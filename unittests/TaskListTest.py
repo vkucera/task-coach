@@ -110,7 +110,7 @@ class NotificationTimingTest(test.TestCase):
         self.assertions = {1: lambda: self.assertEqual(2, len(self.taskList)), 
             2: lambda: self.assertEqual([self.task2], self.task1.children()) }
         self.taskList.append(self.task2)
-        self.assertEqual(2, self.notifications)
+        self.assertEqual(1, self.notifications)
 
     def testRemoveChild(self):
         self.task2.setParent(self.task1)
@@ -118,7 +118,7 @@ class NotificationTimingTest(test.TestCase):
             4: lambda: self.assertEqual([], self.task1.children()) }
         self.taskList.append(self.task2)
         self.taskList.remove(self.task2)
-        self.assertEqual(4, self.notifications)
+        self.assertEqual(3, self.notifications)
 
 class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts, 
         asserts.TaskAsserts):
@@ -169,9 +169,9 @@ class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts,
         self.taskList.remove(self.task2)
         self.taskList.append(self.task2)
         self.assertTaskList(self.originalList)
-        self.assertEqual(6, self.notifications)
+        self.assertEqual(4, self.notifications)
         self.task3.setSubject('Test')
-        self.assertEqual(7, self.notifications)
+        self.assertEqual(5, self.notifications)
         self.failUnlessParentAndChild(self.task2, self.task3)
         self.failUnlessParentAndChild(self.task1, self.task2)
 
@@ -179,9 +179,9 @@ class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts,
         self.taskList.remove(self.task1)
         self.taskList.append(self.task1)
         self.assertTaskList(self.originalList)
-        self.assertEqual(5, self.notifications)
+        self.assertEqual(4, self.notifications)
         self.task3.setSubject('Test')
-        self.assertEqual(6, self.notifications)
+        self.assertEqual(5, self.notifications)
 
     def testExtendWithRemovedTasks(self):
         self.taskList.remove(self.task1)

@@ -40,7 +40,7 @@ class AllTests(unittest.TestSuite):
         for filename in testFiles:
             module = self.filenameToModuleName(filename)
             # Importing the module is not strictly necessary because
-            # loadTestsFromName will do as a side effect. But if the test 
+            # loadTestsFromName will do that too as a side effect. But if the test 
             # module contains errors our import will raise an exception
             # while loadTestsFromName ignores exceptions when importing from 
             # modules.

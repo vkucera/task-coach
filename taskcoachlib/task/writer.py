@@ -15,8 +15,11 @@ class TaskWriter:
         return attributes
 
     def effortAttributes(self, effort):
-        return [effort.task().id(), effort.getStart().timetuple(), 
-            effort.getStop().timetuple()]
+        if effort.getStop() is None:
+            stop = None
+        else:
+            stop = effort.getStop().timetuple()
+        return [effort.task().id(), effort.getStart().timetuple(), stop]
         
     def write(self, taskList, effortList=None):
         self.writer.writerow([self.version])

@@ -1,4 +1,4 @@
-import wx, task, patterns, meta
+import wx, task, patterns, meta, effort
 
 
 class IOController(patterns.Observable):
@@ -72,7 +72,8 @@ class IOController(patterns.Observable):
         if not filename:
             filename = wx.FileSelector("Save as...", flags=wx.SAVE, **self.fileDialogOpts)
         if filename:
-            selectionFile = task.TaskFile(self._effortList, filename)
+            effortList = effort.EffortList(self._effortList.getEffortForTasks(tasks, recursive=True))
+            selectionFile = task.TaskFile(effortList, filename)
             selectionFile.extend(tasks)
             selectionFile.save()
             self.displayMessage('Saved', selectionFile, 'to')

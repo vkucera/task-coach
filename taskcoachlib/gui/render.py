@@ -33,7 +33,9 @@ def dateTime(dateTime):
     return dateTime.strftime('%Y-%m-%d %H:%M')
     
 def dateTimePeriod(start, stop):
-    if start.date() == stop.date():
+    if stop is None:
+        return '%s - now'%dateTime(start)
+    elif start.date() == stop.date():
         return '%s %s - %s'%(date(start.date()), time(start), time(stop))
     else:
         return '%s - %s'%(dateTime(start), dateTime(stop))

@@ -13,11 +13,8 @@ class TaskList(patterns.ObservableObservablesList):
             parent.addChild(task)
 
     def append(self, task):
-        # FIXME: call self.extend to make sure there is just one notification
-        super(TaskList, self).append(task)
-        self.extend(task.children())
-        self._addTaskToParent(task)
-
+        self.extend([task])
+        
     def extend(self, tasks):
         # We use a set here because tasks could contain parents and their children and
         # we want to prevent adding the children twice

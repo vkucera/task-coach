@@ -26,12 +26,24 @@ class EffortListTest(test.TestCase):
     def testGetEffortForTask(self):
         self.effortList.append(self.effort)
         self.assertEqual([self.effort], self.effortList.getEffortForTask(self.task))
+    
+    def testGetEffortForTasks(self):
+        self.effortList.append(self.effort)
+        self.assertEqual([self.effort], self.effortList.getEffortForTasks([self.task]))
         
-    def testGetEffortSpentForTask(self):
+    def testGetEffortForTasks_Recursive(self):
+        child = task.Task()
+        self.task.addChild(child)
+        childEffort = effort.Effort(child, date.DateTime(2004,1,1), date.DateTime(2004,1,2))
+        self.effortList.extend([self.effort, childEffort])
+        self.assertEqual([self.effort, childEffort], self.effortList.getEffortForTasks([self.task],
+            recursive=True))
+        
+    def testGetTimeSpentForTask(self):
         self.effortList.append(self.effort)
         self.assertEqual(self.effort.duration(), self.effortList.getTimeSpentForTask(self.task))
         
-    def testGetTotalEffortSpentForTask(self):
+    def testGetTotalTimeSpentForTask(self):
         child = task.Task()
         self.task.addChild(child)
         childEffort = effort.Effort(child, date.DateTime(2004,3,1), date.DateTime(2004,3,2))
@@ -49,7 +61,7 @@ class EffortListTest(test.TestCase):
         
     def testMaxDateTime_TwoEfforts(self):
         self.effortList.append(self.effort)
-        recentEffort = effort.Effort(self.task)
+        recentEffort = effort.Effort(self.task, date.DateTime.now(), date.DateTime.now())
         self.effortList.append(recentEffort)
         self.assertEqual(recentEffort.getStop(), self.effortList.maxDateTime())
         

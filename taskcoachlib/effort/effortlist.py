@@ -21,27 +21,36 @@ class Cache(dict):
         
 class EffortList(patterns.ObservableObservablesList):
     def __init__(self, *args, **kwargs):
-        super(EffortList, self).__init__(self, *args, **kwargs)
-        self._activeTasks = []
-        self._start = date.DateTime.now()
+        super(EffortList, self).__init__(*args, **kwargs)
         self._timeSpentCache = Cache(self._computeTimeSpentForTasks)
                     
     def notifyChange(self, effort):
         self._timeSpentCache.clean([effort])
         super(EffortList, self).notifyChange(effort)
+        effort.task()._notifyObserversOfChange()
 
     def _notifyObserversOfNewItems(self, efforts):
         self._timeSpentCache.clean(efforts)
         super(EffortList, self)._notifyObserversOfNewItems(efforts)
+        [effort.task()._notifyObserversOfChange() for effort in efforts]
             
     def _notifyObserversOfRemovedItems(self, efforts):
         self._timeSpentCache.clean(efforts)
-        super(EffortList, self)._notifyObserversOfRemovedItems(efforts)        
+        super(EffortList, self)._notifyObserversOfRemovedItems(efforts)
+        [effort.task()._notifyObserversOfChange() for effort in efforts]
+                
+    def stopTracking(self):
+        [effort.setStop() for effort in self if effort.getStop() is None]
                 
     def getEffortForTask(self, task):
         return self.getEffortForTasks([task])
     
-    def getEffortForTasks(self, tasks):
+    def getEffortForTasks(self, tasks, recursive=False):
+        if recursive:
+            allChildren = []
+            for task in tasks:
+                allChildren.extend(task.allChildren())
+            tasks.extend(allChildren)    
         return [effort for effort in self if effort.task() in tasks]
     
     def getTimeSpentForTasks(self, tasks): 
@@ -56,31 +65,24 @@ class EffortList(patterns.ObservableObservablesList):
         
     def getTotalTimeSpentForTask(self, task):
         return self.getTimeSpentForTasks([task]+task.allChildren())
-        
-    def setActiveTasks(self, newActiveTasks, adjacent=False):
-        if adjacent:
-            self._start = self.maxDateTime() or date.DateTime.now()
-        else:
-            self._start = date.DateTime.now()
-        previousActiveTasks = self._activeTasks
-        self._activeTasks = newActiveTasks
-        self.notifyTaskObservers(previousActiveTasks + newActiveTasks)
     
     def notifyTaskObservers(self, tasks):
         for task in tasks:
             task._notifyObserversOfChange()
         
     def getActiveTasks(self):
-        return self._activeTasks
+        return [effort.task() for effort in self if effort.getStop() is None]
         
     def start(self):
         return self._start
 
     def maxDateTime(self):
+        result = None
         if self:
-            return max([effort.getStop() for effort in self])
-        else:
-            return None
+            stopTimes = [effort.getStop() for effort in self if effort.getStop() is not None]
+            if stopTimes:
+                result = max(stopTimes)
+        return result
                      
         
 class SingleTaskEffortList(patterns.ObservableListObserver):
