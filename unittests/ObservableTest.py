@@ -7,15 +7,15 @@ class ObservableTestCase(test.TestCase):
         self.addedItems = self.removedItems = self.changedItems = None
         self.observable = self.getObservable()
 
-    def notifyAdd(self, items):
+    def notifyAdd(self, items, *args, **kwargs):
         self.addNotifications += 1
         self.addedItems = items
         
-    def notifyRemove(self, items):
+    def notifyRemove(self, items, *args, **kwargs):
         self.removeNotifications += 1
         self.removedItems = items
 
-    def notifyChange(self, items):
+    def notifyChange(self, items, *args, **kwargs):
         self.changeNotifications += 1
         self.changedItems = items
         
@@ -230,3 +230,9 @@ class ObservableListObserverTest(ObservableTestCase):
         self.observable.append(self.observableItem)
         self.observable.removeItems([self.observableItem])
         self.check(addNotifications=1, removeNotifications=1, lenOriginal=1)
+
+
+class NotificationTest(test.TestCase):
+    def testSource(self):
+        notification = patterns.observer.Notification(self)
+        self.assertEqual(self, notification.source)

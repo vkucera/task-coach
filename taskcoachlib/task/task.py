@@ -19,8 +19,8 @@ class Task(patterns.Observable):
                                       # the creator's responsibility
         self._efforts        = []
 
-    def notify(self, *args):
-        self._notifyObserversOfChange(*args)
+    def notify(self, *args, **kwargs):
+        self._notifyObserversOfChange(*args, **kwargs)
 
     def __setstate__(self, state):
         self.__dict__.update(state)
@@ -92,7 +92,7 @@ class Task(patterns.Observable):
             child.setParent(self)
             self._updateCompletionState(child.completionDate())
             child.registerObserver(self.notify)
-            self._notifyObserversOfChange()
+            self._notifyObserversOfChange(self, notification=patterns.observer.Notification(self, itemsAdded=[child]))
 
     def removeChild(self, child):
         self._children.remove(child)
@@ -222,14 +222,14 @@ class Task(patterns.Observable):
     def addEffort(self, effort):
         self._efforts.append(effort)
         effort.registerObserver(self.notifyEffortChanged)
-        self._notifyObserversOfChange()
+        self._notifyObserversOfChange(self, patterns.observer.Notification(self, effortsAdded=[effort]))
         
     def removeEffort(self, effort):
         self._efforts.remove(effort)
         effort.removeObserver(self.notifyEffortChanged)
-        self._notifyObserversOfChange()
+        self._notifyObserversOfChange(self, patterns.observer.Notification(self, effortsRemoved=[effort]))
         
-    def notifyEffortChanged(self, effort):
+    def notifyEffortChanged(self, effort, *args, **kwargs):
         self._notifyObserversOfChange()
         
     def duration(self, recursive=False):

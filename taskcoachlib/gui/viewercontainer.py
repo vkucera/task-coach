@@ -12,7 +12,7 @@ class ViewerContainer(patterns.Observable):
     def __getattr__(self, attr):
         return getattr(self[self.currentPage], attr)
 
-    def notify(self, observable):
+    def notify(self, observable, *args, **kwargs):
         self._notifyObserversOfChange()
 
     def onPageChanged(self, event):

@@ -1,18 +1,18 @@
 import patterns
 
 class Sorter(patterns.ObservableListObserver):
-    def notifyChange(self, items):
+    def notifyChange(self, items, *args, **kwargs):
         self.sort()
         self._notifyObserversOfChange(items)
     
-    def notifyAdd(self, items):
+    def notifyAdd(self, items, *args, **kwargs):
         self.stopNotifying()
         self._extend(items)
         self.sort()
         self.startNotifying()
         self._notifyObserversOfNewItems(items)
     
-    def notifyRemove(self, items):
+    def notifyRemove(self, items, *args, **kwargs):
         self.stopNotifying()
         self._removeItems(items)
         self.sort()
@@ -21,11 +21,11 @@ class Sorter(patterns.ObservableListObserver):
         
 
 class DepthFirstSorter(Sorter):
-    def notifyAdd(self, items):
+    def notifyAdd(self, items, *args, **kwargs):
         self.sort()
         self._notifyObserversOfNewItems(items)
         
-    def notifyRemove(self, items):
+    def notifyRemove(self, items, *args, **kwargs):
         self.sort()
         self._notifyObserversOfRemovedItems(items)
         
