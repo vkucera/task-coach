@@ -1,3 +1,11 @@
+Release 0.28 - April ?, 2005
+
+Bugs fixed:
+- Hitting return or double click to edit effort in the task editor 
+  now works (1172164).
+
+
+
 Release 0.27 - April 4, 2005
 
 Features added:
