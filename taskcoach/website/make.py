@@ -200,13 +200,6 @@ pages['features'] = \
             <LI>Export to HTML. Suggested by Sander Boom.
             <LI>Start tracking tasks from the task bar tray
             icon popu menu. Suggested by Wolfgang Keller.
-            <LI>If Task Coach creates an effort record and enters the
-            start time when the start button is clicked and Task Coach 
-            remembers all effort records (even records without stop times), 
-            then there would be no requirement to keep Task Coach running 
-            the whole time you are timing effort spent on a task. This would 
-            be particularly useful when doing system maintenance requiring 
-            many system reboots. Suggested by Bob Hossley.
         </UL>
         </P>'''
 
