@@ -19,15 +19,15 @@ class RenderSubjectTest(test.TestCase):
             render.subject(self.child, recursively=False, sep='+'))
 
 
-class RenderTimeLeftTest(test.TestCase):
+class RenderDaysLeftTest(test.TestCase):
     def testOneDayLeft(self):
-        self.assertEqual('1', render.timeLeft(date.TimeDelta(days=1)))
+        self.assertEqual('1', render.daysLeft(date.TimeDelta(days=1)))
 
     def testOneDayLate(self):
-        self.assertEqual('-1', render.timeLeft(date.TimeDelta(days=-1)))
+        self.assertEqual('-1', render.daysLeft(date.TimeDelta(days=-1)))
 
     def testInfiniteTimeLeft(self):
-        self.assertEqual('Infinite', render.timeLeft(date.TimeDelta.max))
+        self.assertEqual('Infinite', render.daysLeft(date.TimeDelta.max))
 
 
 class RenderTimeSpentTest(test.TestCase):

@@ -104,14 +104,8 @@ class DateCtrl(Panel):
         calendarPopup.Show()
 
     def GetValue(self):
-        value = super(DateCtrl, self).GetValue()
-        try:
-            year, month, day = value.split('-')
-            value = date.Date(int(year), int(month), int(day))
-        except:
-            value = date.Date()
-        return value
-
+        return date.parseDate(super(DateCtrl, self).GetValue())
+        
 
 class StaticDateCtrl(DateCtrl):
     def _createControls(self, callback):
