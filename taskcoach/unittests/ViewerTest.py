@@ -62,3 +62,14 @@ class ViewerBaseClassTest(test.wxTestCase):
         except NotImplementedError:
             pass
 
+
+class CompositeEffortListViewerTest(test.wxTestCase):
+    def testGetItemText(self):
+        taskList = task.TaskList()
+        aTask = task.Task()
+        aTask.addEffort(effort.Effort(aTask))
+        taskList.append(aTask)
+        effortList = effort.EffortList(taskList)
+        viewer = dummy.EffortPerDayViewerWithDummyWidget(self.frame, 
+            effortList, {})
+        self.assertEqual('0:00:00', viewer.getItemText(0, 3))
