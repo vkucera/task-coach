@@ -33,7 +33,9 @@ pages['credits'] = \
         <A HREF="http://www.wxpython.org">wxPython</A>. The icons are from
         the great <A HREF="http://www.icon-king.com">Nuvola icon set</A> by 
         David Vignoni. The Windows installer is <A
-        HREF="http://www.jrsoftware.org">Inno Setup</A>.</P>
+        HREF="http://www.jrsoftware.org">Inno Setup</A>. %(name)s source
+        code and releases are hosted by <A
+        HREF="http://sourceforge.net/">Sourceforge</A>.</P>
 '''
 
 pages['bugs'] = \
@@ -58,6 +60,19 @@ pages['bugs'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.24 - February 26, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>Saving a selection of tasks to a separate file would also save 
+        all effort records to that file (instead of just the effort records 
+        for the selected tasks), giving errors when loading that file.
+        </UL>
+        Features added:
+        <UL>
+        <LI>The tracking status of tasks is saved. So if you start tracking a
+        task, quit Task Coach, and restart Task Coach later, effort for that 
+        task is still being tracked. Requested by Bob Hossley.
+        </UL>
         <H4>Release 0.23 - February 20, 2005</H4>
         Bugs fixed:
         <UL>
