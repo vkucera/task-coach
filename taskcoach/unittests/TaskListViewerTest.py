@@ -5,7 +5,7 @@ class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.listViewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
-            effort.EffortList(self.taskList), dummy.DummyUICommands())
+            dummy.DummyUICommands())
 
     def testEmptyTaskList(self):
         self.assertEqual(0, self.listViewer.size())

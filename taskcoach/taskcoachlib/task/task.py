@@ -20,7 +20,7 @@ class Task(patterns.Observable):
         self._efforts        = []
 
     def notify(self, *args):
-        self._notifyObserversOfChange()
+        self._notifyObserversOfChange(*args)
 
     def __setstate__(self, state):
         self.__dict__.update(state)
@@ -91,12 +91,14 @@ class Task(patterns.Observable):
             self._children.append(child)
             child.setParent(self)
             self._updateCompletionState(child.completionDate())
+            child.registerObserver(self.notify)
             self._notifyObserversOfChange()
 
     def removeChild(self, child):
         self._children.remove(child)
         if self._children:
             self._updateCompletionState(date.Today())
+        child.removeObserver(self.notify)
         self._notifyObserversOfChange()
 
     def setParent(self, parent):
@@ -210,17 +212,24 @@ class Task(patterns.Observable):
     
     # effort related methods:
 
-    def efforts(self):
-        return self._efforts
+    def efforts(self, recursive=False):
+        childEfforts = []
+        if recursive:
+            for child in self.children():
+                childEfforts.extend(child.efforts(recursive=True))
+        return self._efforts + childEfforts
         
     def addEffort(self, effort):
         self._efforts.append(effort)
-        effort.registerObserver(self.notify)
+        effort.registerObserver(self.notifyEffortChanged)
         self._notifyObserversOfChange()
         
     def removeEffort(self, effort):
         self._efforts.remove(effort)
-        effort.removeObserver(self.notify)
+        effort.removeObserver(self.notifyEffortChanged)
+        self._notifyObserversOfChange()
+        
+    def notifyEffortChanged(self, effort):
         self._notifyObserversOfChange()
         
     def duration(self, recursive=False):

@@ -84,7 +84,7 @@ class UICommand(object):
 class SettingsCommand(UICommand):
     ''' SettingsCommands are saved in the settings (a ConfigParser). '''
     
-    section = 'view' # XXX all settings are currently in one section
+    section = 'view' # default section
 
     def __init__(self, settings, *args, **kwargs):
         self.settings = settings
@@ -684,7 +684,7 @@ class EffortStartAdjacent(EffortStart):
     adjacent = True
         
     def enabled(self):
-        return (self.taskList.maxDateTime() is not None) and super(EffortStartAdjacent, self).enabled()
+        return (self.filteredTaskList.maxDateTime() is not None) and super(EffortStartAdjacent, self).enabled()
 
 
 class EffortStop(FilterCommand):

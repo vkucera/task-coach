@@ -64,7 +64,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.filteredTaskList, self.effortList)
         viewerfactory.addTaskViewers(self.viewer, self.filteredTaskList, 
-            self.effortList, self.uiCommands)
+            self.uiCommands)
         viewerfactory.addEffortViewers(self.viewer, self.effortList, self.uiCommands)
         self.SetToolBar(toolbar.ToolBar(self, self.uiCommands))
         import status

@@ -3,16 +3,15 @@ import menu, color, render
 import wx
 
 class Viewer(patterns.Observable, wx.Panel):
-    def __init__(self, parent, taskList, effortList, uiCommands, *args, **kwargs):
+    def __init__(self, parent, list, uiCommands, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1)
         self.parent = parent
         self.uiCommands = uiCommands
-        self.taskList = self.createSorter(taskList)
-        self.taskList.registerObserver(self.notify, self.notify, self.notify)
-        self._effortList = effortList
+        self.list = self.createSorter(list)
+        self.list.registerObserver(self.notify, self.notify, self.notify)
         self.widget = self.createWidget()
         self.initLayout()
-        self.notify(self.taskList)
+        self.notify(self.list)
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
@@ -53,7 +52,7 @@ class Viewer(patterns.Observable, wx.Panel):
             bitmap_selected = bitmap + '_open'
         else:
             bitmap_selected = bitmap
-        if task in self._effortList.getActiveTasks():
+        if task.isBeingTracked():
             bitmap = bitmap_selected = 'start'
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
  
@@ -61,23 +60,20 @@ class Viewer(patterns.Observable, wx.Panel):
         raise NotImplementedError
 
     def notify(self, items):
-        self.widget.refresh(len(self.taskList))
+        self.widget.refresh(len(self.list))
         self._notifyObserversOfChange()
         
     def onSelect(self, *args):
         self._notifyObserversOfChange()
 
     def curselection(self):
-        return [self.taskList[index] for index in self.widget.curselection()]
+        return [self.list[index] for index in self.widget.curselection()]
         
-    def _getTask(self, index):
-        return self.taskList[index]
-
     def size(self):
         return self.widget.GetItemCount()
 
     def select(self, items):
-        indices = [self.taskList.index(item) for item in items if item in self.taskList]
+        indices = [self.list.index(item) for item in items if item in self.list]
         self.widget.select(indices)
 
     def focus_set(self):
@@ -87,13 +83,13 @@ class Viewer(patterns.Observable, wx.Panel):
         return hasattr(self, 'showColumn')
 
     def getItemAttr(self, index):
-        task = self._getTask(index)
+        task = self.list[index]
         return wx.ListItemAttr(color.taskColor(task))
 
 
 class ListViewer(Viewer):
     def getItemImage(self, index):
-        task = self._getTask(index)
+        task = self.list[index]
         normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
         if task.children():
             return expandedImageIndex
@@ -103,7 +99,7 @@ class ListViewer(Viewer):
 
 class TaskViewer(Viewer):
     def select_completedTasks(self):
-        self.select([task for task in self.taskList if task.completed()])
+        self.select([task for task in self.list if task.completed()])
 
     def isShowingTasks(self):
         return True
@@ -128,7 +124,7 @@ class TaskListViewer(TaskViewer, ListViewer):
     def getItemText(self, index, column):
         if self.widget.GetColumnWidth(column) == 0:
             return ''
-        task = self.taskList[index]
+        task = self.list[index]
         if column == 0:
             return render.subject(task, recursively=True)
         elif column == 1:
@@ -140,9 +136,9 @@ class TaskListViewer(TaskViewer, ListViewer):
         elif column == 4:
             return render.date(task.completionDate())
         elif column == 5:
-            return render.timeSpent(self._effortList.getTimeSpentForTask(task))
+            return render.timeSpent(task.duration())
         elif column == 6:
-            return render.timeSpent(self._effortList.getTotalTimeSpentForTask(task))
+            return render.timeSpent(task.duration(recursive=True))
     
     def showColumn(self, columnIndex, show):
         width = {True : wx.LIST_AUTOSIZE, False : 0 } [show]
@@ -180,16 +176,16 @@ class TaskTreeViewer(TaskViewer):
         return task.sorter.DepthFirstSorter(taskList) 
     
     def getItemText(self, index):
-        task = self.taskList[index]
+        task = self.list[index]
         return task.subject()
     
     def getItemImage(self, index):
-        task = self.taskList[index]
+        task = self.list[index]
         return self.getImageIndices(task) 
     
     def getItemChildrenCount(self, index):
-        task = self.taskList[index]
-        return len([task for task in task.children() if task in self.taskList])
+        task = self.list[index]
+        return len([task for task in task.children() if task in self.list])
         
     def getItemFingerprint(self, index):
         ''' A fingerprint can be used to detect changes in a task: if a task
@@ -197,27 +193,26 @@ class TaskTreeViewer(TaskViewer):
         to be a change is entirely determined by the needs of the TaskTreeCtrl.
         The TaskTreeCtrl needs to be able to see whether a task has changed in 
         order to determine what parts of the tree need updating. '''
-        task = self.taskList[index]
+        task = self.list[index]
         fingerprint = task.__getstate__()
         del fingerprint['_description']
         fingerprint['_children'] = len(task.children()) > 0
         fingerprint['_startdate'] = task.startDate()
         fingerprint['_duedate'] = task.dueDate()
-        fingerprint['active'] = task in self._effortList.getActiveTasks()
+        fingerprint['active'] = task.isBeingTracked()
         return fingerprint
 
 
 class EffortListViewer(ListViewer):  
     def __init__(self, parent, effortList, uiCommands, *args, **kwargs):
-        super(EffortListViewer, self).__init__(parent, effortList, effortList,
+        super(EffortListViewer, self).__init__(parent, effortList,
             uiCommands, *args, **kwargs)
-    # FIXME: passing effortList twice is ugly
 
     def createWidget(self):
         widget = widgets.EffortListCtrl(self, ['Period', 'Task', 'Time spent'],
             self.getItemText, self.getItemImage, self.getItemAttr,
             self.onSelect, self.uiCommands['editeffort'], 
-            menu.EffortPopupMenu(self.parent, self.uiCommands, self.taskList, self))
+            menu.EffortPopupMenu(self.parent, self.uiCommands, self.list, self))
         widget.SetColumnWidth(0, 150)
         widget.SetColumnWidth(1, 300)
         return widget
@@ -226,9 +221,9 @@ class EffortListViewer(ListViewer):
         return effort.EffortSorter(effortList)
         
     def getItemText(self, index, column):
-        effort = self.taskList[index] # FIXME: rename taskList to list
+        effort = self.list[index]
         if column == 0:
-            previousEffort = index > 0 and self.taskList[index-1] or None
+            previousEffort = index > 0 and self.list[index-1] or None
             return self.renderPeriod(effort, previousEffort)
         elif column == 1:
             return render.subject(effort.task(), recursively=True)
@@ -236,7 +231,7 @@ class EffortListViewer(ListViewer):
             return render.timeSpent(effort.duration())
 
     def _getTask(self, index):
-        return self.taskList[index].task()
+        return self.list[index].task()
     
     def getItemImage(self, index):
         return -1

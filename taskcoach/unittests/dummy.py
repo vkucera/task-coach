@@ -16,13 +16,13 @@ class DummyWidget(wx.Frame):
         self._selection.append(index)
 
     def selectall(self):
-        self._selection = range(len(self.viewer.taskList))
+        self._selection = range(len(self.viewer.list))
 
     def select(self, indices):
         self._selection = indices
 
     def GetItemCount(self):
-        return len(self.viewer.taskList)
+        return len(self.viewer.list)
 
     def refresh(self, *args, **kwargs):
         pass

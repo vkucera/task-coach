@@ -21,13 +21,16 @@ class TaskWriter:
             stop = effort.getStop().timetuple()
         return [effort.task().id(), effort.getStart().timetuple(), stop]
         
-    def write(self, taskList, effortList=None):
+    def write(self, taskList):
         self.writer.writerow([self.version])
         for task in taskList:
             self.writer.writerow(self.taskAttributes(task))
-        if effortList:
+        efforts = []
+        for task in taskList:
+            efforts.extend(task.efforts())
+        if efforts:
             self.writer.writerow(['effort:'])
-            for effort in effortList:
+            for effort in efforts:
                 self.writer.writerow(self.effortAttributes(effort))
                 
 import xml.dom
@@ -36,7 +39,7 @@ class XMLWriter:
         self.fd = fd
         self.version = '.tsk format version %d'%versionnr
         
-    def write(self, taskList, effortList):
+    def write(self, taskList):
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, "tasks", None)
         for task in taskList.rootTasks():

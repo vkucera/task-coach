@@ -82,8 +82,8 @@ class StartFromEndOfLastEffortCommandTest(EffortCommandTestCase):
  
     def testStartFromEndOfLastEffort(self):
         self.assertDoUndoRedo(
-            lambda: self.assertEqual([self.task], self.effortList.getActiveTasks()),
-            lambda: self.assertEqual([], self.effortList.getActiveTasks()))
+            lambda: self.failUnless(self.task.isBeingTracked()),
+            lambda: self.failIf(self.task.isBeingTracked()))
                    
     def testStartFromEndOfLastEffortAndStop(self):
         stop = command.StopEffortCommand(self.taskList)
