@@ -22,9 +22,12 @@ class TaskFile(tasklist.TaskList):
     def filename(self):
         return self._filename
 
+    def _clear(self):
+        self.removeItems(list(self))
+        
     def close(self):
         self.setFilename('')
-        del self[:]
+        self._clear()
         self._needSave = False
 
     def load(self):
@@ -34,7 +37,7 @@ class TaskFile(tasklist.TaskList):
             fd.close()
         else: 
             tasks = []
-        del self[:]
+        self._clear()
         self.extend(tasks)
         self._needSave = False
 
