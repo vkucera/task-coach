@@ -1,0 +1,210 @@
+from taskcoachlib import patterns, date
+import time, copy
+
+class Task(patterns.Observable):
+    sep = '|'
+   
+    def __init__(self, subject='', description='', duedate=None, 
+            startdate=None, parent=None, budget=None, *args, **kwargs):
+        super(Task, self).__init__(*args, **kwargs)
+        self._subject        = subject
+        self._description    = description 
+        self._duedate        = duedate or date.Date()
+        self._startdate      = startdate or date.Today()
+        self._completiondate = date.Date()
+        self._budget         = budget or date.TimeDelta.max  # infinite budget by default
+        self._id             = '%s:%s'%(id(self), time.time())
+        self._children       = []
+        self._parent         = parent # adding the parent->child link is
+                                      # the creator's responsibility
+
+    def notify(self, *args):
+        self._notifyObserversOfChange()
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self._notifyObserversOfChange()
+
+    def __getstate__(self):
+        return { '_subject' : self._subject, 
+            '_description' : self._description, '_id' : self._id, 
+            '_duedate' : self._duedate, '_startdate' : self._startdate, 
+            '_completiondate' : self._completiondate, '_children' :
+            self._children, '_parent' : self._parent }
+        
+    def __repr__(self):
+        return self._subject
+
+    def id(self):
+        return self._id
+
+    def children(self):
+        return self._children
+
+    def description(self):
+        return self._description
+
+    def setDescription(self, description):
+        self._description = description
+
+    def allChildrenCompleted(self):
+        if not self.children():
+            return False
+        for child in self.children():
+            if not child.completed():
+                return False
+        return True
+
+    def copy(self):
+        ''' Copy constructor '''
+        copy = self.__class__(self.subject(), self.description(), 
+            self.dueDate(), self.startDate(), parent=self.parent())
+        copy.setCompletionDate(self.completionDate())
+        for child in self.children():
+            childCopy = child.copy()
+            copy.addChild(childCopy)
+        return copy
+    
+    def newSubTask(self, subject='New subtask'):
+        ''' Subtask constructor '''
+        return self.__class__(subject, duedate=self.dueDate(),
+            startdate=self.startDate(), parent=self)
+
+    def allChildren(self):
+        return self.children() + [descendent for child in self.children() 
+                                  for descendent in child.allChildren()]
+
+    def ancestors(self):
+        myParent = self.parent()
+        if myParent is None:
+            return []
+        else:
+            return myParent.ancestors() + [myParent]
+
+    def family(self):
+        return self.ancestors() + [self] + self.allChildren()
+        
+    def addChild(self, child):
+        if child not in self._children:
+            self._children.append(child)
+            child.setParent(self)
+            self._updateCompletionState(child.completionDate())
+            self._notifyObserversOfChange()
+
+    def removeChild(self, child):
+        self._children.remove(child)
+        if self._children:
+            self._updateCompletionState(date.Today())
+        self._notifyObserversOfChange()
+
+    def setParent(self, parent):
+        self._parent = parent
+
+    def parent(self):
+        return self._parent
+
+    def subject(self):
+        return self._subject
+
+    def setSubject(self, subject):
+        self._subject = subject
+        self._notifyObserversOfChange()
+
+    def dueDate(self):
+        if self.children():
+            if self.allChildrenCompleted():
+                children = self.children()
+            else:
+                children = [child for child in self.children()
+                            if not child.completed()]
+            return max([child.dueDate() for child in children])
+        else:
+            return self._duedate
+
+    def setDueDate(self, duedate):
+        self._duedate = duedate
+        self._notifyObserversOfChange()
+
+    def startDate(self):
+        if self.children():
+            if self.allChildrenCompleted():
+                children = self.children()
+            else:
+                children = [child for child in self.children()
+                            if not child.completed()]
+            return min([child.startDate() for child in children])
+        else:
+            return self._startdate
+
+    def setStartDate(self, startdate):
+        self._startdate = startdate
+        self._notifyObserversOfChange()
+
+    def timeLeft(self):
+        return self._duedate - date.Today()
+        
+    def completionDate(self):
+        return self._completiondate
+
+    def setCompletionDate(self, completionDate=None):
+        self._completiondate = completionDate or date.Today()
+        [child.setCompletionDate(completionDate) for child in self.children() 
+            if not child.completed()]
+        parent = self.parent()
+        if parent:
+            parent._updateCompletionState(completionDate)
+        self._notifyObserversOfChange()
+
+    def _updateCompletionState(self, completionDate):
+        if not self.completed() and self.allChildrenCompleted():
+            self.setCompletionDate(completionDate)
+        elif self.completed() and not self.allChildrenCompleted():
+            self.setCompletionDate(date.Date())
+
+    def completed(self):
+        return self.completionDate() != date.Date()
+
+    def overdue(self):
+        return self.dueDate() < date.Today() and not self.completed()
+
+    def inactive(self):
+        return (self.startDate() > date.Today()) and not self.completed()
+
+    def dueToday(self):
+        return (self.dueDate() == date.Today() and not self.completed())
+
+    def dueTomorrow(self):
+        return (self.dueDate() == date.Tomorrow() and not self.completed())
+
+    def budget(self):
+        return self._budget
+        
+    def setBudget(self, budget):
+        self._budget = budget
+
+    def _compare(self, other):
+        for method in ['completed', 'inactive', 'dueDate', 'startDate',
+                       'subject', 'id']:
+            result = cmp(getattr(self, method)(), getattr(other, method)())
+            if result != 0:
+                return result
+        return result
+
+    def __eq__(self, other):
+        return self._compare(other) == 0
+
+    def __ne__(self, other):
+        return self._compare(other) != 0
+
+    def __lt__(self, other):
+        return self._compare(other) < 0
+
+    def __le__(self, other):
+        return self._compare(other) <= 0
+
+    def __gt__(self, other):
+        return self._compare(other) > 0
+
+    def __ge__(self, other):
+        return self._compare(other) >= 0
+
