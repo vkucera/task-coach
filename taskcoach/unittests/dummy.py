@@ -42,7 +42,6 @@ class DummyUICommands:
         
     def keys(self):
         return ['new', 'stopeffort']
-        
 
 class ViewerWithDummyWidget(gui.viewer.Viewer):
     def createWidget(self):
