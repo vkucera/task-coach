@@ -42,7 +42,9 @@ footer = '''
                 <LI><A HREF="http://www.wxpython.org">wxPython</A></LI>
                 <LI><A HREF="http://www.icon-king.com">Nuvola icon set</A></LI>
                 <LI><A HREF="http://www.jrsoftware.org">Inno Setup</A></LI>
-                <LI><A HREF="http://sourceforge.net">Sourceforge</A></LI>
+                <LI><A href="http://sourceforge.net"><IMG
+            src="http://sourceforge.net/sflogo.php?group_id=130831&type=1"
+            width="88" height="31" border="0" alt="SourceForge.net Logo"/></A>
             </UL>
         </DIV>
     </BODY>
