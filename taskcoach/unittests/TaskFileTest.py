@@ -82,7 +82,7 @@ class TaskFileTest(TaskFileTestCase):
         self.failIf(self.taskFile.needSave())
 
     def testNeedSave_AfterEffortAdded(self):
-        self.emptyTaskFile.effortList().append(effort.Effort(None, None, None))
+        self.emptyTaskFile.effortList().append(effort.Effort(task.Task(), None, None))
         self.failUnless(self.emptyTaskFile.needSave())
         
         

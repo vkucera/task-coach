@@ -55,51 +55,53 @@ class DeleteEffortCommand(base.BaseCommand):
     redo_command = do_command
 
 
-class StartEffortCommand(base.BaseCommand):
+class StartEffortCommand(base.BaseCommand, base.SaveStateMixin):
     name = 'Start tracking'
 
     def __init__(self, *args, **kwargs):
-        self._startAdjacent = 'adjacent' in kwargs and kwargs['adjacent']
         super(StartEffortCommand, self).__init__(*args, **kwargs)
-        
+        adjacent = 'adjacent' in kwargs and kwargs['adjacent']
+        if adjacent:
+            start = self.list.maxDateTime() or date.DateTime.now()
+        else:
+            start = date.DateTime.now()
+        self.saveStates(self.getEffortsToSave())
+        self.efforts = [effort.Effort(task, start) for task in self.items]
+
+    def getEffortsToSave(self):
+        return [effort for effort in self.list if effort.getStop() is None]
+               
     def do_command(self):
-        self.previousTasks = self.list.getActiveTasks()
-        self.start = self.list.start()
-        self.stop = date.DateTime.now()
-        self.efforts = []
-        for task in self.previousTasks:
-            self.efforts.append(effort.Effort(task, self.start, self.stop))
-        self.list.setActiveTasks(self.items, adjacent=self._startAdjacent)
+        self.list.stopTracking()
         self.list.extend(self.efforts)
         
     def undo_command(self):
-        self.list.setActiveTasks(self.previousTasks)
         self.list.removeItems(self.efforts)
+        self.undoStates()
         
     def redo_command(self):
-        self.list.setActiveTasks(self.items)
         self.list.extend(self.efforts)
-
+        self.redoStates()
+    
         
-class StopEffortCommand(base.BaseCommand):
+class StopEffortCommand(base.BaseCommand, base.SaveStateMixin):
     name = 'Stop tracking'
     
+    def __init__(self, *args, **kwargs):
+        super(StopEffortCommand, self).__init__(*args, **kwargs)
+        self.saveStates(self.getEffortsToSave())
+ 
+    def getEffortsToSave(self):
+        return [effort for effort in self.list if effort.getStop() is None]
+               
     def canDo(self):
-        return True
+        return True    
         
     def do_command(self):
-        self.activeTasks = self.list.getActiveTasks()
-        self.start = self.list.start()
-        self.stop = date.DateTime.now()
-        self.efforts = []
-        for task in self.activeTasks:
-            self.efforts.append(effort.Effort(task, self.start, self.stop))
-        self.redo_command()
+        self.list.stopTracking()
         
     def undo_command(self):
-        self.list.setActiveTasks(self.activeTasks, self.start)
-        self.list.removeItems(self.efforts)
+        self.undoStates()
         
     def redo_command(self):
-        self.list.setActiveTasks([])
-        self.list.extend(self.efforts)
+        self.redoStates()

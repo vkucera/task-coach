@@ -70,7 +70,10 @@ class TaskReader:
             self.effortList.append(newEffort)
             
     def createDateTime(self, string):
-        return date.DateTime.fromtimestamp(time.mktime(eval(string)))
+        if not string:
+            return None
+        else:
+            return date.DateTime.fromtimestamp(time.mktime(eval(string)))
                 
     def createChildren(self):
         for task in self.taskList:

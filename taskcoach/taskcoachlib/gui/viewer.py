@@ -203,7 +203,7 @@ class TaskTreeViewer(TaskViewer):
         fingerprint['_children'] = len(task.children()) > 0
         fingerprint['_startdate'] = task.startDate()
         fingerprint['_duedate'] = task.dueDate()
-        fingerprint['active' ] = task in self._effortList.getActiveTasks()
+        fingerprint['active'] = task in self._effortList.getActiveTasks()
         return fingerprint
 
 

@@ -4,8 +4,9 @@ class EffortCommandTestCase(test.wxTestCase, asserts.CommandAsserts):
     def setUp(self):
         self.effortList = effort.EffortList()
         self.task = task.Task()
-        self.original = date.DateTime.now()
-        self.effort = effort.Effort(self.task, self.original)
+        self.originalStop = date.DateTime.now() 
+        self.originalStart = self.originalStop - date.TimeDelta(hours=1) 
+        self.effort = effort.Effort(self.task, self.originalStart, self.originalStop)
         self.effortList.append(self.effort)
 
     def undo(self):
@@ -30,7 +31,7 @@ class EditEffortCommandTest(EffortCommandTestCase):
         edit.do()
         self.assertDoUndoRedo(
             lambda: self.assertEqual(expected, self.effort.getStart()),
-            lambda: self.assertEqual(self.original, self.effort.getStart()))
+            lambda: self.assertEqual(self.originalStart, self.effort.getStart()))
 
 class DeleteEffortCommandTest(EffortCommandTestCase):
     def testDeleteEffort(self):
@@ -57,21 +58,14 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual([], self.effortList.getActiveTasks()),
             lambda: self.assertEqual([self.task], self.effortList.getActiveTasks()))
-            
-    def testStopAddsEffort(self):
-        stop = command.StopEffortCommand(self.effortList)
-        stop.do()
-        self.assertDoUndoRedo(
-            lambda: self.assertEqual(2, len(self.effortList)),
-            lambda: self.assertEqual(1, len(self.effortList)))
-            
+                        
     def testStartStopsPreviousStart(self):
         task2 = task.Task()
         start = command.StartEffortCommand(self.effortList, [task2])
         start.do()
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(2, len(self.effortList)),
-            lambda: self.assertEqual(1, len(self.effortList)))           
+            lambda: self.assertEqual(3, len(self.effortList)),
+            lambda: self.assertEqual(2, len(self.effortList)))           
     
  
 class StartFromEndOfLastEffortCommandTest(EffortCommandTestCase):
