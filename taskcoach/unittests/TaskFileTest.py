@@ -2,12 +2,11 @@ import test, task, os, date, effort, date
 
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
-        self.effortList = effort.EffortList()
-        self.taskFile = task.TaskFile(self.effortList)
-        self.emptyTaskFile = task.TaskFile(effort.EffortList())
+        self.taskFile = task.TaskFile()
+        self.emptyTaskFile = task.TaskFile()
         self.task = task.Task()
         self.taskFile.append(self.task)
-        self.effortList.append(effort.Effort(self.task, date.DateTime(2004,1,1),
+        self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2)))
         self.filename = 'test.tsk'
 
@@ -46,7 +45,6 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.close()
         self.assertEqual('', self.taskFile.filename())
         self.assertEqual(0, len(self.taskFile))
-        self.assertEqual(0, len(self.taskFile.effortList()))
 
     def testNeedSave_Initial(self):
         self.failIf(self.emptyTaskFile.needSave())
@@ -82,8 +80,8 @@ class TaskFileTest(TaskFileTestCase):
         self.failIf(self.taskFile.needSave())
 
     def testNeedSave_AfterEffortAdded(self):
-        self.emptyTaskFile.effortList().append(effort.Effort(task.Task(), None, None))
-        self.failUnless(self.emptyTaskFile.needSave())
+        self.task.addEffort(effort.Effort(self.task, None, None))
+        self.failUnless(self.taskFile.needSave())
         
         
 class TaskFileSaveAndLoadTest(TaskFileTestCase):
@@ -113,15 +111,9 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         self.remove('new.tsk')
 
     def testMerge(self):
-        mergeFile = task.TaskFile(effort.EffortList(), 'merge.tsk')
+        mergeFile = task.TaskFile('merge.tsk')
         mergeFile.append(task.Task())
         mergeFile.save()
         self.taskFile.merge('merge.tsk')
         self.assertEqual(2, len(self.taskFile))
         self.remove('merge.tsk')
-
-    def testEffort(self):
-        self.taskFile.setFilename(self.filename)
-        self.taskFile.save()
-        self.taskFile.load()
-        self.assertEqual(1, len(self.effortList))

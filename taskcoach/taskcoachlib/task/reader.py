@@ -45,7 +45,7 @@ class TaskReader:
             if line == ['effort:']:
                 return
             if nrTimeEntriesToRead > 0:
-                self.effortList.append(self.createEffort(task, line))
+                task.addEffort(self.createEffort(task, line))
                 nrTimeEntriesToRead -= 1
             else:
                 (task, nrTimeEntriesToRead) = taskFactory.createTask(line)
@@ -65,9 +65,10 @@ class TaskReader:
             if line == []:
                 continue
             taskId, start, stop = line
-            newEffort = effort.Effort(self.taskDict[taskId], self.createDateTime(start),
+            task = self.taskDict[taskId]
+            newEffort = effort.Effort(task, self.createDateTime(start),
                 self.createDateTime(stop))
-            self.effortList.append(newEffort)
+            task.addEffort(newEffort)
             
     def createDateTime(self, string):
         if not string:
@@ -83,7 +84,6 @@ class TaskReader:
  
     def read(self):
         self.taskList = []
-        self.effortList = []
         self.taskDict = {}
         self.version = self.reader.next()[0]
         versionnr = int(self.version.split()[-1])
@@ -91,5 +91,5 @@ class TaskReader:
         self.createChildren()
         self.createEfforts(versionnr)
         tasks = [task for task in self.taskList if task.parent() is None]
-        return tasks, self.effortList
+        return tasks
 

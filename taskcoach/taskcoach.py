@@ -28,8 +28,8 @@ class App(object):
         settings = config.Settings(load)
         if showSplash and settings.getboolean('window', 'splash'):
             splash = gui.SplashScreen()
-        effortList = effort.EffortList()
-        self.taskFile = task.TaskFile(effortList)
+        self.taskFile = task.TaskFile()
+        effortList = effort.EffortList(self.taskFile)
         self.io = gui.IOController(self, self.taskFile, effortList, settings)
         viewFilteredTaskList = task.filter.ViewFilter(self.taskFile)
         searchFilteredTaskList = task.filter.SearchFilter(viewFilteredTaskList)

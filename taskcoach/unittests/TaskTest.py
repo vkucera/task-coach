@@ -342,3 +342,57 @@ class CompareTasksTest(test.TestCase):
         task3 = task.Task(startdate=date.Date(2000,1,1), 
             duedate=date.Date(2003, 1, 1))
         self.failUnless(task3 < self.task1)
+
+
+import effort
+class TaskEffortTest(test.TestCase):
+    def setUp(self):
+        self.task = task.Task()
+        self.effort = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
+        
+    def testNoEffort(self):
+        self.assertEqual(date.TimeDelta(), self.task.duration())
+        
+    def testAddEffort(self):
+        self.task.addEffort(self.effort)
+        self.assertEqual(self.effort.duration(), self.task.duration())
+        
+    def testRemoveEffort(self):
+        self.task.addEffort(self.effort)
+        self.task.removeEffort(self.effort)
+        self.assertEqual(date.TimeDelta(), self.task.duration())
+        
+    def testDuration(self):
+        self.task.addEffort(self.effort)
+        anotherEffort = effort.Effort(self.task, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
+        self.task.addEffort(anotherEffort)
+        self.assertEqual(self.effort.duration() + anotherEffort.duration(), self.task.duration())
+        
+    def addChild(self, parent):
+        child = task.Task()
+        parent.addChild(child)
+        childEffort = effort.Effort(child, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
+        child.addEffort(childEffort)
+        return child, childEffort
+        
+    def testDuration_Recursively(self):
+        self.task.addEffort(self.effort)
+        child, childEffort = self.addChild(self.task)
+        self.assertEqual(self.effort.duration() + childEffort.duration(),
+            self.task.duration(recursive=True))
+            
+    def testDuration_RecursivelyWithGrandChild(self):
+        self.task.addEffort(self.effort)
+        child, childEffort = self.addChild(self.task)
+        grandChild, grandChildEffort = self.addChild(child)
+        self.assertEqual(self.effort.duration() + childEffort.duration() +
+            grandChildEffort.duration(), self.task.duration(recursive=True))
+            
+    def testIsBeingTracked(self):
+        self.task.addEffort(effort.Effort(self.task, date.DateTime.now()))
+        self.failUnless(self.task.isBeingTracked())
+        
+    def testStopTracking(self):
+        self.task.addEffort(effort.Effort(self.task, date.DateTime.now()))
+        self.task.stopTracking()
+        self.failIf(self.task.isBeingTracked())

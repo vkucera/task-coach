@@ -659,14 +659,14 @@ class EffortDelete(NeedsSelectedEffort, EffortCommand, ViewerCommand):
         delete.do()
 
 
-class EffortStart(NeedsSelectedTasks, EffortCommand, ViewerCommand):
+class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
     bitmap = 'start'
     menuText = '&Start tracking effort'
     helpText = 'Start tracking effort for the selected task(s)'
     adjacent = False
     
     def doCommand(self, event):
-        start = command.StartEffortCommand(self.effortList, self.viewer.curselection(),
+        start = command.StartEffortCommand(self.filteredTaskList, self.viewer.curselection(),
             adjacent=self.adjacent)
         start.do()
         
@@ -674,7 +674,7 @@ class EffortStart(NeedsSelectedTasks, EffortCommand, ViewerCommand):
         if not self.viewer.isShowingTasks():
             return False
         return [task for task in self.viewer.curselection() if not
-            (task in self.effortList.getActiveTasks() or task.completed() or task.inactive())]
+            (task.isBeingTracked() or task.completed() or task.inactive())]
 
 
 class EffortStartAdjacent(EffortStart):
@@ -684,20 +684,20 @@ class EffortStartAdjacent(EffortStart):
     adjacent = True
         
     def enabled(self):
-        return bool(self.effortList) and super(EffortStartAdjacent, self).enabled()
+        return (self.taskList.maxDateTime() is not None) and super(EffortStartAdjacent, self).enabled()
 
 
-class EffortStop(EffortCommand):
+class EffortStop(FilterCommand):
     bitmap = 'stop'
     menuText = 'St&op tracking effort'
     helpText = 'Stop tracking effort for the active task(s)'
 
     def doCommand(self, event):
-        stop = command.StopEffortCommand(self.effortList)
+        stop = command.StopEffortCommand(self.filteredTaskList)
         stop.do()
 
     def enabled(self):
-        return bool(self.effortList.getActiveTasks())
+        return bool([task for task in self.filteredTaskList if task.isBeingTracked()])
 
 
 class HelpCommand(UICommand):
@@ -817,9 +817,9 @@ class UICommands(dict):
         self['neweffort'] = EffortNew(mainwindow, effortList, viewer)
         self['editeffort'] = EffortEdit(mainwindow, effortList, viewer)
         self['deleteeffort'] = EffortDelete(effortList, viewer)
-        self['starteffort'] = EffortStart(effortList, viewer)
-        self['starteffortadjacent'] = EffortStartAdjacent(effortList, viewer)
-        self['stopeffort'] = EffortStop(effortList)
+        self['starteffort'] = EffortStart(filteredTaskList, viewer)
+        self['starteffortadjacent'] = EffortStartAdjacent(filteredTaskList, viewer)
+        self['stopeffort'] = EffortStop(filteredTaskList)
         
         # Help menu
         self['helptasks'] = HelpTasks()

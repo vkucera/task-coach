@@ -6,7 +6,7 @@ class ViewerTest(test.wxTestCase):
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
         self.viewer = dummy.ViewerWithDummyWidget(self.frame,
-            self.taskList, effort.EffortList(), {})
+            self.taskList, effort.EffortList(self.taskList), {})
 
     def testSelectTasksThatAreNotInTasklistShouldNotFail(self):
         taskNotInList = task.Task()
@@ -23,7 +23,7 @@ class TaskViewerTest(test.wxTestCase):
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
         self.viewer = dummy.TaskViewerWithDummyWidget(self.frame,
-            self.taskList, effort.EffortList(), {})
+            self.taskList, effort.EffortList(self.taskList), {})
         
     def testSelectCompleted_NoCompletedTasks(self):
         self.viewer.select_completedTasks()
@@ -41,7 +41,7 @@ class TaskListViewerTest(test.wxTestCase):
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
         self.viewer = dummy.TaskListViewerWithDummyWidget(self.frame,
-            self.taskList, effort.EffortList(), {})
+            self.taskList, effort.EffortList(self.taskList), {})
 
     def testGetTimeSpent(self):
         timeSpent = self.viewer.getItemText(0, 5)
@@ -57,7 +57,7 @@ class ViewerBaseClassTest(test.wxTestCase):
         taskList = task.TaskList()
         try:
             baseViewer = gui.viewer.Viewer(self.frame, taskList,
-                effort.EffortList(), {})
+                effort.EffortList(taskList), {})
             self.fail('Expected NotImplementedError')
         except NotImplementedError:
             pass

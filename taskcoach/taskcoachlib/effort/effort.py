@@ -13,7 +13,10 @@ class Effort(patterns.Observable):
     def __setstate__(self, state):
         self.__dict__.update(state)
         self._notifyObserversOfChange()
-        
+    
+    def __copy__(self):
+        return Effort(self._task, self._start, self._stop)
+            
     def task(self):
         return self._task
         
@@ -38,8 +41,11 @@ class Effort(patterns.Observable):
     def getStop(self):
         return self._stop
 
-    def __cmp__(self, other):
-        return cmp(self.getStart(), other.getStart())
+    def __eq__(self, other):
+        return self is other
+        
+    def __lt__(self, other):
+        return self.getStart() < other.getStart()
 
         
 class CompositeEffort(list):

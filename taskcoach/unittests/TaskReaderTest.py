@@ -21,11 +21,11 @@ class TaskReaderVersion1Test(TaskReaderTestCase):
         self.fd.write('.tsk format version 1\n')
         
     def testReadEmptyList(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual([], tasks)
 
     def testVersion(self):    
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual('.tsk format version 1', self.taskReader.version)
 
 
@@ -37,11 +37,11 @@ class TestReaderVersion2Test(TaskReaderTestCase):
         self.fd.write("Task 3,,id3,None,2004-10-10,None,['id2']\n")
         
     def testDescription(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual('Task 1', tasks[0].subject())
         
     def testChildren(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(1, len(tasks[1].children()))
 
 
@@ -56,14 +56,15 @@ class TestReaderVersion3Test(TaskReaderTestCase):
         self.fd.write('"(2005, 1, 9, 23, 23, 40, 6, 9, -1)","(2005, 1, 9, 23, 23, 41, 6, 9, -1)"\n')
 
     def testSubject(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual('Task 1', tasks[0].subject())
         
     def testEffort(self):
-        tasks, efforts = self.writeAndRead()
-        for effort, task in zip(efforts, (tasks[1], tasks[2], tasks[2])):
-            self.assertEqual(date.TimeDelta(seconds=1), effort.duration())
-            self.assertEqual(task, effort.task())
+        tasks = self.writeAndRead()
+        for task in tasks:
+            for effort in task.efforts():
+                self.assertEqual(date.TimeDelta(seconds=1), effort.duration())
+                self.assertEqual(task, effort.task())
 
         
 
@@ -77,14 +78,15 @@ class TestReaderVersion4Test(TaskReaderTestCase):
         self.fd.write('24285680:1106497028.38,"(2005, 1, 23, 17, 17, 15, 6, 23, -1)","(2005, 1, 23, 17, 17, 16, 6, 23, -1)"\n')
         
     def testSubject(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual('New task', tasks[0].subject())
         
     def testEffort(self):
-        tasks, efforts = self.writeAndRead()
-        self.assertEqual(2, len(efforts))
+        tasks = self.writeAndRead()
+        for task in tasks:
+            self.assertEqual(1, len(task.efforts()))
         
     def testTasks(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(1, len(tasks))
         self.assertEqual(1, len(tasks[0].children()))
