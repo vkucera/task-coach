@@ -224,7 +224,7 @@ class EffortEditorTest(TaskEditorTestCase):
         return [theTask]
     
     def createEditor(self):
-        return gui.editor.EffortEditor(wx.Frame(None), self.createCommand())
+        return gui.editor.EffortEditor(wx.Frame(None), self.createCommand(), {})
     
     def testCreate(self):
         self.assertEqual(self.effortList[0].getStart().date(), 

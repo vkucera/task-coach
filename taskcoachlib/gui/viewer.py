@@ -1,4 +1,4 @@
-import patterns, task, command, widgets, effort
+import patterns, task, command, widgets, effort, uicommand
 import menu, color, render
 import wx
 
@@ -212,10 +212,14 @@ class EffortListViewer(ListViewer):
             uiCommands, *args, **kwargs)
 
     def createWidget(self):
+        uiCommands = {}
+        uiCommands.update(self.uiCommands)
+        uiCommands['editeffort'] = uicommand.EffortEdit(self.parent, self.list, self, self.uiCommands)
+        uiCommands['deleteeffort'] = uicommand.EffortDelete(self.list, self)
         widget = widgets.EffortListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr,
-            self.onSelect, self.uiCommands['editeffort'], 
-            menu.EffortPopupMenu(self.parent, self.uiCommands, self.list, self))
+            self.onSelect, uiCommands['editeffort'], 
+            menu.EffortPopupMenu(self.parent, uiCommands, self.list, self))
         widget.SetColumnWidth(0, 150)
         widget.SetColumnWidth(1, 300)
         return widget

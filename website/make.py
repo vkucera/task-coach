@@ -41,6 +41,11 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.27 - April 4, 2005</H4>
+        Features added:
+        <UL>
+        <LI>Tasks can have a budget.
+        </UL>
         <H4>Release 0.26 - March 28, 2005</H4>
         Bugs fixed:
         <UL>
@@ -197,9 +202,9 @@ pages['features'] = \
             <LI>Settings are persistent and saved automatically. The
             last opened file is loaded automatically when starting
             %(name)s.
-            <LI>Track time spent on tasks. Time spent can
-            be viewed by individual effort period, by day, by week, and
-            by month.
+            <LI>Track time spent on tasks. Tasks can have a budget. 
+            Time spent can be viewed by individual effort period, by day, 
+            by week, and by month.
             <LI>Export of tasks to XML. 
         </UL>
         <H3>Missing features</H3>

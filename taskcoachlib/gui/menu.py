@@ -121,10 +121,5 @@ class TaskPopupMenu(Menu):
 class EffortPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands, effortList, effortViewer):
         super(EffortPopupMenu, self).__init__(mainwindow)
-        # We have to create these two uicommands on the fly because the effortViewer is a dialog,
-        # which gets destroyed. Hence, we cannot create these uicommands once and reuse them like
-        # we do for the uicommands that are used in the main window.
-        editEffort = uicommand.EffortEdit(mainwindow, effortList, effortViewer)
-        deleteEffort = uicommand.EffortDelete(effortList, effortViewer)
-        self.appendUICommands(uiCommands, ['new', None, editEffort, deleteEffort,
+        self.appendUICommands(uiCommands, ['new', None, 'editeffort', 'deleteeffort',
             None, 'stopeffort'])
