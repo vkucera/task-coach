@@ -396,3 +396,9 @@ class TaskEffortTest(test.TestCase):
         self.task.addEffort(effort.Effort(self.task, date.DateTime.now()))
         self.task.stopTracking()
         self.failIf(self.task.isBeingTracked())
+        
+    def testEffortsRecursive(self):
+        self.task.addEffort(self.effort)
+        child, childEffort = self.addChild(self.task)
+        self.assertEqual([self.effort, childEffort],
+            self.task.efforts(recursive=True))

@@ -19,11 +19,11 @@ def addEffortViewers(viewerContainer, effortList, uiCommands):
     _addEffortViewers(effortViewerContainer, effortList, uiCommands)
     viewerContainer.addViewer(effortViewerContainer, 'Effort', 'start')
 
-def addTaskViewers(viewerContainer, filteredTaskList, effortList, uiCommands):
+def addTaskViewers(viewerContainer, filteredTaskList, uiCommands):
     listViewer = viewer.TaskListViewer(viewerContainer, filteredTaskList, 
-        effortList, uiCommands)
+        uiCommands)
     viewerContainer.addViewer(listViewer, 'Task list', 'listview')
     treeViewer = viewer.TaskTreeViewer(viewerContainer, filteredTaskList, 
-        effortList, uiCommands)
+        uiCommands)
     viewerContainer.addViewer(treeViewer, 'Task tree', 'treeview')
         

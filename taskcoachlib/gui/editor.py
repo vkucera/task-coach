@@ -123,13 +123,12 @@ class TaskEditBook(widgets.Listbook):
     
     def addEffortPage(self):
         effortPage = Page(self, columns=3)
-        effortPage.addEntry('Time spent:', 
-            render.timeSpent(self._effortList.getTimeSpentForTask(self._task)))
+        effortPage.addEntry('Time spent:', render.timeSpent(self._task.duration()))
         if self._task.children():
             effortPage.addEntry('Total time spent:',
-                render.timeSpent(self._effortList.getTotalTimeSpentForTask(self._task)), 
+                render.timeSpent(self._task.duration(recursive=True)), 
                 '(Time spent on this task and all of its subtasks)')
-        if self._effortList.getTotalTimeSpentForTask(self._task):
+        if self._task.duration(recursive=True):
             import viewercontainer, viewerfactory, effort
             viewerContainer = viewercontainer.ViewerChoicebook(effortPage)
             myEffortList = effort.SingleTaskEffortList(self._task, self._effortList)

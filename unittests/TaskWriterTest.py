@@ -126,7 +126,7 @@ class XMLWriterTest(test.TestCase):
             xmlDocument.getElementsByTagName('task')[0].getAttribute(attribute))
 
     def writeAndParse(self):
-        self.writer.write(self.taskList, [])
+        self.writer.write(self.taskList)
         self.fd.reset()
         return xml.dom.minidom.parse(self.fd)
                 

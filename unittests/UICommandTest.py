@@ -33,3 +33,8 @@ class UICommandTest(test.wxTestCase):
         wx.FutureCall(1, lambda: self.frame.Command(self.uicommand.id()))
         wx.FutureCall(2, lambda: self.app.ExitMainLoop())
         self.app.MainLoop()
+
+
+class UICommandsTest(test.wxTestCase):
+    def testCreate(self):
+        gui.uicommand.UICommands(None, None, None, None, None, None)
