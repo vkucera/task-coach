@@ -1,5 +1,6 @@
 import test, asserts, task, date, time, wx
 
+__coverage__ = [task.Task]
 
 class TaskTest(test.TestCase, asserts.TaskAsserts):
 
@@ -134,7 +135,7 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
     def testBudget_SetBudget(self):
         self.task.setBudget(date.TimeDelta(hours=1))
         self.assertEqual(date.TimeDelta(hours=1), self.task.budget())
-        
+             
 
 class SubTaskTest(test.TestCase, asserts.TaskAsserts):
     def setUp(self):
@@ -315,7 +316,9 @@ class CompareTasksTest(test.TestCase):
         self.failUnless(task1 != noDueDate)
         self.failUnless(task2 != noDueDate)
         self.failUnless(task1 < task2 < noDueDate)
+        self.failUnless(task1 <= task2 <= noDueDate)
         self.failUnless(noDueDate > task2 > task1)
+        self.failUnless(noDueDate >= task2 >= task1)
         self.failUnless(task1 == task1)
         self.failUnless(noDueDate == noDueDate)
 

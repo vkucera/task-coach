@@ -1,6 +1,7 @@
 from taskcoachlib import patterns, date
 import time, copy
 
+
 class Task(patterns.Observable):
     sep = '|'
    
