@@ -30,7 +30,7 @@ class TaskEditorTestCase(test.TestCase):
         self.taskList = task.TaskList()
         self.taskList.extend(self.createTasks())
         self.editor = gui.editor.TaskEditor(wx.Frame(None), self.createCommand(),
-            effort.EffortList(self.taskList), {})
+            {})
 
     def tearDown(self):
         self.editor.Destroy()
@@ -206,6 +206,7 @@ class FocusTest(TaskEditorTestCase, test.wxTestCase):
         return command.NewTaskCommand(self.taskList)
 
     def testFocus(self):
+        wx.Yield()
         self.assertEqual(self.editor[0]._subjectEntry, self.editor.FindFocus())
         
 

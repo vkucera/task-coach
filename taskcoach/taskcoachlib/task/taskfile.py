@@ -17,7 +17,7 @@ class TaskFile(tasklist.TaskList):
     def setFilename(self, filename):
         self._filename = filename
 
-    def notifyNeedSave(self, *args):
+    def notifyNeedSave(self, *args, **kwargs):
         self._needSave = True
 
     def filename(self):

@@ -15,15 +15,15 @@ class Filter(patterns.ObservableListObserver):
         self._addItemsIfNecessary(items)
         self._removeItemsIfNecessary(items)
 
-    def notifyChange(self, items):
+    def notifyChange(self, items, *args, **kwargs):
         itemsChanged = [item for item in items if self.filter(item) and item in self]
         self._addOrRemoveItemsIfNecessary(items)
-        super(Filter, self).notifyChange(itemsChanged)
+        super(Filter, self).notifyChange(itemsChanged, *args, **kwargs)
         
-    def notifyAdd(self, items):
+    def notifyAdd(self, items, *args, **kwargs):
         self._addItemsIfNecessary(items)
         
-    def notifyRemove(self, items):
+    def notifyRemove(self, items, *args, **kwargs):
         self._removeItemsIfNecessary(items)
         
     def resetFilter(self):

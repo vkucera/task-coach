@@ -1,11 +1,11 @@
 import patterns, effort
 
 class EffortReducer(patterns.ObservableListObserver):
-    def notifyChange(self, changedEfforts):
+    def notifyChange(self, changedEfforts, *args, **kwargs):
         self.notifyRemove(changedEfforts)
         self.notifyAdd(changedEfforts)
 
-    def notifyAdd(self, newEfforts):
+    def notifyAdd(self, newEfforts, *args, **kwargs):
         for newEffort in newEfforts:
             for compositeEffort in self:
                 if self.effortFitsInComposite(compositeEffort, newEffort):
@@ -15,7 +15,7 @@ class EffortReducer(patterns.ObservableListObserver):
                 newComposite = effort.CompositeEffort([newEffort])
                 self._extend([newComposite])
 
-    def notifyRemove(self, removedEfforts):
+    def notifyRemove(self, removedEfforts, *args, **kwargs):
         for removedEffort in removedEfforts:
             for compositeEffort in self:
                 if removedEffort in compositeEffort:

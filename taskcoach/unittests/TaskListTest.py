@@ -9,7 +9,7 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
         self.task3 = task.Task()
         self.notifications = 0
 
-    def notify(self, observable):
+    def notify(self, observable, *args, **kwargs):
         self.notifications += 1
 
     def testCreate(self):
@@ -101,7 +101,7 @@ class NotificationTimingTest(test.TestCase):
         self.notifications = 0
         self.assertions = {}
 
-    def notify(self, observable):
+    def notify(self, observable, *args, **kwargs):
         self.notifications += 1
         self.assertions.get(self.notifications, lambda: 1)()
 
@@ -134,7 +134,7 @@ class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts,
         self.taskList.registerObserver(self.notify, self.notify, self.notify)
         self.notifications = 0
 
-    def notify(self, observable):
+    def notify(self, observable, *args, **kwargs):
         self.notifications += 1
 
     def testRemoveTask(self):

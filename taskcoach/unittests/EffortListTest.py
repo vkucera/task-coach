@@ -51,36 +51,39 @@ class SingleTaskEffortListTest(test.TestCase):
     def assertResult(self, expectedLength, expectedNotifications):
         self.assertEqual(expectedLength, len(self.singleTaskEffortList))
         self.assertEqual(expectedNotifications, self.notifications)
+    
+    def addChild(self):
+        self.task.addChild(self.child)
+        self.child.addEffort(self.childEffort)
         
     def testCreate(self):
         self.assertResult(0, 0)
         
-    def testAddEffortToOriginalForTheTask(self):
+    def testAddEffort(self):
         self.task.addEffort(self.effort)
         self.assertResult(1, 1)
                 
-    def testChangeEffortForTheTask(self):
+    def testChangeEffort(self):
         self.task.addEffort(self.effort)
         self.effort.setStop(date.DateTime.now())
         self.assertResult(1, 2)
         
-    def testRemoveEffortForTheTask(self):
+    def testRemoveEffort(self):
         self.task.addEffort(self.effort)
         self.task.removeEffort(self.effort)
         self.assertResult(0, 2)
         
     def testCreateWhenEffortListIsFilled(self):
+        self.addChild()
         self.task.addEffort(self.effort)
-        singleTaskEffortList = effort.SingleTaskEffortList(self.task)
-        self.assertResult(1, 1)
+        self.singleTaskEffortList = effort.SingleTaskEffortList(self.task)
+        self.assertResult(2, 2)
         
     def testChildrensEffortIsIncludedToo(self):
-        self.task.addChild(self.child)
+        self.addChild()
         self.task.addEffort(self.effort)
-        self.task.addEffort(self.childEffort)
         self.assertResult(2, 2)
         
     def testChildrensEffortIsIncludedTooEvenWhenParentHasNoEffort(self):
-        self.task.addChild(self.child)
-        self.child.addEffort(self.childEffort)
+        self.addChild()
         self.assertResult(1, 1)

@@ -25,7 +25,7 @@ class StatusBar(wx.StatusBar):
             self._displayStatus()
         event.Skip()
 
-    def notify(self, *args):
+    def notify(self, *args, **kwargs):
         # Give viewer a chance to update first:
         wx.CallAfter(self._displayStatus)
 

@@ -79,10 +79,9 @@ class Page(wx.Panel):
 
 
 class TaskEditBook(widgets.Listbook):
-    def __init__(self, parent, task, effortList, uiCommands, *args, **kwargs):
+    def __init__(self, parent, task, uiCommands, *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
         self._task = task
-        self._effortList = effortList
         self._uiCommands = uiCommands
         self.addSubjectPage()
         self.addDatesPage()
@@ -131,7 +130,7 @@ class TaskEditBook(widgets.Listbook):
         if self._task.duration(recursive=True):
             import viewercontainer, viewerfactory, effort
             viewerContainer = viewercontainer.ViewerChoicebook(effortPage)
-            myEffortList = effort.SingleTaskEffortList(self._task, self._effortList)
+            myEffortList = effort.SingleTaskEffortList(self._task)
             viewerfactory._addEffortViewers(viewerContainer, myEffortList, self._uiCommands)
             effortPage.addEntry('Effort lists:', viewerContainer, growable=True)
         self.AddPage(effortPage, 'Effort', 'start')
@@ -205,18 +204,17 @@ class EditorWithCommand(widgets.TabbedDialog):
 
             
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, effortList, uiCommands, bitmap='edit', *args, **kwargs):
-        self._effortList = effortList
+    def __init__(self, parent, command, uiCommands, bitmap='edit', *args, **kwargs):
         self._uiCommands = uiCommands
         super(TaskEditor, self).__init__(parent, command, bitmap, *args, **kwargs)
-        self[0]._subjectEntry.SetFocus()
+        wx.CallAfter(self[0]._subjectEntry.SetFocus)
         
     def addPages(self):
         for task in self._command.items:
             self.addPage(task)
 
     def addPage(self, task):
-        page = TaskEditBook(self._notebook, task, self._effortList, self._uiCommands)
+        page = TaskEditBook(self._notebook, task, self._uiCommands)
         self._notebook.AddPage(page, str(task))
         
     

@@ -6,8 +6,23 @@ class List(list):
         for item in items:
             # Prevent overridden remove method from being invoked
             list.remove(self, item) 
-            
 
+    
+class Notification(object):
+    ''' Notification represents notification events. There is one mandatory 
+        attribute: source. Other attributes are set as needed through kwargs. 
+        A receiver of a notification can query the attributes. Non-existent
+        attributes have a default value of []. '''
+        
+    def __init__(self, source, *args, **kwargs):
+        self.source = source
+        self.__dict__.update(kwargs)
+        super(Notification, self).__init__(*args, **kwargs)
+        
+    def __getattr__(self, attr):
+        return []
+        
+        
 class Observable(object):
     ''' Observable objects can be observed by registering (subscribing) a 
         callback method with Observable.registerObserver. The callback is 
@@ -35,12 +50,13 @@ class Observable(object):
         ''' Remove a callback that was registered earlier. '''
         self._changeCallbacks.remove(callback)
 
-    def _notifyObserversOfChange(self, changedObject=None):
+    def _notifyObserversOfChange(self, changedObject=None, notification=None):
         if not self._notifying:
             return
         changedObject = changedObject or self
+        notification = notification or Notification(changedObject)
         for callback in self._changeCallbacks:
-            callback(changedObject)
+            callback(changedObject, notification)
 
 
 class ObservablesList(List):
@@ -133,7 +149,7 @@ class ObservableList(Observable, List):
             
     def _notifyObserversOfRemovedItems(self, items):
         self._callback(self._removeCallbacks, items)
-            
+    
     def append(self, item):
         super(ObservableList, self).append(item)
         self._notifyObserversOfNewItems([item])
@@ -171,7 +187,7 @@ class ObservableList(Observable, List):
 class ObservableObservablesList(ObservableList, ObservablesList):
     ''' A list of observables that is observable. '''
     
-    def notifyChange(self, item):
+    def notifyChange(self, item, *args, **kwargs):
         self._notifyObserversOfChange([item])
 
 
@@ -185,19 +201,19 @@ class ObservableListObserver(ObservableList):
             self.notifyChange)
         self.notifyAdd(self._observedList)
 
-    def notifyChange(self, items):
+    def notifyChange(self, items, *args, **kwargs):
         ''' This method should be overriden to provide some useful
             behavior, like filtering the original list. '''
         if items:
             self._notifyObserversOfChange(items)
         
-    def notifyAdd(self, items):
+    def notifyAdd(self, items, *args, **kwargs):
         ''' This method should be overriden to provide some useful
             behavior, like filtering the original list. '''
         if items:
             self._notifyObserversOfNewItems(items)
         
-    def notifyRemove(self, items):
+    def notifyRemove(self, items, *args, **kwargs):
         ''' This method should be overriden to provide some useful
             behavior, like filtering the original list. '''        
         if items:

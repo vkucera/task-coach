@@ -95,7 +95,7 @@ class MainWindow(WindowWithPersistentDimensions):
         except:
             return False
 
-    def SetTitle(self, event=None):
+    def SetTitle(self, *args, **kwargs):
         title = meta.name
         filename = self.iocontroller.filename()
         if filename:

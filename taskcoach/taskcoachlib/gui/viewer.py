@@ -59,7 +59,7 @@ class Viewer(patterns.Observable, wx.Panel):
     def createSorter(self, *args):
         raise NotImplementedError
 
-    def notify(self, items):
+    def notify(self, items, *args, **kwargs):
         self.widget.refresh(len(self.list))
         self._notifyObserversOfChange()
         
