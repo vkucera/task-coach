@@ -1,12 +1,16 @@
 import patterns, date
 
 class Effort(patterns.Observable):
-    def __init__(self, task, start=None, stop=None, *args, **kwargs):
+    def __init__(self, task, start=None, stop=None, description='', *args, **kwargs):
         super(Effort, self).__init__(*args, **kwargs)
         self._task = task
         self._start = start or date.DateTime.now()
         self._stop = stop
-    
+        self._description = description
+        
+    def __str__(self):
+        return 'Effort(%s, %s, %s)'%(self._task, self._start, self._stop)
+        
     def __getstate__(self):
         return {'_task' : self._task, '_start' : self._start, '_stop' : self._stop }
         
@@ -43,7 +47,14 @@ class Effort(patterns.Observable):
         
     def getStop(self):
         return self._stop
-
+        
+    def setDescription(self, description):
+        self._description = description
+        self.notifyObservers(patterns.observer.Notification(self))
+        
+    def getDescription(self):
+        return self._description
+        
     def __eq__(self, other):
         return self._task == other._task and self._start == other._start and \
             self._stop == other._stop

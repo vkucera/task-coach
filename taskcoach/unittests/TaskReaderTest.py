@@ -90,3 +90,31 @@ class TestReaderVersion4Test(TaskReaderTestCase):
         tasks = self.writeAndRead()
         self.assertEqual(1, len(tasks))
         self.assertEqual(1, len(tasks[0].children()))
+
+class TestReaderVersion5Test(TaskReaderTestCase):
+    def write(self):
+        self.fd.write('.tsk format version 5\n')
+        self.fd.write("New task,,24247504:1106497024.73,None,2005-01-23,None,['24285680:1106497028.38']\n")
+        self.fd.write("New subtask,,24285680:1106497028.38,None,2005-01-23,None,[]\n")
+        self.fd.write("effort:\n")
+        self.fd.write('24247504:1106497024.73,"(2005, 1, 23, 17, 17, 12, 6, 23, -1)","(2005, 1, 23, 17, 17, 13, 6, 23, -1)",description\n')
+        self.fd.write('24285680:1106497028.38,"(2005, 1, 23, 17, 17, 15, 6, 23, -1)","(2005, 1, 23, 17, 17, 16, 6, 23, -1)",\n')
+    
+    def testSubject(self):
+        tasks = self.writeAndRead()
+        self.assertEqual('New task', tasks[0].subject())
+        
+    def testEffort(self):
+        tasks = self.writeAndRead()
+        efforts = []
+        for task in tasks:
+            efforts.extend(task.efforts())
+            self.assertEqual(1, len(task.efforts()))
+        for effort, description in zip(efforts, ['description', '']):
+            self.assertEqual(description, effort.getDescription())
+            
+    def testTasks(self):
+        tasks = self.writeAndRead()
+        self.assertEqual(1, len(tasks))
+        self.assertEqual(1, len(tasks[0].children()))
+            

@@ -167,6 +167,7 @@ class EffortEditBook(Page):
         self._editor = editor
         self._effort = effort
         self.addStartAndStopEntries()
+        self.addDescriptionEntry()
         
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
@@ -176,9 +177,16 @@ class EffortEditBook(Page):
         self.addEntry('Start:', self._startEntry)
         self.addEntry('Stop:', self._stopEntry)
         
+    def addDescriptionEntry(self):
+        self._descriptionEntry = wx.TextCtrl(self, -1, 
+            self._effort.getDescription(), style=wx.TE_MULTILINE)
+        self._descriptionEntry.SetSizeHints(400, 150)
+        self.addEntry('Description:', self._descriptionEntry)
+        
     def ok(self):
         self._effort.setStart(self._startEntry.GetValue())
         self._effort.setStop(self._stopEntry.GetValue())
+        self._effort.setDescription(self._descriptionEntry.GetValue())
 
     def preventNegativeEffortDuration(self, *args, **kwargs):
         if not hasattr(self, '_stopEntry'): # check that both entries have been created

@@ -1,16 +1,6 @@
-import patterns, effort, sets, time
+import patterns, effort, sets, time, log
 
-def log(message):
-    if 1:
-        return
-    import sys
-    callerFrame = sys._getframe().f_back
-    methodName = callerFrame.f_code.co_name
-    if 'self' in callerFrame.f_locals:
-        className = callerFrame.f_locals['self'].__class__.__name__
-        methodName = '%s.%s'%(className, methodName)
-    print '%.4f: %s: %s'%(time.clock(), methodName, message)
-    
+        
 class EffortReducer(patterns.ObservableListObserver):     
     def __init__(self, *args, **kwargs):
         self.__taskAndTimeToCompositesMapping = {}
@@ -18,19 +8,14 @@ class EffortReducer(patterns.ObservableListObserver):
         super(EffortReducer, self).__init__(*args, **kwargs)
         
     def onNotify(self, notification, *args, **kwargs):
-        log(notification)
         self.stopNotifying()
         effortsRemoved, changedComposites1 = self.removeEfforts(notification.itemsRemoved + notification.itemsChanged)
-        log('after removeEfforts')
         effortsAdded, changedComposites2 = self.addEfforts(notification.itemsAdded + notification.itemsChanged)
-        log('after addEfforts')
         self.startNotifying()
         changedComposites = changedComposites1 + changedComposites2
-        log('before notifyObservers')
         self.notifyObservers(patterns.observer.Notification(self, 
             itemsAdded=effortsAdded, itemsRemoved=effortsRemoved, 
             itemsChanged=changedComposites))
-        log('before notifyObservers')
                 
     def addEfforts(self, newEfforts):
         newComposites = []
@@ -78,3 +63,4 @@ class EffortPerWeek(EffortReducer):
 class EffortPerMonth(EffortReducer):
     def timePeriod(self, effort):
         return effort.getStart().startOfMonth(), effort.getStart().endOfMonth()
+        

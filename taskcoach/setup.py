@@ -13,7 +13,7 @@ setupOptions = {
     'license' : meta.license,
     'packages' : ["taskcoachlib."+subpackage for subpackage in 
         ["meta", "config", "date", "command", "widgets", "gui", "task",
-        "effort", "patterns"]] + ["taskcoachlib"], 
+        "log", "effort", "patterns"]] + ["taskcoachlib"], 
     'scripts' : ["taskcoach.py", "taskcoach.pyw"],
     'classifiers' : [\
         'Development Status :: 3 - Alpha',

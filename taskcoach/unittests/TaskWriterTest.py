@@ -112,6 +112,24 @@ class WriteAndReadTasksWithChildrenTest(TaskWriterAndReaderTestCase):
         tasks = self.writeAndRead()
         self.assertEqual(2, len(tasks[0].allChildren()))
 
+class WriteEffortTest(TaskWriterAndReaderTestCase):
+    def setUp(self):
+        taskWithEffort = task.Task()
+        self.effort = effort.Effort(taskWithEffort, description='Yo')
+        taskWithEffort.addEffort(self.effort)
+        self.tasksToWrite = [taskWithEffort]
+        super(WriteEffortTest, self).setUp()
+        
+    def testEffort(self):
+        tasks = self.writeAndRead()
+        self.assertEqual(self.effort.task(), tasks[0])
+        effortRead = tasks[0].efforts()[0]
+        # microseconds get lost, so straight compare doesn't work:
+        self.assertEqual(self.effort.getStart().date(), effortRead.getStart().date())
+        self.assertEqual(self.effort.getStop(), effortRead.getStop())
+        self.assertEqual(self.effort.getDescription(), effortRead.getDescription())
+
+        
 import xml
 class XMLWriterTest(test.TestCase):
     def setUp(self):
@@ -131,6 +149,7 @@ class XMLWriterTest(test.TestCase):
         effortNode = xmlDocument.documentElement.getElementsByTagName('effort')[0]
         self.assertEqual(str(effort.getStart()), effortNode.getAttribute('start'))
         self.assertEqual(str(effort.getStop()), effortNode.getAttribute('stop'))
+        self.assertEqual(effort.getDescription(), effortNode.getAttribute('description'))
 
     def writeAndParse(self):
         self.writer.write(self.taskList)
@@ -175,7 +194,7 @@ class XMLWriterTest(test.TestCase):
 
     def testEffort(self):
         self.assertEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
-            date.DateTime(2004,1,2)))
+            date.DateTime(2004,1,2), 'description'))
         
     def testActiveEffort(self): 
         self.assertEffort(effort.Effort(self.task, date.DateTime(2004,1,1)))

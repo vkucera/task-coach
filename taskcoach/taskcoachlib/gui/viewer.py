@@ -62,7 +62,7 @@ class Viewer(patterns.Observable, wx.Panel):
     def onNotify(self, notification, *args, **kwargs):
         if notification.itemsAdded or notification.itemsChanged or notification.itemsRemoved:
             self.widget.refresh(len(self.list))
-            self.notifyObservers(patterns.observer.Notification(self, notification))
+            self.notifyObservers(patterns.observer.Notification(self))
         
     def onSelect(self, *args):
         self.notifyObservers(patterns.observer.Notification(self))
@@ -250,7 +250,7 @@ class EffortListViewer(ListViewer):
         return True
 
     def renderPeriod(self, effort, previousEffort=None):
-        if previousEffort and self.equalPeriod(effort, previousEffort):
+        if previousEffort and effort.getStart() == previousEffort.getStart():
             return self.renderRepeatedPeriod(effort)
         else:
             return self.renderEntirePeriod(effort)
@@ -260,9 +260,6 @@ class EffortListViewer(ListViewer):
         
     def renderEntirePeriod(self, effort):
         return render.dateTimePeriod(effort.getStart(), effort.getStop())
-
-    def equalPeriod(self, effort1, effort2):
-        return False
 
 
 class CompositeEffortListViewer(EffortListViewer):
@@ -288,9 +285,6 @@ class EffortPerDayViewer(CompositeEffortListViewer):
     def renderEntirePeriod(self, compositeEffort):
         return render.date(compositeEffort.getStart().date())
     
-    def equalPeriod(self, effort1, effort2):
-        return effort1.getStart().date() == effort2.getStart().date()
-
         
 class EffortPerWeekViewer(CompositeEffortListViewer):
     def createSorter(self, effortList):
@@ -299,9 +293,6 @@ class EffortPerWeekViewer(CompositeEffortListViewer):
     def renderEntirePeriod(self, compositeEffort):
         return render.weekNumber(compositeEffort.getStart())
 
-    def equalPeriod(self, effort1, effort2):
-        return effort1.getStart().weeknumber() == effort2.getStart().weeknumber()
-
 
 class EffortPerMonthViewer(CompositeEffortListViewer):
     def createSorter(self, effortList):
@@ -309,6 +300,4 @@ class EffortPerMonthViewer(CompositeEffortListViewer):
         
     def renderEntirePeriod(self, compositeEffort):
         return render.month(compositeEffort.getStart())
-        
-    def equalPeriod(self, effort1, effort2):
-        return effort1.getStart().month == effort2.getStart().month
+
