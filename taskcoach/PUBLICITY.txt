@@ -1,0 +1,9 @@
+Task Coach is listed at the following webpages:
+
+Task Coach Homepage http://taskcoach.niessink.com
+wxPythonPit         http://wiki.wxpython.org/index.cgi/wxPythonPit_20Apps
+PythonInfo Wiki     http://www.python.org/moin/Applications
+Open Directory      http://dmoz.org/Computers/Software/Freeware/Personal_Information_Managers/
+Vaults of Parnassus http://py.vaults.ca
+Python Packages Index http://www.python.org/pypi
+Freeware Home       http://www.freewarehome.com/ (submitted 20041018)

@@ -1,0 +1,126 @@
+h1 { 
+  font-family: Verdana, arial, helvetica, sans-serif; 
+  font-size: 24pt;
+  line-height: 30pt;
+  font-weight: 100; 
+  margin: 0px; 
+  text-align: center;
+}
+
+h2 { 
+    font-family: Verdana, arial, helvetica, sans-serif; 
+    font-size: 20px;
+    font-weight: normal;
+    padding-bottom: 5px;
+    border-bottom: 1px solid black;
+    /* letter-spacing: .1em; */
+}
+
+h3 { 
+  background-color: #C0C0C0;
+  font-size: 12px; 
+  line-height: 100%; 
+  margin: 1px; 
+}
+
+body {
+  background-color: #DDDDDD;
+  font-family: Verdana, arial, helvetica, sans-serif; 
+  font-size: 10pt;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+ul.plain {
+    list-style-type: none;
+    margin-left: 5px;
+    padding-left: 5px;
+}
+
+a { 
+    color: #0066FF;
+    text-decoration:none; 
+}
+
+a:hover { 
+    text-decoration: underline; 
+}
+
+a:visited { 
+    color: #006699;
+}
+
+table, tr {
+    border-style:solid;
+    border-width:1px;
+    border-color:#FFFFFF;
+}
+
+#banner { 
+    font-family:verdana, arial, sans-serif;
+    color:#4B4B4B;
+    background:#C0C0C0;
+    font-size:20px;
+    font-weight:bold;
+    border:1px dotted #4B4B4B;
+    padding-top:15px; 
+    padding-bottom:15px; 
+    text-transform:uppercase;
+    text-align:center;
+    letter-spacing: .2em;
+}
+
+#content { 
+    float:left;
+    position: absolute;
+    width:70%;
+    overflow:clip;
+    padding-top: 15px;
+    padding-right: 2%;
+}
+
+#content h3 {
+    background-color: #C3C3C3;
+    font-size: 11px; 
+    padding:5px;
+    margin-bottom:10px;
+    font-weight:normal;
+}
+
+
+#links { 
+    float: left;
+    position: absolute;
+    left: 72%;
+    width: 24%;
+    margin-left:2%; 
+    padding-top: 15px;
+    border-left: 1px dotted #4B4B4B;
+}
+
+#links h4 {
+    color:#FFFFFF;
+    background:#4B4B4B;
+    font-size:12px;
+    font-weight:bold;
+    line-height:14px;
+    padding:2px;
+    text-align:center;
+    text-transform:uppercase;
+    letter-spacing: .2em;
+}
+
+#links ul { 
+    list-style-type: none; 
+    margin-left: 0px;
+    padding-left: 5px;
+}
+
+#links li {
+    text-align: left;
+}
+
+img { 
+  border: none;
+}
+
