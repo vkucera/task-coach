@@ -1,5 +1,7 @@
 import test, effort, task, date
 
+__coverage__ = [effort.Effort]
+
 class EffortTest(test.TestCase):
     def setUp(self):
         self.task = task.Task()

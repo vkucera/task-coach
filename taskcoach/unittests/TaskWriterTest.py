@@ -136,7 +136,13 @@ class XMLWriterTest(test.TestCase):
         self.writer.write(self.taskList)
         self.fd.reset()
         return xml.dom.minidom.parse(self.fd)
-                
+    
+    def testVersion(self):
+        import meta
+        xmlDocument = self.writeAndParse()
+        lines = xmlDocument.toxml()
+        self.failUnless('<?taskcoach release="%s"'%meta.data.version in lines)
+        
     def testTaskSubject(self):
         self.task.setSubject('Subject')
         self.assertTaskAttribute(self.task.subject(), 'subject')

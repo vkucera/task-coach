@@ -128,7 +128,7 @@ class TestOptionParser(config.OptionParser):
             '__coverage__ attribute in the unittest file. __coverage__ is '
             'a list of classes or modules to watch for being covered by the '
             'unittests.')
-        coverage.add_option('-C', '--coverage', default=False, 
+        coverage.add_option('-C', '--coverage', default=True, 
             action='store_true', help='Add one unittest to test for coverage')
         return coverage
         

@@ -33,15 +33,18 @@ class TaskWriter:
             for effort in efforts:
                 self.writer.writerow(self.effortAttributes(effort))
                 
-import xml.dom
+import xml.dom, meta
 class XMLWriter:
     def __init__(self, fd, versionnr=5):
         self.fd = fd
-        self.version = '.tsk format version %d'%versionnr
+        self.versionnr = versionnr
         
     def write(self, taskList):
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, "tasks", None)
+        pi = self.document.createProcessingInstruction('taskcoach', 
+            'release="%s" tskversion="%d"'%(meta.data.version, self.versionnr))
+        self.document.insertBefore(pi, self.document.documentElement)
         for task in taskList.rootTasks():
             self.document.documentElement.appendChild(self.taskNode(task))
         self.document.writexml(self.fd, addindent=' ', newl='\n')
