@@ -41,6 +41,20 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.28 - April 6, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>Hitting return or double click to edit effort in the task editor 
+        now works (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1172164&group_id=130831&atid=719134">1172164</A>).
+        <LI>Subtasks with the same name would only be visible once in the task 
+        tree view.
+        </UL>
+        Features added:
+        <UL>
+        <LI>You can hide composite tasks in the task list view so that only 
+        leaf tasks are visible. Menu item 'View' -> 'Tasks with subtasks'. 
+        Requested by Brian Crounse.
+        </UL>
         <H4>Release 0.27 - April 4, 2005</H4>
         Features added:
         <UL>

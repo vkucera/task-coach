@@ -4,23 +4,26 @@ import re
 class Filter(patterns.ObservableListObserver):
     def onNotify(self, notification, *args, **kwargs):
         self.stopNotifying()
-        itemsAdded = self._addItemsIfNecessary(notification.itemsAdded + notification.itemsChanged)
-        itemsRemoved = self._removeItemsIfNecessary(notification.itemsRemoved + notification.itemsChanged)
+        changedItemsNotInSelf = [item for item in notification.itemsChanged if item not in self]
+        itemsAdded = self._addItemsIfNecessary(notification.itemsAdded + changedItemsNotInSelf)
+        changedItemsInSelf = [item for item in notification.itemsChanged if item in self]
+        itemsRemoved = self._removeItemsIfNecessary(notification.itemsRemoved + changedItemsInSelf)
         self.startNotifying()
-        itemsChanged = [item for item in notification.itemsChanged if item in self]
+        itemsChanged = [item for item in notification.itemsChanged if item not in itemsAdded+itemsRemoved and item in self]
         self.notifyObservers(patterns.observer.Notification(self, itemsAdded=itemsAdded,
             itemsRemoved=itemsRemoved, itemsChanged=itemsChanged))
         
     def _addItemsIfNecessary(self, items):
-        itemsToAdd = [item for item in items if self.filter(item) and not item in self]
+        itemsToAdd = [item for item in items if self.filter(item) and item not in self]
         self._extend(itemsToAdd)
         return itemsToAdd
         
     def _removeItemsIfNecessary(self, items):
         itemsToRemove = [item for item in items if item in self and (not self.filter(item) \
-            or not item in self.original())]
+            or item not in self.original())]
         self._removeItems(itemsToRemove)
-        return itemsToRemove            
+        return itemsToRemove    
+                        
     def resetFilter(self):
         self.onNotify(patterns.observer.Notification(self.original(), itemsChanged=self.original()))
         
@@ -57,7 +60,7 @@ class ViewFilter(Filter):
                         'Unlimited' : date.Date }
         self._viewTasksDueBeforeDate = dateFactory[dateString]()
         self.resetFilter()
-      
+              
     def filter(self, task):
         if task.completed() and not self._viewCompletedTasks:
             return False
@@ -68,6 +71,22 @@ class ViewFilter(Filter):
         return True
 
 
+class CompositeFilter(Filter):
+    ''' Filter composite tasks '''
+    def __init__(self, taskList):
+        self._viewCompositeTasks = True
+        super(CompositeFilter, self).__init__(taskList)
+
+    def setViewCompositeTasks(self, viewCompositeTasks):
+        self._viewCompositeTasks = viewCompositeTasks
+        self.resetFilter()
+
+    def filter(self, task):
+        if task.children() and not self._viewCompositeTasks:
+            return False
+        else:
+            return True
+    
 
 class SearchFilter(Filter):
     def __init__(self, taskList):

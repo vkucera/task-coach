@@ -50,7 +50,7 @@ class ViewMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewcompletedtasks',
-            'viewinactivetasks'])
+            'viewinactivetasks', 'viewcompositetasks'])
 
         self.AppendMenu(-1, 'Tasks due before end of',
             ViewTasksByDueDateMenu(mainwindow, uiCommands))

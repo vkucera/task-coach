@@ -7,7 +7,7 @@ class Viewer(patterns.Observable, wx.Panel):
         super(Viewer, self).__init__(parent, -1)
         self.parent = parent
         self.uiCommands = uiCommands
-        self.list = self.createSorter(list)
+        self.list = self.createSorter(self.createFilter(list))
         self.list.registerObserver(self.onNotify)
         self.widget = self.createWidget()
         self.initLayout()
@@ -58,6 +58,9 @@ class Viewer(patterns.Observable, wx.Panel):
  
     def createSorter(self, *args):
         raise NotImplementedError
+        
+    def createFilter(self, list):
+        return list
 
     def onNotify(self, notification, *args, **kwargs):
         if notification.itemsAdded or notification.itemsChanged or notification.itemsRemoved:
@@ -121,6 +124,12 @@ class TaskListViewer(TaskViewer, ListViewer):
 
     def createSorter(self, taskList):
         return task.sorter.Sorter(taskList)
+        
+    def createFilter(self, taskList):
+        return task.filter.CompositeFilter(taskList)
+        
+    def setViewCompositeTasks(self, viewCompositeTasks):
+        self.list.setViewCompositeTasks(viewCompositeTasks)
     
     def getItemText(self, index, column):
         if self.widget.GetColumnWidth(column) == 0:
@@ -197,6 +206,7 @@ class TaskTreeViewer(TaskViewer):
         task = self.list[index]
         fingerprint = {}
         fingerprint['subject'] = task.subject()
+        fingerprint['id'] = task.id()
         fingerprint['children'] = len(task.children()) > 0
         fingerprint['startdate'] = task.startDate()
         fingerprint['duedate'] = task.dueDate()
