@@ -1,0 +1,69 @@
+Release 0.23 - February 20, 2005
+
+Bugs fixed:
+- Fixed a couple of bugs in the unit tests, discovered by Stephen Boulet
+  and Jerome Laheurte on the Linux platform.
+
+
+
+Release 0.22 - February 17, 2005
+
+Bugs fixed:
+- In the effort summary view, effort spent on a task in the same month
+  or week but in different years would erroneously be added. 
+  E.g. effort in January 2004 and January 2006 would be added. 
+- The mechanism to prevent effort periods with a negative duration (i.e.
+  a start time later than the stop time) in the effort editor was
+  invoked on each key stroke which caused inconvenient behaviour. Fixed
+  it by only invoking it when the user leaves the text or combo box.
+
+Features added:
+- Added possibility to start tracking effort for a task, with start time
+  equal to the end time of the previous effort period. This is for
+  example convenient if you stop working on a task and then spend
+  some time deciding on what to do next. This is the 'Start tracking 
+  from last stop time' menu item in the 'Effort' menu.
+- (Re)Added the unittests to the source distribution. See INSTALL.txt.
+- Export to XML. Currently limited to tasks, effort is not exported yet.
+
+
+
+Release 0.21 - February 9, 2005
+
+Bugs fixed:
+- Setting the start date/time in the effort editor would change the stop
+  date/time while not strictly necessary to prevent negative durations.
+- Refreshing the virtual ListCtrl failed under 
+  wxPython2.5-gtk2-unicode-2.5.3.1-fc2_py2.3 and 
+  wxPython-common-gtk2-unicode-2.5.3.1-fc2_py2.3. Reported by Stephen
+  Boulet. 
+- After iconizing the main window for a second time, the icon in the
+  task bar wouldn't be hidden anymore. Reported and fixed by Jerome
+  Laheurte.
+
+
+
+Release 0.20 - February 6, 2005
+
+Bugs fixed:
+- Reading .tsk files version 2 failed.
+- Completed child tasks were not hidden in the tree view when
+  'View->Completed tasks' was on.
+- Hiding the find panel did not clear the search filter.
+- When searching for tasks, not all matches were shown in the tree view.
+- Displaying time spent and total time spent in the list view for more
+  than a dozen tasks and efforts was slow. Used caching to speed it up.
+- Tool tips on the toolbar included mnemonics and accelerator characters
+  on Linux. Reported on python-2.3.4 and 
+  wxPython2.5-gtk2-unicode-2.5.3.1-fc2_py2.3 on Suse 9.2 by Stephen
+  Boulet.
+
+Features added:
+- Effort can be viewed summarized per day, per week, and per month.
+- Effort for a specific task can be viewed (and edited) in the task editor.
+- Effort tracking can be stopped from the taskbar menu.
+- Size and position of the main window are saved in the settings and 
+  restored on the next session. This also includes whether the main window 
+  is iconized or not.
+- Splash screen can be turned off.
+
