@@ -2,27 +2,24 @@ import optparse, meta
 
 class OptionParser(optparse.OptionParser, object):
     def __init__(self, *args, **kwargs):
-        self.super = super(OptionParser, self)
-        self.super.__init__(*args, **kwargs)
-        self.addOptionGroups()
-        self.addOptions()
+        super(OptionParser, self).__init__(*args, **kwargs)
+        self.__addOptionGroups()
+        self.__addOptions()
 
-    def addOptionGroups(self):
-        for optionGroup in self.optionGroups():
-            self.add_option_group(optionGroup(self))
-
-    def optionGroups(self):
+    def __addOptionGroups(self):
+        self.__getAndAddOptions('OptionGroup', self.add_option_group)
+        
+    def __addOptions(self):
+        self.__getAndAddOptions('Option', self.add_option)
+        
+    def __methodsEndingWith(self, suffix):
         return [method for name, method in vars(self.__class__).items() if
-                name.endswith('Options')]
+                name.endswith(suffix)]
 
-    def addOptions(self):
-        for option in self.options():
-            self.add_option(option(self))
-            
-    def options(self):
-        return [method for name, method in vars(self.__class__).items() if
-                name.endswith('Option')]
- 
+    def __getAndAddOptions(self, suffix, addOption):
+        for getOption in self.__methodsEndingWith(suffix):
+            addOption(getOption(self))
+
                 
 class OptionGroup(optparse.OptionGroup, object):
     pass
