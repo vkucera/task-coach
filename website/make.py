@@ -41,6 +41,19 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.26 - March 28, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>Marking a task completed did not stop effort tracking (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1159918&group_id=130831&atid=719134">1159918</A>).
+        <LI>Reading lots of efforts was slow.
+        </UL>
+        Features added:
+        <UL>
+        <LI>Save button is disabled when saving is not necessary, 
+        requested by Mike Vorozhbensky (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1164472&group_id=130831&atid=719137">1164472</A>).
+        <LI>Effort records have a description field, requested by Kent 
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1167147&group_id=130831&atid=719137">1167147</A>).
+        </UL>
         <H4>Release 0.25 - March 13, 2005</H4>
         Bugs fixed:
         <UL>
