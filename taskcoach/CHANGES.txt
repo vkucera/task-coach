@@ -1,9 +1,11 @@
-Release 0.24 - ?
+Release 0.24 - March 10, 2005
 
 Bugs fixed:
 - Saving a selection of tasks to a separate file would also save all effort 
   records to that file (instead of just the effort records for the selected 
   tasks), giving errors when loading that file.
+- Deleting a task with effort records would not delete the effort
+  records.
 
 Features added:
 - The tracking status of tasks is saved. So if you start tracking a

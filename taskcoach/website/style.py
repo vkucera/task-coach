@@ -28,6 +28,7 @@ footer = '''
                 <LI><A HREF="download.html">Download</A></LI>
                 <LI><A HREF="screenshots.html">Screenshots</A></LI>
                 <LI><A HREF="features.html">Features</A></LI>
+                <LI><A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</A></LI>
                 <LI><A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Known bugs</A></LI>
                 <LI><A HREF="changes.html">Change history</A></LI>
                 <LI><A HREF="license.html">License</A></LI>
