@@ -135,7 +135,15 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
     def testBudget_SetBudget(self):
         self.task.setBudget(date.TimeDelta(hours=1))
         self.assertEqual(date.TimeDelta(hours=1), self.task.budget())
-             
+    
+    def testState(self):
+        state = self.task.__getstate__()
+        newTask = task.Task()
+        newTask.__setstate__(state)
+        self.assertEqual(newTask, self.task)
+        
+    def testRepr(self):
+        self.assertEqual(self.task.subject(), repr(self.task))
 
 class SubTaskTest(test.TestCase, asserts.TaskAsserts):
     def setUp(self):

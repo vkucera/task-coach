@@ -20,12 +20,14 @@ class Task(patterns.Observable):
                                       # the creator's responsibility
         self._efforts        = []
 
-    def notify(self, *args, **kwargs):
-        self._notifyObserversOfChange(*args, **kwargs)
-
+    def onNotify(self, notification, *args, **kwargs):
+        notification = patterns.observer.Notification(self, notification, 
+            itemsChanged=[notification.source])
+        self.notifyObservers(notification, *args, **kwargs)       
+        
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
 
     def __getstate__(self):
         return { '_subject' : self._subject, 
@@ -92,15 +94,15 @@ class Task(patterns.Observable):
             self._children.append(child)
             child.setParent(self)
             self._updateCompletionState(child.completionDate())
-            child.registerObserver(self.notify)
-            self._notifyObserversOfChange(self, notification=patterns.observer.Notification(self, itemsAdded=[child]))
+            child.registerObserver(self.onNotify)
+            self.notifyObservers(patterns.observer.Notification(self, itemsAdded=[child]))
 
     def removeChild(self, child):
         self._children.remove(child)
         if self._children:
             self._updateCompletionState(date.Today())
-        child.removeObserver(self.notify)
-        self._notifyObserversOfChange()
+        child.removeObserver(self.onNotify)
+        self.notifyObservers(patterns.observer.Notification(self, itemsRemoved=[child]))
 
     def setParent(self, parent):
         self._parent = parent
@@ -113,7 +115,7 @@ class Task(patterns.Observable):
 
     def setSubject(self, subject):
         self._subject = subject
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
 
     def dueDate(self):
         if self.children():
@@ -128,7 +130,7 @@ class Task(patterns.Observable):
 
     def setDueDate(self, duedate):
         self._duedate = duedate
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
 
     def startDate(self):
         if self.children():
@@ -143,7 +145,7 @@ class Task(patterns.Observable):
 
     def setStartDate(self, startdate):
         self._startdate = startdate
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
 
     def timeLeft(self):
         return self._duedate - date.Today()
@@ -158,7 +160,7 @@ class Task(patterns.Observable):
         parent = self.parent()
         if parent:
             parent._updateCompletionState(completionDate)
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
 
     def _updateCompletionState(self, completionDate):
         if not self.completed() and self.allChildrenCompleted():
@@ -223,15 +225,16 @@ class Task(patterns.Observable):
     def addEffort(self, effort):
         self._efforts.append(effort)
         effort.registerObserver(self.notifyEffortChanged)
-        self._notifyObserversOfChange(self, patterns.observer.Notification(self, effortsAdded=[effort]))
+        self.notifyObservers(patterns.observer.Notification(self, effortsAdded=[effort]))
         
     def removeEffort(self, effort):
         self._efforts.remove(effort)
         effort.removeObserver(self.notifyEffortChanged)
-        self._notifyObserversOfChange(self, patterns.observer.Notification(self, effortsRemoved=[effort]))
+        self.notifyObservers(patterns.observer.Notification(self, effortsRemoved=[effort]))
         
-    def notifyEffortChanged(self, effort, *args, **kwargs):
-        self._notifyObserversOfChange()
+    def notifyEffortChanged(self, notification, *args, **kwargs):
+        notification = patterns.observer.Notification(self, effortsChanged=[notification.source])
+        self.notifyObservers(notification)
         
     def duration(self, recursive=False):
         if recursive:
@@ -255,7 +258,8 @@ class Task(patterns.Observable):
         
     def setBudget(self, budget):
         self._budget = budget
-    
+        self.notifyObservers(patterns.observer.Notification(self))
+        
     def _myDuration(self):
         return sum([effort.duration() for effort in self.efforts()], date.TimeDelta())
     

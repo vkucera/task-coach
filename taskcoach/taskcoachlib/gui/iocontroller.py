@@ -39,7 +39,7 @@ class IOController(patterns.Observable):
                 showerror("Error while reading %s.\n" 
                     "Are you sure it is a %s-file?"%(filename, meta.name), 
                     caption="File error", style=wx.ICON_ERROR)
-            self._notifyObserversOfChange()
+            self.notifyObservers(patterns.observer.Notification(self))
 
     def merge(self, filename=None):
         if not filename:
@@ -63,7 +63,7 @@ class IOController(patterns.Observable):
         if filename:
             self.taskFile.saveas(filename)
             self.displayMessage('Saved', self.taskFile, 'to')
-            self._notifyObserversOfChange()
+            self.notifyObservers(patterns.observer.Notification(self))
             return True
         else:
             return False
@@ -99,7 +99,7 @@ class IOController(patterns.Observable):
         self.displayMessage('Closed', file=self.taskFile.filename())
         self.taskFile.close()
         patterns.CommandHistory().clear()
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
         return True
 
     def quit(self, *args):

@@ -5,8 +5,8 @@ class TaskBarIcon(wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList):
         super(TaskBarIcon, self).__init__()
         self.taskList = taskList
-        taskList.registerObserver(self.notify, self.notify, self.notify)
-        self.notify()
+        taskList.registerObserver(self.onNotify)
+        self.onNotify()
         wx.EVT_TASKBAR_LEFT_DCLICK(self, mainwindow.restore)
 
     def setPopupMenu(self, menu):
@@ -33,7 +33,7 @@ class TaskBarIcon(wx.TaskBarIcon):
             bitmap += '_completed'
         return bitmap
 
-    def notify(self, *args, **kwargs):
+    def onNotify(self, *args, **kwargs):
         bitmap = self.selectBitmap(self.taskList)
         self._tooltip = self.createTooltipText(self.taskList.nrDueToday())
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,

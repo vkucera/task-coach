@@ -10,27 +10,26 @@ class ObservableTestCase(test.TestCase):
         self.addNotifications = self.removeNotifications = self.changeNotifications = 0
         self.addedItems = self.removedItems = self.changedItems = None
         self.observable = self.getObservable()
-
-    def notifyAdd(self, items, *args, **kwargs):
-        self.addNotifications += 1
-        self.addedItems = items
+        self.observable.registerObserver(self.onNotify)
         
-    def notifyRemove(self, items, *args, **kwargs):
-        self.removeNotifications += 1
-        self.removedItems = items
-
-    def notifyChange(self, items, *args, **kwargs):
-        self.changeNotifications += 1
-        self.changedItems = items
-        
-
+    def onNotify(self, notification, *args, **kwargs):
+        if notification.itemsAdded:
+            self.addNotifications += 1
+            self.addedItems = notification.itemsAdded
+        elif notification.itemsRemoved:
+            self.removeNotifications += 1
+            self.removedItems = notification.itemsRemoved
+        elif notification.itemsChanged:
+            self.changeNotifications += 1
+            self.changedItems = notification.itemsChanged        
+        else:
+            self.changeNotifications += 1
+            self.changedItems = notification.source
+            
+            
 class ObservableTest(ObservableTestCase):
     def getObservable(self):
         return patterns.Observable()
-
-    def setUp(self):
-        super(ObservableTest, self).setUp()
-        self.observable.registerObserver(self.notifyChange)
 
     def check(self, notifications):
         self.assertEqual(notifications, self.changeNotifications)
@@ -39,12 +38,12 @@ class ObservableTest(ObservableTestCase):
         self.check(notifications=0)
 
     def testNotificationOnChange(self):
-        self.observable._notifyObserversOfChange()
+        self.observable.notifyObservers(patterns.observer.Notification(self.observable))
         self.check(notifications=1)
 
     def testRemoveObserver(self):
-        self.observable.removeObserver(self.notifyChange)
-        self.observable._notifyObserversOfChange()
+        self.observable.removeObserver(self.onNotify)
+        self.observable.notifyObservers(patterns.observer.Notification(self))
         self.check(notifications=0)
 
 
@@ -53,7 +52,7 @@ class MockObservablesList(patterns.ObservablesList):
         super(MockObservablesList, self).__init__(*args, **kwargs)
         self.notifications = 0
         
-    def notifyChange(self, *args):
+    def onNotify(self, *args):
         self.notifications += 1
 
         
@@ -63,7 +62,7 @@ class ObservablesListTest(test.TestCase):
         self.observable = patterns.Observable()
     
     def assertNotificationsAfterChange(self, notifications):
-        self.observable._notifyObserversOfChange()
+        self.observable.notifyObservers(patterns.observer.Notification(self))
         self.assertEqual(notifications, self.list.notifications)
             
     def testCreate(self):
@@ -108,8 +107,8 @@ class ObservableObservablesListTest(ObservableTestCase):
     def setUp(self):
         super(ObservableObservablesListTest, self).setUp()
         self.observableItem = patterns.Observable()
-        self.observable.registerObserver(self.notifyAdd, self.notifyRemove, self.notifyChange)
-
+        self.observable.append(self.observableItem)
+        
     def check(self, addNotifications=0, removeNotifications=0, changeNotifications=0,
             lenObservable=0, addedItems=None, removedItems=None, changedItems=None):
         self.assertEqual(lenObservable, len(self.observable))
@@ -121,18 +120,15 @@ class ObservableObservablesListTest(ObservableTestCase):
         self.assertEqual(changedItems, self.changedItems)
         
     def testAppend(self):
-        self.observable.append(self.observableItem)
         self.check(addNotifications=1, lenObservable=1, addedItems=[self.observableItem])
         
     def testRemove(self):
-        self.observable.append(self.observableItem)
         self.observable.remove(self.observableItem)
         self.check(addNotifications=1, removeNotifications=1, lenObservable=0, 
             addedItems=[self.observableItem], removedItems=[self.observableItem])
         
     def testChangeObservableItem(self):
-        self.observable.append(self.observableItem)
-        self.observableItem._notifyObserversOfChange()
+        self.observableItem.notifyObservers(patterns.observer.Notification(self.observableItem))
         self.check(addNotifications=1, changeNotifications=1, lenObservable=1, 
             addedItems=[self.observableItem], changedItems=[self.observableItem])
         
@@ -140,10 +136,6 @@ class ObservableObservablesListTest(ObservableTestCase):
 class ObservableListTest(ObservableTestCase):
     def getObservable(self):
         return patterns.ObservableList([0])
-        
-    def setUp(self):
-        super(ObservableListTest, self).setUp()
-        self.observable.registerObserver(self.notifyAdd, self.notifyRemove)
         
     def check(self, addNotifications=0, removeNotifications=0, lenObservable=0, 
             addedItems=None, removedItems=None):
@@ -182,7 +174,7 @@ class ObservableListTest(ObservableTestCase):
         self.check(removeNotifications=1, lenObservable=0, removedItems=[0])
     
     def testRemoveObserver(self):
-        self.observable.removeObserver(self.notifyAdd, self.notifyRemove)
+        self.observable.removeObserver(self.onNotify)
         self.observable.remove(0)
         self.check(lenObservable=0)
 
@@ -194,7 +186,6 @@ class ObservableListObserverTest(ObservableTestCase):
     def setUp(self):
         super(ObservableListObserverTest, self).setUp()
         self.observableItem = patterns.Observable()
-        self.observable.registerObserver(self.notifyAdd, self.notifyRemove, self.notifyChange)
         
     def check(self, addNotifications=0, removeNotifications=0, lenOriginal=0):
         self.assertEqual(lenOriginal, len(self.observable.original()))

@@ -1,28 +1,18 @@
 import patterns                    
         
 class EffortList(patterns.ObservableListObserver):
-    def notifyChange(self, tasks, *args, **kwargs):
-        efforts = self.extractEfforts(tasks)
-        effortsToBeRemoved = [effort for effort in self if effort.task() in tasks and effort not in efforts]
-        effortsToBeAdded = [effort for effort in efforts if effort not in self]
-        self._removeItems(effortsToBeRemoved)
-        self._extend(effortsToBeAdded)
-        if not effortsToBeRemoved and not effortsToBeAdded:
-            # no new efforts and no removed efforts: so there must be changed efforts
-            self._notifyObserversOfChange(efforts)
-            
-    def notifyAdd(self, tasks, *args, **kwargs):
-        self._extend(self.extractEfforts(tasks))
-            
-    def notifyRemove(self, tasks, *args, **kwargs):
-        self._removeItems(self.extractEfforts(tasks))
+    def __init__(self, *args, **kwargs):
+        super(EffortList, self).__init__(*args, **kwargs)
+        self._extend(self.original().efforts())
         
-    def extractEfforts(self, tasks):
-        efforts = []
-        for task in tasks:
-            efforts.extend(task.efforts())
-        return efforts             
-
+    def onNotify(self, notification, *args, **kwargs):
+        self.stopNotifying()
+        self._removeItems(notification.effortsRemoved)
+        self._extend(notification.effortsAdded)
+        self.startNotifying()
+        self.notifyObservers(patterns.observer.Notification(self, 
+            notification), *args, **kwargs)
+        
         
 class SingleTaskEffortList(patterns.ObservableObservablesList):
     ''' SingleTaskEffortList filters an EffortList so it contains the efforts for 
@@ -30,11 +20,21 @@ class SingleTaskEffortList(patterns.ObservableObservablesList):
         
     def __init__(self, task, *args, **kwargs):
         super(SingleTaskEffortList, self).__init__(*args, **kwargs)
-        task.registerObserver(self.notify)
-        self.notify(task, patterns.observer.Notification(task, effortsAdded=task.efforts()))
+        task.registerObserver(self.onTaskNotify)
+        efforts = task.efforts()
         for child in task.allChildren():
-            self.notify(child, patterns.observer.Notification(child, effortsAdded=child.efforts()))
+            efforts.extend(child.efforts())
+        self.extend(efforts)
         
-    def notify(self, task, notification, *args, **kwargs):
+    def onTaskNotify(self, notification, *args, **kwargs):
+        if not (notification.effortsAdded or notification.effortsRemoved):
+            return
+        self.stopNotifying()
         self.extend(notification.effortsAdded)
         self.removeItems(notification.effortsRemoved)
+        self.startNotifying()
+        myNotification = patterns.observer.Notification(self, 
+            itemsAdded=notification.effortsAdded,
+            itesmRemoved=notification.effortsRemoved)
+        self.notifyObservers(myNotification)
+

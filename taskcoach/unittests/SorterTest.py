@@ -13,7 +13,7 @@ class Node(patterns.Observable):
 
     def setName(self, name):
         self._name = name
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
 
 
 class SorterTest(test.TestCase):
