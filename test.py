@@ -38,17 +38,35 @@ class AllTests(unittest.TestSuite):
             import glob
             testFiles = glob.glob('unittests/*Test.py')
         for filename in testFiles:
-            module = self.filenameToModuleName(filename)
+            moduleName = self.filenameToModuleName(filename)
             # Importing the module is not strictly necessary because
             # loadTestsFromName will do that too as a side effect. But if the test 
             # module contains errors our import will raise an exception
             # while loadTestsFromName ignores exceptions when importing from 
             # modules.
-            __import__(module) 
-            suite = testloader.loadTestsFromName(module)
+            module = __import__(moduleName)
+            suite = testloader.loadTestsFromName(moduleName)
             self.addTests(suite._tests)
+            self.registerDesiredCoverage(module, moduleName)
+        if self._options.coverage:
+            self.addTests(self.createCoverageTest()._tests)
    
-    def run(self):
+    def registerDesiredCoverage(self, module, moduleName):
+        import unittests.coverage
+        for submoduleName in moduleName.split('.')[1:]:
+            module = getattr(module, submoduleName)
+        if hasattr(module, '__coverage__'):
+            for itemToWatch in module.__coverage__:
+                unittests.coverage.watch(itemToWatch)
+        
+    def createCoverageTest(self):
+        import unittests.coverage
+        class CoverageTest(TestCase):
+                def testCoverage(self):
+                    self.assertEqual([], unittests.coverage.uncovered())
+        return unittest.TestLoader().loadTestsFromTestCase(CoverageTest)
+            
+    def run(self):       
         testrunner = unittest.TextTestRunner(verbosity=self._options.verbosity)
         result = testrunner.run(self)
         if self._options.commit and result.wasSuccessful():
@@ -112,6 +130,16 @@ class TestOptionParser(optparse.OptionParser, object):
            'profile reports')
         return profile
 
+    def coverageOptions(self):
+        coverage = optparse.OptionGroup(self, 'coverage options',
+            'Options to test the coverage of the unittests. Requires a '
+            '__coverage__ attribute in the unittest file. __coverage__ is '
+            'a list of classes or modules to watch for being covered by the '
+            'unittests.')
+        coverage.add_option('-C', '--coverage', default=False, 
+            action='store_true', help='Add one unittest to test for coverage')
+        return coverage
+        
     def parse_args(self):
         options, args = self.super.parse_args()
         if options.profile_report_only:
