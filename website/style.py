@@ -23,10 +23,12 @@ footer = '''
             <H4>Contents</H4>
             <UL>
                 <LI><A HREF="index.html">Home</A></LI>
+                <LI><A HREF="https://sourceforge.net/projects/taskcoach/">Sourceforge
+                home</A></LI>
                 <LI><A HREF="download.html">Download</A></LI>
                 <LI><A HREF="screenshots.html">Screenshots</A></LI>
                 <LI><A HREF="features.html">Features</A></LI>
-                <LI><A HREF="bugs.html">Known bugs</A></LI>
+                <LI><A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Known bugs</A></LI>
                 <LI><A HREF="changes.html">Change history</A></LI>
                 <LI><A HREF="license.html">License</A></LI>
                 <LI><A HREF="http://groups.yahoo.com/group/taskcoach/join">
@@ -39,6 +41,7 @@ footer = '''
                 <LI><A HREF="http://www.wxpython.org">wxPython</A></LI>
                 <LI><A HREF="http://www.icon-king.com">Nuvola icon set</A></LI>
                 <LI><A HREF="http://www.jrsoftware.org">Inno Setup</A></LI>
+                <LI><A HREF="http://sourceforge.net">Sourceforge</A></LI>
             </UL>
         </DIV>
     </BODY>
