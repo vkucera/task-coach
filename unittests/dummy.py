@@ -43,13 +43,18 @@ class DummyUICommands:
 class ViewerWithDummyWidget(gui.viewer.Viewer):
     def createWidget(self):
         return DummyWidget(self)
-
+        
     def createSorter(self, taskList):
         return taskList
-
+    
 class TaskViewerWithDummyWidget(ViewerWithDummyWidget, gui.viewer.TaskViewer):
     pass
 
 class TaskListViewerWithDummyWidget(ViewerWithDummyWidget, 
         gui.viewer.TaskListViewer):
     pass
+
+class EffortPerDayViewerWithDummyWidget(ViewerWithDummyWidget,
+        gui.viewer.EffortPerDayViewer):
+    def createSorter(self, *args, **kwargs):
+        return gui.viewer.EffortPerDayViewer.createSorter(self, *args, **kwargs)

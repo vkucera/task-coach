@@ -134,6 +134,7 @@ class EffortSorterTest(test.TestCase):
         self.taskList.append(self.task)
 
     def testDescending(self):
+        self.assertEqual(2, len(self.sorter))
         self.assertEqual(self.effortList[0], self.sorter[1])
         self.assertEqual(self.effortList[1], self.sorter[0])
 

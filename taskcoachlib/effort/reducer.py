@@ -1,31 +1,47 @@
-import patterns, effort
+import patterns, effort, sets
 
 class EffortReducer(patterns.ObservableListObserver):
+    def __init__(self, *args, **kwargs):
+        super(EffortReducer, self).__init__(*args, **kwargs)
+        self.addEfforts(self.original())
+        
     def onNotify(self, notification, *args, **kwargs):
         self.stopNotifying()
-        self.removeEfforts(notification.effortsRemoved + notification.effortsChanged)
-        self.addEfforts(notification.effortsAdded + notification.effortsChanged)
+        effortsRemoved, changedComposites1 = self.removeEfforts(notification.effortsRemoved + notification.effortsChanged)
+        effortsAdded, changedComposites2 = self.addEfforts(notification.effortsAdded + notification.effortsChanged)
         self.startNotifying()
-        self.notifyObservers(patterns.observer.Notification(self, notification))
+        changedComposites = changedComposites1 + changedComposites2
+        self.notifyObservers(patterns.observer.Notification(self, 
+            effortsAdded=effortsAdded, effortsRemoved=effortsRemoved, 
+            effortsChanged=changedComposites))
         
     def addEfforts(self, newEfforts):
         newComposites = []
+        changedComposites = []
         for newEffort in newEfforts:
             for task in [newEffort.task()] + newEffort.task().ancestors():
                 for compositeEffort in self + newComposites:
                     if self.effortFitsInComposite(compositeEffort, newEffort, task):
                         compositeEffort.append(newEffort)
+                        if compositeEffort not in changedComposites:
+                            changedComposites.append(compositeEffort)
                         break
                 else:
                     newComposites.append(effort.CompositeEffort(task, [newEffort]))
         self._extend(newComposites)
+        return newComposites, changedComposites
 
     def removeEfforts(self, removedEfforts):
+        changedComposites = []
         for removedEffort in removedEfforts:
             for compositeEffort in self:
                 if removedEffort in compositeEffort:
                     compositeEffort.remove(removedEffort)
-        self._removeItems([compositeEffort for compositeEffort in self if len(compositeEffort) == 0])
+                    if compositeEffort not in changedComposites:
+                        changedComposites.append(compositeEffort)
+        removedComposites = [compositeEffort for compositeEffort in self if len(compositeEffort) == 0]
+        self._removeItems(removedComposites)
+        return removedComposites, changedComposites
                 
 
     def effortFitsInComposite(self, compositeEffort, effort, task):

@@ -27,9 +27,10 @@ class ReducerTestCase(test.TestCase):
         self.reducer = self.createReducer()
         self.reducer.registerObserver(self.onNotify)
         
-    def onNotify(self, *args, **kwargs):
+    def onNotify(self, notification, *args, **kwargs):
         self.notifications += 1
-
+        self.notification = notification
+        
     def assertCompositeEffort(self, compositeEffort, startEffort, stopEffort=None):
         stopEffort = stopEffort or startEffort
         self.assertEqual(startEffort.getStart(), compositeEffort.getStart())
@@ -98,6 +99,7 @@ class CommonTests:
     def testNotification_Add(self):
         self.task1.addEffort(self.effort1_1)
         self.assertEqual(1, self.notifications)
+        self.assertEqual(self.reducer[0], self.notification.effortsAdded[0])
         
     def testNotification_Remove(self):
         self.task1.addEffort(self.effort1_1)
