@@ -29,7 +29,11 @@ class TaskEditorTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.taskList.extend(self.createTasks())
-        self.editor = gui.editor.TaskEditor(wx.Frame(None), self.createCommand(),
+        self.effortList = effort.EffortList(self.taskList)
+        self.editor = self.createEditor()
+        
+    def createEditor(self):
+        return gui.editor.TaskEditor(wx.Frame(None), self.createCommand(),
             {})
 
     def tearDown(self):
@@ -210,3 +214,23 @@ class FocusTest(TaskEditorTestCase, test.wxTestCase):
         self.assertEqual(self.editor[0]._subjectEntry, self.editor.FindFocus())
         
 
+class EffortEditorTest(TaskEditorTestCase):      
+    def createCommand(self):
+        return command.EditEffortCommand(self.effortList, self.effortList)
+        
+    def createTasks(self):
+        t = task.Task()
+        t.addEffort(effort.Effort(t))
+        return [t]
+    
+    def createEditor(self):
+        return gui.editor.EffortEditor(wx.Frame(None), self.createCommand())
+    
+    def testCreate(self):
+        self.assertEqual(self.effortList[0].getStart().date(), 
+            self.editor[0]._startEntry.GetValue().date())
+
+    def testOK(self):
+        stop = self.effortList[0].getStop()
+        self.editor.ok()
+        self.assertEqual(stop, self.effortList[0].getStop())

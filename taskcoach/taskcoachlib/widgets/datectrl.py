@@ -128,7 +128,8 @@ class TimeCtrl(Panel):
     def _createControls(self, callback):
         # TODO: use wx.lib.masked.ComboBox or wx.lib.masked.TimeCtrl?
         control = wx.ComboBox(self, -1, '00:00', choices=self._choices())
-        control.Bind(wx.EVT_KILL_FOCUS, callback)
+        control.Bind(wx.EVT_TEXT, callback)
+        control.Bind(wx.EVT_COMBOBOX, callback)
         return [control]
         
     def _choices(self):
@@ -157,8 +158,14 @@ class DateTimeCtrl(Panel):
         return [DateCtrl(self, callback), TimeCtrl(self, callback)]
         
     def SetValue(self, dateTime):
-        self._controls[0].SetValue(dateTime.date())
-        self._controls[1].SetValue(dateTime.time())
+        if dateTime is None:
+            datePart = 'None'
+            timePart = date.Time()
+        else:
+            datePart = dateTime.date()
+            timePart = dateTime.time()
+        self._controls[0].SetValue(datePart)
+        self._controls[1].SetValue(timePart)
         
     def GetValue(self):
         dateValue = self._controls[0].GetValue()

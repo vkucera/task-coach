@@ -18,9 +18,9 @@ class TabbedDialog(Dialog):
         self._notebook = widgets.Notebook(self._panel)
         self._verticalSizer.Add(self._notebook, 1, flag=wx.EXPAND)
         self.addPages()
-        buttonBox = widgets.ButtonBox(self._panel, ('OK', self.ok), 
+        self._buttonBox = widgets.ButtonBox(self._panel, ('OK', self.ok), 
                                       ('Cancel', self.cancel))
-        self._verticalSizer.Add(buttonBox, 0, wx.ALIGN_CENTER)
+        self._verticalSizer.Add(self._buttonBox, 0, wx.ALIGN_CENTER)
         self._panel.SetSizerAndFit(self._verticalSizer)
         self.SetSizerAndFit(self._panelSizer)
         wx.CallAfter(self._panel.SetFocus)
@@ -38,3 +38,9 @@ class TabbedDialog(Dialog):
     
     def addPages(self):
         raise NotImplementedError 
+        
+    def disableOK(self):
+        self._buttonBox.disable('OK')
+        
+    def enableOK(self):
+        self._buttonBox.enable('OK')
