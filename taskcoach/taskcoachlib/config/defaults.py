@@ -5,6 +5,7 @@ defaults = { \
     'toolbar' : '(32, 32)',
     'completedtasks' : 'True',
     'inactivetasks' : 'True',
+    'compositetasks' : 'True',
     'startdate' : 'True',
     'duedate' : 'True',
     'daysleft' : 'False',

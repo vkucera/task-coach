@@ -54,6 +54,7 @@ class ViewFilterTest(test.wxTestCase):
         self.dueToday = task.Task(duedate=date.Today())
         self.dueTomorrow = task.Task(duedate=date.Tomorrow())
         self.dueYesterday = task.Task(duedate=date.Yesterday())
+        self.child = task.Task()
 
     def testCreate(self):
         self.assertEqual(0, len(self.filter))
@@ -104,6 +105,30 @@ class ViewFilterTest(test.wxTestCase):
         self.filter.extend([self.dueToday, dueNextWeek])
         self.filter.viewTasksDueBefore('Workweek')
         self.assertEqual(1, len(self.filter))
+
+class CompositeFilterTest(test.wxTestCase):
+    def setUp(self):
+        self.list = task.TaskList()
+        self.filter = task.filter.CompositeFilter(self.list)
+        self.task = task.Task()
+        self.child = task.Task()
+        self.task.addChild(self.child)
+        self.filter.append(self.task)
+
+    def testInitial(self):
+        self.assertEqual(2, len(self.filter))
+                
+    def testTurnOn(self):
+        self.filter.setViewCompositeTasks(False)
+        self.assertEqual([self.child], list(self.filter))
+                
+    def testTurnOnAndAddChild(self):
+        self.filter.setViewCompositeTasks(False)
+        grandChild = task.Task()
+        self.child.addChild(grandChild)
+        self.list.append(grandChild)
+        self.assertEqual([grandChild], list(self.filter))
+
 
 class SearchFilterTest(test.TestCase):
     def setUp(self):

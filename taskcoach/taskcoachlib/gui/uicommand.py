@@ -398,6 +398,16 @@ class ViewInactiveTasks(FilterCommand, UICheckCommand):
         self.filteredTaskList.setViewInactiveTasks(event.IsChecked())
 
 
+class ViewCompositeTasks(NeedsHidableColumns, ViewerCommand, FilterCommand, UICheckCommand):
+    menuText = 'Tasks with subtasks'
+    hlepText = 'Show/hide tasks with subtasks'
+    setting = 'compositetasks'
+    
+    def doCommand(self, event):
+        super(ViewCompositeTasks, self).doCommand(event)
+        self.viewer.setViewCompositeTasks(event.IsChecked())
+        
+
 class ViewStartDate(NeedsHidableColumns, ViewerCommand, UICheckCommand):
     menuText = '&Start date'
     helpText = 'Show/hide start date column'
@@ -782,6 +792,8 @@ class UICommands(dict):
         self['viewcompletedtasks'] = ViewCompletedTasks(filteredTaskList, 
             settings)
         self['viewinactivetasks'] = ViewInactiveTasks(filteredTaskList,
+            settings)
+        self['viewcompositetasks'] = ViewCompositeTasks(viewer, filteredTaskList,
             settings)
             
         self['viewstartdate'] = ViewStartDate(viewer, settings)
