@@ -2,8 +2,8 @@ import test, effort, date, task
 
 class CompositeEffortTest(test.TestCase):
     def setUp(self):
-        self.compositeEffort = effort.CompositeEffort()
         self.task = task.Task(subject='ABC')
+        self.compositeEffort = effort.CompositeEffort(self.task)
         self.effort = effort.Effort(self.task, date.DateTime(2004,1,1), date.DateTime(2004,1,2))
                 
     def testEmptyCompositeEffort(self):
@@ -27,9 +27,6 @@ class CompositeEffortTest(test.TestCase):
     def testGetStop_EmptyCompositeEffort(self):
         self.assertEqual(None, self.compositeEffort.getStop())
         
-    def testGetTask_EmptyCompositeEffort(self):
-        self.assertEqual(None, self.compositeEffort.task())
-        
     def testGetTask(self):
         self.compositeEffort.append(self.effort)
         self.assertEqual(self.effort.task(), self.compositeEffort.task())
@@ -46,7 +43,7 @@ class CompositeEffortTest(test.TestCase):
     def testCompare_SmallerStart(self):
         self.compositeEffort.append(self.effort)
         effort2 = effort.Effort(self.task, date.DateTime(2004,2,1), date.DateTime(2004,2,2))
-        composite2 = effort.CompositeEffort([effort2])
+        composite2 = effort.CompositeEffort(self.task, [effort2])
         self.failUnless(self.compositeEffort < composite2)
         self.failUnless(composite2 > self.compositeEffort)
         
@@ -54,5 +51,15 @@ class CompositeEffortTest(test.TestCase):
         self.compositeEffort.append(self.effort)
         task2 = task.Task(subject='XYZ')
         effort2 = effort.Effort(task2, date.DateTime(2004,1,1), date.DateTime(2004,1,2))
-        composite2 = effort.CompositeEffort([effort2])
+        composite2 = effort.CompositeEffort(task2, [effort2])
         self.failUnless(self.compositeEffort < composite2)
+        
+    def testDuration(self):
+        self.compositeEffort.append(self.effort)
+        child = task.Task()
+        self.task.addChild(child)
+        childEffort = effort.Effort(child, date.DateTime(2004,3,1), date.DateTime(2004,3,2))
+        child.addEffort(childEffort)
+        self.compositeEffort.append(childEffort)
+        self.assertEqual(self.effort.duration(), self.compositeEffort.duration())
+        

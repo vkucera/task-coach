@@ -219,9 +219,9 @@ class EffortEditorTest(TaskEditorTestCase):
         return command.EditEffortCommand(self.effortList, self.effortList)
         
     def createTasks(self):
-        t = task.Task()
-        t.addEffort(effort.Effort(t))
-        return [t]
+        theTask = task.Task()
+        theTask.addEffort(effort.Effort(theTask))
+        return [theTask]
     
     def createEditor(self):
         return gui.editor.EffortEditor(wx.Frame(None), self.createCommand())
@@ -234,3 +234,9 @@ class EffortEditorTest(TaskEditorTestCase):
         stop = self.effortList[0].getStop()
         self.editor.ok()
         self.assertEqual(stop, self.effortList[0].getStop())
+        
+    def testInvalidEffort(self):
+        self.effortList[0].setStop(date.DateTime(1900, 1, 1))
+        self.editor = self.createEditor()
+        self.editor._notebook[0].preventNegativeEffortDuration()
+        self.failIf(self.editor._buttonBox._buttons['OK'].IsEnabled())

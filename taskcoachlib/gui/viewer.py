@@ -209,13 +209,16 @@ class EffortListViewer(ListViewer):
             uiCommands, *args, **kwargs)
 
     def createWidget(self):
-        widget = widgets.EffortListCtrl(self, ['Period', 'Task', 'Time spent'],
+        widget = widgets.EffortListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr,
             self.onSelect, self.uiCommands['editeffort'], 
             menu.EffortPopupMenu(self.parent, self.uiCommands, self.list, self))
         widget.SetColumnWidth(0, 150)
         widget.SetColumnWidth(1, 300)
         return widget
+
+    def columns(self):
+        return ['Period', 'Task', 'Time spent']
         
     def createSorter(self, effortList):
         return effort.EffortSorter(effortList)
@@ -262,9 +265,19 @@ class EffortListViewer(ListViewer):
 
 
 class CompositeEffortListViewer(EffortListViewer):
+    def columns(self):
+        return super(CompositeEffortListViewer, self).columns() + ['Total time spent']
+        
     def curselection(self):
         compositeEfforts = super(CompositeEffortListViewer, self).curselection()
         return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
+
+    def getItemText(self, index, column):
+        if column == 3:
+            effort = self.list[index]
+            return render.timeSpent(effort.duration(recursive=True))
+        else:
+            return super(CompositeEffortListViewer, self).getItemText(index, column)
 
 
 class EffortPerDayViewer(CompositeEffortListViewer):
