@@ -5,6 +5,8 @@ Bugs fixed:
 
 Features added:
 - XML export now includes effort records.
+- Also show total time spent (i.e. time including time spent on
+  subtasks) in the effort view.
 
 
 

@@ -54,8 +54,16 @@ class Effort(patterns.Observable):
 class CompositeEffort(list):
     ''' CompositeEffort is a list of efforts for one (!) task. '''
     
-    def duration(self):
-        return sum([effort.duration() for effort in self], date.TimeDelta())
+    def __init__(self, task, efforts=None):
+        self._task = task
+        super(CompositeEffort, self).__init__(efforts or [])
+        
+    def duration(self, recursive=False):
+        if recursive:
+            efforts = self
+        else:
+            efforts = [effort for effort in self if effort.task() == self._task]
+        return sum([effort.duration() for effort in efforts], date.TimeDelta())
         
     def getStart(self):
         if self:
@@ -70,10 +78,7 @@ class CompositeEffort(list):
             return None
             
     def task(self):
-        if self:
-            return self[0].task()
-        else:
-            return None
+        return self._task
             
     def __lt__(self, other):
         return self.getStart() < other.getStart() or \

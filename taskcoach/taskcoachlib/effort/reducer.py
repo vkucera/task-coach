@@ -6,26 +6,27 @@ class EffortReducer(patterns.ObservableListObserver):
         self.notifyAdd(changedEfforts)
 
     def notifyAdd(self, newEfforts, *args, **kwargs):
+        newComposites = []
         for newEffort in newEfforts:
-            for compositeEffort in self:
-                if self.effortFitsInComposite(compositeEffort, newEffort):
-                    compositeEffort.append(newEffort)
-                    break
-            else:
-                newComposite = effort.CompositeEffort([newEffort])
-                self._extend([newComposite])
+            for task in [newEffort.task()] + newEffort.task().ancestors():
+                for compositeEffort in self + newComposites:
+                    if self.effortFitsInComposite(compositeEffort, newEffort, task):
+                        compositeEffort.append(newEffort)
+                        break
+                else:
+                    newComposites.append(effort.CompositeEffort(task, [newEffort]))
+        self._extend(newComposites)
 
     def notifyRemove(self, removedEfforts, *args, **kwargs):
         for removedEffort in removedEfforts:
             for compositeEffort in self:
                 if removedEffort in compositeEffort:
                     compositeEffort.remove(removedEffort)
-                    if len(compositeEffort) == 0:
-                        self._removeItems([compositeEffort])
-                    break                
+        self._removeItems([compositeEffort for compositeEffort in self if len(compositeEffort) == 0])
+                
 
-    def effortFitsInComposite(self, compositeEffort, effort):
-        return self.sameTask(compositeEffort, effort) and \
+    def effortFitsInComposite(self, compositeEffort, effort, task):
+        return compositeEffort.task() == task and \
             self.sameTimePeriod(compositeEffort, effort)
             
     def sameTask(self, effort1, effort2):
