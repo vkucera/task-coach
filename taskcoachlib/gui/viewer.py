@@ -195,11 +195,13 @@ class TaskTreeViewer(TaskViewer):
         The TaskTreeCtrl needs to be able to see whether a task has changed in 
         order to determine what parts of the tree need updating. '''
         task = self.list[index]
-        fingerprint = task.__getstate__()
-        del fingerprint['_description']
-        fingerprint['_children'] = len(task.children()) > 0
-        fingerprint['_startdate'] = task.startDate()
-        fingerprint['_duedate'] = task.dueDate()
+        fingerprint = {}
+        fingerprint['subject'] = task.subject()
+        fingerprint['children'] = len(task.children()) > 0
+        fingerprint['startdate'] = task.startDate()
+        fingerprint['duedate'] = task.dueDate()
+        fingerprint['completiondate'] = task.completionDate()
+        fingerprint['parent'] = task.parent()
         fingerprint['active'] = task.isBeingTracked()
         return fingerprint
 

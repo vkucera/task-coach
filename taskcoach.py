@@ -8,8 +8,15 @@ libpath = taskcoachlib.__path__[0]
 sys.path.append(libpath) 
 del taskcoachlib
 
+import log
+from patterns import observer
+from effort import Effort
+from task import Task
+#log.Logger().watch(observer, Effort, Task)
+
 # Now we can directly import taskcoachlib subpackages:
 import task, gui, config, effort
+
 
 class wxApp(wx.App):
     def OnInit(self):
@@ -37,7 +44,7 @@ class App(object):
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
             searchFilteredTaskList, effortList, settings)
         self.processCommandLineArguments(settings, load)
-
+        
     def processCommandLineArguments(self, settings, load=True):
         # FIXME: move to IOController
         if self._args:

@@ -73,7 +73,9 @@ class Observable(object):
         import time
         for callback in self.__callbacks:
             callback(notification)
-            
+
+
+
 
 class ObservablesList(List):
     ''' ObservablesList is a list of observables, i.e. all items that are 
@@ -195,8 +197,7 @@ class ObservableListObserver(ObservableList):
             notification.itemsChanged):
             return
         self.stopNotifying()
-        self._extend(notification.itemsAdded)
-        self._removeItems(notification.itemsRemoved)
+        self.processChanges(notification)
         self.postProcessChanges()
         self.startNotifying()
         self.notifyObservers(Notification(self,
@@ -204,6 +205,10 @@ class ObservableListObserver(ObservableList):
             itemsRemoved=notification.itemsRemoved,
             itemsChanged=notification.itemsChanged), *args, **kwargs)
 
+    def processChanges(self, notification):
+        self._extend(notification.itemsAdded)
+        self._removeItems(notification.itemsRemoved)
+        
     def postProcessChanges(self):
         pass
         
@@ -243,4 +248,5 @@ class ObservableListObserver(ObservableList):
     
     def _removeItems(self, items):
         super(ObservableListObserver, self).removeItems(items)
+        
         

@@ -58,8 +58,11 @@ class TaskList(patterns.ObservableObservablesList):
         for task in tasks:
             self._removeTaskFromParent(task)
         self.startNotifying()
+        tasksAndAllChildren = sets.Set(tasks) 
+        for task in tasks:
+            tasksAndAllChildren |= sets.Set(task.allChildren())
         self.notifyObservers(patterns.observer.Notification(self,
-            itemsRemoved=tasks))
+            itemsRemoved=list(tasksAndAllChildren)))
             
     # queries
 
