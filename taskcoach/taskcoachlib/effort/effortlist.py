@@ -7,6 +7,8 @@ class EffortList(patterns.ObservableListObserver):
         
     def onNotify(self, notification, *args, **kwargs):
         self.stopNotifying()
+        # FIXME: dont expect effortsRemoved, but just itemsRemoved and 
+        # let EffortList figure out what efforts are removed, etc.
         self._removeItems(notification.effortsRemoved)
         self._extend(notification.effortsAdded)
         self.startNotifying()

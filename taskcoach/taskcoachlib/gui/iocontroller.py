@@ -1,7 +1,8 @@
 import wx, task, patterns, meta, effort
 
 
-class IOController(patterns.Observable):
+class IOController(patterns.Observable): 
+    # FIXME: is it really necessary that IOController is Observable?
     def __init__(self, app, taskFile, effortList, settings): 
         super(IOController, self).__init__()
         self.taskFile = taskFile
