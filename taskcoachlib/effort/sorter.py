@@ -1,11 +1,7 @@
-import patterns
+import patterns, effortlist
 
-class EffortSorter(patterns.ObservableListObserver):
+class EffortSorter(patterns.ObservableListObserver, effortlist.EffortListMixin):
     def onNotify(self, notification, *args, **kwargs):
-        self.stopNotifying()
-        self._extend(notification.itemsAdded)
-        self._removeItems(notification.itemsRemoved)
-        self.sort()
-        self.startNotifying()
-        myNotification = patterns.observer.Notification(self, notification)
-        self.notifyObservers(myNotification)
+        self._addAndRemoveEfforts(notification.itemsAdded, 
+            notification.itemsRemoved, notification.itemsChanged, self.sort)
+        
