@@ -1,12 +1,14 @@
 import patterns                    
 
 class EffortListMixin:
-   def _addAndRemoveEfforts(self, effortsToAdd, effortsToRemove, effortsChanged=None):
+   def _addAndRemoveEfforts(self, effortsToAdd, effortsToRemove, effortsChanged=None, postprocess=None):
         if not (effortsToAdd or effortsToRemove or effortsChanged):
             return
         self.stopNotifying()
         self._extend(effortsToAdd)
         self._removeItems(effortsToRemove)
+        if postprocess:
+            postprocess()
         self.startNotifying()
         self.notifyObservers(patterns.observer.Notification(self,
             itemsAdded=effortsToAdd, itemsRemoved=effortsToRemove,
