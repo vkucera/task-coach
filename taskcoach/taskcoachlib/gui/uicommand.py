@@ -638,15 +638,16 @@ class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand, ViewerComm
         editor.Show()
         return editor 
 
-class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand, ViewerCommand):
+class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand, 
+        ViewerCommand, UICommandsCommand):
     bitmap = 'edit'
     menuText = '&Edit effort'
     helpText = 'Edit the selected effort period(s)'
-    
+            
     def doCommand(self, event):
         editor = gui.EffortEditor(self.mainwindow,
             command.EditEffortCommand(self.effortList, 
-                self.viewer.curselection()))
+                self.viewer.curselection()), self.uiCommands)
         editor.Show()
         return editor
 
@@ -816,7 +817,7 @@ class UICommands(dict):
         
         # Effort menu
         self['neweffort'] = EffortNew(mainwindow, effortList, viewer)
-        self['editeffort'] = EffortEdit(mainwindow, effortList, viewer)
+        self['editeffort'] = EffortEdit(mainwindow, effortList, viewer, self)
         self['deleteeffort'] = EffortDelete(effortList, viewer)
         self['starteffort'] = EffortStart(filteredTaskList, viewer)
         self['starteffortadjacent'] = EffortStartAdjacent(filteredTaskList, viewer)

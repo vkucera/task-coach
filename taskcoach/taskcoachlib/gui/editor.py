@@ -231,7 +231,8 @@ class EffortEditBook(Page):
 
 
 class EditorWithCommand(widgets.TabbedDialog):
-    def __init__(self, parent, command, *args, **kwargs):
+    def __init__(self, parent, command, uiCommands, *args, **kwargs):
+        self._uiCommands = uiCommands
         self._command = command
         super(EditorWithCommand, self).__init__(parent, str(command), *args, **kwargs)
 
@@ -242,8 +243,7 @@ class EditorWithCommand(widgets.TabbedDialog):
             
 class TaskEditor(EditorWithCommand):
     def __init__(self, parent, command, uiCommands, bitmap='edit', *args, **kwargs):
-        self._uiCommands = uiCommands
-        super(TaskEditor, self).__init__(parent, command, bitmap, *args, **kwargs)
+        super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
         wx.CallAfter(self[0]._subjectEntry.SetFocus)
         
     def addPages(self):
