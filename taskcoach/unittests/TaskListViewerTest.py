@@ -28,7 +28,7 @@ class TaskListViewerTest(test.wxTestCase):
     def testOneDayLeft(self):
         aTask = task.Task(subject='Test', duedate=date.Tomorrow())
         self.taskList.append(aTask)
-        self.assertEqual(render.timeLeft(aTask.timeLeft()), 
+        self.assertEqual(render.daysLeft(aTask.timeLeft()), 
             self.listViewer.widget.GetItem(0, 3).GetText())
 
     def testChildSubjectRendering(self):

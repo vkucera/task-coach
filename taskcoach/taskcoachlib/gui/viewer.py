@@ -133,7 +133,7 @@ class TaskListViewer(TaskViewer, ListViewer):
         elif column == 2:
             return render.date(task.dueDate())
         elif column == 3:
-            return render.timeLeft(task.timeLeft())
+            return render.daysLeft(task.timeLeft())
         elif column == 4:
             return render.date(task.completionDate())
         elif column == 5:

@@ -32,3 +32,11 @@ class DateTime(datetime.datetime):
                 return DateTime(self.year, self.month, lastday).endOfDay()
             except ValueError:
                 pass
+                
+    def __sub__(self, other):
+        ''' Make sure substraction returns a TimeDelta and not a datetime.timedelta '''
+        result = super(DateTime, self).__sub__(other)
+        if isinstance(result, datetime.timedelta):
+            result = timedelta.TimeDelta(result.days, result.seconds, result.microseconds)
+        return result
+        

@@ -1,5 +1,6 @@
 import date, widgets, render
 import wx, datetime
+import wx.lib.masked as masked
 
 
 class DateEntry(wx.Panel):
@@ -27,7 +28,31 @@ class DateEntry(wx.Panel):
         self._entry.SetValue(date.Today())
 
 
-class GridPosition:
+class TimeDeltaEntry(wx.Panel):
+    defaultTimeDelta=date.TimeDelta()
+    
+    def __init__(self, parent, timeDelta=defaultTimeDelta, readonly=False, *args, **kwargs):
+        super(TimeDeltaEntry, self).__init__(parent, -1, *args, **kwargs)
+        if readonly:
+            self._entry = wx.StaticText(self, -1, render.timeSpent(timeDelta))
+        else:
+            self._entry = masked.TextCtrl(self, -1, mask='#{6}:##:##',
+                formatcodes='RrFS')
+            hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
+            self._entry.SetFieldParameters(0, defaultValue='%6d'%hours)
+            self._entry.SetFieldParameters(1, defaultValue='%02d'%minutes)
+            self._entry.SetFieldParameters(2, defaultValue='%02d'%seconds)
+
+    def renderTimeDelta(timeDelta):
+        return 
+    def get(self):
+        try:
+            hours, minutes, seconds = [int(x) for x in self._entry.GetValue().split(':')]
+        except ValueError:
+            hours, minutes, seconds = 0, 0, 0 
+        return date.TimeDelta(hours=hours, minutes=minutes, seconds=seconds)
+            
+class GridCursor:
     def __init__(self, columns):
         self._columns = columns
         self._nextPosition = (0, 0)
@@ -59,7 +84,7 @@ class Page(wx.Panel):
         super(Page, self).__init__(parent, -1, *args, **kwargs)
         self._sizer = wx.GridBagSizer(vgap=5, hgap=5)
         self._columns = columns
-        self._position = GridPosition(columns)
+        self._position = GridCursor(columns)
         self._sizer.AddGrowableCol(columns-1)
         self._borderWidth = 5
         self.SetSizerAndFit(self._sizer)
@@ -122,17 +147,24 @@ class TaskEditBook(widgets.Listbook):
     
     def addEffortPage(self):
         effortPage = Page(self, columns=3)
-        effortPage.addEntry('Time spent:', render.timeSpent(self._task.duration()))
+        self._budgetEntry = TimeDeltaEntry(effortPage, self._task.budget())
+        entriesArgs = [(['', 'For this task'], {}),
+                       (['Budget:', self._budgetEntry], {}),
+                       (['Time spent:', render.timeSpent(self._task.duration())], {}),
+                       (['Budget left:', render.budget(self._task.budgetLeft())], {})]
         if self._task.children():
-            effortPage.addEntry('Total time spent:',
-                render.timeSpent(self._task.duration(recursive=True)), 
-                '(Time spent on this task and all of its subtasks)')
+            entriesArgs[0][0].append('For this task including all subtasks')
+            entriesArgs[1][0].append(render.budget(self._task.budget(recursive=True)))
+            entriesArgs[2][0].append(render.timeSpent(self._task.duration(recursive=True)))
+            entriesArgs[3][0].append(render.budget(self._task.budgetLeft(recursive=True)))
         if self._task.duration(recursive=True):
             import viewercontainer, viewerfactory, effort
             viewerContainer = viewercontainer.ViewerChoicebook(effortPage)
             myEffortList = effort.SingleTaskEffortList(self._task)
             viewerfactory._addEffortViewers(viewerContainer, myEffortList, self._uiCommands)
-            effortPage.addEntry('Effort lists:', viewerContainer, growable=True)
+            entriesArgs.append((['Effort lists:', viewerContainer], {'growable': True}))
+        for entryArgs, entryKwArgs in entriesArgs:
+            effortPage.addEntry(*entryArgs, **entryKwArgs)
         self.AddPage(effortPage, 'Effort', 'start')
             
     def completed(self, event):
@@ -152,7 +184,8 @@ class TaskEditBook(widgets.Listbook):
         self._task.setDescription(self._descriptionEntry.GetValue())
         self._task.setStartDate(self._startDateEntry.get(date.Today()))
         self._task.setDueDate(self._dueDateEntry.get())
-        self._task.setCompletionDate(self._completionDateEntry.get())       
+        self._task.setCompletionDate(self._completionDateEntry.get())
+        self._task.setBudget(self._budgetEntry.get())     
         
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)

@@ -15,21 +15,23 @@ class TaskList(patterns.ObservableObservablesList):
     def append(self, task):
         self.extend([task])
         
-    def extend(self, tasks):
-        # We use a set here because tasks could contain parents and their children and
-        # we want to prevent adding the children twice
-        if not tasks:
-            return
+    def _tasksAndAllChildren(self, tasks):
         tasksAndAllChildren = sets.Set(tasks) 
         for task in tasks:
             tasksAndAllChildren |= sets.Set(task.allChildren())
+        return list(tasksAndAllChildren)
+        
+    def extend(self, tasks):
+        if not tasks:
+            return
+        tasksAndAllChildren = self._tasksAndAllChildren(tasks) 
         self.stopNotifying()
         super(TaskList, self).extend(tasksAndAllChildren)
         for task in tasks:
             self._addTaskToParent(task)
         self.startNotifying()
         self.notifyObservers(patterns.observer.Notification(self, 
-            itemsAdded=list(tasksAndAllChildren)))
+            itemsAdded=tasksAndAllChildren))
 
     def _removeTaskFromTaskList(self, task):
         self._removeTasksFromTaskList(task.children())
@@ -46,9 +48,8 @@ class TaskList(patterns.ObservableObservablesList):
             parent.removeChild(task)
 
     def remove(self, task):
-        if task not in self:
-            return
-        self.removeItems([task])
+        if task in self:
+            self.removeItems([task])
             
     def removeItems(self, tasks):
         if not tasks:
@@ -58,11 +59,8 @@ class TaskList(patterns.ObservableObservablesList):
         for task in tasks:
             self._removeTaskFromParent(task)
         self.startNotifying()
-        tasksAndAllChildren = sets.Set(tasks) 
-        for task in tasks:
-            tasksAndAllChildren |= sets.Set(task.allChildren())
         self.notifyObservers(patterns.observer.Notification(self,
-            itemsRemoved=list(tasksAndAllChildren)))
+            itemsRemoved=self._tasksAndAllChildren(tasks)))
             
     # queries
 

@@ -195,6 +195,7 @@ class EditTaskCommandTest(CommandTestCase):
         for task in tasks:
             task.setSubject('New subject')
             task.setDescription('New description')
+            task.setBudget(date.TimeDelta(hours=1))
             task.setCompletionDate()
         editcommand.do()
 
@@ -223,6 +224,13 @@ class EditTaskCommandTest(CommandTestCase):
             lambda: self.assertEqual('New description', self.task1.description()),
             lambda: self.assertEqual('', self.task1.description()))
 
+    def testEditBudget(self):
+        self.edit([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.TimeDelta(hours=1), self.task1.budget()),
+            lambda: self.assertEqual(date.TimeDelta(), self.task1.budget()))
+            
+            
 class MarkCompletedCommandTest(CommandWithChildrenTestCase):
 
     def testMarkCompleted(self):

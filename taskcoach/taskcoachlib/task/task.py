@@ -13,7 +13,7 @@ class Task(patterns.Observable):
         self._duedate        = duedate or date.Date()
         self._startdate      = startdate or date.Today()
         self._completiondate = date.Date()
-        self._budget         = budget or date.TimeDelta.max  # infinite budget by default
+        self._budget         = budget or date.TimeDelta()
         self._id             = '%s:%s'%(id(self), time.time())
         self._children       = []
         self._parent         = parent # adding the parent->child link is
@@ -35,7 +35,7 @@ class Task(patterns.Observable):
             '_duedate' : self._duedate, '_startdate' : self._startdate, 
             '_completiondate' : self._completiondate,
             '_children' : self._children, '_parent' : self._parent,
-            '_efforts' : self._efforts }
+            '_efforts' : self._efforts, '_budget' : self._budget }
         
     def __repr__(self):
         return self._subject
@@ -264,13 +264,24 @@ class Task(patterns.Observable):
                 return True
         return False
         
-    def budget(self):
-        return self._budget
+    def budget(self, recursive=False):
+        result = self._budget
+        if recursive:
+            for task in self.children():
+                result += task.budget(recursive)
+        return result
         
     def setBudget(self, budget):
         self._budget = budget
         self.notifyObservers(patterns.observer.Notification(self))
         
+    def budgetLeft(self, recursive=False):
+        budget = self.budget(recursive)
+        if budget:
+            return budget - self.duration(recursive)
+        else:
+            return budget
+
     def _myDuration(self):
         return sum([effort.duration() for effort in self.efforts()], date.TimeDelta())
     

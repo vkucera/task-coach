@@ -1,4 +1,4 @@
-import test, asserts, task, date, time, wx
+import test, asserts, task, date, time, wx, effort
 
 __coverage__ = [task.Task]
 
@@ -100,19 +100,20 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
         self.assertEqual(1, dueTomorrow.timeLeft().days)
 
     def testCopyTask(self):
-        orig = task.Task(subject='Orig', duedate=date.Tomorrow(),
+        original = task.Task(subject='Original', duedate=date.Tomorrow(),
             startdate=date.Tomorrow())
-        orig.setCompletionDate(date.Tomorrow())
-        self.task.addChild(orig)
-        for i in range(2):
-            child = task.Task(subject='Child %d'%i)
-            orig.addChild(child)
-            for j in range(2):
-                grandChild = task.Task(subject='Grandchild %d.%d'%(i,j))
+        original.setCompletionDate(date.Tomorrow())
+        self.task.addChild(original)
+        for childIndex in range(2):
+            child = task.Task(subject='Child %d'%childIndex)
+            original.addChild(child)
+            for grandchildIndex in range(2):
+                grandChild = task.Task(subject='Grandchild %d.%d'%(childIndex, 
+                    grandchildIndex))
                 child.addChild(grandChild)
-        copy = orig.copy()
-        self.assertCopy(orig, copy)
-        self.assertEqual(orig.parent(), copy.parent())
+        copy = original.copy()
+        self.assertCopy(original, copy)
+        self.assertEqual(original.parent(), copy.parent())
 
     def testDescription_Default(self):
         self.assertEqual('', self.task.description())
@@ -124,18 +125,7 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
     def testDescription_SetDescription(self):
         self.task.setDescription('Description')
         self.assertEqual('Description', self.task.description())
-
-    def testBudget_Default(self):
-        self.assertEqual(date.TimeDelta.max, self.task.budget())
         
-    def testBudget_SetThroughConstructor(self):
-        newTask = task.Task(budget=date.TimeDelta(days=5))
-        self.assertEqual(date.TimeDelta(days=5), newTask.budget())
-        
-    def testBudget_SetBudget(self):
-        self.task.setBudget(date.TimeDelta(hours=1))
-        self.assertEqual(date.TimeDelta(hours=1), self.task.budget())
-    
     def testState(self):
         state = self.task.__getstate__()
         newTask = task.Task()
@@ -144,6 +134,7 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
         
     def testRepr(self):
         self.assertEqual(self.task.subject(), repr(self.task))
+
 
 
 class TaskNotificationTest(test.TestCase):
@@ -403,7 +394,7 @@ class CompareTasksTest(test.TestCase):
         self.failUnless(task3 < self.task1)
 
 
-import effort
+
 class TaskEffortTest(test.TestCase):
     def setUp(self):
         self.task = task.Task()
@@ -461,3 +452,87 @@ class TaskEffortTest(test.TestCase):
         child, childEffort = self.addChild(self.task)
         self.assertEqual([self.effort, childEffort],
             self.task.efforts(recursive=True))
+
+    
+class TaskBudgetTest(test.TestCase):
+    def setUp(self):
+        self.task = task.Task(subject='Todo')
+        self.zero = date.TimeDelta()
+        self.oneHour = date.TimeDelta(hours=1)
+        self.twoHours = date.TimeDelta(hours=2)
+        self.oneHourEffort = effort.Effort(self.task, 
+            date.DateTime(2005,1,1,13,0,0), date.DateTime(2005,1,1,14,0,0))
+        self.child = task.Task(subject='child')
+        self.childEffort = effort.Effort(self.child,
+            date.DateTime(2005,1,2,10,0,0), date.DateTime(2005,1,2,11,0,0))
+            
+    def testBudget_Default(self):
+        self.assertEqual(self.zero, self.task.budget())
+        
+    def testBudget_SetThroughConstructor(self):
+        newTask = task.Task(budget=self.oneHour)
+        self.assertEqual(self.oneHour, newTask.budget())
+        
+    def testBudget_SetBudget(self):
+        self.task.setBudget(self.oneHour)
+        self.assertEqual(self.oneHour, self.task.budget())
+    
+    def testBudget_Recursive_None(self):
+        self.task.addChild(self.child)
+        self.assertEqual(self.zero, self.task.budget(recursive=True))
+        
+    def testBudget_Recursive_ChildWithoutBudget(self):
+        self.task.addChild(self.child)
+        self.task.setBudget(self.oneHour)
+        self.assertEqual(self.oneHour, self.task.budget(recursive=True))
+        
+    def testBudget_Recursive_ParentWithoutBudget(self):
+        self.task.addChild(self.child)
+        self.child.setBudget(self.oneHour)
+        self.assertEqual(self.oneHour, self.task.budget(recursive=True))
+        
+    def testBudget_Recursive_BothHaveBudget(self):
+        self.task.addChild(self.child)
+        self.child.setBudget(self.oneHour)
+        self.task.setBudget(self.oneHour)
+        self.assertEqual(self.twoHours, self.task.budget(recursive=True))
+    
+    def testBudgetLeft(self):
+        self.task.setBudget(self.oneHour)
+        self.assertEqual(self.oneHour, self.task.budgetLeft())
+        
+    def testBudgetLeft_NoBudget(self):
+        self.assertEqual(self.zero, self.task.budgetLeft())
+        
+    def testBudgetLeft_HalfSpent(self):
+        self.task.setBudget(self.twoHours)
+        self.task.addEffort(self.oneHourEffort)
+        self.assertEqual(self.oneHour, self.task.budgetLeft())
+        
+    def testBudgetLeft_AllSpent(self):
+        self.task.setBudget(self.twoHours)
+        self.task.addEffort(self.oneHourEffort)
+        self.task.addEffort(self.oneHourEffort)
+        self.assertEqual(self.zero, self.task.budgetLeft())
+    
+    def testBudgetLeft_OverBudget(self):
+        self.task.setBudget(self.oneHour)
+        self.task.addEffort(self.oneHourEffort)
+        self.task.addEffort(self.oneHourEffort)
+        self.assertEqual(-self.oneHour, self.task.budgetLeft())
+        
+    def testBudgetLeft_Recursive_NoBudget(self):
+        self.task.addChild(self.child)
+        self.assertEqual(self.zero, self.task.budgetLeft(recursive=True))
+        
+    def testBudgetLeft_Recursive_BudgetNoEffort(self):
+        self.task.addChild(self.child)
+        self.child.setBudget(self.oneHour)
+        self.assertEqual(self.oneHour, self.task.budgetLeft(recursive=True))
+        
+    def testBudgetLeft_Recursive_BudgetSpent(self):
+        self.task.addChild(self.child)
+        self.child.setBudget(self.oneHour)
+        self.child.addEffort(self.childEffort)
+        self.assertEqual(self.zero, self.task.budgetLeft(recursive=True))
+        

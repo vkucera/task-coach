@@ -12,7 +12,7 @@ def subject(task, recursively=False, sep='|'):
         prefix = subject(task.parent(), recursively) + sep 
     return prefix + task.subject()
    
-def timeLeft(timeLeft):
+def daysLeft(timeLeft):
     ''' render time left (of type date.TimeDelta) in days '''
     import date
     if timeLeft == date.TimeDelta.max:
@@ -23,12 +23,17 @@ def timeLeft(timeLeft):
 def timeSpent(timeSpent):
     ''' render time spent (of type date.TimeDelta) as
     "<hours>:<minutes>:<seconds>" '''
-    days, seconds = timeSpent.days, timeSpent.seconds
-    hours, seconds = seconds/3600, seconds%3600
-    minutes, seconds = seconds/60, seconds%60
-    hours += days*24
-    return '%d:%02d:%02d'%(hours, minutes, seconds)
+    return '%d:%02d:%02d'%timeSpent.hoursMinutesSeconds()
     
+def budget(aBudget):
+    ''' render budget (of type date.TimeDelta) as
+    "<hours>:<minutes>:<seconds>" or "None" if budget is infinite. '''
+    import date
+    if aBudget == date.TimeDelta.max:
+        return 'None'
+    else:
+        return timeSpent(aBudget)
+        
 def dateTime(dateTime):
     return dateTime.strftime('%Y-%m-%d %H:%M')
     
