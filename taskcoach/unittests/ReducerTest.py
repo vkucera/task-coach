@@ -99,7 +99,7 @@ class CommonTests:
     def testNotification_Add(self):
         self.task1.addEffort(self.effort1_1)
         self.assertEqual(1, self.notifications)
-        self.assertEqual(self.reducer[0], self.notification.effortsAdded[0])
+        self.assertEqual(self.reducer[0], self.notification.itemsAdded[0])
         
     def testNotification_Remove(self):
         self.task1.addEffort(self.effort1_1)

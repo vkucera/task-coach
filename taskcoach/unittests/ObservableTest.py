@@ -231,3 +231,4 @@ class NotificationTest(test.TestCase):
     def testSource(self):
         notification = patterns.observer.Notification(self)
         self.assertEqual(self, notification.source)
+        

@@ -142,3 +142,7 @@ class EffortSorterTest(test.TestCase):
         self.effortList[1].setStart(date.DateTime(2004,3,1))
         self.assertEqual(self.effortList[0], self.sorter[0])
         self.assertEqual(self.effortList[1], self.sorter[1])
+
+    def testCreateWhenEffortListIsFilled(self):
+        sorter = effort.EffortSorter(self.effortList)
+        self.assertEqual(2, len(sorter))

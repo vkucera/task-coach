@@ -29,6 +29,7 @@ class EffortListTest(test.TestCase):
         
     def testAppend(self):
         self.task.addEffort(self.effort)
+        self.assertEqual(1, len(self.effortList))
         self.assertEqual(self.effort, self.effortList[0])
         
     def testRemove(self):
@@ -46,6 +47,13 @@ class EffortListTest(test.TestCase):
         self.task.addEffort(self.effort)
         effortList = effort.EffortList(task.TaskList([self.task]))
         self.assertEqual(1, len(effortList))
+
+    def testAddEffortToChild(self):
+        child = task.Task()
+        self.task.addChild(child)
+        self.taskList.append(child)
+        child.addEffort(effort.Effort(child))
+        self.assertEqual(1, len(self.effortList))
         
 
 class SingleTaskEffortListTest(test.TestCase):

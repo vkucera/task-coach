@@ -21,7 +21,7 @@ class Task(patterns.Observable):
         self._efforts        = []
 
     def onNotify(self, notification, *args, **kwargs):
-        notification = patterns.observer.Notification(self, notification, 
+        notification = patterns.observer.Notification(self,  
             itemsChanged=[notification.source])
         self.notifyObservers(notification, *args, **kwargs)       
         
@@ -95,14 +95,14 @@ class Task(patterns.Observable):
             child.setParent(self)
             self._updateCompletionState(child.completionDate())
             child.registerObserver(self.onNotify)
-            self.notifyObservers(patterns.observer.Notification(self, itemsAdded=[child]))
+            self.notifyObservers(patterns.observer.Notification(self, childrenAdded=[child]))
 
     def removeChild(self, child):
         self._children.remove(child)
         if self._children:
             self._updateCompletionState(date.Today())
         child.removeObserver(self.onNotify)
-        self.notifyObservers(patterns.observer.Notification(self, itemsRemoved=[child]))
+        self.notifyObservers(patterns.observer.Notification(self, childrenRemoved=[child]))
 
     def setParent(self, parent):
         self._parent = parent

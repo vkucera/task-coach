@@ -7,13 +7,13 @@ class EffortReducer(patterns.ObservableListObserver):
         
     def onNotify(self, notification, *args, **kwargs):
         self.stopNotifying()
-        effortsRemoved, changedComposites1 = self.removeEfforts(notification.effortsRemoved + notification.effortsChanged)
-        effortsAdded, changedComposites2 = self.addEfforts(notification.effortsAdded + notification.effortsChanged)
+        effortsRemoved, changedComposites1 = self.removeEfforts(notification.itemsRemoved + notification.itemsChanged)
+        effortsAdded, changedComposites2 = self.addEfforts(notification.itemsAdded + notification.itemsChanged)
         self.startNotifying()
         changedComposites = changedComposites1 + changedComposites2
         self.notifyObservers(patterns.observer.Notification(self, 
-            effortsAdded=effortsAdded, effortsRemoved=effortsRemoved, 
-            effortsChanged=changedComposites))
+            itemsAdded=effortsAdded, itemsRemoved=effortsRemoved, 
+            itemsChanged=changedComposites))
         
     def addEfforts(self, newEfforts):
         newComposites = []
