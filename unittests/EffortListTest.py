@@ -1,5 +1,7 @@
 import test, effort, task, date
 
+__coverage__ = [effort.EffortList, effort.SingleTaskEffortList]
+
 class EffortListTest(test.TestCase):
     def setUp(self):
         self.notifications = 0

@@ -1,5 +1,7 @@
 import test, effort, date, task
 
+__coverage__ = [effort.EffortPerDay, effort.EffortPerWeek, effort.EffortPerMonth]
+
 # FIXME: rename to EffortReducerTest.py
 
 class ReducerTestCase(test.TestCase):
@@ -58,9 +60,9 @@ class CommonTests:
         self.assertCompositeEffort(self.reducer[0], self.effort1_1)
         self.assertCompositeEffort(self.reducer[1], self.effort1_3)
         
-    def XXXtestEffortOfChildBringsInParent(self):
+    def testEffortOfChildBringsInParent(self):
         self.task1.addChild(self.task2)
-        self.tasl2.addEffort(self.effort2_1)
+        self.task2.addEffort(self.effort2_1)
         self.assertCompositeEffort(self.reducer[0], self.effort2_1)
         self.assertCompositeEffort(self.reducer[1], self.effort2_1)
 
