@@ -35,7 +35,7 @@ class Task(patterns.Observable):
             '_duedate' : self._duedate, '_startdate' : self._startdate, 
             '_completiondate' : self._completiondate,
             '_children' : self._children, '_parent' : self._parent,
-            '_efforts' : [copy.copy(effort) for effort in self._efforts] }
+            '_efforts' : self._efforts }
         
     def __repr__(self):
         return self._subject
@@ -114,8 +114,9 @@ class Task(patterns.Observable):
         return self._subject
 
     def setSubject(self, subject):
-        self._subject = subject
-        self.notifyObservers(patterns.observer.Notification(self))
+        if subject != self._subject:
+            self._subject = subject
+            self.notifyObservers(patterns.observer.Notification(self))
 
     def dueDate(self):
         if self.children():
@@ -129,8 +130,9 @@ class Task(patterns.Observable):
             return self._duedate
 
     def setDueDate(self, duedate):
-        self._duedate = duedate
-        self.notifyObservers(patterns.observer.Notification(self))
+        if duedate != self._duedate:
+            self._duedate = duedate
+            self.notifyObservers(patterns.observer.Notification(self))
 
     def startDate(self):
         if self.children():
@@ -144,8 +146,9 @@ class Task(patterns.Observable):
             return self._startdate
 
     def setStartDate(self, startdate):
-        self._startdate = startdate
-        self.notifyObservers(patterns.observer.Notification(self))
+        if startdate != self._startdate:
+            self._startdate = startdate
+            self.notifyObservers(patterns.observer.Notification(self))
 
     def timeLeft(self):
         return self._duedate - date.Today()
@@ -154,9 +157,12 @@ class Task(patterns.Observable):
         return self._completiondate
 
     def setCompletionDate(self, completionDate=None):
+        completionDate = completionDate or date.Today()
+        if completionDate == self._completiondate:
+            return
         if completionDate != date.Date():
             self.stopTracking()
-        self._completiondate = completionDate or date.Today()
+        self._completiondate = completionDate
         [child.setCompletionDate(completionDate) for child in self.children() 
             if not child.completed()]
         parent = self.parent()
@@ -197,10 +203,10 @@ class Task(patterns.Observable):
         return result
 
     def __eq__(self, other):
-        return self._compare(other) == 0
+        return self.id() == other.id()
 
     def __ne__(self, other):
-        return self._compare(other) != 0
+        return self.id() != other.id()
 
     def __lt__(self, other):
         return self._compare(other) < 0
@@ -245,9 +251,12 @@ class Task(patterns.Observable):
             return self._myDuration()
     
     def stopTracking(self):
+        stoppedEfforts = []
         for effort in self.efforts():
             if effort.getStop() is None:
                 effort.setStop()
+                stoppedEfforts.append(effort)
+        return stoppedEfforts
                 
     def isBeingTracked(self):
         for effort in self.efforts():

@@ -37,7 +37,10 @@ class EffortReducer(patterns.ObservableListObserver):
         removedComposites = []
         changedComposites = []
         for removedEffort in removedEfforts:
-            composites = self.__effortToCompositeMapping.pop(removedEffort)
+            try:
+                composites = self.__effortToCompositeMapping.pop(removedEffort)
+            except KeyError:
+                continue # Huh, apparently removedEffort has been removed earlier or was never added?
             for composite in composites:
                 composite.remove(removedEffort)
                 if len(composite) == 0:

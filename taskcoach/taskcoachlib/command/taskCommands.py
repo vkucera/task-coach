@@ -173,43 +173,47 @@ class EditTaskCommand(base.BaseCommand, SaveTaskStateMixin):
         return sets.Set([relative for task in self.items for relative in task.family()])
 
     def do_command(self):
-        pass
+        super(EditTaskCommand, self).do_command()
 
     def undo_command(self):
         self.undoStates()
+        super(EditTaskCommand, self).undo_command()
 
     def redo_command(self):
         self.redoStates()
+        super(EditTaskCommand, self).redo_command()
 
 
-class MarkCompletedCommand(EditTaskCommand):
-    name = 'Mark completed'
-
-    def do_command(self):
-        for task in self.items:
-            task.setCompletionDate()
-
-
-class EffortCommand(base.BaseCommand, base.SaveStateMixin):
-    def __init__(self, *args, **kwargs):
-        super(EffortCommand, self).__init__(*args, **kwargs)
-        self.saveStates(self.getTasksToSave())
-        
-    def getTasksToSave(self):
-        return [task for task in self.list if task.isBeingTracked()]
-
+class EffortCommand(base.BaseCommand):
     def stopTracking(self):
+        self.stoppedEfforts = []
         for task in self.list:
-            task.stopTracking()        
+            self.stoppedEfforts.extend(task.stopTracking())
 
+    def startTracking(self):
+        for effort in self.stoppedEfforts:
+            effort.setStop(date.DateTime.max)
+            
     def do_command(self):
         self.stopTracking()
     
     def undo_command(self):
-        self.undoStates()
+        self.startTracking()
         
     def redo_command(self):
-        self.redoStates()
+        self.stopTracking()
+
+
+class MarkCompletedCommand(EditTaskCommand, EffortCommand):
+    name = 'Mark completed'
+
+    def do_command(self):
+        super(MarkCompletedCommand, self).do_command()
+        for task in self.items:
+            task.setCompletionDate()
+
+    def undo_command(self):
+        super(MarkCompletedCommand, self).undo_command()
 
 
 class StartEffortCommand(EffortCommand):
@@ -235,9 +239,10 @@ class StartEffortCommand(EffortCommand):
         super(StartEffortCommand, self).undo_command()
         
     def redo_command(self):
+        super(StartEffortCommand, self).redo_command()
         for task, effort in zip(self.items, self.efforts):
             task.addEffort(effort)
-        super(StartEffortCommand, self).redo_command()
+        
     
         
 class StopEffortCommand(EffortCommand):

@@ -16,12 +16,7 @@ class BaseCommand(patterns.Command):
         if self.canDo():
             super(BaseCommand, self).do()
             self.do_command()
-
-    def do_command(self):
-        raise NotImplementedError
-
-    undo_command = redo_command = do_command
-
+            
     def undo(self):
         super(BaseCommand, self).undo()
         self.undo_command()
@@ -30,6 +25,22 @@ class BaseCommand(patterns.Command):
         super(BaseCommand, self).redo()
         self.redo_command()
 
+    def __tryInvokeMethodOnSuper(self, methodName, *args, **kwargs):
+        try:
+            method = getattr(super(BaseCommand, self), methodName)
+        except AttributeError:
+            return # no 'method' in any super class
+        return method(*args, **kwargs)
+        
+    def do_command(self):
+        self.__tryInvokeMethodOnSuper('do_command')
+        
+    def undo_command(self):
+        self.__tryInvokeMethodOnSuper('undo_command')
+        
+    def redo_command(self):
+        self.__tryInvokeMethodOnSuper('redo_command')
+        
 
 class SaveStateMixin:
     ''' Mixin class for commands that need to keep the states of objects. 

@@ -4,7 +4,10 @@ class Sorter(patterns.ObservableListObserver):
     def postProcessChanges(self):
         self.sort()
 
-class DepthFirstSorter(Sorter):        
+class DepthFirstSorter(Sorter):   
+    def processChanges(self, *args, **kwargs):
+        pass
+        
     def sort(self):
         self[:] = self.sortDepthFirst(self.original().rootTasks())
         
@@ -12,8 +15,6 @@ class DepthFirstSorter(Sorter):
         result = []
         tasks.sort()
         for task in tasks:
-            if task not in self.original():
-                continue
             result.append(task)
             children = task.children()[:]
             result.extend(self.sortDepthFirst(children))

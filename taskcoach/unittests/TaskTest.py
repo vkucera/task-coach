@@ -145,6 +145,54 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
     def testRepr(self):
         self.assertEqual(self.task.subject(), repr(self.task))
 
+
+class TaskNotificationTest(test.TestCase):
+    def setUp(self):
+        self.task = task.Task(subject='Todo')
+        self.task.registerObserver(self.onNotify)
+        self.notifications = 0
+        
+    def onNotify(self, *args, **kwargs):
+        self.notifications += 1
+        
+    def failUnlessNotified(self):
+        self.failUnless(self.notifications > 0)
+        
+    def failIfNotified(self):
+        self.failIf(self.notifications > 0)
+        
+    def testSetSubject(self):
+        self.task.setSubject('New')
+        self.failUnlessNotified()
+        
+    def testSubject_Unchanged(self):
+        self.task.setSubject('Todo')
+        self.failIfNotified()
+        
+    def testSetStartDate(self):
+        self.task.setStartDate(date.Tomorrow())
+        self.failUnlessNotified()
+        
+    def testSetStartDate_Unchanged(self):
+        self.task.setStartDate(self.task.startDate())
+        self.failIfNotified()
+        
+    def testSetDueDate(self):
+        self.task.setDueDate(date.Tomorrow())
+        self.failUnlessNotified()
+        
+    def testSetDueDate_Unchanged(self):
+        self.task.setDueDate(self.task.dueDate())
+        self.failIfNotified()
+        
+    def testSetCompletionDate(self):
+        self.task.setCompletionDate(date.Today())
+        self.failUnlessNotified()
+        
+    def testSetCompletionDate_Unchanged(self):
+        self.task.setCompletionDate(self.task.completionDate())
+        self.failIfNotified()
+        
 class SubTaskTest(test.TestCase, asserts.TaskAsserts):
     def setUp(self):
         self.task = task.Task(subject='Todo', duedate=date.Tomorrow(),

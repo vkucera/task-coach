@@ -1,15 +1,16 @@
-import inspect, patterns, time, sys
+import inspect, time, sys
 
 class Logger:
-    __metaclass__ = patterns.Singleton
-    
-    def watch(self, scope):
-        for attr in scope.__dict__.keys():
-            obj = getattr(scope, attr)
-            if inspect.isroutine(obj) and inspect.getmodule(obj) == inspect.getmodule(scope):
-                setattr(scope, attr, self.__wrap(obj))
-            elif inspect.isclass(obj):
-                self.watch(obj)
+    def watch(self, *scopes):
+        for scope in scopes:
+            for attr in scope.__dict__.keys():
+                if attr in ['__str__', '__repr__']:
+                    continue # don't wrap __str__ to prevent infinite recursion
+                obj = getattr(scope, attr)
+                if inspect.isroutine(obj) and inspect.getmodule(obj) == inspect.getmodule(scope):
+                    setattr(scope, attr, self.__wrap(obj))
+                elif inspect.isclass(obj):
+                    self.watch(obj)
 
     def __wrap(self, func):
         def wrapper(*args, **kwargs):
@@ -25,11 +26,20 @@ class Logger:
             callerName = '%s.%s'%(callerFrame.f_locals['self'].__class__.__name__, callerName)
         return callerName
     
+    def __formatArg(self, arg):
+        try:
+            arg = str(arg)
+        except:
+            arg = '? (got exception)'
+        if len(arg) > 50:
+            arg = arg[:20] + '...' + arg[-20:]
+        return arg
+        
     def __formatArgs(self, args, kwargs):
-        args = [str(arg) for arg in args]
-        kwargs = ['%s=%s'%(key, value) for key, value in kwargs.items()]
+        args = [self.__formatArg(arg) for arg in args]
+        kwargs = ['%s=%s'%(key, self.__formatArg(value)) for key, value in kwargs.items()]
         return ', '.join(args + kwargs)
-    
+        
     def __formatFunc(self, func, args):
         try:
             className = args[0].__class__.__name__

@@ -63,6 +63,18 @@ class EffortTest(test.TestCase):
         newEffort = effort.Effort(self.task, description='description')
         self.assertEqual('description', newEffort.getDescription())
         
-    def testSetDescriptionTriggersNotification(self):
+    def testSetDescriptionDoesNotTriggerNotification(self):
         self.effort.setDescription('description')
-        self.assertEqual(1, self.notifications)
+        self.assertEqual(0, self.notifications)
+        
+    def testSetStop_None(self):
+        self.effort.setStop()
+        self.assertEqual(date.Today(), self.effort.getStop().date())
+        
+    def testSetStop_Infinite(self):
+        self.effort.setStop(date.DateTime.max)
+        self.assertEqual(None, self.effort.getStop())
+        
+    def testSetStop_SpecificDateTime(self):
+        self.effort.setStop(date.DateTime(2005,1,1))
+        self.assertEqual(date.DateTime(2005,1,1), self.effort.getStop())

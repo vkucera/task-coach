@@ -153,7 +153,7 @@ class TaskEditBook(widgets.Listbook):
         self._task.setStartDate(self._startDateEntry.get(date.Today()))
         self._task.setDueDate(self._dueDateEntry.get())
         self._task.setCompletionDate(self._completionDateEntry.get())       
-    
+        
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)
 
@@ -230,3 +230,4 @@ class EffortEditor(EditorWithCommand):
     def addPage(self, effort):
         page = EffortEditBook(self._notebook, effort, self)
         self._notebook.AddPage(page, str(effort.task()))
+

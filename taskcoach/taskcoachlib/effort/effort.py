@@ -50,7 +50,6 @@ class Effort(patterns.Observable):
         
     def setDescription(self, description):
         self._description = description
-        self.notifyObservers(patterns.observer.Notification(self))
         
     def getDescription(self):
         return self._description

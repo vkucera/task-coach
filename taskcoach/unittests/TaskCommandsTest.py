@@ -1,4 +1,4 @@
-import test, asserts, command, task, patterns, dummy, effort
+import test, asserts, command, task, patterns, dummy, effort, date
 
 class CommandTestCase(test.wxTestCase, asserts.Mixin):
     def setUp(self):
@@ -48,9 +48,10 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
                 subtask.setCompletionDate()
         newSubTask.do()
 
+
 class CommandWithChildrenTestCase(CommandTestCase):
     def setUp(self):
-        CommandTestCase.setUp(self)
+        super(CommandWithChildrenTestCase, self).setUp()
         self.parent = task.Task()
         self.child = task.Task(parent=self.parent)
         self.child2 = task.Task(parent=self.parent)
@@ -59,6 +60,16 @@ class CommandWithChildrenTestCase(CommandTestCase):
         self.taskList.extend([self.parent, self.child, self.child2, self.grandchild])
 
 
+class CommandWithEffortTestCase(CommandTestCase):
+    def setUp(self):
+        super(CommandWithEffortTestCase, self).setUp()
+        self.effortList = effort.EffortList(self.taskList)
+        self.task1.addEffort(effort.Effort(self.task1))
+        self.task2.addEffort(effort.Effort(self.task2, 
+            date.DateTime(2004,1,1), date.DateTime(2004,1,2)))
+        self.taskList.append(self.task2)
+
+        
 class DeleteCommandTest(CommandTestCase):
     def testDeleteAllTasks(self):
         self.taskList.append(self.task2)
@@ -120,6 +131,14 @@ class DeleteCommandWithChildrenTest(CommandWithChildrenTestCase):
         self.assertTaskList(self.originalList)
         self.failUnlessParentAndChild(self.parent, self.child)
         self.failUnlessParentAndChild(self.child, self.grandchild)
+
+
+class DeleteCommandWithEffortTest(CommandWithEffortTestCase):
+    def testDeleteActiveTask(self):
+        self.delete([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(1, len(self.effortList)),
+            lambda: self.assertEqual(2, len(self.effortList)))
 
 
 class NewTaskCommandTest(CommandTestCase):
