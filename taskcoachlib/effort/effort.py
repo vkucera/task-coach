@@ -35,7 +35,10 @@ class Effort(patterns.Observable):
         return self._start
         
     def setStop(self, stopDatetime=None):
-        self._stop = stopDatetime or date.DateTime.now()
+        if stopDatetime and stopDatetime.date() == date.Date():
+            self._stop = None
+        else:
+            self._stop = stopDatetime or date.DateTime.now()
         self._notifyObserversOfChange()
         
     def getStop(self):

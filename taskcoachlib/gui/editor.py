@@ -162,16 +162,17 @@ class TaskEditBook(widgets.Listbook):
 
 
 class EffortEditBook(Page):
-    def __init__(self, parent, effort, *args, **kwargs):
+    def __init__(self, parent, effort, editor, *args, **kwargs):
         super(EffortEditBook, self).__init__(parent, 2, *args, **kwargs)
+        self._editor = editor
         self._effort = effort
         self.addStartAndStopEntries()
         
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
-            self.onSetStart)
+            self.preventNegativeEffortDuration)
         self._stopEntry = widgets.DateTimeCtrl(self, self._effort.getStop(),
-            self.onSetStop)
+            self.preventNegativeEffortDuration)
         self.addEntry('Start:', self._startEntry)
         self.addEntry('Stop:', self._stopEntry)
         
@@ -179,18 +180,13 @@ class EffortEditBook(Page):
         self._effort.setStart(self._startEntry.GetValue())
         self._effort.setStop(self._stopEntry.GetValue())
 
-    def onSetStart(self, event):
-        if hasattr(self, '_stopEntry'): # check that both entries have been created
-            self.preventNegativeEffortDuration(self._stopEntry, self._startEntry)
-
-    def onSetStop(self, event):
-        if hasattr(self, '_stopEntry'): # check that both entries have been created
-            self.preventNegativeEffortDuration(self._startEntry, self._stopEntry)
-
-    def preventNegativeEffortDuration(self, adaptEntry, referenceEntry):
-        if self._startEntry.GetValue() > self._stopEntry.GetValue() and \
-            referenceEntry.GetValue().date() < date.Date():
-            wx.CallAfter(lambda: adaptEntry.SetValue(referenceEntry.GetValue()))
+    def preventNegativeEffortDuration(self, *args, **kwargs):
+        if not hasattr(self, '_stopEntry'): # check that both entries have been created
+            return
+        if self._startEntry.GetValue() > self._stopEntry.GetValue():
+            self._editor.disableOK()
+        else:
+            self._editor.enableOK()
 
 
 class EditorWithCommand(widgets.TabbedDialog):
@@ -224,5 +220,5 @@ class EffortEditor(EditorWithCommand):
             self.addPage(effort)
 
     def addPage(self, effort):
-        page = EffortEditBook(self._notebook, effort)
+        page = EffortEditBook(self._notebook, effort, self)
         self._notebook.AddPage(page, str(effort.task()))

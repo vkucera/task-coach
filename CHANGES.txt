@@ -1,5 +1,8 @@
 Release 0.25 - ? 
 
+Bugs fixed:
+- The menu item 'Effort' -> 'New effort' did not work.
+
 Features added:
 - XML export now includes effort records.
 
