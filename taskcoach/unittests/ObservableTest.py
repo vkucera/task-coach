@@ -189,13 +189,14 @@ class ObservableListObserverTest(ObservableTestCase):
         
     def check(self, addNotifications=0, removeNotifications=0, lenOriginal=0):
         self.assertEqual(lenOriginal, len(self.observable.original()))
+        self.assertEqual(lenOriginal, len(self.observable))
         self.assertEqual(addNotifications, self.addNotifications)
         self.assertEqual(removeNotifications, self.removeNotifications)
 
     def testAppend(self):
         self.observable.append(self.observableItem)
         self.check(addNotifications=1, lenOriginal=2)
-
+        
     def testExtend(self):
         self.observable.extend([self.observableItem, patterns.Observable()])
         self.check(addNotifications=1, lenOriginal=3)

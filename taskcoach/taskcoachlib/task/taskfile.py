@@ -1,12 +1,11 @@
-import os, writer, reader, tasklist
+import os, writer, reader, tasklist, patterns
 
 class TaskFile(tasklist.TaskList):
     def __init__(self, filename='', *args, **kwargs):
-        self.setFilename(filename)
+        self.__needSave = False
         super(TaskFile, self).__init__(*args, **kwargs)
-        self.registerObserver(self.onNotifyNeedSave)
-        self._needSave = False
-
+        self.setFilename(filename)
+        
     def __str__(self):
         return self.filename()
 
@@ -14,39 +13,42 @@ class TaskFile(tasklist.TaskList):
         return self.filename() != ''
 
     def setFilename(self, filename):
-        self._filename = filename
-
-    def onNotifyNeedSave(self, *args, **kwargs):
-        self._needSave = True
+        self.__filename = filename
+        notification = patterns.observer.Notification(self, filename=filename)
+        super(TaskFile, self).notifyObservers(notification)
 
     def filename(self):
-        return self._filename
-
+        return self.__filename
+        
+    def notifyObservers(self, notification):
+        self.__needSave = True
+        super(TaskFile, self).notifyObservers(notification)
+        
     def _clear(self):
         self.removeItems(list(self))
         
     def close(self):
         self.setFilename('')
         self._clear()
-        self._needSave = False
+        self.__needSave = False
 
     def load(self):
-        if os.path.isfile(self._filename):
-            fd = file(self._filename, 'rU')
+        if os.path.isfile(self.__filename):
+            fd = file(self.__filename, 'rU')
             tasks = reader.TaskReader(fd).read()
             fd.close()
         else: 
             tasks = []
         self._clear()
         self.extend(tasks)
-        self._needSave = False
+        self.__needSave = False
 
     def save(self):
-        fd = file(self._filename, 'w')
+        fd = file(self.__filename, 'w')
         writer.TaskWriter(fd).write(self)
         fd.close()
-        self._needSave = False
-
+        self.__needSave = False
+        
     def saveas(self, filename):
         self.setFilename(filename)
         self.save()
@@ -55,11 +57,10 @@ class TaskFile(tasklist.TaskList):
         mergeFile = TaskFile(filename)
         mergeFile.load()
         self.extend(mergeFile.rootTasks())
-        self._needSave = True
 
     def needSave(self):
-        return self._needSave
-        
+        return self.__needSave
+            
     def exportToXML(self, filename):
         fd = file(filename, 'w')
         writer.XMLWriter(fd).write(self)

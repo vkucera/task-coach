@@ -31,10 +31,10 @@ class ReducerTestCase(test.TestCase):
         self.notifications += 1
         self.notification = notification
         
-    def assertCompositeEffort(self, compositeEffort, startEffort, stopEffort=None):
-        stopEffort = stopEffort or startEffort
-        self.assertEqual(startEffort.getStart(), compositeEffort.getStart())
-        self.assertEqual(stopEffort.getStop(), compositeEffort.getStop())
+    def assertCompositeEffort(self, compositeEffort, *efforts):
+        for effort in efforts:
+            self.failUnless(compositeEffort.getStart() <= effort.getStart() <= compositeEffort.getStop())
+            self.failUnless(effort in compositeEffort)
 
 class CommonTests:
     def testEmptyEffortList(self):
@@ -112,6 +112,11 @@ class CommonTests:
         self.assertEqual(1, len(self.reducer))
         self.assertEqual(2, self.notifications)
 
+    def testCreateWithInitialEffort(self):
+        self.task1.addEffort(self.effort1_1)
+        reducer = self.createReducer()
+        self.assertEqual(1, len(reducer))
+        
 
 class EffortPerDayTest(ReducerTestCase, CommonTests):  
     def createReducer(self):

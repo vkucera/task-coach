@@ -1,4 +1,4 @@
-import test, asserts, command, task, patterns, dummy
+import test, asserts, command, task, patterns, dummy, effort
 
 class CommandTestCase(test.wxTestCase, asserts.Mixin):
     def setUp(self):
@@ -236,3 +236,9 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
                 not self.parent.completed()), 
             lambda: self.failIf(self.child.completed() or 
                 self.parent.completed()))
+
+    def testMarkCompletedStopsEffortTracking(self):
+        self.task1.addEffort(effort.Effort(self.task1))
+        self.markCompleted([self.task1])
+        self.assertDoUndoRedo(lambda: self.failIf(self.task1.isBeingTracked()), 
+            lambda: self.failUnless(self.task1.isBeingTracked()))

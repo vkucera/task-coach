@@ -37,19 +37,19 @@ class SaveStateMixin:
         
     def saveStates(self, objects):
         self.objectsToBeSaved = objects
-        self.oldStates = self._getStates()
+        self.oldStates = self.__getStates()
 
     def undoStates(self):
-        self.newStates = self._getStates()
-        self._setStates(self.oldStates)
+        self.newStates = self.__getStates()
+        self.__setStates(self.oldStates)
 
     def redoStates(self):
-        self._setStates(self.newStates)
+        self.__setStates(self.newStates)
 
-    def _getStates(self):
+    def __getStates(self):
         return [object.__getstate__() for object in self.objectsToBeSaved]
 
-    def _setStates(self, states):
+    def __setStates(self, states):
         for object, state in zip(self.objectsToBeSaved, states):
             object.__setstate__(state)
 

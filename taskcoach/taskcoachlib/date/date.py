@@ -2,7 +2,7 @@ import patterns
 import time, string, datetime, timedelta
 
 infinite = datetime.date.max
-
+    
 class RealDate(datetime.date):
 
     def __init__(self, year, month, day):
@@ -25,7 +25,7 @@ class RealDate(datetime.date):
 
     def nextFriday(self):
         return self.nextWeekday(5)
-
+        
     def __add__(self, delta):
         newdate = super(RealDate, self).__add__(delta)
         return RealDate(newdate.year, newdate.month, newdate.day)

@@ -154,6 +154,8 @@ class Task(patterns.Observable):
         return self._completiondate
 
     def setCompletionDate(self, completionDate=None):
+        if completionDate != date.Date():
+            self.stopTracking()
         self._completiondate = completionDate or date.Today()
         [child.setCompletionDate(completionDate) for child in self.children() 
             if not child.completed()]

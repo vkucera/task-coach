@@ -11,7 +11,7 @@ class Viewer(patterns.Observable, wx.Panel):
         self.list.registerObserver(self.onNotify)
         self.widget = self.createWidget()
         self.initLayout()
-        self.onNotify(patterns.observer.Notification(self))
+        self.onNotify(patterns.observer.Notification(self.list, itemsAdded=self.list))
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
@@ -60,8 +60,9 @@ class Viewer(patterns.Observable, wx.Panel):
         raise NotImplementedError
 
     def onNotify(self, notification, *args, **kwargs):
-        self.widget.refresh(len(self.list))
-        self.notifyObservers(patterns.observer.Notification(self, notification))
+        if notification.itemsAdded or notification.itemsChanged or notification.itemsRemoved:
+            self.widget.refresh(len(self.list))
+            self.notifyObservers(patterns.observer.Notification(self, notification))
         
     def onSelect(self, *args):
         self.notifyObservers(patterns.observer.Notification(self))

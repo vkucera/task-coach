@@ -47,3 +47,4 @@ class EffortTest(test.TestCase):
         import copy
         copyEffort = copy.copy(self.effort)
         self.assertEqual(copyEffort, self.effort)
+        

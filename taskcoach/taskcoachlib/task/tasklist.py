@@ -18,6 +18,8 @@ class TaskList(patterns.ObservableObservablesList):
     def extend(self, tasks):
         # We use a set here because tasks could contain parents and their children and
         # we want to prevent adding the children twice
+        if not tasks:
+            return
         tasksAndAllChildren = sets.Set(tasks) 
         for task in tasks:
             tasksAndAllChildren |= sets.Set(task.allChildren())

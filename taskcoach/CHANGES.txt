@@ -1,3 +1,13 @@
+Release 0.26 - March ?, 2005
+
+Features added:
+- Save button is disabled when saving is not necessary (1164472).
+
+Bugs fixed:
+- Marking a task completed did not stop effort tracking (1159918).
+
+
+
 Release 0.25 - March 13, 2005 
 
 Bugs fixed:
