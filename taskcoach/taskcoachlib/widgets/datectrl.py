@@ -146,10 +146,17 @@ class TimeCtrl(Panel):
 class DateTimeCtrl(Panel):
     def __init__(self, parent, dateTime, callback=None, *args, **kwargs):
         super(DateTimeCtrl, self).__init__(parent, callback, *args, **kwargs)
+        self._callback = callback
         self.SetValue(dateTime)
         
     def _createControls(self, callback):
-        return [DateCtrl(self, callback), TimeCtrl(self, callback)]
+        return DateCtrl(self, callback), TimeCtrl(self, self._timeCtrlCallback)
+        
+    def _timeCtrlCallback(self, *args, **kwargs):
+        # if user sets time and date == None, then set date to today
+        if self._controls[0].GetValue() == date.Date():
+            self._controls[0].SetValue(date.Today())
+        self._callback(*args, **kwargs)
         
     def SetValue(self, dateTime):
         if dateTime is None:
