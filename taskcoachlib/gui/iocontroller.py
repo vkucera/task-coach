@@ -1,21 +1,17 @@
-import wx, task, patterns, meta, effort
+import wx, task, meta
 
-
-class IOController(patterns.Observable): 
-    # FIXME: is it really necessary that IOController is Observable?
-    def __init__(self, app, taskFile, effortList, settings): 
+class IOController(object): 
+    def __init__(self, taskFile, messageCallback): 
         super(IOController, self).__init__()
-        self.taskFile = taskFile
-        self._effortList = effortList
-        self.app = app # FIXME: pass displayMessage method instead of app object
-        self.settings = settings
-        self.fileDialogOpts = { 'default_path' : '.', 
+        self.__taskFile = taskFile
+        self.__messageCallback = messageCallback
+        self.__fileDialogOpts = { 'default_path' : '.', 
             'default_extension' : 'tsk', 'wildcard' : 
             '%s files (*.tsk)|*.tsk|All files (*.*)|*'%meta.name }
 
-    def filename(self):
-        return self.taskFile.filename()
-
+    def needSave(self):
+        return self.__taskFile.needSave()
+        
     def displayMessage(self, verb, file, toorfrom=None):
         if toorfrom:
             nrTasks = len(file)
@@ -23,55 +19,53 @@ class IOController(patterns.Observable):
                 nrTasks != 1 and 's' or '', toorfrom, file)
         else:
             message = '%s %s'%(verb, file)
-        self.app.displayMessage(message)
+        self.__messageCallback(message)
 
     def open(self, filename=None, showerror=wx.MessageBox, *args):
         if not self.close():
             return
         if not filename:
-            filename = wx.FileSelector("Open", **self.fileDialogOpts)
+            filename = wx.FileSelector("Open", **self.__fileDialogOpts)
         if filename:
-            self.taskFile.setFilename(filename)
+            self.__taskFile.setFilename(filename)
             try:
-                self.taskFile.load()
-                self.displayMessage('Loaded', self.taskFile, 'from')
+                self.__taskFile.load()
+                self.displayMessage('Loaded', self.__taskFile, 'from')
             except:
-                self.taskFile.setFilename('')
+                self.__taskFile.setFilename('')
                 showerror("Error while reading %s.\n" 
                     "Are you sure it is a %s-file?"%(filename, meta.name), 
                     caption="File error", style=wx.ICON_ERROR)
-            self.notifyObservers(patterns.observer.Notification(self))
 
     def merge(self, filename=None):
         if not filename:
-            filename = wx.FileSelector('Merge', **self.fileDialogOpts)
+            filename = wx.FileSelector('Merge', **self.__fileDialogOpts)
         if filename:
-            self.taskFile.merge(filename)
+            self.__taskFile.merge(filename)
             self.displayMessage('Merged', filename) 
 
     def save(self, *args):
-        if self.taskFile:
-            self.taskFile.save()
-            self.displayMessage('Saved', self.taskFile, 'to')
+        if self.__taskFile:
+            self.__taskFile.save()
+            self.displayMessage('Saved', self.__taskFile, 'to')
             return True
-        elif len(self.taskFile) > 0:
+        elif len(self.__taskFile) > 0:
             return self.saveas()
         else:
             return False
 
     def saveas(self):
-        filename = wx.FileSelector("Save as...", flags=wx.SAVE, **self.fileDialogOpts)
+        filename = wx.FileSelector("Save as...", flags=wx.SAVE, **self.__fileDialogOpts)
         if filename:
-            self.taskFile.saveas(filename)
-            self.displayMessage('Saved', self.taskFile, 'to')
-            self.notifyObservers(patterns.observer.Notification(self))
+            self.__taskFile.saveas(filename)
+            self.displayMessage('Saved', self.__taskFile, 'to')
             return True
         else:
             return False
 
     def saveselection(self, tasks, filename=None):
         if not filename:
-            filename = wx.FileSelector("Save as...", flags=wx.SAVE, **self.fileDialogOpts)
+            filename = wx.FileSelector("Save as...", flags=wx.SAVE, **self.__fileDialogOpts)
         if filename:
             selectionFile = task.TaskFile(filename)
             selectionFile.extend(tasks)
@@ -79,16 +73,16 @@ class IOController(patterns.Observable):
             self.displayMessage('Saved', selectionFile, 'to')
 
     def exportToXML(self):
-        self.fileDialogOpts['default_extension'] = 'xml'
-        self.fileDialogOpts['wildcard'] = 'XML files (*.xml)|*.xml|' + self.fileDialogOpts['wildcard']
-        filename = wx.FileSelector("Export to XML...", flags=wx.SAVE, **self.fileDialogOpts)
+        self.__fileDialogOpts['default_extension'] = 'xml'
+        self.__fileDialogOpts['wildcard'] = 'XML files (*.xml)|*.xml|' + self.__fileDialogOpts['wildcard']
+        filename = wx.FileSelector("Export to XML...", flags=wx.SAVE, **self.__fileDialogOpts)
         if filename:
-            self.taskFile.exportToXML(filename)
+            self.__taskFile.exportToXML(filename)
             self.displayMessage('Exported', filename, 'to')
 
         
     def close(self):
-        if self.taskFile.needSave():
+        if self.__taskFile.needSave():
             result = wx.MessageBox('You have unsaved changes.\n'
                 'Save before closing?', 'Save changes?',
                 wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION)
@@ -97,13 +91,8 @@ class IOController(patterns.Observable):
                     return False
             elif result == wx.CANCEL:
                 return False
-        self.displayMessage('Closed', file=self.taskFile.filename())
-        self.taskFile.close()
+        self.displayMessage('Closed', file=self.__taskFile.filename())
+        self.__taskFile.close()
+        import patterns
         patterns.CommandHistory().clear()
-        self.notifyObservers(patterns.observer.Notification(self))
         return True
-
-    def quit(self, *args):
-        self.settings.set('file', 'lastfile', self.taskFile.filename())
-        return self.close()
-

@@ -1,7 +1,5 @@
-import patterns, effortlist
+import patterns
 
-class EffortSorter(patterns.ObservableListObserver, effortlist.EffortListMixin):
-    def onNotify(self, notification, *args, **kwargs):
-        self._addAndRemoveEfforts(notification.itemsAdded, 
-            notification.itemsRemoved, notification.itemsChanged, self.sort)
-        
+class EffortSorter(patterns.ObservableListObserver):        
+    def postProcessChanges(self):
+        self.sort()

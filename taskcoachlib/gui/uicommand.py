@@ -227,6 +227,9 @@ class FileSave(IOCommand):
 
     def doCommand(self, event):
         self.iocontroller.save()
+        
+    def enabled(self):
+        return self.iocontroller.needSave()
 
 class FileSaveAs(IOCommand):
     bitmap = 'saveas'

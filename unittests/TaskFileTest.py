@@ -9,7 +9,7 @@ class TaskFileTestCase(test.TestCase):
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2)))
         self.filename = 'test.tsk'
-
+        
     def tearDown(self):
         self.remove(self.filename)
 
@@ -54,23 +54,26 @@ class TaskFileTest(TaskFileTestCase):
         self.failIf(self.emptyTaskFile.needSave())
 
     def testNeedSave_AfterNewTaskAdded(self):
-        self.taskFile.append(task.Task())
-        self.failUnless(self.taskFile.needSave())
-
+        newTask = task.Task(subject='Task')
+        self.emptyTaskFile.append(newTask)
+        self.failUnless(self.emptyTaskFile.needSave())
+        
     def testNeedSave_AfterSave(self):
-        self.taskFile.append(task.Task())
-        self.taskFile.setFilename(self.filename)
-        self.taskFile.save()
-        self.failIf(self.taskFile.needSave())
+        self.emptyTaskFile.append(task.Task())
+        self.emptyTaskFile.setFilename(self.filename)
+        self.emptyTaskFile.save()
+        self.failIf(self.emptyTaskFile.needSave())
 
     def testNeedSave_AfterClose(self):
         self.taskFile.close()
         self.failIf(self.taskFile.needSave())
-
+        
     def testNeedSave_AfterMerge(self):
-        self.taskFile.merge(self.filename)
-        self.failUnless(self.taskFile.needSave())
-
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.emptyTaskFile.merge(self.filename)
+        self.failUnless(self.emptyTaskFile.needSave())
+        
     def testNeedSave_AfterLoad(self):
         self.taskFile.append(task.Task())
         self.taskFile.setFilename(self.filename)

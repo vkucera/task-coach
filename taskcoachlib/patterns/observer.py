@@ -14,24 +14,26 @@ class Notification(object):
         A receiver of a notification can query the attributes. Non-existent
         attributes have a default value of []. '''
         
-    def __init__(self, source, notification=None, *args, **kwargs):
+    def __init__(self, source, *args, **kwargs):
         self.source = source
-        self.notification = notification
         self.__dict__.update(kwargs)
         super(Notification, self).__init__(*args, **kwargs)
         
     def __getattr__(self, attr):
-        if self.notification:
-            return getattr(self.notification, attr)
-        else:
-            return []
+        return []
         
     def __str__(self):
         kwargs = self.__dict__.copy()
         del kwargs['source']
-        return 'Notification from %s: %s'%(self.source, kwargs)
+        sourceStr = '%s'%self.source
+        if len(sourceStr) > 40:
+            sourceStr = sourceStr[:40] + '...'
+        return 'Notification(source=%s(%s), kwargs=%s)'%(self.source.__class__.__name__, sourceStr, kwargs)
 
+    def __setitem__(self, key, value):
+        self.__dict__[key] = value
 
+                
 class Observable(object):
     ''' Observable objects can be observed by registering (subscribing) a 
         callback method with Observable.registerObserver. The callback is 
@@ -68,9 +70,10 @@ class Observable(object):
     def notifyObservers(self, notification):
         if not self.isNotifying():
             return
+        import time
         for callback in self.__callbacks:
             callback(notification)
-
+            
 
 class ObservablesList(List):
     ''' ObservablesList is a list of observables, i.e. all items that are 
@@ -133,9 +136,6 @@ class ObservableList(Observable, List):
         when items are added to or removed from the list. '''
         
     # FIXME: How about __setitem__ and __setslice__?
-        
-    def __init__(self, *args, **kwargs):
-        super(ObservableList, self).__init__(*args, **kwargs)
     
     def append(self, item):
         super(ObservableList, self).append(item)
@@ -175,7 +175,7 @@ class ObservableObservablesList(ObservableList, ObservablesList):
     ''' A list of observables that is observable. '''
     
     def onNotify(self, notification, *args, **kwargs):
-        myNotification = Notification(self, notification, itemsChanged=[notification.source])
+        myNotification = Notification(self, itemsChanged=[notification.source])
         self.notifyObservers(myNotification)
 
 
@@ -189,10 +189,24 @@ class ObservableListObserver(ObservableList):
         self.onNotify(Notification(self.__observedList, itemsAdded=self.__observedList))
 
     def onNotify(self, notification, *args, **kwargs):
-        ''' This method should be overriden to provide some useful
-            behavior, like filtering the original list. '''
-        self.notifyObservers(notification, *args, **kwargs)
+        ''' By default, we add items that were added to the original list
+            and we remove items that we removed from the original list. '''
+        if not (notification.itemsAdded or notification.itemsRemoved or \
+            notification.itemsChanged):
+            return
+        self.stopNotifying()
+        self._extend(notification.itemsAdded)
+        self._removeItems(notification.itemsRemoved)
+        self.postProcessChanges()
+        self.startNotifying()
+        self.notifyObservers(Notification(self,
+            itemsAdded=notification.itemsAdded, 
+            itemsRemoved=notification.itemsRemoved,
+            itemsChanged=notification.itemsChanged), *args, **kwargs)
 
+    def postProcessChanges(self):
+        pass
+        
     def original(self):
         return self.__observedList
 

@@ -35,12 +35,12 @@ class WindowWithPersistentDimensions(wx.Frame):
 
         
 class MainWindow(WindowWithPersistentDimensions):
-    def __init__(self, iocontroller, taskList, filteredTaskList,
+    def __init__(self, iocontroller, taskFile, filteredTaskList,
             effortList, settings, *args, **kwargs):
         super(MainWindow, self).__init__(settings, *args, **kwargs)
-        iocontroller.registerObserver(self.SetTitle)
         self.iocontroller = iocontroller
-        self.taskList = taskList
+        self.taskFile = taskFile
+        self.taskFile.registerObserver(self.SetTitle)
         self.filteredTaskList = filteredTaskList
         self.settings = settings
         self.effortList = effortList
@@ -50,7 +50,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.initWindow()
         
     def initWindow(self):
-        self.SetTitle()
+        self.SetTitle(patterns.observer.Notification(self, filename=self.taskFile.filename()))
         self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, 
             (16, 16)))
         self.displayMessage('Welcome to %s version %s'%(meta.name, 
@@ -68,7 +68,7 @@ class MainWindow(WindowWithPersistentDimensions):
         viewerfactory.addEffortViewers(self.viewer, self.effortList, self.uiCommands)
         self.SetToolBar(toolbar.ToolBar(self, self.uiCommands))
         import status
-        self.SetStatusBar(status.StatusBar(self, self.taskList,
+        self.SetStatusBar(status.StatusBar(self, self.taskFile,
                                         self.filteredTaskList, self.viewer))
         import menu
         self.SetMenuBar(menu.MainMenu(self, self.uiCommands))
@@ -83,7 +83,7 @@ class MainWindow(WindowWithPersistentDimensions):
     def createTaskBarIcon(self, uiCommands):
         if self.canCreateTaskBarIcon():
             import taskbaricon, menu
-            self.taskBarIcon = taskbaricon.TaskBarIcon(self, self.taskList)
+            self.taskBarIcon = taskbaricon.TaskBarIcon(self, self.taskFile)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon,
                 uiCommands))
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
@@ -95,18 +95,20 @@ class MainWindow(WindowWithPersistentDimensions):
         except:
             return False
 
-    def SetTitle(self, *args, **kwargs):
+    def SetTitle(self, notification, *args, **kwargs):
+        if notification.filename == []:
+            return
         title = meta.name
-        filename = self.iocontroller.filename()
-        if filename:
-            title += ' - %s'%filename
+        if notification.filename:
+            title += ' - %s'%notification.filename
         super(MainWindow, self).SetTitle(title)    
 
     def displayMessage(self, message, pane=0):
         self.GetStatusBar().SetStatusText(message, pane)
 
     def quit(self, event=None):
-        if not self.iocontroller.quit():
+        self.settings.set('file', 'lastfile', self.taskFile.filename())
+        if not self.iocontroller.close():
             return
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()

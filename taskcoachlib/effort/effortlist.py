@@ -1,21 +1,7 @@
 import patterns                    
 
-class EffortListMixin:
-   def _addAndRemoveEfforts(self, effortsToAdd, effortsToRemove, effortsChanged=None, postprocess=None):
-        if not (effortsToAdd or effortsToRemove or effortsChanged):
-            return
-        self.stopNotifying()
-        self._extend(effortsToAdd)
-        self._removeItems(effortsToRemove)
-        if postprocess:
-            postprocess()
-        self.startNotifying()
-        self.notifyObservers(patterns.observer.Notification(self,
-            itemsAdded=effortsToAdd, itemsRemoved=effortsToRemove,
-            itemsChanged=effortsChanged or []))
-
                         
-class EffortList(patterns.ObservableListObserver, EffortListMixin):
+class EffortList(patterns.ObservableListObserver):
     def onNotify(self, notification, *args, **kwargs):
         effortsToAdd, effortsToRemove = [], []
         for task in notification.itemsAdded:
@@ -23,35 +9,38 @@ class EffortList(patterns.ObservableListObserver, EffortListMixin):
             task.registerObserver(self.onNotifyTask)
         for task in notification.itemsRemoved:
             effortsToRemove.extend(task.efforts())
-            task.removeObserver(self.onNotifyTask)   
-        self._addAndRemoveEfforts(effortsToAdd, effortsToRemove)
+            task.removeObserver(self.onNotifyTask)
+        effortNotification = patterns.observer.Notification(notification.source, 
+            itemsAdded=effortsToAdd, itemsRemoved=effortsToRemove)
+        super(EffortList, self).onNotify(effortNotification, *args, **kwargs)
                 
     def onNotifyTask(self, notification, *args, **kwargs):
-        self._addAndRemoveEfforts(notification.effortsAdded, 
-            notification.effortsRemoved, notification.effortsChanged)
+        effortNotification = patterns.observer.Notification(notification.source, 
+            itemsAdded=notification.effortsAdded, 
+            itemsRemoved=notification.effortsRemoved,
+            itemsChanged=notification.effortsChanged)
+        super(EffortList, self).onNotify(effortNotification, *args, **kwargs)
+        
 
-
-class SingleTaskEffortList(patterns.ObservableObservablesList, EffortListMixin):
+class SingleTaskEffortList(patterns.ObservableListObserver):
     ''' SingleTaskEffortList filters an EffortList so it contains the efforts for 
         one task (including its children). '''
-        
+    
+    # FIXME: SingleTaskEffortList is not a real ObservableListObserver
     def __init__(self, task, *args, **kwargs):
-        super(SingleTaskEffortList, self).__init__(*args, **kwargs)
-        task.registerObserver(self.onNotify)
+        super(SingleTaskEffortList, self).__init__(task, *args, **kwargs)
         for child in task.allChildren():
             child.registerObserver(self.onNotify)
-        self.extend(task.efforts(recursive=True))
+        self._extend(task.efforts(recursive=True))
         
     def onNotify(self, notification, *args, **kwargs):
-        self._addAndRemoveEfforts(notification.effortsAdded,
-            notification.effortsRemoved, notification.effortsChanged)
+        effortNotification = patterns.observer.Notification(notification.source,
+            itemsAdded=notification.effortsAdded, 
+            itemsRemoved=notification.effortsRemoved,
+            itemsChanged=notification.effortsChanged)
+        super(SingleTaskEffortList, self).onNotify(effortNotification, *args, **kwargs)
         for child in notification.childrenAdded:
             child.registerObserver(self.onNotify)
         for child in notification.childrenRemoved:
             child.removeObserver(self.onNotify)    
             
-    def _extend(self, *args, **kwargs):
-        self.extend(*args, **kwargs)
-        
-    def _removeItems(self, *args, **kwargs):
-        self.removeItems(*args, **kwargs)

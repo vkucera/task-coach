@@ -1,15 +1,8 @@
 import patterns
 
 class Sorter(patterns.ObservableListObserver):
-    def onNotify(self, notification, *args, **kwargs):
-        self.stopNotifying()
-        self._extend(notification.itemsAdded)
-        self._removeItems(notification.itemsRemoved)
+    def postProcessChanges(self):
         self.sort()
-        self.startNotifying()
-        myNotification = patterns.observer.Notification(self, notification)
-        self.notifyObservers(myNotification)
-    
 
 class DepthFirstSorter(Sorter):        
     def sort(self):

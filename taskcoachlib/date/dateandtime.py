@@ -1,5 +1,34 @@
-import datetime
+import datetime, timedelta
 
 class DateTime(datetime.datetime):
     def weeknumber(self):
         return self.isocalendar()[1]
+
+    def weekday(self):
+        return self.isoweekday()
+        
+    def startOfDay(self):
+        return self.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+    def endOfDay(self):
+        return self.replace(hour=23, minute=59, second=59, microsecond=999999)
+        
+    def startOfWeek(self):
+        days = self.weekday()
+        monday = self - timedelta.TimeDelta(days=days-1)
+        return DateTime(monday.year, monday.month, monday.day)
+        
+    def endOfWeek(self):
+        days = self.weekday()
+        sunday = self + timedelta.TimeDelta(days=7-days)
+        return DateTime(sunday.year, sunday.month, sunday.day).endOfDay()
+        
+    def startOfMonth(self):
+        return DateTime(self.year, self.month, 1)
+        
+    def endOfMonth(self):
+        for lastday in [31,30,29,28]:
+            try:
+                return DateTime(self.year, self.month, lastday).endOfDay()
+            except ValueError:
+                pass

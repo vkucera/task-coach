@@ -31,7 +31,7 @@ class App(object):
             splash = gui.SplashScreen()
         self.taskFile = task.TaskFile()
         effortList = effort.EffortList(self.taskFile)
-        self.io = gui.IOController(self, self.taskFile, effortList, settings)
+        self.io = gui.IOController(self.taskFile, self.displayMessage)
         viewFilteredTaskList = task.filter.ViewFilter(self.taskFile)
         searchFilteredTaskList = task.filter.SearchFilter(viewFilteredTaskList)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
