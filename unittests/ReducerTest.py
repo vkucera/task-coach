@@ -5,7 +5,8 @@ import test, effort, date, task
 class ReducerTestCase(test.TestCase):
     def setUp(self):
         self.notifications = 0
-        self.effortList = effort.EffortList()
+        self.taskList = task.TaskList()
+        self.effortList = effort.EffortList(self.taskList)
         self.reducer = self.createReducer()
         self.reducer.registerObserver(self.notify, self.notify, self.notify)
         self.task1 = task.Task()
@@ -22,7 +23,8 @@ class ReducerTestCase(test.TestCase):
         self.task2 = task.Task()
         self.effort2_1 = effort.Effort(self.task2, date.DateTime(2004,2,1,10,0,0),
             date.DateTime(2004,2,1,11,0,0))
-
+        self.taskList.extend([self.task1, self.task2])
+        
     def notify(self, *args):
         self.notifications += 1
 
@@ -36,64 +38,68 @@ class CommonTests:
         self.assertEqual(0, len(self.reducer))
 
     def testOneEffortForOneTaskOnOneDay(self):
-        self.effortList.append(self.effort1_1)
+        self.task1.addEffort(self.effort1_1)
         self.assertCompositeEffort(self.reducer[0], self.effort1_1)        
 
     def testTwoEffortsForOneTaskOnOneDay(self):
-        self.effortList.append(self.effort1_1)
-        self.effortList.append(self.effort1_2)
+        self.task1.addEffort(self.effort1_1)
+        self.task1.addEffort(self.effort1_2)
         self.assertCompositeEffort(self.reducer[0], self.effort1_1, self.effort1_2)
 
     def testTwoEffortsForTwoTasksOnOneDay(self):
-        self.effortList.extend([self.effort1_1, self.effort2_1])
+        self.task1.addEffort(self.effort1_1)
+        self.task2.addEffort(self.effort2_1)
         self.assertCompositeEffort(self.reducer[0], self.effort1_1)
         self.assertCompositeEffort(self.reducer[1], self.effort2_1)
 
     def testTwoEffortsForOneTaskInTwoDifferentMonths(self):
-        self.effortList.append(self.effort1_1)
-        self.effortList.append(self.effort1_3)
+        self.task1.addEffort(self.effort1_1)
+        self.task1.addEffort(self.effort1_3)
         self.assertCompositeEffort(self.reducer[0], self.effort1_1)
         self.assertCompositeEffort(self.reducer[1], self.effort1_3)
         
     def XXXtestEffortOfChildBringsInParent(self):
         self.task1.addChild(self.task2)
-        self.effortList.append(self.effort2_1)
+        self.tasl2.addEffort(self.effort2_1)
         self.assertCompositeEffort(self.reducer[0], self.effort2_1)
         self.assertCompositeEffort(self.reducer[1], self.effort2_1)
 
     def testRemoveOneEffortOfOneTask(self):
-        self.effortList.append(self.effort1_1)
-        self.effortList.remove(self.effort1_1)
+        self.task1.addEffort(self.effort1_1)
+        self.task1.removeEffort(self.effort1_1)
         self.assertEqual(0, len(self.reducer))                            
 
     def testRemoveOneEffortOfTwoEffortsOfOneTask(self):
-        self.effortList.extend([self.effort1_1, self.effort1_2])
-        self.effortList.remove(self.effort1_1)
+        self.task1.addEffort(self.effort1_1)
+        self.task1.addEffort(self.effort1_2)
+        self.task1.removeEffort(self.effort1_1)
         self.assertEqual(1, len(self.reducer))
 
     def testRemoveOneEffortsOfTwoEffortsOfTwoTasks(self):
-        self.effortList.extend([self.effort1_1, self.effort2_1])
-        self.effortList.remove(self.effort1_1)
+        self.task1.addEffort(self.effort1_1)
+        self.task2.addEffort(self.effort2_1)
+        self.task1.removeEffort(self.effort1_1)
         self.assertEqual(1, len(self.reducer))
 
     def testChangeEffort(self):
-        self.effortList.append(self.effort1_1)
+        self.task1.addEffort(self.effort1_1)
         self.effort1_1.setStop(date.DateTime(2004,1,1,17,0,0))
         self.assertCompositeEffort(self.reducer[0], self.effort1_1)
         self.assertEqual(3, self.notifications)
 
     def testChangeEffort_ToAnotherYear_SameMonthSameWeekNumber(self):
-        self.effortList.extend([self.effort1_1, self.effort1_2])
+        self.task1.addEffort(self.effort1_1)
+        self.task1.addEffort(self.effort1_2)
         self.effort1_1.setStart(date.DateTime(2000,1,4,15,0,0))
         self.assertEqual(2, len(self.reducer))
 
     def testNotification_Add(self):
-        self.effortList.append(self.effort1_1)
+        self.task1.addEffort(self.effort1_1)
         self.assertEqual(1, self.notifications)
         
     def testNotification_Remove(self):
-        self.effortList.append(self.effort1_1)
-        self.effortList.remove(self.effort1_1)
+        self.task1.addEffort(self.effort1_1)
+        self.task1.removeEffort(self.effort1_1)
         self.assertEqual(2, self.notifications)
         
 
@@ -102,7 +108,7 @@ class EffortPerDayTest(ReducerTestCase, CommonTests):
         return effort.EffortPerDay(self.effortList)
         
     def testOneEffortThatSpansTwoDays(self):
-        self.effortList.append(self.effort1_4)
+        self.task1.addEffort(self.effort1_4)
         self.assertEqual(1, len(self.reducer)) # FIXME: would be better to split the effort
                  
         
@@ -113,7 +119,8 @@ class EffortPerWeekTest(ReducerTestCase, CommonTests):
     def testTwoEffortsForOneTaskInOneWeek(self):
         self.assertEqual(self.effort1_1.getStart().weeknumber(),
             self.effort1_5.getStart().weeknumber())
-        self.effortList.extend([self.effort1_1, self.effort1_5])
+        self.task1.addEffort(self.effort1_1)
+        self.task1.addEffort(self.effort1_5)
         self.assertCompositeEffort(self.reducer[0], self.effort1_1, self.effort1_5)
         self.assertEqual(1, len(self.reducer))
 

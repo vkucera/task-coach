@@ -123,13 +123,15 @@ class DepthFirstSorterTest(test.TestCase):
 
 class EffortSorterTest(test.TestCase):
     def setUp(self):
-        self.effortList = effort.EffortList()
+        self.taskList = task.TaskList()
+        self.effortList = effort.EffortList(self.taskList)
         self.sorter = effort.EffortSorter(self.effortList)
         self.task = task.Task()
-        self.effortList.append(effort.Effort(self.task,
+        self.task.addEffort(effort.Effort(self.task,
             date.DateTime(2004,2,1), date.DateTime(2004,2,2)))
-        self.effortList.append(effort.Effort(self.task,
+        self.task.addEffort(effort.Effort(self.task,
             date.DateTime(2004,1,1), date.DateTime(2004,1,2)))
+        self.taskList.append(self.task)
 
     def testDescending(self):
         self.assertEqual(self.effortList[0], self.sorter[1])

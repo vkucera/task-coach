@@ -17,6 +17,7 @@ class Task(patterns.Observable):
         self._children       = []
         self._parent         = parent # adding the parent->child link is
                                       # the creator's responsibility
+        self._efforts        = []
 
     def notify(self, *args):
         self._notifyObserversOfChange()
@@ -29,8 +30,9 @@ class Task(patterns.Observable):
         return { '_subject' : self._subject, 
             '_description' : self._description, '_id' : self._id, 
             '_duedate' : self._duedate, '_startdate' : self._startdate, 
-            '_completiondate' : self._completiondate, '_children' :
-            self._children, '_parent' : self._parent }
+            '_completiondate' : self._completiondate,
+            '_children' : self._children, '_parent' : self._parent,
+            '_efforts' : [copy.copy(effort) for effort in self._efforts] }
         
     def __repr__(self):
         return self._subject
@@ -176,12 +178,9 @@ class Task(patterns.Observable):
     def dueTomorrow(self):
         return (self.dueDate() == date.Tomorrow() and not self.completed())
 
-    def budget(self):
-        return self._budget
+    
+    # comparison related methods:
         
-    def setBudget(self, budget):
-        self._budget = budget
-
     def _compare(self, other):
         for method in ['completed', 'inactive', 'dueDate', 'startDate',
                        'subject', 'id']:
@@ -208,3 +207,48 @@ class Task(patterns.Observable):
     def __ge__(self, other):
         return self._compare(other) >= 0
 
+    
+    # effort related methods:
+
+    def efforts(self):
+        return self._efforts
+        
+    def addEffort(self, effort):
+        self._efforts.append(effort)
+        effort.registerObserver(self.notify)
+        self._notifyObserversOfChange()
+        
+    def removeEffort(self, effort):
+        self._efforts.remove(effort)
+        effort.removeObserver(self.notify)
+        self._notifyObserversOfChange()
+        
+    def duration(self, recursive=False):
+        if recursive:
+            return self._myDuration() + self._childrenDuration()
+        else:
+            return self._myDuration()
+    
+    def stopTracking(self):
+        for effort in self.efforts():
+            if effort.getStop() is None:
+                effort.setStop()
+                
+    def isBeingTracked(self):
+        for effort in self.efforts():
+            if effort.getStop() is None:
+                return True
+        return False
+        
+    def budget(self):
+        return self._budget
+        
+    def setBudget(self, budget):
+        self._budget = budget
+    
+    def _myDuration(self):
+        return sum([effort.duration() for effort in self.efforts()], date.TimeDelta())
+    
+    def _childrenDuration(self):
+        return sum([child.duration(recursive=True) for child in self.children()], date.TimeDelta())
+        

@@ -1,13 +1,11 @@
 import os, writer, reader, tasklist
 
 class TaskFile(tasklist.TaskList):
-    def __init__(self, effortList, filename='', *args, **kwargs):
-        self._effortList = effortList
+    def __init__(self, filename='', *args, **kwargs):
         self.setFilename(filename)
         super(TaskFile, self).__init__(*args, **kwargs)
         notify = [self.notifyNeedSave]*3
         self.registerObserver(*notify)
-        self._effortList.registerObserver(*notify)
         self._needSave = False
 
     def __str__(self):
@@ -28,25 +26,22 @@ class TaskFile(tasklist.TaskList):
     def close(self):
         self.setFilename('')
         del self[:]
-        del self._effortList[:]
         self._needSave = False
 
     def load(self):
         if os.path.isfile(self._filename):
             fd = file(self._filename, 'rU')
-            tasks, efforts = reader.TaskReader(fd).read()
+            tasks = reader.TaskReader(fd).read()
             fd.close()
         else: 
-            tasks, efforts = [], []
+            tasks = []
         del self[:]
-        del self._effortList[:]
         self.extend(tasks)
-        self._effortList.extend(efforts)
         self._needSave = False
 
     def save(self):
         fd = file(self._filename, 'w')
-        writer.TaskWriter(fd).write(self, self._effortList)
+        writer.TaskWriter(fd).write(self)
         fd.close()
         self._needSave = False
 
@@ -55,18 +50,15 @@ class TaskFile(tasklist.TaskList):
         self.save()
 
     def merge(self, filename):
-        mergeFile = TaskFile(self._effortList, filename)
+        mergeFile = TaskFile(filename)
         mergeFile.load()
         self.extend(mergeFile.rootTasks())
         self._needSave = True
 
     def needSave(self):
         return self._needSave
-
-    def effortList(self):
-        return self._effortList
         
     def exportToXML(self, filename):
         fd = file(filename, 'w')
-        writer.XMLWriter(fd).write(self, self._effortList)
+        writer.XMLWriter(fd).write(self)
         fd.close()

@@ -5,13 +5,12 @@ class Cache(dict):
         super(Cache, self).__init__(*args, **kwargs)
         self._computeValue = computeValue
         
-    def clean(self, efforts):
-        for effort in efforts:
-            task = effort.task()
+    def clean(self, tasks):
+        for task in tasks:
             for key in self.keys():
                 if task in key:
                     del self[key]        
-                    
+                        
     def __getitem__(self, tasks):
         key = tuple(tasks)
         if not key in self:
@@ -19,25 +18,37 @@ class Cache(dict):
         return super(Cache, self).__getitem__(key)
                     
         
-class EffortList(patterns.ObservableObservablesList):
+class EffortList(patterns.ObservableListObserver):
     def __init__(self, *args, **kwargs):
-        super(EffortList, self).__init__(*args, **kwargs)
         self._timeSpentCache = Cache(self._computeTimeSpentForTasks)
+        super(EffortList, self).__init__(*args, **kwargs)
                     
-    def notifyChange(self, effort):
-        self._timeSpentCache.clean([effort])
-        super(EffortList, self).notifyChange(effort)
-        effort.task()._notifyObserversOfChange()
-
-    def _notifyObserversOfNewItems(self, efforts):
-        self._timeSpentCache.clean(efforts)
-        super(EffortList, self)._notifyObserversOfNewItems(efforts)
-        [effort.task()._notifyObserversOfChange() for effort in efforts]
+    def notifyChange(self, tasks):
+        self._timeSpentCache.clean(tasks)
+        efforts = []
+        for task in tasks:
+            efforts.extend(task.efforts())
+        effortsToBeRemoved = [effort for effort in self if effort.task() in tasks and effort not in efforts]
+        effortsToBeAdded = [effort for effort in efforts if effort not in self]
+        self._removeItems(effortsToBeRemoved)
+        self._extend(effortsToBeAdded)
+        if not effortsToBeRemoved and not effortsToBeAdded:
+            # no new efforts and no removed efforts: so there must be changed efforts
+            self._notifyObserversOfChange(efforts)
             
-    def _notifyObserversOfRemovedItems(self, efforts):
-        self._timeSpentCache.clean(efforts)
-        super(EffortList, self)._notifyObserversOfRemovedItems(efforts)
-        [effort.task()._notifyObserversOfChange() for effort in efforts]
+    def notifyAdd(self, tasks):
+        self._timeSpentCache.clean(tasks)
+        efforts = []
+        for task in tasks:
+            efforts.extend(task.efforts())
+        self._extend(efforts)
+            
+    def notifyRemove(self, tasks):
+        self._timeSpentCache.clean(tasks)
+        efforts = []
+        for task in tasks:
+            efforts.extend(task.efforts())
+        self._removeItems(efforts)
                 
     def stopTracking(self):
         [effort.setStop() for effort in self if effort.getStop() is None]
@@ -65,24 +76,10 @@ class EffortList(patterns.ObservableObservablesList):
         
     def getTotalTimeSpentForTask(self, task):
         return self.getTimeSpentForTasks([task]+task.allChildren())
-    
-    def notifyTaskObservers(self, tasks):
-        for task in tasks:
-            task._notifyObserversOfChange()
-        
+            
     def getActiveTasks(self):
         return [effort.task() for effort in self if effort.getStop() is None]
         
-    def start(self):
-        return self._start
-
-    def maxDateTime(self):
-        result = None
-        if self:
-            stopTimes = [effort.getStop() for effort in self if effort.getStop() is not None]
-            if stopTimes:
-                result = max(stopTimes)
-        return result
                      
         
 class SingleTaskEffortList(patterns.ObservableListObserver):

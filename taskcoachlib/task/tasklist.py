@@ -77,3 +77,13 @@ class TaskList(patterns.ObservableObservablesList):
 
     def rootTasks(self):
         return [task for task in self if task.parent() is None]
+
+    def maxDateTime(self):
+        stopTimes = []
+        for task in self:
+            stopTimes.extend([effort.getStop() for effort in task.efforts()
+                if effort.getStop() is not None])
+        if stopTimes:
+            return max(stopTimes)
+        else:
+            return None

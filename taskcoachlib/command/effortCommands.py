@@ -8,10 +8,12 @@ class NewEffortCommand(base.BaseCommand):
         self.efforts = [effort.Effort(task) for task in self.items]
         
     def do_command(self):
-        self.list.extend(self.efforts)
+        for task, effort in zip(self.items, self.efforts):
+            task.addEffort(effort)
             
     def undo_command(self):
-        self.list.removeItems(self.efforts)
+        for task, effort in zip(self.items, self.efforts):
+            task.removeEffort(effort)
             
     redo_command = do_command
 
@@ -47,61 +49,11 @@ class DeleteEffortCommand(base.BaseCommand):
         self.efforts = self.items # FIXME: hack
 
     def do_command(self):
-        self.list.removeItems(self.items)
+        for effort in self.efforts:
+            effort.task().removeEffort(effort)
 
     def undo_command(self):
-        self.list.extend(self.items)
+        for effort in self.efforts:
+            effort.task().addEffort(effort)
 
     redo_command = do_command
-
-
-class StartEffortCommand(base.BaseCommand, base.SaveStateMixin):
-    name = 'Start tracking'
-
-    def __init__(self, *args, **kwargs):
-        super(StartEffortCommand, self).__init__(*args, **kwargs)
-        adjacent = 'adjacent' in kwargs and kwargs['adjacent']
-        if adjacent:
-            start = self.list.maxDateTime() or date.DateTime.now()
-        else:
-            start = date.DateTime.now()
-        self.saveStates(self.getEffortsToSave())
-        self.efforts = [effort.Effort(task, start) for task in self.items]
-
-    def getEffortsToSave(self):
-        return [effort for effort in self.list if effort.getStop() is None]
-               
-    def do_command(self):
-        self.list.stopTracking()
-        self.list.extend(self.efforts)
-        
-    def undo_command(self):
-        self.list.removeItems(self.efforts)
-        self.undoStates()
-        
-    def redo_command(self):
-        self.list.extend(self.efforts)
-        self.redoStates()
-    
-        
-class StopEffortCommand(base.BaseCommand, base.SaveStateMixin):
-    name = 'Stop tracking'
-    
-    def __init__(self, *args, **kwargs):
-        super(StopEffortCommand, self).__init__(*args, **kwargs)
-        self.saveStates(self.getEffortsToSave())
- 
-    def getEffortsToSave(self):
-        return [effort for effort in self.list if effort.getStop() is None]
-               
-    def canDo(self):
-        return True    
-        
-    def do_command(self):
-        self.list.stopTracking()
-        
-    def undo_command(self):
-        self.undoStates()
-        
-    def redo_command(self):
-        self.redoStates()

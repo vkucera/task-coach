@@ -190,3 +190,60 @@ class MarkCompletedCommand(EditTaskCommand):
             task.setCompletionDate()
 
 
+class EffortCommand(base.BaseCommand, base.SaveStateMixin):
+    def __init__(self, *args, **kwargs):
+        super(EffortCommand, self).__init__(*args, **kwargs)
+        self.saveStates(self.getTasksToSave())
+        
+    def getTasksToSave(self):
+        return [task for task in self.list if task.isBeingTracked()]
+
+    def stopTracking(self):
+        for task in self.list:
+            task.stopTracking()        
+
+    def do_command(self):
+        self.stopTracking()
+    
+    def undo_command(self):
+        self.undoStates()
+        
+    def redo_command(self):
+        self.redoStates()
+
+
+class StartEffortCommand(EffortCommand):
+    name = 'Start tracking'
+
+    def __init__(self, *args, **kwargs):
+        super(StartEffortCommand, self).__init__(*args, **kwargs)
+        adjacent = 'adjacent' in kwargs and kwargs['adjacent']
+        if adjacent:
+            start = self.list.maxDateTime() or date.DateTime.now()
+        else:
+            start = date.DateTime.now()
+        self.efforts = [effort.Effort(task, start) for task in self.items]
+
+    def do_command(self):
+        super(StartEffortCommand, self).do_command()
+        for task, effort in zip(self.items, self.efforts):
+            task.addEffort(effort)
+        
+    def undo_command(self):
+        for task, effort in zip(self.items, self.efforts):
+            task.removeEffort(effort)
+        super(StartEffortCommand, self).undo_command()
+        
+    def redo_command(self):
+        for task, effort in zip(self.items, self.efforts):
+            task.addEffort(effort)
+        super(StartEffortCommand, self).redo_command()
+    
+        
+class StopEffortCommand(EffortCommand):
+    name = 'Stop tracking'
+                  
+    def canDo(self):
+        return True    
+               
+ 

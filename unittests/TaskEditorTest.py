@@ -29,7 +29,8 @@ class TaskEditorTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.taskList.extend(self.createTasks())
-        self.editor = gui.editor.TaskEditor(wx.Frame(None), self.createCommand(), effort.EffortList(), {})
+        self.editor = gui.editor.TaskEditor(wx.Frame(None), self.createCommand(),
+            effort.EffortList(self.taskList), {})
 
     def tearDown(self):
         self.editor.Destroy()

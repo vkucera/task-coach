@@ -13,7 +13,7 @@ class TreeViewerTest(test.wxTestCase):
         self.taskList = task.TaskList()
         self.task = task.Task()
         self.viewer = TaskTreeViewer(self.frame, self.taskList,
-            effort.EffortList(), {})
+            effort.EffortList(self.taskList), {})
 
     def testCreate(self):
         self.assertEqual(0, self.viewer.size())

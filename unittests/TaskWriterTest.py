@@ -33,43 +33,43 @@ class WriteAndReadOneTaskTest(TaskWriterAndReaderTestCase):
 
     def testSubject(self):
         self.taskOrig.setSubject('ABC')
-        tasks, efforts = self.writeAndRead()
+        tasks  = self.writeAndRead()
         self.assertEqual(self.taskOrig.subject(), tasks[0].subject())
 
     def testId(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(self.taskOrig.id(), tasks[0].id())
 
     def testDueDate_Infinite(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(self.taskOrig.dueDate(), tasks[0].dueDate())
 
     def testDueDate_Tomorrow(self):
         self.taskOrig.setDueDate(date.Tomorrow())
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(self.taskOrig.dueDate(), tasks[0].dueDate())
 
     def testStartDate(self):
         self.taskOrig.setStartDate(date.Yesterday())
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(self.taskOrig.startDate(), tasks[0].startDate())
 
     def testCompletionDate(self):
         self.taskOrig.setCompletionDate(date.Yesterday())
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(self.taskOrig.completionDate(),
             tasks[0].completionDate())
 
     def testChildren(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual([], tasks[0].children())
 
     def testParent(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(None, tasks[0].parent())
 
     def testTemporaryAttribute(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         try:
             tasks[0].childrenToAdd
             self.fail('Expected AttributeError for childrenToAdd')
@@ -84,7 +84,7 @@ class WriteAndReadTwoTasksTest(TaskWriterAndReaderTestCase):
                              task.Task(subject='Task2')]
 
     def testOrder(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(self.tasksToWrite, tasks)
 
 
@@ -97,7 +97,7 @@ class WriteAndReadTasksWithChildrenTest(TaskWriterAndReaderTestCase):
         self.tasksToWrite = [parent, child]
 
     def testParentAndChild(self):
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(1, len(tasks))
         parent = tasks[0]
         self.assertEqual(1, len(parent.children()))
@@ -109,7 +109,7 @@ class WriteAndReadTasksWithChildrenTest(TaskWriterAndReaderTestCase):
         grandChild = task.Task(subject='Grandchild')
         self.tasksToWrite[-1].addChild(grandChild)
         self.tasksToWrite.append(grandChild)
-        tasks, efforts = self.writeAndRead()
+        tasks = self.writeAndRead()
         self.assertEqual(2, len(tasks[0].allChildren()))
 
 import xml
