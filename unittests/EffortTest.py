@@ -31,4 +31,19 @@ class EffortTest(test.TestCase):
         effortPeriod = effort.Effort(self.task)
         now = lambda: date.DateTime.now()
         self.assertEqual(now()-effortPeriod.getStart(), effortPeriod.duration(now=now))
+     
+    def testState(self):
+        state = self.effort.__getstate__()
+        newEffort = effort.Effort(task.Task())
+        newEffort.__setstate__(state)
+        self.assertEqual(newEffort, self.effort)
         
+    def testCompare(self):
+        newEffort = effort.Effort(self.task, start=date.DateTime(2005,1,1),
+            stop=date.DateTime(2005,1,2))
+        self.failUnless(self.effort < newEffort)
+        
+    def testCopy(self):
+        import copy
+        copyEffort = copy.copy(self.effort)
+        self.assertEqual(copyEffort, self.effort)

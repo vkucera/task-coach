@@ -7,17 +7,17 @@ class ViewerContainer(patterns.Observable):
 
     def addViewer(self, viewer, name, bitmap=None):
         self.AddPage(viewer, name, bitmap)
-        viewer.registerObserver(self.notify)
+        viewer.registerObserver(self.onNotify)
             
     def __getattr__(self, attr):
         return getattr(self[self.currentPage], attr)
 
-    def notify(self, observable, *args, **kwargs):
-        self._notifyObserversOfChange()
+    def onNotify(self, notification, *args, **kwargs):
+        self.notifyObservers(notification)
 
     def onPageChanged(self, event):
         self.currentPage = event.GetSelection()
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
         event.Skip()
     
         

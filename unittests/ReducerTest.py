@@ -9,8 +9,6 @@ class ReducerTestCase(test.TestCase):
         self.notifications = 0
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
-        self.reducer = self.createReducer()
-        self.reducer.registerObserver(self.notify, self.notify, self.notify)
         self.task1 = task.Task()
         self.effort1_1 = effort.Effort(self.task1, date.DateTime(2004,1,1,15,0,0), 
             date.DateTime(2004,1,1,16,0,0))
@@ -26,8 +24,10 @@ class ReducerTestCase(test.TestCase):
         self.effort2_1 = effort.Effort(self.task2, date.DateTime(2004,2,1,10,0,0),
             date.DateTime(2004,2,1,11,0,0))
         self.taskList.extend([self.task1, self.task2])
+        self.reducer = self.createReducer()
+        self.reducer.registerObserver(self.onNotify)
         
-    def notify(self, *args):
+    def onNotify(self, *args, **kwargs):
         self.notifications += 1
 
     def assertCompositeEffort(self, compositeEffort, startEffort, stopEffort=None):
@@ -87,7 +87,7 @@ class CommonTests:
         self.task1.addEffort(self.effort1_1)
         self.effort1_1.setStop(date.DateTime(2004,1,1,17,0,0))
         self.assertCompositeEffort(self.reducer[0], self.effort1_1)
-        self.assertEqual(3, self.notifications)
+        self.assertEqual(2, self.notifications)
 
     def testChangeEffort_ToAnotherYear_SameMonthSameWeekNumber(self):
         self.task1.addEffort(self.effort1_1)
@@ -104,6 +104,12 @@ class CommonTests:
         self.task1.removeEffort(self.effort1_1)
         self.assertEqual(2, self.notifications)
         
+    def testNotification_Change(self):
+        self.task1.addEffort(self.effort1_1)
+        self.effort1_1.setStart(date.DateTime(2005,1,1,15,0,0))
+        self.assertEqual(1, len(self.reducer))
+        self.assertEqual(2, self.notifications)
+
 
 class EffortPerDayTest(ReducerTestCase, CommonTests):  
     def createReducer(self):

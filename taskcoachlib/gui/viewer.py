@@ -8,10 +8,10 @@ class Viewer(patterns.Observable, wx.Panel):
         self.parent = parent
         self.uiCommands = uiCommands
         self.list = self.createSorter(list)
-        self.list.registerObserver(self.notify, self.notify, self.notify)
+        self.list.registerObserver(self.onNotify)
         self.widget = self.createWidget()
         self.initLayout()
-        self.notify(self.list)
+        self.onNotify(patterns.observer.Notification(self))
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
@@ -59,12 +59,12 @@ class Viewer(patterns.Observable, wx.Panel):
     def createSorter(self, *args):
         raise NotImplementedError
 
-    def notify(self, items, *args, **kwargs):
+    def onNotify(self, notification, *args, **kwargs):
         self.widget.refresh(len(self.list))
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self, notification))
         
     def onSelect(self, *args):
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
 
     def curselection(self):
         return [self.list[index] for index in self.widget.curselection()]

@@ -4,8 +4,7 @@ class TaskFile(tasklist.TaskList):
     def __init__(self, filename='', *args, **kwargs):
         self.setFilename(filename)
         super(TaskFile, self).__init__(*args, **kwargs)
-        notify = [self.notifyNeedSave]*3
-        self.registerObserver(*notify)
+        self.registerObserver(self.onNotifyNeedSave)
         self._needSave = False
 
     def __str__(self):
@@ -17,7 +16,7 @@ class TaskFile(tasklist.TaskList):
     def setFilename(self, filename):
         self._filename = filename
 
-    def notifyNeedSave(self, *args, **kwargs):
+    def onNotifyNeedSave(self, *args, **kwargs):
         self._needSave = True
 
     def filename(self):

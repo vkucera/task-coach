@@ -9,13 +9,13 @@ class EffortListTest(test.TestCase):
         self.taskList = task.TaskList()
         self.taskList.append(self.task)
         self.effortList = effort.EffortList(self.taskList)
-        self.effortList.registerObserver(self.notify, self.notify, self.notify)
+        self.effortList.registerObserver(self.onNotify)
         self.effort = effort.Effort(self.task, date.DateTime(2004, 1, 1), date.DateTime(2004, 1, 2))
         
     def testCreate(self):
         self.assertEqual(0, len(self.effortList))
     
-    def notify(self, *args):
+    def onNotify(self, *args):
         self.notifications += 1
             
     def testNotificationAfterAppend(self):
@@ -35,6 +35,17 @@ class EffortListTest(test.TestCase):
         self.task.addEffort(self.effort)
         self.task.removeEffort(self.effort)
         self.assertEqual(0, len(self.effortList))
+    
+    def testAppendTaskWithEffort(self):
+        newTask = task.Task()
+        newTask.addEffort(effort.Effort(newTask))
+        self.taskList.append(newTask)
+        self.assertEqual(1, len(self.effortList))    
+
+    def testCreateWhenTaskListIsFilled(self):
+        self.task.addEffort(self.effort)
+        effortList = effort.EffortList(task.TaskList([self.task]))
+        self.assertEqual(1, len(effortList))
         
 
 class SingleTaskEffortListTest(test.TestCase):
@@ -45,9 +56,9 @@ class SingleTaskEffortListTest(test.TestCase):
         self.effort = effort.Effort(self.task, date.DateTime.now())
         self.childEffort = effort.Effort(self.child, date.DateTime.now())
         self.singleTaskEffortList = effort.SingleTaskEffortList(self.task)
-        self.singleTaskEffortList.registerObserver(self.notify, self.notify, self.notify)
+        self.singleTaskEffortList.registerObserver(self.onNotify)
         
-    def notify(self, *args):
+    def onNotify(self, *args):
         self.notifications += 1
         
     def assertResult(self, expectedLength, expectedNotifications):

@@ -12,7 +12,7 @@ class Effort(patterns.Observable):
         
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
     
     def __copy__(self):
         return Effort(self._task, self._start, self._stop)
@@ -29,7 +29,7 @@ class Effort(patterns.Observable):
         
     def setStart(self, startDatetime):
         self._start = startDatetime
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
         
     def getStart(self):
         return self._start
@@ -39,13 +39,14 @@ class Effort(patterns.Observable):
             self._stop = None
         else:
             self._stop = stopDatetime or date.DateTime.now()
-        self._notifyObserversOfChange()
+        self.notifyObservers(patterns.observer.Notification(self))
         
     def getStop(self):
         return self._stop
 
     def __eq__(self, other):
-        return self is other
+        return self._task == other._task and self._start == other._start and \
+            self._stop == other._stop
         
     def __lt__(self, other):
         return self.getStart() < other.getStart()

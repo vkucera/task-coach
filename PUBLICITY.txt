@@ -2,6 +2,7 @@ Task Coach is listed at the following webpages:
 
 Task Coach Homepage   http://taskcoach.niessink.com
 Sourceforge homepage  http://www.sourceforge.net/projects/taskcoach
+Freshmeat homepage    http://freshmeat.net/projects/taskcoach
 wxPythonPit           http://wiki.wxpython.org/index.cgi/wxPythonPit_20Apps
 PythonInfo Wiki       http://www.python.org/moin/Applications
 Open Directory        http://dmoz.org/Computers/Software/Freeware/Personal_Information_Managers/

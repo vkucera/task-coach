@@ -2,32 +2,27 @@ import patterns, date
 import re
 
 class Filter(patterns.ObservableListObserver):
+    def onNotify(self, notification, *args, **kwargs):
+        self.stopNotifying()
+        itemsAdded = self._addItemsIfNecessary(notification.itemsAdded + notification.itemsChanged)
+        itemsRemoved = self._removeItemsIfNecessary(notification.itemsRemoved + notification.itemsChanged)
+        self.startNotifying()
+        itemsChanged = [item for item in notification.itemsChanged if item in self]
+        self.notifyObservers(patterns.observer.Notification(self, itemsAdded=itemsAdded,
+            itemsRemoved=itemsRemoved, itemsChanged=itemsChanged))
+        
     def _addItemsIfNecessary(self, items):
         itemsToAdd = [item for item in items if self.filter(item) and not item in self]
         self._extend(itemsToAdd)
-    
+        return itemsToAdd
+        
     def _removeItemsIfNecessary(self, items):
         itemsToRemove = [item for item in items if item in self and (not self.filter(item) \
             or not item in self.original())]
         self._removeItems(itemsToRemove)
-            
-    def _addOrRemoveItemsIfNecessary(self, items):
-        self._addItemsIfNecessary(items)
-        self._removeItemsIfNecessary(items)
-
-    def notifyChange(self, items, *args, **kwargs):
-        itemsChanged = [item for item in items if self.filter(item) and item in self]
-        self._addOrRemoveItemsIfNecessary(items)
-        super(Filter, self).notifyChange(itemsChanged, *args, **kwargs)
-        
-    def notifyAdd(self, items, *args, **kwargs):
-        self._addItemsIfNecessary(items)
-        
-    def notifyRemove(self, items, *args, **kwargs):
-        self._removeItemsIfNecessary(items)
-        
+        return itemsToRemove            
     def resetFilter(self):
-        self.notifyChange(self.original())
+        self.onNotify(patterns.observer.Notification(self.original(), itemsChanged=self.original()))
         
     def filter(self, item):
         raise NotImplementedError

@@ -163,7 +163,7 @@ class TaskEditBook(widgets.Listbook):
 
 class EffortEditBook(Page):
     def __init__(self, parent, effort, editor, *args, **kwargs):
-        super(EffortEditBook, self).__init__(parent, 2, *args, **kwargs)
+        super(EffortEditBook, self).__init__(parent, columns=2, *args, **kwargs)
         self._editor = editor
         self._effort = effort
         self.addStartAndStopEntries()
