@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-import unittest, sys, optparse, os, wx, taskcoach
+import unittest, sys, os, wx, taskcoach
 
 projectRoot = os.path.split(taskcoach.libpath)[0]
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 if taskcoach.libpath not in sys.path:
     sys.path.insert(0, taskcoach.libpath)
+    
 
 class TestCase(unittest.TestCase):
     pass
@@ -73,22 +74,13 @@ class AllTests(unittest.TestSuite):
             cvsCommit()
         return result
 
-class TestOptionParser(optparse.OptionParser, object):
+import config
+class TestOptionParser(config.OptionParser):
     def __init__(self):
-        self.super = super(TestOptionParser, self)
-        self.super.__init__(usage='usage: %prog [options] [testfiles]')
-        self.addOptionGroups()
-
-    def addOptionGroups(self):
-        for optionGroup in self.optionGroups():
-            self.add_option_group(optionGroup(self))
-
-    def optionGroups(self):
-        return [method for name, method in vars(self.__class__).items() if
-                name.endswith('Options')]
+        super(TestOptionParser, self).__init__(usage='usage: %prog [options] [testfiles]')
 
     def testrunOptions(self):
-        testrun = optparse.OptionGroup(self, 'test run options',
+        testrun = config.OptionGroup(self, 'test run options',
             'Options to determine the amount of output while running the '
             'tests.')
         testrun.add_option('-q', '--quiet', action='store_const', default=1,
@@ -100,14 +92,14 @@ class TestOptionParser(optparse.OptionParser, object):
         return testrun
  
     def cvsOptions(self):
-        cvs = optparse.OptionGroup(self, 'CVS options', 
+        cvs = config.OptionGroup(self, 'CVS options', 
             'Options to interact with CVS.')
         cvs.add_option('-c', '--commit', default=False, action='store_true', 
             help='commit if all the tests succeed')
         return cvs
 
     def profileOptions(self):
-        profile = optparse.OptionGroup(self, 'profile options', 
+        profile = config.OptionGroup(self, 'profile options', 
             'Options to profile the tests to see what test code or production '
             'code is taking the most time. Each of these options imply '
             '--no-commit.')
@@ -131,7 +123,7 @@ class TestOptionParser(optparse.OptionParser, object):
         return profile
 
     def coverageOptions(self):
-        coverage = optparse.OptionGroup(self, 'coverage options',
+        coverage = config.OptionGroup(self, 'coverage options',
             'Options to test the coverage of the unittests. Requires a '
             '__coverage__ attribute in the unittest file. __coverage__ is '
             'a list of classes or modules to watch for being covered by the '
@@ -141,7 +133,7 @@ class TestOptionParser(optparse.OptionParser, object):
         return coverage
         
     def parse_args(self):
-        options, args = self.super.parse_args()
+        options, args = super(TestOptionParser, self).parse_args()
         if options.profile_report_only:
             options.profile = True
         if not options.profile_sort:

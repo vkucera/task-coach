@@ -2,6 +2,7 @@ import test, taskcoach, os, task, sys
 
 class MockApp(taskcoach.App):
     def __init__(self):
+        self._options = self._args = None
         self.init(showSplash=False, load=False)
 
 

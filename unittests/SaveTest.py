@@ -3,6 +3,7 @@ import test, taskcoach, os, task
 
 class MockApp(taskcoach.App):
     def __init__(self, filename):
+        self._options = self._args = None
         self.init(filename)
 
     def init(self, filename):

@@ -11,13 +11,14 @@ del taskcoachlib
 # Now we can directly import taskcoachlib subpackages:
 import task, gui, config, effort
 
-
 class wxApp(wx.App):
     def OnInit(self):
         return True
 
 class App(object):
-    def __init__(self):
+    def __init__(self, options=None, args=None):
+        self._options = options
+        self._args = args
         self.wxApp = wxApp(0)
         self.init()
         self.mainwindow.Show()
@@ -39,8 +40,8 @@ class App(object):
 
     def processCommandLineArguments(self, settings, load=True):
         # FIXME: move to IOController
-        if len(sys.argv) > 1:
-            filename = sys.argv[1]
+        if self._args:
+            filename = self._args[0]
         else:
             filename = settings.get('file', 'lastfile')
         if load and filename:
@@ -54,6 +55,12 @@ class App(object):
         self.wxApp.Exit()
 
 if __name__ == '__main__':
-    App()
+    options, args = config.ApplicationOptionParser().parse_args()
+    if options.profile:
+        import hotshot
+        profiler = hotshot.Profile('.profile')
+        profiler.runcall(App, options, args)
+    else:
+        App(options, args)
 
 

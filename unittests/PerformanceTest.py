@@ -1,7 +1,9 @@
 import test, time, os, sys, task, taskcoach
 
 class MockApp(taskcoach.App):
-    def __init__(self):
+    def __init__(self, filename):
+        self._options = None
+        self._args = [filename]
         self.init(showSplash=False)
 
 class PerformanceTest(test.TestCase):
@@ -22,9 +24,8 @@ class PerformanceTest(test.TestCase):
         os.remove(self.taskfilename)
 
     def testRead(self):
-        sys.argv = ['taskcoach.py', self.taskfilename] 
         start = time.time()
-        self.mockApp = MockApp()
+        self.mockApp = MockApp(self.taskfilename)
         end = time.time()
         self.assertEqual(self.nrTasks, len(self.mockApp.taskFile))
         self.failUnless(end-start < self.nrTasks/10)
