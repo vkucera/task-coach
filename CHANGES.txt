@@ -1,10 +1,13 @@
 Release 0.26 - March ?, 2005
 
 Features added:
-- Save button is disabled when saving is not necessary (1164472).
+- Save button is disabled when saving is not necessary, requested by Mike
+  Vorozhbensky (1164472).
+- Effort records have a description field, requested by Kent (1167147).
 
 Bugs fixed:
 - Marking a task completed did not stop effort tracking (1159918).
+- Reading lots of efforts was slow.
 
 
 

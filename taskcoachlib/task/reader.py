@@ -64,10 +64,14 @@ class TaskReader:
         for line in self.reader:
             if line == []:
                 continue
-            taskId, start, stop = line
+            if versionnr <= 4:
+                taskId, start, stop = line
+                description = ''
+            else:
+                taskId, start, stop, description = line
             task = self.taskDict[taskId]
             newEffort = effort.Effort(task, self.createDateTime(start),
-                self.createDateTime(stop))
+                self.createDateTime(stop), description)
             task.addEffort(newEffort)
             
     def createDateTime(self, string):

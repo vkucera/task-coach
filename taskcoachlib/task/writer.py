@@ -1,5 +1,5 @@
 class TaskWriter:
-    def __init__(self, fd, versionnr=4):
+    def __init__(self, fd, versionnr=5):
         import csv
         self.writer = csv.writer(fd)
         self.versionnr = versionnr
@@ -19,7 +19,7 @@ class TaskWriter:
             stop = None
         else:
             stop = effort.getStop().timetuple()
-        return [effort.task().id(), effort.getStart().timetuple(), stop]
+        return [effort.task().id(), effort.getStart().timetuple(), stop, effort.getDescription()]
         
     def write(self, taskList):
         self.writer.writerow([self.version])
@@ -72,4 +72,5 @@ class XMLWriter:
         node = self.document.createElement("effort")
         node.setAttribute("start", str(effort.getStart()))
         node.setAttribute("stop", str(effort.getStop()))
+        node.setAttribute("description", effort.getDescription())
         return node

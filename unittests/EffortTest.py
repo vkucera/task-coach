@@ -15,6 +15,11 @@ class EffortTest(test.TestCase):
         
     def testCreate(self):
         self.assertEqual(self.task, self.effort.task())
+        self.assertEqual('', self.effort.getDescription())
+        
+    def testStr(self):
+        self.assertEqual('Effort(%s, %s, %s)'%(self.effort.task(), 
+            self.effort.getStart(), self.effort.getStop()), str(self.effort))
         
     def testDuration(self):
         self.assertEqual(date.TimeDelta(days=1), self.effort.duration())
@@ -37,6 +42,7 @@ class EffortTest(test.TestCase):
         newEffort = effort.Effort(task.Task())
         newEffort.__setstate__(state)
         self.assertEqual(newEffort, self.effort)
+        self.assertEqual(newEffort.getDescription(), self.effort.getDescription())
         
     def testCompare(self):
         newEffort = effort.Effort(self.task, start=date.DateTime(2005,1,1),
@@ -47,4 +53,16 @@ class EffortTest(test.TestCase):
         import copy
         copyEffort = copy.copy(self.effort)
         self.assertEqual(copyEffort, self.effort)
+        self.assertEqual(copyEffort.getDescription(), self.effort.getDescription())
         
+    def testDescription(self):
+        self.effort.setDescription('description')
+        self.assertEqual('description', self.effort.getDescription())
+        
+    def testDescription_Constructor(self):
+        newEffort = effort.Effort(self.task, description='description')
+        self.assertEqual('description', newEffort.getDescription())
+        
+    def testSetDescriptionTriggersNotification(self):
+        self.effort.setDescription('description')
+        self.assertEqual(1, self.notifications)
