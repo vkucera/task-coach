@@ -125,6 +125,13 @@ class XMLWriterTest(test.TestCase):
         self.assertEqual(str(expectedValue),
             xmlDocument.getElementsByTagName('task')[0].getAttribute(attribute))
 
+    def assertEffort(self, effort):
+        self.task.addEffort(effort)
+        xmlDocument = self.writeAndParse()
+        effortNode = xmlDocument.documentElement.getElementsByTagName('effort')[0]
+        self.assertEqual(str(effort.getStart()), effortNode.getAttribute('start'))
+        self.assertEqual(str(effort.getStop()), effortNode.getAttribute('stop'))
+
     def writeAndParse(self):
         self.writer.write(self.taskList)
         self.fd.reset()
@@ -160,4 +167,14 @@ class XMLWriterTest(test.TestCase):
         child = parent.getElementsByTagName('task')[0]
         self.assertEqual('child', child.getAttribute('subject'))
 
+    def testEffort(self):
+        self.assertEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
+            date.DateTime(2004,1,2)))
         
+    def testActiveEffort(self): 
+        self.assertEffort(effort.Effort(self.task, date.DateTime(2004,1,1)))
+        
+    def testNoEffort(self):
+        xmlDocument = self.writeAndParse()
+        efforts = xmlDocument.documentElement.getElementsByTagName('efforts')
+        self.assertEqual([], efforts)

@@ -1,3 +1,10 @@
+Release 0.25 - ? 
+
+Features added:
+- XML export now includes effort records.
+
+
+
 Release 0.24 - March 10, 2005
 
 Bugs fixed:

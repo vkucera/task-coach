@@ -60,6 +60,11 @@ pages['bugs'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.25 - ?</H4>
+        Features added:
+        <UL>
+        <LI>XML export now includes effort records.
+        </UL>
         <H4>Release 0.24 - March 10, 2005</H4>
         Bugs fixed:
         <UL>

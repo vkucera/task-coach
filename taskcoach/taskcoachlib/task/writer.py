@@ -58,5 +58,15 @@ class XMLWriter:
             node.appendChild(childrenList)
             for child in task.children():
                 childrenList.appendChild(self.taskNode(child))
+        if task.efforts():
+            effortList = self.document.createElement("efforts")
+            node.appendChild(effortList)
+            for effort in task.efforts():
+                effortList.appendChild(self.effortNode(effort))
         return node
         
+    def effortNode(self, effort):
+        node = self.document.createElement("effort")
+        node.setAttribute("start", str(effort.getStart()))
+        node.setAttribute("stop", str(effort.getStop()))
+        return node

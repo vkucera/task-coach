@@ -27,5 +27,6 @@ class EffortTest(test.TestCase):
         
     def testDefaultStartAndStop(self):
         effortPeriod = effort.Effort(self.task)
-        self.assertEqual(date.TimeDelta(), effortPeriod.duration())
+        now = lambda: date.DateTime.now()
+        self.assertEqual(now()-effortPeriod.getStart(), effortPeriod.duration(now=now))
         
