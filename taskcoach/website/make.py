@@ -38,32 +38,20 @@ pages['credits'] = \
         HREF="http://sourceforge.net/">Sourceforge</A>.</P>
 '''
 
-pages['bugs'] = \
-'''        <H3>Known bugs in version %(version)s</H3>
-        <P>%(name)s version (%(version)s) has the following known bugs:
-        <TABLE>
-            <TR ALIGN=LEFT>
-                <TH>Description</TH><TH>Known affected platform(s)</TH>
-            </TR>
-            <TR>
-                <TD>It is possible to open multiple edit windows
-                at the same time for one task.</TD>
-                <TD>All</TD>
-            </TR>
-            <TR>
-                <TD>Columns that are supposed to be hidden are still
-                visible as very small columns on Linux. Reported on
-                python-2.3.4 and wxPython2.5-gtk2-unicode-2.5.3.1-fc2_py2.3 on
-                Suse 9.2 by Stephen Boulet.
-        </TABLE>
-        </P>'''
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
-        <H4>Release 0.25 - ?</H4>
+        <H4>Release 0.25 - March 13, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>The menu item 'Effort' -&gt; 'New effort' did not work in
+        release 0.24.
+        </UL>
         Features added:
         <UL>
         <LI>XML export now includes effort records.
+        <LI>Effort per day, per week and per month view now also show 
+        total time spent (i.e. time including time spent on subtasks).
         </UL>
         <H4>Release 0.24 - March 10, 2005</H4>
         Bugs fixed:
@@ -199,7 +187,7 @@ pages['features'] = \
             <LI>Track time spent on tasks. Time spent can
             be viewed by individual effort period, by day, by week, and
             by month.
-            <LI>Export of tasks to XML. Effort is not exported yet.
+            <LI>Export of tasks to XML. 
         </UL>
         <H3>Missing features</H3>
         Features that you might expect, but are currently missing, are:
