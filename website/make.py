@@ -60,12 +60,14 @@ pages['bugs'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
-        <H4>Release 0.24 - February 26, 2005</H4>
+        <H4>Release 0.24 - March 10, 2005</H4>
         Bugs fixed:
         <UL>
         <LI>Saving a selection of tasks to a separate file would also save 
         all effort records to that file (instead of just the effort records 
         for the selected tasks), giving errors when loading that file.
+        <LI>Deleting a task with effort records would not delete the
+        effort records.
         </UL>
         Features added:
         <UL>
@@ -169,7 +171,8 @@ pages['download'] = \
             <TD><A HREF="%(filename)s-%(version)s.tar.gz">%(filename)s-%(version)s.tar.gz</A></TD>
             <TD>Tarred/gzipped source distribution</TD>
         </TR>
-        </TABLE>'''
+        </TABLE>
+        <P>Download from <A HREF="https://sourceforge.net/project/showfiles.php?group_id=130831">Sourceforge</A>.'''
 
 pages['features'] = \
 '''        <H3>Features</H3>
