@@ -79,7 +79,7 @@ class TestOptionParser(config.OptionParser):
     def __init__(self):
         super(TestOptionParser, self).__init__(usage='usage: %prog [options] [testfiles]')
 
-    def testrunOptions(self):
+    def testrunOptionGroup(self):
         testrun = config.OptionGroup(self, 'test run options',
             'Options to determine the amount of output while running the '
             'tests.')
@@ -91,14 +91,14 @@ class TestOptionParser(config.OptionParser):
             const=2, dest='verbosity', help='show all tests')
         return testrun
  
-    def cvsOptions(self):
+    def cvsOptionGroup(self):
         cvs = config.OptionGroup(self, 'CVS options', 
             'Options to interact with CVS.')
         cvs.add_option('-c', '--commit', default=False, action='store_true', 
             help='commit if all the tests succeed')
         return cvs
 
-    def profileOptions(self):
+    def profileOptionGroup(self):
         profile = config.OptionGroup(self, 'profile options', 
             'Options to profile the tests to see what test code or production '
             'code is taking the most time. Each of these options imply '
@@ -122,7 +122,7 @@ class TestOptionParser(config.OptionParser):
            'profile reports')
         return profile
 
-    def coverageOptions(self):
+    def coverageOptionGroup(self):
         coverage = config.OptionGroup(self, 'coverage options',
             'Options to test the coverage of the unittests. Requires a '
             '__coverage__ attribute in the unittest file. __coverage__ is '
@@ -159,19 +159,22 @@ class TestProfiler:
         stats.print_callers()
 
     def run(self, command, *args, **kwargs):
-        if not self._options.profile_report_only:
-            import hotshot
-            profiler = hotshot.Profile(self._logfile)
-            result = profiler.runcall(command, *args, **kwargs)
-            if not result.wasSuccessful():
-                self.cleanup()
-                return 
-        self.reportLastRun()
+        if self._options.profile_report_only or self.profile(command, *args, **kwargs):
+            self.reportLastRun()
 
-    def cleanup(self):
+    def profile(self, command, *args, **kwargs):
+        import hotshot
+        profiler = hotshot.Profile(self._logfile)
+        result = profiler.runcall(command, *args, **kwargs)
+        if not result.wasSuccessful():
+            self.cleanup()
+        return result.wasSuccessful()
+            
+    def cleanup(self, result):
         import os
         os.remove(self._logfile)
 
+    
 if __name__ == '__main__':
     options, testFiles = TestOptionParser().parse_args()
     allTests = AllTests(options, testFiles)
