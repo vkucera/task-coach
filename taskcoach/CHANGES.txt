@@ -1,13 +1,13 @@
-Release 0.26 - March ?, 2005
+Release 0.26 - March 28, 2005
+
+Bugs fixed:
+- Marking a task completed did not stop effort tracking (1159918).
+- Reading lots of efforts was slow.
 
 Features added:
 - Save button is disabled when saving is not necessary, requested by Mike
   Vorozhbensky (1164472).
 - Effort records have a description field, requested by Kent (1167147).
-
-Bugs fixed:
-- Marking a task completed did not stop effort tracking (1159918).
-- Reading lots of efforts was slow.
 
 
 
