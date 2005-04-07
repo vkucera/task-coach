@@ -90,16 +90,18 @@ class SettingsCommand(UICommand):
         self.settings = settings
         super(SettingsCommand, self).__init__(*args, **kwargs)
 
+
+class BooleanSettingsCommand(SettingsCommand):
     def appendToMenu(self, *args, **kwargs):
-        item = super(SettingsCommand, self).appendToMenu(*args, **kwargs)
+        item = super(BooleanSettingsCommand, self).appendToMenu(*args, **kwargs)
         item.Check(self.checked())
         return item
 
     def sendCommandActivateEvent(self):
         self.onCommandActivate(wx.CommandEvent(0, self._id))
+        
 
-
-class UICheckCommand(SettingsCommand):
+class UICheckCommand(BooleanSettingsCommand):
     kind = wx.ITEM_CHECK
     bitmap = 'on' # 'on' == checkmark shaped image
 
@@ -115,7 +117,7 @@ class UICheckCommand(SettingsCommand):
         self.settings.set(self.section, self.setting, str(event.IsChecked()))
 
 
-class UIRadioCommand(SettingsCommand):
+class UIRadioCommand(BooleanSettingsCommand):
     kind = wx.ITEM_RADIO
 
     def setMenuItemMarginWidth(self, *args, **kwargs):
@@ -192,7 +194,8 @@ class NeedsItems(object):
 
 class NeedsHidableColumns(object):
     def enabled(self):
-        return self.viewer.canHideColumns()
+        return True
+        #return self.viewer.canHideColumns()
  
 # Commands:
 
@@ -568,7 +571,7 @@ class ViewDueUnlimited(ViewDueBefore):
     helpText = 'Show all tasks' 
 
 
-class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand):
+class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
     bitmap = 'new'
     menuText = '&New task...\tINS' 
     helpText = 'Insert a new task'
@@ -576,13 +579,13 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand):
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
             command.NewTaskCommand(self.filteredTaskList),
-            self.uiCommands, bitmap=self.bitmap)
+            self.uiCommands, self.settings, bitmap=self.bitmap)
         editor.Show(show)
         return editor
 
 
 class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
-        FilterCommand, ViewerCommand, UICommandsCommand):
+        FilterCommand, ViewerCommand, UICommandsCommand, SettingsCommand):
 
     menuText = 'New &subtask...\tCtrl+INS'
     helpText = 'Insert a new subtask into the selected task'
@@ -591,13 +594,13 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         editor = gui.TaskEditor(self.mainwindow, 
             command.NewSubTaskCommand(self.filteredTaskList, 
                 self.viewer.curselection()),
-            self.uiCommands, bitmap='new')
+            self.uiCommands, self.settings, bitmap='new')
         editor.Show(show)
         return editor
 
 
 class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand, 
-        ViewerCommand, UICommandsCommand):
+        ViewerCommand, UICommandsCommand, SettingsCommand):
 
     bitmap = 'edit'
     menuText = '&Edit task...'
@@ -606,7 +609,7 @@ class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand,
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
             command.EditTaskCommand(self.filteredTaskList, 
-                self.viewer.curselection()), self.uiCommands)
+                self.viewer.curselection()), self.uiCommands, self.settings)
         editor.Show(show)
         return editor
 
@@ -637,14 +640,16 @@ class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         deleteCommand.do()
 
 
-class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand, ViewerCommand):
+class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand,
+        ViewerCommand, UICommandsCommand):
     bitmap = 'start'
     menuText = '&New effort'
     helpText = 'Add a effort period to the selected task(s)'
             
     def doCommand(self, event):
         editor = gui.EffortEditor(self.mainwindow, 
-            command.NewEffortCommand(self.effortList, self.viewer.curselection()))
+            command.NewEffortCommand(self.effortList, self.viewer.curselection()),
+            self.uiCommands)
         editor.Show()
         return editor 
 
@@ -820,15 +825,15 @@ class UICommands(dict):
         self['viewdueunlimited'] = ViewDueUnlimited(filteredTaskList, settings)
 
         # Task menu
-        self['new'] = TaskNew(mainwindow, filteredTaskList, self)
+        self['new'] = TaskNew(mainwindow, filteredTaskList, self, settings)
         self['newsubtask'] = TaskNewSubTask(mainwindow, filteredTaskList, 
-            viewer, self)
-        self['edit'] = TaskEdit(mainwindow, filteredTaskList, viewer, self)
+            viewer, self, settings)
+        self['edit'] = TaskEdit(mainwindow, filteredTaskList, viewer, self, settings)
         self['markcompleted'] = TaskMarkCompleted(filteredTaskList, viewer)
         self['delete'] = TaskDelete(filteredTaskList, viewer)
         
         # Effort menu
-        self['neweffort'] = EffortNew(mainwindow, effortList, viewer)
+        self['neweffort'] = EffortNew(mainwindow, effortList, viewer, self)
         self['editeffort'] = EffortEdit(mainwindow, effortList, viewer, self)
         self['deleteeffort'] = EffortDelete(effortList, viewer)
         self['starteffort'] = EffortStart(filteredTaskList, viewer)

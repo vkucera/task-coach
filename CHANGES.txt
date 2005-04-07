@@ -1,3 +1,16 @@
+Release 0.29 - April ?, 2005
+
+Bugs fixed:
+- New effort in the context menu did not work in release 0.28 
+  (reported by Kent Tenney) (1178562).
+  
+Features added:
+- What tab is active is now a persistent setting. This includes the tabs 
+  and choices in the mainwindow and the effort choices in the task editor
+  (1178779).
+
+
+
 Release 0.28 - April 6, 2005
 
 Bugs fixed:

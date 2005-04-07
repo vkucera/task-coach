@@ -58,14 +58,14 @@ class MainWindow(WindowWithPersistentDimensions):
                 
     def createWindowComponents(self):
         self.panel = wx.Panel(self, -1)
-        self.viewer = viewercontainer.ViewerNotebook(self.panel) 
+        self.viewer = viewercontainer.ViewerNotebook(self.panel, self.settings, 'mainviewer') 
         self.findDialog = find.FindPanel(self.panel, self.filteredTaskList)
         self.initLayout()
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.filteredTaskList, self.effortList)
         viewerfactory.addTaskViewers(self.viewer, self.filteredTaskList, 
             self.uiCommands)
-        viewerfactory.addEffortViewers(self.viewer, self.effortList, self.uiCommands)
+        viewerfactory.addEffortViewers(self.viewer, self.effortList, self.uiCommands, self.settings, 'effortviewer')
         self.SetToolBar(toolbar.ToolBar(self, self.uiCommands))
         import status
         self.SetStatusBar(status.StatusBar(self, self.taskFile,
