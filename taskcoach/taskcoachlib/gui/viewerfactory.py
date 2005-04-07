@@ -14,8 +14,8 @@ def _addEffortViewers(viewerContainer, effortList, uiCommands):
         effortList, uiCommands)
     viewerContainer.addViewer(effortPerMonthViewer, 'Effort per month', 'date')
     
-def addEffortViewers(viewerContainer, effortList, uiCommands):
-    effortViewerContainer = viewercontainer.ViewerChoicebook(viewerContainer)
+def addEffortViewers(viewerContainer, effortList, uiCommands, settings, setting):
+    effortViewerContainer = viewercontainer.ViewerChoicebook(viewerContainer, settings, setting)
     _addEffortViewers(effortViewerContainer, effortList, uiCommands)
     viewerContainer.addViewer(effortViewerContainer, 'Effort', 'start')
 

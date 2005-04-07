@@ -4,7 +4,7 @@ import test, task, gui, wx, dummy, effort
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
         self.taskList = task.TaskList()
-        self.container = gui.viewercontainer.ViewerNotebook(self.frame)
+        self.container = gui.viewercontainer.ViewerNotebook(self.frame, dummy.Settings(), 'key')
         self.container.addViewer(dummy.ViewerWithDummyWidget(self.container,
             self.taskList, effort.EffortList(self.taskList), {}), 'Dummy')
 

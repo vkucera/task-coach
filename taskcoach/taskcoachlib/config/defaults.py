@@ -12,7 +12,10 @@ defaults = { \
     'completiondate' : 'False',
     'timespent' : 'False',
     'totaltimespent' : 'False',
-    'tasksdue' : 'Unlimited' },
+    'tasksdue' : 'Unlimited',
+    'mainviewer' : 'Task list',
+    'effortviewer' : 'Effort list',
+    'effortviewerineditor' : 'Effort list' },
 'window' : { \
     'size' : '(600, 500)',
     'position' : '(0, 0)',

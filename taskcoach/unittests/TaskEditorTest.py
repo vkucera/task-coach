@@ -1,4 +1,4 @@
-import test, gui, task, date, command, wx, effort
+import test, gui, task, date, command, wx, effort, dummy
 
 class DummyViewer:
     def __init__(self):
@@ -34,7 +34,7 @@ class TaskEditorTestCase(test.TestCase):
         
     def createEditor(self):
         return gui.editor.TaskEditor(wx.Frame(None), self.createCommand(),
-            {})
+            {}, dummy.Settings())
 
     def tearDown(self):
         self.editor.Destroy()
