@@ -121,6 +121,11 @@ class DepthFirstSorterTest(test.TestCase):
         self.assertEqual([self.parent1, self.child2, self.child1,
             self.grandchild, self.parent2], list(self.sorter))
 
+    def testChildNotInList(self):
+        self.list.remove(self.child2)
+        self.assertEqual([self.parent1, self.child1, self.grandchild, self.parent2],
+            list(self.sorter))
+
 class EffortSorterTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()

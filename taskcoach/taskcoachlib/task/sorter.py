@@ -16,6 +16,6 @@ class DepthFirstSorter(Sorter):
         tasks.sort()
         for task in tasks:
             result.append(task)
-            children = task.children()[:]
+            children = [child for child in task.children() if child in self.original()]
             result.extend(self.sortDepthFirst(children))
         return result
