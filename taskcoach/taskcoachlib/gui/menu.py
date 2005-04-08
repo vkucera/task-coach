@@ -78,9 +78,9 @@ class ViewTasksByDueDateMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewTasksByDueDateMenu, self).__init__(mainwindow)
 
-        self.appendUICommands(uiCommands, ['viewduetoday',
+        self.appendUICommands(uiCommands, ['viewdueunlimited', 'viewduetoday',
             'viewduetomorrow', 'viewdueworkweek', 'viewdueweek',
-            'viewduemonth', 'viewdueyear', 'viewdueunlimited'])
+            'viewduemonth', 'viewdueyear'])
 
 
 class TaskMenu(Menu):

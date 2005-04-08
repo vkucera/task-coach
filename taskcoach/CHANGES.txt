@@ -10,7 +10,8 @@ Features added:
 - What tab is active is now a persistent setting. This includes the tabs 
   and choices in the mainwindow and the effort choices in the task editor
   (1178779).
-
+- Reordered 'View' -> 'Tasks due before end of' menu (?).
+- Added a separate 'Budget' tab in the task editor.
 
 
 Release 0.28 - April 6, 2005
