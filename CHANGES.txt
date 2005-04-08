@@ -3,6 +3,8 @@ Release 0.29 - April ?, 2005
 Bugs fixed:
 - New effort in the context menu did not work in release 0.28 
   (reported by Kent Tenney) (1178562).
+- When selecting 'View' -> 'Completed tasks' in the task tree, only
+  completed root tasks were hidden (?).
   
 Features added:
 - What tab is active is now a persistent setting. This includes the tabs 
