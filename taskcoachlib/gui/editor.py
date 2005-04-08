@@ -91,12 +91,13 @@ class Page(wx.Panel):
         
     def addEntry(self, label, *controls, **kwargs):
         controls = [control for control in controls if control is not None]
-        self._sizer.Add(wx.StaticText(self, -1, label), self._position.next(),
-            flag=wx.ALL|wx.ALIGN_RIGHT, border=self._borderWidth)
+        if label is not None:
+            self._sizer.Add(wx.StaticText(self, -1, label), self._position.next(),
+                flag=wx.ALL|wx.ALIGN_RIGHT, border=self._borderWidth)
         for control in controls:
             if type(control) == type(''):
                 control = wx.StaticText(self, -1, control)
-            colspan = self._columns - len(controls)
+            colspan = max(self._columns - len(controls), 1)
             self._sizer.Add(control, self._position.next(colspan), span=(1, colspan),
                 flag=wx.ALIGN_LEFT|wx.EXPAND|wx.ALL, border=self._borderWidth)
         if 'growable' in kwargs and kwargs['growable']:
@@ -111,6 +112,7 @@ class TaskEditBook(widgets.Listbook):
         self._settings = settings
         self.addSubjectPage()
         self.addDatesPage()
+        self.addBudgetPage()
         self.addEffortPage()
         
     def addSubjectPage(self):
@@ -118,7 +120,7 @@ class TaskEditBook(widgets.Listbook):
         self._subjectEntry = wx.TextCtrl(subjectPage, -1, self._task.subject())
         self._descriptionEntry = wx.TextCtrl(subjectPage, -1, 
             self._task.description(), style=wx.TE_MULTILINE)
-        self._descriptionEntry.SetSizeHints(400, 150)
+        self._descriptionEntry.SetSizeHints(500, 200)
         subjectPage.addEntry('Subject:', self._subjectEntry)
         subjectPage.addEntry('Description:', self._descriptionEntry, growable=True)
         self.AddPage(subjectPage, 'Description', 'description')
@@ -146,9 +148,9 @@ class TaskEditBook(widgets.Listbook):
         datesPage.addEntry('Completion date:', self._completionDateEntry)
         self.AddPage(datesPage, 'Dates', 'date')
     
-    def addEffortPage(self):
-        effortPage = Page(self, columns=3)
-        self._budgetEntry = TimeDeltaEntry(effortPage, self._task.budget())
+    def addBudgetPage(self):
+        budgetPage = Page(self, columns=3)
+        self._budgetEntry = TimeDeltaEntry(budgetPage, self._task.budget())
         entriesArgs = [(['', 'For this task'], {}),
                        (['Budget:', self._budgetEntry], {}),
                        (['Time spent:', render.timeSpent(self._task.duration())], {}),
@@ -158,14 +160,19 @@ class TaskEditBook(widgets.Listbook):
             entriesArgs[1][0].append(render.budget(self._task.budget(recursive=True)))
             entriesArgs[2][0].append(render.timeSpent(self._task.duration(recursive=True)))
             entriesArgs[3][0].append(render.budget(self._task.budgetLeft(recursive=True)))
-        if self._task.duration(recursive=True):
-            import viewercontainer, viewerfactory, effort
-            viewerContainer = viewercontainer.ViewerChoicebook(effortPage, self._settings, 'effortviewerineditor')
-            myEffortList = effort.SingleTaskEffortList(self._task)
-            viewerfactory._addEffortViewers(viewerContainer, myEffortList, self._uiCommands)
-            entriesArgs.append((['Effort lists:', viewerContainer], {'growable': True}))
         for entryArgs, entryKwArgs in entriesArgs:
-            effortPage.addEntry(*entryArgs, **entryKwArgs)
+            budgetPage.addEntry(*entryArgs, **entryKwArgs)
+        self.AddPage(budgetPage, 'Budget', 'budget')
+                
+    def addEffortPage(self):
+        if not self._task.duration(recursive=True):
+            return
+        effortPage = Page(self, columns=1)
+        import viewercontainer, viewerfactory, effort
+        viewerContainer = viewercontainer.ViewerChoicebook(effortPage, self._settings, 'effortviewerineditor')
+        myEffortList = effort.SingleTaskEffortList(self._task)
+        viewerfactory._addEffortViewers(viewerContainer, myEffortList, self._uiCommands)
+        effortPage.addEntry(None, viewerContainer, growable=True)
         self.AddPage(effortPage, 'Effort', 'start')
             
     def completed(self, event):
