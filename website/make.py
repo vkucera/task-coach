@@ -55,17 +55,17 @@ pages['changes'] = \
         <LI>What tab is active is now a persistent setting. This includes 
         the tabs and choices in the mainwindow and the effort choices in 
         the task editor 
-        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1178779&group_id=130831&atid=719134">1178779</A>).
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1178779&group_id=130831&atid=719137">1178779</A>).
         <LI>Reordered 'View' -> 'Tasks due before end of' menu 
-        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1178880&group_id=130831&atid=719134">1178880</A>).
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1178880&group_id=130831&atid=719137">1178880</A>).
         <LI>Added a separate 'Budget' tab in the task editor.
         <LI>Taskbar icon now indicates whether task effort tracking is on 
-        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1178057&group_id=130831&atid=719134">1178057</A>).
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1178057&group_id=130831&atid=719137">1178057</A>).
         <LI>Effort is sorted from most recent to least recent 
-        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1179332&group_id=130831&atid=719134">1179332</A>).
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1179332&group_id=130831&atid=719137">1179332</A>).
         <LI>Changed task/subtask separator in the task list view from '|' 
         to ' -> ' 
-        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1179374&group_id=130831&atid=719134">1179374</A>).
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1179374&group_id=130831&atid=719137">1179374</A>).
         </UL>
         <H4>Release 0.28 - April 6, 2005</H4>
         Bugs fixed:
