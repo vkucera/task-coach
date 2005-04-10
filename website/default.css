@@ -121,6 +121,6 @@ table, tr {
 }
 
 img { 
-  border: none;
+  border: 1px dotted #4B4B4B;
 }
 
