@@ -4,7 +4,7 @@ colorsText = '''Tasks are colored according to the following rules:
 - Over due tasks are red;
 - Tasks due today are orange;
 - Active tasks are black;
-- Inactive tasks are gray, and
+- Future tasks are gray, and
 - Completed tasks are green.
 '''
 
@@ -20,7 +20,7 @@ Tasks always have one of the following states:
 - Over due: the due date is in the past;
 - Due today: the due date is today;
 - Active: the start date is in the past and the due date in the future;
-- Inactive: the start date is in the future, or
+- Future: the start date is in the future, or
 - Completed: the task has been completed.
 '''
 
@@ -41,6 +41,11 @@ By %(author)s <%(author_email)s>
 '''%data.metaDict + doubleline
 
 installText = header + '''
+
+--- Prerequisites ----------------------------------------------
+
+You need Python version %(pythonversion)s or higher and wxPython 
+version %(wxpythonversion)s or higher.
 
 --- Testing ----------------------------------------------------
 
@@ -73,12 +78,6 @@ to let Python install %(name)s for you. In that case run the
 following command:
 
   python setup.py install
-
-
---- Prerequisites ----------------------------------------------
-
-You need Python version %(pythonversion)s or higher and wxPython 
-version %(wxpythonversion)s or higher.
 
 '''%data.metaDict + doubleline
 
