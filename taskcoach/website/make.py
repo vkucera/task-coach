@@ -8,7 +8,8 @@ import style
 
 pages = {}
 pages['index'] = \
-'''        <P>%(name)s is a simple open source todo manager to manage personal 
+'''        <IMG SRC="banner.png" ALT="Banner image"><BR>
+        <P>%(name)s is a simple open source todo manager to manage personal 
         tasks and todo lists. It grew out of my frustration that well-known 
         task managers, such as those provided with Outlook or Lotus Notes, do
         not provide facilities for composite tasks. Often, tasks and
@@ -23,7 +24,8 @@ pages['index'] = \
         <A HREF="download.html">download</A> %(name)s.</P>
         <P>%(name)s is developed using a number of open source products.
         See <A HREF="credits.html">credits</A> for details.</P>
-        <H3>Enjoy, %(author)s &lt;%(author_email)s&gt;</H3>'''
+        <H3>Enjoy, %(author)s &lt;%(author_email)s&gt;</H3>
+        '''
 
 pages['credits'] = \
 '''        <H3>Credits</H3>
@@ -36,6 +38,9 @@ pages['credits'] = \
         HREF="http://www.jrsoftware.org">Inno Setup</A>. %(name)s source
         code and releases are hosted by <A
         HREF="http://sourceforge.net/">Sourceforge</A>.</P>
+        <P>Donations to %(name)s are much appreciated. Donations are listed 
+        <A HREF="https://sourceforge.net/project/project_donations.php?group_id=130831">here</A>
+        at Sourceforge.</P>
 '''
 
 
