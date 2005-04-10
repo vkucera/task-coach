@@ -1,4 +1,4 @@
-import test, asserts, task, date
+import test, asserts, task, date, effort
 
 class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def setUp(self):
@@ -83,6 +83,13 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
         self.assertEqual(0, self.taskList.nrDueToday())
         self.taskList.append(task.Task(duedate=date.Today()))
         self.assertEqual(1, self.taskList.nrDueToday())
+        
+    def testNrBeingTracked(self):
+        self.assertEqual(0, self.taskList.nrBeingTracked())
+        activeTask = task.Task()
+        activeTask.addEffort(effort.Effort(activeTask))
+        self.taskList.append(activeTask)
+        self.assertEqual(1, self.taskList.nrBeingTracked())
 
     def testRootTasks(self):
         self.assertEqual([], self.taskList.rootTasks())

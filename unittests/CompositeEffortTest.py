@@ -39,8 +39,8 @@ class CompositeEffortTest(test.TestCase):
         self.compositeEffort.append(self.effort)
         effort2 = effort.Effort(self.task, date.DateTime(2004,2,1), date.DateTime(2004,2,2))
         composite2 = effort.CompositeEffort(self.task, date.DateTime(2004,2,1), date.DateTime(2004,2,1).endOfDay(), [effort2])
-        self.failUnless(self.compositeEffort < composite2)
-        self.failUnless(composite2 > self.compositeEffort)
+        self.failUnless(self.compositeEffort > composite2)
+        self.failUnless(composite2 < self.compositeEffort)
         
     def testCompare_EqualStartDifferentTasks(self):
         self.compositeEffort.append(self.effort)

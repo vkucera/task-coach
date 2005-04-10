@@ -133,9 +133,9 @@ class EffortSorterTest(test.TestCase):
         self.sorter = effort.EffortSorter(self.effortList)
         self.task = task.Task()
         self.task.addEffort(effort.Effort(self.task,
-            date.DateTime(2004,2,1), date.DateTime(2004,2,2)))
-        self.task.addEffort(effort.Effort(self.task,
             date.DateTime(2004,1,1), date.DateTime(2004,1,2)))
+        self.task.addEffort(effort.Effort(self.task,
+            date.DateTime(2004,2,1), date.DateTime(2004,2,2)))
         self.taskList.append(self.task)
 
     def testDescending(self):
@@ -144,7 +144,7 @@ class EffortSorterTest(test.TestCase):
         self.assertEqual(self.effortList[1], self.sorter[0])
 
     def testResort(self):
-        self.effortList[1].setStart(date.DateTime(2004,3,1))
+        self.effortList[0].setStart(date.DateTime(2004,3,1))
         self.assertEqual(self.effortList[0], self.sorter[0])
         self.assertEqual(self.effortList[1], self.sorter[1])
 

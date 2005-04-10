@@ -64,12 +64,19 @@ class Viewer(patterns.Observable, wx.Panel):
 
     def onNotify(self, notification, *args, **kwargs):
         if notification.itemsAdded or notification.itemsChanged or notification.itemsRemoved:
+            if notification.itemsAdded and len(notification.itemsAdded) < len(self.list):
+                select = notification.itemsAdded
+            elif notification.itemsChanged and len(notification.itemsChanged) < len(self.list):
+                select = notification.itemsChanged
+            else:
+                select = []
             self.widget.refresh(len(self.list))
-            self.notifyObservers(patterns.observer.Notification(self))
+            self.select(select)
+            #self.notifyObservers(patterns.observer.Notification(self))
         
     def onSelect(self, *args):
         self.notifyObservers(patterns.observer.Notification(self))
-
+        
     def curselection(self):
         return [self.list[index] for index in self.widget.curselection()]
         
@@ -99,6 +106,10 @@ class ListViewer(Viewer):
             return expandedImageIndex
         else:
             return normalImageIndex
+
+
+class TreeViewer(Viewer):
+    pass
 
 
 class TaskViewer(Viewer):
@@ -173,7 +184,7 @@ class TaskListViewer(TaskViewer, ListViewer):
         self.showColumn(6, show)
 
 
-class TaskTreeViewer(TaskViewer):
+class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
             self.getItemAttr, self.getItemChildrenCount, 

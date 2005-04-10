@@ -48,7 +48,7 @@ class EffortTest(test.TestCase):
     def testCompare(self):
         newEffort = effort.Effort(self.task, start=date.DateTime(2005,1,1),
             stop=date.DateTime(2005,1,2))
-        self.failUnless(self.effort < newEffort)
+        self.failUnless(self.effort > newEffort)
         
     def testCopy(self):
         import copy

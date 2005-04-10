@@ -89,6 +89,9 @@ class TaskList(patterns.ObservableObservablesList):
 
     def nrDueToday(self):
         return self._nrInterestingTasks(task.Task.dueToday)
+    
+    def nrBeingTracked(self):
+        return self._nrInterestingTasks(task.Task.isBeingTracked)
 
     def allCompleted(self):
         nrCompleted = self.nrCompleted()

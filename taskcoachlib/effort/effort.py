@@ -59,7 +59,7 @@ class Effort(patterns.Observable):
             self._stop == other._stop
         
     def __lt__(self, other):
-        return self.getStart() < other.getStart()
+        return self.getStart() > other.getStart()
 
         
 class CompositeEffort(list):
@@ -89,6 +89,6 @@ class CompositeEffort(list):
         return self._task
             
     def __lt__(self, other):
-        return self.getStart() < other.getStart() or \
+        return self.getStart() > other.getStart() or \
             (self.getStart() == other.getStart() and \
             self.task().subject() < other.task().subject())
