@@ -30,6 +30,7 @@ footer = '''
                 <LI><A HREF="features.html">Features</A></LI>
                 <LI><A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</A></LI>
                 <LI><A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Known bugs</A></LI>
+                <LI><A HREF="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</A></LI>
                 <LI><A HREF="changes.html">Change history</A></LI>
                 <LI><A HREF="license.html">License</A></LI>
                 <LI><A HREF="http://groups.yahoo.com/group/taskcoach/join">
