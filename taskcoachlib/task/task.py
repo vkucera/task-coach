@@ -3,7 +3,7 @@ import time, copy
 
 
 class Task(patterns.Observable):
-    sep = '|'
+    #sep = '|'
    
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, parent=None, budget=None, *args, **kwargs):
