@@ -1,11 +1,13 @@
 ''' render.py - functions to render various objects, like dates, task
 subjects, etc. '''
 
+taskSeparator = ' -> '
+
 def date(date):
     ''' render a date (of type date.Date) '''
     return str(date)
 
-def subject(task, recursively=False, sep='|'):
+def subject(task, recursively=False, sep=taskSeparator):
     ''' render a task subject '''
     prefix = ''
     if recursively and task.parent():

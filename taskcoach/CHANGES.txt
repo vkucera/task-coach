@@ -12,7 +12,10 @@ Features added:
   (1178779).
 - Reordered 'View' -> 'Tasks due before end of' menu (1178880).
 - Added a separate 'Budget' tab in the task editor.
-- Taskbar icon now indicates whether task effort tracking is on (?).
+- Taskbar icon now indicates whether task effort tracking is on (1178057).
+- Effort is sorted from most recent to least recent (1179332).
+- Changed task/subtask separator in the task list view from '|' to ' -> '
+  (1179374).
 
 
 
