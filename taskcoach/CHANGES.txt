@@ -1,4 +1,4 @@
-Release 0.29 - April ?, 2005
+Release 0.29 - April 10, 2005
 
 Bugs fixed:
 - New effort in the context menu did not work in release 0.28 
