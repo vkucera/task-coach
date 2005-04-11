@@ -49,7 +49,8 @@ pages['changes'] = \
         <H4>Release 0.30 - April 11, 2005</H4>
         Bugs fixed:
         <UL>
-        <LI>More than one task due today would crash Task Coach (1180641).
+        <LI>More than one task due today would crash Task Coach 
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1180641&group_id=130831&atid=719134">1180641</A>).
         </UL>
         <H4>Release 0.29 - April 10, 2005</H4>
         Bugs fixed:
