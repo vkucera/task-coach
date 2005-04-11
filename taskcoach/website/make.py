@@ -46,6 +46,11 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.30 - April 11, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>More than one task due today would crash Task Coach (1180641).
+        </UL>
         <H4>Release 0.29 - April 10, 2005</H4>
         Bugs fixed:
         <UL>
