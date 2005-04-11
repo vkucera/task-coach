@@ -42,7 +42,7 @@ class TaskBarIcon(wx.TaskBarIcon):
         elif self.__nrDueToday == 1:
             tasksDueText = 'One task'
         else:
-            tasksDueText = '%d tasks'%nrDueToday
+            tasksDueText = '%d tasks'%self.__nrDueToday
         return '%s - %s due today'%(meta.name, tasksDueText)
 
     def __getBitmap(self):

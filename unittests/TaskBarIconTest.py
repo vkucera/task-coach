@@ -27,3 +27,8 @@ class TaskBarIconTest(test.TestCase):
     def testTooltip_OneTaskDueToday(self):
         self.taskList.append(task.Task(duedate=date.Today()))
         self.assertTooltip('One task due today')
+        
+    def testTooltip_MultipleTasksDueToday(self):
+        self.taskList.append(task.Task(duedate=date.Today()))
+        self.taskList.append(task.Task(duedate=date.Today()))
+        self.assertTooltip('2 tasks due today')
