@@ -67,7 +67,7 @@ class AllTests(unittest.TestSuite):
                     self.assertEqual([], unittests.coverage.uncovered())
         return unittest.TestLoader().loadTestsFromTestCase(CoverageTest)
             
-    def run(self):       
+    def runTests(self):       
         testrunner = unittest.TextTestRunner(verbosity=self._options.verbosity)
         result = testrunner.run(self)
         if self._options.commit and result.wasSuccessful():
@@ -179,6 +179,6 @@ if __name__ == '__main__':
     options, testFiles = TestOptionParser().parse_args()
     allTests = AllTests(options, testFiles)
     if options.profile:
-        TestProfiler(options).run(allTests.run)
+        TestProfiler(options).run(allTests.runTests)
     else:
-        allTests.run()
+        allTests.runTests()

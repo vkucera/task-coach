@@ -54,6 +54,7 @@ class MockObservablesList(patterns.ObservablesList):
         
     def onNotify(self, *args):
         self.notifications += 1
+        super(MockObservablesList, self).onNotify(*args)
 
         
 class ObservablesListTest(test.TestCase):
@@ -62,7 +63,7 @@ class ObservablesListTest(test.TestCase):
         self.observable = patterns.Observable()
     
     def assertNotificationsAfterChange(self, notifications):
-        self.observable.notifyObservers(patterns.observer.Notification(self))
+        self.observable.notifyObservers(patterns.observer.Notification(self.observable))
         self.assertEqual(notifications, self.list.notifications)
             
     def testCreate(self):
@@ -98,7 +99,7 @@ class ObservablesListTest(test.TestCase):
     def testInsert(self):
         self.list.insert(0, self.observable)    
         self.assertNotificationsAfterChange(1)
-
+        
 
 class ObservableObservablesListTest(ObservableTestCase):        
     def getObservable(self):
@@ -229,7 +230,15 @@ class ObservableListObserverTest(ObservableTestCase):
 
 
 class NotificationTest(test.TestCase):
-    def testSource(self):
-        notification = patterns.observer.Notification(self)
-        self.assertEqual(self, notification.source)
+    def setUp(self):
+        self.notification = patterns.observer.Notification(self)
         
+    def testSource(self):
+        self.assertEqual(self, self.notification.source)
+        
+    def testSetItem(self):
+        self.notification['test'] = 'Test'
+        self.assertEqual('Test', self.notification.test)
+        
+    def testStr(self):
+        self.failUnless(str(self.notification).startswith('Notification'))
