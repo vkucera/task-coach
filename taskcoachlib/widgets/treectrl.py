@@ -18,10 +18,10 @@ class TreeCtrl(wx.TreeCtrl):
         self.getItemChildrenCount = getItemChildrenCount
         self.getItemFingerprint = getItemFingerprint
         self.refresh(0)
-        self.fingerprint = {}
+        #self.fingerprint = {}
         
     def curselection(self):
-        return [self.GetPyData(item) for item in self.GetSelections()]
+        return [self.GetPyData(item)[0] for item in self.GetSelections()]
 
     def onPopup(self, event):
         self.PopupMenu(self.popupmenu, event.GetPoint())
@@ -66,29 +66,34 @@ class TreeCtrl(wx.TreeCtrl):
             else:
                 item = self.PrependItem(parent, self.getItemText(index))
             self.renderNode(item, index)
-        self.SetPyData(item, index)
-        self.validItems.append(item.m_pItem)
-        self.fingerprint[item.m_pItem] = fingerprint
+        self.SetPyData(item, (index, fingerprint))
+        #self.validItems.append(item.m_pItem)
+        self.validItems.append(item)
+        #self.fingerprint[item.m_pItem] = fingerprint
+        #self.fingerprint[fingerprint] = item
         return item
 
     def findInsertionPoint(self, parent):
         insertAfterChild = None
         for child in self.getChildren(parent):
-            if child.m_pItem in self.validItems:
+            #if child.m_pItem in self.validItems:
+            if child in self.validItems:
                 insertAfterChild = child
         return insertAfterChild
 
     def findItem(self, parent, fingerprint):
         for child in self.getChildren(parent):
-            if self.fingerprint[child.m_pItem] == fingerprint:
+            #if self.fingerprint[child.m_pItem] == fingerprint:
+            if self.GetPyData(child)[1] == fingerprint:
                 return child
         return None        
 
     def deleteUnusedItems(self):
         unusedItems = []
         for item in self.getChildren(recursively=True):
-            if item.m_pItem not in self.validItems:
-                del self.fingerprint[item.m_pItem]
+            #if item.m_pItem not in self.validItems:
+            if item not in self.validItems:
+                #del self.fingerprint[item.m_pItem]
                 unusedItems.append(item)
         for item in unusedItems:
             self.Delete(item)
@@ -130,7 +135,7 @@ class TreeCtrl(wx.TreeCtrl):
 
     def __getitem__(self, index):
         for item in self.getChildren(recursively=True):
-            if self.GetPyData(item) == index:
+            if self.GetPyData(item)[0] == index:
                 return item
         raise IndexError
 
