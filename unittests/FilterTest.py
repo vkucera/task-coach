@@ -132,10 +132,10 @@ class CompositeFilterTest(test.wxTestCase):
 
 class SearchFilterTest(test.TestCase):
     def setUp(self):
-        parent = task.Task(subject='ABC')
-        child = task.Task(subject='DEF')
-        parent.addChild(child)
-        self.list = task.TaskList([parent, child])
+        self.parent = task.Task(subject='ABC')
+        self.child = task.Task(subject='DEF')
+        self.parent.addChild(self.child)
+        self.list = task.TaskList([self.parent, self.child])
         self.filter = task.filter.SearchFilter(self.list)
 
     def testNoMatch(self):
@@ -166,3 +166,9 @@ class SearchFilterTest(test.TestCase):
     def testMatchChildAlsoSelectsParent(self):
         self.filter.setSubject('DEF')
         self.assertEqual(2, len(self.filter))
+        
+    def testMatchChildDoesNotSelectParentWhenChildNotInList(self):
+        self.list.remove(self.child) 
+        self.parent.addChild(self.child) # simulate a child that has been filtered 
+        self.filter.setSubject('DEF')
+        self.assertEqual(0, len(self.filter))

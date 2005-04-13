@@ -3,6 +3,14 @@ Release 0.31 - April ?, 2005
 Note:
 - Task Coach migrated to Python 2.4.1 and wxPython 2.5.5.1.
 
+Bugs fixed:
+- A unittest.py bug that was fixed in Python 2.4 revealed a
+  bug in test.py (1181714)
+
+Features added:
+- In the task list and effort list the task column is automatically
+  resized to take up the available space.
+
 
 
 Release 0.30 - April 11, 2005

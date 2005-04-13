@@ -95,7 +95,8 @@ class SearchFilter(Filter):
         super(SearchFilter, self).__init__(taskList)
 
     def filter(self, task):
-        childSubjects = ''.join([child.subject() for child in task.allChildren()])
+        childSubjects = ''.join([child.subject() for child in task.allChildren()
+            if child in self.original()])
         return re.search('.*%s.*'%self.subject, task.subject()+childSubjects, self.flag)
 
     def setSubject(self, subject=''):
