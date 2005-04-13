@@ -2,7 +2,7 @@
 # simple website (intermediate files are in ./build, the files for the
 # website end up in ./dist)
 
-PYTHON="/cygdrive/c/Program Files/Python23/python.exe"
+PYTHON="/cygdrive/c/Program Files/Python24/python.exe"
 INNOSETUP="/cygdrive/c/Program Files/Inno Setup 4/ISCC.exe"
 
 all: windist sdist web

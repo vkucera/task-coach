@@ -1,13 +1,15 @@
 import wx, wx.lib.mixins.listctrl
 
 
-class VirtualListCtrl(wx.ListCtrl):
+class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
             selectCommand=None, editCommand=None, popupMenu=None, *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent, -1, 
             style=wx.LC_REPORT|wx.LC_VIRTUAL, *args, **kwargs)
+        wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin.__init__(self)
         for index, column in enumerate(columns):
             self.InsertColumn(index, column)
+        self.setResizeColumn(self.getResizableColumn())
         self.getItemText = getItemText
         self.getItemImage = getItemImage
         self.getItemAttr = getItemAttr
@@ -19,7 +21,17 @@ class VirtualListCtrl(wx.ListCtrl):
         if popupMenu:
             self.popupMenu = popupMenu
             self.Bind(wx.EVT_LIST_ITEM_RIGHT_CLICK, self.onPopup)
-
+    
+    def getResizableColumn(self):
+        return 1
+        
+    def SetColumnWidth(self, column, width, *args, **kwargs):
+        minwidth = 80
+        if width != 0 and width < minwidth: width = minwidth
+        super(VirtualListCtrl, self).SetColumnWidth(column, width, *args, **kwargs)
+        if column != self.getResizableColumn() and width == 0:
+            self.resizeColumn(self.getResizableColumn())
+        
     def OnGetItemText(self, index, column):
         return self.getItemText(index, column)
 
@@ -76,7 +88,6 @@ class ListCtrl(VirtualListCtrl):
             getItemAttr, selectCommand, editCommand, popupMenu=None):
         super(ListCtrl, self).__init__(parent, columns, getItemText, getItemImage, 
             getItemAttr, selectCommand, editCommand, popupMenu)
-        self.SetColumnWidth(0, 300)        
         self.Bind(wx.EVT_LIST_COL_BEGIN_DRAG, self.onBeginColumnDrag)
         
     def onBeginColumnDrag(self, event):
@@ -93,4 +104,5 @@ class EffortListCtrl(VirtualListCtrl):
         super(EffortListCtrl, self).__init__(parent, columns, getItemText, getItemImage, 
             getItemAttr, selectCommand, editCommand, popupMenu, *args, **kwargs)
         
-        
+    def getResizableColumn(self):
+        return 2
