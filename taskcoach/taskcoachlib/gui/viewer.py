@@ -72,7 +72,6 @@ class Viewer(patterns.Observable, wx.Panel):
                 select = []
             self.widget.refresh(len(self.list))
             self.select(select)
-            #self.notifyObservers(patterns.observer.Notification(self))
         
     def onSelect(self, *args):
         self.notifyObservers(patterns.observer.Notification(self))
@@ -242,7 +241,6 @@ class EffortListViewer(ListViewer):
             self.onSelect, uiCommands['editeffort'], 
             menu.EffortPopupMenu(self.parent, uiCommands, self.list, self))
         widget.SetColumnWidth(0, 150)
-        widget.SetColumnWidth(1, 300)
         return widget
 
     def columns(self):
