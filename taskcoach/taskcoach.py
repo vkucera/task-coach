@@ -8,11 +8,9 @@ libpath = taskcoachlib.__path__[0]
 sys.path.append(libpath) 
 del taskcoachlib
 
-import log
 from patterns import observer
 from effort import Effort
 from task import Task
-#log.Logger().watch(observer, Effort, Task)
 
 # Now we can directly import taskcoachlib subpackages:
 import task, gui, config, effort
