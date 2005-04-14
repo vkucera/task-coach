@@ -1,11 +1,17 @@
 Release 0.31 - April ?, 2005
 
 Note:
-- Task Coach migrated to Python 2.4.1 and wxPython 2.5.5.1.
+- Task Coach migrated to Python 2.4.1 and wxPython 2.5.5.1. Added
+  check to give friendly message if wxPython version is below the
+  required version number.
 
 Bugs fixed:
 - A unittest.py bug that was fixed in Python 2.4 revealed a
   bug in test.py (1181714)
+- When searching for a task that is completed, while the 
+  'show completed' switch is off, the search shows the path to 
+  the task (i.e. parent tasks), but not the matched task itself 
+  (1182528).
 
 Features added:
 - In the task list and effort list the task column is automatically

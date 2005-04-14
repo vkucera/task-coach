@@ -2,19 +2,16 @@ import patterns, date
 import re
 
 class Filter(patterns.ObservableListObserver):
-    def onNotify(self, notification, *args, **kwargs):
-        self.stopNotifying()
+    def processChanges(self, notification):
         changedItemsNotInSelf = [item for item in notification.itemsChanged if item not in self]
         itemsAdded = self._addItemsIfNecessary(notification.itemsAdded + changedItemsNotInSelf)
         changedItemsInSelf = [item for item in notification.itemsChanged if item in self]
         itemsRemoved = self._removeItemsIfNecessary(notification.itemsRemoved + changedItemsInSelf)
-        self.startNotifying()
         itemsChanged = [item for item in notification.itemsChanged if item not in itemsAdded+itemsRemoved and item in self]
-        self.notifyObservers(patterns.observer.Notification(self, itemsAdded=itemsAdded,
-            itemsRemoved=itemsRemoved, itemsChanged=itemsChanged))
-        
+        return itemsAdded, itemsRemoved, itemsChanged
+                
     def _addItemsIfNecessary(self, items):
-        itemsToAdd = [item for item in items if self.filter(item) and item not in self]
+        itemsToAdd = [item for item in items if self.filter(item)]
         self._extend(itemsToAdd)
         return itemsToAdd
         
