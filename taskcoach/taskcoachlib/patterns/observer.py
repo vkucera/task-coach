@@ -197,17 +197,17 @@ class ObservableListObserver(ObservableList):
             notification.itemsChanged):
             return
         self.stopNotifying()
-        self.processChanges(notification)
+        itemsAdded, itemsRemoved, itemsChanged = self.processChanges(notification)
         self.postProcessChanges()
         self.startNotifying()
-        self.notifyObservers(Notification(self,
-            itemsAdded=notification.itemsAdded, 
-            itemsRemoved=notification.itemsRemoved,
-            itemsChanged=notification.itemsChanged), *args, **kwargs)
+        self.notifyObservers(Notification(self, itemsAdded=itemsAdded, 
+            itemsRemoved=itemsRemoved, itemsChanged=itemsChanged),
+            *args, **kwargs)
 
     def processChanges(self, notification):
         self._extend(notification.itemsAdded)
         self._removeItems(notification.itemsRemoved)
+        return notification.itemsAdded, notification.itemsRemoved, notification.itemsChanged
         
     def postProcessChanges(self):
         pass

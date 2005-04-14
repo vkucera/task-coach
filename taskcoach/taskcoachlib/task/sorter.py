@@ -5,8 +5,9 @@ class Sorter(patterns.ObservableListObserver):
         self.sort()
 
 class DepthFirstSorter(Sorter):   
-    def processChanges(self, *args, **kwargs):
-        pass
+    def processChanges(self, notification, *args, **kwargs):
+        return notification.itemsAdded, notification.itemsRemoved,\
+            notification.itemsChanged
         
     def sort(self):
         self[:] = self.sortDepthFirst(self.original().rootTasks())

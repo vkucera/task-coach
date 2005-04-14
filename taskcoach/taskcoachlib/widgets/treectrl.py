@@ -139,3 +139,6 @@ class TreeCtrl(wx.TreeCtrl):
                 return item
         raise IndexError
 
+    def expandAllItems(self):
+        for item in self.getChildren(recursively=True):
+            self.Expand(item)

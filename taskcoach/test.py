@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import unittest, sys, os, wx, taskcoach
+import unittest, sys, os, taskcoach, wx
 
 projectRoot = os.path.split(taskcoach.libpath)[0]
 if projectRoot not in sys.path:
