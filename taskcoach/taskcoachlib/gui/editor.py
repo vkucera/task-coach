@@ -253,6 +253,7 @@ class TaskEditor(EditorWithCommand):
     def __init__(self, parent, command, uiCommands, settings, bitmap='edit', *args, **kwargs):
         self._settings = settings
         super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
+        self[0]._subjectEntry.SetSelection(-1, -1)
         wx.CallAfter(self[0]._subjectEntry.SetFocus)
         
     def addPages(self):
