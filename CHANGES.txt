@@ -1,4 +1,4 @@
-Release 0.31 - April ?, 2005
+Release 0.31 - April 17, 2005
 
 Note:
 - Task Coach migrated to Python 2.4.1 and wxPython 2.5.5.1. Added
@@ -15,8 +15,10 @@ Bugs fixed:
 - When searching for tasks in the tree view, composite tasks 
   are expanded automatically to show the children that match
   the search string (1182528).
-- Columns were hidden by setting their width to 0, but that didnot
+- Columns were hidden by setting their width to 0, but that did not
   make them entirely invisible on some Linux platforms (1152566). 
+- When editing a subtask, sometimes its branch would be 
+  collapsed (1179266).
 
 Features added:
 - In the task list and effort list the task column is automatically
@@ -24,7 +26,9 @@ Features added:
 - Added columns to the task list view for: budget, total budget,
   budget left, and total budget left.
 - Reorganized view menu, added extra task filters, added menu item to
-  reset filters (1181762).
+  reset filters (1181762, 1178882, 1178780).
+- The subject is selected in the task editor so that replacing it 
+  is a bit easier (1180887).
 
 
 Release 0.30 - April 11, 2005
