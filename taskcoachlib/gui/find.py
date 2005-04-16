@@ -1,9 +1,10 @@
 import wx 
 
 class FindPanel(wx.Panel):
-    def __init__(self, parent, searchFilter):
+    def __init__(self, parent, searchFilter, viewer):
         super(FindPanel, self).__init__(parent, -1)
         self.searchFilter = searchFilter
+        self.viewer = viewer
         self.createComponents()
         self.layout()
         
@@ -34,6 +35,7 @@ class FindPanel(wx.Panel):
     def find(self, event):
         self.searchFilter.setSubject(self._subjectEntry.GetValue())
         self.searchFilter.setMatchCase(self._caseCheckBox.GetValue())
+        self.viewer.expandAll()
         
     def clear(self, event=None):
         self._subjectEntry.SetValue('')
