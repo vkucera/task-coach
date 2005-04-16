@@ -175,10 +175,12 @@ class TaskListViewer(TaskViewer, ListViewer):
             return render.budget(task.budgetLeft(recursive=True))
     
     def showColumn(self, columnHeader, show):
+        self.widget.showColumn(columnHeader, show)
+        '''
         columnIndex = self.columns().index(columnHeader)
         width = {True : wx.LIST_AUTOSIZE, False : 0 } [show]
         self.widget.SetColumnWidth(columnIndex, width)
-        
+        '''
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
