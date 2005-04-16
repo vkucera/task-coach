@@ -9,8 +9,14 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
         return self.GetMenuItemCount()
 
     def appendUICommand(self, uiCommand):
-        uiCommand.appendToMenu(self, self._window)
+        uiCommand.appendToMenu(self, self._window)    
     
+    def appendMenu(self, text, subMenu):
+        subMenuItem = wx.MenuItem(self, -1, text, subMenu=subMenu)
+        # hack to force a 16 bit margin. SetMarginWidth doesn't work
+        if '__WXMSW__' in wx.PlatformInfo:
+            subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap('nobitmap', wx.ART_MENU, (16,16)))
+        self.AppendItem(subMenuItem)
 
 
 class MainMenu(wx.MenuBar):
@@ -36,8 +42,8 @@ class EditMenu(Menu):
         super(EditMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['undo', 'redo', None, 'cut', 
             'copy', 'paste', 'pasteassubtask', None])
-        self.AppendMenu(-1, 'Select', SelectMenu(mainwindow, uiCommands))
-
+        self.appendMenu('Select', SelectMenu(mainwindow, uiCommands))
+        
 
 class SelectMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
@@ -49,27 +55,50 @@ class SelectMenu(Menu):
 class ViewMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewcompletedtasks',
-            'viewinactivetasks', 'viewcompositetasks'])
-
-        self.AppendMenu(-1, 'Tasks due before end of',
+        self.appendUICommands(uiCommands, ['viewalltasks'])
+        self.appendMenu('Tasks that are', 
+            ViewTaskStatesMenu(mainwindow, uiCommands))
+        self.appendMenu('Tasks due before end of',
             ViewTasksByDueDateMenu(mainwindow, uiCommands))
-
-        self.appendUICommands(uiCommands, [None, 'viewstartdate',
-            'viewduedate', 'viewdaysleft', 'viewcompletiondate', 
-            'viewtimespent', 'viewtotaltimespent', None])
-
-        self.AppendMenu(-1, '&Toolbar', 
-            ToolBarMenu(mainwindow, uiCommands))
-            
+        self.appendUICommands(uiCommands, [None])
+        self.appendMenu('In the task list', 
+            ViewTaskListMenu(mainwindow, uiCommands))
+        self.appendMenu('In the task tree', 
+            ViewTaskTreeMenu(mainwindow, uiCommands))
+        self.appendUICommands(uiCommands, [None])
+        self.appendMenu('&Toolbar', ToolBarMenu(mainwindow, uiCommands))        
         self.appendUICommands(uiCommands, ['viewfinddialog', 'viewstatusbar', 
-            'viewsplashscreen'])
+            'viewsplashscreen'])   
 
+           
+class ViewTaskStatesMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ViewTaskStatesMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewactivetasks',
+            'viewinactivetasks', 'viewcompletedtasks', None,
+            'viewoverduetasks', 'viewoverbudgettasks'])
 
+                
+class ViewTaskListMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ViewTaskListMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewstartdate',
+            'viewduedate', 'viewdaysleft', 'viewcompletiondate',
+            'viewbudget', 'viewtotalbudget', 'viewtimespent',
+            'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
+            None, 'viewcompositetasks'])
+ 
+           
+class ViewTaskTreeMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ViewTaskTreeMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewexpandall', 'viewcollapseall'])
+
+        
+    
 class ToolBarMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ToolBarMenu, self).__init__(mainwindow)
-
         self.appendUICommands(uiCommands, ['toolbarhide', 'toolbarsmall',
             'toolbarmedium', 'toolbarbig'])
 
@@ -77,7 +106,6 @@ class ToolBarMenu(Menu):
 class ViewTasksByDueDateMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewTasksByDueDateMenu, self).__init__(mainwindow)
-
         self.appendUICommands(uiCommands, ['viewdueunlimited', 'viewduetoday',
             'viewduetomorrow', 'viewdueworkweek', 'viewdueweek',
             'viewduemonth', 'viewdueyear'])
@@ -88,7 +116,8 @@ class TaskMenu(Menu):
         super(TaskMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['new', 'newsubtask', 
             None, 'edit', 'markcompleted', None, 'delete'])
-
+            
+            
 class EffortMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(EffortMenu, self).__init__(mainwindow)

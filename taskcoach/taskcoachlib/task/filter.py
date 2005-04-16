@@ -35,9 +35,15 @@ class Filter(patterns.ObservableListObserver):
     
 class ViewFilter(Filter):
     def __init__(self, taskList):
-        self._viewCompletedTasks = self._viewInactiveTasks = True
-        self._viewTasksDueBeforeDate = date.Date()
         super(ViewFilter, self).__init__(taskList)
+        self.setViewAll()
+        
+    def setViewAll(self):
+        self._viewCompletedTasks = self._viewInactiveTasks = \
+            self._viewActiveTasks = self._viewOverDueTasks = \
+            self._viewOverBudgetTasks = True
+        self._viewTasksDueBeforeDate = date.Date()
+        self.resetFilter()
 
     def setViewCompletedTasks(self, viewCompletedTasks):
         self._viewCompletedTasks = viewCompletedTasks
@@ -46,7 +52,19 @@ class ViewFilter(Filter):
     def setViewInactiveTasks(self, viewInactiveTasks):
         self._viewInactiveTasks = viewInactiveTasks
         self.resetFilter()
+        
+    def setViewActiveTasks(self, viewActiveTasks):
+        self._viewActiveTasks = viewActiveTasks
+        self.resetFilter()
 
+    def setViewOverDueTasks(self, viewOverDueTasks):
+        self._viewOverDueTasks = viewOverDueTasks
+        self.resetFilter()
+        
+    def setViewOverBudgetTasks(self, viewOverBudgetTasks):
+        self._viewOverBudgetTasks = viewOverBudgetTasks
+        self.resetFilter()
+        
     def viewTasksDueBefore(self, dateString):
         dateFactory = { 'Today' : date.Today, 
                         'Tomorrow' : date.Tomorrow,
@@ -63,8 +81,14 @@ class ViewFilter(Filter):
             return False
         if task.inactive() and not self._viewInactiveTasks:
             return False
-        if task.dueDate() > self._viewTasksDueBeforeDate:
+        if task.overdue() and not self._viewOverDueTasks:
             return False
+        if task.active() and not self._viewActiveTasks:
+            return False
+        if task.budgetLeft(recursive=True) < date.TimeDelta() and not self._viewOverBudgetTasks:
+            return False
+        if task.dueDate() > self._viewTasksDueBeforeDate:
+            return False        
         return True
 
 

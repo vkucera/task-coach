@@ -16,7 +16,10 @@ Bugs fixed:
 Features added:
 - In the task list and effort list the task column is automatically
   resized to take up the available space.
-
+- Added columns to the task list view for: budget, total budget,
+  budget left, and total budget left.
+- Reorganized view menu, added extra task filters, added menu item to
+  reset filters (1181762).
 
 
 Release 0.30 - April 11, 2005

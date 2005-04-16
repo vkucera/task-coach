@@ -108,8 +108,12 @@ class ListViewer(Viewer):
 
 
 class TreeViewer(Viewer):
-    pass
+    def expandAll(self):
+        self.widget.expandAllItems()
 
+    def collapseAll(self):
+        self.widget.collapseAllItems()
+        
 
 class TaskViewer(Viewer):
     def select_completedTasks(self):
@@ -124,13 +128,17 @@ class TaskViewer(Viewer):
     
 class TaskListViewer(TaskViewer, ListViewer):
     def createWidget(self):
-        widget = widgets.ListCtrl(self, ['Subject', 'Start date', 'Due date',
-            'Days left', 'Completion date', 'Time spent', 'Total time spent'],
+        widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr, 
             self.onSelect, self.uiCommands['edit'], 
             menu.TaskPopupMenu(self.parent, self.uiCommands))
         widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
         return widget
+        
+    def columns(self):
+        return ['Subject', 'Start date', 'Due date',
+            'Days left', 'Completion date', 'Budget', 'Total budget', 
+            'Time spent', 'Total time spent', 'Budget left', 'Total budget left']
 
     def createSorter(self, taskList):
         return task.sorter.Sorter(taskList)
@@ -141,47 +149,36 @@ class TaskListViewer(TaskViewer, ListViewer):
     def setViewCompositeTasks(self, viewCompositeTasks):
         self.list.setViewCompositeTasks(viewCompositeTasks)
     
-    def getItemText(self, index, column):
-        if self.widget.GetColumnWidth(column) == 0:
-            return ''
+    def getItemText(self, index, columnHeader):
         task = self.list[index]
-        if column == 0:
+        if columnHeader == 'Subject':
             return render.subject(task, recursively=True)
-        elif column == 1:
+        elif columnHeader == 'Start date':
             return render.date(task.startDate())
-        elif column == 2:
+        elif columnHeader == 'Due date':
             return render.date(task.dueDate())
-        elif column == 3:
+        elif columnHeader == 'Days left':
             return render.daysLeft(task.timeLeft())
-        elif column == 4:
+        elif columnHeader == 'Completion date':
             return render.date(task.completionDate())
-        elif column == 5:
+        elif columnHeader == 'Budget':
+            return render.budget(task.budget())
+        elif columnHeader == 'Total budget':
+            return render.budget(task.budget(recursive=True))
+        elif columnHeader == 'Time spent':
             return render.timeSpent(task.duration())
-        elif column == 6:
+        elif columnHeader == 'Total time spent':
             return render.timeSpent(task.duration(recursive=True))
+        elif columnHeader == 'Budget left':
+            return render.budget(task.budgetLeft())
+        elif columnHeader == 'Total budget left':
+            return render.budget(task.budgetLeft(recursive=True))
     
-    def showColumn(self, columnIndex, show):
+    def showColumn(self, columnHeader, show):
+        columnIndex = self.columns().index(columnHeader)
         width = {True : wx.LIST_AUTOSIZE, False : 0 } [show]
         self.widget.SetColumnWidth(columnIndex, width)
-
-    def showStartDate(self, show):
-        self.showColumn(1, show)
-
-    def showDueDate(self, show):
-        self.showColumn(2, show)
         
-    def showDaysLeft(self, show):
-        self.showColumn(3, show)
-
-    def showCompletionDate(self, show):
-        self.showColumn(4, show)
-
-    def showTimeSpent(self, show):
-        self.showColumn(5, show)
-
-    def showTotalTimeSpent(self, show):
-        self.showColumn(6, show)
-
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
@@ -249,18 +246,15 @@ class EffortListViewer(ListViewer):
     def createSorter(self, effortList):
         return effort.EffortSorter(effortList)
         
-    def getItemText(self, index, column):
+    def getItemText(self, index, columnHeader):
         effort = self.list[index]
-        if column == 0:
+        if columnHeader == 'Period':
             previousEffort = index > 0 and self.list[index-1] or None
             return self.renderPeriod(effort, previousEffort)
-        elif column == 1:
+        elif columnHeader == 'Task':
             return render.subject(effort.task(), recursively=True)
-        elif column == 2:
+        elif columnHeader == 'Time spent':
             return render.timeSpent(effort.duration())
-
-    def _getTask(self, index):
-        return self.list[index].task()
     
     def getItemImage(self, index):
         return -1
@@ -295,12 +289,12 @@ class CompositeEffortListViewer(EffortListViewer):
         compositeEfforts = super(CompositeEffortListViewer, self).curselection()
         return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
 
-    def getItemText(self, index, column):
-        if column == 3:
+    def getItemText(self, index, columnHeader):
+        if columnHeader == 'Total time spent':
             effort = self.list[index]
             return render.timeSpent(effort.duration(recursive=True))
         else:
-            return super(CompositeEffortListViewer, self).getItemText(index, column)
+            return super(CompositeEffortListViewer, self).getItemText(index, columnHeader)
 
 
 class EffortPerDayViewer(CompositeEffortListViewer):

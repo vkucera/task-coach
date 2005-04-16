@@ -11,17 +11,23 @@ colorsText = '''Tasks are colored according to the following rules:
 tasksText = '''Tasks have the following properties:
 - Subject: a single line that summarizes the task.
 - Description: a multi-line description of the task.
-- Due date: the date the task should be finished. This can be 'None' indicating that this task has no fixed due date;
-- Start date: the first date on which the task can be started. The start date defaults to the date the task is created;
-- Completed: a flag that indicates whether the task is completed or not, and
+- Due date: the date the task should be finished. This can be 'None' indicating that this task has no fixed due date.
+- Start date: the first date on which the task can be started. The start date defaults to the date the task is created.
+- Completed: a flag that indicates whether the task is completed or not.
 - Completion date: this date is None as long as the task has not been completed. It is set to the current date when the user marks the task as completed. The completion date can also be entered manually.
+- Budget: amount of hours available for the task.
 
-Tasks always have one of the following states:
+Tasks always have exactly one of the following states:
+- Active: the start date is in the past and the due date in the future;
+- Inactive: the start date is in the future, or
+- Completed: the task has been completed.
+
+In addition, tasks can be referenced as:
 - Over due: the due date is in the past;
 - Due today: the due date is today;
-- Active: the start date is in the past and the due date in the future;
-- Future: the start date is in the future, or
-- Completed: the task has been completed.
+- Over budget: no buget left;
+- Under budget: still budget left;
+- No budget: the task has no budget.
 '''
 
 doubleline = '================================================================\n'
