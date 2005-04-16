@@ -21,27 +21,16 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
             self.Bind(wx.EVT_LIST_ITEM_RIGHT_CLICK, self.onPopup)
             
     def setColumns(self, columns):
-        self.columnHeaders = {}
+        self.allColumnHeaders = columns
         for columnIndex, columnHeader in enumerate(columns):
-            self.columnHeaders[columnIndex] = columnHeader
             self.InsertColumn(columnIndex, columnHeader)
         self.setResizeColumn(self.getResizableColumn())
         
     def getResizableColumn(self):
         return 1
-        
-    def SetColumnWidth(self, column, width, *args, **kwargs):
-        minwidth = 80
-        if width != 0 and width < minwidth: width = minwidth
-        super(VirtualListCtrl, self).SetColumnWidth(column, width, *args, **kwargs)
-        if column != self.getResizableColumn() and width == 0:
-            self.resizeColumn(self.getResizableColumn())
-        
+               
     def OnGetItemText(self, rowIndex, columnIndex):
-        if self.GetColumnWidth(columnIndex) == 0:
-            return ''
-        else:
-            return self.getItemText(rowIndex, self.columnHeaders[columnIndex])
+        return self.getItemText(rowIndex, self.getColumnHeader(columnIndex))
 
     def OnGetItemImage(self, index):
         return self.getItemImage(index)
@@ -90,22 +79,29 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
             self.SetItemState(index, ~currentState, wx.LIST_STATE_SELECTED)
         self.selectCommand()            
 
+    def showColumn(self, columnHeader, show=True):
+        columnIndex = self.getColumnIndex(columnHeader)
+        if show:
+            self.InsertColumn(columnIndex, columnHeader)
+        else:
+            self.DeleteColumn(columnIndex)
+            self.resizeColumn(self.getResizableColumn())
 
-class ListCtrl(VirtualListCtrl):
-    def __init__(self, parent, columns, getItemText, getItemImage,
-            getItemAttr, selectCommand, editCommand, popupMenu=None):
-        super(ListCtrl, self).__init__(parent, columns, getItemText, getItemImage, 
-            getItemAttr, selectCommand, editCommand, popupMenu)
-        self.Bind(wx.EVT_LIST_COL_BEGIN_DRAG, self.onBeginColumnDrag)
+    def getColumnHeader(self, columnIndex):
+        return self.GetColumn(columnIndex).GetText()
         
-    def onBeginColumnDrag(self, event):
-        # FIXME: if the user sets the width of a column to 0 she can't
-        # make it wider anymore. 
-        column = event.GetColumn()
-        if column >= 0 and self.GetColumnWidth(column) == 0:
-            event.Veto()
+    def getColumnIndex(self, columnHeader):
+        for columnIndex in range(1, self.GetColumnCount()):
+            displayedHeader = self.getColumnHeader(columnIndex)
+            if self.allColumnHeaders.index(displayedHeader) >= self.allColumnHeaders.index(columnHeader):
+                return columnIndex
+        return self.GetColumnCount()
 
-
+                
+class ListCtrl(VirtualListCtrl):
+    pass
+    
+    
 class EffortListCtrl(VirtualListCtrl):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
             selectCommand=None, editCommand=None, popupMenu=None, *args, **kwargs):

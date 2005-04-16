@@ -12,6 +12,11 @@ Bugs fixed:
   'show completed' switch is off, the search shows the path to 
   the task (i.e. parent tasks), but not the matched task itself 
   (1182528).
+- When searching for tasks in the tree view, composite tasks 
+  are expanded automatically to show the children that match
+  the search string (1182528).
+- Columns were hidden by setting their width to 0, but that didnot
+  make them entirely invisible on some Linux platforms (1152566). 
 
 Features added:
 - In the task list and effort list the task column is automatically
