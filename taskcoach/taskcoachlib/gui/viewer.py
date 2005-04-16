@@ -65,13 +65,13 @@ class Viewer(patterns.Observable, wx.Panel):
     def onNotify(self, notification, *args, **kwargs):
         if notification.itemsAdded or notification.itemsChanged or notification.itemsRemoved:
             if notification.itemsAdded and len(notification.itemsAdded) < len(self.list):
-                select = notification.itemsAdded
+                selection = notification.itemsAdded
             elif notification.itemsChanged and len(notification.itemsChanged) < len(self.list):
-                select = notification.itemsChanged
+                selection = notification.itemsChanged
             else:
-                select = []
+                selection = []
             self.widget.refresh(len(self.list))
-            self.select(select)
+            self.select(selection)
         
     def onSelect(self, *args):
         self.notifyObservers(patterns.observer.Notification(self))
