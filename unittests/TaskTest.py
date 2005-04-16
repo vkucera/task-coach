@@ -77,6 +77,9 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
         futureTask.setCompletionDate()
         self.failIf(futureTask.inactive())
 
+    def testActive(self):
+        self.failUnless(task.Task().active())
+        
     def testNotDueToday(self):
         self.failIf(self.task.dueToday())
 

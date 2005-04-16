@@ -184,6 +184,9 @@ class Task(patterns.Observable):
 
     def inactive(self):
         return (self.startDate() > date.Today()) and not self.completed()
+        
+    def active(self):
+        return not self.inactive() and not self.completed()
 
     def dueToday(self):
         return (self.dueDate() == date.Today() and not self.completed())

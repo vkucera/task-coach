@@ -20,7 +20,7 @@ class UICommand(object):
         code to deal with wx.EVT_UPDATE_UI and methods to attach the command to a menu or
         toolbar. Subclasses should implement doCommand() and optionally override enabled(). '''
         
-    bitmap = None
+    bitmap = 'nobitmap'
     menuText = '?'
     helpText = ''
     kind = wx.ITEM_NORMAL
@@ -32,20 +32,14 @@ class UICommand(object):
     def id(self):
         return self._id
 
-    def setMenuItemMarginWidth(self, item, width=16):
-        if '__WXMSW__' in wx.PlatformInfo:
-            item.SetMarginWidth(width)
-
     def appendToMenu(self, menu, window):
-        item = wx.MenuItem(menu, self._id, self.menuText, self.helpText, 
+        self.menuItem = wx.MenuItem(menu, self._id, self.menuText, self.helpText, 
             self.kind)
-        self.setMenuItemMarginWidth(item)
         if self.bitmap:
-            item.SetBitmap(wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
+            self.menuItem.SetBitmap(wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
                 (16, 16)))
-        menu.AppendItem(item)
+        menu.AppendItem(self.menuItem)
         self.bind(window)
-        return item
 
     def appendToToolBar(self, toolbar, window):
         toolbar.AddLabelTool(self._id, '',
@@ -93,9 +87,14 @@ class SettingsCommand(UICommand):
 
 class BooleanSettingsCommand(SettingsCommand):
     def appendToMenu(self, *args, **kwargs):
-        item = super(BooleanSettingsCommand, self).appendToMenu(*args, **kwargs)
-        item.Check(self.checked())
-        return item
+        super(BooleanSettingsCommand, self).appendToMenu(*args, **kwargs)
+        self.check()
+        
+    def check(self):
+        checked = self.checked()
+        self.menuItem.Check(checked)
+        if self.commandNeedsToBeActivated(checked):
+            self.sendCommandActivateEvent()
 
     def sendCommandActivateEvent(self):
         self.onCommandActivate(wx.CommandEvent(0, self._id))
@@ -105,10 +104,8 @@ class UICheckCommand(BooleanSettingsCommand):
     kind = wx.ITEM_CHECK
     bitmap = 'on' # 'on' == checkmark shaped image
 
-    def appendToMenu(self, *args, **kwargs):
-        item = super(UICheckCommand, self).appendToMenu(*args, **kwargs)
-        if not self.checked():
-            self.sendCommandActivateEvent()
+    def commandNeedsToBeActivated(self, checked):
+        return not checked
 
     def checked(self):
         return self.settings.getboolean(self.section, self.setting)
@@ -119,15 +116,11 @@ class UICheckCommand(BooleanSettingsCommand):
 
 class UIRadioCommand(BooleanSettingsCommand):
     kind = wx.ITEM_RADIO
-
-    def setMenuItemMarginWidth(self, *args, **kwargs):
-        pass # SetMarginWidth doesn't work for wx.ITEM_RADIO menu items
-
-    def appendToMenu(self, *args, **kwargs):
-        item = super(UIRadioCommand, self).appendToMenu(*args, **kwargs)
-        if self.checked():
-            self.sendCommandActivateEvent()
-
+    bitmap = None
+    
+    def commandNeedsToBeActivated(self, checked):
+        return checked
+        
     def checked(self):
         return self.settings.get(self.section, self.setting) == str(self.value)
 
@@ -192,10 +185,6 @@ class NeedsItems(object):
     def enabled(self):
         return self.viewer.size() 
 
-class NeedsHidableColumns(object):
-    def enabled(self):
-        return True
-        #return self.viewer.canHideColumns()
  
 # Commands:
 
@@ -337,6 +326,7 @@ class EditPaste(FilterCommand):
 
 
 class EditPasteAsSubtask(FilterCommand, ViewerCommand):
+    bitmap = 'pasteassubtask'
     menuText = 'P&aste as subtask'
     helpText = 'Paste task(s) as children of the selected task'
 
@@ -381,8 +371,28 @@ class ClearSelection(NeedsSelection, ViewerCommand):
         self.viewer.clearselection()
 
 
+class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
+    menuText = '&All tasks'
+    helpText = 'Show all tasks (reset all filters)'
+    bitmap = 'viewalltasks'
+    
+    def doCommand(self, event):
+        for uiCommandName in ['viewcompletedtasks', 'viewinactivetasks', 
+            'viewoverduetasks', 'viewactivetasks', 'viewoverbudgettasks', 
+            'viewcompositetasks']:
+            uiCommand = self.uiCommands[uiCommandName]
+            self.settings.set(uiCommand.section, uiCommand.setting, 'True')
+            uiCommand.check()
+        
+        self.settings.set(self.section, 'tasksdue', 'Unlimited')    
+        for uiCommandName in ['viewdueunlimited', 'viewduetoday', 'viewduetomorrow',
+            'viewdueworkweek', 'viewdueweek', 'viewduemonth', 'viewdueyear']:
+            self.uiCommands[uiCommandName].check()
+        self.filteredTaskList.setViewAll()
+
+
 class ViewCompletedTasks(FilterCommand, UICheckCommand):
-    menuText = '&Completed tasks'
+    menuText = '&Completed'
     helpText = 'Show/hide completed tasks'
     setting ='completedtasks'
 
@@ -392,83 +402,131 @@ class ViewCompletedTasks(FilterCommand, UICheckCommand):
 
 
 class ViewInactiveTasks(FilterCommand, UICheckCommand):
-    menuText = '&Inactive tasks'
-    helpText = 'Show/hide inactive tasks'
+    menuText = '&Inactive'
+    helpText = 'Show/hide inactive tasks (tasks with a start date in the future)'
     setting = 'inactivetasks'
 
     def doCommand(self, event):
         super(ViewInactiveTasks, self).doCommand(event)
         self.filteredTaskList.setViewInactiveTasks(event.IsChecked())
 
+class ViewOverDueTasks(FilterCommand, UICheckCommand):
+    menuText = '&Over due'
+    helpText = 'Show/hide over due tasks (tasks with a due date in the past)'
+    setting = 'overduetasks'
+    
+    def doCommand(self, event):
+        super(ViewOverDueTasks, self).doCommand(event)
+        self.filteredTaskList.setViewOverDueTasks(event.IsChecked())
 
-class ViewCompositeTasks(NeedsHidableColumns, ViewerCommand, FilterCommand, UICheckCommand):
+class ViewActiveTasks(FilterCommand, UICheckCommand):
+    menuText = '&Active'
+    helpText = 'Show/hide active tasks (tasks with a start date in the past and a due date in the future)'
+    setting = 'activetasks'
+    
+    def doCommand(self, event):
+        super(ViewActiveTasks, self).doCommand(event)
+        self.filteredTaskList.setViewActiveTasks(event.IsChecked())    
+ 
+class ViewOverBudgetTasks(FilterCommand, UICheckCommand):
+    menuText = 'Over &budget'
+    helpText = 'Show/hide tasks that are over budget'
+    setting = 'overbudgettasks'
+    
+    def doCommand(self, event):
+        super(ViewOverBudgetTasks, self).doCommand(event)
+        self.filteredTaskList.setViewOverBudgetTasks(event.IsChecked())
+               
+
+class ViewCompositeTasks(ViewerCommand, FilterCommand, UICheckCommand):
     menuText = 'Tasks with subtasks'
-    hlepText = 'Show/hide tasks with subtasks'
+    helpText = 'Show/hide tasks with subtasks'
     setting = 'compositetasks'
     
     def doCommand(self, event):
         super(ViewCompositeTasks, self).doCommand(event)
         self.viewer.setViewCompositeTasks(event.IsChecked())
         
-
-class ViewStartDate(NeedsHidableColumns, ViewerCommand, UICheckCommand):
+class ViewColumn(ViewerCommand, UICheckCommand):
+    
+    def doCommand(self, event):
+        super(ViewColumn, self).doCommand(event)
+        self.viewer.showColumn(self.column, event.IsChecked())
+        
+        
+class ViewStartDate(ViewColumn):
     menuText = '&Start date'
     helpText = 'Show/hide start date column'
     setting = 'startdate'
+    column = 'Start date'
 
-    def doCommand(self, event):
-        super(ViewStartDate, self).doCommand(event)
-        self.viewer.showStartDate(event.IsChecked())
-
-
-class ViewDueDate(NeedsHidableColumns, ViewerCommand, UICheckCommand):
+class ViewDueDate(ViewColumn):
     menuText = '&Due date'
     helpText = 'Show/hide due date column'
     setting = 'duedate'
+    column = 'Due date'
 
-    def doCommand(self, event):
-        super(ViewDueDate, self).doCommand(event)
-        self.viewer.showDueDate(event.IsChecked())
-
-
-class ViewDaysLeft(NeedsHidableColumns, ViewerCommand, UICheckCommand):
+class ViewDaysLeft(ViewColumn):
     menuText = 'Days &left'
     helpText = 'Show/hide days left column'
     setting = 'daysleft'
+    column ='Days left'
 
-    def doCommand(self, event):
-        super(ViewDaysLeft, self).doCommand(event)
-        self.viewer.showDaysLeft(event.IsChecked())
-
-
-class ViewCompletionDate(NeedsHidableColumns, ViewerCommand, UICheckCommand):
+class ViewCompletionDate(ViewColumn):
     menuText = 'Co&mpletion date'
     helpText = 'Show/hide completion date column'
     setting = 'completiondate'
+    column = 'Completion date'
 
-    def doCommand(self, event):
-        super(ViewCompletionDate, self).doCommand(event)
-        self.viewer.showCompletionDate(event.IsChecked())
-
-
-class ViewTimeSpent(NeedsHidableColumns, ViewerCommand, UICheckCommand):
+class ViewTimeSpent(ViewColumn):
     menuText = '&Time spent'
     helpText = 'Show/hide time spent column'
     setting = 'timespent'
+    column = 'Time spent'
 
-    def doCommand(self, event):
-        super(ViewTimeSpent, self).doCommand(event)
-        self.viewer.showTimeSpent(event.IsChecked())
-
-
-class ViewTotalTimeSpent(NeedsHidableColumns, ViewerCommand, UICheckCommand):
+class ViewTotalTimeSpent(ViewColumn):
     menuText = 'T&otal time spent'
     helpText = 'Show/hide total time spent column (total time includes time spent on subtasks)'
     setting = 'totaltimespent'
+    column = 'Total time spent'
+    
+class ViewBudget(ViewColumn):
+    menuText = '&Budget'
+    helpText = 'Show/hide budget column'
+    setting = 'budget'
+    column = 'Budget'
+    
+class ViewTotalBudget(ViewColumn):
+    menuText = 'Total budget'
+    helpText = 'Show/hide total budget column (total budget includes budget for subtasks)'
+    setting = 'totalbudget'
+    column = 'Total budget'
+    
+class ViewBudgetLeft(ViewColumn):
+    menuText = 'Budget &left'
+    helpText = 'Show/hide budget left'
+    setting = 'budgetleft'
+    column = 'Budget left'
+        
+class ViewTotalBudgetLeft(ViewColumn):
+    menuText = 'Total budget left'
+    helpText = 'Show/hide total budget left (total budget left includes budget left for subtasks)'
+    setting = 'totalbudgetleft'
+    column = 'Total budget left'
+
+class ViewExpandAll(ViewerCommand):
+    menuText = '&Expand all tasks'
+    helpText = 'Expand all tasks with subtasks'
     
     def doCommand(self, event):
-        super(ViewTotalTimeSpent, self).doCommand(event)
-        self.viewer.showTotalTimeSpent(event.IsChecked())
+        self.viewer.expandAll()
+        
+class ViewCollapseAll(ViewerCommand):
+    menuText = '&Collapse all tasks'
+    helpText = 'Collapse all tasks with subtasks'
+    
+    def doCommand(self, event):
+        self.viewer.collapseAll()
         
         
 class ViewToolBar(MainWindowCommand, UIRadioCommand):
@@ -586,7 +644,7 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsComma
 
 class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         FilterCommand, ViewerCommand, UICommandsCommand, SettingsCommand):
-
+    bitmap = 'newsubtask'
     menuText = 'New &subtask...\tCtrl+INS'
     helpText = 'Insert a new subtask into the selected task'
 
@@ -794,9 +852,16 @@ class UICommands(dict):
         self['clearselection'] = ClearSelection(viewer)
 
         # View commands
+        self['viewalltasks'] = ViewAllTasks(filteredTaskList, settings, self)
         self['viewcompletedtasks'] = ViewCompletedTasks(filteredTaskList, 
             settings)
         self['viewinactivetasks'] = ViewInactiveTasks(filteredTaskList,
+            settings)
+        self['viewactivetasks'] = ViewActiveTasks(filteredTaskList,
+            settings)    
+        self['viewoverduetasks'] = ViewOverDueTasks(filteredTaskList,
+            settings)    
+        self['viewoverbudgettasks'] = ViewOverBudgetTasks(filteredTaskList,
             settings)
         self['viewcompositetasks'] = ViewCompositeTasks(viewer, filteredTaskList,
             settings)
@@ -805,9 +870,16 @@ class UICommands(dict):
         self['viewduedate'] = ViewDueDate(viewer, settings)
         self['viewdaysleft'] = ViewDaysLeft(viewer, settings)
         self['viewcompletiondate'] = ViewCompletionDate(viewer, settings)
+        self['viewbudget'] = ViewBudget(viewer, settings)
+        self['viewtotalbudget'] = ViewTotalBudget(viewer, settings)
         self['viewtimespent'] = ViewTimeSpent(viewer, settings)
         self['viewtotaltimespent'] = ViewTotalTimeSpent(viewer, settings)
+        self['viewbudgetleft'] = ViewBudgetLeft(viewer, settings)
+        self['viewtotalbudgetleft'] = ViewTotalBudgetLeft(viewer, settings)
 
+        self['viewexpandall'] = ViewExpandAll(viewer)
+        self['viewcollapseall'] = ViewCollapseAll(viewer)
+        
         self['toolbarhide'] = ViewToolBarHide(mainwindow, settings)
         self['toolbarsmall'] = ViewToolBarSmall(mainwindow, settings)
         self['toolbarmedium'] = ViewToolBarMedium(mainwindow, settings)

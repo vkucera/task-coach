@@ -62,6 +62,11 @@ class ViewFilterTest(test.wxTestCase):
     def testAddTask(self):
         self.filter.append(self.task)
         self.assertEqual(1, len(self.filter))
+        
+    def testViewActiveTasks(self):
+        self.filter.append(self.task)
+        self.filter.setViewActiveTasks(False)
+        self.assertEqual(0, len(self.filter))
 
     def testFilterCompletedTask(self):
         self.task.setCompletionDate()

@@ -44,11 +44,11 @@ class TaskListViewerTest(test.wxTestCase):
             self.taskList, effort.EffortList(self.taskList), {})
 
     def testGetTimeSpent(self):
-        timeSpent = self.viewer.getItemText(0, 5)
+        timeSpent = self.viewer.getItemText(0, 'Time spent')
         self.assertEqual("0:00:00", timeSpent)
 
     def testGetTotalTimeSpent(self):
-        timeSpent = self.viewer.getItemText(0, 6)
+        timeSpent = self.viewer.getItemText(0, 'Total time spent')
         self.assertEqual("0:00:00", timeSpent)
 
 
@@ -72,4 +72,4 @@ class CompositeEffortListViewerTest(test.wxTestCase):
         effortList = effort.EffortList(taskList)
         viewer = dummy.EffortPerDayViewerWithDummyWidget(self.frame, 
             effortList, {})
-        self.assertEqual('0:00:00', viewer.getItemText(0, 3))
+        self.assertEqual('0:00:00', viewer.getItemText(0, 'Time spent'))

@@ -142,3 +142,7 @@ class TreeCtrl(wx.TreeCtrl):
     def expandAllItems(self):
         for item in self.getChildren(recursively=True):
             self.Expand(item)
+
+    def collapseAllItems(self):
+        for item in self.getChildren(recursively=True):
+            self.Collapse(item)

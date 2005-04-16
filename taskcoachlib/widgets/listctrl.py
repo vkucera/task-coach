@@ -7,9 +7,7 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         super(VirtualListCtrl, self).__init__(parent, -1, 
             style=wx.LC_REPORT|wx.LC_VIRTUAL, *args, **kwargs)
         wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin.__init__(self)
-        for index, column in enumerate(columns):
-            self.InsertColumn(index, column)
-        self.setResizeColumn(self.getResizableColumn())
+        self.setColumns(columns)
         self.getItemText = getItemText
         self.getItemImage = getItemImage
         self.getItemAttr = getItemAttr
@@ -21,7 +19,14 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         if popupMenu:
             self.popupMenu = popupMenu
             self.Bind(wx.EVT_LIST_ITEM_RIGHT_CLICK, self.onPopup)
-    
+            
+    def setColumns(self, columns):
+        self.columnHeaders = {}
+        for columnIndex, columnHeader in enumerate(columns):
+            self.columnHeaders[columnIndex] = columnHeader
+            self.InsertColumn(columnIndex, columnHeader)
+        self.setResizeColumn(self.getResizableColumn())
+        
     def getResizableColumn(self):
         return 1
         
@@ -32,8 +37,11 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         if column != self.getResizableColumn() and width == 0:
             self.resizeColumn(self.getResizableColumn())
         
-    def OnGetItemText(self, index, column):
-        return self.getItemText(index, column)
+    def OnGetItemText(self, rowIndex, columnIndex):
+        if self.GetColumnWidth(columnIndex) == 0:
+            return ''
+        else:
+            return self.getItemText(rowIndex, self.columnHeaders[columnIndex])
 
     def OnGetItemImage(self, index):
         return self.getItemImage(index)

@@ -41,7 +41,8 @@ iconlist = [
 ('date', 'apps', 'date', [16, 22, 32]),
 ('description', 'actions', 'pencil', [16, 22, 32]),
 ('restore', 'apps', 'kcmkwm', [16]),
-('budget', 'apps', 'kcalc', [16, 22, 32])]
+('budget', 'apps', 'kcalc', [16, 22, 32]),
+('viewalltasks', 'apps', 'kreversi', [16])]
 
 icons = {}
 
