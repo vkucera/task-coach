@@ -46,6 +46,47 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.31 - April 17, 2005</H4>
+        Note:
+        <UL>
+        <LI>Task Coach migrated to Python 2.4.1 and wxPython 2.5.5.1. Added
+        check to give friendly message if wxPython version is below the
+        required version number.
+        </UL>
+        Bugs fixed:
+        <UL>
+        <LI>A unittest.py bug that was fixed in Python 2.4 revealed a
+        bug in test.py
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1181714&group_id=130831&atid=719134">1181714</A>)
+        <LI>When searching for a task that is completed, while the 
+        'show completed' switch is off, the search shows the path to 
+        the task (i.e. parent tasks), but not the matched task itself 
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1182528&group_id=130831&atid=719134">1182528</A>).
+        <LI>When searching for tasks in the tree view, composite tasks 
+        are expanded automatically to show the children that match
+        the search string
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1182528&group_id=130831&atid=719134">1182528</A>).
+        <LI>Columns were hidden by setting their width to 0, but that did not
+        make them entirely invisible on some Linux platforms
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1152566&group_id=130831&atid=719134">1152566</A>). 
+        <LI>When editing a subtask, sometimes its branch would be collapsed 
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1179266&group_id=130831&atid=719134">1179266</A>).
+        </UL>
+        Features added:
+        <UL>
+        <LI>In the task list and effort list the task column is automatically
+        resized to take up the available space.
+        <LI>Added columns to the task list view for: budget, total budget,
+        budget left, and total budget left.
+        <LI>Reorganized view menu, added extra task filters, added menu item to
+        reset filters 
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1181762&group_id=130831&atid=719134">1181762</A>, 
+        <A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1178882&group_id=130831&atid=719137">1178882</A>, 
+        <A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1178780&group_id=130831&atid=719137">1178780</A>).
+        <LI>The subject is selected in the task editor so that replacing it 
+        is a bit easier
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1180887&group_id=130831&atid=719137">1180887</A>).
+        </UL>
         <H4>Release 0.30 - April 11, 2005</H4>
         Bugs fixed:
         <UL>
