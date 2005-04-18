@@ -1,3 +1,10 @@
+Release 0.32 - April 18, 2005
+
+Bugs fixed:
+- Task Coach failure on startup due to trying to add a column
+  from the task list view to the effort view.
+
+
 Release 0.31 - April 17, 2005
 
 Note:
