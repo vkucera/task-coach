@@ -46,6 +46,16 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.32 - April 18, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>Task Coach failure on startup due to trying to add a column
+        from the task list view to the effort view.
+        <LI>Budget couldn't be filled in in the executable Windows
+        distribution "LookupError: unknown encoding: latin1".
+        <LI>Loading files with the executable Windows distribution failed
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1185259&group_id=130831&atid=719134">1185259</A>).
+        </UL>
         <H4>Release 0.31 - April 17, 2005</H4>
         Note:
         <UL>
