@@ -96,6 +96,7 @@ if sys.argv[1] == 'py2exe':
             'compressed' : 1, 
             'includes' : ['xml.dom.minidom'],
             'optimize' : 2, 
+            'packages' : ['encodings'],
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}}})
  
 
