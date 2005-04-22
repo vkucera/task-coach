@@ -34,7 +34,7 @@ class FileMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(FileMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['open', 'merge', 'close', None, 
-            'save', 'saveas', 'saveselection', 'exportxml', None, 'quit'])
+            'save', 'saveas', 'saveselection', None, 'quit'])
 
 
 class EditMenu(Menu):

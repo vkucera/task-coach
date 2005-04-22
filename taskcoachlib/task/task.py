@@ -6,13 +6,14 @@ class Task(patterns.Observable):
     #sep = '|'
    
     def __init__(self, subject='', description='', duedate=None, 
-            startdate=None, parent=None, budget=None, *args, **kwargs):
+            startdate=None, completiondate=None, parent=None, budget=None, 
+            *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
         self._subject        = subject
         self._description    = description 
         self._duedate        = duedate or date.Date()
         self._startdate      = startdate or date.Today()
-        self._completiondate = date.Date()
+        self._completiondate = completiondate or date.Date()
         self._budget         = budget or date.TimeDelta()
         self._id             = '%s:%s'%(id(self), time.time())
         self._children       = []

@@ -9,13 +9,10 @@ class MockApp(taskcoach.App):
     def init(self, filename):
         super(MockApp, self).init(showSplash=False, load=False)
         self.taskFile.setFilename(filename)
-        parent = task.Task()
-        child = task.Task()
-        parent.addChild(child)
-        self.taskFile.extend([parent, child])
-        self.mainwindow.viewer.select([parent])
-        self.parent = parent
-        self.child = child
+        self.parent = task.Task()
+        self.child = task.Task()
+        self.parent.addChild(self.child)
+        self.taskFile.extend([self.parent])
 
 
 class SaveTest(test.TestCase):
@@ -33,19 +30,23 @@ class SaveTest(test.TestCase):
 
     def testSave(self):
         self.mockApp.io.save()
-        lines = file(self.filename, 'r').readlines()
-        self.assertEqual(3, len(lines)) # 1 version line + 2 tasks
+        self.mockApp.io.open(self.filename)
+        self.assertEqual(2, len(self.mockApp.taskFile))
 
     def testSaveSelection_Child(self):
-        self.mockApp.io.saveselection([self.mockApp.child], self.filename)
-        lines = file(self.filename, 'r').readlines()
-        self.assertEqual(2, len(lines)) # 1 version line + 1 task
+        self.mockApp.io.save()
+        self.mockApp.io.saveselection([self.mockApp.child], self.filename2)
+        self.mockApp.io.close()
+        self.mockApp.io.open(self.filename2)
+        self.assertEqual(1, len(self.mockApp.taskFile))
 
     def testSaveSelection_Parent(self):
-        self.mockApp.io.saveselection([self.mockApp.parent], self.filename)
-        lines = file(self.filename, 'r').readlines()
-        self.assertEqual(3, len(lines)) # 1 version line + 2 tasks
-
+        self.mockApp.io.save()
+        self.mockApp.io.saveselection([self.mockApp.parent], self.filename2)
+        self.mockApp.io.close()
+        self.mockApp.io.open(self.filename2)
+        self.assertEqual(2, len(self.mockApp.taskFile))
+        
     def testSaveAndMerge(self):
         mockApp2 = MockApp(self.filename2)
         mockApp2.io.save()

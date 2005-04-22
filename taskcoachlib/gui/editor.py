@@ -43,14 +43,9 @@ class TimeDeltaEntry(wx.Panel):
             self._entry.SetFieldParameters(1, defaultValue='%02d'%minutes)
             self._entry.SetFieldParameters(2, defaultValue='%02d'%seconds)
 
-    def renderTimeDelta(timeDelta):
-        return 
     def get(self):
-        try:
-            hours, minutes, seconds = [int(x) for x in self._entry.GetValue().split(':')]
-        except ValueError:
-            hours, minutes, seconds = 0, 0, 0 
-        return date.TimeDelta(hours=hours, minutes=minutes, seconds=seconds)
+        return date.parseTimeDelta(self._entry.GetValue())
+
             
 class GridCursor:
     def __init__(self, columns):
@@ -262,7 +257,7 @@ class TaskEditor(EditorWithCommand):
 
     def addPage(self, task):
         page = TaskEditBook(self._notebook, task, self._uiCommands, self._settings)
-        self._notebook.AddPage(page, str(task))
+        self._notebook.AddPage(page, task.subject())
         
     
 class EffortEditor(EditorWithCommand):

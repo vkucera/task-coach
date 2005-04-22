@@ -7,7 +7,7 @@ class IOController(object):
         self.__messageCallback = messageCallback
         self.__fileDialogOpts = { 'default_path' : '.', 
             'default_extension' : 'tsk', 'wildcard' : 
-            '%s files (*.tsk)|*.tsk|All files (*.*)|*'%meta.name }
+            '%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*'%meta.name }
 
     def needSave(self):
         return self.__taskFile.needSave()
@@ -70,16 +70,7 @@ class IOController(object):
             selectionFile = task.TaskFile(filename)
             selectionFile.extend(tasks)
             selectionFile.save()
-            self.displayMessage('Saved', selectionFile, 'to')
-
-    def exportToXML(self):
-        self.__fileDialogOpts['default_extension'] = 'xml'
-        self.__fileDialogOpts['wildcard'] = 'XML files (*.xml)|*.xml|' + self.__fileDialogOpts['wildcard']
-        filename = wx.FileSelector("Export to XML...", flags=wx.SAVE, **self.__fileDialogOpts)
-        if filename:
-            self.__taskFile.exportToXML(filename)
-            self.displayMessage('Exported', filename, 'to')
-
+            self.displayMessage('Saved', selectionFile, 'to')        
         
     def close(self):
         if self.__taskFile.needSave():

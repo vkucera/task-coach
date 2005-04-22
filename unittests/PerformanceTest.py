@@ -8,9 +8,9 @@ class MockApp(taskcoach.App):
 
 class PerformanceTest(test.TestCase):
     def createTestFile(self):
-        taskList = [task.Task()]*self.nrTasks
+        taskList = task.TaskList([task.Task('test') for i in range(self.nrTasks)])
         taskfile = file(self.taskfilename, 'w')
-        taskWriter = task.TaskWriter(taskfile)
+        taskWriter = task.writer.XMLWriter(taskfile)
         taskWriter.write(taskList)
         taskfile.close()
 

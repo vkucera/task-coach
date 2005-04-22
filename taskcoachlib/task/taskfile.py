@@ -1,4 +1,4 @@
-import os, writer, reader, tasklist, patterns
+import os, writer, reader, tasklist, patterns, codecs
 
 class TaskFile(tasklist.TaskList):
     def __init__(self, filename='', *args, **kwargs):
@@ -35,7 +35,15 @@ class TaskFile(tasklist.TaskList):
     def load(self):
         if os.path.isfile(self.__filename):
             fd = file(self.__filename, 'rU')
-            tasks = reader.TaskReader(fd).read()
+            line = fd.readline()
+            if line.startswith('<?xml'):
+                fd.close()
+                fd = file(self.__filename, 'r')
+                ReaderClass = reader.XMLReader
+            else:
+                fd.reset()
+                ReaderClass = reader.TaskReader
+            tasks = ReaderClass(fd).read()
             fd.close()
         else: 
             tasks = []
@@ -44,8 +52,8 @@ class TaskFile(tasklist.TaskList):
         self.__needSave = False
 
     def save(self):
-        fd = file(self.__filename, 'w')
-        writer.TaskWriter(fd).write(self)
+        fd = codecs.open(self.__filename, 'w', 'utf-8')
+        writer.XMLWriter(fd).write(self)
         fd.close()
         self.__needSave = False
         
@@ -60,8 +68,4 @@ class TaskFile(tasklist.TaskList):
 
     def needSave(self):
         return self.__needSave
-            
-    def exportToXML(self, filename):
-        fd = file(filename, 'w')
-        writer.XMLWriter(fd).write(self)
-        fd.close()
+        

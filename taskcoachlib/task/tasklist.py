@@ -98,7 +98,7 @@ class TaskList(patterns.ObservableObservablesList):
         return nrCompleted > 0 and nrCompleted == len(self)
 
     def rootTasks(self):
-        return [task for task in self if task.parent() is None]
+        return [task for task in self if task.parent() is None or task.parent() not in self]
 
     def maxDateTime(self):
         stopTimes = []
