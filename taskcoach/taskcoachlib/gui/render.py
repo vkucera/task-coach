@@ -7,12 +7,12 @@ def date(date):
     ''' render a date (of type date.Date) '''
     return str(date)
 
-def subject(task, recursively=False, sep=taskSeparator):
+def subject(aTask, recursively=False, sep=taskSeparator):
     ''' render a task subject '''
     prefix = ''
-    if recursively and task.parent():
-        prefix = subject(task.parent(), recursively) + sep 
-    return prefix + task.subject()
+    if recursively and aTask.parent():
+        prefix = subject(aTask.parent(), recursively) + sep 
+    return prefix + aTask.subject()
    
 def daysLeft(timeLeft):
     ''' render time left (of type date.TimeDelta) in days '''

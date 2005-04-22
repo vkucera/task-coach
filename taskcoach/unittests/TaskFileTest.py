@@ -96,7 +96,8 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         self.emptyTaskFile.extend(tasks)
         self.emptyTaskFile.save()
         self.emptyTaskFile.load()
-        self.assertEqual(tasks, list(self.emptyTaskFile))
+        self.assertEqual([task.subject() for task in tasks], 
+            [task.subject() for task in self.emptyTaskFile])
 
     def testSaveAndLoad(self):
         self.saveAndLoad([task.Task(subject='ABC'), 

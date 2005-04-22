@@ -35,7 +35,7 @@ class TaskWriter:
                 
 import xml.dom, meta
 class XMLWriter:
-    def __init__(self, fd, versionnr=5):
+    def __init__(self, fd, versionnr=6):
         self.fd = fd
         self.versionnr = versionnr
         
@@ -56,16 +56,11 @@ class XMLWriter:
         node.setAttribute("startdate", str(task.startDate()))
         node.setAttribute("duedate", str(task.dueDate()))
         node.setAttribute("completiondate", str(task.completionDate()))
-        if task.children():
-            childrenList = self.document.createElement("tasks")
-            node.appendChild(childrenList)
-            for child in task.children():
-                childrenList.appendChild(self.taskNode(child))
-        if task.efforts():
-            effortList = self.document.createElement("efforts")
-            node.appendChild(effortList)
-            for effort in task.efforts():
-                effortList.appendChild(self.effortNode(effort))
+        node.setAttribute("budget", str(task.budget()))
+        for child in task.children():
+            node.appendChild(self.taskNode(child))
+        for effort in task.efforts():
+            node.appendChild(self.effortNode(effort))
         return node
         
     def effortNode(self, effort):

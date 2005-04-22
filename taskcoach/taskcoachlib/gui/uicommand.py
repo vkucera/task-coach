@@ -230,15 +230,6 @@ class FileSaveAs(IOCommand):
 
     def doCommand(self, event):
         self.iocontroller.saveas()
-
-class FileExportXML(IOCommand):
-    bitmap = 'export'
-    menuText = 'Export tasks to &XML...'
-    helptext = 'Export the tasks to a XML file'
-    
-    def doCommand(self, event):
-        self.iocontroller.exportToXML()
-        
         
 class FileSaveSelection(NeedsSelectedTasks, IOCommand, ViewerCommand):
     bitmap = 'saveselection'
@@ -834,7 +825,6 @@ class UICommands(dict):
         self['save'] = FileSave(iocontroller)
         self['saveas'] = FileSaveAs(iocontroller)
         self['saveselection'] = FileSaveSelection(iocontroller, viewer)
-        self['exportxml'] = FileExportXML(iocontroller)
         self['quit'] = FileQuit(mainwindow)
 
         # menuEdit commands

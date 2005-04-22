@@ -18,3 +18,11 @@ class TimeDelta(datetime.timedelta):
         
 oneDay = TimeDelta(days=1)
 oneYear = TimeDelta(days=365)
+
+def parseTimeDelta(string):
+    try:
+        hours, minutes, seconds = [int(x) for x in string.split(':')]
+    except ValueError:
+        hours, minutes, seconds = 0, 0, 0 
+    return TimeDelta(hours=hours, minutes=minutes, seconds=seconds)
+    

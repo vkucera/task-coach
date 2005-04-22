@@ -1,4 +1,4 @@
-import datetime, timedelta
+import datetime, timedelta, re
 
 class DateTime(datetime.datetime):
     def weeknumber(self):
@@ -39,4 +39,12 @@ class DateTime(datetime.datetime):
         if isinstance(result, datetime.timedelta):
             result = timedelta.TimeDelta(result.days, result.seconds, result.microseconds)
         return result
+
+def parseDateTime(string):
+    if string == 'None':
+        return None
+    else:
+        args = [int(arg) for arg in re.split('[-:. ]', string)]
+        return DateTime(*args)
+        
         

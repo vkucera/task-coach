@@ -1,4 +1,4 @@
-import date, task, datetime, time, effort
+import date, task, datetime, time, effort, xml.dom.minidom
 
 class TaskFactory:
     def __init__(self, versionnr):
@@ -97,3 +97,40 @@ class TaskReader:
         tasks = [task for task in self.taskList if task.parent() is None]
         return tasks
 
+
+class XMLReader:
+    def __init__(self, fd):
+        self.__fd = fd
+
+    def read(self):
+        domDocument = xml.dom.minidom.parse(self.__fd).documentElement
+        return self.__parseTaskNodes(domDocument.childNodes)
+
+    def __parseTaskNodes(self, nodes):
+        return [self.__parseTaskNode(node) for node in nodes if node.nodeName == 'task']
+
+    def __parseTaskNode(self, taskNode):
+        subject = taskNode.getAttribute('subject')
+        description = taskNode.getAttribute('description')
+        startDate = date.parseDate(taskNode.getAttribute('startdate'))
+        dueDate = date.parseDate(taskNode.getAttribute('duedate'))
+        completionDate = date.parseDate(taskNode.getAttribute('completiondate'))
+        budget = date.parseTimeDelta(taskNode.getAttribute('budget'))
+        parent = task.Task(subject, description, startdate=startDate, duedate=dueDate, 
+            completiondate=completionDate, budget=budget)
+        for child in self.__parseTaskNodes(taskNode.childNodes):
+            parent.addChild(child) 
+        for effort in self.__parseEffortNodes(parent, taskNode.childNodes):
+            parent.addEffort(effort)
+        return parent        
+        
+    def __parseEffortNodes(self, task, nodes):
+        return [self.__parseEffortNode(task, node) for node in nodes if node.nodeName == 'effort']
+        
+    def __parseEffortNode(self, task, effortNode):
+        start = effortNode.getAttribute('start')
+        stop = effortNode.getAttribute('stop')
+        return effort.Effort(task, date.parseDateTime(start), date.parseDateTime(stop))
+        
+                
+        
