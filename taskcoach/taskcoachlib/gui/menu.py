@@ -1,4 +1,5 @@
 import wx, uicommand
+from i18n import _
    
 class Menu(wx.Menu, uicommand.UICommandContainer):
     def __init__(self, window):
@@ -22,7 +23,7 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
 class MainMenu(wx.MenuBar):
     def __init__(self, mainwindow, uiCommands):
         super(MainMenu, self).__init__()
-        self.Append(FileMenu(mainwindow, uiCommands), '&File')
+        self.Append(FileMenu(mainwindow, uiCommands), _('&File'))
         self.Append(EditMenu(mainwindow, uiCommands), '&Edit')
         self.Append(ViewMenu(mainwindow, uiCommands), '&View')
         self.Append(TaskMenu(mainwindow, uiCommands), '&Task')
