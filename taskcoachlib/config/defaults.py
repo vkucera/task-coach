@@ -22,7 +22,8 @@ defaults = { \
     'tasksdue' : 'Unlimited',
     'mainviewer' : 'Task list',
     'effortviewer' : 'Effort list',
-    'effortviewerineditor' : 'Effort list' },
+    'effortviewerineditor' : 'Effort list',
+    'language' : 'en' },
 'window' : { \
     'size' : '(600, 500)',
     'position' : '(0, 0)',

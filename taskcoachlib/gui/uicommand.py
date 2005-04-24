@@ -42,9 +42,10 @@ class UICommand(object):
         self.bind(window)
 
     def appendToToolBar(self, toolbar, window):
+        bitmap = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_TOOLBAR, 
+            toolbar.GetToolBitmapSize())
         toolbar.AddLabelTool(self._id, '',
-            wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_TOOLBAR, 
-            toolbar.GetToolBitmapSize()), wx.NullBitmap, self.kind, 
+            bitmap, wx.NullBitmap, self.kind, 
             shortHelp=wx.MenuItem.GetLabelFromText(self.menuText),
             longHelp=self.helpText)
         self.bind(window)

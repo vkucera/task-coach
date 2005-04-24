@@ -1,0 +1,1 @@
+nl = {'&File': '&Bestand' } 
