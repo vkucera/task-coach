@@ -46,6 +46,12 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.33 - April 24, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>The .tsk fileformat is now XML, making Task Coach fully
+        unicode-enabled.
+        </UL>
         <H4>Release 0.32 - April 18, 2005</H4>
         Bugs fixed:
         <UL>
@@ -308,7 +314,7 @@ pages['features'] = \
             <LI>Track time spent on tasks. Tasks can have a budget. 
             Time spent can be viewed by individual effort period, by day, 
             by week, and by month.
-            <LI>Export of tasks to XML. 
+            <LI>The %(name)s file format (.tsk) is XML. 
         </UL>
         <H3>Missing features</H3>
         Features that you might expect, but are currently missing, are:
