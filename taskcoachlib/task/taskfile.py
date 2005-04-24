@@ -41,7 +41,7 @@ class TaskFile(tasklist.TaskList):
                 fd = file(self.__filename, 'r')
                 ReaderClass = reader.XMLReader
             else:
-                fd.reset()
+                fd.seek(0)
                 ReaderClass = reader.TaskReader
             tasks = ReaderClass(fd).read()
             fd.close()

@@ -130,7 +130,9 @@ class XMLReader:
     def __parseEffortNode(self, task, effortNode):
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')
-        return effort.Effort(task, date.parseDateTime(start), date.parseDateTime(stop))
+        description = effortNode.getAttribute('description')
+        return effort.Effort(task, date.parseDateTime(start), 
+            date.parseDateTime(stop), description)
         
                 
         

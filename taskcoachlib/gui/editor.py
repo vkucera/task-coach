@@ -267,5 +267,5 @@ class EffortEditor(EditorWithCommand):
 
     def addPage(self, effort):
         page = EffortEditBook(self._notebook, effort, self)
-        self._notebook.AddPage(page, str(effort.task()))
+        self._notebook.AddPage(page, effort.task().subject())
 
