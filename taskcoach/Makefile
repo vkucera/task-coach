@@ -13,7 +13,7 @@ windist: theicons
 
 sdist: theicons
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
-    
+
 theicons:
 	cd icons; $(PYTHON) make.py
 
