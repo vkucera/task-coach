@@ -14,6 +14,7 @@ class IntegrationTestCase(test.TestCase):
         pass
 
     def readAndWrite(self):
+        self.fd.reset()
         self.writer.write(self.taskList)
         self.fd.reset()
         return self.reader.read()    
@@ -52,6 +53,10 @@ class IntegrationTest(IntegrationTestCase):
  
     def testBudget(self):
         self.assertEqual(self.task.budget(), self.tasksWrittenAndRead[0].budget())
+        
+    def testBudget_MoreThan24Hour(self):
+        self.task.setBudget(date.TimeDelta(hours=25))
+        self.assertEqual(self.task.budget(), self.readAndWrite()[0].budget())
         
     def testEffort(self):
         self.assertEqual(self.task.duration(), self.tasksWrittenAndRead[0].duration())

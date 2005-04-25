@@ -1,5 +1,6 @@
 import xml.dom, meta
 
+
 class XMLWriter:
     def __init__(self, fd, versionnr=6):
         self.__fd = fd
@@ -22,7 +23,7 @@ class XMLWriter:
         node.setAttribute("startdate", str(task.startDate()))
         node.setAttribute("duedate", str(task.dueDate()))
         node.setAttribute("completiondate", str(task.completionDate()))
-        node.setAttribute("budget", str(task.budget()))
+        node.setAttribute("budget", self.budgetAsAttribute(task.budget()))
         for child in task.children():
             node.appendChild(self.taskNode(child))
         for effort in task.efforts():
@@ -35,3 +36,6 @@ class XMLWriter:
         node.setAttribute("stop", str(effort.getStop()))
         node.setAttribute("description", effort.getDescription())
         return node
+        
+    def budgetAsAttribute(self, budget):
+        return '%d:%02d:%02d'%budget.hoursMinutesSeconds()

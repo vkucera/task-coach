@@ -77,3 +77,7 @@ class XMLWriterTest(test.TestCase):
     def testBudget(self):
         self.task.setBudget(date.TimeDelta(hours=1))
         self.assertTaskAttribute(self.task.budget(), 'budget')
+        
+    def testBudget_MoreThan24Hour(self):
+        self.task.setBudget(date.TimeDelta(hours=25))
+        self.assertTaskAttribute('25:00:00', 'budget')

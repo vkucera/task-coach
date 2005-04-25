@@ -269,3 +269,8 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.markCompleted([self.task1])
         self.assertDoUndoRedo(lambda: self.failIf(self.task1.isBeingTracked()), 
             lambda: self.failUnless(self.task1.isBeingTracked()))
+            
+    def testMarkCompletedChildDoesNotStopEffortTrackingOfParent(self):
+        self.parent.addEffort(effort.Effort(self.parent))
+        self.markCompleted([self.child])
+        self.assertDoUndoRedo(lambda: self.failUnless(self.parent.isBeingTracked()))

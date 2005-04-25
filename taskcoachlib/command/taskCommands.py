@@ -187,13 +187,16 @@ class EditTaskCommand(base.BaseCommand, SaveTaskStateMixin):
 class EffortCommand(base.BaseCommand):
     def stopTracking(self):
         self.stoppedEfforts = []
-        for task in self.list:
+        for task in self.tasksToStopTracking():
             self.stoppedEfforts.extend(task.stopTracking())
 
     def startTracking(self):
         for effort in self.stoppedEfforts:
             effort.setStop(date.DateTime.max)
-            
+    
+    def tasksToStopTracking(self):
+        return self.list
+                
     def do_command(self):
         self.stopTracking()
     
@@ -214,6 +217,9 @@ class MarkCompletedCommand(EditTaskCommand, EffortCommand):
 
     def undo_command(self):
         super(MarkCompletedCommand, self).undo_command()
+
+    def tasksToStopTracking(self):
+        return self.items
 
 
 class StartEffortCommand(EffortCommand):
