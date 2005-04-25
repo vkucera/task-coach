@@ -1,3 +1,12 @@
+Release 0.34 - April ?, 2005
+
+Bugs fixed:
+- msvcr71.dll was not shipped with the Windows installer
+  (1189311).
+- Budgets larger than 24 hours were not written correctly
+  to the XML file.
+
+
 Release 0.33 - April 24, 2005
 
 Bugs fixed:
