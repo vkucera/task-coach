@@ -89,6 +89,7 @@ if sys.argv[1] == 'py2exe':
     import py2exe
     py2exeDistdir = '%s-%s-win32exe'%(meta.filename, meta.version)
     setupOptions.update({
+        'data_files' : [os.path.join('c:\\', 'Program Files', 'Python24', 'msvcr71.dll')],
         'windows' : [{ 'script' : 'taskcoach.pyw', 
             'other_resources' : [(24, 1, manifest)],
             'icon_resources': [(1, 'icons/taskcoach.ico')]}],
