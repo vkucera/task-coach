@@ -50,11 +50,11 @@ pages['changes'] = \
         Bugs fixed:
         <UL>
         <LI>msvcr71.dll was not shipped with the Windows installer
-        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1189311&group_id=130831&atid=719134">1189311).
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1189311&group_id=130831&atid=719134">1189311</A>).
         <LI>Budgets larger than 24 hours were not written correctly
         to the XML file.
         <LI>Mark completed stops effort tracking of parent task 
-        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1186667&group_id=130831&atid=719134">1186667).
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1186667&group_id=130831&atid=719134">1186667</A>).
         </UL>
         <H4>Release 0.33 - April 24, 2005</H4>
         Bugs fixed:
