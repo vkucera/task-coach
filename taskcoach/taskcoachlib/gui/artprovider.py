@@ -20,5 +20,5 @@ class ArtProvider(wx.ArtProvider):
 def init():
     if ('__WXMSW__' in wx.PlatformInfo) and (wx.GetApp().GetComCtl32Version() 
         >= 600) and (wx.DisplayDepth() >= 32):
-        wx.SystemOptions_SetOption("msw.remap", "2")
+        wx.SystemOptions_SetOption("msw.remap", "0")
     wx.ArtProvider_PushProvider(ArtProvider())

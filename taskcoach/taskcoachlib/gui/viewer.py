@@ -114,6 +114,12 @@ class TreeViewer(Viewer):
     def collapseAll(self):
         self.widget.collapseAllItems()
         
+    def expandSelected(self):
+        self.widget.expandSelectedItems()
+        
+    def collapseSelected(self):
+        self.widget.collapseSelectedItems()
+        
 
 class TaskViewer(Viewer):
     def select_completedTasks(self):

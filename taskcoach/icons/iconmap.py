@@ -42,7 +42,9 @@ iconlist = [
 ('description', 'actions', 'pencil', [16, 22, 32]),
 ('restore', 'apps', 'kcmkwm', [16]),
 ('budget', 'apps', 'kcalc', [16, 22, 32]),
-('viewalltasks', 'apps', 'kreversi', [16])]
+('viewalltasks', 'apps', 'kreversi', [16]),
+('viewexpand', 'actions', 'edit_add', [16]),
+('viewcollapse', 'actions', 'edit_remove', [16])]
 
 icons = {}
 

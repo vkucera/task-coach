@@ -24,11 +24,11 @@ class MainMenu(wx.MenuBar):
     def __init__(self, mainwindow, uiCommands):
         super(MainMenu, self).__init__()
         self.Append(FileMenu(mainwindow, uiCommands), _('&File'))
-        self.Append(EditMenu(mainwindow, uiCommands), '&Edit')
-        self.Append(ViewMenu(mainwindow, uiCommands), '&View')
-        self.Append(TaskMenu(mainwindow, uiCommands), '&Task')
-        self.Append(EffortMenu(mainwindow, uiCommands), 'Eff&ort')
-        self.Append(HelpMenu(mainwindow, uiCommands), '&Help')
+        self.Append(EditMenu(mainwindow, uiCommands), _('&Edit'))
+        self.Append(ViewMenu(mainwindow, uiCommands), _('&View'))
+        self.Append(TaskMenu(mainwindow, uiCommands), _('&Task'))
+        self.Append(EffortMenu(mainwindow, uiCommands), _('Eff&ort'))
+        self.Append(HelpMenu(mainwindow, uiCommands), _('&Help'))
 
 
 class FileMenu(Menu):
@@ -43,7 +43,7 @@ class EditMenu(Menu):
         super(EditMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['undo', 'redo', None, 'cut', 
             'copy', 'paste', 'pasteassubtask', None])
-        self.appendMenu('Select', SelectMenu(mainwindow, uiCommands))
+        self.appendMenu(_('&Select'), SelectMenu(mainwindow, uiCommands))
         
 
 class SelectMenu(Menu):
@@ -57,17 +57,19 @@ class ViewMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewalltasks'])
-        self.appendMenu('Tasks that are', 
+        self.appendMenu(_('Ta&sks that are'), 
             ViewTaskStatesMenu(mainwindow, uiCommands))
-        self.appendMenu('Tasks due before end of',
+        self.appendMenu(_('Tasks &due before end of'),
             ViewTasksByDueDateMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
-        self.appendMenu('In the task list', 
+        self.appendMenu(_('Task &list fields'), 
             ViewTaskListMenu(mainwindow, uiCommands))
-        self.appendMenu('In the task tree', 
+        self.appendMenu(_('Task &tree'), 
             ViewTaskTreeMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
-        self.appendMenu('&Toolbar', ToolBarMenu(mainwindow, uiCommands))        
+        self.appendMenu(_('Lan&guage'), LanguageMenu(mainwindow, uiCommands))
+        self.appendUICommands(uiCommands, [None])
+        self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
         self.appendUICommands(uiCommands, ['viewfinddialog', 'viewstatusbar', 
             'viewsplashscreen'])   
 
@@ -93,9 +95,15 @@ class ViewTaskListMenu(Menu):
 class ViewTaskTreeMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewTaskTreeMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewexpandall', 'viewcollapseall'])
+        self.appendUICommands(uiCommands, ['viewexpandselected', 
+            'viewcollapseselected', None, 'viewexpandall', 'viewcollapseall'])
 
-        
+
+class LanguageMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(LanguageMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewlanguageenglish', 'viewlanguagedutch'])
+                
     
 class ToolBarMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
@@ -145,7 +153,8 @@ class TaskPopupMenu(Menu):
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste',
             'pasteassubtask', None, 'new', 'newsubtask', None, 'edit', 
             'markcompleted', None, 'delete', None, 'neweffort', 'starteffort',
-            'starteffortadjacent', 'stopeffort'])
+            'starteffortadjacent', 'stopeffort', None, 'viewexpandselected',
+            'viewcollapseselected'])
 
 
 class EffortPopupMenu(Menu):

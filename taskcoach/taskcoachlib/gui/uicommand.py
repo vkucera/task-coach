@@ -1,4 +1,5 @@
 import wx, task, patterns, config, gui, meta, help, command
+from i18n import _
 
 
 class UICommandContainer(object):
@@ -512,14 +513,30 @@ class ViewExpandAll(ViewerCommand):
     
     def doCommand(self, event):
         self.viewer.expandAll()
-        
+
+class ViewExpandSelected(NeedsSelectedTasks, ViewerCommand):
+    bitmap = 'viewexpand'
+    menuText = 'E&xpand'
+    helpText = 'Expand the selected tasks with subtasks'
+    
+    def doCommand(self, event):
+        self.viewer.expandSelectedItems()
+            
 class ViewCollapseAll(ViewerCommand):
     menuText = '&Collapse all tasks'
     helpText = 'Collapse all tasks with subtasks'
     
     def doCommand(self, event):
         self.viewer.collapseAll()
-        
+ 
+class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
+    bitmap = 'viewcollapse'
+    menuText = 'C&ollapse'
+    helpText = 'Collapse the selected tasks with subtasks'
+    
+    def doCommand(self, event):
+        self.viewer.collapseSelectedItems()
+             
         
 class ViewToolBar(MainWindowCommand, UIRadioCommand):
     setting = 'toolbar'
@@ -560,7 +577,7 @@ class ViewFindDialog(MainWindowCommand, UICheckCommand):
 
 
 class ViewStatusBar(MainWindowCommand, UICheckCommand):
-    menuText = 'St&atusbar'
+    menuText = 'Status&bar'
     helpText = 'Show/hide status bar'
     setting = 'statusbar'
 
@@ -620,7 +637,27 @@ class ViewDueUnlimited(ViewDueBefore):
     menuText = '&Unlimited'
     helpText = 'Show all tasks' 
 
+class ViewLanguage(MainWindowCommand, UIRadioCommand):
+    setting = 'language'
 
+    def __init__(self, language, menuText, helpText, *args, **kwargs):
+        self.value = language
+        self.menuText = menuText
+        self.helpText = helpText
+        super(ViewLanguage, self).__init__(*args, **kwargs)
+        
+    def doCommand(self, event):
+        if self.settings.get(self.section, self.setting) == self.value:
+            return
+        self.settings.set(self.section, self.setting, self.value)
+        dialog = wx.MessageDialog(self.mainwindow,
+            'This setting will take effect after you restart %s'%meta.name,
+            'Language setting', wx.OK|wx.ICON_INFORMATION)
+        dialog.ShowModal()
+        dialog.Destroy()    
+    
+    
+    
 class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
     bitmap = 'new'
     menuText = '&New task...\tINS' 
@@ -870,6 +907,13 @@ class UICommands(dict):
 
         self['viewexpandall'] = ViewExpandAll(viewer)
         self['viewcollapseall'] = ViewCollapseAll(viewer)
+        self['viewexpandselected'] = ViewExpandSelected(viewer)
+        self['viewcollapseselected'] = ViewCollapseSelected(viewer)
+        
+        self['viewlanguageenglish'] = ViewLanguage('en', _('&English'),
+            _('Show English user interface after restart'), mainwindow, settings)
+        self['viewlanguagedutch'] = ViewLanguage('nl', _('&Dutch'), 
+            _('Show Dutch user interface after restart'), mainwindow, settings)
         
         self['toolbarhide'] = ViewToolBarHide(mainwindow, settings)
         self['toolbarsmall'] = ViewToolBarSmall(mainwindow, settings)
