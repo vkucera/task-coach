@@ -11,7 +11,7 @@ class Translator:
     def translate(self, string):
         try:
             return self.__language[string]
-        except AttributeError, KeyError:
+        except (AttributeError, KeyError):
             return string
         
 def _(string):
