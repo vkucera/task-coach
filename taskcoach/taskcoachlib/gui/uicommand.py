@@ -838,9 +838,9 @@ class UICommands(dict):
         self['viewcompositetasks'] = ViewCompositeTasks(viewer=viewer, filteredTaskList=filteredTaskList,
             settings=settings)
             
-        self['viewstartdate'] = ViewColumn(column='Start date', viewer=viewer, 
+        self['viewstartdate'] = ViewColumn(column=_('Start date'), viewer=viewer, 
             settings=settings, 
-            menuText='&Start date', helpText = 'Show/hide start date column',
+            menuText=_('&Start date'), helpText = _('Show/hide start date column'),
             setting='startdate')
         self['viewduedate'] = ViewColumn(viewer=viewer, settings=settings,
             menuText='&Due date', helpText='Show/hide due date column',
