@@ -3,7 +3,12 @@ Release 0.35 - April ?, 2005
 Bugs fixed:
 - Toolbar icons had a black background instead of a transparent
   background on some Windows platforms (1190230).
-
+  
+Features added:
+- Internationalization support. Task Coach is available with
+  Dutch or English user interface.
+- Added 'expand selected task' and 'collapse selected task' menu
+  items to the view menu and the task context menu (1189978).
 
 
 Release 0.34 - April 25, 2005

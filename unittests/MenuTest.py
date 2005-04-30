@@ -6,16 +6,17 @@ class DummyCommand(uicommand.UICommand):
         self.event = event
 
 class DummyCheckCommand(uicommand.UICheckCommand):
-    section = 'test'
-    setting = 'test'
+    def __init__(self, *args, **kwargs):
+        super(DummyCheckCommand, self).__init__(section='test',
+            setting='test', *args, **kwargs)
 
     def onCommandActivate(self, event):
         self.event = event
 
 class DummyRadioCommand(uicommand.UIRadioCommand):
-    section = 'test'
-    setting = 'test'
-    value = 'on'
+    def __init__(self, *args, **kwargs):
+        super(DummyRadioCommand, self).__init__(section='test',
+            setting='test', value='on', *args, **kwargs)
 
     def onCommandActivate(self, event):
         self.event = event
@@ -48,24 +49,24 @@ class MenuTest(test.wxTestCase):
 
     def testCheckedCheckCommandIsNotInvoked(self):
         settings = DummySettings(True)
-        command = DummyCheckCommand(settings)
+        command = DummyCheckCommand(settings=settings)
         self.menu.appendUICommand(command)
         self.failIf(hasattr(self.command, 'event'))
 
     def testUncheckedUICheckCommandIsInvoked(self):
         settings = DummySettings(False)
-        command = DummyCheckCommand(settings)
+        command = DummyCheckCommand(settings=settings)
         self.menu.appendUICommand(command)
         self.assertEqual(command._id, command.event.GetId())
 
     def testUncheckedUIRadioCommandIsNotInvoked(self):
         settings = DummySettings('off')
-        command = DummyRadioCommand(settings)
+        command = DummyRadioCommand(settings=settings)
         self.menu.appendUICommand(command)
         self.failIf(hasattr(self.command, 'event'))
 
     def testCheckedUIRadioCommandIsInvoked(self):
         settings = DummySettings('on')
-        command = DummyRadioCommand(settings)
+        command = DummyRadioCommand(settings=settings)
         self.menu.appendUICommand(command)
         self.assertEqual(command._id, command.event.GetId())
