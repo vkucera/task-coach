@@ -1,6 +1,7 @@
 import patterns, task, command, widgets, effort, uicommand
 import menu, color, render
 import wx
+from i18n import _
 
 class Viewer(patterns.Observable, wx.Panel):
     def __init__(self, parent, list, uiCommands, *args, **kwargs):
@@ -142,7 +143,7 @@ class TaskListViewer(TaskViewer, ListViewer):
         return widget
         
     def columns(self):
-        return ['Subject', 'Start date', 'Due date',
+        return ['Subject', _('Start date'), 'Due date',
             'Days left', 'Completion date', 'Budget', 'Total budget', 
             'Time spent', 'Total time spent', 'Budget left', 'Total budget left']
 
