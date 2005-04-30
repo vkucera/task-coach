@@ -9,9 +9,6 @@ class TaskFile(tasklist.TaskList):
     def __str__(self):
         return self.filename()
 
-    def __nonzero__(self):
-        return self.filename() != ''
-
     def setFilename(self, filename):
         self.__filename = filename
         notification = patterns.observer.Notification(self, filename=filename)
@@ -39,6 +36,7 @@ class TaskFile(tasklist.TaskList):
             if line.startswith('<?xml'):
                 fd.close()
                 fd = file(self.__filename, 'r')
+                #fd = codecs.open(self.__filename, 'r', 'utf-8')
                 ReaderClass = reader.XMLReader
             else:
                 fd.seek(0)

@@ -20,14 +20,14 @@ class UICommand(object):
         with menu's and/or toolbars. It contains the menutext and helptext to be displayed,
         code to deal with wx.EVT_UPDATE_UI and methods to attach the command to a menu or
         toolbar. Subclasses should implement doCommand() and optionally override enabled(). '''
-        
-    bitmap = 'nobitmap'
-    menuText = '?'
-    helpText = ''
-    kind = wx.ITEM_NORMAL
-
-    def __init__(self, *args, **kwargs):
+    
+    def __init__(self, menuText='?', helpText='', bitmap='nobitmap',
+            kind=wx.ITEM_NORMAL, *args, **kwargs):
         super(UICommand, self).__init__(*args, **kwargs)
+        self.menuText = menuText
+        self.helpText = helpText
+        self.bitmap = bitmap
+        self.kind = kind
         self._id = wx.NewId()
 
     def id(self):
@@ -79,15 +79,19 @@ class UICommand(object):
 
 class SettingsCommand(UICommand):
     ''' SettingsCommands are saved in the settings (a ConfigParser). '''
-    
-    section = 'view' # default section
 
-    def __init__(self, settings, *args, **kwargs):
+    def __init__(self, settings=None, setting=None, section='view', *args, **kwargs):
         self.settings = settings
+        self.section = section
+        self.setting = setting
         super(SettingsCommand, self).__init__(*args, **kwargs)
 
 
 class BooleanSettingsCommand(SettingsCommand):
+    def __init__(self, value=None, *args, **kwargs):
+        self.value = value
+        super(BooleanSettingsCommand, self).__init__(*args, **kwargs)
+        
     def appendToMenu(self, *args, **kwargs):
         super(BooleanSettingsCommand, self).appendToMenu(*args, **kwargs)
         self.check()
@@ -103,9 +107,10 @@ class BooleanSettingsCommand(SettingsCommand):
         
 
 class UICheckCommand(BooleanSettingsCommand):
-    kind = wx.ITEM_CHECK
-    bitmap = 'on' # 'on' == checkmark shaped image
-
+    def __init__(self, *args, **kwargs):
+        super(UICheckCommand, self).__init__(kind=wx.ITEM_CHECK, 
+            bitmap='on', *args, **kwargs)
+            
     def commandNeedsToBeActivated(self, checked):
         return not checked
 
@@ -117,9 +122,10 @@ class UICheckCommand(BooleanSettingsCommand):
 
 
 class UIRadioCommand(BooleanSettingsCommand):
-    kind = wx.ITEM_RADIO
-    bitmap = None
-    
+    def __init__(self, *args, **kwargs):
+        super(UIRadioCommand, self).__init__(kind=wx.ITEM_RADIO, bitmap=None,
+            *args, **kwargs)
+            
     def commandNeedsToBeActivated(self, checked):
         return checked
         
@@ -131,37 +137,37 @@ class UIRadioCommand(BooleanSettingsCommand):
 
 
 class IOCommand(UICommand):
-    def __init__(self, iocontroller, *args, **kwargs):
+    def __init__(self, iocontroller=None, *args, **kwargs):
         self.iocontroller = iocontroller
         super(IOCommand, self).__init__(*args, **kwargs)
 
 
 class MainWindowCommand(UICommand):
-    def __init__(self, mainwindow, *args, **kwargs):
+    def __init__(self, mainwindow=None, *args, **kwargs):
         self.mainwindow = mainwindow
         super(MainWindowCommand, self).__init__(*args, **kwargs)
 
 
 class EffortCommand(UICommand):
-    def __init__(self, effortList, *args, **kwargs):
-        super(EffortCommand, self).__init__(*args, **kwargs)
+    def __init__(self, effortList=None, *args, **kwargs):
         self.effortList = effortList
+        super(EffortCommand, self).__init__(*args, **kwargs)
 
         
 class ViewerCommand(UICommand):
-    def __init__(self, viewer, *args, **kwargs):
+    def __init__(self, viewer=None, *args, **kwargs):
         self.viewer = viewer
         super(ViewerCommand, self).__init__(*args, **kwargs)
 
 
 class FilterCommand(UICommand):
-    def __init__(self, filteredTaskList, *args, **kwargs):
+    def __init__(self, filteredTaskList=None, *args, **kwargs):
         self.filteredTaskList = filteredTaskList
         super(FilterCommand, self).__init__(*args, **kwargs)
 
 
 class UICommandsCommand(UICommand):
-    def __init__(self, uiCommands, *args, **kwargs):
+    def __init__(self, uiCommands=None, *args, **kwargs):
         self.uiCommands = uiCommands
         super(UICommandsCommand, self).__init__(*args, **kwargs)    
 
@@ -191,33 +197,34 @@ class NeedsItems(object):
 # Commands:
 
 class FileOpen(IOCommand):
-    bitmap = 'fileopen'
-    menuText = '&Open...\tCtrl+O'
-    helpText = 'Open a %s file'%meta.name
+    def __init__(self, *args, **kwargs):
+        super(FileOpen, self).__init__(menuText=_('&Open...\tCtrl+O'),
+            helpText=_('Open a %s file'%meta.name), bitmap='fileopen', *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.open()
 
 class FileMerge(IOCommand):
-    bitmap = 'merge'
-    menuText = '&Merge...'
-    helpText = 'Merge tasks from another file with the current file'
+    def __init__(self, *args, **kwargs):
+        super(FileMerge, self).__init__(menuText=_('&Merge...'),
+            helpText=_('Merge tasks from another file with the current file'), 
+            bitmap='merge', *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.merge()
 
 class FileClose(IOCommand):
-    bitmap = 'close'
-    menuText = '&Close'
-    helpText = 'Close the current file'
+    def __init__(self, *args, **kwargs):
+        super(FileClose, self).__init__(menuText=_('&Close'),
+            helpText=_('Close the current file'), bitmap='close', *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.close()
 
 class FileSave(IOCommand):
-    bitmap = 'save'
-    menuText = '&Save\tCtrl+S'
-    helpText = 'Save the current file'
+    def __init__(self, *args, **kwargs):
+        super(FileSave, self).__init__(menuText=_('&Save\tCtrl+S'),
+            helpText=_('Save the current file'), bitmap='save', *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.save()
@@ -226,37 +233,40 @@ class FileSave(IOCommand):
         return self.iocontroller.needSave()
 
 class FileSaveAs(IOCommand):
-    bitmap = 'saveas'
-    menuText = 'S&ave as...'
-    helpText = 'Save the current file under a new name'
+    def __init__(self, *args, **kwargs):
+        super(FileSaveAs, self).__init__(menuText=_('S&ave as...'),
+            helpText=_('Save the current file under a new name'), 
+            bitmap='saveas', *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.saveas()
         
 class FileSaveSelection(NeedsSelectedTasks, IOCommand, ViewerCommand):
-    bitmap = 'saveselection'
-    menuText = 'Sa&ve selection...'
-    helpText = 'Save the selected tasks to a separate file'
+    def __init__(self, *args, **kwargs):
+        super(FileSaveSelection, self).__init__(menuText=_('Sa&ve selection...'),
+            helpText=_('Save the selected tasks to a separate file'), 
+            bitmap='saveselection', *args, **kwargs)
     
     def doCommand(self, event):
         self.iocontroller.saveselection(self.viewer.curselection()), 
 
 class FileQuit(MainWindowCommand):
-    bitmap = 'exit'
-    menuText = '&Quit\tCtrl+Q'
-    helpText = 'Exit %s'%meta.name
+    def __init__(self, *args, **kwargs):
+        super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
+            helpText=_('Exit %s'%meta.name), bitmap='exit', *args, **kwargs)
 
     def doCommand(self, event):
         self.mainwindow.quit()
+
 
 def getUndoMenuText():
     return '&%s\tCtrl+Z'%patterns.CommandHistory().undostr() 
 
 class EditUndo(UICommand):
-    bitmap = 'undo'
-    menuText = getUndoMenuText()
-    helpText = 'Undo the last command'
-
+    def __init__(self, *args, **kwargs):
+        super(EditUndo, self).__init__(menuText=getUndoMenuText(),
+            helpText=_('Undo the last command'), bitmap='undo', *args, **kwargs)
+            
     def doCommand(self, event):
         patterns.CommandHistory().undo()
 
@@ -272,9 +282,10 @@ def getRedoMenuText():
     return '&%s\tCtrl+Y'%patterns.CommandHistory().redostr() 
 
 class EditRedo(UICommand):
-    bitmap = 'redo'
-    menuText = getRedoMenuText()
-    helpText = 'Redo the last command that was undone'
+    def __init__(self, *args, **kwargs):
+        super(EditRedo, self).__init__(menuText=getRedoMenuText(),
+            helpText=_('Redo the last command that was undone'), bitmap='redo',
+            *args, **kwargs)
 
     def doCommand(self, event):
         patterns.CommandHistory().redo()
@@ -288,27 +299,31 @@ class EditRedo(UICommand):
 
 
 class EditCut(NeedsSelectedTasks, FilterCommand, ViewerCommand): # FIXME: only works for tasks atm
-    bitmap = 'cut'
-    menuText = 'Cu&t\tCtrl+X'
-    helpText = 'Cut the selected task(s) to the clipboard'
+    def __init__(self, *args, **kwargs):
+        super(EditCut, self).__init__(menuText=_('Cu&t\tCtrl+X'), 
+            helpText=_('Cut the selected task(s) to the clipboard'), bitmap='cut', 
+            *args, **kwargs)
 
     def doCommand(self, event):
         cutCommand = command.CutTaskCommand(self.filteredTaskList, self.viewer.curselection())
         cutCommand.do()
 
+
 class EditCopy(NeedsSelectedTasks, FilterCommand, ViewerCommand): # FIXME: only works for tasks atm
-    bitmap = 'copy'
-    menuText = '&Copy\tCtrl+C'
-    helpText = 'Copy the selected task(s) to the clipboard'
+    def __init__(self, *args, **kwargs):
+        super(EditCopy, self).__init__(menuText=_('&Copy\tCtrl+C'), 
+            helpText=_('Copy the selected task(s) to the clipboard'), bitmap='copy',
+            *args, **kwargs)
 
     def doCommand(self, event):
         copyCommand = command.CopyTaskCommand(self.filteredTaskList, self.viewer.curselection())
         copyCommand.do()
 
 class EditPaste(FilterCommand):
-    bitmap = 'paste'
-    menuText = '&Paste\tCtrl+V'
-    helpText = 'Paste task(s) from the clipboard'
+    def __init__(self, *args, **kwargs):
+        super(EditPaste, self).__init__(menuText=_('&Paste\tCtrl+V'), 
+            helpText=_('Paste task(s) from the clipboard'), bitmap='paste', 
+            *args, **kwargs)
 
     def doCommand(self, event):
         pasteCommand = command.PasteTaskCommand(self.filteredTaskList)
@@ -319,9 +334,10 @@ class EditPaste(FilterCommand):
 
 
 class EditPasteAsSubtask(FilterCommand, ViewerCommand):
-    bitmap = 'pasteassubtask'
-    menuText = 'P&aste as subtask'
-    helpText = 'Paste task(s) as children of the selected task'
+    def __init__(self, *args, **kwargs):
+        super(EditPasteAsSubtask, self).__init__(menuText=_('P&aste as subtask'), 
+            helpText=_('Paste task(s) as subtask(s) of the selected task'),
+            bitmap='pasteassubtask', *args, **kwargs)
 
     def doCommand(self, event):
         pasteCommand = command.PasteTaskAsSubtaskCommand(self.filteredTaskList, 
@@ -333,41 +349,48 @@ class EditPasteAsSubtask(FilterCommand, ViewerCommand):
 
 
 class SelectAll(NeedsItems, ViewerCommand):
-    menuText = '&All\tCtrl+A'
-    helpText = 'Select all items in the current view'
-
+    def __init__(self, *args, **kwargs):
+        super(SelectAll, self).__init__(menuText=_('&All\tCtrl+A'),
+            helpText=_('Select all items in the current view'), bitmap='selectall',
+            *args, **kwargs)
+        
     def doCommand(self, event):
         self.viewer.selectall()
 
 
 class SelectCompleted(NeedsTasks, ViewerCommand):
-    menuText = '&Completed tasks' 
-    helpText = 'Select all completed tasks'
+    def __init__(self, *args, **kwargs):
+        super(SelectCompleted, self).__init__(menuText=_('&Completed tasks'), 
+            helpText=_('Select all completed tasks'), *args, **kwargs)
 
     def doCommand(self, event):
         self.viewer.select_completedTasks(), 
 
 
 class InvertSelection(NeedsItems, ViewerCommand):
-    menuText = '&Invert selection\tCtrl+I'
-    helpText = 'Select unselected items and unselect selected items'
+    def __init__(self, *args, **kwargs):
+        super(InvertSelection, self).__init__(menuText=_('&Invert selection\tCtrl+I'),
+            helpText=_('Select unselected items and unselect selected items'), *args,
+            **kwargs)
 
     def doCommand(self, event):
         self.viewer.invertselection()
 
 
 class ClearSelection(NeedsSelection, ViewerCommand):
-    menuText = 'C&lear selection'
-    helpText = 'Unselect all items'
+    def __init__(self, *args, **kwargs):
+        super(ClearSelection, self).__init__(menuText=_('C&lear selection'), 
+            helpText=_('Unselect all items'), *args, **kwargs)
 
     def doCommand(self, event):
         self.viewer.clearselection()
 
 
 class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
-    menuText = '&All tasks'
-    helpText = 'Show all tasks (reset all filters)'
-    bitmap = 'viewalltasks'
+    def __init__(self, *args, **kwargs):
+        super(ViewAllTasks, self).__init__(menuText=_('&All tasks'),
+            helpText=_('Show all tasks (reset all filters)'), bitmap='viewalltasks',
+            *args, **kwargs)
     
     def doCommand(self, event):
         for uiCommandName in ['viewcompletedtasks', 'viewinactivetasks', 
@@ -385,9 +408,10 @@ class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
 
 
 class ViewCompletedTasks(FilterCommand, UICheckCommand):
-    menuText = '&Completed'
-    helpText = 'Show/hide completed tasks'
-    setting ='completedtasks'
+    def __init__(self, *args, **kwargs):
+        super(ViewCompletedTasks, self).__init__(menuText=_('&Completed'), 
+            helpText=_('Show/hide completed tasks'), setting='completedtasks',
+            *args, **kwargs)
 
     def doCommand(self, event):
         super(ViewCompletedTasks, self).doCommand(event)
@@ -395,181 +419,118 @@ class ViewCompletedTasks(FilterCommand, UICheckCommand):
 
 
 class ViewInactiveTasks(FilterCommand, UICheckCommand):
-    menuText = '&Inactive'
-    helpText = 'Show/hide inactive tasks (tasks with a start date in the future)'
-    setting = 'inactivetasks'
+    def __init__(self, *args, **kwargs):
+        super(ViewInactiveTasks, self).__init__(menuText=_('&Inactive'), 
+            helpText=_('Show/hide inactive tasks (tasks with a start date in the future)'),
+            setting='inactivetasks', *args, **kwargs)
 
     def doCommand(self, event):
         super(ViewInactiveTasks, self).doCommand(event)
         self.filteredTaskList.setViewInactiveTasks(event.IsChecked())
 
 class ViewOverDueTasks(FilterCommand, UICheckCommand):
-    menuText = '&Over due'
-    helpText = 'Show/hide over due tasks (tasks with a due date in the past)'
-    setting = 'overduetasks'
-    
+    def __init__(self, *args, **kwargs):
+        super(ViewOverDueTasks, self).__init__(menuText=_('&Over due'), 
+            helpText=_('Show/hide over due tasks (tasks with a due date in the past)'),
+            setting='overduetasks', *args, **kwargs)
+
     def doCommand(self, event):
         super(ViewOverDueTasks, self).doCommand(event)
         self.filteredTaskList.setViewOverDueTasks(event.IsChecked())
 
 class ViewActiveTasks(FilterCommand, UICheckCommand):
-    menuText = '&Active'
-    helpText = 'Show/hide active tasks (tasks with a start date in the past and a due date in the future)'
-    setting = 'activetasks'
-    
+    def __init__(self, *args, **kwargs):
+        super(ViewActiveTasks, self).__init__(menuText=_('&Active'),
+            helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
+            setting='activetasks', *args, **kwargs)    
+
     def doCommand(self, event):
         super(ViewActiveTasks, self).doCommand(event)
         self.filteredTaskList.setViewActiveTasks(event.IsChecked())    
  
 class ViewOverBudgetTasks(FilterCommand, UICheckCommand):
-    menuText = 'Over &budget'
-    helpText = 'Show/hide tasks that are over budget'
-    setting = 'overbudgettasks'
-    
+    def __init__(self, *args, **kwargs):
+        super(ViewOverBudgetTasks, self).__init__(menuText=_('Over &budget'), 
+            helpText=_('Show/hide tasks that are over budget'), 
+            setting='overbudgettasks', *args, **kwargs)
+
     def doCommand(self, event):
         super(ViewOverBudgetTasks, self).doCommand(event)
         self.filteredTaskList.setViewOverBudgetTasks(event.IsChecked())
                
 
 class ViewCompositeTasks(ViewerCommand, FilterCommand, UICheckCommand):
-    menuText = 'Tasks with subtasks'
-    helpText = 'Show/hide tasks with subtasks'
-    setting = 'compositetasks'
-    
+    def __init__(self, *args, **kwargs):
+        super(ViewCompositeTasks, self).__init__(menuText=_('Tasks with subtasks'), 
+            helpText=_('Show/hide tasks with subtasks'), setting='compositetasks', 
+            *args, **kwargs)        
+
     def doCommand(self, event):
         super(ViewCompositeTasks, self).doCommand(event)
         self.viewer.setViewCompositeTasks(event.IsChecked())
+
+
+class ViewColumn(ViewerCommand, UICheckCommand):   
+    def __init__(self, column=0, *args, **kwargs):
+        self.column = column
+        super(ViewColumn, self).__init__(*args, **kwargs)
         
-class ViewColumn(ViewerCommand, UICheckCommand):
-    
     def doCommand(self, event):
         super(ViewColumn, self).doCommand(event)
         self.viewer.showColumn(self.column, event.IsChecked())
         
-        
-class ViewStartDate(ViewColumn):
-    menuText = '&Start date'
-    helpText = 'Show/hide start date column'
-    setting = 'startdate'
-    column = 'Start date'
-
-class ViewDueDate(ViewColumn):
-    menuText = '&Due date'
-    helpText = 'Show/hide due date column'
-    setting = 'duedate'
-    column = 'Due date'
-
-class ViewDaysLeft(ViewColumn):
-    menuText = 'Days &left'
-    helpText = 'Show/hide days left column'
-    setting = 'daysleft'
-    column ='Days left'
-
-class ViewCompletionDate(ViewColumn):
-    menuText = 'Co&mpletion date'
-    helpText = 'Show/hide completion date column'
-    setting = 'completiondate'
-    column = 'Completion date'
-
-class ViewTimeSpent(ViewColumn):
-    menuText = '&Time spent'
-    helpText = 'Show/hide time spent column'
-    setting = 'timespent'
-    column = 'Time spent'
-
-class ViewTotalTimeSpent(ViewColumn):
-    menuText = 'T&otal time spent'
-    helpText = 'Show/hide total time spent column (total time includes time spent on subtasks)'
-    setting = 'totaltimespent'
-    column = 'Total time spent'
-    
-class ViewBudget(ViewColumn):
-    menuText = '&Budget'
-    helpText = 'Show/hide budget column'
-    setting = 'budget'
-    column = 'Budget'
-    
-class ViewTotalBudget(ViewColumn):
-    menuText = 'Total budget'
-    helpText = 'Show/hide total budget column (total budget includes budget for subtasks)'
-    setting = 'totalbudget'
-    column = 'Total budget'
-    
-class ViewBudgetLeft(ViewColumn):
-    menuText = 'Budget &left'
-    helpText = 'Show/hide budget left'
-    setting = 'budgetleft'
-    column = 'Budget left'
-        
-class ViewTotalBudgetLeft(ViewColumn):
-    menuText = 'Total budget left'
-    helpText = 'Show/hide total budget left (total budget left includes budget left for subtasks)'
-    setting = 'totalbudgetleft'
-    column = 'Total budget left'
 
 class ViewExpandAll(ViewerCommand):
-    menuText = '&Expand all tasks'
-    helpText = 'Expand all tasks with subtasks'
-    
+    def __init__(self, *args, **kwargs):
+        super(ViewExpandAll, self).__init__(menuText=_('&Expand all tasks'),
+            helpText=_('Expand all tasks with subtasks'), *args, **kwargs)
+            
     def doCommand(self, event):
         self.viewer.expandAll()
 
+
 class ViewExpandSelected(NeedsSelectedTasks, ViewerCommand):
-    bitmap = 'viewexpand'
-    menuText = 'E&xpand'
-    helpText = 'Expand the selected tasks with subtasks'
-    
+    def __init__(self, *args, **kwargs):
+        super(ViewExpandSelected, self).__init__(bitmap='viewexpand',
+            menuText=_('E&xpand'), helpText=_('Expand the selected task(s)'),
+            *args, **kwargs)
+            
     def doCommand(self, event):
         self.viewer.expandSelectedItems()
             
 class ViewCollapseAll(ViewerCommand):
-    menuText = '&Collapse all tasks'
-    helpText = 'Collapse all tasks with subtasks'
+    def __init__(self, *args, **kwargs):
+        super(ViewCollapseAll, self).__init__(menuText=_('&Collapse all tasks'),
+            helpText=_('Collapse all tasks with subtasks'), *args, **kwargs)
     
     def doCommand(self, event):
         self.viewer.collapseAll()
  
 class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
-    bitmap = 'viewcollapse'
-    menuText = 'C&ollapse'
-    helpText = 'Collapse the selected tasks with subtasks'
+    def __init__(self, *args, **kwargs):
+        super(ViewCollapseSelected, self).__init__(bitmap='viewcollapse',
+            menuText=_('C&ollapse'),
+            helpText=_('Collapse the selected tasks with subtasks'), *args, **kwargs)
     
     def doCommand(self, event):
         self.viewer.collapseSelectedItems()
              
         
 class ViewToolBar(MainWindowCommand, UIRadioCommand):
-    setting = 'toolbar'
-
+    def __init__(self, *args, **kwargs):
+        super(ViewToolBar, self).__init__(setting='toolbar', *args, **kwargs)
+        
     def doCommand(self, event):
         super(ViewToolBar, self).doCommand(event)
         self.mainwindow.setToolBarSize(self.value)
 
-class ViewToolBarHide(ViewToolBar):
-    value = None
-    menuText = '&Hide'
-    helpText = 'Hide the toolbar'
-
-class ViewToolBarSmall(ViewToolBar):
-    value = (16, 16)
-    menuText = '&Small images' 
-    helpText = 'Small images (16x16) on the toolbar'
-
-class ViewToolBarMedium(ViewToolBar):
-    value = (22, 22)
-    menuText = '&Medium-sized images'
-    helpText = 'Medium-sized images (22x22) on the toolbar'
-
-class ViewToolBarBig(ViewToolBar):
-    value = (32, 32)
-    menuText = '&Large images'
-    helpText = 'Large images (32x32) on the toolbar'
 
 
 class ViewFindDialog(MainWindowCommand, UICheckCommand):
-    menuText = '&Find dialog'
-    helpText = 'Show/hide find dialog'
-    setting = 'finddialog'
+    def __init__(self, *args, **kwargs):
+        super(ViewFindDialog, self).__init__(menuText=_('&Find dialog'),
+            helpText=_('Show/hide find dialog'), setting='finddialog', 
+            *args, **kwargs)
     
     def doCommand(self, event):
         super(ViewFindDialog, self).doCommand(event)
@@ -577,9 +538,10 @@ class ViewFindDialog(MainWindowCommand, UICheckCommand):
 
 
 class ViewStatusBar(MainWindowCommand, UICheckCommand):
-    menuText = 'Status&bar'
-    helpText = 'Show/hide status bar'
-    setting = 'statusbar'
+    def __init__(self, *args, **kwargs):
+        super(ViewStatusBar, self).__init__(menuText=_('Status&bar'),
+            helpText=_('Show/hide status bar'), setting='statusbar', *args,
+            **kwargs)
 
     def doCommand(self, event):
         super(ViewStatusBar, self).doCommand(event)
@@ -588,80 +550,42 @@ class ViewStatusBar(MainWindowCommand, UICheckCommand):
 
 
 class ViewSplashScreen(UICheckCommand):
-    menuText = 'S&plash screen'
-    helpText = 'Show/skip splash screen when starting %s'%meta.name
-    section = 'window'
-    setting = 'splash'
+    def __init__(self, *args, **kwargs):
+        super(ViewSplashScreen, self).__init__(menuText=_('S&plash screen'),
+            helpText=_('Show/skip splash screen when starting %s'%meta.name),
+            section='window', setting='splash', *args, **kwargs)
 
 
 class ViewDueBefore(FilterCommand, UIRadioCommand):
-    setting = 'tasksdue'
-
+    def __init__(self, *args, **kwargs):
+        super(ViewDueBefore, self).__init__(setting='tasksdue', *args, **kwargs)
+        
     def doCommand(self, event):
         super(ViewDueBefore, self).doCommand(event)
         self.filteredTaskList.viewTasksDueBefore(self.value) 
 
 
-class ViewDueToday(ViewDueBefore):
-    value = 'Today'
-    menuText = '&Today'
-    helpText = 'Only show tasks due today'
-
-class ViewDueTomorrow(ViewDueBefore):
-    value = 'Tomorrow'
-    menuText = 'T&omorrow' 
-    helpText = 'Only show tasks due today and tomorrow'
-
-class ViewDueWorkWeek(ViewDueBefore):
-    value = 'Workweek'
-    menuText = 'Wo&rk week' 
-    helpText = 'Only show tasks due this work week (i.e. before Friday)'
-
-class ViewDueWeek(ViewDueBefore):
-    value = 'Week'
-    menuText = '&Week'
-    helpText = 'Only show tasks due this week (i.e. before Sunday)'
-
-class ViewDueMonth(ViewDueBefore):
-    value = 'Month'
-    menuText = '&Month'
-    helpText = 'Only show tasks due this month'
-
-class ViewDueYear(ViewDueBefore):
-    value = 'Year'
-    menuText = '&Year'
-    helpText = 'Only show tasks due this year'
-
-class ViewDueUnlimited(ViewDueBefore):
-    value = 'Unlimited'
-    menuText = '&Unlimited'
-    helpText = 'Show all tasks' 
-
 class ViewLanguage(MainWindowCommand, UIRadioCommand):
-    setting = 'language'
-
-    def __init__(self, language, menuText, helpText, *args, **kwargs):
-        self.value = language
-        self.menuText = menuText
-        self.helpText = helpText
-        super(ViewLanguage, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(ViewLanguage, self).__init__(setting='language', *args, **kwargs)
         
     def doCommand(self, event):
         if self.settings.get(self.section, self.setting) == self.value:
             return
-        self.settings.set(self.section, self.setting, self.value)
+        super(ViewLanguage, self).doCommand(event)
         dialog = wx.MessageDialog(self.mainwindow,
-            'This setting will take effect after you restart %s'%meta.name,
-            'Language setting', wx.OK|wx.ICON_INFORMATION)
+            _('This setting will take effect after you restart %s'%meta.name),
+            _('Language setting'), wx.OK|wx.ICON_INFORMATION)
         dialog.ShowModal()
         dialog.Destroy()    
     
     
     
 class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
-    bitmap = 'new'
-    menuText = '&New task...\tINS' 
-    helpText = 'Insert a new task'
+    def __init__(self, *args, **kwargs):
+        super(TaskNew, self).__init__(bitmap='new', 
+            menuText=_('&New task...\tINS'), helpText=_('Insert a new task'), *args,
+            **kwargs)
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
@@ -673,9 +597,11 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsComma
 
 class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         FilterCommand, ViewerCommand, UICommandsCommand, SettingsCommand):
-    bitmap = 'newsubtask'
-    menuText = 'New &subtask...\tCtrl+INS'
-    helpText = 'Insert a new subtask into the selected task'
+    def __init__(self, *args, **kwargs):
+        super(TaskNewSubTask, self).__init__(bitmap='newsubtask',
+            menuText=_('New &subtask...\tCtrl+INS'),
+            helpText=_('Insert a new subtask into the selected task'), *args,
+            **kwargs)
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
@@ -688,10 +614,10 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
 
 class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand, 
         ViewerCommand, UICommandsCommand, SettingsCommand):
-
-    bitmap = 'edit'
-    menuText = '&Edit task...'
-    helpText = 'Edit the selected task'
+    def __init__(self, *args, **kwargs):
+        super(TaskEdit, self).__init__(bitmap='edit',
+            menuText=_('&Edit task...'), helpText=_('Edit the selected task'), 
+            *args, **kwargs)
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
@@ -702,9 +628,10 @@ class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand,
 
 
 class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
-    bitmap = 'markcompleted'
-    menuText = '&Mark completed'
-    helpText = 'Mark the selected task(s) completed'
+    def __init__(self, *args, **kwargs):
+        super(TaskMarkCompleted, self).__init__(bitmap='markcompleted',
+            menuText=_('&Mark completed'),
+            helpText=_('Mark the selected task(s) completed'), *args, **kwargs)
 
     def doCommand(self, event):
         markCompletedCommand = command.MarkCompletedCommand(self.filteredTaskList, 
@@ -717,9 +644,10 @@ class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
 
 
 class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
-    bitmap = 'delete'
-    menuText = '&Delete task\tCtrl+D'
-    helpText = 'Delete the selected task(s)'
+    def __init__(self, *args, **kwargs):
+        super(TaskDelete, self).__init__(bitmap='delete',
+            menuText=_('&Delete task\tCtrl+D'),
+            helpText=_('Delete the selected task(s)'), *args, **kwargs)
 
     def doCommand(self, event):
         deleteCommand = command.DeleteTaskCommand(self.filteredTaskList, 
@@ -729,9 +657,11 @@ class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
 
 class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand,
         ViewerCommand, UICommandsCommand):
-    bitmap = 'start'
-    menuText = '&New effort'
-    helpText = 'Add a effort period to the selected task(s)'
+    def __init__(self, *args, **kwargs):
+        super(EffortNew, self).__init__(bitmap='start',  
+            menuText=_('&New effort...'), 
+            helpText=_('Add a effort period to the selected task(s)'),
+            *args, **kwargs)
             
     def doCommand(self, event):
         editor = gui.EffortEditor(self.mainwindow, 
@@ -742,9 +672,10 @@ class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand,
 
 class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand, 
         ViewerCommand, UICommandsCommand):
-    bitmap = 'edit'
-    menuText = '&Edit effort'
-    helpText = 'Edit the selected effort period(s)'
+    def __init__(self, *args, **kwargs):
+        super(EffortEdit, self).__init__(bitmap='edit',
+            menuText=_('&Edit effort...'),
+            helpText=_('Edit the selected effort period(s)'), *args, **kwargs)
             
     def doCommand(self, event):
         editor = gui.EffortEditor(self.mainwindow,
@@ -754,9 +685,10 @@ class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand,
         return editor
 
 class EffortDelete(NeedsSelectedEffort, EffortCommand, ViewerCommand):
-    bitmap = 'delete'
-    menuText = '&Delete effort'
-    helpText = 'Delete the selected effort period(s)'
+    def __init__(self, *args, **kwargs):
+        super(EffortDelete, self).__init__(bitmap='delete',
+            menuText=_('&Delete effort'),
+            helpText=_('Delete the selected effort period(s)'), *args, **kwargs)
 
     def doCommand(self, event):
         delete = command.DeleteEffortCommand(self.effortList,
@@ -765,10 +697,12 @@ class EffortDelete(NeedsSelectedEffort, EffortCommand, ViewerCommand):
 
 
 class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
-    bitmap = 'start'
-    menuText = '&Start tracking effort'
-    helpText = 'Start tracking effort for the selected task(s)'
-    adjacent = False
+    def __init__(self, *args, **kwargs):
+        self.adjacent = False
+        myOptions = {'bitmap': 'start', 'menuText': _('&Start tracking effort'),
+            'helpText': _('Start tracking effort for the selected task(s)')}
+        myOptions.update(kwargs)
+        super(EffortStart, self).__init__(*args, **myOptions)
     
     def doCommand(self, event):
         start = command.StartEffortCommand(self.filteredTaskList, self.viewer.curselection(),
@@ -783,19 +717,21 @@ class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
 
 
 class EffortStartAdjacent(EffortStart):
-    menuText = 'S&tart tracking from last stop time'
-    helpText = 'Start tracking effort for the selected task(s) with start time ' \
-         'equal to end time of last effort'
-    adjacent = True
+    def __init__(self, *args, **kwargs):
+        super(EffortStartAdjacent, self).__init__(menuText=_('S&tart tracking from last stop time'),
+            helpText=_('Start tracking effort for the selected task(s) with start time ' \
+            'equal to end time of last effort'), *args, **kwargs)
+        self.adjacent = True
         
     def enabled(self):
         return (self.filteredTaskList.maxDateTime() is not None) and super(EffortStartAdjacent, self).enabled()
 
 
 class EffortStop(FilterCommand):
-    bitmap = 'stop'
-    menuText = 'St&op tracking effort'
-    helpText = 'Stop tracking effort for the active task(s)'
+    def __init__(self, *args, **kwargs):
+        super(EffortStop, self).__init__(bitmap='stop',
+            menuText=_('St&op tracking effort'),
+            helpText=_('Stop tracking effort for the active task(s)'), *args, **kwargs)
 
     def doCommand(self, event):
         stop = command.StopEffortCommand(self.filteredTaskList)
@@ -806,45 +742,52 @@ class EffortStop(FilterCommand):
 
 
 class HelpCommand(UICommand):
-    bitmap = 'help'
+    def __init__(self, *args, **kwargs):
+        super(HelpCommand, self).__init__(bitmap='help', *args, **kwargs)
 
 class HelpTasks(HelpCommand):
-    menuText = '&Tasks'
-    helpText = 'Help about the possible states of tasks'
+    def __init__(self, *args, **kwargs):
+        super(HelpTasks, self).__init__(menuText=_('&Tasks'),
+            helpText=_('Help about the possible states of tasks'), *args, **kwargs)
 
     def doCommand(self, event):
         help.Tasks()
 
 class HelpColors(HelpCommand):
-    menuText = '&Colors'
-    helpText = 'Help about the possible colors of tasks'
+    def __init__(self, *args, **kwargs):
+        super(HelpColors, self).__init__(menuText=_('&Colors'),
+            helpText=_('Help about the possible colors of tasks'), *args, **kwargs)
 
     def doCommand(self, event):
         help.Colors()
 
 
 class InfoCommand(UICommand):
-    bitmap = 'info'
+    def __init__(self, *args, **kwargs):
+        super(InfoCommand, self).__init__(bitmap='info', *args, **kwargs)
 
 class HelpAbout(InfoCommand):
-    menuText = '&About'
-    helpText = 'Version and contact information about %s'%meta.name
+    def __init__(self, *args, **kwargs):
+        super(HelpAbout, self).__init__(menuText=_('&About %s'%meta.name),
+            helpText=_('Version and contact information about %s'%meta.name), *args, **kwargs)
 
     def doCommand(self, event):
         help.About()
 
 class HelpLicense(InfoCommand):
-    menuText = '&License'
-    helpText = '%s license'%meta.name
+    def __init__(self, *args, **kwargs):
+        super(HelpLicense, self).__init__(menuText=_('&License'),
+            helpText=_('%s license'%meta.name), *args, **kwargs)
 
     def doCommand(self, event):
         help.License()
 
 
 class MainWindowRestore(MainWindowCommand):
-    menuText = '&Restore'
-    helpText = 'Restore the window to its previous state'
-    bitmap = 'restore'
+    def __init__(self, *args, **kwargs):
+        super(MainWindowRestore, self).__init__(menuText=_('&Restore'),
+            helpText=_('Restore the window to its previous state'),
+            bitmap='restore', *args, **kwargs)
 
     def doCommand(self, event):
         self.mainwindow.restore(event)
@@ -857,95 +800,152 @@ class UICommands(dict):
         super(UICommands, self).__init__()
     
         # File commands
-        self['open'] = FileOpen(iocontroller)
-        self['merge'] = FileMerge(iocontroller)
-        self['close'] = FileClose(iocontroller)
-        self['save'] = FileSave(iocontroller)
-        self['saveas'] = FileSaveAs(iocontroller)
-        self['saveselection'] = FileSaveSelection(iocontroller, viewer)
-        self['quit'] = FileQuit(mainwindow)
+        self['open'] = FileOpen(iocontroller=iocontroller)
+        self['merge'] = FileMerge(iocontroller=iocontroller)
+        self['close'] = FileClose(iocontroller=iocontroller)
+        self['save'] = FileSave(iocontroller=iocontroller)
+        self['saveas'] = FileSaveAs(iocontroller=iocontroller)
+        self['saveselection'] = FileSaveSelection(iocontroller=iocontroller, 
+            viewer=viewer)
+        self['quit'] = FileQuit(mainwindow=mainwindow)
 
         # menuEdit commands
         self['undo'] = EditUndo()
         self['redo'] = EditRedo()
-        self['cut'] = EditCut(filteredTaskList, viewer)
-        self['copy'] = EditCopy(filteredTaskList, viewer)
-        self['paste'] = EditPaste(filteredTaskList)
-        self['pasteassubtask'] = EditPasteAsSubtask(filteredTaskList, viewer)
+        self['cut'] = EditCut(filteredTaskList=filteredTaskList, viewer=viewer)
+        self['copy'] = EditCopy(filteredTaskList=filteredTaskList, viewer=viewer)
+        self['paste'] = EditPaste(filteredTaskList=filteredTaskList)
+        self['pasteassubtask'] = EditPasteAsSubtask(filteredTaskList=filteredTaskList, viewer=viewer)
 
         # Selection commands
-        self['selectall'] = SelectAll(viewer)
-        self['selectcompleted'] = SelectCompleted(viewer)
-        self['invertselection'] = InvertSelection(viewer)
-        self['clearselection'] = ClearSelection(viewer)
+        self['selectall'] = SelectAll(viewer=viewer)
+        self['selectcompleted'] = SelectCompleted(viewer=viewer)
+        self['invertselection'] = InvertSelection(viewer=viewer)
+        self['clearselection'] = ClearSelection(viewer=viewer)
 
         # View commands
-        self['viewalltasks'] = ViewAllTasks(filteredTaskList, settings, self)
-        self['viewcompletedtasks'] = ViewCompletedTasks(filteredTaskList, 
-            settings)
-        self['viewinactivetasks'] = ViewInactiveTasks(filteredTaskList,
-            settings)
-        self['viewactivetasks'] = ViewActiveTasks(filteredTaskList,
-            settings)    
-        self['viewoverduetasks'] = ViewOverDueTasks(filteredTaskList,
-            settings)    
-        self['viewoverbudgettasks'] = ViewOverBudgetTasks(filteredTaskList,
-            settings)
-        self['viewcompositetasks'] = ViewCompositeTasks(viewer, filteredTaskList,
-            settings)
+        self['viewalltasks'] = ViewAllTasks(filteredTaskList=filteredTaskList, settings=settings, uiCommands=self)
+        self['viewcompletedtasks'] = ViewCompletedTasks(filteredTaskList=filteredTaskList, 
+            settings=settings)
+        self['viewinactivetasks'] = ViewInactiveTasks(filteredTaskList=filteredTaskList,
+            settings=settings)
+        self['viewactivetasks'] = ViewActiveTasks(filteredTaskList=filteredTaskList,
+            settings=settings)    
+        self['viewoverduetasks'] = ViewOverDueTasks(filteredTaskList=filteredTaskList,
+            settings=settings)    
+        self['viewoverbudgettasks'] = ViewOverBudgetTasks(filteredTaskList=filteredTaskList,
+            settings=settings)
+        self['viewcompositetasks'] = ViewCompositeTasks(viewer=viewer, filteredTaskList=filteredTaskList,
+            settings=settings)
             
-        self['viewstartdate'] = ViewStartDate(viewer, settings)
-        self['viewduedate'] = ViewDueDate(viewer, settings)
-        self['viewdaysleft'] = ViewDaysLeft(viewer, settings)
-        self['viewcompletiondate'] = ViewCompletionDate(viewer, settings)
-        self['viewbudget'] = ViewBudget(viewer, settings)
-        self['viewtotalbudget'] = ViewTotalBudget(viewer, settings)
-        self['viewtimespent'] = ViewTimeSpent(viewer, settings)
-        self['viewtotaltimespent'] = ViewTotalTimeSpent(viewer, settings)
-        self['viewbudgetleft'] = ViewBudgetLeft(viewer, settings)
-        self['viewtotalbudgetleft'] = ViewTotalBudgetLeft(viewer, settings)
-
-        self['viewexpandall'] = ViewExpandAll(viewer)
-        self['viewcollapseall'] = ViewCollapseAll(viewer)
-        self['viewexpandselected'] = ViewExpandSelected(viewer)
-        self['viewcollapseselected'] = ViewCollapseSelected(viewer)
+        self['viewstartdate'] = ViewColumn(column='Start date', viewer=viewer, 
+            settings=settings, 
+            menuText='&Start date', helpText = 'Show/hide start date column',
+            setting='startdate')
+        self['viewduedate'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText='&Due date', helpText='Show/hide due date column',
+            setting='duedate', column='Due date')
+        self['viewdaysleft'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText='Days &left', helpText='Show/hide days left column',
+            setting='daysleft', column='Days left')
+        self['viewcompletiondate'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText='Co&mpletion date', helpText='Show/hide completion date column',
+            setting='completiondate', column='Completion date')
+        self['viewbudget'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText='&Budget', helpText='Show/hide budget column',
+            setting='budget', column='Budget')
+        self['viewtotalbudget'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText='Total budget',
+            helpText='Show/hide total budget column (total budget includes budget for subtasks)',
+            setting='totalbudget', column='Total budget')
+        self['viewtimespent'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText='&Time spent', helpText='Show/hide time spent column',
+            setting='timespent', column='Time spent')
+        self['viewtotaltimespent'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText='T&otal time spent',
+            helpText='Show/hide total time spent column (total time includes time spent on subtasks)',
+            setting='totaltimespent', column='Total time spent')
+        self['viewbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText='Budget &left', helpText='Show/hide budget left',
+            setting='budgetleft', column='Budget left')
+        self['viewtotalbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText='Total budget left',
+            helpText='Show/hide total budget left (total budget left includes budget left for subtasks)',
+            setting='totalbudgetleft', column='Total budget left')
+    
+        self['viewexpandall'] = ViewExpandAll(viewer=viewer)
+        self['viewcollapseall'] = ViewCollapseAll(viewer=viewer)
+        self['viewexpandselected'] = ViewExpandSelected(viewer=viewer)
+        self['viewcollapseselected'] = ViewCollapseSelected(viewer=viewer)
         
-        self['viewlanguageenglish'] = ViewLanguage('en', _('&English'),
-            _('Show English user interface after restart'), mainwindow, settings)
-        self['viewlanguagedutch'] = ViewLanguage('nl', _('&Dutch'), 
-            _('Show Dutch user interface after restart'), mainwindow, settings)
+        self['viewlanguageenglish'] = ViewLanguage(value='en', menuText=_('&English'),
+            helpText=_('Show English user interface after restart'), mainwindow=mainwindow, 
+            settings=settings)
+        self['viewlanguagedutch'] = ViewLanguage(value='nl', menuText=_('&Dutch'), 
+            helpText=_('Show Dutch user interface after restart'), 
+            mainwindow=mainwindow, settings=settings)
         
-        self['toolbarhide'] = ViewToolBarHide(mainwindow, settings)
-        self['toolbarsmall'] = ViewToolBarSmall(mainwindow, settings)
-        self['toolbarmedium'] = ViewToolBarMedium(mainwindow, settings)
-        self['toolbarbig'] = ViewToolBarBig(mainwindow, settings)
-        self['viewfinddialog'] = ViewFindDialog(mainwindow, settings)
-        self['viewstatusbar'] = ViewStatusBar(mainwindow, settings)
-        self['viewsplashscreen'] = ViewSplashScreen(settings)
+        self['toolbarhide'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
+            value=None, menuText='&Hide', helpText='Hide the toolbar')
+        self['toolbarsmall'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
+            value=(16, 16), menuText='&Small images', 
+            helpText='Small images (16x16) on the toolbar')
+        self['toolbarmedium'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
+            value=(22, 22), menuText='&Medium-sized images',
+            helpText='Medium-sized images (22x22) on the toolbar')
+        self['toolbarbig'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
+            value=(32, 32), menuText='&Large images',
+            helpText='Large images (32x32) on the toolbar')
 
-        self['viewduetoday'] = ViewDueToday(filteredTaskList, settings)
-        self['viewduetomorrow'] = ViewDueTomorrow(filteredTaskList, settings)
-        self['viewdueworkweek'] = ViewDueWorkWeek(filteredTaskList, settings)
-        self['viewdueweek'] = ViewDueWeek(filteredTaskList, settings)
-        self['viewduemonth'] = ViewDueMonth(filteredTaskList, settings)
-        self['viewdueyear'] = ViewDueYear(filteredTaskList, settings)
-        self['viewdueunlimited'] = ViewDueUnlimited(filteredTaskList, settings)
+        self['viewfinddialog'] = ViewFindDialog(mainwindow=mainwindow, settings=settings)
+        self['viewstatusbar'] = ViewStatusBar(mainwindow=mainwindow, settings=settings)
+        self['viewsplashscreen'] = ViewSplashScreen(settings=settings)
+
+        self['viewduetoday'] = ViewDueBefore(menuText=_('&Today'), 
+            helpText=_('Only show tasks due today'), value='Today', 
+            filteredTaskList=filteredTaskList, settings=settings)
+        self['viewduetomorrow'] = ViewDueBefore(menuText=_('T&omorrow'), 
+            helpText=_('Only show tasks due today and tomorrow'), value='Tomorrow', 
+            filteredTaskList=filteredTaskList, settings=settings)
+        self['viewdueworkweek'] = ViewDueBefore(menuText=_('Wo&rk week'),
+            helpText=_('Only show tasks due this work week (i.e. before Friday)'),
+            value='Workweek', filteredTaskList=filteredTaskList, settings=settings)
+        self['viewdueweek'] = ViewDueBefore(menuText=_('&Week'),
+            helpText=_('Only show tasks due this week (i.e. before Sunday)'), value='Week',
+            filteredTaskList=filteredTaskList, settings=settings)
+        self['viewduemonth'] = ViewDueBefore(menuText=_('&Month'), 
+            helpText=_('Only show tasks due this month'), value='Month',
+            filteredTaskList=filteredTaskList, settings=settings)
+        self['viewdueyear'] = ViewDueBefore(menuText=_('&Year'),
+            helpText=_('Only show tasks due this year'), value='Year',
+            filteredTaskList=filteredTaskList, settings=settings)
+        self['viewdueunlimited'] = ViewDueBefore(menuText=_('&Unlimited'), 
+            helpText=_('Show all tasks'), value='Unlimited', 
+            filteredTaskList=filteredTaskList, settings=settings)
 
         # Task menu
-        self['new'] = TaskNew(mainwindow, filteredTaskList, self, settings)
-        self['newsubtask'] = TaskNewSubTask(mainwindow, filteredTaskList, 
-            viewer, self, settings)
-        self['edit'] = TaskEdit(mainwindow, filteredTaskList, viewer, self, settings)
-        self['markcompleted'] = TaskMarkCompleted(filteredTaskList, viewer)
-        self['delete'] = TaskDelete(filteredTaskList, viewer)
+        self['new'] = TaskNew(mainwindow=mainwindow, 
+            filteredTaskList=filteredTaskList, uiCommands=self, settings=settings)
+        self['newsubtask'] = TaskNewSubTask(mainwindow=mainwindow, 
+            filteredTaskList=filteredTaskList, viewer=viewer, uiCommands=self, 
+            settings=settings)
+        self['edit'] = TaskEdit(mainwindow=mainwindow, 
+            filteredTaskList=filteredTaskList, viewer=viewer, uiCommands=self, 
+            settings=settings)
+        self['markcompleted'] = TaskMarkCompleted(filteredTaskList=filteredTaskList,
+            viewer=viewer)
+        self['delete'] = TaskDelete(filteredTaskList=filteredTaskList, viewer=viewer)
         
         # Effort menu
-        self['neweffort'] = EffortNew(mainwindow, effortList, viewer, self)
-        self['editeffort'] = EffortEdit(mainwindow, effortList, viewer, self)
-        self['deleteeffort'] = EffortDelete(effortList, viewer)
-        self['starteffort'] = EffortStart(filteredTaskList, viewer)
-        self['starteffortadjacent'] = EffortStartAdjacent(filteredTaskList, viewer)
-        self['stopeffort'] = EffortStop(filteredTaskList)
+        self['neweffort'] = EffortNew(mainwindow=mainwindow, effortList=effortList,
+            viewer=viewer, uiCommands=self)
+        self['editeffort'] = EffortEdit(mainwindow=mainwindow, effortList=effortList, 
+            viewer=viewer, uiCommands=self)
+        self['deleteeffort'] = EffortDelete(effortList=effortList, viewer=viewer)
+        self['starteffort'] = EffortStart(filteredTaskList=filteredTaskList, viewer=viewer)
+        self['starteffortadjacent'] = EffortStartAdjacent(filteredTaskList=filteredTaskList, 
+            viewer=viewer)
+        self['stopeffort'] = EffortStop(filteredTaskList=filteredTaskList)
         
         # Help menu
         self['helptasks'] = HelpTasks()
@@ -954,6 +954,6 @@ class UICommands(dict):
         self['license'] = HelpLicense()
 
         # Taskbar menu
-        self['restore'] = MainWindowRestore(mainwindow)
+        self['restore'] = MainWindowRestore(mainwindow=mainwindow)
 
 

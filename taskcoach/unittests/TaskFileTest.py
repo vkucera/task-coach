@@ -21,11 +21,6 @@ class TaskFileTest(TaskFileTestCase):
     def testFileNameAfterCreate(self):
         self.assertEqual('', self.taskFile.filename())
 
-    def testNonZero(self):
-        self.failIf(self.taskFile)
-        self.taskFile.setFilename(self.filename)
-        self.failUnless(self.taskFile)
-
     def testFileName(self):
         self.taskFile.setFilename(self.filename)
         self.assertEqual(self.filename, self.taskFile.filename())

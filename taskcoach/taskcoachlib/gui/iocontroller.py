@@ -15,10 +15,10 @@ class IOController(object):
     def displayMessage(self, verb, file, toorfrom=None):
         if toorfrom:
             nrTasks = len(file)
-            message = '%s %d task%s %s %s'%(verb, nrTasks, 
+            message = u'%s %d task%s %s %s'%(verb, nrTasks, 
                 nrTasks != 1 and 's' or '', toorfrom, file)
         else:
-            message = '%s %s'%(verb, file)
+            message = u'%s %s'%(verb, file)
         self.__messageCallback(message)
 
     def open(self, filename=None, showerror=wx.MessageBox, *args):
@@ -45,7 +45,7 @@ class IOController(object):
             self.displayMessage('Merged', filename) 
 
     def save(self, *args):
-        if self.__taskFile:
+        if self.__taskFile.filename():
             self.__taskFile.save()
             self.displayMessage('Saved', self.__taskFile, 'to')
             return True
@@ -75,7 +75,7 @@ class IOController(object):
     def close(self):
         if self.__taskFile.needSave():
             result = wx.MessageBox('You have unsaved changes.\n'
-                'Save before closing?', 'Save changes?',
+                'Save before closing?', '%s: save changes?'%meta.name,
                 wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION)
             if result == wx.YES:
                 if not self.save():
