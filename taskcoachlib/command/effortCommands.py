@@ -1,7 +1,9 @@
 import base, effort, date
+from i18n import _
 
 class NewEffortCommand(base.BaseCommand):
-    name = 'New effort'
+    def name(self):
+        return _('New effort')
     
     def __init__(self, *args, **kwargs):
         super(NewEffortCommand, self).__init__(*args, **kwargs)
@@ -20,7 +22,8 @@ class NewEffortCommand(base.BaseCommand):
 
 class EditEffortCommand(base.BaseCommand, base.SaveStateMixin):
     # FIXME: Duplication with EditTaskCommand
-    name = 'Edit effort'
+    def name(self):
+        return _('Edit effort')
     
     def __init__(self, *args, **kwargs):
         super(EditEffortCommand, self).__init__(*args, **kwargs)
@@ -42,7 +45,8 @@ class EditEffortCommand(base.BaseCommand, base.SaveStateMixin):
     
 
 class DeleteEffortCommand(base.BaseCommand):
-    name = 'Delete effort'
+    def name(self):
+        return _('Delete effort')
 
     def __init__(self, *args, **kwargs):
         super(DeleteEffortCommand, self).__init__(*args, **kwargs)

@@ -1,5 +1,6 @@
 import meta
 import wx
+from i18n import _
 
         
 class TaskBarIcon(wx.TaskBarIcon):
@@ -38,12 +39,12 @@ class TaskBarIcon(wx.TaskBarIcon):
         
     def __getTooltipText(self):
         if self.__nrDueToday == 0:
-            tasksDueText = 'No tasks'
+            nrTasksText = _('No tasks due today')
         elif self.__nrDueToday == 1:
-            tasksDueText = 'One task'
+            nrTasksText = _('One task due today')
         else:
-            tasksDueText = '%d tasks'%self.__nrDueToday
-        return '%s - %s due today'%(meta.name, tasksDueText)
+            nrTasksText = _('%d tasks due today')%self.__nrDueToday
+        return '%s - %s'%(meta.name, nrTasksText)
 
     def __getBitmap(self):
         if self.__tracking:

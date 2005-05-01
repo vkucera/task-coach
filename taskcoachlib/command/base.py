@@ -7,7 +7,7 @@ class BaseCommand(patterns.Command):
         self.items = items or []
 
     def __str__(self):
-        return self.name
+        return self.name()
 
     def canDo(self):
         return bool(self.items)

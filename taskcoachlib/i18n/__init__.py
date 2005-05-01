@@ -1,4 +1,4 @@
-import patterns
+import patterns, wx
 
 class Translator:
     __metaclass__ = patterns.Singleton
@@ -7,6 +7,7 @@ class Translator:
         if language == 'nl':
             from nl import nl
             self.__language = nl
+            #wx.Locale(wx.LANGUAGE_DUTCH) dutch calendarctrl not working properly
         
     def translate(self, string):
         try:

@@ -1,4 +1,5 @@
 import wx 
+from i18n import _
 
 class FindPanel(wx.Panel):
     def __init__(self, parent, searchFilter, viewer):
@@ -9,16 +10,16 @@ class FindPanel(wx.Panel):
         self.layout()
         
     def createComponents(self):
-        self._label = wx.StaticText(self, -1, 'Find: ')
+        self._label = wx.StaticText(self, -1, _('Find: '))
         
         self._subjectEntry = wx.TextCtrl(self, -1, 
-            'Type search string (a regular expression) here and press enter')
+            _('Type search string (a regular expression) here and press enter'))
         self._subjectEntry.Bind(wx.EVT_TEXT_ENTER, self.find)
         
-        self._caseCheckBox = wx.CheckBox(self, -1, 'Match case')
+        self._caseCheckBox = wx.CheckBox(self, -1, _('Match case'))
         self._caseCheckBox.Bind(wx.EVT_CHECKBOX, self.find)
         
-        self._clearButton = wx.Button(self, -1, 'Clear')
+        self._clearButton = wx.Button(self, -1, _('Clear'))
         self._clearButton.Bind(wx.EVT_BUTTON, self.clear)
         
     def layout(self):

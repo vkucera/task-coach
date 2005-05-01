@@ -1,4 +1,5 @@
 import wx, widgets
+from i18n import _
 
 class Dialog(wx.Dialog):
     def __init__(self, parent, title, bitmap='edit', *args, **kwargs):
@@ -18,8 +19,8 @@ class TabbedDialog(Dialog):
         self._notebook = widgets.Notebook(self._panel)
         self._verticalSizer.Add(self._notebook, 1, flag=wx.EXPAND)
         self.addPages()
-        self._buttonBox = widgets.ButtonBox(self._panel, ('OK', self.ok), 
-                                      ('Cancel', self.cancel))
+        self._buttonBox = widgets.ButtonBox(self._panel, (_('OK'), self.ok), 
+                                      (_('Cancel'), self.cancel))
         self._verticalSizer.Add(self._buttonBox, 0, wx.ALIGN_CENTER)
         self._panel.SetSizerAndFit(self._verticalSizer)
         self.SetSizerAndFit(self._panelSizer)

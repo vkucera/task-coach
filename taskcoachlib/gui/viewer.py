@@ -143,9 +143,10 @@ class TaskListViewer(TaskViewer, ListViewer):
         return widget
         
     def columns(self):
-        return ['Subject', _('Start date'), 'Due date',
-            'Days left', 'Completion date', 'Budget', 'Total budget', 
-            'Time spent', 'Total time spent', 'Budget left', 'Total budget left']
+        return [_('Subject'), _('Start date'), _('Due date'),
+            _('Days left'), _('Completion date'), _('Budget'), 
+            _('Total budget'), _('Time spent'), _('Total time spent'), 
+            _('Budget left'), _('Total budget left')]
 
     def createSorter(self, taskList):
         return task.sorter.Sorter(taskList)
@@ -158,36 +159,31 @@ class TaskListViewer(TaskViewer, ListViewer):
     
     def getItemText(self, index, columnHeader):
         task = self.list[index]
-        if columnHeader == 'Subject':
+        if columnHeader == _('Subject'):
             return render.subject(task, recursively=True)
-        elif columnHeader == 'Start date':
+        elif columnHeader == _('Start date'):
             return render.date(task.startDate())
-        elif columnHeader == 'Due date':
+        elif columnHeader == _('Due date'):
             return render.date(task.dueDate())
-        elif columnHeader == 'Days left':
+        elif columnHeader == _('Days left'):
             return render.daysLeft(task.timeLeft())
-        elif columnHeader == 'Completion date':
+        elif columnHeader == _('Completion date'):
             return render.date(task.completionDate())
-        elif columnHeader == 'Budget':
+        elif columnHeader == _('Budget'):
             return render.budget(task.budget())
-        elif columnHeader == 'Total budget':
+        elif columnHeader == _('Total budget'):
             return render.budget(task.budget(recursive=True))
-        elif columnHeader == 'Time spent':
+        elif columnHeader == _('Time spent'):
             return render.timeSpent(task.duration())
-        elif columnHeader == 'Total time spent':
+        elif columnHeader == _('Total time spent'):
             return render.timeSpent(task.duration(recursive=True))
-        elif columnHeader == 'Budget left':
+        elif columnHeader == _('Budget left'):
             return render.budget(task.budgetLeft())
-        elif columnHeader == 'Total budget left':
+        elif columnHeader == _('Total budget left'):
             return render.budget(task.budgetLeft(recursive=True))
     
     def showColumn(self, columnHeader, show):
         self.widget.showColumn(columnHeader, show)
-        '''
-        columnIndex = self.columns().index(columnHeader)
-        width = {True : wx.LIST_AUTOSIZE, False : 0 } [show]
-        self.widget.SetColumnWidth(columnIndex, width)
-        '''
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
@@ -250,19 +246,19 @@ class EffortListViewer(ListViewer):
         return widget
 
     def columns(self):
-        return ['Period', 'Task', 'Time spent']
+        return [_('Period'), _('Task'), _('Time spent')]
         
     def createSorter(self, effortList):
         return effort.EffortSorter(effortList)
         
     def getItemText(self, index, columnHeader):
         effort = self.list[index]
-        if columnHeader == 'Period':
+        if columnHeader == _('Period'):
             previousEffort = index > 0 and self.list[index-1] or None
             return self.renderPeriod(effort, previousEffort)
-        elif columnHeader == 'Task':
+        elif columnHeader == _('Task'):
             return render.subject(effort.task(), recursively=True)
-        elif columnHeader == 'Time spent':
+        elif columnHeader == _('Time spent'):
             return render.timeSpent(effort.duration())
     
     def getItemImage(self, index):
@@ -292,14 +288,14 @@ class EffortListViewer(ListViewer):
 
 class CompositeEffortListViewer(EffortListViewer):
     def columns(self):
-        return super(CompositeEffortListViewer, self).columns() + ['Total time spent']
+        return super(CompositeEffortListViewer, self).columns() + [_('Total time spent')]
         
     def curselection(self):
         compositeEfforts = super(CompositeEffortListViewer, self).curselection()
         return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
 
     def getItemText(self, index, columnHeader):
-        if columnHeader == 'Total time spent':
+        if columnHeader == _('Total time spent'):
             effort = self.list[index]
             return render.timeSpent(effort.duration(recursive=True))
         else:

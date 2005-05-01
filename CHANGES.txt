@@ -7,9 +7,13 @@ Bugs fixed:
   
 Features added:
 - Internationalization support. Task Coach is available with
-  Dutch (incomplete) and English user interface.
+  Dutch and English user interface (1164461).
 - Added 'expand selected task' and 'collapse selected task' menu
   items to the view menu and the task context menu (1189978).
+
+Features removed:
+- 'Select' -> 'Completed tasks'. This can be done through the View
+  menu too.
 
 
 
