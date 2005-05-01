@@ -1,7 +1,7 @@
 import date, widgets, render
 import wx, datetime
 import wx.lib.masked as masked
-
+from i18n import _
 
 class DateEntry(wx.Panel):
     defaultDate = 'None'
@@ -87,6 +87,7 @@ class Page(wx.Panel):
     def addEntry(self, label, *controls, **kwargs):
         controls = [control for control in controls if control is not None]
         if label is not None:
+            if label: label += ':'
             self._sizer.Add(wx.StaticText(self, -1, label), self._position.next(),
                 flag=wx.ALL|wx.ALIGN_RIGHT, border=self._borderWidth)
         for control in controls:
@@ -116,16 +117,16 @@ class TaskEditBook(widgets.Listbook):
         self._descriptionEntry = wx.TextCtrl(subjectPage, -1, 
             self._task.description(), style=wx.TE_MULTILINE)
         self._descriptionEntry.SetSizeHints(500, 200)
-        subjectPage.addEntry('Subject:', self._subjectEntry)
-        subjectPage.addEntry('Description:', self._descriptionEntry, growable=True)
-        self.AddPage(subjectPage, 'Description', 'description')
+        subjectPage.addEntry(_('Subject'), self._subjectEntry)
+        subjectPage.addEntry(_('Description'), self._descriptionEntry, growable=True)
+        self.AddPage(subjectPage, _('Description'), 'description')
         
     def addDatesPage(self):
         datesPage = Page(self, columns=3)
         datesReadonly = bool(self._task.children()) 
         if datesReadonly:
-            startDateComment = '(Minimum of all subtask start dates)'
-            dueDateComment = '(Maximum of all subtask due dates)'
+            startDateComment = _('(Minimum of all subtask start dates)')
+            dueDateComment = _('(Maximum of all subtask due dates)')
         else:
             startDateComment = dueDateComment = None
         self._startDateEntry = DateEntry(datesPage, self._task.startDate(), 
@@ -137,27 +138,27 @@ class TaskEditBook(widgets.Listbook):
         self._completionDateEntry = DateEntry(datesPage, self._task.completionDate(), 
             callback=self.onSetCompletionDate)
         self._completedCheckBox.SetValue(self._task.completed())
-        datesPage.addEntry('Start date:', self._startDateEntry, startDateComment)
-        datesPage.addEntry('Due date:', self._dueDateEntry, dueDateComment)
-        datesPage.addEntry('Completed:', self._completedCheckBox)
-        datesPage.addEntry('Completion date:', self._completionDateEntry)
-        self.AddPage(datesPage, 'Dates', 'date')
+        datesPage.addEntry(_('Start date'), self._startDateEntry, startDateComment)
+        datesPage.addEntry(_('Due date'), self._dueDateEntry, dueDateComment)
+        datesPage.addEntry(_('Completed'), self._completedCheckBox)
+        datesPage.addEntry(_('Completion date'), self._completionDateEntry)
+        self.AddPage(datesPage, _('Dates'), 'date')
     
     def addBudgetPage(self):
         budgetPage = Page(self, columns=3)
         self._budgetEntry = TimeDeltaEntry(budgetPage, self._task.budget())
-        entriesArgs = [(['', 'For this task'], {}),
-                       (['Budget:', self._budgetEntry], {}),
-                       (['Time spent:', render.timeSpent(self._task.duration())], {}),
-                       (['Budget left:', render.budget(self._task.budgetLeft())], {})]
+        entriesArgs = [(['', _('For this task')], {}),
+                       ([_('Budget'), self._budgetEntry], {}),
+                       ([_('Time spent'), render.timeSpent(self._task.duration())], {}),
+                       ([_('Budget left'), render.budget(self._task.budgetLeft())], {})]
         if self._task.children():
-            entriesArgs[0][0].append('For this task including all subtasks')
+            entriesArgs[0][0].append(_('For this task including all subtasks'))
             entriesArgs[1][0].append(render.budget(self._task.budget(recursive=True)))
             entriesArgs[2][0].append(render.timeSpent(self._task.duration(recursive=True)))
             entriesArgs[3][0].append(render.budget(self._task.budgetLeft(recursive=True)))
         for entryArgs, entryKwArgs in entriesArgs:
             budgetPage.addEntry(*entryArgs, **entryKwArgs)
-        self.AddPage(budgetPage, 'Budget', 'budget')
+        self.AddPage(budgetPage, _('Budget'), 'budget')
                 
     def addEffortPage(self):
         if not self._task.duration(recursive=True):
@@ -168,7 +169,7 @@ class TaskEditBook(widgets.Listbook):
         myEffortList = effort.SingleTaskEffortList(self._task)
         viewerfactory._addEffortViewers(viewerContainer, myEffortList, self._uiCommands)
         effortPage.addEntry(None, viewerContainer, growable=True)
-        self.AddPage(effortPage, 'Effort', 'start')
+        self.AddPage(effortPage, _('Effort'), 'start')
             
     def completed(self, event):
         if event.IsChecked():
@@ -210,14 +211,14 @@ class EffortEditBook(Page):
             self.preventNegativeEffortDuration)
         self._stopEntry = widgets.DateTimeCtrl(self, self._effort.getStop(),
             self.preventNegativeEffortDuration)
-        self.addEntry('Start:', self._startEntry)
-        self.addEntry('Stop:', self._stopEntry)
+        self.addEntry(_('Start'), self._startEntry)
+        self.addEntry(_('Stop'), self._stopEntry)
         
     def addDescriptionEntry(self):
         self._descriptionEntry = wx.TextCtrl(self, -1, 
             self._effort.getDescription(), style=wx.TE_MULTILINE)
         self._descriptionEntry.SetSizeHints(400, 150)
-        self.addEntry('Description:', self._descriptionEntry)
+        self.addEntry(_('Description'), self._descriptionEntry)
         
     def ok(self):
         self._effort.setStart(self._startEntry.GetValue())

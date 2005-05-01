@@ -1,5 +1,6 @@
 import task, date, base, effort
 import sets
+from i18n import _
 
 class SaveTaskStateMixin(base.SaveStateMixin):
     def getAncestors(self, tasks): 
@@ -10,7 +11,8 @@ class SaveTaskStateMixin(base.SaveStateMixin):
 
 
 class DeleteTaskCommand(base.BaseCommand, SaveTaskStateMixin):
-    name = 'Delete task'
+    def name(self):
+        return _('Delete task')
 
     def __init__(self, *args, **kwargs):
         super(DeleteTaskCommand, self).__init__(*args, **kwargs)
@@ -32,7 +34,8 @@ class DeleteTaskCommand(base.BaseCommand, SaveTaskStateMixin):
 
 
 class CutTaskCommand(DeleteTaskCommand):
-    name = 'Cut'
+    def name(self):
+        return _('Cut')
 
     def putTasksOnClipboard(self):
         cb = task.Clipboard()
@@ -57,7 +60,8 @@ class CutTaskCommand(DeleteTaskCommand):
 
 
 class CopyTaskCommand(base.BaseCommand):
-    name = 'Copy'
+    def name(self):
+        return _('Copy')
 
     def do_command(self):
         self.copies = [origTask.copy() for origTask in self.items]
@@ -71,7 +75,8 @@ class CopyTaskCommand(base.BaseCommand):
         
 
 class PasteTaskCommand(base.BaseCommand, SaveTaskStateMixin):
-    name = 'Paste'
+    def name(self):
+        return _('Paste')
 
     def __init__(self, *args, **kwargs):
         super(PasteTaskCommand, self).__init__(*args, **kwargs)
@@ -101,7 +106,8 @@ class PasteTaskCommand(base.BaseCommand, SaveTaskStateMixin):
 
 
 class PasteTaskAsSubtaskCommand(PasteTaskCommand):
-    name = 'Paste as subtask'
+    def name(self):
+        return _('Paste as subtask')
 
     def __init__(self, *args, **kwargs):
         super(PasteTaskAsSubtaskCommand, self).__init__(*args, **kwargs)
@@ -121,11 +127,12 @@ class PasteTaskAsSubtaskCommand(PasteTaskCommand):
 
 
 class NewTaskCommand(base.BaseCommand):
-    name = 'New task'
+    def name(self):
+        return _('New task')
 
     def __init__(self, *args, **kwargs):
         super(NewTaskCommand, self).__init__(*args, **kwargs)
-        self.items = [task.Task(subject='New task')]
+        self.items = [task.Task(subject=_('New task'))]
         
     def do_command(self):
         self.list.extend(self.items)
@@ -138,7 +145,8 @@ class NewTaskCommand(base.BaseCommand):
 
 
 class NewSubTaskCommand(base.BaseCommand, SaveTaskStateMixin):
-    name = 'New subtask'
+    def name(self):
+        return _('New subtask')
 
     def __init__(self, *args, **kwargs):
         super(NewSubTaskCommand, self).__init__(*args, **kwargs)
@@ -162,7 +170,8 @@ class NewSubTaskCommand(base.BaseCommand, SaveTaskStateMixin):
 
 
 class EditTaskCommand(base.BaseCommand, SaveTaskStateMixin):
-    name = 'Edit task'
+    def name(self):
+        return _('Edit task')
 
     def __init__(self, *args, **kwargs):
         super(EditTaskCommand, self).__init__(*args, **kwargs)
@@ -208,7 +217,8 @@ class EffortCommand(base.BaseCommand):
 
 
 class MarkCompletedCommand(EditTaskCommand, EffortCommand):
-    name = 'Mark completed'
+    def name(self):
+        return _('Mark completed')
 
     def do_command(self):
         super(MarkCompletedCommand, self).do_command()
@@ -223,7 +233,8 @@ class MarkCompletedCommand(EditTaskCommand, EffortCommand):
 
 
 class StartEffortCommand(EffortCommand):
-    name = 'Start tracking'
+    def name(self):
+        return _('Start tracking')
 
     def __init__(self, *args, **kwargs):
         super(StartEffortCommand, self).__init__(*args, **kwargs)
@@ -252,7 +263,8 @@ class StartEffortCommand(EffortCommand):
     
         
 class StopEffortCommand(EffortCommand):
-    name = 'Stop tracking'
+    def name(self):
+        return _('Stop tracking')
                   
     def canDo(self):
         return True    

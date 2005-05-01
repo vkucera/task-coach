@@ -1,5 +1,6 @@
 ''' render.py - functions to render various objects, like dates, task
 subjects, etc. '''
+from i18n import _
 
 taskSeparator = ' -> '
 
@@ -18,7 +19,7 @@ def daysLeft(timeLeft):
     ''' render time left (of type date.TimeDelta) in days '''
     import date
     if timeLeft == date.TimeDelta.max:
-        return 'Infinite'
+        return _('Infinite')
     else:
         return str(timeLeft.days)
 
@@ -32,7 +33,7 @@ def budget(aBudget):
     "<hours>:<minutes>:<seconds>" or "None" if budget is infinite. '''
     import date
     if aBudget == date.TimeDelta.max:
-        return 'None'
+        return _('None')
     else:
         return timeSpent(aBudget)
         
@@ -41,7 +42,7 @@ def dateTime(dateTime):
     
 def dateTimePeriod(start, stop):
     if stop is None:
-        return '%s - now'%dateTime(start)
+        return '%s - %s'%(dateTime(start), _('now'))
     elif start.date() == stop.date():
         return '%s %s - %s'%(date(start.date()), time(start), time(stop))
     else:

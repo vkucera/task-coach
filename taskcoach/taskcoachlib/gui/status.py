@@ -1,4 +1,5 @@
 import wx
+from i18n import _
 
 class StatusBar(wx.StatusBar):
     def __init__(self, parent, taskList, filteredList, viewer):
@@ -30,10 +31,10 @@ class StatusBar(wx.StatusBar):
         wx.CallAfter(self._displayStatus)
 
     def _displayStatus(self):
-        status1 = 'Tasks: %d selected, %d visible, %d total'%\
+        status1 = _('Tasks: %d selected, %d visible, %d total')%\
             (len(self.viewer.curselection()), len(self.filteredList), 
              len(self.taskList))
-        status2 = 'Status: %d over due, %d inactive, %d completed'% \
+        status2 = _('Status: %d over due, %d inactive, %d completed')% \
             (self.taskList.nrOverdue(), self.taskList.nrInactive(),
              self.taskList.nrCompleted())
         super(StatusBar, self).SetStatusText(status1, 0)

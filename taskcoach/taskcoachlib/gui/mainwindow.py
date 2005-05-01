@@ -1,5 +1,6 @@
 import meta, patterns, widgets, task, command, gui, effort
 import wx, viewer, viewercontainer, viewerfactory, help, find, toolbar, uicommand
+from i18n import _
 
 class WindowWithPersistentDimensions(wx.Frame):
     def __init__(self, settings, *args, **kwargs):
@@ -53,8 +54,8 @@ class MainWindow(WindowWithPersistentDimensions):
         self.SetTitle(patterns.observer.Notification(self, filename=self.taskFile.filename()))
         self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, 
             (16, 16)))
-        self.displayMessage('Welcome to %s version %s'%(meta.name, 
-            meta.version), pane=1)
+        self.displayMessage(_('Welcome to %(name)s version %(version)s')%{'name': meta.name, 
+            'version': meta.version}, pane=1)
                 
     def createWindowComponents(self):
         self.panel = wx.Panel(self, -1)

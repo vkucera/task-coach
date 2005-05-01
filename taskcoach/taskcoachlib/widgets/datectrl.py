@@ -15,7 +15,7 @@ class CalendarPopup(wx.Frame):
             self.onDateSelected)
         self.setupFocus()
         bestSize = self.calendar.GetBestSize()
-        panel.SetSize( (bestSize.width+border*2, bestSize.height+border*2) )
+        panel.SetSize((bestSize.width+border*2, bestSize.height+border*2))
         self.SetSize(panel.GetSize())
     
     def onDateSelected(self, event):

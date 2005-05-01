@@ -843,35 +843,35 @@ class UICommands(dict):
             menuText=_('&Start date'), helpText = _('Show/hide start date column'),
             setting='startdate')
         self['viewduedate'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText='&Due date', helpText='Show/hide due date column',
-            setting='duedate', column='Due date')
+            menuText=_('&Due date'), helpText=_('Show/hide due date column'),
+            setting='duedate', column=_('Due date'))
         self['viewdaysleft'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText='Days &left', helpText='Show/hide days left column',
-            setting='daysleft', column='Days left')
+            menuText=_('Days &left'), helpText=_('Show/hide days left column'),
+            setting='daysleft', column=_('Days left'))
         self['viewcompletiondate'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText='Co&mpletion date', helpText='Show/hide completion date column',
-            setting='completiondate', column='Completion date')
+            menuText=_('Co&mpletion date'), helpText=_('Show/hide completion date column'),
+            setting='completiondate', column=_('Completion date'))
         self['viewbudget'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText='&Budget', helpText='Show/hide budget column',
-            setting='budget', column='Budget')
+            menuText=_('&Budget'), helpText=_('Show/hide budget column'),
+            setting='budget', column=_('Budget'))
         self['viewtotalbudget'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText='Total budget',
-            helpText='Show/hide total budget column (total budget includes budget for subtasks)',
-            setting='totalbudget', column='Total budget')
+            menuText=_('Total budget'),
+            helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
+            setting='totalbudget', column=_('Total budget'))
         self['viewtimespent'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText='&Time spent', helpText='Show/hide time spent column',
-            setting='timespent', column='Time spent')
+            menuText=_('&Time spent'), helpText=_('Show/hide time spent column'),
+            setting='timespent', column=_('Time spent'))
         self['viewtotaltimespent'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText='T&otal time spent',
-            helpText='Show/hide total time spent column (total time includes time spent on subtasks)',
-            setting='totaltimespent', column='Total time spent')
+            menuText=_('T&otal time spent'),
+            helpText=_('Show/hide total time spent column (total time includes time spent on subtasks)'),
+            setting='totaltimespent', column=_('Total time spent'))
         self['viewbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText='Budget &left', helpText='Show/hide budget left',
-            setting='budgetleft', column='Budget left')
+            menuText=_('Budget &left'), helpText=_('Show/hide budget left column'),
+            setting='budgetleft', column=_('Budget left'))
         self['viewtotalbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText='Total budget left',
-            helpText='Show/hide total budget left (total budget left includes budget left for subtasks)',
-            setting='totalbudgetleft', column='Total budget left')
+            menuText=_('Total budget left'),
+            helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
+            setting='totalbudgetleft', column=_('Total budget left'))
     
         self['viewexpandall'] = ViewExpandAll(viewer=viewer)
         self['viewcollapseall'] = ViewCollapseAll(viewer=viewer)
@@ -886,16 +886,16 @@ class UICommands(dict):
             mainwindow=mainwindow, settings=settings)
         
         self['toolbarhide'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
-            value=None, menuText='&Hide', helpText='Hide the toolbar')
+            value=None, menuText=_('&Hide'), helpText=_('Hide the toolbar'))
         self['toolbarsmall'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
-            value=(16, 16), menuText='&Small images', 
-            helpText='Small images (16x16) on the toolbar')
+            value=(16, 16), menuText=_('&Small images'), 
+            helpText=_('Small images (16x16) on the toolbar'))
         self['toolbarmedium'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
-            value=(22, 22), menuText='&Medium-sized images',
-            helpText='Medium-sized images (22x22) on the toolbar')
+            value=(22, 22), menuText=_('&Medium-sized images'),
+            helpText=_('Medium-sized images (22x22) on the toolbar'))
         self['toolbarbig'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
-            value=(32, 32), menuText='&Large images',
-            helpText='Large images (32x32) on the toolbar')
+            value=(32, 32), menuText=_('&Large images'),
+            helpText=_('Large images (32x32) on the toolbar'))
 
         self['viewfinddialog'] = ViewFindDialog(mainwindow=mainwindow, settings=settings)
         self['viewstatusbar'] = ViewStatusBar(mainwindow=mainwindow, settings=settings)
