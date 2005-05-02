@@ -10,6 +10,9 @@ class Command(object):
     def redo(self):
         pass
 
+    def __str__(self):
+        return 'command'
+
 
 class CommandHistory:
     __metaclass__ = patterns.Singleton
@@ -46,7 +49,8 @@ class CommandHistory:
 
     def _extendLabel(self, label, commandList):
         if commandList:
-            label += ' %s'%commandList[-1]
+            commandName = ' %s'%commandList[-1]
+            label += commandName.lower()
         return label
 
     def undostr(self, label='Undo'):

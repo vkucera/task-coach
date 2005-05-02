@@ -1,4 +1,4 @@
-Release 0.35 - May 1, 2005
+Release 0.35 - May 2, 2005
 
 Bugs fixed:
 - Toolbar icons had a black background instead of a transparent

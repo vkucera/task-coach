@@ -116,7 +116,7 @@ class TaskEditBook(widgets.Listbook):
         self._subjectEntry = wx.TextCtrl(subjectPage, -1, self._task.subject())
         self._descriptionEntry = wx.TextCtrl(subjectPage, -1, 
             self._task.description(), style=wx.TE_MULTILINE)
-        self._descriptionEntry.SetSizeHints(500, 200)
+        self._descriptionEntry.SetSizeHints(500, 220)
         subjectPage.addEntry(_('Subject'), self._subjectEntry)
         subjectPage.addEntry(_('Description'), self._descriptionEntry, growable=True)
         self.AddPage(subjectPage, _('Description'), 'description')

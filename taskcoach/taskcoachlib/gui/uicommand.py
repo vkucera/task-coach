@@ -260,7 +260,7 @@ class FileQuit(MainWindowCommand):
 
 
 def getUndoMenuText():
-    return '&%s\tCtrl+Z'%patterns.CommandHistory().undostr() 
+    return '%s\tCtrl+Z'%patterns.CommandHistory().undostr(_('&Undo')) 
 
 class EditUndo(UICommand):
     def __init__(self, *args, **kwargs):
@@ -279,7 +279,7 @@ class EditUndo(UICommand):
 
 
 def getRedoMenuText():
-    return '&%s\tCtrl+Y'%patterns.CommandHistory().redostr() 
+    return '%s\tCtrl+Y'%patterns.CommandHistory().redostr(_('&Redo')) 
 
 class EditRedo(UICommand):
     def __init__(self, *args, **kwargs):
@@ -300,6 +300,7 @@ class EditRedo(UICommand):
 
 class EditCut(NeedsSelectedTasks, FilterCommand, ViewerCommand): # FIXME: only works for tasks atm
     def __init__(self, *args, **kwargs):
+        
         super(EditCut, self).__init__(menuText=_('Cu&t\tCtrl+X'), 
             helpText=_('Cut the selected task(s) to the clipboard'), bitmap='cut', 
             *args, **kwargs)
@@ -358,15 +359,6 @@ class SelectAll(NeedsItems, ViewerCommand):
         self.viewer.selectall()
 
 
-class SelectCompleted(NeedsTasks, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(SelectCompleted, self).__init__(menuText=_('&Completed tasks'), 
-            helpText=_('Select all completed tasks'), *args, **kwargs)
-
-    def doCommand(self, event):
-        self.viewer.select_completedTasks(), 
-
-
 class InvertSelection(NeedsItems, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(InvertSelection, self).__init__(menuText=_('&Invert selection\tCtrl+I'),
@@ -379,7 +371,7 @@ class InvertSelection(NeedsItems, ViewerCommand):
 
 class ClearSelection(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(ClearSelection, self).__init__(menuText=_('C&lear selection'), 
+        super(ClearSelection, self).__init__(menuText=_('&Clear selection'), 
             helpText=_('Unselect all items'), *args, **kwargs)
 
     def doCommand(self, event):
@@ -461,7 +453,7 @@ class ViewOverBudgetTasks(FilterCommand, UICheckCommand):
 
 class ViewCompositeTasks(ViewerCommand, FilterCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewCompositeTasks, self).__init__(menuText=_('Tasks with subtasks'), 
+        super(ViewCompositeTasks, self).__init__(menuText=_('Tasks &with subtasks'), 
             helpText=_('Show/hide tasks with subtasks'), setting='compositetasks', 
             *args, **kwargs)        
 
@@ -819,7 +811,6 @@ class UICommands(dict):
 
         # Selection commands
         self['selectall'] = SelectAll(viewer=viewer)
-        self['selectcompleted'] = SelectCompleted(viewer=viewer)
         self['invertselection'] = InvertSelection(viewer=viewer)
         self['clearselection'] = ClearSelection(viewer=viewer)
 
@@ -846,7 +837,7 @@ class UICommands(dict):
             menuText=_('&Due date'), helpText=_('Show/hide due date column'),
             setting='duedate', column=_('Due date'))
         self['viewdaysleft'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText=_('Days &left'), helpText=_('Show/hide days left column'),
+            menuText=_('D&ays left'), helpText=_('Show/hide days left column'),
             setting='daysleft', column=_('Days left'))
         self['viewcompletiondate'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('Co&mpletion date'), helpText=_('Show/hide completion date column'),
@@ -855,7 +846,7 @@ class UICommands(dict):
             menuText=_('&Budget'), helpText=_('Show/hide budget column'),
             setting='budget', column=_('Budget'))
         self['viewtotalbudget'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText=_('Total budget'),
+            menuText=_('Total b&udget'),
             helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
             setting='totalbudget', column=_('Total budget'))
         self['viewtimespent'] = ViewColumn(viewer=viewer, settings=settings,
@@ -869,7 +860,7 @@ class UICommands(dict):
             menuText=_('Budget &left'), helpText=_('Show/hide budget left column'),
             setting='budgetleft', column=_('Budget left'))
         self['viewtotalbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
-            menuText=_('Total budget left'),
+            menuText=_('Total budget l&eft'),
             helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
             setting='totalbudgetleft', column=_('Total budget left'))
     

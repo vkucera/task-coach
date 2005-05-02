@@ -123,9 +123,6 @@ class TreeViewer(Viewer):
         
 
 class TaskViewer(Viewer):
-    def select_completedTasks(self):
-        self.select([task for task in self.list if task.completed()])
-
     def isShowingTasks(self):
         return True
 
