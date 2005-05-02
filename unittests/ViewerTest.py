@@ -18,24 +18,6 @@ class ViewerTest(test.wxTestCase):
         self.assertEqual([self.task], self.viewer.curselection())
 
 
-class TaskViewerTest(test.wxTestCase):
-    def setUp(self):
-        self.task = task.Task()
-        self.taskList = task.TaskList([self.task])
-        self.viewer = dummy.TaskViewerWithDummyWidget(self.frame,
-            self.taskList, effort.EffortList(self.taskList), {})
-        
-    def testSelectCompleted_NoCompletedTasks(self):
-        self.viewer.select_completedTasks()
-        self.assertEqual([], self.viewer.curselection())
-
-    def testSelectCompleted_NoCompletedTasks(self):
-        completedTask = task.Task()
-        completedTask.setCompletionDate()
-        self.taskList.append(completedTask)
-        self.viewer.select_completedTasks()
-        self.assertEqual([completedTask], self.viewer.curselection())
-
 class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
         self.task = task.Task()

@@ -43,14 +43,15 @@ class EditMenu(Menu):
         super(EditMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['undo', 'redo', None, 'cut', 
             'copy', 'paste', 'pasteassubtask', None])
-        self.appendMenu(_('&Select'), SelectMenu(mainwindow, uiCommands))
+        # the spaces are to leave room for command names in the Undo and Redo menuitems:
+        self.appendMenu(_('&Select')+' '*50, SelectMenu(mainwindow, uiCommands))
         
 
 class SelectMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(SelectMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['selectall', 'selectcompleted', 
-            None, 'invertselection', 'clearselection'])
+        self.appendUICommands(uiCommands, ['selectall', 'invertselection', 
+            'clearselection'])
 
 
 class ViewMenu(Menu):

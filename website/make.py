@@ -46,7 +46,7 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
-        <H4>Release 0.35 - May 1, 2005</H4>
+        <H4>Release 0.35 - May 2, 2005</H4>
         Bugs fixed:
         <UL>
         <LI>Toolbar icons had a black background instead of a transparent
@@ -62,6 +62,11 @@ pages['changes'] = \
         <LI>Added 'expand selected task' and 'collapse selected task' menu
         items to the view menu and the task context menu
         (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1189978&group_id=130831&atid=719134">1189978</A>).
+        </UL>
+        Features removed:
+        <UL>
+        <LI>'Select' -> 'Completed tasks'. This can be done through the View
+        menu too.
         </UL>
         <H4>Release 0.34 - April 25, 2005</H4>
         Bugs fixed:

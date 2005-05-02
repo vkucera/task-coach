@@ -7,7 +7,7 @@ class Translator:
         if language == 'nl':
             from nl import nl
             self.__language = nl
-            #wx.Locale(wx.LANGUAGE_DUTCH) dutch calendarctrl not working properly
+            #Translator.__locale = wx.Locale(wx.LANGUAGE_DUTCH) # dutch calendarctrl not working properly
         
     def translate(self, string):
         try:
