@@ -56,12 +56,13 @@ pages['changes'] = \
         (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1190967&group_id=130831&atid=719134">1190967</A>).
         </UL>
         Features added:
+        <UL>
         <LI>Internationalization support. Task Coach is available with
         Dutch and English user interface
-        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1164461&group_id=130831&atid=719134">1164461</A>).
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1164461&group_id=130831&atid=719137">1164461</A>).
         <LI>Added 'expand selected task' and 'collapse selected task' menu
         items to the view menu and the task context menu
-        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1189978&group_id=130831&atid=719134">1189978</A>).
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1189978&group_id=130831&atid=719137">1189978</A>).
         </UL>
         Features removed:
         <UL>
