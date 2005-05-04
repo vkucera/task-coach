@@ -1,3 +1,10 @@
+Release 0.36 - ?
+
+Features added:
+- French version added, thanks to Jerome Lahuert.
+
+
+
 Release 0.35 - May 2, 2005
 
 Bugs fixed:

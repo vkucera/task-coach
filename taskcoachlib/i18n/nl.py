@@ -1,7 +1,8 @@
 # -*- coding: iso-8859-1 -*-
 import meta
 
-nl = {\
+encoding = 'iso-8859-1'
+dict = {\
 '&About %s'%meta.name:      '&Over %s'%meta.name,
 '&Active':                  '&Actief',
 'Add a effort period to the selected task(s)': 'Voeg een tijdsbesteding toe aan de geselecteerde taak',
@@ -73,6 +74,7 @@ nl = {\
 '&Find dialog':             '&Zoekbalk',
 'For this task':            'Voor deze taak',
 'For this task including all subtasks': 'Voor deze taak inclusief alle subtaken',
+'&French':                  '&Frans',
 '&Help':                    '&Help',
 'Help: About %s'%meta.name: 'Help: Over %s'%meta.name,
 'Help about the possible colors of tasks': 'Informatie over de mogelijke kleuren van taken',
@@ -158,6 +160,7 @@ nl = {\
 'Show all tasks (reset all filters)': 'Toon alle taken (zet alle filters uit)',
 'Show Dutch user interface after restart': 'Toon nederlandstalige gebruikersinterface na herstart',
 'Show English user interface after restart': 'Toon engelstalige gebruikersinterface na herstart',
+'Show French user interface after restart': 'Toon franstalige gebruikersinterface na herstart',
 'Show/hide active tasks (tasks with a start date in the past and a due date in the future)': 'Toon/verberg actieve taken (taken met een startdatum in het verleden en een einddatum in de toekomst)',
 'Show/hide budget column':  'Toon/verberg budget kolom',
 'Show/hide budget left column': 'Toon/verberg budget over kolom',
