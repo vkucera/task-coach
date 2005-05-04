@@ -46,6 +46,11 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.36 - May 4, 2005</H4>
+        Features added:
+        <UL>
+        <LI>French user interface added, thanks to Jerome Laheurte.
+        </UL>
         <H4>Release 0.35 - May 2, 2005</H4>
         Bugs fixed:
         <UL>
