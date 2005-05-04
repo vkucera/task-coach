@@ -875,7 +875,10 @@ class UICommands(dict):
         self['viewlanguagedutch'] = ViewLanguage(value='nl', menuText=_('&Dutch'), 
             helpText=_('Show Dutch user interface after restart'), 
             mainwindow=mainwindow, settings=settings)
-        
+        self['viewlanguagefrench'] = ViewLanguage(value='fr', menuText=_('&French'),
+            helpText=_('Show French user interface after restart'),
+            mainwindow=mainwindow, settings=settings)
+
         self['toolbarhide'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
             value=None, menuText=_('&Hide'), helpText=_('Hide the toolbar'))
         self['toolbarsmall'] = ViewToolBar(mainwindow=mainwindow, settings=settings,

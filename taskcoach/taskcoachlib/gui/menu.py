@@ -103,7 +103,8 @@ class ViewTaskTreeMenu(Menu):
 class LanguageMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(LanguageMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewlanguageenglish', 'viewlanguagedutch'])
+        self.appendUICommands(uiCommands, ['viewlanguageenglish', 
+            'viewlanguagedutch', 'viewlanguagefrench'])
                 
     
 class ToolBarMenu(Menu):
