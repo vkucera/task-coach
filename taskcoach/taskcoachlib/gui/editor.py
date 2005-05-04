@@ -91,7 +91,7 @@ class Page(wx.Panel):
             self._sizer.Add(wx.StaticText(self, -1, label), self._position.next(),
                 flag=wx.ALL|wx.ALIGN_RIGHT, border=self._borderWidth)
         for control in controls:
-            if type(control) == type(''):
+            if type(control) in [type(''), type(u'')]:
                 control = wx.StaticText(self, -1, control)
             colspan = max(self._columns - len(controls), 1)
             self._sizer.Add(control, self._position.next(colspan), span=(1, colspan),
@@ -238,7 +238,7 @@ class EditorWithCommand(widgets.TabbedDialog):
     def __init__(self, parent, command, uiCommands, *args, **kwargs):
         self._uiCommands = uiCommands
         self._command = command
-        super(EditorWithCommand, self).__init__(parent, str(command), *args, **kwargs)
+        super(EditorWithCommand, self).__init__(parent, command.name(), *args, **kwargs)
 
     def ok(self, *args, **kwargs):
         super(EditorWithCommand, self).ok(*args, **kwargs)
