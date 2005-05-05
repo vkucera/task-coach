@@ -3,6 +3,7 @@ import os, writer, reader, tasklist, patterns, codecs
 class TaskFile(tasklist.TaskList):
     def __init__(self, filename='', *args, **kwargs):
         self.__needSave = False
+        self.__lastFilename = ''
         super(TaskFile, self).__init__(*args, **kwargs)
         self.setFilename(filename)
         
@@ -10,12 +11,17 @@ class TaskFile(tasklist.TaskList):
         return self.filename()
 
     def setFilename(self, filename):
+        if filename != '':
+            self.__lastFilename = filename
         self.__filename = filename
         notification = patterns.observer.Notification(self, filename=filename)
         super(TaskFile, self).notifyObservers(notification)
 
     def filename(self):
         return self.__filename
+        
+    def lastFilename(self):
+        return self.__lastFilename
         
     def notifyObservers(self, notification):
         self.__needSave = True

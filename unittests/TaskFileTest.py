@@ -9,13 +9,16 @@ class TaskFileTestCase(test.TestCase):
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2)))
         self.filename = 'test.tsk'
+        self.filename2 = 'test.tsk'
         
     def tearDown(self):
-        self.remove(self.filename)
+        self.remove(self.filename, self.filename2)
 
-    def remove(self, filename):
-        if os.path.isfile(filename):
-            os.remove(filename)
+    def remove(self, *filenames):
+        for filename in filenames:
+            if os.path.isfile(filename):
+                os.remove(filename)
+
 
 class TaskFileTest(TaskFileTestCase):
     def testFileNameAfterCreate(self):
@@ -81,7 +84,24 @@ class TaskFileTest(TaskFileTestCase):
         self.task.addEffort(effort.Effort(self.task, None, None))
         self.failUnless(self.taskFile.needSave())
         
+    def testLastFilename_Initially(self):
+        self.assertEqual('', self.taskFile.lastFilename())
         
+    def testLastFilename_AfterSetFilename(self):
+        self.taskFile.setFilename(self.filename)
+        self.assertEqual(self.filename, self.taskFile.lastFilename())
+        
+    def testLastFilename_AfterClose(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.close()
+        self.assertEqual(self.filename, self.taskFile.lastFilename())
+        
+    def testLastFilename_AfterSaveAs(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.saveas(self.filename2)
+        self.assertEqual(self.filename2, self.taskFile.lastFilename())
+
+
 class TaskFileSaveAndLoadTest(TaskFileTestCase):
     def setUp(self):
         super(TaskFileSaveAndLoadTest, self).setUp()
