@@ -1,4 +1,4 @@
-import date, task, datetime, time, effort, xml.dom.minidom
+import date, task, datetime, time, effort, xml.dom.minidom, re
 
 class TaskFactory:
     def __init__(self, versionnr):
@@ -103,15 +103,21 @@ class XMLReader:
         self.__fd = fd
 
     def read(self):
-        domDocument = xml.dom.minidom.parse(self.__fd).documentElement
-        return self.__parseTaskNodes(domDocument.childNodes)
+        domDocument = xml.dom.minidom.parse(self.__fd)
+        self.__tskversion = self.__parseTskVersionNumber(domDocument)
+        return self.__parseTaskNodes(domDocument.documentElement.childNodes)
 
+    def __parseTskVersionNumber(self, domDocument):
+        processingInstruction = domDocument.firstChild.data
+        matchObject = re.search('tskversion="(\d+)"', processingInstruction)
+        return int(matchObject.group(1))
+        
     def __parseTaskNodes(self, nodes):
         return [self.__parseTaskNode(node) for node in nodes if node.nodeName == 'task']
 
     def __parseTaskNode(self, taskNode):
         subject = taskNode.getAttribute('subject')
-        description = taskNode.getAttribute('description')
+        description = self.__parseDescription(taskNode)
         startDate = date.parseDate(taskNode.getAttribute('startdate'))
         dueDate = date.parseDate(taskNode.getAttribute('duedate'))
         completionDate = date.parseDate(taskNode.getAttribute('completiondate'))
@@ -130,9 +136,25 @@ class XMLReader:
     def __parseEffortNode(self, task, effortNode):
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')
-        description = effortNode.getAttribute('description')
+        description = self.__parseDescription(effortNode)
+        #description = effortNode.getAttribute('description')
         return effort.Effort(task, date.parseDateTime(start), 
             date.parseDateTime(stop), description)
         
-                
+    def __getNode(self, parent, tagName):
+        for child in parent.childNodes:
+            if child.nodeName == tagName:
+                return child
+        return None        
+        
+    def __parseDescription(self, node):
+        if self.__tskversion <= 6:
+            description = node.getAttribute('description')
+        else:
+            descriptionNode = self.__getNode(node, 'description')
+            if descriptionNode and descriptionNode.firstChild:
+                description = descriptionNode.firstChild.data
+            else:
+                description = ''
+        return description
         

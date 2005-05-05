@@ -27,13 +27,16 @@ class IntegrationTest_EmptyList(IntegrationTestCase):
         
 class IntegrationTest(IntegrationTestCase):
     def fillTaskList(self):
-        self.task = task.Task('Subject', 'Description', startdate=date.Yesterday(), 
-            duedate=date.Tomorrow(), completiondate=date.Yesterday(), budget=date.TimeDelta(hours=1))
+        self.description = 'Description\nLine 2'
+        self.task = task.Task('Subject', self.description, startdate=date.Yesterday(), 
+            duedate=date.Tomorrow(), completiondate=date.Yesterday(), 
+            budget=date.TimeDelta(hours=1))
         self.child = task.Task()
         self.task.addChild(self.child)
         self.grandChild = task.Task()
         self.child.addChild(self.grandChild)
-        self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), stop=date.DateTime(2004,1,2), description='Yo'))
+        self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
+            stop=date.DateTime(2004,1,2), description=self.description))
         self.taskList.append(self.task)
                  
     def testSubject(self):
@@ -70,5 +73,4 @@ class IntegrationTest(IntegrationTestCase):
         
     def testGrandChildren(self):
         self.assertEqual(len(self.task.allChildren()), len(self.tasksWrittenAndRead[0].allChildren()))
-        
-        
+       
