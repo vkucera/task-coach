@@ -19,8 +19,18 @@ class XMLWriterTest(test.TestCase):
         effortNode = xmlDocument.documentElement.getElementsByTagName('effort')[0]
         self.assertEqual(str(effort.getStart()), effortNode.getAttribute('start'))
         self.assertEqual(str(effort.getStop()), effortNode.getAttribute('stop'))
-        self.assertEqual(effort.getDescription(), effortNode.getAttribute('description'))
+        textNode = effortNode.getElementsByTagName('description')[0].firstChild
+        if textNode:
+            text = textNode.data
+        else:
+            text = ''
+        self.assertEqual(effort.getDescription(), text)
 
+    def assertDescription(self, task, description):
+        documentElement = self.writeAndParse().documentElement
+        descriptionTextNode = documentElement.getElementsByTagName('description')[0].firstChild
+        self.assertEqual(description, descriptionTextNode.data)
+        
     def writeAndParse(self):
         self.writer.write(self.taskList)
         self.fd.reset()
@@ -38,7 +48,7 @@ class XMLWriterTest(test.TestCase):
             
     def testTaskDescription(self):
         self.task.setDescription('Description')
-        self.assertTaskAttribute(self.task.description(), 'description')
+        self.assertDescription(self.task, 'Description')
         
     def testTaskStartDate(self):
         self.task.setStartDate(date.Date(2004,1,1))
@@ -64,7 +74,7 @@ class XMLWriterTest(test.TestCase):
 
     def testEffort(self):
         self.assertEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
-            date.DateTime(2004,1,2), 'description'))
+            date.DateTime(2004,1,2), 'description\nline 2'))
         
     def testActiveEffort(self): 
         self.assertEffort(effort.Effort(self.task, date.DateTime(2004,1,1)))

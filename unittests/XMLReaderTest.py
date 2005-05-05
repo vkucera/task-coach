@@ -1,16 +1,33 @@
 import test, task, date, xml.parsers.expat
 import cStringIO as StringIO
 
-class XMLReaderTest(test.TestCase):
+class XMLReaderTestCase(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
         self.reader = task.reader.XMLReader(self.fd)
-    
+
     def writeAndRead(self, xml):
+        xml = '<?taskcoach release="whatever" tskversion="%d"?>\n'%self.tskversion + xml
         self.fd.write(xml)
         self.fd.reset()
         return self.reader.read()
-            
+
+    
+class XMLReaderVersion6Test(XMLReaderTestCase):
+    tskversion = 6
+
+    def testDescription(self):
+        tasks = self.writeAndRead('<tasks><task description="%s"/></tasks>\n'%u'Description')
+        self.assertEqual(u'Description', tasks[0].description())
+
+    def testEffortDescription(self):
+        tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000" stop="2004-01-01 10:30:00.123000" description="Yo"/></task></tasks>')
+        self.assertEqual('Yo', tasks[0].efforts()[0].getDescription())
+
+        
+class XMLReaderTest(XMLReaderTestCase):   
+    tskversion = 7
+           
     def testReadEmptyStream(self):
         try:
             self.reader.read()
@@ -56,8 +73,9 @@ class XMLReaderTest(test.TestCase):
         self.assertEqual(date.TimeDelta(), tasks[0].budget())
         
     def testDescription(self):
-        tasks = self.writeAndRead('<tasks><task description="%s"/></tasks>\n'%u'Description')
-        self.assertEqual(u'Description', tasks[0].description())
+        description = u'Description\nline 2'
+        tasks = self.writeAndRead('<tasks><task><description>%s</description></task></tasks>\n'%description)
+        self.assertEqual(description, tasks[0].description())
         
     def testChild(self):
         tasks = self.writeAndRead('<tasks><task><task/></task></tasks>\n')
@@ -78,8 +96,9 @@ class XMLReaderTest(test.TestCase):
         self.assertEqual(tasks[0], tasks[0].efforts()[0].task())
         
     def testEffortDescription(self):
-        tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000" stop="2004-01-01 10:30:00.123000" description="Yo"/></task></tasks>')
-        self.assertEqual('Yo', tasks[0].efforts()[0].getDescription())
+        description = u'Description\nLine 2'
+        tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000" stop="None"><description>%s</description></effort></task></tasks>'%description)
+        self.assertEqual(description, tasks[0].efforts()[0].getDescription())
         
     def testActiveEffort(self):
         tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000" stop="None"/></task></tasks>')
