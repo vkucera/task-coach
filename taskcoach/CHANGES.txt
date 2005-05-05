@@ -1,7 +1,10 @@
-Release 0.36 - May 4, 2005
+Release 0.36 - May 5, 2005
 
 Features added:
 - French user interface added, thanks to Jerome Laheurte.
+
+Bugs fixed:
+- Descriptions loose newlines after reload (1194259).
 
 
 

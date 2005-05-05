@@ -51,6 +51,11 @@ pages['changes'] = \
         <UL>
         <LI>French user interface added, thanks to Jerome Laheurte.
         </UL>
+        Bugs fixed:
+        <UL>
+        <LI>Descriptions loose newlines after reload
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1194259&group_id=130831&atid=719134">1194259</A>).
+        </UL>
         <H4>Release 0.35 - May 2, 2005</H4>
         Bugs fixed:
         <UL>
