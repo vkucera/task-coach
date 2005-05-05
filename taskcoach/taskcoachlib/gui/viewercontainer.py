@@ -5,13 +5,17 @@ class ViewerContainer(patterns.Observable):
         self.__settings = settings
         self.__setting = setting
         self.__currentPageNumber = 0
-        self.__desiredPageName = self.__settings.get('view', setting)
+        # Prepare for an exception, because this setting used to be a string
+        try:
+            self.__desiredPageNumber = int(self.__settings.get('view', setting))
+        except ValueError:
+            self.__desiredPageNumber = 0
         super(ViewerContainer, self).__init__(parent, *args, **kwargs)
 
     def addViewer(self, viewer, pageName, bitmap=None):
         self.AddPage(viewer, pageName, bitmap)
-        if pageName == self.__desiredPageName:
-            self.SetSelection(self.GetPageCount() - 1)
+        if self.GetPageCount() - 1 == self.__desiredPageNumber:
+            self.SetSelection(self.__desiredPageNumber)
         viewer.registerObserver(self.onNotify)
             
     def __getattr__(self, attr):
@@ -28,13 +32,10 @@ class ViewerContainer(patterns.Observable):
 
     def onPageChanged(self, event):
         self.__currentPageNumber = event.GetSelection()
-        self.__settings.set('view', self.__setting, self.currentPageName())
+        self.__settings.set('view', self.__setting, str(self.__currentPageNumber))
         self.notifyObservers(patterns.observer.Notification(self))
         event.Skip()
     
-    def currentPageName(self):
-        return self.GetPageText(self.__currentPageNumber)
-        
         
 class ViewerNotebook(ViewerContainer, widgets.Notebook):
     pass

@@ -469,7 +469,7 @@ class ViewColumn(ViewerCommand, UICheckCommand):
         
     def doCommand(self, event):
         super(ViewColumn, self).doCommand(event)
-        self.viewer.showColumn(self.column, event.IsChecked())
+        self.viewer.showColumn(_(self.column), event.IsChecked())
         
 
 class ViewExpandAll(ViewerCommand):
@@ -829,40 +829,40 @@ class UICommands(dict):
         self['viewcompositetasks'] = ViewCompositeTasks(viewer=viewer, filteredTaskList=filteredTaskList,
             settings=settings)
             
-        self['viewstartdate'] = ViewColumn(column=_('Start date'), viewer=viewer, 
+        self['viewstartdate'] = ViewColumn(column='Start date', viewer=viewer, 
             settings=settings, 
             menuText=_('&Start date'), helpText = _('Show/hide start date column'),
             setting='startdate')
         self['viewduedate'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('&Due date'), helpText=_('Show/hide due date column'),
-            setting='duedate', column=_('Due date'))
+            setting='duedate', column='Due date')
         self['viewdaysleft'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('D&ays left'), helpText=_('Show/hide days left column'),
-            setting='daysleft', column=_('Days left'))
+            setting='daysleft', column='Days left')
         self['viewcompletiondate'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('Co&mpletion date'), helpText=_('Show/hide completion date column'),
-            setting='completiondate', column=_('Completion date'))
+            setting='completiondate', column='Completion date')
         self['viewbudget'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('&Budget'), helpText=_('Show/hide budget column'),
-            setting='budget', column=_('Budget'))
+            setting='budget', column='Budget')
         self['viewtotalbudget'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('Total b&udget'),
             helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
-            setting='totalbudget', column=_('Total budget'))
+            setting='totalbudget', column='Total budget')
         self['viewtimespent'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('&Time spent'), helpText=_('Show/hide time spent column'),
-            setting='timespent', column=_('Time spent'))
+            setting='timespent', column='Time spent')
         self['viewtotaltimespent'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('T&otal time spent'),
             helpText=_('Show/hide total time spent column (total time includes time spent on subtasks)'),
-            setting='totaltimespent', column=_('Total time spent'))
+            setting='totaltimespent', column='Total time spent')
         self['viewbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('Budget &left'), helpText=_('Show/hide budget left column'),
-            setting='budgetleft', column=_('Budget left'))
+            setting='budgetleft', column='Budget left')
         self['viewtotalbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('Total budget l&eft'),
             helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
-            setting='totalbudgetleft', column=_('Total budget left'))
+            setting='totalbudgetleft', column='Total budget left')
     
         self['viewexpandall'] = ViewExpandAll(viewer=viewer)
         self['viewcollapseall'] = ViewCollapseAll(viewer=viewer)

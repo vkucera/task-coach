@@ -108,9 +108,9 @@ class MainWindow(WindowWithPersistentDimensions):
         self.GetStatusBar().SetStatusText(message, pane)
 
     def quit(self, event=None):
-        self.settings.set('file', 'lastfile', self.taskFile.filename())
         if not self.iocontroller.close():
             return
+        self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()
         self.savePosition()
