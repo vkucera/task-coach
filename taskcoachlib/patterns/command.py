@@ -49,7 +49,7 @@ class CommandHistory:
 
     def _extendLabel(self, label, commandList):
         if commandList:
-            commandName = ' %s'%commandList[-1]
+            commandName = u' %s'%commandList[-1]
             label += commandName.lower()
         return label
 
