@@ -243,6 +243,10 @@ class SubTaskTest(test.TestCase, asserts.TaskAsserts):
         self.assertEqual(self.task, child.parent())
         self.assertEqual(self.task.startDate(), child.startDate())
         self.failIf(child in self.task.children())
+        
+    def testNewSubTask_WithSubject(self):
+        child = self.task.newSubTask(subject='Test')
+        self.assertEqual('Test', child.subject())
 
     def testAllChildrenCompleted(self):
         self.failIf(self.task.allChildrenCompleted())
