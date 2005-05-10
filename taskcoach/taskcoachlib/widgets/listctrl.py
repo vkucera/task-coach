@@ -3,7 +3,8 @@ import wx, wx.lib.mixins.listctrl
 
 class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
-            selectCommand=None, editCommand=None, popupMenu=None, *args, **kwargs):
+            selectCommand=None, editCommand=None, popupMenu=None, 
+            columnPopupMenu=None, *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent, -1, 
             style=wx.LC_REPORT|wx.LC_VIRTUAL, *args, **kwargs)
         wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin.__init__(self)
@@ -19,6 +20,9 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         if popupMenu:
             self.popupMenu = popupMenu
             self.Bind(wx.EVT_LIST_ITEM_RIGHT_CLICK, self.onPopup)
+        if columnPopupMenu is not  None:
+            self.columnPopupMenu = columnPopupMenu
+            self.Bind(wx.EVT_LIST_COL_RIGHT_CLICK, self.onColumnPopup)
             
     def setColumns(self, columns):
         self.allColumnHeaders = columns
@@ -41,6 +45,9 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
     def onPopup(self, event):
         self.PopupMenu(self.popupMenu, event.GetPoint())    
 
+    def onColumnPopup(self, event):
+        self.PopupMenu(self.columnPopupMenu, event.GetPoint())
+        
     def onSelect(self, event):
         self.selectCommand()
         event.Skip()
@@ -83,9 +90,9 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         if columnHeader not in self.allColumnHeaders:
             return
         columnIndex = self.getColumnIndex(columnHeader)
-        if show:
+        if show and not self.isColumnVisible(columnHeader):
             self.InsertColumn(columnIndex, columnHeader)
-        else:
+        elif not show and self.isColumnVisible(columnHeader):
             self.DeleteColumn(columnIndex)
             self.resizeColumn(self.getResizableColumn())
 
@@ -93,12 +100,18 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         return self.GetColumn(columnIndex).GetText()
         
     def getColumnIndex(self, columnHeader):
-        for columnIndex in range(1, self.GetColumnCount()):
+        for columnIndex in range(self.GetColumnCount()):
             displayedHeader = self.getColumnHeader(columnIndex)
             if self.allColumnHeaders.index(displayedHeader) >= self.allColumnHeaders.index(columnHeader):
                 return columnIndex
-        return self.GetColumnCount()
+        return self.GetColumnCount() # Not found
 
+    def isColumnVisible(self, columnHeader):
+        for columnIndex in range(self.GetColumnCount()):
+            displayedHeader = self.getColumnHeader(columnIndex)
+            if displayedHeader == columnHeader:
+                return True
+        return False
                 
 class ListCtrl(VirtualListCtrl):
     pass

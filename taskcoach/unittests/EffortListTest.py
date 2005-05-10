@@ -54,8 +54,25 @@ class EffortListTest(test.TestCase):
         self.taskList.append(child)
         child.addEffort(effort.Effort(child))
         self.assertEqual(1, len(self.effortList))
-        
 
+    def testMaxDateTime(self):
+        self.assertEqual(None, self.effortList.maxDateTime())
+        
+    def testMaxDateTime_OneEffort(self):
+        self.task.addEffort(self.effort)
+        self.assertEqual(self.effort.getStop(), self.effortList.maxDateTime())
+
+    def testMaxDateTime_OneTrackingEffort(self):
+        self.task.addEffort(effort.Effort(self.task))
+        self.assertEqual(None, self.effortList.maxDateTime())
+        
+    def testMaxDateTime_TwoEfforts(self):
+        self.task.addEffort(self.effort)
+        now = date.DateTime.now()
+        self.task.addEffort(effort.Effort(self.task, None, now))
+        self.assertEqual(now, self.effortList.maxDateTime())
+        
+        
 class SingleTaskEffortListTest(test.TestCase):
     def setUp(self):
         self.notifications = 0
@@ -79,6 +96,9 @@ class SingleTaskEffortListTest(test.TestCase):
         
     def testCreate(self):
         self.assertResult(0, 0)
+
+    def testMaxDateTime(self):
+        self.assertEqual(None, self.singleTaskEffortList.maxDateTime())
         
     def testAddEffort(self):
         self.task.addEffort(self.effort)

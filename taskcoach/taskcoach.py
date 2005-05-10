@@ -41,8 +41,9 @@ class App(object):
         self.io = gui.IOController(self.taskFile, self.displayMessage)
         viewFilteredTaskList = task.filter.ViewFilter(self.taskFile)
         searchFilteredTaskList = task.filter.SearchFilter(viewFilteredTaskList)
+        sortedTaskList = task.sorter.Sorter(searchFilteredTaskList)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
-            searchFilteredTaskList, effortList, settings)
+            sortedTaskList, effortList, settings)
         self.processCommandLineArguments(settings, load)
         
     def processCommandLineArguments(self, settings, load=True):

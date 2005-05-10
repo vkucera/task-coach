@@ -1,7 +1,15 @@
 import patterns                    
 
+class MaxDateTimeMixin:
+    def maxDateTime(self):
+        stopTimes = [effort.getStop() for effort in self if effort.getStop() is not None]
+        if stopTimes:
+            return max(stopTimes)
+        else:
+            return None
+    
                         
-class EffortList(patterns.ObservableListObserver):
+class EffortList(patterns.ObservableListObserver, MaxDateTimeMixin):
     def onNotify(self, notification, *args, **kwargs):
         effortsToAdd, effortsToRemove = [], []
         for task in notification.itemsAdded:
@@ -20,9 +28,10 @@ class EffortList(patterns.ObservableListObserver):
             itemsRemoved=notification.effortsRemoved,
             itemsChanged=notification.effortsChanged)
         super(EffortList, self).onNotify(effortNotification, *args, **kwargs)
+
         
 
-class SingleTaskEffortList(patterns.ObservableListObserver):
+class SingleTaskEffortList(patterns.ObservableListObserver, MaxDateTimeMixin):
     ''' SingleTaskEffortList filters an EffortList so it contains the efforts for 
         one task (including its children). '''
     
@@ -43,4 +52,4 @@ class SingleTaskEffortList(patterns.ObservableListObserver):
             child.registerObserver(self.onNotify)
         for child in notification.childrenRemoved:
             child.removeObserver(self.onNotify)    
-            
+

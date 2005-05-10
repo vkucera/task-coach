@@ -23,7 +23,8 @@ defaults = { \
     'mainviewer' : 'Task list',
     'effortviewer' : 'Effort list',
     'effortviewerineditor' : 'Effort list',
-    'language' : 'en' },
+    'language' : 'en_US',
+    'sort': 'False' },
 'window' : { \
     'size' : '(600, 500)',
     'position' : '(0, 0)',

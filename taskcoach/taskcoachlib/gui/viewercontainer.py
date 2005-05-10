@@ -25,7 +25,6 @@ class ViewerContainer(patterns.Observable):
                 return getattr(viewer, attr)
         else:
             raise AttributeError
-        #return getattr(self[self.__currentPageNumber], attr)
 
     def onNotify(self, notification, *args, **kwargs):
         self.notifyObservers(notification)

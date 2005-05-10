@@ -4,6 +4,7 @@ from gui import editor
 class DateEntryTest(test.wxTestCase):
     def setUp(self):
         self.dateEntry = editor.DateEntry(self.frame)
+        self.date = date.Date(2004, 1, 1)
 
     def testCreate(self):
         self.assertEqual(date.Date(), self.dateEntry.get())
@@ -17,13 +18,12 @@ class DateEntryTest(test.wxTestCase):
         self.assertEqual(date.Date(), self.dateEntry.get())
 
     def testValidDate(self):
-        self.dateEntry.set('2004-1-1')
-        self.assertEqual(date.Date(2004, 1, 1), self.dateEntry.get())
+        self.dateEntry.set(self.date)
+        self.assertEqual(self.date, self.dateEntry.get())
 
     def testValidDateWithDefaultDate(self):
-        self.dateEntry.set('2004-1-1')
-        self.assertEqual(date.Date(2004, 1, 1), 
-            self.dateEntry.get(date.Today()))
+        self.dateEntry.set(self.date)
+        self.assertEqual(self.date, self.dateEntry.get(date.Today()))
 
     def testInvalidDate(self):
         self.dateEntry.set('bla')

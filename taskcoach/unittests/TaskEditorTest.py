@@ -78,13 +78,13 @@ class NewTaskTest(TaskEditorTestCase):
         self.assertEqual(date.Today(), self.task.dueDate())
 
     def testSetCompleted(self):
-        self.editor[0].completed(DummyEvent(True))
+        self.editor[0]._completionDateEntry.set(date.Today())
         self.editor.ok()
         self.assertEqual(date.Today(), self.task.completionDate())
 
     def testSetUncompleted(self):
-        self.editor[0].completed(DummyEvent(True))
-        self.editor[0].completed(DummyEvent(False))
+        self.editor[0]._completionDateEntry.set(date.Today())
+        self.editor[0]._completionDateEntry.set(date.Date())
         self.editor.ok()
         self.assertEqual(date.Date(), self.task.completionDate())
 
@@ -224,7 +224,7 @@ class EffortEditorTest(TaskEditorTestCase):
         return [theTask]
     
     def createEditor(self):
-        return gui.editor.EffortEditor(wx.Frame(None), self.createCommand(), {})
+        return gui.editor.EffortEditor(wx.Frame(None), self.createCommand(), {}, self.effortList)
     
     def testCreate(self):
         self.assertEqual(self.effortList[0].getStart().date(), 

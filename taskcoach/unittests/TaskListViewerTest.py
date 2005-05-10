@@ -37,4 +37,4 @@ class TaskListViewerTest(test.wxTestCase):
         parent.addChild(child)
         self.taskList.append(parent)
         self.assertEqual('Parent%sChild'%render.taskSeparator, 
-            self.listViewer.widget.GetItem(0, 0).GetText())
+            self.listViewer.widget.GetItem(1, 0).GetText())

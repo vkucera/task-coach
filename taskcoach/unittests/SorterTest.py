@@ -95,18 +95,15 @@ class DepthFirstSorterTest(test.TestCase):
     def testLength(self):
         self.assertEqual(len(self.list), len(self.sorter))
 
-    def testGetItem(self):
-        self.assertEqual(self.parent1, self.sorter[0])
-        self.assertEqual(self.child1, self.sorter[1])
-        self.assertEqual(self.grandchild, self.sorter[2])
-        self.assertEqual(self.child2, self.sorter[3])
-        self.assertEqual(self.parent2, self.sorter[4])
+    def testOrder(self):
+        self.assertEqual([self.parent2, self.parent1, self.child2, self.child1, 
+            self.grandchild], list(self.sorter))
 
     def testRemoveItem(self):
         self.grandchild.delete()
         self.sorter.remove(self.grandchild)
         self.assertEqual(4, len(self.sorter))
-        self.assertEqual(self.parent2, self.sorter[-1])
+        self.assertEqual(self.parent2, self.sorter[0])
         self.assertEqual([self.parent2, self.child2, self.parent1,  
             self.child1], self.list)
 
@@ -114,16 +111,11 @@ class DepthFirstSorterTest(test.TestCase):
         node = NodeWithChildren('1.1.1.1', self.grandchild)
         self.list.append(node)
         self.assertEqual(6, len(self.sorter))
-        self.assertEqual(node, self.sorter[3])
-
-    def testMarkCompleted(self):
-        self.child2.setName('1.0')
-        self.assertEqual([self.parent1, self.child2, self.child1,
-            self.grandchild, self.parent2], list(self.sorter))
+        self.assertEqual(node, self.sorter[5])
 
     def testChildNotInList(self):
         self.list.remove(self.child2)
-        self.assertEqual([self.parent1, self.child1, self.grandchild, self.parent2],
+        self.assertEqual([self.parent2, self.parent1, self.child1, self.grandchild],
             list(self.sorter))
 
 class EffortSorterTest(test.TestCase):
@@ -151,3 +143,32 @@ class EffortSorterTest(test.TestCase):
     def testCreateWhenEffortListIsFilled(self):
         sorter = effort.EffortSorter(self.effortList)
         self.assertEqual(2, len(sorter))
+
+        
+class TaskSorterTest(test.TestCase):
+    def setUp(self):
+        self.taskList = task.TaskList()
+        self.sorter = task.sorter.Sorter(self.taskList)
+    
+    def addTwoTasks(self):
+        self.task1 = task.Task(subject='A', duedate=date.Tomorrow())
+        self.task2 = task.Task(subject='B', duedate=date.Today())
+        self.taskList.extend([self.task1, self.task2])
+        
+    def testInitiallyEmpty(self):
+        self.assertEqual(0, len(self.sorter))
+        
+    def testAddTasks(self):
+        self.addTwoTasks()
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testSortOnSubject(self):
+        self.addTwoTasks()
+        self.sorter.setSortOnSubject()
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
+    def testSortOnSubject_TurnOff(self):
+        self.addTwoTasks()
+        self.sorter.setSortOnSubject()
+        self.sorter.setSortOnSubject(False)
+        self.assertEqual([self.task2, self.task1], list(self.sorter))

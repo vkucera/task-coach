@@ -12,7 +12,7 @@ class TreeViewerTest(test.wxTestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.task = task.Task()
-        self.viewer = TaskTreeViewer(self.frame, self.taskList,
+        self.viewer = TaskTreeViewer(self.frame, task.sorter.Sorter(self.taskList),
             effort.EffortList(self.taskList), {})
 
     def testCreate(self):
@@ -33,8 +33,7 @@ class TreeViewerTest(test.wxTestCase):
         child2 = task.Task(subject='2')
         self.task.addChild(child2)
         self.taskList.extend([self.task, child1, child2])
-        child1.setSubject('3')
-        self.assertEqual(str(child1), 
+        self.assertEqual(str(child2), 
             self.viewer.widget.GetItemText(self.viewer.widget[2]))
 
     def testDelete(self):

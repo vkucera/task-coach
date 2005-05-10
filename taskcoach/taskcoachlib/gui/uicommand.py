@@ -29,17 +29,19 @@ class UICommand(object):
         self.bitmap = bitmap
         self.kind = kind
         self._id = wx.NewId()
+        self.menuItems = [] # uiCommands can be used in multiple menu's
 
     def id(self):
         return self._id
 
     def appendToMenu(self, menu, window):
-        self.menuItem = wx.MenuItem(menu, self._id, self.menuText, self.helpText, 
+        menuItem = wx.MenuItem(menu, self._id, self.menuText, self.helpText, 
             self.kind)
+        self.menuItems.append(menuItem)
         if self.bitmap:
-            self.menuItem.SetBitmap(wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
+            menuItem.SetBitmap(wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
                 (16, 16)))
-        menu.AppendItem(self.menuItem)
+        menu.AppendItem(menuItem)
         self.bind(window)
 
     def appendToToolBar(self, toolbar, window):
@@ -98,12 +100,16 @@ class BooleanSettingsCommand(SettingsCommand):
         
     def check(self):
         checked = self.checked()
-        self.menuItem.Check(checked)
+        self.checkMenuItems(checked)
         if self.commandNeedsToBeActivated(checked):
             self.sendCommandActivateEvent()
 
     def sendCommandActivateEvent(self):
         self.onCommandActivate(wx.CommandEvent(0, self._id))
+
+    def checkMenuItems(self, checked):
+        for menuItem in self.menuItems:
+            menuItem.Check(checked)
         
 
 class UICheckCommand(BooleanSettingsCommand):
@@ -118,7 +124,10 @@ class UICheckCommand(BooleanSettingsCommand):
         return self.settings.getboolean(self.section, self.setting)
 
     def doCommand(self, event):
-        self.settings.set(self.section, self.setting, str(event.IsChecked()))
+        checked = event.IsChecked()
+        self.settings.set(self.section, self.setting, str(checked))
+        self.checkMenuItems(checked)
+        
 
 
 class UIRadioCommand(BooleanSettingsCommand):
@@ -470,7 +479,7 @@ class ViewColumn(ViewerCommand, UICheckCommand):
     def doCommand(self, event):
         super(ViewColumn, self).doCommand(event)
         self.viewer.showColumn(_(self.column), event.IsChecked())
-        
+
 
 class ViewExpandAll(ViewerCommand):
     def __init__(self, *args, **kwargs):
@@ -571,7 +580,17 @@ class ViewLanguage(MainWindowCommand, UIRadioCommand):
         dialog.ShowModal()
         dialog.Destroy()    
     
-    
+
+class ViewSort(FilterCommand, UICheckCommand):
+    def __init__(self, *args, **kwargs):
+        super(ViewSort, self).__init__(menuText=_('On subject'),
+            helpText=_('Sort tasks on subject'), 
+            setting='sort', *args, **kwargs)
+        
+    def doCommand(self, event):
+        super(ViewSort, self).doCommand(event)
+        self.filteredTaskList.setSortOnSubject(event.IsChecked())
+        
     
 class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
@@ -658,7 +677,7 @@ class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand,
     def doCommand(self, event):
         editor = gui.EffortEditor(self.mainwindow, 
             command.NewEffortCommand(self.effortList, self.viewer.curselection()),
-            self.uiCommands)
+            self.uiCommands, self.effortList)
         editor.Show()
         return editor 
 
@@ -671,8 +690,8 @@ class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand,
             
     def doCommand(self, event):
         editor = gui.EffortEditor(self.mainwindow,
-            command.EditEffortCommand(self.effortList, 
-                self.viewer.curselection()), self.uiCommands)
+            command.EditEffortCommand(self.effortList, self.viewer.curselection()),
+            self.uiCommands, self.effortList)
         editor.Show()
         return editor
 
@@ -690,15 +709,13 @@ class EffortDelete(NeedsSelectedEffort, EffortCommand, ViewerCommand):
 
 class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        self.adjacent = False
-        myOptions = {'bitmap': 'start', 'menuText': _('&Start tracking effort'),
-            'helpText': _('Start tracking effort for the selected task(s)')}
-        myOptions.update(kwargs)
-        super(EffortStart, self).__init__(*args, **myOptions)
+        super(EffortStart, self).__init__(bitmap='start', 
+            menuText=_('&Start tracking effort'), 
+            helpText=_('Start tracking effort for the selected task(s)'), 
+            *args, **kwargs)
     
     def doCommand(self, event):
-        start = command.StartEffortCommand(self.filteredTaskList, self.viewer.curselection(),
-            adjacent=self.adjacent)
+        start = command.StartEffortCommand(self.filteredTaskList, self.viewer.curselection())
         start.do()
         
     def enabled(self):
@@ -706,17 +723,6 @@ class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
             return False
         return [task for task in self.viewer.curselection() if not
             (task.isBeingTracked() or task.completed() or task.inactive())]
-
-
-class EffortStartAdjacent(EffortStart):
-    def __init__(self, *args, **kwargs):
-        super(EffortStartAdjacent, self).__init__(menuText=_('S&tart tracking from last stop time'),
-            helpText=_('Start tracking effort for the selected task(s) with start time ' \
-            'equal to end time of last effort'), *args, **kwargs)
-        self.adjacent = True
-        
-    def enabled(self):
-        return (self.filteredTaskList.maxDateTime() is not None) and super(EffortStartAdjacent, self).enabled()
 
 
 class EffortStop(FilterCommand):
@@ -869,13 +875,18 @@ class UICommands(dict):
         self['viewexpandselected'] = ViewExpandSelected(viewer=viewer)
         self['viewcollapseselected'] = ViewCollapseSelected(viewer=viewer)
         
-        self['viewlanguageenglish'] = ViewLanguage(value='en', menuText=_('&English'),
-            helpText=_('Show English user interface after restart'), mainwindow=mainwindow, 
+        self['viewsort'] = ViewSort(filteredTaskList=filteredTaskList, settings=settings)
+        
+        self['viewlanguage_en_gb'] = ViewLanguage(value='en_GB', menuText=_('&English (UK)'),
+            helpText=_('Show English (UK) user interface after restart'), mainwindow=mainwindow, 
             settings=settings)
-        self['viewlanguagedutch'] = ViewLanguage(value='nl', menuText=_('&Dutch'), 
+        self['viewlanguage_en_us'] = ViewLanguage(value='en_US', menuText=_('&English (US)'),
+            helpText=_('Show English (US) user interface after restart'), mainwindow=mainwindow, 
+            settings=settings)    
+        self['viewlanguage_nl'] = ViewLanguage(value='nl_NL', menuText=_('&Dutch'), 
             helpText=_('Show Dutch user interface after restart'), 
             mainwindow=mainwindow, settings=settings)
-        self['viewlanguagefrench'] = ViewLanguage(value='fr', menuText=_('&French'),
+        self['viewlanguage_fr'] = ViewLanguage(value='fr_FR', menuText=_('&French'),
             helpText=_('Show French user interface after restart'),
             mainwindow=mainwindow, settings=settings)
 
@@ -937,8 +948,6 @@ class UICommands(dict):
             viewer=viewer, uiCommands=self)
         self['deleteeffort'] = EffortDelete(effortList=effortList, viewer=viewer)
         self['starteffort'] = EffortStart(filteredTaskList=filteredTaskList, viewer=viewer)
-        self['starteffortadjacent'] = EffortStartAdjacent(filteredTaskList=filteredTaskList, 
-            viewer=viewer)
         self['stopeffort'] = EffortStop(filteredTaskList=filteredTaskList)
         
         # Help menu
