@@ -1,123 +1,83 @@
-import wx, wx.calendar, date, statictextctrl
-
-class CalendarPopup(wx.Frame):
-    def __init__(self, parent, callback=None, *args, **kwargs):
-        super(CalendarPopup, self).__init__(parent, -1, 
-            style=wx.SIMPLE_BORDER|wx.FRAME_FLOAT_ON_PARENT|wx.FRAME_NO_TASKBAR,
-            *args, **kwargs)
-        self._callback = callback
-        panel = wx.Panel(self, -1)
-        border = 5
-        self.calendar = wx.calendar.CalendarCtrl(panel, -1,
-            pos=(border, border), style=wx.WANTS_CHARS)
-        self.setDate()
-        self.calendar.Bind(wx.calendar.EVT_CALENDAR_DAY, 
-            self.onDateSelected)
-        self.setupFocus()
-        bestSize = self.calendar.GetBestSize()
-        panel.SetSize((bestSize.width+border*2, bestSize.height+border*2))
-        self.SetSize(panel.GetSize())
-    
-    def onDateSelected(self, event):
-        wxDate = self.calendar.GetDate()
-        newDate = date.Date(wxDate.GetYear(), wxDate.GetMonth()+1, 
-                            wxDate.GetDay())
-        self.GetParent().SetValue(newDate)
-        if self._callback:
-            self._callback(event)
-        self.Destroy()
-    
-    def setupFocus(self):
-        self.timer = None
-        self.calendar.SetFocus()
-        for control in self._calendarControls():
-            control.Bind(wx.EVT_KILL_FOCUS, self.onKillFocus)
-            control.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
-                
-    def onKillFocus(self, event):
-        if wx.Window.FindFocus() not in self._calendarControls():
-            # remove the calendar 1 second after it loses focus
-            self.timer = wx.FutureCall(1000, self.Destroy)
-        event.Skip()
-        
-    def onSetFocus(self, event):
-        if self.timer:
-            self.timer.Stop()
-        event.Skip()    
-        
-    def setDate(self):
-        currentDate = self.GetParent().GetValue()
-        if currentDate == date.Date():
-            currentDate = date.Today()
-        self.calendar.SetDate(wx.DateTimeFromDMY(currentDate.day, 
-            currentDate.month-1, currentDate.year))
-
-    def _calendarControls(self):
-        return [self.calendar, self.calendar.GetMonthControl(), 
-            self.calendar.GetYearControl()]
-
+import wx, date, statictextctrl
+from i18n import _
 
 class Panel(wx.Panel):
-    def __init__(self, parent, callback=None, render=str, *args, **kwargs):
+    def __init__(self, parent, callback=None, *args, **kwargs):
         super(Panel, self).__init__(parent, -1, *args, **kwargs)
-        self._render = render
         self._controls = self._createControls(callback)
         self._layout()
         
     def _createControls(self, callback):
-        control = wx.TextCtrl(self, -1)
-        if callback:
-            control.Bind(wx.EVT_KILL_FOCUS, callback)
-        return [control]
- 
-    def SetValue(self, value):
-        self._controls[0].SetValue(self._render(value))
-
-    def GetValue(self):
-        return self._controls[0].GetValue()
-        
+        raise NotImplementedError
+                
     def _layout(self):
         self._sizer = wx.BoxSizer(wx.HORIZONTAL)
         for control in self._controls:
             self._sizer.Add(control)
         self.SetSizerAndFit(self._sizer)
 
-   
+
+def date2wxDateTime(value):
+    wxDateTime = wx.DateTime()
+    try: # prepare for a value that is not a Python datetime instance
+        if value < date.Date():
+            wxDateTime.Set(value.day, value.month-1, value.year)
+    except (TypeError, AttributeError):
+        pass
+    return wxDateTime
+    
+def wxDateTime2Date(wxDateTime):
+    if wxDateTime.IsValid():
+        return date.Date(wxDateTime.GetYear(), wxDateTime.GetMonth()+1,
+            wxDateTime.GetDay())
+    else:
+        return date.Date()
+
+    
 class DateCtrl(Panel):
-    def __init__(self, parent, callback=None, *args, **kwargs):
+    def __init__(self, parent, callback=None, noneAllowed=True, *args, **kwargs):
+        self._noneAllowed = noneAllowed
         super(DateCtrl, self).__init__(parent, callback, *args, **kwargs)
         self._callback = callback
-        self.Bind(wx.EVT_BUTTON, self.popupCalendar)
+        self.Bind(wx.EVT_DATE_CHANGED, self._callback)
         
     def _createControls(self, callback):
-        controls = super(DateCtrl, self)._createControls(callback) 
-        dateButton = wx.BitmapButton(self, -1, 
-            wx.ArtProvider_GetBitmap('date', wx.ART_BUTTON, (16,16)))
-        return controls + [dateButton]
-    
-    def popupCalendar(self, event):
-        button = event.GetEventObject()
-        pos = button.ClientToScreen( (0,0) )
-        size = button.GetSize()
-        calendarPopup = CalendarPopup(self, self._callback,
-            pos=(pos[0],pos[1]+size[1]))
-        calendarPopup.Show()
+        style = wx.DP_DROPDOWN
+        if self._noneAllowed:
+            style |= wx.DP_ALLOWNONE
+        return [wx.DatePickerCtrl(self, -1, style=style)]
+
+    def SetValue(self, value):
+        self._controls[0].SetValue(date2wxDateTime(value))
 
     def GetValue(self):
-        return date.parseDate(super(DateCtrl, self).GetValue())
+        return wxDateTime2Date(self._controls[0].GetValue())
         
 
 class StaticDateCtrl(DateCtrl):
     def _createControls(self, callback):
         return [statictextctrl.StaticTextCtrl(self)]
         
+    def SetValue(self, value):
+        self._value = value
+        # Use wx.DateTime to get locale dependent formatting
+        value = date2wxDateTime(value)
+        if value.IsValid():
+            value = value.FormatDate() 
+        else:
+            value = _('None')
+        self._controls[0].SetValue(value)
         
+    def GetValue(self):
+        return self._value
+
+
 class TimeCtrl(Panel):
     def __init__(self, parent, callback=None, *args, **kwargs):
-        super(TimeCtrl, self).__init__(parent, callback, self._renderTime, *args, **kwargs)
+        super(TimeCtrl, self).__init__(parent, callback, *args, **kwargs)
         
-    def _renderTime(self, time):
-        return '%02d:%02d'%(time.hour, time.minute)
+    def SetValue(self, time):
+        self._controls[0].SetValue('%02d:%02d'%(time.hour, time.minute))
     
     def _createControls(self, callback):
         # TODO: use wx.lib.masked.ComboBox or wx.lib.masked.TimeCtrl?
@@ -134,7 +94,7 @@ class TimeCtrl(Panel):
         return choices
         
     def GetValue(self):
-        value = super(TimeCtrl, self).GetValue()
+        value = self._controls[0].GetValue()
         try:
             hour, minute = value.split(':')
             time = date.Time(int(hour), int(minute))
@@ -144,18 +104,29 @@ class TimeCtrl(Panel):
 
 
 class DateTimeCtrl(Panel):
-    def __init__(self, parent, dateTime, callback=None, *args, **kwargs):
+    def __init__(self, parent, dateTime, callback=None, noneAllowed=True, *args, **kwargs):
+        self._noneAllowed = noneAllowed
         super(DateTimeCtrl, self).__init__(parent, callback, *args, **kwargs)
         self._callback = callback
         self.SetValue(dateTime)
         
     def _createControls(self, callback):
-        return DateCtrl(self, callback), TimeCtrl(self, self._timeCtrlCallback)
+        self._dateCtrl = DateCtrl(self, self._dateCtrlCallback, self._noneAllowed)
+        self._timeCtrl = TimeCtrl(self, self._timeCtrlCallback)
+        return self._dateCtrl, self._timeCtrl
         
     def _timeCtrlCallback(self, *args, **kwargs):
         # if user sets time and date == None, then set date to today
-        if self._controls[0].GetValue() == date.Date():
-            self._controls[0].SetValue(date.Today())
+        if self._dateCtrl.GetValue() == date.Date():
+            self._dateCtrl.SetValue(date.Today())
+        self._callback(*args, **kwargs)
+        
+    def _dateCtrlCallback(self, *args, **kwargs):
+        # if users sets date and time == '00:00', then set time to now
+        if self._dateCtrl.GetValue() == date.Date():
+            self._timeCtrl.SetValue(date.Time())
+        elif self._timeCtrl.GetValue() == date.Time():
+            self._timeCtrl.SetValue(date.Time.now())
         self._callback(*args, **kwargs)
         
     def SetValue(self, dateTime):
@@ -165,10 +136,9 @@ class DateTimeCtrl(Panel):
         else:
             datePart = dateTime.date()
             timePart = dateTime.time()
-        self._controls[0].SetValue(datePart)
-        self._controls[1].SetValue(timePart)
+        self._dateCtrl.SetValue(datePart)
+        self._timeCtrl.SetValue(timePart)
         
     def GetValue(self):
-        dateValue = self._controls[0].GetValue()
-        timeValue = self._controls[1].GetValue()
-        return date.DateTime.combine(dateValue, timeValue)
+        return date.DateTime.combine(self._dateCtrl.GetValue(), 
+            self._timeCtrl.GetValue())

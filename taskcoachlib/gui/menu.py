@@ -68,6 +68,8 @@ class ViewMenu(Menu):
         self.appendMenu(_('Task &tree'), 
             ViewTaskTreeMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
+        self.appendMenu(_('Sort'), SortMenu(mainwindow, uiCommands))
+        self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('Lan&guage'), LanguageMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
@@ -87,11 +89,11 @@ class ViewTaskListMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewTaskListMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewstartdate',
-            'viewduedate', 'viewdaysleft', 'viewcompletiondate',
-            'viewbudget', 'viewtotalbudget', 'viewtimespent',
-            'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
-            None, 'viewcompositetasks'])
- 
+        'viewduedate', 'viewdaysleft', 'viewcompletiondate',
+        'viewbudget', 'viewtotalbudget', 'viewtimespent',
+        'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
+        None, 'viewcompositetasks'])
+
            
 class ViewTaskTreeMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
@@ -100,11 +102,17 @@ class ViewTaskTreeMenu(Menu):
             'viewcollapseselected', None, 'viewexpandall', 'viewcollapseall'])
 
 
+class SortMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(SortMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewsort'])
+
+
 class LanguageMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(LanguageMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewlanguageenglish', 
-            'viewlanguagedutch', 'viewlanguagefrench'])
+        self.appendUICommands(uiCommands, ['viewlanguage_en_gb',
+            'viewlanguage_en_us', 'viewlanguage_nl', 'viewlanguage_fr'])
                 
     
 class ToolBarMenu(Menu):
@@ -133,7 +141,7 @@ class EffortMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(EffortMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['neweffort', 'editeffort', 'deleteeffort', None, 
-            'starteffort', 'starteffortadjacent', 'stopeffort'])
+            'starteffort', 'stopeffort'])
         
         
 class HelpMenu(Menu):
@@ -155,12 +163,22 @@ class TaskPopupMenu(Menu):
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste',
             'pasteassubtask', None, 'new', 'newsubtask', None, 'edit', 
             'markcompleted', None, 'delete', None, 'neweffort', 'starteffort',
-            'starteffortadjacent', 'stopeffort', None, 'viewexpandselected',
+            'stopeffort', None, 'viewexpandselected',
             'viewcollapseselected'])
 
 
 class EffortPopupMenu(Menu):
-    def __init__(self, mainwindow, uiCommands, effortList, effortViewer):
+    def __init__(self, mainwindow, uiCommands):
         super(EffortPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['new', None, 'editeffort', 'deleteeffort',
             None, 'stopeffort'])
+
+
+class TaskListViewerColumnPopupMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(TaskListViewerColumnPopupMenu, self).__init__(mainwindow)
+        wx.FutureCall(1000, lambda:
+            self.appendUICommands(uiCommands, ['viewstartdate',
+            'viewduedate', 'viewdaysleft', 'viewcompletiondate',
+            'viewbudget', 'viewtotalbudget', 'viewtimespent',
+            'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft']))

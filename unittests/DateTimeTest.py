@@ -46,3 +46,6 @@ class DateTimeTest(test.TestCase):
         midMonth = date.DateTime(2005,4,15,12,45,1,999999)
         self.assertEqual(endOfMonth, midMonth.endOfMonth())
         
+class TimeTest(test.TestCase):
+    def testNow(self):
+        now = date.Time.now()

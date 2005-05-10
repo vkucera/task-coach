@@ -238,11 +238,7 @@ class StartEffortCommand(EffortCommand):
 
     def __init__(self, *args, **kwargs):
         super(StartEffortCommand, self).__init__(*args, **kwargs)
-        adjacent = 'adjacent' in kwargs and kwargs['adjacent']
-        if adjacent:
-            start = self.list.maxDateTime() or date.DateTime.now()
-        else:
-            start = date.DateTime.now()
+        start = date.DateTime.now()
         self.efforts = [effort.Effort(task, start) for task in self.items]
 
     def do_command(self):

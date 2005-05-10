@@ -24,3 +24,8 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.listctrl.showColumn('column3', True)
         self.assertEqual('column2', self.listctrl.getColumnHeader(1))
         self.assertEqual('column3', self.listctrl.getColumnHeader(2))
+        
+    def testShowColumn_HideTwice(self):
+        self.listctrl.showColumn('column2', False)
+        self.listctrl.showColumn('column2', False)
+        self.assertEqual(2, self.listctrl.GetColumnCount())

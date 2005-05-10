@@ -1,41 +1,22 @@
-import patterns, date
-import re
+import patterns, date, re
+
 
 class Filter(patterns.ObservableListObserver):
     def processChanges(self, notification):
-        changedItemsNotInSelf = [item for item in notification.itemsChanged if item not in self]
-        itemsAdded = self._addItemsIfNecessary(notification.itemsAdded + changedItemsNotInSelf)
-        changedItemsInSelf = [item for item in notification.itemsChanged if item in self]
-        itemsRemoved = self._removeItemsIfNecessary(notification.itemsRemoved + changedItemsInSelf)
-        itemsChanged = [item for item in notification.itemsChanged if item not in itemsAdded+itemsRemoved and item in self]
-        return itemsAdded, itemsRemoved, itemsChanged
-                
-    def _addItemsIfNecessary(self, items):
-        itemsToAdd = [item for item in items if self.filter(item)]
-        self._extend(itemsToAdd)
-        return itemsToAdd
-        
-    def _removeItemsIfNecessary(self, items):
-        itemsToRemove = [item for item in items if item in self and (not self.filter(item) \
-            or item not in self.original())]
-        self._removeItems(itemsToRemove)
-        return itemsToRemove    
-                        
-    def resetFilter(self):
-        self.onNotify(patterns.observer.Notification(self.original(), itemsChanged=self.original()))
-        
+        itemsRemoved = self[:]
+        self[:] = [item for item in self.original() if self.filter(item)]
+        return self, itemsRemoved, []
+            
     def filter(self, item):
         raise NotImplementedError
-    
+
     def rootTasks(self):
-        # FIXME: This is duplicated from TaskList. 
-        # Maybe Filter should be a subclass of TaskList?
         return [task for task in self if task.parent() is None]
 
     
 class ViewFilter(Filter):
-    def __init__(self, taskList):
-        super(ViewFilter, self).__init__(taskList)
+    def __init__(self, *args, **kwargs):
+        super(ViewFilter, self).__init__(*args, **kwargs)
         self.setViewAll()
         
     def setViewAll(self):
@@ -43,27 +24,27 @@ class ViewFilter(Filter):
             self._viewActiveTasks = self._viewOverDueTasks = \
             self._viewOverBudgetTasks = True
         self._viewTasksDueBeforeDate = date.Date()
-        self.resetFilter()
+        self.reset()
 
     def setViewCompletedTasks(self, viewCompletedTasks):
         self._viewCompletedTasks = viewCompletedTasks
-        self.resetFilter()
+        self.reset()
 
     def setViewInactiveTasks(self, viewInactiveTasks):
         self._viewInactiveTasks = viewInactiveTasks
-        self.resetFilter()
+        self.reset()
         
     def setViewActiveTasks(self, viewActiveTasks):
         self._viewActiveTasks = viewActiveTasks
-        self.resetFilter()
+        self.reset()
 
     def setViewOverDueTasks(self, viewOverDueTasks):
         self._viewOverDueTasks = viewOverDueTasks
-        self.resetFilter()
+        self.reset()
         
     def setViewOverBudgetTasks(self, viewOverBudgetTasks):
         self._viewOverBudgetTasks = viewOverBudgetTasks
-        self.resetFilter()
+        self.reset()
         
     def viewTasksDueBefore(self, dateString):
         dateFactory = { 'Today' : date.Today, 
@@ -74,7 +55,7 @@ class ViewFilter(Filter):
                         'Year' : date.LastDayOfCurrentYear, 
                         'Unlimited' : date.Date }
         self._viewTasksDueBeforeDate = dateFactory[dateString]()
-        self.resetFilter()
+        self.reset()
               
     def filter(self, task):
         if task.completed() and not self._viewCompletedTasks:
@@ -94,13 +75,13 @@ class ViewFilter(Filter):
 
 class CompositeFilter(Filter):
     ''' Filter composite tasks '''
-    def __init__(self, taskList):
+    def __init__(self, *args, **kwargs):
         self._viewCompositeTasks = True
-        super(CompositeFilter, self).__init__(taskList)
+        super(CompositeFilter, self).__init__(*args, **kwargs)
 
     def setViewCompositeTasks(self, viewCompositeTasks):
         self._viewCompositeTasks = viewCompositeTasks
-        self.resetFilter()
+        self.reset()
 
     def filter(self, task):
         if task.children() and not self._viewCompositeTasks:
@@ -110,10 +91,10 @@ class CompositeFilter(Filter):
     
 
 class SearchFilter(Filter):
-    def __init__(self, taskList):
+    def __init__(self, *args, **kwargs):
         self.subject = ''
         self.flag = re.IGNORECASE
-        super(SearchFilter, self).__init__(taskList)
+        super(SearchFilter, self).__init__(*args, **kwargs)
 
     def filter(self, task):
         childSubjects = ''.join([child.subject() for child in task.allChildren()
@@ -122,13 +103,13 @@ class SearchFilter(Filter):
 
     def setSubject(self, subject=''):
         self.subject = subject
-        self.resetFilter()
+        self.reset()
 
     def setMatchCase(self, match):
         if match:
             self.flag = 0
         else:
             self.flag = re.IGNORECASE
-        self.resetFilter()
+        self.reset()
 
 

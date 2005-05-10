@@ -70,7 +70,6 @@ class Observable(object):
     def notifyObservers(self, notification):
         if not self.isNotifying():
             return
-        import time
         for callback in self.__callbacks:
             callback(notification)
 
@@ -215,6 +214,11 @@ class ObservableListObserver(ObservableList):
     def original(self):
         return self.__observedList
 
+    def reset(self):
+        ''' Fake a change in all items of the original list. This can be used to
+            e.g. force a resort when the sorting criterium has changed '''
+        self.onNotify(Notification(source=self.original(), itemsChanged=self.original()))
+        
     # delegate changes to the original list
 
     def append(self, item):
@@ -248,5 +252,4 @@ class ObservableListObserver(ObservableList):
     
     def _removeItems(self, items):
         super(ObservableListObserver, self).removeItems(items)
-        
         

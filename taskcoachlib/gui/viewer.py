@@ -4,9 +4,10 @@ import wx
 from i18n import _
 
 class Viewer(patterns.Observable, wx.Panel):
-    def __init__(self, parent, list, uiCommands, *args, **kwargs):
+    def __init__(self, parent, list, uiCommands, settings=None, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1)
         self.parent = parent
+        self.settings = settings
         self.uiCommands = uiCommands
         self.list = self.createSorter(self.createFilter(list))
         self.list.registerObserver(self.onNotify)
@@ -57,8 +58,8 @@ class Viewer(patterns.Observable, wx.Panel):
             bitmap = bitmap_selected = 'start'
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
  
-    def createSorter(self, *args):
-        raise NotImplementedError
+    def createSorter(self, list):
+        return list
         
     def createFilter(self, list):
         return list
@@ -123,19 +124,20 @@ class TreeViewer(Viewer):
         
 
 class TaskViewer(Viewer):
-    def isShowingTasks(self):
+    def isShowingTasks(self): # FIXME: can be removed?
         return True
 
-    def isShowingEffort(self):
+    def isShowingEffort(self): # FIXME: can be removed?
         return False
-
+    
     
 class TaskListViewer(TaskViewer, ListViewer):
     def createWidget(self):
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr, 
             self.onSelect, self.uiCommands['edit'], 
-            menu.TaskPopupMenu(self.parent, self.uiCommands))
+            menu.TaskPopupMenu(self.parent, self.uiCommands),
+            menu.TaskListViewerColumnPopupMenu(self.parent, self.uiCommands))
         widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
         return widget
         
@@ -144,10 +146,7 @@ class TaskListViewer(TaskViewer, ListViewer):
             _('Days left'), _('Completion date'), _('Budget'), 
             _('Total budget'), _('Time spent'), _('Total time spent'), 
             _('Budget left'), _('Total budget left')]
-
-    def createSorter(self, taskList):
-        return task.sorter.Sorter(taskList)
-        
+       
     def createFilter(self, taskList):
         return task.filter.CompositeFilter(taskList)
         
@@ -181,6 +180,7 @@ class TaskListViewer(TaskViewer, ListViewer):
     
     def showColumn(self, columnHeader, show):
         self.widget.showColumn(columnHeader, show)
+
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
@@ -222,14 +222,11 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         fingerprint['completiondate'] = task.completionDate()
         fingerprint['parent'] = task.parent()
         fingerprint['active'] = task.isBeingTracked()
+        fingerprint['sort'] = self.list.getSortOnSubject()
         return fingerprint
 
 
 class EffortListViewer(ListViewer):  
-    def __init__(self, parent, effortList, uiCommands, *args, **kwargs):
-        super(EffortListViewer, self).__init__(parent, effortList,
-            uiCommands, *args, **kwargs)
-
     def createWidget(self):
         uiCommands = {}
         uiCommands.update(self.uiCommands)
@@ -238,7 +235,7 @@ class EffortListViewer(ListViewer):
         widget = widgets.EffortListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr,
             self.onSelect, uiCommands['editeffort'], 
-            menu.EffortPopupMenu(self.parent, uiCommands, self.list, self))
+            menu.EffortPopupMenu(self.parent, uiCommands))
         widget.SetColumnWidth(0, 150)
         return widget
 

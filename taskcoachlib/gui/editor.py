@@ -4,7 +4,7 @@ import wx.lib.masked as masked
 from i18n import _
 
 class DateEntry(wx.Panel):
-    defaultDate = 'None'
+    defaultDate = date.Date()
 
     def __init__(self, parent, date=defaultDate, readonly=False, callback=None, *args, **kwargs):
         super(DateEntry, self).__init__(parent, -1, *args, **kwargs)
@@ -48,26 +48,29 @@ class TimeDeltaEntry(wx.Panel):
 
             
 class GridCursor:
-    def __init__(self, columns):
-        self._columns = columns
-        self._nextPosition = (0, 0)
+    ''' Utility class to help when adding controls to a GridBagSizer. '''
     
-    def _updatePosition(self, colspan):
-        row, column = self._nextPosition
-        if column == self._columns - colspan:
+    def __init__(self, columns):
+        self.__columns = columns
+        self.__nextPosition = (0, 0)
+    
+    def __updatePosition(self, colspan):
+        ''' Update the position of the cursor, taking colspan into account. '''
+        row, column = self.__nextPosition
+        if column == self.__columns - colspan:
             row += 1
             column = 0
         else:
             column += colspan
-        self._nextPosition = (row, column)
+        self.__nextPosition = (row, column)
                     
     def next(self, colspan=1):
-        row, column = self._nextPosition
-        self._updatePosition(colspan)
+        row, column = self.__nextPosition
+        self.__updatePosition(colspan)
         return row, column
 
     def maxRow(self):
-        row, column = self._nextPosition
+        row, column = self.__nextPosition
         if column == 0:
             return max(0, row-1)
         else:
@@ -133,14 +136,9 @@ class TaskEditBook(widgets.Listbook):
             readonly=datesReadonly)
         self._dueDateEntry = DateEntry(datesPage, self._task.dueDate(), 
             readonly=datesReadonly)
-        self._completedCheckBox = wx.CheckBox(datesPage, -1, '')
-        self.Bind(wx.EVT_CHECKBOX, self.completed, self._completedCheckBox)
-        self._completionDateEntry = DateEntry(datesPage, self._task.completionDate(), 
-            callback=self.onSetCompletionDate)
-        self._completedCheckBox.SetValue(self._task.completed())
+        self._completionDateEntry = DateEntry(datesPage, self._task.completionDate())
         datesPage.addEntry(_('Start date'), self._startDateEntry, startDateComment)
         datesPage.addEntry(_('Due date'), self._dueDateEntry, dueDateComment)
-        datesPage.addEntry(_('Completed'), self._completedCheckBox)
         datesPage.addEntry(_('Completion date'), self._completionDateEntry)
         self.AddPage(datesPage, _('Dates'), 'date')
     
@@ -171,18 +169,6 @@ class TaskEditBook(widgets.Listbook):
         effortPage.addEntry(None, viewerContainer, growable=True)
         self.AddPage(effortPage, _('Effort'), 'start')
             
-    def completed(self, event):
-        if event.IsChecked():
-            self._completionDateEntry.setToday()
-        else:
-            self._completionDateEntry.set()
-
-    def onSetCompletionDate(self, event):
-        if not hasattr(self, '_completionDateEntry'):
-            return
-        if self._completionDateEntry.get() != date.Date() and not self._completedCheckBox.GetValue():
-            self._completedCheckBox.SetValue(True)
-
     def ok(self):
         self._task.setSubject(self._subjectEntry.GetValue())
         self._task.setDescription(self._descriptionEntry.GetValue())
@@ -199,25 +185,36 @@ class TaskEditBook(widgets.Listbook):
 
 
 class EffortEditBook(Page):
-    def __init__(self, parent, effort, editor, *args, **kwargs):
-        super(EffortEditBook, self).__init__(parent, columns=2, *args, **kwargs)
+    def __init__(self, parent, effort, editor, effortList, *args, **kwargs):
+        super(EffortEditBook, self).__init__(parent, columns=3, *args, **kwargs)
         self._editor = editor
         self._effort = effort
+        self._effortList = effortList
         self.addStartAndStopEntries()
         self.addDescriptionEntry()
         
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
-            self.preventNegativeEffortDuration)
+            self.preventNegativeEffortDuration, noneAllowed=False)
+        startFromLastEffortButton = wx.Button(self, -1, _('Start tracking from last stop time'))
+        self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, startFromLastEffortButton) 
+        if self._effortList.maxDateTime() is None:
+            startFromLastEffortButton.Disable()
+        
         self._stopEntry = widgets.DateTimeCtrl(self, self._effort.getStop(),
             self.preventNegativeEffortDuration)
-        self.addEntry(_('Start'), self._startEntry)
-        self.addEntry(_('Stop'), self._stopEntry)
         
+        self.addEntry(_('Start'), self._startEntry, startFromLastEffortButton)
+        self.addEntry(_('Stop'), self._stopEntry, '')
+            
+    def onStartFromLastEffort(self, event):
+        self._startEntry.SetValue(self._effortList.maxDateTime())
+        self.preventNegativeEffortDuration()
+            
     def addDescriptionEntry(self):
         self._descriptionEntry = wx.TextCtrl(self, -1, 
             self._effort.getDescription(), style=wx.TE_MULTILINE)
-        self._descriptionEntry.SetSizeHints(400, 150)
+        self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry)
         
     def ok(self):
@@ -262,11 +259,15 @@ class TaskEditor(EditorWithCommand):
         
     
 class EffortEditor(EditorWithCommand):
+    def __init__(self, parent, command, uiCommands, effortList, *args, **kwargs):
+        self._effortList = effortList
+        super(EffortEditor, self).__init__(parent, command, uiCommands, *args, **kwargs)
+        
     def addPages(self):
         for effort in self._command.efforts: # FIXME: use getter
             self.addPage(effort)
 
     def addPage(self, effort):
-        page = EffortEditBook(self._notebook, effort, self)
+        page = EffortEditBook(self._notebook, effort, self, self._effortList)
         self._notebook.AddPage(page, effort.task().subject())
 

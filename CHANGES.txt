@@ -1,3 +1,16 @@
+Release 0.37 - May ?, 2005
+
+Features added:
+- Columns in the task list can be turned on/off by right-clicking
+  on the column headers.
+- Sorting... (SF RFE nr)  
+- More options when editing an effort record.  
+- Used a new DatePickerCtrl.
+
+Bugs fixed:
+- Icons in tree view on Windows 2000 (SF Bug nr).
+
+
 Release 0.36 - May 5, 2005
 
 Features added:
