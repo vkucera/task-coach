@@ -1,7 +1,7 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
 version = '0.37'
-date = 'May ?, 2005'
+date = 'May 14, 2005'
 author = 'Frank Niessink'
 author_email = 'frank@niessink.com'
 url = 'http://taskcoach.niessink.com/'
