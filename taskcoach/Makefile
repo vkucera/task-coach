@@ -18,7 +18,8 @@ theicons:
 	cd icons; $(PYTHON) make.py
 
 web: 
-	cd website; $(PYTHON) make.py
+	cd website; $(PYTHON) make.py; cd ..
+	$(PYTHON) c:/Program\ Files/Python24/Tools/webchecker/webchecker.py dist/index.html
 
 clean:
 	rm -rf *.pyc */*.pyc */*/*.pyc dist build MANIFEST README.txt INSTALL.txt LICENSE.txt
