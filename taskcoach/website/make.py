@@ -46,6 +46,22 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.37 - May 14, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>Icons in tree view on Windows 2000 
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1194654&group_id=130831&atid=719134">1194654</A>).
+        </UL>
+        Features added:
+        <UL>
+        <LI>Columns in the task list view can be turned on/off by right-clicking
+        on the column headers.
+        <LI>Tasks can be sorted either by due date or alphabetically
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1177984&group_id=130831&atid=719137">1177984</A>).
+        <LI>More options when editing an effort record.  
+        <LI>Used a new DatePickerCtrl 
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1191909&group_id=130831&atid=719137">1191909</A>).
+        </UL>
         <H4>Release 0.36 - May 5, 2005</H4>
         Features added:
         <UL>
