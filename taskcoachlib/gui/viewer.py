@@ -91,9 +91,6 @@ class Viewer(patterns.Observable, wx.Panel):
     def focus_set(self):
         self.widget.SetFocus()
 
-    def canHideColumns(self):
-        return hasattr(self, 'showColumn')
-
     def getItemAttr(self, index):
         task = self.list[index]
         return wx.ListItemAttr(color.taskColor(task))
@@ -279,6 +276,9 @@ class EffortListViewer(ListViewer):
     def renderEntirePeriod(self, effort):
         return render.dateTimePeriod(effort.getStart(), effort.getStop())
 
+    def showColumn(self, *args, **kwargs):
+        raise AttributeError # not implemented yet
+        
 
 class CompositeEffortListViewer(EffortListViewer):
     def columns(self):

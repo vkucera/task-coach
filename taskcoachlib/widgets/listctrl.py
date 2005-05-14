@@ -88,7 +88,7 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
 
     def showColumn(self, columnHeader, show=True):
         if columnHeader not in self.allColumnHeaders:
-            return
+            raise ValueError
         columnIndex = self.getColumnIndex(columnHeader)
         if show and not self.isColumnVisible(columnHeader):
             self.InsertColumn(columnIndex, columnHeader)

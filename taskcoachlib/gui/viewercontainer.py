@@ -18,14 +18,21 @@ class ViewerContainer(patterns.Observable):
             self.SetSelection(self.__desiredPageNumber)
         viewer.registerObserver(self.onNotify)
             
-    def __getattr__(self, attr):
-        ''' Find a viewer that has attr. Start by looking in the current viewer. '''
-        for viewer in [self[self.__currentPageNumber]] + list(self):
-            if hasattr(viewer, attr):
-                return getattr(viewer, attr)
-        else:
-            raise AttributeError
-
+    def __getattr__(self, method):
+        ''' Return a function that will call the method on the first viewer 
+            that both has the requested method and does not raise an exception.
+            Start looking in the current viewer. '''
+        def findFirstViewer(*args, **kwargs):
+            for viewer in [self[self.__currentPageNumber]] + list(self):
+                if hasattr(viewer, method):
+                    try:
+                        return getattr(viewer, method)(*args, **kwargs)
+                    except:
+                        pass
+            else:
+                raise AttributeError
+        return findFirstViewer
+        
     def onNotify(self, notification, *args, **kwargs):
         self.notifyObservers(notification)
 
