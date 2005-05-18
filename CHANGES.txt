@@ -1,3 +1,7 @@
+Release 0.38 - May ?, 2005
+
+
+
 Release 0.37 - May 14, 2005
 
 Bugs fixed:

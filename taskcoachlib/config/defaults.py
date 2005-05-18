@@ -31,5 +31,6 @@ defaults = { \
     'iconized' : 'False',
     'splash' : 'True' },
 'file' : { \
-    'lastfile' : '' }}
+    'lastfile' : '',
+    'autosave' : 'False' }}
 

@@ -1,5 +1,61 @@
 import wx
 
+class GridCursor:
+    ''' Utility class to help when adding controls to a GridBagSizer. '''
+    
+    def __init__(self, columns):
+        self.__columns = columns
+        self.__nextPosition = (0, 0)
+    
+    def __updatePosition(self, colspan):
+        ''' Update the position of the cursor, taking colspan into account. '''
+        row, column = self.__nextPosition
+        if column == self.__columns - colspan:
+            row += 1
+            column = 0
+        else:
+            column += colspan
+        self.__nextPosition = (row, column)
+                    
+    def next(self, colspan=1):
+        row, column = self.__nextPosition
+        self.__updatePosition(colspan)
+        return row, column
+
+    def maxRow(self):
+        row, column = self.__nextPosition
+        if column == 0:
+            return max(0, row-1)
+        else:
+            return row
+
+
+class BookPage(wx.Panel):
+    def __init__(self, parent, columns, *args, **kwargs):
+        super(BookPage, self).__init__(parent, -1, *args, **kwargs)
+        self._sizer = wx.GridBagSizer(vgap=5, hgap=5)
+        self._columns = columns
+        self._position = GridCursor(columns)
+        self._sizer.AddGrowableCol(columns-1)
+        self._borderWidth = 5
+        self.SetSizerAndFit(self._sizer)
+        
+    def addEntry(self, label, *controls, **kwargs):
+        controls = [control for control in controls if control is not None]
+        if label is not None:
+            if label: label += ':'
+            self._sizer.Add(wx.StaticText(self, -1, label), self._position.next(),
+                flag=wx.ALL|wx.ALIGN_RIGHT, border=self._borderWidth)
+        for control in controls:
+            if type(control) in [type(''), type(u'')]:
+                control = wx.StaticText(self, -1, control)
+            colspan = max(self._columns - len(controls), 1)
+            self._sizer.Add(control, self._position.next(colspan), span=(1, colspan),
+                flag=wx.ALIGN_LEFT|wx.EXPAND|wx.ALL, border=self._borderWidth)
+        if 'growable' in kwargs and kwargs['growable']:
+            self._sizer.AddGrowableRow(self._position.maxRow())
+
+
 class Book(object):
     ''' Abstract base class for *book '''
     

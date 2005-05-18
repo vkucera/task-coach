@@ -20,6 +20,8 @@ setupOptions = {
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Natural Language :: English',
+        'Natural Language :: Dutch',
+        'Natural Language :: French',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Office/Business :: Scheduling']}
