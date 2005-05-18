@@ -358,6 +358,17 @@ class EditPasteAsSubtask(FilterCommand, ViewerCommand):
         return task.Clipboard() and self.viewer.curselection()
 
 
+class EditPreferences(MainWindowCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(EditPreferences, self).__init__(menuText=_('Preferences...'),
+            helpText=_('Edit preferences'), bitmap='configure', *args, **kwargs)
+            
+    def doCommand(self, event):
+        editor = gui.Preferences(parent=self.mainwindow, title=_('Edit preferences'), 
+            settings=self.settings)
+        editor.Show()
+
+
 class SelectAll(NeedsItems, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(SelectAll, self).__init__(menuText=_('&All\tCtrl+A'),
@@ -548,13 +559,6 @@ class ViewStatusBar(MainWindowCommand, UICheckCommand):
         super(ViewStatusBar, self).doCommand(event)
         self.mainwindow.GetStatusBar().Show(event.IsChecked())
         self.mainwindow.SendSizeEvent()
-
-
-class ViewSplashScreen(UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewSplashScreen, self).__init__(menuText=_('S&plash screen'),
-            helpText=_('Show/skip splash screen when starting %s'%meta.name),
-            section='window', setting='splash', *args, **kwargs)
 
 
 class ViewDueBefore(FilterCommand, UIRadioCommand):
@@ -814,7 +818,8 @@ class UICommands(dict):
         self['copy'] = EditCopy(filteredTaskList=filteredTaskList, viewer=viewer)
         self['paste'] = EditPaste(filteredTaskList=filteredTaskList)
         self['pasteassubtask'] = EditPasteAsSubtask(filteredTaskList=filteredTaskList, viewer=viewer)
-
+        self['editpreferences'] = EditPreferences(mainwindow=mainwindow, settings=settings)
+        
         # Selection commands
         self['selectall'] = SelectAll(viewer=viewer)
         self['invertselection'] = InvertSelection(viewer=viewer)
@@ -904,7 +909,6 @@ class UICommands(dict):
 
         self['viewfinddialog'] = ViewFindDialog(mainwindow=mainwindow, settings=settings)
         self['viewstatusbar'] = ViewStatusBar(mainwindow=mainwindow, settings=settings)
-        self['viewsplashscreen'] = ViewSplashScreen(settings=settings)
 
         self['viewduetoday'] = ViewDueBefore(menuText=_('&Today'), 
             helpText=_('Only show tasks due today'), value='Today', 

@@ -45,7 +45,7 @@ class EditMenu(Menu):
             'copy', 'paste', 'pasteassubtask', None])
         # the spaces are to leave room for command names in the Undo and Redo menuitems:
         self.appendMenu(_('&Select')+' '*50, SelectMenu(mainwindow, uiCommands))
-        
+        self.appendUICommands(uiCommands, [None, 'editpreferences'])
 
 class SelectMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
@@ -73,8 +73,7 @@ class ViewMenu(Menu):
         self.appendMenu(_('Lan&guage'), LanguageMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
-        self.appendUICommands(uiCommands, ['viewfinddialog', 'viewstatusbar', 
-            'viewsplashscreen'])   
+        self.appendUICommands(uiCommands, ['viewfinddialog', 'viewstatusbar'])   
 
            
 class ViewTaskStatesMenu(Menu):

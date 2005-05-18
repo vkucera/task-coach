@@ -3,4 +3,4 @@ from mainwindow import MainWindow
 from editor import TaskEditor, EffortEditor
 from iocontroller import IOController
 from artprovider import init
-
+from preferences import Preferences
