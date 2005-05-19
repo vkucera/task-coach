@@ -361,7 +361,7 @@ pages['features'] = \
             <LI>Tasks have a subject, description, start date, due date and a 
             completion date.
             <LI>Tasks can be viewed as a list or as a tree.
-            <LI>Tasks are sorted by due date.
+            <LI>Tasks can be sorted by due date or by subject.
             <LI>Several filters to e.g. hide completed tasks or view
             only tasks that are due today. 
             <LI>Task status depends on its subtask and vice versa. E.g. if 

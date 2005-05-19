@@ -32,5 +32,6 @@ defaults = { \
     'splash' : 'True' },
 'file' : { \
     'lastfile' : '',
-    'autosave' : 'False' }}
+    'autosave' : 'False',
+    'backup' : 'False' }}
 

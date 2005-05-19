@@ -1,14 +1,11 @@
 import test, task
 
-class DummySettings:
-    def __init__(self):
-        self.autosave = 'False'
-        
+class DummySettings(dict):        
     def set(self, section, setting, value):
-        self.autosave = value
+        self[setting] = value
         
     def getboolean(self, section, setting):
-        return self.autosave == 'True'
+        return self.get(setting, 'False') == 'True'
 
 class DummyFile:
     def close(self, *args, **kwargs):
@@ -30,7 +27,7 @@ class DummyTaskFile(task.TaskFile):
         
     def save(self, *args, **kwargs):
         self.saveCalled += 1
-    
+
   
 class AutoSaverTestCase(test.TestCase):
     def setUp(self):
@@ -85,3 +82,38 @@ class AutoSaverTestCase(test.TestCase):
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.merge('another-non-existing-file.tsk')
         self.assertEqual(1, self.taskFile.saveCalled)
+
+
+class TestableAutoSaver(task.AutoSaver):
+    def __init__(self, *args, **kwargs):
+        self.copyCalled = False
+        super(TestableAutoSaver, self).__init__(*args, **kwargs)
+        
+    def _createBackup(self, *args, **kwargs):
+        self.copyCalled = True    
+
+
+class AutoSaverBackupTestCase(test.TestCase):
+    def setUp(self):
+        self.settings = DummySettings()
+        self.taskFile = DummyTaskFile()
+        self.autoSaver = TestableAutoSaver(self.settings, self.taskFile)
+
+    def testCreateBackupOnOpen(self):
+        self.settings.set('file', 'backup', 'True')
+        self.taskFile.setFilename('whatever.tsk')
+        self.taskFile.load()
+        self.failUnless(self.autoSaver.copyCalled)
+        
+    def testCreateBackupOnOpen_ButBackupOff(self):
+        self.settings.set('file', 'backup', 'False')
+        self.taskFile.setFilename('whatever.tsk')
+        self.taskFile.load()
+        self.failIf(self.autoSaver.copyCalled)
+        
+    def testDontCreateBackupOnSave(self):
+        self.settings.set('file', 'backup', 'True')
+        self.taskFile.setFilename('whatever.tsk')
+        self.taskFile.append(task.Task())
+        self.taskFile.save()
+        self.failIf(self.autoSaver.copyCalled)

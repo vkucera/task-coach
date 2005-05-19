@@ -70,8 +70,6 @@ class ViewMenu(Menu):
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('Sort'), SortMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
-        self.appendMenu(_('Lan&guage'), LanguageMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
         self.appendUICommands(uiCommands, ['viewfinddialog', 'viewstatusbar'])   
 
@@ -105,13 +103,6 @@ class SortMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(SortMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewsort'])
-
-
-class LanguageMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(LanguageMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewlanguage_en_gb',
-            'viewlanguage_en_us', 'viewlanguage_nl', 'viewlanguage_fr'])
                 
     
 class ToolBarMenu(Menu):

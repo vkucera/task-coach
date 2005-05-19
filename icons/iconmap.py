@@ -45,7 +45,8 @@ iconlist = [
 ('viewalltasks', 'apps', 'kreversi', [16]),
 ('viewexpand', 'actions', 'edit_add', [16]),
 ('viewcollapse', 'actions', 'edit_remove', [16]),
-('configure', 'actions', 'configure', [16])]
+('configure', 'actions', 'configure', [16]),
+('language', 'apps', 'edu_languages', [22])]
 
 icons = {}
 
