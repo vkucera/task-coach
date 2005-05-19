@@ -37,6 +37,7 @@ class App(object):
             splash = gui.SplashScreen()
         i18n.Translator(settings.get('view', 'language'))
         self.taskFile = task.TaskFile()
+        self.autoSaver = task.AutoSaver(settings, self.taskFile)
         effortList = effort.EffortList(self.taskFile)
         self.io = gui.IOController(self.taskFile, self.displayMessage)
         viewFilteredTaskList = task.filter.ViewFilter(self.taskFile)

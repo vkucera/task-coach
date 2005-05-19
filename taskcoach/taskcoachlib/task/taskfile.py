@@ -1,4 +1,4 @@
-import os, writer, reader, tasklist, patterns, codecs
+import os, writer, reader, tasklist, patterns, codecs, shutil
 
 class TaskFile(tasklist.TaskList):
     def __init__(self, filename='', *args, **kwargs):
@@ -84,18 +84,37 @@ class TaskFile(tasklist.TaskList):
         self.extend(mergeFile.rootTasks())
 
     def needSave(self):
-        return not self.__loading and self.__needSave
-        
+        return not self.isLoading() and self.__needSave
+ 
+    def isLoading(self):
+        return self.__loading
 
-class AutoSaver:
+
+class AutoSaver(object):
     def __init__(self, settings, taskFile):
         self.__settings = settings
         self.__taskFile = taskFile
         self.__taskFile.registerObserver(self.onTaskFileChanged)
         
     def onTaskFileChanged(self, notification, *args, **kwargs):
-        if self.__taskFile.filename() and self.__taskFile.needSave() and \
-            self.__settings.getboolean('file', 'autosave'):
+        if self._needSave():
             self.__taskFile.save()
-        
+        elif self._needBackup():
+            self._createBackup()
     
+    def _needSave(self):
+        return self.__taskFile.filename() and self.__taskFile.needSave() and \
+            self._isOn('autosave')
+            
+    def _needBackup(self):
+        return self.__taskFile.isLoading() and self._isOn('backup')
+
+    def _createBackup(self):
+        backup = self.__taskFile.filename() + '.bak'
+        if os.path.isfile(backup):
+            backup2 = backup + '.bak'
+            shutil.copyfile(backup, backup2)
+        shutil.copyfile(self.__taskFile.filename(), backup)
+        
+    def _isOn(self, booleanSetting):
+        return self.__settings.getboolean('file', booleanSetting)

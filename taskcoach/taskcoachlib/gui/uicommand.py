@@ -568,21 +568,6 @@ class ViewDueBefore(FilterCommand, UIRadioCommand):
     def doCommand(self, event):
         super(ViewDueBefore, self).doCommand(event)
         self.filteredTaskList.viewTasksDueBefore(self.value) 
-
-
-class ViewLanguage(MainWindowCommand, UIRadioCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewLanguage, self).__init__(setting='language', *args, **kwargs)
-        
-    def doCommand(self, event):
-        if self.settings.get(self.section, self.setting) == self.value:
-            return
-        super(ViewLanguage, self).doCommand(event)
-        dialog = wx.MessageDialog(self.mainwindow,
-            _('This setting will take effect after you restart %s'%meta.name),
-            _('Language setting'), wx.OK|wx.ICON_INFORMATION)
-        dialog.ShowModal()
-        dialog.Destroy()    
     
 
 class ViewSort(FilterCommand, UICheckCommand):
@@ -882,19 +867,6 @@ class UICommands(dict):
         
         self['viewsort'] = ViewSort(filteredTaskList=filteredTaskList, settings=settings)
         
-        self['viewlanguage_en_gb'] = ViewLanguage(value='en_GB', menuText=_('&English (UK)'),
-            helpText=_('Show English (UK) user interface after restart'), mainwindow=mainwindow, 
-            settings=settings)
-        self['viewlanguage_en_us'] = ViewLanguage(value='en_US', menuText=_('&English (US)'),
-            helpText=_('Show English (US) user interface after restart'), mainwindow=mainwindow, 
-            settings=settings)    
-        self['viewlanguage_nl'] = ViewLanguage(value='nl_NL', menuText=_('&Dutch'), 
-            helpText=_('Show Dutch user interface after restart'), 
-            mainwindow=mainwindow, settings=settings)
-        self['viewlanguage_fr'] = ViewLanguage(value='fr_FR', menuText=_('&French'),
-            helpText=_('Show French user interface after restart'),
-            mainwindow=mainwindow, settings=settings)
-
         self['toolbarhide'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
             value=None, menuText=_('&Hide'), helpText=_('Hide the toolbar'))
         self['toolbarsmall'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
