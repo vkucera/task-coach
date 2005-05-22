@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "POT-Creation-Date: 2005-05-20 22:38+W. Europe Daylight Time\n"
-"PO-Revision-Date: 2005-05-22 15:52+0100\n"
+"PO-Revision-Date: 2005-05-22 21:25+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
@@ -184,19 +184,19 @@ msgstr "Hoofdlettergevoelig"
 msgid "Clear"
 msgstr "Wissen"
 
-#: taskcoachlib\gui\help.py:10
+#: taskcoachlib\gui\helpdialog.py:10
 msgid "Help: Colors"
 msgstr "Help: Kleuren"
 
-#: taskcoachlib\gui\help.py:13
+#: taskcoachlib\gui\helpdialog.py:13
 msgid "Help: Tasks"
 msgstr "Help: Taken"
 
-#: taskcoachlib\gui\help.py:16
+#: taskcoachlib\gui\helpdialog.py:16
 msgid "Help: About %s"
 msgstr "Help: Over %s"
 
-#: taskcoachlib\gui\help.py:19
+#: taskcoachlib\gui\helpdialog.py:19
 msgid "Help: %s license"
 msgstr "Help: %s licentie"
 
@@ -328,12 +328,12 @@ msgid "Splash screen"
 msgstr "Openingsscherm"
 
 #: taskcoachlib\gui\preferences.py:46
-#: taskcoachlib\gui\preferences.py:55
+#: taskcoachlib\gui\preferences.py:56
 msgid "This setting will take effect after you restart %s"
 msgstr "Deze instelling wordt effectief nadat u %s opnieuw heeft opgestart"
 
 #: taskcoachlib\gui\preferences.py:52
-#: taskcoachlib\gui\preferences.py:67
+#: taskcoachlib\gui\preferences.py:68
 msgid "Language"
 msgstr "Taal"
 
@@ -353,11 +353,15 @@ msgstr "Nederlands"
 msgid "French"
 msgstr "Frans"
 
-#: taskcoachlib\gui\preferences.py:65
+#: taskcoachlib\gui\preferences.py:55
+msgid "Simplified Chinese"
+msgstr "Vereenvoudigd Chinees"
+
+#: taskcoachlib\gui\preferences.py:66
 msgid "Startup"
 msgstr "Starten"
 
-#: taskcoachlib\gui\preferences.py:66
+#: taskcoachlib\gui\preferences.py:67
 msgid "Save"
 msgstr "Opslaan"
 
@@ -991,7 +995,7 @@ msgstr "Takenlijst"
 msgid "Task tree"
 msgstr "Takenboom"
 
-#: taskcoachlib\meta\help.py:4
+#: taskcoachlib\help\__init__.py:5
 msgid ""
 "Tasks are colored according to the following rules:\n"
 "- Over due tasks are red;\n"
@@ -1007,7 +1011,7 @@ msgstr ""
 "- Inactieve taken zijn grijs, en\n"
 "- Afgeronde taken zijn groen.\n"
 
-#: taskcoachlib\meta\help.py:12
+#: taskcoachlib\help\__init__.py:13
 msgid ""
 "Tasks have the following properties:\n"
 "- Subject: a single line that summarizes the task.\n"
@@ -1051,7 +1055,7 @@ msgstr ""
 "- Onder budget: er is nog budget over;\n"
 "- Geen budget: de taak heeft geen budget toegewezen gekregen.\n"
 
-#: taskcoachlib\meta\help.py:38
+#: taskcoachlib\help\__init__.py:39
 msgid ""
 "\n"
 "Version %(version)s, %(date)s\n"
