@@ -78,8 +78,9 @@ def writeFile(filename, text, directory=''):
     file.close()
 
 def createDocumentation():
-    writeFile('README.txt',  meta.aboutText)
-    writeFile('INSTALL.txt', meta.installText)
+    import help
+    writeFile('README.txt',  help.aboutText)
+    writeFile('INSTALL.txt', help.installText)
     writeFile('LICENSE.txt', meta.licenseText)
 
 def createInnoSetupScript():

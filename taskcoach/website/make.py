@@ -46,6 +46,17 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.38 - May 22, 2005</H4>
+        Features added:
+        <UL>
+        <LI>Simplified Chinese user interface added, thanks to limodou.
+        <LI>Autosave setting to automatically save after every change
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1188194&group_id=130831&atid=719137">1188194</A>).
+        <LI>Backup setting to create a backup when opening a Task Coach file.
+        <LI>Added preference dialog to edit preferences not related to the 
+        view settings.
+        <LI>Now using gettext for i18n.
+        </UL>
         <H4>Release 0.37 - May 14, 2005</H4>
         Bugs fixed:
         <UL>
