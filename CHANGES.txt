@@ -1,6 +1,7 @@
-Release 0.38 - May ?, 2005
+Release 0.38 - May 22, 2005
 
 Features added:
+- Simplified Chinese user interface added, thanks to limodou.
 - Autosave setting to automatically save after every change (1188194).
 - Backup setting to create a backup when opening a Task Coach file.
 - Added preference dialog to edit preferences not related to the 
