@@ -1,14 +1,16 @@
-import data
+import meta
+from i18n import _
 
-colorsText = '''Tasks are colored according to the following rules:
+
+colorsText = _('''Tasks are colored according to the following rules:
 - Over due tasks are red;
 - Tasks due today are orange;
 - Active tasks are black;
 - Future tasks are gray, and
 - Completed tasks are green.
-'''
+''')
 
-tasksText = '''Tasks have the following properties:
+tasksText = _('''Tasks have the following properties:
 - Subject: a single line that summarizes the task.
 - Description: a multi-line description of the task.
 - Due date: the date the task should be finished. This can be 'None' indicating that this task has no fixed due date.
@@ -28,13 +30,13 @@ In addition, tasks can be referenced as:
 - Over budget: no buget left;
 - Under budget: still budget left;
 - No budget: the task has no budget.
-'''
+''')
 
 doubleline = '================================================================\n'
 
-header = doubleline + '%(name)s - %(description)s\n'%data.metaDict + doubleline
+header = doubleline + '%(name)s - %(description)s\n'%meta.metaDict + doubleline
 
-aboutText = header + '''
+aboutText = header + _('''
 Version %(version)s, %(date)s
 
 By %(author)s <%(author_email)s>
@@ -44,7 +46,7 @@ By %(author)s <%(author_email)s>
 %(copyright)s
 %(license)s
 
-'''%data.metaDict + doubleline
+''')%meta.metaDict + doubleline
 
 installText = header + '''
 
@@ -85,5 +87,5 @@ following command:
 
   python setup.py install
 
-'''%data.metaDict + doubleline
+'''%meta.metaDict + doubleline
 

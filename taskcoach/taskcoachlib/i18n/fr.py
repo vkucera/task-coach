@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-import meta
+import meta, help
 
 encoding = 'iso-8859-1'
 dict = {\
@@ -237,14 +237,14 @@ dict = {\
 'Wo&rk week':               '&Semaine travaillée',
 '&Year':                    '&Année',
 'You have unsaved changes.\nSave before closing?': 'Vous avez des modifications non sauvegardées.\nSauvegarder avant de fermer?',
-meta.colorsText:            '''Les tâches sont coloriées en fonction des règles suivantes:
+help.colorsText:            '''Les tâches sont coloriées en fonction des règles suivantes:
 - Les tâches en dépassement de délai en rouge;
 - Les tâches dûes aujourd\'hui en orange;
 - Les tâches actives en noir;
 - Les tâches à venir en gris, et
 - Les tâches terminées en vert.
 ''',
-meta.tasksText:             '''Les tâches ont les propriétés suivantes:
+help.tasksText:             '''Les tâches ont les propriétés suivantes:
 - Sujet: une ligne unique qui résume la tâche.
 - Description: une description de la tâche, sur plusieurs lignes.
 - Date dûe: la date à laquelle la tâche devrait être terminée. Ceci peut être 'None', signifiant que la tâche n'a pas de date dûe fixe.

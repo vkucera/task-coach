@@ -8,7 +8,7 @@ class IOController(object):
         self.__messageCallback = messageCallback
         self.__fileDialogOpts = { 'default_path' : '.', 
             'default_extension' : 'tsk', 'wildcard' : 
-            _('%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*'%meta.name) }
+            _('%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*')%meta.name }
 
     def needSave(self):
         return self.__taskFile.needSave()
