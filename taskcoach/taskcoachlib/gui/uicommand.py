@@ -1,4 +1,4 @@
-import wx, task, patterns, config, gui, meta, help, command
+import wx, task, patterns, config, gui, meta, helpdialog, command
 from i18n import _
 
 
@@ -738,7 +738,7 @@ class HelpTasks(HelpCommand):
             helpText=_('Help about the possible states of tasks'), *args, **kwargs)
 
     def doCommand(self, event):
-        help.Tasks()
+        helpdialog.Tasks()
 
 class HelpColors(HelpCommand):
     def __init__(self, *args, **kwargs):
@@ -746,7 +746,7 @@ class HelpColors(HelpCommand):
             helpText=_('Help about the possible colors of tasks'), *args, **kwargs)
 
     def doCommand(self, event):
-        help.Colors()
+        helpdialog.Colors()
 
 
 class InfoCommand(UICommand):
@@ -759,7 +759,7 @@ class HelpAbout(InfoCommand):
             helpText=_('Version and contact information about %s')%meta.name, *args, **kwargs)
 
     def doCommand(self, event):
-        help.About()
+        helpdialog.About()
 
 class HelpLicense(InfoCommand):
     def __init__(self, *args, **kwargs):
@@ -767,7 +767,7 @@ class HelpLicense(InfoCommand):
             helpText=_('%s license')%meta.name, *args, **kwargs)
 
     def doCommand(self, event):
-        help.License()
+        helpdialog.License()
 
 
 class MainWindowRestore(MainWindowCommand):
