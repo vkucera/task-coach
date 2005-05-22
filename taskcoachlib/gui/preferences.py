@@ -36,14 +36,14 @@ class SavePage(SettingsPage):
         self.addBooleanSetting('file', 'autosave', 
             _('Auto save after every change'))
         self.addBooleanSetting('file', 'backup', 
-            _('Create backup copy when opening a %s file'%meta.name))
+            _('Create backup copy when opening a %s file')%meta.name)
             
                
 class StartupPage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(StartupPage, self).__init__(*args, **kwargs)
         self.addBooleanSetting('window', 'splash', _('Splash screen'),
-            _('This setting will take effect after you restart %s'%meta.name))
+            _('This setting will take effect after you restart %s')%meta.name)
 
 
 class LanguagePage(SettingsPage):
@@ -52,7 +52,7 @@ class LanguagePage(SettingsPage):
         self.addChoiceSetting('view', 'language', _('Language'), 
             [('en_US', _('English (US)')), ('en_GB', _('English (UK)')),
              ('nl_NL', _('Dutch')), ('fr_FR', _('French'))],
-             _('This setting will take effect after you restart %s'%meta.name))
+             _('This setting will take effect after you restart %s')%meta.name)
 
 
 class Preferences(widgets.ListbookDialog):

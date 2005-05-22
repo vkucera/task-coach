@@ -5,7 +5,7 @@ Features added:
 - Backup setting to create a backup when opening a Task Coach file.
 - Added preference dialog to edit preferences not related to the 
   view settings.
-
+- Now using gettext for i18n.
 
 
 Release 0.37 - May 14, 2005

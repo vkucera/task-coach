@@ -12,9 +12,6 @@ libpath = taskcoachlib.__path__[0]
 sys.path.append(libpath) 
 del taskcoachlib
 
-# Now we can directly import taskcoachlib subpackages:
-import task, gui, config, effort, i18n
-
 
 class wxApp(wx.App):
     def OnInit(self):
@@ -31,11 +28,14 @@ class App(object):
         self.wxApp.MainLoop()
 
     def init(self, showSplash=True, load=True): 
-        gui.init()
+        import config, i18n
         settings = config.Settings(load)
+        i18n.Translator(settings.get('view', 'language'))
+        import task, effort, gui
+        gui.init()
         if showSplash and settings.getboolean('window', 'splash'):
             splash = gui.SplashScreen()
-        i18n.Translator(settings.get('view', 'language'))
+        
         self.taskFile = task.TaskFile()
         self.autoSaver = task.AutoSaver(settings, self.taskFile)
         effortList = effort.EffortList(self.taskFile)

@@ -208,7 +208,7 @@ class NeedsItems(object):
 class FileOpen(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileOpen, self).__init__(menuText=_('&Open...\tCtrl+O'),
-            helpText=_('Open a %s file'%meta.name), bitmap='fileopen', *args, **kwargs)
+            helpText=_('Open a %s file')%meta.name, bitmap='fileopen', *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.open()
@@ -262,7 +262,7 @@ class FileSaveSelection(NeedsSelectedTasks, IOCommand, ViewerCommand):
 class FileQuit(MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
-            helpText=_('Exit %s'%meta.name), bitmap='exit', *args, **kwargs)
+            helpText=_('Exit %s')%meta.name, bitmap='exit', *args, **kwargs)
 
     def doCommand(self, event):
         self.mainwindow.quit()
@@ -489,7 +489,7 @@ class ViewColumn(ViewerCommand, UICheckCommand):
         
     def doCommand(self, event):
         super(ViewColumn, self).doCommand(event)
-        self.viewer.showColumn(_(self.column), event.IsChecked())
+        self.viewer.showColumn(self.column, event.IsChecked())
 
 
 class ViewExpandAll(ViewerCommand):
@@ -755,8 +755,8 @@ class InfoCommand(UICommand):
 
 class HelpAbout(InfoCommand):
     def __init__(self, *args, **kwargs):
-        super(HelpAbout, self).__init__(menuText=_('&About %s'%meta.name),
-            helpText=_('Version and contact information about %s'%meta.name), *args, **kwargs)
+        super(HelpAbout, self).__init__(menuText=_('&About %s')%meta.name,
+            helpText=_('Version and contact information about %s')%meta.name, *args, **kwargs)
 
     def doCommand(self, event):
         help.About()
@@ -764,7 +764,7 @@ class HelpAbout(InfoCommand):
 class HelpLicense(InfoCommand):
     def __init__(self, *args, **kwargs):
         super(HelpLicense, self).__init__(menuText=_('&License'),
-            helpText=_('%s license'%meta.name), *args, **kwargs)
+            helpText=_('%s license')%meta.name, *args, **kwargs)
 
     def doCommand(self, event):
         help.License()
@@ -825,40 +825,40 @@ class UICommands(dict):
         self['viewcompositetasks'] = ViewCompositeTasks(viewer=viewer, filteredTaskList=filteredTaskList,
             settings=settings)
             
-        self['viewstartdate'] = ViewColumn(column='Start date', viewer=viewer, 
+        self['viewstartdate'] = ViewColumn(column=_('Start date'), viewer=viewer, 
             settings=settings, 
             menuText=_('&Start date'), helpText = _('Show/hide start date column'),
             setting='startdate')
         self['viewduedate'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('&Due date'), helpText=_('Show/hide due date column'),
-            setting='duedate', column='Due date')
+            setting='duedate', column=_('Due date'))
         self['viewdaysleft'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('D&ays left'), helpText=_('Show/hide days left column'),
-            setting='daysleft', column='Days left')
+            setting='daysleft', column=_('Days left'))
         self['viewcompletiondate'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('Co&mpletion date'), helpText=_('Show/hide completion date column'),
-            setting='completiondate', column='Completion date')
+            setting='completiondate', column=_('Completion date'))
         self['viewbudget'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('&Budget'), helpText=_('Show/hide budget column'),
-            setting='budget', column='Budget')
+            setting='budget', column=_('Budget'))
         self['viewtotalbudget'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('Total b&udget'),
             helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
-            setting='totalbudget', column='Total budget')
+            setting='totalbudget', column=_('Total budget'))
         self['viewtimespent'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('&Time spent'), helpText=_('Show/hide time spent column'),
-            setting='timespent', column='Time spent')
+            setting='timespent', column=_('Time spent'))
         self['viewtotaltimespent'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('T&otal time spent'),
             helpText=_('Show/hide total time spent column (total time includes time spent on subtasks)'),
-            setting='totaltimespent', column='Total time spent')
+            setting='totaltimespent', column=_('Total time spent'))
         self['viewbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('Budget &left'), helpText=_('Show/hide budget left column'),
-            setting='budgetleft', column='Budget left')
+            setting='budgetleft', column=_('Budget left'))
         self['viewtotalbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
             menuText=_('Total budget l&eft'),
             helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
-            setting='totalbudgetleft', column='Total budget left')
+            setting='totalbudgetleft', column=_('Total budget left'))
     
         self['viewexpandall'] = ViewExpandAll(viewer=viewer)
         self['viewcollapseall'] = ViewCollapseAll(viewer=viewer)
