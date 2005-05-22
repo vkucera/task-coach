@@ -34,6 +34,8 @@ def generateDict():
 def make(filename, outfile=None):
     ID = 1
     STR = 2
+    global MESSAGES
+    MESSAGES = {}
 
     # Compute .py name from .po name and arguments
     if filename.endswith('.po'):

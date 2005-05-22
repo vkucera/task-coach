@@ -5,123 +5,124 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
-"POT-Creation-Date: 2005-05-21 21:43+W. Europe Daylight Time\n"
-"PO-Revision-Date: 2005-05-22 21:26+0100\n"
+"POT-Creation-Date: 2005-05-22 17:24+W. Europe Daylight Time\n"
+"PO-Revision-Date: 2005-05-22 21:27+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
-"Language-Team: French <Jerome Laheurte>\n"
+"Language-Team: Simplified Chinese <limodou>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Poedit-Language: French\n"
-"X-Poedit-Country: FRANCE\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: CHINA\n"
+"X-Poedit-SourceCharset: iso-8859-1\n"
 
 #: taskcoachlib\command\effortCommands.py:6
 msgid "New effort"
-msgstr "Nouvel effort"
+msgstr "新花费"
 
 #: taskcoachlib\command\effortCommands.py:26
 msgid "Edit effort"
-msgstr "Editer l'effort"
+msgstr "编辑花费"
 
 #: taskcoachlib\command\effortCommands.py:49
 msgid "Delete effort"
-msgstr "Effacer effort"
+msgstr "删除花费"
 
 #: taskcoachlib\command\taskCommands.py:15
 msgid "Delete task"
-msgstr "Effacer t�che"
+msgstr "删除任务"
 
 #: taskcoachlib\command\taskCommands.py:38
 msgid "Cut"
-msgstr "Couper"
+msgstr "剪切"
 
 #: taskcoachlib\command\taskCommands.py:64
 msgid "Copy"
-msgstr "Copier"
+msgstr "拷贝"
 
 #: taskcoachlib\command\taskCommands.py:79
 msgid "Paste"
-msgstr "Coller"
+msgstr "粘贴"
 
 #: taskcoachlib\command\taskCommands.py:110
 msgid "Paste as subtask"
-msgstr "Coller en tant que sous-t�che"
+msgstr "粘贴为子任务"
 
 #: taskcoachlib\command\taskCommands.py:131
 #: taskcoachlib\command\taskCommands.py:135
 msgid "New task"
-msgstr "Nouvelle t�che"
+msgstr "新任务"
 
 #: taskcoachlib\command\taskCommands.py:149
 #: taskcoachlib\command\taskCommands.py:153
 msgid "New subtask"
-msgstr "Nouvelle sous-t�che"
+msgstr "新子任务"
 
 #: taskcoachlib\command\taskCommands.py:174
 msgid "Edit task"
-msgstr "Editer la t�che"
+msgstr "编辑任务"
 
 #: taskcoachlib\command\taskCommands.py:221
 msgid "Mark completed"
-msgstr "Marquer termin�"
+msgstr "标记完成"
 
 #: taskcoachlib\command\taskCommands.py:237
 msgid "Start tracking"
-msgstr "D�marrer le suivi"
+msgstr "开始跟踪"
 
 #: taskcoachlib\command\taskCommands.py:263
 msgid "Stop tracking"
-msgstr "Arr�ter le suivi"
+msgstr "停止跟踪"
 
 #: taskcoachlib\gui\editor.py:67
 #: taskcoachlib\gui\viewer.py:142
 #: taskcoachlib\gui\viewer.py:155
 msgid "Subject"
-msgstr "Sujet"
+msgstr "主题"
 
 #: taskcoachlib\gui\editor.py:68
 #: taskcoachlib\gui\editor.py:69
 #: taskcoachlib\gui\editor.py:162
 msgid "Description"
-msgstr "Description"
+msgstr "描述"
 
 #: taskcoachlib\gui\editor.py:75
 msgid "(Minimum of all subtask start dates)"
-msgstr "(Minimum des dates de d�part de toutes les sous-t�ches)"
+msgstr "(所有子任务开始日期的最小值)"
 
 #: taskcoachlib\gui\editor.py:76
 msgid "(Maximum of all subtask due dates)"
-msgstr "(Maximum des d�tes d�es de toutes les sous-t�ches)"
+msgstr "(所有子任务的到期日期的最大值)"
 
 #: taskcoachlib\gui\editor.py:84
 #: taskcoachlib\gui\uicommand.py:828
 #: taskcoachlib\gui\viewer.py:142
 #: taskcoachlib\gui\viewer.py:157
 msgid "Start date"
-msgstr "Date de d�marrage"
+msgstr "开始日期"
 
 #: taskcoachlib\gui\editor.py:85
 #: taskcoachlib\gui\uicommand.py:834
 #: taskcoachlib\gui\viewer.py:142
 #: taskcoachlib\gui\viewer.py:159
 msgid "Due date"
-msgstr "Date d�e"
+msgstr "到期日期"
 
 #: taskcoachlib\gui\editor.py:86
 #: taskcoachlib\gui\uicommand.py:840
 #: taskcoachlib\gui\viewer.py:143
 #: taskcoachlib\gui\viewer.py:163
 msgid "Completion date"
-msgstr "Date de fin"
+msgstr "完成日期"
 
 #: taskcoachlib\gui\editor.py:87
 msgid "Dates"
-msgstr "Dates"
+msgstr "日期"
 
 #: taskcoachlib\gui\editor.py:92
 msgid "For this task"
-msgstr "Pour cette t�che"
+msgstr "为此类任务"
 
 #: taskcoachlib\gui\editor.py:93
 #: taskcoachlib\gui\editor.py:103
@@ -129,7 +130,7 @@ msgstr "Pour cette t�che"
 #: taskcoachlib\gui\viewer.py:143
 #: taskcoachlib\gui\viewer.py:165
 msgid "Budget"
-msgstr "Budget"
+msgstr "预算"
 
 #: taskcoachlib\gui\editor.py:94
 #: taskcoachlib\gui\uicommand.py:850
@@ -138,187 +139,186 @@ msgstr "Budget"
 #: taskcoachlib\gui\viewer.py:240
 #: taskcoachlib\gui\viewer.py:252
 msgid "Time spent"
-msgstr "Temps �coul�"
+msgstr "时间花费"
 
 #: taskcoachlib\gui\editor.py:95
 #: taskcoachlib\gui\uicommand.py:857
 #: taskcoachlib\gui\viewer.py:145
 #: taskcoachlib\gui\viewer.py:173
 msgid "Budget left"
-msgstr "Budget restant"
+msgstr "剩余预算"
 
 #: taskcoachlib\gui\editor.py:97
 msgid "For this task including all subtasks"
-msgstr "Pour cette t�che et toutes ses sous-t�ches"
+msgstr "为所有包括子任务的此类任务"
 
 #: taskcoachlib\gui\editor.py:114
 #: taskcoachlib\gui\viewerfactory.py:21
 msgid "Effort"
-msgstr "Effort"
+msgstr "花费"
 
 #: taskcoachlib\gui\editor.py:143
 msgid "Start tracking from last stop time"
-msgstr "D�marrer le suivi depuis la derni�re date d'arr�t"
+msgstr "从上次停止时间开始跟踪"
 
 #: taskcoachlib\gui\editor.py:151
 msgid "Start"
-msgstr "D�marrer"
+msgstr "开始"
 
 #: taskcoachlib\gui\editor.py:152
 msgid "Stop"
-msgstr "Arr�ter"
+msgstr "停止"
 
 #: taskcoachlib\gui\find.py:13
 msgid "Find: "
-msgstr "Chercher: "
+msgstr "查找: "
 
 #: taskcoachlib\gui\find.py:16
 msgid "Type search string (a regular expression) here and press enter"
-msgstr "Entrer une cha�ne de recherche (expression rationnelle) ici et appuyez sur Entr�e"
+msgstr "在这里输入搜索字符串(正则表达式)然后按回车"
 
 #: taskcoachlib\gui\find.py:19
 msgid "Match case"
-msgstr "Tenir compte de la casse"
+msgstr "大小写匹配"
 
 #: taskcoachlib\gui\find.py:22
 msgid "Clear"
-msgstr "Effacer"
+msgstr "清除"
 
 #: taskcoachlib\gui\helpdialog.py:10
 msgid "Help: Colors"
-msgstr "Aide: Couleurs"
+msgstr "帮助: 颜色"
 
 #: taskcoachlib\gui\helpdialog.py:13
 msgid "Help: Tasks"
-msgstr "Aide: T�ches"
+msgstr "帮助: 任务"
 
 #: taskcoachlib\gui\helpdialog.py:16
 msgid "Help: About %s"
-msgstr "Aide: � propos de %s"
+msgstr "帮助: 关于 %s"
 
 #: taskcoachlib\gui\helpdialog.py:19
 msgid "Help: %s license"
-msgstr "Aide: licence de %s"
+msgstr "帮助: %s 许可证"
 
 #: taskcoachlib\gui\iocontroller.py:11
 msgid "%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*"
-msgstr "Fichiers %s (*.tsk)|*.tsk|Fichiers XML (*.xml)|*.xml|Tous les fichiers (*.*)|*"
+msgstr "%s 文件 (*.tsk)|*.tsk|XML 文件 (*.xml)|*.xml|所有文件 (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:20
 msgid "Open"
-msgstr "Ouvrir"
+msgstr "打开"
 
 #: taskcoachlib\gui\iocontroller.py:25
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
-msgstr "Charg� %(nrtasks)d t�ches depuis %(filename)s"
+msgstr "从 %(filename)s 中装入 %(nrtasks)d 条任务"
 
 #: taskcoachlib\gui\iocontroller.py:28
 msgid ""
 "Error while reading %s.\n"
 "Are you sure it is a %s-file?"
 msgstr ""
-"Erreur lors de la lecture de %s.\n"
-"Etes-vous s�r que c'est un fichier %s?"
+"读 %s 时出错。\n"
+"你确定它是 %s 文件吗？"
 
 #: taskcoachlib\gui\iocontroller.py:30
 msgid "File error"
-msgstr "Erreur de fichier"
+msgstr "文件错误"
 
 #: taskcoachlib\gui\iocontroller.py:34
 msgid "Merge"
-msgstr "Fusionner"
+msgstr "融合"
 
 #: taskcoachlib\gui\iocontroller.py:37
 msgid "Merged %(filename)s"
-msgstr "Fusionn� %(filename)s"
+msgstr "已融合 %(filename)s"
 
 #: taskcoachlib\gui\iocontroller.py:42
 #: taskcoachlib\gui\iocontroller.py:53
 #: taskcoachlib\gui\iocontroller.py:65
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
-msgstr "Sauvegard� %(nrtasks)d t�ches dans %(filename)s"
+msgstr "保存 %(nrtasks)d 条任务到 %(filename)s"
 
 #: taskcoachlib\gui\iocontroller.py:50
 #: taskcoachlib\gui\iocontroller.py:60
 msgid "Save as..."
-msgstr "Sauvegarder sous..."
+msgstr "另存为..."
 
 #: taskcoachlib\gui\iocontroller.py:69
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
 msgstr ""
-"Vous avez des modifications non sauvegard�es.\n"
-"Sauvegarder avant de fermer?"
+"存在未保存的修改。\n"
+"在关闭前保存吗？"
 
 #: taskcoachlib\gui\iocontroller.py:70
 msgid "%s: save changes?"
-msgstr "%s: sauvegarder les modifications?"
+msgstr "%s: 保存修改？"
 
 #: taskcoachlib\gui\iocontroller.py:77
 msgid "Closed %s"
-msgstr "%s ferm�"
+msgstr "%s 已关闭"
 
 #: taskcoachlib\gui\mainwindow.py:57
 msgid "Welcome to %(name)s version %(version)s"
-msgstr "Bienvenue dans %(name)s version %(version)s"
+msgstr "欢迎使用 %(name)s 版本 %(version)s"
 
 #: taskcoachlib\gui\menu.py:26
 msgid "&File"
-msgstr "&Fichier"
+msgstr "文件(&F)"
 
 #: taskcoachlib\gui\menu.py:27
 msgid "&Edit"
-msgstr "&Editer"
+msgstr "编辑(&E)"
 
 #: taskcoachlib\gui\menu.py:28
 msgid "&View"
-msgstr "&Affichage"
+msgstr "视图(&V)"
 
 #: taskcoachlib\gui\menu.py:29
 msgid "&Task"
-msgstr "&T�che"
+msgstr "任务(&T)"
 
 #: taskcoachlib\gui\menu.py:30
 msgid "Eff&ort"
-msgstr "Eff&ort"
+msgstr "花费(&O)"
 
 #: taskcoachlib\gui\menu.py:31
 msgid "&Help"
-msgstr "&Aide"
+msgstr "帮助(&H)"
 
 #: taskcoachlib\gui\menu.py:47
 msgid "&Select"
-msgstr "&Selectionner"
+msgstr "选择(&S)"
 
 #: taskcoachlib\gui\menu.py:61
 msgid "Ta&sks that are"
-msgstr "T�che&s qui sont"
+msgstr "任务是(&s)"
 
 #: taskcoachlib\gui\menu.py:63
 msgid "Tasks &due before end of"
-msgstr "T�ches &d�es avant la fin de"
+msgstr "任务预定在结束之前(&d)"
 
 #: taskcoachlib\gui\menu.py:66
 msgid "Task &list fields"
-msgstr "Champs de la &liste des t�ches"
+msgstr "任务列表字段(&l)"
 
 #: taskcoachlib\gui\menu.py:68
 msgid "Task &tree"
-msgstr "&Arbre des t�ches"
+msgstr "任务树(&t)"
 
 #: taskcoachlib\gui\menu.py:71
 msgid "Sort"
-msgstr "Sorte"
+msgstr ""
 
 #: taskcoachlib\gui\menu.py:73
 msgid "T&oolbar"
-msgstr "&Barre d'outils"
+msgstr "工具条(&o)"
 
-# Check please
 #: taskcoachlib\gui\preferences.py:37
 msgid "Auto save after every change"
-msgstr "Sauvegarder automatique apr�s chaque modification"
+msgstr ""
 
 #: taskcoachlib\gui\preferences.py:39
 msgid "Create backup copy when opening a %s file"
@@ -326,322 +326,321 @@ msgstr ""
 
 #: taskcoachlib\gui\preferences.py:45
 msgid "Splash screen"
-msgstr "Splash screen"
+msgstr "Splash 屏幕(&p)"
 
 #: taskcoachlib\gui\preferences.py:46
 #: taskcoachlib\gui\preferences.py:56
 msgid "This setting will take effect after you restart %s"
-msgstr "Cette option prendra effet apr�s le red�marrage de %s"
+msgstr "本设定将在你重启 %s 之后将会生效"
 
 #: taskcoachlib\gui\preferences.py:52
 #: taskcoachlib\gui\preferences.py:68
 msgid "Language"
-msgstr "Langage"
+msgstr "语言"
 
 #: taskcoachlib\gui\preferences.py:53
+#, fuzzy
 msgid "English (UK)"
-msgstr "Anglais (UK)"
+msgstr "英语"
 
 #: taskcoachlib\gui\preferences.py:53
+#, fuzzy
 msgid "English (US)"
-msgstr "Anglais (US)"
+msgstr "英语"
 
 #: taskcoachlib\gui\preferences.py:54
 msgid "Dutch"
-msgstr "N�erlandais"
+msgstr "荷兰语"
 
 #: taskcoachlib\gui\preferences.py:54
 msgid "French"
-msgstr "Fran�ais"
+msgstr ""
 
 #: taskcoachlib\gui\preferences.py:55
 msgid "Simplified Chinese"
 msgstr ""
 
-# Check please
 #: taskcoachlib\gui\preferences.py:66
 msgid "Startup"
-msgstr "D�marrage"
+msgstr ""
 
 #: taskcoachlib\gui\preferences.py:67
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr "保存"
 
 #: taskcoachlib\gui\render.py:22
 msgid "Infinite"
-msgstr "Infini"
+msgstr "无限"
 
 #: taskcoachlib\gui\render.py:36
 #: taskcoachlib\widgets\datectrl.py:68
 msgid "None"
-msgstr "Aucune"
+msgstr "空"
 
 #: taskcoachlib\gui\render.py:45
 msgid "now"
-msgstr "maintenant"
+msgstr "现在"
 
 #: taskcoachlib\gui\status.py:34
 msgid "Tasks: %d selected, %d visible, %d total"
-msgstr "T�ches: %d s�lectionn�e(s), %d visible(s), %d au total"
+msgstr "任务：%d 选中，%d 可见，%d 总数"
 
 #: taskcoachlib\gui\status.py:37
 msgid "Status: %d over due, %d inactive, %d completed"
-msgstr "Etat: %d en d�passement de d�lai, %d inactive(s), %d termin�e(s)"
+msgstr "状态：%d 超出预定，%d 非活动，%d 已完成"
 
 #: taskcoachlib\gui\taskbaricon.py:42
 msgid "No tasks due today"
-msgstr "Aucune t�che d�e aujourd'hui"
+msgstr "没有今天到期的任务"
 
 #: taskcoachlib\gui\taskbaricon.py:44
 msgid "One task due today"
-msgstr "Une t�che d�e aujourd'hui"
+msgstr "一个任务今天到期"
 
 #: taskcoachlib\gui\taskbaricon.py:46
 msgid "%d tasks due today"
-msgstr "%d t�ches d�es ajourd'hui"
+msgstr "%d 个任务今天到期"
 
 #: taskcoachlib\gui\uicommand.py:210
 msgid "&Open...\tCtrl+O"
-msgstr "&Ouvrir...\tCtrl+O"
+msgstr "打开(&O)...\tCtrl+O"
 
 #: taskcoachlib\gui\uicommand.py:211
 msgid "Open a %s file"
-msgstr "Ouvrir un fichier %s"
+msgstr "打开 %s 文件"
 
 #: taskcoachlib\gui\uicommand.py:218
 msgid "&Merge..."
-msgstr "&Fusionner..."
+msgstr "融合(&M)..."
 
 #: taskcoachlib\gui\uicommand.py:219
 msgid "Merge tasks from another file with the current file"
-msgstr "Fusionner les t�ches d'un autre fichier dans le fichier courant"
+msgstr "将别一个文件与当前文件进行融合"
 
 #: taskcoachlib\gui\uicommand.py:227
 msgid "&Close"
-msgstr "&Fermer"
+msgstr "关闭(&C)"
 
 #: taskcoachlib\gui\uicommand.py:228
 msgid "Close the current file"
-msgstr "Fermer le fichier courant"
+msgstr "关闭当前文件"
 
 #: taskcoachlib\gui\uicommand.py:235
 msgid "&Save\tCtrl+S"
-msgstr "&Sauvegarder\tCtrl+S"
+msgstr "保存(&S)\tCtrl+S"
 
 #: taskcoachlib\gui\uicommand.py:236
 msgid "Save the current file"
-msgstr "Sauvegarder le fichier courant"
+msgstr "保存当前文件"
 
 #: taskcoachlib\gui\uicommand.py:246
 msgid "S&ave as..."
-msgstr "S&auvegarder sous..."
+msgstr "另存为(&a)..."
 
 #: taskcoachlib\gui\uicommand.py:247
 msgid "Save the current file under a new name"
-msgstr "Sauvegarder le fichier courant sous un nom diff�rent"
+msgstr "保存当前文件为新文件名"
 
 #: taskcoachlib\gui\uicommand.py:255
 msgid "Sa&ve selection..."
-msgstr "Sau&vegarder la s�lection..."
+msgstr "保存选择(&v)..."
 
 #: taskcoachlib\gui\uicommand.py:256
 msgid "Save the selected tasks to a separate file"
-msgstr "Sauvegarder les t�ches s�lectionn�es dans un fichier s�par�"
+msgstr "保存选中任务到另一个文件"
 
 #: taskcoachlib\gui\uicommand.py:264
 msgid "&Quit\tCtrl+Q"
-msgstr "&Quitter\tCtrl+Q"
+msgstr "退出(&Q)\tCtrl+Q"
 
 #: taskcoachlib\gui\uicommand.py:265
 msgid "Exit %s"
-msgstr "Quitter %s"
+msgstr "退出 %s"
 
 #: taskcoachlib\gui\uicommand.py:272
 msgid "&Undo"
-msgstr "&D�faire"
+msgstr "撤销(&U)"
 
 #: taskcoachlib\gui\uicommand.py:277
 msgid "Undo the last command"
-msgstr "D�faire la derni�re op�ration"
+msgstr "撤销上次命令"
 
 #: taskcoachlib\gui\uicommand.py:291
 msgid "&Redo"
-msgstr "&Refaire"
+msgstr "重做(&R)"
 
 #: taskcoachlib\gui\uicommand.py:296
 msgid "Redo the last command that was undone"
-msgstr "Refaire la derni�re op�ration d�faite"
+msgstr "重做最后一条被撤销的命令"
 
 #: taskcoachlib\gui\uicommand.py:313
 msgid "Cu&t\tCtrl+X"
-msgstr "&Couper\tCtrl+X"
+msgstr "剪切(&t)\tCtrl+X"
 
 #: taskcoachlib\gui\uicommand.py:314
 msgid "Cut the selected task(s) to the clipboard"
-msgstr "Couper la (les) t�che(s) s�lectionn�e(s)"
+msgstr "剪切选中任务到剪粘板"
 
 #: taskcoachlib\gui\uicommand.py:324
 msgid "&Copy\tCtrl+C"
-msgstr "&Copier\tCtrl+C"
+msgstr "拷贝(&C)\tCtrl+C"
 
 #: taskcoachlib\gui\uicommand.py:325
 msgid "Copy the selected task(s) to the clipboard"
-msgstr "Copier la (les) t�che(s) s�lectionn�e(s)"
+msgstr "拷贝选中任务到剪贴板"
 
 #: taskcoachlib\gui\uicommand.py:334
 msgid "&Paste\tCtrl+V"
-msgstr "&Coller\tCtrl+V"
+msgstr "粘贴(&P)\tCtrl+V"
 
 #: taskcoachlib\gui\uicommand.py:335
 msgid "Paste task(s) from the clipboard"
-msgstr "Coller la (les) t�che(s) depuis le presse-papier"
+msgstr "从剪贴板粘贴任务"
 
 #: taskcoachlib\gui\uicommand.py:348
 msgid "P&aste as subtask"
-msgstr "&Coller en tant que sous-t�che"
+msgstr "粘贴为子任务(&a)"
 
 #: taskcoachlib\gui\uicommand.py:349
 msgid "Paste task(s) as subtask(s) of the selected task"
-msgstr "Coller la (les) t�che(s) en tant que sous-t�che(s) de la s�lection"
+msgstr "粘贴任务为选中任务的子任务"
 
-# Check please
 #: taskcoachlib\gui\uicommand.py:363
 msgid "Preferences..."
-msgstr "Pr�f�rences..."
+msgstr ""
 
-# Check please
 #: taskcoachlib\gui\uicommand.py:364
 #: taskcoachlib\gui\uicommand.py:367
 msgid "Edit preferences"
-msgstr "Editer les pr�f�rences"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:374
 msgid "&All\tCtrl+A"
-msgstr "&Tout\tCtrl+A"
+msgstr "全部(&A)\tCtrl+A"
 
 #: taskcoachlib\gui\uicommand.py:375
 msgid "Select all items in the current view"
-msgstr "S�lectionner toutes les entit�s dans la vue courante"
+msgstr "选择所有当前视图中的条目"
 
 #: taskcoachlib\gui\uicommand.py:384
 msgid "&Invert selection\tCtrl+I"
-msgstr "&Inverser la s�lection\tCtrl+I"
+msgstr "颠倒选择(&I)\tCtrl+I"
 
 #: taskcoachlib\gui\uicommand.py:385
 msgid "Select unselected items and unselect selected items"
-msgstr "S�lectionner les entit�s non s�lectionn�es et d�s�lectionner les entit�s s�lectionn�es"
+msgstr "选择未选中的条目并且不选择已经选择的条目"
 
 #: taskcoachlib\gui\uicommand.py:394
 msgid "&Clear selection"
-msgstr "&Effacer s�lection"
+msgstr "清除选择(&C)"
 
 #: taskcoachlib\gui\uicommand.py:395
 msgid "Unselect all items"
-msgstr "D�selectionner tout"
+msgstr "不选所有条目"
 
 #: taskcoachlib\gui\uicommand.py:403
 msgid "&All tasks"
-msgstr "&Toutes les t�ches"
+msgstr "全部任务(&A)"
 
 #: taskcoachlib\gui\uicommand.py:404
 msgid "Show all tasks (reset all filters)"
-msgstr "Montrer toutes les t�ches (r�initialise tous les filtres)"
+msgstr "显示所有任务(重置所有过滤)"
 
 #: taskcoachlib\gui\uicommand.py:424
 msgid "&Completed"
-msgstr "&Termin�"
+msgstr "完成(&C)"
 
 #: taskcoachlib\gui\uicommand.py:425
 msgid "Show/hide completed tasks"
-msgstr "Montrer/cacher les t�ches termin�es"
+msgstr "显示或隐藏完成任务"
 
 #: taskcoachlib\gui\uicommand.py:435
 msgid "&Inactive"
-msgstr "&Inactif"
+msgstr "非活动(&I)"
 
 #: taskcoachlib\gui\uicommand.py:436
 msgid "Show/hide inactive tasks (tasks with a start date in the future)"
-msgstr "Montrer/cacher les t�ches inactives (ayant une date de d�but dans l'avenir)"
+msgstr "显示或隐藏非活动任务(开始日期在将来的任务)"
 
 #: taskcoachlib\gui\uicommand.py:445
 msgid "&Over due"
-msgstr "&D�passement de d�lai"
+msgstr "超过预定(&O)"
 
 #: taskcoachlib\gui\uicommand.py:446
 msgid "Show/hide over due tasks (tasks with a due date in the past)"
-msgstr "Montrer/cacher les t�ches en retard (ayant une date d�e dans le pass�)"
+msgstr "显示或隐藏超出预定任务(预定日期在过去的任务)"
 
 #: taskcoachlib\gui\uicommand.py:455
 msgid "&Active"
-msgstr "&Actif"
+msgstr "活动(&A)"
 
 #: taskcoachlib\gui\uicommand.py:456
 msgid "Show/hide active tasks (tasks with a start date in the past and a due date in the future)"
-msgstr "Montrer/cacher les t�ches actives (ayant une date de d�but dans le pass� et une date d�e dans l'avenir)"
+msgstr "显示或隐藏活动任务(任务带有在过去开始的日期和在将来的预定日期)"
 
 #: taskcoachlib\gui\uicommand.py:465
 msgid "Over &budget"
-msgstr "D�passement de &budget"
+msgstr "超过预算(&b)"
 
 #: taskcoachlib\gui\uicommand.py:466
 msgid "Show/hide tasks that are over budget"
-msgstr "Montrer/cacher les t�ches en d�passement de budget"
+msgstr "显示或隐藏超出预算的任务"
 
 #: taskcoachlib\gui\uicommand.py:476
 msgid "Tasks &with subtasks"
-msgstr "&T�ches ayant des sous-t�ches"
+msgstr "带子交易的任务(&w)"
 
 #: taskcoachlib\gui\uicommand.py:477
 msgid "Show/hide tasks with subtasks"
-msgstr "Montrer/cacher les t�ches ayant des sous-t�ches"
+msgstr "显示或隐藏带有子交易的任务"
 
 #: taskcoachlib\gui\uicommand.py:497
 msgid "&Expand all tasks"
-msgstr "&D�velopper toutes les t�ches"
+msgstr "展开所有任务(&E)"
 
 #: taskcoachlib\gui\uicommand.py:498
 msgid "Expand all tasks with subtasks"
-msgstr "D�velopper toutes les t�ches ayant des sous-t�ches"
+msgstr "展开所有带子任务的任务"
 
 #: taskcoachlib\gui\uicommand.py:507
 msgid "E&xpand"
-msgstr "&D�velopper"
+msgstr "展开(&x)"
 
 #: taskcoachlib\gui\uicommand.py:507
 msgid "Expand the selected task(s)"
-msgstr "D�velopper la (les) t�che(s) s�lectionn�e(s)"
+msgstr "展开选中任务"
 
 #: taskcoachlib\gui\uicommand.py:515
 msgid "&Collapse all tasks"
-msgstr "&Effondrer toutes les t�ches"
+msgstr "折叠全部任务(&C)"
 
 #: taskcoachlib\gui\uicommand.py:516
 msgid "Collapse all tasks with subtasks"
-msgstr "Effondrer toutes les t�ches ayant des sous-t�ches"
+msgstr "折叠所有带子任务的任务"
 
 #: taskcoachlib\gui\uicommand.py:524
 msgid "C&ollapse"
-msgstr "&Effondrer"
+msgstr "折叠(&o)"
 
 #: taskcoachlib\gui\uicommand.py:525
 msgid "Collapse the selected tasks with subtasks"
-msgstr "Effondrer les t�ches s�lectionn�es ayant des sous-t�ches"
+msgstr "折叠所有选中任务中带子任务的任务"
 
 #: taskcoachlib\gui\uicommand.py:543
 msgid "&Find dialog"
-msgstr "&Dialogue de recherche"
+msgstr "查找对话框(&F)"
 
 #: taskcoachlib\gui\uicommand.py:544
 msgid "Show/hide find dialog"
-msgstr "Montrer/cacher le dialogue de recherche"
+msgstr "显示或隐藏查找对话框"
 
 #: taskcoachlib\gui\uicommand.py:554
 msgid "Status&bar"
-msgstr "&Barre d'�tat"
+msgstr "状态条(&b)"
 
 #: taskcoachlib\gui\uicommand.py:555
 msgid "Show/hide status bar"
-msgstr "Montrer/cacher la barre d'�tat"
+msgstr "显示或隐藏状态条"
 
 #: taskcoachlib\gui\uicommand.py:575
 msgid "On subject"
@@ -653,199 +652,199 @@ msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:587
 msgid "&New task...\tINS"
-msgstr "&Nouvelle t�che...\tINS"
+msgstr "新任务(&N)...\tINS"
 
 #: taskcoachlib\gui\uicommand.py:587
 msgid "Insert a new task"
-msgstr "Ins�rer une nouvelle t�che"
+msgstr "插入新任务"
 
 #: taskcoachlib\gui\uicommand.py:602
 msgid "New &subtask...\tCtrl+INS"
-msgstr "Nouvelle &sous-t�che...\tCtrl+INS"
+msgstr "新子任务(&s)...\tCtrl+INS"
 
 #: taskcoachlib\gui\uicommand.py:603
 msgid "Insert a new subtask into the selected task"
-msgstr "Ins�rer une nouvelle sous-t�che dans la t�che s�lectionn�e"
+msgstr "向选中的任务插入新的子任务"
 
 #: taskcoachlib\gui\uicommand.py:619
 msgid "&Edit task..."
-msgstr "&Editer la t�che..."
+msgstr "编辑任务(&E)..."
 
 #: taskcoachlib\gui\uicommand.py:619
 msgid "Edit the selected task"
-msgstr "Editer la t�che s�lectionn�e"
+msgstr "编辑选中的任务"
 
 #: taskcoachlib\gui\uicommand.py:633
 msgid "&Mark completed"
-msgstr "&Marquer termin�"
+msgstr "标记完成(&M)"
 
 #: taskcoachlib\gui\uicommand.py:634
 msgid "Mark the selected task(s) completed"
-msgstr "Marquer la (les) t�che(s) s�lectionn�e(s)"
+msgstr "标记选中任务完成"
 
 #: taskcoachlib\gui\uicommand.py:649
 msgid "&Delete task\tCtrl+D"
-msgstr "&Effacer t�che\tCtrl+D"
+msgstr "删除任务(&D)\tCtrl+D"
 
 #: taskcoachlib\gui\uicommand.py:650
 msgid "Delete the selected task(s)"
-msgstr "Effacer la (les) t�che(s) s�letionn�e(s)"
+msgstr "删除选中任务"
 
 #: taskcoachlib\gui\uicommand.py:662
 msgid "&New effort..."
-msgstr "&Nouvel effort..."
+msgstr "新花费(&N)..."
 
 #: taskcoachlib\gui\uicommand.py:663
 msgid "Add a effort period to the selected task(s)"
-msgstr "Ajouter une p�riode d'effort � (aux) la t�che s�lectionn�e(s)"
+msgstr "给选中的任务增加成就时期"
 
 #: taskcoachlib\gui\uicommand.py:677
 msgid "&Edit effort..."
-msgstr "&Editer l'effort..."
+msgstr "编辑任务(&E)..."
 
 #: taskcoachlib\gui\uicommand.py:678
 msgid "Edit the selected effort period(s)"
-msgstr "Editer la (les) p�riode(s) d'effort s�lectionn�e(s)"
+msgstr "编辑选中的花费日期"
 
 #: taskcoachlib\gui\uicommand.py:690
 msgid "&Delete effort"
-msgstr "&Effacer effort"
+msgstr "删除花费(&D)"
 
 #: taskcoachlib\gui\uicommand.py:691
 msgid "Delete the selected effort period(s)"
-msgstr "Effacer la (les) p�riode(s) d'effort s�lectionn�e(s)"
+msgstr "删除选中花费时期"
 
 #: taskcoachlib\gui\uicommand.py:702
 msgid "&Start tracking effort"
-msgstr "&D�marrer le suivi"
+msgstr "开始跟踪花费(&S)"
 
 #: taskcoachlib\gui\uicommand.py:703
 msgid "Start tracking effort for the selected task(s)"
-msgstr "D�marrer le suivi pour la (les) t�che(s) s�lectionn�e(s)"
+msgstr "对选中的任务开始跟踪花费"
 
 #: taskcoachlib\gui\uicommand.py:720
 msgid "St&op tracking effort"
-msgstr "&Arr�ter le suivi de l'effort"
+msgstr "停止跟踪花费(&o)"
 
 #: taskcoachlib\gui\uicommand.py:721
 msgid "Stop tracking effort for the active task(s)"
-msgstr "Arr�ter le suivi de l'effort pour la (les) t�che(s) active(s)"
+msgstr "停止跟踪活动任务的花费"
 
 #: taskcoachlib\gui\uicommand.py:737
 msgid "&Tasks"
-msgstr "&T�ches"
+msgstr "任务(&T)"
 
 #: taskcoachlib\gui\uicommand.py:738
 msgid "Help about the possible states of tasks"
-msgstr "Aide sur les �tats des t�ches"
+msgstr "关于任务可能状态的帮助"
 
 #: taskcoachlib\gui\uicommand.py:745
 msgid "&Colors"
-msgstr "&Couleurs"
+msgstr "颜色(&C)"
 
 #: taskcoachlib\gui\uicommand.py:746
 msgid "Help about the possible colors of tasks"
-msgstr "Aide sur les couleurs des t�ches"
+msgstr "关于任务可能颜色的帮助"
 
 #: taskcoachlib\gui\uicommand.py:758
 msgid "&About %s"
-msgstr "&A propos de %s"
+msgstr "关于 %s (&A)"
 
 #: taskcoachlib\gui\uicommand.py:759
 msgid "Version and contact information about %s"
-msgstr "Version et informations de contact sur %s"
+msgstr "关于 %s 的版本和联系信息"
 
 #: taskcoachlib\gui\uicommand.py:766
 msgid "&License"
-msgstr "&Licence"
+msgstr "许可证(&L)"
 
 #: taskcoachlib\gui\uicommand.py:767
 msgid "%s license"
-msgstr "licence de %s"
+msgstr "%s 许可证"
 
 #: taskcoachlib\gui\uicommand.py:775
 msgid "&Restore"
-msgstr "&Restaurer"
+msgstr "恢复(&R)"
 
 #: taskcoachlib\gui\uicommand.py:776
 msgid "Restore the window to its previous state"
-msgstr "Restaurer la fen�tre � son �tat pr�c�dent"
+msgstr "恢复窗口为它以前的状态"
 
 #: taskcoachlib\gui\uicommand.py:830
 msgid "&Start date"
-msgstr "&Date de d�marrage"
+msgstr "开始日期(&S)"
 
 #: taskcoachlib\gui\uicommand.py:830
 msgid "Show/hide start date column"
-msgstr "Montrer/cacher la colonne de date de d�but"
+msgstr "显示或隐藏开始日期列"
 
 #: taskcoachlib\gui\uicommand.py:833
 msgid "&Due date"
-msgstr "&Date d�e"
+msgstr "到期日期(&D)"
 
 #: taskcoachlib\gui\uicommand.py:833
 msgid "Show/hide due date column"
-msgstr "Montrer/cacher la colonne de date d�e"
+msgstr "显示或隐藏到期日期列"
 
 #: taskcoachlib\gui\uicommand.py:836
 msgid "D&ays left"
-msgstr "&Jours restant"
+msgstr "剩余天数(&a)"
 
 #: taskcoachlib\gui\uicommand.py:836
 msgid "Show/hide days left column"
-msgstr "Montrer/cacher la colonne des jours restant"
+msgstr "显示或隐藏剩余天数列"
 
 #: taskcoachlib\gui\uicommand.py:837
 #: taskcoachlib\gui\viewer.py:143
 #: taskcoachlib\gui\viewer.py:161
 msgid "Days left"
-msgstr "Jours restant"
+msgstr "剩余天数"
 
 #: taskcoachlib\gui\uicommand.py:839
 msgid "Co&mpletion date"
-msgstr "&Date de fin"
+msgstr "完成日期(&m)"
 
 #: taskcoachlib\gui\uicommand.py:839
 msgid "Show/hide completion date column"
-msgstr "Montrer/cacher la colonne de date de terminaison"
+msgstr "显示或隐藏日期列"
 
 #: taskcoachlib\gui\uicommand.py:842
 msgid "&Budget"
-msgstr "&Budget"
+msgstr "预算(&B)"
 
 #: taskcoachlib\gui\uicommand.py:842
 msgid "Show/hide budget column"
-msgstr "Montrer/cacher la colonne du budget"
+msgstr "显示或隐藏预算列"
 
 #: taskcoachlib\gui\uicommand.py:845
 msgid "Total b&udget"
-msgstr "B&udget total"
+msgstr "全部预算(&u)"
 
 #: taskcoachlib\gui\uicommand.py:846
 msgid "Show/hide total budget column (total budget includes budget for subtasks)"
-msgstr "Montrer/cacher la colonne du budget total restant (incluant le budget des sous-t�ches)"
+msgstr "显示或隐藏全部预算列(全部预算包括子任务的预算)"
 
 #: taskcoachlib\gui\uicommand.py:847
 #: taskcoachlib\gui\viewer.py:144
 #: taskcoachlib\gui\viewer.py:167
 msgid "Total budget"
-msgstr "Budget total"
+msgstr "全部预算"
 
 #: taskcoachlib\gui\uicommand.py:849
 msgid "&Time spent"
-msgstr "&Temps �coul�"
+msgstr "时间花费(&T)"
 
 #: taskcoachlib\gui\uicommand.py:849
 msgid "Show/hide time spent column"
-msgstr "Montrer/cacher la colonne du temps �coul�"
+msgstr "显示或隐藏时间花费列"
 
 #: taskcoachlib\gui\uicommand.py:852
 msgid "T&otal time spent"
-msgstr "Temps �coul� &total"
+msgstr "全部花费时间(&o)"
 
 #: taskcoachlib\gui\uicommand.py:853
 msgid "Show/hide total time spent column (total time includes time spent on subtasks)"
-msgstr "Montrer/cacher la colonne du temps total �coul� (incluant le temps �coul� des sous-t�ches)"
+msgstr "显示或隐藏全部花费时间列(全部时间包括子交易的花费时间)"
 
 #: taskcoachlib\gui\uicommand.py:854
 #: taskcoachlib\gui\viewer.py:144
@@ -853,151 +852,151 @@ msgstr "Montrer/cacher la colonne du temps total �coul� (incluant le temps �coul
 #: taskcoachlib\gui\viewer.py:285
 #: taskcoachlib\gui\viewer.py:292
 msgid "Total time spent"
-msgstr "Temps �coul� total"
+msgstr "全部花费时间"
 
 #: taskcoachlib\gui\uicommand.py:856
 msgid "Budget &left"
-msgstr "Budget &restant"
+msgstr "剩余预算(&l)"
 
 #: taskcoachlib\gui\uicommand.py:856
 msgid "Show/hide budget left column"
-msgstr "Montrer/cacher la colonne du budget restant"
+msgstr "显示或隐藏剩余预算"
 
 #: taskcoachlib\gui\uicommand.py:859
 msgid "Total budget l&eft"
-msgstr "Budget total &restant"
+msgstr "全部剩余预算(&e)"
 
 #: taskcoachlib\gui\uicommand.py:860
 msgid "Show/hide total budget left column (total budget left includes budget left for subtasks)"
-msgstr "Montrer/cacher la colonne du budget total restant (incluant le budget des sous-t�ches)"
+msgstr "显示或隐藏剩余预算列(全部剩余预算包括子任务的剩余预算)"
 
 #: taskcoachlib\gui\uicommand.py:861
 #: taskcoachlib\gui\viewer.py:145
 #: taskcoachlib\gui\viewer.py:175
 msgid "Total budget left"
-msgstr "Budget total restant"
+msgstr "全部剩余预算"
 
 #: taskcoachlib\gui\uicommand.py:871
 msgid "&Hide"
-msgstr "&Cacher"
+msgstr "隐藏(&H)"
 
 #: taskcoachlib\gui\uicommand.py:871
 msgid "Hide the toolbar"
-msgstr "Cacher la barre d'outils"
+msgstr "隐藏工具条"
 
 #: taskcoachlib\gui\uicommand.py:873
 msgid "&Small images"
-msgstr "&Petites images"
+msgstr "小图片(&S)"
 
 #: taskcoachlib\gui\uicommand.py:874
 msgid "Small images (16x16) on the toolbar"
-msgstr "Petites images (16x16) dans la barre d'outils"
+msgstr "在工具条显示小图片(16x16)"
 
 #: taskcoachlib\gui\uicommand.py:876
 msgid "&Medium-sized images"
-msgstr "&Images de taille moyenne"
+msgstr "中等图片(&M)"
 
 #: taskcoachlib\gui\uicommand.py:877
 msgid "Medium-sized images (22x22) on the toolbar"
-msgstr "Images de taille moyenne (22x22) dans la barre d'outils"
+msgstr "在工具条上使用中等图片(22x22)"
 
 #: taskcoachlib\gui\uicommand.py:879
 msgid "&Large images"
-msgstr "&Grandes images"
+msgstr "大图片(&L)"
 
 #: taskcoachlib\gui\uicommand.py:880
 msgid "Large images (32x32) on the toolbar"
-msgstr "Grandes images (32x32) dans la barre d'outils"
+msgstr "在工具条上使用大图片(32x32)"
 
 #: taskcoachlib\gui\uicommand.py:885
 msgid "&Today"
-msgstr "&Aoujourd'hui"
+msgstr "今天(&T)"
 
 #: taskcoachlib\gui\uicommand.py:886
 msgid "Only show tasks due today"
-msgstr "Ne montrer que les t�ches d�es aujourd'hui"
+msgstr "仅显示今天到期的任务"
 
 #: taskcoachlib\gui\uicommand.py:888
 msgid "T&omorrow"
-msgstr "&Demain"
+msgstr "明天(&o)"
 
 #: taskcoachlib\gui\uicommand.py:889
 msgid "Only show tasks due today and tomorrow"
-msgstr "Ne montrer que les t�ches d�es aujourd'hui et demain"
+msgstr "仅显示今天和明天到期的任务"
 
 #: taskcoachlib\gui\uicommand.py:891
 msgid "Wo&rk week"
-msgstr "&Semaine travaill�e"
+msgstr "工作周(&r)"
 
 #: taskcoachlib\gui\uicommand.py:892
 msgid "Only show tasks due this work week (i.e. before Friday)"
-msgstr "Ne montrer que les t�ches d�es cette semaine travaill�e (cad avant Vendredi)"
+msgstr "仅显示本工作周到期的任务(例如，日期五之前)"
 
 #: taskcoachlib\gui\uicommand.py:894
 msgid "&Week"
-msgstr "&Semaine"
+msgstr "周(&W)"
 
 #: taskcoachlib\gui\uicommand.py:895
 msgid "Only show tasks due this week (i.e. before Sunday)"
-msgstr "Ne montrer que les t�ches d�es cette semaine (cad avant Dimanche)"
+msgstr "仅显示本周到期的任务(例如，星期日之前)"
 
 #: taskcoachlib\gui\uicommand.py:897
 msgid "&Month"
-msgstr "&Mois"
+msgstr "月份(&M)"
 
 #: taskcoachlib\gui\uicommand.py:898
 msgid "Only show tasks due this month"
-msgstr "Ne montrer que les t�ches d�es ce mois-ci"
+msgstr "仅显示本月到期的任务"
 
 #: taskcoachlib\gui\uicommand.py:900
 msgid "&Year"
-msgstr "&Ann�e"
+msgstr "年(&Y)"
 
 #: taskcoachlib\gui\uicommand.py:901
 msgid "Only show tasks due this year"
-msgstr "Ne montrer que les t�ches d�es cette ann�e"
+msgstr "仅显示本年到期的任务"
 
 #: taskcoachlib\gui\uicommand.py:903
 msgid "&Unlimited"
-msgstr "&Sans limite"
+msgstr "去掉限制(&U)"
 
 #: taskcoachlib\gui\uicommand.py:904
 msgid "Show all tasks"
-msgstr "Montrer toutes les t�ches"
+msgstr "显示所有任务"
 
 #: taskcoachlib\gui\viewer.py:240
 #: taskcoachlib\gui\viewer.py:247
 msgid "Period"
-msgstr "P�riode"
+msgstr "时期"
 
 #: taskcoachlib\gui\viewer.py:240
 #: taskcoachlib\gui\viewer.py:250
 msgid "Task"
-msgstr "T�che"
+msgstr "任务"
 
 #: taskcoachlib\gui\viewerfactory.py:7
 msgid "Effort list"
-msgstr "Liste d'efforts"
+msgstr "花费列表"
 
 #: taskcoachlib\gui\viewerfactory.py:10
 msgid "Effort per day"
-msgstr "Effort par jour"
+msgstr "每天花费"
 
 #: taskcoachlib\gui\viewerfactory.py:13
 msgid "Effort per week"
-msgstr "Effort par semaine"
+msgstr "每周花费"
 
 #: taskcoachlib\gui\viewerfactory.py:16
 msgid "Effort per month"
-msgstr "Effort par mois"
+msgstr "每月花费"
 
 #: taskcoachlib\gui\viewerfactory.py:26
 msgid "Task list"
-msgstr "Liste des t�ches"
+msgstr "任务列表"
 
 #: taskcoachlib\gui\viewerfactory.py:29
 msgid "Task tree"
-msgstr "Arbre des t�ches"
+msgstr "任务树"
 
 #: taskcoachlib\help\__init__.py:5
 msgid ""
@@ -1008,12 +1007,12 @@ msgid ""
 "- Future tasks are gray, and\n"
 "- Completed tasks are green.\n"
 msgstr ""
-"Les t�ches sont colori�es en fonction des r�gles suivantes:\n"
-"- Les t�ches en d�passement de d�lai en rouge;\n"
-"- Les t�ches d�es aujourd'hui en orange;\n"
-"- Les t�ches actives en noir;\n"
-"- Les t�ches � venir en gris, et\n"
-"- Les t�ches termin�es en vert.\n"
+"任务将根据下面的规则被着色：\n"
+"- 超过预定日期的任务是红色；\n"
+"- 预定为今天的任务是桔黄色；\n"
+"- 活动任务是黑色；\n"
+"- 将来任务是灰色；\n"
+"- 已完成的任务是绿色。\n"
 
 #: taskcoachlib\help\__init__.py:13
 msgid ""
@@ -1038,26 +1037,26 @@ msgid ""
 "- Under budget: still budget left;\n"
 "- No budget: the task has no budget.\n"
 msgstr ""
-"Les t�ches ont les propri�t�s suivantes:\n"
-"- Sujet: une ligne unique qui r�sume la t�che.\n"
-"- Description: une description de la t�che, sur plusieurs lignes.\n"
-"- Date d�e: la date � laquelle la t�che devrait �tre termin�e. Ceci peut �tre 'None', signifiant que la t�che n'a pas de date d�e fixe.\n"
-"- Date de d�part: la premi�re date � laquelle la t�che peut �tre d�marr�e. Par d�faut, c'est la date de cr�ation de la t�che.\n"
-"- Termin�e: un drapeau indiquant si la t�che est termin�e.\n"
-"- Date de fin: Cette date est None tant que la t�che n'est pas termin�e. Elle est fix�e � la date courante lorsque l'utilisateur marque la t�che comme termin�e. Elle peut aussi �tre fix�e manuellement.\n"
-"- Budget: nombre d'heures disponibles pour la t�che.\n"
+"任务有以下属性：\n"
+"- 主题：用于总结任务的单行文本。\n"
+"- 描述：关于任务的多行描述。\n"
+"- 到期日期：任务应该完成日期。它可以为“空”，表示任务没有固定的到期日期。\n"
+"- 开始日期：任务可以开始的第一个日期。开始日期缺省为任务创建的日期。\n"
+"- 完成：用于指示任务是否完成的标志。\n"
+"- 完成日期：只要任务没有完成，这个日期为“空”。当用户设置任务为完成时它将被设为当前日期。完成日期可以手工输入。\n"
+"- 预算：任务有有效时间的合计。\n"
 "\n"
-"Les t�ches sont toujours dans exactement l'un des �tats suivant:\n"
-"- Actif: la date de d�marrage est dans le pass� et la date d�e dans l'avenir;\n"
-"- Inactif: la date de d�marrage est dans l'avenir;\n"
-"- Termin�: la t�che est termin�e.\n"
+"任务总是拥有下列确切状态之一：\n"
+"- 活动：开始日期在过去，预期日期在将来；\n"
+"- 非活动：开始日期在将来，或\n"
+"- 已完成：任务已经被完成。\n"
 "\n"
-"De plus, les t�ches sont dites:\n"
-"- En d�passement de d�lai: la date d�e est dans le pass�;\n"
-"- D�e aujourd'hui: la t�che est d�e aujourd'hui;\n"
-"- En d�passement de budget: plus de budget restant;\n"
-"- Sous le budget: il reste du budget;\n"
-"- Sans budget: la t�che n'a pas de budget.\n"
+"另上，任务可以被引用为：\n"
+"- 超出预期：预期日期在过去；\n"
+"- 今天到期：到期日为今天；\n"
+"- 超出预算：没有剩余预算；\n"
+"- 低于预算：仍然还有剩余预算；\n"
+"- 没有预算：任务没有预算。\n"
 
 #: taskcoachlib\help\__init__.py:39
 msgid ""
@@ -1079,5 +1078,5 @@ msgstr "OK"
 
 #: taskcoachlib\widgets\dialog.py:23
 msgid "Cancel"
-msgstr "Annuler"
+msgstr "取消"
 
