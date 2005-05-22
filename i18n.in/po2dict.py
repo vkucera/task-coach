@@ -1,42 +1,18 @@
 #! /usr/bin/env python
 # -*- coding: iso-8859-1 -*-
-# Written by Martin v. Löwis <loewis@informatik.hu-berlin.de>
 
-"""Generate binary message catalog from textual translation description.
+"""Generate python dictionaries catalog from textual translation description.
 
 This program converts a textual Uniforum-style message catalog (.po file) into
-a binary GNU catalog (.mo file).  This is essentially the same function as the
-GNU msgfmt program, however, it is a simpler implementation.
+a python dictionary 
 
-Usage: msgfmt.py [OPTIONS] filename.po
+Based on msgfmt.py by Martin v. Löwis <loewis@informatik.hu-berlin.de>
 
-Options:
-    -o file
-    --output-file=file
-        Specify the output file to write to.  If omitted, output will go to a
-        file named filename.mo (based off the input file name).
-
-    -h
-    --help
-        Print this message and exit.
-
-    -V
-    --version
-        Display version information and exit.
 """
 
-import sys, re, os, getopt, struct, array
-
-__version__ = "1.1"
+import sys, re, os
 
 MESSAGES = {}
-
-
-def usage(code, msg=''):
-    print >> sys.stderr, __doc__
-    if msg:
-        print >> sys.stderr, msg
-    sys.exit(code)
 
 
 def add(id, str, fuzzy):
@@ -52,9 +28,10 @@ def generateDict():
     metadata = MESSAGES['']
     del MESSAGES['']
     encoding = re.search(r'charset=(\S*)\n', metadata).group(1)
-    return "# -*- coding: %s -*-\nimport meta\nencoding = '%s'\ndict = %s"%(encoding, encoding, str(MESSAGES))
+    return "# -*- coding: %s -*-\n#This is generated code - do not edit\nencoding = '%s'\ndict = %s"%(encoding, encoding, MESSAGES)
 
-def make(filename, outfile):
+
+def make(filename, outfile=None):
     ID = 1
     STR = 2
 
@@ -128,34 +105,4 @@ def make(filename, outfile):
     except IOError,msg:
         print >> sys.stderr, msg
 
-
-
-def main():
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hVo:',
-                                   ['help', 'version', 'output-file='])
-    except getopt.error, msg:
-        usage(1, msg)
-
-    outfile = None
-    # parse options
-    for opt, arg in opts:
-        if opt in ('-h', '--help'):
-            usage(0)
-        elif opt in ('-V', '--version'):
-            print >> sys.stderr, "msgfmt.py", __version__
-            sys.exit(0)
-        elif opt in ('-o', '--output-file'):
-            outfile = arg
-    # do it
-    if not args:
-        print >> sys.stderr, 'No input file given'
-        print >> sys.stderr, "Try `msgfmt --help' for more information."
-        return
-
-    for filename in args:
-        make(filename, outfile)
-
-
-if __name__ == '__main__':
-    main()
+    return outfile

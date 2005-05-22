@@ -5,13 +5,13 @@ class Translator:
     
     def __init__(self, language=None):
         if language and language.startswith('nl'):
-            import nl
-            self.__language = nl.dict
-            self.__encoding = nl.encoding
+            import nl_NL
+            self.__language = nl_NL.dict
+            self.__encoding = nl_NL.encoding
         elif language and language.startswith('fr'):
-            import fr
-            self.__language = fr.dict
-            self.__encoding = fr.encoding
+            import fr_FR
+            self.__language = fr_FR.dict
+            self.__encoding = fr_FR.encoding
         if language:
             li = wx.Locale.FindLanguageInfo(language)
             self.__locale = wx.Locale(li.Language)

@@ -23,6 +23,7 @@ web:
 
 i18n:
 	$(PYTHON) c:/Program\ Files/Python24/Tools/i18n/pygettext.py --output-dir i18n.in taskcoachlib
+	cd i18n.in; $(PYTHON) make.py
 
 clean:
 	rm -rf *.pyc */*.pyc */*/*.pyc dist build MANIFEST README.txt INSTALL.txt LICENSE.txt messages.pot
