@@ -30,6 +30,9 @@ class DummyWidget(wx.Frame):
     def GetColumnWidth(self, column):
         return 100
         
+    def showSort(self, *args, **kwargs):
+        pass
+        
 class DummyUICommand(gui.uicommand.UICommand):
     bitmap = 'undo'
 
@@ -45,10 +48,8 @@ class DummyUICommands:
 
 class ViewerWithDummyWidget(gui.viewer.Viewer):
     def createWidget(self):
+        self.createImageList()
         return DummyWidget(self)
-        
-    def createSorter(self, taskList):
-        return taskList
     
 class TaskViewerWithDummyWidget(ViewerWithDummyWidget, gui.viewer.TaskViewer):
     pass

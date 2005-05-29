@@ -7,15 +7,15 @@ INNOSETUP="/cygdrive/c/Program Files/Inno Setup 4/ISCC.exe"
 
 all: windist sdist web
 
-windist: theicons
+windist: icons
 	$(PYTHON) make.py py2exe
 	$(INNOSETUP) build/taskcoach.iss
 
-sdist: theicons
+sdist: icons
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
-theicons:
-	cd icons; $(PYTHON) make.py
+icons:
+	cd icons.in; $(PYTHON) make.py
 
 web: 
 	cd website; $(PYTHON) make.py; cd ..

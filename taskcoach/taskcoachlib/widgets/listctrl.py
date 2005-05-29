@@ -64,14 +64,11 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
             listItem.SetImage(-1)
             self.SetColumn(columnIndex, listItem)
             
-    def showSort(self, columnHeader, ascending):
+    def showSort(self, columnHeader, imageIndex):
         self._clearColumnImages()
         columnIndex = self.getColumnIndex(columnHeader)
         listItem = self.GetColumn(columnIndex)
-        if ascending:
-            listItem.SetImage(0)
-        else:
-            listItem.SetImage(1)
+        listItem.SetImage(imageIndex)
         self.SetColumn(columnIndex, listItem)
 
     def refresh(self, count):
@@ -134,6 +131,7 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
             if displayedHeader == columnHeader:
                 return True
         return False
+
                 
 class ListCtrl(VirtualListCtrl):
     pass

@@ -33,7 +33,7 @@ class Viewer(patterns.Observable, wx.Panel):
             'task_duetoday', 'task_overdue', 'tasks', 'tasks_open', 
             'tasks_inactive', 'tasks_inactive_open', 'tasks_completed', 
             'tasks_completed_open', 'tasks_duetoday', 'tasks_duetoday_open', 
-            'tasks_overdue', 'tasks_overdue_open', 'start']):
+            'tasks_overdue', 'tasks_overdue_open', 'start', 'ascending', 'descending']):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList
@@ -191,9 +191,25 @@ class TaskListViewer(TaskViewer, ListViewer):
             return
         if newSortKey != currentSortKey:
             self.list.setSortKey(newSortKey)
+            self.list.setAscending(True)
         else:
             self.list.setAscending(not self.list.isAscending())
-        self.widget.showSort(columnHeader, self.list.isAscending())
+        if self.list.isAscending():
+            imageIndex = self.imageIndex['ascending']
+        else:
+            imageIndex = self.imageIndex['descending']
+        self.widget.showSort(columnHeader, imageIndex)
+
+    def onNotify(self, *args, **kwargs):
+        sortKey = self.list.getSortKey()
+        columnHeader = {'subject': _('Subject'), 'dueDate': _('Due date'),
+            'budget': _('Budget')}[sortKey]
+        if self.list.isAscending():
+            imageIndex = self.imageIndex['ascending']
+        else:
+            imageIndex = self.imageIndex['descending']
+        self.widget.showSort(columnHeader, imageIndex)
+        super(TaskListViewer, self).onNotify(*args, **kwargs)
 
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
