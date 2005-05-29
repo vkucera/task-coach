@@ -1,22 +1,54 @@
 import patterns, task
 
 class Sorter(patterns.ObservableListObserver):
+    defaultSortKey = 'dueDate'
     def __init__(self, *args, **kwargs):
-        self.__sortOnSubject = False
+        self.__sortKey = getattr(self, '_%sSortKey'%self.defaultSortKey)
+        self.__ascending = True
+        self.__sortByStatusFirst = True
         super(Sorter, self).__init__(*args, **kwargs)
 
+    def _dueDateSortKey(self, task):
+        result = []
+        if self.__sortByStatusFirst:
+            result.extend([task.completed(), task.inactive()])
+        result.extend([task.dueDate(), task.startDate(), task.subject()])
+        return tuple(result)
+        
+    def _subjectSortKey(self, task):
+        result = []
+        if self.__sortByStatusFirst:
+            result.extend([task.completed(), task.inactive()])
+        result.append(task.subject())
+        return tuple(result)
+
+    def _budgetSortKey(self, task):
+        result = []
+        if self.__sortByStatusFirst:
+            result.extend([task.completed(), task.inactive()])
+        result.append(task.budget())
+        return tuple(result)
+
     def postProcessChanges(self):
-        if self.__sortOnSubject:
-            self.sort(key=task.Task.subject)
-        else:
-            self.sort()
-
-    def setSortOnSubject(self, sortOnSubject=True):
-        self.__sortOnSubject = sortOnSubject
+        self.sort(key=self.__sortKey, reverse=not self.__ascending)
+  
+    def setSortKey(self, sortKey):
+        self.__sortKey = getattr(self, '_%sSortKey'%sortKey)
         self.reset()
-
-    def getSortOnSubject(self):
-        return self.__sortOnSubject
+        
+    def getSortKey(self):
+        return self.__sortKey.__name__[1:-len('SortKey')]
+        
+    def setAscending(self, ascending=True):
+        self.__ascending = ascending
+        self.reset()
+        
+    def isAscending(self):
+        return self.__ascending
+        
+    def setSortByStatusFirst(self, sortByStatusFirst=True):
+        self.__sortByStatusFirst = sortByStatusFirst
+        self.reset()
 
     def rootTasks(self):
         return [task for task in self if task.parent() is None]

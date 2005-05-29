@@ -48,8 +48,8 @@ class CommandAsserts:
     def assertHistoryAndFuture(self, expectedHistory, expectedFuture):
         import patterns
         commands = patterns.CommandHistory()
-        self.assertEqual(expectedHistory, commands.history)
-        self.assertEqual(expectedFuture, commands.future)
+        self.assertEqual(expectedHistory, commands.getHistory())
+        self.assertEqual(expectedFuture, commands.getFuture())
 
     def assertDoUndoRedo(self, assertDone, assertUndone=None, 
             assertRedone=None):

@@ -1,3 +1,13 @@
+Release 0.39 - May ?, 2005
+
+Bugs fixed:
+- Composite tasks in the tree view are now sorted according to the
+  most urgent subtask instead of the least urgent subtask.
+  
+Featues added:
+- Added option to sort ascending or descending.
+
+
 Release 0.38 - May 22, 2005
 
 Features added:

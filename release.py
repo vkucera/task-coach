@@ -8,13 +8,13 @@ class SimpleFTP(ftplib.FTP, object):
     def delete(self, filenames):
         for filename in filenames:
             try:
-                self.delete(filename)
+                super(SimpleFTP, self).delete(filename)
                 print 'Deleted %s'%filename
             except ftplib.error_perm:
                 print "Couldn't delete %s"%filename
 
     def put(self, filenames):
-        for filename in filename:
+        for filename in filenames:
             fd = file(filename, 'rb')
             self.storbinary('STOR %s'%filename, fd)
             print 'Stored %s'%filename

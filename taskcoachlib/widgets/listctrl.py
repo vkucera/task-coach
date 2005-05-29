@@ -4,7 +4,7 @@ import wx, wx.lib.mixins.listctrl
 class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
             selectCommand=None, editCommand=None, popupMenu=None, 
-            columnPopupMenu=None, *args, **kwargs):
+            columnPopupMenu=None, columnSortCallback=None, *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent, -1, 
             style=wx.LC_REPORT|wx.LC_VIRTUAL, *args, **kwargs)
         wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin.__init__(self)
@@ -20,9 +20,12 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         if popupMenu:
             self.popupMenu = popupMenu
             self.Bind(wx.EVT_LIST_ITEM_RIGHT_CLICK, self.onPopup)
-        if columnPopupMenu is not  None:
+        if columnPopupMenu is not None:
             self.columnPopupMenu = columnPopupMenu
             self.Bind(wx.EVT_LIST_COL_RIGHT_CLICK, self.onColumnPopup)
+        if columnSortCallback is not None:
+            self.columnSortCallback = columnSortCallback
+            self.Bind(wx.EVT_LIST_COL_CLICK, self.onColumnClick)
             
     def setColumns(self, columns):
         self.allColumnHeaders = columns
@@ -51,6 +54,25 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
     def onSelect(self, event):
         self.selectCommand()
         event.Skip()
+        
+    def onColumnClick(self, event):
+        self.columnSortCallback(self.getColumnHeader(event.GetColumn()))
+    
+    def _clearColumnImages(self):
+        for columnIndex in range(self.GetColumnCount()):
+            listItem = self.GetColumn(columnIndex)
+            listItem.SetImage(-1)
+            self.SetColumn(columnIndex, listItem)
+            
+    def showSort(self, columnHeader, ascending):
+        self._clearColumnImages()
+        columnIndex = self.getColumnIndex(columnHeader)
+        listItem = self.GetColumn(columnIndex)
+        if ascending:
+            listItem.SetImage(0)
+        else:
+            listItem.SetImage(1)
+        self.SetColumn(columnIndex, listItem)
 
     def refresh(self, count):
         ''' Refresh the contents of the (visible part of the) ListCtrl '''

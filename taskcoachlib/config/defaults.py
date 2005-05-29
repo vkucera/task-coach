@@ -24,7 +24,9 @@ defaults = { \
     'effortviewer' : 'Effort list',
     'effortviewerineditor' : 'Effort list',
     'language' : 'en_US',
-    'sort': 'False' },
+    'sortby': 'dueDate',
+    'sortascending': 'True',
+    'sortbystatusfirst': 'True' },
 'window' : { \
     'size' : '(600, 500)',
     'position' : '(0, 0)',

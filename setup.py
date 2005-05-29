@@ -22,6 +22,7 @@ setupOptions = {
         'Natural Language :: English',
         'Natural Language :: Dutch',
         'Natural Language :: French',
+        'Natural Language :: Chinese (Simplified)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Office/Business :: Scheduling']}
