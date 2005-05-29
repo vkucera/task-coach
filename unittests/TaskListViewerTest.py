@@ -3,7 +3,8 @@ from gui import render
 
 class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
-        self.taskList = task.TaskList()
+        self.taskList = task.sorter.Sorter(task.TaskList())
+        self.taskList.setSortKey('subject')
         self.listViewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             dummy.DummyUICommands())
 
@@ -37,4 +38,4 @@ class TaskListViewerTest(test.wxTestCase):
         parent.addChild(child)
         self.taskList.append(parent)
         self.assertEqual('Parent%sChild'%render.taskSeparator, 
-            self.listViewer.widget.GetItem(1, 0).GetText())
+            self.listViewer.widget.GetItem(0, 0).GetText())

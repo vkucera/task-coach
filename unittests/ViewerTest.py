@@ -21,7 +21,7 @@ class ViewerTest(test.wxTestCase):
 class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
         self.task = task.Task()
-        self.taskList = task.TaskList([self.task])
+        self.taskList = task.sorter.Sorter(task.TaskList([self.task]))
         self.viewer = dummy.TaskListViewerWithDummyWidget(self.frame,
             self.taskList, effort.EffortList(self.taskList), {})
 
