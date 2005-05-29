@@ -570,15 +570,35 @@ class ViewDueBefore(FilterCommand, UIRadioCommand):
         self.filteredTaskList.viewTasksDueBefore(self.value) 
     
 
-class ViewSort(FilterCommand, UICheckCommand):
+class ViewSortBy(FilterCommand, UIRadioCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewSort, self).__init__(menuText=_('On subject'),
-            helpText=_('Sort tasks on subject'), 
-            setting='sort', *args, **kwargs)
+        super(ViewSortBy, self).__init__(setting='sortby', *args, **kwargs)
         
     def doCommand(self, event):
-        super(ViewSort, self).doCommand(event)
-        self.filteredTaskList.setSortOnSubject(event.IsChecked())
+        super(ViewSortBy, self).doCommand(event)
+        self.filteredTaskList.setSortKey(self.value)
+        
+
+class ViewSortOrder(FilterCommand, UICheckCommand):
+    def __init__(self, *args, **kwargs):
+        super(ViewSortOrder, self).__init__(menuText=_('&Ascending'),
+            helpText=_('Sort tasks ascending (checked) or descending (unchecked)'),
+            setting='sortascending', *args, **kwargs)
+            
+    def doCommand(self, event):
+        super(ViewSortOrder, self).doCommand(event)
+        self.filteredTaskList.setAscending(event.IsChecked())
+
+
+class ViewSortByStatusFirst(FilterCommand, UICheckCommand):
+    def __init__(self, *args, **kwargs):
+        super(ViewSortByStatusFirst, self).__init__(menuText=_('Sort by status &first'),
+            helpText=_('Sort tasks by status (active/inactive/completed) first'),
+            setting='sortbystatusfirst', *args, **kwargs)
+            
+    def doCommand(self, event):
+        super(ViewSortByStatusFirst, self).doCommand(event)
+        self.filteredTaskList.setSortByStatusFirst(event.IsChecked())
         
     
 class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
@@ -865,7 +885,18 @@ class UICommands(dict):
         self['viewexpandselected'] = ViewExpandSelected(viewer=viewer)
         self['viewcollapseselected'] = ViewCollapseSelected(viewer=viewer)
         
-        self['viewsort'] = ViewSort(filteredTaskList=filteredTaskList, settings=settings)
+        self['viewsortbysubject'] = ViewSortBy(filteredTaskList=filteredTaskList, 
+            settings=settings, value='subject', menuText=_('&Subject'), 
+            helpText=_('Sort by task subject'))
+        self['viewsortbyduedate'] = ViewSortBy(filteredTaskList=filteredTaskList,
+            settings=settings, value='dueDate', menuText=_('&Due date'),
+            helpText=_('Sort by task due date'))
+        self['viewsortbybudget'] = ViewSortBy(filteredTaskList=filteredTaskList,
+            settings=settings, value='budget', menuText=_('&Budget'),
+            helpText=_('Sort by task budget'))
+
+        self['viewsortorder'] = ViewSortOrder(filteredTaskList=filteredTaskList, settings=settings)
+        self['viewsortbystatusfirst'] = ViewSortByStatusFirst(filteredTaskList=filteredTaskList, settings=settings)
         
         self['toolbarhide'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
             value=None, menuText=_('&Hide'), helpText=_('Hide the toolbar'))

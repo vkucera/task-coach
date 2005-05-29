@@ -134,7 +134,8 @@ class TaskListViewer(TaskViewer, ListViewer):
             self.getItemText, self.getItemImage, self.getItemAttr, 
             self.onSelect, self.uiCommands['edit'], 
             menu.TaskPopupMenu(self.parent, self.uiCommands),
-            menu.TaskListViewerColumnPopupMenu(self.parent, self.uiCommands))
+            menu.TaskListViewerColumnPopupMenu(self.parent, self.uiCommands),
+            self.onColumnClick)
         widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
         return widget
         
@@ -178,6 +179,22 @@ class TaskListViewer(TaskViewer, ListViewer):
     def showColumn(self, columnHeader, show):
         self.widget.showColumn(columnHeader, show)
 
+    def onColumnClick(self, columnHeader):
+        currentSortKey = self.list.getSortKey()
+        if columnHeader == _('Subject'):
+            newSortKey = 'subject'
+        elif columnHeader == _('Due date'):
+            newSortKey = 'dueDate'
+        elif columnHeader == _('Budget'):
+            newSortKey = 'budget'
+        else:
+            return
+        if newSortKey != currentSortKey:
+            self.list.setSortKey(newSortKey)
+        else:
+            self.list.setAscending(not self.list.isAscending())
+        self.widget.showSort(columnHeader, self.list.isAscending())
+
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
@@ -219,7 +236,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         fingerprint['completiondate'] = task.completionDate()
         fingerprint['parent'] = task.parent()
         fingerprint['active'] = task.isBeingTracked()
-        fingerprint['sort'] = self.list.getSortOnSubject()
+        fingerprint['index'] = index
         return fingerprint
 
 

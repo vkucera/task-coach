@@ -119,14 +119,10 @@ class Task(patterns.Observable):
             self._subject = subject
             self.notifyObservers(patterns.observer.Notification(self))
 
-    def dueDate(self):
-        if self.children():
-            if self.allChildrenCompleted():
-                children = self.children()
-            else:
-                children = [child for child in self.children()
-                            if not child.completed()]
-            return max([child.dueDate() for child in children])
+    def dueDate(self, recursive=False):
+        childrenDueDates = [child.dueDate() for child in self.children() if not child.completed()]
+        if childrenDueDates:
+            return min(childrenDueDates)
         else:
             return self._duedate
 
@@ -135,14 +131,10 @@ class Task(patterns.Observable):
             self._duedate = duedate
             self.notifyObservers(patterns.observer.Notification(self))
 
-    def startDate(self):
-        if self.children():
-            if self.allChildrenCompleted():
-                children = self.children()
-            else:
-                children = [child for child in self.children()
-                            if not child.completed()]
-            return min([child.startDate() for child in children])
+    def startDate(self, recursive=False):
+        childrenStartDates = [child.startDate() for child in self.children() if not child.completed()]
+        if childrenStartDates:
+            return min(childrenStartDates)
         else:
             return self._startdate
 
@@ -154,7 +146,7 @@ class Task(patterns.Observable):
     def timeLeft(self):
         return self._duedate - date.Today()
         
-    def completionDate(self):
+    def completionDate(self, recursive=False):
         return self._completiondate
 
     def setCompletionDate(self, completionDate=None):
@@ -194,36 +186,15 @@ class Task(patterns.Observable):
 
     def dueTomorrow(self):
         return (self.dueDate() == date.Tomorrow() and not self.completed())
-
     
     # comparison related methods:
         
-    def _compare(self, other):
-        for method in ['completed', 'inactive', 'dueDate', 'startDate',
-                       'subject', 'id']:
-            result = cmp(getattr(self, method)(), getattr(other, method)())
-            if result != 0:
-                return result
-        return result
-
     def __eq__(self, other):
         return self.id() == other.id()
 
     def __ne__(self, other):
         return self.id() != other.id()
-        
-    def __le__(self, other):
-        return self == other or self < other
-        
-    def __ge__(self, other):
-        return self == other or self > other
-
-    def __lt__(self, other):
-        return self._compare(other) < 0
-
-    def __gt__(self, other):
-        return self._compare(other) > 0
-    
+            
     # effort related methods:
 
     def efforts(self, recursive=False):

@@ -16,6 +16,13 @@ class Node(patterns.Observable):
         self.notifyObservers(patterns.observer.Notification(self))
 
 
+class TestableSorter(task.sorter.Sorter):
+    defaultSortKey = 'node'
+    
+    def _nodeSortKey(self, node):
+        return node._name
+
+        
 class SorterTest(test.TestCase):
     def setUp(self):
         a = self.a = Node('a')
@@ -23,7 +30,7 @@ class SorterTest(test.TestCase):
         c = self.c = Node('c')
         d = self.d = Node('d')
         self.list = patterns.ObservableObservablesList([d, b, c, a])
-        self.sorter = task.sorter.Sorter(self.list)
+        self.sorter = TestableSorter(self.list)
 
     def testLength(self):
         self.assertEqual(4, len(self.sorter))
@@ -145,30 +152,71 @@ class EffortSorterTest(test.TestCase):
         self.assertEqual(2, len(sorter))
 
         
-class TaskSorterTest(test.TestCase):
+class TaskSorterTestOnEmptyList(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.sorter = task.sorter.Sorter(self.taskList)
-    
-    def addTwoTasks(self):
+            
+    def testInitiallyEmpty(self):
+        self.assertEqual(0, len(self.sorter))
+
+class TaskSorterTest(test.TestCase):        
+    def setUp(self):
+        self.taskList = task.TaskList()
+        self.sorter = task.sorter.Sorter(self.taskList)        
         self.task1 = task.Task(subject='A', duedate=date.Tomorrow())
         self.task2 = task.Task(subject='B', duedate=date.Today())
         self.taskList.extend([self.task1, self.task2])
-        
-    def testInitiallyEmpty(self):
-        self.assertEqual(0, len(self.sorter))
-        
-    def testAddTasks(self):
-        self.addTwoTasks()
+
+    def testSortDueDate(self):
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
-    def testSortOnSubject(self):
-        self.addTwoTasks()
-        self.sorter.setSortOnSubject()
+    def testSortBySubject(self):
+        self.sorter.setSortKey('subject')
         self.assertEqual([self.task1, self.task2], list(self.sorter))
         
-    def testSortOnSubject_TurnOff(self):
-        self.addTwoTasks()
-        self.sorter.setSortOnSubject()
-        self.sorter.setSortOnSubject(False)
+    def testSortBySubject_TurnOff(self):
+        self.sorter.setSortKey('subject')
+        self.sorter.setSortKey('dueDate')
         self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testSortByCompletionStatus(self):
+        self.task2.setCompletionDate(date.Today())
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
+    def testSortByInactiveStatus(self):
+        self.task2.setStartDate(date.Tomorrow())
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
+    def testSortByStartDate(self):
+        self.task1.setDueDate(date.Today())
+        self.task2.setStartDate(date.Yesterday())
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testSortBySubject(self):
+        self.task1.setDueDate(date.Today())
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
+    def testSortById(self):
+        self.task1.setDueDate(date.Today())
+        self.task2.setSubject('A')
+        sorted = list(self.sorter)
+        self.failUnless(sorted[0].id() < sorted[1].id())
+        
+    def testDescending(self):
+        self.sorter.setAscending(False)
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
+    def testByDueDateWithoutFirstSortingByStatus(self):
+        self.sorter.setSortByStatusFirst(False)
+        self.task2.setCompletionDate(date.Today())
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testSortBySubjectWithoutFirstSortingByStatus(self):
+        self.sorter.setSortByStatusFirst(True)
+        self.sorter.setSortKey('subject')
+        self.task1.setCompletionDate(date.Today())
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testGetSortKey(self):
+        self.assertEqual('dueDate', self.sorter.getSortKey())

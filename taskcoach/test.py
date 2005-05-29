@@ -48,8 +48,8 @@ class AllTests(unittest.TestSuite):
             module = __import__(moduleName)
             suite = testloader.loadTestsFromName(moduleName)
             self.addTests(suite._tests)
-            self.registerDesiredCoverage(module, moduleName)
         if self._options.coverage:
+            self.registerDesiredCoverage(module, moduleName)
             self.addTests(self.createCoverageTest()._tests)
    
     def registerDesiredCoverage(self, module, moduleName):

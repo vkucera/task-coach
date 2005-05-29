@@ -304,20 +304,20 @@ class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
         self.createChildrenWithDueDate([date.Today()])
         self.assertEqual(date.Today(), self.task.dueDate())
 
-    def testDueDateParent_EqualsMaxDueDateChildren(self):
+    def testDueDateParent_EqualsMinDueDateChildren(self):
         self.createChildrenWithDueDate([date.Today(), date.Tomorrow()])
-        self.assertEqual(date.Tomorrow(), self.task.dueDate())
+        self.assertEqual(date.Today(), self.task.dueDate())
 
     def testDueDateParent_IgnoresCompletedChildren(self):
         self.createChildrenWithDueDate([date.Today(), date.Tomorrow()])
         self.task.children()[-1].setCompletionDate()
         self.assertEqual(date.Today(), self.task.dueDate())
 
-    def testDueDateParent_EqualsMaxDueDateWhenAllChildrenCompleted(self):
+    def testDueDateParent_EqualsParentDueDateWhenAllChildrenCompleted(self):
         self.createChildrenWithDueDate([date.Yesterday(), date.Today()])
         for child in self.task.children():
             child.setCompletionDate()
-        self.assertEqual(date.Today(), self.task.dueDate())
+        self.assertEqual(date.Tomorrow(), self.task.dueDate())
 
     def testStartDateParent_EqualsStartDateChild(self):
         self.createChildrenWithStartDate([date.Today()])
@@ -332,11 +332,11 @@ class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
         self.task.children()[0].setCompletionDate()
         self.assertEqual(date.Tomorrow(), self.task.startDate())
 
-    def testStartDateParent_EqualsMinStartDateWhenAllChildrenCompleted(self):
+    def testStartDateParent_EqualsParentStartDateWhenAllChildrenCompleted(self):
         self.createChildrenWithStartDate([date.Today(), date.Tomorrow()])
         for child in self.task.children():
             child.setCompletionDate()
-        self.assertEqual(date.Today(), self.task.startDate())
+        self.assertEqual(date.Yesterday(), self.task.startDate())
 
 
 class SubTaskRelationsTest(test.TestCase):
@@ -357,48 +357,6 @@ class SubTaskRelationsTest(test.TestCase):
     def testGetFamily(self):
         for task in self.parent, self.child, self.grandChild:
             self.assertEqual([self.parent, self.child, self.grandChild], task.family())
-
-class CompareTasksTest(test.TestCase):
-    def setUp(self):
-        self.task1 = task.Task(duedate=date.Date(2003,1,1))
-        self.task2 = task.Task(duedate=date.Date(2004,1,1))
-        self.noDueDate = task.Task()
-
-    def testCompare(self):
-        task1, task2, noDueDate = self.task1, self.task2, self.noDueDate
-        self.failUnless(task1 != task2) 
-        self.failUnless(task1 != noDueDate)
-        self.failUnless(task2 != noDueDate)
-        self.failUnless(task1 < task2 < noDueDate)
-        self.failUnless(task1 <= task2 <= noDueDate)
-        self.failUnless(noDueDate > task2 > task1)
-        self.failUnless(noDueDate >= task2 >= task1)
-        self.failUnless(task1 == task1)
-        self.failUnless(noDueDate == noDueDate)
-
-    def testCompareWithCompletedTask(self):
-        task1, task2, noDueDate = self.task1, self.task2, self.noDueDate
-        task1completed = task.Task(duedate=date.Date(2003,1,1))
-        task1completed.setCompletionDate()
-        self.failUnless(task2 < task1completed)
-        self.failUnless(noDueDate < task1completed)
-        self.failUnless(task1 < task1completed)
-
-    def testCompareWithInactiveTask(self):
-        task1, task2, noDueDate = self.task1, self.task2, self.noDueDate
-        inactiveTask = task.Task(duedate=date.Tomorrow(), 
-            startdate=date.Tomorrow())
-        completedTask = task.Task()
-        completedTask.setCompletionDate()
-        self.failUnless(task1 < inactiveTask)
-        self.failUnless(task2 < inactiveTask)
-        self.failUnless(noDueDate < inactiveTask)
-        self.failUnless(inactiveTask < completedTask)
-
-    def testCompareSortsOnStartDate(self):
-        task3 = task.Task(startdate=date.Date(2000,1,1), 
-            duedate=date.Date(2003, 1, 1))
-        self.failUnless(task3 < self.task1)
 
 
 

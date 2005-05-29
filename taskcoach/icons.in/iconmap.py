@@ -46,7 +46,9 @@ iconlist = [
 ('viewexpand', 'actions', 'edit_add', [16]),
 ('viewcollapse', 'actions', 'edit_remove', [16]),
 ('configure', 'actions', 'configure', [16]),
-('language', 'apps', 'edu_languages', [22])]
+('language', 'apps', 'edu_languages', [22]),
+('ascending', 'actions', 'up', [16]),
+('descending', 'actions', 'down', [16])]
 
 icons = {}
 

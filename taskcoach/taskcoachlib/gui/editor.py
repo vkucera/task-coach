@@ -70,36 +70,36 @@ class TaskEditBook(widgets.Listbook):
         
     def addDatesPage(self):
         datesPage = widgets.BookPage(self, columns=3)
-        datesReadonly = bool(self._task.children()) 
-        if datesReadonly:
-            startDateComment = _('(Minimum of all subtask start dates)')
-            dueDateComment = _('(Maximum of all subtask due dates)')
-        else:
-            startDateComment = dueDateComment = None
-        self._startDateEntry = DateEntry(datesPage, self._task.startDate(), 
-            readonly=datesReadonly)
-        self._dueDateEntry = DateEntry(datesPage, self._task.dueDate(), 
-            readonly=datesReadonly)
-        self._completionDateEntry = DateEntry(datesPage, self._task.completionDate())
-        datesPage.addEntry(_('Start date'), self._startDateEntry, startDateComment)
-        datesPage.addEntry(_('Due date'), self._dueDateEntry, dueDateComment)
-        datesPage.addEntry(_('Completion date'), self._completionDateEntry)
+        self._startDateEntry = DateEntry(datesPage, self._task.startDate())
+        self._dueDateEntry = DateEntry(datesPage, self._task.dueDate())
+        self._completionDateEntry = DateEntry(datesPage, self._task.completionDate())        
+        entriesArgs = [['', _('For this task')],
+                       [_('Start date'), self._startDateEntry],
+                       [_('Due date'), self._dueDateEntry],
+                       [_('Completion date'), self._completionDateEntry]]    
+        if self._task.children():
+            entriesArgs[0].append(_('For this task including all subtasks'))
+            entriesArgs[1].append(DateEntry(datesPage, self._task.startDate(recursive=True), readonly=True))
+            entriesArgs[2].append(DateEntry(datesPage, self._task.dueDate(recursive=True), readonly=True))
+            entriesArgs[3].append(DateEntry(datesPage, self._task.completionDate(recursive=True), readonly=True))
+        for entryArgs in entriesArgs:
+            datesPage.addEntry(*entryArgs)
         self.AddPage(datesPage, _('Dates'), 'date')
     
     def addBudgetPage(self):
         budgetPage = widgets.BookPage(self, columns=3)
         self._budgetEntry = TimeDeltaEntry(budgetPage, self._task.budget())
-        entriesArgs = [(['', _('For this task')], {}),
-                       ([_('Budget'), self._budgetEntry], {}),
-                       ([_('Time spent'), render.timeSpent(self._task.duration())], {}),
-                       ([_('Budget left'), render.budget(self._task.budgetLeft())], {})]
+        entriesArgs = [['', _('For this task')],
+                       [_('Budget'), self._budgetEntry],
+                       [_('Time spent'), render.timeSpent(self._task.duration())],
+                       [_('Budget left'), render.budget(self._task.budgetLeft())]]
         if self._task.children():
-            entriesArgs[0][0].append(_('For this task including all subtasks'))
-            entriesArgs[1][0].append(render.budget(self._task.budget(recursive=True)))
-            entriesArgs[2][0].append(render.timeSpent(self._task.duration(recursive=True)))
-            entriesArgs[3][0].append(render.budget(self._task.budgetLeft(recursive=True)))
-        for entryArgs, entryKwArgs in entriesArgs:
-            budgetPage.addEntry(*entryArgs, **entryKwArgs)
+            entriesArgs[0].append(_('For this task including all subtasks'))
+            entriesArgs[1].append(render.budget(self._task.budget(recursive=True)))
+            entriesArgs[2].append(render.timeSpent(self._task.duration(recursive=True)))
+            entriesArgs[3].append(render.budget(self._task.budgetLeft(recursive=True)))
+        for entryArgs in entriesArgs:
+            budgetPage.addEntry(*entryArgs)
         self.AddPage(budgetPage, _('Budget'), 'budget')
                 
     def addEffortPage(self):

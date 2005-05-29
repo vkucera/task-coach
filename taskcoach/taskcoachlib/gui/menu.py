@@ -102,7 +102,9 @@ class ViewTaskTreeMenu(Menu):
 class SortMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(SortMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewsort'])
+        self.appendUICommands(uiCommands, ['viewsortbysubject', 
+            'viewsortbyduedate', 'viewsortbybudget', None, 'viewsortorder', 
+            'viewsortbystatusfirst'])
                 
     
 class ToolBarMenu(Menu):
