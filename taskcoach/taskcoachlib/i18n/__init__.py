@@ -16,6 +16,10 @@ class Translator:
             import zh_CN
             self.__language = zh_CN.dict
             self.__encoding = zh_CN.encoding
+        elif language and language.startswith('de'):
+            import de_DE
+            self.__language = de_DE.dict
+            self.__encoding = de_DE.encoding
         if language:
             li = wx.Locale.FindLanguageInfo(language)
             self.__locale = wx.Locale(li.Language)

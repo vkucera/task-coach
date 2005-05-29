@@ -51,6 +51,7 @@ class LanguagePage(SettingsPage):
         super(LanguagePage, self).__init__(*args, **kwargs)
         self.addChoiceSetting('view', 'language', _('Language'), 
             [('en_US', _('English (US)')), ('en_GB', _('English (UK)')),
+             ('de_DE', _('German')),
              ('nl_NL', _('Dutch')), ('fr_FR', _('French')),
              ('zh_CN', _('Simplified Chinese'))],
              _('This setting will take effect after you restart %s')%meta.name)

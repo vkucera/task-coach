@@ -6,6 +6,11 @@ Bugs fixed:
   
 Featues added:
 - Added option to sort ascending or descending.
+- Added German translation, thanks to J. Martin.
+- Readded menu item to start effort tracking from the last stopped 
+  effort. [TODO]
+
+
 
 
 Release 0.38 - May 22, 2005
