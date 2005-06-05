@@ -99,13 +99,15 @@ class BooleanSettingsCommand(SettingsCommand):
         self.check()
         
     def check(self):
-        checked = self.checked()
+        checked = self.checked()        
         self.checkMenuItems(checked)
         if self.commandNeedsToBeActivated(checked):
-            self.sendCommandActivateEvent()
+            self.sendCommandActivateEvent(checked)
 
-    def sendCommandActivateEvent(self):
-        self.onCommandActivate(wx.CommandEvent(0, self._id))
+    def sendCommandActivateEvent(self, checked):
+        event = wx.CommandEvent(0, self._id)
+        event.SetInt(checked)
+        self.onCommandActivate(event)
 
     def checkMenuItems(self, checked):
         for menuItem in self.menuItems:
@@ -144,6 +146,10 @@ class UIRadioCommand(BooleanSettingsCommand):
     def doCommand(self, event):
         self.settings.set(self.section, self.setting, str(self.value))
 
+    def onUpdateUI(self, event):
+        print self.settings.get(self.section, self.setting)
+        self.checkMenuItems(self.checked())
+        super(UIRadioCommand, self).onUpdateUI(event)
 
 class IOCommand(UICommand):
     def __init__(self, iocontroller=None, *args, **kwargs):
@@ -570,13 +576,16 @@ class ViewDueBefore(FilterCommand, UIRadioCommand):
         self.filteredTaskList.viewTasksDueBefore(self.value) 
     
 
-class ViewSortBy(FilterCommand, UIRadioCommand):
+class ViewSortBy(FilterCommand, UIRadioCommand, UICommandsCommand):
     def __init__(self, *args, **kwargs):
         super(ViewSortBy, self).__init__(setting='sortby', *args, **kwargs)
         
     def doCommand(self, event):
         super(ViewSortBy, self).doCommand(event)
         self.filteredTaskList.setSortKey(self.value)
+        sortOrderCommand = self.uiCommands['viewsortorder']
+        self.settings.set(sortOrderCommand.section, sortOrderCommand.setting, str(self.filteredTaskList.isAscending()))
+        sortOrderCommand.check()
         
 
 class ViewSortOrder(FilterCommand, UICheckCommand):
@@ -584,7 +593,7 @@ class ViewSortOrder(FilterCommand, UICheckCommand):
         super(ViewSortOrder, self).__init__(menuText=_('&Ascending'),
             helpText=_('Sort tasks ascending (checked) or descending (unchecked)'),
             setting='sortascending', *args, **kwargs)
-            
+        
     def doCommand(self, event):
         super(ViewSortOrder, self).doCommand(event)
         self.filteredTaskList.setAscending(event.IsChecked())
@@ -885,19 +894,35 @@ class UICommands(dict):
         self['viewexpandselected'] = ViewExpandSelected(viewer=viewer)
         self['viewcollapseselected'] = ViewCollapseSelected(viewer=viewer)
         
-        self['viewsortbysubject'] = ViewSortBy(filteredTaskList=filteredTaskList, 
-            settings=settings, value='subject', menuText=_('&Subject'), 
-            helpText=_('Sort by task subject'))
-        self['viewsortbyduedate'] = ViewSortBy(filteredTaskList=filteredTaskList,
-            settings=settings, value='dueDate', menuText=_('&Due date'),
-            helpText=_('Sort by task due date'))
-        self['viewsortbybudget'] = ViewSortBy(filteredTaskList=filteredTaskList,
-            settings=settings, value='budget', menuText=_('&Budget'),
-            helpText=_('Sort by task budget'))
-
         self['viewsortorder'] = ViewSortOrder(filteredTaskList=filteredTaskList, settings=settings)
         self['viewsortbystatusfirst'] = ViewSortByStatusFirst(filteredTaskList=filteredTaskList, settings=settings)
         
+        sortByKwArgs = {'uiCommands': self, 'filteredTaskList': filteredTaskList, 
+            'settings': settings}
+        self['viewsortbysubject'] = ViewSortBy(value='subject', menuText=_('Sub&ject'), 
+            helpText=_('Sort tasks by subject'), **sortByKwArgs)
+        self['viewsortbystartdate'] = ViewSortBy(value='startDate', menuText=_('&Start date'),
+            helpText=_('Sort tasks by start date'), **sortByKwArgs)
+        self['viewsortbyduedate'] = ViewSortBy(value='dueDate', menuText=_('&Due date'),
+            helpText=_('Sort tasks by due date'), **sortByKwArgs)
+        self['viewsortbycompletiondate'] = ViewSortBy(value='completionDate',
+            menuText=_('&Completion date'),
+            helpText=_('Sort tasks by completion date'), **sortByKwArgs)
+        self['viewsortbydaysleft'] = ViewSortBy(value='timeLeft', menuText=_('&Days left'),
+            helpText=_('Sort tasks by number of days left'), **sortByKwArgs)
+        self['viewsortbybudget'] = ViewSortBy(value='budget', menuText=_('&Budget'),
+            helpText=_('Sort tasks by budget'), **sortByKwArgs)
+        self['viewsortbytotalbudget'] = ViewSortBy(value='totalbudget', menuText=_('Total b&udget'),
+            helpText=_('Sort tasks by total budget'), **sortByKwArgs)
+        self['viewsortbytimespent'] = ViewSortBy(value='timeSpent', menuText=_('&Time spent'),
+            helpText=_('Sort tasks by time spent'), **sortByKwArgs)
+        self['viewsortbytotaltimespent'] = ViewSortBy(value='totaltimeSpent', menuText=_('T&otal time spent'),
+            helpText=_('Sort tasks by total time spent'), **sortByKwArgs)
+        self['viewsortbybudgetleft'] = ViewSortBy(value='budgetLeft', menuText=_('Budget &left'),
+            helpText=_('Sort tasks by budget left'), **sortByKwArgs)
+        self['viewsortbytotalbudgetleft'] = ViewSortBy(value='totalbudgetLeft', menuText=_('Total budget l&eft'),
+            helpText=_('Sort tasks by total budget left'), **sortByKwArgs)
+
         self['toolbarhide'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
             value=None, menuText=_('&Hide'), helpText=_('Hide the toolbar'))
         self['toolbarsmall'] = ViewToolBar(mainwindow=mainwindow, settings=settings,

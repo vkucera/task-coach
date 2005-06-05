@@ -91,19 +91,19 @@ class TaskEditBook(widgets.Listbook):
         self._budgetEntry = TimeDeltaEntry(budgetPage, self._task.budget())
         entriesArgs = [['', _('For this task')],
                        [_('Budget'), self._budgetEntry],
-                       [_('Time spent'), render.timeSpent(self._task.duration())],
+                       [_('Time spent'), render.timeSpent(self._task.timeSpent())],
                        [_('Budget left'), render.budget(self._task.budgetLeft())]]
         if self._task.children():
             entriesArgs[0].append(_('For this task including all subtasks'))
             entriesArgs[1].append(render.budget(self._task.budget(recursive=True)))
-            entriesArgs[2].append(render.timeSpent(self._task.duration(recursive=True)))
+            entriesArgs[2].append(render.timeSpent(self._task.timeSpent(recursive=True)))
             entriesArgs[3].append(render.budget(self._task.budgetLeft(recursive=True)))
         for entryArgs in entriesArgs:
             budgetPage.addEntry(*entryArgs)
         self.AddPage(budgetPage, _('Budget'), 'budget')
                 
     def addEffortPage(self):
-        if not self._task.duration(recursive=True):
+        if not self._task.timeSpent(recursive=True):
             return
         effortPage = widgets.BookPage(self, columns=1)
         import viewercontainer, viewerfactory, effort

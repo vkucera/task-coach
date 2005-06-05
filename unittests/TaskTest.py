@@ -366,22 +366,22 @@ class TaskEffortTest(test.TestCase):
         self.effort = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
         
     def testNoEffort(self):
-        self.assertEqual(date.TimeDelta(), self.task.duration())
+        self.assertEqual(date.TimeDelta(), self.task.timeSpent())
         
     def testAddEffort(self):
         self.task.addEffort(self.effort)
-        self.assertEqual(self.effort.duration(), self.task.duration())
+        self.assertEqual(self.effort.duration(), self.task.timeSpent())
         
     def testRemoveEffort(self):
         self.task.addEffort(self.effort)
         self.task.removeEffort(self.effort)
-        self.assertEqual(date.TimeDelta(), self.task.duration())
+        self.assertEqual(date.TimeDelta(), self.task.timeSpent())
         
-    def testDuration(self):
+    def testTimeSpent(self):
         self.task.addEffort(self.effort)
         anotherEffort = effort.Effort(self.task, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
         self.task.addEffort(anotherEffort)
-        self.assertEqual(self.effort.duration() + anotherEffort.duration(), self.task.duration())
+        self.assertEqual(self.effort.duration() + anotherEffort.duration(), self.task.timeSpent())
         
     def addChild(self, parent):
         child = task.Task()
@@ -390,18 +390,18 @@ class TaskEffortTest(test.TestCase):
         child.addEffort(childEffort)
         return child, childEffort
         
-    def testDuration_Recursively(self):
+    def testTimeSpent_Recursively(self):
         self.task.addEffort(self.effort)
         child, childEffort = self.addChild(self.task)
         self.assertEqual(self.effort.duration() + childEffort.duration(),
-            self.task.duration(recursive=True))
+            self.task.timeSpent(recursive=True))
             
-    def testDuration_RecursivelyWithGrandChild(self):
+    def testTimespent_RecursivelyWithGrandChild(self):
         self.task.addEffort(self.effort)
         child, childEffort = self.addChild(self.task)
         grandChild, grandChildEffort = self.addChild(child)
         self.assertEqual(self.effort.duration() + childEffort.duration() +
-            grandChildEffort.duration(), self.task.duration(recursive=True))
+            grandChildEffort.duration(), self.task.timeSpent(recursive=True))
             
     def testIsBeingTracked(self):
         self.task.addEffort(effort.Effort(self.task, date.DateTime.now()))

@@ -4,11 +4,11 @@ import wx, wx.lib.mixins.listctrl
 class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
             selectCommand=None, editCommand=None, popupMenu=None, 
-            columnPopupMenu=None, columnSortCallback=None, *args, **kwargs):
+            columnPopupMenu=None, sorters=None, sortOrderCommand=None, *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent, -1, 
             style=wx.LC_REPORT|wx.LC_VIRTUAL, *args, **kwargs)
         wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin.__init__(self)
-        self.setColumns(columns)
+        self.setColumns(columns, sorters or [])
         self.getItemText = getItemText
         self.getItemImage = getItemImage
         self.getItemAttr = getItemAttr
@@ -23,15 +23,17 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         if columnPopupMenu is not None:
             self.columnPopupMenu = columnPopupMenu
             self.Bind(wx.EVT_LIST_COL_RIGHT_CLICK, self.onColumnPopup)
-        if columnSortCallback is not None:
-            self.columnSortCallback = columnSortCallback
+        if sorters is not None:
             self.Bind(wx.EVT_LIST_COL_CLICK, self.onColumnClick)
             
-    def setColumns(self, columns):
+    def setColumns(self, columns, sorters):
         self.allColumnHeaders = columns
         for columnIndex, columnHeader in enumerate(columns):
             self.InsertColumn(columnIndex, columnHeader)
         self.setResizeColumn(self.getResizableColumn())
+        self.sorters = {}
+        for columnIndex, columnSorter in enumerate(sorters):
+            self.sorters[self.getColumnHeader(columnIndex)] = columnSorter
         
     def getResizableColumn(self):
         return 1
@@ -56,7 +58,7 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         event.Skip()
         
     def onColumnClick(self, event):
-        self.columnSortCallback(self.getColumnHeader(event.GetColumn()))
+        self.sorters[self.getColumnHeader(event.GetColumn())].onCommandActivate(event)
     
     def _clearColumnImages(self):
         for columnIndex in range(self.GetColumnCount()):

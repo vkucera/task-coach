@@ -2,42 +2,42 @@ import patterns, task
 
 class Sorter(patterns.ObservableListObserver):
     defaultSortKey = 'dueDate'
+    
     def __init__(self, *args, **kwargs):
-        self.__sortKey = getattr(self, '_%sSortKey'%self.defaultSortKey)
+        self.__sortKey = self.defaultSortKey
+        self.__sortKeyInitialized = False
         self.__ascending = True
         self.__sortByStatusFirst = True
         super(Sorter, self).__init__(*args, **kwargs)
 
-    def _dueDateSortKey(self, task):
-        result = []
+    def _statusSortKey(self, task):
         if self.__sortByStatusFirst:
-            result.extend([task.completed(), task.inactive()])
-        result.extend([task.dueDate(), task.startDate(), task.subject()])
-        return tuple(result)
-        
-    def _subjectSortKey(self, task):
-        result = []
-        if self.__sortByStatusFirst:
-            result.extend([task.completed(), task.inactive()])
-        result.append(task.subject())
-        return tuple(result)
+            return [task.completed(), task.inactive()]
+        else:
+            return []
 
-    def _budgetSortKey(self, task):
-        result = []
-        if self.__sortByStatusFirst:
-            result.extend([task.completed(), task.inactive()])
-        result.append(task.budget())
-        return tuple(result)
+    def __generateSortKey(self, sortKeyName):
+        def sortKey(task, sortKeyName=sortKeyName):
+            args = []
+            if sortKeyName.startswith('total'):
+                args.append(True)
+                sortKeyName = sortKeyName[len('total'):]
+            return self._statusSortKey(task) + [getattr(task, sortKeyName)(*args)]
+        return sortKey
 
     def postProcessChanges(self):
-        self.sort(key=self.__sortKey, reverse=not self.__ascending)
+        self.sort(key=self.__generateSortKey(self.__sortKey), reverse=not self.__ascending)
   
     def setSortKey(self, sortKey):
-        self.__sortKey = getattr(self, '_%sSortKey'%sortKey)
+        if sortKey == self.getSortKey() and self.__sortKeyInitialized:
+            self.setAscending(not self.isAscending())
+        else:
+            self.__sortKey = sortKey
+        self.__sortKeyInitialized = True
         self.reset()
         
     def getSortKey(self):
-        return self.__sortKey.__name__[1:-len('SortKey')]
+        return self.__sortKey
         
     def setAscending(self, ascending=True):
         self.__ascending = ascending

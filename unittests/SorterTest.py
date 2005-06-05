@@ -15,13 +15,15 @@ class Node(patterns.Observable):
         self._name = name
         self.notifyObservers(patterns.observer.Notification(self))
 
+    def name(self):
+        return self._name
 
 class TestableSorter(task.sorter.Sorter):
-    defaultSortKey = 'node'
+    defaultSortKey = 'name'
     
-    def _nodeSortKey(self, node):
-        return node._name
-
+    def _statusSortKey(self, node):
+        return []
+    
         
 class SorterTest(test.TestCase):
     def setUp(self):
@@ -189,20 +191,15 @@ class TaskSorterTest(test.TestCase):
         self.assertEqual([self.task1, self.task2], list(self.sorter))
         
     def testSortByStartDate(self):
-        self.task1.setDueDate(date.Today())
+        self.sorter.setSortKey('startDate')
+        self.task1.setDueDate(date.Yesterday())
         self.task2.setStartDate(date.Yesterday())
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
     def testSortBySubject(self):
-        self.task1.setDueDate(date.Today())
+        self.sorter.setSortKey('subject')
         self.assertEqual([self.task1, self.task2], list(self.sorter))
-        
-    def testSortById(self):
-        self.task1.setDueDate(date.Today())
-        self.task2.setSubject('A')
-        sorted = list(self.sorter)
-        self.failUnless(sorted[0].id() < sorted[1].id())
-        
+               
     def testDescending(self):
         self.sorter.setAscending(False)
         self.assertEqual([self.task1, self.task2], list(self.sorter))
