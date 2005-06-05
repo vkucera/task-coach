@@ -92,7 +92,7 @@ class XMLReaderTest(XMLReaderTestCase):
     def testEffort(self):
         tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000" stop="2004-01-01 10:30:00.123000"/></task></tasks>')
         self.assertEqual(1, len(tasks[0].efforts()))
-        self.assertEqual(date.TimeDelta(minutes=30), tasks[0].duration())
+        self.assertEqual(date.TimeDelta(minutes=30), tasks[0].timeSpent())
         self.assertEqual(tasks[0], tasks[0].efforts()[0].task())
         
     def testEffortDescription(self):

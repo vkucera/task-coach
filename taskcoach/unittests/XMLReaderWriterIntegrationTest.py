@@ -62,7 +62,7 @@ class IntegrationTest(IntegrationTestCase):
         self.assertEqual(self.task.budget(), self.readAndWrite()[0].budget())
         
     def testEffort(self):
-        self.assertEqual(self.task.duration(), self.tasksWrittenAndRead[0].duration())
+        self.assertEqual(self.task.timeSpent(), self.tasksWrittenAndRead[0].timeSpent())
         
     def testEffortDescription(self):
         self.assertEqual(self.task.efforts()[0].getDescription(), 

@@ -135,7 +135,17 @@ class TaskListViewer(TaskViewer, ListViewer):
             self.onSelect, self.uiCommands['edit'], 
             menu.TaskPopupMenu(self.parent, self.uiCommands),
             menu.TaskListViewerColumnPopupMenu(self.parent, self.uiCommands),
-            self.onColumnClick)
+            [self.uiCommands['viewsortbysubject'], 
+                self.uiCommands['viewsortbystartdate'], 
+                self.uiCommands['viewsortbyduedate'],
+                self.uiCommands['viewsortbydaysleft'],
+                self.uiCommands['viewsortbycompletiondate'],
+                self.uiCommands['viewsortbybudget'],
+                self.uiCommands['viewsortbytotalbudget'],
+                self.uiCommands['viewsortbytimespent'],
+                self.uiCommands['viewsortbytotaltimespent'],
+                self.uiCommands['viewsortbybudgetleft'],
+                self.uiCommands['viewsortbytotalbudgetleft']])
         widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
         return widget
         
@@ -168,9 +178,9 @@ class TaskListViewer(TaskViewer, ListViewer):
         elif columnHeader == _('Total budget'):
             return render.budget(task.budget(recursive=True))
         elif columnHeader == _('Time spent'):
-            return render.timeSpent(task.duration())
+            return render.timeSpent(task.timeSpent())
         elif columnHeader == _('Total time spent'):
-            return render.timeSpent(task.duration(recursive=True))
+            return render.timeSpent(task.timeSpent(recursive=True))
         elif columnHeader == _('Budget left'):
             return render.budget(task.budgetLeft())
         elif columnHeader == _('Total budget left'):
@@ -179,31 +189,14 @@ class TaskListViewer(TaskViewer, ListViewer):
     def showColumn(self, columnHeader, show):
         self.widget.showColumn(columnHeader, show)
 
-    def onColumnClick(self, columnHeader):
-        currentSortKey = self.list.getSortKey()
-        if columnHeader == _('Subject'):
-            newSortKey = 'subject'
-        elif columnHeader == _('Due date'):
-            newSortKey = 'dueDate'
-        elif columnHeader == _('Budget'):
-            newSortKey = 'budget'
-        else:
-            return
-        if newSortKey != currentSortKey:
-            self.list.setSortKey(newSortKey)
-            self.list.setAscending(True)
-        else:
-            self.list.setAscending(not self.list.isAscending())
-        if self.list.isAscending():
-            imageIndex = self.imageIndex['ascending']
-        else:
-            imageIndex = self.imageIndex['descending']
-        self.widget.showSort(columnHeader, imageIndex)
-
     def onNotify(self, *args, **kwargs):
         sortKey = self.list.getSortKey()
-        columnHeader = {'subject': _('Subject'), 'dueDate': _('Due date'),
-            'budget': _('Budget')}[sortKey]
+        columnHeader = {'subject': _('Subject'), 'startDate': _('Start date'),
+            'dueDate': _('Due date'), 'timeLeft': _('Days left'),
+            'completionDate': _('Completion date'), 'budget': _('Budget'),
+            'totalbudget': _('Total budget'), 'timeSpent': _('Time spent'),
+            'totaltimeSpent': _('Total time spent'), 'budgetLeft': _('Budget left'),
+            'totalbudgetLeft': _('Total budget left')}[sortKey]
         if self.list.isAscending():
             imageIndex = self.imageIndex['ascending']
         else:

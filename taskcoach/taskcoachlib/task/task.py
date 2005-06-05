@@ -218,11 +218,11 @@ class Task(patterns.Observable):
         notification = patterns.observer.Notification(self, effortsChanged=[notification.source])
         self.notifyObservers(notification)
         
-    def duration(self, recursive=False):
+    def timeSpent(self, recursive=False):
         if recursive:
-            return self._myDuration() + self._childrenDuration()
+            return self._myTimeSpent() + self._childrenTimeSpent()
         else:
-            return self._myDuration()
+            return self._myTimeSpent()
     
     def stopTracking(self):
         stoppedEfforts = []
@@ -252,13 +252,13 @@ class Task(patterns.Observable):
     def budgetLeft(self, recursive=False):
         budget = self.budget(recursive)
         if budget:
-            return budget - self.duration(recursive)
+            return budget - self.timeSpent(recursive)
         else:
             return budget
 
-    def _myDuration(self):
+    def _myTimeSpent(self):
         return sum([effort.duration() for effort in self.efforts()], date.TimeDelta())
     
-    def _childrenDuration(self):
-        return sum([child.duration(recursive=True) for child in self.children()], date.TimeDelta())
+    def _childrenTimeSpent(self):
+        return sum([child.timeSpent(recursive=True) for child in self.children()], date.TimeDelta())
         
