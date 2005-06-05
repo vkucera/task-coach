@@ -68,6 +68,7 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
             
     def showSort(self, columnHeader, imageIndex):
         self._clearColumnImages()
+        self.showColumn(columnHeader)
         columnIndex = self.getColumnIndex(columnHeader)
         listItem = self.GetColumn(columnIndex)
         listItem.SetImage(imageIndex)
