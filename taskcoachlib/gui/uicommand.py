@@ -147,7 +147,6 @@ class UIRadioCommand(BooleanSettingsCommand):
         self.settings.set(self.section, self.setting, str(self.value))
 
     def onUpdateUI(self, event):
-        print self.settings.get(self.section, self.setting)
         self.checkMenuItems(self.checked())
         super(UIRadioCommand, self).onUpdateUI(event)
 

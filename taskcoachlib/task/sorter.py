@@ -9,7 +9,7 @@ class Sorter(patterns.ObservableListObserver):
         self.__ascending = True
         self.__sortByStatusFirst = True
         super(Sorter, self).__init__(*args, **kwargs)
-
+     
     def _statusSortKey(self, task):
         if self.__sortByStatusFirst:
             return [task.completed(), task.inactive()]
