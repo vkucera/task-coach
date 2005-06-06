@@ -1,15 +1,17 @@
-Release 0.39 - May ?, 2005
+Release 0.39 - June 6, 2005
 
 Bugs fixed:
-- Composite tasks in the tree view are now sorted according to the
-  most urgent subtask instead of the least urgent subtask.
+- When sorting by due date, composite tasks in the tree view are 
+  now sorted according to the most urgent subtask instead of the 
+  least urgent subtask.
   
 Featues added:
-- Added option to sort ascending or descending.
+- Tasks can be sorted on all attributes (subject, start date, due date,
+  budget, etc.) This includes options to sort ascending or descending 
+  and to first sort by status (active/inactive/completed).
+- Sorting order can be changed by clicking on column headers.
 - Added German translation, thanks to J. Martin.
-- Readded menu item to start effort tracking from the last stopped 
-  effort. [TODO]
-
+- Minor view menu changes (1189978)
 
 
 
@@ -22,6 +24,7 @@ Features added:
 - Added preference dialog to edit preferences not related to the 
   view settings.
 - Now using gettext for i18n.
+
 
 
 Release 0.37 - May 14, 2005
