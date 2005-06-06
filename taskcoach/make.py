@@ -93,7 +93,7 @@ if sys.argv[1] == 'py2exe':
         'data_files' : [os.path.join('c:\\', 'Program Files', 'Python24', 'msvcr71.dll')],
         'windows' : [{ 'script' : 'taskcoach.pyw', 
             'other_resources' : [(24, 1, manifest)],
-            'icon_resources': [(1, 'icons/taskcoach.ico')]}],
+            'icon_resources': [(1, 'icons.in/taskcoach.ico')]}],
         'options' : {'py2exe' : {
             'compressed' : 1, 
             'includes' : ['xml.dom.minidom'],

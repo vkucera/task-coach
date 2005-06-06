@@ -46,6 +46,23 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.39 - June 6, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>When sorting by due date, composite tasks in the tree view are 
+          now sorted according to the most urgent subtask instead of the 
+          least urgent subtask.
+        </UL>  
+        Featues added:
+        <UL>
+        <LI>Tasks can be sorted on all attributes (subject, start date, due date,
+        budget, etc.) This includes options to sort ascending or descending 
+        and to first sort by status (active/inactive/completed).
+        <LI>Sorting order can be changed by clicking on column headers.
+        <LI>Added German translation, thanks to J. Martin.
+        <LI>Minor view menu changes 
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1189978&group_id=130831&atid=719137">1189978</A>)
+        </UL>
         <H4>Release 0.38 - May 22, 2005</H4>
         Features added:
         <UL>
@@ -372,7 +389,8 @@ pages['features'] = \
             <LI>Tasks have a subject, description, start date, due date and a 
             completion date.
             <LI>Tasks can be viewed as a list or as a tree.
-            <LI>Tasks can be sorted by due date or by subject.
+            <LI>Tasks can be sorted by all task attributes, e.g. subject,
+            budget, budget left, due date, etc.
             <LI>Several filters to e.g. hide completed tasks or view
             only tasks that are due today. 
             <LI>Task status depends on its subtask and vice versa. E.g. if 
@@ -393,22 +411,7 @@ pages['features'] = \
             <LI>Printing
         </UL>
         <H3>Requested features</H3>
-        Features requested or suggested by people. The more people 
-        request a feature, the bigger the chance I will add it in the 
-        next release (hint).
-        <UL>
-            <LI>A graphics view of the tasks, like horizontal bars 
-            representing the tasks duration, with a dates row at the top 
-            so you can see the start and end dates (the same type of 
-            view you can get in Outlook). Requested by Nadia.
-            <LI>Original time estimation, current time estimation,
-            elapsed time, remaining time. Suggested by Sander Boom.
-            <LI>Priorities per task (at least five levels). Suggested by
-            Sander Boom.
-            <LI>Export to HTML. Suggested by Sander Boom.
-            <LI>Start tracking tasks from the task bar tray
-            icon popu menu. Suggested by Wolfgang Keller.
-        </UL>
+        See <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">feature requests</A>.
         </P>'''
 
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
@@ -435,5 +438,5 @@ for title, text in pages.items():
 
 import shutil, glob
 for file in glob.glob('*.png') + glob.glob('*.ico') + glob.glob('*.css') + \
-    ['../icons/splash.png']:
+    ['../icons.in/splash.png']:
     shutil.copyfile(file, os.path.join(dist, os.path.basename(file)))

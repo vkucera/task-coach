@@ -1,8 +1,8 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
-version = '0.38'
-previous_version = '0.37'
-date = 'May 22, 2005'
+version = '0.39'
+previous_version = '0.38'
+date = 'June 6, 2005'
 author = 'Frank Niessink'
 author_email = 'frank@niessink.com'
 url = 'http://taskcoach.niessink.com/'
@@ -11,7 +11,7 @@ license = 'GNU GENERAL PUBLIC LICENSE Version 2, June 1991'
 platform = 'Any'
 filename = 'TaskCoach'
 pythonversion = '2.4.1'
-wxpythonversion = '2.5.5.1'
+wxpythonversion = '2.5.5.1-unicode'
 
 def __createDict(locals):
     ''' Provide the local variables as a dictionary for use in string
