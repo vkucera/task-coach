@@ -2,9 +2,18 @@ import datetime
 
 class TimeDelta(datetime.timedelta):
     def hoursMinutesSeconds(self):
-        hours, seconds = self.seconds/3600, self.seconds%3600
+        ''' Return a tuple (hours, minutes, seconds). Note that the caller
+            is responsible for checking whether the TimeDelta instance is positive
+            or negative. '''
+        if self < TimeDelta():
+            seconds = 3600*24 - self.seconds
+            days = abs(self.days) - 1
+        else:
+            seconds = self.seconds
+            days = self.days
+        hours, seconds = seconds/3600, seconds%3600
         minutes, seconds = seconds/60, seconds%60
-        hours += self.days*24
+        hours += days*24
         return hours, minutes, seconds
         
     def __add__(self, other):

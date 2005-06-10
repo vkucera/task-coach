@@ -1,4 +1,4 @@
-import test, asserts, task, date, effort
+import test, asserts, task, date, effort, sets
 
 class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def setUp(self):
@@ -230,3 +230,41 @@ class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts,
         self.failUnlessParentAndChild(self.task2, self.task3)
         self.assertEqual(1, self.notifications)
 
+
+class TaskListTaskCategoriesTest(test.TestCase):
+    def setUp(self):
+        self.taskList = task.TaskList()
+        self.task = task.Task()
+        self.task2 = task.Task()
+        self.task2.addCategory('new')
+        self.task.addCategory('test')
+        
+    def assertCategoriesEquals(self, expected):
+        self.assertEqual(sets.Set(expected), self.taskList.categories())
+        
+    def testInitial(self):
+        self.assertCategoriesEquals([])
+        
+    def testOneTaskWithoutCategories(self):
+        self.taskList.append(task.Task())
+        self.assertCategoriesEquals([])
+
+    def testOneTaskWithOneCategory(self):
+        self.taskList.append(self.task)
+        self.assertCategoriesEquals(['test'])
+        
+    def testOneTaskWithTwoCategories(self):
+        self.task.addCategory('second')
+        self.taskList.append(self.task)
+        self.assertCategoriesEquals(['test', 'second'])
+        
+    def testTwoTasksWithDifferentCategories(self):
+        self.taskList.append(self.task)
+        self.taskList.append(self.task2)
+        self.assertCategoriesEquals(['test', 'new'])
+        
+    def testTwoTasksWithOverlappingCategories(self):
+        self.taskList.append(self.task)
+        self.task2.addCategory('test')
+        self.taskList.append(self.task2)
+        self.assertCategoriesEquals(['test', 'new'])

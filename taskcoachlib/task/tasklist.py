@@ -105,3 +105,9 @@ class TaskList(patterns.ObservableObservablesList):
         for task in self:
             result.extend(task.efforts())
         return result
+
+    def categories(self):
+        result = sets.Set()
+        for task in self:
+            result |= task.categories()
+        return result

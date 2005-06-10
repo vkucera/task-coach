@@ -26,16 +26,17 @@ def daysLeft(timeLeft):
 def timeSpent(timeSpent):
     ''' render time spent (of type date.TimeDelta) as
     "<hours>:<minutes>:<seconds>" '''
-    return '%d:%02d:%02d'%timeSpent.hoursMinutesSeconds()
+    import date
+    if timeSpent < date.TimeDelta():
+        sign = '-'
+    else:
+        sign = ''
+    return sign + '%d:%02d:%02d'%timeSpent.hoursMinutesSeconds()
     
 def budget(aBudget):
     ''' render budget (of type date.TimeDelta) as
-    "<hours>:<minutes>:<seconds>" or "None" if budget is infinite. '''
-    import date
-    if aBudget == date.TimeDelta.max:
-        return _('None')
-    else:
-        return timeSpent(aBudget)
+    "<hours>:<minutes>:<seconds>". '''
+    return timeSpent(aBudget)
         
 def dateTime(dateTime):
     return dateTime.strftime('%Y-%m-%d %H:%M')

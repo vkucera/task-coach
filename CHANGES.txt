@@ -1,3 +1,10 @@
+Release 0.40 - June X, 2005
+
+Bugs fixed:
+- Budget left was rendered incorrectly when over budget (1216951).
+
+
+
 Release 0.39 - June 6, 2005
 
 Bugs fixed:

@@ -1,10 +1,8 @@
 from taskcoachlib import patterns, date
-import time, copy
+import time, copy, sets
 
 
 class Task(patterns.Observable):
-    #sep = '|'
-   
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, completiondate=None, parent=None, budget=None, 
             *args, **kwargs):
@@ -20,6 +18,7 @@ class Task(patterns.Observable):
         self._parent         = parent # adding the parent->child link is
                                       # the creator's responsibility
         self._efforts        = []
+        self._categories     = sets.Set()
 
     def onNotify(self, notification, *args, **kwargs):
         notification = patterns.observer.Notification(self,  
@@ -261,4 +260,18 @@ class Task(patterns.Observable):
     
     def _childrenTimeSpent(self):
         return sum([child.timeSpent(recursive=True) for child in self.children()], date.TimeDelta())
+        
+    # categories
+    
+    def categories(self, recursive=False):
+        result = sets.Set(self._categories)
+        if recursive and self.parent() is not None:
+            result |= self.parent().categories(recursive=True)
+        return result
+        
+    def addCategory(self, category):
+        self._categories.add(category)
+        
+    def removeCategory(self, category):
+        self._categories.discard(category)
         
