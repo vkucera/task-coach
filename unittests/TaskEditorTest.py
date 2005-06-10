@@ -46,10 +46,10 @@ class TaskEditorTestCase(test.TestCase):
         return []
 
     def setSubject(self, newSubject, index=0):
-        self.editor[index].setSubject(newSubject)
+        self.editor[index][0].setSubject(newSubject)
 
     def setDescription(self, newDescription, index=0):
-        self.editor[index].setDescription(newDescription)
+        self.editor[index][0].setDescription(newDescription)
 
 
 class NewTaskTest(TaskEditorTestCase):
@@ -59,8 +59,8 @@ class NewTaskTest(TaskEditorTestCase):
         return newTaskCommand
 
     def testCreate(self):
-        self.assertEqual('New task', self.editor[0]._subjectPage._subjectEntry.GetValue())
-        self.assertEqual(date.Date(), self.editor[0]._dueDateEntry.get())
+        self.assertEqual('New task', self.editor[0][0]._subjectEntry.GetValue())
+        self.assertEqual(date.Date(), self.editor[0][1]._dueDateEntry.get())
 
     def testOk(self):
         self.setSubject('Done')
@@ -73,18 +73,18 @@ class NewTaskTest(TaskEditorTestCase):
         self.assertEqual('New task', self.task.subject())
 
     def testDueDate(self):
-        self.editor[0]._dueDateEntry.set(date.Today())
+        self.editor[0][1]._dueDateEntry.set(date.Today())
         self.editor.ok()
         self.assertEqual(date.Today(), self.task.dueDate())
 
     def testSetCompleted(self):
-        self.editor[0]._completionDateEntry.set(date.Today())
+        self.editor[0][1]._completionDateEntry.set(date.Today())
         self.editor.ok()
         self.assertEqual(date.Today(), self.task.completionDate())
 
     def testSetUncompleted(self):
-        self.editor[0]._completionDateEntry.set(date.Today())
-        self.editor[0]._completionDateEntry.set(date.Date())
+        self.editor[0][1]._completionDateEntry.set(date.Today())
+        self.editor[0][1]._completionDateEntry.set(date.Date())
         self.editor.ok()
         self.assertEqual(date.Date(), self.task.completionDate())
 
@@ -134,12 +134,12 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual('Task to edit', self.task.subject())
 
     def testSetDueDate(self):
-        self.editor[0]._dueDateEntry.set(date.Tomorrow())
+        self.editor[0][1]._dueDateEntry.set(date.Tomorrow())
         self.editor.ok()
         self.assertEqual(date.Tomorrow(), self.task.dueDate())
 
     def testSetStartDate(self):
-        self.editor[0]._startDateEntry.set(date.Tomorrow())
+        self.editor[0][1]._startDateEntry.set(date.Tomorrow())
         self.editor.ok()
         self.assertEqual(date.Tomorrow(), self.task.startDate())
 
@@ -195,12 +195,12 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
         self.assertEqual('Task2', self.task2.subject())
 
     def testCannotChangeDueDate(self):
-        self.editor[0]._dueDateEntry.set(date.Tomorrow())
+        self.editor[0][1]._dueDateEntry.set(date.Tomorrow())
         self.editor.ok()
         self.assertNotEqual(date.Tomorrow(), self.task1.dueDate())
 
     def testCannotChangeStartDate(self):
-        self.editor[0]._startDateEntry.set(date.Tomorrow())
+        self.editor[0][1]._startDateEntry.set(date.Tomorrow())
         self.editor.ok()
         self.assertNotEqual(date.Tomorrow(), self.task1.startDate())
 
@@ -211,7 +211,7 @@ class FocusTest(TaskEditorTestCase, test.wxTestCase):
 
     def testFocus(self):
         wx.Yield()
-        self.assertEqual(self.editor[0]._subjectPage._subjectEntry, self.editor.FindFocus())
+        self.assertEqual(self.editor[0][0]._subjectEntry, self.editor.FindFocus())
         
 
 class EffortEditorTest(TaskEditorTestCase):      

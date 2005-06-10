@@ -48,7 +48,8 @@ iconlist = [
 ('configure', 'actions', 'configure', [16]),
 ('language', 'apps', 'edu_languages', [22]),
 ('ascending', 'actions', 'up', [16]),
-('descending', 'actions', 'down', [16])]
+('descending', 'actions', 'down', [16]),
+('category', 'filesystems', 'folder_download', [22])]
 
 icons = {}
 
