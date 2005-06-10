@@ -47,6 +47,28 @@ class TimeDeltaEntry(wx.Panel):
         return date.parseTimeDelta(self._entry.GetValue())
 
 
+class SubjectPage(widgets.BookPage):
+    def __init__(self, parent, task, *args, **kwargs):
+        super(SubjectPage, self).__init__(parent, columns=2, *args, **kwargs)
+        self._subjectEntry = wx.TextCtrl(self, -1, task.subject())
+        self._descriptionEntry = wx.TextCtrl(self, -1, 
+            task.description(), style=wx.TE_MULTILINE)
+        self._descriptionEntry.SetSizeHints(500, 220)
+        self.addEntry(_('Subject'), self._subjectEntry)    
+        self.addEntry(_('Description'), self._descriptionEntry, growable=True)    
+        self._task = task
+        
+    def ok(self):
+        self._task.setSubject(self._subjectEntry.GetValue())
+        self._task.setDescription(self._descriptionEntry.GetValue())
+
+    def setSubject(self, subject):
+        self._subjectEntry.SetValue(subject)
+
+    def setDescription(self, description):
+        self._descriptionEntry.SetValue(description)        
+        
+        
 class TaskEditBook(widgets.Listbook):
     def __init__(self, parent, task, uiCommands, settings, *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
@@ -59,14 +81,8 @@ class TaskEditBook(widgets.Listbook):
         self.addEffortPage()
         
     def addSubjectPage(self):
-        subjectPage = widgets.BookPage(self, columns=2)
-        self._subjectEntry = wx.TextCtrl(subjectPage, -1, self._task.subject())
-        self._descriptionEntry = wx.TextCtrl(subjectPage, -1, 
-            self._task.description(), style=wx.TE_MULTILINE)
-        self._descriptionEntry.SetSizeHints(500, 220)
-        subjectPage.addEntry(_('Subject'), self._subjectEntry)
-        subjectPage.addEntry(_('Description'), self._descriptionEntry, growable=True)
-        self.AddPage(subjectPage, _('Description'), 'description')
+        self._subjectPage = SubjectPage(self, self._task)
+        self.AddPage(self._subjectPage, _('Description'), 'description')
         
     def addDatesPage(self):
         datesPage = widgets.BookPage(self, columns=3)
@@ -114,18 +130,17 @@ class TaskEditBook(widgets.Listbook):
         self.AddPage(effortPage, _('Effort'), 'start')
             
     def ok(self):
-        self._task.setSubject(self._subjectEntry.GetValue())
-        self._task.setDescription(self._descriptionEntry.GetValue())
+        self._subjectPage.ok()
         self._task.setStartDate(self._startDateEntry.get(date.Today()))
         self._task.setDueDate(self._dueDateEntry.get())
         self._task.setCompletionDate(self._completionDateEntry.get())
         self._task.setBudget(self._budgetEntry.get())     
         
     def setSubject(self, subject):
-        self._subjectEntry.SetValue(subject)
+        self._subjectPage.setSubject(subject)
 
     def setDescription(self, description):
-        self._descriptionEntry.SetValue(description)        
+        self._subjectPage.setDescription(description)        
 
 
 class EffortEditBook(widgets.BookPage):
@@ -190,8 +205,8 @@ class TaskEditor(EditorWithCommand):
     def __init__(self, parent, command, uiCommands, settings, bitmap='edit', *args, **kwargs):
         self._settings = settings
         super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
-        self[0]._subjectEntry.SetSelection(-1, -1)
-        wx.CallAfter(self[0]._subjectEntry.SetFocus)
+        self[0]._subjectPage._subjectEntry.SetSelection(-1, -1)
+        wx.CallAfter(self[0]._subjectPage._subjectEntry.SetFocus)
         
     def addPages(self):
         for task in self._command.items:

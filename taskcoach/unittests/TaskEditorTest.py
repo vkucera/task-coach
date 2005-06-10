@@ -59,7 +59,7 @@ class NewTaskTest(TaskEditorTestCase):
         return newTaskCommand
 
     def testCreate(self):
-        self.assertEqual('New task', self.editor[0]._subjectEntry.GetValue())
+        self.assertEqual('New task', self.editor[0]._subjectPage._subjectEntry.GetValue())
         self.assertEqual(date.Date(), self.editor[0]._dueDateEntry.get())
 
     def testOk(self):
@@ -211,7 +211,7 @@ class FocusTest(TaskEditorTestCase, test.wxTestCase):
 
     def testFocus(self):
         wx.Yield()
-        self.assertEqual(self.editor[0]._subjectEntry, self.editor.FindFocus())
+        self.assertEqual(self.editor[0]._subjectPage._subjectEntry, self.editor.FindFocus())
         
 
 class EffortEditorTest(TaskEditorTestCase):      

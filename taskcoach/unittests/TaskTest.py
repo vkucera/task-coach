@@ -1,4 +1,4 @@
-import test, asserts, task, date, time, wx, effort
+import test, asserts, task, date, time, wx, effort, sets
 
 __coverage__ = [task.Task]
 
@@ -500,4 +500,42 @@ class TaskBudgetTest(test.TestCase):
         self.child.setBudget(self.oneHour)
         self.child.addEffort(self.childEffort)
         self.assertEqual(self.zero, self.task.budgetLeft(recursive=True))
+        
+        
+class TaskCategoryTest(test.TestCase):
+    def setUp(self):
+        self.task = task.Task()
+        self.task.addCategory('test')
+        self.child = task.Task()
+        self.task.addChild(self.child)
+        
+    def testInitialCategories(self):
+        self.assertEqual(sets.Set(), task.Task().categories())
+        
+    def testAddCategory(self):
+        self.assertEqual(sets.Set(['test']), self.task.categories())
+        
+    def testAddCategoryTwice(self):
+        self.task.addCategory('test')
+        self.assertEqual(sets.Set(['test']), self.task.categories())
+        
+    def testGetCategoriesRecursiveFromParent(self):
+        self.assertEqual(sets.Set(['test']), self.child.categories(recursive=True))
+        
+    def testGetCategoriesNotRecursive(self):
+        self.assertEqual(sets.Set(), self.child.categories())
+        
+    def testGetCategoriesRecursiveFromGrandParent(self):
+        grandchild = task.Task()
+        self.child.addChild(grandchild)
+        self.assertEqual(sets.Set(['test']), grandchild.categories(recursive=True))
+        
+    def testRemoveCategory(self):
+        self.task.removeCategory('test')
+        self.assertEqual(sets.Set(), self.task.categories())
+        
+    def testRemoveCategoryTwice(self):
+        self.task.removeCategory('test')
+        self.task.removeCategory('test')
+        self.assertEqual(sets.Set(), self.task.categories())
         
