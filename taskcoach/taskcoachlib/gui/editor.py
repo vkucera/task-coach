@@ -67,81 +67,102 @@ class SubjectPage(widgets.BookPage):
 
     def setDescription(self, description):
         self._descriptionEntry.SetValue(description)        
-        
-        
-class TaskEditBook(widgets.Listbook):
-    def __init__(self, parent, task, uiCommands, settings, *args, **kwargs):
-        super(TaskEditBook, self).__init__(parent)
+
+
+class DatesPage(widgets.BookPage):
+    def __init__(self, parent, task, *args, **kwargs):
+        super(DatesPage, self).__init__(parent, columns=3, *args, **kwargs)
         self._task = task
-        self._uiCommands = uiCommands
-        self._settings = settings
-        self.addSubjectPage()
-        self.addDatesPage()
-        self.addBudgetPage()
-        self.addEffortPage()
-        
-    def addSubjectPage(self):
-        self._subjectPage = SubjectPage(self, self._task)
-        self.AddPage(self._subjectPage, _('Description'), 'description')
-        
-    def addDatesPage(self):
-        datesPage = widgets.BookPage(self, columns=3)
-        self._startDateEntry = DateEntry(datesPage, self._task.startDate())
-        self._dueDateEntry = DateEntry(datesPage, self._task.dueDate())
-        self._completionDateEntry = DateEntry(datesPage, self._task.completionDate())        
+        self._startDateEntry = DateEntry(self, task.startDate())
+        self._dueDateEntry = DateEntry(self, task.dueDate())
+        self._completionDateEntry = DateEntry(self, task.completionDate())        
         entriesArgs = [['', _('For this task')],
                        [_('Start date'), self._startDateEntry],
                        [_('Due date'), self._dueDateEntry],
                        [_('Completion date'), self._completionDateEntry]]    
-        if self._task.children():
+        if task.children():
             entriesArgs[0].append(_('For this task including all subtasks'))
-            entriesArgs[1].append(DateEntry(datesPage, self._task.startDate(recursive=True), readonly=True))
-            entriesArgs[2].append(DateEntry(datesPage, self._task.dueDate(recursive=True), readonly=True))
-            entriesArgs[3].append(DateEntry(datesPage, self._task.completionDate(recursive=True), readonly=True))
+            entriesArgs[1].append(DateEntry(self, task.startDate(recursive=True), readonly=True))
+            entriesArgs[2].append(DateEntry(self, task.dueDate(recursive=True), readonly=True))
+            entriesArgs[3].append(DateEntry(self, task.completionDate(recursive=True), readonly=True))
         for entryArgs in entriesArgs:
-            datesPage.addEntry(*entryArgs)
-        self.AddPage(datesPage, _('Dates'), 'date')
-    
-    def addBudgetPage(self):
-        budgetPage = widgets.BookPage(self, columns=3)
-        self._budgetEntry = TimeDeltaEntry(budgetPage, self._task.budget())
-        entriesArgs = [['', _('For this task')],
-                       [_('Budget'), self._budgetEntry],
-                       [_('Time spent'), render.timeSpent(self._task.timeSpent())],
-                       [_('Budget left'), render.budget(self._task.budgetLeft())]]
-        if self._task.children():
-            entriesArgs[0].append(_('For this task including all subtasks'))
-            entriesArgs[1].append(render.budget(self._task.budget(recursive=True)))
-            entriesArgs[2].append(render.timeSpent(self._task.timeSpent(recursive=True)))
-            entriesArgs[3].append(render.budget(self._task.budgetLeft(recursive=True)))
-        for entryArgs in entriesArgs:
-            budgetPage.addEntry(*entryArgs)
-        self.AddPage(budgetPage, _('Budget'), 'budget')
-                
-    def addEffortPage(self):
-        if not self._task.timeSpent(recursive=True):
-            return
-        effortPage = widgets.BookPage(self, columns=1)
-        import viewercontainer, viewerfactory, effort
-        viewerContainer = viewercontainer.ViewerChoicebook(effortPage, self._settings, 'effortviewerineditor')
-        myEffortList = effort.SingleTaskEffortList(self._task)
-        viewerfactory._addEffortViewers(viewerContainer, myEffortList, self._uiCommands)
-        effortPage.addEntry(None, viewerContainer, growable=True)
-        self.AddPage(effortPage, _('Effort'), 'start')
-            
-    def ok(self):
-        self._subjectPage.ok()
+            self.addEntry(*entryArgs)
+
+    def ok(self):                   
         self._task.setStartDate(self._startDateEntry.get(date.Today()))
         self._task.setDueDate(self._dueDateEntry.get())
         self._task.setCompletionDate(self._completionDateEntry.get())
-        self._task.setBudget(self._budgetEntry.get())     
+
+
+class BudgetPage(widgets.BookPage):
+    def __init__(self, parent, task, *args, **kwargs):
+        super(BudgetPage, self).__init__(parent, columns=3, *args, **kwargs)
+        self._task = task
+        self._budgetEntry = TimeDeltaEntry(self, task.budget())
+        entriesArgs = [['', _('For this task')],
+                       [_('Budget'), self._budgetEntry],
+                       [_('Time spent'), render.timeSpent(task.timeSpent())],
+                       [_('Budget left'), render.budget(task.budgetLeft())]]
+        if task.children():
+            entriesArgs[0].append(_('For this task including all subtasks'))
+            entriesArgs[1].append(render.budget(task.budget(recursive=True)))
+            entriesArgs[2].append(render.timeSpent(task.timeSpent(recursive=True)))
+            entriesArgs[3].append(render.budget(task.budgetLeft(recursive=True)))
+        for entryArgs in entriesArgs:
+            self.addEntry(*entryArgs)
+
+    def ok(self):
+        self._task.setBudget(self._budgetEntry.get())              
+
+
+class EffortPage(widgets.BookPage):        
+    def __init__(self, parent, task, settings, uiCommands, *args, **kwargs):
+        super(EffortPage, self).__init__(parent, columns=1, *args, **kwargs)
+        import viewercontainer, viewerfactory, effort
+        viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 'effortviewerineditor')
+        myEffortList = effort.SingleTaskEffortList(task)
+        viewerfactory._addEffortViewers(viewerContainer, myEffortList, uiCommands)
+        self.addEntry(None, viewerContainer, growable=True)
+
+
+class CategoriesPage(widgets.BookPage):
+    def __init__(self, parent, task, categories, *args, **kwargs):
+        super(CategoriesPage, self).__init__(parent, columns=2, *args, **kwargs)
+        self._checkListBox = wx.CheckListBox(self, -1)
+        self._checkListBox.InsertItems(categories, 0)
+        for index in range(self._checkListBox.GetCount()):
+            if self._checkListBox.GetString(index) in task.categories():
+                self._checkListBox.Check(index)
+        self.addEntry(_('Categories'), self._checkListBox, growable=True)
+        self._textEntry = wx.TextCtrl(self, -1, style=wx.TE_PROCESS_ENTER)
+        self.addEntry(_('New category'), self._textEntry)
+        self.Bind(wx.EVT_TEXT_ENTER, self.onNewCategory, self._textEntry)
+        self._task = task
         
-    def setSubject(self, subject):
-        self._subjectPage.setSubject(subject)
+    def ok(self):
+        for index in range(self._checkListBox.GetCount()):
+            category = self._checkListBox.GetString(index)
+            if self._checkListBox.IsChecked(index):
+                self._task.addCategory(category)
+            else:
+                self._task.removeCategory(category)
 
-    def setDescription(self, description):
-        self._subjectPage.setDescription(description)        
+    def onNewCategory(self, event):
+        self._checkListBox.InsertItems([event.GetString()], 0)
+        self._checkListBox.Check(0)
 
+
+class TaskEditBook(widgets.Listbook):
+    def __init__(self, parent, task, uiCommands, settings, categories, *args, **kwargs):
+        super(TaskEditBook, self).__init__(parent)
+        self.AddPage(SubjectPage(self, task), _('Description'), 'description')
+        self.AddPage(DatesPage(self, task), _('Dates'), 'date')
+        self.AddPage(CategoriesPage(self, task, categories), _('Categories'), 'category')
+        self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')        
+        if task.timeSpent(recursive=True):
+            effortPage = EffortPage(self, task, settings, uiCommands)
+            self.AddPage(effortPage, _('Effort'), 'start')
+                  
 
 class EffortEditBook(widgets.BookPage):
     def __init__(self, parent, effort, editor, effortList, *args, **kwargs):
@@ -202,18 +223,19 @@ class EditorWithCommand(widgets.NotebookDialog):
 
             
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, uiCommands, settings, bitmap='edit', *args, **kwargs):
+    def __init__(self, parent, command, uiCommands, settings, categories=None, bitmap='edit', *args, **kwargs):
         self._settings = settings
+        self._categories = list(categories or [])
         super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
-        self[0]._subjectPage._subjectEntry.SetSelection(-1, -1)
-        wx.CallAfter(self[0]._subjectPage._subjectEntry.SetFocus)
+        self[0][0]._subjectEntry.SetSelection(-1, -1)
+        wx.CallAfter(self[0][0]._subjectEntry.SetFocus)
         
     def addPages(self):
         for task in self._command.items:
             self.addPage(task)
 
     def addPage(self, task):
-        page = TaskEditBook(self._book, task, self._uiCommands, self._settings)
+        page = TaskEditBook(self._book, task, self._uiCommands, self._settings, self._categories)
         self._book.AddPage(page, task.subject())
         
     

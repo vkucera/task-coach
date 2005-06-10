@@ -55,6 +55,9 @@ class BookPage(wx.Panel):
         if 'growable' in kwargs and kwargs['growable']:
             self._sizer.AddGrowableRow(self._position.maxRow())
 
+    def ok(self):
+        pass
+        
 
 class Book(object):
     ''' Abstract base class for *book '''
@@ -91,6 +94,10 @@ class Book(object):
             imageId = -1
         super(Book, self).AddPage(page, name, imageId=imageId)
 
+    def ok(self):
+        for page in self:
+            page.ok()
+            
 
 class Notebook(Book, wx.Notebook):
     pageChangedEvent = wx.EVT_NOTEBOOK_PAGE_CHANGED

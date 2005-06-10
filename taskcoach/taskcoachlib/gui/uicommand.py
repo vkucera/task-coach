@@ -618,7 +618,7 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsComma
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
             command.NewTaskCommand(self.filteredTaskList),
-            self.uiCommands, self.settings, bitmap=self.bitmap)
+            self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap=self.bitmap)
         editor.Show(show)
         return editor
 
@@ -635,7 +635,7 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         editor = gui.TaskEditor(self.mainwindow, 
             command.NewSubTaskCommand(self.filteredTaskList, 
                 self.viewer.curselection()),
-            self.uiCommands, self.settings, bitmap='new')
+            self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap='new')
         editor.Show(show)
         return editor
 
@@ -650,7 +650,8 @@ class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand,
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
             command.EditTaskCommand(self.filteredTaskList, 
-                self.viewer.curselection()), self.uiCommands, self.settings)
+                self.viewer.curselection()), self.uiCommands, self.settings,
+                self.filteredTaskList.categories())
         editor.Show(show)
         return editor
 
