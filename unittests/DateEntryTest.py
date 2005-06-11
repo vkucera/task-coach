@@ -1,5 +1,5 @@
 import test, date
-from gui import editor 
+from gui.dialog import editor 
 
 class DateEntryTest(test.wxTestCase):
     def setUp(self):

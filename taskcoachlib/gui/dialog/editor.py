@@ -1,4 +1,5 @@
-import date, widgets, render
+import date, widgets
+from gui import render
 import wx, datetime
 import wx.lib.masked as masked
 from i18n import _
@@ -53,7 +54,7 @@ class SubjectPage(widgets.BookPage):
         self._subjectEntry = wx.TextCtrl(self, -1, task.subject())
         self._descriptionEntry = wx.TextCtrl(self, -1, 
             task.description(), style=wx.TE_MULTILINE)
-        self._descriptionEntry.SetSizeHints(500, 220)
+        self._descriptionEntry.SetSizeHints(500, 260)
         self.addEntry(_('Subject'), self._subjectEntry)    
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)    
         self._task = task
@@ -127,7 +128,7 @@ class EffortPage(widgets.BookPage):
 
 class CategoriesPage(widgets.BookPage):
     def __init__(self, parent, task, categories, *args, **kwargs):
-        super(CategoriesPage, self).__init__(parent, columns=2, *args, **kwargs)
+        super(CategoriesPage, self).__init__(parent, columns=3, growableColumn=1, *args, **kwargs)
         self._checkListBox = wx.CheckListBox(self, -1)
         self._checkListBox.InsertItems(categories, 0)
         for index in range(self._checkListBox.GetCount()):
@@ -135,7 +136,9 @@ class CategoriesPage(widgets.BookPage):
                 self._checkListBox.Check(index)
         self.addEntry(_('Categories'), self._checkListBox, growable=True)
         self._textEntry = wx.TextCtrl(self, -1, style=wx.TE_PROCESS_ENTER)
-        self.addEntry(_('New category'), self._textEntry)
+        addButton = wx.Button(self, -1, 'Add category')
+        addButton.Bind(wx.EVT_BUTTON, self.onNewCategory)
+        self.addEntry(_('New category'), self._textEntry, addButton)
         self.Bind(wx.EVT_TEXT_ENTER, self.onNewCategory, self._textEntry)
         self._task = task
         
@@ -148,8 +151,9 @@ class CategoriesPage(widgets.BookPage):
                 self._task.removeCategory(category)
 
     def onNewCategory(self, event):
-        self._checkListBox.InsertItems([event.GetString()], 0)
+        self._checkListBox.InsertItems([self._textEntry.GetValue()], 0)
         self._checkListBox.Check(0)
+        self._textEntry.Clear()
 
 
 class TaskEditBook(widgets.Listbook):

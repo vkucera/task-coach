@@ -1,4 +1,5 @@
-import wx, task, patterns, config, gui, meta, helpdialog, command
+import wx, task, patterns, config, gui, meta, command
+from gui.dialog import helpdialog
 from i18n import _
 
 

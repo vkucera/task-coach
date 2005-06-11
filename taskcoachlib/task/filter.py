@@ -1,4 +1,4 @@
-import patterns, date, re
+import patterns, date, re, sets
 
 
 class Filter(patterns.ObservableListObserver):
@@ -113,3 +113,19 @@ class SearchFilter(Filter):
         self.reset()
 
 
+class CategoryFilter(Filter):
+    def __init__(self, *args, **kwargs):
+        self._categories = sets.Set()
+        super(CategoryFilter, self).__init__(*args, **kwargs)
+        
+    def filter(self, task):
+        return not (task.categories(recursive=True) & self._categories) 
+        
+    def addCategory(self, category):
+        self._categories.add(category)
+        self.reset()
+        
+    def removeCategory(self, category):
+        self._categories.discard(category)
+        self.reset()
+        
