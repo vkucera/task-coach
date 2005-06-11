@@ -212,4 +212,9 @@ class CategoryFilterTest(test.TestCase):
     def testFilteredCategories(self):
         self.filter.addCategory('test')
         self.failUnless('test' in self.filter.filteredCategories())
+        
+    def testClearFilter(self):
+        self.filter.addCategory('parent')
+        self.filter.removeAllCategories()
+        self.assertEqual(2, len(self.filter))
     

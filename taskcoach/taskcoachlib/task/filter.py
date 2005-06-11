@@ -129,6 +129,10 @@ class CategoryFilter(Filter):
         self._categories.discard(category)
         self.reset()
         
+    def removeAllCategories(self):
+        self._categories.clear()
+        self.reset()
+            
     def filteredCategories(self):
         return self._categories
         
