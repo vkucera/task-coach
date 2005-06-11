@@ -423,6 +423,7 @@ class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
             'viewdueworkweek', 'viewdueweek', 'viewduemonth', 'viewdueyear']:
             self.uiCommands[uiCommandName].check()
         self.filteredTaskList.setViewAll()
+        self.filteredTaskList.removeAllCategories()
 
 
 class ViewCompletedTasks(FilterCommand, UICheckCommand):
@@ -490,13 +491,16 @@ class ViewCompositeTasks(ViewerCommand, FilterCommand, UICheckCommand):
 
 class ViewCategories(MainWindowCommand, FilterCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewCategories, self).__init__(menuText=_('Categories...'),
+        super(ViewCategories, self).__init__(menuText=_('Tasks by categories...'),
             helpText=_('Show/hide tasks by category'), bitmap='category', *args, **kwargs)
             
     def doCommand(self, event):
         editor = gui.CategoriesFilterDialog(parent=self.mainwindow,
             title=_('View categories'), taskList=self.filteredTaskList)
         editor.Show()
+
+    def enabled(self):
+        return self.filteredTaskList.categories() 
 
 
 class ViewColumn(ViewerCommand, UICheckCommand):   
