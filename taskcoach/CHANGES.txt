@@ -4,8 +4,8 @@ Bugs fixed:
 - Budget left was rendered incorrectly when over budget (1216951).
 
 Features added:
-- Tasks can belong to zero or more categories. Tasks can be hidden
-  by category (<sf>).
+- Tasks can belong to zero or more categories. Tasks can be 
+  viewed/hidden by category (1182172).
 
 
 
