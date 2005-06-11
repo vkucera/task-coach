@@ -488,6 +488,17 @@ class ViewCompositeTasks(ViewerCommand, FilterCommand, UICheckCommand):
         self.viewer.setViewCompositeTasks(event.IsChecked())
 
 
+class ViewCategories(MainWindowCommand, FilterCommand):
+    def __init__(self, *args, **kwargs):
+        super(ViewCategories, self).__init__(menuText=_('Categories...'),
+            helpText=_('Show/hide tasks by category'), bitmap='category', *args, **kwargs)
+            
+    def doCommand(self, event):
+        editor = gui.CategoriesFilterDialog(parent=self.mainwindow,
+            title=_('View categories'), taskList=self.filteredTaskList)
+        editor.Show()
+
+
 class ViewColumn(ViewerCommand, UICheckCommand):   
     def __init__(self, column=0, *args, **kwargs):
         self.column = column
@@ -854,6 +865,9 @@ class UICommands(dict):
             settings=settings)
         self['viewcompositetasks'] = ViewCompositeTasks(viewer=viewer, filteredTaskList=filteredTaskList,
             settings=settings)
+        
+        self['viewcategories'] = ViewCategories(mainwindow=mainwindow, 
+            filteredTaskList=filteredTaskList)
             
         self['viewstartdate'] = ViewColumn(column=_('Start date'), viewer=viewer, 
             settings=settings, 

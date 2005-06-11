@@ -7,18 +7,13 @@ class Dialog(wx.Dialog):
             style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,
             (16, 16)))
-
-           
-class BookDialog(Dialog):
-    def __init__(self, *args, **kwargs):
-        super(BookDialog, self).__init__(*args, **kwargs)
+        self._verticalSizer = wx.BoxSizer(wx.VERTICAL)
         self._panel = wx.Panel(self, -1)
         self._panelSizer = wx.GridSizer(1, 1)
         self._panelSizer.Add(self._panel, flag=wx.EXPAND)
-        self._verticalSizer = wx.BoxSizer(wx.VERTICAL)
-        self._book = self.createBook()
-        self._verticalSizer.Add(self._book, 1, flag=wx.EXPAND)
-        self.addPages()
+        self._interior = self.createInterior()
+        self.fillInterior()
+        self._verticalSizer.Add(self._interior, 1, flag=wx.EXPAND)
         self._buttonBox = widgets.ButtonBox(self._panel, (_('OK'), self.ok), 
                                       (_('Cancel'), self.cancel))
         self._verticalSizer.Add(self._buttonBox, 0, wx.ALIGN_CENTER)
@@ -26,32 +21,42 @@ class BookDialog(Dialog):
         self.SetSizerAndFit(self._panelSizer)
         wx.CallAfter(self._panel.SetFocus)
 
-    def __getitem__(self, index):
-        return self._book[index]
-
-    def ok(self, *args):
-        for page in self._book:
-            page.ok()
-        self.Close()
-
-    def cancel(self, *args):
-        self.Close()
-    
-    def addPages(self):
-        raise NotImplementedError 
+    def fillInterior(self):
+        pass
         
+    def ok(self, *args, **kwargs):
+        self.Close()
+        
+    def cancel(self, *args, **kwargs):
+        self.Close()
+
     def disableOK(self):
         self._buttonBox.disable('OK')
         
     def enableOK(self):
         self._buttonBox.enable('OK')
-        
+          
+           
+class BookDialog(Dialog):    
+    def fillInterior(self):
+        self.addPages()
+            
+    def __getitem__(self, index):
+        return self._interior[index]
+       
+    def ok(self, *args, **kwargs):
+        for page in self._interior:
+            page.ok()
+        super(BookDialog, self).ok(*args, **kwargs)
+
+    def addPages(self):
+        raise NotImplementedError 
+              
         
 class NotebookDialog(BookDialog):
-    def createBook(self):
+    def createInterior(self):
         return widgets.Notebook(self._panel)
-
         
 class ListbookDialog(BookDialog):
-    def createBook(self):
+    def createInterior(self):
         return widgets.Listbook(self._panel)
