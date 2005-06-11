@@ -1,4 +1,4 @@
-import test, task, date, xml.parsers.expat
+import test, task, date, xml.parsers.expat, sets
 import cStringIO as StringIO
 
 class XMLReaderTestCase(test.TestCase):
@@ -26,7 +26,7 @@ class XMLReaderVersion6Test(XMLReaderTestCase):
 
         
 class XMLReaderTest(XMLReaderTestCase):   
-    tskversion = 7
+    tskversion = 8
            
     def testReadEmptyStream(self):
         try:
@@ -105,4 +105,11 @@ class XMLReaderTest(XMLReaderTestCase):
         self.assertEqual(1, len(tasks[0].efforts()))
         self.failUnless(tasks[0].isBeingTracked())
         
+    def testOneCategory(self):
+        tasks = self.writeAndRead('<tasks><task><category>test</category></task></tasks>')
+        self.assertEqual(['test'], list(tasks[0].categories()))
+
+    def testMultipleCategories(self):
+        tasks = self.writeAndRead('<tasks><task><category>test</category><category>another</category><category>yetanother</category></task></tasks>')
+        self.assertEqual(sets.Set(['test', 'another', 'yetanother']), tasks[0].categories())
         

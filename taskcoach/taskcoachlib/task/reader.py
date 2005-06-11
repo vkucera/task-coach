@@ -124,11 +124,19 @@ class XMLReader:
         budget = date.parseTimeDelta(taskNode.getAttribute('budget'))
         parent = task.Task(subject, description, startdate=startDate, duedate=dueDate, 
             completiondate=completionDate, budget=budget)
+        for category in self.__parseCategoryNodes(taskNode.childNodes):
+            parent.addCategory(category)
         for child in self.__parseTaskNodes(taskNode.childNodes):
             parent.addChild(child) 
         for effort in self.__parseEffortNodes(parent, taskNode.childNodes):
             parent.addEffort(effort)
         return parent        
+        
+    def __parseCategoryNodes(self, nodes):
+        return [self.__parseCategoryNode(node) for node in nodes if node.nodeName == 'category']
+        
+    def __parseCategoryNode(self, node):
+        return node.firstChild.data
         
     def __parseEffortNodes(self, task, nodes):
         return [self.__parseEffortNode(task, node) for node in nodes if node.nodeName == 'effort']
@@ -137,7 +145,6 @@ class XMLReader:
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')
         description = self.__parseDescription(effortNode)
-        #description = effortNode.getAttribute('description')
         return effort.Effort(task, date.parseDateTime(start), 
             date.parseDateTime(stop), description)
         
