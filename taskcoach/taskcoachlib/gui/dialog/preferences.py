@@ -64,6 +64,6 @@ class Preferences(widgets.ListbookDialog):
                    
     def addPages(self):
         self.SetMinSize((300, 300))
-        self._book.AddPage(StartupPage(parent=self._book, columns=3, settings=self.settings), _('Startup'), bitmap='taskcoach')
-        self._book.AddPage(SavePage(parent=self._book, columns=3, settings=self.settings), _('Save'), bitmap='save')
-        self._book.AddPage(LanguagePage(parent=self._book, columns=3, settings=self.settings), _('Language'), bitmap='language')
+        self._interior.AddPage(StartupPage(parent=self._interior, columns=3, settings=self.settings), _('Startup'), bitmap='taskcoach')
+        self._interior.AddPage(SavePage(parent=self._interior, columns=3, settings=self.settings), _('Save'), bitmap='save')
+        self._interior.AddPage(LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), bitmap='language')

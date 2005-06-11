@@ -62,7 +62,7 @@ class ViewMenu(Menu):
             ViewTaskStatesMenu(mainwindow, uiCommands))
         self.appendMenu(_('Tasks &due before end of'),
             ViewTasksByDueDateMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, [None])
+        self.appendUICommands(uiCommands, ['viewcategories', None])
         self.appendMenu(_('Task &list options'), 
             ViewTaskListMenu(mainwindow, uiCommands))
         self.appendMenu(_('Task &tree options'), 

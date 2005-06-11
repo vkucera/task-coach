@@ -239,8 +239,8 @@ class TaskEditor(EditorWithCommand):
             self.addPage(task)
 
     def addPage(self, task):
-        page = TaskEditBook(self._book, task, self._uiCommands, self._settings, self._categories)
-        self._book.AddPage(page, task.subject())
+        page = TaskEditBook(self._interior, task, self._uiCommands, self._settings, self._categories)
+        self._interior.AddPage(page, task.subject())
         
     
 class EffortEditor(EditorWithCommand):
@@ -253,6 +253,6 @@ class EffortEditor(EditorWithCommand):
             self.addPage(effort)
 
     def addPage(self, effort):
-        page = EffortEditBook(self._book, effort, self, self._effortList)
-        self._book.AddPage(page, effort.task().subject())
+        page = EffortEditBook(self._interior, effort, self, self._effortList)
+        self._interior.AddPage(page, effort.task().subject())
 

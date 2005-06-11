@@ -41,7 +41,8 @@ class App(object):
         effortList = effort.EffortList(self.taskFile)
         self.io = gui.IOController(self.taskFile, self.displayMessage)
         viewFilteredTaskList = task.filter.ViewFilter(self.taskFile)
-        searchFilteredTaskList = task.filter.SearchFilter(viewFilteredTaskList)
+        categoryFilteredTaskList = task.filter.CategoryFilter(viewFilteredTaskList)
+        searchFilteredTaskList = task.filter.SearchFilter(categoryFilteredTaskList)
         sortedTaskList = task.sorter.Sorter(searchFilteredTaskList)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
             sortedTaskList, effortList, settings)

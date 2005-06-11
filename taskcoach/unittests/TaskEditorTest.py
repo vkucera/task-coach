@@ -238,5 +238,5 @@ class EffortEditorTest(TaskEditorTestCase):
     def testInvalidEffort(self):
         self.effortList[0].setStop(date.DateTime(1900, 1, 1))
         self.editor = self.createEditor()
-        self.editor._book[0].preventNegativeEffortDuration()
+        self.editor._interior[0].preventNegativeEffortDuration()
         self.failIf(self.editor._buttonBox._buttons['OK'].IsEnabled())
