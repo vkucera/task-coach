@@ -30,6 +30,13 @@ class XMLWriterTest(test.TestCase):
         documentElement = self.writeAndParse().documentElement
         descriptionTextNode = documentElement.getElementsByTagName('description')[0].firstChild
         self.assertEqual(description, descriptionTextNode.data)
+   
+    def assertCategories(self, categories):
+        for category in categories:
+            self.task.addCategory(category)
+        xmlDocument = self.writeAndParse()
+        for categoryNode in xmlDocument.documentElement.getElementsByTagName('category'):
+            self.failUnless(categoryNode.firstChild.data in categories)
         
     def writeAndParse(self):
         self.writer.write(self.taskList)
@@ -91,3 +98,9 @@ class XMLWriterTest(test.TestCase):
     def testBudget_MoreThan24Hour(self):
         self.task.setBudget(date.TimeDelta(hours=25))
         self.assertTaskAttribute('25:00:00', 'budget')
+        
+    def testOneCategory(self):
+        self.assertCategories(['test'])
+        
+    def testMultipleCategories(self):
+        self.assertCategories(['test', 'another', 'yetanother'])

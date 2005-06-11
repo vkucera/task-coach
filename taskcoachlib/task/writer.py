@@ -2,7 +2,7 @@ import xml.dom, meta
 
 
 class XMLWriter:
-    def __init__(self, fd, versionnr=7):
+    def __init__(self, fd, versionnr=8):
         self.__fd = fd
         self.__versionnr = versionnr
         
@@ -23,7 +23,9 @@ class XMLWriter:
         node.setAttribute('duedate', str(task.dueDate()))
         node.setAttribute('completiondate', str(task.completionDate()))
         node.setAttribute('budget', self.budgetAsAttribute(task.budget()))
-        node.appendChild(self.descriptionNode(task.description()))
+        node.appendChild(self.textNode('description', task.description()))
+        for category in task.categories():
+            node.appendChild(self.textNode('category', category))
         for child in task.children():
             node.appendChild(self.taskNode(child))
         for effort in task.efforts():
@@ -34,14 +36,14 @@ class XMLWriter:
         node = self.document.createElement('effort')
         node.setAttribute('start', str(effort.getStart()))
         node.setAttribute('stop', str(effort.getStop()))
-        node.appendChild(self.descriptionNode(effort.getDescription()))
+        node.appendChild(self.textNode('description', effort.getDescription()))
         return node
         
     def budgetAsAttribute(self, budget):
         return '%d:%02d:%02d'%budget.hoursMinutesSeconds()
-        
-    def descriptionNode(self, description):
-        node = self.document.createElement('description')
-        text = self.document.createTextNode(description)
-        node.appendChild(text)
+                
+    def textNode(self, tagName, text):
+        node = self.document.createElement(tagName)
+        textNode = self.document.createTextNode(text)
+        node.appendChild(textNode)
         return node

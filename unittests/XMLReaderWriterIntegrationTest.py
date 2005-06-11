@@ -37,6 +37,7 @@ class IntegrationTest(IntegrationTestCase):
         self.child.addChild(self.grandChild)
         self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
             stop=date.DateTime(2004,1,2), description=self.description))
+        self.task.addCategory('test')
         self.taskList.append(self.task)
                  
     def testSubject(self):
@@ -74,3 +75,5 @@ class IntegrationTest(IntegrationTestCase):
     def testGrandChildren(self):
         self.assertEqual(len(self.task.allChildren()), len(self.tasksWrittenAndRead[0].allChildren()))
        
+    def testCategory(self):
+        self.assertEqual(self.task.categories(), self.tasksWrittenAndRead[0].categories())
