@@ -33,7 +33,7 @@ class TaskEditorTestCase(test.TestCase):
         self.editor = self.createEditor()
         
     def createEditor(self):
-        return gui.editor.TaskEditor(wx.Frame(None), self.createCommand(),
+        return gui.dialog.editor.TaskEditor(wx.Frame(None), self.createCommand(),
             {}, dummy.Settings())
 
     def tearDown(self):
@@ -224,7 +224,7 @@ class EffortEditorTest(TaskEditorTestCase):
         return [theTask]
     
     def createEditor(self):
-        return gui.editor.EffortEditor(wx.Frame(None), self.createCommand(), {}, self.effortList)
+        return gui.dialog.editor.EffortEditor(wx.Frame(None), self.createCommand(), {}, self.effortList)
     
     def testCreate(self):
         self.assertEqual(self.effortList[0].getStart().date(), 

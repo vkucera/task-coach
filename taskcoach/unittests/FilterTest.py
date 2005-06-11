@@ -177,3 +177,35 @@ class SearchFilterTest(test.TestCase):
         self.parent.addChild(self.child) # simulate a child that has been filtered 
         self.filter.setSubject('DEF')
         self.assertEqual(0, len(self.filter))
+
+        
+class CategoryFilterTest(test.TestCase):
+    def setUp(self):
+        self.parent = task.Task()
+        self.parent.addCategory('parent')
+        self.child = task.Task()
+        self.child.addCategory('child')
+        self.parent.addChild(self.child)
+        self.list = task.TaskList([self.parent, self.child])
+        self.filter = task.filter.CategoryFilter(self.list)
+        
+    def testInitial(self):
+        self.assertEqual(2, len(self.filter))
+
+    def testFilterOnCategoryNotPresent(self):
+        self.filter.addCategory('test')
+        self.assertEqual(2, len(self.filter))
+        
+    def testFilterOnCategory(self):
+        self.filter.addCategory('child')
+        self.assertEqual(1, len(self.filter))
+        
+    def testFilterOnCategoryParent(self):
+        self.filter.addCategory('parent')
+        self.assertEqual(0, len(self.filter))
+        
+    def testRemoveCategory(self):
+        self.filter.addCategory('parent')
+        self.filter.removeCategory('parent')
+        self.assertEqual(2, len(self.filter))
+    

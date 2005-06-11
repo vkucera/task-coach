@@ -1,6 +1,5 @@
 from splash import SplashScreen
 from mainwindow import MainWindow
-from editor import TaskEditor, EffortEditor
+from dialog import TaskEditor, EffortEditor, Preferences
 from iocontroller import IOController
 from artprovider import init
-from preferences import Preferences
