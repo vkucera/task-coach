@@ -46,6 +46,18 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
+        <H4>Release 0.40 - June 12, 2005</H4>
+        Bugs fixed:
+        <UL>
+        <LI>Budget left was rendered incorrectly when over budget
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1216951&group_id=130831&atid=719134">1216951</A>).
+        </UL>
+        Features added:
+        <UL>
+        <LI>Tasks can belong to zero or more categories. Tasks can be 
+        viewed/hidden by category 
+        (<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=1182172&group_id=130831&atid=719137">1182172</A>).
+        </UL>
         <H4>Release 0.39 - June 6, 2005</H4>
         Bugs fixed:
         <UL>

@@ -27,7 +27,7 @@ manifest = """
 </assembly>
 """%meta.name
 
-script = r"""
+script = r'''
 ; Inno Setup Script
 
 [Setup]
@@ -44,11 +44,13 @@ LicenseFile=../LICENSE.txt
 Compression=lzma
 SolidCompression=yes
 OutputDir=../dist
-OutputBaseFilename=%(filename)s-%(version)s-win32 
+OutputBaseFilename=%(filename)s-%(version)s-win32
+ChangesAssociations=yes 
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: associate; Description: "{cm:AssocFileExtension,{app},.tsk}"; GroupDescription: "Other tasks:"; Flags: unchecked
 
 [Files]
 Source: "%(filename)s-%(version)s-win32exe\%(filename)s.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -57,6 +59,12 @@ Source: "%(filename)s-%(version)s-win32exe\*"; DestDir: "{app}"; Flags: ignoreve
 
 [INI]
 Filename: "{app}\%(filename)s.url"; Section: "InternetShortcut"; Key: "URL"; String: "%(url)s"
+
+[Registry]
+Root: HKCR; Subkey: ".tsk"; ValueType: string; ValueName: ""; ValueData: "TaskCoach"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "TaskCoach"; ValueType: string; ValueName: ""; ValueData: "%(name)s File"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "TaskCoach\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\%(filename)s.EXE,0"
+Root: HKCR; Subkey: "TaskCoach\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\%(filename)s.EXE"" ""%%1"""
 
 [Icons]
 Name: "{group}\%(name)s"; Filename: "{app}\%(filename)s.exe"; WorkingDir: "{app}"
@@ -70,7 +78,7 @@ Filename: "{app}\%(filename)s.exe"; Description: "{cm:LaunchProgram,%(name)s}"; 
 
 [UninstallDelete]
 Type: files; Name: "{app}\%(filename)s.url"
-"""
+'''
 
 def writeFile(filename, text, directory=''):
     file = open(os.path.join(directory, filename), 'w')
