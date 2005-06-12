@@ -636,7 +636,6 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsComma
             command.NewTaskCommand(self.filteredTaskList),
             self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap=self.bitmap)
         editor.Show(show)
-        return editor
 
 
 class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
@@ -649,11 +648,9 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
-            command.NewSubTaskCommand(self.filteredTaskList, 
-                self.viewer.curselection()),
+            command.NewSubTaskCommand(self.filteredTaskList, self.viewer.curselection()),
             self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap='new')
         editor.Show(show)
-        return editor
 
 
 class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand, 
@@ -665,11 +662,10 @@ class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand,
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
-            command.EditTaskCommand(self.filteredTaskList, 
-                self.viewer.curselection()), self.uiCommands, self.settings,
-                self.filteredTaskList.categories())
+            command.EditTaskCommand(self.filteredTaskList, self.viewer.curselection()), 
+            self.uiCommands, self.settings,
+            self.filteredTaskList.categories())
         editor.Show(show)
-        return editor
 
 
 class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
@@ -713,7 +709,7 @@ class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand,
             command.NewEffortCommand(self.effortList, self.viewer.curselection()),
             self.uiCommands, self.effortList)
         editor.Show()
-        return editor 
+
 
 class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand, 
         ViewerCommand, UICommandsCommand):
@@ -727,7 +723,7 @@ class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand,
             command.EditEffortCommand(self.effortList, self.viewer.curselection()),
             self.uiCommands, self.effortList)
         editor.Show()
-        return editor
+
 
 class EffortDelete(NeedsSelectedEffort, EffortCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):

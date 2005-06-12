@@ -3,7 +3,7 @@
 # website end up in ./dist)
 
 PYTHON="/cygdrive/c/Program Files/Python24/python.exe"
-INNOSETUP="/cygdrive/c/Program Files/Inno Setup 4/ISCC.exe"
+INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
 
 all: windist sdist web
 
