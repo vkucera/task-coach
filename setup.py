@@ -11,11 +11,11 @@ setupOptions = {
     'version' : meta.version,
     'url' : meta.url,
     'license' : meta.license,
-    'packages' : ["taskcoachlib."+subpackage for subpackage in 
-        ["meta", "config", "date", "command", "widgets", "gui",
-        "gui.dialog",  "task", "i18n", "log", "effort", "patterns", "help"]] + 
-        ["taskcoachlib"], 
-    'scripts' : ["taskcoach.py", "taskcoach.pyw"],
+    'packages' : ['taskcoachlib'] + 
+        ['taskcoachlib.'+subpackage for subpackage in ('meta', 'config', 
+        'date', 'command', 'widgets', 'gui', 'gui.dialog', 'task', 'i18n', 
+        'log', 'effort', 'patterns', 'help')],
+    'scripts' : ['taskcoach.py', 'taskcoach.pyw'],
     'classifiers' : [\
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',
