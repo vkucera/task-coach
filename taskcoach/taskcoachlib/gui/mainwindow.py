@@ -1,5 +1,5 @@
-import meta, patterns, widgets, task, command, gui, effort
-import wx, viewer, viewercontainer, viewerfactory, help, find, toolbar, uicommand
+import wx, meta, patterns, widgets, task, command, effort
+import viewer, viewercontainer, viewerfactory, help, find, toolbar, uicommand
 from i18n import _
 
 class WindowWithPersistentDimensions(wx.Frame):

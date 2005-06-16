@@ -4,13 +4,14 @@ import sys
 if not hasattr(sys, "frozen"):
     import wxversion
     wxversion.ensureMinimal("2.5.5")
-import wx, taskcoachlib
+    import taskcoachlib
+    # We don't want to use 'from taskcoachlib import X' all the time, so we add 
+    # the taskcoachlib directory to the search path:
+    libpath = taskcoachlib.__path__[0]
+    sys.path.append(libpath) 
+    del taskcoachlib
 
-# We don't want to use 'from taskcoachlib import X' all the time, so we add 
-# the taskcoachlib directory to the search path:
-libpath = taskcoachlib.__path__[0]
-sys.path.append(libpath) 
-del taskcoachlib
+import wx
 
 
 class wxApp(wx.App):

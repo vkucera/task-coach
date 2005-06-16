@@ -11,6 +11,9 @@ windist: icons
 	$(PYTHON) make.py py2exe
 	$(INNOSETUP) build/taskcoach.iss
 
+wininstaller:
+	$(INNOSETUP) build/taskcoach.iss
+
 sdist: icons
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 

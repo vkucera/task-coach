@@ -119,7 +119,8 @@ class BudgetPage(widgets.BookPage):
 class EffortPage(widgets.BookPage):        
     def __init__(self, parent, task, settings, uiCommands, *args, **kwargs):
         super(EffortPage, self).__init__(parent, columns=1, *args, **kwargs)
-        import viewercontainer, viewerfactory, effort
+        from gui import viewercontainer, viewerfactory
+        import effort
         viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 'effortviewerineditor')
         myEffortList = effort.SingleTaskEffortList(task)
         viewerfactory._addEffortViewers(viewerContainer, myEffortList, uiCommands)

@@ -6,7 +6,6 @@ import sys, os, glob
 from setup import setupOptions
 import taskcoach # to add taskcoachlib to the searchpath
 
-
 distdir = 'dist'
 builddir = 'build'
 
@@ -46,6 +45,7 @@ SolidCompression=yes
 OutputDir=../dist
 OutputBaseFilename=%(filename)s-%(version)s-win32
 ChangesAssociations=yes 
+WizardImageFile=..\icons.in\splash_inno.bmp
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
@@ -104,7 +104,8 @@ if sys.argv[1] == 'py2exe':
             'icon_resources': [(1, 'icons.in/taskcoach.ico')]}],
         'options' : {'py2exe' : {
             'compressed' : 1, 
-            'includes' : ['xml.dom.minidom'],
+            'includes' : ['xml.dom.minidom', 'gui.dialog.editor'],
+            'excludes' : ['taskcoachlib'],
             'optimize' : 2, 
             'packages' : ['encodings'],
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}}})
