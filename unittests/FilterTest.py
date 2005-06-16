@@ -217,4 +217,5 @@ class CategoryFilterTest(test.TestCase):
         self.filter.addCategory('parent')
         self.filter.removeAllCategories()
         self.assertEqual(2, len(self.filter))
+
     

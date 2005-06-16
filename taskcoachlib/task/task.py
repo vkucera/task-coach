@@ -1,5 +1,4 @@
-from taskcoachlib import patterns, date
-import time, copy, sets
+import patterns, date, time, copy, sets
 
 
 class Task(patterns.Observable):
