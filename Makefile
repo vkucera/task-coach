@@ -4,8 +4,10 @@
 
 PYTHON="/cygdrive/c/Program Files/Python24/python.exe"
 INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
+WEBCHECKER="c:/Program Files/Python24/Tools/webchecker/webchecker.py" 
+GETTEXT="c:/Program Files/Python24/Tools/i18n/pygettext.py"
 
-all: windist sdist web
+all: windist sdist website
 
 windist: icons
 	$(PYTHON) make.py py2exe
@@ -20,12 +22,12 @@ sdist: icons
 icons:
 	cd icons.in; $(PYTHON) make.py
 
-web: 
-	cd website; $(PYTHON) make.py; cd ..
-	$(PYTHON) c:/Program\ Files/Python24/Tools/webchecker/webchecker.py dist/index.html
+website: 
+	cd website.in; $(PYTHON) make.py; cd ..
+	$(PYTHON) $(WEBCHECKER) dist/index.html
 
 i18n:
-	$(PYTHON) c:/Program\ Files/Python24/Tools/i18n/pygettext.py --output-dir i18n.in taskcoachlib
+	$(PYTHON) $(GETTEXT) --output-dir i18n.in taskcoachlib
 	cd i18n.in; $(PYTHON) make.py
 
 clean:

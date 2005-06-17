@@ -46,7 +46,7 @@ pages['credits'] = \
 
 pages['changes'] = \
 '''        <H3>Change history</H3>
-        <H4>Release 0.40 - June 12, 2005</H4>
+        <H4>Release 0.40 - June 16, 2005</H4>
         Bugs fixed:
         <UL>
         <LI>Budget left was rendered incorrectly when over budget
