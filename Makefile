@@ -31,7 +31,8 @@ i18n:
 	cd i18n.in; $(PYTHON) make.py
 
 changes:
-	$(PYTHON) changes.in/make.py > CHANGES.txt
+	$(PYTHON) changes.in/make.py text > CHANGES.txt
+	$(PYTHON) changes.in/make.py html > website.in/changes.html
  
 
 clean:
