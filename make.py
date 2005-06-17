@@ -39,7 +39,7 @@ AppUpdatesURL=%(url)s
 DefaultDirName={pf}\%(filename)s
 DefaultGroupName=%(name)s
 AllowNoIcons=yes
-LicenseFile=../LICENSE.txt
+LicenseFile=LICENSE.txt
 Compression=lzma
 SolidCompression=yes
 OutputDir=../dist
@@ -80,7 +80,7 @@ Filename: "{app}\%(filename)s.exe"; Description: "{cm:LaunchProgram,%(name)s}"; 
 Type: files; Name: "{app}\%(filename)s.url"
 '''
 
-def writeFile(filename, text, directory=''):
+def writeFile(filename, text, directory='.'):
     file = open(os.path.join(directory, filename), 'w')
     file.write(text)
     file.close()

@@ -1,6 +1,6 @@
 include *.txt
-include unittests/*.py
 exclude PUBLICITY.txt
+include unittests/*.py
 include TODO.tsk
 include setup.py
 include test.py
