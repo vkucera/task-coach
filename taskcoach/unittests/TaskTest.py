@@ -241,7 +241,7 @@ class SubTaskTest(test.TestCase, asserts.TaskAsserts):
         child = self.task.newSubTask()
         self.assertEqual(self.task.dueDate(), child.dueDate())
         self.assertEqual(self.task, child.parent())
-        self.assertEqual(self.task.startDate(), child.startDate())
+        self.assertEqual(date.Today(), child.startDate())
         self.failIf(child in self.task.children())
         
     def testNewSubTask_WithSubject(self):
@@ -319,24 +319,27 @@ class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
             child.setCompletionDate()
         self.assertEqual(date.Tomorrow(), self.task.dueDate())
 
-    def testStartDateParent_EqualsStartDateChild(self):
+    def testStartDateParent_EqualsStartOfParentWhenParentHasEarliestStartDate(self):
         self.createChildrenWithStartDate([date.Today()])
-        self.assertEqual(date.Today(), self.task.startDate())
+        self.assertEqual(date.Yesterday(), self.task.startDate(recursive=True))
 
-    def testStartDateParent_EqualsMinStartDateChildren(self):
-        self.createChildrenWithStartDate([date.Today(), date.Tomorrow()])
-        self.assertEqual(date.Today(), self.task.startDate())
+    def testStartDateParent_EqualsStartDateOfChildWhenChildHasEarliestStartDate(self):
+        self.createChildrenWithStartDate([date.Yesterday(), date.Tomorrow()])
+        self.task.setStartDate(date.Today())
+        self.assertEqual(date.Yesterday(), self.task.startDate(recursive=True))
 
     def testStartDateParent_IgnoreCompletedChildren(self):
         self.createChildrenWithStartDate([date.Today(), date.Tomorrow()])
+        self.task.setStartDate(date.Date())
         self.task.children()[0].setCompletionDate()
-        self.assertEqual(date.Tomorrow(), self.task.startDate())
+        self.assertEqual(date.Tomorrow(), self.task.startDate(recursive=True))
 
     def testStartDateParent_EqualsParentStartDateWhenAllChildrenCompleted(self):
-        self.createChildrenWithStartDate([date.Today(), date.Tomorrow()])
+        self.createChildrenWithStartDate([date.Yesterday(), date.Tomorrow()])
+        self.task.setStartDate(date.Today())
         for child in self.task.children():
             child.setCompletionDate()
-        self.assertEqual(date.Yesterday(), self.task.startDate())
+        self.assertEqual(date.Today(), self.task.startDate(recursive=True))
 
 
 class SubTaskRelationsTest(test.TestCase):

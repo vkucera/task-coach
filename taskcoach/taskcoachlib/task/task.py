@@ -73,7 +73,7 @@ class Task(patterns.Observable):
     def newSubTask(self, subject='New subtask'):
         ''' Subtask constructor '''
         return self.__class__(subject, duedate=self.dueDate(),
-            startdate=self.startDate(), parent=self)
+            parent=self)
 
     def allChildren(self):
         return self.children() + [descendent for child in self.children() 
@@ -133,7 +133,7 @@ class Task(patterns.Observable):
     def startDate(self, recursive=False):
         childrenStartDates = [child.startDate() for child in self.children() if not child.completed()]
         if childrenStartDates:
-            return min(childrenStartDates)
+            return min(childrenStartDates+[self._startdate])
         else:
             return self._startdate
 
