@@ -66,6 +66,7 @@ class App(object):
         self.wxApp.Exit()
 
 if __name__ == '__main__':
+    import config
     options, args = config.ApplicationOptionParser().parse_args()
     if options.profile:
         import hotshot
