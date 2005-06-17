@@ -16,13 +16,13 @@ windist: icons
 wininstaller:
 	$(INNOSETUP) build/taskcoach.iss
 
-sdist: icons
+sdist: icons changes
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
 icons:
 	cd icons.in; $(PYTHON) make.py
 
-website: 
+website: changes
 	cd website.in; $(PYTHON) make.py; cd ..
 	$(PYTHON) $(WEBCHECKER) dist/index.html
 
@@ -30,6 +30,10 @@ i18n:
 	$(PYTHON) $(GETTEXT) --output-dir i18n.in taskcoachlib
 	cd i18n.in; $(PYTHON) make.py
 
+changes:
+	$(PYTHON) changes.in/make.py > CHANGES.txt
+ 
+
 clean:
-	rm -rf *.pyc */*.pyc */*/*.pyc dist build MANIFEST README.txt INSTALL.txt LICENSE.txt 
+	rm -rf *.pyc */*.pyc */*/*.pyc dist build MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt
 
