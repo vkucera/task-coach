@@ -124,6 +124,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.Iconize(False)
 
     def onIconify(self, event):
+        print event, event.Iconized()
         if event.Iconized():
             self.Hide()
 
