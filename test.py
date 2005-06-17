@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import unittest, sys, os, taskcoach, wx
+import unittest, sys, os, taskcoach, wx, time
 
 projectRoot = os.path.split(taskcoach.libpath)[0]
 if projectRoot not in sys.path:
@@ -21,6 +21,42 @@ class wxTestCase(TestCase):
 
 def cvsCommit():
     os.system('cvs ci -m "Automatic commit due to green-bar"')
+
+
+class TestResultWithTimings(unittest._TextTestResult):
+    def __init__(self, *args, **kwargs):
+        super(TestResultWithTimings, self).__init__(*args, **kwargs)
+        self._timings = {}
+
+    def startTest(self, test):
+        super(TestResultWithTimings, self).startTest(test)
+        self._timings[test] = time.time()
+        
+    def stopTest(self, test):
+        super(TestResultWithTimings, self).stopTest(test)
+        self._timings[test] = time.time() - self._timings[test]
+
+
+class TextTestRunnerWithTimings(unittest.TextTestRunner):
+    def __init__(self, timeTests=False, nrTestsToReport=10, *args, **kwargs):
+        super(TextTestRunnerWithTimings, self).__init__(*args, **kwargs)
+        self._timeTests = timeTests
+        self._nrTestsToReport = nrTestsToReport
+
+    def _makeResult(self):
+        return TestResultWithTimings(self.stream, self.descriptions, 
+            self.verbosity)
+
+    def run(self, *args, **kwargs):
+        result = super(TextTestRunnerWithTimings, self).run(*args, **kwargs)
+        if self._timeTests:
+            sortableTimings = [(time, test) for test, time in result._timings.items()]
+            sortableTimings.sort(reverse=True)
+            print '\n%d slowest tests:'%self._nrTestsToReport
+            for time, test in sortableTimings[:self._nrTestsToReport]:
+                print '%s (%.2f)'%(test, time)
+        return result
+
 
 class AllTests(unittest.TestSuite):
     def __init__(self, options, testFiles):
@@ -68,11 +104,14 @@ class AllTests(unittest.TestSuite):
         return unittest.TestLoader().loadTestsFromTestCase(CoverageTest)
             
     def runTests(self):       
-        testrunner = unittest.TextTestRunner(verbosity=self._options.verbosity)
+        testrunner = TextTestRunnerWithTimings(
+            verbosity=self._options.verbosity,
+            timeTests=self._options.time)
         result = testrunner.run(self)
         if self._options.commit and result.wasSuccessful():
             cvsCommit()
         return result
+
 
 import config
 class TestOptionParser(config.OptionParser):
@@ -89,6 +128,8 @@ class TestOptionParser(config.OptionParser):
             dest='verbosity', help='show progress [default]')
         testrun.add_option('-v', '--verbose', action='store_const',
             const=2, dest='verbosity', help='show all tests')
+        testrun.add_option('-t', '--time', default=False, action='store_true', 
+            help='time the tests. Report 10 slowest tests')
         return testrun
  
     def cvsOptionGroup(self):

@@ -1,6 +1,12 @@
 from domain import *
 
 releases = [
+Release('0.41', 'June ?, 2005',
+    bugsFixed=[],
+    featuresChanged=[
+        Feature('''Default start date of new subtasks is today
+(used to be the start date of the parent task)''')]),
+
 Release('0.40', 'June 16, 2005', 
     bugsFixed=[
         Bug('Budget left was rendered incorrectly when over budget.', 
