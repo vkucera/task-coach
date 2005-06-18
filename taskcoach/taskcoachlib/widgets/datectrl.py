@@ -1,5 +1,4 @@
-import wx, date, statictextctrl
-from i18n import _
+import wx, date
 
 class Panel(wx.Panel):
     def __init__(self, parent, callback=None, *args, **kwargs):
@@ -53,24 +52,6 @@ class DateCtrl(Panel):
     def GetValue(self):
         return wxDateTime2Date(self._controls[0].GetValue())
         
-
-class StaticDateCtrl(DateCtrl):
-    def _createControls(self, callback):
-        return [statictextctrl.StaticTextCtrl(self)]
-        
-    def SetValue(self, value):
-        self._value = value
-        # Use wx.DateTime to get locale dependent formatting
-        value = date2wxDateTime(value)
-        if value.IsValid():
-            value = value.FormatDate() 
-        else:
-            value = _('None')
-        self._controls[0].SetValue(value)
-        
-    def GetValue(self):
-        return self._value
-
 
 class TimeCtrl(Panel):
     def __init__(self, parent, callback=None, *args, **kwargs):

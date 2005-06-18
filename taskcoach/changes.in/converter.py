@@ -61,13 +61,16 @@ class ReleaseConverter(object):
         self._changeConverter = self.ChangeConverterClass()
 
     def _addS(self, listToCount):
-        return len(listToCount) > 1 and 's' or ''
+        return {'s' : len(listToCount) > 1 and 's' or '',
+                'y' : len(listToCount) > 1 and 'ies' or 'y' }
 
     def convert(self, release):
         result = [self.header(release)]
-        for section, list in [('Bug%s fixed', release.bugsFixed),
-                ('Feature%s added', release.featuresAdded),
-                ('Feature%s removed', release.featuresRemoved)]:
+        for section, list in [('Bug%(s)s fixed', release.bugsFixed),
+                ('Feature%(s)s added', release.featuresAdded),
+                ('Feature%(s)s changed', release.featuresChanged),
+                ('Feature%(s)s removed', release.featuresRemoved),
+                ('Dependenc%(y)s changed', release.dependenciesChanged)]:
             if list:
                 result.append(self.sectionHeader(section, list))
                 for change in list:
