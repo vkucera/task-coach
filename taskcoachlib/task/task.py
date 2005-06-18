@@ -119,9 +119,9 @@ class Task(patterns.Observable):
             self.notifyObservers(patterns.observer.Notification(self))
 
     def dueDate(self, recursive=False):
-        childrenDueDates = [child.dueDate() for child in self.children() if not child.completed()]
-        if childrenDueDates:
-            return min(childrenDueDates)
+        if recursive:
+            childrenDueDates = [child.dueDate(recursive=True) for child in self.children() if not child.completed()]
+            return min(childrenDueDates + [self._duedate])
         else:
             return self._duedate
 
@@ -131,8 +131,8 @@ class Task(patterns.Observable):
             self.notifyObservers(patterns.observer.Notification(self))
 
     def startDate(self, recursive=False):
-        childrenStartDates = [child.startDate() for child in self.children() if not child.completed()]
-        if childrenStartDates:
+        if recursive:
+            childrenStartDates = [child.startDate(recursive=True) for child in self.children() if not child.completed()]
             return min(childrenStartDates+[self._startdate])
         else:
             return self._startdate
@@ -146,7 +146,11 @@ class Task(patterns.Observable):
         return self._duedate - date.Today()
         
     def completionDate(self, recursive=False):
-        return self._completiondate
+        if recursive:
+            childrenCompletionDates = [child.completionDate(recursive=True) for child in self.children() if child.completed()]
+            return max(childrenCompletionDates+[self._completiondate])
+        else:
+            return self._completiondate
 
     def setCompletionDate(self, completionDate=None):
         completionDate = completionDate or date.Today()

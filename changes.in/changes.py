@@ -1,11 +1,13 @@
 from domain import *
 
 releases = [
-Release('0.41', 'June ?, 2005',
+Release('0.41', 'June 18, 2005',
     bugsFixed=[],
     featuresChanged=[
         Feature('''Default start date of new subtasks is today
-(used to be the start date of the parent task)''')]),
+(used to be the start date of the parent task)'''),
+        Feature('''URL's (including mailto) in task and effort descriptions are 
+clickable.''', '1190310')]),
 
 Release('0.40', 'June 16, 2005', 
     bugsFixed=[

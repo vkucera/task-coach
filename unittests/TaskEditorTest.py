@@ -194,15 +194,15 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
         self.assertEqual('Task1', self.task1.subject())
         self.assertEqual('Task2', self.task2.subject())
 
-    def testCannotChangeDueDate(self):
+    def testChangeDueDate(self):
         self.editor[0][1]._dueDateEntry.set(date.Tomorrow())
         self.editor.ok()
-        self.assertNotEqual(date.Tomorrow(), self.task1.dueDate())
+        self.assertEqual(date.Tomorrow(), self.task1.dueDate(recursive=False))
 
-    def testCannotChangeStartDate(self):
+    def testChangeStartDate(self):
         self.editor[0][1]._startDateEntry.set(date.Tomorrow())
         self.editor.ok()
-        self.assertNotEqual(date.Tomorrow(), self.task1.startDate())
+        self.assertEqual(date.Tomorrow(), self.task1.startDate(recursive=False))
 
 
 class FocusTest(TaskEditorTestCase, test.wxTestCase):
