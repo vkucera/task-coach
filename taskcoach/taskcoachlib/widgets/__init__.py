@@ -5,3 +5,4 @@ from listctrl import ListCtrl, EffortListCtrl
 from treectrl import TreeCtrl
 from datectrl import DateCtrl, DateTimeCtrl, StaticDateCtrl
 from statictextctrl import StaticTextCtrl
+from textctrl import TextCtrl

@@ -52,8 +52,7 @@ class SubjectPage(widgets.BookPage):
     def __init__(self, parent, task, *args, **kwargs):
         super(SubjectPage, self).__init__(parent, columns=2, *args, **kwargs)
         self._subjectEntry = wx.TextCtrl(self, -1, task.subject())
-        self._descriptionEntry = wx.TextCtrl(self, -1, 
-            task.description(), style=wx.TE_MULTILINE)
+        self._descriptionEntry = widgets.TextCtrl(self, task.description())
         self._descriptionEntry.SetSizeHints(500, 260)
         self.addEntry(_('Subject'), self._subjectEntry)    
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)    
@@ -197,8 +196,7 @@ class EffortEditBook(widgets.BookPage):
         self.preventNegativeEffortDuration()
             
     def addDescriptionEntry(self):
-        self._descriptionEntry = wx.TextCtrl(self, -1, 
-            self._effort.getDescription(), style=wx.TE_MULTILINE)
+        self._descriptionEntry = widgets.TextCtrl(self, self._effort.getDescription())
         self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry)
         
