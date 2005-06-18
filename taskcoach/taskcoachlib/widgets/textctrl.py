@@ -13,3 +13,12 @@ class TextCtrl(wx.TextCtrl):
         if mouseEvent.ButtonDown():
             url = self.GetRange(event.GetURLStart(), event.GetURLEnd())
             self._webbrowser.open(url)
+            
+            
+class StaticText(wx.Window):
+    def __init__(self, parent, text, helpText=None, *args, **kwargs):
+        super(StaticText, self).__init__(parent, -1, *args, **kwargs)
+        label = wx.StaticText(self, -1, text)
+        self.SetSize(label.GetSize())
+        if helpText:
+            self.SetToolTipString(helpText)

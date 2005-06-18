@@ -1,4 +1,4 @@
-import wx
+import wx, widgets
 
 class GridCursor:
     ''' Utility class to help when adding controls to a GridBagSizer. '''
@@ -42,11 +42,12 @@ class BookPage(wx.Panel):
         self._borderWidth = 5
         self.SetSizerAndFit(self._sizer)
         
-    def addEntry(self, label, *controls, **kwargs):
+    def addEntry(self, labelText, *controls, **kwargs):
         controls = [control for control in controls if control is not None]
-        if label is not None:
-            if label: label += ':'
-            self._sizer.Add(wx.StaticText(self, -1, label), self._position.next(),
+        if labelText is not None:
+            if labelText: labelText += ':'
+            label = wx.StaticText(self, -1, labelText)
+            self._sizer.Add(label, self._position.next(),
                 flag=wx.ALL|wx.ALIGN_RIGHT, border=self._borderWidth)
         for control in controls:
             if type(control) in [type(''), type(u'')]:

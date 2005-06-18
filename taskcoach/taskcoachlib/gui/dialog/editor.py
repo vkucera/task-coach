@@ -53,7 +53,7 @@ class SubjectPage(widgets.BookPage):
         self._descriptionEntry = widgets.TextCtrl(self, task.description())
         self._descriptionEntry.SetSizeHints(500, 260)
         self.addEntry(_('Subject'), self._subjectEntry)    
-        self.addEntry(_('Description'), self._descriptionEntry, growable=True)    
+        self.addEntry(_('Description'), self._descriptionEntry, growable=True, helpText=_("Multiline description of the task. You can use URL's (http://, mailto:, file:)."))    
         self._task = task
         
     def ok(self):
