@@ -4,4 +4,4 @@ from buttonbox import ButtonBox
 from listctrl import ListCtrl, EffortListCtrl
 from treectrl import TreeCtrl
 from datectrl import DateCtrl, DateTimeCtrl
-from textctrl import TextCtrl
+from textctrl import TextCtrl, StaticText
