@@ -9,11 +9,9 @@ class DateEntry(wx.Panel):
 
     def __init__(self, parent, date=defaultDate, readonly=False, callback=None, *args, **kwargs):
         super(DateEntry, self).__init__(parent, -1, *args, **kwargs)
-        size = (100, -1)
+        self._entry = widgets.DateCtrl(self, callback, size=(100, -1))
         if readonly:
-            self._entry = widgets.StaticDateCtrl(self, size=size)
-        else:
-            self._entry = widgets.DateCtrl(self, callback, size=size)
+            self._entry.Disable()
         self._entry.SetValue(date)
 
     def get(self, defaultDate=None):
