@@ -7,6 +7,10 @@ taskSeparator = ' -> '
 def date(date):
     ''' render a date (of type date.Date) '''
     return str(date)
+    
+def priority(priority):
+    ''' Render an (integer) priority '''
+    return str(priority)
 
 def subject(aTask, recursively=False, sep=taskSeparator):
     ''' render a task subject '''

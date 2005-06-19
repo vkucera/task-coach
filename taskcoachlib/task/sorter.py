@@ -12,7 +12,10 @@ class Sorter(patterns.ObservableListObserver):
      
     def _statusSortKey(self, task):
         if self.__sortByStatusFirst:
-            return [task.completed(), task.inactive()]
+            if self.__ascending:
+                return [task.completed(), task.inactive()]
+            else:
+                return [not task.completed(), not task.inactive()]
         else:
             return []
 

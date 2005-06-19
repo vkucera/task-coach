@@ -145,7 +145,9 @@ class TaskListViewer(TaskViewer, ListViewer):
                 self.uiCommands['viewsortbytimespent'],
                 self.uiCommands['viewsortbytotaltimespent'],
                 self.uiCommands['viewsortbybudgetleft'],
-                self.uiCommands['viewsortbytotalbudgetleft']])
+                self.uiCommands['viewsortbytotalbudgetleft'],
+                self.uiCommands['viewsortbypriority'],
+                self.uiCommands['viewsortbytotalpriority']])
         widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
         return widget
         
@@ -153,7 +155,8 @@ class TaskListViewer(TaskViewer, ListViewer):
         return [_('Subject'), _('Start date'), _('Due date'),
             _('Days left'), _('Completion date'), _('Budget'), 
             _('Total budget'), _('Time spent'), _('Total time spent'), 
-            _('Budget left'), _('Total budget left')]
+            _('Budget left'), _('Total budget left'), _('Priority'),
+            _('Overall priority') ]
        
     def createFilter(self, taskList):
         return task.filter.CompositeFilter(taskList)
@@ -185,6 +188,10 @@ class TaskListViewer(TaskViewer, ListViewer):
             return render.budget(task.budgetLeft())
         elif columnHeader == _('Total budget left'):
             return render.budget(task.budgetLeft(recursive=True))
+        elif columnHeader == _('Priority'):
+            return render.priority(task.priority())
+        elif columnHeader == _('Overall priority'):
+            return render.priority(task.priority(recursive=True))
     
     def showColumn(self, columnHeader, show):
         self.widget.showColumn(columnHeader, show)
@@ -196,7 +203,8 @@ class TaskListViewer(TaskViewer, ListViewer):
             'completionDate': _('Completion date'), 'budget': _('Budget'),
             'totalbudget': _('Total budget'), 'timeSpent': _('Time spent'),
             'totaltimeSpent': _('Total time spent'), 'budgetLeft': _('Budget left'),
-            'totalbudgetLeft': _('Total budget left')}[sortKey]
+            'totalbudgetLeft': _('Total budget left'), 'priority': _('Priority'),
+            'totalpriority': _('Overall priority')}[sortKey]
         if self.list.isAscending():
             imageIndex = self.imageIndex['ascending']
         else:

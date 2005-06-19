@@ -189,6 +189,12 @@ class TaskSorterTest(test.TestCase):
     def testSortByInactiveStatus(self):
         self.task2.setStartDate(date.Tomorrow())
         self.assertEqual([self.task1, self.task2], list(self.sorter))
+    
+    def testSortBySubjectDescending(self):
+        self.sorter.setSortKey('subject')    
+        self.task2.setCompletionDate(date.Today())
+        self.sorter.setAscending(False)
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
         
     def testSortByStartDate(self):
         self.sorter.setSortKey('startDate')

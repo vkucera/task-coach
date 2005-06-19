@@ -127,6 +127,9 @@ class EffortPage(widgets.BookPage):
 class CategoriesPage(widgets.BookPage):
     def __init__(self, parent, task, categories, *args, **kwargs):
         super(CategoriesPage, self).__init__(parent, columns=3, growableColumn=1, *args, **kwargs)
+        self._prioritySpinner = wx.SpinCtrl(self, -1, render.priority(task.priority()), 
+            style=wx.SP_ARROW_KEYS)
+        self.addEntry(_('Priority'), self._prioritySpinner)
         self._checkListBox = wx.CheckListBox(self, -1)
         self._checkListBox.InsertItems(categories, 0)
         for index in range(self._checkListBox.GetCount()):
@@ -141,6 +144,7 @@ class CategoriesPage(widgets.BookPage):
         self._task = task
         
     def ok(self):
+        self._task.setPriority(self._prioritySpinner.GetValue())
         for index in range(self._checkListBox.GetCount()):
             category = self._checkListBox.GetString(index)
             if self._checkListBox.IsChecked(index):

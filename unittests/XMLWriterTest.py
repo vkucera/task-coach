@@ -104,3 +104,10 @@ class XMLWriterTest(test.TestCase):
         
     def testMultipleCategories(self):
         self.assertCategories(['test', 'another', 'yetanother'])
+        
+    def testDefaultPriority(self):
+        self.assertTaskAttribute('0', 'priority')
+        
+    def testPriority(self):
+        self.task.setPriority(5)
+        self.assertTaskAttribute('5', 'priority')

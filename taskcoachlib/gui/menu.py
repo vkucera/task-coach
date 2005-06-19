@@ -89,6 +89,7 @@ class ViewTaskListMenu(Menu):
         'viewduedate', 'viewdaysleft', 'viewcompletiondate',
         'viewbudget', 'viewtotalbudget', 'viewtimespent',
         'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
+        'viewpriority', 'viewtotalpriority',
         None, 'viewcompositetasks'])
 
            
@@ -109,7 +110,8 @@ class SortMenu(Menu):
             'viewsortbystartdate', 'viewsortbyduedate', 'viewsortbydaysleft',
             'viewsortbycompletiondate', 'viewsortbybudget', 'viewsortbytotalbudget',
             'viewsortbytimespent', 'viewsortbytotaltimespent', 'viewsortbybudgetleft',
-            'viewsortbytotalbudgetleft'])
+            'viewsortbytotalbudgetleft', 'viewsortbypriority', 
+            'viewsortbytotalpriority'])
                 
     
 class ToolBarMenu(Menu):
@@ -178,4 +180,5 @@ class TaskListViewerColumnPopupMenu(Menu):
             self.appendUICommands(uiCommands, ['viewstartdate',
             'viewduedate', 'viewdaysleft', 'viewcompletiondate',
             'viewbudget', 'viewtotalbudget', 'viewtimespent',
-            'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft']))
+            'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
+            'viewpriority', 'viewtotalpriority']))

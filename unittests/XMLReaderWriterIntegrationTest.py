@@ -30,7 +30,7 @@ class IntegrationTest(IntegrationTestCase):
         self.description = 'Description\nLine 2'
         self.task = task.Task('Subject', self.description, startdate=date.Yesterday(), 
             duedate=date.Tomorrow(), completiondate=date.Yesterday(), 
-            budget=date.TimeDelta(hours=1))
+            budget=date.TimeDelta(hours=1), priority=4)
         self.child = task.Task()
         self.task.addChild(self.child)
         self.grandChild = task.Task()
@@ -77,3 +77,7 @@ class IntegrationTest(IntegrationTestCase):
        
     def testCategory(self):
         self.assertEqual(self.task.categories(), self.tasksWrittenAndRead[0].categories())
+        
+    def testPriority(self):
+        self.assertEqual(self.task.priority(), self.tasksWrittenAndRead[0].priority())
+        
