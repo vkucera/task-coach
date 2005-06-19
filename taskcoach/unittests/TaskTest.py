@@ -3,7 +3,6 @@ import test, asserts, task, date, time, wx, effort, sets
 __coverage__ = [task.Task]
 
 class TaskTest(test.TestCase, asserts.TaskAsserts):
-
     def setUp(self):
         self.task = task.Task(subject='Todo')
         self.date = date.Date(2003, 1, 1)
@@ -139,22 +138,27 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
         self.assertEqual(self.task.subject(), repr(self.task))
 
 
-
-class TaskNotificationTest(test.TestCase):
+class TaskNotificationTestCase(test.TestCase):
     def setUp(self):
-        self.task = task.Task(subject='Todo')
+        self.task = self.createTask()
         self.task.registerObserver(self.onNotify)
-        self.notifications = 0
-        
+        self.__notifications = 0
+
     def onNotify(self, *args, **kwargs):
-        self.notifications += 1
-        
-    def failUnlessNotified(self):
-        self.failUnless(self.notifications > 0)
+        self.__notifications += 1
+
+    def failUnlessNotified(self, notificationsExpected=1):
+        self.assertEqual(notificationsExpected, self.__notifications)
         
     def failIfNotified(self):
-        self.failIf(self.notifications > 0)
+        self.assertEqual(0, self.__notifications)
         
+
+
+class TaskNotificationTest(TaskNotificationTestCase):
+    def createTask(self):
+        return task.Task(subject='Todo')
+                
     def testSetSubject(self):
         self.task.setSubject('New')
         self.failUnlessNotified()
@@ -187,15 +191,11 @@ class TaskNotificationTest(test.TestCase):
         self.task.setCompletionDate(self.task.completionDate())
         self.failIfNotified()
         
-class SubTaskTest(test.TestCase, asserts.TaskAsserts):
-    def setUp(self):
-        self.task = task.Task(subject='Todo', duedate=date.Tomorrow(),
-            startdate=date.Yesterday())
-        self.task.registerObserver(self.notify)
-        self.notifications = 0
 
-    def notify(self, *args):
-        self.notifications += 1
+class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
+    def createTask(self):
+        return task.Task(subject='Todo', duedate=date.Tomorrow(),
+            startdate=date.Yesterday())
 
     def testNoChildren(self):
         self.assertEqual([], self.task.children())
@@ -207,7 +207,7 @@ class SubTaskTest(test.TestCase, asserts.TaskAsserts):
         child = task.Task()
         self.task.addChild(child)
         self.failUnlessParentAndChild(self.task, child)
-        self.assertEqual(1, self.notifications)
+        self.failUnlessNotified()
 
     def testAddCompletedChild(self):
         child = task.Task()
@@ -220,7 +220,7 @@ class SubTaskTest(test.TestCase, asserts.TaskAsserts):
         self.task.addChild(child)
         self.task.removeChild(child)
         self.failIfParentHasChild(self.task, child)
-        self.assertEqual(2, self.notifications)
+        self.failUnlessNotified(2)
 
     def testRemoveLastNotCompletedChild(self):
         child = task.Task()
@@ -235,7 +235,7 @@ class SubTaskTest(test.TestCase, asserts.TaskAsserts):
         child = task.Task(parent=self.task)
         self.failIf(child in self.task.children())
         self.assertEqual(self.task, child.parent())
-        self.assertEqual(0, self.notifications)
+        self.failIfNotified()
 
     def testNewSubTask(self):
         child = self.task.newSubTask()
@@ -368,7 +368,6 @@ class SubTaskRelationsTest(test.TestCase):
             self.assertEqual([self.parent, self.child, self.grandChild], task.family())
 
 
-
 class TaskEffortTest(test.TestCase):
     def setUp(self):
         self.task = task.Task()
@@ -428,8 +427,8 @@ class TaskEffortTest(test.TestCase):
             self.task.efforts(recursive=True))
 
     
-class TaskBudgetTest(test.TestCase):
-    def setUp(self):
+class TaskBudgetTest(TaskNotificationTestCase):
+    def createTask(self):
         self.task = task.Task(subject='Todo')
         self.zero = date.TimeDelta()
         self.oneHour = date.TimeDelta(hours=1)
@@ -439,6 +438,7 @@ class TaskBudgetTest(test.TestCase):
         self.child = task.Task(subject='child')
         self.childEffort = effort.Effort(self.child,
             date.DateTime(2005,1,2,10,0,0), date.DateTime(2005,1,2,11,0,0))
+        return self.task
             
     def testBudget_Default(self):
         self.assertEqual(self.zero, self.task.budget())
@@ -510,6 +510,21 @@ class TaskBudgetTest(test.TestCase):
         self.child.addEffort(self.childEffort)
         self.assertEqual(self.zero, self.task.budgetLeft(recursive=True))
         
+    def testBudgetIsCopiedWhenTaskIsCopied(self):
+        self.task.setBudget(self.oneHour)
+        copy = self.task.copy()
+        self.assertEqual(copy.budget(), self.task.budget())
+        self.task.setBudget(self.twoHours)
+        self.assertEqual(self.oneHour, copy.budget())
+        
+    def testSetBudgetCausesNotification(self):
+        self.task.setBudget(self.oneHour)
+        self.failUnlessNotified()
+        
+    def testSetBudgetEqualToCurrentBudgetDoesNotCauseNotification(self):
+        self.task.setBudget(self.task.budget())
+        self.failIfNotified()
+
         
 class TaskCategoryTest(test.TestCase):
     def setUp(self):
@@ -518,8 +533,11 @@ class TaskCategoryTest(test.TestCase):
         self.child = task.Task()
         self.task.addChild(self.child)
         
+    def assertCategories(self, task, *categories):
+        self.assertEqual(sets.Set(*categories), task.categories())
+        
     def testInitialCategories(self):
-        self.assertEqual(sets.Set(), task.Task().categories())
+        self.assertCategories(task.Task())
         
     def testAddCategory(self):
         self.assertEqual(sets.Set(['test']), self.task.categories())
@@ -547,4 +565,53 @@ class TaskCategoryTest(test.TestCase):
         self.task.removeCategory('test')
         self.task.removeCategory('test')
         self.assertEqual(sets.Set(), self.task.categories())
+    
+    def testCategoriesAreCopiedWhenTaskIsCopied(self):
+        copy = self.task.copy()
+        self.assertEqual(copy.categories(), self.task.categories())
+        
+        
+class TaskPriorityTest(TaskNotificationTestCase):
+    def createTask(self):
+        self.priority = 5
+        self.childPriority = self.priority - 1
+        self.child = task.Task(priority=self.childPriority)
+        parent = task.Task(priority=self.priority)
+        parent.addChild(self.child)
+        return parent
+        
+    def testDefaultPriority(self):
+        self.assertEqual(None, task.Task().priority())
+        
+    def testSetPriorityOnConstruction(self):
+        self.assertEqual(self.priority, self.task.priority())
+        
+    def testPriorityIsCopiedWhenTaskIsCopied(self):
+        copy = self.task.copy()
+        self.assertEqual(self.task.priority(), copy.priority())
+        
+    def testTaskStateIncludesPriority(self):
+        state = self.task.__getstate__()
+        self.task.setPriority(self.priority+1)
+        self.task.__setstate__(state)
+        self.assertEqual(self.priority, self.task.priority())
+        
+    def testSetPriorityCausesNotification(self):
+        self.task.setPriority(self.priority+1)
+        self.failUnlessNotified()
+        
+    def testSetPriorityEqualToCurrentPriorityDoesNotCauseNotification(self):
+        self.task.setPriority(self.priority)
+        self.failIfNotified()
+        
+    def testPriority_Recursive(self):
+        self.assertEqual(self.childPriority, self.task.priority(recursive=True))
+        
+    def testPriority_RecursiveWhenChildHasNoPriority(self):
+        self.child.setPriority(None)
+        self.assertEqual(self.priority, self.task.priority(recursive=True))
+
+    def testPriority_RecursiveWhenParentHasNoPriority(self):
+        self.task.setPriority(None)
+        self.assertEqual(self.childPriority, self.task.priority(recursive=True))
         
