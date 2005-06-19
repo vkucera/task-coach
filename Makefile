@@ -7,7 +7,7 @@ INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
 WEBCHECKER="c:/Program Files/Python24/Tools/webchecker/webchecker.py" 
 GETTEXT="c:/Program Files/Python24/Tools/i18n/pygettext.py"
 
-all: windist sdist website
+all: i18n windist sdist website
 
 windist: icons
 	$(PYTHON) make.py py2exe
