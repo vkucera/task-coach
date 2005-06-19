@@ -903,6 +903,13 @@ class UICommands(dict):
             menuText=_('Total budget l&eft'),
             helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
             setting='totalbudgetleft', column=_('Total budget left'))
+        self['viewpriority'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText=_('&Priority'), helpText=_('Show/hide priority column'),
+            setting='priority', column=_('Priority'))
+        self['viewtotalpriority'] = ViewColumn(viewer=viewer, settings=settings,
+            menuText=_('O&verall priority'), 
+            helpText=_('Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)'),
+            setting='totalpriority', column=_('Overall priority'))
     
         self['viewexpandall'] = ViewExpandAll(viewer=viewer)
         self['viewcollapseall'] = ViewCollapseAll(viewer=viewer)
@@ -937,7 +944,12 @@ class UICommands(dict):
             helpText=_('Sort tasks by budget left'), **sortByKwArgs)
         self['viewsortbytotalbudgetleft'] = ViewSortBy(value='totalbudgetLeft', menuText=_('Total budget l&eft'),
             helpText=_('Sort tasks by total budget left'), **sortByKwArgs)
-
+        self['viewsortbypriority'] = ViewSortBy(value='priority', menuText=_('&Priority'), 
+            helpText=_('Sort tasks by priority'), **sortByKwArgs)
+        self['viewsortbytotalpriority'] = ViewSortBy(value='totalpriority', 
+            menuText=_('Overall priority'), helpText=_('Sort tasks by overall priority'),
+            **sortByKwArgs)
+        
         self['toolbarhide'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
             value=None, menuText=_('&Hide'), helpText=_('Hide the toolbar'))
         self['toolbarsmall'] = ViewToolBar(mainwindow=mainwindow, settings=settings,

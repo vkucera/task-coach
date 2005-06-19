@@ -4,7 +4,7 @@ import patterns, date, time, copy, sets
 class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, completiondate=None, parent=None, budget=None, 
-            priority=None, *args, **kwargs):
+            priority=0, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
         self._subject        = subject
         self._description    = description 
@@ -288,11 +288,7 @@ class Task(patterns.Observable):
     def priority(self, recursive=False):
         if recursive:
             childPriorities = [child.priority(recursive=True) for child in self.children()]
-            priorities = [priority for priority in childPriorities + [self._priority] if priority is not None]
-            if priorities:
-                return min(priorities)
-            else:
-                return None
+            return max(childPriorities + [self._priority])
         else:
             return self._priority
         

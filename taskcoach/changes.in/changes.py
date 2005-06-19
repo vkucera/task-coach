@@ -5,10 +5,17 @@ Release('0.41', 'June 19, 2005',
     bugsFixed=[],
     featuresAdded=[
         Feature('''URL's (including mailto) in task and effort descriptions are 
-clickable.''', '1190310')],
+clickable.''', '1190310'),
+        Feature('''Tasks can have a priority. Priorities are integer numbers:
+the higher the number, the higher the priority. Default priority is 0.
+Negative numbers are allowed''', 
+        '1194527', '1194567', '1210154')],
     featuresChanged=[
         Feature('''Default start date of new subtasks is today
-(used to be the start date of the parent task)''')]),
+(used to be the start date of the parent task)'''),
+        Feature('''When 'sort by status first' is on, active tasks always come
+before inactive tasks which in turn come before completed tasks, regardless of 
+whether the sort order is ascending or descending.''')]),
 
 Release('0.40', 'June 16, 2005', 
     bugsFixed=[
@@ -16,8 +23,7 @@ Release('0.40', 'June 16, 2005',
             '1216951')],
     featuresAdded=[
         Feature('''Tasks can belong to zero or more categories.
-Tasks can be viewed/hidden by category.''', '1182172')
-        ]),
+Tasks can be viewed/hidden by category.''', '1182172')]),
 
 Release('0.39', 'June 6, 2005',
     bugsFixed=[

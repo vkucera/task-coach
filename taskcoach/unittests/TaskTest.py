@@ -581,7 +581,7 @@ class TaskPriorityTest(TaskNotificationTestCase):
         return parent
         
     def testDefaultPriority(self):
-        self.assertEqual(None, task.Task().priority())
+        self.assertEqual(0, task.Task().priority())
         
     def testSetPriorityOnConstruction(self):
         self.assertEqual(self.priority, self.task.priority())
@@ -603,15 +603,12 @@ class TaskPriorityTest(TaskNotificationTestCase):
     def testSetPriorityEqualToCurrentPriorityDoesNotCauseNotification(self):
         self.task.setPriority(self.priority)
         self.failIfNotified()
-        
-    def testPriority_Recursive(self):
-        self.assertEqual(self.childPriority, self.task.priority(recursive=True))
-        
-    def testPriority_RecursiveWhenChildHasNoPriority(self):
-        self.child.setPriority(None)
+                
+    def testPriority_RecursiveWhenChildHasLowestPriority(self):
+        self.child.setPriority(0)
         self.assertEqual(self.priority, self.task.priority(recursive=True))
 
-    def testPriority_RecursiveWhenParentHasNoPriority(self):
-        self.task.setPriority(None)
+    def testPriority_RecursiveWhenParentHasLowestPriority(self):
+        self.task.setPriority(0)
         self.assertEqual(self.childPriority, self.task.priority(recursive=True))
         

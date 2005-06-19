@@ -26,7 +26,7 @@ class XMLReaderVersion6Test(XMLReaderTestCase):
 
         
 class XMLReaderTest(XMLReaderTestCase):   
-    tskversion = 8
+    tskversion = 9
            
     def testReadEmptyStream(self):
         try:
@@ -113,3 +113,6 @@ class XMLReaderTest(XMLReaderTestCase):
         tasks = self.writeAndRead('<tasks><task><category>test</category><category>another</category><category>yetanother</category></task></tasks>')
         self.assertEqual(sets.Set(['test', 'another', 'yetanother']), tasks[0].categories())
         
+    def testPriority(self):
+        tasks = self.writeAndRead('<tasks><task priority="5"/></tasks>')        
+        self.assertEqual(5, tasks[0].priority())

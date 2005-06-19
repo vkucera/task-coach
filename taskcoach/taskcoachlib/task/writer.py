@@ -2,7 +2,7 @@ import xml.dom, meta
 
 
 class XMLWriter:
-    def __init__(self, fd, versionnr=8):
+    def __init__(self, fd, versionnr=9):
         self.__fd = fd
         self.__versionnr = versionnr
         
@@ -23,6 +23,7 @@ class XMLWriter:
         node.setAttribute('duedate', str(task.dueDate()))
         node.setAttribute('completiondate', str(task.completionDate()))
         node.setAttribute('budget', self.budgetAsAttribute(task.budget()))
+        node.setAttribute('priority', str(task.priority()))
         node.appendChild(self.textNode('description', task.description()))
         for category in task.categories():
             node.appendChild(self.textNode('category', category))
