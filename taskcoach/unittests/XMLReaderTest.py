@@ -24,6 +24,14 @@ class XMLReaderVersion6Test(XMLReaderTestCase):
         tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000" stop="2004-01-01 10:30:00.123000" description="Yo"/></task></tasks>')
         self.assertEqual('Yo', tasks[0].efforts()[0].getDescription())
 
+
+class XMLReaderVersion8Test(XMLReaderTestCase):   
+    tskversion = 8
+
+    def testPriority(self):
+        tasks = self.writeAndRead('<tasks><task/></tasks>')
+        self.assertEqual(0, tasks[0].priority())
+        
         
 class XMLReaderTest(XMLReaderTestCase):   
     tskversion = 9
