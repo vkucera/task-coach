@@ -143,7 +143,7 @@ class XMLReader:
         try:
             return int(priorityText)
         except ValueError:
-            return None
+            return 0
             
     def __parseEffortNodes(self, task, nodes):
         return [self.__parseEffortNode(task, node) for node in nodes if node.nodeName == 'effort']
