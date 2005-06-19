@@ -4,7 +4,7 @@ import patterns, date, time, copy, sets
 class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, completiondate=None, parent=None, budget=None, 
-            *args, **kwargs):
+            priority=None, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
         self._subject        = subject
         self._description    = description 
@@ -18,6 +18,7 @@ class Task(patterns.Observable):
                                       # the creator's responsibility
         self._efforts        = []
         self._categories     = sets.Set()
+        self._priority       = priority
 
     def onNotify(self, notification, *args, **kwargs):
         notification = patterns.observer.Notification(self,  
@@ -35,10 +36,17 @@ class Task(patterns.Observable):
             '_completiondate' : self._completiondate,
             '_children' : self._children, '_parent' : self._parent,
             '_efforts' : self._efforts, '_budget' : self._budget, 
-            '_categories': sets.Set(self._categories) }
+            '_categories': sets.Set(self._categories),
+            '_priority': self._priority }
         
     def __repr__(self):
         return self._subject
+        
+    def __setAttributeAndNotifyObservers(self, attribute, newValue):
+        currentValue = getattr(self, attribute)
+        if newValue != currentValue:
+            setattr(self, attribute, newValue)
+            self.notifyObservers(patterns.observer.Notification(self))
 
     def id(self):
         return self._id
@@ -63,7 +71,10 @@ class Task(patterns.Observable):
     def copy(self):
         ''' Copy constructor '''
         copy = self.__class__(self.subject(), self.description(), 
-            self.dueDate(), self.startDate(), parent=self.parent())
+            self.dueDate(), self.startDate(), parent=self.parent(), 
+            budget=self.budget(), priority=self.priority())
+        for category in self.categories():
+            copy.addCategory(category)
         copy.setCompletionDate(self.completionDate())
         for child in self.children():
             childCopy = child.copy()
@@ -114,9 +125,7 @@ class Task(patterns.Observable):
         return self._subject
 
     def setSubject(self, subject):
-        if subject != self._subject:
-            self._subject = subject
-            self.notifyObservers(patterns.observer.Notification(self))
+        self.__setAttributeAndNotifyObservers('_subject', subject)
 
     def dueDate(self, recursive=False):
         if recursive:
@@ -126,9 +135,7 @@ class Task(patterns.Observable):
             return self._duedate
 
     def setDueDate(self, duedate):
-        if duedate != self._duedate:
-            self._duedate = duedate
-            self.notifyObservers(patterns.observer.Notification(self))
+        self.__setAttributeAndNotifyObservers('_duedate', duedate)
 
     def startDate(self, recursive=False):
         if recursive:
@@ -138,9 +145,7 @@ class Task(patterns.Observable):
             return self._startdate
 
     def setStartDate(self, startdate):
-        if startdate != self._startdate:
-            self._startdate = startdate
-            self.notifyObservers(patterns.observer.Notification(self))
+        self.__setAttributeAndNotifyObservers('_startdate', startdate)
 
     def timeLeft(self):
         return self._duedate - date.Today()
@@ -249,8 +254,7 @@ class Task(patterns.Observable):
         return result
         
     def setBudget(self, budget):
-        self._budget = budget
-        self.notifyObservers(patterns.observer.Notification(self))
+        self.__setAttributeAndNotifyObservers('_budget', budget)
         
     def budgetLeft(self, recursive=False):
         budget = self.budget(recursive)
@@ -279,3 +283,18 @@ class Task(patterns.Observable):
     def removeCategory(self, category):
         self._categories.discard(category)
         
+    # priority
+    
+    def priority(self, recursive=False):
+        if recursive:
+            childPriorities = [child.priority(recursive=True) for child in self.children()]
+            priorities = [priority for priority in childPriorities + [self._priority] if priority is not None]
+            if priorities:
+                return min(priorities)
+            else:
+                return None
+        else:
+            return self._priority
+        
+    def setPriority(self, priority):
+        self.__setAttributeAndNotifyObservers('_priority', priority)
