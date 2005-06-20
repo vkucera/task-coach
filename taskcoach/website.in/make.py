@@ -78,8 +78,8 @@ pages['features'] = \
         <P>%(name)s currently (%(version)s) has the following features:
         <UL>
             <LI>Creating, editing, and deleting tasks and subtasks.
-            <LI>Tasks have a subject, description, start date, due date and a 
-            completion date.
+            <LI>Tasks have a subject, description, priority, start date, 
+            due date and a completion date.
             <LI>Tasks can be viewed as a list or as a tree.
             <LI>Tasks can be sorted by all task attributes, e.g. subject,
             budget, budget left, due date, etc.
@@ -88,6 +88,7 @@ pages['features'] = \
             <LI>Task status depends on its subtask and vice versa. E.g. if 
             you mark the last uncompleted subtask as completed, the parent 
             task is automatically marked as completed too.
+            <LI>Tasks can be assigned to user-defined categories. 
             <LI>Settings are persistent and saved automatically. The
             last opened file is loaded automatically when starting
             %(name)s.
