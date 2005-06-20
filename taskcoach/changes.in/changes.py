@@ -1,7 +1,7 @@
 from domain import *
 
 releases = [
-Release('0.41', 'June 19, 2005',
+Release('0.41', 'June 20, 2005',
     bugsFixed=[],
     featuresAdded=[
         Feature('''URL's (including mailto) in task and effort descriptions are 
