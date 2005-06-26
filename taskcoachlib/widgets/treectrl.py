@@ -8,7 +8,11 @@ class TreeCtrl(wx.TreeCtrl):
             wx.TR_MULTIPLE|wx.TR_HAS_BUTTONS|wx.TR_LINES_AT_ROOT)
         self.selectcommand = selectcommand
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelect)
+        self.editcommand = editcommand
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, editcommand.onCommandActivate)
+        # We deal with double clicks ourselves, to prevent the default behaviour
+        # of collapsing or expanding nodes on double click. 
+        self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
         if popupmenu:
             self.popupmenu = popupmenu
             self.Bind(wx.EVT_TREE_ITEM_RIGHT_CLICK, self.onPopup)
@@ -18,7 +22,6 @@ class TreeCtrl(wx.TreeCtrl):
         self.getItemChildrenCount = getItemChildrenCount
         self.getItemFingerprint = getItemFingerprint
         self.refresh(0)
-        #self.fingerprint = {}
         
     def curselection(self):
         return [self.GetPyData(item)[0] for item in self.GetSelections()]
@@ -29,6 +32,15 @@ class TreeCtrl(wx.TreeCtrl):
     def onSelect(self, event):
         self.selectcommand()
 
+    def onDoubleClick(self, event):
+        if not self.collapseExpandButtonClicked(event):
+            self.editcommand.onCommandActivate(event)
+        event.Skip(False)
+        
+    def collapseExpandButtonClicked(self, event):
+        item, flags = self.HitTest(event.GetPosition())
+        return flags & wx.TREE_HITTEST_ONITEMBUTTON
+        
     def refresh(self, count):
         self.validItems = []
         if count == 0:
@@ -66,6 +78,7 @@ class TreeCtrl(wx.TreeCtrl):
             else:
                 item = self.PrependItem(parent, self.getItemText(index))
             self.renderNode(item, index)
+            self.EnsureVisible(item)
         self.SetPyData(item, (index, fingerprint))
         self.validItems.append(item)
         return item

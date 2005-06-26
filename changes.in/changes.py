@@ -1,10 +1,15 @@
 from domain import *
 
 releases = [
+Release('0.42', 'June X, 2005',
+    bugsFixed=['''Double clicking a task in the tree view would both expand or
+collapse the children and open the edit dialog. Fixed to not collapse or expand
+the children when double clicking the task.''']),
+    
 Release('0.41', 'June 20, 2005',
     bugsFixed=[],
     featuresAdded=[
-        Feature('''URL's (including mailto) in task and effort descriptions are 
+        Feature('''URL's (including mailto) in task and effort descriptions are
 clickable.''', '1190310'),
         Feature('''Tasks can have a priority. Priorities are integer numbers:
 the higher the number, the higher the priority. Default priority is 0.
@@ -14,7 +19,7 @@ Negative numbers are allowed''',
         Feature('''Default start date of new subtasks is today
 (used to be the start date of the parent task)'''),
         Feature('''When 'sort by status first' is on, active tasks always come
-before inactive tasks which in turn come before completed tasks, regardless of 
+before inactive tasks which in turn come before completed tasks, regardless of
 whether the sort order is ascending or descending.''')]),
 
 Release('0.40', 'June 16, 2005', 

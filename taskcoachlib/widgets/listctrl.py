@@ -4,10 +4,12 @@ import wx, wx.lib.mixins.listctrl
 class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
             selectCommand=None, editCommand=None, popupMenu=None, 
-            columnPopupMenu=None, sorters=None, sortOrderCommand=None, *args, **kwargs):
+            columnPopupMenu=None, sorters=None, sortOrderCommand=None, 
+            resizeableColumn=1, *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent, -1, 
             style=wx.LC_REPORT|wx.LC_VIRTUAL, *args, **kwargs)
         wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin.__init__(self)
+        self._resizeableColumn = resizeableColumn
         self.setColumns(columns, sorters or [])
         self.getItemText = getItemText
         self.getItemImage = getItemImage
@@ -30,14 +32,11 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         self.allColumnHeaders = columns
         for columnIndex, columnHeader in enumerate(columns):
             self.InsertColumn(columnIndex, columnHeader)
-        self.setResizeColumn(self.getResizableColumn())
+        self.setResizeColumn(self._resizeableColumn)
         self.sorters = {}
         for columnIndex, columnSorter in enumerate(sorters):
             self.sorters[self.getColumnHeader(columnIndex)] = columnSorter
-        
-    def getResizableColumn(self):
-        return 1
-               
+                       
     def OnGetItemText(self, rowIndex, columnIndex):
         return self.getItemText(rowIndex, self.getColumnHeader(columnIndex))
 
@@ -116,7 +115,7 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
             self.InsertColumn(columnIndex, columnHeader)
         elif not show and self.isColumnVisible(columnHeader):
             self.DeleteColumn(columnIndex)
-            self.resizeColumn(self.getResizableColumn())
+            self.resizeColumn(self._resizeableColumn)
 
     def getColumnHeader(self, columnIndex):
         return self.GetColumn(columnIndex).GetText()
@@ -141,10 +140,6 @@ class ListCtrl(VirtualListCtrl):
     
     
 class EffortListCtrl(VirtualListCtrl):
-    def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
-            selectCommand=None, editCommand=None, popupMenu=None, *args, **kwargs):
-        super(EffortListCtrl, self).__init__(parent, columns, getItemText, getItemImage, 
-            getItemAttr, selectCommand, editCommand, popupMenu, *args, **kwargs)
-        
-    def getResizableColumn(self):
-        return 2
+    def __init__(self, *args, **kwargs):
+        kwargs['resizeableColumn'] = 2
+        super(EffortListCtrl, self).__init__(*args, **kwargs)   
