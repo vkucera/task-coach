@@ -263,10 +263,10 @@ class EffortListViewer(ListViewer):
         uiCommands.update(self.uiCommands)
         uiCommands['editeffort'] = uicommand.EffortEdit(self.parent, self.list, self, self.uiCommands)
         uiCommands['deleteeffort'] = uicommand.EffortDelete(self.list, self)
-        widget = widgets.EffortListCtrl(self, self.columns(),
+        widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr,
             self.onSelect, uiCommands['editeffort'], 
-            menu.EffortPopupMenu(self.parent, uiCommands))
+            menu.EffortPopupMenu(self.parent, uiCommands), resizeableColumn=2)
         widget.SetColumnWidth(0, 150)
         return widget
 

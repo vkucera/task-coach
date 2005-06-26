@@ -1,9 +1,38 @@
-import test, widgets
+import test, widgets, wx, dummy
 
 class VirtualListCtrlTestCase(test.wxTestCase):
+    def getItemText(self, index, column):
+        return 'Dummy text'
+    
+    def getItemImage(self, index):
+        return -1
+    
+    def getItemAttr(self, index):
+        return wx.ListItemAttr()
+        
+    def onSelect(self, *args):
+        pass
+        
+    def createListCtrl(self, nrColumns=3):
+        return widgets.ListCtrl(self.frame, self.createColumns(nrColumns),
+            self.getItemText, self.getItemImage, self.getItemAttr, self.onSelect, 
+            dummy.DummyUICommand())
+            
+    def createColumns(self, nrColumns):
+        columns = []
+        for columnIndex in range(1, nrColumns+1):
+            columns.append('column%d'%columnIndex)
+        return columns
+
     def setUp(self):
-        self.listctrl = widgets.listctrl.VirtualListCtrl(self.frame, 
-            ['column1', 'column2', 'column3'], None, None, None)
+        self.listctrl = self.createListCtrl(nrColumns=3)
+            
+    def testOneItem(self):
+        self.listctrl.refresh(1)
+        self.assertEqual(1, self.listctrl.GetItemCount())
+
+    def testNrOfColumns(self):
+        self.assertEqual(3, self.listctrl.GetColumnCount())
             
     def testCurselection_EmptyList(self):
         self.assertEqual([], self.listctrl.curselection())
