@@ -1,4 +1,5 @@
 import wx
+       
 
 class TreeCtrl(wx.TreeCtrl):
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
@@ -24,7 +25,7 @@ class TreeCtrl(wx.TreeCtrl):
         self.refresh(0)
         
     def curselection(self):
-        return [self.GetPyData(item)[0] for item in self.GetSelections()]
+        return [self.index(item) for item in self.GetSelections()]
 
     def onPopup(self, event):
         self.PopupMenu(self.popupmenu, event.GetPoint())
@@ -33,16 +34,17 @@ class TreeCtrl(wx.TreeCtrl):
         self.selectcommand()
 
     def onDoubleClick(self, event):
-        if not self.collapseExpandButtonClicked(event):
+        if not self.isCollapseExpandButtonClicked(event):
             self.editcommand.onCommandActivate(event)
         event.Skip(False)
         
-    def collapseExpandButtonClicked(self, event):
+    def isCollapseExpandButtonClicked(self, event):
         item, flags = self.HitTest(event.GetPosition())
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
-        
+                
     def refresh(self, count):
         self.validItems = []
+        self.Freeze()
         if count == 0:
             self.DeleteAllItems()
             self.AddRoot('root')
@@ -52,6 +54,7 @@ class TreeCtrl(wx.TreeCtrl):
             while index < count:
                 index = self.addItemsRecursively(root, index)
             self.deleteUnusedItems()
+        self.Thaw()
         
     def addItemsRecursively(self, parent, index):
         node = self.AppendItem(parent, index)
@@ -78,7 +81,8 @@ class TreeCtrl(wx.TreeCtrl):
             else:
                 item = self.PrependItem(parent, self.getItemText(index))
             self.renderNode(item, index)
-            self.EnsureVisible(item)
+            if parent != self.GetRootItem():
+                self.Expand(parent)
         self.SetPyData(item, (index, fingerprint))
         self.validItems.append(item)
         return item
@@ -134,7 +138,7 @@ class TreeCtrl(wx.TreeCtrl):
 
     def select(self, indices):
         for item in self.getChildren(recursively=True):
-            index = self.GetPyData(item)[0]
+            index = self.index(item)
             self.SelectItem(item, index in indices)
             if index in indices:
                 self.EnsureVisible(item)
@@ -142,10 +146,13 @@ class TreeCtrl(wx.TreeCtrl):
 
     def __getitem__(self, index):
         for item in self.getChildren(recursively=True):
-            if self.GetPyData(item)[0] == index:
+            if self.index(item) == index:
                 return item
         raise IndexError
 
+    def index(self, item):
+        return self.GetPyData(item)[0]
+    
     def expandAllItems(self):
         for item in self.getChildren(recursively=True):
             self.Expand(item)
@@ -165,3 +172,4 @@ class TreeCtrl(wx.TreeCtrl):
             self.Collapse(item)
             for child in self.getChildren(item, recursively=True):
                 self.Collapse(child)
+                

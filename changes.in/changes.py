@@ -1,10 +1,13 @@
 from domain import *
 
 releases = [
-Release('0.42', 'June X, 2005',
-    bugsFixed=['''Double clicking a task in the tree view would both expand or
-collapse the children and open the edit dialog. Fixed to not collapse or expand
-the children when double clicking the task.''']),
+Release('0.42', 'July X, 2005',
+    bugsFixed=[
+        Bug('''Double clicking a task with children in the tree view would 
+open the edit dialog and expand or collapse the task as well. Fixed to not 
+collapse or expand the task when double clicking it.'''),
+        Bug('''Adding a subtask to a collapsed parent task now automatically
+expands the parent task.''')]),
     
 Release('0.41', 'June 20, 2005',
     bugsFixed=[],
