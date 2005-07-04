@@ -31,7 +31,8 @@ class TreeCtrl(wx.TreeCtrl):
         self.PopupMenu(self.popupmenu, event.GetPoint())
 
     def onSelect(self, event):
-        self.selectcommand()
+        if not self._refreshing:
+            self.selectcommand()
 
     def onDoubleClick(self, event):
         if not self.isCollapseExpandButtonClicked(event):
@@ -43,6 +44,7 @@ class TreeCtrl(wx.TreeCtrl):
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
                 
     def refresh(self, count):
+        self._refreshing = True
         self.validItems = []
         self.Freeze()
         if count == 0:
@@ -55,6 +57,7 @@ class TreeCtrl(wx.TreeCtrl):
                 index = self.addItemsRecursively(root, index)
             self.deleteUnusedItems()
         self.Thaw()
+        self._refreshing = False
         
     def addItemsRecursively(self, parent, index):
         node = self.AppendItem(parent, index)

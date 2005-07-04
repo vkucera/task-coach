@@ -65,7 +65,10 @@ class Observable(object):
         
     def removeObserver(self, callback):
         ''' Remove a callback that was registered earlier. '''
-        self.__callbacks.remove(callback)
+        try:
+            self.__callbacks.remove(callback)
+        except ValueError:
+            pass
 
     def notifyObservers(self, notification):
         if not self.isNotifying():
