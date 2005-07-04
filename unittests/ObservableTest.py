@@ -46,7 +46,11 @@ class ObservableTest(ObservableTestCase):
         self.observable.notifyObservers(patterns.observer.Notification(self))
         self.check(notifications=0)
 
-
+    def testRemoveObserverTwice(self):
+        self.observable.removeObserver(self.onNotify)
+        self.observable.removeObserver(self.onNotify)
+        
+        
 class MockObservablesList(patterns.ObservablesList):
     def __init__(self, *args, **kwargs):
         super(MockObservablesList, self).__init__(*args, **kwargs)

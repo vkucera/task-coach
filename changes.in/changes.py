@@ -9,7 +9,8 @@ collapse or expand the task when double clicking it.'''),
         Bug('''Adding a subtask to a collapsed parent task now automatically
 expands the parent task.'''),
         Bug('''Changing the description of a task wouldn't mark the task 
-file as changed.''')],
+file as changed.'''),
+        Bug('Time spent is now updated every second.')],
     featuresChanged=[
         Feature('''The start date of a task can now be left unset, creating
 a task that is permanently inactive. This can be useful for activities that

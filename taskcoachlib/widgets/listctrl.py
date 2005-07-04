@@ -53,8 +53,8 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         self.PopupMenu(self.columnPopupMenu, event.GetPoint())
         
     def onSelect(self, event):
+        print 'ListCtrl.onSelect'
         self.selectCommand()
-        event.Skip()
         
     def onColumnClick(self, event):
         self.sorters[self.getColumnHeader(event.GetColumn())].onCommandActivate(event)
@@ -88,6 +88,7 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         return wx.lib.mixins.listctrl.getListCtrlSelection(self)
 
     def select(self, indices):
+        print 'ListCtrl.select(indices=%s)'%indices
         for index in range(self.GetItemCount()):
             self.Select(index, index in indices)
         if indices:

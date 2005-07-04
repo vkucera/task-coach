@@ -11,6 +11,7 @@ class Viewer(patterns.Observable, wx.Panel):
         self.uiCommands = uiCommands
         self.list = self.createSorter(self.createFilter(list))
         self.list.registerObserver(self.onNotify)
+        self._selection = []
         self.widget = self.createWidget()
         self.initLayout()
         self.onNotify(patterns.observer.Notification(self.list, itemsAdded=self.list))
@@ -66,11 +67,12 @@ class Viewer(patterns.Observable, wx.Panel):
 
     def onNotify(self, notification, *args, **kwargs):
         if notification.itemsAdded or notification.itemsChanged or notification.itemsRemoved:
-            selection = notification.itemsAdded or notification.itemsChanged or []
             self.widget.refresh(len(self.list))
-            self.select(selection)
+            self.select(self._selection)
         
     def onSelect(self, *args):
+        self._selection = self.curselection()
+        print 'Viewer.onSelect: self._selection=%s'%self._selection
         self.notifyObservers(patterns.observer.Notification(self))
         
     def curselection(self):

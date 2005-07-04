@@ -429,7 +429,7 @@ class TaskEffortTest(test.TestCase):
         child, childEffort = self.addChild(self.task)
         self.assertEqual([self.effort, childEffort],
             self.task.efforts(recursive=True))
-
+        
     
 class TaskBudgetTest(TaskNotificationTestCase):
     def createTask(self):
