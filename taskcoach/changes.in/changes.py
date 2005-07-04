@@ -7,7 +7,14 @@ Release('0.42', 'July X, 2005',
 open the edit dialog and expand or collapse the task as well. Fixed to not 
 collapse or expand the task when double clicking it.'''),
         Bug('''Adding a subtask to a collapsed parent task now automatically
-expands the parent task.''')]),
+expands the parent task.'''),
+        Bug('''Changing the description of a task wouldn't mark the task 
+file as changed.''')],
+    featuresChanged=[
+        Feature('''The start date of a task can now be left unset, creating
+a task that is permanently inactive. This can be useful for activities that
+you would normally no want to plan, but have to keep a time record for, e.g.
+sickness.''')]),
     
 Release('0.41', 'June 20, 2005',
     bugsFixed=[],
