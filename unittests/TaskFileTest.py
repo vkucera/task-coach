@@ -81,7 +81,17 @@ class TaskFileTest(TaskFileTestCase):
         self.failIf(self.taskFile.needSave())
 
     def testNeedSave_AfterEffortAdded(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.failIf(self.taskFile.needSave())
         self.task.addEffort(effort.Effort(self.task, None, None))
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterEditDescription(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setDescription('new description')
         self.failUnless(self.taskFile.needSave())
         
     def testLastFilename_Initially(self):

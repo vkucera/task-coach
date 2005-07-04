@@ -191,6 +191,10 @@ class TaskNotificationTest(TaskNotificationTestCase):
         self.task.setCompletionDate(self.task.completionDate())
         self.failIfNotified()
         
+    def testSetDescription(self):
+        self.task.setDescription('new description')
+        self.failUnlessNotified()
+        
 
 class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
     def createTask(self):

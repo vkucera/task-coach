@@ -87,7 +87,7 @@ class DatesPage(widgets.BookPage):
             self.addEntry(*entryArgs)
 
     def ok(self):                   
-        self._task.setStartDate(self._startDateEntry.get(date.Today()))
+        self._task.setStartDate(self._startDateEntry.get())
         self._task.setDueDate(self._dueDateEntry.get())
         self._task.setCompletionDate(self._completionDateEntry.get())
 

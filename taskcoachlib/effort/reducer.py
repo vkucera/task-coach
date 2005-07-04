@@ -1,5 +1,7 @@
-import patterns, effort, sets, time, log
+import patterns, effort
 
+# FIXME: EffortAggregator would be a better name for this
+# file and this class
         
 class EffortReducer(patterns.ObservableListObserver):     
     def __init__(self, *args, **kwargs):

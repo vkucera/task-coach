@@ -4,7 +4,7 @@ class List(list):
             ObservableList to be able to generate just one notification 
             when removing multiple items. '''
         for item in items:
-            # Prevent overridden remove method from being invoked
+            # No super() to prevent overridden remove method from being invoked
             list.remove(self, item) 
 
     

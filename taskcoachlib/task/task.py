@@ -58,7 +58,7 @@ class Task(patterns.Observable):
         return self._description
 
     def setDescription(self, description):
-        self._description = description
+        self.__setAttributeAndNotifyObservers('_description', description)
 
     def allChildrenCompleted(self):
         if not self.children():
