@@ -17,6 +17,7 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         if selectCommand:
             self.selectCommand = selectCommand
             self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelect)
+            self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onSelect)
         if editCommand:
             self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, editCommand.onCommandActivate)
         if popupMenu:
@@ -53,7 +54,6 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         self.PopupMenu(self.columnPopupMenu, event.GetPoint())
         
     def onSelect(self, event):
-        print 'ListCtrl.onSelect'
         self.selectCommand()
         
     def onColumnClick(self, event):
@@ -88,7 +88,6 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
         return wx.lib.mixins.listctrl.getListCtrlSelection(self)
 
     def select(self, indices):
-        print 'ListCtrl.select(indices=%s)'%indices
         for index in range(self.GetItemCount()):
             self.Select(index, index in indices)
         if indices:
