@@ -72,7 +72,6 @@ class Viewer(patterns.Observable, wx.Panel):
         
     def onSelect(self, *args):
         self._selection = self.curselection()
-        print 'Viewer.onSelect: self._selection=%s'%self._selection
         self.notifyObservers(patterns.observer.Notification(self))
         
     def curselection(self):
