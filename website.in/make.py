@@ -118,6 +118,37 @@ pages['screenshots'] = \
         <P><IMG SRC="screenshot-0.22-effortview.png" ALT="Effort view"></P>
         <P><IMG SRC="screenshot-0.22-taskeditor.png" ALT="Task editor"></P>'''
 
+pages['i18n'] = \
+'''        <H3>Internationalization</H3>
+        <H4>Information for users</H4>
+        <P>Currently, %(name)s is available in a number of languages:
+        %(languages)s. You can select languages via 'Edit' -> 
+        'Preferences'. Click the 'Language' icon, select the
+        language of your choice and restart %(name)s.</P>
+        <H4>Instructions for translators</H4>
+        <P>I would welcome translations in additional languages.
+        Please be aware that, next to providing the initial translation,
+        you will be expected to keep your translation up to date as new
+        versions of %(name)s are released.</P>
+        <P>To create a new translation, please follow these steps:
+        <OL>
+            <LI>Install a gettext catalogs editor. I recommend 
+            <A HREF="http://www.poedit.org/">poEdit</A>. 
+            <LI>Download the message catalog:
+            <A HREF="messages.pot"><TT>messages.pot</TT></A>. This file
+            contains all text strings to be translated.
+            <LI>Rename <TT>messages.pot</TT> into <TT>yourlanguage.po</TT>.
+            <LI>Start poEdit and load <TT>yourlanguage.po</TT> and 
+            create the translation.
+            <LI>Mail me the resulting <TT>yourlanguage.po</TT> file. I will
+            include it into %(name)s.
+        </OL>
+        When a new release of %(name)s is ready, I will make the new
+        <A HREF="messages.pot"><TT>messages.pot</TT></A> available here 
+        so you can update your <TT>.po</TT> file. This is when using poEdit 
+        will really pay off, because it will mark for you which strings have
+        been added or changed and require your attention.</P>'''
+
 dist = os.path.join('..', 'dist')
 
 if not os.path.isdir(dist):
@@ -131,5 +162,5 @@ for title, text in pages.items():
 
 import shutil, glob
 for file in glob.glob('*.png') + glob.glob('*.ico') + glob.glob('*.css') + \
-    ['../icons.in/splash.png']:
+    ['../icons.in/splash.png', '../i18n.in/messages.pot']:
     shutil.copyfile(file, os.path.join(dist, os.path.basename(file)))

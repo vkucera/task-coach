@@ -1,7 +1,7 @@
 from domain import *
 
 releases = [
-Release('0.42', 'July X, 2005',
+Release('0.42', 'July 6, 2005',
     bugsFixed=[
         Bug('''Double clicking a task with children in the tree view would 
 open the edit dialog and expand or collapse the task as well. Fixed to not 
@@ -10,7 +10,7 @@ collapse or expand the task when double clicking it.'''),
 expands the parent task.'''),
         Bug('''Changing the description of a task wouldn't mark the task 
 file as changed.'''),
-        Bug('Time spent is now updated every second.')],
+        Bug('Time spent is now updated every second.', '1173048')],
     featuresChanged=[
         Feature('''The start date of a task can now be left unset, creating
 a task that is permanently inactive. This can be useful for activities that

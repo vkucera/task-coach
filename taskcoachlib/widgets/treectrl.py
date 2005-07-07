@@ -3,7 +3,7 @@ import wx
 
 class TreeCtrl(wx.TreeCtrl):
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
-            getItemChildrenCount, getItemFingerprint, selectcommand, 
+            getItemChildrenCount, getItemId, getItemFingerprint, selectcommand, 
             editcommand, popupmenu=None):
         super(TreeCtrl, self).__init__(parent, -1, style=wx.TR_HIDE_ROOT|\
             wx.TR_MULTIPLE|wx.TR_HAS_BUTTONS|wx.TR_LINES_AT_ROOT)
@@ -21,6 +21,7 @@ class TreeCtrl(wx.TreeCtrl):
         self.getItemImage = getItemImage
         self.getItemAttr = getItemAttr
         self.getItemChildrenCount = getItemChildrenCount
+        self.getItemId = getItemId
         self.getItemFingerprint = getItemFingerprint
         self.refresh(0)
         
@@ -46,6 +47,7 @@ class TreeCtrl(wx.TreeCtrl):
     def refresh(self, count):
         self._refreshing = True
         self.validItems = []
+        self.itemsToExpandOrCollapse = {}
         self.Freeze()
         if count == 0:
             self.DeleteAllItems()
@@ -74,21 +76,31 @@ class TreeCtrl(wx.TreeCtrl):
         self.SetItemTextColour(node, self.getItemAttr(index).GetTextColour())
         
     def AppendItem(self, parent, index):
-        fingerprint = self.getItemFingerprint(index)
-        item = self.findItem(parent, fingerprint)
-        if not item:
+        itemId = self.getItemId(index)
+        oldItem = self.findItem(itemId)
+        if oldItem and self.itemUnchanged(oldItem, index) and \
+                self.GetItemParent(oldItem) == parent:
+            newItem = oldItem
+            print 'AppendItem: Keeping oldItem for index=%d'%index
+        else:
+            print 'AppendItem: Creating newItem for index=%d'%index
             insertAfterChild = self.findInsertionPoint(parent)
             if insertAfterChild:
-                item = self.InsertItem(parent, insertAfterChild, 
+                newItem = self.InsertItem(parent, insertAfterChild, 
                     self.getItemText(index))
             else:
-                item = self.PrependItem(parent, self.getItemText(index))
-            self.renderNode(item, index)
-            if parent != self.GetRootItem():
-                self.Expand(parent)
-        self.SetPyData(item, (index, fingerprint))
-        self.validItems.append(item)
-        return item
+                newItem = self.PrependItem(parent, self.getItemText(index))
+            self.renderNode(newItem, index)
+            if not oldItem and parent != self.GetRootItem():
+                self.itemsToExpandOrCollapse[parent] = True
+            if oldItem:
+                self.itemsToExpandOrCollapse[newItem] = self.IsExpanded(oldItem)
+        self.SetPyData(newItem, (index, itemId, self.getItemFingerprint(index)))
+        self.validItems.append(newItem)
+        return newItem
+        
+    def itemUnchanged(self, item, index):
+        return self.getItemFingerprint(index) == self.GetPyData(item)[2]
 
     def findInsertionPoint(self, parent):
         insertAfterChild = None
@@ -97,13 +109,18 @@ class TreeCtrl(wx.TreeCtrl):
                 insertAfterChild = child
         return insertAfterChild
 
-    def findItem(self, parent, fingerprint):
-        for child in self.getChildren(parent):
-            if self.GetPyData(child)[1] == fingerprint:
+    def findItem(self, itemId):
+        for child in self.getChildren(recursively=True):
+            if self.GetPyData(child)[1] == itemId:
                 return child
         return None        
 
     def deleteUnusedItems(self):
+        for item, expand in self.itemsToExpandOrCollapse.items():
+            if expand:
+                self.Expand(item)
+            else:
+                self.Collapse(item)
         unusedItems = []
         for item in self.getChildren(recursively=True):
             if item not in self.validItems:
