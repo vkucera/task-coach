@@ -123,7 +123,8 @@ class TaskViewer(Viewer):
     def isShowingEffort(self): # FIXME: can be removed?
         return False
     
-    
+
+
 class TaskListViewer(TaskViewer, ListViewer):
     def createWidget(self):
         widget = widgets.ListCtrl(self, self.columns(),
@@ -212,7 +213,7 @@ class TaskListViewer(TaskViewer, ListViewer):
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
-            self.getItemAttr, self.getItemChildrenCount, 
+            self.getItemAttr, self.getItemChildrenCount, self.getItemId,
             self.getItemFingerprint, self.onSelect, self.uiCommands['edit'], 
             menu.TaskPopupMenu(self.parent, self.uiCommands))
         widget.AssignImageList(self.createImageList())
@@ -249,8 +250,17 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         fingerprint['completiondate'] = task.completionDate()
         fingerprint['parent'] = task.parent()
         fingerprint['active'] = task.isBeingTracked()
-        fingerprint['index'] = index
+        if task.parent():
+            fingerprint['index'] = index - self.list.index(task.parent())
+            print 'getItemFingerPrint: index=%d'%fingerprint['index']
+            #task.parent().children().index(task) # FIXME: children are not sorted
+        else:
+            fingerprint['index'] = index
         return fingerprint
+        
+    def getItemId(self, index):
+        task = self.list[index]
+        return task.id()
 
 
 class EffortListViewer(ListViewer):  
