@@ -6,13 +6,18 @@ class TreeCtrlTest(test.wxTestCase):
         return 'item %d'%self.getItemId(index)
 
     def getItemImage(self, index):
-        return 0, 0
+        if self.getItemChildrenCount(index) > 0:
+            return 0, 0
+        else:
+            return 1, 1
         
     def getItemAttr(self, index):
         return wx.ListItemAttr()
     
     def setItemChildrenCount(self, index, nrChildren):
         self._childrenCount[self.getItemId(index)] = nrChildren
+        for childIndex in range(nrChildren):
+            self._childIndex[index+1+childIndex] = childIndex
             
     def getItemChildrenCount(self, index, recursive=False):
         return self._childrenCount.get(self.getItemId(index), 0)
@@ -22,13 +27,10 @@ class TreeCtrlTest(test.wxTestCase):
         
     def getItemId(self, index):
         return self._itemIds.get(index, index)
-        
-    def setItemFingerprints(self, indexToFingerPrintMapping):
-        self._fingerprints.update(indexToFingerPrintMapping)
-        
-    def getItemFingerprint(self, index):
-        return self._fingerprints.get(index, (index, self.getItemChildrenCount(index)))
-        
+           
+    def getItemChildIndex(self, index):
+        return self._childIndex.get(index, index)
+            
     def onSelect(self, *args, **kwargs):
         pass
 
@@ -45,11 +47,11 @@ class TreeCtrlTest(test.wxTestCase):
             
     def setUp(self):
         self._childrenCount = {}
+        self._childIndex = {}
         self._itemIds = {}
-        self._fingerprints = {}
         self.treeCtrl = widgets.TreeCtrl(self.frame, self.getItemText,
             self.getItemImage, self.getItemAttr, self.getItemChildrenCount,
-            self.getItemId, self.getItemFingerprint, self.onSelect, 
+            self.getItemId, self.getItemChildIndex, self.onSelect, 
             dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         imageList.Add(wx.ArtProvider_GetBitmap('task', wx.ART_MENU, (16,16)))

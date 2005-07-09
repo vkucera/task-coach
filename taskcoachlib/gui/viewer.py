@@ -214,7 +214,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
             self.getItemAttr, self.getItemChildrenCount, self.getItemId,
-            self.getItemFingerprint, self.onSelect, self.uiCommands['edit'], 
+            self.getItemChildIndex, self.onSelect, self.uiCommands['edit'], 
             menu.TaskPopupMenu(self.parent, self.uiCommands))
         widget.AssignImageList(self.createImageList())
         return widget
@@ -232,29 +232,17 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
     
     def getItemChildrenCount(self, index, recursive=False):
         task = self.list[index]
-        return len([task for task in task.children(recursive=recursive) if task in self.list])
-        
-    def getItemFingerprint(self, index):
-        ''' A fingerprint can be used to detect changes in a task: if a task
-        changes, its fingerprint will be different. What exactly is considered
-        to be a change is entirely determined by the needs of the TaskTreeCtrl.
-        The TaskTreeCtrl needs to be able to see whether a task has changed in 
-        order to determine what parts of the tree need updating. '''
+        return len([child for child in task.children(recursive=recursive) if child in self.list])
+    
+    def getItemChildIndex(self, index):
         task = self.list[index]
-        fingerprint = {}
-        fingerprint['subject'] = task.subject()
-        fingerprint['children'] = len(task.children()) > 0
-        fingerprint['startdate'] = task.startDate()
-        fingerprint['duedate'] = task.dueDate()
-        fingerprint['completiondate'] = task.completionDate()
-        fingerprint['parent'] = task.parent()
-        fingerprint['active'] = task.isBeingTracked()
         if task.parent():
-            fingerprint['index'] = index - self.list.index(task.parent()) # FIXME: should be child nr
+            parentIndex = self.list.index(task.parent())
+            nrChildren = [child for child in self.list[parentIndex+1:index] if task.parent() == child.parent()]
+            return len(nrChildren)
         else:
-            fingerprint['index'] = index
-        return fingerprint
-        
+            return len([child for child in self.list[:index] if child.parent() is None])
+                   
     def getItemId(self, index):
         task = self.list[index]
         return task.id()
