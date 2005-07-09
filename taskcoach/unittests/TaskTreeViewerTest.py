@@ -4,7 +4,7 @@ class TaskTreeViewer(gui.viewer.TaskTreeViewer):
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
             self.getItemAttr, self.getItemChildrenCount, self.getItemId,
-            self.getItemFingerprint, self.onSelect, dummy.DummyUICommand())
+            self.getItemChildIndex, self.onSelect, dummy.DummyUICommand())
         widget.AssignImageList(self.createImageList())
         return widget
 

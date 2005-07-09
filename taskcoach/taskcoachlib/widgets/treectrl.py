@@ -3,8 +3,8 @@ import wx
 
 class TreeCtrl(wx.TreeCtrl):
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
-            getItemChildrenCount, getItemId, getItemFingerprint, selectcommand, 
-            editcommand, popupmenu=None):
+            getItemChildrenCount, getItemId, getItemChildIndex,
+            selectcommand, editcommand, popupmenu=None):
         super(TreeCtrl, self).__init__(parent, -1, style=wx.TR_HIDE_ROOT|\
             wx.TR_MULTIPLE|wx.TR_HAS_BUTTONS|wx.TR_LINES_AT_ROOT)
         self.selectcommand = selectcommand
@@ -24,7 +24,7 @@ class TreeCtrl(wx.TreeCtrl):
         self.getItemAttr = getItemAttr
         self.getItemChildrenCount = getItemChildrenCount
         self.getItemId = getItemId
-        self.getItemFingerprint = getItemFingerprint
+        self.getItemChildIndex = getItemChildIndex
         self.refresh(0)
         
     def curselection(self):
@@ -44,14 +44,11 @@ class TreeCtrl(wx.TreeCtrl):
         
     def onExpand(self, event):
         item = event.GetItem()
-        index = self.GetPyData(item)[0] + 1
-        nextSibling = self.GetNextSibling(item)
-        if nextSibling.IsOk():
-            endIndex = self.GetPyData(nextSibling)[0]
-        else:
-            endIndex = self._count
-        while index < endIndex:
-            index = self.addItemsRecursively(item, index)
+        itemIndex = self.index(item)
+        childIndex = itemIndex + 1
+        nextItemIndex = childIndex + self.getItemChildrenCount(itemIndex, recursive=True)
+        while childIndex < nextItemIndex:
+            childIndex = self.addItemsRecursively(item, childIndex)
         
     def onCollapse(self, event):
         self.CollapseAndReset(event.GetItem())
@@ -59,11 +56,11 @@ class TreeCtrl(wx.TreeCtrl):
     def isCollapseExpandButtonClicked(self, event):
         item, flags = self.HitTest(event.GetPosition())
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
-                
+
     def refresh(self, count):
         self._refreshing = True
         self._count = count
-        self.validItems = []
+        self._validItems = []
         self.itemsToExpandOrCollapse = {}
         self.Freeze()
         if count == 0:
@@ -87,7 +84,8 @@ class TreeCtrl(wx.TreeCtrl):
                 nextIndex = self.addItemsRecursively(node, nextIndex)
         else:
             nextIndex += self.getItemChildrenCount(index, recursive=True)
-            self.SetItemHasChildren(node, self.getItemChildrenCount(index) > 0)
+            if self.getItemChildrenCount(index) > 0 and not self.ItemHasChildren(node):
+                self.SetItemHasChildren(node)
         return nextIndex     
             
     def renderNode(self, node, index):
@@ -103,9 +101,7 @@ class TreeCtrl(wx.TreeCtrl):
         if oldItem and self.itemUnchanged(oldItem, index) and \
                 self.GetItemParent(oldItem) == parent:
             newItem = oldItem
-            #print 'AppendItem: Keeping oldItem for index=%d'%index
         else:
-            #print 'AppendItem: Creating newItem for index=%d'%index
             insertAfterChild = self.findInsertionPoint(parent)
             if insertAfterChild:
                 newItem = self.InsertItem(parent, insertAfterChild, 
@@ -117,20 +113,28 @@ class TreeCtrl(wx.TreeCtrl):
                 self.itemsToExpandOrCollapse[parent] = True
             if oldItem:
                 self.itemsToExpandOrCollapse[newItem] = self.IsExpanded(oldItem)
-                if self.getItemChildrenCount(index) > self.GetPyData(oldItem)[3]:
+                if self.getItemChildrenCount(index) > self.GetPyData(oldItem)[2]:
                     self.itemsToExpandOrCollapse[newItem] = True
-            self.SetPyData(newItem, (index, itemId, self.getItemFingerprint(index), 
-                self.getItemChildrenCount(index)))
-        self.validItems.append(newItem)
+        self.SetPyData(newItem, self.itemFingerprint(index))
+        self._validItems.append(newItem)
         return newItem
-        
+    
+    def itemFingerprint(self, index):
+        return (index, self.getItemId(index),  
+            self.getItemChildrenCount(index), self.getItemImage(index), self.getItemText(index),
+            self.getItemAttr(index), self.getItemChildIndex(index))
+            
     def itemUnchanged(self, item, index):
-        return self.getItemFingerprint(index) == self.GetPyData(item)[2]
+        oldIndex, oldId, oldChildrenCount, oldImage, oldText,\
+            oldAttr, oldChildIndex = self.GetPyData(item)
+        return self.getItemChildIndex(index) == oldChildIndex and\
+            self.getItemImage(index) == oldImage and self.getItemText(index) == oldText and\
+            self.getItemAttr(index).GetTextColour() == oldAttr.GetTextColour()
 
     def findInsertionPoint(self, parent):
         insertAfterChild = None
         for child in self.getChildren(parent):
-            if child in self.validItems:
+            if child in self._validItems:
                 insertAfterChild = child
         return insertAfterChild
 
@@ -143,7 +147,7 @@ class TreeCtrl(wx.TreeCtrl):
     def deleteUnusedItems(self):
         unusedItems = []
         for item in self.getChildren(recursively=True):
-            if item not in self.validItems:
+            if item not in self._validItems:
                 unusedItems.append(item)
         for item in unusedItems:
             self.Delete(item)
@@ -153,7 +157,7 @@ class TreeCtrl(wx.TreeCtrl):
             if expand:
                 self.Expand(item)
             else:
-                self.Collapse(item)
+                self.CollapseAndReset(item)
                 
     def getChildren(self, parent=None, recursively=False):
         if not parent:
@@ -205,8 +209,8 @@ class TreeCtrl(wx.TreeCtrl):
             self.Expand(item)
 
     def collapseAllItems(self):
-        for item in self.getChildren(recursively=True):
-            self.Collapse(item)
+        for item in self.getChildren():
+            self.CollapseAndReset(item)
             
     def expandSelectedItems(self):
         for item in self.GetSelections():
@@ -216,7 +220,4 @@ class TreeCtrl(wx.TreeCtrl):
                 
     def collapseSelectedItems(self):
         for item in self.GetSelections():
-            self.Collapse(item)
-            for child in self.getChildren(item, recursively=True):
-                self.Collapse(child)
-                
+            self.CollapseAndReset(item)

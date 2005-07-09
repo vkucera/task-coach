@@ -72,6 +72,7 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
             return
         self._clearColumnImages()
         self.showColumn(columnHeader)
+        listItem = self.GetColumn(columnIndex)
         listItem.SetImage(imageIndex)
         self.SetColumn(columnIndex, listItem)
 
