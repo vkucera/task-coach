@@ -14,7 +14,7 @@ class TreeCtrlTest(test.wxTestCase):
     def setItemChildrenCount(self, index, nrChildren):
         self._childrenCount[self.getItemId(index)] = nrChildren
             
-    def getItemChildrenCount(self, index):
+    def getItemChildrenCount(self, index, recursive=False):
         return self._childrenCount.get(self.getItemId(index), 0)
     
     def setItemIds(self, indexToItemIdMapping):
@@ -27,12 +27,13 @@ class TreeCtrlTest(test.wxTestCase):
         self._fingerprints.update(indexToFingerPrintMapping)
         
     def getItemFingerprint(self, index):
-        return self._fingerprints.get(index, index)
+        return self._fingerprints.get(index, (index, self.getItemChildrenCount(index)))
         
     def onSelect(self, *args, **kwargs):
         pass
 
     def assertItems(self, *items):
+        self.treeCtrl.expandAllItems()
         self.assertEqual(len(items), self.treeCtrl.GetItemCount())    
         for index, itemInfo in enumerate(items):
             if type(itemInfo) != type((),):
@@ -124,6 +125,7 @@ class TreeCtrlTest(test.wxTestCase):
         self.assertItems('item 3', ('item 0', 2), 'item 2', 'item 1')
         
     def testReorderParentsAndChildrenDoesNotCollapsParent(self):
+        self.treeCtrl.refresh(2)
         self.setItemChildrenCount(0, 2)
         self.treeCtrl.refresh(4)
         self.setItemIds({0: 3, 1: 0, 2: 2, 3: 1})

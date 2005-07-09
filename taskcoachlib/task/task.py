@@ -51,8 +51,11 @@ class Task(patterns.Observable):
     def id(self):
         return self._id
 
-    def children(self):
-        return self._children
+    def children(self, recursive=False):
+        if recursive:
+            return self.allChildren()
+        else:
+            return self._children
 
     def description(self):
         return self._description

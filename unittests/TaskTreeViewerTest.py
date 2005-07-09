@@ -33,6 +33,7 @@ class TreeViewerTest(test.wxTestCase):
         child2 = task.Task(subject='2')
         self.task.addChild(child2)
         self.taskList.extend([self.task, child1, child2])
+        self.viewer.widget.expandAllItems()
         self.assertEqual(str(child2), 
             self.viewer.widget.GetItemText(self.viewer.widget[2]))
 
