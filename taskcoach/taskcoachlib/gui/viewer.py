@@ -230,9 +230,9 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         task = self.list[index]
         return self.getImageIndices(task) 
     
-    def getItemChildrenCount(self, index):
+    def getItemChildrenCount(self, index, recursive=False):
         task = self.list[index]
-        return len([task for task in task.children() if task in self.list])
+        return len([task for task in task.children(recursive=recursive) if task in self.list])
         
     def getItemFingerprint(self, index):
         ''' A fingerprint can be used to detect changes in a task: if a task
@@ -243,7 +243,6 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         task = self.list[index]
         fingerprint = {}
         fingerprint['subject'] = task.subject()
-        fingerprint['id'] = task.id()
         fingerprint['children'] = len(task.children()) > 0
         fingerprint['startdate'] = task.startDate()
         fingerprint['duedate'] = task.dueDate()
@@ -251,9 +250,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         fingerprint['parent'] = task.parent()
         fingerprint['active'] = task.isBeingTracked()
         if task.parent():
-            fingerprint['index'] = index - self.list.index(task.parent())
-            print 'getItemFingerPrint: index=%d'%fingerprint['index']
-            #task.parent().children().index(task) # FIXME: children are not sorted
+            fingerprint['index'] = index - self.list.index(task.parent()) # FIXME: should be child nr
         else:
             fingerprint['index'] = index
         return fingerprint

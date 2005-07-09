@@ -9,6 +9,8 @@ class TreeCtrl(wx.TreeCtrl):
             wx.TR_MULTIPLE|wx.TR_HAS_BUTTONS|wx.TR_LINES_AT_ROOT)
         self.selectcommand = selectcommand
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelect)
+        self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.onExpand)
+        self.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.onCollapse)
         self.editcommand = editcommand
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, editcommand.onCommandActivate)
         # We deal with double clicks ourselves, to prevent the default behaviour
@@ -40,12 +42,27 @@ class TreeCtrl(wx.TreeCtrl):
             self.editcommand.onCommandActivate(event)
         event.Skip(False)
         
+    def onExpand(self, event):
+        item = event.GetItem()
+        index = self.GetPyData(item)[0] + 1
+        nextSibling = self.GetNextSibling(item)
+        if nextSibling.IsOk():
+            endIndex = self.GetPyData(nextSibling)[0]
+        else:
+            endIndex = self._count
+        while index < endIndex:
+            index = self.addItemsRecursively(item, index)
+        
+    def onCollapse(self, event):
+        self.CollapseAndReset(event.GetItem())
+        
     def isCollapseExpandButtonClicked(self, event):
         item, flags = self.HitTest(event.GetPosition())
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
                 
     def refresh(self, count):
         self._refreshing = True
+        self._count = count
         self.validItems = []
         self.itemsToExpandOrCollapse = {}
         self.Freeze()
@@ -58,14 +75,19 @@ class TreeCtrl(wx.TreeCtrl):
             while index < count:
                 index = self.addItemsRecursively(root, index)
             self.deleteUnusedItems()
+            self.restoreCollapseExpandState()
         self.Thaw()
         self._refreshing = False
         
     def addItemsRecursively(self, parent, index):
         node = self.AppendItem(parent, index)
         nextIndex = index + 1
-        for i in range(self.getItemChildrenCount(index)):
-            nextIndex = self.addItemsRecursively(node, nextIndex)
+        if self.IsExpanded(node):
+            for i in range(self.getItemChildrenCount(index)):
+                nextIndex = self.addItemsRecursively(node, nextIndex)
+        else:
+            nextIndex += self.getItemChildrenCount(index, recursive=True)
+            self.SetItemHasChildren(node, self.getItemChildrenCount(index) > 0)
         return nextIndex     
             
     def renderNode(self, node, index):
@@ -81,9 +103,9 @@ class TreeCtrl(wx.TreeCtrl):
         if oldItem and self.itemUnchanged(oldItem, index) and \
                 self.GetItemParent(oldItem) == parent:
             newItem = oldItem
-            print 'AppendItem: Keeping oldItem for index=%d'%index
+            #print 'AppendItem: Keeping oldItem for index=%d'%index
         else:
-            print 'AppendItem: Creating newItem for index=%d'%index
+            #print 'AppendItem: Creating newItem for index=%d'%index
             insertAfterChild = self.findInsertionPoint(parent)
             if insertAfterChild:
                 newItem = self.InsertItem(parent, insertAfterChild, 
@@ -95,7 +117,10 @@ class TreeCtrl(wx.TreeCtrl):
                 self.itemsToExpandOrCollapse[parent] = True
             if oldItem:
                 self.itemsToExpandOrCollapse[newItem] = self.IsExpanded(oldItem)
-        self.SetPyData(newItem, (index, itemId, self.getItemFingerprint(index)))
+                if self.getItemChildrenCount(index) > self.GetPyData(oldItem)[3]:
+                    self.itemsToExpandOrCollapse[newItem] = True
+            self.SetPyData(newItem, (index, itemId, self.getItemFingerprint(index), 
+                self.getItemChildrenCount(index)))
         self.validItems.append(newItem)
         return newItem
         
@@ -116,17 +141,19 @@ class TreeCtrl(wx.TreeCtrl):
         return None        
 
     def deleteUnusedItems(self):
-        for item, expand in self.itemsToExpandOrCollapse.items():
-            if expand:
-                self.Expand(item)
-            else:
-                self.Collapse(item)
         unusedItems = []
         for item in self.getChildren(recursively=True):
             if item not in self.validItems:
                 unusedItems.append(item)
         for item in unusedItems:
             self.Delete(item)
+        
+    def restoreCollapseExpandState(self):
+        for item, expand in self.itemsToExpandOrCollapse.items():
+            if expand:
+                self.Expand(item)
+            else:
+                self.Collapse(item)
                 
     def getChildren(self, parent=None, recursively=False):
         if not parent:
