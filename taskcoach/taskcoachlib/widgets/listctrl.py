@@ -93,8 +93,6 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
     def select(self, indices):
         for index in range(self.GetItemCount()):
             self.Select(index, index in indices)
-        if indices:
-            self.EnsureVisible(indices[0])        
     
     def clearselection(self):
         for index in self.curselection():

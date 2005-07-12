@@ -76,6 +76,8 @@ class Observable(object):
         for callback in self.__callbacks:
             callback(notification)
 
+    def observers(self):
+        return self.__callbacks
 
 
 

@@ -2,12 +2,14 @@ import patterns, date
 
 class Effort(patterns.Observable, date.ClockObserver):
     def __init__(self, task, start=None, stop=None, description='', *args, **kwargs):
+        super(Effort, self).__init__(*args, **kwargs)
         self._task = task
         self._start = start or date.DateTime.now()
         self._stop = stop
+        if self._stop == None:
+            self.startClock()
         self._description = description
-        super(Effort, self).__init__(*args, **kwargs)
-        
+
     def __str__(self):
         return 'Effort(%s, %s, %s)'%(self._task, self._start, self._stop)
         
@@ -43,7 +45,10 @@ class Effort(patterns.Observable, date.ClockObserver):
             self._stop = None
         else:
             self._stop = stopDatetime or date.DateTime.now()
-        self.startOrStopClock()
+        if self._stop == None and not self.isClockStarted():
+            self.startClock()
+        elif self._stop != None and self.isClockStarted():
+            self.stopClock()
         self.notifyObservers(patterns.observer.Notification(self))
         
     def getStop(self):
@@ -51,13 +56,11 @@ class Effort(patterns.Observable, date.ClockObserver):
         
     def setDescription(self, description):
         self._description = description
+        self.notifyObservers(patterns.observer.Notification(self))
         
     def getDescription(self):
         return self._description
 
-    def startClock(self):
-        return self._stop is None
-        
     def onEverySecond(self, *args, **kwargs):
         self.notifyObservers(patterns.Notification(source=self))
         
