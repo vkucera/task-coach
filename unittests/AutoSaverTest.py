@@ -17,7 +17,10 @@ class DummyTaskFile(task.TaskFile):
         super(DummyTaskFile, self).__init__(*args, **kwargs)
         
     def _read(self, *args, **kwargs):
-        return [task.Task()]
+        if self._throw:
+            raise IOError
+        else:
+            return [task.Task()]
         
     def _exists(self, *args, **kwargs):
         return True
@@ -28,7 +31,11 @@ class DummyTaskFile(task.TaskFile):
     def save(self, *args, **kwargs):
         self.saveCalled += 1
 
-  
+    def load(self, throw=False, *args, **kwargs):
+        self._throw = throw
+        return super(DummyTaskFile, self).load(*args, **kwargs)
+
+
 class AutoSaverTestCase(test.TestCase):
     def setUp(self):
         self.settings = DummySettings()
@@ -99,6 +106,11 @@ class AutoSaverBackupTestCase(test.TestCase):
         self.taskFile = DummyTaskFile()
         self.autoSaver = TestableAutoSaver(self.settings, self.taskFile)
 
+    def testDontCreakeBackupWhenSettingFilename(self):
+        self.settings.set('file', 'backup', 'True')
+        self.taskFile.setFilename('whatever.tsk')
+        self.failIf(self.autoSaver.copyCalled)
+
     def testCreateBackupOnOpen(self):
         self.settings.set('file', 'backup', 'True')
         self.taskFile.setFilename('whatever.tsk')
@@ -116,4 +128,14 @@ class AutoSaverBackupTestCase(test.TestCase):
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.append(task.Task())
         self.taskFile.save()
+        self.failIf(self.autoSaver.copyCalled)
+                
+    def testDontCreateBackupAfterException(self):
+        self.settings.set('file', 'backup', 'True')
+        self.taskFile.setFilename('whatever.tsk')
+        try:
+            self.taskFile.load(throw=True)
+        except IOError:
+            pass
+        self.taskFile.setFilename('')
         self.failIf(self.autoSaver.copyCalled)

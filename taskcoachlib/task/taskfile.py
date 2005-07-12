@@ -57,16 +57,18 @@ class TaskFile(tasklist.TaskList):
             
     def load(self):
         self.__loading = True
-        if self._exists():
-            fd = self._open()
-            tasks = self._read(fd)
-            fd.close()
-        else: 
-            tasks = []
-        self._clear()
-        self.extend(tasks)
-        self.__loading = False
-        self.__needSave = False
+        try:
+            if self._exists():
+                fd = self._open()
+                tasks = self._read(fd)
+                fd.close()
+            else: 
+                tasks = []
+            self._clear()
+            self.extend(tasks)
+        finally:
+            self.__loading = False
+            self.__needSave = False
 
     def save(self):
         fd = codecs.open(self.__filename, 'w', 'utf-8')

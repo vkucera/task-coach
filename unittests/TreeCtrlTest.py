@@ -2,8 +2,11 @@ import test, widgets, dummy, wx
         
 class TreeCtrlTest(test.wxTestCase):
         
+    def setItemTexts(self, indexToTextMapping):
+        self._itemTexts.update(indexToTextMapping)
+        
     def getItemText(self, index):
-        return 'item %d'%self.getItemId(index)
+        return self._itemTexts.get(index, 'item %d'%self.getItemId(index))
 
     def getItemImage(self, index):
         if self.getItemChildrenCount(index) > 0:
@@ -44,11 +47,18 @@ class TreeCtrlTest(test.wxTestCase):
             item = self.treeCtrl[index]
             self.assertEqual(itemText, self.treeCtrl.GetItemText(item))
             self.assertEqual(nrChildren, self.treeCtrl.GetChildrenCount(item))
-            
+    
+    def assertSelection(self, selected=None, notSelected=None):
+        for index in selected or []:
+            self.failUnless(self.treeCtrl.IsSelected(self.treeCtrl[index]))
+        for index in notSelected or []:
+            self.failIf(self.treeCtrl.IsSelected(self.treeCtrl[index]))
+    
     def setUp(self):
         self._childrenCount = {}
         self._childIndex = {}
         self._itemIds = {}
+        self._itemTexts = {}
         self.treeCtrl = widgets.TreeCtrl(self.frame, self.getItemText,
             self.getItemImage, self.getItemAttr, self.getItemChildrenCount,
             self.getItemId, self.getItemChildIndex, self.onSelect, 
@@ -133,3 +143,43 @@ class TreeCtrlTest(test.wxTestCase):
         self.setItemIds({0: 3, 1: 0, 2: 2, 3: 1})
         self.treeCtrl.refresh(4)
         self.failUnless(self.treeCtrl.IsExpanded(self.treeCtrl[1]))
+
+    def testRetainSelectionWhenEditingTask(self):
+        self.treeCtrl.refresh(1)
+        self.treeCtrl.SelectItem(self.treeCtrl[0])
+        self.failUnless(self.treeCtrl.IsSelected(self.treeCtrl[0]))
+        self.setItemTexts({0: 'new subject'})
+        self.treeCtrl.refresh(1)
+        self.assertSelection(selected=[0])
+        
+    def testRetainSelectionWhenEditingSubTask(self):
+        self.treeCtrl.refresh(1)
+        self.setItemChildrenCount(0, 1)
+        self.treeCtrl.refresh(2)
+        self.treeCtrl.SelectItem(self.treeCtrl[1])
+        self.failUnless(self.treeCtrl.IsSelected(self.treeCtrl[1]))
+        self.setItemTexts({1: 'new subject'})
+        self.treeCtrl.refresh(2)
+        self.assertSelection(selected=[1], notSelected=[0])
+        
+    def testRetainSelectionWhenAddingSubTask(self):
+        self.treeCtrl.refresh(1)
+        self.treeCtrl.SelectItem(self.treeCtrl[0])
+        self.setItemChildrenCount(0, 1)
+        self.treeCtrl.refresh(2)
+        self.assertSelection(selected=[0], notSelected=[1])
+        
+    def testRetainSelectionWhenAddingSubTask_TwoToplevelTasks(self):
+        self.treeCtrl.refresh(2)
+        self.treeCtrl.SelectItem(self.treeCtrl[0])
+        self.setItemChildrenCount(0, 1)
+        self.treeCtrl.refresh(3)
+        self.assertSelection(selected=[0], notSelected=[1,2])
+        
+    def XXXtestRemovingASelectedItemMakesAnotherOneSelected(self):
+        self.treeCtrl.refresh(2)
+        self.treeCtrl.SelectItem(self.treeCtrl[0])
+        self.setItemIds({0: 1})
+        self.treeCtrl.refresh(1)
+        self.assertSelection(selected=[0])
+        

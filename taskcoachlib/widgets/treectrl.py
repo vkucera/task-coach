@@ -9,6 +9,7 @@ class TreeCtrl(wx.TreeCtrl):
             wx.TR_MULTIPLE|wx.TR_HAS_BUTTONS|wx.TR_LINES_AT_ROOT)
         self.selectcommand = selectcommand
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelect)
+        self.Bind(wx.EVT_TREE_SEL_CHANGING, self.onSelectionChanging)
         self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.onExpand)
         self.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.onCollapse)
         self.editcommand = editcommand
@@ -33,6 +34,10 @@ class TreeCtrl(wx.TreeCtrl):
     def onPopup(self, event):
         self.PopupMenu(self.popupmenu, event.GetPoint())
 
+    def onSelectionChanging(self, event):
+        if self._refreshing:
+            event.Veto()
+        
     def onSelect(self, event):
         if not self._refreshing:
             self.selectcommand()
@@ -112,6 +117,7 @@ class TreeCtrl(wx.TreeCtrl):
             if not oldItem and parent != self.GetRootItem():
                 self.itemsToExpandOrCollapse[parent] = True
             if oldItem:
+                self.SelectItem(newItem, self.IsSelected(oldItem))
                 self.itemsToExpandOrCollapse[newItem] = self.IsExpanded(oldItem)
                 if self.getItemChildrenCount(index) > self.GetPyData(oldItem)[2]:
                     self.itemsToExpandOrCollapse[newItem] = True
@@ -158,7 +164,7 @@ class TreeCtrl(wx.TreeCtrl):
                 self.Expand(item)
             else:
                 self.CollapseAndReset(item)
-                
+            
     def getChildren(self, parent=None, recursively=False):
         if not parent:
             parent = self.GetRootItem()
@@ -188,11 +194,10 @@ class TreeCtrl(wx.TreeCtrl):
         self.selectcommand()
 
     def select(self, indices):
+        print 'TreeCtrl.select(indices=%s)'%indices
         for item in self.getChildren(recursively=True):
             index = self.index(item)
             self.SelectItem(item, index in indices)
-            if index in indices:
-                self.EnsureVisible(item)
         self.selectcommand()
 
     def __getitem__(self, index):

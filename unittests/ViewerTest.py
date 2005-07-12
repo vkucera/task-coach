@@ -8,11 +8,6 @@ class ViewerTest(test.wxTestCase):
         self.viewer = dummy.ViewerWithDummyWidget(self.frame,
             self.taskList, effort.EffortList(self.taskList), {})
 
-    def testSelectTasksThatAreNotInTasklistShouldNotFail(self):
-        taskNotInList = task.Task()
-        self.viewer.select([taskNotInList])
-        self.assertEqual([], self.viewer.curselection())
-
     def testSelectAll(self):
         self.viewer.selectall()
         self.assertEqual([self.task], self.viewer.curselection())

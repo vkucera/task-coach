@@ -11,7 +11,6 @@ class Viewer(patterns.Observable, wx.Panel):
         self.uiCommands = uiCommands
         self.list = self.createSorter(self.createFilter(list))
         self.list.registerObserver(self.onNotify)
-        self._selection = []
         self.widget = self.createWidget()
         self.initLayout()
         self.onNotify(patterns.observer.Notification(self.list, itemsAdded=self.list))
@@ -68,10 +67,8 @@ class Viewer(patterns.Observable, wx.Panel):
     def onNotify(self, notification, *args, **kwargs):
         if notification.itemsAdded or notification.itemsChanged or notification.itemsRemoved:
             self.widget.refresh(len(self.list))
-            self.select(self._selection)
         
     def onSelect(self, *args):
-        self._selection = self.curselection()
         self.notifyObservers(patterns.observer.Notification(self))
         
     def curselection(self):
@@ -79,13 +76,6 @@ class Viewer(patterns.Observable, wx.Panel):
         
     def size(self):
         return self.widget.GetItemCount()
-
-    def select(self, items):
-        indices = [self.list.index(item) for item in items if item in self.list]
-        self.widget.select(indices)
-
-    def focus_set(self):
-        self.widget.SetFocus()
 
     def getItemAttr(self, index):
         task = self.list[index]
@@ -238,8 +228,8 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         task = self.list[index]
         if task.parent():
             parentIndex = self.list.index(task.parent())
-            nrChildren = [child for child in self.list[parentIndex+1:index] if task.parent() == child.parent()]
-            return len(nrChildren)
+            childrenBeforeThisTask = [child for child in self.list[parentIndex+1:index] if task.parent() == child.parent()]
+            return len(childrenBeforeThisTask)
         else:
             return len([child for child in self.list[:index] if child.parent() is None])
                    

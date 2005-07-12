@@ -2,14 +2,13 @@ import meta, wx, date
 from i18n import _
 
         
-class TaskBarIcon(wx.TaskBarIcon):
+class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList, defaultBitmap='taskcoach', 
             tickBitmap='tick', tackBitmap='tack', *args, **kwargs):
         super(TaskBarIcon, self).__init__(*args, **kwargs)
         self.__bitmap = self.__defaultBitmap = defaultBitmap
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap       
-        self.__tracking = False
         taskList.registerObserver(self.onNotifyTaskList)
         self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, mainwindow.restore)
         self.__nrDueToday = 0
@@ -24,10 +23,16 @@ class TaskBarIcon(wx.TaskBarIcon):
 
     def onNotifyTaskList(self, notification, *args, **kwargs):
         taskList = notification.source
-        self.__tracking = taskList.nrBeingTracked() > 0
+        if taskList.nrBeingTracked() > 0 and not self.isClockStarted():
+            self.startClock()
+        elif taskList.nrBeingTracked() == 0 and self.isClockStarted():
+            self.stopClock()
+            self.__setIcon()
         self.__nrDueToday = taskList.nrDueToday()
+    
+    def onEverySecond(self, *args, **kwargs):
         self.__setIcon()
-                
+        
     def tooltip(self):
         return self.__getTooltipText() 
         
@@ -41,7 +46,7 @@ class TaskBarIcon(wx.TaskBarIcon):
         return '%s - %s'%(meta.name, nrTasksText)
 
     def __getBitmap(self):
-        if self.__tracking:
+        if self.isClockStarted():
             self.__alternateTrackingBitmap()
         else:
             self.__bitmap = self.__defaultBitmap

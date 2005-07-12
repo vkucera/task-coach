@@ -64,9 +64,9 @@ class EffortTest(test.TestCase):
         newEffort = effort.Effort(self.task, description='description')
         self.assertEqual('description', newEffort.getDescription())
         
-    def testSetDescriptionDoesNotTriggerNotification(self):
+    def testSetDescriptionDoesTriggerNotification(self):
         self.effort.setDescription('description')
-        self.assertEqual(0, self.notifications)
+        self.assertEqual(1, self.notifications)
         
     def testSetStop_None(self):
         self.effort.setStop()
