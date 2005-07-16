@@ -63,7 +63,7 @@ class DepthFirstSorter(patterns.ObservableListObserver):
         parents, in depth-first fashion. ''' 
 
     def processChanges(self, notification):
-        return self.original(), self[:], []
+        return notification.itemsAdded, notification.itemsRemoved, notification.itemsChanged
         
     def postProcessChanges(self):
         self[:] = self.sortDepthFirst(self.original().rootTasks())

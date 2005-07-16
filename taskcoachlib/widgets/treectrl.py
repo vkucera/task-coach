@@ -81,6 +81,12 @@ class TreeCtrl(wx.TreeCtrl):
         self.Thaw()
         self._refreshing = False
         
+    def refreshItem(self, index):
+        try:
+            self.renderNode(self[index], index)
+        except IndexError:
+            pass # Hidden item
+        
     def addItemsRecursively(self, parent, index):
         node = self.AppendItem(parent, index)
         nextIndex = index + 1
@@ -94,11 +100,12 @@ class TreeCtrl(wx.TreeCtrl):
         return nextIndex     
             
     def renderNode(self, node, index):
-        normalImageIndex, expandedImageIndex = self.getItemImage(index) 
+        normalImageIndex, expandedImageIndex = self.getItemImage(index)
+        if self.getItemChildrenCount(index) > 0:
+            self.SetItemImage(node, expandedImageIndex, wx.TreeItemIcon_Expanded)
         self.SetItemImage(node, normalImageIndex, wx.TreeItemIcon_Normal)
-        self.SetItemImage(node, expandedImageIndex, 
-            wx.TreeItemIcon_Expanded)
         self.SetItemTextColour(node, self.getItemAttr(index).GetTextColour())
+        self.SetItemText(node, self.getItemText(index))
         
     def AppendItem(self, parent, index):
         itemId = self.getItemId(index)

@@ -9,3 +9,4 @@ Open Directory        http://dmoz.org/Computers/Software/Freeware/Personal_Infor
 Vaults of Parnassus   http://py.vaults.ca
 Python Packages Index http://www.python.org/pypi
 Freeware Home         http://www.freewarehome.com/ 
+Wikipedia             http://en.wikipedia.org/wiki/Task_Coach

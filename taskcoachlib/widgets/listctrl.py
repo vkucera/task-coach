@@ -87,6 +87,9 @@ class VirtualListCtrl(wx.ListCtrl, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin
             self.RefreshItems(startRow, stopRow) 
             self.Refresh()
 
+    def refreshItem(self, index):
+        self.RefreshItem(index)
+        
     def curselection(self):
         return wx.lib.mixins.listctrl.getListCtrlSelection(self)
 
