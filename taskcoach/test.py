@@ -197,7 +197,7 @@ class TestProfiler:
             stats.sort_stats(sortKey)
             stats.print_stats(self._options.profile_regex, 
                 self._options.profile_limit)
-        stats.print_callers()
+        #stats.print_callers()
 
     def run(self, command, *args, **kwargs):
         if self._options.profile_report_only or self.profile(command, *args, **kwargs):

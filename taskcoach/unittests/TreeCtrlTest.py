@@ -183,3 +183,8 @@ class TreeCtrlTest(test.wxTestCase):
         self.treeCtrl.refresh(1)
         self.assertSelection(selected=[0])
         
+    def testRefreshItem(self):
+        self.treeCtrl.refresh(1)
+        self.setItemTexts({0: 'Hi'})
+        self.treeCtrl.refreshItem(0)
+        self.assertEqual(self.getItemText(0), self.treeCtrl.GetItemText(self.treeCtrl[0]))

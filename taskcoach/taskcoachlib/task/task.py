@@ -198,15 +198,7 @@ class Task(patterns.Observable):
     def dueTomorrow(self):
         return (self.dueDate() == date.Tomorrow() and not self.completed())
     
-    # comparison related methods:
-        
-    def __eq__(self, other):
-        return self.id() == other.id()
-
-    def __ne__(self, other):
-        return self.id() != other.id()
-            
-    # effort related methods:
+   # effort related methods:
 
     def efforts(self, recursive=False):
         childEfforts = []

@@ -132,7 +132,7 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
         state = self.task.__getstate__()
         newTask = task.Task()
         newTask.__setstate__(state)
-        self.assertEqual(newTask, self.task)
+        self.assertNotEqual(newTask, self.task)
         
     def testRepr(self):
         self.assertEqual(self.task.subject(), repr(self.task))

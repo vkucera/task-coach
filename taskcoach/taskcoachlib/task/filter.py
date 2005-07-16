@@ -3,9 +3,12 @@ import patterns, date, re, sets
 
 class Filter(patterns.ObservableListObserver):
     def processChanges(self, notification):
-        itemsRemoved = self[:]
+        oldSelf = self[:]
         self[:] = [item for item in self.original() if self.filter(item)]
-        return self, itemsRemoved, []
+        itemsAdded = [item for item in self if item not in oldSelf]
+        itemsRemoved = [item for item in oldSelf if item not in self]
+        itemsChanged = [item for item in notification.itemsChanged if item in self and item not in itemsAdded+itemsRemoved]
+        return itemsAdded, itemsRemoved, itemsChanged
             
     def filter(self, item):
         raise NotImplementedError
