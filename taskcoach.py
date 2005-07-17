@@ -23,7 +23,7 @@ class App(object):
     def __init__(self, options=None, args=None):
         self._options = options
         self._args = args
-        self.wxApp = wxApp(0)
+        self.wxApp = wxApp(1)
         self.init()
         self.mainwindow.Show()
         self.wxApp.MainLoop()
@@ -65,7 +65,7 @@ class App(object):
         self.wxApp.ProcessIdle()
         self.wxApp.Exit()
 
-if __name__ == '__main__':
+def start():
     import config
     options, args = config.ApplicationOptionParser().parse_args()
     if options.profile:
@@ -75,4 +75,5 @@ if __name__ == '__main__':
     else:
         App(options, args)
 
-
+if __name__ == '__main__':
+    start()

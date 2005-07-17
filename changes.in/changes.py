@@ -1,7 +1,7 @@
 from domain import *
 
 releases = [
-Release('0.42', 'July X, 2005',
+Release('0.42', 'July 17, 2005',
     bugsFixed=[
         Bug('''Double clicking a task with children in the tree view would 
 open the edit dialog and expand or collapse the task as well. Fixed to not 
@@ -12,7 +12,9 @@ expands the parent task.'''),
 mark the task file as changed.'''),
         Bug('Time spent is now updated every second.', '1173048'),
         Bug('''Don't try to make a backup when loading the file fails. 
-Reported by Scott Schroeder.''')],
+Reported by Scott Schroeder.'''),
+        Bug('''(Windows installer only) Association between .tsk files and
+Task Coach was broken.''')],
     featuresChanged=[
         Feature('''The start date of a task can now be left unset, creating
 a task that is permanently inactive. This can be useful for activities that
