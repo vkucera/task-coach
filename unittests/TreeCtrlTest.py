@@ -105,7 +105,15 @@ class TreeCtrlTest(test.wxTestCase):
         self.setItemChildrenCount(0, 1)
         self.treeCtrl.refresh(2)
         self.failUnless(self.treeCtrl.IsExpanded(self.treeCtrl[0]))
-
+        
+    def testAddingTheSecondChildExpandsParent(self):
+        self.setItemChildrenCount(0, 1)
+        self.treeCtrl.refresh(2)
+        self.failIf(self.treeCtrl.IsExpanded(self.treeCtrl[0]))
+        self.setItemChildrenCount(0, 2)
+        self.treeCtrl.refresh(3)
+        self.failUnless(self.treeCtrl.IsExpanded(self.treeCtrl[0]))
+        
     def testDeleteOneChild(self):
         self.setItemChildrenCount(0, 2)
         self.treeCtrl.refresh(3)
@@ -176,12 +184,13 @@ class TreeCtrlTest(test.wxTestCase):
         self.treeCtrl.refresh(3)
         self.assertSelection(selected=[0], notSelected=[1,2])
         
-    def XXXtestRemovingASelectedItemMakesAnotherOneSelected(self):
+    def testRemovingASelectedItemDoesNotMakeAnotherOneSelected(self):
         self.treeCtrl.refresh(2)
         self.treeCtrl.SelectItem(self.treeCtrl[0])
         self.setItemIds({0: 1})
         self.treeCtrl.refresh(1)
-        self.assertSelection(selected=[0])
+        self.treeCtrl.SetFocus()
+        self.assertSelection(selected=[], notSelected=[0])
         
     def testRefreshItem(self):
         self.treeCtrl.refresh(1)
