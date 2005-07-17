@@ -8,6 +8,7 @@ class TreeCtrl(wx.TreeCtrl):
         super(TreeCtrl, self).__init__(parent, -1, style=wx.TR_HIDE_ROOT|\
             wx.TR_MULTIPLE|wx.TR_HAS_BUTTONS|wx.TR_LINES_AT_ROOT)
         self.selectcommand = selectcommand
+        self.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelect)
         self.Bind(wx.EVT_TREE_SEL_CHANGING, self.onSelectionChanging)
         self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.onExpand)
@@ -26,6 +27,7 @@ class TreeCtrl(wx.TreeCtrl):
         self.getItemChildrenCount = getItemChildrenCount
         self.getItemId = getItemId
         self.getItemChildIndex = getItemChildIndex
+        self.__settingFocus = False
         self.refresh(0)
         
     def curselection(self):
@@ -34,14 +36,25 @@ class TreeCtrl(wx.TreeCtrl):
     def onPopup(self, event):
         self.PopupMenu(self.popupmenu, event.GetPoint())
 
+    def onSetFocus(self, event):
+        # When the TreeCtrl gets focus sometimes the selection is changed.
+        # We want to prevent that from happening, so we need to keep track
+        # of the fact that we have just received a EVT_SET_FOCUS
+        self.__settingFocus = True
+        event.Skip()
+        
     def onSelectionChanging(self, event):
-        if self._refreshing:
+        if self._refreshing or self.__settingFocus:
+            self.__settingFocus = False
             event.Veto()
+        else:
+            event.Skip()
         
     def onSelect(self, event):
         if not self._refreshing:
             self.selectcommand()
-
+        event.Skip()
+            
     def onDoubleClick(self, event):
         if not self.isCollapseExpandButtonClicked(event):
             self.editcommand.onCommandActivate(event)
@@ -126,8 +139,8 @@ class TreeCtrl(wx.TreeCtrl):
             if oldItem:
                 self.SelectItem(newItem, self.IsSelected(oldItem))
                 self.itemsToExpandOrCollapse[newItem] = self.IsExpanded(oldItem)
-                if self.getItemChildrenCount(index) > self.GetPyData(oldItem)[2]:
-                    self.itemsToExpandOrCollapse[newItem] = True
+        if oldItem and self.getItemChildrenCount(index) > self.GetPyData(oldItem)[2]:
+            self.itemsToExpandOrCollapse[newItem] = True
         self.SetPyData(newItem, self.itemFingerprint(index))
         self._validItems.append(newItem)
         return newItem
@@ -199,14 +212,7 @@ class TreeCtrl(wx.TreeCtrl):
         for item in self.getChildren(recursively=True):
             self.ToggleItemSelection(item)
         self.selectcommand()
-
-    def select(self, indices):
-        print 'TreeCtrl.select(indices=%s)'%indices
-        for item in self.getChildren(recursively=True):
-            index = self.index(item)
-            self.SelectItem(item, index in indices)
-        self.selectcommand()
-
+    
     def __getitem__(self, index):
         for item in self.getChildren(recursively=True):
             if self.index(item) == index:

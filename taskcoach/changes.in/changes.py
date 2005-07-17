@@ -16,7 +16,7 @@ Reported by Scott Schroeder.''')],
     featuresChanged=[
         Feature('''The start date of a task can now be left unset, creating
 a task that is permanently inactive. This can be useful for activities that
-you would normally no want to plan, but have to keep a time record for, e.g.
+you would normally not want to plan, but have to keep a time record for, e.g.
 sickness.''')]),
     
 Release('0.41', 'June 20, 2005',
