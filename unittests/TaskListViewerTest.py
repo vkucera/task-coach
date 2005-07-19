@@ -8,17 +8,22 @@ class TaskListViewerTest(test.wxTestCase):
         self.listViewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             dummy.DummyUICommands())
 
+    def assertItems(self, *tasks):
+        self.assertEqual(len(tasks), self.listViewer.size())
+        for index, task in enumerate(tasks):
+            self.assertEqual(task, self.listViewer.widget.GetItemText(index))
+ 
     def testEmptyTaskList(self):
-        self.assertEqual(0, self.listViewer.size())
+        self.assertItems()
 
     def testAddTask(self):
-        self.taskList.append(task.Task())
-        self.assertEqual(1, self.listViewer.size())
+        self.taskList.append(task.Task(subject='Test'))
+        self.assertItems('Test')
 
     def testRemoveTask(self):
         self.taskList.append(task.Task())
         del self.taskList[0]
-        self.assertEqual(0, self.listViewer.size())
+        self.assertItems()
 
     def testCurrent(self):
         aTask = task.Task(subject='Test')
@@ -37,5 +42,14 @@ class TaskListViewerTest(test.wxTestCase):
         child = task.Task(subject='Child')
         parent.addChild(child)
         self.taskList.append(parent)
-        self.assertEqual('Parent%sChild'%render.taskSeparator, 
-            self.listViewer.widget.GetItem(0, 0).GetText())
+        self.assertItems('Parent%sChild'%render.taskSeparator, 'Parent')
+           
+    def testMarkCompleted(self):
+        self.taskList.setSortKey('subject')
+        self.taskList.setAscending(True)
+        task1 = task.Task(subject='task1')
+        task2 = task.Task(subject='task2')
+        self.taskList.extend([task1, task2])
+        self.assertItems('task1', 'task2')
+        task1.setCompletionDate()
+        self.assertItems('task2', 'task1')

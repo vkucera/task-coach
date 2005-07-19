@@ -65,8 +65,8 @@ class Viewer(patterns.Observable, wx.Panel):
         return list
 
     def onNotify(self, notification, *args, **kwargs):
-        if notification.itemsAdded or notification.itemsChanged or notification.itemsRemoved:
-            if not notification.itemsAdded and not notification.itemsRemoved:
+        if notification:
+            if not notification.itemsAdded and not notification.itemsRemoved and not notification.orderChanged:
                 for item in notification.itemsChanged:
                     self.widget.refreshItem(self.list.index(item))
             else:
