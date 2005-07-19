@@ -1,6 +1,11 @@
 from domain import *
 
 releases = [
+Release('0.43', 'July 19, 2005',
+    bugsFixed=[
+        Bug('''Tree view was not updated correctly when changing sort key 
+or order.''')]),
+             
 Release('0.42', 'July 17, 2005',
     bugsFixed=[
         Bug('''Double clicking a task with children in the tree view would 

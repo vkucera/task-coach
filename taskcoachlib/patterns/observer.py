@@ -204,12 +204,12 @@ class ObservableListObserver(ObservableList):
         self.postProcessChanges()
         self.startNotifying()
         self.notifyObservers(Notification(self, itemsAdded=itemsAdded, 
-            itemsRemoved=itemsRemoved, itemsChanged=itemsChanged, force=notification.force),
+            itemsRemoved=itemsRemoved, itemsChanged=itemsChanged),
             *args, **kwargs)
 
     def processNotification(self, notification, *args, **kwargs):
         ''' Should we process the notification? '''
-        return notification.force or notification.itemsAdded or notification.itemsRemoved or \
+        return notification.itemsAdded or notification.itemsRemoved or \
             notification.itemsChanged
 
     def processChanges(self, notification):
@@ -226,7 +226,7 @@ class ObservableListObserver(ObservableList):
     def reset(self):
         ''' Fake a change in all items of the original list. This can be used to
             e.g. force a resort when the sorting criterium has changed '''
-        self.onNotify(Notification(source=self.original(), force=True, itemsChanged=self.original()))
+        self.onNotify(Notification(source=self.original(), itemsRemoved=self.original(), itemsAdded=self.original()))
         
     # delegate changes to the original list
 

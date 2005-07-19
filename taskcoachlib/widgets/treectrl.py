@@ -103,7 +103,7 @@ class TreeCtrl(wx.TreeCtrl):
     def addItemsRecursively(self, parent, index):
         node = self.AppendItem(parent, index)
         nextIndex = index + 1
-        if self.IsExpanded(node):
+        if self.IsExpanded(node) or self.itemsToExpandOrCollapse.get(node, False):
             for i in range(self.getItemChildrenCount(index)):
                 nextIndex = self.addItemsRecursively(node, nextIndex)
         else:
