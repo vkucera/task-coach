@@ -5,10 +5,10 @@ class Filter(patterns.ObservableListObserver):
     def processChanges(self, notification):
         oldSelf = self[:]
         self[:] = [item for item in self.original() if self.filter(item)]
-        itemsAdded = [item for item in self if item not in oldSelf]
-        itemsRemoved = [item for item in oldSelf if item not in self]
-        itemsChanged = [item for item in notification.itemsChanged if item in self and item not in itemsAdded+itemsRemoved]
-        return itemsAdded, itemsRemoved, itemsChanged
+        notification['itemsAdded'] = [item for item in self if item not in oldSelf]
+        notification['itemsRemoved'] = [item for item in oldSelf if item not in self]
+        notification['itemsChanged'] = [item for item in notification.itemsChanged if item in self and item not in notification.itemsAdded+notification.itemsRemoved]
+        return notification
             
     def filter(self, item):
         raise NotImplementedError

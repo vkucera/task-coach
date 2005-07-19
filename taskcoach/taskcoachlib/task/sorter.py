@@ -28,9 +28,13 @@ class Sorter(patterns.ObservableListObserver):
             return self._statusSortKey(task) + [getattr(task, sortKeyName)(*args)]
         return sortKey
 
-    def postProcessChanges(self):
+    def postProcessChanges(self, notification):
+        oldSelf = self[:]
         self.sort(key=self.__generateSortKey(self.__sortKey), reverse=not self.__ascending)
-  
+        if self != oldSelf:
+            notification['orderChanged'] = True
+        return notification
+        
     def setSortKey(self, sortKey):
         if sortKey == self.getSortKey() and self.__sortKeyInitialized:
             self.setAscending(not self.isAscending())
@@ -63,11 +67,15 @@ class DepthFirstSorter(patterns.ObservableListObserver):
         parents, in depth-first fashion. ''' 
 
     def processChanges(self, notification):
-        return notification.itemsAdded, notification.itemsRemoved, notification.itemsChanged
+        return notification
         
-    def postProcessChanges(self):
+    def postProcessChanges(self, notification):
+        oldSelf = self[:]
         self[:] = self.sortDepthFirst(self.original().rootTasks())
-        
+        if self != oldSelf:
+            notification['orderChanged'] = True
+        return notification
+         
     def sortDepthFirst(self, tasks):
         result = []
         for task in tasks:

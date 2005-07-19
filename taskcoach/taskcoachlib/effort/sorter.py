@@ -2,5 +2,7 @@ import patterns
 
 
 class EffortSorter(patterns.ObservableListObserver):        
-    def postProcessChanges(self):
+    def postProcessChanges(self, notification):
         self.sort()
+        notification['orderChanged'] = True
+        return notification

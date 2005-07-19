@@ -33,6 +33,14 @@ class Notification(object):
     def __setitem__(self, key, value):
         self.__dict__[key] = value
 
+    def __nonzero__(self):
+        kwargs = self.__dict__.copy()
+        del kwargs['source']
+        for value in kwargs.values():
+            if value:
+                return True
+        return False
+
                 
 class Observable(object):
     ''' Observable objects can be observed by registering (subscribing) a 
@@ -197,36 +205,27 @@ class ObservableListObserver(ObservableList):
     def onNotify(self, notification, *args, **kwargs):
         ''' By default, we add items that were added to the original list
             and we remove items that we removed from the original list. '''
-        if not self.processNotification(notification):
+        if not notification:
             return
         self.stopNotifying()
-        itemsAdded, itemsRemoved, itemsChanged = self.processChanges(notification)
-        self.postProcessChanges()
+        notification = self.processChanges(notification)
+        notification = self.postProcessChanges(notification)
         self.startNotifying()
-        self.notifyObservers(Notification(self, itemsAdded=itemsAdded, 
-            itemsRemoved=itemsRemoved, itemsChanged=itemsChanged),
-            *args, **kwargs)
-
-    def processNotification(self, notification, *args, **kwargs):
-        ''' Should we process the notification? '''
-        return notification.itemsAdded or notification.itemsRemoved or \
-            notification.itemsChanged
+        self.notifyObservers(notification, *args, **kwargs)
 
     def processChanges(self, notification):
         self._extend(notification.itemsAdded)
         self._removeItems(notification.itemsRemoved)
-        return notification.itemsAdded, notification.itemsRemoved, notification.itemsChanged
+        return notification
         
-    def postProcessChanges(self):
-        pass
+    def postProcessChanges(self, notification):
+        return notification
         
     def original(self):
         return self.__observedList
 
     def reset(self):
-        ''' Fake a change in all items of the original list. This can be used to
-            e.g. force a resort when the sorting criterium has changed '''
-        self.onNotify(Notification(source=self.original(), itemsRemoved=self.original(), itemsAdded=self.original()))
+        self.onNotify(Notification(source=self, orderChanged=True))
         
     # delegate changes to the original list
 
