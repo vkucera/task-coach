@@ -1,6 +1,10 @@
 from domain import *
 
 releases = [
+Release('0.44', 'July 21, 2005',
+    featuresAdded=[
+        Feature('Added Russian translation thanks to Valdimir Ilyash.')]),
+
 Release('0.43', 'July 19, 2005',
     bugsFixed=[
         Bug('''Tree and list view were not updated correctly when changing sort key 

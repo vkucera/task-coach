@@ -121,8 +121,9 @@ pages['screenshots'] = \
 pages['i18n'] = \
 '''        <H3>Internationalization</H3>
         <H4>Information for users</H4>
-        <P>Currently, %(name)s is available in a number of languages:
-        %(languages)s. You can select languages via 'Edit' -> 
+        <P>Currently, %(name)s is available in a number of languages: '''\
+        + ', '.join(meta.languages.keys()) + \
+        '''. You can select languages via 'Edit' -> 
         'Preferences'. Click the 'Language' icon, select the
         language of your choice and restart %(name)s.</P>
         <H4>Instructions for translators</H4>
@@ -147,7 +148,12 @@ pages['i18n'] = \
         <A HREF="messages.pot"><TT>messages.pot</TT></A> available here 
         so you can update your <TT>.po</TT> file. This is when using poEdit 
         will really pay off, because it will mark for you which strings have
-        been added or changed and require your attention.</P>'''
+        been added or changed and require your attention.</P>
+        <P>These are the language .po files in the current version
+        (%(version)s) of %(name)s:
+        <UL>
+        ''' + '\n'.join(['<LI><A HREF="%s.po">%s</A></LI>'%(code, language) for
+        language, code in meta.languages.items() if language != 'English']) + '</UL></P>'
 
 dist = os.path.join('..', 'dist')
 
@@ -162,5 +168,7 @@ for title, text in pages.items():
 
 import shutil, glob
 for file in glob.glob('*.png') + glob.glob('*.ico') + glob.glob('*.css') + \
-    ['../icons.in/splash.png', '../i18n.in/messages.pot']:
+    glob.glob('../i18n.in/*.po') + ['../i18n.in/messages.pot', 
+    '../icons.in/splash.png']:
+    print file
     shutil.copyfile(file, os.path.join(dist, os.path.basename(file)))

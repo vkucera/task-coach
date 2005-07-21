@@ -137,7 +137,7 @@ class CategoriesPage(widgets.BookPage):
                 self._checkListBox.Check(index)
         self.addEntry(_('Categories'), self._checkListBox, growable=True)
         self._textEntry = wx.TextCtrl(self, -1, style=wx.TE_PROCESS_ENTER)
-        addButton = wx.Button(self, -1, 'Add category')
+        addButton = wx.Button(self, -1, _('Add category'))
         addButton.Bind(wx.EVT_BUTTON, self.onNewCategory)
         self.addEntry(_('New category'), self._textEntry, addButton)
         self.Bind(wx.EVT_TEXT_ENTER, self.onNewCategory, self._textEntry)

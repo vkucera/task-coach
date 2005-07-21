@@ -53,7 +53,8 @@ class LanguagePage(SettingsPage):
             [('en_US', _('English (US)')), ('en_GB', _('English (UK)')),
              ('de_DE', _('German')),
              ('nl_NL', _('Dutch')), ('fr_FR', _('French')),
-             ('zh_CN', _('Simplified Chinese'))],
+             ('zh_CN', _('Simplified Chinese')),
+             ('ru_RU', _('Russian'))],
              _('This setting will take effect after you restart %s')%meta.name)
 
 

@@ -1,8 +1,8 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
-version = '0.43'
-previous_version = '0.42'
-date = 'July 19, 2005'
+version = '0.44'
+previous_version = '0.43'
+date = 'July 21, 2005'
 author = 'Frank Niessink'
 author_email = 'frank@niessink.com'
 url = 'http://taskcoach.niessink.com/'
@@ -13,7 +13,13 @@ filename = 'TaskCoach'
 filename_lower = filename.lower()
 pythonversion = '2.4.1'
 wxpythonversion = '2.5.5.1-unicode'
-languages = 'English, French, German, Dutch, and Simplified Chinese'
+languages = {
+    'English': None, 
+    'French': 'fr_FR', 
+    'German': 'de_DE',
+    'Dutch': 'nl_NL',
+    'Russian': 'ru_RU',
+    'Simplified Chinese': 'zh_CN'}
 
 def __createDict(locals):
     ''' Provide the local variables as a dictionary for use in string
