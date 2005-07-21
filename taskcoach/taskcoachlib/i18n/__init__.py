@@ -20,6 +20,10 @@ class Translator:
             import de_DE
             self.__language = de_DE.dict
             self.__encoding = de_DE.encoding
+        elif language and language.startswith('ru'):
+            import ru_RU
+            self.__language = ru_RU.dict
+            self.__encoding = ru_RU.encoding
         if language:
             li = wx.Locale.FindLanguageInfo(language)
             self.__locale = wx.Locale(li.Language)
