@@ -27,7 +27,7 @@ class Task(patterns.Observable):
         
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.notifyObservers(patterns.observer.Notification(self))
+        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
 
     def __getstate__(self):
         return { '_subject' : self._subject, 
@@ -46,7 +46,7 @@ class Task(patterns.Observable):
         currentValue = getattr(self, attribute)
         if newValue != currentValue:
             setattr(self, attribute, newValue)
-            self.notifyObservers(patterns.observer.Notification(self))
+            self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
 
     def id(self):
         return self._id
@@ -172,7 +172,7 @@ class Task(patterns.Observable):
         parent = self.parent()
         if parent:
             parent._updateCompletionState(completionDate)
-        self.notifyObservers(patterns.observer.Notification(self))
+        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
 
     def _updateCompletionState(self, completionDate):
         if not self.completed() and self.allChildrenCompleted():
@@ -210,15 +210,16 @@ class Task(patterns.Observable):
     def addEffort(self, effort):
         self._efforts.append(effort)
         effort.registerObserver(self.notifyEffortChanged)
-        self.notifyObservers(patterns.observer.Notification(self, effortsAdded=[effort]))
+        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True, effortsAdded=[effort]))
         
     def removeEffort(self, effort):
         self._efforts.remove(effort)
         effort.removeObserver(self.notifyEffortChanged)
-        self.notifyObservers(patterns.observer.Notification(self, effortsRemoved=[effort]))
+        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True, effortsRemoved=[effort]))
         
     def notifyEffortChanged(self, notification, *args, **kwargs):
-        notification = patterns.observer.Notification(self, effortsChanged=[notification.source])
+        notification['effortsChanged'] = [notification.source]
+        notification['source'] = self
         self.notifyObservers(notification)
         
     def timeSpent(self, recursive=False):
@@ -274,10 +275,12 @@ class Task(patterns.Observable):
         
     def addCategory(self, category):
         self._categories.add(category)
+        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True, categoriesAdded=[category]))
         
     def removeCategory(self, category):
         self._categories.discard(category)
-        
+        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True, categoriesRemoved=[category]))
+
     # priority
     
     def priority(self, recursive=False):

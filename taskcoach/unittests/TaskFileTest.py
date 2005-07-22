@@ -103,6 +103,39 @@ class TaskFileTest(TaskFileTestCase):
         newEffort.setDescription('new description')
         self.failUnless(self.taskFile.needSave())
         
+    def testDontNeedSave_AfterEverySecond(self):
+        newEffort = effort.Effort(self.task, None, None)
+        self.task.addEffort(newEffort)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        clock = date.Clock()
+        clock.notify()
+        self.failIf(self.taskFile.needSave())
+        del clock
+    
+    def testNeedSave_AfterAddCategory(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.addCategory('category')
+        self.failUnless(self.taskFile.needSave())
+    
+    def testNeedSave_AfterRemoveCategory(self):
+        self.task.addCategory('category')
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.removeCategory('category')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterChangePriority(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setPriority(10)
+        self.failUnless(self.taskFile.needSave())        
+        
     def testLastFilename_Initially(self):
         self.assertEqual('', self.taskFile.lastFilename())
         

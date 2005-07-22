@@ -142,6 +142,11 @@ class EditTaskTest(TaskEditorTestCase):
         self.editor[0][1]._startDateEntry.set(date.Tomorrow())
         self.editor.ok()
         self.assertEqual(date.Tomorrow(), self.task.startDate())
+        
+    def testSetNegativePriority(self):
+        self.editor[0][2]._prioritySpinner.SetValue(-1)
+        self.editor.ok()
+        self.assertEqual(-1, self.task.priority())
 
 
 class EditMultipleTasksTest(TaskEditorTestCase):

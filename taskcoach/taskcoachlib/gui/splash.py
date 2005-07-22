@@ -1,4 +1,4 @@
-import wx, os, icons
+import wx, icons
 
 class SplashScreen(wx.SplashScreen):
     def __init__(self):
