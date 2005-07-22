@@ -616,3 +616,7 @@ class TaskPriorityTest(TaskNotificationTestCase):
         self.task.setPriority(0)
         self.assertEqual(self.childPriority, self.task.priority(recursive=True))
         
+    def testNegativePriority(self):
+        self.task.setPriority(-1)
+        self.assertEqual(-1, self.task.priority())
+        

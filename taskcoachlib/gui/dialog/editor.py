@@ -1,4 +1,4 @@
-import date, widgets
+import date, widgets, sys
 from gui import render
 import wx, datetime
 import wx.lib.masked as masked
@@ -129,6 +129,7 @@ class CategoriesPage(widgets.BookPage):
         super(CategoriesPage, self).__init__(parent, columns=3, growableColumn=1, *args, **kwargs)
         self._prioritySpinner = wx.SpinCtrl(self, -1, render.priority(task.priority()), 
             style=wx.SP_ARROW_KEYS)
+        self._prioritySpinner.SetRange(-sys.maxint, sys.maxint)
         self.addEntry(_('Priority'), self._prioritySpinner)
         self._checkListBox = wx.CheckListBox(self, -1)
         self._checkListBox.InsertItems(categories, 0)

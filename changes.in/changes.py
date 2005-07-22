@@ -1,6 +1,13 @@
 from domain import *
 
 releases = [
+Release('0.45', 'July ?, 2005',
+    bugsFixed=[
+        Bug('''When tracking effort the task file would be marked as 
+changed after every clock tick.'''),
+        Bug('''Priorities can now be set to both positive and
+negative integers.''')]),
+                
 Release('0.44', 'July 21, 2005',
     featuresAdded=[
         Feature('Added Russian translation thanks to Valdimir Ilyash.')]),

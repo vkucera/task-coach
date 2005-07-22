@@ -38,7 +38,8 @@ class IntegrationTest(IntegrationTestCase):
         self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
             stop=date.DateTime(2004,1,2), description=self.description))
         self.task.addCategory('test')
-        self.taskList.append(self.task)
+        self.task2 = task.Task(priority=-1954)
+        self.taskList.extend([self.task, self.task2])
                  
     def testSubject(self):
         self.assertEqual(self.task.subject(), self.tasksWrittenAndRead[0].subject())
@@ -80,4 +81,7 @@ class IntegrationTest(IntegrationTestCase):
         
     def testPriority(self):
         self.assertEqual(self.task.priority(), self.tasksWrittenAndRead[0].priority())
+        
+    def testNegativePriority(self):
+        self.assertEqual(self.task2.priority(), self.tasksWrittenAndRead[1].priority())
         

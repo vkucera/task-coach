@@ -153,43 +153,44 @@ class ObservableList(Observable, List):
     
     def append(self, item):
         super(ObservableList, self).append(item)
-        self.notifyObservers(Notification(self, itemsAdded=[item]))
+        self.notifyObservers(Notification(self, changeNeedsSave=True, itemsAdded=[item]))
 
     def extend(self, items):
         if items:
             super(ObservableList, self).extend(items)
-            self.notifyObservers(Notification(self, itemsAdded=items))
+            self.notifyObservers(Notification(self, changeNeedsSave=True, itemsAdded=items))
 
     def insert(self, index, item):
         super(ObservableList, self).insert(index, item)
-        self.notifyObservers(Notification(self, itemsAdded=[item]))
+        self.notifyObservers(Notification(self, changeNeedsSave=True, itemsAdded=[item]))
 
     def remove(self, item):
         super(ObservableList, self).remove(item)
-        self.notifyObservers(Notification(self, itemsRemoved=[item]))
+        self.notifyObservers(Notification(self, changeNeedsSave=True, itemsRemoved=[item]))
     
     def removeItems(self, items):
         if items:
             super(ObservableList, self).removeItems(items)
-            self.notifyObservers(Notification(self, itemsRemoved=items))
+            self.notifyObservers(Notification(self, changeNeedsSave=True, itemsRemoved=items))
             
     def __delitem__(self, index):
         item = self[index]
         super(ObservableList, self).__delitem__(index)
-        self.notifyObservers(Notification(self, itemsRemoved=[item]))
+        self.notifyObservers(Notification(self, changeNeedsSave=True, itemsRemoved=[item]))
         
     def __delslice__(self, *slice):
         items = self.__getslice__(*slice)
         if items:
             super(ObservableList, self).__delslice__(*slice)
-            self.notifyObservers(Notification(self, itemsRemoved=items))
+            self.notifyObservers(Notification(self, changeNeedsSave=True, itemsRemoved=items))
 
 
 class ObservableObservablesList(ObservableList, ObservablesList):
     ''' A list of observables that is observable. '''
     
     def onNotify(self, notification, *args, **kwargs):
-        myNotification = Notification(self, itemsChanged=[notification.source])
+        myNotification = Notification(self, changeNeedsSave=notification.changeNeedsSave,
+            itemsChanged=[notification.source])
         self.notifyObservers(myNotification)
 
 

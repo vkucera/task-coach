@@ -15,7 +15,7 @@ class TaskFile(tasklist.TaskList):
         if filename != '':
             self.__lastFilename = filename
         self.__filename = filename
-        notification = patterns.observer.Notification(self, filename=filename)
+        notification = patterns.observer.Notification(self, filename=filename, changeNeedsSave=True)
         super(TaskFile, self).notifyObservers(notification)
 
     def filename(self):
@@ -25,7 +25,7 @@ class TaskFile(tasklist.TaskList):
         return self.__lastFilename
         
     def notifyObservers(self, notification):
-        if not self.__loading:
+        if not self.__loading and notification.changeNeedsSave:
             self.__needSave = True
         super(TaskFile, self).notifyObservers(notification)
         
