@@ -4,10 +4,6 @@ from i18n import _
 
 class HelpDialog(wx.lib.dialogs.ScrolledMessageDialog):
     pass
-    '''
-    def OnOk(self, *args, **kwargs):
-        self.Close()
-    '''
      
 def show(text, title):
     dialog = HelpDialog(None, text, title)
