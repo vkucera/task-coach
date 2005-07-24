@@ -181,33 +181,33 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
         self.setSubject('TaskB', 1)
 
     def createCommand(self):
-        return command.EditTaskCommand(self.taskList, [self.task1, self.task2])
+        return command.EditTaskCommand(self.taskList, [self.parent, self.child])
 
     def createTasks(self):
-        self.task1 = task.Task('Task1')
-        self.task2 = task.Task('Task2')
-        self.task1.addChild(self.task2)
-        return [self.task1] # self.task2 is added to tasklist automatically
+        self.parent = task.Task('Parent')
+        self.child = task.Task('Child')
+        self.parent.addChild(self.child)
+        return [self.parent] # self.child is added to tasklist automatically
 
     def testOk(self):
         self.editor.ok()
-        self.assertEqual('TaskA', self.task1.subject())
-        self.assertEqual('TaskB', self.task2.subject())
+        self.assertEqual('TaskA', self.parent.subject())
+        self.assertEqual('TaskB', self.child.subject())
 
     def testCancel(self):
         self.editor.cancel()
-        self.assertEqual('Task1', self.task1.subject())
-        self.assertEqual('Task2', self.task2.subject())
+        self.assertEqual('Parent', self.parent.subject())
+        self.assertEqual('Child', self.child.subject())
 
-    def testChangeDueDate(self):
-        self.editor[0][1]._dueDateEntry.set(date.Tomorrow())
+    def testChangeDueDateOfParentHasNoEffectOnChild(self):
+        self.editor[0][1]._dueDateEntry.set(date.Yesterday())
         self.editor.ok()
-        self.assertEqual(date.Tomorrow(), self.task1.dueDate(recursive=False))
+        self.assertEqual(date.Date(), self.child.dueDate())
 
-    def testChangeStartDate(self):
+    def testChangeStartDateOfParentHasNoEffectOnChild(self):
         self.editor[0][1]._startDateEntry.set(date.Tomorrow())
         self.editor.ok()
-        self.assertEqual(date.Tomorrow(), self.task1.startDate(recursive=False))
+        self.assertEqual(date.Today(), self.child.startDate())
 
 
 class FocusTest(TaskEditorTestCase, test.wxTestCase):

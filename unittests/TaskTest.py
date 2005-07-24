@@ -208,32 +208,17 @@ class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
         self.assertEqual(None, self.task.parent())
 
     def testAddChild(self):
-        child = task.Task()
+        child = self.task.newSubTask()
         self.task.addChild(child)
         self.failUnlessParentAndChild(self.task, child)
         self.failUnlessNotified()
 
-    def testAddCompletedChild(self):
-        child = task.Task()
-        child.setCompletionDate()
-        self.task.addChild(child)
-        self.failUnless(self.task.completed())
-
     def testRemoveChild(self):
-        child = task.Task()
+        child = self.task.newSubTask()
         self.task.addChild(child)
         self.task.removeChild(child)
         self.failIfParentHasChild(self.task, child)
         self.failUnlessNotified(2)
-
-    def testRemoveLastNotCompletedChild(self):
-        child = task.Task()
-        self.task.addChild(child)
-        completedChild = task.Task()
-        completedChild.setCompletionDate()
-        self.task.addChild(completedChild)
-        self.task.removeChild(child)
-        self.failUnless(self.task.completed())
 
     def testSetParentInConstructor_DoesNotAffectParent(self):
         child = task.Task(parent=self.task)
@@ -248,6 +233,16 @@ class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
         self.assertEqual(date.Today(), child.startDate())
         self.failIf(child in self.task.children())
         
+    def testNewSubTask_ParentHasStartDateInTheFuture(self):
+        self.task.setStartDate(date.Tomorrow())
+        child = self.task.newSubTask()
+        self.assertEqual(self.task.startDate(), child.startDate())
+
+    def testNewSubTask_ParentHasStartDateInThePast(self):
+        self.task.setStartDate(date.Yesterday())
+        child = self.task.newSubTask()
+        self.assertEqual(date.Today(), child.startDate())
+        
     def testNewSubTask_WithSubject(self):
         child = self.task.newSubTask(subject='Test')
         self.assertEqual('Test', child.subject())
@@ -260,41 +255,16 @@ class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
         child.setCompletionDate()
         self.failUnless(self.task.allChildrenCompleted())
         
-    def testSetCompletionDate_CompletesChild(self):
-        child = task.Task()
-        self.task.addChild(child)
-        self.task.setCompletionDate()
-        self.failUnless(child.completed())
-        
-    def testSetCompletionDate_WhenChildCompleted(self):
-        child = task.Task()
-        child.setCompletionDate(date.Yesterday())
-        self.task.addChild(child)
-        self.task.setCompletionDate()
-        self.assertEqual(date.Yesterday(), child.completionDate())
-
-    def testSetCompletionDate_CompletesParent(self):
-        child = task.Task()
-        self.task.addChild(child)
-        child.setCompletionDate()
-        self.failUnless(self.task.completed())
-
-    def testSetCompletionDate_UncompletesParent(self):
-        child = task.Task()
-        self.task.addChild(child)
-        self.task.setCompletionDate()
-        child.setCompletionDate(date.Date())
-        self.failIf(self.task.completed())
-
 
 class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
+    ''' FIXME: to be deleted '''
     def setUp(self):
         self.task = task.Task(subject='Todo', duedate=date.Tomorrow(),
             startdate=date.Yesterday())
 
     def _createChildren(self, dateFunction, dates):
         for date in dates:
-            child = task.Task()
+            child = self.task.newSubTask()
             self.task.addChild(child)
             getattr(child, dateFunction)(date)
 
@@ -332,17 +302,6 @@ class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
     def testStartDateParent_EqualsStartOfParentWhenParentHasEarliestStartDate(self):
         self.createChildrenWithStartDate([date.Today()])
         self.assertStartDate(date.Yesterday())
-
-    def testStartDateParent_EqualsStartDateOfChildWhenChildHasEarliestStartDate(self):
-        self.createChildrenWithStartDate([date.Yesterday(), date.Tomorrow()])
-        self.task.setStartDate(date.Today())
-        self.assertStartDate(date.Yesterday())
-
-    def testStartDateParent_IgnoreCompletedChildren(self):
-        self.createChildrenWithStartDate([date.Today(), date.Tomorrow()])
-        self.task.setStartDate(date.Date())
-        self.task.children()[0].setCompletionDate()
-        self.assertStartDate(date.Tomorrow())
 
     def testStartDateParent_EqualsParentStartDateWhenAllChildrenCompleted(self):
         self.createChildrenWithStartDate([date.Yesterday(), date.Tomorrow()])
@@ -422,6 +381,11 @@ class TaskEffortTest(test.TestCase):
     def testStopTracking(self):
         self.task.addEffort(effort.Effort(self.task, date.DateTime.now()))
         self.task.stopTracking()
+        self.failIf(self.task.isBeingTracked())
+        
+    def testMarkCompletedStopsEffortTracking(self):
+        self.task.addEffort(effort.Effort(self.task, date.DateTime.now()))
+        self.task.setCompletionDate()
         self.failIf(self.task.isBeingTracked())
         
     def testEffortsRecursive(self):

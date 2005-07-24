@@ -1,4 +1,4 @@
-import patterns, date, time, copy, sets
+import patterns, date, time, copy, sets, relations
 
 
 class Task(patterns.Observable):
@@ -19,7 +19,11 @@ class Task(patterns.Observable):
         self._efforts        = []
         self._categories     = sets.Set()
         self._priority       = priority
+        relations.TaskRelationshipManager().startManaging(self)
 
+    def __del__(self):
+        relations.TaskRelationshipManager().stopManaging(self)
+        
     def onNotify(self, notification, *args, **kwargs):
         notification = patterns.observer.Notification(self,  
             itemsChanged=[notification.source])
@@ -46,7 +50,12 @@ class Task(patterns.Observable):
         currentValue = getattr(self, attribute)
         if newValue != currentValue:
             setattr(self, attribute, newValue)
-            self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
+            completionDateChanged = attribute == '_completiondate'
+            dueDateChanged = attribute == '_duedate'
+            startDateChanged = attribute == '_startdate'
+            self.notifyObservers(patterns.observer.Notification(self, dueDateChanged=dueDateChanged, 
+                completionDateChanged=completionDateChanged, startDateChanged=startDateChanged,
+                changeNeedsSave=True))
 
     def id(self):
         return self._id
@@ -87,7 +96,7 @@ class Task(patterns.Observable):
     def newSubTask(self, subject='New subtask'):
         ''' Subtask constructor '''
         return self.__class__(subject, duedate=self.dueDate(),
-            parent=self)
+            startdate=max(date.Today(), self.startDate()), parent=self)
 
     def allChildren(self):
         return self.children() + [descendent for child in self.children() 
@@ -107,16 +116,13 @@ class Task(patterns.Observable):
         if child not in self._children:
             self._children.append(child)
             child.setParent(self)
-            self._updateCompletionState(child.completionDate())
             child.registerObserver(self.onNotify)
-            self.notifyObservers(patterns.observer.Notification(self, childrenAdded=[child]))
+            self.notifyObservers(patterns.observer.Notification(self, childAdded=child))
 
     def removeChild(self, child):
         self._children.remove(child)
-        if self._children:
-            self._updateCompletionState(date.Today())
         child.removeObserver(self.onNotify)
-        self.notifyObservers(patterns.observer.Notification(self, childrenRemoved=[child]))
+        self.notifyObservers(patterns.observer.Notification(self, childRemoved=child))
 
     def setParent(self, parent):
         self._parent = parent
@@ -162,24 +168,8 @@ class Task(patterns.Observable):
 
     def setCompletionDate(self, completionDate=None):
         completionDate = completionDate or date.Today()
-        if completionDate == self._completiondate:
-            return
-        if completionDate != date.Date() and self.isBeingTracked():
-            self.stopTracking()
-        self._completiondate = completionDate
-        [child.setCompletionDate(completionDate) for child in self.children() 
-            if not child.completed()]
-        parent = self.parent()
-        if parent:
-            parent._updateCompletionState(completionDate)
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
-
-    def _updateCompletionState(self, completionDate):
-        if not self.completed() and self.allChildrenCompleted():
-            self.setCompletionDate(completionDate)
-        elif self.completed() and not self.allChildrenCompleted():
-            self.setCompletionDate(date.Date())
-
+        self.__setAttributeAndNotifyObservers('_completiondate', completionDate)
+        
     def completed(self):
         return self.completionDate() != date.Date()
 

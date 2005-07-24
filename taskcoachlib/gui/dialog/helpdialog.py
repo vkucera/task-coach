@@ -2,18 +2,26 @@ import meta, help
 import wx.lib.dialogs
 from i18n import _
 
+class HelpDialog(wx.lib.dialogs.ScrolledMessageDialog):
+    pass
+    '''
+    def OnOk(self, *args, **kwargs):
+        self.Close()
+    '''
+     
 def show(text, title):
-    dialog = wx.lib.dialogs.ScrolledMessageDialog(None, text, title)
-    dialog.ShowModal()
+    dialog = HelpDialog(None, text, title)
+    dialog.Show()
+    return dialog
 
 def Colors():
-    show(help.colorsText, _('Help: Colors'))
+    return show(help.colorsText, _('Help: Colors'))
 
 def Tasks():
-    show(help.tasksText, _('Help: Tasks'))
+    return show(help.tasksText, _('Help: Tasks'))
 
 def About():
-    show(help.aboutText, _('Help: About %s')%meta.name)
+    return show(help.aboutText, _('Help: About %s')%meta.name)
 
 def License():
-    show(meta.licenseText, _('Help: %s license')%meta.name)
+    return show(meta.licenseText, _('Help: %s license')%meta.name)

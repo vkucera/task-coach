@@ -768,47 +768,55 @@ class EffortStop(FilterCommand):
     def enabled(self):
         return bool([task for task in self.filteredTaskList if task.isBeingTracked()])
 
+class DialogCommand(UICommand):
+    def __init__(self, *args, **kwargs):
+        self.closed = True
+        super(DialogCommand, self).__init__(*args, **kwargs)
+        
+    def doCommand(self, event):
+        self.closed = False
+        dialog = self.dialog()
+        dialog.Bind(wx.EVT_CLOSE, self.onClose)
+        dialog.Bind(wx.EVT_BUTTON, self.onClose)
+        
+    def onClose(self, event):
+        self.closed = True
+        event.Skip()
+        
+    def enabled(self):
+        return self.closed
 
-class HelpCommand(UICommand):
+class HelpCommand(DialogCommand):
     def __init__(self, *args, **kwargs):
         super(HelpCommand, self).__init__(bitmap='help', *args, **kwargs)
-
+        
 class HelpTasks(HelpCommand):
     def __init__(self, *args, **kwargs):
+        self.dialog = helpdialog.Tasks
         super(HelpTasks, self).__init__(menuText=_('&Tasks'),
             helpText=_('Help about the possible states of tasks'), *args, **kwargs)
 
-    def doCommand(self, event):
-        helpdialog.Tasks()
-
 class HelpColors(HelpCommand):
     def __init__(self, *args, **kwargs):
+        self.dialog = helpdialog.Colors
         super(HelpColors, self).__init__(menuText=_('&Colors'),
             helpText=_('Help about the possible colors of tasks'), *args, **kwargs)
 
-    def doCommand(self, event):
-        helpdialog.Colors()
-
-
-class InfoCommand(UICommand):
+class InfoCommand(DialogCommand):
     def __init__(self, *args, **kwargs):
         super(InfoCommand, self).__init__(bitmap='info', *args, **kwargs)
 
 class HelpAbout(InfoCommand):
     def __init__(self, *args, **kwargs):
+        self.dialog = helpdialog.About
         super(HelpAbout, self).__init__(menuText=_('&About %s')%meta.name,
             helpText=_('Version and contact information about %s')%meta.name, *args, **kwargs)
 
-    def doCommand(self, event):
-        helpdialog.About()
-
 class HelpLicense(InfoCommand):
     def __init__(self, *args, **kwargs):
+        self.dialog = helpdialog.License
         super(HelpLicense, self).__init__(menuText=_('&License'),
             helpText=_('%s license')%meta.name, *args, **kwargs)
-
-    def doCommand(self, event):
-        helpdialog.License()
 
 
 class MainWindowRestore(MainWindowCommand):
