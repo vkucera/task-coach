@@ -152,7 +152,7 @@ class TreeCtrlTest(test.wxTestCase):
         self.treeCtrl.refresh(3)
         self.assertItems('item 2', ('item 0', 1), 'item 1')
             
-    def testReorderParentsAndChildrenDoesNotCollapsParent(self):
+    def testReorderParentsAndChildrenDoesNotCollapseParent(self):
         self.treeCtrl.refresh(2)
         self.setItemChildrenCount(0, 2)
         self.treeCtrl.refresh(4)

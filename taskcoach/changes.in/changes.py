@@ -5,8 +5,16 @@ Release('0.45', 'July ?, 2005',
     bugsFixed=[
         Bug('''When tracking effort the task file would be marked as 
 changed after every clock tick.'''),
-        Bug('''Priorities can now be set to both positive and
-negative integers.''')]),
+        Bug('''Task priority can now be set to both positive and
+negative integers.'''),
+        Bug('''Opening a help dialog before the splash screen disappeared
+would make Task Coach stop responding to input. Fixed by making the
+helpdialogs modeless (as they should be).''', '1241058')],
+    featuresChanged=[
+        Bug('''Setting the start date of a subtask earlier than the
+start date of the parent task, or setting the due date of a subtask
+later than the due date of the parent task will adapt the parent start
+or due date as necessary.''', '1237634')]),
                 
 Release('0.44', 'July 21, 2005',
     featuresAdded=[

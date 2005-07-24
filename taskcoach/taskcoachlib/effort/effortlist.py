@@ -48,8 +48,8 @@ class SingleTaskEffortList(patterns.ObservableListObserver, MaxDateTimeMixin):
             itemsRemoved=notification.effortsRemoved,
             itemsChanged=notification.effortsChanged)
         super(SingleTaskEffortList, self).onNotify(effortNotification, *args, **kwargs)
-        for child in notification.childrenAdded:
-            child.registerObserver(self.onNotify)
-        for child in notification.childrenRemoved:
-            child.removeObserver(self.onNotify)    
+        if notification.childAdded:
+            notification.childAdded.registerObserver(self.onNotify)
+        if notification.childRemoved:
+            notification.childRemoved.removeObserver(self.onNotify)    
 

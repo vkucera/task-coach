@@ -6,4 +6,5 @@ from reader import TaskReader, XMLReader
 import filter
 import sorter
 from clipboard import Clipboard
+from relations import TaskRelationshipManager
 
