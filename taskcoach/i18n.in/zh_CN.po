@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach 0.40\n"
 "POT-Creation-Date: 2005-05-29 22:29+W. Europe Daylight Time\n"
-"PO-Revision-Date: 2005-07-19 20:41+0800\n"
+"PO-Revision-Date: 2005-07-23 09:07+0800\n"
 "Last-Translator: limodou <limodou@gmail.com>\n"
 "Language-Team: LANGUAGE <limodou@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -161,10 +161,13 @@ msgstr "优先级"
 msgid "Categories"
 msgstr "分类"
 
+#: taskcoachlib\gui\dialog\editor.py:140
+msgid "Add category"
+msgstr "增加分类"
+
 #: taskcoachlib\gui\dialog\editor.py:142
-#, fuzzy
 msgid "New category"
-msgstr "新建花费"
+msgstr "新建分类"
 
 #: taskcoachlib\gui\dialog\editor.py:165
 msgid "Dates"
@@ -216,12 +219,12 @@ msgid "Splash screen"
 msgstr "启动画面"
 
 #: taskcoachlib\gui\dialog\preferences.py:46
-#: taskcoachlib\gui\dialog\preferences.py:57
+#: taskcoachlib\gui\dialog\preferences.py:58
 msgid "This setting will take effect after you restart %s"
 msgstr "本设定将在你重启 %s 之后将会生效"
 
 #: taskcoachlib\gui\dialog\preferences.py:52
-#: taskcoachlib\gui\dialog\preferences.py:69
+#: taskcoachlib\gui\dialog\preferences.py:70
 msgid "Language"
 msgstr "语言"
 
@@ -249,11 +252,15 @@ msgstr "法语"
 msgid "Simplified Chinese"
 msgstr "简体中文"
 
-#: taskcoachlib\gui\dialog\preferences.py:67
+#: taskcoachlib\gui\dialog\preferences.py:57
+msgid "Russian"
+msgstr "俄语"
+
+#: taskcoachlib\gui\dialog\preferences.py:68
 msgid "Startup"
 msgstr "启动"
 
-#: taskcoachlib\gui\dialog\preferences.py:68
+#: taskcoachlib\gui\dialog\preferences.py:69
 msgid "Save"
 msgstr "保存"
 
@@ -373,14 +380,12 @@ msgid "Tasks &due before end of"
 msgstr "任务预定在结束之前(&d)"
 
 #: taskcoachlib\gui\menu.py:66
-#, fuzzy
 msgid "Task &list options"
-msgstr "任务列表字段(&l)"
+msgstr "任务列表选项(&l)"
 
 #: taskcoachlib\gui\menu.py:68
-#, fuzzy
 msgid "Task &tree options"
-msgstr "任务树(&t)"
+msgstr "任务树选项(&t)"
 
 #: taskcoachlib\gui\menu.py:71
 msgid "Sort"
@@ -616,9 +621,8 @@ msgid "Tasks by categories..."
 msgstr "按分类的任务..."
 
 #: taskcoachlib\gui\uicommand.py:495
-#, fuzzy
 msgid "Show/hide tasks by category"
-msgstr "显示或隐藏状态条"
+msgstr "按分类显示或隐藏任务"
 
 #: taskcoachlib\gui\uicommand.py:499
 msgid "View categories"
@@ -927,9 +931,8 @@ msgid "Total budget left"
 msgstr "全部剩余预算"
 
 #: taskcoachlib\gui\uicommand.py:907
-#, fuzzy
 msgid "Show/hide priority column"
-msgstr "显示或隐藏预算列"
+msgstr "显示或隐藏优先级列"
 
 #: taskcoachlib\gui\uicommand.py:907
 #: taskcoachlib\gui\uicommand.py:947
@@ -953,73 +956,60 @@ msgid "Overall priority"
 msgstr "总体优先级"
 
 #: taskcoachlib\gui\uicommand.py:924
-#, fuzzy
 msgid "Sub&ject"
-msgstr "主题"
+msgstr "主题(&j)"
 
 #: taskcoachlib\gui\uicommand.py:925
-#, fuzzy
 msgid "Sort tasks by subject"
-msgstr "按任务主题排序"
+msgstr "按主题对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:927
-#, fuzzy
 msgid "Sort tasks by start date"
-msgstr "按任务到期日期排序"
+msgstr "按开始日期对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:929
-#, fuzzy
 msgid "Sort tasks by due date"
-msgstr "按任务到期日期排序"
+msgstr "按到期日期对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:931
-#, fuzzy
 msgid "&Completion date"
-msgstr "完成日期"
+msgstr "完成日期(&C)"
 
 #: taskcoachlib\gui\uicommand.py:932
-#, fuzzy
 msgid "Sort tasks by completion date"
-msgstr "按任务到期日期排序"
+msgstr "按完成日期对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:933
-#, fuzzy
 msgid "&Days left"
-msgstr "剩余天数"
+msgstr "剩余天数(&D)"
 
 #: taskcoachlib\gui\uicommand.py:934
 msgid "Sort tasks by number of days left"
 msgstr "按剩余天数对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:936
-#, fuzzy
 msgid "Sort tasks by budget"
-msgstr "按任务预算排序"
+msgstr "按预算对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:938
-#, fuzzy
 msgid "Sort tasks by total budget"
-msgstr "按任务预算排序"
+msgstr "按全部预算对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:940
-#, fuzzy
 msgid "Sort tasks by time spent"
-msgstr "全部花费时间"
+msgstr "按花费时间对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:942
-#, fuzzy
 msgid "Sort tasks by total time spent"
-msgstr "全部花费时间"
+msgstr "按全部花费时间对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:944
-#, fuzzy
 msgid "Sort tasks by budget left"
-msgstr "按任务预算排序"
+msgstr "按剩余预算对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:946
-#, fuzzy
 msgid "Sort tasks by total budget left"
-msgstr "按任务预算排序"
+msgstr "按全部剩余预算对任务排序"
 
 #: taskcoachlib\gui\uicommand.py:948
 msgid "Sort tasks by priority"

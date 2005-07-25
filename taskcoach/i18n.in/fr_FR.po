@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2005-05-29 22:29+W. Europe Daylight Time\n"
-"PO-Revision-Date: 2005-07-19 13:40+0100\n"
+"PO-Revision-Date: 2005-07-23 09:52+0100\n"
 "Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -159,6 +159,10 @@ msgstr "Priorité"
 msgid "Categories"
 msgstr "Catégories"
 
+#: taskcoachlib\gui\dialog\editor.py:140
+msgid "Add category"
+msgstr "Ajouter catégorie"
+
 #: taskcoachlib\gui\dialog\editor.py:142
 msgid "New category"
 msgstr "Nouvelle catégorie"
@@ -213,12 +217,12 @@ msgid "Splash screen"
 msgstr "Ecran d'accueil"
 
 #: taskcoachlib\gui\dialog\preferences.py:46
-#: taskcoachlib\gui\dialog\preferences.py:57
+#: taskcoachlib\gui\dialog\preferences.py:58
 msgid "This setting will take effect after you restart %s"
 msgstr "Cette option prendra effet aprés le redémarrage de %s"
 
 #: taskcoachlib\gui\dialog\preferences.py:52
-#: taskcoachlib\gui\dialog\preferences.py:69
+#: taskcoachlib\gui\dialog\preferences.py:70
 msgid "Language"
 msgstr "Langue"
 
@@ -246,11 +250,15 @@ msgstr "Français"
 msgid "Simplified Chinese"
 msgstr "Chinois simplifié"
 
-#: taskcoachlib\gui\dialog\preferences.py:67
+#: taskcoachlib\gui\dialog\preferences.py:57
+msgid "Russian"
+msgstr "Russe"
+
+#: taskcoachlib\gui\dialog\preferences.py:68
 msgid "Startup"
 msgstr "Démarrage"
 
-#: taskcoachlib\gui\dialog\preferences.py:68
+#: taskcoachlib\gui\dialog\preferences.py:69
 msgid "Save"
 msgstr "Sauvegarder"
 
