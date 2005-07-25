@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "POT-Creation-Date: 2005-07-20 00:00+W. Europe Daylight Time\n"
-"PO-Revision-Date: 2005-07-21 22:09+0100\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"PO-Revision-Date: 2005-07-25 10:27+0700\n"
+"Last-Translator: Vladimir Ilyash <fundamentator@yahoo.com>\n"
 "Language-Team: Russian <fundamentator@yahoo.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -245,6 +245,10 @@ msgstr "Французский"
 #: taskcoachlib\gui\dialog\preferences.py:56
 msgid "Simplified Chinese"
 msgstr "Упрощенный китайский"
+
+#: taskcoachlib\gui\dialog\preferences.py:57
+msgid "Russian"
+msgstr "Русский"
 
 #: taskcoachlib\gui\dialog\preferences.py:67
 msgid "Startup"
@@ -822,7 +826,7 @@ msgstr "С&рок"
 
 #: taskcoachlib\gui\uicommand.py:880
 msgid "D&ays left"
-msgstr "&Дней ост."
+msgstr "&Дней осталось"
 
 #: taskcoachlib\gui\uicommand.py:880
 msgid "Show/hide days left column"
@@ -902,12 +906,12 @@ msgstr "Показать/скрыть колонку остатка бюджет
 #: taskcoachlib\gui\uicommand.py:900
 #: taskcoachlib\gui\uicommand.py:943
 msgid "Budget &left"
-msgstr "Ост. бюд&жета"
+msgstr "Остаток бюд&жета"
 
 #: taskcoachlib\gui\uicommand.py:903
 #: taskcoachlib\gui\uicommand.py:945
 msgid "Total budget l&eft"
-msgstr "Об&щий ост. бюджета"
+msgstr "Об&щий остаток бюджета"
 
 #: taskcoachlib\gui\uicommand.py:904
 msgid "Show/hide total budget left column (total budget left includes budget left for subtasks)"
@@ -931,7 +935,7 @@ msgstr "&Приоритет"
 
 #: taskcoachlib\gui\uicommand.py:910
 msgid "O&verall priority"
-msgstr "Су&мм. приоритет"
+msgstr "Су&ммарный приоритет"
 
 #: taskcoachlib\gui\uicommand.py:911
 msgid "Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)"
@@ -971,7 +975,7 @@ msgstr "Сортировка задач по дате выполнения"
 
 #: taskcoachlib\gui\uicommand.py:933
 msgid "&Days left"
-msgstr "&Дней ост."
+msgstr "&Дней осталось"
 
 #: taskcoachlib\gui\uicommand.py:934
 msgid "Sort tasks by number of days left"
@@ -1144,7 +1148,7 @@ msgstr ""
 "- Просроченные задачи окрашены в красный цвет;\n"
 "- Задачи на сегодня окрашены в оранжевый цвет;\n"
 "- Активные задачи окрашены в черный цвет;\n"
-"- Будущие задачи окрашены в серый цвет, and\n"
+"- Будущие задачи окрашены в серый цвет;\n"
 "- Выполненные задачи окрашены в зеленый цвет.\n"
 
 #: taskcoachlib\help\__init__.py:13
