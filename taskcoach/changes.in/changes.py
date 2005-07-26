@@ -1,7 +1,7 @@
 from domain import *
 
 releases = [
-Release('0.45', 'July ?, 2005',
+Release('0.45', 'July 26, 2005',
     bugsFixed=[
         Bug('''When tracking effort the task file would be marked as 
 changed after every clock tick.'''),
