@@ -121,6 +121,7 @@ class MainWindow(WindowWithPersistentDimensions):
 
     def restore(self, event):
         self.Show()
+        self.Raise()
         self.Iconize(False)
 
     def onIconify(self, event):
