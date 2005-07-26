@@ -1,6 +1,15 @@
 from domain import *
 
 releases = [
+Release('0.46', 'July ?, 2005',
+    featuresChanged=[
+        Feature('''Keyboard shortcut for deleting a task is now 'Delete'
+instead of 'Ctrl-D' and 'Ctrl-Enter' marks the selected task(s) completed.''', 
+        '1241549')], 
+    featuresAdded=[
+        Feature('''Double-clicking the system tray icon when Task Coach
+is not minimized will raise the Task Coach window.''', '1242520')]),
+
 Release('0.45', 'July 26, 2005',
     bugsFixed=[
         Bug('''When tracking effort the task file would be marked as 

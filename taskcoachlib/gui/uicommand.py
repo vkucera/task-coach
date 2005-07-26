@@ -671,7 +671,7 @@ class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand,
 class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMarkCompleted, self).__init__(bitmap='markcompleted',
-            menuText=_('&Mark completed'),
+            menuText=_('&Mark completed\tCtrl+ENTER'),
             helpText=_('Mark the selected task(s) completed'), *args, **kwargs)
 
     def doCommand(self, event):
@@ -687,7 +687,7 @@ class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
 class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskDelete, self).__init__(bitmap='delete',
-            menuText=_('&Delete task\tCtrl+D'),
+            menuText=_('&Delete task\tDEL'),
             helpText=_('Delete the selected task(s)'), *args, **kwargs)
 
     def doCommand(self, event):
