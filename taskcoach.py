@@ -23,7 +23,7 @@ class App(object):
     def __init__(self, options=None, args=None):
         self._options = options
         self._args = args
-        self.wxApp = wxApp(1)
+        self.wxApp = wxApp(0)
         self.init()
         self.mainwindow.Show()
         self.wxApp.MainLoop()
