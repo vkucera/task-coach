@@ -144,4 +144,3 @@ class MainWindow(WindowWithPersistentDimensions):
         else:
             self.GetToolBar().Destroy()
             self.SetToolBar(toolbar.ToolBar(self, self.uiCommands, size=size))
-
