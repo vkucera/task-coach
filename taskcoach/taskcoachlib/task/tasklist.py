@@ -37,7 +37,8 @@ class TaskList(patterns.ObservableObservablesList):
                 parents.append(parent)
         self.startNotifying()
         self.notifyObservers(patterns.observer.Notification(self, 
-            itemsAdded=tasksAndAllChildren, itemsChanged=parents))
+            itemsAdded=tasksAndAllChildren, itemsChanged=parents,
+            effortsAdded=self._allEfforts(tasksAndAllChildren)))
 
     def _removeTaskFromTaskList(self, task):
         self._removeTasksFromTaskList(task.children())
@@ -61,6 +62,7 @@ class TaskList(patterns.ObservableObservablesList):
     def removeItems(self, tasks):
         if not tasks:
             return
+        tasksAndAllChildren = self._tasksAndAllChildren(tasks)
         self.stopNotifying()
         self._removeTasksFromTaskList(tasks)
         parents = []
@@ -70,8 +72,15 @@ class TaskList(patterns.ObservableObservablesList):
                 parents.append(parent)
         self.startNotifying()
         self.notifyObservers(patterns.observer.Notification(self,
-            itemsRemoved=self._tasksAndAllChildren(tasks), itemsChanged=parents))
-            
+            itemsRemoved=tasksAndAllChildren, itemsChanged=parents,
+            effortsRemoved=self._allEfforts(tasksAndAllChildren)))
+    
+    def _allEfforts(self, tasks):
+        efforts = []
+        for task in tasks:
+            efforts.extend(task.efforts())
+        return efforts
+        
     # queries
 
     def _nrInterestingTasks(self, isInteresting):

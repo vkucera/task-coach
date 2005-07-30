@@ -20,18 +20,18 @@ class Task(patterns.Observable):
         self._categories     = sets.Set()
         self._priority       = priority
         relations.TaskRelationshipManager().startManaging(self)
-
+        
     def __del__(self):
         relations.TaskRelationshipManager().stopManaging(self)
         
     def onNotify(self, notification, *args, **kwargs):
         notification = patterns.observer.Notification(self,  
-            itemsChanged=[notification.source])
+            itemsChanged=[notification.source])                  
         self.notifyObservers(notification, *args, **kwargs)       
         
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
 
     def __getstate__(self):
         return { '_subject' : self._subject, 
@@ -53,7 +53,7 @@ class Task(patterns.Observable):
             completionDateChanged = attribute == '_completiondate'
             dueDateChanged = attribute == '_duedate'
             startDateChanged = attribute == '_startdate'
-            self.notifyObservers(patterns.observer.Notification(self, dueDateChanged=dueDateChanged, 
+            self.notifyObservers(patterns.Notification(self, dueDateChanged=dueDateChanged, 
                 completionDateChanged=completionDateChanged, startDateChanged=startDateChanged,
                 changeNeedsSave=True))
 
@@ -117,12 +117,12 @@ class Task(patterns.Observable):
             self._children.append(child)
             child.setParent(self)
             child.registerObserver(self.onNotify)
-            self.notifyObservers(patterns.observer.Notification(self, childAdded=child))
+            self.notifyObservers(patterns.Notification(self, childAdded=child))
 
     def removeChild(self, child):
         self._children.remove(child)
         child.removeObserver(self.onNotify)
-        self.notifyObservers(patterns.observer.Notification(self, childRemoved=child))
+        self.notifyObservers(patterns.Notification(self, childRemoved=child))
 
     def setParent(self, parent):
         self._parent = parent
@@ -200,12 +200,12 @@ class Task(patterns.Observable):
     def addEffort(self, effort):
         self._efforts.append(effort)
         effort.registerObserver(self.notifyEffortChanged)
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True, effortsAdded=[effort]))
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, effortsAdded=[effort]))
         
     def removeEffort(self, effort):
         self._efforts.remove(effort)
         effort.removeObserver(self.notifyEffortChanged)
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True, effortsRemoved=[effort]))
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, effortsRemoved=[effort]))
         
     def notifyEffortChanged(self, notification, *args, **kwargs):
         notification['effortsChanged'] = [notification.source]
