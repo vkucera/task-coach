@@ -18,7 +18,7 @@ class Effort(patterns.Observable, date.ClockObserver):
         
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
     
     def __copy__(self):
         return Effort(self._task, self._start, self._stop)
@@ -35,7 +35,7 @@ class Effort(patterns.Observable, date.ClockObserver):
         
     def setStart(self, startDatetime):
         self._start = startDatetime
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
         
     def getStart(self):
         return self._start
@@ -49,20 +49,20 @@ class Effort(patterns.Observable, date.ClockObserver):
             self.startClock()
         elif self._stop != None and self.isClockStarted():
             self.stopClock()
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
         
     def getStop(self):
         return self._stop
         
     def setDescription(self, description):
         self._description = description
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True))
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
         
     def getDescription(self):
         return self._description
 
     def onEverySecond(self, *args, **kwargs):
-        self.notifyObservers(patterns.Notification(source=self))
+        self.notifyObservers(patterns.Notification(self))
         
     def __eq__(self, other):
         return self._task == other._task and self._start == other._start and \

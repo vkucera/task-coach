@@ -7,8 +7,8 @@ class EffortListTest(test.TestCase):
         self.notifications = 0
         self.task = task.Task()
         self.taskList = task.TaskList()
-        self.taskList.append(self.task)
         self.effortList = effort.EffortList(self.taskList)
+        self.taskList.append(self.task)
         self.effortList.registerObserver(self.onNotify)
         self.effort = effort.Effort(self.task, date.DateTime(2004, 1, 1), date.DateTime(2004, 1, 2))
         
@@ -49,8 +49,7 @@ class EffortListTest(test.TestCase):
         self.assertEqual(1, len(effortList))
 
     def testAddEffortToChild(self):
-        child = task.Task()
-        self.task.addChild(child)
+        child = task.Task(parent=self.task)
         self.taskList.append(child)
         child.addEffort(effort.Effort(child))
         self.assertEqual(1, len(self.effortList))

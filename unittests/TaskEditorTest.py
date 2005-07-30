@@ -28,8 +28,8 @@ class DummyEvent:
 class TaskEditorTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
-        self.taskList.extend(self.createTasks())
         self.effortList = effort.EffortList(self.taskList)
+        self.taskList.extend(self.createTasks())
         self.editor = self.createEditor()
         
     def createEditor(self):

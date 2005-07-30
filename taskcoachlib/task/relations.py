@@ -4,6 +4,7 @@ instead alters objects based on their relations. For example, if a task is
 marked completed, it will mark all children completed. '''
 
 import patterns, date
+import task as tsk
 
 class TaskRelationshipManager:
     __metaclass__ = patterns.Singleton
@@ -16,6 +17,7 @@ class TaskRelationshipManager:
         
     def onNotify(self, notification):
         task = notification.source
+        #assert  task.__class__ == tsk.Task, 'task.__class__ == %s'%task.__class__
         if notification.completionDateChanged:
             if task.parent():
                 self.__markParentCompletedOrUncompletedIfNecessary(task.parent(), task)

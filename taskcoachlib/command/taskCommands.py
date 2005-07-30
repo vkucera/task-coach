@@ -154,6 +154,7 @@ class NewSubTaskCommand(base.BaseCommand, SaveTaskStateMixin):
         self.saveStates(self.getTasksToSave())
         
     def getTasksToSave(self):
+        # FIXME: can be simplified to: return self.getAncestors(self.items) ?
         parents = [task.parent() for task in self.items if task.parent()]
         return parents + self.getAncestors(parents)
 

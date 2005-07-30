@@ -53,11 +53,14 @@ class CommandWithChildrenTestCase(CommandTestCase):
     def setUp(self):
         super(CommandWithChildrenTestCase, self).setUp()
         self.parent = task.Task()
-        self.child = task.Task(parent=self.parent)
-        self.child2 = task.Task(parent=self.parent)
-        self.grandchild = task.Task(parent=self.child)
+        self.child = task.Task()
+        self.parent.addChild(self.child)
+        self.child2 = task.Task()
+        self.parent.addChild(self.child2)
+        self.grandchild = task.Task()
+        self.child.addChild(self.grandchild)
         self.originalList.extend([self.parent, self.child, self.child2, self.grandchild])
-        self.taskList.extend([self.parent, self.child, self.child2, self.grandchild])
+        self.taskList.append(self.parent)
 
 
 class CommandWithEffortTestCase(CommandTestCase):

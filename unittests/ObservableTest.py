@@ -246,3 +246,8 @@ class NotificationTest(test.TestCase):
         
     def testStr(self):
         self.failUnless(str(self.notification).startswith('Notification'))
+        
+    def testSetAttribute(self):
+        self.notification.source = 'Test'
+        self.assertEqual('Test', self.notification.source)
+        
