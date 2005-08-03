@@ -26,7 +26,7 @@ class Task(patterns.Observable):
         
     def onNotify(self, notification, *args, **kwargs):
         notification = patterns.observer.Notification(self,  
-            itemsChanged=[notification.source])                  
+            itemsChanged=[notification.source], effortsChanged=notification.effortsChanged)
         self.notifyObservers(notification, *args, **kwargs)       
         
     def __setstate__(self, state):

@@ -1,11 +1,34 @@
 import patterns, date
 
-class Effort(patterns.Observable, date.ClockObserver):
-    def __init__(self, task, start=None, stop=None, description='', *args, **kwargs):
-        super(Effort, self).__init__(*args, **kwargs)
+class EffortBase(object):
+    def __init__(self, task, start, stop, *args, **kwargs):
         self._task = task
-        self._start = start or date.DateTime.now()
+        self._start = start
         self._stop = stop
+        super(EffortBase, self).__init__(*args, **kwargs)
+        
+    def task(self):
+        return self._task
+
+    def getStart(self):
+        return self._start
+
+    def getStop(self):
+        return self._stop
+
+    def __lt__(self, other):
+        return self.getStart() > other.getStart() or \
+            (self.getStart() == other.getStart() and \
+            self.task().subject() < other.task().subject())
+
+    def __eq__(self, other):
+        return self._task == other._task and self._start == other._start and \
+            self._stop == other._stop
+                  
+
+class Effort(EffortBase, patterns.Observable, date.ClockObserver):
+    def __init__(self, task, start=None, stop=None, description='', *args, **kwargs):
+        super(Effort, self).__init__(task, start or date.DateTime.now(), stop, *args, **kwargs)
         if self._stop == None:
             self.startClock()
         self._description = description
@@ -21,11 +44,8 @@ class Effort(patterns.Observable, date.ClockObserver):
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
     
     def __copy__(self):
-        return Effort(self._task, self._start, self._stop)
-            
-    def task(self):
-        return self._task
-        
+        return Effort(self._task, self._start, self._stop)            
+       
     def duration(self, now=date.DateTime.now):
         if self._stop:
             stop = self._stop
@@ -35,11 +55,8 @@ class Effort(patterns.Observable, date.ClockObserver):
         
     def setStart(self, startDatetime):
         self._start = startDatetime
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
-        
-    def getStart(self):
-        return self._start
-        
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))       
+       
     def setStop(self, stopDatetime=None):
         if stopDatetime and stopDatetime.date() == date.Date():
             self._stop = None
@@ -49,10 +66,7 @@ class Effort(patterns.Observable, date.ClockObserver):
             self.startClock()
         elif self._stop != None and self.isClockStarted():
             self.stopClock()
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
-        
-    def getStop(self):
-        return self._stop
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))        
         
     def setDescription(self, description):
         self._description = description
@@ -64,23 +78,13 @@ class Effort(patterns.Observable, date.ClockObserver):
     def onEverySecond(self, *args, **kwargs):
         self.notifyObservers(patterns.Notification(self))
         
-    def __eq__(self, other):
-        return self._task == other._task and self._start == other._start and \
-            self._stop == other._stop
         
-    def __lt__(self, other):
-        return self.getStart() > other.getStart()
-
-        
-class CompositeEffort(list):
+class CompositeEffort(EffortBase, list):
     ''' CompositeEffort is a list of efforts for one task (and maybe its children)
         and within a certain time period. '''
     
     def __init__(self, task, start, stop, efforts=None):
-        self._task = task
-        self._start = start
-        self._stop = stop
-        super(CompositeEffort, self).__init__(efforts or [])
+        super(CompositeEffort, self).__init__(task, start, stop, efforts or [])
         
     def duration(self, recursive=False):
         if recursive:
@@ -88,17 +92,4 @@ class CompositeEffort(list):
         else:
             efforts = [effort for effort in self if effort.task() == self._task]
         return sum([effort.duration() for effort in efforts], date.TimeDelta())
-        
-    def getStart(self):
-        return self._start
-            
-    def getStop(self):
-        return self._stop
-            
-    def task(self):
-        return self._task
-            
-    def __lt__(self, other):
-        return self.getStart() > other.getStart() or \
-            (self.getStart() == other.getStart() and \
-            self.task().subject() < other.task().subject())
+                              

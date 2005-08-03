@@ -60,6 +60,7 @@ class Sorter(patterns.ObservableListObserver):
     def rootTasks(self):
         return [task for task in self if task.parent() is None]
 
+        
 
 class DepthFirstSorter(patterns.ObservableListObserver):
     ''' DepthFirstSorter assumes the tasks in the original list are sorted, and
