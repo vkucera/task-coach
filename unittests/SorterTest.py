@@ -223,3 +223,6 @@ class TaskSorterTest(test.TestCase):
         
     def testGetSortKey(self):
         self.assertEqual('dueDate', self.sorter.getSortKey())
+        
+        
+    

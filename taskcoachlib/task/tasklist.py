@@ -1,4 +1,4 @@
-import patterns, task, sets
+import patterns, task, sets, date
 
 class TaskList(patterns.ObservableObservablesList):
     def __init__(self, initList=None, *args, **kwargs):
@@ -120,3 +120,18 @@ class TaskList(patterns.ObservableObservablesList):
         for task in self:
             result |= task.categories()
         return result
+    
+    def __allDates(self):        
+        realDates = [aDate for task in self 
+            for aDate in (task.startDate(), task.dueDate(), task.completionDate()) 
+            if aDate != date.Date()]
+        if realDates:
+            return realDates
+        else:
+            return [date.Date()]
+            
+    def minDate(self):      
+        return min(self.__allDates())
+          
+    def maxDate(self):
+        return max(self.__allDates())

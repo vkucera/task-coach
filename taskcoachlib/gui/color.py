@@ -1,6 +1,6 @@
 import wx
 
-def taskColor(task):
+def taskColor(task, active=wx.BLACK):
     if task.completed():
         return wx.GREEN
     elif task.overdue(): 
@@ -11,4 +11,4 @@ def taskColor(task):
     elif task.inactive(): 
         return wx.NamedColour('LIGHT GREY')
     else:
-        return wx.BLACK
+        return active

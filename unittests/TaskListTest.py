@@ -99,6 +99,45 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
         self.taskList.append(self.task2)
         self.assertEqual([self.task1, self.task2], self.taskList.rootTasks())
 
+    def testMinDate_EmptyTaskList(self):
+        self.assertEqual(date.Date(), self.taskList.minDate())
+        
+    def testMinDate_TaskWithoutDates(self):
+        self.taskList.append(task.Task(startdate=date.Date()))
+        self.assertEqual(date.Date(), self.taskList.minDate())
+        
+    def testMinDate_TaskWithStartDate(self):
+        self.taskList.append(task.Task())
+        self.assertEqual(date.Today(), self.taskList.minDate())
+        
+    def testMinDate_TaskWithDueDate(self):
+        self.taskList.append(task.Task(duedate=date.Yesterday()))
+        self.assertEqual(date.Yesterday(), self.taskList.minDate())
+
+    def testMinDate_TaskWithCompletionDate(self):
+        self.taskList.append(task.Task(completiondate=date.Yesterday()))
+        self.assertEqual(date.Yesterday(), self.taskList.minDate())
+
+    def testMaxDate_EmptyTaskList(self):
+        self.assertEqual(date.Date(), self.taskList.maxDate())
+        
+    def testMaxDate_TaskWithoutDates(self):
+        self.taskList.append(task.Task(startdate=date.Date()))
+        self.assertEqual(date.Date(), self.taskList.maxDate())
+        
+    def testMaxDate_TaskWithStartDate(self):
+        self.taskList.append(task.Task())
+        self.assertEqual(date.Today(), self.taskList.maxDate())
+
+    def testMaxDate_TaskWithDueDate(self):
+        self.taskList.append(task.Task(duedate=date.Tomorrow()))
+        self.assertEqual(date.Tomorrow(), self.taskList.maxDate())
+    
+    def testMaxDate_TaskWithCompletionDate(self):
+        self.taskList.append(task.Task(completiondate=date.Tomorrow()))
+        self.assertEqual(date.Tomorrow(), self.taskList.maxDate())
+        
+        
 class NotificationTimingTest(test.TestCase):
     def setUp(self):
         self.task1 = task.Task()

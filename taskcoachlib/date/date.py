@@ -2,6 +2,7 @@ import patterns
 import time, string, datetime, timedelta
 
 infinite = datetime.date.max
+minimumDate = datetime.date.min
     
 class RealDate(datetime.date):
 

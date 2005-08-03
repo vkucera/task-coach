@@ -1,7 +1,8 @@
 import patterns, task, command, widgets, effort, uicommand
-import menu, color, render
+import menu, color, render, date
 import wx
 from i18n import _
+import wx.grid as grid
 
 class Viewer(patterns.Observable, wx.Panel):
     def __init__(self, parent, list, uiCommands, settings=None, *args, **kwargs):
@@ -321,7 +322,7 @@ class EffortPerDayViewer(CompositeEffortListViewer):
     
     def renderEntirePeriod(self, compositeEffort):
         return render.date(compositeEffort.getStart().date())
-    
+
         
 class EffortPerWeekViewer(CompositeEffortListViewer):
     def createSorter(self, effortList):
@@ -338,3 +339,67 @@ class EffortPerMonthViewer(CompositeEffortListViewer):
     def renderEntirePeriod(self, compositeEffort):
         return render.month(compositeEffort.getStart())
 
+
+class Table(grid.PyGridTableBase):
+    def __init__(self, taskList, *args, **kwargs):
+        self._taskList = taskList
+        super(Table, self).__init__(*args, **kwargs)
+        
+    def GetRowLabelValue(self, row):
+        return self._taskList[row].subject()
+
+    def GetColLabelValue(self, col):
+        return render.date(self.__minDate() + date.TimeDelta(days=col))
+        
+    def GetNumberRows(self):
+        return len(self._taskList)
+
+    def __minDate(self):
+        minDate = self._taskList.minDate()
+        if minDate == date.Date():
+            minDate = date.Today()
+        if minDate == date.minimumDate:
+            return minDate
+        else:
+            return minDate - date.TimeDelta(days=1)
+        
+    def __maxDate(self):
+        maxDate = self._taskList.maxDate()
+        if maxDate == date.Date():
+            maxDate = date.Today() 
+        return maxDate + date.TimeDelta(days=1)
+        
+    def GetNumberCols(self):
+        period = self.__maxDate() - self.__minDate() + date.TimeDelta(days=1)
+        return period.days
+       
+    def IsEmptyCell(self, row, col):
+        True
+        
+    def GetValue(self, row, col):
+        return ''
+
+    def GetAttr(self, row, col, *args):
+        attr = grid.GridCellAttr()
+        attr.SetReadOnly()
+        if not self.__emptyCell(row, col):
+            task = self._taskList[row]
+            attr.SetBackgroundColour(color.taskColor(task, active=wx.BLUE))
+        return attr
+        
+    def __emptyCell(self, row, col):
+        task = self._taskList[row]
+        thisDate = self.__minDate() + date.TimeDelta(days=col)
+        taskDates = [task.startDate()]
+        if task.completed():
+            taskDates.append(task.completionDate())
+        else:
+            taskDates.append(task.dueDate())
+        return thisDate < min(taskDates) or thisDate > max(taskDates)
+ 
+
+class GanttChartViewer(TaskViewer):
+    def createWidget(self):
+        self.table = Table(self.list)
+        widget = widgets.GridCtrl(self, self.table)
+        return widget

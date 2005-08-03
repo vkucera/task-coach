@@ -3,11 +3,12 @@ import patterns, wx, time
 class Clock(patterns.Observable):
     __metaclass__ = patterns.Singleton
     
-    def __init__(self, *args, **kwargs):
+    def __init__(self, now=time.time, *args, **kwargs):
         super(Clock, self).__init__(*args, **kwargs)
         self._timer = wx.PyTimer(self.startTheClock)
-        now = time.time()
-        millisecondsToNextWholeSecond = 1000-(now%1)*1000
+        millisecondsToNextWholeSecond = 1000-(now()%1)*1000
+        if millisecondsToNextWholeSecond < 1:
+            millisecondsToNextWholeSecond += 1000
         self._timer.Start(milliseconds=millisecondsToNextWholeSecond, oneShot=True)
         
     def startTheClock(self, *args, **kwargs):
