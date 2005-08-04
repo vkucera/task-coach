@@ -24,6 +24,10 @@ class Translator:
             import ru_RU
             self.__language = ru_RU.dict
             self.__encoding = ru_RU.encoding
+        elif language and language.startswith('es'):
+            import es_ES
+            self.__language = es_ES.dict
+            self.__encoding = es_ES.encoding
         if language:
             li = wx.Locale.FindLanguageInfo(language)
             self.__locale = wx.Locale(li.Language)
