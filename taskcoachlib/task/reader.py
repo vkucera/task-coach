@@ -117,13 +117,14 @@ class XMLReader:
 
     def __parseTaskNode(self, taskNode):
         subject = taskNode.getAttribute('subject')
+        id = taskNode.getAttribute('id')
         description = self.__parseDescription(taskNode)
         startDate = date.parseDate(taskNode.getAttribute('startdate'))
         dueDate = date.parseDate(taskNode.getAttribute('duedate'))
         completionDate = date.parseDate(taskNode.getAttribute('completiondate'))
         budget = date.parseTimeDelta(taskNode.getAttribute('budget'))
         priority = self.__parsePriority(taskNode.getAttribute('priority'))
-        parent = task.Task(subject, description, startdate=startDate, duedate=dueDate, 
+        parent = task.Task(subject, description, id_=id, startdate=startDate, duedate=dueDate, 
             completiondate=completionDate, budget=budget, priority=priority)
         for category in self.__parseCategoryNodes(taskNode.childNodes):
             parent.addCategory(category)

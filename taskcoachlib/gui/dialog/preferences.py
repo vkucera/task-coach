@@ -50,9 +50,11 @@ class LanguagePage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(LanguagePage, self).__init__(*args, **kwargs)
         self.addChoiceSetting('view', 'language', _('Language'), 
-            [('en_US', _('English (US)')), ('en_GB', _('English (UK)')),
+            [('en_US', _('English (US)')), 
+             ('en_GB', _('English (UK)')),
              ('de_DE', _('German')),
-             ('nl_NL', _('Dutch')), ('fr_FR', _('French')),
+             ('nl_NL', _('Dutch')),
+             ('fr_FR', _('French')),
              ('zh_CN', _('Simplified Chinese')),
              ('ru_RU', _('Russian')),
              ('es_ES', _('Spanish'))],

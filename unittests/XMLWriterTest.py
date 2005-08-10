@@ -111,3 +111,6 @@ class XMLWriterTest(test.TestCase):
     def testPriority(self):
         self.task.setPriority(5)
         self.assertTaskAttribute('5', 'priority')
+        
+    def testId(self):
+        self.assertTaskAttribute(self.task.id(), 'id')

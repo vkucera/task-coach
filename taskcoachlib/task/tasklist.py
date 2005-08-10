@@ -135,3 +135,7 @@ class TaskList(patterns.ObservableObservablesList):
           
     def maxDate(self):
         return max(self.__allDates())
+        
+    def originalLength(self):
+        ''' Provide a way for bypassing the __len__ method of decorators. '''
+        return len(self)

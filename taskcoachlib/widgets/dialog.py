@@ -31,10 +31,10 @@ class Dialog(wx.Dialog):
         self.Close()
 
     def disableOK(self):
-        self._buttonBox.disable('OK')
+        self._buttonBox.disable(_('OK'))
         
     def enableOK(self):
-        self._buttonBox.enable('OK')
+        self._buttonBox.enable(_('OK'))
           
            
 class BookDialog(Dialog):    

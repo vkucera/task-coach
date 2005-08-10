@@ -2,12 +2,25 @@ import wx.grid as grid
 import wx
 
 class GridCtrl(grid.Grid):
-    def __init__(self, parent, gridTable, *args, **kwargs):
+    def __init__(self, parent, gridTable, selectcommand, editcommand, *args, **kwargs):
         super(GridCtrl, self).__init__(parent, *args, **kwargs)
         self.gridTable = gridTable
-        self.SetTable(gridTable, True)
+        self.SetTable(gridTable, True)#, selmode=grid.Grid.SelectRows)
         self.SetLabelFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
         self._rows, self._cols = gridTable.GetNumberRows(), gridTable.GetNumberCols()
+        self.EnableGridLines(False)
+        self.EnableEditing(False)
+        self.selectcommand = selectcommand
+        self.Bind(grid.EVT_GRID_CELL_LEFT_DCLICK, editcommand.onCommandActivate)
+        self.Bind(grid.EVT_GRID_SELECT_CELL, self.onSelect)
+        self.Bind(grid.EVT_GRID_RANGE_SELECT, self.onSelect)
+               
+    def onSelect(self, event):
+        self.selectcommand()
+        event.Skip()
+        
+    def curselection(self):
+        return self.GetSelectedRows()
         
     def GetItemCount(self):
         return self.GetNumberRows()
