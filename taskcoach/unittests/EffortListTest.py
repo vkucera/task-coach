@@ -70,6 +70,12 @@ class EffortListTest(test.TestCase):
         now = date.DateTime.now()
         self.task.addEffort(effort.Effort(self.task, None, now))
         self.assertEqual(now, self.effortList.maxDateTime())
+    
+    def testNrTracking(self):
+        self.assertEqual(0, self.effortList.nrBeingTracked())
+        
+    def testOriginalLength(self):
+        self.assertEqual(0, self.effortList.originalLength())
         
         
 class SingleTaskEffortListTest(test.TestCase):

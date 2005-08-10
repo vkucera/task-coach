@@ -70,6 +70,7 @@ class ReleaseConverter(object):
                 ('Feature%(s)s added', release.featuresAdded),
                 ('Feature%(s)s changed', release.featuresChanged),
                 ('Feature%(s)s removed', release.featuresRemoved),
+                ('Implementation%(s)s changed', release.implementationChanged),
                 ('Dependenc%(y)s changed', release.dependenciesChanged)]:
             if list:
                 result.append(self.sectionHeader(section, list))

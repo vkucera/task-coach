@@ -3,7 +3,7 @@ import textwrap
 class Release:
     def __init__(self, number, date, bugsFixed=None, featuresAdded=None,
             featuresRemoved=None, featuresChanged=None, 
-            dependenciesChanged=None):
+            dependenciesChanged=None, implementationChanged=None):
         self.number = number
         self.date = date
         self.bugsFixed = bugsFixed or []
@@ -11,6 +11,7 @@ class Release:
         self.featuresRemoved = featuresRemoved or []
         self.featuresChanged = featuresChanged or []
         self.dependenciesChanged = dependenciesChanged or []
+        self.implementationChanged = implementationChanged or []
 
 
 class Change:
@@ -28,4 +29,8 @@ class Feature(Change):
 
 
 class Dependency(Change):
+    pass
+
+
+class Implementation(Change):
     pass

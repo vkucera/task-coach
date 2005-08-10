@@ -4,7 +4,7 @@ import patterns, date, time, copy, sets, relations
 class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, completiondate=None, parent=None, budget=None, 
-            priority=0, *args, **kwargs):
+            priority=0, id_=None, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
         self._subject        = subject
         self._description    = description 
@@ -12,7 +12,7 @@ class Task(patterns.Observable):
         self._startdate      = startdate or date.Today()
         self._completiondate = completiondate or date.Date()
         self._budget         = budget or date.TimeDelta()
-        self._id             = '%s:%s'%(id(self), time.time())
+        self._id             = id_ or '%s:%s'%(id(self), time.time())
         self._children       = []
         self._parent         = parent # adding the parent->child link is
                                       # the creator's responsibility

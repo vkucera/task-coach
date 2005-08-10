@@ -2,7 +2,7 @@ import xml.dom, meta
 
 
 class XMLWriter:
-    def __init__(self, fd, versionnr=9):
+    def __init__(self, fd, versionnr=10):
         self.__fd = fd
         self.__versionnr = versionnr
         
@@ -19,6 +19,7 @@ class XMLWriter:
     def taskNode(self, task):
         node = self.document.createElement('task')
         node.setAttribute('subject', task.subject())
+        node.setAttribute('id', task.id())
         node.setAttribute('startdate', str(task.startDate()))
         node.setAttribute('duedate', str(task.dueDate()))
         node.setAttribute('completiondate', str(task.completionDate()))

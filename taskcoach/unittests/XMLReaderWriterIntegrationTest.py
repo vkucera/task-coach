@@ -85,3 +85,6 @@ class IntegrationTest(IntegrationTestCase):
     def testNegativePriority(self):
         self.assertEqual(self.task2.priority(), self.tasksWrittenAndRead[1].priority())
         
+    def testId(self):
+        self.assertEqual(self.task.id(), self.tasksWrittenAndRead[0].id())
+        

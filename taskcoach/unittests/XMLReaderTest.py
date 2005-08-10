@@ -28,13 +28,21 @@ class XMLReaderVersion6Test(XMLReaderTestCase):
 class XMLReaderVersion8Test(XMLReaderTestCase):   
     tskversion = 8
 
-    def testPriority(self):
+    def testReadTaskWithoutPriority(self):
         tasks = self.writeAndRead('<tasks><task/></tasks>')
         self.assertEqual(0, tasks[0].priority())
         
         
-class XMLReaderTest(XMLReaderTestCase):   
+class XMLReaderVersion9Test(XMLReaderTestCase):
     tskversion = 9
+    
+    def testReadTaskWithoutId(self):
+        tasks = self.writeAndRead('<tasks><task/></tasks>')
+        self.failUnless(tasks[0].id())
+        
+                
+class XMLReaderTest(XMLReaderTestCase):   
+    tskversion = 10
            
     def testReadEmptyStream(self):
         try:
@@ -124,3 +132,7 @@ class XMLReaderTest(XMLReaderTestCase):
     def testPriority(self):
         tasks = self.writeAndRead('<tasks><task priority="5"/></tasks>')        
         self.assertEqual(5, tasks[0].priority())
+        
+    def testId(self):
+        tasks = self.writeAndRead('<tasks><task id="xyz"/></tasks>')
+        self.assertEqual('xyz', tasks[0].id())

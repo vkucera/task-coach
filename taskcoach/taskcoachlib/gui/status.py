@@ -31,12 +31,7 @@ class StatusBar(wx.StatusBar):
         wx.CallAfter(self._displayStatus)
 
     def _displayStatus(self):
-        status1 = _('Tasks: %d selected, %d visible, %d total')%\
-            (len(self.viewer.curselection()), len(self.filteredList), 
-             len(self.taskList))
-        status2 = _('Status: %d over due, %d inactive, %d completed')% \
-            (self.taskList.nrOverdue(), self.taskList.nrInactive(),
-             self.taskList.nrCompleted())
+        status1, status2 = self.viewer.statusMessages()
         super(StatusBar, self).SetStatusText(status1, 0)
         super(StatusBar, self).SetStatusText(status2, 1)
 

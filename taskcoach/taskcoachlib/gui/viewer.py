@@ -117,7 +117,16 @@ class TaskViewer(Viewer):
 
     def isShowingEffort(self): # FIXME: can be removed?
         return False
-    
+   
+    def statusMessages(self):
+        status1 = _('Tasks: %d selected, %d visible, %d total')%\
+            (len(self.curselection()), len(self.list), 
+             self.list.originalLength())         
+        status2 = _('Status: %d over due, %d inactive, %d completed')% \
+            (self.list.nrOverdue(), self.list.nrInactive(),
+             self.list.nrCompleted())
+        return status1, status2
+ 
 
 
 class TaskListViewer(TaskViewer, ListViewer):
@@ -243,7 +252,22 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         return task.id()
 
 
-class EffortListViewer(ListViewer):  
+class EffortViewer(Viewer):
+    def isShowingTasks(self):
+        return False
+        
+    def isShowingEffort(self):
+        return True
+
+    def statusMessages(self):
+        status1 = _('Effort: %d selected, %d visible, %d total')%\
+            (len(self.curselection()), len(self.list), 
+             self.list.originalLength())         
+        status2 = _('Status: %d tracking')% self.list.nrBeingTracked()
+        return status1, status2
+ 
+    
+class EffortListViewer(ListViewer, EffortViewer):  
     def createWidget(self):
         uiCommands = {}
         uiCommands.update(self.uiCommands)
@@ -278,12 +302,6 @@ class EffortListViewer(ListViewer):
     def getItemAttr(self, index):
         return wx.ListItemAttr()
                 
-    def isShowingTasks(self):
-        return False
-        
-    def isShowingEffort(self):
-        return True
-
     def renderPeriod(self, effort, previousEffort=None):
         if previousEffort and effort.getStart() == previousEffort.getStart():
             return self.renderRepeatedPeriod(effort)
@@ -381,13 +399,14 @@ class Table(grid.PyGridTableBase):
 
     def GetAttr(self, row, col, *args):
         attr = grid.GridCellAttr()
-        attr.SetReadOnly()
         if not self.__emptyCell(row, col):
             task = self._taskList[row]
             attr.SetBackgroundColour(color.taskColor(task, active=wx.BLUE))
         return attr
-        
+       
     def __emptyCell(self, row, col):
+        if row >= len(self._taskList):
+            return True
         task = self._taskList[row]
         thisDate = self.__minDate() + date.TimeDelta(days=col)
         taskDates = [task.startDate()]
@@ -401,5 +420,5 @@ class Table(grid.PyGridTableBase):
 class GanttChartViewer(TaskViewer):
     def createWidget(self):
         self.table = Table(self.list)
-        widget = widgets.GridCtrl(self, self.table)
+        widget = widgets.GridCtrl(self, self.table, self.onSelect, self.uiCommands['edit'])
         return widget

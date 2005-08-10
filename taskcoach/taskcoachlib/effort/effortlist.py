@@ -29,6 +29,10 @@ class EffortList(patterns.ObservableListObserver, MaxDateTimeMixin):
             itemsChanged=notification.effortsChanged)
         super(EffortList, self).onNotify(effortNotification, *args, **kwargs)
 
+    def originalLength(self):
+        ''' Do not delegate originalLength to the underlying TaskList because
+        that would return a number of tasks, and not a number of effort records.'''
+        return len(self)
         
 
 class SingleTaskEffortList(patterns.ObservableListObserver, MaxDateTimeMixin):

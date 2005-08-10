@@ -23,6 +23,10 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
     def testId_DifferentTasks(self):
         task2 = task.Task()
         self.failIf(task2.id() == self.task.id())
+        
+    def testSetIdThroughConstructor(self):
+        task2 = task.Task(id_='id')
+        self.assertEqual('id', task2.id())
 
     def testNoDueDate(self):
         self.assertEqual(date.Date(), self.task.dueDate())
@@ -257,7 +261,7 @@ class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
         
 
 class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
-    ''' FIXME: to be deleted '''
+    ''' FIXME: to be deleted because of duplication with TaskRelationshipManager? '''
     def setUp(self):
         self.task = task.Task(subject='Todo', duedate=date.Tomorrow(),
             startdate=date.Yesterday())
