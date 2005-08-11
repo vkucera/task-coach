@@ -25,6 +25,7 @@ class XMLWriter:
         node.setAttribute('completiondate', str(task.completionDate()))
         node.setAttribute('budget', self.budgetAsAttribute(task.budget()))
         node.setAttribute('priority', str(task.priority()))
+        node.setAttribute('lastModificationTime', str(task.lastModificationTime()))
         node.appendChild(self.textNode('description', task.description()))
         for category in task.categories():
             node.appendChild(self.textNode('category', category))

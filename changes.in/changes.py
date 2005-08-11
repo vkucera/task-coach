@@ -18,7 +18,10 @@ is not minimized will raise the Task Coach window.''', '1242520'),
     implementationChanged=[
         Implementation('''Task ids are now persistent, i.e. they are saved to
 and loaded from the Task Coach (XML) file. This will make it easier, in the future,
-to keep tasks synchronized with external sources, e.g. Outlook.''')]),
+to keep tasks synchronized with external sources, e.g. Outlook.'''),
+        Implementation('''Task Coach now keeps track of the last modification 
+time of tasks. These times are saved to and loaded from the Task Coach (XML) file.
+This change is also in preparation of synchronization functionality.''')]),
 
 Release('0.45', 'July 26, 2005',
     bugsFixed=[

@@ -30,7 +30,8 @@ class IntegrationTest(IntegrationTestCase):
         self.description = 'Description\nLine 2'
         self.task = task.Task('Subject', self.description, startdate=date.Yesterday(), 
             duedate=date.Tomorrow(), completiondate=date.Yesterday(), 
-            budget=date.TimeDelta(hours=1), priority=4)
+            budget=date.TimeDelta(hours=1), priority=4, 
+            lastModificationTime=date.DateTime(2004,1,1))
         self.child = task.Task()
         self.task.addChild(self.child)
         self.grandChild = task.Task()
@@ -87,4 +88,7 @@ class IntegrationTest(IntegrationTestCase):
         
     def testId(self):
         self.assertEqual(self.task.id(), self.tasksWrittenAndRead[0].id())
+        
+    def testLastModificationTime(self):
+        self.assertEqual(self.task.lastModificationTime(), self.tasksWrittenAndRead[0].lastModificationTime())
         

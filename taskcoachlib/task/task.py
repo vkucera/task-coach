@@ -4,7 +4,7 @@ import patterns, date, time, copy, sets, relations
 class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, completiondate=None, parent=None, budget=None, 
-            priority=0, id_=None, *args, **kwargs):
+            priority=0, id_=None, lastModificationTime=None, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
         self._subject        = subject
         self._description    = description 
@@ -12,13 +12,14 @@ class Task(patterns.Observable):
         self._startdate      = startdate or date.Today()
         self._completiondate = completiondate or date.Date()
         self._budget         = budget or date.TimeDelta()
-        self._id             = id_ or '%s:%s'%(id(self), time.time())
+        self._id             = id_ or '%s:%s'%(id(self), time.time()) # FIXME: Npt a valid XML id
         self._children       = []
         self._parent         = parent # adding the parent->child link is
                                       # the creator's responsibility
         self._efforts        = []
         self._categories     = sets.Set()
         self._priority       = priority
+        self.setLastModificationTime(lastModificationTime)
         relations.TaskRelationshipManager().startManaging(self)
         
     def __del__(self):
@@ -28,7 +29,12 @@ class Task(patterns.Observable):
         notification = patterns.observer.Notification(self,  
             itemsChanged=[notification.source], effortsChanged=notification.effortsChanged)
         self.notifyObservers(notification, *args, **kwargs)       
-        
+    
+    def notifyObservers(self, notification, *args, **kwargs):
+        if notification.changeNeedsSave:
+            self.setLastModificationTime()
+        super(Task, self).notifyObservers(notification, *args, **kwargs)
+
     def __setstate__(self, state):
         self.__dict__.update(state)
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
@@ -117,12 +123,12 @@ class Task(patterns.Observable):
             self._children.append(child)
             child.setParent(self)
             child.registerObserver(self.onNotify)
-            self.notifyObservers(patterns.Notification(self, childAdded=child))
+            self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, childAdded=child))
 
     def removeChild(self, child):
         self._children.remove(child)
         child.removeObserver(self.onNotify)
-        self.notifyObservers(patterns.Notification(self, childRemoved=child))
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, childRemoved=child))
 
     def setParent(self, parent):
         self._parent = parent
@@ -282,3 +288,11 @@ class Task(patterns.Observable):
         
     def setPriority(self, priority):
         self.__setAttributeAndNotifyObservers('_priority', priority)
+        
+    # modifications
+    
+    def lastModificationTime(self):
+        return self._lastModificationTime
+
+    def setLastModificationTime(self, time=None):
+        self._lastModificationTime = time or date.DateTime.now()
