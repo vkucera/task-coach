@@ -587,4 +587,115 @@ class TaskPriorityTest(TaskNotificationTestCase):
     def testNegativePriority(self):
         self.task.setPriority(-1)
         self.assertEqual(-1, self.task.priority())
+
+        
+class TaskLastModificationTimeTest(test.TestCase):
+    def setUp(self):
+        self.time = date.DateTime(2004,1,1)
+        self.task = task.Task(lastModificationTime=self.time)
+    
+    def assertEqualTimes(self, time1, time2):
+        delta = time1 - time2
+        self.failUnless(abs(delta) < date.TimeDelta(seconds=1))
+        
+    def assertLastModificationTimeIsNow(self, task):
+        self.assertEqualTimes(date.DateTime.now(), task.lastModificationTime())
+        
+    def testNewlyCreatedTask(self):
+        self.assertLastModificationTimeIsNow(task.Task())
+        
+    def testSetLastModificationTime(self):
+        self.task.setLastModificationTime(date.DateTime.now())
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testSetLastModificationTime_ThroughConstructor(self):
+        self.assertEqualTimes(self.time, self.task.lastModificationTime())
+        
+    def testChangeSubject(self):
+        self.task.setSubject('New subject')
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testChangeDescription(self):
+        self.task.setDescription('New description')
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testChangeStartDate(self):
+        self.task.setStartDate(date.Yesterday())
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testChangeDueDate(self):
+        self.task.setDueDate(date.Tomorrow())
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testChangeCompletionDate(self):
+        self.task.setCompletionDate()
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testChangeBudget(self):
+        self.task.setBudget(date.TimeDelta(hours=100))
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testChangePriority(self):
+        self.task.setPriority(42)
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testAddCategory(self):
+        self.task.addCategory('New category')
+        self.assertLastModificationTimeIsNow(self.task)
+
+    def testRemoveCategory(self):
+        self.task.removeCategory('New category')
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testAddEffort(self):
+        self.task.addEffort(effort.Effort(self.task))
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testRemoveEffort(self):
+        anEffort = effort.Effort(self.task)
+        self.task.addEffort(anEffort)
+        self.task.setLastModificationTime(self.time)
+        self.task.removeEffort(anEffort)
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testActiveEffort(self):
+        anEffort = effort.Effort(self.task)
+        self.task.addEffort(anEffort)
+        self.task.setLastModificationTime(self.time)
+        anEffort.onEverySecond()
+        self.assertEqualTimes(self.time, self.task.lastModificationTime())
+        
+    def testStopTracking(self):
+        anEffort = effort.Effort(self.task)
+        self.task.addEffort(anEffort)
+        self.task.setLastModificationTime(self.time)
+        self.task.stopTracking()
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testAddChild(self):
+        self.task.addChild(task.Task())
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testRemoveChild(self):
+        child = task.Task()
+        self.task.addChild(child)
+        self.task.setLastModificationTime(self.time)
+        self.task.removeChild(child)
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testChangeChildSubject(self):
+        child = task.Task()
+        self.task.addChild(child)
+        self.task.setLastModificationTime(self.time)
+        child.setSubject('New subject')
+        self.assertEqualTimes(self.time, self.task.lastModificationTime())
+        
+    def testAddChildEffort(self):
+        child = task.Task()
+        self.task.addChild(child)
+        self.task.setLastModificationTime(self.time)
+        child.addEffort(effort.Effort(child))
+        self.assertEqualTimes(self.time, self.task.lastModificationTime())
+        
+        
         

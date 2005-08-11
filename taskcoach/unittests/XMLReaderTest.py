@@ -40,7 +40,11 @@ class XMLReaderVersion9Test(XMLReaderTestCase):
         tasks = self.writeAndRead('<tasks><task/></tasks>')
         self.failUnless(tasks[0].id())
         
-                
+    def testReadTaskWithoutLastModificationTime(self):
+        tasks = self.writeAndRead('<tasks><task/></tasks>')
+        self.assertEqual(date.DateTime.now(), tasks[0].lastModificationTime())
+
+
 class XMLReaderTest(XMLReaderTestCase):   
     tskversion = 10
            
@@ -136,3 +140,8 @@ class XMLReaderTest(XMLReaderTestCase):
     def testId(self):
         tasks = self.writeAndRead('<tasks><task id="xyz"/></tasks>')
         self.assertEqual('xyz', tasks[0].id())
+        
+    def testLastModificationTime(self):
+        tasks = self.writeAndRead('<tasks><task lastModificationTime="2004-01-01 10:00:00.123000"/></tasks>')
+        self.assertEqual(date.DateTime(2004,1,1,10,0,0,123000), tasks[0].lastModificationTime())
+        

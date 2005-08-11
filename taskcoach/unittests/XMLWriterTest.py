@@ -114,3 +114,6 @@ class XMLWriterTest(test.TestCase):
         
     def testId(self):
         self.assertTaskAttribute(self.task.id(), 'id')
+        
+    def testLastModificationTime(self):
+        self.assertTaskAttribute(self.task.lastModificationTime(), 'lastModificationTime')
