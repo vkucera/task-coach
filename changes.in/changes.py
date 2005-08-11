@@ -5,7 +5,7 @@ Release('0.46', 'August ?, 2005',
     bugsFixed=[
         Bug('''In the effort views, the status bar would show information about
 tasks, not about effort.'''),
-        Bug('''Entering a negative effort duration while using non-english 
+        Bug('''Entering a negative effort duration while using a non-english 
 language would crash Task Coach.''', '1250177')],
     featuresChanged=[
         Feature('''Keyboard shortcut for deleting a task is now 'Delete'
@@ -14,7 +14,7 @@ instead of 'Ctrl-D' and 'Ctrl-Enter' marks the selected task(s) completed.''',
     featuresAdded=[
         Feature('''Double-clicking the system tray icon when Task Coach
 is not minimized will raise the Task Coach window.''', '1242520'),
-        Feature('''Added Spanish translation thanks to Juan José''')],
+        Feature('''Added Spanish translation thanks to Juan José.''')],
     implementationChanged=[
         Implementation('''Task ids are now persistent, i.e. they are saved to
 and loaded from the Task Coach (XML) file. This will make it easier, in the future,
