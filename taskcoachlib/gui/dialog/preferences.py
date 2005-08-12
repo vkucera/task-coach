@@ -20,6 +20,8 @@ class SettingsPage(widgets.BookPage):
             choice.Append(choiceText, choiceValue)
             if choiceValue == self.settings.get(section, setting):
                 choice.SetSelection(choice.GetCount()-1)
+        if choice.GetSelection() == wx.NOT_FOUND: # force a selection if necessary
+            choice.SetSelection(0)
         self.addEntry(text, choice, helpText)
         self._choiceSettings.append((section, setting, choice))
         

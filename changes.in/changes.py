@@ -1,12 +1,15 @@
 from domain import *
 
 releases = [
-Release('0.46', 'August ?, 2005',
+Release('0.46', 'August 12, 2005',
     bugsFixed=[
         Bug('''In the effort views, the status bar would show information about
 tasks, not about effort.'''),
         Bug('''Entering a negative effort duration while using a non-english 
-language would crash Task Coach.''', '1250177')],
+language would crash Task Coach.''', '1250177'),
+        Bug('''Having a two letter language string (e.g. 'en') in the 
+TaskCoach.ini file would cause an error in the preferences dialog.''', 
+'1247506')],
     featuresChanged=[
         Feature('''Keyboard shortcut for deleting a task is now 'Delete'
 instead of 'Ctrl-D' and 'Ctrl-Enter' marks the selected task(s) completed.''', 

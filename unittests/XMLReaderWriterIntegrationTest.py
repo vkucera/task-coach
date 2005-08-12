@@ -90,5 +90,6 @@ class IntegrationTest(IntegrationTestCase):
         self.assertEqual(self.task.id(), self.tasksWrittenAndRead[0].id())
         
     def testLastModificationTime(self):
-        self.assertEqual(self.task.lastModificationTime(), self.tasksWrittenAndRead[0].lastModificationTime())
+        delta = abs(self.task.lastModificationTime() - self.tasksWrittenAndRead[0].lastModificationTime())
+        self.failUnless(delta < date.TimeDelta(seconds=1))
         
