@@ -127,48 +127,97 @@ class TaskViewer(Viewer):
              self.list.nrCompleted())
         return status1, status2
  
+    def createTaskPopupMenu(self):
+        return menu.TaskPopupMenu(self.parent, self.uiCommands)
+        
 
+class TaskViewerWithColumns(TaskViewer):
+    def __init__(self, *args, **kwargs):
+        super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
+        self.settings.registerObserver(self.onShowColumn, ('view', 'duedate'), ('view', 'startdate'),
+            ('view', 'daysleft'), ('view', 'completiondate'), ('view', 'budget'), 
+            ('view', 'totalbudget'), ('view', 'timespent'), ('view', 'totaltimespent'),
+            ('view', 'budgetleft'), ('view', 'totalbudgetleft'), ('view', 'priority'),
+            ('view', 'totalpriority'), ('view', 'lastmodificationtime'),
+            ('view', 'totallastmodificationtime'))
+        self.settings.registerObserver(self.onSortKeyChanged, ('view', 'sortby'))
+        self.settings.registerObserver(self.onSortOrderChanged, ('view', 'sortascending'))
+        
+    def onShowColumn(self, notification):
+        columnHeader = {'subject': _('Subject'), 'startdate': _('Start date'),
+            'duedate': _('Due date'), 'daysleft': _('Days left'),
+            'completiondate': _('Completion date'), 'budget': _('Budget'),
+            'totalbudget': _('Total budget'), 'timespent': _('Time spent'),
+            'totaltimespent': _('Total time spent'), 'budgetleft': _('Budget left'),
+            'totalbudgetleft': _('Total budget left'), 'priority': _('Priority'),
+            'totalpriority': _('Overall priority'), 
+            'lastmodificationtime': _('Last modification time'), 
+            'totallastmodificationtime': _('Overall last modification time')}[notification.option]
+        self.widget.showColumn(columnHeader, notification.value=='True')
 
-class TaskListViewer(TaskViewer, ListViewer):
-    def createWidget(self):
-        widget = widgets.ListCtrl(self, self.columns(),
-            self.getItemText, self.getItemImage, self.getItemAttr, 
-            self.onSelect, self.uiCommands['edit'], 
-            menu.TaskPopupMenu(self.parent, self.uiCommands),
-            menu.TaskListViewerColumnPopupMenu(self.parent, self.uiCommands),
-            [self.uiCommands['viewsortbysubject'], 
-                self.uiCommands['viewsortbystartdate'], 
-                self.uiCommands['viewsortbyduedate'],
-                self.uiCommands['viewsortbydaysleft'],
-                self.uiCommands['viewsortbycompletiondate'],
-                self.uiCommands['viewsortbybudget'],
-                self.uiCommands['viewsortbytotalbudget'],
-                self.uiCommands['viewsortbytimespent'],
-                self.uiCommands['viewsortbytotaltimespent'],
-                self.uiCommands['viewsortbybudgetleft'],
-                self.uiCommands['viewsortbytotalbudgetleft'],
-                self.uiCommands['viewsortbypriority'],
-                self.uiCommands['viewsortbytotalpriority']])
-        widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
-        return widget
+    def onSortKeyChanged(self, notification):
+        sortKey = notification.value
+        columnHeader = {'subject': _('Subject'), 'startDate': _('Start date'),
+            'dueDate': _('Due date'), 'timeLeft': _('Days left'),
+            'completionDate': _('Completion date'), 'budget': _('Budget'),
+            'totalbudget': _('Total budget'), 'timeSpent': _('Time spent'),
+            'totaltimeSpent': _('Total time spent'), 'budgetLeft': _('Budget left'),
+            'totalbudgetLeft': _('Total budget left'), 'priority': _('Priority'),
+            'totalpriority': _('Overall priority'), 
+            'lastModificationTime': _('Last modification time'),
+            'totallastModificationTime': _('Overall last modification time')}[sortKey]
+        self.widget.showSortColumn(columnHeader)
+        
+    def onSortOrderChanged(self, notification):
+        if notification.value == 'True':
+            imageIndex = self.imageIndex['ascending']
+        else:
+            imageIndex = self.imageIndex['descending']
+        self.widget.showSortOrder(imageIndex)
         
     def columns(self):
-        return [_('Subject'), _('Start date'), _('Due date'),
+        return [widgets.Column(columnHeader) for columnHeader in _('Subject'), 
+            _('Start date'), _('Due date'),
             _('Days left'), _('Completion date'), _('Budget'), 
             _('Total budget'), _('Time spent'), _('Total time spent'), 
             _('Budget left'), _('Total budget left'), _('Priority'),
-            _('Overall priority') ]
-       
-    def createFilter(self, taskList):
-        return task.filter.CompositeFilter(taskList)
-        
-    def setViewCompositeTasks(self, viewCompositeTasks):
-        self.list.setViewCompositeTasks(viewCompositeTasks)
+            _('Overall priority'), _('Last modification time'),
+            _('Overall last modification time')]
+
+    def columnSortCommands(self):
+        return {_('Subject'): self.uiCommands['viewsortbysubject'], 
+                _('Start date'): self.uiCommands['viewsortbystartdate'], 
+                _('Due date'): self.uiCommands['viewsortbyduedate'],
+                _('Days left'): self.uiCommands['viewsortbydaysleft'],
+                _('Completion date'): self.uiCommands['viewsortbycompletiondate'],
+                _('Budget'): self.uiCommands['viewsortbybudget'],
+                _('Total budget'): self.uiCommands['viewsortbytotalbudget'],
+                _('Time spent'): self.uiCommands['viewsortbytimespent'],
+                _('Total time spent'): self.uiCommands['viewsortbytotaltimespent'],
+                _('Budget left'): self.uiCommands['viewsortbybudgetleft'],
+                _('Total budget left'): self.uiCommands['viewsortbytotalbudgetleft'],
+                _('Priority'): self.uiCommands['viewsortbypriority'],
+                _('Overall priority'): self.uiCommands['viewsortbytotalpriority'],
+                _('Last modification time'): self.uiCommands['viewsortbylastmodificationtime'],
+                _('Overall last modification time'): self.uiCommands['viewsortbytotallastmodificationtime']}
+
     
-    def getItemText(self, index, columnHeader):
+    def getItemText(self, index, columnHeader=None):
         task = self.list[index]
+        # FIXME: When in a TaskTreeListViewer we need the subject non-recursively 
+        # (e.g., 'task') when in a TaskListViewer we need the subject recursively
+        # (e.g. 'parent -> task'. However, the following 5 lines depend on the fact 
+        # that getItemText is currently called *with* the columnHeader argument from
+        # a TreeCtrl and *without* the columnHeader from a TreeListCtrl.
+        if not columnHeader:
+            columnHeader = _('Subject')
+            recursively = False
+        else:
+            recursively = True
+        # FIXME: Create a renderer dictionary with the column headers as keys and
+        # the renderers as values.
         if columnHeader == _('Subject'):
-            return render.subject(task, recursively=True)
+            return render.subject(task, recursively=recursively)
         elif columnHeader == _('Start date'):
             return render.date(task.startDate())
         elif columnHeader == _('Due date'):
@@ -193,38 +242,47 @@ class TaskListViewer(TaskViewer, ListViewer):
             return render.priority(task.priority())
         elif columnHeader == _('Overall priority'):
             return render.priority(task.priority(recursive=True))
-    
-    def showColumn(self, columnHeader, show):
-        self.widget.showColumn(columnHeader, show)
+        elif columnHeader == _('Last modification time'):
+            return render.dateTime(task.lastModificationTime())
+        elif columnHeader == _('Overall last modification time'):
+            return render.dateTime(task.lastModificationTime(recursive=True))
 
-    def onNotify(self, *args, **kwargs):
-        sortKey = self.list.getSortKey()
-        columnHeader = {'subject': _('Subject'), 'startDate': _('Start date'),
-            'dueDate': _('Due date'), 'timeLeft': _('Days left'),
-            'completionDate': _('Completion date'), 'budget': _('Budget'),
-            'totalbudget': _('Total budget'), 'timeSpent': _('Time spent'),
-            'totaltimeSpent': _('Total time spent'), 'budgetLeft': _('Budget left'),
-            'totalbudgetLeft': _('Total budget left'), 'priority': _('Priority'),
-            'totalpriority': _('Overall priority')}[sortKey]
-        if self.list.isAscending():
-            imageIndex = self.imageIndex['ascending']
-        else:
-            imageIndex = self.imageIndex['descending']
-        self.widget.showSort(columnHeader, imageIndex)
-        super(TaskListViewer, self).onNotify(*args, **kwargs)
+    def createColumnPopupMenu(self):
+        return menu.TaskViewerColumnPopupMenu(self.parent, self.uiCommands)
+
+    
+
+class TaskListViewer(TaskViewerWithColumns, ListViewer):
+    def createWidget(self):
+        widget = widgets.ListCtrl(self, self.columns(),
+            self.getItemText, self.getItemImage, self.getItemAttr, 
+            self.onSelect, self.uiCommands['edit'], 
+            self.createTaskPopupMenu(),
+            self.createColumnPopupMenu(),
+            self.columnSortCommands())
+        widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
+        return widget
+        
+    def createFilter(self, taskList):
+        return task.filter.CompositeFilter(taskList)
+        
+    def createSorter(self, list):
+        return task.sorter.Sorter(list, settings=self.settings, treeMode=False)
+    
+    def setViewCompositeTasks(self, viewCompositeTasks):
+        self.list.setViewCompositeTasks(viewCompositeTasks)
 
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
-            self.getItemAttr, self.getItemChildrenCount, self.getItemId,
-            self.getItemChildIndex, self.onSelect, self.uiCommands['edit'], 
-            menu.TaskPopupMenu(self.parent, self.uiCommands))
+            self.getItemAttr, self.getItemId, self.getRootIndices, self.getChildIndices,
+            self.onSelect, self.uiCommands['edit'], self.createTaskPopupMenu())
         widget.AssignImageList(self.createImageList())
         return widget
-
-    def createSorter(self, taskList):
-        return task.sorter.DepthFirstSorter(taskList) 
+        
+    def createSorter(self, list):
+        return task.sorter.Sorter(list, settings=self.settings, treeMode=True)
     
     def getItemText(self, index):
         task = self.list[index]
@@ -233,11 +291,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
     def getItemImage(self, index):
         task = self.list[index]
         return self.getImageIndices(task) 
-    
-    def getItemChildrenCount(self, index, recursive=False):
-        task = self.list[index]
-        return len([child for child in task.children(recursive=recursive) if child in self.list])
-    
+        
     def getItemChildIndex(self, index):
         task = self.list[index]
         if task.parent():
@@ -250,6 +304,25 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
     def getItemId(self, index):
         task = self.list[index]
         return task.id()
+
+    def getRootIndices(self):
+        return [self.list.index(task) for task in self.list.rootTasks()]
+        
+    def getChildIndices(self, index):
+        task = self.list[index]
+        childIndices = [self.list.index(child) for child in task.children()]
+        childIndices.sort()
+        return childIndices
+
+
+class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
+    def createWidget(self):
+        widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
+            self.getItemImage, self.getItemAttr, self.getItemId, self.getRootIndices,
+            self.getChildIndices, self.onSelect, self.uiCommands['edit'],
+            self.createTaskPopupMenu(), self.createColumnPopupMenu(), self.columnSortCommands())
+        widget.AssignImageList(self.createImageList())
+        return widget    
 
 
 class EffortViewer(Viewer):
@@ -269,6 +342,7 @@ class EffortViewer(Viewer):
     
 class EffortListViewer(ListViewer, EffortViewer):  
     def createWidget(self):
+        # FIXME: Why are we creating uiCommands here? I forgot to document the reason.
         uiCommands = {}
         uiCommands.update(self.uiCommands)
         uiCommands['editeffort'] = uicommand.EffortEdit(self.parent, self.list, self, self.uiCommands)
@@ -281,7 +355,7 @@ class EffortListViewer(ListViewer, EffortViewer):
         return widget
 
     def columns(self):
-        return [_('Period'), _('Task'), _('Time spent')]
+        return [widgets.Column(columnHeader) for columnHeader in (_('Period'), _('Task'), _('Time spent'))]
         
     def createSorter(self, effortList):
         return effort.EffortSorter(effortList)
@@ -320,7 +394,7 @@ class EffortListViewer(ListViewer, EffortViewer):
 
 class CompositeEffortListViewer(EffortListViewer):
     def columns(self):
-        return super(CompositeEffortListViewer, self).columns() + [_('Total time spent')]
+        return super(CompositeEffortListViewer, self).columns() + [widgets.Column(_('Total time spent'))]
         
     def curselection(self):
         compositeEfforts = super(CompositeEffortListViewer, self).curselection()

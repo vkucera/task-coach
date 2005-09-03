@@ -95,24 +95,27 @@ class CompositeFilter(Filter):
 
 class SearchFilter(Filter):
     def __init__(self, *args, **kwargs):
-        self.subject = ''
-        self.flag = re.IGNORECASE
+        self.__subject = ''
+        self.__flag = re.IGNORECASE
         super(SearchFilter, self).__init__(*args, **kwargs)
 
     def filter(self, task):
         childSubjects = ''.join([child.subject() for child in task.allChildren()
             if child in self.original()])
-        return re.search('.*%s.*'%self.subject, task.subject()+childSubjects, self.flag)
+        return re.search('.*%s.*'%self.__subject, task.subject()+childSubjects, self.__flag)
 
     def setSubject(self, subject=''):
-        self.subject = subject
+        self.__subject = subject
         self.reset()
 
+    def getSubject(self):
+        return self.__subject
+        
     def setMatchCase(self, match):
         if match:
-            self.flag = 0
+            self.__flag = 0
         else:
-            self.flag = re.IGNORECASE
+            self.__flag = re.IGNORECASE
         self.reset()
 
 

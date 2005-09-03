@@ -2,10 +2,11 @@ import wx, task, meta
 from i18n import _
 
 class IOController(object): 
-    def __init__(self, taskFile, messageCallback): 
+    def __init__(self, taskFile, messageCallback, settings): 
         super(IOController, self).__init__()
         self.__taskFile = taskFile
         self.__messageCallback = messageCallback
+        self.__settings = settings
         self.__fileDialogOpts = { 'default_path' : '.', 
             'default_extension' : 'tsk', 'wildcard' : 
             _('%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*')%meta.name }
@@ -17,24 +18,27 @@ class IOController(object):
         if not self.close():
             return
         if not filename:
-            filename = wx.FileSelector(_('Open'), **self.__fileDialogOpts)
+            filename = self.__askUserForFile(_('Open'))
         if filename:
             self.__taskFile.setFilename(filename)
             try:
-                self.__taskFile.load()
-                self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})
+                self.__taskFile.load()                
             except:
                 self.__taskFile.setFilename('')
                 showerror(_('Error while reading %s.\n' 
                     'Are you sure it is a %s-file?')%(filename, meta.name), 
                     caption=_('File error'), style=wx.ICON_ERROR)
-
+                return
+            self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})
+            self.__addRecentFile(filename)
+            
     def merge(self, filename=None):
         if not filename:
-            filename = wx.FileSelector(_('Merge'), **self.__fileDialogOpts)
+            filename = self.__askUserForFile(_('Merge'))
         if filename:
             self.__taskFile.merge(filename)
             self.__messageCallback(_('Merged %(filename)s')%{'filename': filename}) 
+            self.__addRecentFile(filename)
 
     def save(self, *args):
         if self.__taskFile.filename():
@@ -46,23 +50,26 @@ class IOController(object):
         else:
             return False
 
-    def saveas(self):
-        filename = wx.FileSelector(_('Save as...'), flags=wx.SAVE, **self.__fileDialogOpts)
+    def saveas(self, filename=None):
+        if not filename:
+            filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
         if filename:
             self.__taskFile.saveas(filename)
             self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': filename})
+            self.__addRecentFile(filename)
             return True
         else:
             return False
 
     def saveselection(self, tasks, filename=None):
         if not filename:
-            filename = wx.FileSelector(_('Save as...'), flags=wx.SAVE, **self.__fileDialogOpts)
+            filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
         if filename:
             selectionFile = task.TaskFile(filename)
             selectionFile.extend(tasks)
             selectionFile.save()
             self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(selectionFile), 'filename': filename})
+            self.__addRecentFile(filename)
         
     def close(self):
         if self.__taskFile.needSave():
@@ -79,3 +86,15 @@ class IOController(object):
         import patterns
         patterns.CommandHistory().clear()
         return True
+
+    def __addRecentFile(self, fileName):
+        recentFiles = eval(self.__settings.get('file', 'recentfiles'))
+        if fileName in recentFiles:
+            recentFiles.remove(fileName)
+        recentFiles.insert(0, fileName)
+        maximumNumberOfRecentFiles = self.__settings.getint('file', 'maxrecentfiles')
+        recentFiles = recentFiles[:maximumNumberOfRecentFiles]
+        self.__settings.set('file', 'recentfiles', str(recentFiles))
+        
+    def __askUserForFile(self, title, flags=wx.OPEN):
+        return wx.FileSelector(title, flags=flags, **self.__fileDialogOpts)

@@ -1,38 +1,20 @@
-import test, task, task.sorter, patterns, date, effort
+import test, task, task.sorter, patterns, date, effort, dummy, config
 
-class Node(patterns.Observable):
-    def __init__(self, name, *args, **kwargs):
-        super(Node, self).__init__(*args, **kwargs)
-        self._name = name
 
-    def __cmp__(self, other):
-        return cmp(self._name, other._name)
-
-    def __repr__(self):
-        return self._name
-
-    def setName(self, name):
-        self._name = name
-        self.notifyObservers(patterns.observer.Notification(self))
-
-    def name(self):
-        return self._name
-
-class TestableSorter(task.sorter.Sorter):
-    defaultSortKey = 'name'
-    
-    def _statusSortKey(self, node):
-        return []
-    
-        
-class SorterTest(test.TestCase):
+class TaskSorterTest(test.TestCase):
     def setUp(self):
-        a = self.a = Node('a')
-        b = self.b = Node('b')
-        c = self.c = Node('c')
-        d = self.d = Node('d')
-        self.list = patterns.ObservableObservablesList([d, b, c, a])
-        self.sorter = TestableSorter(self.list)
+        a = self.a = task.Task('a')
+        b = self.b = task.Task('b')
+        c = self.c = task.Task('c')
+        d = self.d = task.Task('d')
+        self.list = dummy.TaskList([d, b, c, a])
+        self.settings = config.Settings(load=False)
+        self.settings.set('view', 'sortby', 'subject')
+        self.sorter = task.sorter.Sorter(self.list, settings=self.settings)
+
+    def testInitiallyEmpty(self):
+        sorter = task.sorter.Sorter(dummy.TaskList(), settings=self.settings)
+        self.assertEqual(0, len(sorter))
 
     def testLength(self):
         self.assertEqual(4, len(self.sorter))
@@ -50,83 +32,125 @@ class SorterTest(test.TestCase):
         self.assertEqual([self.d, self.b, self.a], self.list)
 
     def testAppend(self):
-        e = Node('e')
+        e = task.Task('e')
         self.list.append(e)
         self.assertEqual(5, len(self.sorter))
         self.assertEqual(e, self.sorter[-1])
 
     def testChange(self):
-        self.a.setName('z')
+        self.a.setSubject('z')
         self.assertEqual([self.b, self.c, self.d, self.a], list(self.sorter))
 
-
-class NodeWithChildren(Node):
-    def __init__(self, name, parent=None, *args, **kwargs):
-        super(NodeWithChildren, self).__init__(name, *args, **kwargs)
-        self._children = []
-        self._parent = parent
-        if parent:
-            parent.addChild(self)
-
-    def addChild(self, child):
-        self._children.append(child)
-
-    def removeChild(self, child):
-        self._children.remove(child)
-
-    def delete(self):
-        if self._parent:
-            self._parent.removeChild(self)
-
-    def children(self):
-        return self._children
-
-    def parent(self):
-        return self._parent
-
-
-class DummyList(patterns.ObservableObservablesList):
-    def rootTasks(self):
-        return [task for task in self if task.parent() is None]
-       
-
-class DepthFirstSorterTest(test.TestCase):
+class TaskSorterSettingsTest(test.TestCase):        
     def setUp(self):
-        self.parent1 = NodeWithChildren('1')
-        self.child1 = NodeWithChildren('1.1', self.parent1)
-        self.grandchild = NodeWithChildren('1.1.1', self.child1)
-        self.child2 = NodeWithChildren('1.2', self.parent1)
-        self.parent2 = NodeWithChildren('2')
-        self.list = DummyList([self.parent2, self.child2, 
-            self.parent1, self.child1, self.grandchild])
-        self.sorter = task.sorter.DepthFirstSorter(self.list)
+        self.taskList = task.TaskList()
+        self.settings = config.Settings(load=False)
+        self.sorter = task.sorter.Sorter(self.taskList, settings=self.settings)        
+        self.task1 = task.Task(subject='A', duedate=date.Tomorrow())
+        self.task2 = task.Task(subject='B', duedate=date.Today())
+        self.taskList.extend([self.task1, self.task2])
 
-    def testLength(self):
-        self.assertEqual(len(self.list), len(self.sorter))
+    def tearDown(self):
+        task.sorter.SortOrderReverser.deleteInstance()
+        
+    def testSortDueDate(self):
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testSortBySubject(self):
+        self.settings.set('view', 'sortby', 'subject')
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
+    def testSortBySubject_TurnOff(self):
+        self.settings.set('view', 'sortby', 'subject')
+        self.settings.set('view', 'sortby', 'dueDate')
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testSortByCompletionStatus(self):
+        self.task2.setCompletionDate(date.Today())
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
+    def testSortByInactiveStatus(self):
+        self.task2.setStartDate(date.Tomorrow())
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+    
+    def testSortBySubjectDescending(self):
+        self.settings.set('view', 'sortby', 'subject')
+        self.settings.set('view', 'sortascending', 'False')
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testSortByStartDate(self):
+        self.settings.set('view', 'sortby', 'startDate')
+        self.task1.setDueDate(date.Yesterday())
+        self.task2.setStartDate(date.Yesterday())
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testDescending(self):
+        self.settings.set('view', 'sortascending', 'False')
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
+    def testByDueDateWithoutFirstSortingByStatus(self):
+        self.settings.set('view', 'sortbystatusfirst', 'False')
+        self.task2.setCompletionDate(date.Today())
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
 
-    def testOrder(self):
-        self.assertEqual([self.parent2, self.parent1, self.child2, self.child1, 
-            self.grandchild], list(self.sorter))
+    def testSortBySubjectWithFirstSortingByStatus(self):
+        self.settings.set('view', 'sortbystatusfirst', 'True')
+        self.settings.set('view', 'sortby', 'subject')
+        self.task1.setCompletionDate(date.Today())
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+    def testSortBySubjectWithoutFirstSortingByStatus(self):
+        self.settings.set('view', 'sortbystatusfirst', 'False')
+        self.settings.set('view', 'sortby', 'subject')
+        self.task1.setCompletionDate(date.Today())
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+                
+    def testSortCaseSensitive(self):
+        self.settings.set('view', 'sortcasesensitive', 'True')
+        self.settings.set('view', 'sortby', 'subject')
+        task3 = task.Task('a')
+        self.taskList.append(task3)
+        self.assertEqual([self.task1, self.task2, task3], list(self.sorter))
 
-    def testRemoveItem(self):
-        self.grandchild.delete()
-        self.sorter.remove(self.grandchild)
-        self.assertEqual(4, len(self.sorter))
-        self.assertEqual(self.parent2, self.sorter[0])
-        self.assertEqual([self.parent2, self.child2, self.parent1,  
-            self.child1], self.list)
+    def testSortCaseInsensitive(self):
+        self.settings.set('view', 'sortcasesensitive', 'False')
+        self.settings.set('view', 'sortby', 'subject')
+        task3 = task.Task('a')
+        self.taskList.append(task3)
+        self.assertEqual([self.task1, task3, self.task2], list(self.sorter))
+    
+    def testFlipSortOrder(self):
+        self.settings.set('view', 'sortascending', 'True')
+        self.settings.set('view', 'sortby', 'subject')
+        self.settings.set('view', 'sortby', 'subject')
+        self.assertEqual('False', self.settings.get('view', 'sortascending'))
 
-    def testAppendItem(self):
-        node = NodeWithChildren('1.1.1.1', self.grandchild)
-        self.list.append(node)
-        self.assertEqual(6, len(self.sorter))
-        self.assertEqual(node, self.sorter[5])
 
-    def testChildNotInList(self):
-        self.list.remove(self.child2)
-        self.assertEqual([self.parent2, self.parent1, self.child1, self.grandchild],
-            list(self.sorter))
+class TaskSorterTreeModeTest(test.TestCase):
+    def setUp(self):
+        self.taskList = task.TaskList()
+        self.settings = config.Settings(load=False)
+        self.sorter = task.sorter.Sorter(self.taskList, settings=self.settings, treeMode=True)        
+        self.parent1 = task.Task(subject='parent 1')
+        self.child1 = task.Task(subject='child 1')
+        self.parent1.addChild(self.child1)
+        self.parent2 = task.Task(subject='parent 2')
+        self.child2 = task.Task(subject='child 2')
+        self.parent2.addChild(self.child2)
+        self.taskList.extend([self.parent1, self.parent2])
+        
+    def testSortByDueDate(self):
+        self.settings.set('view', 'sortby', 'dueDate')
+        self.child2.setDueDate(date.Today())
+        self.failUnless(list(self.sorter).index(self.parent2)< list(self.sorter).index(self.parent1))
 
+    def testSortByPriority(self):
+        self.settings.set('view', 'sortby', 'priority')
+        self.settings.set('view', 'sortascending', 'False')
+        self.child2.setPriority(10)
+        self.failUnless(list(self.sorter).index(self.parent2)< list(self.sorter).index(self.parent1))
+        
+        
 class EffortSorterTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
@@ -152,77 +176,3 @@ class EffortSorterTest(test.TestCase):
     def testCreateWhenEffortListIsFilled(self):
         sorter = effort.EffortSorter(self.effortList)
         self.assertEqual(2, len(sorter))
-
-        
-class TaskSorterTestOnEmptyList(test.TestCase):
-    def setUp(self):
-        self.taskList = task.TaskList()
-        self.sorter = task.sorter.Sorter(self.taskList)
-            
-    def testInitiallyEmpty(self):
-        self.assertEqual(0, len(self.sorter))
-
-class TaskSorterTest(test.TestCase):        
-    def setUp(self):
-        self.taskList = task.TaskList()
-        self.sorter = task.sorter.Sorter(self.taskList)        
-        self.task1 = task.Task(subject='A', duedate=date.Tomorrow())
-        self.task2 = task.Task(subject='B', duedate=date.Today())
-        self.taskList.extend([self.task1, self.task2])
-
-    def testSortDueDate(self):
-        self.assertEqual([self.task2, self.task1], list(self.sorter))
-        
-    def testSortBySubject(self):
-        self.sorter.setSortKey('subject')
-        self.assertEqual([self.task1, self.task2], list(self.sorter))
-        
-    def testSortBySubject_TurnOff(self):
-        self.sorter.setSortKey('subject')
-        self.sorter.setSortKey('dueDate')
-        self.assertEqual([self.task2, self.task1], list(self.sorter))
-        
-    def testSortByCompletionStatus(self):
-        self.task2.setCompletionDate(date.Today())
-        self.assertEqual([self.task1, self.task2], list(self.sorter))
-        
-    def testSortByInactiveStatus(self):
-        self.task2.setStartDate(date.Tomorrow())
-        self.assertEqual([self.task1, self.task2], list(self.sorter))
-    
-    def testSortBySubjectDescending(self):
-        self.sorter.setSortKey('subject')    
-        self.task2.setCompletionDate(date.Today())
-        self.sorter.setAscending(False)
-        self.assertEqual([self.task1, self.task2], list(self.sorter))
-        
-    def testSortByStartDate(self):
-        self.sorter.setSortKey('startDate')
-        self.task1.setDueDate(date.Yesterday())
-        self.task2.setStartDate(date.Yesterday())
-        self.assertEqual([self.task2, self.task1], list(self.sorter))
-        
-    def testSortBySubject(self):
-        self.sorter.setSortKey('subject')
-        self.assertEqual([self.task1, self.task2], list(self.sorter))
-               
-    def testDescending(self):
-        self.sorter.setAscending(False)
-        self.assertEqual([self.task1, self.task2], list(self.sorter))
-        
-    def testByDueDateWithoutFirstSortingByStatus(self):
-        self.sorter.setSortByStatusFirst(False)
-        self.task2.setCompletionDate(date.Today())
-        self.assertEqual([self.task2, self.task1], list(self.sorter))
-        
-    def testSortBySubjectWithoutFirstSortingByStatus(self):
-        self.sorter.setSortByStatusFirst(True)
-        self.sorter.setSortKey('subject')
-        self.task1.setCompletionDate(date.Today())
-        self.assertEqual([self.task2, self.task1], list(self.sorter))
-        
-    def testGetSortKey(self):
-        self.assertEqual('dueDate', self.sorter.getSortKey())
-        
-        
-    

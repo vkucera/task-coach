@@ -136,7 +136,9 @@ class Task(patterns.Observable):
     def parent(self):
         return self._parent
 
-    def subject(self):
+    def subject(self, recursive=False):
+        ''' The recursive flag is allowed, but ignored. This makes 
+            task.sorter.Sorter.__createRegularSortKey easier. '''
         return self._subject
 
     def setSubject(self, subject):
@@ -291,8 +293,12 @@ class Task(patterns.Observable):
         
     # modifications
     
-    def lastModificationTime(self):
-        return self._lastModificationTime
+    def lastModificationTime(self, recursive=False):
+        if recursive:
+            childModificationTimes = [child.lastModificationTime(recursive=True) for child in self.children()]
+            return max(childModificationTimes + [self._lastModificationTime])
+        else:
+            return self._lastModificationTime
 
     def setLastModificationTime(self, time=None):
         self._lastModificationTime = time or date.DateTime.now()

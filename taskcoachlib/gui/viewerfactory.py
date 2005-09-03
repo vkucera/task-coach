@@ -25,8 +25,11 @@ def addTaskViewers(viewerContainer, filteredTaskList, uiCommands, settings):
         uiCommands, settings)
     viewerContainer.addViewer(listViewer, _('Task list'), 'listview')
     treeViewer = viewer.TaskTreeViewer(viewerContainer, filteredTaskList, 
-        uiCommands)
+        uiCommands, settings)
     viewerContainer.addViewer(treeViewer, _('Task tree'), 'treeview')
+    treeListViewer = viewer.TaskTreeListViewer(viewerContainer, filteredTaskList, 
+        uiCommands, settings)
+    viewerContainer.addViewer(treeListViewer, _('Task treelist'), 'treeview')
     if False:
         ganttChartViewer = viewer.GanttChartViewer(viewerContainer, filteredTaskList,
             uiCommands)

@@ -43,12 +43,45 @@ class ObservableTest(ObservableTestCase):
 
     def testRemoveObserver(self):
         self.observable.removeObserver(self.onNotify)
-        self.observable.notifyObservers(patterns.observer.Notification(self))
+        self.observable.notifyObservers(patterns.observer.Notification(self.observable))
         self.check(notifications=0)
 
     def testRemoveObserverTwice(self):
         self.observable.removeObserver(self.onNotify)
         self.observable.removeObserver(self.onNotify)
+
+
+class ObservableWithEventTypeTest(test.TestCase):
+    def setUp(self):
+        self.observable = patterns.Observable()
+        self.observable.registerObserver(self.onNotify, 'OnlyInterestedInThis')
+        self.notifications = 0
+
+    def onNotify(self, *args, **kwargs):
+        self.notifications += 1
+        
+    def testInterestedInNotification(self):
+        self.observable.notifyObservers(patterns.Notification(self.observable), 'OnlyInterestedInThis')
+        self.assertEqual(1, self.notifications)
+        
+    def testNotInterestedInNotification(self):
+        self.observable.notifyObservers(patterns.Notification(self.observable), 'SomethingElseHappened')
+        self.assertEqual(0, self.notifications)
+        
+    def testNotificationWithoutEventType(self):
+        self.observable.notifyObservers(patterns.Notification(self.observable))
+        self.assertEqual(0, self.notifications)
+
+    def testRegisterForMultipleEventTypes(self):
+        self.observable.registerObserver(self.onNotify, 'AnotherEventType')
+        self.observable.notifyObservers(patterns.Notification(self.observable), 'AnotherEventType')
+        self.assertEqual(1, self.notifications)
+
+    def testRegisterForMultipleEventTypesAtOnce(self):
+        self.observable.registerObserver(self.onNotify, 'AnotherEventType', 'AndAnother')
+        self.observable.notifyObservers(patterns.Notification(self.observable), 'AnotherEventType')
+        self.observable.notifyObservers(patterns.Notification(self.observable), 'AndAnother')
+        self.assertEqual(2, self.notifications)
         
         
 class MockObservablesList(patterns.ObservablesList):

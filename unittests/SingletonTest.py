@@ -41,6 +41,13 @@ class SingletonTest(test.TestCase):
         single1 = SingletonWithInit()
         single2 = SingletonWithInit()
         self.assertEqual(1, SingletonWithInit._count)
+        
+    def testDeleteInstance(self):
+        singleton1 = Singleton()
+        Singleton.deleteInstance()
+        singleton2 = Singleton()
+        self.failIf(singleton1 is singleton2)
+
 
 class SingletonSubclassTest(test.TestCase):
     def testSubclassesAreSingletonsToo(self):

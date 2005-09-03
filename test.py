@@ -17,7 +17,7 @@ class wxTestCase(TestCase):
     frame = wx.Frame(None, -1, 'Frame')
     from taskcoachlib import gui
     gui.init()
-
+        
 
 def cvsCommit():
     os.system('cvs ci -m "Automatic commit due to green-bar"')
@@ -38,7 +38,7 @@ class TestResultWithTimings(unittest._TextTestResult):
 
 
 class TextTestRunnerWithTimings(unittest.TextTestRunner):
-    def __init__(self, timeTests=False, nrTestsToReport=10, *args, **kwargs):
+    def __init__(self, nrTestsToReport, timeTests=False, *args, **kwargs):
         super(TextTestRunnerWithTimings, self).__init__(*args, **kwargs)
         self._timeTests = timeTests
         self._nrTestsToReport = nrTestsToReport
@@ -106,7 +106,8 @@ class AllTests(unittest.TestSuite):
     def runTests(self):       
         testrunner = TextTestRunnerWithTimings(
             verbosity=self._options.verbosity,
-            timeTests=self._options.time)
+            timeTests=self._options.time,
+            nrTestsToReport=self._options.time_reports)
         result = testrunner.run(self)
         if self._options.commit and result.wasSuccessful():
             cvsCommit()
@@ -129,7 +130,9 @@ class TestOptionParser(config.OptionParser):
         testrun.add_option('-v', '--verbose', action='store_const',
             const=2, dest='verbosity', help='show all tests')
         testrun.add_option('-t', '--time', default=False, action='store_true', 
-            help='time the tests. Report 10 slowest tests')
+            help='time the tests and report the slowest tests')
+        testrun.add_option('--time-reports', default=10, type='int',
+            help='the number of slow tests to report [%default]')
         return testrun
  
     def cvsOptionGroup(self):
@@ -157,7 +160,7 @@ class TestOptionParser(config.OptionParser):
             "and 'time'. This option may be repeated")
         profile.add_option('-l', '--limit', dest='profile_limit', default=25, 
             type="int", help="limit the number of calls to show in the "
-            "profile reports [defaults to 25]")
+            "profile reports [%default]")
         profile.add_option('--regex', dest='profile_regex',
             help='Regular expression to limit the functions shown in the '
            'profile reports')

@@ -10,8 +10,8 @@ class ToolBarTest(test.wxTestCase):
         gui.init()
         toolbar = ToolBar(self.frame, {})
         uiCommand = dummy.DummyUICommand()
-        toolbar.appendUICommand(uiCommand)
-        self.assertNotEqual(wx.NOT_FOUND, toolbar.GetToolPos(uiCommand.id()))
+        id = toolbar.appendUICommand(uiCommand)
+        self.assertNotEqual(wx.NOT_FOUND, toolbar.GetToolPos(id))
 
 
 class ToolBarSizeTest(test.wxTestCase):

@@ -42,7 +42,7 @@ class XMLReaderVersion9Test(XMLReaderTestCase):
         
     def testReadTaskWithoutLastModificationTime(self):
         tasks = self.writeAndRead('<tasks><task/></tasks>')
-        self.assertEqual(date.DateTime.now(), tasks[0].lastModificationTime())
+        self.failUnless(abs(date.DateTime.now() - tasks[0].lastModificationTime()) < date.TimeDelta(seconds=0.1))
 
 
 class XMLReaderTest(XMLReaderTestCase):   

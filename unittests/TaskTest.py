@@ -598,8 +598,8 @@ class TaskLastModificationTimeTest(test.TestCase):
         delta = time1 - time2
         self.failUnless(abs(delta) < date.TimeDelta(seconds=1))
         
-    def assertLastModificationTimeIsNow(self, task):
-        self.assertEqualTimes(date.DateTime.now(), task.lastModificationTime())
+    def assertLastModificationTimeIsNow(self, task, recursive=False):
+        self.assertEqualTimes(date.DateTime.now(), task.lastModificationTime(recursive))
         
     def testNewlyCreatedTask(self):
         self.assertLastModificationTimeIsNow(task.Task())
@@ -611,91 +611,94 @@ class TaskLastModificationTimeTest(test.TestCase):
     def testSetLastModificationTime_ThroughConstructor(self):
         self.assertEqualTimes(self.time, self.task.lastModificationTime())
         
-    def testChangeSubject(self):
+    def testChangeSubjectAffectsLastModificationTime(self):
         self.task.setSubject('New subject')
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testChangeDescription(self):
+    def testChangeDescriptionAffectsLastModificationTime(self):
         self.task.setDescription('New description')
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testChangeStartDate(self):
+    def testChangeStartDateAffectsLastModificationTime(self):
         self.task.setStartDate(date.Yesterday())
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testChangeDueDate(self):
+    def testChangeDueDateAffectsLastModificationTime(self):
         self.task.setDueDate(date.Tomorrow())
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testChangeCompletionDate(self):
+    def testChangeCompletionDateAffectsLastModificationTime(self):
         self.task.setCompletionDate()
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testChangeBudget(self):
+    def testChangeBudgetAffectsLastModificationTime(self):
         self.task.setBudget(date.TimeDelta(hours=100))
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testChangePriority(self):
+    def testChangePriorityAffectsLastModificationTime(self):
         self.task.setPriority(42)
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testAddCategory(self):
+    def testAddCategoryAffectsLastModificationTime(self):
         self.task.addCategory('New category')
         self.assertLastModificationTimeIsNow(self.task)
 
-    def testRemoveCategory(self):
+    def testRemoveCategoryAffectsLastModificationTime(self):
         self.task.removeCategory('New category')
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testAddEffort(self):
+    def testAddEffortAffectsLastModificationTime(self):
         self.task.addEffort(effort.Effort(self.task))
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testRemoveEffort(self):
+    def testRemoveEffortAffectsLastModificationTime(self):
         anEffort = effort.Effort(self.task)
         self.task.addEffort(anEffort)
         self.task.setLastModificationTime(self.time)
         self.task.removeEffort(anEffort)
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testActiveEffort(self):
+    def testActiveEffortDoesNotAffectLastModificationTime(self):
         anEffort = effort.Effort(self.task)
         self.task.addEffort(anEffort)
         self.task.setLastModificationTime(self.time)
         anEffort.onEverySecond()
         self.assertEqualTimes(self.time, self.task.lastModificationTime())
         
-    def testStopTracking(self):
+    def testStopTrackingAffectsLastModificationTime(self):
         anEffort = effort.Effort(self.task)
         self.task.addEffort(anEffort)
         self.task.setLastModificationTime(self.time)
         self.task.stopTracking()
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testAddChild(self):
+    def testAddChildAffectsLastModificationTime(self):
         self.task.addChild(task.Task())
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testRemoveChild(self):
+    def testRemoveChildAffectsLastModificationTime(self):
         child = task.Task()
         self.task.addChild(child)
         self.task.setLastModificationTime(self.time)
         self.task.removeChild(child)
         self.assertLastModificationTimeIsNow(self.task)
         
-    def testChangeChildSubject(self):
+    def testChangeChildSubjectDoesNotAffectLastModificationTime(self):
         child = task.Task()
         self.task.addChild(child)
         self.task.setLastModificationTime(self.time)
         child.setSubject('New subject')
         self.assertEqualTimes(self.time, self.task.lastModificationTime())
         
-    def testAddChildEffort(self):
+    def testAddChildEffortDoesNotAffectLastModificationTime(self):
         child = task.Task()
         self.task.addChild(child)
         self.task.setLastModificationTime(self.time)
         child.addEffort(effort.Effort(child))
         self.assertEqualTimes(self.time, self.task.lastModificationTime())
         
-        
-        
+    def testGetLastModifictionTimeRecursively(self):
+        child = task.Task()
+        self.task.addChild(child)
+        self.task.setLastModificationTime(self.time)
+        self.assertLastModificationTimeIsNow(self.task, recursive=True)

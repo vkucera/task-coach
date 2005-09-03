@@ -29,35 +29,52 @@ class UICommand(object):
         self.helpText = helpText
         self.bitmap = bitmap
         self.kind = kind
-        self._id = wx.NewId()
         self.menuItems = [] # uiCommands can be used in multiple menu's
 
-    def id(self):
-        return self._id
-
-    def appendToMenu(self, menu, window):
-        menuItem = wx.MenuItem(menu, self._id, self.menuText, self.helpText, 
+    def appendToMenu(self, menu, window, position=None):
+        # FIXME: rename to addToMenu
+        id = wx.NewId()
+        menuItem = wx.MenuItem(menu, id, self.menuText, self.helpText, 
             self.kind)
         self.menuItems.append(menuItem)
         if self.bitmap:
             menuItem.SetBitmap(wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
                 (16, 16)))
-        menu.AppendItem(menuItem)
-        self.bind(window)
-
-    def appendToToolBar(self, toolbar, window):
+        if position is None:
+            menu.AppendItem(menuItem)
+        else:
+            menu.InsertItem(position, menuItem)
+        self.bind(window, id)
+        return id
+    
+    def removeFromMenu(self, menu, window):
+        for menuItem in self.menuItems:
+            if menuItem.GetMenu() == menu:
+                self.menuItems.remove(menuItem)
+                id = menuItem.GetId()
+                menu.Remove(id)
+                break
+        self.unbind(window, id)
+        
+    def appendToToolBar(self, toolbar):
+        id = wx.NewId()
         bitmap = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_TOOLBAR, 
             toolbar.GetToolBitmapSize())
-        toolbar.AddLabelTool(self._id, '',
+        toolbar.AddLabelTool(id, '',
             bitmap, wx.NullBitmap, self.kind, 
             shortHelp=wx.MenuItem.GetLabelFromText(self.menuText),
             longHelp=self.helpText)
-        self.bind(window)
+        self.bind(toolbar, id)
+        return id
 
-    def bind(self, window):
-        window.Bind(wx.EVT_MENU, self.onCommandActivate, id=self._id)
-        window.Bind(wx.EVT_UPDATE_UI, self.onUpdateUI, id=self._id)
+    def bind(self, window, id):
+        window.Bind(wx.EVT_MENU, self.onCommandActivate, id=id)
+        window.Bind(wx.EVT_UPDATE_UI, self.onUpdateUI, id=id)
 
+    def unbind(self, window, id):
+        for eventType in [wx.EVT_MENU, wx.EVT_UPDATE_UI]:
+            window.Unbind(eventType, id=id)
+        
     def onCommandActivate(self, event):
         ''' For Menu's and ToolBars, activating the command is not
             possible when not enabled, because menu items and toolbar
@@ -68,6 +85,8 @@ class UICommand(object):
             TaskEditor. '''
         if self.enabled():
             self.doCommand(event)
+            
+    __call__ = onCommandActivate
 
     def doCommand(self, event):
         raise NotImplementedError
@@ -96,23 +115,23 @@ class BooleanSettingsCommand(SettingsCommand):
         super(BooleanSettingsCommand, self).__init__(*args, **kwargs)
         
     def appendToMenu(self, *args, **kwargs):
-        super(BooleanSettingsCommand, self).appendToMenu(*args, **kwargs)
-        self.check()
+        id = super(BooleanSettingsCommand, self).appendToMenu(*args, **kwargs)
+        self.check(id)
+        return id
         
-    def check(self):
+    def check(self, id):
         checked = self.checked()        
-        self.checkMenuItems(checked)
         if self.commandNeedsToBeActivated(checked):
-            self.sendCommandActivateEvent(checked)
+            self.sendCommandActivateEvent(checked, id)
 
-    def sendCommandActivateEvent(self, checked):
-        event = wx.CommandEvent(0, self._id)
+    def sendCommandActivateEvent(self, checked, id):
+        event = wx.CommandEvent(0, id)
         event.SetInt(checked)
         self.onCommandActivate(event)
 
-    def checkMenuItems(self, checked):
-        for menuItem in self.menuItems:
-            menuItem.Check(checked)
+    def onUpdateUI(self, event):
+        event.Check(self.checked())     
+        super(BooleanSettingsCommand, self).onUpdateUI(event)
         
 
 class UICheckCommand(BooleanSettingsCommand):
@@ -127,11 +146,8 @@ class UICheckCommand(BooleanSettingsCommand):
         return self.settings.getboolean(self.section, self.setting)
 
     def doCommand(self, event):
-        checked = event.IsChecked()
-        self.settings.set(self.section, self.setting, str(checked))
-        self.checkMenuItems(checked)
+        self.settings.set(self.section, self.setting, str(event.IsChecked()))
         
-
 
 class UIRadioCommand(BooleanSettingsCommand):
     def __init__(self, *args, **kwargs):
@@ -147,9 +163,6 @@ class UIRadioCommand(BooleanSettingsCommand):
     def doCommand(self, event):
         self.settings.set(self.section, self.setting, str(self.value))
 
-    def onUpdateUI(self, event):
-        self.checkMenuItems(self.checked())
-        super(UIRadioCommand, self).onUpdateUI(event)
 
 class IOCommand(UICommand):
     def __init__(self, iocontroller=None, *args, **kwargs):
@@ -219,6 +232,18 @@ class FileOpen(IOCommand):
     def doCommand(self, event):
         self.iocontroller.open()
 
+
+class RecentFileOpen(IOCommand):
+    def __init__(self, *args, **kwargs):
+        self.__filename = kwargs.pop('filename')
+        index = kwargs.pop('index')
+        super(RecentFileOpen, self).__init__(menuText='&%d %s'%(index, self.__filename),
+            helpText=_('Open %s')%self.__filename, *args, **kwargs)
+            
+    def doCommand(self, event):
+        self.iocontroller.open(self.__filename)
+
+        
 class FileMerge(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileMerge, self).__init__(menuText=_('&Merge...'),
@@ -228,13 +253,16 @@ class FileMerge(IOCommand):
     def doCommand(self, event):
         self.iocontroller.merge()
 
+
 class FileClose(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileClose, self).__init__(menuText=_('&Close'),
             helpText=_('Close the current file'), bitmap='close', *args, **kwargs)
 
+
     def doCommand(self, event):
         self.iocontroller.close()
+
 
 class FileSave(IOCommand):
     def __init__(self, *args, **kwargs):
@@ -314,8 +342,7 @@ class EditRedo(UICommand):
 
 
 class EditCut(NeedsSelectedTasks, FilterCommand, ViewerCommand): # FIXME: only works for tasks atm
-    def __init__(self, *args, **kwargs):
-        
+    def __init__(self, *args, **kwargs):        
         super(EditCut, self).__init__(menuText=_('Cu&t\tCtrl+X'), 
             helpText=_('Cut the selected task(s) to the clipboard'), bitmap='cut', 
             *args, **kwargs)
@@ -416,13 +443,9 @@ class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
             'viewcompositetasks']:
             uiCommand = self.uiCommands[uiCommandName]
             self.settings.set(uiCommand.section, uiCommand.setting, 'True')
-            uiCommand.check()
-        
         self.settings.set(self.section, 'tasksdue', 'Unlimited')    
-        for uiCommandName in ['viewdueunlimited', 'viewduetoday', 'viewduetomorrow',
-            'viewdueworkweek', 'viewdueweek', 'viewduemonth', 'viewdueyear']:
-            self.uiCommands[uiCommandName].check()
         self.filteredTaskList.setViewAll()
+        self.filteredTaskList.setSubject()
         self.filteredTaskList.removeAllCategories()
 
 
@@ -491,7 +514,7 @@ class ViewCompositeTasks(ViewerCommand, FilterCommand, UICheckCommand):
 
 class ViewCategories(MainWindowCommand, FilterCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewCategories, self).__init__(menuText=_('Tasks by categories...'),
+        super(ViewCategories, self).__init__(menuText=_('Tasks by catego&ries...'),
             helpText=_('Show/hide tasks by category'), bitmap='category', *args, **kwargs)
             
     def doCommand(self, event):
@@ -503,16 +526,12 @@ class ViewCategories(MainWindowCommand, FilterCommand):
         return self.filteredTaskList.categories() 
 
 
-class ViewColumn(ViewerCommand, UICheckCommand):   
+class ViewColumn(UICheckCommand):   
     def __init__(self, column=0, *args, **kwargs):
         self.column = column
         super(ViewColumn, self).__init__(*args, **kwargs)
         
-    def doCommand(self, event):
-        super(ViewColumn, self).doCommand(event)
-        self.viewer.showColumn(self.column, event.IsChecked())
-
-
+        
 class ViewExpandAll(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewExpandAll, self).__init__(menuText=_('&Expand all tasks'),
@@ -591,40 +610,32 @@ class ViewDueBefore(FilterCommand, UIRadioCommand):
         self.filteredTaskList.viewTasksDueBefore(self.value) 
     
 
-class ViewSortBy(FilterCommand, UIRadioCommand, UICommandsCommand):
+class ViewSortBy(UIRadioCommand):
     def __init__(self, *args, **kwargs):
         super(ViewSortBy, self).__init__(setting='sortby', *args, **kwargs)
+    
         
-    def doCommand(self, event):
-        super(ViewSortBy, self).doCommand(event)
-        self.filteredTaskList.setSortKey(self.value)
-        sortOrderCommand = self.uiCommands['viewsortorder']
-        self.settings.set(sortOrderCommand.section, sortOrderCommand.setting, str(self.filteredTaskList.isAscending()))
-        sortOrderCommand.check()
-        
-
-class ViewSortOrder(FilterCommand, UICheckCommand):
+class ViewSortOrder(UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewSortOrder, self).__init__(menuText=_('&Ascending'),
             helpText=_('Sort tasks ascending (checked) or descending (unchecked)'),
             setting='sortascending', *args, **kwargs)
         
-    def doCommand(self, event):
-        super(ViewSortOrder, self).doCommand(event)
-        self.filteredTaskList.setAscending(event.IsChecked())
 
-
-class ViewSortByStatusFirst(FilterCommand, UICheckCommand):
+class ViewSortByStatusFirst(UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewSortByStatusFirst, self).__init__(menuText=_('Sort by status &first'),
             helpText=_('Sort tasks by status (active/inactive/completed) first'),
             setting='sortbystatusfirst', *args, **kwargs)
             
-    def doCommand(self, event):
-        super(ViewSortByStatusFirst, self).doCommand(event)
-        self.filteredTaskList.setSortByStatusFirst(event.IsChecked())
         
-    
+class ViewSortCaseSensitive(UICheckCommand):
+    def __init__(self, *args, **kwargs):
+        super(ViewSortCaseSensitive, self).__init__(menuText=_('Sort case sensitive'),
+            helpText=_('When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)'),
+            setting='sortcasesensitive', *args, **kwargs)
+
+                                                                    
 class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskNew, self).__init__(bitmap='new', 
@@ -834,6 +845,7 @@ class UICommands(dict):
     def __init__(self, mainwindow, iocontroller, viewer, settings, 
             filteredTaskList, effortList):
         super(UICommands, self).__init__()
+        self.__iocontroller = iocontroller
     
         # File commands
         self['open'] = FileOpen(iocontroller=iocontroller)
@@ -877,58 +889,66 @@ class UICommands(dict):
         self['viewcategories'] = ViewCategories(mainwindow=mainwindow, 
             filteredTaskList=filteredTaskList)
             
-        self['viewstartdate'] = ViewColumn(column=_('Start date'), viewer=viewer, 
+        self['viewstartdate'] = ViewColumn(column=_('Start date'),
             settings=settings, 
             menuText=_('&Start date'), helpText = _('Show/hide start date column'),
             setting='startdate')
-        self['viewduedate'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewduedate'] = ViewColumn(settings=settings,
             menuText=_('&Due date'), helpText=_('Show/hide due date column'),
             setting='duedate', column=_('Due date'))
-        self['viewdaysleft'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewdaysleft'] = ViewColumn(settings=settings,
             menuText=_('D&ays left'), helpText=_('Show/hide days left column'),
             setting='daysleft', column=_('Days left'))
-        self['viewcompletiondate'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewcompletiondate'] = ViewColumn(settings=settings,
             menuText=_('Co&mpletion date'), helpText=_('Show/hide completion date column'),
             setting='completiondate', column=_('Completion date'))
-        self['viewbudget'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewbudget'] = ViewColumn(settings=settings,
             menuText=_('&Budget'), helpText=_('Show/hide budget column'),
             setting='budget', column=_('Budget'))
-        self['viewtotalbudget'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewtotalbudget'] = ViewColumn(settings=settings,
             menuText=_('Total b&udget'),
             helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
             setting='totalbudget', column=_('Total budget'))
-        self['viewtimespent'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewtimespent'] = ViewColumn(settings=settings,
             menuText=_('&Time spent'), helpText=_('Show/hide time spent column'),
             setting='timespent', column=_('Time spent'))
-        self['viewtotaltimespent'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewtotaltimespent'] = ViewColumn(settings=settings,
             menuText=_('T&otal time spent'),
             helpText=_('Show/hide total time spent column (total time includes time spent on subtasks)'),
             setting='totaltimespent', column=_('Total time spent'))
-        self['viewbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewbudgetleft'] = ViewColumn(settings=settings,
             menuText=_('Budget &left'), helpText=_('Show/hide budget left column'),
             setting='budgetleft', column=_('Budget left'))
-        self['viewtotalbudgetleft'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewtotalbudgetleft'] = ViewColumn(settings=settings,
             menuText=_('Total budget l&eft'),
             helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
             setting='totalbudgetleft', column=_('Total budget left'))
-        self['viewpriority'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewpriority'] = ViewColumn(settings=settings,
             menuText=_('&Priority'), helpText=_('Show/hide priority column'),
             setting='priority', column=_('Priority'))
-        self['viewtotalpriority'] = ViewColumn(viewer=viewer, settings=settings,
+        self['viewtotalpriority'] = ViewColumn(settings=settings,
             menuText=_('O&verall priority'), 
             helpText=_('Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)'),
             setting='totalpriority', column=_('Overall priority'))
+        self['viewlastmodificationtime'] = ViewColumn(settings=settings,
+            menuText=_('Last modification time'),
+            helpText=_('Show/hide last modification time column'),
+            setting='lastmodificationtime', column=_('Last modification time'))
+        self['viewtotallastmodificationtime'] = ViewColumn(settings=settings,
+            menuText=_('Overall last modification time'),
+            helpText=_('Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks'),
+            setting='totallastmodificationtime', column=('Overall last modification time'))
     
         self['viewexpandall'] = ViewExpandAll(viewer=viewer)
         self['viewcollapseall'] = ViewCollapseAll(viewer=viewer)
         self['viewexpandselected'] = ViewExpandSelected(viewer=viewer)
         self['viewcollapseselected'] = ViewCollapseSelected(viewer=viewer)
         
-        self['viewsortorder'] = ViewSortOrder(filteredTaskList=filteredTaskList, settings=settings)
-        self['viewsortbystatusfirst'] = ViewSortByStatusFirst(filteredTaskList=filteredTaskList, settings=settings)
+        self['viewsortorder'] = ViewSortOrder(settings=settings)
+        self['viewsortcasesensitive'] = ViewSortCaseSensitive(settings=settings)
+        self['viewsortbystatusfirst'] = ViewSortByStatusFirst(settings=settings)
         
-        sortByKwArgs = {'uiCommands': self, 'filteredTaskList': filteredTaskList, 
-            'settings': settings}
+        sortByKwArgs = {'settings': settings}
         self['viewsortbysubject'] = ViewSortBy(value='subject', menuText=_('Sub&ject'), 
             helpText=_('Sort tasks by subject'), **sortByKwArgs)
         self['viewsortbystartdate'] = ViewSortBy(value='startDate', menuText=_('&Start date'),
@@ -956,6 +976,14 @@ class UICommands(dict):
             helpText=_('Sort tasks by priority'), **sortByKwArgs)
         self['viewsortbytotalpriority'] = ViewSortBy(value='totalpriority', 
             menuText=_('Overall priority'), helpText=_('Sort tasks by overall priority'),
+            **sortByKwArgs)
+        self['viewsortbylastmodificationtime'] = ViewSortBy(value='lastModificationTime',
+            menuText=_('Last modification time'), 
+            helpText=_('Sort tasks by last modification time'),
+            **sortByKwArgs)
+        self['viewsortbytotallastmodificationtime'] = ViewSortBy(value='totallastModificationTime',
+            menuText=_('Overall last modification time'), 
+            helpText=_('Sort tasks by overall last modification time'),
             **sortByKwArgs)
         
         self['toolbarhide'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
@@ -1026,4 +1054,5 @@ class UICommands(dict):
         # Taskbar menu
         self['restore'] = MainWindowRestore(mainwindow=mainwindow)
 
-
+    def createRecentFileOpenUICommand(self, filename, index):
+        return RecentFileOpen(filename=filename, index=index, iocontroller=self.__iocontroller)

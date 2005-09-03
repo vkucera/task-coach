@@ -40,13 +40,12 @@ class App(object):
         self.taskFile = task.TaskFile()
         self.autoSaver = task.AutoSaver(settings, self.taskFile)
         effortList = effort.EffortList(self.taskFile)
-        self.io = gui.IOController(self.taskFile, self.displayMessage)
+        self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
         viewFilteredTaskList = task.filter.ViewFilter(self.taskFile)
         categoryFilteredTaskList = task.filter.CategoryFilter(viewFilteredTaskList)
         searchFilteredTaskList = task.filter.SearchFilter(categoryFilteredTaskList)
-        sortedTaskList = task.sorter.Sorter(searchFilteredTaskList)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
-            sortedTaskList, effortList, settings)
+            searchFilteredTaskList, effortList, settings)
         self.processCommandLineArguments(settings, load)
         
     def processCommandLineArguments(self, settings, load=True):

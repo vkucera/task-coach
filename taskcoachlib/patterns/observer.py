@@ -50,8 +50,8 @@ class Observable(object):
         remove themselves (unsubscribe) by calling Observable.removeObserver. '''
         
     def __init__(self, *args, **kwargs):
+        self.__callbacks = {}
         super(Observable, self).__init__(*args, **kwargs)
-        self.__callbacks = []
         self.startNotifying()
         
     def stopNotifying(self):
@@ -63,29 +63,31 @@ class Observable(object):
     def isNotifying(self):
         return self.__notifying
         
-    def registerObserver(self, callback):
+    def registerObserver(self, callback, *eventTypes):
         ''' Register an observer. The callback should be a callable and 
-            accept one argument (the observable), see 
-            Observable._notifyObserversOfChange. 
-            NB: this is in the process of changing: callbacks will need to 
-            accept one argument in the future, a Notification instance. '''
-        self.__callbacks.append(callback)
+            accept one argument (a Notification), see 
+            Observable.notifyObservers. Optionally, observers can tell the 
+            observable they are interested in a certain type of event. By default, 
+            observers receive notification of all types of events. 
+            Event types can be anything as long as they are hashable.'''
+        eventTypes = eventTypes or [None]
+        for eventType in eventTypes:
+            self.__callbacks.setdefault(eventType, []).append(callback)
         
     def removeObserver(self, callback):
         ''' Remove a callback that was registered earlier. '''
-        try:
-            self.__callbacks.remove(callback)
-        except ValueError:
-            pass
+        for eventType, callbacks in self.__callbacks.items():
+            if callback in callbacks:
+                self.__callbacks[eventType].remove(callback)
 
-    def notifyObservers(self, notification):
+    def notifyObservers(self, notification, eventType=None):
         if not self.isNotifying():
             return
-        for callback in self.__callbacks:
+        for callback in self.observers(eventType):
             callback(notification)
 
-    def observers(self):
-        return self.__callbacks
+    def observers(self, eventType=None):
+        return self.__callbacks.get(eventType, [])
 
 
 
