@@ -21,7 +21,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
     def createColumns(self, nrColumns):
         columns = []
         for columnIndex in range(1, nrColumns+1):
-            columns.append('column%d'%columnIndex)
+            columns.append(widgets.Column('column%d'%columnIndex))
         return columns
 
     def setUp(self):
@@ -51,8 +51,8 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.listctrl.showColumn('column3', False)
         self.listctrl.showColumn('column2', True)
         self.listctrl.showColumn('column3', True)
-        self.assertEqual('column2', self.listctrl.getColumnHeader(1))
-        self.assertEqual('column3', self.listctrl.getColumnHeader(2))
+        self.assertEqual('column2', self.listctrl._getColumnHeader(1))
+        self.assertEqual('column3', self.listctrl._getColumnHeader(2))
         
     def testShowColumn_HideTwice(self):
         self.listctrl.showColumn('column2', False)

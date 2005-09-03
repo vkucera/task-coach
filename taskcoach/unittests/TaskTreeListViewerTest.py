@@ -1,0 +1,26 @@
+import test, gui, task, widgets, dummy, date, TaskTreeViewerTest
+from gui import render
+
+class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
+    def createWidget(self):
+        widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
+            self.getItemImage, self.getItemAttr, self.getItemId,
+            self.getRootIndices, self.getChildIndices,
+            self.onSelect, dummy.DummyUICommand())
+        widget.AssignImageList(self.createImageList())
+        return widget
+
+class TaskTreeListViewerTest(TaskTreeViewerTest.TaskTreeViewerTestCase,
+                             TaskTreeViewerTest.CommonTests):
+    def setUp(self):
+        super(TaskTreeListViewerTest, self).setUp()
+        self.viewer = TaskTreeListViewerUnderTest(self.frame, self.taskList, {}, self.settings)
+          
+    def testOneDayLeft(self):
+        self.task.setDueDate(date.Tomorrow())
+        self.taskList.append(self.task)
+        firstItem, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())
+        self.assertEqual(render.daysLeft(self.task.timeLeft()), 
+            self.viewer.widget.GetItemText(firstItem, 3))
+    
+    

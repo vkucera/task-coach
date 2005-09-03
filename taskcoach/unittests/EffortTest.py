@@ -9,6 +9,12 @@ class EffortTest(test.TestCase):
             stop=date.DateTime(2004,1,2))
         self.notifications = 0
         self.effort.registerObserver(self.notify)
+    
+    def tearDown(self):
+        try:
+            date.Clock.deleteInstance()
+        except AttributeError:
+            pass
         
     def notify(self, *args):
         self.notifications += 1
@@ -75,7 +81,17 @@ class EffortTest(test.TestCase):
     def testSetStop_Infinite(self):
         self.effort.setStop(date.DateTime.max)
         self.assertEqual(None, self.effort.getStop())
+        self.failUnless(self.effort.isClockStarted())
         
     def testSetStop_SpecificDateTime(self):
         self.effort.setStop(date.DateTime(2005,1,1))
         self.assertEqual(date.DateTime(2005,1,1), self.effort.getStop())
+        
+    def testNoNotificationsFromClockAfterStop(self):
+        self.effort.setStop(date.DateTime.max)
+        self.failUnless(self.effort.isClockStarted())
+        self.effort.setStop()
+        self.notifications = 0
+        date.Clock().notify()
+        self.assertEqual(0, self.notifications)
+        

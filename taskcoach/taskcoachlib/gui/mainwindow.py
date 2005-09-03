@@ -73,7 +73,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.SetStatusBar(status.StatusBar(self, self.taskFile,
                                         self.filteredTaskList, self.viewer))
         import menu
-        self.SetMenuBar(menu.MainMenu(self, self.uiCommands))
+        self.SetMenuBar(menu.MainMenu(self, self.uiCommands, self.settings))
         self.createTaskBarIcon(self.uiCommands)
         
     def initLayout(self):

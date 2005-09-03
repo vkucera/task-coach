@@ -1,9 +1,10 @@
-import test, gui, task, dummy, date
+import test, gui, task, dummy, date, config
 
 class GanttChartViewerTest(test.wxTestCase):
     def setUp(self):
-        self.taskList = task.sorter.Sorter(task.TaskList())
-        self.taskList.setSortKey('subject')
+        self.settings = config.Settings(load=False)
+        self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
+        self.settings.set('view', 'sortby', 'subject')
         self.ganttChartViewer = gui.viewer.GanttChartViewer(self.frame, self.taskList, 
             dummy.DummyUICommands())
 

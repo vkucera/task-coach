@@ -3,7 +3,8 @@ import patterns, wx, time
 class Clock(patterns.Observable):
     __metaclass__ = patterns.Singleton
     
-    def __init__(self, now=time.time, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        now = kwargs.pop('now', time.time)
         super(Clock, self).__init__(*args, **kwargs)
         self._timer = wx.PyTimer(self.startTheClock)
         millisecondsToNextWholeSecond = 1000-(now()%1)*1000
@@ -18,7 +19,7 @@ class Clock(patterns.Observable):
         
     def notify(self, *args, **kwargs):
         self.notifyObservers(patterns.Notification(source=self))
-        
+   
         
 class ClockObserver(object):    
     def startClock(self):
@@ -30,5 +31,5 @@ class ClockObserver(object):
     def isClockStarted(self):
         return self.onEverySecond in Clock().observers()
         
-    def everySecond(self, *args, **kwargs):
+    def XonEverySecond(self, *args, **kwargs):
         raise NotImplementedError

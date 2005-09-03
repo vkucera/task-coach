@@ -1,17 +1,19 @@
 import test, sys, os, meta, config
 
-
 class Settings(config.Settings):
     def read(self, *args):
         pass
 
-class SettingsTest(test.TestCase):
+
+class SettingsTestCase(test.TestCase):
     def setUp(self):
         self.settings = Settings()
 
     def tearDown(self):
         del self.settings
 
+
+class SettingsTest(SettingsTestCase):
     def testDefaults(self):
         self.failUnless(self.settings.has_section('view'))
         self.assertEqual('False', self.settings.get('view', 'finddialog'))
@@ -30,14 +32,11 @@ class SettingsTest(test.TestCase):
         self.assertEqual(expected, self.settings.path(environ={}))
 
 
-class SettingsIOTest(test.TestCase):
+class SettingsIOTest(SettingsTestCase):
     def setUp(self):
+        super(SettingsIOTest, self).setUp()
         import StringIO
         self.fakeFile = StringIO.StringIO()
-        self.settings = Settings()
-
-    def tearDown(self):
-        del self.settings
 
     def testSave(self):
         self.settings.write(self.fakeFile)
@@ -52,3 +51,20 @@ class SettingsIOTest(test.TestCase):
         self.failUnless(self.settings.has_section('testing'))
 
 
+class SettingsObservableTest(SettingsTestCase):
+    def setUp(self):
+        super(SettingsObservableTest, self).setUp()
+        self.notifications = 0
+        self.settings.registerObserver(self.onNotify, ('view', 'toolbarsize'))
+        
+    def onNotify(self, *args, **kwargs):
+        self.notifications += 1
+        
+    def testChangingTheSettingCausesNotification(self):
+        self.settings.set('view', 'toolbarsize', '16')
+        self.assertEqual(1, self.notifications)
+        
+    def testChangingAnotherSettingDoesNotCauseANotification(self):
+        self.settings.set('view', 'statusbar', 'True')
+        self.assertEqual(0, self.notifications)
+        

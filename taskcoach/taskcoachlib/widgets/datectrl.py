@@ -121,5 +121,8 @@ class DateTimeCtrl(Panel):
         self._timeCtrl.SetValue(timePart)
         
     def GetValue(self):
-        return date.DateTime.combine(self._dateCtrl.GetValue(), 
-            self._timeCtrl.GetValue())
+        dateValue = self._dateCtrl.GetValue()
+        if dateValue == date.Date():
+            return date.DateTime.max
+        else:
+            return date.DateTime.combine(dateValue, self._timeCtrl.GetValue())

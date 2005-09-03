@@ -1,8 +1,9 @@
-import ConfigParser, os, meta, defaults
+import ConfigParser, os, meta, defaults, patterns
 
-class Settings(ConfigParser.SafeConfigParser, object):
-    def __init__(self, load=True):
-        super(Settings, self).__init__()
+class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
+    def __init__(self, load=True, *args, **kwargs):
+        super(Settings, self).__init__(*args, **kwargs)
+        ConfigParser.SafeConfigParser.__init__(self, *args, **kwargs) # sigh, SafeConfigParser is not cooperative
         self.setDefaults()
         if load:
             self.read(self.filename()) # ConfigParser.read fails silently
@@ -12,6 +13,10 @@ class Settings(ConfigParser.SafeConfigParser, object):
             self.add_section(section)
             for key, value in settings.items():
                 self.set(section, key, value)
+                
+    def set(self, section, option, value):
+        super(Settings, self).set(section, option, value)
+        self.notifyObservers(patterns.Notification(self, section=section, option=option, value=value), (section, option))
 
     def save(self):
         try:
@@ -37,4 +42,3 @@ class Settings(ConfigParser.SafeConfigParser, object):
 
     def filename(self):
         return os.path.join(self.path(), '%s.ini'%meta.filename)
-

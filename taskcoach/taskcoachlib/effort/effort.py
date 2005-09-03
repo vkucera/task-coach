@@ -28,10 +28,11 @@ class EffortBase(object):
 
 class Effort(EffortBase, patterns.Observable, date.ClockObserver):
     def __init__(self, task, start=None, stop=None, description='', *args, **kwargs):
+        self._description = description
         super(Effort, self).__init__(task, start or date.DateTime.now(), stop, *args, **kwargs)
         if self._stop == None:
             self.startClock()
-        self._description = description
+
 
     def __str__(self):
         return 'Effort(%s, %s, %s)'%(self._task, self._start, self._stop)
@@ -58,10 +59,12 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))       
        
     def setStop(self, stopDatetime=None):
-        if stopDatetime and stopDatetime.date() == date.Date():
+        if stopDatetime is None:
+            self._stop = date.DateTime.now()
+        elif stopDatetime == date.DateTime.max:
             self._stop = None
         else:
-            self._stop = stopDatetime or date.DateTime.now()
+            self._stop = stopDatetime
         if self._stop == None and not self.isClockStarted():
             self.startClock()
         elif self._stop != None and self.isClockStarted():

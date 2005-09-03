@@ -12,6 +12,9 @@ class DummySettings:
     def get(self, section, setting):
         return 'bla'
         
+    def getint(self, section, setting):
+        return 0
+        
     def set(self, section, setting, value):
         self.assertEqual(type(''), type(value))
 

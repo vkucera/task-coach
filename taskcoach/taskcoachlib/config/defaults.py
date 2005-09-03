@@ -21,6 +21,8 @@ defaults = { \
     'totalbudgetleft': 'False',
     'priority': 'False',
     'totalpriority': 'False',
+    'lastmodificationtime': 'False',
+    'totallastmodificationtime': 'False',
     'tasksdue': 'Unlimited',
     'mainviewer': 'Task list',
     'effortviewer': 'Effort list',
@@ -28,13 +30,16 @@ defaults = { \
     'language': 'en_US',
     'sortby': 'dueDate',
     'sortascending': 'True',
-    'sortbystatusfirst': 'True' },
+    'sortbystatusfirst': 'True',
+    'sortcasesensitive': 'True' },
 'window' : { \
     'size': '(600, 500)',
     'position': '(0, 0)',
     'iconized': 'False',
     'splash': 'True' },
 'file' : { \
+    'recentfiles': '[]',
+    'maxrecentfiles': '4',
     'lastfile': '',
     'autosave': 'False',
     'backup': 'False' }}

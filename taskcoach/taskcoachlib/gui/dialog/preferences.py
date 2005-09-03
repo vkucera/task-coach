@@ -7,6 +7,7 @@ class SettingsPage(widgets.BookPage):
         self.settings = settings
         self._booleanSettings = []
         self._choiceSettings = []
+        self._integerSettings = []
         
     def addBooleanSetting(self, section, setting, text, helpText=''):
         checkBox = wx.CheckBox(self, -1)
@@ -25,12 +26,19 @@ class SettingsPage(widgets.BookPage):
         self.addEntry(text, choice, helpText)
         self._choiceSettings.append((section, setting, choice))
         
+    def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100, helpText=''):
+        spin = wx.SpinCtrl(self, -1, min=minimum, max=maximum, 
+            value=str(self.settings.getint(section, setting)))
+        self.addEntry(text, spin, helpText)
+        self._integerSettings.append((section, setting, spin))
+        
     def ok(self):
         for section, setting, checkBox in self._booleanSettings:
             self.settings.set(section, setting, str(checkBox.IsChecked()))
         for section, setting, choice in self._choiceSettings:
             self.settings.set(section, setting, choice.GetClientData(choice.GetSelection()))
-            
+        for section, setting, spin in self._integerSettings:
+            self.settings.set(section, setting, str(spin.GetValue()))
 
 class SavePage(SettingsPage):
     def __init__(self, *args, **kwargs):
@@ -39,6 +47,8 @@ class SavePage(SettingsPage):
             _('Auto save after every change'))
         self.addBooleanSetting('file', 'backup', 
             _('Create backup copy when opening a %s file')%meta.name)
+        self.addIntegerSetting('file', 'maxrecentfiles',
+            _('Maximum number of recent files to remember'), minimum=0, maximum=9)
             
                
 class StartupPage(SettingsPage):
@@ -71,5 +81,5 @@ class Preferences(widgets.ListbookDialog):
     def addPages(self):
         self.SetMinSize((300, 300))
         self._interior.AddPage(StartupPage(parent=self._interior, columns=3, settings=self.settings), _('Startup'), bitmap='taskcoach')
-        self._interior.AddPage(SavePage(parent=self._interior, columns=3, settings=self.settings), _('Save'), bitmap='save')
+        self._interior.AddPage(SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), bitmap='save')
         self._interior.AddPage(LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), bitmap='language')

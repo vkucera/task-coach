@@ -18,4 +18,4 @@ class ToolBar(wx.ToolBar, uicommand.UICommandContainer):
         self.AddSeparator()
 
     def appendUICommand(self, uiCommand):
-        uiCommand.appendToToolBar(self, self.GetParent())
+        return uiCommand.appendToToolBar(self)

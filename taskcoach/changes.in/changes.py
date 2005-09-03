@@ -1,6 +1,20 @@
 from domain import *
 
 releases = [
+Release('0.47', 'September ?, 2005',
+    featuresAdded=[
+        Feature('''The task tree view now also shows columns with task details,
+similar to the task list view''', '?'),
+        Feature('''Sorting on task subject can now also be case 
+insensitive. See the menu item 'View' -> 'Sort' -> 'Sort case sensitive'.''', '?'),
+        Feature('''Recent files are remembered and can be opened from the 
+File menu. The maximum number of recent files shown can be set in the
+Preferences dialog. Set the maximum to zero to disable this feature. ''', '?'),
+        Feature('''The last modification time of tasks can be viewed.''')],
+    bugsFixed=[
+        Bug(''''View'->'All tasks' now also resets any search criterium entered
+by the user in the search bar.''')]),
+
 Release('0.46', 'August 12, 2005',
     bugsFixed=[
         Bug('''In the effort views, the status bar would show information about

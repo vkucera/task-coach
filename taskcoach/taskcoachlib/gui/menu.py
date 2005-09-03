@@ -5,12 +5,12 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
     def __init__(self, window):
         super(Menu, self).__init__()
         self._window = window
-
+        
     def __len__(self):
         return self.GetMenuItemCount()
 
     def appendUICommand(self, uiCommand):
-        uiCommand.appendToMenu(self, self._window)    
+        return uiCommand.appendToMenu(self, self._window)    
     
     def appendMenu(self, text, subMenu):
         subMenuItem = wx.MenuItem(self, -1, text, subMenu=subMenu)
@@ -19,11 +19,19 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
             subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap('nobitmap', wx.ART_MENU, (16,16)))
         self.AppendItem(subMenuItem)
 
+    def invokeMenuItem(self, menuItem):
+        ''' Programmatically invoke the menuItem. This is mainly for testing purposes. '''
+        self._window.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, winid=menuItem.GetId()))
+    
+    def openMenu(self):
+        ''' Programmatically open the menu. This is mainly for testing purposes. '''
+        self._window.ProcessEvent(wx.MenuEvent(wx.wxEVT_MENU_OPEN, menu=self))
+
 
 class MainMenu(wx.MenuBar):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, uiCommands, settings):
         super(MainMenu, self).__init__()
-        self.Append(FileMenu(mainwindow, uiCommands), _('&File'))
+        self.Append(FileMenu(mainwindow, uiCommands, settings), _('&File'))
         self.Append(EditMenu(mainwindow, uiCommands), _('&Edit'))
         self.Append(ViewMenu(mainwindow, uiCommands), _('&View'))
         self.Append(TaskMenu(mainwindow, uiCommands), _('&Task'))
@@ -32,12 +40,51 @@ class MainMenu(wx.MenuBar):
 
 
 class FileMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, uiCommands, settings):
         super(FileMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['open', 'merge', 'close', None, 
-            'save', 'saveas', 'saveselection', None, 'quit'])
+        self.__settings = settings
+        self.__uiCommands = uiCommands
+        self.__fileMenuUICommands = ['open', 'merge', 'close', None, 
+            'save', 'saveas', 'saveselection', None, 'quit']
+        self.__recentFileUICommands = []
+        self.__separator = None
+        self.appendUICommands(uiCommands, self.__fileMenuUICommands)
+        self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
 
+    def onOpenMenu(self, event):
+        self.__removeRecentFileMenuItems()
+        self.__insertRecentFileMenuItems()        
+        event.Skip()
+    
+    def __insertRecentFileMenuItems(self):
+        self.__recentFileUICommands = []
+        self.__separator = None
+        recentFilesStartPosition = self.__recentFilesStartPosition()
+        recentFiles = eval(self.__settings.get('file', 'recentfiles'))
+        maximumNumberOfRecentFiles = self.__settings.getint('file', 'maxrecentfiles')
+        recentFiles = recentFiles[:maximumNumberOfRecentFiles]
+        if recentFiles:
+            for index, recentFile in enumerate(recentFiles):
+                recentFileNumber = index + 1 # Only computer nerds start counting at 0 :-)
+                recentFileMenuPosition = recentFilesStartPosition + index
+                recentFileOpenUICommand = self.__uiCommands.createRecentFileOpenUICommand(recentFile, recentFileNumber)
+                recentFileOpenUICommand.appendToMenu(self, self._window, recentFileMenuPosition)
+                self.__recentFileUICommands.append(recentFileOpenUICommand)
+            self.__separator = self.InsertSeparator(recentFileMenuPosition+1)
 
+    def __removeRecentFileMenuItems(self):
+        for recentFileUICommand in self.__recentFileUICommands:
+            recentFileUICommand.removeFromMenu(self, self._window)
+        if self.__separator:
+            self.RemoveItem(self.__separator)
+
+    def __recentFilesStartPosition(self):
+        return len(self.__fileMenuUICommands) - 1 # Start just before the Quit menu item
+        
+    def __recentFilesStopPosition(self):
+        return len(self) - 1 # Stop just before the Quit menu item
+        
+        
 class EditMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(EditMenu, self).__init__(mainwindow)
@@ -46,6 +93,7 @@ class EditMenu(Menu):
         # the spaces are to leave room for command names in the Undo and Redo menuitems:
         self.appendMenu(_('&Select')+' '*50, SelectMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None, 'editpreferences'])
+
 
 class SelectMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
@@ -58,21 +106,34 @@ class ViewMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewalltasks'])
-        self.appendMenu(_('Ta&sks that are'), 
+        self.appendMenu(_('Tas&ks that are'), 
             ViewTaskStatesMenu(mainwindow, uiCommands))
         self.appendMenu(_('Tasks &due before end of'),
             ViewTasksByDueDateMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, ['viewcategories', None])
+        self.appendMenu(_('&Columns'), ViewColumnsMenu(mainwindow, uiCommands))
+        self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('Task &list options'), 
             ViewTaskListMenu(mainwindow, uiCommands))
         self.appendMenu(_('Task &tree options'), 
             ViewTaskTreeMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
-        self.appendMenu(_('Sort'), SortMenu(mainwindow, uiCommands))
+        self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
         self.appendUICommands(uiCommands, ['viewfinddialog', 'viewstatusbar'])   
 
+
+class ViewColumnsMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ViewColumnsMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewstartdate',
+        'viewduedate', 'viewdaysleft', 'viewcompletiondate',
+        'viewbudget', 'viewtotalbudget', 'viewtimespent',
+        'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
+        'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime',
+        'viewtotallastmodificationtime'])
+        
            
 class ViewTaskStatesMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
@@ -85,12 +146,7 @@ class ViewTaskStatesMenu(Menu):
 class ViewTaskListMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewTaskListMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewstartdate',
-        'viewduedate', 'viewdaysleft', 'viewcompletiondate',
-        'viewbudget', 'viewtotalbudget', 'viewtimespent',
-        'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
-        'viewpriority', 'viewtotalpriority',
-        None, 'viewcompositetasks'])
+        self.appendUICommands(uiCommands, ['viewcompositetasks'])
 
            
 class ViewTaskTreeMenu(Menu):
@@ -103,15 +159,16 @@ class ViewTaskTreeMenu(Menu):
 class SortMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(SortMenu, self).__init__(mainwindow)
-        # FIXME: 'viewsortorder' needs to be added first to properly initialize 
+        # NOTE: 'viewsortorder' needs to be added first to properly initialize 
         # ascending/descending order
-        self.appendUICommands(uiCommands, ['viewsortorder', 
+        self.appendUICommands(uiCommands, ['viewsortorder', 'viewsortcasesensitive',
             'viewsortbystatusfirst', None, 'viewsortbysubject', 
             'viewsortbystartdate', 'viewsortbyduedate', 'viewsortbydaysleft',
             'viewsortbycompletiondate', 'viewsortbybudget', 'viewsortbytotalbudget',
             'viewsortbytimespent', 'viewsortbytotaltimespent', 'viewsortbybudgetleft',
             'viewsortbytotalbudgetleft', 'viewsortbypriority', 
-            'viewsortbytotalpriority'])
+            'viewsortbytotalpriority', 'viewsortbylastmodificationtime', 
+            'viewsortbytotallastmodificationtime'])
                 
     
 class ToolBarMenu(Menu):
@@ -173,12 +230,16 @@ class EffortPopupMenu(Menu):
             None, 'stopeffort'])
 
 
-class TaskListViewerColumnPopupMenu(Menu):
+class TaskViewerColumnPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
-        super(TaskListViewerColumnPopupMenu, self).__init__(mainwindow)
+        super(TaskViewerColumnPopupMenu, self).__init__(mainwindow)
+        # FIXME: Can't remember why we need a wx.FutureCall here? Maybe
+        # because we need time for the viewer to add columns, so these commands
+        # can then hide the right columns?
         wx.FutureCall(1000, lambda:
             self.appendUICommands(uiCommands, ['viewstartdate',
             'viewduedate', 'viewdaysleft', 'viewcompletiondate',
             'viewbudget', 'viewtotalbudget', 'viewtimespent',
             'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
-            'viewpriority', 'viewtotalpriority']))
+            'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime',
+            'viewtotallastmodificationtime']))
