@@ -3,17 +3,20 @@ from domain import *
 releases = [
 Release('0.47', 'September ?, 2005',
     featuresAdded=[
+        Feature('''Added Hungarian translation thanks to Majsa Norbert'''),
         Feature('''The task tree view now also shows columns with task details,
-similar to the task list view''', '?'),
+similar to the task list view''', '1194642'),
         Feature('''Sorting on task subject can now also be case 
-insensitive. See the menu item 'View' -> 'Sort' -> 'Sort case sensitive'.''', '?'),
+insensitive. See the menu item 'View' -> 'Sort' -> 'Sort case sensitive'.''', '1228873'),
         Feature('''Recent files are remembered and can be opened from the 
 File menu. The maximum number of recent files shown can be set in the
-Preferences dialog. Set the maximum to zero to disable this feature. ''', '?'),
+Preferences dialog. Set the maximum to zero to disable this feature. ''', '1191707'),
         Feature('''The last modification time of tasks can be viewed.''')],
     bugsFixed=[
         Bug(''''View'->'All tasks' now also resets any search criterium entered
-by the user in the search bar.''')]),
+by the user in the search bar.'''),
+        Bug('''When opening a task with a (long) description, the cursor will
+be positioned on the first line of the text, instead of on the last line.''', '1265845')]),
 
 Release('0.46', 'August 12, 2005',
     bugsFixed=[

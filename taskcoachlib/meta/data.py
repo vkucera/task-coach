@@ -20,7 +20,8 @@ languages = {
     'Dutch': 'nl_NL',
     'Russian': 'ru_RU',
     'Simplified Chinese': 'zh_CN',
-    'Spanish': 'es_ES'}
+    'Spanish': 'es_ES',
+    'Hungarian': 'hu_HU'}
 
 def __createDict(locals):
     ''' Provide the local variables as a dictionary for use in string
