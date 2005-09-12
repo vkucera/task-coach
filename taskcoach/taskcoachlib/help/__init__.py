@@ -67,7 +67,7 @@ the message 'Ran X tests in Y seconds. OK'. If not, you'll get
 one or more failed tests. In that case, please run the tests
 again, redirecting the output to a textfile, like this:
 
-  python test.py > errors.txt
+  python test.py 2> errors.txt
 
 Please mail me the errors.txt file and your platform information
 (operating system version, Python version and wxPython version).

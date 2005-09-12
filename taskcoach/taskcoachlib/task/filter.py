@@ -2,6 +2,10 @@ import patterns, date, re, sets
 
 
 class Filter(patterns.ObservableListObserver):
+    def __init__(self, *args, **kwargs):
+        self.__treeMode = kwargs.pop('treeMode', False)
+        super(Filter, self).__init__(*args, **kwargs)
+        
     def processChanges(self, notification):
         oldSelf = self[:]
         self[:] = [item for item in self.original() if self.filter(item)]

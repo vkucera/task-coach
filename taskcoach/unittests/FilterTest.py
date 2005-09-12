@@ -46,7 +46,7 @@ class StackedFilterTest(test.TestCase):
         self.assertEqual(1, self.filter1.testcalled)
 
 
-class ViewFilterTest(test.wxTestCase):
+class ViewFilterTest(test.TestCase):
     def setUp(self):
         self.list = task.TaskList()
         self.filter = task.filter.ViewFilter(self.list)
@@ -110,6 +110,21 @@ class ViewFilterTest(test.wxTestCase):
         self.filter.extend([self.dueToday, dueNextWeek])
         self.filter.viewTasksDueBefore('Workweek')
         self.assertEqual(1, len(self.filter))
+
+
+class ViewFilterInTreeModeTest(test.TestCase):
+    def setUp(self):
+        self.list = task.TaskList()
+        self.filter = task.filter.ViewFilter(self.list, treeMode=True)
+        self.task = task.Task()
+        self.dueToday = task.Task(duedate=date.Today())
+        self.dueTomorrow = task.Task(duedate=date.Tomorrow())
+        self.dueYesterday = task.Task(duedate=date.Yesterday())
+        self.child = task.Task()
+        
+    def testCreate(self):
+        self.assertEqual(0, len(self.filter))
+        
 
 class CompositeFilterTest(test.wxTestCase):
     def setUp(self):
@@ -238,5 +253,5 @@ class OriginalLengthTest(test.TestCase):
         self.filter.addCategory('test')
         self.assertEqual(0, len(self.filter))
         self.assertEqual(1, self.filter.originalLength())
-        self.list.append
+
      

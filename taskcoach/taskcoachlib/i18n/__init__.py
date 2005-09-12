@@ -4,34 +4,14 @@ class Translator:
     __metaclass__ = patterns.Singleton
     
     def __init__(self, language=None):
-        if language and language.startswith('nl'):
-            import nl_NL
-            self.__language = nl_NL.dict
-            self.__encoding = nl_NL.encoding
-        elif language and language.startswith('fr'):
-            import fr_FR
-            self.__language = fr_FR.dict
-            self.__encoding = fr_FR.encoding
-        elif language and language.startswith('zh'):
-            import zh_CN
-            self.__language = zh_CN.dict
-            self.__encoding = zh_CN.encoding
-        elif language and language.startswith('de'):
-            import de_DE
-            self.__language = de_DE.dict
-            self.__encoding = de_DE.encoding
-        elif language and language.startswith('ru'):
-            import ru_RU
-            self.__language = ru_RU.dict
-            self.__encoding = ru_RU.encoding
-        elif language and language.startswith('es'):
-            import es_ES
-            self.__language = es_ES.dict
-            self.__encoding = es_ES.encoding
         if language:
+            if language not in ('en_US', 'en_GB'):
+                module = __import__(language, globals())
+                self.__language = module.dict
+                self.__encoding = module.encoding                
             li = wx.Locale.FindLanguageInfo(language)
             self.__locale = wx.Locale(li.Language)
-        
+         
     def translate(self, string):
         try:
             return self.__language[string].decode(self.__encoding)
