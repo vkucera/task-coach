@@ -1,7 +1,7 @@
 from domain import *
 
 releases = [
-Release('0.47', 'September ?, 2005',
+Release('0.47', 'September 18, 2005',
     featuresAdded=[
         Feature('''Added Hungarian translation thanks to Majsa Norbert'''),
         Feature('''The task tree view now also shows columns with task details,
@@ -18,7 +18,7 @@ by the user in the search bar.'''),
         Bug('''When opening a task with a (long) description, the cursor will
 be positioned on the first line of the text, instead of on the last line.''', '1265845'),
         Bug('''When viewing tasks due before a certain date in the tree view,
-tasks with subtasks due before that date will be visible.''', '?')]),
+tasks with subtasks due before that date will be visible.''', '1275708')]),
 
 Release('0.46', 'August 12, 2005',
     bugsFixed=[

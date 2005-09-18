@@ -825,7 +825,7 @@ class UICommands(dict):
             helpText=_('Show/hide inactive tasks (tasks with a start date in the future)'),
             setting='inactivetasks', settings=settings)
         self['viewactivetasks'] = UICheckCommand(menuText=_('&Active'), 
-            helpText=_('Show/hide active tasks (tasks with a due date in the past)'),
+            helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
             setting='activetasks', settings=settings)    
         self['viewoverduetasks'] = UICheckCommand(menuText=_('&Over due'), 
             helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
