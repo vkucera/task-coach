@@ -264,10 +264,10 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
         return widget
         
     def createFilter(self, taskList):
-        return task.filter.CompositeFilter(taskList)
+        return task.filter.CompositeFilter(task.filter.ViewFilter(taskList, settings=self.settings))
         
-    def createSorter(self, list):
-        return task.sorter.Sorter(list, settings=self.settings, treeMode=False)
+    def createSorter(self, taskList):
+        return task.sorter.Sorter(taskList, settings=self.settings, treeMode=False)
     
     def setViewCompositeTasks(self, viewCompositeTasks):
         self.list.setViewCompositeTasks(viewCompositeTasks)
@@ -280,9 +280,12 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
             self.onSelect, self.uiCommands['edit'], self.createTaskPopupMenu())
         widget.AssignImageList(self.createImageList())
         return widget
+    
+    def createFilter(self, taskList):
+        return task.filter.ViewFilter(taskList, settings=self.settings, treeMode=True)
         
-    def createSorter(self, list):
-        return task.sorter.Sorter(list, settings=self.settings, treeMode=True)
+    def createSorter(self, taskList):
+        return task.sorter.Sorter(taskList, settings=self.settings, treeMode=True)
     
     def getItemText(self, index):
         task = self.list[index]

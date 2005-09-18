@@ -109,6 +109,16 @@ class CommonTests(object):
         self.settings.set('view', 'sortby', 'dueDate')
         self.assertItems((task2, 1), child2, (self.task, 1), child)
         
+    def testViewDueTodayHidesTasksNotDueToday(self):
+        self.settings.set('view', 'tasksdue', 'Today')
+        child = task.Task(subject='child')
+        self.task.addChild(child)
+        self.taskList.append(self.task)
+        self.assertItems()
+        
+    def testViewDueTodayShowsTasksWhoseChildrenAreDueToday(self):
+        pass
+        
         
 class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):
     def createWidget(self):

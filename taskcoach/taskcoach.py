@@ -41,8 +41,7 @@ class App(object):
         self.autoSaver = task.AutoSaver(settings, self.taskFile)
         effortList = effort.EffortList(self.taskFile)
         self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
-        viewFilteredTaskList = task.filter.ViewFilter(self.taskFile)
-        categoryFilteredTaskList = task.filter.CategoryFilter(viewFilteredTaskList)
+        categoryFilteredTaskList = task.filter.CategoryFilter(self.taskFile)
         searchFilteredTaskList = task.filter.SearchFilter(categoryFilteredTaskList)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
             searchFilteredTaskList, effortList, settings)

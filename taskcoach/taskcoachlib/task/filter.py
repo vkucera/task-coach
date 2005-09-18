@@ -6,6 +6,9 @@ class Filter(patterns.ObservableListObserver):
         self.__treeMode = kwargs.pop('treeMode', False)
         super(Filter, self).__init__(*args, **kwargs)
         
+    def treeMode(self):
+        return self.__treeMode
+        
     def processChanges(self, notification):
         oldSelf = self[:]
         self[:] = [item for item in self.original() if self.filter(item)]
@@ -23,59 +26,38 @@ class Filter(patterns.ObservableListObserver):
     
 class ViewFilter(Filter):
     def __init__(self, *args, **kwargs):
+        self.__settings = kwargs.pop('settings')
+        for setting in ('tasksdue', 'completedtasks', 'inactivetasks',
+                        'activetasks', 'overduetasks', 'overbudgetasks'):
+            self.__settings.registerObserver(self.onViewSettingChanged, ('view', setting))
         super(ViewFilter, self).__init__(*args, **kwargs)
-        self.setViewAll()
         
-    def setViewAll(self):
-        self._viewCompletedTasks = self._viewInactiveTasks = \
-            self._viewActiveTasks = self._viewOverDueTasks = \
-            self._viewOverBudgetTasks = True
-        self._viewTasksDueBeforeDate = date.Date()
-        self.reset()
-
-    def setViewCompletedTasks(self, viewCompletedTasks):
-        self._viewCompletedTasks = viewCompletedTasks
-        self.reset()
-
-    def setViewInactiveTasks(self, viewInactiveTasks):
-        self._viewInactiveTasks = viewInactiveTasks
+    def onViewSettingChanged(self, notification):
         self.reset()
         
-    def setViewActiveTasks(self, viewActiveTasks):
-        self._viewActiveTasks = viewActiveTasks
-        self.reset()
-
-    def setViewOverDueTasks(self, viewOverDueTasks):
-        self._viewOverDueTasks = viewOverDueTasks
-        self.reset()
-        
-    def setViewOverBudgetTasks(self, viewOverBudgetTasks):
-        self._viewOverBudgetTasks = viewOverBudgetTasks
-        self.reset()
-        
-    def viewTasksDueBefore(self, dateString):
+    def getViewTasksDueBeforeDate(self):
         dateFactory = { 'Today' : date.Today, 
                         'Tomorrow' : date.Tomorrow,
                         'Workweek' : date.NextFriday, 
                         'Week' : date.NextSunday, 
                         'Month' : date.LastDayOfCurrentMonth, 
                         'Year' : date.LastDayOfCurrentYear, 
-                        'Unlimited' : date.Date }
-        self._viewTasksDueBeforeDate = dateFactory[dateString]()
-        self.reset()
-              
+                        'Unlimited' : date.Date }        
+        return dateFactory[self.__settings.get('view', 'tasksdue')]()
+        
     def filter(self, task):
-        if task.completed() and not self._viewCompletedTasks:
+        if task.completed() and not self.__settings.getboolean('view', 'completedtasks'):
             return False
-        if task.inactive() and not self._viewInactiveTasks:
+        if task.inactive() and not self.__settings.getboolean('view', 'inactivetasks'):
             return False
-        if task.overdue() and not self._viewOverDueTasks:
+        if task.overdue() and not self.__settings.getboolean('view', 'overduetasks'):
             return False
-        if task.active() and not self._viewActiveTasks:
+        if task.active() and not self.__settings.getboolean('view', 'activetasks'):
             return False
-        if task.budgetLeft(recursive=True) < date.TimeDelta() and not self._viewOverBudgetTasks:
+        if task.budgetLeft(recursive=True) < date.TimeDelta() and not \
+            self.__settings.getboolean('view', 'overbudgettasks'):
             return False
-        if task.dueDate() > self._viewTasksDueBeforeDate:
+        if task.dueDate(recursive=self.treeMode()) > self.getViewTasksDueBeforeDate():
             return False        
         return True
 

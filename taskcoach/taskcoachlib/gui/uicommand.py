@@ -444,62 +444,11 @@ class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
             uiCommand = self.uiCommands[uiCommandName]
             self.settings.set(uiCommand.section, uiCommand.setting, 'True')
         self.settings.set(self.section, 'tasksdue', 'Unlimited')    
-        self.filteredTaskList.setViewAll()
         self.filteredTaskList.setSubject()
         self.filteredTaskList.removeAllCategories()
 
 
-class ViewCompletedTasks(FilterCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewCompletedTasks, self).__init__(menuText=_('&Completed'), 
-            helpText=_('Show/hide completed tasks'), setting='completedtasks',
-            *args, **kwargs)
 
-    def doCommand(self, event):
-        super(ViewCompletedTasks, self).doCommand(event)
-        self.filteredTaskList.setViewCompletedTasks(event.IsChecked())
-
-
-class ViewInactiveTasks(FilterCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewInactiveTasks, self).__init__(menuText=_('&Inactive'), 
-            helpText=_('Show/hide inactive tasks (tasks with a start date in the future)'),
-            setting='inactivetasks', *args, **kwargs)
-
-    def doCommand(self, event):
-        super(ViewInactiveTasks, self).doCommand(event)
-        self.filteredTaskList.setViewInactiveTasks(event.IsChecked())
-
-class ViewOverDueTasks(FilterCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewOverDueTasks, self).__init__(menuText=_('&Over due'), 
-            helpText=_('Show/hide over due tasks (tasks with a due date in the past)'),
-            setting='overduetasks', *args, **kwargs)
-
-    def doCommand(self, event):
-        super(ViewOverDueTasks, self).doCommand(event)
-        self.filteredTaskList.setViewOverDueTasks(event.IsChecked())
-
-class ViewActiveTasks(FilterCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewActiveTasks, self).__init__(menuText=_('&Active'),
-            helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
-            setting='activetasks', *args, **kwargs)    
-
-    def doCommand(self, event):
-        super(ViewActiveTasks, self).doCommand(event)
-        self.filteredTaskList.setViewActiveTasks(event.IsChecked())    
- 
-class ViewOverBudgetTasks(FilterCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewOverBudgetTasks, self).__init__(menuText=_('Over &budget'), 
-            helpText=_('Show/hide tasks that are over budget'), 
-            setting='overbudgettasks', *args, **kwargs)
-
-    def doCommand(self, event):
-        super(ViewOverBudgetTasks, self).doCommand(event)
-        self.filteredTaskList.setViewOverBudgetTasks(event.IsChecked())
-               
 
 class ViewCompositeTasks(ViewerCommand, FilterCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
@@ -601,13 +550,9 @@ class ViewStatusBar(MainWindowCommand, UICheckCommand):
         self.mainwindow.SendSizeEvent()
 
 
-class ViewDueBefore(FilterCommand, UIRadioCommand):
+class ViewDueBefore(UIRadioCommand):
     def __init__(self, *args, **kwargs):
         super(ViewDueBefore, self).__init__(setting='tasksdue', *args, **kwargs)
-        
-    def doCommand(self, event):
-        super(ViewDueBefore, self).doCommand(event)
-        self.filteredTaskList.viewTasksDueBefore(self.value) 
     
 
 class ViewSortBy(UIRadioCommand):
@@ -873,16 +818,21 @@ class UICommands(dict):
 
         # View commands
         self['viewalltasks'] = ViewAllTasks(filteredTaskList=filteredTaskList, settings=settings, uiCommands=self)
-        self['viewcompletedtasks'] = ViewCompletedTasks(filteredTaskList=filteredTaskList, 
+        self['viewcompletedtasks'] = UICheckCommand(menuText=_('&Completed'), 
+            helpText=_('Show/hide completed tasks'), setting='completedtasks',
             settings=settings)
-        self['viewinactivetasks'] = ViewInactiveTasks(filteredTaskList=filteredTaskList,
-            settings=settings)
-        self['viewactivetasks'] = ViewActiveTasks(filteredTaskList=filteredTaskList,
-            settings=settings)    
-        self['viewoverduetasks'] = ViewOverDueTasks(filteredTaskList=filteredTaskList,
-            settings=settings)    
-        self['viewoverbudgettasks'] = ViewOverBudgetTasks(filteredTaskList=filteredTaskList,
-            settings=settings)
+        self['viewinactivetasks'] = UICheckCommand(menuText=_('&Inactive'), 
+            helpText=_('Show/hide inactive tasks (tasks with a start date in the future)'),
+            setting='inactivetasks', settings=settings)
+        self['viewactivetasks'] = UICheckCommand(menuText=_('&Active'), 
+            helpText=_('Show/hide active tasks (tasks with a due date in the past)'),
+            setting='activetasks', settings=settings)    
+        self['viewoverduetasks'] = UICheckCommand(menuText=_('&Over due'), 
+            helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
+            setting='overduetasks', settings=settings)    
+        self['viewoverbudgettasks'] = UICheckCommand(menuText=_('Over &budget'), 
+            helpText=_('Show/hide tasks that are over budget'),
+            setting='overbudgettasks', settings=settings)
         self['viewcompositetasks'] = ViewCompositeTasks(viewer=viewer, filteredTaskList=filteredTaskList,
             settings=settings)
         
@@ -1003,25 +953,24 @@ class UICommands(dict):
 
         self['viewduetoday'] = ViewDueBefore(menuText=_('&Today'), 
             helpText=_('Only show tasks due today'), value='Today', 
-            filteredTaskList=filteredTaskList, settings=settings)
+            settings=settings)
         self['viewduetomorrow'] = ViewDueBefore(menuText=_('T&omorrow'), 
             helpText=_('Only show tasks due today and tomorrow'), value='Tomorrow', 
-            filteredTaskList=filteredTaskList, settings=settings)
+            settings=settings)
         self['viewdueworkweek'] = ViewDueBefore(menuText=_('Wo&rk week'),
             helpText=_('Only show tasks due this work week (i.e. before Friday)'),
-            value='Workweek', filteredTaskList=filteredTaskList, settings=settings)
+            value='Workweek', settings=settings)
         self['viewdueweek'] = ViewDueBefore(menuText=_('&Week'),
             helpText=_('Only show tasks due this week (i.e. before Sunday)'), value='Week',
-            filteredTaskList=filteredTaskList, settings=settings)
+            settings=settings)
         self['viewduemonth'] = ViewDueBefore(menuText=_('&Month'), 
             helpText=_('Only show tasks due this month'), value='Month',
-            filteredTaskList=filteredTaskList, settings=settings)
+            settings=settings)
         self['viewdueyear'] = ViewDueBefore(menuText=_('&Year'),
             helpText=_('Only show tasks due this year'), value='Year',
-            filteredTaskList=filteredTaskList, settings=settings)
+            settings=settings)
         self['viewdueunlimited'] = ViewDueBefore(menuText=_('&Unlimited'), 
-            helpText=_('Show all tasks'), value='Unlimited', 
-            filteredTaskList=filteredTaskList, settings=settings)
+            helpText=_('Show all tasks'), value='Unlimited', settings=settings)
 
         # Task menu
         self['new'] = TaskNew(mainwindow=mainwindow, 

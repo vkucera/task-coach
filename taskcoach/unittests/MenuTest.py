@@ -150,6 +150,7 @@ class RecentFilesMenuTest(test.wxTestCase):
         self.settings.set('file', 'maxrecentfiles', '1')
         self.assertRecentFileMenuItems(self.filename1)
 
+
 class ViewMenuTestCase(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
@@ -164,7 +165,8 @@ class ViewMenuTestCase(test.wxTestCase):
         
     def createFilteredTaskList(self):
         return None
-        
+
+
 class ViewSortMenuTest(ViewMenuTestCase):
     def createMenu(self):
         return gui.menu.SortMenu(self.frame, self.uiCommands)
@@ -193,7 +195,7 @@ class ViewAllTasksTest(ViewMenuTestCase):
         return dummy.MainWindow()
         
     def createFilteredTaskList(self):
-        return task.filter.SearchFilter(task.filter.CategoryFilter(task.filter.ViewFilter(task.TaskList())))
+        return task.filter.SearchFilter(task.filter.CategoryFilter(task.filter.ViewFilter(task.TaskList(), settings=self.settings)))
 
     def invokeViewAllTasks(self):
         self.menu.invokeMenuItem(self.menu.FindItemByPosition(0))

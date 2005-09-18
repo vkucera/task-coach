@@ -16,7 +16,9 @@ Preferences dialog. Set the maximum to zero to disable this feature. ''', '11917
         Bug(''''View'->'All tasks' now also resets any search criterium entered
 by the user in the search bar.'''),
         Bug('''When opening a task with a (long) description, the cursor will
-be positioned on the first line of the text, instead of on the last line.''', '1265845')]),
+be positioned on the first line of the text, instead of on the last line.''', '1265845'),
+        Bug('''When viewing tasks due before a certain date in the tree view,
+tasks with subtasks due before that date will be visible.''', '?')]),
 
 Release('0.46', 'August 12, 2005',
     bugsFixed=[

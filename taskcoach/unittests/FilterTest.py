@@ -1,4 +1,4 @@
-import test, patterns, string, task, gui, date
+import test, patterns, string, task, gui, date, config
 
 class TestFilter(task.filter.Filter):
     def filter(self, item):
@@ -49,7 +49,8 @@ class StackedFilterTest(test.TestCase):
 class ViewFilterTest(test.TestCase):
     def setUp(self):
         self.list = task.TaskList()
-        self.filter = task.filter.ViewFilter(self.list)
+        self.settings = config.Settings(load=False)
+        self.filter = task.filter.ViewFilter(self.list, settings=self.settings)
         self.task = task.Task()
         self.dueToday = task.Task(duedate=date.Today())
         self.dueTomorrow = task.Task(duedate=date.Tomorrow())
@@ -65,57 +66,58 @@ class ViewFilterTest(test.TestCase):
         
     def testViewActiveTasks(self):
         self.filter.append(self.task)
-        self.filter.setViewActiveTasks(False)
+        self.settings.set('view', 'activetasks', 'False')
         self.assertEqual(0, len(self.filter))
 
     def testFilterCompletedTask(self):
         self.task.setCompletionDate()
         self.filter.append(self.task)
         self.assertEqual(1, len(self.filter))
-        self.filter.setViewCompletedTasks(False)
+        self.settings.set('view', 'completedtasks', 'False')
         self.assertEqual(0, len(self.filter))
         
     def testFilterCompletedTask_RootTasks(self):
         self.task.setCompletionDate()
         self.filter.append(self.task)
-        self.filter.setViewCompletedTasks(False)
+        self.settings.set('view', 'completedtasks', 'False')
         self.assertEqual(0, len(self.filter.rootTasks()))
 
     def testFilterDueToday(self):
         self.filter.extend([self.task, self.dueToday])
         self.assertEqual(2, len(self.filter))
-        self.filter.viewTasksDueBefore('Today')
+        self.settings.set('view', 'tasksdue', 'Today')
         self.assertEqual(1, len(self.filter))
     
     def testFilterDueToday_ShouldIncludeOverdueTasks(self):
         self.filter.append(self.dueYesterday)
-        self.filter.viewTasksDueBefore('Today')
+        self.settings.set('view', 'tasksdue', 'Today')
         self.assertEqual(1, len(self.filter))
 
     def testFilterDueToday_ShouldIncludeCompletedTasks(self):
         self.filter.append(self.dueToday)
         self.dueToday.setCompletionDate()
-        self.filter.viewTasksDueBefore('Today')
+        self.settings.set('view', 'tasksdue', 'Today')
         self.assertEqual(1, len(self.filter))
 
     def testFilterDueTomorrow(self):
         self.filter.extend([self.task, self.dueTomorrow, self.dueToday])
         self.assertEqual(3, len(self.filter))
-        self.filter.viewTasksDueBefore('Tomorrow')
+        self.settings.set('view', 'tasksdue', 'Tomorrow')
         self.assertEqual(2, len(self.filter))
     
     def testFilterDueWeekend(self):
         dueNextWeek = task.Task(duedate=date.Today() + \
             date.TimeDelta(days=8))
         self.filter.extend([self.dueToday, dueNextWeek])
-        self.filter.viewTasksDueBefore('Workweek')
+        self.settings.set('view', 'tasksdue', 'Workweek')
         self.assertEqual(1, len(self.filter))
 
 
 class ViewFilterInTreeModeTest(test.TestCase):
     def setUp(self):
         self.list = task.TaskList()
-        self.filter = task.filter.ViewFilter(self.list, treeMode=True)
+        self.settings = config.Settings(load=False)
+        self.filter = task.filter.ViewFilter(self.list, settings=self.settings, treeMode=True)
         self.task = task.Task()
         self.dueToday = task.Task(duedate=date.Today())
         self.dueTomorrow = task.Task(duedate=date.Tomorrow())
@@ -125,7 +127,23 @@ class ViewFilterInTreeModeTest(test.TestCase):
     def testCreate(self):
         self.assertEqual(0, len(self.filter))
         
+    def testAddTask(self):
+        self.filter.append(self.task)
+        self.assertEqual(1, len(self.filter))
 
+    def testFilterDueToday(self):
+        self.task.addChild(self.dueToday)
+        self.list.append(self.task)
+        self.settings.set('view', 'tasksdue', 'Today')
+        self.assertEqual(2, len(self.filter))
+        
+    def testFilterOverDueTasks(self):
+        self.task.addChild(self.dueYesterday)
+        self.list.append(self.task)
+        self.settings.set('view', 'overduetasks', 'False')
+        self.assertEqual(1, len(self.filter))
+        
+        
 class CompositeFilterTest(test.wxTestCase):
     def setUp(self):
         self.list = task.TaskList()
