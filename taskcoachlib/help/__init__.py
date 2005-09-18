@@ -89,3 +89,10 @@ following command:
 
 '''%meta.metaDict + doubleline
 
+buildText = header + '''
+
+--- Building ---------------------------------------------------
+
+To be done.
+
+'''%meta.metaDict + doubleline

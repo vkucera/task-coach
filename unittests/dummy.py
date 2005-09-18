@@ -77,8 +77,11 @@ class Settings:
     def registerObserver(self, *args, **kwargs):
         pass
         
-    def get(self, *args):
-        return 'subject'
+    def get(self, section, setting):
+        if setting == 'tasksdue':
+            return 'Unlimited'
+        else:
+            return 'subject'
         
     def getboolean(self, *args):
         return True
