@@ -135,7 +135,7 @@ class TaskViewerWithColumns(TaskViewer):
     def __init__(self, *args, **kwargs):
         super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
         self.settings.registerObserver(self.onShowColumn, ('view', 'duedate'), ('view', 'startdate'),
-            ('view', 'daysleft'), ('view', 'completiondate'), ('view', 'budget'), 
+            ('view', 'timeleft'), ('view', 'completiondate'), ('view', 'budget'), 
             ('view', 'totalbudget'), ('view', 'timespent'), ('view', 'totaltimespent'),
             ('view', 'budgetleft'), ('view', 'totalbudgetleft'), ('view', 'priority'),
             ('view', 'totalpriority'), ('view', 'lastmodificationtime'),
@@ -145,7 +145,7 @@ class TaskViewerWithColumns(TaskViewer):
         
     def onShowColumn(self, notification):
         columnHeader = {'subject': _('Subject'), 'startdate': _('Start date'),
-            'duedate': _('Due date'), 'daysleft': _('Days left'),
+            'duedate': _('Due date'), 'timeleft': _('Days left'),
             'completiondate': _('Completion date'), 'budget': _('Budget'),
             'totalbudget': _('Total budget'), 'timespent': _('Time spent'),
             'totaltimespent': _('Total time spent'), 'budgetleft': _('Budget left'),
@@ -188,7 +188,7 @@ class TaskViewerWithColumns(TaskViewer):
         return {_('Subject'): self.uiCommands['viewsortbysubject'], 
                 _('Start date'): self.uiCommands['viewsortbystartdate'], 
                 _('Due date'): self.uiCommands['viewsortbyduedate'],
-                _('Days left'): self.uiCommands['viewsortbydaysleft'],
+                _('Days left'): self.uiCommands['viewsortbytimeleft'],
                 _('Completion date'): self.uiCommands['viewsortbycompletiondate'],
                 _('Budget'): self.uiCommands['viewsortbybudget'],
                 _('Total budget'): self.uiCommands['viewsortbytotalbudget'],
@@ -313,7 +313,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         
     def getChildIndices(self, index):
         task = self.list[index]
-        childIndices = [self.list.index(child) for child in task.children()]
+        childIndices = [self.list.index(child) for child in task.children() if child in self.list]
         childIndices.sort()
         return childIndices
 

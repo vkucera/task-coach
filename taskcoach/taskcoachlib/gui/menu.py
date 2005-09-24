@@ -128,7 +128,7 @@ class ViewColumnsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewColumnsMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewstartdate',
-        'viewduedate', 'viewdaysleft', 'viewcompletiondate',
+        'viewduedate', 'viewtimeleft', 'viewcompletiondate',
         'viewbudget', 'viewtotalbudget', 'viewtimespent',
         'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
         'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime',
@@ -163,7 +163,7 @@ class SortMenu(Menu):
         # ascending/descending order
         self.appendUICommands(uiCommands, ['viewsortorder', 'viewsortcasesensitive',
             'viewsortbystatusfirst', None, 'viewsortbysubject', 
-            'viewsortbystartdate', 'viewsortbyduedate', 'viewsortbydaysleft',
+            'viewsortbystartdate', 'viewsortbyduedate', 'viewsortbytimeleft',
             'viewsortbycompletiondate', 'viewsortbybudget', 'viewsortbytotalbudget',
             'viewsortbytimespent', 'viewsortbytotaltimespent', 'viewsortbybudgetleft',
             'viewsortbytotalbudgetleft', 'viewsortbypriority', 
@@ -238,7 +238,7 @@ class TaskViewerColumnPopupMenu(Menu):
         # can then hide the right columns?
         wx.FutureCall(1000, lambda:
             self.appendUICommands(uiCommands, ['viewstartdate',
-            'viewduedate', 'viewdaysleft', 'viewcompletiondate',
+            'viewduedate', 'viewtimeleft', 'viewcompletiondate',
             'viewbudget', 'viewtotalbudget', 'viewtimespent',
             'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
             'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime',
