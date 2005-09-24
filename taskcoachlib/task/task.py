@@ -164,8 +164,8 @@ class Task(patterns.Observable):
     def setStartDate(self, startdate):
         self.__setAttributeAndNotifyObservers('_startdate', startdate)
 
-    def timeLeft(self):
-        return self._duedate - date.Today()
+    def timeLeft(self, recursive=False):
+        return self.dueDate(recursive) - date.Today()
         
     def completionDate(self, recursive=False):
         if recursive:

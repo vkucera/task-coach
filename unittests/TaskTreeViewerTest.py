@@ -4,7 +4,8 @@ class TaskTreeViewerTestCase(test.wxTestCase):
     def setUp(self):
         self.task = task.Task(subject='task')
         self.settings = config.Settings(load=False)
-        self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
+        self.taskList = task.sorter.Sorter(task.filter.ViewFilter(task.TaskList(),
+            settings=self.settings, treeMode=True), settings=self.settings, treeMode=True)
         
     def assertItems(self, *tasks):
         self.viewer.widget.expandAllItems()
@@ -117,7 +118,20 @@ class CommonTests(object):
         self.assertItems()
         
     def testViewDueTodayShowsTasksWhoseChildrenAreDueToday(self):
-        pass
+        self.settings.set('view', 'tasksdue', 'Today')
+        child = task.Task(subject='child', duedate=date.Today())
+        self.task.addChild(child)
+        self.taskList.append(self.task)
+        self.assertItems((self.task, 1), child)
+        
+    def testFilterCompletedTasks(self):
+        self.settings.set('view', 'completedtasks', 'False')
+        completedChild = task.Task(completiondate=date.Today())
+        notCompletedChild = task.Task()
+        self.task.addChild(notCompletedChild)
+        self.task.addChild(completedChild)
+        self.taskList.append(self.task)
+        self.assertItems((self.task, 1), notCompletedChild)
         
         
 class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):
@@ -127,6 +141,7 @@ class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):
             self.onSelect, dummy.DummyUICommand())
         widget.AssignImageList(self.createImageList())
         return widget
+
 
 class TaskTreeViewerTest(TaskTreeViewerTestCase, CommonTests):
     def setUp(self):
