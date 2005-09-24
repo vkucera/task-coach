@@ -199,6 +199,10 @@ class TaskNotificationTest(TaskNotificationTestCase):
         self.task.setDescription('new description')
         self.failUnlessNotified()
         
+    def testSetCompletionDate_ViaConstructor(self):
+        completedTask = task.Task(completiondate=date.Today())
+        self.failUnless(completedTask.completed())
+
 
 class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
     def createTask(self):
@@ -258,7 +262,12 @@ class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
         self.failIf(self.task.allChildrenCompleted())
         child.setCompletionDate()
         self.failUnless(self.task.allChildrenCompleted())
-        
+    
+    def testTimeLeftRecursive(self):
+        child = task.Task(duedate=date.Today())
+        self.task.addChild(child)
+        self.assertEqual(date.TimeDelta(), self.task.timeLeft(recursive=True))
+
 
 class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
     ''' FIXME: to be deleted because of duplication with TaskRelationshipManager? '''

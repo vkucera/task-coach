@@ -41,6 +41,7 @@ class TaskSorterTest(test.TestCase):
         self.a.setSubject('z')
         self.assertEqual([self.b, self.c, self.d, self.a], list(self.sorter))
 
+
 class TaskSorterSettingsTest(test.TestCase):        
     def setUp(self):
         self.taskList = task.TaskList()
@@ -124,6 +125,11 @@ class TaskSorterSettingsTest(test.TestCase):
         self.settings.set('view', 'sortby', 'subject')
         self.settings.set('view', 'sortby', 'subject')
         self.assertEqual('False', self.settings.get('view', 'sortascending'))
+
+    def testSortByTotalTimeLeft(self):
+        self.settings.set('view', 'sortascending', 'True')
+        self.settings.set('view', 'sortby', 'totaltimeLeft')
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
 
 
 class TaskSorterTreeModeTest(test.TestCase):
