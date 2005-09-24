@@ -473,12 +473,6 @@ class ViewCategories(MainWindowCommand, FilterCommand):
 
     def enabled(self):
         return self.filteredTaskList.categories() 
-
-
-class ViewColumn(UICheckCommand):   
-    def __init__(self, column=0, *args, **kwargs):
-        self.column = column
-        super(ViewColumn, self).__init__(*args, **kwargs)
         
         
 class ViewExpandAll(ViewerCommand):
@@ -526,7 +520,6 @@ class ViewToolBar(MainWindowCommand, UIRadioCommand):
         self.mainwindow.setToolBarSize(self.value)
 
 
-
 class ViewFindDialog(MainWindowCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewFindDialog, self).__init__(menuText=_('&Find dialog'),
@@ -548,38 +541,7 @@ class ViewStatusBar(MainWindowCommand, UICheckCommand):
         super(ViewStatusBar, self).doCommand(event)
         self.mainwindow.GetStatusBar().Show(event.IsChecked())
         self.mainwindow.SendSizeEvent()
-
-
-class ViewDueBefore(UIRadioCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewDueBefore, self).__init__(setting='tasksdue', *args, **kwargs)
     
-
-class ViewSortBy(UIRadioCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewSortBy, self).__init__(setting='sortby', *args, **kwargs)
-    
-        
-class ViewSortOrder(UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewSortOrder, self).__init__(menuText=_('&Ascending'),
-            helpText=_('Sort tasks ascending (checked) or descending (unchecked)'),
-            setting='sortascending', *args, **kwargs)
-        
-
-class ViewSortByStatusFirst(UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewSortByStatusFirst, self).__init__(menuText=_('Sort by status &first'),
-            helpText=_('Sort tasks by status (active/inactive/completed) first'),
-            setting='sortbystatusfirst', *args, **kwargs)
-            
-        
-class ViewSortCaseSensitive(UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewSortCaseSensitive, self).__init__(menuText=_('Sort case sensitive'),
-            helpText=_('When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)'),
-            setting='sortcasesensitive', *args, **kwargs)
-
                                                                     
 class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
@@ -724,6 +686,7 @@ class EffortStop(FilterCommand):
     def enabled(self):
         return bool([task for task in self.filteredTaskList if task.isBeingTracked()])
 
+
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self.closed = True
@@ -741,6 +704,7 @@ class DialogCommand(UICommand):
         
     def enabled(self):
         return self.closed
+
 
 class HelpCommand(DialogCommand):
     def __init__(self, *args, **kwargs):
@@ -838,140 +802,90 @@ class UICommands(dict):
         
         self['viewcategories'] = ViewCategories(mainwindow=mainwindow, 
             filteredTaskList=filteredTaskList)
-            
-        self['viewstartdate'] = ViewColumn(column=_('Start date'),
-            settings=settings, 
-            menuText=_('&Start date'), helpText = _('Show/hide start date column'),
-            setting='startdate')
-        self['viewduedate'] = ViewColumn(settings=settings,
-            menuText=_('&Due date'), helpText=_('Show/hide due date column'),
-            setting='duedate', column=_('Due date'))
-        self['viewdaysleft'] = ViewColumn(settings=settings,
-            menuText=_('D&ays left'), helpText=_('Show/hide days left column'),
-            setting='daysleft', column=_('Days left'))
-        self['viewcompletiondate'] = ViewColumn(settings=settings,
-            menuText=_('Co&mpletion date'), helpText=_('Show/hide completion date column'),
-            setting='completiondate', column=_('Completion date'))
-        self['viewbudget'] = ViewColumn(settings=settings,
-            menuText=_('&Budget'), helpText=_('Show/hide budget column'),
-            setting='budget', column=_('Budget'))
-        self['viewtotalbudget'] = ViewColumn(settings=settings,
-            menuText=_('Total b&udget'),
-            helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
-            setting='totalbudget', column=_('Total budget'))
-        self['viewtimespent'] = ViewColumn(settings=settings,
-            menuText=_('&Time spent'), helpText=_('Show/hide time spent column'),
-            setting='timespent', column=_('Time spent'))
-        self['viewtotaltimespent'] = ViewColumn(settings=settings,
-            menuText=_('T&otal time spent'),
-            helpText=_('Show/hide total time spent column (total time includes time spent on subtasks)'),
-            setting='totaltimespent', column=_('Total time spent'))
-        self['viewbudgetleft'] = ViewColumn(settings=settings,
-            menuText=_('Budget &left'), helpText=_('Show/hide budget left column'),
-            setting='budgetleft', column=_('Budget left'))
-        self['viewtotalbudgetleft'] = ViewColumn(settings=settings,
-            menuText=_('Total budget l&eft'),
-            helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
-            setting='totalbudgetleft', column=_('Total budget left'))
-        self['viewpriority'] = ViewColumn(settings=settings,
-            menuText=_('&Priority'), helpText=_('Show/hide priority column'),
-            setting='priority', column=_('Priority'))
-        self['viewtotalpriority'] = ViewColumn(settings=settings,
-            menuText=_('O&verall priority'), 
-            helpText=_('Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)'),
-            setting='totalpriority', column=_('Overall priority'))
-        self['viewlastmodificationtime'] = ViewColumn(settings=settings,
-            menuText=_('Last modification time'),
-            helpText=_('Show/hide last modification time column'),
-            setting='lastmodificationtime', column=_('Last modification time'))
-        self['viewtotallastmodificationtime'] = ViewColumn(settings=settings,
-            menuText=_('Overall last modification time'),
-            helpText=_('Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks'),
-            setting='totallastmodificationtime', column=('Overall last modification time'))
+
+        # Column show/hide commands
+        for menuText, helpText, setting in \
+            [(_('&Start date'), _('Show/hide start date column'), 'startdate'),
+             (_('&Due date'), _('Show/hide due date column'), 'duedate'),
+             (_('D&ays left'), _('Show/hide days left column'), 'timeleft'),
+             (_('Co&mpletion date'), _('Show/hide completion date column'), 'completiondate'),
+             (_('&Budget'), _('Show/hide budget column'), 'budget'),
+             (_('Total b&udget'), _('Show/hide total budget column (total budget includes budget for subtasks)'), 'totalbudget'),
+             (_('&Time spent'), _('Show/hide time spent column'), 'timespent'),
+             (_('T&otal time spent'), _('Show/hide total time spent column (total time includes time spent on subtasks)'), 'totaltimespent'),
+             (_('Budget &left'), _('Show/hide budget left column'), 'budgetleft'),
+             (_('Total budget l&eft'), _('Show/hide total budget left column (total budget left includes budget left for subtasks)'), 'totalbudgetleft'),
+             (_('&Priority'), _('Show/hide priority column'), 'priority'),
+             (_('O&verall priority'), _('Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)'), 'totalpriority'),
+             (_('Last modification time'), _('Show/hide last modification time column'), 'lastmodificationtime'),
+             (_('Overall last modification time'), _('Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks'), 'totallastmodificationtime')]:
+            key = 'view' + setting
+            self[key] = UICheckCommand(menuText=menuText, helpText=helpText, setting=setting, settings=settings)
     
         self['viewexpandall'] = ViewExpandAll(viewer=viewer)
         self['viewcollapseall'] = ViewCollapseAll(viewer=viewer)
         self['viewexpandselected'] = ViewExpandSelected(viewer=viewer)
         self['viewcollapseselected'] = ViewCollapseSelected(viewer=viewer)
+                
+        self['viewsortorder'] = UICheckCommand(menuText=_('&Ascending'),
+            helpText=_('Sort tasks ascending (checked) or descending (unchecked)'),
+            setting='sortascending', settings=settings)
+        self['viewsortcasesensitive'] = UICheckCommand(menuText=_('Sort case sensitive'),
+            helpText=_('When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)'),
+            setting='sortcasesensitive', settings=settings)
+        self['viewsortbystatusfirst'] = UICheckCommand(menuText=_('Sort by status &first'),
+            helpText=_('Sort tasks by status (active/inactive/completed) first'),
+            setting='sortbystatusfirst', settings=settings)
         
-        self['viewsortorder'] = ViewSortOrder(settings=settings)
-        self['viewsortcasesensitive'] = ViewSortCaseSensitive(settings=settings)
-        self['viewsortbystatusfirst'] = ViewSortByStatusFirst(settings=settings)
+        # Sort by column commands
+        for menuText, helpText, value in \
+            [(_('Sub&ject'), _('Sort tasks by subject'), 'subject'),
+             (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
+             (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
+             (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
+             (_('&Days left'), _('Sort tasks by number of days left'), 'timeLeft'),
+             (_('&Budget'), _('Sort tasks by budget'), 'budget'),
+             (_('Total b&udget'), _('Sort tasks by total budget'), 'totalbudget'),
+             (_('&Time spent'), _('Sort tasks by time spent'), 'timeSpent'),
+             (_('T&otal time spent'), _('Sort tasks by total time spent'), 'totaltimeSpent'),
+             (_('Budget &left'), _('Sort tasks by budget left'), 'budgetLeft'),
+             (_('Total budget l&eft'), _('Sort tasks by total budget left'), 'totalbudgetLeft'),
+             (_('&Priority'), _('Sort tasks by priority'), 'priority'),
+             (_('Overall priority'), _('Sort tasks by overall priority'), 'totalpriority'),
+             (_('Last modification time'), _('Sort tasks by last modification time'), 'lastModificationTime'),
+             (_('Overall last modification time'), _('Sort tasks by overall last modification time'), 'totallastModificationTime')]:
+            key = 'viewsortby' + value
+            key = key.lower()
+            self[key] = UIRadioCommand(settings=settings, setting='sortby', value=value,
+                                       menuText=menuText, helpText=helpText)
         
-        sortByKwArgs = {'settings': settings}
-        self['viewsortbysubject'] = ViewSortBy(value='subject', menuText=_('Sub&ject'), 
-            helpText=_('Sort tasks by subject'), **sortByKwArgs)
-        self['viewsortbystartdate'] = ViewSortBy(value='startDate', menuText=_('&Start date'),
-            helpText=_('Sort tasks by start date'), **sortByKwArgs)
-        self['viewsortbyduedate'] = ViewSortBy(value='dueDate', menuText=_('&Due date'),
-            helpText=_('Sort tasks by due date'), **sortByKwArgs)
-        self['viewsortbycompletiondate'] = ViewSortBy(value='completionDate',
-            menuText=_('&Completion date'),
-            helpText=_('Sort tasks by completion date'), **sortByKwArgs)
-        self['viewsortbydaysleft'] = ViewSortBy(value='timeLeft', menuText=_('&Days left'),
-            helpText=_('Sort tasks by number of days left'), **sortByKwArgs)
-        self['viewsortbybudget'] = ViewSortBy(value='budget', menuText=_('&Budget'),
-            helpText=_('Sort tasks by budget'), **sortByKwArgs)
-        self['viewsortbytotalbudget'] = ViewSortBy(value='totalbudget', menuText=_('Total b&udget'),
-            helpText=_('Sort tasks by total budget'), **sortByKwArgs)
-        self['viewsortbytimespent'] = ViewSortBy(value='timeSpent', menuText=_('&Time spent'),
-            helpText=_('Sort tasks by time spent'), **sortByKwArgs)
-        self['viewsortbytotaltimespent'] = ViewSortBy(value='totaltimeSpent', menuText=_('T&otal time spent'),
-            helpText=_('Sort tasks by total time spent'), **sortByKwArgs)
-        self['viewsortbybudgetleft'] = ViewSortBy(value='budgetLeft', menuText=_('Budget &left'),
-            helpText=_('Sort tasks by budget left'), **sortByKwArgs)
-        self['viewsortbytotalbudgetleft'] = ViewSortBy(value='totalbudgetLeft', menuText=_('Total budget l&eft'),
-            helpText=_('Sort tasks by total budget left'), **sortByKwArgs)
-        self['viewsortbypriority'] = ViewSortBy(value='priority', menuText=_('&Priority'), 
-            helpText=_('Sort tasks by priority'), **sortByKwArgs)
-        self['viewsortbytotalpriority'] = ViewSortBy(value='totalpriority', 
-            menuText=_('Overall priority'), helpText=_('Sort tasks by overall priority'),
-            **sortByKwArgs)
-        self['viewsortbylastmodificationtime'] = ViewSortBy(value='lastModificationTime',
-            menuText=_('Last modification time'), 
-            helpText=_('Sort tasks by last modification time'),
-            **sortByKwArgs)
-        self['viewsortbytotallastmodificationtime'] = ViewSortBy(value='totallastModificationTime',
-            menuText=_('Overall last modification time'), 
-            helpText=_('Sort tasks by overall last modification time'),
-            **sortByKwArgs)
-        
-        self['toolbarhide'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
-            value=None, menuText=_('&Hide'), helpText=_('Hide the toolbar'))
-        self['toolbarsmall'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
-            value=(16, 16), menuText=_('&Small images'), 
-            helpText=_('Small images (16x16) on the toolbar'))
-        self['toolbarmedium'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
-            value=(22, 22), menuText=_('&Medium-sized images'),
-            helpText=_('Medium-sized images (22x22) on the toolbar'))
-        self['toolbarbig'] = ViewToolBar(mainwindow=mainwindow, settings=settings,
-            value=(32, 32), menuText=_('&Large images'),
-            helpText=_('Large images (32x32) on the toolbar'))
-
+        # Toolbar size commands                
+        for key, value, menuText, helpText in \
+            [('hide', None, _('&Hide'), _('Hide the toolbar')),
+             ('small', (16, 16), _('&Small images'), _('Small images (16x16) on the toolbar')),
+             ('medium', (22, 22), _('&Medium-sized images'), _('Medium-sized images (22x22) on the toolbar')),
+             ('big', (32, 32), _('&Large images'), _('Large images (32x32) on the toolbar'))]:
+            key = 'toolbar' + key     
+            self[key] = ViewToolBar(mainwindow=mainwindow, settings=settings,
+                                    value=value, menuText=menuText, helpText=helpText)
+                                                         
         self['viewfinddialog'] = ViewFindDialog(mainwindow=mainwindow, settings=settings)
         self['viewstatusbar'] = ViewStatusBar(mainwindow=mainwindow, settings=settings)
 
-        self['viewduetoday'] = ViewDueBefore(menuText=_('&Today'), 
-            helpText=_('Only show tasks due today'), value='Today', 
-            settings=settings)
-        self['viewduetomorrow'] = ViewDueBefore(menuText=_('T&omorrow'), 
-            helpText=_('Only show tasks due today and tomorrow'), value='Tomorrow', 
-            settings=settings)
-        self['viewdueworkweek'] = ViewDueBefore(menuText=_('Wo&rk week'),
-            helpText=_('Only show tasks due this work week (i.e. before Friday)'),
-            value='Workweek', settings=settings)
-        self['viewdueweek'] = ViewDueBefore(menuText=_('&Week'),
-            helpText=_('Only show tasks due this week (i.e. before Sunday)'), value='Week',
-            settings=settings)
-        self['viewduemonth'] = ViewDueBefore(menuText=_('&Month'), 
-            helpText=_('Only show tasks due this month'), value='Month',
-            settings=settings)
-        self['viewdueyear'] = ViewDueBefore(menuText=_('&Year'),
-            helpText=_('Only show tasks due this year'), value='Year',
-            settings=settings)
-        self['viewdueunlimited'] = ViewDueBefore(menuText=_('&Unlimited'), 
-            helpText=_('Show all tasks'), value='Unlimited', settings=settings)
-
+        # View tasks due before commands
+        for value, menuText, helpText in \
+            [('Today', _('&Today'), _('Only show tasks due today')),
+             ('Tomorrow', _('T&omorrow'), _('Only show tasks due today and tomorrow')),
+             ('Workweek', _('Wo&rk week'), _('Only show tasks due this work week (i.e. before Friday)')),
+             ('Week', _('&Week'), _('Only show tasks due this week (i.e. before Sunday)')),
+             ('Month', _('&Month'), _('Only show tasks due this month')),
+             ('Year', _('&Year'), _('Only show tasks due this year')),
+             ('Unlimited', _('&Unlimited'), _('Show all tasks'))]:
+            key = 'viewdue' + value
+            key = key.lower()
+            self[key] = UIRadioCommand(settings=settings, setting='tasksdue', value=value,
+                                       menuText=menuText, helpText=helpText)
+                                       
         # Task menu
         self['new'] = TaskNew(mainwindow=mainwindow, 
             filteredTaskList=filteredTaskList, uiCommands=self, settings=settings)

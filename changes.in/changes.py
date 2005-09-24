@@ -1,6 +1,12 @@
 from domain import *
 
 releases = [
+Release('0.48', 'September ?, 2005',
+    bugsFixed=[
+        Bug('''Filtering tasks by status ('View' -> 'Tasks that are' -> '...')
+would cause an exception.'''),
+        Bug('''Sorting by days left would cause an exception''', '1295122')]),
+                    
 Release('0.47', 'September 18, 2005',
     featuresAdded=[
         Feature('''Added Hungarian translation thanks to Majsa Norbert'''),
