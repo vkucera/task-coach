@@ -110,8 +110,9 @@ class RecentFilesMenuTest(test.wxTestCase):
         self.assertEqual(self.initialFileMenuLength + numberOfMenuItemsAdded, len(self.menu))
         for index, expectedFilename in enumerate(expectedFilenames):
             menuItem = self.menu.FindItemByPosition(self.initialFileMenuLength-1+index)
+            # Apparently the '&' can also be a '_' (seen on Ubuntu)
             expectedLabel = u'&%d %s'%(index+1, expectedFilename)
-            self.assertEqual(expectedLabel, menuItem.GetText())
+            self.assertEqual(expectedLabel[1:], menuItem.GetText()[1:])
     
     def openMenu(self):
         self.menu.onOpenMenu(wx.MenuEvent(menu=self.menu))
