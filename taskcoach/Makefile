@@ -2,7 +2,7 @@
 # simple website (intermediate files are in ./build, the files for the
 # website end up in ./dist)
 
-PYTHON="/cygdrive/c/Program Files/Python24/python.exe"
+PYTHON="python"
 INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
 WEBCHECKER="c:/Program Files/Python24/Tools/webchecker/webchecker.py" 
 GETTEXT="c:/Program Files/Python24/Tools/i18n/pygettext.py"

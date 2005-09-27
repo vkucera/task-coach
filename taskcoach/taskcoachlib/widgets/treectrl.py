@@ -383,3 +383,13 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
 
     def SelectAll(self):
         self.selectItems(*[item for rowIndex, item in self.allItems()])
+
+    def GetCountPerPage(self):
+        ''' ListCtrlAutoWidthMixin expects a GetCountPerPage() method,
+            else it will throw an AttributeError. So for controls that have
+            no such method (such as TreeListCtrl), we have to add it
+            ourselves. '''
+        # We currently return -1 which makes ListCtrlAutoWithMixin think
+        # that we have a scrollbar always. We'll have to think of a
+        # better solution later.
+        return -1
