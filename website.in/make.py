@@ -53,7 +53,7 @@ pages['download'] = \
         case you need Python <strong>%(pythonversion)s</strong> (or higher) 
         and wxPython <strong>%(wxpythonversion)s</strong> (or higher), or
         you can download the Windows executable distribution.</P>
-        <P>I am only able to test %(name)s on Windows XP at the moment, so I'd 
+        <P>I test %(name)s on Windows XP SP2 and Linux Ubuntu 5.10. I'd 
         appreciate some feedback if you are able to run it (or not) on other
         platforms.</P>
         <P>
