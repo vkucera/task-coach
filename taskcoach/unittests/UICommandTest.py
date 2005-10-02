@@ -2,7 +2,7 @@ import test, wx, gui, dummy
 
 class UICommandTest(test.wxTestCase):
     def setUp(self):
-        self.uicommand = dummy.DummyUICommand()
+        self.uicommand = dummy.DummyUICommand(menuText='undo', bitmap='undo')
         self.menu = wx.Menu()
         self.frame = wx.Frame(None)
         self.frame.Show(False)

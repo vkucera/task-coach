@@ -147,7 +147,9 @@ class ViewFilterInTreeModeTest(test.TestCase):
 class CompositeFilterTest(test.wxTestCase):
     def setUp(self):
         self.list = task.TaskList()
-        self.filter = task.filter.CompositeFilter(self.list)
+        self.settings = config.Settings(load=False)
+        self.filter = task.filter.CompositeFilter(self.list, 
+            settings=self.settings)
         self.task = task.Task()
         self.child = task.Task()
         self.task.addChild(self.child)
@@ -157,11 +159,11 @@ class CompositeFilterTest(test.wxTestCase):
         self.assertEqual(2, len(self.filter))
                 
     def testTurnOn(self):
-        self.filter.setViewCompositeTasks(False)
+        self.settings.set('view', 'compositetasks', 'False')
         self.assertEqual([self.child], list(self.filter))
                 
     def testTurnOnAndAddChild(self):
-        self.filter.setViewCompositeTasks(False)
+        self.settings.set('view', 'compositetasks', 'False')
         grandChild = task.Task()
         self.child.addChild(grandChild)
         self.list.append(grandChild)

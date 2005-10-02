@@ -9,7 +9,7 @@ class ToolBarTest(test.wxTestCase):
     def testAppendUICommand(self):
         gui.init()
         toolbar = ToolBar(self.frame, {})
-        uiCommand = dummy.DummyUICommand()
+        uiCommand = dummy.DummyUICommand(menuText='undo', bitmap='undo')
         id = toolbar.appendUICommand(uiCommand)
         self.assertNotEqual(wx.NOT_FOUND, toolbar.GetToolPos(id))
 

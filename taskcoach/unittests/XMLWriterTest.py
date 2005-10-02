@@ -8,10 +8,10 @@ class XMLWriterTest(test.TestCase):
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
     
-    def assertTaskAttribute(self, expectedValue, attribute):
+    def assertTaskAttribute(self, expectedValue, attribute, index=0):
         xmlDocument = self.writeAndParse()
         self.assertEqual(str(expectedValue),
-            xmlDocument.getElementsByTagName('task')[0].getAttribute(attribute))
+            xmlDocument.getElementsByTagName('task')[index].getAttribute(attribute))
 
     def assertEffort(self, effort):
         self.task.addEffort(effort)
@@ -117,3 +117,9 @@ class XMLWriterTest(test.TestCase):
         
     def testLastModificationTime(self):
         self.assertTaskAttribute(self.task.lastModificationTime(), 'lastModificationTime')
+
+    def testTwoTasks(self):
+        self.task.setSubject('task 1')
+        task2 = task.Task('task 2')
+        self.taskList.append(task2)
+        self.assertTaskAttribute('task 2', 'subject', 1)

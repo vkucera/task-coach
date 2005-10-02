@@ -23,17 +23,17 @@ class Filter(patterns.ObservableListObserver):
     def rootTasks(self):
         return [task for task in self if task.parent() is None]
 
+    def onSettingChanged(self, notification):
+        self.reset()
+
     
 class ViewFilter(Filter):
     def __init__(self, *args, **kwargs):
         self.__settings = kwargs.pop('settings')
         for setting in ('tasksdue', 'completedtasks', 'inactivetasks',
                         'activetasks', 'overduetasks', 'overbudgetasks'):
-            self.__settings.registerObserver(self.onViewSettingChanged, ('view', setting))
+            self.__settings.registerObserver(self.onSettingChanged, ('view', setting))
         super(ViewFilter, self).__init__(*args, **kwargs)
-        
-    def onViewSettingChanged(self, notification):
-        self.reset()
         
     def getViewTasksDueBeforeDate(self):
         dateFactory = { 'Today' : date.Today, 
@@ -65,15 +65,14 @@ class ViewFilter(Filter):
 class CompositeFilter(Filter):
     ''' Filter composite tasks '''
     def __init__(self, *args, **kwargs):
-        self._viewCompositeTasks = True
+        self.__settings = kwargs.pop('settings')
+        self.__settings.registerObserver(self.onSettingChanged, 
+                                         ('view', 'compositetasks'))
         super(CompositeFilter, self).__init__(*args, **kwargs)
 
-    def setViewCompositeTasks(self, viewCompositeTasks):
-        self._viewCompositeTasks = viewCompositeTasks
-        self.reset()
-
     def filter(self, task):
-        if task.children() and not self._viewCompositeTasks:
+        if task.children() and not \
+            self.__settings.getboolean('view', 'compositetasks'):
             return False
         else:
             return True

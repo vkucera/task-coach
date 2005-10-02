@@ -25,7 +25,7 @@ class DummyEvent:
         return self._checked
 
 
-class TaskEditorTestCase(test.TestCase):
+class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
@@ -33,7 +33,7 @@ class TaskEditorTestCase(test.TestCase):
         self.editor = self.createEditor()
         
     def createEditor(self):
-        return gui.dialog.editor.TaskEditor(wx.Frame(None), self.createCommand(),
+        return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
             {}, dummy.Settings())
 
     def tearDown(self):
@@ -210,14 +210,20 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
         self.assertEqual(date.Today(), self.child.startDate())
 
 
-class FocusTest(TaskEditorTestCase, test.wxTestCase):
+class FocusTest(TaskEditorTestCase):
     def createCommand(self):
         return command.NewTaskCommand(self.taskList)
 
     def testFocus(self):
+        # Unfortunately, it seems we *have* to show to window on Linux (Ubuntu)
+        # in order to get wx.Window_FindFocus to not return None.
+        # We move the window outside the visible screen area to make it 
+        # less annoying.
+        self.editor.SetDimensions(10000, 10000, 0, 0)
+        self.editor.Show()
         wx.Yield()
-        self.assertEqual(self.editor[0][0]._subjectEntry, self.editor.FindFocus())
-        
+        self.assertEqual(self.editor[0][0]._subjectEntry, wx.Window_FindFocus())
+
 
 class EffortEditorTest(TaskEditorTestCase):      
     def createCommand(self):
@@ -229,7 +235,7 @@ class EffortEditorTest(TaskEditorTestCase):
         return [theTask]
     
     def createEditor(self):
-        return gui.dialog.editor.EffortEditor(wx.Frame(None), self.createCommand(), {}, self.effortList)
+        return gui.dialog.editor.EffortEditor(self.frame, self.createCommand(), {}, self.effortList)
     
     def testCreate(self):
         self.assertEqual(self.effortList[0].getStart().date(), 
