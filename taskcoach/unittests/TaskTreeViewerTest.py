@@ -46,6 +46,8 @@ class CommonTests(TaskViewerTest.CommonTests):
         self.assertItems()
 
     def testChildOrder(self):
+        self.settings.set('view', 'sortby', 'subject')
+        self.settings.set('view', 'sortascending', 'True')
         child1 = task.Task(subject='1')
         self.task.addChild(child1)
         child2 = task.Task(subject='2')
