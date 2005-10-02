@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "POT-Creation-Date: 2005-08-12 22:34+W. Europe Daylight Time\n"
-"PO-Revision-Date: 2005-09-08 19:06+0100\n"
+"PO-Revision-Date: 2005-09-22 23:10+0100\n"
 "Last-Translator: majsa norbert <nmajsa@szintezis.hu>\n"
 "Language-Team: Majsa Norbert <nmajsa@szintezis.hu>\n"
 "MIME-Version: 1.0\n"
@@ -42,6 +42,25 @@ msgstr "Másolás"
 #: taskcoachlib\command\taskCommands.py:79
 msgid "Paste"
 msgstr "Beillesztés"
+
+#: taskcoachlib\gui\dialog\preferences.py:73
+msgid "Hungarian"
+msgstr "Magyar"
+
+#: taskcoachlib\gui\uicommand.py:884
+#: taskcoachlib\gui\uicommand.py:886
+#: taskcoachlib\gui\uicommand.py:931
+#: taskcoachlib\gui\viewer.py:154
+#: taskcoachlib\gui\viewer.py:167
+#: taskcoachlib\gui\viewer.py:184
+#: taskcoachlib\gui\viewer.py:201
+#: taskcoachlib\gui\viewer.py:245
+msgid "Last modification time"
+msgstr "Utolsó módosítás ideje"
+
+#: taskcoachlib\gui\dialog\preferences.py:85
+msgid "Files"
+msgstr "Fájlok"
 
 #: taskcoachlib\command\taskCommands.py:110
 msgid "Paste as subtask"
@@ -571,6 +590,36 @@ msgstr "&Teljesített"
 msgid "Show/hide completed tasks"
 msgstr "Megjeleníti/elrejti a teljesített feladatokat"
 
+#: taskcoachlib\gui\uicommand.py:885
+msgid "Show/hide last modification time column"
+msgstr "Megjeleníti/elrejti az utolsó módosítás ideje oszlopot"
+
+#: taskcoachlib\gui\uicommand.py:888
+#: taskcoachlib\gui\uicommand.py:935
+#: taskcoachlib\gui\viewer.py:155
+#: taskcoachlib\gui\viewer.py:168
+#: taskcoachlib\gui\viewer.py:185
+#: taskcoachlib\gui\viewer.py:202
+#: taskcoachlib\gui\viewer.py:247
+msgid "Overall last modification time"
+msgstr "Összegzett utolsó módosítás ideje"
+
+#: taskcoachlib\gui\uicommand.py:889
+msgid "Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks"
+msgstr "Megjeleníti/elrejti az utolsó módosítás ideje oszlopot (összegzett utolsó módosítás ideje a legutolsó módosítás a feladatnál illetve annak részfeladatainál)"
+
+#: taskcoachlib\gui\menu.py:121
+msgid "&Sort"
+msgstr "&Rendezés"
+
+#: taskcoachlib\gui\uicommand.py:579
+msgid "Sort case sensitive"
+msgstr "Kis/Nagy betû érzékeny rendezés"
+
+#: taskcoachlib\gui\dialog\preferences.py:51
+msgid "Maximum number of recent files to remember"
+msgstr "Megnyitott fájlok listájának maximális száma"
+
 #: taskcoachlib\gui\uicommand.py:442
 msgid "&Inactive"
 msgstr "&Inaktív"
@@ -916,7 +965,7 @@ msgstr "Összes maradék ráfordítható idõ"
 
 #: taskcoachlib\gui\uicommand.py:912
 msgid "Show/hide total budget left column (total budget left includes budget left for subtasks)"
-msgstr "Megjeleníti/elrejti az összegzettráfordítható idõ összlopot (összegzett ráfordítható idõ tartalmazza a részfeladatok ráfordítható idejét is)"
+msgstr "Megjeleníti/elrejti az összegzett ráfordítható idõ összlopot (összegzett ráfordítható idõ tartalmazza a részfeladatok ráfordítható idejét is)"
 
 #: taskcoachlib\gui\uicommand.py:913
 #: taskcoachlib\gui\viewer.py:159
