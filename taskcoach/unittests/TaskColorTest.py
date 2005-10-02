@@ -1,10 +1,12 @@
-import test, gui, task, date, wx
+import test, gui, task, date, wx, config
 
 
 class TaskColorTest(test.TestCase):
-
+    def setUp(self):
+        self.settings = config.Settings(load=False)
+        
     def assertColor(self, task, color):
-        self.assertEqual(color, gui.color.taskColor(task))
+        self.assertEqual(color, gui.color.taskColor(task, self.settings))
 
     def testDefaultTask(self):
         self.assertColor(task.Task(), wx.BLACK)

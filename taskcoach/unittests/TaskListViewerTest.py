@@ -1,20 +1,25 @@
-import test, task, date, dummy, effort, gui, config
+import test, task, date, dummy, effort, gui, config, TaskViewerTest
 from gui import render
 
-class TaskListViewerTest(test.wxTestCase):
+
+class TaskListViewerTest(TaskViewerTest.CommonTests, test.wxTestCase):
     def setUp(self):
+        super(TaskListViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
         self.settings.set('view', 'sortby', 'subject')
         self.task = task.Task('task')
-        self.listViewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
+        self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             dummy.DummyUICommands(), self.settings)
 
     def assertItems(self, *tasks):
-        self.assertEqual(len(tasks), self.listViewer.size())
+        self.assertEqual(len(tasks), self.viewer.size())
         for index, task in enumerate(tasks):
             self.assertEqual(render.subject(task, recursively=True), 
-                             self.listViewer.widget.GetItemText(index))
+                             self.viewer.widget.GetItemText(index))
+                             
+    def getItemTextColor(self, index):
+        return self.viewer.widget.GetItemTextColour(index)
  
     def testEmptyTaskList(self):
         self.assertItems()
@@ -30,14 +35,14 @@ class TaskListViewerTest(test.wxTestCase):
 
     def testCurrent(self):
         self.taskList.append(self.task)
-        self.listViewer.widget.select([0])
-        self.assertEqual([self.task], self.listViewer.curselection())
+        self.viewer.widget.select([0])
+        self.assertEqual([self.task], self.viewer.curselection())
 
     def testOneDayLeft(self):
         self.task.setDueDate(date.Tomorrow())
         self.taskList.append(self.task)
         self.assertEqual(render.daysLeft(self.task.timeLeft()), 
-            self.listViewer.widget.GetItem(0, 3).GetText())
+            self.viewer.widget.GetItem(0, 3).GetText())
 
     def testChildSubjectRendering(self):
         child = task.Task(subject='child')

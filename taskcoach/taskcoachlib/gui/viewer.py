@@ -14,6 +14,7 @@ class Viewer(patterns.Observable, wx.Panel):
         self.list.registerObserver(self.onNotify)
         self.widget = self.createWidget()
         self.initLayout()
+        self.registerForColorChanges()
         self.onNotify(patterns.observer.Notification(self.list, itemsAdded=self.list))
 
     def initLayout(self):
@@ -21,6 +22,14 @@ class Viewer(patterns.Observable, wx.Panel):
         self._sizer.Add(self.widget, 1, wx.EXPAND)
         self.SetSizerAndFit(self._sizer)
 
+    def registerForColorChanges(self):
+        colorSettings = [('color', setting) for setting in 'activetasks',\
+            'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
+        self.settings.registerObserver(self.onColorChange, *colorSettings)
+    
+    def onColorChange(self, *args, **kwargs):
+        self.refresh()
+        
     def __getattr__(self, attr):
         return getattr(self.widget, attr)
         
@@ -71,10 +80,13 @@ class Viewer(patterns.Observable, wx.Panel):
                 for item in notification.itemsChanged:
                     self.widget.refreshItem(self.list.index(item))
             else:
-                self.widget.refresh(len(self.list))
+                self.refresh()
         
     def onSelect(self, *args):
         self.notifyObservers(patterns.observer.Notification(self))
+    
+    def refresh(self):
+        self.widget.refresh(len(self.list))
         
     def curselection(self):
         return [self.list[index] for index in self.widget.curselection()]
@@ -84,7 +96,7 @@ class Viewer(patterns.Observable, wx.Panel):
 
     def getItemAttr(self, index):
         task = self.list[index]
-        return wx.ListItemAttr(color.taskColor(task))
+        return wx.ListItemAttr(color.taskColor(task, self.settings))
 
 
 class ListViewer(Viewer):

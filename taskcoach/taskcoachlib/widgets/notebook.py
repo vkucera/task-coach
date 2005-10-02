@@ -38,7 +38,8 @@ class BookPage(wx.Panel):
         self._position = GridCursor(columns)
         if growableColumn is None:
             growableColumn = columns - 1
-        self._sizer.AddGrowableCol(growableColumn)
+        if growableColumn > -1:
+            self._sizer.AddGrowableCol(growableColumn)
         self._borderWidth = 5
         self.SetSizerAndFit(self._sizer)
         

@@ -1,7 +1,8 @@
-import test, task, gui, widgets, dummy, config, date
+import test, task, gui, widgets, dummy, config, date, TaskViewerTest
 
 class TaskTreeViewerTestCase(test.wxTestCase):
     def setUp(self):
+        super(TaskTreeViewerTestCase, self).setUp()
         self.task = task.Task(subject='task')
         self.settings = config.Settings(load=False)
         self.taskList = task.sorter.Sorter(task.filter.ViewFilter(task.TaskList(),
@@ -20,9 +21,12 @@ class TaskTreeViewerTestCase(test.wxTestCase):
             self.assertEqual(nrChildren, self.viewer.widget.GetChildrenCount(self.viewer.widget.GetItem(index), recursively=False))
 
 
-class CommonTests(object):
+class CommonTests(TaskViewerTest.CommonTests):
     ''' Tests common to TaskTreeViewerTest and TaskTreeListViewerTest. '''
-    
+
+    def getItemTextColor(self, index):
+        return self.viewer.widget.GetItemTextColour(self.viewer.widget.GetItem(index))
+        
     def testCreate(self):
         self.assertItems()
         
@@ -143,7 +147,7 @@ class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):
         return widget
 
 
-class TaskTreeViewerTest(TaskTreeViewerTestCase, CommonTests):
+class TaskTreeViewerTest(CommonTests, TaskTreeViewerTestCase):
     def setUp(self):
         super(TaskTreeViewerTest, self).setUp()
         self.viewer = TaskTreeViewerUnderTest(self.frame, self.taskList, {}, self.settings)

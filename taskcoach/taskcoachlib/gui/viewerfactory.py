@@ -1,23 +1,23 @@
 import viewer, viewercontainer
 from i18n import _
 
-def _addEffortViewers(viewerContainer, effortList, uiCommands):
+def _addEffortViewers(viewerContainer, effortList, uiCommands, settings):
     effortViewer = viewer.EffortListViewer(viewerContainer, effortList, 
-        uiCommands)
+        uiCommands, settings)
     viewerContainer.addViewer(effortViewer, _('Effort list'), 'start')
     effortPerDayViewer = viewer.EffortPerDayViewer(viewerContainer,
-        effortList, uiCommands)
+        effortList, uiCommands, settings)
     viewerContainer.addViewer(effortPerDayViewer, _('Effort per day'), 'date')
     effortPerWeekViewer = viewer.EffortPerWeekViewer(viewerContainer,
-        effortList, uiCommands)
+        effortList, uiCommands, settings)
     viewerContainer.addViewer(effortPerWeekViewer, _('Effort per week'), 'date')
     effortPerMonthViewer = viewer.EffortPerMonthViewer(viewerContainer,
-        effortList, uiCommands)
+        effortList, uiCommands, settings)
     viewerContainer.addViewer(effortPerMonthViewer, _('Effort per month'), 'date')
     
 def addEffortViewers(viewerContainer, effortList, uiCommands, settings, setting):
     effortViewerContainer = viewercontainer.ViewerChoicebook(viewerContainer, settings, setting)
-    _addEffortViewers(effortViewerContainer, effortList, uiCommands)
+    _addEffortViewers(effortViewerContainer, effortList, uiCommands, settings)
     viewerContainer.addViewer(effortViewerContainer, _('Effort'), 'start')
 
 def addTaskViewers(viewerContainer, filteredTaskList, uiCommands, settings):

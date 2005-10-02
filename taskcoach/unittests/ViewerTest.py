@@ -1,12 +1,13 @@
-import test, task, gui, wx, dummy, effort
+import test, task, gui, wx, dummy, effort, config
 
 
 class ViewerTest(test.wxTestCase):
     def setUp(self):
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
+        self.settings = config.Settings(load=False)
         self.viewer = dummy.ViewerWithDummyWidget(self.frame,
-            self.taskList, effort.EffortList(self.taskList), {})
+            self.taskList, effort.EffortList(self.taskList), self.settings)
 
     def testSelectAll(self):
         self.viewer.selectall()
@@ -43,10 +44,11 @@ class ViewerBaseClassTest(test.wxTestCase):
 class CompositeEffortListViewerTest(test.wxTestCase):
     def testGetItemText(self):
         taskList = task.TaskList()
+        self.settings = config.Settings(load=False)
         aTask = task.Task()
         aTask.addEffort(effort.Effort(aTask))
         taskList.append(aTask)
         effortList = effort.EffortList(taskList)
         viewer = dummy.EffortPerDayViewerWithDummyWidget(self.frame, 
-            effortList, {})
+            effortList, {}, self.settings)
         self.assertEqual('0:00:00', viewer.getItemText(0, 'Time spent'))
