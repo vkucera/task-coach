@@ -1,4 +1,4 @@
-import test, gui, task, date, command, wx, effort, dummy
+import test, gui, task, date, command, wx, effort, dummy, config
 
 class DummyViewer:
     def __init__(self):
@@ -34,10 +34,9 @@ class TaskEditorTestCase(test.wxTestCase):
         
     def createEditor(self):
         return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
-            dummy.DummyUICommands(), dummy.Settings())
+            dummy.DummyUICommands(), config.Settings(load=False))
 
     def tearDown(self):
-        self.editor.Destroy()
         # TaskEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
         wx.Yield() 
@@ -240,6 +239,9 @@ class FocusTest(TaskEditorTestCase):
 
 
 class EffortEditorTest(TaskEditorTestCase):      
+    def tearDown(self):
+        pass
+
     def createCommand(self):
         return command.EditEffortCommand(self.effortList, self.effortList)
         

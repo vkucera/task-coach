@@ -28,7 +28,7 @@ class TaskListViewerTest(TaskViewerTest.CommonTests, test.wxTestCase):
         if '__WXMSW__' in wx.PlatformInfo:
             self.assertEqual(wx.NullColour, self.getItemTextColor(0))
         else:
-            super(TaskListViewerTest, self).assertColor(color)
+            super(TaskListViewerTest, self).assertColor()
         
     def testEmptyTaskList(self):
         self.assertItems()
