@@ -3,8 +3,14 @@
 from domain import *
 
 releases = [
-Release('0.49', 'September ?, 2005',
-    featuresAdded=[]),
+Release('0.49', 'October ?, 2005',
+    bugsFixed=[
+        Bug('''Previous release did not work on Linux because of a
+platform inconsistency between Windows and Linux (GetCountPerPage method 
+is missing on Linux, added manually).''')],
+    featuresAdded=[
+        Feature('''Task colors can be adjusted via 
+'Edit' -> 'Preferences'.''', '?')]),
                     
 Release('0.48', 'September 24, 2005',
     bugsFixed=[
