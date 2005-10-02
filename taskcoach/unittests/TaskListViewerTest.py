@@ -1,4 +1,4 @@
-import test, task, date, dummy, effort, gui, config, TaskViewerTest
+import test, task, date, dummy, effort, gui, config, TaskViewerTest, wx
 from gui import render
 
 
@@ -20,7 +20,16 @@ class TaskListViewerTest(TaskViewerTest.CommonTests, test.wxTestCase):
                              
     def getItemTextColor(self, index):
         return self.viewer.widget.GetItemTextColour(index)
- 
+
+    def assertColor(self):
+        # There seems to be a bug in the ListCtrl causing GetItemTextColour() to
+        # always return the 'unknown' colour on Windows. We keep this test like
+        # this so it will fail when the bug is fixed.
+        if '__WXMSW__' in wx.PlatformInfo:
+            self.assertEqual(wx.NullColour, self.getItemTextColor(0))
+        else:
+            super(TaskListViewerTest, self).assertColor(color)
+        
     def testEmptyTaskList(self):
         self.assertItems()
 
