@@ -34,7 +34,7 @@ class TaskEditorTestCase(test.wxTestCase):
         
     def createEditor(self):
         return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
-            {}, dummy.Settings())
+            dummy.DummyUICommands(), dummy.Settings())
 
     def tearDown(self):
         self.editor.Destroy()
@@ -210,6 +210,20 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
         self.assertEqual(date.Today(), self.child.startDate())
 
 
+class EditTaskWithEffortTest(TaskEditorTestCase):    
+    def createCommand(self):
+        return command.EditTaskCommand(self.taskList, [self.task])
+
+    def createTasks(self):
+        self.task = task.Task('task')
+        self.task.addEffort(effort.Effort(self.task))
+        return [self.task]
+        
+    def testCancel(self):
+        self.editor.cancel()
+        self.assertEqual(1, len(self.task.efforts()))
+        
+        
 class FocusTest(TaskEditorTestCase):
     def createCommand(self):
         return command.NewTaskCommand(self.taskList)

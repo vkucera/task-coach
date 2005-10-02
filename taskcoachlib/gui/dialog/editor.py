@@ -120,7 +120,7 @@ class EffortPage(widgets.BookPage):
         import effort
         viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 'effortviewerineditor')
         myEffortList = effort.SingleTaskEffortList(task)
-        viewerfactory._addEffortViewers(viewerContainer, myEffortList, uiCommands)
+        viewerfactory._addEffortViewers(viewerContainer, myEffortList, uiCommands, settings)
         self.addEntry(None, viewerContainer, growable=True)
 
 
