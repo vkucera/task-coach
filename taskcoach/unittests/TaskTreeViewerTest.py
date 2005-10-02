@@ -85,6 +85,8 @@ class CommonTests(TaskViewerTest.CommonTests):
         self.assertItems(task2, (self.task, 1), (child, 1), grandchild)
 
     def testGetRootIndices(self):
+        self.settings.set('view', 'sortby', 'subject')
+        self.settings.set('view', 'sortascending', 'True')
         child = task.Task(subject='child')
         self.task.addChild(child)
         grandchild = task.Task(subject='grandchild')
