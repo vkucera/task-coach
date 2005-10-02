@@ -1,4 +1,4 @@
-import wx, task, meta
+import wx, task, meta, os
 from i18n import _
 
 class IOController(object): 
@@ -7,7 +7,7 @@ class IOController(object):
         self.__taskFile = taskFile
         self.__messageCallback = messageCallback
         self.__settings = settings
-        self.__fileDialogOpts = { 'default_path' : '.', 
+        self.__fileDialogOpts = { 'default_path' : os.getcwd(), 
             'default_extension' : 'tsk', 'wildcard' : 
             _('%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*')%meta.name }
 
