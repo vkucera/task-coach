@@ -5,6 +5,7 @@ class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
         super(Settings, self).__init__(*args, **kwargs)
         ConfigParser.SafeConfigParser.__init__(self, *args, **kwargs) # sigh, SafeConfigParser is not cooperative
         self.setDefaults()
+        self.__loadAndSave = load
         if load:
             self.read(self.filename()) # ConfigParser.read fails silently
 
@@ -19,6 +20,8 @@ class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
         self.notifyObservers(patterns.Notification(self, section=section, option=option, value=value), (section, option))
 
     def save(self):
+        if not self.__loadAndSave:
+            return
         try:
             path = self.path()
             if not os.path.exists(path):

@@ -1,4 +1,4 @@
-import test, gui, task, dummy, effort
+import test, gui, task, dummy, effort, config
 
 class EffortViewerUnderTest(gui.viewer.EffortViewer):
     def createWidget(self):
@@ -8,7 +8,8 @@ class EffortViewerTest(test.wxTestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
-        self.viewer = EffortViewerUnderTest(self.frame, self.effortList, {})
+        self.settings = config.Settings(load=False)
+        self.viewer = EffortViewerUnderTest(self.frame, self.effortList, {}, self.settings)
         
     def testStatusMessage_EmptyTaskList(self):
         self.assertEqual(('Effort: 0 selected, 0 visible, 0 total', 

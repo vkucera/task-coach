@@ -6,16 +6,16 @@ class GanttChartViewerTest(test.wxTestCase):
         self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
         self.settings.set('view', 'sortby', 'subject')
         self.ganttChartViewer = gui.viewer.GanttChartViewer(self.frame, self.taskList, 
-            dummy.DummyUICommands())
+            dummy.DummyUICommands(), self.settings)
 
     def testAddTask(self):
         self.taskList.append(task.Task(subject='Test'))
-        self.ganttChartViewer.refresh(1)
+        self.ganttChartViewer.refresh()
         self.assertEqual('Test', self.ganttChartViewer.widget.GetRowLabelValue(0))
         
     def testDatesShown(self):
         self.taskList.append(task.Task(startdate=date.Today(), duedate=date.Tomorrow()))
-        self.ganttChartViewer.refresh(1)
+        self.ganttChartViewer.refresh()
         self.assertEqual(gui.render.date(date.Yesterday()), self.ganttChartViewer.widget.GetColLabelValue(0))
         self.assertEqual(4, self.ganttChartViewer.widget.GetNumberCols())
         

@@ -7,7 +7,7 @@ class MockApp(taskcoach.App):
         self.init(filename)
 
     def init(self, filename):
-        super(MockApp, self).init(showSplash=False, load=False)
+        super(MockApp, self).init(showSplash=False, loadSettings=False)
         self.taskFile.setFilename(filename)
         self.parent = task.Task()
         self.child = task.Task()

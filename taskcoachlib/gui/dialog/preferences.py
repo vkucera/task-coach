@@ -8,6 +8,7 @@ class SettingsPage(widgets.BookPage):
         self._booleanSettings = []
         self._choiceSettings = []
         self._integerSettings = []
+        self._colorSettings = []
         
     def addBooleanSetting(self, section, setting, text, helpText=''):
         checkBox = wx.CheckBox(self, -1)
@@ -31,7 +32,12 @@ class SettingsPage(widgets.BookPage):
             value=str(self.settings.getint(section, setting)))
         self.addEntry(text, spin, helpText)
         self._integerSettings.append((section, setting, spin))
-        
+
+    def addColorSetting(self, section, setting, text):
+        colorButton = widgets.ColorSelect(self, -1, text, eval(self.settings.get(section, setting)))
+        self.addEntry(None, colorButton)
+        self._colorSettings.append((section, setting, colorButton))
+                
     def ok(self):
         for section, setting, checkBox in self._booleanSettings:
             self.settings.set(section, setting, str(checkBox.IsChecked()))
@@ -39,6 +45,9 @@ class SettingsPage(widgets.BookPage):
             self.settings.set(section, setting, choice.GetClientData(choice.GetSelection()))
         for section, setting, spin in self._integerSettings:
             self.settings.set(section, setting, str(spin.GetValue()))
+        for section, setting, colorButton in self._colorSettings:
+            self.settings.set(section, setting, str(colorButton.GetColour()))
+            
 
 class SavePage(SettingsPage):
     def __init__(self, *args, **kwargs):
@@ -74,6 +83,18 @@ class LanguagePage(SettingsPage):
              _('This setting will take effect after you restart %s')%meta.name)
 
 
+class ColorsPage(SettingsPage):
+    def __init__(self, *args, **kwargs):
+        super(ColorsPage, self).__init__(*args, **kwargs)
+        for setting, label in \
+            [('activetasks', _('Click this button to change the color of active tasks')), 
+             ('inactivetasks', _('Click this button to change the color of inactive tasks')),
+             ('completedtasks', _('Click this button to change the color of completed tasks')),
+             ('overduetasks', _('Click this button to change the color of over due tasks')),
+             ('duetodaytasks', _('Click this button to change the color of tasks due today'))]:
+            self.addColorSetting('color', setting, label)
+
+        
 class Preferences(widgets.ListbookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
@@ -84,3 +105,5 @@ class Preferences(widgets.ListbookDialog):
         self._interior.AddPage(StartupPage(parent=self._interior, columns=3, settings=self.settings), _('Startup'), bitmap='taskcoach')
         self._interior.AddPage(SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), bitmap='save')
         self._interior.AddPage(LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), bitmap='language')
+        self._interior.AddPage(ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), bitmap='colorize')
+        

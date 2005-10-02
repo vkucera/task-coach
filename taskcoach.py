@@ -28,9 +28,9 @@ class App(object):
         self.mainwindow.Show()
         self.wxApp.MainLoop()
 
-    def init(self, showSplash=True, load=True): 
+    def init(self, showSplash=True, loadSettings=True, loadTaskFile=True): 
         import config, i18n
-        settings = config.Settings(load)
+        settings = config.Settings(loadSettings)
         i18n.Translator(settings.get('view', 'language'))
         import task, effort, gui
         gui.init()
@@ -45,7 +45,7 @@ class App(object):
         searchFilteredTaskList = task.filter.SearchFilter(categoryFilteredTaskList)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
             searchFilteredTaskList, effortList, settings)
-        self.processCommandLineArguments(settings, load)
+        self.processCommandLineArguments(settings, loadTaskFile)
         
     def processCommandLineArguments(self, settings, load=True):
         # FIXME: move to IOController

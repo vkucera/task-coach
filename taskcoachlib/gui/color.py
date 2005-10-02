@@ -1,14 +1,14 @@
 import wx
 
-def taskColor(task, active=wx.BLACK):
+def taskColor(task, settings):
     if task.completed():
-        return wx.GREEN
+        setting = 'completedtasks'
     elif task.overdue(): 
-        return wx.RED
+        setting = 'overduetasks'
     elif task.dueToday():
-        #return wx.NamedColour('GOLD')
-        return wx.Colour(red=255, green=128, blue=0)
+        setting = 'duetodaytasks'
     elif task.inactive(): 
-        return wx.NamedColour('LIGHT GREY')
+        setting = 'inactivetasks'
     else:
-        return active
+        setting = 'activetasks'
+    return wx.Colour(*eval(settings.get('color', setting)))

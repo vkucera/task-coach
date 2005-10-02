@@ -10,8 +10,8 @@ class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
         widget.AssignImageList(self.createImageList())
         return widget
 
-class TaskTreeListViewerTest(TaskTreeViewerTest.TaskTreeViewerTestCase,
-                             TaskTreeViewerTest.CommonTests):
+class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
+                             TaskTreeViewerTest.TaskTreeViewerTestCase):
     def setUp(self):
         super(TaskTreeListViewerTest, self).setUp()
         self.viewer = TaskTreeListViewerUnderTest(self.frame, self.taskList, {}, self.settings)

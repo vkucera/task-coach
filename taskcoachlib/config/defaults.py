@@ -42,5 +42,11 @@ defaults = { \
     'maxrecentfiles': '4',
     'lastfile': '',
     'autosave': 'False',
-    'backup': 'False' }}
+    'backup': 'False' },
+'color' : { \
+    'activetasks': '(0, 0, 0)',
+    'completedtasks': '(0, 255, 0)',
+    'overduetasks': '(255, 0, 0)',
+    'inactivetasks': '(192, 192, 192)',
+    'duetodaytasks': '(255, 128, 0)'}}
 

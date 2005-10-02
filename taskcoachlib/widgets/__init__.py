@@ -7,3 +7,4 @@ from treectrl import TreeCtrl, TreeListCtrl
 from gridctrl import GridCtrl
 from datectrl import DateCtrl, DateTimeCtrl
 from textctrl import TextCtrl, StaticText
+from colorselect import ColorSelect
