@@ -17,10 +17,11 @@ class UICommandContainer(object):
 
 
 class UICommand(object):
-    ''' Base user interface command. An UICommand is some action that can be associated
-        with menu's and/or toolbars. It contains the menutext and helptext to be displayed,
-        code to deal with wx.EVT_UPDATE_UI and methods to attach the command to a menu or
-        toolbar. Subclasses should implement doCommand() and optionally override enabled(). '''
+    ''' Base user interface command. An UICommand is some action that can be 
+        associated with menu's and/or toolbars. It contains the menutext and 
+        helptext to be displayed, code to deal with wx.EVT_UPDATE_UI and 
+        methods to attach the command to a menu or toolbar. Subclasses should 
+        implement doCommand() and optionally override enabled(). '''
     
     def __init__(self, menuText='?', helpText='', bitmap='nobitmap',
             kind=wx.ITEM_NORMAL, *args, **kwargs):
@@ -137,7 +138,7 @@ class BooleanSettingsCommand(SettingsCommand):
 class UICheckCommand(BooleanSettingsCommand):
     def __init__(self, *args, **kwargs):
         super(UICheckCommand, self).__init__(kind=wx.ITEM_CHECK, 
-            bitmap='on', *args, **kwargs)
+            bitmap=self.getBitmap(), *args, **kwargs)
             
     def commandNeedsToBeActivated(self, checked):
         return not checked
@@ -148,6 +149,17 @@ class UICheckCommand(BooleanSettingsCommand):
     def doCommand(self, event):
         self.settings.set(self.section, self.setting, str(event.IsChecked()))
         
+    def getBitmap(self):
+        if '__WXMSW__' in wx.PlatformInfo:
+            # Use pretty Nuvola checkmark bitmap
+            return 'on' 
+        else:
+            # Use default checkmark. Providing our own bitmap causes
+            # "(python:8569): Gtk-CRITICAL **: gtk_check_menu_item_set_active: 
+            # assertion `GTK_IS_CHECK_MENU_ITEM (check_menu_item)' failed"
+            # on systems that use Gtk
+            return None
+
 
 class UIRadioCommand(BooleanSettingsCommand):
     def __init__(self, *args, **kwargs):
@@ -446,19 +458,6 @@ class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
         self.settings.set(self.section, 'tasksdue', 'Unlimited')    
         self.filteredTaskList.setSubject()
         self.filteredTaskList.removeAllCategories()
-
-
-
-
-class ViewCompositeTasks(ViewerCommand, FilterCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewCompositeTasks, self).__init__(menuText=_('Tasks &with subtasks'), 
-            helpText=_('Show/hide tasks with subtasks'), setting='compositetasks', 
-            *args, **kwargs)        
-
-    def doCommand(self, event):
-        super(ViewCompositeTasks, self).doCommand(event)
-        self.viewer.setViewCompositeTasks(event.IsChecked())
 
 
 class ViewCategories(MainWindowCommand, FilterCommand):
@@ -797,8 +796,11 @@ class UICommands(dict):
         self['viewoverbudgettasks'] = UICheckCommand(menuText=_('Over &budget'), 
             helpText=_('Show/hide tasks that are over budget'),
             setting='overbudgettasks', settings=settings)
-        self['viewcompositetasks'] = ViewCompositeTasks(viewer=viewer, filteredTaskList=filteredTaskList,
-            settings=settings)
+        self['viewcompositetasks'] = UICheckCommand(
+            menuText=_('Tasks &with subtasks'), 
+            helpText=_('Show/hide tasks with subtasks'), 
+            setting='compositetasks', settings=settings)
+
         
         self['viewcategories'] = ViewCategories(mainwindow=mainwindow, 
             filteredTaskList=filteredTaskList)

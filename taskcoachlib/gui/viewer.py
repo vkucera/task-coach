@@ -264,7 +264,7 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
         return widget
         
     def createFilter(self, taskList):
-        return task.filter.CompositeFilter(task.filter.ViewFilter(taskList, settings=self.settings))
+        return task.filter.CompositeFilter(task.filter.ViewFilter(taskList, settings=self.settings), settings=self.settings)
         
     def createSorter(self, taskList):
         return task.sorter.Sorter(taskList, settings=self.settings, treeMode=False)

@@ -8,7 +8,7 @@ class IntegrationTestCase(test.TestCase):
         self.writer = task.writer.XMLWriter(self.fd)
         self.taskList = task.TaskList()
         self.fillTaskList()
-        self.tasksWrittenAndRead = self.readAndWrite()
+        self.tasksWrittenAndRead = task.TaskList(self.readAndWrite())
 
     def fillTaskList(self):
         pass
@@ -17,7 +17,7 @@ class IntegrationTestCase(test.TestCase):
         self.fd.reset()
         self.writer.write(self.taskList)
         self.fd.reset()
-        return self.reader.read()    
+        return self.reader.read()
 
 
 class IntegrationTest_EmptyList(IntegrationTestCase):
@@ -39,57 +39,66 @@ class IntegrationTest(IntegrationTestCase):
         self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
             stop=date.DateTime(2004,1,2), description=self.description))
         self.task.addCategory('test')
-        self.task2 = task.Task(priority=-1954)
+        self.task2 = task.Task('Task 2', priority=-1954)
         self.taskList.extend([self.task, self.task2])
-                 
+
+    def getTaskWrittenAndRead(self, id):
+        return [task for task in self.tasksWrittenAndRead if task.id() == id][0]
+
+    def assertAttributeWrittenAndRead(self, task, attribute):
+        taskWrittenAndRead = self.getTaskWrittenAndRead(task.id())
+        self.assertEqual(getattr(task, attribute)(), 
+                         getattr(taskWrittenAndRead, attribute)())
+
     def testSubject(self):
-        self.assertEqual(self.task.subject(), self.tasksWrittenAndRead[0].subject())
+        self.assertAttributeWrittenAndRead(self.task, 'subject')
 
     def testDescription(self):
-        self.assertEqual(self.task.description(), self.tasksWrittenAndRead[0].description())
+        self.assertAttributeWrittenAndRead(self.task, 'description')
          
     def testStartDate(self):
-        self.assertEqual(self.task.startDate(), self.tasksWrittenAndRead[0].startDate())
+        self.assertAttributeWrittenAndRead(self.task, 'startDate')
                 
     def testDueDate(self):
-        self.assertEqual(self.task.dueDate(), self.tasksWrittenAndRead[0].dueDate())
+        self.assertAttributeWrittenAndRead(self.task, 'dueDate')
  
     def testCompletionDate(self):
-        self.assertEqual(self.task.completionDate(), self.tasksWrittenAndRead[0].completionDate())
+        self.assertAttributeWrittenAndRead(self.task, 'completionDate')
  
     def testBudget(self):
-        self.assertEqual(self.task.budget(), self.tasksWrittenAndRead[0].budget())
+        self.assertAttributeWrittenAndRead(self.task, 'budget')
         
     def testBudget_MoreThan24Hour(self):
         self.task.setBudget(date.TimeDelta(hours=25))
-        self.assertEqual(self.task.budget(), self.readAndWrite()[0].budget())
+        self.tasksWrittenAndRead = task.TaskList(self.readAndWrite())
+        self.assertAttributeWrittenAndRead(self.task, 'budget')
         
     def testEffort(self):
-        self.assertEqual(self.task.timeSpent(), self.tasksWrittenAndRead[0].timeSpent())
+        self.assertAttributeWrittenAndRead(self.task, 'timeSpent')
         
     def testEffortDescription(self):
         self.assertEqual(self.task.efforts()[0].getDescription(), 
-            self.tasksWrittenAndRead[0].efforts()[0].getDescription())
+                         self.getTaskWrittenAndRead(self.task.id()).efforts()[0].getDescription())
         
     def testChildren(self):
-        self.assertEqual(len(self.task.children()), len(self.tasksWrittenAndRead[0].children()))
+        self.assertEqual(len(self.task.children()), 
+                         len(self.getTaskWrittenAndRead(self.task.id()).children()))
         
     def testGrandChildren(self):
-        self.assertEqual(len(self.task.allChildren()), len(self.tasksWrittenAndRead[0].allChildren()))
+        self.assertEqual(len(self.task.allChildren()),  
+                         len(self.getTaskWrittenAndRead(self.task.id()).allChildren()))
        
     def testCategory(self):
-        self.assertEqual(self.task.categories(), self.tasksWrittenAndRead[0].categories())
+        self.assertAttributeWrittenAndRead(self.task, 'categories')
         
     def testPriority(self):
-        self.assertEqual(self.task.priority(), self.tasksWrittenAndRead[0].priority())
+        self.assertAttributeWrittenAndRead(self.task, 'priority')
         
     def testNegativePriority(self):
-        self.assertEqual(self.task2.priority(), self.tasksWrittenAndRead[1].priority())
-        
-    def testId(self):
-        self.assertEqual(self.task.id(), self.tasksWrittenAndRead[0].id())
+        self.assertAttributeWrittenAndRead(self.task2, 'priority')
         
     def testLastModificationTime(self):
-        delta = abs(self.task.lastModificationTime() - self.tasksWrittenAndRead[0].lastModificationTime())
+        delta = abs(self.task.lastModificationTime() - \
+                    self.getTaskWrittenAndRead(self.task.id()).lastModificationTime())
         self.failUnless(delta < date.TimeDelta(seconds=1))
-        
+ 

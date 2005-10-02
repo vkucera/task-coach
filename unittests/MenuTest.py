@@ -185,6 +185,7 @@ class ViewSortMenuTest(ViewMenuTestCase):
     def testSortBySubject(self):
         self.settings.set('view', 'sortby', 'subject')
         self.menu.openMenu()
+        self.failIf(self.menu.FindItemByPosition(3).IsChecked())
         self.failUnless(self.menu.FindItemByPosition(4).IsChecked())
 
 

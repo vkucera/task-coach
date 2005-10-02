@@ -62,6 +62,12 @@ class XMLReaderTest(XMLReaderTestCase):
         tasks = self.writeAndRead('<tasks><task/></tasks>\n')
         self.assertEqual(1, len(tasks))
         self.assertEqual('', tasks[0].subject())
+
+    def testTwoTasks(self):
+        tasks = self.writeAndRead('<tasks><task subject="1"/><task subject="2"/></tasks>\n')
+        self.assertEqual(2, len(tasks))
+        self.assertEqual('1', tasks[0].subject())
+        self.assertEqual('2', tasks[1].subject())
         
     def testOneTask_Subject(self):
         tasks = self.writeAndRead('<tasks><task subject="Yo"/></tasks>\n')
