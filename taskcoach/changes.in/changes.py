@@ -3,6 +3,10 @@
 from domain import *
 
 releases = [
+Release('0.50', 'October ?, 2005',
+    bugsFixed=[
+        Bug('''Exception was thrown when opening a task with logged effort.''')]),
+             
 Release('0.49', 'October 2, 2005',
     bugsFixed=[
         Bug('''Previous release did not work on Linux/Mac OSX because of a
