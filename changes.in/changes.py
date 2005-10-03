@@ -3,6 +3,11 @@
 from domain import *
 
 releases = [
+Release('0.51', 'October ?, 2005',
+    featuresAdded=[
+        Feature('''Escape closes pop-up windows. Patch provided by
+        Markus Meyer.''', '1241547')]),
+
 Release('0.50', 'October 2, 2005',
     bugsFixed=[
         Bug('''Exception was thrown when opening a task with logged effort.''')]),

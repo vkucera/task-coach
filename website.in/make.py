@@ -155,6 +155,19 @@ pages['i18n'] = \
         ''' + '\n'.join(['<LI><A HREF="%s.po">%s</A></LI>'%(code, language) for
         language, code in meta.languages.items() if language != 'English']) + '</UL></P>'
 
+pages['mailinglist'] = \
+'''       <H3>Mailinglist</H3>         
+        <P>A Yahoo!Groups mailinglist is available for discussing
+        %(name)s. You can join by sending mail to <tt><a 
+        href="mailto:taskcoach-subscribe@yahoogroups.com">taskcoach-subscribe@yahoogroups.com</a></tt>
+        or alternatively, if you have a Yahoo id (or don't mind creating
+        one), join via the <a
+        href="http://groups.yahoo.com/group/taskcoach/join">webinterface</a>.</P>
+        <P>You can browse the <a
+        href="http://groups.yahoo.com/group/taskcoach/messages">archive
+        of messages</a> without subscribing to the mailinglist.</P>
+'''
+
 dist = os.path.join('..', 'dist')
 
 if not os.path.isdir(dist):

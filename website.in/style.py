@@ -34,8 +34,7 @@ footer = '''
                 <LI><A HREF="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</A></LI>
                 <LI><A HREF="changes.html">Change history</A></LI>
                 <LI><A HREF="license.html">License</A></LI>
-                <LI><A HREF="http://groups.yahoo.com/group/taskcoach/join">
-                Join mailinglist</A></LI>
+                <LI><A HREF="mailinglist.html">Join mailinglist</A></LI>
                 <LI><A HREF="credits.html">Credits</A></LI>
             </UL>
             <H4>Links</H4>
