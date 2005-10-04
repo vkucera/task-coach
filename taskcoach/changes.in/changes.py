@@ -6,7 +6,9 @@ releases = [
 Release('0.51', 'October ?, 2005',
     featuresAdded=[
         Feature('''Escape closes pop-up windows. Patch provided by
-        Markus Meyer.''', '1241547')]),
+Markus Meyer.''', '1241547')],
+    bugsFixed=[
+        Bug('''Hitting enter in the find dialog didn't work on Linux.''')]),
 
 Release('0.50', 'October 2, 2005',
     bugsFixed=[

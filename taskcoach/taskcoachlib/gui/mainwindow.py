@@ -41,7 +41,6 @@ class MainWindow(WindowWithPersistentDimensions):
         super(MainWindow, self).__init__(settings, *args, **kwargs)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
-        self.taskFile.registerObserver(self.SetTitle)
         self.filteredTaskList = filteredTaskList
         self.settings = settings
         self.effortList = effortList
@@ -49,14 +48,9 @@ class MainWindow(WindowWithPersistentDimensions):
 
         self.createWindowComponents()
         self.initWindow()
-        
-    def initWindow(self):
-        self.SetTitle(patterns.observer.Notification(self, filename=self.taskFile.filename()))
-        self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, 
-            (16, 16)))
-        self.displayMessage(_('Welcome to %(name)s version %(version)s')%{'name': meta.name, 
-            'version': meta.version}, pane=1)
-                
+        self.initWindowComponents()
+        self.registerForWindowComponentChanges()
+
     def createWindowComponents(self):
         self.panel = wx.Panel(self, -1)
         self.viewer = viewercontainer.ViewerNotebook(self.panel, self.settings, 'mainviewer') 
@@ -71,7 +65,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.SetToolBar(toolbar.ToolBar(self, self.uiCommands))
         import status
         self.SetStatusBar(status.StatusBar(self, self.taskFile,
-                                        self.filteredTaskList, self.viewer))
+                          self.filteredTaskList, self.viewer))
         import menu
         self.SetMenuBar(menu.MainMenu(self, self.uiCommands, self.settings))
         self.createTaskBarIcon(self.uiCommands)
@@ -81,6 +75,32 @@ class MainWindow(WindowWithPersistentDimensions):
         self._sizer.Add(self.viewer, proportion=1, flag=wx.EXPAND)
         self._sizer.Add(self.findDialog, flag=wx.EXPAND|wx.ALL, border=1)
         self.panel.SetSizerAndFit(self._sizer)
+
+    def initWindow(self):
+        self.SetTitle(patterns.observer.Notification(self, filename=self.taskFile.filename()))
+        self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, 
+            (16, 16)))
+        self.displayMessage(_('Welcome to %(name)s version %(version)s')%{'name': meta.name, 
+            'version': meta.version}, pane=1)
+
+    def initWindowComponents(self):
+        self.onShowFindDialog()
+        # We use CallAfter because otherwise the statusbar will appear at the 
+        # top of the window when it is initially hidden and later shown.
+        wx.CallAfter(self.onShowStatusBar) 
+                
+    def registerForWindowComponentChanges(self):
+        self.taskFile.registerObserver(self.SetTitle)
+        self.settings.registerObserver(self.onShowFindDialog, 
+            ('view', 'finddialog'))
+        self.settings.registerObserver(self.onShowStatusBar, 
+            ('view', 'statusbar'))
+
+    def onShowFindDialog(self, *args, **kwargs):
+        self.showFindDialog(self.settings.getboolean('view', 'finddialog'))
+
+    def onShowStatusBar(self, *args, **kwargs):
+        self.showStatusBar(self.settings.getboolean('view', 'statusbar'))
 
     def createTaskBarIcon(self, uiCommands):
         if self.canCreateTaskBarIcon():
@@ -134,13 +154,13 @@ class MainWindow(WindowWithPersistentDimensions):
         self._sizer.Show(self.findDialog, show)
         self._sizer.Layout()
 
-    def hideToolBar(self):
-        self.GetToolBar().Hide()
+    def showStatusBar(self, show=True):
+        self.GetStatusBar().Show(show)
         self.SendSizeEvent()
 
     def setToolBarSize(self, size):
-        if size is None:
-            self.hideToolBar()
-        else:
-            self.GetToolBar().Destroy()
+        oldToolBar = self.GetToolBar()
+        if oldToolBar:
+            oldToolBar.Destroy()
+        if size is not None:
             self.SetToolBar(toolbar.ToolBar(self, self.uiCommands, size=size))

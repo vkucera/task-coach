@@ -13,7 +13,8 @@ class FindPanel(wx.Panel):
         self._label = wx.StaticText(self, -1, _('Find: '))
         
         self._subjectEntry = wx.TextCtrl(self, -1, 
-            _('Type search string (a regular expression) here and press enter'))
+            _('Type search string (a regular expression) here and press enter'),
+            style=wx.TE_PROCESS_ENTER)
         self._subjectEntry.Bind(wx.EVT_TEXT_ENTER, self.find)
         
         self._caseCheckBox = wx.CheckBox(self, -1, _('Match case'))

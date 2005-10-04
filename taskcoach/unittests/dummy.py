@@ -106,3 +106,7 @@ class MainWindow:
         pass
         
     showFindDialog = setToolBarSize
+
+class IOController:
+    def needSave(self, *args, **kwargs):
+        return False

@@ -25,6 +25,8 @@ setupOptions = {
         'Natural Language :: French',
         'Natural Language :: German',
         'Natural Language :: Spanish',
+        'Natural Language :: Hungarian',
+        'Natural Language :: Russian',
         'Natural Language :: Chinese (Simplified)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
