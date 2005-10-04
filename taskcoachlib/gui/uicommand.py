@@ -519,17 +519,6 @@ class ViewToolBar(MainWindowCommand, UIRadioCommand):
         self.mainwindow.setToolBarSize(self.value)
 
 
-class ViewFindDialog(MainWindowCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewFindDialog, self).__init__(menuText=_('&Find dialog'),
-            helpText=_('Show/hide find dialog'), setting='finddialog', 
-            *args, **kwargs)
-    
-    def doCommand(self, event):
-        super(ViewFindDialog, self).doCommand(event)
-        self.mainwindow.showFindDialog(event.IsChecked())
-
-
 class ViewStatusBar(MainWindowCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewStatusBar, self).__init__(menuText=_('Status&bar'),
@@ -538,8 +527,8 @@ class ViewStatusBar(MainWindowCommand, UICheckCommand):
 
     def doCommand(self, event):
         super(ViewStatusBar, self).doCommand(event)
-        self.mainwindow.GetStatusBar().Show(event.IsChecked())
-        self.mainwindow.SendSizeEvent()
+        #self.mainwindow.GetStatusBar().Show(event.IsChecked())
+        #self.mainwindow.SendSizeEvent()
     
                                                                     
 class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
@@ -871,7 +860,9 @@ class UICommands(dict):
             self[key] = ViewToolBar(mainwindow=mainwindow, settings=settings,
                                     value=value, menuText=menuText, helpText=helpText)
                                                          
-        self['viewfinddialog'] = ViewFindDialog(mainwindow=mainwindow, settings=settings)
+        self['viewfinddialog'] = UICheckCommand(settings=settings,
+            menuText=_('&Find dialog'), helpText=_('Show/hide find dialog'), 
+            setting='finddialog')
         self['viewstatusbar'] = ViewStatusBar(mainwindow=mainwindow, settings=settings)
 
         # View tasks due before commands
