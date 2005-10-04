@@ -155,6 +155,8 @@ class MainWindow(WindowWithPersistentDimensions):
         self._sizer.Layout()
 
     def showStatusBar(self, show=True):
+        # FIXME: First hiding the statusbar, then hiding the toolbar, then
+        # showing the statusbar puts it in the wrong place.
         self.GetStatusBar().Show(show)
         self.SendSizeEvent()
 
