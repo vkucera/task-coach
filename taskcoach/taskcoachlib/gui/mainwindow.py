@@ -158,11 +158,14 @@ class MainWindow(WindowWithPersistentDimensions):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then
         # showing the statusbar puts it in the wrong place.
         self.GetStatusBar().Show(show)
+        self._sizer.Layout()
         self.SendSizeEvent()
 
     def setToolBarSize(self, size):
-        oldToolBar = self.GetToolBar()
-        if oldToolBar:
-            oldToolBar.Destroy()
-        if size is not None:
+        if self.GetToolBar():
+            self.GetToolBar().Destroy()
+        if size is None:
+            self.SendSizeEvent()
+        else:
             self.SetToolBar(toolbar.ToolBar(self, self.uiCommands, size=size))
+    

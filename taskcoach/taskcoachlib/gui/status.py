@@ -5,6 +5,7 @@ class StatusBar(wx.StatusBar):
     def __init__(self, parent, taskList, filteredList, viewer):
         super(StatusBar, self).__init__(parent, -1)
         self.SetFieldsCount(2)
+        self.parent = parent
         self.taskList = taskList
         self.filteredList = filteredList
         self.viewer = viewer
@@ -40,3 +41,10 @@ class StatusBar(wx.StatusBar):
             self.scheduledStatusDisplay.Stop()
         super(StatusBar, self).SetStatusText(message, pane)
         self.scheduledStatusDisplay = wx.FutureCall(delay, self._displayStatus)
+
+    def Destroy(self):
+        self.viewer.removeObserver(self.notify)
+        self.parent.Unbind(wx.EVT_MENU_HIGHLIGHT_ALL)
+        self.parent.Unbind(wx.EVT_TOOL_ENTER)
+        if self.scheduledStatusDisplay:
+            self.scheduledStatusDisplay.Stop()
