@@ -26,6 +26,7 @@ class Task(patterns.Observable):
         relations.TaskRelationshipManager().stopManaging(self)
         
     def onNotify(self, notification, *args, **kwargs):
+        print 'Task.onNotify: %s'%notification
         notification = patterns.observer.Notification(self,  
             itemsChanged=[notification.source], effortsChanged=notification.effortsChanged)
         self.notifyObservers(notification, *args, **kwargs)       
@@ -302,3 +303,4 @@ class Task(patterns.Observable):
 
     def setLastModificationTime(self, time=None):
         self._lastModificationTime = time or date.DateTime.now()
+

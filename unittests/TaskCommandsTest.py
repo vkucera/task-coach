@@ -3,8 +3,8 @@ import test, asserts, command, task, patterns, dummy, effort, date
 class CommandTestCase(test.wxTestCase, asserts.Mixin):
     def setUp(self):
         self.taskList = task.TaskList()
-        self.task1 = task.Task()
-        self.task2 = task.Task()
+        self.task1 = task.Task('task1')
+        self.task2 = task.Task('task2')
         self.taskList.append(self.task1)
         self.originalList = [self.task1]
 
@@ -52,12 +52,12 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
 class CommandWithChildrenTestCase(CommandTestCase):
     def setUp(self):
         super(CommandWithChildrenTestCase, self).setUp()
-        self.parent = task.Task()
-        self.child = task.Task()
+        self.parent = task.Task('parent')
+        self.child = task.Task('child')
         self.parent.addChild(self.child)
-        self.child2 = task.Task()
+        self.child2 = task.Task('child2')
         self.parent.addChild(self.child2)
-        self.grandchild = task.Task()
+        self.grandchild = task.Task('grandchild')
         self.child.addChild(self.grandchild)
         self.originalList.extend([self.parent, self.child, self.child2, self.grandchild])
         self.taskList.append(self.parent)
@@ -103,6 +103,17 @@ class DeleteCommandTest(CommandTestCase):
         
 
 class DeleteCommandWithChildrenTest(CommandWithChildrenTestCase):
+    def assertDeleteWorks(self):
+        self.assertDoUndoRedo(self.assertParentAndAllChildrenDeleted,
+            self.assertTaskListUnchanged)
+
+    def assertParentAndAllChildrenDeleted(self):
+        self.assertTaskList([self.task1])
+
+    def assertTaskListUnchanged(self):
+        self.assertTaskList(self.originalList)
+        self.failUnlessParentAndChild(self.parent, self.child)
+        self.failUnlessParentAndChild(self.child, self.grandchild)
 
     def testDeleteParent(self):
         self.delete([self.parent])
@@ -122,18 +133,6 @@ class DeleteCommandWithChildrenTest(CommandWithChildrenTestCase):
         self.assertDoUndoRedo(
             lambda: self.failUnless(self.parent.completed()), 
             lambda: self.failIf(self.parent.completed()))
-
-    def assertDeleteWorks(self):
-        self.assertDoUndoRedo(self.assertParentAndAllChildrenDeleted,
-            self.assertTaskListUnchanged)
-
-    def assertParentAndAllChildrenDeleted(self):
-        self.assertTaskList([self.task1])
-
-    def assertTaskListUnchanged(self):
-        self.assertTaskList(self.originalList)
-        self.failUnlessParentAndChild(self.parent, self.child)
-        self.failUnlessParentAndChild(self.child, self.grandchild)
 
 
 class DeleteCommandWithEffortTest(CommandWithEffortTestCase):

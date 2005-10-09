@@ -47,8 +47,8 @@ class MainWindow(WindowWithPersistentDimensions):
         self.Bind(wx.EVT_CLOSE, self.quit)
 
         self.createWindowComponents()
-        self.initWindow()
         self.initWindowComponents()
+        self.initWindow()
         self.registerForWindowComponentChanges()
 
     def createWindowComponents(self):
@@ -62,7 +62,6 @@ class MainWindow(WindowWithPersistentDimensions):
             self.uiCommands, self.settings)
         viewerfactory.addEffortViewers(self.viewer, self.effortList, 
             self.uiCommands, self.settings, 'effortviewer')
-        self.SetToolBar(toolbar.ToolBar(self, self.uiCommands))
         import status
         self.SetStatusBar(status.StatusBar(self, self.taskFile,
                           self.filteredTaskList, self.viewer))
@@ -85,6 +84,7 @@ class MainWindow(WindowWithPersistentDimensions):
 
     def initWindowComponents(self):
         self.onShowFindDialog()
+        self.onShowToolBar()
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
         wx.CallAfter(self.onShowStatusBar) 
@@ -95,12 +95,17 @@ class MainWindow(WindowWithPersistentDimensions):
             ('view', 'finddialog'))
         self.settings.registerObserver(self.onShowStatusBar, 
             ('view', 'statusbar'))
+        self.settings.registerObserver(self.onShowToolBar, 
+            ('view', 'toolbar'))
 
     def onShowFindDialog(self, *args, **kwargs):
         self.showFindDialog(self.settings.getboolean('view', 'finddialog'))
 
     def onShowStatusBar(self, *args, **kwargs):
         self.showStatusBar(self.settings.getboolean('view', 'statusbar'))
+
+    def onShowToolBar(self, *args, **kwargs):
+        self.showToolBar(eval(self.settings.get('view', 'toolbar')))
 
     def createTaskBarIcon(self, uiCommands):
         if self.canCreateTaskBarIcon():
@@ -161,7 +166,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self._sizer.Layout()
         self.SendSizeEvent()
 
-    def setToolBarSize(self, size):
+    def showToolBar(self, size):
         if self.GetToolBar():
             self.GetToolBar().Destroy()
         if size is None:

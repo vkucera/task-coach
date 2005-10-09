@@ -3,7 +3,10 @@
 import sys
 if not hasattr(sys, "frozen"):
     import wxversion
-    wxversion.ensureMinimal("2.5.5")
+    try:
+        wxversion.ensureMinimal("2.5.5")
+    except:
+        pass
     import taskcoachlib
     # We don't want to use 'from taskcoachlib import X' all the time, so we add 
     # the taskcoachlib directory to the search path:

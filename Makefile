@@ -4,8 +4,9 @@
 
 PYTHON="python"
 INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
-WEBCHECKER="c:/Program Files/Python24/Tools/webchecker/webchecker.py" 
-GETTEXT="c:/Program Files/Python24/Tools/i18n/pygettext.py"
+#WEBCHECKER="c:/Program Files/Python24/Tools/webchecker/webchecker.py" 
+WEBCHECKER="/usr/share/doc/python2.4/examples/Tools/webchecker/webchecker.py" 
+GETTEXT="pygettext"
 
 all: i18n windist sdist website
 
@@ -27,7 +28,7 @@ website: changes
 	$(PYTHON) $(WEBCHECKER) dist/index.html
 
 i18n:
-	$(PYTHON) $(GETTEXT) --output-dir i18n.in taskcoachlib
+	$(GETTEXT) --output-dir i18n.in taskcoachlib
 	cd i18n.in; $(PYTHON) make.py
 
 changes:

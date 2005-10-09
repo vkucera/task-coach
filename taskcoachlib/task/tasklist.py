@@ -1,9 +1,17 @@
 import patterns, task, sets, date
+from i18n import _
 
 class TaskList(patterns.ObservableObservablesList):
     def __init__(self, initList=None, *args, **kwargs):
         super(TaskList, self).__init__(*args, **kwargs)
         self.extend(initList or [])
+
+    def newItem(self):
+        ''' TaskList knows how to create new items so classes that
+            manipulate containers (TaskList, EffortList, etc.) such
+            as commands (NewCommand, DeleteCommand, etc.) can
+            create new items without having to know their type. '''
+        return task.Task(subject=_('New task'))
 
     # list interface and helpers
 

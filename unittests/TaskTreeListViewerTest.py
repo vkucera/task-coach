@@ -1,4 +1,5 @@
-import test, gui, task, widgets, dummy, date, TaskTreeViewerTest
+import test, gui, task, widgets, dummy, date, TaskTreeViewerTest, \
+    TaskListViewerTest
 from gui import render
 
 class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
@@ -11,12 +12,14 @@ class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
         return widget
 
 class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
+                             TaskListViewerTest.CommonTests,
                              TaskTreeViewerTest.TaskTreeViewerTestCase):
     def setUp(self):
         super(TaskTreeListViewerTest, self).setUp()
         self.viewer = TaskTreeListViewerUnderTest(self.frame, self.taskList, {}, self.settings)
           
     def testOneDayLeft(self):
+        self.settings.set('view', 'timeleft', 'True')
         self.task.setDueDate(date.Tomorrow())
         self.taskList.append(self.task)
         firstItem, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())

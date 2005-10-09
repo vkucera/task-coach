@@ -55,23 +55,31 @@ class CtrlWithItems(_CtrlWithItemPopupMenu):
 
 
 class Column(object):
-    def __init__(self, columnHeader):
+    def __init__(self, columnHeader, visibilitySetting, sortKey):
         self.__columnHeader = columnHeader
+        self.__visibilitySetting = visibilitySetting
+        self.__sortKey = sortKey
         
     def header(self):
         return self.__columnHeader
+
+    def visibilitySetting(self):
+        return self.__visibilitySetting
+
+    def sortKey(self):
+        return self.__sortKey
         
     def __eq__(self, other):
         return self.header() == other.header()
         
 
 class _BaseCtrlWithColumns(object):
-    ''' A base class for all controls with columns. Note that most manipulation of
-        columns (in derived classes) is done by use of the column header instead of 
-        a column index. This class provides two utility methods to help converting
-        column indices to column headers and vice versa. Note that this class and its 
-        subclasses do not support addition or deletion of columns after the initial 
-        setting of columns. '''
+    ''' A base class for all controls with columns. Note that most manipulation 
+        of columns (in derived classes) is done by use of the column header 
+        instead of a column index. This class provides two utility methods to 
+        help converting column indices to column headers and vice versa. Note 
+        that this class and its subclasses do not support addition or deletion 
+        of columns after the initial setting of columns. '''
 
     def __init__(self, *args, **kwargs):
         self.__allColumns = kwargs.pop('columnHeaders')
@@ -161,22 +169,23 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
 
 
 class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
-    ''' This class adds sort indicators and clickable column headers that trigger
-        callbacks to (re)sort the contents of the control. '''
+    ''' This class adds sort indicators and clickable column headers that 
+        trigger callbacks to (re)sort the contents of the control. '''
     
     def __init__(self, *args, **kwargs):
-        ''' _CtrlWithSortableColumns(columnSortCommands={columnHeader:sorter, columnHeader:sorter, ...})
-            The columnSortCommands dictionary contains one callable for each column header. 
-            The callbacks should expect one argument: the event. '''
-        
+        ''' _CtrlWithSortableColumns(columnSortCommands={columnHeader:sorter, 
+            columnHeader:sorter, ...})
+            The columnSortCommands dictionary contains one callable for each 
+            column header. The callbacks should expect one argument: the 
+            event. '''
         self.__sorters = kwargs.pop('columnSortCommands')
         super(_CtrlWithSortableColumns, self).__init__(*args, **kwargs)
         self.__attachColumnSortCommands()
         
     def __attachColumnSortCommands(self):
-        ''' columnSortCommands is a list of callables, one for each column and in
-            the same order as the columns were passed to setColumns. The callbacks
-            should expect one argument: the event. '''
+        ''' columnSortCommands is a list of callables, one for each column and 
+            in the same order as the columns were passed to setColumns. The 
+            callbacks should expect one argument: the event. '''
         if self.__sorters is not None:
             self.Bind(wx.EVT_LIST_COL_CLICK, self.onColumnClick)
         self.__currentSortColumnHeader = self._getColumnHeader(0)
