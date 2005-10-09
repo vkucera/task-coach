@@ -112,12 +112,13 @@ class TreeMixin(object):
         self._refreshing = True
         self._validItems = []
         self.itemsToExpandOrCollapse = {}
+        self.itemsToSelect = []
         self.Freeze()
         rootItem = self.__getOrCreateRootItem()
         rootIndices = self.getRootIndices()
         self._count = self.addItemsRecursively(rootItem, rootIndices)
         self.deleteUnusedItems()
-        self.restoreCollapseExpandState()
+        self.restoreItemState()
         self.Thaw()
         self._refreshing = False
 
@@ -155,7 +156,7 @@ class TreeMixin(object):
                 self.itemsToExpandOrCollapse[parent] = True
             if oldItem:
                 if self.IsSelected(oldItem):            
-                    wx.CallAfter(self.SelectItem, newItem)
+                    self.itemsToSelect.append(newItem)
                 self.itemsToExpandOrCollapse[newItem] = self.IsExpanded(oldItem)
         if oldItem and len(self.getChildIndices(index)) > self.GetPyData(oldItem)[2]:
             self.itemsToExpandOrCollapse[newItem] = True
@@ -220,12 +221,18 @@ class TreeMixin(object):
         else:
             return parent in list or self.anyAncestorInList(parent, list)
         
-    def restoreCollapseExpandState(self):
+    def restoreItemState(self):
         for item, expand in self.itemsToExpandOrCollapse.items():
             if expand:
                 self.Expand(item)
             else:
                 self.CollapseAndReset(item)
+        wx.CallAfter(self.restoreSelection)
+
+    def restoreSelection(self):
+        for item in self.itemsToSelect:
+            if item.IsOk():
+                self.SelectItem(item)
 
     def itemUnchanged(self, item, index, itemChildIndex):
         oldIndex, oldId, oldChildrenCount, oldImage, oldText,\
@@ -343,14 +350,16 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
     # Adapters to make the TreeListCtrl API more like the TreeCtrl API:
         
     def SelectItem(self, item, select=True):
-        ''' SelectItem takes an item and an optional boolean that indicates whether the item
-            should be selected (True, default) or unselected (False). This makes SelectItem
-            more similar to TreeCtrl.SelectItem. '''
+        ''' SelectItem takes an item and an optional boolean that indicates 
+            whether the item should be selected (True, default) or unselected 
+            (False). This makes SelectItem more similar to 
+            TreeCtrl.SelectItem. '''
         if select:
             self.selectItems(item)
         elif not select and self.IsSelected(item):
             # Take the current selection and remove item from it. This is a
-            # bit more wordy then I'd like, but TreeListCtrl has no UnselectItem.
+            # bit more wordy then I'd like, but TreeListCtrl has no 
+            # UnselectItem.
             currentSelection = self.GetSelections()
             currentSelection.remove(item)
             self.UnselectAll()

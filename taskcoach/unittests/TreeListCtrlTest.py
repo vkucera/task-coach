@@ -13,7 +13,7 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
 
     def columns(self):
         columnHeaders = ['Tree Column'] + ['Column %d'%index for index in range(1, 5)]
-        return [widgets.Column(columnHeader) for columnHeader in columnHeaders]
+        return [widgets.Column(columnHeader, ('view', 'whatever'), None) for columnHeader in columnHeaders]
         
     def getItemText(self, index, columnHeader=None):
         itemText = super(TreeListCtrlTestCase, self).getItemText(index)
@@ -42,7 +42,7 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
     
     def showColumn(self, columnHeader, show=True):
         self.treeCtrl.showColumn(columnHeader, show)
-        column = widgets.Column(columnHeader)
+        column = widgets.Column(columnHeader, ('view', 'whatever'), None)
         if show:
             index = self.columns()[1:].index(column)
             self.visibleColumns.insert(index, column)

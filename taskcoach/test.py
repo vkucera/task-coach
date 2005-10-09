@@ -59,10 +59,10 @@ class TextTestRunnerWithTimings(unittest.TextTestRunner):
 
 
 class AllTests(unittest.TestSuite):
-    def __init__(self, options, testFiles):
+    def __init__(self, options=None, testFiles=None):
         super(AllTests, self).__init__()
-        self._options = options
-        self.loadAllTests(testFiles)
+        self._options = options or TestOptionParser().parse_args()[0]
+        self.loadAllTests(testFiles or [])
 
     def filenameToModuleName(self, filename):
         module = filename.replace(os.sep, '.')

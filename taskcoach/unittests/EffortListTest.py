@@ -77,7 +77,20 @@ class EffortListTest(test.TestCase):
     def testOriginalLength(self):
         self.assertEqual(0, self.effortList.originalLength())
         
-        
+    def testRemoveItems(self):
+        self.task.addEffort(self.effort)
+        self.effortList.removeItems([self.effort])
+        self.assertEqual(0, len(self.effortList))
+        self.assertEqual(0, len(self.task.efforts()))
+
+    def testExtend(self):
+        self.effortList.extend([self.effort])
+        self.assertEqual(1, len(self.effortList))
+        self.assertEqual(self.effort, self.effortList[0])
+        self.assertEqual(1, len(self.task.efforts()))
+        self.assertEqual(self.effort, self.task.efforts()[0])
+
+
 class SingleTaskEffortListTest(test.TestCase):
     def setUp(self):
         self.notifications = 0

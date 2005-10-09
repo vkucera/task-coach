@@ -140,6 +140,10 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def testOriginalLength(self):
         self.assertEqual(0, self.taskList.originalLength())
         
+    def testCreateNewItem(self):
+        newTask = self.taskList.newItem()
+        self.assertEqual(date.Today(), newTask.startDate())
+
         
 class NotificationTimingTest(test.TestCase):
     def setUp(self):

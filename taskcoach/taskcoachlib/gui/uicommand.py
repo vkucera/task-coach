@@ -115,23 +115,8 @@ class BooleanSettingsCommand(SettingsCommand):
         self.value = value
         super(BooleanSettingsCommand, self).__init__(*args, **kwargs)
         
-    def appendToMenu(self, *args, **kwargs):
-        id = super(BooleanSettingsCommand, self).appendToMenu(*args, **kwargs)
-        self.check(id)
-        return id
-        
-    def check(self, id):
-        checked = self.checked()        
-        if self.commandNeedsToBeActivated(checked):
-            self.sendCommandActivateEvent(checked, id)
-
-    def sendCommandActivateEvent(self, checked, id):
-        event = wx.CommandEvent(0, id)
-        event.SetInt(checked)
-        self.onCommandActivate(event)
-
     def onUpdateUI(self, event):
-        event.Check(self.checked())     
+        event.Check(self.isSettingChecked())     
         super(BooleanSettingsCommand, self).onUpdateUI(event)
         
 
@@ -140,10 +125,7 @@ class UICheckCommand(BooleanSettingsCommand):
         super(UICheckCommand, self).__init__(kind=wx.ITEM_CHECK, 
             bitmap=self.getBitmap(), *args, **kwargs)
             
-    def commandNeedsToBeActivated(self, checked):
-        return not checked
-
-    def checked(self):
+    def isSettingChecked(self):
         return self.settings.getboolean(self.section, self.setting)
 
     def doCommand(self, event):
@@ -166,10 +148,7 @@ class UIRadioCommand(BooleanSettingsCommand):
         super(UIRadioCommand, self).__init__(kind=wx.ITEM_RADIO, bitmap=None,
             *args, **kwargs)
             
-    def commandNeedsToBeActivated(self, checked):
-        return checked
-        
-    def checked(self):
+    def isSettingChecked(self):
         return self.settings.get(self.section, self.setting) == str(self.value)
 
     def doCommand(self, event):
@@ -510,27 +489,6 @@ class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
         self.viewer.collapseSelectedItems()
              
         
-class ViewToolBar(MainWindowCommand, UIRadioCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewToolBar, self).__init__(setting='toolbar', *args, **kwargs)
-        
-    def doCommand(self, event):
-        super(ViewToolBar, self).doCommand(event)
-        self.mainwindow.setToolBarSize(self.value)
-
-
-class ViewStatusBar(MainWindowCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewStatusBar, self).__init__(menuText=_('Status&bar'),
-            helpText=_('Show/hide status bar'), setting='statusbar', *args,
-            **kwargs)
-
-    def doCommand(self, event):
-        super(ViewStatusBar, self).doCommand(event)
-        #self.mainwindow.GetStatusBar().Show(event.IsChecked())
-        #self.mainwindow.SendSizeEvent()
-    
-                                                                    
 class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskNew, self).__init__(bitmap='new', 
@@ -857,13 +815,15 @@ class UICommands(dict):
              ('medium', (22, 22), _('&Medium-sized images'), _('Medium-sized images (22x22) on the toolbar')),
              ('big', (32, 32), _('&Large images'), _('Large images (32x32) on the toolbar'))]:
             key = 'toolbar' + key     
-            self[key] = ViewToolBar(mainwindow=mainwindow, settings=settings,
-                                    value=value, menuText=menuText, helpText=helpText)
+            self[key] = UIRadioCommand(settings=settings, setting='toolbar',
+                value=value, menuText=menuText, helpText=helpText)
                                                          
         self['viewfinddialog'] = UICheckCommand(settings=settings,
             menuText=_('&Find dialog'), helpText=_('Show/hide find dialog'), 
             setting='finddialog')
-        self['viewstatusbar'] = ViewStatusBar(mainwindow=mainwindow, settings=settings)
+        self['viewstatusbar'] = UICheckCommand(settings=settings, 
+            menuText=_('Status&bar'), helpText=_('Show/hide status bar'), 
+            setting='statusbar')
 
         # View tasks due before commands
         for value, menuText, helpText in \

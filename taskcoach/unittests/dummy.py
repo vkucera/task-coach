@@ -33,6 +33,15 @@ class DummyWidget(wx.Frame):
     def showSort(self, *args, **kwargs):
         pass
 
+    def showColumn(self, *args, **kwargs):
+        pass
+
+    def showSortColumn(self, *args, **kwargs):
+        pass
+
+    def showSortOrder(self, *args, **kwargs):
+        pass
+
 
 class DummyUICommand(gui.uicommand.UICommand):
     bitmap = 'undo'

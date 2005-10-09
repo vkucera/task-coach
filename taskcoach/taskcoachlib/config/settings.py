@@ -17,7 +17,8 @@ class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
                 
     def set(self, section, option, value):
         super(Settings, self).set(section, option, value)
-        self.notifyObservers(patterns.Notification(self, section=section, option=option, value=value), (section, option))
+        self.notifyObservers(patterns.Notification(self, section=section, 
+            option=option, value=value), (section, option))
 
     def save(self):
         if not self.__loadAndSave:

@@ -1,10 +1,9 @@
 ''' Partly inspired by http://www.atug.com/andypatterns/rm.htm, but this 
 RelationshipManager does not (at the moment) keep of list of relations, but
 instead alters objects based on their relations. For example, if a task is
-marked completed, it will mark all children completed. '''
+marked completed, the RelationshipManager will mark all children completed. '''
 
 import patterns, date
-import task as tsk
 
 class TaskRelationshipManager:
     __metaclass__ = patterns.Singleton
@@ -17,7 +16,8 @@ class TaskRelationshipManager:
         
     def onNotify(self, notification):
         task = notification.source
-        #assert  task.__class__ == tsk.Task, 'task.__class__ == %s'%task.__class__
+        if task.subject() in ['task 1', 'parent']:
+            print 'TaskRelationshipManager.onNotify: %s'%notification
         if notification.completionDateChanged:
             if task.parent():
                 self.__markParentCompletedOrUncompletedIfNecessary(task.parent(), task)

@@ -31,9 +31,28 @@ class EffortList(patterns.ObservableListObserver, MaxDateTimeMixin):
 
     def originalLength(self):
         ''' Do not delegate originalLength to the underlying TaskList because
-        that would return a number of tasks, and not a number of effort records.'''
+        that would return a number of tasks, and not the number of effort 
+        records.'''
         return len(self)
         
+    def removeItems(self, efforts):
+        ''' We override ObservableListObserver.removeItems because the default
+            implementation is to remove the arguments from the original list,
+            which in this case would mean removing efforts from a task list.
+            Since that wouldn't work we remove the efforts from the tasks by
+            hand. '''
+        for effort in efforts:
+            effort.task().removeEffort(effort)
+
+    def extend(self, efforts):
+        ''' We override ObservableListObserver.extend because the default
+            implementation is to add the arguments to the original list,
+            which in this case would mean adding efforts to a task list.
+            Since that wouldn't work we add the efforts to the tasks by
+            hand. '''
+        for effort in efforts:
+            effort.task().addEffort(effort)
+
 
 class SingleTaskEffortList(patterns.ObservableListObserver, MaxDateTimeMixin):
     ''' SingleTaskEffortList filters an EffortList so it contains the efforts for 

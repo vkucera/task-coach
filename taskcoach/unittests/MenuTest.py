@@ -1,75 +1,65 @@
 import test, gui, wx, config, dummy, task
 from gui import uicommand
 
-class DummyCommand(uicommand.UICommand):
-    def onActivateCommand(self, event):
-        self.event = event
-
-class DummyCheckCommand(uicommand.UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(DummyCheckCommand, self).__init__(section='test',
-            setting='test', *args, **kwargs)
-
-    def onCommandActivate(self, event):
-        self.event = event
-
-class DummyRadioCommand(uicommand.UIRadioCommand):
-    def __init__(self, *args, **kwargs):
-        super(DummyRadioCommand, self).__init__(section='test',
-            setting='test', value='on', *args, **kwargs)
-
-    def onCommandActivate(self, event):
-        self.event = event
-
-class DummySettings(config.Settings):
-    def __init__(self, value, *args, **kwargs):
-        super(DummySettings, self).__init__(*args, **kwargs)
-        self.add_section('test')
-        self.set('test', 'test', str(value))
-
-    def read(self, *args):
-        pass
-
-class MenuTest(test.wxTestCase):
+class MenuTestCase(test.wxTestCase):
     def setUp(self):
         self.menu = gui.menu.Menu(self.frame)
-        self.command = DummyCommand()
 
+class MenuTest(MenuTestCase):
     def testLenEmptyMenu(self):
         self.assertEqual(0, len(self.menu))
 
     def testLenNonEmptyMenu(self):
-        self.menu.appendUICommand(self.command)
         self.menu.AppendSeparator()
-        self.assertEqual(2, len(self.menu))
+        self.assertEqual(1, len(self.menu))
 
-    def testAppendUICommandDoesNotInvokeTheCommand(self):
-        self.menu.appendUICommand(self.command)
-        self.failIf(hasattr(self.command, 'event'))
 
-    def testCheckedCheckCommandIsNotInvoked(self):
-        settings = DummySettings(True)
-        command = DummyCheckCommand(settings=settings)
-        self.menu.appendUICommand(command)
-        self.failIf(hasattr(self.command, 'event'))
+class MenuWithBooleanMenuItemsTestCase(MenuTestCase):
+    def setUp(self):
+        super(MenuWithBooleanMenuItemsTestCase, self).setUp()
+        self.settings = config.Settings(load=False)
 
-    def testUncheckedUICheckCommandIsInvoked(self):
-        settings = DummySettings(False)
-        command = DummyCheckCommand(settings=settings)
-        id = self.menu.appendUICommand(command)
-        self.assertEqual(id, command.event.GetId())
+    def assertMenuItemsChecked(self, *expectedStates):
+        for command in self.commands:
+            self.menu.appendUICommand(command)
+        self.menu.openMenu()
+        for index, shouldBeChecked in enumerate(expectedStates):
+            isChecked = self.menu.FindItemByPosition(index).IsChecked()
+            if shouldBeChecked:
+                self.failUnless(isChecked)
+            else:
+                self.failIf(isChecked)
 
-    def testUncheckedUIRadioCommandIsNotInvoked(self):
-        settings = DummySettings('off')
-        command = DummyRadioCommand(settings=settings)
-        self.menu.appendUICommand(command)
-        self.failIf(hasattr(self.command, 'event'))
 
-    def testCheckedUIRadioCommandIsInvoked(self):
-        settings = DummySettings('on')
-        command = DummyRadioCommand(settings=settings)
-        id = self.menu.appendUICommand(command)
-        self.assertEqual(id, command.event.GetId())
+class MenuWithCheckItemsTest(MenuWithBooleanMenuItemsTestCase):
+    def setUp(self):
+        super(MenuWithCheckItemsTest, self).setUp()
+        self.commands = [uicommand.UICheckCommand(settings=self.settings,
+            section='view', setting='statusbar')]
+
+    def testCheckedItem(self):
+        self.settings.set('view', 'statusbar', 'True')
+        self.assertMenuItemsChecked(True)
+
+    def testUncheckedItem(self):
+        self.settings.set('view', 'statusbar', 'False')
+        self.assertMenuItemsChecked(False)
+
+
+class MenuWithRadioItemsTest(MenuWithBooleanMenuItemsTestCase):
+    def setUp(self):
+        super(MenuWithRadioItemsTest, self).setUp()
+        self.commands = [uicommand.UIRadioCommand(settings=self.settings,
+                section='view', setting='toolbar', value=value) for value in
+                ['None', '(16, 16)']]
+
+    def testRadioItem_FirstChecked(self):
+        self.settings.set('view', 'toolbar', 'None')
+        self.assertMenuItemsChecked(True, False)
+
+    def testRadioItem_SecondChecked(self):
+        self.settings.set('view', 'toolbar', '(16, 16)')
+        self.assertMenuItemsChecked(False, True)
 
 
 class MockIOController:

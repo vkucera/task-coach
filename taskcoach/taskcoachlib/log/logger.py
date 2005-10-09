@@ -1,6 +1,8 @@
 import inspect, time, sys
 
 class Logger:
+    maxArgLength = 1000
+
     def watch(self, *scopes):
         for scope in scopes:
             for attr in scope.__dict__.keys():
@@ -31,8 +33,8 @@ class Logger:
             arg = str(arg)
         except:
             arg = '? (got exception)'
-        if len(arg) > 50:
-            arg = arg[:20] + '...' + arg[-20:]
+        if len(arg) > self.maxArgLength:
+            arg = arg[:self.maxArgLength/2] + '...' + arg[-self.maxArgLength/2:]
         return arg
         
     def __formatArgs(self, args, kwargs):

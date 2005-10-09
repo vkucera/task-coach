@@ -1,8 +1,36 @@
 import test, task, date, dummy, effort, gui, config, TaskViewerTest, wx
 from gui import render
+from i18n import _
+
+class CommonTests:
+    ''' Tests common to all TaskListViewers, i.e. TaskListViewer and
+        TaskTreeListViewer. '''
+
+    def testSubjectColumnIsVisible(self):
+        self.assertEqual(_('Subject'), self.viewer.GetColumn(0).GetText())
+
+    def testStartDateColumnIsVisibleByDefault(self):
+        self.assertEqual(_('Start date'), self.viewer.GetColumn(1).GetText())
+
+    def testDueDateColumnIsVisibleByDefault(self):
+        self.assertEqual(_('Due date'), self.viewer.GetColumn(2).GetText())
+
+    def testThreeColumnsByDefault(self):
+        self.assertEqual(3, self.viewer.GetColumnCount())
+
+    def testTurnOffStartDateColumn(self):
+        self.settings.set('view', 'startdate', 'False')
+        self.assertEqual(_('Due date'), self.viewer.GetColumn(1).GetText())
+        self.assertEqual(2, self.viewer.GetColumnCount())
+        
+    def testShowSort(self):
+        self.settings.set('view', 'sortby', 'subject')
+        self.failIf(-1 == self.viewer.GetColumn(0).GetImage())
+        self.failUnless(-1 == self.viewer.GetColumn(1).GetImage())
 
 
-class TaskListViewerTest(TaskViewerTest.CommonTests, test.wxTestCase):
+class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests, 
+        test.wxTestCase):
     def setUp(self):
         super(TaskListViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
@@ -48,6 +76,7 @@ class TaskListViewerTest(TaskViewerTest.CommonTests, test.wxTestCase):
         self.assertEqual([self.task], self.viewer.curselection())
 
     def testOneDayLeft(self):
+        self.settings.set('view', 'timeleft', 'True')
         self.task.setDueDate(date.Tomorrow())
         self.taskList.append(self.task)
         self.assertEqual(render.daysLeft(self.task.timeLeft()), 

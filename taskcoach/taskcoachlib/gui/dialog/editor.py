@@ -254,7 +254,7 @@ class EffortEditor(EditorWithCommand):
         super(EffortEditor, self).__init__(parent, command, uiCommands, *args, **kwargs)
         
     def addPages(self):
-        for effort in self._command.efforts: # FIXME: use getter
+        for effort in self._command.items: # FIXME: use getter
             self.addPage(effort)
 
     def addPage(self, effort):
