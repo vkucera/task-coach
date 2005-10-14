@@ -8,7 +8,11 @@ class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
         self.__loadAndSave = load
         if load:
             self.read(self.filename()) # ConfigParser.read fails silently
-
+        # FIXME: add some machinery to check whether values read in from
+        # the TaskCoach.ini file are allowed values. We need some way to 
+        # specify allowed values. That's easy for boolean and enumeration types,
+        # but more difficult for e.g. color values and coordinates.
+        
     def setDefaults(self):
         for section, settings in defaults.defaults.items():
             self.add_section(section)

@@ -16,7 +16,8 @@ class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
                              TaskTreeViewerTest.TaskTreeViewerTestCase):
     def setUp(self):
         super(TaskTreeListViewerTest, self).setUp()
-        self.viewer = TaskTreeListViewerUnderTest(self.frame, self.taskList, {}, self.settings)
+        self.viewer = TaskTreeListViewerUnderTest(self.frame,
+            self.taskList, dummy.DummyUICommands(), self.settings)
           
     def testOneDayLeft(self):
         self.settings.set('view', 'timeleft', 'True')

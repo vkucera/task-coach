@@ -1,5 +1,17 @@
 import inspect, time, sys
 
+def caller(nrHops=1):
+        # Three hops: __caller -> __log -> wrapper -> real caller
+        # Add one hop for this function
+        nrHops += 1
+        callerFrame = sys._getframe()
+        for hopNr in range(nrHops):
+            callerFrame = callerFrame.f_back
+        callerName = callerFrame.f_code.co_name
+        if 'self' in callerFrame.f_locals:
+            callerName = '%s.%s'%(callerFrame.f_locals['self'].__class__.__name__, callerName)
+        return callerName
+    
 class Logger:
     maxArgLength = 1000
 
