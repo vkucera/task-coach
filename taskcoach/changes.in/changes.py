@@ -8,7 +8,10 @@ Release('0.51', 'October ?, 2005',
         Feature('''Escape closes pop-up windows. Patch provided by
 Markus Meyer.''', '1241547')],
     bugsFixed=[
-        Bug('''Hitting enter in the find dialog didn't work on Linux.''')]),
+        Bug('''Hitting enter in the find dialog didn't work on Linux.'''),
+        Bug('''Old TaskCoach.ini files with a language setting of 'en' instead
+of 'en_US' or 'en_GB' would cause an exception. Patch provided by 
+Nirendra Maharaj.''')]),
 
 Release('0.50', 'October 2, 2005',
     bugsFixed=[

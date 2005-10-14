@@ -21,7 +21,7 @@ class NewEffortCommandTest(EffortCommandTestCase):
     def testNewEffort(self):
         newEffortCommand = command.NewEffortCommand(self.effortList, [self.task])
         newEffortCommand.do()
-        newEffort = newEffortCommand.items[0]
+        newEffort = newEffortCommand.efforts[0]
         self.assertDoUndoRedo(
             lambda: self.failUnless(newEffort in self.task.efforts()),
             lambda: self.assertEqual([self.effort], self.task.efforts()))

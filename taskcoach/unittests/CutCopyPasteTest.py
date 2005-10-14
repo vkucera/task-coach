@@ -2,11 +2,11 @@ import test, task, command
 from TaskCommandsTest import CommandTestCase, CommandWithChildrenTestCase
 
 class CutCommandTest(CommandTestCase):
-    def XtestCut_WithoutSelection(self):
+    def testCut_WithoutSelection(self):
         command.CutTaskCommand(self.taskList, []).do()
         self.assertDoUndoRedo(lambda: self.assertTaskList([self.task1]))
 
-    def XtestCut_SpecificTask(self):
+    def testCut_SpecificTask(self):
         self.taskList.append(self.task2)
         self.cut([self.task1])
         self.assertDoUndoRedo(lambda: (self.assertTaskList([self.task2]),
@@ -14,19 +14,19 @@ class CutCommandTest(CommandTestCase):
             lambda: (self.assertTaskList([self.task1, self.task2]),
             self.failIf(task.Clipboard())))
 
-    def XtestCut(self):
+    def testCut(self):
         self.cut('all')
         self.assertDoUndoRedo(self.assertEmptyTaskList, 
             lambda: self.assertTaskList(self.originalList))
 
 
 class CutCommandWithChildrenTest(CommandWithChildrenTestCase):
-    def XtestCutParent(self):
+    def testCutParent(self):
         self.cut([self.parent])
         self.assertDoUndoRedo(lambda: self.assertTaskList([self.task1]),
             lambda: self.assertTaskList(self.originalList))
 
-    def XtestCutChild(self):
+    def testCutChild(self):
         self.cut([self.child])
         self.assertDoUndoRedo(
             lambda: (self.assertTaskList([self.task1, self.child2, self.parent]),
@@ -34,24 +34,24 @@ class CutCommandWithChildrenTest(CommandWithChildrenTestCase):
             lambda: (self.assertTaskList(self.originalList),
             self.failUnlessParentAndChild(self.parent, self.child)))
 
-    def XtestCutParentAndChild(self):
+    def testCutParentAndChild(self):
         self.cut([self.child, self.parent])
         self.assertDoUndoRedo(lambda: self.assertTaskList([self.task1]),
             lambda: self.assertTaskList(self.originalList))
 
 
 class PasteCommandTest(CommandTestCase):
-    def XtestPasteWithoutPreviousCut(self):
+    def testPasteWithoutPreviousCut(self):
         self.paste()
         self.assertDoUndoRedo(lambda: self.assertTaskList(self.originalList))
 
-    def XtestPaste(self):
+    def testPaste(self):
         self.cut([self.task1])
         self.paste()
         self.assertDoUndoRedo(lambda: self.assertTaskList(self.originalList),
             self.assertEmptyTaskList)
 
-    def XtestClipboardIsEmptyAfterPaste(self):
+    def testClipboardIsEmptyAfterPaste(self):
         self.cut([self.task1])
         self.paste()
         self.assertDoUndoRedo(
@@ -60,7 +60,7 @@ class PasteCommandTest(CommandTestCase):
 
 
 class PasteCommandWithChildrenTest(CommandWithChildrenTestCase):
-    def XtestCutAndPasteChild(self):
+    def testCutAndPasteChild(self):
         self.cut([self.child])
         self.paste()
         self.assertDoUndoRedo(lambda: (self.assertTaskList(self.originalList),
@@ -68,14 +68,14 @@ class PasteCommandWithChildrenTest(CommandWithChildrenTestCase):
             self.failUnlessParentAndChild(self.child, self.grandchild)),
             lambda: self.assertTaskList([self.task1, self.parent, self.child2]))
 
-    def XtestCutAndPasteParentAndChild(self):
+    def testCutAndPasteParentAndChild(self):
         self.cut([self.parent, self.child])
         self.paste()
         self.assertDoUndoRedo(lambda: (self.assertTaskList(self.originalList),
             self.failIfParentAndChild(self.parent, self.child)),
             lambda: self.assertTaskList([self.task1]))
 
-    def XtestCutAndPasteParentAndGrandChild(self):
+    def testCutAndPasteParentAndGrandChild(self):
         self.cut([self.parent, self.grandchild])
         self.paste()
         self.assertDoUndoRedo(lambda: (self.assertTaskList(self.originalList),
@@ -85,7 +85,7 @@ class PasteCommandWithChildrenTest(CommandWithChildrenTestCase):
 
 
 class PasteAsSubTaskTest(CommandWithChildrenTestCase):
-    def XtestPasteChild(self):
+    def testPasteChild(self):
         self.cut([self.child])
         self.paste([self.task1])
         self.assertDoUndoRedo(
@@ -96,7 +96,7 @@ class PasteAsSubTaskTest(CommandWithChildrenTestCase):
             lambda: (self.assertEqual([self.child2], self.parent.children()),
             self.assertEqual([], self.task1.children())))
 
-    def XtestPasteExtraChild(self):
+    def testPasteExtraChild(self):
         self.cut([self.task1])
         self.paste([self.parent])
         self.assertDoUndoRedo(
@@ -109,16 +109,11 @@ class PasteAsSubTaskTest(CommandWithChildrenTestCase):
         self.markCompleted([self.parent])
         self.cut([self.task1])
         self.paste([self.parent])
-        import log
-        logger = log.Logger()
-        logger.watch(task.Task)
-        logger.watch(task.TaskList)
-        logger.watch(task.TaskRelationshipManager)
         self.assertDoUndoRedo(
             lambda: self.failIf(self.parent.completed()),
             lambda: self.failUnless(self.parent.completed()))
 
-    def XtestPasteCompletedChild_DoesNotMarkParentAsNotCompleted(self):
+    def testPasteCompletedChild_DoesNotMarkParentAsNotCompleted(self):
         self.markCompleted([self.task1, self.parent])
         self.cut([self.task1])
         self.paste([self.parent])
@@ -128,7 +123,7 @@ class PasteAsSubTaskTest(CommandWithChildrenTestCase):
 
 
 class CutAndPasteIntegrationTest(CommandTestCase):
-    def XtestUndoCutAndPaste(self):
+    def testUndoCutAndPaste(self):
         self.cut([self.task1])
         self.paste()
         self.undo()
@@ -141,21 +136,21 @@ class CutAndPasteWithChildrenIntegrationTest(CommandWithChildrenTestCase):
         self.failUnlessParentAndChild(self.parent, self.child)
         self.failUnlessParentAndChild(self.child, self.grandchild)
 
-    def XtestUndoCutAndPaste(self):
+    def testUndoCutAndPaste(self):
         self.cut([self.child])
         self.paste()
         self.undo()
         self.undo()
         self.assertTaskListUnchanged()
 
-    def XtestUndoCutAndPasteParentAndGrandChild(self):
+    def testUndoCutAndPasteParentAndGrandChild(self):
         self.cut([self.parent, self.grandchild])
         self.paste()
         self.undo()
         self.undo()
         self.assertTaskListUnchanged()
 
-    def XtestRedoCutAndPasteParentAndGrandChild(self):
+    def testRedoCutAndPasteParentAndGrandChild(self):
         self.cut([self.parent, self.grandchild])
         self.paste()
         self.undo()
@@ -171,12 +166,12 @@ class CopyCommandTest(CommandTestCase):
         tasks = tasks or []
         command.CopyTaskCommand(self.taskList, tasks).do()
 
-    def XtestCopyWithoutSelection(self):
+    def testCopyWithoutSelection(self):
         command.CopyTaskCommand(self.taskList, []).do()
         self.assertEqual([], task.Clipboard().get())
         self.assertTaskList(self.originalList)
 
-    def XtestCopy(self):
+    def testCopy(self):
         self.copy([self.task1])
         copiedTask = task.Clipboard().get()[0]
         self.assertDoUndoRedo(lambda: (self.assertCopy(self.task1, copiedTask),
@@ -187,7 +182,7 @@ class CopyCommandTest(CommandTestCase):
 
 class CopyCommandWithChildrenTest(CommandWithChildrenTestCase):
 
-    def XtestCopy(self):
+    def testCopy(self):
         self.copy([self.parent])
         copiedTask = task.Clipboard().get()[0]
         self.assertDoUndoRedo(

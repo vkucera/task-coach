@@ -5,7 +5,8 @@ class Translator:
     
     def __init__(self, language=None):
         if language:
-            if language not in ('en_US', 'en_GB'):
+            # 'en' is no longer used, but might be part of old TaskCoach.ini files:
+            if language not in ('en', 'en_US', 'en_GB'): 
                 module = __import__(language, globals())
                 self.__language = module.dict
                 self.__encoding = module.encoding                

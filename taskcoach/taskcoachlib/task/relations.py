@@ -13,11 +13,11 @@ class TaskRelationshipManager:
         
     def stopManaging(self, task):
         task.removeObserver(self.onNotify)
-        
+    
     def onNotify(self, notification):
         task = notification.source
-        if task.subject() in ['task 1', 'parent']:
-            print 'TaskRelationshipManager.onNotify: %s'%notification
+        # NB: This assumes each notification has only one of the following flags
+        # set to True:
         if notification.completionDateChanged:
             if task.parent():
                 self.__markParentCompletedOrUncompletedIfNecessary(task.parent(), task)
@@ -41,7 +41,7 @@ class TaskRelationshipManager:
                 task.setStartDate(child.startDate())
         elif notification.childRemoved:
             self.__markTaskCompletedIfNecessary(task, date.Today())
-
+        
     def __markParentCompletedOrUncompletedIfNecessary(self, parent, child):
         if child.completed():
             self.__markTaskCompletedIfNecessary(parent, child.completionDate())

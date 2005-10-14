@@ -205,7 +205,7 @@ class EditTaskCommandTest(CommandTestCase):
         self.edit([self.task1])
         self.assertDoUndoRedo(
             lambda: self.assertEqual('New subject', self.task1.subject()),
-            lambda: self.assertEqual('', self.task1.subject()))
+            lambda: self.assertEqual('task1', self.task1.subject()))
 
     def testEditTask_MarkCompleted(self):
         self.edit([self.task1])

@@ -207,7 +207,7 @@ class ObservableListObserver(ObservableList):
 
     def onNotify(self, notification, *args, **kwargs):
         ''' By default, we add items that were added to the original list
-            and we remove items that we removed from the original list. '''
+            and we remove items that were removed from the original list. '''
         if not notification:
             return
         self.stopNotifying()

@@ -1,5 +1,5 @@
 import patterns, date, time, copy, sets, relations
-
+import tasklist
 
 class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
@@ -26,7 +26,6 @@ class Task(patterns.Observable):
         relations.TaskRelationshipManager().stopManaging(self)
         
     def onNotify(self, notification, *args, **kwargs):
-        print 'Task.onNotify: %s'%notification
         notification = patterns.observer.Notification(self,  
             itemsChanged=[notification.source], effortsChanged=notification.effortsChanged)
         self.notifyObservers(notification, *args, **kwargs)       
@@ -34,12 +33,13 @@ class Task(patterns.Observable):
     def notifyObservers(self, notification, *args, **kwargs):
         if notification.changeNeedsSave:
             self.setLastModificationTime()
+        assert notification.source.__class__ == Task
         super(Task, self).notifyObservers(notification, *args, **kwargs)
 
     def __setstate__(self, state):
-        self.__dict__.update(state)
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
-
+        for attribute, newValue in state.items():
+            self.__setAttributeAndNotifyObservers(attribute, newValue)
+            
     def __getstate__(self):
         return { '_subject' : self._subject, 
             '_description' : self._description, '_id' : self._id, 
@@ -60,9 +60,12 @@ class Task(patterns.Observable):
             completionDateChanged = attribute == '_completiondate'
             dueDateChanged = attribute == '_duedate'
             startDateChanged = attribute == '_startdate'
-            self.notifyObservers(patterns.Notification(self, dueDateChanged=dueDateChanged, 
+            assert self.__class__ == Task
+            notification = patterns.Notification(self, dueDateChanged=dueDateChanged, 
                 completionDateChanged=completionDateChanged, startDateChanged=startDateChanged,
-                changeNeedsSave=True))
+                changeNeedsSave=True)
+            assert notification.source.__class__ == Task
+            self.notifyObservers(notification)
 
     def id(self):
         return self._id
@@ -120,6 +123,7 @@ class Task(patterns.Observable):
         return self.ancestors() + [self] + self.allChildren()
         
     def addChild(self, child):
+        assert child.__class__ != tasklist.TaskList
         if child not in self._children:
             self._children.append(child)
             child.setParent(self)
@@ -207,6 +211,7 @@ class Task(patterns.Observable):
         return self._efforts + childEfforts
         
     def addEffort(self, effort):
+        assert effort.__class__ != tasklist.TaskList
         self._efforts.append(effort)
         effort.registerObserver(self.notifyEffortChanged)
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, effortsAdded=[effort]))
