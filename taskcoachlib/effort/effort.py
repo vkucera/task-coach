@@ -6,7 +6,7 @@ class EffortBase(object):
         self._start = start
         self._stop = stop
         super(EffortBase, self).__init__(*args, **kwargs)
-        
+      
     def task(self):
         return self._task
 
@@ -33,6 +33,11 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         if self._stop == None:
             self.startClock()
 
+    def setTask(self, task):
+        if self in self._task.efforts():
+            self._task.removeEffort(self)
+        self._task = task
+        self._task.addEffort(self)
 
     def __str__(self):
         return 'Effort(%s, %s, %s)'%(self._task, self._start, self._stop)

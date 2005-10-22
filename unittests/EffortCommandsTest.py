@@ -4,12 +4,12 @@ class EffortCommandTestCase(test.wxTestCase, asserts.CommandAsserts):
     def setUp(self):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
-        self.task = task.Task()
-        self.taskList.append(self.task)
+        self.originalTask = task.Task()
+        self.taskList.append(self.originalTask)
         self.originalStop = date.DateTime.now() 
         self.originalStart = self.originalStop - date.TimeDelta(hours=1) 
-        self.effort = effort.Effort(self.task, self.originalStart, self.originalStop)
-        self.task.addEffort(self.effort)
+        self.effort = effort.Effort(self.originalTask, self.originalStart, self.originalStop)
+        self.originalTask.addEffort(self.effort)
 
     def undo(self):
         patterns.CommandHistory().undo()
@@ -19,16 +19,16 @@ class EffortCommandTestCase(test.wxTestCase, asserts.CommandAsserts):
            
 class NewEffortCommandTest(EffortCommandTestCase):        
     def testNewEffort(self):
-        newEffortCommand = command.NewEffortCommand(self.effortList, [self.task])
+        newEffortCommand = command.NewEffortCommand(self.effortList, [self.originalTask])
         newEffortCommand.do()
         newEffort = newEffortCommand.efforts[0]
         self.assertDoUndoRedo(
-            lambda: self.failUnless(newEffort in self.task.efforts()),
-            lambda: self.assertEqual([self.effort], self.task.efforts()))
+            lambda: self.failUnless(newEffort in self.originalTask.efforts()),
+            lambda: self.assertEqual([self.effort], self.originalTask.efforts()))
             
         
 class EditEffortCommandTest(EffortCommandTestCase):
-    def testEditEffort(self):
+    def testEditStartDateTime(self):
         edit = command.EditEffortCommand(self.effortList, [self.effort])
         expected = date.DateTime(2000,1,1)
         edit.items[0].setStart(expected)
@@ -37,37 +37,46 @@ class EditEffortCommandTest(EffortCommandTestCase):
             lambda: self.assertEqual(expected, self.effort.getStart()),
             lambda: self.assertEqual(self.originalStart, self.effort.getStart()))
 
+    def testEditTask(self):
+        edit = command.EditEffortCommand(self.effortList, [self.effort])
+        expected = task.Task()
+        edit.items[0].setTask(expected)
+        edit.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(expected, self.effort.task()),
+            lambda: self.assertEqual(self.originalTask, self.effort.task()))
+        
 
 class DeleteEffortCommandTest(EffortCommandTestCase):
     def testDeleteEffort(self):
         delete = command.DeleteEffortCommand(self.effortList, [self.effort])
         delete.do()
         self.assertDoUndoRedo(
-            lambda: self.assertEqual([], self.task.efforts()),
-            lambda: self.assertEqual([self.effort], self.task.efforts()))
+            lambda: self.assertEqual([], self.originalTask.efforts()),
+            lambda: self.assertEqual([self.effort], self.originalTask.efforts()))
 
 class StartAndStopEffortCommandTest(EffortCommandTestCase):
     def setUp(self):
         super(StartAndStopEffortCommandTest, self).setUp()
-        self.start = command.StartEffortCommand(self.taskList, [self.task])
+        self.start = command.StartEffortCommand(self.taskList, [self.originalTask])
         self.start.do()
         
     def testStart(self):
         self.assertDoUndoRedo(
-            lambda: self.failUnless(self.task.isBeingTracked()),
-            lambda: self.failIf(self.task.isBeingTracked()))
+            lambda: self.failUnless(self.originalTask.isBeingTracked()),
+            lambda: self.failIf(self.originalTask.isBeingTracked()))
                         
     def testStop(self):
         stop = command.StopEffortCommand(self.taskList)
         stop.do()
         self.assertDoUndoRedo(
-            lambda: self.failIf(self.task.isBeingTracked()),
-            lambda: self.failUnless(self.task.isBeingTracked()))
+            lambda: self.failIf(self.originalTask.isBeingTracked()),
+            lambda: self.failUnless(self.originalTask.isBeingTracked()))
                 
     def testStartStopsPreviousStart(self):
         task2 = task.Task()
         start = command.StartEffortCommand(self.taskList, [task2])
         start.do()
         self.assertDoUndoRedo(
-            lambda: self.failIf(self.task.isBeingTracked()),
-            lambda: self.failUnless(self.task.isBeingTracked()))
+            lambda: self.failIf(self.originalTask.isBeingTracked()),
+            lambda: self.failUnless(self.originalTask.isBeingTracked()))
