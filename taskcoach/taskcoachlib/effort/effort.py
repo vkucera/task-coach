@@ -34,6 +34,8 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
             self.startClock()
 
     def setTask(self, task):
+        if task == self._task:
+            return
         if self in self._task.efforts():
             self._task.removeEffort(self)
         self._task = task

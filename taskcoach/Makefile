@@ -2,11 +2,18 @@
 # simple website (intermediate files are in ./build, the files for the
 # website end up in ./dist)
 
-PYTHON="python"
-INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
-#WEBCHECKER="c:/Program Files/Python24/Tools/webchecker/webchecker.py" 
-WEBCHECKER="/usr/share/doc/python2.4/examples/Tools/webchecker/webchecker.py" 
-GETTEXT="pygettext"
+
+ifeq "$(OSTYPE)" "linux"
+    PYTHON="python"
+    WEBCHECKER="/usr/share/doc/python2.4/examples/Tools/webchecker/webchecker.py" 
+    GETTEXT="pygettext"
+else # cygwin:
+    PYTHON="python"
+    INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
+    WEBCHECKER="/cygdrive/i/Program Files/Python24/Tools/webchecker/webchecker.py" 
+    GETTEXT=python i:/Program\ Files/Python24/Tools/i18n/pygettext.py
+endif
+
 
 all: i18n windist sdist website
 
@@ -36,6 +43,12 @@ changes:
 	$(PYTHON) changes.in/make.py html > website.in/changes.html
  
 
+CLEANFILES=*.pyc */*.pyc */*/*.pyc dist build MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle
+REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/i18n/??_??.py
+
 clean:
-	rm -rf *.pyc */*.pyc */*/*.pyc dist build MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle
+	rm -rf $(CLEANFILES)
+
+reallyclean:
+	rm -rf $(CLEANFILES) $(REALLYCLEANFILES)
 

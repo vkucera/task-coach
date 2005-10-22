@@ -61,7 +61,7 @@ class MainWindow(WindowWithPersistentDimensions):
         viewerfactory.addTaskViewers(self.viewer, self.filteredTaskList, 
             self.uiCommands, self.settings)
         viewerfactory.addEffortViewers(self.viewer, self.effortList, 
-            self.uiCommands, self.settings, 'effortviewer')
+            self.filteredTaskList, self.uiCommands, self.settings, 'effortviewer')
         import status
         self.SetStatusBar(status.StatusBar(self, self.taskFile,
                           self.filteredTaskList, self.viewer))
