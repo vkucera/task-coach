@@ -95,3 +95,21 @@ class EffortTest(test.TestCase):
         date.Clock().notify()
         self.assertEqual(0, self.notifications)
         
+    def testSetTaskToNewTaskWhileEffortIsNotInOldTaskListOfEfforts(self):
+        task2 = task.Task()
+        self.effort.setTask(task2)
+        self.assertEqual([self.effort], task2.efforts())
+        self.failIf(self.effort in self.task.efforts())
+        
+    def testSetTaskToNewTaskWhileEffortIsInOldTaskListOfEfforts(self):
+        self.task.addEffort(self.effort)
+        task2 = task.Task()
+        self.effort.setTask(task2)
+        self.assertEqual([self.effort], task2.efforts())
+        self.failIf(self.effort in self.task.efforts())
+
+    def testSetTaskToOldTaskTwice(self):
+        self.task.addEffort(self.effort)
+        self.effort.setTask(self.task)
+        self.assertEqual([self.effort], self.task.efforts())
+        
