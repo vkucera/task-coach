@@ -386,13 +386,19 @@ class EffortViewer(Viewer):
         return status1, status2
  
     
-class EffortListViewer(ListViewer, EffortViewer):  
+class EffortListViewer(ListViewer, EffortViewer):
+    def __init__(self, *args, **kwargs):
+        self.taskList = kwargs.pop('taskList')
+        super(EffortListViewer, self).__init__(*args, **kwargs)
+        
     def createWidget(self):
-        # FIXME: Why are we creating uiCommands here? I forgot to document the reason.
+        # We need to create new uiCommands here, because the viewer might not
+        # be the effort viewer in the mainwindow, but the effort viewer in the 
+        # task edit window.
         uiCommands = {}
         uiCommands.update(self.uiCommands)
-        uiCommands['editeffort'] = uicommand.EffortEdit(self.parent, self.list, self, self.uiCommands)
-        uiCommands['deleteeffort'] = uicommand.EffortDelete(self.list, self)
+        uiCommands['editeffort'] = uicommand.EffortEdit(mainwindow=self.parent, effortList=self.list, filteredTaskList=self.taskList, viewer=self, uiCommands=self.uiCommands)
+        uiCommands['deleteeffort'] = uicommand.EffortDelete(effortList=self.list, viewer=self, filteredTaskList=self.taskList)
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr,
             self.onSelect, uiCommands['editeffort'], 

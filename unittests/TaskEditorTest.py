@@ -34,7 +34,7 @@ class TaskEditorTestCase(test.wxTestCase):
         
     def createEditor(self):
         return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
-            dummy.DummyUICommands(), config.Settings(load=False))
+            self.taskList, dummy.DummyUICommands(), config.Settings(load=False))
 
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
@@ -251,11 +251,14 @@ class EffortEditorTest(TaskEditorTestCase):
         return [theTask]
     
     def createEditor(self):
-        return gui.dialog.editor.EffortEditor(self.frame, self.createCommand(), {}, self.effortList)
+        return gui.dialog.editor.EffortEditor(self.frame, self.createCommand(), 
+            {}, self.effortList, self.taskList)
     
     def testCreate(self):
         self.assertEqual(self.effortList[0].getStart().date(), 
             self.editor[0]._startEntry.GetValue().date())
+        self.assertEqual(self.effortList[0].task().subject(), 
+            self.editor[0]._taskEntry.GetValue())
 
     def testOK(self):
         stop = self.effortList[0].getStop()

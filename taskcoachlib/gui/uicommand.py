@@ -156,38 +156,38 @@ class UIRadioCommand(BooleanSettingsCommand):
 
 
 class IOCommand(UICommand):
-    def __init__(self, iocontroller=None, *args, **kwargs):
-        self.iocontroller = iocontroller
+    def __init__(self, *args, **kwargs):
+        self.iocontroller = kwargs.pop('iocontroller', None)
         super(IOCommand, self).__init__(*args, **kwargs)
 
 
 class MainWindowCommand(UICommand):
-    def __init__(self, mainwindow=None, *args, **kwargs):
-        self.mainwindow = mainwindow
+    def __init__(self, *args, **kwargs):
+        self.mainwindow = kwargs.pop('mainwindow', None)
         super(MainWindowCommand, self).__init__(*args, **kwargs)
 
 
 class EffortCommand(UICommand):
-    def __init__(self, effortList=None, *args, **kwargs):
-        self.effortList = effortList
+    def __init__(self, *args, **kwargs):
+        self.effortList = kwargs.pop('effortList', None)
         super(EffortCommand, self).__init__(*args, **kwargs)
 
         
 class ViewerCommand(UICommand):
-    def __init__(self, viewer=None, *args, **kwargs):
-        self.viewer = viewer
+    def __init__(self, *args, **kwargs):
+        self.viewer = kwargs.pop('viewer', None)
         super(ViewerCommand, self).__init__(*args, **kwargs)
 
 
 class FilterCommand(UICommand):
-    def __init__(self, filteredTaskList=None, *args, **kwargs):
-        self.filteredTaskList = filteredTaskList
+    def __init__(self, *args, **kwargs):
+        self.filteredTaskList = kwargs.pop('filteredTaskList', None)
         super(FilterCommand, self).__init__(*args, **kwargs)
 
 
 class UICommandsCommand(UICommand):
-    def __init__(self, uiCommands=None, *args, **kwargs):
-        self.uiCommands = uiCommands
+    def __init__(self, *args, **kwargs):
+        self.uiCommands = kwargs.pop('uiCommands', None)
         super(UICommandsCommand, self).__init__(*args, **kwargs)    
 
 # Mixins: 
@@ -498,7 +498,7 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsComma
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
             command.NewTaskCommand(self.filteredTaskList),
-            self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap=self.bitmap)
+            self.filteredTaskList, self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap=self.bitmap)
         editor.Show(show)
 
 
@@ -513,7 +513,7 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
             command.NewSubTaskCommand(self.filteredTaskList, self.viewer.curselection()),
-            self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap='new')
+            self.filteredTaskList, self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap='new')
         editor.Show(show)
 
 
@@ -527,7 +527,7 @@ class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand,
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
             command.EditTaskCommand(self.filteredTaskList, self.viewer.curselection()), 
-            self.uiCommands, self.settings,
+            self.filteredTaskList, self.uiCommands, self.settings,
             self.filteredTaskList.categories())
         editor.Show(show)
 
@@ -561,22 +561,22 @@ class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
 
 
 class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand,
-        ViewerCommand, UICommandsCommand):
+        ViewerCommand, UICommandsCommand, FilterCommand):
     def __init__(self, *args, **kwargs):
         super(EffortNew, self).__init__(bitmap='start',  
             menuText=_('&New effort...'), 
-            helpText=_('Add a effort period to the selected task(s)'),
+            helpText=_('Add an effort period to the selected task(s)'),
             *args, **kwargs)
             
     def doCommand(self, event):
         editor = gui.EffortEditor(self.mainwindow, 
             command.NewEffortCommand(self.effortList, self.viewer.curselection()),
-            self.uiCommands, self.effortList)
+            self.uiCommands, self.effortList, self.filteredTaskList)
         editor.Show()
 
 
 class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand, 
-        ViewerCommand, UICommandsCommand):
+        ViewerCommand, UICommandsCommand, FilterCommand):
     def __init__(self, *args, **kwargs):
         super(EffortEdit, self).__init__(bitmap='edit',
             menuText=_('&Edit effort...'),
@@ -585,7 +585,7 @@ class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand,
     def doCommand(self, event):
         editor = gui.EffortEditor(self.mainwindow,
             command.EditEffortCommand(self.effortList, self.viewer.curselection()),
-            self.uiCommands, self.effortList)
+            self.uiCommands, self.effortList, self.filteredTaskList)
         editor.Show()
 
 
@@ -854,9 +854,9 @@ class UICommands(dict):
         
         # Effort menu
         self['neweffort'] = EffortNew(mainwindow=mainwindow, effortList=effortList,
-            viewer=viewer, uiCommands=self)
+            viewer=viewer, uiCommands=self, filteredTaskList=filteredTaskList)
         self['editeffort'] = EffortEdit(mainwindow=mainwindow, effortList=effortList, 
-            viewer=viewer, uiCommands=self)
+            viewer=viewer, uiCommands=self, filteredTaskList=filteredTaskList)
         self['deleteeffort'] = EffortDelete(effortList=effortList, viewer=viewer)
         self['starteffort'] = EffortStart(filteredTaskList=filteredTaskList, viewer=viewer)
         self['stopeffort'] = EffortStop(filteredTaskList=filteredTaskList)

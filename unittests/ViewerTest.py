@@ -50,5 +50,5 @@ class CompositeEffortListViewerTest(test.wxTestCase):
         taskList.append(aTask)
         effortList = effort.EffortList(taskList)
         viewer = dummy.EffortPerDayViewerWithDummyWidget(self.frame, 
-            effortList, {}, self.settings)
+            effortList, {}, self.settings, taskList=taskList)
         self.assertEqual('0:00:00', viewer.getItemText(0, 'Time spent'))

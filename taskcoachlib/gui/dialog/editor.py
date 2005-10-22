@@ -114,13 +114,13 @@ class BudgetPage(widgets.BookPage):
 
 
 class EffortPage(widgets.BookPage):        
-    def __init__(self, parent, task, settings, uiCommands, *args, **kwargs):
+    def __init__(self, parent, task, taskList, settings, uiCommands, *args, **kwargs):
         super(EffortPage, self).__init__(parent, columns=1, *args, **kwargs)
         from gui import viewercontainer, viewerfactory
         import effort
         viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 'effortviewerineditor')
         myEffortList = effort.SingleTaskEffortList(task)
-        viewerfactory._addEffortViewers(viewerContainer, myEffortList, uiCommands, settings)
+        viewerfactory._addEffortViewers(viewerContainer, myEffortList, taskList, uiCommands, settings)
         self.addEntry(None, viewerContainer, growable=True)
 
 
@@ -160,31 +160,43 @@ class CategoriesPage(widgets.BookPage):
 
 
 class TaskEditBook(widgets.Listbook):
-    def __init__(self, parent, task, uiCommands, settings, categories, *args, **kwargs):
+    def __init__(self, parent, task, taskList, uiCommands, settings, categories, *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(SubjectPage(self, task), _('Description'), 'description')
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
         self.AddPage(CategoriesPage(self, task, categories), _('Categories'), 'category')
         self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')        
         if task.timeSpent(recursive=True):
-            effortPage = EffortPage(self, task, settings, uiCommands)
+            effortPage = EffortPage(self, task, taskList, settings, uiCommands)
             self.AddPage(effortPage, _('Effort'), 'start')
                   
 
 class EffortEditBook(widgets.BookPage):
-    def __init__(self, parent, effort, editor, effortList, *args, **kwargs):
+    def __init__(self, parent, effort, editor, effortList, taskList, *args, **kwargs):
         super(EffortEditBook, self).__init__(parent, columns=3, *args, **kwargs)
         self._editor = editor
         self._effort = effort
         self._effortList = effortList
+        self._taskList = taskList
+        self.addTaskEntry()
         self.addStartAndStopEntries()
         self.addDescriptionEntry()
+        
+    def addTaskEntry(self):
+        self._taskEntry = wx.ComboBox(self, style=wx.CB_READONLY|wx.CB_SORT)
+        for task in self._taskList:
+            self._taskEntry.Append(render.subject(task, recursively=True), task)
+        self._taskEntry.SetStringSelection(render.subject(self._effort.task(),
+            recursively=True))
+        self.addEntry(_('Task'), self._taskEntry)
         
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
             self.preventNegativeEffortDuration, noneAllowed=False)
-        startFromLastEffortButton = wx.Button(self, -1, _('Start tracking from last stop time'))
-        self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, startFromLastEffortButton) 
+        startFromLastEffortButton = wx.Button(self, -1, 
+            _('Start tracking from last stop time'))
+        self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, 
+            startFromLastEffortButton) 
         if self._effortList.maxDateTime() is None:
             startFromLastEffortButton.Disable()
         
@@ -204,6 +216,7 @@ class EffortEditBook(widgets.BookPage):
         self.addEntry(_('Description'), self._descriptionEntry)
         
     def ok(self):
+        self._effort.setTask(self._taskEntry.GetClientData(self._taskEntry.GetSelection()))
         self._effort.setStart(self._startEntry.GetValue())
         self._effort.setStop(self._stopEntry.GetValue())
         self._effort.setDescription(self._descriptionEntry.GetValue())
@@ -229,8 +242,9 @@ class EditorWithCommand(widgets.NotebookDialog):
 
             
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, uiCommands, settings, categories=None, bitmap='edit', *args, **kwargs):
+    def __init__(self, parent, command, taskList, uiCommands, settings, categories=None, bitmap='edit', *args, **kwargs):
         self._settings = settings
+        self._taskList = taskList
         self._categories = list(categories or [])
         super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
@@ -244,20 +258,22 @@ class TaskEditor(EditorWithCommand):
             self.addPage(task)
 
     def addPage(self, task):
-        page = TaskEditBook(self._interior, task, self._uiCommands, self._settings, self._categories)
+        page = TaskEditBook(self._interior, task, self._taskList, self._uiCommands, self._settings, self._categories)
         self._interior.AddPage(page, task.subject())
         
     
 class EffortEditor(EditorWithCommand):
-    def __init__(self, parent, command, uiCommands, effortList, *args, **kwargs):
+    def __init__(self, parent, command, uiCommands, effortList, taskList, *args, **kwargs):
         self._effortList = effortList
+        self._taskList = taskList
         super(EffortEditor, self).__init__(parent, command, uiCommands, *args, **kwargs)
         
     def addPages(self):
-        for effort in self._command.items: # FIXME: use getter
+        for effort in self._command.efforts: # FIXME: use getter
             self.addPage(effort)
 
     def addPage(self, effort):
-        page = EffortEditBook(self._interior, effort, self, self._effortList)
+        page = EffortEditBook(self._interior, effort, self, self._effortList, 
+            self._taskList)
         self._interior.AddPage(page, effort.task().subject())
 
