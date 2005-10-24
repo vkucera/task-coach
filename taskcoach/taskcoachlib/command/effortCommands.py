@@ -53,11 +53,11 @@ class DeleteEffortCommand(base.BaseCommand):
         self.efforts = self.items # FIXME: hack
 
     def do_command(self):
-        for effort in self.efforts:
-            effort.task().removeEffort(effort)
+        self.list.removeItems(self.efforts)
 
     def undo_command(self):
-        for effort in self.efforts:
-            effort.task().addEffort(effort)
+        self.list.extend(self.efforts)
 
-    redo_command = do_command
+    def redo_command(self):
+        self.list.removeItems(self.efforts)
+

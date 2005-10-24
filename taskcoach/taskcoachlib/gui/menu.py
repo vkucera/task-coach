@@ -210,7 +210,7 @@ class HelpMenu(Menu):
 class TaskBarMenu(Menu):
     def __init__(self, taskBarIcon, uiCommands):
         super(TaskBarMenu, self).__init__(taskBarIcon)
-        self.appendUICommands(uiCommands, ['new', 'stopeffort', None, 'restore', 'quit'])
+        self.appendUICommands(uiCommands, ['new', 'neweffort', 'stopeffort', None, 'restore', 'quit'])
 
 
 class TaskPopupMenu(Menu):
@@ -226,7 +226,7 @@ class TaskPopupMenu(Menu):
 class EffortPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(EffortPopupMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['new', None, 'editeffort', 'deleteeffort',
+        self.appendUICommands(uiCommands, ['new', None, 'neweffort', 'editeffort', 'deleteeffort',
             None, 'stopeffort'])
 
 

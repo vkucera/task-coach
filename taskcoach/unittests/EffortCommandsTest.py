@@ -8,7 +8,8 @@ class EffortCommandTestCase(test.wxTestCase, asserts.CommandAsserts):
         self.taskList.append(self.originalTask)
         self.originalStop = date.DateTime.now() 
         self.originalStart = self.originalStop - date.TimeDelta(hours=1) 
-        self.effort = effort.Effort(self.originalTask, self.originalStart, self.originalStop)
+        self.effort = effort.Effort(self.originalTask, self.originalStart, 
+                                    self.originalStop)
         self.originalTask.addEffort(self.effort)
 
     def undo(self):
@@ -19,13 +20,14 @@ class EffortCommandTestCase(test.wxTestCase, asserts.CommandAsserts):
            
 class NewEffortCommandTest(EffortCommandTestCase):        
     def testNewEffort(self):
-        newEffortCommand = command.NewEffortCommand(self.effortList, [self.originalTask])
+        newEffortCommand = command.NewEffortCommand(self.effortList, 
+                                                    [self.originalTask])
         newEffortCommand.do()
         newEffort = newEffortCommand.efforts[0]
         self.assertDoUndoRedo(
             lambda: self.failUnless(newEffort in self.originalTask.efforts()),
             lambda: self.assertEqual([self.effort], self.originalTask.efforts()))
-            
+
         
 class EditEffortCommandTest(EffortCommandTestCase):
     def testEditStartDateTime(self):
@@ -45,6 +47,45 @@ class EditEffortCommandTest(EffortCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(expected, self.effort.task()),
             lambda: self.assertEqual(self.originalTask, self.effort.task()))
+
+
+class EditEffortCommandNotificationTest(EffortCommandTestCase):
+    def setUp(self):
+        super(EditEffortCommandNotificationTest, self).setUp()
+        self.originalTask.registerObserver(self.onNotify)
+        self.edit = command.EditEffortCommand(self.effortList, [self.effort])
+        newTask = task.Task()
+        newTask.registerObserver(self.onNotify)
+        self.edit.items[0].setTask(newTask)
+        self.edit.do()        
+    
+    def clearNotifications(self):           
+        self.notifiedOfEffortRemoved = False
+        self.notifiedOfEffortAdded = False
+        
+    def onNotify(self, notification, *args, **kwargs):
+        if notification.effortsRemoved:
+            self.notifiedOfEffortRemoved = True
+        elif notification.effortsAdded:
+            self.notifiedOfEffortAdded = True
+            
+    def assertNotifiedOfEffortsAddedAndRemoved(self):
+        self.failUnless(self.notifiedOfEffortRemoved and \
+                        self.notifiedOfEffortAdded)
+            
+    def testEditTaskNotifiesOldAndNewTaskAfterDo(self):
+        self.assertNotifiedOfEffortsAddedAndRemoved()
+        
+    def testEditTaskNotifiesOldAndNewTaskAfterUndo(self):
+        self.clearNotifications()
+        self.edit.undo()
+        self.assertNotifiedOfEffortsAddedAndRemoved()
+
+    def testEditTaskNotifiesOldAndNewTaskAfterRedo(self):
+        self.edit.undo()
+        self.clearNotifications()
+        self.edit.redo()
+        self.assertNotifiedOfEffortsAddedAndRemoved()
         
 
 class DeleteEffortCommandTest(EffortCommandTestCase):

@@ -48,9 +48,14 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         return {'_task' : self._task, '_start' : self._start, '_stop' : self._stop }
         
     def __setstate__(self, state):
-        self.__dict__.update(state)
+        # FIXME: we have to treat _task differently, see the action that 
+        # goes on in setTask(), but I don't like it
+        # FIXME: duplicstion with Task.__setstate__
+        task = state.pop('_task')
+        self.setTask(task)
+        self.__dict__.update(state)      
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
-    
+   
     def __copy__(self):
         return Effort(self._task, self._start, self._stop)            
        

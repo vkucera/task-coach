@@ -10,27 +10,21 @@ class SaveTaskStateMixin(base.SaveStateMixin):
         return ancestors
 
 
-class DeleteTaskCommand(base.BaseCommand, SaveTaskStateMixin):
+class DeleteTaskCommand(base.BaseCommand):
     def name(self):
         return _('Delete task')
 
     def __init__(self, *args, **kwargs):
         super(DeleteTaskCommand, self).__init__(*args, **kwargs)
-        self.saveStates(self.getTasksToSave())
-
-    def getTasksToSave(self):
-        return self.getAncestors(self.items)
 
     def do_command(self):
         self.list.removeItems(self.items)
 
     def undo_command(self):
-        self.undoStates()
         self.list.extend(self.items)
 
     def redo_command(self):
         self.list.removeItems(self.items)
-        self.redoStates()
 
 
 class CutTaskCommand(DeleteTaskCommand):
@@ -80,28 +74,31 @@ class PasteTaskCommand(base.BaseCommand, SaveTaskStateMixin):
 
     def __init__(self, *args, **kwargs):
         super(PasteTaskCommand, self).__init__(*args, **kwargs)
-        self.tasksToPaste = task.Clipboard().get()
-        self.saveStates(self.tasksToPaste)
+        self.__tasksToPaste = task.Clipboard().get()
+        self.saveStates(self.getTasksToSave())
 
+    def getTasksToSave(self):
+        return self.__tasksToPaste
+    
     def canDo(self):
-        return bool(self.tasksToPaste)
+        return bool(self.__tasksToPaste)
         
     def do_command(self):
         self.setParentOfPastedTasks()
-        self.list.extend(self.tasksToPaste)
+        self.list.extend(self.__tasksToPaste)
 
     def undo_command(self):
-        self.list.removeItems(self.tasksToPaste)
+        self.list.removeItems(self.__tasksToPaste)
         self.undoStates()
-        task.Clipboard().put(self.tasksToPaste)
+        task.Clipboard().put(self.__tasksToPaste)
         
     def redo_command(self):
         task.Clipboard().clear() 
         self.redoStates()
-        self.list.extend(self.tasksToPaste)
+        self.list.extend(self.__tasksToPaste)
 
     def setParentOfPastedTasks(self, newParent=None):
-        for task in self.tasksToPaste:
+        for task in self.__tasksToPaste:
             task.setParent(newParent) 
 
 
@@ -109,21 +106,14 @@ class PasteTaskAsSubtaskCommand(PasteTaskCommand):
     def name(self):
         return _('Paste as subtask')
 
-    def __init__(self, *args, **kwargs):
-        super(PasteTaskAsSubtaskCommand, self).__init__(*args, **kwargs)
-        self.saveStates(self.getTasksToSave())
-
-    def do_command(self):
-        super(PasteTaskAsSubtaskCommand, self).do_command()
-
     def setParentOfPastedTasks(self):
         newParent = self.items[0]
         super(PasteTaskAsSubtaskCommand, self).setParentOfPastedTasks(newParent)
 
     def getTasksToSave(self):
         parents = [task for task in [self.items[0]] if task.completed()]
-        return parents + self.getAncestors(parents)
-
+        return parents + self.getAncestors(parents) + \
+            super(PasteTaskAsSubtaskCommand, self).getTasksToSave()
 
 
 class NewTaskCommand(base.BaseCommand):

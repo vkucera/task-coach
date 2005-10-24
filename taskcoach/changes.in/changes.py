@@ -6,7 +6,8 @@ releases = [
 Release('0.51', 'October ?, 2005',
     featuresAdded=[
         Feature('''Escape closes pop-up windows. Patch provided by
-Markus Meyer.''', '1241547')],
+Markus Meyer.''', '1241547'),
+        Feature('''The task of an effort record can be changed.''')],
     bugsFixed=[
         Bug('''Hitting enter in the find dialog didn't work on Linux.'''),
         Bug('''Old TaskCoach.ini files with a language setting of 'en' instead

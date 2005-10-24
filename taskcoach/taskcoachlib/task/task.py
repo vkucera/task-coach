@@ -60,11 +60,9 @@ class Task(patterns.Observable):
             completionDateChanged = attribute == '_completiondate'
             dueDateChanged = attribute == '_duedate'
             startDateChanged = attribute == '_startdate'
-            assert self.__class__ == Task
             notification = patterns.Notification(self, dueDateChanged=dueDateChanged, 
                 completionDateChanged=completionDateChanged, startDateChanged=startDateChanged,
                 changeNeedsSave=True)
-            assert notification.source.__class__ == Task
             self.notifyObservers(notification)
 
     def id(self):
