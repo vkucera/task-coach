@@ -1,4 +1,5 @@
-import patterns
+import patterns, task
+from i18n import _
 
 class BaseCommand(patterns.Command):
     def __init__(self, list, items=None, *args, **kwargs):
@@ -63,4 +64,33 @@ class SaveStateMixin:
     def __setStates(self, states):
         for object, state in zip(self.objectsToBeSaved, states):
             object.__setstate__(state)
+
+
+class CopyCommand(BaseCommand):
+    def name(self):
+        return _('Copy')
+
+    def do_command(self):
+        self.__copies = [item.copy() for item in self.items]
+        task.Clipboard().put(self.__copies)
+
+    def undo_command(self):
+        task.Clipboard().clear()
+
+    def redo_command(self):
+        task.Clipboard().put(self.__copies)
+
+        
+class DeleteCommand(BaseCommand):
+    def name(self):
+        return _('Delete')
+
+    def do_command(self):
+        self.list.removeItems(self.items)
+
+    def undo_command(self):
+        self.list.extend(self.items)
+
+    def redo_command(self):
+        self.list.removeItems(self.items)
 

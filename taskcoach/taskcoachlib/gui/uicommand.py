@@ -352,7 +352,7 @@ class EditCopy(NeedsSelectedTasks, FilterCommand, ViewerCommand): # FIXME: only 
             *args, **kwargs)
 
     def doCommand(self, event):
-        copyCommand = command.CopyTaskCommand(self.filteredTaskList, self.viewer.curselection())
+        copyCommand = command.CopyCommand(self.filteredTaskList, self.viewer.curselection())
         copyCommand.do()
 
 class EditPaste(FilterCommand):
@@ -557,7 +557,7 @@ class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
             helpText=_('Delete the selected task(s)'), *args, **kwargs)
 
     def doCommand(self, event):
-        deleteCommand = command.DeleteTaskCommand(self.filteredTaskList, 
+        deleteCommand = command.DeleteCommand(self.filteredTaskList, 
             self.viewer.curselection())
         deleteCommand.do()
 

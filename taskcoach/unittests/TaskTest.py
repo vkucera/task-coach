@@ -118,7 +118,7 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
                     grandchildIndex))
                 child.addChild(grandChild)
         copy = original.copy()
-        self.assertCopy(original, copy)
+        self.assertTaskCopy(original, copy)
         self.assertEqual(original.parent(), copy.parent())
 
     def testDescription_Default(self):
