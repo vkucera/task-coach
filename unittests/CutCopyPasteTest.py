@@ -1,5 +1,6 @@
 import test, task, command
-from TaskCommandsTest import CommandTestCase, CommandWithChildrenTestCase
+from TaskCommandsTest import CommandTestCase, CommandWithChildrenTestCase, \
+    CommandWithEffortTestCase
 
 class CutCommandTest(CommandTestCase):
     def testCut_WithoutSelection(self):
@@ -168,32 +169,52 @@ class CutAndPasteWithChildrenIntegrationTest(CommandWithChildrenTestCase):
         self.failIf(self.child.children())
         
 
-class CopyCommandTest(CommandTestCase):
-    def copy(self, tasks=None):
-        tasks = tasks or []
-        command.CopyTaskCommand(self.taskList, tasks).do()
+class CopyCommandWithTasksTest(CommandTestCase):
+    def testCopyTaskWithoutSelection(self):
+        self.copy([])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual([], task.Clipboard().get()),
+                    self.assertTaskList(self.originalList))
 
-    def testCopyWithoutSelection(self):
-        command.CopyTaskCommand(self.taskList, []).do()
-        self.assertEqual([], task.Clipboard().get())
-        self.assertTaskList(self.originalList)
-
-    def testCopy(self):
+    def testCopyTask(self):
         self.copy([self.task1])
         copiedTask = task.Clipboard().get()[0]
-        self.assertDoUndoRedo(lambda: (self.assertCopy(self.task1, copiedTask),
+        self.assertDoUndoRedo(lambda: (self.assertTaskCopy(self.task1, copiedTask),
             self.assertTaskList(self.originalList)),
             lambda: (self.assertTaskList(self.originalList),
             self.failIf(task.Clipboard())))
 
 
-class CopyCommandWithChildrenTest(CommandWithChildrenTestCase):
-
+class CopyCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
     def testCopy(self):
         self.copy([self.parent])
         copiedTask = task.Clipboard().get()[0]
         self.assertDoUndoRedo(
-            lambda: self.assertCopy(self.parent, copiedTask),
+            lambda: self.assertTaskCopy(self.parent, copiedTask),
             lambda: (self.assertTaskList(self.originalList),
             self.failIf(task.Clipboard())))
 
+
+class CopyCommandWithEffortTest(CommandWithEffortTestCase):
+    def testCopyEffortWithoutSelection(self):
+        self.copy([])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual([], task.Clipboard().get()),
+                    self.assertEffortList(self.originalEffortList))
+        
+    def testCopyEffort(self):
+        self.copy([self.effort1])
+        copiedEffort = task.Clipboard().get()[0]
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(self.effort1, copiedEffort),
+            lambda: (self.assertEffortList(self.originalEffortList),
+            self.failIf(task.Clipboard())))
+            
+    def testCopyMultipleEfforts(self):
+        self.copy([self.effort1, self.effort2])
+        copiedEfforts = task.Clipboard().get()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqualLists([self.effort1, self.effort2], copiedEfforts),
+            lambda: (self.assertEffortList(self.originalEffortList),
+            self.failIf(task.Clipboard())))
+        

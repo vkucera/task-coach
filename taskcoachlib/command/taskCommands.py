@@ -10,24 +10,7 @@ class SaveTaskStateMixin(base.SaveStateMixin):
         return ancestors
 
 
-class DeleteTaskCommand(base.BaseCommand):
-    def name(self):
-        return _('Delete task')
-
-    def __init__(self, *args, **kwargs):
-        super(DeleteTaskCommand, self).__init__(*args, **kwargs)
-
-    def do_command(self):
-        self.list.removeItems(self.items)
-
-    def undo_command(self):
-        self.list.extend(self.items)
-
-    def redo_command(self):
-        self.list.removeItems(self.items)
-
-
-class CutTaskCommand(DeleteTaskCommand):
+class CutTaskCommand(base.DeleteCommand):
     def name(self):
         return _('Cut')
 
@@ -51,22 +34,7 @@ class CutTaskCommand(DeleteTaskCommand):
     def redo_command(self):
         self.putTasksOnClipboard()
         super(CutTaskCommand, self).redo_command()
-
-
-class CopyTaskCommand(base.BaseCommand):
-    def name(self):
-        return _('Copy')
-
-    def do_command(self):
-        self.copies = [origTask.copy() for origTask in self.items]
-        task.Clipboard().put(self.copies)
-
-    def undo_command(self):
-        task.Clipboard().clear()
-
-    def redo_command(self):
-        task.Clipboard().put(self.copies)
-        
+     
 
 class PasteTaskCommand(base.BaseCommand, SaveTaskStateMixin):
     def name(self):

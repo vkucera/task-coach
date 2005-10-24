@@ -56,8 +56,8 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         self.__dict__.update(state)      
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
    
-    def __copy__(self):
-        return Effort(self._task, self._start, self._stop)            
+    def copy(self):
+        return Effort(self._task, self._start, self._stop, self._description)            
        
     def duration(self, now=date.DateTime.now):
         if self._stop:

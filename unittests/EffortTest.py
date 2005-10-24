@@ -57,8 +57,7 @@ class EffortTest(test.TestCase):
         self.failUnless(self.effort > newEffort)
         
     def testCopy(self):
-        import copy
-        copyEffort = copy.copy(self.effort)
+        copyEffort = self.effort.copy()
         self.assertEqual(copyEffort, self.effort)
         self.assertEqual(copyEffort.getDescription(), self.effort.getDescription())
         

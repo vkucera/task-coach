@@ -1,11 +1,16 @@
-class TaskListAsserts:
-    def assertEqualTaskLists(self, expected, actual):
+class ListAsserts(object):
+    def assertEqualLists(self, expected, actual):
         self.assertEqual(len(expected), len(actual))
-        for task in expected:
-            self.failUnless(task in actual)
+        for item in expected:
+            self.failUnless(item in actual)
 
+    def assertEmptyList(self, list):
+        self.assertEqual(0, len(list))
+        
+        
+class TaskListAsserts(ListAsserts):
     def assertTaskList(self, expected):
-        self.assertEqualTaskLists(expected, self.taskList)
+        self.assertEqualLists(expected, self.taskList)
         self.assertAllChildrenInTaskList()
 
     def assertAllChildrenInTaskList(self):
@@ -14,10 +19,15 @@ class TaskListAsserts:
                 self.failUnless(child in self.taskList)
 
     def assertEmptyTaskList(self):
-        self.assertEqual(0, len(self.taskList))
+        self.assertEmptyList(self.taskList)
 
 
-class TaskAsserts:
+class EffortListAsserts(ListAsserts):
+    def assertEffortList(self, expected):
+        self.assertEqualLists(expected, self.effortList)
+        
+
+class TaskAsserts(object):
     def failIfParentAndChild(self, parent, child):
         self.failIf(child in parent.children())
         if child.parent():
@@ -30,7 +40,7 @@ class TaskAsserts:
         self.failUnless(child in parent.children())
         self.failUnless(child.parent() == parent)
 
-    def assertCopy(self, orig, copy):
+    def assertTaskCopy(self, orig, copy):
         self.failIf(orig == copy)
         self.assertEqual(orig.subject(), copy.subject())
         self.assertEqual(orig.dueDate(), copy.dueDate())
@@ -41,10 +51,10 @@ class TaskAsserts:
         self.assertEqual(orig.completionDate(), copy.completionDate())
         self.assertEqual(len(orig.children()), len(copy.children()))
         for origChild, copyChild in zip(orig.children(), copy.children()):
-            self.assertCopy(origChild, copyChild)
+            self.assertTaskCopy(origChild, copyChild)
+      
 
-
-class CommandAsserts:
+class CommandAsserts(object):
     def assertHistoryAndFuture(self, expectedHistory, expectedFuture):
         import patterns
         commands = patterns.CommandHistory()
@@ -63,5 +73,5 @@ class CommandAsserts:
         self.redo()
         assertRedone()
 
-class Mixin(CommandAsserts, TaskAsserts, TaskListAsserts):
+class Mixin(CommandAsserts, TaskAsserts, TaskListAsserts, EffortListAsserts):
     pass

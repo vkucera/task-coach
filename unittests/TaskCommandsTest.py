@@ -2,7 +2,7 @@ import test, asserts, command, task, patterns, dummy, effort, date
 
 class CommandTestCase(test.wxTestCase, asserts.Mixin):
     def setUp(self):
-        self.taskList = task.TaskList()
+        self.list = self.taskList = task.TaskList()
         self.task1 = task.Task('task1')
         self.task2 = task.Task('task2')
         self.taskList.append(self.task1)
@@ -18,10 +18,10 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
     def redo(self):
         patterns.CommandHistory().redo()
 
-    def delete(self, tasks=None):
-        if tasks == 'all':
-            tasks = self.taskList[:]
-        command.DeleteTaskCommand(self.taskList, tasks or []).do()
+    def delete(self, items=None):
+        if items == 'all':
+            items = self.list[:]
+        command.DeleteCommand(self.list, items or []).do()
  
     def cut(self, tasks=None):
         if tasks == 'all':
@@ -34,9 +34,9 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
         else:
             command.PasteTaskCommand(self.taskList).do()
 
-    def copy(self, tasks=None):
-        command.CopyTaskCommand(self.taskList, tasks or []).do()
-
+    def copy(self, items=None):
+        command.CopyCommand(self.list, items or []).do()
+        
     def markCompleted(self, tasks=None):
         command.MarkCompletedCommand(self.taskList, tasks or []).do()
 
@@ -66,14 +66,17 @@ class CommandWithChildrenTestCase(CommandTestCase):
 class CommandWithEffortTestCase(CommandTestCase):
     def setUp(self):
         super(CommandWithEffortTestCase, self).setUp()
-        self.effortList = effort.EffortList(self.taskList)
-        self.task1.addEffort(effort.Effort(self.task1))
-        self.task2.addEffort(effort.Effort(self.task2, 
-            date.DateTime(2004,1,1), date.DateTime(2004,1,2)))
+        self.list = self.effortList = effort.EffortList(self.taskList)
+        self.effort1 = effort.Effort(self.task1)
+        self.task1.addEffort(self.effort1)
+        self.effort2 = effort.Effort(self.task2, 
+            date.DateTime(2004,1,1), date.DateTime(2004,1,2))
+        self.task2.addEffort(self.effort2)
         self.taskList.append(self.task2)
+        self.originalEffortList = [self.effort1, self.effort2]
 
-        
-class DeleteCommandTest(CommandTestCase):
+
+class DeleteCommandWithTasksTest(CommandTestCase):
     def testDeleteAllTasks(self):
         self.taskList.append(self.task2)
         self.delete('all')
@@ -102,7 +105,7 @@ class DeleteCommandTest(CommandTestCase):
             lambda: self.assertTaskList(self.originalList))
         
 
-class DeleteCommandWithChildrenTest(CommandWithChildrenTestCase):
+class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
     def assertDeleteWorks(self):
         self.assertDoUndoRedo(self.assertParentAndAllChildrenDeleted,
             self.assertTaskListUnchanged)
@@ -135,12 +138,21 @@ class DeleteCommandWithChildrenTest(CommandWithChildrenTestCase):
             lambda: self.failIf(self.parent.completed()))
 
 
-class DeleteCommandWithEffortTest(CommandWithEffortTestCase):
+class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
     def testDeleteActiveTask(self):
+        self.list = self.taskList
         self.delete([self.task1])
         self.assertDoUndoRedo(
             lambda: self.assertEqual(1, len(self.effortList)),
             lambda: self.assertEqual(2, len(self.effortList)))
+            
+    def testDeleteEffort(self):
+        self.delete([self.effort1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(1, len(self.effortList)) and \
+                self.assertEqual(0, len(self.task1.efforts())),
+            lambda: self.assertEqual(2, len(self.effortList)) and \
+                self.assertEqual(1, len(self.task1.efforts())))
 
 
 class NewTaskCommandTest(CommandTestCase):
@@ -169,7 +181,7 @@ class NewSubTaskCommandTest(CommandTestCase):
 
     def assertNewSubTask(self, newSubTask):
         self.assertEqual(len(self.originalList)+1, len(self.taskList))
-        self.assertEqualTaskLists([newSubTask], self.task1.children())
+        self.assertEqualLists([newSubTask], self.task1.children())
 
     def testNewSubTask_MarksParentAsNotCompleted(self):
         self.markCompleted([self.task1])
