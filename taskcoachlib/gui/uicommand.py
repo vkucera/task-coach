@@ -1,5 +1,6 @@
 import wx, task, patterns, config, gui, meta, command
 from gui.dialog import helpdialog
+from gui import render
 from i18n import _
 
 
@@ -204,14 +205,15 @@ class NeedsSelectedEffort(NeedsSelection):
     def enabled(self):
         return super(NeedsSelectedEffort, self).enabled() and self.viewer.isShowingEffort()
                
-class NeedsTasks(object):
+class NeedsAtLeastOneTask(object):
     def enabled(self):
-        return self.viewer.isShowingTasks()
+        return len(self.filteredTaskList) > 0
         
 class NeedsItems(object):
     def enabled(self):
         return self.viewer.size() 
 
+#class Needs
  
 # Commands:
 
@@ -560,7 +562,7 @@ class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         deleteCommand.do()
 
 
-class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand,
+class EffortNew(NeedsAtLeastOneTask, MainWindowCommand, EffortCommand,
         ViewerCommand, UICommandsCommand, FilterCommand):
     def __init__(self, *args, **kwargs):
         super(EffortNew, self).__init__(bitmap='start',  
@@ -569,8 +571,14 @@ class EffortNew(NeedsSelectedTasks, MainWindowCommand, EffortCommand,
             *args, **kwargs)
             
     def doCommand(self, event):
+        if self.viewer.isShowingTasks() and self.viewer.curselection():
+            selectedTasks = self.viewer.curselection()
+        else:
+            subjectDecoratedTaskList = [(render.subject(task, recursively=True), task) for task in self.filteredTaskList]
+            subjectDecoratedTaskList.sort() # Sort by subject
+            selectedTasks = [subjectDecoratedTaskList[0][1]]
         editor = gui.EffortEditor(self.mainwindow, 
-            command.NewEffortCommand(self.effortList, self.viewer.curselection()),
+            command.NewEffortCommand(self.effortList, selectedTasks),
             self.uiCommands, self.effortList, self.filteredTaskList)
         editor.Show()
 

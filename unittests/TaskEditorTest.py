@@ -246,9 +246,11 @@ class EffortEditorTest(TaskEditorTestCase):
         return command.EditEffortCommand(self.effortList, self.effortList)
         
     def createTasks(self):
-        theTask = task.Task()
-        theTask.addEffort(effort.Effort(theTask))
-        return [theTask]
+        self.task1 = task.Task()
+        self.effort = effort.Effort(self.task1)
+        self.task1.addEffort(self.effort)
+        self.task2 = task.Task('task2')
+        return [self.task1, self.task2]
     
     def createEditor(self):
         return gui.dialog.editor.EffortEditor(self.frame, self.createCommand(), 
@@ -270,3 +272,9 @@ class EffortEditorTest(TaskEditorTestCase):
         self.editor = self.createEditor()
         self.editor._interior[0].preventNegativeEffortDuration()
         self.failIf(self.editor._buttonBox._buttons['OK'].IsEnabled())
+        
+    def testChangeTask(self):
+        self.editor[0]._taskEntry.SetValue('task2')
+        self.editor.ok()
+        self.assertEqual(self.task2, self.effortList[0].task())
+        self.failIf(self.effort in self.task1.efforts())

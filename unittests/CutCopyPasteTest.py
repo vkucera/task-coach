@@ -142,6 +142,13 @@ class CutAndPasteWithChildrenIntegrationTest(CommandWithChildrenTestCase):
         self.undo()
         self.undo()
         self.assertTaskListUnchanged()
+        
+    def testUndoCutAndPasteAsSubtask(self):
+        self.cut([self.child])
+        self.paste([self.child2])
+        self.undo()
+        self.undo()
+        self.assertTaskListUnchanged()
 
     def testUndoCutAndPasteParentAndGrandChild(self):
         self.cut([self.parent, self.grandchild])
