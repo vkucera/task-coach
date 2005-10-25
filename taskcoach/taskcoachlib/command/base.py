@@ -94,3 +94,28 @@ class DeleteCommand(BaseCommand):
     def redo_command(self):
         self.list.removeItems(self.items)
 
+
+class CutCommand(DeleteCommand):
+    def name(self):
+        return _('Cut')
+
+    def __putItemsOnClipboard(self):
+        cb = task.Clipboard()
+        self.__previousClipboardContents = cb.get()
+        cb.put(self.items)
+
+    def __removeItemsFromClipboard(self):
+        cb = task.Clipboard()
+        cb.put(self.__previousClipboardContents)
+
+    def do_command(self):
+        self.__putItemsOnClipboard()
+        super(CutCommand, self).do_command()
+
+    def undo_command(self):
+        self.__removeItemsFromClipboard()
+        super(CutCommand, self).undo_command()
+
+    def redo_command(self):
+        self.__putItemsOnClipboard()
+        super(CutCommand, self).redo_command()

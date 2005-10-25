@@ -146,3 +146,13 @@ class SingleTaskEffortListTest(test.TestCase):
     def testChildrensEffortIsIncludedTooEvenWhenParentHasNoEffort(self):
         self.addChild()
         self.assertResult(1, 1)
+        
+    def testExtend(self):
+        self.singleTaskEffortList.extend([self.effort])
+        self.assertEqual([self.effort], self.task.efforts())
+        
+    def testRemoveItems(self):
+        self.addChild()
+        self.singleTaskEffortList.removeItems([self.childEffort])
+        self.assertEqual([], self.child.efforts())
+        

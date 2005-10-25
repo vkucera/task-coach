@@ -341,7 +341,7 @@ class EditCut(NeedsSelectedTasks, FilterCommand, ViewerCommand): # FIXME: only w
             *args, **kwargs)
 
     def doCommand(self, event):
-        cutCommand = command.CutTaskCommand(self.filteredTaskList, self.viewer.curselection())
+        cutCommand = command.CutCommand(self.filteredTaskList, self.viewer.curselection())
         cutCommand.do()
 
 
@@ -604,7 +604,7 @@ class EffortDelete(NeedsSelectedEffort, EffortCommand, ViewerCommand):
             helpText=_('Delete the selected effort period(s)'), *args, **kwargs)
 
     def doCommand(self, event):
-        delete = command.DeleteEffortCommand(self.effortList,
+        delete = command.DeleteCommand(self.effortList,
             self.viewer.curselection())
         delete.do()
 
