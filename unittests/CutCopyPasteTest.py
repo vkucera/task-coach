@@ -2,12 +2,12 @@ import test, task, command
 from TaskCommandsTest import CommandTestCase, CommandWithChildrenTestCase, \
     CommandWithEffortTestCase
 
-class CutCommandTest(CommandTestCase):
-    def testCut_WithoutSelection(self):
-        command.CutTaskCommand(self.taskList, []).do()
+class CutCommandWithTasksTest(CommandTestCase):
+    def testCutTasks_WithoutSelection(self):
+        self.cut()
         self.assertDoUndoRedo(lambda: self.assertTaskList([self.task1]))
 
-    def testCut_SpecificTask(self):
+    def testCutTasks_SpecificTask(self):
         self.taskList.append(self.task2)
         self.cut([self.task1])
         self.assertDoUndoRedo(lambda: (self.assertTaskList([self.task2]),
@@ -15,13 +15,13 @@ class CutCommandTest(CommandTestCase):
             lambda: (self.assertTaskList([self.task1, self.task2]),
             self.failIf(task.Clipboard())))
 
-    def testCut(self):
+    def testCutTasks_All(self):
         self.cut('all')
         self.assertDoUndoRedo(self.assertEmptyTaskList, 
             lambda: self.assertTaskList(self.originalList))
 
 
-class CutCommandWithChildrenTest(CommandWithChildrenTestCase):
+class CutCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
     def testCutParent(self):
         self.cut([self.parent])
         self.assertDoUndoRedo(lambda: self.assertTaskList([self.task1]),
@@ -41,6 +41,22 @@ class CutCommandWithChildrenTest(CommandWithChildrenTestCase):
             lambda: self.assertTaskList(self.originalList))
 
 
+class CutCommandWithEffortTest(CommandWithEffortTestCase):
+    def testCutEfforts_WithoutSelection(self):
+        self.cut()
+        self.assertDoUndoRedo(lambda: self.assertEffortList(self.originalEffortList))
+
+    def testCutEfforts_Selection(self):
+        self.cut([self.effort1])
+        self.assertDoUndoRedo(lambda: self.assertEffortList([self.effort2]),
+                              lambda: self.assertEffortList(self.originalEffortList))
+                              
+    def testCutEfforts_All(self):
+        self.cut('all')
+        self.assertDoUndoRedo(lambda: self.assertEffortList([]),
+                              lambda: self.assertEffortList(self.originalEffortList))
+
+                              
 class PasteCommandTest(CommandTestCase):
     def testPasteWithoutPreviousCut(self):
         self.paste()

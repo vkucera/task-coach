@@ -17,7 +17,8 @@ class EffortCommandTestCase(test.wxTestCase, asserts.CommandAsserts):
         
     def redo(self):
         patterns.CommandHistory().redo()
-           
+
+
 class NewEffortCommandTest(EffortCommandTestCase):        
     def testNewEffort(self):
         newEffortCommand = command.NewEffortCommand(self.effortList, 
@@ -87,14 +88,6 @@ class EditEffortCommandNotificationTest(EffortCommandTestCase):
         self.edit.redo()
         self.assertNotifiedOfEffortsAddedAndRemoved()
         
-
-class DeleteEffortCommandTest(EffortCommandTestCase):
-    def testDeleteEffort(self):
-        delete = command.DeleteEffortCommand(self.effortList, [self.effort])
-        delete.do()
-        self.assertDoUndoRedo(
-            lambda: self.assertEqual([], self.originalTask.efforts()),
-            lambda: self.assertEqual([self.effort], self.originalTask.efforts()))
 
 class StartAndStopEffortCommandTest(EffortCommandTestCase):
     def setUp(self):

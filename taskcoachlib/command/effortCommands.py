@@ -43,21 +43,3 @@ class EditEffortCommand(base.BaseCommand, base.SaveStateMixin):
     def redo_command(self):
         self.redoStates()
     
-
-class DeleteEffortCommand(base.BaseCommand):
-    def name(self):
-        return _('Delete effort')
-
-    def __init__(self, *args, **kwargs):
-        super(DeleteEffortCommand, self).__init__(*args, **kwargs)
-        self.efforts = self.items # FIXME: hack
-
-    def do_command(self):
-        self.list.removeItems(self.efforts)
-
-    def undo_command(self):
-        self.list.extend(self.efforts)
-
-    def redo_command(self):
-        self.list.removeItems(self.efforts)
-

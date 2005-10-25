@@ -23,10 +23,10 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
             items = self.list[:]
         command.DeleteCommand(self.list, items or []).do()
  
-    def cut(self, tasks=None):
-        if tasks == 'all':
-            tasks = self.taskList[:]
-        command.CutTaskCommand(self.taskList, tasks or []).do()
+    def cut(self, items=None):
+        if items == 'all':
+            items = self.list[:]
+        command.CutCommand(self.list, items or []).do()
 
     def paste(self, tasks=None):
         if tasks:
@@ -149,9 +149,9 @@ class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
     def testDeleteEffort(self):
         self.delete([self.effort1])
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(1, len(self.effortList)) and \
+            lambda: self.assertEffortList([self.effort2]) and \
                 self.assertEqual(0, len(self.task1.efforts())),
-            lambda: self.assertEqual(2, len(self.effortList)) and \
+            lambda: self.assertEffortList(self.originalEffortList) and \
                 self.assertEqual(1, len(self.task1.efforts())))
 
 
