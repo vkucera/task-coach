@@ -362,7 +362,7 @@ class EditPaste(FilterCommand):
             *args, **kwargs)
 
     def doCommand(self, event):
-        pasteCommand = command.PasteTaskCommand(self.filteredTaskList)
+        pasteCommand = command.PasteCommand(self.filteredTaskList)
         pasteCommand.do()
 
     def enabled(self):
@@ -376,7 +376,7 @@ class EditPasteAsSubtask(FilterCommand, ViewerCommand):
             bitmap='pasteassubtask', *args, **kwargs)
 
     def doCommand(self, event):
-        pasteCommand = command.PasteTaskAsSubtaskCommand(self.filteredTaskList, 
+        pasteCommand = command.PasteIntoTaskCommand(self.filteredTaskList, 
             self.viewer.curselection())
         pasteCommand.do()
 

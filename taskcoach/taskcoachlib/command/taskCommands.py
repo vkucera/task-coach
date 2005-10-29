@@ -10,52 +10,24 @@ class SaveTaskStateMixin(base.SaveStateMixin):
         return ancestors
 
 
-class PasteTaskCommand(base.BaseCommand, SaveTaskStateMixin):
+class PasteIntoTaskCommand(base.PasteCommand):
     def name(self):
-        return _('Paste')
+        return _('Paste into task')
 
-    def __init__(self, *args, **kwargs):
-        super(PasteTaskCommand, self).__init__(*args, **kwargs)
-        self.__tasksToPaste = task.Clipboard().get()
-        self.saveStates(self.getTasksToSave())
-
-    def getTasksToSave(self):
-        return self.__tasksToPaste
-    
-    def canDo(self):
-        return bool(self.__tasksToPaste)
-        
-    def do_command(self):
-        self.setParentOfPastedTasks()
-        self.list.extend(self.__tasksToPaste)
-
-    def undo_command(self):
-        self.list.removeItems(self.__tasksToPaste)
-        self.undoStates()
-        task.Clipboard().put(self.__tasksToPaste)
-        
-    def redo_command(self):
-        task.Clipboard().clear() 
-        self.redoStates()
-        self.list.extend(self.__tasksToPaste)
-
-    def setParentOfPastedTasks(self, newParent=None):
-        for task in self.__tasksToPaste:
-            task.setParent(newParent) 
-
-
-class PasteTaskAsSubtaskCommand(PasteTaskCommand):
-    def name(self):
-        return _('Paste as subtask')
-
-    def setParentOfPastedTasks(self):
+    def setParentOfPastedItems(self):
         newParent = self.items[0]
-        super(PasteTaskAsSubtaskCommand, self).setParentOfPastedTasks(newParent)
+        super(PasteIntoTaskCommand, self).setParentOfPastedItems(newParent)
 
-    def getTasksToSave(self):
+    def getItemsToSave(self):
         parents = [task for task in [self.items[0]] if task.completed()]
         return parents + self.getAncestors(parents) + \
-            super(PasteTaskAsSubtaskCommand, self).getTasksToSave()
+            super(PasteIntoTaskCommand, self).getItemsToSave()
+
+    def getAncestors(self, tasks): 
+        ancestors = []
+        for task in tasks:
+            ancestors.extend(task.ancestors())
+        return ancestors
 
 
 class NewTaskCommand(base.BaseCommand):

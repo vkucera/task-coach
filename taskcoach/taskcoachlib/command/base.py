@@ -72,13 +72,13 @@ class CopyCommand(BaseCommand):
 
     def do_command(self):
         self.__copies = [item.copy() for item in self.items]
-        task.Clipboard().put(self.__copies)
+        task.Clipboard().put(self.__copies, self.list)
 
     def undo_command(self):
         task.Clipboard().clear()
 
     def redo_command(self):
-        task.Clipboard().put(self.__copies)
+        task.Clipboard().put(self.__copies, self.list)
 
         
 class DeleteCommand(BaseCommand):
@@ -102,11 +102,11 @@ class CutCommand(DeleteCommand):
     def __putItemsOnClipboard(self):
         cb = task.Clipboard()
         self.__previousClipboardContents = cb.get()
-        cb.put(self.items)
+        cb.put(self.items, self.list)
 
     def __removeItemsFromClipboard(self):
         cb = task.Clipboard()
-        cb.put(self.__previousClipboardContents)
+        cb.put(*self.__previousClipboardContents)
 
     def do_command(self):
         self.__putItemsOnClipboard()
@@ -119,3 +119,41 @@ class CutCommand(DeleteCommand):
     def redo_command(self):
         self.__putItemsOnClipboard()
         super(CutCommand, self).redo_command()
+
+        
+class PasteCommand(BaseCommand, SaveStateMixin):
+    def name(self):
+        return _('Paste')
+
+    def __init__(self, *args, **kwargs):
+        super(PasteCommand, self).__init__(*args, **kwargs)
+        self.__itemsToPaste, self.__sourceOfItemsToPaste = task.Clipboard().get()
+        self.saveStates(self.getItemsToSave())
+
+    def getItemsToSave(self):
+        return self.__itemsToPaste
+    
+    def canDo(self):
+        return bool(self.__itemsToPaste)
+        
+    def do_command(self):
+        self.setParentOfPastedItems()
+        self.__sourceOfItemsToPaste.extend(self.__itemsToPaste)
+
+    def undo_command(self):
+        self.__sourceOfItemsToPaste.removeItems(self.__itemsToPaste)
+        self.undoStates()
+        task.Clipboard().put(self.__itemsToPaste, self.__sourceOfItemsToPaste)
+        
+    def redo_command(self):
+        task.Clipboard().clear() 
+        self.redoStates()
+        self.__sourceOfItemsToPaste.extend(self.__itemsToPaste)
+
+    def setParentOfPastedItems(self, newParent=None):
+        for item in self.__itemsToPaste:
+            item.setParent(newParent) 
+
+    
+
+        

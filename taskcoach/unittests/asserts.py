@@ -26,7 +26,15 @@ class EffortListAsserts(ListAsserts):
     def assertEffortList(self, expected):
         self.assertEqualLists(expected, self.effortList)
         
-
+        
+class EffortAsserts(object):
+    def assertEqualEfforts(self, effort1, effort2):
+        self.assertEqual(effort1.task(), effort2.task())
+        self.assertEqual(effort1.getStart(), effort2.getStart())
+        self.assertEqual(effort1.getStop(), effort2.getStop())
+        self.assertEqual(effort1.getDescription(), effort2.getDescription())
+        
+                
 class TaskAsserts(object):
     def failIfParentAndChild(self, parent, child):
         self.failIf(child in parent.children())
@@ -73,5 +81,6 @@ class CommandAsserts(object):
         self.redo()
         assertRedone()
 
-class Mixin(CommandAsserts, TaskAsserts, TaskListAsserts, EffortListAsserts):
+class Mixin(CommandAsserts, TaskAsserts, EffortAsserts, TaskListAsserts, 
+            EffortListAsserts):
     pass

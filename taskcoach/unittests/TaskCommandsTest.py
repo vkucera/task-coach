@@ -28,11 +28,11 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
             items = self.list[:]
         command.CutCommand(self.list, items or []).do()
 
-    def paste(self, tasks=None):
-        if tasks:
-            command.PasteTaskAsSubtaskCommand(self.taskList, tasks).do()
+    def paste(self, items=None):
+        if items:
+            command.PasteIntoTaskCommand(self.taskList, items).do()
         else:
-            command.PasteTaskCommand(self.taskList).do()
+            command.PasteCommand(self.list).do()
 
     def copy(self, items=None):
         command.CopyCommand(self.list, items or []).do()
