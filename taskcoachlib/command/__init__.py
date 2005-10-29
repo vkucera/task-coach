@@ -1,3 +1,3 @@
 from taskCommands import *
 from effortCommands import *
-from base import CopyCommand, DeleteCommand, CutCommand
+from base import CopyCommand, DeleteCommand, CutCommand, PasteCommand

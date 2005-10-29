@@ -467,13 +467,13 @@ class TaskBudgetTest(TaskNotificationTestCase):
     def testBudgetLeft_AllSpent(self):
         self.task.setBudget(self.twoHours)
         self.task.addEffort(self.oneHourEffort)
-        self.task.addEffort(self.oneHourEffort)
+        self.task.addEffort(self.oneHourEffort.copy())
         self.assertEqual(self.zero, self.task.budgetLeft())
     
     def testBudgetLeft_OverBudget(self):
         self.task.setBudget(self.oneHour)
         self.task.addEffort(self.oneHourEffort)
-        self.task.addEffort(self.oneHourEffort)
+        self.task.addEffort(self.oneHourEffort.copy())
         self.assertEqual(-self.oneHour, self.task.budgetLeft())
         
     def testBudgetLeft_Recursive_NoBudget(self):

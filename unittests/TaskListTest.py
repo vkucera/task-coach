@@ -143,7 +143,7 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def testCreateNewItem(self):
         newTask = self.taskList.newItem()
         self.assertEqual(date.Today(), newTask.startDate())
-
+        
         
 class NotificationTimingTest(test.TestCase):
     def setUp(self):

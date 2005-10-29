@@ -10,7 +10,7 @@ ifeq "$(OSTYPE)" "linux"
 else # cygwin:
     PYTHON="python"
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
-    WEBCHECKER="/cygdrive/i/Program Files/Python24/Tools/webchecker/webchecker.py" 
+    WEBCHECKER=i:/Program\ Files/Python24/Tools/webchecker/webchecker.py
     GETTEXT=python i:/Program\ Files/Python24/Tools/i18n/pygettext.py
 endif
 

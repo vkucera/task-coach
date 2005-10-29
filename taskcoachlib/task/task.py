@@ -209,10 +209,10 @@ class Task(patterns.Observable):
         return self._efforts + childEfforts
         
     def addEffort(self, effort):
-        assert effort.__class__ != tasklist.TaskList
-        self._efforts.append(effort)
-        effort.registerObserver(self.notifyEffortChanged)
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, effortsAdded=[effort]))
+        if effort not in self._efforts:
+            self._efforts.append(effort)
+            effort.registerObserver(self.notifyEffortChanged)
+            self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, effortsAdded=[effort]))
         
     def removeEffort(self, effort):
         self._efforts.remove(effort)
@@ -220,10 +220,13 @@ class Task(patterns.Observable):
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, effortsRemoved=[effort]))
         
     def notifyEffortChanged(self, notification, *args, **kwargs):
-        notification['effortsChanged'] = [notification.source]
-        notification['source'] = self
-        self.notifyObservers(notification)
-        
+        if notification.source.task() != self:
+            self.removeEffort(notification.source)
+        else:
+            notification['effortsChanged'] = [notification.source]
+            notification['source'] = self
+            self.notifyObservers(notification)
+            
     def timeSpent(self, recursive=False):
         if recursive:
             return self._myTimeSpent() + self._childrenTimeSpent()

@@ -21,10 +21,6 @@ class EffortBase(object):
             (self.getStart() == other.getStart() and \
             self.task().subject() < other.task().subject())
 
-    def __eq__(self, other):
-        return self._task == other._task and self._start == other._start and \
-            self._stop == other._stop
-                  
 
 class Effort(EffortBase, patterns.Observable, date.ClockObserver):
     def __init__(self, task, start=None, stop=None, description='', *args, **kwargs):
@@ -34,15 +30,18 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
             self.startClock()
 
     def setTask(self, task):
-        if task == self._task:
+        if task in [self._task, None]: # command.PasteCommand tries to set the parent to None
             return
-        if self in self._task.efforts():
-            self._task.removeEffort(self)
         self._task = task
         self._task.addEffort(self)
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
 
+    setParent = setTask # I should really create a common superclass for Effort and Task
+    
     def __str__(self):
         return 'Effort(%s, %s, %s)'%(self._task, self._start, self._stop)
+    
+    __repr__ = __str__
         
     def __getstate__(self):
         return {'_task' : self._task, '_start' : self._start, '_stop' : self._stop }
@@ -50,7 +49,7 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
     def __setstate__(self, state):
         # FIXME: we have to treat _task differently, see the action that 
         # goes on in setTask(), but I don't like it
-        # FIXME: duplicstion with Task.__setstate__
+        # FIXME: duplication with Task.__setstate__
         task = state.pop('_task')
         self.setTask(task)
         self.__dict__.update(state)      

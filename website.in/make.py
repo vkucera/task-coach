@@ -8,7 +8,7 @@ import style
 
 pages = {}
 pages['index'] = \
-'''        <IMG SRC="banner.png" ALT="Banner image"><BR>
+'''        <P><IMG SRC="banner.png" ALT="Banner image"></P>
         <P>%(name)s is a simple open source todo manager to manage personal 
         tasks and todo lists. It grew out of my frustration that well-known 
         task managers, such as those provided with Outlook or Lotus Notes, do
@@ -24,7 +24,7 @@ pages['index'] = \
         <A HREF="download.html">download</A> %(name)s.</P>
         <P>%(name)s is developed using a number of open source products.
         See <A HREF="credits.html">credits</A> for details.</P>
-        <H3>Enjoy, %(author)s &lt;%(author_email)s&gt;</H3>
+        <P>Enjoy, %(author)s &lt;%(author_email)s&gt;</P>
         '''
 
 pages['credits'] = \

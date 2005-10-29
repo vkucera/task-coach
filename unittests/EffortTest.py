@@ -1,8 +1,8 @@
-import test, effort, task, date
+import test, effort, task, date, asserts
 
 __coverage__ = [effort.Effort]
 
-class EffortTest(test.TestCase):
+class EffortTest(test.TestCase, asserts.Mixin):
     def setUp(self):
         self.task = task.Task()
         self.effort = effort.Effort(self.task, start=date.DateTime(2004, 1, 1),
@@ -48,8 +48,7 @@ class EffortTest(test.TestCase):
         state = self.effort.__getstate__()
         newEffort = effort.Effort(task.Task())
         newEffort.__setstate__(state)
-        self.assertEqual(newEffort, self.effort)
-        self.assertEqual(newEffort.getDescription(), self.effort.getDescription())
+        self.assertEqualEfforts(newEffort, self.effort)
         
     def testCompare(self):
         newEffort = effort.Effort(self.task, start=date.DateTime(2005,1,1),
@@ -58,7 +57,7 @@ class EffortTest(test.TestCase):
         
     def testCopy(self):
         copyEffort = self.effort.copy()
-        self.assertEqual(copyEffort, self.effort)
+        self.assertEqualEfforts(copyEffort, self.effort)
         self.assertEqual(copyEffort.getDescription(), self.effort.getDescription())
         
     def testDescription(self):
@@ -94,13 +93,12 @@ class EffortTest(test.TestCase):
         date.Clock().notify()
         self.assertEqual(0, self.notifications)
         
-    def testSetTaskToNewTaskWhileEffortIsNotInOldTaskListOfEfforts(self):
+    def testSetTaskToNewTaskWillAddItToNewTask(self):
         task2 = task.Task()
         self.effort.setTask(task2)
         self.assertEqual([self.effort], task2.efforts())
-        self.failIf(self.effort in self.task.efforts())
         
-    def testSetTaskToNewTaskWhileEffortIsInOldTaskListOfEfforts(self):
+    def testSetTaskToNewTaskWillRemoveItFromOldTask(self):
         self.task.addEffort(self.effort)
         task2 = task.Task()
         self.effort.setTask(task2)
