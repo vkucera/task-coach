@@ -5,9 +5,13 @@ from i18n import _
 import wx.grid as grid
 
 class Viewer(patterns.Observable, wx.Panel):
+    ''' A Viewer shows the contents of a model (a list of tasks or a list of 
+        efforts) by means of a widget (e.g. a ListCtrl or a TreeListCtrl).'''
+        
     def __init__(self, parent, list, uiCommands, settings=None, *args, **kwargs):
-        super(Viewer, self).__init__(parent, -1)
-        self.parent = parent
+        # FIXME: Are settings still obtional?
+        super(Viewer, self).__init__(parent, -1) # FIXME: Pass *args, **kwargs
+        self.parent = parent # FIXME: Make instance variables private
         self.settings = settings
         self.uiCommands = uiCommands
         self.list = self.createSorter(self.createFilter(list))
@@ -98,6 +102,9 @@ class Viewer(patterns.Observable, wx.Panel):
         task = self.list[index]
         return wx.ListItemAttr(color.taskColor(task, self.settings))
 
+    def model(self):
+        return self.list
+    
 
 class ListViewer(Viewer):
     def getItemImage(self, index):

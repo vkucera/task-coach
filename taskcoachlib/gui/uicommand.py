@@ -334,54 +334,55 @@ class EditRedo(UICommand):
         return patterns.CommandHistory().hasFuture()
 
 
-class EditCut(NeedsSelectedTasks, FilterCommand, ViewerCommand): # FIXME: only works for tasks atm
+class EditCut(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):        
         super(EditCut, self).__init__(menuText=_('Cu&t\tCtrl+X'), 
-            helpText=_('Cut the selected task(s) to the clipboard'), bitmap='cut', 
+            helpText=_('Cut the selected item(s) to the clipboard'), bitmap='cut', 
             *args, **kwargs)
 
     def doCommand(self, event):
-        cutCommand = command.CutCommand(self.filteredTaskList, self.viewer.curselection())
+        cutCommand = command.CutCommand(self.viewer.model(), self.viewer.curselection())
         cutCommand.do()
 
 
-class EditCopy(NeedsSelectedTasks, FilterCommand, ViewerCommand): # FIXME: only works for tasks atm
+class EditCopy(NeedsSelectedTasks, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EditCopy, self).__init__(menuText=_('&Copy\tCtrl+C'), 
-            helpText=_('Copy the selected task(s) to the clipboard'), bitmap='copy',
+            helpText=_('Copy the selected item(s) to the clipboard'), bitmap='copy',
             *args, **kwargs)
 
     def doCommand(self, event):
-        copyCommand = command.CopyCommand(self.filteredTaskList, self.viewer.curselection())
+        copyCommand = command.CopyCommand(self.viewer.model(), self.viewer.curselection())
         copyCommand.do()
 
-class EditPaste(FilterCommand):
+
+class EditPaste(UICommand):
     def __init__(self, *args, **kwargs):
         super(EditPaste, self).__init__(menuText=_('&Paste\tCtrl+V'), 
-            helpText=_('Paste task(s) from the clipboard'), bitmap='paste', 
+            helpText=_('Paste item(s) from the clipboard'), bitmap='paste', 
             *args, **kwargs)
 
     def doCommand(self, event):
-        pasteCommand = command.PasteCommand(self.filteredTaskList)
+        pasteCommand = command.PasteCommand()
         pasteCommand.do()
 
     def enabled(self):
         return task.Clipboard()
 
 
-class EditPasteAsSubtask(FilterCommand, ViewerCommand):
+class EditPasteIntoTask(NeedsSelectedTasks, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(EditPasteAsSubtask, self).__init__(menuText=_('P&aste as subtask'), 
-            helpText=_('Paste task(s) as subtask(s) of the selected task'),
-            bitmap='pasteassubtask', *args, **kwargs)
+        super(EditPasteIntoTask, self).__init__(menuText=_('P&aste into task'), 
+            helpText=_('Paste item(s) from the clipboard into the selected task'),
+            bitmap='pasteintotask', *args, **kwargs)
 
     def doCommand(self, event):
-        pasteCommand = command.PasteIntoTaskCommand(self.filteredTaskList, 
-            self.viewer.curselection())
+        pasteCommand = command.PasteIntoTaskCommand(
+            items=self.viewer.curselection())
         pasteCommand.do()
 
     def enabled(self):
-        return task.Clipboard() and self.viewer.curselection()
+        return super(EditPasteIntoTask, self).enabled() and task.Clipboard()
 
 
 class EditPreferences(MainWindowCommand, SettingsCommand):
@@ -723,10 +724,10 @@ class UICommands(dict):
         # menuEdit commands
         self['undo'] = EditUndo()
         self['redo'] = EditRedo()
-        self['cut'] = EditCut(filteredTaskList=filteredTaskList, viewer=viewer)
-        self['copy'] = EditCopy(filteredTaskList=filteredTaskList, viewer=viewer)
-        self['paste'] = EditPaste(filteredTaskList=filteredTaskList)
-        self['pasteassubtask'] = EditPasteAsSubtask(filteredTaskList=filteredTaskList, viewer=viewer)
+        self['cut'] = EditCut(viewer=viewer)
+        self['copy'] = EditCopy(viewer=viewer)
+        self['paste'] = EditPaste(viewer=viewer)
+        self['pasteintotask'] = EditPasteIntoTask(viewer=viewer)
         self['editpreferences'] = EditPreferences(mainwindow=mainwindow, settings=settings)
         
         # Selection commands

@@ -2,7 +2,7 @@ import patterns, task
 from i18n import _
 
 class BaseCommand(patterns.Command):
-    def __init__(self, list, items=None, *args, **kwargs):
+    def __init__(self, list=None, items=None, *args, **kwargs):
         super(BaseCommand, self).__init__(*args, **kwargs)
         self.list = list
         self.items = items or []
