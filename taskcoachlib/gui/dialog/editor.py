@@ -7,7 +7,8 @@ from i18n import _
 class DateEntry(wx.Panel):
     defaultDate = date.Date()
 
-    def __init__(self, parent, date=defaultDate, readonly=False, callback=None, *args, **kwargs):
+    def __init__(self, parent, date=defaultDate, readonly=False, callback=None, 
+                 *args, **kwargs):
         super(DateEntry, self).__init__(parent, -1, *args, **kwargs)
         self._entry = widgets.DateCtrl(self, callback, size=(100, -1))
         if readonly:
@@ -30,7 +31,8 @@ class DateEntry(wx.Panel):
 class TimeDeltaEntry(wx.Panel):
     defaultTimeDelta=date.TimeDelta()
     
-    def __init__(self, parent, timeDelta=defaultTimeDelta, readonly=False, *args, **kwargs):
+    def __init__(self, parent, timeDelta=defaultTimeDelta, readonly=False, 
+                 *args, **kwargs):
         super(TimeDeltaEntry, self).__init__(parent, -1, *args, **kwargs)
         if readonly:
             self._entry = wx.StaticText(self, -1, render.timeSpent(timeDelta))
@@ -162,11 +164,13 @@ class CategoriesPage(widgets.BookPage):
 
 
 class TaskEditBook(widgets.Listbook):
-    def __init__(self, parent, task, taskList, uiCommands, settings, categories, *args, **kwargs):
+    def __init__(self, parent, task, taskList, uiCommands, settings, 
+                 categories, *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(SubjectPage(self, task), _('Description'), 'description')
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
-        self.AddPage(CategoriesPage(self, task, categories), _('Categories'), 'category')
+        self.AddPage(CategoriesPage(self, task, categories), _('Categories'), 
+                     'category')
         self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')        
         if task.timeSpent(recursive=True):
             effortPage = EffortPage(self, task, taskList, settings, uiCommands)
@@ -174,7 +178,8 @@ class TaskEditBook(widgets.Listbook):
                   
 
 class EffortEditBook(widgets.BookPage):
-    def __init__(self, parent, effort, editor, effortList, taskList, *args, **kwargs):
+    def __init__(self, parent, effort, editor, effortList, taskList, 
+                 *args, **kwargs):
         super(EffortEditBook, self).__init__(parent, columns=3, *args, **kwargs)
         self._editor = editor
         self._effort = effort
@@ -213,7 +218,8 @@ class EffortEditBook(widgets.BookPage):
         self.preventNegativeEffortDuration()
             
     def addDescriptionEntry(self):
-        self._descriptionEntry = widgets.TextCtrl(self, self._effort.getDescription())
+        self._descriptionEntry = widgets.TextCtrl(self, 
+            self._effort.getDescription())
         self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry)
         
@@ -265,10 +271,12 @@ class TaskEditor(EditorWithCommand):
         
     
 class EffortEditor(EditorWithCommand):
-    def __init__(self, parent, command, uiCommands, effortList, taskList, *args, **kwargs):
+    def __init__(self, parent, command, uiCommands, effortList, taskList, 
+                 *args, **kwargs):
         self._effortList = effortList
         self._taskList = taskList
-        super(EffortEditor, self).__init__(parent, command, uiCommands, *args, **kwargs)
+        super(EffortEditor, self).__init__(parent, command, uiCommands, 
+                                           *args, **kwargs)
         
     def addPages(self):
         for effort in self._command.efforts: # FIXME: use getter

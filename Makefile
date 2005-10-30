@@ -3,7 +3,7 @@
 # website end up in ./dist)
 
 
-ifeq "$(OSTYPE)" "linux"
+ifeq ($(shell uname),Linux)
     PYTHON="python"
     WEBCHECKER="/usr/share/doc/python2.4/examples/Tools/webchecker/webchecker.py" 
     GETTEXT="pygettext"
@@ -16,11 +16,7 @@ else # cygwin:
     GETTEXT=python $(PYTHONDIR)/Tools/i18n/pygettext.py
 endif
 
-
 all: i18n windist sdist website
-
-test:
-	@echo $(PYTHONDIR)
 
 windist: icons
 	$(PYTHON) make.py py2exe
