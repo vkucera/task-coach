@@ -50,6 +50,7 @@ of stacking order (z-index). */
     border:1px solid black;
     background-color:white;
     padding:10px;
+    overflow:hidden;
     z-index:3; /* This allows the content to overlap the right menu in
 narrow windows in good browsers. */
     }
