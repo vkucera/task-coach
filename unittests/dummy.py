@@ -27,6 +27,9 @@ class DummyWidget(wx.Frame):
     def refresh(self, *args, **kwargs):
         pass
 
+    def refreshItem(self, *args, **kwargs):
+        pass
+
     def GetColumnWidth(self, column):
         return 100
         
