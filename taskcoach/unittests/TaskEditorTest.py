@@ -246,7 +246,7 @@ class EffortEditorTest(TaskEditorTestCase):
         return command.EditEffortCommand(self.effortList, self.effortList)
         
     def createTasks(self):
-        self.task1 = task.Task()
+        self.task1 = task.Task('task1')
         self.effort = effort.Effort(self.task1)
         self.task1.addEffort(self.effort)
         self.task2 = task.Task('task2')
@@ -274,7 +274,8 @@ class EffortEditorTest(TaskEditorTestCase):
         self.failIf(self.editor._buttonBox._buttons['OK'].IsEnabled())
         
     def testChangeTask(self):
-        self.editor[0]._taskEntry.SetValue('task2')
+        self.editor[0]._taskEntry.SetStringSelection('task2')
         self.editor.ok()
         self.assertEqual(self.task2, self.effortList[0].task())
         self.failIf(self.effort in self.task1.efforts())
+
