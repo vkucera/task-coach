@@ -406,6 +406,10 @@ class EffortListViewer(ListViewer, EffortViewer):
         uiCommands.update(self.uiCommands)
         uiCommands['editeffort'] = uicommand.EffortEdit(mainwindow=self.parent, effortList=self.list, filteredTaskList=self.taskList, viewer=self, uiCommands=self.uiCommands)
         uiCommands['deleteeffort'] = uicommand.EffortDelete(effortList=self.list, viewer=self, filteredTaskList=self.taskList)
+        uiCommands['cut'] = uicommand.EditCut(viewer=self)
+        uiCommands['copy'] = uicommand.EditCopy(viewer=self)
+        uiCommands['pasteintotask'] = uicommand.EditPasteIntoTask(viewer=self)
+        
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr,
             self.onSelect, uiCommands['editeffort'], 

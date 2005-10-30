@@ -341,18 +341,20 @@ class EditCut(NeedsSelection, ViewerCommand):
             *args, **kwargs)
 
     def doCommand(self, event):
-        cutCommand = command.CutCommand(self.viewer.model(), self.viewer.curselection())
+        cutCommand = command.CutCommand(self.viewer.model(),
+                                        self.viewer.curselection())
         cutCommand.do()
 
 
-class EditCopy(NeedsSelectedTasks, ViewerCommand):
+class EditCopy(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EditCopy, self).__init__(menuText=_('&Copy\tCtrl+C'), 
             helpText=_('Copy the selected item(s) to the clipboard'), bitmap='copy',
             *args, **kwargs)
 
     def doCommand(self, event):
-        copyCommand = command.CopyCommand(self.viewer.model(), self.viewer.curselection())
+        copyCommand = command.CopyCommand(self.viewer.model(), 
+                                          self.viewer.curselection())
         copyCommand.do()
 
 
@@ -726,7 +728,7 @@ class UICommands(dict):
         self['redo'] = EditRedo()
         self['cut'] = EditCut(viewer=viewer)
         self['copy'] = EditCopy(viewer=viewer)
-        self['paste'] = EditPaste(viewer=viewer)
+        self['paste'] = EditPaste()
         self['pasteintotask'] = EditPasteIntoTask(viewer=viewer)
         self['editpreferences'] = EditPreferences(mainwindow=mainwindow, settings=settings)
         
