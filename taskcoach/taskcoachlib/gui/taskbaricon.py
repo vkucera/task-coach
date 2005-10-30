@@ -61,6 +61,6 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
     def __setIcon(self):
         bitmap = self.__getBitmap()
         tooltipText = self.__getTooltipText()
-        self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON, (16, 16)), 
-            tooltipText)
-        
+        self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON, 
+            (16, 16)), tooltipText)
+
