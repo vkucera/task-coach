@@ -168,6 +168,18 @@ pages['mailinglist'] = \
         of messages</a> without subscribing to the mailinglist.</P>
 '''
 
+pages['faq'] = \
+'''    <H3>Frequently asked questions</H3>
+    <P><I>I upgraded to a new version and now I cannot load my %(name)s file. It
+    says: "Error loading <myfile>.tsk. Are you sure it is a %(name)s file?".
+    I'm sure the file's ok. What next?</I></P>
+    <P>Remove your TaskCoach.ini file and try again. Sometimes errors in
+    loading old settings files will cause %(name)s to barf on .tsk files that
+    are just fine. The TaskCoach.ini file is located in C:\Documents and
+    Settings\&lt;yourname&gt;\Application Data\TaskCoach if you're on Windows 
+    and in /home/&lt;yourname&gt;/.TaskCoach if you're on Linux.</P>
+'''
+
 dist = os.path.join('..', 'dist')
 
 if not os.path.isdir(dist):

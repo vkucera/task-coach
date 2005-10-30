@@ -33,13 +33,14 @@ footer = '''
                     <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Known bugs</A><BR>
                     <A HREF="changes.html">Change history</A><BR>
                     <A HREF="license.html">License</A><BR>
-                    <A HREF="mailinglist.html">Join mailinglist</A><BR>
                     <A HREF="credits.html">Credits</A>
                 </P>
             </DIV>
             <DIV class="navbox">
-                <h2>Feedback</h2>
+                <h2>Support</h2>
                 <P>
+                    <A HREF="mailinglist.html">Join mailinglist</A><BR>
+                    <A HREF="faq.html">Frequently asked questions</A><BR>
                     <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</A><BR>
                     <A HREF="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</A>
                 </P>

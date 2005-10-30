@@ -3,11 +3,12 @@
 from domain import *
 
 releases = [
-Release('0.51', 'October ?, 2005',
+Release('0.51', 'October 30, 2005',
     featuresAdded=[
         Feature('''Escape closes pop-up windows. Patch provided by
 Markus Meyer.''', '1241547'),
-        Feature('''The task of an effort record can be changed.''')],
+        Feature('''The task of an effort record can be changed.'''),
+        Feature('''Effort records can be cut, copied, and pasted.''')],
     bugsFixed=[
         Bug('''Hitting enter in the find dialog didn't work on Linux.'''),
         Bug('''Old TaskCoach.ini files with a language setting of 'en' instead
