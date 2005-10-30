@@ -1,3 +1,12 @@
+'''
+Release steps:
+1. Run this script to release to Chello (my ISP) and PyPI.
+2. Use releaseforge to release to Sourceforge.
+3. Post release notification on freshmeat.net by hand.
+4. Tag source code: cvs tag ReleaseX_Y.
+5. Email taskcoach@yahoogroups.com and python-announce@python.org.
+'''
+
 import ftplib, taskcoachlib.meta, os, glob, sys
 
 class SimpleFTP(ftplib.FTP, object):
