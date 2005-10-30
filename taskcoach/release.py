@@ -5,6 +5,7 @@ Release steps:
 3. Post release notification on freshmeat.net by hand.
 4. Tag source code: cvs tag ReleaseX_Y.
 5. Email taskcoach@yahoogroups.com and python-announce@python.org.
+6. Add release to Sourceforge bug tracker groups.
 '''
 
 import ftplib, taskcoachlib.meta, os, glob, sys
