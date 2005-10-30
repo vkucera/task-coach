@@ -118,9 +118,11 @@ class EffortPage(widgets.BookPage):
         super(EffortPage, self).__init__(parent, columns=1, *args, **kwargs)
         from gui import viewercontainer, viewerfactory
         import effort
-        viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 'effortviewerineditor')
+        viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 
+            'effortviewerineditor')
         myEffortList = effort.SingleTaskEffortList(task)
-        viewerfactory._addEffortViewers(viewerContainer, myEffortList, taskList, uiCommands, settings)
+        viewerfactory._addEffortViewers(viewerContainer, myEffortList, 
+            taskList, uiCommands, settings)
         self.addEntry(None, viewerContainer, growable=True)
 
 
