@@ -89,7 +89,7 @@ class EditMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(EditMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['undo', 'redo', None, 'cut', 
-            'copy', 'paste', 'pasteassubtask', None])
+            'copy', 'paste', 'pasteintotask', None])
         # the spaces are to leave room for command names in the Undo and Redo menuitems:
         self.appendMenu(_('&Select')+' '*50, SelectMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None, 'editpreferences'])
@@ -217,17 +217,17 @@ class TaskPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(TaskPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste',
-            'pasteassubtask', None, 'new', 'newsubtask', None, 'edit', 
+            'pasteintotask', None, 'new', 'newsubtask', None, 'edit', 
             'markcompleted', None, 'delete', None, 'neweffort', 'starteffort',
-            'stopeffort', None, 'viewexpandselected',
-            'viewcollapseselected'])
+            'stopeffort', None, 'viewexpandselected', 'viewcollapseselected'])
 
 
 class EffortPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(EffortPopupMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['new', None, 'neweffort', 'editeffort', 'deleteeffort',
-            None, 'stopeffort'])
+        self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', 
+           'pasteintotask', None, 'new', None, 'neweffort', 'editeffort', 
+           'deleteeffort', None, 'stopeffort'])
 
 
 class TaskViewerColumnPopupMenu(Menu):
