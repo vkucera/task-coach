@@ -180,6 +180,11 @@ pages['faq'] = \
     and in /home/&lt;yourname&gt;/.TaskCoach if you're on Linux.</P>
 '''
 
+pages['roadmap'] = \
+'''    <h3>%(name)s roadmap</h3>
+    <p>[Roadmap to be described here]</p>
+'''
+
 dist = os.path.join('..', 'dist')
 
 if not os.path.isdir(dist):

@@ -8,14 +8,19 @@ ifeq "$(OSTYPE)" "linux"
     WEBCHECKER="/usr/share/doc/python2.4/examples/Tools/webchecker/webchecker.py" 
     GETTEXT="pygettext"
 else # cygwin:
-    PYTHON="python"
+    PYTHON="python" # python should be on the path
+    PYTHONEXE=$(shell python -c "import sys, re; print re.sub('/cygdrive/([a-z])', r'\1:', '\ '.join(sys.argv[1:]))" $(shell which $(PYTHON)))
+    PYTHONDIR=$(dir $(PYTHONEXE))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
-    WEBCHECKER=i:/Program\ Files/Python24/Tools/webchecker/webchecker.py
-    GETTEXT=python i:/Program\ Files/Python24/Tools/i18n/pygettext.py
+    WEBCHECKER=$(PYTHONDIR)/Tools/webchecker/webchecker.py
+    GETTEXT=python $(PYTHONDIR)/Tools/i18n/pygettext.py
 endif
 
 
 all: i18n windist sdist website
+
+test:
+	@echo $(PYTHONDIR)
 
 windist: icons
 	$(PYTHON) make.py py2exe
