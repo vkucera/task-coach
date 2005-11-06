@@ -3,6 +3,9 @@
 from domain import *
 
 releases = [
+Release('0.52', 'November ?, 2005',
+    featuresAdded=[]),
+                    
 Release('0.51', 'October 30, 2005',
     featuresAdded=[
         Feature('''Escape closes pop-up windows. Patch provided by
