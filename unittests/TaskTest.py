@@ -104,6 +104,10 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
     def testDaysLeft_DueTomorrow(self):
         dueTomorrow = task.Task(duedate=date.Tomorrow())
         self.assertEqual(1, dueTomorrow.timeLeft().days)
+        
+    def testDaysLeft_DueTodayCompletedYesterday(self):
+        dueTomorrow = task.Task(duedate=date.Today(), completiondate=date.Yesterday())
+        self.assertEqual(1, dueTomorrow.timeLeft().days)
 
     def testCopyTask(self):
         original = task.Task(subject='Original', duedate=date.Tomorrow(),
@@ -267,6 +271,11 @@ class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
         child = task.Task(duedate=date.Today())
         self.task.addChild(child)
         self.assertEqual(date.TimeDelta(), self.task.timeLeft(recursive=True))
+        
+    def testTimeLeftRecursive_Completed(self):
+        child = task.Task(duedate=date.Tomorrow(), completiondate=date.Yesterday())
+        self.task.addChild(child)
+        self.assertEqual(date.TimeDelta(2), self.task.timeLeft(recursive=True))
 
 
 class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
