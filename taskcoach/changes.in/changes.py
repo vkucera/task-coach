@@ -4,7 +4,13 @@ from domain import *
 
 releases = [
 Release('0.52', 'November ?, 2005',
-    featuresAdded=[]),
+    bugsFixed=[
+        Bug('''For completed tasks, the number of days left for a task is 
+now the number of days between the completion date and the due 
+date. This prevents that the number of days left of completed tasks keeps 
+decreasing, i.e. becoming more negative. For uncompleted tasks, the number
+of days left is still the number of days between today and the due date, 
+of course. Patch provided by Maciej Malycha.''')]),
                     
 Release('0.51', 'October 30, 2005',
     featuresAdded=[
