@@ -28,10 +28,11 @@ class IntegrationTest_EmptyList(IntegrationTestCase):
 class IntegrationTest(IntegrationTestCase):
     def fillTaskList(self):
         self.description = 'Description\nLine 2'
-        self.task = task.Task('Subject', self.description, startdate=date.Yesterday(), 
-            duedate=date.Tomorrow(), completiondate=date.Yesterday(), 
-            budget=date.TimeDelta(hours=1), priority=4, 
-            lastModificationTime=date.DateTime(2004,1,1))
+        self.task = task.Task('Subject', self.description, 
+            startdate=date.Yesterday(), duedate=date.Tomorrow(), 
+            completiondate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
+            priority=4, lastModificationTime=date.DateTime(2004,1,1), 
+            hourlyFee=100.5, fixedFee=1000)
         self.child = task.Task()
         self.task.addChild(self.child)
         self.grandChild = task.Task()
@@ -101,4 +102,10 @@ class IntegrationTest(IntegrationTestCase):
         delta = abs(self.task.lastModificationTime() - \
                     self.getTaskWrittenAndRead(self.task.id()).lastModificationTime())
         self.failUnless(delta < date.TimeDelta(seconds=1))
- 
+
+    def testHourlyFee(self):
+        self.assertAttributeWrittenAndRead(self.task, 'hourlyFee')
+
+    def testFixedFee(self):
+        self.assertAttributeWrittenAndRead(self.task, 'fixedFee')
+        

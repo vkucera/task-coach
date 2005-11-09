@@ -123,3 +123,18 @@ class XMLWriterTest(test.TestCase):
         task2 = task.Task('task 2')
         self.taskList.append(task2)
         self.assertTaskAttribute('task 2', 'subject', 1)
+
+    def testDefaultHourlyFee(self):
+        self.assertTaskAttribute('0', 'hourlyFee')
+        
+    def testHourlyFee(self):
+        self.task.setHourlyFee(100)
+        self.assertTaskAttribute('100', 'hourlyFee')
+
+    def testDefaultFixedFee(self):
+        self.assertTaskAttribute('0', 'fixedFee')
+        
+    def testFixedFee(self):
+        self.task.setFixedFee(1000)
+        self.assertTaskAttribute('1000', 'fixedFee')
+        
