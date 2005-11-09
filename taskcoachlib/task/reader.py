@@ -123,11 +123,14 @@ class XMLReader:
         dueDate = date.parseDate(taskNode.getAttribute('duedate'))
         completionDate = date.parseDate(taskNode.getAttribute('completiondate'))
         budget = date.parseTimeDelta(taskNode.getAttribute('budget'))
-        priority = self.__parsePriority(taskNode.getAttribute('priority'))
+        priority = self.__parseInteger(taskNode.getAttribute('priority'))
         lastModificationTime = self.__parseLastModificationTime(taskNode.getAttribute('lastModificationTime'))
+        hourlyFee = self.__parseFloat(taskNode.getAttribute('hourlyFee'))
+        fixedFee = self.__parseFloat(taskNode.getAttribute('fixedFee'))
         parent = task.Task(subject, description, id_=id, startdate=startDate, duedate=dueDate, 
             completiondate=completionDate, budget=budget, priority=priority, 
-            lastModificationTime=lastModificationTime)
+            lastModificationTime=lastModificationTime, hourlyFee=hourlyFee,
+            fixedFee=fixedFee)
         for category in self.__parseCategoryNodes(taskNode.childNodes):
             parent.addCategory(category)
         for child in self.__parseTaskNodes(taskNode.childNodes):
@@ -142,12 +145,6 @@ class XMLReader:
     def __parseCategoryNode(self, node):
         return node.firstChild.data
     
-    def __parsePriority(self, priorityText):
-        try:
-            return int(priorityText)
-        except ValueError:
-            return 0
-            
     def __parseEffortNodes(self, task, nodes):
         return [self.__parseEffortNode(task, node) for node in nodes if node.nodeName == 'effort']
         
@@ -174,9 +171,18 @@ class XMLReader:
             else:
                 description = ''
         return description
-        
+
+    def __parseInteger(self, integerText):
+        return self.__parse(integerText, int, 0)
+
+    def __parseFloat(self, floatText):
+        return self.__parse(floatText, float, 0.0)
+                    
     def __parseLastModificationTime(self, lastModificationTimeText):
+        return self.__parse(lastModificationTimeText, date.parseDateTime, None)
+        
+    def __parse(self, text, parseFunction, defaultValue):
         try:
-            return date.parseDateTime(lastModificationTimeText)
+            return parseFunction(text)
         except ValueError:
-            return None
+            return defaultValue

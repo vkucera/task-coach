@@ -45,8 +45,17 @@ class XMLReaderVersion9Test(XMLReaderTestCase):
         self.failUnless(abs(date.DateTime.now() - tasks[0].lastModificationTime()) < date.TimeDelta(seconds=0.1))
 
 
-class XMLReaderTest(XMLReaderTestCase):   
+class XMLReaderVersion10Test(XMLReaderTestCase):
     tskversion = 10
+    
+    def testReadTaskWithoutFee(self):
+        tasks = self.writeAndRead('<tasks><task/></tasks>')
+        self.assertEqual(0, tasks[0].hourlyFee())
+        self.assertEqual(0, tasks[0].fixedFee())
+        
+
+class XMLReaderTest(XMLReaderTestCase):   
+    tskversion = 11
            
     def testReadEmptyStream(self):
         try:
@@ -150,4 +159,13 @@ class XMLReaderTest(XMLReaderTestCase):
     def testLastModificationTime(self):
         tasks = self.writeAndRead('<tasks><task lastModificationTime="2004-01-01 10:00:00.123000"/></tasks>')
         self.assertEqual(date.DateTime(2004,1,1,10,0,0,123000), tasks[0].lastModificationTime())
+        
+    def testHourlyFee(self):
+        tasks = self.writeAndRead('<tasks><task hourlyFee="100"/><task hourlyFee="5.5"/></tasks>')
+        self.assertEqual(100, tasks[0].hourlyFee())
+        self.assertEqual(5.5, tasks[1].hourlyFee())
+        
+    def testFixedFee(self):
+        tasks = self.writeAndRead('<tasks><task fixedFee="240.50"/></tasks>')
+        self.assertEqual(240.5, tasks[0].fixedFee())
         

@@ -104,11 +104,6 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
     def testDaysLeft_DueTomorrow(self):
         dueTomorrow = task.Task(duedate=date.Tomorrow())
         self.assertEqual(1, dueTomorrow.timeLeft().days)
-        
-    def testDaysLeft_DueTodayCompletedYesterday(self):
-        dueToday = task.Task(duedate=date.Today(), 
-                             completiondate=date.Yesterday())
-        self.assertEqual(1, dueToday.timeLeft().days)
 
     def testCopyTask(self):
         original = task.Task(subject='Original', duedate=date.Tomorrow(),
@@ -272,12 +267,6 @@ class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
         child = task.Task(duedate=date.Today())
         self.task.addChild(child)
         self.assertEqual(date.TimeDelta(), self.task.timeLeft(recursive=True))
-        
-    def testTimeLeftRecursive_Completed(self):
-        child = task.Task(duedate=date.Tomorrow(),
-                          completiondate=date.Yesterday())
-        self.task.addChild(child)
-        self.assertEqual(date.TimeDelta(2), self.task.timeLeft(recursive=True))
 
 
 class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
@@ -722,3 +711,81 @@ class TaskLastModificationTimeTest(test.TestCase):
         self.task.addChild(child)
         self.task.setLastModificationTime(self.time)
         self.assertLastModificationTimeIsNow(self.task, recursive=True)
+        
+        
+class TaskRevenueTest(TaskNotificationTestCase):
+    def createTask(self):
+        return task.Task()
+
+    def createEffort(self, task=None):
+        return effort.Effort(task or self.task, 
+            date.DateTime(2005, 1, 1, 10, 0), date.DateTime(2005, 1, 1, 11, 0))
+            
+    def testDefaultHourlyFee(self):
+        self.assertEqual(0, self.task.hourlyFee())
+        
+    def testSetHourlyFeeViaConstructor(self):
+        t = task.Task(hourlyFee=100)
+        self.assertEqual(100, t.hourlyFee())
+        
+    def testSetHourlyFeeViaSetter(self):
+        self.task.setHourlyFee(100)
+        self.assertEqual(100, self.task.hourlyFee())
+
+    def testSetHourlyFeeCausesNotification(self):
+        self.task.setHourlyFee(100)
+        self.failUnlessNotified()
+        
+    def testDefaultRevenue(self):
+        self.assertEqual(0, self.task.revenue())
+        
+    def testRevenueWithEffortButWithZeroFee(self):
+        self.task.addEffort(self.createEffort())
+        self.assertEqual(0, self.task.revenue())
+        
+    def testRevenue(self):
+        self.task.setHourlyFee(100)
+        self.task.addEffort(self.createEffort())
+        self.assertEqual(100, self.task.revenue())
+        
+    def testRecursiveRevenue(self):
+        self.task.setHourlyFee(100)
+        self.task.addEffort(self.createEffort())
+        child = task.Task()
+        self.task.addChild(child)
+        child.setHourlyFee(100)
+        child.addEffort(self.createEffort(child))
+        self.assertEqual(200, self.task.revenue(recursive=True))
+        
+    def testDefaultFixedFee(self):
+        self.assertEqual(0, self.task.fixedFee())
+        
+    def testSetFixedFeeViaContructor(self):
+        t = task.Task(fixedFee=1000)
+        self.assertEqual(1000, t.fixedFee())
+        
+    def testSetFixedFeeViaSetter(self):
+        self.task.setFixedFee(1000)
+        self.assertEqual(1000, self.task.fixedFee())
+        
+    def testSetFixedFeeCausesNotification(self):
+        self.task.setFixedFee(1000)
+        self.failUnlessNotified()
+    
+    def testRevenueFromFixedFee(self):
+        self.task.setFixedFee(1000)
+        self.assertEqual(1000, self.task.revenue())
+        
+    def testRecursiveRevenueFromFixedFee(self):
+        self.task.setFixedFee(2000)
+        child = task.Task()
+        self.task.addChild(child)
+        child.setFixedFee(1000)
+        self.assertEqual(3000, self.task.revenue(recursive=True))
+        
+    def testGetFixedFeeRecursive(self):
+        self.task.setFixedFee(2000)
+        child = task.Task()
+        self.task.addChild(child)
+        child.setFixedFee(1000)
+        self.assertEqual(3000, self.task.fixedFee(recursive=True))

@@ -4,7 +4,8 @@ import tasklist
 class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, completiondate=None, parent=None, budget=None, 
-            priority=0, id_=None, lastModificationTime=None, *args, **kwargs):
+            priority=0, id_=None, lastModificationTime=None, hourlyFee=0,
+            fixedFee=0, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
         self._subject        = subject
         self._description    = description 
@@ -19,6 +20,8 @@ class Task(patterns.Observable):
         self._efforts        = []
         self._categories     = sets.Set()
         self._priority       = priority
+        self._hourlyFee      = hourlyFee
+        self._fixedFee       = fixedFee
         self.setLastModificationTime(lastModificationTime)
         relations.TaskRelationshipManager().startManaging(self)
         
@@ -168,10 +171,7 @@ class Task(patterns.Observable):
         self.__setAttributeAndNotifyObservers('_startdate', startdate)
 
     def timeLeft(self, recursive=False):
-        if self.completed():
-            return self.dueDate(recursive) - self.completionDate(recursive)
-        else:
-            return self.dueDate(recursive) - date.Today()
+        return self.dueDate(recursive) - date.Today()
         
     def completionDate(self, recursive=False):
         if recursive:
@@ -313,3 +313,29 @@ class Task(patterns.Observable):
     def setLastModificationTime(self, time=None):
         self._lastModificationTime = time or date.DateTime.now()
 
+    # revenue
+    
+    def hourlyFee(self):
+        return self._hourlyFee
+    
+    def setHourlyFee(self, hourlyFee):
+        self.__setAttributeAndNotifyObservers('_hourlyFee', hourlyFee)
+        
+    def revenue(self, recursive=False):
+        if recursive:
+            childRevenues = sum(child.revenue(recursive) for child in self.children())
+        else:
+            childRevenues = 0
+        return self.timeSpent().hours() * self.hourlyFee() + self.fixedFee() + childRevenues
+    
+    def fixedFee(self, recursive=False):
+        if recursive:
+            childFixedFees = sum(child.fixedFee(recursive) for child in self.children())
+        else:
+            childFixedFees = 0
+        return self._fixedFee + childFixedFees
+    
+    def setFixedFee(self, fixedFee):
+        self.__setAttributeAndNotifyObservers('_fixedFee', fixedFee)
+        
+        

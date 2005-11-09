@@ -64,3 +64,5 @@ def weekNumber(dateTime):
     # in 2004
     return '%d-%d'%(dateTime.year, dateTime.weeknumber())
     
+def amount(aFloat):
+    return '%.2f'%aFloat

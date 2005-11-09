@@ -3,8 +3,8 @@ import datetime
 class TimeDelta(datetime.timedelta):
     def hoursMinutesSeconds(self):
         ''' Return a tuple (hours, minutes, seconds). Note that the caller
-            is responsible for checking whether the TimeDelta instance is positive
-            or negative. '''
+            is responsible for checking whether the TimeDelta instance is
+            positive or negative. '''
         if self < TimeDelta():
             seconds = 3600*24 - self.seconds
             days = abs(self.days) - 1
@@ -15,9 +15,15 @@ class TimeDelta(datetime.timedelta):
         minutes, seconds = seconds/60, seconds%60
         hours += days*24
         return hours, minutes, seconds
+    
+    def hours(self):
+        ''' Return hours as float. '''
+        hours, minutes, seconds = self.hoursMinutesSeconds()
+        return hours + (minutes / 60.) + (seconds / 3600.)
         
     def __add__(self, other):
-        ''' Make sure we return a TimeDelta instance and not a datetime.timedelta instance '''
+        ''' Make sure we return a TimeDelta instance and not a 
+            datetime.timedelta instance '''
         sum = super(TimeDelta, self).__add__(other)
         return self.__class__(sum.days, sum.seconds, sum.microseconds)
         

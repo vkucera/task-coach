@@ -46,6 +46,22 @@ class TimeDeltaEntry(wx.Panel):
 
     def get(self):
         return date.parseTimeDelta(self._entry.GetValue())
+    
+
+class AmountEntry(wx.Panel):
+    def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
+        super(AmountEntry, self).__init__(parent, -1, *args, **kwargs)
+        if readonly:
+            self._entry = wx.StaticText(self, -1, render.amount(amount))
+        else:
+            self._entry = masked.NumCtrl(self, -1, fractionWidth=2, 
+                                         allowNegative=False, value=amount)
+                                         
+    def get(self):
+        return self._entry.GetValue()
+
+    def set(self, value):
+        self._entry.SetValue(value)
 
 
 class SubjectPage(widgets.BookPage):
@@ -99,20 +115,27 @@ class BudgetPage(widgets.BookPage):
         super(BudgetPage, self).__init__(parent, columns=3, *args, **kwargs)
         self._task = task
         self._budgetEntry = TimeDeltaEntry(self, task.budget())
+        self._hourlyFeeEntry = AmountEntry(self, task.hourlyFee())
+        self._fixedFeeEntry = AmountEntry(self, task.fixedFee())
         entriesArgs = [['', _('For this task')],
                        [_('Budget'), self._budgetEntry],
                        [_('Time spent'), render.timeSpent(task.timeSpent())],
-                       [_('Budget left'), render.budget(task.budgetLeft())]]
+                       [_('Budget left'), render.budget(task.budgetLeft())],
+                       [_('Hourly fee'), self._hourlyFeeEntry],
+                       [_('Fixed fee'), self._fixedFeeEntry]]
         if task.children():
             entriesArgs[0].append(_('For this task including all subtasks'))
             entriesArgs[1].append(render.budget(task.budget(recursive=True)))
             entriesArgs[2].append(render.timeSpent(task.timeSpent(recursive=True)))
             entriesArgs[3].append(render.budget(task.budgetLeft(recursive=True)))
+            entriesArgs[5].append(render.amount(task.fixedFee(recursive=True)))
         for entryArgs in entriesArgs:
             self.addEntry(*entryArgs)
 
     def ok(self):
-        self._task.setBudget(self._budgetEntry.get())              
+        self._task.setBudget(self._budgetEntry.get())           
+        self._task.setHourlyFee(self._hourlyFeeEntry.get())   
+        self._task.setFixedFee(self._fixedFeeEntry.get())   
 
 
 class EffortPage(widgets.BookPage):        

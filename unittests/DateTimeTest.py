@@ -13,8 +13,7 @@ class PyDateTimeTest(test.TestCase):
 class DateTimeTest(test.TestCase):
     def testWeekNumber(self):
         self.assertEqual(53, date.DateTime(2005,1,1).weeknumber())
-        self.assertEqual(1, date.DateTime(2005,1,3).weeknumber())
-        
+        self.assertEqual(1, date.DateTime(2005,1,3).weeknumber())   
         
     def testStartOfDay(self):
         startOfDay = date.DateTime(2005,1,1,0,0,0,0)
@@ -45,7 +44,16 @@ class DateTimeTest(test.TestCase):
         endOfMonth = date.DateTime(2005,4,30).endOfDay()
         midMonth = date.DateTime(2005,4,15,12,45,1,999999)
         self.assertEqual(endOfMonth, midMonth.endOfMonth())
-        
+
+
 class TimeTest(test.TestCase):
     def testNow(self):
         now = date.Time.now()
+
+
+class TimeDeltaTest(test.TestCase):
+    def testHours(self):
+        timedelta = date.TimeDelta(hours=2, minutes=15)
+        self.assertEqual(2.25, timedelta.hours())
+        
+        
