@@ -182,6 +182,11 @@ class TaskViewerWithColumns(TaskViewer):
             'totalbudgetleft': _('Total budget left'), 
             'priority': _('Priority'),
             'totalpriority': _('Overall priority'), 
+            'hourlyfee': _('Hourly fee'), 
+            'fixedfee': _('Fixed fee'), 
+            'totalfixedfee': _('Total fixed fee'),
+            'revenue': _('Revenue'),
+            'totalrevenue': _('Total revenue'),
             'lastmodificationtime': _('Last modification time'), 
             'totallastmodificationtime': _('Overall last modification time')}[notification.option]
         self.widget.showColumn(columnHeader, notification.value=='True')
@@ -199,6 +204,9 @@ class TaskViewerWithColumns(TaskViewer):
             'totalbudgetLeft': _('Total budget left'), 'priority': _('Priority'),
             'totalpriority': _('Overall priority'), 
             'lastModificationTime': _('Last modification time'),
+            'hourlyFee': _('Hourly fee'), 'fixedFee': _('Fixed fee'),
+            'totalfixedFee': _('Total fixed fee'), 'revenue': _('Revenue'),
+            'totalrevenue': _('Total revenue'),
             'totallastModificationTime': _('Overall last modification time')}[sortKey]
         self.widget.showSortColumn(columnHeader)
         
@@ -228,6 +236,11 @@ class TaskViewerWithColumns(TaskViewer):
             (_('Total budget left'), 'totalbudgetleft', 'totalbudgetLeft'),
             (_('Priority'), 'priority', 'priority'),
             (_('Overall priority'), 'totalpriority', 'totalpriority'),
+            (_('Hourly fee'), 'hourlyfee', 'hourlyFee'),
+            (_('Fixed fee'), 'fixedfee', 'fixedFee'),
+            (_('Total fixed fee'), 'totalfixedfee', 'totalfixedFee'),
+            (_('Revenue'), 'revenue', 'revenue'),
+            (_('Total revenue'), 'totalrevenue', 'totalrevenue'),
             (_('Last modification time'), 'lastmodificationtime', 
                 'lastModificationTime'),
             (_('Overall last modification time'), 'totallastmodificationtime',
@@ -247,6 +260,9 @@ class TaskViewerWithColumns(TaskViewer):
                 _('Total budget left'): self.uiCommands['viewsortbytotalbudgetleft'],
                 _('Priority'): self.uiCommands['viewsortbypriority'],
                 _('Overall priority'): self.uiCommands['viewsortbytotalpriority'],
+                _('Hourly fee'): self.uiCommands['viewsortbyhourlyfee'],
+                _('Fixed fee'): self.uiCommands['viewsortbyfixedfee'],
+                _('Total fixed fee'): self.uiCommands['viewsortbytotalfixedfee'],
                 _('Last modification time'): self.uiCommands['viewsortbylastmodificationtime'],
                 _('Overall last modification time'): self.uiCommands['viewsortbytotallastmodificationtime']}
 
@@ -291,6 +307,16 @@ class TaskViewerWithColumns(TaskViewer):
             return render.priority(task.priority())
         elif columnHeader == _('Overall priority'):
             return render.priority(task.priority(recursive=True))
+        elif columnHeader == _('Hourly fee'):
+            return render.amount(task.hourlyFee())
+        elif columnHeader == _('Fixed fee'):
+            return render.amount(task.fixedFee())
+        elif columnHeader == _('Total fixed fee'):
+            return render.amount(task.fixedFee(recursive=True))
+        elif columnHeader == _('Revenue'):
+            return render.amount(task.revenue())
+        elif columnHeader == _('Total revenue'):
+            return render.amount(task.revenue(recursive=True))
         elif columnHeader == _('Last modification time'):
             return render.dateTime(task.lastModificationTime())
         elif columnHeader == _('Overall last modification time'):

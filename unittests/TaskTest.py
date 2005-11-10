@@ -736,6 +736,9 @@ class TaskRevenueTest(TaskNotificationTestCase):
         self.task.setHourlyFee(100)
         self.failUnlessNotified()
         
+    def testGetHourlyFeeAcceptsRecursiveKeywordArgument(self):
+        self.assertEqual(0, self.task.hourlyFee(recursive=False))
+        
     def testDefaultRevenue(self):
         self.assertEqual(0, self.task.revenue())
         

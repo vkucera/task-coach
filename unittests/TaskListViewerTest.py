@@ -30,6 +30,18 @@ class CommonTests:
         self.assertNotEqual(-1, self.viewer.GetColumn(0).GetImage())
         self.assertEqual(-1, self.viewer.GetColumn(1).GetImage())
 
+    def testTurnOnHourlyFeeColumn(self):
+        self.settings.set('view', 'hourlyfee', 'True')
+        self.assertEqual(_('Hourly fee'), self.viewer.GetColumn(3).GetText())
+
+    def testTurnOnFixedFeeColumn(self):
+        self.settings.set('view', 'fixedfee', 'True')
+        self.assertEqual(_('Fixed fee'), self.viewer.GetColumn(3).GetText())
+
+    def testTurnOnTotalFixedFeeColumn(self):
+        self.settings.set('view', 'totalfixedfee', 'True')
+        self.assertEqual(_('Total fixed fee'), self.viewer.GetColumn(3).GetText())
+        
 
 class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests, 
         test.wxTestCase):

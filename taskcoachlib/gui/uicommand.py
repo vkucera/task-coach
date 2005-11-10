@@ -191,6 +191,32 @@ class UICommandsCommand(UICommand):
         self.uiCommands = kwargs.pop('uiCommands', None)
         super(UICommandsCommand, self).__init__(*args, **kwargs)    
 
+
+class UICheckGroupCommand(UICommandsCommand, UICheckCommand):
+    def __init__(self, *args, **kwargs):
+        self.uiCommandNames = kwargs.pop('uiCommandNames')
+        super(UICheckGroupCommand, self).__init__(*args, **kwargs)
+        
+    def doCommand(self, event):
+        for uiCommandName in self.uiCommandNames:
+            uiCommand = self.uiCommands[uiCommandName]
+            self.settings.set(uiCommand.section, uiCommand.setting,
+                              str(event.IsChecked()))
+        super(UICheckGroupCommand, self).doCommand(event)
+
+    def onUpdateUI(self, event):
+        # This check command is off when one or more of the check commands in 
+        # the group is off and on when all check commands in the group are on
+        for uiCommandName in self.uiCommandNames:
+            uiCommand = self.uiCommands[uiCommandName]
+            if not self.settings.getboolean(uiCommand.section, uiCommand.setting):
+                self.settings.set(self.section, self.setting, 'False')
+                break
+        else:
+            self.settings.set(self.section, self.setting, 'True')
+        super(UICheckGroupCommand, self).onUpdateUI(event)
+        
+
 # Mixins: 
 
 class NeedsSelection(object):
@@ -444,6 +470,7 @@ class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
         self.filteredTaskList.removeAllCategories()
 
 
+            
 class ViewCategories(MainWindowCommand, FilterCommand):
     def __init__(self, *args, **kwargs):
         super(ViewCategories, self).__init__(menuText=_('Tasks by catego&ries...'),
@@ -777,11 +804,33 @@ class UICommands(dict):
              (_('Total budget l&eft'), _('Show/hide total budget left column (total budget left includes budget left for subtasks)'), 'totalbudgetleft'),
              (_('&Priority'), _('Show/hide priority column'), 'priority'),
              (_('O&verall priority'), _('Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)'), 'totalpriority'),
+             (_('&Hourly fee'), _('Show/hide hourly fee column'), 'hourlyfee'),
+             (_('&Fixed fee'), _('Show/hide fixed fee column'), 'fixedfee'),
+             (_('&Total fixed fee'), _('Show/hide total fixed fee column'), 'totalfixedfee'),
+             (_('&Revenue'), _('Show/hide revenue column'), 'revenue'),
+             (_('T&otal revenue'), _('Show/hide total revenue column'), 'totalrevenue'),
              (_('Last modification time'), _('Show/hide last modification time column'), 'lastmodificationtime'),
              (_('Overall last modification time'), _('Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks'), 'totallastmodificationtime')]:
             key = 'view' + setting
             self[key] = UICheckCommand(menuText=menuText, helpText=helpText, setting=setting, settings=settings)
     
+        self['viewalldatecolumns'] = UICheckGroupCommand(menuText=_('All date columns'), 
+              helpText=_('Show/hide all date-related columns'), 
+              uiCommandNames=['viewstartdate', 'viewduedate', 'viewtimeleft', 
+              'viewcompletiondate'], uiCommands=self, settings=settings, 
+              setting='alldatecolumns')
+        self['viewallbudgetcolumns'] = UICheckGroupCommand(menuText=_('All budget columns'),
+              helpText=_('Show/hide all budget-related columns'),
+              uiCommandNames=['viewbudget', 'viewtotalbudget', 'viewtimespent', 
+              'viewtotaltimespent', 'viewbudgetleft','viewtotalbudgetleft'],
+              uiCommands=self, settings=settings, setting='allbudgetcolumns')
+        self['viewallfinancialcolumns'] = UICheckGroupCommand(menuText=_('All financial columns'),
+              helpText=_('Show/hide all finance-related columns'),
+              uiCommandNames=['viewhourlyfee', 'viewfixedfee', 'viewtotalfixedfee', 
+              'viewrevenue', 'viewtotalrevenue'],
+              uiCommands=self, settings=settings, setting='allfinancialcolumns')
+
+              
         self['viewexpandall'] = ViewExpandAll(viewer=viewer)
         self['viewcollapseall'] = ViewCollapseAll(viewer=viewer)
         self['viewexpandselected'] = ViewExpandSelected(viewer=viewer)
@@ -812,6 +861,11 @@ class UICommands(dict):
              (_('Total budget l&eft'), _('Sort tasks by total budget left'), 'totalbudgetLeft'),
              (_('&Priority'), _('Sort tasks by priority'), 'priority'),
              (_('Overall priority'), _('Sort tasks by overall priority'), 'totalpriority'),
+             (_('&Hourly fee'), _('Sort tasks by hourly fee'), 'hourlyFee'),
+             (_('&Fixed fee'), _('Sort tasks by fixed fee'), 'fixedFee'),
+             (_('Total Fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalfixedFee'),
+             (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
+             (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalrevenue'),
              (_('Last modification time'), _('Sort tasks by last modification time'), 'lastModificationTime'),
              (_('Overall last modification time'), _('Sort tasks by overall last modification time'), 'totallastModificationTime')]:
             key = 'viewsortby' + value

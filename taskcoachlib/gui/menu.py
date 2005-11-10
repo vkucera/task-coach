@@ -127,13 +127,36 @@ class ViewMenu(Menu):
 class ViewColumnsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewColumnsMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewstartdate',
-        'viewduedate', 'viewtimeleft', 'viewcompletiondate',
-        'viewbudget', 'viewtotalbudget', 'viewtimespent',
-        'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
-        'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime',
-        'viewtotallastmodificationtime'])
-        
+        self.appendMenu(_('&Dates'), ViewDateColumnsMenu(mainwindow, uiCommands))
+        self.appendMenu(_('&Budget'), ViewBudgetColumnsMenu(mainwindow, uiCommands))
+        self.appendMenu(_('&Financial'), ViewFinancialColumnsMenu(mainwindow, uiCommands))
+        self.appendUICommands(uiCommands, ['viewpriority', 'viewtotalpriority', 
+        'viewlastmodificationtime', 'viewtotallastmodificationtime'])
+
+
+class ViewDateColumnsMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ViewDateColumnsMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewalldatecolumns', None, 
+            'viewstartdate', 'viewduedate', 'viewcompletiondate', 
+            'viewtimeleft'])
+
+
+class ViewBudgetColumnsMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ViewBudgetColumnsMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewallbudgetcolumns', None, 
+            'viewbudget', 'viewtotalbudget', 'viewtimespent',
+            'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft'])
+
+
+class ViewFinancialColumnsMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ViewFinancialColumnsMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewallfinancialcolumns', None, 
+            'viewhourlyfee', 'viewfixedfee', 'viewtotalfixedfee', 
+            'viewrevenue', 'viewtotalrevenue'])
+
            
 class ViewTaskStatesMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
@@ -161,13 +184,15 @@ class SortMenu(Menu):
         super(SortMenu, self).__init__(mainwindow)
         # NOTE: 'viewsortorder' needs to be added first to properly initialize 
         # ascending/descending order
-        self.appendUICommands(uiCommands, ['viewsortorder', 'viewsortcasesensitive',
-            'viewsortbystatusfirst', None, 'viewsortbysubject', 
-            'viewsortbystartdate', 'viewsortbyduedate', 'viewsortbytimeleft',
-            'viewsortbycompletiondate', 'viewsortbybudget', 'viewsortbytotalbudget',
-            'viewsortbytimespent', 'viewsortbytotaltimespent', 'viewsortbybudgetleft',
-            'viewsortbytotalbudgetleft', 'viewsortbypriority', 
-            'viewsortbytotalpriority', 'viewsortbylastmodificationtime', 
+        self.appendUICommands(uiCommands, ['viewsortorder', 
+            'viewsortcasesensitive', 'viewsortbystatusfirst', None, 
+            'viewsortbysubject', 'viewsortbystartdate', 'viewsortbyduedate',
+            'viewsortbytimeleft', 'viewsortbycompletiondate',
+            'viewsortbybudget', 'viewsortbytotalbudget', 'viewsortbytimespent',
+            'viewsortbytotaltimespent', 'viewsortbybudgetleft',
+            'viewsortbytotalbudgetleft', 'viewsortbypriority',
+            'viewsortbytotalpriority', 'viewsortbyhourlyfee',
+            'viewsortbyfixedfee', 'viewsortbylastmodificationtime', 
             'viewsortbytotallastmodificationtime'])
                 
     
@@ -236,10 +261,13 @@ class TaskViewerColumnPopupMenu(Menu):
         # FIXME: Can't remember why we need a wx.FutureCall here? Maybe
         # because we need time for the viewer to add columns, so these commands
         # can then hide the right columns?
-        wx.FutureCall(1000, lambda:
-            self.appendUICommands(uiCommands, ['viewstartdate',
-            'viewduedate', 'viewtimeleft', 'viewcompletiondate',
-            'viewbudget', 'viewtotalbudget', 'viewtimespent',
-            'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft',
-            'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime',
-            'viewtotallastmodificationtime']))
+        wx.FutureCall(1000, lambda: self.fillMenu(mainwindow, uiCommands))
+        
+    def fillMenu(self, mainwindow, uiCommands):
+        self.appendMenu(_('&Dates'), ViewDateColumnsMenu(mainwindow, uiCommands)),
+        self.appendMenu(_('&Budget'), ViewBudgetColumnsMenu(mainwindow, uiCommands)),
+        self.appendMenu(_('&Financial'), ViewFinancialColumnsMenu(mainwindow, uiCommands))
+        self.appendUICommands(uiCommands, [
+            'viewpriority', 'viewtotalpriority',
+            'viewlastmodificationtime',
+            'viewtotallastmodificationtime'])
