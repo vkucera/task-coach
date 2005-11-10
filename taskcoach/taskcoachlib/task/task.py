@@ -1,5 +1,4 @@
 import patterns, date, time, copy, sets, relations
-import tasklist
 
 class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
@@ -124,7 +123,6 @@ class Task(patterns.Observable):
         return self.ancestors() + [self] + self.allChildren()
         
     def addChild(self, child):
-        assert child.__class__ != tasklist.TaskList
         if child not in self._children:
             self._children.append(child)
             child.setParent(self)
@@ -315,7 +313,7 @@ class Task(patterns.Observable):
 
     # revenue
     
-    def hourlyFee(self):
+    def hourlyFee(self, recursive=False):
         return self._hourlyFee
     
     def setHourlyFee(self, hourlyFee):
