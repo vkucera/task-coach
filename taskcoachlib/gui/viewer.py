@@ -129,6 +129,12 @@ class TreeViewer(Viewer):
     def collapseSelected(self):
         self.widget.collapseSelectedItems()
         
+        
+class ViewerWithColumns(Viewer):
+    def columns(self):
+        return self._columns
+    
+    
 
 class TaskViewer(Viewer):
     def isShowingTasks(self): # FIXME: can be removed?
@@ -150,7 +156,7 @@ class TaskViewer(Viewer):
         return menu.TaskPopupMenu(self.parent, self.uiCommands)
         
 
-class TaskViewerWithColumns(TaskViewer):
+class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
     def __init__(self, *args, **kwargs):
         super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
         self.initColumns()
@@ -158,6 +164,30 @@ class TaskViewerWithColumns(TaskViewer):
             ('view', 'sortby'))
         self.settings.registerObserver(self.onSortOrderChanged, 
             ('view', 'sortascending'))
+            
+    def _createColumns(self):
+        return [widgets.Column(_('Subject'), None, 'subject', self.uiCommands['viewsortbysubject'])] + \
+            [widgets.Column(columnHeader, ('view', setting), setting, self.uiCommands['viewsortby' + setting]) for \
+            columnHeader, setting in \
+            (_('Start date'), 'startdate'),
+            (_('Due date'), 'duedate'),
+            (_('Days left'), 'timeleft'),
+            (_('Completion date'), 'completiondate'),
+            (_('Budget'), 'budget'),
+            (_('Total budget'), 'totalbudget'),
+            (_('Time spent'), 'timespent'),
+            (_('Total time spent'), 'totaltimespent'),
+            (_('Budget left'), 'budgetleft'),
+            (_('Total budget left'), 'totalbudgetleft'),
+            (_('Priority'), 'priority'),
+            (_('Overall priority'), 'totalpriority'),
+            (_('Hourly fee'), 'hourlyfee'),
+            (_('Fixed fee'), 'fixedfee'),
+            (_('Total fixed fee'), 'totalfixedfee'),
+            (_('Revenue'), 'revenue'),
+            (_('Total revenue'), 'totalrevenue'),
+            (_('Last modification time'), 'lastmodificationtime'),
+            (_('Overall last modification time'), 'totallastmodificationtime')]
 
     def initColumns(self):
         for column in self.columns():
@@ -165,7 +195,7 @@ class TaskViewerWithColumns(TaskViewer):
             if visibilitySetting:
                 self.settings.registerObserver(self.onShowColumn, 
                     visibilitySetting)
-                self.showColumn(column, 
+                self.widget.showColumn(column.header(), 
                     show=self.settings.getboolean(*column.visibilitySetting()))
             if self.settings.get('view', 'sortby') == column.sortKey():
                 self.widget.showSortColumn(column.header())
@@ -173,42 +203,18 @@ class TaskViewerWithColumns(TaskViewer):
                     'sortascending'))
         
     def onShowColumn(self, notification):
-        columnHeader = {'startdate': _('Start date'),
-            'duedate': _('Due date'), 'timeleft': _('Days left'),
-            'completiondate': _('Completion date'), 'budget': _('Budget'),
-            'totalbudget': _('Total budget'), 'timespent': _('Time spent'),
-            'totaltimespent': _('Total time spent'), 
-            'budgetleft': _('Budget left'),
-            'totalbudgetleft': _('Total budget left'), 
-            'priority': _('Priority'),
-            'totalpriority': _('Overall priority'), 
-            'hourlyfee': _('Hourly fee'), 
-            'fixedfee': _('Fixed fee'), 
-            'totalfixedfee': _('Total fixed fee'),
-            'revenue': _('Revenue'),
-            'totalrevenue': _('Total revenue'),
-            'lastmodificationtime': _('Last modification time'), 
-            'totallastmodificationtime': _('Overall last modification time')}[notification.option]
-        self.widget.showColumn(columnHeader, notification.value=='True')
-
-    def showColumn(self, column, show):
-        self.widget.showColumn(column.header(), show)
+        visibilitySetting = notification.section, notification.option
+        for column in self.columns():
+            if column.visibilitySetting() == visibilitySetting:
+                self.widget.showColumn(column.header(), notification.value=='True')
+                break
 
     def onSortKeyChanged(self, notification):
         sortKey = notification.value
-        columnHeader = {'subject': _('Subject'), 'startDate': _('Start date'),
-            'dueDate': _('Due date'), 'timeLeft': _('Days left'),
-            'completionDate': _('Completion date'), 'budget': _('Budget'),
-            'totalbudget': _('Total budget'), 'timeSpent': _('Time spent'),
-            'totaltimeSpent': _('Total time spent'), 'budgetLeft': _('Budget left'),
-            'totalbudgetLeft': _('Total budget left'), 'priority': _('Priority'),
-            'totalpriority': _('Overall priority'), 
-            'lastModificationTime': _('Last modification time'),
-            'hourlyFee': _('Hourly fee'), 'fixedFee': _('Fixed fee'),
-            'totalfixedFee': _('Total fixed fee'), 'revenue': _('Revenue'),
-            'totalrevenue': _('Total revenue'),
-            'totallastModificationTime': _('Overall last modification time')}[sortKey]
-        self.widget.showSortColumn(columnHeader)
+        for column in self.columns():
+            if column.sortKey() == sortKey:
+                self.widget.showSortColumn(column.header())
+                break
         
     def onSortOrderChanged(self, notification):
         self.showSortOrder(notification.value == 'True')
@@ -219,53 +225,6 @@ class TaskViewerWithColumns(TaskViewer):
         else:
             imageIndex = self.imageIndex['descending']
         self.widget.showSortOrder(imageIndex)
-
-    def columns(self):
-        return [widgets.Column(_('Subject'), None, 'subject')] + \
-            [widgets.Column(columnHeader, ('view', visibilitySetting), sortKey) for \
-            columnHeader, visibilitySetting, sortKey in \
-            (_('Start date'), 'startdate', 'startDate'),
-            (_('Due date'), 'duedate', 'dueDate'),
-            (_('Days left'), 'timeleft', 'timeLeft'),
-            (_('Completion date'), 'completiondate', 'completionDate'),
-            (_('Budget'), 'budget', 'budget'),
-            (_('Total budget'), 'totalbudget', 'totalbudget'),
-            (_('Time spent'), 'timespent', 'timeSpent'),
-            (_('Total time spent'), 'totaltimespent', 'totaltimeSpent'),
-            (_('Budget left'), 'budgetleft', 'budgetLeft'),
-            (_('Total budget left'), 'totalbudgetleft', 'totalbudgetLeft'),
-            (_('Priority'), 'priority', 'priority'),
-            (_('Overall priority'), 'totalpriority', 'totalpriority'),
-            (_('Hourly fee'), 'hourlyfee', 'hourlyFee'),
-            (_('Fixed fee'), 'fixedfee', 'fixedFee'),
-            (_('Total fixed fee'), 'totalfixedfee', 'totalfixedFee'),
-            (_('Revenue'), 'revenue', 'revenue'),
-            (_('Total revenue'), 'totalrevenue', 'totalrevenue'),
-            (_('Last modification time'), 'lastmodificationtime', 
-                'lastModificationTime'),
-            (_('Overall last modification time'), 'totallastmodificationtime',
-                'totallastModificationTime')]
-
-    def columnSortCommands(self):
-        return {_('Subject'): self.uiCommands['viewsortbysubject'], 
-                _('Start date'): self.uiCommands['viewsortbystartdate'], 
-                _('Due date'): self.uiCommands['viewsortbyduedate'],
-                _('Days left'): self.uiCommands['viewsortbytimeleft'],
-                _('Completion date'): self.uiCommands['viewsortbycompletiondate'],
-                _('Budget'): self.uiCommands['viewsortbybudget'],
-                _('Total budget'): self.uiCommands['viewsortbytotalbudget'],
-                _('Time spent'): self.uiCommands['viewsortbytimespent'],
-                _('Total time spent'): self.uiCommands['viewsortbytotaltimespent'],
-                _('Budget left'): self.uiCommands['viewsortbybudgetleft'],
-                _('Total budget left'): self.uiCommands['viewsortbytotalbudgetleft'],
-                _('Priority'): self.uiCommands['viewsortbypriority'],
-                _('Overall priority'): self.uiCommands['viewsortbytotalpriority'],
-                _('Hourly fee'): self.uiCommands['viewsortbyhourlyfee'],
-                _('Fixed fee'): self.uiCommands['viewsortbyfixedfee'],
-                _('Total fixed fee'): self.uiCommands['viewsortbytotalfixedfee'],
-                _('Last modification time'): self.uiCommands['viewsortbylastmodificationtime'],
-                _('Overall last modification time'): self.uiCommands['viewsortbytotallastmodificationtime']}
-
     
     def getItemText(self, index, columnHeader=None):
         task = self.list[index]
@@ -329,12 +288,12 @@ class TaskViewerWithColumns(TaskViewer):
 
 class TaskListViewer(TaskViewerWithColumns, ListViewer):
     def createWidget(self):
+        self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr, 
             self.onSelect, self.uiCommands['edit'], 
             self.createTaskPopupMenu(),
-            self.createColumnPopupMenu(),
-            self.columnSortCommands())
+            self.createColumnPopupMenu())
         widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
         return widget
         
@@ -396,10 +355,11 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
 
 class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
     def createWidget(self):
+        self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
             self.getItemImage, self.getItemAttr, self.getItemId, self.getRootIndices,
             self.getChildIndices, self.onSelect, self.uiCommands['edit'],
-            self.createTaskPopupMenu(), self.createColumnPopupMenu(), self.columnSortCommands())
+            self.createTaskPopupMenu(), self.createColumnPopupMenu())
         widget.AssignImageList(self.createImageList())
         return widget    
 
@@ -419,7 +379,7 @@ class EffortViewer(Viewer):
         return status1, status2
  
     
-class EffortListViewer(ListViewer, EffortViewer):
+class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     def __init__(self, *args, **kwargs):
         self.taskList = kwargs.pop('taskList')
         super(EffortListViewer, self).__init__(*args, **kwargs)
@@ -436,14 +396,15 @@ class EffortListViewer(ListViewer, EffortViewer):
         uiCommands['copy'] = uicommand.EditCopy(viewer=self)
         uiCommands['pasteintotask'] = uicommand.EditPasteIntoTask(viewer=self)
         
+        self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr,
             self.onSelect, uiCommands['editeffort'], 
             menu.EffortPopupMenu(self.parent, uiCommands), resizeableColumn=2)
         widget.SetColumnWidth(0, 150)
         return widget
-
-    def columns(self):
+    
+    def _createColumns(self):
         return [widgets.Column(columnHeader, None, None) for columnHeader in (_('Period'), _('Task'), _('Time spent'))]
         
     def createSorter(self, effortList):
@@ -476,14 +437,11 @@ class EffortListViewer(ListViewer, EffortViewer):
         
     def renderEntirePeriod(self, effort):
         return render.dateTimePeriod(effort.getStart(), effort.getStop())
-
-    def showColumn(self, *args, **kwargs):
-        raise AttributeError # not implemented yet
         
 
 class CompositeEffortListViewer(EffortListViewer):
-    def columns(self):
-        return super(CompositeEffortListViewer, self).columns() + \
+    def _createColumns(self):
+        return super(CompositeEffortListViewer, self)._createColumns() + \
             [widgets.Column(_('Total time spent'), None, None)]
         
     def curselection(self):

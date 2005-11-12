@@ -1,12 +1,11 @@
 import wx, itemctrl
 
 class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, wx.ListCtrl):
-    def __init__(self, parent, columnHeaders, getItemText, getItemImage, getItemAttr, 
+    def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
             selectCommand=None, editCommand=None, itemPopupMenu=None, 
-            columnPopupMenu=None, columnSortCommands=None, resizeableColumn=1, *args, **kwargs):
+            columnPopupMenu=None, resizeableColumn=1, *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent, -1, 
-            style=wx.LC_REPORT|wx.LC_VIRTUAL, columnHeaders=columnHeaders, 
-            columnSortCommands=columnSortCommands,
+            style=wx.LC_REPORT|wx.LC_VIRTUAL, columns=columns, 
             resizeableColumn=resizeableColumn, itemPopupMenu=itemPopupMenu, 
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.getItemText = getItemText
