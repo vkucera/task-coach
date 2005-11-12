@@ -226,26 +226,22 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             imageIndex = self.imageIndex['descending']
         self.widget.showSortOrder(imageIndex)
     
-    def getItemText(self, index, columnHeader=None):
+    def getItemText(self, index, column=None):
         task = self.list[index]
         # FIXME: When in a TaskTreeListViewer we need the subject non-recursively 
         # (e.g., 'task') when in a TaskListViewer we need the subject recursively
         # (e.g. 'parent -> task'. However, the following 5 lines depend on the fact 
-        # that getItemText is currently called *with* the columnHeader argument from
-        # a TreeCtrl and *without* the columnHeader from a TreeListCtrl.
-        if not columnHeader:
-            columnHeader = _('Subject')
+        # that getItemText is currently called *with* the column argument from
+        # a TreeCtrl and *without* the column from a TreeListCtrl.
+        if not column:
+            column = self.columns()[0]
             recursively = False
         else:
             recursively = True
-        # FIXME: Create a renderer dictionary with the column headers as keys and
-        # the renderers as values.
-        if columnHeader == _('Subject'):
+        if column == self.columns()[0]:
             return render.subject(task, recursively=recursively)
         else:
-            for column in self.columns():
-                if column.header() == columnHeader:
-                    return column.render(task)
+            return column.render(task)
                 
     def createColumnPopupMenu(self):
         return menu.TaskViewerColumnPopupMenu(self.parent, self.uiCommands)
@@ -376,14 +372,14 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     def createSorter(self, effortList):
         return effort.EffortSorter(effortList)
         
-    def getItemText(self, index, columnHeader):
+    def getItemText(self, index, column):
         effort = self.list[index]
-        if columnHeader == _('Period'):
+        if column.header() == _('Period'):
             previousEffort = index > 0 and self.list[index-1] or None
             return self.renderPeriod(effort, previousEffort)
-        elif columnHeader == _('Task'):
+        elif column.header() == _('Task'):
             return render.subject(effort.task(), recursively=True)
-        elif columnHeader == _('Time spent'):
+        elif column.header() == _('Time spent'):
             return render.timeSpent(effort.duration())
     
     def getItemImage(self, index):
@@ -414,12 +410,12 @@ class CompositeEffortListViewer(EffortListViewer):
         compositeEfforts = super(CompositeEffortListViewer, self).curselection()
         return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
 
-    def getItemText(self, index, columnHeader):
-        if columnHeader == _('Total time spent'):
+    def getItemText(self, index, column):
+        if column.header() == _('Total time spent'):
             effort = self.list[index]
             return render.timeSpent(effort.duration(recursive=True))
         else:
-            return super(CompositeEffortListViewer, self).getItemText(index, columnHeader)
+            return super(CompositeEffortListViewer, self).getItemText(index, column)
 
 
 class EffortPerDayViewer(CompositeEffortListViewer):

@@ -19,7 +19,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, wx.ListC
             self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, editCommand)
                         
     def OnGetItemText(self, rowIndex, columnIndex):
-        return self.getItemText(rowIndex, self._getColumnHeader(columnIndex))
+        return self.getItemText(rowIndex, self._getColumn(columnIndex))
 
     def OnGetItemImage(self, index):
         return self.getItemImage(index)

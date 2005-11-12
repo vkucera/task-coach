@@ -89,6 +89,9 @@ class EffortPerDayViewerWithDummyWidget(ViewerWithDummyWidget,
     def createSorter(self, *args, **kwargs):
         return gui.viewer.EffortPerDayViewer.createSorter(self, *args, **kwargs)
 
+    def _createColumns(self):
+        return gui.viewer.EffortPerDayViewer._createColumns(self)
+
         
 class Settings:
     def registerObserver(self, *args, **kwargs):

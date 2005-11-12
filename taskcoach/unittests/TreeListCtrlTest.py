@@ -3,6 +3,7 @@ import widgets, wx, dummy, TreeCtrlTest
 class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
     def setUp(self):
         super(TreeListCtrlTestCase, self).setUp()
+        self.createColumns()
         self.treeCtrl = widgets.TreeListCtrl(self.frame, self.columns(), 
             self.getItemText, self.getItemImage, self.getItemAttr,
             self.getItemId, self.getRootIndices, self.getChildIndices,
@@ -11,16 +12,19 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
         imageList.Add(wx.ArtProvider_GetBitmap('task', wx.ART_MENU, (16,16)))
         self.treeCtrl.AssignImageList(imageList)
 
-    def columns(self):
+    def createColumns(self):
         columnHeaders = ['Tree Column'] + ['Column %d'%index for index in range(1, 5)]
-        return [widgets.Column(columnHeader, ('view', 'whatever'), None) for columnHeader in columnHeaders]
+        self._columns = [widgets.Column(columnHeader, ('view', 'whatever'), None) for columnHeader in columnHeaders]
         
-    def getItemText(self, index, columnHeader=None):
+    def columns(self):
+        return self._columns
+    
+    def getItemText(self, index, column=None):
         itemText = super(TreeListCtrlTestCase, self).getItemText(index)
-        if columnHeader is None:
+        if column is None:
             return itemText
         else:
-            return '%s in %s'%(itemText, columnHeader)
+            return '%s in %s'%(itemText, column.header())
     
     
 class TreeListCtrlTest(TreeListCtrlTestCase, TreeCtrlTest.CommonTests):
@@ -37,7 +41,7 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
     def assertColumns(self):
         self.assertEqual(len(self.visibleColumns)+1, self.treeCtrl.GetColumnCount())
         for index, column in enumerate(self.visibleColumns):
-            self.assertEqual(self.getItemText(0, column.header()), 
+            self.assertEqual(self.getItemText(0, column), 
                              self.treeCtrl.GetItemText(self.treeCtrl[0], index+1))
     
     def showColumn(self, columnHeader, show=True):

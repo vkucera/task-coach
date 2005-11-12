@@ -327,13 +327,13 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
     def renderNode(self, item, rowIndex):
         super(TreeListCtrl, self).renderNode(item, rowIndex)
         for columnIndex in range(1, self.GetColumnCount()):
-            columnHeader = self._getColumnHeader(columnIndex)
-            self.SetItemText(item, self.getItemText(rowIndex, columnHeader), columnIndex)
+            column = self._getColumn(columnIndex)
+            self.SetItemText(item, self.getItemText(rowIndex, column), columnIndex)
                         
     def refreshColumn(self, columnIndex):
-        columnHeader = self._getColumnHeader(columnIndex)
+        column = self._getColumn(columnIndex)
         for rowIndex, item in self.allItems():
-            self.SetItemText(item, self.getItemText(rowIndex, columnHeader), columnIndex)
+            self.SetItemText(item, self.getItemText(rowIndex, column), columnIndex)
 
     def refreshColumns(self):
         for columnIndex in range(1, self.GetColumnCount()):
