@@ -22,11 +22,11 @@ class TaskListViewerTest(test.wxTestCase):
             self.taskList, dummy.DummyUICommands(), dummy.Settings())
 
     def testGetTimeSpent(self):
-        timeSpent = self.viewer.getItemText(0, 'Time spent')
+        timeSpent = self.viewer.getItemText(0, u'Time spent')
         self.assertEqual("0:00:00", timeSpent)
 
     def testGetTotalTimeSpent(self):
-        timeSpent = self.viewer.getItemText(0, 'Total time spent')
+        timeSpent = self.viewer.getItemText(0, u'Total time spent')
         self.assertEqual("0:00:00", timeSpent)
 
 

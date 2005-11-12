@@ -7,7 +7,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.container = gui.viewercontainer.ViewerNotebook(self.frame, dummy.Settings(), 'key')
         self.container.addViewer(dummy.ViewerWithDummyWidget(self.container,
-            self.taskList, effort.EffortList(self.taskList), self.settings), 'Dummy')
+            self.taskList, dummy.DummyUICommands(), self.settings), 'Dummy')
 
     def testCreate(self):
         self.assertEqual(0, self.container.size())
