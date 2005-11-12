@@ -167,27 +167,27 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             
     def _createColumns(self):
         return [widgets.Column(_('Subject'), None, 'subject', self.uiCommands['viewsortbysubject'])] + \
-            [widgets.Column(columnHeader, ('view', setting), setting, self.uiCommands['viewsortby' + setting]) for \
-            columnHeader, setting in \
-            (_('Start date'), 'startdate'),
-            (_('Due date'), 'duedate'),
-            (_('Days left'), 'timeleft'),
-            (_('Completion date'), 'completiondate'),
-            (_('Budget'), 'budget'),
-            (_('Total budget'), 'totalbudget'),
-            (_('Time spent'), 'timespent'),
-            (_('Total time spent'), 'totaltimespent'),
-            (_('Budget left'), 'budgetleft'),
-            (_('Total budget left'), 'totalbudgetleft'),
-            (_('Priority'), 'priority'),
-            (_('Overall priority'), 'totalpriority'),
-            (_('Hourly fee'), 'hourlyfee'),
-            (_('Fixed fee'), 'fixedfee'),
-            (_('Total fixed fee'), 'totalfixedfee'),
-            (_('Revenue'), 'revenue'),
-            (_('Total revenue'), 'totalrevenue'),
-            (_('Last modification time'), 'lastmodificationtime'),
-            (_('Overall last modification time'), 'totallastmodificationtime')]
+            [widgets.Column(columnHeader, ('view', setting), setting, self.uiCommands['viewsortby' + setting], renderCallback) for \
+            columnHeader, setting, renderCallback in \
+            (_('Start date'), 'startdate', lambda task: render.date(task.startDate())),
+            (_('Due date'), 'duedate', lambda task: render.date(task.dueDate())),
+            (_('Days left'), 'timeleft', lambda task: render.daysLeft(task.timeLeft())),
+            (_('Completion date'), 'completiondate', lambda task: render.date(task.completionDate())),
+            (_('Budget'), 'budget', lambda task: render.budget(task.budget())),
+            (_('Total budget'), 'totalbudget', lambda task: render.budget(task.budget(recursive=True))),
+            (_('Time spent'), 'timespent', lambda task: render.timeSpent(task.timeSpent())),
+            (_('Total time spent'), 'totaltimespent', lambda task: render.timeSpent(task.timeSpent(recursive=True))),
+            (_('Budget left'), 'budgetleft', lambda task: render.budget(task.budgetLeft())),
+            (_('Total budget left'), 'totalbudgetleft', lambda task: render.budget(task.budgetLeft(recursive=True))),
+            (_('Priority'), 'priority', lambda task: render.priority(task.priority())),
+            (_('Overall priority'), 'totalpriority', lambda task: render.priority(task.priority(recursive=True))),
+            (_('Hourly fee'), 'hourlyfee', lambda task: render.amount(task.hourlyFee())),
+            (_('Fixed fee'), 'fixedfee', lambda task: render.amount(task.fixedFee())),
+            (_('Total fixed fee'), 'totalfixedfee', lambda task: render.amount(task.fixedFee(recursive=True))),
+            (_('Revenue'), 'revenue', lambda task: render.amount(task.revenue())),
+            (_('Total revenue'), 'totalrevenue', lambda task: render.amount(task.revenue(recursive=True))),
+            (_('Last modification time'), 'lastmodificationtime', lambda task: render.dateTime(task.lastModificationTime())),
+            (_('Overall last modification time'), 'totallastmodificationtime', lambda task: render.dateTime(task.lastModificationTime(recursive=True)))]
 
     def initColumns(self):
         for column in self.columns():
@@ -242,45 +242,11 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
         # the renderers as values.
         if columnHeader == _('Subject'):
             return render.subject(task, recursively=recursively)
-        elif columnHeader == _('Start date'):
-            return render.date(task.startDate())
-        elif columnHeader == _('Due date'):
-            return render.date(task.dueDate())
-        elif columnHeader == _('Days left'):
-            return render.daysLeft(task.timeLeft())
-        elif columnHeader == _('Completion date'):
-            return render.date(task.completionDate())
-        elif columnHeader == _('Budget'):
-            return render.budget(task.budget())
-        elif columnHeader == _('Total budget'):
-            return render.budget(task.budget(recursive=True))
-        elif columnHeader == _('Time spent'):
-            return render.timeSpent(task.timeSpent())
-        elif columnHeader == _('Total time spent'):
-            return render.timeSpent(task.timeSpent(recursive=True))
-        elif columnHeader == _('Budget left'):
-            return render.budget(task.budgetLeft())
-        elif columnHeader == _('Total budget left'):
-            return render.budget(task.budgetLeft(recursive=True))
-        elif columnHeader == _('Priority'):
-            return render.priority(task.priority())
-        elif columnHeader == _('Overall priority'):
-            return render.priority(task.priority(recursive=True))
-        elif columnHeader == _('Hourly fee'):
-            return render.amount(task.hourlyFee())
-        elif columnHeader == _('Fixed fee'):
-            return render.amount(task.fixedFee())
-        elif columnHeader == _('Total fixed fee'):
-            return render.amount(task.fixedFee(recursive=True))
-        elif columnHeader == _('Revenue'):
-            return render.amount(task.revenue())
-        elif columnHeader == _('Total revenue'):
-            return render.amount(task.revenue(recursive=True))
-        elif columnHeader == _('Last modification time'):
-            return render.dateTime(task.lastModificationTime())
-        elif columnHeader == _('Overall last modification time'):
-            return render.dateTime(task.lastModificationTime(recursive=True))
-
+        else:
+            for column in self.columns():
+                if column.header() == columnHeader:
+                    return column.render(task)
+                
     def createColumnPopupMenu(self):
         return menu.TaskViewerColumnPopupMenu(self.parent, self.uiCommands)
 

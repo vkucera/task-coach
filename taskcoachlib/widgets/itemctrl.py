@@ -55,11 +55,13 @@ class CtrlWithItems(_CtrlWithItemPopupMenu):
 
 
 class Column(object):
-    def __init__(self, columnHeader, visibilitySetting, sortKey, sortCallback=None):
+    def __init__(self, columnHeader, visibilitySetting, sortKey, 
+            sortCallback=None, renderCallback=None):
         self.__columnHeader = columnHeader
         self.__visibilitySetting = visibilitySetting
         self.__sortKey = sortKey
         self.__sortCallback = sortCallback
+        self.__renderCallback = renderCallback
         
     def header(self):
         return self.__columnHeader
@@ -72,6 +74,9 @@ class Column(object):
     
     def sort(self, *args, **kwargs):
         self.__sortCallback(*args, **kwargs)
+        
+    def render(self, *args, **kwargs):
+        return self.__renderCallback(*args, **kwargs)
         
     def __eq__(self, other):
         return self.header() == other.header()
