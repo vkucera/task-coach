@@ -66,6 +66,7 @@ class DummyUICommands(gui.uicommand.UICommands):
 
 class ViewerWithDummyWidget(gui.viewer.Viewer):
     def createWidget(self):
+        self._columns = []
         self.createImageList()
         return DummyWidget(self)
 

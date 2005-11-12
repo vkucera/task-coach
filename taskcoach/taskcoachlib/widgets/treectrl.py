@@ -301,13 +301,12 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
 
 
 class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, gizmos.TreeListCtrl):
-    def __init__(self, parent, columnHeaders, getItemText, getItemImage, getItemAttr,
+    def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices, selectCommand, editCommand, 
-            itemPopupMenu=None, columnPopupMenu=None, columnSortCommands=None):
+            itemPopupMenu=None, columnPopupMenu=None):
         self._count = 0 # Need to set this early because InsertColumn invokes refreshColumn
         super(TreeListCtrl, self).__init__(parent, -1, style=self.getStyle(), 
-            columnHeaders=columnHeaders, columnSortCommands=columnSortCommands,
-            resizeableColumn=1, itemPopupMenu=itemPopupMenu,
+            columns=columns, resizeableColumn=1, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices)

@@ -3,7 +3,7 @@ import test, gui, task, widgets, dummy, date, TaskTreeViewerTest, \
 from gui import render
 
 class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
-    def createWidget(self):
+    def createWidgetWithColumns(self):
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
             self.getItemImage, self.getItemAttr, self.getItemId,
             self.getRootIndices, self.getChildIndices,

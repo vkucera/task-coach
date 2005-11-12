@@ -55,10 +55,11 @@ class CtrlWithItems(_CtrlWithItemPopupMenu):
 
 
 class Column(object):
-    def __init__(self, columnHeader, visibilitySetting, sortKey):
+    def __init__(self, columnHeader, visibilitySetting, sortKey, sortCallback=None):
         self.__columnHeader = columnHeader
         self.__visibilitySetting = visibilitySetting
         self.__sortKey = sortKey
+        self.__sortCallback = sortCallback
         
     def header(self):
         return self.__columnHeader
@@ -68,6 +69,9 @@ class Column(object):
 
     def sortKey(self):
         return self.__sortKey
+    
+    def sort(self, *args, **kwargs):
+        self.__sortCallback(*args, **kwargs)
         
     def __eq__(self, other):
         return self.header() == other.header()
@@ -82,13 +86,16 @@ class _BaseCtrlWithColumns(object):
         of columns after the initial setting of columns. '''
 
     def __init__(self, *args, **kwargs):
-        self.__allColumns = kwargs.pop('columnHeaders')
+        self.__allColumns = kwargs.pop('columns')
         super(_BaseCtrlWithColumns, self).__init__(*args, **kwargs)
         self._setColumns()
 
     def _setColumns(self):
         for columnIndex, column in enumerate(self.__allColumns):
             self.InsertColumn(columnIndex, column.header())
+            
+    def _allColumns(self):
+        return self.__allColumns
 
     def _getColumn(self, columnIndex):
         return self.__allColumns[columnIndex]
@@ -162,10 +169,16 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
             if super(_CtrlWithHideableColumns, self)._getColumnIndex(visibleColumnHeader) >= columnIndexWhenAllColumnsVisible:
                 return columnIndex
         return self.GetColumnCount() # Not found
+    
+    def _getColumn(self, columnIndex):
+        columnHeader = self._getColumnHeader(columnIndex)
+        for column in self._allColumns():
+            if columnHeader == column.header():
+                return column
+        raise IndexError
 
     def __visibleColumnHeaders(self):
         return [self._getColumnHeader(columnIndex) for columnIndex in range(self.GetColumnCount())]
-
 
 
 class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
@@ -173,26 +186,13 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
         trigger callbacks to (re)sort the contents of the control. '''
     
     def __init__(self, *args, **kwargs):
-        ''' _CtrlWithSortableColumns(columnSortCommands={columnHeader:sorter, 
-            columnHeader:sorter, ...})
-            The columnSortCommands dictionary contains one callable for each 
-            column header. The callbacks should expect one argument: the 
-            event. '''
-        self.__sorters = kwargs.pop('columnSortCommands')
         super(_CtrlWithSortableColumns, self).__init__(*args, **kwargs)
-        self.__attachColumnSortCommands()
-        
-    def __attachColumnSortCommands(self):
-        ''' columnSortCommands is a list of callables, one for each column and 
-            in the same order as the columns were passed to setColumns. The 
-            callbacks should expect one argument: the event. '''
-        if self.__sorters is not None:
-            self.Bind(wx.EVT_LIST_COL_CLICK, self.onColumnClick)
+        self.Bind(wx.EVT_LIST_COL_CLICK, self.onColumnClick)
         self.__currentSortColumnHeader = self._getColumnHeader(0)
         self.__currentSortImageIndex = -1
         
     def onColumnClick(self, event):
-        self.__sorters[self._getColumnHeader(event.GetColumn())](event)
+        self._getColumn(event.GetColumn()).sort(event)
         
     def showSort(self, columnHeader, imageIndex):
         if columnHeader != self.__currentSortColumnHeader:

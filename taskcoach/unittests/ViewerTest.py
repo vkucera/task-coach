@@ -7,7 +7,7 @@ class ViewerTest(test.wxTestCase):
         self.taskList = task.TaskList([self.task])
         self.settings = config.Settings(load=False)
         self.viewer = dummy.ViewerWithDummyWidget(self.frame,
-            self.taskList, effort.EffortList(self.taskList), self.settings)
+            self.taskList, dummy.DummyUICommands(), self.settings)
 
     def testSelectAll(self):
         self.viewer.selectall()
@@ -19,7 +19,7 @@ class TaskListViewerTest(test.wxTestCase):
         self.task = task.Task()
         self.taskList = task.sorter.Sorter(task.TaskList([self.task]), settings=dummy.Settings())
         self.viewer = dummy.TaskListViewerWithDummyWidget(self.frame,
-            self.taskList, effort.EffortList(self.taskList), dummy.Settings())
+            self.taskList, dummy.DummyUICommands(), dummy.Settings())
 
     def testGetTimeSpent(self):
         timeSpent = self.viewer.getItemText(0, 'Time spent')
@@ -35,7 +35,7 @@ class ViewerBaseClassTest(test.wxTestCase):
         taskList = task.TaskList()
         try:
             baseViewer = gui.viewer.Viewer(self.frame, taskList,
-                effort.EffortList(taskList), {})
+                dummy.DummyUICommands(), {})
             self.fail('Expected NotImplementedError')
         except NotImplementedError:
             pass
