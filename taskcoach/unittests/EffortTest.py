@@ -110,3 +110,24 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.effort.setTask(self.task)
         self.assertEqual([self.effort], self.task.efforts())
         
+    def testRevenueWithoutFee(self):
+        self.task.addEffort(self.effort)
+        self.assertEqual(0, self.effort.revenue())
+        
+    def testRevenue_HourlyFee(self):
+        self.task.setHourlyFee(100)
+        self.task.addEffort(self.effort)
+        self.assertEqual(self.effort.duration().hours()*100, self.effort.revenue())
+        
+    def testRevenue_FixedFee_OneEffort(self):
+        self.task.setFixedFee(1000)
+        self.task.addEffort(self.effort)
+        self.assertEqual(1000, self.effort.revenue())
+        
+    def testRevenue_FixedFee_TwoEfforts(self):
+        self.task.setFixedFee(1000)
+        self.task.addEffort(self.effort)
+        self.task.addEffort(effort.Effort(self.task, date.DateTime(2005,1,1,10,0),
+                            date.DateTime(2005,1,1,22,0)))
+        self.assertEqual(2./3*1000., self.effort.revenue())
+        

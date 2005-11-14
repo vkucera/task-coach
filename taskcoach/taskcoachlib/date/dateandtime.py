@@ -12,7 +12,7 @@ class DateTime(datetime.datetime):
         
     def endOfDay(self):
         return self.replace(hour=23, minute=59, second=59, microsecond=999999)
-        
+
     def startOfWeek(self):
         days = self.weekday()
         monday = self - timedelta.TimeDelta(days=days-1)
@@ -39,6 +39,12 @@ class DateTime(datetime.datetime):
         if isinstance(result, datetime.timedelta):
             result = timedelta.TimeDelta(result.days, result.seconds, result.microseconds)
         return result
+
+    def __add__(self, other):
+        result = super(DateTime, self).__add__(other)
+        return self.__class__(result.year, result.month, result.day, 
+            result.hour, result.minute, result.second, result.microsecond)
+
 
 def parseDateTime(string):
     if string == 'None':

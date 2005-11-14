@@ -58,3 +58,39 @@ class CompositeEffortTest(test.TestCase):
         self.compositeEffort.append(childEffort)
         self.assertEqual(self.effort.duration(), self.compositeEffort.duration())
         
+    def testRevenue_WithoutFee(self):
+        self.task.addEffort(self.effort)
+        self.compositeEffort.append(self.effort)
+        self.assertEqual(0, self.compositeEffort.revenue())
+        
+    def testRevenue_HourlyFee(self):
+        self.task.setHourlyFee(100)
+        self.task.addEffort(self.effort)
+        self.compositeEffort.append(self.effort)
+        self.assertEqual(self.effort.duration().hours()*100, self.compositeEffort.revenue())
+        
+    def testRevenue_FixedFee_OneEffort(self):
+        self.task.setFixedFee(1000)
+        self.task.addEffort(self.effort)
+        self.compositeEffort.append(self.effort)
+        self.assertEqual(1000, self.compositeEffort.revenue())
+        
+    def testRevenue_FixedFee_TwoEfforts(self):
+        self.task.setFixedFee(1000)
+        self.task.addEffort(self.effort)
+        self.compositeEffort.append(self.effort)
+        effort2 = effort.Effort(self.task, date.DateTime(2005,1,1,10,0),
+                                date.DateTime(2005,1,1,22,0))
+        self.task.addEffort(effort2)
+        self.assertEqual(2./3*1000., self.compositeEffort.revenue())
+        
+    def testRevenue_Recursive(self):
+        self.task.setHourlyFee(100)
+        child = task.Task()
+        self.task.addChild(child)
+        child.setHourlyFee(200)
+        self.task.addEffort(self.effort)
+        childEffort = effort.Effort(child, self.datetime, self.datetime + date.TimeDelta(hours=1))
+        child.addEffort(childEffort)
+        self.compositeEffort.extend([self.effort, childEffort])
+        self.assertEqual(2400 + 200, self.compositeEffort.revenue(recursive=True))

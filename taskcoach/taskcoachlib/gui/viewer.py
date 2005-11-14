@@ -221,10 +221,10 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
 
     def showSortOrder(self, ascending):
         if ascending:
-            imageIndex = self.imageIndex['ascending']
+            sortOrder = 'ascending'
         else:
-            imageIndex = self.imageIndex['descending']
-        self.widget.showSortOrder(imageIndex)
+            sortOrder = 'descending'
+        self.widget.showSortOrder(self.imageIndex[sortOrder])
     
     def getItemText(self, index, column=None):
         task = self.list[index]
@@ -367,7 +367,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         return widget
     
     def _createColumns(self):
-        return [widgets.Column(columnHeader, None, None) for columnHeader in (_('Period'), _('Task'), _('Time spent'))]
+        return [widgets.Column(columnHeader, None, None) for columnHeader in (_('Period'), _('Task'), _('Time spent'), _('Revenue'))]
         
     def createSorter(self, effortList):
         return effort.EffortSorter(effortList)
@@ -381,6 +381,8 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             return render.subject(effort.task(), recursively=True)
         elif column.header() == _('Time spent'):
             return render.timeSpent(effort.duration())
+        elif column.header() == _('Revenue'):
+            return render.amount(effort.revenue())
     
     def getItemImage(self, index):
         return -1
@@ -404,16 +406,18 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
 class CompositeEffortListViewer(EffortListViewer):
     def _createColumns(self):
         return super(CompositeEffortListViewer, self)._createColumns() + \
-            [widgets.Column(_('Total time spent'), None, None)]
+            [widgets.Column(columnHeader, None, None) for columnHeader in (_('Total time spent'), _('Total revenue'))]
         
     def curselection(self):
         compositeEfforts = super(CompositeEffortListViewer, self).curselection()
         return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
 
     def getItemText(self, index, column):
+        effort = self.list[index]
         if column.header() == _('Total time spent'):
-            effort = self.list[index]
             return render.timeSpent(effort.duration(recursive=True))
+        elif column.header() == _('Total revenue'):
+            return render.amount(effort.revenue(recursive=True))
         else:
             return super(CompositeEffortListViewer, self).getItemText(index, column)
 
