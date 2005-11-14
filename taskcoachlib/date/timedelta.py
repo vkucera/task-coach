@@ -26,7 +26,7 @@ class TimeDelta(datetime.timedelta):
             datetime.timedelta instance '''
         sum = super(TimeDelta, self).__add__(other)
         return self.__class__(sum.days, sum.seconds, sum.microseconds)
-        
+    
     def __sub__(self, other):
         result = super(TimeDelta, self).__sub__(other)
         return self.__class__(result.days, result.seconds, result.microseconds)

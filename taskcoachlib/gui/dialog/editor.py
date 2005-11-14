@@ -115,25 +115,40 @@ class BudgetPage(widgets.BookPage):
         super(BudgetPage, self).__init__(parent, columns=3, *args, **kwargs)
         self._task = task
         self._budgetEntry = TimeDeltaEntry(self, task.budget())
-        self._hourlyFeeEntry = AmountEntry(self, task.hourlyFee())
-        self._fixedFeeEntry = AmountEntry(self, task.fixedFee())
         entriesArgs = [['', _('For this task')],
                        [_('Budget'), self._budgetEntry],
                        [_('Time spent'), render.timeSpent(task.timeSpent())],
-                       [_('Budget left'), render.budget(task.budgetLeft())],
-                       [_('Hourly fee'), self._hourlyFeeEntry],
-                       [_('Fixed fee'), self._fixedFeeEntry]]
+                       [_('Budget left'), render.budget(task.budgetLeft())]]
         if task.children():
             entriesArgs[0].append(_('For this task including all subtasks'))
             entriesArgs[1].append(render.budget(task.budget(recursive=True)))
             entriesArgs[2].append(render.timeSpent(task.timeSpent(recursive=True)))
             entriesArgs[3].append(render.budget(task.budgetLeft(recursive=True)))
-            entriesArgs[5].append(render.amount(task.fixedFee(recursive=True)))
         for entryArgs in entriesArgs:
             self.addEntry(*entryArgs)
 
     def ok(self):
         self._task.setBudget(self._budgetEntry.get())           
+
+
+class RevenuePage(widgets.BookPage):
+    def __init__(self, parent, task, *args, **kwargs):
+        super(RevenuePage, self).__init__(parent, columns=3, *args, **kwargs)
+        self._task = task
+        self._hourlyFeeEntry = AmountEntry(self, task.hourlyFee())
+        self._fixedFeeEntry = AmountEntry(self, task.fixedFee())
+        entriesArgs = [['', _('For this task')],
+                       [_('Hourly fee'), self._hourlyFeeEntry],
+                       [_('Fixed fee'), self._fixedFeeEntry],
+                       [_('Revenue'), render.amount(task.revenue())]]
+        if task.children():
+            entriesArgs[0].append(_('For this task including all subtasks'))
+            entriesArgs[2].append(render.amount(task.fixedFee(recursive=True)))
+            entriesArgs[3].append(render.amount(task.revenue(recursive=True)))
+        for entryArgs in entriesArgs:
+            self.addEntry(*entryArgs)
+
+    def ok(self):
         self._task.setHourlyFee(self._hourlyFeeEntry.get())   
         self._task.setFixedFee(self._fixedFeeEntry.get())   
 
@@ -194,7 +209,8 @@ class TaskEditBook(widgets.Listbook):
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
         self.AddPage(CategoriesPage(self, task, categories), _('Categories'), 
                      'category')
-        self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')        
+        self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')
+        self.AddPage(RevenuePage(self, task), _('Revenue'), 'revenue')
         if task.timeSpent(recursive=True):
             effortPage = EffortPage(self, task, taskList, settings, uiCommands)
             self.AddPage(effortPage, _('Effort'), 'start')

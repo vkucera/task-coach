@@ -148,12 +148,12 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual(-1, self.task.priority())
         
     def testSetHourlyFee(self):
-        self.editor[0][3]._hourlyFeeEntry.set(100)
+        self.editor[0][4]._hourlyFeeEntry.set(100)
         self.editor.ok()
         self.assertEqual(100, self.task.hourlyFee())
 
     def testSetFixedFee(self):
-        self.editor[0][3]._fixedFeeEntry.set(100.5)
+        self.editor[0][4]._fixedFeeEntry.set(100.5)
         self.editor.ok()
         self.assertEqual(100.5, self.task.fixedFee())
 
