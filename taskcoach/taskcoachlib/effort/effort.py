@@ -121,3 +121,5 @@ class CompositeEffort(EffortBase, list):
         else:
             return [effort for effort in self if effort.task() == self._task]
         
+    def __eq__(self, other):
+        return self is other

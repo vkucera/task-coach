@@ -45,8 +45,8 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
                              self.treeCtrl.GetItemText(self.treeCtrl[0], index+1))
     
     def showColumn(self, columnHeader, show=True):
-        self.treeCtrl.showColumn(columnHeader, show)
         column = widgets.Column(columnHeader, ('view', 'whatever'), None)
+        self.treeCtrl.showColumn(column, show)
         if show:
             index = self.columns()[1:].index(column)
             self.visibleColumns.insert(index, column)

@@ -133,7 +133,10 @@ class TreeViewer(Viewer):
 class ViewerWithColumns(Viewer):
     def columns(self):
         return self._columns
-    
+
+    def getItemText(self, index, column):
+        item = self.list[index]
+        return column.render(item)
     
 
 class TaskViewer(Viewer):
@@ -195,10 +198,10 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             if visibilitySetting:
                 self.settings.registerObserver(self.onShowColumn, 
                     visibilitySetting)
-                self.widget.showColumn(column.header(), 
+                self.widget.showColumn(column, 
                     show=self.settings.getboolean(*column.visibilitySetting()))
             if self.settings.get('view', 'sortby') == column.sortKey():
-                self.widget.showSortColumn(column.header())
+                self.widget.showSortColumn(column)
                 self.showSortOrder(self.settings.getboolean('view',
                     'sortascending'))
         
@@ -206,14 +209,14 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
         visibilitySetting = notification.section, notification.option
         for column in self.columns():
             if column.visibilitySetting() == visibilitySetting:
-                self.widget.showColumn(column.header(), notification.value=='True')
+                self.widget.showColumn(column, notification.value=='True')
                 break
 
     def onSortKeyChanged(self, notification):
         sortKey = notification.value
         for column in self.columns():
             if column.sortKey() == sortKey:
-                self.widget.showSortColumn(column.header())
+                self.widget.showSortColumn(column)
                 break
         
     def onSortOrderChanged(self, notification):
@@ -367,30 +370,25 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         return widget
     
     def _createColumns(self):
-        return [widgets.Column(columnHeader, None, None) for columnHeader in (_('Period'), _('Task'), _('Time spent'), _('Revenue'))]
+        return [widgets.Column(columnHeader, None, None, None, renderCallback) \
+            for columnHeader, renderCallback in \
+            (_('Period'), self.renderPeriod),
+            (_('Task'), lambda effort: render.subject(effort.task(), recursively=True)),
+            (_('Time spent'), lambda effort: render.timeSpent(effort.duration())),
+            (_('Revenue'), lambda effort: render.amount(effort.revenue()))]
         
     def createSorter(self, effortList):
         return effort.EffortSorter(effortList)
-        
-    def getItemText(self, index, column):
-        effort = self.list[index]
-        if column.header() == _('Period'):
-            previousEffort = index > 0 and self.list[index-1] or None
-            return self.renderPeriod(effort, previousEffort)
-        elif column.header() == _('Task'):
-            return render.subject(effort.task(), recursively=True)
-        elif column.header() == _('Time spent'):
-            return render.timeSpent(effort.duration())
-        elif column.header() == _('Revenue'):
-            return render.amount(effort.revenue())
-    
+            
     def getItemImage(self, index):
         return -1
     
     def getItemAttr(self, index):
         return wx.ListItemAttr()
                 
-    def renderPeriod(self, effort, previousEffort=None):
+    def renderPeriod(self, effort):
+        index = self.list.index(effort)
+        previousEffort = index > 0 and self.list[index-1] or None
         if previousEffort and effort.getStart() == previousEffort.getStart():
             return self.renderRepeatedPeriod(effort)
         else:
@@ -406,20 +404,13 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
 class CompositeEffortListViewer(EffortListViewer):
     def _createColumns(self):
         return super(CompositeEffortListViewer, self)._createColumns() + \
-            [widgets.Column(columnHeader, None, None) for columnHeader in (_('Total time spent'), _('Total revenue'))]
+            [widgets.Column(columnHeader, None, None, None, renderCallback) for columnHeader, renderCallback in 
+                (_('Total time spent'), lambda effort: render.timeSpent(effort.duration(recursive=True))),
+                (_('Total revenue'), lambda effort: render.amount(effort.revenue(recursive=True)))]
         
     def curselection(self):
         compositeEfforts = super(CompositeEffortListViewer, self).curselection()
         return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
-
-    def getItemText(self, index, column):
-        effort = self.list[index]
-        if column.header() == _('Total time spent'):
-            return render.timeSpent(effort.duration(recursive=True))
-        elif column.header() == _('Total revenue'):
-            return render.amount(effort.revenue(recursive=True))
-        else:
-            return super(CompositeEffortListViewer, self).getItemText(index, column)
 
 
 class EffortPerDayViewer(CompositeEffortListViewer):

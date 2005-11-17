@@ -153,25 +153,25 @@ class _CtrlWithAutoResizeableColumns(_BaseCtrlWithColumns, wx.lib.mixins.listctr
 class _CtrlWithHideableColumns(_BaseCtrlWithColumns):        
     ''' This class supports hiding columns. '''
     
-    def showColumn(self, columnHeader, show=True):
-        ''' showColumn shows or hides the column for columnHeader. 
+    def showColumn(self, column, show=True):
+        ''' showColumn shows or hides the column for column. 
             The column is actually removed or inserted into the control because although
             TreeListCtrl supports hiding columns, ListCtrl does not. '''
-        columnIndex = self._getColumnIndex(columnHeader)
-        if show and not self.isColumnVisible(columnHeader):
-            self.InsertColumn(columnIndex, columnHeader)
-        elif not show and self.isColumnVisible(columnHeader):
+        columnIndex = self._getColumnIndex(column.header())
+        if show and not self.isColumnVisible(column):
+            self.InsertColumn(columnIndex, column.header())
+        elif not show and self.isColumnVisible(column):
             self.DeleteColumn(columnIndex)
 
-    def isColumnVisible(self, columnHeader):
-        return columnHeader in self.__visibleColumnHeaders()
+    def isColumnVisible(self, column):
+        return column in self.__visibleColumns()
 
     def _getColumnIndex(self, columnHeader):
         ''' _getColumnIndex returns the actual columnIndex of the column if it is visible, or
             the position it would have if it were visible. '''
         columnIndexWhenAllColumnsVisible = super(_CtrlWithHideableColumns, self)._getColumnIndex(columnHeader)
-        for columnIndex, visibleColumnHeader in enumerate(self.__visibleColumnHeaders()):
-            if super(_CtrlWithHideableColumns, self)._getColumnIndex(visibleColumnHeader) >= columnIndexWhenAllColumnsVisible:
+        for columnIndex, visibleColumn in enumerate(self.__visibleColumns()):
+            if super(_CtrlWithHideableColumns, self)._getColumnIndex(visibleColumn.header()) >= columnIndexWhenAllColumnsVisible:
                 return columnIndex
         return self.GetColumnCount() # Not found
     
@@ -182,8 +182,8 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
                 return column
         raise IndexError
 
-    def __visibleColumnHeaders(self):
-        return [self._getColumnHeader(columnIndex) for columnIndex in range(self.GetColumnCount())]
+    def __visibleColumns(self):
+        return [self._getColumn(columnIndex) for columnIndex in range(self.GetColumnCount())]
 
 
 class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
@@ -193,23 +193,16 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
     def __init__(self, *args, **kwargs):
         super(_CtrlWithSortableColumns, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_LIST_COL_CLICK, self.onColumnClick)
-        self.__currentSortColumnHeader = self._getColumnHeader(0)
+        self.__currentSortColumn = self._getColumn(0)
         self.__currentSortImageIndex = -1
         
     def onColumnClick(self, event):
         self._getColumn(event.GetColumn()).sort(event)
         
-    def showSort(self, columnHeader, imageIndex):
-        if columnHeader != self.__currentSortColumnHeader:
+    def showSortColumn(self, column):
+        if column != self.__currentSortColumn:
             self._clearSortImage()
-        self.__currentSortColumnHeader = columnHeader
-        self.__currentSortImageIndex = imageIndex
-        self._showSortImage()
-
-    def showSortColumn(self, columnHeader):
-        if columnHeader != self.__currentSortColumnHeader:
-            self._clearSortImage()
-        self.__currentSortColumnHeader = columnHeader
+        self.__currentSortColumn = column
         self._showSortImage()
 
     def showSortOrder(self, imageIndex):
@@ -223,10 +216,13 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
         self.__setSortColumnImage(self.__currentSortImageIndex)
         
     def _currentSortColumnHeader(self):
-        return self.__currentSortColumnHeader
+        return self.__currentSortColumn.header() # REMOVE ME
+    
+    def _currentSortColumn(self):
+        return self.__currentSortColumn
         
     def __setSortColumnImage(self, imageIndex):
-        columnIndex = self._getColumnIndex(self.__currentSortColumnHeader)
+        columnIndex = self._getColumnIndex(self.__currentSortColumn.header())
         columnInfo = self.GetColumn(columnIndex)
         if columnInfo.GetImage() == imageIndex:
             pass # The column is already showing the right image, so we're done
@@ -241,19 +237,19 @@ class CtrlWithColumns(_CtrlWithAutoResizeableColumns, _CtrlWithHideableColumns,
         resizing of columns, hideable columns, columns with sort indicators, and
         column popup menu's. '''
         
-    def showColumn(self, columnHeader, show=True):
-        super(CtrlWithColumns, self).showColumn(columnHeader, show)
+    def showColumn(self, column, show=True):
+        super(CtrlWithColumns, self).showColumn(column, show)
         # Show sort indicator if the column that was just made visible is being sorted on
-        if show and columnHeader == self._currentSortColumnHeader():
+        if show and column == self._currentSortColumn():
             self._showSortImage()
             
     def _clearSortImage(self):
         # Only clear the sort image if the column in question is visible
-        if self.isColumnVisible(self._currentSortColumnHeader()):
+        if self.isColumnVisible(self._currentSortColumn()):
             super(CtrlWithColumns, self)._clearSortImage()
             
     def _showSortImage(self):
         # Only show the sort image if the column in question is visible
-        if self.isColumnVisible(self._currentSortColumnHeader()):
+        if self.isColumnVisible(self._currentSortColumn()):
             super(CtrlWithColumns, self)._showSortImage()
         
