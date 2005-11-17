@@ -42,13 +42,21 @@ class ViewerBaseClassTest(test.wxTestCase):
 
 
 class CompositeEffortListViewerTest(test.wxTestCase):
-    def testGetItemText(self):
+    def setUp(self):
         taskList = task.TaskList()
         self.settings = config.Settings(load=False)
         aTask = task.Task()
         aTask.addEffort(effort.Effort(aTask))
         taskList.append(aTask)
         effortList = effort.EffortList(taskList)
-        viewer = dummy.EffortPerDayViewerWithDummyWidget(self.frame, 
+        self.viewer = dummy.EffortPerDayViewerWithDummyWidget(self.frame, 
             effortList, {}, self.settings, taskList=taskList)
-        self.assertEqual('0:00:00', viewer.getItemText(0, viewer.columns()[2]))
+            
+    def testGetItemText_TimeSpent(self):
+        self.assertEqual('0:00:00', 
+                         self.viewer.getItemText(0, self.viewer.columns()[2]))
+        
+    def testGetItemText_Revenue(self):
+        self.assertEqual('0.00', 
+                         self.viewer.getItemText(0, self.viewer.columns()[3]))
+    
