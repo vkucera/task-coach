@@ -108,7 +108,7 @@ class TreeMixin(object):
             pass # Hidden item
 
     def refresh(self, count=0):
-        # FIXME: count is ignored, but is present to make API consistent with ListCtrl API
+        self._count = count
         self._refreshing = True
         self._validItems = []
         self.itemsToExpandOrCollapse = {}
@@ -116,7 +116,7 @@ class TreeMixin(object):
         self.Freeze()
         rootItem = self.__getOrCreateRootItem()
         rootIndices = self.getRootIndices()
-        self._count = self.addItemsRecursively(rootItem, rootIndices)
+        self.addItemsRecursively(rootItem, rootIndices)
         self.deleteUnusedItems()
         self.restoreItemState()
         self.Thaw()

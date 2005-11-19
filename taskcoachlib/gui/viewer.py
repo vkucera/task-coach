@@ -98,9 +98,6 @@ class Viewer(patterns.Observable, wx.Panel):
     def size(self):
         return self.widget.GetItemCount()
 
-    def getItemAttr(self, index):
-        task = self.list[index]
-        return wx.ListItemAttr(color.taskColor(task, self.settings))
 
     def model(self):
         return self.list
@@ -157,6 +154,10 @@ class TaskViewer(Viewer):
  
     def createTaskPopupMenu(self):
         return menu.TaskPopupMenu(self.parent, self.uiCommands)
+
+    def getItemAttr(self, index):
+        task = self.list[index]
+        return wx.ListItemAttr(color.taskColor(task, self.settings))
         
 
 class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
