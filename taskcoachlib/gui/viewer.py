@@ -170,27 +170,27 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             
     def _createColumns(self):
         return [widgets.Column(_('Subject'), None, 'subject', self.uiCommands['viewsortbysubject'])] + \
-            [widgets.Column(columnHeader, ('view', setting), setting, self.uiCommands['viewsortby' + setting], renderCallback) for \
+            [widgets.Column(columnHeader, ('view', setting.lower()), setting, self.uiCommands['viewsortby' + setting.lower()], renderCallback) for \
             columnHeader, setting, renderCallback in \
-            (_('Start date'), 'startdate', lambda task: render.date(task.startDate())),
-            (_('Due date'), 'duedate', lambda task: render.date(task.dueDate())),
-            (_('Days left'), 'timeleft', lambda task: render.daysLeft(task.timeLeft())),
-            (_('Completion date'), 'completiondate', lambda task: render.date(task.completionDate())),
+            (_('Start date'), 'startDate', lambda task: render.date(task.startDate())),
+            (_('Due date'), 'dueDate', lambda task: render.date(task.dueDate())),
+            (_('Days left'), 'timeLeft', lambda task: render.daysLeft(task.timeLeft())),
+            (_('Completion date'), 'completionDate', lambda task: render.date(task.completionDate())),
             (_('Budget'), 'budget', lambda task: render.budget(task.budget())),
             (_('Total budget'), 'totalbudget', lambda task: render.budget(task.budget(recursive=True))),
-            (_('Time spent'), 'timespent', lambda task: render.timeSpent(task.timeSpent())),
-            (_('Total time spent'), 'totaltimespent', lambda task: render.timeSpent(task.timeSpent(recursive=True))),
-            (_('Budget left'), 'budgetleft', lambda task: render.budget(task.budgetLeft())),
-            (_('Total budget left'), 'totalbudgetleft', lambda task: render.budget(task.budgetLeft(recursive=True))),
+            (_('Time spent'), 'timeSpent', lambda task: render.timeSpent(task.timeSpent())),
+            (_('Total time spent'), 'totaltimeSpent', lambda task: render.timeSpent(task.timeSpent(recursive=True))),
+            (_('Budget left'), 'budgetLeft', lambda task: render.budget(task.budgetLeft())),
+            (_('Total budget left'), 'totalbudgetLeft', lambda task: render.budget(task.budgetLeft(recursive=True))),
             (_('Priority'), 'priority', lambda task: render.priority(task.priority())),
             (_('Overall priority'), 'totalpriority', lambda task: render.priority(task.priority(recursive=True))),
-            (_('Hourly fee'), 'hourlyfee', lambda task: render.amount(task.hourlyFee())),
-            (_('Fixed fee'), 'fixedfee', lambda task: render.amount(task.fixedFee())),
+            (_('Hourly fee'), 'hourlyFee', lambda task: render.amount(task.hourlyFee())),
+            (_('Fixed fee'), 'fixedFee', lambda task: render.amount(task.fixedFee())),
             (_('Total fixed fee'), 'totalfixedfee', lambda task: render.amount(task.fixedFee(recursive=True))),
             (_('Revenue'), 'revenue', lambda task: render.amount(task.revenue())),
             (_('Total revenue'), 'totalrevenue', lambda task: render.amount(task.revenue(recursive=True))),
-            (_('Last modification time'), 'lastmodificationtime', lambda task: render.dateTime(task.lastModificationTime())),
-            (_('Overall last modification time'), 'totallastmodificationtime', lambda task: render.dateTime(task.lastModificationTime(recursive=True)))]
+            (_('Last modification time'), 'lastModificationTime', lambda task: render.dateTime(task.lastModificationTime())),
+            (_('Overall last modification time'), 'totallastModificationTime', lambda task: render.dateTime(task.lastModificationTime(recursive=True)))]
 
     def initColumns(self):
         for column in self.columns():
