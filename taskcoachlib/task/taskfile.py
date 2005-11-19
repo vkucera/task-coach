@@ -38,16 +38,7 @@ class TaskFile(tasklist.TaskList):
         self.__needSave = False
 
     def _read(self, fd):
-        line = fd.readline()
-        if line.startswith('<?xml'):
-            fd.close()
-            fd = file(self.__filename, 'r')
-            #fd = codecs.open(self.__filename, 'r', 'utf-8')
-            ReaderClass = reader.XMLReader
-        else:
-            fd.seek(0)
-            ReaderClass = reader.TaskReader
-        return ReaderClass(fd).read()
+        return reader.XMLReader(fd).read()
         
     def _exists(self):
         return os.path.isfile(self.__filename)

@@ -73,7 +73,8 @@ class Column(object):
         return self.__sortKey
     
     def sort(self, *args, **kwargs):
-        self.__sortCallback(*args, **kwargs)
+        if self.__sortCallback:
+            self.__sortCallback(*args, **kwargs)
         
     def render(self, *args, **kwargs):
         return self.__renderCallback(*args, **kwargs)

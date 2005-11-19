@@ -36,7 +36,7 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         self._task.addEffort(self)
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
 
-    setParent = setTask # I should really create a common superclass for Effort and Task
+    setParent = setTask # FIXME: I should really create a common superclass for Effort and Task
     
     def __str__(self):
         return 'Effort(%s, %s, %s)'%(self._task, self._start, self._stop)

@@ -69,7 +69,7 @@ class Observable(object):
             Observable.notifyObservers. Optionally, observers can tell the 
             observable they are interested in a certain type of event. By default, 
             observers receive notification of all types of events. 
-            Event types can be anything as long as they are hashable.'''
+            Event types can be anything as long as it is hashable.'''
         eventTypes = eventTypes or [None]
         for eventType in eventTypes:
             self.__callbacks.setdefault(eventType, []).append(callback)

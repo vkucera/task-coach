@@ -4,6 +4,12 @@ from domain import *
 
 releases = [
 Release('0.52', 'November ?, 2005',
+    featuresRemoved=[
+        Feature('''Files in the old comma-separated format can no longer
+be read by Task Coach.''')],
+    featuresAdded=[
+        Feature('''Tasks can have an hourly fee and/or a fixed fee. Revenue
+is calculated based on effort spent.''')],
     bugsFixed=[
         Bug('''For completed tasks, the number of days left for a task is 
 now the number of days between the completion date and the due 
