@@ -854,7 +854,7 @@ class UICommands(dict):
              (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
              (_('&Days left'), _('Sort tasks by number of days left'), 'timeLeft'),
              (_('&Budget'), _('Sort tasks by budget'), 'budget'),
-             (_('Total b&udget'), _('Sort tasks by total budget'), 'totalbudget'),
+             (_('Total b&udget'), _('Sort tasks by total budget'), 'totalBudget'),
              (_('&Time spent'), _('Sort tasks by time spent'), 'timeSpent'),
              (_('T&otal time spent'), _('Sort tasks by total time spent'), 'totaltimeSpent'),
              (_('Budget &left'), _('Sort tasks by budget left'), 'budgetLeft'),

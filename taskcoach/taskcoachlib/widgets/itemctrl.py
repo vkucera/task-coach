@@ -55,7 +55,7 @@ class CtrlWithItems(_CtrlWithItemPopupMenu):
 
 
 class Column(object):
-    def __init__(self, columnHeader, visibilitySetting, sortKey, 
+    def __init__(self, columnHeader, visibilitySetting=None, sortKey=None, 
             sortCallback=None, renderCallback=None):
         self.__columnHeader = columnHeader
         self.__visibilitySetting = visibilitySetting
@@ -214,10 +214,7 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
     
     def _showSortImage(self):
         self.__setSortColumnImage(self.__currentSortImageIndex)
-        
-    def _currentSortColumnHeader(self):
-        return self.__currentSortColumn.header() # REMOVE ME
-    
+            
     def _currentSortColumn(self):
         return self.__currentSortColumn
         
