@@ -35,7 +35,7 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
     def setUp(self):
         super(TreeListCtrlColumnsTest, self).setUp()
         self.setTree('item')
-        self.treeCtrl.refresh()
+        self.treeCtrl.refresh(1)
         self.visibleColumns = self.columns()[1:]
         
     def assertColumns(self):
@@ -57,7 +57,7 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
         self.assertColumns()
         
     def testHideColumn(self):
-        self.showColumn('Column 2', False)
+        self.showColumn('Column 1', False)
         self.assertColumns()
         
     def testHideLastColumn(self):
