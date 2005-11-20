@@ -1,5 +1,5 @@
 from notebook import Notebook, Choicebook, Listbook, BookPage
-from dialog import Dialog, NotebookDialog, ListbookDialog
+from dialog import Dialog, NotebookDialog, ListbookDialog, HTMLDialog
 from buttonbox import ButtonBox
 from itemctrl import Column
 from listctrl import ListCtrl
