@@ -10,7 +10,7 @@ be read by Task Coach.''')],
     featuresAdded=[
         Feature('''Tasks can have an hourly fee and/or a fixed fee. Revenue
 is calculated based on effort spent.'''),
-        Feature('''First steps towards a user manual, see 'Help' -> 
+        Feature('''First tiny steps towards a user manual, see 'Help' -> 
 'Help contents'.''')],
     bugsFixed=[
         Bug('''For completed tasks, the number of days left for a task is 
@@ -21,7 +21,8 @@ of days left is still the number of days between today and the due date,
 of course. Patch provided by Maciej Malycha.'''),
         Bug('''Put taskocachlib package first on the Python search path to
 prevent name conflict with the config module on Gentoo Linux.''', '1353636'),
-        Bug('''Mention blue icon in the help on task colors.''', '1355985')]),
+        Bug('''Mention blue icon in the help on task colors.''', '1355985'),
+        Bug('''Don't allow empty categories.''', '1333896')]),
                     
 Release('0.51', 'October 30, 2005',
     featuresAdded=[
