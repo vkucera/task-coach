@@ -44,7 +44,8 @@ defaults = { \
     'size': '(600, 500)',
     'position': '(0, 0)',
     'iconized': 'False',
-    'splash': 'True' },
+    'splash': 'True',
+    'hidewheniconized': 'True' },
 'file' : { \
     'recentfiles': '[]',
     'maxrecentfiles': '4',

@@ -11,7 +11,9 @@ be read by Task Coach.''')],
         Feature('''Tasks can have an hourly fee and/or a fixed fee. Revenue
 is calculated based on effort spent.'''),
         Feature('''First tiny steps towards a user manual, see 'Help' -> 
-'Help contents'.''')],
+'Help contents'.'''),
+        Feature('''Whether the main window hides itself when iconized is now
+adjustable behavior. See 'Edit' -> 'Preferences'.''')],
     bugsFixed=[
         Bug('''For completed tasks, the number of days left for a task is 
 now the number of days between the completion date and the due 

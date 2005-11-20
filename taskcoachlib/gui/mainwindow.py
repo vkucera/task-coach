@@ -150,7 +150,8 @@ class MainWindow(WindowWithPersistentDimensions):
         self.Iconize(False)
 
     def onIconify(self, event):
-        if event.Iconized():
+        if event.Iconized() and self.settings.getboolean('window', 
+                                                         'hidewheniconized'):
             self.Hide()
 
     def showFindDialog(self, show=True):

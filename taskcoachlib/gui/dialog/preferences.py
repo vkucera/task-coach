@@ -60,11 +60,13 @@ class SavePage(SettingsPage):
             _('Maximum number of recent files to remember'), minimum=0, maximum=9)
             
                
-class StartupPage(SettingsPage):
+class WindowPage(SettingsPage):
     def __init__(self, *args, **kwargs):
-        super(StartupPage, self).__init__(*args, **kwargs)
-        self.addBooleanSetting('window', 'splash', _('Splash screen'),
+        super(WindowPage, self).__init__(*args, **kwargs)
+        self.addBooleanSetting('window', 'splash', _('Show splash screen on startup'),
             _('This setting will take effect after you restart %s')%meta.name)
+        self.addBooleanSetting('window', 'hidewheniconized', 
+            _('Hide main window when iconized'))
 
 
 class LanguagePage(SettingsPage):
@@ -102,7 +104,7 @@ class Preferences(widgets.ListbookDialog):
                    
     def addPages(self):
         self.SetMinSize((300, 300))
-        self._interior.AddPage(StartupPage(parent=self._interior, columns=3, settings=self.settings), _('Startup'), bitmap='taskcoach')
+        self._interior.AddPage(WindowPage(parent=self._interior, columns=3, settings=self.settings), _('Window behavior'), bitmap='windows')
         self._interior.AddPage(SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), bitmap='save')
         self._interior.AddPage(LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), bitmap='language')
         self._interior.AddPage(ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), bitmap='colorize')
