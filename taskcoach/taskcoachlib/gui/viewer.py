@@ -18,27 +18,116 @@ class Viewer(patterns.Observable, wx.Panel):
         self.widget = self.createWidget()
         self.initLayout()
         self.list.registerObserver(self.onNotify)
-        self.registerForColorChanges()
         self.onNotify(patterns.observer.Notification(self.list, itemsAdded=self.list))
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
         self._sizer.Add(self.widget, 1, wx.EXPAND)
         self.SetSizerAndFit(self._sizer)
-
-    def registerForColorChanges(self):
-        colorSettings = [('color', setting) for setting in 'activetasks',\
-            'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
-        self.settings.registerObserver(self.onColorChange, *colorSettings)
     
-    def onColorChange(self, *args, **kwargs):
-        self.refresh()
-        
     def __getattr__(self, attr):
         return getattr(self.widget, attr)
         
     def createWidget(self, *args):
         raise NotImplementedError
+ 
+    def createSorter(self, list):
+        return list
+        
+    def createFilter(self, list):
+        return list
+
+    def onNotify(self, notification, *args, **kwargs):
+        if notification:
+            if not notification.itemsAdded and not notification.itemsRemoved and not notification.orderChanged:
+                for item in notification.itemsChanged:
+                    self.widget.refreshItem(self.list.index(item))
+            else:
+                self.refresh()
+        
+    def onSelect(self, *args):
+        self.notifyObservers(patterns.observer.Notification(self))
+    
+    def refresh(self):
+        self.widget.refresh(len(self.list))
+        
+    def curselection(self):
+        return [self.list[index] for index in self.widget.curselection()]
+        
+    def size(self):
+        return self.widget.GetItemCount()
+
+    def model(self):
+        return self.list
+    
+
+class ListViewer(Viewer):
+    def getItemImage(self, index):
+        item = self.list[index]
+        normalImageIndex, expandedImageIndex = self.getImageIndices(item) 
+        if item.children():
+            return expandedImageIndex
+        else:
+            return normalImageIndex
+
+
+class TreeViewer(Viewer):
+    def expandAll(self):
+        self.widget.expandAllItems()
+
+    def collapseAll(self):
+        self.widget.collapseAllItems()
+        
+    def expandSelected(self):
+        self.widget.expandSelectedItems()
+        
+    def collapseSelected(self):
+        self.widget.collapseSelectedItems()
+        
+        
+class ViewerWithColumns(Viewer):
+    def columns(self):
+        return self._columns
+
+    def getItemText(self, index, column):
+        item = self.list[index]
+        return column.render(item)
+    
+
+class TaskViewer(Viewer):
+    def __init__(self, *args, **kwargs):
+        super(TaskViewer, self).__init__(*args, **kwargs)
+        self.__registerForColorChanges()
+    
+    def isShowingTasks(self): # FIXME: can be removed?
+        return True
+
+    def isShowingEffort(self): # FIXME: can be removed?
+        return False
+   
+    def statusMessages(self):
+        status1 = _('Tasks: %d selected, %d visible, %d total')%\
+            (len(self.curselection()), len(self.list), 
+             self.list.originalLength())         
+        status2 = _('Status: %d over due, %d inactive, %d completed')% \
+            (self.list.nrOverdue(), self.list.nrInactive(),
+             self.list.nrCompleted())
+        return status1, status2
+ 
+    def createTaskPopupMenu(self):
+        return menu.TaskPopupMenu(self.parent, self.uiCommands)
+
+    def getItemAttr(self, index):
+        task = self.list[index]
+        return wx.ListItemAttr(color.taskColor(task, self.settings))
+
+    def __registerForColorChanges(self):
+        colorSettings = [('color', setting) for setting in 'activetasks',\
+            'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
+        self.settings.registerObserver(self.onColorChange, *colorSettings)
+        
+    def onColorChange(self, *args, **kwargs):
+        self.refresh()
 
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
@@ -71,93 +160,6 @@ class Viewer(patterns.Observable, wx.Panel):
         if task.isBeingTracked():
             bitmap = bitmap_selected = 'start'
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
- 
-    def createSorter(self, list):
-        return list
-        
-    def createFilter(self, list):
-        return list
-
-    def onNotify(self, notification, *args, **kwargs):
-        if notification:
-            if not notification.itemsAdded and not notification.itemsRemoved and not notification.orderChanged:
-                for item in notification.itemsChanged:
-                    self.widget.refreshItem(self.list.index(item))
-            else:
-                self.refresh()
-        
-    def onSelect(self, *args):
-        self.notifyObservers(patterns.observer.Notification(self))
-    
-    def refresh(self):
-        self.widget.refresh(len(self.list))
-        
-    def curselection(self):
-        return [self.list[index] for index in self.widget.curselection()]
-        
-    def size(self):
-        return self.widget.GetItemCount()
-
-
-    def model(self):
-        return self.list
-    
-
-class ListViewer(Viewer):
-    def getItemImage(self, index):
-        task = self.list[index]
-        normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
-        if task.children():
-            return expandedImageIndex
-        else:
-            return normalImageIndex
-
-
-class TreeViewer(Viewer):
-    def expandAll(self):
-        self.widget.expandAllItems()
-
-    def collapseAll(self):
-        self.widget.collapseAllItems()
-        
-    def expandSelected(self):
-        self.widget.expandSelectedItems()
-        
-    def collapseSelected(self):
-        self.widget.collapseSelectedItems()
-        
-        
-class ViewerWithColumns(Viewer):
-    def columns(self):
-        return self._columns
-
-    def getItemText(self, index, column):
-        item = self.list[index]
-        return column.render(item)
-    
-
-class TaskViewer(Viewer):
-    def isShowingTasks(self): # FIXME: can be removed?
-        return True
-
-    def isShowingEffort(self): # FIXME: can be removed?
-        return False
-   
-    def statusMessages(self):
-        status1 = _('Tasks: %d selected, %d visible, %d total')%\
-            (len(self.curselection()), len(self.list), 
-             self.list.originalLength())         
-        status2 = _('Status: %d over due, %d inactive, %d completed')% \
-            (self.list.nrOverdue(), self.list.nrInactive(),
-             self.list.nrCompleted())
-        return status1, status2
- 
-    def createTaskPopupMenu(self):
-        return menu.TaskPopupMenu(self.parent, self.uiCommands)
-
-    def getItemAttr(self, index):
-        task = self.list[index]
-        return wx.ListItemAttr(color.taskColor(task, self.settings))
         
 
 class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):

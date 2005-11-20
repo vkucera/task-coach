@@ -1,4 +1,4 @@
-import wx, widgets
+import wx, wx.html, widgets
 from i18n import _
 
 class Dialog(wx.Dialog):
@@ -14,12 +14,15 @@ class Dialog(wx.Dialog):
         self._interior = self.createInterior()
         self.fillInterior()
         self._verticalSizer.Add(self._interior, 1, flag=wx.EXPAND)
-        self._buttonBox = widgets.ButtonBox(self._panel, (_('OK'), self.ok), 
-                                      (_('Cancel'), self.cancel))
+        self._buttonBox = self.createButtonBox()
         self._verticalSizer.Add(self._buttonBox, 0, wx.ALIGN_CENTER)
         self._panel.SetSizerAndFit(self._verticalSizer)
         self.SetSizerAndFit(self._panelSizer)
         wx.CallAfter(self._panel.SetFocus)
+
+    def createButtonBox(self):
+        return widgets.ButtonBox(self._panel, (_('OK'), self.ok), 
+                                 (_('Cancel'), self.cancel))
 
     def fillInterior(self):
         pass
@@ -56,7 +59,41 @@ class BookDialog(Dialog):
 class NotebookDialog(BookDialog):
     def createInterior(self):
         return widgets.Notebook(self._panel)
+
         
 class ListbookDialog(BookDialog):
     def createInterior(self):
         return widgets.Listbook(self._panel)
+
+
+class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
+    def OnLinkClicked(self, linkInfo):
+        openedLinkInExternalBrowser = False
+        if linkInfo.GetTarget() == '_blank':
+            import webbrowser
+            try:
+                webbrowser.open(linkInfo.GetHref())
+                openedLinkInExternalBrowser = True
+            except Error:
+                pass
+        if not openedLinkInExternalBrowser:
+            self.base_OnLinkClicked(linkInfo)
+
+
+class HTMLDialog(Dialog):
+    def __init__(self, title, htmlText, *args, **kwargs):
+        self._htmlText = htmlText
+        super(HTMLDialog, self).__init__(None, title, *args, **kwargs)
+        
+    def createInterior(self):
+        return HtmlWindowThatUsesWebBrowserForExternalLinks(self._panel, 
+            -1, size=(550,400))
+        
+    def fillInterior(self):
+        self._interior.AppendToPage(self._htmlText)
+        
+    def createButtonBox(self):
+        return widgets.ButtonBox(self._panel, (_('OK'), self.ok))
+    
+    def OnLinkClicked(self, linkInfo):
+        print linkInfo

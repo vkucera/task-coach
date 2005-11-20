@@ -1,5 +1,4 @@
-import wx, task, patterns, config, gui, meta, command
-from gui.dialog import helpdialog
+import wx, task, patterns, config, gui, meta, command, help, widgets
 from gui import render
 from i18n import _
 
@@ -673,14 +672,18 @@ class EffortStop(FilterCommand):
 
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
+        self._dialogTitle = kwargs.pop('dialogTitle')
+        self._dialogText = kwargs.pop('dialogText')
         self.closed = True
         super(DialogCommand, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
         self.closed = False
-        dialog = self.dialog()
+        dialog = widgets.HTMLDialog(self._dialogTitle, self._dialogText, 
+                                    bitmap=self.bitmap)
         dialog.Bind(wx.EVT_CLOSE, self.onClose)
         dialog.Bind(wx.EVT_BUTTON, self.onClose)
+        dialog.Show()
         
     def onClose(self, event):
         self.closed = True
@@ -689,38 +692,33 @@ class DialogCommand(UICommand):
     def enabled(self):
         return self.closed
 
-
-class HelpCommand(DialogCommand):
-    def __init__(self, *args, **kwargs):
-        super(HelpCommand, self).__init__(bitmap='help', *args, **kwargs)
         
-class HelpTasks(HelpCommand):
+class Help(DialogCommand):
     def __init__(self, *args, **kwargs):
-        self.dialog = helpdialog.Tasks
-        super(HelpTasks, self).__init__(menuText=_('&Tasks'),
-            helpText=_('Help about the possible states of tasks'), *args, **kwargs)
+        super(Help, self).__init__(menuText=_('&Help contents'),
+            helpText=_('Help about the program'), bitmap='help', 
+            dialogTitle=_('Help'), dialogText=help.helpHTML, *args, **kwargs)
 
-class HelpColors(HelpCommand):
-    def __init__(self, *args, **kwargs):
-        self.dialog = helpdialog.Colors
-        super(HelpColors, self).__init__(menuText=_('&Colors'),
-            helpText=_('Help about the possible colors of tasks'), *args, **kwargs)
 
 class InfoCommand(DialogCommand):
     def __init__(self, *args, **kwargs):
         super(InfoCommand, self).__init__(bitmap='info', *args, **kwargs)
-
+    
+    
 class HelpAbout(InfoCommand):
     def __init__(self, *args, **kwargs):
-        self.dialog = helpdialog.About
         super(HelpAbout, self).__init__(menuText=_('&About %s')%meta.name,
-            helpText=_('Version and contact information about %s')%meta.name, *args, **kwargs)
-
+            helpText=_('Version and contact information about %s')%meta.name, 
+            dialogTitle=_('Help: About %s')%meta.name, 
+            dialogText=help.aboutHTML, *args, **kwargs)
+  
+  
 class HelpLicense(InfoCommand):
     def __init__(self, *args, **kwargs):
-        self.dialog = helpdialog.License
         super(HelpLicense, self).__init__(menuText=_('&License'),
-            helpText=_('%s license')%meta.name, *args, **kwargs)
+            helpText=_('%s license')%meta.name,
+            dialogTitle=_('Help: %s license')%meta.name, 
+            dialogText=meta.licenseHTML, *args, **kwargs)
 
 
 class MainWindowRestore(MainWindowCommand):
@@ -927,8 +925,7 @@ class UICommands(dict):
         self['stopeffort'] = EffortStop(filteredTaskList=filteredTaskList)
         
         # Help menu
-        self['helptasks'] = HelpTasks()
-        self['helpcolors'] = HelpColors()
+        self['help'] = Help()
         self['about'] = HelpAbout()
         self['license'] = HelpLicense()
 

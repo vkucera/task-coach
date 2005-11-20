@@ -67,7 +67,6 @@ class DummyUICommands(gui.uicommand.UICommands):
 class ViewerWithDummyWidget(gui.viewer.Viewer):
     def createWidget(self):
         self._columns = self._createColumns()
-        self.createImageList()
         return DummyWidget(self)
 
     def _createColumns(self):
@@ -75,10 +74,12 @@ class ViewerWithDummyWidget(gui.viewer.Viewer):
 
     
 class TaskViewerWithDummyWidget(ViewerWithDummyWidget, gui.viewer.TaskViewer):
-    pass
+    def createWidget(self):
+        self.createImageList()
+        return super(TaskViewerWithDummyWidget, self).createWidget()
 
 
-class TaskListViewerWithDummyWidget(ViewerWithDummyWidget, 
+class TaskListViewerWithDummyWidget(TaskViewerWithDummyWidget, 
         gui.viewer.TaskListViewer):
     def _createColumns(self):
         return gui.viewer.TaskListViewer._createColumns(self)
