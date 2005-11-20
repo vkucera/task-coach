@@ -157,6 +157,14 @@ class EditTaskTest(TaskEditorTestCase):
         self.editor.ok()
         self.assertEqual(100.5, self.task.fixedFee())
 
+    def testAddCategory(self):
+        self.editor[0][2]._textEntry.SetValue('New category')
+        self.failUnless(self.editor[0][2]._addButton.IsEnabled())
+
+    def testAddCategory_DontAllowEmptyCategory(self):
+        self.editor[0][2]._textEntry.SetValue('')
+        self.failIf(self.editor[0][2]._addButton.IsEnabled())
+
 
 class EditMultipleTasksTest(TaskEditorTestCase):
     def setUp(self):

@@ -180,10 +180,11 @@ class CategoriesPage(widgets.BookPage):
                 self._checkListBox.Check(index)
         self.addEntry(_('Categories'), self._checkListBox, growable=True)
         self._textEntry = wx.TextCtrl(self, -1, style=wx.TE_PROCESS_ENTER)
-        addButton = wx.Button(self, -1, _('Add category'))
-        addButton.Bind(wx.EVT_BUTTON, self.onNewCategory)
-        self.addEntry(_('New category'), self._textEntry, addButton)
-        self.Bind(wx.EVT_TEXT_ENTER, self.onNewCategory, self._textEntry)
+        self._addButton = wx.Button(self, -1, _('Add category'))
+        self._addButton.Bind(wx.EVT_BUTTON, self.onNewCategory)
+        self.addEntry(_('New category'), self._textEntry, self._addButton)
+        self.Bind(wx.EVT_TEXT, self.onCategoryTextEntryChanged, self._textEntry)
+        self.disallowNewCategory()
         self._task = task
         
     def ok(self):
@@ -195,6 +196,22 @@ class CategoriesPage(widgets.BookPage):
             else:
                 self._task.removeCategory(category)
 
+    def onCategoryTextEntryChanged(self, event):
+        if self._textEntry.GetValue():
+            self.allowNewCategory()
+        else:
+            self.disallowNewCategory()
+            
+    def allowNewCategory(self):
+        if not self._addButton.IsEnabled():
+            self.Bind(wx.EVT_TEXT_ENTER, self.onNewCategory, self._textEntry)
+            self._addButton.Enable()
+        
+    def disallowNewCategory(self):
+        if self._addButton.IsEnabled():
+            self.Unbind(wx.EVT_TEXT_ENTER, self._textEntry)
+            self._addButton.Disable()
+        
     def onNewCategory(self, event):
         self._checkListBox.InsertItems([self._textEntry.GetValue()], 0)
         self._checkListBox.Check(0)
