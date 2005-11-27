@@ -8,6 +8,12 @@ class SaveTaskStateMixin(base.SaveStateMixin):
         for task in tasks:
             ancestors.extend(task.ancestors())
         return ancestors
+    
+    def getAllChildren(self, tasks):
+        allChildren = []
+        for task in tasks:
+            allChildren.extend(task.allChildren())
+        return allChildren
 
 
 class PasteIntoTaskCommand(base.PasteCommand):
@@ -29,6 +35,38 @@ class PasteIntoTaskCommand(base.PasteCommand):
             ancestors.extend(task.ancestors())
         return ancestors
 
+
+class DragAndDropTaskCommand(base.BaseCommand, SaveTaskStateMixin):
+    def name(self):
+        return _('Drag and drop')
+    
+    def __init__(self, *args, **kwargs):
+        self.__itemToDropOn = kwargs.pop('drop')
+        super(DragAndDropTaskCommand, self).__init__(*args, **kwargs)
+        self.saveStates(self.getTasksToSave())
+        
+    def getTasksToSave(self):
+        return [self.__itemToDropOn] + self.items
+    
+    def canDo(self):
+        return self.__itemToDropOn not in self.items + self.getAllChildren(self.items)
+    
+    def do_command(self):
+        self.list.removeItems(self.items)
+        for item in self.items:
+            item.setParent(self.__itemToDropOn)
+        self.list.extend(self.items)
+        
+    def undo_command(self):
+        self.list.removeItems(self.items)
+        self.undoStates()
+        self.list.extend(self.items)
+        
+    def redo_command(self):
+        self.list.removeItems(self.items)
+        self.redoStates()
+        self.list.extend(self.items)
+        
 
 class NewTaskCommand(base.BaseCommand):
     def name(self):

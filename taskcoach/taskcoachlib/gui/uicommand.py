@@ -591,6 +591,17 @@ class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         deleteCommand.do()
 
 
+class TaskDragAndDrop(NeedsSelectedTasks, FilterCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(TaskDragAndDrop, self).__init__(*args, **kwargs)
+        
+    def doCommand(self, event):
+        dragAndDropCommand = command.DragAndDropTaskCommand(self.filteredTaskList,
+            self.viewer.draggedItems(), drop=self.viewer.curselection()[0])
+        if dragAndDropCommand.canDo():
+            dragAndDropCommand.do()
+            
+
 class EffortNew(NeedsAtLeastOneTask, MainWindowCommand, EffortCommand,
         ViewerCommand, UICommandsCommand, FilterCommand):
     def __init__(self, *args, **kwargs):
@@ -915,6 +926,9 @@ class UICommands(dict):
             viewer=viewer)
         self['delete'] = TaskDelete(filteredTaskList=filteredTaskList, viewer=viewer)
         
+        # Task related, but not on any menu:
+        self['draganddroptask'] = TaskDragAndDrop(filteredTaskList=filteredTaskList, viewer=viewer)
+
         # Effort menu
         self['neweffort'] = EffortNew(mainwindow=mainwindow, effortList=effortList,
             viewer=viewer, uiCommands=self, filteredTaskList=filteredTaskList)
