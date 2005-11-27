@@ -262,4 +262,41 @@ class CopyCommandWithEffortTest(CommandWithEffortTestCase):
                     self.assertEqualEfforts(self.effort2, copiedEfforts[1])),
             lambda: (self.assertEffortList(self.originalEffortList),
             self.failIf(task.Clipboard())))
+     
+        
+class DragAndDropWithTasksTest(CommandWithChildrenTestCase):
+    def dragAndDrop(self, draggedItems, dropItem):
+        command.DragAndDropTaskCommand(self.taskList, draggedItems, drop=dropItem).do()
+        
+    def testDragAndDropRootTask(self):
+        self.taskList.append(self.task2)
+        self.dragAndDrop([self.task2], self.task1)
+        self.assertDoUndoRedo(
+            lambda: self.failUnless(self.task2 in self.task1.children()),
+            lambda: self.failIf(self.task2 in self.task1.children()))
+            
+    def testDontAllowDropOnSelf(self):
+        self.dragAndDrop([self.task1], self.task1)
+        self.assertDoUndoRedo(lambda: self.failIf(self.task1 in self.task1.children()))
+        
+    def testDragChildTaskAndDropOnOtherRootTask(self):
+        self.dragAndDrop([self.child2], self.task1)
+        self.assertDoUndoRedo(
+             lambda: (self.failUnless(self.child2 in self.task1.children()),
+                     self.failIf(self.child2 in self.parent.children())),
+             lambda: (self.failIf(self.child2 in self.task1.children()), 
+                     self.failUnless(self.child2 in self.parent.children())))
+                     
+    def testDragChildAndDropOnOwnParent(self):
+        self.dragAndDrop([self.child2], self.parent)
+        self.assertDoUndoRedo(
+            lambda: self.failUnless(self.child2 in self.parent.children()))
+            
+    def testDragParentAndDropOnOwnChild(self):
+        self.dragAndDrop([self.parent], self.child2) 
+        self.assertDoUndoRedo(
+            lambda: (self.failUnless(self.child2 in self.parent.children()),
+                    self.failIf(self.parent in self.child2.children())))
+                    
+
         

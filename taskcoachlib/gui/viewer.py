@@ -84,6 +84,9 @@ class TreeViewer(Viewer):
     def collapseSelected(self):
         self.widget.collapseSelectedItems()
         
+    def draggedItems(self):
+        return [self.list[index] for index in self.widget.draggedItems()]
+        
         
 class ViewerWithColumns(Viewer):
     def columns(self):
@@ -279,8 +282,9 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
-            self.getItemAttr, self.getItemId, self.getRootIndices, self.getChildIndices,
-            self.onSelect, self.uiCommands['edit'], self.createTaskPopupMenu())
+            self.getItemAttr, self.getItemId, self.getRootIndices, 
+            self.getChildIndices, self.onSelect, self.uiCommands['edit'], 
+            self.uiCommands['draganddroptask'], self.createTaskPopupMenu())
         widget.AssignImageList(self.createImageList())
         return widget
     
@@ -327,6 +331,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
             self.getItemImage, self.getItemAttr, self.getItemId, self.getRootIndices,
             self.getChildIndices, self.onSelect, self.uiCommands['edit'],
+            self.uiCommands['draganddroptask'],
             self.createTaskPopupMenu(), self.createColumnPopupMenu())
         widget.AssignImageList(self.createImageList())
         return widget    

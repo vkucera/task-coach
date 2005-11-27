@@ -127,7 +127,7 @@ class PasteCommand(BaseCommand, SaveStateMixin):
 
     def __init__(self, *args, **kwargs):
         super(PasteCommand, self).__init__(*args, **kwargs)
-        self.__itemsToPaste, self.__sourceOfItemsToPaste = task.Clipboard().get()
+        self.__itemsToPaste, self.__sourceOfItemsToPaste = self.getItemsToPaste()
         self.saveStates(self.getItemsToSave())
 
     def getItemsToSave(self):
@@ -143,17 +143,23 @@ class PasteCommand(BaseCommand, SaveStateMixin):
     def undo_command(self):
         self.__sourceOfItemsToPaste.removeItems(self.__itemsToPaste)
         self.undoStates()
-        task.Clipboard().put(self.__itemsToPaste, self.__sourceOfItemsToPaste)
+        self.restoreItemsToPasteToSource()
         
     def redo_command(self):
-        task.Clipboard().clear() 
+        self.clearSourceOfItemsToPaste()
         self.redoStates()
         self.__sourceOfItemsToPaste.extend(self.__itemsToPaste)
 
     def setParentOfPastedItems(self, newParent=None):
         for item in self.__itemsToPaste:
             item.setParent(newParent) 
-
     
+    # Clipboard interaction:
+    def getItemsToPaste(self):
+        return task.Clipboard().get()
 
+    def restoreItemsToPasteToSource(self):
+        task.Clipboard().put(self.__itemsToPaste, self.__sourceOfItemsToPaste)
         
+    def clearSourceOfItemsToPaste(self):
+        task.Clipboard().clear() 

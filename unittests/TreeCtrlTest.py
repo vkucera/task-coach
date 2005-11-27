@@ -205,7 +205,8 @@ class TreeCtrlTest(TreeCtrlTestCase, CommonTests):
         self.treeCtrl = widgets.TreeCtrl(self.frame, self.getItemText,
             self.getItemImage, self.getItemAttr,
             self.getItemId, self.getRootIndices,
-            self.getChildIndices, self.onSelect, dummy.DummyUICommand())
+            self.getChildIndices, self.onSelect, dummy.DummyUICommand(),
+            dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         imageList.Add(wx.ArtProvider_GetBitmap('task', wx.ART_MENU, (16,16)))
         self.treeCtrl.AssignImageList(imageList)

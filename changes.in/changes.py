@@ -8,8 +8,9 @@ Release('0.52', 'November ?, 2005',
         Feature('''Files in the old comma-separated format can no longer
 be read by Task Coach.''')],
     featuresAdded=[
+        Feature('''Tasks can be dragged and dropped.''', '1262863'),
         Feature('''Tasks can have an hourly fee and/or a fixed fee. Revenue
-is calculated based on effort spent.'''),
+is calculated based on effort spent.''', '1361790'),
         Feature('''First tiny steps towards a user manual, see 'Help' -> 
 'Help contents'.'''),
         Feature('''Whether the main window hides itself when iconized is now

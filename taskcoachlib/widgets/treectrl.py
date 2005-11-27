@@ -5,9 +5,10 @@ import wx.gizmos as gizmos
 class TreeMixin(object):
     ''' Methods common to both TreeCtrl and TreeListCtrl. '''
     
-    def bindEventHandlers(self, selectCommand, editCommand):
+    def bindEventHandlers(self, selectCommand, editCommand, dragAndDropCommand):
         self.selectCommand = selectCommand
         self.editCommand = editCommand
+        self.dragAndDropCommand = dragAndDropCommand
         self.__settingFocus = False
         self.__collapsing = False
         self.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
@@ -19,6 +20,31 @@ class TreeMixin(object):
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
         self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
+        self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.onBeginDrag)
+        self.Bind(wx.EVT_TREE_END_DRAG, self.onEndDrag)
+
+    def onBeginDrag(self, event):
+        event.Allow()
+        self.dragItem = event.GetItem()
+        
+    def draggedItems(self):
+        return [self.index(self.dragItem)]
+        
+    def onEndDrag(self, event):
+        if not event.GetItem().IsOk():
+            return
+        # Make sure this member exists.
+        try:
+            old = self.dragItem
+        except:
+            return
+        # Get the other IDs that are involved
+        new = event.GetItem()
+        parent = self.GetItemParent(new)
+        if not parent.IsOk():
+            return
+        # Move 'em
+        self.dragAndDropCommand(event)
 
     def onSetFocus(self, event):
         # When the TreeCtrl gets focus sometimes the selection is changed.
@@ -282,10 +308,11 @@ class TreeMixin(object):
 class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices,
-            getChildIndices, selectCommand, editCommand, itemPopupMenu=None):
+            getChildIndices, selectCommand, editCommand, dragAndDropCommand,
+            itemPopupMenu=None):
         super(TreeCtrl, self).__init__(parent, -1, style=self.getStyle(), 
             itemPopupMenu=itemPopupMenu)
-        self.bindEventHandlers(selectCommand, editCommand)
+        self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices)
         self.refresh()
@@ -302,7 +329,8 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
 
 class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, gizmos.TreeListCtrl):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr,
-            getItemId, getRootIndices, getChildIndices, selectCommand, editCommand, 
+            getItemId, getRootIndices, getChildIndices, selectCommand, 
+            editCommand, dragAndDropCommand,
             itemPopupMenu=None, columnPopupMenu=None):
         self._count = 0 # Need to set this early because InsertColumn invokes refreshColumn
         super(TreeListCtrl, self).__init__(parent, -1, style=self.getStyle(), 
@@ -310,7 +338,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
             columnPopupMenu=columnPopupMenu)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices)
-        self.bindEventHandlers(selectCommand, editCommand)
+        self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
         self.refresh()
         
     # Extend CtrlWithColumns with TreeListCtrl specific behaviour:
