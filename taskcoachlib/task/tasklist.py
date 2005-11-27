@@ -46,7 +46,8 @@ class TaskList(patterns.ObservableObservablesList):
         self.startNotifying()
         self.notifyObservers(patterns.observer.Notification(self, 
             itemsAdded=tasksAndAllChildren, itemsChanged=parents,
-            effortsAdded=self._allEfforts(tasksAndAllChildren)))
+            effortsAdded=self._allEfforts(tasksAndAllChildren), 
+            changeNeedsSave=True))
 
     def _removeTaskFromTaskList(self, task):
         self._removeTasksFromTaskList(task.children())

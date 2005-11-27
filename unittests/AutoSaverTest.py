@@ -1,4 +1,4 @@
-import test, task
+import test, task, date
 
 class DummySettings(dict):        
     def set(self, section, setting, value):
@@ -7,10 +7,15 @@ class DummySettings(dict):
     def getboolean(self, section, setting):
         return self.get(setting, 'False') == 'True'
 
+
 class DummyFile:
     def close(self, *args, **kwargs):
         pass
 
+    def write(self, *args, **kwargs):
+        pass
+    
+    
 class DummyTaskFile(task.TaskFile):
     def __init__(self, *args, **kwargs):
         self.saveCalled = 0
@@ -22,14 +27,18 @@ class DummyTaskFile(task.TaskFile):
         else:
             return [task.Task()]
         
-    def _exists(self, *args, **kwargs):
+    def exists(self, *args, **kwargs):
         return True
         
-    def _open(self, *args, **kwargs):
+    def _openForRead(self, *args, **kwargs):
         return DummyFile()
         
+    def _openForWrite(self, *args, **kwargs):
+        return DummyFile()
+    
     def save(self, *args, **kwargs):
         self.saveCalled += 1
+        super(DummyTaskFile, self).save(*args, **kwargs)
 
     def load(self, throw=False, *args, **kwargs):
         self._throw = throw
@@ -106,36 +115,34 @@ class AutoSaverBackupTestCase(test.TestCase):
         self.taskFile = DummyTaskFile()
         self.autoSaver = TestableAutoSaver(self.settings, self.taskFile)
 
-    def testDontCreakeBackupWhenSettingFilename(self):
+    def testBackupFilename(self):
+        now = date.DateTime(2004,1,1)
+        self.taskFile.setFilename('whatever.tsk')
+        self.assertEqual('whatever.tsk.20040101-000000.bak', 
+            self.autoSaver._backupFilename(lambda: now))
+
+    def testDontCreateBackupWhenSettingFilename(self):
         self.settings.set('file', 'backup', 'True')
         self.taskFile.setFilename('whatever.tsk')
         self.failIf(self.autoSaver.copyCalled)
 
-    def testCreateBackupOnOpen(self):
+    def testDontCreateBackupOnOpen(self):
         self.settings.set('file', 'backup', 'True')
-        self.taskFile.setFilename('whatever.tsk')
-        self.taskFile.load()
-        self.failUnless(self.autoSaver.copyCalled)
-        
-    def testCreateBackupOnOpen_ButBackupOff(self):
-        self.settings.set('file', 'backup', 'False')
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.load()
         self.failIf(self.autoSaver.copyCalled)
         
-    def testDontCreateBackupOnSave(self):
-        self.settings.set('file', 'backup', 'True')
+    def testCreateBackupOnSave_ButBackupOff(self):
+        self.settings.set('file', 'backup', 'False')
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.append(task.Task())
         self.taskFile.save()
         self.failIf(self.autoSaver.copyCalled)
-                
-    def testDontCreateBackupAfterException(self):
+        
+    def testCreateBackupOnSave(self):
         self.settings.set('file', 'backup', 'True')
         self.taskFile.setFilename('whatever.tsk')
-        try:
-            self.taskFile.load(throw=True)
-        except IOError:
-            pass
-        self.taskFile.setFilename('')
-        self.failIf(self.autoSaver.copyCalled)
+        self.taskFile.append(task.Task())
+        self.taskFile.save()
+        self.failUnless(self.autoSaver.copyCalled)
+                

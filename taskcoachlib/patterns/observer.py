@@ -52,16 +52,16 @@ class Observable(object):
     def __init__(self, *args, **kwargs):
         self.__callbacks = {}
         super(Observable, self).__init__(*args, **kwargs)
-        self.startNotifying()
+        self.__notifyingSemaphore = 0
         
     def stopNotifying(self):
-        self.__notifying = False
+        self.__notifyingSemaphore += 1
         
     def startNotifying(self):
-        self.__notifying = True
+        self.__notifyingSemaphore -= 1
 
     def isNotifying(self):
-        return self.__notifying
+        return self.__notifyingSemaphore == 0
         
     def registerObserver(self, callback, *eventTypes):
         ''' Register an observer. The callback should be a callable and 

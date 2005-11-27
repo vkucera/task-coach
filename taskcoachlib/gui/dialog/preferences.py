@@ -55,7 +55,7 @@ class SavePage(SettingsPage):
         self.addBooleanSetting('file', 'autosave', 
             _('Auto save after every change'))
         self.addBooleanSetting('file', 'backup', 
-            _('Create backup copy when opening a %s file')%meta.name)
+            _('Create backup copy before overwriting a %s file')%meta.name)
         self.addIntegerSetting('file', 'maxrecentfiles',
             _('Maximum number of recent files to remember'), minimum=0, maximum=9)
             
@@ -108,4 +108,3 @@ class Preferences(widgets.ListbookDialog):
         self._interior.AddPage(SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), bitmap='save')
         self._interior.AddPage(LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), bitmap='language')
         self._interior.AddPage(ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), bitmap='colorize')
-        

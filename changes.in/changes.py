@@ -15,6 +15,9 @@ is calculated based on effort spent.''', '1361790'),
 'Help contents'.'''),
         Feature('''Whether the main window hides itself when iconized is now
 adjustable behavior. See 'Edit' -> 'Preferences'.''')],
+    featuresChanged=[
+        Feature('''Backups are created just before saving, instead of when 
+loading a .tsk file. Patch provided by Maciej Malycha.''')],
     bugsFixed=[
         Bug('''For completed tasks, the number of days left for a task is 
 now the number of days between the completion date and the due 
