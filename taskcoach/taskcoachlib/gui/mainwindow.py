@@ -90,7 +90,7 @@ class MainWindow(WindowWithPersistentDimensions):
         wx.CallAfter(self.onShowStatusBar) 
                 
     def registerForWindowComponentChanges(self):
-        self.taskFile.registerObserver(self.SetTitle)
+        self.taskFile.registerObserver(self.SetTitle, 'FilenameChanged')
         self.settings.registerObserver(self.onShowFindDialog, 
             ('view', 'finddialog'))
         self.settings.registerObserver(self.onShowStatusBar, 
