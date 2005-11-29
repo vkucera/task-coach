@@ -171,7 +171,11 @@ class CategoriesPage(widgets.BookPage):
         super(CategoriesPage, self).__init__(parent, columns=3, growableColumn=1, *args, **kwargs)
         self._prioritySpinner = wx.SpinCtrl(self, -1, render.priority(task.priority()), 
             style=wx.SP_ARROW_KEYS)
-        self._prioritySpinner.SetRange(-sys.maxint, sys.maxint)
+        # Can't use sys.maxint because Python and wxPython disagree on what the 
+        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
+        # an Overflow exception, so we use a constant:
+        maxint = 2147483647
+        self._prioritySpinner.SetRange(-maxint, maxint)
         self.addEntry(_('Priority'), self._prioritySpinner)
         self._checkListBox = wx.CheckListBox(self, -1)
         self._checkListBox.InsertItems(categories, 0)
