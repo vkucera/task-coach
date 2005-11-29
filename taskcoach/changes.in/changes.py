@@ -3,7 +3,7 @@
 from domain import *
 
 releases = [
-Release('0.52', 'November ?, 2005',
+Release('0.52', 'November 29, 2005',
     featuresRemoved=[
         Feature('''Files in the old comma-separated format can no longer
 be read by Task Coach.''')],

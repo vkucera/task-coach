@@ -1,7 +1,10 @@
 '''
 Release steps:
-1. Run this script to release to Chello (my ISP) and PyPI.
+1. Run this script to release to Sourceforge Website, Chello (my ISP) and PyPI.
+1a. Remove old TaskCoach releases from SF TC Website by hand (sftp)
 2. Use releaseforge to release to Sourceforge.
+2a. Upload distributions
+2b. Post project news.
 3. Post release notification on freshmeat.net by hand.
 4. Tag source code: cvs tag ReleaseX_Y.
 5. Email taskcoach@yahoogroups.com and python-announce@python.org.
@@ -38,6 +41,9 @@ def ftpToChello():
     chello.put(glob.glob('*'))
     chello.quit()
 
+def scpToSourceForge():
+    os.system('scp dist/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
+
 def registerWithPyPI():
     from setup import setupOptions
     from distutils.core import setup
@@ -47,4 +53,5 @@ def registerWithPyPI():
     setup(**setupOptions)
 
 ftpToChello()
+#scpToSourceForge()
 registerWithPyPI()
