@@ -3,6 +3,14 @@
 from domain import *
 
 releases = [
+Release('0.53', 'December ?, 2005',
+    bugsFixed=[
+        Bug('''On some platforms, Python and wxPython seem to disagree on what
+the maximum integer is. The maximum integer is used to set the maximum and 
+minimum allowed priority values. Fixed by allowing priority values between 
+the rather arbitrary minimum and maximum values of -1000000000 and
+1000000000.''')]),
+
 Release('0.52', 'November 29, 2005',
     featuresRemoved=[
         Feature('''Files in the old comma-separated format can no longer
