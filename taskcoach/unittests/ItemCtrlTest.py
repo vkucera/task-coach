@@ -28,7 +28,7 @@ class CtrlWithHideableColumnsTests(object):
 class CtrlWithHideableColumnsTest(CtrlWithColumnsTestCase, 
                                   CtrlWithHideableColumnsTests):
     def createControl(self):
-        return CtrlWithHideableColumnsUnderTest(self.frame, 
+        return CtrlWithHideableColumnsUnderTest(self.frame, style=wx.LC_REPORT,
             columns=[self.column1, self.column2])
                 
         
@@ -48,7 +48,7 @@ class CtrlWithSortableColumnsTests(object):
 
 class CtrlWithSortableColumnsTest(CtrlWithColumnsTestCase, CtrlWithSortableColumnsTests):
     def createControl(self):
-        return CtrlWithSortableColumnsUnderTest(self.frame, 
+        return CtrlWithSortableColumnsUnderTest(self.frame, style=wx.LC_REPORT,
             columns=[self.column1, self.column2])            
         
         
@@ -59,7 +59,7 @@ class CtrlWithColumnsUnderTest(widgets.itemctrl.CtrlWithColumns, wx.ListCtrl):
 class CtrlWithColumnsTest(CtrlWithColumnsTestCase, 
         CtrlWithHideableColumnsTests, CtrlWithSortableColumnsTests):
     def createControl(self):
-        return CtrlWithColumnsUnderTest(self.frame,
+        return CtrlWithColumnsUnderTest(self.frame, style=wx.LC_REPORT,
             columns=[self.column1, self.column2], resizeableColumn=0, 
             columnPopupMenu=None)
                 
