@@ -15,6 +15,12 @@ class TextCtrl(wx.TextCtrl):
             self.__webbrowser.open(url)
      
     def __initializeText(self, text):
+        # Work around a bug in wxPython 2.6.0 and 2.6.1 that causes a
+        # wx._core.PyAssertionError: C++ assertion "ucf.GotUpdate()" failed in 
+        # ..\..\src\msw\textctrl.cpp(813): EM_STREAMIN didn't send EN_UPDATE?
+        # when text is empty.
+        if text == '':
+            text = ' '
         self.AppendText(text)
         self.SetInsertionPoint(0)
 
