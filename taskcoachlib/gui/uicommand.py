@@ -872,7 +872,7 @@ class UICommands(dict):
              (_('Overall priority'), _('Sort tasks by overall priority'), 'totalpriority'),
              (_('&Hourly fee'), _('Sort tasks by hourly fee'), 'hourlyFee'),
              (_('&Fixed fee'), _('Sort tasks by fixed fee'), 'fixedFee'),
-             (_('Total Fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalfixedFee'),
+             (_('Total fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalfixedFee'),
              (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
              (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalrevenue'),
              (_('Last modification time'), _('Sort tasks by last modification time'), 'lastModificationTime'),

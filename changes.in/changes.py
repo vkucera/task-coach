@@ -9,7 +9,11 @@ Release('0.53', 'December ?, 2005',
 the maximum integer is. The maximum integer is used to set the maximum and 
 minimum allowed priority values. Fixed by allowing priority values between 
 the rather arbitrary minimum and maximum values of -1000000000 and
-1000000000.''')]),
+1000000000.'''),
+        Bug('''Fixed exception: "wx._core.PyAssertionError: C++ assertion
+"ucf.GotUpdate()" failed in ..\..\src\msw\textctrl.cpp(813): EM_STREAMIN didn't 
+send EN_UPDATE?". This seems to be a bug in wxPython 2.6.0 and 2.6.1.
+Patch provided by Franz Steinhaeusler.''', '1344023')]),
 
 Release('0.52', 'November 29, 2005',
     featuresRemoved=[
