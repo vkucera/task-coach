@@ -13,7 +13,11 @@ the rather arbitrary minimum and maximum values of -1000000000 and
         Bug('''Fixed exception: "wx._core.PyAssertionError: C++ assertion
 "ucf.GotUpdate()" failed in ..\..\src\msw\textctrl.cpp(813): EM_STREAMIN didn't 
 send EN_UPDATE?". This seems to be a bug in wxPython 2.6.0 and 2.6.1.
-Patch provided by Franz Steinhaeusler.''', '1344023')]),
+Patch provided by Franz Steinhaeusler.''', '1344023')],
+    featuresAdded=[
+        Feature('''Columns in the effort view are hideable too, just like
+columns in the task views. See 'View' -> 'Effort columns', or right-click
+a column header in the effort view.''')]),
 
 Release('0.52', 'November 29, 2005',
     featuresRemoved=[

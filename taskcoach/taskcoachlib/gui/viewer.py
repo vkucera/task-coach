@@ -9,7 +9,7 @@ class Viewer(patterns.Observable, wx.Panel):
         efforts) by means of a widget (e.g. a ListCtrl or a TreeListCtrl).'''
         
     def __init__(self, parent, list, uiCommands, settings=None, *args, **kwargs):
-        # FIXME: Are settings still obtional?
+        # FIXME: Are settings still optional?
         super(Viewer, self).__init__(parent, -1) # FIXME: Pass *args, **kwargs
         self.parent = parent # FIXME: Make instance variables private
         self.settings = settings
@@ -89,13 +89,36 @@ class TreeViewer(Viewer):
         
         
 class ViewerWithColumns(Viewer):
+    def __init__(self, *args, **kwargs):
+        super(ViewerWithColumns, self).__init__(*args, **kwargs)
+        self.initColumns()
+        
     def columns(self):
         return self._columns
 
     def getItemText(self, index, column):
         item = self.list[index]
         return column.render(item)
-    
+
+    def initColumns(self):
+        for column in self.columns():
+            self.initColumn(column)
+
+    def initColumn(self, column):
+        visibilitySetting = column.visibilitySetting()
+        if visibilitySetting:
+            self.settings.registerObserver(self.onShowColumn, 
+                visibilitySetting)
+            self.widget.showColumn(column, 
+                show=self.settings.getboolean(*column.visibilitySetting()))
+
+    def onShowColumn(self, notification):
+        visibilitySetting = notification.section, notification.option
+        for column in self.columns():
+            if column.visibilitySetting() == visibilitySetting:
+                self.widget.showColumn(column, notification.value=='True')
+                break
+                
 
 class TaskViewer(Viewer):
     def __init__(self, *args, **kwargs):
@@ -168,7 +191,6 @@ class TaskViewer(Viewer):
 class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
     def __init__(self, *args, **kwargs):
         super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
-        self.initColumns()
         self.settings.registerObserver(self.onSortKeyChanged, 
             ('view', 'sortby'))
         self.settings.registerObserver(self.onSortOrderChanged, 
@@ -198,26 +220,13 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             (_('Last modification time'), 'lastModificationTime', lambda task: render.dateTime(task.lastModificationTime())),
             (_('Overall last modification time'), 'totallastModificationTime', lambda task: render.dateTime(task.lastModificationTime(recursive=True)))]
 
-    def initColumns(self):
-        for column in self.columns():
-            visibilitySetting = column.visibilitySetting()
-            if visibilitySetting:
-                self.settings.registerObserver(self.onShowColumn, 
-                    visibilitySetting)
-                self.widget.showColumn(column, 
-                    show=self.settings.getboolean(*column.visibilitySetting()))
-            if self.settings.get('view', 'sortby') == column.sortKey():
-                self.widget.showSortColumn(column)
-                self.showSortOrder(self.settings.getboolean('view',
-                    'sortascending'))
+    def initColumn(self, column):
+        super(TaskViewerWithColumns, self).initColumn(column)
+        if self.settings.get('view', 'sortby') == column.sortKey():
+            self.widget.showSortColumn(column)
+            self.showSortOrder(self.settings.getboolean('view',
+                'sortascending'))
         
-    def onShowColumn(self, notification):
-        visibilitySetting = notification.section, notification.option
-        for column in self.columns():
-            if column.visibilitySetting() == visibilitySetting:
-                self.widget.showColumn(column, notification.value=='True')
-                break
-
     def onSortKeyChanged(self, notification):
         sortKey = notification.value
         for column in self.columns():
@@ -373,7 +382,9 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr,
             self.onSelect, uiCommands['editeffort'], 
-            menu.EffortPopupMenu(self.parent, uiCommands), resizeableColumn=2)
+            menu.EffortPopupMenu(self.parent, uiCommands), 
+            menu.EffortViewerColumnPopupMenu(self.parent, uiCommands), 
+            resizeableColumn=2)
         widget.SetColumnWidth(0, 150)
         return widget
     
@@ -381,10 +392,12 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         return [widgets.Column(columnHeader, None, None, None, renderCallback) \
             for columnHeader, renderCallback in \
             (_('Period'), self.renderPeriod),
-            (_('Task'), lambda effort: render.subject(effort.task(), recursively=True)),
-            (_('Time spent'), lambda effort: render.timeSpent(effort.duration())),
-            (_('Revenue'), lambda effort: render.amount(effort.revenue()))]
-        
+            (_('Task'), lambda effort: render.subject(effort.task(), recursively=True))] + \
+            [widgets.Column(columnHeader, ('view', setting), None, None, renderCallback) \
+            for columnHeader, setting, renderCallback in \
+            (_('Time spent'), 'efforttimespent', lambda effort: render.timeSpent(effort.duration())),
+            (_('Revenue'), 'effortrevenue', lambda effort: render.amount(effort.revenue()))]
+
     def createSorter(self, effortList):
         return effort.EffortSorter(effortList)
             
@@ -412,9 +425,12 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
 class CompositeEffortListViewer(EffortListViewer):
     def _createColumns(self):
         return super(CompositeEffortListViewer, self)._createColumns() + \
-            [widgets.Column(columnHeader, None, None, None, renderCallback) for columnHeader, renderCallback in 
-                (_('Total time spent'), lambda effort: render.timeSpent(effort.duration(recursive=True))),
-                (_('Total revenue'), lambda effort: render.amount(effort.revenue(recursive=True)))]
+            [widgets.Column(columnHeader, ('view', setting), None, None, 
+             renderCallback) for columnHeader, setting, renderCallback in 
+                (_('Total time spent'), 'totalefforttimespent', 
+                 lambda effort: render.timeSpent(effort.duration(recursive=True))),
+                (_('Total revenue'), 'totaleffortrevenue', 
+                 lambda effort: render.amount(effort.revenue(recursive=True)))]
         
     def curselection(self):
         compositeEfforts = super(CompositeEffortListViewer, self).curselection()

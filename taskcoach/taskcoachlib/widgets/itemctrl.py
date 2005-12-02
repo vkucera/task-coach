@@ -156,8 +156,9 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
     
     def showColumn(self, column, show=True):
         ''' showColumn shows or hides the column for column. 
-            The column is actually removed or inserted into the control because although
-            TreeListCtrl supports hiding columns, ListCtrl does not. '''
+            The column is actually removed or inserted into the control because 
+            although TreeListCtrl supports hiding columns, ListCtrl does not. 
+            '''
         columnIndex = self._getColumnIndex(column.header())
         if show and not self.isColumnVisible(column):
             self.InsertColumn(columnIndex, column.header())
@@ -168,13 +169,13 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
         return column in self.__visibleColumns()
 
     def _getColumnIndex(self, columnHeader):
-        ''' _getColumnIndex returns the actual columnIndex of the column if it is visible, or
-            the position it would have if it were visible. '''
+        ''' _getColumnIndex returns the actual columnIndex of the column if it 
+            is visible, or the position it would have if it were visible. '''
         columnIndexWhenAllColumnsVisible = super(_CtrlWithHideableColumns, self)._getColumnIndex(columnHeader)
         for columnIndex, visibleColumn in enumerate(self.__visibleColumns()):
             if super(_CtrlWithHideableColumns, self)._getColumnIndex(visibleColumn.header()) >= columnIndexWhenAllColumnsVisible:
                 return columnIndex
-        return self.GetColumnCount() # Not found
+        return self.GetColumnCount() # Column header not found
     
     def _getColumn(self, columnIndex):
         columnHeader = self._getColumnHeader(columnIndex)
@@ -231,9 +232,9 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
 
 class CtrlWithColumns(_CtrlWithAutoResizeableColumns, _CtrlWithHideableColumns,
                       _CtrlWithSortableColumns, _CtrlWithColumnPopupMenu):
-    ''' CtrlWithColumns combines the functionality of its four parent classes: automatic
-        resizing of columns, hideable columns, columns with sort indicators, and
-        column popup menu's. '''
+    ''' CtrlWithColumns combines the functionality of its four parent classes: 
+        automatic resizing of columns, hideable columns, columns with sort 
+        indicators, and column popup menu's. '''
         
     def showColumn(self, column, show=True):
         super(CtrlWithColumns, self).showColumn(column, show)

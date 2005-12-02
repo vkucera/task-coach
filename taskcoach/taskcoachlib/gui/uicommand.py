@@ -819,7 +819,11 @@ class UICommands(dict):
              (_('&Revenue'), _('Show/hide revenue column'), 'revenue'),
              (_('T&otal revenue'), _('Show/hide total revenue column'), 'totalrevenue'),
              (_('Last modification time'), _('Show/hide last modification time column'), 'lastmodificationtime'),
-             (_('Overall last modification time'), _('Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks'), 'totallastmodificationtime')]:
+             (_('Overall last modification time'), _('Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks'), 'totallastmodificationtime'),
+             (_('&Time spent'), _('Show/hide time spent column'), 'efforttimespent'),
+             (_('T&otal time spent'), _('Show/hide total time spent column'), 'totalefforttimespent'),
+             (_('&Revenue'), _('Show/hide revenue column'), 'effortrevenue'),
+             (_('To&tal revenue'), _('Show/hide total revenue column'), 'totaleffortrevenue')]:
             key = 'view' + setting
             self[key] = UICheckCommand(menuText=menuText, helpText=helpText, setting=setting, settings=settings)
     
