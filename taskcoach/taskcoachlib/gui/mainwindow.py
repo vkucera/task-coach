@@ -54,7 +54,7 @@ class MainWindow(WindowWithPersistentDimensions):
     def createWindowComponents(self):
         self.panel = wx.Panel(self, -1)
         self.viewer = viewercontainer.ViewerNotebook(self.panel, self.settings, 'mainviewer') 
-        self.findDialog = find.FindPanel(self.panel, self.filteredTaskList, self.viewer)
+        self.findDialog = find.FindPanel(self.panel, self.viewer, self.settings)
         self.initLayout()
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.filteredTaskList, self.effortList)
@@ -136,6 +136,9 @@ class MainWindow(WindowWithPersistentDimensions):
     def quit(self, event=None):
         if not self.iocontroller.close():
             return
+        # FIXME: I'm not sure unicode strings will work in the TaskCoach.ini
+        # file, so just to be sure we'll clear a possible search string:
+        self.settings.set('view', 'tasksearchfilterstring', '') 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()

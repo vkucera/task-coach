@@ -94,23 +94,6 @@ class EffortPerDayViewerWithDummyWidget(ViewerWithDummyWidget,
         return gui.viewer.EffortPerDayViewer._createColumns(self)
 
         
-class Settings:
-    def registerObserver(self, *args, **kwargs):
-        pass
-        
-    def get(self, section, setting):
-        if setting == 'tasksdue':
-            return 'Unlimited'
-        else:
-            return 'subject'
-        
-    def getboolean(self, *args):
-        return True
-        
-    def set(self, *args):
-        pass
-
-        
 class TaskList(patterns.ObservableObservablesList):        
     def rootTasks(self):
         return [task for task in self if task.parent() is None]

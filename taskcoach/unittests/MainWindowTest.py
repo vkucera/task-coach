@@ -7,8 +7,9 @@ class MainWindowUnderTest(gui.MainWindow):
 
 class MainWindowTest(test.wxTestCase):
     def setUp(self):
-        taskList = task.filter.SearchFilter(task.TaskFile())
         self.settings = config.Settings(load=False)
+        taskList = task.filter.SearchFilter(task.TaskFile(), 
+            settings=self.settings)
         self.mainwindow = MainWindowUnderTest(dummy.IOController(), taskList,
             taskList, effort.EffortList(taskList), self.settings)
 

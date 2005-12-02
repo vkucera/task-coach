@@ -17,9 +17,11 @@ class ViewerTest(test.wxTestCase):
 class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
         self.task = task.Task()
-        self.taskList = task.sorter.Sorter(task.TaskList([self.task]), settings=dummy.Settings())
+        settings = config.Settings(load=False)
+        self.taskList = task.sorter.Sorter(task.TaskList([self.task]), 
+            settings=settings)
         self.viewer = dummy.TaskListViewerWithDummyWidget(self.frame,
-            self.taskList, dummy.DummyUICommands(), dummy.Settings())
+            self.taskList, dummy.DummyUICommands(), settings)
 
     def testGetTimeSpent(self):
         timeSpent = self.viewer.getItemText(0, self.viewer.columns()[7])

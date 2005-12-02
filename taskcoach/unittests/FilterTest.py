@@ -176,41 +176,50 @@ class SearchFilterTest(test.TestCase):
         self.child = task.Task(subject='DEF')
         self.parent.addChild(self.child)
         self.list = task.TaskList([self.parent, self.child])
-        self.filter = task.filter.SearchFilter(self.list)
+        self.settings = config.Settings(load=False)
+        self.filter = task.filter.SearchFilter(self.list, settings=self.settings)
 
+    def setSearchString(self, searchString):
+        self.settings.set('view', 'tasksearchfilterstring', searchString)
+        
     def testNoMatch(self):
-        self.filter.setSubject('XYZ')
+        self.setSearchString('XYZ')
         self.assertEqual(0, len(self.filter))
 
     def testMatch(self):
-        self.filter.setSubject('AB')
+        self.setSearchString('AB')
         self.assertEqual(1, len(self.filter))
 
     def testMatchIsCaseInSensitiveByDefault(self):
-        self.filter.setSubject('abc')
+        self.setSearchString('abc')
         self.assertEqual(1, len(self.filter))
 
     def testMatchCaseInsensitive(self):
-        self.filter.setMatchCase(True)
-        self.filter.setSubject('abc')
+        self.settings.set('view', 'tasksearchfiltermatchcase', 'True')
+        self.setSearchString('abc')
         self.assertEqual(0, len(self.filter))
 
     def testMatchWithRE(self):
-        self.filter.setSubject('a.c')
+        self.setSearchString('a.c')
         self.assertEqual(1, len(self.filter))
 
     def testMatchWithEmptyString(self):
-        self.filter.setSubject('')
+        self.setSearchString('')
         self.assertEqual(2, len(self.filter))
 
-    def testMatchChildAlsoSelectsParent(self):
-        self.filter.setSubject('DEF')
+    def testMatchChildDoesNotSelectParentWhenNotInTreeMode(self):
+        self.setSearchString('DEF')
+        self.assertEqual(1, len(self.filter))
+
+    def testMatchChildAlsoSelectsParentWhenInTreeMode(self):
+        self.filter.setTreeMode(True)
+        self.setSearchString('DEF')
         self.assertEqual(2, len(self.filter))
         
     def testMatchChildDoesNotSelectParentWhenChildNotInList(self):
         self.list.remove(self.child) 
         self.parent.addChild(self.child) # simulate a child that has been filtered 
-        self.filter.setSubject('DEF')
+        self.setSearchString('DEF')
         self.assertEqual(0, len(self.filter))
 
         

@@ -43,7 +43,9 @@ defaults = { \
     'sortby': 'dueDate',
     'sortascending': 'True',
     'sortbystatusfirst': 'True',
-    'sortcasesensitive': 'True' },
+    'sortcasesensitive': 'True',
+    'tasksearchfilterstring': '',
+    'tasksearchfiltermatchcase': 'False' },
 'window' : { \
     'size': '(600, 500)',
     'position': '(0, 0)',

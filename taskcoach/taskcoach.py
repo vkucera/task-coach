@@ -45,9 +45,8 @@ class App(object):
         effortList = effort.EffortList(self.taskFile)
         self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
         categoryFilteredTaskList = task.filter.CategoryFilter(self.taskFile)
-        searchFilteredTaskList = task.filter.SearchFilter(categoryFilteredTaskList)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
-            searchFilteredTaskList, effortList, settings)
+            categoryFilteredTaskList, effortList, settings)
         self.processCommandLineArguments(settings, loadTaskFile)
         
     def processCommandLineArguments(self, settings, load=True):
