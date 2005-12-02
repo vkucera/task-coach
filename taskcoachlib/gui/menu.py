@@ -111,7 +111,8 @@ class ViewMenu(Menu):
         self.appendMenu(_('Tasks &due before end of'),
             ViewTasksByDueDateMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, ['viewcategories', None])
-        self.appendMenu(_('&Columns'), ViewColumnsMenu(mainwindow, uiCommands))
+        self.appendMenu(_('Task &columns'), ViewTaskColumnsMenu(mainwindow, uiCommands))
+        self.appendMenu(_('Effort &columns'), ViewEffortColumnsMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('Task &list options'), 
             ViewTaskListMenu(mainwindow, uiCommands))
@@ -124,38 +125,49 @@ class ViewMenu(Menu):
         self.appendUICommands(uiCommands, ['viewfinddialog', 'viewstatusbar'])   
 
 
-class ViewColumnsMenu(Menu):
+class ViewTaskColumnsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
-        super(ViewColumnsMenu, self).__init__(mainwindow)
-        self.appendMenu(_('&Dates'), ViewDateColumnsMenu(mainwindow, uiCommands))
-        self.appendMenu(_('&Budget'), ViewBudgetColumnsMenu(mainwindow, uiCommands))
-        self.appendMenu(_('&Financial'), ViewFinancialColumnsMenu(mainwindow, uiCommands))
+        super(ViewTaskColumnsMenu, self).__init__(mainwindow)
+        self.appendMenu(_('&Dates'), 
+            _ViewTaskDateColumnsMenu(mainwindow, uiCommands))
+        self.appendMenu(_('&Budget'), 
+            _ViewTaskBudgetColumnsMenu(mainwindow, uiCommands))
+        self.appendMenu(_('&Financial'), 
+            _ViewTaskFinancialColumnsMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, ['viewpriority', 'viewtotalpriority', 
         'viewlastmodificationtime', 'viewtotallastmodificationtime'])
 
 
-class ViewDateColumnsMenu(Menu):
+class _ViewTaskDateColumnsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
-        super(ViewDateColumnsMenu, self).__init__(mainwindow)
+        super(_ViewTaskDateColumnsMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewalldatecolumns', None, 
             'viewstartdate', 'viewduedate', 'viewcompletiondate', 
             'viewtimeleft'])
 
 
-class ViewBudgetColumnsMenu(Menu):
+class _ViewTaskBudgetColumnsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
-        super(ViewBudgetColumnsMenu, self).__init__(mainwindow)
+        super(_ViewTaskBudgetColumnsMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewallbudgetcolumns', None, 
             'viewbudget', 'viewtotalbudget', 'viewtimespent',
             'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft'])
 
 
-class ViewFinancialColumnsMenu(Menu):
+class _ViewTaskFinancialColumnsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
-        super(ViewFinancialColumnsMenu, self).__init__(mainwindow)
+        super(_ViewTaskFinancialColumnsMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewallfinancialcolumns', None, 
             'viewhourlyfee', 'viewfixedfee', 'viewtotalfixedfee', 
             'viewrevenue', 'viewtotalrevenue'])
+
+
+class ViewEffortColumnsMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ViewEffortColumnsMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewefforttimespent',
+            'viewtotalefforttimespent', 'vieweffortrevenue',
+            'viewtotaleffortrevenue'])
 
            
 class ViewTaskStatesMenu(Menu):
@@ -221,8 +233,8 @@ class TaskMenu(Menu):
 class EffortMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(EffortMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['neweffort', 'editeffort', 'deleteeffort', None, 
-            'starteffort', 'stopeffort'])
+        self.appendUICommands(uiCommands, ['neweffort', 'editeffort', 
+            'deleteeffort', None, 'starteffort', 'stopeffort'])
         
         
 class HelpMenu(Menu):
@@ -234,7 +246,8 @@ class HelpMenu(Menu):
 class TaskBarMenu(Menu):
     def __init__(self, taskBarIcon, uiCommands):
         super(TaskBarMenu, self).__init__(taskBarIcon)
-        self.appendUICommands(uiCommands, ['new', 'neweffort', 'stopeffort', None, 'restore', 'quit'])
+        self.appendUICommands(uiCommands, ['new', 'neweffort', 'stopeffort', 
+            None, 'restore', 'quit'])
 
 
 class TaskPopupMenu(Menu):
@@ -254,19 +267,34 @@ class EffortPopupMenu(Menu):
            'deleteeffort', None, 'stopeffort'])
 
 
-class TaskViewerColumnPopupMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(TaskViewerColumnPopupMenu, self).__init__(mainwindow)
+# Column header popup menu's
+
+class _ColumnPopupMenu(Menu):
+    def __init__(self, window, uiCommands, *args, **kwargs):
+        super(_ColumnPopupMenu, self).__init__(window, *args, **kwargs)
         # FIXME: Can't remember why we need a wx.FutureCall here? Maybe
         # because we need time for the viewer to add columns, so these commands
         # can then hide the right columns?
-        wx.FutureCall(1000, lambda: self.fillMenu(mainwindow, uiCommands))
-        
-    def fillMenu(self, mainwindow, uiCommands):
-        self.appendMenu(_('&Dates'), ViewDateColumnsMenu(mainwindow, uiCommands)),
-        self.appendMenu(_('&Budget'), ViewBudgetColumnsMenu(mainwindow, uiCommands)),
-        self.appendMenu(_('&Financial'), ViewFinancialColumnsMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, [
-            'viewpriority', 'viewtotalpriority',
-            'viewlastmodificationtime',
-            'viewtotallastmodificationtime'])
+        wx.FutureCall(1000, lambda: self._fillMenu(window, uiCommands))
+                
+    def _fillMenu(self, window, uiCommands):
+        raise NotImplementedError
+    
+
+class TaskViewerColumnPopupMenu(_ColumnPopupMenu):        
+    def _fillMenu(self, window, uiCommands):
+        self.appendMenu(_('&Dates'), 
+            _ViewTaskDateColumnsMenu(window, uiCommands)),
+        self.appendMenu(_('&Budget'), 
+            _ViewTaskBudgetColumnsMenu(window, uiCommands)),
+        self.appendMenu(_('&Financial'), 
+            _ViewTaskFinancialColumnsMenu(window, uiCommands))
+        self.appendUICommands(uiCommands, ['viewpriority', 'viewtotalpriority',
+            'viewlastmodificationtime', 'viewtotallastmodificationtime'])
+
+
+class EffortViewerColumnPopupMenu(_ColumnPopupMenu):
+    def _fillMenu(self, window, uiCommands):
+        self.appendUICommands(uiCommands, ['viewefforttimespent',
+            'viewtotalefforttimespent', 'vieweffortrevenue',
+            'viewtotaleffortrevenue'])
