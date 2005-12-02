@@ -3,8 +3,11 @@ import patterns, date, re, sets
 
 class Filter(patterns.ObservableListObserver):
     def __init__(self, *args, **kwargs):
-        self.__treeMode = kwargs.pop('treeMode', False)
+        self.setTreeMode(kwargs.pop('treeMode', False))
         super(Filter, self).__init__(*args, **kwargs)
+        
+    def setTreeMode(self, treeMode):
+        self.__treeMode = treeMode
         
     def treeMode(self):
         return self.__treeMode
@@ -80,28 +83,34 @@ class CompositeFilter(Filter):
 
 class SearchFilter(Filter):
     def __init__(self, *args, **kwargs):
-        self.__subject = ''
-        self.__flag = re.IGNORECASE
+        self.__settings = kwargs.pop('settings')
+        self.__settings.registerObserver(self.onSettingChanged, 
+                                         ('view', 'tasksearchfilterstring'))
+        self.__settings.registerObserver(self.onSettingChanged,
+                                         ('view', 'tasksearchfiltermatchcase'))
         super(SearchFilter, self).__init__(*args, **kwargs)
 
     def filter(self, task):
-        childSubjects = ''.join([child.subject() for child in task.allChildren()
-            if child in self.original()])
-        return re.search('.*%s.*'%self.__subject, task.subject()+childSubjects, self.__flag)
-
-    def setSubject(self, subject=''):
-        self.__subject = subject
-        self.reset()
-
-    def getSubject(self):
-        return self.__subject
+        return self.__matches(task)
         
-    def setMatchCase(self, match):
-        if match:
-            self.__flag = 0
+    def __matches(self, task):
+        return re.search('.*%s.*'%self.__settings.get('view', 
+            'tasksearchfilterstring'), 
+            self.__taskSubject(task), 
+            self.__matchCase())
+
+    def __taskSubject(self, task):
+        subject = task.subject()
+        if self.treeMode():
+            subject += ''.join([child.subject() for child in task.allChildren()
+                if child in self.original()])
+        return subject
+    
+    def __matchCase(self):
+        if self.__settings.getboolean('view', 'tasksearchfiltermatchcase'):
+            return 0
         else:
-            self.__flag = re.IGNORECASE
-        self.reset()
+            return re.IGNORECASE
 
 
 class CategoryFilter(Filter):

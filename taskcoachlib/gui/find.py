@@ -2,10 +2,10 @@ import wx
 from i18n import _
 
 class FindPanel(wx.Panel):
-    def __init__(self, parent, searchFilter, viewer):
+    def __init__(self, parent, viewer, settings):
         super(FindPanel, self).__init__(parent, -1)
-        self.searchFilter = searchFilter
-        self.viewer = viewer
+        self.__viewer = viewer
+        self.__settings = settings
         self.createComponents()
         self.layout()
         
@@ -35,9 +35,9 @@ class FindPanel(wx.Panel):
         self.SetSizerAndFit(sizer)        
 
     def find(self, event):
-        self.searchFilter.setSubject(self._subjectEntry.GetValue())
-        self.searchFilter.setMatchCase(self._caseCheckBox.GetValue())
-        self.viewer.expandAll()
+        self.__settings.set('view', 'tasksearchfilterstring', self._subjectEntry.GetValue())
+        self.__settings.set('view', 'tasksearchfiltermatchcase', str(self._caseCheckBox.GetValue()))
+        self.__viewer.expandAll()
         
     def clear(self, event=None):
         self._subjectEntry.SetValue('')

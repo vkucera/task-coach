@@ -187,7 +187,7 @@ class ViewAllTasksTest(ViewMenuTestCase):
         return dummy.MainWindow()
         
     def createFilteredTaskList(self):
-        return task.filter.SearchFilter(task.filter.CategoryFilter(task.filter.ViewFilter(task.TaskList(), settings=self.settings)))
+        return task.filter.SearchFilter(task.filter.CategoryFilter(task.filter.ViewFilter(task.TaskList(), settings=self.settings)), settings=self.settings)
 
     def invokeViewAllTasks(self):
         self.menu.invokeMenuItem(self.menu.FindItemByPosition(0))
@@ -203,6 +203,6 @@ class ViewAllTasksTest(ViewMenuTestCase):
         self.failUnless(self.settings.getboolean('view', 'completedtasks'))
         
     def testInvokingViewAllTasksResetsSearchFilter(self):
-        self.filteredTaskList.setSubject('test')
+        self.settings.set('view', 'tasksearchfilterstring', 'test')
         self.invokeViewAllTasks()
-        self.assertEqual('', self.filteredTaskList.getSubject())
+        self.assertEqual('', self.settings.get('view', 'tasksearchfilterstring'))

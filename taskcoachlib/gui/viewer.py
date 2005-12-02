@@ -69,6 +69,7 @@ class ListViewer(Viewer):
             return expandedImageIndex
         else:
             return normalImageIndex
+        
 
 
 class TreeViewer(Viewer):
@@ -278,7 +279,8 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
         return widget
         
     def createFilter(self, taskList):
-        return task.filter.CompositeFilter(task.filter.ViewFilter(taskList, 
+        return task.filter.CompositeFilter(task.filter.ViewFilter(\
+            task.filter.SearchFilter(taskList, settings=self.settings), 
             settings=self.settings), settings=self.settings)
         
     def createSorter(self, taskList):
@@ -298,10 +300,13 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         return widget
     
     def createFilter(self, taskList):
-        return task.filter.ViewFilter(taskList, settings=self.settings, treeMode=True)
+        return task.filter.ViewFilter(task.filter.SearchFilter(taskList, 
+            settings=self.settings, treeMode=True), settings=self.settings, 
+            treeMode=True)
         
     def createSorter(self, taskList):
-        return task.sorter.Sorter(taskList, settings=self.settings, treeMode=True)
+        return task.sorter.Sorter(taskList, settings=self.settings, 
+            treeMode=True)
     
     def getItemText(self, index):
         task = self.list[index]

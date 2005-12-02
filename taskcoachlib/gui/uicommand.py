@@ -465,7 +465,7 @@ class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
             uiCommand = self.uiCommands[uiCommandName]
             self.settings.set(uiCommand.section, uiCommand.setting, 'True')
         self.settings.set(self.section, 'tasksdue', 'Unlimited')    
-        self.filteredTaskList.setSubject()
+        self.settings.set(self.section, 'tasksearchfilterstring', '')
         self.filteredTaskList.removeAllCategories()
 
 
