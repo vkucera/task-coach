@@ -1,4 +1,5 @@
-import wx, task, patterns, config, gui, meta, command, help, widgets
+import wx, task, patterns, config, gui, meta, command, help, widgets, \
+    webbrowser, urllib
 from gui import render
 from i18n import _
 
@@ -600,7 +601,26 @@ class TaskDragAndDrop(NeedsSelectedTasks, FilterCommand, ViewerCommand):
             self.viewer.draggedItems(), drop=self.viewer.curselection()[0])
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
-            
+
+
+class TaskMail(NeedsSelectedTasks, ViewerCommand):
+    def doCommand(self, event):
+        tasks = self.viewer.curselection()
+        if len(tasks) > 1:
+            subject = _('Tasks')
+            bodyLines = []
+            for task in tasks:
+                bodyLines.append(render.subject(task, recursively=True) + '\n')
+                if task.description():
+                    bodyLines.extend(task.description().splitlines())
+                    bodyLines.append('\n')
+        else:
+            subject = render.subject(tasks[0], recursively=True)
+            bodyLines = tasks[0].description().splitlines()
+        body = urllib.quote('\r\n'.join(bodyLines))
+        mailToURL = 'mailto:%s?subject=%s&body=%s'%(_('Please enter recipient'), subject, body)
+        webbrowser.open(mailToURL)
+        
 
 class EffortNew(NeedsAtLeastOneTask, MainWindowCommand, EffortCommand,
         ViewerCommand, UICommandsCommand, FilterCommand):
@@ -929,6 +949,9 @@ class UICommands(dict):
         self['markcompleted'] = TaskMarkCompleted(filteredTaskList=filteredTaskList,
             viewer=viewer)
         self['delete'] = TaskDelete(filteredTaskList=filteredTaskList, viewer=viewer)
+        self['mailtask'] = TaskMail(viewer=viewer, menuText=_('Mail task'), 
+            helpText=_('Mail the task, using your default mailer'), 
+            bitmap='email')
         
         # Task related, but not on any menu:
         self['draganddroptask'] = TaskDragAndDrop(filteredTaskList=filteredTaskList, viewer=viewer)
