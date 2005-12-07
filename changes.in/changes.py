@@ -17,7 +17,9 @@ Patch provided by Franz Steinhaeusler.''', '1344023')],
     featuresAdded=[
         Feature('''Columns in the effort view are hideable too, just like
 columns in the task views. See 'View' -> 'Effort columns', or right-click
-a column header in the effort view.''')]),
+a column header in the effort view.'''),
+        Feature('''Added possibility to mail tasks via your default mailer, see 
+'Task' -> 'Mail task' or right-click a task in one of the task views.''')]),
 
 Release('0.52', 'November 29, 2005',
     featuresRemoved=[

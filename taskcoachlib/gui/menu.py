@@ -227,7 +227,7 @@ class TaskMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(TaskMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['new', 'newsubtask', 
-            None, 'edit', 'markcompleted', None, 'delete'])
+            None, 'edit', 'markcompleted', None, 'delete', None, 'mailtask'])
             
             
 class EffortMenu(Menu):
@@ -255,8 +255,9 @@ class TaskPopupMenu(Menu):
         super(TaskPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste',
             'pasteintotask', None, 'new', 'newsubtask', None, 'edit', 
-            'markcompleted', None, 'delete', None, 'neweffort', 'starteffort',
-            'stopeffort', None, 'viewexpandselected', 'viewcollapseselected'])
+            'markcompleted', None, 'delete', None, 'mailtask', None, 
+            'neweffort', 'starteffort', 'stopeffort', None, 
+            'viewexpandselected', 'viewcollapseselected'])
 
 
 class EffortPopupMenu(Menu):
