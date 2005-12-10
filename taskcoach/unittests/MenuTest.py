@@ -1,5 +1,6 @@
-import test, gui, wx, config, dummy, task
+import test, gui, wx, config, dummy
 from gui import uicommand
+import domain.task as task
 
 class MenuTestCase(test.wxTestCase):
     def setUp(self):

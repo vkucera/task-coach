@@ -1,4 +1,5 @@
-import gui, wx, widgets, patterns, task
+import gui, wx, widgets, patterns
+import domain.task as task
 
 class DummyWidget(wx.Frame):
     def __init__(self, viewer):

@@ -1,4 +1,5 @@
-import test, effort, task, date
+import test, effort, date
+import domain.task as task
 
 __coverage__ = [effort.EffortList, effort.SingleTaskEffortList]
 

@@ -1,5 +1,5 @@
-import test, gui, task, dummy, config
-
+import test, gui, dummy, config
+import domain.task as task
 
 class IOControllerTest(test.TestCase):
     def setUp(self):

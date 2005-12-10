@@ -1,5 +1,6 @@
-import patterns, task
+import patterns
 from i18n import _
+import domain.task as task
 
 class BaseCommand(patterns.Command):
     def __init__(self, list=None, items=None, *args, **kwargs):

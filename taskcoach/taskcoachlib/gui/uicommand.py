@@ -1,8 +1,8 @@
-import wx, task, patterns, config, gui, meta, command, help, widgets, \
+import wx, patterns, config, gui, meta, command, help, widgets, \
     webbrowser, urllib
 from gui import render
 from i18n import _
-
+import domain.task as task
 
 class UICommandContainer(object):
     ''' Mixin with wx.Menu or wx.ToolBar (sub)class. '''

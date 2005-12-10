@@ -1,5 +1,6 @@
-import test, task, date
+import test, date
 from gui import render
+import domain.task as task
 
 class RenderSubjectTest(test.TestCase):
     def setUp(self):

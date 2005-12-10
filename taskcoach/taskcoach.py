@@ -35,7 +35,8 @@ class App(object):
         import config, i18n
         settings = config.Settings(loadSettings)
         i18n.Translator(settings.get('view', 'language'))
-        import task, effort, gui
+        import effort, gui
+        import domain.task as task
         gui.init()
         if showSplash and settings.getboolean('window', 'splash'):
             splash = gui.SplashScreen()

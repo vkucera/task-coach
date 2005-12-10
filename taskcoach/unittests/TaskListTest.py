@@ -1,4 +1,5 @@
-import test, asserts, task, date, effort, sets
+import test, asserts, date, effort, sets
+import domain.task as task
 
 class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def setUp(self):

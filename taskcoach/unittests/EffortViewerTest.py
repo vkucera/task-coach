@@ -1,4 +1,5 @@
-import test, gui, task, dummy, effort, config
+import test, gui, dummy, effort, config
+import domain.task as task
 
 class EffortViewerUnderTest(gui.viewer.EffortViewer):
     def createWidget(self):

@@ -1,4 +1,5 @@
-import test, task, command
+import test, command
+import domain.task as task
 from TaskCommandsTest import CommandTestCase, CommandWithChildrenTestCase, \
     CommandWithEffortTestCase
 

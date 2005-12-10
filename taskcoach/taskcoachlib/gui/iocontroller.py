@@ -1,5 +1,6 @@
-import wx, task, meta, os
+import wx, meta, os
 from i18n import _
+import domain.task as task
 
 class IOController(object): 
     def __init__(self, taskFile, messageCallback, settings): 

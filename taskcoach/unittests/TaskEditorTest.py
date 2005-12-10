@@ -1,4 +1,5 @@
-import test, gui, task, date, command, wx, effort, dummy, config
+import test, gui, date, command, wx, effort, dummy, config
+import domain.task as task
 
 class DummyViewer:
     def __init__(self):

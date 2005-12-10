@@ -1,4 +1,5 @@
-import test, task, os, date, effort, date
+import test, os, date, effort, date
+import domain.task as task
 
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
