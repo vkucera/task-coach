@@ -1,8 +1,9 @@
-import date, widgets, sys
+import widgets, sys
 from gui import render
 import wx, datetime
 import wx.lib.masked as masked
 from i18n import _
+import domain.date as date
 
 class DateEntry(wx.Panel):
     defaultDate = date.Date()

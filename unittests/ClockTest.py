@@ -1,5 +1,5 @@
-import test, date, wx
-        
+import test, wx
+import domain.date as date
         
 class ClockTest(test.wxTestCase):    
     def tearDown(self):

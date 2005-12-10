@@ -1,4 +1,5 @@
-import test, datetime, date
+import test, datetime
+import domain.date as date
 
 class PyDateTimeTest(test.TestCase):
     def testReplaceCannotBeEasilyUsedToFindTheLastDayofTheMonth(self):

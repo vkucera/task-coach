@@ -1,5 +1,6 @@
-import test, gui, widgets, dummy, config, date, TaskViewerTest
+import test, gui, widgets, dummy, config, TaskViewerTest
 import domain.task as task
+import domain.date as date
 
 class TaskTreeViewerTestCase(test.wxTestCase):
     def setUp(self):

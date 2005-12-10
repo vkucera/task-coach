@@ -1,4 +1,5 @@
-import patterns, date
+import patterns
+import domain.date as date
 
 class EffortBase(object):
     def __init__(self, task, start, stop, *args, **kwargs):

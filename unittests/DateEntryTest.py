@@ -1,5 +1,6 @@
-import test, date
+import test
 from gui.dialog import editor 
+import domain.date as date
 
 class DateEntryTest(test.wxTestCase):
     def setUp(self):

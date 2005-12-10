@@ -1,5 +1,6 @@
-import test, gui, wx, date, meta, gui.taskbaricon
+import test, gui, wx, meta, gui.taskbaricon
 import domain.task as task
+import domain.date as date
 
 class MainWindowMock:
     def restore(self):

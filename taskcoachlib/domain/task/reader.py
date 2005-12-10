@@ -1,5 +1,7 @@
-import date, domain.task, domain.effort, time, xml.dom.minidom, re
-
+import time, xml.dom.minidom, re
+import domain.date as date
+import domain.effort as effort
+import task
 
 class XMLReader:
     def __init__(self, fd):
@@ -30,7 +32,7 @@ class XMLReader:
         lastModificationTime = self.__parseLastModificationTime(taskNode.getAttribute('lastModificationTime'))
         hourlyFee = self.__parseFloat(taskNode.getAttribute('hourlyFee'))
         fixedFee = self.__parseFloat(taskNode.getAttribute('fixedFee'))
-        parent = domain.task.Task(subject, description, id_=id, startdate=startDate, duedate=dueDate, 
+        parent = task.Task(subject, description, id_=id, startdate=startDate, duedate=dueDate, 
             completiondate=completionDate, budget=budget, priority=priority, 
             lastModificationTime=lastModificationTime, hourlyFee=hourlyFee,
             fixedFee=fixedFee)
@@ -55,7 +57,7 @@ class XMLReader:
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')
         description = self.__parseDescription(effortNode)
-        return domain.effort.Effort(task, date.parseDateTime(start), 
+        return effort.Effort(task, date.parseDateTime(start), 
             date.parseDateTime(stop), description)
         
     def __getNode(self, parent, tagName):

@@ -1,6 +1,6 @@
-import meta, wx, date
+import meta, wx
 from i18n import _
-
+import domain.date as date
         
 class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList, defaultBitmap='taskcoach', 

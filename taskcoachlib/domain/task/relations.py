@@ -3,7 +3,8 @@ RelationshipManager does not (at the moment) keep of list of relations, but
 instead alters objects based on their relations. For example, if a task is
 marked completed, the RelationshipManager will mark all children completed. '''
 
-import patterns, date
+import patterns
+import domain.date as date
 
 class TaskRelationshipManager:
     __metaclass__ = patterns.Singleton

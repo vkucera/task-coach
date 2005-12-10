@@ -1,4 +1,5 @@
-import os, writer, reader, tasklist, patterns, codecs, shutil, date
+import os, writer, reader, tasklist, patterns, codecs, shutil
+import domain.date as date
 
 class TaskFile(tasklist.TaskList):
     def __init__(self, filename='', *args, **kwargs):

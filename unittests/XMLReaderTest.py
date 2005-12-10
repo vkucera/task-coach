@@ -1,7 +1,7 @@
-import test, date, xml.parsers.expat, sets
+import test, xml.parsers.expat, sets
 import cStringIO as StringIO
 import domain.task as task
-
+import domain.date as date
 
 class XMLReaderTestCase(test.TestCase):
     def setUp(self):

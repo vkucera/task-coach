@@ -1,6 +1,7 @@
-import test, date
+import test
 import domain.task as task
 import domain.effort as effort
+import domain.date as date
 
 __coverage__ = [effort.EffortPerDay, effort.EffortPerWeek, effort.EffortPerMonth]
 
