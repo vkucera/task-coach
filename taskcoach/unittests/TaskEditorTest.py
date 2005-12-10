@@ -1,5 +1,6 @@
-import test, gui, date, command, wx, effort, dummy, config
+import test, gui, date, command, wx, dummy, config
 import domain.task as task
+import domain.effort as effort
 
 class DummyViewer:
     def __init__(self):

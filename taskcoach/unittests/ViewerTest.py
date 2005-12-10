@@ -1,5 +1,6 @@
-import test, gui, wx, dummy, effort, config
+import test, gui, wx, dummy, config
 import domain.task as task
+import domain.effort as effort
 
 class ViewerTest(test.wxTestCase):
     def setUp(self):

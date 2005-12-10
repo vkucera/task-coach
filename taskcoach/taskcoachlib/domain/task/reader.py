@@ -1,4 +1,4 @@
-import date, domain.task, time, effort, xml.dom.minidom, re
+import date, domain.task, domain.effort, time, xml.dom.minidom, re
 
 
 class XMLReader:
@@ -55,7 +55,7 @@ class XMLReader:
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')
         description = self.__parseDescription(effortNode)
-        return effort.Effort(task, date.parseDateTime(start), 
+        return domain.effort.Effort(task, date.parseDateTime(start), 
             date.parseDateTime(stop), description)
         
     def __getNode(self, parent, tagName):

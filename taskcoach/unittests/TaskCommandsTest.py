@@ -1,5 +1,6 @@
-import test, asserts, command, patterns, dummy, effort, date
+import test, asserts, command, patterns, dummy, date
 import domain.task as task
+import domain.effort as effort
 
 class CommandTestCase(test.wxTestCase, asserts.Mixin):
     def setUp(self):
