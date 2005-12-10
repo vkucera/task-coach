@@ -1,5 +1,6 @@
-import test, effort, date, asserts
+import test, date, asserts
 import domain.task as task
+import domain.effort as effort
 
 __coverage__ = [effort.Effort]
 

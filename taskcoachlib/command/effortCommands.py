@@ -1,5 +1,6 @@
-import base, effort, date
+import base, date
 from i18n import _
+import domain.effort as effort
 
 class NewEffortCommand(base.BaseCommand):
     def name(self):

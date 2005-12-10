@@ -1,7 +1,8 @@
-import date, base, effort
+import date, base
 import sets
 from i18n import _
 import domain.task as task
+import domain.effort as effort
 
 class SaveTaskStateMixin(base.SaveStateMixin):
     def getAncestors(self, tasks): 

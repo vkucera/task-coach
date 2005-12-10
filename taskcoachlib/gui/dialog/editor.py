@@ -157,7 +157,7 @@ class EffortPage(widgets.BookPage):
     def __init__(self, parent, task, taskList, settings, uiCommands, *args, **kwargs):
         super(EffortPage, self).__init__(parent, columns=1, *args, **kwargs)
         from gui import viewercontainer, viewerfactory
-        import effort
+        import domain.effort as effort
         viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 
             'effortviewerineditor')
         myEffortList = effort.SingleTaskEffortList(task)
