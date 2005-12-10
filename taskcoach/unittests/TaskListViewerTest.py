@@ -1,8 +1,9 @@
-import test, date, dummy, gui, config, TaskViewerTest, wx
+import test, dummy, gui, config, TaskViewerTest, wx
 from gui import render
 from i18n import _
 import domain.task as task
 import domain.effort as effort
+import domain.date as date
 
 class CommonTests:
     ''' Tests common to all TaskListViewers, i.e. TaskListViewer and

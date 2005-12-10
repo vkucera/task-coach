@@ -1,5 +1,5 @@
-import patterns, date, re, sets
-
+import patterns, re, sets
+import domain.date as date
 
 class Filter(patterns.ObservableListObserver):
     def __init__(self, *args, **kwargs):

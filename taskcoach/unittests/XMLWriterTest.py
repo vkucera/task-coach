@@ -1,7 +1,8 @@
-import xml, test, date
+import xml, test
 import cStringIO as StringIO
 import domain.task as task
 import domain.effort as effort
+import domain.date as date
 
 class XMLWriterTest(test.TestCase):
     def setUp(self):

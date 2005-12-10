@@ -1,4 +1,5 @@
-import wx, date
+import wx
+import domain.date as date
 
 class Panel(wx.Panel):
     def __init__(self, parent, callback=None, *args, **kwargs):

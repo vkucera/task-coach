@@ -1,7 +1,7 @@
 ''' render.py - functions to render various objects, like dates, task
 subjects, etc. '''
 from i18n import _
-
+    
 taskSeparator = ' -> '
 
 def date(date):
@@ -21,7 +21,7 @@ def subject(aTask, recursively=False, sep=taskSeparator):
    
 def daysLeft(timeLeft):
     ''' render time left (of type date.TimeDelta) in days '''
-    import date
+    import domain.date as date
     if timeLeft == date.TimeDelta.max:
         return _('Infinite')
     else:
@@ -30,7 +30,7 @@ def daysLeft(timeLeft):
 def timeSpent(timeSpent):
     ''' render time spent (of type date.TimeDelta) as
     "<hours>:<minutes>:<seconds>" '''
-    import date
+    import domain.date as date
     if timeSpent < date.TimeDelta():
         sign = '-'
     else:

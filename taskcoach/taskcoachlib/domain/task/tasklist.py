@@ -1,5 +1,8 @@
-import patterns, sets, date, domain.task
+import patterns, sets
 from i18n import _
+import domain.date as date
+import task
+
 
 class TaskList(patterns.ObservableObservablesList):
     def __init__(self, initList=None, *args, **kwargs):
@@ -11,7 +14,7 @@ class TaskList(patterns.ObservableObservablesList):
             manipulate containers (TaskList, EffortList, etc.) such
             as commands (NewCommand, DeleteCommand, etc.) can
             create new items without having to know their type. '''
-        return domain.task.Task(subject=_('New task'))
+        return task.Task(subject=_('New task'))
 
     # list interface and helpers
 
@@ -97,19 +100,19 @@ class TaskList(patterns.ObservableObservablesList):
         return len(interestingTasks)
 
     def nrCompleted(self):
-        return self._nrInterestingTasks(domain.task.Task.completed)
+        return self._nrInterestingTasks(task.Task.completed)
 
     def nrOverdue(self):
-        return self._nrInterestingTasks(domain.task.Task.overdue)
+        return self._nrInterestingTasks(task.Task.overdue)
 
     def nrInactive(self):
-        return self._nrInterestingTasks(domain.task.Task.inactive)
+        return self._nrInterestingTasks(task.Task.inactive)
 
     def nrDueToday(self):
-        return self._nrInterestingTasks(domain.task.Task.dueToday)
+        return self._nrInterestingTasks(task.Task.dueToday)
     
     def nrBeingTracked(self):
-        return self._nrInterestingTasks(domain.task.Task.isBeingTracked)
+        return self._nrInterestingTasks(task.Task.isBeingTracked)
 
     def allCompleted(self):
         nrCompleted = self.nrCompleted()

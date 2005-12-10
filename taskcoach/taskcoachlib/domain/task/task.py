@@ -1,4 +1,5 @@
-import patterns, date, time, copy, sets, relations
+import patterns, time, copy, sets, relations
+import domain.date as date
 
 class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 

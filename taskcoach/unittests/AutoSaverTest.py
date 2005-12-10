@@ -1,5 +1,6 @@
-import test, date
+import test
 import domain.task as task
+import domain.date as date
 
 class DummySettings(dict):        
     def set(self, section, setting, value):

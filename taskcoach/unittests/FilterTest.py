@@ -1,5 +1,6 @@
-import test, patterns, string, gui, date, config
+import test, patterns, string, gui, config
 import domain.task as task
+import domain.date as date
 
 class TestFilter(task.filter.Filter):
     def filter(self, item):
