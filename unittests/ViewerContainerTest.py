@@ -1,5 +1,5 @@
-import test, task, gui, wx, dummy, effort, config
-
+import test, gui, wx, dummy, effort, config
+import domain.task as task
 
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):

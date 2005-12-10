@@ -1,4 +1,5 @@
-import test, taskcoach, os, task, sys
+import test, taskcoach, os, sys
+import domain.task as task
 
 class MockApp(taskcoach.App):
     def __init__(self):

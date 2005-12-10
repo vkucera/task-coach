@@ -1,5 +1,7 @@
-import test, task, date, effort
+import test, date, effort
 import cStringIO as StringIO
+import domain.task as task
+
 
 class IntegrationTestCase(test.TestCase):
     def setUp(self):

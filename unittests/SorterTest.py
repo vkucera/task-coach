@@ -1,5 +1,5 @@
-import test, task, task.sorter, patterns, date, effort, dummy, config
-
+import test, patterns, date, effort, dummy, config
+import domain.task as task
 
 class TaskSorterTest(test.TestCase):
     def setUp(self):

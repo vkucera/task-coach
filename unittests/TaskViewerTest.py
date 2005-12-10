@@ -1,5 +1,5 @@
-import wx, test, task, date
-
+import wx, test, date
+import domain.task as task
             
 class CommonTests(object):
     ''' Common test cases for all task viewers. This class is mixed in with

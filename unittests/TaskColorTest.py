@@ -1,5 +1,5 @@
-import test, gui, task, date, wx, config
-
+import test, gui, date, wx, config
+import domain.task as task
 
 class TaskColorTest(test.TestCase):
     def setUp(self):

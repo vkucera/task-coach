@@ -1,6 +1,7 @@
-import test, gui, task, widgets, dummy, date, TaskTreeViewerTest, \
+import test, gui, widgets, dummy, date, TaskTreeViewerTest, \
     TaskListViewerTest
 from gui import render
+import domain.task as task
 
 class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
     def createWidgetWithColumns(self):

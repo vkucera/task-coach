@@ -1,5 +1,6 @@
-import xml, test, task, date, effort
+import xml, test, date, effort
 import cStringIO as StringIO
+import domain.task as task
 
 class XMLWriterTest(test.TestCase):
     def setUp(self):

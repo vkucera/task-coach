@@ -1,4 +1,5 @@
-import test, asserts, task, date, time, wx, effort, sets
+import test, asserts, date, time, wx, effort, sets
+import domain.task as task
 
 __coverage__ = [task.Task]
 

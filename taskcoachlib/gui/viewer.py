@@ -1,8 +1,9 @@
-import patterns, task, command, widgets, effort, uicommand
+import patterns, command, widgets, effort, uicommand
 import menu, color, render, date
 import wx
 from i18n import _
 import wx.grid as grid
+import domain.task as task
 
 class Viewer(patterns.Observable, wx.Panel):
     ''' A Viewer shows the contents of a model (a list of tasks or a list of 

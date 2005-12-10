@@ -1,4 +1,5 @@
-import test, task, gui, wx, config, effort, dummy
+import test, gui, wx, config, effort, dummy
+import domain.task as task
 
 class MainWindowUnderTest(gui.MainWindow):
     def canCreateTaskBarIcon(self):

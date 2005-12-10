@@ -1,6 +1,7 @@
-import wx, meta, patterns, widgets, task, command, effort
+import wx, meta, patterns, widgets, command, effort
 import viewer, viewercontainer, viewerfactory, help, find, toolbar, uicommand
 from i18n import _
+import domain.task as task
 
 class WindowWithPersistentDimensions(wx.Frame):
     def __init__(self, settings, *args, **kwargs):

@@ -1,4 +1,5 @@
-import test, gui, task, dummy, date, config
+import test, gui, dummy, date, config
+import domain.task as task
 
 class GanttChartViewerTest(test.wxTestCase):
     def setUp(self):

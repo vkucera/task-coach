@@ -1,4 +1,5 @@
-import test, task, date
+import test, date
+import domain.task as task
 
 class TaskRelationshipManagerTestCase(test.TestCase):
     def setUp(self):
