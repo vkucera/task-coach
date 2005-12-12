@@ -19,7 +19,9 @@ Patch provided by Franz Steinhaeusler.''', '1344023')],
 columns in the task views. See 'View' -> 'Effort columns', or right-click
 a column header in the effort view.'''),
         Feature('''Added possibility to mail tasks via your default mailer, see 
-'Task' -> 'Mail task' or right-click a task in one of the task views.''')]),
+'Task' -> 'Mail task' or right-click a task in one of the task views.'''),
+        Feature('''Left-clicking the taskbar icon brings up the taskbar 
+icon menu, just as right-clicking does.''')]),
 
 Release('0.52', 'November 29, 2005',
     featuresRemoved=[

@@ -15,7 +15,8 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__setIcon()
         
     def setPopupMenu(self, menu):
-        self.Bind(wx.EVT_TASKBAR_RIGHT_UP, self.popupTaskBarMenu)
+        for event in wx.EVT_TASKBAR_RIGHT_UP, wx.EVT_TASKBAR_LEFT_UP:
+            self.Bind(event, self.popupTaskBarMenu)
         self.popupmenu = menu
 
     def popupTaskBarMenu(self, event):
