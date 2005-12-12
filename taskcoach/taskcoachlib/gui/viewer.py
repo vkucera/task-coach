@@ -1,5 +1,4 @@
-import patterns, command, widgets, uicommand
-import menu, color, render
+import patterns, command, widgets, uicommand, menu, color, render
 import wx
 from i18n import _
 import wx.grid as grid
