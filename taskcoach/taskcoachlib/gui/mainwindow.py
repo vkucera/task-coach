@@ -46,7 +46,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.filteredTaskList = filteredTaskList
         self.settings = settings
         self.effortList = effortList
-        self.Bind(wx.EVT_CLOSE, self.quit)
+        self.Bind(wx.EVT_CLOSE, self.onClose)
 
         self.createWindowComponents()
         self.initWindowComponents()
@@ -148,6 +148,14 @@ class MainWindow(WindowWithPersistentDimensions):
         self.settings.save()
         wx.GetApp().ProcessIdle()
         wx.GetApp().Exit()
+        
+    def onClose(self, event):
+        if event.CanVeto() and self.settings.getboolean('window', 
+                                                        'hidewhenclosed'):
+            event.Veto()
+            self.Iconize()
+        else:
+            self.quit()
 
     def restore(self, event):
         self.Show()

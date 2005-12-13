@@ -67,6 +67,8 @@ class WindowPage(SettingsPage):
             _('This setting will take effect after you restart %s')%meta.name)
         self.addBooleanSetting('window', 'hidewheniconized', 
             _('Hide main window when iconized'))
+        self.addBooleanSetting('window', 'hidewhenclosed', 
+            _('Minimize main window when closed'))
 
 
 class LanguagePage(SettingsPage):
