@@ -51,7 +51,8 @@ defaults = { \
     'position': '(0, 0)',
     'iconized': 'False',
     'splash': 'True',
-    'hidewheniconized': 'True' },
+    'hidewheniconized': 'True',
+    'hidewhenclosed': 'False' },
 'file' : { \
     'recentfiles': '[]',
     'maxrecentfiles': '4',

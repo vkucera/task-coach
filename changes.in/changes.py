@@ -20,8 +20,9 @@ columns in the task views. See 'View' -> 'Effort columns', or right-click
 a column header in the effort view.'''),
         Feature('''Added possibility to mail tasks via your default mailer, see 
 'Task' -> 'Mail task' or right-click a task in one of the task views.'''),
-        Feature('''Left-clicking the taskbar icon brings up the taskbar 
-icon menu, just as right-clicking does.''')]),
+        Feature('''Added option to minimize the window when you attempt
+to close the application via the close button on the window title bar or 
+the system menu. See 'Edit' -> 'Preferences' -> 'Window behavior'.''')]),
 
 Release('0.52', 'November 29, 2005',
     featuresRemoved=[
