@@ -53,5 +53,5 @@ def registerWithPyPI():
     setup(**setupOptions)
 
 ftpToChello()
-#scpToSourceForge()
+scpToSourceForge()
 registerWithPyPI()
