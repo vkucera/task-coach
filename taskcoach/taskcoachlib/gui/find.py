@@ -35,9 +35,11 @@ class FindPanel(wx.Panel):
         self.SetSizerAndFit(sizer)        
 
     def find(self, event):
-        self.__settings.set('view', 'tasksearchfilterstring', self._subjectEntry.GetValue())
+        searchString = self._subjectEntry.GetValue()
+        self.__settings.set('view', 'tasksearchfilterstring', searchString)
         self.__settings.set('view', 'tasksearchfiltermatchcase', str(self._caseCheckBox.GetValue()))
-        self.__viewer.expandAll()
+        if searchString:
+            self.__viewer.expandAll()
         
     def clear(self, event=None):
         self._subjectEntry.SetValue('')
