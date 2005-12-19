@@ -182,7 +182,22 @@ pages['faq'] = \
 
 pages['roadmap'] = \
 '''    <h3>%(name)s roadmap</h3>
-    <p>[Roadmap to be described here]</p>
+    <p>My aim for %(name)s is to be a personal assistent that helps with
+    the daily chores of life: remembering things to do, registering
+    hours spent on projects, taking notes, etc. It should also be as
+    intuitive as possible for users to deal with and not require any technical
+    knowledge.</p>
+    <p>Currently, %(name)s knows about two domain concepts: tasks and
+    effort. Other domain concepts that might be added include note
+    and contact person.</p>
+    <p>In the long run, it might be worthwile to allow
+    users to add their own concepts. So, for example, if you want to keep
+    a list of books to read you could define a book concept and accompanying
+    fields like author, title, isbn, read/unread status, etc. That would
+    also need the file format to be very flexible.</p>
+    <p>Anyway, this is it for now, I'll add more as soon as my thoughts
+    on the subject crystalize into a more coherent picture of the future 
+    direction for %(name)s.</p>
 '''
 
 dist = os.path.join('..', 'dist')

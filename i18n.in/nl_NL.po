@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "POT-Creation-Date: 2005-05-20 22:38+W. Europe Daylight Time\n"
-"PO-Revision-Date: 2005-12-01 23:41+0100\n"
+"PO-Revision-Date: 2005-12-19 20:01+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
@@ -16,178 +16,178 @@ msgstr ""
 "X-Poedit-Language: dutch\n"
 "X-Poedit-Country: NETHERLANDS\n"
 
-#: taskcoachlib\command\base.py:71
+#: taskcoachlib\command\base.py:72
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: taskcoachlib\command\base.py:86
+#: taskcoachlib\command\base.py:87
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: taskcoachlib\command\base.py:100
+#: taskcoachlib\command\base.py:101
 msgid "Cut"
 msgstr "Knippen"
 
-#: taskcoachlib\command\base.py:126
+#: taskcoachlib\command\base.py:127
 msgid "Paste"
 msgstr "Plakken"
 
-#: taskcoachlib\command\effortCommands.py:6
+#: taskcoachlib\command\effortCommands.py:8
 msgid "New effort"
 msgstr "Nieuwe tijdsbesteding"
 
-#: taskcoachlib\command\effortCommands.py:26
+#: taskcoachlib\command\effortCommands.py:28
 msgid "Edit effort"
 msgstr "Tijdsbesteding bewerken"
 
-#: taskcoachlib\command\taskCommands.py:21
+#: taskcoachlib\command\taskCommands.py:24
 msgid "Paste into task"
 msgstr "Plakken in taak"
 
-#: taskcoachlib\command\taskCommands.py:41
+#: taskcoachlib\command\taskCommands.py:44
 msgid "Drag and drop"
 msgstr "Slepen en neerzetten"
 
-#: taskcoachlib\command\taskCommands.py:73
-#: taskcoachlib\command\taskCommands.py:77
-#: taskcoachlib\task\tasklist.py:14
+#: taskcoachlib\command\taskCommands.py:76
+#: taskcoachlib\command\taskCommands.py:80
+#: taskcoachlib\domain\task\tasklist.py:17
 msgid "New task"
 msgstr "Nieuwe taak"
 
-#: taskcoachlib\command\taskCommands.py:91
-#: taskcoachlib\command\taskCommands.py:95
+#: taskcoachlib\command\taskCommands.py:94
+#: taskcoachlib\command\taskCommands.py:98
 msgid "New subtask"
 msgstr "Nieuwe subtaak"
 
-#: taskcoachlib\command\taskCommands.py:117
+#: taskcoachlib\command\taskCommands.py:120
 msgid "Edit task"
 msgstr "Taak bewerken"
 
-#: taskcoachlib\command\taskCommands.py:164
+#: taskcoachlib\command\taskCommands.py:167
 msgid "Mark completed"
 msgstr "Als afgerond markeren"
 
-#: taskcoachlib\command\taskCommands.py:180
+#: taskcoachlib\command\taskCommands.py:183
 msgid "Start tracking"
 msgstr "Tijdsbesteding starten"
 
-#: taskcoachlib\command\taskCommands.py:206
+#: taskcoachlib\command\taskCommands.py:209
 msgid "Stop tracking"
 msgstr "Tijdsbesteding stoppen"
 
-#: taskcoachlib\gui\dialog\editor.py:73
-#: taskcoachlib\gui\viewer.py:178
+#: taskcoachlib\gui\dialog\editor.py:74
+#: taskcoachlib\gui\viewer.py:203
 msgid "Subject"
 msgstr "Onderwerp"
 
-#: taskcoachlib\gui\dialog\editor.py:74
-#: taskcoachlib\gui\dialog\editor.py:229
-#: taskcoachlib\gui\dialog\editor.py:284
+#: taskcoachlib\gui\dialog\editor.py:75
+#: taskcoachlib\gui\dialog\editor.py:230
+#: taskcoachlib\gui\dialog\editor.py:285
 msgid "Description"
 msgstr "Beschrijving"
 
-#: taskcoachlib\gui\dialog\editor.py:95
-#: taskcoachlib\gui\dialog\editor.py:118
-#: taskcoachlib\gui\dialog\editor.py:140
+#: taskcoachlib\gui\dialog\editor.py:96
+#: taskcoachlib\gui\dialog\editor.py:119
+#: taskcoachlib\gui\dialog\editor.py:141
 msgid "For this task"
 msgstr "Voor deze taak"
 
-#: taskcoachlib\gui\dialog\editor.py:96
-#: taskcoachlib\gui\viewer.py:181
+#: taskcoachlib\gui\dialog\editor.py:97
+#: taskcoachlib\gui\viewer.py:206
 msgid "Start date"
 msgstr "Startdatum"
 
-#: taskcoachlib\gui\dialog\editor.py:97
-#: taskcoachlib\gui\viewer.py:182
+#: taskcoachlib\gui\dialog\editor.py:98
+#: taskcoachlib\gui\viewer.py:207
 msgid "Due date"
 msgstr "Geplande einddatum"
 
-#: taskcoachlib\gui\dialog\editor.py:98
-#: taskcoachlib\gui\viewer.py:184
+#: taskcoachlib\gui\dialog\editor.py:99
+#: taskcoachlib\gui\viewer.py:209
 msgid "Completion date"
 msgstr "Werkelijke einddatum"
 
-#: taskcoachlib\gui\dialog\editor.py:100
-#: taskcoachlib\gui\dialog\editor.py:123
-#: taskcoachlib\gui\dialog\editor.py:145
+#: taskcoachlib\gui\dialog\editor.py:101
+#: taskcoachlib\gui\dialog\editor.py:124
+#: taskcoachlib\gui\dialog\editor.py:146
 msgid "For this task including all subtasks"
 msgstr "Voor deze taak inclusief alle subtaken"
 
-#: taskcoachlib\gui\dialog\editor.py:119
-#: taskcoachlib\gui\dialog\editor.py:233
-#: taskcoachlib\gui\viewer.py:185
+#: taskcoachlib\gui\dialog\editor.py:120
+#: taskcoachlib\gui\dialog\editor.py:234
+#: taskcoachlib\gui\viewer.py:210
 msgid "Budget"
 msgstr "Budget"
 
-#: taskcoachlib\gui\dialog\editor.py:120
-#: taskcoachlib\gui\viewer.py:187
-#: taskcoachlib\gui\viewer.py:385
+#: taskcoachlib\gui\dialog\editor.py:121
+#: taskcoachlib\gui\viewer.py:212
+#: taskcoachlib\gui\viewer.py:405
 msgid "Time spent"
 msgstr "Bestede tijd"
 
-#: taskcoachlib\gui\dialog\editor.py:121
-#: taskcoachlib\gui\viewer.py:189
+#: taskcoachlib\gui\dialog\editor.py:122
+#: taskcoachlib\gui\viewer.py:214
 msgid "Budget left"
 msgstr "Budget over"
 
-#: taskcoachlib\gui\dialog\editor.py:141
-#: taskcoachlib\gui\viewer.py:193
+#: taskcoachlib\gui\dialog\editor.py:142
+#: taskcoachlib\gui\viewer.py:218
 msgid "Hourly fee"
 msgstr "Tarief per uur"
 
-#: taskcoachlib\gui\dialog\editor.py:142
-#: taskcoachlib\gui\viewer.py:194
+#: taskcoachlib\gui\dialog\editor.py:143
+#: taskcoachlib\gui\viewer.py:219
 msgid "Fixed fee"
 msgstr "Vast tarief"
 
-#: taskcoachlib\gui\dialog\editor.py:143
-#: taskcoachlib\gui\dialog\editor.py:234
-#: taskcoachlib\gui\viewer.py:196
-#: taskcoachlib\gui\viewer.py:386
+#: taskcoachlib\gui\dialog\editor.py:144
+#: taskcoachlib\gui\dialog\editor.py:235
+#: taskcoachlib\gui\viewer.py:221
+#: taskcoachlib\gui\viewer.py:406
 msgid "Revenue"
 msgstr "Opbrengst"
 
-#: taskcoachlib\gui\dialog\editor.py:179
-#: taskcoachlib\gui\viewer.py:191
+#: taskcoachlib\gui\dialog\editor.py:180
+#: taskcoachlib\gui\viewer.py:216
 msgid "Priority"
 msgstr "Prioriteit"
 
-#: taskcoachlib\gui\dialog\editor.py:185
-#: taskcoachlib\gui\dialog\editor.py:231
+#: taskcoachlib\gui\dialog\editor.py:186
+#: taskcoachlib\gui\dialog\editor.py:232
 msgid "Categories"
 msgstr "Categorieën "
 
-#: taskcoachlib\gui\dialog\editor.py:187
+#: taskcoachlib\gui\dialog\editor.py:188
 msgid "Add category"
 msgstr "Categorie toevoegen"
 
-#: taskcoachlib\gui\dialog\editor.py:189
+#: taskcoachlib\gui\dialog\editor.py:190
 msgid "New category"
 msgstr "Nieuwe categorie"
 
-#: taskcoachlib\gui\dialog\editor.py:230
+#: taskcoachlib\gui\dialog\editor.py:231
 msgid "Dates"
 msgstr "Data"
 
-#: taskcoachlib\gui\dialog\editor.py:237
+#: taskcoachlib\gui\dialog\editor.py:238
 #: taskcoachlib\gui\viewerfactory.py:21
 msgid "Effort"
 msgstr "Tijdsbesteding"
 
-#: taskcoachlib\gui\dialog\editor.py:258
-#: taskcoachlib\gui\viewer.py:384
+#: taskcoachlib\gui\dialog\editor.py:259
+#: taskcoachlib\gui\viewer.py:402
 msgid "Task"
 msgstr "Taak"
 
-#: taskcoachlib\gui\dialog\editor.py:264
+#: taskcoachlib\gui\dialog\editor.py:265
 msgid "Start tracking from last stop time"
 msgstr "Tijdsbesteding starten vanaf einde laatste tijdsbesteding"
 
-#: taskcoachlib\gui\dialog\editor.py:273
+#: taskcoachlib\gui\dialog\editor.py:274
 msgid "Start"
 msgstr "Start"
 
-#: taskcoachlib\gui\dialog\editor.py:274
+#: taskcoachlib\gui\dialog\editor.py:275
 msgid "Stop"
 msgstr "Stop"
 
@@ -208,84 +208,88 @@ msgid "Show splash screen on startup"
 msgstr "Openingsscherm tonen bij starten"
 
 #: taskcoachlib\gui\dialog\preferences.py:67
-#: taskcoachlib\gui\dialog\preferences.py:85
+#: taskcoachlib\gui\dialog\preferences.py:87
 msgid "This setting will take effect after you restart %s"
 msgstr "Deze instelling wordt effectief nadat u %s opnieuw heeft opgestart"
 
 #: taskcoachlib\gui\dialog\preferences.py:69
 msgid "Hide main window when iconized"
-msgstr "Verberg window bij minimaliseren"
+msgstr "Het window verbergen bij minimaliseren"
 
-#: taskcoachlib\gui\dialog\preferences.py:75
-#: taskcoachlib\gui\dialog\preferences.py:109
+#: taskcoachlib\gui\dialog\preferences.py:71
+msgid "Minimize main window when closed"
+msgstr "Het window minimaliseren bij sluiten"
+
+#: taskcoachlib\gui\dialog\preferences.py:77
+#: taskcoachlib\gui\dialog\preferences.py:111
 msgid "Language"
 msgstr "Taal"
 
-#: taskcoachlib\gui\dialog\preferences.py:76
+#: taskcoachlib\gui\dialog\preferences.py:78
 msgid "English (US)"
 msgstr "Engels (VS)"
 
-#: taskcoachlib\gui\dialog\preferences.py:77
+#: taskcoachlib\gui\dialog\preferences.py:79
 msgid "English (UK)"
 msgstr "Engels (GB)"
 
-#: taskcoachlib\gui\dialog\preferences.py:78
+#: taskcoachlib\gui\dialog\preferences.py:80
 msgid "German"
 msgstr "Duits"
 
-#: taskcoachlib\gui\dialog\preferences.py:79
+#: taskcoachlib\gui\dialog\preferences.py:81
 msgid "Dutch"
 msgstr "Nederlands"
 
-#: taskcoachlib\gui\dialog\preferences.py:80
+#: taskcoachlib\gui\dialog\preferences.py:82
 msgid "French"
 msgstr "Frans"
 
-#: taskcoachlib\gui\dialog\preferences.py:81
+#: taskcoachlib\gui\dialog\preferences.py:83
 msgid "Simplified Chinese"
 msgstr "Vereenvoudigd Chinees"
 
-#: taskcoachlib\gui\dialog\preferences.py:82
+#: taskcoachlib\gui\dialog\preferences.py:84
 msgid "Russian"
 msgstr "Russisch"
 
-#: taskcoachlib\gui\dialog\preferences.py:83
+#: taskcoachlib\gui\dialog\preferences.py:85
 msgid "Spanish"
 msgstr "Spaans"
 
-#: taskcoachlib\gui\dialog\preferences.py:84
+#: taskcoachlib\gui\dialog\preferences.py:86
 msgid "Hungarian"
 msgstr "Hongaars"
 
-#: taskcoachlib\gui\dialog\preferences.py:92
+#: taskcoachlib\gui\dialog\preferences.py:94
 msgid "Click this button to change the color of active tasks"
 msgstr "Klik op deze knop om de kleur van actieve taken te veranderen"
 
-#: taskcoachlib\gui\dialog\preferences.py:93
+#: taskcoachlib\gui\dialog\preferences.py:95
 msgid "Click this button to change the color of inactive tasks"
 msgstr "Klik op deze knop om de kleur van inactieve taken te veranderen"
 
-#: taskcoachlib\gui\dialog\preferences.py:94
+#: taskcoachlib\gui\dialog\preferences.py:96
 msgid "Click this button to change the color of completed tasks"
 msgstr "Klik op deze knop om de kleur van afgeronde taken te veranderen"
 
-#: taskcoachlib\gui\dialog\preferences.py:95
+#: taskcoachlib\gui\dialog\preferences.py:97
 msgid "Click this button to change the color of over due tasks"
 msgstr "Klik op deze knop om de kleur van taken die te laat zijn te veranderen"
 
-#: taskcoachlib\gui\dialog\preferences.py:96
+#: taskcoachlib\gui\dialog\preferences.py:98
 msgid "Click this button to change the color of tasks due today"
 msgstr "Klik op deze knop om de kleur van taken die vandaag af moeten te veranderen"
 
-#: taskcoachlib\gui\dialog\preferences.py:107
+#: taskcoachlib\gui\dialog\preferences.py:109
 msgid "Window behavior"
 msgstr "Window gedrag"
 
-#: taskcoachlib\gui\dialog\preferences.py:108
+#: taskcoachlib\gui\dialog\preferences.py:110
 msgid "Files"
 msgstr "Bestanden"
 
-#: taskcoachlib\gui\dialog\preferences.py:110
+#: taskcoachlib\gui\dialog\preferences.py:112
 msgid "Colors"
 msgstr "Kleuren"
 
@@ -305,15 +309,15 @@ msgstr "Hoofdlettergevoelig"
 msgid "Clear"
 msgstr "Wissen"
 
-#: taskcoachlib\gui\iocontroller.py:12
+#: taskcoachlib\gui\iocontroller.py:13
 msgid "%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*"
 msgstr "%s bestanden (*.tsk)|*.tsk|XML bestanden (*.xml)|Alle bestanden (*.*)|*"
 
-#: taskcoachlib\gui\iocontroller.py:21
+#: taskcoachlib\gui\iocontroller.py:22
 msgid "Open"
 msgstr "Openen"
 
-#: taskcoachlib\gui\iocontroller.py:28
+#: taskcoachlib\gui\iocontroller.py:29
 msgid ""
 "Error while reading %s.\n"
 "Are you sure it is a %s-file?"
@@ -321,34 +325,34 @@ msgstr ""
 "Fout tijdens het lezen van %s.\n"
 "Weet u zeker dat het een %s-bestand is?"
 
-#: taskcoachlib\gui\iocontroller.py:30
+#: taskcoachlib\gui\iocontroller.py:31
 msgid "File error"
 msgstr "Bestandsfout"
 
-#: taskcoachlib\gui\iocontroller.py:32
+#: taskcoachlib\gui\iocontroller.py:33
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "%(nrtasks)d taken geladen uit %(filename)s"
 
-#: taskcoachlib\gui\iocontroller.py:37
+#: taskcoachlib\gui\iocontroller.py:38
 msgid "Merge"
 msgstr "Invoegen"
 
-#: taskcoachlib\gui\iocontroller.py:40
+#: taskcoachlib\gui\iocontroller.py:41
 msgid "Merged %(filename)s"
 msgstr "Taken uit %(filename)s ingevoegd"
 
-#: taskcoachlib\gui\iocontroller.py:46
-#: taskcoachlib\gui\iocontroller.py:58
-#: taskcoachlib\gui\iocontroller.py:71
+#: taskcoachlib\gui\iocontroller.py:47
+#: taskcoachlib\gui\iocontroller.py:59
+#: taskcoachlib\gui\iocontroller.py:72
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "%(nrtasks)d taken opgeslagen in %(filename)s"
 
-#: taskcoachlib\gui\iocontroller.py:55
-#: taskcoachlib\gui\iocontroller.py:66
+#: taskcoachlib\gui\iocontroller.py:56
+#: taskcoachlib\gui\iocontroller.py:67
 msgid "Save as..."
 msgstr "Opslaan als..."
 
-#: taskcoachlib\gui\iocontroller.py:76
+#: taskcoachlib\gui\iocontroller.py:77
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -356,15 +360,15 @@ msgstr ""
 "U heeft niet-opgeslagen veranderingen.\n"
 "Opslaan voor het afsluiten?"
 
-#: taskcoachlib\gui\iocontroller.py:77
+#: taskcoachlib\gui\iocontroller.py:78
 msgid "%s: save changes?"
 msgstr "%s: veranderingen opslaan?"
 
-#: taskcoachlib\gui\iocontroller.py:84
+#: taskcoachlib\gui\iocontroller.py:85
 msgid "Closed %s"
 msgstr "%s gesloten"
 
-#: taskcoachlib\gui\mainwindow.py:82
+#: taskcoachlib\gui\mainwindow.py:84
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Welkom bij %(name)s versie %(version)s"
 
@@ -405,39 +409,43 @@ msgid "Tasks &due before end of"
 msgstr "Taken &die af moeten voor"
 
 #: taskcoachlib\gui\menu.py:114
-msgid "&Columns"
-msgstr "&Kolommen"
+msgid "Task &columns"
+msgstr "Taak&kolommen"
 
-#: taskcoachlib\gui\menu.py:116
+#: taskcoachlib\gui\menu.py:115
+msgid "Effort &columns"
+msgstr "Tijdsbestedingkolommen"
+
+#: taskcoachlib\gui\menu.py:117
 msgid "Task &list options"
 msgstr "Taken&lijst opties"
 
-#: taskcoachlib\gui\menu.py:118
+#: taskcoachlib\gui\menu.py:119
 msgid "Task &tree options"
 msgstr "Taken&boom opties"
 
-#: taskcoachlib\gui\menu.py:121
+#: taskcoachlib\gui\menu.py:122
 msgid "&Sort"
 msgstr "&Sorteren"
 
-#: taskcoachlib\gui\menu.py:123
+#: taskcoachlib\gui\menu.py:124
 msgid "T&oolbar"
 msgstr "&Werkbalk"
 
-#: taskcoachlib\gui\menu.py:130
-#: taskcoachlib\gui\menu.py:266
+#: taskcoachlib\gui\menu.py:131
+#: taskcoachlib\gui\menu.py:287
 msgid "&Dates"
 msgstr "&Data"
 
-#: taskcoachlib\gui\menu.py:131
-#: taskcoachlib\gui\menu.py:267
-#: taskcoachlib\gui\uicommand.py:808
-#: taskcoachlib\gui\uicommand.py:865
+#: taskcoachlib\gui\menu.py:133
+#: taskcoachlib\gui\menu.py:289
+#: taskcoachlib\gui\uicommand.py:828
+#: taskcoachlib\gui\uicommand.py:889
 msgid "&Budget"
 msgstr "&Budget"
 
-#: taskcoachlib\gui\menu.py:132
-#: taskcoachlib\gui\menu.py:268
+#: taskcoachlib\gui\menu.py:135
+#: taskcoachlib\gui\menu.py:291
 msgid "&Financial"
 msgstr "&Financieel"
 
@@ -461,831 +469,861 @@ msgstr "Eén taak die vandaag af moet"
 msgid "%d tasks due today"
 msgstr "%d taken die vandaag af moeten"
 
-#: taskcoachlib\gui\uicommand.py:247
+#: taskcoachlib\gui\uicommand.py:248
 msgid "&Open...\tCtrl+O"
 msgstr "&Openen...\tCtrl+O"
 
-#: taskcoachlib\gui\uicommand.py:248
+#: taskcoachlib\gui\uicommand.py:249
 msgid "Open a %s file"
 msgstr "Open een %s bestand"
 
-#: taskcoachlib\gui\uicommand.py:259
+#: taskcoachlib\gui\uicommand.py:260
 msgid "Open %s"
 msgstr "Open %s"
 
-#: taskcoachlib\gui\uicommand.py:267
+#: taskcoachlib\gui\uicommand.py:268
 msgid "&Merge..."
 msgstr "&Invoegen..."
 
-#: taskcoachlib\gui\uicommand.py:268
+#: taskcoachlib\gui\uicommand.py:269
 msgid "Merge tasks from another file with the current file"
 msgstr "Taken uit een ander bestand in het huidige bestand invoegen"
 
-#: taskcoachlib\gui\uicommand.py:277
+#: taskcoachlib\gui\uicommand.py:278
 msgid "&Close"
 msgstr "&Sluiten"
 
-#: taskcoachlib\gui\uicommand.py:278
+#: taskcoachlib\gui\uicommand.py:279
 msgid "Close the current file"
 msgstr "Het huidige bestand sluiten"
 
-#: taskcoachlib\gui\uicommand.py:287
+#: taskcoachlib\gui\uicommand.py:288
 msgid "&Save\tCtrl+S"
 msgstr "O&pslaan\tCtrl+S"
 
-#: taskcoachlib\gui\uicommand.py:288
+#: taskcoachlib\gui\uicommand.py:289
 msgid "Save the current file"
 msgstr "Het huidige bestand opslaan"
 
-#: taskcoachlib\gui\uicommand.py:298
+#: taskcoachlib\gui\uicommand.py:299
 msgid "S&ave as..."
 msgstr "Opslaan &als..."
 
-#: taskcoachlib\gui\uicommand.py:299
+#: taskcoachlib\gui\uicommand.py:300
 msgid "Save the current file under a new name"
 msgstr "Het huidige bestand onder een nieuwe naam opslaan"
 
-#: taskcoachlib\gui\uicommand.py:307
+#: taskcoachlib\gui\uicommand.py:308
 msgid "Sa&ve selection..."
 msgstr "S&electie opslaan..."
 
-#: taskcoachlib\gui\uicommand.py:308
+#: taskcoachlib\gui\uicommand.py:309
 msgid "Save the selected tasks to a separate file"
 msgstr "De gelecteerde taken in een apart bestand opslaan"
 
-#: taskcoachlib\gui\uicommand.py:316
+#: taskcoachlib\gui\uicommand.py:317
 msgid "&Quit\tCtrl+Q"
 msgstr "A&fsluiten\tCtrl+Q"
 
-#: taskcoachlib\gui\uicommand.py:317
+#: taskcoachlib\gui\uicommand.py:318
 msgid "Exit %s"
 msgstr "%s beëindigen"
 
-#: taskcoachlib\gui\uicommand.py:324
+#: taskcoachlib\gui\uicommand.py:325
 msgid "&Undo"
 msgstr "&Ongedaan maken"
 
-#: taskcoachlib\gui\uicommand.py:329
+#: taskcoachlib\gui\uicommand.py:330
 msgid "Undo the last command"
 msgstr "De laatste bewerking ongedaan maken"
 
-#: taskcoachlib\gui\uicommand.py:343
+#: taskcoachlib\gui\uicommand.py:344
 msgid "&Redo"
 msgstr "Opnie&uw doen"
 
-#: taskcoachlib\gui\uicommand.py:348
+#: taskcoachlib\gui\uicommand.py:349
 msgid "Redo the last command that was undone"
 msgstr "De laatste ongedaan gemaakte bewerking opnieuw uitvoeren"
 
-#: taskcoachlib\gui\uicommand.py:364
+#: taskcoachlib\gui\uicommand.py:365
 msgid "Cu&t\tCtrl+X"
 msgstr "K&nippen\tCtrl+X"
 
-#: taskcoachlib\gui\uicommand.py:365
+#: taskcoachlib\gui\uicommand.py:366
 msgid "Cut the selected item(s) to the clipboard"
 msgstr "De geselecteerde items knippen en op het klembord plaatsen"
 
-#: taskcoachlib\gui\uicommand.py:376
+#: taskcoachlib\gui\uicommand.py:377
 msgid "&Copy\tCtrl+C"
 msgstr "&Kopiëren\tCtrl+C"
 
-#: taskcoachlib\gui\uicommand.py:377
+#: taskcoachlib\gui\uicommand.py:378
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "De gelecteerde items naar het klembord kopiëren"
 
-#: taskcoachlib\gui\uicommand.py:388
+#: taskcoachlib\gui\uicommand.py:389
 msgid "&Paste\tCtrl+V"
 msgstr "&Plakken\tCtrl+V"
 
-#: taskcoachlib\gui\uicommand.py:389
+#: taskcoachlib\gui\uicommand.py:390
 msgid "Paste item(s) from the clipboard"
 msgstr "Item(s) van het klembord plakken"
 
-#: taskcoachlib\gui\uicommand.py:402
+#: taskcoachlib\gui\uicommand.py:403
 msgid "P&aste into task"
 msgstr "Pl&akken in taak"
 
-#: taskcoachlib\gui\uicommand.py:403
+#: taskcoachlib\gui\uicommand.py:404
 msgid "Paste item(s) from the clipboard into the selected task"
 msgstr "Item(s) van het klembord in de geselecteerde taak plakken"
 
-#: taskcoachlib\gui\uicommand.py:417
+#: taskcoachlib\gui\uicommand.py:418
 msgid "Preferences..."
 msgstr "Opties..."
 
-#: taskcoachlib\gui\uicommand.py:418
-#: taskcoachlib\gui\uicommand.py:421
+#: taskcoachlib\gui\uicommand.py:419
+#: taskcoachlib\gui\uicommand.py:422
 msgid "Edit preferences"
 msgstr "Opties bewerken"
 
-#: taskcoachlib\gui\uicommand.py:428
+#: taskcoachlib\gui\uicommand.py:429
 msgid "&All\tCtrl+A"
 msgstr "&Alles\tCtrl+A"
 
-#: taskcoachlib\gui\uicommand.py:429
+#: taskcoachlib\gui\uicommand.py:430
 msgid "Select all items in the current view"
 msgstr "Alle items in het huidige tabblad selecteren"
 
-#: taskcoachlib\gui\uicommand.py:438
+#: taskcoachlib\gui\uicommand.py:439
 msgid "&Invert selection\tCtrl+I"
 msgstr "Selectie &inverteren\tCtrl+I"
 
-#: taskcoachlib\gui\uicommand.py:439
+#: taskcoachlib\gui\uicommand.py:440
 msgid "Select unselected items and unselect selected items"
 msgstr "Niet-geselecteerde items selecteren en geselecteerde items deselecteren"
 
-#: taskcoachlib\gui\uicommand.py:448
+#: taskcoachlib\gui\uicommand.py:449
 msgid "&Clear selection"
 msgstr "Selectie op&heffen"
 
-#: taskcoachlib\gui\uicommand.py:449
+#: taskcoachlib\gui\uicommand.py:450
 msgid "Unselect all items"
 msgstr "Alle items deselecteren"
 
-#: taskcoachlib\gui\uicommand.py:457
+#: taskcoachlib\gui\uicommand.py:458
 msgid "&All tasks"
 msgstr "&Alle taken"
 
-#: taskcoachlib\gui\uicommand.py:458
+#: taskcoachlib\gui\uicommand.py:459
 msgid "Show all tasks (reset all filters)"
 msgstr "Alle taken tonen (zet alle filters uit)"
 
-#: taskcoachlib\gui\uicommand.py:475
+#: taskcoachlib\gui\uicommand.py:476
 msgid "Tasks by catego&ries..."
 msgstr "Taken op catego&rie tonen..."
 
-#: taskcoachlib\gui\uicommand.py:476
+#: taskcoachlib\gui\uicommand.py:477
 msgid "Show/hide tasks by category"
 msgstr "Taken op basis van categorie tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:480
+#: taskcoachlib\gui\uicommand.py:481
 msgid "View categories"
 msgstr "Categorieën tonen"
 
-#: taskcoachlib\gui\uicommand.py:489
+#: taskcoachlib\gui\uicommand.py:490
 msgid "&Expand all tasks"
 msgstr "Alle taken &expanderen"
 
-#: taskcoachlib\gui\uicommand.py:490
+#: taskcoachlib\gui\uicommand.py:491
 msgid "Expand all tasks with subtasks"
 msgstr "Alle taken met subtaken expanderen"
 
-#: taskcoachlib\gui\uicommand.py:499
+#: taskcoachlib\gui\uicommand.py:500
 msgid "E&xpand"
 msgstr "E&xpanderen"
 
-#: taskcoachlib\gui\uicommand.py:499
+#: taskcoachlib\gui\uicommand.py:500
 msgid "Expand the selected task(s)"
 msgstr "De geselecteerde taken expanderen"
 
-#: taskcoachlib\gui\uicommand.py:507
+#: taskcoachlib\gui\uicommand.py:508
 msgid "&Collapse all tasks"
 msgstr "Alle taken in&klappen"
 
-#: taskcoachlib\gui\uicommand.py:508
+#: taskcoachlib\gui\uicommand.py:509
 msgid "Collapse all tasks with subtasks"
 msgstr "Alle taken met subtaken inklappen"
 
-#: taskcoachlib\gui\uicommand.py:516
+#: taskcoachlib\gui\uicommand.py:517
 msgid "C&ollapse"
 msgstr "Ink&lappen"
 
-#: taskcoachlib\gui\uicommand.py:517
+#: taskcoachlib\gui\uicommand.py:518
 msgid "Collapse the selected tasks with subtasks"
 msgstr "De geselecteerde taken met subtaken inklappen"
 
-#: taskcoachlib\gui\uicommand.py:526
+#: taskcoachlib\gui\uicommand.py:527
 msgid "&New task...\tINS"
 msgstr "&Nieuwe taak...\tINS"
 
-#: taskcoachlib\gui\uicommand.py:526
+#: taskcoachlib\gui\uicommand.py:527
 msgid "Insert a new task"
 msgstr "Een nieuwe taak toevoegen"
 
-#: taskcoachlib\gui\uicommand.py:540
+#: taskcoachlib\gui\uicommand.py:541
 msgid "New &subtask...\tCtrl+INS"
 msgstr "Nieuwe &subtaak...\tCtrl+INS"
 
-#: taskcoachlib\gui\uicommand.py:541
+#: taskcoachlib\gui\uicommand.py:542
 msgid "Insert a new subtask into the selected task"
 msgstr "Een nieuwe subtaak toevoegen aan de geselecteerde taak"
 
-#: taskcoachlib\gui\uicommand.py:555
+#: taskcoachlib\gui\uicommand.py:556
 msgid "&Edit task..."
 msgstr "Taak &bewerken..."
 
-#: taskcoachlib\gui\uicommand.py:555
+#: taskcoachlib\gui\uicommand.py:556
 msgid "Edit the selected task"
 msgstr "De geselecteerde taak bewerken"
 
-#: taskcoachlib\gui\uicommand.py:569
+#: taskcoachlib\gui\uicommand.py:570
 msgid "&Mark completed\tCtrl+ENTER"
 msgstr "Als afgerond &markeren\tCtrl+ENTER"
 
-#: taskcoachlib\gui\uicommand.py:570
+#: taskcoachlib\gui\uicommand.py:571
 msgid "Mark the selected task(s) completed"
 msgstr "De geselecteerde taak als afgerond markeren"
 
-#: taskcoachlib\gui\uicommand.py:585
+#: taskcoachlib\gui\uicommand.py:586
 msgid "&Delete task\tDEL"
 msgstr "Taak &verwijderen\tDEL"
 
-#: taskcoachlib\gui\uicommand.py:586
+#: taskcoachlib\gui\uicommand.py:587
 msgid "Delete the selected task(s)"
 msgstr "De geselecteerde taak verwijderen"
 
-#: taskcoachlib\gui\uicommand.py:609
+#: taskcoachlib\gui\uicommand.py:610
+msgid "Tasks"
+msgstr "Taken"
+
+#: taskcoachlib\gui\uicommand.py:621
+msgid "Please enter recipient"
+msgstr "Vul a.u.b. de geadresseerde in"
+
+#: taskcoachlib\gui\uicommand.py:629
 msgid "&New effort..."
 msgstr "&Nieuwe tijdsbesteding..."
 
-#: taskcoachlib\gui\uicommand.py:610
+#: taskcoachlib\gui\uicommand.py:630
 msgid "Add an effort period to the selected task(s)"
 msgstr "Een tijdsbesteding aan de geselecteerde ta(a)k(en) toevoegen"
 
-#: taskcoachlib\gui\uicommand.py:630
+#: taskcoachlib\gui\uicommand.py:650
 msgid "&Edit effort..."
 msgstr "Tijdsbesteding &bewerken..."
 
-#: taskcoachlib\gui\uicommand.py:631
+#: taskcoachlib\gui\uicommand.py:651
 msgid "Edit the selected effort period(s)"
 msgstr "De geselecteerde tijdsbesteding(en) bewerken"
 
-#: taskcoachlib\gui\uicommand.py:643
+#: taskcoachlib\gui\uicommand.py:663
 msgid "&Delete effort"
 msgstr "Tijdsbesteding &verwijderen"
 
-#: taskcoachlib\gui\uicommand.py:644
+#: taskcoachlib\gui\uicommand.py:664
 msgid "Delete the selected effort period(s)"
 msgstr "De geselecteerde tijdsbesteding(en) verwijderen"
 
-#: taskcoachlib\gui\uicommand.py:655
+#: taskcoachlib\gui\uicommand.py:675
 msgid "&Start tracking effort"
 msgstr "Tijdsbesteding &starten"
 
-#: taskcoachlib\gui\uicommand.py:656
+#: taskcoachlib\gui\uicommand.py:676
 msgid "Start tracking effort for the selected task(s)"
 msgstr "Tijdsbesteding starten voor de geselecteerde taak"
 
-#: taskcoachlib\gui\uicommand.py:673
+#: taskcoachlib\gui\uicommand.py:693
 msgid "St&op tracking effort"
 msgstr "Tijdsbesteding st&oppen"
 
-#: taskcoachlib\gui\uicommand.py:674
+#: taskcoachlib\gui\uicommand.py:694
 msgid "Stop tracking effort for the active task(s)"
 msgstr "Tijdsbesteding stoppen voor de lopende taak"
 
-#: taskcoachlib\gui\uicommand.py:709
+#: taskcoachlib\gui\uicommand.py:729
 msgid "&Help contents"
 msgstr "&Helpinhoud"
 
-#: taskcoachlib\gui\uicommand.py:710
+#: taskcoachlib\gui\uicommand.py:730
 msgid "Help about the program"
 msgstr "Helpinformatie over het programma"
 
-#: taskcoachlib\gui\uicommand.py:711
+#: taskcoachlib\gui\uicommand.py:731
 msgid "Help"
 msgstr "Help"
 
-#: taskcoachlib\gui\uicommand.py:721
+#: taskcoachlib\gui\uicommand.py:741
 msgid "&About %s"
 msgstr "&Over %s"
 
-#: taskcoachlib\gui\uicommand.py:722
+#: taskcoachlib\gui\uicommand.py:742
 msgid "Version and contact information about %s"
 msgstr "Versie- en contactinformatie over %s"
 
-#: taskcoachlib\gui\uicommand.py:723
+#: taskcoachlib\gui\uicommand.py:743
 msgid "Help: About %s"
 msgstr "Help: Over %s"
 
-#: taskcoachlib\gui\uicommand.py:729
+#: taskcoachlib\gui\uicommand.py:749
 msgid "&License"
 msgstr "&Licentie"
 
-#: taskcoachlib\gui\uicommand.py:730
+#: taskcoachlib\gui\uicommand.py:750
 msgid "%s license"
 msgstr "%s licentie"
 
-#: taskcoachlib\gui\uicommand.py:731
+#: taskcoachlib\gui\uicommand.py:751
 msgid "Help: %s license"
 msgstr "Help: %s licentie"
 
-#: taskcoachlib\gui\uicommand.py:737
+#: taskcoachlib\gui\uicommand.py:757
 msgid "&Restore"
 msgstr "&Herstel scherm"
 
-#: taskcoachlib\gui\uicommand.py:738
+#: taskcoachlib\gui\uicommand.py:758
 msgid "Restore the window to its previous state"
 msgstr "Het scherm in zijn oorspronkelijke toestand herstellen"
 
-#: taskcoachlib\gui\uicommand.py:778
+#: taskcoachlib\gui\uicommand.py:798
 msgid "&Completed"
 msgstr "A&fgerond"
 
-#: taskcoachlib\gui\uicommand.py:779
+#: taskcoachlib\gui\uicommand.py:799
 msgid "Show/hide completed tasks"
 msgstr "Afgerond taken tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:781
+#: taskcoachlib\gui\uicommand.py:801
 msgid "&Inactive"
 msgstr "&Inactief"
 
-#: taskcoachlib\gui\uicommand.py:782
+#: taskcoachlib\gui\uicommand.py:802
 msgid "Show/hide inactive tasks (tasks with a start date in the future)"
 msgstr "Inactieve taken tonen/verbergen (taken met een startdatum in de toekomst)"
 
-#: taskcoachlib\gui\uicommand.py:784
+#: taskcoachlib\gui\uicommand.py:804
 msgid "&Active"
 msgstr "&Actief"
 
-#: taskcoachlib\gui\uicommand.py:785
-#: taskcoachlib\gui\uicommand.py:788
+#: taskcoachlib\gui\uicommand.py:805
+#: taskcoachlib\gui\uicommand.py:808
 msgid "Show/hide active tasks (tasks with a start date in the past and a due date in the future)"
 msgstr "Actieve taken tonen/verbergen (niet-afgeronde taken met een startdatum in het verleden)"
 
-#: taskcoachlib\gui\uicommand.py:787
+#: taskcoachlib\gui\uicommand.py:807
 msgid "&Over due"
 msgstr "&Te laat"
 
-#: taskcoachlib\gui\uicommand.py:790
+#: taskcoachlib\gui\uicommand.py:810
 msgid "Over &budget"
 msgstr "Over &budget"
 
-#: taskcoachlib\gui\uicommand.py:791
+#: taskcoachlib\gui\uicommand.py:811
 msgid "Show/hide tasks that are over budget"
 msgstr "Taken die over budget zijn tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:794
+#: taskcoachlib\gui\uicommand.py:814
 msgid "Tasks &with subtasks"
 msgstr "&Taken met subtaken"
 
-#: taskcoachlib\gui\uicommand.py:795
+#: taskcoachlib\gui\uicommand.py:815
 msgid "Show/hide tasks with subtasks"
 msgstr "Taken met subtaken tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:804
+#: taskcoachlib\gui\uicommand.py:824
 msgid "Show/hide start date column"
 msgstr "Startdatum kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:804
-#: taskcoachlib\gui\uicommand.py:861
+#: taskcoachlib\gui\uicommand.py:824
+#: taskcoachlib\gui\uicommand.py:885
 msgid "&Start date"
 msgstr "&Startdatum"
 
-#: taskcoachlib\gui\uicommand.py:805
+#: taskcoachlib\gui\uicommand.py:825
 msgid "Show/hide due date column"
 msgstr "Geplande einddatum kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:805
-#: taskcoachlib\gui\uicommand.py:862
+#: taskcoachlib\gui\uicommand.py:825
+#: taskcoachlib\gui\uicommand.py:886
 msgid "&Due date"
 msgstr "&Geplande einddatum"
 
-#: taskcoachlib\gui\uicommand.py:806
+#: taskcoachlib\gui\uicommand.py:826
 msgid "D&ays left"
 msgstr "&Dagen over"
 
-#: taskcoachlib\gui\uicommand.py:806
+#: taskcoachlib\gui\uicommand.py:826
 msgid "Show/hide days left column"
 msgstr "Dagen over kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:807
+#: taskcoachlib\gui\uicommand.py:827
 msgid "Co&mpletion date"
 msgstr "&Werkelijke einddatum"
 
-#: taskcoachlib\gui\uicommand.py:807
+#: taskcoachlib\gui\uicommand.py:827
 msgid "Show/hide completion date column"
 msgstr "Werkelijke einddatum kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:808
+#: taskcoachlib\gui\uicommand.py:828
 msgid "Show/hide budget column"
 msgstr "Budget kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:809
+#: taskcoachlib\gui\uicommand.py:829
 msgid "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr "Totaal budget kolom tonen/verbergen (totaal budget is inclusief budget voor subtaken)"
 
-#: taskcoachlib\gui\uicommand.py:809
-#: taskcoachlib\gui\uicommand.py:866
+#: taskcoachlib\gui\uicommand.py:829
+#: taskcoachlib\gui\uicommand.py:890
 msgid "Total b&udget"
 msgstr "Totaal b&udget"
 
-#: taskcoachlib\gui\uicommand.py:810
+#: taskcoachlib\gui\uicommand.py:830
+#: taskcoachlib\gui\uicommand.py:843
 msgid "Show/hide time spent column"
 msgstr "Bestede tijd kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:810
-#: taskcoachlib\gui\uicommand.py:867
+#: taskcoachlib\gui\uicommand.py:830
+#: taskcoachlib\gui\uicommand.py:843
+#: taskcoachlib\gui\uicommand.py:891
 msgid "&Time spent"
 msgstr "B&estede tijd"
 
-#: taskcoachlib\gui\uicommand.py:811
+#: taskcoachlib\gui\uicommand.py:831
 msgid "Show/hide total time spent column (total time includes time spent on subtasks)"
 msgstr "Totaal bestede tijd kolom tonen/verbergen (totaal bestede tijd is inclusief tijd besteed aan subtaken)"
 
-#: taskcoachlib\gui\uicommand.py:811
-#: taskcoachlib\gui\uicommand.py:868
+#: taskcoachlib\gui\uicommand.py:831
+#: taskcoachlib\gui\uicommand.py:844
+#: taskcoachlib\gui\uicommand.py:892
 msgid "T&otal time spent"
 msgstr "Tot&aal bestede tijd"
 
-#: taskcoachlib\gui\uicommand.py:812
+#: taskcoachlib\gui\uicommand.py:832
 msgid "Show/hide budget left column"
 msgstr "Budget over kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:812
-#: taskcoachlib\gui\uicommand.py:869
+#: taskcoachlib\gui\uicommand.py:832
+#: taskcoachlib\gui\uicommand.py:893
 msgid "Budget &left"
 msgstr "Budget &over"
 
-#: taskcoachlib\gui\uicommand.py:813
+#: taskcoachlib\gui\uicommand.py:833
 msgid "Show/hide total budget left column (total budget left includes budget left for subtasks)"
 msgstr "Totaal budget over kolom tonen/verbergen (totaal budget over is inclusief budget over voor subtaken)"
 
-#: taskcoachlib\gui\uicommand.py:813
-#: taskcoachlib\gui\uicommand.py:870
+#: taskcoachlib\gui\uicommand.py:833
+#: taskcoachlib\gui\uicommand.py:894
 msgid "Total budget l&eft"
 msgstr "Totaal budget o&ver"
 
-#: taskcoachlib\gui\uicommand.py:814
+#: taskcoachlib\gui\uicommand.py:834
 msgid "Show/hide priority column"
 msgstr "Prioriteit kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:814
-#: taskcoachlib\gui\uicommand.py:871
+#: taskcoachlib\gui\uicommand.py:834
+#: taskcoachlib\gui\uicommand.py:895
 msgid "&Priority"
 msgstr "&Prioriteit"
 
-#: taskcoachlib\gui\uicommand.py:815
+#: taskcoachlib\gui\uicommand.py:835
 msgid "O&verall priority"
 msgstr "Totale prioriteit"
 
-#: taskcoachlib\gui\uicommand.py:815
+#: taskcoachlib\gui\uicommand.py:835
 msgid "Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)"
 msgstr "Totale prioriteit kolom tonen/verbergen (totale prioriteit is de maximum prioriteit van een taak en al zijn subtaken)"
 
-#: taskcoachlib\gui\uicommand.py:816
+#: taskcoachlib\gui\uicommand.py:836
 msgid "Show/hide hourly fee column"
 msgstr "Tarief per uur kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:816
-#: taskcoachlib\gui\uicommand.py:873
+#: taskcoachlib\gui\uicommand.py:836
+#: taskcoachlib\gui\uicommand.py:897
 msgid "&Hourly fee"
 msgstr "&Tarief per uur"
 
-#: taskcoachlib\gui\uicommand.py:817
+#: taskcoachlib\gui\uicommand.py:837
 msgid "Show/hide fixed fee column"
 msgstr "Vast tarief kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:817
-#: taskcoachlib\gui\uicommand.py:874
+#: taskcoachlib\gui\uicommand.py:837
+#: taskcoachlib\gui\uicommand.py:898
 msgid "&Fixed fee"
 msgstr "&Vaste prijs"
 
-#: taskcoachlib\gui\uicommand.py:818
+#: taskcoachlib\gui\uicommand.py:838
 msgid "&Total fixed fee"
 msgstr "Totaal vast tarief"
 
-#: taskcoachlib\gui\uicommand.py:818
+#: taskcoachlib\gui\uicommand.py:838
 msgid "Show/hide total fixed fee column"
 msgstr "Totaal vast tarief kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:819
+#: taskcoachlib\gui\uicommand.py:839
+#: taskcoachlib\gui\uicommand.py:845
 msgid "Show/hide revenue column"
 msgstr "Opbrengst kolom tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:819
-#: taskcoachlib\gui\uicommand.py:876
+#: taskcoachlib\gui\uicommand.py:839
+#: taskcoachlib\gui\uicommand.py:845
+#: taskcoachlib\gui\uicommand.py:900
 msgid "&Revenue"
 msgstr "&Opbrengst"
 
-#: taskcoachlib\gui\uicommand.py:820
-msgid "Show/hide total revenue column"
-msgstr "Totale opbrengst kolom tonen/verbergen"
-
-#: taskcoachlib\gui\uicommand.py:820
+#: taskcoachlib\gui\uicommand.py:840
 msgid "T&otal revenue"
 msgstr "T&otale opbrengst"
 
-#: taskcoachlib\gui\uicommand.py:821
+#: taskcoachlib\gui\uicommand.py:840
+#: taskcoachlib\gui\uicommand.py:846
+msgid "Show/hide total revenue column"
+msgstr "Totale opbrengst kolom tonen/verbergen"
+
+#: taskcoachlib\gui\uicommand.py:841
 msgid "Show/hide last modification time column"
 msgstr "Kolom met tijdstip laatste wijziging tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:821
-#: taskcoachlib\gui\uicommand.py:878
-#: taskcoachlib\gui\viewer.py:198
+#: taskcoachlib\gui\uicommand.py:841
+#: taskcoachlib\gui\uicommand.py:902
+#: taskcoachlib\gui\viewer.py:223
 msgid "Last modification time"
 msgstr "Tijdstip laatste wijziging"
 
-#: taskcoachlib\gui\uicommand.py:822
+#: taskcoachlib\gui\uicommand.py:842
 msgid "Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks"
 msgstr "Kolom met tijdstip laatste wijziging van taak en subtaken tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:822
-#: taskcoachlib\gui\uicommand.py:879
-#: taskcoachlib\gui\viewer.py:199
+#: taskcoachlib\gui\uicommand.py:842
+#: taskcoachlib\gui\uicommand.py:903
+#: taskcoachlib\gui\viewer.py:224
 msgid "Overall last modification time"
 msgstr "Tijdstip laatste wijziging taak en subtaken"
 
-#: taskcoachlib\gui\uicommand.py:826
+#: taskcoachlib\gui\uicommand.py:844
+msgid "Show/hide total time spent column"
+msgstr "Totaal bestede tijd kolom tonen/verbergen"
+
+#: taskcoachlib\gui\uicommand.py:846
+msgid "To&tal revenue"
+msgstr "To&tale opbrengst"
+
+#: taskcoachlib\gui\uicommand.py:850
 msgid "All date columns"
 msgstr "Alle datum kolommen"
 
-#: taskcoachlib\gui\uicommand.py:827
+#: taskcoachlib\gui\uicommand.py:851
 msgid "Show/hide all date-related columns"
 msgstr "Alle datum-gerelateerde kolommen tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:831
+#: taskcoachlib\gui\uicommand.py:855
 msgid "All budget columns"
 msgstr "Alle budget kolommen"
 
-#: taskcoachlib\gui\uicommand.py:832
+#: taskcoachlib\gui\uicommand.py:856
 msgid "Show/hide all budget-related columns"
 msgstr "Alle budget-gerelateerde kolommen tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:836
+#: taskcoachlib\gui\uicommand.py:860
 msgid "All financial columns"
 msgstr "Alle financiële kolommen"
 
-#: taskcoachlib\gui\uicommand.py:837
+#: taskcoachlib\gui\uicommand.py:861
 msgid "Show/hide all finance-related columns"
 msgstr "Alle financiën-gerelateerde kolommen tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:848
+#: taskcoachlib\gui\uicommand.py:872
 msgid "&Ascending"
 msgstr "&Oplopend"
 
-#: taskcoachlib\gui\uicommand.py:849
+#: taskcoachlib\gui\uicommand.py:873
 msgid "Sort tasks ascending (checked) or descending (unchecked)"
 msgstr "Taken oplopend (aangevinkt) of aflopend (niet aangevinkt) sorteren"
 
-#: taskcoachlib\gui\uicommand.py:851
+#: taskcoachlib\gui\uicommand.py:875
 msgid "Sort case sensitive"
 msgstr "Hoofdlettergevoelig sorteren"
 
-#: taskcoachlib\gui\uicommand.py:852
+#: taskcoachlib\gui\uicommand.py:876
 msgid "When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)"
 msgstr "Sorteren is hoofdlettergevoelig (aangevinkt) of niet hoofdlettergevoelig (niet aangevinkt)"
 
-#: taskcoachlib\gui\uicommand.py:854
+#: taskcoachlib\gui\uicommand.py:878
 msgid "Sort by status &first"
 msgstr "Eerst op status sorteren"
 
-#: taskcoachlib\gui\uicommand.py:855
+#: taskcoachlib\gui\uicommand.py:879
 msgid "Sort tasks by status (active/inactive/completed) first"
 msgstr "Taken eerst op status (actief/inactief/afgerond) sorteren"
 
-#: taskcoachlib\gui\uicommand.py:860
+#: taskcoachlib\gui\uicommand.py:884
 msgid "Sort tasks by subject"
 msgstr "Taken op onderwerp sorteren"
 
-#: taskcoachlib\gui\uicommand.py:860
+#: taskcoachlib\gui\uicommand.py:884
 msgid "Sub&ject"
 msgstr "&Onderwerp"
 
-#: taskcoachlib\gui\uicommand.py:861
+#: taskcoachlib\gui\uicommand.py:885
 msgid "Sort tasks by start date"
 msgstr "Taken op startdatum sorteren"
 
-#: taskcoachlib\gui\uicommand.py:862
+#: taskcoachlib\gui\uicommand.py:886
 msgid "Sort tasks by due date"
 msgstr "Taken op geplande einddatum sorteren"
 
-#: taskcoachlib\gui\uicommand.py:863
+#: taskcoachlib\gui\uicommand.py:887
 msgid "&Completion date"
 msgstr "&Werkelijke einddatum"
 
-#: taskcoachlib\gui\uicommand.py:863
+#: taskcoachlib\gui\uicommand.py:887
 msgid "Sort tasks by completion date"
 msgstr "Taken op werkelijke einddatum sorteren"
 
-#: taskcoachlib\gui\uicommand.py:864
+#: taskcoachlib\gui\uicommand.py:888
 msgid "&Days left"
 msgstr "&Dagen over"
 
-#: taskcoachlib\gui\uicommand.py:864
+#: taskcoachlib\gui\uicommand.py:888
 msgid "Sort tasks by number of days left"
 msgstr "Taken sorteren op aantal dagen over"
 
-#: taskcoachlib\gui\uicommand.py:865
+#: taskcoachlib\gui\uicommand.py:889
 msgid "Sort tasks by budget"
 msgstr "Taken op budget sorteren"
 
-#: taskcoachlib\gui\uicommand.py:866
+#: taskcoachlib\gui\uicommand.py:890
 msgid "Sort tasks by total budget"
 msgstr "Taken op totaal budget sorteren"
 
-#: taskcoachlib\gui\uicommand.py:867
+#: taskcoachlib\gui\uicommand.py:891
 msgid "Sort tasks by time spent"
 msgstr "Taken op bestede tijd sorteren"
 
-#: taskcoachlib\gui\uicommand.py:868
+#: taskcoachlib\gui\uicommand.py:892
 msgid "Sort tasks by total time spent"
 msgstr "Taken op totaal bestede tijd sorteren"
 
-#: taskcoachlib\gui\uicommand.py:869
+#: taskcoachlib\gui\uicommand.py:893
 msgid "Sort tasks by budget left"
 msgstr "Taken op budget over sorteren"
 
-#: taskcoachlib\gui\uicommand.py:870
+#: taskcoachlib\gui\uicommand.py:894
 msgid "Sort tasks by total budget left"
 msgstr "Taken op totaal budget over sorteren"
 
-#: taskcoachlib\gui\uicommand.py:871
+#: taskcoachlib\gui\uicommand.py:895
 msgid "Sort tasks by priority"
 msgstr "Taken sorteren op prioriteit"
 
-#: taskcoachlib\gui\uicommand.py:872
+#: taskcoachlib\gui\uicommand.py:896
 msgid "Sort tasks by overall priority"
 msgstr "Taken sorteren op totale prioriteit"
 
-#: taskcoachlib\gui\uicommand.py:872
-#: taskcoachlib\gui\viewer.py:192
+#: taskcoachlib\gui\uicommand.py:896
+#: taskcoachlib\gui\viewer.py:217
 msgid "Overall priority"
 msgstr "Totale prioriteit"
 
-#: taskcoachlib\gui\uicommand.py:873
+#: taskcoachlib\gui\uicommand.py:897
 msgid "Sort tasks by hourly fee"
 msgstr "Taken op tarief per uur sorteren"
 
-#: taskcoachlib\gui\uicommand.py:874
+#: taskcoachlib\gui\uicommand.py:898
 msgid "Sort tasks by fixed fee"
 msgstr "Taken op vast tarief sorteren"
 
-#: taskcoachlib\gui\uicommand.py:875
+#: taskcoachlib\gui\uicommand.py:899
 msgid "Sort tasks by total fixed fee"
 msgstr "Taken op totaal vast tarief sorteren"
 
-#: taskcoachlib\gui\uicommand.py:875
-msgid "Total Fi&xed fee"
-msgstr "Totaal &vast tarief"
+#: taskcoachlib\gui\uicommand.py:899
+msgid "Total fi&xed fee"
+msgstr "Totaal v&ast tarief"
 
-#: taskcoachlib\gui\uicommand.py:876
+#: taskcoachlib\gui\uicommand.py:900
 msgid "Sort tasks by revenue"
 msgstr "Taken op opbrengst sorteren"
 
-#: taskcoachlib\gui\uicommand.py:877
+#: taskcoachlib\gui\uicommand.py:901
 msgid "Sort tasks by total revenue"
 msgstr "Taken op totale opbrengst sorteren"
 
-#: taskcoachlib\gui\uicommand.py:877
+#: taskcoachlib\gui\uicommand.py:901
 msgid "Total re&venue"
 msgstr "Totale o&pbrengst"
 
-#: taskcoachlib\gui\uicommand.py:878
+#: taskcoachlib\gui\uicommand.py:902
 msgid "Sort tasks by last modification time"
 msgstr "Taken op tijdstip laatste wijziging sorteren"
 
-#: taskcoachlib\gui\uicommand.py:879
+#: taskcoachlib\gui\uicommand.py:903
 msgid "Sort tasks by overall last modification time"
 msgstr "Taken op tijstip laatste wijziging van taak en subtaken sorteren"
 
-#: taskcoachlib\gui\uicommand.py:887
+#: taskcoachlib\gui\uicommand.py:911
 msgid "&Hide"
 msgstr "&Verbergen"
 
-#: taskcoachlib\gui\uicommand.py:887
+#: taskcoachlib\gui\uicommand.py:911
 msgid "Hide the toolbar"
 msgstr "De werkbalk verbergen"
 
-#: taskcoachlib\gui\uicommand.py:888
+#: taskcoachlib\gui\uicommand.py:912
 msgid "&Small images"
 msgstr "&Kleine iconen"
 
-#: taskcoachlib\gui\uicommand.py:888
+#: taskcoachlib\gui\uicommand.py:912
 msgid "Small images (16x16) on the toolbar"
 msgstr "Kleine iconen (16x16) op de werkbalk"
 
-#: taskcoachlib\gui\uicommand.py:889
+#: taskcoachlib\gui\uicommand.py:913
 msgid "&Medium-sized images"
 msgstr "&Gemiddelde omvang iconen"
 
-#: taskcoachlib\gui\uicommand.py:889
+#: taskcoachlib\gui\uicommand.py:913
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr "Gemiddelde omvang iconen (22x22) op de werkbalk"
 
-#: taskcoachlib\gui\uicommand.py:890
+#: taskcoachlib\gui\uicommand.py:914
 msgid "&Large images"
 msgstr "G&rote iconen"
 
-#: taskcoachlib\gui\uicommand.py:890
+#: taskcoachlib\gui\uicommand.py:914
 msgid "Large images (32x32) on the toolbar"
 msgstr "Grote iconen (32x32) op de werkbalk"
 
-#: taskcoachlib\gui\uicommand.py:896
+#: taskcoachlib\gui\uicommand.py:920
 msgid "&Find dialog"
 msgstr "&Zoekbalk"
 
-#: taskcoachlib\gui\uicommand.py:896
+#: taskcoachlib\gui\uicommand.py:920
 msgid "Show/hide find dialog"
 msgstr "Zoekbalk tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:899
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Show/hide status bar"
 msgstr "Statusbalk tonen/verbergen"
 
-#: taskcoachlib\gui\uicommand.py:899
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Status&bar"
 msgstr "Stat&usbalk"
 
-#: taskcoachlib\gui\uicommand.py:904
+#: taskcoachlib\gui\uicommand.py:928
 msgid "&Today"
 msgstr "&Vandaag"
 
-#: taskcoachlib\gui\uicommand.py:904
+#: taskcoachlib\gui\uicommand.py:928
 msgid "Only show tasks due today"
 msgstr "Alleen taken tonen die vandaag af moeten"
 
-#: taskcoachlib\gui\uicommand.py:905
+#: taskcoachlib\gui\uicommand.py:929
 msgid "Only show tasks due today and tomorrow"
 msgstr "Alleen taken tonen die vandaag of morgen af moeten"
 
-#: taskcoachlib\gui\uicommand.py:905
+#: taskcoachlib\gui\uicommand.py:929
 msgid "T&omorrow"
 msgstr "&Morgen"
 
-#: taskcoachlib\gui\uicommand.py:906
+#: taskcoachlib\gui\uicommand.py:930
 msgid "Only show tasks due this work week (i.e. before Friday)"
 msgstr "Alleen taken tonen die deze werkweek (uiterlijk a.s. vrijdag) af moeten"
 
-#: taskcoachlib\gui\uicommand.py:906
+#: taskcoachlib\gui\uicommand.py:930
 msgid "Wo&rk week"
 msgstr "We&rkweek"
 
-#: taskcoachlib\gui\uicommand.py:907
+#: taskcoachlib\gui\uicommand.py:931
 msgid "&Week"
 msgstr "&Week"
 
-#: taskcoachlib\gui\uicommand.py:907
+#: taskcoachlib\gui\uicommand.py:931
 msgid "Only show tasks due this week (i.e. before Sunday)"
 msgstr "Alleen taken tonen die deze week (uiterlijk a.s. zondag) af moeten"
 
-#: taskcoachlib\gui\uicommand.py:908
+#: taskcoachlib\gui\uicommand.py:932
 msgid "&Month"
 msgstr "M&aand"
 
-#: taskcoachlib\gui\uicommand.py:908
+#: taskcoachlib\gui\uicommand.py:932
 msgid "Only show tasks due this month"
 msgstr "Alleen taken tonen die deze maand af moeten"
 
-#: taskcoachlib\gui\uicommand.py:909
+#: taskcoachlib\gui\uicommand.py:933
 msgid "&Year"
 msgstr "&Jaar"
 
-#: taskcoachlib\gui\uicommand.py:909
+#: taskcoachlib\gui\uicommand.py:933
 msgid "Only show tasks due this year"
 msgstr "Alleen taken tonen die dit jaar af moeten"
 
-#: taskcoachlib\gui\uicommand.py:910
+#: taskcoachlib\gui\uicommand.py:934
 msgid "&Unlimited"
 msgstr "&Ongelimiteerd"
 
-#: taskcoachlib\gui\uicommand.py:910
+#: taskcoachlib\gui\uicommand.py:934
 msgid "Show all tasks"
 msgstr "Alle taken tonen"
 
-#: taskcoachlib\gui\viewer.py:112
+#: taskcoachlib\gui\uicommand.py:952
+msgid "Mail task"
+msgstr "Taak versturen"
+
+#: taskcoachlib\gui\uicommand.py:953
+msgid "Mail the task, using your default mailer"
+msgstr "De taak versturen met behulp van uw standaard email programma"
+
+#: taskcoachlib\gui\viewer.py:138
 msgid "Tasks: %d selected, %d visible, %d total"
 msgstr "Taken: %d geselecteerd, %d zichtbaar, %d totaal"
 
-#: taskcoachlib\gui\viewer.py:115
+#: taskcoachlib\gui\viewer.py:141
 msgid "Status: %d over due, %d inactive, %d completed"
 msgstr "Status: %d te laat, %d inactief, %d afgerond"
 
-#: taskcoachlib\gui\viewer.py:183
+#: taskcoachlib\gui\viewer.py:208
 msgid "Days left"
 msgstr "Dagen over"
 
-#: taskcoachlib\gui\viewer.py:186
+#: taskcoachlib\gui\viewer.py:211
 msgid "Total budget"
 msgstr "Totaal budget"
 
-#: taskcoachlib\gui\viewer.py:188
-#: taskcoachlib\gui\viewer.py:416
+#: taskcoachlib\gui\viewer.py:213
+#: taskcoachlib\gui\viewer.py:437
 msgid "Total time spent"
 msgstr "Totaal bestede tijd"
 
-#: taskcoachlib\gui\viewer.py:190
+#: taskcoachlib\gui\viewer.py:215
 msgid "Total budget left"
 msgstr "Totaal budget over"
 
-#: taskcoachlib\gui\viewer.py:195
+#: taskcoachlib\gui\viewer.py:220
 msgid "Total fixed fee"
 msgstr "Totaal vast tarief"
 
-#: taskcoachlib\gui\viewer.py:197
-#: taskcoachlib\gui\viewer.py:417
+#: taskcoachlib\gui\viewer.py:222
+#: taskcoachlib\gui\viewer.py:439
 msgid "Total revenue"
 msgstr "Totale opbrengst"
 
-#: taskcoachlib\gui\viewer.py:348
+#: taskcoachlib\gui\viewer.py:364
 msgid "Effort: %d selected, %d visible, %d total"
 msgstr "Inspanning: %d geselecteerd, %d zichtbaar, %d totaal"
 
-#: taskcoachlib\gui\viewer.py:351
+#: taskcoachlib\gui\viewer.py:367
 msgid "Status: %d tracking"
 msgstr "Status: %d gestart"
 
-#: taskcoachlib\gui\viewer.py:383
+#: taskcoachlib\gui\viewer.py:401
 msgid "Period"
 msgstr "Periode"
 
