@@ -3,7 +3,7 @@
 from domain import *
 
 releases = [
-Release('0.53', 'December ?, 2005',
+Release('0.53', 'December 19, 2005',
     bugsFixed=[
         Bug('''On some platforms, Python and wxPython seem to disagree on what
 the maximum integer is. The maximum integer is used to set the maximum and 
