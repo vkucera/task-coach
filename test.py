@@ -73,12 +73,13 @@ class AllTests(unittest.TestSuite):
         testloader = unittest.TestLoader()
         if not testFiles:
             import glob
-            testFiles = glob.glob('unittests/*Test.py')
+            testFiles = glob.glob('unittests/*Test.py') + \
+                glob.glob('unittests/*/*Test.py')
         for filename in testFiles:
             moduleName = self.filenameToModuleName(filename)
             # Importing the module is not strictly necessary because
-            # loadTestsFromName will do that too as a side effect. But if the test 
-            # module contains errors our import will raise an exception
+            # loadTestsFromName will do that too as a side effect. But if the 
+            # test module contains errors our import will raise an exception
             # while loadTestsFromName ignores exceptions when importing from 
             # modules.
             module = __import__(moduleName)

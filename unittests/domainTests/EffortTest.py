@@ -1,4 +1,5 @@
-import test, asserts
+import test
+import unittests.asserts as asserts
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
