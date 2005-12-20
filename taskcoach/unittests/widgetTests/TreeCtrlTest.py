@@ -1,4 +1,5 @@
-import test, widgets, dummy, wx
+import test, widgets, wx
+import unittests.dummy as dummy
         
 class TreeCtrlTestCase(test.wxTestCase):
     def setTree(self, *items):

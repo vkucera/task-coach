@@ -1,4 +1,5 @@
-import test, widgets, dummy
+import test, widgets
+import unittests.dummy as dummy
 import wx.grid as grid
 
 class Table(grid.PyGridTableBase):
