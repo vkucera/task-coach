@@ -1,113 +1,27 @@
-import test, asserts, time, wx, sets
+import test, asserts, wx, sets
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
 
 __coverage__ = [task.Task]
 
-class TaskTest(test.TestCase, asserts.TaskAsserts):
+''' I'm rearranging these unittests to be more fixture based instead of 'subject'
+(e.g. budget, effort, priority) based to see how that feels. '''
+
+
+class TaskTestCase(test.TestCase):
+    taskKeywordArguments = {}
+    
     def setUp(self):
-        self.task = task.Task(subject='Todo')
-        self.date = date.Date(2003, 1, 1)
-
-    def testSubject(self):
-        self.assertEqual('Todo', self.task.subject())
-
-    def testSetSubject(self):
-        self.task.setSubject('Done')
-        self.assertEqual('Done', self.task.subject())
-
-    def testId(self):
-        self.assertEqual(str(id(self.task)), self.task.id().split(':')[0])
-
-    def testId_HasStringType(self):
-        self.assertEqual(type(''), type(self.task.id()))
-
-    def testId_DifferentTasks(self):
-        task2 = task.Task()
-        self.failIf(task2.id() == self.task.id())
+        self.task = self.createTask()
         
-    def testSetIdThroughConstructor(self):
-        task2 = task.Task(id_='id')
-        self.assertEqual('id', task2.id())
-
-    def testNoDueDate(self):
-        self.assertEqual(date.Date(), self.task.dueDate())
-
-    def testDueDate(self):
-        anotherTask = task.Task(duedate=self.date)
-        self.assertEqual(self.date, anotherTask.dueDate())
-
-    def testSetDueDate(self):
-        self.task.setDueDate(self.date)
-        self.assertEqual(self.date, self.task.dueDate())
-
-    def testStartDate(self):
-        self.assertEqual(date.Today(), self.task.startDate())
-        anotherTask = task.Task(startdate=self.date)
-        self.assertEqual(self.date, anotherTask.startDate())
-
-    def testSetStartDate(self):
-        self.task.setStartDate(self.date)
-        self.assertEqual(self.date, self.task.startDate())
-
-    def testCompleted(self):
-        self.failIf(self.task.completed())
-        self.task.setCompletionDate()
-        self.failUnless(self.task.completed())
-        self.task.setCompletionDate(date.Date())
-        self.failIf(self.task.completed())
-
-    def testCompletionDate(self):
-        self.assertEqual(date.Date(), self.task.completionDate())
-
-    def testSetCompletionDate(self):
-        self.task.setCompletionDate()
-        self.assertEqual(date.Today(), self.task.completionDate())
-
-    def testSetCompletionDateWithDate(self):
-        self.task.setCompletionDate(self.date)
-        self.assertEqual(self.date, self.task.completionDate())
-
-    def testOverdue(self):
-        oldTask = task.Task(duedate=date.Date(1990,1,1))
-        self.failUnless(oldTask.overdue())
-        oldTask = task.Task(duedate=date.Date(1990,1,1))
-        oldTask.setCompletionDate()
-        self.failIf(oldTask.overdue())
-
-    def testInactive(self):
-        futureTask = task.Task(startdate=date.Tomorrow())
-        self.failUnless(futureTask.inactive())
-        futureTask = task.Task(startdate=date.Tomorrow())
-        futureTask.setCompletionDate()
-        self.failIf(futureTask.inactive())
-
-    def testActive(self):
-        self.failUnless(task.Task().active())
+    def createTask(self):
+        return task.Task(**self.taskKeywordArguments)
         
-    def testNotDueToday(self):
-        self.failIf(self.task.dueToday())
-
-    def testDueToday(self):
-        dueToday = task.Task(duedate=date.Today())
-        self.failUnless(dueToday.dueToday())
-
-    def testNotDueTomorrow(self):
-        self.failIf(self.task.dueTomorrow())
-
-    def testDueTomorrow(self):
-        dueTomorrow = task.Task(duedate=date.Tomorrow())
-        self.failUnless(dueTomorrow.dueTomorrow())
-
-    def testDaysLeft_DueToday(self):
-        dueToday = task.Task(duedate=date.Today())
-        self.assertEqual(0, dueToday.timeLeft().days)
-
-    def testDaysLeft_DueTomorrow(self):
-        dueTomorrow = task.Task(duedate=date.Tomorrow())
-        self.assertEqual(1, dueTomorrow.timeLeft().days)
-
+        
+class TaskTest(TaskTestCase, asserts.TaskAsserts):
+    taskKeywordArguments = {'subject': 'Todo'}
+        
     def testCopyTask(self):
         original = task.Task(subject='Original', duedate=date.Tomorrow(),
             startdate=date.Tomorrow())
@@ -124,30 +38,207 @@ class TaskTest(test.TestCase, asserts.TaskAsserts):
         self.assertTaskCopy(original, copy)
         self.assertEqual(original.parent(), copy.parent())
 
-    def testDescription_Default(self):
+
+
+class DefaultTaskStateTest(TaskTestCase):
+    def testTaskHasNoDueDateByDefault(self):
+        self.assertEqual(date.Date(), self.task.dueDate())
+
+    def testTaskStartDateIsTodayByDefault(self):
+        self.assertEqual(date.Today(), self.task.startDate())
+
+    def testTaskIsNotCompletedByDefault(self):
+        self.failIf(self.task.completed())
+
+    def testTaskHasNoCompletionDateByDefault(self):
+        self.assertEqual(date.Date(), self.task.completionDate())
+
+    def testTaskIsActiveByDefault(self):
+        self.failUnless(self.task.active())
+        
+    def testTaskIsNotInActiveByDefault(self):
+        self.failIf(self.task.inactive())
+        
+    def testTaskIsNotDueTodayByDefault(self):
+        self.failIf(self.task.dueToday())
+
+    def testTaskIsNotDueTomorrowByDefault(self):
+        self.failIf(self.task.dueTomorrow())
+
+    def testTaskHasNoDescriptionByDefault(self):
         self.assertEqual('', self.task.description())
 
-    def testDescription_SetThroughConstructor(self):
-        newTask = task.Task(description='Description')
-        self.assertEqual('Description', newTask.description())
+    def testFirstPartOfTaskIdEqualsTheObjectId(self):
+        self.assertEqual(str(id(self.task)), self.task.id().split(':')[0])
 
-    def testDescription_SetDescription(self):
-        self.task.setDescription('Description')
-        self.assertEqual('Description', self.task.description())
+    def testTaskIdHasStringType(self):
+        self.assertEqual(type(''), type(self.task.id()))
+
+    def testTaskHasNoChildrenByDefault(self):
+        self.assertEqual([], self.task.children())
+
+    def testTaskHasNoParentByDefault(self):
+        self.assertEqual(None, self.task.parent())
+
+    def testTaskHasNoEffortByDefault(self):
+        self.assertEqual(date.TimeDelta(), self.task.timeSpent())
         
-    def testState(self):
-        state = self.task.__getstate__()
-        newTask = task.Task()
-        newTask.__setstate__(state)
-        self.assertNotEqual(newTask, self.task)
+
         
-    def testRepr(self):
+    # move these to another fixture?
+    def testSetCompletionDateMakesTaskCompleted(self):
+        self.task.setCompletionDate()
+        self.failUnless(self.task.completed())
+
+    def testSetCompletionDateDefaultsToToday(self):
+        self.task.setCompletionDate()
+        self.assertEqual(date.Today(), self.task.completionDate())
+
+    def testSetCompletionDateWithDate(self):
+        self.task.setCompletionDate(date.Tomorrow())
+        self.assertEqual(date.Tomorrow(), self.task.completionDate())
+
+    def testSetDueDate(self):
+        self.date = date.Tomorrow()
+        self.task.setDueDate(self.date)
+        self.assertEqual(self.date, self.task.dueDate())
+
+
+
+class TaskDueTodayTest(TaskTestCase):
+    taskKeywordArguments = {'duedate': date.Today()}
+    
+    def testIsDueToday(self):
+        self.failUnless(self.task.dueToday())
+
+    def testDaysLeft(self):
+        self.assertEqual(0, self.task.timeLeft().days)
+
+    def testDueDate(self):
+        self.assertEqual(self.taskKeywordArguments['duedate'], self.task.dueDate())
+
+
+class TaskDueTomorrowTest(TaskTestCase):
+    taskKeywordArguments = {'duedate': date.Tomorrow()}
+        
+    def testIsDueTomorrow(self):
+        self.failUnless(self.task.dueTomorrow())
+
+    def testDaysLeft(self):
+        self.assertEqual(1, self.task.timeLeft().days)
+
+    def testDueDate(self):
+        self.assertEqual(self.taskKeywordArguments['duedate'], self.task.dueDate())
+
+
+class OverdueTaskTest(TaskTestCase):
+    taskKeywordArguments = {'duedate' : date.Yesterday()}
+
+    def testIsOverdue(self):
+        self.failUnless(self.task.overdue())
+        
+    def testCompletedOverdueTaskIsNoLongerOverdue(self):
+        self.task.setCompletionDate()
+        self.failIf(self.task.overdue())
+
+    def testDueDate(self):
+        self.assertEqual(self.taskKeywordArguments['duedate'], self.task.dueDate())
+
+
+class CompletedTaskTest(TaskTestCase):
+    taskKeywordArguments = {'completiondate': date.Today()}
+        
+    def testThatATaskWithACompletionDateIsCompleted(self):
+        self.failUnless(self.task.completed())
+
+    def testThatSettingTheCompletionDateToInfiniteMakesTheTaskUncompleted(self):
+        self.task.setCompletionDate(date.Date())
+        self.failIf(self.task.completed())
+
+    def testThatSettingTheCompletionDateToAnotherDateLeavesTheTaskCompleted(self):
+        self.task.setCompletionDate(date.Yesterday())
+        self.failUnless(self.task.completed())
+
+
+class TaskCompletedInTheFutureTest(TaskTestCase):
+    taskKeywordArguments = {'completiondate': date.Tomorrow()}
+        
+    def testThatATaskWithAFutureCompletionDateIsCompleted(self):
+        self.failUnless(self.task.completed())
+
+
+class InactiveTaskTest(TaskTestCase):
+    taskKeywordArguments = {'startdate': date.Tomorrow()}
+
+    def testThatTaskWithStartDateInTheFutureIsInactive(self):
+        self.failUnless(self.task.inactive())
+        
+    def testThatACompletedTaskWithStartDateInTheFutureIsNotInactive(self):
+        self.task.setCompletionDate()
+        self.failIf(self.task.inactive())
+
+    def testStartDate(self):
+        self.assertEqual(date.Tomorrow(), self.task.startDate())
+
+    def testSetStartDateToTodayMakesTaskActive(self):
+        self.task.setStartDate(date.Today())
+        self.failUnless(self.task.active())
+
+
+class TaskWithSubject(TaskTestCase):
+    taskKeywordArguments = {'subject': 'Subject'}
+        
+    def testSubject(self):
+        self.assertEqual('Subject', self.task.subject())
+
+    def testSetSubject(self):
+        self.task.setSubject('Done')
+        self.assertEqual('Done', self.task.subject())
+
+    def testRepresentationEqualsSubject(self):
         self.assertEqual(self.task.subject(), repr(self.task))
 
 
-class TaskNotificationTestCase(test.TestCase):
+class TaskWithDescriptionTest(TaskTestCase):
+    taskKeywordArguments = {'description': 'Description'}
+
+    def testDescription(self):
+        self.assertEqual('Description', self.task.description())
+
+    def testSetDescription(self):
+        self.task.setDescription('New description')
+        self.assertEqual('New description', self.task.description())
+
+
+class TaskWithId(TaskTestCase):
+    taskKeywordArguments = {'id_': 'id'}
+        
+    def testTaskId(self):
+        self.assertEqual('id', self.task.id())
+
+                
+
+class TwoTasksTest(test.TestCase):
     def setUp(self):
-        self.task = self.createTask()
+        self.task1 = task.Task()
+        self.task2 = task.Task()
+        
+    def testTwoTasksHaveDifferentIds(self):
+        self.assertNotEqual(self.task1.id(), self.task2.id())
+
+    def testTwoDefaultTasksAreNotEqual(self):
+        self.assertNotEqual(self.task1, self.task2)
+
+    def testEqualStatesDoesNotImplyEqualTasks(self):
+        state = self.task1.__getstate__()
+        self.task2.__setstate__(state)
+        self.assertNotEqual(self.task1, self.task2)
+        
+        
+
+class TaskNotificationTestCase(TaskTestCase):
+    def setUp(self):
+        super(TaskNotificationTestCase, self).setUp()
         self.task.registerObserver(self.onNotify)
         self.__notifications = 0
 
@@ -163,8 +254,7 @@ class TaskNotificationTestCase(test.TestCase):
 
 
 class TaskNotificationTest(TaskNotificationTestCase):
-    def createTask(self):
-        return task.Task(subject='Todo')
+    taskKeywordArguments = {'subject': 'Todo'}
                 
     def testSetSubject(self):
         self.task.setSubject('New')
@@ -202,21 +292,10 @@ class TaskNotificationTest(TaskNotificationTestCase):
         self.task.setDescription('new description')
         self.failUnlessNotified()
         
-    def testSetCompletionDate_ViaConstructor(self):
-        completedTask = task.Task(completiondate=date.Today())
-        self.failUnless(completedTask.completed())
-
 
 class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
-    def createTask(self):
-        return task.Task(subject='Todo', duedate=date.Tomorrow(),
-            startdate=date.Yesterday())
-
-    def testNoChildren(self):
-        self.assertEqual([], self.task.children())
-
-    def testNoParent(self):
-        self.assertEqual(None, self.task.parent())
+    taskKeywordArguments = {'subject': 'Todo', 'duedate': date.Tomorrow(),
+                            'startdate': date.Yesterday()}
 
     def testAddChild(self):
         child = self.task.newSubTask()
@@ -347,29 +426,37 @@ class SubTaskRelationsTest(test.TestCase):
             self.assertEqual([self.parent, self.child, self.grandChild], task.family())
 
 
+class TaskWithOneEffortTest(test.TestCase):
+    def setUp(self):
+        self.task = task.Task()
+        self.effort = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
+        self.task.addEffort(self.effort)
+
+    def testTimeSpentOnTaskEqualsEffortDuration(self):
+        self.assertEqual(self.effort.duration(), self.task.timeSpent())
+
+    def testTimeSpentOnTaskIsZeroAfterRemovalOfEffort(self):
+        self.task.removeEffort(self.effort)
+        self.assertEqual(date.TimeDelta(), self.task.timeSpent())
+        
+
+class TaskWithTwoEffortsTest(test.TestCase):
+    def setUp(self):
+        self.task = task.Task()
+        self.effort1 = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
+        self.effort2 = effort.Effort(self.task, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        
+    def testTimeSpentOnTaskEqualsEffortDuration(self):
+        self.assertEqual(self.effort1.duration() + self.effort2.duration(), self.task.timeSpent())
+        
+        
 class TaskEffortTest(test.TestCase):
     def setUp(self):
         self.task = task.Task()
         self.effort = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
-        
-    def testNoEffort(self):
-        self.assertEqual(date.TimeDelta(), self.task.timeSpent())
-        
-    def testAddEffort(self):
-        self.task.addEffort(self.effort)
-        self.assertEqual(self.effort.duration(), self.task.timeSpent())
-        
-    def testRemoveEffort(self):
-        self.task.addEffort(self.effort)
-        self.task.removeEffort(self.effort)
-        self.assertEqual(date.TimeDelta(), self.task.timeSpent())
-        
-    def testTimeSpent(self):
-        self.task.addEffort(self.effort)
-        anotherEffort = effort.Effort(self.task, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
-        self.task.addEffort(anotherEffort)
-        self.assertEqual(self.effort.duration() + anotherEffort.duration(), self.task.timeSpent())
-        
+                        
     def addChild(self, parent):
         child = task.Task()
         parent.addChild(child)

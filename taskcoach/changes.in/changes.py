@@ -3,6 +3,9 @@
 from domain import *
 
 releases = [
+Release('0.54', 'December ?, 2005',
+    featuresAdded=[]),
+
 Release('0.53', 'December 19, 2005',
     bugsFixed=[
         Bug('''On some platforms, Python and wxPython seem to disagree on what
