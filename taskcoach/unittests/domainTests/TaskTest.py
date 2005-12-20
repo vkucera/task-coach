@@ -1,4 +1,5 @@
-import test, asserts, wx, sets
+import test, wx, sets
+import unittests.asserts as asserts
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
