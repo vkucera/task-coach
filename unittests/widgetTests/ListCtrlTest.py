@@ -1,4 +1,5 @@
-import test, widgets, wx, dummy
+import test, widgets, wx
+import unittests.dummy as dummy
 
 class VirtualListCtrlTestCase(test.wxTestCase):
     def getItemText(self, index, column):

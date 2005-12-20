@@ -1,4 +1,5 @@
-import widgets, wx, dummy, TreeCtrlTest
+import widgets, wx, TreeCtrlTest
+import unittests.dummy as dummy
 
 class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
     def setUp(self):
