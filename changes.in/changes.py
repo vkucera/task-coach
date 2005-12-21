@@ -4,7 +4,7 @@ from domain import *
 
 releases = [
 Release('0.54', 'December ?, 2005',
-    featuresAdded=[]),
+    bugsFixed=[]),
 
 Release('0.53', 'December 19, 2005',
     bugsFixed=[

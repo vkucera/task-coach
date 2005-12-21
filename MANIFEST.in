@@ -1,7 +1,7 @@
 include *.txt
-exclude PUBLICITY.txt
 include unittests/*.py
 include TODO.tsk
 include setup.py
 include test.py
 exclude make.py
+prune standards
