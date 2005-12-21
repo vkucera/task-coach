@@ -13,7 +13,7 @@ setupOptions = {
     'license' : meta.license,
     'packages' : ['taskcoachlib'] + 
         ['taskcoachlib.'+subpackage for subpackage in ('meta', 'config', 
-        'domain.date', 'command', 'widgets', 'gui', 'gui.dialog',
+        'domain', 'domain.date', 'command', 'widgets', 'gui', 'gui.dialog',
         'domain.task', 'i18n', 'log', 'domain.effort', 'patterns', 'help')],
     'scripts' : ['taskcoach.py', 'taskcoach.pyw'],
     'classifiers' : [\
