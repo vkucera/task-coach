@@ -1,6 +1,5 @@
 import test, patterns
 
-__coverage__ = [patterns.Singleton]
 
 class Singleton:
     __metaclass__ = patterns.Singleton

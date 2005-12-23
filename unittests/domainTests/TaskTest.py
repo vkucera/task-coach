@@ -4,10 +4,9 @@ import domain.task as task
 import domain.effort as effort
 import domain.date as date
 
-__coverage__ = [task.Task]
 
-''' I'm rearranging these unittests to be more fixture based instead of 'subject'
-(e.g. budget, effort, priority) based to see how that feels. '''
+''' I'm rearranging these unittests to be more fixture based instead of 
+'subject' (e.g. budget, effort, priority) based to see how that feels. '''
 
 
 class TaskTestCase(test.TestCase):
