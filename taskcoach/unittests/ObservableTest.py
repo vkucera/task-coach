@@ -1,8 +1,5 @@
 import test, patterns
 
-__coverage__ = [patterns.Observable, patterns.ObservablesList,
-    patterns.ObservableObservablesList, patterns.ObservableList,
-    patterns.ObservableListObserver, patterns.observer.Notification]
     
 class ObservableTestCase(test.TestCase):
     def setUp(self):

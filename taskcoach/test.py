@@ -73,8 +73,12 @@ class AllTests(unittest.TestSuite):
         testloader = unittest.TestLoader()
         if not testFiles:
             import glob
-            testFiles = glob.glob('unittests/*Test.py') + \
-                glob.glob('unittests/*/*Test.py')
+            testfiles = []
+            if self._options.unittests:
+                testFiles.extend(glob.glob('unittests/*Test.py') + \
+                    glob.glob('unittests/*/*Test.py'))
+            if self._options.releasetests:
+                testFiles.extend(glob.glob('releasetests/*Test.py'))
         for filename in testFiles:
             moduleName = self.filenameToModuleName(filename)
             # Importing the module is not strictly necessary because
@@ -85,25 +89,7 @@ class AllTests(unittest.TestSuite):
             module = __import__(moduleName)
             suite = testloader.loadTestsFromName(moduleName)
             self.addTests(suite._tests)
-        if self._options.coverage:
-            self.registerDesiredCoverage(module, moduleName)
-            self.addTests(self.createCoverageTest()._tests)
    
-    def registerDesiredCoverage(self, module, moduleName):
-        import unittests.coverage
-        for submoduleName in moduleName.split('.')[1:]:
-            module = getattr(module, submoduleName)
-        if hasattr(module, '__coverage__'):
-            for itemToWatch in module.__coverage__:
-                unittests.coverage.watch(itemToWatch)
-        
-    def createCoverageTest(self):
-        import unittests.coverage
-        class CoverageTest(TestCase):
-                def testCoverage(self):
-                    self.assertEqual([], unittests.coverage.uncovered())
-        return unittest.TestLoader().loadTestsFromTestCase(CoverageTest)
-            
     def runTests(self):       
         testrunner = TextTestRunnerWithTimings(
             verbosity=self._options.verbosity,
@@ -135,7 +121,7 @@ class TestOptionParser(config.OptionParser):
         testrun.add_option('--time-reports', default=10, type='int',
             help='the number of slow tests to report [%default]')
         return testrun
- 
+
     def cvsOptionGroup(self):
         cvs = config.OptionGroup(self, 'CVS options', 
             'Options to interact with CVS.')
@@ -169,12 +155,15 @@ class TestOptionParser(config.OptionParser):
 
     def coverageOptionGroup(self):
         coverage = config.OptionGroup(self, 'coverage options',
-            'Options to test the coverage of the unittests. Requires a '
-            '__coverage__ attribute in the unittest file. __coverage__ is '
-            'a list of classes or modules to watch for being covered by the '
-            'unittests.')
-        coverage.add_option('-C', '--coverage', default=True, 
-            action='store_true', help='Add one unittest to test for coverage')
+            'Options to determine which tests to run.')
+        coverage.add_option('--unittests', default=True,
+            action='store_true', help='run the unit tests [default]')
+        coverage.add_option('--no-unittests', action='store_false', 
+            help="don't run the unit tests", dest='unittests')
+        coverage.add_option('--releasetests', default=False,
+            action='store_true', help='run the release tests')
+        coverage.add_option('--no-releasetests', action='store_false', 
+            help="don't run the release tests [default]", dest='releasetests')
         return coverage
         
     def parse_args(self):
