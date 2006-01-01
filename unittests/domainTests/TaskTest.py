@@ -8,39 +8,54 @@ import domain.date as date
 ''' I'm rearranging these unittests to be more fixture based instead of 
 'subject' (e.g. budget, effort, priority) based to see how that feels. '''
 
+# Handy globals
+zeroHour = date.TimeDelta(hours=0)
+oneHour = date.TimeDelta(hours=1)
+twoHours = date.TimeDelta(hours=2)
+threeHours = date.TimeDelta(hours=3)
+
 
 class TaskTestCase(test.TestCase):
-    taskKeywordArguments = {}
+    taskCreationKeywordArguments = [{}]
     
     def setUp(self):
-        self.task = self.createTask()
+        self.tasks = self.createTasks()
+        self.task = self.tasks[0]
+        for index, task in enumerate(self.tasks):
+            setattr(self, 'task%d'%(index+1), task)
         
-    def createTask(self):
-        return task.Task(**self.taskKeywordArguments)
-        
-        
-class TaskTest(TaskTestCase, asserts.TaskAsserts):
-    taskKeywordArguments = {'subject': 'Todo'}
-        
-    def testCopyTask(self):
-        original = task.Task(subject='Original', duedate=date.Tomorrow(),
-            startdate=date.Tomorrow())
-        original.setCompletionDate(date.Tomorrow())
-        self.task.addChild(original)
-        for childIndex in range(2):
-            child = task.Task(subject='Child %d'%childIndex)
-            original.addChild(child)
-            for grandchildIndex in range(2):
-                grandChild = task.Task(subject='Grandchild %d.%d'%(childIndex, 
-                    grandchildIndex))
-                child.addChild(grandChild)
-        copy = original.copy()
-        self.assertTaskCopy(original, copy)
-        self.assertEqual(original.parent(), copy.parent())
+    def createTasks(self):
+        return [task.Task(**kwargs) for kwargs in self.taskCreationKeywordArguments]
 
+    def addEffort(self, hours, task=None):
+        task = task or self.task
+        start = date.DateTime(2005,1,1)
+        task.addEffort(effort.Effort(task, start, start+hours))
 
+        
+class CommonTaskTests(asserts.TaskAsserts):
+    ''' These tests should succeed for all tasks, regardless of state. '''
+    def testCopy(self):
+        copy = self.task.copy()
+        self.assertTaskCopy(copy, self.task)
 
-class DefaultTaskStateTest(TaskTestCase):
+    
+class NoBudgetTests(object):
+    ''' These tests should succeed for all tasks without budget. '''
+    def testTaskHasNoBudget(self):
+        self.assertEqual(date.TimeDelta(), self.task.budget())
+        
+    def testTaskHasNoRecursiveBudget(self):
+        self.assertEqual(date.TimeDelta(), self.task.budget(recursive=True))
+
+    def testTaskHasNoBudgetLeft(self):
+        self.assertEqual(date.TimeDelta(), self.task.budgetLeft())
+
+    def testTaskHasNoRecursiveBudgetLeft(self):
+        self.assertEqual(date.TimeDelta(), self.task.budgetLeft(recursive=True))
+    
+
+class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testTaskHasNoDueDateByDefault(self):
         self.assertEqual(date.Date(), self.task.dueDate())
 
@@ -77,12 +92,30 @@ class DefaultTaskStateTest(TaskTestCase):
     def testTaskHasNoChildrenByDefault(self):
         self.assertEqual([], self.task.children())
 
+    def testTaskHasNoChildrenByDefaultSoAllChildrenReturnsAnEmptyListToo(self):
+        self.assertEqual([], self.task.allChildren())
+
+    def testTaskHasNoChildrenByDefaultSoNotAllChildrenAreCompleted(self):
+        self.failIf(self.task.allChildrenCompleted())
+
     def testTaskHasNoParentByDefault(self):
         self.assertEqual(None, self.task.parent())
 
+    def testTaskHasNoAncestorsByDefault(self):
+        self.assertEqual([], self.task.ancestors())
+
+    def testTaskIsItsOnlyFamilyByDefault(self):
+        self.assertEqual([self.task], self.task.family())        
+
     def testTaskHasNoEffortByDefault(self):
         self.assertEqual(date.TimeDelta(), self.task.timeSpent())
-        
+
+    def testTaskHasNoRecursiveEffortByDefault(self):
+        self.assertEqual(date.TimeDelta(), self.task.timeSpent(recursive=True))
+
+    def testTaskPriorityIsZeroByDefault(self):
+        self.assertEqual(0, self.task.priority())
+
 
         
     # move these to another fixture?
@@ -103,10 +136,14 @@ class DefaultTaskStateTest(TaskTestCase):
         self.task.setDueDate(self.date)
         self.assertEqual(self.date, self.task.dueDate())
 
+    def testSetBudget(self):
+        budget = date.TimeDelta(hours=1)
+        self.task.setBudget(budget)
+        self.assertEqual(budget, self.task.budget())
+        
 
-
-class TaskDueTodayTest(TaskTestCase):
-    taskKeywordArguments = {'duedate': date.Today()}
+class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'duedate': date.Today()}]
     
     def testIsDueToday(self):
         self.failUnless(self.task.dueToday())
@@ -115,11 +152,11 @@ class TaskDueTodayTest(TaskTestCase):
         self.assertEqual(0, self.task.timeLeft().days)
 
     def testDueDate(self):
-        self.assertEqual(self.taskKeywordArguments['duedate'], self.task.dueDate())
+        self.assertEqual(self.taskCreationKeywordArguments[0]['duedate'], self.task.dueDate())
 
 
-class TaskDueTomorrowTest(TaskTestCase):
-    taskKeywordArguments = {'duedate': date.Tomorrow()}
+class TaskDueTomorrowTest(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'duedate': date.Tomorrow()}]
         
     def testIsDueTomorrow(self):
         self.failUnless(self.task.dueTomorrow())
@@ -128,11 +165,11 @@ class TaskDueTomorrowTest(TaskTestCase):
         self.assertEqual(1, self.task.timeLeft().days)
 
     def testDueDate(self):
-        self.assertEqual(self.taskKeywordArguments['duedate'], self.task.dueDate())
+        self.assertEqual(self.taskCreationKeywordArguments[0]['duedate'], self.task.dueDate())
 
 
-class OverdueTaskTest(TaskTestCase):
-    taskKeywordArguments = {'duedate' : date.Yesterday()}
+class OverdueTaskTest(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'duedate' : date.Yesterday()}]
 
     def testIsOverdue(self):
         self.failUnless(self.task.overdue())
@@ -142,11 +179,11 @@ class OverdueTaskTest(TaskTestCase):
         self.failIf(self.task.overdue())
 
     def testDueDate(self):
-        self.assertEqual(self.taskKeywordArguments['duedate'], self.task.dueDate())
+        self.assertEqual(self.taskCreationKeywordArguments[0]['duedate'], self.task.dueDate())
 
 
-class CompletedTaskTest(TaskTestCase):
-    taskKeywordArguments = {'completiondate': date.Today()}
+class CompletedTaskTest(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'completiondate': date.Today()}]
         
     def testThatATaskWithACompletionDateIsCompleted(self):
         self.failUnless(self.task.completed())
@@ -160,15 +197,15 @@ class CompletedTaskTest(TaskTestCase):
         self.failUnless(self.task.completed())
 
 
-class TaskCompletedInTheFutureTest(TaskTestCase):
-    taskKeywordArguments = {'completiondate': date.Tomorrow()}
+class TaskCompletedInTheFutureTest(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'completiondate': date.Tomorrow()}]
         
     def testThatATaskWithAFutureCompletionDateIsCompleted(self):
         self.failUnless(self.task.completed())
 
 
-class InactiveTaskTest(TaskTestCase):
-    taskKeywordArguments = {'startdate': date.Tomorrow()}
+class InactiveTaskTest(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'startdate': date.Tomorrow()}]
 
     def testThatTaskWithStartDateInTheFutureIsInactive(self):
         self.failUnless(self.task.inactive())
@@ -185,8 +222,8 @@ class InactiveTaskTest(TaskTestCase):
         self.failUnless(self.task.active())
 
 
-class TaskWithSubject(TaskTestCase):
-    taskKeywordArguments = {'subject': 'Subject'}
+class TaskWithSubject(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'subject': 'Subject'}]
         
     def testSubject(self):
         self.assertEqual('Subject', self.task.subject())
@@ -199,8 +236,8 @@ class TaskWithSubject(TaskTestCase):
         self.assertEqual(self.task.subject(), repr(self.task))
 
 
-class TaskWithDescriptionTest(TaskTestCase):
-    taskKeywordArguments = {'description': 'Description'}
+class TaskWithDescriptionTest(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'description': 'Description'}]
 
     def testDescription(self):
         self.assertEqual('Description', self.task.description())
@@ -210,18 +247,15 @@ class TaskWithDescriptionTest(TaskTestCase):
         self.assertEqual('New description', self.task.description())
 
 
-class TaskWithId(TaskTestCase):
-    taskKeywordArguments = {'id_': 'id'}
+class TaskWithId(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'id_': 'id'}]
         
     def testTaskId(self):
         self.assertEqual('id', self.task.id())
 
                 
-
-class TwoTasksTest(test.TestCase):
-    def setUp(self):
-        self.task1 = task.Task()
-        self.task2 = task.Task()
+class TwoTasksTest(TaskTestCase):
+    taskCreationKeywordArguments = [{}, {}]
         
     def testTwoTasksHaveDifferentIds(self):
         self.assertNotEqual(self.task1.id(), self.task2.id())
@@ -233,8 +267,282 @@ class TwoTasksTest(test.TestCase):
         state = self.task1.__getstate__()
         self.task2.__setstate__(state)
         self.assertNotEqual(self.task1, self.task2)
+
+
+class NewSubTaskTestCase(TaskTestCase):
+    def setUp(self):
+        super(NewSubTaskTestCase, self).setUp()
+        self.child = self.task.newSubTask()
+
+
+class NewSubTaskOfDefaultTaskTest(NewSubTaskTestCase):
+    taskCreationKeywordArguments = [{}]
+    
+    def testNewSubTaskParent(self):
+        self.assertEqual(self.task, self.child.parent())
+                
+    def testNewSubTaskIsNotAutomaticallyAddedAsChild(self):
+        self.failIf(self.child in self.task.children())
+
+    def testNewSubTaskHasSameDueDateAsParent(self):
+        self.assertEqual(self.task.dueDate(), self.child.dueDate())
+                
+    def testNewSubTaskHasStartDateToday(self):
+        self.assertEqual(date.Today(), self.child.startDate())
+
+    def testNewSubTaskIsNotCompleted(self):
+        self.failIf(self.child.completed())
+
+
+class NewSubTaskOfInactiveTask(NewSubTaskTestCase):
+    taskCreationKeywordArguments = [{'startdate': date.Tomorrow()}]
+    
+    def testNewSubTaskHasSameStartDateAsParent(self):
+        self.assertEqual(self.task.startDate(), self.child.startDate())
+
+
+class NewSubTaskOfActiveTask(NewSubTaskTestCase):
+    taskCreationKeywordArguments = [{'startdate': date.Yesterday()}]
+
+    def testNewSubTaskHasStartDateToday(self):
+        self.assertEqual(date.Today(), self.child.startDate())
         
+
+class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
+    taskCreationKeywordArguments = [{}, {}]
+    
+    def setUp(self):
+        super(TaskWithChildTest, self).setUp()
+        self.task1.addChild(self.task2)
+    
+    def testParentHasChild(self):
+        self.failUnless([self.task2], self.task1.children())
         
+    def testChildHasParent(self):
+        self.assertEqual(self.task1, self.task2.parent())
+        
+    def testRemoveChild(self):
+        self.task1.removeChild(self.task2)
+        self.failIf(self.task1.children())
+
+    def testNotAllChildrenAreCompleted(self):
+        self.failIf(self.task1.allChildrenCompleted())
+        
+    def testAllChildrenAreCompletedAfterMarkingTheOnlyChildAsCompleted(self):
+        self.task2.setCompletionDate()
+        self.failUnless(self.task1.allChildrenCompleted())
+
+    def testGetAllChildren(self):
+        self.assertEqual([self.task2], self.task1.allChildren())
+
+    def testGetFamily(self):
+        for task in self.tasks:
+            self.assertEqual(self.tasks, task.family())
+
+    def testAncestors(self):
+        self.assertEqual([self.task1], self.task2.ancestors())
+
+    def testTimeSpentRecursivelyIsZero(self):
+        self.assertEqual(date.TimeDelta(), self.task.timeSpent(recursive=True))
+
+    def testRecursiveBudgetWhenParentHasNoBudgetWhileChildDoes(self):
+        self.task2.setBudget(oneHour)
+        self.assertEqual(oneHour, self.task.budget(recursive=True))
+
+    def testRecursiveBudgetLeftWhenParentHasNoBudgetWhileChildDoes(self):
+        self.task2.setBudget(oneHour)
+        self.assertEqual(oneHour, self.task.budgetLeft(recursive=True))
+
+    def testRecursiveBudgetWhenBothHaveBudget(self):
+        self.task2.setBudget(oneHour)
+        self.task.setBudget(oneHour)
+        self.assertEqual(twoHours, self.task.budget(recursive=True))
+
+    def testRecursiveBudgetLeftWhenBothHaveBudget(self):
+        self.task2.setBudget(oneHour)
+        self.task.setBudget(oneHour)
+        self.assertEqual(twoHours, self.task.budgetLeft(recursive=True))
+        
+    def testRecursiveBudgetLeftWhenChildBudgetIsAllSpent(self):
+        self.task2.setBudget(oneHour)
+        self.addEffort(oneHour, self.task2)
+        self.assertEqual(zeroHour, self.task.budgetLeft(recursive=True))
+        
+
+
+class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
+    taskCreationKeywordArguments = [{}, {}, {}]
+    
+    def setUp(self):
+        super(TaskWithGrandChildTest, self).setUp()
+        self.task1.addChild(self.task2)
+        self.task2.addChild(self.task3)
+
+    def testGetAllChildren(self):
+        self.assertEqual([self.task2, self.task3], self.task1.allChildren())
+
+    def testGetAncestors(self):
+        self.assertEqual([self.task1, self.task2], self.task3.ancestors())
+
+    def testGetFamily(self):
+        for task in self.tasks:
+            self.assertEqual(self.tasks, task.family())
+
+    def testTimeSpentRecursivelyIsZero(self):
+        self.assertEqual(date.TimeDelta(), self.task.timeSpent(recursive=True))
+
+        
+
+class TaskWithEffortTestCase(TaskTestCase):
+    def setUp(self):
+        super(TaskWithEffortTestCase, self).setUp()
+        for effort in self.createEfforts():
+            effort.task().addEffort(effort)
+            
+
+class TaskWithOneEffortTest(TaskWithEffortTestCase, CommonTaskTests):
+    def createEfforts(self):
+        self.effort = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
+        return [self.effort]
+
+    def testTimeSpentOnTaskEqualsEffortDuration(self):
+        self.assertEqual(self.effort.duration(), self.task.timeSpent())
+        
+    def testTimeSpentRecursivelyOnTaskEqualsEffortDuration(self):
+        self.assertEqual(self.effort.duration(), self.task.timeSpent(recursive=True))
+
+    def testTimeSpentOnTaskIsZeroAfterRemovalOfEffort(self):
+        self.task.removeEffort(self.effort)
+        self.assertEqual(date.TimeDelta(), self.task.timeSpent())
+        
+    def testTaskEffortListContainsTheOneEffortAdded(self):
+        self.assertEqual([self.effort], self.task.efforts())
+
+
+class TaskWithTwoEffortsTest(TaskWithEffortTestCase, CommonTaskTests):
+    def createEfforts(self):
+        self.effort1 = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
+        self.effort2 = effort.Effort(self.task, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
+        self.totalDuration = self.effort1.duration() + self.effort2.duration()
+        return [self.effort1, self.effort2]
+        
+    def testTimeSpentOnTaskEqualsEffortDuration(self):
+        self.assertEqual(self.totalDuration, self.task.timeSpent())
+
+    def testTimeSpentRecursivelyOnTaskEqualsEffortDuration(self):
+        self.assertEqual(self.totalDuration, self.task.timeSpent(recursive=True))
+
+
+class TaskWithActiveEffort(TaskWithEffortTestCase, CommonTaskTests):
+    def createEfforts(self):
+        return [effort.Effort(self.task, date.DateTime.now())]
+    
+    def testTaskIsBeingTracked(self):
+        self.failUnless(self.task.isBeingTracked())
+        
+    def testStopTracking(self):
+        self.task.stopTracking()
+        self.failIf(self.task.isBeingTracked())
+        
+    def testMarkTaskCompletedStopsEffortTracking(self):
+        self.task.setCompletionDate()
+        self.failIf(self.task.isBeingTracked())
+
+
+class TaskWithChildAndEffortTest(TaskWithEffortTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{}, {}]
+
+    def setUp(self):
+        super(TaskWithChildAndEffortTest, self).setUp()
+        self.task1.addChild(self.task2)
+
+    def createEfforts(self):
+        self.effort1 = effort.Effort(self.task1, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
+        self.effort2 = effort.Effort(self.task2, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
+        return [self.effort1, self.effort2]
+
+    def testTimeSpentOnTaskEqualsEffortDuration(self):
+        self.assertEqual(self.effort1.duration(), self.task1.timeSpent())
+
+    def testTimeSpentRecursivelyOnTaskEqualsTotalEffortDuration(self):
+        self.assertEqual(self.effort1.duration() + self.effort2.duration(), 
+                         self.task1.timeSpent(recursive=True))
+
+    def testEffortsRecursive(self):
+        self.assertEqual([self.effort1, self.effort2],
+            self.task1.efforts(recursive=True))
+
+
+class TaskWithGrandChildAndEffortTest(TaskWithEffortTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{}, {}, {}]
+    
+    def setUp(self):
+        super(TaskWithGrandChildAndEffortTest, self).setUp()
+        self.task1.addChild(self.task2)
+        self.task2.addChild(self.task3)
+
+    def createEfforts(self):
+        self.effort1 = effort.Effort(self.task1, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
+        self.effort2 = effort.Effort(self.task2, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
+        self.effort3 = effort.Effort(self.task3, date.DateTime(2005,3,1), date.DateTime(2005,3,2))
+        return [self.effort1, self.effort2, self.effort3]
+
+    def testTimeSpentRecursivelyOnTaskEqualsTotalEffortDuration(self):
+        self.assertEqual(self.effort1.duration() + self.effort2.duration() + self.effort3.duration(), 
+                         self.task1.timeSpent(recursive=True))
+
+    def testEffortsRecursive(self):
+        self.assertEqual([self.effort1, self.effort2, self.effort3],
+            self.task1.efforts(recursive=True))
+
+    
+class TaskWithBudgetTest(TaskTestCase, CommonTaskTests):
+    taskCreationKeywordArguments = [{'budget': twoHours}]
+    
+    def setUp(self):
+        super(TaskWithBudgetTest, self).setUp()
+        self.oneHourEffort = effort.Effort(self.task, date.DateTime(2005,1,1,13,0),
+                                          date.DateTime(2005,1,1,14,0))
+                                          
+    def expectedBudget(self):
+        return self.taskCreationKeywordArguments[0]['budget']
+    
+    
+    def testBudget(self):
+        self.assertEqual(self.expectedBudget(), self.task.budget())
+
+    def testBudgetLeft(self):
+        self.assertEqual(self.expectedBudget(), self.task.budgetLeft())
+
+    def testBudgetLeftAfterHalfSpent(self):
+        self.addEffort(oneHour)
+        self.assertEqual(oneHour, self.task.budgetLeft())
+
+    def testBudgetLeftAfterAllSpent(self):
+        self.addEffort(twoHours)
+        self.assertEqual(zeroHour, self.task.budgetLeft())
+
+    def testBudgetLeftWhenOverBudget(self):
+        self.addEffort(threeHours)
+        self.assertEqual(-oneHour, self.task.budgetLeft())
+
+    def testRecursiveBudget(self):
+        self.assertEqual(self.expectedBudget(), self.task.budget(recursive=True))
+        
+    def testRecursiveBudgetWithChildWithoutBudget(self):
+        self.task.addChild(task.Task())
+        self.assertEqual(self.expectedBudget(), self.task.budget(recursive=True))
+
+    def testBudgetIsCopiedWhenTaskIsCopied(self):
+        copy = self.task.copy()
+        self.assertEqual(copy.budget(), self.task.budget())
+        self.task.setBudget(oneHour)
+        self.assertEqual(twoHours, copy.budget())
+        
+
+                         
+                         
+##################
 
 class TaskNotificationTestCase(TaskTestCase):
     def setUp(self):
@@ -254,7 +562,7 @@ class TaskNotificationTestCase(TaskTestCase):
 
 
 class TaskNotificationTest(TaskNotificationTestCase):
-    taskKeywordArguments = {'subject': 'Todo'}
+    taskCreationKeywordArguments = [{'subject': 'Todo'}]
                 
     def testSetSubject(self):
         self.task.setSubject('New')
@@ -291,11 +599,19 @@ class TaskNotificationTest(TaskNotificationTestCase):
     def testSetDescription(self):
         self.task.setDescription('new description')
         self.failUnlessNotified()
+
+    def testSetBudgetCausesNotification(self):
+        self.task.setBudget(oneHour)
+        self.failUnlessNotified()
+        
+    def testSetBudgetEqualToCurrentBudgetDoesNotCauseNotification(self):
+        self.task.setBudget(self.task.budget())
+        self.failIfNotified()
         
 
 class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
-    taskKeywordArguments = {'subject': 'Todo', 'duedate': date.Tomorrow(),
-                            'startdate': date.Yesterday()}
+    taskCreationKeywordArguments = [{'subject': 'Todo', 'duedate': date.Tomorrow(),
+                            'startdate': date.Yesterday()}]
 
     def testAddChild(self):
         child = self.task.newSubTask()
@@ -315,35 +631,10 @@ class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
         self.failIf(child in self.task.children())
         self.assertEqual(self.task, child.parent())
         self.failIfNotified()
-
-    def testNewSubTask(self):
-        child = self.task.newSubTask()
-        self.assertEqual(self.task.dueDate(), child.dueDate())
-        self.assertEqual(self.task, child.parent())
-        self.assertEqual(date.Today(), child.startDate())
-        self.failIf(child in self.task.children())
-        
-    def testNewSubTask_ParentHasStartDateInTheFuture(self):
-        self.task.setStartDate(date.Tomorrow())
-        child = self.task.newSubTask()
-        self.assertEqual(self.task.startDate(), child.startDate())
-
-    def testNewSubTask_ParentHasStartDateInThePast(self):
-        self.task.setStartDate(date.Yesterday())
-        child = self.task.newSubTask()
-        self.assertEqual(date.Today(), child.startDate())
-        
+                
     def testNewSubTask_WithSubject(self):
         child = self.task.newSubTask(subject='Test')
         self.assertEqual('Test', child.subject())
-
-    def testAllChildrenCompleted(self):
-        self.failIf(self.task.allChildrenCompleted())
-        child = task.Task()
-        self.task.addChild(child)
-        self.failIf(self.task.allChildrenCompleted())
-        child.setCompletionDate()
-        self.failUnless(self.task.allChildrenCompleted())
     
     def testTimeLeftRecursive(self):
         child = task.Task(duedate=date.Today())
@@ -404,198 +695,7 @@ class SubTaskDateRelationsTest(test.TestCase, asserts.TaskAsserts):
         for child in self.task.children():
             child.setCompletionDate()
         self.assertStartDate(date.Today())
-
-
-class SubTaskRelationsTest(test.TestCase):
-    def setUp(self):
-        self.parent = task.Task(subject='Parent')
-        self.child = task.Task(subject='Child')
-        self.parent.addChild(self.child)
-        self.grandChild = task.Task(subject='Grandchild')
-        self.child.addChild(self.grandChild)
-
-    def testGetAllChildren(self):
-        self.assertEqual([self.child, self.grandChild], 
-            self.parent.allChildren())
-
-    def testGetAncestors(self):
-        self.assertEqual([self.parent, self.child], self.grandChild.ancestors())
-
-    def testGetFamily(self):
-        for task in self.parent, self.child, self.grandChild:
-            self.assertEqual([self.parent, self.child, self.grandChild], task.family())
-
-
-class TaskWithOneEffortTest(test.TestCase):
-    def setUp(self):
-        self.task = task.Task()
-        self.effort = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
-        self.task.addEffort(self.effort)
-
-    def testTimeSpentOnTaskEqualsEffortDuration(self):
-        self.assertEqual(self.effort.duration(), self.task.timeSpent())
-
-    def testTimeSpentOnTaskIsZeroAfterRemovalOfEffort(self):
-        self.task.removeEffort(self.effort)
-        self.assertEqual(date.TimeDelta(), self.task.timeSpent())
         
-
-class TaskWithTwoEffortsTest(test.TestCase):
-    def setUp(self):
-        self.task = task.Task()
-        self.effort1 = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
-        self.effort2 = effort.Effort(self.task, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
-        self.task.addEffort(self.effort1)
-        self.task.addEffort(self.effort2)
-        
-    def testTimeSpentOnTaskEqualsEffortDuration(self):
-        self.assertEqual(self.effort1.duration() + self.effort2.duration(), self.task.timeSpent())
-        
-        
-class TaskEffortTest(test.TestCase):
-    def setUp(self):
-        self.task = task.Task()
-        self.effort = effort.Effort(self.task, date.DateTime(2005,1,1), date.DateTime(2005,1,2))
-                        
-    def addChild(self, parent):
-        child = task.Task()
-        parent.addChild(child)
-        childEffort = effort.Effort(child, date.DateTime(2005,2,1), date.DateTime(2005,2,2))
-        child.addEffort(childEffort)
-        return child, childEffort
-        
-    def testTimeSpent_Recursively(self):
-        self.task.addEffort(self.effort)
-        child, childEffort = self.addChild(self.task)
-        self.assertEqual(self.effort.duration() + childEffort.duration(),
-            self.task.timeSpent(recursive=True))
-            
-    def testTimespent_RecursivelyWithGrandChild(self):
-        self.task.addEffort(self.effort)
-        child, childEffort = self.addChild(self.task)
-        grandChild, grandChildEffort = self.addChild(child)
-        self.assertEqual(self.effort.duration() + childEffort.duration() +
-            grandChildEffort.duration(), self.task.timeSpent(recursive=True))
-            
-    def testIsBeingTracked(self):
-        self.task.addEffort(effort.Effort(self.task, date.DateTime.now()))
-        self.failUnless(self.task.isBeingTracked())
-        
-    def testStopTracking(self):
-        self.task.addEffort(effort.Effort(self.task, date.DateTime.now()))
-        self.task.stopTracking()
-        self.failIf(self.task.isBeingTracked())
-        
-    def testMarkCompletedStopsEffortTracking(self):
-        self.task.addEffort(effort.Effort(self.task, date.DateTime.now()))
-        self.task.setCompletionDate()
-        self.failIf(self.task.isBeingTracked())
-        
-    def testEffortsRecursive(self):
-        self.task.addEffort(self.effort)
-        child, childEffort = self.addChild(self.task)
-        self.assertEqual([self.effort, childEffort],
-            self.task.efforts(recursive=True))
-        
-    
-class TaskBudgetTest(TaskNotificationTestCase):
-    def createTask(self):
-        self.task = task.Task(subject='Todo')
-        self.zero = date.TimeDelta()
-        self.oneHour = date.TimeDelta(hours=1)
-        self.twoHours = date.TimeDelta(hours=2)
-        self.oneHourEffort = effort.Effort(self.task, 
-            date.DateTime(2005,1,1,13,0,0), date.DateTime(2005,1,1,14,0,0))
-        self.child = task.Task(subject='child')
-        self.childEffort = effort.Effort(self.child,
-            date.DateTime(2005,1,2,10,0,0), date.DateTime(2005,1,2,11,0,0))
-        return self.task
-            
-    def testBudget_Default(self):
-        self.assertEqual(self.zero, self.task.budget())
-        
-    def testBudget_SetThroughConstructor(self):
-        newTask = task.Task(budget=self.oneHour)
-        self.assertEqual(self.oneHour, newTask.budget())
-        
-    def testBudget_SetBudget(self):
-        self.task.setBudget(self.oneHour)
-        self.assertEqual(self.oneHour, self.task.budget())
-    
-    def testBudget_Recursive_None(self):
-        self.task.addChild(self.child)
-        self.assertEqual(self.zero, self.task.budget(recursive=True))
-        
-    def testBudget_Recursive_ChildWithoutBudget(self):
-        self.task.addChild(self.child)
-        self.task.setBudget(self.oneHour)
-        self.assertEqual(self.oneHour, self.task.budget(recursive=True))
-        
-    def testBudget_Recursive_ParentWithoutBudget(self):
-        self.task.addChild(self.child)
-        self.child.setBudget(self.oneHour)
-        self.assertEqual(self.oneHour, self.task.budget(recursive=True))
-        
-    def testBudget_Recursive_BothHaveBudget(self):
-        self.task.addChild(self.child)
-        self.child.setBudget(self.oneHour)
-        self.task.setBudget(self.oneHour)
-        self.assertEqual(self.twoHours, self.task.budget(recursive=True))
-    
-    def testBudgetLeft(self):
-        self.task.setBudget(self.oneHour)
-        self.assertEqual(self.oneHour, self.task.budgetLeft())
-        
-    def testBudgetLeft_NoBudget(self):
-        self.assertEqual(self.zero, self.task.budgetLeft())
-        
-    def testBudgetLeft_HalfSpent(self):
-        self.task.setBudget(self.twoHours)
-        self.task.addEffort(self.oneHourEffort)
-        self.assertEqual(self.oneHour, self.task.budgetLeft())
-        
-    def testBudgetLeft_AllSpent(self):
-        self.task.setBudget(self.twoHours)
-        self.task.addEffort(self.oneHourEffort)
-        self.task.addEffort(self.oneHourEffort.copy())
-        self.assertEqual(self.zero, self.task.budgetLeft())
-    
-    def testBudgetLeft_OverBudget(self):
-        self.task.setBudget(self.oneHour)
-        self.task.addEffort(self.oneHourEffort)
-        self.task.addEffort(self.oneHourEffort.copy())
-        self.assertEqual(-self.oneHour, self.task.budgetLeft())
-        
-    def testBudgetLeft_Recursive_NoBudget(self):
-        self.task.addChild(self.child)
-        self.assertEqual(self.zero, self.task.budgetLeft(recursive=True))
-        
-    def testBudgetLeft_Recursive_BudgetNoEffort(self):
-        self.task.addChild(self.child)
-        self.child.setBudget(self.oneHour)
-        self.assertEqual(self.oneHour, self.task.budgetLeft(recursive=True))
-        
-    def testBudgetLeft_Recursive_BudgetSpent(self):
-        self.task.addChild(self.child)
-        self.child.setBudget(self.oneHour)
-        self.child.addEffort(self.childEffort)
-        self.assertEqual(self.zero, self.task.budgetLeft(recursive=True))
-        
-    def testBudgetIsCopiedWhenTaskIsCopied(self):
-        self.task.setBudget(self.oneHour)
-        copy = self.task.copy()
-        self.assertEqual(copy.budget(), self.task.budget())
-        self.task.setBudget(self.twoHours)
-        self.assertEqual(self.oneHour, copy.budget())
-        
-    def testSetBudgetCausesNotification(self):
-        self.task.setBudget(self.oneHour)
-        self.failUnlessNotified()
-        
-    def testSetBudgetEqualToCurrentBudgetDoesNotCauseNotification(self):
-        self.task.setBudget(self.task.budget())
-        self.failIfNotified()
-
         
 class TaskCategoryTest(test.TestCase):
     def setUp(self):
@@ -643,16 +743,13 @@ class TaskCategoryTest(test.TestCase):
         
         
 class TaskPriorityTest(TaskNotificationTestCase):
-    def createTask(self):
+    def createTasks(self):
         self.priority = 5
         self.childPriority = self.priority - 1
         self.child = task.Task(priority=self.childPriority)
         parent = task.Task(priority=self.priority)
         parent.addChild(self.child)
-        return parent
-        
-    def testDefaultPriority(self):
-        self.assertEqual(0, task.Task().priority())
+        return [parent]
         
     def testSetPriorityOnConstruction(self):
         self.assertEqual(self.priority, self.task.priority())

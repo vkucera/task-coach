@@ -4,7 +4,10 @@ from domain import *
 
 releases = [
 Release('0.54', 'December ?, 2005',
-    bugsFixed=[]),
+    bugsFixed=['''One python file was missing in the source distribution
+of release 0.53. Added a test to check that all python files in the source
+are actually added to the source distributions, so hopefully this will never
+happen again.''', '1389224']),
 
 Release('0.53', 'December 19, 2005',
     bugsFixed=[

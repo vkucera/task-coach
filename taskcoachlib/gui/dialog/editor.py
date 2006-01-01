@@ -68,8 +68,8 @@ class AmountEntry(wx.Panel):
 class SubjectPage(widgets.BookPage):
     def __init__(self, parent, task, *args, **kwargs):
         super(SubjectPage, self).__init__(parent, columns=2, *args, **kwargs)
-        self._subjectEntry = wx.TextCtrl(self, -1, task.subject())
-        self._descriptionEntry = widgets.TextCtrl(self, task.description())
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, task.subject())
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, task.description())
         self._descriptionEntry.SetSizeHints(500, 260)
         self.addEntry(_('Subject'), self._subjectEntry)    
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)    
@@ -184,7 +184,7 @@ class CategoriesPage(widgets.BookPage):
             if self._checkListBox.GetString(index) in task.categories():
                 self._checkListBox.Check(index)
         self.addEntry(_('Categories'), self._checkListBox, growable=True)
-        self._textEntry = wx.TextCtrl(self, -1, style=wx.TE_PROCESS_ENTER)
+        self._textEntry = widgets.SingleLineTextCtrl(self, style=wx.TE_PROCESS_ENTER)
         self._addButton = wx.Button(self, -1, _('Add category'))
         self._addButton.Bind(wx.EVT_BUTTON, self.onNewCategory)
         self.addEntry(_('New category'), self._textEntry, self._addButton)
@@ -279,7 +279,7 @@ class EffortEditBook(widgets.BookPage):
         self.preventNegativeEffortDuration()
             
     def addDescriptionEntry(self):
-        self._descriptionEntry = widgets.TextCtrl(self, 
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, 
             self._effort.getDescription())
         self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry)

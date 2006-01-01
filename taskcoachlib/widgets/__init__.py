@@ -6,5 +6,5 @@ from listctrl import ListCtrl
 from treectrl import TreeCtrl, TreeListCtrl
 from gridctrl import GridCtrl
 from datectrl import DateCtrl, DateTimeCtrl
-from textctrl import TextCtrl, StaticText
+from textctrl import SingleLineTextCtrl, MultiLineTextCtrl, StaticText
 from colorselect import ColorSelect
