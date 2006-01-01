@@ -281,3 +281,57 @@ class NotificationTest(test.TestCase):
         self.notification.source = 'Test'
         self.assertEqual('Test', self.notification.source)
         
+
+class ClassWithObservableProperties(patterns.Observable):
+    def __getObservableProperty(self):
+        return self.__observableProperty
+    
+    def __setObservableProperty(self, value):
+        self.__observableProperty = value
+        
+    observableProperty = patterns.ObservableProperty(__getObservableProperty, 
+                                                     __setObservableProperty,
+                                                     propertyName='observableProperty')
+
+
+
+class ObservablePropertyTest(test.TestCase):
+    def setUp(self):
+        self.observable = ClassWithObservableProperties()
+        self.observable.registerObserver(self.notify)
+        self.notifications = 0
+        self.lastNotification = None
+        self.observable.observableProperty = 1
+
+    def notify(self, notification, *args, **kwargs):
+        self.notifications += 1
+        self.lastNotification = notification
+        
+    def testFirstAssignmentNotifiesObservers(self):
+        self.assertEqual(1, self.notifications)
+
+    def testSecondAssignmentNotifiesObservers(self):
+        self.observable.observableProperty = 2
+        self.assertEqual(2, self.notifications)
+
+    def testAssigningSameValueTwiceDoesCauseNotification(self):
+        self.observable.observableProperty = 1
+        self.assertEqual(1, self.notifications)
+
+    def testPropertyNotificationContainsSource(self):
+        self.assertEqual(self.observable, self.lastNotification.source)
+        
+    def testPropertyNotificationContainsNewValue(self):
+        self.assertEqual(1, self.lastNotification.newValue)
+        
+    def testPropertyNotificationContainsOldValue(self):
+        self.observable.observableProperty = 2
+        self.assertEqual(1, self.lastNotification.oldValue)
+        
+    def testPropertyNotificationWhenNoOldValueExists(self):
+        self.assertEqual(None, self.lastNotification.oldValue)
+    
+    def testPropertyNotificationContainsAttribute(self):
+        self.assertEqual('observableProperty', self.lastNotification.property)
+
+    

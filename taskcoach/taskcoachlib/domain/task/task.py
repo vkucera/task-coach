@@ -1,6 +1,10 @@
 import patterns, time, copy, sets, relations
 import domain.date as date
 
+
+class TaskProperty(property):
+    pass
+
 class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, completiondate=None, parent=None, budget=None, 
@@ -36,7 +40,6 @@ class Task(patterns.Observable):
     def notifyObservers(self, notification, *args, **kwargs):
         if notification.changeNeedsSave:
             self.setLastModificationTime()
-        assert notification.source.__class__ == Task
         super(Task, self).notifyObservers(notification, *args, **kwargs)
 
     def __setstate__(self, state):
@@ -76,13 +79,21 @@ class Task(patterns.Observable):
             return self.allChildren()
         else:
             return self._children
+        
+    def __getDescription(self):
+        return self.__description
+    
+    def __setDescription(self, description):
+        self.__description = description
+        
+    _description = TaskProperty(__getDescription, __setDescription)
 
     def description(self):
         return self._description
 
     def setDescription(self, description):
         self.__setAttributeAndNotifyObservers('_description', description)
-
+    
     def allChildrenCompleted(self):
         if not self.children():
             return False
