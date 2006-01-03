@@ -1,5 +1,11 @@
 import test, widgets
 
+
+class BaseTextCtrlTest(test.wxTestCase):
+    def testRemoveAnyControlCharactersEnteredByUser(self):
+        textctrl = widgets.textctrl.BaseTextCtrl(self.frame, u'Test\x01test') # ^A
+        self.assertEqual('Testtest', textctrl.GetValue())    
+    
 class MultiLineTextCtrlTest(test.wxTestCase):
         
     def testOpenWebbrowserOnURLClick(self):
@@ -11,6 +17,3 @@ class MultiLineTextCtrlTest(test.wxTestCase):
         textctrl = widgets.MultiLineTextCtrl(self.frame, text='Hiya')
         self.assertEqual(0, textctrl.GetInsertionPoint())
         
-    def testRemoveAnyControlCharactersEnteredByUser(self):
-        textctrl = widgets.MultiLineTextCtrl(self.frame, text=u'Test\x01test') # ^A
-        self.assertEqual('Testtest', textctrl.GetValue())
