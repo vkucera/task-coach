@@ -17,7 +17,8 @@ class ICSWriter:
     def write(self, taskList):
         self += 'BEGIN:VCALENDAR'
         self += 'VERSION:2.0'
-        self += 'PRODID:-//taskcoach.niessink.com//NONSGML Taskcoach V%s//EN' % meta.data.version
+        domain = meta.url[len('http://'):-1]
+        self += 'PRODID:-//%s//NONSGML %s V%s//EN'%(domain, meta.name, meta.version)
 
         for task in taskList.rootTasks():
             self.writeTask(task)
