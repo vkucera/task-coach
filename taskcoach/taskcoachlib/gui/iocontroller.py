@@ -1,16 +1,23 @@
-import wx, meta, os
+import wx, meta, os, codecs
 from i18n import _
 import domain.task as task
 
 class IOController(object): 
+    ''' IOController is responsible for opening, closing, loading,
+    saving, and exporting files. It also presents the necessary dialogs
+    to let the user specify what file to load/save/etc.'''
+
     def __init__(self, taskFile, messageCallback, settings): 
         super(IOController, self).__init__()
         self.__taskFile = taskFile
         self.__messageCallback = messageCallback
         self.__settings = settings
-        self.__fileDialogOpts = { 'default_path' : os.getcwd(), 
+        self.__tskFileDialogOpts = { 'default_path' : os.getcwd(), 
             'default_extension' : 'tsk', 'wildcard' : 
             _('%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*')%meta.name }
+        self.__icsFileDialogOpts = { 'default_path' : os.getcwd(), 
+            'default_extension' : 'ics', 'wildcard' : 
+            _('ICS files (*.ics)|*.ics|All files (*.*)|*') }
 
     def needSave(self):
         return self.__taskFile.needSave()
@@ -88,6 +95,19 @@ class IOController(object):
         patterns.CommandHistory().clear()
         return True
 
+    def exportAsICS(self, filename=None):
+        if not filename:
+            filename = self.__askUserForFile(_('Export as...'),
+                flags=wx.SAVE, fileDialogOpts=self.__icsFileDialogOpts)
+        if filename:
+            icsFile = codecs.open(filename, 'w', 'utf-8')
+            task.ICSWriter(icsFile).write(self.__taskFile)
+            icsFile.close()
+            self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s as ICS')%{'nrtasks': len(self.__taskFile), 'filename': filename})
+            return True
+        else:
+            return False
+
     def __addRecentFile(self, fileName):
         recentFiles = eval(self.__settings.get('file', 'recentfiles'))
         if fileName in recentFiles:
@@ -97,5 +117,6 @@ class IOController(object):
         recentFiles = recentFiles[:maximumNumberOfRecentFiles]
         self.__settings.set('file', 'recentfiles', str(recentFiles))
         
-    def __askUserForFile(self, title, flags=wx.OPEN):
-        return wx.FileSelector(title, flags=flags, **self.__fileDialogOpts)
+    def __askUserForFile(self, title, fileDialogOpts=None, flags=wx.OPEN):
+        fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts
+        return wx.FileSelector(title, flags=flags, **fileDialogOpts)
