@@ -312,6 +312,17 @@ class FileSaveSelection(NeedsSelectedTasks, IOCommand, ViewerCommand):
     def doCommand(self, event):
         self.iocontroller.saveselection(self.viewer.curselection()), 
 
+
+class FileExportAsICS(IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportAsICS, self).__init__(menuText=_('Export as &ICS...'), 
+            helpText=_('Export the current file in ICS format'),
+            bitmap='export', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportAsICS()
+
+    
 class FileQuit(MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
@@ -777,6 +788,7 @@ class UICommands(dict):
         self['saveas'] = FileSaveAs(iocontroller=iocontroller)
         self['saveselection'] = FileSaveSelection(iocontroller=iocontroller, 
             viewer=viewer)
+        self['exportasics'] = FileExportAsICS(iocontroller=iocontroller)
         self['quit'] = FileQuit(mainwindow=mainwindow)
 
         # menuEdit commands
