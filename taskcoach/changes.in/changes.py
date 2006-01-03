@@ -3,11 +3,16 @@
 from domain import *
 
 releases = [
-Release('0.54', 'December ?, 2005',
-    bugsFixed=['''One python file was missing in the source distribution
+Release('0.54', 'January ?, 2006',
+    bugsFixed=[
+        Bug('''One python file was missing in the source distribution
 of release 0.53. Added a test to check that all python files in the source
 are actually added to the source distributions, so hopefully this will never
-happen again.''', '1389224']),
+happen again.''', '1389224')],
+    featuresAdded=[
+        Feature('''Effort can be exported as ICS (vCalendar) file and imported
+into e.g. Mozilla Sunbird. Each effort record is exported as a "VEVENT".
+This is an experimental feature. Patch provided by Gissehel.''')]),
 
 Release('0.53', 'December 19, 2005',
     bugsFixed=[
