@@ -1,14 +1,22 @@
 import wx, webbrowser
 
 
-class SingleLineTextCtrl(wx.TextCtrl):
+class BaseTextCtrl(wx.TextCtrl):
     def __init__(self, parent, *args, **kwargs):
-        super(SingleLineTextCtrl, self).__init__(parent, -1, *args, **kwargs)
+        super(BaseTextCtrl, self).__init__(parent, -1, *args, **kwargs)
+
+    def GetValue(self, *args, **kwargs):
+        value = super(BaseTextCtrl, self).GetValue(*args, **kwargs)
+        return value.translate({ord(u'\x01'): None})
 
 
-class MultiLineTextCtrl(wx.TextCtrl):
+class SingleLineTextCtrl(BaseTextCtrl):
+    pass
+
+
+class MultiLineTextCtrl(BaseTextCtrl):
     def __init__(self, parent, text='', *args, **kwargs):
-        super(MultiLineTextCtrl, self).__init__(parent, -1,
+        super(MultiLineTextCtrl, self).__init__(parent,
             style=wx.TE_MULTILINE|wx.TE_RICH|wx.TE_AUTO_URL, *args, **kwargs)
         self.__initializeText(text)
         self.Bind(wx.EVT_TEXT_URL, self.onURLClicked)
@@ -30,9 +38,6 @@ class MultiLineTextCtrl(wx.TextCtrl):
         self.AppendText(text)
         self.SetInsertionPoint(0)
 
-    def GetValue(self, *args, **kwargs):
-        value = super(MultiLineTextCtrl, self).GetValue(*args, **kwargs)
-        return value.translate({ord(u'\x01'): None})
     
             
 class StaticText(wx.Window):
