@@ -5,6 +5,9 @@ from domain import *
 releases = [
 Release('0.54', 'January ?, 2006',
     bugsFixed=[
+        Bug('''It was possible to enter control characters -- by 
+copy-and-pasting -- resulting in invalid XML in the Task Coach 
+file.''', '1288689'),
         Bug('''One python file was missing in the source distribution
 of release 0.53. Added a test to check that all python files in the source
 are actually added to the source distributions, so hopefully this will never

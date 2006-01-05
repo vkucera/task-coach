@@ -1,5 +1,10 @@
 import wx, webbrowser
 
+UNICODE_CONTROL_CHARACTERS_TO_WEED = {}
+for ordinal in range(0x20):
+    if chr(ordinal) not in '\t\r\n':
+        UNICODE_CONTROL_CHARACTERS_TO_WEED[ordinal] = None
+
 
 class BaseTextCtrl(wx.TextCtrl):
     def __init__(self, parent, *args, **kwargs):
@@ -7,7 +12,8 @@ class BaseTextCtrl(wx.TextCtrl):
 
     def GetValue(self, *args, **kwargs):
         value = super(BaseTextCtrl, self).GetValue(*args, **kwargs)
-        return value.translate({ord(u'\x01'): None})
+        # don't allow unicode control characters:
+        return value.translate(UNICODE_CONTROL_CHARACTERS_TO_WEED)
 
 
 class SingleLineTextCtrl(BaseTextCtrl):
