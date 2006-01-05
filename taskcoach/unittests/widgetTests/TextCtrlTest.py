@@ -3,11 +3,11 @@ import test, widgets
 
 class BaseTextCtrlTest(test.wxTestCase):
     def testRemoveAnyControlCharactersEnteredByUser(self):
-        textctrl = widgets.textctrl.BaseTextCtrl(self.frame, u'Test\x01test') # ^A
-        self.assertEqual('Testtest', textctrl.GetValue())    
+        textctrl = widgets.textctrl.BaseTextCtrl(self.frame, u'T\x02\x01est\x09')
+        self.assertEqual(u'Test\t', textctrl.GetValue())    
+    
     
 class MultiLineTextCtrlTest(test.wxTestCase):
-        
     def testOpenWebbrowserOnURLClick(self):
         textctrl = widgets.MultiLineTextCtrl(self.frame)
         textctrl.AppendText('test http://test.com/ test')
