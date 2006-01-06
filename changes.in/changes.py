@@ -5,6 +5,11 @@ from domain import *
 releases = [
 Release('0.54', 'January 6, 2006',
     bugsFixed=[
+        Bug('''The accelerators INSERT and Ctrl+INSERT were mapped to 'c'
+and 'Command-Copy' on the Mac, which caused Task Coach to create a new task
+whenever the user typed a 'c'. Fixed by changing the accelerators for
+new task and new subtask to Ctrl+N and Shift+Ctrl+N (on the Mac only).''', 
+        '1311413'),
         Bug('''It was possible to enter control characters -- by 
 copy-and-pasting -- resulting in invalid XML in the Task Coach 
 file.''', '1288689'),
@@ -13,7 +18,7 @@ of release 0.53. Added a test to check that all python files in the source
 are actually added to the source distributions, so hopefully this will never
 happen again.''', '1389224')],
     featuresAdded=[
-        Feature('''Effort can be exported as ICS (vCalendar) file and imported
+        Feature('''Effort can be exported as iCalendar (ICS) file and imported
 into e.g. Mozilla Sunbird. Each effort record is exported as a "VEVENT".
 This is an experimental feature. Patch provided by Gissehel.''')]),
 

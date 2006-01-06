@@ -239,7 +239,6 @@ class NeedsItems(object):
     def enabled(self):
         return self.viewer.size() 
 
-#class Needs
  
 # Commands:
 
@@ -535,7 +534,7 @@ class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
 class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskNew, self).__init__(bitmap='new', 
-            menuText=_('&New task...\tINS'), helpText=_('Insert a new task'), *args,
+            menuText=self.getMenuText(), helpText=_('Insert a new task'), *args,
             **kwargs)
 
     def doCommand(self, event, show=True):
@@ -544,12 +543,24 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsComma
             self.filteredTaskList, self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap=self.bitmap)
         editor.Show(show)
 
+    def getMenuText(self):
+        # There is a bug in wxWidget/wxPython on the Mac that causes the 
+        # INSERT accelerator to be mapped so some other key sequence ('c' in
+        # this case) so that whenever that key sequence is typed, this command
+        # is invoked.
+        menuText = _('&New task...')
+        if '__WXMAC__' in wx.PlatformInfo:
+            menuText += u'\tCtrl+N'
+        else:
+            menuText += u'\tINS'
+        return menuText 
+
 
 class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         FilterCommand, ViewerCommand, UICommandsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskNewSubTask, self).__init__(bitmap='newsubtask',
-            menuText=_('New &subtask...\tCtrl+INS'),
+            menuText=self.getMenuText(),
             helpText=_('Insert a new subtask into the selected task'), *args,
             **kwargs)
 
@@ -559,6 +570,18 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
             self.filteredTaskList, self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap='new')
         editor.Show(show)
 
+    def getMenuText(self):
+        # There is a bug in wxWidget/wxPython on the Mac that causes the 
+        # Ctrl+INSERT accelerator to be mapped so some other key sequence 
+        # so that whenever that key sequence is typed, this command is 
+        # invoked.
+        menuText = _('New &subtask...')
+        if '__WXMAC__' in wx.PlatformInfo:
+            menuText += u'\tShift+Ctrl+N'
+        else:
+            menuText += u'\tCtrl+INS'
+        return menuText  
+        
 
 class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand, 
         ViewerCommand, UICommandsCommand, SettingsCommand):
