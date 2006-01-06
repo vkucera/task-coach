@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "POT-Creation-Date: 2005-05-20 22:38+W. Europe Daylight Time\n"
-"PO-Revision-Date: 2006-01-06 19:45+0100\n"
+"PO-Revision-Date: 2006-01-06 20:02+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,6 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 "X-Poedit-Language: dutch\n"
 "X-Poedit-Country: NETHERLANDS\n"
-"X-Poedit-Bookmarks: -1,-1,-1,80,-1,-1,-1,-1,-1,-1\n"
 
 #: taskcoachlib\command\base.py:72
 msgid "Copy"
@@ -315,8 +314,8 @@ msgid "%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*"
 msgstr "%s bestanden (*.tsk)|*.tsk|XML bestanden (*.xml)|Alle bestanden (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:20
-msgid "ICS files (*.ics)|*.ics|All files (*.*)|*"
-msgstr "ICS bestanden (*.ics)|*.ics|Alle bestanden (*.*)|*"
+msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
+msgstr "iCalendar bestanden (*.ics)|*.ics|Alle bestanden (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:29
 msgid "Open"
@@ -374,12 +373,12 @@ msgid "Closed %s"
 msgstr "%s gesloten"
 
 #: taskcoachlib\gui\iocontroller.py:100
-msgid "Export as..."
-msgstr "Exporteren als..."
+msgid "Export as iCalendar..."
+msgstr "Als iCalendar exporteren"
 
 #: taskcoachlib\gui\iocontroller.py:106
-msgid "Exported %(nrtasks)d tasks to %(filename)s as ICS"
-msgstr "%(nrtasks)d taken als ICS geëxporteerd in %(filename)s"
+msgid "Exported %(nrtasks)d tasks to %(filename)s"
+msgstr "%(nrtasks)d taken geëxporteerd in %(filename)s"
 
 #: taskcoachlib\gui\mainwindow.py:84
 msgid "Welcome to %(name)s version %(version)s"
@@ -535,12 +534,12 @@ msgid "Save the selected tasks to a separate file"
 msgstr "De gelecteerde taken in een apart bestand opslaan"
 
 #: taskcoachlib\gui\uicommand.py:318
-msgid "Export as &ICS..."
-msgstr "Als &ICS exporteren"
+msgid "Export as &iCalendar..."
+msgstr "Als &iCalendar exporteren..."
 
 #: taskcoachlib\gui\uicommand.py:319
-msgid "Export the current file in ICS format"
-msgstr "Het huidige bestand in ICS formaat exporteren"
+msgid "Export the current file in iCalendar (*.ics) format"
+msgstr "Het huidige bestand in iCalendar formaat exporteren"
 
 #: taskcoachlib\gui\uicommand.py:328
 msgid "&Quit\tCtrl+Q"
