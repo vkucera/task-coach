@@ -17,7 +17,7 @@ class IOController(object):
             _('%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*')%meta.name }
         self.__icsFileDialogOpts = { 'default_path' : os.getcwd(), 
             'default_extension' : 'ics', 'wildcard' : 
-            _('ICS files (*.ics)|*.ics|All files (*.*)|*') }
+            _('iCalendar files (*.ics)|*.ics|All files (*.*)|*') }
 
     def needSave(self):
         return self.__taskFile.needSave()
@@ -97,13 +97,13 @@ class IOController(object):
 
     def exportAsICS(self, filename=None):
         if not filename:
-            filename = self.__askUserForFile(_('Export as...'),
+            filename = self.__askUserForFile(_('Export as iCalendar...'),
                 flags=wx.SAVE, fileDialogOpts=self.__icsFileDialogOpts)
         if filename:
             icsFile = codecs.open(filename, 'w', 'utf-8')
             task.ICSWriter(icsFile).write(self.__taskFile)
             icsFile.close()
-            self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s as ICS')%{'nrtasks': len(self.__taskFile), 'filename': filename})
+            self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': filename})
             return True
         else:
             return False

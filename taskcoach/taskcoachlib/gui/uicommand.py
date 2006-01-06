@@ -315,9 +315,9 @@ class FileSaveSelection(NeedsSelectedTasks, IOCommand, ViewerCommand):
 
 class FileExportAsICS(IOCommand):
     def __init__(self, *args, **kwargs):
-        super(FileExportAsICS, self).__init__(menuText=_('Export as &ICS...'), 
-            helpText=_('Export the current file in ICS format'),
-            bitmap='export', *args, **kwargs)
+        super(FileExportAsICS, self).__init__(menuText=_('Export as &iCalendar...'), 
+            helpText=_('Export the current file in iCalendar (*.ics) format'),
+            bitmap='exportasics', *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.exportAsICS()
