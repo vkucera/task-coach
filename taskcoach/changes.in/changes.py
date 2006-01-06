@@ -3,7 +3,7 @@
 from domain import *
 
 releases = [
-Release('0.54', 'January ?, 2006',
+Release('0.54', 'January 6, 2006',
     bugsFixed=[
         Bug('''It was possible to enter control characters -- by 
 copy-and-pasting -- resulting in invalid XML in the Task Coach 
