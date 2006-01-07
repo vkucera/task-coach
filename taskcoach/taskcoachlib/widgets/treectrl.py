@@ -350,7 +350,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
     # Extend TreeMixin with TreeListCtrl specific behaviour:
 
     def getStyle(self):
-        return super(TreeListCtrl, self).getStyle() | wx.TR_FULL_ROW_HIGHLIGHT 
+        return super(TreeListCtrl, self).getStyle() | wx.TR_FULL_ROW_HIGHLIGHT
 
     def renderNode(self, item, rowIndex):
         super(TreeListCtrl, self).renderNode(item, rowIndex)

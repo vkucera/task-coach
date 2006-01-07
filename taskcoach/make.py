@@ -98,7 +98,6 @@ if sys.argv[1] == 'py2exe':
     import py2exe
     py2exeDistdir = '%s-%s-win32exe'%(meta.filename, meta.version)
     setupOptions.update({
-        'data_files' : [os.path.join('c:\\', 'Program Files', 'Python24', 'msvcr71.dll')],
         'windows' : [{ 'script' : 'taskcoach.pyw', 
             'other_resources' : [(24, 1, manifest)],
             'icon_resources': [(1, 'icons.in/taskcoach.ico')]}],
@@ -107,7 +106,7 @@ if sys.argv[1] == 'py2exe':
             'includes' : ['xml.dom.minidom', 'gui.dialog.editor'],
             'excludes' : ['taskcoachlib'],
             'optimize' : 2, 
-            'packages' : ['encodings', 'i18n'],
+            'packages' : ['i18n'],
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}}})
  
 
