@@ -3,6 +3,12 @@
 from domain import *
 
 releases = [
+Release('0.55', 'January ?, 2006',
+    bugsFixed=[
+        Bug('''Sorting by total budget was broken.''', '1399116')],
+    featuresAdded=[
+        Feature('''Reminders''')]),
+
 Release('0.54', 'January 6, 2006',
     bugsFixed=[
         Bug('''The accelerators INSERT and Ctrl+INSERT were mapped to 'c'
