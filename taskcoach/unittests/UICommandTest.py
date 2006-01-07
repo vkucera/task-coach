@@ -9,6 +9,9 @@ class UICommandTest(test.wxTestCase):
         self.frame.SetMenuBar(wx.MenuBar())
         self.frame.CreateToolBar()
 
+    def activate(self, window, id):
+        window.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, id))
+
     def testAppendToMenu(self):
         id = self.uicommand.appendToMenu(self.menu, self.frame)
         self.assertEqual(id, self.menu.FindItem(self.uicommand.menuText))
@@ -26,9 +29,6 @@ class UICommandTest(test.wxTestCase):
         id = self.uicommand.appendToToolBar(self.frame.GetToolBar())
         self.activate(self.frame.GetToolBar(), id)
         self.failUnless(self.uicommand.activated)
-
-    def activate(self, window, id):
-        window.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, id))
 
 
 class UICommandsTest(test.wxTestCase):
