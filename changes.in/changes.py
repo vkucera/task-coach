@@ -4,10 +4,11 @@ from domain import *
 
 releases = [
 Release('0.55', 'January ?, 2006',
+    dependenciesChanged=[
+        Dependency('''Task Coach now requires wxPython 2.6.1.0-unicode or newer
+(this is only relevant if you use the source distribution).''')],
     bugsFixed=[
-        Bug('''Sorting by total budget was broken.''', '1399116')],
-    featuresAdded=[
-        Feature('''Reminders''')]),
+        Bug('''Sorting by total budget was broken.''', '1399116')]),
 
 Release('0.54', 'January 6, 2006',
     bugsFixed=[

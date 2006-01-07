@@ -12,7 +12,7 @@ platform = 'Any'
 filename = 'TaskCoach'
 filename_lower = filename.lower()
 pythonversion = '2.4.1'
-wxpythonversion = '2.5.5.1-unicode'
+wxpythonversion = '2.6.1.0-unicode'
 languages = {
     'English': None, 
     'French': 'fr_FR', 
