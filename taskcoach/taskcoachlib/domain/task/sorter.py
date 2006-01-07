@@ -1,10 +1,11 @@
 import patterns
 
 class SortOrderReverser(object):
-    ''' This class is responsible for reversing the sort order from ascending to
-        descending or vice versa when the sort key setting is set to the same sort
-        key twice in a row. In other words, this class will flip the sort order when
-        a user clicks on the same column in a list view twice in a row. '''
+    ''' This class is responsible for reversing the sort order from ascending
+        to descending or vice versa when the sort key setting is set to the 
+        same sort key twice in a row. In other words, this class will flip the 
+        sort order when a user clicks on the same column in a list view twice
+        in a row. '''
     
     __metaclass__ = patterns.Singleton
     
@@ -65,10 +66,11 @@ class Sorter(patterns.ObservableListObserver):
         return [task for task in self if task.parent() is None]
 
     def __createSortKey(self):
-        ''' __getSortKey returns a list of values to be used for sorting. Which values
-            are returned by this method depend on sort settings such
-            as __sortKey (obviously), __sortByStatusFirst and __sortCaseSensitive. 
-            __getSortKey result is passed to the builtin list.sort method for efficient sorting. '''
+        ''' __getSortKey returns a list of values to be used for sorting. Which 
+            values are returned by this method depend on sort settings such
+            as __sortKey (obviously), __sortByStatusFirst and 
+            __sortCaseSensitive. __getSortKey result is passed to the builtin 
+            list.sort method for efficient sorting. '''
         statusSortKey = self.__createStatusSortKey()
         regularSortKey = self.__createRegularSortKey()
         return lambda task: statusSortKey(task) + regularSortKey(task)

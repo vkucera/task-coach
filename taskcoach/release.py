@@ -40,6 +40,7 @@ def ftpToChello():
         ('TaskCoach-%s.tar.gz', 'TaskCoach-%s.zip', 'TaskCoach-%s-win32.exe')])
     chello.put(glob.glob('*'))
     chello.quit()
+    os.chdir('..')
 
 def scpToSourceForge():
     os.system('scp dist/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
