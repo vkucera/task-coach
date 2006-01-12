@@ -1,4 +1,5 @@
 import patterns, wx, time
+import dateandtime
 
 class Clock(patterns.Observable):
     __metaclass__ = patterns.Singleton
@@ -17,9 +18,17 @@ class Clock(patterns.Observable):
         self._clock = wx.PyTimer(self.notify)
         self._clock.Start(milliseconds=1000, oneShot=False)
         
-    def notify(self, *args, **kwargs):
+    def notify(self, now=None, *args, **kwargs):
         self.notifyObservers(patterns.Notification(source=self))
+        now = now or dateandtime.DateTime.now()
+        now = now.replace(microsecond=0)
+        self.notifyObservers(patterns.Notification(source=self), now)
    
+    def registerObserver(self, callback, time=None):
+        if time:
+            time = time.replace(microsecond=0)
+        super(Clock, self).registerObserver(callback, time)
+        
         
 class ClockObserver(object):    
     def startClock(self):
