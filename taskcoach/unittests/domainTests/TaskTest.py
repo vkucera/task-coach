@@ -15,7 +15,7 @@ twoHours = date.TimeDelta(hours=2)
 threeHours = date.TimeDelta(hours=3)
 
 
-class TaskTestCase(test.TestCase):
+class TaskTestCase(test.wxTestCase):
     taskCreationKeywordArguments = [{}]
     
     def setUp(self):
@@ -32,6 +32,10 @@ class TaskTestCase(test.TestCase):
         start = date.DateTime(2005,1,1)
         task.addEffort(effort.Effort(task, start, start+hours))
 
+    def assertReminder(self, expectedReminder, task=None):
+        task = task or self.task
+        self.assertEqual(expectedReminder, task.reminder())
+        
         
 class CommonTaskTests(asserts.TaskAsserts):
     ''' These tests should succeed for all tasks, regardless of state. '''
@@ -116,7 +120,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testTaskPriorityIsZeroByDefault(self):
         self.assertEqual(0, self.task.priority())
 
-
+    def testTestHasNoReminderSetByDefault(self):
+        self.assertReminder(None)
         
     # move these to another fixture?
     def testSetCompletionDateMakesTaskCompleted(self):
@@ -367,7 +372,6 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task2.setBudget(oneHour)
         self.addEffort(oneHour, self.task2)
         self.assertEqual(zeroHour, self.task.budgetLeft(recursive=True))
-        
 
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
@@ -390,7 +394,6 @@ class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
 
     def testTimeSpentRecursivelyIsZero(self):
         self.assertEqual(date.TimeDelta(), self.task.timeSpent(recursive=True))
-
         
 
 class TaskWithEffortTestCase(TaskTestCase):
@@ -507,7 +510,6 @@ class TaskWithBudgetTest(TaskTestCase, CommonTaskTests):
     def expectedBudget(self):
         return self.taskCreationKeywordArguments[0]['budget']
     
-    
     def testBudget(self):
         self.assertEqual(self.expectedBudget(), self.task.budget())
 
@@ -540,7 +542,42 @@ class TaskWithBudgetTest(TaskTestCase, CommonTaskTests):
         self.assertEqual(twoHours, copy.budget())
         
 
-                         
+class TaskReminderTest(TaskTestCase):
+    taskCreationKeywordArguments = [{'reminder': date.DateTime(2005,1,1)}]
+
+    def setUp(self):
+        self.notifications = 0
+        super(TaskReminderTest, self).setUp()
+        
+    def onNotify(self, *args, **kwargs):
+        self.notifications += 1
+        
+    def testReminder(self):
+        self.assertReminder(self.taskCreationKeywordArguments[0]['reminder'])
+        
+    def testSetReminder(self):
+        someOtherTime = date.DateTime(2005,1,2)
+        self.task.setReminder(someOtherTime)
+        self.assertReminder(someOtherTime)
+
+    def testCancelReminder(self):
+        self.task.setReminder()
+        self.assertReminder(None)
+        
+    def testTaskNotifiesObserversOfReminder(self):
+        self.task.registerObserver(self.onNotify, 'reminder')
+        realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=1)
+        self.task.setReminder(realSoonNow)
+        date.Clock().notify(now=realSoonNow)
+        self.assertEqual(1, self.notifications)
+            
+    def testSetReminderCancelsPreviousReminder(self):
+        self.task.registerObserver(self.onNotify, 'reminder')
+        realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=1)
+        self.task.setReminder(realSoonNow)
+        self.task.setReminder(realSoonNow)
+        date.Clock().notify(now=realSoonNow)
+        self.assertEqual(1, self.notifications)
                          
 ##################
 
