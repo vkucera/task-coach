@@ -79,7 +79,7 @@ pages['features'] = \
         <UL>
             <LI>Creating, editing, and deleting tasks and subtasks.
             <LI>Tasks have a subject, description, priority, start date, 
-            due date and a completion date.
+            due date, a completion date and an optional reminder.
             <LI>Tasks can be viewed as a list or as a tree.
             <LI>Tasks can be sorted by all task attributes, e.g. subject,
             budget, budget left, due date, etc.
@@ -98,11 +98,9 @@ pages['features'] = \
             <LI>The %(name)s file format (.tsk) is XML. 
         </UL>
         <H3>Missing features</H3>
-        Features that you might expect, but are currently missing, are:
-        <UL>
-            <LI>Reminders
-            <LI>Printing
-        </UL>
+        <P>The main feature that is currently missing is the possibility to
+        print/export reports. 
+        </P>
         <H3>Requested features</H3>
         See <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">feature requests</A>.
         </P>'''
