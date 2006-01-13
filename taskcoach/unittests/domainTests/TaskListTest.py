@@ -26,7 +26,7 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def testGetItem(self):
         self.taskList.append(self.task1)
         self.assertTaskList([self.task1])
-
+        
     def testCompareEmptyList(self):
         self.assertEqual(self.taskList, self.taskList)
 
@@ -318,3 +318,19 @@ class TaskListTaskCategoriesTest(test.TestCase):
         self.task2.addCategory('test')
         self.taskList.append(self.task2)
         self.assertCategoriesEquals(['test', 'new'])
+
+
+class ReminderTest(test.TestCase):
+    def setUp(self):
+        self.task = task.Task(reminder=date.DateTime(2005,1,1))
+        self.taskList = task.TaskList()
+        self.taskList.append(self.task)
+        self.taskList.registerObserver(self.onNotifyReminder, 'reminder')
+        self.notifications = 0
+        
+    def onNotifyReminder(self, *args, **kwargs):
+        self.notifications += 1
+        
+    def testTaskListNotifiesObserversOfTaskReminder(self):
+        date.Clock().notify(date.DateTime(2005,1,1))
+        self.assertEqual(1, self.notifications)

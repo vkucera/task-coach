@@ -35,7 +35,7 @@ class IntegrationTest(IntegrationTestCase):
             startdate=date.Yesterday(), duedate=date.Tomorrow(), 
             completiondate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
             priority=4, lastModificationTime=date.DateTime(2004,1,1), 
-            hourlyFee=100.5, fixedFee=1000)
+            hourlyFee=100.5, fixedFee=1000, reminder=date.DateTime(2004,1,1))
         self.child = task.Task()
         self.task.addChild(self.child)
         self.grandChild = task.Task()
@@ -111,4 +111,10 @@ class IntegrationTest(IntegrationTestCase):
 
     def testFixedFee(self):
         self.assertAttributeWrittenAndRead(self.task, 'fixedFee')
+
+    def testReminder(self):
+        self.assertAttributeWrittenAndRead(self.task, 'reminder')
+        
+    def testNoReminder(self):
+        self.assertAttributeWrittenAndRead(self.task2, 'reminder')
         

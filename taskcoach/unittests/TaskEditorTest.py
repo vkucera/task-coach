@@ -53,6 +53,9 @@ class TaskEditorTestCase(test.wxTestCase):
     def setDescription(self, newDescription, index=0):
         self.editor[index][0].setDescription(newDescription)
 
+    def setReminder(self, newReminderDateTime, index=0):
+        self.editor[index][1].setReminder(newReminderDateTime)
+        
 
 class NewTaskTest(TaskEditorTestCase):
     def createCommand(self):
@@ -95,7 +98,13 @@ class NewTaskTest(TaskEditorTestCase):
         self.editor.ok()
         self.assertEqual('Description', self.task.description())
 
-
+    def testSetReminder(self):
+        reminderDateTime = date.DateTime(2005,1,1)
+        self.setReminder(reminderDateTime)
+        self.editor.ok()
+        self.assertEqual(reminderDateTime, self.task.reminder())
+        
+        
 class NewSubTaskTest(TaskEditorTestCase):
     def createCommand(self):
         newSubTaskCommand = command.NewSubTaskCommand(self.taskList, [self.task])

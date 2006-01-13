@@ -92,11 +92,13 @@ class DatesPage(widgets.BookPage):
         self._task = task
         self._startDateEntry = DateEntry(self, task.startDate())
         self._dueDateEntry = DateEntry(self, task.dueDate())
-        self._completionDateEntry = DateEntry(self, task.completionDate())        
+        self._completionDateEntry = DateEntry(self, task.completionDate())
+        self._reminderDateTimeEntry = widgets.DateTimeCtrl(self, task.reminder())     
         entriesArgs = [['', _('For this task')],
                        [_('Start date'), self._startDateEntry],
                        [_('Due date'), self._dueDateEntry],
-                       [_('Completion date'), self._completionDateEntry]]    
+                       [_('Completion date'), self._completionDateEntry],
+                       [_('Reminder'), self._reminderDateTimeEntry]]    
         if task.children():
             entriesArgs[0].append(_('For this task including all subtasks'))
             entriesArgs[1].append(DateEntry(self, task.startDate(recursive=True), readonly=True))
@@ -109,7 +111,11 @@ class DatesPage(widgets.BookPage):
         self._task.setStartDate(self._startDateEntry.get())
         self._task.setDueDate(self._dueDateEntry.get())
         self._task.setCompletionDate(self._completionDateEntry.get())
+        self._task.setReminder(self._reminderDateTimeEntry.GetValue())
 
+    def setReminder(self, newReminder):
+        self._reminderDateTimeEntry.SetValue(newReminder)
+        
 
 class BudgetPage(widgets.BookPage):
     def __init__(self, parent, task, *args, **kwargs):

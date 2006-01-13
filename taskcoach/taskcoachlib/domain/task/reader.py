@@ -29,13 +29,14 @@ class XMLReader:
         completionDate = date.parseDate(taskNode.getAttribute('completiondate'))
         budget = date.parseTimeDelta(taskNode.getAttribute('budget'))
         priority = self.__parseInteger(taskNode.getAttribute('priority'))
-        lastModificationTime = self.__parseLastModificationTime(taskNode.getAttribute('lastModificationTime'))
+        lastModificationTime = self.__parseDateTime(taskNode.getAttribute('lastModificationTime'))
         hourlyFee = self.__parseFloat(taskNode.getAttribute('hourlyFee'))
         fixedFee = self.__parseFloat(taskNode.getAttribute('fixedFee'))
+        reminder = self.__parseDateTime(taskNode.getAttribute('reminder'))
         parent = task.Task(subject, description, id_=id, startdate=startDate, duedate=dueDate, 
             completiondate=completionDate, budget=budget, priority=priority, 
             lastModificationTime=lastModificationTime, hourlyFee=hourlyFee,
-            fixedFee=fixedFee)
+            fixedFee=fixedFee, reminder=reminder)
         for category in self.__parseCategoryNodes(taskNode.childNodes):
             parent.addCategory(category)
         for child in self.__parseTaskNodes(taskNode.childNodes):
@@ -76,15 +77,15 @@ class XMLReader:
             else:
                 description = ''
         return description
-
+    
     def __parseInteger(self, integerText):
         return self.__parse(integerText, int, 0)
 
     def __parseFloat(self, floatText):
         return self.__parse(floatText, float, 0.0)
                     
-    def __parseLastModificationTime(self, lastModificationTimeText):
-        return self.__parse(lastModificationTimeText, date.parseDateTime, None)
+    def __parseDateTime(self, dateTimeText):
+        return self.__parse(dateTimeText, date.parseDateTime, None)
         
     def __parse(self, text, parseFunction, defaultValue):
         try:

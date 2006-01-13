@@ -89,8 +89,11 @@ class DateTimeCtrl(Panel):
     def __init__(self, parent, dateTime, callback=None, noneAllowed=True, *args, **kwargs):
         self._noneAllowed = noneAllowed
         super(DateTimeCtrl, self).__init__(parent, callback, *args, **kwargs)
-        self._callback = callback
+        self._callback = callback or self.__nullCallback
         self.SetValue(dateTime)
+        
+    def __nullCallback(self, *args, **kwargs):
+        pass
         
     def _createControls(self, callback):
         self._dateCtrl = DateCtrl(self, self._dateCtrlCallback, self._noneAllowed)

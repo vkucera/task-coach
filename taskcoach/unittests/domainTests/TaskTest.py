@@ -23,7 +23,7 @@ class TaskTestCase(test.wxTestCase):
         self.task = self.tasks[0]
         for index, task in enumerate(self.tasks):
             setattr(self, 'task%d'%(index+1), task)
-        
+            
     def createTasks(self):
         return [task.Task(**kwargs) for kwargs in self.taskCreationKeywordArguments]
 
@@ -540,20 +540,28 @@ class TaskWithBudgetTest(TaskTestCase, CommonTaskTests):
         self.assertEqual(copy.budget(), self.task.budget())
         self.task.setBudget(oneHour)
         self.assertEqual(twoHours, copy.budget())
-        
 
-class TaskReminderTest(TaskTestCase):
+
+class TaskReminderTestCase(TaskTestCase):
     taskCreationKeywordArguments = [{'reminder': date.DateTime(2005,1,1)}]
 
     def setUp(self):
-        self.notifications = 0
-        super(TaskReminderTest, self).setUp()
+        self.clock = date.Clock() # make sure there is someting to delete
+        date.Clock.deleteInstance() # make sure the old instance is deleted
+        self.clock = date.Clock() # create a shiny new clock
+        super(TaskReminderTestCase, self).setUp()
         
-    def onNotify(self, *args, **kwargs):
-        self.notifications += 1
-        
+    def initialReminder(self):
+        return self.taskCreationKeywordArguments[0]['reminder']
+    
+    
+class TaskReminderTest(TaskReminderTestCase):
     def testReminder(self):
-        self.assertReminder(self.taskCreationKeywordArguments[0]['reminder'])
+        self.assertReminder(self.initialReminder())
+    
+    def testTaskIsObservingClock(self):
+        self.assertEqual([self.task.onReminder], 
+            self.clock.observers(self.initialReminder()))
         
     def testSetReminder(self):
         someOtherTime = date.DateTime(2005,1,2)
@@ -564,21 +572,44 @@ class TaskReminderTest(TaskTestCase):
         self.task.setReminder()
         self.assertReminder(None)
         
-    def testTaskNotifiesObserversOfReminder(self):
+    def testTaskDoesNotObserveTheClockAfterReminderIsCancelled(self):
+        self.task.setReminder()
+        self.assertEqual([], self.clock.observers())
+
+    def testTaskDoesNotObserveTheClockAfterReminderHasFired(self):
+        self.clock.notify(self.initialReminder())
+        self.assertEqual([], self.clock.observers())
+        
+        
+class TaskReminderNotificationTest(TaskReminderTestCase):        
+    def setUp(self):
+        super(TaskReminderNotificationTest, self).setUp()
         self.task.registerObserver(self.onNotify, 'reminder')
-        realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=1)
-        self.task.setReminder(realSoonNow)
-        date.Clock().notify(now=realSoonNow)
-        self.assertEqual(1, self.notifications)
+        self.notifications = 0
+        
+    def onNotify(self, *args, **kwargs):
+        self.notifications += 1
+        
+    def assertNotified(self, expectedNumberOfNotifications=1):
+        self.assertEqual(expectedNumberOfNotifications, self.notifications)
+        
+    def testTaskNotifiesObserverOfReminder(self):
+        self.clock.notify(self.initialReminder())
+        self.assertNotified()
+        
+    def testTaskNotifiesObserverOfNewReminder(self):
+        newReminder = date.DateTime.now() + date.TimeDelta(seconds=1)
+        self.task.setReminder(newReminder)
+        self.clock.notify(now=newReminder)
+        self.assertNotified()
             
-    def testSetReminderCancelsPreviousReminder(self):
-        self.task.registerObserver(self.onNotify, 'reminder')
-        realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=1)
-        self.task.setReminder(realSoonNow)
-        self.task.setReminder(realSoonNow)
-        date.Clock().notify(now=realSoonNow)
-        self.assertEqual(1, self.notifications)
-                         
+    def testNewReminderCancelsPreviousReminder(self):
+        newReminder = date.DateTime.now() + date.TimeDelta(seconds=1)
+        self.task.setReminder(newReminder)
+        self.clock.notify(now=self.initialReminder())
+        self.assertNotified(0)
+        
+        
 ##################
 
 class TaskNotificationTestCase(TaskTestCase):
@@ -929,6 +960,10 @@ class TaskLastModificationTimeTest(test.TestCase):
         self.task.setLastModificationTime(self.time)
         child.addEffort(effort.Effort(child))
         self.assertEqualTimes(self.time, self.task.lastModificationTime())
+        
+    def testSetReminderAffectsLastModificationTime(self):
+        self.task.setReminder(date.DateTime.now())
+        self.assertLastModificationTimeIsNow(self.task)
         
     def testGetLastModifictionTimeRecursively(self):
         child = task.Task()

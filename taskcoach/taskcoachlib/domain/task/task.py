@@ -26,7 +26,8 @@ class Task(patterns.Observable):
         self._priority       = priority
         self._hourlyFee      = hourlyFee
         self._fixedFee       = fixedFee
-        self._reminder       = reminder
+        self._reminder       = None
+        self.setReminder(reminder)
         self.setLastModificationTime(lastModificationTime)
         relations.TaskRelationshipManager().startManaging(self)
         
@@ -358,8 +359,9 @@ class Task(patterns.Observable):
         clock = date.Clock()
         if self._reminder:
             clock.removeObserver(self.onReminder)
-        self._reminder = reminderDateTime
-        clock.registerObserver(self.onReminder, self._reminder)
+        self.__setAttributeAndNotifyObservers('_reminder', reminderDateTime)
+        if self._reminder:
+            clock.registerObserver(self.onReminder, self._reminder)
         
     def onReminder(self, *args, **kwargs):
         self.notifyObservers(patterns.Notification(self), 'reminder')
