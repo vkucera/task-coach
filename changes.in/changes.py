@@ -3,12 +3,14 @@
 from domain import *
 
 releases = [
-Release('0.55', 'January ?, 2006',
+Release('0.55', 'January 13, 2006',
     dependenciesChanged=[
         Dependency('''Task Coach now requires wxPython 2.6.1.0-unicode or newer
 (this is only relevant if you use the source distribution).''')],
     bugsFixed=[
-        Bug('''Sorting by total budget was broken.''', '1399116')]),
+        Bug('''Sorting by total budget was broken.''', '1399116')],
+    featuresAdded=[
+        Feature('''Simple reminders.''', '1372932')]),
 
 Release('0.54', 'January 6, 2006',
     bugsFixed=[
