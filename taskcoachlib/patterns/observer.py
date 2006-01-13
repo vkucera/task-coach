@@ -110,49 +110,49 @@ class ObservablesList(List):
     
     def __init__(self, initList=None, *args, **kwargs):
         super(ObservablesList, self).__init__(initList or [], *args, **kwargs)
-        self.__subscribe(*(initList or []))
+        self._subscribe(*(initList or []))
         
     def onNotify(self, notification, *args, **kwargs):
         ''' This method is called by items in the list when they change. 
             Override to react to those changes. '''
         pass
     
-    def __subscribe(self, *observables):
-        ''' Private method to subscribe to one or more observables. '''
+    def _subscribe(self, *observables):
+        ''' Subscribe to one or more observables. '''
         for observable in observables:
             observable.registerObserver(self.onNotify)
             
-    def __unsubscribe(self, *observables):
-        ''' Private method to unsubcribe to one or more observables. '''
+    def _unsubscribe(self, *observables):
+        ''' Unsubcribe from one or more observables. '''
         for observable in observables:
             observable.removeObserver(self.onNotify)
         
     def append(self, observable):
         super(ObservablesList, self).append(observable)
-        self.__subscribe(observable)
+        self._subscribe(observable)
 
     def extend(self, observables):
         super(ObservablesList, self).extend(observables)
-        self.__subscribe(*observables)
+        self._subscribe(*observables)
     
     def insert(self, index, observable):
         super(ObservablesList, self).insert(index, observable)
-        self.__subscribe(observable)
+        self._subscribe(observable)
         
     def __delitem__(self, index):
-        self.__unsubscribe(self[index])
+        self._unsubscribe(self[index])
         super(ObservablesList, self).__delitem__(index)
     
     def __delslice__(self, *slice):
-        self.__unsubscribe(*self.__getslice__(*slice))
+        self._unsubscribe(*self.__getslice__(*slice))
         super(ObservablesList, self).__delslice__(*slice)    
 
     def remove(self, observable):
-        self.__unsubscribe(observable)
+        self._unsubscribe(observable)
         super(ObservablesList, self).remove(observable)
     
     def removeItems(self, observables):
-        self.__unsubscribe(*observables)
+        self._unsubscribe(*observables)
         super(ObservablesList, self).removeItems(observables)
         
         

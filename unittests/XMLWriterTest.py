@@ -140,4 +140,10 @@ class XMLWriterTest(test.TestCase):
     def testFixedFee(self):
         self.task.setFixedFee(1000)
         self.assertTaskAttribute('1000', 'fixedFee')
+
+    def testNoReminder(self):
+        self.assertTaskAttribute(str(self.task.reminder()), 'reminder')
         
+    def testReminder(self):
+        self.task.setReminder(date.DateTime(2005, 5, 7, 13, 15, 10))
+        self.assertTaskAttribute(str(self.task.reminder()), 'reminder')

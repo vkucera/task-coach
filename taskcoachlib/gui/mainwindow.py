@@ -1,5 +1,6 @@
 import wx, meta, patterns, widgets, command
-import viewer, viewercontainer, viewerfactory, help, find, toolbar, uicommand
+import viewer, viewercontainer, viewerfactory, help, find, toolbar, uicommand,\
+    remindercontroller
 from i18n import _
 import domain.task as task
 import domain.effort as effort
@@ -70,6 +71,7 @@ class MainWindow(WindowWithPersistentDimensions):
         import menu
         self.SetMenuBar(menu.MainMenu(self, self.uiCommands, self.settings))
         self.createTaskBarIcon(self.uiCommands)
+        self.reminderController = remindercontroller.ReminderController(self.taskFile)
         
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)

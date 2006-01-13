@@ -54,10 +54,18 @@ class XMLReaderVersion10Test(XMLReaderTestCase):
         tasks = self.writeAndRead('<tasks><task/></tasks>')
         self.assertEqual(0, tasks[0].hourlyFee())
         self.assertEqual(0, tasks[0].fixedFee())
+
+
+class XMLReaderVersion10Test(XMLReaderTestCase):
+    tskversion = 11
+    
+    def testReadTaskWithoutReminder(self):
+        tasks = self.writeAndRead('<tasks><task/></tasks>')
+        self.assertEqual(None, tasks[0].reminder())
         
 
 class XMLReaderTest(XMLReaderTestCase):   
-    tskversion = 11
+    tskversion = 12
            
     def testReadEmptyStream(self):
         try:
@@ -170,4 +178,12 @@ class XMLReaderTest(XMLReaderTestCase):
     def testFixedFee(self):
         tasks = self.writeAndRead('<tasks><task fixedFee="240.50"/></tasks>')
         self.assertEqual(240.5, tasks[0].fixedFee())
+
+    def testNoReminder(self):
+        tasks = self.writeAndRead('<tasks><task reminder="None"/></tasks>')
+        self.assertEqual(None, tasks[0].reminder())
+        
+    def testReminder(self):
+        tasks = self.writeAndRead('<tasks><task reminder="2004-01-01 10:00:00.123000"/></tasks>')
+        self.assertEqual(date.DateTime(2004,1,1,10,0,0,123000), tasks[0].reminder())
         
