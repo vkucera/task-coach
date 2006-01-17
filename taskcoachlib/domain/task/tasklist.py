@@ -1,12 +1,13 @@
 import patterns, sets
 from i18n import _
 import domain.date as date
-import task
+import task#, relations
 
-
+            
 class TaskList(patterns.ObservableObservablesList):
     def __init__(self, initList=None, *args, **kwargs):
         super(TaskList, self).__init__(*args, **kwargs)
+        # self.__taskRelationshipManager = relations.TaskRelationshipManager(taskList=self)
         self.extend(initList or [])
         
     def _subscribe(self, *tasks):

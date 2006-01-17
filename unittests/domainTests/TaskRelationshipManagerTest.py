@@ -1,14 +1,17 @@
-import test
+import test, config
 import domain.task as task
 import domain.date as date
+import domain.effort as effort
 
-class TaskRelationshipManagerTestCase(test.TestCase):
+class TaskRelationshipManagerTest(test.TestCase):
     def setUp(self):
         self.parent = task.Task()
         self.child = task.Task()
         self.parent.addChild(self.child)
         self.child2 = task.Task()
         self.grandchild = task.Task()
+        self.taskList = task.TaskList([self.parent, self.child2, self.grandchild])
+        self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskList)
         
     # completion date:
                
@@ -88,6 +91,16 @@ class TaskRelationshipManagerTestCase(test.TestCase):
         self.parent.removeChild(self.child2)
         self.failUnless(self.parent.completed())
         
+    def testDontMarkOnlyChildCompletedWhenSettingIsOff(self):
+        self.child.setCompletionDate()
+        self.failUnless(self.parent.completed())
+        
+    def testMarkTaskCompletedStopsEffortTracking(self):
+        self.child.addEffort(effort.Effort(self.child))
+        self.child.setCompletionDate()
+        self.failIf(self.child.isBeingTracked())
+    
+        
     # due date:
         
     def testAddChildWithoutDueDateToParentWithoutDueDate(self):
@@ -165,3 +178,19 @@ class TaskRelationshipManagerTestCase(test.TestCase):
     def testSetChildStartDateEarlierThanParentStartDate(self):
         self.child.setStartDate(date.Yesterday())
         self.assertEqual(date.Yesterday(), self.parent.startDate())
+
+
+class TaskRelationshipManagerTestWhenMarkParentCompletedAutomaticallyIsOff(test.TestCase):       
+    def setUp(self):
+        self.parent = task.Task()
+        self.child = task.Task()
+        self.parent.addChild(self.child)
+        self.child2 = task.Task()
+        self.grandchild = task.Task()
+        settings = config.Settings(load=False)
+        settings.set('behaviour', 'markparentcompletedwhenallchildrencompleted', 'False')
+        
+    def XtestDontMarkOnlyChildCompleted(self):
+        self.child.setCompletionDate()
+        self.failIf(self.parent.completed())
+        

@@ -1,4 +1,5 @@
-import test, asserts, patterns
+import test, patterns
+import unittests.asserts as asserts
 
 class HistoryTest(test.TestCase, asserts.CommandAsserts):
     def setUp(self):

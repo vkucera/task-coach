@@ -200,9 +200,9 @@ class ObservableObservablesList(ObservableList, ObservablesList):
     ''' A list of observables that is observable. '''
     
     def onNotify(self, notification, *args, **kwargs):
-        notification['itemsChanged'] = [notification.source]
-        notification['source'] = self
-        self.notifyObservers(notification)
+        myNotification = Notification(self, itemsChanged=[notification.source],
+            changeNeedsSave=notification.changeNeedsSave)
+        self.notifyObservers(myNotification)
 
 
 class ObservableListObserver(ObservableList):
