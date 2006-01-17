@@ -1,4 +1,4 @@
-import patterns, time, copy, sets, relations
+import patterns, time, copy, sets
 import domain.date as date
 
 
@@ -29,11 +29,7 @@ class Task(patterns.Observable):
         self._reminder       = None
         self.setReminder(reminder)
         self.setLastModificationTime(lastModificationTime)
-        relations.TaskRelationshipManager().startManaging(self)
-        
-    def __del__(self):
-        relations.TaskRelationshipManager().stopManaging(self)
-        
+            
     def onNotify(self, notification, *args, **kwargs):
         notification = patterns.observer.Notification(self,  
             itemsChanged=[notification.source], effortsChanged=notification.effortsChanged)

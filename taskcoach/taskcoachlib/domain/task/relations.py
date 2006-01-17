@@ -3,12 +3,24 @@ RelationshipManager does not (at the moment) keep of list of relations, but
 instead alters objects based on their relations. For example, if a task is
 marked completed, the RelationshipManager will mark all children completed. '''
 
-import patterns
+import patterns, config
 import domain.date as date
 
-class TaskRelationshipManager:
-    __metaclass__ = patterns.Singleton
-    
+class TaskRelationshipManager(object):
+    def __init__(self, *args, **kwargs):
+        #self.__settings = kwargs.pop('settings')
+        taskList = kwargs.pop('taskList')
+        for task in taskList:
+            self.startManaging(task)
+        taskList.registerObserver(self.onTaskListChanged)    
+        super(TaskRelationshipManager, self).__init__(*args, **kwargs)
+
+    def onTaskListChanged(self, notification):
+        for task in notification.itemsAdded:
+            self.startManaging(task)
+        for task in notification.itemsRemoved:
+            self.stopManaging(task)
+            
     def startManaging(self, task):
         task.registerObserver(self.onNotify)
         

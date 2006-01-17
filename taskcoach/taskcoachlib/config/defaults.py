@@ -1,5 +1,5 @@
 defaults = { \
-'view' : { \
+'view': { \
     'finddialog': 'False',
     'statusbar': 'True',
     'toolbar': '(32, 32)',
@@ -46,23 +46,25 @@ defaults = { \
     'sortcasesensitive': 'True',
     'tasksearchfilterstring': '',
     'tasksearchfiltermatchcase': 'False' },
-'window' : { \
+'window': { \
     'size': '(600, 500)',
     'position': '(0, 0)',
     'iconized': 'False',
     'splash': 'True',
     'hidewheniconized': 'True',
     'hidewhenclosed': 'False' },
-'file' : { \
+'file': { \
     'recentfiles': '[]',
     'maxrecentfiles': '4',
     'lastfile': '',
     'autosave': 'False',
     'backup': 'False' },
-'color' : { \
+'color': { \
     'activetasks': '(0, 0, 0)',
     'completedtasks': '(0, 255, 0)',
     'overduetasks': '(255, 0, 0)',
     'inactivetasks': '(192, 192, 192)',
-    'duetodaytasks': '(255, 128, 0)'}}
+    'duetodaytasks': '(255, 128, 0)'},
+'behaviour': { \
+    'markparentcompletedwhenallchildrencompleted': 'True'}}
 

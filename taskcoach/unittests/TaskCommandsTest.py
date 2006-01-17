@@ -10,7 +10,8 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
         self.task2 = task.Task('task2')
         self.taskList.append(self.task1)
         self.originalList = [self.task1]
-
+        self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskList)
+        
     def tearDown(self):
         task.Clipboard().clear()
         patterns.CommandHistory().clear()
@@ -64,7 +65,7 @@ class CommandWithChildrenTestCase(CommandTestCase):
         self.child.addChild(self.grandchild)
         self.originalList.extend([self.parent, self.child, self.child2, self.grandchild])
         self.taskList.append(self.parent)
-
+        
 
 class CommandWithEffortTestCase(CommandTestCase):
     def setUp(self):

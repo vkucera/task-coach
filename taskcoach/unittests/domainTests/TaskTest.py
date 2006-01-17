@@ -447,10 +447,6 @@ class TaskWithActiveEffort(TaskWithEffortTestCase, CommonTaskTests):
         self.task.stopTracking()
         self.failIf(self.task.isBeingTracked())
         
-    def testMarkTaskCompletedStopsEffortTracking(self):
-        self.task.setCompletionDate()
-        self.failIf(self.task.isBeingTracked())
-
 
 class TaskWithChildAndEffortTest(TaskWithEffortTestCase, CommonTaskTests):
     taskCreationKeywordArguments = [{}, {}]
