@@ -3,6 +3,9 @@
 from domain import *
 
 releases = [
+Release('0.56', 'January ?, 2006',
+    featureAdded=[]),
+                   
 Release('0.55', 'January 13, 2006',
     dependenciesChanged=[
         Dependency('''Task Coach now requires wxPython 2.6.1.0-unicode or newer
