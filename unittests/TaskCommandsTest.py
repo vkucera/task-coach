@@ -1,4 +1,4 @@
-import test, asserts, command, patterns, dummy
+import test, asserts, command, patterns, dummy, config
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
@@ -10,7 +10,9 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
         self.task2 = task.Task('task2')
         self.taskList.append(self.task1)
         self.originalList = [self.task1]
-        self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskList)
+        self.taskRelationshipManager = \
+            task.TaskRelationshipManager(taskList=self.taskList,
+                                         settings=config.Settings(load=False))
         
     def tearDown(self):
         task.Clipboard().clear()

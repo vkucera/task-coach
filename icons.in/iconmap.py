@@ -54,7 +54,8 @@ iconlist = [
 ('revenue', 'apps', 'kchart', [22, 32]),
 ('colorize', 'actions', 'colorize', [22]),
 ('windows', 'apps', 'window_list', [22]),
-('email', 'apps', 'email', [16])]
+('email', 'apps', 'email', [16]),
+('behavior', 'actions', 'misc', [22])]
 
 icons = {}
 

@@ -44,7 +44,7 @@ class App(object):
         
         self.taskFile = task.TaskFile()
         self.autoSaver = task.AutoSaver(settings, self.taskFile)
-        self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskFile)
+        self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskFile, settings=settings)
         effortList = effort.EffortList(self.taskFile)
         self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
         categoryFilteredTaskList = task.filter.CategoryFilter(self.taskFile)

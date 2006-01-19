@@ -8,25 +8,19 @@ import domain.date as date
 
 class TaskRelationshipManager(object):
     def __init__(self, *args, **kwargs):
-        #self.__settings = kwargs.pop('settings')
+        self.__settings = kwargs.pop('settings')
         taskList = kwargs.pop('taskList')
         for task in taskList:
-            self.startManaging(task)
+            task.registerObserver(self.onNotify)
         taskList.registerObserver(self.onTaskListChanged)    
         super(TaskRelationshipManager, self).__init__(*args, **kwargs)
 
     def onTaskListChanged(self, notification):
         for task in notification.itemsAdded:
-            self.startManaging(task)
+            task.registerObserver(self.onNotify)
         for task in notification.itemsRemoved:
-            self.stopManaging(task)
-            
-    def startManaging(self, task):
-        task.registerObserver(self.onNotify)
-        
-    def stopManaging(self, task):
-        task.removeObserver(self.onNotify)
-    
+            task.removeObserver(self.onNotify)
+                
     def onNotify(self, notification):
         task = notification.source
         # NB: This assumes each notification has only one of the following flags
@@ -62,7 +56,9 @@ class TaskRelationshipManager(object):
             self.__markTaskUncompletedIfNecessary(parent)
                 
     def __markTaskCompletedIfNecessary(self, task, completionDate):
-        if task.allChildrenCompleted() and not task.completed():
+        if task.allChildrenCompleted() and not task.completed() and \
+            self.__settings.getboolean('behavior',
+                'markparentcompletedwhenallchildrencompleted'):
             task.setCompletionDate(completionDate)
         
     def __markTaskUncompletedIfNecessary(self, task):

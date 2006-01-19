@@ -65,6 +65,6 @@ defaults = { \
     'overduetasks': '(255, 0, 0)',
     'inactivetasks': '(192, 192, 192)',
     'duetodaytasks': '(255, 128, 0)'},
-'behaviour': { \
+'behavior': { \
     'markparentcompletedwhenallchildrencompleted': 'True'}}
 
