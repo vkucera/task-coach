@@ -57,10 +57,16 @@ class TaskRelationshipManager(object):
                 
     def __markTaskCompletedIfNecessary(self, task, completionDate):
         if task.allChildrenCompleted() and not task.completed() and \
-            self.__settings.getboolean('behavior',
-                'markparentcompletedwhenallchildrencompleted'):
+                self.__shouldMarkTaskCompletedWhenAllChildrenCompleted(task):
             task.setCompletionDate(completionDate)
-        
+    
+    def __shouldMarkTaskCompletedWhenAllChildrenCompleted(self, task):
+        shouldMarkCompletedAccordingToSetting = self.__settings.getboolean('behavior',
+            'markparentcompletedwhenallchildrencompleted')
+        shouldMarkCompletedAccordingToTask = task.shouldMarkCompletedWhenAllChildrenCompleted
+        return (shouldMarkCompletedAccordingToTask == True) or \
+            ((shouldMarkCompletedAccordingToTask == None) and shouldMarkCompletedAccordingToSetting)
+      
     def __markTaskUncompletedIfNecessary(self, task):
         if task.completed():
             task.setCompletionDate(date.Date())

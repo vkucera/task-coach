@@ -120,8 +120,11 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testTaskPriorityIsZeroByDefault(self):
         self.assertEqual(0, self.task.priority())
 
-    def testTestHasNoReminderSetByDefault(self):
+    def testTaskHasNoReminderSetByDefault(self):
         self.assertReminder(None)
+    
+    def testShouldMarkTaskCompletedWhenAllChildrenAreCompletedIsNoOpinionByDefault(self):
+        self.assertEqual(None, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
         
     # move these to another fixture?
     def testSetCompletionDateMakesTaskCompleted(self):
@@ -604,6 +607,42 @@ class TaskReminderNotificationTest(TaskReminderTestCase):
         self.task.setReminder(newReminder)
         self.clock.notify(now=self.initialReminder())
         self.assertNotified(0)
+
+
+class TaskSettingTestCase(TaskTestCase):
+    def setUp(self):
+        super(TaskSettingTestCase, self).setUp()
+        self.task.registerObserver(self.onNotifySettingChanged)
+        self.notifications = 0
+        
+    def onNotifySettingChanged(self, notification):
+        self.notifications += 1
+
+    
+class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueTest(TaskSettingTestCase):
+    taskCreationKeywordArguments = [{'shouldMarkCompletedWhenAllChildrenCompleted': True}]
+    
+    def testSetting(self):
+        self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+    
+    def testSetSetting(self):
+        self.task.shouldMarkCompletedWhenAllChildrenCompleted = False
+        self.assertEqual(False, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+
+    def testSetSettingCausesNotification(self):
+        self.task.shouldMarkCompletedWhenAllChildrenCompleted = False
+        self.assertEqual(1, self.notifications)
+        
+
+class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseTest(TaskTestCase):
+    taskCreationKeywordArguments = [{'shouldMarkCompletedWhenAllChildrenCompleted': False}]
+    
+    def testSetting(self):
+        self.assertEqual(False, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+    
+    def testSetSetting(self):
+        self.task.shouldMarkCompletedWhenAllChildrenCompleted = True
+        self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
         
         
 ##################

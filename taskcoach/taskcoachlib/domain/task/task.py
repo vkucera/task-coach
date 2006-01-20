@@ -9,7 +9,8 @@ class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, completiondate=None, parent=None, budget=None, 
             priority=0, id_=None, lastModificationTime=None, hourlyFee=0,
-            fixedFee=0, reminder=None, *args, **kwargs):
+            fixedFee=0, reminder=None, 
+            shouldMarkCompletedWhenAllChildrenCompleted=None, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
         self._subject        = subject
         self._description    = description 
@@ -28,6 +29,7 @@ class Task(patterns.Observable):
         self._fixedFee       = fixedFee
         self._reminder       = None
         self.setReminder(reminder)
+        self._shouldMarkCompletedWhenAllChildrenCompleted = shouldMarkCompletedWhenAllChildrenCompleted
         self.setLastModificationTime(lastModificationTime)
             
     def onNotify(self, notification, *args, **kwargs):
@@ -361,3 +363,17 @@ class Task(patterns.Observable):
         
     def onReminder(self, *args, **kwargs):
         self.notifyObservers(patterns.Notification(self), 'reminder')
+        
+    # behavior
+    
+    # To experiment, this attribute is coded by means of a proporty, which
+    # means you can set it like this: task.shouldMark... = True
+    
+    def __setShouldMarkCompletedWhenAllChildrenCompleted(self, newValue):
+        self.__setAttributeAndNotifyObservers('_shouldMarkCompletedWhenAllChildrenCompleted', newValue)
+        
+    def __getShouldMarkCompletedWhenAllChildrenCompleted(self):
+        return self._shouldMarkCompletedWhenAllChildrenCompleted
+    
+    shouldMarkCompletedWhenAllChildrenCompleted = property(fget=__getShouldMarkCompletedWhenAllChildrenCompleted,
+                                                           fset=__setShouldMarkCompletedWhenAllChildrenCompleted)
