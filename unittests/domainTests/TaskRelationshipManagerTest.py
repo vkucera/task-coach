@@ -154,13 +154,14 @@ class CommonTaskRelationshipManagerTests(object):
     def testSetChildStartDateEarlierThanParentStartDate(self):
         self.child.setStartDate(date.Yesterday())
         self.assertEqual(date.Yesterday(), self.parent.startDate())
-    
 
-class TaskRelationshipManagerTest(CommonTaskRelationshipManagerTests, test.TestCase):
-    markParentCompletedWhenAllChildrenCompleted = True
 
-    # completion date
-    
+class MarkParentTaskCompletedTests(object):
+    ''' Tests where we expect to parent task to be marked completed, based on
+        the fact that all children are completed. This happens when the global
+        setting is on and task is indifferent or the task specific setting is 
+        on. '''
+        
     def testMarkOnlyChildCompleted(self):
         self.child.setCompletionDate()
         self.failUnless(self.parent.completed())
@@ -184,22 +185,24 @@ class TaskRelationshipManagerTest(CommonTaskRelationshipManagerTests, test.TestC
         self.child.setCompletionDate()
         self.parent.removeChild(self.child2)
         self.failUnless(self.parent.completed())
-
-        
-class TaskRelationshipManagerTestWhenMarkParentCompletedAutomaticallyIsOff( \
-        CommonTaskRelationshipManagerTests, test.TestCase):
-    markParentCompletedWhenAllChildrenCompleted = False
-              
-    def testDontMarkOnlyChildCompleted(self):
+    
+    
+class DontMarkParentTaskCompletedTests(object):
+    ''' Tests where we expect to parent task not to be marked completed when 
+        all children are completed. This should be the case when the global
+        setting is off and task is indifferent or when the task specific 
+        setting is off. '''
+  
+    def testMarkOnlyChildCompletedDoesNotMarkParentCompleted(self):
         self.child.setCompletionDate()
         self.failIf(self.parent.completed())
 
-    def testDontMarkOnlyGrandchildCompleted(self):
+    def testMarkOnlyGrandchildCompletedDoesNotMarkParentCompleted(self):
         self.child.addChild(self.grandchild)
         self.grandchild.setCompletionDate()
         self.failIf(self.parent.completed())    
  
-    def testAddCompletedChildAsOnlyChild(self):
+    def testAddCompletedChildAsOnlyChildDoesNotMarkParentCompleted(self):
         self.grandchild.setCompletionDate()
         self.child.addChild(self.grandchild)
         self.failIf(self.child.completed())
@@ -208,10 +211,46 @@ class TaskRelationshipManagerTestWhenMarkParentCompletedAutomaticallyIsOff( \
         self.child.setCompletionDate(date.Yesterday())
         self.assertEqual(date.Date(), self.parent.completionDate())
 
-    def testRemoveLastUncompletedChild(self):
+    def testRemoveLastUncompletedChildDoesNotMarkParentCompleted(self):
         self.parent.addChild(self.child2)
         self.child.setCompletionDate()
         self.parent.removeChild(self.child2)
-        self.failIf(self.parent.completed())
+        self.failIf(self.parent.completed())        
 
+
+class MarkParentCompletedAutomaticallyIsOn(CommonTaskRelationshipManagerTests,
+                                           MarkParentTaskCompletedTests,
+                                           test.TestCase):
+    markParentCompletedWhenAllChildrenCompleted = True
+
+
+        
+class MarkParentCompletedAutomaticallyIsOff(CommonTaskRelationshipManagerTests,
+                                            DontMarkParentTaskCompletedTests,
+                                            test.TestCase):
+    markParentCompletedWhenAllChildrenCompleted = False
+              
+
+
+class MarkParentCompletedAutomaticallyIsOnButTaskSettingIsOff( \
+        CommonTaskRelationshipManagerTests, test.TestCase,
+        DontMarkParentTaskCompletedTests):
+    markParentCompletedWhenAllChildrenCompleted = True
+    
+    def setUp(self):
+        super(MarkParentCompletedAutomaticallyIsOnButTaskSettingIsOff, self).setUp()
+        self.parent.shouldMarkCompletedWhenAllChildrenCompleted = False
+        self.child.shouldMarkCompletedWhenAllChildrenCompleted = False
+
+
+class MarkParentCompletedAutomaticallyIsOffButTaskSettingIsOn( \
+        CommonTaskRelationshipManagerTests, test.TestCase,
+        MarkParentTaskCompletedTests):
+    markParentCompletedWhenAllChildrenCompleted = False
+
+    def setUp(self):
+        super(MarkParentCompletedAutomaticallyIsOffButTaskSettingIsOn, self).setUp()
+        self.parent.shouldMarkCompletedWhenAllChildrenCompleted = True
+        self.child.shouldMarkCompletedWhenAllChildrenCompleted = True
+    
     
