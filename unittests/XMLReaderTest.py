@@ -56,16 +56,24 @@ class XMLReaderVersion10Test(XMLReaderTestCase):
         self.assertEqual(0, tasks[0].fixedFee())
 
 
-class XMLReaderVersion10Test(XMLReaderTestCase):
+class XMLReaderVersion11Test(XMLReaderTestCase):
     tskversion = 11
     
     def testReadTaskWithoutReminder(self):
         tasks = self.writeAndRead('<tasks><task/></tasks>')
         self.assertEqual(None, tasks[0].reminder())
         
+        
+class XMLReaderVersion12Test(XMLReaderTestCase):
+    tskversion = 12
+    
+    def testReadTaskWithoutMarkCompletedWhenAllChildrenCompletedSetting(self):
+        tasks = self.writeAndRead('<tasks><task/></tasks>')
+        self.assertEqual(None, tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
+        
 
 class XMLReaderTest(XMLReaderTestCase):   
-    tskversion = 12
+    tskversion = 13
            
     def testReadEmptyStream(self):
         try:
@@ -187,3 +195,16 @@ class XMLReaderTest(XMLReaderTestCase):
         tasks = self.writeAndRead('<tasks><task reminder="2004-01-01 10:00:00.123000"/></tasks>')
         self.assertEqual(date.DateTime(2004,1,1,10,0,0,123000), tasks[0].reminder())
         
+    def testMarkCompletedWhenAllChildrenCompletedSetting_True(self):
+        tasks = self.writeAndRead('<tasks><task shouldMarkCompletedWhenAllChildrenCompleted="True"/></tasks>')
+        self.assertEqual(True, tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
+
+    def testMarkCompletedWhenAllChildrenCompletedSetting_False(self):
+        tasks = self.writeAndRead('<tasks><task shouldMarkCompletedWhenAllChildrenCompleted="False"/></tasks>')
+        self.assertEqual(False, tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
+ 
+    def testMarkCompletedWhenAllChildrenCompletedSetting_None(self):
+        tasks = self.writeAndRead('<tasks><task/></tasks>')
+        self.assertEqual(None, tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
+
+    

@@ -33,10 +33,12 @@ class XMLReader:
         hourlyFee = self.__parseFloat(taskNode.getAttribute('hourlyFee'))
         fixedFee = self.__parseFloat(taskNode.getAttribute('fixedFee'))
         reminder = self.__parseDateTime(taskNode.getAttribute('reminder'))
+        shouldMarkCompletedWhenAllChildrenCompleted = self.__parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted'))
         parent = task.Task(subject, description, id_=id, startdate=startDate, duedate=dueDate, 
             completiondate=completionDate, budget=budget, priority=priority, 
             lastModificationTime=lastModificationTime, hourlyFee=hourlyFee,
-            fixedFee=fixedFee, reminder=reminder)
+            fixedFee=fixedFee, reminder=reminder, 
+            shouldMarkCompletedWhenAllChildrenCompleted=shouldMarkCompletedWhenAllChildrenCompleted)
         for category in self.__parseCategoryNodes(taskNode.childNodes):
             parent.addCategory(category)
         for child in self.__parseTaskNodes(taskNode.childNodes):
@@ -86,6 +88,14 @@ class XMLReader:
                     
     def __parseDateTime(self, dateTimeText):
         return self.__parse(dateTimeText, date.parseDateTime, None)
+    
+    def __parseBoolean(self, booleanText):
+        def textToBoolean(text):
+            if text in ['True', 'False']:
+                return text == 'True'
+            else:
+                raise ValueError, "Expected 'True' or 'False'"
+        return self.__parse(booleanText, textToBoolean, None)
         
     def __parse(self, text, parseFunction, defaultValue):
         try:

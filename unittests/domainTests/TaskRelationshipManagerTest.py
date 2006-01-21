@@ -188,7 +188,7 @@ class MarkParentTaskCompletedTests(object):
     
     
 class DontMarkParentTaskCompletedTests(object):
-    ''' Tests where we expect to parent task not to be marked completed when 
+    ''' Tests where we expect the parent task not to be marked completed when 
         all children are completed. This should be the case when the global
         setting is off and task is indifferent or when the task specific 
         setting is off. '''
@@ -224,13 +224,11 @@ class MarkParentCompletedAutomaticallyIsOn(CommonTaskRelationshipManagerTests,
     markParentCompletedWhenAllChildrenCompleted = True
 
 
-        
 class MarkParentCompletedAutomaticallyIsOff(CommonTaskRelationshipManagerTests,
                                             DontMarkParentTaskCompletedTests,
                                             test.TestCase):
     markParentCompletedWhenAllChildrenCompleted = False
               
-
 
 class MarkParentCompletedAutomaticallyIsOnButTaskSettingIsOff( \
         CommonTaskRelationshipManagerTests, test.TestCase,

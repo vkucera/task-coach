@@ -229,6 +229,27 @@ class CategoriesPage(widgets.BookPage):
         self._textEntry.Clear()
 
 
+class BehaviorPage(widgets.BookPage):
+    def __init__(self, parent, task, *args, **kwargs):
+        super(BehaviorPage, self).__init__(parent, columns=2, growableColumn=1,
+            *args, **kwargs)
+        self._task = task
+        choice = self._markTaskCompletedEntry = wx.Choice(self)
+        for choiceValue, choiceText in [(None, _('Use application-wide setting')), 
+                                        (False, _('No')), (True, _('Yes'))]:
+            choice.Append(choiceText, choiceValue)
+            if choiceValue == task.shouldMarkCompletedWhenAllChildrenCompleted:
+                choice.SetSelection(choice.GetCount()-1)
+        if choice.GetSelection() == wx.NOT_FOUND: # force a selection if necessary
+            choice.SetSelection(0)
+        self.addEntry(_('Mark task completed when all children are completed?'),
+            self._markTaskCompletedEntry)
+            
+    def ok(self):
+        self._task.shouldMarkCompletedWhenAllChildrenCompleted = \
+            self._markTaskCompletedEntry.GetClientData(self._markTaskCompletedEntry.GetSelection())
+            
+        
 class TaskEditBook(widgets.Listbook):
     def __init__(self, parent, task, taskList, uiCommands, settings, 
                  categories, *args, **kwargs):
@@ -242,7 +263,7 @@ class TaskEditBook(widgets.Listbook):
         if task.timeSpent(recursive=True):
             effortPage = EffortPage(self, task, taskList, settings, uiCommands)
             self.AddPage(effortPage, _('Effort'), 'start')
-                  
+        self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior')         
 
 class EffortEditBook(widgets.BookPage):
     def __init__(self, parent, effort, editor, effortList, taskList, 
@@ -310,7 +331,7 @@ class EditorWithCommand(widgets.NotebookDialog):
         self._uiCommands = uiCommands
         self._command = command
         super(EditorWithCommand, self).__init__(parent, command.name(), *args, **kwargs)
-
+        
     def ok(self, *args, **kwargs):
         super(EditorWithCommand, self).ok(*args, **kwargs)
         self._command.do()

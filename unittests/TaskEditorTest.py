@@ -176,6 +176,11 @@ class EditTaskTest(TaskEditorTestCase):
     def testAddCategory_DontAllowEmptyCategory(self):
         self.editor[0][2]._textEntry.SetValue('')
         self.failIf(self.editor[0][2]._addButton.IsEnabled())
+        
+    def testBehaviorMarkCompleted(self):
+        self.editor[0][5]._markTaskCompletedEntry.SetStringSelection('Yes')
+        self.editor.ok()
+        self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
 
 
 class EditMultipleTasksTest(TaskEditorTestCase):
