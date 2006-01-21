@@ -27,14 +27,16 @@ class SettingsPage(widgets.BookPage):
         self.addEntry(text, choice, helpText)
         self._choiceSettings.append((section, setting, choice))
         
-    def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100, helpText=''):
+    def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100,
+            helpText=''):
         spin = wx.SpinCtrl(self, -1, min=minimum, max=maximum, 
             value=str(self.settings.getint(section, setting)))
         self.addEntry(text, spin, helpText)
         self._integerSettings.append((section, setting, spin))
 
     def addColorSetting(self, section, setting, text):
-        colorButton = widgets.ColorSelect(self, -1, text, eval(self.settings.get(section, setting)))
+        colorButton = widgets.ColorSelect(self, -1, text,
+            eval(self.settings.get(section, setting)))
         self.addEntry(None, colorButton)
         self._colorSettings.append((section, setting, colorButton))
                 

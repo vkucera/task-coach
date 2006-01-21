@@ -43,6 +43,7 @@ class BookPage(wx.Panel):
         self._borderWidth = 5
         self.SetSizerAndFit(self._sizer)
         
+        
     def addEntry(self, labelText, *controls, **kwargs):
         controls = [control for control in controls if control is not None]
         if labelText is not None:
@@ -61,7 +62,7 @@ class BookPage(wx.Panel):
 
     def ok(self):
         pass
-        
+    
 
 class Book(object):
     ''' Abstract base class for *book '''

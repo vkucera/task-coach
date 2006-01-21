@@ -147,3 +147,18 @@ class XMLWriterTest(test.TestCase):
     def testReminder(self):
         self.task.setReminder(date.DateTime(2005, 5, 7, 13, 15, 10))
         self.assertTaskAttribute(str(self.task.reminder()), 'reminder')
+        
+    def testMarkCompletedWhenAllChildrenAreCompletedSetting_None(self):
+        self.assertTaskAttribute('', 
+            'shouldMarkCompletedWhenAllChildrenCompleted')
+            
+    def testMarkCompletedWhenAllChildrenAreCompletedSetting_True(self):
+        self.task.shouldMarkCompletedWhenAllChildrenCompleted = True
+        self.assertTaskAttribute('True', 
+            'shouldMarkCompletedWhenAllChildrenCompleted')
+            
+    def testMarkCompletedWhenAllChildrenAreCompletedSetting_False(self):
+        self.task.shouldMarkCompletedWhenAllChildrenCompleted = False
+        self.assertTaskAttribute('False', 
+            'shouldMarkCompletedWhenAllChildrenCompleted')
+              

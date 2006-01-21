@@ -4,7 +4,11 @@ from domain import *
 
 releases = [
 Release('0.56', 'January ?, 2006',
-    featureAdded=[]),
+    featureAdded=[
+        Feature('''Whether a task is marked completed when all its
+child tasks are completed is now a setting that can be changed application-wide
+via the preferences dialog. The application-wide setting can be overruled
+on a task-by-task basis via the task editor dialog.''', '1393803')]),
                    
 Release('0.55', 'January 13, 2006',
     dependenciesChanged=[
