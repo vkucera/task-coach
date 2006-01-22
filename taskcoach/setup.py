@@ -14,7 +14,7 @@ setupOptions = {
     'packages' : ['taskcoachlib'] + 
         ['taskcoachlib.' + subpackage for subpackage in ('meta', 'config', 
         'command', 'widgets', 'gui', 'gui.dialog', 'i18n', 'log', 'patterns', 
-        'help', 'domain')] +
+        'help', 'domain', 'thirdparty')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'effort', 'task')],
     'scripts' : ['taskcoach.py', 'taskcoach.pyw'],

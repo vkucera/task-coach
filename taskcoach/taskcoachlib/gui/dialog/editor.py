@@ -326,11 +326,25 @@ class EffortEditBook(widgets.BookPage):
             self._editor.enableOK()
 
 
+class MyFileDropTarget(wx.FileDropTarget):
+    def __init__(self, window):
+        wx.FileDropTarget.__init__(self)
+        self.window = window
+        
+    def OnDropFiles(self, x, y, filenames):
+        print "\n%d file(s) dropped at %d,%d:" %(len(filenames), x, y)
+        for file in filenames:
+            print file
+
+
 class EditorWithCommand(widgets.NotebookDialog):
     def __init__(self, parent, command, uiCommands, *args, **kwargs):
         self._uiCommands = uiCommands
         self._command = command
         super(EditorWithCommand, self).__init__(parent, command.name(), *args, **kwargs)
+        #dropTarget = MyFileDropTarget(self)
+        #self.SetDropTarget(dropTarget)
+        
         
     def ok(self, *args, **kwargs):
         super(EditorWithCommand, self).ok(*args, **kwargs)
