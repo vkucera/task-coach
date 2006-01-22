@@ -22,15 +22,28 @@ class TreeMixin(object):
         self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.onBeginDrag)
         self.Bind(wx.EVT_TREE_END_DRAG, self.onEndDrag)
-
+        
     def onBeginDrag(self, event):
         event.Allow()
         self.dragItem = event.GetItem()
+        self.GetMainWindow().Bind(wx.EVT_MOTION, self.onDragging)
+        self.__setCursorToDragging()
+        
+    def __setCursorToDragging(self):
+        self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        
+    def __setCursorToDroppingImpossible(self):
+        self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+        
+    def __resetCursor(self):
+        self.SetCursor(wx.STANDARD_CURSOR)
         
     def draggedItems(self):
         return [self.index(self.dragItem)]
         
     def onEndDrag(self, event):
+        self.GetMainWindow().Unbind(wx.EVT_MOTION)
+        self.__resetCursor()
         if not event.GetItem().IsOk():
             return
         # Make sure this member exists.
@@ -46,6 +59,23 @@ class TreeMixin(object):
         # Move 'em
         self.dragAndDropCommand(event)
 
+    def onDragging(self, event):
+        # We have to be careful unpacking the result of HitTest, because
+        # TreeListCtrl.HitTest returns three values: item, flags, column
+        # while TreeCtrl.HitTest returns only two values: item, flags
+        result = self.HitTest((event.GetX(), event.GetY()))
+        item, flags  = result[0], result[1] 
+        if self.__isValidDropTarget(item):
+            self.__setCursorToDragging()
+        else:
+            self.__setCursorToDroppingImpossible()     
+        event.Skip()
+        
+    def __isValidDropTarget(self, dropTarget):
+        return dropTarget.IsOk() and self.dragItem != dropTarget and \
+            self.GetItemParent(self.dragItem) != dropTarget and \
+            dropTarget not in self.getChildren(self.dragItem, recursively=True)
+        
     def onSetFocus(self, event):
         # When the TreeCtrl gets focus sometimes the selection is changed.
         # We want to prevent that from happening, so we need to keep track
@@ -223,8 +253,8 @@ class TreeMixin(object):
         self.SetItemText(node, self.getItemText(index))
 
     def __createPyData(self, index, itemChildIndex):
-        return (index, self.getItemId(index),  
-            len(self.getChildIndices(index)), self.getItemImage(index), self.getItemText(index),
+        return (index, self.getItemId(index), len(self.getChildIndices(index)),
+            self.getItemImage(index), self.getItemText(index),
             self.getItemAttr(index), itemChildIndex)
 
     def deleteUnusedItems(self):
