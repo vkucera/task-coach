@@ -54,6 +54,10 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
                 subtask.setCompletionDate()
         newSubTask.do()
 
+    def dragAndDrop(self, dropTarget, tasks=None):
+        command.DragAndDropTaskCommand(self.taskList, tasks or [], 
+                                       drop=dropTarget).do()
+        
 
 class CommandWithChildrenTestCase(CommandTestCase):
     def setUp(self):
@@ -294,3 +298,17 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.parent.addEffort(effort.Effort(self.parent))
         self.markCompleted([self.child])
         self.assertDoUndoRedo(lambda: self.failUnless(self.parent.isBeingTracked()))
+
+        
+class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
+    def testCannotDropOnParent(self):
+        self.dragAndDrop(self.parent, [self.child])
+        self.failIf(patterns.CommandHistory().hasHistory())
+        
+    def testCannotDropOnChild(self):
+        self.dragAndDrop(self.child, [self.parent])
+        self.failIf(patterns.CommandHistory().hasHistory())
+        
+    def testCannotDropOnGrandchild(self):
+        self.dragAndDrop(self.grandchild, [self.parent])
+        self.failIf(patterns.CommandHistory().hasHistory())

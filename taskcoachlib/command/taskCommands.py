@@ -18,6 +18,9 @@ class SaveTaskStateMixin(base.SaveStateMixin):
             allChildren.extend(task.allChildren())
         return allChildren
 
+    def getAllParents(self, tasks):
+        return [task.parent() for task in tasks if task.parent() != None]
+
 
 class PasteIntoTaskCommand(base.PasteCommand):
     def name(self):
@@ -52,7 +55,8 @@ class DragAndDropTaskCommand(base.BaseCommand, SaveTaskStateMixin):
         return [self.__itemToDropOn] + self.items
     
     def canDo(self):
-        return self.__itemToDropOn not in self.items + self.getAllChildren(self.items)
+        return self.__itemToDropOn not in self.items + \
+            self.getAllChildren(self.items) + self.getAllParents(self.items)
     
     def do_command(self):
         self.list.removeItems(self.items)
