@@ -18,7 +18,7 @@ class Task(patterns.Observable):
         self._startdate      = startdate or date.Today()
         self._completiondate = completiondate or date.Date()
         self._budget         = budget or date.TimeDelta()
-        self._id             = id_ or '%s:%s'%(id(self), time.time()) # FIXME: Npt a valid XML id
+        self._id             = id_ or '%s:%s'%(id(self), time.time()) # FIXME: Not a valid XML id
         self._children       = []
         self._parent         = parent # adding the parent->child link is
                                       # the creator's responsibility
@@ -375,5 +375,6 @@ class Task(patterns.Observable):
     def __getShouldMarkCompletedWhenAllChildrenCompleted(self):
         return self._shouldMarkCompletedWhenAllChildrenCompleted
     
-    shouldMarkCompletedWhenAllChildrenCompleted = property(fget=__getShouldMarkCompletedWhenAllChildrenCompleted,
-                                                           fset=__setShouldMarkCompletedWhenAllChildrenCompleted)
+    shouldMarkCompletedWhenAllChildrenCompleted = \
+        property(fget=__getShouldMarkCompletedWhenAllChildrenCompleted,
+                 fset=__setShouldMarkCompletedWhenAllChildrenCompleted)

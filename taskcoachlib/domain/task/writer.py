@@ -32,7 +32,8 @@ class XMLWriter:
         if task.shouldMarkCompletedWhenAllChildrenCompleted != None:
             node.setAttribute('shouldMarkCompletedWhenAllChildrenCompleted', 
                               str(task.shouldMarkCompletedWhenAllChildrenCompleted))
-        node.appendChild(self.textNode('description', task.description()))
+        if task.description():
+            node.appendChild(self.textNode('description', task.description()))
         for category in task.categories():
             node.appendChild(self.textNode('category', category))
         for child in task.children():
@@ -45,7 +46,8 @@ class XMLWriter:
         node = self.document.createElement('effort')
         node.setAttribute('start', str(effort.getStart()))
         node.setAttribute('stop', str(effort.getStop()))
-        node.appendChild(self.textNode('description', effort.getDescription()))
+        if effort.getDescription():
+            node.appendChild(self.textNode('description', effort.getDescription()))
         return node
         
     def budgetAsAttribute(self, budget):
