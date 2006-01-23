@@ -46,80 +46,104 @@ class XMLWriterTest(test.TestCase):
         self.fd.reset()
         return xml.dom.minidom.parse(self.fd)
     
+    def writeAndRead(self):
+        self.writer.write(self.taskList)
+        self.fd.reset()
+        return self.fd.read()
+    
+    def expectInXML(self, expectedFragment):
+        result = self.writeAndRead()
+        self.failUnless(expectedFragment in result,
+            '%s not in %s'%(expectedFragment, result))
+    
+    def expectNotInXML(self, expectedFragment):
+        self.failIf(expectedFragment in self.writeAndRead())
+    
+    # tests
+        
     def testVersion(self):
         import meta
-        xmlDocument = self.writeAndParse()
-        lines = xmlDocument.toxml()
-        self.failUnless('<?taskcoach release="%s"'%meta.data.version in lines)
+        self.expectInXML('<?taskcoach release="%s"'%meta.data.version)
         
     def testTaskSubject(self):
         self.task.setSubject('Subject')
-        self.assertTaskAttribute(self.task.subject(), 'subject')
+        self.expectInXML('subject="Subject"')
             
     def testTaskDescription(self):
         self.task.setDescription('Description')
-        self.assertDescription(self.task, 'Description')
+        self.expectInXML('<description>Description</description>')
+        
+    def testEmptyTaskDescriptionIsNotWritten(self):
+        self.expectNotInXML('<description>')
         
     def testTaskStartDate(self):
         self.task.setStartDate(date.Date(2004,1,1))
-        self.assertTaskAttribute(self.task.startDate(), 'startdate')
+        self.expectInXML('startdate="%s"'%str(self.task.startDate()))
         
     def testTaskDueDate(self):
         self.task.setDueDate(date.Date(2004,1,1))
-        self.assertTaskAttribute(self.task.dueDate(), 'duedate')
+        self.expectInXML('duedate="%s"'%str(self.task.dueDate()))
         
     def testTaskCompletionDate_None(self):
         self.assertTaskAttribute(self.task.dueDate(), 'completiondate')
+        self.expectInXML('completiondate="%s"'%str(self.task.completionDate()))
         
     def testTaskCompletionDate(self):
         self.task.setCompletionDate(date.Date(2004, 1, 1))
-        self.assertTaskAttribute(self.task.completionDate(), 'completiondate')
+        self.expectInXML('completiondate="%s"'%str(self.task.completionDate()))
         
     def testChildTask(self):
         self.task.addChild(task.Task(subject='child'))
-        xmlDocument = self.writeAndParse()
-        parent = xmlDocument.documentElement.getElementsByTagName('task')[0]
-        child = parent.getElementsByTagName('task')[0]
-        self.assertEqual('child', child.getAttribute('subject'))
+        self.expectInXML('subject="child"/></task></tasks>')
 
     def testEffort(self):
-        self.assertEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
-            date.DateTime(2004,1,2), 'description\nline 2'))
+        taskEffort = effort.Effort(self.task, date.DateTime(2004,1,1),
+            date.DateTime(2004,1,2), 'description\nline 2')
+        self.task.addEffort(taskEffort)
+        self.expectInXML('<effort start="%s" stop="%s"><description>description\nline 2</description></effort>'% \
+            (taskEffort.getStart(), taskEffort.getStop()))
+            
+    def testEmptyEffortDescriptionIsNotWritten(self):
+        self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
+            date.DateTime(2004,1,2)))
+        self.expectNotInXML('<description>')
         
-    def testActiveEffort(self): 
-        self.assertEffort(effort.Effort(self.task, date.DateTime(2004,1,1)))
+    def testActiveEffort(self):
+        self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1)))
+        self.expectInXML('<effort start="%s" stop="None"/>'%self.task.efforts()[0].getStart()) 
                 
-    def testNoEffort(self):
-        xmlDocument = self.writeAndParse()
-        efforts = xmlDocument.documentElement.getElementsByTagName('efforts')
-        self.assertEqual([], efforts)
+    def testNoEffortByDefault(self):
+        self.expectNotInXML('<efforts>')
         
     def testBudget(self):
         self.task.setBudget(date.TimeDelta(hours=1))
-        self.assertTaskAttribute(self.task.budget(), 'budget')
+        self.expectInXML('budget="%s"'%str(self.task.budget()))
         
     def testBudget_MoreThan24Hour(self):
         self.task.setBudget(date.TimeDelta(hours=25))
-        self.assertTaskAttribute('25:00:00', 'budget')
+        self.expectInXML('budget="25:00:00"')
         
     def testOneCategory(self):
-        self.assertCategories(['test'])
+        self.task.addCategory('test')
+        self.expectInXML('<category>test</category>')
         
     def testMultipleCategories(self):
-        self.assertCategories(['test', 'another', 'yetanother'])
+        for category in ['test', 'another']:
+            self.task.addCategory(category)
+        self.expectInXML('<category>test</category><category>another</category>')
         
     def testDefaultPriority(self):
-        self.assertTaskAttribute('0', 'priority')
+        self.expectInXML('priority="0"')
         
     def testPriority(self):
         self.task.setPriority(5)
-        self.assertTaskAttribute('5', 'priority')
+        self.expectInXML('priority="5"')
         
     def testId(self):
-        self.assertTaskAttribute(self.task.id(), 'id')
+        self.expectInXML('id="%s"'%self.task.id())
         
     def testLastModificationTime(self):
-        self.assertTaskAttribute(self.task.lastModificationTime(), 'lastModificationTime')
+        self.expectInXML('lastModificationTime="%s"'%self.task.lastModificationTime())
 
     def testTwoTasks(self):
         self.task.setSubject('task 1')
