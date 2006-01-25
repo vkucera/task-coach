@@ -194,6 +194,9 @@ class TestOptionParser(config.OptionParser):
             options.releasetests = True
         if options.profile or args:
             options.commit = False
+        if options.commit:
+            options.unittests = True
+            options.integrationtests = True
         return options, args
 
 
