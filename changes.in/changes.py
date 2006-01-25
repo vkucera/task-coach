@@ -11,7 +11,11 @@ via the preferences dialog. The application-wide setting can be overruled
 on a task-by-task basis via the task editor dialog.''', '1393803')],
     featuresChanged=[
         Feature('''More visual feedback when dragging tasks in the tree 
-view.''')]),
+view.''')],
+    implementationChanged=[
+        Implementation('''Default values for task and effort attributes are 
+no longer saved in the Task Coach file, resulting in an estimated 33% 
+reduction of file size.''')]),
                    
 Release('0.55', 'January 13, 2006',
     dependenciesChanged=[

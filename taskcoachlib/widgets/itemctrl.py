@@ -137,20 +137,30 @@ class _CtrlWithAutoResizeableColumns(_BaseCtrlWithColumns, wx.lib.mixins.listctr
         super(_CtrlWithAutoResizeableColumns, self)._setColumns(*args, **kwargs)
         self.setResizeColumn(self.__resizeableColumn)
     
-    def __getattribute__(self, attribute):
-        ''' Return a wrapper method that first calls InsertColumn or DeleteColumn on the
-            super class and then resizes the resizeable column. '''
-        if attribute in ['InsertColumn', 'DeleteColumn']:
-            def manipulateColumnAndResize(*args, **kwargs):
-                # First, get method from super class and call it
-                super(_CtrlWithAutoResizeableColumns, self).__getattribute__(attribute)(*args, **kwargs)
-                # Next, resize the column(s)
-                self.resizeColumn(self.__minColumnWidth)
-            return manipulateColumnAndResize
-        else:
-            return super(_CtrlWithAutoResizeableColumns, self).__getattribute__(attribute)
+    # Override all methods that manipulate columns to be able to resize the
+    # columns after any additions or removals.
+    
+    def InsertColumn(self, *args, **kwargs):
+        ''' Insert the new column and then resize. '''
+        super(_CtrlWithAutoResizeableColumns, self).InsertColumn(*args, **kwargs)
+        self.resizeColumn(self.__minColumnWidth)
+        
+    def DeleteColumn(self, *args, **kwargs):
+        ''' Delete the column and then resize. '''
+        super(_CtrlWithAutoResizeableColumns, self).DeleteColumn(*args, **kwargs)
+        self.resizeColumn(self.__minColumnWidth)
+        
+    def RemoveColumn(self, *args, **kwargs):
+        ''' Remove the column and then resize. '''
+        super(_CtrlWithAutoResizeableColumns, self).RemoveColumn(*args, **kwargs)
+        self.resizeColumn(self.__minColumnWidth)
 
-
+    def AddColumn(self, *args, **kwargs):
+        ''' Add the column and then resize. '''
+        super(_CtrlWithAutoResizeableColumns, self).AddColumn(*args, **kwargs)
+        self.resizeColumn(self.__minColumnWidth)
+        
+        
 class _CtrlWithHideableColumns(_BaseCtrlWithColumns):        
     ''' This class supports hiding columns. '''
     

@@ -38,12 +38,17 @@ class MultiLineTextCtrl(BaseTextCtrl):
         # Work around a bug in wxPython 2.6.0 and 2.6.1 that causes a
         # wx._core.PyAssertionError: C++ assertion "ucf.GotUpdate()" failed in 
         # ..\..\src\msw\textctrl.cpp(813): EM_STREAMIN didn't send EN_UPDATE?
-        # when text is empty.
+        # when text is empty. Also see GetValue() below.
         if text == '':
             text = ' '
         self.AppendText(text)
         self.SetInsertionPoint(0)
 
+    def GetValue(self, *args, **kwargs):
+        value = super(MultiLineTextCtrl, self).GetValue(*args, **kwargs)
+        if value == ' ':
+            value = ''
+        return value
     
             
 class StaticText(wx.Window):
