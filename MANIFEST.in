@@ -1,5 +1,6 @@
 include *.txt
 include unittests/*.py
+include integrationtests/*.py
 include releasetests/*.py
 include TODO.tsk
 include setup.py

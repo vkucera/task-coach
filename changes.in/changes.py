@@ -14,7 +14,7 @@ on a task-by-task basis via the task editor dialog.''', '1393803')],
 view.''')],
     implementationChanged=[
         Implementation('''Default values for task and effort attributes are 
-no longer saved in the Task Coach file, resulting in an estimated 33% 
+no longer saved in the Task Coach file, resulting in an estimated 33%% 
 reduction of file size.''')]),
                    
 Release('0.55', 'January 13, 2006',
