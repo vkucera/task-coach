@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import unittest, sys, os, taskcoach, wx, time
+import unittest, sys, os, taskcoach, wx, time, glob
 
 projectRoot = os.path.split(taskcoach.libpath)[0]
 if projectRoot not in sys.path:
@@ -69,16 +69,20 @@ class AllTests(unittest.TestSuite):
         module = module.replace('/', '.')  
         return module[:-3] # strip '.py'
 
+    def getTestFilesFromDir(self, directory):
+        return glob.glob(os.path.join(directory, '*Test.py')) + \
+            glob.glob(os.path.join(directory, '*', '*Test.py'))
+
     def loadAllTests(self, testFiles):
         testloader = unittest.TestLoader()
         if not testFiles:
-            import glob
             testfiles = []
             if self._options.unittests:
-                testFiles.extend(glob.glob('unittests/*Test.py') + \
-                    glob.glob('unittests/*/*Test.py'))
+                testFiles.extend(self.getTestFilesFromDir('unittests'))
+            if self._options.integrationtests:
+                testFiles.extend(self.getTestFilesFromDir('integrationtests'))
             if self._options.releasetests:
-                testFiles.extend(glob.glob('releasetests/*Test.py'))
+                testFiles.extend(self.getTestFilesFromDir('releasetests'))
         for filename in testFiles:
             moduleName = self.filenameToModuleName(filename)
             # Importing the module is not strictly necessary because
@@ -126,7 +130,8 @@ class TestOptionParser(config.OptionParser):
         cvs = config.OptionGroup(self, 'CVS options', 
             'Options to interact with CVS.')
         cvs.add_option('-c', '--commit', default=False, action='store_true', 
-            help='commit if all the tests succeed')
+            help='commit if all the tests succeed'
+                 ' (implies --unittests and --integrationtests)')
         return cvs
 
     def profileOptionGroup(self):
@@ -156,14 +161,25 @@ class TestOptionParser(config.OptionParser):
     def coverageOptionGroup(self):
         coverage = config.OptionGroup(self, 'coverage options',
             'Options to determine which tests to run.')
+
         coverage.add_option('--unittests', default=True,
             action='store_true', help='run the unit tests [default]')
         coverage.add_option('--no-unittests', action='store_false', 
             help="don't run the unit tests", dest='unittests')
+
+        coverage.add_option('--integrationtests', default=False,
+            action='store_true', help='run the integration tests')
+        coverage.add_option('--no-integrationtests', action='store_false', 
+            help="don't run the integration tests [default]",
+            dest='integrationtests')
+
         coverage.add_option('--releasetests', default=False,
             action='store_true', help='run the release tests')
         coverage.add_option('--no-releasetests', action='store_false', 
             help="don't run the release tests [default]", dest='releasetests')
+
+        coverage.add_option('--alltests', default=False,
+            action='store_true', help='run all tests')
         return coverage
         
     def parse_args(self):
@@ -172,6 +188,10 @@ class TestOptionParser(config.OptionParser):
             options.profile = True
         if not options.profile_sort:
             options.profile_sort.append('cumulative')
+        if options.alltests:
+            options.unittests = True
+            options.integrationtests = True
+            options.releasetests = True
         if options.profile or args:
             options.commit = False
         return options, args

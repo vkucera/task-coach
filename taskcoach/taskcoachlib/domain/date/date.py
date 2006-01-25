@@ -38,9 +38,6 @@ class RealDate(datetime.date):
         else:
             return RealDate(newdate.year, newdate.month, newdate.day)
 
-    def isSchrikkeljaar(self):
-        return self.year % 2 == 0
-    
 
 class InfiniteDate(datetime.date):
     __metaclass__ = patterns.Singleton
@@ -49,6 +46,11 @@ class InfiniteDate(datetime.date):
         return super(InfiniteDate, self).__new__(InfiniteDate, infinite.year,
             infinite.month, infinite.day)
 
+    '''
+    def __nonzero__(self):
+        return False
+    '''
+    
     def _getyear(self):
         return None
 

@@ -103,14 +103,6 @@ class DateTest(test.TestCase):
 
     def testSubstractTwoDates_BothInfinite(self):
         self.assertEqual(date.TimeDelta(days=0), date.Date() - date.Date())
-
-    def testGeenSchrikkeljaar(self):
-        aDate = date.Date(2005,1,1)
-        self.failIf(aDate.isSchrikkeljaar())
-        
-    def testGeenSchrikkeljaar(self):
-        aDate = date.Date(2004,1,1)
-        self.failUnless(aDate.isSchrikkeljaar())
         
         
 class FactoriesTest(test.TestCase):

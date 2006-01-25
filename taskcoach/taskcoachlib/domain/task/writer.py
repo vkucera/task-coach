@@ -1,4 +1,5 @@
 import xml.dom, meta
+import domain.date as date
 
 
 class XMLWriter:
@@ -20,15 +21,23 @@ class XMLWriter:
         node = self.document.createElement('task')
         node.setAttribute('subject', task.subject())
         node.setAttribute('id', task.id())
-        node.setAttribute('startdate', str(task.startDate()))
-        node.setAttribute('duedate', str(task.dueDate()))
-        node.setAttribute('completiondate', str(task.completionDate()))
-        node.setAttribute('budget', self.budgetAsAttribute(task.budget()))
-        node.setAttribute('priority', str(task.priority()))
         node.setAttribute('lastModificationTime', str(task.lastModificationTime()))
-        node.setAttribute('hourlyFee', str(task.hourlyFee()))
-        node.setAttribute('fixedFee', str(task.fixedFee()))
-        node.setAttribute('reminder', str(task.reminder()))
+        if task.startDate() != date.Date():
+            node.setAttribute('startdate', str(task.startDate()))
+        if task.dueDate() != date.Date():
+            node.setAttribute('duedate', str(task.dueDate()))
+        if task.completionDate() != date.Date():
+            node.setAttribute('completiondate', str(task.completionDate()))
+        if task.budget() != date.TimeDelta():
+            node.setAttribute('budget', self.budgetAsAttribute(task.budget()))
+        if task.priority() != 0:
+            node.setAttribute('priority', str(task.priority()))
+        if task.hourlyFee() != 0:
+            node.setAttribute('hourlyFee', str(task.hourlyFee()))
+        if task.fixedFee() != 0:
+            node.setAttribute('fixedFee', str(task.fixedFee()))
+        if task.reminder() != None:
+            node.setAttribute('reminder', str(task.reminder()))
         if task.shouldMarkCompletedWhenAllChildrenCompleted != None:
             node.setAttribute('shouldMarkCompletedWhenAllChildrenCompleted', 
                               str(task.shouldMarkCompletedWhenAllChildrenCompleted))
@@ -45,7 +54,8 @@ class XMLWriter:
     def effortNode(self, effort):
         node = self.document.createElement('effort')
         node.setAttribute('start', str(effort.getStart()))
-        node.setAttribute('stop', str(effort.getStop()))
+        if effort.getStop() != None:
+            node.setAttribute('stop', str(effort.getStop()))
         if effort.getDescription():
             node.appendChild(self.textNode('description', effort.getDescription()))
         return node
