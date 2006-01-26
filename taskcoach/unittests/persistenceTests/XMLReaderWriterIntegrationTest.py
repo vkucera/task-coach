@@ -44,6 +44,7 @@ class IntegrationTest(IntegrationTestCase):
         self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
             stop=date.DateTime(2004,1,2), description=self.description))
         self.task.addCategory('test')
+        self.task.addAttachment('/home/frank/whatever.txt')
         self.task2 = task.Task('Task 2', priority=-1954)
         self.taskList.extend([self.task, self.task2])
 
@@ -132,4 +133,5 @@ class IntegrationTest(IntegrationTestCase):
         self.assertPropertyWrittenAndRead(self.task2, 
             'shouldMarkCompletedWhenAllChildrenCompleted')
  
-        
+    def testAttachment(self):
+        self.assertAttributeWrittenAndRead(self.task, 'attachments')

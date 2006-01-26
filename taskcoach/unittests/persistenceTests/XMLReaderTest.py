@@ -207,4 +207,14 @@ class XMLReaderTest(XMLReaderTestCase):
         tasks = self.writeAndRead('<tasks><task/></tasks>')
         self.assertEqual(None, tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
 
-    
+    def testNoAttachments(self):
+        tasks = self.writeAndRead('<tasks><task/></tasks>')
+        self.assertEqual([], tasks[0].attachments())
+        
+    def testOneAttachment(self):
+        tasks = self.writeAndRead('<tasks><task><attachment>whatever.tsk</attachment></task></tasks>')
+        self.assertEqual(['whatever.tsk'], tasks[0].attachments())
+        
+    def testTwoAttachments(self):
+        tasks = self.writeAndRead('<tasks><task><attachment>whatever.tsk</attachment><attachment>another.txt</attachment></task></tasks>')
+        self.assertEqual(['whatever.tsk', 'another.txt'], tasks[0].attachments())

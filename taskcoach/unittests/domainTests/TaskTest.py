@@ -611,6 +611,10 @@ class TaskReminderTest(TaskReminderTestCase):
         self.task.setReminder()
         self.assertReminder(None)
         
+    def testCancelReminderWithMaxDateTime(self):
+        self.task.setReminder(date.DateTime.max)
+        self.assertReminder(None)
+        
     def testTaskDoesNotObserveTheClockAfterReminderIsCancelled(self):
         self.task.setReminder()
         self.assertEqual([], self.clock.observers())

@@ -157,3 +157,15 @@ class XMLWriterTest(test.TestCase):
         self.task.shouldMarkCompletedWhenAllChildrenCompleted = False
         self.expectInXML('shouldMarkCompletedWhenAllChildrenCompleted="False"')
               
+    def testNoAttachments(self):
+        self.expectNotInXML('attachment')
+        
+    def testOneAttachment(self):
+        self.task.addAttachment('whatever.txt')
+        self.expectInXML('<attachment>whatever.txt</attachment>')
+        
+    def testTwoAttachments(self):
+        attachments = ['whatever.txt', '/home/frank/attachment.doc']
+        for attachment in attachments:
+            self.task.addAttachment(attachment)
+        self.expectInXML('<attachment>%s</attachment>'*2%tuple(attachments))
