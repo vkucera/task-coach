@@ -80,6 +80,9 @@ class Task(patterns.Observable):
             return self.allChildren()
         else:
             return self._children
+    
+    # I want to use properties more, but I still need to make all the changes.
+    # So, only desciripion is a property right now.
         
     def __getDescription(self):
         return self.__description
@@ -355,6 +358,8 @@ class Task(patterns.Observable):
         return self._reminder
 
     def setReminder(self, reminderDateTime=None):
+        if reminderDateTime == date.DateTime.max:
+            reminderDateTime = None
         clock = date.Clock()
         if self._reminder:
             clock.removeObserver(self.onReminder)
