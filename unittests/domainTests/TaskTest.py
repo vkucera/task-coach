@@ -16,8 +16,6 @@ threeHours = date.TimeDelta(hours=3)
 
 
 class TaskTestCase(test.wxTestCase):
-    taskCreationKeywordArguments = [{}]
-    
     def setUp(self):
         self.tasks = self.createTasks()
         self.task = self.tasks[0]
@@ -25,8 +23,11 @@ class TaskTestCase(test.wxTestCase):
             setattr(self, 'task%d'%(index+1), task)
             
     def createTasks(self):
-        return [task.Task(**kwargs) for kwargs in self.taskCreationKeywordArguments]
+        return [task.Task(**kwargs) for kwargs in self.taskCreationKeywordArguments()]
 
+    def taskCreationKeywordArguments(self):
+        return [{}]
+    
     def addEffort(self, hours, task=None):
         task = task or self.task
         start = date.DateTime(2005,1,1)
@@ -57,6 +58,22 @@ class NoBudgetTests(object):
 
     def testTaskHasNoRecursiveBudgetLeft(self):
         self.assertEqual(date.TimeDelta(), self.task.budgetLeft(recursive=True))
+
+
+class NotificationMixin(object):
+    def setUp(self):
+        super(NotificationMixin, self).setUp()
+        self.task.registerObserver(self.onNotify, self.eventType)
+        self.__notifications = 0
+
+    def onNotify(self, *args, **kwargs):
+        self.__notifications += 1
+
+    def failUnlessNotified(self, notificationsExpected=1):
+        self.assertEqual(notificationsExpected, self.__notifications)
+        
+    def failIfNotified(self):
+        self.assertEqual(0, self.__notifications)
     
 
 class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
@@ -126,6 +143,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testShouldMarkTaskCompletedWhenAllChildrenAreCompletedIsNoOpinionByDefault(self):
         self.assertEqual(None, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
         
+    def testTaskHasNoAttachmentsByDefault(self):
+        self.assertEqual([], self.task.attachments())
+        
     # move these to another fixture?
     def testSetCompletionDateMakesTaskCompleted(self):
         self.task.setCompletionDate()
@@ -151,7 +171,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'duedate': date.Today()}]
+    def taskCreationKeywordArguments(self):
+        return [{'duedate': date.Today()}]
     
     def testIsDueToday(self):
         self.failUnless(self.task.dueToday())
@@ -160,11 +181,12 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
         self.assertEqual(0, self.task.timeLeft().days)
 
     def testDueDate(self):
-        self.assertEqual(self.taskCreationKeywordArguments[0]['duedate'], self.task.dueDate())
+        self.assertEqual(self.taskCreationKeywordArguments()[0]['duedate'], self.task.dueDate())
 
 
 class TaskDueTomorrowTest(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'duedate': date.Tomorrow()}]
+    def taskCreationKeywordArguments(self):
+        return [{'duedate': date.Tomorrow()}]
         
     def testIsDueTomorrow(self):
         self.failUnless(self.task.dueTomorrow())
@@ -173,11 +195,13 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTests):
         self.assertEqual(1, self.task.timeLeft().days)
 
     def testDueDate(self):
-        self.assertEqual(self.taskCreationKeywordArguments[0]['duedate'], self.task.dueDate())
+        self.assertEqual(self.taskCreationKeywordArguments()[0]['duedate'], 
+                         self.task.dueDate())
 
 
 class OverdueTaskTest(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'duedate' : date.Yesterday()}]
+    def taskCreationKeywordArguments(self):
+        return [{'duedate' : date.Yesterday()}]
 
     def testIsOverdue(self):
         self.failUnless(self.task.overdue())
@@ -187,11 +211,12 @@ class OverdueTaskTest(TaskTestCase, CommonTaskTests):
         self.failIf(self.task.overdue())
 
     def testDueDate(self):
-        self.assertEqual(self.taskCreationKeywordArguments[0]['duedate'], self.task.dueDate())
+        self.assertEqual(self.taskCreationKeywordArguments()[0]['duedate'], self.task.dueDate())
 
 
 class CompletedTaskTest(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'completiondate': date.Today()}]
+    def taskCreationKeywordArguments(self):
+        return [{'completiondate': date.Today()}]
         
     def testThatATaskWithACompletionDateIsCompleted(self):
         self.failUnless(self.task.completed())
@@ -206,14 +231,16 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTests):
 
 
 class TaskCompletedInTheFutureTest(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'completiondate': date.Tomorrow()}]
+    def taskCreationKeywordArguments(self):
+        return [{'completiondate': date.Tomorrow()}]
         
     def testThatATaskWithAFutureCompletionDateIsCompleted(self):
         self.failUnless(self.task.completed())
 
 
 class InactiveTaskTest(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'startdate': date.Tomorrow()}]
+    def taskCreationKeywordArguments(self):
+        return [{'startdate': date.Tomorrow()}]
 
     def testThatTaskWithStartDateInTheFutureIsInactive(self):
         self.failUnless(self.task.inactive())
@@ -231,7 +258,8 @@ class InactiveTaskTest(TaskTestCase, CommonTaskTests):
 
 
 class TaskWithSubject(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'subject': 'Subject'}]
+    def taskCreationKeywordArguments(self):
+        return [{'subject': 'Subject'}]
         
     def testSubject(self):
         self.assertEqual('Subject', self.task.subject())
@@ -245,7 +273,8 @@ class TaskWithSubject(TaskTestCase, CommonTaskTests):
 
 
 class TaskWithDescriptionTest(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'description': 'Description'}]
+    def taskCreationKeywordArguments(self):
+        return [{'description': 'Description'}]
 
     def testDescription(self):
         self.assertEqual('Description', self.task.description())
@@ -256,14 +285,16 @@ class TaskWithDescriptionTest(TaskTestCase, CommonTaskTests):
 
 
 class TaskWithId(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'id_': 'id'}]
+    def taskCreationKeywordArguments(self):
+        return [{'id_': 'id'}]
         
     def testTaskId(self):
         self.assertEqual('id', self.task.id())
 
                 
 class TwoTasksTest(TaskTestCase):
-    taskCreationKeywordArguments = [{}, {}]
+    def taskCreationKeywordArguments(self):
+        return [{}, {}]
         
     def testTwoTasksHaveDifferentIds(self):
         self.assertNotEqual(self.task1.id(), self.task2.id())
@@ -284,7 +315,8 @@ class NewSubTaskTestCase(TaskTestCase):
 
 
 class NewSubTaskOfDefaultTaskTest(NewSubTaskTestCase):
-    taskCreationKeywordArguments = [{}]
+    def taskCreationKeywordArguments(self):
+        return [{}]
     
     def testNewSubTaskParent(self):
         self.assertEqual(self.task, self.child.parent())
@@ -303,21 +335,24 @@ class NewSubTaskOfDefaultTaskTest(NewSubTaskTestCase):
 
 
 class NewSubTaskOfInactiveTask(NewSubTaskTestCase):
-    taskCreationKeywordArguments = [{'startdate': date.Tomorrow()}]
+    def taskCreationKeywordArguments(self):
+        return [{'startdate': date.Tomorrow()}]
     
     def testNewSubTaskHasSameStartDateAsParent(self):
         self.assertEqual(self.task.startDate(), self.child.startDate())
 
 
 class NewSubTaskOfActiveTask(NewSubTaskTestCase):
-    taskCreationKeywordArguments = [{'startdate': date.Yesterday()}]
+    def taskCreationKeywordArguments(self):
+        return [{'startdate': date.Yesterday()}]
 
     def testNewSubTaskHasStartDateToday(self):
         self.assertEqual(date.Today(), self.child.startDate())
         
 
 class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
-    taskCreationKeywordArguments = [{}, {}]
+    def taskCreationKeywordArguments(self):
+        return [{}, {}]
     
     def setUp(self):
         super(TaskWithChildTest, self).setUp()
@@ -378,7 +413,8 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
 
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
-    taskCreationKeywordArguments = [{}, {}, {}]
+    def taskCreationKeywordArguments(self):
+        return [{}, {}, {}]
     
     def setUp(self):
         super(TaskWithGrandChildTest, self).setUp()
@@ -452,7 +488,8 @@ class TaskWithActiveEffort(TaskWithEffortTestCase, CommonTaskTests):
         
 
 class TaskWithChildAndEffortTest(TaskWithEffortTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{}, {}]
+    def taskCreationKeywordArguments(self):
+        return [{}, {}]
 
     def setUp(self):
         super(TaskWithChildAndEffortTest, self).setUp()
@@ -476,7 +513,8 @@ class TaskWithChildAndEffortTest(TaskWithEffortTestCase, CommonTaskTests):
 
 
 class TaskWithGrandChildAndEffortTest(TaskWithEffortTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{}, {}, {}]
+    def taskCreationKeywordArguments(self):
+        return [{}, {}, {}]
     
     def setUp(self):
         super(TaskWithGrandChildAndEffortTest, self).setUp()
@@ -499,7 +537,8 @@ class TaskWithGrandChildAndEffortTest(TaskWithEffortTestCase, CommonTaskTests):
 
     
 class TaskWithBudgetTest(TaskTestCase, CommonTaskTests):
-    taskCreationKeywordArguments = [{'budget': twoHours}]
+    def taskCreationKeywordArguments(self):
+        return [{'budget': twoHours}]
     
     def setUp(self):
         super(TaskWithBudgetTest, self).setUp()
@@ -507,7 +546,7 @@ class TaskWithBudgetTest(TaskTestCase, CommonTaskTests):
                                           date.DateTime(2005,1,1,14,0))
                                           
     def expectedBudget(self):
-        return self.taskCreationKeywordArguments[0]['budget']
+        return self.taskCreationKeywordArguments()[0]['budget']
     
     def testBudget(self):
         self.assertEqual(self.expectedBudget(), self.task.budget())
@@ -542,7 +581,8 @@ class TaskWithBudgetTest(TaskTestCase, CommonTaskTests):
 
 
 class TaskReminderTestCase(TaskTestCase):
-    taskCreationKeywordArguments = [{'reminder': date.DateTime(2005,1,1)}]
+    def taskCreationKeywordArguments(self):
+        return [{'reminder': date.DateTime(2005,1,1)}]
 
     def setUp(self):
         self.clock = date.Clock() # make sure there is someting to delete
@@ -551,7 +591,7 @@ class TaskReminderTestCase(TaskTestCase):
         super(TaskReminderTestCase, self).setUp()
         
     def initialReminder(self):
-        return self.taskCreationKeywordArguments[0]['reminder']
+        return self.taskCreationKeywordArguments()[0]['reminder']
     
     
 class TaskReminderTest(TaskReminderTestCase):
@@ -620,7 +660,8 @@ class TaskSettingTestCase(TaskTestCase):
 
     
 class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueTest(TaskSettingTestCase):
-    taskCreationKeywordArguments = [{'shouldMarkCompletedWhenAllChildrenCompleted': True}]
+    def taskCreationKeywordArguments(self):
+        return [{'shouldMarkCompletedWhenAllChildrenCompleted': True}]
     
     def testSetting(self):
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
@@ -635,7 +676,8 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueTest(TaskSettingTest
         
 
 class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseTest(TaskTestCase):
-    taskCreationKeywordArguments = [{'shouldMarkCompletedWhenAllChildrenCompleted': False}]
+    def taskCreationKeywordArguments(self):
+        return [{'shouldMarkCompletedWhenAllChildrenCompleted': False}]
     
     def testSetting(self):
         self.assertEqual(False, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
@@ -644,8 +686,55 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseTest(TaskTestCase):
         self.task.shouldMarkCompletedWhenAllChildrenCompleted = True
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
         
+
+class TaskWithAttachmentFixture(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        return [{'attachments': ['/home/frank/attachment.txt']}]
+         
+    def testAttachments(self):
+        self.assertEqual(self.taskCreationKeywordArguments()[0]['attachments'],
+                         self.task.attachments())
+                         
+    def testRemoveAttachment(self):
+        self.task.removeAttachment(self.taskCreationKeywordArguments()[0]['attachments'][0])
+        self.assertEqual([], self.task.attachments())
         
+    def testRemoveNonExistingAttachment(self):
+        self.task.removeAttachment('Non-existing attachment')
+        self.assertEqual(self.taskCreationKeywordArguments()[0]['attachments'],
+                         self.task.attachments())
+
+
+class TaskWithAttachmentAddedTestCase(NotificationMixin, TaskTestCase):
+    def setUp(self):
+        self.eventType = 'attachment'
+        super(TaskWithAttachmentAddedTestCase, self).setUp()
+        self.attachment = './test.txt'
+        self.task.addAttachment(self.attachment)
+
+
+class TaskWithAttachmentAddedFixture(TaskWithAttachmentAddedTestCase):
+    def testAddAttachment(self):
+        self.failUnless(self.attachment in self.task.attachments())
+        
+    def testNotification(self):
+        self.failUnlessNotified()
+
+
+class TaskWithAttachmentRemovedFixture(TaskWithAttachmentAddedTestCase):
+    def setUp(self):
+        super(TaskWithAttachmentRemovedFixture, self).setUp()
+        self.task.removeAttachment(self.attachment)
+
+    def testRemoveAttachment(self):
+        self.failIf(self.attachment in self.task.attachments())
+        
+    def testNotification(self):
+        self.failUnlessNotified(2)
+
+            
 ##################
+
 
 class TaskNotificationTestCase(TaskTestCase):
     def setUp(self):
@@ -665,7 +754,8 @@ class TaskNotificationTestCase(TaskTestCase):
 
 
 class TaskNotificationTest(TaskNotificationTestCase):
-    taskCreationKeywordArguments = [{'subject': 'Todo'}]
+    def taskCreationKeywordArguments(self):
+        return [{'subject': 'Todo'}]
                 
     def testSetSubject(self):
         self.task.setSubject('New')
@@ -713,8 +803,9 @@ class TaskNotificationTest(TaskNotificationTestCase):
         
 
 class SubTaskTest(TaskNotificationTestCase, asserts.TaskAsserts):
-    taskCreationKeywordArguments = [{'subject': 'Todo', 'duedate': date.Tomorrow(),
-                            'startdate': date.Yesterday()}]
+    def taskCreationKeywordArguments(self):
+        return [{'subject': 'Todo', 'duedate': date.Tomorrow(),
+                 'startdate': date.Yesterday()}]
 
     def testAddChild(self):
         child = self.task.newSubTask()

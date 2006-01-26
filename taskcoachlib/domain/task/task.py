@@ -9,7 +9,7 @@ class Task(patterns.Observable):
     def __init__(self, subject='', description='', duedate=None, 
             startdate=None, completiondate=None, parent=None, budget=None, 
             priority=0, id_=None, lastModificationTime=None, hourlyFee=0,
-            fixedFee=0, reminder=None, 
+            fixedFee=0, reminder=None, attachments=None,
             shouldMarkCompletedWhenAllChildrenCompleted=None, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
         self._subject        = subject
@@ -29,6 +29,7 @@ class Task(patterns.Observable):
         self._fixedFee       = fixedFee
         self._reminder       = None
         self.setReminder(reminder)
+        self._attachments    = attachments or []
         self._shouldMarkCompletedWhenAllChildrenCompleted = shouldMarkCompletedWhenAllChildrenCompleted
         self.setLastModificationTime(lastModificationTime)
             
@@ -364,6 +365,20 @@ class Task(patterns.Observable):
     def onReminder(self, *args, **kwargs):
         self.notifyObservers(patterns.Notification(self), 'reminder')
         
+    # attachments
+    
+    def attachments(self):
+        return self._attachments
+    
+    def addAttachment(self, attachment):
+        self._attachments.append(attachment)
+        self.notifyObservers(patterns.Notification(self), 'attachment')
+        
+    def removeAttachment(self, attachment):
+        if attachment in self._attachments:
+            self._attachments.remove(attachment)
+            self.notifyObservers(patterns.Notification(self), 'attachment')
+            
     # behavior
     
     # To experiment, this attribute is coded by means of a proporty, which
