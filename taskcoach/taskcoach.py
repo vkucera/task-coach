@@ -35,15 +35,15 @@ class App(object):
         import config, i18n
         settings = config.Settings(loadSettings)
         i18n.Translator(settings.get('view', 'language'))
-        import gui
+        import gui, persistence
         import domain.task as task
         import domain.effort as effort
         gui.init()
         if showSplash and settings.getboolean('window', 'splash'):
             splash = gui.SplashScreen()
         
-        self.taskFile = task.TaskFile()
-        self.autoSaver = task.AutoSaver(settings, self.taskFile)
+        self.taskFile = persistence.TaskFile()
+        self.autoSaver = persistence.AutoSaver(settings, self.taskFile)
         self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskFile, settings=settings)
         effortList = effort.EffortList(self.taskFile)
         self.io = gui.IOController(self.taskFile, self.displayMessage, settings)

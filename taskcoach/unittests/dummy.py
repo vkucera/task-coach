@@ -1,5 +1,5 @@
-import gui, wx, widgets, patterns
-import domain.task as task
+import gui, wx, widgets, patterns, persistence
+
 
 class DummyWidget(wx.Frame):
     def __init__(self, viewer):
@@ -100,7 +100,7 @@ class TaskList(patterns.ObservableObservablesList):
         return [task for task in self if task.parent() is None]
     
     
-class TaskFile(task.TaskFile):
+class TaskFile(persistence.TaskFile):
     def load(self, *args, **kwargs):
         pass
         

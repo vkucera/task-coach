@@ -1,4 +1,4 @@
-import test
+import test, persistence
 import cStringIO as StringIO
 import domain.task as task
 import domain.effort as effort
@@ -7,8 +7,8 @@ import domain.date as date
 class IntegrationTestCase(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
-        self.reader = task.reader.XMLReader(self.fd)
-        self.writer = task.writer.XMLWriter(self.fd)
+        self.reader = persistence.XMLReader(self.fd)
+        self.writer = persistence.XMLWriter(self.fd)
         self.taskList = task.TaskList()
         self.fillTaskList()
         self.tasksWrittenAndRead = task.TaskList(self.readAndWrite())

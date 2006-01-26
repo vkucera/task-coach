@@ -1,12 +1,12 @@
-import test, os
+import test, os, persistence
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
 
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
-        self.taskFile = task.TaskFile()
-        self.emptyTaskFile = task.TaskFile()
+        self.taskFile = persistence.TaskFile()
+        self.emptyTaskFile = persistence.TaskFile()
         self.task = task.Task()
         self.taskFile.append(self.task)
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
@@ -185,7 +185,7 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         self.remove('new.tsk')
 
     def testMerge(self):
-        mergeFile = task.TaskFile('merge.tsk')
+        mergeFile = persistence.TaskFile('merge.tsk')
         mergeFile.append(task.Task())
         mergeFile.save()
         self.taskFile.merge('merge.tsk')

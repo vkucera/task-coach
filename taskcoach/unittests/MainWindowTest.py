@@ -1,4 +1,4 @@
-import test, gui, wx, config, dummy
+import test, gui, wx, config, dummy, persistence
 import domain.task as task
 import domain.effort as effort
 
@@ -10,7 +10,7 @@ class MainWindowUnderTest(gui.MainWindow):
 class MainWindowTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        taskList = task.filter.SearchFilter(task.TaskFile(), 
+        taskList = task.filter.SearchFilter(persistence.TaskFile(), 
             settings=self.settings)
         self.mainwindow = MainWindowUnderTest(dummy.IOController(), taskList,
             taskList, effort.EffortList(taskList), self.settings)

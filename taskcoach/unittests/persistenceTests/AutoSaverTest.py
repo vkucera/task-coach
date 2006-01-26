@@ -1,4 +1,4 @@
-import test
+import test, persistence
 import domain.task as task
 import domain.date as date
 
@@ -18,7 +18,7 @@ class DummyFile:
         pass
     
     
-class DummyTaskFile(task.TaskFile):
+class DummyTaskFile(persistence.TaskFile):
     def __init__(self, *args, **kwargs):
         self.saveCalled = 0
         super(DummyTaskFile, self).__init__(*args, **kwargs)
@@ -51,7 +51,7 @@ class AutoSaverTestCase(test.TestCase):
     def setUp(self):
         self.settings = DummySettings()
         self.taskFile = DummyTaskFile()
-        self.autoSaver = task.AutoSaver(self.settings, self.taskFile)
+        self.autoSaver = persistence.AutoSaver(self.settings, self.taskFile)
         
     def testCreate(self):
         self.failIf(self.taskFile.saveCalled)
@@ -102,7 +102,7 @@ class AutoSaverTestCase(test.TestCase):
         self.assertEqual(1, self.taskFile.saveCalled)
 
 
-class TestableAutoSaver(task.AutoSaver):
+class TestableAutoSaver(persistence.AutoSaver):
     def __init__(self, *args, **kwargs):
         self.copyCalled = False
         super(TestableAutoSaver, self).__init__(*args, **kwargs)

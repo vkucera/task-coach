@@ -1,4 +1,4 @@
-import xml, test
+import test, persistence
 import cStringIO as StringIO
 import domain.task as task
 import domain.effort as effort
@@ -7,7 +7,7 @@ import domain.date as date
 class XMLWriterTest(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
-        self.writer = task.writer.XMLWriter(self.fd)
+        self.writer = persistence.XMLWriter(self.fd)
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
             

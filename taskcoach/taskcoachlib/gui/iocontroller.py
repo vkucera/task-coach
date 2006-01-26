@@ -1,4 +1,4 @@
-import wx, meta, os, codecs
+import wx, meta, os, codecs, persistence
 from i18n import _
 import domain.task as task
 
@@ -73,7 +73,7 @@ class IOController(object):
         if not filename:
             filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
         if filename:
-            selectionFile = task.TaskFile(filename)
+            selectionFile = persistence.TaskFile(filename)
             selectionFile.extend(tasks)
             selectionFile.save()
             self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(selectionFile), 'filename': filename})
@@ -101,7 +101,7 @@ class IOController(object):
                 flags=wx.SAVE, fileDialogOpts=self.__icsFileDialogOpts)
         if filename:
             icsFile = codecs.open(filename, 'w', 'utf-8')
-            task.ICSWriter(icsFile).write(self.__taskFile)
+            persistence.ICSWriter(icsFile).write(self.__taskFile)
             icsFile.close()
             self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': filename})
             return True
