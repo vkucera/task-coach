@@ -1,4 +1,4 @@
-import test, meta
+import test, meta, persistence
 import cStringIO as StringIO
 import domain.task as task
 import domain.effort as effort
@@ -8,7 +8,7 @@ import domain.date as date
 class ICSTestCase(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
-        self.writer = task.ICSWriter(self.fd)
+        self.writer = persistence.ICSWriter(self.fd)
         self.taskList = self.createTaskList()
         self.icsFile = self.writeAndParse()
         

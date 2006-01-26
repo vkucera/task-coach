@@ -1,7 +1,8 @@
-import os, writer, reader, tasklist, patterns, codecs, shutil
+import os, patterns, codecs, shutil, xml
 import domain.date as date
+import domain.task as task
 
-class TaskFile(tasklist.TaskList):
+class TaskFile(task.TaskList):
     def __init__(self, filename='', *args, **kwargs):
         self.__needSave = False
         self.__loading = False
@@ -39,7 +40,7 @@ class TaskFile(tasklist.TaskList):
         self.__needSave = False
 
     def _read(self, fd):
-        return reader.XMLReader(fd).read()
+        return xml.XMLReader(fd).read()
         
     def exists(self):
         return os.path.isfile(self.__filename)
@@ -68,7 +69,7 @@ class TaskFile(tasklist.TaskList):
     def save(self):
         self.notifyObservers(patterns.Notification(self), 'TaskFileAboutToSave')
         fd = self._openForWrite()
-        writer.XMLWriter(fd).write(self)
+        xml.XMLWriter(fd).write(self)
         fd.close()
         self.__needSave = False
         

@@ -1,4 +1,4 @@
-import test, xml.parsers.expat, sets
+import test, xml.parsers.expat, sets, persistence
 import cStringIO as StringIO
 import domain.task as task
 import domain.date as date
@@ -6,7 +6,7 @@ import domain.date as date
 class XMLReaderTestCase(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
-        self.reader = task.reader.XMLReader(self.fd)
+        self.reader = persistence.XMLReader(self.fd)
 
     def writeAndRead(self, xml):
         xml = '<?taskcoach release="whatever" tskversion="%d"?>\n'%self.tskversion + xml
