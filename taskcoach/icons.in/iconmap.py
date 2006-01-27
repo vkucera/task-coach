@@ -55,7 +55,8 @@ iconlist = [
 ('colorize', 'actions', 'colorize', [22]),
 ('windows', 'apps', 'window_list', [22]),
 ('email', 'apps', 'email', [16]),
-('behavior', 'actions', 'misc', [22])]
+('behavior', 'actions', 'misc', [22]),
+('attachment', 'actions', 'attach', [22])]
 
 icons = {}
 

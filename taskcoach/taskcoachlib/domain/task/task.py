@@ -384,6 +384,11 @@ class Task(patterns.Observable):
             self._attachments.remove(attachment)
             self.notifyObservers(patterns.Notification(self), 'attachment')
             
+    def removeAllAttachments(self):
+        if self._attachments:
+            self._attachments = []
+            self.notifyObservers(patterns.Notification(self), 'attachment')
+            
     # behavior
     
     # To experiment, this attribute is coded by means of a proporty, which

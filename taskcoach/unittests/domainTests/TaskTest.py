@@ -146,6 +146,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testTaskHasNoAttachmentsByDefault(self):
         self.assertEqual([], self.task.attachments())
         
+        
     # move these to another fixture?
     def testSetCompletionDateMakesTaskCompleted(self):
         self.task.setCompletionDate()
@@ -691,27 +692,37 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseTest(TaskTestCase):
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
         
 
-class TaskWithAttachmentFixture(TaskTestCase):
+class AttachmentNotificationMixin(NotificationMixin):
+    def setUp(self):
+        self.eventType = 'attachment'
+        super(AttachmentNotificationMixin, self).setUp()
+
+
+class TaskWithoutAttachmentFixture(AttachmentNotificationMixin, TaskTestCase):
+    def testRemoveNonExistingAttachmentRaisesNoException(self):
+        self.task.removeAttachment('Non-existing attachment')
+        
+    def testRemoveAllAttachmentsCausesNoNotification(self):
+        self.task.removeAllAttachments()
+        self.failIfNotified()
+
+    
+class TaskWithAttachmentFixture(AttachmentNotificationMixin, TaskTestCase):
     def taskCreationKeywordArguments(self):
         return [{'attachments': ['/home/frank/attachment.txt']}]
-         
+
     def testAttachments(self):
         self.assertEqual(self.taskCreationKeywordArguments()[0]['attachments'],
                          self.task.attachments())
-                         
-    def testRemoveAttachment(self):
-        self.task.removeAttachment(self.taskCreationKeywordArguments()[0]['attachments'][0])
-        self.assertEqual([], self.task.attachments())
-        
+                                 
     def testRemoveNonExistingAttachment(self):
         self.task.removeAttachment('Non-existing attachment')
         self.assertEqual(self.taskCreationKeywordArguments()[0]['attachments'],
                          self.task.attachments())
 
 
-class TaskWithAttachmentAddedTestCase(NotificationMixin, TaskTestCase):
+class TaskWithAttachmentAddedTestCase(AttachmentNotificationMixin, TaskTestCase):
     def setUp(self):
-        self.eventType = 'attachment'
         super(TaskWithAttachmentAddedTestCase, self).setUp()
         self.attachment = './test.txt'
         self.task.addAttachment(self.attachment)
@@ -736,7 +747,20 @@ class TaskWithAttachmentRemovedFixture(TaskWithAttachmentAddedTestCase):
     def testNotification(self):
         self.failUnlessNotified(2)
 
-            
+
+class TaskWithAllAttachmentsRemovedFixture(TaskWithAttachmentAddedTestCase):
+    def setUp(self):
+        super(TaskWithAllAttachmentsRemovedFixture, self).setUp()
+        self.task.removeAllAttachments()
+
+    def testRemoveAllAttachments(self):
+        self.assertEqual([], self.task.attachments())
+
+    def testRemoveAllAttachmentsCausesNotification(self):
+        self.failUnlessNotified(2)
+
+
+
 ##################
 
 
