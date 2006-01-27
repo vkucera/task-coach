@@ -2,6 +2,7 @@ import widgets, sys
 from gui import render
 import wx, datetime
 import wx.lib.masked as masked
+import wx.lib.filebrowsebutton as filebrowsebutton
 from i18n import _
 import domain.date as date
 
@@ -229,6 +230,54 @@ class CategoriesPage(widgets.BookPage):
         self._textEntry.Clear()
 
 
+class AttachmentPage(widgets.BookPage):
+    def __init__(self, parent, task, *args, **kwargs):
+        super(AttachmentPage, self).__init__(parent, columns=4, growableColumn=1)
+        self._task = task
+        self._listCtrl = wx.ListCtrl(self, style=wx.LC_LIST)
+        for attachment in task.attachments():
+            item = wx.ListItem()
+            item.SetText(attachment)
+            self._listCtrl.InsertItem(item)
+        self.addEntry(_('Attachments'), self._listCtrl, growable=True)
+        self._textEntry = widgets.SingleLineTextCtrl(self, style=wx.TE_PROCESS_ENTER)
+        self._browseButton = wx.Button(self, label=_('Browse'))
+        self._addButton = wx.Button(self, label=_('Add attachment'))
+        self._addButton.Bind(wx.EVT_BUTTON, self.onNewAttachment)
+        self.addEntry(_('New attachment'), self._textEntry,
+            self._browseButton, self._addButton)
+        self.Bind(wx.EVT_TEXT, self.onAttachmentTextEntryChanged, self._textEntry)
+        self.disallowNewAttachment()
+
+    def allowNewAttachment(self):
+        if not self._addButton.IsEnabled():
+            self.Bind(wx.EVT_TEXT_ENTER, self.onNewAttachment, self._textEntry)
+            self._addButton.Enable()
+    
+    def disallowNewAttachment(self):
+        if self._addButton.IsEnabled():
+            self.Unbind(wx.EVT_TEXT_ENTER, self._textEntry)
+            self._addButton.Disable()
+        
+    def onAttachmentTextEntryChanged(self, event):
+        if self._textEntry.GetValue():
+            self.allowNewAttachment()
+        else:
+            self.disallowNewAttachment()
+
+    def onNewAttachment(self, event):
+        item = wx.ListItem()
+        item.SetText(self._textEntry.GetValue())
+        self._listCtrl.InsertItem(item)
+        self._textEntry.Clear()
+        self.disallowNewAttachment()
+    
+    def ok(self):
+        self._task.removeAllAttachments()
+        for index in range(self._listCtrl.GetItemCount()):
+            self._task.addAttachment(self._listCtrl.GetItem(index).GetText())
+                                     
+            
 class BehaviorPage(widgets.BookPage):
     def __init__(self, parent, task, *args, **kwargs):
         super(BehaviorPage, self).__init__(parent, columns=2, growableColumn=1,
@@ -263,7 +312,9 @@ class TaskEditBook(widgets.Listbook):
         if task.timeSpent(recursive=True):
             effortPage = EffortPage(self, task, taskList, settings, uiCommands)
             self.AddPage(effortPage, _('Effort'), 'start')
+        self.AddPage(AttachmentPage(self, task), _('Attachments'), 'attachment')
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior')         
+
 
 class EffortEditBook(widgets.BookPage):
     def __init__(self, parent, effort, editor, effortList, taskList, 

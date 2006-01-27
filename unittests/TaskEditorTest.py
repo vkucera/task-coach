@@ -178,7 +178,7 @@ class EditTaskTest(TaskEditorTestCase):
         self.failIf(self.editor[0][2]._addButton.IsEnabled())
         
     def testBehaviorMarkCompleted(self):
-        self.editor[0][5]._markTaskCompletedEntry.SetStringSelection('Yes')
+        self.editor[0][6]._markTaskCompletedEntry.SetStringSelection('Yes')
         self.editor.ok()
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
 
