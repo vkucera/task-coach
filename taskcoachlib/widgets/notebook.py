@@ -42,21 +42,23 @@ class BookPage(wx.Panel):
             self._sizer.AddGrowableCol(growableColumn)
         self._borderWidth = 5
         self.SetSizerAndFit(self._sizer)
-        
-        
-    def addEntry(self, labelText, *controls, **kwargs):
+                
+    def addEntry(self, *controls, **kwargs):
         controls = [control for control in controls if control is not None]
-        if labelText is not None:
-            if labelText: labelText += ':'
-            label = wx.StaticText(self, -1, labelText)
-            self._sizer.Add(label, self._position.next(),
-                flag=wx.ALL|wx.ALIGN_RIGHT, border=self._borderWidth)
-        for control in controls:
+        labelInFirstColumn = type(controls[0]) in [type(''), type(u'')]
+        for columnIndex, control in enumerate(controls):
             if type(control) in [type(''), type(u'')]:
                 control = wx.StaticText(self, -1, control)
-            colspan = max(self._columns - len(controls), 1)
-            self._sizer.Add(control, self._position.next(colspan), span=(1, colspan),
-                flag=wx.ALIGN_LEFT|wx.EXPAND|wx.ALL, border=self._borderWidth)
+            if columnIndex == len(controls) - 1:
+                colspan = max(self._columns + 1 - len(controls), 1)
+            else:
+                colspan = 1
+            if columnIndex == 0 and labelInFirstColumn:
+                flag = wx.ALL|wx.ALIGN_RIGHT
+            else:
+                flag = wx.ALL|wx.ALIGN_LEFT|wx.EXPAND
+            self._sizer.Add(control, self._position.next(colspan), 
+                span=(1, colspan), flag=flag, border=self._borderWidth)
         if 'growable' in kwargs and kwargs['growable']:
             self._sizer.AddGrowableRow(self._position.maxRow())
 

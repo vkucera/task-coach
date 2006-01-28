@@ -12,10 +12,10 @@ class IOController(object):
         self.__taskFile = taskFile
         self.__messageCallback = messageCallback
         self.__settings = settings
-        self.__tskFileDialogOpts = { 'default_path' : os.getcwd(), 
+        self.__tskFileDialogOpts = {'default_path' : os.getcwd(), 
             'default_extension' : 'tsk', 'wildcard' : 
             _('%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*')%meta.name }
-        self.__icsFileDialogOpts = { 'default_path' : os.getcwd(), 
+        self.__icsFileDialogOpts = {'default_path' : os.getcwd(), 
             'default_extension' : 'ics', 'wildcard' : 
             _('iCalendar files (*.ics)|*.ics|All files (*.*)|*') }
 

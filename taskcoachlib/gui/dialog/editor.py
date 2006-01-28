@@ -1,10 +1,11 @@
-import widgets, sys
+import widgets, sys, os
 from gui import render
 import wx, datetime
 import wx.lib.masked as masked
 import wx.lib.filebrowsebutton as filebrowsebutton
 from i18n import _
 import domain.date as date
+import thirdparty.desktop as desktop
 
 class DateEntry(wx.Panel):
     defaultDate = date.Date()
@@ -230,48 +231,79 @@ class CategoriesPage(widgets.BookPage):
         self._textEntry.Clear()
 
 
+class FileDropTarget(wx.FileDropTarget):
+    def __init__(self, onDropCallback):
+        wx.FileDropTarget.__init__(self)
+        self.__onDropCallback = onDropCallback
+        
+    def OnDropFiles(self, x, y, filenames):
+        #print "\n%d file(s) dropped at %d,%d:" %(len(filenames), x, y)
+        for filename in filenames:
+            self.__onDropCallback(filename)
+
+
 class AttachmentPage(widgets.BookPage):
     def __init__(self, parent, task, *args, **kwargs):
-        super(AttachmentPage, self).__init__(parent, columns=4, growableColumn=1)
+        super(AttachmentPage, self).__init__(parent, columns=2, growableColumn=0)
         self._task = task
         self._listCtrl = wx.ListCtrl(self, style=wx.LC_LIST)
+        self._listCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelectItem)
+        self._listCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onDeselectItem)
+        self._listCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onOpen)
+        dropTarget = FileDropTarget(self.addAttachment)
+        self._listCtrl.SetDropTarget(dropTarget)
         for attachment in task.attachments():
-            item = wx.ListItem()
-            item.SetText(attachment)
-            self._listCtrl.InsertItem(item)
-        self.addEntry(_('Attachments'), self._listCtrl, growable=True)
-        self._textEntry = widgets.SingleLineTextCtrl(self, style=wx.TE_PROCESS_ENTER)
-        self._browseButton = wx.Button(self, label=_('Browse'))
-        self._addButton = wx.Button(self, label=_('Add attachment'))
-        self._addButton.Bind(wx.EVT_BUTTON, self.onNewAttachment)
-        self.addEntry(_('New attachment'), self._textEntry,
-            self._browseButton, self._addButton)
-        self.Bind(wx.EVT_TEXT, self.onAttachmentTextEntryChanged, self._textEntry)
-        self.disallowNewAttachment()
-
-    def allowNewAttachment(self):
-        if not self._addButton.IsEnabled():
-            self.Bind(wx.EVT_TEXT_ENTER, self.onNewAttachment, self._textEntry)
-            self._addButton.Enable()
-    
-    def disallowNewAttachment(self):
-        if self._addButton.IsEnabled():
-            self.Unbind(wx.EVT_TEXT_ENTER, self._textEntry)
-            self._addButton.Disable()
-        
-    def onAttachmentTextEntryChanged(self, event):
-        if self._textEntry.GetValue():
-            self.allowNewAttachment()
+            self.addAttachment(attachment)
+        self.addEntry(self._listCtrl, growable=True)
+        self._buttonBox = widgets.ButtonBox(self, 
+            (_('Open attachment'), self.onOpen),
+            (_('Add attachment'), self.onBrowse), 
+            (_('Remove attachment'), self.onRemove))
+        self._buttonsThatNeedSelectedAttachments = [_('Open attachment'), 
+                                                    _('Remove attachment')]
+        self.addEntry(self._buttonBox)
+        if task.attachments():
+            self._listCtrl.SetItemState(0, wx.LIST_STATE_SELECTED, 
+                                        wx.LIST_STATE_SELECTED)
         else:
-            self.disallowNewAttachment()
-
-    def onNewAttachment(self, event):
+            self.onDeselectItem()
+            
+    def addAttachment(self, filename):
         item = wx.ListItem()
-        item.SetText(self._textEntry.GetValue())
+        item.SetText(filename)
         self._listCtrl.InsertItem(item)
-        self._textEntry.Clear()
-        self.disallowNewAttachment()
+        
+    def onBrowse(self, *args, **kwargs):
+        fileDialogOpts = {'default_path' : os.getcwd(), 
+            'wildcard' : _('All files (*.*)|*')}
+        filename = wx.FileSelector(_('Open'), flags=wx.OPEN, **fileDialogOpts)
+        if filename:
+            self.addAttachment(filename)
+        
+    def onOpen(self, *args, **kwargs):
+        index = -1
+        while True:
+            index = self._listCtrl.GetNextItem(index, state=wx.LIST_STATE_SELECTED)
+            if index == -1:
+                break
+            desktop.open(self._listCtrl.GetItemText(index))
     
+    def onRemove(self, *args, **kwargs):
+        index = -1
+        while True:
+            index = self._listCtrl.GetNextItem(index, state=wx.LIST_STATE_SELECTED)
+            if index == -1:
+                break
+            self._listCtrl.DeleteItem(index)
+    
+    def onSelectItem(self, *args, **kwargs):
+        for button in self._buttonsThatNeedSelectedAttachments:
+            self._buttonBox.enable(button)
+        
+    def onDeselectItem(self, *args, **kwargs):
+        for button in self._buttonsThatNeedSelectedAttachments:
+            self._buttonBox.disable(button)
+        
     def ok(self):
         self._task.removeAllAttachments()
         for index in range(self._listCtrl.GetItemCount()):
@@ -377,25 +409,11 @@ class EffortEditBook(widgets.BookPage):
             self._editor.enableOK()
 
 
-class MyFileDropTarget(wx.FileDropTarget):
-    def __init__(self, window):
-        wx.FileDropTarget.__init__(self)
-        self.window = window
-        
-    def OnDropFiles(self, x, y, filenames):
-        print "\n%d file(s) dropped at %d,%d:" %(len(filenames), x, y)
-        for file in filenames:
-            print file
-
-
 class EditorWithCommand(widgets.NotebookDialog):
     def __init__(self, parent, command, uiCommands, *args, **kwargs):
         self._uiCommands = uiCommands
         self._command = command
         super(EditorWithCommand, self).__init__(parent, command.name(), *args, **kwargs)
-        #dropTarget = MyFileDropTarget(self)
-        #self.SetDropTarget(dropTarget)
-        
         
     def ok(self, *args, **kwargs):
         super(EditorWithCommand, self).ok(*args, **kwargs)
