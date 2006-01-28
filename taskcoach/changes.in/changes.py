@@ -5,6 +5,10 @@ from domain import *
 releases = [
 Release('0.56', 'January ?, 2006',
     featuresAdded=[
+        Feature('''Tasks can have attachments. Attachments can be added, removed
+and opened. Opening of attachments is done by starting the default application
+for the attachment file type. Attachments can also be dragged from a file 
+browser and dropped onto the attachment pane.''', '1250241', '1339113'),
         Feature('''Whether a task is marked completed when all its
 child tasks are completed is now a setting that can be changed application-wide
 via the preferences dialog. The application-wide setting can be overruled

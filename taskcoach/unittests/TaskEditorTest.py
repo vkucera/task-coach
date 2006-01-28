@@ -306,7 +306,7 @@ class EffortEditorTest(TaskEditorTestCase):
         self.effortList[0].setStop(date.DateTime(1900, 1, 1))
         self.editor = self.createEditor()
         self.editor._interior[0].preventNegativeEffortDuration()
-        self.failIf(self.editor._buttonBox._buttons['OK'].IsEnabled())
+        self.failIf(self.editor._buttonBox['OK'].IsEnabled())
         
     def testChangeTask(self):
         self.editor[0]._taskEntry.SetStringSelection('task2')
