@@ -55,7 +55,7 @@ class Task(patterns.Observable):
             '_children' : self._children, '_parent' : self._parent,
             '_efforts' : self._efforts, '_budget' : self._budget, 
             '_categories': sets.Set(self._categories),
-            '_priority': self._priority }
+            '_priority': self._priority, '_attachments': self._attachments[:] }
         
     def __repr__(self):
         return self._subject

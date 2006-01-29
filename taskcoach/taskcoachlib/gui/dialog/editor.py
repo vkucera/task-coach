@@ -237,7 +237,6 @@ class FileDropTarget(wx.FileDropTarget):
         self.__onDropCallback = onDropCallback
         
     def OnDropFiles(self, x, y, filenames):
-        #print "\n%d file(s) dropped at %d,%d:" %(len(filenames), x, y)
         for filename in filenames:
             self.__onDropCallback(filename)
 
@@ -286,7 +285,11 @@ class AttachmentPage(widgets.BookPage):
             index = self._listCtrl.GetNextItem(index, state=wx.LIST_STATE_SELECTED)
             if index == -1:
                 break
-            desktop.open(self._listCtrl.GetItemText(index))
+            try:
+                desktop.open(self._listCtrl.GetItemText(index))
+            except Exception, instance:
+                wx.MessageBox(str(instance), caption=_('Error'), 
+                              style=wx.ICON_ERROR)
     
     def onRemove(self, *args, **kwargs):
         index = -1

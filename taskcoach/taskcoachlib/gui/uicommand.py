@@ -1,5 +1,5 @@
 import wx, patterns, config, gui, meta, command, help, widgets, \
-    webbrowser, urllib
+    webbrowser, urllib, os
 from gui import render
 from i18n import _
 import domain.task as task
@@ -654,7 +654,23 @@ class TaskMail(NeedsSelectedTasks, ViewerCommand):
         body = urllib.quote('\r\n'.join(bodyLines))
         mailToURL = 'mailto:%s?subject=%s&body=%s'%(_('Please enter recipient'), subject, body)
         webbrowser.open(mailToURL)
+
+
+class TaskAddAttachment(NeedsSelectedTasks, FilterCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(TaskAddAttachment, self).__init__(menuText=_('&Add attachment'),
+            helpText=_('Browse for files to add as attachment to the selected task(s)'),
+            bitmap='attachment', *args, **kwargs)
         
+    def doCommand(self, event):
+        fileDialogOpts = {'default_path' : os.getcwd(), 
+            'wildcard' : _('All files (*.*)|*')}
+        filename = wx.FileSelector(_('Add attachment'), flags=wx.OPEN, **fileDialogOpts)
+        if filename:
+            addAttachmentCommand = command.AddAttachmentToTaskCommand(self.filteredTaskList,
+                self.viewer.curselection(), attachment=filename)
+            addAttachmentCommand.do()
+                
 
 class EffortNew(NeedsAtLeastOneTask, MainWindowCommand, EffortCommand,
         ViewerCommand, UICommandsCommand, FilterCommand):
@@ -987,7 +1003,8 @@ class UICommands(dict):
         self['mailtask'] = TaskMail(viewer=viewer, menuText=_('Mail task'), 
             helpText=_('Mail the task, using your default mailer'), 
             bitmap='email')
-        
+        self['addattachmenttotask'] = TaskAddAttachment(filteredTaskList=filteredTaskList,
+                                                        viewer=viewer)
         # Task related, but not on any menu:
         self['draganddroptask'] = TaskDragAndDrop(filteredTaskList=filteredTaskList, viewer=viewer)
 

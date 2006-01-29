@@ -141,8 +141,34 @@ class EditTaskCommand(base.BaseCommand, SaveTaskStateMixin):
     def redo_command(self):
         self.redoStates()
         super(EditTaskCommand, self).redo_command()
+        
+        
+class AddAttachmentToTaskCommand(base.BaseCommand):
+    def name(self):
+        return _('Add attachment')
+    
+    def __init__(self, *args, **kwargs):
+        self.__attachment = kwargs.pop('attachment')
+        super(AddAttachmentToTaskCommand, self).__init__(*args, **kwargs)
 
+    def addAttachments(self):
+        for task in self.items:
+            task.addAttachment(self.__attachment)
+        
+    def removeAttachments(self):
+        for task in self.items:
+            task.removeAttachment(self.__attachment)
+                
+    def do_command(self):
+        self.addAttachments()
+        
+    def undo_command(self):
+        self.removeAttachments()
 
+    def redo_command(self):
+        self.addAttachments()
+        
+        
 class EffortCommand(base.BaseCommand):
     def stopTracking(self):
         self.stoppedEfforts = []
