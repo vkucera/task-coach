@@ -58,6 +58,12 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
         command.DragAndDropTaskCommand(self.taskList, tasks or [], 
                                        drop=dropTarget).do()
         
+    def addAttachment(self, tasks=None, attachment='attachment'):
+        self.attachment = attachment
+        addAttachmentCommand = command.AddAttachmentToTaskCommand(self.taskList,
+            tasks or [], attachment=attachment)
+        addAttachmentCommand.do()
+
 
 class CommandWithChildrenTestCase(CommandTestCase):
     def setUp(self):
@@ -221,6 +227,7 @@ class EditTaskCommandTest(CommandTestCase):
             task.setDescription('New description')
             task.setBudget(date.TimeDelta(hours=1))
             task.setCompletionDate()
+            task.addAttachment('attachment')
         editcommand.do()
 
     def testEditTask(self):
@@ -253,10 +260,15 @@ class EditTaskCommandTest(CommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(date.TimeDelta(hours=1), self.task1.budget()),
             lambda: self.assertEqual(date.TimeDelta(), self.task1.budget()))
+
+    def testAddAttachment(self):
+        self.edit([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(['attachment'], self.task1.attachments()),
+            lambda: self.assertEqual([], self.task1.attachments()))
             
             
 class MarkCompletedCommandTest(CommandWithChildrenTestCase):
-
     def testMarkCompleted(self):
         self.markCompleted([self.task1])
         self.assertDoUndoRedo(
@@ -312,3 +324,19 @@ class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
     def testCannotDropOnGrandchild(self):
         self.dragAndDrop(self.grandchild, [self.parent])
         self.failIf(patterns.CommandHistory().hasHistory())
+        
+
+class AddAttachmentToTaskCommandTest(CommandTestCase):
+    def testAddOneAttachmentToOneTask(self):
+        self.addAttachment([self.task1])
+        self.assertDoUndoRedo(lambda: self.assertEqual([self.attachment], 
+            self.task1.attachments()), lambda: self.assertEqual([], 
+            self.task1.attachments()))
+            
+    def testAddOneAttachmentToTwoTasks(self):
+        self.addAttachment([self.task1, self.task2])
+        self.assertDoUndoRedo(lambda: self.failUnless([self.attachment] == \
+            self.task1.attachments() == self.task2.attachments()), 
+            lambda: self.failUnless([] == self.task1.attachments() == \
+            self.task2.attachments()))
+    
