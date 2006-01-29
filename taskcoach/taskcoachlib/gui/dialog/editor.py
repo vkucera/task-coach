@@ -1,4 +1,4 @@
-import widgets, sys, os
+import widgets
 from gui import render
 import wx, datetime
 import wx.lib.masked as masked
@@ -6,6 +6,7 @@ import wx.lib.filebrowsebutton as filebrowsebutton
 from i18n import _
 import domain.date as date
 import thirdparty.desktop as desktop
+
 
 class DateEntry(wx.Panel):
     defaultDate = date.Date()
@@ -273,9 +274,7 @@ class AttachmentPage(widgets.BookPage):
         self._listCtrl.InsertItem(item)
         
     def onBrowse(self, *args, **kwargs):
-        fileDialogOpts = {'default_path' : os.getcwd(), 
-            'wildcard' : _('All files (*.*)|*')}
-        filename = wx.FileSelector(_('Open'), flags=wx.OPEN, **fileDialogOpts)
+        filename = widgets.AttachmentSelector()
         if filename:
             self.addAttachment(filename)
         
