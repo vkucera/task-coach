@@ -1,4 +1,4 @@
-import wx, wx.html, widgets
+import wx, wx.html, widgets, os
 from i18n import _
 
 class Dialog(wx.Dialog):
@@ -97,3 +97,12 @@ class HTMLDialog(Dialog):
     
     def OnLinkClicked(self, linkInfo):
         print linkInfo
+        
+        
+def AttachmentSelector(**callerKeywordArguments):
+    kwargs = {'message': _('Add attachment'),
+              'default_path' : os.getcwd(), 
+              'wildcard' : _('All files (*.*)|*'), 
+              'flags': wx.OPEN}
+    kwargs.update(callerKeywordArguments)
+    return wx.FileSelectorsuper(**kwargs)

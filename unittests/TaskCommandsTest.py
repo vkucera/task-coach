@@ -227,7 +227,10 @@ class EditTaskCommandTest(CommandTestCase):
             task.setDescription('New description')
             task.setBudget(date.TimeDelta(hours=1))
             task.setCompletionDate()
-            task.addAttachment('attachment')
+            if 'attachment' in task.attachments():
+                task.removeAttachment('attachment')
+            else:
+                task.addAttachment('attachment')
         editcommand.do()
 
     def testEditTask(self):
@@ -266,6 +269,13 @@ class EditTaskCommandTest(CommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(['attachment'], self.task1.attachments()),
             lambda: self.assertEqual([], self.task1.attachments()))
+            
+    def testRemoveAttachment(self):
+        self.task1.addAttachment('attachment')
+        self.edit([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual([], self.task1.attachments()),
+            lambda: self.assertEqual(['attachment'], self.task1.attachments()))
             
             
 class MarkCompletedCommandTest(CommandWithChildrenTestCase):

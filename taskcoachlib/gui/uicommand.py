@@ -663,9 +663,7 @@ class TaskAddAttachment(NeedsSelectedTasks, FilterCommand, ViewerCommand):
             bitmap='attachment', *args, **kwargs)
         
     def doCommand(self, event):
-        fileDialogOpts = {'default_path' : os.getcwd(), 
-            'wildcard' : _('All files (*.*)|*')}
-        filename = wx.FileSelector(_('Add attachment'), flags=wx.OPEN, **fileDialogOpts)
+        filename = widgets.AttachmentSelector()
         if filename:
             addAttachmentCommand = command.AddAttachmentToTaskCommand(self.filteredTaskList,
                 self.viewer.curselection(), attachment=filename)
