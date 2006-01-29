@@ -105,4 +105,4 @@ def AttachmentSelector(**callerKeywordArguments):
               'wildcard' : _('All files (*.*)|*'), 
               'flags': wx.OPEN}
     kwargs.update(callerKeywordArguments)
-    return wx.FileSelectorsuper(**kwargs)
+    return wx.FileSelector(**kwargs)

@@ -134,6 +134,7 @@ class EditTaskTest(TaskEditorTestCase):
 
     def createTasks(self):
         self.task = task.Task('Task to edit')
+        self.task.addAttachment('some attachment')
         return [self.task]
 
     def testOk(self):
@@ -181,6 +182,16 @@ class EditTaskTest(TaskEditorTestCase):
         self.editor[0][6]._markTaskCompletedEntry.SetStringSelection('Yes')
         self.editor.ok()
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+
+    def testAddAttachment(self):
+        self.editor[0][5].addAttachment('filename')
+        self.editor.ok()
+        self.failUnless('filename' in self.task.attachments())
+        
+    def testRemoveAttachment(self):
+        self.editor[0][5]._listCtrl.DeleteItem(0)
+        self.editor.ok()
+        self.assertEqual([], self.task.attachments())
 
 
 class EditMultipleTasksTest(TaskEditorTestCase):

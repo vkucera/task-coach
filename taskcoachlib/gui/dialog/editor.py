@@ -257,7 +257,7 @@ class AttachmentPage(widgets.BookPage):
         self.addEntry(self._listCtrl, growable=True)
         self._buttonBox = widgets.ButtonBox(self, 
             (_('Open attachment'), self.onOpen),
-            (_('Add attachment'), self.onBrowse), 
+            (_('Add attachment...'), self.onBrowse), 
             (_('Remove attachment'), self.onRemove))
         self._buttonsThatNeedSelectedAttachments = [_('Open attachment'), 
                                                     _('Remove attachment')]
@@ -287,7 +287,7 @@ class AttachmentPage(widgets.BookPage):
             try:
                 desktop.open(self._listCtrl.GetItemText(index))
             except Exception, instance:
-                wx.MessageBox(str(instance), caption=_('Error'), 
+                wx.MessageBox(str(instance), caption=_('Error opening attachment'), 
                               style=wx.ICON_ERROR)
     
     def onRemove(self, *args, **kwargs):
