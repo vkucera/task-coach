@@ -2,7 +2,7 @@ name = 'Task Coach'
 description = 'Your friendly task manager'
 version = '0.56'
 previous_version = '0.55'
-date = 'January ?, 2006'
+date = 'February ?, 2006'
 author = 'Frank Niessink'
 author_email = 'frank@niessink.com'
 url = 'http://taskcoach.niessink.com/'
@@ -25,7 +25,7 @@ languages = {
 
 def __createDict(locals):
     ''' Provide the local variables as a dictionary for use in string
-    formatting. See e.g. meta/help.py. '''
+        formatting. '''
     metaDict = {}
     for key in locals:
         if not key.startswith('__'):

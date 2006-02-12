@@ -1,4 +1,5 @@
-import wx, webbrowser
+import wx, webbrowser, draganddrop
+
 
 UNICODE_CONTROL_CHARACTERS_TO_WEED = {}
 for ordinal in range(0x20):
@@ -58,3 +59,74 @@ class StaticText(wx.Window):
         self.SetSize(label.GetSize())
         if helpText:
             self.SetToolTipString(helpText)
+
+
+class SingleLineTextCtrlWithEnterButton(wx.Panel):
+    def __init__(self, parent, *args, **kwargs):
+        ''' SingleLineTextCtrlWithEnterButton provides a text control and a
+            together with an 'enter' button. '''
+        label = kwargs.pop('label')
+        self.__onEnterCallback = kwargs.pop('onEnter')
+        spacerWidth = kwargs.pop('spacerWidth', 5)
+        super(SingleLineTextCtrlWithEnterButton, self).__init__(parent, -1, *args, **kwargs)
+        self.__textCtrl = SingleLineTextCtrl(self, style=wx.TE_PROCESS_ENTER)
+        self.__textCtrl.Bind(wx.EVT_TEXT, self.onTextCtrlChanged)
+        self.__button = wx.Button(self, label=label)
+        self.__button.Bind(wx.EVT_BUTTON, self.onEnter)
+        dropTarget = draganddrop.TextDropTarget(self.onTextDrop)
+        self.__textCtrl.SetDropTarget(dropTarget)
+        self.__layoutControls(spacerWidth)
+        self.onTextCtrlChanged()
+        
+    def __layoutControls(self, spacerWidth):
+        self.__sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.__sizer.Add(self.__textCtrl, proportion=1, flag=wx.EXPAND)
+        self.__sizer.Add((5,0))
+        self.__sizer.Add(self.__button)
+        self.SetSizerAndFit(self.__sizer)
+    
+    # forwarders
+    
+    def isButtonEnabled(self):
+        return self.__button.IsEnabled()
+    
+    def SetValue(self, *args, **kwargs):
+        return self.__textCtrl.SetValue(*args, **kwargs)
+        
+    def GetValue(self, *args, **kwargs):
+        return self.__textCtrl.GetValue(*args, **kwargs)
+    
+    # callbacks
+    
+    def onTextCtrlChanged(self, *args, **kwargs):
+        ''' Called when the contents of the textCtrl is changed. '''
+        if self.__textCtrl.GetValue():
+            self.__allowEnter()
+        else:
+            self.__disallowEnter()
+
+    def onEnter(self, *args, **kwargs):
+        ''' Called when the user hits enter or clicks the button. '''
+        self.__onEnterCallback(self.__textCtrl.GetValue())
+        self.__textCtrl.Clear()
+    
+    def onTextDrop(self, text):
+        ''' Called when the user drags text and drops it on the textCtrl. '''
+        self.__textCtrl.SetValue(text)
+        
+    # helper methods
+                    
+    def __allowEnter(self):
+        ''' The textctrl contains text so allow the user to hit enter or click
+            the button. '''
+        if not self.__button.IsEnabled():
+            self.__textCtrl.Bind(wx.EVT_TEXT_ENTER, self.onEnter)
+            self.__button.Enable()
+        
+    def __disallowEnter(self):
+        ''' The textctrl contains no text so disallow the user to hit enter
+            or click the button. '''
+        if self.__button.IsEnabled():
+            self.__textCtrl.Unbind(wx.EVT_TEXT_ENTER)
+            self.__button.Disable()
+            

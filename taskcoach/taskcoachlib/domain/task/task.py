@@ -375,19 +375,24 @@ class Task(patterns.Observable):
     def attachments(self):
         return self._attachments
     
-    def addAttachment(self, attachment):
-        self._attachments.append(attachment)
-        self.notifyObservers(patterns.Notification(self), 'attachment')
+    def addAttachments(self, *attachments):
+        if attachments:
+            self._attachments.extend(attachments)
+            self.notifyObservers(patterns.Notification(self, changeNeedsSave=True), 'attachment')
         
-    def removeAttachment(self, attachment):
-        if attachment in self._attachments:
-            self._attachments.remove(attachment)
-            self.notifyObservers(patterns.Notification(self), 'attachment')
+    def removeAttachments(self, *attachments):
+        atLeastOneAttachmentRemoved = False
+        for attachment in attachments:
+            if attachment in self._attachments:
+                self._attachments.remove(attachment)
+                atLeastOneAttachmentRemoved = True
+        if atLeastOneAttachmentRemoved:
+            self.notifyObservers(patterns.Notification(self, changeNeedsSave=True), 'attachment')
             
     def removeAllAttachments(self):
         if self._attachments:
             self._attachments = []
-            self.notifyObservers(patterns.Notification(self), 'attachment')
+            self.notifyObservers(patterns.Notification(self, changeNeedsSave=True), 'attachment')
             
     # behavior
     

@@ -1,4 +1,4 @@
-import wx, widgets
+import wx, widgets, draganddrop
 
 class GridCursor:
     ''' Utility class to help when adding controls to a GridBagSizer. '''
@@ -59,12 +59,31 @@ class BookPage(wx.Panel):
                 flag = wx.ALL|wx.ALIGN_LEFT|wx.EXPAND
             self._sizer.Add(control, self._position.next(colspan), 
                 span=(1, colspan), flag=flag, border=self._borderWidth)
-        if 'growable' in kwargs and kwargs['growable']:
+        if kwargs.get('growable', False):
             self._sizer.AddGrowableRow(self._position.maxRow())
 
     def ok(self):
         pass
-    
+
+
+class BoxedBookPage(BookPage):
+    def __init__(self, *args, **kwargs):
+        super(BoxedBookPage, self).__init__(*args, **kwargs)
+        self.__boxSizers = {}
+
+    def addBox(self, label):
+        box = wx.StaticBox(self, label=label)
+        boxSizer = wx.StaticBoxSizer(box, wx.HORIZONTAL)
+        gridBagSizer = wx.GridBagSizer()
+        boxSizer.Add(gridBagSizer, flag=wx.EXPAND|wx.ALL)
+        self.__boxSizers[label] = gridBagSizer
+        self._sizer.Add(boxSizer, self._position.next(self._columns),
+                        span=(1, self._columns), flag=wx.EXPAND|wx.ALL)
+
+    def addEntry(self, *args, **kwargs):
+        self._sizer = self.__boxSizers[kwargs['box']]
+        super(BoxedBookPage, self).addEntry(*args, **kwargs)
+        
 
 class Book(object):
     ''' Abstract base class for *book '''
@@ -73,6 +92,8 @@ class Book(object):
     
     def __init__(self, parent, *args, **kwargs):
         super(Book, self).__init__(parent, -1, *args, **kwargs)
+        dropTarget = draganddrop.FileDropTarget(onDragOverCallback=self.onDragOver)
+        self.SetDropTarget(dropTarget)
         self.Bind(self.pageChangedEvent, self.onPageChanged)
         self.createImageList()
         
@@ -80,12 +101,24 @@ class Book(object):
         self.AssignImageList(wx.ImageList(*self._bitmapSize))
         
     def __getitem__(self, index):
-        ''' More pythonic way to get a specific page, also useful if you 
-            want to iterate over all pages, e.g: for page in notebook: ... '''
+        ''' More pythonic way to get a specific page, also useful for iterating
+            over all pages, e.g: for page in notebook: ... '''
         if index < self.GetPageCount():
             return self.GetPage(index)
         else:
             raise IndexError
+        
+    def onDragOver(self, x, y, defaultResult, pageSelectionArea=None):
+        ''' When the user drags something (currently limited to files because
+            the DropTarget created in __init__ is a FileDropTarget) over a tab
+            raise the appropriate page. '''
+        # NB: HitTest is currently only implemented under wxMSW and wxUniv.
+        # FIXME: This will probably give errors on Linux and Mac, need to test.
+        pageSelectionArea = pageSelectionArea or self
+        pageIndex, flags = pageSelectionArea.HitTest((x, y))
+        if pageIndex != wx.NOT_FOUND:
+            self.SetSelection(pageIndex)
+        return wx.DragNone
 
     def onPageChanged(self, event):
         ''' Can be overridden in a subclass to do something useful '''
@@ -113,7 +146,21 @@ class Notebook(Book, wx.Notebook):
 class Choicebook(Book, wx.Choicebook):
     pageChangedEvent = wx.EVT_CHOICEBOOK_PAGE_CHANGED
 
+    def onDragOver(self, *args, **kwargs):
+        ''' onDragOver cannot work for Choicebooks because the choice control
+            widget that is used to switch between pages has no HitTest 
+            method. '''
+        return wx.DragNone
 
 class Listbook(Book, wx.Listbook):
     _bitmapSize = (22, 22)
     pageChangedEvent = wx.EVT_LISTBOOK_PAGE_CHANGED
+
+    def onDragOver(self, x, y, defaultResult):
+        ''' onDragOver will only work for Listbooks if we query the list 
+            control (instead of the Listbook itself) with HitTest, so we pass
+            the result of self.GetListView() as pageSelectionArea to 
+            super.onDragOver. '''
+        return super(Listbook, self).onDragOver(x, y, defaultResult, 
+            pageSelectionArea=self.GetListView())
+    

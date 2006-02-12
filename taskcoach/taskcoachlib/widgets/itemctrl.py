@@ -2,7 +2,7 @@
     and TreeListCtrl. '''
 
 
-import wx, wx.lib.mixins.listctrl
+import wx, wx.lib.mixins.listctrl, draganddrop
 
 
 class _CtrlWithPopupMenu(object):
@@ -30,27 +30,74 @@ class _CtrlWithItemPopupMenu(_CtrlWithPopupMenu):
 
 
 class _CtrlWithColumnPopupMenu(_CtrlWithPopupMenu):
-    ''' This class enables a right-click popup menu on column headers. '''
+    ''' This class enables a right-click popup menu on column headers. The 
+        popup menu should expect a public property columnIndex to be set so 
+        that the control can tell the menu which column the user clicked to
+        popup the menu. '''
     
     def __init__(self, *args, **kwargs):
         self.__popupMenu = kwargs.pop('columnPopupMenu')
         super(_CtrlWithColumnPopupMenu, self).__init__(*args, **kwargs)
         if self.__popupMenu is not None:
-            self._attachPopupMenu(self.GetHeaderWindow(), [wx.EVT_LIST_COL_RIGHT_CLICK],
+            self._attachPopupMenu(self, [wx.EVT_LIST_COL_RIGHT_CLICK],
                 self.onColumnPopupMenu)
         
     def onColumnPopupMenu(self, event):
+        # We store the columnIndex in the menu, because it's near to 
+        # impossible for commands in the menu to determine on what column the
+        # menu was popped up.
+        columnIndex = event.GetColumn()
+        self.__popupMenu.columnIndex = columnIndex
         self.PopupMenu(self.__popupMenu, event.GetPosition())
         
-    def GetHeaderWindow(self):
-        ''' This method is automatically overridden by TreeListCtrl.GetHeaderWindow(),
-            which returns the window containing the column headers, when this class 
-            is mixed in with TreeListCtrl. '''
-        return self
 
+class _CtrlWithFileDropTarget(object):
+    ''' Control that accepts files being dropped onto items. '''
+    
+    def __init__(self, *args, **kwargs):
+        self.__onDropFilesCallback = kwargs.pop('onDropFiles', None)
+        super(_CtrlWithFileDropTarget, self).__init__(*args, **kwargs)
+        if self.__onDropFilesCallback:
+            dropTarget = draganddrop.FileDropTarget(self.onDropFiles, self.onDragOver)
+            self.GetMainWindow().SetDropTarget(dropTarget)
 
+    def onDropFiles(self, x, y, filenames):
+        item, flags, column = self.HitTest((x, y))
+        if self.__itemIsOk(item):
+            self.__onDropFilesCallback(self.index(item), filenames)
+        
+    def onDragOver(self, x, y, defaultResult):
+        item, flags, column = self.HitTest((x, y))
+        if self.__itemIsOk(item):
+            if flags & wx.TREE_HITTEST_ONITEMBUTTON:
+                self.Expand(item)
+            return defaultResult
+        else:
+            return wx.DragNone
+        
+    def __itemIsOk(self, item):
+        try:
+            return item.IsOk()          # for Tree(List)Ctrl
+        except AttributeError:
+            return item != wx.NOT_FOUND # for ListCtrl
+        
+    def index(self, item):
+        # Convert the item into an index. For ListCtrls this is not 
+        # necessary, so an AttributeError will be raised. In that case the
+        # item is already an index, so we can simply return the item.
+        try:
+            return super(_CtrlWithFileDropTarget, self).index(item)
+        except AttributeError:
+            return item
 
-class CtrlWithItems(_CtrlWithItemPopupMenu):
+    def GetMainWindow(self):
+        try:
+            return super(_CtrlWithFileDropTarget, self).GetMainWindow()
+        except AttributeError:
+            return self
+        
+        
+class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithFileDropTarget):
     pass
 
 

@@ -279,13 +279,25 @@ class _ColumnPopupMenu(Menu):
         # because we need time for the viewer to add columns, so these commands
         # can then hide the right columns?
         wx.FutureCall(1000, lambda: self._fillMenu(window, uiCommands))
-                
+    
+    def __setColumn(self, columnIndex):
+        self.__columnIndex = columnIndex
+    
+    def __getColumn(self):
+        return self.__columnIndex
+    
+    # columnIndex is the index of the column clicked by the user to popup this menu
+    # This property should be set by the control popping up this menu (see 
+    # widgets._CtrlWithColumnPopupMenu.
+    columnIndex = property(__getColumn, __setColumn) 
+                            
     def _fillMenu(self, window, uiCommands):
         raise NotImplementedError
     
 
 class TaskViewerColumnPopupMenu(_ColumnPopupMenu):        
     def _fillMenu(self, window, uiCommands):
+        self.appendUICommands(uiCommands, ['hidecurrentcolumn', None])
         self.appendMenu(_('&Dates'), 
             _ViewTaskDateColumnsMenu(window, uiCommands)),
         self.appendMenu(_('&Budget'), 
@@ -298,6 +310,6 @@ class TaskViewerColumnPopupMenu(_ColumnPopupMenu):
 
 class EffortViewerColumnPopupMenu(_ColumnPopupMenu):
     def _fillMenu(self, window, uiCommands):
-        self.appendUICommands(uiCommands, ['viewefforttimespent',
-            'viewtotalefforttimespent', 'vieweffortrevenue',
-            'viewtotaleffortrevenue'])
+        self.appendUICommands(uiCommands, ['hidecurrentcolumn', None, 
+            'viewefforttimespent', 'viewtotalefforttimespent',
+            'vieweffortrevenue', 'viewtotaleffortrevenue'])

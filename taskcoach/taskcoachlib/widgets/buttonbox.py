@@ -5,12 +5,13 @@ class ButtonBox(wx.Panel):
     stockItems = {_('OK'): wx.ID_OK, _('Cancel'): wx.ID_CANCEL }
 
     def __init__(self, parent, *buttons, **kwargs):
-        super(ButtonBox, self).__init__(parent, -1)
+        orientation = kwargs.pop('orientation', wx.HORIZONTAL)
         self.__borderWidth = kwargs.pop('borderWidth', 5)
-        self.__sizer = wx.BoxSizer(wx.HORIZONTAL)
+        super(ButtonBox, self).__init__(parent, -1)
+        self.__sizer = wx.BoxSizer(orientation)
         self.__buttons = {}
         for text, callback in buttons:
-            self.createButton(text, callback)        
+            self.createButton(text, callback)    
         self.SetSizerAndFit(self.__sizer)
         
     def __getitem__(self, buttonLabel):
@@ -22,7 +23,7 @@ class ButtonBox(wx.Panel):
         if id == wx.ID_OK:
             button.SetDefault()
         button.Bind(wx.EVT_BUTTON, callback)
-        self.__sizer.Add(button, border=self.__borderWidth, flag=wx.ALL)
+        self.__sizer.Add(button, border=self.__borderWidth, flag=wx.ALL|wx.EXPAND)
         
     def setDefault(self, buttonText):
         self.__buttons[buttonText].SetDefault()
@@ -32,3 +33,6 @@ class ButtonBox(wx.Panel):
         
     def disable(self, buttonText):
         self.__buttons[buttonText].Disable()
+        
+    def buttonLabels(self):
+        return self.__buttons.keys()

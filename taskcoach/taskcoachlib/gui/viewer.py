@@ -32,6 +32,9 @@ class Viewer(patterns.Observable, wx.Panel):
         
     def createWidget(self, *args):
         raise NotImplementedError
+    
+    def getWidget(self):
+        return self.widget
  
     def createSorter(self, list):
         return list
@@ -61,6 +64,9 @@ class Viewer(patterns.Observable, wx.Panel):
 
     def model(self):
         return self.list
+    
+    def widgetCreationKeywordArguments(self):
+        return {}
     
 
 class ListViewer(Viewer):
@@ -98,7 +104,23 @@ class ViewerWithColumns(Viewer):
         
     def columns(self):
         return self._columns
+    
+    def isVisibleColumn(self, column):
+        visibilitySetting = column.visibilitySetting()
+        return visibilitySetting == None or self.settings.getboolean(*visibilitySetting)
+    
+    def visibleColumns(self):
+        return [column for column in self._columns if self.isVisibleColumn(column)]
+    
+    def hideColumn(self, visibleColumnIndex):
+        column = self.visibleColumns()[visibleColumnIndex]
+        section, setting = column.visibilitySetting()
+        self.settings.set(section, setting, 'False')
 
+    def isHideableColumn(self, visibleColumnIndex):
+        column = self.visibleColumns()[visibleColumnIndex]
+        return column.visibilitySetting() != None
+        
     def getItemText(self, index, column):
         item = self.list[index]
         return column.render(item)
@@ -190,7 +212,19 @@ class TaskViewer(Viewer):
             bitmap = bitmap_selected = 'start'
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
         
+    def onDropFiles(self, index, filenames):
+        ''' This method is called by the widget when one or more files
+            are dropped on a task. '''
+        addAttachment = command.AddAttachmentToTaskCommand(self.list,
+            [self.list[index]], attachments=filenames)
+        addAttachment.do()
 
+    def widgetCreationKeywordArguments(self):
+        kwargs = super(TaskViewer, self).widgetCreationKeywordArguments()
+        kwargs['onDropFiles'] = self.onDropFiles
+        return kwargs
+               
+            
 class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
     def __init__(self, *args, **kwargs):
         super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
@@ -276,7 +310,8 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
             self.getItemText, self.getItemImage, self.getItemAttr, 
             self.onSelect, self.uiCommands['edit'], 
             self.createTaskPopupMenu(),
-            self.createColumnPopupMenu())
+            self.createColumnPopupMenu(),
+            **self.widgetCreationKeywordArguments())
         widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
         return widget
         
@@ -297,7 +332,8 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
             self.getItemAttr, self.getItemId, self.getRootIndices, 
             self.getChildIndices, self.onSelect, self.uiCommands['edit'], 
-            self.uiCommands['draganddroptask'], self.createTaskPopupMenu())
+            self.uiCommands['draganddroptask'], self.createTaskPopupMenu(),
+            **self.widgetCreationKeywordArguments())
         widget.AssignImageList(self.createImageList())
         return widget
     
@@ -348,7 +384,8 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
             self.getItemImage, self.getItemAttr, self.getItemId, self.getRootIndices,
             self.getChildIndices, self.onSelect, self.uiCommands['edit'],
             self.uiCommands['draganddroptask'],
-            self.createTaskPopupMenu(), self.createColumnPopupMenu())
+            self.createTaskPopupMenu(), self.createColumnPopupMenu(),
+            **self.widgetCreationKeywordArguments())
         widget.AssignImageList(self.createImageList())
         return widget    
 
@@ -384,6 +421,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         uiCommands['cut'] = uicommand.EditCut(viewer=self)
         uiCommands['copy'] = uicommand.EditCopy(viewer=self)
         uiCommands['pasteintotask'] = uicommand.EditPasteIntoTask(viewer=self)
+        uiCommands['hidecurrentcolumn'] = uicommand.HideCurrentColumn(viewer=self)
         
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
@@ -391,7 +429,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             self.onSelect, uiCommands['editeffort'], 
             menu.EffortPopupMenu(self.parent, uiCommands), 
             menu.EffortViewerColumnPopupMenu(self.parent, uiCommands), 
-            resizeableColumn=2)
+            resizeableColumn=2, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
         return widget
     

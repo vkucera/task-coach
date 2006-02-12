@@ -664,7 +664,7 @@ class TaskSettingTestCase(TaskTestCase):
         self.notifications += 1
 
     
-class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueTest(TaskSettingTestCase):
+class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueFixture(TaskSettingTestCase):
     def taskCreationKeywordArguments(self):
         return [{'shouldMarkCompletedWhenAllChildrenCompleted': True}]
     
@@ -680,7 +680,7 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueTest(TaskSettingTest
         self.assertEqual(1, self.notifications)
         
 
-class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseTest(TaskTestCase):
+class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseFixture(TaskTestCase):
     def taskCreationKeywordArguments(self):
         return [{'shouldMarkCompletedWhenAllChildrenCompleted': False}]
     
@@ -700,12 +700,16 @@ class AttachmentNotificationMixin(NotificationMixin):
 
 class TaskWithoutAttachmentFixture(AttachmentNotificationMixin, TaskTestCase):
     def testRemoveNonExistingAttachmentRaisesNoException(self):
-        self.task.removeAttachment('Non-existing attachment')
+        self.task.removeAttachments('Non-existing attachment')
         
     def testRemoveAllAttachmentsCausesNoNotification(self):
         self.task.removeAllAttachments()
         self.failIfNotified()
 
+    def testAddEmptyListOfAttachments(self):
+        self.task.addAttachments()
+        self.failIfNotified()
+        
     
 class TaskWithAttachmentFixture(AttachmentNotificationMixin, TaskTestCase):
     def taskCreationKeywordArguments(self):
@@ -716,7 +720,7 @@ class TaskWithAttachmentFixture(AttachmentNotificationMixin, TaskTestCase):
                          self.task.attachments())
                                  
     def testRemoveNonExistingAttachment(self):
-        self.task.removeAttachment('Non-existing attachment')
+        self.task.removeAttachments('Non-existing attachment')
         self.assertEqual(self.taskCreationKeywordArguments()[0]['attachments'],
                          self.task.attachments())
 
@@ -725,7 +729,7 @@ class TaskWithAttachmentAddedTestCase(AttachmentNotificationMixin, TaskTestCase)
     def setUp(self):
         super(TaskWithAttachmentAddedTestCase, self).setUp()
         self.attachment = './test.txt'
-        self.task.addAttachment(self.attachment)
+        self.task.addAttachments(self.attachment)
 
 
 class TaskWithAttachmentAddedFixture(TaskWithAttachmentAddedTestCase):
@@ -739,7 +743,7 @@ class TaskWithAttachmentAddedFixture(TaskWithAttachmentAddedTestCase):
 class TaskWithAttachmentRemovedFixture(TaskWithAttachmentAddedTestCase):
     def setUp(self):
         super(TaskWithAttachmentRemovedFixture, self).setUp()
-        self.task.removeAttachment(self.attachment)
+        self.task.removeAttachments(self.attachment)
 
     def testRemoveAttachment(self):
         self.failIf(self.attachment in self.task.attachments())
@@ -1124,7 +1128,23 @@ class TaskLastModificationTimeTest(test.TestCase):
         self.task.addChild(child)
         self.task.setLastModificationTime(self.time)
         self.assertLastModificationTimeIsNow(self.task, recursive=True)
+   
+    def testAddAttachmentAffectsLastModificationTime(self):
+        self.task.addAttachments('attachment')
+        self.assertLastModificationTimeIsNow(self.task)
         
+    def testRemoveAttachmentAffectsLastModificationTime(self):
+        self.task.addAttachments('attachment')
+        self.task.setLastModificationTime(self.time)
+        self.task.removeAttachments('attachment')
+        self.assertLastModificationTimeIsNow(self.task)
+        
+    def testRemoveAllAttachmentsAffectsLastModificationTime(self):
+        self.task.addAttachments('attachment')
+        self.task.setLastModificationTime(self.time)
+        self.task.removeAllAttachments()
+        self.assertLastModificationTimeIsNow(self.task)
+
         
 class TaskRevenueTest(TaskNotificationTestCase):
     def createTask(self):

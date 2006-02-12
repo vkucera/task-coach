@@ -148,16 +148,16 @@ class AddAttachmentToTaskCommand(base.BaseCommand):
         return _('Add attachment')
     
     def __init__(self, *args, **kwargs):
-        self.__attachment = kwargs.pop('attachment')
+        self.__attachments = kwargs.pop('attachments')
         super(AddAttachmentToTaskCommand, self).__init__(*args, **kwargs)
 
     def addAttachments(self):
         for task in self.items:
-            task.addAttachment(self.__attachment)
+            task.addAttachments(*self.__attachments)
         
     def removeAttachments(self):
         for task in self.items:
-            task.removeAttachment(self.__attachment)
+            task.removeAttachments(*self.__attachments)
                 
     def do_command(self):
         self.addAttachments()

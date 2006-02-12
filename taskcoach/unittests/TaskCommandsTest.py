@@ -61,7 +61,7 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
     def addAttachment(self, tasks=None, attachment='attachment'):
         self.attachment = attachment
         addAttachmentCommand = command.AddAttachmentToTaskCommand(self.taskList,
-            tasks or [], attachment=attachment)
+            tasks or [], attachments=[attachment])
         addAttachmentCommand.do()
 
 
@@ -228,9 +228,9 @@ class EditTaskCommandTest(CommandTestCase):
             task.setBudget(date.TimeDelta(hours=1))
             task.setCompletionDate()
             if 'attachment' in task.attachments():
-                task.removeAttachment('attachment')
+                task.removeAttachments('attachment')
             else:
-                task.addAttachment('attachment')
+                task.addAttachments('attachment')
         editcommand.do()
 
     def testEditTask(self):
@@ -271,7 +271,7 @@ class EditTaskCommandTest(CommandTestCase):
             lambda: self.assertEqual([], self.task1.attachments()))
             
     def testRemoveAttachment(self):
-        self.task1.addAttachment('attachment')
+        self.task1.addAttachments('attachment')
         self.edit([self.task1])
         self.assertDoUndoRedo(
             lambda: self.assertEqual([], self.task1.attachments()),

@@ -85,7 +85,7 @@ class UICommand(object):
             sent, so we need an explicit check here. Otherwise hitting return 
             on an empty selection in the ListCtrl would bring up the 
             TaskEditor. '''
-        if self.enabled():
+        if self.enabled(event):
             self.doCommand(event)
             
     __call__ = onCommandActivate
@@ -94,9 +94,9 @@ class UICommand(object):
         raise NotImplementedError
 
     def onUpdateUI(self, event):
-        event.Enable(bool(self.enabled()))
+        event.Enable(bool(self.enabled(event)))
 
-    def enabled(self):
+    def enabled(self, event):
         ''' Can be overridden in a subclass. '''
         return True
 
@@ -220,23 +220,23 @@ class UICheckGroupCommand(UICommandsCommand, UICheckCommand):
 # Mixins: 
 
 class NeedsSelection(object):
-    def enabled(self):
+    def enabled(self, event):
         return self.viewer.curselection()
  
 class NeedsSelectedTasks(NeedsSelection):
-    def enabled(self):
-        return super(NeedsSelectedTasks, self).enabled() and self.viewer.isShowingTasks()
+    def enabled(self, event):
+        return super(NeedsSelectedTasks, self).enabled(event) and self.viewer.isShowingTasks()
 
 class NeedsSelectedEffort(NeedsSelection):
-    def enabled(self):
-        return super(NeedsSelectedEffort, self).enabled() and self.viewer.isShowingEffort()
+    def enabled(self, event):
+        return super(NeedsSelectedEffort, self).enabled(event) and self.viewer.isShowingEffort()
                
 class NeedsAtLeastOneTask(object):
-    def enabled(self):
+    def enabled(self, event):
         return len(self.filteredTaskList) > 0
         
 class NeedsItems(object):
-    def enabled(self):
+    def enabled(self, event):
         return self.viewer.size() 
 
  
@@ -290,7 +290,7 @@ class FileSave(IOCommand):
     def doCommand(self, event):
         self.iocontroller.save()
         
-    def enabled(self):
+    def enabled(self, event):
         return self.iocontroller.needSave()
 
 class FileSaveAs(IOCommand):
@@ -346,7 +346,7 @@ class EditUndo(UICommand):
         event.SetText(getUndoMenuText())
         super(EditUndo, self).onUpdateUI(event)
 
-    def enabled(self):
+    def enabled(self, event):
         return patterns.CommandHistory().hasHistory()
 
 
@@ -366,7 +366,7 @@ class EditRedo(UICommand):
         event.SetText(getRedoMenuText())
         super(EditRedo, self).onUpdateUI(event)
 
-    def enabled(self):
+    def enabled(self, event):
         return patterns.CommandHistory().hasFuture()
 
 
@@ -404,7 +404,7 @@ class EditPaste(UICommand):
         pasteCommand = command.PasteCommand()
         pasteCommand.do()
 
-    def enabled(self):
+    def enabled(self, event):
         return task.Clipboard()
 
 
@@ -419,8 +419,8 @@ class EditPasteIntoTask(NeedsSelectedTasks, ViewerCommand):
             items=self.viewer.curselection())
         pasteCommand.do()
 
-    def enabled(self):
-        return super(EditPasteIntoTask, self).enabled() and task.Clipboard()
+    def enabled(self, event):
+        return super(EditPasteIntoTask, self).enabled(event) and task.Clipboard()
 
 
 class EditPreferences(MainWindowCommand, SettingsCommand):
@@ -480,7 +480,25 @@ class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
         self.filteredTaskList.removeAllCategories()
 
 
-            
+class HideCurrentColumn(ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(HideCurrentColumn, self).__init__(menuText=_('&Hide this column'),
+            helpText=_('Hide the selected column'), *args, **kwargs)
+    
+    def doCommand(self, event):
+        columnPopupMenu = event.GetEventObject()
+        self.viewer.hideColumn(columnPopupMenu.columnIndex)
+        
+    def enabled(self, event):
+        # Unfortunately the event (an UpdateUIEvent) does not give us any
+        # information to determine the current column, so we have to find 
+        # the column ourselves. We use the current mouse position to do so.
+        widget = self.viewer.getWidget()
+        x, y = widget.ScreenToClient(wx.GetMousePosition())
+        item, flag, columnIndex = widget.HitTest((x, y))
+        return self.viewer.isHideableColumn(columnIndex)
+    
+    
 class ViewCategories(MainWindowCommand, FilterCommand):
     def __init__(self, *args, **kwargs):
         super(ViewCategories, self).__init__(menuText=_('Tasks by catego&ries...'),
@@ -491,7 +509,7 @@ class ViewCategories(MainWindowCommand, FilterCommand):
             title=_('View categories'), taskList=self.filteredTaskList)
         editor.Show()
 
-    def enabled(self):
+    def enabled(self, event):
         return self.filteredTaskList.categories() 
         
         
@@ -547,7 +565,7 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsComma
         # There is a bug in wxWidget/wxPython on the Mac that causes the 
         # INSERT accelerator to be mapped so some other key sequence ('c' in
         # this case) so that whenever that key sequence is typed, this command
-        # is invoked.
+        # is invoked. Hence, we use a different accelarator on the Mac.
         menuText = _('&New task...')
         if '__WXMAC__' in wx.PlatformInfo:
             menuText += u'\tCtrl+N'
@@ -574,7 +592,7 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         # There is a bug in wxWidget/wxPython on the Mac that causes the 
         # Ctrl+INSERT accelerator to be mapped so some other key sequence 
         # so that whenever that key sequence is typed, this command is 
-        # invoked.
+        # invoked. Hence, we use a different accelarator on the Mac.
         menuText = _('New &subtask...')
         if '__WXMAC__' in wx.PlatformInfo:
             menuText += u'\tShift+Ctrl+N'
@@ -609,8 +627,8 @@ class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
             self.viewer.curselection())
         markCompletedCommand.do()
 
-    def enabled(self):
-        return super(TaskMarkCompleted, self).enabled() and \
+    def enabled(self, event):
+        return super(TaskMarkCompleted, self).enabled(event) and \
             [task for task in self.viewer.curselection() if not task.completed()]
 
 
@@ -666,7 +684,7 @@ class TaskAddAttachment(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         filename = widgets.AttachmentSelector()
         if filename:
             addAttachmentCommand = command.AddAttachmentToTaskCommand(self.filteredTaskList,
-                self.viewer.curselection(), attachment=filename)
+                self.viewer.curselection(), attachments=[filename])
             addAttachmentCommand.do()
                 
 
@@ -728,7 +746,7 @@ class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         start = command.StartEffortCommand(self.filteredTaskList, self.viewer.curselection())
         start.do()
         
-    def enabled(self):
+    def enabled(self, event):
         if not self.viewer.isShowingTasks():
             return False
         return [task for task in self.viewer.curselection() if not
@@ -745,7 +763,7 @@ class EffortStop(FilterCommand):
         stop = command.StopEffortCommand(self.filteredTaskList)
         stop.do()
 
-    def enabled(self):
+    def enabled(self, event):
         return bool([task for task in self.filteredTaskList if task.isBeingTracked()])
 
 
@@ -768,7 +786,7 @@ class DialogCommand(UICommand):
         self.closed = True
         event.Skip()
         
-    def enabled(self):
+    def enabled(self, event):
         return self.closed
 
         
@@ -911,6 +929,7 @@ class UICommands(dict):
               uiCommandNames=['viewhourlyfee', 'viewfixedfee', 'viewtotalfixedfee', 
               'viewrevenue', 'viewtotalrevenue'],
               uiCommands=self, settings=settings, setting='allfinancialcolumns')
+        self['hidecurrentcolumn'] = HideCurrentColumn(viewer=viewer)
 
               
         self['viewexpandall'] = ViewExpandAll(viewer=viewer)

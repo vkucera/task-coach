@@ -41,8 +41,8 @@ class XMLReader:
             shouldMarkCompletedWhenAllChildrenCompleted=shouldMarkCompletedWhenAllChildrenCompleted)
         for category in self.__parseCategoryNodes(taskNode.childNodes):
             parent.addCategory(category)
-        for attachment in self.__parseAttachmentNodes(taskNode.childNodes):
-            parent.addAttachment(attachment)
+        attachments = self.__parseAttachmentNodes(taskNode.childNodes)
+        parent.addAttachments(*attachments)
         for child in self.__parseTaskNodes(taskNode.childNodes):
             parent.addChild(child) 
         for effort in self.__parseEffortNodes(parent, taskNode.childNodes):
