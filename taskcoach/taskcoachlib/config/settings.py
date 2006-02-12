@@ -8,6 +8,10 @@ class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
         self.__loadAndSave = load
         if load:
             self.read(self.filename()) # ConfigParser.read fails silently
+        else:
+            # Assume that if the settings are not to be loaded, we also 
+            # should be quiet (i.e. we are probably in test mode):
+            self.__beQuit() 
         # FIXME: add some machinery to check whether values read in from
         # the TaskCoach.ini file are allowed values. We need some way to 
         # specify allowed values. That's easy for boolean and enumeration types,
@@ -18,6 +22,11 @@ class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
             self.add_section(section)
             for key, value in settings.items():
                 self.set(section, key, value)
+
+    def __beQuit(self):
+        noisySettings = [('window', 'splash'), ('window', 'tips')]
+        for section, setting in noisySettings:
+            self.set(section, setting, 'False')
                 
     def set(self, section, option, value):
         super(Settings, self).set(section, option, value)
