@@ -16,6 +16,7 @@ class TaskList(patterns.ObservableObservablesList):
         super(TaskList, self)._subscribe(*tasks)
         for task in tasks:
             task.registerObserver(self.onReminder, 'reminder')
+            task.registerObserver(self.onAttachment, 'attachment')
             
     def _unsubscribe(self, *tasks):
         # extend super(TaskList, self)._unsubscribe to unsubscribe from 
@@ -23,9 +24,13 @@ class TaskList(patterns.ObservableObservablesList):
         super(TaskList, self)._unsubscribe(*tasks)
         for task in tasks:
             task.removeObserver(self.onReminder)
+            task.removeObserver(self.onAttachment)
 
     def onReminder(self, notification, *args, **kwargs):
         self.notifyObservers(patterns.Notification(self, task=notification.source), 'reminder')
+
+    def onAttachment(self, notification, *args, **kwargs):
+        self.notifyObservers(patterns.Notification(self, task=notification.source, changeNeedsSave=notification.changeNeedsSave), 'attachment')
 
     def newItem(self):
         ''' TaskList knows how to create new items so classes that

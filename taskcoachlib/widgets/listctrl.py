@@ -1,6 +1,24 @@
 import wx, itemctrl
 
-class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, wx.ListCtrl):
+class _ListCtrl(wx.ListCtrl):
+    ''' Make ListCtrl API more like the TreeList and TreeListCtrl API '''
+    
+    def HitTest(self, (x,y)):
+        ''' Allways return a three-tuple (item, flag, column). '''
+        index, flags = super(_ListCtrl, self).HitTest((x,y))
+        column = 0
+        if self.InReportView():
+            # Determine the column in which the user clicked
+            cumulativeColumnWidth = 0
+            for columnIndex in range(self.GetColumnCount()):
+                cumulativeColumnWidth += self.GetColumnWidth(columnIndex)
+                if x <= cumulativeColumnWidth:
+                    column = columnIndex
+                    break
+        return index, flags, column
+     
+        
+class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtrl):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
             selectCommand=None, editCommand=None, itemPopupMenu=None, 
             columnPopupMenu=None, resizeableColumn=1, *args, **kwargs):
@@ -11,13 +29,16 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, wx.ListC
         self.getItemText = getItemText
         self.getItemImage = getItemImage
         self.getItemAttr = getItemAttr
+        self.bindEventHandlers(selectCommand, editCommand)
+            
+    def bindEventHandlers(self, selectCommand, editCommand):
         if selectCommand:
             self.selectCommand = selectCommand
             self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelect)
             self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onSelect)
         if editCommand:
-            self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, editCommand)
-                        
+            self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, editCommand)  
+
     def OnGetItemText(self, rowIndex, columnIndex):
         return self.getItemText(rowIndex, self._getColumn(columnIndex))
 

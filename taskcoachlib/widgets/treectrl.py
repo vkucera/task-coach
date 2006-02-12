@@ -20,6 +20,7 @@ class TreeMixin(object):
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
         self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
+        # prepare for dragging and dropping tree items
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.onBeginDrag)
         self.Bind(wx.EVT_TREE_END_DRAG, self.onEndDrag)
         
@@ -60,11 +61,7 @@ class TreeMixin(object):
         self.dragAndDropCommand(event)
 
     def onDragging(self, event):
-        # We have to be careful unpacking the result of HitTest, because
-        # TreeListCtrl.HitTest returns three values: item, flags, column
-        # while TreeCtrl.HitTest returns only two values: item, flags
-        result = self.HitTest((event.GetX(), event.GetY()))
-        item, flags  = result[0], result[1] 
+        item, flags, column = self.HitTest((event.GetX(), event.GetY()))
         if self.__isValidDropTarget(item):
             self.__setCursorToDragging()
         else:
@@ -75,7 +72,7 @@ class TreeMixin(object):
         return dropTarget.IsOk() and self.dragItem != dropTarget and \
             self.GetItemParent(self.dragItem) != dropTarget and \
             dropTarget not in self.getChildren(self.dragItem, recursively=True)
-        
+            
     def onSetFocus(self, event):
         # When the TreeCtrl gets focus sometimes the selection is changed.
         # We want to prevent that from happening, so we need to keep track
@@ -122,7 +119,7 @@ class TreeMixin(object):
         event.Skip(False)
 
     def isCollapseExpandButtonClicked(self, event):
-        item, flags = self.HitTest(event.GetPosition())
+        item, flags, column = self.HitTest(event.GetPosition())
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
     
     def __getitem__(self, index):
@@ -339,9 +336,9 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices,
             getChildIndices, selectCommand, editCommand, dragAndDropCommand,
-            itemPopupMenu=None):
+            itemPopupMenu=None, *args, **kwargs):
         super(TreeCtrl, self).__init__(parent, -1, style=self.getStyle(), 
-            itemPopupMenu=itemPopupMenu)
+            itemPopupMenu=itemPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices)
@@ -356,16 +353,21 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
         for item in self.getChildren(recursively=True):
             self.SelectItem(item)
 
+    def HitTest(self, *args, **kwargs):
+        item, flags = super(TreeCtrl, self).HitTest(*args, **kwargs)
+        column = 0
+        return item, flags, column
+    
 
 class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, gizmos.TreeListCtrl):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices, selectCommand, 
             editCommand, dragAndDropCommand,
-            itemPopupMenu=None, columnPopupMenu=None):
+            itemPopupMenu=None, columnPopupMenu=None, *args, **kwargs):
         self._count = 0 # Need to set this early because InsertColumn invokes refreshColumn
         super(TreeListCtrl, self).__init__(parent, -1, style=self.getStyle(), 
             columns=columns, resizeableColumn=1, itemPopupMenu=itemPopupMenu,
-            columnPopupMenu=columnPopupMenu)
+            columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)

@@ -49,3 +49,7 @@ class CommonTests(object):
             'Status: 0 over due, 0 inactive, 0 completed'),
             self.viewer.statusMessages())
     
+    def testOnDropFiles(self):
+        self.taskList.append(task.Task())
+        self.viewer.onDropFiles(0, ['filename'])
+        self.assertEqual(['filename'], self.taskList[0].attachments())

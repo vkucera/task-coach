@@ -41,6 +41,8 @@ class App(object):
         gui.init()
         if showSplash and settings.getboolean('window', 'splash'):
             splash = gui.SplashScreen()
+        else:
+            splash = None
         
         self.taskFile = persistence.TaskFile()
         self.autoSaver = persistence.AutoSaver(settings, self.taskFile)
@@ -49,7 +51,7 @@ class App(object):
         self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
         categoryFilteredTaskList = task.filter.CategoryFilter(self.taskFile)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
-            categoryFilteredTaskList, effortList, settings)
+            categoryFilteredTaskList, effortList, settings, splash)
         self.processCommandLineArguments(settings, loadTaskFile)
         
     def processCommandLineArguments(self, settings, load=True):

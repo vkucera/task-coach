@@ -1,23 +1,25 @@
 import widgets
 from gui import render
+import widgets.draganddrop as draganddrop
 import wx, datetime
 import wx.lib.masked as masked
-import wx.lib.filebrowsebutton as filebrowsebutton
 from i18n import _
 import domain.date as date
 import thirdparty.desktop as desktop
 
 
-class DateEntry(wx.Panel):
+class DateEntry(widgets.PanelWithBoxSizer):
     defaultDate = date.Date()
 
     def __init__(self, parent, date=defaultDate, readonly=False, callback=None, 
                  *args, **kwargs):
-        super(DateEntry, self).__init__(parent, -1, *args, **kwargs)
-        self._entry = widgets.DateCtrl(self, callback, size=(100, -1))
+        super(DateEntry, self).__init__(parent, *args, **kwargs)
+        self._entry = widgets.DateCtrl(self, callback)
         if readonly:
             self._entry.Disable()
         self._entry.SetValue(date)
+        self.add(self._entry)
+        self.fit()
 
     def get(self, defaultDate=None):
         result = self._entry.GetValue()
@@ -32,35 +34,39 @@ class DateEntry(wx.Panel):
         self._entry.SetValue(date.Today())
 
 
-class TimeDeltaEntry(wx.Panel):
+class TimeDeltaEntry(widgets.PanelWithBoxSizer):
     defaultTimeDelta=date.TimeDelta()
     
     def __init__(self, parent, timeDelta=defaultTimeDelta, readonly=False, 
                  *args, **kwargs):
-        super(TimeDeltaEntry, self).__init__(parent, -1, *args, **kwargs)
+        super(TimeDeltaEntry, self).__init__(parent, *args, **kwargs)
         if readonly:
-            self._entry = wx.StaticText(self, -1, render.timeSpent(timeDelta))
+            self._entry = wx.StaticText(self, label=render.timeSpent(timeDelta))
         else:
-            self._entry = masked.TextCtrl(self, -1, mask='#{6}:##:##',
+            self._entry = masked.TextCtrl(self, mask='#{6}:##:##',
                 formatcodes='RrFS')
             hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
             self._entry.SetFieldParameters(0, defaultValue='%6d'%hours)
             self._entry.SetFieldParameters(1, defaultValue='%02d'%minutes)
             self._entry.SetFieldParameters(2, defaultValue='%02d'%seconds)
-
+        self.add(self._entry, flag=wx.EXPAND|wx.ALL, proportion=1)
+        self.fit()
+                
     def get(self):
         return date.parseTimeDelta(self._entry.GetValue())
     
 
-class AmountEntry(wx.Panel):
+class AmountEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
-        super(AmountEntry, self).__init__(parent, -1, *args, **kwargs)
+        super(AmountEntry, self).__init__(parent, *args, **kwargs)
         if readonly:
-            self._entry = wx.StaticText(self, -1, render.amount(amount))
+            self._entry = wx.StaticText(self, label=render.amount(amount))
         else:
-            self._entry = masked.NumCtrl(self, -1, fractionWidth=2, 
+            self._entry = masked.NumCtrl(self, fractionWidth=2, 
                                          allowNegative=False, value=amount)
-                                         
+        self.add(self._entry)
+        self.fit()
+         
     def get(self):
         return self._entry.GetValue()
 
@@ -68,20 +74,56 @@ class AmountEntry(wx.Panel):
         self._entry.SetValue(value)
 
 
-class SubjectPage(widgets.BookPage):
+class TaskEditorPage(widgets.PanelWithBoxSizer):
     def __init__(self, parent, task, *args, **kwargs):
-        super(SubjectPage, self).__init__(parent, columns=2, *args, **kwargs)
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, task.subject())
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, task.description())
-        self._descriptionEntry.SetSizeHints(500, 260)
-        self.addEntry(_('Subject'), self._subjectEntry)    
-        self.addEntry(_('Description'), self._descriptionEntry, growable=True)    
+        super(TaskEditorPage, self).__init__(parent, *args, **kwargs)
         self._task = task
+                
+    def addHeaders(self, box):
+        headers = ['', _('For this task')]
+        if self._task.children():
+            headers.append(_('For this task including all subtasks'))
+        else:
+            headers.append('')
+        for header in headers:
+            box.add(header)
+        
+    def ok(self):
+        pass
+    
+        
+class SubjectPage(TaskEditorPage):
+    def __init__(self, parent, task, *args, **kwargs):
+        super(SubjectPage, self).__init__(parent, task, *args, **kwargs)
+        descriptionBox = widgets.BoxWithFlexGridSizer(self, _('Description'), cols=2, growableRow=1, growableCol=1)
+        descriptionBox.add(_('Subject'))
+        self._subjectEntry = widgets.SingleLineTextCtrl(descriptionBox, task.subject())
+        descriptionBox.add(self._subjectEntry, proportion=1, flag=wx.EXPAND)
+        descriptionBox.add(_('Description'))
+        self._descriptionEntry = widgets.MultiLineTextCtrl(descriptionBox, task.description())
+        descriptionBox.add(self._descriptionEntry, proportion=1, flag=wx.EXPAND)
+        
+        priorityBox = widgets.BoxWithFlexGridSizer(self, _('Priority'), cols=2)
+        priorityBox.add(_('Priority'))
+        self._prioritySpinner = wx.SpinCtrl(priorityBox, value=render.priority(task.priority()), 
+            style=wx.SP_ARROW_KEYS)
+        # Can't use sys.maxint because Python and wxPython disagree on what the 
+        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
+        # an Overflow exception, so we use a constant:
+        maxint = 2147483647
+        self._prioritySpinner.SetRange(-maxint, maxint)
+        priorityBox.add(self._prioritySpinner)
+
+        for box, proportion in [(descriptionBox, 1), (priorityBox, 0)]:
+            box.fit()
+            self.add(box, proportion=proportion, flag=wx.EXPAND|wx.ALL, border=5)
+        self.fit()
         
     def ok(self):
         self._task.setSubject(self._subjectEntry.GetValue())
         self._task.setDescription(self._descriptionEntry.GetValue())
-
+        self._task.setPriority(self._prioritySpinner.GetValue())
+        
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)
 
@@ -89,26 +131,33 @@ class SubjectPage(widgets.BookPage):
         self._descriptionEntry.SetValue(description)        
 
 
-class DatesPage(widgets.BookPage):
+class DatesPage(TaskEditorPage):
     def __init__(self, parent, task, *args, **kwargs):
-        super(DatesPage, self).__init__(parent, columns=3, *args, **kwargs)
-        self._task = task
-        self._startDateEntry = DateEntry(self, task.startDate())
-        self._dueDateEntry = DateEntry(self, task.dueDate())
-        self._completionDateEntry = DateEntry(self, task.completionDate())
-        self._reminderDateTimeEntry = widgets.DateTimeCtrl(self, task.reminder())     
-        entriesArgs = [['', _('For this task')],
-                       [_('Start date'), self._startDateEntry],
-                       [_('Due date'), self._dueDateEntry],
-                       [_('Completion date'), self._completionDateEntry],
-                       [_('Reminder'), self._reminderDateTimeEntry]]    
-        if task.children():
-            entriesArgs[0].append(_('For this task including all subtasks'))
-            entriesArgs[1].append(DateEntry(self, task.startDate(recursive=True), readonly=True))
-            entriesArgs[2].append(DateEntry(self, task.dueDate(recursive=True), readonly=True))
-            entriesArgs[3].append(DateEntry(self, task.completionDate(recursive=True), readonly=True))
-        for entryArgs in entriesArgs:
-            self.addEntry(*entryArgs)
+        super(DatesPage, self).__init__(parent, task, *args, **kwargs)
+        datesBox = widgets.BoxWithFlexGridSizer(self, label=_('Dates'), cols=3)
+        self.addHeaders(datesBox)
+        for label, taskMethodName in [(_('Start date'), 'startDate'), 
+                                      (_('Due date'), 'dueDate'),
+                                      (_('Completion date'), 'completionDate')]:
+            datesBox.add(label)
+            taskMethod = getattr(task, taskMethodName)
+            entry = DateEntry(datesBox, taskMethod())
+            setattr(self, '_%sEntry'%taskMethodName, entry)
+            datesBox.add(entry)
+            if task.children():
+                recursiveEntry = DateEntry(datesBox, taskMethod(recursive=True), readonly=True)
+            else:
+                recursiveEntry = (0, 0)
+            datesBox.add(recursiveEntry)
+        
+        reminderBox = widgets.BoxWithFlexGridSizer(self, label=_('Reminder'), cols=2)
+        reminderBox.add(_('Reminder'))
+        self._reminderDateTimeEntry = widgets.DateTimeCtrl(reminderBox, task.reminder())
+        reminderBox.add(self._reminderDateTimeEntry)
+        for box in datesBox, reminderBox:
+            box.fit()
+            self.add(box, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
+        self.fit()
 
     def ok(self):                   
         self._task.setStartDate(self._startDateEntry.get())
@@ -120,52 +169,52 @@ class DatesPage(widgets.BookPage):
         self._reminderDateTimeEntry.SetValue(newReminder)
         
 
-class BudgetPage(widgets.BookPage):
+class BudgetPage(TaskEditorPage):
     def __init__(self, parent, task, *args, **kwargs):
-        super(BudgetPage, self).__init__(parent, columns=3, *args, **kwargs)
-        self._task = task
-        self._budgetEntry = TimeDeltaEntry(self, task.budget())
-        entriesArgs = [['', _('For this task')],
-                       [_('Budget'), self._budgetEntry],
-                       [_('Time spent'), render.timeSpent(task.timeSpent())],
-                       [_('Budget left'), render.budget(task.budgetLeft())]]
+        super(BudgetPage, self).__init__(parent, task, *args, **kwargs)
+        # Boxes:
+        budgetBox = widgets.BoxWithFlexGridSizer(self, label=_('Budget'), cols=3)
+        revenueBox = widgets.BoxWithFlexGridSizer(self, label=_('Revenue'), cols=3)
+        # Editable entries:
+        self._budgetEntry = TimeDeltaEntry(budgetBox, task.budget())
+        self._hourlyFeeEntry = AmountEntry(revenueBox, task.hourlyFee())
+        self._fixedFeeEntry = AmountEntry(revenueBox, task.fixedFee())
+        # Readonly entries:
         if task.children():
-            entriesArgs[0].append(_('For this task including all subtasks'))
-            entriesArgs[1].append(render.budget(task.budget(recursive=True)))
-            entriesArgs[2].append(render.timeSpent(task.timeSpent(recursive=True)))
-            entriesArgs[3].append(render.budget(task.budgetLeft(recursive=True)))
-        for entryArgs in entriesArgs:
-            self.addEntry(*entryArgs)
-
+            recursiveBudget = render.budget(task.budget(recursive=True))
+            recursiveTimeSpent = render.timeSpent(task.timeSpent(recursive=True))
+            recursiveBudgetLeft = render.budget(task.budgetLeft(recursive=True))
+            recursiveFixedFee = render.amount(task.fixedFee(recursive=True))
+            recursiveRevenue = render.amount(task.revenue(recursive=True))
+        else:
+            recursiveBudget = recursiveTimeSpent = recursiveBudgetLeft = \
+            recursiveFixedFee = recursiveRevenue = ''
+        # Fill the boxes:
+        self.addHeaders(budgetBox)
+        for entry in [_('Budget'), self._budgetEntry, recursiveBudget,
+                      _('Time spent'), render.budget(task.timeSpent()), recursiveTimeSpent,
+                      _('Budget left'), render.budget(task.budgetLeft()), recursiveBudgetLeft]:
+            budgetBox.add(entry, flag=wx.ALIGN_RIGHT)
+        
+        self.addHeaders(revenueBox)
+        for entry in [_('Hourly fee'), self._hourlyFeeEntry, '',
+                      _('Fixed fee'), self._fixedFeeEntry, recursiveFixedFee,
+                      _('Revenue'), render.amount(task.revenue()), recursiveRevenue]:
+            revenueBox.add(entry, flag=wx.ALIGN_RIGHT)
+        for box in budgetBox, revenueBox:
+            box.fit()
+            self.add(box, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
+        self.fit()
+        
     def ok(self):
         self._task.setBudget(self._budgetEntry.get())           
-
-
-class RevenuePage(widgets.BookPage):
-    def __init__(self, parent, task, *args, **kwargs):
-        super(RevenuePage, self).__init__(parent, columns=3, *args, **kwargs)
-        self._task = task
-        self._hourlyFeeEntry = AmountEntry(self, task.hourlyFee())
-        self._fixedFeeEntry = AmountEntry(self, task.fixedFee())
-        entriesArgs = [['', _('For this task')],
-                       [_('Hourly fee'), self._hourlyFeeEntry],
-                       [_('Fixed fee'), self._fixedFeeEntry],
-                       [_('Revenue'), render.amount(task.revenue())]]
-        if task.children():
-            entriesArgs[0].append(_('For this task including all subtasks'))
-            entriesArgs[2].append(render.amount(task.fixedFee(recursive=True)))
-            entriesArgs[3].append(render.amount(task.revenue(recursive=True)))
-        for entryArgs in entriesArgs:
-            self.addEntry(*entryArgs)
-
-    def ok(self):
         self._task.setHourlyFee(self._hourlyFeeEntry.get())   
         self._task.setFixedFee(self._fixedFeeEntry.get())   
 
 
-class EffortPage(widgets.BookPage):        
+class EffortPage(TaskEditorPage):        
     def __init__(self, parent, task, taskList, settings, uiCommands, *args, **kwargs):
-        super(EffortPage, self).__init__(parent, columns=1, *args, **kwargs)
+        super(EffortPage, self).__init__(parent, task, *args, **kwargs)
         from gui import viewercontainer, viewerfactory
         import domain.effort as effort
         viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 
@@ -173,110 +222,96 @@ class EffortPage(widgets.BookPage):
         myEffortList = effort.SingleTaskEffortList(task)
         viewerfactory._addEffortViewers(viewerContainer, myEffortList, 
             taskList, uiCommands, settings)
-        self.addEntry(None, viewerContainer, growable=True)
+        self.add(viewerContainer, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
+        self.fit()
 
 
-class CategoriesPage(widgets.BookPage):
+class CategoriesPage(TaskEditorPage):
     def __init__(self, parent, task, categories, *args, **kwargs):
-        super(CategoriesPage, self).__init__(parent, columns=3, growableColumn=1, *args, **kwargs)
-        self._prioritySpinner = wx.SpinCtrl(self, -1, render.priority(task.priority()), 
-            style=wx.SP_ARROW_KEYS)
-        # Can't use sys.maxint because Python and wxPython disagree on what the 
-        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
-        # an Overflow exception, so we use a constant:
-        maxint = 2147483647
-        self._prioritySpinner.SetRange(-maxint, maxint)
-        self.addEntry(_('Priority'), self._prioritySpinner)
-        self._checkListBox = wx.CheckListBox(self, -1)
+        super(CategoriesPage, self).__init__(parent, task, *args, **kwargs)
+        categoriesBox = widgets.BoxWithFlexGridSizer(self, label=_('Categories'), cols=2, growableCol=1, growableRow=0)
+        self._checkListBox = wx.CheckListBox(categoriesBox)
         self._checkListBox.InsertItems(categories, 0)
         for index in range(self._checkListBox.GetCount()):
             if self._checkListBox.GetString(index) in task.categories():
                 self._checkListBox.Check(index)
-        self.addEntry(_('Categories'), self._checkListBox, growable=True)
-        self._textEntry = widgets.SingleLineTextCtrl(self, style=wx.TE_PROCESS_ENTER)
-        self._addButton = wx.Button(self, -1, _('Add category'))
-        self._addButton.Bind(wx.EVT_BUTTON, self.onNewCategory)
-        self.addEntry(_('New category'), self._textEntry, self._addButton)
-        self.Bind(wx.EVT_TEXT, self.onCategoryTextEntryChanged, self._textEntry)
-        self.disallowNewCategory()
-        self._task = task
+        categoriesBox.add(_('Categories'))
+        categoriesBox.add(self._checkListBox, proportion=1, flag=wx.EXPAND|wx.ALL)
+        categoriesBox.add(_('New category'))
+        self._textEntry = widgets.SingleLineTextCtrlWithEnterButton(categoriesBox, 
+            label=_('New category'), onEnter=self.onNewCategory)
+        categoriesBox.add(self._textEntry, proportion=1, flag=wx.EXPAND|wx.ALL)
+        categoriesBox.fit()
+        self.add(categoriesBox, border=5)
+        self.fit()
         
     def ok(self):
-        self._task.setPriority(self._prioritySpinner.GetValue())
         for index in range(self._checkListBox.GetCount()):
             category = self._checkListBox.GetString(index)
             if self._checkListBox.IsChecked(index):
                 self._task.addCategory(category)
             else:
                 self._task.removeCategory(category)
-
-    def onCategoryTextEntryChanged(self, event):
-        if self._textEntry.GetValue():
-            self.allowNewCategory()
-        else:
-            self.disallowNewCategory()
-            
-    def allowNewCategory(self):
-        if not self._addButton.IsEnabled():
-            self.Bind(wx.EVT_TEXT_ENTER, self.onNewCategory, self._textEntry)
-            self._addButton.Enable()
-        
-    def disallowNewCategory(self):
-        if self._addButton.IsEnabled():
-            self.Unbind(wx.EVT_TEXT_ENTER, self._textEntry)
-            self._addButton.Disable()
-        
-    def onNewCategory(self, event):
-        self._checkListBox.InsertItems([self._textEntry.GetValue()], 0)
+                    
+    def onNewCategory(self, newCategory):
+        self._checkListBox.InsertItems([newCategory], 0)
         self._checkListBox.Check(0)
-        self._textEntry.Clear()
 
 
-class FileDropTarget(wx.FileDropTarget):
-    def __init__(self, onDropCallback):
-        wx.FileDropTarget.__init__(self)
-        self.__onDropCallback = onDropCallback
-        
-    def OnDropFiles(self, x, y, filenames):
-        for filename in filenames:
-            self.__onDropCallback(filename)
-
-
-class AttachmentPage(widgets.BookPage):
+class AttachmentPage(TaskEditorPage):
     def __init__(self, parent, task, *args, **kwargs):
-        super(AttachmentPage, self).__init__(parent, columns=2, growableColumn=0)
-        self._task = task
-        self._listCtrl = wx.ListCtrl(self, style=wx.LC_LIST)
+        super(AttachmentPage, self).__init__(parent, task, *args, **kwargs)
+        attachmentBox = widgets.BoxWithFlexGridSizer(self, 
+            label=_('Attachments'), cols=2, growableCol=1, growableRow=0)
+        self._buttonBox = widgets.ButtonBox(attachmentBox, 
+            (_('Open attachment'), self.onOpen),
+            (_('Remove attachment'), self.onRemove),
+            (_('Edit attachment'), self.onEdit), orientation=wx.HORIZONTAL)        
+        self._listCtrl = wx.ListCtrl(attachmentBox, style=wx.LC_LIST)
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelectItem)
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onDeselectItem)
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onOpen)
-        dropTarget = FileDropTarget(self.addAttachment)
+        dropTarget = draganddrop.FileDropTarget(self.onFileDrop)
         self._listCtrl.SetDropTarget(dropTarget)
-        for attachment in task.attachments():
-            self.addAttachment(attachment)
-        self.addEntry(self._listCtrl, growable=True)
-        self._buttonBox = widgets.ButtonBox(self, 
-            (_('Open attachment'), self.onOpen),
-            (_('Add attachment...'), self.onBrowse), 
-            (_('Remove attachment'), self.onRemove))
-        self._buttonsThatNeedSelectedAttachments = [_('Open attachment'), 
-                                                    _('Remove attachment')]
-        self.addEntry(self._buttonBox)
+        self.onFileDrop(0, 0, task.attachments())
+        attachmentBox.add(_('Attachments'))
+        attachmentBox.add(self._listCtrl, flag=wx.EXPAND|wx.ALL, proportion=1)
+        attachmentBox.add('')
+        attachmentBox.add(self._buttonBox)
+        self._urlEntry = widgets.SingleLineTextCtrlWithEnterButton(attachmentBox, 
+            label=_('Add attachment'), onEnter=self.onAdd)
+        attachmentBox.add(_('New attachment'))
+        attachmentBox.add(self._urlEntry, flag=wx.EXPAND|wx.ALL, proportion=1)
+        attachmentBox.add('')
+        browseButton = wx.Button(attachmentBox, label=_('Browse for attachment...'))
+        browseButton.Bind(wx.EVT_BUTTON, self.onBrowse)
+        attachmentBox.add(browseButton)
         if task.attachments():
             self._listCtrl.SetItemState(0, wx.LIST_STATE_SELECTED, 
                                         wx.LIST_STATE_SELECTED)
         else:
             self.onDeselectItem()
+        attachmentBox.fit()
+        self.add(attachmentBox, border=5)
+        self.fit()
             
-    def addAttachment(self, filename):
+    def addAttachmentToListCtrl(self, filename):
         item = wx.ListItem()
         item.SetText(filename)
-        self._listCtrl.InsertItem(item)
+        index = self._listCtrl.InsertItem(item)
+        self._listCtrl.Select(index)
+            
+    def onAdd(self, *args, **kwargs):
+        self.addAttachmentToListCtrl(self._urlEntry.GetValue())
+        
+    def onFileDrop(self, x, y, filenames):
+        for filename in filenames:
+            self.addAttachmentToListCtrl(filename)
         
     def onBrowse(self, *args, **kwargs):
         filename = widgets.AttachmentSelector()
         if filename:
-            self.addAttachment(filename)
+            self.addAttachmentToListCtrl(filename)
         
     def onOpen(self, *args, **kwargs):
         index = -1
@@ -297,27 +332,34 @@ class AttachmentPage(widgets.BookPage):
             if index == -1:
                 break
             self._listCtrl.DeleteItem(index)
+            
+    def onEdit(self, *args, **kwargs):
+        index = self._listCtrl.GetNextItem(-1, state=wx.LIST_STATE_SELECTED)
+        attachment = self._listCtrl.GetItem(index).GetText()
+        self._listCtrl.DeleteItem(index)
+        self._urlEntry.SetValue(attachment)
     
     def onSelectItem(self, *args, **kwargs):
-        for button in self._buttonsThatNeedSelectedAttachments:
+        for button in self._buttonBox.buttonLabels():
             self._buttonBox.enable(button)
         
     def onDeselectItem(self, *args, **kwargs):
-        for button in self._buttonsThatNeedSelectedAttachments:
-            self._buttonBox.disable(button)
+        if self._listCtrl.GetSelectedItemCount() == 0:
+            for button in self._buttonBox.buttonLabels():
+                self._buttonBox.disable(button)
         
     def ok(self):
         self._task.removeAllAttachments()
-        for index in range(self._listCtrl.GetItemCount()):
-            self._task.addAttachment(self._listCtrl.GetItem(index).GetText())
+        attachments = [self._listCtrl.GetItem(index).GetText() for index in range(self._listCtrl.GetItemCount())]
+        self._task.addAttachments(*attachments)
                                      
             
-class BehaviorPage(widgets.BookPage):
+class BehaviorPage(TaskEditorPage):
     def __init__(self, parent, task, *args, **kwargs):
-        super(BehaviorPage, self).__init__(parent, columns=2, growableColumn=1,
-            *args, **kwargs)
-        self._task = task
-        choice = self._markTaskCompletedEntry = wx.Choice(self)
+        super(BehaviorPage, self).__init__(parent, task, *args, **kwargs)
+        behaviorBox = widgets.BoxWithFlexGridSizer(self,
+            label=_('Task behavior'), cols=2)                                           
+        choice = self._markTaskCompletedEntry = wx.Choice(behaviorBox)
         for choiceValue, choiceText in [(None, _('Use application-wide setting')), 
                                         (False, _('No')), (True, _('Yes'))]:
             choice.Append(choiceText, choiceValue)
@@ -325,8 +367,11 @@ class BehaviorPage(widgets.BookPage):
                 choice.SetSelection(choice.GetCount()-1)
         if choice.GetSelection() == wx.NOT_FOUND: # force a selection if necessary
             choice.SetSelection(0)
-        self.addEntry(_('Mark task completed when all children are completed?'),
-            self._markTaskCompletedEntry)
+        behaviorBox.add(_('Mark task completed when all children are completed?'))
+        behaviorBox.add(choice)
+        behaviorBox.fit()
+        self.add(behaviorBox, border=5)
+        self.fit()
             
     def ok(self):
         self._task.shouldMarkCompletedWhenAllChildrenCompleted = \
@@ -342,7 +387,6 @@ class TaskEditBook(widgets.Listbook):
         self.AddPage(CategoriesPage(self, task, categories), _('Categories'), 
                      'category')
         self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')
-        self.AddPage(RevenuePage(self, task), _('Revenue'), 'revenue')
         if task.timeSpent(recursive=True):
             effortPage = EffortPage(self, task, taskList, settings, uiCommands)
             self.AddPage(effortPage, _('Effort'), 'start')
@@ -439,7 +483,8 @@ class TaskEditor(EditorWithCommand):
             self.addPage(task)
 
     def addPage(self, task):
-        page = TaskEditBook(self._interior, task, self._taskList, self._uiCommands, self._settings, self._categories)
+        page = TaskEditBook(self._interior, task, self._taskList, 
+            self._uiCommands, self._settings, self._categories)
         self._interior.AddPage(page, task.subject())
         
     

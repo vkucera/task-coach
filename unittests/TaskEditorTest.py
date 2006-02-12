@@ -134,7 +134,7 @@ class EditTaskTest(TaskEditorTestCase):
 
     def createTasks(self):
         self.task = task.Task('Task to edit')
-        self.task.addAttachment('some attachment')
+        self.task.addAttachments('some attachment')
         return [self.task]
 
     def testOk(self):
@@ -156,40 +156,37 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual(date.Tomorrow(), self.task.startDate())
         
     def testSetNegativePriority(self):
-        self.editor[0][2]._prioritySpinner.SetValue(-1)
+        self.editor[0][0]._prioritySpinner.SetValue(-1)
         self.editor.ok()
         self.assertEqual(-1, self.task.priority())
         
     def testSetHourlyFee(self):
-        self.editor[0][4]._hourlyFeeEntry.set(100)
+        self.editor[0][3]._hourlyFeeEntry.set(100)
         self.editor.ok()
         self.assertEqual(100, self.task.hourlyFee())
 
     def testSetFixedFee(self):
-        self.editor[0][4]._fixedFeeEntry.set(100.5)
+        self.editor[0][3]._fixedFeeEntry.set(100.5)
         self.editor.ok()
         self.assertEqual(100.5, self.task.fixedFee())
 
     def testAddCategory(self):
         self.editor[0][2]._textEntry.SetValue('New category')
-        self.failUnless(self.editor[0][2]._addButton.IsEnabled())
-
-    def testAddCategory_DontAllowEmptyCategory(self):
-        self.editor[0][2]._textEntry.SetValue('')
-        self.failIf(self.editor[0][2]._addButton.IsEnabled())
+        self.editor[0][2]._textEntry.onEnter()
+        self.assertEqual('New category', self.editor[0][2]._checkListBox.GetString(0))
         
     def testBehaviorMarkCompleted(self):
-        self.editor[0][6]._markTaskCompletedEntry.SetStringSelection('Yes')
+        self.editor[0][5]._markTaskCompletedEntry.SetStringSelection('Yes')
         self.editor.ok()
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
 
     def testAddAttachment(self):
-        self.editor[0][5].addAttachment('filename')
+        self.editor[0][4].onFileDrop(0, 0, ['filename'])
         self.editor.ok()
         self.failUnless('filename' in self.task.attachments())
         
     def testRemoveAttachment(self):
-        self.editor[0][5]._listCtrl.DeleteItem(0)
+        self.editor[0][4]._listCtrl.DeleteItem(0)
         self.editor.ok()
         self.assertEqual([], self.task.attachments())
 

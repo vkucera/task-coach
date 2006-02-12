@@ -161,11 +161,10 @@ class XMLWriterTest(test.TestCase):
         self.expectNotInXML('attachment')
         
     def testOneAttachment(self):
-        self.task.addAttachment('whatever.txt')
+        self.task.addAttachments('whatever.txt')
         self.expectInXML('<attachment>whatever.txt</attachment>')
         
     def testTwoAttachments(self):
         attachments = ['whatever.txt', '/home/frank/attachment.doc']
-        for attachment in attachments:
-            self.task.addAttachment(attachment)
+        self.task.addAttachments(*attachments)
         self.expectInXML('<attachment>%s</attachment>'*2%tuple(attachments))

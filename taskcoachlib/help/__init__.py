@@ -1,5 +1,6 @@
 import meta
 from i18n import _
+from tips import TipProvider
 
 _TOC = _('''<h3>Table of contents</h3>
 <ul>

@@ -3,19 +3,24 @@
 from domain import *
 
 releases = [
-Release('0.56', 'January ?, 2006',
+Release('0.56', 'February ?, 2006',
     featuresAdded=[
         Feature('''Tasks can have attachments. Attachments can be added, removed
 and opened. Opening of attachments is done by starting the default application
 for the attachment file type. Attachments can also be dragged from a file 
-browser and dropped onto the task attachment pane.''', '1250241', '1339113'),
+browser and dropped onto a task in one of the task viewers or on the task 
+attachment pane in the task editor dialog.''', '1250241', '1339113'),
         Feature('''Whether a task is marked completed when all its
 child tasks are completed is now a setting that can be changed application-wide
 via the preferences dialog. The application-wide setting can be overruled
-on a task-by-task basis via the task editor dialog.''', '1393803')],
+on a task-by-task basis via the task editor dialog.''', '1393803'),
+        Feature('''Task Coach shows a 'tips' dialog at startup. Hopefully it
+is helpful for new users. Experienced users can turn it off.''')],
     featuresChanged=[
         Feature('''More visual feedback when dragging tasks in the tree 
-view.''')],
+view.'''),
+        Feature('''Task editor layout changed. Priority is now part of the
+task description. Budget and revenue have been merged into one pane.''', '?')],
     implementationChanged=[
         Implementation('''Default values for task and effort attributes are 
 no longer saved in the Task Coach file, resulting in an estimated 33%% 

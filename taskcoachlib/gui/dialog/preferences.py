@@ -65,8 +65,11 @@ class SavePage(SettingsPage):
 class WindowBehaviorPage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(WindowBehaviorPage, self).__init__(*args, **kwargs)
+        restartText = _('This setting will take effect after you restart %s')%meta.name
         self.addBooleanSetting('window', 'splash', _('Show splash screen on startup'),
-            _('This setting will take effect after you restart %s')%meta.name)
+            restartText)
+        self.addBooleanSetting('window', 'tips', _('Show tips window on startup'),
+            restartText)
         self.addBooleanSetting('window', 'hidewheniconized', 
             _('Hide main window when iconized'))
         self.addBooleanSetting('window', 'hidewhenclosed', 

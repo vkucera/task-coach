@@ -40,7 +40,7 @@ class WindowWithPersistentDimensions(wx.Frame):
         
 class MainWindow(WindowWithPersistentDimensions):
     def __init__(self, iocontroller, taskFile, filteredTaskList,
-            effortList, settings, *args, **kwargs):
+            effortList, settings, splash=None, *args, **kwargs):
         super(MainWindow, self).__init__(settings, *args, **kwargs)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
@@ -48,11 +48,13 @@ class MainWindow(WindowWithPersistentDimensions):
         self.settings = settings
         self.effortList = effortList
         self.Bind(wx.EVT_CLOSE, self.onClose)
+        self.splash = splash
 
         self.createWindowComponents()
         self.initWindowComponents()
         self.initWindow()
         self.registerForWindowComponentChanges()
+        wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
         self.panel = wx.Panel(self, -1)
@@ -102,6 +104,15 @@ class MainWindow(WindowWithPersistentDimensions):
         self.settings.registerObserver(self.onShowToolBar, 
             ('view', 'toolbar'))
 
+    def showTips(self):
+        if self.settings.getboolean('window', 'tips'):
+            if self.splash:
+                self.splash.Hide()
+            tipProvider = help.TipProvider(self.settings.getint('window', 'tipsindex'))
+            keepShowingTips = wx.ShowTip(self, tipProvider)
+            self.settings.set('window', 'tips', str(keepShowingTips))
+            self.settings.set('window', 'tipsindex', str(tipProvider.GetCurrentTip()))
+                         
     def onShowFindDialog(self, *args, **kwargs):
         self.showFindDialog(self.settings.getboolean('view', 'finddialog'))
 

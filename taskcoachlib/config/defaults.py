@@ -52,7 +52,9 @@ defaults = { \
     'iconized': 'False',
     'splash': 'True',
     'hidewheniconized': 'True',
-    'hidewhenclosed': 'False' },
+    'hidewhenclosed': 'False',
+    'tips': 'True',
+    'tipsindex': '0' },
 'file': { \
     'recentfiles': '[]',
     'maxrecentfiles': '4',

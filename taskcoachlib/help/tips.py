@@ -1,0 +1,26 @@
+import wx, meta
+from i18n import _
+
+tips = [
+_('''%(name)s has a mailinglist where you can discuss usage of %(name)s with fellow users, discuss and request features and complain about bugs. Go to %(url)s and join today!''')%meta.metaDict, 
+_('''%(name)s has unlimited undo and redo. Any change that you make, be it editing a task's description, or deleting an effort record, is undoable. Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards through your edit history.''')%meta.metaDict, 
+_('''%(name)s is available in a number of different languages. Select 'Edit' -> 'Preferences' to see whether your language is one of them. If your language is not available or the translation needs improvement, please consider to help translating %(name)s. Visit %(url)s for more information about how you can help.''')%meta.metaDict,
+_('''If you enter a URL (e.g. %(url)s) in a task or effort description, it becomes clickable. Clicking such a URL will open your default webbrowser and load the referred webpage.''')%meta.metaDict,
+_('''You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks.'''),
+_('''You can drag files from a file browser onto a task to create attachments. Dragging the files over a tab will raise the appropriate page, dragging the files over a collapsed task (the boxed + sign) in the tree view will expand the task to show its subtasks.''')
+]
+
+class TipProvider(wx.PyTipProvider):
+    def __init__(self, tipIndex):
+        super(TipProvider, self).__init__(tipIndex)
+        self.__tipIndex = tipIndex
+        
+    def GetTip(self):
+        tip = tips[self.__tipIndex]
+        self.__tipIndex += 1
+        if self.__tipIndex >= len(tips):
+            self.__tipIndex = 0
+        return tip
+    
+    def GetCurrentTip(self):
+        return self.__tipIndex
