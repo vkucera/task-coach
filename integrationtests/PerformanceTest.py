@@ -5,7 +5,7 @@ class MockApp(taskcoach.App):
     def __init__(self, filename):
         self._options = None
         self._args = [filename]
-        self.init(showSplash=False, loadSettings=False)
+        self.init(loadSettings=False)
 
 class PerformanceTest(test.TestCase):
     def createTestFile(self):

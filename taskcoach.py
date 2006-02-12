@@ -31,7 +31,7 @@ class App(object):
         self.mainwindow.Show()
         self.wxApp.MainLoop()
 
-    def init(self, showSplash=True, loadSettings=True, loadTaskFile=True): 
+    def init(self, loadSettings=True, loadTaskFile=True): 
         import config, i18n
         settings = config.Settings(loadSettings)
         i18n.Translator(settings.get('view', 'language'))
@@ -39,7 +39,7 @@ class App(object):
         import domain.task as task
         import domain.effort as effort
         gui.init()
-        if showSplash and settings.getboolean('window', 'splash'):
+        if settings.getboolean('window', 'splash'):
             splash = gui.SplashScreen()
         else:
             splash = None
