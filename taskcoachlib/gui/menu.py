@@ -241,7 +241,7 @@ class EffortMenu(Menu):
 class HelpMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(HelpMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['help', None, 'about', 'license'])
+        self.appendUICommands(uiCommands, ['help', 'tips', None, 'about', 'license'])
 
 
 class TaskBarMenu(Menu):
