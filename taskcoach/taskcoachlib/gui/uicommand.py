@@ -778,8 +778,8 @@ class DialogCommand(UICommand):
         self.closed = False
         dialog = widgets.HTMLDialog(self._dialogTitle, self._dialogText, 
                                     bitmap=self.bitmap)
-        dialog.Bind(wx.EVT_CLOSE, self.onClose)
-        dialog.Bind(wx.EVT_BUTTON, self.onClose)
+        for event in wx.EVT_CLOSE, wx.EVT_BUTTON:
+            dialog.Bind(event, self.onClose)
         dialog.Show()
         
     def onClose(self, event):
@@ -796,6 +796,15 @@ class Help(DialogCommand):
             helpText=_('Help about the program'), bitmap='help', 
             dialogTitle=_('Help'), dialogText=help.helpHTML, *args, **kwargs)
 
+
+class Tips(SettingsCommand, MainWindowCommand):
+    def __init__(self, *args, **kwargs):
+        super(Tips, self).__init__(menuText=_('&Tips'),
+            helpText=_('Tips about the program'), bitmap='help', *args, **kwargs)
+
+    def doCommand(self, event):
+        help.showTips(self.mainwindow, self.settings)
+        
 
 class InfoCommand(DialogCommand):
     def __init__(self, *args, **kwargs):
@@ -1036,6 +1045,7 @@ class UICommands(dict):
         
         # Help menu
         self['help'] = Help()
+        self['tips'] = Tips(settings=settings, mainwindow=mainwindow)
         self['about'] = HelpAbout()
         self['license'] = HelpLicense()
 

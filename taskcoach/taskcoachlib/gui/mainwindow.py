@@ -108,10 +108,7 @@ class MainWindow(WindowWithPersistentDimensions):
         if self.settings.getboolean('window', 'tips'):
             if self.splash:
                 self.splash.Hide()
-            tipProvider = help.TipProvider(self.settings.getint('window', 'tipsindex'))
-            keepShowingTips = wx.ShowTip(self, tipProvider)
-            self.settings.set('window', 'tips', str(keepShowingTips))
-            self.settings.set('window', 'tipsindex', str(tipProvider.GetCurrentTip()))
+            help.showTips(self, self.settings)
                          
     def onShowFindDialog(self, *args, **kwargs):
         self.showFindDialog(self.settings.getboolean('view', 'finddialog'))
