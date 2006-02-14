@@ -473,7 +473,8 @@ class TaskEditor(EditorWithCommand):
         self._categories = list(categories or [])
         super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
-        wx.CallAfter(self.setFocus)
+        self.setFocus()
+        #wx.CallAfter(self.setFocus)
 
     def setFocus(self, *args, **kwargs):
         self[0][0]._subjectEntry.SetFocus()
