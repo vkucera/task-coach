@@ -473,8 +473,11 @@ class TaskEditor(EditorWithCommand):
         self._categories = list(categories or [])
         super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
-        self.setFocus()
-        #wx.CallAfter(self.setFocus)
+        # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
+        self.setFocus() 
+        # This works on Windows XP, but fails silently on Linux Ubuntu 5.10:
+        wx.CallAfter(self.setFocus) 
+        # So we did just do it twice, guess it doesn't hurt
 
     def setFocus(self, *args, **kwargs):
         self[0][0]._subjectEntry.SetFocus()
