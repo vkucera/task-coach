@@ -20,7 +20,8 @@ is helpful for new users. Experienced users can turn it off.''')],
         Feature('''More visual feedback when dragging tasks in the tree 
 view.'''),
         Feature('''Task editor layout changed. Priority is now part of the
-task description. Budget and revenue have been merged into one pane.''', '?')],
+task description. Budget and revenue have been merged into one pane.''', 
+'1312284')],
     implementationChanged=[
         Implementation('''Default values for task and effort attributes are 
 no longer saved in the Task Coach file, resulting in an estimated 33%% 
