@@ -3,7 +3,7 @@
 from domain import *
 
 releases = [
-Release('0.56', 'February ?, 2006',
+Release('0.56', 'February 14, 2006',
     featuresAdded=[
         Feature('''Tasks can have attachments. Attachments can be added, removed
 and opened. Opening of attachments is done by starting the default application
