@@ -83,10 +83,16 @@ class MainWindow(WindowWithPersistentDimensions):
 
     def initWindow(self):
         self.SetTitle(patterns.observer.Notification(self, filename=self.taskFile.filename()))
-        self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, 
-            (16, 16)))
+        self.setIcon()
         self.displayMessage(_('Welcome to %(name)s version %(version)s')%{'name': meta.name, 
             'version': meta.version}, pane=1)
+
+    def setIcon(self):
+        bundle = wx.IconBundle()
+        for size in [(16, 16), (22, 22), (32, 32), (48, 48), (64, 64), (128, 128)]:
+            icon = wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, size)
+            bundle.AddIcon(icon)
+        self.SetIcons(bundle)
 
     def initWindowComponents(self):
         self.onShowFindDialog()

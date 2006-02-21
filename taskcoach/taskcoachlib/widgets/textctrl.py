@@ -13,7 +13,7 @@ class BaseTextCtrl(wx.TextCtrl):
 
     def GetValue(self, *args, **kwargs):
         value = super(BaseTextCtrl, self).GetValue(*args, **kwargs)
-        # don't allow unicode control characters:
+        # Don't allow unicode control characters:
         return value.translate(UNICODE_CONTROL_CHARACTERS_TO_WEED)
 
 

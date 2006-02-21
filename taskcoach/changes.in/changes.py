@@ -2,7 +2,12 @@
 
 from domain import *
 
-releases = [
+releases = [             
+Release('0.57', 'February ?, 2006',
+    bugsFixed=[
+        Bug('''A file that was saved with an active effort couldn't be loaded 
+again. Task Coach would complain that the file was invalid.''', '1433611')]),
+             
 Release('0.56', 'February 14, 2006',
     featuresAdded=[
         Feature('''Tasks can have attachments. Attachments can be added, removed
