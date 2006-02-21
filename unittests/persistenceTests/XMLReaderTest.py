@@ -150,11 +150,11 @@ class XMLReaderTest(XMLReaderTestCase):
         
     def testEffortDescription(self):
         description = u'Description\nLine 2'
-        tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000" stop="None"><description>%s</description></effort></task></tasks>'%description)
+        tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000"><description>%s</description></effort></task></tasks>'%description)
         self.assertEqual(description, tasks[0].efforts()[0].getDescription())
         
     def testActiveEffort(self):
-        tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000" stop="None"/></task></tasks>')
+        tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000"/></task></tasks>')
         self.assertEqual(1, len(tasks[0].efforts()))
         self.failUnless(tasks[0].isBeingTracked())
         

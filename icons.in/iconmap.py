@@ -22,7 +22,7 @@ iconlist = [
 ('task_duetoday', 'actions', 'ledorange', [16]),
 ('task_inactive', 'actions', 'ledgrey', [16]),
 ('task_overdue', 'actions', 'ledred', [16]),
-('taskcoach', 'apps', 'korganizer_todo', [16, 22, 32]),
+('taskcoach', 'apps', 'korganizer_todo', [16, 22, 32, 48, 64, 128]),
 ('tasks', 'filesystems', 'folder_blue', [16]),
 ('tasks_open', 'filesystems', 'folder_blue_open', [16]),
 ('tasks_completed', 'filesystems', 'folder_green', [16]),

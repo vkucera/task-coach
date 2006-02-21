@@ -47,7 +47,7 @@ class DateTime(datetime.datetime):
 
 
 def parseDateTime(string):
-    if string == 'None':
+    if string in ('', 'None'):
         return None
     else:
         args = [int(arg) for arg in re.split('[-:. ]', string)]
