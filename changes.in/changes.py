@@ -6,7 +6,10 @@ releases = [
 Release('0.57', 'February ?, 2006',
     bugsFixed=[
         Bug('''A file that was saved with an active effort couldn't be loaded 
-again. Task Coach would complain that the file was invalid.''', '1433611')]),
+again. Task Coach would complain that the file was invalid.''', '1433611'),
+        Bug('''Added different sizes of the Task Coach icon. This should
+prevent scaling up the 16x16 version to 32x32 on Windows or to even 128x128
+on the Mac.''', '1406651', '1434044')]),
              
 Release('0.56', 'February 14, 2006',
     featuresAdded=[

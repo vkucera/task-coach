@@ -176,6 +176,8 @@ class MainWindow(WindowWithPersistentDimensions):
     def restore(self, event):
         self.Show()
         self.Raise()
+        self.Refresh() # This is not necessary on Windows/Linux Ubuntu/Mac but
+                       # might help to fix bug 1429540 (Linux Mandrake)
         self.Iconize(False)
 
     def onIconify(self, event):
