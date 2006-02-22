@@ -8,7 +8,8 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         super(TaskBarIcon, self).__init__(*args, **kwargs)
         self.__bitmap = self.__defaultBitmap = defaultBitmap
         self.__tickBitmap = tickBitmap
-        self.__tackBitmap = tackBitmap       
+        self.__tackBitmap = tackBitmap
+        self.__iconSize = self.__determineIconSize()
         taskList.registerObserver(self.onNotifyTaskList)
         self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, mainwindow.restore)
         self.__nrDueToday = 0
@@ -62,5 +63,11 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         bitmap = self.__getBitmap()
         tooltipText = self.__getTooltipText()
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON, 
-            (16, 16)), tooltipText)
+            self.__iconSize), tooltipText)
 
+    def __determineIconSize(self):
+        if '__WXMAC__' in wx.PlatformInfo:
+            return (128, 128)
+        else:
+            return (16, 16)
+    
