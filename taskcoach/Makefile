@@ -11,7 +11,7 @@ endif
 ifeq ($(shell uname),Darwin)
     PYTHON="pythonw"
 endif
-ifeq ($(shell uname),CYGWIN_NT-5.1) # cygwin:
+ifeq ($(shell uname),CYGWIN_NT-5.1)
     PYTHON="python" # python should be on the path
     PYTHONEXE=$(shell python -c "import sys, re; print re.sub('/cygdrive/([a-z])', r'\1:', '\ '.join(sys.argv[1:]))" $(shell which $(PYTHON)))
     PYTHONDIR=$(dir $(PYTHONEXE))
