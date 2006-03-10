@@ -10,14 +10,17 @@ ifeq ($(shell uname),Linux)
 endif
 ifeq ($(shell uname),Darwin)
     PYTHON="pythonw"
+    PYTHONTOOLDIR="/Applications/MacPython-2.4/Extras/Tools"
+    WEBCHECKER=$(PYTHONTOOLDIR)/webchecker/webchecker.py
+    GETTEXT=python $(PYTHONTOOLDIR)/i18n/pygettext.py
 endif
 ifeq ($(shell uname),CYGWIN_NT-5.1)
     PYTHON="python" # python should be on the path
     PYTHONEXE=$(shell python -c "import sys, re; print re.sub('/cygdrive/([a-z])', r'\1:', '\ '.join(sys.argv[1:]))" $(shell which $(PYTHON)))
-    PYTHONDIR=$(dir $(PYTHONEXE))
+    PYTHONTOOLDIR=$(dir $(PYTHONEXE))/Tools
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
-    WEBCHECKER=$(PYTHONDIR)/Tools/webchecker/webchecker.py
-    GETTEXT=python $(PYTHONDIR)/Tools/i18n/pygettext.py
+    WEBCHECKER=$(PYTHONTOOLDIR)/webchecker/webchecker.py
+    GETTEXT=python $(PYTHONTOOLDIR)/i18n/pygettext.py
 endif
 
 all: i18n windist sdist website
