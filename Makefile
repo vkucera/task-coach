@@ -35,6 +35,10 @@ wininstaller:
 sdist: icons changes
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
+macdist: icons
+	$(PYTHON) make.py py2app
+	hdiutil create -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach.dmg
+
 icons:
 	cd icons.in; $(PYTHON) make.py
 
