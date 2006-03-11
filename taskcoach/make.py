@@ -109,10 +109,17 @@ if sys.argv[1] == 'py2exe':
             'packages' : ['i18n'],
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}}})
  
+if sys.argv[1] == 'py2app':
+    import py2app
+    setupOptions.update(dict(app=['taskcoach.py'], 
+        options=dict(py2app=dict(argv_emulation=True, compressed=True,
+            dist_dir=builddir, optimize=2))))
 
 if __name__ == '__main__':
     if not os.path.exists(builddir):
         os.mkdir(builddir)
+    if not os.path.exists(distdir):
+        os.mkdir(distdir)
     createDocumentation()
     setup(**setupOptions)
     if sys.argv[1] == 'py2exe':
