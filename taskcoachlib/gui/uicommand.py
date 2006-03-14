@@ -25,18 +25,18 @@ class UICommand(object):
         implement doCommand() and optionally override enabled(). '''
     
     def __init__(self, menuText='?', helpText='', bitmap='nobitmap',
-            kind=wx.ITEM_NORMAL, *args, **kwargs):
+            kind=wx.ITEM_NORMAL, id=None, *args, **kwargs):
         super(UICommand, self).__init__(*args, **kwargs)
         self.menuText = menuText
         self.helpText = helpText
         self.bitmap = bitmap
         self.kind = kind
+        self.id = id or wx.NewId()
         self.menuItems = [] # uiCommands can be used in multiple menu's
 
     def appendToMenu(self, menu, window, position=None):
         # FIXME: rename to addToMenu
-        id = wx.NewId()
-        menuItem = wx.MenuItem(menu, id, self.menuText, self.helpText, 
+        menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
             self.kind)
         self.menuItems.append(menuItem)
         if self.bitmap:
@@ -46,8 +46,8 @@ class UICommand(object):
             menu.AppendItem(menuItem)
         else:
             menu.InsertItem(position, menuItem)
-        self.bind(window, id)
-        return id
+        self.bind(window, self.id)
+        return self.id
     
     def removeFromMenu(self, menu, window):
         for menuItem in self.menuItems:
@@ -59,15 +59,14 @@ class UICommand(object):
         self.unbind(window, id)
         
     def appendToToolBar(self, toolbar):
-        id = wx.NewId()
         bitmap = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_TOOLBAR, 
             toolbar.GetToolBitmapSize())
-        toolbar.AddLabelTool(id, '',
+        toolbar.AddLabelTool(self.id, '',
             bitmap, wx.NullBitmap, self.kind, 
             shortHelp=wx.MenuItem.GetLabelFromText(self.menuText),
             longHelp=self.helpText)
-        self.bind(toolbar, id)
-        return id
+        self.bind(toolbar, self.id)
+        return self.id
 
     def bind(self, window, id):
         window.Bind(wx.EVT_MENU, self.onCommandActivate, id=id)
