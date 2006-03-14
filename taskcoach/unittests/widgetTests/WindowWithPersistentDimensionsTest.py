@@ -30,7 +30,8 @@ class WindowTest(test.wxTestCase):
             
     def testChangeSize(self):
         self.window.ProcessEvent(wx.SizeEvent((100, 100)))
-        self.assertEqual((100, 100), eval(self.settings.get(self.section, 'size')))
+        self.assertEqual((100, 100), 
+            eval(self.settings.get(self.section, 'size')))
         
     def testMove(self):
         self.window.ProcessEvent(wx.MoveEvent((100, 100)))
