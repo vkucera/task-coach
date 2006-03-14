@@ -20,11 +20,14 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
         self.AppendItem(subMenuItem)
 
     def invokeMenuItem(self, menuItem):
-        ''' Programmatically invoke the menuItem. This is mainly for testing purposes. '''
-        self._window.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, winid=menuItem.GetId()))
+        ''' Programmatically invoke the menuItem. This is mainly for testing 
+            purposes. '''
+        self._window.ProcessEvent(wx.CommandEvent( \
+            wx.wxEVT_COMMAND_MENU_SELECTED, winid=menuItem.GetId()))
     
     def openMenu(self):
-        ''' Programmatically open the menu. This is mainly for testing purposes. '''
+        ''' Programmatically open the menu. This is mainly for testing 
+            purposes. '''
         self._window.ProcessEvent(wx.MenuEvent(wx.wxEVT_MENU_OPEN, menu=self))
 
 
