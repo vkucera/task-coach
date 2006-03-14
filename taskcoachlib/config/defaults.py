@@ -48,7 +48,7 @@ defaults = { \
     'tasksearchfiltermatchcase': 'False' },
 'window': { \
     'size': '(600, 500)',
-    'position': '(0, 0)',
+    'position': '(-1, -1)',
     'iconized': 'False',
     'splash': 'True',
     'hidewheniconized': 'True',

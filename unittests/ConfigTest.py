@@ -68,3 +68,7 @@ class SettingsObservableTest(SettingsTestCase):
         self.settings.set('view', 'statusbar', 'True')
         self.assertEqual(0, self.notifications)
         
+
+class SpecificSettingsTest(SettingsTestCase):
+    def testDefaultWindowPosition(self):
+        self.assertEqual('(-1, -1)', self.settings.get('window', 'position'))
