@@ -244,7 +244,8 @@ class NeedsItems(object):
 class FileOpen(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileOpen, self).__init__(menuText=_('&Open...\tCtrl+O'),
-            helpText=_('Open a %s file')%meta.name, bitmap='fileopen', *args, **kwargs)
+            helpText=_('Open a %s file')%meta.name, bitmap='fileopen',
+            id=wx.ID_OPEN, *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.open()
@@ -274,8 +275,8 @@ class FileMerge(IOCommand):
 class FileClose(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileClose, self).__init__(menuText=_('&Close'),
-            helpText=_('Close the current file'), bitmap='close', *args, **kwargs)
-
+            helpText=_('Close the current file'), bitmap='close',
+            id=wx.ID_CLOSE, *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.close()
@@ -284,7 +285,8 @@ class FileClose(IOCommand):
 class FileSave(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileSave, self).__init__(menuText=_('&Save\tCtrl+S'),
-            helpText=_('Save the current file'), bitmap='save', *args, **kwargs)
+            helpText=_('Save the current file'), bitmap='save',
+            id=wx.ID_SAVE, *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.save()
@@ -296,7 +298,7 @@ class FileSaveAs(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileSaveAs, self).__init__(menuText=_('S&ave as...'),
             helpText=_('Save the current file under a new name'), 
-            bitmap='saveas', *args, **kwargs)
+            bitmap='saveas', id=wx.ID_SAVEAS, *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.saveas()
@@ -324,7 +326,8 @@ class FileExportAsICS(IOCommand):
 class FileQuit(MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
-            helpText=_('Exit %s')%meta.name, bitmap='exit', *args, **kwargs)
+            helpText=_('Exit %s')%meta.name, bitmap='exit',
+            id=wx.ID_EXIT, *args, **kwargs)
 
     def doCommand(self, event):
         self.mainwindow.quit()
@@ -336,7 +339,8 @@ def getUndoMenuText():
 class EditUndo(UICommand):
     def __init__(self, *args, **kwargs):
         super(EditUndo, self).__init__(menuText=getUndoMenuText(),
-            helpText=_('Undo the last command'), bitmap='undo', *args, **kwargs)
+            helpText=_('Undo the last command'), bitmap='undo',
+            id=wx.ID_UNDO, *args, **kwargs)
             
     def doCommand(self, event):
         patterns.CommandHistory().undo()
@@ -356,7 +360,7 @@ class EditRedo(UICommand):
     def __init__(self, *args, **kwargs):
         super(EditRedo, self).__init__(menuText=getRedoMenuText(),
             helpText=_('Redo the last command that was undone'), bitmap='redo',
-            *args, **kwargs)
+            id=wx.ID_REDO, *args, **kwargs)
 
     def doCommand(self, event):
         patterns.CommandHistory().redo()
@@ -372,8 +376,8 @@ class EditRedo(UICommand):
 class EditCut(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):        
         super(EditCut, self).__init__(menuText=_('Cu&t\tCtrl+X'), 
-            helpText=_('Cut the selected item(s) to the clipboard'), bitmap='cut', 
-            *args, **kwargs)
+            helpText=_('Cut the selected item(s) to the clipboard'), 
+            bitmap='cut', id=wx.ID_CUT, *args, **kwargs)
 
     def doCommand(self, event):
         cutCommand = command.CutCommand(self.viewer.model(),
@@ -384,8 +388,8 @@ class EditCut(NeedsSelection, ViewerCommand):
 class EditCopy(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EditCopy, self).__init__(menuText=_('&Copy\tCtrl+C'), 
-            helpText=_('Copy the selected item(s) to the clipboard'), bitmap='copy',
-            *args, **kwargs)
+            helpText=_('Copy the selected item(s) to the clipboard'), 
+            bitmap='copy', id=wx.ID_COPY, *args, **kwargs)
 
     def doCommand(self, event):
         copyCommand = command.CopyCommand(self.viewer.model(), 
@@ -397,7 +401,7 @@ class EditPaste(UICommand):
     def __init__(self, *args, **kwargs):
         super(EditPaste, self).__init__(menuText=_('&Paste\tCtrl+V'), 
             helpText=_('Paste item(s) from the clipboard'), bitmap='paste', 
-            *args, **kwargs)
+            id=wx.ID_PASTE, *args, **kwargs)
 
     def doCommand(self, event):
         pasteCommand = command.PasteCommand()
@@ -425,19 +429,20 @@ class EditPasteIntoTask(NeedsSelectedTasks, ViewerCommand):
 class EditPreferences(MainWindowCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(EditPreferences, self).__init__(menuText=_('Preferences...'),
-            helpText=_('Edit preferences'), bitmap='configure', *args, **kwargs)
+            helpText=_('Edit preferences'), bitmap='configure', 
+            *args, **kwargs)
             
     def doCommand(self, event):
-        editor = gui.Preferences(parent=self.mainwindow, title=_('Edit preferences'), 
-            settings=self.settings)
+        editor = gui.Preferences(parent=self.mainwindow, 
+            title=_('Edit preferences'), settings=self.settings)
         editor.Show()
 
 
 class SelectAll(NeedsItems, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(SelectAll, self).__init__(menuText=_('&All\tCtrl+A'),
-            helpText=_('Select all items in the current view'), bitmap='selectall',
-            *args, **kwargs)
+            helpText=_('Select all items in the current view'), 
+            bitmap='selectall', id=wx.ID_SELECTALL, *args, **kwargs)
         
     def doCommand(self, event):
         self.viewer.selectall()
@@ -445,9 +450,10 @@ class SelectAll(NeedsItems, ViewerCommand):
 
 class InvertSelection(NeedsItems, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(InvertSelection, self).__init__(menuText=_('&Invert selection\tCtrl+I'),
-            helpText=_('Select unselected items and unselect selected items'), *args,
-            **kwargs)
+        super(InvertSelection, self).__init__( \
+            menuText=_('&Invert selection\tCtrl+I'),
+            helpText=_('Select unselected items and unselect selected items'), 
+            *args, **kwargs)
 
     def doCommand(self, event):
         self.viewer.invertselection()
@@ -465,8 +471,8 @@ class ClearSelection(NeedsSelection, ViewerCommand):
 class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
     def __init__(self, *args, **kwargs):
         super(ViewAllTasks, self).__init__(menuText=_('&All tasks'),
-            helpText=_('Show all tasks (reset all filters)'), bitmap='viewalltasks',
-            *args, **kwargs)
+            helpText=_('Show all tasks (reset all filters)'), 
+            bitmap='viewalltasks', *args, **kwargs)
     
     def doCommand(self, event):
         for uiCommandName in ['viewcompletedtasks', 'viewinactivetasks', 
@@ -500,8 +506,10 @@ class HideCurrentColumn(ViewerCommand):
     
 class ViewCategories(MainWindowCommand, FilterCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewCategories, self).__init__(menuText=_('Tasks by catego&ries...'),
-            helpText=_('Show/hide tasks by category'), bitmap='category', *args, **kwargs)
+        super(ViewCategories, self).__init__( \
+            menuText=_('Tasks by catego&ries...'),
+            helpText=_('Show/hide tasks by category'), bitmap='category', 
+            *args, **kwargs)
             
     def doCommand(self, event):
         editor = gui.CategoriesFilterDialog(parent=self.mainwindow,
@@ -530,6 +538,7 @@ class ViewExpandSelected(NeedsSelectedTasks, ViewerCommand):
     def doCommand(self, event):
         self.viewer.expandSelectedItems()
             
+
 class ViewCollapseAll(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewCollapseAll, self).__init__(menuText=_('&Collapse all tasks'),
@@ -538,26 +547,30 @@ class ViewCollapseAll(ViewerCommand):
     def doCommand(self, event):
         self.viewer.collapseAll()
  
+
 class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewCollapseSelected, self).__init__(bitmap='viewcollapse',
             menuText=_('C&ollapse'),
-            helpText=_('Collapse the selected tasks with subtasks'), *args, **kwargs)
+            helpText=_('Collapse the selected tasks with subtasks'), 
+            *args, **kwargs)
     
     def doCommand(self, event):
         self.viewer.collapseSelectedItems()
              
         
-class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, SettingsCommand):
+class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, \
+              SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskNew, self).__init__(bitmap='new', 
-            menuText=self.getMenuText(), helpText=_('Insert a new task'), *args,
-            **kwargs)
+            menuText=self.getMenuText(), helpText=_('Insert a new task'), 
+            *args, **kwargs)
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
             command.NewTaskCommand(self.filteredTaskList),
-            self.filteredTaskList, self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap=self.bitmap)
+            self.filteredTaskList, self.uiCommands, self.settings, 
+            self.filteredTaskList.categories(), bitmap=self.bitmap)
         editor.Show(show)
 
     def getMenuText(self):
@@ -583,8 +596,10 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
-            command.NewSubTaskCommand(self.filteredTaskList, self.viewer.curselection()),
-            self.filteredTaskList, self.uiCommands, self.settings, self.filteredTaskList.categories(), bitmap='new')
+            command.NewSubTaskCommand(self.filteredTaskList, 
+            self.viewer.curselection()), self.filteredTaskList, 
+            self.uiCommands, self.settings, self.filteredTaskList.categories(), 
+            bitmap='new')
         editor.Show(show)
 
     def getMenuText(self):
@@ -609,9 +624,9 @@ class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand,
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
-            command.EditTaskCommand(self.filteredTaskList, self.viewer.curselection()), 
-            self.filteredTaskList, self.uiCommands, self.settings,
-            self.filteredTaskList.categories())
+            command.EditTaskCommand(self.filteredTaskList, 
+            self.viewer.curselection()), self.filteredTaskList, 
+            self.uiCommands, self.settings, self.filteredTaskList.categories())
         editor.Show(show)
 
 
@@ -622,13 +637,14 @@ class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
             helpText=_('Mark the selected task(s) completed'), *args, **kwargs)
 
     def doCommand(self, event):
-        markCompletedCommand = command.MarkCompletedCommand(self.filteredTaskList, 
-            self.viewer.curselection())
+        markCompletedCommand = command.MarkCompletedCommand( \
+            self.filteredTaskList, self.viewer.curselection())
         markCompletedCommand.do()
 
     def enabled(self, event):
         return super(TaskMarkCompleted, self).enabled(event) and \
-            [task for task in self.viewer.curselection() if not task.completed()]
+            [task for task in self.viewer.curselection() \
+             if not task.completed()]
 
 
 class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
@@ -648,8 +664,9 @@ class TaskDragAndDrop(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         super(TaskDragAndDrop, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
-        dragAndDropCommand = command.DragAndDropTaskCommand(self.filteredTaskList,
-            self.viewer.draggedItems(), drop=self.viewer.curselection()[0])
+        dragAndDropCommand = command.DragAndDropTaskCommand( \
+            self.filteredTaskList, self.viewer.draggedItems(), 
+            drop=self.viewer.curselection()[0])
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
 
@@ -669,7 +686,8 @@ class TaskMail(NeedsSelectedTasks, ViewerCommand):
             subject = render.subject(tasks[0], recursively=True)
             bodyLines = tasks[0].description().splitlines()
         body = urllib.quote('\r\n'.join(bodyLines))
-        mailToURL = 'mailto:%s?subject=%s&body=%s'%(_('Please enter recipient'), subject, body)
+        mailToURL = 'mailto:%s?subject=%s&body=%s'%( \
+            _('Please enter recipient'), subject, body)
         webbrowser.open(mailToURL)
 
 
@@ -682,8 +700,9 @@ class TaskAddAttachment(NeedsSelectedTasks, FilterCommand, ViewerCommand):
     def doCommand(self, event):
         filename = widgets.AttachmentSelector()
         if filename:
-            addAttachmentCommand = command.AddAttachmentToTaskCommand(self.filteredTaskList,
-                self.viewer.curselection(), attachments=[filename])
+            addAttachmentCommand = command.AddAttachmentToTaskCommand( \
+                self.filteredTaskList, self.viewer.curselection(), 
+                attachments=[filename])
             addAttachmentCommand.do()
                 
 
@@ -699,7 +718,8 @@ class EffortNew(NeedsAtLeastOneTask, MainWindowCommand, EffortCommand,
         if self.viewer.isShowingTasks() and self.viewer.curselection():
             selectedTasks = self.viewer.curselection()
         else:
-            subjectDecoratedTaskList = [(render.subject(task, recursively=True), task) for task in self.filteredTaskList]
+            subjectDecoratedTaskList = [(render.subject(task, 
+                recursively=True), task) for task in self.filteredTaskList]
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         editor = gui.EffortEditor(self.mainwindow, 
@@ -717,8 +737,9 @@ class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand,
             
     def doCommand(self, event):
         editor = gui.EffortEditor(self.mainwindow,
-            command.EditEffortCommand(self.effortList, self.viewer.curselection()),
-            self.uiCommands, self.effortList, self.filteredTaskList)
+            command.EditEffortCommand(self.effortList, 
+            self.viewer.curselection()), self.uiCommands, self.effortList, 
+            self.filteredTaskList)
         editor.Show()
 
 
@@ -742,7 +763,8 @@ class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
             *args, **kwargs)
     
     def doCommand(self, event):
-        start = command.StartEffortCommand(self.filteredTaskList, self.viewer.curselection())
+        start = command.StartEffortCommand(self.filteredTaskList, 
+            self.viewer.curselection())
         start.do()
         
     def enabled(self, event):
@@ -756,14 +778,16 @@ class EffortStop(FilterCommand):
     def __init__(self, *args, **kwargs):
         super(EffortStop, self).__init__(bitmap='stop',
             menuText=_('St&op tracking effort'),
-            helpText=_('Stop tracking effort for the active task(s)'), *args, **kwargs)
+            helpText=_('Stop tracking effort for the active task(s)'), 
+            *args, **kwargs)
 
     def doCommand(self, event):
         stop = command.StopEffortCommand(self.filteredTaskList)
         stop.do()
 
     def enabled(self, event):
-        return bool([task for task in self.filteredTaskList if task.isBeingTracked()])
+        return bool([task for task in self.filteredTaskList if \
+                     task.isBeingTracked()])
 
 
 class DialogCommand(UICommand):
@@ -793,7 +817,8 @@ class Help(DialogCommand):
     def __init__(self, *args, **kwargs):
         super(Help, self).__init__(menuText=_('&Help contents'),
             helpText=_('Help about the program'), bitmap='help', 
-            dialogTitle=_('Help'), dialogText=help.helpHTML, *args, **kwargs)
+            dialogTitle=_('Help'), dialogText=help.helpHTML, id=wx.ID_HELP, 
+            *args, **kwargs)
 
 
 class Tips(SettingsCommand, MainWindowCommand):
@@ -815,7 +840,7 @@ class HelpAbout(InfoCommand):
         super(HelpAbout, self).__init__(menuText=_('&About %s')%meta.name,
             helpText=_('Version and contact information about %s')%meta.name, 
             dialogTitle=_('Help: About %s')%meta.name, 
-            dialogText=help.aboutHTML, *args, **kwargs)
+            dialogText=help.aboutHTML, id=wx.ID_ABOUT, *args, **kwargs)
   
   
 class HelpLicense(InfoCommand):
@@ -994,7 +1019,7 @@ class UICommands(dict):
                                                          
         self['viewfinddialog'] = UICheckCommand(settings=settings,
             menuText=_('&Find dialog'), helpText=_('Show/hide find dialog'), 
-            setting='finddialog')
+            setting='finddialog', id=wx.ID_FIND)
         self['viewstatusbar'] = UICheckCommand(settings=settings, 
             menuText=_('Status&bar'), helpText=_('Show/hide status bar'), 
             setting='statusbar')
