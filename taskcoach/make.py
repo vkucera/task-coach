@@ -113,7 +113,7 @@ if sys.argv[1] == 'py2app':
     import py2app
     setupOptions.update(dict(app=['taskcoach.py'], 
         options=dict(py2app=dict(argv_emulation=True, compressed=True,
-            dist_dir=builddir, optimize=2))))
+            dist_dir=builddir, optimize=2, packages=['i18n']))))
 
 if __name__ == '__main__':
     if not os.path.exists(builddir):
