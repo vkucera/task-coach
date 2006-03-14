@@ -1,9 +1,35 @@
 import ConfigParser, os, meta, defaults, patterns
 
-class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
+
+class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
+    def set(self, section, setting, value):
+        if type(value) == type(u''):
+            '''
+            try:
+                print 'set: %s->%s'%(value, value.encode('utf-8'))
+            except UnicodeDecodeError:
+                print 'set:', value.encode('utf-8')
+            '''
+            value = value.encode('utf-8')
+        ConfigParser.SafeConfigParser.set(self, section, setting, value)
+
+    def get(self, section, setting):
+        value = ConfigParser.SafeConfigParser.get(self, section, setting)
+        '''
+        try:
+            print 'get: %s->%s'%(value, value.decode('utf-8'))
+        except UnicodeDecodeError:
+            print 'get:', value
+        '''
+        return value.decode('utf-8')
+    
+
+class Settings(patterns.Observable, UnicodeAwareConfigParser):
     def __init__(self, load=True, *args, **kwargs):
+        # sigh, SafeConfigParser is not cooperative, so we have to call
+        # the superclasses explicitly:
         super(Settings, self).__init__(*args, **kwargs)
-        ConfigParser.SafeConfigParser.__init__(self, *args, **kwargs) # sigh, SafeConfigParser is not cooperative
+        ConfigParser.SafeConfigParser.__init__(self, *args, **kwargs) 
         self.setDefaults()
         self.__loadAndSave = load
         if load:
@@ -11,7 +37,7 @@ class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
         else:
             # Assume that if the settings are not to be loaded, we also 
             # should be quiet (i.e. we are probably in test mode):
-            self.__beQuit() 
+            self.__beQuiet() 
         # FIXME: add some machinery to check whether values read in from
         # the TaskCoach.ini file are allowed values. We need some way to 
         # specify allowed values. That's easy for boolean and enumeration types,
@@ -23,7 +49,7 @@ class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
             for key, value in settings.items():
                 self.set(section, key, value)
 
-    def __beQuit(self):
+    def __beQuiet(self):
         noisySettings = [('window', 'splash'), ('window', 'tips')]
         for section, setting in noisySettings:
             self.set(section, setting, 'False')
@@ -40,11 +66,11 @@ class Settings(patterns.Observable, ConfigParser.SafeConfigParser):
             path = self.path()
             if not os.path.exists(path):
                 os.mkdir(path)
-            fp = file(self.filename(), 'w')
-            self.write(fp)
-            fp.close()
+            iniFile = file(self.filename(), 'w')
+            self.write(iniFile)
+            iniFile.close()
         except:
-            pass
+            raise # pass
 
     def path(self, environ=os.environ):
         try:
