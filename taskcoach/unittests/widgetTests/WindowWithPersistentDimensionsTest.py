@@ -12,6 +12,7 @@ class WindowWithPersistentDimensions(gui.mainwindow.WindowWithPersistentDimensio
 class WindowTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
+        self.settings.set('window', 'position', '(100, 100)')
         self.window = WindowWithPersistentDimensions(self.settings)
         self.section = self.window._section
         
@@ -34,4 +35,4 @@ class WindowTest(test.wxTestCase):
     def testMove(self):
         self.window.ProcessEvent(wx.MoveEvent((100, 100)))
         #The move is not processed, dunno why:
-        self.assertEqual((0, 0), eval(self.settings.get(self.section, 'position')))
+        self.assertEqual((100, 100), eval(self.settings.get(self.section, 'position')))
