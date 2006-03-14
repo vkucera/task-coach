@@ -23,21 +23,21 @@ ifeq ($(shell uname),CYGWIN_NT-5.1)
     GETTEXT=python $(PYTHONTOOLDIR)/i18n/pygettext.py
 endif
 
-all: i18n windist sdist website
+all: windist sdist website
 
-windist: icons
+windist: icons i18n
 	$(PYTHON) make.py py2exe
 	$(INNOSETUP) build/taskcoach.iss
 
 wininstaller:
 	$(INNOSETUP) build/taskcoach.iss
 
-sdist: icons changes
+sdist: icons changes i18n
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
-macdist: icons
+macdist: icons i18n
 	$(PYTHON) make.py py2app
-	hdiutil create -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach.dmg
+	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach.dmg
 
 icons:
 	cd icons.in; $(PYTHON) make.py
