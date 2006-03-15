@@ -1,8 +1,7 @@
 '''
 Release steps:
 1. Run this script to release to Sourceforge Website, Chello (my ISP) and PyPI.
-1a. Remove old TaskCoach releases from SF TC Website by hand (sftp)
-2. Use releaseforge to release to Sourceforge.
+2. Use releaseforge to release distributions to Sourceforge.
 2a. Upload distributions
 2b. Post project news.
 3. Post release notification on freshmeat.net by hand.
@@ -33,17 +32,14 @@ class SimpleFTP(ftplib.FTP, object):
             print 'Stored %s'%filename
 
 def ftpToChello():
-    previous_version = taskcoachlib.meta.previous_version
     chello = SimpleFTP('members.chello.nl', 'f.niessink', '.chello_password')
-    os.chdir('dist')
-    chello.delete([distro%previous_version for distro in
-        ('TaskCoach-%s.tar.gz', 'TaskCoach-%s.zip', 'TaskCoach-%s-win32.exe')])
+    os.chdir('website.out')
     chello.put(glob.glob('*'))
     chello.quit()
     os.chdir('..')
 
 def scpToSourceForge():
-    os.system('scp dist/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
+    os.system('scp website.out/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
 
 def registerWithPyPI():
     from setup import setupOptions
