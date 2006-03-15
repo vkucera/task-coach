@@ -52,26 +52,12 @@ pages['download'] = \
         <P>You can download either the source distribution, in which
         case you need Python <strong>%(pythonversion)s</strong> (or higher) 
         and wxPython <strong>%(wxpythonversion)s</strong> (or higher), or
-        you can download the Windows executable distribution.</P>
-        <P>I test %(name)s on Windows XP SP2 and Linux Ubuntu 5.10. I'd 
-        appreciate some feedback if you are able to run it (or not) on other
-        platforms.</P>
-        <P>
-        <TABLE>
-        <TR>
-            <TD><A HREF="%(filename)s-%(version)s-win32.exe">%(filename)s-%(version)s-win32.exe</A></TD>
-            <TD>Installer for Windows XP (and other Windows versions)</TD>
-        </TR>
-        <TR>
-            <TD><A HREF="%(filename)s-%(version)s.zip">%(filename)s-%(version)s.zip</A></TD>
-            <TD>Zipped source distribution</TD>
-        </TR>
-        <TR>
-            <TD><A HREF="%(filename)s-%(version)s.tar.gz">%(filename)s-%(version)s.tar.gz</A></TD>
-            <TD>Tarred/gzipped source distribution</TD>
-        </TR>
-        </TABLE>
-        <P>Download from <A HREF="https://sourceforge.net/project/showfiles.php?group_id=130831">Sourceforge</A>.'''
+        you can download an executable distribution for Windows or Mac
+        OSX.</P>
+        <P>I test %(name)s on Windows XP SP2, Linux Ubuntu 5.10, and Mac
+        OSX 10.4. I'd appreciate some feedback if you are able to run it 
+        (or not) on other platforms.</P>
+        <P>Download %(name)s from <A HREF="https://sourceforge.net/project/showfiles.php?group_id=130831">Sourceforge</A>.'''
 
 pages['features'] = \
 '''        <H3>Features</H3>
@@ -198,7 +184,7 @@ pages['roadmap'] = \
     direction for %(name)s.</p>
 '''
 
-dist = os.path.join('..', 'dist')
+dist = os.path.join('..', 'website.out')
 
 if not os.path.isdir(dist):
     os.mkdir(dist)
