@@ -12,12 +12,12 @@ class NewEffortCommand(base.BaseCommand):
         self.efforts = [effort.Effort(task) for task in self.items]
         
     def do_command(self):
-        for task, effort in zip(self.items, self.efforts):
-            task.addEffort(effort)
+        for effort in self.efforts:
+            effort.task().addEffort(effort)
             
     def undo_command(self):
-        for task, effort in zip(self.items, self.efforts):
-            task.removeEffort(effort)
+        for effort in self.efforts:
+            effort.task().removeEffort(effort)
             
     redo_command = do_command
 

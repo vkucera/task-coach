@@ -24,14 +24,17 @@ class EffortBase(object):
 
 
 class Effort(EffortBase, patterns.Observable, date.ClockObserver):
-    def __init__(self, task, start=None, stop=None, description='', *args, **kwargs):
+    def __init__(self, task, start=None, stop=None, description='', 
+            *args, **kwargs):
         self._description = description
-        super(Effort, self).__init__(task, start or date.DateTime.now(), stop, *args, **kwargs)
+        super(Effort, self).__init__(task, start or date.DateTime.now(), stop, 
+            *args, **kwargs)
         if self._stop == None:
             self.startClock()
 
     def setTask(self, task):
-        if task in [self._task, None]: # command.PasteCommand tries to set the parent to None
+        if task in [self._task, None]: 
+            # command.PasteCommand may try to set the parent to None
             return
         self._task = task
         self._task.addEffort(self)
@@ -45,7 +48,7 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
     __repr__ = __str__
         
     def __getstate__(self):
-        return {'_task' : self._task, '_start' : self._start, '_stop' : self._stop }
+        return dict(_task=self._task, _start=self._start, _stop=self._stop)
         
     def __setstate__(self, state):
         # FIXME: we have to treat _task differently, see the action that 
@@ -57,8 +60,8 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
    
     def copy(self):
-        return Effort(self._task, self._start, self._stop, self._description)            
-       
+        return Effort(self._task, self._start, self._stop, self._description) 
+
     def duration(self, now=date.DateTime.now):
         if self._stop:
             stop = self._stop
@@ -68,8 +71,8 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         
     def setStart(self, startDatetime):
         self._start = startDatetime
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))       
-       
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
+
     def setStop(self, stopDatetime=None):
         if stopDatetime is None:
             self._stop = date.DateTime.now()
@@ -81,8 +84,8 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
             self.startClock()
         elif self._stop != None and self.isClockStarted():
             self.stopClock()
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))        
-        
+        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
+
     def setDescription(self, description):
         self._description = description
         self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
@@ -103,8 +106,8 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         
         
 class CompositeEffort(EffortBase, list):
-    ''' CompositeEffort is a list of efforts for one task (and maybe its children)
-        and within a certain time period. '''
+    ''' CompositeEffort is a list of efforts for one task (and maybe its 
+        children) and within a certain time period. '''
     
     def __init__(self, task, start, stop, efforts=None):
         super(CompositeEffort, self).__init__(task, start, stop, efforts or [])
