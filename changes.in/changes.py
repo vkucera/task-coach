@@ -3,7 +3,7 @@
 from domain import *
 
 releases = [             
-Release('0.57', 'February ?, 2006',
+Release('0.57', 'March 16, 2006',
     bugsFixed=[
         Bug('''When adding a new effort to a task, take into account that the
 user may have changed the task that the effort belongs to in the effort editor
