@@ -1,9 +1,9 @@
 '''
 Release steps:
-1. Run this script to release to Sourceforge Website, Chello (my ISP) and PyPI.
-2. Use releaseforge to release distributions to Sourceforge.
-2a. Upload distributions
-2b. Post project news.
+1. Use releaseforge to release distributions to Sourceforge.
+1a. Upload distributions
+1b. Post project news.
+2. Run this script to release to Sourceforge Website, Chello (my ISP) and PyPI.
 3. Post release notification on freshmeat.net by hand.
 4. Tag source code: cvs tag ReleaseX_Y.
 5. Email taskcoach@yahoogroups.com and python-announce@python.org.
