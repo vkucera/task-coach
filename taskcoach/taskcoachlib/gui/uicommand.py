@@ -1,8 +1,8 @@
-import wx, patterns, config, gui, meta, command, help, widgets, \
-    webbrowser, urllib, os
+import wx, patterns, config, gui, meta, command, help, widgets, urllib, os
 from gui import render
 from i18n import _
 import domain.task as task
+import thirdparty.desktop as desktop
 
 class UICommandContainer(object):
     ''' Mixin with wx.Menu or wx.ToolBar (sub)class. '''
@@ -688,7 +688,7 @@ class TaskMail(NeedsSelectedTasks, ViewerCommand):
         body = urllib.quote('\r\n'.join(bodyLines))
         mailToURL = 'mailto:%s?subject=%s&body=%s'%( \
             _('Please enter recipient'), subject, body)
-        webbrowser.open(mailToURL)
+        desktop.open(mailToURL)
 
 
 class TaskAddAttachment(NeedsSelectedTasks, FilterCommand, ViewerCommand):

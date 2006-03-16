@@ -32,7 +32,21 @@ class NewEffortCommandTest(EffortCommandTestCase):
             lambda: self.failUnless(newEffort in self.originalTask.efforts()),
             lambda: self.assertEqual([self.effort], self.originalTask.efforts()))
 
+    def testNewEffortWhenUserEditsTask(self):
+        secondTask = task.Task()
+        self.taskList.append(secondTask)
+        newEffortCommand = command.NewEffortCommand(self.effortList, 
+                                                    [self.originalTask])
+        newEffort = newEffortCommand.efforts[0]
+        newEffort.setTask(secondTask)
+        newEffortCommand.do()
+        self.assertDoUndoRedo(
+            lambda: self.failUnless(newEffort in secondTask.efforts() and \
+                    newEffort not in self.originalTask.efforts()),
+            lambda: self.failUnless(newEffort not in secondTask.efforts() and \
+                    newEffort not in self.originalTask.efforts()))
         
+
 class EditEffortCommandTest(EffortCommandTestCase):
     def testEditStartDateTime(self):
         edit = command.EditEffortCommand(self.effortList, [self.effort])

@@ -229,7 +229,8 @@ class Task(patterns.Observable):
         if effort not in self._efforts:
             self._efforts.append(effort)
             effort.registerObserver(self.notifyEffortChanged)
-            self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, effortsAdded=[effort]))
+            self.notifyObservers(patterns.Notification(self, 
+                changeNeedsSave=True, effortsAdded=[effort]))
         
     def removeEffort(self, effort):
         self._efforts.remove(effort)

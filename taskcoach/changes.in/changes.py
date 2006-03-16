@@ -5,6 +5,11 @@ from domain import *
 releases = [             
 Release('0.57', 'February ?, 2006',
     bugsFixed=[
+        Bug('''When adding a new effort to a task, take into account that the
+user may have changed the task that the effort belongs to in the effort editor
+dialog (using the dropdown combobox). Because Task Coach didn't do that, the
+effort would be added twice if the user changed the task of the new effort
+record.''', '1443906'),
         Bug('''A file that was saved with an active effort couldn't be loaded 
 again. Task Coach would complain that the file was invalid.''', '1433611'),
         Bug('''Added different sizes of the Task Coach icon. This should
