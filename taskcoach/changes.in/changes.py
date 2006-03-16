@@ -4,6 +4,9 @@ from domain import *
 
 releases = [             
 Release('0.57', 'March 16, 2006',
+    featuresAdded=[
+        Feature('''Task Coach is now also available as disk image (.dmg)
+for Mac OSX (tested on OSX 10.4).''')],
     bugsFixed=[
         Bug('''When adding a new effort to a task, take into account that the
 user may have changed the task that the effort belongs to in the effort editor
@@ -12,8 +15,8 @@ effort would be added twice if the user changed the task of the new effort
 record.''', '1443906'),
         Bug('''A file that was saved with an active effort couldn't be loaded 
 again. Task Coach would complain that the file was invalid.''', '1433611'),
-        Bug('''Added different sizes of the Task Coach icon. This should
-prevent scaling up the 16x16 version to 32x32 on Windows or to even 128x128
+        Bug('''Added different sizes of the Task Coach icon. This 
+prevents scaling up the 16x16 version to 32x32 on Windows or to even 128x128
 on the Mac.''', '1406651', '1434044')]),
              
 Release('0.56', 'February 14, 2006',
