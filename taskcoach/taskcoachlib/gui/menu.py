@@ -29,10 +29,10 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
     def openMenu(self):
         ''' Programmatically open the menu. This is mainly for testing 
             purposes. '''
-        # on Mac OSX, force an update of the menu, otherwise the tests
-        # will fail. FIXME: maybe this works on all platforms?
-        if '__WXMAC__' in wx.PlatformInfo:
-            self._window.UpdateWindowUI() 
+        # On Mac OSX, an explicit UpdateWindowUI is needed to ensure that
+        # menu items are updated before the menu is opened. This is not needed
+        # on other platforms, but it doesn't hurt either.
+        self._window.UpdateWindowUI() 
         self._window.ProcessEvent(wx.MenuEvent(wx.wxEVT_MENU_OPEN, menu=self))
 
 
