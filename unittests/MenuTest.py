@@ -5,6 +5,10 @@ import domain.task as task
 class MenuTestCase(test.wxTestCase):
     def setUp(self):
         self.menu = gui.menu.Menu(self.frame)
+        menuBar = wx.MenuBar()
+        menuBar.Append(self.menu, 'menu')
+        self.frame.SetMenuBar(menuBar)
+
 
 class MenuTest(MenuTestCase):
     def testLenEmptyMenu(self):
@@ -148,9 +152,12 @@ class ViewMenuTestCase(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.mainWindow = self.createMainWindow()
         self.filteredTaskList = self.createFilteredTaskList()
-        self.uiCommands = uicommand.UICommands(self.mainWindow, None, None, self.settings, 
-                                               self.filteredTaskList, None)
+        self.uiCommands = uicommand.UICommands(self.mainWindow, None, None, 
+            self.settings, self.filteredTaskList, None)
         self.menu = self.createMenu()
+        menuBar = wx.MenuBar()
+        menuBar.Append(self.menu, 'menu')
+        self.frame.SetMenuBar(menuBar)
         
     def createMainWindow(self):
         return None
