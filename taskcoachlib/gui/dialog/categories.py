@@ -6,7 +6,7 @@ class CategoriesFilterDialog(widgets.Dialog):
         super(CategoriesFilterDialog, self).__init__(bitmap='category', *args, **kwargs)
         
     def createInterior(self):
-        self._checkListBox = wx.CheckListBox(self._panel, -1)
+        self._checkListBox = wx.CheckListBox(self._panel, style=wx.LB_SORT)
         self._checkListBox.InsertItems(list(self._taskList.categories()), 0)
         for category in self._taskList.categories():
             if category not in self._taskList.filteredCategories():

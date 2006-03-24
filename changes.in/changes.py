@@ -3,6 +3,10 @@
 from domain import *
 
 releases = [             
+Release('0.58', '?', 
+    bugsFixed=[
+        Bug('''On Mac OSX, Task Coach would seg fault upon exiting.''')]),
+ 
 Release('0.57', 'March 16, 2006',
     featuresAdded=[
         Feature('''Task Coach is now also available as disk image (.dmg)
