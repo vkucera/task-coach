@@ -23,11 +23,14 @@ class wxApp(wx.App):
 
 
 class App(object):
-    def __init__(self, options=None, args=None):
+    def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
         self.wxApp = wxApp(0)
-        self.init()
+        self.init(**kwargs)
+
+    def start(self):
+        ''' Call this to start the App. '''
         self.mainwindow.Show()
         self.wxApp.MainLoop()
 
@@ -38,6 +41,9 @@ class App(object):
         import gui, persistence
         import domain.task as task
         import domain.effort as effort
+	import meta
+        self.wxApp.SetAppName(meta.name)
+        self.wxApp.SetVendorName(meta.author)
         gui.init()
         if settings.getboolean('window', 'splash'):
             splash = gui.SplashScreen()
@@ -66,19 +72,17 @@ class App(object):
     def displayMessage(self, message):
         self.mainwindow.displayMessage(message)
 
-    def quit(self):
-        self.wxApp.ProcessIdle()
-        self.wxApp.Exit()
 
 def start():
     import config
     options, args = config.ApplicationOptionParser().parse_args()
+    app = App(options, args)
     if options.profile:
         import hotshot
         profiler = hotshot.Profile('.profile')
-        profiler.runcall(App, options, args)
+        profiler.runcall(app.start)
     else:
-        App(options, args)
+        app.start()
 
 if __name__ == '__main__':
     start()
