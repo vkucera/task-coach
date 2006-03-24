@@ -41,7 +41,7 @@ class App(object):
         import gui, persistence
         import domain.task as task
         import domain.effort as effort
-	import meta
+        import meta
         self.wxApp.SetAppName(meta.name)
         self.wxApp.SetVendorName(meta.author)
         gui.init()

@@ -13,10 +13,11 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
         return uiCommand.appendToMenu(self, self._window)    
     
     def appendMenu(self, text, subMenu):
-        subMenuItem = wx.MenuItem(self, -1, text, subMenu=subMenu)
+        subMenuItem = wx.MenuItem(self, text=text, subMenu=subMenu)
         # hack to force a 16 bit margin. SetMarginWidth doesn't work
         if '__WXMSW__' in wx.PlatformInfo:
-            subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap('nobitmap', wx.ART_MENU, (16,16)))
+            subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap('nobitmap', 
+                wx.ART_MENU, (16,16)))
         self.AppendItem(subMenuItem)
 
     def invokeMenuItem(self, menuItem):
@@ -28,6 +29,10 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
     def openMenu(self):
         ''' Programmatically open the menu. This is mainly for testing 
             purposes. '''
+        # on Mac OSX, force an update of the menu, otherwise the tests
+        # will fail. FIXME: maybe this works on all platforms?
+        if '__WXMAC__' in wx.PlatformInfo:
+            self._window.UpdateWindowUI() 
         self._window.ProcessEvent(wx.MenuEvent(wx.wxEVT_MENU_OPEN, menu=self))
 
 
