@@ -132,8 +132,8 @@ class TreeMixin(object):
         
     def GetItem(self, index):
         ''' Return the item at position index in the *Tree(List)Ctrl* which is
-            not necessarily the same index as in the model. This method also mimics
-            the ListCtrl API. '''
+            not necessarily the same index as in the model. This method also 
+            mimics the ListCtrl API. '''
         for cursorIndex, item in enumerate(self.getChildren(recursively=True)):
             if index == cursorIndex:
                 return item
@@ -182,14 +182,13 @@ class TreeMixin(object):
         return rootItem
         
     def addItemsRecursively(self, parent, indices):
-        nrChildrenAdded = 0
         for itemChildIndex, index in enumerate(indices):
             item = self.appendItem(parent, index, itemChildIndex)
-            if self.IsExpanded(item) or self.itemsToExpandOrCollapse.get(item, False):
-                nrChildrenAdded += self.addItemsRecursively(item, self.getChildIndices(index))
+            if self.IsExpanded(item) or \
+                    self.itemsToExpandOrCollapse.get(item, False):
+                self.addItemsRecursively(item, self.getChildIndices(index))
             elif self.getChildIndices(index) and not self.ItemHasChildren(item):
                 self.SetItemHasChildren(item)
-        return len(indices) + nrChildrenAdded
     
     def appendItem(self, parent, index, itemChildIndex):
         itemId = self.getItemId(index)
@@ -283,6 +282,7 @@ class TreeMixin(object):
         wx.CallAfter(self.restoreSelection)
 
     def restoreSelection(self):
+        self.UnselectAll()
         for item in self.itemsToSelect:
             if item.IsOk():
                 self.SelectItem(item)

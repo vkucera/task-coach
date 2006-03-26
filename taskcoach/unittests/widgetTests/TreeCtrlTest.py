@@ -18,9 +18,9 @@ class TreeCtrlTestCase(test.wxTestCase):
 
     def getItemImage(self, index):
         if self.getChildIndices(index):
-            return 0, 0
-        else:
             return 1, 1
+        else:
+            return 0, 0
         
     def getItemAttr(self, index):
         return wx.ListItemAttr()
@@ -33,7 +33,8 @@ class TreeCtrlTestCase(test.wxTestCase):
         allChildIndices = []
         for index in allIndices:
             allChildIndices.extend(self.getChildIndices(index))
-        rootIndices = [index for index in allIndices if index not in allChildIndices]
+        rootIndices = [index for index in allIndices \
+                       if index not in allChildIndices]
         return rootIndices
         
     def getChildIndices(self, index):
