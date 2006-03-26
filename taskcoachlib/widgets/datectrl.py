@@ -45,7 +45,7 @@ class DateCtrl(Panel):
         style = wx.DP_DROPDOWN
         if self._noneAllowed:
             style |= wx.DP_ALLOWNONE
-        return [wx.DatePickerCtrl(self, -1, style=style)]
+        return [wx.DatePickerCtrl(self, style=style)]
 
     def SetValue(self, value):
         self._controls[0].SetValue(date2wxDateTime(value))
@@ -96,18 +96,19 @@ class DateTimeCtrl(Panel):
         pass
         
     def _createControls(self, callback):
-        self._dateCtrl = DateCtrl(self, self._dateCtrlCallback, self._noneAllowed)
+        self._dateCtrl = DateCtrl(self, self._dateCtrlCallback, 
+            self._noneAllowed)
         self._timeCtrl = TimeCtrl(self, self._timeCtrlCallback)
         return self._dateCtrl, self._timeCtrl
         
     def _timeCtrlCallback(self, *args, **kwargs):
-        # if user sets time and date == None, then set date to today
+        # If user sets time and date == None, then set date to today
         if self._dateCtrl.GetValue() == date.Date():
             self._dateCtrl.SetValue(date.Today())
         self._callback(*args, **kwargs)
         
     def _dateCtrlCallback(self, *args, **kwargs):
-        # if users sets date and time == '00:00', then set time to now
+        # If user sets date and time == '00:00', then set time to now
         if self._dateCtrl.GetValue() == date.Date():
             self._timeCtrl.SetValue(date.Time())
         elif self._timeCtrl.GetValue() == date.Time():

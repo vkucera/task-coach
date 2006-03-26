@@ -227,7 +227,7 @@ class TestProfiler:
             self.cleanup()
         return result.wasSuccessful()
             
-    def cleanup(self, result):
+    def cleanup(self):
         import os
         os.remove(self._logfile)
 

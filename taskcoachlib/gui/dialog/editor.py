@@ -376,8 +376,8 @@ class BehaviorPage(TaskEditorPage):
     def ok(self):
         self._task.shouldMarkCompletedWhenAllChildrenCompleted = \
             self._markTaskCompletedEntry.GetClientData(self._markTaskCompletedEntry.GetSelection())
-            
-        
+
+
 class TaskEditBook(widgets.Listbook):
     def __init__(self, parent, task, taskList, uiCommands, settings, 
                  categories, *args, **kwargs):
@@ -391,7 +391,7 @@ class TaskEditBook(widgets.Listbook):
             effortPage = EffortPage(self, task, taskList, settings, uiCommands)
             self.AddPage(effortPage, _('Effort'), 'start')
         self.AddPage(AttachmentPage(self, task), _('Attachments'), 'attachment')
-        self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior')         
+        self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior') 
 
 
 class EffortEditBook(widgets.BookPage):
@@ -413,7 +413,7 @@ class EffortEditBook(widgets.BookPage):
         self._taskEntry.SetStringSelection(render.subject(self._effort.task(),
             recursively=True))
         self.addEntry(_('Task'), self._taskEntry)
-        
+
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
             self.preventNegativeEffortDuration, noneAllowed=False)

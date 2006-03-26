@@ -63,21 +63,28 @@ class StaticText(wx.Window):
 
 class SingleLineTextCtrlWithEnterButton(wx.Panel):
     def __init__(self, parent, *args, **kwargs):
-        ''' SingleLineTextCtrlWithEnterButton provides a text control and a
+        ''' SingleLineTextCtrlWithEnterButton provides a text control 
             together with an 'enter' button. '''
         label = kwargs.pop('label')
         self.__onEnterCallback = kwargs.pop('onEnter')
         spacerWidth = kwargs.pop('spacerWidth', 5)
-        super(SingleLineTextCtrlWithEnterButton, self).__init__(parent, -1, *args, **kwargs)
-        self.__textCtrl = SingleLineTextCtrl(self, style=wx.TE_PROCESS_ENTER)
-        self.__textCtrl.Bind(wx.EVT_TEXT, self.onTextCtrlChanged)
-        self.__button = wx.Button(self, label=label)
-        self.__button.Bind(wx.EVT_BUTTON, self.onEnter)
-        dropTarget = draganddrop.TextDropTarget(self.onTextDrop)
-        self.__textCtrl.SetDropTarget(dropTarget)
+        super(SingleLineTextCtrlWithEnterButton, self).__init__(parent, 
+            *args, **kwargs)
+        self.__createControls(label)
+        self.__bindEventHandlers()
         self.__layoutControls(spacerWidth)
         self.onTextCtrlChanged()
         
+    def __createControls(self, label):
+        self.__textCtrl = SingleLineTextCtrl(self, style=wx.TE_PROCESS_ENTER)
+        self.__button = wx.Button(self, label=label)
+
+    def __bindEventHandlers(self):
+        self.__textCtrl.Bind(wx.EVT_TEXT, self.onTextCtrlChanged)
+        self.__button.Bind(wx.EVT_BUTTON, self.onEnter)
+        dropTarget = draganddrop.TextDropTarget(self.onTextDrop)
+        self.__textCtrl.SetDropTarget(dropTarget)
+
     def __layoutControls(self, spacerWidth):
         self.__sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.__sizer.Add(self.__textCtrl, proportion=1, flag=wx.EXPAND)
@@ -109,6 +116,10 @@ class SingleLineTextCtrlWithEnterButton(wx.Panel):
         ''' Called when the user hits enter or clicks the button. '''
         self.__onEnterCallback(self.__textCtrl.GetValue())
         self.__textCtrl.Clear()
+        if '__WXMAC__' in wx.PlatformInfo:
+            # textCtrl.Clear() does not fire an EVT_TEXT event on Mac OSX
+            # so we have to force a call to onTextCtrlChanged ourselves...
+            self.onTextCtrlChanged()
     
     def onTextDrop(self, text):
         ''' Called when the user drags text and drops it on the textCtrl. '''
