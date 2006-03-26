@@ -6,7 +6,7 @@ from itemctrl import Column
 from listctrl import ListCtrl
 from treectrl import TreeCtrl, TreeListCtrl
 from gridctrl import GridCtrl
-from datectrl import DateCtrl, DateTimeCtrl
+from datectrl import DateCtrl, DateTimeCtrl, DatePickerCtrl
 from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
     MultiLineTextCtrl, StaticText
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer

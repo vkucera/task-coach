@@ -425,7 +425,7 @@ class EffortEditBook(widgets.BookPage):
             startFromLastEffortButton.Disable()
         
         self._stopEntry = widgets.DateTimeCtrl(self, self._effort.getStop(),
-            self.preventNegativeEffortDuration)
+            self.preventNegativeEffortDuration, noneAllowed=True)
         
         self.addEntry(_('Start'), self._startEntry, startFromLastEffortButton)
         self.addEntry(_('Stop'), self._stopEntry, '')
