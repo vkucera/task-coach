@@ -1,25 +1,13 @@
-import test, taskcoach, os
+import test, taskcoach, os, mock
 import domain.task as task
-
-class MockApp(taskcoach.App):
-    def __init__(self, filename):
-        self._options = self._args = None
-        self.init(filename)
-
-    def init(self, filename):
-        super(MockApp, self).init(loadSettings=False)
-        self.taskFile.setFilename(filename)
-        self.parent = task.Task()
-        self.child = task.Task()
-        self.parent.addChild(self.child)
-        self.taskFile.extend([self.parent])
 
 
 class SaveTest(test.TestCase):
     def setUp(self):
         self.filename = 'SaveTest.tsk'
         self.filename2 = 'SaveTest2.tsk'
-        self.mockApp = MockApp(self.filename)
+        self.mockApp = mock.App(args=[self.filename])
+        self.mockApp.addTasks()
 
     def tearDown(self):
         self.mockApp.io.save()
@@ -48,7 +36,8 @@ class SaveTest(test.TestCase):
         self.assertEqual(2, len(self.mockApp.taskFile))
         
     def testSaveAndMerge(self):
-        mockApp2 = MockApp(self.filename2)
+        mockApp2 = mock.App(args=[self.filename2])
+        mockApp2.addTasks()
         mockApp2.io.save()
         self.mockApp.io.merge(self.filename2)
         self.assertEqual(4, len(self.mockApp.taskFile))

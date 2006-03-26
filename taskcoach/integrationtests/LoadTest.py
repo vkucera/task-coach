@@ -1,10 +1,5 @@
-import test, taskcoach, os, sys
+import test, taskcoach, os, sys, mock
 import domain.task as task
-
-class MockApp(taskcoach.App):
-    def __init__(self):
-        self._options = self._args = None
-        self.init(loadSettings=False)
 
 
 class LoadTest(test.TestCase):
@@ -14,7 +9,7 @@ class LoadTest(test.TestCase):
         taskfile.writelines(['Line 1\n', 'Line 2\n'])
         taskfile.close()
         self.errorDialogCalled = False
-        self.mockApp = MockApp()
+        self.mockApp = mock.App()
 
     def tearDown(self):
         self.mockApp.mainwindow.quit()
