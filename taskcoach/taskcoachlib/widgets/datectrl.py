@@ -1,6 +1,7 @@
 import wx
 import domain.date as date
 
+
 class Panel(wx.Panel):
     def __init__(self, parent, callback=None, *args, **kwargs):
         super(Panel, self).__init__(parent, -1, *args, **kwargs)
@@ -17,6 +18,60 @@ class Panel(wx.Panel):
         self.SetSizerAndFit(self._sizer)
 
 
+class _DatePickerCtrlThatFixesAllowNoneStyle(Panel):
+    def __init__(self, parent, *args, **kwargs):
+        self.__args = args
+        self.__kwargs = kwargs
+        super(_DatePickerCtrlThatFixesAllowNoneStyle, self).__init__(parent)
+        
+    def _createControls(self, callback):
+        self.__check = wx.CheckBox(self)
+        self.__check.Bind(wx.EVT_CHECKBOX, self.onCheck)
+        self.__datePicker = wx.DatePickerCtrl(self, *self.__args,
+            **self.__kwargs)
+        self.__datePicker.Disable()
+        return [self.__check, self.__datePicker]
+
+    def onCheck(self, event):
+        self.__datePicker.Enable(event.IsChecked())
+
+    def GetValue(self):
+        if self.__datePicker.IsEnabled():
+            return self.__datePicker.GetValue()
+        else:
+            return wx.DateTime()
+
+    def SetValue(self, value):
+        if value.IsValid():
+            self.__datePicker.Enable()
+            self.__check.SetValue(True)
+            self.__datePicker.SetValue(value)
+        else:
+            self.__datePicker.Disable()
+            self.__check.SetValue(False)
+
+    def IsEnabled(self):
+        return self.__datePicker.IsEnabled()
+
+
+def DatePickerCtrl(*args, **kwargs):
+    ''' Factory function that returns _DatePickerCtrlThatFixesAllowNoneStyle 
+        when necessary and wx.DatePickerCtrl otherwise. '''
+
+    def allowNone(style):
+        return (style & wx.DP_ALLOWNONE) == wx.DP_ALLOWNONE 
+
+    def allowNoneBroken():
+        return not ('__WXMSW__' in wx.PlatformInfo)
+
+    style = kwargs.get('style', wx.DP_DEFAULT)
+    if allowNone(style) and allowNoneBroken():
+        DatePickerCtrlClass = _DatePickerCtrlThatFixesAllowNoneStyle
+    else:
+        DatePickerCtrlClass = wx.DatePickerCtrl
+    return DatePickerCtrlClass(*args, **kwargs)
+
+
 def date2wxDateTime(value):
     wxDateTime = wx.DateTime()
     try: # prepare for a value that is not a Python datetime instance
@@ -26,6 +81,7 @@ def date2wxDateTime(value):
         pass
     return wxDateTime
     
+
 def wxDateTime2Date(wxDateTime):
     if wxDateTime.IsValid():
         return date.Date(wxDateTime.GetYear(), wxDateTime.GetMonth()+1,
@@ -45,7 +101,7 @@ class DateCtrl(Panel):
         style = wx.DP_DROPDOWN
         if self._noneAllowed:
             style |= wx.DP_ALLOWNONE
-        return [wx.DatePickerCtrl(self, style=style)]
+        return [DatePickerCtrl(self, style=style)]
 
     def SetValue(self, value):
         self._controls[0].SetValue(date2wxDateTime(value))
@@ -117,7 +173,7 @@ class DateTimeCtrl(Panel):
         
     def SetValue(self, dateTime):
         if dateTime is None:
-            datePart = 'None'
+            datePart = None
             timePart = date.Time()
         else:
             datePart = dateTime.date()
