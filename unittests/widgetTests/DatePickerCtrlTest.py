@@ -1,5 +1,25 @@
 import test, widgets, wx
 
+class DatePickerCtrlThatFixesAllowNoneStyleTest(test.wxTestCase):
+    def setUp(self):
+        self.datePicker = \
+            widgets.datectrl._DatePickerCtrlThatFixesAllowNoneStyle(self.frame)
+
+    def testCtrlIsDisabledInitially(self):
+        self.failIf(self.datePicker.IsEnabled())
+        
+    def testSetValidValueEnablesCtrl(self):
+        today = wx.DateTime()
+        today.SetToCurrent()
+        self.datePicker.SetValue(today)
+        self.failUnless(self.datePicker.IsEnabled())
+
+    def testSetInvalidValueDisablesCtrl(self):
+        invalid = wx.DateTime()
+        self.datePicker.SetValue(invalid)
+        self.failIf(self.datePicker.IsEnabled())
+
+
 class DatePickerCtrlWithStyleDP_ALLOWNONETest(test.wxTestCase):
     def setUp(self):
         self.datePicker = widgets.DatePickerCtrl(self.frame, 
@@ -8,17 +28,6 @@ class DatePickerCtrlWithStyleDP_ALLOWNONETest(test.wxTestCase):
     def testInitialValueIsNotValid(self):
         value = self.datePicker.GetValue()
         self.failIf(value.IsValid())
-
-    def testValueWhenTurnedOnIsToday(self):
-        class CheckedEvent:
-            def IsChecked(self):
-                return True
-
-        self.datePicker.onCheck(CheckedEvent())
-        value = self.datePicker.GetValue()
-        today = wx.DateTime()
-        today.SetToCurrent()
-        self.failUnless(value.IsSameDate(today))
 
     def testSetValue(self):
         today = wx.DateTime()
@@ -32,7 +41,6 @@ class DatePickerCtrlWithStyleDP_ALLOWNONETest(test.wxTestCase):
         self.datePicker.SetValue(invalid)
         value = self.datePicker.GetValue()
         self.failIf(value.IsValid())
-        self.failIf(self.datePicker.IsEnabled())
 
 
 class DatePickerCtrlFactoryTest(test.wxTestCase):
