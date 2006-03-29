@@ -5,7 +5,10 @@ from domain import *
 releases = [             
 Release('0.58', '?', 
     bugsFixed=[
-        Bug('''On Mac OSX, Task Coach would seg fault upon exiting.''')]),
+        Bug('''On Mac OSX, Task Coach would seg fault upon exiting.'''),
+        Bug('''Right-clicking a task in the task tree view would,
+correctly, pop up the context menu, but would not select the underlying
+task.''', '1440416')]),
  
 Release('0.57', 'March 16, 2006',
     featuresAdded=[

@@ -5,7 +5,28 @@
 import wx, wx.lib.mixins.listctrl, draganddrop
 
 
-class _CtrlWithPopupMenu(object):
+class _CtrlWithItems(object):
+    ''' Base class for controls with items, such as ListCtrl, TreeCtrl,
+        TreeListCtrl, etc. '''
+
+    def _itemIsOk(self, item):
+        try:
+            return item.IsOk()          # for Tree(List)Ctrl
+        except AttributeError:
+            return item != wx.NOT_FOUND # for ListCtrl
+
+    def SelectItem(self, item, **kwargs):
+        try:
+            super(_CtrlWithItems, self).SelectItem(item, **kwargs)
+        except AttributeError:
+            select = kwargs.get('select', True)
+            newState = wx.LIST_STATE_SELECTED
+            if not select:
+                newState = ~newState
+            self.SetItemState(item, newState, wx.LIST_STATE_SELECTED)
+
+
+class _CtrlWithPopupMenu(_CtrlWithItems):
     ''' Base class for controls with popupmenu's. '''
     
     @staticmethod
@@ -26,6 +47,15 @@ class _CtrlWithItemPopupMenu(_CtrlWithPopupMenu):
                 self.onItemPopupMenu)
 
     def onItemPopupMenu(self, event):
+        # Make sure the item under the mouse is selected because that
+        # is what users expect and what is most user-friendly. Not all
+        # widgets do this by default, e.g. the TreeListCtrl does not.
+        item, flags, column = self.HitTest(event.GetPoint())
+        if not self._itemIsOk(item):
+            return
+        if not self.IsSelected(item):
+            self.UnselectAll()
+            self.SelectItem(item)
         self.PopupMenu(self.__popupMenu)
 
 
@@ -51,7 +81,7 @@ class _CtrlWithColumnPopupMenu(_CtrlWithPopupMenu):
         self.PopupMenu(self.__popupMenu, event.GetPosition())
         
 
-class _CtrlWithFileDropTarget(object):
+class _CtrlWithFileDropTarget(_CtrlWithItems):
     ''' Control that accepts files being dropped onto items. '''
     
     def __init__(self, *args, **kwargs):
@@ -63,23 +93,17 @@ class _CtrlWithFileDropTarget(object):
 
     def onDropFiles(self, x, y, filenames):
         item, flags, column = self.HitTest((x, y))
-        if self.__itemIsOk(item):
+        if self._itemIsOk(item):
             self.__onDropFilesCallback(self.index(item), filenames)
         
     def onDragOver(self, x, y, defaultResult):
         item, flags, column = self.HitTest((x, y))
-        if self.__itemIsOk(item):
+        if self._itemIsOk(item):
             if flags & wx.TREE_HITTEST_ONITEMBUTTON:
                 self.Expand(item)
             return defaultResult
         else:
             return wx.DragNone
-        
-    def __itemIsOk(self, item):
-        try:
-            return item.IsOk()          # for Tree(List)Ctrl
-        except AttributeError:
-            return item != wx.NOT_FOUND # for ListCtrl
         
     def index(self, item):
         # Convert the item into an index. For ListCtrls this is not 
