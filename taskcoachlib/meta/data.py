@@ -1,7 +1,6 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
 version = '0.58'
-previous_version = '0.57'
 date = '? ?, 2006'
 author = 'Frank Niessink'
 author_email = 'frank@niessink.com'
