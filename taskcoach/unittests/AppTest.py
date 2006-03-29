@@ -1,11 +1,10 @@
 import test, meta, taskcoach, wx
 
 class AppTests(test.TestCase):
-    def setUp(self):
-        self.app = taskcoach.App(loadSettings=False, loadTaskFile=False)
-
-    def testAppName(self):
-        self.assertEqual(meta.name, wx.GetApp().GetAppName())
-
-    def testVendorName(self):
-        self.assertEqual(meta.author, wx.GetApp().GetVendorName())
+    def testAppProperties(self):
+        # Normally I prefer one assert per test, but creating the app is
+        # expensive, so we do all the queries in one test method.
+        app = taskcoach.App(loadSettings=False, loadTaskFile=False)
+        wxApp = wx.GetApp()
+        self.assertEqual(meta.name, wxApp.GetAppName())
+        self.assertEqual(meta.author, wxApp.GetVendorName())
