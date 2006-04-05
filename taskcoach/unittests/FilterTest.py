@@ -240,15 +240,16 @@ class CategoryFilterTest(test.TestCase):
 
     def testFilterOnCategoryNotPresent(self):
         self.filter.addCategory('test')
-        self.assertEqual(2, len(self.filter))
+        self.assertEqual(0, len(self.filter))
         
-    def testFilterOnCategory(self):
+    def testFilterOnCategoryChild(self):
         self.filter.addCategory('child')
         self.assertEqual(1, len(self.filter))
+        self.assertEqual(self.child, self.filter[0])
         
     def testFilterOnCategoryParent(self):
         self.filter.addCategory('parent')
-        self.assertEqual(0, len(self.filter))
+        self.assertEqual(2, len(self.filter))
         
     def testRemoveCategory(self):
         self.filter.addCategory('parent')
@@ -263,6 +264,8 @@ class CategoryFilterTest(test.TestCase):
         self.filter.addCategory('parent')
         self.filter.removeAllCategories()
         self.assertEqual(2, len(self.filter))
+        
+    def testRemoveCategoryThatIsNotUsed(self):
         self.filter.removeCategory('parent')
         self.assertEqual(2, len(self.filter))
 
@@ -283,7 +286,7 @@ class OriginalLengthTest(test.TestCase):
         aTask = task.Task()
         aTask.addCategory('test')
         self.list.append(aTask)
-        self.filter.addCategory('test')
+        self.filter.addCategory('nottest')
         self.assertEqual(0, len(self.filter))
         self.assertEqual(1, self.filter.originalLength())
 

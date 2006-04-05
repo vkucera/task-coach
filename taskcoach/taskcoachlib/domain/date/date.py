@@ -46,11 +46,6 @@ class InfiniteDate(datetime.date):
         return super(InfiniteDate, self).__new__(InfiniteDate, infinite.year,
             infinite.month, infinite.day)
 
-    '''
-    def __nonzero__(self):
-        return False
-    '''
-    
     def _getyear(self):
         return None
 

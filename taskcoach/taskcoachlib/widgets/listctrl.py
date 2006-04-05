@@ -16,6 +16,10 @@ class _ListCtrl(wx.ListCtrl):
                     column = columnIndex
                     break
         return index, flags, column
+
+    def ToggleItemSelection(self, index):
+        currentState = self.GetItemState(index, wx.LIST_STATE_SELECTED)
+        self.SetItemState(index, ~currentState, wx.LIST_STATE_SELECTED)
      
         
 class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtrl):
@@ -58,7 +62,8 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
             self.DeleteAllItems()
         else:
             startRow = self.GetTopItem()
-            stopRow = min(startRow + self.GetCountPerPage(), self.GetItemCount() - 1)
+            stopRow = min(startRow + self.GetCountPerPage(), 
+                          self.GetItemCount() - 1)
             self.RefreshItems(startRow, stopRow) 
             self.Refresh() # FIXME: Refresh not necessary?
 
@@ -85,9 +90,6 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
             self.ToggleItemSelection(index)
         self.selectCommand()            
 
-    def ToggleItemSelection(self, index):
-        currentState = self.GetItemState(index, wx.LIST_STATE_SELECTED)
-        self.SetItemState(index, ~currentState, wx.LIST_STATE_SELECTED)
 
 
 class ListCtrl(VirtualListCtrl):

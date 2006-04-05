@@ -17,8 +17,10 @@ class _CtrlWithItems(object):
 
     def SelectItem(self, item, **kwargs):
         try:
+            # Tree(List)Ctrl:
             super(_CtrlWithItems, self).SelectItem(item, **kwargs)
         except AttributeError:
+            # ListCtrl:
             select = kwargs.get('select', True)
             newState = wx.LIST_STATE_SELECTED
             if not select:
