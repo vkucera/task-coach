@@ -498,6 +498,7 @@ class HideCurrentColumn(ViewerCommand):
         # Unfortunately the event (an UpdateUIEvent) does not give us any
         # information to determine the current column, so we have to find 
         # the column ourselves. We use the current mouse position to do so.
+
         widget = self.viewer.getWidget()
         x, y = widget.ScreenToClient(wx.GetMousePosition())
         item, flag, columnIndex = widget.HitTest((x, y))
@@ -642,6 +643,7 @@ class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         markCompletedCommand.do()
 
     def enabled(self, event):
+        return True
         return super(TaskMarkCompleted, self).enabled(event) and \
             [task for task in self.viewer.curselection() \
              if not task.completed()]
@@ -768,6 +770,7 @@ class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         start.do()
         
     def enabled(self, event):
+        return True
         if not self.viewer.isShowingTasks():
             return False
         return [task for task in self.viewer.curselection() if not

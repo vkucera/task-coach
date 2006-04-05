@@ -21,6 +21,7 @@ class Filter(patterns.ObservableListObserver):
         return notification
             
     def filter(self, item):
+        ''' filter returns False iff the item should be hidden. '''
         raise NotImplementedError
 
     def rootTasks(self):
@@ -119,7 +120,11 @@ class CategoryFilter(Filter):
         super(CategoryFilter, self).__init__(*args, **kwargs)
         
     def filter(self, task):
-        return not (task.categories(recursive=True) & self._categories) 
+        for category in self._categories:
+            if category not in task.categories(recursive=True):
+                return False
+        return True
+        #return not (task.categories(recursive=True) & self._categories)
         
     def addCategory(self, category):
         self._categories.add(category)

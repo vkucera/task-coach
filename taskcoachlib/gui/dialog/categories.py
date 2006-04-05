@@ -9,14 +9,14 @@ class CategoriesFilterDialog(widgets.Dialog):
         self._checkListBox = wx.CheckListBox(self._panel, style=wx.LB_SORT)
         self._checkListBox.InsertItems(list(self._taskList.categories()), 0)
         for category in self._taskList.categories():
-            if category not in self._taskList.filteredCategories():
+            if category in self._taskList.filteredCategories():
                 self._checkListBox.Check(self._checkListBox.FindString(category))
         return self._checkListBox
         
     def ok(self, *args, **kwargs):
         for category in self._taskList.categories():
             if self._checkListBox.IsChecked(self._checkListBox.FindString(category)):
-                self._taskList.removeCategory(category)
+                self._taskList.addCategory(category)                
             else:
-                self._taskList.addCategory(category)
+                self._taskList.removeCategory(category)
         super(CategoriesFilterDialog, self).ok(*args, **kwargs)
