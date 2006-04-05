@@ -9,6 +9,11 @@ Release('0.58', '?',
         Bug('''Right-clicking a task in the task tree view would,
 correctly, pop up the context menu, but would not select the underlying
 task.''', '1440416'),
+        Bug('''The memory leak in the TreeListCtrl was fixed in wxPython
+2.6.3.2. The installer for Windows and the disk image for Mac OSX use
+wxPython 2.6.3.2, thus fixing the memory leak in Task Coach. If you use
+the source distribution of Task Coach you will have to install wxPython
+2.6.3.2 yourself to get the fix.''', '1309858'),
         Bug('''Filtering on task categories was improved.''')]),
  
 Release('0.57', 'March 16, 2006',
