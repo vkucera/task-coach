@@ -427,8 +427,10 @@ class EffortEditBook(widgets.BookPage):
         self._stopEntry = widgets.DateTimeCtrl(self, self._effort.getStop(),
             self.preventNegativeEffortDuration, noneAllowed=True)
         
-        self.addEntry(_('Start'), self._startEntry, startFromLastEffortButton)
-        self.addEntry(_('Stop'), self._stopEntry, '')
+        flags = [None, wx.ALIGN_RIGHT, wx.ALIGN_LEFT]
+        self.addEntry(_('Start'), self._startEntry, startFromLastEffortButton, 
+            flags=flags)
+        self.addEntry(_('Stop'), self._stopEntry, '', flags=flags)
             
     def onStartFromLastEffort(self, event):
         self._startEntry.SetValue(self._effortList.maxDateTime())

@@ -32,7 +32,7 @@ class GridCursor:
 
 class BookPage(wx.Panel):
     def __init__(self, parent, columns, growableColumn=None, *args, **kwargs):
-        super(BookPage, self).__init__(parent, -1, style=wx.TAB_TRAVERSAL, *args, **kwargs)
+        super(BookPage, self).__init__(parent, style=wx.TAB_TRAVERSAL, *args, **kwargs)
         self._sizer = wx.GridBagSizer(vgap=5, hgap=5)
         self._columns = columns
         self._position = GridCursor(columns)
@@ -42,23 +42,47 @@ class BookPage(wx.Panel):
             self._sizer.AddGrowableCol(growableColumn)
         self._borderWidth = 5
         self.SetSizerAndFit(self._sizer)
-                
+
+    def __defaultFlags(self, controls):
+        labelInFirstColumn = type(controls[0]) in [type(''), type(u'')]
+        flags = []
+        for columnIndex in range(len(controls)):
+            if columnIndex == 0 and labelInFirstColumn:
+                flag = wx.ALL|wx.ALIGN_LEFT
+            else:
+                flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND
+            flags.append(flag)
+        return flags
+
+    def __determineFlags(self, controls, flagsPassed):
+        flagsPassed = flagsPassed or [None] * len(controls)
+        defaultFlags = self.__defaultFlags(controls)
+        flags = []
+        for flagPassed, defaultFlag in zip(flagsPassed, defaultFlags):
+            if flagPassed is None:
+                flag = defaultFlag
+            else:
+                flag = flagPassed
+            flags.append(flag)
+        return flags 
+
+    def __addControl(self, columnIndex, control, flag, lastColumn):
+        if type(control) in [type(''), type(u'')]:
+            control = wx.StaticText(self, label=control)
+        if lastColumn:
+            colspan = max(self._columns - columnIndex, 1)
+        else:
+            colspan = 1
+        self._sizer.Add(control, self._position.next(colspan), 
+            span=(1, colspan), flag=flag, border=self._borderWidth)
+            
     def addEntry(self, *controls, **kwargs):
         controls = [control for control in controls if control is not None]
-        labelInFirstColumn = type(controls[0]) in [type(''), type(u'')]
+        flags = self.__determineFlags(controls, kwargs.get('flags', None))
+        lastColumnIndex = len(controls) - 1
         for columnIndex, control in enumerate(controls):
-            if type(control) in [type(''), type(u'')]:
-                control = wx.StaticText(self, -1, control)
-            if columnIndex == len(controls) - 1:
-                colspan = max(self._columns + 1 - len(controls), 1)
-            else:
-                colspan = 1
-            if columnIndex == 0 and labelInFirstColumn:
-                flag = wx.ALL|wx.ALIGN_RIGHT
-            else:
-                flag = wx.ALL|wx.ALIGN_LEFT|wx.EXPAND
-            self._sizer.Add(control, self._position.next(colspan), 
-                span=(1, colspan), flag=flag, border=self._borderWidth)
+            self.__addControl(columnIndex, control, flags[columnIndex], 
+                lastColumn=columnIndex==lastColumnIndex)
         if kwargs.get('growable', False):
             self._sizer.AddGrowableRow(self._position.maxRow())
 
