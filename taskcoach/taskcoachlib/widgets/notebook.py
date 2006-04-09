@@ -32,7 +32,8 @@ class GridCursor:
 
 class BookPage(wx.Panel):
     def __init__(self, parent, columns, growableColumn=None, *args, **kwargs):
-        super(BookPage, self).__init__(parent, style=wx.TAB_TRAVERSAL, *args, **kwargs)
+        super(BookPage, self).__init__(parent, style=wx.TAB_TRAVERSAL, 
+            *args, **kwargs)
         self._sizer = wx.GridBagSizer(vgap=5, hgap=5)
         self._columns = columns
         self._position = GridCursor(columns)

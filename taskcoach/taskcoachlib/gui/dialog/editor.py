@@ -145,14 +145,17 @@ class DatesPage(TaskEditorPage):
             setattr(self, '_%sEntry'%taskMethodName, entry)
             datesBox.add(entry)
             if task.children():
-                recursiveEntry = DateEntry(datesBox, taskMethod(recursive=True), readonly=True)
+                recursiveEntry = DateEntry(datesBox, 
+                    taskMethod(recursive=True), readonly=True)
             else:
                 recursiveEntry = (0, 0)
             datesBox.add(recursiveEntry)
         
-        reminderBox = widgets.BoxWithFlexGridSizer(self, label=_('Reminder'), cols=2)
+        reminderBox = widgets.BoxWithFlexGridSizer(self, label=_('Reminder'), 
+            cols=2)
         reminderBox.add(_('Reminder'))
-        self._reminderDateTimeEntry = widgets.DateTimeCtrl(reminderBox, task.reminder())
+        self._reminderDateTimeEntry = widgets.DateTimeCtrl(reminderBox, 
+            task.reminder())
         reminderBox.add(self._reminderDateTimeEntry)
         for box in datesBox, reminderBox:
             box.fit()
@@ -397,7 +400,7 @@ class TaskEditBook(widgets.Listbook):
 class EffortEditBook(widgets.BookPage):
     def __init__(self, parent, effort, editor, effortList, taskList, 
                  *args, **kwargs):
-        super(EffortEditBook, self).__init__(parent, columns=3, *args, **kwargs)
+        super(EffortEditBook, self).__init__(parent, columns=4, *args, **kwargs)
         self._editor = editor
         self._effort = effort
         self._effortList = effortList
@@ -417,8 +420,8 @@ class EffortEditBook(widgets.BookPage):
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
             self.preventNegativeEffortDuration, noneAllowed=False)
-        startFromLastEffortButton = wx.Button(self, -1, 
-            _('Start tracking from last stop time'))
+        startFromLastEffortButton = wx.Button(self, 
+            label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, 
             startFromLastEffortButton) 
         if self._effortList.maxDateTime() is None:

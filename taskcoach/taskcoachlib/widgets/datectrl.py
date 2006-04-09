@@ -14,7 +14,7 @@ class Panel(wx.Panel):
     def _layout(self):
         self._sizer = wx.BoxSizer(wx.HORIZONTAL)
         for control in self._controls:
-            self._sizer.Add(control, flag=wx.EXPAND|wx.ALIGN_RIGHT)
+            self._sizer.Add(control)
         self.SetSizerAndFit(self._sizer)
 
 
@@ -34,6 +34,7 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(Panel):
 
     def onCheck(self, event):
         self.__datePicker.Enable(event.IsChecked())
+        event.Skip()
 
     def GetValue(self):
         if self.__datePicker.IsEnabled():
@@ -154,9 +155,13 @@ class DateTimeCtrl(Panel):
     def _createControls(self, callback):
         self._dateCtrl = DateCtrl(self, self._dateCtrlCallback, 
             self._noneAllowed)
+        self._dateCtrl.Bind(wx.EVT_CHECKBOX, self.onEnableDatePicker)
         self._timeCtrl = TimeCtrl(self, self._timeCtrlCallback)
         return self._dateCtrl, self._timeCtrl
         
+    def onEnableDatePicker(self, event):
+        self._timeCtrl.Enable(event.IsChecked())
+
     def _timeCtrlCallback(self, *args, **kwargs):
         # If user sets time and date == None, then set date to today
         if self._dateCtrl.GetValue() == date.Date():
@@ -164,7 +169,6 @@ class DateTimeCtrl(Panel):
         self._callback(*args, **kwargs)
         
     def _dateCtrlCallback(self, *args, **kwargs):
-        print 'DateTimeCtrl._dateCtrlCallback(args=%s, kwargs=%s)'%(args, kwargs)
         # If user sets date and time == '00:00', then set time to now
         if self._dateCtrl.GetValue() == date.Date():
             self._timeCtrl.SetValue(date.Time())
