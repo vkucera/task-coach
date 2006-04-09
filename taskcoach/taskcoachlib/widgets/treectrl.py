@@ -288,10 +288,11 @@ class TreeMixin(object):
                 self.SelectItem(item)
 
     def itemUnchanged(self, item, index, itemChildIndex):
-        oldIndex, oldId, oldChildrenCount, oldImage, oldText,\
+        oldIndex, oldId, oldChildrenCount, oldImage, oldText, \
             oldAttr, oldChildIndex = self.GetPyData(item)
-        return itemChildIndex == oldChildIndex and\
-            self.getItemImage(index) == oldImage and self.getItemText(index) == oldText and\
+        return itemChildIndex == oldChildIndex and \
+            self.getItemImage(index) == oldImage and \
+            self.getItemText(index) == oldText and \
             self.getItemAttr(index).GetTextColour() == oldAttr.GetTextColour()
 
     def expandAllItems(self):

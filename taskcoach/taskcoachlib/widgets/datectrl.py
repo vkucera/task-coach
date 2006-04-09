@@ -185,6 +185,7 @@ class DateTimeCtrl(Panel):
             timePart = dateTime.time()
         self._dateCtrl.SetValue(datePart)
         self._timeCtrl.SetValue(timePart)
+        self._timeCtrl.Enable(self._dateCtrl.IsEnabled())
         
     def GetValue(self):
         dateValue = self._dateCtrl.GetValue()
