@@ -14,7 +14,7 @@ class Panel(wx.Panel):
     def _layout(self):
         self._sizer = wx.BoxSizer(wx.HORIZONTAL)
         for control in self._controls:
-            self._sizer.Add(control)
+            self._sizer.Add(control, flag=wx.ALIGN_CENTER_VERTICAL)
         self.SetSizerAndFit(self._sizer)
 
 
@@ -67,6 +67,7 @@ def DatePickerCtrl(*args, **kwargs):
 
     style = kwargs.get('style', wx.DP_DEFAULT)
     if styleIncludesDP_ALLOWNONE(style) and styleDP_ALLOWNONEIsBroken():
+        kwargs['style'] = kwargs['style'] & ~wx.DP_ALLOWNONE
         DatePickerCtrlClass = _DatePickerCtrlThatFixesAllowNoneStyle
     else:
         DatePickerCtrlClass = wx.DatePickerCtrl
@@ -92,7 +93,8 @@ def wxDateTime2Date(wxDateTime):
 
     
 class DateCtrl(Panel):
-    def __init__(self, parent, callback=None, noneAllowed=True, *args, **kwargs):
+    def __init__(self, parent, callback=None, noneAllowed=True, *args, 
+                 **kwargs):
         self._noneAllowed = noneAllowed
         super(DateCtrl, self).__init__(parent, callback, *args, **kwargs)
         self._callback = callback
@@ -143,7 +145,8 @@ class TimeCtrl(Panel):
 
 
 class DateTimeCtrl(Panel):
-    def __init__(self, parent, dateTime, callback=None, noneAllowed=True, *args, **kwargs):
+    def __init__(self, parent, dateTime, callback=None, noneAllowed=True, 
+                 *args, **kwargs):
         self._noneAllowed = noneAllowed
         super(DateTimeCtrl, self).__init__(parent, callback, *args, **kwargs)
         self._callback = callback or self.__nullCallback
@@ -169,12 +172,16 @@ class DateTimeCtrl(Panel):
         self._callback(*args, **kwargs)
         
     def _dateCtrlCallback(self, *args, **kwargs):
-        # If user sets date and time == '00:00', then set time to now
-        if self._dateCtrl.GetValue() == date.Date():
+        if not self._isDateCtrlEnabled(): 
             self._timeCtrl.SetValue(date.Time())
         elif self._timeCtrl.GetValue() == date.Time():
             self._timeCtrl.SetValue(date.Time.now())
+        # If user disables dateCtrl, disable timeCtrl too and vice versa:
+        self._timeCtrl.Enable(self._isDateCtrlEnabled())
         self._callback(*args, **kwargs)
+
+    def _isDateCtrlEnabled(self):
+        return self._dateCtrl.GetValue() != date.Date()
         
     def SetValue(self, dateTime):
         if dateTime is None:
@@ -185,7 +192,7 @@ class DateTimeCtrl(Panel):
             timePart = dateTime.time()
         self._dateCtrl.SetValue(datePart)
         self._timeCtrl.SetValue(timePart)
-        self._timeCtrl.Enable(self._dateCtrl.IsEnabled())
+        self._timeCtrl.Enable(self._isDateCtrlEnabled())
         
     def GetValue(self):
         dateValue = self._dateCtrl.GetValue()

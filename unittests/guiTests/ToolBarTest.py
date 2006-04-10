@@ -1,4 +1,5 @@
-import test, gui, wx, dummy
+import test, gui, wx
+import unittests.dummy as dummy
 
 class ToolBar(gui.toolbar.ToolBar):
     def commandNames(self):
