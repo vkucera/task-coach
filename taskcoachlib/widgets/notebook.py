@@ -31,6 +31,7 @@ class GridCursor:
 
 
 class BookPage(wx.Panel):
+    ''' A page in a notebook. '''
     def __init__(self, parent, columns, growableColumn=None, *args, **kwargs):
         super(BookPage, self).__init__(parent, style=wx.TAB_TRAVERSAL, 
             *args, **kwargs)
@@ -42,9 +43,12 @@ class BookPage(wx.Panel):
         if growableColumn > -1:
             self._sizer.AddGrowableCol(growableColumn)
         self._borderWidth = 5
+
+    def fit(self):
         self.SetSizerAndFit(self._sizer)
 
     def __defaultFlags(self, controls):
+        ''' Return the default flags for placing a list of controls. '''
         labelInFirstColumn = type(controls[0]) in [type(''), type(u'')]
         flags = []
         for columnIndex in range(len(controls)):
@@ -56,6 +60,8 @@ class BookPage(wx.Panel):
         return flags
 
     def __determineFlags(self, controls, flagsPassed):
+        ''' Return a merged list of flags by overriding the default
+            flags with flags passed by the caller. '''
         flagsPassed = flagsPassed or [None] * len(controls)
         defaultFlags = self.__defaultFlags(controls)
         flags = []
@@ -66,6 +72,12 @@ class BookPage(wx.Panel):
                 flag = flagPassed
             flags.append(flag)
         return flags 
+        '''
+        # Note how brief the above can be written using a conditional 
+        # expression (which will be available in Python 2.5):
+        return [defaultFlag if flagPassed is None else flagPassed 
+                for flagPassed, defaultFlag in zip(flagsPassed, defaultFlags)]
+        '''
 
     def __addControl(self, columnIndex, control, flag, lastColumn):
         if type(control) in [type(''), type(u'')]:
@@ -74,10 +86,22 @@ class BookPage(wx.Panel):
             colspan = max(self._columns - columnIndex, 1)
         else:
             colspan = 1
-        self._sizer.Add(control, self._position.next(colspan), 
+        self._sizer.Add(control, self._position.next(colspan),
             span=(1, colspan), flag=flag, border=self._borderWidth)
             
     def addEntry(self, *controls, **kwargs):
+        ''' Add a number of controls to the page. All controls are
+            placed on one row, and together they form one entry. E.g. a
+            label, a text field and an explanatory label. The default
+            flags for placing the controls can be overridden by
+            providing a keyword parameter 'flags'. flags should be a
+            list of flags (wx.ALIGN_LEFT and the like). The list may
+            contain None for controls that should be placed using the default
+            flag. If the flags list is shorter than the number of
+            controls it is extended with as much 'None's as needed.
+            So, addEntry(aLabel, aTextCtrl, flags=[None, wx.ALIGN_LEFT]) 
+            will place the label with the default flag and will place the 
+            textCtrl left aligned. '''
         controls = [control for control in controls if control is not None]
         flags = self.__determineFlags(controls, kwargs.get('flags', None))
         lastColumnIndex = len(controls) - 1

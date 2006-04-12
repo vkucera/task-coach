@@ -184,6 +184,18 @@ pages['roadmap'] = \
     direction for %(name)s.</p>
 '''
 
+pages['devinfo'] = \
+'''    <h3>Information for developers</h3>
+    <p>Here's some information for developers that either want to hack
+    on %(name)s or reuse code.</p>
+    <h4>Coding style</h4>
+    <p>Class names are StudlyCaps. Method names are camelCase, except
+    for wxPython methods that are called or overridden because those are
+    StudlyCaps. At first I thought that was ugly, a mixture of two
+    styles. But it turned out to be quite handy, since you can easily
+    see whether some method is a wxPython method or not.</p>
+'''
+
 dist = os.path.join('..', 'website.out')
 
 if not os.path.isdir(dist):

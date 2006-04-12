@@ -400,7 +400,7 @@ class TaskEditBook(widgets.Listbook):
 class EffortEditBook(widgets.BookPage):
     def __init__(self, parent, effort, editor, effortList, taskList, 
                  *args, **kwargs):
-        super(EffortEditBook, self).__init__(parent, columns=4, *args, **kwargs)
+        super(EffortEditBook, self).__init__(parent, columns=3, *args, **kwargs)
         self._editor = editor
         self._effort = effort
         self._effortList = effortList
@@ -408,6 +408,7 @@ class EffortEditBook(widgets.BookPage):
         self.addTaskEntry()
         self.addStartAndStopEntries()
         self.addDescriptionEntry()
+        self.fit()
         
     def addTaskEntry(self):
         self._taskEntry = wx.ComboBox(self, style=wx.CB_READONLY|wx.CB_SORT)
@@ -415,7 +416,7 @@ class EffortEditBook(widgets.BookPage):
             self._taskEntry.Append(render.subject(task, recursively=True), task)
         self._taskEntry.SetStringSelection(render.subject(self._effort.task(),
             recursively=True))
-        self.addEntry(_('Task'), self._taskEntry)
+        self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL])
 
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
@@ -430,9 +431,9 @@ class EffortEditBook(widgets.BookPage):
         self._stopEntry = widgets.DateTimeCtrl(self, self._effort.getStop(),
             self.preventNegativeEffortDuration, noneAllowed=True)
         
-        flags = [None, wx.ALIGN_RIGHT, wx.ALIGN_LEFT]
-        self.addEntry(_('Start'), self._startEntry, startFromLastEffortButton, 
-            flags=flags)
+        flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
+        self.addEntry(_('Start'), self._startEntry, 
+            startFromLastEffortButton,  flags=flags)
         self.addEntry(_('Stop'), self._stopEntry, '', flags=flags)
             
     def onStartFromLastEffort(self, event):
@@ -443,7 +444,8 @@ class EffortEditBook(widgets.BookPage):
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, 
             self._effort.getDescription())
         self._descriptionEntry.SetSizeHints(300, 150)
-        self.addEntry(_('Description'), self._descriptionEntry)
+        self.addEntry(_('Description'), self._descriptionEntry, 
+            flags=[None, wx.ALL|wx.EXPAND], growable=True)
         
     def ok(self):
         self._effort.setTask(self._taskEntry.GetClientData(self._taskEntry.GetSelection()))

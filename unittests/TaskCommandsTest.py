@@ -324,16 +324,22 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         
 class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
     def testCannotDropOnParent(self):
-        self.dragAndDrop(self.parent, [self.child])
+        self.dragAndDrop([self.parent], [self.child])
         self.failIf(patterns.CommandHistory().hasHistory())
         
     def testCannotDropOnChild(self):
-        self.dragAndDrop(self.child, [self.parent])
+        self.dragAndDrop([self.child], [self.parent])
         self.failIf(patterns.CommandHistory().hasHistory())
         
     def testCannotDropOnGrandchild(self):
-        self.dragAndDrop(self.grandchild, [self.parent])
+        self.dragAndDrop([self.grandchild], [self.parent])
         self.failIf(patterns.CommandHistory().hasHistory())
+
+    def testDropAsRootTask(self):
+        self.dragAndDrop([], [self.grandchild])
+        self.assertDoUndoRedo(lambda: self.assertEqual(None, 
+            self.grandchild.parent()), lambda:
+            self.assertEqual(self.child, self.grandchild.parent()))
         
 
 class AddAttachmentToTaskCommandTest(CommandTestCase):

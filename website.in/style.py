@@ -41,6 +41,8 @@ footer = '''
                     <a href="changes.html">Change history</a><br>
                     <a href="roadmap.html" 
                        title="Future plans for %(name)s">Roadmap</a><br>
+                    <a href="devinfo.html"
+                       title="Information for developers">For developers</a><br>
                     <a href="license.html">License</a><br>
                     <a href="credits.html">Credits</a>
                 </p>
