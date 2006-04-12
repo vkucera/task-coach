@@ -224,11 +224,13 @@ class NeedsSelection(object):
  
 class NeedsSelectedTasks(NeedsSelection):
     def enabled(self, event):
-        return super(NeedsSelectedTasks, self).enabled(event) and self.viewer.isShowingTasks()
+        return super(NeedsSelectedTasks, self).enabled(event) and \
+            self.viewer.isShowingTasks()
 
 class NeedsSelectedEffort(NeedsSelection):
     def enabled(self, event):
-        return super(NeedsSelectedEffort, self).enabled(event) and self.viewer.isShowingEffort()
+        return super(NeedsSelectedEffort, self).enabled(event) and \
+            self.viewer.isShowingEffort()
                
 class NeedsAtLeastOneTask(object):
     def enabled(self, event):
@@ -238,7 +240,7 @@ class NeedsItems(object):
     def enabled(self, event):
         return self.viewer.size() 
 
- 
+
 # Commands:
 
 class FileOpen(IOCommand):
@@ -583,7 +585,7 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, \
         if '__WXMAC__' in wx.PlatformInfo:
             menuText += u'\tCtrl+N'
         else:
-            menuText += u'\tINS'
+            menuText += u'\tCtrl+INS'
         return menuText 
 
 
@@ -612,7 +614,7 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         if '__WXMAC__' in wx.PlatformInfo:
             menuText += u'\tShift+Ctrl+N'
         else:
-            menuText += u'\tCtrl+INS'
+            menuText += u'\tShift+Ctrl+INS'
         return menuText  
         
 
@@ -652,7 +654,7 @@ class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
 class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskDelete, self).__init__(bitmap='delete',
-            menuText=_('&Delete task\tDEL'),
+            menuText=_('&Delete task\tCtrl+DEL'),
             helpText=_('Delete the selected task(s)'), *args, **kwargs)
 
     def doCommand(self, event):

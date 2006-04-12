@@ -4,7 +4,7 @@ from i18n import _
 
 class FindPanel(wx.Panel):
     def __init__(self, parent, viewer, settings):
-        super(FindPanel, self).__init__(parent, -1)
+        super(FindPanel, self).__init__(parent)
         self.__viewer = viewer
         self.__settings = settings
         self.createComponents()
