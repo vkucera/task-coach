@@ -14,7 +14,12 @@ task.''', '1440416'),
 wxPython 2.6.3.2, thus fixing the memory leak in Task Coach. If you use
 the source distribution of Task Coach you will have to install wxPython
 2.6.3.2 yourself to get the fix.''', '1309858'),
-        Bug('''Filtering on task categories was improved.''')],
+        Bug('''Filtering on task categories was improved.'''),
+        Bug('''Hitting Delete when editing the text in the find dialog would 
+delete any selected tasks. Unfortunately, to fix this bug some accelerators had
+to be changed: the accelerator for "Delete task" is now Ctrl-Delete, for 
+"New task" it is now Ctrl-Insert, and for "New subtask" it is now 
+Shift-Ctrl-Insert.''', '1463316')],
     featuresAdded=[
         Feature('''When dragging a task in the tree view, hover over
 a tree button (a boxed plus-sign or a triangle, depending on your
