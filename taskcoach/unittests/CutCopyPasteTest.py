@@ -267,7 +267,7 @@ class CopyCommandWithEffortTest(CommandWithEffortTestCase):
         
 class DragAndDropWithTasksTest(CommandWithChildrenTestCase):
     def dragAndDrop(self, draggedItems, dropItem):
-        command.DragAndDropTaskCommand(self.taskList, draggedItems, drop=dropItem).do()
+        command.DragAndDropTaskCommand(self.taskList, draggedItems, drop=[dropItem]).do()
         
     def testDragAndDropRootTask(self):
         self.taskList.append(self.task2)

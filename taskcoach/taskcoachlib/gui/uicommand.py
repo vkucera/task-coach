@@ -661,14 +661,14 @@ class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         deleteCommand.do()
 
 
-class TaskDragAndDrop(NeedsSelectedTasks, FilterCommand, ViewerCommand):
+class TaskDragAndDrop(FilterCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskDragAndDrop, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
         dragAndDropCommand = command.DragAndDropTaskCommand( \
             self.filteredTaskList, self.viewer.draggedItems(), 
-            drop=self.viewer.curselection()[0])
+            drop=self.viewer.curselection())
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
 

@@ -47,16 +47,23 @@ class DragAndDropTaskCommand(base.BaseCommand, SaveTaskStateMixin):
         return _('Drag and drop')
     
     def __init__(self, *args, **kwargs):
-        self.__itemToDropOn = kwargs.pop('drop')
+        dropTargets = kwargs.pop('drop') 
+        if dropTargets:
+            self.__itemToDropOn = dropTargets[0]
+        else:
+            self.__itemToDropOn = None
         super(DragAndDropTaskCommand, self).__init__(*args, **kwargs)
         self.saveStates(self.getTasksToSave())
         
     def getTasksToSave(self):
-        return [self.__itemToDropOn] + self.items
+        if self.__itemToDropOn is None:
+            return self.items
+        else:
+            return [self.__itemToDropOn] + self.items
     
     def canDo(self):
-        return self.__itemToDropOn not in self.items + \
-            self.getAllChildren(self.items) + self.getAllParents(self.items)
+        return self.__itemToDropOn not in (self.items + \
+            self.getAllChildren(self.items) + self.getAllParents(self.items))
     
     def do_command(self):
         self.list.removeItems(self.items)

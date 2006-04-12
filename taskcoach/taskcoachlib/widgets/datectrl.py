@@ -4,7 +4,7 @@ import domain.date as date
 
 class Panel(wx.Panel):
     def __init__(self, parent, callback=None, *args, **kwargs):
-        super(Panel, self).__init__(parent, -1, *args, **kwargs)
+        super(Panel, self).__init__(parent, *args, **kwargs)
         self._controls = self._createControls(callback)
         self._layout()
         
@@ -122,7 +122,7 @@ class TimeCtrl(Panel):
     
     def _createControls(self, callback):
         # TODO: use wx.lib.masked.ComboBox or wx.lib.masked.TimeCtrl?
-        control = wx.ComboBox(self, -1, '00:00', choices=self._choices())
+        control = wx.ComboBox(self, value='00:00', choices=self._choices())
         control.Bind(wx.EVT_TEXT, callback)
         control.Bind(wx.EVT_COMBOBOX, callback)
         return [control]
@@ -160,7 +160,7 @@ class DateTimeCtrl(Panel):
             self._noneAllowed)
         self._dateCtrl.Bind(wx.EVT_CHECKBOX, self.onEnableDatePicker)
         self._timeCtrl = TimeCtrl(self, self._timeCtrlCallback)
-        return self._dateCtrl, self._timeCtrl
+        return [self._dateCtrl, self._timeCtrl]
         
     def onEnableDatePicker(self, event):
         self._timeCtrl.Enable(event.IsChecked())
@@ -200,3 +200,4 @@ class DateTimeCtrl(Panel):
             return date.DateTime.max
         else:
             return date.DateTime.combine(dateValue, self._timeCtrl.GetValue())
+

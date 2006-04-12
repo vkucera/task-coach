@@ -14,7 +14,13 @@ task.''', '1440416'),
 wxPython 2.6.3.2, thus fixing the memory leak in Task Coach. If you use
 the source distribution of Task Coach you will have to install wxPython
 2.6.3.2 yourself to get the fix.''', '1309858'),
-        Bug('''Filtering on task categories was improved.''')]),
+        Bug('''Filtering on task categories was improved.''')],
+    featuresAdded=[
+        Feature('''When dragging a task in the tree view, hover over
+a tree button (a boxed plus-sign or a triangle, depending on your
+platform) to expand the sub tree.'''),
+        Feature('''To promote a sub task to a top-level task in the tree
+view, drag it and drop it anywhere as long as it is not on another task.''')]),
  
 Release('0.57', 'March 16, 2006',
     featuresAdded=[

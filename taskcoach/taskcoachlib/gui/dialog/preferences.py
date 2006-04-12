@@ -60,6 +60,7 @@ class SavePage(SettingsPage):
             _('Create backup copy before overwriting a %s file')%meta.name)
         self.addIntegerSetting('file', 'maxrecentfiles',
             _('Maximum number of recent files to remember'), minimum=0, maximum=9)
+        self.fit()
             
                
 class WindowBehaviorPage(SettingsPage):
@@ -73,6 +74,7 @@ class WindowBehaviorPage(SettingsPage):
             _('Hide main window when iconized'))
         self.addBooleanSetting('window', 'hidewhenclosed', 
             _('Minimize main window when closed'))
+        self.fit()
 
 
 class LanguagePage(SettingsPage):
@@ -89,6 +91,7 @@ class LanguagePage(SettingsPage):
              ('es_ES', _('Spanish')),
              ('hu_HU', _('Hungarian'))],
              _('This setting will take effect after you restart %s')%meta.name)
+        self.fit()
 
 
 class ColorsPage(SettingsPage):
@@ -101,6 +104,7 @@ class ColorsPage(SettingsPage):
              ('overduetasks', _('Click this button to change the color of over due tasks')),
              ('duetodaytasks', _('Click this button to change the color of tasks due today'))]:
             self.addColorSetting('color', setting, label)
+        self.fit()
 
 
 class TaskBehaviorPage(SettingsPage):
@@ -108,6 +112,7 @@ class TaskBehaviorPage(SettingsPage):
         super(TaskBehaviorPage, self).__init__(*args, **kwargs)
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
+        self.fit()
         
         
 class Preferences(widgets.ListbookDialog):

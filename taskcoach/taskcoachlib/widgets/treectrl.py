@@ -45,33 +45,36 @@ class TreeMixin(object):
     def onEndDrag(self, event):
         self.GetMainWindow().Unbind(wx.EVT_MOTION)
         self.__resetCursor()
-        if not event.GetItem().IsOk():
-            return
         # Make sure this member exists.
         try:
             old = self.dragItem
         except:
             return
-        # Get the other IDs that are involved
-        new = event.GetItem()
-        parent = self.GetItemParent(new)
-        if not parent.IsOk():
-            return
-        # Move 'em
-        self.dragAndDropCommand(event)
+        if self.__isValidDropTarget(event.GetItem()):
+            self.dragAndDropCommand(event)
 
     def onDragging(self, event):
         item, flags, column = self.HitTest((event.GetX(), event.GetY()))
         if self.__isValidDropTarget(item):
             self.__setCursorToDragging()
         else:
-            self.__setCursorToDroppingImpossible()     
+            self.__setCursorToDroppingImpossible()
+        if flags & wx.TREE_HITTEST_ONITEMBUTTON:
+            self.Expand(item)
+        elif flags & (wx.TREE_HITTEST_NOWHERE | wx.TREE_HITTEST_BELOW | 
+                      wx.TREE_HITTEST_ABOVE | wx.TREE_HITTEST_TOLEFT |
+                      wx.TREE_HITTEST_TORIGHT):
+            self.UnselectAll()
         event.Skip()
         
     def __isValidDropTarget(self, dropTarget):
-        return dropTarget.IsOk() and self.dragItem != dropTarget and \
-            self.GetItemParent(self.dragItem) != dropTarget and \
-            dropTarget not in self.getChildren(self.dragItem, recursively=True)
+        if dropTarget.IsOk():
+            return self.dragItem != dropTarget and \
+                self.GetItemParent(self.dragItem) != dropTarget and \
+                dropTarget not in self.getChildren(self.dragItem,
+                recursively=True)
+        else:
+            return True
             
     def onSetFocus(self, event):
         # When the TreeCtrl gets focus sometimes the selection is changed.
