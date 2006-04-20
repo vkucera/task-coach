@@ -21,7 +21,7 @@ class Filter(patterns.ObservableListObserver):
         return notification
             
     def filter(self, item):
-        ''' filter returns False iff the item should be hidden. '''
+        ''' filter returns False if the item should be hidden. '''
         raise NotImplementedError
 
     def rootTasks(self):
@@ -36,7 +36,8 @@ class ViewFilter(Filter):
         self.__settings = kwargs.pop('settings')
         for setting in ('tasksdue', 'completedtasks', 'inactivetasks',
                         'activetasks', 'overduetasks', 'overbudgetasks'):
-            self.__settings.registerObserver(self.onSettingChanged, ('view', setting))
+            self.__settings.registerObserver(self.onSettingChanged, 
+                ('view', setting))
         super(ViewFilter, self).__init__(*args, **kwargs)
         
     def getViewTasksDueBeforeDate(self):
@@ -50,16 +51,17 @@ class ViewFilter(Filter):
         return dateFactory[self.__settings.get('view', 'tasksdue')]()
         
     def filter(self, task):
-        if task.completed() and not self.__settings.getboolean('view', 'completedtasks'):
+        settings = self.__settings
+        if task.completed() and not settings.getboolean('view', 'completedtasks'):
             return False
-        if task.inactive() and not self.__settings.getboolean('view', 'inactivetasks'):
+        if task.inactive() and not settings.getboolean('view', 'inactivetasks'):
             return False
-        if task.overdue() and not self.__settings.getboolean('view', 'overduetasks'):
+        if task.overdue() and not settings.getboolean('view', 'overduetasks'):
             return False
-        if task.active() and not self.__settings.getboolean('view', 'activetasks'):
+        if task.active() and not settings.getboolean('view', 'activetasks'):
             return False
         if task.budgetLeft(recursive=True) < date.TimeDelta() and not \
-            self.__settings.getboolean('view', 'overbudgettasks'):
+                settings.getboolean('view', 'overbudgettasks'):
             return False
         if task.dueDate(recursive=self.treeMode()) > self.getViewTasksDueBeforeDate():
             return False        
@@ -117,15 +119,22 @@ class SearchFilter(Filter):
 class CategoryFilter(Filter):
     def __init__(self, *args, **kwargs):
         self._categories = sets.Set()
+        self.__settings = kwargs.pop('settings')
+        self.__settings.registerObserver(self.onSettingChanged, 
+                                         ('view', 'taskcategoryfiltermatchall'))
         super(CategoryFilter, self).__init__(*args, **kwargs)
         
     def filter(self, task):
-        for category in self._categories:
-            if category not in task.categories(recursive=True):
-                return False
-        return True
-        #return not (task.categories(recursive=True) & self._categories)
-        
+        if not self._categories:
+            return True
+        filterOnlyWhenAllCategoriesMatch = self.__settings.getboolean('view', 
+            'taskcategoryfiltermatchall')
+        matches = [category in task.categories(recursive=True) for category in self._categories]
+        if filterOnlyWhenAllCategoriesMatch:
+            return False not in matches
+        else:
+            return True in matches
+            
     def addCategory(self, category):
         self._categories.add(category)
         self.reset()
@@ -140,4 +149,4 @@ class CategoryFilter(Filter):
             
     def filteredCategories(self):
         return self._categories
-        
+                

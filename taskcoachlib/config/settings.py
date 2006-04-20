@@ -4,23 +4,11 @@ import ConfigParser, os, meta, defaults, patterns
 class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
     def set(self, section, setting, value):
         if type(value) == type(u''):
-            '''
-            try:
-                print 'set: %s->%s'%(value, value.encode('utf-8'))
-            except UnicodeDecodeError:
-                print 'set:', value.encode('utf-8')
-            '''
             value = value.encode('utf-8')
         ConfigParser.SafeConfigParser.set(self, section, setting, value)
 
     def get(self, section, setting):
         value = ConfigParser.SafeConfigParser.get(self, section, setting)
-        '''
-        try:
-            print 'get: %s->%s'%(value, value.decode('utf-8'))
-        except UnicodeDecodeError:
-            print 'get:', value
-        '''
         return value.decode('utf-8')
     
 

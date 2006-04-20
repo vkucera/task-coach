@@ -55,7 +55,8 @@ class App(object):
         self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskFile, settings=settings)
         effortList = effort.EffortList(self.taskFile)
         self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
-        categoryFilteredTaskList = task.filter.CategoryFilter(self.taskFile)
+        categoryFilteredTaskList = task.filter.CategoryFilter(self.taskFile, 
+            settings=settings)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, 
             categoryFilteredTaskList, effortList, settings, splash)
         self.processCommandLineArguments(settings, loadTaskFile)

@@ -2,6 +2,7 @@ import test, patterns, string, gui, config
 import domain.task as task
 import domain.date as date
 
+
 class TestFilter(task.filter.Filter):
     def filter(self, item):
         return item > 'b' 
@@ -36,6 +37,7 @@ class DummyFilter(task.filter.Filter):
 
     def test(self):
         self.testcalled = 1
+
 
 class StackedFilterTest(test.TestCase):
     def setUp(self):
@@ -233,7 +235,14 @@ class CategoryFilterTest(test.TestCase):
         self.child.addCategory('child')
         self.parent.addChild(self.child)
         self.list = task.TaskList([self.parent, self.child])
-        self.filter = task.filter.CategoryFilter(self.list)
+        self.settings = config.Settings(load=False)
+        self.filter = task.filter.CategoryFilter(self.list, settings=self.settings)
+        
+    def setFilterOnAnyCategory(self):
+        self.settings.set('view', 'taskcategoryfiltermatchall', 'False')
+        
+    def setFilterOnAllCategories(self):
+        self.settings.set('view', 'taskcategoryfiltermatchall', 'True')
         
     def testInitial(self):
         self.assertEqual(2, len(self.filter))
@@ -269,11 +278,44 @@ class CategoryFilterTest(test.TestCase):
         self.filter.removeCategory('parent')
         self.assertEqual(2, len(self.filter))
 
+    def testFilterOnAnyCategory(self):
+        self.setFilterOnAnyCategory()
+        self.filter.addCategory('parent')
+        self.filter.addCategory('child')
+        self.assertEqual(2, len(self.filter))
 
+    def testFilterOnAllCategories(self):
+        self.setFilterOnAllCategories()
+        self.filter.addCategory('parent')
+        self.filter.addCategory('child')
+        self.assertEqual(1, len(self.filter))
+        
+    def testFilterOnAnyCategory_NoTasksMatch(self):
+        self.setFilterOnAnyCategory()
+        self.filter.addCategory('test')
+        self.filter.addCategory('another')
+        self.assertEqual(0, len(self.filter))
+        
+    def testFilterOnAllCategories_NoTasksMatch(self):
+        self.setFilterOnAllCategories()
+        self.filter.addCategory('test')
+        self.filter.addCategory('child')
+        self.assertEqual(0, len(self.filter))
+    
+    def testFilterOnAnyCategory_NoCategoriesSelected(self):
+        self.setFilterOnAnyCategory()
+        self.assertEqual(2, len(self.filter))
+        
+    def testFilterOnAllCategories_NoCategoriesSelected(self):
+        self.setFilterOnAllCategories()
+        self.assertEqual(2, len(self.filter))
+
+        
 class OriginalLengthTest(test.TestCase):
     def setUp(self):
         self.list = task.TaskList()
-        self.filter = task.filter.CategoryFilter(self.list)
+        settings = config.Settings(load=False)
+        self.filter = task.filter.CategoryFilter(self.list, settings=settings)
         
     def testEmptyList(self):
         self.assertEqual(0, self.filter.originalLength())
