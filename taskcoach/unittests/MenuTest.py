@@ -195,7 +195,7 @@ class ViewAllTasksTest(ViewMenuTestCase):
         return dummy.MainWindow()
         
     def createFilteredTaskList(self):
-        return task.filter.SearchFilter(task.filter.CategoryFilter(task.filter.ViewFilter(task.TaskList(), settings=self.settings)), settings=self.settings)
+        return task.filter.SearchFilter(task.filter.CategoryFilter(task.filter.ViewFilter(task.TaskList(), settings=self.settings), settings=self.settings), settings=self.settings)
 
     def invokeViewAllTasks(self):
         self.menu.invokeMenuItem(self.menu.FindItemByPosition(0))

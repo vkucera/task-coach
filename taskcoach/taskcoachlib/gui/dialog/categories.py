@@ -3,7 +3,8 @@ import widgets, wx
 class CategoriesFilterDialog(widgets.Dialog):
     def __init__(self, taskList, *args, **kwargs):
         self._taskList = taskList
-        super(CategoriesFilterDialog, self).__init__(bitmap='category', *args, **kwargs)
+        super(CategoriesFilterDialog, self).__init__(bitmap='category', 
+            *args, **kwargs)
         
     def createInterior(self):
         self._checkListBox = wx.CheckListBox(self._panel, style=wx.LB_SORT)

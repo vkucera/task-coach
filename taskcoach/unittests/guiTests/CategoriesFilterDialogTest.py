@@ -1,4 +1,4 @@
-import test, gui
+import test, gui, config
 from domain import task
 
 class CategoriesFilterDialogTest(test.wxTestCase):
@@ -6,7 +6,8 @@ class CategoriesFilterDialogTest(test.wxTestCase):
         aTask = task.Task()
         aTask.addCategory('test')
         taskList = task.TaskList()
-        self.filter = task.filter.CategoryFilter(taskList)
+        settings = config.Settings(load=False)
+        self.filter = task.filter.CategoryFilter(taskList, settings=settings)
         taskList.append(aTask)
         self.dialog = gui.CategoriesFilterDialog(parent=self.frame,
             title='View categories', taskList=self.filter)
