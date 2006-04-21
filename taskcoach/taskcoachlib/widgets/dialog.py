@@ -8,7 +8,7 @@ class Dialog(wx.Dialog):
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,
             (16, 16)))
         self._verticalSizer = wx.BoxSizer(wx.VERTICAL)
-        self._panel = wx.Panel(self, -1)
+        self._panel = wx.Panel(self)
         self._panelSizer = wx.GridSizer(1, 1)
         self._panelSizer.Add(self._panel, flag=wx.EXPAND)
         self._interior = self.createInterior()

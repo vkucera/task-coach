@@ -77,11 +77,8 @@ class CompositeFilter(Filter):
         super(CompositeFilter, self).__init__(*args, **kwargs)
 
     def filter(self, task):
-        if task.children() and not \
-            self.__settings.getboolean('view', 'compositetasks'):
-            return False
-        else:
-            return True
+        return (not task.children()) or \
+            self.__settings.getboolean('view', 'compositetasks')
     
 
 class SearchFilter(Filter):
