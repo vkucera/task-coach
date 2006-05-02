@@ -23,11 +23,13 @@ class IOController(object):
         return self.__taskFile.needSave()
         
     def open(self, filename=None, showerror=wx.MessageBox, *args):
-        if not self.close():
-            return
+        if self.__taskFile.needSave():
+            if not self.__saveUnsavedChanges():
+                return
         if not filename:
             filename = self.__askUserForFile(_('Open'))
         if filename:
+            self.__closeUnconditionally() 
             self.__taskFile.setFilename(filename)
             try:
                 self.__taskFile.load()                
@@ -78,21 +80,12 @@ class IOController(object):
             selectionFile.save()
             self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(selectionFile), 'filename': filename})
             self.__addRecentFile(filename)
-        
+
     def close(self):
         if self.__taskFile.needSave():
-            result = wx.MessageBox(_('You have unsaved changes.\n'
-                'Save before closing?'), _('%s: save changes?')%meta.name,
-                wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION)
-            if result == wx.YES:
-                if not self.save():
-                    return False
-            elif result == wx.CANCEL:
+            if not self.__saveUnsavedChanges():
                 return False
-        self.__messageCallback(_('Closed %s')%self.__taskFile.filename())
-        self.__taskFile.close()
-        import patterns
-        patterns.CommandHistory().clear()
+        self.__closeUnconditionally()
         return True
 
     def exportAsICS(self, filename=None):
@@ -120,3 +113,21 @@ class IOController(object):
     def __askUserForFile(self, title, fileDialogOpts=None, flags=wx.OPEN):
         fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts
         return wx.FileSelector(title, flags=flags, **fileDialogOpts)
+
+    def __saveUnsavedChanges(self):
+        result = wx.MessageBox(_('You have unsaved changes.\n'
+            'Save before closing?'), _('%s: save changes?')%meta.name,
+            wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION)
+        if result == wx.YES:
+            if not self.save():
+                return False
+        elif result == wx.CANCEL:
+            return False
+        return True
+    
+    def __closeUnconditionally(self):
+        self.__messageCallback(_('Closed %s')%self.__taskFile.filename())
+        self.__taskFile.close()
+        import patterns
+        patterns.CommandHistory().clear()
+        

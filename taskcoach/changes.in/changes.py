@@ -19,13 +19,18 @@ the source distribution of Task Coach you will have to install wxPython
 delete any selected tasks. Unfortunately, to fix this bug some accelerators had
 to be changed: the accelerator for "Delete task" is now Ctrl-Delete, for 
 "New task" it is now Ctrl-Insert, and for "New subtask" it is now 
-Shift-Ctrl-Insert.''', '1463316')],
+Shift-Ctrl-Insert.''', '1463316'),
+        Bug('''Don't close the current file when user cancels opening another
+file.''', '1475473')],
     featuresAdded=[
         Feature('''When dragging a task in the tree view, hover over
 a tree button (a boxed plus-sign or a triangle, depending on your
 platform) to expand the sub tree.'''),
         Feature('''To promote a sub task to a top-level task in the tree
-view, drag it and drop it anywhere as long as it is not on another task.''')]),
+view, drag it and drop it anywhere as long as it is not on another task.'''),
+        Feature('''When filtering tasks by multiple categories, you may 
+either choose to view tasks that belong to at least one of the selected
+categories, or view tasks that belong to all selected categories.''')]),
  
 Release('0.57', 'March 16, 2006',
     featuresAdded=[

@@ -7,18 +7,19 @@ class CategoriesFilterDialog(widgets.Dialog):
         self._taskList = taskList
         super(CategoriesFilterDialog, self).__init__(bitmap='category', 
             *args, **kwargs)
-        self.onCheck()
         
     def createInterior(self):
         return wx.Panel(self._panel)
         
     def fillInterior(self):
+        self._about = wx.StaticText(self._interior, 
+            label='Show tasks that belong to the categories selected below.\n'
+                'Unselect all categories to reset the filter.')
         self._checkListBox = wx.CheckListBox(self._interior, style=wx.LB_SORT)
         self._checkListBox.InsertItems(list(self._taskList.categories()), 0)
         for category in self._taskList.categories():
             if category in self._taskList.filteredCategories():
                 self._checkListBox.Check(self._checkListBox.FindString(category))
-        self._checkListBox.Bind(wx.EVT_CHECKLISTBOX, self.onCheck)
         self._radioBox = wx.RadioBox(self._interior, majorDimension=1, 
             label=_('Show tasks that match'),
             choices=[_('any of the above selected categories'),
@@ -32,6 +33,8 @@ class CategoriesFilterDialog(widgets.Dialog):
         
     def layoutInterior(self):
         panelSizer = wx.BoxSizer(wx.VERTICAL)
+        panelSizer.Add(self._about, flag=wx.EXPAND|wx.ALL, border=5)
+        panelSizer.Add(wx.StaticLine(self._interior), flag=wx.EXPAND)
         panelSizer.Add(self._checkListBox, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
         panelSizer.Add(self._radioBox, flag=wx.ALL, border=5)
         self._interior.SetSizer(panelSizer)
@@ -45,10 +48,3 @@ class CategoriesFilterDialog(widgets.Dialog):
         matchAll = self._radioBox.GetSelection() == 1
         self.__settings.set('view', 'taskcategoryfiltermatchall', str(matchAll))
         super(CategoriesFilterDialog, self).ok(*args, **kwargs)
-
-    def onCheck(self, event=None):
-        for index in range(self._checkListBox.GetCount()):
-            if self._checkListBox.IsChecked(index):
-                self.enableOK()
-                return
-        self.disableOK()
