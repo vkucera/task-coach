@@ -48,6 +48,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.settings = settings
         self.effortList = effortList
         self.Bind(wx.EVT_CLOSE, self.onClose)
+        wx.GetApp().Bind(wx.EVT_QUERY_END_SESSION, self.onEndSession)
         self.splash = splash
 
         self.createWindowComponents()
@@ -173,6 +174,12 @@ class MainWindow(WindowWithPersistentDimensions):
         else:
             self.quit()
 
+    def onEndSession(self, event):
+        event.Veto()
+        print 'onEndSession'
+        wx.MessageBox('bla') 
+        return False 
+    
     def restore(self, event):
         self.Show()
         self.Raise()

@@ -11,3 +11,4 @@ from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
     MultiLineTextCtrl, StaticText
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer
 from colorselect import ColorSelect
+from thirdparty.ComboTreeBox import ComboTreeBox
