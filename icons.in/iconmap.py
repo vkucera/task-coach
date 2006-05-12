@@ -11,6 +11,7 @@ iconlist = [
 ('info', 'actions', 'messagebox_info', [16]),
 ('markcompleted', 'apps', 'korganizer_todo', [16, 22, 32]),
 ('new', 'actions', 'filenew', [16, 22, 32]),
+('new_subtask', 'actions', 'new_sub', [16, 22, 32]),
 ('on', 'actions', 'apply', [16]),
 ('paste', 'actions', 'editpaste', [16, 22, 32]),
 ('undo', 'actions', 'undo', [16, 22, 32]),

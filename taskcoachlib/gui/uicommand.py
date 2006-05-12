@@ -593,7 +593,7 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, \
 class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         FilterCommand, ViewerCommand, UICommandsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(TaskNewSubTask, self).__init__(bitmap='newsubtask',
+        super(TaskNewSubTask, self).__init__(bitmap='new_subtask',
             menuText=self.getMenuText(),
             helpText=_('Insert a new subtask into the selected task'), *args,
             **kwargs)
