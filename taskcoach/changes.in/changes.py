@@ -23,6 +23,9 @@ Shift-Ctrl-Insert.''', '1463316'),
         Bug('''Don't close the current file when user cancels opening another
 file.''', '1475473')],
     featuresAdded=[
+        Feature('''Added toolbar button for 'new subtask'.'''),
+        Feature('''Task Coach searches incrementally as you type a query 
+in the find bar.'''),
         Feature('''When dragging a task in the tree view, hover over
 a tree button (a boxed plus-sign or a triangle, depending on your
 platform) to expand the sub tree.'''),
