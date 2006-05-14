@@ -1,7 +1,8 @@
+#!/usr/bin/env python
+
 ''' ComboTreeBox provides a ComboBox that pops up a tree instead of
     a list. 
 
-    Not implemented: style=wx.CB_SORT 
     Supported platforms: wxMSW and wxMAC natively, wxGTK by means of a
                          workaround
 
@@ -87,9 +88,16 @@ class _BaseComboTreeBox(object):
             self._readOnly = True
         else:
             self._readOnly = False
+        if style & wx.CB_SORT:
+            style &= ~wx.CB_SORT # We manage sorting ourselves
+            self._sort = True
+        else:
+            self._sort = False
         super(_BaseComboTreeBox, self).__init__(style=style, *args, **kwargs)
         self._createInterior()
         self._bindEventHandlers()
+
+    # Private methods
 
     def _createInterior(self):
         self._popupFrame = PopupFrame(self)
@@ -101,6 +109,8 @@ class _BaseComboTreeBox(object):
         for eventType in self._buttonEventTypesToBind():
             self._button.Bind(eventType, self.OnMouseClick)
 
+    # Event handlers
+
     def OnMouseClick(self, event):
         self.Popup()
         # We don't call event.Skip() to prevent popping up the
@@ -111,9 +121,21 @@ class _BaseComboTreeBox(object):
                 event.GetKeyCode() == wx.WXK_DOWN:
             self.Popup()
         else:
+            def SelectItemJustTypedInIfPossible():
+                item = self.FindString(self.GetValue())
+                if item.IsOk():
+                    self._tree.SelectItem(item)
+            wx.CallAfter(SelectItemJustTypedInIfPossible)
             event.Skip()
 
+    # Misc methods
+
     def Popup(self):
+        ''' 
+        Popup(self)
+
+        Pops up the frame with the tree.
+        '''
         comboBoxSize = self.GetSize()
         x, y = self.GetParent().ClientToScreen(self.GetPosition())
         y += comboBoxSize[1]
@@ -126,6 +148,11 @@ class _BaseComboTreeBox(object):
         self._popupFrame.Show()
  
     def GetTree(self):
+        '''
+        GetTree(self) -> wx.TreeCtrl
+
+        Returns the tree control that is popped up. 
+        '''
         return self._popupFrame.GetTree()
 
     def PostComboBoxSelectedEvent(self, text):
@@ -144,83 +171,214 @@ class _BaseComboTreeBox(object):
     # as parameter and return TreeItemIds, rather than indices.
 
     def Append(self, itemText, parent=None, clientData=None):
+        ''' 
+        Append(self, String itemText, TreeItemId parent=None, PyObject
+               clientData=None) -> TreeItemId
+
+        Adds the itemText to the control, associating the given clientData 
+        with the item if not None. If parent is None, itemText is added
+        as a root item, else itemText is added as a child item of
+        parent. The return value is the TreeItemId of the newly added
+        item. '''    
         if parent is None:
             parent = self._tree.GetRootItem()
-        return self._tree.AppendItem(parent, itemText, 
+        item = self._tree.AppendItem(parent, itemText, 
                                      data=wx.TreeItemData(clientData))
+        if self._sort:
+            self._tree.SortChildren(parent)
+        return item
 
     def Clear(self):
+        '''
+        Clear(self)
+        
+        Removes all items from the control.
+        '''
         return self._tree.DeleteAllItems()
         
     def Delete(self, item):
+        '''
+        Delete(self, TreeItemId item)
+
+        Deletes the item from the control. 
+        '''
         return self._tree.Delete(item)
 
-    def FindString(self, string):
-        item, cookie = self._tree.GetFirstChild(self._tree.GetRootItem())
-        while item.IsOk():
-            if self._tree.GetItemText(item) == string:
-                return item
+    def FindString(self, string, parent=None):
+        ''' 
+        FindString(self, String string, TreeItemId parent=None) -> TreeItemId
+        
+        Finds the *first* item in the tree with a label equal to the
+        given string. If no such item exists, an invalid item is
+        returned. 
+        '''
+        parent = parent or self._tree.GetRootItem()
+        child, cookie = self._tree.GetFirstChild(parent)
+        while child.IsOk():
+            if self._tree.GetItemText(child) == string:
+                return child
             else:
-                item, cookie = self._tree.GetNextChild(item, cookie)
-        return wx.NOT_FOUND
+                result = self.FindString(string, child)
+                if result.IsOk():
+                    return result
+            child, cookie = self._tree.GetNextChild(parent, cookie)
+        return child
 
     def GetSelection(self):
-        return self.FindString(self.GetValue())
+        '''
+        GetSelection(self) -> TreeItemId
+
+        Returns the TreeItemId of the selected item or an invalid item
+        if no item is selected.
+        '''
+        selectedItem = self._tree.GetSelection()
+        if selectedItem.IsOk() and selectedItem != self._tree.GetRootItem():
+            return selectedItem
+        else:
+            return self.FindString(self.GetValue())
 
     def GetString(self, item):
+        '''
+        GetString(self, TreeItemId item) -> String
+
+        Returns the label of the given item.
+        '''
         if item.IsOk():
             return self._tree.GetItemText(item)
         else:
             return ''
 
     def GetStringSelection(self):
+        '''
+        GetStringSelection(self) -> String
+
+        Returns the label of the selected item or an empty string if no item 
+        is selected.
+        '''
         return self.GetValue()
 
     def Insert(self, itemText, previous=None, parent=None, clientData=None):
+        '''
+        Insert(self, String itemText, TreeItemId previous=None, TreeItemId
+               parent=None, PyObject clientData=None) -> TreeItemId
+
+        Insert an item into the control before the ``previous`` item 
+        and/or as child of the ``parent`` item. The itemText is associated 
+        with clientData when not None.
+        '''
         data = wx.TreeItemData(clientData)
         if parent is None:
             parent = self._tree.GetRootItem()
         if previous is None:
-            return self._tree.InsertItemBefore(parent, 0, itemText, data=data)
+            item = self._tree.InsertItemBefore(parent, 0, itemText, data=data)
         else:
-            return self._tree.InsertItem(parent, previous, itemText, data=data)
+            item = self._tree.InsertItem(parent, previous, itemText, data=data)
+        if self._sort:
+            self._tree.SortChildren(parent)
+        return item
 
     def IsEmpty(self):
+        '''
+        IsEmpty(self) -> bool
+
+        Returns True if the control is empty or False if it has some items.
+        '''
         return self.GetCount() == 0
 
     def GetCount(self):
-        # NB: We don't need to substract 1 for the hidden root item, because
-        # the TreeCtrl does that for us
+        '''
+        GetCount(self) -> int
+
+        Returns the number of items in the control.
+        '''
+        # Note: We don't need to substract 1 for the hidden root item, 
+        # because the TreeCtrl does that for us
         return self._tree.GetCount() 
 
     def SetSelection(self, item):
+        ''' 
+        SetSelection(self, TreeItemId item) 
+
+        Sets the provided item to be the selected item.
+        '''
+        self._tree.SelectItem(item)
         self._text.SetValue(self._tree.GetItemText(item))
         
     Select = SetSelection
 
     def SetString(self, item, string):
+        '''
+        SetString(self, TreeItemId item, String string)
+
+        Sets the label for the provided item.
+        '''
         self._tree.SetItemText(item, string)
+        if self._sort:
+            self._tree.SortChildren(self._tree.GetItemParent(item))
 
     def SetStringSelection(self, string):
-        self._text.SetValue(string)
+        '''
+        SetStringSelection(self, String string) -> bool
+
+        Selects the item with the provided string in the control. 
+        Returns True if the provided string has been selected, False if
+        it wasn't found in the control.
+        '''
+        item = self.FindString(string)
+        if item.IsOk():
+            if self._text.GetValue() != string:
+                self._text.SetValue(string)
+            self._tree.SelectItem(item)
+            return True
+        else:
+            return False
+
+    def GetClientData(self, item):
+        '''
+        GetClientData(self, TreeItemId item) -> PyObject
+
+        Returns the client data associated with the given item, if any.
+        '''
+        return self._tree.GetItemPyData(item)
+
+    def SetClientData(self, item, clientData):
+        '''
+        SetClientData(self, TreeItemId item, PyObject clientData)
+
+        Associate the given client data with the provided item.
+        '''
+        self._tree.SetItemPyData(item, clientData)
 
     def GetValue(self):
+        '''
+        GetValue(self) -> String
+
+        Returns the current value in the combobox text field.
+        '''
         if self._text == self:
             return super(_BaseComboTreeBox, self).GetValue()
         else:
             return self._text.GetValue()
 
     def SetValue(self, value):
+        '''
+        SetValue(self, String value)
+
+        Sets the text for the combobox text field.
+
+        NB: For a combobox with wxCB_READONLY style the string must be
+        in the combobox choices list, otherwise the call to SetValue()
+        is ignored.
+        '''
+        item = self.FindString(value)
+        if self._readOnly and not item.IsOk():
+            return
         if self._text == self:
             super(_BaseComboTreeBox, self).SetValue(value)
         else:
             self._text.SetValue(value)
-
-    def GetClientData(self, item):
-        return self._tree.GetPyData(item)
-
-    def SetClientData(self, item, clientData):
-        self._tree.SetPyData(item, clientData)
+        if item.IsOk():
+            self._tree.SelectItem(item)
 
 
 class _ComboTreeBox(_BaseComboTreeBox, wx.ComboBox):
@@ -331,7 +489,12 @@ class DemoFrame(wx.Frame):
 
 import unittest
 
-class ComboTreeBoxTest(unittest.TestCase):
+class ComboTreeBoxTestCase(unittest.TestCase):
+    def firstItem(self):
+        return self.tree.GetFirstChild(self.tree.GetRootItem())[0]
+
+
+class ComboTreeBoxTest(ComboTreeBoxTestCase):
     def setUp(self):
         self.comboBoxEventReceived = False
         frame = wx.Frame(None)
@@ -341,8 +504,11 @@ class ComboTreeBoxTest(unittest.TestCase):
     def onComboBox(self, event):
         self.comboBoxEventReceived = True
 
-    def firstItem(self):
-        return self.tree.GetFirstChild(self.tree.GetRootItem())[0]
+    def selectItem(self, item):
+        event = wx.TreeEvent(wx.wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
+            self.tree.GetId())
+        event.SetItem(item)
+        self.tree.GetEventHandler().ProcessEvent(event)
 
     def testComboBoxIsEmptyByDefault(self):
         self.assertEqual(0, self.comboBox.GetCount())
@@ -364,10 +530,7 @@ class ComboTreeBoxTest(unittest.TestCase):
     def testSelectingAnItemPutsItInTheComboBox(self):
         self.comboBox.Append('Item 1')
         self.comboBox.Bind(wx.EVT_COMBOBOX, self.onComboBox)
-        event = wx.TreeEvent(wx.wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
-            self.tree.GetId())
-        event.SetItem(self.tree.GetFirstVisibleItem())
-        self.tree.GetEventHandler().ProcessEvent(event)
+        self.selectItem(self.tree.GetFirstVisibleItem())
         self.failUnless(self.comboBoxEventReceived)
 
     def testClear(self):
@@ -380,23 +543,43 @@ class ComboTreeBoxTest(unittest.TestCase):
         self.comboBox.Delete(self.firstItem())
         self.assertEqual(0, self.comboBox.GetCount())
 
+    def testGetSelection_NoItems(self):
+        self.failIf(self.comboBox.GetSelection().IsOk())
+
     def testGetSelection_NoSelection(self):
         self.comboBox.Append('Item 1')
-        self.assertEqual(wx.NOT_FOUND, self.comboBox.GetSelection())
+        self.failIf(self.comboBox.GetSelection().IsOk())
 
     def testGetSelection_WithSelection(self):
-        self.comboBox.Append('Item 1')
+        item1 = self.comboBox.Append('Item 1')
         self.comboBox.SetValue('Item 1')
-        self.assertEqual(self.firstItem(), self.comboBox.GetSelection())
+        self.assertEqual(item1, self.comboBox.GetSelection())
+
+    def testGetSelection_EquallyNamedNodes_SelectedInTree(self):
+        item1 = self.comboBox.Append('Item')
+        item2 = self.comboBox.Append('Item')
+        self.tree.SelectItem(item2)
+        self.assertEqual(item2, self.comboBox.GetSelection())
+
+    def testGetSelection_EquallyNamedNodes_TypedInTextBox(self):
+        item1 = self.comboBox.Append('Item')
+        item2 = self.comboBox.Append('Item')
+        self.comboBox.SetValue('Item')
+        self.assertEqual(item1, self.comboBox.GetSelection())
 
     def testFindString_NotPresent(self):
         self.comboBox.Append('Item 1')
-        self.assertEqual(wx.NOT_FOUND, self.comboBox.FindString('Item 2'))
+        self.failIf(self.comboBox.FindString('Item 2').IsOk())
 
     def testFindString_Present(self):
         self.comboBox.Append('Item 1')
         self.assertEqual(self.firstItem(),
                          self.comboBox.FindString('Item 1'))
+
+    def testFindString_Child(self):
+        parent = self.comboBox.Append('Parent')
+        child = self.comboBox.Append('Child', parent=parent)
+        self.assertEqual(child, self.comboBox.FindString('Child'))
 
     def testGetString_NotPresent(self):
         self.assertEqual('', self.comboBox.GetString(self.firstItem()))
@@ -437,9 +620,14 @@ class ComboTreeBoxTest(unittest.TestCase):
         self.comboBox.SetString(item1, 'Item 2')
         self.assertEqual('Item 2', self.comboBox.GetString(item1))
 
-    def testSetStringSelection(self):
+    def testSetStringSelection_ExistingString(self):
+        self.comboBox.Append('Hi')
         self.comboBox.SetStringSelection('Hi')
         self.assertEqual('Hi', self.comboBox.GetStringSelection())
+
+    def testSetStringSelection_NonExistingString(self):
+        self.comboBox.SetStringSelection('Hi')
+        self.assertEqual('', self.comboBox.GetStringSelection())
 
     def testAppendWithClientData(self):
         item1 = self.comboBox.Append('Item 1', clientData=[1,2,3])
@@ -455,7 +643,58 @@ class ComboTreeBoxTest(unittest.TestCase):
         item1 = self.comboBox.Append('Item 1')
         self.comboBox.SetClientData(item1, [1,2,3])
         self.assertEqual([1,2,3], self.comboBox.GetClientData(item1))
+
+
+class SortedComboTreeBoxTest(ComboTreeBoxTestCase):
+    def setUp(self):
+        frame = wx.Frame(None)
+        self.comboBox = ComboTreeBox(frame, style=wx.CB_SORT)
+        self.tree = self.comboBox._popupFrame.GetTree()
+
+    def testAppend(self):
+        itemB = self.comboBox.Append('B')
+        itemA = self.comboBox.Append('A')
+        self.assertEqual(itemA, self.firstItem())
+
+    def testInsert(self):
+        itemA = self.comboBox.Append('A')
+        itemB = self.comboBox.Insert('B')
+        self.assertEqual(itemA, self.firstItem())
+
+    def testAppend_Child(self):
+        itemA = self.comboBox.Append('A')
+        itemA2 = self.comboBox.Append('2', parent=itemA)
+        itemA1 = self.comboBox.Append('1', parent=itemA)
+        self.assertEqual(itemA1, self.tree.GetFirstChild(itemA)[0])
+
+    def testInsert_Child(self):
+        itemA = self.comboBox.Append('A')
+        itemA1 = self.comboBox.Append('1', parent=itemA)
+        itemA2 = self.comboBox.Insert('2', parent=itemA)
+        self.assertEqual(itemA1, self.tree.GetFirstChild(itemA)[0])
         
+    def testSetString(self):
+        itemB = self.comboBox.Append('B')
+        itemC = self.comboBox.Append('C')
+        self.comboBox.SetString(itemC, 'A')
+        self.assertEqual(itemC, self.firstItem())
+
+
+class ReadOnlyComboTreeBoxTesT(ComboTreeBoxTestCase):
+    def setUp(self):
+        frame = wx.Frame(None)
+        self.comboBox = ComboTreeBox(frame, style=wx.CB_READONLY)
+        self.tree = self.comboBox._popupFrame.GetTree()
+
+    def testSetValue_ToNonExistingValue(self):
+        self.comboBox.SetValue('Ignored value')
+        self.assertEqual('', self.comboBox.GetValue())
+
+    def testSetValue_ToExistingValue(self):
+        self.comboBox.Append('This works')
+        self.comboBox.SetValue('This works')
+        self.assertEqual('This works', self.comboBox.GetValue())
+
 
 if __name__ == '__main__':
     import sys
