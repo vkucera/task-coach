@@ -1,7 +1,7 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
 version = '0.58'
-date = '? ?, 2006'
+date = 'May 14, 2006'
 author = 'Frank Niessink'
 author_email = 'frank@niessink.com'
 url = 'http://taskcoach.niessink.com/'
@@ -11,7 +11,7 @@ platform = 'Any'
 filename = 'TaskCoach'
 filename_lower = filename.lower()
 pythonversion = '2.4.1'
-wxpythonversion = '2.6.1.0-unicode'
+wxpythonversion = '2.6.3.2-unicode'
 languages = {
     'English': None, 
     'French': 'fr_FR', 
