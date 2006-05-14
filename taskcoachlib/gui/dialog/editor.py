@@ -409,14 +409,21 @@ class EffortEditBook(widgets.BookPage):
         self.addStartAndStopEntries()
         self.addDescriptionEntry()
         self.fit()
-        
+
     def addTaskEntry(self):
-        self._taskEntry = wx.ComboBox(self, style=wx.CB_READONLY|wx.CB_SORT)
-        for task in self._taskList:
-            self._taskEntry.Append(render.subject(task, recursively=True), task)
-        self._taskEntry.SetStringSelection(render.subject(self._effort.task(),
-            recursively=True))
-        self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL])
+        self._taskEntry = widgets.ComboTreeBox(self, 
+            style=wx.CB_READONLY|wx.CB_SORT)
+
+        def addTaskRecursively(task, parentItem=None):
+            item = self._taskEntry.Append(task.subject(), 
+                parent=parentItem, clientData=task)
+            for child in task.children():
+                addTaskRecursively(child, item)
+
+        for task in self._taskList.rootTasks():
+            addTaskRecursively(task)
+        self._taskEntry.SetStringSelection(self._effort.task().subject())
+        self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])
 
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
