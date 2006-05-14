@@ -3,7 +3,7 @@
 from domain import *
 
 releases = [             
-Release('0.58', '?', 
+Release('0.58', 'May 14, 2006', 
     bugsFixed=[
         Bug('''On Mac OSX, Task Coach would seg fault upon exiting.'''),
         Bug('''Right-clicking a task in the task tree view would,
