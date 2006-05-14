@@ -11,7 +11,7 @@ endif
 
 ifeq ($(shell uname),Darwin)
     PYTHON="pythonw"
-    PYTHONTOOLDIR="/Applications/MacPython-2.4/Extras/Tools"
+    PYTHONTOOLDIR="/Applications/MacPython 2.4/Extras/Tools"
     GETTEXT=python $(PYTHONTOOLDIR)/i18n/pygettext.py
 endif
 
