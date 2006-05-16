@@ -1028,6 +1028,10 @@ class UICommands(dict):
         self['viewstatusbar'] = UICheckCommand(settings=settings, 
             menuText=_('Status&bar'), helpText=_('Show/hide status bar'), 
             setting='statusbar')
+        self['viewfiltersidebar'] = UICheckCommand(settings=settings,
+            menuText=_('Filter sidebar'), 
+            helpText=_('Show/hide filter sidebar'),
+            setting='filtersidebar')
 
         # View tasks due before commands
         for value, menuText, helpText in \

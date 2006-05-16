@@ -130,7 +130,8 @@ class ViewMenu(Menu):
         self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
-        self.appendUICommands(uiCommands, ['viewfinddialog', 'viewstatusbar'])   
+        self.appendUICommands(uiCommands, ['viewfinddialog',
+            'viewstatusbar', 'viewfiltersidebar'])   
 
 
 class ViewTaskColumnsMenu(Menu):
