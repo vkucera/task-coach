@@ -48,7 +48,9 @@ class MainWindow(WindowWithPersistentDimensions):
         self.settings = settings
         self.effortList = effortList
         self.Bind(wx.EVT_CLOSE, self.onClose)
+        self.Bind(wx.EVT_SIZE, self.onSize)
         wx.GetApp().Bind(wx.EVT_QUERY_END_SESSION, self.onEndSession)
+
         self.splash = splash
 
         self.createWindowComponents()
@@ -58,6 +60,7 @@ class MainWindow(WindowWithPersistentDimensions):
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
+        self.createFilterSideBar()
         self.panel = wx.Panel(self, -1)
         self.viewer = viewercontainer.ViewerNotebook(self.panel, self.settings, 'mainviewer') 
         self.findDialog = find.FindPanel(self.panel, self.viewer, self.settings)
@@ -76,6 +79,17 @@ class MainWindow(WindowWithPersistentDimensions):
         self.createTaskBarIcon(self.uiCommands)
         self.reminderController = remindercontroller.ReminderController(self.taskFile)
         
+    def createFilterSideBar(self):
+        defaultWidth = self.settings.getint('view', 'filtersidebarwidth')
+        self.filterSideBarWindow = wx.SashLayoutWindow(self,
+            style=wx.NO_BORDER|wx.SW_3D|wx.CLIP_CHILDREN)
+        self.filterSideBarWindow.SetSashVisible(wx.SASH_RIGHT, True)
+        self.filterSideBarWindow.SetOrientation(wx.LAYOUT_VERTICAL)
+        self.filterSideBarWindow.SetAlignment(wx.LAYOUT_LEFT)
+        self.filterSideBarWindow.SetDefaultSize((defaultWidth, 1000))
+        self.filterSideBarWindow.Bind(wx.EVT_SASH_DRAGGED, self.onDragSash)
+        self.text = wx.StaticText(self.filterSideBarWindow, label='Hi there')
+
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
         self._sizer.Add(self.viewer, proportion=1, flag=wx.EXPAND)
@@ -98,6 +112,7 @@ class MainWindow(WindowWithPersistentDimensions):
     def initWindowComponents(self):
         self.onShowFindDialog()
         self.onShowToolBar()
+        self.onShowFilterSideBar()
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
         wx.CallAfter(self.onShowStatusBar) 
@@ -110,12 +125,28 @@ class MainWindow(WindowWithPersistentDimensions):
             ('view', 'statusbar'))
         self.settings.registerObserver(self.onShowToolBar, 
             ('view', 'toolbar'))
+        self.settings.registerObserver(self.onShowFilterSideBar,
+            ('view', 'filtersidebar'))
 
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
             if self.splash:
                 self.splash.Hide()
             help.showTips(self, self.settings)
+
+    def onSize(self, event):
+        wx.LayoutAlgorithm().LayoutWindow(self, self.panel)
+        # Make sure WindowWithPersistentDimensions.onSize is invoked too:
+        event.Skip() 
+
+    def onDragSash(self, event):
+        width = event.GetDragRect().width
+        if width < 50:
+            self.settings.set('view', 'filtersidebar', 'False')
+        else:
+            self.settings.set('view', 'filtersidebarwidth', str(width))
+            self.filterSideBarWindow.SetDefaultSize((width, 1000))
+            wx.LayoutAlgorithm().LayoutWindow(self, self.panel)
                          
     def onShowFindDialog(self, *args, **kwargs):
         self.showFindDialog(self.settings.getboolean('view', 'finddialog'))
@@ -125,6 +156,12 @@ class MainWindow(WindowWithPersistentDimensions):
 
     def onShowToolBar(self, *args, **kwargs):
         self.showToolBar(eval(self.settings.get('view', 'toolbar')))
+
+    def onShowFilterSideBar(self, *args, **kwargs):
+        self.filterSideBarWindow.Show(self.settings.getboolean('view',
+            'filtersidebar'))
+        self.filterSideBarWindow.SizeWindows()
+        wx.LayoutAlgorithm().LayoutWindow(self, self.panel)
 
     def createTaskBarIcon(self, uiCommands):
         if self.canCreateTaskBarIcon():
