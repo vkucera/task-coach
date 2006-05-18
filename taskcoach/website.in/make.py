@@ -162,6 +162,11 @@ pages['faq'] = \
     are just fine. The TaskCoach.ini file is located in C:\Documents and
     Settings\&lt;yourname&gt;\Application Data\TaskCoach if you're on Windows 
     and in /home/&lt;yourname&gt;/.TaskCoach if you're on Linux.</P>
+    <P><I>Can I track effort for more than one task at the same
+    time?</I></P>
+    <P>Yes, when you are tracking effort for a task, select the second
+    task, right-click and select 'New effort...'. When you don't fill in
+    an end-time, effort for that second task will be tracked too.</P>
 '''
 
 pages['roadmap'] = \

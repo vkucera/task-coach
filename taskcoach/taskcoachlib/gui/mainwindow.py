@@ -1,9 +1,11 @@
 import wx, meta, patterns, widgets, command
-import viewer, viewercontainer, viewerfactory, help, find, toolbar, uicommand,\
-    remindercontroller
+import viewer, viewercontainer, viewerfactory, help, toolbar, uicommand,\
+    remindercontroller, filter 
 from i18n import _
 import domain.task as task
 import domain.effort as effort
+import wx.lib.foldpanelbar as foldpanelbar
+
 
 class WindowWithPersistentDimensions(wx.Frame):
     def __init__(self, settings, *args, **kwargs):
@@ -60,10 +62,9 @@ class MainWindow(WindowWithPersistentDimensions):
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
-        self.createFilterSideBar()
         self.panel = wx.Panel(self, -1)
         self.viewer = viewercontainer.ViewerNotebook(self.panel, self.settings, 'mainviewer') 
-        self.findDialog = find.FindPanel(self.panel, self.viewer, self.settings)
+        self.createFilterSideBar()
         self.initLayout()
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.filteredTaskList, self.effortList)
@@ -88,12 +89,33 @@ class MainWindow(WindowWithPersistentDimensions):
         self.filterSideBarWindow.SetAlignment(wx.LAYOUT_LEFT)
         self.filterSideBarWindow.SetDefaultSize((defaultWidth, 1000))
         self.filterSideBarWindow.Bind(wx.EVT_SASH_DRAGGED, self.onDragSash)
-        self.text = wx.StaticText(self.filterSideBarWindow, label='Hi there')
+        self.filterSideBarFoldPanel = \
+            foldpanelbar.FoldPanelBar(self.filterSideBarWindow)
+        images = wx.ImageList(16, 16)
+        images.Add(wx.ArtProvider_GetBitmap('unfold', size=(16, 16)))
+        images.Add(wx.ArtProvider_GetBitmap('fold', size=(16, 16)))
+        panel = self.filterSideBarFoldPanel.AddFoldPanel( \
+            _("Filter by subject"), collapsed=False, foldIcons=images)
+        findPanel = filter.SubjectFilterPanel(panel, self.viewer, self.settings)
+        self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, findPanel)
+        panel = self.filterSideBarFoldPanel.AddFoldPanel( \
+            _("Filter by category"), collapsed=False, foldIcons=images)
+        categoriesPanel = filter.CategoriesFilterPanel(panel, 
+            self.filteredTaskList, self.settings)
+        self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, categoriesPanel)
+        panel = self.filterSideBarFoldPanel.AddFoldPanel( \
+            _("Filter by status"), collapsed=False, foldIcons=images)
+        statusPanel = filter.StatusFilterPanel(panel, self.filteredTaskList, 
+            self.settings)
+        self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, statusPanel)
+        panel = self.filterSideBarFoldPanel.AddFoldPanel( \
+            _("Filter by due date"), collapsed=False, foldIcons=images)
+        dueDatePanel = filter.DueDateFilterPanel(panel, self.settings)
+        self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, dueDatePanel)
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
         self._sizer.Add(self.viewer, proportion=1, flag=wx.EXPAND)
-        self._sizer.Add(self.findDialog, flag=wx.EXPAND|wx.ALL, border=1)
         self.panel.SetSizerAndFit(self._sizer)
 
     def initWindow(self):
@@ -110,7 +132,6 @@ class MainWindow(WindowWithPersistentDimensions):
         self.SetIcons(bundle)
 
     def initWindowComponents(self):
-        self.onShowFindDialog()
         self.onShowToolBar()
         self.onShowFilterSideBar()
         # We use CallAfter because otherwise the statusbar will appear at the 
@@ -119,8 +140,6 @@ class MainWindow(WindowWithPersistentDimensions):
                 
     def registerForWindowComponentChanges(self):
         self.taskFile.registerObserver(self.SetTitle, 'FilenameChanged')
-        self.settings.registerObserver(self.onShowFindDialog, 
-            ('view', 'finddialog'))
         self.settings.registerObserver(self.onShowStatusBar, 
             ('view', 'statusbar'))
         self.settings.registerObserver(self.onShowToolBar, 
@@ -148,9 +167,6 @@ class MainWindow(WindowWithPersistentDimensions):
             self.filterSideBarWindow.SetDefaultSize((width, 1000))
             wx.LayoutAlgorithm().LayoutWindow(self, self.panel)
                          
-    def onShowFindDialog(self, *args, **kwargs):
-        self.showFindDialog(self.settings.getboolean('view', 'finddialog'))
-
     def onShowStatusBar(self, *args, **kwargs):
         self.showStatusBar(self.settings.getboolean('view', 'statusbar'))
 
@@ -228,12 +244,6 @@ class MainWindow(WindowWithPersistentDimensions):
         if event.Iconized() and self.settings.getboolean('window', 
                                                          'hidewheniconized'):
             self.Hide()
-
-    def showFindDialog(self, show=True):
-        if not show:
-            self.findDialog.clear()
-        self._sizer.Show(self.findDialog, show)
-        self._sizer.Layout()
 
     def showStatusBar(self, show=True):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then

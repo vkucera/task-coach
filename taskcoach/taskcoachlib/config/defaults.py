@@ -1,6 +1,5 @@
 defaults = { \
 'view': { \
-    'finddialog': 'False',
     'filtersidebar': 'False',
     'filtersidebarwidth': '250',
     'statusbar': 'True',
