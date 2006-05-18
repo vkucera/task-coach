@@ -126,7 +126,8 @@ class CategoryFilter(Filter):
             return True
         filterOnlyWhenAllCategoriesMatch = self.__settings.getboolean('view', 
             'taskcategoryfiltermatchall')
-        matches = [category in task.categories(recursive=True) for category in self._categories]
+        matches = [category in task.categories(recursive=True) 
+                   for category in self._categories]
         if filterOnlyWhenAllCategoriesMatch:
             return False not in matches
         else:

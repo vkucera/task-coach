@@ -23,14 +23,6 @@ class MainWindowTest(test.wxTestCase):
         self.settings.set('view', 'statusbar', 'False')
         self.failIf(self.mainwindow.GetStatusBar().IsShown())
 
-    def testFindDialog_Show(self):
-        self.settings.set('view', 'finddialog', 'True')
-        self.failUnless(self.mainwindow.findDialog.IsShown())
-
-    def testFindDialog_Hide(self):
-        self.settings.set('view', 'finddialog', 'False')
-        self.failIf(self.mainwindow.findDialog.IsShown())
-
     def testFilterSideBar_Show(self):
         self.settings.set('view', 'filtersidebar', 'True')
         self.failUnless(self.mainwindow.filterSideBarWindow.IsShown())

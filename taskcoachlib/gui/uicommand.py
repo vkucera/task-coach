@@ -526,7 +526,8 @@ class ViewCategories(MainWindowCommand, FilterCommand, SettingsCommand):
         
 class ViewExpandAll(ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewExpandAll, self).__init__(menuText=_('&Expand all tasks'),
+        super(ViewExpandAll, self).__init__( \
+            menuText=_('&Expand all tasks\tShift+Ctrl+E'),
             helpText=_('Expand all tasks with subtasks'), *args, **kwargs)
             
     def doCommand(self, event):
@@ -545,7 +546,8 @@ class ViewExpandSelected(NeedsSelectedTasks, ViewerCommand):
 
 class ViewCollapseAll(ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewCollapseAll, self).__init__(menuText=_('&Collapse all tasks'),
+        super(ViewCollapseAll, self).__init__( \
+            menuText=_('&Collapse all tasks\tShift+Ctrl+C'),
             helpText=_('Collapse all tasks with subtasks'), *args, **kwargs)
     
     def doCommand(self, event):
@@ -610,7 +612,7 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         # There is a bug in wxWidget/wxPython on the Mac that causes the 
         # Ctrl+INSERT accelerator to be mapped so some other key sequence 
         # so that whenever that key sequence is typed, this command is 
-        # invoked. Hence, we use a different accelarator on the Mac.
+        # invoked. Hence, we use a different accelerator on the Mac.
         menuText = _('New &subtask...')
         if '__WXMAC__' in wx.PlatformInfo:
             menuText += u'\tShift+Ctrl+N'
@@ -646,7 +648,6 @@ class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         markCompletedCommand.do()
 
     def enabled(self, event):
-        return True
         return super(TaskMarkCompleted, self).enabled(event) and \
             [task for task in self.viewer.curselection() \
              if not task.completed()]
@@ -773,7 +774,6 @@ class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         start.do()
         
     def enabled(self, event):
-        return True
         if not self.viewer.isShowingTasks():
             return False
         return [task for task in self.viewer.curselection() if not
@@ -1022,14 +1022,11 @@ class UICommands(dict):
             self[key] = UIRadioCommand(settings=settings, setting='toolbar',
                 value=value, menuText=menuText, helpText=helpText)
                                                          
-        self['viewfinddialog'] = UICheckCommand(settings=settings,
-            menuText=_('&Find dialog'), helpText=_('Show/hide find dialog'), 
-            setting='finddialog', id=wx.ID_FIND)
         self['viewstatusbar'] = UICheckCommand(settings=settings, 
             menuText=_('Status&bar'), helpText=_('Show/hide status bar'), 
             setting='statusbar')
         self['viewfiltersidebar'] = UICheckCommand(settings=settings,
-            menuText=_('Filter sidebar'), 
+            menuText=_('&Filter sidebar'), 
             helpText=_('Show/hide filter sidebar'),
             setting='filtersidebar')
 

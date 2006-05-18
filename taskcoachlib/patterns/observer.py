@@ -42,15 +42,6 @@ class Notification(object):
         return False
 
 
-class PropertyNotification(object):
-    def __init__(self, source, newValue, oldValue, property):
-        self.source = source
-        self.newValue = newValue
-        self.oldValue = oldValue
-        self.property = property
-        super(PropertyNotification, self).__init__()
-                 
-                
 class Observable(object):
     ''' Observable objects can be observed by registering (subscribing) a 
         callback method with Observable.registerObserver. The callback is 
@@ -273,19 +264,3 @@ class ObservableListObserver(ObservableList):
     def _removeItems(self, items):
         super(ObservableListObserver, self).removeItems(items)
         
-
-class ObservableProperty(property):
-    def __init__(self, *args, **kwargs):
-        self.__propertyName = kwargs.pop('propertyName')
-        super(ObservableProperty, self).__init__(*args, **kwargs)
-        
-    def __set__(self, obj, newValue):
-        try:
-            oldValue = self.__get__(obj)
-            oldValueExists = True
-        except AttributeError:
-            oldValueExists = False
-            oldValue = None
-        super(ObservableProperty, self).__set__(obj, newValue)
-        if not oldValueExists or newValue != oldValue:
-            obj.notifyObservers(PropertyNotification(obj, newValue, oldValue, self.__propertyName))

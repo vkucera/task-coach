@@ -25,10 +25,13 @@ class TreeMixin(object):
         self.Bind(wx.EVT_TREE_END_DRAG, self.onEndDrag)
         
     def onBeginDrag(self, event):
-        event.Allow()
         self.dragItem = event.GetItem()
-        self.GetMainWindow().Bind(wx.EVT_MOTION, self.onDragging)
-        self.__setCursorToDragging()
+        if self.dragItem.IsOk():
+            event.Allow()
+            self.GetMainWindow().Bind(wx.EVT_MOTION, self.onDragging)
+            self.__setCursorToDragging()
+        else:
+            event.Veto()
         
     def __setCursorToDragging(self):
         self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
@@ -68,7 +71,7 @@ class TreeMixin(object):
         event.Skip()
         
     def __isValidDropTarget(self, dropTarget):
-        if dropTarget.IsOk():
+        if dropTarget.IsOk(): 
             return self.dragItem != dropTarget and \
                 self.GetItemParent(self.dragItem) != dropTarget and \
                 dropTarget not in self.getChildren(self.dragItem,

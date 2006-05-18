@@ -298,11 +298,13 @@ class Task(patterns.Observable):
         
     def addCategory(self, category):
         self._categories.add(category)
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True, categoriesAdded=[category]))
+        self.notifyObservers(patterns.observer.Notification(self, 
+            changeNeedsSave=True, categoriesAdded=[category]))
         
     def removeCategory(self, category):
         self._categories.discard(category)
-        self.notifyObservers(patterns.observer.Notification(self, changeNeedsSave=True, categoriesRemoved=[category]))
+        self.notifyObservers(patterns.observer.Notification(self, 
+            changeNeedsSave=True, categoriesRemoved=[category]))
 
     # priority
     

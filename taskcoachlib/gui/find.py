@@ -14,7 +14,6 @@ class FindPanel(wx.Panel):
     def _createComponents(self):
         self.__timer = wx.Timer(self)
 
-        self._label = wx.StaticText(self, -1, _('Find: '))
         self._subjectEntry = widgets.SingleLineTextCtrl(self, 
             _('Type search string (a regular expression) here and press enter'),
             style=wx.TE_PROCESS_ENTER)
@@ -31,15 +30,23 @@ class FindPanel(wx.Panel):
             eventSource.Bind(eventType, eventHandler)
         
     def _layout(self):
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        verticalSizer = wx.BoxSizer(wx.VERTICAL)
+        verticalSizer.Add(self._subjectEntry, flag=wx.EXPAND, proportion=1)
+        horizontalSizer = wx.BoxSizer(wx.HORIZONTAL)
+        horizontalSizer.Add(self._caseCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
+        horizontalSizer.Add(self._clearButton, flag=wx.ALIGN_CENTER_VERTICAL)
+        verticalSizer.Add(horizontalSizer)
+        '''
+
         space = (10, 0)
         align = {'flag' : wx.ALIGN_CENTER_VERTICAL}
-        for component, options in [(self._label, align),
+        for component, options in [ \
                 (self._subjectEntry, {'proportion' : 1, 'flag' : wx.EXPAND}),
                 (space, {}), (self._caseCheckBox, align), (space, {}),
                 (self._clearButton, align)]:
             sizer.Add(component, **options)
-        self.SetSizerAndFit(sizer)        
+        '''
+        self.SetSizerAndFit(verticalSizer)        
 
     def onFindLater(self, event):
         # Start the timer so that the actual filtering will be done
