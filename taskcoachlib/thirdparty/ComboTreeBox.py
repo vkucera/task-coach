@@ -9,8 +9,8 @@
     Author: Frank Niessink <frank@niessink.com>
     Copyright 2006, Frank Niessink
     License: wxWidgets license
-    Version: 0.4
-    Date: May 7, 2006
+    Version: 0.5
+    Date: May 25, 2006
 '''
 
 import wx
@@ -26,12 +26,15 @@ class PopupFrame(wx.MiniFrame):
             style=wx.DEFAULT_FRAME_STYLE & wx.FRAME_FLOAT_ON_PARENT &
                   ~(wx.RESIZE_BORDER | wx.CAPTION)) 
         self._createInterior()
+        self._layoutInterior()
         self._bindEventHandlers()
 
     def _createInterior(self):
         self._tree = wx.TreeCtrl(self, 
             style=wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT|wx.TR_HAS_BUTTONS)
         self._tree.AddRoot('Hidden root node')
+
+    def _layoutInterior(self):
         frameSizer = wx.BoxSizer(wx.HORIZONTAL)
         frameSizer.Add(self._tree, flag=wx.EXPAND, proportion=1)
         self.SetSizerAndFit(frameSizer)
@@ -43,22 +46,22 @@ class PopupFrame(wx.MiniFrame):
             self.Bind(wx.EVT_ACTIVATE, self.OnDeactivate)
         else:
             self._tree.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
-        self._tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate)
+        self._tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivateItem)
         self._tree.Bind(wx.EVT_CHAR, self.OnChar)
 
     def OnKillFocus(self, event):
-        # Hide the frame so it can be popped up again later.
+        # Hide the frame so it can be popped up again later:
         self.Hide()
         self.GetParent().SetFocus()
         event.Skip()
 
     def OnDeactivate(self, event):
-        if not event.GetActive(): # Deactivate
+        if not event.GetActive(): # We received a deactivate event
             self.Hide()
             wx.CallAfter(self.GetParent().SetFocus)
         event.Skip()
 
-    def OnActivate(self, event):
+    def OnActivateItem(self, event):
         self.Hide()
         self.GetParent().SetFocus()
         if self._tree.GetSelection() == self._tree.GetRootItem():
@@ -95,19 +98,38 @@ class _BaseComboTreeBox(object):
             self._sort = False
         super(_BaseComboTreeBox, self).__init__(style=style, *args, **kwargs)
         self._createInterior()
+        self._layoutInterior()
         self._bindEventHandlers()
 
-    # Private methods
+    # Protected methods
 
     def _createInterior(self):
         self._popupFrame = PopupFrame(self)
         self._tree = self._popupFrame.GetTree()
+        self._text = self._createTextCtrl()
+        self._button = self._createButton()
+
+    def _createTextCtrl(self):
+        return self # By default, the text control is the control itself.
+
+    def _createButton(self):
+        return self # By default, the dropdown button is on the control itself.
+
+    def _layoutInterior(self):
+        pass # By default, there is no layout to be done.
 
     def _bindEventHandlers(self):
-        self._text.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-        self._button.Bind(wx.EVT_BUTTON, self.OnMouseClick)
-        for eventType in self._buttonEventTypesToBind():
-            self._button.Bind(eventType, self.OnMouseClick)
+        for eventSource, eventType, eventHandler in self.__eventsToBind():
+            eventSource.Bind(eventType, eventHandler)
+
+    def __eventsToBind(self):
+        return [(self._text, wx.EVT_KEY_DOWN, self.OnKeyDown),
+                (self._button, wx.EVT_BUTTON, self.OnMouseClick)] + \
+            self._eventsToBind()
+
+    def _eventsToBind(self):
+        # Can be overridden to bind additional events.
+        return []
 
     # Event handlers
 
@@ -128,7 +150,7 @@ class _BaseComboTreeBox(object):
             wx.CallAfter(SelectItemJustTypedInIfPossible)
             event.Skip()
 
-    # Misc methods
+    # Misc methods, not part of the ComboBox API.
 
     def Popup(self):
         ''' 
@@ -381,32 +403,34 @@ class _BaseComboTreeBox(object):
             self._tree.SelectItem(item)
 
 
-class _ComboTreeBox(_BaseComboTreeBox, wx.ComboBox):
-    ''' The ComboTreeBox widget for wxMSW and wxMAC. '''
+class _NativeComboTreeBox(_BaseComboTreeBox, wx.ComboBox):
+    ''' _NativeComboTreeBox, and any subclass, uses the native ComboBox as 
+        basis. '''
 
-    def _createInterior(self):
-        self._text = self
-        if '__WXMAC__' in wx.PlatformInfo:
-            self._button = self.GetChildren()[0] # The choice button
-        else:
-            self._button = self
-        super(_ComboTreeBox, self)._createInterior()
-
-    def _bindEventHandlers(self):
+    def _eventsToBind(self):
+        # Bind all mouse click events to self.OnMouseClick.
+        events = [(self._button, eventType, self.OnMouseClick) for
+            eventType in (wx.EVT_LEFT_DOWN, wx.EVT_LEFT_DCLICK, 
+                          wx.EVT_MIDDLE_DOWN, wx.EVT_MIDDLE_DCLICK, 
+                          wx.EVT_RIGHT_DOWN, wx.EVT_RIGHT_DCLICK)]
         if self._readOnly:
-            self.Bind(wx.EVT_CHAR, self.OnChar)
-        super(_ComboTreeBox, self)._bindEventHandlers()
-
-    def _buttonEventTypesToBind(self):
-        return (wx.EVT_LEFT_DOWN, wx.EVT_LEFT_DCLICK, 
-                wx.EVT_MIDDLE_DOWN, wx.EVT_MIDDLE_DCLICK, 
-                wx.EVT_RIGHT_DOWN, wx.EVT_RIGHT_DCLICK)
+            events.append((self, wx.EVT_CHAR, self.OnChar))
+        return events 
 
     def OnChar(self, event):
         # OnChar is only called when in read only mode. We don't call 
         # event.Skip() on purpose, to prevent the characters from being 
         # displayed in the text field.
         pass
+
+
+class _MSWComboTreeBox(_NativeComboTreeBox):
+    pass
+
+
+class _MACComboTreeBox(_NativeComboTreeBox):
+    def _createButton(self):
+        return self.GetChildren()[0] # The choice button
 
 
 class _GTKComboTreeBox(_BaseComboTreeBox, wx.Panel):
@@ -418,38 +442,40 @@ class _GTKComboTreeBox(_BaseComboTreeBox, wx.Panel):
         possible we build a poor man's Combobox ourselves using a TextCtrl and
         a BitmapButton.  '''
 
-    def _createInterior(self):
+    def _createTextCtrl(self):
         if self._readOnly:
             style = wx.TE_READONLY
         else:
             style = 0
-        self._text = wx.TextCtrl(self, style=style)
+        return wx.TextCtrl(self, style=style)
+
+    def _createButton(self):
         bitmap = wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN, client=wx.ART_BUTTON)
-        self._button = wx.BitmapButton(self, bitmap=bitmap)
+        return wx.BitmapButton(self, bitmap=bitmap)
+
+    def _layoutInterior(self):
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
         panelSizer.Add(self._text, flag=wx.EXPAND, proportion=1)
         panelSizer.Add(self._button)
         self.SetSizerAndFit(panelSizer)
-        super(_GTKComboTreeBox, self)._createInterior()
-
-    def _buttonEventTypesToBind(self):
-        return (wx.EVT_BUTTON,)
 
 
 def ComboTreeBox(*args, **kwargs):
     ''' Factory function to create the right ComboTreeBox depending on
-        platform. '''
+        platform. You may force a specific class by setting the keyword
+        argument 'platform', e.g. 'platform=GTK' or 'platform=MSW' or 
+        platform='MAC'. '''
 
-    if '__WXGTK__' in wx.PlatformInfo:
-        return _GTKComboTreeBox(*args, **kwargs)
-    else:
-        return _ComboTreeBox(*args, **kwargs)
+    platform = kwargs.pop('platform', None) or wx.PlatformInfo[0][4:7]
+    ComboTreeBoxClassName = '_%sComboTreeBox' % platform
+    ComboTreeBoxClass = globals()[ComboTreeBoxClassName]
+    return ComboTreeBoxClass(*args, **kwargs)
 
 
 # Demo
 
 class DemoFrame(wx.Frame):
-    def __init__(self):
+    def __init__(self, platform):
         super(DemoFrame, self).__init__(None, title='ComboTreeBox Demo')
         panel = wx.Panel(self)
         panelSizer = wx.FlexGridSizer(2, 2)
@@ -459,13 +485,13 @@ class DemoFrame(wx.Frame):
             label = wx.StaticText(panel, label=labelText)
             panelSizer.Add(label, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, 
                            border=5)
-            comboBox = self._createComboTreeBox(panel, style=style)
+            comboBox = self._createComboTreeBox(panel, style, platform)
             panelSizer.Add(comboBox, flag=wx.EXPAND|wx.ALL, border=5)
         panel.SetSizerAndFit(panelSizer)
         self.Fit()
 
-    def _createComboTreeBox(self, parent, style):
-        comboBox = ComboTreeBox(parent, style=style)
+    def _createComboTreeBox(self, parent, style, platform):
+        comboBox = ComboTreeBox(parent, style=style, platform=platform)
         self._bindEventHandlers(comboBox)
         for i in range(20):
             parent = comboBox.Append('Item %d'%i)
@@ -498,7 +524,7 @@ class ComboTreeBoxTest(ComboTreeBoxTestCase):
     def setUp(self):
         self.comboBoxEventReceived = False
         frame = wx.Frame(None)
-        self.comboBox = ComboTreeBox(frame)
+        self.comboBox = ComboTreeBox(frame, platform=platform)
         self.tree = self.comboBox._popupFrame.GetTree()
 
     def onComboBox(self, event):
@@ -648,7 +674,7 @@ class ComboTreeBoxTest(ComboTreeBoxTestCase):
 class SortedComboTreeBoxTest(ComboTreeBoxTestCase):
     def setUp(self):
         frame = wx.Frame(None)
-        self.comboBox = ComboTreeBox(frame, style=wx.CB_SORT)
+        self.comboBox = ComboTreeBox(frame, style=wx.CB_SORT, platform=platform)
         self.tree = self.comboBox._popupFrame.GetTree()
 
     def testAppend(self):
@@ -700,8 +726,13 @@ if __name__ == '__main__':
     import sys
     if len(sys.argv) == 1 or (len(sys.argv) > 1 and sys.argv[1] not in
         ['demo', 'test']):
-        print "Usage: %s ['demo' | 'test' ]"%sys.argv[0]
+        print "Usage: %s 'demo' | 'test' ['MSW' | 'MAC' | 'GTK']"%sys.argv[0]
         sys.exit(1)
+    if len(sys.argv) > 2:
+        platform = sys.argv[2].upper()
+        del sys.argv[2]
+    else:
+        platform = None
 
     app = wx.App(False)
     if sys.argv[1] == 'test':
@@ -710,7 +741,7 @@ if __name__ == '__main__':
         del sys.argv[1] 
         unittest.main()
     elif sys.argv[1] == 'demo':
-        frame = DemoFrame()
+        frame = DemoFrame(platform)
         frame.Show()
         app.MainLoop()
 
