@@ -119,14 +119,16 @@ class MainWindow(WindowWithPersistentDimensions):
         self.panel.SetSizerAndFit(self._sizer)
 
     def initWindow(self):
-        self.SetTitle(patterns.observer.Notification(self, filename=self.taskFile.filename()))
+        self.SetTitle(patterns.observer.Notification(self, 
+            filename=self.taskFile.filename()))
         self.setIcon()
-        self.displayMessage(_('Welcome to %(name)s version %(version)s')%{'name': meta.name, 
-            'version': meta.version}, pane=1)
+        self.displayMessage(_('Welcome to %(name)s version %(version)s')% \
+            {'name': meta.name, 'version': meta.version}, pane=1)
 
     def setIcon(self):
         bundle = wx.IconBundle()
-        for size in [(16, 16), (22, 22), (32, 32), (48, 48), (64, 64), (128, 128)]:
+        for size in [(16, 16), (22, 22), (32, 32), (48, 48), (64, 64), 
+                     (128, 128)]:
             icon = wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, size)
             bundle.AddIcon(icon)
         self.SetIcons(bundle)
@@ -176,7 +178,6 @@ class MainWindow(WindowWithPersistentDimensions):
     def onShowFilterSideBar(self, *args, **kwargs):
         self.filterSideBarWindow.Show(self.settings.getboolean('view',
             'filtersidebar'))
-        self.filterSideBarWindow.SizeWindows()
         wx.LayoutAlgorithm().LayoutWindow(self, self.panel)
 
     def createTaskBarIcon(self, uiCommands):
