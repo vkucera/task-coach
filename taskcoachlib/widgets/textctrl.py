@@ -148,25 +148,15 @@ class AutoWrapStaticText(wx.Panel):
     def __init__(self, *args, **kwargs):
         self.__label = kwargs.pop('label')
         super(AutoWrapStaticText, self).__init__(*args, **kwargs)
-        self.__handlingSizeEvent = False
-        self.__sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.createStaticText()
-        self.SetSizer(self.__sizer)
         self.Bind(wx.EVT_SIZE, self.onSize)
 
-    def createStaticText(self):
-        self.__staticText = wx.StaticText(self, label=self.__label)
-        self.__staticText.Wrap(self.GetSize()[0])
-        self.__sizer.Add(self.__staticText, flag=wx.EXPAND, proportion=1)
-        self.Fit()
-
     def onSize(self, event):
-        if self.__handlingSizeEvent:
-            return
-        self.__handlingSizeEvent = True
-        self.__sizer.Detach(self.__staticText)
-        self.__staticText.Destroy()
-        self.createStaticText()
+        if hasattr(self, '__staticText'):
+            self.__staticText.Destroy()
+        width = event.GetSize()[0]
+        self.__staticText = wx.StaticText(self, label=self.__label)
+        self.__staticText.Wrap(width)
+        self.__staticText.SetSize((width, -1))
+        self.SetMinSize(self.__staticText.GetSize())
         self.GetParent().Layout()
-        self.__handlingSizeEvent = False
-
+        event.Skip()

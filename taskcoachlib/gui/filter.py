@@ -11,11 +11,14 @@ class SubjectFilterPanel(wx.Panel):
         self.createInterior()
         self.layoutInterior()
         self.bindEventHandlers()
+        self.__settingSize = False
         
     def createInterior(self):
         self.__timer = wx.Timer(self)
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, 
-            _('Type search string (a regular expression) here and press enter'),
+        self._about = widgets.AutoWrapStaticText(self, label=\
+            _('Type a search string (a regular expression) and press enter.'))
+        searchString = self.__settings.get('view', 'tasksearchfilterstring')
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, searchString,
             style=wx.TE_PROCESS_ENTER)
         self._caseCheckBox = wx.CheckBox(self, label=_('Match case'))
         self._clearButton = wx.Button(self, label=_('Clear'))
@@ -31,15 +34,16 @@ class SubjectFilterPanel(wx.Panel):
         
     def layoutInterior(self):
         verticalSizer = wx.BoxSizer(wx.VERTICAL)
+        verticalSizer.Add(self._about, flag=wx.EXPAND|wx.ALL, border=5)
         verticalSizer.Add(self._subjectEntry, flag=wx.EXPAND|wx.ALL, 
-            proportion=1, border=5)
+            border=5)
         horizontalSizer = wx.BoxSizer(wx.HORIZONTAL)
         horizontalSizer.Add(self._caseCheckBox,
             flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
         horizontalSizer.Add((1,1), flag=wx.EXPAND, proportion=1)
         horizontalSizer.Add(self._clearButton,
             flag=wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, border=5)
-        verticalSizer.Add(horizontalSizer, flag=wx.EXPAND, proportion=1)
+        verticalSizer.Add(horizontalSizer, flag=wx.EXPAND)
         self.SetSizerAndFit(verticalSizer)        
 
     def onFindLater(self, event):
@@ -56,7 +60,7 @@ class SubjectFilterPanel(wx.Panel):
             str(self._caseCheckBox.GetValue()))
         if searchString:
             self.__viewer.expandAll()
-        
+
     def clear(self, event=None):
         self._subjectEntry.SetValue('')
         self.onFind(event)
@@ -137,6 +141,7 @@ class CategoriesFilterPanel(wx.Panel):
         panelSizer.Add(self._about, flag=wx.EXPAND|wx.ALL, border=5)
         panelSizer.Add(self._checkListBox, proportion=1, flag=wx.EXPAND|wx.ALL, 
             border=5)
+        panelSizer.SetItemMinSize(self._checkListBox, (-1, 120))
         panelSizer.Add(self._radioBox, flag=wx.ALL, border=5)
         self.SetSizerAndFit(panelSizer)
 
@@ -159,10 +164,8 @@ class CategoriesFilterPanel(wx.Panel):
 
     def onTaskChanged(self, event):
         for category in event.categoriesAdded:
-            print 'Append(%s)'%category
             self._checkListBox.Append(category)
         for category in event.categoriesRemoved:
-            print 'Delete(%s)'%category
             self._checkListBox.Delete(self._checkList.FindString(category))
         self.Enable(len(self.__taskList.categories()) > 0)
 
