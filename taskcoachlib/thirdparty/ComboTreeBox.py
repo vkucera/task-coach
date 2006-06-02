@@ -9,11 +9,13 @@
     Author: Frank Niessink <frank@niessink.com>
     Copyright 2006, Frank Niessink
     License: wxWidgets license
-    Version: 0.5
-    Date: May 25, 2006
+    Version: 0.6
+    Date: June 2, 2006
 '''
 
 import wx
+
+__all__ = ['ComboTreeBox'] # Export only the ComboTreeBox widget
 
 
 class PopupFrame(wx.MiniFrame):
@@ -83,7 +85,10 @@ class PopupFrame(wx.MiniFrame):
         return self._tree
 
 
-class _BaseComboTreeBox(object):
+class BaseComboTreeBox(object):
+    ''' BaseComboTreeBox is the base class for platform specific
+        versions of the ComboTreeBox. '''
+
     def __init__(self, *args, **kwargs):
         style = kwargs.pop('style', 0)
         if style & wx.CB_READONLY:
@@ -96,12 +101,12 @@ class _BaseComboTreeBox(object):
             self._sort = True
         else:
             self._sort = False
-        super(_BaseComboTreeBox, self).__init__(style=style, *args, **kwargs)
+        super(BaseComboTreeBox, self).__init__(style=style, *args, **kwargs)
         self._createInterior()
         self._layoutInterior()
         self._bindEventHandlers()
 
-    # Protected methods
+    # Methods to construct the widget.
 
     def _createInterior(self):
         self._popupFrame = PopupFrame(self)
@@ -113,23 +118,25 @@ class _BaseComboTreeBox(object):
         return self # By default, the text control is the control itself.
 
     def _createButton(self):
-        return self # By default, the dropdown button is on the control itself.
+        return self # By default, the dropdown button is the control itself.
 
     def _layoutInterior(self):
         pass # By default, there is no layout to be done.
 
     def _bindEventHandlers(self):
-        for eventSource, eventType, eventHandler in self.__eventsToBind():
+        for eventSource, eventType, eventHandler in self._eventsToBind():
             eventSource.Bind(eventType, eventHandler)
 
-    def __eventsToBind(self):
-        return [(self._text, wx.EVT_KEY_DOWN, self.OnKeyDown),
-                (self._button, wx.EVT_BUTTON, self.OnMouseClick)] + \
-            self._eventsToBind()
-
     def _eventsToBind(self):
-        # Can be overridden to bind additional events.
-        return []
+        ''' _eventsToBind(self) -> 
+            [(eventSource, eventType, eventHandler), ...] 
+            
+            _eventsToBind returns a list of eventSource, eventType,
+            eventHandlers tuples that will be bound. This method can be 
+            extended to bind additional events. In that case, don't 
+            forget to call _eventsToBind on the super class. '''
+        return [(self._text, wx.EVT_KEY_DOWN, self.OnKeyDown),
+                (self._button, wx.EVT_BUTTON, self.OnMouseClick)] 
 
     # Event handlers
 
@@ -138,9 +145,8 @@ class _BaseComboTreeBox(object):
         # We don't call event.Skip() to prevent popping up the
         # ComboBox's own box.
 
-    def OnKeyDown(self, event):
-        if (event.AltDown() or event.MetaDown()) and \
-                event.GetKeyCode() == wx.WXK_DOWN:
+    def OnKeyDown(self, keyEvent):
+        if self._keyShouldPopUpTree(keyEvent):
             self.Popup()
         else:
             def SelectItemJustTypedInIfPossible():
@@ -148,7 +154,11 @@ class _BaseComboTreeBox(object):
                 if item.IsOk():
                     self._tree.SelectItem(item)
             wx.CallAfter(SelectItemJustTypedInIfPossible)
-            event.Skip()
+            keyEvent.Skip()
+
+    def _keyShouldPopUpTree(self, keyEvent):
+        return (keyEvent.AltDown() or keyEvent.MetaDown()) and \
+                keyEvent.GetKeyCode() == wx.WXK_DOWN 
 
     # Misc methods, not part of the ComboBox API.
 
@@ -177,16 +187,18 @@ class _BaseComboTreeBox(object):
         '''
         return self._popupFrame.GetTree()
 
-    def PostComboBoxSelectedEvent(self, text):
+    def SetValueAndPostEvent(self, text):
+        ''' Simulate selection of an item by the user. This is meant to 
+            be called by the PopupFrame when the user selects an item. '''
+        self._text.SetValue(text)
+        self._postComboBoxSelectedEvent(text)
+
+    def _postComboBoxSelectedEvent(self, text):
+        ''' Simulate a selection event. ''' 
         event = wx.CommandEvent(wx.wxEVT_COMMAND_COMBOBOX_SELECTED, 
                                 self.GetId())
         event.SetString(text)
         self.GetEventHandler().ProcessEvent(event)
-
-    def SetValueAndPostEvent(self, text):
-        ''' Simulate selection of an item by the user. '''
-        self._text.SetValue(text)
-        self.PostComboBoxSelectedEvent(text)
 
     # The following methods are all part of the ComboBox API (actually
     # the ControlWithItems API) and have been adapted to take TreeItemIds 
@@ -378,7 +390,7 @@ class _BaseComboTreeBox(object):
         Returns the current value in the combobox text field.
         '''
         if self._text == self:
-            return super(_BaseComboTreeBox, self).GetValue()
+            return super(BaseComboTreeBox, self).GetValue()
         else:
             return self._text.GetValue()
 
@@ -396,23 +408,24 @@ class _BaseComboTreeBox(object):
         if self._readOnly and not item.IsOk():
             return
         if self._text == self:
-            super(_BaseComboTreeBox, self).SetValue(value)
+            super(BaseComboTreeBox, self).SetValue(value)
         else:
             self._text.SetValue(value)
         if item.IsOk():
             self._tree.SelectItem(item)
 
 
-class _NativeComboTreeBox(_BaseComboTreeBox, wx.ComboBox):
-    ''' _NativeComboTreeBox, and any subclass, uses the native ComboBox as 
+class NativeComboTreeBox(BaseComboTreeBox, wx.ComboBox):
+    ''' NativeComboTreeBox, and any subclass, uses the native ComboBox as 
         basis. '''
 
     def _eventsToBind(self):
+        events = super(NativeComboTreeBox, self)._eventsToBind() 
         # Bind all mouse click events to self.OnMouseClick.
-        events = [(self._button, eventType, self.OnMouseClick) for
-            eventType in (wx.EVT_LEFT_DOWN, wx.EVT_LEFT_DCLICK, 
+        for eventType in (wx.EVT_LEFT_DOWN, wx.EVT_LEFT_DCLICK, 
                           wx.EVT_MIDDLE_DOWN, wx.EVT_MIDDLE_DCLICK, 
-                          wx.EVT_RIGHT_DOWN, wx.EVT_RIGHT_DCLICK)]
+                          wx.EVT_RIGHT_DOWN, wx.EVT_RIGHT_DCLICK):
+            events.append((self._button, eventType, self.OnMouseClick))
         if self._readOnly:
             events.append((self, wx.EVT_CHAR, self.OnChar))
         return events 
@@ -424,16 +437,44 @@ class _NativeComboTreeBox(_BaseComboTreeBox, wx.ComboBox):
         pass
 
 
-class _MSWComboTreeBox(_NativeComboTreeBox):
-    pass
+class MSWComboTreeBox(NativeComboTreeBox):
+    def _keyShouldPopupTree(self, keyEvent):
+        return super(MSWComboTreeBox, self)._keyShouldPopupTree(keyEvent) or \
+            keyEvent.GetKeyCode() == wx.WXK_F4
+
+    def OnKeyDown(self, keyEvent):
+        if keyEvent.GetKeyCode() == wx.WXK_DOWN:
+            print 'Down'
+            item = self.GetSelection()
+            if item.IsOk():
+                if self._tree.ItemHasChildren(item):
+                    nextItem, cookie = self._tree.GetFirstChild(item)
+                else:
+                    nextItem = self._tree.GetNextSibling(item)
+                    parent = item
+                    while not nextItem.IsOk():
+                        parent = self._tree.GetItemParent(parent)
+                        if parent == self._tree.GetRootItem():
+                            break
+                        nextItem = self._tree.GetNextSibling(parent)
+            else:
+                nextItem, cookie = \
+                    self._tree.GetFirstChild(self._tree.GetRootItem())
+            if not nextItem.IsOk():
+                self.SetSelection(nextItem)
+            else:
+        elif keyEvent.GetKeyCode() == wx.WXK_UP:
+            print 'Up'
+        else:
+            super(MSWComboTreeBox, self).OnKeyDown(keyEvent)
 
 
-class _MACComboTreeBox(_NativeComboTreeBox):
+class MACComboTreeBox(NativeComboTreeBox):
     def _createButton(self):
         return self.GetChildren()[0] # The choice button
 
 
-class _GTKComboTreeBox(_BaseComboTreeBox, wx.Panel):
+class GTKComboTreeBox(BaseComboTreeBox, wx.Panel):
     ''' The ComboTreeBox widget for wxGTK. This is actually a work
         around because on wxGTK, there doesn't seem to be a way to intercept 
         mouse events sent to the Combobox. Intercepting those events is 
@@ -467,7 +508,7 @@ def ComboTreeBox(*args, **kwargs):
         platform='MAC'. '''
 
     platform = kwargs.pop('platform', None) or wx.PlatformInfo[0][4:7]
-    ComboTreeBoxClassName = '_%sComboTreeBox' % platform
+    ComboTreeBoxClassName = '%sComboTreeBox' % platform
     ComboTreeBoxClass = globals()[ComboTreeBoxClassName]
     return ComboTreeBoxClass(*args, **kwargs)
 
@@ -706,7 +747,7 @@ class SortedComboTreeBoxTest(ComboTreeBoxTestCase):
         self.assertEqual(itemC, self.firstItem())
 
 
-class ReadOnlyComboTreeBoxTesT(ComboTreeBoxTestCase):
+class ReadOnlyComboTreeBoxTest(ComboTreeBoxTestCase):
     def setUp(self):
         frame = wx.Frame(None)
         self.comboBox = ComboTreeBox(frame, style=wx.CB_READONLY)
