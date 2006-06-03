@@ -129,13 +129,14 @@ class PopupFrame(wx.MiniFrame):
         self.SetSizerAndFit(frameSizer)
 
     def _bindEventHandlers(self):
-        # On wxMac, the kill focus event doesn't work, but the
-        # deactivate event does:
         self._tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivateItem)
         self._tree.Bind(wx.EVT_CHAR, self.OnChar)
         self._tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelectionChanged)
+        self._tree.Bind(wx.EVT_LEFT_DOWN, self.OnMouseClick)
 
     def _bindKillFocus(self):
+        # On wxMac, the kill focus event doesn't work, but the
+        # deactivate event does:
         if '__WXMAC__' in wx.PlatformInfo:
             self.Bind(wx.EVT_ACTIVATE, self.OnDeactivate)
         else:
@@ -155,13 +156,11 @@ class PopupFrame(wx.MiniFrame):
 
     def OnDeactivate(self, event):
         if not event.GetActive(): # We received a deactivate event
-            self._unbindKillFocus()
             self.Hide()
             wx.CallAfter(self.GetParent().OnNoItemSelected)
         event.Skip()
 
     def OnActivateItem(self, event):
-        self._unbindKillFocus()
         self.Hide()
         if self._tree.GetSelection() == self._tree.GetRootItem():
             text = ''
@@ -171,7 +170,6 @@ class PopupFrame(wx.MiniFrame):
 
     def OnChar(self, event):
         if event.GetKeyCode() == wx.WXK_ESCAPE:
-            self._unbindKillFocus()
             self.Hide()
             self.GetParent().OnNoItemSelected()
         event.Skip()
@@ -183,10 +181,23 @@ class PopupFrame(wx.MiniFrame):
             self.GetParent().SetValue(text)
         event.Skip()
 
-    def Show(self, *args, **kwargs):
+    def OnMouseClick(self, event):
+        item, flags = self._tree.HitTest(event.GetPosition())
+        if item.IsOk() and flags & wx.TREE_HITTEST_ONITEMLABEL:
+            self._tree.SelectItem(item)
+            self.Hide()
+            self.GetParent().OnItemSelected(self._tree.GetItemText(item))
+        else:
+            event.Skip()
+
+    def Show(self):
         self._bindKillFocus()
         wx.CallAfter(self._tree.SetFocus)
-        super(PopupFrame, self).Show(*args, **kwargs)
+        super(PopupFrame, self).Show()
+
+    def Hide(self):
+        self._unbindKillFocus()
+        super(PopupFrame, self).Hide()
 
     def GetTree(self):
         return self._tree
