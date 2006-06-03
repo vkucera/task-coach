@@ -131,7 +131,6 @@ class PopupFrame(wx.MiniFrame):
     def _bindEventHandlers(self):
         self._tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivateItem)
         self._tree.Bind(wx.EVT_CHAR, self.OnChar)
-        self._tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelectionChanged)
         self._tree.Bind(wx.EVT_LEFT_DOWN, self.OnMouseClick)
 
     def _bindKillFocus(self):
@@ -172,13 +171,6 @@ class PopupFrame(wx.MiniFrame):
         if event.GetKeyCode() == wx.WXK_ESCAPE:
             self.Hide()
             self.GetParent().OnNoItemSelected()
-        event.Skip()
-
-    def OnSelectionChanged(self, event):
-        item = event.GetItem()
-        if item.IsOk():
-            text = self._tree.GetItemText(event.GetItem())
-            self.GetParent().SetValue(text)
         event.Skip()
 
     def OnMouseClick(self, event):
@@ -254,7 +246,8 @@ class BaseComboTreeBox(object):
             extended to bind additional events. In that case, don't 
             forget to call _eventsToBind on the super class. '''
         return [(self._text, wx.EVT_KEY_DOWN, self.OnKeyDown),
-                (self._button, wx.EVT_BUTTON, self.OnMouseClick)] 
+                (self._text, wx.EVT_TEXT, self.OnText),
+                (self._button, wx.EVT_BUTTON, self.OnMouseClick)]
 
     # Event handlers
 
@@ -267,19 +260,20 @@ class BaseComboTreeBox(object):
         if self._keyShouldPopUpTree(keyEvent):
             self.Popup()
         else:
-            def SelectItemJustTypedInIfPossible():
-                item = self.FindString(self.GetValue())
-                if item.IsOk():
-                    self._tree.SelectItem(item)
-                else:
-                    self._tree.Unselect()
-            wx.CallAfter(SelectItemJustTypedInIfPossible)
             keyEvent.Skip()
 
     def _keyShouldPopUpTree(self, keyEvent):
         return (keyEvent.AltDown() or keyEvent.MetaDown()) and \
                 (keyEvent.GetKeyCode() in (wx.WXK_DOWN, wx.WXK_UP))
 
+    def OnText(self, event):
+        event.Skip()
+        item = self.FindString(event.GetString())
+        if item.IsOk():
+            if self._tree.GetSelection() != item:
+                self._tree.SelectItem(item)
+        else:
+            self._tree.Unselect()
 
     # Methods called by the PopupFrame, to let the ComboTreeBox know
     # about what the user did.
@@ -302,7 +296,7 @@ class BaseComboTreeBox(object):
         ''' This is called by the PopupFrame when the user closes the 
             PopupFrame, without selecting an item.  '''
         self.SetFocus()
-    
+
     # Misc methods, not part of the ComboBox API.
 
     def Popup(self):
@@ -585,6 +579,20 @@ class MSWComboTreeBox(NativeComboTreeBox):
            (the one that was selected before the PopupFrame was popped
            up) is restored. '''
 
+    def _eventsToBind(self):
+        events = super(MSWComboTreeBox, self)._eventsToBind()
+        events.append((self._tree, wx.EVT_TREE_SEL_CHANGED,
+            self.OnSelectionChangedInTree))
+        return events
+
+    def OnSelectionChangedInTree(self, event):
+        item = event.GetItem()
+        if item.IsOk():
+            selectedValue = self._tree.GetItemText(item)
+            if self.GetValue() != selectedValue:
+                self.SetValue(selectedValue)
+        event.Skip()
+
     def _keyShouldPopUpTree(self, keyEvent):
         return super(MSWComboTreeBox, self)._keyShouldPopUpTree(keyEvent) or \
             keyEvent.GetKeyCode() == wx.WXK_F4
@@ -719,9 +727,11 @@ class DemoFrame(wx.Frame):
 
     def onItemSelected(self, event):
         print 'You selected: %s'%event.GetString()
+        event.Skip()
 
     def onItemEntered(self, event):
         print 'You entered: %s'%event.GetString()
+        event.Skip()
 
 
 # Unittests
