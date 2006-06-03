@@ -104,6 +104,16 @@ class IterableTreeCtrl(wx.TreeCtrl):
             parent = self.GetItemParent(item)
             return self.GetNextSiblingRecursively(parent)
 
+    def GetSelection(self):
+        ''' Extend GetSelection to never return the root item if the
+            root item is hidden. '''
+        selection = super(IterableTreeCtrl, self).GetSelection()
+        if selection == self.GetRootItem() and \
+            (self.GetWindowStyle() & wx.TR_HIDE_ROOT):
+            return wx.TreeItemId() # Return an invalid TreeItemId
+        else:
+            return selection
+
 
 class PopupFrame(wx.MiniFrame):
     ''' This is the frame that is popped up by ComboTreeBox. It contains
@@ -1016,6 +1026,19 @@ class IterableTreeCtrlTest(unittest.TestCase):
         tree = IterableTreeCtrl(self.frame)
         self.failIf(tree.GetFirstItem().IsOk())
 
+    def testGetSelection_NoSelection(self):
+        self.tree.Unselect()
+        self.failIf(self.tree.GetSelection().IsOk())
+
+    def testGetSelection_RootItemSelected(self):
+        self.tree.SelectItem(self.tree.GetRootItem())
+        self.assertEqual(self.tree.GetRootItem(), self.tree.GetSelection())
+
+    def testGetSelection_OtherItem(self):
+        child = self.tree.AppendItem(self.root, 'child')
+        self.tree.SelectItem(child)
+        self.assertEqual(child, self.tree.GetSelection())
+
 
 class IterableTreeCtrlWithHiddenRootTest(unittest.TestCase):
     def setUp(self):
@@ -1038,7 +1061,21 @@ class IterableTreeCtrlWithHiddenRootTest(unittest.TestCase):
     def testFirstChildOfRootIsTheFirstItem(self):
         child = self.tree.AppendItem(self.root, 'child')
         self.assertEqual(child, self.tree.GetFirstItem())
-      
+
+    def testGetSelection_NoSelection(self):
+        self.tree.Unselect()
+        self.failIf(self.tree.GetSelection().IsOk())
+
+    def testGetSelection_RootItemSelected(self):
+        self.tree.SelectItem(self.tree.GetRootItem())
+        self.failIf(self.tree.GetSelection().IsOk())
+
+    def testGetSelection_OtherItem(self):
+        child = self.tree.AppendItem(self.root, 'child')
+        self.tree.SelectItem(child)
+        self.assertEqual(child, self.tree.GetSelection())
+
+     
 
 if __name__ == '__main__':
     import sys
