@@ -129,8 +129,8 @@ class PopupFrame(wx.MiniFrame):
         self.SetSizerAndFit(frameSizer)
 
     def _bindEventHandlers(self):
-        self._tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivateItem)
         self._tree.Bind(wx.EVT_CHAR, self.OnChar)
+        self._tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnItemActivated)
         self._tree.Bind(wx.EVT_LEFT_DOWN, self.OnMouseClick)
 
     def _bindKillFocus(self):
@@ -159,14 +159,6 @@ class PopupFrame(wx.MiniFrame):
             wx.CallAfter(self.GetParent().OnNoItemSelected)
         event.Skip()
 
-    def OnActivateItem(self, event):
-        self.Hide()
-        if self._tree.GetSelection() == self._tree.GetRootItem():
-            text = ''
-        else:
-            text = self._tree.GetItemText(event.GetItem())
-        self.GetParent().OnItemSelected(text)
-
     def OnChar(self, event):
         if event.GetKeyCode() == wx.WXK_ESCAPE:
             self.Hide()
@@ -182,9 +174,16 @@ class PopupFrame(wx.MiniFrame):
         else:
             event.Skip()
 
+    def OnItemActivated(self, event):
+        item = event.GetItem()
+        self.Hide()
+        self.GetParent().OnItemSelected(self._tree.GetItemText(item))
+
     def Show(self):
         self._bindKillFocus()
         wx.CallAfter(self._tree.SetFocus)
+        if not self._tree.GetSelection().IsOk():
+            self._tree.SelectItem(self._tree.GetFirstItem())
         super(PopupFrame, self).Show()
 
     def Hide(self):
@@ -748,12 +747,6 @@ class ComboTreeBoxTest(unittest.TestCase):
     def onComboBox(self, event):
         self.comboBoxEventReceived = True
 
-    def selectItem(self, item):
-        event = wx.TreeEvent(wx.wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
-            self.tree.GetId())
-        event.SetItem(item)
-        self.tree.GetEventHandler().ProcessEvent(event)
-
     def testComboBoxIsEmptyByDefault(self):
         self.assertEqual(0, self.comboBox.GetCount())
 
@@ -774,7 +767,7 @@ class ComboTreeBoxTest(unittest.TestCase):
     def testSelectingAnItemPutsItInTheComboBox(self):
         self.comboBox.Append('Item 1')
         self.comboBox.Bind(wx.EVT_COMBOBOX, self.onComboBox)
-        self.selectItem(self.tree.GetFirstVisibleItem())
+        self.comboBox.OnItemSelected('Item 1')
         self.failUnless(self.comboBoxEventReceived)
 
     def testClear(self):
