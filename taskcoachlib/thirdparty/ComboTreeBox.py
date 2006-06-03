@@ -1067,8 +1067,11 @@ class IterableTreeCtrlWithHiddenRootTest(unittest.TestCase):
         self.failIf(self.tree.GetSelection().IsOk())
 
     def testGetSelection_RootItemSelected(self):
-        self.tree.SelectItem(self.tree.GetRootItem())
-        self.failIf(self.tree.GetSelection().IsOk())
+        # Apparently, selecting a hidden root item crashes wxPython on
+        # Windows, so don't do that.
+        if '__WXMSW__' not in wx.PlatformInfo:
+            self.tree.SelectItem(self.tree.GetRootItem())
+            self.failIf(self.tree.GetSelection().IsOk())
 
     def testGetSelection_OtherItem(self):
         child = self.tree.AppendItem(self.root, 'child')
