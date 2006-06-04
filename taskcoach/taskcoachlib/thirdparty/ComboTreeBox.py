@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-''' ComboTreeBox provides a ComboBox that pops up a tree instead of
+''' ComboTreeBox provides a comboBox that pops up a tree instead of
     a list. 
 
     Supported platforms: wxMSW and wxMAC natively, wxGTK by means of a
@@ -116,9 +116,11 @@ class IterableTreeCtrl(wx.TreeCtrl):
 
 
 class BasePopupFrame(wx.MiniFrame):
-    ''' This is the frame that is popped up by ComboTreeBox. It contains
-        the tree of items that the user can select one item from. Upon
-        selection, or when focus is lost, the frame is hidden. '''
+    ''' BasePopupFrame is the base class for platform specific
+        versions of the PopupFrame. The PopupFrame is the frame that 
+        is popped up by ComboTreeBox. It contains the tree of items 
+        that the user can select one item from. Upon selection, or 
+        when focus is lost, the frame is hidden. '''
 
     def __init__(self, parent):
         super(BasePopupFrame, self).__init__(parent,
@@ -193,7 +195,9 @@ class BasePopupFrame(wx.MiniFrame):
 
 class MSWPopupFrame(BasePopupFrame):
     def Show(self):
-        # Comply with the MS Windows Combobox behaviour:
+        # Comply with the MS Windows Combobox behaviour: if the text in
+        # the text field is not in the tree, the first item in the tree
+        # is selected.
         if not self._tree.GetSelection().IsOk():
             self._tree.SelectItem(self._tree.GetFirstItem())
         super(MSWPopupFrame, self).Show()
@@ -223,18 +227,6 @@ class GTKPopupFrame(BasePopupFrame):
             (keyEvent.AltDown() and keyEvent.GetKeyCode() == wx.WXK_UP)
 
 
-def PopupFrame(*args, **kwargs):
-    ''' Factory function to create the right PopupFrame depending on
-        platform. You may force a specific class by setting the keyword
-        argument 'platform', e.g. 'platform=GTK' or 'platform=MSW' or 
-        platform='MAC'. '''
-
-    platform = kwargs.pop('platform', None) or wx.PlatformInfo[0][4:7]
-    PopupFrameClassName = '%sPopupFrame' % platform
-    PopupFrameClass = globals()[PopupFrameClassName]
-    return PopupFrameClass(*args, **kwargs)
-
-
 class BaseComboTreeBox(object):
     ''' BaseComboTreeBox is the base class for platform specific
         versions of the ComboTreeBox. '''
@@ -259,16 +251,19 @@ class BaseComboTreeBox(object):
     # Methods to construct the widget.
 
     def _createInterior(self):
-        self._popupFrame = PopupFrame(self)
-        self._tree = self._popupFrame.GetTree()
+        self._popupFrame = self._createPopupFrame()
         self._text = self._createTextCtrl()
         self._button = self._createButton()
+        self._tree = self._popupFrame.GetTree()
 
     def _createTextCtrl(self):
         return self # By default, the text control is the control itself.
 
     def _createButton(self):
         return self # By default, the dropdown button is the control itself.
+
+    def _createPopupFrame(self):
+        raise NotImplementedError # Subclass responsibility
 
     def _layoutInterior(self):
         pass # By default, there is no layout to be done.
@@ -626,16 +621,16 @@ class NativeComboTreeBox(BaseComboTreeBox, wx.ComboBox):
 
 
 class MSWComboTreeBox(NativeComboTreeBox):
-    ''' MSWComboTreeBox adds two pieces of functionality as compared to
-        NativeComboTreeBox:
-        1. It allows for navigating through the available choices by means 
-           of the up and down key without popping up the tree.
-        2. When the user browses through the tree, the ComboTreeBox's
-           text field is continuously updated to show the currently selected 
-           item in the tree. If the user cancels selecting a new item
-           from the tree, e.g. by hitting escape, the previous value
-           (the one that was selected before the PopupFrame was popped
-           up) is restored. '''
+    ''' MSWComboTreeBox adds one piece of functionality as compared to
+        NativeComboTreeBox: when the user browses through the tree, the
+        ComboTreeBox's text field is continuously updated to show the
+        currently selected item in the tree. If the user cancels
+        selecting a new item from the tree, e.g. by hitting escape, the
+        previous value (the one that was selected before the PopupFrame
+        was popped up) is restored. '''
+
+    def _createPopupFrame(self):
+        return MSWPopupFrame(self)
 
     def _eventsToBind(self):
         events = super(MSWComboTreeBox, self)._eventsToBind()
@@ -686,11 +681,14 @@ class MSWComboTreeBox(NativeComboTreeBox):
 
 
 class MACComboTreeBox(NativeComboTreeBox):
+    def _createPopupFrame(self):
+        return MACPopupFrame(self)
+
     def _createButton(self):
         return self.GetChildren()[0] # The choice button
 
     def _keyShouldNavigate(self, keyEvent):
-        return False
+        return False # No navigation with up and down on wxMac
 
     def _keyShouldPopUpTree(self, keyEvent):
         return super(MACComboTreeBox, self)._keyShouldPopUpTree(keyEvent) or \
@@ -705,6 +703,9 @@ class GTKComboTreeBox(BaseComboTreeBox, wx.Panel):
         the tree instead. So, until wxPython makes intercepting those events
         possible we build a poor man's Combobox ourselves using a TextCtrl and
         a BitmapButton.  '''
+
+    def _createPopupFrame(self):
+        return GTKPopupFrame(self)
 
     def _createTextCtrl(self):
         if self._readOnly:
