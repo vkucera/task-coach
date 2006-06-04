@@ -10,7 +10,7 @@
     Copyright 2006, Frank Niessink
     License: wxWidgets license
     Version: 0.6
-    Date: June 3, 2006
+    Date: June 4, 2006
 '''
 
 import wx
