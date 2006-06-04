@@ -213,7 +213,6 @@ class MACPopupFrame(BasePopupFrame):
         self.Unbind(wx.EVT_ACTIVATE)
 
     def OnKillFocus(self, event):
-        # FIXME: reuse more of super.OnKillFocus?
         if not event.GetActive(): # We received a deactivate event
             self.Hide()
             wx.CallAfter(self.GetParent().NotifyNoItemSelected)
