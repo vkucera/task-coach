@@ -155,12 +155,6 @@ class BasePopupFrame(wx.MiniFrame):
         self.GetParent().NotifyNoItemSelected()
         event.Skip()
 
-    def OnDeactivate(self, event):
-        if not event.GetActive(): # We received a deactivate event
-            self.Hide()
-            wx.CallAfter(self.GetParent().NotifyNoItemSelected)
-        event.Skip()
-
     def OnChar(self, keyEvent):
         if self._keyShouldHidePopup(keyEvent):
             self.Hide()
@@ -209,10 +203,17 @@ class MACPopupFrame(BasePopupFrame):
     def _bindKillFocus(self):
         # On wxMac, the kill focus event doesn't work, but the
         # deactivate event does:
-        self.Bind(wx.EVT_ACTIVATE, self.OnDeactivate)
+        self.Bind(wx.EVT_ACTIVATE, self.OnKillFocus)
 
     def _unbindKillFocus(self):
         self.Unbind(wx.EVT_ACTIVATE)
+
+    def OnKillFocus(self, event):
+        # FIXME: reuse more of super.OnKillFocus?
+        if not event.GetActive(): # We received a deactivate event
+            self.Hide()
+            wx.CallAfter(self.GetParent().NotifyNoItemSelected)
+        event.Skip()
 
 
 class GTKPopupFrame(BasePopupFrame):
@@ -232,8 +233,6 @@ def PopupFrame(*args, **kwargs):
     PopupFrameClassName = '%sPopupFrame' % platform
     PopupFrameClass = globals()[PopupFrameClassName]
     return PopupFrameClass(*args, **kwargs)
-
-
 
 
 class BaseComboTreeBox(object):
@@ -327,7 +326,7 @@ class BaseComboTreeBox(object):
 
     def OnText(self, event):
         event.Skip()
-        item = self.FindString(event.GetString())
+        item = self.FindString(self._text.GetValue())
         if item.IsOk():
             if self._tree.GetSelection() != item:
                 self._tree.SelectItem(item)
@@ -605,7 +604,6 @@ class NativeComboTreeBox(BaseComboTreeBox, wx.ComboBox):
     ''' NativeComboTreeBox, and any subclass, uses the native ComboBox as 
         basis, but prevent it from popping up its drop down list and
         instead pops up a PopupFrame containing a tree of items. '''
-
 
     def _eventsToBind(self):
         events = super(NativeComboTreeBox, self)._eventsToBind() 
