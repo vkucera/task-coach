@@ -1,16 +1,44 @@
-#!/usr/bin/env python
+''' 
+ComboTreeBox provides a ComboBox that pops up a tree instead of a list. 
 
-''' ComboTreeBox provides a comboBox that pops up a tree instead of
-    a list. 
+ComboTreeBox tries to provide the same interface as ComboBox as much as
+possible. However, whereas the ComboBox widget uses indices to access 
+items in the list of choices, ComboTreeBox uses TreeItemId's instead. If
+you append an item to the ComboTreeBox (using Append or Insert), the 
+TreeItemId associated with the added item is returned. You can then use
+that TreeItemId to add items as children of that first item. For
+example:
 
-    Supported platforms: wxMSW and wxMAC natively, wxGTK by means of a
-                         workaround
+>>> from wx.lib.combotreebox import ComboTreeBox
+>>> combo = ComboTreeBox(parent)
+>>> item1 = combo.Append('Item 1') # Add a root item
+>>> item1a = combo.Append('Item 1a', parent=item1) # Add a child to item1
 
-    Author: Frank Niessink <frank@niessink.com>
-    Copyright 2006, Frank Niessink
-    License: wxWidgets license
-    Version: 0.6
-    Date: June 4, 2006
+You can also add client data to each of the items like this:
+>>> item1 = combo.Append('Item 1', clientData=somePythonObject)
+>>> item1a = combo.Append('Item 1a', parent=item1, 
+...                       clientData=someOtherPythonObject)
+
+And fetch it like this:
+>>> somePythonObject = combo.GetClientData(item1)
+
+To get the client data of the currently selected item (if any):
+>>> currentItem = combo.GetSelection()
+>>> if currentItem:
+>>>     somePythonObject = combo.GetClientData(currentItem)
+
+Supported styles are the same as for ComboBox, i.e. wx.CB_READONLY and
+wx.CB_SORT. Provide them as usual:
+>>> combo = ComboTreeBox(parent, style=wx.CB_READONLY|wx.CB_SORT)
+
+Supported platforms: wxMSW and wxMAC natively, wxGTK by means of a
+workaround.
+
+Author: Frank Niessink <frank@niessink.com>
+Copyright 2006, Frank Niessink
+License: wxWidgets license
+Version: 0.7
+Date: June 5, 2006
 '''
 
 import wx
@@ -18,9 +46,13 @@ import wx
 __all__ = ['ComboTreeBox'] # Export only the ComboTreeBox widget
 
 
+# ---------------------------------------------------------------------------
+
+
 class IterableTreeCtrl(wx.TreeCtrl):
-    ''' TreeCtrl is the same as wx.TreeCtrl, with a few convenience methods 
-        added for easier navigation of items. '''
+    ''' 
+    TreeCtrl is the same as wx.TreeCtrl, with a few convenience methods 
+    added for easier navigation of items. '''
 
     def GetPreviousItem(self, item):
         ''' 
@@ -31,7 +63,7 @@ class IterableTreeCtrl(wx.TreeCtrl):
         item is invalid if item is the first item in the tree.
         '''
         previousSibling = self.GetPrevSibling(item)
-        if previousSibling.IsOk():
+        if previousSibling:
             return self.GetLastChildRecursively(previousSibling)
         else:
             parent = self.GetItemParent(item)
@@ -66,7 +98,7 @@ class IterableTreeCtrl(wx.TreeCtrl):
         invalid tree item is returned.
         '''
         rootItem = self.GetRootItem()
-        if rootItem.IsOk() and (self.GetWindowStyle() & wx.TR_HIDE_ROOT):
+        if rootItem and (self.GetWindowStyle() & wx.TR_HIDE_ROOT):
             firstChild, cookie = self.GetFirstChild(rootItem)
             return firstChild
         else:
@@ -98,7 +130,7 @@ class IterableTreeCtrl(wx.TreeCtrl):
         if item == self.GetRootItem():
             return wx.TreeItemId() # Return an invalid TreeItemId
         nextSibling = self.GetNextSibling(item)
-        if nextSibling.IsOk():
+        if nextSibling:
             return nextSibling
         else:
             parent = self.GetItemParent(item)
@@ -115,12 +147,16 @@ class IterableTreeCtrl(wx.TreeCtrl):
             return selection
 
 
+# ---------------------------------------------------------------------------
+
+
 class BasePopupFrame(wx.MiniFrame):
-    ''' BasePopupFrame is the base class for platform specific
-        versions of the PopupFrame. The PopupFrame is the frame that 
-        is popped up by ComboTreeBox. It contains the tree of items 
-        that the user can select one item from. Upon selection, or 
-        when focus is lost, the frame is hidden. '''
+    ''' 
+    BasePopupFrame is the base class for platform specific
+    versions of the PopupFrame. The PopupFrame is the frame that 
+    is popped up by ComboTreeBox. It contains the tree of items 
+    that the user can select one item from. Upon selection, or 
+    when focus is lost, the frame is hidden. '''
 
     def __init__(self, parent):
         super(BasePopupFrame, self).__init__(parent,
@@ -152,7 +188,8 @@ class BasePopupFrame(wx.MiniFrame):
         self._tree.Unbind(wx.EVT_KILL_FOCUS)
 
     def OnKillFocus(self, event):
-        # Hide the frame so it can be popped up again later:
+        # We hide the frame rather than destroy it, so it can be 
+        # popped up again later:
         self.Hide()
         self.GetParent().NotifyNoItemSelected()
         event.Skip()
@@ -168,7 +205,7 @@ class BasePopupFrame(wx.MiniFrame):
 
     def OnMouseClick(self, event):
         item, flags = self._tree.HitTest(event.GetPosition())
-        if item.IsOk() and flags & wx.TREE_HITTEST_ONITEMLABEL:
+        if item and (flags & wx.TREE_HITTEST_ONITEMLABEL):
             self._tree.SelectItem(item)
             self.Hide()
             self.GetParent().NotifyItemSelected(self._tree.GetItemText(item))
@@ -198,7 +235,7 @@ class MSWPopupFrame(BasePopupFrame):
         # Comply with the MS Windows Combobox behaviour: if the text in
         # the text field is not in the tree, the first item in the tree
         # is selected.
-        if not self._tree.GetSelection().IsOk():
+        if not self._tree.GetSelection():
             self._tree.SelectItem(self._tree.GetFirstItem())
         super(MSWPopupFrame, self).Show()
 
@@ -224,6 +261,9 @@ class GTKPopupFrame(BasePopupFrame):
         # On wxGTK, Alt-Up also closes the popup:
         return super(GTKPopupFrame, self)._keyShouldHidePopup(keyEvent) or \
             (keyEvent.AltDown() and keyEvent.GetKeyCode() == wx.WXK_UP)
+
+
+# ---------------------------------------------------------------------------
 
 
 class BaseComboTreeBox(object):
@@ -262,7 +302,9 @@ class BaseComboTreeBox(object):
         return self # By default, the dropdown button is the control itself.
 
     def _createPopupFrame(self):
-        raise NotImplementedError # Subclass responsibility
+        # It is a subclass responsibility to provide the right PopupFrame, 
+        # depending on platform:
+        raise NotImplementedError 
 
     def _layoutInterior(self):
         pass # By default, there is no layout to be done.
@@ -272,13 +314,13 @@ class BaseComboTreeBox(object):
             eventSource.Bind(eventType, eventHandler)
 
     def _eventsToBind(self):
-        ''' _eventsToBind(self) -> 
-            [(eventSource, eventType, eventHandler), ...] 
+        ''' 
+        _eventsToBind(self) -> [(eventSource, eventType, eventHandler), ...] 
             
-            _eventsToBind returns a list of eventSource, eventType,
-            eventHandlers tuples that will be bound. This method can be 
-            extended to bind additional events. In that case, don't 
-            forget to call _eventsToBind on the super class. '''
+        _eventsToBind returns a list of eventSource, eventType,
+        eventHandlers tuples that will be bound. This method can be 
+        extended to bind additional events. In that case, don't 
+        forget to call _eventsToBind on the super class. '''
         return [(self._text, wx.EVT_KEY_DOWN, self.OnKeyDown),
                 (self._text, wx.EVT_TEXT, self.OnText),
                 (self._button, wx.EVT_BUTTON, self.OnMouseClick)]
@@ -287,7 +329,7 @@ class BaseComboTreeBox(object):
 
     def OnMouseClick(self, event):
         self.Popup()
-        # We don't call event.Skip() to prevent popping up the
+        # Note that we don't call event.Skip() to prevent popping up the
         # ComboBox's own box.
 
     def OnKeyDown(self, keyEvent):
@@ -308,20 +350,20 @@ class BaseComboTreeBox(object):
 
     def _navigateUpOrDown(self, keyEvent):
         item = self.GetSelection()
-        if item.IsOk():
+        if item:
             navigationMethods = {wx.WXK_DOWN: self._tree.GetNextItem, 
                                  wx.WXK_UP: self._tree.GetPreviousItem}
             getNextItem = navigationMethods[keyEvent.GetKeyCode()]
             nextItem = getNextItem(item)
         else:
             nextItem = self._tree.GetFirstItem()
-        if nextItem.IsOk():
+        if nextItem:
             self.SetSelection(nextItem)
 
     def OnText(self, event):
         event.Skip()
         item = self.FindString(self._text.GetValue())
-        if item.IsOk():
+        if item:
             if self._tree.GetSelection() != item:
                 self._tree.SelectItem(item)
         else:
@@ -424,12 +466,12 @@ class BaseComboTreeBox(object):
         '''
         parent = parent or self._tree.GetRootItem()
         child, cookie = self._tree.GetFirstChild(parent)
-        while child.IsOk():
+        while child:
             if self._tree.GetItemText(child) == string:
                 return child
             else:
                 result = self.FindString(string, child)
-                if result.IsOk():
+                if result:
                     return result
             child, cookie = self._tree.GetNextChild(parent, cookie)
         return child
@@ -442,7 +484,7 @@ class BaseComboTreeBox(object):
         if no item is selected.
         '''
         selectedItem = self._tree.GetSelection()
-        if selectedItem.IsOk() and selectedItem != self._tree.GetRootItem():
+        if selectedItem and selectedItem != self._tree.GetRootItem():
             return selectedItem
         else:
             return self.FindString(self.GetValue())
@@ -453,7 +495,7 @@ class BaseComboTreeBox(object):
 
         Returns the label of the given item.
         '''
-        if item.IsOk():
+        if item:
             return self._tree.GetItemText(item)
         else:
             return ''
@@ -535,7 +577,7 @@ class BaseComboTreeBox(object):
         it wasn't found in the control.
         '''
         item = self.FindString(string)
-        if item.IsOk():
+        if item:
             if self._text.GetValue() != string:
                 self._text.SetValue(string)
             self._tree.SelectItem(item)
@@ -581,13 +623,13 @@ class BaseComboTreeBox(object):
         is ignored.
         '''
         item = self.FindString(value)
-        if self._readOnly and not item.IsOk():
+        if self._readOnly and not item:
             return
         if self._text == self:
             super(BaseComboTreeBox, self).SetValue(value)
         else:
             self._text.SetValue(value)
-        if item.IsOk():
+        if item:
             if self._tree.GetSelection() != item:
                 self._tree.SelectItem(item)
         else:
@@ -639,7 +681,7 @@ class MSWComboTreeBox(NativeComboTreeBox):
 
     def OnSelectionChangedInTree(self, event):
         item = event.GetItem()
-        if item.IsOk():
+        if item:
             selectedValue = self._tree.GetItemText(item)
             if self.GetValue() != selectedValue:
                 self.SetValue(selectedValue)
@@ -724,418 +766,17 @@ class GTKComboTreeBox(BaseComboTreeBox, wx.Panel):
         self.SetSizerAndFit(panelSizer)
 
 
+# ---------------------------------------------------------------------------
+
+
 def ComboTreeBox(*args, **kwargs):
     ''' Factory function to create the right ComboTreeBox depending on
-        platform. You may force a specific class by setting the keyword
-        argument 'platform', e.g. 'platform=GTK' or 'platform=MSW' or 
-        platform='MAC'. '''
+        platform. You may force a specific class, e.g. for testing
+        purposes, by setting the keyword argument 'platform', e.g. 
+        'platform=GTK' or 'platform=MSW' or platform='MAC'. '''
 
     platform = kwargs.pop('platform', None) or wx.PlatformInfo[0][4:7]
     ComboTreeBoxClassName = '%sComboTreeBox' % platform
     ComboTreeBoxClass = globals()[ComboTreeBoxClassName]
     return ComboTreeBoxClass(*args, **kwargs)
-
-
-# Demo
-
-class DemoFrame(wx.Frame):
-    def __init__(self, platform):
-        super(DemoFrame, self).__init__(None, title='ComboTreeBox Demo')
-        panel = wx.Panel(self)
-        panelSizer = wx.FlexGridSizer(2, 2)
-        panelSizer.AddGrowableCol(1)
-        for style, labelText in [(0, 'Default style:'), 
-                                 (wx.CB_READONLY, 'Read-only style:')]:
-            label = wx.StaticText(panel, label=labelText)
-            panelSizer.Add(label, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, 
-                           border=5)
-            comboBox = self._createComboTreeBox(panel, style, platform)
-            panelSizer.Add(comboBox, flag=wx.EXPAND|wx.ALL, border=5)
-        panel.SetSizerAndFit(panelSizer)
-        self.Fit()
-
-    def _createComboTreeBox(self, parent, style, platform):
-        comboBox = ComboTreeBox(parent, style=style, platform=platform)
-        self._bindEventHandlers(comboBox)
-        for i in range(5):
-            child = comboBox.Append('Item %d'%i)
-            for j in range(5):
-                grandChild = comboBox.Append('Item %d.%d'%(i,j), child)
-                for k in range(5):
-                    comboBox.Append('Item %d.%d.%d'%(i,j, k), grandChild)
-        return comboBox
-        
-    def _bindEventHandlers(self, comboBox):
-        for eventType, handler in [(wx.EVT_COMBOBOX, self.onItemSelected), 
-                                   (wx.EVT_TEXT, self.onItemEntered)]:
-            comboBox.Bind(eventType, handler)
-
-    def onItemSelected(self, event):
-        print 'You selected: %s'%event.GetString()
-        event.Skip()
-
-    def onItemEntered(self, event):
-        print 'You entered: %s'%event.GetString()
-        event.Skip()
-
-
-# Unittests
-
-import unittest
-
-class ComboTreeBoxTest(unittest.TestCase):
-    def setUp(self):
-        self.comboBoxEventReceived = False
-        frame = wx.Frame(None)
-        self.comboBox = ComboTreeBox(frame, platform=platform)
-        self.tree = self.comboBox._popupFrame.GetTree()
-
-    def onComboBox(self, event):
-        self.comboBoxEventReceived = True
-
-    def testComboBoxIsEmptyByDefault(self):
-        self.assertEqual(0, self.comboBox.GetCount())
-
-    def testAddingOneItem(self):
-        self.comboBox.Append('Item 1')
-        self.assertEqual(1, self.comboBox.GetCount())
-
-    def testAddingTwoItems(self):
-        self.comboBox.Append('Item 1')
-        self.comboBox.Append('Item 2')
-        self.assertEqual(2, self.comboBox.GetCount())
-
-    def testAddingTwoParentAndChild(self):
-        item1 = self.comboBox.Append('Item 1')
-        self.comboBox.Append('Item 2', item1)
-        self.assertEqual(2, self.comboBox.GetCount())
-
-    def testSelectingAnItemPutsItInTheComboBox(self):
-        self.comboBox.Append('Item 1')
-        self.comboBox.Bind(wx.EVT_COMBOBOX, self.onComboBox)
-        self.comboBox.NotifyItemSelected('Item 1')
-        self.failUnless(self.comboBoxEventReceived)
-
-    def testClear(self):
-        self.comboBox.Append('Item 1')
-        self.comboBox.Clear()
-        self.assertEqual(0, self.comboBox.GetCount())
-
-    def testDelete(self):
-        self.comboBox.Append('Item 1')
-        self.comboBox.Delete(self.tree.GetFirstItem())
-        self.assertEqual(0, self.comboBox.GetCount())
-
-    def testGetSelection_NoItems(self):
-        self.failIf(self.comboBox.GetSelection().IsOk())
-
-    def testGetSelection_NoSelection(self):
-        self.comboBox.Append('Item 1')
-        self.failIf(self.comboBox.GetSelection().IsOk())
-
-    def testGetSelection_WithSelection(self):
-        item1 = self.comboBox.Append('Item 1')
-        self.comboBox.SetValue('Item 1')
-        self.assertEqual(item1, self.comboBox.GetSelection())
-
-    def testGetSelection_EquallyNamedNodes_SelectedInTree(self):
-        item1 = self.comboBox.Append('Item')
-        item2 = self.comboBox.Append('Item')
-        self.tree.SelectItem(item2)
-        self.assertEqual(self.tree.GetSelection(), self.comboBox.GetSelection())
-
-    def testGetSelection_EquallyNamedNodes_TypedInTextBox(self):
-        item1 = self.comboBox.Append('Item')
-        item2 = self.comboBox.Append('Item')
-        self.comboBox.SetValue('Item')
-        self.assertEqual(item1, self.comboBox.GetSelection())
-
-    def testFindString_NotPresent(self):
-        self.comboBox.Append('Item 1')
-        self.failIf(self.comboBox.FindString('Item 2').IsOk())
-
-    def testFindString_Present(self):
-        self.comboBox.Append('Item 1')
-        self.assertEqual(self.tree.GetFirstItem(),
-                         self.comboBox.FindString('Item 1'))
-
-    def testFindString_Child(self):
-        parent = self.comboBox.Append('Parent')
-        child = self.comboBox.Append('Child', parent=parent)
-        self.assertEqual(child, self.comboBox.FindString('Child'))
-
-    def testGetString_NotPresent(self):
-        self.assertEqual('', self.comboBox.GetString(self.tree.GetFirstItem()))
-
-    def testGetString_Present(self):
-        self.comboBox.Append('Item 1')
-        self.assertEqual('Item 1', 
-            self.comboBox.GetString(self.tree.GetFirstItem()))
-
-    def testGetStringSelection_NotPresent(self):
-        self.assertEqual('', self.comboBox.GetStringSelection())
-
-    def testGetStringSelection_Present(self):
-        self.comboBox.SetValue('Item 1')
-        self.assertEqual('Item 1', self.comboBox.GetStringSelection())
-
-    def testInsertAsFirstItem(self):
-        self.comboBox.Insert('Item 1')
-        self.assertEqual('Item 1', 
-            self.comboBox.GetString(self.tree.GetFirstItem()))
-
-    def testInsertAsFirstItemBeforeExistingItem(self):
-        item1 = self.comboBox.Append('Item 1')
-        item2 = self.comboBox.Insert('Item 2')
-        self.assertEqual(item2, self.tree.GetFirstItem())
-
-    def testInsertAsFirstChildBeforeExistingChild(self):
-        parent = self.comboBox.Append('parent')
-        child1 = self.comboBox.Append('child 1', parent)
-        child2 = self.comboBox.Insert('child 2', parent=parent)
-        self.assertEqual(child2, self.tree.GetFirstChild(parent)[0])
-
-    def testSelect(self):
-        item1 = self.comboBox.Append('Item 1')
-        self.comboBox.Select(item1)
-        self.assertEqual('Item 1', self.comboBox.GetValue())
-
-    def testSetString(self):
-        item1 = self.comboBox.Append('Item 1')
-        self.comboBox.SetString(item1, 'Item 2')
-        self.assertEqual('Item 2', self.comboBox.GetString(item1))
-
-    def testSetStringSelection_ExistingString(self):
-        self.comboBox.Append('Hi')
-        self.comboBox.SetStringSelection('Hi')
-        self.assertEqual('Hi', self.comboBox.GetStringSelection())
-
-    def testSetStringSelection_NonExistingString(self):
-        self.comboBox.SetStringSelection('Hi')
-        self.assertEqual('', self.comboBox.GetStringSelection())
-
-    def testAppendWithClientData(self):
-        item1 = self.comboBox.Append('Item 1', clientData=[1,2,3])
-        self.assertEqual([1,2,3], self.comboBox.GetClientData(item1))
-
-    def testInsertWithClientData(self):
-        item1 = self.comboBox.Append('Item 1')
-        item2 = self.comboBox.Insert('Item 2', previous=item1, 
-                                     clientData=[1,2,3])
-        self.assertEqual([1,2,3], self.comboBox.GetClientData(item2))
-
-    def testSetClientData(self):
-        item1 = self.comboBox.Append('Item 1')
-        self.comboBox.SetClientData(item1, [1,2,3])
-        self.assertEqual([1,2,3], self.comboBox.GetClientData(item1))
-
-
-class SortedComboTreeBoxTest(unittest.TestCase):
-    def setUp(self):
-        frame = wx.Frame(None)
-        self.comboBox = ComboTreeBox(frame, style=wx.CB_SORT, platform=platform)
-        self.tree = self.comboBox._popupFrame.GetTree()
-
-    def testAppend(self):
-        itemB = self.comboBox.Append('B')
-        itemA = self.comboBox.Append('A')
-        self.assertEqual(itemA, self.tree.GetFirstItem())
-
-    def testInsert(self):
-        itemA = self.comboBox.Append('A')
-        itemB = self.comboBox.Insert('B')
-        self.assertEqual(itemA, self.tree.GetFirstItem())
-
-    def testAppend_Child(self):
-        itemA = self.comboBox.Append('A')
-        itemA2 = self.comboBox.Append('2', parent=itemA)
-        itemA1 = self.comboBox.Append('1', parent=itemA)
-        self.assertEqual(itemA1, self.tree.GetFirstChild(itemA)[0])
-
-    def testInsert_Child(self):
-        itemA = self.comboBox.Append('A')
-        itemA1 = self.comboBox.Append('1', parent=itemA)
-        itemA2 = self.comboBox.Insert('2', parent=itemA)
-        self.assertEqual(itemA1, self.tree.GetFirstChild(itemA)[0])
-        
-    def testSetString(self):
-        itemB = self.comboBox.Append('B')
-        itemC = self.comboBox.Append('C')
-        self.comboBox.SetString(itemC, 'A')
-        self.assertEqual(itemC, self.tree.GetFirstItem())
-
-
-class ReadOnlyComboTreeBoxTest(unittest.TestCase):
-    def setUp(self):
-        frame = wx.Frame(None)
-        self.comboBox = ComboTreeBox(frame, style=wx.CB_READONLY)
-        self.tree = self.comboBox._popupFrame.GetTree()
-
-    def testSetValue_ToNonExistingValue(self):
-        self.comboBox.SetValue('Ignored value')
-        self.assertEqual('', self.comboBox.GetValue())
-
-    def testSetValue_ToExistingValue(self):
-        self.comboBox.Append('This works')
-        self.comboBox.SetValue('This works')
-        self.assertEqual('This works', self.comboBox.GetValue())
-
-
-class IterableTreeCtrlTest(unittest.TestCase):
-    def setUp(self):
-        self.frame = wx.Frame(None)
-        self.tree = IterableTreeCtrl(self.frame)
-        self.root = self.tree.AddRoot('root')
-
-    def testPreviousOfRootIsInvalid(self):
-        item = self.tree.GetPreviousItem(self.root)
-        self.failIf(item.IsOk())
-
-    def testPreviousOfChildOfRootIsRoot(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        self.assertEqual(self.root, self.tree.GetPreviousItem(child))
-
-    def testPreviousOfSecondChildOfRootIsFirstChild(self):
-        child1 = self.tree.AppendItem(self.root, 'child1')
-        child2 = self.tree.AppendItem(self.root, 'child2')
-        self.assertEqual(child1, self.tree.GetPreviousItem(child2))
-
-    def testPreviousOfGrandChildIsChild(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        grandchild = self.tree.AppendItem(child, 'grandchild')
-        self.assertEqual(child, self.tree.GetPreviousItem(grandchild))
-
-    def testPreviousOfSecondChildWhenFirstChildHasChildIsThatChild(self):
-        child1 = self.tree.AppendItem(self.root, 'child1')
-        grandchild = self.tree.AppendItem(child1, 'child of child1')
-        child2 = self.tree.AppendItem(self.root, 'child2')
-        self.assertEqual(grandchild, self.tree.GetPreviousItem(child2))
-
-    def testPreviousOfSecondChildWhenFirstChildHasGrandChildIsThatGrandChild(self):
-        child1 = self.tree.AppendItem(self.root, 'child1')
-        grandchild = self.tree.AppendItem(child1, 'child of child1')
-        greatgrandchild = self.tree.AppendItem(grandchild, 
-            'grandchild of child1')
-        child2 = self.tree.AppendItem(self.root, 'child2')
-        self.assertEqual(greatgrandchild, self.tree.GetPreviousItem(child2))
-
-    def testNextOfRootIsInvalidWhenRootHasNoChildren(self):
-        item = self.tree.GetNextItem(self.root)
-        self.failIf(item.IsOk())
-
-    def testNextOfRootIsItsChildWhenRootHasOneChild(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        self.assertEqual(child, self.tree.GetNextItem(self.root))
-
-    def testNextOfLastChildIsInvalid(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        self.failIf(self.tree.GetNextItem(child).IsOk())
-
-    def testNextOfFirstChildIsSecondChild(self):
-        child1 = self.tree.AppendItem(self.root, 'child1')
-        child2 = self.tree.AppendItem(self.root, 'child2')
-        self.assertEqual(child2, self.tree.GetNextItem(child1))
-
-    def testNextOfGrandChildIsItsParentsSibling(self):
-        child1 = self.tree.AppendItem(self.root, 'child1')
-        grandchild = self.tree.AppendItem(child1, 'child of child1')
-        child2 = self.tree.AppendItem(self.root, 'child2')
-        self.assertEqual(child2, self.tree.GetNextItem(grandchild))
-
-    def testNextOfGreatGrandChildIsItsParentsSiblingRecursively(self):
-        child1 = self.tree.AppendItem(self.root, 'child1')
-        grandchild = self.tree.AppendItem(child1, 'child of child1')
-        greatgrandchild = self.tree.AppendItem(grandchild, 
-            'grandchild of child1')
-        child2 = self.tree.AppendItem(self.root, 'child2')
-        self.assertEqual(child2, self.tree.GetNextItem(greatgrandchild))
-
-    def testNextOfGrandChildWhenItIsLastIsInvalid(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        grandchild = self.tree.AppendItem(child, 'child of child')
-        self.failIf(self.tree.GetNextItem(grandchild).IsOk())
-
-    def testFirstItemIsRoot(self):
-        self.assertEqual(self.root, self.tree.GetFirstItem())
-
-    def testGetFirstItemWithoutRootIsInvalid(self):
-        tree = IterableTreeCtrl(self.frame)
-        self.failIf(tree.GetFirstItem().IsOk())
-
-    def testGetSelection_NoSelection(self):
-        self.tree.Unselect()
-        self.failIf(self.tree.GetSelection().IsOk())
-
-    def testGetSelection_RootItemSelected(self):
-        self.tree.SelectItem(self.tree.GetRootItem())
-        self.assertEqual(self.tree.GetRootItem(), self.tree.GetSelection())
-
-    def testGetSelection_OtherItem(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        self.tree.SelectItem(child)
-        self.assertEqual(child, self.tree.GetSelection())
-
-
-class IterableTreeCtrlWithHiddenRootTest(unittest.TestCase):
-    def setUp(self):
-        frame = wx.Frame(None)
-        self.tree = IterableTreeCtrl(frame, style=wx.TR_HIDE_ROOT)
-        self.root = self.tree.AddRoot('root')
-
-    def testPreviousOfChildOfRootIsInvalid(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        self.failIf(self.tree.GetPreviousItem(child).IsOk())
-
-    def testNextOfGrandChildWhenItIsLastIsInvalid(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        grandchild = self.tree.AppendItem(child, 'child of child')
-        self.failIf(self.tree.GetNextItem(grandchild).IsOk())
-
-    def testRootIsNotTheFirstItem(self):
-        self.failIf(self.tree.GetFirstItem().IsOk())
-
-    def testFirstChildOfRootIsTheFirstItem(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        self.assertEqual(child, self.tree.GetFirstItem())
-
-    def testGetSelection_NoSelection(self):
-        self.tree.Unselect()
-        self.failIf(self.tree.GetSelection().IsOk())
-
-    def testGetSelection_RootItemSelected(self):
-        # Apparently, selecting a hidden root item crashes wxPython on
-        # Windows, so don't do that.
-        if '__WXMSW__' not in wx.PlatformInfo:
-            self.tree.SelectItem(self.tree.GetRootItem())
-            self.failIf(self.tree.GetSelection().IsOk())
-
-    def testGetSelection_OtherItem(self):
-        child = self.tree.AppendItem(self.root, 'child')
-        self.tree.SelectItem(child)
-        self.assertEqual(child, self.tree.GetSelection())
-
-     
-
-if __name__ == '__main__':
-    import sys
-    if len(sys.argv) == 1 or (len(sys.argv) > 1 and sys.argv[1] not in
-        ['demo', 'test']):
-        print "Usage: %s 'demo' | 'test' ['MSW' | 'MAC' | 'GTK']"%sys.argv[0]
-        sys.exit(1)
-    if len(sys.argv) > 2:
-        platform = sys.argv[2].upper()
-        del sys.argv[2]
-    else:
-        platform = None
-
-    app = wx.App(False)
-    if sys.argv[1] == 'test':
-        # Remove the 'test' command line argument otherwise unittest.main 
-        # will try to use it to load tests.
-        del sys.argv[1] 
-        unittest.main()
-    elif sys.argv[1] == 'demo':
-        frame = DemoFrame(platform)
-        frame.Show()
-        app.MainLoop()
 
