@@ -8,7 +8,8 @@ from treectrl import TreeCtrl, TreeListCtrl
 from gridctrl import GridCtrl
 from datectrl import DateCtrl, DateTimeCtrl, DatePickerCtrl
 from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
-    MultiLineTextCtrl, StaticText, AutoWrapStaticText
+    MultiLineTextCtrl, StaticText
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer
 from colorselect import ColorSelect
+from foldpanelbar import FoldPanelBar
 from thirdparty.ComboTreeBox import ComboTreeBox

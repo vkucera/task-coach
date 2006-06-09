@@ -82,7 +82,7 @@ class Task(patterns.Observable):
             return self._children
     
     # I want to use properties more, but I still need to make all the changes.
-    # So, only desciripion is a property right now.
+    # So, only description is a property right now.
         
     def __getDescription(self):
         return self.__description

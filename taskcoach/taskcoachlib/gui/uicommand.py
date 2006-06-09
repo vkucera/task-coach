@@ -296,6 +296,7 @@ class FileSave(IOCommand):
     def enabled(self, event):
         return self.iocontroller.needSave()
 
+
 class FileSaveAs(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileSaveAs, self).__init__(menuText=_('S&ave as...'),
@@ -305,6 +306,7 @@ class FileSaveAs(IOCommand):
     def doCommand(self, event):
         self.iocontroller.saveas()
         
+
 class FileSaveSelection(NeedsSelectedTasks, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileSaveSelection, self).__init__(menuText=_('Sa&ve selection...'),
@@ -314,6 +316,64 @@ class FileSaveSelection(NeedsSelectedTasks, IOCommand, ViewerCommand):
     def doCommand(self, event):
         self.iocontroller.saveselection(self.viewer.curselection()), 
 
+
+def createPrintout(taskList):
+    printout = wx.html.HtmlPrintout()
+    htmlText = ''.join(['<p>%s</p>\n'%task.subject(recursive=True) \
+                        for task in taskList])
+    printout.SetHtmlText(htmlText)
+    printout.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
+    printout.SetMargins(12, 12, 12, 12)
+    printout.SetFonts('Arial', 'Courier')
+    return printout
+
+def createPrintData(parent):
+    dialog = wx.PrintDialog(parent)
+    result = dialog.ShowModal()
+    if result == wx.ID_OK:
+        data = dialog.GetPrintDialogData()
+        #data.GetPrintData().SetPaperId(wx.PAPER_A4)
+        #data.GetPrintData().SetNoCopies(1)
+        #data.SetAllPages(True)
+        return data
+    else:
+        return None
+
+
+class FilePrintPreview(FilterCommand, MainWindowCommand):
+    def __init__(self, *args, **kwargs):
+        super(FilePrintPreview, self).__init__(\
+            menuText=_('Print preview'), 
+            helpText=_('Show a preview of what the print will look like'), 
+            bitmap='print', *args, **kwargs)
+
+    def doCommand(self, event):
+        printout = createPrintout(self.filteredTaskList)
+        data = createPrintData(self.mainwindow)
+        if data is None:
+            return
+        preview = wx.PrintPreview(printout, None, data)
+        previewFrame = wx.PreviewFrame(preview, None, _('Print preview'), 
+            size=(750, 700))
+        previewFrame.Initialize()
+        previewFrame.Show()
+        
+
+class FilePrint(FilterCommand, MainWindowCommand):
+    def __init__(self, *args, **kwargs):
+        super(FilePrint, self).__init__(\
+            menuText=_('Print...'), 
+            helpText=_('Print the current file'), 
+            bitmap='print', *args, **kwargs)
+
+    def doCommand(self, event):
+        printout = createPrintout(self.filteredTaskList)
+        data = createPrintData(self.mainwindow)
+        if data is None:
+            return
+        printer = wx.Printer(data)
+        printer.Print(None, printout, False)
+ 
 
 class FileExportAsICS(IOCommand):
     def __init__(self, *args, **kwargs):
@@ -882,6 +942,10 @@ class UICommands(dict):
         self['saveas'] = FileSaveAs(iocontroller=iocontroller)
         self['saveselection'] = FileSaveSelection(iocontroller=iocontroller, 
             viewer=viewer)
+        self['printpreview'] = FilePrintPreview(mainwindow=mainwindow, 
+            filteredTaskList=filteredTaskList)
+        self['print'] = FilePrint(mainwindow=mainwindow, 
+            filteredTaskList=filteredTaskList)
         self['exportasics'] = FileExportAsICS(iocontroller=iocontroller)
         self['quit'] = FileQuit(mainwindow=mainwindow)
 

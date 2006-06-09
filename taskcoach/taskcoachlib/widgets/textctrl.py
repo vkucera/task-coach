@@ -141,22 +141,3 @@ class SingleLineTextCtrlWithEnterButton(wx.Panel):
             self.__textCtrl.Unbind(wx.EVT_TEXT_ENTER)
             self.__button.Disable()
 
-
-class AutoWrapStaticText(wx.Panel):
-    ''' A StaticText widget that (re)wraps the text when its size
-        changes. '''
-    def __init__(self, *args, **kwargs):
-        self.__label = kwargs.pop('label')
-        super(AutoWrapStaticText, self).__init__(*args, **kwargs)
-        self.Bind(wx.EVT_SIZE, self.onSize)
-
-    def onSize(self, event):
-        if hasattr(self, '__staticText'):
-            self.__staticText.Destroy()
-        width = event.GetSize()[0]
-        self.__staticText = wx.StaticText(self, label=self.__label)
-        self.__staticText.Wrap(width)
-        self.__staticText.SetSize((width, -1))
-        self.SetMinSize(self.__staticText.GetSize())
-        self.GetParent().Layout()
-        event.Skip()

@@ -53,7 +53,8 @@ class FileMenu(Menu):
         self.__settings = settings
         self.__uiCommands = uiCommands
         self.__fileMenuUICommands = ['open', 'merge', 'close', None, 
-            'save', 'saveas', 'saveselection', 'exportasics', None, 'quit']
+            'save', 'saveas', 'saveselection', None, 'printpreview',
+            'print', None, 'exportasics', None, 'quit']
         self.__recentFileUICommands = []
         self.__separator = None
         self.appendUICommands(uiCommands, self.__fileMenuUICommands)

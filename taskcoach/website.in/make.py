@@ -78,7 +78,7 @@ pages['features'] = \
             <LI>Settings are persistent and saved automatically. The
             last opened file is loaded automatically when starting
             %(name)s.
-            <LI>Track time spent on tasks. Tasks can have a budget. 
+            <LI>Tracking time spent on tasks. Tasks can have a budget. 
             Time spent can be viewed by individual effort period, by day, 
             by week, and by month.
             <LI>The %(name)s file format (.tsk) is XML. 
