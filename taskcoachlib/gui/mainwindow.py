@@ -4,7 +4,6 @@ import viewer, viewercontainer, viewerfactory, help, toolbar, uicommand,\
 from i18n import _
 import domain.task as task
 import domain.effort as effort
-import wx.lib.foldpanelbar as foldpanelbar
 
 
 class WindowWithPersistentDimensions(wx.Frame):
@@ -63,7 +62,8 @@ class MainWindow(WindowWithPersistentDimensions):
 
     def createWindowComponents(self):
         self.panel = wx.Panel(self, -1)
-        self.viewer = viewercontainer.ViewerNotebook(self.panel, self.settings, 'mainviewer') 
+        self.viewer = viewercontainer.ViewerNotebook(self.panel, 
+            self.settings, 'mainviewer') 
         self.createFilterSideBar()
         self.initLayout()
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
@@ -71,14 +71,16 @@ class MainWindow(WindowWithPersistentDimensions):
         viewerfactory.addTaskViewers(self.viewer, self.filteredTaskList, 
             self.uiCommands, self.settings)
         viewerfactory.addEffortViewers(self.viewer, self.effortList, 
-            self.filteredTaskList, self.uiCommands, self.settings, 'effortviewer')
+            self.filteredTaskList, self.uiCommands, self.settings, 
+            'effortviewer')
         import status
         self.SetStatusBar(status.StatusBar(self, self.taskFile,
                           self.filteredTaskList, self.viewer))
         import menu
         self.SetMenuBar(menu.MainMenu(self, self.uiCommands, self.settings))
         self.createTaskBarIcon(self.uiCommands)
-        self.reminderController = remindercontroller.ReminderController(self.taskFile)
+        self.reminderController = \
+            remindercontroller.ReminderController(self.taskFile)
         
     def createFilterSideBar(self):
         defaultWidth = self.settings.getint('view', 'filtersidebarwidth')
@@ -90,7 +92,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.filterSideBarWindow.SetDefaultSize((defaultWidth, 1000))
         self.filterSideBarWindow.Bind(wx.EVT_SASH_DRAGGED, self.onDragSash)
         self.filterSideBarFoldPanel = \
-            foldpanelbar.FoldPanelBar(self.filterSideBarWindow)
+            widgets.FoldPanelBar(self.filterSideBarWindow)
         images = wx.ImageList(16, 16)
         images.Add(wx.ArtProvider_GetBitmap('unfold', size=(16, 16)))
         images.Add(wx.ArtProvider_GetBitmap('fold', size=(16, 16)))
@@ -179,6 +181,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.filterSideBarWindow.Show(self.settings.getboolean('view',
             'filtersidebar'))
         wx.LayoutAlgorithm().LayoutWindow(self, self.panel)
+        self.filterSideBarFoldPanel.SetFocus()
 
     def createTaskBarIcon(self, uiCommands):
         if self.canCreateTaskBarIcon():

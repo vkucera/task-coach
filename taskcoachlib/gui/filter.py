@@ -15,8 +15,10 @@ class SubjectFilterPanel(wx.Panel):
         
     def createInterior(self):
         self.__timer = wx.Timer(self)
-        self._about = widgets.AutoWrapStaticText(self, label=\
-            _('Type a search string (a regular expression) and press enter.'))
+        self._about = wx.StaticText(self, label= \
+            _('Type a search string (a regular expression) ' 
+              'and press enter.') + '\n')
+        self._about.SetBackgroundColour(self.GetBackgroundColour())
         searchString = self.__settings.get('view', 'tasksearchfilterstring')
         self._subjectEntry = widgets.SingleLineTextCtrl(self, searchString,
             style=wx.TE_PROCESS_ENTER)
@@ -116,9 +118,9 @@ class CategoriesFilterPanel(wx.Panel):
 
     def createInterior(self):
         taskList = self.__taskList
-        self._about = widgets.AutoWrapStaticText(self,
-            label='Show tasks that belong to the categories selected below. '
-                'Unselect all categories to reset the filter.')
+        self._about = wx.StaticText(self, 
+            label=_('Show tasks that belong to the categories selected below. '
+                    'Unselect all categories to reset the filter.') + '\n') 
         self._checkListBox = wx.CheckListBox(self, style=wx.LB_SORT)
         self._checkListBox.InsertItems(list(taskList.categories()), 0)
         for category in taskList.categories():
@@ -134,7 +136,7 @@ class CategoriesFilterPanel(wx.Panel):
         else:
             index = 0
         self._radioBox.SetSelection(index)
-        self.Enable(len(self.__taskList.categories()) > 0)
+        self.Enable(len(taskList.categories()) > 0)
 
     def layoutInterior(self):
         panelSizer = wx.BoxSizer(wx.VERTICAL)
@@ -144,6 +146,7 @@ class CategoriesFilterPanel(wx.Panel):
         panelSizer.SetItemMinSize(self._checkListBox, (-1, 120))
         panelSizer.Add(self._radioBox, flag=wx.ALL, border=5)
         self.SetSizerAndFit(panelSizer)
+        self.GetParent().ResizePanel()
 
     def bindEventHandlers(self):
         self._checkListBox.Bind(wx.EVT_CHECKLISTBOX, self.onCheckCategory)
@@ -152,7 +155,8 @@ class CategoriesFilterPanel(wx.Panel):
 
     def onCheckCategory(self, event):
         category = self._checkListBox.GetString(event.GetInt())
-        if event.IsChecked():
+        # Note: using event.IsChecked() would be nicer but doesn't work
+        if self._checkListBox.IsChecked(event.GetInt()): 
             self.__taskList.addCategory(category)                
         else:
             self.__taskList.removeCategory(category)
@@ -193,7 +197,6 @@ class DueDateFilterPanel(wx.Panel):
         value = self.__settings.get('view', 'tasksdue')
         index = self.__settingValues.index(value)
         self._radioBox.SetSelection(index)
-        self._radioBox.SetToolTipString('Hi there')
 
     def layoutInterior(self):
         panelSizer = wx.BoxSizer(wx.VERTICAL)
