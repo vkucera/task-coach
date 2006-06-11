@@ -324,24 +324,38 @@ class PrinterSettings(object):
         self.pageSetupData = wx.PageSetupDialogData(self.printData)
 
     def updatePageSetupData(self, data):
-        self.pageSetupData.SetMarginTopLeft(data.GetMarginTopLeft())
-        self.pageSetupData.SetMarginBottomRight(data.GetMarginBottomRight())
+        self.pageSetupData = wx.PageSetupDialogData(data)
         self.updatePrintData(data.GetPrintData())
 
     def updatePrintData(self, printData):
+        printData = wx.PrintData(printData)
         self.pageSetupData.SetPrintData(printData)
         self.printData = printData
 
 printerSettings = PrinterSettings()
 
-def createPrintout(taskList):
+def createPrintout(viewer):
     printout = wx.html.HtmlPrintout()
-    htmlText = ''.join(['<p>%s</p>\n'%task.subject(recursive=True) \
-                        for task in taskList])
+    visibleColumns = viewer.visibleColumns()
+    htmlText = '<table>\n'
+    htmlText += '<tr>'
+    for column in visibleColumns:
+        htmlText += '<th>%s</th>'%column.header()
+    htmlText += '</tr>\n'
+    for item in viewer.model():
+        htmlText += '<tr>'
+        for column in visibleColumns:
+            htmlText += '<td>%s</td>'%column.render(item)
+        htmlText += '</tr>\n'
+    htmlText += '</table>\n'
+
+    global printerSettings
     printout.SetHtmlText(htmlText)
     printout.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
-    printout.SetMargins(12, 12, 12, 12)
     printout.SetFonts('Arial', 'Courier')
+    top, left = printerSettings.pageSetupData.GetMarginTopLeft()
+    bottom, right = printerSettings.pageSetupData.GetMarginBottomRight()
+    printout.SetMargins(top, bottom, left, right)
     return printout
 
 
@@ -362,7 +376,7 @@ class PrintPageSetup(MainWindowCommand):
         dialog.Destroy()
 
 
-class PrintPreview(FilterCommand, MainWindowCommand):
+class PrintPreview(ViewerCommand, MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(PrintPreview, self).__init__(\
             menuText=_('Print preview'), 
@@ -371,8 +385,8 @@ class PrintPreview(FilterCommand, MainWindowCommand):
 
     def doCommand(self, event):
         global printerSettings 
-        printout = createPrintout(self.filteredTaskList)
-        printout2 = createPrintout(self.filteredTaskList)
+        printout = createPrintout(self.viewer)
+        printout2 = createPrintout(self.viewer)
         preview = wx.PrintPreview(printout, printout2, 
             printerSettings.printData)
         previewFrame = wx.PreviewFrame(preview, self.mainwindow, 
@@ -381,7 +395,7 @@ class PrintPreview(FilterCommand, MainWindowCommand):
         previewFrame.Show()
         
 
-class Print(FilterCommand, MainWindowCommand):
+class Print(ViewerCommand, MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(Print, self).__init__(\
             menuText=_('Print...'), 
@@ -390,7 +404,7 @@ class Print(FilterCommand, MainWindowCommand):
 
     def doCommand(self, event):
         global printerSettings 
-        printout = createPrintout(self.filteredTaskList)
+        printout = createPrintout(self.viewer)
         printDialogData = wx.PrintDialogData(printerSettings.printData)
         printDialog = wx.Printer(printDialogData)
         printDialog.Print(self.mainwindow, printout, prompt=True)
@@ -965,9 +979,8 @@ class UICommands(dict):
             viewer=viewer)
         self['printpagesetup'] = PrintPageSetup(mainwindow=mainwindow)
         self['printpreview'] = PrintPreview(mainwindow=mainwindow, 
-            filteredTaskList=filteredTaskList)
-        self['print'] = Print(mainwindow=mainwindow, 
-            filteredTaskList=filteredTaskList)
+            viewer=viewer)
+        self['print'] = Print(mainwindow=mainwindow, viewer=viewer)
         self['exportasics'] = FileExportAsICS(iocontroller=iocontroller)
         self['quit'] = FileQuit(mainwindow=mainwindow)
 
