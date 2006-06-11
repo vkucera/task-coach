@@ -176,6 +176,7 @@ class NotificationTimingTest(test.TestCase):
         self.taskList.remove(self.task2)
         self.assertEqual(2, self.notifications)
 
+
 class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts, 
         asserts.TaskAsserts):
     def setUp(self):

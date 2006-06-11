@@ -114,7 +114,7 @@ class TaskList(patterns.ObservableObservablesList):
         self.notifyObservers(patterns.observer.Notification(self,
             itemsRemoved=tasksAndAllChildren, itemsChanged=parents,
             effortsRemoved=self._allEfforts(tasksAndAllChildren),
-            categoriesRemoved=self.categories()-currentCategories))
+            categoriesRemoved=currentCategories-self.categories()))
 
     def _allEfforts(self, tasks):
         efforts = []

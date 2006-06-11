@@ -264,39 +264,50 @@ class CategoriesPage(TaskEditorPage):
 class AttachmentPage(TaskEditorPage):
     def __init__(self, parent, task, *args, **kwargs):
         super(AttachmentPage, self).__init__(parent, task, *args, **kwargs)
-        attachmentBox = widgets.BoxWithFlexGridSizer(self, 
-            label=_('Attachments'), cols=2, growableCol=1, growableRow=0)
+        attachmentBox = widgets.BoxWithBoxSizer(self, label=_('Attachments'))
+        self._listCtrl = wx.ListCtrl(attachmentBox, style=wx.LC_REPORT)
+        self._listCtrl.InsertColumn(0, _('Attachment filenames'))
+        self._listCtrl.SetColumnWidth(0, 500)
+        attachmentBox.add(self._listCtrl, flag=wx.EXPAND|wx.ALL, proportion=1)
+
+        boxSizer = wx.BoxSizer(wx.HORIZONTAL)
         self._buttonBox = widgets.ButtonBox(attachmentBox, 
             (_('Open attachment'), self.onOpen),
             (_('Remove attachment'), self.onRemove),
-            (_('Edit attachment'), self.onEdit), orientation=wx.HORIZONTAL)        
-        self._listCtrl = wx.ListCtrl(attachmentBox, style=wx.LC_LIST)
-        self._listCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelectItem)
-        self._listCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onDeselectItem)
-        self._listCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onOpen)
-        dropTarget = draganddrop.FileDropTarget(self.onFileDrop)
-        self._listCtrl.SetDropTarget(dropTarget)
-        self.onFileDrop(0, 0, task.attachments())
-        attachmentBox.add(_('Attachments'))
-        attachmentBox.add(self._listCtrl, flag=wx.EXPAND|wx.ALL, proportion=1)
-        attachmentBox.add('')
-        attachmentBox.add(self._buttonBox)
-        self._urlEntry = widgets.SingleLineTextCtrlWithEnterButton(attachmentBox, 
-            label=_('Add attachment'), onEnter=self.onAdd)
-        attachmentBox.add(_('New attachment'))
-        attachmentBox.add(self._urlEntry, flag=wx.EXPAND|wx.ALL, proportion=1)
-        attachmentBox.add('')
-        browseButton = wx.Button(attachmentBox, label=_('Browse for attachment...'))
-        browseButton.Bind(wx.EVT_BUTTON, self.onBrowse)
-        attachmentBox.add(browseButton)
+            (_('Edit filename'), self.onEdit), 
+            orientation=wx.HORIZONTAL)        
+        boxSizer.Add(self._buttonBox)
+        buttonBox2 = widgets.ButtonBox(attachmentBox, 
+            (_('Browse for new attachment...'), self.onBrowse),
+            orientation=wx.HORIZONTAL)
+        boxSizer.Add(buttonBox2)
+        attachmentBox.add(boxSizer)
         if task.attachments():
             self._listCtrl.SetItemState(0, wx.LIST_STATE_SELECTED, 
                                         wx.LIST_STATE_SELECTED)
         else:
             self.onDeselectItem()
         attachmentBox.fit()
-        self.add(attachmentBox, border=5)
+
+        filenameBox = widgets.BoxWithBoxSizer(self, 
+            label=_('Attachment filename'), orientation=wx.HORIZONTAL)
+        self._urlEntry = widgets.SingleLineTextCtrlWithEnterButton(filenameBox, 
+            label=_('Add attachment'), onEnter=self.onAdd)
+        filenameBox.add(self._urlEntry, proportion=1)
+        filenameBox.fit()
+
+        self.add(attachmentBox, proportion=1, border=5)
+        self.add(filenameBox, proportion=0, border=5)
         self.fit()
+        self.bindEventHandlers()
+        self.onFileDrop(0, 0, task.attachments())
+
+    def bindEventHandlers(self):
+        self._listCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelectItem)
+        self._listCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onDeselectItem)
+        self._listCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onOpen)
+        dropTarget = draganddrop.FileDropTarget(self.onFileDrop)
+        self._listCtrl.SetDropTarget(dropTarget)
             
     def addAttachmentToListCtrl(self, filename):
         item = wx.ListItem()
@@ -341,6 +352,7 @@ class AttachmentPage(TaskEditorPage):
         attachment = self._listCtrl.GetItem(index).GetText()
         self._listCtrl.DeleteItem(index)
         self._urlEntry.SetValue(attachment)
+        self._urlEntry.SetFocus()
     
     def onSelectItem(self, *args, **kwargs):
         for button in self._buttonBox.buttonLabels():
