@@ -150,10 +150,10 @@ class TaskViewer(Viewer):
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.__registerForColorChanges()
     
-    def isShowingTasks(self): # FIXME: can be removed?
+    def isShowingTasks(self): 
         return True
 
-    def isShowingEffort(self): # FIXME: can be removed?
+    def isShowingEffort(self): 
         return False
    
     def statusMessages(self):

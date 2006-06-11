@@ -134,7 +134,7 @@ class Column(object):
         self.__visibilitySetting = visibilitySetting
         self.__sortKey = sortKey
         self.__sortCallback = sortCallback
-        self.__renderCallback = renderCallback
+        self.__renderCallback = renderCallback or self.defaultRenderer
         
     def header(self):
         return self.__columnHeader
@@ -151,6 +151,9 @@ class Column(object):
         
     def render(self, *args, **kwargs):
         return self.__renderCallback(*args, **kwargs)
+
+    def defaultRenderer(self, *args, **kwargs):
+        return args[0]
         
     def __eq__(self, other):
         return self.header() == other.header()
