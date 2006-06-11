@@ -170,7 +170,7 @@ class CategoriesFilterPanel(wx.Panel):
         for category in event.categoriesAdded:
             self._checkListBox.Append(category)
         for category in event.categoriesRemoved:
-            self._checkListBox.Delete(self._checkList.FindString(category))
+            self._checkListBox.Delete(self._checkListBox.FindString(category))
         self.Enable(len(self.__taskList.categories()) > 0)
 
 

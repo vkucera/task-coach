@@ -3,6 +3,15 @@
 from domain import *
 
 releases = [             
+Release('0.59', 'June ?, 2006',
+    bugsFixed=[
+        Bug('''The column width of the list with filenames in the attachment 
+page of the task editor is now adaptable, so that long filenames can be made 
+visible entirely.''', '1503006')],
+    featuresAdded=[
+        Feature('''Simple printing of tasks.'''),
+        Feature('''Filter sidebar.''')]),
+
 Release('0.58', 'May 14, 2006', 
     bugsFixed=[
         Bug('''On Mac OSX, Task Coach would seg fault upon exiting.'''),

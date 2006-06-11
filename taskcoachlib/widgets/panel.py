@@ -44,3 +44,21 @@ class BoxWithFlexGridSizer(wx.Panel):
                 kwargs['flag'] = wx.ALIGN_RIGHT
         self.__entriesSizer.Add(control, *args, **kwargs)
         
+
+class BoxWithBoxSizer(wx.Panel):
+    ''' A panel that is boxed and has a BoxSizer inside it. '''
+    def __init__(self, parent, label, orientation=wx.VERTICAL, *args, **kwargs):
+        super(BoxWithBoxSizer, self).__init__(parent, *args, **kwargs)
+        box = wx.StaticBox(self, label=label)
+        self.__boxSizer = wx.StaticBoxSizer(box, wx.HORIZONTAL)
+        self.__innerBoxSizer = wx.BoxSizer(orientation)
+        self.__boxSizer.Add(self.__innerBoxSizer, proportion=1,
+            flag=wx.EXPAND|wx.ALL, border=10)
+
+    def fit(self):
+        ''' Call this method after all controls have been added (via add()). '''
+        self.SetSizerAndFit(self.__boxSizer)
+
+    def add(self, control, *args, **kwargs):
+        ''' Add controls to the BoxSizer. '''
+        self.__innerBoxSizer.Add(control, *args, **kwargs)
