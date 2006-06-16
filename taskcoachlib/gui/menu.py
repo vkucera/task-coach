@@ -63,8 +63,9 @@ class FileMenu(Menu):
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
 
     def onOpenMenu(self, event):
-        self.__removeRecentFileMenuItems()
-        self.__insertRecentFileMenuItems()        
+        if event.GetMenu() == self:
+            self.__removeRecentFileMenuItems()
+            self.__insertRecentFileMenuItems()        
         event.Skip()
     
     def __insertRecentFileMenuItems(self):

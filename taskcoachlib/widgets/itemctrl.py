@@ -130,7 +130,7 @@ class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithFileDropTarget):
 class Column(object):
     def __init__(self, columnHeader, visibilitySetting=None, sortKey=None, 
             sortCallback=None, renderCallback=None,
-            alignment=wx.LIST_FORMAT_RIGHT):
+            alignment=wx.LIST_FORMAT_LEFT):
         self.__columnHeader = columnHeader
         self.__visibilitySetting = visibilitySetting
         self.__sortKey = sortKey
