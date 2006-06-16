@@ -78,17 +78,19 @@ class StatusFilterPanel(wx.Panel):
         self.bindEventHandlers()
 
     def createInterior(self):
-        labelsAndSettings = [(_('Active tasks'), 'activetasks'),
-                             (_('Inactive tasks'), 'inactivetasks'),
-                             (_('Completed tasks'), 'completedtasks'),
-                             (_('Over due tasks'), 'overduetasks'),
-                             (_('Over budget tasks'), 'overbudgettasks')]
+        self.labelsAndSettings = [(_('Active tasks'), 'activetasks'),
+                                  (_('Inactive tasks'), 'inactivetasks'),
+                                  (_('Completed tasks'), 'completedtasks'),
+                                  (_('Over due tasks'), 'overduetasks'),
+                                  (_('Over budget tasks'), 'overbudgettasks')]
         self._checkBoxToSetting = {}
+        self._settingToCheckBox = {}
         self._checkBoxes = []
-        for label, setting in labelsAndSettings:
+        for label, setting in self.labelsAndSettings:
             checkBox = wx.CheckBox(self, label=label)
             checkBox.SetValue(self.__settings.getboolean('view', setting))
             self._checkBoxToSetting[checkBox] = setting
+            self._settingToCheckBox[setting] = checkBox
             self._checkBoxes.append(checkBox)
 
     def layoutInterior(self):
@@ -100,11 +102,18 @@ class StatusFilterPanel(wx.Panel):
     def bindEventHandlers(self):
         for checkBox in self._checkBoxes:
             checkBox.Bind(wx.EVT_CHECKBOX, self.onCheck)
+        for label, setting in self.labelsAndSettings:
+            self.__settings.registerObserver(self.onSettingChanged, 
+                ('view', setting))
 
     def onCheck(self, event):
         checkBox = event.GetEventObject()
         setting = self._checkBoxToSetting[checkBox]
         self.__settings.set('view', setting, str(event.IsChecked()))
+
+    def onSettingChanged(self, notification):
+        checkBox = self._settingToCheckBox[notification.option]
+        checkBox.SetValue(notification.value == 'True')
 
 
 class CategoriesFilterPanel(wx.Panel):
@@ -205,7 +214,13 @@ class DueDateFilterPanel(wx.Panel):
 
     def bindEventHandlers(self):
         self._radioBox.Bind(wx.EVT_RADIOBOX, self.onCheck)
+        self.__settings.registerObserver(self.onTasksDueChanged,
+            ('view', 'tasksdue'))
 
     def onCheck(self, event):
         value = self.__settingValues[event.GetInt()]
         self.__settings.set('view', 'tasksdue', value)
+
+    def onTasksDueChanged(self, notification):
+        index = self.__settingValues.index(notification.value)
+        self._radioBox.SetSelection(index)
