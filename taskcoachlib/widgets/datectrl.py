@@ -164,11 +164,9 @@ class DateTimeCtrl(Panel):
         
     def onEnableDatePicker(self, event):
         self._timeCtrl.Enable(event.IsChecked())
+        self._callback(event)
 
     def _timeCtrlCallback(self, *args, **kwargs):
-        # If user sets time and date == None, then set date to today
-        if self._dateCtrl.GetValue() == date.Date():
-            self._dateCtrl.SetValue(date.Today())
         self._callback(*args, **kwargs)
         
     def _dateCtrlCallback(self, *args, **kwargs):
