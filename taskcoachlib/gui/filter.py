@@ -11,7 +11,6 @@ class SubjectFilterPanel(wx.Panel):
         self.createInterior()
         self.layoutInterior()
         self.bindEventHandlers()
-        self.__settingSize = False
         
     def createInterior(self):
         self.__timer = wx.Timer(self)
@@ -36,6 +35,7 @@ class SubjectFilterPanel(wx.Panel):
         
     def layoutInterior(self):
         verticalSizer = wx.BoxSizer(wx.VERTICAL)
+        self._about.SetMinSize((1,-1))
         verticalSizer.Add(self._about, flag=wx.EXPAND|wx.ALL, border=5)
         verticalSizer.Add(self._subjectEntry, flag=wx.EXPAND|wx.ALL, 
             border=5)
