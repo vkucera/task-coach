@@ -3,6 +3,7 @@ from gui import render
 from i18n import _
 import domain.task as task
 import thirdparty.desktop as desktop
+import persistence.html
 
 class UICommandContainer(object):
     ''' Mixin with wx.Menu or wx.ToolBar (sub)class. '''
@@ -335,29 +336,12 @@ class PrinterSettings(object):
 printerSettings = PrinterSettings()
 
 def createPrintout(viewer):
+    htmlText = persistence.viewer2html(viewer)
     printout = wx.html.HtmlPrintout()
-    visibleColumns = viewer.visibleColumns()
-    htmlText = '<table>\n'
-    columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left', 
-                         wx.LIST_FORMAT_CENTRE: 'center', 
-                         wx.LIST_FORMAT_RIGHT: 'right'}[column.alignment()]
-                         for column in visibleColumns]
-    htmlText += '<tr>'
-    for column, alignment in zip(visibleColumns, columnAlignments):
-        htmlText += '<th align="%s">%s</th>'%(alignment, column.header())
-    htmlText += '</tr>\n'
-    for item in viewer.model():
-        htmlText += '<tr>'
-        for column, alignment in zip(visibleColumns, columnAlignments):
-            htmlText += '<td align="%s">%s</td>'%(alignment, 
-                column.render(item))
-        htmlText += '</tr>\n'
-    htmlText += '</table>\n'
-
-    global printerSettings
     printout.SetHtmlText(htmlText)
     printout.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
     printout.SetFonts('Arial', 'Courier')
+    global printerSettings
     top, left = printerSettings.pageSetupData.GetMarginTopLeft()
     bottom, right = printerSettings.pageSetupData.GetMarginBottomRight()
     printout.SetMargins(top, bottom, left, right)
@@ -424,11 +408,21 @@ class FileExportAsICS(IOCommand):
     def doCommand(self, event):
         self.iocontroller.exportAsICS()
 
+
+class FileExportAsHTML(IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportAsHTML, self).__init__(menuText=_('Export as &HTML...'), 
+            helpText=_('Export the current view as HTML file'),
+            bitmap='exportashtml', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportAsHTML(self.viewer)
     
+
 class FileQuit(MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
-            helpText=_('Exit %s')%meta.name, bitmap='exit',
+            helpText=_('Exit %s')%meta.name, bitmap='exit', 
             id=wx.ID_EXIT, *args, **kwargs)
 
     def doCommand(self, event):
@@ -987,6 +981,8 @@ class UICommands(dict):
             viewer=viewer)
         self['print'] = Print(mainwindow=mainwindow, viewer=viewer)
         self['exportasics'] = FileExportAsICS(iocontroller=iocontroller)
+        self['exportashtml'] = FileExportAsHTML(iocontroller=iocontroller, 
+            viewer=viewer)
         self['quit'] = FileQuit(mainwindow=mainwindow)
 
         # menuEdit commands

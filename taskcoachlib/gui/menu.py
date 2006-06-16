@@ -52,12 +52,14 @@ class FileMenu(Menu):
         super(FileMenu, self).__init__(mainwindow)
         self.__settings = settings
         self.__uiCommands = uiCommands
-        self.__fileMenuUICommands = ['open', 'merge', 'close', None, 
-            'save', 'saveas', 'saveselection', None, 'printpagesetup', 
-            'printpreview', 'print', None, 'exportasics', None, 'quit']
         self.__recentFileUICommands = []
         self.__separator = None
-        self.appendUICommands(uiCommands, self.__fileMenuUICommands)
+        self.appendUICommands(uiCommands, ['open', 'merge', 'close', None, 
+            'save', 'saveas', 'saveselection', None, 'printpagesetup',
+            'printpreview', 'print', None])
+        self.appendMenu(_('&Export'), ExportMenu(mainwindow, uiCommands))
+        self.__recentFilesStartPosition = len(self) 
+        self.appendUICommands(uiCommands, [None, 'quit'])
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
 
     def onOpenMenu(self, event):
@@ -66,34 +68,36 @@ class FileMenu(Menu):
         event.Skip()
     
     def __insertRecentFileMenuItems(self):
-        self.__recentFileUICommands = []
-        self.__separator = None
-        recentFilesStartPosition = self.__recentFilesStartPosition()
         recentFiles = eval(self.__settings.get('file', 'recentfiles'))
-        maximumNumberOfRecentFiles = self.__settings.getint('file', 'maxrecentfiles')
+        if not recentFiles:
+            return
+        maximumNumberOfRecentFiles = self.__settings.getint('file', 
+            'maxrecentfiles')
         recentFiles = recentFiles[:maximumNumberOfRecentFiles]
-        if recentFiles:
-            for index, recentFile in enumerate(recentFiles):
-                recentFileNumber = index + 1 # Only computer nerds start counting at 0 :-)
-                recentFileMenuPosition = recentFilesStartPosition + index
-                recentFileOpenUICommand = self.__uiCommands.createRecentFileOpenUICommand(recentFile, recentFileNumber)
-                recentFileOpenUICommand.appendToMenu(self, self._window, recentFileMenuPosition)
-                self.__recentFileUICommands.append(recentFileOpenUICommand)
-            self.__separator = self.InsertSeparator(recentFileMenuPosition+1)
+        self.__separator = self.InsertSeparator(self.__recentFilesStartPosition)
+        for index, recentFile in enumerate(recentFiles):
+            recentFileNumber = index + 1 # Only computer nerds start counting at 0 :-)
+            recentFileMenuPosition = self.__recentFilesStartPosition + 1 + index
+            recentFileOpenUICommand = self.__uiCommands.createRecentFileOpenUICommand(recentFile, recentFileNumber)
+            recentFileOpenUICommand.appendToMenu(self, self._window, 
+                recentFileMenuPosition)
+            self.__recentFileUICommands.append(recentFileOpenUICommand)
 
     def __removeRecentFileMenuItems(self):
         for recentFileUICommand in self.__recentFileUICommands:
             recentFileUICommand.removeFromMenu(self, self._window)
+        self.__recentFileUICommands = []
         if self.__separator:
             self.RemoveItem(self.__separator)
+            self.__separator = None
 
-    def __recentFilesStartPosition(self):
-        return len(self.__fileMenuUICommands) - 1 # Start just before the Quit menu item
+
+class ExportMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ExportMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['exportashtml', 'exportasics'])
         
-    def __recentFilesStopPosition(self):
-        return len(self) - 1 # Stop just before the Quit menu item
-        
-        
+
 class EditMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(EditMenu, self).__init__(mainwindow)

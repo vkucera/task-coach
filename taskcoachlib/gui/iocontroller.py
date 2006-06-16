@@ -18,6 +18,9 @@ class IOController(object):
         self.__icsFileDialogOpts = {'default_path' : os.getcwd(), 
             'default_extension' : 'ics', 'wildcard' : 
             _('iCalendar files (*.ics)|*.ics|All files (*.*)|*') }
+        self.__htmlFileDialogOpts = {'default_path' : os.getcwd(), 
+            'default_extension' : 'html', 'wildcard' : 
+            _('HTML files (*.html)|*.html|All files (*.*)|*') }
 
     def needSave(self):
         return self.__taskFile.needSave()
@@ -97,6 +100,19 @@ class IOController(object):
             persistence.ICSWriter(icsFile).write(self.__taskFile)
             icsFile.close()
             self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': filename})
+            return True
+        else:
+            return False
+
+    def exportAsHTML(self, viewer, filename=None):
+        if not filename:
+            filename = self.__askUserForFile(_('Export as HTML...'),
+                flags=wx.SAVE, fileDialogOpts=self.__htmlFileDialogOpts)
+        if filename:
+            htmlFile = codecs.open(filename, 'w', 'utf-8')
+            persistence.HTMLWriter(htmlFile).write(viewer)
+            htmlFile.close()
+            self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s')%{'nrtasks': viewer.size(), 'filename': filename})
             return True
         else:
             return False

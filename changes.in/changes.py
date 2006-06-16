@@ -9,9 +9,12 @@ Release('0.59', 'June ?, 2006',
 page of the task editor is now adaptable, so that long filenames can be made 
 visible entirely.''', '1503006')],
     featuresAdded=[
-        Feature('''Columns with numbers or dates are right-aligned.'''),
-        Feature('''Simple printing of tasks.'''),
-        Feature('''Filter sidebar.''')]),
+        Feature('''Filter sidebar.'''),
+        Feature('''Printing. Selecting 'File' -> 'Print' will print the 
+currently active view.'''),
+        Feature('''Export to HTML. Selecting 'File' -> 'Export' -> 'to
+HTML' will export the currently active view to HTML.'''),
+        Feature('''Columns with numbers or dates are right-aligned.''')]),
 
 Release('0.58', 'May 14, 2006', 
     bugsFixed=[
