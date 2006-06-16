@@ -1,8 +1,8 @@
-import wx
+import wx, gui.viewer
 
 def viewer2html(viewer):
     visibleColumns = viewer.visibleColumns()
-    htmlText = '<html><body><table>\n'
+    htmlText = '<html><body><table border=1>\n'
     columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left',
                          wx.LIST_FORMAT_CENTRE: 'center',
                          wx.LIST_FORMAT_RIGHT: 'right'}[column.alignment()]
@@ -11,13 +11,37 @@ def viewer2html(viewer):
     for column, alignment in zip(visibleColumns, columnAlignments):
         htmlText += '<th align="%s">%s</th>'%(alignment, column.header())
     htmlText += '</tr>\n'
-    for item in viewer.model():
+    if viewer.isTreeViewer():
+        model2html = treeModel2html
+    else:
+        model2html = listModel2html
+    htmlText += model2html(viewer.model(), visibleColumns, columnAlignments)
+    htmlText += '</table></body></html>\n'
+    return htmlText
+ 
+def listModel2html(model, visibleColumns, columnAlignments):
+    htmlText = ''
+    for item in model:
         htmlText += '<tr>'
         for column, alignment in zip(visibleColumns, columnAlignments):
             htmlText += '<td align="%s">%s</td>'%(alignment,
                 column.render(item))
         htmlText += '</tr>\n'
-    htmlText += '</table></body></html>\n'
     return htmlText
- 
 
+def treeModel2html(model, visibleColumns, columnAlignments):
+    htmlText = ''
+    for item in model.rootTasks(): # Note: we assume a tree consists of tasks
+        htmlText += node2html(item, visibleColumns, columnAlignments)
+    return htmlText
+
+def node2html(item, visibleColumns, columnAlignments, level=0):
+    htmlText = '<tr>'
+    for column, alignment in zip(visibleColumns, columnAlignments):
+        space = '&nbsp;' * level * 3
+        htmlText += '<td align="%s">%s%s</td>'%(alignment, space, 
+            column.render(item))
+    htmlText += '</tr>\n'
+    for child in item.children():
+        htmlText += node2html(child, visibleColumns, columnAlignments, level+1)
+    return htmlText

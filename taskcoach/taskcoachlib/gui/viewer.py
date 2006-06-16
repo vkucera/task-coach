@@ -77,8 +77,10 @@ class ListViewer(Viewer):
             return expandedImageIndex
         else:
             return normalImageIndex
-        
 
+    def isTreeViewer(self):
+        return False
+        
 
 class TreeViewer(Viewer):
     def expandAll(self):
@@ -95,6 +97,9 @@ class TreeViewer(Viewer):
         
     def draggedItems(self):
         return [self.list[index] for index in self.widget.draggedItems()]
+
+    def isTreeViewer(self):
+        return True
         
         
 class ViewerWithColumns(Viewer):
@@ -235,9 +240,10 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             
     def _createColumns(self):
         return [widgets.Column(_('Subject'), None, 'subject', 
-            self.uiCommands['viewsortbysubject'], 
-            alignment=wx.LIST_FORMAT_LEFT)] + \
-            [widgets.Column(columnHeader, ('view', setting.lower()), setting, self.uiCommands['viewsortby' + setting.lower()], renderCallback) for \
+                self.uiCommands['viewsortbysubject'], self.renderSubject)] + \
+            [widgets.Column(columnHeader, ('view', setting.lower()), 
+            setting, self.uiCommands['viewsortby' + setting.lower()],
+            renderCallback, alignment=wx.LIST_FORMAT_RIGHT) for \
             columnHeader, setting, renderCallback in \
             (_('Start date'), 'startDate', lambda task: render.date(task.startDate())),
             (_('Due date'), 'dueDate', lambda task: render.date(task.dueDate())),
@@ -285,20 +291,9 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
     
     def getItemText(self, index, column=None):
         task = self.list[index]
-        # FIXME: When in a TaskTreeListViewer we need the subject non-recursively 
-        # (e.g., 'task') when in a TaskListViewer we need the subject recursively
-        # (e.g. 'parent -> task'. However, the following 5 lines depend on the fact 
-        # that getItemText is currently called *with* the column argument from
-        # a TreeCtrl and *without* the column from a TreeListCtrl.
         if not column:
             column = self.columns()[0]
-            recursively = False
-        else:
-            recursively = True
-        if column == self.columns()[0]:
-            return render.subject(task, recursively=recursively)
-        else:
-            return column.render(task)
+        return column.render(task)
                 
     def createColumnPopupMenu(self):
         return menu.TaskViewerColumnPopupMenu(self.parent, self.uiCommands)
@@ -327,6 +322,9 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
     
     def setViewCompositeTasks(self, viewCompositeTasks):
         self.list.setViewCompositeTasks(viewCompositeTasks)
+
+    def renderSubject(self, task):
+        return render.subject(task, recursively=True)
 
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
@@ -377,6 +375,9 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         childIndices = [self.list.index(child) for child in task.children() if child in self.list]
         childIndices.sort()
         return childIndices
+
+    def renderSubject(self, task):
+        return render.subject(task, recursively=False)
 
 
 class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
@@ -436,12 +437,12 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         return widget
     
     def _createColumns(self):
-        return [widgets.Column(columnHeader, None, None, None, renderCallback, 
-                alignment=wx.LIST_FORMAT_LEFT) \
+        return [widgets.Column(columnHeader, None, None, None, renderCallback) \
             for columnHeader, renderCallback in \
             (_('Period'), self.renderPeriod),
             (_('Task'), lambda effort: render.subject(effort.task(), recursively=True))] + \
-            [widgets.Column(columnHeader, ('view', setting), None, None, renderCallback) \
+            [widgets.Column(columnHeader, ('view', setting), None, None,
+            renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
             for columnHeader, setting, renderCallback in \
             (_('Time spent'), 'efforttimespent', lambda effort: render.timeSpent(effort.duration())),
             (_('Revenue'), 'effortrevenue', lambda effort: render.amount(effort.revenue()))]
@@ -474,7 +475,8 @@ class CompositeEffortListViewer(EffortListViewer):
     def _createColumns(self):
         return super(CompositeEffortListViewer, self)._createColumns() + \
             [widgets.Column(columnHeader, ('view', setting), None, None, 
-             renderCallback) for columnHeader, setting, renderCallback in 
+             renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
+             for columnHeader, setting, renderCallback in \
                 (_('Total time spent'), 'totalefforttimespent', 
                  lambda effort: render.timeSpent(effort.duration(recursive=True))),
                 (_('Total revenue'), 'totaleffortrevenue', 

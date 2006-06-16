@@ -318,6 +318,8 @@ class FileSaveSelection(NeedsSelectedTasks, IOCommand, ViewerCommand):
         self.iocontroller.saveselection(self.viewer.curselection()), 
 
 
+# FIXME: Move the printing specific stuff somewhere else
+
 import patterns
 class PrinterSettings(object):
     def __init__(self):
@@ -329,9 +331,8 @@ class PrinterSettings(object):
         self.updatePrintData(data.GetPrintData())
 
     def updatePrintData(self, printData):
-        printData = wx.PrintData(printData)
-        self.pageSetupData.SetPrintData(printData)
-        self.printData = printData
+        self.printData = wx.PrintData(printData)
+        self.pageSetupData.SetPrintData(self.printData)
 
 printerSettings = PrinterSettings()
 
