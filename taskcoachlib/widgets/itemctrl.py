@@ -129,12 +129,14 @@ class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithFileDropTarget):
 
 class Column(object):
     def __init__(self, columnHeader, visibilitySetting=None, sortKey=None, 
-            sortCallback=None, renderCallback=None):
+            sortCallback=None, renderCallback=None,
+            alignment=wx.LIST_FORMAT_RIGHT):
         self.__columnHeader = columnHeader
         self.__visibilitySetting = visibilitySetting
         self.__sortKey = sortKey
         self.__sortCallback = sortCallback
         self.__renderCallback = renderCallback or self.defaultRenderer
+        self.__alignment = alignment
         
     def header(self):
         return self.__columnHeader
@@ -154,6 +156,9 @@ class Column(object):
 
     def defaultRenderer(self, *args, **kwargs):
         return args[0]
+
+    def alignment(self):
+        return self.__alignment
         
     def __eq__(self, other):
         return self.header() == other.header()
@@ -174,7 +179,8 @@ class _BaseCtrlWithColumns(object):
 
     def _setColumns(self):
         for columnIndex, column in enumerate(self.__allColumns):
-            self.InsertColumn(columnIndex, column.header())
+            self.InsertColumn(columnIndex, column.header(), 
+                format=column.alignment())
             
     def _allColumns(self):
         return self.__allColumns
@@ -247,7 +253,8 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
             '''
         columnIndex = self._getColumnIndex(column.header())
         if show and not self.isColumnVisible(column):
-            self.InsertColumn(columnIndex, column.header())
+            self.InsertColumn(columnIndex, column.header(),
+                format=column.alignment())
         elif not show and self.isColumnVisible(column):
             self.DeleteColumn(columnIndex)
 

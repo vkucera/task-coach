@@ -9,6 +9,7 @@ Release('0.59', 'June ?, 2006',
 page of the task editor is now adaptable, so that long filenames can be made 
 visible entirely.''', '1503006')],
     featuresAdded=[
+        Feature('''Columns with numbers or dates are right-aligned.'''),
         Feature('''Simple printing of tasks.'''),
         Feature('''Filter sidebar.''')]),
 

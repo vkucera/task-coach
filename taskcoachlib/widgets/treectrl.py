@@ -449,11 +449,14 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
         self.RemoveColumn(columnIndex)
         self.refreshColumns()
         
-    def InsertColumn(self, columnIndex, columnHeader):
+    def InsertColumn(self, columnIndex, columnHeader, *args, **kwargs):
+        format = kwargs.pop('format', wx.LIST_FORMAT_LEFT)
         if columnIndex == self.GetColumnCount():
-            self.AddColumn(columnHeader)
+            self.AddColumn(columnHeader, *args, **kwargs)
         else:
-            super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader)
+            super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader, 
+                *args, **kwargs)
+        self.SetColumnAlignment(columnIndex, format)
         self.refreshColumns()
 
     def SelectAll(self):
