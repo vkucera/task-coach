@@ -52,13 +52,11 @@ class MultiLineTextCtrl(BaseTextCtrl):
         return value
     
             
-class StaticText(wx.Window):
-    def __init__(self, parent, text, helpText=None, *args, **kwargs):
-        super(StaticText, self).__init__(parent, -1, *args, **kwargs)
-        label = wx.StaticText(self, -1, text)
-        self.SetSize(label.GetSize())
-        if helpText:
-            self.SetToolTipString(helpText)
+class StaticTextWithToolTip(wx.StaticText):
+    def __init__(self, *args, **kwargs):
+        super(StaticTextWithToolTip, self).__init__(*args, **kwargs)
+        label = kwargs['label']
+        self.SetToolTip(wx.ToolTip(label))
 
 
 class SingleLineTextCtrlWithEnterButton(wx.Panel):
