@@ -82,10 +82,16 @@ pages['features'] = \
             Time spent can be viewed by individual effort period, by day, 
             by week, and by month.
             <LI>The %(name)s file format (.tsk) is XML. 
+            <LI>Tasks can be exported to HTML. Effort can be exported to
+            XML and iCalendar/ICS format.
+            <LI>Tasks and effort can be printed. When printing, Task
+            Coach print the information that is visible in the current
+            view, including any filters and sort order. 
         </UL>
         <H3>Missing features</H3>
         <P>The main feature that is currently missing is the possibility to
-        print/export reports. 
+        assign or be assigned tasks to/by other people via the 
+        iCalendar standard.
         </P>
         <H3>Requested features</H3>
         See <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">feature requests</A>.

@@ -11,9 +11,14 @@ visible entirely.''', '1503006')],
     featuresAdded=[
         Feature('''Filter sidebar.'''),
         Feature('''Printing. Selecting 'File' -> 'Print' will print the 
-currently active view.'''),
-        Feature('''Export to HTML. Selecting 'File' -> 'Export' -> 'to
-HTML' will export the currently active view to HTML.'''),
+currently active view. This means only the visible columns will be
+printed and only the filtered tasks will be printed, in the current sort
+order.''', '1481881', '1472662', '1307275', '1205819'),
+        Feature('''Export to HTML. Selecting 'File' -> 'Export' ->
+'Export to HTML' will export the currently active view to HTML. This
+means only the visible columns will be exported and only the filtered
+tasks will be printed, in the current sort order.''', '1375773',
+'1205819'),
         Feature('''Columns with numbers or dates are right-aligned.''')]),
 
 Release('0.58', 'May 14, 2006', 
