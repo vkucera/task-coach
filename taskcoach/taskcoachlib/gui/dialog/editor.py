@@ -282,11 +282,6 @@ class AttachmentPage(TaskEditorPage):
             orientation=wx.HORIZONTAL)
         boxSizer.Add(buttonBox2)
         attachmentBox.add(boxSizer)
-        if task.attachments():
-            self._listCtrl.SetItemState(0, wx.LIST_STATE_SELECTED, 
-                                        wx.LIST_STATE_SELECTED)
-        else:
-            self.onDeselectItem()
         attachmentBox.fit()
 
         filenameBox = widgets.BoxWithBoxSizer(self, 
@@ -301,6 +296,11 @@ class AttachmentPage(TaskEditorPage):
         self.fit()
         self.bindEventHandlers()
         self.onFileDrop(0, 0, task.attachments())
+        if task.attachments():
+            self._listCtrl.SetItemState(0, wx.LIST_STATE_SELECTED, 
+                                        wx.LIST_STATE_SELECTED)
+        else:
+            self.onDeselectItem()
 
     def bindEventHandlers(self):
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelectItem)
