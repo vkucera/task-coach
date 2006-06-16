@@ -3,4 +3,6 @@
 from ics.writer import ICSWriter
 from xml.writer import XMLWriter
 from xml.reader import XMLReader
+from html.writer import HTMLWriter
+from html.generator import viewer2html
 from taskfile import TaskFile, AutoSaver
