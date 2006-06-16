@@ -234,7 +234,9 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             ('view', 'sortascending'))
             
     def _createColumns(self):
-        return [widgets.Column(_('Subject'), None, 'subject', self.uiCommands['viewsortbysubject'])] + \
+        return [widgets.Column(_('Subject'), None, 'subject', 
+            self.uiCommands['viewsortbysubject'], 
+            alignment=wx.LIST_FORMAT_LEFT)] + \
             [widgets.Column(columnHeader, ('view', setting.lower()), setting, self.uiCommands['viewsortby' + setting.lower()], renderCallback) for \
             columnHeader, setting, renderCallback in \
             (_('Start date'), 'startDate', lambda task: render.date(task.startDate())),
@@ -434,7 +436,8 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         return widget
     
     def _createColumns(self):
-        return [widgets.Column(columnHeader, None, None, None, renderCallback) \
+        return [widgets.Column(columnHeader, None, None, None, renderCallback, 
+                alignment=wx.LIST_FORMAT_LEFT) \
             for columnHeader, renderCallback in \
             (_('Period'), self.renderPeriod),
             (_('Task'), lambda effort: render.subject(effort.task(), recursively=True))] + \
