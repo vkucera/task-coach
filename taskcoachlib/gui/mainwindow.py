@@ -50,7 +50,6 @@ class MainWindow(WindowWithPersistentDimensions):
         self.effortList = effortList
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_SIZE, self.onSize)
-        wx.GetApp().Bind(wx.EVT_QUERY_END_SESSION, self.onEndSession)
 
         self.splash = splash
 
@@ -121,6 +120,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.panel.SetSizerAndFit(self._sizer)
 
     def initWindow(self):
+        wx.GetApp().SetTopWindow(self)
         self.SetTitle(patterns.observer.Notification(self, 
             filename=self.taskFile.filename()))
         self.setIcon()
@@ -209,9 +209,9 @@ class MainWindow(WindowWithPersistentDimensions):
     def displayMessage(self, message, pane=0):
         self.GetStatusBar().SetStatusText(message, pane)
 
-    def quit(self, event=None):
+    def quit(self):
         if not self.iocontroller.close():
-            return
+            return 
         # FIXME: I'm not sure unicode strings will work in the TaskCoach.ini
         # file, so just to be sure we'll clear a possible search string:
         self.settings.set('view', 'tasksearchfilterstring', '') 
@@ -222,6 +222,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.settings.save()
         wx.GetApp().ProcessIdle()
         wx.GetApp().ExitMainLoop()
+        return
         
     def onClose(self, event):
         if event.CanVeto() and self.settings.getboolean('window', 
@@ -231,12 +232,6 @@ class MainWindow(WindowWithPersistentDimensions):
         else:
             self.quit()
 
-    def onEndSession(self, event):
-        event.Veto()
-        print 'onEndSession'
-        wx.MessageBox('bla') 
-        return False 
-    
     def restore(self, event):
         self.Show()
         self.Raise()
