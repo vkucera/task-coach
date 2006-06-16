@@ -14,7 +14,7 @@ class SubjectFilterPanel(wx.Panel):
         
     def createInterior(self):
         self.__timer = wx.Timer(self)
-        self._about = wx.StaticText(self, label= \
+        self._about = widgets.StaticTextWithToolTip(self, label= \
             _('Type a search string (a regular expression) ' 
               'and press enter.') + '\n')
         self._about.SetBackgroundColour(self.GetBackgroundColour())
@@ -118,7 +118,7 @@ class CategoriesFilterPanel(wx.Panel):
 
     def createInterior(self):
         taskList = self.__taskList
-        self._about = wx.StaticText(self, 
+        self._about = widgets.StaticTextWithToolTip(self, 
             label=_('Show tasks that belong to the categories selected below. '
                     'Unselect all categories to reset the filter.') + '\n') 
         self._checkListBox = wx.CheckListBox(self, style=wx.LB_SORT)
