@@ -3,7 +3,7 @@
 from domain import *
 
 releases = [             
-Release('0.59', 'June ?, 2006',
+Release('0.59', 'June 17, 2006',
     bugsFixed=[
         Bug('''The column width of the list with filenames in the attachment 
 page of the task editor is now adaptable, so that long filenames can be made 
