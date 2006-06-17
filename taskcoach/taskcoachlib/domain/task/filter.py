@@ -135,14 +135,20 @@ class CategoryFilter(Filter):
             
     def addCategory(self, category):
         self._categories.add(category)
+        self.notifyObservers(patterns.Notification(self, category=category),
+            'filter.category.add')
         self.reset()
         
     def removeCategory(self, category):
         self._categories.discard(category)
+        self.notifyObservers(patterns.Notification(self, category=category),
+            'filter.category.remove')
         self.reset()
         
     def removeAllCategories(self):
         self._categories.clear()
+        self.notifyObservers(patterns.Notification(self),
+            'filter.category.removeall')
         self.reset()
             
     def filteredCategories(self):

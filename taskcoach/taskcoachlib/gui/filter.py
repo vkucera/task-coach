@@ -140,12 +140,15 @@ class CategoriesFilterPanel(wx.Panel):
             label=_('Show tasks that match'),
             choices=[_('any of the above selected categories'),
                      _('all of the above selected categories')])
+        self.setRadioBox()
+        self.Enable(len(taskList.categories()) > 0)
+
+    def setRadioBox(self):
         if self.__settings.getboolean('view', 'taskcategoryfiltermatchall'):
             index = 1
         else:
             index = 0
         self._radioBox.SetSelection(index)
-        self.Enable(len(taskList.categories()) > 0)
 
     def layoutInterior(self):
         panelSizer = wx.BoxSizer(wx.VERTICAL)
@@ -161,6 +164,14 @@ class CategoriesFilterPanel(wx.Panel):
         self._checkListBox.Bind(wx.EVT_CHECKLISTBOX, self.onCheckCategory)
         self._radioBox.Bind(wx.EVT_RADIOBOX, self.onCheckMatchAll)
         self.__taskList.registerObserver(self.onTaskChanged)
+        self.__settings.registerObserver(self.onMatchAllChanged,
+            ('view', 'taskcategoryfiltermatchall'))
+        self.__taskList.registerObserver(self.onFilterCategoryAdd,
+            'filter.category.add')
+        self.__taskList.registerObserver(self.onFilterCategoryRemove,
+            'filter.category.remove')
+        self.__taskList.registerObserver(self.onFilterCategoryRemoveAll,
+            'filter.category.removeall')
 
     def onCheckCategory(self, event):
         category = self._checkListBox.GetString(event.GetInt())
@@ -181,6 +192,22 @@ class CategoriesFilterPanel(wx.Panel):
         for category in event.categoriesRemoved:
             self._checkListBox.Delete(self._checkListBox.FindString(category))
         self.Enable(len(self.__taskList.categories()) > 0)
+
+    def onMatchAllChanged(self, notification):
+        self.setRadioBox()
+
+    def onFilterCategoryAdd(self, notification):
+        category = notification.category
+        self._checkListBox.Check(self._checkListBox.FindString(category))
+
+    def onFilterCategoryRemove(self, notification):
+        category = notification.category
+        self._checkListBox.Check(self._checkListBox.FindString(category), 
+                                 False)
+
+    def onFilterCategoryRemoveAll(self, notification):
+        for index in range(self._checkListBox.GetCount()):
+            self._checkListBox.Check(index, False)
 
 
 class DueDateFilterPanel(wx.Panel):
