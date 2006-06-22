@@ -39,6 +39,7 @@ class Task(patterns.Observable):
         self.notifyObservers(notification, *args, **kwargs)       
     
     def notifyObservers(self, notification, *args, **kwargs):
+        #print 'Task.notifyObservers(%s, %s)'%(notification, args)
         if notification.changeNeedsSave:
             self.setLastModificationTime()
         super(Task, self).notifyObservers(notification, *args, **kwargs)
@@ -143,12 +144,14 @@ class Task(patterns.Observable):
             self._children.append(child)
             child.setParent(self)
             child.registerObserver(self.onNotify)
-            self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, childAdded=child))
+            self.notifyObservers(patterns.Notification(self, 
+                changeNeedsSave=True, childAdded=child))
 
     def removeChild(self, child):
         self._children.remove(child)
         child.removeObserver(self.onNotify)
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, childRemoved=child))
+        self.notifyObservers(patterns.Notification(self, 
+            changeNeedsSave=True, childRemoved=child))
 
     def setParent(self, parent):
         self._parent = parent
@@ -235,7 +238,8 @@ class Task(patterns.Observable):
     def removeEffort(self, effort):
         self._efforts.remove(effort)
         effort.removeObserver(self.notifyEffortChanged)
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True, effortsRemoved=[effort]))
+        self.notifyObservers(patterns.Notification(self, 
+            changeNeedsSave=True, effortsRemoved=[effort]))
         
     def notifyEffortChanged(self, notification, *args, **kwargs):
         if notification.source.task() != self:
@@ -297,14 +301,20 @@ class Task(patterns.Observable):
         return result
         
     def addCategory(self, category):
-        self._categories.add(category)
-        self.notifyObservers(patterns.observer.Notification(self, 
-            changeNeedsSave=True, categoriesAdded=[category]))
+        if category not in self._categories:
+            self._categories.add(category)
+            self.notifyObservers(patterns.observer.Notification(self, 
+                changeNeedsSave=True))
+            self.notifyObservers(patterns.observer.Notification(self, 
+                categoriesAdded=[category]), 'task.category.add')
         
     def removeCategory(self, category):
-        self._categories.discard(category)
-        self.notifyObservers(patterns.observer.Notification(self, 
-            changeNeedsSave=True, categoriesRemoved=[category]))
+        if category in self._categories:
+            self._categories.discard(category)
+            self.notifyObservers(patterns.observer.Notification(self, 
+                changeNeedsSave=True))
+            self.notifyObservers(patterns.observer.Notification(self, 
+                categoriesRemoved=[category]), 'task.category.remove')
 
     # priority
     
