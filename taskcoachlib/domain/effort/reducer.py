@@ -6,8 +6,8 @@ import patterns, effort, sets
 
 class EffortReducer(patterns.ObservableListObserver):
     ''' This class observers an EffortList and aggregates the individual effort
-    records to CompositeEfforts, e.g. per day or per week. This class is abstract.
-    Subclasses should implement timePeriod(effort).'''
+        records to CompositeEfforts, e.g. per day or per week. This class is 
+        abstract. Subclasses should implement timePeriod(effort).'''
     
     def __init__(self, *args, **kwargs):
         self.__taskAndTimeToCompositesMapping = {}
@@ -54,9 +54,12 @@ class EffortReducer(patterns.ObservableListObserver):
         return changedCompositesKeys
    
     def __removeEmptyCompositeEfforts(self, changedOrRemovedCompositesKeys):
-        composites = [self.__taskAndTimeToCompositesMapping[key] for key in changedOrRemovedCompositesKeys]
-        removedComposites = [composite for composite in composites if len(composite) == 0]
-        changedComposites = [composite for composite in composites if len(composite) > 0]
+        composites = [self.__taskAndTimeToCompositesMapping[key] \
+                      for key in changedOrRemovedCompositesKeys]
+        removedComposites = [composite for composite in composites \
+                             if len(composite) == 0]
+        changedComposites = [composite for composite in composites \
+                             if len(composite) > 0]
         for composite in removedComposites:
             del self.__taskAndTimeToCompositesMapping[self.__key(composite)]
         self._removeItems(removedComposites)
@@ -76,9 +79,11 @@ class EffortPerDay(EffortReducer):
     def timePeriod(self, effort):
         return effort.getStart().startOfDay(), effort.getStart().endOfDay()
 
+
 class EffortPerWeek(EffortReducer): 
     def timePeriod(self, effort):
         return effort.getStart().startOfWeek(), effort.getStart().endOfWeek()
+
 
 class EffortPerMonth(EffortReducer):
     def timePeriod(self, effort):

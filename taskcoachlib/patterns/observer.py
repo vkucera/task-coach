@@ -193,7 +193,7 @@ class ObservableObservablesList(ObservableList, ObservablesList):
     def onNotify(self, notification, *args, **kwargs):
         myNotification = Notification(self, itemsChanged=[notification.source],
             changeNeedsSave=notification.changeNeedsSave)
-        self.notifyObservers(myNotification)
+        self.notifyObservers(myNotification, *args, **kwargs)
 
 
 class ObservableListObserver(ObservableList):

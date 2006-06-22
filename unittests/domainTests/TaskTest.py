@@ -1066,6 +1066,8 @@ class TaskLastModificationTimeTest(test.TestCase):
         self.assertLastModificationTimeIsNow(self.task)
 
     def testRemoveCategoryAffectsLastModificationTime(self):
+        self.task.addCategory('New category')
+        self.task.setLastModificationTime(date.DateTime(2004,1,1))
         self.task.removeCategory('New category')
         self.assertLastModificationTimeIsNow(self.task)
         

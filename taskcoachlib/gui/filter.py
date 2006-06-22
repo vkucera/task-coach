@@ -163,7 +163,10 @@ class CategoriesFilterPanel(wx.Panel):
     def bindEventHandlers(self):
         self._checkListBox.Bind(wx.EVT_CHECKLISTBOX, self.onCheckCategory)
         self._radioBox.Bind(wx.EVT_RADIOBOX, self.onCheckMatchAll)
-        self.__taskList.registerObserver(self.onTaskChanged)
+        self.__taskList.registerObserver(self.onTaskListCategoryAdded,
+            'tasklist.category.add')
+        self.__taskList.registerObserver(self.onTaskListCategoryRemoved,
+            'tasklist.category.remove')
         self.__settings.registerObserver(self.onMatchAllChanged,
             ('view', 'taskcategoryfiltermatchall'))
         self.__taskList.registerObserver(self.onFilterCategoryAdd,
@@ -186,9 +189,14 @@ class CategoriesFilterPanel(wx.Panel):
         setting = ['False', 'True'][index]
         self.__settings.set('view', 'taskcategoryfiltermatchall', setting)
 
-    def onTaskChanged(self, event):
+    def onTaskListCategoryAdded(self, event):
+        print 'CategoriesFilterPanel.onTaskListCategoryAdded(%s)'%event
         for category in event.categoriesAdded:
             self._checkListBox.Append(category)
+        self.Enable(len(self.__taskList.categories()) > 0)
+
+    def onTaskListCategoryRemoved(self, event):
+        print 'CategoriesFilterPanel.onTaskListCategoryAdded(%s)'%event
         for category in event.categoriesRemoved:
             self._checkListBox.Delete(self._checkListBox.FindString(category))
         self.Enable(len(self.__taskList.categories()) > 0)
