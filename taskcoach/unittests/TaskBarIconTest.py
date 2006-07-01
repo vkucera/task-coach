@@ -1,5 +1,6 @@
 import test, gui, wx, meta, gui.taskbaricon
 import domain.task as task
+import domain.effort as effort
 import domain.date as date
 
 class MainWindowMock:
@@ -27,10 +28,24 @@ class TaskBarIconTest(test.TestCase):
         self.assertTooltip('No tasks due today')
 
     def testTooltip_OneTaskDueToday(self):
-        self.taskList.append(task.Task(duedate=date.Today()))
+        self.taskList.append(task.Task(dueDate=date.Today()))
         self.assertTooltip('One task due today')
         
     def testTooltip_MultipleTasksDueToday(self):
-        self.taskList.append(task.Task(duedate=date.Today()))
-        self.taskList.append(task.Task(duedate=date.Today()))
+        self.taskList.append(task.Task(dueDate=date.Today()))
+        self.taskList.append(task.Task(dueDate=date.Today()))
         self.assertTooltip('2 tasks due today')
+
+    def testStartTracking(self):
+        activeTask = task.Task()
+        self.taskList.append(activeTask)
+        activeTask.addEffort(effort.Effort(activeTask))
+        self.assertEqual('tick', self.icon.bitmap())
+
+    def testStopTracking(self):
+        activeTask = task.Task()
+        self.taskList.append(activeTask)
+        activeEffort = effort.Effort(activeTask)
+        activeTask.addEffort(activeEffort)
+        activeTask.removeEffort(activeEffort)
+        self.assertEqual(self.icon.defaultBitmap(), self.icon.bitmap())

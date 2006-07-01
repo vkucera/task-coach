@@ -44,14 +44,15 @@ class CommonTests:
     def testTurnOnTotalFixedFeeColumn(self):
         self.settings.set('view', 'totalfixedfee', 'True')
         self.assertEqual(_('Total fixed fee'), self.viewer.GetColumn(3).GetText())
-        
+
 
 class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests, 
         test.wxTestCase):
     def setUp(self):
         super(TaskListViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
+        self.taskList = task.sorter.Sorter(task.TaskList(), 
+            settings=self.settings)
         self.settings.set('view', 'sortby', 'subject')
         self.task = task.Task('task')
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
@@ -127,4 +128,4 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         child2.setDueDate(date.Today())
         self.settings.set('view', 'sortby', 'dueDate')
         self.assertItems(child2, child, self.task, task2)
-        
+

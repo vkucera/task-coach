@@ -55,11 +55,13 @@ class ViewFilterTest(test.TestCase):
         self.list = task.TaskList()
         self.settings = config.Settings(load=False)
         self.filter = task.filter.ViewFilter(self.list, settings=self.settings)
-        self.task = task.Task()
-        self.dueToday = task.Task(duedate=date.Today())
-        self.dueTomorrow = task.Task(duedate=date.Tomorrow())
-        self.dueYesterday = task.Task(duedate=date.Yesterday())
-        self.child = task.Task()
+        self.task = task.Task(subject='task')
+        self.dueToday = task.Task(subject='due today', dueDate=date.Today())
+        self.dueTomorrow = task.Task(subject='due tomorrow', 
+            dueDate=date.Tomorrow())
+        self.dueYesterday = task.Task(subject='due yesterday', 
+            dueDate=date.Yesterday())
+        self.child = task.Task(subject='child')
 
     def testCreate(self):
         self.assertEqual(0, len(self.filter))
@@ -110,7 +112,7 @@ class ViewFilterTest(test.TestCase):
         self.assertEqual(2, len(self.filter))
     
     def testFilterDueWeekend(self):
-        dueNextWeek = task.Task(duedate=date.Today() + \
+        dueNextWeek = task.Task(dueDate=date.Today() + \
             date.TimeDelta(days=8))
         self.filter.extend([self.dueToday, dueNextWeek])
         self.settings.set('view', 'tasksdue', 'Workweek')
@@ -123,9 +125,9 @@ class ViewFilterInTreeModeTest(test.TestCase):
         self.settings = config.Settings(load=False)
         self.filter = task.filter.ViewFilter(self.list, settings=self.settings, treeMode=True)
         self.task = task.Task()
-        self.dueToday = task.Task(duedate=date.Today())
-        self.dueTomorrow = task.Task(duedate=date.Tomorrow())
-        self.dueYesterday = task.Task(duedate=date.Yesterday())
+        self.dueToday = task.Task(dueDate=date.Today())
+        self.dueTomorrow = task.Task(dueDate=date.Tomorrow())
+        self.dueYesterday = task.Task(dueDate=date.Yesterday())
         self.child = task.Task()
         
     def testCreate(self):
@@ -154,8 +156,8 @@ class CompositeFilterTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.filter = task.filter.CompositeFilter(self.list, 
             settings=self.settings)
-        self.task = task.Task()
-        self.child = task.Task()
+        self.task = task.Task(subject='task')
+        self.child = task.Task(subject='child')
         self.task.addChild(self.child)
         self.filter.append(self.task)
 
@@ -165,13 +167,42 @@ class CompositeFilterTest(test.wxTestCase):
     def testTurnOn(self):
         self.settings.set('view', 'compositetasks', 'False')
         self.assertEqual([self.child], list(self.filter))
-                
-    def testTurnOnAndAddChild(self):
+
+    def testTurnOff(self):
         self.settings.set('view', 'compositetasks', 'False')
-        grandChild = task.Task()
+        self.settings.set('view', 'compositetasks', 'True')
+        self.assertEqual(2, len(self.filter))
+                
+    def testAddChild(self):
+        self.settings.set('view', 'compositetasks', 'False')
+        grandChild = task.Task(subject='grandchild')
         self.child.addChild(grandChild)
         self.list.append(grandChild)
         self.assertEqual([grandChild], list(self.filter))
+
+    def testRemoveChild(self):
+        self.settings.set('view', 'compositetasks', 'False')
+        self.list.remove(self.child)
+        self.assertEqual([self.task], list(self.filter))
+
+    def _addTwoGrandChildren(self):
+        self.grandChild1 = task.Task(subject='grandchild 1')
+        self.grandChild2 = task.Task(subject='grandchild 2')
+        self.child.addChild(self.grandChild1)
+        self.child.addChild(self.grandChild2)
+        self.list.extend([self.grandChild1, self.grandChild2])
+
+    def testAddTwoChildren(self):
+        self.settings.set('view', 'compositetasks', 'False')
+        self._addTwoGrandChildren()
+        self.assertEqual([self.grandChild1, self.grandChild2], 
+            list(self.filter))
+
+    def testRemoveTwoChildren(self):
+        self._addTwoGrandChildren()
+        self.settings.set('view', 'compositetasks', 'False')
+        self.list.removeItems([self.grandChild1, self.grandChild2])
+        self.assertEqual([self.child], list(self.filter))
 
 
 class SearchFilterTest(test.TestCase):
@@ -225,6 +256,17 @@ class SearchFilterTest(test.TestCase):
         self.parent.addChild(self.child) # simulate a child that has been filtered 
         self.setSearchString('DEF')
         self.assertEqual(0, len(self.filter))
+
+    def testAddTask(self):
+        self.setSearchString('XYZ')
+        taskXYZ = task.Task(subject='subject with XYZ')
+        self.list.append(taskXYZ)
+        self.assertEqual([taskXYZ], list(self.filter))
+
+    def testRemoveTask(self):
+        self.setSearchString('DEF')
+        self.list.remove(self.child)
+        self.failIf(self.filter)
 
         
 class CategoryFilterTest(test.TestCase):

@@ -112,44 +112,6 @@ class EditEffortCommandTest(EffortCommandTestCase):
         self.redo()
         self.assertEqual(self.effort, self.events[1].value())
 
-"""
-class EditEffortCommandNotificationTest(EffortCommandTestCase):
-    def setUp(self):
-        super(EditEffortCommandNotificationTest, self).setUp()
-        self.originalTask.registerObserver(self.onNotify)
-        self.edit = command.EditEffortCommand(self.effortList, [self.effort])
-        newTask = task.Task()
-        self.events = []
-        newTask.registerObserver(self.onNotify)
-        self.edit.items[0].setTask(newTask)
-        self.edit.do()        
-    
-    def clearNotifications(self):           
-        self.notifiedOfEffortRemoved = False
-        self.notifiedOfEffortAdded = False
-        
-    def onNotify(self, notification, *args, **kwargs):
-        if notification.effortsRemoved:
-            self.notifiedOfEffortRemoved = True
-        elif notification.effortsAdded:
-            self.notifiedOfEffortAdded = True
-            
-    def assertNotifiedOfEffortsAddedAndRemoved(self):
-        self.failUnless(self.notifiedOfEffortRemoved and \
-                        self.notifiedOfEffortAdded)
-            
-    def testEditTaskNotifiesOldAndNewTaskAfterUndo(self):
-        self.clearNotifications()
-        self.edit.undo()
-        self.assertNotifiedOfEffortsAddedAndRemoved()
-
-    def testEditTaskNotifiesOldAndNewTaskAfterRedo(self):
-        self.edit.undo()
-        self.clearNotifications()
-        self.edit.redo()
-        self.assertNotifiedOfEffortsAddedAndRemoved()
-        
-"""
 
 class StartAndStopEffortCommandTest(EffortCommandTestCase):
     def setUp(self):

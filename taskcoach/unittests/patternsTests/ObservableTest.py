@@ -1,283 +1,241 @@
 import test, patterns
 
     
-class ObservableTestCase(test.TestCase):
+class ObservableTest(test.TestCase):
     def setUp(self):
-        super(ObservableTestCase, self).setUp()
-        self.addNotifications = self.removeNotifications = self.changeNotifications = 0
-        self.addedItems = self.removedItems = self.changedItems = None
-        self.observable = self.getObservable()
-        self.observable.registerObserver(self.onNotify)
+        self.observable = patterns.Observable()
+        self.observable.registerObserver(self.onEvent, 'eventtype')
+        self.event = patterns.Event(self, 'eventtype', 'some value')
+        self.eventsReceived = []
+
+    def onEvent(self, event):
+        self.eventsReceived.append(event)
+
+    def testRegisterObserver(self):
+        self.assertEqual([self.onEvent],
+            self.observable.observers('eventtype'))
+
+    def testNotifyObservers(self):
+        self.observable.notifyObservers(self.event)
+        self.assertEqual(self.event, self.eventsReceived[0])
         
-    def onNotify(self, notification, *args, **kwargs):
-        if notification.itemsAdded:
-            self.addNotifications += 1
-            self.addedItems = notification.itemsAdded
-        elif notification.itemsRemoved:
-            self.removeNotifications += 1
-            self.removedItems = notification.itemsRemoved
-        elif notification.itemsChanged:
-            self.changeNotifications += 1
-            self.changedItems = notification.itemsChanged        
-        else:
-            self.changeNotifications += 1
-            self.changedItems = notification.source
-            
-            
-class ObservableTest(ObservableTestCase):
-    def getObservable(self):
-        return patterns.Observable()
-
-    def check(self, notifications):
-        self.assertEqual(notifications, self.changeNotifications)
-        
-    def testNoNotificationOnRegistration(self):
-        self.check(notifications=0)
-
-    def testNotificationOnChange(self):
-        self.observable.notifyObservers(patterns.observer.Notification(self.observable))
-        self.check(notifications=1)
-
     def testRemoveObserver(self):
-        self.observable.removeObserver(self.onNotify)
-        self.observable.notifyObservers(patterns.observer.Notification(self.observable))
-        self.check(notifications=0)
+        self.observable.removeObserver(self.onEvent)
+        self.assertEqual([], self.observable.observers('eventtype'))
+        self.observable.notifyObservers(self.event)
+        self.failIf(self.eventsReceived)
 
     def testRemoveObserverTwice(self):
-        self.observable.removeObserver(self.onNotify)
-        self.observable.removeObserver(self.onNotify)
+        self.observable.removeObserver(self.onEvent)
+        self.observable.removeObserver(self.onEvent)
+
+    def testNotifyObserverWithAnotherEventType(self):
+        event = patterns.Event(self, 'eventtype2', 'some value')
+        self.observable.notifyObservers(event)
+        self.failIf(self.eventsReceived)
+
+    def testMultipleObservers(self):
+        self.observable.registerObserver(self.onEvent, 'eventtype')
+        self.observable.notifyObservers(self.event)
+        self.assertEqual([self.event]*2, self.eventsReceived)
+
+    # Semaphore tests:
+
+    def testStopNotifying(self):
+        self.observable.stopNotifying()
+        self.observable.notifyObservers(self.event)
+        self.failIf(self.eventsReceived)
+
+    def testStartNotifying(self):
+        self.observable.stopNotifying()
+        self.observable.startNotifying()
+        self.observable.notifyObservers(self.event)
+        self.assertEqual(self.event, self.eventsReceived[0])
+
+    def testStopNotifyingTwice(self):
+        self.observable.stopNotifying()
+        self.observable.stopNotifying()
+        self.observable.notifyObservers(self.event)
+        self.failIf(self.eventsReceived)
+
+    def testStopNotifyingTwiceAndStartNotifyingOnce(self):
+        self.observable.stopNotifying()
+        self.observable.stopNotifying()
+        self.observable.startNotifying()
+        self.observable.notifyObservers(self.event)
+        self.failIf(self.eventsReceived)
+
+    def testStopNotifyingTwiceAndStartNotifyingTwice(self):
+        self.observable.stopNotifying()
+        self.observable.stopNotifying()
+        self.observable.startNotifying()
+        self.observable.startNotifying()
+        self.observable.notifyObservers(self.event)
+        self.assertEqual(self.event, self.eventsReceived[0])
 
 
-class ObservableWithEventTypeTest(test.TestCase):
+class ObservableListTest(test.TestCase):
     def setUp(self):
-        self.observable = patterns.Observable()
-        self.observable.registerObserver(self.onNotify, 'OnlyInterestedInThis')
-        self.notifications = 0
+        self.list = patterns.ObservableList()
+        self.list.registerObserver(self.onAdd, 'list.add')
+        self.list.registerObserver(self.onRemove, 'list.remove')
+        self.receivedAddEvents = []
+        self.receivedRemoveEvents = []
 
-    def onNotify(self, *args, **kwargs):
-        self.notifications += 1
-        
-    def testInterestedInNotification(self):
-        self.observable.notifyObservers(patterns.Notification(self.observable), 'OnlyInterestedInThis')
-        self.assertEqual(1, self.notifications)
-        
-    def testNotInterestedInNotification(self):
-        self.observable.notifyObservers(patterns.Notification(self.observable), 'SomethingElseHappened')
-        self.assertEqual(0, self.notifications)
-        
-    def testNotificationWithoutEventType(self):
-        self.observable.notifyObservers(patterns.Notification(self.observable))
-        self.assertEqual(0, self.notifications)
+    def onAdd(self, event):
+        self.receivedAddEvents.append(event)
 
-    def testRegisterForMultipleEventTypes(self):
-        self.observable.registerObserver(self.onNotify, 'AnotherEventType')
-        self.observable.notifyObservers(patterns.Notification(self.observable), 'AnotherEventType')
-        self.assertEqual(1, self.notifications)
+    def onRemove(self, event):
+        self.receivedRemoveEvents.append(event)
 
-    def testRegisterForMultipleEventTypesAtOnce(self):
-        self.observable.registerObserver(self.onNotify, 'AnotherEventType', 'AndAnother')
-        self.observable.notifyObservers(patterns.Notification(self.observable), 'AnotherEventType')
-        self.observable.notifyObservers(patterns.Notification(self.observable), 'AndAnother')
-        self.assertEqual(2, self.notifications)
-        
-        
-class MockObservablesList(patterns.ObservablesList):
-    def __init__(self, *args, **kwargs):
-        super(MockObservablesList, self).__init__(*args, **kwargs)
-        self.notifications = 0
-        
-    def onNotify(self, *args):
-        self.notifications += 1
-        super(MockObservablesList, self).onNotify(*args)
-
-        
-class ObservablesListTest(test.TestCase):
-    def setUp(self):
-        self.list = MockObservablesList()
-        self.observable = patterns.Observable()
-    
-    def assertNotificationsAfterChange(self, notifications):
-        self.observable.notifyObservers(patterns.observer.Notification(self.observable))
-        self.assertEqual(notifications, self.list.notifications)
-            
-    def testCreate(self):
-        self.assertEqual(0, len(self.list))
-        
-    def testCreateWithInitList(self):
-        self.list = MockObservablesList([self.observable])
-        self.assertNotificationsAfterChange(1)
-        
     def testAppend(self):
-        self.list.append(self.observable)
-        self.assertNotificationsAfterChange(1)
-        
+        self.list.append(1)
+        self.assertEqual(1, self.receivedAddEvents[0].value())
+
     def testExtend(self):
-        self.list.extend([self.observable])
-        self.assertNotificationsAfterChange(1)
-        
-    def testDeleteItem(self):
-        self.list.append(self.observable)
-        del self.list[0]
-        self.assertNotificationsAfterChange(0)
-    
-    def testDeleteSlice(self):    
-        self.list.append(self.observable)
-        del self.list[:]
-        self.assertNotificationsAfterChange(0)
+        self.list.extend([1, 2, 3])
+        self.assertEqual((1, 2, 3), self.receivedAddEvents[0].values())
 
-    def testRemove(self):
-        self.list.append(self.observable)
-        self.list.remove(self.observable)
-        self.assertNotificationsAfterChange(0)
-    
-    def testInsert(self):
-        self.list.insert(0, self.observable)    
-        self.assertNotificationsAfterChange(1)
-        
-
-class ObservableObservablesListTest(ObservableTestCase):        
-    def getObservable(self):
-        return patterns.ObservableObservablesList()
-        
-    def setUp(self):
-        super(ObservableObservablesListTest, self).setUp()
-        self.observableItem = patterns.Observable()
-        self.observable.append(self.observableItem)
-        
-    def check(self, addNotifications=0, removeNotifications=0, changeNotifications=0,
-            lenObservable=0, addedItems=None, removedItems=None, changedItems=None):
-        self.assertEqual(lenObservable, len(self.observable))
-        self.assertEqual(addNotifications, self.addNotifications)
-        self.assertEqual(removeNotifications, self.removeNotifications)
-        self.assertEqual(changeNotifications, self.changeNotifications)
-        self.assertEqual(addedItems, self.addedItems)
-        self.assertEqual(removedItems, self.removedItems)
-        self.assertEqual(changedItems, self.changedItems)
-        
-    def testAppend(self):
-        self.check(addNotifications=1, lenObservable=1, addedItems=[self.observableItem])
-        
-    def testRemove(self):
-        self.observable.remove(self.observableItem)
-        self.check(addNotifications=1, removeNotifications=1, lenObservable=0, 
-            addedItems=[self.observableItem], removedItems=[self.observableItem])
-        
-    def testChangeObservableItem(self):
-        self.observableItem.notifyObservers(patterns.observer.Notification(self.observableItem))
-        self.check(addNotifications=1, changeNotifications=1, lenObservable=1, 
-            addedItems=[self.observableItem], changedItems=[self.observableItem])
-        
-
-class ObservableListTest(ObservableTestCase):
-    def getObservable(self):
-        return patterns.ObservableList([0])
-        
-    def check(self, addNotifications=0, removeNotifications=0, lenObservable=0, 
-            addedItems=None, removedItems=None):
-        self.assertEqual(lenObservable, len(self.observable))
-        self.assertEqual(addNotifications, self.addNotifications)
-        self.assertEqual(removeNotifications, self.removeNotifications)
-        self.assertEqual(addedItems, self.addedItems)
-        self.assertEqual(removedItems, self.removedItems)
-                
-    def testAppend(self):
-        self.observable.append(1)
-        self.check(addNotifications=1, lenObservable=2, addedItems=[1])
-        
-    def testExtend(self):
-        self.observable.extend([1,2,3])
-        self.check(addNotifications=1, lenObservable=4, addedItems=[1,2,3])
-        
-    def testExtend_WithEmptyList(self):
-        self.observable.extend([])
-        self.check(lenObservable=1)
+    def testExtend_NoItems(self):
+        self.list.extend([])
+        self.failIf(self.receivedAddEvents)
 
     def testInsert(self):
-        self.observable.insert(0, 1)
-        self.check(addNotifications=1, lenObservable=2, addedItems=[1])        
-
-    def testDeleteItem(self):
-        del self.observable[0]
-        self.check(removeNotifications=1, lenObservable=0, removedItems=[0])
- 
-    def testDeleteSlice(self):
-        del self.observable[:]
-        self.check(removeNotifications=1, lenObservable=0, removedItems=[0])
-        
-    def testRemove(self):
-        self.observable.remove(0)
-        self.check(removeNotifications=1, lenObservable=0, removedItems=[0])
-    
-    def testRemoveObserver(self):
-        self.observable.removeObserver(self.onNotify)
-        self.observable.remove(0)
-        self.check(lenObservable=0)
-
-    
-class ObservableListObserverTest(ObservableTestCase):
-    def getObservable(self):
-        return patterns.ObservableListObserver(patterns.ObservableObservablesList([patterns.Observable()]))
-
-    def setUp(self):
-        super(ObservableListObserverTest, self).setUp()
-        self.observableItem = patterns.Observable()
-        
-    def check(self, addNotifications=0, removeNotifications=0, lenOriginal=0):
-        self.assertEqual(lenOriginal, len(self.observable.original()))
-        self.assertEqual(lenOriginal, len(self.observable))
-        self.assertEqual(addNotifications, self.addNotifications)
-        self.assertEqual(removeNotifications, self.removeNotifications)
-
-    def testAppend(self):
-        self.observable.append(self.observableItem)
-        self.check(addNotifications=1, lenOriginal=2)
-        
-    def testExtend(self):
-        self.observable.extend([self.observableItem, patterns.Observable()])
-        self.check(addNotifications=1, lenOriginal=3)
-
-    def testExtend_WithEmptyList(self):
-        self.observable.extend([])
-        self.check(lenOriginal=1)
-
-    def testDeleteItem(self):
-        del self.observable[0]
-        self.check(removeNotifications=1, lenOriginal=0)
-
-    def testDeleteSlice(self):
-        del self.observable[:]
-        self.check(removeNotifications=1, lenOriginal=0)
+        self.list.insert(0, 'abc')
+        self.assertEqual('abc', self.receivedAddEvents[0].value())
 
     def testRemove(self):
-        self.observable.append(self.observableItem)
-        self.observable.remove(self.observableItem)
-        self.check(removeNotifications=1, addNotifications=1, lenOriginal=1)
+        self.list.append(1)
+        self.list.remove(1)
+        self.assertEqual(1, self.receivedRemoveEvents[0].value())
 
-    def testInsert(self):
-        self.observable.insert(0, self.observableItem)
-        self.check(addNotifications=1, lenOriginal=2)
-        
     def testRemoveItems(self):
-        self.observable.append(self.observableItem)
-        self.observable.removeItems([self.observableItem])
-        self.check(addNotifications=1, removeNotifications=1, lenOriginal=1)
+        self.list.extend([1, 2, 3])
+        self.list.removeItems([1, 2])
+        self.assertEqual((1, 2), self.receivedRemoveEvents[0].values())
+
+    def testRemoveItems_NoItems(self):
+        self.list.extend([1, 2, 3])
+        self.list.removeItems([])
+        self.failIf(self.receivedRemoveEvents)
+
+    def testDeleteItem(self):
+        self.list.extend([1, 2, 3])
+        del self.list[0]
+        self.assertEqual(1, self.receivedRemoveEvents[0].value())
+
+    def testDeleteSlice(self):
+        self.list.extend([1, 2, 3])
+        del self.list[0:2]
+        self.assertEqual((1, 2), self.receivedRemoveEvents[0].values())
+
+    def testOriginalNotEmpty(self):
+        list = patterns.ObservableList([1, 2, 3])
+        observer = patterns.ObservableListObserver(list)
+        self.assertEqual([1, 2, 3], observer)
 
 
-class NotificationTest(test.TestCase):
+class ObservableListObserverTest_AddItems(test.TestCase):
     def setUp(self):
-        self.notification = patterns.observer.Notification(self)
-        
-    def testSource(self):
-        self.assertEqual(self, self.notification.source)
-        
-    def testSetItem(self):
-        self.notification['test'] = 'Test'
-        self.assertEqual('Test', self.notification.test)
-        
-    def testStr(self):
-        self.failUnless(str(self.notification).startswith('Notification'))
-        
-    def testSetAttribute(self):
-        self.notification.source = 'Test'
-        self.assertEqual('Test', self.notification.source)
+        self.list = patterns.ObservableList()
+        self.observer = patterns.ObservableListObserver(self.list)
 
+    def testOriginal(self):
+        self.assertEqual(self.list, self.observer.original())
+
+    def testAppendToOriginal(self):
+        self.list.append(1)
+        self.assertEqual(1, self.observer[0])
+
+    def testAppendToObserver(self):
+        self.observer.append(1)
+        self.failUnless(1 == self.list[0] == self.observer[0])
+
+    def testExtendOriginal(self):
+        self.list.extend([1, 2, 3])
+        self.assertEqual([1, 2, 3], self.observer)
+
+    def testExtendObserver(self):
+        self.observer.extend([1, 2, 3])
+        self.failUnless([1, 2, 3] == self.list == self.observer)
+
+    def testInsertOriginal(self):
+        self.list.insert(0, 'abc')
+        self.assertEqual('abc', self.observer[0])
+
+    def testInsertObserver(self):
+        self.observer.insert(0, 'abc')
+        self.failUnless('abc' == self.list[0] == self.observer[0])
+
+
+class ObservableListObserverTest_RemoveItems(test.TestCase):
+    def setUp(self):
+        self.list = patterns.ObservableList()
+        self.observer = patterns.ObservableListObserver(self.list)
+        self.list.extend([1, 2, 3])
+
+    def testRemoveFromOriginal(self):
+        self.list.remove(1)
+        self.failUnless([2, 3] == self.list == self.observer)
+
+    def testRemoveFromObserver(self):
+        self.observer.remove(1)
+        self.failUnless([2, 3] == self.list == self.observer)
+
+    def testRemoveItemsFromOriginal(self):
+        self.list.removeItems([1, 2])
+        self.failUnless([3] == self.list == self.observer)
+
+    def testRemoveItemsFromObserver(self):
+        self.observer.removeItems([1, 2])
+        self.failUnless([3] == self.list == self.observer)
+
+    def testDeleteFromOriginal(self):
+        del self.list[1]
+        self.failUnless([1, 3] == self.list == self.observer)
+
+    def testDeleteFromObserver(self):
+        del self.observer[1]
+        self.failUnless([1, 3] == self.list == self.observer)
+
+    def testDeleteSliceFromOriginal(self):
+        del self.list[0:2]
+        self.failUnless([3] == self.list == self.observer)
+
+    def testDeleteSliceFromObserver(self):
+        del self.observer[0:2]
+        self.failUnless([3] == self.list == self.observer)
+
+
+class ObservableListObserverTest_ObserveTheObserver(test.TestCase):
+    def setUp(self):
+        self.list = patterns.ObservableList()
+        self.observer = patterns.ObservableListObserver(self.list)
+        self.observer.registerObserver(self.onAdd, 'list.add')
+        self.observer.registerObserver(self.onRemove, 'list.remove')
+        self.receivedAddEvents = []
+        self.receivedRemoveEvents = []
+
+    def onAdd(self, event):
+        self.receivedAddEvents.append(event)
+
+    def onRemove(self, event):
+        self.receivedRemoveEvents.append(event)
+
+    def testExtendOriginal(self):
+        self.list.extend([1, 2, 3])
+        self.assertEqual((1, 2, 3), self.receivedAddEvents[0].values())
+
+    def testExtendObserver(self):
+        self.observer.extend([1, 2, 3])
+        self.assertEqual((1, 2, 3), self.receivedAddEvents[0].values())
+
+    def testRemoveItemsFromOriginal(self):
+        self.list.extend([1, 2, 3])
+        self.list.removeItems([1, 3])
+        self.assertEqual((1, 3), self.receivedRemoveEvents[0].values())
+
+    def testRemoveItemsFromOriginal(self):
+        self.list.extend([1, 2, 3])
+        self.observer.removeItems([1, 3])
+        self.assertEqual((1, 3), self.receivedRemoveEvents[0].values())
