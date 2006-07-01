@@ -44,8 +44,8 @@ class Settings(patterns.Observable, UnicodeAwareConfigParser):
                 
     def set(self, section, option, value):
         super(Settings, self).set(section, option, value)
-        self.notifyObservers(patterns.Notification(self, section=section, 
-            option=option, value=value), (section, option))
+        self.notifyObservers(patterns.Event(self, 
+            '%s.%s'%(section, option), value))
 
     def save(self):
         if not self.__loadAndSave:

@@ -69,9 +69,8 @@ class MainWindow(WindowWithPersistentDimensions):
             self.viewer, self.settings, self.filteredTaskList, self.effortList)
         viewerfactory.addTaskViewers(self.viewer, self.filteredTaskList, 
             self.uiCommands, self.settings)
-        viewerfactory.addEffortViewers(self.viewer, self.effortList, 
-            self.filteredTaskList, self.uiCommands, self.settings, 
-            'effortviewer')
+        viewerfactory.addEffortViewers(self.viewer, self.filteredTaskList, 
+            self.uiCommands, self.settings, 'effortviewer')
         import status
         self.SetStatusBar(status.StatusBar(self, self.taskFile,
                           self.filteredTaskList, self.viewer))
@@ -121,8 +120,8 @@ class MainWindow(WindowWithPersistentDimensions):
 
     def initWindow(self):
         wx.GetApp().SetTopWindow(self)
-        self.SetTitle(patterns.observer.Notification(self, 
-            filename=self.taskFile.filename()))
+        self.SetTitle(patterns.Event(self, 'taskfile.filenameChanged',
+            self.taskFile.filename()))
         self.setIcon()
         self.displayMessage(_('Welcome to %(name)s version %(version)s')% \
             {'name': meta.name, 'version': meta.version}, pane=1)
@@ -143,13 +142,14 @@ class MainWindow(WindowWithPersistentDimensions):
         wx.CallAfter(self.onShowStatusBar) 
                 
     def registerForWindowComponentChanges(self):
-        self.taskFile.registerObserver(self.SetTitle, 'FilenameChanged')
+        self.taskFile.registerObserver(self.SetTitle, 
+            'taskfile.filenameChanged')
         self.settings.registerObserver(self.onShowStatusBar, 
-            ('view', 'statusbar'))
+            'view.statusbar')
         self.settings.registerObserver(self.onShowToolBar, 
-            ('view', 'toolbar'))
+            'view.toolbar')
         self.settings.registerObserver(self.onShowFilterSideBar,
-            ('view', 'filtersidebar'))
+            'view.filtersidebar')
 
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
@@ -198,12 +198,10 @@ class MainWindow(WindowWithPersistentDimensions):
         except:
             return False
 
-    def SetTitle(self, notification, *args, **kwargs):
-        if notification.filename == []:
-            return
+    def SetTitle(self, event, *args, **kwargs):
         title = meta.name
-        if notification.filename:
-            title += ' - %s'%notification.filename
+        if event.value():
+            title += ' - %s'%event.value()
         super(MainWindow, self).SetTitle(title)    
 
     def displayMessage(self, message, pane=0):

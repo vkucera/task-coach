@@ -11,7 +11,8 @@ class XMLWriter:
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None)
         pi = self.document.createProcessingInstruction('taskcoach', 
-            'release="%s" tskversion="%d"'%(meta.data.version, self.__versionnr))
+            'release="%s" tskversion="%d"'%(meta.data.version, 
+            self.__versionnr))
         self.document.insertBefore(pi, self.document.documentElement)
         for task in taskList.rootTasks():
             self.document.documentElement.appendChild(self.taskNode(task))
@@ -21,7 +22,8 @@ class XMLWriter:
         node = self.document.createElement('task')
         node.setAttribute('subject', task.subject())
         node.setAttribute('id', task.id())
-        node.setAttribute('lastModificationTime', str(task.lastModificationTime()))
+        node.setAttribute('lastModificationTime', 
+            str(task.lastModificationTime()))
         if task.startDate() != date.Date():
             node.setAttribute('startdate', str(task.startDate()))
         if task.dueDate() != date.Date():

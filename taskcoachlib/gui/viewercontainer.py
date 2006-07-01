@@ -39,7 +39,8 @@ class ViewerContainer(patterns.Observable):
     def onPageChanged(self, event):
         self.__currentPageNumber = event.GetSelection()
         self.__settings.set('view', self.__setting, str(self.__currentPageNumber))
-        self.notifyObservers(patterns.observer.Notification(self))
+        self.notifyObservers(patterns.Event(self, 'viewer.changed',
+            self.__currentPageNumber))
         event.Skip()
     
         

@@ -3,19 +3,19 @@ import domain.date as date
         
 class ClockTest(test.wxTestCase):
     def setUp(self):
-        self.notifications = 0
+        self.events = []
         self.clock = date.Clock()
          
     def tearDown(self):
         date.Clock.deleteInstance()
         
-    def onNotify(self, *args, **kwargs):
-        self.notifications += 1
+    def onEvent(self, event):
+        self.events.append(event)
                 
     def testNotification(self):
-        self.clock.registerObserver(self.onNotify)
+        self.clock.registerObserver(self.onEvent, 'clock.second')
         self.clock.notify()
-        self.assertEqual(1, self.notifications)
+        self.assertEqual(1, len(self.events))
         
     def testSingleton(self):
         clock2 = date.Clock()
@@ -27,7 +27,7 @@ class ClockTest(test.wxTestCase):
         
     def testRegisterForSpecificTime(self):
         realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=1)
-        self.clock.registerObserver(self.onNotify, realSoonNow)
+        self.clock.registerObserver(self.onEvent, realSoonNow)
         self.clock.notify(now=realSoonNow)
-        self.assertEqual(1, self.notifications)
+        self.assertEqual(1, len(self.events))
             

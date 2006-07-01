@@ -3,52 +3,66 @@ RelationshipManager does not (at the moment) keep of list of relations, but
 instead alters objects based on their relations. For example, if a task is
 marked completed, the RelationshipManager will mark all children completed. '''
 
-import patterns, config
 import domain.date as date
 
 class TaskRelationshipManager(object):
     def __init__(self, *args, **kwargs):
         self.__settings = kwargs.pop('settings')
         taskList = kwargs.pop('taskList')
-        for task in taskList:
-            task.registerObserver(self.onNotify)
-        taskList.registerObserver(self.onTaskListChanged)    
         super(TaskRelationshipManager, self).__init__(*args, **kwargs)
+        self.handlers = (self.onStartDate, self.onDueDate, 
+            self.onCompletionDate, self.onAddChild, self.onRemoveChild)
+        self.eventTypes = ('task.startDate', 'task.dueDate', 
+            'task.completionDate', 'task.child.add', 'task.child.remove')
+        taskList.registerObserver(self.onAddItems, 'list.add')    
+        taskList.registerObserver(self.onRemoveItems, 'list.remove')    
+        self.registerForTaskChanges(taskList)
 
-    def onTaskListChanged(self, notification):
-        for task in notification.itemsAdded:
-            task.registerObserver(self.onNotify)
-        for task in notification.itemsRemoved:
-            task.removeObserver(self.onNotify)
-                
-    def onNotify(self, notification):
-        task = notification.source
-        # NB: This assumes each notification has only one of the following flags
-        # set to True:
-        if notification.completionDateChanged:
-            if task.parent():
-                self.__markParentCompletedOrUncompletedIfNecessary(task.parent(), task)
-            if task.completed():
-                self.__markUncompletedChildrenCompleted(task)
-                if task.isBeingTracked():
-                    task.stopTracking()
-        elif notification.dueDateChanged:
-            self.__setDueDateChildren(task)
-            if task.parent():
-                self.__setDueDateParent(task.parent(), task)
-        elif notification.startDateChanged:
-            self.__setStartDateChildren(task)
-            if task.parent():
-                self.__setStartDateParent(task.parent(), task)
-        elif notification.childAdded:
-            child = notification.childAdded
-            self.__markParentCompletedOrUncompletedIfNecessary(task, child)
-            self.__setDueDateParent(task, child)
-            if child.startDate() < task.startDate():
-                task.setStartDate(child.startDate())
-        elif notification.childRemoved:
-            self.__markTaskCompletedIfNecessary(task, date.Today())
-        
+    def onAddItems(self, event):
+        self.registerForTaskChanges(event.values())
+
+    def registerForTaskChanges(self, tasks):
+        for handler, eventType in zip(self.handlers, self.eventTypes):
+            for task in tasks:
+                task.registerObserver(handler, eventType)
+
+    def onRemoveItems(self, event):
+        for task in event.values():
+            task.removeObservers(*self.handlers)
+
+    def onStartDate(self, event):
+        task = event.source()
+        self.__setStartDateChildren(task)
+        if task.parent():
+            self.__setStartDateParent(task.parent(), task)
+
+    def onDueDate(self, event):
+        task = event.source()
+        self.__setDueDateChildren(task)
+        if task.parent():
+            self.__setDueDateParent(task.parent(), task)
+
+    def onCompletionDate(self, event):
+        task = event.source()
+        if task.parent():
+            self.__markParentCompletedOrUncompletedIfNecessary(task.parent(), 
+                task)
+        if task.completed():
+            self.__markUncompletedChildrenCompleted(task)
+            if task.isBeingTracked():
+                task.stopTracking()
+
+    def onAddChild(self, event):
+        task, child = event.source(), event.value()
+        self.__markParentCompletedOrUncompletedIfNecessary(task, child)
+        self.__setDueDateParent(task, child)
+        if child.startDate() < task.startDate():
+            task.setStartDate(child.startDate())
+
+    def onRemoveChild(self, event):
+        task = event.source()
+        self.__markTaskCompletedIfNecessary(task, date.Today())
+
     def __markParentCompletedOrUncompletedIfNecessary(self, parent, child):
         if child.completed():
             self.__markTaskCompletedIfNecessary(parent, child.completionDate())
@@ -61,11 +75,14 @@ class TaskRelationshipManager(object):
             task.setCompletionDate(completionDate)
     
     def __shouldMarkTaskCompletedWhenAllChildrenCompleted(self, task):
-        shouldMarkCompletedAccordingToSetting = self.__settings.getboolean('behavior',
-            'markparentcompletedwhenallchildrencompleted')
-        shouldMarkCompletedAccordingToTask = task.shouldMarkCompletedWhenAllChildrenCompleted
+        shouldMarkCompletedAccordingToSetting = \
+            self.__settings.getboolean('behavior', 
+                'markparentcompletedwhenallchildrencompleted')
+        shouldMarkCompletedAccordingToTask = \
+            task.shouldMarkCompletedWhenAllChildrenCompleted
         return (shouldMarkCompletedAccordingToTask == True) or \
-            ((shouldMarkCompletedAccordingToTask == None) and shouldMarkCompletedAccordingToSetting)
+            ((shouldMarkCompletedAccordingToTask == None) and \
+              shouldMarkCompletedAccordingToSetting)
       
     def __markTaskUncompletedIfNecessary(self, task):
         if task.completed():

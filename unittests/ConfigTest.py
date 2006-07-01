@@ -60,19 +60,19 @@ class SettingsIOTest(SettingsTestCase):
 class SettingsObservableTest(SettingsTestCase):
     def setUp(self):
         super(SettingsObservableTest, self).setUp()
-        self.notifications = 0
-        self.settings.registerObserver(self.onNotify, ('view', 'toolbarsize'))
+        self.events = []
+        self.settings.registerObserver(self.onEvent, 'view.toolbarsize')
         
-    def onNotify(self, *args, **kwargs):
-        self.notifications += 1
+    def onEvent(self, event):
+        self.events.append(event)
         
     def testChangingTheSettingCausesNotification(self):
         self.settings.set('view', 'toolbarsize', '16')
-        self.assertEqual(1, self.notifications)
+        self.assertEqual('16', self.events[0].value())
         
     def testChangingAnotherSettingDoesNotCauseANotification(self):
         self.settings.set('view', 'statusbar', 'True')
-        self.assertEqual(0, self.notifications)
+        self.failIf(self.events)
 
 
 class UnicodeAwareConfigParserTest(test.TestCase):

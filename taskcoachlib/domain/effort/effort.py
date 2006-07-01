@@ -1,7 +1,7 @@
 import patterns
 import domain.date as date
 
-class EffortBase(object):
+class EffortBase(patterns.Observable):
     def __init__(self, task, start, stop, *args, **kwargs):
         self._task = task
         self._start = start
@@ -23,22 +23,21 @@ class EffortBase(object):
             self.task().subject() < other.task().subject())
 
 
-class Effort(EffortBase, patterns.Observable, date.ClockObserver):
+class Effort(EffortBase):
     def __init__(self, task, start=None, stop=None, description='', 
             *args, **kwargs):
         self._description = description
         super(Effort, self).__init__(task, start or date.DateTime.now(), stop, 
             *args, **kwargs)
-        if self._stop == None:
-            self.startClock()
 
     def setTask(self, task):
         if task in [self._task, None]: 
             # command.PasteCommand may try to set the parent to None
             return
+        self._task.removeEffort(self)
         self._task = task
         self._task.addEffort(self)
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
+        self.notifyObservers(patterns.Event(self, 'effort.task', task))
 
     setParent = setTask # FIXME: I should really create a common superclass for Effort and Task
     
@@ -48,16 +47,14 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
     __repr__ = __str__
         
     def __getstate__(self):
-        return dict(_task=self._task, _start=self._start, _stop=self._stop)
+        return dict(task=self._task, start=self._start,
+            stop=self._stop, description=self._description)
         
     def __setstate__(self, state):
-        # FIXME: we have to treat _task differently, see the action that 
-        # goes on in setTask(), but I don't like it
-        # FIXME: duplication with Task.__setstate__
-        task = state.pop('_task')
-        self.setTask(task)
-        self.__dict__.update(state)      
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
+        self.setTask(state['task'])
+        self.setStart(state['start'])
+        self.setStop(state['stop'])
+        self.setDescription(state['description'])
    
     def copy(self):
         return Effort(self._task, self._start, self._stop, self._description) 
@@ -70,32 +67,39 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         return stop - self._start
         
     def setStart(self, startDatetime):
+        if startDatetime == self._start:
+            return
         self._start = startDatetime
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
+        self.notifyObservers(patterns.Event(self, 'effort.start', self._start))
 
-    def setStop(self, stopDatetime=None):
-        if stopDatetime is None:
-            self._stop = date.DateTime.now()
-        elif stopDatetime == date.DateTime.max:
-            self._stop = None
-        else:
-            self._stop = stopDatetime
-        if self._stop == None and not self.isClockStarted():
-            self.startClock()
-        elif self._stop != None and self.isClockStarted():
-            self.stopClock()
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
+    def setStop(self, newStop=None):
+        if newStop is None:
+            newStop = date.DateTime.now()
+        elif newStop == date.DateTime.max:
+            newStop = None
+        if newStop != self._stop:
+            previousStop = self._stop
+            self._stop = newStop
+            self.notifyObservers(patterns.Event(self, 'effort.stop', newStop))
+            self.notifyStopOrStartTracking(previousStop, newStop)
+
+    def notifyStopOrStartTracking(self, previousStop, newStop):
+        eventType = ''
+        if newStop == None:
+            eventType = 'effort.track.start'
+        elif previousStop == None:
+            eventType = 'effort.track.stop'
+        if eventType:
+            self.notifyObservers(patterns.Event(self, eventType))
 
     def setDescription(self, description):
         self._description = description
-        self.notifyObservers(patterns.Notification(self, changeNeedsSave=True))
+        self.notifyObservers(patterns.Event(self, 'effort.description',
+            description))
         
     def getDescription(self):
         return self._description
 
-    def onEverySecond(self, *args, **kwargs):
-        self.notifyObservers(patterns.Notification(self))
-        
     def revenue(self):
         variableRevenue = self.duration().hours() * self.task().hourlyFee()
         if self.task().timeSpent().hours() > 0:
@@ -105,7 +109,7 @@ class Effort(EffortBase, patterns.Observable, date.ClockObserver):
         return variableRevenue + fixedRevenue
         
         
-class CompositeEffort(EffortBase, list):
+class CompositeEffort(EffortBase, patterns.List):
     ''' CompositeEffort is a list of efforts for one task (and maybe its 
         children) and within a certain time period. '''
     

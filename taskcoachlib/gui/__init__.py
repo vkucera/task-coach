@@ -4,4 +4,5 @@ from dialog.editor import TaskEditor, EffortEditor
 from dialog.preferences import Preferences
 from dialog.categories import CategoriesFilterDialog
 from iocontroller import IOController
+from remindercontroller import ReminderController
 from artprovider import init
