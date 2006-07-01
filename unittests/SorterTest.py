@@ -49,8 +49,8 @@ class TaskSorterSettingsTest(test.TestCase):
         self.taskList = task.TaskList()
         self.settings = config.Settings(load=False)
         self.sorter = task.sorter.Sorter(self.taskList, settings=self.settings)        
-        self.task1 = task.Task(subject='A', duedate=date.Tomorrow())
-        self.task2 = task.Task(subject='B', duedate=date.Today())
+        self.task1 = task.Task(subject='A', dueDate=date.Tomorrow())
+        self.task2 = task.Task(subject='B', dueDate=date.Today())
         self.taskList.extend([self.task1, self.task2])
 
     def tearDown(self):
@@ -128,17 +128,48 @@ class TaskSorterSettingsTest(test.TestCase):
         self.settings.set('view', 'sortby', 'subject')
         self.assertEqual('False', self.settings.get('view', 'sortascending'))
 
-    def testSortByTotalTimeLeft(self):
+    def testSortByTotalTimeLeftAscending(self):
         self.settings.set('view', 'sortascending', 'True')
         self.settings.set('view', 'sortby', 'totaltimeLeft')
         self.assertEqual([self.task2, self.task1], list(self.sorter))
 
+    def testSortByTotalTimeLeftDescending(self):
+        self.settings.set('view', 'sortascending', 'False')
+        self.settings.set('view', 'sortby', 'totaltimeLeft')
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+
+    def testSortByBudgetAscending(self):
+        self.settings.set('view', 'sortascending', 'True')
+        self.settings.set('view', 'sortby', 'budget')
+        self.task1.setBudget(date.TimeDelta(100))
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+
+    def testSortByBudgetDescending(self):
+        self.settings.set('view', 'sortascending', 'False')
+        self.settings.set('view', 'sortby', 'budget')
+        self.task1.setBudget(date.TimeDelta(100))
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+
+    def testSortByTimeSpentAscending(self):
+        self.settings.set('view', 'sortascending', 'True')
+        self.settings.set('view', 'sortby', 'timeSpent')
+        self.task1.addEffort(effort.Effort(self.task1,
+            date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+
+    def testSortByTimeSpentDescending(self):
+        self.settings.set('view', 'sortascending', 'False')
+        self.settings.set('view', 'sortby', 'timeSpent')
+        self.task1.addEffort(effort.Effort(self.task1,
+            date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
 
 class TaskSorterTreeModeTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.settings = config.Settings(load=False)
-        self.sorter = task.sorter.Sorter(self.taskList, settings=self.settings, treeMode=True)        
+        self.sorter = task.sorter.Sorter(self.taskList, 
+            settings=self.settings, treeMode=True)        
         self.parent1 = task.Task(subject='parent 1')
         self.child1 = task.Task(subject='child 1')
         self.parent1.addChild(self.child1)
@@ -150,13 +181,15 @@ class TaskSorterTreeModeTest(test.TestCase):
     def testSortByDueDate(self):
         self.settings.set('view', 'sortby', 'dueDate')
         self.child2.setDueDate(date.Today())
-        self.failUnless(list(self.sorter).index(self.parent2)< list(self.sorter).index(self.parent1))
+        self.failUnless(list(self.sorter).index(self.parent2) < \
+            list(self.sorter).index(self.parent1))
 
     def testSortByPriority(self):
         self.settings.set('view', 'sortby', 'priority')
         self.settings.set('view', 'sortascending', 'False')
         self.child2.setPriority(10)
-        self.failUnless(list(self.sorter).index(self.parent2)< list(self.sorter).index(self.parent1))
+        self.failUnless(list(self.sorter).index(self.parent2) < \
+            list(self.sorter).index(self.parent1))
         
         
 class EffortSorterTest(test.TestCase):
@@ -184,3 +217,13 @@ class EffortSorterTest(test.TestCase):
     def testCreateWhenEffortListIsFilled(self):
         sorter = effort.EffortSorter(self.effortList)
         self.assertEqual(2, len(sorter))
+        self.assertEqual(self.effortList[0], self.sorter[1])
+        self.assertEqual(self.effortList[1], self.sorter[0])
+
+    def testAddEffort(self):
+        self.task.addEffort(effort.Effort(self.task,
+            date.DateTime(2005,1,1), date.DateTime(2005,1,2)))
+        self.assertEqual(self.effortList[0], self.sorter[2])
+        self.assertEqual(self.effortList[1], self.sorter[1])
+        self.assertEqual(self.effortList[2], self.sorter[0])
+

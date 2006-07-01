@@ -90,6 +90,22 @@ class TaskFileTest(TaskFileTestCase):
         self.task.addEffort(effort.Effort(self.task, None, None))
         self.failUnless(self.taskFile.needSave())
 
+    def testNeedSave_AfterEffortRemoved(self):
+        newEffort = effort.Effort(self.task, None, None)
+        self.task.addEffort(newEffort)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.failIf(self.taskFile.needSave())
+        self.task.removeEffort(newEffort)
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterEditTaskSubject(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setSubject('new subject')
+        self.failUnless(self.taskFile.needSave())
+
     def testNeedSave_AfterEditTaskDescription(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
@@ -97,6 +113,27 @@ class TaskFileTest(TaskFileTestCase):
         self.task.setDescription('new description')
         self.failUnless(self.taskFile.needSave())
         
+    def testNeedSave_AfterEditTaskStartDate(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setStartDate(date.Tomorrow())
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterEditTaskDueDate(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setDueDate(date.Tomorrow())
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterEditTaskCompletionDate(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setCompletionDate(date.Tomorrow())
+        self.failUnless(self.taskFile.needSave())
+
     def testNeedSave_AfterEditEffortDescription(self):
         newEffort = effort.Effort(self.task, None, None)
         self.task.addEffort(newEffort)
@@ -105,18 +142,36 @@ class TaskFileTest(TaskFileTestCase):
         self.failIf(self.taskFile.needSave())
         newEffort.setDescription('new description')
         self.failUnless(self.taskFile.needSave())
-        
-    def testDontNeedSave_AfterEverySecond(self):
+
+    def testNeedSave_AfterEditEffortStart(self):
         newEffort = effort.Effort(self.task, None, None)
         self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
-        clock = date.Clock()
-        clock.notify()
+        newEffort.setStart(date.DateTime(2005,1,1,10,0,0))
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterEditEffortStop(self):
+        newEffort = effort.Effort(self.task, None, None)
+        self.task.addEffort(newEffort)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
         self.failIf(self.taskFile.needSave())
-        del clock
-    
+        newEffort.setStop(date.DateTime(2005,1,1,10,0,0))
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterEditEffortTask(self):
+        task2 = task.Task()
+        self.taskFile.append(task2)
+        newEffort = effort.Effort(self.task, None, None)
+        self.task.addEffort(newEffort)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        newEffort.setTask(task2)
+        self.failUnless(self.taskFile.needSave())
+
     def testNeedSave_AfterAddCategory(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
@@ -138,6 +193,27 @@ class TaskFileTest(TaskFileTestCase):
         self.failIf(self.taskFile.needSave())
         self.task.setPriority(10)
         self.failUnless(self.taskFile.needSave())        
+
+    def testNeedSave_AfterChangeBudget(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setBudget(date.TimeDelta(10))
+        self.failUnless(self.taskFile.needSave())        
+        
+    def testNeedSave_AfterChangeHourlyFee(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setHourlyFee(100)
+        self.failUnless(self.taskFile.needSave())        
+        
+    def testNeedSave_AfterChangeFixedFee(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setFixedFee(500)
+        self.failUnless(self.taskFile.needSave())        
         
     def testNeedSave_AfterAttachmentAdded(self):
         self.taskFile.setFilename(self.filename)
@@ -157,6 +233,35 @@ class TaskFileTest(TaskFileTestCase):
         self.task.addAttachments('attachment')
         self.taskFile.save()
         self.task.removeAllAttachments()
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterAddChild(self):
+        self.taskFile.setFilename(self.filename)
+        child = task.Task()
+        self.taskFile.append(child)
+        self.taskFile.save()
+        self.task.addChild(child)
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterRemoveChild(self):
+        self.taskFile.setFilename(self.filename)
+        child = task.Task()
+        self.taskFile.append(child)
+        self.task.addChild(child)
+        self.taskFile.save()
+        self.task.removeChild(child)
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterSetReminder(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.task.setReminder(date.DateTime(2005,1,1,10,0,0))
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterChangeSetting(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.task.shouldMarkCompletedWhenAllChildrenCompleted = True
         self.failUnless(self.taskFile.needSave())
         
     def testLastFilename_Initially(self):

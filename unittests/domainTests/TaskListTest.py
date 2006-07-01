@@ -7,14 +7,15 @@ import domain.date as date
 class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def setUp(self):
         self.taskList = task.TaskList()
-        self.taskList.registerObserver(self.onNotify)
-        self.task1 = task.Task(duedate=date.Date(2010,1,1))
-        self.task2 = task.Task(duedate=date.Date(2011,1,1))
+        self.taskList.registerObserver(self.onEvent, 'list.add',
+            'list.remove')
+        self.task1 = task.Task(dueDate=date.Date(2010,1,1))
+        self.task2 = task.Task(dueDate=date.Date(2011,1,1))
         self.task3 = task.Task()
-        self.notifications = 0
+        self.events = []
 
-    def onNotify(self, *args, **kwargs):
-        self.notifications += 1
+    def onEvent(self, event):
+        self.events.append(event)
 
     def testCreate(self):
         self.assertEmptyTaskList()
@@ -49,20 +50,19 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
         self.assertTaskList([self.task1, self.task1])
 
     def testAppendCausesNotification(self):
+        self.taskList.append(self.task1)
+        self.assertEqual(self.task1, self.events[0].value())
+
+    def testAppendTwoItemsCausesTwoNotifications(self):
         self.taskList.append(self.task2)
         self.taskList.append(self.task1)
-        self.assertEqual(2, self.notifications)
+        self.assertEqual(2, len(self.events))
 
     def testAppendTaskWithChild(self):
         self.task1.addChild(self.task2)
         self.taskList.append(self.task1)
         self.assertTaskList([self.task1, self.task2])
     
-    def testTaskChangeCausesNotification(self):
-        self.taskList.append(self.task1)
-        self.task1.setSubject('Test')
-        self.assertEqual(2, self.notifications)
-
     def testNrCompleted(self):
         self.assertEqual(0, self.taskList.nrCompleted())
         self.taskList.append(self.task1)
@@ -85,7 +85,7 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
 
     def testNrDueToday(self):
         self.assertEqual(0, self.taskList.nrDueToday())
-        self.taskList.append(task.Task(duedate=date.Today()))
+        self.taskList.append(task.Task(dueDate=date.Today()))
         self.assertEqual(1, self.taskList.nrDueToday())
         
     def testNrBeingTracked(self):
@@ -107,7 +107,7 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
         self.assertEqual(date.Date(), self.taskList.minDate())
         
     def testMinDate_TaskWithoutDates(self):
-        self.taskList.append(task.Task(startdate=date.Date()))
+        self.taskList.append(task.Task(startDate=date.Date()))
         self.assertEqual(date.Date(), self.taskList.minDate())
         
     def testMinDate_TaskWithStartDate(self):
@@ -115,18 +115,18 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
         self.assertEqual(date.Today(), self.taskList.minDate())
         
     def testMinDate_TaskWithDueDate(self):
-        self.taskList.append(task.Task(duedate=date.Yesterday()))
+        self.taskList.append(task.Task(dueDate=date.Yesterday()))
         self.assertEqual(date.Yesterday(), self.taskList.minDate())
 
     def testMinDate_TaskWithCompletionDate(self):
-        self.taskList.append(task.Task(completiondate=date.Yesterday()))
+        self.taskList.append(task.Task(completionDate=date.Yesterday()))
         self.assertEqual(date.Yesterday(), self.taskList.minDate())
 
     def testMaxDate_EmptyTaskList(self):
         self.assertEqual(date.Date(), self.taskList.maxDate())
         
     def testMaxDate_TaskWithoutDates(self):
-        self.taskList.append(task.Task(startdate=date.Date()))
+        self.taskList.append(task.Task(startDate=date.Date()))
         self.assertEqual(date.Date(), self.taskList.maxDate())
         
     def testMaxDate_TaskWithStartDate(self):
@@ -134,11 +134,11 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
         self.assertEqual(date.Today(), self.taskList.maxDate())
 
     def testMaxDate_TaskWithDueDate(self):
-        self.taskList.append(task.Task(duedate=date.Tomorrow()))
+        self.taskList.append(task.Task(dueDate=date.Tomorrow()))
         self.assertEqual(date.Tomorrow(), self.taskList.maxDate())
     
     def testMaxDate_TaskWithCompletionDate(self):
-        self.taskList.append(task.Task(completiondate=date.Tomorrow()))
+        self.taskList.append(task.Task(completionDate=date.Tomorrow()))
         self.assertEqual(date.Tomorrow(), self.taskList.maxDate())
         
     def testOriginalLength(self):
@@ -154,19 +154,20 @@ class NotificationTimingTest(test.TestCase):
         self.task1 = task.Task()
         self.task2 = task.Task()
         self.taskList = task.TaskList([self.task1])
-        self.taskList.registerObserver(self.onNotify)
-        self.notifications = 0
+        self.taskList.registerObserver(self.onEvent, 'list.add',
+            'list.remove')
+        self.events = []
         self.assertions = {}
 
-    def onNotify(self, *args, **kwargs):
-        self.notifications += 1
-        self.assertions.get(self.notifications, lambda: 1)()
+    def onEvent(self, event):
+        self.events.append(event)
+        self.assertions.get(len(self.events), lambda: 1)()
 
     def testAddChild(self):
         self.task2.setParent(self.task1)
         self.assertions = {1: lambda: self.assertEqual(2, len(self.taskList))}
         self.taskList.append(self.task2)
-        self.assertEqual(1, self.notifications)
+        self.assertEqual(self.task2, self.events[0].value())
 
     def testRemoveChild(self):
         self.task2.setParent(self.task1)
@@ -174,7 +175,7 @@ class NotificationTimingTest(test.TestCase):
             4: lambda: self.assertEqual([], self.task1.children()) }
         self.taskList.append(self.task2)
         self.taskList.remove(self.task2)
-        self.assertEqual(2, self.notifications)
+        self.assertEqual(2, len(self.events))
 
 
 class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts, 
@@ -188,50 +189,40 @@ class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts,
         self.task4 = task.Task('Task 4')
         self.taskList = task.TaskList([self.task1, self.task4])
         self.originalList = [self.task1, self.task2, self.task3, self.task4]
-        self.taskList.registerObserver(self.onNotify)
-        self.notifications = 0
+        self.taskList.registerObserver(self.onEvent, 'list.add', 'list.remove')
+        self.events = []
 
-    def onNotify(self, notification, *args, **kwargs):
-        self.notification = notification
-        self.notifications += 1
+    def onEvent(self, event):
+        self.events.append(event)
 
     def testRemoveTask(self):
         self.taskList.remove(self.task3)
         self.assertTaskList([self.task1, self.task2, self.task4])
-        self.assertEqual(1, self.notifications)
-        self.assertEqual([self.task3], self.notification.itemsRemoved)
-        #self.assertEqual([self.task2], self.notification.itemsChanged)
+        self.assertEqual(self.task3, self.events[0].value())
         self.failIf(self.task2.children())
 
     def testRemoveTaskWithChild(self):
         self.taskList.remove(self.task2)
         self.assertTaskList([self.task1, self.task4])
-        self.assertEqual(1, self.notifications)
+        self.assertEqual((self.task2, self.task3), self.events[0].values())
         self.failIf(self.task1.children())
 
     def testRemoveTaskWithGrandchild(self):
         self.taskList.remove(self.task1)
         self.assertTaskList([self.task4])
-        self.assertEqual(1, self.notifications)
-
-    def testUpdateRemovedTask(self):
-        self.taskList.remove(self.task3)
-        self.task3.setSubject('Test')
-        self.assertEqual(1, self.notifications)
+        self.assertEqual((self.task1, self.task2, self.task3), 
+            self.events[0].values())
 
     def testAddRemovedTask(self):
         self.taskList.remove(self.task4)
         self.taskList.append(self.task4)
-        self.task3.setSubject('Test')
-        self.assertEqual(5, self.notifications)
+        self.assertEqual(2, len(self.events))
 
     def testAddRemovedTaskWithChild(self):
         self.taskList.remove(self.task2)
         self.taskList.append(self.task2)
         self.assertTaskList(self.originalList)
-        self.assertEqual(2, self.notifications)
-        self.task3.setSubject('Test')
-        self.assertEqual(5, self.notifications)
+        self.assertEqual(2, len(self.events))
         self.failUnlessParentAndChild(self.task2, self.task3)
         self.failUnlessParentAndChild(self.task1, self.task2)
 
@@ -239,9 +230,7 @@ class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts,
         self.taskList.remove(self.task1)
         self.taskList.append(self.task1)
         self.assertTaskList(self.originalList)
-        self.assertEqual(2, self.notifications)
-        self.task3.setSubject('Test')
-        self.assertEqual(5, self.notifications)
+        self.assertEqual(2, len(self.events))
 
     def testExtendWithRemovedTasks(self):
         self.taskList.remove(self.task1)
@@ -259,27 +248,27 @@ class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts,
     def testRemoveTasks_ParentOnly(self):
         self.taskList.removeItems([self.task1])
         self.assertTaskList([self.task4])
-        self.assertEqual(1, self.notifications)
+        self.assertEqual(1, len(self.events))
 
     def testRemoveTasks_GrandchildOnly(self):
         self.taskList.removeItems([self.task3])
         self.assertTaskList([self.task1, self.task2, self.task4])
         self.failIfParentHasChild(self.task2, self.task3)
-        self.assertEqual(1, self.notifications)
+        self.assertEqual(1, len(self.events))
 
     def testRemoveTasks_ChildOnly(self):
         self.taskList.removeItems([self.task2])
         self.assertTaskList([self.task1, self.task4])
         self.failIfParentHasChild(self.task1, self.task2)
         self.failUnlessParentAndChild(self.task2, self.task3)
-        self.assertEqual(1, self.notifications)
+        self.assertEqual(1, len(self.events))
 
     def testRemoveTasks_ChildAndOtherTask(self):
         self.taskList.removeItems([self.task2, self.task4])
         self.assertTaskList([self.task1])
         self.failIfParentHasChild(self.task1, self.task2)
         self.failUnlessParentAndChild(self.task2, self.task3)
-        self.assertEqual(1, self.notifications)
+        self.assertEqual(1, len(self.events))
 
 
 class TaskListTaskCategoriesTest(test.TestCase):
@@ -320,18 +309,3 @@ class TaskListTaskCategoriesTest(test.TestCase):
         self.taskList.append(self.task2)
         self.assertCategoriesEquals(['test', 'new'])
 
-
-class ReminderTest(test.TestCase):
-    def setUp(self):
-        self.task = task.Task(reminder=date.DateTime(2005,1,1))
-        self.taskList = task.TaskList()
-        self.taskList.append(self.task)
-        self.taskList.registerObserver(self.onNotifyReminder, 'reminder')
-        self.notifications = 0
-        
-    def onNotifyReminder(self, *args, **kwargs):
-        self.notifications += 1
-        
-    def testTaskListNotifiesObserversOfTaskReminder(self):
-        date.Clock().notify(date.DateTime(2005,1,1))
-        self.assertEqual(1, self.notifications)

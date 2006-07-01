@@ -7,8 +7,9 @@ class TaskTreeViewerTestCase(test.wxTestCase):
         super(TaskTreeViewerTestCase, self).setUp()
         self.task = task.Task(subject='task')
         self.settings = config.Settings(load=False)
-        self.taskList = task.sorter.Sorter(task.filter.ViewFilter(task.TaskList(),
-            settings=self.settings, treeMode=True), settings=self.settings, treeMode=True)
+        self.taskList = task.sorter.Sorter(task.filter.ViewFilter( \
+            task.TaskList(), settings=self.settings, treeMode=True), 
+            settings=self.settings, treeMode=True)
         
     def assertItems(self, *tasks):
         self.viewer.widget.expandAllItems()
@@ -19,8 +20,10 @@ class TaskTreeViewerTestCase(test.wxTestCase):
             else:
                 nrChildren = 0
             subject = task.subject()
-            self.assertEqual(subject, self.viewer.widget.GetItemText(self.viewer.widget.GetItem(index)))
-            self.assertEqual(nrChildren, self.viewer.widget.GetChildrenCount(self.viewer.widget.GetItem(index), recursively=False))
+            self.assertEqual(subject, self.viewer.widget.GetItemText( \
+                self.viewer.widget.GetItem(index)))
+            self.assertEqual(nrChildren, self.viewer.widget.GetChildrenCount( \
+                self.viewer.widget.GetItem(index), recursively=False))
 
 
 class CommonTests(TaskViewerTest.CommonTests):
@@ -129,14 +132,14 @@ class CommonTests(TaskViewerTest.CommonTests):
         
     def testViewDueTodayShowsTasksWhoseChildrenAreDueToday(self):
         self.settings.set('view', 'tasksdue', 'Today')
-        child = task.Task(subject='child', duedate=date.Today())
+        child = task.Task(subject='child', dueDate=date.Today())
         self.task.addChild(child)
         self.taskList.append(self.task)
         self.assertItems((self.task, 1), child)
         
     def testFilterCompletedTasks(self):
         self.settings.set('view', 'completedtasks', 'False')
-        completedChild = task.Task(completiondate=date.Today())
+        completedChild = task.Task(completionDate=date.Today())
         notCompletedChild = task.Task()
         self.task.addChild(notCompletedChild)
         self.task.addChild(completedChild)
@@ -157,9 +160,4 @@ class TaskTreeViewerTest(CommonTests, TaskTreeViewerTestCase):
     def setUp(self):
         super(TaskTreeViewerTest, self).setUp()
         self.viewer = TaskTreeViewerUnderTest(self.frame, self.taskList, {}, self.settings)
-
-
-    
-        
-        
         

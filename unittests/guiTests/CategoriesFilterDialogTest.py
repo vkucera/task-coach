@@ -7,10 +7,12 @@ class CategoriesFilterDialogTest(test.wxTestCase):
         aTask.addCategory('test')
         taskList = task.TaskList()
         self.settings = config.Settings(load=False)
-        self.filter = task.filter.CategoryFilter(taskList, settings=self.settings)
+        self.filter = task.filter.CategoryFilter(taskList, 
+            settings=self.settings)
         taskList.append(aTask)
         self.dialog = gui.CategoriesFilterDialog(parent=self.frame,
-            title='View categories', taskList=self.filter, settings=self.settings)
+            title='View categories', taskList=self.filter, 
+            settings=self.settings)
             
     def testFilterOnCategory(self):
         self.dialog._checkListBox.Check(0)
@@ -26,4 +28,5 @@ class CategoriesFilterDialogTest(test.wxTestCase):
     def testFilterOnAnyCategoryIsProcessedCorrectly(self):
         self.dialog._radioBox.SetSelection(0)
         self.dialog.ok()
-        self.failIf(self.settings.getboolean('view', 'taskcategoryfiltermatchall'))
+        self.failIf(self.settings.getboolean('view', 
+            'taskcategoryfiltermatchall'))

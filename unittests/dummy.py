@@ -95,7 +95,7 @@ class EffortPerDayViewerWithDummyWidget(ViewerWithDummyWidget,
         return gui.viewer.EffortPerDayViewer._createColumns(self)
 
         
-class TaskList(patterns.ObservableObservablesList):        
+class TaskList(patterns.ObservableList):        
     def rootTasks(self):
         return [task for task in self if task.parent() is None]
     

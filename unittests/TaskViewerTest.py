@@ -26,22 +26,22 @@ class CommonTests(object):
     
     def testChangeInactiveTaskColor(self):
         self.setColor('inactivetasks')
-        self.taskList.append(task.Task(startdate=date.Tomorrow()))
+        self.taskList.append(task.Task(startDate=date.Tomorrow()))
         self.assertColor()
     
     def testChangeCompletedTaskColor(self):
         self.setColor('completedtasks')
-        self.taskList.append(task.Task(completiondate=date.Today()))
+        self.taskList.append(task.Task(completionDate=date.Today()))
         self.assertColor()
 
     def testChangeDueTodayTaskColor(self):
         self.setColor('duetodaytasks')
-        self.taskList.append(task.Task(duedate=date.Today()))
+        self.taskList.append(task.Task(dueDate=date.Today()))
         self.assertColor()
 
     def testChangeOverDueTaskColor(self):
         self.setColor('overduetasks')
-        self.taskList.append(task.Task(duedate=date.Yesterday()))
+        self.taskList.append(task.Task(dueDate=date.Yesterday()))
         self.assertColor()
             
     def testStatusMessage_EmptyTaskList(self):

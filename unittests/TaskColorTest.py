@@ -18,18 +18,18 @@ class TaskColorTest(test.TestCase):
         self.assertColor(completed, wx.GREEN)
 
     def testOverDueTask(self):
-        overdue = task.Task(duedate=date.Yesterday())
+        overdue = task.Task(dueDate=date.Yesterday())
         self.assertColor(overdue, wx.RED)
 
     def testDueTodayTask(self):
-        duetoday = task.Task(duedate=date.Today())
+        duetoday = task.Task(dueDate=date.Today())
         self.assertColor(duetoday, wx.Colour(255, 128, 0))
 
     def testDueTomorrow(self):
-        duetoday = task.Task(duedate=date.Tomorrow())
+        duetoday = task.Task(dueDate=date.Tomorrow())
         self.assertColor(duetoday, wx.NamedColour('BLACK'))
 
     def testInactive(self):
-        inactive = task.Task(startdate=date.Tomorrow())
+        inactive = task.Task(startDate=date.Tomorrow())
         self.assertColor(inactive, wx.NamedColour('LIGHT GREY'))
 
