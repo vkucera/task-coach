@@ -45,6 +45,12 @@ class CommonTests:
         self.settings.set('view', 'totalfixedfee', 'True')
         self.assertEqual(_('Total fixed fee'), self.viewer.GetColumn(3).GetText())
 
+    def testTurnOnFixedFeeColumnWithItemsInTheList(self):
+        taskWithFixedFee = task.Task(fixedFee=100)
+        self.taskList.append(taskWithFixedFee)
+        self.settings.set('view', 'fixedfee', 'True')
+        self.assertEqual(_('Fixed fee'), self.viewer.GetColumn(3).GetText())
+
 
 class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests, 
         test.wxTestCase):

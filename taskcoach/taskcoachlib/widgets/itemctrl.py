@@ -128,10 +128,13 @@ class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithFileDropTarget):
 
 
 class Column(object):
-    def __init__(self, columnHeader, visibilitySetting=None, sortKey=None, 
-            sortCallback=None, renderCallback=None,
+    def __init__(self, columnHeader, eventType, visibilitySetting=None, 
+            sortKey=None, sortCallback=None, renderCallback=None,
             alignment=wx.LIST_FORMAT_LEFT):
         self.__columnHeader = columnHeader
+        # The event type to use for registering an oberver that is
+        # interested in changes that affect this column:
+        self.__eventType = eventType 
         self.__visibilitySetting = visibilitySetting
         self.__sortKey = sortKey
         self.__sortCallback = sortCallback
@@ -140,6 +143,9 @@ class Column(object):
         
     def header(self):
         return self.__columnHeader
+
+    def eventType(self):
+        return self.__eventType
 
     def visibilitySetting(self):
         return self.__visibilitySetting

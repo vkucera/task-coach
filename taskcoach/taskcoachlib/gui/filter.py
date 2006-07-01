@@ -111,9 +111,9 @@ class StatusFilterPanel(wx.Panel):
         setting = self._checkBoxToSetting[checkBox]
         self.__settings.set('view', setting, str(event.IsChecked()))
 
-    def onSettingChanged(self, notification):
-        checkBox = self._settingToCheckBox[notification.option]
-        checkBox.SetValue(notification.value == 'True')
+    def onSettingChanged(self, event):
+        checkBox = self._settingToCheckBox[event.type().split('.')[1]]
+        checkBox.SetValue(event.value() == 'True')
 
 
 class CategoriesFilterPanel(wx.Panel):
@@ -193,9 +193,16 @@ class CategoriesFilterPanel(wx.Panel):
                 self.onAddCategoryToTask)
             task.registerObserver('task.category.remove',
                 self.onRemoveCategoryFromTask)
+            categories = [self._checkListBox.GetString(index) for \
+                          index in range(self._checkListBox.GetCount())]
+            for category in categories:
+                if category not in self.__taskList.categories():
+                    index = self._checkListBox.FindString(category)
+                    self._checkListBox.Delete(index)
             for category in task.categories():
                 if self._checkListBox.FindString(category) == wx.NOT_FOUND:
-                    self._checkListBox.append(category)
+                    self._checkListBox.Append(category)
+        self.Enable(len(self.__taskList.categories()) > 0)
 
     def onRemoveTask(self, event):
         for task in event.values():
@@ -203,13 +210,15 @@ class CategoriesFilterPanel(wx.Panel):
                 self.onRemoveCategoryFromTask)
             for category in task.categories():
                 if category not in self.__taskList.categories():
-                    self._checkListBox.Delete(self._checkListBox.FindString(category))
+                    index = self._checkListBox.FindString(category)
+                    if index != wx.NOT_FOUND:
+                        self._checkListBox.Delete(index)
         self.Enable(len(self.__taskList.categories()) > 0)
 
     def onAddCategoryToTask(self, event):
         for category in event.values():
             if self._checkListBox.FindString(category) == wx.NOT_FOUND:
-                self._checkListBox.append(category)
+                self._checkListBox.Append(category)
         self.Enable(len(self.__taskList.categories()) > 0)
 
     def onRemoveCategoryFromTask(self, event):
