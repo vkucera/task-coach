@@ -48,3 +48,4 @@ class StatusBar(wx.StatusBar):
         self.parent.Unbind(wx.EVT_TOOL_ENTER)
         if self.scheduledStatusDisplay:
             self.scheduledStatusDisplay.Stop()
+        super(StatusBar, self).Destroy()

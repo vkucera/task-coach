@@ -19,48 +19,69 @@ class SortOrderReverser(object):
         except AttributeError:
             pass
         self.__settings = settings
-        self.__settings.registerObserver(self.onSortKeyChanged, ('view', 'sortby'))
+        self.__settings.registerObserver(self.onSortKeyChanged, 'view.sortby')
         self.__previousSortKey = self.__settings.get('view', 'sortby')
         
-    def onSortKeyChanged(self, notification):
-        if notification.value == self.__previousSortKey:
-            newSortOrder = not self.__settings.getboolean('view', 'sortascending')
+    def onSortKeyChanged(self, event):
+        if event.value() == self.__previousSortKey:
+            newSortOrder = not self.__settings.getboolean('view', 
+                'sortascending')
             self.__settings.set('view', 'sortascending', str(newSortOrder))
         else:        
-            self.__previousSortKey = notification.value
+            self.__previousSortKey = event.value()
 
 
 class Sorter(patterns.ObservableListObserver):
     def __init__(self, *args, **kwargs):
         self.__settings = kwargs.pop('settings')
         self.__treeMode = kwargs.pop('treeMode', False)
-        self.__settings.registerObserver(self.onSortKeyChanged, ('view', 'sortby'))
-        self.__settings.registerObserver(self.onSortSettingChanged, ('view', 'sortascending'), 
-            ('view', 'sortbystatusfirst'), ('view', 'sortcasesensitive'))
+        self.__settings.registerObserver(self.onSortKeyChanged, 'view.sortby')
+        self.__settings.registerObserver(self.reset,
+            'view.sortascending', 'view.sortbystatusfirst', 
+            'view.sortcasesensitive')
         self.__previousSortKey = self.__settings.get('view', 'sortby')
         SortOrderReverser(settings=self.__settings)
         super(Sorter, self).__init__(*args, **kwargs)
-                
-    def onSortKeyChanged(self, notification):
-        if notification.value == self.__previousSortKey:
+
+    def extendSelf(self, tasks):
+        super(Sorter, self).extendSelf(tasks)
+        sortKey = self.__settings.get('view', 'sortby')
+        for task in tasks:
+            task.registerObserver(self.reset, 'task.startDate',
+                'task.completionDate', 'task.%s'%sortKey)
+        self.reset()
+
+    def removeItemsFromSelf(self, tasks):
+        super(Sorter, self).removeItemsFromSelf(tasks)
+        for task in tasks:
+            task.removeObserver(self.reset)
+        # We don't need to sort, because removing tasks will not affect
+        # the order of the remaining tasks
+
+    def onSortKeyChanged(self, event):
+        sortKey = event.value()
+        if sortKey == self.__previousSortKey:
             # We don't call self.reset() because the sort order will be changed
-            # by the SortOrderReverser, which will trigger another notification
+            # by the SortOrderReverser, which will trigger another event
             pass
         else:        
-            self.__previousSortKey = notification.value
+            eventTypeToRemove = 'task.%s'% \
+                self.__previousSortKey.replace('total', '')
+            eventTypeToAdd = 'task.%s'%sortKey.replace('total', '')
+            self.__previousSortKey = sortKey
+            for task in self:
+                task.removeObserver(self.reset, eventTypeToRemove)
+                task.registerObserver(self.reset, eventTypeToAdd)
             self.reset()
      
-    def onSortSettingChanged(self, *args, **kwargs):
-        self.reset()
-        
-    def postProcessChanges(self, notification):
-        ''' postProcessChanges does the actual sorting. If the order of the list 
-            changes, an 'orderChanged' flag is added to the notification to reflect this. '''
+    def reset(self, event=None):
+        ''' reset does the actual sorting. If the order of the list changes, 
+            observers are notified by means of the 'list.sorted' event.  '''
         oldSelf = self[:]
-        self.sort(key=self.__createSortKey(), reverse=not self.__settings.getboolean('view', 'sortascending'))
+        self.sort(key=self.__createSortKey(), 
+            reverse=not self.__settings.getboolean('view', 'sortascending'))
         if self != oldSelf:
-            notification['orderChanged'] = True
-        return notification
+            self.notifyObservers(patterns.Event(self, 'list.sorted'))
                         
     def rootTasks(self):
         return [task for task in self if task.parent() is None]
@@ -86,7 +107,8 @@ class Sorter(patterns.ObservableListObserver):
 
     def __createRegularSortKey(self):
         sortKeyName = self.__settings.get('view', 'sortby')
-        if not self.__settings.getboolean('view', 'sortcasesensitive') and sortKeyName == 'subject':
+        if not self.__settings.getboolean('view', 'sortcasesensitive') \
+            and sortKeyName == 'subject':
             prepareSortValue = lambda subject: subject.lower()
         else:
             prepareSortValue = lambda value: value
@@ -94,6 +116,7 @@ class Sorter(patterns.ObservableListObserver):
         if sortKeyName.startswith('total') or self.__treeMode:
             kwargs['recursive'] = True
             sortKeyName = sortKeyName.replace('total', '')
-        return lambda task: [prepareSortValue(getattr(task, sortKeyName)(**kwargs))]
+        return lambda task: [prepareSortValue(getattr(task, 
+            sortKeyName)(**kwargs))]
         
  

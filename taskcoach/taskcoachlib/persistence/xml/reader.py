@@ -18,7 +18,8 @@ class XMLReader:
         return int(matchObject.group(1))
         
     def __parseTaskNodes(self, nodes):
-        return [self.__parseTaskNode(node) for node in nodes if node.nodeName == 'task']
+        return [self.__parseTaskNode(node) for node in nodes \
+                if node.nodeName == 'task']
 
     def __parseTaskNode(self, taskNode):
         subject = taskNode.getAttribute('subject')
@@ -29,16 +30,19 @@ class XMLReader:
         completionDate = date.parseDate(taskNode.getAttribute('completiondate'))
         budget = date.parseTimeDelta(taskNode.getAttribute('budget'))
         priority = self.__parseInteger(taskNode.getAttribute('priority'))
-        lastModificationTime = self.__parseDateTime(taskNode.getAttribute('lastModificationTime'))
+        lastModificationTime = \
+            self.__parseDateTime(taskNode.getAttribute('lastModificationTime'))
         hourlyFee = self.__parseFloat(taskNode.getAttribute('hourlyFee'))
         fixedFee = self.__parseFloat(taskNode.getAttribute('fixedFee'))
         reminder = self.__parseDateTime(taskNode.getAttribute('reminder'))
-        shouldMarkCompletedWhenAllChildrenCompleted = self.__parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted'))
-        parent = task.Task(subject, description, id_=id, startdate=startDate, duedate=dueDate, 
-            completiondate=completionDate, budget=budget, priority=priority, 
-            lastModificationTime=lastModificationTime, hourlyFee=hourlyFee,
-            fixedFee=fixedFee, reminder=reminder, 
-            shouldMarkCompletedWhenAllChildrenCompleted=shouldMarkCompletedWhenAllChildrenCompleted)
+        shouldMarkCompletedWhenAllChildrenCompleted = \
+            self.__parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted'))
+        parent = task.Task(subject, description, id_=id, startDate=startDate, 
+            dueDate=dueDate, completionDate=completionDate, budget=budget, 
+            priority=priority, lastModificationTime=lastModificationTime, 
+            hourlyFee=hourlyFee, fixedFee=fixedFee, reminder=reminder, 
+            shouldMarkCompletedWhenAllChildrenCompleted=\
+                shouldMarkCompletedWhenAllChildrenCompleted)
         for category in self.__parseCategoryNodes(taskNode.childNodes):
             parent.addCategory(category)
         attachments = self.__parseAttachmentNodes(taskNode.childNodes)
@@ -50,13 +54,16 @@ class XMLReader:
         return parent        
         
     def __parseCategoryNodes(self, nodes):
-        return [self.__parseTextNode(node) for node in nodes if node.nodeName == 'category']
+        return [self.__parseTextNode(node) for node in nodes \
+                if node.nodeName == 'category']
         
     def __parseAttachmentNodes(self, nodes):
-        return [self.__parseTextNode(node) for node in nodes if node.nodeName == 'attachment']
+        return [self.__parseTextNode(node) for node in nodes \
+                if node.nodeName == 'attachment']
 
     def __parseEffortNodes(self, task, nodes):
-        return [self.__parseEffortNode(task, node) for node in nodes if node.nodeName == 'effort']
+        return [self.__parseEffortNode(task, node) for node in nodes \
+                if node.nodeName == 'effort']
         
     def __parseEffortNode(self, task, effortNode):
         start = effortNode.getAttribute('start')

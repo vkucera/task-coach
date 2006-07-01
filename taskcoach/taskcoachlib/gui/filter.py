@@ -104,7 +104,7 @@ class StatusFilterPanel(wx.Panel):
             checkBox.Bind(wx.EVT_CHECKBOX, self.onCheck)
         for label, setting in self.labelsAndSettings:
             self.__settings.registerObserver(self.onSettingChanged, 
-                ('view', setting))
+                'view.%s'%setting)
 
     def onCheck(self, event):
         checkBox = event.GetEventObject()
@@ -163,17 +163,15 @@ class CategoriesFilterPanel(wx.Panel):
     def bindEventHandlers(self):
         self._checkListBox.Bind(wx.EVT_CHECKLISTBOX, self.onCheckCategory)
         self._radioBox.Bind(wx.EVT_RADIOBOX, self.onCheckMatchAll)
-        self.__taskList.registerObserver(self.onTaskListCategoryAdded,
-            'tasklist.category.add')
-        self.__taskList.registerObserver(self.onTaskListCategoryRemoved,
-            'tasklist.category.remove')
+        self.__taskList.registerObserver(self.onAddTask, 'list.add')
+        self.__taskList.registerObserver(self.onRemoveTask, 'list.remove')
         self.__settings.registerObserver(self.onMatchAllChanged,
-            ('view', 'taskcategoryfiltermatchall'))
-        self.__taskList.registerObserver(self.onFilterCategoryAdd,
+            'view.taskcategoryfiltermatchall')
+        self.__taskList.registerObserver(self.onAddCategoryToFilter,
             'filter.category.add')
-        self.__taskList.registerObserver(self.onFilterCategoryRemove,
+        self.__taskList.registerObserver(self.onRemoveCategoryFromFilter,
             'filter.category.remove')
-        self.__taskList.registerObserver(self.onFilterCategoryRemoveAll,
+        self.__taskList.registerObserver(self.onRemoveAllCategoriesFromFilter,
             'filter.category.removeall')
 
     def onCheckCategory(self, event):
@@ -189,31 +187,50 @@ class CategoriesFilterPanel(wx.Panel):
         setting = ['False', 'True'][index]
         self.__settings.set('view', 'taskcategoryfiltermatchall', setting)
 
-    def onTaskListCategoryAdded(self, event):
-        print 'CategoriesFilterPanel.onTaskListCategoryAdded(%s)'%event
-        for category in event.categoriesAdded:
-            self._checkListBox.Append(category)
+    def onAddTask(self, event):
+        for task in event.values():
+            task.registerObserver('task.category.add',
+                self.onAddCategoryToTask)
+            task.registerObserver('task.category.remove',
+                self.onRemoveCategoryFromTask)
+            for category in task.categories():
+                if self._checkListBox.FindString(category) == wx.NOT_FOUND:
+                    self._checkListBox.append(category)
+
+    def onRemoveTask(self, event):
+        for task in event.values():
+            task.removeObservers(self.onAddCategoryToTask, 
+                self.onRemoveCategoryFromTask)
+            for category in task.categories():
+                if category not in self.__taskList.categories():
+                    self._checkListBox.Delete(self._checkListBox.FindString(category))
         self.Enable(len(self.__taskList.categories()) > 0)
 
-    def onTaskListCategoryRemoved(self, event):
-        print 'CategoriesFilterPanel.onTaskListCategoryAdded(%s)'%event
-        for category in event.categoriesRemoved:
-            self._checkListBox.Delete(self._checkListBox.FindString(category))
+    def onAddCategoryToTask(self, event):
+        for category in event.values():
+            if self._checkListBox.FindString(category) == wx.NOT_FOUND:
+                self._checkListBox.append(category)
+        self.Enable(len(self.__taskList.categories()) > 0)
+
+    def onRemoveCategoryFromTask(self, event):
+        for category in event.values():
+            if category not in self.__taskList.categories():
+                self._checkListBox.Delete(self._checkListBox.FindString(category))
         self.Enable(len(self.__taskList.categories()) > 0)
 
     def onMatchAllChanged(self, notification):
         self.setRadioBox()
 
-    def onFilterCategoryAdd(self, notification):
-        category = notification.category
+    def onAddCategoryToFilter(self, event):
+        category = event.value()
         self._checkListBox.Check(self._checkListBox.FindString(category))
 
-    def onFilterCategoryRemove(self, notification):
-        category = notification.category
+    def onRemoveCategoryFromFilter(self, event):
+        category = event.value()
         self._checkListBox.Check(self._checkListBox.FindString(category), 
                                  False)
 
-    def onFilterCategoryRemoveAll(self, notification):
+    def onRemoveAllCategoriesFromFilter(self, event):
         for index in range(self._checkListBox.GetCount()):
             self._checkListBox.Check(index, False)
 
@@ -250,12 +267,12 @@ class DueDateFilterPanel(wx.Panel):
     def bindEventHandlers(self):
         self._radioBox.Bind(wx.EVT_RADIOBOX, self.onCheck)
         self.__settings.registerObserver(self.onTasksDueChanged,
-            ('view', 'tasksdue'))
+            'view.tasksdue')
 
     def onCheck(self, event):
         value = self.__settingValues[event.GetInt()]
         self.__settings.set('view', 'tasksdue', value)
 
-    def onTasksDueChanged(self, notification):
-        index = self.__settingValues.index(notification.value)
+    def onTasksDueChanged(self, event):
+        index = self.__settingValues.index(event.value())
         self._radioBox.SetSelection(index)

@@ -19,8 +19,9 @@ class Viewer(patterns.Observable, wx.Panel):
         self.list = self.createSorter(self.createFilter(list))
         self.widget = self.createWidget()
         self.initLayout()
-        self.list.registerObserver(self.onNotify)
-        self.onNotify(patterns.observer.Notification(self.list, itemsAdded=self.list))
+        self.list.registerObserver(self.onAddItem, 'list.add')
+        self.list.registerObserver(self.onRemoveItem, 'list.remove')
+        self.list.registerObserver(self.onSorted, 'list.sorted')
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
@@ -42,18 +43,20 @@ class Viewer(patterns.Observable, wx.Panel):
     def createFilter(self, list):
         return list
 
-    def onNotify(self, notification, *args, **kwargs):
-        if notification:
-            if not notification.itemsAdded and not notification.itemsRemoved and not notification.orderChanged:
-                for item in notification.itemsChanged:
-                    self.widget.refreshItem(self.list.index(item))
-            else:
-                self.refresh()
-        
+    def onAddItem(self, event):
+        self.refresh(event)
+
+    def onRemoveItem(self, event):
+        self.refresh(event)
+
+    def onSorted(self, event):
+        self.refresh(event)
+
     def onSelect(self, *args):
-        self.notifyObservers(patterns.observer.Notification(self))
+        self.notifyObservers(patterns.Event(self, 'viewer.select',
+            self.curselection()))
     
-    def refresh(self):
+    def refresh(self, event=None):
         self.widget.refresh(len(self.list))
         
     def curselection(self):
@@ -121,6 +124,8 @@ class ViewerWithColumns(Viewer):
         column = self.visibleColumns()[visibleColumnIndex]
         section, setting = column.visibilitySetting()
         self.settings.set(section, setting, 'False')
+        for item in self.list:
+            item.removeObserver(self.onAttributeChanged, column.eventType())
 
     def isHideableColumn(self, visibleColumnIndex):
         column = self.visibleColumns()[visibleColumnIndex]
@@ -138,17 +143,24 @@ class ViewerWithColumns(Viewer):
         visibilitySetting = column.visibilitySetting()
         if visibilitySetting:
             self.settings.registerObserver(self.onShowColumn, 
-                visibilitySetting)
+                '%s.%s'%visibilitySetting)
             self.widget.showColumn(column, 
                 show=self.settings.getboolean(*column.visibilitySetting()))
 
-    def onShowColumn(self, notification):
-        visibilitySetting = notification.section, notification.option
+    def onShowColumn(self, event):
+        visibilitySetting = tuple(event.type().split('.'))
         for column in self.columns():
             if column.visibilitySetting() == visibilitySetting:
-                self.widget.showColumn(column, notification.value=='True')
+                self.widget.showColumn(column, event.value()=='True')
+                for item in self.list:
+                    item.registerObserver(self.onAttributeChanged,
+                        column.eventType())
                 break
                 
+    def onAttributeChanged(self, event):
+        item = event.source()
+        self.refreshItem(item)
+
 
 class TaskViewer(Viewer):
     def __init__(self, *args, **kwargs):
@@ -178,7 +190,7 @@ class TaskViewer(Viewer):
         return wx.ListItemAttr(color.taskColor(task, self.settings))
 
     def __registerForColorChanges(self):
-        colorSettings = [('color', setting) for setting in 'activetasks',\
+        colorSettings = ['color.%s'%setting for setting in 'activetasks',\
             'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
         self.settings.registerObserver(self.onColorChange, *colorSettings)
         
@@ -233,10 +245,9 @@ class TaskViewer(Viewer):
 class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
     def __init__(self, *args, **kwargs):
         super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
-        self.settings.registerObserver(self.onSortKeyChanged, 
-            ('view', 'sortby'))
+        self.settings.registerObserver(self.onSortKeyChanged, 'view.sortby')
         self.settings.registerObserver(self.onSortOrderChanged, 
-            ('view', 'sortascending'))
+            'view.sortascending')
             
     def _createColumns(self):
         return [widgets.Column(_('Subject'), None, 'subject', 
@@ -272,15 +283,15 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             self.showSortOrder(self.settings.getboolean('view',
                 'sortascending'))
         
-    def onSortKeyChanged(self, notification):
-        sortKey = notification.value
+    def onSortKeyChanged(self, event):
+        sortKey = event.value()
         for column in self.columns():
             if column.sortKey() == sortKey:
                 self.widget.showSortColumn(column)
                 break
         
-    def onSortOrderChanged(self, notification):
-        self.showSortOrder(notification.value == 'True')
+    def onSortOrderChanged(self, event):
+        self.showSortOrder(event.value() == 'True')
 
     def showSortOrder(self, ascending):
         if ascending:
@@ -297,7 +308,6 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
                 
     def createColumnPopupMenu(self):
         return menu.TaskViewerColumnPopupMenu(self.parent, self.uiCommands)
-
     
 
 class TaskListViewer(TaskViewerWithColumns, ListViewer):
@@ -318,7 +328,8 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
             settings=self.settings), settings=self.settings)
         
     def createSorter(self, taskList):
-        return task.sorter.Sorter(taskList, settings=self.settings, treeMode=False)
+        return task.sorter.Sorter(taskList, settings=self.settings, 
+            treeMode=False)
     
     def setViewCompositeTasks(self, viewCompositeTasks):
         self.list.setViewCompositeTasks(viewCompositeTasks)
@@ -358,10 +369,13 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         task = self.list[index]
         if task.parent():
             parentIndex = self.list.index(task.parent())
-            childrenBeforeThisTask = [child for child in self.list[parentIndex+1:index] if task.parent() == child.parent()]
+            childrenBeforeThisTask = [child for child in \
+                self.list[parentIndex+1:index] \
+                if task.parent() == child.parent()]
             return len(childrenBeforeThisTask)
         else:
-            return len([child for child in self.list[:index] if child.parent() is None])
+            return len([child for child in self.list[:index] \
+                        if child.parent() is None])
                    
     def getItemId(self, index):
         task = self.list[index]
@@ -372,7 +386,8 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         
     def getChildIndices(self, index):
         task = self.list[index]
-        childIndices = [self.list.index(child) for child in task.children() if child in self.list]
+        childIndices = [self.list.index(child) for child in task.children() \
+                        if child in self.list]
         childIndices.sort()
         return childIndices
 
@@ -384,9 +399,9 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
     def createWidget(self):
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
-            self.getItemImage, self.getItemAttr, self.getItemId, self.getRootIndices,
-            self.getChildIndices, self.onSelect, self.uiCommands['edit'],
-            self.uiCommands['draganddroptask'],
+            self.getItemImage, self.getItemAttr, self.getItemId, 
+            self.getRootIndices, self.getChildIndices, self.onSelect, 
+            self.uiCommands['edit'], self.uiCommands['draganddroptask'],
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(self.createImageList())
@@ -409,9 +424,9 @@ class EffortViewer(Viewer):
  
     
 class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
-    def __init__(self, *args, **kwargs):
-        self.taskList = kwargs.pop('taskList')
-        super(EffortListViewer, self).__init__(*args, **kwargs)
+    def __init__(self, parent, list, *args, **kwargs):
+        self.taskList = list
+        super(EffortListViewer, self).__init__(parent, list, *args, **kwargs)
         
     def createWidget(self):
         # We need to create new uiCommands here, because the viewer might not
@@ -419,12 +434,16 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         # task edit window.
         uiCommands = {}
         uiCommands.update(self.uiCommands)
-        uiCommands['editeffort'] = uicommand.EffortEdit(mainwindow=self.parent, effortList=self.list, filteredTaskList=self.taskList, viewer=self, uiCommands=self.uiCommands)
-        uiCommands['deleteeffort'] = uicommand.EffortDelete(effortList=self.list, viewer=self, filteredTaskList=self.taskList)
+        uiCommands['editeffort'] = uicommand.EffortEdit(mainwindow=self.parent, 
+            effortList=self.list, filteredTaskList=self.taskList, viewer=self, 
+            uiCommands=self.uiCommands)
+        uiCommands['deleteeffort'] = uicommand.EffortDelete( \
+            effortList=self.list, viewer=self, filteredTaskList=self.taskList)
         uiCommands['cut'] = uicommand.EditCut(viewer=self)
         uiCommands['copy'] = uicommand.EditCopy(viewer=self)
         uiCommands['pasteintotask'] = uicommand.EditPasteIntoTask(viewer=self)
-        uiCommands['hidecurrentcolumn'] = uicommand.HideCurrentColumn(viewer=self)
+        uiCommands['hidecurrentcolumn'] = \
+            uicommand.HideCurrentColumn(viewer=self)
         
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
@@ -444,8 +463,13 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             [widgets.Column(columnHeader, ('view', setting), None, None,
             renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
             for columnHeader, setting, renderCallback in \
-            (_('Time spent'), 'efforttimespent', lambda effort: render.timeSpent(effort.duration())),
-            (_('Revenue'), 'effortrevenue', lambda effort: render.amount(effort.revenue()))]
+            (_('Time spent'), 'efforttimespent', 
+                lambda effort: render.timeSpent(effort.duration())),
+            (_('Revenue'), 'effortrevenue', 
+                lambda effort: render.amount(effort.revenue()))]
+
+    def createFilter(self, taskList):
+        return effort.EffortList(taskList)
 
     def createSorter(self, effortList):
         return effort.EffortSorter(effortList)
@@ -486,92 +510,30 @@ class CompositeEffortListViewer(EffortListViewer):
         compositeEfforts = super(CompositeEffortListViewer, self).curselection()
         return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
 
+    def createFilter(self, taskList):
+        return taskList
+
 
 class EffortPerDayViewer(CompositeEffortListViewer):
-    def createSorter(self, effortList):
-        return effort.EffortSorter(effort.EffortPerDay(effortList))
+    def createSorter(self, taskList):
+        return effort.EffortSorter(effort.EffortPerDay(taskList))
     
     def renderEntirePeriod(self, compositeEffort):
         return render.date(compositeEffort.getStart().date())
 
         
 class EffortPerWeekViewer(CompositeEffortListViewer):
-    def createSorter(self, effortList):
-        return effort.EffortSorter(effort.EffortPerWeek(effortList))
+    def createSorter(self, taskList):
+        return effort.EffortSorter(effort.EffortPerWeek(taskList))
         
     def renderEntirePeriod(self, compositeEffort):
         return render.weekNumber(compositeEffort.getStart())
 
 
 class EffortPerMonthViewer(CompositeEffortListViewer):
-    def createSorter(self, effortList):
-        return effort.EffortSorter(effort.EffortPerMonth(effortList))
+    def createSorter(self, taskList):
+        return effort.EffortSorter(effort.EffortPerMonth(taskList))
         
     def renderEntirePeriod(self, compositeEffort):
         return render.month(compositeEffort.getStart())
 
-
-class Table(grid.PyGridTableBase):
-    def __init__(self, taskList, *args, **kwargs):
-        self._taskList = taskList
-        super(Table, self).__init__(*args, **kwargs)
-        
-    def GetRowLabelValue(self, row):
-        return self._taskList[row].subject()
-
-    def GetColLabelValue(self, col):
-        return render.date(self.__minDate() + date.TimeDelta(days=col))
-        
-    def GetNumberRows(self):
-        return len(self._taskList)
-
-    def __minDate(self):
-        minDate = self._taskList.minDate()
-        if minDate == date.Date():
-            minDate = date.Today()
-        if minDate == date.minimumDate:
-            return minDate
-        else:
-            return minDate - date.TimeDelta(days=1)
-        
-    def __maxDate(self):
-        maxDate = self._taskList.maxDate()
-        if maxDate == date.Date():
-            maxDate = date.Today() 
-        return maxDate + date.TimeDelta(days=1)
-        
-    def GetNumberCols(self):
-        period = self.__maxDate() - self.__minDate() + date.TimeDelta(days=1)
-        return period.days
-       
-    def IsEmptyCell(self, row, col):
-        True
-        
-    def GetValue(self, row, col):
-        return ''
-
-    def GetAttr(self, row, col, *args):
-        attr = grid.GridCellAttr()
-        if not self.__emptyCell(row, col):
-            task = self._taskList[row]
-            attr.SetBackgroundColour(color.taskColor(task, active=wx.BLUE))
-        return attr
-       
-    def __emptyCell(self, row, col):
-        if row >= len(self._taskList):
-            return True
-        task = self._taskList[row]
-        thisDate = self.__minDate() + date.TimeDelta(days=col)
-        taskDates = [task.startDate()]
-        if task.completed():
-            taskDates.append(task.completionDate())
-        else:
-            taskDates.append(task.dueDate())
-        return thisDate < min(taskDates) or thisDate > max(taskDates)
- 
-
-class GanttChartViewer(TaskViewer):
-    def createWidget(self):
-        self.table = Table(self.list)
-        widget = widgets.GridCtrl(self, self.table, self.onSelect, self.uiCommands['edit'])
-        return widget

@@ -4,65 +4,10 @@ import domain.date as date
 import task
 
             
-class TaskList(patterns.ObservableObservablesList):
+class TaskList(patterns.ObservableList):
     def __init__(self, initList=None, *args, **kwargs):
         super(TaskList, self).__init__(*args, **kwargs)
         self.extend(initList or [])
-        
-    def _subscribe(self, *tasks):
-        # extend super(TaskList, self)._subscribe to subscribe to
-        # specific events
-        super(TaskList, self)._subscribe(*tasks)
-        for task in tasks:
-            task.registerObserver(self.onReminder, 'reminder')
-            task.registerObserver(self.onAttachment, 'attachment')
-            task.registerObserver(self.onCategoryAdded, 'task.category.add')
-            task.registerObserver(self.onCategoryRemoved,
-                'task.category.remove')
-            
-    def _unsubscribe(self, *tasks):
-        # extend super(TaskList, self)._unsubscribe to unsubscribe from 
-        # specific events
-        super(TaskList, self)._unsubscribe(*tasks)
-        for task in tasks:
-            task.removeObserver(self.onReminder)
-            task.removeObserver(self.onAttachment)
-            task.removeObserver(self.onCategoryAdded)
-            task.removeObserver(self.onCategoryRemoved)
-
-    def onReminder(self, notification, *args, **kwargs):
-        self.notifyObservers(patterns.Notification(self, 
-            task=notification.source), 'reminder')
-
-    def onAttachment(self, notification, *args, **kwargs):
-        self.notifyObservers(patterns.Notification(self, 
-            task=notification.source, 
-            changeNeedsSave=notification.changeNeedsSave), 'attachment')
-
-    def onCategoryAdded(self, event):
-        #print 'TaskList.onCategoryAdded(%s)'%event
-        categories = event.categoriesAdded
-        newCategories = []
-        for category in categories:
-            if len([task for task in self \
-                    if category in task.categories()]) == 1:
-                newCategories.append(category)
-        if newCategories:
-            self.notifyObservers(patterns.Notification(self,
-                categoriesAdded=newCategories), 'tasklist.category.add')
-
-    def onCategoryRemoved(self, event):
-        #print 'TaskList.onCategoryRemoved(%s)'%event
-        categories = event.categoriesAdded
-        removedCategories = []
-        for category in categories:
-            if len([task for task in self \
-                    if category in task.categories()]) == 0:
-                removedCategories.append(category)
-        if removedCategories:
-            self.notifyObservers(patterns.Notification(self,
-                categoriesRemoved=removedCategories),
-                'tasklist.category.remove')
         
     def newItem(self):
         ''' TaskList knows how to create new items so classes that
@@ -73,45 +18,47 @@ class TaskList(patterns.ObservableObservablesList):
 
     # list interface and helpers
 
-    def _addTaskToParent(self, task):
-        parent = task.parent()
-        if parent and parent in self:
-            parent.addChild(task)
-            return parent
-        else:
-            return None
-
     def append(self, task):
         self.extend([task])
         
+    def extend(self, tasks):
+        if not tasks:
+            return
+        tasksAndAllChildren = self._tasksAndAllChildren(tasks) 
+        self.stopNotifying()
+        super(TaskList, self).extend(tasksAndAllChildren)
+        for task in tasks:
+            self._addTaskToParent(task)
+        self.startNotifying()
+        self.notifyObservers(patterns.Event(self, 'list.add', 
+            *tasksAndAllChildren))
+
     def _tasksAndAllChildren(self, tasks):
         tasksAndAllChildren = sets.Set(tasks) 
         for task in tasks:
             tasksAndAllChildren |= sets.Set(task.allChildren())
         return list(tasksAndAllChildren)
-        
-    def extend(self, tasks):
-        #print 'TaskList.extend(%s)'%tasks
+
+    def _addTaskToParent(self, task):
+        parent = task.parent()
+        if parent and parent in self:
+            parent.addChild(task)
+
+    def remove(self, task):
+        if task in self:
+            self.removeItems([task])
+            
+    def removeItems(self, tasks):
         if not tasks:
             return
-        currentCategories = self.categories()
-        tasksAndAllChildren = self._tasksAndAllChildren(tasks) 
+        tasksAndAllChildren = self._tasksAndAllChildren(tasks)
         self.stopNotifying()
-        super(TaskList, self).extend(tasksAndAllChildren)
-        parents = []
+        self._removeTasksFromTaskList(tasks)
         for task in tasks:
-            parent = self._addTaskToParent(task)
-            if parent:
-                parents.append(parent)
+            self._removeTaskFromParent(task)
         self.startNotifying()
-        self.notifyObservers(patterns.observer.Notification(self, 
-            itemsAdded=tasksAndAllChildren, itemsChanged=parents,
-            effortsAdded=self._allEfforts(tasksAndAllChildren), 
-            changeNeedsSave=True))
-        #print self.observers('tasklist.category.add')
-        self.notifyObservers(patterns.observer.Notification(self,
-            categoriesAdded=self.categories() - currentCategories),
-            'tasklist.category.add')
+        self.notifyObservers(patterns.Event(self, 'list.remove', 
+            *tasksAndAllChildren))
 
     def _removeTaskFromTaskList(self, task):
         self._removeTasksFromTaskList(task.children())
@@ -126,38 +73,7 @@ class TaskList(patterns.ObservableObservablesList):
         parent = task.parent()
         if parent:
             parent.removeChild(task)
-        return parent
 
-    def remove(self, task):
-        if task in self:
-            self.removeItems([task])
-            
-    def removeItems(self, tasks):
-        if not tasks:
-            return
-        currentCategories = self.categories()
-        tasksAndAllChildren = self._tasksAndAllChildren(tasks)
-        self.stopNotifying()
-        self._removeTasksFromTaskList(tasks)
-        parents = []
-        for task in tasks:
-            parent = self._removeTaskFromParent(task)
-            if parent and parent in self:
-                parents.append(parent)
-        self.startNotifying()
-        self.notifyObservers(patterns.observer.Notification(self,
-            itemsRemoved=tasksAndAllChildren, itemsChanged=parents,
-            effortsRemoved=self._allEfforts(tasksAndAllChildren)))
-        self.notifyObservers(patterns.observer.Notification(self,
-            categoriesRemoved=currentCategories-self.categories()),
-            'tasklist.category.remove')
-
-    def _allEfforts(self, tasks):
-        efforts = []
-        for task in tasks:
-            efforts.extend(task.efforts())
-        return efforts
-        
     # queries
 
     def _nrInterestingTasks(self, isInteresting):
@@ -184,7 +100,8 @@ class TaskList(patterns.ObservableObservablesList):
         return nrCompleted > 0 and nrCompleted == len(self)
 
     def rootTasks(self):
-        return [task for task in self if task.parent() is None or task.parent() not in self]
+        return [task for task in self if task.parent() is None or \
+                task.parent() not in self]
             
     def efforts(self):
         result = []

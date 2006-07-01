@@ -11,14 +11,18 @@ class Filter(patterns.ObservableListObserver):
         
     def treeMode(self):
         return self.__treeMode
+
+    def extendSelf(self, items):
+        itemsToAddToSelf = [item for item in items if self.filter(item)]
+        super(Filter, self).extendSelf(itemsToAddToSelf)
+
+    def removeItemsFromSelf(self, items):
+        itemsToRemoveFromSelf = [item for item in items if item in self]
+        super(Filter, self).removeItemsFromSelf(itemsToRemoveFromSelf)
         
-    def processChanges(self, notification):
-        oldSelf = self[:]
-        self[:] = [item for item in self.original() if self.filter(item)]
-        notification['itemsAdded'] = [item for item in self if item not in oldSelf]
-        notification['itemsRemoved'] = [item for item in oldSelf if item not in self]
-        notification['itemsChanged'] = [item for item in notification.itemsChanged if item in self and item not in notification.itemsAdded+notification.itemsRemoved]
-        return notification
+    def reset(self):
+        self.removeItemsFromSelf(self.original())
+        self.extendSelf(self.original())
             
     def filter(self, item):
         ''' filter returns False if the item should be hidden. '''
@@ -27,7 +31,7 @@ class Filter(patterns.ObservableListObserver):
     def rootTasks(self):
         return [task for task in self if task.parent() is None]
 
-    def onSettingChanged(self, notification):
+    def onSettingChanged(self, event):
         self.reset()
 
     
@@ -36,10 +40,53 @@ class ViewFilter(Filter):
         self.__settings = kwargs.pop('settings')
         for setting in ('tasksdue', 'completedtasks', 'inactivetasks',
                         'activetasks', 'overduetasks', 'overbudgetasks'):
-            self.__settings.registerObserver(self.onSettingChanged, 
-                ('view', setting))
+            self.__settings.registerObserver(self.onSettingChanged,
+                'view.%s'%setting)
         super(ViewFilter, self).__init__(*args, **kwargs)
+
+    def extendSelf(self, tasks):
+        super(ViewFilter, self).extendSelf(tasks)
+        for task in tasks:
+            task.registerObserver(self.onTaskChange, 'task.dueDate',
+                'task.startDate', 'task.completionDate', 'task.budget',
+                'task.effort.add', 'task.effort.remove')
+            task.registerObserver(self.onEffortAdded, 'task.effort.add')
+            task.registerObserver(self.onEffortRemoved, 'task.effort.remove')
+            for effort in task.efforts():
+                effort.registerObserver(self.onEffortChanged,
+                    'effort.start', 'effort.stop')
+
+    def removeItemsFromSelf(self, tasks):
+        super(ViewFilter, self).removeItemsFromSelf(tasks)
+        for task in tasks:
+            task.removeObservers(self.onTaskChange, self.onEffortAdded,
+                self.onEffortRemoved)
+            for effort in task.efforts():
+                effort.removeObserver(self.onEffortChanged)
+
+    def onTaskChange(self, event):
+        self.addOrRemoveTask(event.source())
+
+    def addOrRemoveTask(self, task):
+        if self.filter(task):
+            if task not in self:
+                self.extendSelf([task])
+        else:
+            if task in self:
+                self.removeItemsFromSelf([task])
         
+    def onEffortAdded(self, event):
+        for effort in event.values():
+            self.registerObserver(self.onEffortChanged, 'effort.start', 
+                'effort.stop')
+
+    def onEffortRemoved(self, event):
+        for effort in event.values():
+            self.removeObserver(self.onEffortChanged)
+
+    def onEffortChanged(self, event):
+        self.addOrRemoveTask(event.source().task())
+
     def getViewTasksDueBeforeDate(self):
         dateFactory = { 'Today' : date.Today, 
                         'Tomorrow' : date.Tomorrow,
@@ -52,20 +99,21 @@ class ViewFilter(Filter):
         
     def filter(self, task):
         settings = self.__settings
+        result = True
         if task.completed() and not settings.getboolean('view', 'completedtasks'):
-            return False
-        if task.inactive() and not settings.getboolean('view', 'inactivetasks'):
-            return False
-        if task.overdue() and not settings.getboolean('view', 'overduetasks'):
-            return False
-        if task.active() and not settings.getboolean('view', 'activetasks'):
-            return False
-        if task.budgetLeft(recursive=True) < date.TimeDelta() and not \
+            result = False
+        elif task.inactive() and not settings.getboolean('view', 'inactivetasks'):
+            result = False
+        elif task.overdue() and not settings.getboolean('view', 'overduetasks'):
+            result = False
+        elif task.active() and not settings.getboolean('view', 'activetasks'):
+            result = False
+        elif task.budgetLeft(recursive=True) < date.TimeDelta() and not \
                 settings.getboolean('view', 'overbudgettasks'):
-            return False
-        if task.dueDate(recursive=self.treeMode()) > self.getViewTasksDueBeforeDate():
-            return False        
-        return True
+            result = False
+        elif task.dueDate(recursive=self.treeMode()) > self.getViewTasksDueBeforeDate():
+            result = False        
+        return result
 
 
 class CompositeFilter(Filter):
@@ -73,9 +121,30 @@ class CompositeFilter(Filter):
     def __init__(self, *args, **kwargs):
         self.__settings = kwargs.pop('settings')
         self.__settings.registerObserver(self.onSettingChanged, 
-                                         ('view', 'compositetasks'))
+                                         'view.compositetasks')
         super(CompositeFilter, self).__init__(*args, **kwargs)
 
+    def onAddItem(self, event):
+        super(CompositeFilter, self).onAddItem(event)
+        for task in event.values():
+            task.registerObserver(self.onAddChild, 'task.child.add')
+            task.registerObserver(self.onRemoveChild, 'task.child.remove')
+
+    def onRemoveItem(self, event):
+        super(CompositeFilter, self).onRemoveItem(event)
+        for task in event.values():
+            task.removeObservers(self.onAddChild, self.onRemoveChild)
+
+    def onAddChild(self, event):
+        task = event.source()
+        if task in self and not self.filter(task):
+            self.removeItemsFromSelf([task])
+
+    def onRemoveChild(self, event):
+        task = event.source()
+        if task not in self and self.filter(task):
+            self.extendSelf([task])
+        
     def filter(self, task):
         return (not task.children()) or \
             self.__settings.getboolean('view', 'compositetasks')
@@ -85,9 +154,7 @@ class SearchFilter(Filter):
     def __init__(self, *args, **kwargs):
         self.__settings = kwargs.pop('settings')
         self.__settings.registerObserver(self.onSettingChanged, 
-                                         ('view', 'tasksearchfilterstring'))
-        self.__settings.registerObserver(self.onSettingChanged,
-                                         ('view', 'tasksearchfiltermatchcase'))
+            'view.tasksearchfilterstring', 'view.tasksearchfiltermatchcase')
         super(SearchFilter, self).__init__(*args, **kwargs)
 
     def filter(self, task):
@@ -102,7 +169,7 @@ class SearchFilter(Filter):
     def __taskSubject(self, task):
         subject = task.subject()
         if self.treeMode():
-            subject += ''.join([child.subject() for child in task.allChildren()
+            subject += ' '.join([child.subject() for child in task.allChildren()
                 if child in self.original()])
         return subject
     
@@ -118,7 +185,7 @@ class CategoryFilter(Filter):
         self._categories = sets.Set()
         self.__settings = kwargs.pop('settings')
         self.__settings.registerObserver(self.onSettingChanged, 
-                                         ('view', 'taskcategoryfiltermatchall'))
+            'view.taskcategoryfiltermatchall')
         super(CategoryFilter, self).__init__(*args, **kwargs)
         
     def filter(self, task):
@@ -135,20 +202,19 @@ class CategoryFilter(Filter):
             
     def addCategory(self, category):
         self._categories.add(category)
-        self.notifyObservers(patterns.Notification(self, category=category),
-            'filter.category.add')
+        self.notifyObservers(patterns.Event(self, 'filter.category.add',
+            category))
         self.reset()
         
     def removeCategory(self, category):
         self._categories.discard(category)
-        self.notifyObservers(patterns.Notification(self, category=category),
-            'filter.category.remove')
+        self.notifyObservers(patterns.Event(self, 'filter.category.remove', 
+            category))
         self.reset()
         
     def removeAllCategories(self):
         self._categories.clear()
-        self.notifyObservers(patterns.Notification(self),
-            'filter.category.removeall')
+        self.notifyObservers(patterns.Event(self, 'filter.category.removeall'))
         self.reset()
             
     def filteredCategories(self):

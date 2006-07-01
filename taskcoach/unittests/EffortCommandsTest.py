@@ -48,6 +48,14 @@ class NewEffortCommandTest(EffortCommandTestCase):
         
 
 class EditEffortCommandTest(EffortCommandTestCase):
+    def setUp(self):
+        super(EditEffortCommandTest, self).setUp()
+        self.newTask = task.Task()
+        self.events = []
+
+    def onEvent(self, event):
+        self.events.append(event)
+
     def testEditStartDateTime(self):
         edit = command.EditEffortCommand(self.effortList, [self.effort])
         expected = date.DateTime(2000,1,1)
@@ -57,22 +65,61 @@ class EditEffortCommandTest(EffortCommandTestCase):
             lambda: self.assertEqual(expected, self.effort.getStart()),
             lambda: self.assertEqual(self.originalStart, self.effort.getStart()))
 
-    def testEditTask(self):
+    def doEditEffortTask(self):
         edit = command.EditEffortCommand(self.effortList, [self.effort])
-        expected = task.Task()
-        edit.items[0].setTask(expected)
+        edit.items[0].setTask(self.newTask)
         edit.do()
+
+    def testEditTask(self):
+        self.doEditEffortTask()
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(expected, self.effort.task()),
+            lambda: self.assertEqual(self.newTask, self.effort.task()),
             lambda: self.assertEqual(self.originalTask, self.effort.task()))
 
+    def testEditTaskNotifiesOriginalTask(self):
+        self.originalTask.registerObserver(self.onEvent, 'task.effort.remove')
+        self.doEditEffortTask()
+        self.assertEqual(self.effort, self.events[0].value())
 
+    def testEditTaskNotifiesNewTask(self):
+        self.newTask.registerObserver(self.onEvent, 'task.effort.add')
+        self.doEditEffortTask()
+        self.assertEqual(self.effort, self.events[0].value())
+
+    def testEditTaskUndoNotifiesOriginalTask(self):
+        self.originalTask.registerObserver(self.onEvent, 'task.effort.add')
+        self.doEditEffortTask()
+        self.undo()
+        self.assertEqual(self.effort, self.events[0].value())
+        
+    def testEditTaskUndoNotifiesNewTask(self):
+        self.newTask.registerObserver(self.onEvent, 'task.effort.remove')
+        self.doEditEffortTask()
+        self.undo()
+        self.assertEqual(self.effort, self.events[0].value())
+
+    def testEditTaskRedoNotifiesOriginalTask(self):
+        self.originalTask.registerObserver(self.onEvent, 'task.effort.remove')
+        self.doEditEffortTask()
+        self.undo()
+        self.redo()
+        self.assertEqual(self.effort, self.events[1].value())
+
+    def testEditTaskRedoNotifiesNewTask(self):
+        self.newTask.registerObserver(self.onEvent, 'task.effort.add')
+        self.doEditEffortTask()
+        self.undo()
+        self.redo()
+        self.assertEqual(self.effort, self.events[1].value())
+
+"""
 class EditEffortCommandNotificationTest(EffortCommandTestCase):
     def setUp(self):
         super(EditEffortCommandNotificationTest, self).setUp()
         self.originalTask.registerObserver(self.onNotify)
         self.edit = command.EditEffortCommand(self.effortList, [self.effort])
         newTask = task.Task()
+        self.events = []
         newTask.registerObserver(self.onNotify)
         self.edit.items[0].setTask(newTask)
         self.edit.do()        
@@ -91,9 +138,6 @@ class EditEffortCommandNotificationTest(EffortCommandTestCase):
         self.failUnless(self.notifiedOfEffortRemoved and \
                         self.notifiedOfEffortAdded)
             
-    def testEditTaskNotifiesOldAndNewTaskAfterDo(self):
-        self.assertNotifiedOfEffortsAddedAndRemoved()
-        
     def testEditTaskNotifiesOldAndNewTaskAfterUndo(self):
         self.clearNotifications()
         self.edit.undo()
@@ -105,6 +149,7 @@ class EditEffortCommandNotificationTest(EffortCommandTestCase):
         self.edit.redo()
         self.assertNotifiedOfEffortsAddedAndRemoved()
         
+"""
 
 class StartAndStopEffortCommandTest(EffortCommandTestCase):
     def setUp(self):
