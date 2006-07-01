@@ -36,10 +36,11 @@ class IOController(object):
             self.__taskFile.setFilename(filename)
             try:
                 self.__taskFile.load()                
-            except:
+            except Exception, message:
                 self.__taskFile.setFilename('')
-                showerror(_('Error while reading %s.\n' 
-                    'Are you sure it is a %s-file?')%(filename, meta.name), 
+                showerror(_('Error while reading %s:\n' 
+                    '%s\n'
+                    'Are you sure it is a %s-file?')%(filename, message, meta.name), 
                     caption=_('File error'), style=wx.ICON_ERROR)
                 return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})

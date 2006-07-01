@@ -250,31 +250,32 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             'view.sortascending')
             
     def _createColumns(self):
-        return [widgets.Column(_('Subject'), None, 'subject', 
+        return [widgets.Column(_('Subject'), 'task.subject', None, 'subject', 
                 self.uiCommands['viewsortbysubject'], self.renderSubject)] + \
-            [widgets.Column(columnHeader, ('view', setting.lower()), 
+            [widgets.Column(columnHeader, eventType, ('view', setting.lower()), 
             setting, self.uiCommands['viewsortby' + setting.lower()],
             renderCallback, alignment=wx.LIST_FORMAT_RIGHT) for \
-            columnHeader, setting, renderCallback in \
-            (_('Start date'), 'startDate', lambda task: render.date(task.startDate())),
-            (_('Due date'), 'dueDate', lambda task: render.date(task.dueDate())),
-            (_('Days left'), 'timeLeft', lambda task: render.daysLeft(task.timeLeft())),
-            (_('Completion date'), 'completionDate', lambda task: render.date(task.completionDate())),
-            (_('Budget'), 'budget', lambda task: render.budget(task.budget())),
-            (_('Total budget'), 'totalbudget', lambda task: render.budget(task.budget(recursive=True))),
-            (_('Time spent'), 'timeSpent', lambda task: render.timeSpent(task.timeSpent())),
-            (_('Total time spent'), 'totaltimeSpent', lambda task: render.timeSpent(task.timeSpent(recursive=True))),
-            (_('Budget left'), 'budgetLeft', lambda task: render.budget(task.budgetLeft())),
-            (_('Total budget left'), 'totalbudgetLeft', lambda task: render.budget(task.budgetLeft(recursive=True))),
-            (_('Priority'), 'priority', lambda task: render.priority(task.priority())),
-            (_('Overall priority'), 'totalpriority', lambda task: render.priority(task.priority(recursive=True))),
-            (_('Hourly fee'), 'hourlyFee', lambda task: render.amount(task.hourlyFee())),
-            (_('Fixed fee'), 'fixedFee', lambda task: render.amount(task.fixedFee())),
-            (_('Total fixed fee'), 'totalfixedfee', lambda task: render.amount(task.fixedFee(recursive=True))),
-            (_('Revenue'), 'revenue', lambda task: render.amount(task.revenue())),
-            (_('Total revenue'), 'totalrevenue', lambda task: render.amount(task.revenue(recursive=True))),
-            (_('Last modification time'), 'lastModificationTime', lambda task: render.dateTime(task.lastModificationTime())),
-            (_('Overall last modification time'), 'totallastModificationTime', lambda task: render.dateTime(task.lastModificationTime(recursive=True)))]
+            columnHeader, eventType, setting, renderCallback in \
+            (_('Start date'), 'task.startDate', 'startDate', lambda task: render.date(task.startDate())),
+            (_('Due date'), 'task.duedate', 'dueDate', lambda task: render.date(task.dueDate())),
+            (_('Days left'), 'task.timeLeft', 'timeLeft', lambda task: render.daysLeft(task.timeLeft())),
+            (_('Completion date'), 'task.completionDate', 'completionDate', lambda task: render.date(task.completionDate())),
+            (_('Budget'), 'task.budget', 'budget', lambda task: render.budget(task.budget())),
+            (_('Total budget'), 'task.totalBudget', 'totalbudget', lambda task: render.budget(task.budget(recursive=True))),
+            (_('Time spent'), 'task.timeSpent', 'timeSpent', lambda task: render.timeSpent(task.timeSpent())),
+            (_('Total time spent'), 'task.totalTimeSpent', 'totaltimeSpent', lambda task: render.timeSpent(task.timeSpent(recursive=True))),
+            (_('Budget left'), 'task.budgetLeft', 'budgetLeft', lambda task: render.budget(task.budgetLeft())),
+            (_('Total budget left'), 'task.totalBudgetLeft', 'totalbudgetLeft', lambda task: render.budget(task.budgetLeft(recursive=True))),
+            (_('Priority'), 'task.priority', 'priority', lambda task: render.priority(task.priority())),
+            (_('Overall priority'), 'task.totalPriority', 'totalpriority', lambda task: render.priority(task.priority(recursive=True))),
+            (_('Hourly fee'), 'task.hourlyFee', 'hourlyFee', lambda task: render.amount(task.hourlyFee())),
+            (_('Fixed fee'), 'task.fixedFee', 'fixedFee', lambda task: render.amount(task.fixedFee())),
+            (_('Total fixed fee'), 'task.totalFixedFee', 'totalfixedfee', lambda task: render.amount(task.fixedFee(recursive=True))),
+            (_('Revenue'), 'task.revenue', 'revenue', lambda task: render.amount(task.revenue())),
+            (_('Total revenue'), 'task.totalRevenue', 'totalrevenue', lambda task: render.amount(task.revenue(recursive=True))),
+            (_('Last modification time'), 'task.lastModificationTime', 'lastModificationTime', lambda task: render.dateTime(task.lastModificationTime())),
+            (_('Overall last modification time'),
+            'task.totalLastModificationTime', 'totallastModificationTime', lambda task: render.dateTime(task.lastModificationTime(recursive=True)))]
 
     def initColumn(self, column):
         super(TaskViewerWithColumns, self).initColumn(column)
@@ -456,16 +457,16 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         return widget
     
     def _createColumns(self):
-        return [widgets.Column(columnHeader, None, None, None, renderCallback) \
-            for columnHeader, renderCallback in \
-            (_('Period'), self.renderPeriod),
-            (_('Task'), lambda effort: render.subject(effort.task(), recursively=True))] + \
-            [widgets.Column(columnHeader, ('view', setting), None, None,
+        return [widgets.Column(columnHeader, eventType, None, None, None, renderCallback) \
+            for columnHeader, eventType, renderCallback in \
+            (_('Period'), 'effort.duration', self.renderPeriod),
+            (_('Task'), 'effort.task', lambda effort: render.subject(effort.task(), recursively=True))] + \
+            [widgets.Column(columnHeader, eventType, ('view', setting), None, None,
             renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
-            for columnHeader, setting, renderCallback in \
-            (_('Time spent'), 'efforttimespent', 
+            for columnHeader, eventType, setting, renderCallback in \
+            (_('Time spent'), 'effort.duration', 'efforttimespent', 
                 lambda effort: render.timeSpent(effort.duration())),
-            (_('Revenue'), 'effortrevenue', 
+            (_('Revenue'), 'effort.duration', 'effortrevenue', 
                 lambda effort: render.amount(effort.revenue()))]
 
     def createFilter(self, taskList):
@@ -498,12 +499,12 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
 class CompositeEffortListViewer(EffortListViewer):
     def _createColumns(self):
         return super(CompositeEffortListViewer, self)._createColumns() + \
-            [widgets.Column(columnHeader, ('view', setting), None, None, 
+            [widgets.Column(columnHeader, eventType, ('view', setting), None, None, 
              renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
-             for columnHeader, setting, renderCallback in \
-                (_('Total time spent'), 'totalefforttimespent', 
+             for columnHeader, eventType, setting, renderCallback in \
+                (_('Total time spent'), 'effort.totalDuration', 'totalefforttimespent', 
                  lambda effort: render.timeSpent(effort.duration(recursive=True))),
-                (_('Total revenue'), 'totaleffortrevenue', 
+                (_('Total revenue'), 'effort.totalDuration', 'totaleffortrevenue', 
                  lambda effort: render.amount(effort.revenue(recursive=True)))]
         
     def curselection(self):
