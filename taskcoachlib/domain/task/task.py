@@ -147,12 +147,25 @@ class Task(patterns.Observable):
             self._children.append(child)
             child.setParent(self)
             self.setLastModificationTime()
+            child.registerObserver(self.onChildBudgetChanged, 
+                'task.totalBudget')
+            child.registerObserver(self.onChildBudgetLeftChanged,
+                'task.totalBudgetLeft')
+            child.registerObserver(self.onChildTimeSpentChanged,
+                'task.totalTimeSpent')
+            child.registerObserver(self.onChildPriorityChanged,
+                'task.totalPriority')
+            child.registerObserver(self.onChildRevenueChanged,
+                'task.totalRevenue')
             self.notifyObservers(patterns.Event(self, 'task.child.add', child))
 
     def removeChild(self, child):
         if child in self._children:
             self._children.remove(child)
             self.setLastModificationTime()
+            child.removeObservers(self.onChildBudgetChanged,
+                self.onChildBudgetLeftChanged, self.onChildPriorityChanged,
+                self.onChildRevenueChanged)
             self.notifyObservers(patterns.Event(self, 'task.child.remove', 
                 child))
 
@@ -205,7 +218,8 @@ class Task(patterns.Observable):
         
     def completionDate(self, recursive=False):
         if recursive:
-            childrenCompletionDates = [child.completionDate(recursive=True) for child in self.children() if child.completed()]
+            childrenCompletionDates = [child.completionDate(recursive=True) \
+                for child in self.children() if child.completed()]
             return max(childrenCompletionDates+[self._completionDate])
         else:
             return self._completionDate
@@ -284,7 +298,16 @@ class Task(patterns.Observable):
     def onEffortDurationChanged(self, event=None):
         self.notifyObservers( \
             patterns.Event(self, 'task.timeSpent', self.timeSpent()), 
-            patterns.Event(self, 'task.budgetLeft', self.budgetLeft()))
+            patterns.Event(self, 'task.totalTimeSpent',
+                self.timeSpent(recursive=True)), 
+            patterns.Event(self, 'task.budgetLeft', self.budgetLeft()), 
+            patterns.Event(self, 'task.totalBudgetLeft',
+                self.budgetLeft(recursive=True)))
+        if self.hourlyFee() > 0:
+            self.notifyObservers( \
+                patterns.Event(self, 'task.revenue', self.revenue()),
+                patterns.Event(self, 'task.totalRevenue',
+                    self.revenue(recursive=True)))
 
     def onEffortStartTracking(self, event):
         if self.nrActiveEfforts() == 1:
@@ -293,6 +316,18 @@ class Task(patterns.Observable):
     def onEffortStopTracking(self, event):
         if self.nrActiveEfforts() == 0:
             self.notifyObservers(patterns.Event(self, 'task.track.stop'))
+
+    def onChildBudgetChanged(self, event):
+        self.notifyObservers(patterns.Event(self, 'task.totalBudget',
+            self.budget(recursive=True)))
+
+    def onChildBudgetLeftChanged(self, event):
+        self.notifyObservers(patterns.Event(self, 'task.totalBudgetLeft',
+            self.budgetLeft(recursive=True)))
+
+    def onChildTimeSpentChanged(self, event):
+        self.notifyObservers(patterns.Event(self, 'task.totalTimeSpent',
+            self.timeSpent(recursive=True)))
 
     def timeSpent(self, recursive=False):
         if recursive:
@@ -327,7 +362,11 @@ class Task(patterns.Observable):
             self._budget = budget
             self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.budget', budget),
-                patterns.Event(self, 'task.budgetLeft', self.budgetLeft()))
+                patterns.Event(self, 'task.totalBudget',
+                    self.budget(recursive=True)),
+                patterns.Event(self, 'task.budgetLeft', self.budgetLeft()),
+                patterns.Event(self, 'task.totalBudgetLeft',
+                self.budgetLeft(recursive=True)))
         
     def budgetLeft(self, recursive=False):
         budget = self.budget(recursive)
@@ -385,7 +424,18 @@ class Task(patterns.Observable):
             self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.priority', 
                 priority))
+            if priority == self.priority(recursive=True):
+                self.notifyObservers(patterns.Event(self, 'task.totalPriority',
+                    priority))
         
+    def onChildPriorityChanged(self, event):
+        # If the child (total) priority is less than our total priority
+        # we know that our total priority has not changed so we don't need 
+        # to notify our observers. 
+        if event.value() == self.priority(recursive=True):
+            self.notifyObservers(patterns.Event(self, 'task.totalPriority',
+                event.value()))
+
     # modifications
     
     def lastModificationTime(self, recursive=False):
@@ -409,6 +459,9 @@ class Task(patterns.Observable):
             self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.hourlyFee',
                 hourlyFee))
+            if self.timeSpent() > date.TimeDelta():
+                self.notifyObservers(patterns.Event(self,
+                'task.revenue', self.revenue()))
         
     def revenue(self, recursive=False):
         if recursive:
@@ -430,6 +483,10 @@ class Task(patterns.Observable):
             self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.fixedFee',
                 fixedFee))
+
+    def onChildRevenueChanged(self, event):
+        self.notifyObservers(patterns.Event(self, 'task.totalRevenue',
+            self.revenue(recursive=True)))
         
     # reminder
     

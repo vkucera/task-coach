@@ -109,6 +109,19 @@ class ViewerWithColumns(Viewer):
     def __init__(self, *args, **kwargs):
         super(ViewerWithColumns, self).__init__(*args, **kwargs)
         self.initColumns()
+
+    def onAddItem(self, event):
+        for item in event.values():
+            for column in self.visibleColumns():
+                item.registerObserver(self.onAttributeChanged, 
+                    *column.eventTypes())
+        super(ViewerWithColumns, self).onAddItem(event)
+
+    def onRemoveItem(self, event):
+        for item in event.values():
+            for column in self.visibleColumns():
+                item.removeObserver(self.onAttributeChanged)
+        super(ViewerWithColumns, self).onRemoveItem(event)
         
     def columns(self):
         return self._columns
@@ -125,7 +138,7 @@ class ViewerWithColumns(Viewer):
         section, setting = column.visibilitySetting()
         self.settings.set(section, setting, 'False')
         for item in self.list:
-            item.removeObserver(self.onAttributeChanged, column.eventType())
+            item.removeObserver(self.onAttributeChanged, *column.eventTypes())
 
     def isHideableColumn(self, visibleColumnIndex):
         column = self.visibleColumns()[visibleColumnIndex]
@@ -144,22 +157,34 @@ class ViewerWithColumns(Viewer):
         if visibilitySetting:
             self.settings.registerObserver(self.onShowColumn, 
                 '%s.%s'%visibilitySetting)
-            self.widget.showColumn(column, 
-                show=self.settings.getboolean(*column.visibilitySetting()))
+            show = self.settings.getboolean(*column.visibilitySetting())
+            self.widget.showColumn(column, show=show)
+        else:
+            show = True
+        if show:
+            for item in self.list:
+                item.registerObserver(self.onAttributeChanged, 
+                    *column.eventTypes())
 
     def onShowColumn(self, event):
         visibilitySetting = tuple(event.type().split('.'))
         for column in self.columns():
             if column.visibilitySetting() == visibilitySetting:
-                self.widget.showColumn(column, event.value()=='True')
-                for item in self.list:
-                    item.registerObserver(self.onAttributeChanged,
-                        column.eventType())
+                show = event.value() == 'True'
+                self.widget.showColumn(column, show)
+                if show:
+                    for item in self.list:
+                        item.registerObserver(self.onAttributeChanged,
+                            *column.eventTypes())
+                else:
+                    for item in self.list:
+                        item.removeObserver(self.onAttributeChanged,
+                            *column.eventTypes())
                 break
                 
     def onAttributeChanged(self, event):
         item = event.source()
-        self.refreshItem(item)
+        self.widget.refreshItem(self.list.index(item))
 
 
 class TaskViewer(Viewer):
@@ -250,14 +275,17 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             'view.sortascending')
             
     def _createColumns(self):
-        return [widgets.Column(_('Subject'), 'task.subject', None, 'subject', 
-                self.uiCommands['viewsortbysubject'], self.renderSubject)] + \
-            [widgets.Column(columnHeader, eventType, ('view', setting.lower()), 
-            setting, self.uiCommands['viewsortby' + setting.lower()],
-            renderCallback, alignment=wx.LIST_FORMAT_RIGHT) for \
-            columnHeader, eventType, setting, renderCallback in \
+        return [widgets.Column(_('Subject'), 'task.subject',
+                'task.track.start', 'task.track.stop', sortKey='subject', 
+                sortCallback=self.uiCommands['viewsortbysubject'], 
+                renderCallback=self.renderSubject)] + \
+            [widgets.Column(columnHeader, eventType,
+             visibilitySetting=('view', setting.lower()), sortKey=setting, 
+             sortCallback=self.uiCommands['viewsortby' + setting.lower()],
+             renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
+             for columnHeader, eventType, setting, renderCallback in \
             (_('Start date'), 'task.startDate', 'startDate', lambda task: render.date(task.startDate())),
-            (_('Due date'), 'task.duedate', 'dueDate', lambda task: render.date(task.dueDate())),
+            (_('Due date'), 'task.dueDate', 'dueDate', lambda task: render.date(task.dueDate())),
             (_('Days left'), 'task.timeLeft', 'timeLeft', lambda task: render.daysLeft(task.timeLeft())),
             (_('Completion date'), 'task.completionDate', 'completionDate', lambda task: render.date(task.completionDate())),
             (_('Budget'), 'task.budget', 'budget', lambda task: render.budget(task.budget())),
@@ -457,12 +485,14 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         return widget
     
     def _createColumns(self):
-        return [widgets.Column(columnHeader, eventType, None, None, None, renderCallback) \
+        return [widgets.Column(columnHeader, eventType, 
+                renderCallback=renderCallback) \
             for columnHeader, eventType, renderCallback in \
             (_('Period'), 'effort.duration', self.renderPeriod),
             (_('Task'), 'effort.task', lambda effort: render.subject(effort.task(), recursively=True))] + \
-            [widgets.Column(columnHeader, eventType, ('view', setting), None, None,
-            renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
+            [widgets.Column(columnHeader, eventType, 
+             visibilitySetting=('view', setting), 
+             renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
             for columnHeader, eventType, setting, renderCallback in \
             (_('Time spent'), 'effort.duration', 'efforttimespent', 
                 lambda effort: render.timeSpent(effort.duration())),
@@ -499,8 +529,9 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
 class CompositeEffortListViewer(EffortListViewer):
     def _createColumns(self):
         return super(CompositeEffortListViewer, self)._createColumns() + \
-            [widgets.Column(columnHeader, eventType, ('view', setting), None, None, 
-             renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
+            [widgets.Column(columnHeader, eventType, 
+             visibilitySetting=('view', setting), 
+              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
              for columnHeader, eventType, setting, renderCallback in \
                 (_('Total time spent'), 'effort.totalDuration', 'totalefforttimespent', 
                  lambda effort: render.timeSpent(effort.duration(recursive=True))),

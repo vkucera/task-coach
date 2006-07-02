@@ -1,6 +1,5 @@
 import test, gui, wx, dummy, config
-import domain.task as task
-import domain.effort as effort
+from domain import task, effort, date
 
 class ViewerTest(test.wxTestCase):
     def setUp(self):
@@ -15,23 +14,88 @@ class ViewerTest(test.wxTestCase):
         self.assertEqual([self.task], self.viewer.curselection())
 
 
+class TaskListViewerUnderTest(dummy.TaskListViewerWithDummyWidget):
+    def __init__(self, *args, **kwargs):
+        super(TaskListViewerUnderTest, self).__init__(*args, **kwargs)
+        self.events = []
+
+    def onAttributeChanged(self, event):
+        super(TaskListViewerUnderTest, self).onAttributeChanged(event)
+        self.events.append(event)
+
+
 class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
         self.task = task.Task()
-        settings = config.Settings(load=False)
+        self.settings = config.Settings(load=False)
         self.taskList = task.sorter.Sorter(task.TaskList([self.task]), 
-            settings=settings)
-        self.viewer = dummy.TaskListViewerWithDummyWidget(self.frame,
-            self.taskList, dummy.DummyUICommands(), settings)
+            settings=self.settings)
+        self.viewer = TaskListViewerUnderTest(self.frame,
+            self.taskList, dummy.DummyUICommands(), self.settings)
 
     def testGetTimeSpent(self):
         timeSpent = self.viewer.getItemText(0, self.viewer.columns()[7])
         self.assertEqual("0:00:00", timeSpent)
 
     def testGetTotalTimeSpent(self):
-        timeSpent = self.viewer.getItemText(0, self.viewer.columns()[7])
-        self.assertEqual("0:00:00", timeSpent)
+        totalTimeSpent = self.viewer.getItemText(0, self.viewer.columns()[8])
+        self.assertEqual("0:00:00", totalTimeSpent)
 
+    def testChangeSubject(self):
+        self.task.setSubject('New subject')
+        self.assertEqual('task.subject', self.viewer.events[0].type())
+
+    def testChangeStartDateWhileColumnShown(self):
+        self.task.setStartDate(date.Yesterday())
+        self.assertEqual('task.startDate', self.viewer.events[0].type())
+
+    def testStartTracking(self):
+        self.task.addEffort(effort.Effort(self.task))
+        self.assertEqual('task.track.start', self.viewer.events[0].type())
+
+    def testChangeStartDateWhileColumnNotShown(self):
+        self.settings.set('view', 'startdate', 'False')
+        self.task.setStartDate(date.Yesterday())
+        self.failIf(self.viewer.events)
+
+    def testChangeDueDate(self):
+        self.task.setDueDate(date.Today())
+        self.assertEqual('task.dueDate', self.viewer.events[0].type())
+
+    def testChangeCompletionDateWhileColumnNotShown(self):
+        self.task.setCompletionDate(date.Today())
+        self.failIf(self.viewer.events)
+
+    def testChangeCompletionDateWhileColumnShown(self):
+        self.settings.set('view', 'completiondate', 'True')
+        self.task.setCompletionDate(date.Today())
+        self.assertEqual('task.completionDate', self.viewer.events[0].type())
+
+    def testChangePriorityWhileColumnNotShown(self):
+        self.task.setPriority(10)
+        self.failIf(self.viewer.events)
+
+    def testChangePriorityWhileColumnShown(self):
+        self.settings.set('view', 'priority', 'True')
+        self.task.setPriority(10)
+        self.assertEqual('task.priority', self.viewer.events[0].type())
+
+    def testChangeTotalPriorityWhileColumnNotShown(self):
+        child = task.Task()
+        self.taskList.append(child)
+        self.task.addChild(child)
+        child.setPriority(10)
+        self.failIf(self.viewer.events)
+
+    def testChangePriorityWhileColumnShown(self):
+        self.settings.set('view', 'totalpriority', 'True')
+        child = task.Task()
+        self.taskList.append(child)
+        self.task.addChild(child)
+        child.setPriority(10)
+        self.assertEqual('task.totalPriority', self.viewer.events[0].type())
+
+    # Test all attributes...
 
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
