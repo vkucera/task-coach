@@ -64,13 +64,19 @@ class Observable(object):
             self.__callbacks.setdefault(eventType, []).append(callback)
         
     def removeObserver(self, callbackToRemove, *eventTypes):
-        ''' Remove callbacks that were registered earlier. '''
+        ''' Remove a callback that was registered earlier. Use this
+            method (as opposed to Observable.removeObservers to remove
+            observers for specific event types. '''
         eventTypes = eventTypes or self.__callbacks.keys()
         for eventType in eventTypes:
             if callbackToRemove in self.__callbacks[eventType]:
                 self.__callbacks[eventType].remove(callbackToRemove)
 
     def removeObservers(self, *callbacksRoRemove):
+        ''' Remove callbacks that were registered earlier. The callbacks
+            are removed for all event types. If you want to remove 
+            callbacks for a specific event type only, use 
+            Observable.removeObserver. '''
         for callback in callbacksRoRemove:
             self.removeObserver(callback)
 
@@ -86,7 +92,13 @@ class Observable(object):
 
 
 class Observer(object):
-    pass
+    def __init__(self, observable, *args, **kwargs):
+        super(Observer, self).__init__(*args, **kwargs)
+        self.__observable = observable
+
+    def observable(self):
+        return self.__observable 
+
 
 class ObservableList(Observable, List):
     ''' ObservableList is a list that is observable and notifies observers 
@@ -136,11 +148,10 @@ class ListDecorator(Observer, ObservableList):
         list or a decorated version. '''
     
     def __init__(self, observedList, *args, **kwargs):
-        super(ListDecorator, self).__init__(*args, **kwargs)
-        self.__observedList = observedList
-        self.__observedList.registerObserver(self.onAddItem, 'list.add')
-        self.__observedList.registerObserver(self.onRemoveItem, 'list.remove')
-        self.extendSelf(self.__observedList)
+        super(ListDecorator, self).__init__(observedList, *args, **kwargs)
+        self.observable().registerObserver(self.onAddItem, 'list.add')
+        self.observable().registerObserver(self.onRemoveItem, 'list.remove')
+        self.extendSelf(self.observable())
 
     def onAddItem(self, event):
         ''' The default behaviour is to simply add the items that are
@@ -164,32 +175,29 @@ class ListDecorator(Observer, ObservableList):
             delegating to the observed list. '''
         super(ListDecorator, self).removeItems(items)
 
-    def original(self):
-        return self.__observedList
-
     # delegate changes to the original list
 
     def append(self, item):
-        self.__observedList.append(item)
+        self.observable().append(item)
             
     def extend(self, items):
-        self.__observedList.extend(items)
+        self.observable().extend(items)
         
     def remove(self, item):
-        self.__observedList.remove(item)
+        self.observable().remove(item)
     
     def removeItems(self, items):
-        self.__observedList.removeItems(items)
+        self.observable().removeItems(items)
         
     def __delitem__(self, index):
-        del self.__observedList[index]
+        del self.observable()[index]
 
     def __delslice__(self, *slice):
-        self.__observedList.__delslice__(*slice)
+        self.observable().__delslice__(*slice)
 
     def insert(self, index, item):
-        self.__observedList.insert(index, item)
+        self.observable().insert(index, item)
 
     def __getattr__(self, attribute):
-        return getattr(self.__observedList, attribute)
+        return getattr(self.observable(), attribute)
     

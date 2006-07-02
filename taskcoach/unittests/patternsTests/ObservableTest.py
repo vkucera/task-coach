@@ -74,6 +74,15 @@ class ObservableTest(test.TestCase):
         self.assertEqual(self.event, self.eventsReceived[0])
 
 
+class ObserverTest(test.TestCase):
+    def setUp(self):
+        self.observable = patterns.Observable()
+        self.observer = patterns.Observer(self.observable)
+
+    def testObservable(self):
+        self.assertEqual(self.observable, self.observer.observable())
+
+
 class ObservableListTest(test.TestCase):
     def setUp(self):
         self.list = patterns.ObservableList()
@@ -139,9 +148,6 @@ class ListDecoratorTest_AddItems(test.TestCase):
     def setUp(self):
         self.list = patterns.ObservableList()
         self.observer = patterns.ListDecorator(self.list)
-
-    def testOriginal(self):
-        self.assertEqual(self.list, self.observer.original())
 
     def testAppendToOriginal(self):
         self.list.append(1)
