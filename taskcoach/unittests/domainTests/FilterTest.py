@@ -1,4 +1,4 @@
-import test, patterns, string, gui, config
+import test, patterns, string, config
 import domain.task as task
 import domain.date as date
 

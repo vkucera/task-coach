@@ -1,4 +1,5 @@
-import test, wx, gui, dummy
+import test, wx, gui
+from unittests import dummy
 
 class UICommandTest(test.wxTestCase):
     def setUp(self):
