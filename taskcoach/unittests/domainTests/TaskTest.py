@@ -538,6 +538,46 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.addEffort(oneHour, self.task2)
         self.assertEqual(zeroHour, self.task.budgetLeft(recursive=True))
 
+    def testTotalBudgetNotification(self):
+        self.task1.registerObserver(self.onEvent, 'task.totalBudget')
+        self.task2.setBudget(oneHour)
+        self.assertEqual(oneHour, self.events[0].value())
+
+    def testTotalBudgetLeftNotification_WhenChildBudgetChanges(self):
+        self.task1.registerObserver(self.onEvent, 'task.totalBudgetLeft')
+        self.task2.setBudget(oneHour)
+        self.assertEqual(oneHour, self.events[0].value())
+
+    def testTotalBudgetLeftNotification_WhenChildTimeSpentChanges(self):
+        self.task2.setBudget(twoHours)
+        self.task1.registerObserver(self.onEvent, 'task.totalBudgetLeft')
+        self.task2.addEffort(effort.Effort(self.task2,
+            date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
+        self.assertEqual(oneHour, self.events[0].value())
+
+    def testTotalTimeSpentNotification(self):
+        self.task1.registerObserver(self.onEvent, 'task.totalTimeSpent')
+        self.task2.addEffort(effort.Effort(self.task2,
+            date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
+        self.assertEqual(oneHour, self.events[0].value())
+
+    def testTotalPriorityNotification(self):
+        self.task1.registerObserver(self.onEvent, 'task.totalPriority')
+        self.task2.setPriority(10)
+        self.assertEqual(10, self.events[0].value())
+
+    def testTotalPriorityNotification_WithLowerChildPriority(self):
+        self.task1.registerObserver(self.onEvent, 'task.totalPriority')
+        self.task2.setPriority(-1)
+        self.failIf(self.events)
+
+    def testTotalRevenueNotification(self):
+        self.task1.registerObserver(self.onEvent, 'task.totalRevenue')
+        self.task2.setHourlyFee(100)
+        self.task2.addEffort(effort.Effort(self.task2,
+            date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,12,0,0)))
+        self.assertEqual(200, self.events[0].value())
+
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def taskCreationKeywordArguments(self):
@@ -1148,6 +1188,12 @@ class TaskRevenueTest(TaskTestCase):
         self.task.setHourlyFee(100)
         self.task.addEffort(self.createEffort())
         self.assertEqual(100, self.task.revenue())
+
+    def testRevenueNotification(self):
+        self.task.registerObserver(self.onEvent, 'task.revenue')
+        self.task.addEffort(self.createEffort())
+        self.task.setHourlyFee(100)
+        self.assertEqual(100, self.events[0].value())
         
     def testRecursiveRevenue(self):
         self.task.setHourlyFee(100)
