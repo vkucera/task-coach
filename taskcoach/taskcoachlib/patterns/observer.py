@@ -99,12 +99,16 @@ class Observer(object):
     def observable(self):
         return self.__observable 
 
+    def __getattr__(self, attribute):
+        return getattr(self.observable(), attribute)
+
 
 class ObservableList(Observable, List):
     ''' ObservableList is a list that is observable and notifies observers 
         when items are added to or removed from the list. '''
         
     # FIXME: How about __setitem__ and __setslice__?
+    # FIXME: We really only need extend and removeItems.
     
     def append(self, item):
         super(ObservableList, self).append(item)
@@ -198,6 +202,4 @@ class ListDecorator(Observer, ObservableList):
     def insert(self, index, item):
         self.observable().insert(index, item)
 
-    def __getattr__(self, attribute):
-        return getattr(self.observable(), attribute)
     
