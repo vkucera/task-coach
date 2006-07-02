@@ -131,14 +131,14 @@ class ObservableListTest(test.TestCase):
 
     def testOriginalNotEmpty(self):
         list = patterns.ObservableList([1, 2, 3])
-        observer = patterns.ObservableListObserver(list)
+        observer = patterns.ListDecorator(list)
         self.assertEqual([1, 2, 3], observer)
 
 
-class ObservableListObserverTest_AddItems(test.TestCase):
+class ListDecoratorTest_AddItems(test.TestCase):
     def setUp(self):
         self.list = patterns.ObservableList()
-        self.observer = patterns.ObservableListObserver(self.list)
+        self.observer = patterns.ListDecorator(self.list)
 
     def testOriginal(self):
         self.assertEqual(self.list, self.observer.original())
@@ -168,10 +168,10 @@ class ObservableListObserverTest_AddItems(test.TestCase):
         self.failUnless('abc' == self.list[0] == self.observer[0])
 
 
-class ObservableListObserverTest_RemoveItems(test.TestCase):
+class ListDecoratorTest_RemoveItems(test.TestCase):
     def setUp(self):
         self.list = patterns.ObservableList()
-        self.observer = patterns.ObservableListObserver(self.list)
+        self.observer = patterns.ListDecorator(self.list)
         self.list.extend([1, 2, 3])
 
     def testRemoveFromOriginal(self):
@@ -207,10 +207,10 @@ class ObservableListObserverTest_RemoveItems(test.TestCase):
         self.failUnless([3] == self.list == self.observer)
 
 
-class ObservableListObserverTest_ObserveTheObserver(test.TestCase):
+class ListDecoratorTest_ObserveTheObserver(test.TestCase):
     def setUp(self):
         self.list = patterns.ObservableList()
-        self.observer = patterns.ObservableListObserver(self.list)
+        self.observer = patterns.ListDecorator(self.list)
         self.observer.registerObserver(self.onAdd, 'list.add')
         self.observer.registerObserver(self.onRemove, 'list.remove')
         self.receivedAddEvents = []

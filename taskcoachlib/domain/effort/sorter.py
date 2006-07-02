@@ -1,7 +1,7 @@
 import patterns
 
 
-class EffortSorter(patterns.ObservableListObserver):        
+class EffortSorter(patterns.ListDecorator):        
     def extendSelf(self, efforts):
         super(EffortSorter, self).extendSelf(efforts)
         for effort in efforts:

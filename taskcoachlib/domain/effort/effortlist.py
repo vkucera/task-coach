@@ -9,7 +9,7 @@ class MaxDateTimeMixin:
             return None
     
                         
-class EffortList(patterns.ObservableListObserver, MaxDateTimeMixin):
+class EffortList(patterns.ListDecorator, MaxDateTimeMixin):
     ''' EffortList observes a TaskList and contains all effort records of
         all tasks in the underlying TaskList. '''
 

@@ -31,7 +31,7 @@ class SortOrderReverser(object):
             self.__previousSortKey = event.value()
 
 
-class Sorter(patterns.ObservableListObserver):
+class Sorter(patterns.ListDecorator):
     def __init__(self, *args, **kwargs):
         self.__settings = kwargs.pop('settings')
         self.__treeMode = kwargs.pop('treeMode', False)
