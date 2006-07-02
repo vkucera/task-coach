@@ -1,4 +1,5 @@
-import test, gui, dummy, config
+import test, gui, config
+from unittests import dummy
 import domain.task as task
 
 class IOControllerTest(test.TestCase):

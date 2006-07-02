@@ -1,4 +1,5 @@
-import test, gui, wx, config, dummy
+import test, gui, wx, config
+from unittests import dummy
 from gui import uicommand
 import domain.task as task
 

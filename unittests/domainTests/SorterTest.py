@@ -1,4 +1,5 @@
-import test, patterns, dummy, config
+import test, patterns, config
+from unittests import dummy
 import domain.task as task
 import domain.effort as effort
 import domain.date as date

@@ -1,4 +1,5 @@
-import test, gui, widgets, dummy, TaskTreeViewerTest, TaskListViewerTest
+import test, gui, widgets, TaskTreeViewerTest, TaskListViewerTest
+from unittests import dummy
 from gui import render
 import domain.task as task
 import domain.date as date

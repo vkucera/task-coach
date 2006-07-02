@@ -1,4 +1,5 @@
-import test, dummy, gui, config, TaskViewerTest, wx
+import test, gui, config, TaskViewerTest, wx
+from unittests import dummy
 from gui import render
 from i18n import _
 import domain.task as task

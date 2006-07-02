@@ -1,4 +1,5 @@
-import test, gui, wx, dummy, config
+import test, gui, wx, config
+from unittests import dummy
 from domain import task, effort, date
 
 class ViewerTest(test.wxTestCase):

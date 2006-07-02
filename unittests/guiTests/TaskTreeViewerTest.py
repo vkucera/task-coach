@@ -1,4 +1,5 @@
-import test, gui, widgets, dummy, config, TaskViewerTest
+import test, gui, widgets, config, TaskViewerTest
+from unittests import dummy
 import domain.task as task
 import domain.date as date
 

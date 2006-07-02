@@ -1,4 +1,5 @@
-import test, gui, wx, dummy, config
+import test, gui, wx, config
+from unittests import dummy
 import domain.task as task
 import domain.effort as effort
 
