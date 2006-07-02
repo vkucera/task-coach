@@ -6,6 +6,7 @@ import domain.task as task
 import domain.effort as effort
 import domain.date as date
 
+
 class Viewer(patterns.Observable, wx.Panel):
     ''' A Viewer shows the contents of a model (a list of tasks or a list of 
         efforts) by means of a widget (e.g. a ListCtrl or a TreeListCtrl).'''
@@ -104,6 +105,59 @@ class TreeViewer(Viewer):
     def isTreeViewer(self):
         return True
         
+
+class UpdatePerSecondViewer(Viewer, date.ClockObserver):
+    def __init__(self, *args, **kwargs):
+        self.__trackedItems = patterns.List()
+        super(UpdatePerSecondViewer, self).__init__(*args, **kwargs)
+
+    def onAddItem(self, event):
+        items = event.values()
+        for item in items:
+            item.registerObserver(self.onStartTracking,
+                'task.track.start', 'effort.track.start')
+            item.registerObserver(self.onStopTracking,
+                'task.track.stop', 'effort.track.stop')
+        super(UpdatePerSecondViewer, self).onAddItem(event)
+        self.addTrackedItems(self.trackedItems(items))
+
+    def onRemoveItem(self, event):
+        items = event.values()
+        for item in items:
+            item.removeObservers(self.onStartTracking, self.onStopTracking)
+        super(UpdatePerSecondViewer, self).onRemoveItem(event)
+        self.removeTrackedItems(self.trackedItems(items))
+
+    def onStartTracking(self, event):
+        self.addTrackedItems([event.source()])
+
+    def onStopTracking(self, event):
+        self.removeTrackedItems([event.source()])
+
+    def onEverySecond(self, event):
+        for item in self.__trackedItems:
+            self.widget.refreshItem(self.list.index(item))
+
+    def addTrackedItems(self, items):
+        self.__trackedItems.extend(items)
+        self.startClockIfNecessary()
+
+    def removeTrackedItems(self, items):
+        self.__trackedItems.removeItems(items)
+        self.stopClockIfNecessary()
+
+    def startClockIfNecessary(self):
+        if self.__trackedItems and not self.isClockStarted():
+            self.startClock()
+
+    def stopClockIfNecessary(self):
+        if not self.__trackedItems and self.isClockStarted():
+            self.stopClock()
+
+    @staticmethod
+    def trackedItems(items):
+        return [item for item in items if item.isBeingTracked()]
+
         
 class ViewerWithColumns(Viewer):
     def __init__(self, *args, **kwargs):
@@ -128,10 +182,12 @@ class ViewerWithColumns(Viewer):
     
     def isVisibleColumn(self, column):
         visibilitySetting = column.visibilitySetting()
-        return visibilitySetting == None or self.settings.getboolean(*visibilitySetting)
+        return visibilitySetting == None or \
+            self.settings.getboolean(*visibilitySetting)
     
     def visibleColumns(self):
-        return [column for column in self._columns if self.isVisibleColumn(column)]
+        return [column for column in self._columns if \
+                self.isVisibleColumn(column)]
     
     def hideColumn(self, visibleColumnIndex):
         column = self.visibleColumns()[visibleColumnIndex]
@@ -187,7 +243,7 @@ class ViewerWithColumns(Viewer):
         self.widget.refreshItem(self.list.index(item))
 
 
-class TaskViewer(Viewer):
+class TaskViewer(UpdatePerSecondViewer):
     def __init__(self, *args, **kwargs):
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.__registerForColorChanges()
@@ -225,11 +281,12 @@ class TaskViewer(Viewer):
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
         self.imageIndex = {}
-        for index, image in enumerate(['task', 'task_inactive', 'task_completed', 
-            'task_duetoday', 'task_overdue', 'tasks', 'tasks_open', 
-            'tasks_inactive', 'tasks_inactive_open', 'tasks_completed', 
-            'tasks_completed_open', 'tasks_duetoday', 'tasks_duetoday_open', 
-            'tasks_overdue', 'tasks_overdue_open', 'start', 'ascending', 'descending']):
+        for index, image in enumerate(['task', 'task_inactive', 
+            'task_completed', 'task_duetoday', 'task_overdue', 'tasks', 
+            'tasks_open', 'tasks_inactive', 'tasks_inactive_open', 
+            'tasks_completed', 'tasks_completed_open', 'tasks_duetoday', 
+            'tasks_duetoday_open', 'tasks_overdue', 'tasks_overdue_open', 
+            'start', 'ascending', 'descending']):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList

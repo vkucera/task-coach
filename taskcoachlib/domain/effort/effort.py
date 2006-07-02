@@ -22,6 +22,9 @@ class EffortBase(patterns.Observable):
             (self.getStart() == other.getStart() and \
             self.task().subject() < other.task().subject())
 
+    def isBeingTracked(self):
+        return self._stop is None
+
 
 class Effort(EffortBase):
     def __init__(self, task, start=None, stop=None, description='', 

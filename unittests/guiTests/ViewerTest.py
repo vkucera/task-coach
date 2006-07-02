@@ -1,4 +1,4 @@
-import test, gui, wx, config
+import test, gui, wx, config, patterns
 from unittests import dummy
 from domain import task, effort, date
 
@@ -127,3 +127,35 @@ class CompositeEffortListViewerTest(test.wxTestCase):
         self.assertEqual('0.00', 
                          self.viewer.getItemText(0, self.viewer.columns()[3]))
     
+
+class UpdatePerSecondViewerTest(test.wxTestCase):
+    def setUp(self):
+        self.taskList = task.TaskList()
+        self.settings = config.Settings(load=False)
+        self.updateViewer = TaskListViewerUnderTest(self.frame, self.taskList,
+                dummy.DummyUICommands(), self.settings)
+        self.trackedTask = task.Task(subject='tracked')
+        self.trackedTask.addEffort(effort.Effort(self.trackedTask))
+        self.taskList.append(self.trackedTask)
+
+    def testViewerHasRegisteredWithClock(self):
+        self.failUnless(self.updateViewer.onEverySecond in
+            date.Clock().observers('clock.second'))
+
+    def testClockNotificationResultsInRefreshedItem(self):
+        self.updateViewer.onEverySecond(patterns.Event(date.Clock(),
+            'clock.second'))
+        self.assertEqual([self.taskList.index(self.trackedTask)], 
+            self.updateViewer.widget.refreshedItems)
+
+    def testClockNotificationResultsInRefreshedItem_OnlyForTrackedItems(self):
+        self.taskList.append(task.Task('not tracked'))
+        self.updateViewer.onEverySecond(patterns.Event(date.Clock(),
+            'clock.second'))
+        self.assertEqual([self.taskList.index(self.trackedTask)], 
+            self.updateViewer.widget.refreshedItems)
+
+    def testStopTrackingRemovesViewerFromClockObservers(self):
+        self.trackedTask.stopTracking()
+        self.failIf(self.updateViewer.onEverySecond in
+            date.Clock().observers('clock.second'))

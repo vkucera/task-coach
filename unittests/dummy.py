@@ -6,6 +6,7 @@ class DummyWidget(wx.Frame):
         super(DummyWidget, self).__init__(viewer)
         self._selection = []
         self.viewer = viewer
+        self.refreshedItems = []
 
     def DeleteAllItems(self, *args, **kwargs):
         pass
@@ -28,8 +29,8 @@ class DummyWidget(wx.Frame):
     def refresh(self, *args, **kwargs):
         pass
 
-    def refreshItem(self, *args, **kwargs):
-        pass
+    def refreshItem(self, index, ):
+        self.refreshedItems.append(index)
 
     def GetColumnWidth(self, column):
         return 100
