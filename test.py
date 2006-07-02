@@ -20,8 +20,7 @@ class wxTestCase(TestCase):
         
 
 def cvsCommit():
-    #os.system('cvs ci -m "Automatic commit due to green-bar"')
-    os.system('cvs ci')
+    os.system('cvs commit')
 
 
 class TestResultWithTimings(unittest._TextTestResult):

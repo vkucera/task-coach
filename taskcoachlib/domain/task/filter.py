@@ -21,8 +21,8 @@ class Filter(patterns.ListDecorator):
         super(Filter, self).removeItemsFromSelf(itemsToRemoveFromSelf)
         
     def reset(self):
-        self.removeItemsFromSelf(self.original())
-        self.extendSelf(self.original())
+        self.removeItemsFromSelf(self.observable())
+        self.extendSelf(self.observable())
             
     def filter(self, item):
         ''' filter returns False if the item should be hidden. '''
@@ -170,7 +170,7 @@ class SearchFilter(Filter):
         subject = task.subject()
         if self.treeMode():
             subject += ' '.join([child.subject() for child in task.allChildren()
-                if child in self.original()])
+                if child in self.observable()])
         return subject
     
     def __matchCase(self):
