@@ -99,10 +99,17 @@ class EffortTest(test.TestCase, asserts.Mixin):
     def testSetStop_Infinite(self):
         self.effort.setStop(date.DateTime.max)
         self.assertEqual(None, self.effort.getStop())
-        
+
     def testSetStop_SpecificDateTime(self):
         self.effort.setStop(date.DateTime(2005,1,1))
         self.assertEqual(date.DateTime(2005,1,1), self.effort.getStop())
+        
+    def testIsNotBeingTracked_(self): 
+        self.failIf(self.effort.isBeingTracked())
+
+    def testIsBeingTracked(self): 
+        self.effort.setStop(date.DateTime.max)
+        self.failUnless(self.effort.isBeingTracked())
         
     def testSetTaskToNewTaskWillAddItToNewTask(self):
         task2 = task.Task()

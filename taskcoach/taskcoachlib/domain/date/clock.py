@@ -40,5 +40,5 @@ class ClockObserver(object):
     def isClockStarted(self):
         return self.onEverySecond in Clock().observers('clock.second')
         
-    def XonEverySecond(self, *args, **kwargs):
+    def onEverySecond(self, *args, **kwargs):
         raise NotImplementedError
