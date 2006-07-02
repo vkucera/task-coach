@@ -1,7 +1,7 @@
 import patterns, re, sets
 import domain.date as date
 
-class Filter(patterns.ObservableListObserver):
+class Filter(patterns.ListDecorator):
     def __init__(self, *args, **kwargs):
         self.setTreeMode(kwargs.pop('treeMode', False))
         super(Filter, self).__init__(*args, **kwargs)

@@ -85,6 +85,9 @@ class Observable(object):
         return self.__callbacks.get(eventType, [])
 
 
+class Observer(object):
+    pass
+
 class ObservableList(Observable, List):
     ''' ObservableList is a list that is observable and notifies observers 
         when items are added to or removed from the list. '''
@@ -125,31 +128,41 @@ class ObservableList(Observable, List):
             self.notifyObservers(Event(self, 'list.remove', *items))
 
 
-class ObservableListObserver(ObservableList):
-    ''' ObservableListObserver observes an ObservableList. '''
+class ListDecorator(Observer, ObservableList):
+    ''' ListDecorator observes an ObservableList and is an
+        ObservableList itself. Its purpose is to decorate another list
+        and add some behaviour, such as sorting or filtering. Users of
+        this class shouldn't see a difference between using the original
+        list or a decorated version. '''
     
     def __init__(self, observedList, *args, **kwargs):
-        super(ObservableListObserver, self).__init__(*args, **kwargs)
+        super(ListDecorator, self).__init__(*args, **kwargs)
         self.__observedList = observedList
         self.__observedList.registerObserver(self.onAddItem, 'list.add')
         self.__observedList.registerObserver(self.onRemoveItem, 'list.remove')
         self.extendSelf(self.__observedList)
 
     def onAddItem(self, event):
+        ''' The default behaviour is to simply add the items that are
+            added to the original list to this list too. Extend to add
+            behaviour. '''
         self.extendSelf(event.values())
 
     def onRemoveItem(self, event):
+        ''' The default behaviour is to simply remove the items that are
+            removed from the original list from this list too. Extend to add
+            behaviour. '''
         self.removeItemsFromSelf(event.values())
 
     def extendSelf(self, items):
         ''' Provide a method to extend this list without delegating to
             the observed list. '''
-        super(ObservableListObserver, self).extend(items)
+        super(ListDecorator, self).extend(items)
         
     def removeItemsFromSelf(self, items):
         ''' Provide a method to remove items from this list without 
             delegating to the observed list. '''
-        super(ObservableListObserver, self).removeItems(items)
+        super(ListDecorator, self).removeItems(items)
 
     def original(self):
         return self.__observedList

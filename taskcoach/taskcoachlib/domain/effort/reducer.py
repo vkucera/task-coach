@@ -1,7 +1,7 @@
 import patterns, effort
 
 
-class EffortAggregator(patterns.ObservableListObserver):
+class EffortAggregator(patterns.ListDecorator):
     ''' This class observes an TaskList and aggregates the individual effort
         records to CompositeEfforts, e.g. per day or per week. This class is 
         abstract. Subclasses should implement timePeriod(effort).'''
@@ -133,7 +133,8 @@ class EffortAggregator(patterns.ObservableListObserver):
 
 
 
-class _EffortAggregator(patterns.ObservableListObserver):
+"""
+class _EffortAggregator(patterns.ListDecorator):
     ''' This class observes an EffortList and aggregates the individual effort
         records to CompositeEfforts, e.g. per day or per week. This class is 
         abstract. Subclasses should implement timePeriod(effort).'''
@@ -194,7 +195,7 @@ class _EffortAggregator(patterns.ObservableListObserver):
             that would return a number of tasks, and not the number of 
             effort records.'''
         return len(self)
-
+"""
 
 class EffortPerDay(EffortAggregator):        
     def timePeriod(self, effort):
