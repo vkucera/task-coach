@@ -104,9 +104,11 @@ class Effort(EffortBase):
         return self._description
 
     def revenue(self):
-        variableRevenue = self.duration().hours() * self.task().hourlyFee()
-        if self.task().timeSpent().hours() > 0:
-            fixedRevenue = self.duration().hours() / self.task().timeSpent().hours() * self.task().fixedFee()
+        task = self.task()
+        variableRevenue = self.duration().hours() * task.hourlyFee()
+        if task.timeSpent().hours() > 0:
+            fixedRevenue = self.duration().hours() / \
+                task.timeSpent().hours() * task.fixedFee()
         else:
             fixedRevenue = 0
         return variableRevenue + fixedRevenue
@@ -118,10 +120,10 @@ class CompositeEffort(EffortBase, patterns.List):
     
     def __init__(self, task, start, stop, efforts=None):
         super(CompositeEffort, self).__init__(task, start, stop, efforts or [])
-        
+
     def duration(self, recursive=False):
-        return sum([effort.duration() for effort in self.__getEfforts(recursive)], 
-                   date.TimeDelta())
+        return sum([effort.duration() for effort in \
+                    self.__getEfforts(recursive)], date.TimeDelta())
                               
     def revenue(self, recursive=False):
         return sum(effort.revenue() for effort in self.__getEfforts(recursive))

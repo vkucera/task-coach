@@ -39,6 +39,17 @@ class TaskList(patterns.ObservableList):
             tasksAndAllChildren |= sets.Set(task.allChildren())
         return list(tasksAndAllChildren)
 
+    def _splitTasksInParentsAndChildren(self, tasks):
+        parents, children = [], []
+        for task in tasks:
+            for ancestor in task.ancestors():
+                if ancestor in tasks:
+                    children.append(task)
+                    break
+            else:
+                parents.append(task)
+        return parents, children
+
     def _addTaskToParent(self, task):
         parent = task.parent()
         if parent and parent in self:
@@ -51,14 +62,17 @@ class TaskList(patterns.ObservableList):
     def removeItems(self, tasks):
         if not tasks:
             return
-        tasksAndAllChildren = self._tasksAndAllChildren(tasks)
+        parents, children = self._splitTasksInParentsAndChildren(tasks)
+        tasksAndAllChildren = self._tasksAndAllChildren(parents)
         self.stopNotifying()
-        self._removeTasksFromTaskList(tasks)
-        for task in tasks:
-            self._removeTaskFromParent(task)
+        self._removeTasksFromTaskList(parents)
+        parentsWithChildrenRemoved = self._removeTasksFromParent(tasks)
         self.startNotifying()
         self.notifyObservers(patterns.Event(self, 'list.remove', 
             *tasksAndAllChildren))
+        for parent, children in parentsWithChildrenRemoved.items():
+            parent.notifyObservers(patterns.Event(parent, 'task.child.remove', 
+                *children))
 
     def _removeTaskFromTaskList(self, task):
         self._removeTasksFromTaskList(task.children())
@@ -69,10 +83,16 @@ class TaskList(patterns.ObservableList):
             if task in self:
                 self._removeTaskFromTaskList(task)
             
-    def _removeTaskFromParent(self, task):
-        parent = task.parent()
-        if parent:
-            parent.removeChild(task)
+    def _removeTasksFromParent(self, tasks):
+        parents = {}
+        for task in tasks:
+            parent = task.parent()
+            if parent:
+                parent.stopNotifying()
+                parent.removeChild(task)
+                parent.startNotifying()
+                parents.setdefault(parent, []).append(parent)
+        return parents
 
     # queries
 

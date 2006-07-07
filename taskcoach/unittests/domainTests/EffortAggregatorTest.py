@@ -9,8 +9,10 @@ class EffortAggregatorTestCase(test.TestCase):
         self.effortPerPeriod = self.createEffortPerPeriod()
         self.effortPerPeriod.registerObserver(self.onEvent, 'list.add',
             'list.remove')
-        self.task1 = task.Task()
-        self.task2 = task.Task()
+        self.task1 = task.Task(subject='task 1')
+        self.task2 = task.Task(subject='task 2')
+        self.task3 = task.Task(subject='child')
+        self.task1.addChild(self.task3)
         self.effort1period1a = effort.Effort(self.task1, 
             date.DateTime(2004,1,1,11,0,0), date.DateTime(2004,1,1,12,0,0))
         self.effort2period1a = effort.Effort(self.task2, 
@@ -23,6 +25,8 @@ class EffortAggregatorTestCase(test.TestCase):
             date.DateTime(2004,2,2,13,0,0), date.DateTime(2004,2,2,14,0,0))
         self.effort1period3 = effort.Effort(self.task1,
             date.DateTime(2004,1,1,10,0,0), date.DateTime(2005,1,1,10,0,0))
+        self.effort3period1a = effort.Effort(self.task3, 
+            date.DateTime(2004,1,1,14,0,0), date.DateTime(2004,1,1,15,0,0))
         self.events = []
 
     def onEvent(self, event):
@@ -66,13 +70,13 @@ class CommonTests(object):
         self.task2.addEffort(self.effort2period1a)
         self.assertEqual(2, len(self.effortPerPeriod))
 
-    def testRemoveChildWithEffort(self):
+    def testRemoveChildWithEffortFromParent(self):
         self.taskList.extend([self.task1, self.task2])
         self.task1.addChild(self.task2)
         self.task2.addEffort(self.effort2period1a)
         self.task2.setParent(None)
         self.task1.removeChild(self.task2)
-        self.assertEqual(1, len(self.effortPerPeriod))
+        self.assertEqual(2, len(self.effortPerPeriod))
 
     def testAddEffortToChild(self):
         self.taskList.extend([self.task1, self.task2])
@@ -113,6 +117,12 @@ class CommonTests(object):
         self.task2.addEffort(self.effort2period1a)
         self.task1.addChild(self.task2)
         self.task2.removeEffort(self.effort2period1a)
+        self.assertEqual(0, len(self.effortPerPeriod))
+
+    def testRemoveTasks(self):
+        self.taskList.extend([self.task1, self.task3])
+        self.task3.addEffort(self.effort3period1a)
+        self.taskList.removeItems([self.task1, self.task3])
         self.assertEqual(0, len(self.effortPerPeriod))
  
     def testChangeStart(self):
