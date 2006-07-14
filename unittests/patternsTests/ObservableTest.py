@@ -1,6 +1,23 @@
 import test, patterns
 
+class EventTest(test.TestCase):
+    def testEqualWhenAllValuesAreEqual(self):
+        self.assertEqual(patterns.Event(self, 'eventtype', 'some value'), 
+                         patterns.Event(self, 'eventtype', 'some value'))
+
+    def testUnequalWhenValuesAreDifferent(self):
+        self.assertNotEqual(patterns.Event(self, 'eventtype', 'some value'), 
+                            patterns.Event(self, 'eventtype', 'other value'))
     
+    def testUnequalWhenTypesAreDifferent(self):
+        self.assertNotEqual(patterns.Event(self, 'eventtype', 'some value'), 
+                            patterns.Event(self, 'other type', 'some value'))
+
+    def testUnequalWhenSourcesAreDifferent(self):
+        self.assertNotEqual(patterns.Event(self, 'eventtype', 'some value'), 
+                            patterns.Event(None, 'eventtype', 'some value'))
+
+
 class ObservableTest(test.TestCase):
     def setUp(self):
         self.observable = patterns.Observable()

@@ -18,12 +18,12 @@ class EffortBase(patterns.Observable):
         return self._stop
 
     def __lt__(self, other):
-        return self.getStart() > other.getStart() or \
+        return self.getStart() < other.getStart() or \
             (self.getStart() == other.getStart() and \
             self.task().subject() < other.task().subject())
 
-    def isBeingTracked(self):
-        return self._stop is None
+    def __gt__(self, other):
+        return other < self
 
 
 class Effort(EffortBase):
@@ -74,6 +74,8 @@ class Effort(EffortBase):
             return
         self._start = startDatetime
         self.notifyObservers(patterns.Event(self, 'effort.start', self._start))
+        self.notifyObservers(patterns.Event(self, 'effort.duration',
+            self.duration()))
 
     def setStop(self, newStop=None):
         if newStop is None:
@@ -84,6 +86,8 @@ class Effort(EffortBase):
             previousStop = self._stop
             self._stop = newStop
             self.notifyObservers(patterns.Event(self, 'effort.stop', newStop))
+            self.notifyObservers(patterns.Event(self, 'effort.duration', 
+                self.duration()))
             self.notifyStopOrStartTracking(previousStop, newStop)
 
     def notifyStopOrStartTracking(self, previousStop, newStop):
@@ -94,6 +98,9 @@ class Effort(EffortBase):
             eventType = 'effort.track.stop'
         if eventType:
             self.notifyObservers(patterns.Event(self, eventType))
+
+    def isBeingTracked(self):
+        return self._stop is None
 
     def setDescription(self, description):
         self._description = description
@@ -115,11 +122,21 @@ class Effort(EffortBase):
         
         
 class CompositeEffort(EffortBase, patterns.List):
-    ''' CompositeEffort is a list of efforts for one task (and maybe its 
-        children) and within a certain time period. '''
+    ''' CompositeEffort is a list of efforts for one task (and its 
+        children) and within a certain time period. The task, start of
+        time period and end of time period need to be provided when
+        initializing the CompositeEffort and cannot be changed
+        afterwards. '''
     
-    def __init__(self, task, start, stop, efforts=None):
-        super(CompositeEffort, self).__init__(task, start, stop, efforts or [])
+    def __init__(self, task, start, stop):
+        super(CompositeEffort, self).__init__(task, start, stop)
+        self.addTask(task)
+
+    def __hash__(self):
+        return hash((self.task(), self.getStart()))
+
+    def __repr__(self):
+        return 'CompositeEffort(%s, %s)'%(self.task(), str([e for e in self]))
 
     def duration(self, recursive=False):
         return sum([effort.duration() for effort in \
@@ -136,3 +153,92 @@ class CompositeEffort(EffortBase, patterns.List):
         
     def __eq__(self, other):
         return self is other
+
+    def isBeingTracked(self):
+        return True in [effort.isBeingTracked() for effort in self]
+
+    # event handlers:
+    
+    def onAddChild(self, event):
+        self.addTask(event.value())
+
+    def onRemoveChild(self, event):
+        self.removeTask(event.value())
+
+    def onAddEffort(self, event):
+        self.addNewEffortIfInPeriod(event.value())
+
+    def onRemoveEffort(self, event):
+        self.removeDeletedEffortIfInPeriod(event.value())
+    
+    def onStartTracking(self, event):
+        self.notifyObservers(patterns.Event(self, 'effort.track.start'))
+
+    def onStopTracking(self, event):
+        self.notifyObservers(patterns.Event(self, 'effort.track.stop'))
+
+    def onChangeStart(self, event):
+        effort = event.source()
+        inPeriod = self.inPeriod(effort)
+        if inPeriod and effort not in self:
+            self.addEffort(effort)
+        elif not inPeriod and effort in self:
+            self.removeEffort(effort)
+        
+    def onChangeDuration(self, event):
+        self.notifyObservers(patterns.Event(self, 'effort.duration',
+            self.duration()))
+
+    # process changes:
+
+    def inPeriod(self, effort):
+        return self.getStart() <= effort.getStart() <= self.getStop()
+
+    def addNewEffortIfInPeriod(self, effort):
+        if self.inPeriod(effort):
+            self.addEffort(effort)
+        effort.registerObserver(self.onChangeStart, 'effort.start')
+
+    def removeDeletedEffortIfInPeriod(self, effort):
+        if self.inPeriod(effort):
+            self.removeEffort(effort)
+        effort.removeObserver(self.onChangeStart)
+
+    def addEffort(self, effort):
+        wasTracking = self.isBeingTracked()
+        self.append(effort) 
+        effort.registerObserver(self.onStartTracking, 'effort.track.start') 
+        effort.registerObserver(self.onStopTracking, 'effort.track.stop') 
+        effort.registerObserver(self.onChangeDuration, 'effort.duration') 
+        self.notifyObservers(patterns.Event(self, 'effort.duration', 
+            self.duration()))
+        if effort.isBeingTracked() and not wasTracking:
+            self.notifyObservers(patterns.Event(self, 'effort.track.start'))
+
+    def removeEffort(self, effort):
+        wasTracking = self.isBeingTracked()
+        self.remove(effort)
+        effort.removeObservers(self.onStartTracking, self.onStopTracking, 
+            self.onChangeDuration) 
+        self.notifyObservers(patterns.Event(self, 'effort.duration', 
+            self.duration()))
+        if wasTracking and not self.isBeingTracked():
+            self.notifyObservers(patterns.Event(self, 'effort.track.stop'))
+        if len(self) == 0:
+            self.notifyObservers(patterns.Event(self, 'list.empty'))
+
+    def addTask(self, task):
+        for child in [task] + task.children(recursive=True):
+            child.registerObserver(self.onAddChild, 'task.child.add')
+            child.registerObserver(self.onRemoveChild, 'task.child.remove')
+            child.registerObserver(self.onAddEffort, 'task.effort.add')
+            child.registerObserver(self.onRemoveEffort, 'task.effort.remove')
+        for effort in task.efforts(recursive=True):
+            self.addNewEffortIfInPeriod(effort)
+
+    def removeTask(self, task):
+        for child in [task] + task.children(recursive=True):
+            child.removeObservers(self.onAddChild, self.onRemoveChild, 
+                self.onAddEffort, self.onRemoveEffort)
+        for effort in task.efforts(recursive=True):
+            self.removeDeletedEffortIfInPeriod(effort)

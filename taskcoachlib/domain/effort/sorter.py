@@ -18,7 +18,7 @@ class EffortSorter(patterns.ListDecorator):
 
     def reset(self, event=None):
         oldSelf = self[:]
-        self.sort()
+        self.sort(reverse=True)
         if self != oldSelf:
             self.notifyObservers(patterns.Event(self, 'list.sorted'))
 

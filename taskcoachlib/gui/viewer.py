@@ -494,7 +494,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         return widget    
 
 
-class EffortViewer(Viewer):
+class EffortViewer(UpdatePerSecondViewer):
     def isShowingTasks(self):
         return False
         

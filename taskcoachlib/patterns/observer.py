@@ -18,6 +18,11 @@ class Event(object):
     def __repr__(self):
         return 'Event(%s, %s, %s)'%(self.__source, self.__type, self.__values)
 
+    def __eq__(self, other):
+        return self.source() == other.source() and \
+               self.type() == other.type() and \
+               self.values() == other.values()
+
     def source(self):
         return self.__source
 
@@ -88,7 +93,10 @@ class Observable(object):
                 callback(event)
 
     def observers(self, eventType):
-        return self.__callbacks.get(eventType, [])
+        # Make a copy of the callbacks so event handlers that are
+        # registered during notification of an event are not notified
+        # for that event.
+        return self.__callbacks.get(eventType, [])[:] 
 
 
 class Observer(object):
