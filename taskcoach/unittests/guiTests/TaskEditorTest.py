@@ -43,7 +43,8 @@ class TaskEditorTestCase(test.wxTestCase):
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
-        wx.Yield() 
+        if '__WXMAC__' not in wx.PlatformInfo:
+            wx.Yield() 
 
     def createTasks(self):
         return []
@@ -278,7 +279,8 @@ class FocusTest(TaskEditorTestCase):
         # less annoying.
         self.editor.SetDimensions(10000, 10000, 0, 0)
         self.editor.Show()
-        wx.Yield()
+        if '__WXMAC__' not in wx.PlatformInfo:
+            wx.Yield()
         self.assertEqual(self.editor[0][0]._subjectEntry, wx.Window_FindFocus())
 
 

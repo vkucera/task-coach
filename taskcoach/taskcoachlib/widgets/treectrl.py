@@ -330,7 +330,8 @@ class TreeMixin(object):
         self.selectCommand()
 
     def selectall(self):
-        self.SelectAll()
+        if self.GetCount() > 0:
+            self.SelectAll()
         self.selectCommand()
 
     def invertselection(self):
@@ -460,7 +461,8 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
         self.refreshColumns()
 
     def SelectAll(self):
-        self.selectItems(*[item for rowIndex, item in self.allItems()])
+        super(TreeListCtrl, self).SelectAll()
+        #self.selectItems(*[item for rowIndex, item in self.allItems()])
 
     def GetCountPerPage(self):
         ''' ListCtrlAutoWidthMixin expects a GetCountPerPage() method,
