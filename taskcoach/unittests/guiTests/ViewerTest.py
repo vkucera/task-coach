@@ -25,6 +25,24 @@ class TaskListViewerUnderTest(dummy.TaskListViewerWithDummyWidget):
         self.events.append(event)
 
 
+class EffortListViewerUnderTest(dummy.EffortListViewerWithDummyWidget):
+    def __init__(self, *args, **kwargs):
+        super(EffortListViewerUnderTest, self).__init__(*args, **kwargs)
+        self.events = []
+
+    def onAttributeChanged(self, event):
+        super(EffortListViewerUnderTest, self).onAttributeChanged(event)
+
+
+class EffortPerDayViewerUnderTest(dummy.EffortPerDayViewerWithDummyWidget):
+    def __init__(self, *args, **kwargs):
+        super(EffortPerDayViewerUnderTest, self).__init__(*args, **kwargs)
+        self.events = []
+
+    def onAttributeChanged(self, event):
+        super(EffortPerDayViewerUnderTest, self).onAttributeChanged(event)
+
+
 class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
         self.task = task.Task()
@@ -128,12 +146,12 @@ class CompositeEffortListViewerTest(test.wxTestCase):
                          self.viewer.getItemText(0, self.viewer.columns()[3]))
     
 
-class UpdatePerSecondViewerTest(test.wxTestCase):
+class UpdatePerSecondViewerTests(object):
     def setUp(self):
         self.taskList = task.TaskList()
         self.settings = config.Settings(load=False)
-        self.updateViewer = TaskListViewerUnderTest(self.frame, self.taskList,
-                dummy.DummyUICommands(), self.settings)
+        self.updateViewer = self.ListViewerClass(self.frame, self.taskList, 
+            dummy.DummyUICommands(), self.settings)
         self.trackedTask = task.Task(subject='tracked')
         self.trackedTask.addEffort(effort.Effort(self.trackedTask))
         self.taskList.append(self.trackedTask)
@@ -159,3 +177,21 @@ class UpdatePerSecondViewerTest(test.wxTestCase):
         self.trackedTask.stopTracking()
         self.failIf(self.updateViewer.onEverySecond in
             date.Clock().observers('clock.second'))
+
+
+'''
+class TaskListViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTests, 
+        test.wxTestCase):
+    ListViewerClass = TaskListViewerUnderTest
+
+
+class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTests, 
+        test.wxTestCase):
+    ListViewerClass = EffortListViewerUnderTest
+
+'''
+
+class EffortPerDayViewerUpdatePerSecondTest(UpdatePerSecondViewerTests, 
+        test.wxTestCase):
+    ListViewerClass = EffortPerDayViewerUnderTest
+

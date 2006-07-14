@@ -87,6 +87,15 @@ class TaskListViewerWithDummyWidget(TaskViewerWithDummyWidget,
         return gui.viewer.TaskListViewer._createColumns(self)
 
 
+class EffortListViewerWithDummyWidget(ViewerWithDummyWidget,
+        gui.viewer.EffortListViewer):
+    def createSorter(self, *args, **kwargs):
+        return gui.viewer.EffortListViewer.createSorter(self, *args, **kwargs)
+
+    def _createColumns(self):
+        return gui.viewer.EffortListViewer._createColumns(self)
+
+
 class EffortPerDayViewerWithDummyWidget(ViewerWithDummyWidget,
         gui.viewer.EffortPerDayViewer):
     def createSorter(self, *args, **kwargs):

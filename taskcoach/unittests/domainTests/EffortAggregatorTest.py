@@ -64,7 +64,7 @@ class CommonTests(object):
         self.task2.addEffort(self.effort2period1a)
         self.assertEqual(2, len(self.effortPerPeriod))
 
-    def testAddChildWithEffort(self):
+    def testAddEffortToChild(self):
         self.taskList.extend([self.task1, self.task2])
         self.task1.addChild(self.task2)
         self.task2.addEffort(self.effort2period1a)
@@ -76,9 +76,9 @@ class CommonTests(object):
         self.task2.addEffort(self.effort2period1a)
         self.task2.setParent(None)
         self.task1.removeChild(self.task2)
-        self.assertEqual(2, len(self.effortPerPeriod))
+        self.assertEqual(1, len(self.effortPerPeriod))
 
-    def testAddEffortToChild(self):
+    def testAddChildWithEffort(self):
         self.taskList.extend([self.task1, self.task2])
         self.task2.addEffort(self.effort2period1a)
         self.task1.addChild(self.task2)
@@ -123,6 +123,18 @@ class CommonTests(object):
         self.taskList.extend([self.task1, self.task3])
         self.task3.addEffort(self.effort3period1a)
         self.taskList.removeItems([self.task1, self.task3])
+        self.assertEqual(0, len(self.effortPerPeriod))
+
+    def testRemoveAllTasks(self):
+        self.taskList.extend([self.task1, self.task2, self.task3])
+        self.task3.addEffort(self.effort3period1a)
+        self.taskList.removeItems([self.task1, self.task2, self.task3])
+        self.assertEqual(0, len(self.effortPerPeriod))
+ 
+    def testRemoveChildTask(self):
+        self.taskList.extend([self.task1])
+        self.task3.addEffort(self.effort3period1a)
+        self.taskList.removeItems([self.task3])
         self.assertEqual(0, len(self.effortPerPeriod))
  
     def testChangeStart(self):
@@ -191,6 +203,7 @@ class EffortPerWeekTest(EffortAggregatorTestCase, CommonTests):
 
     def startOfPeriod(self):
         return date.DateTime.now().startOfWeek()
+
 
 class EffortPerMonthTest(EffortAggregatorTestCase, CommonTests):
     def createEffortPerPeriod(self):

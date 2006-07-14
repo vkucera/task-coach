@@ -65,9 +65,8 @@ class Sorter(patterns.ListDecorator):
             # by the SortOrderReverser, which will trigger another event
             pass
         else:        
-            eventTypeToRemove = 'task.%s'% \
-                self.__previousSortKey.replace('total', '')
-            eventTypeToAdd = 'task.%s'%sortKey.replace('total', '')
+            eventTypeToRemove = 'task.%s'% self.__previousSortKey
+            eventTypeToAdd = 'task.%s'%sortKey
             self.__previousSortKey = sortKey
             for task in self:
                 task.removeObserver(self.reset, eventTypeToRemove)

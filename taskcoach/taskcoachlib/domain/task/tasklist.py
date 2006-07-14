@@ -91,7 +91,8 @@ class TaskList(patterns.ObservableList):
                 parent.stopNotifying()
                 parent.removeChild(task)
                 parent.startNotifying()
-                parents.setdefault(parent, []).append(parent)
+                if parent not in tasks:
+                    parents.setdefault(parent, []).append(task)
         return parents
 
     # queries

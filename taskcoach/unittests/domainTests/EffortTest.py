@@ -1,4 +1,4 @@
-import test
+import test, patterns
 import unittests.asserts as asserts
 import domain.task as task
 import domain.effort as effort
@@ -37,6 +37,20 @@ class EffortTest(test.TestCase, asserts.Mixin):
         stop = date.DateTime.now()
         self.effort.setStop(stop)
         self.assertEqual(stop, self.events[0].value())
+
+    def testDurationNotificationForSetStart(self):
+        self.effort.registerObserver(self.onEvent, 'effort.duration')
+        start = date.DateTime.now()
+        self.effort.setStart(start)
+        self.assertEqual(patterns.Event(self.effort, 'effort.duration',
+            self.effort.duration()), self.events[0])
+
+    def testDurationNotificationForSetStop(self):
+        self.effort.registerObserver(self.onEvent, 'effort.duration')
+        stop = date.DateTime.now()
+        self.effort.setStop(stop)
+        self.assertEqual(patterns.Event(self.effort, 'effort.duration',
+            self.effort.duration()), self.events[0])
         
     def testNotificationForSetDescription(self):
         self.effort.registerObserver(self.onEvent, 'effort.description')
@@ -73,10 +87,15 @@ class EffortTest(test.TestCase, asserts.Mixin):
         newEffort.__setstate__(state)
         self.assertEqualEfforts(newEffort, self.effort)
         
-    def testCompare(self):
+    def testCompare_Smaller(self):
         newEffort = effort.Effort(self.task, start=date.DateTime(2005,1,1),
             stop=date.DateTime(2005,1,2))
-        self.failUnless(self.effort > newEffort)
+        self.failUnless(self.effort < newEffort)
+
+    def testCompare_Bigger(self):
+        newEffort = effort.Effort(self.task, start=date.DateTime(2005,1,1),
+            stop=date.DateTime(2005,1,2))
+        self.failUnless(newEffort > self.effort)
         
     def testCopy(self):
         copyEffort = self.effort.copy()
@@ -151,31 +170,3 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual(2./3*1000., self.effort.revenue())
         
 
-class CompositeEffortTest(test.TestCase):
-    def setUp(self):
-        self.task = task.Task()
-        self.effort1 = effort.Effort(self.task, 
-            date.DateTime(2004,1,1,11,0,0), date.DateTime(2004,1,1,12,0,0))
-        self.effort2 = effort.Effort(self.task, 
-            date.DateTime(2004,1,1,13,0,0), date.DateTime(2004,1,1,14,0,0))
-        self.composite = effort.CompositeEffort(self.task,
-            date.DateTime(2004,1,1,0,0,0), date.DateTime(2004,1,1,23,59,59))
-
-    def testDuration(self):
-        self.composite.append(self.effort1)
-        self.assertEqual(self.effort1.duration(), self.composite.duration())
-
-    def testDurationTwoEfforts(self):
-        self.composite.extend([self.effort1, self.effort2])
-        self.assertEqual(self.effort1.duration() + self.effort2.duration(), 
-            self.composite.duration())
-
-    def testRevenue(self):
-        self.task.setHourlyFee(100)
-        self.composite.append(self.effort1)
-        self.assertEqual(100, self.composite.revenue())
-
-    def testRevenueTwoEfforts(self):
-        self.task.setHourlyFee(100)
-        self.composite.extend([self.effort1, self.effort2])
-        self.assertEqual(200, self.composite.revenue())
