@@ -15,7 +15,10 @@ class TaskBarIconTest(test.TestCase):
         self.icon = gui.taskbaricon.TaskBarIcon(MainWindowMock(), self.taskList)
 
     def tearDown(self):
-        self.icon.Destroy()
+        if '__WXMAC__' in wx.PlatformInfo:
+            self.icon.RemoveIcon()
+        else:
+            self.icon.Destroy()
 
     def assertTooltip(self, text):
         self.assertEqual(self.icon.tooltip(), '%s - %s'%(meta.name, text))
