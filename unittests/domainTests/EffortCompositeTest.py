@@ -201,6 +201,18 @@ class CompositeEffortTest(test.TestCase):
             self.composite.getStart(), self.composite.getStop())
         self.failUnless(composite2 < self.composite)
         
+    def testChangeTask(self):
+        self.task.addEffort(self.effort1)
+        self.effort1.setTask(task.Task())
+        self.assertEqual(0, len(self.composite))
+
+    def testChangeTask_EmptyNotification(self):
+        self.composite.registerObserver(self.onEvent, 'list.empty')
+        self.task.addEffort(self.effort1)
+        self.effort1.setTask(task.Task())
+        self.assertEqual(patterns.Event(self.composite, 'list.empty'),
+            self.events[0])
+        
 
 class CompositeEffortWithSubTasksTest(test.TestCase):
     def setUp(self):
@@ -318,6 +330,11 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
         self.child.addEffort(childEffort)
         childEffort.setStart(self.composite.getStart())
         self.failUnless(childEffort in self.composite)
+
+    def testChangeTask(self):
+        self.child.addEffort(self.childEffort)
+        self.childEffort.setTask(task.Task())
+        self.assertEqual(0, len(self.composite))
 
 
 class CompositeEffortWithSubTasksRevenueTest(test.TestCase):

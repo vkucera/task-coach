@@ -200,7 +200,7 @@ class CompositeEffort(EffortBase, patterns.List):
         effort.registerObserver(self.onChangeStart, 'effort.start')
 
     def removeDeletedEffortIfInPeriod(self, effort):
-        if self.inPeriod(effort):
+        if effort in self:
             self.removeEffort(effort)
         effort.removeObserver(self.onChangeStart)
 
