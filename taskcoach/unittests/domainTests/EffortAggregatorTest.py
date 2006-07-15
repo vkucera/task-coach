@@ -218,6 +218,34 @@ class CommonTests(object):
         self.assertEqual(1, len(self.effortPerPeriod))
         self.assertEqual(self.effort1period1a, self.effortPerPeriod[0][0])
 
+    def testMaxDateTime(self):
+        self.assertEqual(None, self.effortPerPeriod.maxDateTime())
+
+    def testMaxDateTime_OneEffort(self):
+        self.taskList.append(self.task1)
+        self.task1.addEffort(self.effort1period1a)
+        self.assertEqual(self.effort1period1a.getStop(), 
+            self.effortPerPeriod.maxDateTime())
+
+    def testMaxDateTime_OneTrackingEffort(self):
+        self.taskList.append(self.task1)
+        self.task1.addEffort(effort.Effort(self.task1))
+        self.assertEqual(None, self.effortPerPeriod.maxDateTime())
+
+    def testMaxDateTime_TwoEfforts(self):
+        self.taskList.append(self.task1)
+        self.task1.addEffort(self.effort1period1a)
+        now = date.DateTime.now()
+        self.task1.addEffort(effort.Effort(self.task1, 
+            self.effort1period1a.getStart(), now))
+        self.assertEqual(now, self.effortPerPeriod.maxDateTime())
+   
+    def testNrTracking(self):
+        self.assertEqual(0, self.effortPerPeriod.nrBeingTracked())
+
+    def testOriginalLength(self):
+        self.assertEqual(0, self.effortPerPeriod.originalLength())
+
 
 class EffortPerDayTest(EffortAggregatorTestCase, CommonTests):
     def createEffortPerPeriod(self):
