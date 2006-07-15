@@ -28,7 +28,7 @@ class EffortAggregator(patterns.ListDecorator):
             newTask.registerObserver(self.onChildAddedToTask, 
                 'task.child.add')
             newEfforts.extend(newTask.efforts())
-        self.addEfforts(newEfforts)
+        self.addComposites(self.addEfforts(newEfforts))
 
     def removeItemsFromSelf(self, tasks):
         ''' removeItemsFromSelf is called when an item is removed from the 
@@ -43,15 +43,15 @@ class EffortAggregator(patterns.ListDecorator):
                                  self.onChildAddedToTask)
             for effort in task.efforts():
                 effort.removeObserver(self.onEffortChanged)
-            compositesToRemove.extend(self.__taskToCompositesMap.pop(task, []))
-        super(EffortAggregator, self).removeItemsFromSelf(compositesToRemove)
+            compositesToRemove.extend(self.__taskToCompositesMap.get(task, []))
+        self.removeComposites(compositesToRemove)
 
     def onChildAddedToTask(self, event):
         child = event.value() 
-        self.addEfforts(child.efforts(recursive=True))
+        self.addComposites(self.addEfforts(child.efforts(recursive=True)))
 
     def onEffortAddedToTask(self, event):
-        self.addEfforts(event.values())
+        self.addComposites(self.addEfforts(event.values()))
 
     def onEffortRemovedFromTask(self, event):
         event.value().removeObserver(self.onEffortChanged)
@@ -60,18 +60,32 @@ class EffortAggregator(patterns.ListDecorator):
         ''' onEffortChanged is called when the start datetime or the
             task of an effort record has changed. '''
         effortChanged = event.source()
-        self.addEfforts([effortChanged])
+        self.addComposites(self.addEfforts([effortChanged]))
 
     def onCompositeEmpty(self, event):
-        super(EffortAggregator, self).removeItemsFromSelf([event.source()])
+        self.removeComposites([event.source()])
 
+    def addComposites(self, composites):
+        for composite in composites:
+            composite.registerObserver(self.onCompositeEmpty, 'list.empty')
+        super(EffortAggregator, self).extendSelf(composites)
+
+    def removeComposites(self, composites):
+        for composite in composites:
+            composite.removeObserver(self.onCompositeEmpty)
+            task = composite.task()
+            self.__taskToCompositesMap[task].remove(composite)
+            key = (task.id(), composite.getStart())
+            del self.__taskAndTimeToCompositesMap[key]
+        super(EffortAggregator, self).removeItemsFromSelf(composites)
+        
     def addEfforts(self, efforts):
         newComposites = set()
         for effort in efforts:
             effort.registerObserver(self.onEffortChanged, 'effort.start')
             newComposites |= self.addEffort(effort)
         newComposites.discard(None)
-        super(EffortAggregator, self).extendSelf(newComposites)
+        return newComposites
 
     def addEffort(self, newEffort):
         newComposites = set()
@@ -90,7 +104,6 @@ class EffortAggregator(patterns.ListDecorator):
                 self.endOfPeriod(startOfEffort))
             self.__taskToCompositesMap.setdefault(task, []).append(newComposite)
             self.__taskAndTimeToCompositesMap[key] = newComposite
-            newComposite.registerObserver(self.onCompositeEmpty, 'list.empty')
         return newComposite
 
     def startOfPeriod(self, dateTime):
