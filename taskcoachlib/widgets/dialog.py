@@ -18,6 +18,7 @@ class Dialog(wx.Dialog):
         self._verticalSizer.Add(self._buttonBox, 0, wx.ALIGN_CENTER)
         self._panel.SetSizerAndFit(self._verticalSizer)
         self.SetSizerAndFit(self._panelSizer)
+        wx.CallAfter(self.Raise)
         wx.CallAfter(self._panel.SetFocus)
 
     def createButtonBox(self):

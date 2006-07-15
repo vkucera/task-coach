@@ -216,7 +216,8 @@ class BudgetPage(TaskEditorPage):
 
 
 class EffortPage(TaskEditorPage):        
-    def __init__(self, parent, task, taskList, settings, uiCommands, *args, **kwargs):
+    def __init__(self, parent, task, taskList, settings, uiCommands, 
+                 *args, **kwargs):
         super(EffortPage, self).__init__(parent, task, *args, **kwargs)
         from gui import viewercontainer, viewerfactory
         import domain.effort as effort
@@ -232,17 +233,20 @@ class EffortPage(TaskEditorPage):
 class CategoriesPage(TaskEditorPage):
     def __init__(self, parent, task, categories, *args, **kwargs):
         super(CategoriesPage, self).__init__(parent, task, *args, **kwargs)
-        categoriesBox = widgets.BoxWithFlexGridSizer(self, label=_('Categories'), cols=2, growableCol=1, growableRow=0)
+        categoriesBox = widgets.BoxWithFlexGridSizer(self, 
+            label=_('Categories'), cols=2, growableCol=1, growableRow=0)
         self._checkListBox = wx.CheckListBox(categoriesBox)
         self._checkListBox.InsertItems(categories, 0)
         for index in range(self._checkListBox.GetCount()):
             if self._checkListBox.GetString(index) in task.categories():
                 self._checkListBox.Check(index)
         categoriesBox.add(_('Categories'))
-        categoriesBox.add(self._checkListBox, proportion=1, flag=wx.EXPAND|wx.ALL)
+        categoriesBox.add(self._checkListBox, proportion=1, 
+            flag=wx.EXPAND|wx.ALL)
         categoriesBox.add(_('New category'))
-        self._textEntry = widgets.SingleLineTextCtrlWithEnterButton(categoriesBox, 
-            label=_('New category'), onEnter=self.onNewCategory)
+        self._textEntry = \
+            widgets.SingleLineTextCtrlWithEnterButton(categoriesBox, 
+                label=_('New category'), onEnter=self.onNewCategory)
         categoriesBox.add(self._textEntry, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
         self.add(categoriesBox, border=5)
@@ -330,19 +334,21 @@ class AttachmentPage(TaskEditorPage):
     def onOpen(self, *args, **kwargs):
         index = -1
         while True:
-            index = self._listCtrl.GetNextItem(index, state=wx.LIST_STATE_SELECTED)
+            index = self._listCtrl.GetNextItem(index, 
+                state=wx.LIST_STATE_SELECTED)
             if index == -1:
                 break
             try:
                 desktop.open(self._listCtrl.GetItemText(index))
             except Exception, instance:
-                wx.MessageBox(str(instance), caption=_('Error opening attachment'), 
-                              style=wx.ICON_ERROR)
+                wx.MessageBox(str(instance), 
+                    caption=_('Error opening attachment'), style=wx.ICON_ERROR)
     
     def onRemove(self, *args, **kwargs):
         index = -1
         while True:
-            index = self._listCtrl.GetNextItem(index, state=wx.LIST_STATE_SELECTED)
+            index = self._listCtrl.GetNextItem(index, 
+                state=wx.LIST_STATE_SELECTED)
             if index == -1:
                 break
             self._listCtrl.DeleteItem(index)
@@ -365,7 +371,8 @@ class AttachmentPage(TaskEditorPage):
         
     def ok(self):
         self._task.removeAllAttachments()
-        attachments = [self._listCtrl.GetItem(index).GetText() for index in range(self._listCtrl.GetItemCount())]
+        attachments = [self._listCtrl.GetItem(index).GetText() \
+                       for index in range(self._listCtrl.GetItemCount())]
         self._task.addAttachments(*attachments)
                                      
             
@@ -375,14 +382,17 @@ class BehaviorPage(TaskEditorPage):
         behaviorBox = widgets.BoxWithFlexGridSizer(self,
             label=_('Task behavior'), cols=2)                                           
         choice = self._markTaskCompletedEntry = wx.Choice(behaviorBox)
-        for choiceValue, choiceText in [(None, _('Use application-wide setting')), 
-                                        (False, _('No')), (True, _('Yes'))]:
+        for choiceValue, choiceText in \
+                [(None, _('Use application-wide setting')), 
+                 (False, _('No')), (True, _('Yes'))]:
             choice.Append(choiceText, choiceValue)
             if choiceValue == task.shouldMarkCompletedWhenAllChildrenCompleted:
                 choice.SetSelection(choice.GetCount()-1)
-        if choice.GetSelection() == wx.NOT_FOUND: # force a selection if necessary
+        if choice.GetSelection() == wx.NOT_FOUND: 
+            # Force a selection if necessary:
             choice.SetSelection(0)
-        behaviorBox.add(_('Mark task completed when all children are completed?'))
+        behaviorBox.add(_('Mark task completed when all children are'
+                          ' completed?'))
         behaviorBox.add(choice)
         behaviorBox.fit()
         self.add(behaviorBox, border=5)
@@ -390,7 +400,8 @@ class BehaviorPage(TaskEditorPage):
             
     def ok(self):
         self._task.shouldMarkCompletedWhenAllChildrenCompleted = \
-            self._markTaskCompletedEntry.GetClientData(self._markTaskCompletedEntry.GetSelection())
+            self._markTaskCompletedEntry.GetClientData( \
+                self._markTaskCompletedEntry.GetSelection())
 
 
 class TaskEditBook(widgets.Listbook):
