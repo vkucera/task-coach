@@ -122,6 +122,14 @@ class EffortAggregator(patterns.ListDecorator):
             effort records.'''
         return len(self)
 
+    def maxDateTime(self):
+        stopTimes = [effort.getStop() for composite in self for effort
+            in composite if effort.getStop() is not None]
+        if stopTimes:
+            return max(stopTimes)
+        else:
+            return None
+
 
 class EffortPerDay(EffortAggregator):        
     startOfPeriod = date.DateTime.startOfDay
