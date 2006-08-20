@@ -9,7 +9,7 @@ class Translator:
             if language not in ('en', 'en_US', 'en_GB'): 
                 module = __import__(language, globals())
                 self.__language = module.dict
-                self.__encoding = module.encoding                
+                self.__encoding = module.encoding
             li = wx.Locale.FindLanguageInfo(language)
             self.__locale = wx.Locale(li.Language)
          

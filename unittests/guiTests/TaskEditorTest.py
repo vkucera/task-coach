@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 import test, gui, command, wx, config
 from unittests import dummy
 import domain.task as task
@@ -45,7 +46,8 @@ class TaskEditorTestCase(test.wxTestCase):
         # calls are dealt with, otherwise they'll turn up in other tests
         if '__WXMAC__' not in wx.PlatformInfo:
             wx.Yield() 
-
+        super(TaskEditorTestCase, self).tearDown()
+        
     def createTasks(self):
         return []
 
@@ -105,6 +107,19 @@ class NewTaskTest(TaskEditorTestCase):
         self.setReminder(reminderDateTime)
         self.editor.ok()
         self.assertEqual(reminderDateTime, self.task.reminder())
+    
+    def testOpenAttachmentWithNonAsciiFileNameThrowsException(self):
+        ''' os.startfile() does not accept unicode filenames. This will be 
+            fixed in Python 2.5. This test will fail if the bug is fixed. '''
+        def onError(*args, **kwargs):
+            self.errorMessage = args[0]
+        item = wx.ListItem()
+        item.SetId(0)
+        item.SetText('tést.tsk')
+        item.SetState(wx.LIST_STATE_SELECTED)
+        self.editor[0][4]._listCtrl.InsertItem(item)
+        self.editor[0][4].onOpen(None, showerror=onError)
+        self.failUnless(self.errorMessage.startswith("'ascii' codec can't encode character"))
         
         
 class NewSubTaskTest(TaskEditorTestCase):

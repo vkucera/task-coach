@@ -3,12 +3,19 @@
 from domain import *
 
 releases = [             
-Release('0.59', 'June 17, 2006',
+Release('0.59', 'August ?, 2006',
     bugsFixed=[
         Bug('''The column width of the list with filenames in the attachment 
 page of the task editor is now adaptable, so that long filenames can be made 
-visible entirely.''', '1503006')],
+visible entirely.''', '1503006'),
+        Bug('''Translation errors in tips.''', '1525410', '1525423'),
+        Bug('''When having multiple tasks with the same subject, new effort
+records would always be created for the first of these tasks instead of the
+selected task.''', '1513403', '1524037'),
+        Bug('''Opening a file with a non-ascii filename specified on the 
+command line did not work.''', '1532528')],
     featuresAdded=[
+        Feature('''Japanese translation thanks to Yutaka Usui.'''),
         Feature('''Filter sidebar.'''),
         Feature('''Printing. Selecting 'File' -> 'Print' will print the 
 currently active view. This means only the visible columns will be
