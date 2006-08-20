@@ -7,6 +7,7 @@ from i18n import _
 import domain.date as date
 import domain.task as task
 import thirdparty.desktop as desktop
+import os.path
 
 
 
@@ -332,17 +333,20 @@ class AttachmentPage(TaskEditorPage):
         if filename:
             self.addAttachmentToListCtrl(filename)
         
-    def onOpen(self, *args, **kwargs):
+    def onOpen(self, event, showerror=wx.MessageBox):
         index = -1
         while True:
             index = self._listCtrl.GetNextItem(index, 
                 state=wx.LIST_STATE_SELECTED)
             if index == -1:
                 break
-            try:
-                desktop.open(self._listCtrl.GetItemText(index))
+            attachment = self._listCtrl.GetItemText(index)
+            # Make sure the path is properly encoded for Win32:
+            attachment = os.path.normpath(attachment)
+            try:    
+                desktop.open(attachment)
             except Exception, instance:
-                wx.MessageBox(str(instance), 
+                showerror(str(instance), 
                     caption=_('Error opening attachment'), style=wx.ICON_ERROR)
     
     def onRemove(self, *args, **kwargs):

@@ -62,7 +62,7 @@ class App(object):
     def processCommandLineArguments(self, settings, load=True):
         # FIXME: move to IOController
         if self._args:
-            filename = self._args[0]
+            filename = self._args[0].decode(sys.getfilesystemencoding())
         else:
             filename = settings.get('file', 'lastfile')
         if load and filename:

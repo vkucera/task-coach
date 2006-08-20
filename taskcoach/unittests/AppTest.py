@@ -1,4 +1,4 @@
-import test, meta, taskcoach, wx
+import test, meta, taskcoach, wx, sys
 
 class AppTests(test.TestCase):
     def testAppProperties(self):

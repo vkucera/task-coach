@@ -130,7 +130,11 @@ pages['i18n'] = \
             contains all text strings to be translated.
             <LI>Rename <TT>messages.pot</TT> into <TT>yourlanguage.po</TT>.
             <LI>Start poEdit and load <TT>yourlanguage.po</TT> and 
-            create the translation.
+            create the translation. Please make sure you understand how
+            <A HREF="http://docs.python.org/lib/typesseq-strings.html">Python
+            string formatting</A> works since %(name)s uses both the regular
+            '%%s' type of string formatting as well as the mapping key form 
+            '%%(mapping_key)s'.
             <LI>Mail me the resulting <TT>yourlanguage.po</TT> file. I will
             include it into %(name)s.
         </OL>

@@ -19,6 +19,7 @@ languages = {
     'Dutch': 'nl_NL',
     'Russian': 'ru_RU',
     'Simplified Chinese': 'zh_CN',
+    'Japanese': 'ja_JP',
     'Spanish': 'es_ES',
     'Hungarian': 'hu_HU'}
 
