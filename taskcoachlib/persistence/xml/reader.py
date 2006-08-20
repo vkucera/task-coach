@@ -35,22 +35,20 @@ class XMLReader:
         hourlyFee = self.__parseFloat(taskNode.getAttribute('hourlyFee'))
         fixedFee = self.__parseFloat(taskNode.getAttribute('fixedFee'))
         reminder = self.__parseDateTime(taskNode.getAttribute('reminder'))
+        attachments = self.__parseAttachmentNodes(taskNode.childNodes)
         shouldMarkCompletedWhenAllChildrenCompleted = \
             self.__parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted'))
+        categories = self.__parseCategoryNodes(taskNode.childNodes)
+        children = self.__parseTaskNodes(taskNode.childNodes)
+        efforts = self.__parseEffortNodes(taskNode.childNodes)
         parent = task.Task(subject, description, id_=id, startDate=startDate, 
             dueDate=dueDate, completionDate=completionDate, budget=budget, 
             priority=priority, lastModificationTime=lastModificationTime, 
             hourlyFee=hourlyFee, fixedFee=fixedFee, reminder=reminder, 
+            categories=categories, attachments=attachments, children=children,
+            efforts=efforts,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 shouldMarkCompletedWhenAllChildrenCompleted)
-        for category in self.__parseCategoryNodes(taskNode.childNodes):
-            parent.addCategory(category)
-        attachments = self.__parseAttachmentNodes(taskNode.childNodes)
-        parent.addAttachments(*attachments)
-        for child in self.__parseTaskNodes(taskNode.childNodes):
-            parent.addChild(child) 
-        for effort in self.__parseEffortNodes(parent, taskNode.childNodes):
-            parent.addEffort(effort)
         return parent        
         
     def __parseCategoryNodes(self, nodes):
@@ -61,15 +59,15 @@ class XMLReader:
         return [self.__parseTextNode(node) for node in nodes \
                 if node.nodeName == 'attachment']
 
-    def __parseEffortNodes(self, task, nodes):
-        return [self.__parseEffortNode(task, node) for node in nodes \
+    def __parseEffortNodes(self, nodes):
+        return [self.__parseEffortNode(node) for node in nodes \
                 if node.nodeName == 'effort']
         
-    def __parseEffortNode(self, task, effortNode):
+    def __parseEffortNode(self, effortNode):
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')
         description = self.__parseDescription(effortNode)
-        return effort.Effort(task, date.parseDateTime(start), 
+        return effort.Effort(None, date.parseDateTime(start), 
             date.parseDateTime(stop), description)
         
     def __getNode(self, parent, tagName):

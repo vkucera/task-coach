@@ -17,7 +17,8 @@ class CategoriesFilterDialogTest(test.wxTestCase):
     def testFilterOnCategory(self):
         self.dialog._checkListBox.Check(0)
         self.dialog.ok()
-        self.failUnless('test' in self.filter.filteredCategories())
+        self.failUnless('test' in self.settings.getlist('view', 
+            'taskcategoryfilterlist'))
         
     def testFilteredCategoriesAreDisplayedCorrectly(self):
         self.failIf(self.dialog._checkListBox.IsChecked(0))

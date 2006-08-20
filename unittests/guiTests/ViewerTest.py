@@ -4,9 +4,10 @@ from domain import task, effort, date
 
 class ViewerTest(test.wxTestCase):
     def setUp(self):
-        self.task = task.Task()
-        self.taskList = task.TaskList([self.task])
         self.settings = config.Settings(load=False)
+        self.task = task.Task()
+        self.taskList = task.sorter.Sorter(task.TaskList([self.task]), 
+            settings=self.settings)
         self.viewer = dummy.ViewerWithDummyWidget(self.frame,
             self.taskList, dummy.DummyUICommands(), self.settings)
 
@@ -83,7 +84,8 @@ class TaskListViewerTest(test.wxTestCase):
 
     def testChangeCompletionDateWhileColumnNotShown(self):
         self.task.setCompletionDate(date.Today())
-        self.failIf(self.viewer.events)
+        # We still get an event for the subject column:
+        self.assertEqual('task.completionDate', self.viewer.events[0].type())
 
     def testChangeCompletionDateWhileColumnShown(self):
         self.settings.set('view', 'completiondate', 'True')
@@ -148,8 +150,8 @@ class CompositeEffortListViewerTest(test.wxTestCase):
 
 class UpdatePerSecondViewerTests(object):
     def setUp(self):
-        self.taskList = task.TaskList()
         self.settings = config.Settings(load=False)
+        self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
         self.updateViewer = self.ListViewerClass(self.frame, self.taskList, 
             dummy.DummyUICommands(), self.settings)
         self.trackedTask = task.Task(subject='tracked')
@@ -158,7 +160,7 @@ class UpdatePerSecondViewerTests(object):
 
     def testViewerHasRegisteredWithClock(self):
         self.failUnless(self.updateViewer.onEverySecond in
-            date.Clock().observers('clock.second'))
+            patterns.Publisher().observers(eventType='clock.second'))
 
     def testClockNotificationResultsInRefreshedItem(self):
         self.updateViewer.onEverySecond(patterns.Event(date.Clock(),
@@ -176,10 +178,17 @@ class UpdatePerSecondViewerTests(object):
     def testStopTrackingRemovesViewerFromClockObservers(self):
         self.trackedTask.stopTracking()
         self.failIf(self.updateViewer.onEverySecond in
-            date.Clock().observers('clock.second'))
+            patterns.Publisher().observers(eventType='clock.second'))
+            
+    def testRemoveTrackedChildAndParentRemovesViewerFromClockObservers(self):
+        parent = task.Task()
+        self.taskList.append(parent)
+        parent.addChild(self.trackedTask)
+        self.taskList.remove(parent)
+        self.failIf(self.updateViewer.onEverySecond in
+            patterns.Publisher().observers(eventType='clock.second'))
 
 
-'''
 class TaskListViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTests, 
         test.wxTestCase):
     ListViewerClass = TaskListViewerUnderTest
@@ -189,7 +198,6 @@ class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTests,
         test.wxTestCase):
     ListViewerClass = EffortListViewerUnderTest
 
-'''
 
 class EffortPerDayViewerUpdatePerSecondTest(UpdatePerSecondViewerTests, 
         test.wxTestCase):

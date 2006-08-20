@@ -1,7 +1,7 @@
-import test, gui, wx, config, persistence
+import test, gui, wx, config, persistence, meta
 from unittests import dummy
 import domain.task as task
-import domain.effort as effort
+
 
 class MainWindowUnderTest(gui.MainWindow):
     def canCreateTaskBarIcon(self):
@@ -11,10 +11,9 @@ class MainWindowUnderTest(gui.MainWindow):
 class MainWindowTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        taskList = task.filter.SearchFilter(persistence.TaskFile(), 
-            settings=self.settings)
-        self.mainwindow = MainWindowUnderTest(dummy.IOController(), taskList,
-            taskList, effort.EffortList(taskList), self.settings)
+        self.taskFile = persistence.TaskFile()
+        self.mainwindow = MainWindowUnderTest(dummy.IOController(),
+            self.taskFile, [], self.settings)
 
     def testStatusBar_Show(self):
         self.settings.set('view', 'statusbar', 'True')
@@ -31,3 +30,11 @@ class MainWindowTest(test.wxTestCase):
     def testFilterSideBar_Hide(self):
         self.settings.set('view', 'filtersidebar', 'False')
         self.failIf(self.mainwindow.filterSideBarWindow.IsShown())
+
+    def testTitle_Default(self):
+        self.assertEqual(meta.name, self.mainwindow.GetTitle())
+        
+    def testTitle_AfterFilenameChange(self):
+        self.taskFile.setFilename('New filename')
+        self.assertEqual('%s - %s'%(meta.name, self.taskFile.filename()), 
+            self.mainwindow.GetTitle())

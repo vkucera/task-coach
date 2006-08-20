@@ -26,6 +26,9 @@ class TaskBarIconTest(test.TestCase):
     def testTooltip_NoTasks(self):
         self.assertTooltip('No tasks due today')
         
+    def testIcon_NoTasks(self):
+        self.failUnless(self.icon.IsIconInstalled())
+
     def testTooltip_OneTaskNoDueDate(self):
         self.taskList.append(task.Task())
         self.assertTooltip('No tasks due today')
@@ -52,3 +55,9 @@ class TaskBarIconTest(test.TestCase):
         activeTask.addEffort(activeEffort)
         activeTask.removeEffort(activeEffort)
         self.assertEqual(self.icon.defaultBitmap(), self.icon.bitmap())
+
+    def testRemoveTask(self):
+        newTask = task.Task()
+        self.taskList.append(newTask)
+        self.taskList.remove(newTask)
+        self.assertTooltip('No tasks due today')

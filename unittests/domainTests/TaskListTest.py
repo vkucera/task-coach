@@ -1,4 +1,4 @@
-import test, sets
+import test, sets, patterns
 import unittests.asserts as asserts
 import domain.task as task
 import domain.effort as effort
@@ -7,8 +7,10 @@ import domain.date as date
 class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def setUp(self):
         self.taskList = task.TaskList()
-        self.taskList.registerObserver(self.onEvent, 'list.add',
-            'list.remove')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=self.taskList.addItemEventType())
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=self.taskList.removeItemEventType())
         self.task1 = task.Task(dueDate=date.Date(2010,1,1))
         self.task2 = task.Task(dueDate=date.Date(2011,1,1))
         self.task3 = task.Task()
@@ -47,7 +49,7 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def testAppendTaskAlreadyInList(self):
         self.taskList.append(self.task1)
         self.taskList.append(self.task1)
-        self.assertTaskList([self.task1, self.task1])
+        self.assertTaskList([self.task1])
 
     def testAppendCausesNotification(self):
         self.taskList.append(self.task1)
@@ -144,18 +146,16 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
     def testOriginalLength(self):
         self.assertEqual(0, self.taskList.originalLength())
         
-    def testCreateNewItem(self):
-        newTask = self.taskList.newItem()
-        self.assertEqual(date.Today(), newTask.startDate())
-        
         
 class NotificationTimingTest(test.TestCase):
     def setUp(self):
         self.task1 = task.Task()
         self.task2 = task.Task()
         self.taskList = task.TaskList([self.task1])
-        self.taskList.registerObserver(self.onEvent, 'list.add',
-            'list.remove')
+        patterns.Publisher().registerObserver(self.onEvent, 
+            eventType=self.taskList.addItemEventType())
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=self.taskList.removeItemEventType())
         self.events = []
         self.assertions = {}
 
@@ -189,7 +189,10 @@ class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts,
         self.task4 = task.Task('Task 4')
         self.taskList = task.TaskList([self.task1, self.task4])
         self.originalList = [self.task1, self.task2, self.task3, self.task4]
-        self.taskList.registerObserver(self.onEvent, 'list.add', 'list.remove')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=self.taskList.addItemEventType())
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=self.taskList.removeItemEventType())
         self.events = []
 
     def onEvent(self, event):
@@ -280,7 +283,7 @@ class TaskListTaskCategoriesTest(test.TestCase):
         self.task.addCategory('test')
         
     def assertCategoriesEquals(self, expected):
-        self.assertEqual(sets.Set(expected), self.taskList.categories())
+        self.assertEqual(set(expected), self.taskList.categories())
         
     def testInitial(self):
         self.assertCategoriesEquals([])

@@ -47,7 +47,8 @@ defaults = { \
     'sortcasesensitive': 'True',
     'tasksearchfilterstring': '',
     'tasksearchfiltermatchcase': 'False',
-    'taskcategoryfiltermatchall': 'True' },
+    'taskcategoryfiltermatchall': 'True',
+    'taskcategoryfilterlist': '[]' },
 'window': { \
     'size': '(600, 500)',
     'position': '(-1, -1)',

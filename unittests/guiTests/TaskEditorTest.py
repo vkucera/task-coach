@@ -262,7 +262,10 @@ class EditTaskWithEffortTest(TaskEditorTestCase):
         self.task = task.Task('task')
         self.task.addEffort(effort.Effort(self.task))
         return [self.task]
-        
+    
+    def testEffortIsShown(self):
+        self.assertEqual(1, self.editor[0][4]._viewerContainer[0].GetItemCount())
+                          
     def testCancel(self):
         self.editor.cancel()
         self.assertEqual(1, len(self.task.efforts()))
@@ -303,18 +306,18 @@ class EffortEditorTest(TaskEditorTestCase):
             {}, self.effortList, self.taskList)
     
     def testCreate(self):
-        self.assertEqual(self.effortList[0].getStart().date(), 
+        self.assertEqual(self.effort.getStart().date(), 
             self.editor[0]._startEntry.GetValue().date())
-        self.assertEqual(self.effortList[0].task().subject(), 
+        self.assertEqual(self.effort.task().subject(), 
             self.editor[0]._taskEntry.GetValue())
 
     def testOK(self):
-        stop = self.effortList[0].getStop()
+        stop = self.effort.getStop()
         self.editor.ok()
-        self.assertEqual(stop, self.effortList[0].getStop())
+        self.assertEqual(stop, self.effort.getStop())
         
     def testInvalidEffort(self):
-        self.effortList[0].setStop(date.DateTime(1900, 1, 1))
+        self.effort.setStop(date.DateTime(1900, 1, 1))
         self.editor = self.createEditor()
         self.editor._interior[0].preventNegativeEffortDuration()
         self.failIf(self.editor._buttonBox['OK'].IsEnabled())
@@ -322,6 +325,6 @@ class EffortEditorTest(TaskEditorTestCase):
     def testChangeTask(self):
         self.editor[0]._taskEntry.SetStringSelection('task2')
         self.editor.ok()
-        self.assertEqual(self.task2, self.effortList[0].task())
+        self.assertEqual(self.task2, self.effort.task())
         self.failIf(self.effort in self.task1.efforts())
 

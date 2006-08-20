@@ -129,10 +129,19 @@ class XMLReaderTest(XMLReaderTestCase):
         description = u'Description\nline 2'
         tasks = self.writeAndRead('<tasks><task><description>%s</description></task></tasks>\n'%description)
         self.assertEqual(description, tasks[0].description())
+    
+    def testNoChildren(self):
+        tasks = self.writeAndRead('<tasks><task/></tasks>\n')
+        self.failIf((tasks[0].children()))
         
     def testChild(self):
         tasks = self.writeAndRead('<tasks><task><task/></task></tasks>\n')
         self.assertEqual(1, len(tasks[0].children()))
+        self.assertEqual(1, len(tasks))
+        
+    def testChildren(self):
+        tasks = self.writeAndRead('<tasks><task><task/><task/></task></tasks>\n')
+        self.assertEqual(2, len(tasks[0].children()))
         self.assertEqual(1, len(tasks))
         
     def testGrandchild(self):
@@ -147,7 +156,14 @@ class XMLReaderTest(XMLReaderTestCase):
         self.assertEqual(1, len(tasks[0].efforts()))
         self.assertEqual(date.TimeDelta(minutes=30), tasks[0].timeSpent())
         self.assertEqual(tasks[0], tasks[0].efforts()[0].task())
-        
+    
+    def testChildEffort(self):    
+        tasks = self.writeAndRead('<tasks><task><task><effort start="2004-01-01 10:00:00.123000" stop="2004-01-01 10:30:00.123000"/></task></task></tasks>')
+        child = tasks[0].children()[0]
+        self.assertEqual(1, len(child.efforts()))
+        self.assertEqual(date.TimeDelta(minutes=30), child.timeSpent())
+        self.assertEqual(child, child.efforts()[0].task())
+
     def testEffortDescription(self):
         description = u'Description\nLine 2'
         tasks = self.writeAndRead('<tasks><task><effort start="2004-01-01 10:00:00.123000"><description>%s</description></effort></task></tasks>'%description)
@@ -164,7 +180,7 @@ class XMLReaderTest(XMLReaderTestCase):
 
     def testMultipleCategories(self):
         tasks = self.writeAndRead('<tasks><task><category>test</category><category>another</category><category>yetanother</category></task></tasks>')
-        self.assertEqual(sets.Set(['test', 'another', 'yetanother']), tasks[0].categories())
+        self.assertEqual(set(['test', 'another', 'yetanother']), tasks[0].categories())
         
     def testPriority(self):
         tasks = self.writeAndRead('<tasks><task priority="5"/></tasks>')        

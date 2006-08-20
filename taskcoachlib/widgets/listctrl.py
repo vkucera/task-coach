@@ -38,6 +38,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
     def bindEventHandlers(self, selectCommand, editCommand):
         if selectCommand:
             self.selectCommand = selectCommand
+            self.Bind(wx.EVT_LIST_ITEM_FOCUSED, self.onSelect)
             self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelect)
             self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onSelect)
         if editCommand:

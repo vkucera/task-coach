@@ -4,7 +4,7 @@ ComboTreeBox provides a ComboBox that pops up a tree instead of a list.
 ComboTreeBox tries to provide the same interface as ComboBox as much as
 possible. However, whereas the ComboBox widget uses indices to access 
 items in the list of choices, ComboTreeBox uses TreeItemId's instead. If
-you append an item to the ComboTreeBox (using Append or Insert), the 
+you add an item to the ComboTreeBox (using Append or Insert), the 
 TreeItemId associated with the added item is returned. You can then use
 that TreeItemId to add items as children of that first item. For
 example:
@@ -19,7 +19,7 @@ You can also add client data to each of the items like this:
 >>> item1a = combo.Append('Item 1a', parent=item1, 
 ...                       clientData=someOtherPythonObject)
 
-And fetch it like this:
+And later fetch the client data like this:
 >>> somePythonObject = combo.GetClientData(item1)
 
 To get the client data of the currently selected item (if any):
@@ -37,8 +37,8 @@ workaround.
 Author: Frank Niessink <frank@niessink.com>
 Copyright 2006, Frank Niessink
 License: wxWidgets license
-Version: 0.7
-Date: June 5, 2006
+Version: 0.8 (unreleased)
+Date: August 18, 2006
 '''
 
 import wx
@@ -418,6 +418,42 @@ class BaseComboTreeBox(object):
         '''
         return self._popupFrame.GetTree()
 
+    def FindClientData(self, clientData, parent=None):
+        ''' 
+        FindClientData(self, PyObject clientData, TreeItemId parent=None) 
+            -> TreeItemId
+        
+        Finds the *first* item in the tree with client data equal to the
+        given clientData. If no such item exists, an invalid item is
+        returned. 
+        '''
+        parent = parent or self._tree.GetRootItem()
+        child, cookie = self._tree.GetFirstChild(parent)
+        while child:
+            if self.GetClientData(child) == clientData:
+                return child
+            else:
+                result = self.FindClientData(clientData, child)
+                if result:
+                    return result
+            child, cookie = self._tree.GetNextChild(parent, cookie)
+        return child
+
+    def SetClientDataSelection(self, clientData):
+        '''
+        SetClientDataSelection(self, PyObject clientData) -> bool
+
+        Selects the item with the provided clientData in the control. 
+        Returns True if the item belonging to the clientData has been 
+        selected, False if it wasn't found in the control.
+        '''
+        item = self.FindClientData(clientData)
+        if item:
+            self._tree.SelectItem(item)
+            return True
+        else:
+            return False
+
     # The following methods are all part of the ComboBox API (actually
     # the ControlWithItems API) and have been adapted to take TreeItemIds 
     # as parameter and return TreeItemIds, rather than indices.
@@ -622,7 +658,9 @@ class BaseComboTreeBox(object):
         in the combobox choices list, otherwise the call to SetValue()
         is ignored.
         '''
-        item = self.FindString(value)
+        item = self._tree.GetSelection()
+        if not item or self._tree.GetItemText(item) != value:
+            item = self.FindString(value)
         if self._readOnly and not item:
             return
         if self._text == self:
@@ -695,7 +733,7 @@ class MSWComboTreeBox(NativeComboTreeBox):
 
     def SetValue(self, value):
         ''' Extend SetValue to also select the text in the
-            ComboTreeBox's test field. '''
+            ComboTreeBox's text field. '''
         super(MSWComboTreeBox, self).SetValue(value)
         # We select the text in the ComboTreeBox's text field.
         # There is a slight complication, however. When the control is 

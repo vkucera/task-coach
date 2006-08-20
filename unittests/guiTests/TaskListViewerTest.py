@@ -33,6 +33,13 @@ class CommonTests:
         self.settings.set('view', 'sortby', 'subject')
         self.assertNotEqual(-1, self.viewer.GetColumn(0).GetImage())
         self.assertEqual(-1, self.viewer.GetColumn(1).GetImage())
+        
+    def testColorWhenTaskIsCompleted(self):
+        self.taskList.append(self.task)
+        self.task.setCompletionDate()
+        newColor = gui.color.taskColor(self.task, self.settings)
+        self.newColor = newColor.Red(), newColor.Green(), newColor.Blue()
+        self.assertColor()
 
     def testTurnOnHourlyFeeColumn(self):
         self.settings.set('view', 'hourlyfee', 'True')
@@ -92,7 +99,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
 
     def testRemoveTask(self):
         self.taskList.append(self.task)
-        del self.taskList[0]
+        self.taskList.remove(self.task)
         self.assertItems()
 
     def testCurrent(self):

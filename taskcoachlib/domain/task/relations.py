@@ -4,6 +4,7 @@ instead alters objects based on their relations. For example, if a task is
 marked completed, the RelationshipManager will mark all children completed. '''
 
 import domain.date as date
+import patterns
 
 class TaskRelationshipManager(object):
     def __init__(self, *args, **kwargs):
@@ -14,21 +15,8 @@ class TaskRelationshipManager(object):
             self.onCompletionDate, self.onAddChild, self.onRemoveChild)
         self.eventTypes = ('task.startDate', 'task.dueDate', 
             'task.completionDate', 'task.child.add', 'task.child.remove')
-        taskList.registerObserver(self.onAddItems, 'list.add')    
-        taskList.registerObserver(self.onRemoveItems, 'list.remove')    
-        self.registerForTaskChanges(taskList)
-
-    def onAddItems(self, event):
-        self.registerForTaskChanges(event.values())
-
-    def registerForTaskChanges(self, tasks):
         for handler, eventType in zip(self.handlers, self.eventTypes):
-            for task in tasks:
-                task.registerObserver(handler, eventType)
-
-    def onRemoveItems(self, event):
-        for task in event.values():
-            task.removeObservers(*self.handlers)
+            patterns.Publisher().registerObserver(handler, eventType=eventType)        
 
     def onStartDate(self, event):
         task = event.source()

@@ -1,11 +1,13 @@
 import widgets
-from gui import render
+from gui import render, viewercontainer, viewerfactory
 import widgets.draganddrop as draganddrop
 import wx, datetime
 import wx.lib.masked as masked
 from i18n import _
 import domain.date as date
+import domain.task as task
 import thirdparty.desktop as desktop
+
 
 
 class DateEntry(widgets.PanelWithBoxSizer):
@@ -216,17 +218,16 @@ class BudgetPage(TaskEditorPage):
 
 
 class EffortPage(TaskEditorPage):        
-    def __init__(self, parent, task, taskList, settings, uiCommands, 
+    def __init__(self, parent, theTask, taskList, settings, uiCommands, 
                  *args, **kwargs):
-        super(EffortPage, self).__init__(parent, task, *args, **kwargs)
-        from gui import viewercontainer, viewerfactory
-        import domain.effort as effort
-        viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 
+        super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
+        self._viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 
             'effortviewerineditor')
-        myEffortList = effort.SingleTaskEffortList(task)
-        viewerfactory._addEffortViewers(viewerContainer, taskList, 
+        singleTaskList = task.SingleTaskList()
+        viewerfactory._addEffortViewers(self._viewerContainer, singleTaskList, 
             uiCommands, settings)
-        self.add(viewerContainer, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
+        self.add(self._viewerContainer, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
+        singleTaskList.append(theTask)
         self.fit()
 
 
@@ -445,7 +446,7 @@ class EffortEditBook(widgets.BookPage):
 
         for task in self._taskList.rootTasks():
             addTaskRecursively(task)
-        self._taskEntry.SetStringSelection(self._effort.task().subject())
+        self._taskEntry.SetClientDataSelection(self._effort.task())
         self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])
 
     def addStartAndStopEntries(self):

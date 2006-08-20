@@ -55,6 +55,7 @@ class TaskSorterSettingsTest(test.TestCase):
         self.taskList.extend([self.task1, self.task2])
 
     def tearDown(self):
+        super(TaskSorterSettingsTest, self).tearDown()
         task.sorter.SortOrderReverser.deleteInstance()
         
     def testSortDueDate(self):
@@ -165,6 +166,27 @@ class TaskSorterSettingsTest(test.TestCase):
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
         self.assertEqual([self.task1, self.task2], list(self.sorter))
 
+    def testAlwaysKeepSubscriptionToCompletionDate(self):
+        ''' TaskSorter should keep a subscription to task.completionDate 
+            even when the completion date is not the sort key, because sorting
+            on task status (active, completed, etc.) depends on the completion
+            date. '''
+        self.settings.set('view', 'sortby', 'completionDate')
+        self.settings.set('view', 'sortby', 'subject')
+        self.task1.setCompletionDate()
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+
+    def testAlwaysKeepSubscriptionToStartDate(self):
+        ''' TaskSorter should keep a subscription to task.startDate 
+            even when the start date is not the sort key, because sorting
+            on task status (active, completed, etc.) depends on the start
+            date. '''
+        self.settings.set('view', 'sortby', 'startDate')
+        self.settings.set('view', 'sortby', 'subject')
+        self.task1.setStartDate(date.Tomorrow())
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
+
 class TaskSorterTreeModeTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
@@ -199,32 +221,29 @@ class EffortSorterTest(test.TestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.sorter = effort.EffortSorter(self.effortList)
         self.task = task.Task()
-        self.task.addEffort(effort.Effort(self.task,
-            date.DateTime(2004,1,1), date.DateTime(2004,1,2)))
-        self.task.addEffort(effort.Effort(self.task,
-            date.DateTime(2004,2,1), date.DateTime(2004,2,2)))
+        self.oldestEffort = effort.Effort(self.task,
+            date.DateTime(2004,1,1), date.DateTime(2004,1,2))
+        self.newestEffort = effort.Effort(self.task,
+            date.DateTime(2004,2,1), date.DateTime(2004,2,2))
+        self.task.addEffort(self.oldestEffort)
+        self.task.addEffort(self.newestEffort)
         self.taskList.append(self.task)
 
     def testDescending(self):
-        self.assertEqual(2, len(self.sorter))
-        self.assertEqual(self.effortList[0], self.sorter[1])
-        self.assertEqual(self.effortList[1], self.sorter[0])
+        self.assertEqual([self.newestEffort, self.oldestEffort], self.sorter)
 
     def testResort(self):
-        self.effortList[0].setStart(date.DateTime(2004,3,1))
-        self.assertEqual(self.effortList[0], self.sorter[0])
-        self.assertEqual(self.effortList[1], self.sorter[1])
+        self.oldestEffort.setStart(date.DateTime(2004,3,1))
+        self.assertEqual([self.oldestEffort, self.newestEffort], self.sorter)
 
     def testCreateWhenEffortListIsFilled(self):
         sorter = effort.EffortSorter(self.effortList)
-        self.assertEqual(2, len(sorter))
-        self.assertEqual(self.effortList[0], self.sorter[1])
-        self.assertEqual(self.effortList[1], self.sorter[0])
+        self.assertEqual([self.newestEffort, self.oldestEffort], self.sorter)
 
     def testAddEffort(self):
-        self.task.addEffort(effort.Effort(self.task,
-            date.DateTime(2005,1,1), date.DateTime(2005,1,2)))
-        self.assertEqual(self.effortList[0], self.sorter[2])
-        self.assertEqual(self.effortList[1], self.sorter[1])
-        self.assertEqual(self.effortList[2], self.sorter[0])
+        evenNewerEffort = effort.Effort(self.task,
+            date.DateTime(2005,1,1), date.DateTime(2005,1,2))
+        self.task.addEffort(evenNewerEffort)
+        self.assertEqual([evenNewerEffort, self.newestEffort, 
+            self.oldestEffort], self.sorter)
 

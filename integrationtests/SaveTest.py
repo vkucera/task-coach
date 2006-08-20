@@ -15,6 +15,7 @@ class SaveTest(test.TestCase):
         for filename in [self.filename, self.filename2]:
             if os.path.isfile(filename):
                 os.remove(filename)
+        super(SaveTest, self).tearDown()
 
     def testSave(self):
         self.mockApp.io.save()

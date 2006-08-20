@@ -14,3 +14,6 @@ class Singleton(type):
             they can start with a clean slate. '''
         del class_.instance
 
+    def hasInstance(class_):
+        ''' Has the (only) instance created already? '''
+        return hasattr(class_, 'instance')

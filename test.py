@@ -10,7 +10,10 @@ if taskcoach.libpath not in sys.path:
     
 
 class TestCase(unittest.TestCase):
-    pass
+    def tearDown(self):
+        import patterns
+        patterns.Publisher().clear()
+        
 
 class wxTestCase(TestCase):
     app = wx.App(0)
@@ -65,6 +68,9 @@ class AllTests(unittest.TestSuite):
         self.loadAllTests(testFiles or [])
 
     def filenameToModuleName(self, filename):
+        if filename == os.path.abspath(filename):
+            # Strip current working directory to get the relative path:
+            filename = filename[len(os.getcwd() + os.sep):]
         module = filename.replace(os.sep, '.')
         module = module.replace('/', '.')  
         return module[:-3] # strip '.py'
@@ -137,7 +143,7 @@ class TestOptionParser(config.OptionParser):
     def profileOptionGroup(self):
         profile = config.OptionGroup(self, 'profile options', 
             'Options to profile the tests to see what test code or production '
-            'code is taking the most time. Each of these options imply '
+            'code is taking the most time. Each of these options implies '
             '--no-commit.')
         profile.add_option('-p', '--profile', default=False, 
             action='store_true', help='profile the running of all the tests')
@@ -150,7 +156,11 @@ class TestOptionParser(config.OptionParser):
             "Possible sort keys are: 'calls', 'cumulative' [default], "
             "'file', 'line', 'module', 'name', 'nfl', 'pcalls', 'stdname', "
             "and 'time'. This option may be repeated")
-        profile.add_option('-l', '--limit', dest='profile_limit', default=25, 
+        profile.add_option('--callers', dest='profile_callers',
+            default=False, action='store_true', help='print callers')
+        profile.add_option('--callees', dest='profile_callees',
+            default=False, action='store_true', help='print callees')
+        profile.add_option('-l', '--limit', dest='profile_limit', default=50, 
             type="int", help="limit the number of calls to show in the "
             "profile reports [%default]")
         profile.add_option('--regex', dest='profile_regex',
@@ -213,7 +223,10 @@ class TestProfiler:
             stats.sort_stats(sortKey)
             stats.print_stats(self._options.profile_regex, 
                 self._options.profile_limit)
-        #stats.print_callers()
+        if self._options.profile_callers:
+            stats.print_callers()
+        if self._options.profile_callees:
+            stats.print_callees()
 
     def run(self, command, *args, **kwargs):
         if self._options.profile_report_only or self.profile(command, *args, **kwargs):

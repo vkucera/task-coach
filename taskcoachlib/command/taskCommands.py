@@ -1,5 +1,4 @@
 import base
-import sets
 from i18n import _
 import domain.task as task
 import domain.effort as effort
@@ -136,7 +135,7 @@ class EditTaskCommand(base.BaseCommand, SaveTaskStateMixin):
         # FIXME: EditTaskCommand doesn't need to get the tasklist as first argument
         
     def getTasksToSave(self):
-        return sets.Set([relative for task in self.items for relative in task.family()])
+        return set([relative for task in self.items for relative in task.family()])
 
     def do_command(self):
         super(EditTaskCommand, self).do_command()

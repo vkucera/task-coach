@@ -1,4 +1,4 @@
-import test
+import test, patterns
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
@@ -7,8 +7,10 @@ class EffortAggregatorTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.effortPerPeriod = self.createEffortPerPeriod()
-        self.effortPerPeriod.registerObserver(self.onEvent, 'list.add',
-            'list.remove')
+        patterns.Publisher().registerObserver(self.onEvent, 
+            eventType=self.effortPerPeriod.addItemEventType())
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=self.effortPerPeriod.removeItemEventType())
         self.task1 = task.Task(subject='task 1')
         self.task2 = task.Task(subject='task 2')
         self.task3 = task.Task(subject='child')
@@ -29,36 +31,50 @@ class EffortAggregatorTestCase(test.TestCase):
             date.DateTime(2004,1,1,14,0,0), date.DateTime(2004,1,1,15,0,0))
         self.events = []
 
+    def tearDown(self):
+        patterns.Publisher().clear()
+
     def onEvent(self, event):
         self.events.append(event)
 
-        
+                
 class CommonTests(object):
     def testEmptyTaskList(self):
         self.assertEqual(0, len(self.effortPerPeriod))
         
-    def testOneTaskWithoutEffort(self):
+    def testAddTaskWithoutEffort(self):
         self.taskList.append(self.task1)
         self.assertEqual(0, len(self.effortPerPeriod))
         
-    def testOneTaskWithOneEffort(self):
+    def testAddTaskWithEffort(self):
+        self.task1.addEffort(self.effort1period1a)
+        self.taskList.append(self.task1)
+        self.assertEqual(1, len(self.effortPerPeriod))
+
+    def testAddEffort(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(effort.Effort(self.task1))
         self.assertEqual(1, len(self.effortPerPeriod))
         
-    def testOneTaskWithTwoEffortsOneSameDay(self):
+    def testAddTwoEffortsOnSameDay(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.task1.addEffort(self.effort1period1b)
         self.assertEqual(1, len(self.effortPerPeriod))
+
+    def testAddTaskWithTwoEffortsOnSameDay(self):
+        self.task1.addEffort(self.effort1period1a)
+        self.task1.addEffort(self.effort1period1b)
+        self.taskList.append(self.task1)
+        self.assertEqual(1, len(self.effortPerPeriod))
         
-    def testOneTaskWithTwoEffortsInDifferentPeriods(self):
+    def testAddTwoEffortsInDifferentPeriods(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.task1.addEffort(self.effort1period2)
         self.assertEqual(2, len(self.effortPerPeriod))
 
-    def testTwoTasksWithEffortOnTheSameDay(self):
+    def testAddTwoEffortsOnTheSameDayToTwoDifferentTasks(self):
         self.taskList.extend([self.task1, self.task2])
         self.task1.addEffort(self.effort1period1a)
         self.task2.addEffort(self.effort2period1a)
@@ -70,6 +86,29 @@ class CommonTests(object):
         self.task2.addEffort(self.effort2period1a)
         self.assertEqual(2, len(self.effortPerPeriod))
 
+    def testAddChildWithEffort(self):
+        self.taskList.extend([self.task1, self.task2])
+        self.task2.addEffort(self.effort2period1a)
+        self.task1.addChild(self.task2)
+        self.assertEqual(2, len(self.effortPerPeriod))
+
+    def testAddParentAndChildWithEffortToTaskList(self):
+        self.task3.addEffort(self.effort3period1a)
+        self.taskList.append(self.task1)
+        self.assertEqual(2, len(self.effortPerPeriod))
+
+    def testAddEffortToGrandChild(self):
+        self.taskList.extend([self.task1, self.task2])
+        self.task3.addChild(self.task2)
+        self.task2.addEffort(self.effort2period1a)
+        self.assertEqual(3, len(self.effortPerPeriod))
+
+    def testAddGrandChildWithEffort(self):
+        self.taskList.extend([self.task1, self.task2])
+        self.task2.addEffort(self.effort2period1a)
+        self.task3.addChild(self.task2)
+        self.assertEqual(3, len(self.effortPerPeriod))
+
     def testRemoveChildWithEffortFromParent(self):
         self.taskList.extend([self.task1, self.task2])
         self.task1.addChild(self.task2)
@@ -77,12 +116,6 @@ class CommonTests(object):
         self.task2.setParent(None)
         self.task1.removeChild(self.task2)
         self.assertEqual(1, len(self.effortPerPeriod))
-
-    def testAddChildWithEffort(self):
-        self.taskList.extend([self.task1, self.task2])
-        self.task2.addEffort(self.effort2period1a)
-        self.task1.addChild(self.task2)
-        self.assertEqual(2, len(self.effortPerPeriod))
 
     def testRemoveEffort(self):
         self.taskList.append(self.task1)
@@ -125,6 +158,13 @@ class CommonTests(object):
         self.taskList.removeItems([self.task1, self.task3])
         self.assertEqual(0, len(self.effortPerPeriod))
 
+    def testRemoveTasksWithOverlappingEffort(self):
+        self.taskList.extend([self.task1, self.task3])
+        self.task3.addEffort(self.effort3period1a)
+        self.task1.addEffort(self.effort1period1a)
+        self.taskList.removeItems([self.task1, self.task3])
+        self.assertEqual(0, len(self.effortPerPeriod))
+
     def testRemoveAllTasks(self):
         self.taskList.extend([self.task1, self.task2, self.task3])
         self.task3.addEffort(self.effort3period1a)
@@ -141,8 +181,7 @@ class CommonTests(object):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.effort1period1a.setStart(date.DateTime.now())
-        self.assertEqual(self.startOfPeriod(),
-            self.effortPerPeriod[0].getStart())
+        self.assertEqual(1, len(self.effortPerPeriod))
 
     def testChangeStartOfOneOfTwoEfforts(self):
         self.taskList.append(self.task1)
@@ -151,12 +190,20 @@ class CommonTests(object):
         self.effort1period1a.setStart(date.DateTime.now())
         self.assertEqual(2, len(self.effortPerPeriod))
 
+    def testChangeStart_WithinPeriod(self):
+        self.taskList.append(self.task1)
+        self.task1.addEffort(self.effort1period1a)
+        self.effort1period1a.setStart(self.effort1period1a.getStart() + \
+            date.TimeDelta(seconds=1))
+        self.assertEqual(1, len(self.effortPerPeriod))
+
     def testChangeStopDoesNotAffectPeriod(self):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
-        start = self.effortPerPeriod[0].getStart()
+        composite = list(self.effortPerPeriod)[0]
+        start = composite.getStart()
         self.effort1period1a.setStop(date.DateTime.now())
-        self.assertEqual(start, self.effortPerPeriod[0].getStart())
+        self.assertEqual(start, composite.getStart())
 
     def testChangeStartOfOneOfTwoEffortsToOneYearLater(self):
         self.taskList.append(self.task1)
@@ -169,7 +216,7 @@ class CommonTests(object):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.assertEqual(1, len(self.events))
-        self.assertEqual(self.effortPerPeriod[0], self.events[0].value())
+        self.assertEqual(list(self.effortPerPeriod)[0], self.events[0].value())
 
     def testNotification_Remove(self):
         self.taskList.append(self.task1)
@@ -193,14 +240,14 @@ class CommonTests(object):
         self.task1.addEffort(self.effort1period1a)
         self.effort1period1a.setTask(self.task2)
         self.assertEqual(1, len(self.effortPerPeriod))
-        self.assertEqual(self.task2, self.effortPerPeriod[0].task())
+        self.assertEqual(self.task2, list(self.effortPerPeriod)[0].task())
 
     def testChangeTaskOfChildEffort(self):
         self.taskList.extend([self.task1, self.task2])
         self.task3.addEffort(self.effort3period1a)
         self.effort3period1a.setTask(self.task2)
         self.assertEqual(1, len(self.effortPerPeriod))
-        self.assertEqual(self.task2, self.effortPerPeriod[0].task())
+        self.assertEqual(self.task2, list(self.effortPerPeriod)[0].task())
 
     def testRemoveTaskAfterChangeTaskOfEffort(self):
         self.taskList.extend([self.task1, self.task2])
@@ -208,7 +255,7 @@ class CommonTests(object):
         self.effort1period1a.setTask(self.task2)
         self.taskList.remove(self.task1)
         self.assertEqual(1, len(self.effortPerPeriod))
-        self.assertEqual(self.task2, self.effortPerPeriod[0].task())
+        self.assertEqual(self.task2, list(self.effortPerPeriod)[0].task())
 
     def testRemoveAndAddEffortToSamePeriod(self):
         self.taskList.append(self.task1)
@@ -216,7 +263,7 @@ class CommonTests(object):
         self.task1.removeEffort(self.effort1period1a)
         self.task1.addEffort(self.effort1period1a)
         self.assertEqual(1, len(self.effortPerPeriod))
-        self.assertEqual(self.effort1period1a, self.effortPerPeriod[0][0])
+        self.assertEqual(self.effort1period1a, list(self.effortPerPeriod)[0][0])
 
     def testMaxDateTime(self):
         self.assertEqual(None, self.effortPerPeriod.maxDateTime())

@@ -1,7 +1,7 @@
 import patterns, wx, time
 import dateandtime
 
-class Clock(patterns.Observable):
+class Clock(object):
     __metaclass__ = patterns.Singleton
     
     def __init__(self, *args, **kwargs):
@@ -11,7 +11,8 @@ class Clock(patterns.Observable):
         millisecondsToNextWholeSecond = 1000-(now()%1)*1000
         if millisecondsToNextWholeSecond < 1:
             millisecondsToNextWholeSecond += 1000
-        self._timer.Start(milliseconds=millisecondsToNextWholeSecond, oneShot=True)
+        self._timer.Start(milliseconds=millisecondsToNextWholeSecond, 
+                          oneShot=True)
         
     def startTheClock(self, *args, **kwargs):
         self.notify()
@@ -19,26 +20,29 @@ class Clock(patterns.Observable):
         self._clock.Start(milliseconds=1000, oneShot=False)
         
     def notify(self, now=None, *args, **kwargs):
-        self.notifyObservers(patterns.Event(self, 'clock.second'))
         now = now or dateandtime.DateTime.now()
-        now = now.replace(microsecond=0)
-        self.notifyObservers(patterns.Event(self, now))
-   
-    def registerObserver(self, callback, time):
-        if time != 'clock.second':
-            time = time.replace(microsecond=0)
-        super(Clock, self).registerObserver(callback, time)
-        
-        
+        for eventType in 'clock.second', Clock.eventType(now):
+            patterns.Publisher().notifyObservers(patterns.Event(self,
+                eventType, now))
+       
+    @staticmethod    
+    def eventType(dateTime):
+        return 'clock.%s'%dateTime.strftime('%Y%m%d-%H%M%S')
+
+
 class ClockObserver(object):    
     def startClock(self):
-        Clock().registerObserver(self.onEverySecond, 'clock.second')
+        self.__clock = Clock() # make sure the clock is instantiated at least once
+        patterns.Publisher().registerObserver(self.onEverySecond,
+                                              eventType='clock.second')
         
     def stopClock(self):
-        Clock().removeObserver(self.onEverySecond)
+        patterns.Publisher().removeObserver(self.onEverySecond,
+                                            eventType='clock.second')
 
     def isClockStarted(self):
-        return self.onEverySecond in Clock().observers('clock.second')
+        return self.onEverySecond in \
+            patterns.Publisher().observers(eventType='clock.second')
         
     def onEverySecond(self, *args, **kwargs):
         raise NotImplementedError

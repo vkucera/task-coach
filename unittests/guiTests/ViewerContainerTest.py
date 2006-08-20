@@ -5,8 +5,9 @@ import domain.effort as effort
 
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
-        self.taskList = task.TaskList()
         self.settings = config.Settings(load=False)
+        self.taskList = task.sorter.Sorter(task.TaskList(), 
+            settings=self.settings)
         self.container = gui.viewercontainer.ViewerNotebook(self.frame, 
             self.settings, 'mainviewer')
         self.container.addViewer(dummy.ViewerWithDummyWidget(self.container,

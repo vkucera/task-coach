@@ -1,5 +1,6 @@
 import wx
 import wx.lib.foldpanelbar as foldpanelbar
+import wx.lib.scrolledpanel as scrolledpanel
 
 class FoldPanelBar(foldpanelbar.FoldPanelBar):
     def SetFocus(self):

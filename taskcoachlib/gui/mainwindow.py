@@ -40,12 +40,11 @@ class WindowWithPersistentDimensions(wx.Frame):
 
         
 class MainWindow(WindowWithPersistentDimensions):
-    def __init__(self, iocontroller, taskFile, filteredTaskList,
-            effortList, settings, splash=None, *args, **kwargs):
+    def __init__(self, iocontroller, taskFile, effortList, settings, 
+                 splash=None, *args, **kwargs):
         super(MainWindow, self).__init__(settings, *args, **kwargs)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
-        self.filteredTaskList = filteredTaskList
         self.settings = settings
         self.effortList = effortList
         self.Bind(wx.EVT_CLOSE, self.onClose)
@@ -66,14 +65,13 @@ class MainWindow(WindowWithPersistentDimensions):
         self.createFilterSideBar()
         self.initLayout()
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
-            self.viewer, self.settings, self.filteredTaskList, self.effortList)
-        viewerfactory.addTaskViewers(self.viewer, self.filteredTaskList, 
+            self.viewer, self.settings, self.taskFile, self.effortList)
+        viewerfactory.addTaskViewers(self.viewer, self.taskFile, 
             self.uiCommands, self.settings)
-        viewerfactory.addEffortViewers(self.viewer, self.filteredTaskList, 
+        viewerfactory.addEffortViewers(self.viewer, self.taskFile, 
             self.uiCommands, self.settings, 'effortviewer')
         import status
-        self.SetStatusBar(status.StatusBar(self, self.taskFile,
-                          self.filteredTaskList, self.viewer))
+        self.SetStatusBar(status.StatusBar(self, self.viewer))
         import menu
         self.SetMenuBar(menu.MainMenu(self, self.uiCommands, self.settings))
         self.createTaskBarIcon(self.uiCommands)
@@ -101,18 +99,18 @@ class MainWindow(WindowWithPersistentDimensions):
         panel = self.filterSideBarFoldPanel.AddFoldPanel( \
             _("Filter by category"), collapsed=False, foldIcons=images)
         categoriesPanel = filter.CategoriesFilterPanel(panel, 
-            self.filteredTaskList, self.settings)
+            self.taskFile, self.settings)
         self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, categoriesPanel)
         panel = self.filterSideBarFoldPanel.AddFoldPanel( \
             _("Filter by status"), collapsed=False, foldIcons=images)
-        statusPanel = filter.StatusFilterPanel(panel, self.filteredTaskList, 
+        statusPanel = filter.StatusFilterPanel(panel, self.taskFile, 
             self.settings)
         self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, statusPanel)
         panel = self.filterSideBarFoldPanel.AddFoldPanel( \
             _("Filter by due date"), collapsed=False, foldIcons=images)
         dueDatePanel = filter.DueDateFilterPanel(panel, self.settings)
         self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, dueDatePanel)
-
+        
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
         self._sizer.Add(self.viewer, proportion=1, flag=wx.EXPAND)
@@ -120,8 +118,7 @@ class MainWindow(WindowWithPersistentDimensions):
 
     def initWindow(self):
         wx.GetApp().SetTopWindow(self)
-        self.SetTitle(patterns.Event(self, 'taskfile.filenameChanged',
-            self.taskFile.filename()))
+        self.setTitle(self.taskFile.filename())
         self.setIcon()
         self.displayMessage(_('Welcome to %(name)s version %(version)s')% \
             {'name': meta.name, 'version': meta.version}, pane=1)
@@ -142,14 +139,14 @@ class MainWindow(WindowWithPersistentDimensions):
         wx.CallAfter(self.onShowStatusBar) 
                 
     def registerForWindowComponentChanges(self):
-        self.taskFile.registerObserver(self.SetTitle, 
-            'taskfile.filenameChanged')
-        self.settings.registerObserver(self.onShowStatusBar, 
-            'view.statusbar')
-        self.settings.registerObserver(self.onShowToolBar, 
-            'view.toolbar')
-        self.settings.registerObserver(self.onShowFilterSideBar,
-            'view.filtersidebar')
+        patterns.Publisher().registerObserver(self.onFilenameChanged, 
+            eventType='taskfile.filenameChanged')
+        patterns.Publisher().registerObserver(self.onShowStatusBar, 
+            eventType='view.statusbar')
+        patterns.Publisher().registerObserver(self.onShowToolBar, 
+            eventType='view.toolbar')
+        patterns.Publisher().registerObserver(self.onShowFilterSideBar,
+            eventType='view.filtersidebar')
 
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
@@ -197,22 +194,25 @@ class MainWindow(WindowWithPersistentDimensions):
             return True
         except:
             return False
+        
+    def onFilenameChanged(self, event):
+        self.setTitle(event.value())
 
-    def SetTitle(self, event, *args, **kwargs):
+    def setTitle(self, filename):
         title = meta.name
-        if event.value():
-            title += ' - %s'%event.value()
-        super(MainWindow, self).SetTitle(title)    
-
+        if filename:
+            title += ' - %s'%filename
+        self.SetTitle(title)
+        
     def displayMessage(self, message, pane=0):
         self.GetStatusBar().SetStatusText(message, pane)
 
     def quit(self):
         if not self.iocontroller.close():
             return 
-        # FIXME: I'm not sure unicode strings will work in the TaskCoach.ini
-        # file, so just to be sure we'll clear a possible search string:
+        # Clear task file specific settings (FIXME: save these in the task file)
         self.settings.set('view', 'tasksearchfilterstring', '') 
+        self.settings.setlist('view', 'taskcategoryfilterlist', [])
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()

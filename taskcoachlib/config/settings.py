@@ -12,12 +12,12 @@ class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
         return value.decode('utf-8')
     
 
-class Settings(patterns.Observable, UnicodeAwareConfigParser):
+class Settings(object, UnicodeAwareConfigParser):
     def __init__(self, load=True, *args, **kwargs):
-        # sigh, SafeConfigParser is not cooperative, so we have to call
-        # the superclasses explicitly:
+        # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we 
+        # have to call the superclass __init__ explicitly:
         super(Settings, self).__init__(*args, **kwargs)
-        ConfigParser.SafeConfigParser.__init__(self, *args, **kwargs) 
+        UnicodeAwareConfigParser.__init__(self, *args, **kwargs) 
         self.setDefaults()
         self.__loadAndSave = load
         if load:
@@ -35,7 +35,8 @@ class Settings(patterns.Observable, UnicodeAwareConfigParser):
         for section, settings in defaults.defaults.items():
             self.add_section(section)
             for key, value in settings.items():
-                self.set(section, key, value)
+                # Don't notify observers while we are initializing
+                super(Settings, self).set(section, key, value)
 
     def __beQuiet(self):
         noisySettings = [('window', 'splash'), ('window', 'tips')]
@@ -44,9 +45,15 @@ class Settings(patterns.Observable, UnicodeAwareConfigParser):
                 
     def set(self, section, option, value):
         super(Settings, self).set(section, option, value)
-        self.notifyObservers(patterns.Event(self, 
+        patterns.Publisher().notifyObservers(patterns.Event(self, 
             '%s.%s'%(section, option), value))
 
+    def getlist(self, section, option):
+        return eval(self.get(section, option))
+    
+    def setlist(self, section, option, value):
+        self.set(section, option, str(value))
+        
     def save(self):
         if not self.__loadAndSave:
             return

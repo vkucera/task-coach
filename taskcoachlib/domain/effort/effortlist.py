@@ -9,10 +9,17 @@ class MaxDateTimeMixin:
             return None
     
                         
-class EffortList(patterns.ListDecorator, MaxDateTimeMixin):
+class EffortList(patterns.SetDecorator, MaxDateTimeMixin):
     ''' EffortList observes a TaskList and contains all effort records of
         all tasks in the underlying TaskList. '''
 
+    def  __init__(self, *args, **kwargs):
+        super(EffortList, self).__init__(*args, **kwargs)
+        patterns.Publisher().registerObserver(self.onAddEffortToTask, 
+            eventType='task.effort.add')
+        patterns.Publisher().registerObserver(self.onRemoveEffortFromTask,
+            eventType='task.effort.remove')
+    
     def extendSelf(self, tasks):
         ''' This method is called when a task is added to the observed list.
             It overrides ObservableListObserver.extendSelf whose default 
@@ -22,9 +29,6 @@ class EffortList(patterns.ListDecorator, MaxDateTimeMixin):
         effortsToAdd = []
         for task in tasks:
             effortsToAdd.extend(task.efforts())
-            task.registerObserver(self.onAddEffortToTask, 'task.effort.add')
-            task.registerObserver(self.onRemoveEffortFromTask,
-                'task.effort.remove')
         super(EffortList, self).extendSelf(effortsToAdd)
         
     def removeItemsFromSelf(self, tasks):
@@ -37,17 +41,17 @@ class EffortList(patterns.ListDecorator, MaxDateTimeMixin):
         effortsToRemove = []
         for task in tasks:
             effortsToRemove.extend(task.efforts())
-            task.removeObservers(self.onAddEffortToTask, 
-                self.onRemoveEffortFromTask)
         super(EffortList, self).removeItemsFromSelf(effortsToRemove)
 
     def onAddEffortToTask(self, event):
-        effortsToAdd = event.values()
-        super(EffortList, self).extendSelf(effortsToAdd)
+        if event.source() in self.observable():
+            effortsToAdd = event.values()
+            super(EffortList, self).extendSelf(effortsToAdd)
         
     def onRemoveEffortFromTask(self, event):
-        effortsToRemove = event.values()
-        super(EffortList, self).removeItemsFromSelf(effortsToRemove)
+        if event.source() in self.observable():
+            effortsToRemove = event.values()
+            super(EffortList, self).removeItemsFromSelf(effortsToRemove)
 
     def originalLength(self):
         ''' Do not delegate originalLength to the underlying TaskList because
@@ -72,54 +76,3 @@ class EffortList(patterns.ListDecorator, MaxDateTimeMixin):
             hand. '''
         for effort in efforts:
             effort.task().addEffort(effort)
-
-
-class SingleTaskEffortList(patterns.ObservableList, MaxDateTimeMixin):
-    ''' SingleTaskEffortList filters an EffortList so it contains the efforts 
-        for one task (including its children). '''
-    
-    def __init__(self, task, *args, **kwargs):
-        super(SingleTaskEffortList, self).__init__(*args, **kwargs)
-        self.addTask(task)
-
-    def onAddEffortToTask(self, event):
-        effortsToAdd = event.values()
-        self.extendSelf(effortsToAdd)
-        
-    def onRemoveEffortFromTask(self, event):
-        effortsToRemove = event.values()
-        self.removeItemsFromSelf(effortsToRemove)
-
-    def onAddChild(self, event):
-        self.addTask(event.value())
-
-    def onRemoveChild(self, event):
-        childRemoved = event.value()
-        for child in [childAdded] + childAdded.allChildren():
-            child.removeObservers(self.onAddEffortToTask, 
-                self.onRemoveEffortFromTask, self.onAddChild, 
-                self.onRemoveChild)
-        self.removeItemsFromSelf(child.efforts(recursive=True))
-
-    def addTask(self, task):
-        for child in [task] + task.allChildren():
-            child.registerObserver(self.onAddEffortToTask, 'task.effort.add')
-            child.registerObserver(self.onRemoveEffortFromTask, 
-                'task.effort.remove')
-            child.registerObserver(self.onAddChild, 'task.child.add')
-            child.registerObserver(self.onRemoveChild, 'task.child.remove')
-        self.extendSelf(task.efforts(recursive=True))
-
-    def extendSelf(self, efforts):
-        super(SingleTaskEffortList, self).extend(efforts)
-
-    def removeItemsFromSelf(self, efforts):
-        super(SingleTaskEffortList, self).removeItems(efforts)
- 
-    def extend(self, efforts):
-        for effort in efforts:
-            effort.task().addEffort(effort)
-
-    def removeItems(self, efforts):
-        for effort in efforts:
-            effort.task().removeEffort(effort)
