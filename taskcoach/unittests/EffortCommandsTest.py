@@ -55,6 +55,9 @@ class EditEffortCommandTest(EffortCommandTestCase):
 
     def onEvent(self, event):
         self.events.append(event)
+        
+    def registerObserver(self, eventType):
+        patterns.Publisher().registerObserver(self.onEvent, eventType=eventType)
 
     def testEditStartDateTime(self):
         edit = command.EditEffortCommand(self.effortList, [self.effort])
@@ -77,36 +80,36 @@ class EditEffortCommandTest(EffortCommandTestCase):
             lambda: self.assertEqual(self.originalTask, self.effort.task()))
 
     def testEditTaskNotifiesOriginalTask(self):
-        self.originalTask.registerObserver(self.onEvent, 'task.effort.remove')
+        self.registerObserver('task.effort.remove')
         self.doEditEffortTask()
         self.assertEqual(self.effort, self.events[0].value())
 
     def testEditTaskNotifiesNewTask(self):
-        self.newTask.registerObserver(self.onEvent, 'task.effort.add')
+        self.registerObserver('task.effort.add')
         self.doEditEffortTask()
         self.assertEqual(self.effort, self.events[0].value())
 
     def testEditTaskUndoNotifiesOriginalTask(self):
-        self.originalTask.registerObserver(self.onEvent, 'task.effort.add')
+        self.registerObserver('task.effort.add')
         self.doEditEffortTask()
         self.undo()
         self.assertEqual(self.effort, self.events[0].value())
         
     def testEditTaskUndoNotifiesNewTask(self):
-        self.newTask.registerObserver(self.onEvent, 'task.effort.remove')
+        self.registerObserver('task.effort.remove')
         self.doEditEffortTask()
         self.undo()
         self.assertEqual(self.effort, self.events[0].value())
 
     def testEditTaskRedoNotifiesOriginalTask(self):
-        self.originalTask.registerObserver(self.onEvent, 'task.effort.remove')
+        self.registerObserver('task.effort.remove')
         self.doEditEffortTask()
         self.undo()
         self.redo()
         self.assertEqual(self.effort, self.events[1].value())
 
     def testEditTaskRedoNotifiesNewTask(self):
-        self.newTask.registerObserver(self.onEvent, 'task.effort.add')
+        self.registerObserver('task.effort.add')
         self.doEditEffortTask()
         self.undo()
         self.redo()

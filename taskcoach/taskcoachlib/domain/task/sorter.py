@@ -6,81 +6,72 @@ class SortOrderReverser(object):
         same sort key twice in a row. In other words, this class will flip the 
         sort order when a user clicks on the same column in a list view twice
         in a row. '''
+
+    # SortOrderReverser is a singleton so it can be used by multiple 
+    # (Task)Sorter's.
+    __metaclass__ = patterns.Singleton 
     
-    __metaclass__ = patterns.Singleton
-    
-    def __init__(self, *args, **kwargs):
-        self.init(kwargs.pop('settings'))
+    def __init__(self, previousSortKey, *args, **kwargs):
+        self.__previousSortKey = previousSortKey
         super(SortOrderReverser, self).__init__(*args, **kwargs)    
-    
-    def init(self, settings):
-        try:
-            self.__settings.removeObserver(self.onSortKeyChanged)
-        except AttributeError:
-            pass
-        self.__settings = settings
-        self.__settings.registerObserver(self.onSortKeyChanged, 'view.sortby')
-        self.__previousSortKey = self.__settings.get('view', 'sortby')
-        
+        patterns.Publisher().registerObserver(self.onSortKeyChanged, 
+            eventType='view.sortby')
+            
     def onSortKeyChanged(self, event):
-        if event.value() == self.__previousSortKey:
-            newSortOrder = not self.__settings.getboolean('view', 
-                'sortascending')
-            self.__settings.set('view', 'sortascending', str(newSortOrder))
+        settings, newSortKey = event.source(), event.value()
+        if newSortKey == self.__previousSortKey:
+            newSortOrder = not settings.getboolean('view', 'sortascending')
+            settings.set('view', 'sortascending', str(newSortOrder))
         else:        
-            self.__previousSortKey = event.value()
+            self.__previousSortKey = newSortKey
 
 
 class Sorter(patterns.ListDecorator):
     def __init__(self, *args, **kwargs):
         self.__settings = kwargs.pop('settings')
         self.__treeMode = kwargs.pop('treeMode', False)
-        self.__settings.registerObserver(self.onSortKeyChanged, 'view.sortby')
-        self.__settings.registerObserver(self.reset,
-            'view.sortascending', 'view.sortbystatusfirst', 
-            'view.sortcasesensitive')
         self.__previousSortKey = self.__settings.get('view', 'sortby')
-        SortOrderReverser(settings=self.__settings)
+        patterns.Publisher().registerObserver(self.onSortKeyChanged, 
+            eventType='view.sortby')
+        for eventType in ('view.sortascending', 'view.sortbystatusfirst', 
+            'view.sortcasesensitive', 'task.startDate', 'task.completionDate'):
+            patterns.Publisher().registerObserver(self.reset, 
+                                                  eventType=eventType)
+        self.__registerObserverForTaskAttribute('task.%s'%self.__previousSortKey)
+        SortOrderReverser(self.__previousSortKey)
         super(Sorter, self).__init__(*args, **kwargs)
+        
+    def sortEventType(self):
+        return '%s.sorted'%self.__class__
 
     def extendSelf(self, tasks):
         super(Sorter, self).extendSelf(tasks)
-        sortKey = self.__settings.get('view', 'sortby')
-        for task in tasks:
-            task.registerObserver(self.reset, 'task.startDate',
-                'task.completionDate', 'task.%s'%sortKey)
         self.reset()
-
-    def removeItemsFromSelf(self, tasks):
-        super(Sorter, self).removeItemsFromSelf(tasks)
-        for task in tasks:
-            task.removeObserver(self.reset)
-        # We don't need to sort, because removing tasks will not affect
-        # the order of the remaining tasks
-
+        
+    # We don't need to call self.reset when removing items because removing
+    # items does not influence the sort order.
+    
     def onSortKeyChanged(self, event):
-        sortKey = event.value()
-        if sortKey == self.__previousSortKey:
+        newSortKey, previousSortKey = event.value(), self.__previousSortKey
+        if newSortKey == previousSortKey:
             # We don't call self.reset() because the sort order will be changed
             # by the SortOrderReverser, which will trigger another event
             pass
-        else:        
-            eventTypeToRemove = 'task.%s'% self.__previousSortKey
-            eventTypeToAdd = 'task.%s'%sortKey
-            self.__previousSortKey = sortKey
-            for task in self:
-                task.removeObserver(self.reset, eventTypeToRemove)
-                task.registerObserver(self.reset, eventTypeToAdd)
+        else:
+            self.__removeObserverForTaskAttribute('task.%s'%previousSortKey)
+            self.__registerObserverForTaskAttribute('task.%s'%newSortKey)
+            self.__previousSortKey = newSortKey
             self.reset()
      
     def reset(self, event=None):
         ''' reset does the actual sorting. If the order of the list changes, 
-            observers are notified by means of the 'list.sorted' event.  '''
+            observers are notified by means of the list-sorted event. '''
         oldSelf = self[:]
         self.sort(key=self.__createSortKey(), 
             reverse=not self.__settings.getboolean('view', 'sortascending'))
         if self != oldSelf:
-            self.notifyObservers(patterns.Event(self, 'list.sorted'))
+            patterns.Publisher().notifyObservers(patterns.Event(self, 
+                self.sortEventType()))
                         
     def rootTasks(self):
         return [task for task in self if task.parent() is None]
@@ -118,4 +109,17 @@ class Sorter(patterns.ListDecorator):
         return lambda task: [prepareSortValue(getattr(task, 
             sortKeyName)(**kwargs))]
         
- 
+    def __registerObserverForTaskAttribute(self, eventType):
+        # Sorter is always observing completion date and start date because
+        # sorting by status depends on those two attributes, hence we don't
+        # need to subscribe to these two attributes when they become the sort
+        # key.
+        if eventType not in ('task.completionDate', 'task.startDate'):
+            patterns.Publisher().registerObserver(self.reset, 
+                                                  eventType=eventType)
+            
+    def __removeObserverForTaskAttribute(self, eventType):
+         # See comment at __registerObserverForTaskAttribute.
+        if eventType not in ('task.completionDate', 'task.startDate'):
+            patterns.Publisher().removeObserver(self.reset, eventType=eventType)
+         

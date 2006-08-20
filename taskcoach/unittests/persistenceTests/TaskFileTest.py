@@ -135,7 +135,7 @@ class TaskFileTest(TaskFileTestCase):
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditEffortDescription(self):
-        newEffort = effort.Effort(self.task, None, None)
+        newEffort = effort.Effort(self.task)
         self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
@@ -144,7 +144,8 @@ class TaskFileTest(TaskFileTestCase):
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditEffortStart(self):
-        newEffort = effort.Effort(self.task, None, None)
+        newEffort = effort.Effort(self.task, date.DateTime(2000,1,1),
+            date.DateTime(2000,1,2))
         self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
@@ -153,7 +154,8 @@ class TaskFileTest(TaskFileTestCase):
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterEditEffortStop(self):
-        newEffort = effort.Effort(self.task, None, None)
+        newEffort = effort.Effort(self.task, date.DateTime(2000,1,1),
+            date.DateTime(2000,1,2))
         self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
@@ -164,7 +166,7 @@ class TaskFileTest(TaskFileTestCase):
     def testNeedSave_AfterEditEffortTask(self):
         task2 = task.Task()
         self.taskFile.append(task2)
-        newEffort = effort.Effort(self.task, None, None)
+        newEffort = effort.Effort(self.task)
         self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()

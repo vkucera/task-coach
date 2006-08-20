@@ -51,7 +51,11 @@ class AutoSaverTestCase(test.TestCase):
     def setUp(self):
         self.settings = DummySettings()
         self.taskFile = DummyTaskFile()
-        self.autoSaver = persistence.AutoSaver(self.settings, self.taskFile)
+        self.autoSaver = persistence.AutoSaver(self.settings)
+        
+    def tearDown(self):
+        super(AutoSaverTestCase, self).tearDown()
+        del self.autoSaver # Make sure AutoSaver is not observing task files
         
     def testCreate(self):
         self.failIf(self.taskFile.saveCalled)
@@ -115,13 +119,16 @@ class AutoSaverBackupTestCase(test.TestCase):
     def setUp(self):
         self.settings = DummySettings()
         self.taskFile = DummyTaskFile()
-        self.autoSaver = TestableAutoSaver(self.settings, self.taskFile)
+        self.autoSaver = TestableAutoSaver(self.settings)
 
+    def tearDown(self):
+        del self.autoSaver
+        
     def testBackupFilename(self):
         now = date.DateTime(2004,1,1)
         self.taskFile.setFilename('whatever.tsk')
         self.assertEqual('whatever.tsk.20040101-000000.bak', 
-            self.autoSaver._backupFilename(lambda: now))
+            self.autoSaver._backupFilename(self.taskFile, lambda: now))
 
     def testDontCreateBackupWhenSettingFilename(self):
         self.settings.set('file', 'backup', 'True')

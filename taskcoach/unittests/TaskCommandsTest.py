@@ -15,6 +15,7 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
                                          settings=config.Settings(load=False))
         
     def tearDown(self):
+        super(CommandTestCase, self).tearDown()
         task.Clipboard().clear()
         patterns.CommandHistory().clear()
 
@@ -26,12 +27,12 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
 
     def delete(self, items=None):
         if items == 'all':
-            items = self.list[:]
+            items = list(self.list)
         command.DeleteCommand(self.list, items or []).do()
  
     def cut(self, items=None):
         if items == 'all':
-            items = self.list[:]
+            items = list(self.list)
         command.CutCommand(self.list, items or []).do()
 
     def paste(self, items=None):
@@ -106,12 +107,12 @@ class DeleteCommandWithTasksTest(CommandTestCase):
             lambda: self.assertTaskList([self.task1, self.task2]))
 
     def testDeleteEmptyList(self):
-        del self.taskList[:]
+        self.taskList.remove(self.task1)
         self.delete('all')
         self.assertDoUndoRedo(self.assertEmptyTaskList)
 
     def testDeleteEmptyList_NoCommandHistory(self):
-        del self.taskList[:]
+        self.taskList.remove(self.task1)
         self.delete('all')
         self.assertDoUndoRedo(lambda: self.assertHistoryAndFuture([], []))
 
@@ -173,11 +174,13 @@ class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
 
 class NewTaskCommandTest(CommandTestCase):
     def new(self):
-        command.NewTaskCommand(self.taskList, [task.Task()]).do()
+        newTaskCommand = command.NewTaskCommand(self.taskList)
+        newTask = newTaskCommand.items[0]
+        newTaskCommand.do()
+        return newTask
     
     def testNewTask(self):
-        self.new()
-        newTask = self.taskList[1]
+        newTask = self.new()
         self.assertDoUndoRedo(
             lambda: self.assertTaskList([self.task1, newTask]),
             lambda: self.assertTaskList(self.originalList))

@@ -168,22 +168,22 @@ class MainWindowCommand(UICommand):
         super(MainWindowCommand, self).__init__(*args, **kwargs)
 
 
-class EffortCommand(UICommand):
+class TaskListCommand(UICommand):
+    def __init__(self, *args, **kwargs):
+        self.taskList = kwargs.pop('taskList', None)
+        super(TaskListCommand, self).__init__(*args, **kwargs)
+        
+        
+class EffortListCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self.effortList = kwargs.pop('effortList', None)
-        super(EffortCommand, self).__init__(*args, **kwargs)
+        super(EffortListCommand, self).__init__(*args, **kwargs)
 
-        
+
 class ViewerCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self.viewer = kwargs.pop('viewer', None)
         super(ViewerCommand, self).__init__(*args, **kwargs)
-
-
-class FilterCommand(UICommand):
-    def __init__(self, *args, **kwargs):
-        self.filteredTaskList = kwargs.pop('filteredTaskList', None)
-        super(FilterCommand, self).__init__(*args, **kwargs)
 
 
 class UICommandsCommand(UICommand):
@@ -235,7 +235,7 @@ class NeedsSelectedEffort(NeedsSelection):
                
 class NeedsAtLeastOneTask(object):
     def enabled(self, event):
-        return len(self.filteredTaskList) > 0
+        return len(self.taskList) > 0
         
 class NeedsItems(object):
     def enabled(self, event):
@@ -565,7 +565,7 @@ class ClearSelection(NeedsSelection, ViewerCommand):
         self.viewer.clearselection()
 
 
-class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
+class ViewAllTasks(SettingsCommand, UICommandsCommand):
     def __init__(self, *args, **kwargs):
         super(ViewAllTasks, self).__init__(menuText=_('&All tasks'),
             helpText=_('Show all tasks (reset all filters)'), 
@@ -579,7 +579,7 @@ class ViewAllTasks(FilterCommand, SettingsCommand, UICommandsCommand):
             self.settings.set(uiCommand.section, uiCommand.setting, 'True')
         self.settings.set(self.section, 'tasksdue', 'Unlimited')    
         self.settings.set(self.section, 'tasksearchfilterstring', '')
-        self.filteredTaskList.removeAllCategories()
+        self.settings.setlist(self.section, 'taskcategoryfilterlist', [])
 
 
 class HideCurrentColumn(ViewerCommand):
@@ -602,7 +602,7 @@ class HideCurrentColumn(ViewerCommand):
         return self.viewer.isHideableColumn(columnIndex)
     
     
-class ViewCategories(MainWindowCommand, FilterCommand, SettingsCommand):
+class ViewCategories(MainWindowCommand, TaskListCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(ViewCategories, self).__init__( \
             menuText=_('Tasks by catego&ries...'),
@@ -611,12 +611,12 @@ class ViewCategories(MainWindowCommand, FilterCommand, SettingsCommand):
             
     def doCommand(self, event):
         editor = gui.CategoriesFilterDialog(parent=self.mainwindow,
-            title=_('View categories'), taskList=self.filteredTaskList,
+            title=_('View categories'), taskList=self.taskList,
             settings=self.settings)
         editor.Show()
 
     def enabled(self, event):
-        return self.filteredTaskList.categories() 
+        return self.taskList.categories() 
         
         
 class ViewExpandAll(ViewerCommand):
@@ -660,7 +660,7 @@ class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
         self.viewer.collapseSelectedItems()
              
         
-class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, \
+class TaskNew(MainWindowCommand, TaskListCommand, UICommandsCommand, \
               SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskNew, self).__init__(bitmap='new', 
@@ -669,9 +669,9 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, \
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
-            command.NewTaskCommand(self.filteredTaskList),
-            self.filteredTaskList, self.uiCommands, self.settings, 
-            self.filteredTaskList.categories(), bitmap=self.bitmap)
+            command.NewTaskCommand(self.taskList),
+            self.taskList, self.uiCommands, self.settings, 
+            self.taskList.categories(), bitmap=self.bitmap)
         editor.Show(show)
 
     def getMenuText(self):
@@ -688,7 +688,7 @@ class TaskNew(MainWindowCommand, FilterCommand, UICommandsCommand, \
 
 
 class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
-        FilterCommand, ViewerCommand, UICommandsCommand, SettingsCommand):
+        TaskListCommand, ViewerCommand, UICommandsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskNewSubTask, self).__init__(bitmap='new_subtask',
             menuText=self.getMenuText(),
@@ -697,10 +697,9 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
-            command.NewSubTaskCommand(self.filteredTaskList, 
-            self.viewer.curselection()), self.filteredTaskList, 
-            self.uiCommands, self.settings, self.filteredTaskList.categories(), 
-            bitmap='new')
+            command.NewSubTaskCommand(self.taskList, 
+            self.viewer.curselection()), self.taskList, self.uiCommands, 
+            self.settings, self.taskList.categories(), bitmap='new')
         editor.Show(show)
 
     def getMenuText(self):
@@ -716,7 +715,7 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         return menuText  
         
 
-class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand, 
+class TaskEdit(NeedsSelectedTasks, MainWindowCommand, TaskListCommand, 
         ViewerCommand, UICommandsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskEdit, self).__init__(bitmap='edit',
@@ -725,13 +724,13 @@ class TaskEdit(NeedsSelectedTasks, MainWindowCommand, FilterCommand,
 
     def doCommand(self, event, show=True):
         editor = gui.TaskEditor(self.mainwindow, 
-            command.EditTaskCommand(self.filteredTaskList, 
-            self.viewer.curselection()), self.filteredTaskList, 
-            self.uiCommands, self.settings, self.filteredTaskList.categories())
+            command.EditTaskCommand(self.taskList, 
+            self.viewer.curselection()), self.taskList, 
+            self.uiCommands, self.settings, self.taskList.categories())
         editor.Show(show)
 
 
-class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
+class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMarkCompleted, self).__init__(bitmap='markcompleted',
             menuText=_('&Mark completed\tCtrl+ENTER'),
@@ -739,7 +738,7 @@ class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
 
     def doCommand(self, event):
         markCompletedCommand = command.MarkCompletedCommand( \
-            self.filteredTaskList, self.viewer.curselection())
+            self.taskList, self.viewer.curselection())
         markCompletedCommand.do()
 
     def enabled(self, event):
@@ -748,25 +747,25 @@ class TaskMarkCompleted(NeedsSelectedTasks, FilterCommand, ViewerCommand):
              if not task.completed()]
 
 
-class TaskDelete(NeedsSelectedTasks, FilterCommand, ViewerCommand):
+class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskDelete, self).__init__(bitmap='delete',
             menuText=_('&Delete task\tCtrl+DEL'),
             helpText=_('Delete the selected task(s)'), *args, **kwargs)
 
     def doCommand(self, event):
-        deleteCommand = command.DeleteCommand(self.filteredTaskList, 
+        deleteCommand = command.DeleteCommand(self.taskList, 
             self.viewer.curselection())
         deleteCommand.do()
 
 
-class TaskDragAndDrop(FilterCommand, ViewerCommand):
+class TaskDragAndDrop(TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskDragAndDrop, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
         dragAndDropCommand = command.DragAndDropTaskCommand( \
-            self.filteredTaskList, self.viewer.draggedItems(), 
+            self.taskList, self.viewer.draggedItems(), 
             drop=self.viewer.curselection())
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
@@ -792,7 +791,7 @@ class TaskMail(NeedsSelectedTasks, ViewerCommand):
         desktop.open(mailToURL)
 
 
-class TaskAddAttachment(NeedsSelectedTasks, FilterCommand, ViewerCommand):
+class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskAddAttachment, self).__init__(menuText=_('&Add attachment'),
             helpText=_('Browse for files to add as attachment to the selected task(s)'),
@@ -802,13 +801,13 @@ class TaskAddAttachment(NeedsSelectedTasks, FilterCommand, ViewerCommand):
         filename = widgets.AttachmentSelector()
         if filename:
             addAttachmentCommand = command.AddAttachmentToTaskCommand( \
-                self.filteredTaskList, self.viewer.curselection(), 
+                self.taskList, self.viewer.curselection(), 
                 attachments=[filename])
             addAttachmentCommand.do()
                 
 
-class EffortNew(NeedsAtLeastOneTask, MainWindowCommand, EffortCommand,
-        ViewerCommand, UICommandsCommand, FilterCommand):
+class EffortNew(NeedsAtLeastOneTask, MainWindowCommand, EffortListCommand,
+        ViewerCommand, UICommandsCommand, TaskListCommand):
     def __init__(self, *args, **kwargs):
         super(EffortNew, self).__init__(bitmap='start',  
             menuText=_('&New effort...'), 
@@ -820,17 +819,17 @@ class EffortNew(NeedsAtLeastOneTask, MainWindowCommand, EffortCommand,
             selectedTasks = self.viewer.curselection()
         else:
             subjectDecoratedTaskList = [(render.subject(task, 
-                recursively=True), task) for task in self.filteredTaskList]
+                recursively=True), task) for task in self.taskList]
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         editor = gui.EffortEditor(self.mainwindow, 
             command.NewEffortCommand(self.effortList, selectedTasks),
-            self.uiCommands, self.effortList, self.filteredTaskList)
+            self.uiCommands, self.effortList, self.taskList)
         editor.Show()
 
 
-class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand, 
-        ViewerCommand, UICommandsCommand, FilterCommand):
+class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortListCommand, 
+        ViewerCommand, UICommandsCommand, TaskListCommand):
     def __init__(self, *args, **kwargs):
         super(EffortEdit, self).__init__(bitmap='edit',
             menuText=_('&Edit effort...'),
@@ -840,11 +839,11 @@ class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortCommand,
         editor = gui.EffortEditor(self.mainwindow,
             command.EditEffortCommand(self.effortList, 
             self.viewer.curselection()), self.uiCommands, self.effortList, 
-            self.filteredTaskList)
+            self.taskList)
         editor.Show()
 
 
-class EffortDelete(NeedsSelectedEffort, EffortCommand, ViewerCommand):
+class EffortDelete(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EffortDelete, self).__init__(bitmap='delete',
             menuText=_('&Delete effort'),
@@ -856,7 +855,7 @@ class EffortDelete(NeedsSelectedEffort, EffortCommand, ViewerCommand):
         delete.do()
 
 
-class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
+class EffortStart(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EffortStart, self).__init__(bitmap='start', 
             menuText=_('&Start tracking effort'), 
@@ -864,7 +863,7 @@ class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
             *args, **kwargs)
     
     def doCommand(self, event):
-        start = command.StartEffortCommand(self.filteredTaskList, 
+        start = command.StartEffortCommand(self.taskList, 
             self.viewer.curselection())
         start.do()
         
@@ -875,7 +874,7 @@ class EffortStart(NeedsSelectedTasks, FilterCommand, ViewerCommand):
             (task.isBeingTracked() or task.completed() or task.inactive())]
 
 
-class EffortStop(FilterCommand):
+class EffortStop(TaskListCommand):
     def __init__(self, *args, **kwargs):
         super(EffortStop, self).__init__(bitmap='stop',
             menuText=_('St&op tracking effort'),
@@ -883,11 +882,11 @@ class EffortStop(FilterCommand):
             *args, **kwargs)
 
     def doCommand(self, event):
-        stop = command.StopEffortCommand(self.filteredTaskList)
+        stop = command.StopEffortCommand(self.taskList)
         stop.do()
 
     def enabled(self, event):
-        return bool([task for task in self.filteredTaskList if \
+        return bool([task for task in self.taskList if \
                      task.isBeingTracked()])
 
 
@@ -965,7 +964,7 @@ class MainWindowRestore(MainWindowCommand):
 
 class UICommands(dict):
     def __init__(self, mainwindow, iocontroller, viewer, settings, 
-            filteredTaskList, effortList):
+            taskList, effortList):
         super(UICommands, self).__init__()
         self.__iocontroller = iocontroller
     
@@ -993,7 +992,8 @@ class UICommands(dict):
         self['copy'] = EditCopy(viewer=viewer)
         self['paste'] = EditPaste()
         self['pasteintotask'] = EditPasteIntoTask(viewer=viewer)
-        self['editpreferences'] = EditPreferences(mainwindow=mainwindow, settings=settings)
+        self['editpreferences'] = EditPreferences(mainwindow=mainwindow, 
+                                                  settings=settings)
         
         # Selection commands
         self['selectall'] = SelectAll(viewer=viewer)
@@ -1001,7 +1001,7 @@ class UICommands(dict):
         self['clearselection'] = ClearSelection(viewer=viewer)
 
         # View commands
-        self['viewalltasks'] = ViewAllTasks(filteredTaskList=filteredTaskList, settings=settings, uiCommands=self)
+        self['viewalltasks'] = ViewAllTasks(settings=settings, uiCommands=self)
         self['viewcompletedtasks'] = UICheckCommand(menuText=_('&Completed'), 
             helpText=_('Show/hide completed tasks'), setting='completedtasks',
             settings=settings)
@@ -1023,7 +1023,7 @@ class UICommands(dict):
             setting='compositetasks', settings=settings)
         
         self['viewcategories'] = ViewCategories(mainwindow=mainwindow, 
-            filteredTaskList=filteredTaskList, settings=settings)
+            taskList=taskList, settings=settings)
 
         # Column show/hide commands
         for menuText, helpText, setting in \
@@ -1142,37 +1142,38 @@ class UICommands(dict):
              ('Unlimited', _('&Unlimited'), _('Show all tasks'))]:
             key = 'viewdue' + value
             key = key.lower()
-            self[key] = UIRadioCommand(settings=settings, setting='tasksdue', value=value,
-                                       menuText=menuText, helpText=helpText)
+            self[key] = UIRadioCommand(settings=settings, setting='tasksdue',
+                value=value, menuText=menuText, helpText=helpText)
                                        
         # Task menu
-        self['new'] = TaskNew(mainwindow=mainwindow, 
-            filteredTaskList=filteredTaskList, uiCommands=self, settings=settings)
+        self['new'] = TaskNew(mainwindow=mainwindow, taskList=taskList, 
+            uiCommands=self, settings=settings)
         self['newsubtask'] = TaskNewSubTask(mainwindow=mainwindow, 
-            filteredTaskList=filteredTaskList, viewer=viewer, uiCommands=self, 
+            taskList=taskList, viewer=viewer, uiCommands=self, 
             settings=settings)
-        self['edit'] = TaskEdit(mainwindow=mainwindow, 
-            filteredTaskList=filteredTaskList, viewer=viewer, uiCommands=self, 
-            settings=settings)
-        self['markcompleted'] = TaskMarkCompleted(filteredTaskList=filteredTaskList,
+        self['edit'] = TaskEdit(mainwindow=mainwindow, taskList=taskList, 
+            viewer=viewer, uiCommands=self, settings=settings)
+        self['markcompleted'] = TaskMarkCompleted(taskList=taskList,
             viewer=viewer)
-        self['delete'] = TaskDelete(filteredTaskList=filteredTaskList, viewer=viewer)
+        self['delete'] = TaskDelete(taskList=taskList, viewer=viewer)
         self['mailtask'] = TaskMail(viewer=viewer, menuText=_('Mail task'), 
             helpText=_('Mail the task, using your default mailer'), 
             bitmap='email')
-        self['addattachmenttotask'] = TaskAddAttachment(filteredTaskList=filteredTaskList,
+        self['addattachmenttotask'] = TaskAddAttachment(taskList=taskList,
                                                         viewer=viewer)
         # Task related, but not on any menu:
-        self['draganddroptask'] = TaskDragAndDrop(filteredTaskList=filteredTaskList, viewer=viewer)
+        self['draganddroptask'] = TaskDragAndDrop(taskList=taskList, 
+                                                  viewer=viewer)
 
         # Effort menu
-        self['neweffort'] = EffortNew(mainwindow=mainwindow, effortList=effortList,
-            viewer=viewer, uiCommands=self, filteredTaskList=filteredTaskList)
-        self['editeffort'] = EffortEdit(mainwindow=mainwindow, effortList=effortList, 
-            viewer=viewer, uiCommands=self, filteredTaskList=filteredTaskList)
-        self['deleteeffort'] = EffortDelete(effortList=effortList, viewer=viewer)
-        self['starteffort'] = EffortStart(filteredTaskList=filteredTaskList, viewer=viewer)
-        self['stopeffort'] = EffortStop(filteredTaskList=filteredTaskList)
+        self['neweffort'] = EffortNew(mainwindow=mainwindow, viewer=viewer,
+            effortList=effortList, uiCommands=self, taskList=taskList)
+        self['editeffort'] = EffortEdit(mainwindow=mainwindow, viewer=viewer,
+            effortList=effortList, uiCommands=self, taskList=taskList)
+        self['deleteeffort'] = EffortDelete(effortList=effortList, 
+                                            viewer=viewer)
+        self['starteffort'] = EffortStart(taskList=taskList, viewer=viewer)
+        self['stopeffort'] = EffortStop(taskList=taskList)
         
         # Help menu
         self['help'] = Help()
@@ -1184,4 +1185,5 @@ class UICommands(dict):
         self['restore'] = MainWindowRestore(mainwindow=mainwindow)
 
     def createRecentFileOpenUICommand(self, filename, index):
-        return RecentFileOpen(filename=filename, index=index, iocontroller=self.__iocontroller)
+        return RecentFileOpen(filename=filename, index=index, 
+            iocontroller=self.__iocontroller)

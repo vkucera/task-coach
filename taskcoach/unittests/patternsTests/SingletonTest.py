@@ -6,6 +6,10 @@ class Singleton:
     pass
 
 class SingletonTest(test.TestCase):
+    def tearDown(self):
+        if Singleton.hasInstance():
+            Singleton.deleteInstance()
+        
     def testCreation(self):
         singleton = Singleton()
         self.failUnless(isinstance(singleton, Singleton))
@@ -46,6 +50,23 @@ class SingletonTest(test.TestCase):
         Singleton.deleteInstance()
         singleton2 = Singleton()
         self.failIf(singleton1 is singleton2)
+        
+    def testSingletonHasNoInstanceBeforeFirstCreation(self):
+        self.failIf(Singleton.hasInstance())
+        
+    def testSingletonHasInstanceAfterFirstCreation(self):
+        singleton = Singleton()
+        self.failUnless(Singleton.hasInstance())
+        
+    def testSingletonHasInstanceAfterSecondCreation(self):
+        singleton1 = Singleton()
+        singleton2 = Singleton()
+        self.failUnless(Singleton.hasInstance())
+        
+    def testSingletonHasNoInstanceAfterDeletion(self):
+        singleton = Singleton()
+        Singleton.deleteInstance()
+        self.failIf(Singleton.hasInstance())
 
 
 class SingletonSubclassTest(test.TestCase):

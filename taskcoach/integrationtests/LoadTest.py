@@ -15,6 +15,7 @@ class LoadTest(test.TestCase):
         self.mockApp.mainwindow.quit()
         if os.path.isfile(self.filename):
             os.remove(self.filename)
+        super(LoadTest, self).tearDown()
 
     def mockErrorDialog(self, *args, **kwargs):
         self.errorDialogCalled = True

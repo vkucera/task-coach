@@ -9,52 +9,54 @@ class TaskFile(task.TaskList):
         self.__lastFilename = ''
         self.__filename = filename
         super(TaskFile, self).__init__(*args, **kwargs)
-        # Register for tasks being added and removed to we can monitor
+        # Register for tasks and efforts being changed so we can monitor
         # when the task file needs saving (i.e. is 'dirty'):
-        self.registerObserver(self.onAddItem, 'list.add')
-        self.registerObserver(self.onRemoveItem, 'list.remove')
+        for eventType in ('task.subject',
+            'task.description', 'task.startDate', 'task.dueDate',
+            'task.completionDate', 'task.priority', 
+            'task.budget', 'task.hourlyFee', 'task.fixedFee',
+            'task.timeSpent', 'task.reminder',
+            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
+            'task.child.add', 'task.child.remove',
+            'task.effort.add', 'task.effort.remove', 
+            'task.category.add', 'task.category.remove', 
+            'task.attachment.add', 'task.attachment.remove'):
+            patterns.Publisher().registerObserver(self.onTaskChanged, 
+                                                  eventType=eventType)
+        for eventType in ('effort.description', 'effort.start', 'effort.stop'):
+            # We don't need to observe 'effort.task', because when an
+            # effort record is assigned to a different task we already will 
+            # get a notification through 'task.effort.add'                
+            patterns.Publisher().registerObserver(self.onEffortChanged, 
+                                                  eventType=eventType)
         
     def __str__(self):
         return self.filename()
 
-    def onAddItem(self, event):
-        self.markDirty()
-        for task in event.values():
-            task.registerObserver(self.markDirty, 'task.subject',
-                'task.description', 'task.startDate', 'task.dueDate',
-                'task.completionDate', 'task.priority', 
-                'task.budget', 'task.hourlyFee', 'task.fixedFee',
-                'task.reminder',
-                'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
-                'task.child.add', 'task.child.remove',
-                'task.effort.add', 'task.effort.remove', 
-                'task.category.add', 'task.category.remove', 
-                'task.attachment.add', 'task.attachment.remove')
-            task.registerObserver(self.onAddEffort, 'task.effort.add')
+    def extend(self, tasks):
+        if tasks:
+            super(TaskFile, self).extend(tasks)
+            self.markDirty()
 
-    def onRemoveItem(self, event):
-        self.markDirty()
-        for task in event.values():
-            task.removeObserver(self.markDirty)
-
-    def onAddEffort(self, event):
-        for effort in event.values():
-            effort.registerObserver(self.markDirty, 'effort.description', 
-                'effort.start', 'effort.stop')
-            # We don't need to observe 'effort.task', because when an
-            # effort record is assigned to a different task we already will 
-            # get a notification through 'task.effort.add'
-
-    def onRemoveEffort(self, event):
-        for effort in event.values():
-            effort.removeObserver(self.markDirty)
+    def removeItems(self, tasks):
+        if tasks:
+            super(TaskFile, self).removeItems(tasks)
+            self.markDirty()
+        
+    def onTaskChanged(self, event):
+        if event.source() in self:
+            self.markDirty()
+            
+    def onEffortChanged(self, event):
+        if event.source().task() in self:
+            self.markDirty()
 
     def setFilename(self, filename):
         if filename != '':
             self.__lastFilename = filename
         self.__filename = filename
-        self.notifyObservers(patterns.Event(self, 'taskfile.filenameChanged', 
-            filename))
+        patterns.Publisher().notifyObservers(patterns.Event(self, 
+            'taskfile.filenameChanged', filename))
 
     def filename(self):
         return self.__filename
@@ -62,16 +64,18 @@ class TaskFile(task.TaskList):
     def lastFilename(self):
         return self.__lastFilename
         
-    def markDirty(self, event=None):
+    def markDirty(self):
         if not self.__needSave:
             self.__needSave = True
-            self.notifyObservers(patterns.Event(self, 'taskfile.dirty', True))
-
+            patterns.Publisher().notifyObservers(patterns.Event(self, 
+                'taskfile.dirty', True))
+                
     def markClean(self):
         if self.__needSave:
             self.__needSave = False
-            self.notifyObservers(patterns.Event(self, 'taskfile.dirty', False))
-        
+            patterns.Publisher().notifyObservers(patterns.Event(self, 
+                'taskfile.dirty', False))
+            
     def _clear(self):
         self.removeItems(list(self))
         
@@ -108,7 +112,8 @@ class TaskFile(task.TaskList):
             self.__needSave = False
         
     def save(self):
-        self.notifyObservers(patterns.Event(self, 'taskfile.aboutToSave'))
+        patterns.Publisher().notifyObservers(patterns.Event(self, 
+            'taskfile.aboutToSave'))
         fd = self._openForWrite()
         xml.XMLWriter(fd).write(self)
         fd.close()
@@ -128,35 +133,36 @@ class TaskFile(task.TaskList):
  
 
 class AutoSaver(object):
-    def __init__(self, settings, taskFile):
+    def __init__(self, settings):
         self.__settings = settings
-        self.__taskFile = taskFile
-        self.__taskFile.registerObserver(self.onTaskFileDirty,
-            'taskfile.dirty')
-        self.__taskFile.registerObserver(self.onTaskFileAboutToSave, 
-            'taskfile.aboutToSave')
-        
+        patterns.Publisher().registerObserver(self.onTaskFileDirty, 
+            eventType='taskfile.dirty')
+        patterns.Publisher().registerObserver(self.onTaskFileAboutToSave,
+            eventType='taskfile.aboutToSave')
+            
     def onTaskFileDirty(self, event):
-        if self._needSave():
-            self.__taskFile.save()
+        taskFile = event.source()
+        if self._needSave(taskFile):
+            taskFile.save()
         
     def onTaskFileAboutToSave(self, event):
-        if self._needBackup():
-            self._createBackup()
+        taskFile = event.source()
+        if self._needBackup(taskFile):
+            self._createBackup(taskFile)
     
-    def _needSave(self):
-        return self.__taskFile.filename() and self.__taskFile.needSave() and \
+    def _needSave(self, taskFile):
+        return taskFile.filename() and taskFile.needSave() and \
             self._isOn('autosave')
     
-    def _needBackup(self):        
-        return self._isOn('backup') and self.__taskFile.exists()
+    def _needBackup(self, taskFile):        
+        return self._isOn('backup') and taskFile.exists()
     
-    def _createBackup(self):
-        shutil.copyfile(self.__taskFile.filename(), self._backupFilename())
+    def _createBackup(self, taskFile):
+        shutil.copyfile(taskFile.filename(), self._backupFilename(taskFile))
         
-    def _backupFilename(self, now=date.DateTime.now):
+    def _backupFilename(self, taskFile, now=date.DateTime.now):
         now = now().strftime('%Y%m%d-%H%M%S')
-        return self.__taskFile.filename() + '.%s.bak'%now
+        return taskFile.filename() + '.%s.bak'%now
         
     def _isOn(self, booleanSetting):
         return self.__settings.getboolean('file', booleanSetting)

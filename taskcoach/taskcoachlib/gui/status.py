@@ -1,24 +1,25 @@
-import wx
+import wx, patterns
 from i18n import _
 
 class StatusBar(wx.StatusBar):
-    def __init__(self, parent, taskList, filteredList, viewer):
+    def __init__(self, parent, viewer):
         super(StatusBar, self).__init__(parent, -1)
         self.SetFieldsCount(2)
         self.parent = parent
-        self.taskList = taskList
-        self.filteredList = filteredList
         self.viewer = viewer
-        self.viewer.registerObserver(self.notify)
+        patterns.Publisher().registerObserver(self.onSelect, 
+            eventType=self.viewer.selectEventType())
+        patterns.Publisher().registerObserver(self.onSelect, 
+            eventType=self.viewer.viewerChangeEventType())
         self.scheduledStatusDisplay = None
-        self.notify(None)
+        self.onSelect(None)
         parent.Bind(wx.EVT_MENU_HIGHLIGHT_ALL, self.resetStatusBar)
         parent.Bind(wx.EVT_TOOL_ENTER, self.resetStatusBar)
 
     def resetStatusBar(self, event):
         ''' Unfortunately, the menu's and toolbar don't restore the
-        previous statusbar text after they have displayed their help
-        text, so we have to do it by hand. '''
+            previous statusbar text after they have displayed their help
+            text, so we have to do it by hand. '''
         try:
             id = event.GetSelection() # for CommandEvent from the Toolbar
         except AttributeError:
@@ -27,7 +28,7 @@ class StatusBar(wx.StatusBar):
             self._displayStatus()
         event.Skip()
 
-    def notify(self, *args, **kwargs):
+    def onSelect(self, *args, **kwargs):
         # Give viewer a chance to update first:
         wx.CallAfter(self._displayStatus)
 
@@ -43,7 +44,10 @@ class StatusBar(wx.StatusBar):
         self.scheduledStatusDisplay = wx.FutureCall(delay, self._displayStatus)
 
     def Destroy(self):
-        self.viewer.removeObserver(self.notify)
+        patterns.Publisher().removeObserver(self.onSelect, 
+            eventType=self.viewer.selectEventType())
+        patterns.Publisher().removeObserver(self.onSelect, 
+            eventType=self.viewer.viewerChangeEventType())
         self.parent.Unbind(wx.EVT_MENU_HIGHLIGHT_ALL)
         self.parent.Unbind(wx.EVT_TOOL_ENTER)
         if self.scheduledStatusDisplay:

@@ -1,21 +1,14 @@
-import patterns, sets
+import patterns
 from i18n import _
 import domain.date as date
 import task
 
             
-class TaskList(patterns.ObservableList):
+class TaskList(patterns.ObservableSet):
     def __init__(self, initList=None, *args, **kwargs):
         super(TaskList, self).__init__(*args, **kwargs)
         self.extend(initList or [])
         
-    def newItem(self):
-        ''' TaskList knows how to create new items so classes that
-            manipulate containers (TaskList, EffortList, etc.) such
-            as commands (NewCommand, DeleteCommand, etc.) can
-            create new items without having to know their type. '''
-        return task.Task(subject=_('New task'))
-
     # list interface and helpers
 
     def append(self, task):
@@ -25,18 +18,20 @@ class TaskList(patterns.ObservableList):
         if not tasks:
             return
         tasksAndAllChildren = self._tasksAndAllChildren(tasks) 
-        self.stopNotifying()
+        patterns.Publisher().stopNotifying()
         super(TaskList, self).extend(tasksAndAllChildren)
-        for task in tasks:
-            self._addTaskToParent(task)
-        self.startNotifying()
-        self.notifyObservers(patterns.Event(self, 'list.add', 
+        parentsWithChildrenAdded = self._addTasksToParent(tasks)
+        patterns.Publisher().startNotifying()
+        patterns.Publisher().notifyObservers(patterns.Event(self, self.addItemEventType(), 
             *tasksAndAllChildren))
+        for parent, children in parentsWithChildrenAdded.items():
+            patterns.Publisher().notifyObservers(patterns.Event(parent,
+                'task.child.add', *children))
 
     def _tasksAndAllChildren(self, tasks):
-        tasksAndAllChildren = sets.Set(tasks) 
+        tasksAndAllChildren = set(tasks) 
         for task in tasks:
-            tasksAndAllChildren |= sets.Set(task.allChildren())
+            tasksAndAllChildren |= set(task.allChildren())
         return list(tasksAndAllChildren)
 
     def _splitTasksInParentsAndChildren(self, tasks):
@@ -49,11 +44,16 @@ class TaskList(patterns.ObservableList):
             else:
                 parents.append(task)
         return parents, children
-
-    def _addTaskToParent(self, task):
-        parent = task.parent()
-        if parent and parent in self:
-            parent.addChild(task)
+    
+    def _addTasksToParent(self, tasks):
+        parents = {}
+        for task in tasks:
+            parent = task.parent()
+            if parent and parent in self:
+                parent.addChild(task)
+                if parent not in tasks:
+                    parents.setdefault(parent, []).append(task)
+        return parents
 
     def remove(self, task):
         if task in self:
@@ -64,15 +64,16 @@ class TaskList(patterns.ObservableList):
             return
         parents, children = self._splitTasksInParentsAndChildren(tasks)
         tasksAndAllChildren = self._tasksAndAllChildren(parents)
-        self.stopNotifying()
+        patterns.Publisher().stopNotifying()
         self._removeTasksFromTaskList(parents)
         parentsWithChildrenRemoved = self._removeTasksFromParent(tasks)
-        self.startNotifying()
-        self.notifyObservers(patterns.Event(self, 'list.remove', 
-            *tasksAndAllChildren))
+        patterns.Publisher().startNotifying()
+        patterns.Publisher().notifyObservers(patterns.Event(self, 
+            self.removeItemEventType(), *tasksAndAllChildren))
         for parent, children in parentsWithChildrenRemoved.items():
-            parent.notifyObservers(patterns.Event(parent, 'task.child.remove', 
-                *children))
+            if parent in self:
+                patterns.Publisher().notifyObservers(patterns.Event(parent,
+                    'task.child.remove', *children))
 
     def _removeTaskFromTaskList(self, task):
         self._removeTasksFromTaskList(task.children())
@@ -88,9 +89,7 @@ class TaskList(patterns.ObservableList):
         for task in tasks:
             parent = task.parent()
             if parent:
-                parent.stopNotifying()
                 parent.removeChild(task)
-                parent.startNotifying()
                 if parent not in tasks:
                     parents.setdefault(parent, []).append(task)
         return parents
@@ -131,7 +130,7 @@ class TaskList(patterns.ObservableList):
         return result
 
     def categories(self):
-        result = sets.Set()
+        result = set()
         for task in self:
             result |= task.categories()
         return result
@@ -154,3 +153,7 @@ class TaskList(patterns.ObservableList):
     def originalLength(self):
         ''' Provide a way for bypassing the __len__ method of decorators. '''
         return len(self)
+
+        
+class SingleTaskList(TaskList):
+    pass

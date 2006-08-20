@@ -119,13 +119,13 @@ class IOController(object):
             return False
 
     def __addRecentFile(self, fileName):
-        recentFiles = eval(self.__settings.get('file', 'recentfiles'))
+        recentFiles = self.__settings.getlist('file', 'recentfiles')
         if fileName in recentFiles:
             recentFiles.remove(fileName)
         recentFiles.insert(0, fileName)
         maximumNumberOfRecentFiles = self.__settings.getint('file', 'maxrecentfiles')
         recentFiles = recentFiles[:maximumNumberOfRecentFiles]
-        self.__settings.set('file', 'recentfiles', str(recentFiles))
+        self.__settings.setlist('file', 'recentfiles', recentFiles)
         
     def __askUserForFile(self, title, fileDialogOpts=None, flags=wx.OPEN):
         fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts

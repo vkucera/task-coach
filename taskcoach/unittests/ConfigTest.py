@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import test, sys, os, meta, config
+import test, sys, os, meta, config, patterns
 
 class SettingsUnderTest(config.Settings):
     def __init__(self, *args, **kwargs):
@@ -16,6 +16,7 @@ class SettingsTestCase(test.TestCase):
         self.settings = SettingsUnderTest()
 
     def tearDown(self):
+        super(SettingsTestCase, self).tearDown()
         del self.settings
 
 
@@ -37,7 +38,24 @@ class SettingsTest(SettingsTestCase):
         expected = os.path.join(os.path.expanduser("~"), '.%s'%meta.filename)
         self.assertEqual(expected, self.settings.path(environ={}))
 
+    def testGetList_EmptyByDefault(self):
+        self.assertEqual([], self.settings.getlist('file', 'recentfiles'))
 
+    def testSetList_Empty(self):
+        self.settings.setlist('file', 'recentfiles', [])
+        self.assertEqual([], self.settings.getlist('file', 'recentfiles'))
+    
+    def testSetList_SimpleStrings(self):
+        recentfiles = ['abc', 'C:\Documents And Settings\Whatever']
+        self.settings.setlist('file', 'recentfiles', recentfiles)
+        self.assertEqual(recentfiles, self.settings.getlist('file', 'recentfiles'))
+        
+    def testSetList_UnicodeStrings(self):
+        recentfiles = ['ümlaut', 'Σομη χρεεκ']
+        self.settings.setlist('file', 'recentfiles', recentfiles)
+        self.assertEqual(recentfiles, self.settings.getlist('file', 'recentfiles'))
+        
+        
 class SettingsIOTest(SettingsTestCase):
     def setUp(self):
         super(SettingsIOTest, self).setUp()
@@ -61,7 +79,8 @@ class SettingsObservableTest(SettingsTestCase):
     def setUp(self):
         super(SettingsObservableTest, self).setUp()
         self.events = []
-        self.settings.registerObserver(self.onEvent, 'view.toolbarsize')
+        patterns.Publisher().registerObserver(self.onEvent, 
+            eventType='view.toolbarsize')
         
     def onEvent(self, event):
         self.events.append(event)
@@ -86,7 +105,7 @@ class UnicodeAwareConfigParserTest(test.TestCase):
         self.parser.add_section('section')
         self.iniFile = StringIO.StringIO()
         self.asciiValue = 'ascii'
-        self.unicodeValue = u'υνιγοδη'
+        self.unicodeValue = u'Ï…Î½Î¹Î³Î¿Î´Î·'
         
     def testWriteAsciiValue(self):
         self.parser.set('section', 'setting', self.asciiValue)
@@ -118,3 +137,7 @@ class UnicodeAwareConfigParserTest(test.TestCase):
 class SpecificSettingsTest(SettingsTestCase):
     def testDefaultWindowPosition(self):
         self.assertEqual('(-1, -1)', self.settings.get('window', 'position'))
+
+    def testDefaultTaskCategoryFilterList(self):
+        self.assertEqual([], self.settings.getlist('view', 
+            'taskcategoryfilterlist'))

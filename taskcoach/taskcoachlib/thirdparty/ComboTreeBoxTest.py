@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 import wx, unittest
-from wx.lib.combotreebox import ComboTreeBox
-from wx.lib.combotreebox import IterableTreeCtrl
+#from wx.lib.combotreebox import ComboTreeBox, IterableTreeCtrl
+from ComboTreeBox import ComboTreeBox, IterableTreeCtrl
+
 
 class ComboTreeBoxTest(unittest.TestCase):
     def setUp(self):
@@ -149,6 +150,27 @@ class ComboTreeBoxTest(unittest.TestCase):
         item1 = self.comboBox.Append('Item 1')
         self.comboBox.SetClientData(item1, [1,2,3])
         self.assertEqual([1,2,3], self.comboBox.GetClientData(item1))
+
+    def testFindClientData(self):
+        item1 = self.comboBox.Append('Item 1', clientData='A')
+        self.assertEqual(item1, self.comboBox.FindClientData('A'))
+
+    def testFindClientData_NoItems(self):
+        self.failIf(self.comboBox.FindClientData('A'))
+
+    def testFindClientData_NoSuchData(self):
+        item1 = self.comboBox.Append('Item 1', clientData='A')
+        self.failIf(self.comboBox.FindClientData('B'))
+
+    def testSetClientDataSelection(self):
+        item1 = self.comboBox.Append('Item 1', clientData='A')
+        self.comboBox.SetClientDataSelection('A')
+        self.assertEqual(item1, self.comboBox.GetSelection())
+
+    def testSetClientDataSelection_NoSuchData(self):
+        item1 = self.comboBox.Append('Item 1', clientData='A')
+        self.comboBox.SetClientDataSelection('B')
+        self.failIf(self.comboBox.GetSelection())
 
 
 class SortedComboTreeBoxTest(unittest.TestCase):

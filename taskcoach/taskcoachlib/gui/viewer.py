@@ -7,7 +7,7 @@ import domain.effort as effort
 import domain.date as date
 
 
-class Viewer(patterns.Observable, wx.Panel):
+class Viewer(wx.Panel):
     ''' A Viewer shows the contents of a model (a list of tasks or a list of 
         efforts) by means of a widget (e.g. a ListCtrl or a TreeListCtrl).'''
         
@@ -20,9 +20,15 @@ class Viewer(patterns.Observable, wx.Panel):
         self.list = self.createSorter(self.createFilter(list))
         self.widget = self.createWidget()
         self.initLayout()
-        self.list.registerObserver(self.onAddItem, 'list.add')
-        self.list.registerObserver(self.onRemoveItem, 'list.remove')
-        self.list.registerObserver(self.onSorted, 'list.sorted')
+        patterns.Publisher().registerObserver(self.onAddItem, 
+            eventType=self.list.addItemEventType())
+        patterns.Publisher().registerObserver(self.onRemoveItem, 
+            eventType=self.list.removeItemEventType())
+        patterns.Publisher().registerObserver(self.onSorted, 
+            eventType=self.list.sortEventType())
+        
+    def selectEventType(self):
+        return '%s (%s).select'%(self.__class__, id(self))
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
@@ -45,19 +51,19 @@ class Viewer(patterns.Observable, wx.Panel):
         return list
 
     def onAddItem(self, event):
-        self.refresh(event)
+        self.refresh()
 
     def onRemoveItem(self, event):
-        self.refresh(event)
+        self.refresh()
 
     def onSorted(self, event):
-        self.refresh(event)
+        self.refresh()
 
     def onSelect(self, *args):
-        self.notifyObservers(patterns.Event(self, 'viewer.select',
-            self.curselection()))
+        patterns.Publisher().notifyObservers(patterns.Event(self, 
+            self.selectEventType(), self.curselection()))
     
-    def refresh(self, event=None):
+    def refresh(self):
         self.widget.refresh(len(self.list))
         
     def curselection(self):
@@ -72,7 +78,31 @@ class Viewer(patterns.Observable, wx.Panel):
     def widgetCreationKeywordArguments(self):
         return {}
     
-
+    """
+    def onActivateViewer(self):
+        ''' Called by ViewerContainer when a viewer becomes active, i.e. the
+            foremost tab. '''
+        print '%s.onActivateViewer'%self.__class__
+        self.refresh()
+        patterns.Publisher().registerObserver(self.onAddItem, 
+            eventType=self.list.addItemEventType())
+        patterns.Publisher().registerObserver(self.onRemoveItem, 
+            eventType=self.list.removeItemEventType())
+        patterns.Publisher().registerObserver(self.onSorted, 
+            eventType=self.list.sortEventType())
+        
+    def onDeactivateViewer(self):
+        ''' Called by ViewerContainer when a viewer is no longer the active
+            viewer, i.e. no longer the foremost tab. '''
+        print '%s.onDeactivateViewer'%self.__class__
+        patterns.Publisher().removeObserver(self.onAddItem, 
+            eventType=self.list.addItemEventType())
+        patterns.Publisher().removeObserver(self.onRemoveItem, 
+            eventType=self.list.removeItemEventType())
+        patterns.Publisher().removeObserver(self.onSorted, 
+            eventType=self.list.sortEventType())
+    """     
+        
 class ListViewer(Viewer):
     def getItemImage(self, index):
         item = self.list[index]
@@ -108,43 +138,58 @@ class TreeViewer(Viewer):
 
 class UpdatePerSecondViewer(Viewer, date.ClockObserver):
     def __init__(self, *args, **kwargs):
-        self.__trackedItems = patterns.List()
+        self.__trackedItems = set()
         super(UpdatePerSecondViewer, self).__init__(*args, **kwargs)
+        patterns.Publisher().registerObserver(self.onStartTracking,
+            eventType=self.trackStartEventType())
+        patterns.Publisher().registerObserver(self.onStopTracking,
+            eventType=self.trackStopEventType())
+                
+    def trackStartEventType(self):
+        raise NotImplementedError
+    
+    def trackStopEventType(self):
+        raise NotImplementedError
 
     def onAddItem(self, event):
-        items = event.values()
-        for item in items:
-            item.registerObserver(self.onStartTracking,
-                'task.track.start', 'effort.track.start')
-            item.registerObserver(self.onStopTracking,
-                'task.track.stop', 'effort.track.stop')
         super(UpdatePerSecondViewer, self).onAddItem(event)
-        self.addTrackedItems(self.trackedItems(items))
+        self.addTrackedItems(self.trackedItems(event.values()))
 
     def onRemoveItem(self, event):
-        items = event.values()
-        for item in items:
-            item.removeObservers(self.onStartTracking, self.onStopTracking)
         super(UpdatePerSecondViewer, self).onRemoveItem(event)
-        self.removeTrackedItems(self.trackedItems(items))
+        self.removeTrackedItems(self.trackedItems(event.values()))
 
     def onStartTracking(self, event):
-        self.addTrackedItems([event.source()])
+        item = event.source()
+        if item in self.list:
+            self.addTrackedItems([item])
 
     def onStopTracking(self, event):
-        self.removeTrackedItems([event.source()])
+        item = event.source()
+        if item in self.list:
+            self.removeTrackedItems([item])
 
     def onEverySecond(self, event):
+        trackedItemsToRemove = []
         for item in self.__trackedItems:
-            self.widget.refreshItem(self.list.index(item))
-
+            # Prepare for a ValueError, because we might receive a clock
+            # notification before we receive a 'remove item' notification for
+            # an item that has been removed from the observed collection.
+            try:
+                self.widget.refreshItem(self.list.index(item))
+            except ValueError:
+                trackedItemsToRemove.append(item)
+        self.removeTrackedItems(trackedItemsToRemove)
+            
     def addTrackedItems(self, items):
-        self.__trackedItems.extend(items)
-        self.startClockIfNecessary()
+        if items:
+            self.__trackedItems.update(items)
+            self.startClockIfNecessary()
 
     def removeTrackedItems(self, items):
-        self.__trackedItems.removeItems(items)
-        self.stopClockIfNecessary()
+        if items:
+            self.__trackedItems.difference_update(items)
+            self.stopClockIfNecessary()
 
     def startClockIfNecessary(self):
         if self.__trackedItems and not self.isClockStarted():
@@ -156,7 +201,7 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
 
     @staticmethod
     def trackedItems(items):
-        return [item for item in items if item.isBeingTracked()]
+        return [item for item in items if item.isBeingTracked(recursive=True)]
 
         
 class ViewerWithColumns(Viewer):
@@ -164,18 +209,38 @@ class ViewerWithColumns(Viewer):
         super(ViewerWithColumns, self).__init__(*args, **kwargs)
         self.initColumns()
 
-    def onAddItem(self, event):
-        for item in event.values():
-            for column in self.visibleColumns():
-                item.registerObserver(self.onAttributeChanged, 
-                    *column.eventTypes())
-        super(ViewerWithColumns, self).onAddItem(event)
+    def initColumns(self):
+        for column in self.columns():
+            self.initColumn(column)
 
-    def onRemoveItem(self, event):
-        for item in event.values():
-            for column in self.visibleColumns():
-                item.removeObserver(self.onAttributeChanged)
-        super(ViewerWithColumns, self).onRemoveItem(event)
+    def initColumn(self, column):
+        visibilitySetting = column.visibilitySetting()
+        if visibilitySetting:
+            patterns.Publisher().registerObserver(self.onShowColumn, 
+                eventType='%s.%s'%visibilitySetting)
+            show = self.settings.getboolean(*column.visibilitySetting())
+            self.widget.showColumn(column, show=show)
+        else:
+            show = True
+        if show:
+            self.__startObserving(column.eventTypes())
+    
+    def onShowColumn(self, event):
+        visibilitySetting = tuple(event.type().split('.'))
+        for column in self.columns():
+            if column.visibilitySetting() == visibilitySetting:
+                show = event.value() == 'True'
+                self.widget.showColumn(column, show)
+                if show:
+                    self.__startObserving(column.eventTypes())
+                else:
+                    self.__stopObserving(column.eventTypes())
+                break
+                
+    def onAttributeChanged(self, event):
+        item = event.source()
+        if item in self.list:
+            self.widget.refreshItem(self.list.index(item))
         
     def columns(self):
         return self._columns
@@ -193,9 +258,8 @@ class ViewerWithColumns(Viewer):
         column = self.visibleColumns()[visibleColumnIndex]
         section, setting = column.visibilitySetting()
         self.settings.set(section, setting, 'False')
-        for item in self.list:
-            item.removeObserver(self.onAttributeChanged, *column.eventTypes())
-
+        self.__stopObserving(column.eventTypes())
+            
     def isHideableColumn(self, visibleColumnIndex):
         column = self.visibleColumns()[visibleColumnIndex]
         return column.visibilitySetting() != None
@@ -204,43 +268,15 @@ class ViewerWithColumns(Viewer):
         item = self.list[index]
         return column.render(item)
 
-    def initColumns(self):
-        for column in self.columns():
-            self.initColumn(column)
-
-    def initColumn(self, column):
-        visibilitySetting = column.visibilitySetting()
-        if visibilitySetting:
-            self.settings.registerObserver(self.onShowColumn, 
-                '%s.%s'%visibilitySetting)
-            show = self.settings.getboolean(*column.visibilitySetting())
-            self.widget.showColumn(column, show=show)
-        else:
-            show = True
-        if show:
-            for item in self.list:
-                item.registerObserver(self.onAttributeChanged, 
-                    *column.eventTypes())
-
-    def onShowColumn(self, event):
-        visibilitySetting = tuple(event.type().split('.'))
-        for column in self.columns():
-            if column.visibilitySetting() == visibilitySetting:
-                show = event.value() == 'True'
-                self.widget.showColumn(column, show)
-                if show:
-                    for item in self.list:
-                        item.registerObserver(self.onAttributeChanged,
-                            *column.eventTypes())
-                else:
-                    for item in self.list:
-                        item.removeObserver(self.onAttributeChanged,
-                            *column.eventTypes())
-                break
-                
-    def onAttributeChanged(self, event):
-        item = event.source()
-        self.widget.refreshItem(self.list.index(item))
+    def __startObserving(self, eventTypes):
+        for eventType in eventTypes:
+            patterns.Publisher().registerObserver(self.onAttributeChanged, 
+                eventType=eventType)                    
+        
+    def __stopObserving(self, eventTypes):
+        for eventType in eventTypes:
+            patterns.Publisher().removeObserver(self.onAttributeChanged, 
+                eventType=eventType)                                        
 
 
 class TaskViewer(UpdatePerSecondViewer):
@@ -253,6 +289,12 @@ class TaskViewer(UpdatePerSecondViewer):
 
     def isShowingEffort(self): 
         return False
+    
+    def trackStartEventType(self):
+        return 'task.track.start'
+    
+    def trackStopEventType(self):
+        return 'task.track.stop'
    
     def statusMessages(self):
         status1 = _('Tasks: %d selected, %d visible, %d total')%\
@@ -273,7 +315,9 @@ class TaskViewer(UpdatePerSecondViewer):
     def __registerForColorChanges(self):
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
             'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
-        self.settings.registerObserver(self.onColorChange, *colorSettings)
+        for colorSetting in colorSettings:
+            patterns.Publisher().registerObserver(self.onColorChange, 
+                eventType=colorSetting)
         
     def onColorChange(self, *args, **kwargs):
         self.refresh()
@@ -327,12 +371,14 @@ class TaskViewer(UpdatePerSecondViewer):
 class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
     def __init__(self, *args, **kwargs):
         super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
-        self.settings.registerObserver(self.onSortKeyChanged, 'view.sortby')
-        self.settings.registerObserver(self.onSortOrderChanged, 
-            'view.sortascending')
+        patterns.Publisher().registerObserver(self.onSortKeyChanged, 
+            eventType='view.sortby')
+        patterns.Publisher().registerObserver(self.onSortOrderChanged, 
+            eventType='view.sortascending')
             
     def _createColumns(self):
-        return [widgets.Column(_('Subject'), 'task.subject',
+        return [widgets.Column(_('Subject'), 'task.subject', 'task.completionDate',
+                'task.dueDate', 'task.startDate',
                 'task.track.start', 'task.track.stop', sortKey='subject', 
                 sortCallback=self.uiCommands['viewsortbysubject'], 
                 renderCallback=self.renderSubject)] + \
@@ -409,8 +455,9 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
         return widget
         
     def createFilter(self, taskList):
-        return task.filter.CompositeFilter(task.filter.ViewFilter(\
-            task.filter.SearchFilter(taskList, settings=self.settings), 
+        return task.filter.CategoryFilter(task.filter.CompositeFilter( \
+            task.filter.ViewFilter(task.filter.SearchFilter(taskList, 
+            settings=self.settings), settings=self.settings), 
             settings=self.settings), settings=self.settings)
         
     def createSorter(self, taskList):
@@ -435,11 +482,13 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         return widget
     
     def createFilter(self, taskList):
-        return task.filter.ViewFilter(task.filter.SearchFilter(taskList, 
+        # FIXME: pull up
+        return task.filter.CategoryFilter(task.filter.ViewFilter(task.filter.SearchFilter(taskList, 
             settings=self.settings, treeMode=True), settings=self.settings, 
-            treeMode=True)
+            treeMode=True), settings=self.settings, treeMode=True)
         
     def createSorter(self, taskList):
+        # FIMXE: pull up
         return task.sorter.Sorter(taskList, settings=self.settings, 
             treeMode=True)
     
@@ -501,6 +550,15 @@ class EffortViewer(UpdatePerSecondViewer):
     def isShowingEffort(self):
         return True
 
+    def trackStartEventType(self):
+        return 'effort.track.start'
+    
+    def trackStopEventType(self):
+        return 'effort.track.stop'
+
+    def createSorter(self, effortList):
+        return effort.EffortSorter(effortList)
+    
     def statusMessages(self):
         status1 = _('Effort: %d selected, %d visible, %d total')%\
             (len(self.curselection()), len(self.list), 
@@ -521,10 +579,10 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         uiCommands = {}
         uiCommands.update(self.uiCommands)
         uiCommands['editeffort'] = uicommand.EffortEdit(mainwindow=self.parent, 
-            effortList=self.list, filteredTaskList=self.taskList, viewer=self, 
+            effortList=self.list, taskList=self.taskList, viewer=self, 
             uiCommands=self.uiCommands)
         uiCommands['deleteeffort'] = uicommand.EffortDelete( \
-            effortList=self.list, viewer=self, filteredTaskList=self.taskList)
+            effortList=self.list, viewer=self, taskList=self.taskList)
         uiCommands['cut'] = uicommand.EditCut(viewer=self)
         uiCommands['copy'] = uicommand.EditCopy(viewer=self)
         uiCommands['pasteintotask'] = uicommand.EditPasteIntoTask(viewer=self)
@@ -558,9 +616,6 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
 
     def createFilter(self, taskList):
         return effort.EffortList(taskList)
-
-    def createSorter(self, effortList):
-        return effort.EffortSorter(effortList)
             
     def getItemImage(self, index):
         return -1
@@ -600,29 +655,26 @@ class CompositeEffortListViewer(EffortListViewer):
         return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
 
     def createFilter(self, taskList):
-        return taskList
+        return self.EffortPerPeriod(taskList)
 
 
 class EffortPerDayViewer(CompositeEffortListViewer):
-    def createSorter(self, taskList):
-        return effort.EffortSorter(effort.EffortPerDay(taskList))
+    EffortPerPeriod = effort.EffortPerDay
     
     def renderEntirePeriod(self, compositeEffort):
         return render.date(compositeEffort.getStart().date())
 
         
 class EffortPerWeekViewer(CompositeEffortListViewer):
-    def createSorter(self, taskList):
-        return effort.EffortSorter(effort.EffortPerWeek(taskList))
+    EffortPerPeriod = effort.EffortPerWeek
         
     def renderEntirePeriod(self, compositeEffort):
         return render.weekNumber(compositeEffort.getStart())
 
 
 class EffortPerMonthViewer(CompositeEffortListViewer):
-    def createSorter(self, taskList):
-        return effort.EffortSorter(effort.EffortPerMonth(taskList))
-        
+    EffortPerPeriod = effort.EffortPerMonth
+    
     def renderEntirePeriod(self, compositeEffort):
         return render.month(compositeEffort.getStart())
 

@@ -1,4 +1,17 @@
-class List(list):    
+import patterns
+
+
+class List(list):
+    def __eq__(self, other):
+        ''' Subclasses of List are always considered to be unequal, even when
+            their contents are the same. This is because List subclasses are
+            used as Collections of domain objects. When compared to other types,
+            the contents are compared. '''
+        if isinstance(other, List):
+            return self is other
+        else:
+            return list(self) == other
+    
     def removeItems(self, items):
         ''' List.removeItems is the opposite of list.extend. Useful for 
             ObservableList to be able to generate just one notification 
@@ -35,69 +48,82 @@ class Event(object):
     def values(self):
         return self.__values
 
+        
+class Publisher(object):
+    ''' Publisher is used to register for event notifications. It supports
+        the publisher/subscribe pattern, also known as the observer pattern.
+        Objects (Observers) interested in change notifications register a 
+        callback method via Publisher.registerObserver. The callback should
+        expect one argument; an instance of the Event class. Observers can 
+        register their interest in specific event types (topics) when 
+        registering. 
+        
+        Implementation note: 
+        - Publisher is a Singleton class since all observables and all
+        observers have to use exactly one registry to be sure that all
+        observables can reach all observers. '''
+        
+    __metaclass__ = patterns.Singleton
     
-class Observable(object):
-    ''' Observable objects can be observed by registering (subscribing) a 
-        callback method with Observable.registerObserver. The callback is 
-        called when the object changes. Subclasses should call 
-        Observer.notifyObservers to notify observers. Observers can
-        remove themselves (unsubscribe) by calling 
-        Observable.removeObserver(s). '''
-        
     def __init__(self, *args, **kwargs):
-        self.__callbacks = {}
-        super(Observable, self).__init__(*args, **kwargs)
+        super(Publisher, self).__init__(*args, **kwargs)
+        self.clear()
+        
+    def clear(self):
+        ''' Clear the registry of observers. Mainly for testing purposes. '''
+        self.__observers = {} # {eventType: [list of callbacks]}
         self.__notifyingSemaphore = 0
+    
+    def registerObserver(self, observer, eventType):
+        ''' Register an observer for an event type. The observer is a callback 
+            method that should expect one argument, an instance of Event.
+            The eventType can be anything hashable, typically a string. '''
+        observerList = self.__observers.setdefault(eventType, [])
+        if observer not in observerList:
+            observerList.append(observer)
         
+    def removeObserver(self, observer, eventType=None):
+        ''' Remove an observer. If no event type is specified, the observer
+            is removed for all event types. If an event type is specified
+            the observer is removed for that event type only. '''
+        if eventType:
+            observerListsToScan = [self.__observers.get(eventType, [])]
+        else:
+            observerListsToScan = self.__observers.values()            
+        for observerList in observerListsToScan:
+            if observer in observerList:
+                observerList.remove(observer)
+        
+    def notifyObservers(self, event):
+        ''' Notify observers of the event. The event type is extracted from
+            the event. '''
+        if self.isNotifying():
+            for observer in self.__observers.get(event.type(), []):
+                observer(event)
+                
+    def observers(self, eventType=None):
+        ''' Get the currently registered observers. Optionally specify
+            a specific event type to get observers for that event type only. '''
+        if eventType:
+            return self.__observers.get(eventType, [])
+        else:
+            return [observer for observersForEventType in \
+                    self.__observers.values() for observer in \
+                    observersForEventType]
+    
     def stopNotifying(self):
+        ''' Temporarily stop notifying. Calls to stopNotifying and 
+            startNotifying can be nested. As soon as startNotifying has been
+            called the same number of times as stopNotifying, notifying is 
+            resumed again. ''' 
         self.__notifyingSemaphore += 1
-        
+
     def startNotifying(self):
         self.__notifyingSemaphore -= 1
 
     def isNotifying(self):
         return self.__notifyingSemaphore == 0
-        
-    def registerObserver(self, callback, *eventTypes):
-        ''' Register an observer. The callback should be a callable and 
-            accept one argument (an Event), see Observable.notifyObservers. 
-            Observers should tell the observable they are interested 
-            in a certain type of event (at least one). Event types are
-            typically strings, but can be anything as long as its
-            hashable. '''
-        for eventType in eventTypes:
-            self.__callbacks.setdefault(eventType, []).append(callback)
-        
-    def removeObserver(self, callbackToRemove, *eventTypes):
-        ''' Remove a callback that was registered earlier. Use this
-            method (as opposed to Observable.removeObservers to remove
-            observers for specific event types. '''
-        eventTypes = eventTypes or self.__callbacks.keys()
-        for eventType in eventTypes:
-            if callbackToRemove in self.__callbacks[eventType]:
-                self.__callbacks[eventType].remove(callbackToRemove)
-
-    def removeObservers(self, *callbacksRoRemove):
-        ''' Remove callbacks that were registered earlier. The callbacks
-            are removed for all event types. If you want to remove 
-            callbacks for a specific event type only, use 
-            Observable.removeObserver. '''
-        for callback in callbacksRoRemove:
-            self.removeObserver(callback)
-
-    def notifyObservers(self, *events):
-        if not self.isNotifying():
-            return
-        for event in events:
-            for callback in self.observers(event.type()):
-                callback(event)
-
-    def observers(self, eventType):
-        # Make a copy of the callbacks so event handlers that are
-        # registered during notification of an event are not notified
-        # for that event.
-        return self.__callbacks.get(eventType, [])[:] 
-
+    
 
 class Observer(object):
     def __init__(self, observable, *args, **kwargs):
@@ -111,83 +137,135 @@ class Observer(object):
         return getattr(self.observable(), attribute)
 
 
-class ObservableList(Observable, List):
-    ''' ObservableList is a list that is observable and notifies observers 
-        when items are added to or removed from the list. '''
-        
-    # FIXME: How about __setitem__ and __setslice__?
-    # FIXME: We really only need extend and removeItems.
+class Observable(object):
+    def __init__(self, *args, **kwargs):
+        self.notifyObservers = patterns.Publisher().notifyObservers
+        super(Observable, self).__init__(*args, **kwargs)
+
+
+class ObservableCollection(Observable):
+    def __hash__(self):
+        ''' Make ObservableCollections suitable as keys in dictionaries. '''
+        return hash(id(self))
+
+    def addItemEventType(self):
+        ''' The event type used to notify observers that one or more items
+            have been added to the list. '''
+        return '%s (%s).add'%(self.__class__, id(self))
     
+    def removeItemEventType(self):
+        ''' The event type used to notify observers that one or more items
+            have been removed from the list. '''
+        return '%s (%s).remove'%(self.__class__, id(self))
+
+    def notifyObserversOfItemsAdded(self, *items):
+        self.notifyObservers(Event(self, self.addItemEventType(), *items))
+
+    def notifyObserversOfItemsRemoved(self, *items):
+        self.notifyObservers(Event(self, self.removeItemEventType(), *items))
+
+
+class ObservableSet(ObservableCollection, set):
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self is other
+        else:
+            return list(self) == other
+
     def append(self, item):
-        super(ObservableList, self).append(item)
-        self.notifyObservers(Event(self, 'list.add', item))
+        self.add(item)
+        self.notifyObserversOfItemsAdded(item)
 
     def extend(self, items):
         if items:
+            self.update(items)
+            self.notifyObserversOfItemsAdded(*items)
+        
+    def remove(self, item):
+        super(ObservableSet, self).remove(item)
+        self.notifyObserversOfItemsRemoved(item)
+    
+    def removeItems(self, items):
+        if items:
+            self.difference_update(items)
+            self.notifyObserversOfItemsRemoved(*items)
+    
+    def clear(self):
+        if self:
+            items = tuple(self)
+            super(ObservableSet, self).clear()
+            self.notifyObserversOfItemsRemoved(*items)
+    
+class ObservableList(ObservableCollection, List):
+    ''' ObservableList is a list that notifies observers 
+        when items are added to or removed from the list. '''
+        
+    def append(self, item):
+        super(ObservableList, self).append(item)
+        self.notifyObserversOfItemsAdded(item)
+        
+    def extend(self, items):
+        if items:
             super(ObservableList, self).extend(items)
-            self.notifyObservers(Event(self, 'list.add', *items))
-
-    def insert(self, index, item):
-        super(ObservableList, self).insert(index, item)
-        self.notifyObservers(Event(self, 'list.add', item))
-
+            self.notifyObserversOfItemsAdded(*items)
+            
     def remove(self, item):
         super(ObservableList, self).remove(item)
-        self.notifyObservers(Event(self, 'list.remove', item))
+        self.notifyObserversOfItemsRemoved(item)
     
     def removeItems(self, items):
         if items:
             super(ObservableList, self).removeItems(items)
-            self.notifyObservers(Event(self, 'list.remove', *items))
-            
-    def __delitem__(self, index):
-        item = self[index]
-        super(ObservableList, self).__delitem__(index)
-        self.notifyObservers(Event(self, 'list.remove', item))
-        
-    def __delslice__(self, *slice):
-        items = self.__getslice__(*slice)
-        if items:
-            super(ObservableList, self).__delslice__(*slice)
-            self.notifyObservers(Event(self, 'list.remove', *items))
+            self.notifyObserversOfItemsRemoved(*items)
 
+    def clear(self):
+        if self:
+            items = tuple(self)
+            del self[:]
+            self.notifyObserversOfItemsRemoved(*items) 
+               
 
-class ListDecorator(Observer, ObservableList):
-    ''' ListDecorator observes an ObservableList and is an
-        ObservableList itself. Its purpose is to decorate another list
-        and add some behaviour, such as sorting or filtering. Users of
-        this class shouldn't see a difference between using the original
-        list or a decorated version. '''
-    
-    def __init__(self, observedList, *args, **kwargs):
-        super(ListDecorator, self).__init__(observedList, *args, **kwargs)
-        self.observable().registerObserver(self.onAddItem, 'list.add')
-        self.observable().registerObserver(self.onRemoveItem, 'list.remove')
+class CollectionDecorator(Observer, ObservableCollection):
+    ''' CollectionDecorator observes an ObservableCollection and is an
+        ObservableCollection itself too. Its purpose is to decorate another 
+        collection and add some behaviour, such as sorting or filtering. 
+        Users of this class shouldn't see a difference between using the 
+        original collection or a decorated version. '''
+
+    def __init__(self, observedCollection, *args, **kwargs):
+        super(CollectionDecorator, self).__init__(observedCollection, *args, **kwargs)
+        patterns.Publisher().registerObserver(self.onAddItem, 
+            eventType=self.observable().addItemEventType())
+        patterns.Publisher().registerObserver(self.onRemoveItem, 
+            eventType=self.observable().removeItemEventType())
         self.extendSelf(self.observable())
+
+    def __repr__(self):
+        return '%s(%s)'%(self.__class__, super(CollectionDecorator, self).__repr__())
 
     def onAddItem(self, event):
         ''' The default behaviour is to simply add the items that are
-            added to the original list to this list too. Extend to add
-            behaviour. '''
+            added to the original collection to this collection too. 
+            Extend to add behaviour. '''
         self.extendSelf(event.values())
 
     def onRemoveItem(self, event):
         ''' The default behaviour is to simply remove the items that are
-            removed from the original list from this list too. Extend to add
-            behaviour. '''
+            removed from the original collection from this collection too.
+            Extend to add behaviour. '''
         self.removeItemsFromSelf(event.values())
 
     def extendSelf(self, items):
-        ''' Provide a method to extend this list without delegating to
-            the observed list. '''
-        super(ListDecorator, self).extend(items)
+        ''' Provide a method to extend this collection without delegating to
+            the observed collection. '''
+        super(CollectionDecorator, self).extend(items)
         
     def removeItemsFromSelf(self, items):
-        ''' Provide a method to remove items from this list without 
-            delegating to the observed list. '''
-        super(ListDecorator, self).removeItems(items)
+        ''' Provide a method to remove items from this collection without 
+            delegating to the observed collection. '''
+        super(CollectionDecorator, self).removeItems(items)
 
-    # delegate changes to the original list
+    # Delegate changes to the observed collection
 
     def append(self, item):
         self.observable().append(item)
@@ -201,13 +279,10 @@ class ListDecorator(Observer, ObservableList):
     def removeItems(self, items):
         self.observable().removeItems(items)
         
-    def __delitem__(self, index):
-        del self.observable()[index]
 
-    def __delslice__(self, *slice):
-        self.observable().__delslice__(*slice)
+class ListDecorator(CollectionDecorator, ObservableList):
+    pass
 
-    def insert(self, index, item):
-        self.observable().insert(index, item)
 
-    
+class SetDecorator(CollectionDecorator, ObservableSet):
+    pass

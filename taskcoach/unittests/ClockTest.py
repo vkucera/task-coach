@@ -1,4 +1,4 @@
-import test, wx
+import test, wx, patterns
 import domain.date as date
         
 class ClockTest(test.wxTestCase):
@@ -7,13 +7,15 @@ class ClockTest(test.wxTestCase):
         self.clock = date.Clock()
          
     def tearDown(self):
-        date.Clock.deleteInstance()
+        if date.Clock.hasInstance():
+            date.Clock.deleteInstance()
         
     def onEvent(self, event):
         self.events.append(event)
                 
     def testNotification(self):
-        self.clock.registerObserver(self.onEvent, 'clock.second')
+        patterns.Publisher().registerObserver(self.onEvent, 
+            eventType='clock.second')
         self.clock.notify()
         self.assertEqual(1, len(self.events))
         
@@ -27,7 +29,7 @@ class ClockTest(test.wxTestCase):
         
     def testRegisterForSpecificTime(self):
         realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=1)
-        self.clock.registerObserver(self.onEvent, realSoonNow)
+        patterns.Publisher().registerObserver(self.onEvent, 
+            eventType=date.Clock.eventType(realSoonNow))
         self.clock.notify(now=realSoonNow)
         self.assertEqual(1, len(self.events))
-            

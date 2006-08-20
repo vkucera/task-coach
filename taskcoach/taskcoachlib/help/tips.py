@@ -7,15 +7,8 @@ _('''%(name)s has unlimited undo and redo. Any change that you make, be it editi
 _('''%(name)s is available in a number of different languages. Select 'Edit' -> 'Preferences' to see whether your language is one of them. If your language is not available or the translation needs improvement, please consider to help translating %(name)s. Visit %(url)s for more information about how you can help.''')%meta.metaDict,
 _('''If you enter a URL (e.g. %(url)s) in a task or effort description, it becomes clickable. Clicking such a URL will open your default webbrowser and load the referred webpage.''')%meta.metaDict,
 _('''You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks.'''),
-_('''You can drag files from a file browser onto a task to create
-attachments. Dragging the files over a tab will raise the appropriate
-page, dragging the files over a collapsed task (the boxed + sign) in the
-tree view will expand the task to show its subtasks.'''),
-_('''What is actually printed when you select 'File' -> 'Print' depends
-on the current view. If the current view shows the task list, a list of
-tasks will be printed, if the current view shows effort grouped by
-month, that will be printed. The same goes for visible columns, sort
-order, filtered tasks, etc.''')
+_('''You can drag files from a file browser onto a task to create attachments. Dragging the files over a tab will raise the appropriate page, dragging the files over a collapsed task (the boxed + sign) in the tree view will expand the task to show its subtasks.'''),
+_('''What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc.''')
 ]
 
 class TipProvider(wx.PyTipProvider):

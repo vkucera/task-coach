@@ -15,8 +15,8 @@ ifeq ($(shell uname),Darwin)
 endif
 
 ifeq ($(shell uname),CYGWIN_NT-5.1)
-    PYTHONEXE=$(shell python -c "import sys, re; print re.sub('/cygdrive/([a-z])', r'\1:', '\ '.join(sys.argv[1:]))" $(shell which $(PYTHON)))
-    PYTHONTOOLDIR=$(dir $(PYTHONEXE))/Tools
+    PYTHONEXEDIR=$(shell python -c "import sys, re; print re.sub('/cygdrive/([a-z])', r'\1:', '\ '.join(sys.argv[1:])).strip('python')" $(shell which $(PYTHON)))
+    PYTHONTOOLDIR=$(PYTHONEXEDIR)/Tools
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
     GETTEXT=python $(PYTHONTOOLDIR)/i18n/pygettext.py
 endif
@@ -56,7 +56,7 @@ changes:
 	$(PYTHON) changes.in/make.py html > website.in/changes.html
  
 
-CLEANFILES=*.pyc */*.pyc */*/*.pyc build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle
+CLEANFILES=*.pyc */*.pyc */*/*.pyc build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
 REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/i18n/??_??.py
 
 clean:

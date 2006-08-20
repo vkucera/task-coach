@@ -18,6 +18,7 @@ class PerformanceTest(test.TestCase):
     def tearDown(self):
         self.mockApp.mainwindow.quit()
         os.remove(self.taskfilename)
+        super(PerformanceTest, self).tearDown()
 
     def testRead(self):
         start = time.time()

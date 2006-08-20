@@ -1,4 +1,4 @@
-import meta, wx
+import meta, wx, patterns
 from i18n import _
 import domain.date as date
         
@@ -11,25 +11,27 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap
         self.__iconSize = self.__determineIconSize()
-        self.__taskList.registerObserver(self.onAddItem, 'list.add')
-        self.__taskList.registerObserver(self.onRemoveItem, 'list.remove')
+        patterns.Publisher().registerObserver(self.onAddItem,
+            eventType=self.__taskList.addItemEventType())
+        patterns.Publisher().registerObserver(self.onRemoveItem, 
+            eventType=self.__taskList.removeItemEventType())
+        patterns.Publisher().registerObserver(self.onStartTracking,
+            eventType='task.track.start')
+        patterns.Publisher().registerObserver(self.onStopTracking,
+            eventType='task.track.stop')
+        patterns.Publisher().registerObserver(self.onChangeDueDate,
+            eventType='task.dueDate')
         self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, mainwindow.restore)
         self.__setTooltipText()
+        self.__setIcon()
 
     # Event handlers:
 
     def onAddItem(self, event):
-        for task in event.values():
-            task.registerObserver(self.onStartTracking, 'task.track.start')
-            task.registerObserver(self.onStopTracking, 'task.track.stop')
-            task.registerObserver(self.onChangeDueDate, 'task.dueDate')
         self.__setTooltipText()
         self.__startTicking()
         
     def onRemoveItem(self, event):
-        for task in event.values():
-            task.removeObservers(self.onStartTracking,
-                self.onStopTracking, self.onChangeDueDate)
         self.__setTooltipText()
         self.__stopTicking()
 

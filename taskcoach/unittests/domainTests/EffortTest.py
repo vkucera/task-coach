@@ -27,49 +27,57 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual(date.TimeDelta(days=1), self.effort.duration())
 
     def testNotificationForSetStart(self):
-        self.effort.registerObserver(self.onEvent, 'effort.start')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.start')
         start = date.DateTime.now()
         self.effort.setStart(start)
         self.assertEqual(start, self.events[0].value())
         
     def testNotificationForSetStop(self):
-        self.effort.registerObserver(self.onEvent, 'effort.stop')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.stop')
         stop = date.DateTime.now()
         self.effort.setStop(stop)
         self.assertEqual(stop, self.events[0].value())
 
     def testDurationNotificationForSetStart(self):
-        self.effort.registerObserver(self.onEvent, 'effort.duration')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.duration')
         start = date.DateTime.now()
         self.effort.setStart(start)
         self.assertEqual(patterns.Event(self.effort, 'effort.duration',
             self.effort.duration()), self.events[0])
 
     def testDurationNotificationForSetStop(self):
-        self.effort.registerObserver(self.onEvent, 'effort.duration')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.duration')
         stop = date.DateTime.now()
         self.effort.setStop(stop)
         self.assertEqual(patterns.Event(self.effort, 'effort.duration',
             self.effort.duration()), self.events[0])
         
     def testNotificationForSetDescription(self):
-        self.effort.registerObserver(self.onEvent, 'effort.description')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.description')
         self.effort.setDescription('description')
         self.assertEqual('description', self.events[0].value())
 
     def testNotificationForSetTask(self):
-        self.effort.registerObserver(self.onEvent, 'effort.task')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.task')
         task2 = task.Task()
         self.effort.setTask(task2)
         self.assertEqual(task2, self.events[0].value())
 
     def testNotificationForStartTracking(self):
-        self.effort.registerObserver(self.onEvent, 'effort.track.start')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.track.start')
         self.effort.setStop(date.Date())
         self.assertEqual('effort.track.start', self.events[0].type())
 
     def testNotificationForStopTracking(self):
-        self.effort.registerObserver(self.onEvent, 'effort.track.stop')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.track.stop')
         self.effort.setStop(date.Date())
         self.effort.setStop(date.DateTime.now())
         self.assertEqual('effort.track.stop', self.events[0].type())
@@ -86,16 +94,6 @@ class EffortTest(test.TestCase, asserts.Mixin):
         newEffort = effort.Effort(task.Task())
         newEffort.__setstate__(state)
         self.assertEqualEfforts(newEffort, self.effort)
-        
-    def testCompare_Smaller(self):
-        newEffort = effort.Effort(self.task, start=date.DateTime(2005,1,1),
-            stop=date.DateTime(2005,1,2))
-        self.failUnless(self.effort < newEffort)
-
-    def testCompare_Bigger(self):
-        newEffort = effort.Effort(self.task, start=date.DateTime(2005,1,1),
-            stop=date.DateTime(2005,1,2))
-        self.failUnless(newEffort > self.effort)
         
     def testCopy(self):
         copyEffort = self.effort.copy()
@@ -168,5 +166,26 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task.addEffort(effort.Effort(self.task, 
             date.DateTime(2005,1,1,10,0), date.DateTime(2005,1,1,22,0)))
         self.assertEqual(2./3*1000., self.effort.revenue())
-        
 
+
+class EffortWithoutTaskTest(test.TestCase):   
+    def setUp(self):
+        self.effort = effort.Effort(None, start=date.DateTime(2005,1,1))
+        self.task = task.Task()
+        self.events = []
+        
+    def onEvent(self, event):
+        self.events.append(event)
+        
+    def testCreatingAnEffortWithoutTask(self):
+        self.assertEqual(None, self.effort.task())
+        
+    def testSettingTask(self):
+        self.effort.setTask(self.task)
+        self.assertEqual(self.task, self.effort.task())
+    
+    def testSettingTask_CausesNoNotification(self):
+        patterns.Publisher().registerObserver(self.onEvent, 'effort.task')
+        self.effort.setTask(self.task)
+        self.failIf(self.events)
+        

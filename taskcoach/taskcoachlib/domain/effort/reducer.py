@@ -2,16 +2,22 @@ import patterns, effort
 from domain import date
 
 
-class EffortAggregator(patterns.ListDecorator):
+class EffortAggregator(patterns.SetDecorator):
     ''' This class observes an TaskList and aggregates the individual effort
         records to CompositeEfforts, e.g. per day or per week. This class is 
         abstract. Subclasses should implement startOfPeriod(dateTime)
         and endOfPeriod(dateTime). '''
-
     def __init__(self, *args, **kwargs):
-        self.__taskAndTimeToCompositesMap = {}
-        self.__taskToCompositesMap = {}
+        self.__composites = {}
         super(EffortAggregator, self).__init__(*args, **kwargs)
+        patterns.Publisher().registerObserver(self.onCompositeEmpty,
+            eventType='effort.composite.empty')
+        patterns.Publisher().registerObserver(self.onEffortAddedToTask, 
+            eventType='task.effort.add')
+        patterns.Publisher().registerObserver(self.onChildAddedToTask,
+            eventType='task.child.add')
+        patterns.Publisher().registerObserver(self.onEffortStartChanged, 
+            eventType='effort.start')
 
     def extendSelf(self, tasks):
         ''' extendSelf is called when an item is added to the observed
@@ -19,16 +25,10 @@ class EffortAggregator(patterns.ListDecorator):
             to the observing list (i.e. this list) unchanged. We override 
             the default behavior to first get the efforts from the task
             and then group the efforts by time period. '''
-        newEfforts = []
-        for newTask in tasks:
-            newTask.registerObserver(self.onEffortAddedToTask, 
-                'task.effort.add')
-            newTask.registerObserver(self.onEffortRemovedFromTask, 
-                'task.effort.remove')
-            newTask.registerObserver(self.onChildAddedToTask, 
-                'task.child.add')
-            newEfforts.extend(newTask.efforts())
-        self.addComposites(self.addEfforts(newEfforts))
+        newComposites = []
+        for task in tasks:
+            newComposites.extend(self.createComposites(task, task.efforts()))
+        super(EffortAggregator, self).extendSelf(newComposites)
 
     def removeItemsFromSelf(self, tasks):
         ''' removeItemsFromSelf is called when an item is removed from the 
@@ -36,91 +36,75 @@ class EffortAggregator(patterns.ListDecorator):
             remove the item from the observing list (i.e. this list)
             unchanged. We override the default behavior to remove the 
             tasks' efforts from the CompositeEfforts they are part of. '''
-        compositesToRemove = []
         for task in tasks:
-            task.removeObservers(self.onEffortAddedToTask,
-                                 self.onEffortRemovedFromTask,
-                                 self.onChildAddedToTask)
-            for effort in task.efforts():
-                effort.removeObserver(self.onEffortChanged)
-            compositesToRemove.extend(self.__taskToCompositesMap.get(task, []))
-        self.removeComposites(compositesToRemove)
-
-    def onChildAddedToTask(self, event):
-        child = event.value() 
-        self.addComposites(self.addEfforts(child.efforts(recursive=True)))
+            self.removeComposites(task, task.efforts())
 
     def onEffortAddedToTask(self, event):
-        self.addComposites(self.addEfforts(event.values()))
-
-    def onEffortRemovedFromTask(self, event):
-        event.value().removeObserver(self.onEffortChanged)
-
-    def onEffortChanged(self, event):
-        ''' onEffortChanged is called when the start datetime or the
-            task of an effort record has changed. '''
-        effortChanged = event.source()
-        self.addComposites(self.addEfforts([effortChanged]))
+        task, effort = event.source(), event.value()
+        if task in self.observable():
+            newComposites = self.createComposites(task, [effort])
+            super(EffortAggregator, self).extendSelf(newComposites)
+        
+    def onChildAddedToTask(self, event):
+        task, child = event.source(), event.value()
+        if task in self.observable():
+            newComposites = self.createComposites(task,
+                child.efforts(recursive=True))
+            super(EffortAggregator, self).extendSelf(newComposites)
 
     def onCompositeEmpty(self, event):
-        self.removeComposites([event.source()])
-
-    def addComposites(self, composites):
-        for composite in composites:
-            composite.registerObserver(self.onCompositeEmpty, 'list.empty')
-        super(EffortAggregator, self).extendSelf(composites)
-
-    def removeComposites(self, composites):
-        for composite in composites:
-            composite.removeObserver(self.onCompositeEmpty)
-            task = composite.task()
-            self.__taskToCompositesMap[task].remove(composite)
-            key = (task.id(), composite.getStart())
-            del self.__taskAndTimeToCompositesMap[key]
-        super(EffortAggregator, self).removeItemsFromSelf(composites)
+        composite = event.source()
+        key = (composite.task(), composite.getStart())
+        if key not in self.__composites:
+            # A composite may already have been removed, e.g. when a
+            # parent and child task have effort in the same period
+            return
+        del self.__composites[(composite.task(), composite.getStart())]
+        super(EffortAggregator, self).removeItemsFromSelf([composite])
         
-    def addEfforts(self, efforts):
-        newComposites = set()
+    def onEffortStartChanged(self, event):
+        effort, start = event.source(), event.value()
+        task = effort.task()
+        if (task in self.observable()) and \
+           ((task, self.startOfPeriod(start)) not in self.__composites):
+                newComposites = self.createComposites(task, [effort])
+                super(EffortAggregator, self).extendSelf(newComposites)
+            
+    def createComposites(self, task, efforts):
+        newComposites = []
+        taskAndAncestors = [task] + task.ancestors()
         for effort in efforts:
-            effort.registerObserver(self.onEffortChanged, 'effort.start')
-            newComposites |= self.addEffort(effort)
-        newComposites.discard(None)
+            for task in taskAndAncestors:
+                newComposites.extend(self.createComposite(effort, task))
         return newComposites
 
-    def addEffort(self, newEffort):
-        newComposites = set()
-        for task in [newEffort.task()] + newEffort.task().ancestors():
-            newComposites.add(self.addEffortForTask(newEffort, task))
-        return newComposites
-
-    def addEffortForTask(self, newEffort, task):
-        startOfEffort = newEffort.getStart()
+    def createComposite(self, anEffort, task):
+        startOfEffort = anEffort.getStart()
         startOfPeriod = self.startOfPeriod(startOfEffort)
-        key = (task.id(), startOfPeriod)
-        if key in self.__taskAndTimeToCompositesMap:
-            newComposite = None
-        else:
-            newComposite = effort.CompositeEffort(task, startOfPeriod, 
+        key = (task, startOfPeriod) 
+        if key in self.__composites:
+            return []
+        newComposite = effort.CompositeEffort(task, startOfPeriod, 
                 self.endOfPeriod(startOfEffort))
-            self.__taskToCompositesMap.setdefault(task, []).append(newComposite)
-            self.__taskAndTimeToCompositesMap[key] = newComposite
-        return newComposite
+        self.__composites[key] = newComposite
+        return [newComposite]
 
-    def startOfPeriod(self, dateTime):
-        ''' For a given dateTime, startOfPeriod returns the start-dateTime 
-            of the period dateTime belongs to. '''
-        raise NotImplementedError
+    def removeComposites(self, task, efforts):
+        taskAndAncestors = [task] + task.ancestors()
+        for effort in efforts:
+            for task in taskAndAncestors:
+                self.removeComposite(effort, task)
 
-    def endOfPeriod(self, dateTime):
-        ''' For a given dateTime, endOfPeriod returns the end-dateTime 
-            of the period dateTime belongs to. '''
-        raise NotImplementedError
-
-    def originalLength(self):
-        ''' Do not delegate originalLength to the observed TaskList because 
-            that would return a number of tasks, and not the number of 
-            effort records.'''
-        return len(self)
+    def removeComposite(self, anEffort, task):
+        startOfEffort = anEffort.getStart()
+        startOfPeriod = self.startOfPeriod(startOfEffort)
+        key = (task, startOfPeriod) 
+        if key not in self.__composites:
+            # A composite may already have been removed, e.g. when a
+            # parent and child task have effort in the same period
+            return
+        compositeToRemove = self.__composites.pop(key)
+        super(EffortAggregator, self).removeItemsFromSelf([compositeToRemove])
 
     def maxDateTime(self):
         stopTimes = [effort.getStop() for composite in self for effort
@@ -134,7 +118,7 @@ class EffortAggregator(patterns.ListDecorator):
 class EffortPerDay(EffortAggregator):        
     startOfPeriod = date.DateTime.startOfDay
     endOfPeriod = date.DateTime.endOfDay
-
+    
 
 class EffortPerWeek(EffortAggregator): 
     startOfPeriod = date.DateTime.startOfWeek
@@ -144,4 +128,4 @@ class EffortPerWeek(EffortAggregator):
 class EffortPerMonth(EffortAggregator):
     startOfPeriod = date.DateTime.startOfMonth
     endOfPeriod = date.DateTime.endOfMonth
-        
+    
