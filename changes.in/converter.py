@@ -1,4 +1,4 @@
-import textwrap, domain
+import textwrap, changetypes
 
 
 # Change (bugs fixed, features added, etc.) converters:

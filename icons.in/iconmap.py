@@ -5,6 +5,7 @@ iconlist = [
 ('edit', 'actions', 'edit', [16, 22, 32]),
 ('fileopen', 'actions', 'fileopen', [16, 22, 32]),
 ('print', 'actions', 'fileprint', [16]),
+('export', 'actions', 'fileexport', [16]),
 ('exportasics', 'mimetypes', 'vcalendar', [16]),
 ('exportashtml', 'mimetypes', 'html', [16]),
 ('close', 'actions', 'fileclose', [16]),
