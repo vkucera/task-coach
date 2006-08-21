@@ -1,6 +1,6 @@
 # -*- coding: ISO8859-1 -*-
 
-from domain import *
+from changetypes import *
 
 releases = [             
 Release('0.59', 'August ?, 2006',

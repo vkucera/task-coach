@@ -12,11 +12,13 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
     def appendUICommand(self, uiCommand):
         return uiCommand.appendToMenu(self, self._window)    
     
-    def appendMenu(self, text, subMenu):
+    def appendMenu(self, text, subMenu, bitmap=None):
         subMenuItem = wx.MenuItem(self, text=text, subMenu=subMenu)
-        # hack to force a 16 bit margin. SetMarginWidth doesn't work
-        if '__WXMSW__' in wx.PlatformInfo:
-            subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap('nobitmap', 
+        if not bitmap and '__WXMSW__' in wx.PlatformInfo:
+            # hack to force a 16 bit margin. SetMarginWidth doesn't work
+            bitmap = 'nobitmap'
+        if bitmap:
+            subMenuItem.SetBitmap(wx.ArtProvider_GetBitmap(bitmap, 
                 wx.ART_MENU, (16,16)))
         self.AppendItem(subMenuItem)
 
@@ -57,7 +59,8 @@ class FileMenu(Menu):
         self.appendUICommands(uiCommands, ['open', 'merge', 'close', None, 
             'save', 'saveas', 'saveselection', None, 'printpagesetup',
             'printpreview', 'print', None])
-        self.appendMenu(_('&Export'), ExportMenu(mainwindow, uiCommands))
+        self.appendMenu(_('&Export'), ExportMenu(mainwindow, uiCommands),
+            'export')
         self.__recentFilesStartPosition = len(self) 
         self.appendUICommands(uiCommands, [None, 'quit'])
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
@@ -129,9 +132,9 @@ class ViewMenu(Menu):
         self.appendMenu(_('Effort &columns'), ViewEffortColumnsMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('Task &list options'), 
-            ViewTaskListMenu(mainwindow, uiCommands))
+            ViewTaskListMenu(mainwindow, uiCommands), 'listview')
         self.appendMenu(_('Task &tree options'), 
-            ViewTaskTreeMenu(mainwindow, uiCommands))
+            ViewTaskTreeMenu(mainwindow, uiCommands), 'treeview')
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])

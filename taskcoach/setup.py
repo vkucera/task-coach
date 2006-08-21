@@ -16,9 +16,9 @@ setupOptions = {
         'command', 'widgets', 'gui', 'gui.dialog', 'i18n', 'log', 'patterns', 
         'help', 'domain', 'persistence', 'thirdparty')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
-        'date', 'effort', 'task')] +
+        'date', 'category', 'effort', 'task')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
-        'ics')],
+        'ics', 'html')],
     'scripts' : ['taskcoach.py', 'taskcoach.pyw'],
     'classifiers' : [\
         'Development Status :: 3 - Alpha',

@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 import wx, unittest
-#from wx.lib.combotreebox import ComboTreeBox, IterableTreeCtrl
-from ComboTreeBox import ComboTreeBox, IterableTreeCtrl
+from wx.lib.combotreebox import ComboTreeBox, IterableTreeCtrl
 
 
 class ComboTreeBoxTest(unittest.TestCase):

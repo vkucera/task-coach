@@ -37,8 +37,8 @@ workaround.
 Author: Frank Niessink <frank@niessink.com>
 Copyright 2006, Frank Niessink
 License: wxWidgets license
-Version: 0.8 (unreleased)
-Date: August 18, 2006
+Version: 0.8
+Date: August 21, 2006
 '''
 
 import wx
