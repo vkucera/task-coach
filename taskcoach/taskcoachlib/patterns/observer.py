@@ -21,6 +21,13 @@ class List(list):
             list.remove(self, item) 
 
 
+class Set(set):
+    ''' The builtin set type does not like keyword arguments, so to keep
+        it happy we don't pass these on. '''
+    def __new__(class_, iterable=None, *args, **kwargs):
+        return set.__new__(class_, iterable)
+
+
 class Event(object):
     ''' Event represents notification events. '''
     def __init__(self, source, type, *values):
@@ -165,7 +172,7 @@ class ObservableCollection(Observable):
         self.notifyObservers(Event(self, self.removeItemEventType(), *items))
 
 
-class ObservableSet(ObservableCollection, set):
+class ObservableSet(ObservableCollection, Set):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self is other
@@ -196,6 +203,7 @@ class ObservableSet(ObservableCollection, set):
             super(ObservableSet, self).clear()
             self.notifyObserversOfItemsRemoved(*items)
     
+
 class ObservableList(ObservableCollection, List):
     ''' ObservableList is a list that notifies observers 
         when items are added to or removed from the list. '''

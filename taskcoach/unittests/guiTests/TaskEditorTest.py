@@ -111,6 +111,7 @@ class NewTaskTest(TaskEditorTestCase):
     def testOpenAttachmentWithNonAsciiFileNameThrowsException(self):
         ''' os.startfile() does not accept unicode filenames. This will be 
             fixed in Python 2.5. This test will fail if the bug is fixed. '''
+        self.errorMessage = ''
         def onError(*args, **kwargs):
             self.errorMessage = args[0]
         item = wx.ListItem()
@@ -119,7 +120,10 @@ class NewTaskTest(TaskEditorTestCase):
         item.SetState(wx.LIST_STATE_SELECTED)
         self.editor[0][4]._listCtrl.InsertItem(item)
         self.editor[0][4].onOpen(None, showerror=onError)
-        self.failUnless(self.errorMessage.startswith("'ascii' codec can't encode character"))
+        if '__WXMSW__' in wx.PlatformInfo:
+            self.failUnless(self.errorMessage.startswith("'ascii' codec can't encode character"))
+        else:
+            self.assertEqual('', self.errorMessage)
         
         
 class NewSubTaskTest(TaskEditorTestCase):
