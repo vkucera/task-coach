@@ -160,6 +160,7 @@ class SearchFilter(Filter):
 
 class CategoryFilter(Filter):
     def __init__(self, *args, **kwargs):
+        import sys
         self.__settings = kwargs.pop('settings')
         patterns.Publisher().registerObserver(self.onSettingChanged, 
             eventType='view.taskcategoryfiltermatchall')

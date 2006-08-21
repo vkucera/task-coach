@@ -450,6 +450,9 @@ class BaseComboTreeBox(object):
         item = self.FindClientData(clientData)
         if item:
             self._tree.SelectItem(item)
+            string = self._tree.GetItemText(item)
+            if self._text.GetValue() != string:
+                self._text.SetValue(string)
             return True
         else:
             return False
