@@ -12,7 +12,7 @@ class CategoriesFilterDialogTest(test.wxTestCase):
         taskList.append(aTask)
         self.dialog = gui.CategoriesFilterDialog(parent=self.frame,
             title='View categories', taskList=self.filter, 
-            settings=self.settings)
+            settings=self.settings, raiseDialog=False)
             
     def testFilterOnCategory(self):
         self.dialog._checkListBox.Check(0)
