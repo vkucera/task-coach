@@ -45,9 +45,9 @@ class ChangeToHTMLConverter(ChangeConverter):
         return '<LI>%s</LI>'%convertedChange
 
     def convertSourceForgeId(self, change, sourceForgeId):
-        if isinstance(change, domain.Bug):
+        if isinstance(change, changetypes.Bug):
             template = bugLink    
-        elif isinstance(change, domain.Feature):
+        elif isinstance(change, changetypes.Feature):
             template = rfeLink
         else:
             template = noLink

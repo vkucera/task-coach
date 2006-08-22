@@ -38,11 +38,23 @@ pages['credits'] = \
         HREF="http://www.jrsoftware.org">Inno Setup</A>. %(name)s source
         code and releases are hosted by <A
         HREF="http://sourceforge.net/">Sourceforge</A>.</P>
-        <P>Donations to %(name)s are much appreciated. Donations are listed 
-        <A HREF="https://sourceforge.net/project/project_donations.php?group_id=130831">here</A>
-        at Sourceforge.</P>
 '''
 
+pages['donations'] = \
+'''        <H3>Donations</H3>
+        <P>Donations for the development of %(name)s are very much appreciated.
+        Options for donating are:
+        <UL>
+            <LI><A HREF="https://sourceforge.net/donate/index.php?group_id=130831">Donate
+            via SourceForge</A>. Fees are deducted for PayPal and 
+            SourceForge.
+        Peevious donations made via SourceForge are listed <A
+        HREF="https://sourceforge.net/project/project_donations.php?group_id=130831">here</A>.
+            <LI>Donate directly via <A HREF="http://www.paypal.com">PayPal</A>.
+            Please use the email address &lt;%(author_email)s&gt;.</P>
+        </UL>
+        </P>
+'''
 
 pages['changes'] = file('changes.html').read()
 
@@ -70,7 +82,8 @@ pages['features'] = \
             <LI>Tasks can be sorted by all task attributes, e.g. subject,
             budget, budget left, due date, etc.
             <LI>Several filters to e.g. hide completed tasks or view
-            only tasks that are due today. 
+            only tasks that are due today. Filters can be managed through
+            the filter side bar.
             <LI>Task status depends on its subtask and vice versa. E.g. if 
             you mark the last uncompleted subtask as completed, the parent 
             task is automatically marked as completed too.
@@ -177,6 +190,18 @@ pages['faq'] = \
     <P>Yes, when you are tracking effort for a task, select the second
     task, right-click and select 'New effort...'. When you don't fill in
     an end-time, effort for that second task will be tracked too.</P>
+    <P><I>I'm on Linux, using a window manager with virtual desktops. If
+    I switch (back) to the virtual desktop where %(name)s was running, I can 
+    no longer find it. Where did %(name)s go?</I></P>
+    <P>%(name)s is probably minimized. Look for the little %(name)s icon
+    in the system tray, click on it with your right mouse button and
+    select 'Restore'.  Apparently, switching between virtual desktops is
+    implemented by sending a minimize event to applications.
+    Unfortunately, %(name)s has no way to distinguish between minimize
+    events caused by the window manager and minimize events caused by
+    the user minimizing the window. If you run into this issue, you may
+    want to change the setting 'Hide main window when iconized', see
+    'Edit' -> 'Preferences'.</P>
 '''
 
 pages['roadmap'] = \

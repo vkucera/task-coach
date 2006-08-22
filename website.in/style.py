@@ -44,7 +44,8 @@ footer = '''
                     <a href="devinfo.html"
                        title="Information for developers">For developers</a><br>
                     <a href="license.html">License</a><br>
-                    <a href="credits.html">Credits</a>
+                    <a href="credits.html">Credits</a><br>
+                    <a href="donations.html">Donations</a>
                 </p>
             </div>
             <div class="navbox">
