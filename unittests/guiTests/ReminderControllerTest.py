@@ -1,4 +1,5 @@
 import test, gui, patterns
+import unittests.asserts as asserts
 import domain.task as task
 import domain.date as date
 
@@ -58,7 +59,8 @@ class ReminderControllerTest(test.TestCase):
                 date.Clock.eventType(self.reminderDateTime)))
 
 
-class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
+class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase,
+        asserts.TaskListAsserts):
     def setUp(self):
         self.taskList = task.TaskList()
         self.reminderDateTime = date.DateTime.now() + date.TimeDelta(hours=1)
@@ -69,14 +71,14 @@ class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
 
     def testClockNotificationResultsInTwoMessages(self):
         date.Clock().notify(now=self.reminderDateTime)
-        self.assertEqual([self.task1.subject(), self.task2.subject()], 
-                         self.reminderController.messages)
+        self.assertEqualLists([self.task1.subject(), self.task2.subject()], 
+            self.reminderController.messages)
 
     def testChangeOneReminder(self):
         self.task1.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
         date.Clock().notify(now=self.reminderDateTime + date.TimeDelta(hours=1))
-        self.assertEqual([task.subject() for task in self.task1, self.task2], 
-                         self.reminderController.messages)
+        self.assertEqualLists([task.subject() for task in self.task1, 
+            self.task2], self.reminderController.messages)
                          
     def testChangeOneReminderDoesNotAffectTheOther(self):
         self.task1.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))

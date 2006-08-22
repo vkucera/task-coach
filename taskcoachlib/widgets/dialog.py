@@ -3,6 +3,10 @@ from i18n import _
 
 class Dialog(wx.Dialog):
     def __init__(self, parent, title, bitmap='edit', *args, **kwargs):
+        # On wxGTK, calling Raise() on the dialog causes it to be shown, which
+        # is rather undesirable during testing, so provide a way to instruct 
+        # the dialog to not call self.Raise():
+        raiseDialog = kwargs.pop('raiseDialog', True)  
         super(Dialog, self).__init__(parent, -1, title,
             style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,
@@ -18,7 +22,8 @@ class Dialog(wx.Dialog):
         self._verticalSizer.Add(self._buttonBox, 0, wx.ALIGN_CENTER)
         self._panel.SetSizerAndFit(self._verticalSizer)
         self.SetSizerAndFit(self._panelSizer)
-        wx.CallAfter(self.Raise)
+        if raiseDialog:
+            wx.CallAfter(self.Raise)
         wx.CallAfter(self._panel.SetFocus)
 
     def createButtonBox(self):

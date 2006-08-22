@@ -5,7 +5,7 @@ class PreferencesTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.preferences = gui.Preferences(parent=self.frame, title='Test',
-            settings=self.settings)
+            settings=self.settings, raiseDialog=False)
         self.originalColor = self.settings.get('color', 'activetasks')
         self.newColor = (1, 2, 29)
         

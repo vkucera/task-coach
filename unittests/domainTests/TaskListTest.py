@@ -103,7 +103,8 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
         self.assertEqual([self.task1], self.taskList.rootTasks())
         self.task2.addChild(self.task3)
         self.taskList.append(self.task2)
-        self.assertEqual([self.task1, self.task2], self.taskList.rootTasks())
+        self.assertEqualLists([self.task1, self.task2], 
+            self.taskList.rootTasks())
 
     def testMinDate_EmptyTaskList(self):
         self.assertEqual(date.Date(), self.taskList.minDate())
@@ -207,13 +208,13 @@ class RemoveTasksFromTaskListTest(test.TestCase, asserts.TaskListAsserts,
     def testRemoveTaskWithChild(self):
         self.taskList.remove(self.task2)
         self.assertTaskList([self.task1, self.task4])
-        self.assertEqual((self.task2, self.task3), self.events[0].values())
+        self.assertEqualLists((self.task2, self.task3), self.events[0].values())
         self.failIf(self.task1.children())
 
     def testRemoveTaskWithGrandchild(self):
         self.taskList.remove(self.task1)
         self.assertTaskList([self.task4])
-        self.assertEqual((self.task1, self.task2, self.task3), 
+        self.assertEqualLists((self.task1, self.task2, self.task3), 
             self.events[0].values())
 
     def testAddRemovedTask(self):

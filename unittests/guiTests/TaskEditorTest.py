@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 import test, gui, command, wx, config
 from unittests import dummy
 import domain.task as task
@@ -39,7 +39,8 @@ class TaskEditorTestCase(test.wxTestCase):
         
     def createEditor(self):
         return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
-            self.taskList, dummy.DummyUICommands(), config.Settings(load=False))
+            self.taskList, dummy.DummyUICommands(),
+            config.Settings(load=False), raiseDialog=False)
 
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
@@ -116,7 +117,7 @@ class NewTaskTest(TaskEditorTestCase):
             self.errorMessage = args[0]
         item = wx.ListItem()
         item.SetId(0)
-        item.SetText('tést.tsk')
+        item.SetText('tÃ©st.tsk')
         item.SetState(wx.LIST_STATE_SELECTED)
         self.editor[0][4]._listCtrl.InsertItem(item)
         self.editor[0][4].onOpen(None, showerror=onError)
@@ -297,13 +298,13 @@ class FocusTest(TaskEditorTestCase):
     def testFocus(self):
         # Unfortunately, it seems we *have* to show to window on Linux (Ubuntu)
         # in order to get wx.Window_FindFocus to not return None.
-        # We move the window outside the visible screen area to make it 
-        # less annoying.
-        self.editor.SetDimensions(10000, 10000, 0, 0)
-        self.editor.Show()
+        if '__WXGTK__' in wx.PlatformInfo:
+            self.editor.Show()
         if '__WXMAC__' not in wx.PlatformInfo:
             wx.Yield()
         self.assertEqual(self.editor[0][0]._subjectEntry, wx.Window_FindFocus())
+        if '__WXGTK__' in wx.PlatformInfo:
+            self.editor.Hide()
 
 
 class EffortEditorTest(TaskEditorTestCase):      
@@ -322,7 +323,7 @@ class EffortEditorTest(TaskEditorTestCase):
     
     def createEditor(self):
         return gui.dialog.editor.EffortEditor(self.frame, self.createCommand(), 
-            {}, self.effortList, self.taskList)
+            {}, self.effortList, self.taskList, raiseDialog=False)
     
     def testCreate(self):
         self.assertEqual(self.effort.getStart().date(), 
