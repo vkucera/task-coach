@@ -3,7 +3,7 @@
 from changetypes import *
 
 releases = [             
-Release('0.59', 'August ?, 2006',
+Release('0.59', 'August 23, 2006',
     bugsFixed=[
         Bug('''The column width of the list with filenames in the attachment 
 page of the task editor is now adaptable, so that long filenames can be made 

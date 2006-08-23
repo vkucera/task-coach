@@ -241,7 +241,11 @@ class MainWindow(WindowWithPersistentDimensions):
         if event.Iconized() and self.settings.getboolean('window', 
                                                          'hidewheniconized'):
             self.Hide()
-
+        else:
+            # This is not necessary on Windows/Linux Ubuntu/Mac but
+            # might help to fix bug 1429540 (Linux Mandrake)
+            event.Skip()
+            
     def showStatusBar(self, show=True):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then
         # showing the statusbar puts it in the wrong place (only on Linux?)
