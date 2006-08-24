@@ -427,7 +427,7 @@ class FileQuit(MainWindowCommand):
             id=wx.ID_EXIT, *args, **kwargs)
 
     def doCommand(self, event):
-        self.mainwindow.Close()
+        self.mainwindow.Close(force=True)
 
 
 def getUndoMenuText():

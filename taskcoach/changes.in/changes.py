@@ -3,6 +3,13 @@
 from changetypes import *
 
 releases = [             
+Release('0.60', 'August ?, 2006',
+    bugsFixed=[
+        Bug('''Selecting Japanese translation would cause error upon next 
+restart.''', '1545593'),
+        Bug('''Task Coach wouldn't quit when the setting 'Minimize window
+when closing' was set.''', '1545936')]),
+    
 Release('0.59', 'August 23, 2006',
     bugsFixed=[
         Bug('''Improved efficiency while tracking effort for tasks.''',
