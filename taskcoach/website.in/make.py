@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys
+import os, sys, glob, md5
 sys.path.append('..')
 from taskcoachlib import meta
 import style
@@ -58,7 +58,6 @@ pages['donations'] = \
 
 pages['changes'] = file('changes.html').read()
 
-
 pages['download'] = \
 '''        <H3>Download %(name)s</H3>
         <P>You can download either the source distribution, in which
@@ -69,7 +68,10 @@ pages['download'] = \
         <P>I test %(name)s on Windows XP SP2, Linux Ubuntu 6, and Mac
         OSX 10.4. I'd appreciate some feedback if you are able to run it 
         (or not) on other platforms.</P>
-        <P>Download %(name)s from <A HREF="https://sourceforge.net/project/showfiles.php?group_id=130831">Sourceforge</A>.'''
+        <P>Download %(name)s from <A HREF="https://sourceforge.net/project/showfiles.php?group_id=130831">Sourceforge</A>.
+        </P>
+        <P>The MD5 digests for the files are as follows:
+''' + file('md5digests.html').read() + '''</P>'''
 
 pages['features'] = \
 '''        <H3>Features</H3>
@@ -219,6 +221,9 @@ pages['roadmap'] = \
     a list of books to read you could define a book concept and accompanying
     fields like author, title, isbn, read/unread status, etc. That would
     also need the file format to be very flexible.</p>
+    <p>Currently, the focus of %(name)s is to support single users. In the long
+    run, support for exchange of tasks with other users should be possible,
+    probably via the iCal standard.</p>
     <p>Anyway, this is it for now, I'll add more as soon as my thoughts
     on the subject crystalize into a more coherent picture of the future 
     direction for %(name)s.</p>
