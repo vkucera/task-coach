@@ -3,7 +3,8 @@ import textwrap
 class Release:
     def __init__(self, number, date, bugsFixed=None, featuresAdded=None,
             featuresRemoved=None, featuresChanged=None, 
-            dependenciesChanged=None, implementationChanged=None):
+            dependenciesChanged=None, implementationChanged=None,
+            websiteChanges=None):
         self.number = number
         self.date = date
         self.bugsFixed = bugsFixed or []
@@ -12,9 +13,10 @@ class Release:
         self.featuresChanged = featuresChanged or []
         self.dependenciesChanged = dependenciesChanged or []
         self.implementationChanged = implementationChanged or []
+        self.websiteChanges = websiteChanges or []
 
 
-class Change:
+class Change(object):
     def __init__(self, description, *sourceForgeIds):
         self.description = description
         self.sourceForgeIds = sourceForgeIds
@@ -34,3 +36,9 @@ class Dependency(Change):
 
 class Implementation(Change):
     pass
+
+
+class Website(Change):
+    def __init__(self, description, url, *sourceForgeIds):
+        super(Website, self).__init__(description, *sourceForgeIds)
+        self.url = url
