@@ -6,6 +6,8 @@ import textwrap, changetypes
 class ChangeConverter(object):
     def convert(self, change):
         result = change.description
+        if hasattr(change, 'url'):
+            result += ' (%s)'%self.convertURL(change.url)
         if change.sourceForgeIds:
             convertedIds = self.convertSourceForgeIds(change)
             result += ' (%s)'%', '.join(convertedIds)
@@ -20,6 +22,9 @@ class ChangeConverter(object):
     def convertSourceForgeId(self, change, sourceForgeId):
         return sourceForgeId
 
+    def convertURL(self, url):
+        return url
+    
 
 class ChangeToTextConverter(ChangeConverter):
     def __init__(self):
@@ -53,6 +58,9 @@ class ChangeToHTMLConverter(ChangeConverter):
             template = noLink
         return template%{'id': sourceForgeId}
 
+    def convertURL(self, url):
+        return '<A HREF="%s">%s</A>'%(url, url)
+
 
 # Release converters:
 
@@ -71,7 +79,8 @@ class ReleaseConverter(object):
                 ('Feature%(s)s changed', release.featuresChanged),
                 ('Feature%(s)s removed', release.featuresRemoved),
                 ('Implementation%(s)s changed', release.implementationChanged),
-                ('Dependenc%(y)s changed', release.dependenciesChanged)]:
+                ('Dependenc%(y)s changed', release.dependenciesChanged),
+                ('Website change%(s)s', release.websiteChanges)]:
             if list:
                 result.append(self.sectionHeader(section, list))
                 for change in list:
