@@ -87,7 +87,7 @@ class LanguagePage(SettingsPage):
              ('nl_NL', _('Dutch')),
              ('fr_FR', _('French')),
              ('zh_CN', _('Simplified Chinese')),
-             ('ja_JA', _('Japanese')),
+             ('ja_JP', _('Japanese')),
              ('ru_RU', _('Russian')),
              ('es_ES', _('Spanish')),
              ('hu_HU', _('Hungarian'))],

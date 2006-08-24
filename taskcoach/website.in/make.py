@@ -66,7 +66,7 @@ pages['download'] = \
         and wxPython <strong>%(wxpythonversion)s</strong> (or higher), or
         you can download an executable distribution for Windows or Mac
         OSX.</P>
-        <P>I test %(name)s on Windows XP SP2, Linux Ubuntu 5.10, and Mac
+        <P>I test %(name)s on Windows XP SP2, Linux Ubuntu 6, and Mac
         OSX 10.4. I'd appreciate some feedback if you are able to run it 
         (or not) on other platforms.</P>
         <P>Download %(name)s from <A HREF="https://sourceforge.net/project/showfiles.php?group_id=130831">Sourceforge</A>.'''
