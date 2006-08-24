@@ -242,8 +242,6 @@ class MainWindow(WindowWithPersistentDimensions):
                                                          'hidewheniconized'):
             self.Hide()
         else:
-            # This is not necessary on Windows/Linux Ubuntu/Mac but
-            # might help to fix bug 1429540 (Linux Mandrake)
             event.Skip()
             
     def showStatusBar(self, show=True):
