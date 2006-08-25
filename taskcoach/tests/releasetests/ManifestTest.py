@@ -7,12 +7,13 @@ class ManifestTest(test.TestCase):
         manifestFile.close()
         self.manifest = [filename[:-1] for filename in manifestLines]
 
-    def missingPyFiles(self, dir):
+    def missingPyFiles(self, *dir):
         missing = []
-        for root, dirs, files in os.walk(dir):
+        for root, dirs, files in os.walk(os.path.join(test.projectRoot, *dir)):
             pyfiles = [os.path.join(root, filename) for filename in files 
                        if filename.endswith('.py')]
             for filename in pyfiles:
+                filename = filename.strip(test.projectRoot + os.sep)
                 if filename not in self.manifest:
                     missing.append(filename)
             if 'CVS' in dirs:
@@ -23,10 +24,10 @@ class ManifestTest(test.TestCase):
         self.assertEqual([], self.missingPyFiles('taskcoachlib'))
 
     def testAllUnittestPyFilesAreInManifest(self):
-        self.assertEqual([], self.missingPyFiles('unittests'))
+        self.assertEqual([], self.missingPyFiles('tests', 'unittests'))
     
     def testAllReleasetestPyFilesAreInManifest(self):
-        self.assertEqual([], self.missingPyFiles('releasetests'))
+        self.assertEqual([], self.missingPyFiles('tests', 'releasetests'))
 
     def testAllIntegrationtestPyFilesAreInManifest(self):
-        self.assertEqual([], self.missingPyFiles('integrationtests'))
+        self.assertEqual([], self.missingPyFiles('tests', 'integrationtests'))

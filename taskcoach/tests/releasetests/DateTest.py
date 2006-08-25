@@ -7,6 +7,6 @@ class DateTest(test.TestCase):
 
     def testNoQuestionMarkInChangeLog(self):
         import sys, os.path
-        sys.path.insert(0, 'changes.in')
+        sys.path.insert(0, os.path.join(test.projectRoot, 'changes.in'))
         import changes
         self.failIf('?' in changes.releases[0].date)
