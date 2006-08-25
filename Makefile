@@ -55,6 +55,18 @@ changes:
 	$(PYTHON) changes.in/make.py text > CHANGES.txt
 	$(PYTHON) changes.in/make.py html > website.in/changes.html
  
+unittests:
+	cd tests; $(PYTHON) test.py
+
+alltests:
+	cd tests; $(PYTHON) test.py --releasetests --integrationtests
+
+releasetests:
+	cd tests; $(PYTHON) test.py --releasetests --no-unittests
+
+integrationtests:
+	cd tests; $(PYTHON) test.py --integrationtests --no-unittests
+    
 
 CLEANFILES=*.pyc */*.pyc */*/*.pyc build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
 REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/i18n/??_??.py

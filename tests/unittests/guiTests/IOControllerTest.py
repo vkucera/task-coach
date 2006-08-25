@@ -1,21 +1,30 @@
-import test, gui, config
+import test, gui, config, os
 from unittests import dummy
 import domain.task as task
 
 class IOControllerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.iocontroller = gui.IOController(dummy.TaskFile(), lambda *args: None, self.settings)
+        self.iocontroller = gui.IOController(dummy.TaskFile(), 
+            lambda *args: None, self.settings)
         self.filename1 = 'whatever.tsk'
         self.filename2 = 'another.tsk' 
+
+    def tearDown(self):
+        for filename in self.filename1, self.filename2:
+            if os.path.exists(filename):
+                os.remove(filename)
+        super(IOControllerTest, self).tearDown()
         
-    def doIOAndCheckRecentFiles(self, open=None, saveas=None, saveselection=None, merge=None, expectedFilenames=None):
+    def doIOAndCheckRecentFiles(self, open=None, saveas=None, 
+            saveselection=None, merge=None, expectedFilenames=None):
         open = open or []
         saveas = saveas or []
         saveselection = saveselection or []
         merge = merge or []
         self.doIO(open, saveas, saveselection, merge)
-        self.checkRecentFiles(expectedFilenames or open+saveas+saveselection+merge)
+        self.checkRecentFiles(expectedFilenames or \
+            open+saveas+saveselection+merge)
     
     def doIO(self, open, saveas, saveselection, merge):
         for filename in open:
@@ -30,7 +39,8 @@ class IOControllerTest(test.TestCase):
     def checkRecentFiles(self, expectedFilenames):
         expectedFilenames.reverse()
         expectedFilenames = str(expectedFilenames)
-        self.assertEqual(expectedFilenames, self.settings.get('file', 'recentfiles'))
+        self.assertEqual(expectedFilenames, 
+                         self.settings.get('file', 'recentfiles'))
         
     def testOpenFileAddsItToRecentFiles(self):
         self.doIOAndCheckRecentFiles(open=[self.filename1])
@@ -46,14 +56,18 @@ class IOControllerTest(test.TestCase):
         self.doIOAndCheckRecentFiles(saveas=[self.filename1])
         
     def testMergeFileAddsItToRecentFiles(self):    
-        self.doIOAndCheckRecentFiles(open=[self.filename1], merge=[self.filename2])
+        self.doIOAndCheckRecentFiles(open=[self.filename1], 
+                                     merge=[self.filename2])
     
     def testSaveSelectionAddsItToRecentFiles(self):
         self.doIOAndCheckRecentFiles(saveselection=[self.filename1])
         
     def testMaximumNumberOfRecentFiles(self):
-        maximumNumberOfRecentFiles = self.settings.getint('file', 'maxrecentfiles')
-        filenames = ['filename %d'%index for index in range(maximumNumberOfRecentFiles+1)]
-        self.doIOAndCheckRecentFiles(filenames, expectedFilenames=filenames[1:])
+        maximumNumberOfRecentFiles = self.settings.getint('file', 
+                                                          'maxrecentfiles')
+        filenames = ['filename %d'%index for index in \
+                     range(maximumNumberOfRecentFiles+1)]
+        self.doIOAndCheckRecentFiles(filenames, 
+                                     expectedFilenames=filenames[1:])
         
     

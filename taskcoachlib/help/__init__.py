@@ -178,7 +178,7 @@ version %(wxpythonversion)s or higher.
 Before installing, you may want to run the unittests included.
 Issue the following command:
 
-  python test.py
+  cd tests; python test.py
 
 If all goes well, you should see a number of dots appearing and
 the message 'Ran X tests in Y seconds. OK'. If not, you'll get
