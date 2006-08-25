@@ -122,6 +122,7 @@ class AutoSaverBackupTestCase(test.TestCase):
         self.autoSaver = TestableAutoSaver(self.settings)
 
     def tearDown(self):
+        super(AutoSaverBackupTestCase, self).tearDown()
         del self.autoSaver
         
     def testBackupFilename(self):

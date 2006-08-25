@@ -1,9 +1,6 @@
 include *.txt
-include unittests/*.py
-include integrationtests/*.py
-include releasetests/*.py
+recursive-include tests *.py
 include TODO.tsk
 include setup.py
-include test.py
 exclude make.py
 prune standards

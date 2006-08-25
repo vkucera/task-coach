@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import unittest, sys, os, taskcoach, wx, time, glob
+import sys
+sys.path.insert(0, '..')
+
+import unittest, os, taskcoach, wx, time, glob
 
 projectRoot = os.path.split(taskcoach.libpath)[0]
 if projectRoot not in sys.path:
@@ -13,6 +16,7 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         import patterns
         patterns.Publisher().clear()
+        super(TestCase, self).tearDown()
         
 
 class wxTestCase(TestCase):

@@ -2,7 +2,9 @@ import os, test
 
 class ManifestTest(test.TestCase):
     def setUp(self):
-        manifestLines = file('MANIFEST').readlines()
+        manifestFile = file(os.path.join(test.projectRoot, 'MANIFEST'))
+        manifestLines = manifestFile.readlines()
+        manifestFile.close()
         self.manifest = [filename[:-1] for filename in manifestLines]
 
     def missingPyFiles(self, dir):
@@ -25,3 +27,6 @@ class ManifestTest(test.TestCase):
     
     def testAllReleasetestPyFilesAreInManifest(self):
         self.assertEqual([], self.missingPyFiles('releasetests'))
+
+    def testAllIntegrationtestPyFilesAreInManifest(self):
+        self.assertEqual([], self.missingPyFiles('integrationtests'))
