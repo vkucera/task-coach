@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-import sys
+import sys, unittest, os, wx, time, glob, coverage
 sys.path.insert(0, '..')
 
-import unittest, os, taskcoach, wx, time, glob
-
+import taskcoach
 projectRoot = os.path.split(taskcoach.libpath)[0]
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
@@ -66,9 +65,9 @@ class TextTestRunnerWithTimings(unittest.TextTestRunner):
 
 
 class AllTests(unittest.TestSuite):
-    def __init__(self, options=None, testFiles=None):
+    def __init__(self, options, testFiles=None):
         super(AllTests, self).__init__()
-        self._options = options or TestOptionParser().parse_args()[0]
+        self._options = options 
         self.loadAllTests(testFiles or [])
 
     def filenameToModuleName(self, filename):
@@ -78,10 +77,6 @@ class AllTests(unittest.TestSuite):
         module = filename.replace(os.sep, '.')
         module = module.replace('/', '.')  
         return module[:-3] # strip '.py'
-
-    def getTestFilesFromDir(self, directory):
-        return glob.glob(os.path.join(directory, '*Test.py')) + \
-            glob.glob(os.path.join(directory, '*', '*Test.py'))
 
     def loadAllTests(self, testFiles):
         testloader = unittest.TestLoader()
@@ -109,9 +104,34 @@ class AllTests(unittest.TestSuite):
             verbosity=self._options.verbosity,
             timeTests=self._options.time,
             nrTestsToReport=self._options.time_reports)
+        if self._options.coverage:
+            coverage.erase()
+            coverage.start()
         result = testrunner.run(self)
+        if self._options.coverage:
+            coverage.stop()
+            print coverage.report(self.getPyFilesFromDir(os.path.join(projectRoot, 
+                'taskcoachlib')))
         if self._options.commit and result.wasSuccessful():
             cvsCommit()
+        return result
+
+    @staticmethod
+    def getPyFilesFromDir(directory):
+        return AllTests.getFilesFromDir(directory, '.py')
+
+    @staticmethod
+    def getTestFilesFromDir(directory):
+        return AllTests.getFilesFromDir(directory, 'Test.py')
+
+    @staticmethod
+    def getFilesFromDir(directory, extension):
+        result = []
+        for root, dirs, files in os.walk(directory):
+            result.extend([os.path.join(root, file) for file in files \
+                           if file.endswith(extension)])
+            if 'CVS' in dirs:
+                dirs.remove('CVS')
         return result
 
 
@@ -120,24 +140,25 @@ class TestOptionParser(config.OptionParser):
     def __init__(self):
         super(TestOptionParser, self).__init__(usage='usage: %prog [options] [testfiles]')
 
-    def testrunOptionGroup(self):
-        testrun = config.OptionGroup(self, 'test run options',
+    def testoutputOptionGroup(self):
+        testoutput = config.OptionGroup(self, 'Test output',
             'Options to determine the amount of output while running the '
             'tests.')
-        testrun.add_option('-q', '--quiet', action='store_const', default=1,
+        testoutput.add_option('-q', '--quiet', action='store_const', default=1,
             const=0, dest='verbosity', help='show only the final test result')
-        testrun.add_option('--progress', action='store_const', const=1,
+        testoutput.add_option('--progress', action='store_const', const=1,
             dest='verbosity', help='show progress [default]')
-        testrun.add_option('-v', '--verbose', action='store_const',
+        testoutput.add_option('-v', '--verbose', action='store_const',
             const=2, dest='verbosity', help='show all tests')
-        testrun.add_option('-t', '--time', default=False, action='store_true', 
+        testoutput.add_option('-t', '--time', default=False, 
+            action='store_true', 
             help='time the tests and report the slowest tests')
-        testrun.add_option('--time-reports', default=10, type='int',
+        testoutput.add_option('--time-reports', default=10, type='int',
             help='the number of slow tests to report [%default]')
-        return testrun
+        return testoutput
 
     def cvsOptionGroup(self):
-        cvs = config.OptionGroup(self, 'CVS options', 
+        cvs = config.OptionGroup(self, 'CVS', 
             'Options to interact with CVS.')
         cvs.add_option('-c', '--commit', default=False, action='store_true', 
             help='commit if all the tests succeed'
@@ -145,10 +166,10 @@ class TestOptionParser(config.OptionParser):
         return cvs
 
     def profileOptionGroup(self):
-        profile = config.OptionGroup(self, 'profile options', 
+        profile = config.OptionGroup(self, 'Profiling', 
             'Options to profile the tests to see what test code or production '
             'code is taking the most time. Each of these options implies '
-            '--no-commit.')
+            '--no-commit and --no-coverage.')
         profile.add_option('-p', '--profile', default=False, 
             action='store_true', help='profile the running of all the tests')
         profile.add_option('-r', '--report-only', dest='profile_report_only', 
@@ -172,29 +193,36 @@ class TestOptionParser(config.OptionParser):
            'profile reports')
         return profile
 
-    def coverageOptionGroup(self):
-        coverage = config.OptionGroup(self, 'coverage options',
+    def testselectionOptionGroup(self):
+        testselection = config.OptionGroup(self, 'Test selection',
             'Options to determine which tests to run.')
 
-        coverage.add_option('--unittests', default=True,
+        testselection.add_option('--unittests', default=True,
             action='store_true', help='run the unit tests [default]')
-        coverage.add_option('--no-unittests', action='store_false', 
+        testselection.add_option('--no-unittests', action='store_false', 
             help="don't run the unit tests", dest='unittests')
 
-        coverage.add_option('--integrationtests', default=False,
+        testselection.add_option('--integrationtests', default=False,
             action='store_true', help='run the integration tests')
-        coverage.add_option('--no-integrationtests', action='store_false', 
+        testselection.add_option('--no-integrationtests', action='store_false', 
             help="don't run the integration tests [default]",
             dest='integrationtests')
 
-        coverage.add_option('--releasetests', default=False,
+        testselection.add_option('--releasetests', default=False,
             action='store_true', help='run the release tests')
-        coverage.add_option('--no-releasetests', action='store_false', 
+        testselection.add_option('--no-releasetests', action='store_false', 
             help="don't run the release tests [default]", dest='releasetests')
 
-        coverage.add_option('--alltests', default=False,
+        testselection.add_option('--alltests', default=False,
             action='store_true', help='run all tests')
-        return coverage
+        return testselection
+
+    def testcoverageOptionGroup(self):
+        testcoverage = config.OptionGroup(self, 'Test coverage',
+            'Options to measure test (statement) coverage.')
+        testcoverage.add_option('--coverage', default=False,
+            action='store_true', help='measure test statement coverage')
+        return testcoverage
         
     def parse_args(self):
         options, args = super(TestOptionParser, self).parse_args()
@@ -208,6 +236,8 @@ class TestOptionParser(config.OptionParser):
             options.releasetests = True
         if options.profile or args:
             options.commit = False
+        if options.profile:
+            options.coverage = False
         if options.commit:
             options.unittests = True
             options.integrationtests = True

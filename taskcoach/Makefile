@@ -59,7 +59,7 @@ unittests:
 	cd tests; $(PYTHON) test.py
 
 alltests:
-	cd tests; $(PYTHON) test.py --releasetests --integrationtests
+	cd tests; $(PYTHON) test.py --alltests
 
 releasetests:
 	cd tests; $(PYTHON) test.py --releasetests --no-unittests
