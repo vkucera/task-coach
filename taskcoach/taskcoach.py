@@ -11,7 +11,8 @@ if not hasattr(sys, "frozen"):
     # We don't want to use 'from taskcoachlib import X' all the time, so we add 
     # the taskcoachlib directory to the search path:
     libpath = taskcoachlib.__path__[0]
-    sys.path.insert(0, libpath) 
+    if libpath not in sys.path:
+        sys.path.insert(0, libpath) 
     del taskcoachlib
 
 import wx

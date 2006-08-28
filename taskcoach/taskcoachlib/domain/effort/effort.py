@@ -161,7 +161,8 @@ class CompositeEffort(EffortBase):
         return len(self.__getEfforts(recursive=True))
 
     def __repr__(self):
-        return 'CompositeEffort(%s, %s)'%(self.task(), 
+        return 'CompositeEffort(task=%s, start=%s, stop=%s, efforts=%s)'%\
+            (self.task(), self.getStart(), self.getStop(),
             str([e for e in self.__getEfforts(recursive=True)]))
 
     def duration(self, recursive=False):

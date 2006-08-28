@@ -624,7 +624,10 @@ class ViewExpandAll(ViewerCommand):
         super(ViewExpandAll, self).__init__( \
             menuText=_('&Expand all tasks\tShift+Ctrl+E'),
             helpText=_('Expand all tasks with subtasks'), *args, **kwargs)
-            
+
+    def enabled(self, event):
+        return self.viewer.isAnyItemExpandable()
+                
     def doCommand(self, event):
         self.viewer.expandAll()
 
@@ -634,7 +637,11 @@ class ViewExpandSelected(NeedsSelectedTasks, ViewerCommand):
         super(ViewExpandSelected, self).__init__(bitmap='viewexpand',
             menuText=_('E&xpand'), helpText=_('Expand the selected task(s)'),
             *args, **kwargs)
-            
+    
+    def enabled(self, event):
+        return super(ViewExpandSelected, self).enabled(event) and \
+            self.viewer.isSelectionExpandable()
+                
     def doCommand(self, event):
         self.viewer.expandSelectedItems()
             
@@ -645,9 +652,12 @@ class ViewCollapseAll(ViewerCommand):
             menuText=_('&Collapse all tasks\tShift+Ctrl+C'),
             helpText=_('Collapse all tasks with subtasks'), *args, **kwargs)
     
+    def enabled(self, event):
+        return self.viewer.isAnyItemCollapsable()
+    
     def doCommand(self, event):
         self.viewer.collapseAll()
- 
+        
 
 class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
     def __init__(self, *args, **kwargs):
@@ -655,6 +665,10 @@ class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
             menuText=_('C&ollapse'),
             helpText=_('Collapse the selected tasks with subtasks'), 
             *args, **kwargs)
+
+    def enabled(self, event):
+        return super(ViewCollapseSelected, self).enabled(event) and \
+            self.viewer.isSelectionCollapsable()
     
     def doCommand(self, event):
         self.viewer.collapseSelectedItems()

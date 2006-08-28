@@ -270,14 +270,17 @@ class TaskBarMenu(Menu):
 
 
 class TaskPopupMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, uiCommands, treeViewer):
         super(TaskPopupMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['cut', 'copy', 'paste',
+        commandsToAppend = ['cut', 'copy', 'paste',
             'pasteintotask', None, 'new', 'newsubtask', None, 'edit', 
             'markcompleted', None, 'delete', None, 'mailtask', 
             'addattachmenttotask', None, 
-            'neweffort', 'starteffort', 'stopeffort', None, 
-            'viewexpandselected', 'viewcollapseselected'])
+            'neweffort', 'starteffort', 'stopeffort']
+        if treeViewer:
+            commandsToAppend.extend([None, 'viewexpandselected', 
+                'viewcollapseselected'])
+        self.appendUICommands(uiCommands, commandsToAppend)
 
 
 class EffortPopupMenu(Menu):

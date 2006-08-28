@@ -129,6 +129,12 @@ class TreeViewer(Viewer):
     def collapseSelected(self):
         self.widget.collapseSelectedItems()
         
+    def isSelectionExpandable(self):
+        return self.widget.isSelectionExpandable()
+    
+    def isSelectionCollapsable(self):
+        return self.widget.isSelectionCollapsable()
+        
     def draggedItems(self):
         return [self.list[index] for index in self.widget.draggedItems()]
 
@@ -306,7 +312,8 @@ class TaskViewer(UpdatePerSecondViewer):
         return status1, status2
  
     def createTaskPopupMenu(self):
-        return menu.TaskPopupMenu(self.parent, self.uiCommands)
+        return menu.TaskPopupMenu(self.parent, self.uiCommands, 
+            self.isTreeViewer())
 
     def getItemAttr(self, index):
         task = self.list[index]

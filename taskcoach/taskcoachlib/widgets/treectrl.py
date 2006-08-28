@@ -338,6 +338,30 @@ class TreeMixin(object):
         for item in self.getChildren(recursively=True):
             self.ToggleItemSelection(item)
         self.selectCommand()
+        
+    def isSelectionCollapsable(self):
+        return self.isCollapsable(self.GetSelections())
+    
+    def isSelectionExpandable(self):
+        return self.isExpandable(self.GetSelections())
+    
+    def isAnyItemCollapsable(self):
+        return self.isCollapsable(self.getChildren(recursively=True))
+    
+    def isAnyItemExpandable(self):
+        return self.isExpandable(self.getChildren(recursively=True))
+    
+    def isExpandable(self, items):
+        for item in items:
+            if self.ItemHasChildren(item) and not self.IsExpanded(item):
+                return True
+        return False
+    
+    def isCollapsable(self, items):
+        for item in items:
+            if self.ItemHasChildren(item) and self.IsExpanded(item):
+                return True
+        return False
 
 
 class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
