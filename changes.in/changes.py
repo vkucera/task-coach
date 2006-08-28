@@ -8,7 +8,9 @@ Release('0.60', 'August ?, 2006',
         Bug('''Selecting Japanese translation would cause error upon next 
 restart.''', '1545593'),
         Bug('''Task Coach wouldn't quit when the setting 'Minimize window
-when closing' was set.''', '1545936')],
+when closing' was set.''', '1545936'),
+        Bug('''Deleting an effort record would throw an exception.''',
+            '1548117')],
     websiteChanges=[
         Website('Added MD5 digests to download page.', 'download.html')]),
     

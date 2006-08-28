@@ -330,3 +330,4 @@ class MultipleAggregatorsTest(test.TestCase):
                             date.DateTime(2006,8,29))
         self.task.addEffort(self.effort)
         self.task.removeEffort(self.effort)
+        self.failIf(self.effortPerDay)
