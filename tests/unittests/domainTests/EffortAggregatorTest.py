@@ -31,9 +31,6 @@ class EffortAggregatorTestCase(test.TestCase):
             date.DateTime(2004,1,1,14,0,0), date.DateTime(2004,1,1,15,0,0))
         self.events = []
 
-    def tearDown(self):
-        patterns.Publisher().clear()
-
     def onEvent(self, event):
         self.events.append(event)
 
@@ -316,3 +313,20 @@ class EffortPerMonthTest(EffortAggregatorTestCase, CommonTests):
 
     def startOfPeriod(self):
         return date.DateTime.now().startOfMonth()
+
+        
+class MultipleAggregatorsTest(test.TestCase):
+    def setUp(self):
+        self.taskList = task.TaskList()
+        self.effortPerDay = effort.EffortSorter(effort.EffortPerDay(self.taskList))
+        self.effortPerWeek = effort.EffortSorter(effort.EffortPerWeek(self.taskList))
+        
+    def testDeleteEffort_StartOfBothPeriods(self):
+        self.task = task.Task()
+        self.taskList.append(self.task)
+        # Make sure the start of the day and week are the same, 
+        # in other words, use a Monday
+        self.effort = effort.Effort(self.task, date.DateTime(2006,8,28), 
+                            date.DateTime(2006,8,29))
+        self.task.addEffort(self.effort)
+        self.task.removeEffort(self.effort)

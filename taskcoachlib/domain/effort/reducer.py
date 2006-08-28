@@ -54,21 +54,21 @@ class EffortAggregator(patterns.SetDecorator):
 
     def onCompositeEmpty(self, event):
         composite = event.source()
-        key = (composite.task(), composite.getStart())
+        key = (composite.task(), composite.getStart(), composite.getStop())
         if key not in self.__composites:
             # A composite may already have been removed, e.g. when a
             # parent and child task have effort in the same period
             return
-        del self.__composites[(composite.task(), composite.getStart())]
+        del self.__composites[key]
         super(EffortAggregator, self).removeItemsFromSelf([composite])
         
     def onEffortStartChanged(self, event):
         effort, start = event.source(), event.value()
         task = effort.task()
-        if (task in self.observable()) and \
-           ((task, self.startOfPeriod(start)) not in self.__composites):
-                newComposites = self.createComposites(task, [effort])
-                super(EffortAggregator, self).extendSelf(newComposites)
+        key = (task, self.startOfPeriod(start), self.endOfPeriod(start))
+        if (task in self.observable()) and (key not in self.__composites):
+            newComposites = self.createComposites(task, [effort])
+            super(EffortAggregator, self).extendSelf(newComposites)
             
     def createComposites(self, task, efforts):
         newComposites = []
@@ -81,7 +81,8 @@ class EffortAggregator(patterns.SetDecorator):
     def createComposite(self, anEffort, task):
         startOfEffort = anEffort.getStart()
         startOfPeriod = self.startOfPeriod(startOfEffort)
-        key = (task, startOfPeriod) 
+        endOfPeriod = self.endOfPeriod(startOfEffort)
+        key = (task, startOfPeriod, endOfPeriod) 
         if key in self.__composites:
             return []
         newComposite = effort.CompositeEffort(task, startOfPeriod, 
@@ -98,7 +99,8 @@ class EffortAggregator(patterns.SetDecorator):
     def removeComposite(self, anEffort, task):
         startOfEffort = anEffort.getStart()
         startOfPeriod = self.startOfPeriod(startOfEffort)
-        key = (task, startOfPeriod) 
+        endOfPeriod = self.endOfPeriod(startOfEffort)
+        key = (task, startOfPeriod, endOfPeriod) 
         if key not in self.__composites:
             # A composite may already have been removed, e.g. when a
             # parent and child task have effort in the same period

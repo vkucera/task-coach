@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, unittest, os, wx, time, glob, coverage
-sys.path.insert(0, '..')
+sys.path.insert(0, os.path.abspath('..'))
 
 import taskcoach
 projectRoot = os.path.split(taskcoach.libpath)[0]
