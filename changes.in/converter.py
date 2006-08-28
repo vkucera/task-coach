@@ -1,4 +1,4 @@
-import textwrap, changetypes
+import textwrap, changetypes, re
 
 
 # Change (bugs fixed, features added, etc.) converters:
@@ -30,9 +30,16 @@ class ChangeToTextConverter(ChangeConverter):
     def __init__(self):
         self._textWrapper = textwrap.TextWrapper(initial_indent='- ', 
                 subsequent_indent='  ', width=78)
+        # Regular expression to remove multiple spaces, except when on
+        # the start of a line:
+        self._multipleSpaces = re.compile(r'(?<!^) +', re.M)
 
     def postProcess(self, convertedChange):
-        return self._textWrapper.fill(convertedChange)
+        convertedChange = self._textWrapper.fill(convertedChange)
+        # Somehow the text wrapper introduces multiple spaces within
+        # lines, this is a work around:
+        convertedChange = self._multipleSpaces.sub(' ', convertedChange)
+        return convertedChange
 
     def convertSourceForgeId(self, change, sourceForgeId):
         return 'SF#%s'%sourceForgeId
