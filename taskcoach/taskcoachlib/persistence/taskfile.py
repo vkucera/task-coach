@@ -4,10 +4,8 @@ import domain.task as task
 
 class TaskFile(task.TaskList):
     def __init__(self, filename='', *args, **kwargs):
-        self.__needSave = False
-        self.__loading = False
-        self.__lastFilename = ''
-        self.__filename = filename
+        self.__filename = self.__lastFilename = filename
+        self.__needSave = self.__loading = False
         super(TaskFile, self).__init__(*args, **kwargs)
         # Register for tasks and efforts being changed so we can monitor
         # when the task file needs saving (i.e. is 'dirty'):
@@ -52,8 +50,7 @@ class TaskFile(task.TaskList):
             self.markDirty()
 
     def setFilename(self, filename):
-        if filename != '':
-            self.__lastFilename = filename
+        self.__lastFilename = self.__filename or filename
         self.__filename = filename
         patterns.Publisher().notifyObservers(patterns.Event(self, 
             'taskfile.filenameChanged', filename))
