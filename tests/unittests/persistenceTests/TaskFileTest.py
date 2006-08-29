@@ -278,6 +278,12 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.close()
         self.assertEqual(self.filename, self.taskFile.lastFilename())
         
+    def testLastFilename_AfterClosingTwice(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.close()
+        self.taskFile.close()
+        self.assertEqual('', self.taskFile.lastFilename())
+        
     def testLastFilename_AfterSaveAs(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.saveas(self.filename2)
