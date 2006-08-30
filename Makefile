@@ -69,7 +69,7 @@ integrationtests:
     
 
 CLEANFILES=*.pyc */*.pyc */*/*.pyc build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
-REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/i18n/??_??.py *.bak */*.bak */*/*.bak 
+REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/i18n/??_??.py *.bak */*.bak */*/*.bak .\#* */.\#* */*/.\#*
 
 clean:
 	rm -rf $(CLEANFILES)
