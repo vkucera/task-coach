@@ -220,7 +220,6 @@ class MainWindow(WindowWithPersistentDimensions):
         self.settings.save()
         wx.GetApp().ProcessIdle()
         wx.GetApp().ExitMainLoop()
-        return
         
     def onClose(self, event):
         if event.CanVeto() and self.settings.getboolean('window', 
