@@ -3,8 +3,10 @@
 from changetypes import *
 
 releases = [             
-Release('0.60', 'August ?, 2006',
+Release('0.60', 'August 30, 2006',
     bugsFixed=[
+        Bug('''Closing a task file did not reset the 'lastfile'
+setting.''', '1548126'),
         Bug('''Selecting Japanese translation would cause error upon next 
 restart.''', '1545593'),
         Bug('''Task Coach wouldn't quit when the setting 'Minimize window
