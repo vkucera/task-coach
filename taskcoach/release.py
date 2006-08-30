@@ -41,6 +41,14 @@ def generateMD5Digests():
     print 'Done generating MD5 digests.'
 
 
+def generateWebsite():
+    print 'Generating website...'
+    os.chdir('website.in')
+    os.system('python make.py')
+    os.chdir('..')
+    print 'Done generating website...'
+
+
 class SimpleFTP(ftplib.FTP, object):
     def __init__(self, server, login, password_file):
         password = file(password_file).read()
@@ -85,6 +93,7 @@ def registerWithPyPI():
     print 'Done registering with PyPI.'
 
 generateMD5Digests()
-ftpToChello()
-scpToSourceForge()
-registerWithPyPI()
+generateWebsite()
+#ftpToChello()
+#scpToSourceForge()
+#registerWithPyPI()

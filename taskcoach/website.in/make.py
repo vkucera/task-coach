@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, glob, md5
+import os, sys, glob
 sys.path.append('..')
 from taskcoachlib import meta
 import style
