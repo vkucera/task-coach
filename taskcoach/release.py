@@ -94,6 +94,6 @@ def registerWithPyPI():
 
 generateMD5Digests()
 generateWebsite()
-#ftpToChello()
-#scpToSourceForge()
-#registerWithPyPI()
+ftpToChello()
+scpToSourceForge()
+registerWithPyPI()
