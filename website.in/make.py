@@ -233,6 +233,22 @@ pages['devinfo'] = \
 '''    <h3>Information for developers</h3>
     <p>Here's some information for developers that either want to hack
     on %(name)s or reuse code.</p>
+    <h4>Dependencies</h4>
+    %(name)s is developed in <A HREF="http://www.python.org">Python</A>,
+    using <A HREF="http://www.wxpython.org">wxPython</A> for the
+    graphical user interface. The few other libraries (other than those
+    provided by Python and wxPython) that are used are put into the
+    taskcoachlib/thirdparty package and included in the CVS repository.
+    <h4>Getting the source</h4>
+    %(name)s source code is hosted at <A
+    HREF="https://sourceforge.net/cvs/?group_id=130831">SourceForge</A>.
+    You can check out the code from CVS directly or <A
+    HREF="http://taskcoach.cvs.sourceforge.net/taskcoach/">browse the
+    repository</A>.
+    <h4>Tests</h4>
+    To do.
+    <h4>Deployment</h4>
+    To do.
     <h4>Coding style</h4>
     <p>Class names are StudlyCaps. Method names are camelCase, except
     for wxPython methods that are called or overridden because those are

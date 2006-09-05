@@ -41,20 +41,26 @@ footer = '''
                     <a href="changes.html">Change history</a><br>
                     <a href="roadmap.html" 
                        title="Future plans for %(name)s">Roadmap</a><br>
-                    <a href="devinfo.html"
-                       title="Information for developers">For developers</a><br>
                     <a href="license.html">License</a><br>
                     <a href="credits.html">Credits</a><br>
-                    <a href="donations.html">Donations</a>
                 </p>
             </div>
             <div class="navbox">
-                <h2>Support</h2>
+                <h2>Get support</h2>
                 <p>
                     <a href="mailinglist.html">Join mailinglist</a><br>
                     <a href="faq.html">Frequently asked questions</a><br>
                     <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</a><br>
                     <a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</a>
+                </p>
+            </div>
+            <div class="navbox">
+                <h2>Give support</h2>
+                <p>
+                    <a href="i18n.html">Help translate</a><br>
+                    <a href="devinfo.html">Help develop</a><br>
+                    <a href="donations.html">Donate</a><br>
+                    <a href="http://www.cafepress.com/taskcoach/">Buy the mug</a>
                 </p>
             </div>
         </div>
