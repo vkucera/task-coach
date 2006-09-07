@@ -17,7 +17,6 @@ if not hasattr(sys, "frozen"):
 
 import wx
 
-
 class wxApp(wx.App):
     def OnInit(self):
         return True

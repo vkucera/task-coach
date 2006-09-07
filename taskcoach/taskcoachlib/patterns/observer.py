@@ -133,8 +133,15 @@ class Publisher(object):
     
 
 class Observer(object):
-    def __init__(self, observable, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        self.registerObserver = patterns.Publisher().registerObserver
+        self.removeObserver = patterns.Publisher().removeObserver
         super(Observer, self).__init__(*args, **kwargs)
+        
+        
+class Decorator(Observer):
+    def __init__(self, observable, *args, **kwargs):
+        super(Decorator, self).__init__(*args, **kwargs)
         self.__observable = observable
 
     def observable(self):
@@ -233,7 +240,7 @@ class ObservableList(ObservableCollection, List):
             self.notifyObserversOfItemsRemoved(*items) 
                
 
-class CollectionDecorator(Observer, ObservableCollection):
+class CollectionDecorator(Decorator, ObservableCollection):
     ''' CollectionDecorator observes an ObservableCollection and is an
         ObservableCollection itself too. Its purpose is to decorate another 
         collection and add some behaviour, such as sorting or filtering. 
@@ -242,9 +249,9 @@ class CollectionDecorator(Observer, ObservableCollection):
 
     def __init__(self, observedCollection, *args, **kwargs):
         super(CollectionDecorator, self).__init__(observedCollection, *args, **kwargs)
-        patterns.Publisher().registerObserver(self.onAddItem, 
+        self.registerObserver(self.onAddItem, 
             eventType=self.observable().addItemEventType())
-        patterns.Publisher().registerObserver(self.onRemoveItem, 
+        self.registerObserver(self.onRemoveItem, 
             eventType=self.observable().removeItemEventType())
         self.extendSelf(self.observable())
 
