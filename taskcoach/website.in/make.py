@@ -102,6 +102,7 @@ pages['features'] = \
             <LI>Tasks and effort can be printed. When printing, Task
             Coach print the information that is visible in the current
             view, including any filters and sort order. 
+            <LI>%(name)s can be run from a removable medium.
         </UL>
         <H3>Missing features</H3>
         <P>The main feature that is currently missing is the possibility to
