@@ -2,7 +2,17 @@
 
 from changetypes import *
 
-releases = [             
+releases = [
+Release('0.61', 'September ?, 2006',
+    bugsFixed=[],
+    featuresAdded=[
+        Feature('''Task Coach can be run from a removable medium, such as an 
+USB stick. On Windows, use the installer to install Task Coach to the medium.
+Then, start Task Coach and turn the setting 'Save settings to same 
+directory as program' on. This setting can be found in Edit -> Preferences -> 
+File). This makes sure the TaskCoach.ini file is saved on the 
+removable medium. ''')]),
+
 Release('0.60', 'August 30, 2006',
     bugsFixed=[
         Bug('''Closing a task file did not reset the 'lastfile'

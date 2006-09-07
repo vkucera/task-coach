@@ -29,7 +29,7 @@ class SettingsPage(widgets.BookPage):
         
     def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100,
             helpText=''):
-        spin = wx.SpinCtrl(self, -1, min=minimum, max=maximum, 
+        spin = wx.SpinCtrl(self, min=minimum, max=maximum, size=(40, -1),
             value=str(self.settings.getint(section, setting)))
         self.addEntry(text, spin, helpText)
         self._integerSettings.append((section, setting, spin))
@@ -44,7 +44,8 @@ class SettingsPage(widgets.BookPage):
         for section, setting, checkBox in self._booleanSettings:
             self.settings.set(section, setting, str(checkBox.IsChecked()))
         for section, setting, choice in self._choiceSettings:
-            self.settings.set(section, setting, choice.GetClientData(choice.GetSelection()))
+            self.settings.set(section, setting, 
+                              choice.GetClientData(choice.GetSelection()))
         for section, setting, spin in self._integerSettings:
             self.settings.set(section, setting, str(spin.GetValue()))
         for section, setting, colorButton in self._colorSettings:
@@ -60,6 +61,10 @@ class SavePage(SettingsPage):
             _('Create backup copy before overwriting a %s file')%meta.name)
         self.addIntegerSetting('file', 'maxrecentfiles',
             _('Maximum number of recent files to remember'), minimum=0, maximum=9)
+        self.addBooleanSetting('file', 'saveinifileinprogramdir',
+            _('Save settings (%s.ini) in same directory as the program') \
+              %meta.filename, 
+            _('(For running %s from a removable medium)')%meta.name)
         self.fit()
             
                

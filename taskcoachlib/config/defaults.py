@@ -63,7 +63,8 @@ defaults = { \
     'maxrecentfiles': '4',
     'lastfile': '',
     'autosave': 'False',
-    'backup': 'False' },
+    'backup': 'False',
+    'saveinifileinprogramdir': 'False' },
 'color': { \
     'activetasks': '(0, 0, 0)',
     'completedtasks': '(0, 255, 0)',

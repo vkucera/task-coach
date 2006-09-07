@@ -48,12 +48,14 @@ class SettingsTest(SettingsTestCase):
     def testSetList_SimpleStrings(self):
         recentfiles = ['abc', 'C:\Documents And Settings\Whatever']
         self.settings.setlist('file', 'recentfiles', recentfiles)
-        self.assertEqual(recentfiles, self.settings.getlist('file', 'recentfiles'))
+        self.assertEqual(recentfiles, 
+                         self.settings.getlist('file', 'recentfiles'))
         
     def testSetList_UnicodeStrings(self):
-        recentfiles = ['ümlaut', 'Σομη χρεεκ']
+        recentfiles = ['Ã¼mlaut', 'Î£Î¿Î¼Î· Ï‡Ï�ÎµÎµÎº']
         self.settings.setlist('file', 'recentfiles', recentfiles)
-        self.assertEqual(recentfiles, self.settings.getlist('file', 'recentfiles'))
+        self.assertEqual(recentfiles, 
+                         self.settings.getlist('file', 'recentfiles'))
         
         
 class SettingsIOTest(SettingsTestCase):
@@ -105,19 +107,21 @@ class UnicodeAwareConfigParserTest(test.TestCase):
         self.parser.add_section('section')
         self.iniFile = StringIO.StringIO()
         self.asciiValue = 'ascii'
-        self.unicodeValue = u'Ï…Î½Î¹Î³Î¿Î´Î·'
+        self.unicodeValue = u'Ã�â€¦ÃŽÂ½ÃŽÂ¹ÃŽÂ³ÃŽÂ¿ÃŽÂ´ÃŽÂ·'
         
     def testWriteAsciiValue(self):
         self.parser.set('section', 'setting', self.asciiValue)
         self.parser.write(self.iniFile)
         fileContents = self.iniFile.getvalue()
-        self.assertEqual('[section]\nsetting = %s\n\n'%self.asciiValue, fileContents)
+        self.assertEqual('[section]\nsetting = %s\n\n'%self.asciiValue, 
+                         fileContents)
                 
     def testWriteUnicodeValue(self):
         self.parser.set('section', 'setting', self.unicodeValue)
         self.parser.write(self.iniFile)
         fileContents = self.iniFile.getvalue()
-        self.assertEqual('[section]\nsetting = %s\n\n'%self.unicodeValue.encode('utf-8'), fileContents)
+        self.assertEqual('[section]\nsetting = %s\n\n' \
+                         %self.unicodeValue.encode('utf-8'), fileContents)
     
     def testReadAsciiValue(self):
         iniFileContents = '[section]\nsetting = %s\n\n'%self.asciiValue
@@ -127,11 +131,13 @@ class UnicodeAwareConfigParserTest(test.TestCase):
         self.assertEqual(self.asciiValue, self.parser.get('section', 'setting'))
         
     def testReadUnicodeValue(self):
-        iniFileContents = '[section]\nsetting = %s\n\n'%self.unicodeValue.encode('utf-8')
+        iniFileContents = '[section]\nsetting = %s\n\n' \
+            %self.unicodeValue.encode('utf-8')
         self.iniFile.write(iniFileContents)
         self.iniFile.seek(0)
         self.parser.readfp(self.iniFile)
-        self.assertEqual(self.unicodeValue, self.parser.get('section', 'setting'))
+        self.assertEqual(self.unicodeValue, 
+                         self.parser.get('section', 'setting'))
         
 
 class SpecificSettingsTest(SettingsTestCase):
@@ -141,3 +147,27 @@ class SpecificSettingsTest(SettingsTestCase):
     def testDefaultTaskCategoryFilterList(self):
         self.assertEqual([], self.settings.getlist('view', 
             'taskcategoryfilterlist'))
+            
+
+class SettingsFileLocationTest(SettingsTestCase):
+    def testDefaultSetting(self):
+        self.assertEqual(False, self.settings.getboolean('file', 
+                         'saveinifileinprogramdir'))
+
+    def testPathWhenNotSavingIniFileInProgramDir(self):
+        self.assertNotEqual(sys.argv[0], self.settings.path())
+        
+    def testPathWhenSavingIniFileInProgramDir(self):
+        self.settings.setboolean('file', 'saveinifileinprogramdir', True)
+        self.assertEqual(os.path.dirname(sys.argv[0]), self.settings.path())
+        
+    def testPathWhenSavingIniFileInProgramDirAndRunFromZipFile(self):
+        self.settings.setboolean('file', 'saveinifileinprogramdir', True)
+        sys.argv.insert(0, r'd:\TaskCoach\library.zip')
+        self.assertEqual(r'd:\TaskCoach', self.settings.path())
+        del sys.argv[0]
+        
+    def testSettingSaveIniFileInProgramDirToFalseRemovesIniFile(self):
+        self.settings.setboolean('file', 'saveinifileinprogramdir', True)
+        self.settings.setboolean('file', 'saveinifileinprogramdir', False)
+        
