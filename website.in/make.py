@@ -234,21 +234,54 @@ pages['devinfo'] = \
     <p>Here's some information for developers that either want to hack
     on %(name)s or reuse code.</p>
     <h4>Dependencies</h4>
-    %(name)s is developed in <A HREF="http://www.python.org">Python</A>,
+    <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
     using <A HREF="http://www.wxpython.org">wxPython</A> for the
     graphical user interface. The few other libraries (other than those
     provided by Python and wxPython) that are used are put into the
-    taskcoachlib/thirdparty package and included in the CVS repository.
+    taskcoachlib/thirdparty package and included in the CVS
+    repository.</p>
     <h4>Getting the source</h4>
-    %(name)s source code is hosted at <A
+    <p>%(name)s source code is hosted at <A
     HREF="https://sourceforge.net/cvs/?group_id=130831">SourceForge</A>.
     You can check out the code from CVS directly or <A
     HREF="http://taskcoach.cvs.sourceforge.net/taskcoach/">browse the
-    repository</A>.
+    repository</A>.</p>
     <h4>Tests</h4>
-    To do.
-    <h4>Deployment</h4>
-    To do.
+    <p>Tests can be run from the Makefile. There are targets for
+    <tt>unittests</tt>, <tt>integrationtests</tt>,
+    <tt>releasetests</tt>, and <tt>alltests</tt>. These targets all
+    invoke the tests/test.py script. Run <tt>tests/test.py --help</tt> for 
+    many more test options (including profiling, timing, measuring test 
+    coverage, etc.).</p>
+    <h4>Building the distributions</h4>
+    <p>The Makefile is used to build the different distributions of
+    %(name)s. Currently, a Windows installer is built, a Mac OSX dmg
+    file, and the sources are packaged as compressed archives (.zip and 
+    .tar.gz). The Makefile contains targets for each of the
+    distributions. Most of the code for the actual building of the
+    distributions, using the python distutils package, is located in 
+    make.py. In turn, make.py imports setup.py. These two files were
+    split so that setup.py only contains distutils information related
+    to <i>installing</i>, while make.py contains all information related
+    to <i>building</i> the distributions. Only setup.py is included in
+    the source distributions.</p>
+    <h5>Windows</h5>
+    <p>On Windows, py2exe is used to bundle the application with the python
+    interpreter and wxPython libraries. Innosetup is used to create an
+    executable installer. 
+    All the necessary packaging code is in make.py
+    and driven from the Makefile (<tt>windist</tt> target).</p>
+    <h5>Mac OSX</h5>
+    <p>On Mac OSX, py2app is used to bundle the application. The resulting
+    application is packaged into a dmg file using the <tt>hdiutil</tt>
+    utility, which is part of Mac OSX. 
+    All the necessary packaging code is in make.py
+    and driven from the Makefile (<tt>macdist</tt> target).</p>
+    <h5>Linux</h5>
+    <p>Currently, Linux users have to install python and wxPython
+    themselves (if not installed by default) and use the source
+    distribution. The source distributions are created by the
+    <tt>sdist</tt> Makefile target.</p>
     <h4>Coding style</h4>
     <p>Class names are StudlyCaps. Method names are camelCase, except
     for wxPython methods that are called or overridden because those are
