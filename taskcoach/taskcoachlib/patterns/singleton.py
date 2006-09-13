@@ -5,15 +5,16 @@ class Singleton(type):
     '''              
 
     def __call__(class_, *args, **kwargs):
-        if not hasattr(class_, 'instance'):
+        if not class_.hasInstance():
             class_.instance = super(Singleton, class_).__call__(*args, **kwargs)
         return class_.instance
 
     def deleteInstance(class_):
         ''' Delete the (only) instance. This method is mainly for unittests so
             they can start with a clean slate. '''
-        del class_.instance
+        if class_.hasInstance():
+            del class_.instance
 
     def hasInstance(class_):
-        ''' Has the (only) instance created already? '''
+        ''' Has the (only) instance been created already? '''
         return hasattr(class_, 'instance')

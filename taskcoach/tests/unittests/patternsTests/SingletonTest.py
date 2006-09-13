@@ -7,8 +7,8 @@ class Singleton:
 
 class SingletonTest(test.TestCase):
     def tearDown(self):
-        if Singleton.hasInstance():
-            Singleton.deleteInstance()
+        super(SingletonTest, self).tearDown()
+        Singleton.deleteInstance()
         
     def testCreation(self):
         singleton = Singleton()
