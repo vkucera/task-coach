@@ -98,13 +98,13 @@ class TaskListTest(test.TestCase, asserts.TaskListAsserts):
         self.assertEqual(1, self.taskList.nrBeingTracked())
 
     def testRootTasks(self):
-        self.assertEqual([], self.taskList.rootTasks())
+        self.assertEqual([], self.taskList.rootItems())
         self.taskList.append(self.task1)
-        self.assertEqual([self.task1], self.taskList.rootTasks())
+        self.assertEqual([self.task1], self.taskList.rootItems())
         self.task2.addChild(self.task3)
         self.taskList.append(self.task2)
         self.assertEqualLists([self.task1, self.task2], 
-            self.taskList.rootTasks())
+            self.taskList.rootItems())
 
     def testMinDate_EmptyTaskList(self):
         self.assertEqual(date.Date(), self.taskList.minDate())

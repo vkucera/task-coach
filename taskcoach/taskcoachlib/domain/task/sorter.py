@@ -73,7 +73,7 @@ class Sorter(patterns.ListDecorator):
             patterns.Publisher().notifyObservers(patterns.Event(self, 
                 self.sortEventType()))
                         
-    def rootTasks(self):
+    def rootItems(self):
         return [task for task in self if task.parent() is None]
 
     def __createSortKey(self):

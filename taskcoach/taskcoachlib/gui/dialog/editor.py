@@ -448,7 +448,7 @@ class EffortEditBook(widgets.BookPage):
             for child in task.children():
                 addTaskRecursively(child, item)
 
-        for task in self._taskList.rootTasks():
+        for task in self._taskList.rootItems():
             addTaskRecursively(task)
         self._taskEntry.SetClientDataSelection(self._effort.task())
         self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])

@@ -1,4 +1,5 @@
-import wx, meta, os, codecs, persistence
+import wx, os, sys, codecs, traceback
+import meta, persistence
 from i18n import _
 import domain.task as task
 
@@ -36,11 +37,11 @@ class IOController(object):
             self.__taskFile.setFilename(filename)
             try:
                 self.__taskFile.load()                
-            except Exception, message:
+            except Exception:
                 self.__taskFile.setFilename('')
-                showerror(_('Error while reading %s:\n' 
-                    '%s\n'
-                    'Are you sure it is a %s-file?')%(filename, message, meta.name), 
+                showerror(_('Error while reading %s:\n'%filename + \
+                    ''.join(traceback.format_exception(*sys.exc_info())) + \
+                    'Are you sure it is a %s-file?')%meta.name, 
                     caption=_('File error'), style=wx.ICON_ERROR)
                 return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})

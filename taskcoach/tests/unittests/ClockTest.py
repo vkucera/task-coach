@@ -7,8 +7,8 @@ class ClockTest(test.wxTestCase):
         self.clock = date.Clock()
          
     def tearDown(self):
-        if date.Clock.hasInstance():
-            date.Clock.deleteInstance()
+        super(ClockTest, self).tearDown()
+        date.Clock.deleteInstance()
         
     def onEvent(self, event):
         self.events.append(event)

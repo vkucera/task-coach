@@ -31,7 +31,7 @@ def listModel2html(model, visibleColumns, columnAlignments):
 
 def treeModel2html(model, visibleColumns, columnAlignments):
     htmlText = ''
-    for item in model.rootTasks(): # Note: we assume a tree consists of tasks
+    for item in model.rootItems(): # Note: we assume a tree consists of tasks
         htmlText += node2html(item, visibleColumns, columnAlignments)
     return htmlText
 

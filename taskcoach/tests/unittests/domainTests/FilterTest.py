@@ -94,7 +94,7 @@ class ViewFilterTest(test.TestCase):
         self.task.setCompletionDate()
         self.filter.append(self.task)
         self.settings.set('view', 'completedtasks', 'False')
-        self.assertEqual(0, len(self.filter.rootTasks()))
+        self.assertEqual(0, len(self.filter.rootItems()))
 
     def testFilterDueToday(self):
         self.filter.extend([self.task, self.dueToday])

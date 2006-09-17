@@ -52,8 +52,8 @@ class App(object):
         
         self.taskFile = persistence.TaskFile()
         self.autoSaver = persistence.AutoSaver(settings)
-        self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskFile, settings=settings)
-        effortList = effort.EffortList(self.taskFile)
+        self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskFile.tasks(), settings=settings)
+        effortList = effort.EffortList(self.taskFile.tasks())
         self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, effortList, 
                                          settings, splash)

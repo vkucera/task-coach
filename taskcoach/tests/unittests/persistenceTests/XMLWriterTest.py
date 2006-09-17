@@ -3,6 +3,7 @@ import cStringIO as StringIO
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
+import domain.category as category
 
 class XMLWriterTest(test.TestCase):
     def setUp(self):
@@ -10,9 +11,10 @@ class XMLWriterTest(test.TestCase):
         self.writer = persistence.XMLWriter(self.fd)
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
+        self.categoryContainer = category.CategoryContainer()
             
     def __writeAndRead(self):
-        self.writer.write(self.taskList)
+        self.writer.write(self.taskList, self.categoryContainer)
         self.fd.reset()
         return self.fd.read()
     
@@ -97,14 +99,44 @@ class XMLWriterTest(test.TestCase):
         self.task.setBudget(date.TimeDelta(hours=25))
         self.expectInXML('budget="25:00:00"')
         
-    def testOneCategory(self):
-        self.task.addCategory('test')
-        self.expectInXML('<category>test</category>')
+    def testOneCategoryWithoutTask(self):
+        self.categoryContainer.append(category.Category('test'))
+        self.expectInXML('<category subject="test"/>')
+    
+    def testOneCategoryWithOneTask(self):
+        self.categoryContainer.append(category.Category('test', [self.task]))
+        self.expectInXML('<category subject="test" tasks="%s"/>'%self.task.id())
         
-    def testMultipleCategories(self):
-        for category in ['test', 'another']:
-            self.task.addCategory(category)
-        self.expectInXML('<category>test</category><category>another</category>')
+    def testTwoCategoriesWithOneTask(self):
+        subjects = ['test', 'another']
+        expectedResult = ''
+        for subject in subjects:
+            self.categoryContainer.append(category.Category(subject, [self.task]))
+            expectedResult += '<category subject="%s" tasks="%s"/>'%(subject, self.task.id())
+        self.expectInXML(expectedResult)
+        
+    def testOneCategoryWithSubTask(self):
+        child = task.Task()
+        self.task.addChild(child)
+        self.categoryContainer.append(category.Category('test', [child]))
+        self.expectInXML('<category subject="test" tasks="%s"/>'%child.id())
+        
+    def testSubCategoryWithoutTasks(self):
+        parentCategory = category.Category('parent')
+        childCategory = category.Category('child')
+        parentCategory.addChild(childCategory)
+        self.categoryContainer.extend([parentCategory, childCategory])
+        self.expectInXML('<category subject="parent">'
+                         '<category subject="child"/></category>')
+
+    def testSubCategoryWithOneTask(self):
+        parentCategory = category.Category('parent')
+        childCategory = category.Category('child', tasks=[self.task])
+        parentCategory.addChild(childCategory)
+        self.categoryContainer.extend([parentCategory, childCategory])
+        self.expectInXML('<category subject="parent">'
+                         '<category subject="child" tasks="%s"/>'
+                         '</category>'%self.task.id())
         
     def testDefaultPriority(self):
         self.expectNotInXML('priority')

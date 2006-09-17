@@ -30,7 +30,7 @@ class Filter(patterns.SetDecorator):
         ''' filter returns the items that pass the filter. '''
         raise NotImplementedError
 
-    def rootTasks(self):
+    def rootItems(self):
         return [task for task in self if task.parent() is None]
 
     def onSettingChanged(self, event):
@@ -147,8 +147,8 @@ class SearchFilter(Filter):
     def __taskSubject(self, task):
         subject = task.subject()
         if self.treeMode():
-            subject += ' '.join([child.subject() for child in task.allChildren()
-                if child in self.observable()])
+            subject += ' '.join([child.subject() for child in \
+                task.children(recursive=True) if child in self.observable()])
         return subject
     
     def __matchCase(self):

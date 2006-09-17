@@ -1,14 +1,26 @@
 import os, patterns, codecs, shutil, xml
 import domain.date as date
 import domain.task as task
+import domain.category as category
+
+# FIXME: TaskFile currently inherits from TaskList. It should contain a 
+# task list instead, just like it contains a CategoryContainer.
 
 class TaskFile(task.TaskList):
     def __init__(self, filename='', *args, **kwargs):
         self.__filename = self.__lastFilename = filename
         self.__needSave = self.__loading = False
+        self.__categories = category.CategoryContainer()
         super(TaskFile, self).__init__(*args, **kwargs)
-        # Register for tasks and efforts being changed so we can monitor
-        # when the task file needs saving (i.e. is 'dirty'):
+        # Register for tasks, categories, and efforts being changed so we 
+        # can monitor when the task file needs saving (i.e. is 'dirty'):
+        for eventType in (self.tasks().addItemEventType(), 
+                          self.tasks().removeItemEventType(), 
+                          self.categories().addItemEventType(),
+                          self.categories().removeItemEventType()):
+            patterns.Publisher().registerObserver(self.onDomainObjectAddedOrRemoved, 
+                                                  eventType)
+
         for eventType in ('task.subject',
             'task.description', 'task.startDate', 'task.dueDate',
             'task.completionDate', 'task.priority', 
@@ -31,29 +43,31 @@ class TaskFile(task.TaskList):
     def __str__(self):
         return self.filename()
 
-    def extend(self, tasks):
-        if tasks:
-            super(TaskFile, self).extend(tasks)
-            self.markDirty()
-
-    def removeItems(self, tasks):
-        if tasks:
-            super(TaskFile, self).removeItems(tasks)
-            self.markDirty()
+    def categories(self):
+        return self.__categories
+    
+    def tasks(self):
+        return self
+    
+    def isEmpty(self):
+        return 0 == len(self.categories()) == len(self.tasks())
+            
+    def onDomainObjectAddedOrRemoved(self, event):
+        self.markDirty()
         
     def onTaskChanged(self, event):
-        if event.source() in self:
+        if event.source() in self.tasks():
             self.markDirty()
             
     def onEffortChanged(self, event):
-        if event.source().task() in self:
+        if event.source().task() in self.tasks():
             self.markDirty()
 
     def setFilename(self, filename):
         self.__lastFilename = self.__filename or filename
         self.__filename = filename
-        patterns.Publisher().notifyObservers(patterns.Event(self, 
-            'taskfile.filenameChanged', filename))
+        self.notifyObservers(patterns.Event(self, 'taskfile.filenameChanged', 
+                                            filename))
 
     def filename(self):
         return self.__filename
@@ -61,20 +75,19 @@ class TaskFile(task.TaskList):
     def lastFilename(self):
         return self.__lastFilename
         
-    def markDirty(self):
-        if not self.__needSave:
+    def markDirty(self, force=False):
+        if force or not self.__needSave:
             self.__needSave = True
-            patterns.Publisher().notifyObservers(patterns.Event(self, 
-                'taskfile.dirty', True))
+            self.notifyObservers(patterns.Event(self, 'taskfile.dirty', True))
                 
     def markClean(self):
         if self.__needSave:
             self.__needSave = False
-            patterns.Publisher().notifyObservers(patterns.Event(self, 
-                'taskfile.dirty', False))
+            self.notifyObservers(patterns.Event(self, 'taskfile.dirty', False))
             
     def _clear(self):
-        self.removeItems(list(self))
+        self.tasks().removeItems(list(self.tasks()))
+        self.categories().removeItems(list(self.categories()))
         
     def close(self):
         self.setFilename('')
@@ -98,21 +111,22 @@ class TaskFile(task.TaskList):
         try:
             if self.exists():
                 fd = self._openForRead()
-                tasks = self._read(fd)
+                tasks, categories = self._read(fd)
                 fd.close()
             else: 
                 tasks = []
+                categories = []
             self._clear()
-            self.extend(tasks)
+            self.tasks().extend(tasks)
+            self.categories().extend(categories)
         finally:
             self.__loading = False
             self.__needSave = False
         
     def save(self):
-        patterns.Publisher().notifyObservers(patterns.Event(self, 
-            'taskfile.aboutToSave'))
+        self.notifyObservers(patterns.Event(self, 'taskfile.aboutToSave'))
         fd = self._openForWrite()
-        xml.XMLWriter(fd).write(self)
+        xml.XMLWriter(fd).write(self.tasks(), self.categories())
         fd.close()
         self.__needSave = False
         
@@ -123,19 +137,23 @@ class TaskFile(task.TaskList):
     def merge(self, filename):
         mergeFile = self.__class__(filename)
         mergeFile.load()
-        self.extend(mergeFile.rootTasks())
+        self.__loading = True
+        self.tasks().extend(mergeFile.tasks().rootItems())
+        self.categories().extend(mergeFile.categories().rootItems())
+        self.__loading = False
+        self.markDirty(force=True)
 
     def needSave(self):
         return not self.__loading and self.__needSave
  
 
-class AutoSaver(object):
-    def __init__(self, settings):
+class AutoSaver(patterns.Observer):
+    def __init__(self, settings, *args, **kwargs):
+        super(AutoSaver, self).__init__(*args, **kwargs)
         self.__settings = settings
-        patterns.Publisher().registerObserver(self.onTaskFileDirty, 
-            eventType='taskfile.dirty')
-        patterns.Publisher().registerObserver(self.onTaskFileAboutToSave,
-            eventType='taskfile.aboutToSave')
+        self.registerObserver(self.onTaskFileDirty, eventType='taskfile.dirty')
+        self.registerObserver(self.onTaskFileAboutToSave,
+                              eventType='taskfile.aboutToSave')
             
     def onTaskFileDirty(self, event):
         taskFile = event.source()

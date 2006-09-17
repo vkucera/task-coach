@@ -3,6 +3,7 @@ import wx
 from i18n import _
 import wx.grid as grid
 import domain.task as task
+import domain.category as category
 import domain.effort as effort
 import domain.date as date
 
@@ -44,11 +45,11 @@ class Viewer(wx.Panel):
     def getWidget(self):
         return self.widget
  
-    def createSorter(self, list):
-        return list
+    def createSorter(self, collection):
+        return collection
         
-    def createFilter(self, list):
-        return list
+    def createFilter(self, collection):
+        return collection
 
     def onAddItem(self, event):
         self.refresh()
@@ -71,7 +72,7 @@ class Viewer(wx.Panel):
         
     def size(self):
         return self.widget.GetItemCount()
-
+    
     def model(self):
         return self.list
     
@@ -524,7 +525,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         return task.id()
 
     def getRootIndices(self):
-        return [self.list.index(task) for task in self.list.rootTasks()]
+        return [self.list.index(task) for task in self.list.rootItems()]
         
     def getChildIndices(self, index):
         task = self.list[index]
@@ -549,6 +550,41 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         widget.AssignImageList(self.createImageList())
         return widget    
 
+
+class CategoryViewer(TreeViewer):
+    def createWidget(self):
+        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage,
+            self.getItemAttr, self.getItemId, self.getRootIndices, 
+            self.getChildIndices, self.onSelect, None, None)
+        return widget
+
+    def getItemText(self, index):    # FIXME: pull up to TreeViewer
+        category = self.list[index]
+        return category.subject()
+    
+    def getItemImage(self, index):
+        return -1, -1
+    
+    def getItemAttr(self, index):
+        return wx.ListItemAttr()
+    
+    def getItemId(self, index):
+        category = self.list[index]
+        return id(category)
+    
+    def getRootIndices(self):
+        return [self.list.index(category) for category in self.list.rootItems()]
+    
+    def getChildIndices(self, index):    # FIXME: pull up to TreeViewer
+        category = self.list[index]
+        childIndices = [self.list.index(child) for child in category.children() \
+                        if child in self.list]
+        childIndices.sort()
+        return childIndices
+    
+    def createSorter(self, categoryContainer):
+        return category.CategorySorter(categoryContainer)
+    
 
 class EffortViewer(UpdatePerSecondViewer):
     def isShowingTasks(self):

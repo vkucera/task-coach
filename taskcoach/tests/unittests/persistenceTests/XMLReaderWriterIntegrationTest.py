@@ -1,6 +1,7 @@
 import test, persistence
 import cStringIO as StringIO
 import domain.task as task
+import domain.category as category
 import domain.effort as effort
 import domain.date as date
 
@@ -10,15 +11,18 @@ class IntegrationTestCase(test.TestCase):
         self.reader = persistence.XMLReader(self.fd)
         self.writer = persistence.XMLWriter(self.fd)
         self.taskList = task.TaskList()
-        self.fillTaskList()
-        self.tasksWrittenAndRead = task.TaskList(self.readAndWrite())
+        self.categoryContainer = category.CategoryContainer()
+        self.fillContainers()
+        tasks, categories = self.readAndWrite()
+        self.tasksWrittenAndRead = task.TaskList(tasks)
+        self.categoriesWrittenAndRead = category.CategoryContainer(categories)
 
-    def fillTaskList(self):
+    def fillContainers(self):
         pass
 
     def readAndWrite(self):
         self.fd.reset()
-        self.writer.write(self.taskList)
+        self.writer.write(self.taskList, self.categoryContainer)
         self.fd.reset()
         return self.reader.read()
 
@@ -27,9 +31,12 @@ class IntegrationTest_EmptyList(IntegrationTestCase):
     def testEmptyTaskList(self):
         self.assertEqual([], self.tasksWrittenAndRead)
         
+    def testNoCategories(self):
+        self.assertEqual([], self.categoriesWrittenAndRead)
+        
         
 class IntegrationTest(IntegrationTestCase):
-    def fillTaskList(self):
+    def fillContainers(self):
         self.description = 'Description\nLine 2'
         self.task = task.Task('Subject', self.description, 
             startdate=date.Yesterday(), duedate=date.Tomorrow(), 
@@ -43,7 +50,7 @@ class IntegrationTest(IntegrationTestCase):
         self.child.addChild(self.grandChild)
         self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
             stop=date.DateTime(2004,1,2), description=self.description))
-        self.task.addCategory('test')
+        self.categoryContainer.append(category.Category('test', [self.task]))
         self.task.addAttachments('/home/frank/whatever.txt')
         self.task2 = task.Task('Task 2', priority=-1954)
         self.taskList.extend([self.task, self.task2])
@@ -81,7 +88,7 @@ class IntegrationTest(IntegrationTestCase):
         
     def testBudget_MoreThan24Hour(self):
         self.task.setBudget(date.TimeDelta(hours=25))
-        self.tasksWrittenAndRead = task.TaskList(self.readAndWrite())
+        self.tasksWrittenAndRead = task.TaskList(self.readAndWrite()[0])
         self.assertAttributeWrittenAndRead(self.task, 'budget')
         
     def testEffort(self):
@@ -89,18 +96,19 @@ class IntegrationTest(IntegrationTestCase):
         
     def testEffortDescription(self):
         self.assertEqual(self.task.efforts()[0].getDescription(), 
-                         self.getTaskWrittenAndRead(self.task.id()).efforts()[0].getDescription())
+            self.getTaskWrittenAndRead(self.task.id()).efforts()[0].getDescription())
         
     def testChildren(self):
         self.assertEqual(len(self.task.children()), 
-                         len(self.getTaskWrittenAndRead(self.task.id()).children()))
+            len(self.getTaskWrittenAndRead(self.task.id()).children()))
         
     def testGrandChildren(self):
-        self.assertEqual(len(self.task.allChildren()),  
-                         len(self.getTaskWrittenAndRead(self.task.id()).allChildren()))
+        self.assertEqual(len(self.task.children(recursive=True)),  
+            len(self.getTaskWrittenAndRead(self.task.id()).children(recursive=True)))
        
     def testCategory(self):
-        self.assertAttributeWrittenAndRead(self.task, 'categories')
+        self.assertEqual(self.task.id(), 
+                         list(self.categoriesWrittenAndRead)[0].tasks()[0].id())
         
     def testPriority(self):
         self.assertAttributeWrittenAndRead(self.task, 'priority')

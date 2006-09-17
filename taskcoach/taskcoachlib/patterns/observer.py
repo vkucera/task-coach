@@ -154,6 +154,8 @@ class Decorator(Observer):
 class Observable(object):
     def __init__(self, *args, **kwargs):
         self.notifyObservers = patterns.Publisher().notifyObservers
+        self.startNotifying = patterns.Publisher().startNotifying
+        self.stopNotifying = patterns.Publisher().stopNotifying
         super(Observable, self).__init__(*args, **kwargs)
 
 
