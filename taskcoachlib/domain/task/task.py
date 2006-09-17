@@ -82,7 +82,8 @@ class Task(object):
 
     def children(self, recursive=False):
         if recursive:
-            return self.allChildren()
+            return self.children() + [descendent for child in self.children() 
+                for descendent in child.children(recursive=True)]
         else:
             return self._children
     
@@ -133,10 +134,6 @@ class Task(object):
         return self.__class__(subject, dueDate=self.dueDate(),
             startDate=max(date.Today(), self.startDate()), parent=self)
 
-    def allChildren(self):
-        return self.children() + [descendent for child in self.children() 
-                                  for descendent in child.allChildren()]
-
     def ancestors(self):
         myParent = self.parent()
         if myParent is None:
@@ -145,7 +142,7 @@ class Task(object):
             return myParent.ancestors() + [myParent]
 
     def family(self):
-        return self.ancestors() + [self] + self.allChildren()
+        return self.ancestors() + [self] + self.children(recursive=True)
 
     def setChildren(self, children):
         self._children = children # FIXME: no notification?

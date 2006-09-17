@@ -22,7 +22,7 @@ class ICSWriter:
         domain = meta.url[len('http://'):-1]
         self += 'PRODID:-//%s//NONSGML %s V%s//EN'%(domain, meta.name, meta.version)
 
-        for task in taskList.rootTasks():
+        for task in taskList.rootItems():
             self.writeTask(task)
 
         self += 'END:VCALENDAR'

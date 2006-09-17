@@ -31,4 +31,9 @@ def addTaskViewers(viewerContainer, taskList, uiCommands, settings):
     treeListViewer = viewer.TaskTreeListViewer(viewerContainer, taskList,
         uiCommands, settings)
     viewerContainer.addViewer(treeListViewer, _('Task tree'), 'treeview')
-        
+
+def addCategoryViewers(viewerContainer, categoryContainer, uiCommands, 
+                       settings):
+    categoryViewer = viewer.CategoryViewer(viewerContainer, categoryContainer,
+                                           uiCommands, settings)
+    viewerContainer.addViewer(categoryViewer, _('Categories'), 'category')

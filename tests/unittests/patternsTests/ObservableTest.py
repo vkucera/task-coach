@@ -128,12 +128,22 @@ class ObservableCollectionTests(object):
 class ObservableListTest(ObservableCollectionFixture, ObservableCollectionTests):
     def createObservableCollection(self):
         return patterns.ObservableList()
+
+    def testAppendSameItemTwice(self):
+        self.collection.append(1)
+        self.collection.append(1)
+        self.assertEqual(2, len(self.collection))
     
 
 class ObservableSetTest(ObservableCollectionFixture, ObservableCollectionTests):
     def createObservableCollection(self):
         return patterns.ObservableSet()
-        
+
+    def testAppendSameItemTwice(self):
+        self.collection.append(1)
+        self.collection.append(1)
+        self.assertEqual(1, len(self.collection))
+
 
 class ListDecoratorTest_Constructor(test.TestCase):
     def testOriginalNotEmpty(self):

@@ -3,19 +3,21 @@ import domain.date as date
 
 
 class XMLWriter:
-    def __init__(self, fd, versionnr=13):
+    def __init__(self, fd, versionnr=14):
         self.__fd = fd
         self.__versionnr = versionnr
         
-    def write(self, taskList):
+    def write(self, taskList, categoryContainer):
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None)
         pi = self.document.createProcessingInstruction('taskcoach', 
             'release="%s" tskversion="%d"'%(meta.data.version, 
             self.__versionnr))
         self.document.insertBefore(pi, self.document.documentElement)
-        for task in taskList.rootTasks():
+        for task in taskList.rootItems():
             self.document.documentElement.appendChild(self.taskNode(task))
+        for category in categoryContainer.rootItems():
+            self.document.documentElement.appendChild(self.categoryNode(category))
         self.document.writexml(self.__fd)
             
     def taskNode(self, task):
@@ -45,8 +47,6 @@ class XMLWriter:
                               str(task.shouldMarkCompletedWhenAllChildrenCompleted))
         if task.description():
             node.appendChild(self.textNode('description', task.description()))
-        for category in task.categories():
-            node.appendChild(self.textNode('category', category))
         for attachment in task.attachments():
             node.appendChild(self.textNode('attachment', attachment))
         for child in task.children():
@@ -62,6 +62,16 @@ class XMLWriter:
             node.setAttribute('stop', str(effort.getStop()))
         if effort.getDescription():
             node.appendChild(self.textNode('description', effort.getDescription()))
+        return node
+    
+    def categoryNode(self, category):
+        node = self.document.createElement('category')
+        node.setAttribute('subject', str(category.subject()))
+        if category.tasks():
+            node.setAttribute('tasks', 
+                ' '.join([task.id() for task in category.tasks()]))
+        for child in category.children():
+            node.appendChild(self.categoryNode(child))
         return node
         
     def budgetAsAttribute(self, budget):

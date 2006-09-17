@@ -14,7 +14,7 @@ class SaveTaskStateMixin(base.SaveStateMixin):
     def getAllChildren(self, tasks):
         allChildren = []
         for task in tasks:
-            allChildren.extend(task.allChildren())
+            allChildren.extend(task.children(recursive=True))
         return allChildren
 
     def getAllParents(self, tasks):

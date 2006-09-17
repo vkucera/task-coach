@@ -2,6 +2,7 @@ import time, xml.dom.minidom, re
 import domain.date as date
 import domain.effort as effort
 import domain.task as task
+import domain.category as category
 
 class XMLReader:
     def __init__(self, fd):
@@ -10,7 +11,18 @@ class XMLReader:
     def read(self):
         domDocument = xml.dom.minidom.parse(self.__fd)
         self.__tskversion = self.__parseTskVersionNumber(domDocument)
-        return self.__parseTaskNodes(domDocument.documentElement.childNodes)
+        tasks = self.__parseTaskNodes(domDocument.documentElement.childNodes)
+        tasksAndAllChildren = tasks[:]
+        for task in tasks:
+            tasksAndAllChildren.extend(task.children(recursive=True))
+        tasksById = dict([(task.id(), task) for task in tasksAndAllChildren])
+        if self.__tskversion <= 13:
+            categories = self.__parseCategoryNodesFromTaskNodes(domDocument, 
+                                                                tasksById)
+        else:
+            categories = self.__parseCategoryNodes( \
+                domDocument.documentElement.childNodes, tasksById)
+        return tasks, categories
 
     def __parseTskVersionNumber(self, domDocument):
         processingInstruction = domDocument.firstChild.data
@@ -20,7 +32,44 @@ class XMLReader:
     def __parseTaskNodes(self, nodes):
         return [self.__parseTaskNode(node) for node in nodes \
                 if node.nodeName == 'task']
+                
+    def __parseCategoryNodes(self, nodes, tasks):
+        return [self.__parseCategoryNode(node, tasks) for node in nodes \
+                if node.nodeName == 'category']
 
+    def __parseCategoryNode(self, categoryNode, tasksById):        
+        subject = categoryNode.getAttribute('subject')
+        taskIds = categoryNode.getAttribute('tasks')
+        if taskIds:
+            categoryTasks = [tasksById[id] for id in taskIds.split(' ')]
+        else:
+            categoryTasks = []
+        children = self.__parseCategoryNodes(categoryNode.childNodes, tasksById)
+        return category.Category(subject, categoryTasks, children)
+                      
+    def __parseCategoryNodesFromTaskNodes(self, document, tasks):
+        taskNodes = document.getElementsByTagName('task')
+        categoryMapping = self.__parseCategoryNodesWithinTaskNodes(taskNodes, tasks)
+        subjectCategoryMapping = {}
+        for taskId, categories in categoryMapping.items():
+            for subject in categories:
+                if subject in subjectCategoryMapping:
+                    cat = subjectCategoryMapping[subject]
+                else:
+                    cat = category.Category(subject)
+                    subjectCategoryMapping[subject] = cat
+                cat.addTask(tasks[taskId])
+        return subjectCategoryMapping.values()
+    
+    def __parseCategoryNodesWithinTaskNodes(self, taskNodes, tasks):
+        categoryMapping = {}
+        for node in taskNodes:
+            taskId = node.getAttribute('id')
+            categories = [self.__parseTextNode(node) for node in node.childNodes \
+                          if node.nodeName == 'category']
+            categoryMapping.setdefault(taskId, []).extend(categories)
+        return categoryMapping
+        
     def __parseTaskNode(self, taskNode):
         subject = taskNode.getAttribute('subject')
         id = taskNode.getAttribute('id')
@@ -38,7 +87,10 @@ class XMLReader:
         attachments = self.__parseAttachmentNodes(taskNode.childNodes)
         shouldMarkCompletedWhenAllChildrenCompleted = \
             self.__parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted'))
-        categories = self.__parseCategoryNodes(taskNode.childNodes)
+        if self.__tskversion <= 13:
+            categories = self.__parseCategoryNodesWithinTaskNode(taskNode.childNodes)
+        else:
+            categories = []
         children = self.__parseTaskNodes(taskNode.childNodes)
         efforts = self.__parseEffortNodes(taskNode.childNodes)
         parent = task.Task(subject, description, id_=id, startDate=startDate, 
@@ -51,7 +103,7 @@ class XMLReader:
                 shouldMarkCompletedWhenAllChildrenCompleted)
         return parent        
         
-    def __parseCategoryNodes(self, nodes):
+    def __parseCategoryNodesWithinTaskNode(self, nodes):
         return [self.__parseTextNode(node) for node in nodes \
                 if node.nodeName == 'category']
         

@@ -4,14 +4,16 @@ from changetypes import *
 
 releases = [
 Release('0.61', 'September ?, 2006',
-    bugsFixed=[],
+    bugsFixed=[
+        Bug('''Displaying a previously hidden toolbar would result in
+an incorrectly drawn window.''', '1551885')],
     featuresAdded=[
-        Feature('''Task Coach can be run from a removable medium, such as an 
+        Feature('''Task Coach can be run from a removable medium, such as a 
 USB stick. On Windows, use the installer to install Task Coach to the medium.
 Then, start Task Coach and turn the setting 'Save settings to same 
 directory as program' on. This setting can be found in Edit -> Preferences -> 
 File). This makes sure the TaskCoach.ini file is saved on the 
-removable medium. ''')]),
+removable medium, in the same directory as the main program.''', '1464435')]),
 
 Release('0.60', 'August 30, 2006',
     bugsFixed=[

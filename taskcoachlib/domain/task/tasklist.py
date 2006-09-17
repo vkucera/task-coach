@@ -9,8 +9,6 @@ class TaskList(patterns.ObservableSet):
         super(TaskList, self).__init__(*args, **kwargs)
         self.extend(initList or [])
         
-    # list interface and helpers
-
     def append(self, task):
         self.extend([task])
         
@@ -18,20 +16,19 @@ class TaskList(patterns.ObservableSet):
         if not tasks:
             return
         tasksAndAllChildren = self._tasksAndAllChildren(tasks) 
-        patterns.Publisher().stopNotifying()
+        self.stopNotifying()
         super(TaskList, self).extend(tasksAndAllChildren)
         parentsWithChildrenAdded = self._addTasksToParent(tasks)
-        patterns.Publisher().startNotifying()
-        patterns.Publisher().notifyObservers(patterns.Event(self, self.addItemEventType(), 
-            *tasksAndAllChildren))
+        self.startNotifying()
+        self.notifyObserversOfItemsAdded(*tasksAndAllChildren)
         for parent, children in parentsWithChildrenAdded.items():
-            patterns.Publisher().notifyObservers(patterns.Event(parent,
+            self.notifyObservers(patterns.Event(parent,
                 'task.child.add', *children))
 
     def _tasksAndAllChildren(self, tasks):
         tasksAndAllChildren = set(tasks) 
         for task in tasks:
-            tasksAndAllChildren |= set(task.allChildren())
+            tasksAndAllChildren |= set(task.children(recursive=True))
         return list(tasksAndAllChildren)
 
     def _splitTasksInParentsAndChildren(self, tasks):
@@ -64,15 +61,14 @@ class TaskList(patterns.ObservableSet):
             return
         parents, children = self._splitTasksInParentsAndChildren(tasks)
         tasksAndAllChildren = self._tasksAndAllChildren(parents)
-        patterns.Publisher().stopNotifying()
+        self.stopNotifying()
         self._removeTasksFromTaskList(parents)
         parentsWithChildrenRemoved = self._removeTasksFromParent(tasks)
-        patterns.Publisher().startNotifying()
-        patterns.Publisher().notifyObservers(patterns.Event(self, 
-            self.removeItemEventType(), *tasksAndAllChildren))
+        self.startNotifying()
+        self.notifyObserversOfItemsRemoved(*tasksAndAllChildren)
         for parent, children in parentsWithChildrenRemoved.items():
             if parent in self:
-                patterns.Publisher().notifyObservers(patterns.Event(parent,
+                self.notifyObservers(patterns.Event(parent,
                     'task.child.remove', *children))
 
     def _removeTaskFromTaskList(self, task):
@@ -119,7 +115,7 @@ class TaskList(patterns.ObservableSet):
         nrCompleted = self.nrCompleted()
         return nrCompleted > 0 and nrCompleted == len(self)
 
-    def rootTasks(self):
+    def rootItems(self):
         return [task for task in self if task.parent() is None or \
                 task.parent() not in self]
             

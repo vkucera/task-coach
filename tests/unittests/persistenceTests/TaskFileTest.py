@@ -2,19 +2,22 @@ import test, os, persistence
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
+import domain.category as category
 
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
         self.taskFile = persistence.TaskFile()
         self.emptyTaskFile = persistence.TaskFile()
         self.task = task.Task()
-        self.taskFile.append(self.task)
+        self.category = category.Category('category')
+        self.taskFile.tasks().append(self.task)
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2)))
         self.filename = 'test.tsk'
         self.filename2 = 'test.tsk'
         
     def tearDown(self):
+        super(TaskFileTestCase, self).tearDown()
         self.remove(self.filename, self.filename2)
 
     def remove(self, *filenames):
@@ -24,6 +27,9 @@ class TaskFileTestCase(test.TestCase):
 
 
 class TaskFileTest(TaskFileTestCase):
+    def testIsEmptyInitially(self):
+        self.failUnless(persistence.TaskFile().isEmpty())
+        
     def testFileNameAfterCreate(self):
         self.assertEqual('', self.taskFile.filename())
 
@@ -33,24 +39,38 @@ class TaskFileTest(TaskFileTestCase):
 
     def testLoadWithoutFilename(self):
         self.taskFile.load()
-        self.assertEqual(0, len(self.taskFile))
-
+        self.failUnless(self.taskFile.isEmpty())
+        
     def testLoadFromNotExistingFile(self):
         self.taskFile.setFilename(self.filename)
         self.failIf(os.path.isfile(self.taskFile.filename()))
         self.taskFile.load()
-        self.assertEqual(0, len(self.taskFile))
+        self.failUnless(self.taskFile.isEmpty())
 
-    def testClose(self):
+    def testClose_EmptyTaskFileWithoutFilename(self):
+        self.taskFile.close()
+        self.assertEqual('', self.taskFile.filename())
+        self.failUnless(self.taskFile.isEmpty())
+    
+    def testClose_EmptyTaskFileWithFilename(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.close()
         self.assertEqual('', self.taskFile.filename())
-        self.assertEqual(0, len(self.taskFile))
+        self.failUnless(self.taskFile.isEmpty())
 
-    def testNeedSave_Initial(self):
+    def testClose_TaskFileWithTasksDeletesTasks(self):
+        self.taskFile.close()
+        self.failUnless(self.taskFile.isEmpty())
+        
+    def testClose_TaskFileWithCategoriesDeletesCategories(self):
+        self.taskFile.categories().append(self.category)
+        self.taskFile.close()
+        self.failUnless(self.taskFile.isEmpty())
+
+    def testDoesNotNeedSave_Initial(self):
         self.failIf(self.emptyTaskFile.needSave())
 
-    def testNeedSave_AfterSetFileName(self):
+    def testDoesNotNeedSave_AfterSetFileName(self):
         self.emptyTaskFile.setFilename(self.filename)
         self.failIf(self.emptyTaskFile.needSave())
 
@@ -59,13 +79,13 @@ class TaskFileTest(TaskFileTestCase):
         self.emptyTaskFile.append(newTask)
         self.failUnless(self.emptyTaskFile.needSave())
         
-    def testNeedSave_AfterSave(self):
+    def testDoesNotNeedSave_AfterSave(self):
         self.emptyTaskFile.append(task.Task())
         self.emptyTaskFile.setFilename(self.filename)
         self.emptyTaskFile.save()
         self.failIf(self.emptyTaskFile.needSave())
 
-    def testNeedSave_AfterClose(self):
+    def testDoesNotNeedSave_AfterClose(self):
         self.taskFile.close()
         self.failIf(self.taskFile.needSave())
         
@@ -75,7 +95,7 @@ class TaskFileTest(TaskFileTestCase):
         self.emptyTaskFile.merge(self.filename)
         self.failUnless(self.emptyTaskFile.needSave())
         
-    def testNeedSave_AfterLoad(self):
+    def testDoesNotNeedSave_AfterLoad(self):
         self.taskFile.append(task.Task())
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
@@ -265,26 +285,39 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.save()
         self.task.shouldMarkCompletedWhenAllChildrenCompleted = True
         self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterAddingCategory(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.taskFile.categories().append(self.category)
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterRemovingCategory(self):
+        self.taskFile.categories().append(self.category)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.taskFile.categories().remove(self.category)
+        self.failUnless(self.taskFile.needSave())
         
-    def testLastFilename_Initially(self):
+    def testLastFilename_IsEmptyInitially(self):
         self.assertEqual('', self.taskFile.lastFilename())
         
-    def testLastFilename_AfterSetFilename(self):
+    def testLastFilename_EqualsCurrentFilenameAfterSetFilename(self):
         self.taskFile.setFilename(self.filename)
         self.assertEqual(self.filename, self.taskFile.lastFilename())
         
-    def testLastFilename_AfterClose(self):
+    def testLastFilename_EqualsPreviousFilenameAfterClose(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.close()
         self.assertEqual(self.filename, self.taskFile.lastFilename())
         
-    def testLastFilename_AfterClosingTwice(self):
+    def testLastFilename_IsEmptyAfterClosingTwice(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.close()
         self.taskFile.close()
         self.assertEqual('', self.taskFile.lastFilename())
         
-    def testLastFilename_AfterSaveAs(self):
+    def testLastFilename_EqualsCurrentFilenameAfterSaveAs(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.saveas(self.filename2)
         self.assertEqual(self.filename2, self.taskFile.lastFilename())
@@ -294,33 +327,79 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
     def setUp(self):
         super(TaskFileSaveAndLoadTest, self).setUp()
         self.emptyTaskFile.setFilename(self.filename)
-
-    def saveAndLoad(self, tasks):
-        self.emptyTaskFile.extend(tasks)
+        
+    def saveAndLoad(self, tasks, categories=None):
+        categories = categories or []
+        self.emptyTaskFile.tasks().extend(tasks)
+        self.emptyTaskFile.categories().extend(categories)
         self.emptyTaskFile.save()
         self.emptyTaskFile.load()
         self.assertEqual([task.subject() for task in tasks], 
-            [task.subject() for task in self.emptyTaskFile])
+            [task.subject() for task in self.emptyTaskFile.tasks()])
+        self.assertEqual([category.subject() for category in categories],
+            [category.subject() for category in self.emptyTaskFile.categories()])
 
     def testSaveAndLoad(self):
         self.saveAndLoad([task.Task(subject='ABC'), 
             task.Task(duedate=date.Tomorrow())])
 
-    def testSaveAndLoadedTaskWithChild(self):
+    def testSaveAndLoadTaskWithChild(self):
         parentTask = task.Task()
         childTask = task.Task(parent=parentTask)
         self.saveAndLoad([parentTask])
 
+    def testSaveAndLoadCategory(self):
+        self.saveAndLoad([], [self.category])
+        
     def testSaveAs(self):
         self.taskFile.saveas('new.tsk')
         self.taskFile.load()
-        self.assertEqual(1, len(self.taskFile))
+        self.assertEqual(1, len(self.taskFile.tasks()))
         self.remove('new.tsk')
 
-    def testMerge(self):
-        mergeFile = persistence.TaskFile('merge.tsk')
-        mergeFile.append(task.Task())
-        mergeFile.save()
-        self.taskFile.merge('merge.tsk')
-        self.assertEqual(2, len(self.taskFile))
+
+class TaskFileMergeTest(TaskFileTestCase):
+    def setUp(self):
+        super(TaskFileMergeTest, self).setUp()
+        self.mergeFile = persistence.TaskFile('merge.tsk')
+    
+    def tearDown(self):
         self.remove('merge.tsk')
+        super(TaskFileMergeTest, self).tearDown()
+        
+    def merge(self):
+        self.mergeFile.save()
+        self.taskFile.merge('merge.tsk')
+        
+    def testMerge_Tasks(self):
+        self.mergeFile.tasks().append(task.Task())
+        self.merge()
+        self.assertEqual(2, len(self.taskFile.tasks()))
+
+    def testMerge_OneCategoryInMergeFile(self):
+        self.mergeFile.categories().append(self.category)
+        self.merge()
+        self.assertEqual(self.category, list(self.taskFile.categories())[0])
+        
+    def testMerge_DifferentCategories(self):
+        self.mergeFile.categories().append(self.category)
+        self.taskFile.categories().append(category.Category('another category'))
+        self.merge()
+        self.assertEqual(2, len(self.taskFile.categories()))
+        
+    def testMerge_SameCategory(self):
+        self.mergeFile.categories().append(self.category)
+        self.taskFile.categories().append(category.Category(self.category.subject()))
+        self.merge()
+        self.assertEqual([self.category, self.category], 
+                         list(self.taskFile.categories()))
+        
+    def testMerge_CategoryWithTask(self):
+        self.mergeFile.categories().append(self.category)
+        aTask = task.Task(subject='merged task')
+        self.mergeFile.tasks().append(aTask)
+        self.category.addTask(aTask)
+        self.merge()
+        self.assertEqual(aTask.id(), 
+                         list(self.taskFile.categories())[0].tasks()[0].id())
+                         

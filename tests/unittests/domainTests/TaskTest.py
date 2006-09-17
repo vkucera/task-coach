@@ -129,7 +129,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.assertEqual([], self.task.children())
 
     def testTaskHasNoChildrenByDefaultSoAllChildrenReturnsAnEmptyListToo(self):
-        self.assertEqual([], self.task.allChildren())
+        self.assertEqual([], self.task.children(recursive=True))
 
     def testTaskHasNoChildrenByDefaultSoNotAllChildrenAreCompleted(self):
         self.failIf(self.task.allChildrenCompleted())
@@ -759,7 +759,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.failUnless(self.task1.allChildrenCompleted())
 
     def testGetAllChildren(self):
-        self.assertEqual([self.task1_1], self.task1.allChildren())
+        self.assertEqual([self.task1_1], self.task1.children(recursive=True))
 
     def testGetFamily(self):
         for task in self.task1, self.task1_1:
@@ -889,7 +889,8 @@ class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task2.addChild(self.task3)
 
     def testGetAllChildren(self):
-        self.assertEqual([self.task2, self.task3], self.task1.allChildren())
+        self.assertEqual([self.task2, self.task3], 
+                         self.task1.children(recursive=True))
 
     def testGetAncestors(self):
         self.assertEqual([self.task1, self.task2], self.task3.ancestors())

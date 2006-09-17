@@ -68,6 +68,8 @@ class MainWindow(WindowWithPersistentDimensions):
             self.viewer, self.settings, self.taskFile, self.effortList)
         viewerfactory.addTaskViewers(self.viewer, self.taskFile, 
             self.uiCommands, self.settings)
+        viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
+            self.uiCommands, self.settings)
         viewerfactory.addEffortViewers(self.viewer, self.taskFile, 
             self.uiCommands, self.settings, 'effortviewer')
         import status
@@ -253,8 +255,6 @@ class MainWindow(WindowWithPersistentDimensions):
     def showToolBar(self, size):
         if self.GetToolBar():
             self.GetToolBar().Destroy()
-        if size is None:
-            self.SendSizeEvent()
-        else:
+        if size is not None:
             self.SetToolBar(toolbar.ToolBar(self, self.uiCommands, size=size))
-    
+        self.SendSizeEvent()

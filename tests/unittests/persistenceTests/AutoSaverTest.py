@@ -1,5 +1,6 @@
 import test, persistence
 import domain.task as task
+import domain.category as category
 import domain.date as date
 
 class DummySettings(dict):        
@@ -27,7 +28,7 @@ class DummyTaskFile(persistence.TaskFile):
         if self._throw:
             raise IOError
         else:
-            return [task.Task()]
+            return [task.Task()], [category.Category('category')]
         
     def exists(self, *args, **kwargs):
         return True
