@@ -8,6 +8,8 @@ Release('0.61', 'September ?, 2006',
         Bug('''Displaying a previously hidden toolbar would result in
 an incorrectly drawn window.''', '1551885')],
     featuresAdded=[
+        Feature('''Export in Comma Separated Values (CSV) format. As
+with export to HTML, the current view is exported.''', '1534862'),
         Feature('''Task Coach can be run from a removable medium, such as a 
 USB stick. On Windows, use the installer to install Task Coach to the medium.
 Then, start Task Coach and turn the setting 'Save settings to same 

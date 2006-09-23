@@ -13,15 +13,18 @@ class IOController(object):
         self.__taskFile = taskFile
         self.__messageCallback = messageCallback
         self.__settings = settings
-        self.__tskFileDialogOpts = {'default_path' : os.getcwd(), 
-            'default_extension' : 'tsk', 'wildcard' : 
+        self.__tskFileDialogOpts = {'default_path': os.getcwd(), 
+            'default_extension': 'tsk', 'wildcard': 
             _('%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*')%meta.name }
-        self.__icsFileDialogOpts = {'default_path' : os.getcwd(), 
-            'default_extension' : 'ics', 'wildcard' : 
+        self.__icsFileDialogOpts = {'default_path': os.getcwd(), 
+            'default_extension': 'ics', 'wildcard': 
             _('iCalendar files (*.ics)|*.ics|All files (*.*)|*') }
-        self.__htmlFileDialogOpts = {'default_path' : os.getcwd(), 
-            'default_extension' : 'html', 'wildcard' : 
+        self.__htmlFileDialogOpts = {'default_path': os.getcwd(), 
+            'default_extension': 'html', 'wildcard': 
             _('HTML files (*.html)|*.html|All files (*.*)|*') }
+        self.__csvFileDialogOpts = {'default_path': os.getcwd(),
+            'default_extension': 'csv', 'wildcard': 
+            _('CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*')}
 
     def needSave(self):
         return self.__taskFile.needSave()
@@ -39,9 +42,9 @@ class IOController(object):
                 self.__taskFile.load()                
             except Exception:
                 self.__taskFile.setFilename('')
-                showerror(_('Error while reading %s:\n'%filename + \
+                showerror(_('Error while reading %s:\n')%filename + \
                     ''.join(traceback.format_exception(*sys.exc_info())) + \
-                    'Are you sure it is a %s-file?')%meta.name, 
+                    _('Are you sure it is a %s-file?')%meta.name, 
                     caption=_('File error'), style=wx.ICON_ERROR)
                 return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})
@@ -114,11 +117,24 @@ class IOController(object):
             htmlFile = codecs.open(filename, 'w', 'utf-8')
             persistence.HTMLWriter(htmlFile).write(viewer)
             htmlFile.close()
-            self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s')%{'nrtasks': viewer.size(), 'filename': filename})
+            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%{'nrtasks': viewer.size(), 'filename': filename})
             return True
         else:
             return False
 
+    def exportAsCSV(self, viewer, filename=None):
+        if not filename:
+            filename = self.__askUserForFile(_('Export as CSV...'),
+                flags=wx.SAVE, fileDialogOpts=self.__csvFileDialogOpts)
+        if filename:
+            csvFile = codecs.open(filename, 'w', 'utf-8')
+            persistence.CSVWriter(csvFile).write(viewer)
+            csvFile.close()
+            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%{'nrtasks': viewer.size(), 'filename': filename})
+            return True
+        else:
+            return False
+        
     def __addRecentFile(self, fileName):
         recentFiles = self.__settings.getlist('file', 'recentfiles')
         if fileName in recentFiles:
