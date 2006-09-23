@@ -8,6 +8,7 @@ iconlist = [
 ('export', 'actions', 'fileexport', [16]),
 ('exportasics', 'mimetypes', 'vcalendar', [16]),
 ('exportashtml', 'mimetypes', 'html', [16]),
+('exportascsv', 'mimetypes', 'txt', [16]),
 ('close', 'actions', 'fileclose', [16]),
 ('exit', 'actions', 'exit', [16]),
 ('help', 'actions', 'help', [16]),

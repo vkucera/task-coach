@@ -418,8 +418,18 @@ class FileExportAsHTML(IOCommand, ViewerCommand):
 
     def doCommand(self, event):
         self.iocontroller.exportAsHTML(self.viewer)
-    
 
+
+class FileExportAsCSV(IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportAsCSV, self).__init__(menuText=_('Export as &CSV...'),
+            helpText=_('Export the current view in Comma Separated Values (CSV) format.'),
+            bitmap='exportascsv', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportAsCSV(self.viewer)
+        
+        
 class FileQuit(MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
@@ -996,6 +1006,8 @@ class UICommands(dict):
         self['print'] = Print(mainwindow=mainwindow, viewer=viewer)
         self['exportasics'] = FileExportAsICS(iocontroller=iocontroller)
         self['exportashtml'] = FileExportAsHTML(iocontroller=iocontroller, 
+            viewer=viewer)
+        self['exportascsv'] = FileExportAsCSV(iocontroller=iocontroller,
             viewer=viewer)
         self['quit'] = FileQuit(mainwindow=mainwindow)
 

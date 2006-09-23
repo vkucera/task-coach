@@ -99,7 +99,8 @@ class FileMenu(Menu):
 class ExportMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ExportMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['exportashtml', 'exportasics'])
+        self.appendUICommands(uiCommands, ['exportashtml', 'exportasics', 
+                                           'exportascsv'])
         
 
 class EditMenu(Menu):
