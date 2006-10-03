@@ -128,7 +128,7 @@ class ViewMenu(Menu):
             ViewTaskStatesMenu(mainwindow, uiCommands))
         self.appendMenu(_('Tasks &due before end of'),
             ViewTasksByDueDateMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, ['viewcategories', None])
+        self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('Task &columns'), ViewTaskColumnsMenu(mainwindow, uiCommands))
         self.appendMenu(_('Effort &columns'), ViewEffortColumnsMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])

@@ -448,3 +448,10 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(tasks[0].children()[0], categories[0].tasks()[0])
         
+    def testFilteredCategory(self):
+        tasks, categories = self.writeAndRead('''
+        <tasks>
+            <category filtered="True" subject="category"/>
+        </tasks>''')
+        self.failUnless(categories[0].isFiltered())
+    

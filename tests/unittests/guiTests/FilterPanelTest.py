@@ -1,25 +1,26 @@
 import test, gui, config, widgets
-import domain.task as task
+import domain.category as category
 
 class CategoriesFilterPanelTest(test.wxTestCase):
     def setUp(self):
-        self.taskList = task.TaskList()
+        self.categories = category.CategoryContainer()
         self.settings = config.Settings(load=False)
         self.filterSideBarFoldPanel = widgets.FoldPanelBar(self.frame)
         parent = self.filterSideBarFoldPanel.AddFoldPanel('Title', 
                                                           collapsed=False)
-        self.panel = gui.filter.CategoriesFilterPanel(parent, self.taskList, 
+        self.panel = gui.filter.CategoriesFilterPanel(parent, self.categories, 
                                                       self.settings)
-        self.task = task.Task()
+        self.category = category.Category('category')
 
-    def testCheckListBoxIsEmptyWhenNoCategories(self):
-        self.assertEqual(0, self.panel._checkListBox.GetCount())
+    def testCheckTreeIsEmptyWhenNoCategories(self):
+        self.assertEqual(0, self.panel._treeCtrl.GetCount())
         
-    def testCheckListBoxContainsCategoryAfterAddingTaskWithCategory(self):
-        self.task.addCategory('Category')
-        self.taskList.append(self.task)
-        self.assertEqual('Category', self.panel._checkListBox.GetString(0))
-        
+    def testCategoryDisplayedAfterAddingCategory(self):
+        self.categories.append(self.category)
+        self.assertEqual(self.category.subject(), 
+                         self.panel._treeCtrl[0].GetText())
+    
+    '''    
     def testCategoryIsRemovedFromCheckListBoxWhenTaskWithCategoryIsRemoved(self):
         self.task.addCategory('Category')
         self.taskList.append(self.task)
@@ -52,3 +53,4 @@ class CategoriesFilterPanelTest(test.wxTestCase):
         event.SetInt(0)
         self.panel._checkListBox.ProcessEvent(event)
         self.assertEqual(['Category'], self.settings.getlist('view', 'taskcategoryfilterlist'))
+    '''

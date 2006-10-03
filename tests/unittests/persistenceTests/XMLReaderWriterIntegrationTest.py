@@ -11,7 +11,7 @@ class IntegrationTestCase(test.TestCase):
         self.reader = persistence.XMLReader(self.fd)
         self.writer = persistence.XMLWriter(self.fd)
         self.taskList = task.TaskList()
-        self.categoryContainer = category.CategoryContainer()
+        self.categories = category.CategoryContainer()
         self.fillContainers()
         tasks, categories = self.readAndWrite()
         self.tasksWrittenAndRead = task.TaskList(tasks)
@@ -22,7 +22,7 @@ class IntegrationTestCase(test.TestCase):
 
     def readAndWrite(self):
         self.fd.reset()
-        self.writer.write(self.taskList, self.categoryContainer)
+        self.writer.write(self.taskList, self.categories)
         self.fd.reset()
         return self.reader.read()
 
@@ -50,7 +50,8 @@ class IntegrationTest(IntegrationTestCase):
         self.child.addChild(self.grandChild)
         self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
             stop=date.DateTime(2004,1,2), description=self.description))
-        self.categoryContainer.append(category.Category('test', [self.task]))
+        self.category = category.Category('test', [self.task], filtered=True)
+        self.categories.append(self.category)
         self.task.addAttachments('/home/frank/whatever.txt')
         self.task2 = task.Task('Task 2', priority=-1954)
         self.taskList.extend([self.task, self.task2])
@@ -108,7 +109,10 @@ class IntegrationTest(IntegrationTestCase):
        
     def testCategory(self):
         self.assertEqual(self.task.id(), 
-                         list(self.categoriesWrittenAndRead)[0].tasks()[0].id())
+                         self.categoriesWrittenAndRead[0].tasks()[0].id())
+
+    def testFilteredCategory(self):
+        self.failUnless(self.categoriesWrittenAndRead[0].isFiltered())
         
     def testPriority(self):
         self.assertAttributeWrittenAndRead(self.task, 'priority')

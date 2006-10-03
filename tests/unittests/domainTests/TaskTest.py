@@ -125,23 +125,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testTaskIdHasStringType(self):
         self.assertEqual(type(''), type(self.task.id()))
 
-    def testTaskHasNoChildrenByDefault(self):
-        self.assertEqual([], self.task.children())
-
-    def testTaskHasNoChildrenByDefaultSoAllChildrenReturnsAnEmptyListToo(self):
-        self.assertEqual([], self.task.children(recursive=True))
-
     def testTaskHasNoChildrenByDefaultSoNotAllChildrenAreCompleted(self):
         self.failIf(self.task.allChildrenCompleted())
-
-    def testTaskHasNoParentByDefault(self):
-        self.assertEqual(None, self.task.parent())
-
-    def testTaskHasNoAncestorsByDefault(self):
-        self.assertEqual([], self.task.ancestors())
-
-    def testTaskIsItsOnlyFamilyByDefault(self):
-        self.assertEqual([self.task], self.task.family())        
 
     def testTaskHasNoEffortByDefault(self):
         self.assertEqual(date.TimeDelta(), self.task.timeSpent())
@@ -310,13 +295,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
   
     # Add child
         
-    def testAddChild(self):
-        child = task.Task()
-        self.task.addChild(child)
-        self.failUnlessParentAndChild(self.task, child)
-
     def testAddChildNotification(self):
-        self.registerObserver('task.child.add')
+        self.registerObserver(task.Task.addChildEventType())
         child = task.Task()
         self.task.addChild(child)
         self.assertEqual(child, self.events[0].value())
@@ -421,12 +401,6 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
             child.efforts()[0]), self.events[0])
 
     # Constructor
-
-    def testSetParentInConstructor_DoesNotAffectParent(self):
-        child = task.Task(parent=self.task)
-        self.failIf(child in self.task.children())
-        self.assertEqual(self.task, child.parent())
-        self.failIf(self.events)
 
     def testNewSubTask_WithSubject(self):
         child = self.task.newSubTask(subject='Test')
@@ -653,23 +627,13 @@ class NewSubTaskOfActiveTask(NewSubTaskTestCase):
 
 class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def taskCreationKeywordArguments(self):
-        return [{'children': [task.Task()]}]
+        return [{'children': [task.Task(subject='child')]}]
     
-    def testParentHasChild(self):
-        self.failUnless([self.task1_1], self.task1.children())
-        
-    def testChildHasParent(self):
-        self.assertEqual(self.task1, self.task1_1.parent())
-        
-    def testRemoveChild(self):
-        self.task1.removeChild(self.task1_1)
-        self.failIf(self.task1.children())
-
     def testRemoveChildNotification(self):
-        self.registerObserver('task.child.remove')
+        self.registerObserver(task.Task.removeChildEventType())
         self.task1.removeChild(self.task1_1)
-        self.assertEqual([patterns.Event(self.task1, 'task.child.remove', 
-            self.task1_1)], self.events)
+        self.assertEqual([patterns.Event(self.task1, 
+            task.Task.removeChildEventType(), self.task1_1)], self.events)
 
     def testRemoveChildWithBudgetCausesTotalBudgetNotification(self):
         self.task1_1.setBudget(date.TimeDelta(hours=100))
@@ -757,16 +721,6 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testAllChildrenAreCompletedAfterMarkingTheOnlyChildAsCompleted(self):
         self.task1_1.setCompletionDate()
         self.failUnless(self.task1.allChildrenCompleted())
-
-    def testGetAllChildren(self):
-        self.assertEqual([self.task1_1], self.task1.children(recursive=True))
-
-    def testGetFamily(self):
-        for task in self.task1, self.task1_1:
-            self.assertEqual([self.task1, self.task1_1], task.family())
-
-    def testAncestors(self):
-        self.assertEqual([self.task1], self.task1_1.ancestors())
 
     def testTimeLeftRecursivelyIsInfinite(self):
         self.assertEqual(date.TimeDelta.max, 
@@ -887,17 +841,6 @@ class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         super(TaskWithGrandChildTest, self).setUp()
         self.task1.addChild(self.task2)
         self.task2.addChild(self.task3)
-
-    def testGetAllChildren(self):
-        self.assertEqual([self.task2, self.task3], 
-                         self.task1.children(recursive=True))
-
-    def testGetAncestors(self):
-        self.assertEqual([self.task1, self.task2], self.task3.ancestors())
-
-    def testGetFamily(self):
-        for task in self.tasks:
-            self.assertEqual(self.tasks, task.family())
 
     def testTimeSpentRecursivelyIsZero(self):
         self.assertEqual(date.TimeDelta(), self.task.timeSpent(recursive=True))

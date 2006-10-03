@@ -101,7 +101,7 @@ class MainWindow(WindowWithPersistentDimensions):
         panel = self.filterSideBarFoldPanel.AddFoldPanel( \
             _("Filter by category"), collapsed=False, foldIcons=images)
         categoriesPanel = filter.CategoriesFilterPanel(panel, 
-            self.taskFile, self.settings)
+            self.taskFile.categories(), self.settings)
         self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, categoriesPanel)
         panel = self.filterSideBarFoldPanel.AddFoldPanel( \
             _("Filter by status"), collapsed=False, foldIcons=images)

@@ -1,11 +1,14 @@
-class Category(object):
-    def __init__(self, subject, tasks=None, children=None):
+import patterns
+
+class Category(patterns.ObservableComposite):
+    def __init__(self, subject, tasks=None, children=None, filtered=False):
+        super(Category, self).__init__(children=children or [])
         self.__subject = subject
-        self.__parent = None
         self.__tasks = tasks or []
-        self.__children = children or []
-        for child in self.__children:
-            child.setParent(self)
+        self.__filtered = filtered
+        
+    def __repr__(self):
+        return self.__subject
             
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
@@ -19,21 +22,21 @@ class Category(object):
         else:
             return self.__subject
     
-    def tasks(self):
-        return self.__tasks
+    def tasks(self, recursive=False):
+        result = []
+        if recursive:
+            for child in self.children():
+                result.extend(child.tasks(recursive))
+        result.extend(self.__tasks)
+        return result
     
     def addTask(self, task):
         self.__tasks.append(task)
+        
+    def isFiltered(self):
+        return self.__filtered
     
-    def setParent(self, parent):
-        self.__parent = parent
-        
-    def parent(self):
-        return self.__parent
-            
-    def addChild(self, category):
-        self.__children.append(category)
-        category.setParent(self)
-        
-    def children(self):
-        return self.__children
+    def setFiltered(self, filtered=True):
+        self.__filtered = filtered
+        for child in self.children():
+            child.setFiltered(filtered)
