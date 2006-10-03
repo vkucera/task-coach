@@ -5,12 +5,12 @@ import domain.date as date
 class TaskProperty(property):
     pass
 
-class Task(object):
+class Task(patterns.ObservableComposite):
     def __init__(self, subject='', description='', dueDate=None, 
-            startDate=None, completionDate=None, parent=None, budget=None, 
+            startDate=None, completionDate=None, budget=None, 
             priority=0, id_=None, lastModificationTime=None, hourlyFee=0,
             fixedFee=0, reminder=None, attachments=None, categories=None,
-            children=None, efforts=None,
+            efforts=None,
             shouldMarkCompletedWhenAllChildrenCompleted=None, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
         self._subject        = subject
@@ -20,11 +20,6 @@ class Task(object):
         self._completionDate = completionDate or date.Date()
         self._budget         = budget or date.TimeDelta()
         self._id             = id_ or '%s:%s'%(id(self), time.time()) # FIXME: Not a valid XML id
-        self._children       = children or []
-        for child in self._children:
-            child.setParent(self)
-        self._parent         = parent # adding the parent->child link is
-                                      # the creator's responsibility
         self._efforts        = efforts or []
         for effort in self._efforts:
             effort.setTask(self)
@@ -45,8 +40,8 @@ class Task(object):
         self.setStartDate(state['startDate'])
         self.setDueDate(state['dueDate'])
         self.setCompletionDate(state['completionDate'])
-        self.setChildren(state['children'])
-        self.setParent(state['parent'])
+        self.replaceChildren(state['children'])
+        self.replaceParent(state['parent'])
         self.setEfforts(state['efforts'])
         self.setBudget(state['budget'])
         self.setCategories(state['categories'])
@@ -60,8 +55,8 @@ class Task(object):
     def __getstate__(self):
         return dict(subject=self._subject, description=self._description, 
             id=self._id, dueDate=self._dueDate, startDate=self._startDate, 
-            completionDate=self._completionDate, children=self._children, 
-            parent=self._parent, efforts=self._efforts, budget=self._budget, 
+            completionDate=self._completionDate, children=self.children(), 
+            parent=self.parent(), efforts=self._efforts, budget=self._budget, 
             categories=set(self._categories), priority=self._priority, 
             attachments=self._attachments[:], hourlyFee=self._hourlyFee, 
             fixedFee=self._fixedFee, 
@@ -79,13 +74,6 @@ class Task(object):
     
     def __notifyObservers(self, event):
         patterns.Publisher().notifyObservers(event)
-
-    def children(self, recursive=False):
-        if recursive:
-            return self.children() + [descendent for child in self.children() 
-                for descendent in child.children(recursive=True)]
-        else:
-            return self._children
     
     # I want to use properties more, but I still need to make all the changes.
     # So, only description is a property right now.
@@ -134,28 +122,14 @@ class Task(object):
         return self.__class__(subject, dueDate=self.dueDate(),
             startDate=max(date.Today(), self.startDate()), parent=self)
 
-    def ancestors(self):
-        myParent = self.parent()
-        if myParent is None:
-            return []
-        else:
-            return myParent.ancestors() + [myParent]
-
-    def family(self):
-        return self.ancestors() + [self] + self.children(recursive=True)
-
-    def setChildren(self, children):
-        self._children = children # FIXME: no notification?
-        
     def addChild(self, child):
-        if child in self._children:
+        if child in self.children():
             return
         oldTotalBudgetLeft = self.budgetLeft(recursive=True)
         oldTotalPriority = self.priority(recursive=True)
-        self._children.append(child)
-        child.setParent(self)
+        super(Task, self).addChild(child)
         self.setLastModificationTime()
-        self.__notifyObservers(patterns.Event(self, 'task.child.add', child))
+        self.__notifyObservers(patterns.Event(self, Task.addChildEventType(), child))
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
         if child.budget(recursive=True):
             self.notifyObserversOfTotalBudgetChange()
@@ -171,13 +145,12 @@ class Task(object):
             self.notifyObserversOfStartTracking(*child.activeEfforts(recursive=True))
 
     def removeChild(self, child):
-        if child not in self._children:
+        if child not in self.children():
             return
         oldTotalBudgetLeft = self.budgetLeft(recursive=True)
         oldTotalPriority = self.priority(recursive=True)
-        self._children.remove(child)
+        super(Task, self).removeChild(child)
         self.setLastModificationTime()
-        self.__notifyObservers(patterns.Event(self, 'task.child.remove', child))
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
         if child.budget(recursive=True):
             self.notifyObserversOfTotalBudgetChange()
@@ -192,12 +165,6 @@ class Task(object):
         if child.isBeingTracked(recursive=True) and not \
             self.isBeingTracked(recursive=True):
             self.notifyObserversOfStopTracking(*child.activeEfforts(recursive=True))
-
-    def setParent(self, parent):
-        self._parent = parent
-
-    def parent(self):
-        return self._parent
 
     def subject(self, recursive=False):
         ''' The recursive flag is allowed, but ignored. This makes 

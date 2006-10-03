@@ -137,6 +137,11 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('<category subject="parent">'
                          '<category subject="child" tasks="%s"/>'
                          '</category>'%self.task.id())
+    
+    def testFilteredCategory(self):
+        filteredCategory = category.Category('test', filtered=True)
+        self.categoryContainer.extend([filteredCategory])
+        self.expectInXML('<category filtered="True" subject="test"/>')
         
     def testDefaultPriority(self):
         self.expectNotInXML('priority')

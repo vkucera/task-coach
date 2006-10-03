@@ -39,13 +39,15 @@ class XMLReader:
 
     def __parseCategoryNode(self, categoryNode, tasksById):        
         subject = categoryNode.getAttribute('subject')
+        filtered = self.__parseBoolean(categoryNode.getAttribute('filtered'), 
+                                       False)
         taskIds = categoryNode.getAttribute('tasks')
         if taskIds:
             categoryTasks = [tasksById[id] for id in taskIds.split(' ')]
         else:
             categoryTasks = []
         children = self.__parseCategoryNodes(categoryNode.childNodes, tasksById)
-        return category.Category(subject, categoryTasks, children)
+        return category.Category(subject, categoryTasks, children, filtered)
                       
     def __parseCategoryNodesFromTaskNodes(self, document, tasks):
         taskNodes = document.getElementsByTagName('task')
@@ -151,13 +153,13 @@ class XMLReader:
     def __parseDateTime(self, dateTimeText):
         return self.__parse(dateTimeText, date.parseDateTime, None)
     
-    def __parseBoolean(self, booleanText):
+    def __parseBoolean(self, booleanText, defaultValue=None):
         def textToBoolean(text):
             if text in ['True', 'False']:
                 return text == 'True'
             else:
                 raise ValueError, "Expected 'True' or 'False'"
-        return self.__parse(booleanText, textToBoolean, None)
+        return self.__parse(booleanText, textToBoolean, defaultValue)
         
     def __parse(self, text, parseFunction, defaultValue):
         try:

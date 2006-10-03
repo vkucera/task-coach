@@ -189,6 +189,7 @@ class CommonTests(object):
         
     def testIsSelectionExpandable_OneUnselectedItem(self):
         self.setTree('item 1')
+        self.treeCtrl.UnselectAll()
         self.failIf(self.treeCtrl.isSelectionExpandable())
         
     def testIsSelectionCollapsable_OneSelectedItem(self):
@@ -283,3 +284,42 @@ class TreeCtrlTest(TreeCtrlTestCase, CommonTests):
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
                           (16,16)))
         self.treeCtrl.AssignImageList(imageList)
+        
+
+class CustomTreeCtrlTest(TreeCtrlTestCase, CommonTests):
+    def setUp(self):
+        super(CustomTreeCtrlTest, self).setUp()
+        self.treeCtrl = widgets.CustomTreeCtrl(self.frame, self.getItemText,
+            self.getItemImage, self.getItemAttr,
+            self.getItemId, self.getRootIndices,
+            self.getChildIndices, self.onSelect, dummy.DummyUICommand(),
+            dummy.DummyUICommand())
+        imageList = wx.ImageList(16, 16)
+        for bitmapName in ['task', 'tasks']:
+            imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
+                          (16,16)))
+        self.treeCtrl.AssignImageList(imageList)
+        
+    def testIsSelectionCollapsable_CollapsedAndExpandedTasksInSelection(self):
+        # This test only makes sense when the TreeCtrl supports wx.TR_EXTENDED, 
+        # and CustomTreeCtrl does not support that.
+        pass
+
+
+class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
+    def setUp(self):
+        super(CheckTreeCtrlTest, self).setUp()
+        self.treeCtrl = widgets.CheckTreeCtrl(self.frame, self.getItemText,
+            self.getItemImage, self.getItemAttr,
+            self.getItemId, self.getRootIndices, self.getChildIndices, 
+            self.getIsItemChecked, self.onSelect, dummy.DummyUICommand(),
+            dummy.DummyUICommand())
+    
+    def getIsItemChecked(self, index):
+        return False
+            
+    def testCheckParentChecksChild(self):
+        self.setTree(('parent', 1), 'child')
+        self.treeCtrl.Expand(self.treeCtrl[0])
+        self.treeCtrl.CheckItem(self.treeCtrl[0])
+        self.failUnless(self.treeCtrl[1].IsChecked())

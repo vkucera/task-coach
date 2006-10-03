@@ -1,7 +1,7 @@
 import wx
 import widgets, patterns
 from i18n import _ 
-
+import thirdparty.CustomTreeCtrl as customtree
 
 class SubjectFilterPanel(wx.Panel):
     def __init__(self, parent, viewer, settings, *args, **kwargs):
@@ -117,31 +117,35 @@ class StatusFilterPanel(wx.Panel):
 
 
 class CategoriesFilterPanel(wx.Panel):
-    def __init__(self, parent, taskList, settings, *args, **kwargs):
+    def __init__(self, parent, categories, settings, *args, **kwargs):
         super(CategoriesFilterPanel, self).__init__(parent, *args, **kwargs)
-        self.__taskList = taskList
+        self.__categories = categories
         self.__settings = settings
         self.createInterior()
         self.layoutInterior()
         self.bindEventHandlers()
 
     def createInterior(self):
-        taskList = self.__taskList
         self._about = widgets.StaticTextWithToolTip(self, 
             label=_('Show tasks that belong to the categories selected below. '
                     'Unselect all categories to reset the filter.') + '\n') 
-        self._checkListBox = wx.CheckListBox(self, style=wx.LB_SORT)
-        self._checkListBox.InsertItems(list(taskList.categories()), 0)
-        for category in taskList.categories():
-            if category in taskList.filteredCategories():
-                self._checkListBox.Check( \
-                    self._checkListBox.FindString(category))
+        self._treeCtrl = widgets.CheckTreeCtrl(self, 
+            lambda index: self.__categories[index].subject(),
+            lambda index: (-1, -1), lambda index: customtree.TreeItemAttr(),
+            lambda index: id(self.__categories[index]), 
+            lambda: [index for index in range(len(self.__categories)) if \
+                     self.__categories[index] in self.__categories.rootItems()],
+            lambda parentIndex: [index for index in range(len(self.__categories)) if \
+                     self.__categories[index] in self.__categories[parentIndex].children()], 
+            lambda index: self.__categories[index].isFiltered(),
+            lambda *args: None, lambda *args: None,
+            lambda *args: None)
         self._radioBox = wx.RadioBox(self, majorDimension=1, 
             label=_('Show tasks that match'),
             choices=[_('any of the above selected categories'),
                      _('all of the above selected categories')])
         self.setRadioBox()
-        self.Enable(len(taskList.categories()) > 0)
+        self.Enable(len(self.__categories) > 0)
 
     def setRadioBox(self):
         if self.__settings.getboolean('view', 'taskcategoryfiltermatchall'):
@@ -153,87 +157,52 @@ class CategoriesFilterPanel(wx.Panel):
     def layoutInterior(self):
         panelSizer = wx.BoxSizer(wx.VERTICAL)
         panelSizer.Add(self._about, flag=wx.EXPAND|wx.ALL, border=5)
-        panelSizer.Add(self._checkListBox, proportion=1, flag=wx.EXPAND|wx.ALL, 
+        panelSizer.Add(self._treeCtrl, proportion=1, flag=wx.EXPAND|wx.ALL, 
             border=5)
-        panelSizer.SetItemMinSize(self._checkListBox, (-1, 120))
+        panelSizer.SetItemMinSize(self._treeCtrl, (-1, 120))
         panelSizer.Add(self._radioBox, flag=wx.ALL, border=5)
         self.SetSizerAndFit(panelSizer)
         self.GetParent().ResizePanel()
 
     def bindEventHandlers(self):
-        self._checkListBox.Bind(wx.EVT_CHECKLISTBOX, self.onCheckCategory)
+        self._treeCtrl.Bind(customtree.EVT_TREE_ITEM_CHECKED, self.onCheckCategory)
         self._radioBox.Bind(wx.EVT_RADIOBOX, self.onCheckMatchAll)
-        patterns.Publisher().registerObserver(self.onAddTask, 
-            eventType=self.__taskList.addItemEventType())
-        patterns.Publisher().registerObserver(self.onRemoveTask,
-            eventType=self.__taskList.removeItemEventType())
         patterns.Publisher().registerObserver(self.onMatchAllChanged,
-            eventType='view.taskcategoryfiltermatchall')
+            'view.taskcategoryfiltermatchall')
         patterns.Publisher().registerObserver(self.onFilteredCategoriesChanged, 
-            eventType='view.taskcategoryfilterlist')
-        patterns.Publisher().registerObserver(self.onAddCategoryToTask,
-            eventType='task.category.add')
-        patterns.Publisher().registerObserver(self.onRemoveCategoryFromTask,
-            eventType='task.category.remove')
+            'view.taskcategoryfilterlist')
+        patterns.Publisher().registerObserver(self.onAddCategory,
+            self.__categories.addItemEventType())
+        patterns.Publisher().registerObserver(self.onRemoveCategory,
+            self.__categories.removeItemEventType())
         
     def onCheckCategory(self, event):
-        category = self._checkListBox.GetString(event.GetInt())
-        filteredCategories = self.__settings.getlist('view', 'taskcategoryfilterlist')
-        # Note: using event.IsChecked() would be nicer but doesn't work
-        if self._checkListBox.IsChecked(event.GetInt()):
-            filteredCategories.append(category)
-        else:
-            filteredCategories.remove(category)
-        self.__settings.setlist('view', 'taskcategoryfilterlist', filteredCategories)
+        category = self.__categories[self._treeCtrl.index(event.GetItem())]
+        category.setFiltered(event.GetItem().IsChecked())
 
     def onCheckMatchAll(self, event):
         index = event.GetInt()
         setting = ['False', 'True'][index]
         self.__settings.set('view', 'taskcategoryfiltermatchall', setting)
 
-    def onAddTask(self, event):
-        for task in event.values():
-            categories = [self._checkListBox.GetString(index) for \
-                          index in range(self._checkListBox.GetCount())]
-            for category in categories:
-                if category not in self.__taskList.categories():
-                    index = self._checkListBox.FindString(category)
-                    self._checkListBox.Delete(index)
-            for category in task.categories():
-                if self._checkListBox.FindString(category) == wx.NOT_FOUND:
-                    self._checkListBox.Append(category)
-        self.Enable(len(self.__taskList.categories()) > 0)
+    def onAddCategory(self, event):
+        self._treeCtrl.refresh()
+        self.Enable(len(self.__categories) > 0)
 
-    def onRemoveTask(self, event):
-        for task in event.values():
-            for category in task.categories():
-                if category not in self.__taskList.categories():
-                    index = self._checkListBox.FindString(category)
-                    if index != wx.NOT_FOUND:
-                        self._checkListBox.Delete(index)
-        self.Enable(len(self.__taskList.categories()) > 0)
-
-    def onAddCategoryToTask(self, event):
-        for category in event.values():
-            if self._checkListBox.FindString(category) == wx.NOT_FOUND:
-                self._checkListBox.Append(category)
-        self.Enable(len(self.__taskList.categories()) > 0)
-
-    def onRemoveCategoryFromTask(self, event):
-        for category in event.values():
-            if category not in self.__taskList.categories():
-                self._checkListBox.Delete(self._checkListBox.FindString(category))
-        self.Enable(len(self.__taskList.categories()) > 0)
+    def onRemoveCategory(self, event):
+        self._treeCtrl.refresh()
+        self.Enable(len(self.__categories) > 0)
 
     def onMatchAllChanged(self, notification):
         self.setRadioBox()
 
     def onFilteredCategoriesChanged(self, event):
         filteredCategories = self.__settings.getlist('view', 'taskcategoryfilterlist')
+        '''
         for index in range(self._checkListBox.GetCount()):
             self._checkListBox.Check(index, 
                 self._checkListBox.GetString(index) in filteredCategories)
-            
+        '''    
     
 class DueDateFilterPanel(wx.Panel):
     def __init__(self, parent, settings, *args, **kwargs):

@@ -1,5 +1,6 @@
-import wx, itemctrl
+import wx, itemctrl, thirdparty
 import wx.gizmos as gizmos
+import thirdparty.CustomTreeCtrl as customtree
 
         
 class TreeMixin(object):
@@ -26,7 +27,7 @@ class TreeMixin(object):
         
     def onBeginDrag(self, event):
         self.dragItem = event.GetItem()
-        if self.dragItem.IsOk():
+        if self.dragItem:
             event.Allow()
             self.GetMainWindow().Bind(wx.EVT_MOTION, self.onDragging)
             self.__setCursorToDragging()
@@ -71,7 +72,7 @@ class TreeMixin(object):
         event.Skip()
         
     def __isValidDropTarget(self, dropTarget):
-        if dropTarget.IsOk(): 
+        if dropTarget: 
             return self.dragItem != dropTarget and \
                 self.GetItemParent(self.dragItem) != dropTarget and \
                 dropTarget not in self.getChildren(self.dragItem,
@@ -146,7 +147,7 @@ class TreeMixin(object):
         raise IndexError
         
     def getStyle(self):
-        return wx.TR_HIDE_ROOT|wx.TR_MULTIPLE|wx.TR_HAS_BUTTONS
+        return wx.TR_HIDE_ROOT | wx.TR_MULTIPLE | wx.TR_HAS_BUTTONS
 
     def setItemGetters(self, getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices):
@@ -183,7 +184,7 @@ class TreeMixin(object):
 
     def __getOrCreateRootItem(self):
         rootItem = self.GetRootItem()
-        if not rootItem.IsOk():
+        if not rootItem:
             rootItem = self.AddRoot('root')
         return rootItem
         
@@ -232,7 +233,7 @@ class TreeMixin(object):
         if parent is None:
             parent = self.GetRootItem()
         child, cookie = self.GetFirstChild(parent)
-        while child.IsOk():
+        while child:
             yield (child)
             if recursively:
                 for grandchild in self.getChildren(child, recursively):
@@ -290,7 +291,7 @@ class TreeMixin(object):
     def restoreSelection(self):
         self.UnselectAll()
         for item in self.itemsToSelect:
-            if item.IsOk():
+            if item:
                 self.SelectItem(item)
 
     def itemUnchanged(self, item, index, itemChildIndex):
@@ -369,7 +370,7 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
             getItemId, getRootIndices,
             getChildIndices, selectCommand, editCommand, dragAndDropCommand,
             itemPopupMenu=None, *args, **kwargs):
-        super(TreeCtrl, self).__init__(parent, -1, style=self.getStyle(), 
+        super(TreeCtrl, self).__init__(parent, style=self.getStyle(), 
             itemPopupMenu=itemPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
@@ -377,6 +378,8 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
         self.refresh()
         
     def getStyle(self):
+        # Adding wx.TR_LINES_AT_ROOT is necessary to make the buttons 
+        # (wx.TR_HAS_BUTTONS) appear. I think this is a bug in wx.TreeCtrl.
         return super(TreeCtrl, self).getStyle() | wx.TR_LINES_AT_ROOT
 
     # Adapters to make the TreeCtrl API more like the TreeListCtrl API:
@@ -389,7 +392,68 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
         item, flags = super(TreeCtrl, self).HitTest(*args, **kwargs)
         column = 0
         return item, flags, column
+
+
+class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtrl): 
+    def __init__(self, parent, getItemText, getItemImage, getItemAttr,
+            getItemId, getRootIndices, getChildIndices, selectCommand,
+            editCommand, dragAndDropCommand, 
+            itemPopupMenu=None, *args, **kwargs):
+        super(CustomTreeCtrl, self).__init__(parent, ctstyle=self.getStyle(), 
+            itemPopupMenu=itemPopupMenu, *args, **kwargs)
+        self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
+        self.setItemGetters(getItemText, getItemImage, getItemAttr,
+            getItemId, getRootIndices, getChildIndices)
+        self.refresh()
+            
+    # Adapters to make the TreeCtrl API more like the TreeListCtrl API:
+        
+    def SelectAll(self):
+        for item in self.getChildren(recursively=True):
+            self.SelectItem(item)
+
+    def HitTest(self, *args, **kwargs):
+        item, flags = super(CustomTreeCtrl, self).HitTest(*args, **kwargs)
+        column = 0
+        return item, flags, column
     
+    def GetItemCount(self):
+        if self.GetWindowStyle() & wx.TR_HIDE_ROOT:
+            hiddenRoot = 1
+        else:
+            hiddenRoot = 0
+        return super(CustomTreeCtrl, self).GetItemCount() - hiddenRoot
+
+
+class CheckTreeCtrl(CustomTreeCtrl):
+    def __init__(self, parent, getItemText, getItemImage, getItemAttr,
+            getItemId, getRootIndices, getChildIndices, getIsItemChecked,
+            selectCommand, editCommand, dragAndDropCommand, 
+            itemPopupMenu=None, *args, **kwargs):
+        super(CheckTreeCtrl, self).__init__(parent, getItemText, getItemImage, 
+            getItemAttr, getItemId, getRootIndices, getChildIndices, 
+            selectCommand, editCommand, dragAndDropCommand, 
+            itemPopupMenu, *args, **kwargs)
+        self.getIsItemChecked = getIsItemChecked
+        
+    def renderNode(self, node, index):
+        super(CheckTreeCtrl, self).renderNode(node, index)
+        # Let the tree complete refreshing first:
+        wx.CallAfter(lambda: self.CheckItem(node, 
+            checked=self.getIsItemChecked(index)))
+        
+    def getStyle(self):
+        return super(CheckTreeCtrl, self).getStyle() | \
+            customtree.TR_AUTO_CHECK_CHILD
+            
+    def InsertItem(self, *args, **kwargs):
+        kwargs['ct_type'] = 1
+        return super(CheckTreeCtrl, self).InsertItem(*args, **kwargs)
+
+    def PrependItem(self, *args, **kwargs):
+        kwargs['ct_type'] = 1
+        return super(CheckTreeCtrl, self).PrependItem(*args, **kwargs)
+        
 
 class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, gizmos.TreeListCtrl):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr,
@@ -397,7 +461,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
             editCommand, dragAndDropCommand,
             itemPopupMenu=None, columnPopupMenu=None, *args, **kwargs):
         self._count = 0 # Need to set this early because InsertColumn invokes refreshColumn
-        super(TreeListCtrl, self).__init__(parent, -1, style=self.getStyle(), 
+        super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
             columns=columns, resizeableColumn=1, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,

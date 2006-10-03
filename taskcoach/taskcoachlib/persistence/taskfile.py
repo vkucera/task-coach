@@ -27,7 +27,7 @@ class TaskFile(task.TaskList):
             'task.budget', 'task.hourlyFee', 'task.fixedFee',
             'task.timeSpent', 'task.reminder',
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
-            'task.child.add', 'task.child.remove',
+            task.Task.addChildEventType(), task.Task.removeChildEventType(),
             'task.effort.add', 'task.effort.remove', 
             'task.category.add', 'task.category.remove', 
             'task.attachment.add', 'task.attachment.remove'):

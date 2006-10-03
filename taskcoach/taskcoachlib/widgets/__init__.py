@@ -4,7 +4,7 @@ from dialog import Dialog, NotebookDialog, ListbookDialog, HTMLDialog, \
 from buttonbox import ButtonBox
 from itemctrl import Column
 from listctrl import ListCtrl
-from treectrl import TreeCtrl, TreeListCtrl
+from treectrl import TreeCtrl, CustomTreeCtrl, CheckTreeCtrl, TreeListCtrl
 from gridctrl import GridCtrl
 from datectrl import DateCtrl, DateTimeCtrl, DatePickerCtrl
 from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \

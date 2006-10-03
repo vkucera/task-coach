@@ -1,5 +1,6 @@
 import patterns, effort
 from domain import date
+from domain import task
 
 
 class EffortAggregator(patterns.SetDecorator):
@@ -15,7 +16,7 @@ class EffortAggregator(patterns.SetDecorator):
         patterns.Publisher().registerObserver(self.onEffortAddedToTask, 
             eventType='task.effort.add')
         patterns.Publisher().registerObserver(self.onChildAddedToTask,
-            eventType='task.child.add')
+            eventType=task.Task.addChildEventType())
         patterns.Publisher().registerObserver(self.onEffortStartChanged, 
             eventType='effort.start')
 

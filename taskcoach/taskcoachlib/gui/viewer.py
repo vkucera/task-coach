@@ -585,6 +585,9 @@ class CategoryViewer(TreeViewer):
     def createSorter(self, categoryContainer):
         return category.CategorySorter(categoryContainer)
     
+    def isShowingTasks(self):
+        return False
+    
 
 class EffortViewer(UpdatePerSecondViewer):
     def isShowingTasks(self):

@@ -1,4 +1,4 @@
-import patterns, re
+import patterns, re, task
 import domain.date as date
 
 class Filter(patterns.SetDecorator):
@@ -105,9 +105,9 @@ class CompositeFilter(Filter):
         patterns.Publisher().registerObserver(self.onSettingChanged, 
             eventType='view.compositetasks')
         patterns.Publisher().registerObserver(self.onAddChild, 
-            eventType='task.child.add')
+            eventType=task.Task.addChildEventType())
         patterns.Publisher().registerObserver(self.onRemoveChild, 
-            eventType='task.child.remove')
+            eventType=task.Task.removeChildEventType())
         super(CompositeFilter, self).__init__(*args, **kwargs)
     
     def onAddChild(self, event):

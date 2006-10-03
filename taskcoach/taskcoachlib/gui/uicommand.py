@@ -612,23 +612,6 @@ class HideCurrentColumn(ViewerCommand):
         return self.viewer.isHideableColumn(columnIndex)
     
     
-class ViewCategories(MainWindowCommand, TaskListCommand, SettingsCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewCategories, self).__init__( \
-            menuText=_('Tasks by catego&ries...'),
-            helpText=_('Show/hide tasks by category'), bitmap='category', 
-            *args, **kwargs)
-            
-    def doCommand(self, event):
-        editor = gui.CategoriesFilterDialog(parent=self.mainwindow,
-            title=_('View categories'), taskList=self.taskList,
-            settings=self.settings)
-        editor.Show()
-
-    def enabled(self, event):
-        return self.taskList.categories() 
-        
-        
 class ViewExpandAll(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewExpandAll, self).__init__( \
@@ -1048,9 +1031,6 @@ class UICommands(dict):
             helpText=_('Show/hide tasks with subtasks'), 
             setting='compositetasks', settings=settings)
         
-        self['viewcategories'] = ViewCategories(mainwindow=mainwindow, 
-            taskList=taskList, settings=settings)
-
         # Column show/hide commands
         for menuText, helpText, setting in \
             [(_('&Start date'), _('Show/hide start date column'), 'startdate'),
