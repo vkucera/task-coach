@@ -70,7 +70,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.settings.set('view', 'sortby', 'subject')
         self.task = task.Task('task')
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
-            dummy.DummyUICommands(), self.settings)
+            dummy.DummyUICommands(), self.settings, categories=[])
 
     def assertItems(self, *tasks):
         self.assertEqual(len(tasks), self.viewer.size())

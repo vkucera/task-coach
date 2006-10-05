@@ -7,6 +7,7 @@ class CategoryTest(test.TestCase):
         self.category = category.Category('category')
         self.subCategory = category.Category('subcategory')
         self.task = task.Task('task')
+        self.child = task.Task('child')
         
     def testCreateWithSubject(self):
         self.assertEqual('category', self.category.subject())
@@ -84,3 +85,48 @@ class CategoryTest(test.TestCase):
         self.category.addChild(self.subCategory)
         self.category.setFiltered(False)
         self.failIf(self.subCategory.isFiltered())
+        
+    def testContains_NoTasks(self):
+        self.failIf(self.category.contains(self.task))
+        
+    def testContains_TasksInCategory(self):
+        self.category.addTask(self.task)
+        self.failUnless(self.category.contains(self.task))
+        
+    def testContains_TaskInSubCategory(self):
+        self.subCategory.addTask(self.task)
+        self.category.addChild(self.subCategory)
+        self.failUnless(self.category.contains(self.task))
+        
+    def testContains_ParentInCategory(self):
+        self.category.addTask(self.task)
+        self.task.addChild(self.child)
+        self.failUnless(self.category.contains(self.child))
+        
+    def testContains_ParentInSubCategory(self):
+        self.subCategory.addTask(self.task)
+        self.category.addChild(self.subCategory)
+        self.task.addChild(self.child)
+        self.failUnless(self.category.contains(self.child))
+    
+    def testContains_ChildInCategory(self):
+        self.task.addChild(self.child)
+        self.category.addTask(self.child)
+        self.failIf(self.category.contains(self.task))
+        
+    def testContains_ChildInSubCategory(self):
+        self.task.addChild(self.child)
+        self.subCategory.addTask(self.child)
+        self.category.addChild(self.subCategory)
+        self.failIf(self.category.contains(self.task))
+        
+    def testRecursiveContains_ChildInCategory(self):
+        self.task.addChild(self.child)
+        self.category.addTask(self.child)
+        self.failUnless(self.category.contains(self.task, treeMode=True))
+        
+    def testRecursiveContains_ChildInSubcategory(self):
+        self.task.addChild(self.child)
+        self.subCategory.addTask(self.child)
+        self.category.addChild(self.subCategory)
+        self.failUnless(self.category.contains(self.task, treeMode=True))

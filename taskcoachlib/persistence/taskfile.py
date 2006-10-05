@@ -10,7 +10,7 @@ class TaskFile(task.TaskList):
     def __init__(self, filename='', *args, **kwargs):
         self.__filename = self.__lastFilename = filename
         self.__needSave = self.__loading = False
-        self.__categories = category.CategoryContainer()
+        self.__categories = category.CategoryList()
         super(TaskFile, self).__init__(*args, **kwargs)
         # Register for tasks, categories, and efforts being changed so we 
         # can monitor when the task file needs saving (i.e. is 'dirty'):

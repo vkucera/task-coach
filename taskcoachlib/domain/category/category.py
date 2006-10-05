@@ -37,6 +37,20 @@ class Category(patterns.ObservableComposite):
         return self.__filtered
     
     def setFiltered(self, filtered=True):
-        self.__filtered = filtered
+        if filtered != self.__filtered:
+            self.__filtered = filtered
+            self.notifyObservers(patterns.Event(self, 'category.filter', 
+                filtered))
         for child in self.children():
             child.setFiltered(filtered)
+
+    def contains(self, task, treeMode=False):
+        containedTasks = self.tasks(recursive=True)
+        if treeMode:
+            tasksToInvestigate = task.family()
+        else:
+            tasksToInvestigate = [task] + task.ancestors()
+        for task in tasksToInvestigate:
+            if task in containedTasks:
+                return True
+        return False

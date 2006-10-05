@@ -11,11 +11,11 @@ class IntegrationTestCase(test.TestCase):
         self.reader = persistence.XMLReader(self.fd)
         self.writer = persistence.XMLWriter(self.fd)
         self.taskList = task.TaskList()
-        self.categories = category.CategoryContainer()
+        self.categories = category.CategoryList()
         self.fillContainers()
         tasks, categories = self.readAndWrite()
         self.tasksWrittenAndRead = task.TaskList(tasks)
-        self.categoriesWrittenAndRead = category.CategoryContainer(categories)
+        self.categoriesWrittenAndRead = category.CategoryList(categories)
 
     def fillContainers(self):
         pass

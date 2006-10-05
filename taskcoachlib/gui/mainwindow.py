@@ -67,7 +67,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.taskFile, self.effortList)
         viewerfactory.addTaskViewers(self.viewer, self.taskFile, 
-            self.uiCommands, self.settings)
+            self.uiCommands, self.settings, self.taskFile.categories())
         viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
             self.uiCommands, self.settings)
         viewerfactory.addEffortViewers(self.viewer, self.taskFile, 

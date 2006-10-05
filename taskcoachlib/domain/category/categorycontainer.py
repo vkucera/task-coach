@@ -1,5 +1,4 @@
 import patterns
 
-
-class CategoryContainer(patterns.CompositeList):
+class CategoryList(patterns.CompositeList):
     pass

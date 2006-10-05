@@ -1,6 +1,7 @@
 import test, patterns, config
 import domain.task as task
 import domain.date as date
+import domain.category as category
 
 
 class TestFilter(task.filter.Filter):
@@ -283,85 +284,62 @@ class CategoryFilterHelpers(object):
         
     def setFilterOnAllCategories(self):
         self.settings.set('view', 'taskcategoryfiltermatchall', 'True')
- 
-    def addCategory(self, category):
-        filteredCategories = self.filteredCategories()
-        if category not in filteredCategories:
-            filteredCategories.append(category)
-            self.settings.setlist('view', 'taskcategoryfilterlist', 
-                                  filteredCategories)
-    
-    def removeCategory(self, category):
-        filteredCategories = self.filteredCategories()
-        if category in filteredCategories:
-            filteredCategories.remove(category)
-            self.settings.setlist('view', 'taskcategoryfilterlist', 
-                                  filteredCategories)    
-
-    def removeAllCategories(self):
-        self.settings.setlist('view', 'taskcategoryfilterlist', [])
-        
-    def filteredCategories(self):
-        return self.settings.getlist('view', 'taskcategoryfilterlist')
     
     
 class CategoryFilterFixtureAndCommonTests(CategoryFilterHelpers):
     def setUp(self):
-        self.parent = task.Task()
-        self.parent.addCategory('parent')
+        self.parent = task.Task('parent')
+        self.parentCategory = category.Category('parent')
+        self.parentCategory.addTask(self.parent)
         self.child = task.Task()
-        self.child.addCategory('child')
+        self.childCategory = category.Category('child')
+        self.childCategory.addTask(self.child)
         self.parent.addChild(self.child)
+        self.unusedCategory = category.Category('unused')
         self.list = task.TaskList([self.parent, self.child])
+        self.categories = category.CategoryList([self.parentCategory, 
+            self.childCategory, self.unusedCategory])
         self.settings = config.Settings(load=False)
-        self.filter = task.filter.CategoryFilter(self.list,
-            settings=self.settings, treeMode=self.treeMode)
+        self.filter = task.filter.CategoryFilter(self.list, 
+            categories=self.categories, settings=self.settings, 
+            treeMode=self.treeMode)
                               
     def testInitial(self):
         self.assertEqual(2, len(self.filter))
     
     def testFilterOnCategoryNotPresent(self):
-        self.addCategory('test')
+        self.unusedCategory.setFiltered()
         self.assertEqual(0, len(self.filter))
  
     def testFilterOnCategoryParent(self):
-        self.addCategory('parent')
+        self.parentCategory.setFiltered()
         self.assertEqual(2, len(self.filter))
-
+    
     def testRemoveCategory(self):
-        self.addCategory('parent')
-        self.removeCategory('parent')
+        self.parentCategory.setFiltered()
+        self.parentCategory.setFiltered(False)
         self.assertEqual(2, len(self.filter))
-
-    def testFilteredCategories(self):
-        self.addCategory('test')
-        self.failUnless('test' in self.filteredCategories())
-            
-    def testClearFilter(self):
-        self.addCategory('parent')
-        self.removeAllCategories()
-        self.assertEqual(2, len(self.filter))
-
+    
     def testRemoveCategoryThatIsNotCurrentlyUsed(self):
-        self.removeCategory('parent')
+        self.parentCategory.setFiltered(False)
         self.assertEqual(2, len(self.filter))
-
+    
     def testFilterOnAnyCategory(self):
         self.setFilterOnAnyCategory()
-        self.addCategory('parent')
-        self.addCategory('child')
+        self.parentCategory.setFiltered()
+        self.childCategory.setFiltered()
         self.assertEqual(2, len(self.filter))
-
-    def testFilterOnAnyCategory_NoTasksMatch(self):
+    
+    def testFilterOnAnyCategory_OneUsedAndOneUnusedCategory(self):
         self.setFilterOnAnyCategory()
-        self.addCategory('test')
-        self.addCategory('another')
-        self.assertEqual(0, len(self.filter))
+        self.unusedCategory.setFiltered()
+        self.parentCategory.setFiltered()
+        self.assertEqual(2, len(self.filter))
 
     def testFilterOnAllCategories_NoTasksMatch(self):
         self.setFilterOnAllCategories()
-        self.addCategory('test')
-        self.addCategory('child')
+        self.unusedCategory.setFiltered()
+        self.parentCategory.setFiltered()
         self.assertEqual(0, len(self.filter))
 
     def testFilterOnAnyCategory_NoCategoriesSelected(self):
@@ -371,21 +349,21 @@ class CategoryFilterFixtureAndCommonTests(CategoryFilterHelpers):
     def testFilterOnAllCategories_NoCategoriesSelected(self):
         self.setFilterOnAllCategories()
         self.assertEqual(2, len(self.filter))
-                    
+
 
 class CategoryFilterInListModeTest(CategoryFilterFixtureAndCommonTests, 
                                    test.TestCase):
     treeMode = False   
-       
+    
     def testFilterOnCategoryChild(self):
-        self.addCategory('child')
+        self.childCategory.setFiltered()
         self.assertEqual(1, len(self.filter))
         self.failUnless(self.child in self.filter)
         
     def testFilterOnAllCategories(self):
         self.setFilterOnAllCategories()
-        self.addCategory('parent')
-        self.addCategory('child')
+        self.parentCategory.setFiltered()
+        self.childCategory.setFiltered()
         self.assertEqual(1, len(self.filter))
         self.failUnless(self.child in self.filter)
 
@@ -393,24 +371,25 @@ class CategoryFilterInListModeTest(CategoryFilterFixtureAndCommonTests,
 class CategoryFilterInTreeModeTest(CategoryFilterFixtureAndCommonTests, 
                                    test.TestCase):
     treeMode = True
-
+    
     def testFilterOnCategoryChild(self):
-        self.addCategory('child')
+        self.childCategory.setFiltered()
         self.assertEqual(2, len(self.filter))
 
     def testFilterOnAllCategories(self):
         self.setFilterOnAllCategories()
-        self.addCategory('parent')
-        self.addCategory('child')
+        self.parentCategory.setFiltered()
+        self.childCategory.setFiltered()
         self.assertEqual(2, len(self.filter))
-            
+
                 
 class OriginalLengthTest(test.TestCase, CategoryFilterHelpers):
     def setUp(self):
         self.list = task.TaskList()
         self.settings = config.Settings(load=False)
+        self.categories = category.CategoryList()
         self.filter = task.filter.CategoryFilter(self.list,
-                                                 settings=self.settings)
+            categories=self.categories, settings=self.settings)
         
     def testEmptyList(self):
         self.assertEqual(0, self.filter.originalLength())
@@ -418,7 +397,7 @@ class OriginalLengthTest(test.TestCase, CategoryFilterHelpers):
     def testNoFilter(self):
         self.list.append(task.Task())
         self.assertEqual(1, self.filter.originalLength())
-        
+    '''    
     def testFilter(self):
         aTask = task.Task()
         aTask.addCategory('test')
@@ -426,5 +405,5 @@ class OriginalLengthTest(test.TestCase, CategoryFilterHelpers):
         self.addCategory('nottest')
         self.assertEqual(0, len(self.filter))
         self.assertEqual(1, self.filter.originalLength())
-
+    '''
      

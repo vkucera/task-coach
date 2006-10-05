@@ -3,7 +3,7 @@ import domain.category as category
 
 class CategoryContainerTest(test.TestCase):
     def setUp(self):
-        self.categories = category.CategoryContainer()
+        self.categories = category.CategoryList()
         self.category = category.Category('category 1')
                 
     def testAddExistingCategory_WithoutTasks(self):

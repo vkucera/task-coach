@@ -3,7 +3,7 @@ import domain.category as category
 
 class CategoriesFilterPanelTest(test.wxTestCase):
     def setUp(self):
-        self.categories = category.CategoryContainer()
+        self.categories = category.CategoryList()
         self.settings = config.Settings(load=False)
         self.filterSideBarFoldPanel = widgets.FoldPanelBar(self.frame)
         parent = self.filterSideBarFoldPanel.AddFoldPanel('Title', 

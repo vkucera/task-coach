@@ -11,7 +11,7 @@ class XMLWriterTest(test.TestCase):
         self.writer = persistence.XMLWriter(self.fd)
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
-        self.categoryContainer = category.CategoryContainer()
+        self.categoryContainer = category.CategoryList()
             
     def __writeAndRead(self):
         self.writer.write(self.taskList, self.categoryContainer)

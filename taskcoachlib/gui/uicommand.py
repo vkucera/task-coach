@@ -5,6 +5,14 @@ import domain.task as task
 import thirdparty.desktop as desktop
 import persistence.html
 
+
+''' User interface commands (subclasses of UICommand) are actions that can
+    be invoked by the user via the user interface (menu's, toolbar, etc.).
+    See the Taskmaster pattern described here: 
+    http://www.objectmentor.com/resources/articles/taskmast.pdf 
+'''
+
+
 class UICommandContainer(object):
     ''' Mixin with wx.Menu or wx.ToolBar (sub)class. '''
 
