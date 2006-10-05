@@ -160,17 +160,17 @@ class SearchFilter(Filter):
 
 class CategoryFilter(Filter):
     def __init__(self, *args, **kwargs):
-        import sys
         self.__settings = kwargs.pop('settings')
+        self.__categories = kwargs.pop('categories')
         patterns.Publisher().registerObserver(self.onSettingChanged, 
             eventType='view.taskcategoryfiltermatchall')
         patterns.Publisher().registerObserver(self.onSettingChanged,
-            eventType='view.taskcategoryfilterlist')
+            eventType='category.filter')
         super(CategoryFilter, self).__init__(*args, **kwargs)
 
     def filter(self, tasks):
-        filteredCategories = self.__settings.getlist('view', 
-                                                     'taskcategoryfilterlist')
+        filteredCategories = [category for category in self.__categories 
+                              if category.isFiltered()]
         if not filteredCategories:
             return tasks
         filterOnlyWhenAllCategoriesMatch = self.__settings.getboolean('view', 
@@ -180,11 +180,8 @@ class CategoryFilter(Filter):
         
     def filterTask(self, task, filteredCategories, 
                    filterOnlyWhenAllCategoriesMatch):
-        taskCategories = task.categories(recursive=True)
-        if self.treeMode():
-            for child in task.children(recursive=True):
-                taskCategories.update(child.categories())
-        matches = [category in taskCategories for category in filteredCategories]
+        matches = [category.contains(task, self.treeMode()) 
+                   for category in filteredCategories]
         if filterOnlyWhenAllCategoriesMatch:
             return False not in matches
         else:

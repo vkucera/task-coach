@@ -160,5 +160,6 @@ class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):
 class TaskTreeViewerTest(CommonTests, TaskTreeViewerTestCase):
     def setUp(self):
         super(TaskTreeViewerTest, self).setUp()
-        self.viewer = TaskTreeViewerUnderTest(self.frame, self.taskList, {}, self.settings)
+        self.viewer = TaskTreeViewerUnderTest(self.frame, self.taskList, {}, 
+            self.settings, categories=[])
         

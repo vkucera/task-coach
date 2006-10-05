@@ -288,6 +288,7 @@ class ViewerWithColumns(Viewer):
 
 class TaskViewer(UpdatePerSecondViewer):
     def __init__(self, *args, **kwargs):
+        self.categories = kwargs.pop('categories')
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.__registerForColorChanges()
     
@@ -466,7 +467,8 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
         return task.filter.CategoryFilter(task.filter.CompositeFilter( \
             task.filter.ViewFilter(task.filter.SearchFilter(taskList, 
             settings=self.settings), settings=self.settings), 
-            settings=self.settings), settings=self.settings)
+            settings=self.settings), settings=self.settings, 
+                categories=self.categories)
         
     def createSorter(self, taskList):
         return task.sorter.Sorter(taskList, settings=self.settings, 
@@ -493,7 +495,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         # FIXME: pull up
         return task.filter.CategoryFilter(task.filter.ViewFilter(task.filter.SearchFilter(taskList, 
             settings=self.settings, treeMode=True), settings=self.settings, 
-            treeMode=True), settings=self.settings, treeMode=True)
+            treeMode=True), settings=self.settings, categories=self.categories, treeMode=True)
         
     def createSorter(self, taskList):
         # FIMXE: pull up
