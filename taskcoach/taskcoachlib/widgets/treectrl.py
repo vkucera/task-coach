@@ -196,13 +196,14 @@ class TreeMixin(object):
                 self.addItemsRecursively(item, self.getChildIndices(index))
             elif self.getChildIndices(index) and not self.ItemHasChildren(item):
                 self.SetItemHasChildren(item)
-    
+        
     def appendItem(self, parent, index, itemChildIndex):
         itemId = self.getItemId(index)
         oldItem = self.findItem(itemId)
         if oldItem and self.itemUnchanged(oldItem, index, itemChildIndex) and \
                 self.GetItemParent(oldItem) == parent:
             newItem = oldItem
+            render = False
         else:
             insertAfterChild = self.findInsertionPoint(parent)
             if insertAfterChild:
@@ -210,7 +211,7 @@ class TreeMixin(object):
                     self.getItemText(index))
             else:
                 newItem = self.PrependItem(parent, self.getItemText(index))
-            self.renderNode(newItem, index)
+            render = True
             if not oldItem and parent != self.GetRootItem():
                 self.itemsToExpandOrCollapse[parent] = True
             if oldItem:
@@ -221,6 +222,8 @@ class TreeMixin(object):
             self.itemsToExpandOrCollapse[newItem] = True
         self.SetPyData(newItem, self.__createPyData(index, itemChildIndex))
         self._validItems.append(newItem)
+        if render:
+            self.renderNode(newItem, index)
         return newItem
        
     def findItem(self, itemId):
@@ -246,7 +249,7 @@ class TreeMixin(object):
             if child in self._validItems:
                 insertAfterChild = child
         return insertAfterChild
-
+            
     def renderNode(self, node, index):
         normalImageIndex, expandedImageIndex = self.getItemImage(index)
         if self.getChildIndices(index):
@@ -438,9 +441,11 @@ class CheckTreeCtrl(CustomTreeCtrl):
         
     def renderNode(self, node, index):
         super(CheckTreeCtrl, self).renderNode(node, index)
-        # Let the tree complete refreshing first:
-        wx.CallAfter(lambda: self.CheckItem(node, 
-            checked=self.getIsItemChecked(index)))
+        self.CheckItem(node, checked=self.getIsItemChecked(index))
+        
+    def itemUnchanged(self, item, index, itemChildIndex):
+        return super(CheckTreeCtrl, self).itemUnchanged(item, index, itemChildIndex) \
+            and self.getIsItemChecked(index) == item.IsChecked()
         
     def getStyle(self):
         return super(CheckTreeCtrl, self).getStyle() | \

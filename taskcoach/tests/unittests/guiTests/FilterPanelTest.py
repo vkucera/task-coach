@@ -19,38 +19,22 @@ class CategoriesFilterPanelTest(test.wxTestCase):
         self.categories.append(self.category)
         self.assertEqual(self.category.subject(), 
                          self.panel._treeCtrl[0].GetText())
-    
-    '''    
-    def testCategoryIsRemovedFromCheckListBoxWhenTaskWithCategoryIsRemoved(self):
-        self.task.addCategory('Category')
-        self.taskList.append(self.task)
-        self.taskList.remove(self.task)
-        self.assertEqual(0, self.panel._checkListBox.GetCount())
-        
-    def testCategoryIsAddedToCheckListBoxWhenCategoryIsAddedToTask(self):
-        self.taskList.append(self.task)
-        self.task.addCategory('Category')
-        self.assertEqual('Category', self.panel._checkListBox.GetString(0))
-        
-    def testCategoryIsRemovedFromCheckListBoxWhenCategoryIsRemovedFromTask(self):
-        self.taskList.append(self.task)
-        self.task.addCategory('Category')
-        self.task.removeCategory('Category')
-        self.assertEqual(0, self.panel._checkListBox.GetCount())
-        
+      
+    def testCategoryIsNotDisplayedWhenCategoryIsRemoved(self):
+        self.categories.append(self.category)
+        self.categories.remove(self.category)
+        self.assertEqual(0, self.panel._treeCtrl.GetCount())
+         
     def testFilterOnCategory(self):
-        self.taskList.append(self.task)
-        self.task.addCategory('Category')
-        self.settings.setlist('view', 'taskcategoryfilterlist', ['Category'])
-        self.failUnless(self.panel._checkListBox.IsChecked(0))
+        self.categories.append(self.category)
+        self.category.setFiltered()
+        self.failUnless(self.panel._treeCtrl[0].IsChecked())
         
-    def testSetFilterThroughCheckListBox(self):
-        self.taskList.append(self.task)
-        self.task.addCategory('Category')
-        self.panel._checkListBox.Check(0)
-        import wx
-        event = wx.CommandEvent(wx.wxEVT_COMMAND_CHECKLISTBOX_TOGGLED)
-        event.SetInt(0)
-        self.panel._checkListBox.ProcessEvent(event)
-        self.assertEqual(['Category'], self.settings.getlist('view', 'taskcategoryfilterlist'))
-    '''
+    def testSetFilterThroughCheckTreeCtrl(self):
+        self.categories.append(self.category)
+        self.panel._treeCtrl[0].Check()
+        import thirdparty.CustomTreeCtrl as customtree
+        event = customtree.CommandTreeEvent(customtree.wxEVT_TREE_ITEM_CHECKED, 0)
+        event.SetItem(self.panel._treeCtrl[0])
+        self.panel._treeCtrl.ProcessEvent(event)
+        self.failUnless(self.category.isFiltered())
