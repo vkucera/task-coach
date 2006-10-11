@@ -77,7 +77,7 @@ class TreeCtrlTestCase(test.wxTestCase):
         
 class CommonTests(object):
     ''' Tests common to TreeCtrlTest and TreeListCtrlTest. '''
-    
+
     def testCreate(self):
         self.assertTree()
 
@@ -96,7 +96,7 @@ class CommonTests(object):
 
     def testOneParentAndTwoChildren(self):
         self.assertTree(('item 0', 2), 'item 1', 'item 2')
-
+   
     def testAddOneChild(self):
         self.setTree(('parent', 1), 'child 1')
         self.assertTree(('parent', 2), 'child 1', 'child 2')
@@ -285,7 +285,7 @@ class TreeCtrlTest(TreeCtrlTestCase, CommonTests):
                           (16,16)))
         self.treeCtrl.AssignImageList(imageList)
         
-
+        
 class CustomTreeCtrlTest(TreeCtrlTestCase, CommonTests):
     def setUp(self):
         super(CustomTreeCtrlTest, self).setUp()
@@ -317,7 +317,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
     
     def getIsItemChecked(self, index):
         return False
-            
+    
     def testCheckParentChecksChild(self):
         self.setTree(('parent', 1), 'child')
         self.treeCtrl.Expand(self.treeCtrl[0])

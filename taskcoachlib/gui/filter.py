@@ -170,7 +170,7 @@ class CategoriesFilterPanel(wx.Panel):
         patterns.Publisher().registerObserver(self.onMatchAllChanged,
             'view.taskcategoryfiltermatchall')
         patterns.Publisher().registerObserver(self.onFilteredCategoriesChanged, 
-            'view.taskcategoryfilterlist')
+            'category.filter')
         patterns.Publisher().registerObserver(self.onAddCategory,
             self.__categories.addItemEventType())
         patterns.Publisher().registerObserver(self.onRemoveCategory,
@@ -186,23 +186,19 @@ class CategoriesFilterPanel(wx.Panel):
         self.__settings.set('view', 'taskcategoryfiltermatchall', setting)
 
     def onAddCategory(self, event):
-        self._treeCtrl.refresh()
+        self._treeCtrl.refresh(len(self.__categories))
         self.Enable(len(self.__categories) > 0)
 
     def onRemoveCategory(self, event):
-        self._treeCtrl.refresh()
+        self._treeCtrl.refresh(len(self.__categories))
         self.Enable(len(self.__categories) > 0)
 
     def onMatchAllChanged(self, notification):
         self.setRadioBox()
 
     def onFilteredCategoriesChanged(self, event):
-        filteredCategories = self.__settings.getlist('view', 'taskcategoryfilterlist')
-        '''
-        for index in range(self._checkListBox.GetCount()):
-            self._checkListBox.Check(index, 
-                self._checkListBox.GetString(index) in filteredCategories)
-        '''    
+        self._treeCtrl.refresh(len(self.__categories))
+
     
 class DueDateFilterPanel(wx.Panel):
     def __init__(self, parent, settings, *args, **kwargs):

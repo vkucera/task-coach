@@ -6,7 +6,8 @@ releases = [
 Release('0.61', 'September ?, 2006',
     bugsFixed=[
         Bug('''Displaying a previously hidden toolbar would result in
-an incorrectly drawn window.''', '1551885')],
+an incorrectly drawn window.''', '1551885'),
+        Bug('''Exported HTML didn't contain an explicit charset.''', '?')],
     featuresAdded=[
         Feature('''Export in Comma Separated Values (CSV) format. As
 with export to HTML, the current view is exported.''', '1534862'),
