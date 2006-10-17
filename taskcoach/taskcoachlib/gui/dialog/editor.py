@@ -237,35 +237,13 @@ class CategoriesPage(TaskEditorPage):
         super(CategoriesPage, self).__init__(parent, task, *args, **kwargs)
         categoriesBox = widgets.BoxWithFlexGridSizer(self, 
             label=_('Categories'), cols=2, growableCol=1, growableRow=0)
-        self._checkListBox = wx.CheckListBox(categoriesBox)
-        self._checkListBox.InsertItems(categories, 0)
-        for index in range(self._checkListBox.GetCount()):
-            if self._checkListBox.GetString(index) in task.categories():
-                self._checkListBox.Check(index)
-        categoriesBox.add(_('Categories'))
-        categoriesBox.add(self._checkListBox, proportion=1, 
-            flag=wx.EXPAND|wx.ALL)
-        categoriesBox.add(_('New category'))
-        self._textEntry = \
-            widgets.SingleLineTextCtrlWithEnterButton(categoriesBox, 
-                label=_('New category'), onEnter=self.onNewCategory)
-        categoriesBox.add(self._textEntry, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
         self.add(categoriesBox, border=5)
         self.fit()
         
     def ok(self):
-        for index in range(self._checkListBox.GetCount()):
-            category = self._checkListBox.GetString(index)
-            if self._checkListBox.IsChecked(index):
-                self._task.addCategory(category)
-            else:
-                self._task.removeCategory(category)
-                    
-    def onNewCategory(self, newCategory):
-        self._checkListBox.InsertItems([newCategory], 0)
-        self._checkListBox.Check(0)
-
+        pass
+    
 
 class AttachmentPage(TaskEditorPage):
     def __init__(self, parent, task, *args, **kwargs):
@@ -497,6 +475,22 @@ class EffortEditBook(widgets.BookPage):
             self._editor.enableOK()
 
 
+class CategoryEditBook(widgets.BookPage):
+    def __init__(self, parent, category, editor, *args, **kwargs):
+        super(CategoryEditBook, self).__init__(parent, columns=2, *args, **kwargs)
+        self._editor = editor
+        self._category = category
+        self.addSubjectEntry()
+        self.fit()
+
+    def addSubjectEntry(self):
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._category.subject())
+        self.addEntry(_('Subject'), self._subjectEntry, flags=[None, wx.ALL|wx.EXPAND])
+
+    def ok(self):
+        self._category.setSubject(self._subjectEntry.GetValue())
+
+
 class EditorWithCommand(widgets.NotebookDialog):
     def __init__(self, parent, command, uiCommands, *args, **kwargs):
         self._uiCommands = uiCommands
@@ -551,3 +545,17 @@ class EffortEditor(EditorWithCommand):
             self._taskList)
         self._interior.AddPage(page, effort.task().subject())
 
+
+class CategoryEditor(EditorWithCommand):
+    def __init__(self, parent, command, uiCommands, categories, *args, **kwargs):
+        self._categories = categories
+        super(CategoryEditor, self).__init__(parent, command, uiCommands, 
+                                             *args, **kwargs)
+        
+    def addPages(self):
+        for category in self._command.items:
+            self.addPage(category)
+            
+    def addPage(self, category):
+        page = CategoryEditBook(self._interior, category, self)
+        self._interior.AddPage(page, category.subject())

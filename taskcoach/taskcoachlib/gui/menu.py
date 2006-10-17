@@ -46,6 +46,7 @@ class MainMenu(wx.MenuBar):
         self.Append(ViewMenu(mainwindow, uiCommands), _('&View'))
         self.Append(TaskMenu(mainwindow, uiCommands), _('&Task'))
         self.Append(EffortMenu(mainwindow, uiCommands), _('Eff&ort'))
+        self.Append(CategoryMenu(mainwindow, uiCommands), _('&Category'))
         self.Append(HelpMenu(mainwindow, uiCommands), _('&Help'))
 
 
@@ -255,6 +256,12 @@ class EffortMenu(Menu):
         super(EffortMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['neweffort', 'editeffort', 
             'deleteeffort', None, 'starteffort', 'stopeffort'])
+        
+
+class CategoryMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(CategoryMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['newcategory', 'newsubcategory'])
         
         
 class HelpMenu(Menu):

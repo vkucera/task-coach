@@ -154,7 +154,7 @@ class ViewMenuTestCase(test.wxTestCase):
         self.mainWindow = self.createMainWindow()
         self.filteredTaskList = self.createFilteredTaskList()
         self.uiCommands = uicommand.UICommands(self.mainWindow, None, None, 
-            self.settings, self.filteredTaskList, None)
+            self.settings, self.filteredTaskList, None, None)
         self.menu = self.createMenu()
         menuBar = wx.MenuBar()
         menuBar.Append(self.menu, 'menu')

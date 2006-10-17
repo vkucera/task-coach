@@ -1,9 +1,9 @@
 import test, command
 import domain.task as task
-from TaskCommandsTest import CommandTestCase, CommandWithChildrenTestCase, \
+from TaskCommandsTest import TaskCommandTestCase, CommandWithChildrenTestCase, \
     CommandWithEffortTestCase
 
-class CutCommandWithTasksTest(CommandTestCase):
+class CutCommandWithTasksTest(TaskCommandTestCase):
     def testCutTasks_WithoutSelection(self):
         self.cut()
         self.assertDoUndoRedo(lambda: self.assertTaskList([self.task1]))
@@ -58,7 +58,7 @@ class CutCommandWithEffortTest(CommandWithEffortTestCase):
                               lambda: self.assertEffortList(self.originalEffortList))
 
                               
-class PasteCommandWithTasksTest(CommandTestCase):
+class PasteCommandWithTasksTest(TaskCommandTestCase):
     def testPasteWithoutPreviousCut(self):
         self.paste()
         self.assertDoUndoRedo(lambda: self.assertTaskList(self.originalList))
@@ -168,7 +168,7 @@ class PasteIntoTaskCommandWithEffortTest(CommandWithEffortTestCase):
             lambda: self.assertEqualLists([self.effort1], self.task1.efforts()))
 
         
-class CutAndPasteTasksIntegrationTest(CommandTestCase):
+class CutAndPasteTasksIntegrationTest(TaskCommandTestCase):
     def testUndoCutAndPaste(self):
         self.cut([self.task1])
         self.paste()
@@ -214,7 +214,7 @@ class CutAndPasteWithChildrenIntegrationTest(CommandWithChildrenTestCase):
         self.failIf(self.child.children())
         
 
-class CopyCommandWithTasksTest(CommandTestCase):
+class CopyCommandWithTasksTest(TaskCommandTestCase):
     def testCopyTaskWithoutSelection(self):
         self.copy([])
         self.assertDoUndoRedo(

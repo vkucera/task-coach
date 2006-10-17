@@ -188,6 +188,12 @@ class EffortListCommand(UICommand):
         super(EffortListCommand, self).__init__(*args, **kwargs)
 
 
+class CategoriesCommand(UICommand):
+    def __init__(self, *args, **kwargs):
+        self.categories = kwargs.pop('categories', None)
+        super(CategoriesCommand, self).__init__(*args, **kwargs)
+        
+
 class ViewerCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self.viewer = kwargs.pop('viewer', None)
@@ -905,6 +911,35 @@ class EffortStop(TaskListCommand):
                      task.isBeingTracked()])
 
 
+class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
+    def __init__(self, *args, **kwargs):
+        super(CategoryNew, self).__init__(bitmap='new', 
+            menuText=_('New category...'), helpText=_('Insert a new category'), 
+            *args, **kwargs)
+
+    def doCommand(self, event, show=True):
+        editor = gui.CategoryEditor(self.mainwindow, 
+            command.NewCategoryCommand(self.categories),
+            self.categories, self.uiCommands, 
+            bitmap=self.bitmap)
+        editor.Show(show)
+        
+
+class CategoryNewSubCategory(MainWindowCommand, CategoriesCommand, 
+                             ViewerCommand, UICommandsCommand):
+    def __init__(self, *args, **kwargs):
+        super(CategoryNewSubCategory, self).__init__(bitmap='new_subtask', 
+            menuText=_('New subcategory...'), helpText=_('Insert a new subcategory'), 
+            *args, **kwargs)
+
+    def doCommand(self, event, show=True):
+        editor = gui.CategoryEditor(self.mainwindow, 
+            command.NewSubCategoryCommand(self.categories, 
+                                          self.viewer.curselection()),
+            self.categories, self.uiCommands, bitmap=self.bitmap)
+        editor.Show(show)
+
+
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self._dialogTitle = kwargs.pop('dialogTitle')
@@ -979,7 +1014,7 @@ class MainWindowRestore(MainWindowCommand):
 
 class UICommands(dict):
     def __init__(self, mainwindow, iocontroller, viewer, settings, 
-            taskList, effortList):
+            taskList, effortList, categories):
         super(UICommands, self).__init__()
         self.__iocontroller = iocontroller
     
@@ -1188,6 +1223,12 @@ class UICommands(dict):
                                             viewer=viewer)
         self['starteffort'] = EffortStart(taskList=taskList, viewer=viewer)
         self['stopeffort'] = EffortStop(taskList=taskList)
+        
+        # Categorymenu
+        self['newcategory'] = CategoryNew(mainwindow=mainwindow,
+            categories=categories, uiCommands=self)
+        self['newsubcategory'] = CategoryNewSubCategory(mainwindow=mainwindow,
+            viewer=viewer, categories=categories, uiCommands=self)
         
         # Help menu
         self['help'] = Help()

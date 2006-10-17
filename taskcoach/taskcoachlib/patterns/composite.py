@@ -10,6 +10,13 @@ class Composite(object):
         for child in children:
             child.setParent(self)
         
+    def __getstate__(self):
+        return dict(children=self.__children[:], parent=self.__parent)
+    
+    def __setstate__(self, state):
+        self.__parent = state['parent']
+        self.__children = state['children']
+    
     def parent(self):
         return self.__parent
     
@@ -32,6 +39,10 @@ class Composite(object):
                 for descendent in child.children(recursive=True)]
         else:
             return self.__children
+    
+    def newChild(self, *args, **kwargs):
+        kwargs['parent'] = self
+        return self.__class__(*args, **kwargs)
     
     def addChild(self, child):
         self.__children.append(child)

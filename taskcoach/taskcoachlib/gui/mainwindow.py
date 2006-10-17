@@ -65,7 +65,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.createFilterSideBar()
         self.initLayout()
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
-            self.viewer, self.settings, self.taskFile, self.effortList)
+            self.viewer, self.settings, self.taskFile, self.effortList, self.taskFile.categories())
         viewerfactory.addTaskViewers(self.viewer, self.taskFile, 
             self.uiCommands, self.settings, self.taskFile.categories())
         viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),

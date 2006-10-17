@@ -34,4 +34,4 @@ class UICommandTest(test.wxTestCase):
 
 class UICommandsTest(test.wxTestCase):
     def testCreate(self):
-        gui.uicommand.UICommands(None, None, None, None, None, None)
+        gui.uicommand.UICommands(None, None, None, None, None, None, None)
