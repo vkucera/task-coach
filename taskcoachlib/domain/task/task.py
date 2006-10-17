@@ -117,9 +117,10 @@ class Task(patterns.ObservableComposite):
                 self.shouldMarkCompletedWhenAllChildrenCompleted,
             children=[child.copy() for child in self.children()])
     
-    def newSubTask(self, subject='New subtask'):
+    def newChild(self, subject='New subtask'):
         ''' Subtask constructor '''
-        return self.__class__(subject, dueDate=self.dueDate(),
+        return super(Task, self).newChild(subject=subject, 
+            dueDate=self.dueDate(),
             startDate=max(date.Today(), self.startDate()), parent=self)
 
     def addChild(self, child):

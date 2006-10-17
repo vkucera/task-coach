@@ -17,6 +17,10 @@ class CategoryTest(test.TestCase):
         self.assertEqual('%s -> %s'%(self.category.subject(),
                          self.subCategory.subject()), 
                          self.subCategory.subject(recursive=True))
+        
+    def testSetSubject(self):
+        self.category.setSubject('New')
+        self.assertEqual('New', self.category.subject())
 
     def testNoTasksAfterCreation(self):
         self.assertEqual([], self.category.tasks())

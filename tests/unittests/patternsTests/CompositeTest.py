@@ -80,6 +80,40 @@ class CompositeTest(test.TestCase):
         self.composite.addChild(self.child)
         self.assertEqual([self.composite, self.child], self.composite.family())
         
+    def testNewChild_HasCorrectParent(self):
+        child = self.composite.newChild()
+        self.assertEqual(self.composite, child.parent())
+        
+    def testNewChild_NotInParentsChildren(self):
+        child = self.composite.newChild()
+        self.failIf(child in self.composite.children())
+        
+    def testGetState(self):
+        self.assertEqual(dict(children=[], parent=None), 
+                         self.composite.__getstate__())
+        
+    def testGetState_WithChildren(self):
+        self.composite.addChild(self.child)
+        self.assertEqual(dict(children=[self.child], parent=None), 
+                         self.composite.__getstate__())
+        
+    def testGetState_WithParent(self):
+        self.composite.addChild(self.child)
+        self.assertEqual(dict(children=[], parent=self.composite),
+                         self.child.__getstate__())
+                
+    def testSetState_Parent(self):
+        state = self.composite.__getstate__()
+        self.composite.setParent(self.child)
+        self.composite.__setstate__(state)
+        self.assertEqual(None, self.composite.parent())
+        
+    def testSetState_Children(self):
+        state = self.composite.__getstate__()
+        self.composite.addChild(self.child)
+        self.composite.__setstate__(state)
+        self.assertEqual([], self.composite.children())
+        
         
 class ObservableCompositeTest(test.TestCase):
     def setUp(self):

@@ -1,9 +1,12 @@
-import test, asserts, command, patterns, dummy, config
+import test, command, patterns, config
+from unittests import asserts, dummy
+from CommandTestCase import CommandTestCase
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
 
-class CommandTestCase(test.wxTestCase, asserts.Mixin):
+
+class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
     def setUp(self):
         self.list = self.taskList = task.TaskList()
         self.task1 = task.Task('task1')
@@ -15,15 +18,8 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
                                          settings=config.Settings(load=False))
         
     def tearDown(self):
-        super(CommandTestCase, self).tearDown()
+        super(TaskCommandTestCase, self).tearDown()
         task.Clipboard().clear()
-        patterns.CommandHistory().clear()
-
-    def undo(self):
-        patterns.CommandHistory().undo()
-
-    def redo(self):
-        patterns.CommandHistory().redo()
 
     def delete(self, items=None):
         if items == 'all':
@@ -66,7 +62,7 @@ class CommandTestCase(test.wxTestCase, asserts.Mixin):
         addAttachmentCommand.do()
 
 
-class CommandWithChildrenTestCase(CommandTestCase):
+class CommandWithChildrenTestCase(TaskCommandTestCase):
     def setUp(self):
         super(CommandWithChildrenTestCase, self).setUp()
         self.parent = task.Task('parent')
@@ -80,7 +76,7 @@ class CommandWithChildrenTestCase(CommandTestCase):
         self.taskList.append(self.parent)
         
 
-class CommandWithEffortTestCase(CommandTestCase):
+class CommandWithEffortTestCase(TaskCommandTestCase):
     def setUp(self):
         super(CommandWithEffortTestCase, self).setUp()
         self.list = self.effortList = effort.EffortList(self.taskList)
@@ -93,7 +89,7 @@ class CommandWithEffortTestCase(CommandTestCase):
         self.originalEffortList = [self.effort1, self.effort2]
 
 
-class DeleteCommandWithTasksTest(CommandTestCase):
+class DeleteCommandWithTasksTest(TaskCommandTestCase):
     def testDeleteAllTasks(self):
         self.taskList.append(self.task2)
         self.delete('all')
@@ -172,7 +168,7 @@ class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
                 self.assertEqual(1, len(self.task1.efforts())))
 
 
-class NewTaskCommandTest(CommandTestCase):
+class NewTaskCommandTest(TaskCommandTestCase):
     def new(self):
         newTaskCommand = command.NewTaskCommand(self.taskList)
         newTask = newTaskCommand.items[0]
@@ -186,7 +182,7 @@ class NewTaskCommandTest(CommandTestCase):
             lambda: self.assertTaskList(self.originalList))
 
 
-class NewSubTaskCommandTest(CommandTestCase):
+class NewSubTaskCommandTest(TaskCommandTestCase):
 
     def testNewSubTask_WithoutSelection(self):
         self.newSubTask()
@@ -221,7 +217,7 @@ class NewSubTaskCommandTest(CommandTestCase):
             lambda: self.failIf(self.task1.completed()))
 
 
-class EditTaskCommandTest(CommandTestCase):
+class EditTaskCommandTest(TaskCommandTestCase):
     def edit(self, tasks=None):
         tasks = tasks or []
         editcommand = command.EditTaskCommand(self.taskList, tasks)
@@ -345,7 +341,7 @@ class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
             self.assertEqual(self.child, self.grandchild.parent()))
         
 
-class AddAttachmentToTaskCommandTest(CommandTestCase):
+class AddAttachmentToTaskCommandTest(TaskCommandTestCase):
     def testAddOneAttachmentToOneTask(self):
         self.addAttachment([self.task1])
         self.assertDoUndoRedo(lambda: self.assertEqual([self.attachment], 

@@ -402,8 +402,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
 
     # Constructor
 
-    def testNewSubTask_WithSubject(self):
-        child = self.task.newSubTask(subject='Test')
+    def testNewChild_WithSubject(self):
+        child = self.task.newChild(subject='Test')
         self.assertEqual('Test', child.subject())
 
     # Add effort
@@ -583,45 +583,39 @@ class TwoTasksTest(TaskTestCase):
         self.assertNotEqual(self.task1, self.task2)
 
 
-class NewSubTaskTestCase(TaskTestCase):
+class NewChildTestCase(TaskTestCase):
     def setUp(self):
-        super(NewSubTaskTestCase, self).setUp()
-        self.child = self.task.newSubTask()
+        super(NewChildTestCase, self).setUp()
+        self.child = self.task.newChild()
 
 
-class NewSubTaskOfDefaultTaskTest(NewSubTaskTestCase):
+class NewChildOfDefaultTaskTest(NewChildTestCase):
     def taskCreationKeywordArguments(self):
         return [{}]
     
-    def testNewSubTaskParent(self):
-        self.assertEqual(self.task, self.child.parent())
-                
-    def testNewSubTaskIsNotAutomaticallyAddedAsChild(self):
-        self.failIf(self.child in self.task.children())
-
-    def testNewSubTaskHasSameDueDateAsParent(self):
+    def testNewChildHasSameDueDateAsParent(self):
         self.assertEqual(self.task.dueDate(), self.child.dueDate())
                 
-    def testNewSubTaskHasStartDateToday(self):
+    def testNewChildHasStartDateToday(self):
         self.assertEqual(date.Today(), self.child.startDate())
 
-    def testNewSubTaskIsNotCompleted(self):
+    def testNewChildIsNotCompleted(self):
         self.failIf(self.child.completed())
 
 
-class NewSubTaskOfInactiveTask(NewSubTaskTestCase):
+class NewChildOfInactiveTask(NewChildTestCase):
     def taskCreationKeywordArguments(self):
         return [{'startDate': date.Tomorrow()}]
     
-    def testNewSubTaskHasSameStartDateAsParent(self):
+    def testChildHasSameStartDateAsParent(self):
         self.assertEqual(self.task.startDate(), self.child.startDate())
 
 
-class NewSubTaskOfActiveTask(NewSubTaskTestCase):
+class NewChildOfActiveTask(NewChildTestCase):
     def taskCreationKeywordArguments(self):
         return [{'startDate': date.Yesterday()}]
 
-    def testNewSubTaskHasStartDateToday(self):
+    def testNewChildHasStartDateToday(self):
         self.assertEqual(date.Today(), self.child.startDate())
         
 

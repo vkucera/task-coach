@@ -1,9 +1,11 @@
-import test, asserts, command, gui, dummy, patterns
+import test, command, gui, patterns
+from unittests import asserts, dummy
+from CommandTestCase import CommandTestCase
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
 
-class EffortCommandTestCase(test.wxTestCase, asserts.CommandAsserts):
+class EffortCommandTestCase(CommandTestCase, asserts.CommandAsserts):
     def setUp(self):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
@@ -14,12 +16,6 @@ class EffortCommandTestCase(test.wxTestCase, asserts.CommandAsserts):
         self.effort = effort.Effort(self.originalTask, self.originalStart, 
                                     self.originalStop)
         self.originalTask.addEffort(self.effort)
-
-    def undo(self):
-        patterns.CommandHistory().undo()
-        
-    def redo(self):
-        patterns.CommandHistory().redo()
 
 
 class NewEffortCommandTest(EffortCommandTestCase):        

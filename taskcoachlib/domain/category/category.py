@@ -1,11 +1,24 @@
 import patterns
 
 class Category(patterns.ObservableComposite):
-    def __init__(self, subject, tasks=None, children=None, filtered=False):
-        super(Category, self).__init__(children=children or [])
+    def __init__(self, subject, tasks=None, children=None, filtered=False, 
+                 parent=None):
+        super(Category, self).__init__(children=children or [], parent=parent)
         self.__subject = subject
         self.__tasks = tasks or []
         self.__filtered = filtered
+        
+    def __getstate__(self):
+        state = super(Category, self).__getstate__()
+        state.update(dict(subject=self.__subject, tasks=self.__tasks[:], 
+                          filtered=self.__filtered))
+        return state
+        
+    def __setstate__(self, state):
+        super(Category, self).__setstate__(state)
+        self.__subject = state['subject']
+        self.__tasks = state['tasks']
+        self.__filtered = state['filtered']
         
     def __repr__(self):
         return self.__subject
@@ -15,6 +28,9 @@ class Category(patterns.ObservableComposite):
             return False
         return self.subject(recursive=True) == other.subject(recursive=True)
     
+    def setSubject(self, newSubject):
+        self.__subject = newSubject
+        
     def subject(self, recursive=False):
         if recursive and self.parent():
             return '%s -> %s'%(self.parent().subject(recursive=True), 
