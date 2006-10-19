@@ -29,4 +29,4 @@ class NewSubCategoryCommand(NewCategoryCommand):
             
     def createNewCategories(self):
         return [parent.newChild(subject=_('New subcategory')) for parent in self.items]
-        
+    

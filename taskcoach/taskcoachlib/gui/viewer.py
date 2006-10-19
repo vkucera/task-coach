@@ -78,6 +78,15 @@ class Viewer(wx.Panel):
     
     def widgetCreationKeywordArguments(self):
         return {}
+
+    def isShowingTasks(self): 
+        return False
+
+    def isShowingEffort(self): 
+        return False
+    
+    def isShowingCategories(self):
+        return False
     
     """
     def onActivateViewer(self):
@@ -294,9 +303,6 @@ class TaskViewer(UpdatePerSecondViewer):
     
     def isShowingTasks(self): 
         return True
-
-    def isShowingEffort(self): 
-        return False
     
     def trackStartEventType(self):
         return 'task.track.start'
@@ -557,8 +563,12 @@ class CategoryViewer(TreeViewer):
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage,
             self.getItemAttr, self.getItemId, self.getRootIndices, 
-            self.getChildIndices, self.onSelect, None, None)
+            self.getChildIndices, self.onSelect, None, None, 
+            self.createCategoryPopupMenu())
         return widget
+
+    def createCategoryPopupMenu(self):
+        return menu.CategoryPopupMenu(self.parent, self.uiCommands)
 
     def getItemText(self, index):    # FIXME: pull up to TreeViewer
         category = self.list[index]
@@ -587,17 +597,14 @@ class CategoryViewer(TreeViewer):
     def createSorter(self, categoryContainer):
         return category.CategorySorter(categoryContainer)
     
-    def isShowingTasks(self):
-        return False
+    def isShowingCategories(self):
+        return True
     
 
 class EffortViewer(UpdatePerSecondViewer):
-    def isShowingTasks(self):
-        return False
-        
     def isShowingEffort(self):
         return True
-
+        
     def trackStartEventType(self):
         return 'effort.track.start'
     

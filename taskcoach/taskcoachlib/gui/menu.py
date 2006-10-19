@@ -261,7 +261,8 @@ class EffortMenu(Menu):
 class CategoryMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(CategoryMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['newcategory', 'newsubcategory'])
+        self.appendUICommands(uiCommands, ['newcategory', 'newsubcategory', 
+            'deletecategory'])
         
         
 class HelpMenu(Menu):
@@ -299,6 +300,13 @@ class EffortPopupMenu(Menu):
            'deleteeffort', None, 'stopeffort'])
 
 
+class CategoryPopupMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(CategoryPopupMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['new', None, 'newcategory',
+            'newsubcategory', 'deletecategory', None, 'stopeffort'])
+        
+        
 # Column header popup menu's
 
 class _ColumnPopupMenu(Menu):
@@ -342,3 +350,6 @@ class EffortViewerColumnPopupMenu(_ColumnPopupMenu):
         self.appendUICommands(uiCommands, ['hidecurrentcolumn', None, 
             'viewefforttimespent', 'viewtotalefforttimespent',
             'vieweffortrevenue', 'viewtotaleffortrevenue'])
+        
+
+
