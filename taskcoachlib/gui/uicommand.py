@@ -246,7 +246,12 @@ class NeedsSelectedEffort(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectedEffort, self).enabled(event) and \
             self.viewer.isShowingEffort()
-               
+
+class NeedsSelectedCategory(NeedsSelection):
+    def enabled(self, event):
+        return super(NeedsSelectedCategory, self).enabled(event) and \
+            self.viewer.isShowingCategories()
+            
 class NeedsAtLeastOneTask(object):
     def enabled(self, event):
         return len(self.taskList) > 0
@@ -925,8 +930,8 @@ class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
         editor.Show(show)
         
 
-class CategoryNewSubCategory(MainWindowCommand, CategoriesCommand, 
-                             ViewerCommand, UICommandsCommand):
+class CategoryNewSubCategory(NeedsSelectedCategory, MainWindowCommand, 
+        CategoriesCommand, ViewerCommand, UICommandsCommand):
     def __init__(self, *args, **kwargs):
         super(CategoryNewSubCategory, self).__init__(bitmap='new_subtask', 
             menuText=_('New subcategory...'), helpText=_('Insert a new subcategory'), 
@@ -940,6 +945,19 @@ class CategoryNewSubCategory(MainWindowCommand, CategoriesCommand,
         editor.Show(show)
 
 
+class CategoryDelete(NeedsSelectedCategory, MainWindowCommand, 
+        CategoriesCommand, ViewerCommand, UICommandsCommand):
+    def __init__(self, *args, **kwargs):
+        super(CategoryDelete, self).__init__(bitmap='delete',
+            menuText=_('Delete category'), 
+            helpText=_('Delete the selected categories'), *args ,**kwargs)
+        
+    def doCommand(self, event):
+        delete = command.DeleteCommand(self.categories,
+            self.viewer.curselection())
+        delete.do()
+
+                                                        
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self._dialogTitle = kwargs.pop('dialogTitle')
@@ -1228,6 +1246,8 @@ class UICommands(dict):
         self['newcategory'] = CategoryNew(mainwindow=mainwindow,
             categories=categories, uiCommands=self)
         self['newsubcategory'] = CategoryNewSubCategory(mainwindow=mainwindow,
+            viewer=viewer, categories=categories, uiCommands=self)
+        self['deletecategory'] = CategoryDelete(mainwindow=mainwindow,
             viewer=viewer, categories=categories, uiCommands=self)
         
         # Help menu

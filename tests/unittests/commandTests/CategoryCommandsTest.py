@@ -23,16 +23,15 @@ class NewCategoryCommandTest(CategoryCommandTestCase):
             lambda: self.assertEqual([], self.categories))
         
 
-class NewSubTaskCommandTest(CategoryCommandTestCase):
+class NewSubCategoryCommandTest(CategoryCommandTestCase):
     def setUp(self):
-        super(NewSubTaskCommandTest, self).setUp()
+        super(NewSubCategoryCommandTest, self).setUp()
         self.category = category.Category('category')
         self.categories.append(self.category)
         
     def newSubCategory(self, categories=None):
-        categories = categories or []
         newSubCategory = command.NewSubCategoryCommand(self.categories, 
-                                                       categories)
+                                                       categories or [])
         newSubCategory.do()
 
     def testNewSubCategory_WithoutSelection(self):
@@ -46,4 +45,3 @@ class NewSubTaskCommandTest(CategoryCommandTestCase):
         self.assertDoUndoRedo(lambda: self.assertEqual([newSubCategory], 
                                                        self.category.children()),
             lambda: self.assertEqual([self.category], self.categories))
-
