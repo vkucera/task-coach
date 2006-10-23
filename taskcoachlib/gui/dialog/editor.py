@@ -6,7 +6,9 @@ import wx.lib.masked as masked
 from i18n import _
 import domain.date as date
 import domain.task as task
+import domain.category as category
 import thirdparty.desktop as desktop
+import thirdparty.CustomTreeCtrl as customtree
 import os.path
 
 
@@ -235,8 +237,20 @@ class EffortPage(TaskEditorPage):
 class CategoriesPage(TaskEditorPage):
     def __init__(self, parent, task, categories, *args, **kwargs):
         super(CategoriesPage, self).__init__(parent, task, *args, **kwargs)
-        categoriesBox = widgets.BoxWithFlexGridSizer(self, 
-            label=_('Categories'), cols=2, growableCol=1, growableRow=0)
+        self.__categories = category.CategorySorter(categories)
+        categoriesBox = widgets.BoxWithBoxSizer(self, label=_('Categories'))
+        self._treeCtrl = widgets.CheckTreeCtrl(categoriesBox, 
+            lambda index: self.__categories[index].subject(),
+            lambda index: (-1, -1), lambda index: customtree.TreeItemAttr(),
+            lambda index: id(self.__categories[index]), 
+            lambda: sorted([index for index in range(len(self.__categories)) if \
+                     self.__categories[index] in self.__categories.rootItems()]),
+            lambda parentIndex: [index for index in range(len(self.__categories)) if \
+                     self.__categories[index] in self.__categories[parentIndex].children()], 
+            lambda index: self.__categories[index].isFiltered(),
+            lambda *args: None, lambda *args: None,
+            lambda *args: None)
+        categoriesBox.add(self._treeCtrl, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
         self.add(categoriesBox, border=5)
         self.fit()
@@ -503,10 +517,10 @@ class EditorWithCommand(widgets.NotebookDialog):
 
             
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, taskList, uiCommands, settings, categories=None, bitmap='edit', *args, **kwargs):
+    def __init__(self, parent, command, taskList, uiCommands, settings, categories, bitmap='edit', *args, **kwargs):
         self._settings = settings
         self._taskList = taskList
-        self._categories = list(categories or [])
+        self._categories = categories
         super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
         # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:

@@ -433,11 +433,11 @@ class CheckTreeCtrl(CustomTreeCtrl):
             getItemId, getRootIndices, getChildIndices, getIsItemChecked,
             selectCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu=None, *args, **kwargs):
+        self.getIsItemChecked = getIsItemChecked
         super(CheckTreeCtrl, self).__init__(parent, getItemText, getItemImage, 
             getItemAttr, getItemId, getRootIndices, getChildIndices, 
             selectCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu, *args, **kwargs)
-        self.getIsItemChecked = getIsItemChecked
         
     def renderNode(self, node, index):
         super(CheckTreeCtrl, self).renderNode(node, index)

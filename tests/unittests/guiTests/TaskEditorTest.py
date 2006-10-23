@@ -4,6 +4,7 @@ from unittests import dummy
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
+import domain.category as category
 
 class DummyViewer:
     def __init__(self):
@@ -40,7 +41,8 @@ class TaskEditorTestCase(test.wxTestCase):
     def createEditor(self):
         return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
             self.taskList, dummy.DummyUICommands(),
-            config.Settings(load=False), raiseDialog=False)
+            config.Settings(load=False), category.CategoryList(), 
+            raiseDialog=False)
 
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
