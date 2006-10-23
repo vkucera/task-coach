@@ -2,6 +2,7 @@ import wx
 import widgets, patterns
 from i18n import _ 
 import thirdparty.CustomTreeCtrl as customtree
+import domain.category as category
 
 class SubjectFilterPanel(wx.Panel):
     def __init__(self, parent, viewer, settings, *args, **kwargs):
@@ -119,7 +120,7 @@ class StatusFilterPanel(wx.Panel):
 class CategoriesFilterPanel(wx.Panel):
     def __init__(self, parent, categories, settings, *args, **kwargs):
         super(CategoriesFilterPanel, self).__init__(parent, *args, **kwargs)
-        self.__categories = categories
+        self.__categories = category.CategorySorter(categories)
         self.__settings = settings
         self.createInterior()
         self.layoutInterior()
@@ -133,8 +134,8 @@ class CategoriesFilterPanel(wx.Panel):
             lambda index: self.__categories[index].subject(),
             lambda index: (-1, -1), lambda index: customtree.TreeItemAttr(),
             lambda index: id(self.__categories[index]), 
-            lambda: [index for index in range(len(self.__categories)) if \
-                     self.__categories[index] in self.__categories.rootItems()],
+            lambda: sorted([index for index in range(len(self.__categories)) if \
+                     self.__categories[index] in self.__categories.rootItems()]),
             lambda parentIndex: [index for index in range(len(self.__categories)) if \
                      self.__categories[index] in self.__categories[parentIndex].children()], 
             lambda index: self.__categories[index].isFiltered(),
@@ -175,6 +176,10 @@ class CategoriesFilterPanel(wx.Panel):
             self.__categories.addItemEventType())
         patterns.Publisher().registerObserver(self.onRemoveCategory,
             self.__categories.removeItemEventType())
+        patterns.Publisher().registerObserver(self.onCategorySubjectChanged,
+            category.Category.subjectChangedEventType())
+        patterns.Publisher().registerObserver(self.onCategorySubjectChanged,
+            self.__categories.sortEventType())
         
     def onCheckCategory(self, event):
         category = self.__categories[self._treeCtrl.index(event.GetItem())]
@@ -197,6 +202,9 @@ class CategoriesFilterPanel(wx.Panel):
         self.setRadioBox()
 
     def onFilteredCategoriesChanged(self, event):
+        self._treeCtrl.refresh(len(self.__categories))
+        
+    def onCategorySubjectChanged(self, event):
         self._treeCtrl.refresh(len(self.__categories))
 
     

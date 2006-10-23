@@ -594,7 +594,7 @@ class ClearSelection(NeedsSelection, ViewerCommand):
         self.viewer.clearselection()
 
 
-class ViewAllTasks(SettingsCommand, UICommandsCommand):
+class ViewAllTasks(SettingsCommand, UICommandsCommand, CategoriesCommand):
     def __init__(self, *args, **kwargs):
         super(ViewAllTasks, self).__init__(menuText=_('&All tasks'),
             helpText=_('Show all tasks (reset all filters)'), 
@@ -608,7 +608,8 @@ class ViewAllTasks(SettingsCommand, UICommandsCommand):
             self.settings.set(uiCommand.section, uiCommand.setting, 'True')
         self.settings.set(self.section, 'tasksdue', 'Unlimited')    
         self.settings.set(self.section, 'tasksearchfilterstring', '')
-        self.settings.setlist(self.section, 'taskcategoryfilterlist', [])
+        for category in self.categories:
+            category.setFiltered(False)
 
 
 class HideCurrentColumn(ViewerCommand):
@@ -950,13 +951,28 @@ class CategoryDelete(NeedsSelectedCategory, MainWindowCommand,
     def __init__(self, *args, **kwargs):
         super(CategoryDelete, self).__init__(bitmap='delete',
             menuText=_('Delete category'), 
-            helpText=_('Delete the selected categories'), *args ,**kwargs)
+            helpText=_('Delete the selected categories'), *args, **kwargs)
         
     def doCommand(self, event):
         delete = command.DeleteCommand(self.categories,
             self.viewer.curselection())
         delete.do()
 
+
+class CategoryEdit(NeedsSelectedCategory, MainWindowCommand, ViewerCommand,
+                   CategoriesCommand, UICommandsCommand):
+    def __init__(self, *args, **kwargs):
+        super(CategoryEdit, self).__init__(bitmap='edit',
+            menuText=_('Edit category'),
+            helpText=_('Edit the selected categories'), *args, **kwargs)
+        
+    def doCommand(self, event, show=True):
+        editor = gui.CategoryEditor(self.mainwindow, 
+            command.EditCategoryCommand(self.categories, 
+                                        self.viewer.curselection()),
+            self.categories, self.uiCommands, bitmap=self.bitmap)
+        editor.Show(show)
+        
                                                         
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
@@ -1071,7 +1087,8 @@ class UICommands(dict):
         self['clearselection'] = ClearSelection(viewer=viewer)
 
         # View commands
-        self['viewalltasks'] = ViewAllTasks(settings=settings, uiCommands=self)
+        self['viewalltasks'] = ViewAllTasks(settings=settings, uiCommands=self,
+            categories=categories)
         self['viewcompletedtasks'] = UICheckCommand(menuText=_('&Completed'), 
             helpText=_('Show/hide completed tasks'), setting='completedtasks',
             settings=settings)
@@ -1248,6 +1265,8 @@ class UICommands(dict):
         self['newsubcategory'] = CategoryNewSubCategory(mainwindow=mainwindow,
             viewer=viewer, categories=categories, uiCommands=self)
         self['deletecategory'] = CategoryDelete(mainwindow=mainwindow,
+            viewer=viewer, categories=categories, uiCommands=self)
+        self['editcategory'] = CategoryEdit(mainwindow=mainwindow,
             viewer=viewer, categories=categories, uiCommands=self)
         
         # Help menu

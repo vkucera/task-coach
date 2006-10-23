@@ -560,15 +560,26 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
 
 
 class CategoryViewer(TreeViewer):
+    def __init__(self, *args, **kwargs):
+        super(CategoryViewer, self).__init__(*args, **kwargs)
+        patterns.Publisher().registerObserver(self.onSubjectChanged, 
+            category.Category.subjectChangedEventType())
+        
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage,
             self.getItemAttr, self.getItemId, self.getRootIndices, 
-            self.getChildIndices, self.onSelect, None, None, 
+            self.getChildIndices, self.onSelect, 
+            self.uiCommands['editcategory'], None, 
             self.createCategoryPopupMenu())
         return widget
 
     def createCategoryPopupMenu(self):
         return menu.CategoryPopupMenu(self.parent, self.uiCommands)
+
+    def onSubjectChanged(self, event):
+        item = event.source()
+        if item in self.list:
+            self.widget.refreshItem(self.list.index(item))
 
     def getItemText(self, index):    # FIXME: pull up to TreeViewer
         category = self.list[index]
@@ -585,7 +596,9 @@ class CategoryViewer(TreeViewer):
         return id(category)
     
     def getRootIndices(self):
-        return [self.list.index(category) for category in self.list.rootItems()]
+        result = [self.list.index(category) for category in self.list.rootItems()]
+        result.sort()
+        return result
     
     def getChildIndices(self, index):    # FIXME: pull up to TreeViewer
         category = self.list[index]

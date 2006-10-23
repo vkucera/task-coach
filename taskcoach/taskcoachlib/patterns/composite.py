@@ -35,11 +35,18 @@ class Composite(object):
     
     def children(self, recursive=False):
         if recursive:
-            return self.__children + [descendent for child in self.__children 
-                for descendent in child.children(recursive=True)]
+            result = self.__children[:]
+            for child in self.__children:
+                result.extend(child.children(recursive=True))
+            return result
         else:
             return self.__children
-    
+
+    def copy(self, *args, **kwargs):
+        kwargs['parent'] = self.parent()
+        kwargs['children'] = [child.copy() for child in self.children()]
+        return self.__class__(*args, **kwargs)
+        
     def newChild(self, *args, **kwargs):
         kwargs['parent'] = self
         return self.__class__(*args, **kwargs)
@@ -52,7 +59,7 @@ class Composite(object):
         self.__children.remove(child)
         # We don't reset the parent of the child, because that makes restoring
         # the parent-child relationship easier.
-        
+    
     # FIXME: this is for do/undo, need a better, generic, implementation
     def replaceChildren(self, children): 
         self.__children = children

@@ -262,7 +262,7 @@ class CategoryMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(CategoryMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['newcategory', 'newsubcategory', 
-            'deletecategory'])
+            'editcategory', 'deletecategory'])
         
         
 class HelpMenu(Menu):
@@ -303,8 +303,9 @@ class EffortPopupMenu(Menu):
 class CategoryPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(CategoryPopupMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['new', None, 'newcategory',
-            'newsubcategory', 'deletecategory', None, 'stopeffort'])
+        self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None, 'new', 
+            None, 'newcategory', 'newsubcategory', 'editcategory', 
+            'deletecategory', None, 'stopeffort'])
         
         
 # Column header popup menu's

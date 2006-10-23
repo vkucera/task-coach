@@ -8,6 +8,10 @@ class Category(patterns.ObservableComposite):
         self.__tasks = tasks or []
         self.__filtered = filtered
         
+    @classmethod
+    def subjectChangedEventType(class_):
+        return 'category.subject'
+        
     def __getstate__(self):
         state = super(Category, self).__getstate__()
         state.update(dict(subject=self.__subject, tasks=self.__tasks[:], 
@@ -23,13 +27,11 @@ class Category(patterns.ObservableComposite):
     def __repr__(self):
         return self.__subject
             
-    def __eq__(self, other):
-        if not isinstance(other, self.__class__):
-            return False
-        return self.subject(recursive=True) == other.subject(recursive=True)
-    
     def setSubject(self, newSubject):
-        self.__subject = newSubject
+        if newSubject != self.__subject:
+            self.__subject = newSubject
+            self.notifyObservers(patterns.Event(self, 
+                self.subjectChangedEventType(), newSubject))
         
     def subject(self, recursive=False):
         if recursive and self.parent():
@@ -59,6 +61,10 @@ class Category(patterns.ObservableComposite):
                 filtered))
         for child in self.children():
             child.setFiltered(filtered)
+
+    def copy(self):
+        return super(Category, self).copy(subject=self.subject(), 
+            filtered=self.isFiltered(), tasks=self.tasks()[:])
 
     def contains(self, task, treeMode=False):
         containedTasks = self.tasks(recursive=True)

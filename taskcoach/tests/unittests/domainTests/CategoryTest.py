@@ -1,4 +1,4 @@
-import test
+import test, patterns
 import domain.category as category
 import domain.task as task
 
@@ -8,6 +8,10 @@ class CategoryTest(test.TestCase):
         self.subCategory = category.Category('subcategory')
         self.task = task.Task('task')
         self.child = task.Task('child')
+        self.events = []
+        
+    def onEvent(self, event):
+        self.events.append(event)
         
     def testCreateWithSubject(self):
         self.assertEqual('category', self.category.subject())
@@ -21,6 +25,19 @@ class CategoryTest(test.TestCase):
     def testSetSubject(self):
         self.category.setSubject('New')
         self.assertEqual('New', self.category.subject())
+        
+    def testSetSubjectNotification(self):
+        eventType = category.Category.subjectChangedEventType()
+        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.category.setSubject('New')
+        self.assertEqual([patterns.Event(self.category, eventType, 'New')], 
+            self.events)
+        
+    def testSetSubjectCausesNoNotificationWhenNewSubjectEqualsOldSubject(self):
+        eventType = category.Category.subjectChangedEventType()
+        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.category.setSubject(self.category.subject())
+        self.failIf(self.events)
 
     def testNoTasksAfterCreation(self):
         self.assertEqual([], self.category.tasks())
@@ -54,10 +71,10 @@ class CategoryTest(test.TestCase):
         self.assertEqual(None, self.category.parent())
         
     def testEquality_SameSubjectAndNoParents(self):
-        self.assertEqual(category.Category(self.category.subject()), 
-                         self.category)
-        self.assertEqual(self.category,
-                         category.Category(self.category.subject()))
+        self.assertNotEqual(category.Category(self.category.subject()), 
+                            self.category)
+        self.assertNotEqual(self.category,
+                            category.Category(self.category.subject()))
                      
     def testEquality_SameSubjectDifferentParents(self):
         self.category.addChild(self.subCategory)
@@ -134,3 +151,28 @@ class CategoryTest(test.TestCase):
         self.subCategory.addTask(self.child)
         self.category.addChild(self.subCategory)
         self.failUnless(self.category.contains(self.task, treeMode=True))
+        
+    def testCopy_SubjectIsCopied(self):
+        self.category.setSubject('New subject')
+        copy = self.category.copy()
+        self.assertEqual(copy.subject(), self.category.subject())
+        
+    def testCopy_FilteredStatusIsCopied(self):
+        self.category.setFiltered()
+        copy = self.category.copy()
+        self.assertEqual(copy.isFiltered(), self.category.isFiltered())
+        
+    def testCopy_TasksAreCopied(self):
+        self.category.addTask(self.task)
+        copy = self.category.copy()
+        self.assertEqual(copy.tasks(), self.category.tasks())
+        
+    def testCopy_TasksAreCopiedIntoADifferentList(self):
+        copy = self.category.copy()
+        self.category.addTask(self.task)
+        self.failIf(self.task in copy.tasks())
+
+    def testCopy_ChildrenAreCopied(self):
+        self.category.addChild(self.subCategory)
+        copy = self.category.copy()
+        self.assertEqual(self.subCategory.subject(), copy.children()[0].subject())
