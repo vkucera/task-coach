@@ -29,4 +29,12 @@ class NewSubCategoryCommand(NewCategoryCommand):
             
     def createNewCategories(self):
         return [parent.newChild(subject=_('New subcategory')) for parent in self.items]
+
+
+class EditCategoryCommand(base.EditCommand):
+    def name(self):
+        return _('Edit category')
+    
+    def getItemsToSave(self):
+        return self.items
     

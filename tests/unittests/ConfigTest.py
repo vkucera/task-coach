@@ -143,10 +143,6 @@ class UnicodeAwareConfigParserTest(test.TestCase):
 class SpecificSettingsTest(SettingsTestCase):
     def testDefaultWindowPosition(self):
         self.assertEqual('(-1, -1)', self.settings.get('window', 'position'))
-
-    def testDefaultTaskCategoryFilterList(self):
-        self.assertEqual([], self.settings.getlist('view', 
-            'taskcategoryfilterlist'))
             
 
 class SettingsFileLocationTest(SettingsTestCase):

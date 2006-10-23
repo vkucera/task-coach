@@ -379,7 +379,8 @@ class TaskFileMergeTest(TaskFileTestCase):
     def testMerge_OneCategoryInMergeFile(self):
         self.mergeFile.categories().append(self.category)
         self.merge()
-        self.assertEqual(self.category, list(self.taskFile.categories())[0])
+        self.assertEqual([self.category.subject()], 
+                         [cat.subject() for cat in self.taskFile.categories()])
         
     def testMerge_DifferentCategories(self):
         self.mergeFile.categories().append(self.category)
@@ -391,8 +392,8 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.mergeFile.categories().append(self.category)
         self.taskFile.categories().append(category.Category(self.category.subject()))
         self.merge()
-        self.assertEqual([self.category, self.category], 
-                         list(self.taskFile.categories()))
+        self.assertEqual([self.category.subject()]*2, 
+                         [cat.subject() for cat in self.taskFile.categories()])
         
     def testMerge_CategoryWithTask(self):
         self.mergeFile.categories().append(self.category)

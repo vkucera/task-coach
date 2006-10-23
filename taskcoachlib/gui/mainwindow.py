@@ -214,7 +214,6 @@ class MainWindow(WindowWithPersistentDimensions):
             return 
         # Clear task file specific settings (FIXME: save these in the task file)
         self.settings.set('view', 'tasksearchfilterstring', '') 
-        self.settings.setlist('view', 'taskcategoryfilterlist', [])
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()

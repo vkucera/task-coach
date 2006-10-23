@@ -50,6 +50,8 @@ class DummyWidget(wx.Frame):
 
 class DummyUICommand(gui.uicommand.UICommand):
     bitmap = 'undo'
+    section = 'view'
+    setting = 'setting'
 
     def onCommandActivate(self, event):
         self.activated = True

@@ -164,3 +164,20 @@ class PasteCommand(BaseCommand, SaveStateMixin):
         
     def clearSourceOfItemsToPaste(self):
         task.Clipboard().clear() 
+        
+        
+class EditCommand(BaseCommand, SaveStateMixin):
+    def __init__(self, *args, **kwargs):
+        super(EditCommand, self).__init__(*args, **kwargs)
+        self.saveStates(self.getItemsToSave())
+        
+    def getItemsToSave(self):
+        raise NotImplementedError
+        
+    def undo_command(self):
+        self.undoStates()
+        super(EditCommand, self).undo_command()
+
+    def redo_command(self):
+        self.redoStates()
+        super(EditCommand, self).redo_command()

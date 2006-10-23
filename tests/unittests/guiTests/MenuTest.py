@@ -2,6 +2,8 @@ import test, gui, wx, config
 from unittests import dummy
 from gui import uicommand
 import domain.task as task
+import domain.category as category
+
 
 class MenuTestCase(test.wxTestCase):
     def setUp(self):
@@ -154,7 +156,7 @@ class ViewMenuTestCase(test.wxTestCase):
         self.mainWindow = self.createMainWindow()
         self.filteredTaskList = self.createFilteredTaskList()
         self.uiCommands = uicommand.UICommands(self.mainWindow, None, None, 
-            self.settings, self.filteredTaskList, None, None)
+            self.settings, self.filteredTaskList, None, category.CategoryList())
         self.menu = self.createMenu()
         menuBar = wx.MenuBar()
         menuBar.Append(self.menu, 'menu')

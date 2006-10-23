@@ -68,7 +68,7 @@ integrationtests:
 	cd tests; $(PYTHON) test.py --integrationtests --no-unittests
     
 
-CLEANFILES=*.pyc */*.pyc */*/*.pyc build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
+CLEANFILES=*.pyc */*.pyc */*/*.pyc */*/*/*.pyc build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
 REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/i18n/??_??.py *.bak */*.bak */*/*.bak .\#* */.\#* */*/.\#*
 
 clean:

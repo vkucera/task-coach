@@ -114,6 +114,35 @@ class CompositeTest(test.TestCase):
         self.composite.__setstate__(state)
         self.assertEqual([], self.composite.children())
         
+    def testCopy(self):
+        copy = self.composite.copy()
+        self.assertEqual(copy.children(), self.composite.children())
+        
+    def testCopy_AddChildrenAfterCopy(self):
+        copy = self.composite.copy()
+        self.composite.addChild(self.child)
+        self.failIf(self.child in copy.children())
+        
+    def testCopy_WithChildren(self):
+        self.composite.addChild(self.child)
+        copy = self.composite.copy()
+        self.assertEqual(1, len(copy.children()))
+    
+    def testCopy_WithChildren_ParentOfCopiedChildrenIsNewComposite(self):
+        self.composite.addChild(self.child)
+        copy = self.composite.copy()
+        self.assertEqual(copy, copy.children()[0].parent())
+    
+    def testCopy_WithParent(self):
+        self.composite.addChild(self.child)
+        copy = self.child.copy()
+        self.assertEqual(self.child.parent(), copy.parent())
+        
+    def testCopy_WithChildren_DoesNotCreateExtraChildrenForOriginal(self):
+        self.composite.addChild(self.child)
+        copy = self.composite.copy()
+        self.assertEqual(1, len(self.composite.children()))
+
         
 class ObservableCompositeTest(test.TestCase):
     def setUp(self):

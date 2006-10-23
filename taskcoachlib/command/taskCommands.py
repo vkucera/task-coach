@@ -125,28 +125,12 @@ class NewSubTaskCommand(base.BaseCommand, SaveTaskStateMixin):
         self.redoStates()
 
 
-class EditTaskCommand(base.BaseCommand, SaveTaskStateMixin):
+class EditTaskCommand(base.EditCommand):
     def name(self):
         return _('Edit task')
-
-    def __init__(self, *args, **kwargs):
-        super(EditTaskCommand, self).__init__(*args, **kwargs)
-        self.saveStates(self.getTasksToSave())
-        # FIXME: EditTaskCommand doesn't need to get the tasklist as first argument
         
-    def getTasksToSave(self):
+    def getItemsToSave(self):
         return set([relative for task in self.items for relative in task.family()])
-
-    def do_command(self):
-        super(EditTaskCommand, self).do_command()
-
-    def undo_command(self):
-        self.undoStates()
-        super(EditTaskCommand, self).undo_command()
-
-    def redo_command(self):
-        self.redoStates()
-        super(EditTaskCommand, self).redo_command()
         
         
 class AddAttachmentToTaskCommand(base.BaseCommand):
