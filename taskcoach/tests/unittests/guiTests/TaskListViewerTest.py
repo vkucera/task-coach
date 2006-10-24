@@ -71,10 +71,13 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.task = task.Task('task')
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             dummy.DummyUICommands(), self.settings, categories=[])
-
+        
     def assertItems(self, *tasks):
         self.assertEqual(len(tasks), self.viewer.size())
+        print 'assertItems before enumerating tasks'
         for index, task in enumerate(tasks):
+            item = self.viewer.widget.GetItem(index)
+            print index, task, self.viewer.widget.GetItem(index).GetText(), '.'
             self.assertEqual(render.subject(task, recursively=True), 
                              self.viewer.widget.GetItemText(index))
                              
