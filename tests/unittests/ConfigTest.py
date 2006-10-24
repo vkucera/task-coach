@@ -52,7 +52,7 @@ class SettingsTest(SettingsTestCase):
                          self.settings.getlist('file', 'recentfiles'))
         
     def testSetList_UnicodeStrings(self):
-        recentfiles = ['Ã¼mlaut', 'Î£Î¿Î¼Î· Ï‡Ï�ÎµÎµÎº']
+        recentfiles = ['√É¬ºmlaut', '√é¬£√é¬ø√é¬º√é¬∑ √è‚Ä°√èÔøΩ√é¬µ√é¬µ√é¬∫']
         self.settings.setlist('file', 'recentfiles', recentfiles)
         self.assertEqual(recentfiles, 
                          self.settings.getlist('file', 'recentfiles'))
@@ -107,7 +107,7 @@ class UnicodeAwareConfigParserTest(test.TestCase):
         self.parser.add_section('section')
         self.iniFile = StringIO.StringIO()
         self.asciiValue = 'ascii'
-        self.unicodeValue = u'Ã�â€¦ÃŽÂ½ÃŽÂ¹ÃŽÂ³ÃŽÂ¿ÃŽÂ´ÃŽÂ·'
+        self.unicodeValue = u'√ÉÔøΩ√¢‚Ç¨¬¶√É≈Ω√Ç¬Ω√É≈Ω√Ç¬π√É≈Ω√Ç¬≥√É≈Ω√Ç¬ø√É≈Ω√Ç¬¥√É≈Ω√Ç¬∑'
         
     def testWriteAsciiValue(self):
         self.parser.set('section', 'setting', self.asciiValue)
@@ -159,8 +159,8 @@ class SettingsFileLocationTest(SettingsTestCase):
         
     def testPathWhenSavingIniFileInProgramDirAndRunFromZipFile(self):
         self.settings.setboolean('file', 'saveinifileinprogramdir', True)
-        sys.argv.insert(0, r'd:\TaskCoach\library.zip')
-        self.assertEqual(r'd:\TaskCoach', self.settings.path())
+        sys.argv.insert(0, os.path.join('d:', 'TaskCoach', 'library.zip'))
+        self.assertEqual(os.path.join('d:', 'TaskCoach'), self.settings.path())
         del sys.argv[0]
         
     def testSettingSaveIniFileInProgramDirToFalseRemovesIniFile(self):
