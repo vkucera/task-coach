@@ -74,10 +74,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         
     def assertItems(self, *tasks):
         self.assertEqual(len(tasks), self.viewer.size())
-        print 'assertItems before enumerating tasks'
         for index, task in enumerate(tasks):
-            item = self.viewer.widget.GetItem(index)
-            print index, task, self.viewer.widget.GetItem(index).GetText(), '.'
             self.assertEqual(render.subject(task, recursively=True), 
                              self.viewer.widget.GetItemText(index))
                              

@@ -247,16 +247,21 @@ class CategoriesPage(TaskEditorPage):
                      self.__categories[index] in self.__categories.rootItems()]),
             lambda parentIndex: [index for index in range(len(self.__categories)) if \
                      self.__categories[index] in self.__categories[parentIndex].children()], 
-            lambda index: self.__categories[index].isFiltered(),
+            lambda index: task in self.__categories[index].tasks(),
             lambda *args: None, lambda *args: None,
             lambda *args: None)
         categoriesBox.add(self._treeCtrl, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
-        self.add(categoriesBox, border=5)
+        self.add(categoriesBox)
         self.fit()
         
     def ok(self):
-        pass
+        self._treeCtrl.ExpandAll(self._treeCtrl.GetRootItem())
+        for index in range(len(self.__categories)):
+            if self._treeCtrl[index].IsChecked():
+                self.__categories[index].addTask(self._task)
+            else:
+                self.__categories[index].removeTask(self._task)
     
 
 class AttachmentPage(TaskEditorPage):

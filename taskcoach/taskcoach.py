@@ -4,7 +4,7 @@ import sys
 if not hasattr(sys, "frozen"):
     import wxversion
     try:
-        wxversion.ensureMinimal("2.7")
+        wxversion.select("2.6")
     except:
         pass
     import taskcoachlib
