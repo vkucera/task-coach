@@ -45,6 +45,20 @@ class CategoryTest(test.TestCase):
     def testAddTask(self):
         self.category.addTask(self.task)
         self.assertEqual([self.task], self.category.tasks())
+        
+    def testAddTaskTwice(self):
+        self.category.addTask(self.task)
+        self.category.addTask(self.task)
+        self.assertEqual([self.task], self.category.tasks())
+        
+    def testRemoveTask(self):
+        self.category.addTask(self.task)
+        self.category.removeTask(self.task)
+        self.failIf(self.category.tasks())
+        
+    def testRemoveTaskThatsNotInThisCategory(self):
+        self.category.removeTask(self.task)
+        self.failIf(self.category.tasks())
     
     def testCreateWithTasks(self):
         cat = category.Category('category', [self.task])

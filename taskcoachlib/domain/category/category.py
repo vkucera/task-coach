@@ -49,7 +49,12 @@ class Category(patterns.ObservableComposite):
         return result
     
     def addTask(self, task):
-        self.__tasks.append(task)
+        if task not in self.__tasks: # FIXME: use set
+            self.__tasks.append(task)
+            
+    def removeTask(self, task):
+        if task in self.__tasks:
+            self.__tasks.remove(task)
         
     def isFiltered(self):
         return self.__filtered

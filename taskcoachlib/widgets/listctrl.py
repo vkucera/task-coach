@@ -59,6 +59,8 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
     def refresh(self, count):
         ''' Refresh the contents of the (visible part of the) ListCtrl '''
         self.SetItemCount(count)
+        if count == 0:
+            self.DeleteAllItems()
         '''
         if count == 0:
             self.DeleteAllItems()

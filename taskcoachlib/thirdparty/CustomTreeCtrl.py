@@ -3446,7 +3446,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         if not item:
             raise "\nERROR: Invalid Tree Item. "
         
-        if not self.HasFlag(TR_HIDE_ROOT) or item != GetRootItem():
+        if not self.HasFlag(TR_HIDE_ROOT) or item != self.GetRootItem():
             self.Expand(item)
             if not self.IsExpanded(item):
                 return
