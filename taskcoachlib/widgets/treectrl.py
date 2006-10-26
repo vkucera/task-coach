@@ -58,6 +58,10 @@ class TreeMixin(object):
             self.dragAndDropCommand(event)
 
     def onDragging(self, event):
+        if not event.Dragging():
+            self.GetMainWindow().Unbind(wx.EVT_MOTION)
+            self.__resetCursor()
+            return
         item, flags, column = self.HitTest((event.GetX(), event.GetY()))
         if self.__isValidDropTarget(item):
             self.__setCursorToDragging()
@@ -68,6 +72,10 @@ class TreeMixin(object):
         elif flags & (wx.TREE_HITTEST_NOWHERE | wx.TREE_HITTEST_BELOW | 
                       wx.TREE_HITTEST_ABOVE | wx.TREE_HITTEST_TOLEFT |
                       wx.TREE_HITTEST_TORIGHT):
+            self.UnselectAll()
+        if item:
+            self.SelectItem(item)
+        else:
             self.UnselectAll()
         event.Skip()
         
@@ -395,7 +403,7 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
         item, flags = super(TreeCtrl, self).HitTest(*args, **kwargs)
         column = 0
         return item, flags, column
-
+    
 
 class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtrl): 
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,

@@ -4,24 +4,11 @@ import domain.task as task
 import domain.effort as effort
 import domain.date as date
 
-class SaveTaskStateMixin(base.SaveStateMixin):
-    def getAncestors(self, tasks): 
-        ancestors = []
-        for task in tasks:
-            ancestors.extend(task.ancestors())
-        return ancestors
-    
-    def getAllChildren(self, tasks):
-        allChildren = []
-        for task in tasks:
-            allChildren.extend(task.children(recursive=True))
-        return allChildren
-
-    def getAllParents(self, tasks):
-        return [task.parent() for task in tasks if task.parent() != None]
+class SaveTaskStateMixin(base.SaveStateMixin, base.CompositeMixin):
+    pass
 
 
-class PasteIntoTaskCommand(base.PasteCommand):
+class PasteIntoTaskCommand(base.PasteCommand, base.CompositeMixin):
     def name(self):
         return _('Paste into task')
 
@@ -34,52 +21,11 @@ class PasteIntoTaskCommand(base.PasteCommand):
         return parents + self.getAncestors(parents) + \
             super(PasteIntoTaskCommand, self).getItemsToSave()
 
-    def getAncestors(self, tasks): 
-        ancestors = []
-        for task in tasks:
-            ancestors.extend(task.ancestors())
-        return ancestors
 
-
-class DragAndDropTaskCommand(base.BaseCommand, SaveTaskStateMixin):
+class DragAndDropTaskCommand(base.DragAndDropCommand):
     def name(self):
-        return _('Drag and drop')
-    
-    def __init__(self, *args, **kwargs):
-        dropTargets = kwargs.pop('drop') 
-        if dropTargets:
-            self.__itemToDropOn = dropTargets[0]
-        else:
-            self.__itemToDropOn = None
-        super(DragAndDropTaskCommand, self).__init__(*args, **kwargs)
-        self.saveStates(self.getTasksToSave())
-        
-    def getTasksToSave(self):
-        if self.__itemToDropOn is None:
-            return self.items
-        else:
-            return [self.__itemToDropOn] + self.items
-    
-    def canDo(self):
-        return self.__itemToDropOn not in (self.items + \
-            self.getAllChildren(self.items) + self.getAllParents(self.items))
-    
-    def do_command(self):
-        self.list.removeItems(self.items)
-        for item in self.items:
-            item.setParent(self.__itemToDropOn)
-        self.list.extend(self.items)
-        
-    def undo_command(self):
-        self.list.removeItems(self.items)
-        self.undoStates()
-        self.list.extend(self.items)
-        
-    def redo_command(self):
-        self.list.removeItems(self.items)
-        self.redoStates()
-        self.list.extend(self.items)
-        
+        return _('Drag and drop task')
+     
 
 class NewTaskCommand(base.BaseCommand):
     def name(self):

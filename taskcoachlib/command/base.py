@@ -67,6 +67,25 @@ class SaveStateMixin:
             object.__setstate__(state)
 
 
+class CompositeMixin(object):
+    ''' Mixin class for commands that deal with composites. '''
+    def getAncestors(self, composites): 
+        ancestors = []
+        for composite in composites:
+            ancestors.extend(composite.ancestors())
+        return ancestors
+    
+    def getAllChildren(self, composites):
+        allChildren = []
+        for composite in composites:
+            allChildren.extend(composite.children(recursive=True))
+        return allChildren
+
+    def getAllParents(self, composites):
+        return [composite.parent() for composite in composites \
+                if composite.parent() != None]
+
+
 class CopyCommand(BaseCommand):
     def name(self):
         return _('Copy')
@@ -181,3 +200,44 @@ class EditCommand(BaseCommand, SaveStateMixin):
     def redo_command(self):
         self.redoStates()
         super(EditCommand, self).redo_command()
+        
+
+class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
+    def name(self):
+        return _('Drag and drop')
+    
+    def __init__(self, *args, **kwargs):
+        dropTargets = kwargs.pop('drop')
+        if dropTargets:
+            self.__itemToDropOn = dropTargets[0]
+        else:
+            self.__itemToDropOn = None
+        super(DragAndDropCommand, self).__init__(*args, **kwargs)
+        self.saveStates(self.getItemsToSave())
+        
+    def getItemsToSave(self):
+        if self.__itemToDropOn is None:
+            return self.items
+        else:
+            return [self.__itemToDropOn] + self.items
+    
+    def canDo(self):
+        return self.__itemToDropOn not in (self.items + \
+            self.getAllChildren(self.items) + self.getAllParents(self.items))
+    
+    def do_command(self):
+        self.list.removeItems(self.items)
+        for item in self.items:
+            item.setParent(self.__itemToDropOn)
+        self.list.extend(self.items)
+        
+    def undo_command(self):
+        self.list.removeItems(self.items)
+        self.undoStates()
+        self.list.extend(self.items)
+        
+    def redo_command(self):
+        self.list.removeItems(self.items)
+        self.redoStates()
+        self.list.extend(self.items)
+        
