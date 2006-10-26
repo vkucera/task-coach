@@ -38,3 +38,7 @@ class EditCategoryCommand(base.EditCommand):
     def getItemsToSave(self):
         return self.items
     
+    
+class DragAndDropCategoryCommand(base.DragAndDropCommand):
+    def name(self):
+        return _('Drag and drop category')

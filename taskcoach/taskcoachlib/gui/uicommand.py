@@ -972,7 +972,16 @@ class CategoryEdit(NeedsSelectedCategory, MainWindowCommand, ViewerCommand,
                                         self.viewer.curselection()),
             self.categories, self.uiCommands, bitmap=self.bitmap)
         editor.Show(show)
-        
+
+
+class CategoryDragAndDrop(CategoriesCommand, ViewerCommand):
+    def doCommand(self, event):
+        dragAndDropCommand = command.DragAndDropCategoryCommand( \
+            self.categories, self.viewer.draggedItems(), 
+            drop=self.viewer.curselection())
+        if dragAndDropCommand.canDo():
+            dragAndDropCommand.do()
+
                                                         
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
@@ -1245,9 +1254,7 @@ class UICommands(dict):
             bitmap='email')
         self['addattachmenttotask'] = TaskAddAttachment(taskList=taskList,
                                                         viewer=viewer)
-        # Task related, but not on any menu:
-        self['draganddroptask'] = TaskDragAndDrop(taskList=taskList, 
-                                                  viewer=viewer)
+
 
         # Effort menu
         self['neweffort'] = EffortNew(mainwindow=mainwindow, viewer=viewer,
@@ -1277,6 +1284,12 @@ class UICommands(dict):
 
         # Taskbar menu
         self['restore'] = MainWindowRestore(mainwindow=mainwindow)
+        
+        # Drag and drop related, not on any menu:
+        self['draganddroptask'] = TaskDragAndDrop(taskList=taskList, 
+                                                  viewer=viewer)
+        self['draganddropcategory'] = CategoryDragAndDrop(viewer=viewer,
+            categories=categories)
 
     def createRecentFileOpenUICommand(self, filename, index):
         return RecentFileOpen(filename=filename, index=index, 

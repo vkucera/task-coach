@@ -1,4 +1,4 @@
-import test, command
+import test, command, patterns
 from unittests import asserts
 from CommandTestCase import CommandTestCase
 import domain.category as category
@@ -69,3 +69,36 @@ class EditCategoryCommandTest(CategoryCommandTestCase):
         self.editCategory([self.category])
         self.assertDoUndoRedo(lambda: self.assertEqual('new', self.category.subject()),
             lambda: self.assertEqual('category', self.category.subject()))
+
+
+class DragAndDropCategoryCommand(CategoryCommandTestCase):
+    def setUp(self):
+        super(DragAndDropCategoryCommand, self).setUp()
+        self.parent = category.Category('parent')
+        self.child = category.Category('child')
+        self.grandchild = category.Category('grandchild')
+        self.parent.addChild(self.child)
+        self.child.addChild(self.grandchild)
+        self.categories.extend([self.parent, self.child])
+    
+    def dragAndDrop(self, dropTarget, categories=None):
+        command.DragAndDropCategoryCommand(self.categories, categories or [], 
+                                       drop=dropTarget).do()
+                                       
+    def testCannotDropOnParent(self):
+        self.dragAndDrop([self.parent], [self.child])
+        self.failIf(patterns.CommandHistory().hasHistory())
+        
+    def testCannotDropOnChild(self):
+        self.dragAndDrop([self.child], [self.parent])
+        self.failIf(patterns.CommandHistory().hasHistory())
+        
+    def testCannotDropOnGrandchild(self):
+        self.dragAndDrop([self.grandchild], [self.parent])
+        self.failIf(patterns.CommandHistory().hasHistory())
+
+    def testDropAsRootTask(self):
+        self.dragAndDrop([], [self.grandchild])
+        self.assertDoUndoRedo(lambda: self.assertEqual(None, 
+            self.grandchild.parent()), lambda:
+            self.assertEqual(self.child, self.grandchild.parent()))

@@ -569,7 +569,8 @@ class CategoryViewer(TreeViewer):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage,
             self.getItemAttr, self.getItemId, self.getRootIndices, 
             self.getChildIndices, self.onSelect, 
-            self.uiCommands['editcategory'], None, 
+            self.uiCommands['editcategory'], 
+            self.uiCommands['draganddropcategory'], 
             self.createCategoryPopupMenu())
         return widget
 
