@@ -452,7 +452,7 @@ class EffortEditBook(widgets.BookPage):
 
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
-            self.preventNegativeEffortDuration, noneAllowed=False)
+            self.onPeriodChanged, noneAllowed=False)
         startFromLastEffortButton = wx.Button(self, 
             label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, 
@@ -461,7 +461,7 @@ class EffortEditBook(widgets.BookPage):
             startFromLastEffortButton.Disable()
         
         self._stopEntry = widgets.DateTimeCtrl(self, self._effort.getStop(),
-            self.preventNegativeEffortDuration, noneAllowed=True)
+            self.onPeriodChanged, noneAllowed=True)
         
         flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
         self.addEntry(_('Start'), self._startEntry, 
@@ -485,9 +485,14 @@ class EffortEditBook(widgets.BookPage):
         self._effort.setStop(self._stopEntry.GetValue())
         self._effort.setDescription(self._descriptionEntry.GetValue())
 
-    def preventNegativeEffortDuration(self, *args, **kwargs):
-        if not hasattr(self, '_stopEntry'): # check that both entries have been created
+    def onPeriodChanged(self, *args, **kwargs):
+        if not hasattr(self, '_stopEntry'): # Check that both entries exist
             return
+        # We use CallAfter to give the DatePickerCtrl widgets a chance 
+        # to update themselves
+        wx.CallAfter(self.preventNegativeEffortDuration)
+        
+    def preventNegativeEffortDuration(self):
         if self._startEntry.GetValue() > self._stopEntry.GetValue():
             self._editor.disableOK()
         else:
