@@ -88,6 +88,9 @@ class Viewer(wx.Panel):
     def isShowingCategories(self):
         return False
     
+    def visibleColumns(self):
+        return [widgets.Column(_('Subject'))]
+    
     """
     def onActivateViewer(self):
         ''' Called by ViewerContainer when a viewer becomes active, i.e. the
