@@ -167,11 +167,9 @@ class DateTimeCtrl(Panel):
         self._callback(event)
 
     def _timeCtrlCallback(self, *args, **kwargs):
-        print '_timeCtrlCallback'
         self._callback(*args, **kwargs)
         
     def _dateCtrlCallback(self, *args, **kwargs):
-        print '_dateCtrlCallback'
         if not self._isDateCtrlEnabled(): 
             self._timeCtrl.SetValue(date.Time())
         elif self._timeCtrl.GetValue() == date.Time():

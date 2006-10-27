@@ -73,8 +73,11 @@ class TreeMixin(object):
                       wx.TREE_HITTEST_ABOVE | wx.TREE_HITTEST_TOLEFT |
                       wx.TREE_HITTEST_TORIGHT):
             self.UnselectAll()
+        selections = self.GetSelections()
         if item:
-            self.SelectItem(item)
+            if selections != [item]:
+                self.UnselectAll()
+                self.SelectItem(item)
         else:
             self.UnselectAll()
         event.Skip()
@@ -308,7 +311,10 @@ class TreeMixin(object):
     def itemUnchanged(self, item, index, itemChildIndex):
         oldIndex, oldId, oldChildrenCount, oldImage, oldText, \
             oldAttr, oldChildIndex = self.GetPyData(item)
+        hadChildren = bool(oldChildrenCount)
+        hasChildren = bool(self.getChildIndices(index))
         return itemChildIndex == oldChildIndex and \
+            hasChildren == hadChildren and \
             self.getItemImage(index) == oldImage and \
             self.getItemText(index) == oldText and \
             self.getItemAttr(index).GetTextColour() == oldAttr.GetTextColour()
