@@ -1,6 +1,9 @@
 import wx, itemctrl, thirdparty
 import wx.gizmos as gizmos
-import thirdparty.CustomTreeCtrl as customtree
+try:
+    import wx.lib.customtreectrl as customtree # for wxPython >= 2.7.1
+except:
+    import thirdparty.CustomTreeCtrl as customtree # for wxPython < 2.7.1
 
         
 class TreeMixin(object):
