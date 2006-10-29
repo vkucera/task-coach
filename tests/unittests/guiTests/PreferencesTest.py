@@ -17,5 +17,6 @@ class PreferencesTest(test.wxTestCase):
     def testOk(self):
         self.preferences[4]._colorSettings[0][2].SetColour(self.newColor)
         self.preferences.ok()
-        self.assertEqual(self.newColor, eval(self.settings.get('color', 'activetasks')))
+        self.assertEqual(self.newColor, 
+            eval(self.settings.get('color', 'activetasks'))[:3])
         

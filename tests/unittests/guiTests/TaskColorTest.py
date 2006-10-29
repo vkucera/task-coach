@@ -31,5 +31,6 @@ class TaskColorTest(test.TestCase):
 
     def testInactive(self):
         inactive = task.Task(startDate=date.Tomorrow())
-        self.assertColor(inactive, wx.NamedColour('LIGHT GREY'))
+        self.assertColor(inactive, 
+            wx.Colour(*eval(self.settings.get('color', 'inactivetasks'))))
 
