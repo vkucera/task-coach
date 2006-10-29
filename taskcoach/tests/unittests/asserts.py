@@ -1,14 +1,4 @@
-class ListAsserts(object):
-    def assertEqualLists(self, expected, actual):
-        self.assertEqual(len(expected), len(actual))
-        for item in expected:
-            self.failUnless(item in actual)
-
-    def assertEmptyList(self, list):
-        self.assertEqual(0, len(list))
-        
-        
-class TaskListAsserts(ListAsserts):
+class TaskListAsserts(object):
     def assertTaskList(self, expected):
         self.assertEqualLists(expected, self.taskList)
         self.assertAllChildrenInTaskList()
@@ -19,10 +9,10 @@ class TaskListAsserts(ListAsserts):
                 self.failUnless(child in self.taskList)
 
     def assertEmptyTaskList(self):
-        self.assertEmptyList(self.taskList)
+        self.failIf(self.taskList)
 
 
-class EffortListAsserts(ListAsserts):
+class EffortListAsserts(object):
     def assertEffortList(self, expected):
         self.assertEqualLists(expected, self.effortList)
         
