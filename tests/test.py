@@ -11,6 +11,11 @@ import taskcoach
     
 
 class TestCase(unittest.TestCase):
+    def assertEqualLists(self, expectedList, actualList):
+        self.assertEqual(len(expectedList), len(actualList))
+        for item in expectedList:
+            self.failUnless(item in actualList)
+
     def tearDown(self):
         import patterns
         patterns.Publisher().clear()

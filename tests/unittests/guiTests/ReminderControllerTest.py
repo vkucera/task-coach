@@ -1,5 +1,4 @@
 import test, gui, patterns
-import unittests.asserts as asserts
 import domain.task as task
 import domain.date as date
 
@@ -59,8 +58,7 @@ class ReminderControllerTest(test.TestCase):
                 date.Clock.eventType(self.reminderDateTime)))
 
 
-class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase,
-        asserts.TaskListAsserts):
+class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.reminderDateTime = date.DateTime.now() + date.TimeDelta(hours=1)

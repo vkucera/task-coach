@@ -201,7 +201,7 @@ class CompositeCollectionTest(test.TestCase):
         
     def testRootItems_MultipleRootItems(self):
         self.collection.extend([self.composite, self.composite2])
-        self.assertEqual([self.composite, self.composite2], 
+        self.assertEqualLists([self.composite, self.composite2], 
                          self.collection.rootItems())
         
     def testRootItems_RootAndChildItems(self):
@@ -217,12 +217,14 @@ class CompositeCollectionTest(test.TestCase):
     def testAddRootWithChildItems(self):
         self.composite.addChild(self.composite2)
         self.collection.append(self.composite)
-        self.assertEqual([self.composite, self.composite2], self.collection)
+        self.assertEqualLists([self.composite, self.composite2], 
+                              self.collection)
         
     def testAddRootWithChildItems_AddAllAtOnce(self):
         self.composite.addChild(self.composite2)
         self.collection.extend([self.composite, self.composite2])
-        self.assertEqual([self.composite, self.composite2], self.collection)
+        self.assertEqualLists([self.composite, self.composite2], 
+                              self.collection)
 
     def testAddRootWithChildItems_DoesNotAddChildToParent(self):
         self.composite.addChild(self.composite2)
@@ -281,9 +283,8 @@ class CompositeCollectionTest(test.TestCase):
         self.composite2.addChild(grandChild)
         self.collection.append(self.composite)
         self.collection.remove(self.composite2)
-        self.assertEqual([patterns.Event(self.collection, 
-            self.collection.removeItemEventType(), self.composite2, grandChild)], 
-            self.events)
+        self.assertEqualLists([self.composite2, grandChild],
+                              self.events[0].values())
     
     def testRemoveCompositeWithChildrenDoesNotBreakParentChildRelation(self):
         self.composite.addChild(self.composite2)
