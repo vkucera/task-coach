@@ -51,7 +51,10 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
         return self.getItemImage(index)
 
     def OnGetItemAttr(self, index):
-        return self.getItemAttr(index)
+        # We need to keep a reference to the item attribute to prevent it
+        # from being garbage collected too soon.
+        self.__itemAttribute = self.getItemAttr(index)
+        return self.__itemAttribute
         
     def onSelect(self, event):
         self.selectCommand()
