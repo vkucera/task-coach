@@ -963,7 +963,7 @@ class CategoryEdit(NeedsSelectedCategory, MainWindowCommand, ViewerCommand,
                    CategoriesCommand, UICommandsCommand):
     def __init__(self, *args, **kwargs):
         super(CategoryEdit, self).__init__(bitmap='edit',
-            menuText=_('Edit category'),
+            menuText=_('Edit category...'),
             helpText=_('Edit the selected categories'), *args, **kwargs)
         
     def doCommand(self, event, show=True):
