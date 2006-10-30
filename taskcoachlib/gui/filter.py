@@ -1,7 +1,10 @@
 import wx
 import widgets, patterns
 from i18n import _ 
-import thirdparty.CustomTreeCtrl as customtree
+try:
+    import wx.lib.customtreectrl as customtree # for wxPython >= 2.7.1
+except:
+    import thirdparty.CustomTreeCtrl as customtree # for wxPython < 2.7.1
 import domain.category as category
 
 class SubjectFilterPanel(wx.Panel):

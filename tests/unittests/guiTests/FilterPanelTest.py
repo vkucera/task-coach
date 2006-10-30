@@ -1,5 +1,10 @@
 import test, gui, config, widgets
 import domain.category as category
+try:
+    import wx.lib.customtreectrl as customtree # for wxPython >= 2.7.1
+except ImportError:
+    import thirdparty.CustomTreeCtrl as customtree # for wxPython < 2.7.1
+
 
 class CategoriesFilterPanelTest(test.wxTestCase):
     def setUp(self):
@@ -33,7 +38,6 @@ class CategoriesFilterPanelTest(test.wxTestCase):
     def testSetFilterThroughCheckTreeCtrl(self):
         self.categories.append(self.category)
         self.panel._treeCtrl[0].Check()
-        import thirdparty.CustomTreeCtrl as customtree
         event = customtree.CommandTreeEvent(customtree.wxEVT_TREE_ITEM_CHECKED, 0)
         event.SetItem(self.panel._treeCtrl[0])
         self.panel._treeCtrl.ProcessEvent(event)

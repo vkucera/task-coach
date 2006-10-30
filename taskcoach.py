@@ -4,7 +4,7 @@ import sys
 if not hasattr(sys, "frozen"):
     import wxversion
     try:
-        wxversion.select("2.6")
+        wxversion.select("2.7")
     except:
         pass
     import taskcoachlib
@@ -16,6 +16,7 @@ if not hasattr(sys, "frozen"):
     del taskcoachlib
 
 import wx
+wx.SystemOptions.SetOptionInt('mac.listctrl.always_use_generic', 1)
 
 class wxApp(wx.App):
     def OnInit(self):
