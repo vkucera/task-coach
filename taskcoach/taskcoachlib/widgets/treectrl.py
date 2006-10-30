@@ -2,7 +2,7 @@ import wx, itemctrl, thirdparty
 import wx.gizmos as gizmos
 try:
     import wx.lib.customtreectrl as customtree # for wxPython >= 2.7.1
-except:
+except ImportError:
     import thirdparty.CustomTreeCtrl as customtree # for wxPython < 2.7.1
 
         
@@ -414,7 +414,7 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
         return item, flags, column
     
 
-class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtrl): 
+class CustomTreeCtrl(itemctrl.CtrlWithItems, customtree.CustomTreeCtrl, TreeMixin): 
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices, selectCommand,
             editCommand, dragAndDropCommand, 
