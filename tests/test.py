@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import wxversion
-wxversion.select("2.7")
+wxversion.select("2.6")
 
 import sys, unittest, os, wx, time, glob, coverage
 projectRoot = os.path.abspath('..')

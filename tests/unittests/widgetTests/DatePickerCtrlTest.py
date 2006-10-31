@@ -30,11 +30,12 @@ class DatePickerCtrlWithStyleDP_ALLOWNONETest(test.wxTestCase):
         self.failIf(value.IsValid())
 
     def testSetValue(self):
-        today = wx.DateTime()
-        today.SetToCurrent()
-        self.datePicker.SetValue(today)
+        someDate = wx.DateTime()
+        someDate.SetToCurrent()
+        someDate.SetYear(2005)
+        self.datePicker.SetValue(someDate)
         value = self.datePicker.GetValue()
-        self.failUnless(value.IsSameDate(today))
+        self.failUnless(value.IsSameDate(someDate))
 
     def testSetValueInvalid(self):
         invalid = wx.DateTime()

@@ -2,7 +2,7 @@ import test, wx
 
 ''' These are unittests of wxPython functionality. Of course, the goal is
     not to test all wxPython functions, but rather to document platform
-    inconsistencies or surpiring behaviour. '''
+    inconsistencies or surprising behaviour. '''
 
 
 class TextCtrlTest(test.wxTestCase):
@@ -28,3 +28,13 @@ class DatePickerCtrlTest(test.wxTestCase):
             self.failIf(value.IsValid())
         else:
             self.failUnless(value.IsValid())
+
+    def testAssertionOnGetValueOnWxPython2_7_1(self):
+        dpc = wx.DatePickerCtrl(self.frame)
+        today = wx.DateTime()
+        today.SetToCurrent()
+        dpc.SetValue(today)
+        if wx.VERSION < (2,7):
+            dpc.GetValue()
+        else:
+            self.assertRaises(wx.PyAssertionError, dpc.GetValue)
