@@ -62,10 +62,10 @@ class MainWindow(WindowWithPersistentDimensions):
         self.panel = wx.Panel(self, -1)
         self.viewer = viewercontainer.ViewerNotebook(self.panel, 
             self.settings, 'mainviewer') 
-        self.createFilterSideBar()
-        self.initLayout()
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.taskFile, self.effortList, self.taskFile.categories())
+        self.createFilterSideBar()
+        self.initLayout()
         viewerfactory.addTaskViewers(self.viewer, self.taskFile, 
             self.uiCommands, self.settings, self.taskFile.categories())
         viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),

@@ -29,6 +29,9 @@ class TreeMixin(object):
         self.Bind(wx.EVT_TREE_END_DRAG, self.onEndDrag)
         
     def onBeginDrag(self, event):
+        if not self.dragAndDropCommand:
+            event.Veto()
+            return
         self.dragItem = event.GetItem()
         if self.dragItem:
             event.Allow()
@@ -65,7 +68,7 @@ class TreeMixin(object):
             self.GetMainWindow().Unbind(wx.EVT_MOTION)
             self.__resetCursor()
             return
-        item, flags, column = self.HitTest((event.GetX(), event.GetY()))
+        item, flags, column = self.HitTest(wx.Point(event.GetX(), event.GetY()))
         if self.__isValidDropTarget(item):
             self.__setCursorToDragging()
         else:

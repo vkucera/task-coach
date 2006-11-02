@@ -62,20 +62,10 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
     def refresh(self, count):
         ''' Refresh the contents of the (visible part of the) ListCtrl '''
         self.SetItemCount(count)
-        if count == 0:
-            self.DeleteAllItems()
-        '''
-        if count == 0:
-            self.DeleteAllItems()
-        else:
-            startRow = self.GetTopItem()
-            stopRow = min(startRow + self.GetCountPerPage(), 
-                          self.GetItemCount() - 1)
-            print 'refreshing %d to %d'%(startRow, stopRow)
-            self.RefreshItems(startRow, stopRow)
-             
-            #self.Refresh() # FIXME: Refresh not necessary?
-        '''
+        startRow = self.GetTopItem()
+        stopRow = min(startRow + self.GetCountPerPage(), 
+                      self.GetItemCount() - 1)
+        self.RefreshItems(startRow, stopRow)
         
     def refreshItem(self, index):
         self.RefreshItem(index)

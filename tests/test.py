@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-import wxversion
-wxversion.select("2.7")
-
 import sys, unittest, os, wx, time, glob, coverage
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
