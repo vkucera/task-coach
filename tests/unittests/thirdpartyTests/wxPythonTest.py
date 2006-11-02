@@ -34,7 +34,7 @@ class DatePickerCtrlTest(test.wxTestCase):
         today = wx.DateTime()
         today.SetToCurrent()
         dpc.SetValue(today)
-        if wx.VERSION < (2,7):
+        if wx.VERSION < (2,7) or '__WXMAC__' in wx.PlatformInfo:
             dpc.GetValue()
         else:
             self.assertRaises(wx.PyAssertionError, dpc.GetValue)
