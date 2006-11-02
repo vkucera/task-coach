@@ -3,7 +3,7 @@
 from changetypes import *
 
 releases = [
-Release('0.61', 'September ?, 2006',
+Release('0.61.0', 'November 2, 2006',
     bugsFixed=[
         Bug('''Displaying a previously hidden toolbar would result in
 an incorrectly drawn window.''', '1551885'),
@@ -11,6 +11,7 @@ an incorrectly drawn window.''', '1551885'),
         Bug('''Negative effort preventation was not working correctly.''',
             '1575458')],
     featuresAdded=[
+        Feature('''Hierarchical categories.'''),
         Feature('''Export in Comma Separated Values (CSV) format. As
 with export to HTML, the current view is exported.''', '1534862'),
         Feature('''Task Coach can be run from a removable medium, such as a 
