@@ -3,6 +3,10 @@
 from changetypes import *
 
 releases = [
+Release('0.61.1', 'November 3, 2006',
+    bugsFixed=[
+        Bug('''Source distribution was missing some files.''')]),
+
 Release('0.61.0', 'November 2, 2006',
     bugsFixed=[
         Bug('''Displaying a previously hidden toolbar would result in

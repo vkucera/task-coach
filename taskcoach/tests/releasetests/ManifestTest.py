@@ -5,7 +5,8 @@ class ManifestTest(test.TestCase):
         manifestFile = file(os.path.join(test.projectRoot, 'MANIFEST'))
         manifestLines = manifestFile.readlines()
         manifestFile.close()
-        self.manifest = [filename[:-1] for filename in manifestLines]
+        self.manifest = [os.path.join(test.projectRoot, filename[:-1]) 
+                         for filename in manifestLines]
 
     def missingPyFiles(self, *dir):
         missing = []
@@ -13,7 +14,6 @@ class ManifestTest(test.TestCase):
             pyfiles = [os.path.join(root, filename) for filename in files 
                        if filename.endswith('.py')]
             for filename in pyfiles:
-                filename = filename.strip(test.projectRoot + os.sep)
                 if filename not in self.manifest:
                     missing.append(filename)
             if 'CVS' in dirs:

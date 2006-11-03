@@ -58,6 +58,12 @@ pages['donations'] = \
 
 pages['changes'] = file('changes.html').read()
 
+try:
+    md5 = '<P>The MD5 digests for the files are as follows:' + \
+        file('md5digests.html').read() + '</P>'
+except IOError:
+    md5 = ''
+
 pages['download'] = \
 '''        <H3>Download %(name)s</H3>
         <P>You can download either the source distribution, in which
@@ -70,8 +76,7 @@ pages['download'] = \
         (or not) on other platforms.</P>
         <P>Download %(name)s from <A HREF="https://sourceforge.net/project/showfiles.php?group_id=130831">Sourceforge</A>.
         </P>
-        <P>The MD5 digests for the files are as follows:
-''' + file('md5digests.html').read() + '''</P>'''
+''' + md5 
 
 pages['features'] = \
 '''        <H3>Features</H3>
