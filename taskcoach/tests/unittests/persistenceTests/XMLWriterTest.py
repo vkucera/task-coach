@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import test, persistence
-import cStringIO as StringIO
+import StringIO
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
@@ -15,8 +17,8 @@ class XMLWriterTest(test.TestCase):
             
     def __writeAndRead(self):
         self.writer.write(self.taskList, self.categoryContainer)
-        self.fd.reset()
-        return self.fd.read()
+        #self.fd.reset()
+        return self.fd.getvalue()
     
     def expectInXML(self, xmlFragment):
         xml = self.__writeAndRead()
@@ -35,6 +37,10 @@ class XMLWriterTest(test.TestCase):
     def testTaskSubject(self):
         self.task.setSubject('Subject')
         self.expectInXML('subject="Subject"')
+        
+    def testTaskSubjectWithUnicode(self):
+        self.task.setSubject(u'ײַפֿﭖ')
+        self.expectInXML(u'subject="ײַפֿﭖ"')
             
     def testTaskDescription(self):
         self.task.setDescription('Description')
@@ -142,6 +148,11 @@ class XMLWriterTest(test.TestCase):
         filteredCategory = category.Category('test', filtered=True)
         self.categoryContainer.extend([filteredCategory])
         self.expectInXML('<category filtered="True" subject="test"/>')
+
+    def testCategoryWithUnicodeSubject(self):
+        unicodeCategory = category.Category(u'ײַפֿﭖ')
+        self.categoryContainer.extend([unicodeCategory])
+        self.expectInXML(u'<category subject="ײַפֿﭖ"/>')
         
     def testDefaultPriority(self):
         self.expectNotInXML('priority')
