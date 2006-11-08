@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import test, persistence
-import StringIO
+import StringIO # We cannot use CStringIO since unicode strings are used below.
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
@@ -17,7 +17,6 @@ class XMLWriterTest(test.TestCase):
             
     def __writeAndRead(self):
         self.writer.write(self.taskList, self.categoryContainer)
-        #self.fd.reset()
         return self.fd.getvalue()
     
     def expectInXML(self, xmlFragment):
