@@ -63,11 +63,12 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
         ''' Refresh the contents of the (visible part of the) ListCtrl '''
         self.SetItemCount(count)
         if count == 0:
-            return
-        startRow = self.GetTopItem()
-        stopRow = min(startRow + self.GetCountPerPage(), 
-                      self.GetItemCount() - 1)
-        self.RefreshItems(startRow, stopRow)
+            self.DeleteAllItems()
+        else:
+            startRow = self.GetTopItem()
+            stopRow = min(startRow + self.GetCountPerPage(), 
+                          self.GetItemCount() - 1)
+            self.RefreshItems(startRow, stopRow)
         
     def refreshItem(self, index):
         self.RefreshItem(index)

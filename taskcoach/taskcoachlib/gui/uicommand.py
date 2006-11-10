@@ -774,15 +774,16 @@ class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
              if not task.completed()]
 
 
-class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand, 
+                 CategoriesCommand):
     def __init__(self, *args, **kwargs):
         super(TaskDelete, self).__init__(bitmap='delete',
             menuText=_('&Delete task\tCtrl+DEL'),
             helpText=_('Delete the selected task(s)'), *args, **kwargs)
 
     def doCommand(self, event):
-        deleteCommand = command.DeleteCommand(self.taskList, 
-            self.viewer.curselection())
+        deleteCommand = command.DeleteTaskCommand(self.taskList, 
+            self.viewer.curselection(), categories=self.categories)
         deleteCommand.do()
 
 
@@ -1248,7 +1249,8 @@ class UICommands(dict):
             viewer=viewer, uiCommands=self, settings=settings)
         self['markcompleted'] = TaskMarkCompleted(taskList=taskList,
             viewer=viewer)
-        self['delete'] = TaskDelete(taskList=taskList, viewer=viewer)
+        self['delete'] = TaskDelete(taskList=taskList, viewer=viewer, 
+            categories=categories)
         self['mailtask'] = TaskMail(viewer=viewer, menuText=_('Mail task'), 
             helpText=_('Mail the task, using your default mailer'), 
             bitmap='email')

@@ -4,11 +4,13 @@ from CommandTestCase import CommandTestCase
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
+import domain.category as category
 
 
 class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
     def setUp(self):
         self.list = self.taskList = task.TaskList()
+        self.categories = category.CategoryList()
         self.task1 = task.Task('task1')
         self.task2 = task.Task('task2')
         self.taskList.append(self.task1)
@@ -24,7 +26,8 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
     def delete(self, items=None):
         if items == 'all':
             items = list(self.list)
-        command.DeleteCommand(self.list, items or []).do()
+        command.DeleteTaskCommand(self.list, items or [], 
+            categories=self.categories).do()
  
     def cut(self, items=None):
         if items == 'all':
@@ -116,6 +119,14 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
         self.delete('all')
         self.assertDoUndoRedo(self.assertEmptyTaskList,
             lambda: self.assertTaskList(self.originalList))
+        
+    def testDeleteTaskWithCategory(self):
+        cat = category.Category('category')
+        self.categories.append(cat)
+        cat.addTask(self.task1)
+        self.delete('all')
+        self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
+            lambda: self.assertEqual([self.task1], cat.tasks()))
         
 
 class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
