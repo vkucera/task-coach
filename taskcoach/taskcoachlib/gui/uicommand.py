@@ -1034,7 +1034,7 @@ class HelpAbout(InfoCommand):
             helpText=_('Version and contact information about %s')%meta.name, 
             dialogTitle=_('Help: About %s')%meta.name, 
             dialogText=help.aboutHTML, id=wx.ID_ABOUT, *args, **kwargs)
-  
+        
   
 class HelpLicense(InfoCommand):
     def __init__(self, *args, **kwargs):

@@ -59,8 +59,8 @@ class MainWindow(WindowWithPersistentDimensions):
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
-        self.panel = wx.Panel(self, -1)
-        self.viewer = viewercontainer.ViewerNotebook(self.panel, 
+        self.panel = wx.Panel(self)
+        self.viewer = viewercontainer.ViewerAUINotebook(self.panel, 
             self.settings, 'mainviewer') 
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.taskFile, self.effortList, self.taskFile.categories())
