@@ -106,7 +106,6 @@ if sys.argv[1] == 'py2exe':
             'includes' : ['xml.dom.minidom', 'gui.dialog.editor'],
             'excludes' : ['taskcoachlib'],
             'optimize' : 2, 
-            'dll_excludes' : ['gdiplus.dll'],
             'packages' : ['i18n'],
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}}})
  

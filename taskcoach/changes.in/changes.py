@@ -3,6 +3,16 @@
 from changetypes import *
 
 releases = [
+Release('0.61.2', 'November 11, 2006',
+    bugsFixed=[
+        Bug('''Some Linux distributions do not have the BROWSER environment
+variable set, causing errors. Be prepared.''', '1567244'),
+        Bug('''Saving failed with a UnicodeError if a category
+description would contain non-ASCII characters.''', '1589991'),
+        Bug('''Deleting a task would not delete the task from the
+categories it belonged to, resulting in errors upon next loading
+of the task file.''', '1589993')]),
+
 Release('0.61.1', 'November 3, 2006',
     bugsFixed=[
         Bug('''Source distribution was missing some files.''')]),
