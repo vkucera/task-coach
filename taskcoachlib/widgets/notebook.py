@@ -1,4 +1,4 @@
-import wx, widgets, draganddrop
+import wx, wx.aui, widgets, draganddrop
 
 class GridCursor:
     ''' Utility class to help when adding controls to a GridBagSizer. '''
@@ -213,3 +213,20 @@ class Listbook(Book, wx.Listbook):
         return super(Listbook, self).onDragOver(x, y, defaultResult, 
             pageSelectionArea=self.GetListView())
     
+
+class AUINotebook(Book, wx.aui.AuiMultiNotebook):
+    pageChangedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED
+    
+    def __init__(self, *args, **kwargs):
+        super(AUINotebook, self).__init__(*args, **kwargs)
+        self.Bind(wx.aui.EVT_AUI_PANEBUTTON, self.onClosePane)
+        
+    def onClosePane(self, event):
+        print 'onClosePane'
+        
+    def createImageList(self):
+        pass
+    
+    def AddPage(self, page, name, bitmap=None):
+        bitmap = wx.ArtProvider.GetBitmap(bitmap)
+        wx.aui.AuiMultiNotebook.AddPage(self, page, name, bitmap=bitmap)

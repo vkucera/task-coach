@@ -3,6 +3,10 @@
 from changetypes import *
 
 releases = [
+Release('0.62.0', 'November ?, 2006',
+    featuresAdded=[
+        Feature('''?''')]),
+        
 Release('0.61.0', 'November 2, 2006',
     bugsFixed=[
         Bug('''Displaying a previously hidden toolbar would result in

@@ -1,4 +1,5 @@
-from notebook import Notebook, Choicebook, Listbook, BookPage, BoxedBookPage
+from notebook import Notebook, Choicebook, Listbook, AUINotebook, BookPage, \
+    BoxedBookPage
 from dialog import Dialog, NotebookDialog, ListbookDialog, HTMLDialog, \
     AttachmentSelector
 from buttonbox import ButtonBox

@@ -64,3 +64,7 @@ class ViewerChoicebook(ViewerContainer, widgets.Choicebook):
 
 class ViewerListbook(ViewerContainer, widgets.Listbook):
     pass
+
+
+class ViewerAUINotebook(ViewerContainer, widgets.AUINotebook):
+    pass
