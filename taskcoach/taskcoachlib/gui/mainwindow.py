@@ -185,7 +185,8 @@ class MainWindow(WindowWithPersistentDimensions):
     def createTaskBarIcon(self, uiCommands):
         if self.canCreateTaskBarIcon():
             import taskbaricon, menu
-            self.taskBarIcon = taskbaricon.TaskBarIcon(self, self.taskFile)
+            self.taskBarIcon = taskbaricon.TaskBarIcon(self, self.taskFile, 
+                self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon,
                 uiCommands))
         self.Bind(wx.EVT_ICONIZE, self.onIconify)

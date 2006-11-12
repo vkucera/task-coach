@@ -56,7 +56,8 @@ defaults = { \
     'hidewheniconized': 'True',
     'hidewhenclosed': 'False',
     'tips': 'True',
-    'tipsindex': '0' },
+    'tipsindex': '0',
+    'blinktaskbariconwhentrackingeffort': 'True' },
 'file': { \
     'recentfiles': '[]',
     'maxrecentfiles': '4',
