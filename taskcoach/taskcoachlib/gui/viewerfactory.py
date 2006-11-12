@@ -1,8 +1,8 @@
-import viewer, viewercontainer
+import viewer
 from i18n import _
 
     
-def addEffortViewers(viewerContainer, taskList, uiCommands, settings, setting):
+def addEffortViewers(viewerContainer, taskList, uiCommands, settings):
     effortViewer = viewer.EffortListViewer(viewerContainer, taskList, 
         uiCommands, settings)
     viewerContainer.addViewer(effortViewer, _('Effort details'), 'start')

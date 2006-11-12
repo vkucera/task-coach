@@ -71,7 +71,7 @@ class MainWindow(WindowWithPersistentDimensions):
         viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
             self.uiCommands, self.settings)
         viewerfactory.addEffortViewers(self.viewer, self.taskFile, 
-            self.uiCommands, self.settings, 'effortviewer')
+            self.uiCommands, self.settings)
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         import menu
