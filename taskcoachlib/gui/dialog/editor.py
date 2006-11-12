@@ -227,7 +227,7 @@ class EffortPage(TaskEditorPage):
         self._viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 
             'effortviewerineditor')
         singleTaskList = task.SingleTaskList()
-        viewerfactory._addEffortViewers(self._viewerContainer, singleTaskList, 
+        viewerfactory.addEffortViewers(self._viewerContainer, singleTaskList, 
             uiCommands, settings)
         self.add(self._viewerContainer, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
         singleTaskList.append(theTask)
