@@ -5,7 +5,9 @@ from changetypes import *
 releases = [
 Release('0.62.0', 'November ?, 2006',
     featuresAdded=[
-        Feature('''?''')]),
+        Feature('''Whether the clock icon in the task bar actually blinks
+or is static is now a setting (see Edit -> Preferences -> Window 
+behavior.''')]),
         
 Release('0.61.0', 'November 2, 2006',
     bugsFixed=[

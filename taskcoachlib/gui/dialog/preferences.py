@@ -79,6 +79,8 @@ class WindowBehaviorPage(SettingsPage):
             _('Hide main window when iconized'))
         self.addBooleanSetting('window', 'hidewhenclosed', 
             _('Minimize main window when closed'))
+        self.addBooleanSetting('window', 'blinktaskbariconwhentrackingeffort',
+            _('Make clock in the task bar tick when tracking effort'))
         self.fit()
 
 

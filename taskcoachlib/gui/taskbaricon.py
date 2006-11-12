@@ -3,10 +3,12 @@ from i18n import _
 import domain.date as date
         
 class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
-    def __init__(self, mainwindow, taskList, defaultBitmap='taskcoach', 
-            tickBitmap='tick', tackBitmap='tack', *args, **kwargs):
+    def __init__(self, mainwindow, taskList, settings, 
+            defaultBitmap='taskcoach', tickBitmap='tick', tackBitmap='tack', 
+            *args, **kwargs):
         super(TaskBarIcon, self).__init__(*args, **kwargs)
         self.__taskList = taskList
+        self.__settings = settings
         self.__bitmap = self.__defaultBitmap = defaultBitmap
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap
@@ -46,8 +48,10 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__setIcon()
 
     def onEverySecond(self, *args, **kwargs):
-        self.__toggleTrackingBitmap()
-        self.__setIcon()
+        if self.__settings.getboolean('window', 
+            'blinktaskbariconwhentrackingeffort'):
+            self.__toggleTrackingBitmap()
+            self.__setIcon()
 
     # Menu:
 

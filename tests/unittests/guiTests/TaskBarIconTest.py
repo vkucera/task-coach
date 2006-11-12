@@ -1,4 +1,4 @@
-import test, gui, wx, meta, gui.taskbaricon
+import test, gui, wx, meta, gui.taskbaricon, config
 import domain.task as task
 import domain.effort as effort
 import domain.date as date
@@ -12,7 +12,9 @@ class MainWindowMock:
 class TaskBarIconTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
-        self.icon = gui.taskbaricon.TaskBarIcon(MainWindowMock(), self.taskList)
+        self.settings = config.Settings(load=False)
+        self.icon = gui.taskbaricon.TaskBarIcon(MainWindowMock(), self.taskList,
+            self.settings)
 
     def tearDown(self):
         if '__WXMAC__' in wx.PlatformInfo:
