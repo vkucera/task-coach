@@ -201,6 +201,7 @@ class Choicebook(Book, wx.Choicebook):
             method. '''
         return wx.DragNone
 
+
 class Listbook(Book, wx.Listbook):
     _bitmapSize = (22, 22)
     pageChangedEvent = wx.EVT_LISTBOOK_PAGE_CHANGED
@@ -219,10 +220,10 @@ class AUINotebook(Book, wx.aui.AuiMultiNotebook):
     
     def __init__(self, *args, **kwargs):
         super(AUINotebook, self).__init__(*args, **kwargs)
-        self.Bind(wx.aui.EVT_AUI_PANEBUTTON, self.onClosePane)
+        self.Bind(wx.aui.EVT_AUINOTEBOOK_BUTTON, self.onClosePane)
         
     def onClosePane(self, event):
-        print 'onClosePane'
+        pass # Don't allow closing of panes.
         
     def createImageList(self):
         pass
