@@ -3,6 +3,15 @@
 from changetypes import *
 
 releases = [
+Release('0.61.3', 'November ?, 2006',
+    bugsFixed=[
+        Bug('''Dragging and dropping a task in the task tree view would 
+sometimes drag the wrong task.'''),
+        Bug('''Give category dialog focus and select default category title
+to make it easier to quickly enter categories using the keyboard.'''),
+        Bug('''The gdiplus.dll was missing from the Windows 
+distribution.''', '1596843')]),
+
 Release('0.61.2', 'November 11, 2006',
     bugsFixed=[
         Bug('''Some Linux distributions do not have the BROWSER environment

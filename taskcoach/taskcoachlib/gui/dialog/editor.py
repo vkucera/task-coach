@@ -575,6 +575,15 @@ class CategoryEditor(EditorWithCommand):
         self._categories = categories
         super(CategoryEditor, self).__init__(parent, command, uiCommands, 
                                              *args, **kwargs)
+        self[0]._subjectEntry.SetSelection(-1, -1)
+        # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
+        self.setFocus() 
+        # This works on Windows XP, but fails silently on Linux Ubuntu 5.10:
+        wx.CallAfter(self.setFocus) 
+        # So we did just do it twice, guess it doesn't hurt
+
+    def setFocus(self, *args, **kwargs):
+        self[0]._subjectEntry.SetFocus()
         
     def addPages(self):
         for category in self._command.items:

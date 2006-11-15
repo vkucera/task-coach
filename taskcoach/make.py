@@ -107,7 +107,8 @@ if sys.argv[1] == 'py2exe':
             'excludes' : ['taskcoachlib'],
             'optimize' : 2, 
             'packages' : ['i18n'],
-            'dist_dir' : os.path.join(builddir, py2exeDistdir)}}})
+            'dist_dir' : os.path.join(builddir, py2exeDistdir)}},
+        'data_files': [('', ['dist.in/gdiplus.dll'])]})
  
 if sys.argv[1] == 'py2app':
     import py2app
