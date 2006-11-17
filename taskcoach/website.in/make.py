@@ -210,6 +210,9 @@ pages['faq'] = \
     the user minimizing the window. If you run into this issue, you may
     want to change the setting 'Hide main window when iconized', see
     'Edit' -> 'Preferences'.</P>
+    <P><I>How can I mark a task 'inactive'?</I></P>
+    <P>Set the start date of the task to a future data or don't set 
+    a start date at all by unchecking the start date check box.</P>
 '''
 
 pages['roadmap'] = \

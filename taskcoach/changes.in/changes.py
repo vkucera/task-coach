@@ -3,8 +3,10 @@
 from changetypes import *
 
 releases = [
-Release('0.61.3', 'November ?, 2006',
+Release('0.61.3', 'November 17, 2006',
     bugsFixed=[
+        Bug('''Mac OSX distribution did not start. Upgraded py2app.''', 
+            '1594190'),
         Bug('''Dragging and dropping a task in the task tree view would 
 sometimes drag the wrong task.'''),
         Bug('''Give category dialog focus and select default category title
