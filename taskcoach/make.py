@@ -110,7 +110,7 @@ if sys.argv[1] == 'py2exe':
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}},
         'data_files': [('', ['dist.in/gdiplus.dll'])]})
  
-if sys.argv[1] == 'py2app':
+elif sys.argv[1] == 'py2app':
     from setuptools import setup
     setupOptions.update(dict(app=['taskcoach.py'], 
         setup_requires=['py2app'],
@@ -118,6 +118,9 @@ if sys.argv[1] == 'py2app':
             dist_dir=builddir, optimize=2, iconfile='icons.in/taskcoach.icns', 
             packages=['i18n'],
             plist=dict(CFBundleIconFile='taskcoach.icns')))))
+else:
+    from distutils.core import setup
+
 
 if __name__ == '__main__':
     for directory in builddir, distdir:

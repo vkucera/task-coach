@@ -442,7 +442,7 @@ class FileExportAsHTML(IOCommand, ViewerCommand):
 class FileExportAsCSV(IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsCSV, self).__init__(menuText=_('Export as &CSV...'),
-            helpText=_('Export the current view in Comma Separated Values (CSV) format.'),
+            helpText=_('Export the current view in Comma Separated Values (CSV) format'),
             bitmap='exportascsv', *args, **kwargs)
 
     def doCommand(self, event):
@@ -1109,7 +1109,7 @@ class UICommands(dict):
             helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
             setting='activetasks', settings=settings)    
         self['viewoverduetasks'] = UICheckCommand(menuText=_('&Over due'), 
-            helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
+            helpText=_('Show/hide over due tasks (tasks with a due date in the past)'),
             setting='overduetasks', settings=settings)    
         self['viewoverbudgettasks'] = UICheckCommand(menuText=_('Over &budget'), 
             helpText=_('Show/hide tasks that are over budget'),
@@ -1186,7 +1186,7 @@ class UICommands(dict):
              (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
              (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
              (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
-             (_('&Days left'), _('Sort tasks by number of days left'), 'timeLeft'),
+             (_('D&ays left'), _('Sort tasks by number of days left'), 'timeLeft'),
              (_('&Budget'), _('Sort tasks by budget'), 'budget'),
              (_('Total b&udget'), _('Sort tasks by total budget'), 'totalbudget'),
              (_('&Time spent'), _('Sort tasks by time spent'), 'timeSpent'),

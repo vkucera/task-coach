@@ -3,8 +3,11 @@
 from changetypes import *
 
 releases = [
-Release('0.61.3', 'November 17, 2006',
+Release('0.61.3', 'November 18, 2006',
     bugsFixed=[
+        Bug('''If saving the TaskCoach.ini file would fail, displaying
+the error message would fail (too) because the i18n translator had not
+been imported at that point.''', '1598568'),
         Bug('''Mac OSX distribution did not start. Upgraded py2app.''', 
             '1594190'),
         Bug('''Dragging and dropping a task in the task tree view would 
