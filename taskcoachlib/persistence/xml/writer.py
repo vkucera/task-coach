@@ -66,7 +66,7 @@ class XMLWriter:
     
     def categoryNode(self, category):
         node = self.document.createElement('category')
-        node.setAttribute('subject', str(category.subject()))
+        node.setAttribute('subject', category.subject())
         if category.isFiltered():
             node.setAttribute('filtered', str(category.isFiltered()))
         if category.tasks():

@@ -1,5 +1,6 @@
 import test, time, os, persistence, mock
 import domain.task as task
+import domain.category as category
 
 
 class PerformanceTest(test.TestCase):
@@ -7,7 +8,7 @@ class PerformanceTest(test.TestCase):
         taskList = task.TaskList([task.Task('test') for i in range(self.nrTasks)])
         taskfile = file(self.taskfilename, 'w')
         taskWriter = persistence.XMLWriter(taskfile)
-        taskWriter.write(taskList)
+        taskWriter.write(taskList, category.CategoryList())
         taskfile.close()
 
     def setUp(self):

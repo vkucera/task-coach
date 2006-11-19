@@ -25,7 +25,34 @@ class PasteIntoTaskCommand(base.PasteCommand, base.CompositeMixin):
 class DragAndDropTaskCommand(base.DragAndDropCommand):
     def name(self):
         return _('Drag and drop task')
-     
+
+
+class DeleteTaskCommand(base.DeleteCommand):
+    def __init__(self, *args, **kwargs):
+        self.__categories = kwargs.pop('categories')
+        self.__map = {}
+        super(DeleteTaskCommand, self).__init__(*args, **kwargs)
+
+    def do_command(self):
+        for category in self.__categories:
+            for task in self.items:
+                if task in category.tasks():
+                    category.removeTask(task)
+                    self.__map.setdefault(task, []).append(category)
+        super(DeleteTaskCommand, self).do_command()
+        
+    def undo_command(self):
+        for task in self.__map:
+            for category in self.__map[task]:
+                category.addTask(task)
+        super(DeleteTaskCommand, self).undo_command()
+        
+    def redo_command(self):
+        for task in self.__map:
+            for category in self.__map[task]:
+                category.removeTask(task)
+        super(DeleteTaskCommand, self).redo_command()
+
 
 class NewTaskCommand(base.BaseCommand):
     def name(self):
