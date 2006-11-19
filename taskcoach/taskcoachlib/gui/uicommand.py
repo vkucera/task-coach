@@ -442,7 +442,7 @@ class FileExportAsHTML(IOCommand, ViewerCommand):
 class FileExportAsCSV(IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsCSV, self).__init__(menuText=_('Export as &CSV...'),
-            helpText=_('Export the current view in Comma Separated Values (CSV) format.'),
+            helpText=_('Export the current view in Comma Separated Values (CSV) format'),
             bitmap='exportascsv', *args, **kwargs)
 
     def doCommand(self, event):
@@ -774,15 +774,16 @@ class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
              if not task.completed()]
 
 
-class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand, 
+                 CategoriesCommand):
     def __init__(self, *args, **kwargs):
         super(TaskDelete, self).__init__(bitmap='delete',
             menuText=_('&Delete task\tCtrl+DEL'),
             helpText=_('Delete the selected task(s)'), *args, **kwargs)
 
     def doCommand(self, event):
-        deleteCommand = command.DeleteCommand(self.taskList, 
-            self.viewer.curselection())
+        deleteCommand = command.DeleteTaskCommand(self.taskList, 
+            self.viewer.curselection(), categories=self.categories)
         deleteCommand.do()
 
 
@@ -1108,7 +1109,7 @@ class UICommands(dict):
             helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
             setting='activetasks', settings=settings)    
         self['viewoverduetasks'] = UICheckCommand(menuText=_('&Over due'), 
-            helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
+            helpText=_('Show/hide over due tasks (tasks with a due date in the past)'),
             setting='overduetasks', settings=settings)    
         self['viewoverbudgettasks'] = UICheckCommand(menuText=_('Over &budget'), 
             helpText=_('Show/hide tasks that are over budget'),
@@ -1138,7 +1139,7 @@ class UICommands(dict):
              (_('&Revenue'), _('Show/hide revenue column'), 'revenue'),
              (_('T&otal revenue'), _('Show/hide total revenue column'), 'totalrevenue'),
              (_('Last modification time'), _('Show/hide last modification time column'), 'lastmodificationtime'),
-             (_('Overall last modification time'), _('Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks'), 'totallastmodificationtime'),
+             (_('Overall last modification time'), _('Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks)'), 'totallastmodificationtime'),
              (_('&Time spent'), _('Show/hide time spent column'), 'efforttimespent'),
              (_('T&otal time spent'), _('Show/hide total time spent column'), 'totalefforttimespent'),
              (_('&Revenue'), _('Show/hide revenue column'), 'effortrevenue'),
@@ -1185,7 +1186,7 @@ class UICommands(dict):
              (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
              (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
              (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
-             (_('&Days left'), _('Sort tasks by number of days left'), 'timeLeft'),
+             (_('D&ays left'), _('Sort tasks by number of days left'), 'timeLeft'),
              (_('&Budget'), _('Sort tasks by budget'), 'budget'),
              (_('Total b&udget'), _('Sort tasks by total budget'), 'totalbudget'),
              (_('&Time spent'), _('Sort tasks by time spent'), 'timeSpent'),
@@ -1248,7 +1249,8 @@ class UICommands(dict):
             viewer=viewer, uiCommands=self, settings=settings)
         self['markcompleted'] = TaskMarkCompleted(taskList=taskList,
             viewer=viewer)
-        self['delete'] = TaskDelete(taskList=taskList, viewer=viewer)
+        self['delete'] = TaskDelete(taskList=taskList, viewer=viewer, 
+            categories=categories)
         self['mailtask'] = TaskMail(viewer=viewer, menuText=_('Mail task'), 
             helpText=_('Mail the task, using your default mailer'), 
             bitmap='email')

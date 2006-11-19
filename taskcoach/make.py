@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
 from taskcoachlib import meta
 import sys, os, glob
 from setup import setupOptions
@@ -95,6 +94,7 @@ def createInnoSetupScript():
     writeFile('taskcoach.iss', script%meta.metaDict, builddir)
 
 if sys.argv[1] == 'py2exe':
+    from distutils.core import setup
     import py2exe
     py2exeDistdir = '%s-%s-win32exe'%(meta.filename, meta.version)
     setupOptions.update({
@@ -107,20 +107,25 @@ if sys.argv[1] == 'py2exe':
             'excludes' : ['taskcoachlib'],
             'optimize' : 2, 
             'packages' : ['i18n'],
-            'dist_dir' : os.path.join(builddir, py2exeDistdir)}}})
+            'dist_dir' : os.path.join(builddir, py2exeDistdir)}},
+        'data_files': [('', ['dist.in/gdiplus.dll'])]})
  
-if sys.argv[1] == 'py2app':
-    import py2app
+elif sys.argv[1] == 'py2app':
+    from setuptools import setup
     setupOptions.update(dict(app=['taskcoach.py'], 
+        setup_requires=['py2app'],
         options=dict(py2app=dict(argv_emulation=True, compressed=True,
             dist_dir=builddir, optimize=2, iconfile='icons.in/taskcoach.icns', 
-            packages=['i18n']))))
+            packages=['i18n'],
+            plist=dict(CFBundleIconFile='taskcoach.icns')))))
+else:
+    from distutils.core import setup
+
 
 if __name__ == '__main__':
-    if not os.path.exists(builddir):
-        os.mkdir(builddir)
-    if not os.path.exists(distdir):
-        os.mkdir(distdir)
+    for directory in builddir, distdir:
+        if not os.path.exists(directory):
+            os.mkdir(directory)
     createDocumentation()
     setup(**setupOptions)
     if sys.argv[1] == 'py2exe':

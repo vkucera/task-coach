@@ -24,21 +24,25 @@ class TreeMixin(object):
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
         self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
-        # prepare for dragging and dropping tree items
+        # prepare for dragging of tree items
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.onBeginDrag)
-        self.Bind(wx.EVT_TREE_END_DRAG, self.onEndDrag)
         
     def onBeginDrag(self, event):
-        if not self.dragAndDropCommand:
-            event.Veto()
-            return
-        self.dragItem = event.GetItem()
-        if self.dragItem:
+        self.dragItem = self.__getDraggedItem()
+        if self.dragItem and self.dragAndDropCommand:
             event.Allow()
             self.GetMainWindow().Bind(wx.EVT_MOTION, self.onDragging)
+            self.Bind(wx.EVT_TREE_END_DRAG, self.onEndDrag)
             self.__setCursorToDragging()
         else:
             event.Veto()
+            
+    def __getDraggedItem(self):
+        selectedItems = self.GetSelections()
+        if selectedItems:
+            return selectedItems[0]
+        else:
+            return None
         
     def __setCursorToDragging(self):
         self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
@@ -54,18 +58,15 @@ class TreeMixin(object):
         
     def onEndDrag(self, event):
         self.GetMainWindow().Unbind(wx.EVT_MOTION)
+        self.Unbind(wx.EVT_TREE_END_DRAG)
         self.__resetCursor()
-        # Make sure this member exists.
-        try:
-            old = self.dragItem
-        except:
-            return
         if self.__isValidDropTarget(event.GetItem()):
             self.dragAndDropCommand(event)
 
     def onDragging(self, event):
         if not event.Dragging():
             self.GetMainWindow().Unbind(wx.EVT_MOTION)
+            self.Unbind(wx.EVT_TREE_END_DRAG)
             self.__resetCursor()
             return
         item, flags, column = self.HitTest(wx.Point(event.GetX(), event.GetY()))

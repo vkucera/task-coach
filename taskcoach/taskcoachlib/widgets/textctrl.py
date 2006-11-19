@@ -27,11 +27,14 @@ class MultiLineTextCtrl(BaseTextCtrl):
             style=wx.TE_MULTILINE|wx.TE_RICH|wx.TE_AUTO_URL, *args, **kwargs)
         self.__initializeText(text)
         self.Bind(wx.EVT_TEXT_URL, self.onURLClicked)
-        self.__webbrowser = webbrowser.get()
+        try:
+            self.__webbrowser = webbrowser.get()
+        except:
+            self.__webbrowser = None
         
     def onURLClicked(self, event):
         mouseEvent = event.GetMouseEvent()
-        if mouseEvent.ButtonDown():
+        if mouseEvent.ButtonDown() and self.__webbrowser:
             url = self.GetRange(event.GetURLStart(), event.GetURLEnd())
             self.__webbrowser.open(url)
      

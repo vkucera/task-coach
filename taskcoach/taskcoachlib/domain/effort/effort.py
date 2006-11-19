@@ -199,7 +199,7 @@ class CompositeEffort(EffortBase):
         duration = self.duration(recursive=True)
         patterns.Publisher().notifyObservers(patterns.Event(self,
             'effort.duration', duration))
-        if duration == date.TimeDelta() and not task.isBeingTracked():
+        if not self.__getEfforts(recursive=True):
             patterns.Publisher().notifyObservers(patterns.Event(self, 
                 'effort.composite.empty'))
 

@@ -9,6 +9,34 @@ Release('0.62.0', 'November ?, 2006',
 or is static is now a setting (see Edit -> Preferences -> Window 
 behavior.''')]),
         
+Release('0.61.3', 'November 19, 2006',
+    bugsFixed=[
+        Bug('''If saving the TaskCoach.ini file would fail, displaying
+the error message would fail (too) because the i18n translator had not
+been imported at that point.''', '1598568'),
+        Bug('''Mac OSX distribution did not start. Upgraded py2app.''', 
+            '1594190'),
+        Bug('''Dragging and dropping a task in the task tree view would 
+sometimes drag the wrong task.'''),
+        Bug('''Give category dialog focus and select default category title
+to make it easier to quickly enter categories using the keyboard.'''),
+        Bug('''The gdiplus.dll was missing from the Windows 
+distribution.''', '1596843')]),
+
+Release('0.61.2', 'November 11, 2006',
+    bugsFixed=[
+        Bug('''Some Linux distributions do not have the BROWSER environment
+variable set, causing errors. Be prepared.''', '1567244'),
+        Bug('''Saving failed with a UnicodeError if a category
+description would contain non-ASCII characters.''', '1589991'),
+        Bug('''Deleting a task would not delete the task from the
+categories it belonged to, resulting in errors upon next loading
+of the task file.''', '1589993')]),
+
+Release('0.61.1', 'November 3, 2006',
+    bugsFixed=[
+        Bug('''Source distribution was missing some files.''')]),
+
 Release('0.61.0', 'November 2, 2006',
     bugsFixed=[
         Bug('''Displaying a previously hidden toolbar would result in

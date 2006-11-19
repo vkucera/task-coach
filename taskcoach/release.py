@@ -1,14 +1,16 @@
 '''
 Release steps:
-1. Use releaseforge to release distributions to Sourceforge.
-1a. Upload distributions
-1b. Post project news.
-2. Run this script to generate MD5 digests and publish to Sourceforge 
-   Website, Chello (my ISP) and PyPI.
-3. Post release notification on freshmeat.net by hand.
-4. Tag source code: cvs tag ReleaseX_Y.
-5. Email taskcoach@yahoogroups.com and python-announce@python.org.
-6. Add release to Sourceforge bug tracker groups.
+- make clean all 
+- make releasetests 
+- Use releaseforge to release distributions to Sourceforge.
+  * Upload distributions
+  * Post project news.
+- Run this script to generate MD5 digests and publish to Sourceforge 
+  Website, Chello (my ISP) and PyPI.
+- Post release notification on freshmeat.net by hand.
+- Tag source code: cvs tag ReleaseX_Y.
+- Email taskcoach@yahoogroups.com and python-announce@python.org.
+- Add release to Sourceforge bug tracker groups.
 '''
 
 import ftplib, taskcoachlib.meta, os, glob, sys, md5

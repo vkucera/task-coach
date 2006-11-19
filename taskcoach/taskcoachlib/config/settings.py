@@ -1,5 +1,5 @@
 import ConfigParser, os, sys, meta, defaults, patterns, wx
-
+from i18n import _
 
 class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
     def set(self, section, setting, value):
