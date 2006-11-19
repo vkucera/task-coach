@@ -3,7 +3,7 @@
 from changetypes import *
 
 releases = [
-Release('0.61.3', 'November 18, 2006',
+Release('0.61.3', 'November 19, 2006',
     bugsFixed=[
         Bug('''If saving the TaskCoach.ini file would fail, displaying
 the error message would fail (too) because the i18n translator had not

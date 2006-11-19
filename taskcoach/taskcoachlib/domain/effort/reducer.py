@@ -55,6 +55,8 @@ class EffortAggregator(patterns.SetDecorator):
 
     def onCompositeEmpty(self, event):
         composite = event.source()
+        if composite not in self:
+            return
         key = self.keyForComposite(composite)
         if key not in self.__composites:
             # A composite may already have been removed, e.g. when a

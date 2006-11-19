@@ -71,7 +71,7 @@ class CompositeEffortTest(test.TestCase):
     def testAddTrackedEffortToTaskDoesNotCauseListEmptyNotification(self):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.composite.empty')
-        self.task.addEffort(effort.Effort(self.task))
+        self.task.addEffort(effort.Effort(self.task, self.composite.getStart()))
         self.failIf(self.events)
 
     def testAddSecondTrackedEffortToTask(self):
