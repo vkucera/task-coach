@@ -4,10 +4,16 @@ from changetypes import *
 
 releases = [
 Release('0.62.0', 'November ?, 2006',
+    dependenciesChanged=[
+        Dependency('''Task Coach now requires wxPython 2.7.1.3-unicode or newer
+(this is only relevant if you use the source distribution).''')],
     featuresAdded=[
         Feature('''Whether the clock icon in the task bar actually blinks
 or is static is now a setting (see Edit -> Preferences -> Window 
-behavior.''')]),
+behavior.'''),
+        Feature('''The toolbar buttons for 'new item', 'new sub item',
+'edit item' and 'delete item' now work for tasks, effort records
+and categories.''')]),
         
 Release('0.61.3', 'November 19, 2006',
     bugsFixed=[
