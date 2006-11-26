@@ -726,6 +726,26 @@ class NewDomainObject(ViewerCommand, TaskListCommand):
         return self.viewer.model().newItemMenuText
     
 
+class NewSubDomainObject(NeedsSelection, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(NewSubDomainObject, self).__init__(bitmap='newsub', *args, 
+            **kwargs)
+        
+    def doCommand(self, event, show=True):
+        dialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
+        dialog.Show(show)
+
+    def enabled(self, event):
+        return not self.viewer.isShowingEffort() and \
+            super(NewSubDomainObject, self).enabled(event)
+            
+    def getHelpText(self):
+        return self.viewer.model().newSubItemHelpText
+    
+    def getMenuText(self):
+        return self.viewer.model().newSubItemMenuText
+     
+
 class EditDomainObject(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EditDomainObject, self).__init__(bitmap='edit', *args, **kwargs)
@@ -769,32 +789,16 @@ class TaskNew(ViewerCommand, TaskListCommand):
         dialog.Show()
 
 
-class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
-        TaskListCommand, ViewerCommand, UICommandsCommand, SettingsCommand):
+class TaskNewSubTask(NeedsSelectedTasks,  TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(TaskNewSubTask, self).__init__(bitmap='new_subtask',
-            menuText=self.getMenuText(),
-            helpText=_('Insert a new subtask into the selected task'), *args,
-            **kwargs)
+        taskList = kwargs['taskList']
+        super(TaskNewSubTask, self).__init__(bitmap='newsub',
+            menuText=taskList.newSubItemMenuText,
+            helpText=taskList.newSubItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        editor = gui.TaskEditor(self.mainwindow, 
-            command.NewSubTaskCommand(self.taskList, 
-            self.viewer.curselection()), self.taskList, self.uiCommands, 
-            self.settings, self.taskList.categories(), bitmap='new')
-        editor.Show(show)
-
-    def getMenuText(self):
-        # There is a bug in wxWidget/wxPython on the Mac that causes the 
-        # Ctrl+INSERT accelerator to be mapped so some other key sequence 
-        # so that whenever that key sequence is typed, this command is 
-        # invoked. Hence, we use a different accelerator on the Mac.
-        menuText = _('New &subtask...')
-        if '__WXMAC__' in wx.PlatformInfo:
-            menuText += u'\tShift+Ctrl+N'
-        else:
-            menuText += u'\tShift+Ctrl+INS'
-        return menuText  
+        dialog = self.viewer.newSubTaskDialog(bitmap=self.bitmap)
+        dialog.Show(show)
         
 
 class TaskEdit(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
@@ -898,7 +902,7 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
             selectedTasks = self.viewer.curselection()
         else:
             selectedTasks = None
-        dialog = self.viewer.newFffortDialog(bitmap=self.bitmap, 
+        dialog = self.viewer.newEffortDialog(bitmap=self.bitmap, 
             selectedTasks=selectedTasks)
         dialog.Show()
 
@@ -974,19 +978,17 @@ class CategoryNew(ViewerCommand, CategoriesCommand):
         dialog.Show(show)
         
 
-class CategoryNewSubCategory(NeedsSelectedCategory, MainWindowCommand, 
-        CategoriesCommand, ViewerCommand, UICommandsCommand):
+class CategoryNewSubCategory(NeedsSelectedCategory, CategoriesCommand, 
+                             ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(CategoryNewSubCategory, self).__init__(bitmap='new_subtask', 
-            menuText=_('New subcategory...'), helpText=_('Insert a new subcategory'), 
-            *args, **kwargs)
+        categories = kwargs['categories']
+        super(CategoryNewSubCategory, self).__init__(bitmap='newsub', 
+            menuText=categories.newSubItemMenuText, 
+            helpText=categories.newSubItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        editor = gui.CategoryEditor(self.mainwindow, 
-            command.NewSubCategoryCommand(self.categories, 
-                                          self.viewer.curselection()),
-            self.categories, self.uiCommands, bitmap=self.bitmap)
-        editor.Show(show)
+        dialog = self.viewer.newSubCategoryDialog(bitmap=self.bitmap)
+        dialog.Show(show)
 
 
 class CategoryDelete(NeedsSelectedCategory, CategoriesCommand, ViewerCommand):
@@ -1281,12 +1283,11 @@ class UICommands(dict):
         self['new'] = NewDomainObject(viewer=viewer, taskList=taskList)
         self['edit'] = EditDomainObject(viewer=viewer)
         self['delete'] = DeleteDomainObject(viewer=viewer)
+        self['newsub'] = NewSubDomainObject(viewer=viewer)
         
         # Task menu
         self['newtask'] = TaskNew(viewer=viewer, taskList=taskList)
-        self['newsubtask'] = TaskNewSubTask(mainwindow=mainwindow, 
-            taskList=taskList, viewer=viewer, uiCommands=self, 
-            settings=settings)
+        self['newsubtask'] = TaskNewSubTask(taskList=taskList, viewer=viewer)
         self['edittask'] = TaskEdit(taskList=taskList, viewer=viewer)
         self['markcompleted'] = TaskMarkCompleted(taskList=taskList,
             viewer=viewer)
@@ -1308,8 +1309,8 @@ class UICommands(dict):
         
         # Categorymenu
         self['newcategory'] = CategoryNew(viewer=viewer, categories=categories)
-        self['newsubcategory'] = CategoryNewSubCategory(mainwindow=mainwindow,
-            viewer=viewer, categories=categories, uiCommands=self)
+        self['newsubcategory'] = CategoryNewSubCategory(viewer=viewer, 
+            categories=categories)
         self['deletecategory'] = CategoryDelete(viewer=viewer, 
             categories=categories)
         self['editcategory'] = CategoryEdit(viewer=viewer, 

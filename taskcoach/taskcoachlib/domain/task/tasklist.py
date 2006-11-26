@@ -15,6 +15,14 @@ def newTaskMenuText():
         menuText += u'\tCtrl+INS'
     return menuText
 
+def newSubTaskMenuText():
+    # See comments in newTaskMenuText() above
+    menuText = _('New &subtask...')
+    if '__WXMAC__' in wx.PlatformInfo:
+        menuText += u'\tShift+Ctrl+N'
+    else:
+        menuText += u'\tShift+Ctrl+INS'
+    return menuText  
             
 class TaskList(patterns.CompositeSet):
     # FIXME: TaskList should be called TaskCollection or TaskSet
@@ -23,8 +31,10 @@ class TaskList(patterns.CompositeSet):
     newItemHelpText = _('Insert a new task')
     editItemMenuText = _('&Edit task...')
     editItemHelpText = _('Edit the selected task')
-    deleteItemMenuText= _('&Delete task\tCtrl+DEL')
-    deleteItemHelpText= _('Delete the selected task(s)')
+    deleteItemMenuText = _('&Delete task\tCtrl+DEL')
+    deleteItemHelpText = _('Delete the selected task(s)')
+    newSubItemMenuText = newSubTaskMenuText()
+    newSubItemHelpText = _('Insert a new subtask into the selected task')
     
     def _nrInterestingTasks(self, isInteresting):
         interestingTasks = [task for task in self if isInteresting(task)]

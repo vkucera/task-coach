@@ -14,8 +14,10 @@ class EffortUICommandNamesMixin(object):
     newItemHelpText =  _('Add an effort period to the selected task(s)')
     editItemMenuText = _('&Edit effort...')
     editItemHelpText = _('Edit the selected effort period(s)')
-    deleteItemMenuText= _('&Delete effort')
-    deleteItemHelpText= _('Delete the selected effort period(s)')
+    deleteItemMenuText = _('&Delete effort')
+    deleteItemHelpText = _('Delete the selected effort period(s)')
+    newSubItemMenuText = ''
+    newSubItemHelpText = '' 
     
                         
 class EffortList(patterns.SetDecorator, MaxDateTimeMixin, 
