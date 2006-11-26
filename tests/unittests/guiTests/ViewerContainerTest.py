@@ -1,7 +1,6 @@
 import test, gui, wx, config
 from unittests import dummy
-import domain.task as task
-import domain.effort as effort
+from domain import task, effort, category
 
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
@@ -11,7 +10,9 @@ class ViewerContainerTest(test.wxTestCase):
         self.container = gui.viewercontainer.ViewerNotebook(self.frame, 
             self.settings, 'mainviewer')
         self.container.addViewer(dummy.ViewerWithDummyWidget(self.container,
-            self.taskList, dummy.DummyUICommands(), self.settings), 'Dummy')
+            self.taskList, gui.uicommand.UICommands(self.frame, None, None, 
+                self.settings, self.taskList, effort.EffortList(self.taskList),
+                category.CategoryList()), self.settings), 'Dummy')
 
     def testCreate(self):
         self.assertEqual(0, self.container.size())

@@ -1,6 +1,6 @@
 import test, gui, wx, config, persistence, meta
 from unittests import dummy
-import domain.task as task
+from domain import task, effort
 
 
 class MainWindowUnderTest(gui.MainWindow):
@@ -13,7 +13,7 @@ class MainWindowTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(dummy.IOController(),
-            self.taskFile, [], self.settings)
+            self.taskFile, effort.EffortList(self.taskFile), self.settings)
 
     def testStatusBar_Show(self):
         self.settings.set('view', 'statusbar', 'True')

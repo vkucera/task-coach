@@ -1,6 +1,5 @@
 import test, wx, gui, config
-import domain.category as category
-import domain.task as task
+from domain import task, effort, category
 from unittests import dummy
 
 class UICommandTest(test.wxTestCase):
@@ -36,14 +35,20 @@ class UICommandTest(test.wxTestCase):
 
 class UICommandsTest(test.wxTestCase):
     def testCreate(self):
-        gui.uicommand.UICommands(None, None, None, None, None, None, None)
+        taskList = task.TaskList()
+        effortList = effort.EffortList(taskList)
+        categories = category.CategoryList()
+        gui.uicommand.UICommands(self.frame, None, None, None, taskList, 
+            effortList, categories)
 
 
 class ViewAllTasksTest(test.wxTestCase):
     def testTurnOfFilteredCategory(self):
         settings = config.Settings(load=False)
-        uiCommands = dummy.DummyUICommands()
+        taskList = task.TaskList()
         categories = category.CategoryList()
+        uiCommands = gui.uicommand.UICommands(self.frame, None, None, settings,
+            taskList, effort.EffortList(taskList), categories)
         aCategory = category.Category('category')
         categories.append(aCategory)
         aCategory.setFiltered()

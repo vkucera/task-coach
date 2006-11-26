@@ -1,12 +1,31 @@
-import patterns
+import patterns, wx
 from i18n import _
 import domain.date as date
 import task
+
+def newTaskMenuText():
+    # There is a bug in wxWidget/wxPython on the Mac that causes the 
+    # INSERT accelerator to be mapped so some other key sequence ('c' in
+    # this case) so that whenever that key sequence is typed, this command
+    # is invoked. Hence, we use a different accelarator on the Mac.
+    menuText = _('&New task...')
+    if '__WXMAC__' in wx.PlatformInfo:
+        menuText += u'\tCtrl+N'
+    else:
+        menuText += u'\tCtrl+INS'
+    return menuText
 
             
 class TaskList(patterns.CompositeSet):
     # FIXME: TaskList should be called TaskCollection or TaskSet
 
+    newItemMenuText = newTaskMenuText()
+    newItemHelpText = _('Insert a new task')
+    editItemMenuText = _('&Edit task...')
+    editItemHelpText = _('Edit the selected task')
+    deleteItemMenuText= _('&Delete task\tCtrl+DEL')
+    deleteItemHelpText= _('Delete the selected task(s)')
+    
     def _nrInterestingTasks(self, isInteresting):
         interestingTasks = [task for task in self if isInteresting(task)]
         return len(interestingTasks)

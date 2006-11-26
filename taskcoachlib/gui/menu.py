@@ -246,9 +246,9 @@ class ViewTasksByDueDateMenu(Menu):
 class TaskMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(TaskMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['new', 'newsubtask', 
-            None, 'edit', 'markcompleted', None, 'delete', None, 'mailtask',
-            'addattachmenttotask'])
+        self.appendUICommands(uiCommands, ['newtask', 'newsubtask', 
+            None, 'edittask', 'markcompleted', None, 'deletetask', None, 
+            'mailtask', 'addattachmenttotask'])
             
             
 class EffortMenu(Menu):
@@ -274,7 +274,7 @@ class HelpMenu(Menu):
 class TaskBarMenu(Menu):
     def __init__(self, taskBarIcon, uiCommands):
         super(TaskBarMenu, self).__init__(taskBarIcon)
-        self.appendUICommands(uiCommands, ['new', 'neweffort', 'stopeffort', 
+        self.appendUICommands(uiCommands, ['newtask', 'neweffort', 'stopeffort', 
             None, 'restore', 'quit'])
 
 
@@ -282,8 +282,8 @@ class TaskPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands, treeViewer):
         super(TaskPopupMenu, self).__init__(mainwindow)
         commandsToAppend = ['cut', 'copy', 'paste',
-            'pasteintotask', None, 'new', 'newsubtask', None, 'edit', 
-            'markcompleted', None, 'delete', None, 'mailtask', 
+            'pasteintotask', None, 'newtask', 'newsubtask', None, 'edittask', 
+            'markcompleted', None, 'deletetask', None, 'mailtask', 
             'addattachmenttotask', None, 
             'neweffort', 'starteffort', 'stopeffort']
         if treeViewer:
@@ -296,15 +296,15 @@ class EffortPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(EffortPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', 
-           'pasteintotask', None, 'new', None, 'neweffort', 'editeffort', 
+           'pasteintotask', None, 'newtask', None, 'neweffort', 'editeffort', 
            'deleteeffort', None, 'stopeffort'])
 
 
 class CategoryPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(CategoryPopupMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None, 'new', 
-            None, 'newcategory', 'newsubcategory', 'editcategory', 
+        self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None, 
+            'newtask', None, 'newcategory', 'newsubcategory', 'editcategory', 
             'deletecategory', None, 'stopeffort'])
         
         

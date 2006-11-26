@@ -58,9 +58,9 @@ class DummyUICommand(gui.uicommand.UICommand):
 
 
 class DummyUICommands(gui.uicommand.UICommands):
-    def __init__(self, iocontroller=None):
+    def __init__(self, iocontroller=None, taskList=None, effortList=None):
         super(DummyUICommands, self).__init__(None, iocontroller, None, None, 
-                                              None, None, None)
+                                              taskList, effortList, None)
         
     def __getitem__(self, key):
         return DummyUICommand()

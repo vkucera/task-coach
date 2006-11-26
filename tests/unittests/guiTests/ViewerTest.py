@@ -1,6 +1,6 @@
 import test, gui, wx, config, patterns
 from unittests import dummy
-from domain import task, effort, date
+from domain import task, effort, date, category
 
 class ViewerTest(test.wxTestCase):
     def setUp(self):
@@ -8,8 +8,11 @@ class ViewerTest(test.wxTestCase):
         self.task = task.Task()
         self.taskList = task.sorter.Sorter(task.TaskList([self.task]), 
             settings=self.settings)
-        self.viewer = dummy.ViewerWithDummyWidget(self.frame,
-            self.taskList, dummy.DummyUICommands(), self.settings)
+        effortList = effort.EffortList(self.taskList)
+        categories = category.CategoryList()
+        self.viewer = dummy.ViewerWithDummyWidget(self.frame, self.taskList, 
+            gui.uicommand.UICommands(self.frame, None, None, self.settings, self.taskList, 
+            effortList, categories), self.settings)
 
     def testSelectAll(self):
         self.viewer.selectall()
@@ -51,7 +54,9 @@ class TaskListViewerTest(test.wxTestCase):
         self.taskList = task.sorter.Sorter(task.TaskList([self.task]), 
             settings=self.settings)
         self.viewer = TaskListViewerUnderTest(self.frame,
-            self.taskList, dummy.DummyUICommands(), self.settings, categories=[])
+            self.taskList, gui.uicommand.UICommands(self.frame, None, None, 
+                self.settings, self.taskList, effort.EffortList(self.taskList), 
+                category.CategoryList()), self.settings, categories=[])
 
     def testGetTimeSpent(self):
         timeSpent = self.viewer.getItemText(0, self.viewer.columns()[7])
@@ -121,9 +126,13 @@ class TaskListViewerTest(test.wxTestCase):
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
         taskList = task.TaskList()
+        effortList = effort.EffortList(taskList)
+        categories = category.CategoryList()
+        settings = config.Settings(load=False)
         try:
             baseViewer = gui.viewer.Viewer(self.frame, taskList,
-                dummy.DummyUICommands(), {})
+                gui.uicommand.UICommands(self.frame, None, None, settings, taskList,
+                    effortList, categories), {})
             self.fail('Expected NotImplementedError')
         except NotImplementedError:
             pass
@@ -153,7 +162,8 @@ class UpdatePerSecondViewerTests(object):
         self.settings = config.Settings(load=False)
         self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
         self.updateViewer = self.ListViewerClass(self.frame, self.taskList, 
-            dummy.DummyUICommands(), self.settings, categories=[])
+            gui.uicommand.UICommands(self.frame, None, None, self.settings, self.taskList,
+                effort.EffortList(self.taskList), category.CategoryList()), self.settings, categories=[])
         self.trackedTask = task.Task(subject='tracked')
         self.trackedTask.addEffort(effort.Effort(self.trackedTask))
         self.taskList.append(self.trackedTask)

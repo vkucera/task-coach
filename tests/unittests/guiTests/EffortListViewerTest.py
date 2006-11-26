@@ -1,7 +1,5 @@
 import test, gui, config
-from unittests import dummy
-import domain.task as task
-import domain.effort as effort
+from domain import task, effort, category
 
 class EffortViewerTest(test.wxTestCase):
     def setUp(self):
@@ -11,5 +9,7 @@ class EffortViewerTest(test.wxTestCase):
         
     def testCreate(self):
         effortViewer = gui.viewer.EffortListViewer(self.frame, self.effortList, 
-            dummy.DummyUICommands(), self.settings, taskList=self.taskList)
+            gui.uicommand.UICommands(self.frame, None, None, self.settings,
+                self.taskList, self.effortList, category.CategoryList()), 
+                self.settings, taskList=self.taskList)
         self.assertEqual(0, effortViewer.size())
