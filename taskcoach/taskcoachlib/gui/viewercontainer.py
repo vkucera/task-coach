@@ -35,7 +35,7 @@ class ViewerContainer(object):
                     try:
                         return getattr(viewer, method)(*args, **kwargs)
                     except:
-                        pass
+                        raise
             else:
                 raise AttributeError
         return findFirstViewer

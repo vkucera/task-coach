@@ -41,6 +41,7 @@ class UICommand(object):
         self.bitmap = bitmap
         self.kind = kind
         self.id = id or wx.NewId()
+        self.toolbar = None
         self.menuItems = [] # uiCommands can be used in multiple menu's
 
     def appendToMenu(self, menu, window, position=None):
@@ -68,6 +69,7 @@ class UICommand(object):
         self.unbind(window, id)
         
     def appendToToolBar(self, toolbar):
+        self.toolbar = toolbar
         bitmap = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_TOOLBAR, 
             toolbar.GetToolBitmapSize())
         toolbar.AddLabelTool(self.id, '',
@@ -103,6 +105,11 @@ class UICommand(object):
 
     def onUpdateUI(self, event):
         event.Enable(bool(self.enabled(event)))
+        if self.toolbar:
+            if not self.helpText:
+                self.toolbar.SetToolLongHelp(self.id, self.getHelpText())
+            if self.menuText == '?':
+                self.toolbar.SetToolShortHelp(self.id, self.getMenuText())
 
     def enabled(self, event):
         ''' Can be overridden in a subclass. '''
@@ -235,23 +242,33 @@ class UICheckGroupCommand(UICommandsCommand, UICheckCommand):
 
 class NeedsSelection(object):
     def enabled(self, event):
-        return self.viewer.curselection()
- 
-class NeedsSelectedTasks(NeedsSelection):
+        return super(NeedsSelection, self).enabled(event) and \
+            self.viewer.curselection()
+
+class NeedsTaskViewer(object):
     def enabled(self, event):
-        return super(NeedsSelectedTasks, self).enabled(event) and \
+        return super(NeedsTaskViewer, self).enabled(event) and \
             self.viewer.isShowingTasks()
 
-class NeedsSelectedEffort(NeedsSelection):
+class NeedsEffortViewer(object):
     def enabled(self, event):
-        return super(NeedsSelectedEffort, self).enabled(event) and \
+        return super(NeedsEffortViewer, self).enabled(event) and \
             self.viewer.isShowingEffort()
 
-class NeedsSelectedCategory(NeedsSelection):
+class NeedsCategoryViewer(object):
     def enabled(self, event):
-        return super(NeedsSelectedCategory, self).enabled(event) and \
+        return super(NeedsCategoryViewer, self).enabled(event) and \
             self.viewer.isShowingCategories()
-            
+                     
+class NeedsSelectedTasks(NeedsTaskViewer, NeedsSelection):
+    pass
+
+class NeedsSelectedEffort(NeedsEffortViewer, NeedsSelection):
+    pass
+
+class NeedsSelectedCategory(NeedsCategoryViewer, NeedsSelection):
+    pass
+
 class NeedsAtLeastOneTask(object):
     def enabled(self, event):
         return len(self.taskList) > 0
@@ -686,32 +703,70 @@ class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
     def doCommand(self, event):
         self.viewer.collapseSelectedItems()
              
-        
-class TaskNew(MainWindowCommand, TaskListCommand, UICommandsCommand, \
-              SettingsCommand):
+
+class NewDomainObject(ViewerCommand, TaskListCommand):
     def __init__(self, *args, **kwargs):
+        super(NewDomainObject, self).__init__(bitmap='new', *args, **kwargs)
+        
+    def doCommand(self, event, show=True):
+        dialog = self.viewer.newItemDialog(bitmap=self.bitmap)
+        dialog.Show(show)
+        
+    def enabled(self, event):
+        if self.viewer.isShowingEffort():
+            enabled = len(self.taskList) > 0
+        else:
+            enabled = True
+        return enabled and super(NewDomainObject, self).enabled(event)
+    
+    def getHelpText(self):
+        return self.viewer.model().newItemHelpText
+    
+    def getMenuText(self):
+        return self.viewer.model().newItemMenuText
+    
+
+class EditDomainObject(NeedsSelection, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(EditDomainObject, self).__init__(bitmap='edit', *args, **kwargs)
+        
+    def doCommand(self, event, show=True):
+        dialog = self.viewer.editItemDialog(bitmap=self.bitmap)
+        dialog.Show(show)
+
+    def getHelpText(self):
+        return self.viewer.model().editItemHelpText
+    
+    def getMenuText(self):
+        return self.viewer.model().editItemMenuText
+
+
+class DeleteDomainObject(NeedsSelection, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(DeleteDomainObject, self).__init__(bitmap='delete', *args, 
+            **kwargs)
+        
+    def doCommand(self, event):
+        deleteCommand = self.viewer.deleteItemCommand()
+        deleteCommand.do()
+
+    def getHelpText(self):
+        return self.viewer.model().deleteItemHelpText
+    
+    def getMenuText(self):
+        return self.viewer.model().deleteItemMenuText
+
+        
+class TaskNew(ViewerCommand, TaskListCommand):
+    def __init__(self, *args, **kwargs):
+        taskList = kwargs['taskList']
         super(TaskNew, self).__init__(bitmap='new', 
-            menuText=self.getMenuText(), helpText=_('Insert a new task'), 
-            *args, **kwargs)
+            menuText=taskList.newItemMenuText, 
+            helpText=taskList.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        editor = gui.TaskEditor(self.mainwindow, 
-            command.NewTaskCommand(self.taskList),
-            self.taskList, self.uiCommands, self.settings, 
-            self.taskList.categories(), bitmap=self.bitmap)
-        editor.Show(show)
-
-    def getMenuText(self):
-        # There is a bug in wxWidget/wxPython on the Mac that causes the 
-        # INSERT accelerator to be mapped so some other key sequence ('c' in
-        # this case) so that whenever that key sequence is typed, this command
-        # is invoked. Hence, we use a different accelarator on the Mac.
-        menuText = _('&New task...')
-        if '__WXMAC__' in wx.PlatformInfo:
-            menuText += u'\tCtrl+N'
-        else:
-            menuText += u'\tCtrl+INS'
-        return menuText 
+        dialog = self.viewer.newTaskDialog(bitmap=self.bitmap)
+        dialog.Show()
 
 
 class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
@@ -742,19 +797,28 @@ class TaskNewSubTask(NeedsSelectedTasks, MainWindowCommand,
         return menuText  
         
 
-class TaskEdit(NeedsSelectedTasks, MainWindowCommand, TaskListCommand, 
-        ViewerCommand, UICommandsCommand, SettingsCommand):
+class TaskEdit(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
+        taskList = kwargs['taskList']
         super(TaskEdit, self).__init__(bitmap='edit',
-            menuText=_('&Edit task...'), helpText=_('Edit the selected task'), 
-            *args, **kwargs)
+            menuText=taskList.editItemMenuText, 
+            helpText=taskList.editItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        editor = gui.TaskEditor(self.mainwindow, 
-            command.EditTaskCommand(self.taskList, 
-            self.viewer.curselection()), self.taskList, 
-            self.uiCommands, self.settings, self.taskList.categories())
+        editor = self.viewer.editTaskDialog(bitmap=self.bitmap)
         editor.Show(show)
+
+
+class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        taskList = kwargs['taskList']
+        super(TaskDelete, self).__init__(bitmap='delete',
+            menuText=taskList.deleteItemMenuText,
+            helpText=taskList.deleteItemHelpText, *args, **kwargs)
+
+    def doCommand(self, event):
+        deleteCommand = self.viewer.deleteTaskCommand()
+        deleteCommand.do()
 
 
 class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
@@ -772,19 +836,6 @@ class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
         return super(TaskMarkCompleted, self).enabled(event) and \
             [task for task in self.viewer.curselection() \
              if not task.completed()]
-
-
-class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand, 
-                 CategoriesCommand):
-    def __init__(self, *args, **kwargs):
-        super(TaskDelete, self).__init__(bitmap='delete',
-            menuText=_('&Delete task\tCtrl+DEL'),
-            helpText=_('Delete the selected task(s)'), *args, **kwargs)
-
-    def doCommand(self, event):
-        deleteCommand = command.DeleteTaskCommand(self.taskList, 
-            self.viewer.curselection(), categories=self.categories)
-        deleteCommand.do()
 
 
 class TaskDragAndDrop(TaskListCommand, ViewerCommand):
@@ -834,52 +885,45 @@ class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
             addAttachmentCommand.do()
                 
 
-class EffortNew(NeedsAtLeastOneTask, MainWindowCommand, EffortListCommand,
-        ViewerCommand, UICommandsCommand, TaskListCommand):
+class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand, 
+                TaskListCommand):
     def __init__(self, *args, **kwargs):
-        super(EffortNew, self).__init__(bitmap='start',  
-            menuText=_('&New effort...'), 
-            helpText=_('Add an effort period to the selected task(s)'),
-            *args, **kwargs)
+        effortList = kwargs['effortList']
+        super(EffortNew, self).__init__(bitmap='new',  
+            menuText=effortList.newItemMenuText, 
+            helpText=effortList.newItemHelpText, *args, **kwargs)
             
     def doCommand(self, event):
         if self.viewer.isShowingTasks() and self.viewer.curselection():
             selectedTasks = self.viewer.curselection()
         else:
-            subjectDecoratedTaskList = [(render.subject(task, 
-                recursively=True), task) for task in self.taskList]
-            subjectDecoratedTaskList.sort() # Sort by subject
-            selectedTasks = [subjectDecoratedTaskList[0][1]]
-        editor = gui.EffortEditor(self.mainwindow, 
-            command.NewEffortCommand(self.effortList, selectedTasks),
-            self.uiCommands, self.effortList, self.taskList)
-        editor.Show()
+            selectedTasks = None
+        dialog = self.viewer.newFffortDialog(bitmap=self.bitmap, 
+            selectedTasks=selectedTasks)
+        dialog.Show()
 
 
-class EffortEdit(NeedsSelectedEffort, MainWindowCommand, EffortListCommand, 
-        ViewerCommand, UICommandsCommand, TaskListCommand):
+class EffortEdit(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
+        effortList = kwargs['effortList']
         super(EffortEdit, self).__init__(bitmap='edit',
-            menuText=_('&Edit effort...'),
-            helpText=_('Edit the selected effort period(s)'), *args, **kwargs)
+            menuText=effortList.editItemMenuText,
+            helpText=effortList.editItemHelpText, *args, **kwargs)
             
     def doCommand(self, event):
-        editor = gui.EffortEditor(self.mainwindow,
-            command.EditEffortCommand(self.effortList, 
-            self.viewer.curselection()), self.uiCommands, self.effortList, 
-            self.taskList)
-        editor.Show()
+        dialog = self.viewer.editEffortDialog(bitmap=self.bitmap)
+        dialog.Show()
 
 
 class EffortDelete(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
+        effortList = kwargs['effortList']
         super(EffortDelete, self).__init__(bitmap='delete',
-            menuText=_('&Delete effort'),
-            helpText=_('Delete the selected effort period(s)'), *args, **kwargs)
+            menuText=effortList.deleteItemMenuText,
+            helpText=effortList.deleteItemHelpText, *args, **kwargs)
 
     def doCommand(self, event):
-        delete = command.DeleteCommand(self.effortList,
-            self.viewer.curselection())
+        delete = self.viewer.deleteEffortCommand()
         delete.do()
 
 
@@ -918,18 +962,16 @@ class EffortStop(TaskListCommand):
                      task.isBeingTracked()])
 
 
-class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
+class CategoryNew(ViewerCommand, CategoriesCommand):
     def __init__(self, *args, **kwargs):
+        categories = kwargs['categories']
         super(CategoryNew, self).__init__(bitmap='new', 
-            menuText=_('New category...'), helpText=_('Insert a new category'), 
-            *args, **kwargs)
+            menuText=categories.newItemMenuText,
+            helpText=categories.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        editor = gui.CategoryEditor(self.mainwindow, 
-            command.NewCategoryCommand(self.categories),
-            self.categories, self.uiCommands, 
-            bitmap=self.bitmap)
-        editor.Show(show)
+        dialog = self.viewer.newCategoryDialog(bitmap=self.bitmap)
+        dialog.Show(show)
         
 
 class CategoryNewSubCategory(NeedsSelectedCategory, MainWindowCommand, 
@@ -947,32 +989,28 @@ class CategoryNewSubCategory(NeedsSelectedCategory, MainWindowCommand,
         editor.Show(show)
 
 
-class CategoryDelete(NeedsSelectedCategory, MainWindowCommand, 
-        CategoriesCommand, ViewerCommand, UICommandsCommand):
+class CategoryDelete(NeedsSelectedCategory, CategoriesCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
+        categories = kwargs['categories']
         super(CategoryDelete, self).__init__(bitmap='delete',
-            menuText=_('Delete category'), 
-            helpText=_('Delete the selected categories'), *args, **kwargs)
+            menuText=categories.deleteItemMenuText, 
+            helpText=categories.deleteItemHelpText, *args, **kwargs)
         
     def doCommand(self, event):
-        delete = command.DeleteCommand(self.categories,
-            self.viewer.curselection())
+        delete = self.viewer.deleteCategoryCommand()
         delete.do()
 
 
-class CategoryEdit(NeedsSelectedCategory, MainWindowCommand, ViewerCommand,
-                   CategoriesCommand, UICommandsCommand):
+class CategoryEdit(NeedsSelectedCategory, ViewerCommand, CategoriesCommand):
     def __init__(self, *args, **kwargs):
+        categories = kwargs['categories']
         super(CategoryEdit, self).__init__(bitmap='edit',
-            menuText=_('Edit category...'),
-            helpText=_('Edit the selected categories'), *args, **kwargs)
+            menuText=categories.editItemMenuText,
+            helpText=categories.editItemHelpText, *args, **kwargs)
         
     def doCommand(self, event, show=True):
-        editor = gui.CategoryEditor(self.mainwindow, 
-            command.EditCategoryCommand(self.categories, 
-                                        self.viewer.curselection()),
-            self.categories, self.uiCommands, bitmap=self.bitmap)
-        editor.Show(show)
+        dialog = self.viewer.editCategoryDialog(bitmap=self.bitmap)
+        dialog.Show(show)
 
 
 class CategoryDragAndDrop(CategoriesCommand, ViewerCommand):
@@ -1238,45 +1276,44 @@ class UICommands(dict):
             key = key.lower()
             self[key] = UIRadioCommand(settings=settings, setting='tasksdue',
                 value=value, menuText=menuText, helpText=helpText)
-                                       
+        
+        # Generic domain object commands
+        self['new'] = NewDomainObject(viewer=viewer, taskList=taskList)
+        self['edit'] = EditDomainObject(viewer=viewer)
+        self['delete'] = DeleteDomainObject(viewer=viewer)
+        
         # Task menu
-        self['new'] = TaskNew(mainwindow=mainwindow, taskList=taskList, 
-            uiCommands=self, settings=settings)
+        self['newtask'] = TaskNew(viewer=viewer, taskList=taskList)
         self['newsubtask'] = TaskNewSubTask(mainwindow=mainwindow, 
             taskList=taskList, viewer=viewer, uiCommands=self, 
             settings=settings)
-        self['edit'] = TaskEdit(mainwindow=mainwindow, taskList=taskList, 
-            viewer=viewer, uiCommands=self, settings=settings)
+        self['edittask'] = TaskEdit(taskList=taskList, viewer=viewer)
         self['markcompleted'] = TaskMarkCompleted(taskList=taskList,
             viewer=viewer)
-        self['delete'] = TaskDelete(taskList=taskList, viewer=viewer, 
-            categories=categories)
+        self['deletetask'] = TaskDelete(taskList=taskList, viewer=viewer)
         self['mailtask'] = TaskMail(viewer=viewer, menuText=_('Mail task'), 
             helpText=_('Mail the task, using your default mailer'), 
             bitmap='email')
         self['addattachmenttotask'] = TaskAddAttachment(taskList=taskList,
                                                         viewer=viewer)
 
-
         # Effort menu
-        self['neweffort'] = EffortNew(mainwindow=mainwindow, viewer=viewer,
-            effortList=effortList, uiCommands=self, taskList=taskList)
-        self['editeffort'] = EffortEdit(mainwindow=mainwindow, viewer=viewer,
-            effortList=effortList, uiCommands=self, taskList=taskList)
+        self['neweffort'] = EffortNew(viewer=viewer, effortList=effortList,
+            taskList=taskList)
+        self['editeffort'] = EffortEdit(viewer=viewer, effortList=effortList)
         self['deleteeffort'] = EffortDelete(effortList=effortList, 
                                             viewer=viewer)
         self['starteffort'] = EffortStart(taskList=taskList, viewer=viewer)
         self['stopeffort'] = EffortStop(taskList=taskList)
         
         # Categorymenu
-        self['newcategory'] = CategoryNew(mainwindow=mainwindow,
-            categories=categories, uiCommands=self)
+        self['newcategory'] = CategoryNew(viewer=viewer, categories=categories)
         self['newsubcategory'] = CategoryNewSubCategory(mainwindow=mainwindow,
             viewer=viewer, categories=categories, uiCommands=self)
-        self['deletecategory'] = CategoryDelete(mainwindow=mainwindow,
-            viewer=viewer, categories=categories, uiCommands=self)
-        self['editcategory'] = CategoryEdit(mainwindow=mainwindow,
-            viewer=viewer, categories=categories, uiCommands=self)
+        self['deletecategory'] = CategoryDelete(viewer=viewer, 
+            categories=categories)
+        self['editcategory'] = CategoryEdit(viewer=viewer, 
+            categories=categories)
         
         # Help menu
         self['help'] = Help()

@@ -1,4 +1,4 @@
-import patterns, command, widgets, uicommand, menu, color, render
+import patterns, command, widgets, uicommand, menu, color, render, dialog
 import wx
 from i18n import _
 import wx.grid as grid
@@ -90,6 +90,9 @@ class Viewer(wx.Panel):
     
     def visibleColumns(self):
         return [widgets.Column(_('Subject'))]
+    
+    def itemEditor(self, *args, **kwargs):
+        raise NotImplementedError
     
     """
     def onActivateViewer(self):
@@ -384,7 +387,39 @@ class TaskViewer(UpdatePerSecondViewer):
         kwargs = super(TaskViewer, self).widgetCreationKeywordArguments()
         kwargs['onDropFiles'] = self.onDropFiles
         return kwargs
-               
+    
+    # The methods below have two names. This is because there are two types
+    # of domain object related UICommands. The generic variant works on
+    # whatever type of domain object is shown in the current viewer. The
+    # specific variant works on one specific type of domain object.
+    # When a generic UICommand is invoked, e.g. uicommand.NewDomainObject, 
+    # it will use 'itemEditor' to get a domain object editor for the current 
+    # viewer. But when a specific UICommand is invoked, e.g. uicommand.NewTask, 
+    # a TaskEditor needs to be returned, independently of which viewer is 
+    # current. So, uicommand.NewTask will call taskEditor() to force a 
+    # task editor.
+    
+    def newItemDialog(self, *args, **kwargs):
+        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self), 
+            command.NewTaskCommand(self.list), self.list, self.uiCommands, 
+            self.settings, self.categories, bitmap=kwargs['bitmap'])
+    
+    newTaskDialog = newItemDialog
+    
+    def editItemDialog(self, *args, **kwargs):
+        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
+            command.EditTaskCommand(self.list, self.curselection()),
+            self.list, self.uiCommands, self.settings, self.categories,
+            bitmap=kwargs['bitmap'])
+    
+    editTaskDialog = editItemDialog
+    
+    def deleteItemCommand(self):
+        return command.DeleteTaskCommand(self.list, self.curselection(),
+            categories=self.categories)
+        
+    deleteTaskCommand = deleteItemCommand
+           
             
 class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
     def __init__(self, *args, **kwargs):
@@ -465,7 +500,7 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr, 
-            self.onSelect, self.uiCommands['edit'], 
+            self.onSelect, self.uiCommands['edittask'], 
             self.createTaskPopupMenu(),
             self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
@@ -494,7 +529,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
             self.getItemAttr, self.getItemId, self.getRootIndices, 
-            self.getChildIndices, self.onSelect, self.uiCommands['edit'], 
+            self.getChildIndices, self.onSelect, self.uiCommands['edittask'], 
             self.uiCommands['draganddroptask'], self.createTaskPopupMenu(),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(self.createImageList())
@@ -555,7 +590,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
             self.getItemImage, self.getItemAttr, self.getItemId, 
             self.getRootIndices, self.getChildIndices, self.onSelect, 
-            self.uiCommands['edit'], self.uiCommands['draganddroptask'],
+            self.uiCommands['edittask'], self.uiCommands['draganddroptask'],
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(self.createImageList())
@@ -616,8 +651,29 @@ class CategoryViewer(TreeViewer):
     
     def isShowingCategories(self):
         return True
-    
 
+    # See TaskViewer for why the methods below have two names.
+    
+    def newItemDialog(self, *args, **kwargs):
+        return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self), 
+            command.NewCategoryCommand(self.list),
+            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+    
+    newCategoryDialog = newItemDialog
+    
+    def editItemDialog(self, *args, **kwargs):
+        return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
+            command.EditCategoryCommand(self.list, self.curselection()),
+            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+    
+    editCategoryDialog = editItemDialog
+    
+    def deleteItemCommand(self):
+        return command.DeleteCommand(self.list, self.curselection())
+    
+    deleteCategoryCommand = deleteItemCommand
+    
+    
 class EffortViewer(UpdatePerSecondViewer):
     def isShowingEffort(self):
         return True
@@ -638,7 +694,34 @@ class EffortViewer(UpdatePerSecondViewer):
         status2 = _('Status: %d tracking')% self.list.nrBeingTracked()
         return status1, status2
  
+    # See TaskViewer for why the methods below have two names.
     
+    def newItemDialog(self, *args, **kwargs):
+        selectedTasks = kwargs.get('selectedTasks', [])
+        if not selectedTasks:
+            subjectDecoratedTaskList = [(render.subject(task, 
+                recursively=True), task) for task in self.taskList]
+            subjectDecoratedTaskList.sort() # Sort by subject
+            selectedTasks = [subjectDecoratedTaskList[0][1]]
+        return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
+            command.NewEffortCommand(self.list, selectedTasks),
+            self.uiCommands, self.list, self.taskList, bitmap=kwargs['bitmap'])
+        
+    newEffortDialog = newItemDialog
+    
+    def editItemDialog(self, *args, **kwargs):
+        return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
+            command.EditEffortCommand(self.list, self.curselection()), 
+            self.uiCommands, self.list, self.taskList)
+    
+    editEffortDialog = editItemDialog
+    
+    def deleteItemCommand(self):
+        return command.DeleteCommand(self.list, self.curselection())
+    
+    deleteEffortCommand = deleteItemCommand
+    
+
 class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     def __init__(self, parent, list, *args, **kwargs):
         self.taskList = list

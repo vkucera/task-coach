@@ -1,8 +1,7 @@
 import test, gui, wx, config
 from unittests import dummy
 from gui import uicommand
-import domain.task as task
-import domain.category as category
+from domain import task, effort, category
 
 
 class MenuTestCase(test.wxTestCase):
@@ -82,14 +81,18 @@ class RecentFilesMenuTest(test.wxTestCase):
     def setUp(self):
         self.ioController = MockIOController()
         self.settings = config.Settings(load=False)
+        self.taskList = task.TaskList()
+        self.effortList = effort.EffortList(self.taskList)
+        self.categories = category.CategoryList()
         self.initialFileMenuLength = len(self.createFileMenu())
         self.filename1 = 'c:/Program Files/TaskCoach/test.tsk'
         self.filename2 = 'c:/two.tsk'
         self.filenames = []
         
     def createFileMenu(self):
-        return gui.menu.FileMenu(self.frame, dummy.DummyUICommands(self.ioController), 
-                                 self.settings)
+        return gui.menu.FileMenu(self.frame, gui.uicommand.UICommands(self.frame,
+            self.ioController, None, self.settings, self.taskList, 
+            self.effortList, self.categories), self.settings)
         
     def setRecentFilesAndCreateMenu(self, *filenames):
         self.addRecentFiles(*filenames)
@@ -156,7 +159,8 @@ class ViewMenuTestCase(test.wxTestCase):
         self.mainWindow = self.createMainWindow()
         self.filteredTaskList = self.createFilteredTaskList()
         self.uiCommands = uicommand.UICommands(self.mainWindow, None, None, 
-            self.settings, self.filteredTaskList, None, category.CategoryList())
+            self.settings, self.filteredTaskList, 
+            effort.EffortList(self.filteredTaskList), category.CategoryList())
         self.menu = self.createMenu()
         menuBar = wx.MenuBar()
         menuBar.Append(self.menu, 'menu')
@@ -166,7 +170,7 @@ class ViewMenuTestCase(test.wxTestCase):
         return None
         
     def createFilteredTaskList(self):
-        return None
+        return task.TaskList()
 
 
 class ViewSortMenuTest(ViewMenuTestCase):

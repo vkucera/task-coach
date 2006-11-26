@@ -1,9 +1,10 @@
-import patterns, effort
+import patterns, effort, effortlist
 from domain import date
 from domain import task
 
 
-class EffortAggregator(patterns.SetDecorator):
+class EffortAggregator(patterns.SetDecorator, 
+                       effortlist.EffortUICommandNamesMixin):
     ''' This class observes an TaskList and aggregates the individual effort
         records to CompositeEfforts, e.g. per day or per week. This class is 
         abstract. Subclasses should implement startOfPeriod(dateTime)
@@ -19,6 +20,14 @@ class EffortAggregator(patterns.SetDecorator):
             eventType=task.Task.addChildEventType())
         patterns.Publisher().registerObserver(self.onEffortStartChanged, 
             eventType='effort.start')
+        
+    def extend(self, efforts):
+        for effort in efforts:
+            effort.task().addEffort(effort)
+            
+    def removeItems(self, efforts):
+        for effort in efforts:
+            effort.task().removeEffort(effort)
 
     def extendSelf(self, tasks):
         ''' extendSelf is called when an item is added to the observed

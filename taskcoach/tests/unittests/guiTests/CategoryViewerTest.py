@@ -1,12 +1,15 @@
 import test, gui
 from unittests import dummy
-import domain.category as category
+from domain import task, effort, category
 
 class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
+        self.taskList = task.TaskList()
+        self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
-            dummy.DummyUICommands())
+            gui.uicommand.UICommands(self.frame, None, None, None, self.taskList,
+                self.effortList, self.categories))
         
     def testInitialSize(self):
         self.assertEqual(0, self.viewer.size())

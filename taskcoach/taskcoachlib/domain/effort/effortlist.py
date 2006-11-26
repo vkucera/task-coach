@@ -1,4 +1,5 @@
-import patterns                    
+import patterns 
+from i18n import _                   
 
 class MaxDateTimeMixin:
     def maxDateTime(self):
@@ -7,9 +8,18 @@ class MaxDateTimeMixin:
             return max(stopTimes)
         else:
             return None
+
+class EffortUICommandNamesMixin(object):
+    newItemMenuText = _('&New effort...')
+    newItemHelpText =  _('Add an effort period to the selected task(s)')
+    editItemMenuText = _('&Edit effort...')
+    editItemHelpText = _('Edit the selected effort period(s)')
+    deleteItemMenuText= _('&Delete effort')
+    deleteItemHelpText= _('Delete the selected effort period(s)')
     
                         
-class EffortList(patterns.SetDecorator, MaxDateTimeMixin):
+class EffortList(patterns.SetDecorator, MaxDateTimeMixin, 
+                 EffortUICommandNamesMixin):
     ''' EffortList observes a TaskList and contains all effort records of
         all tasks in the underlying TaskList. '''
 
