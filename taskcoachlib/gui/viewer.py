@@ -419,6 +419,14 @@ class TaskViewer(UpdatePerSecondViewer):
             categories=self.categories)
         
     deleteTaskCommand = deleteItemCommand
+    
+    def newSubItemDialog(self, *args, **kwargs):
+        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self), 
+            command.NewSubTaskCommand(self.list, self.curselection()), 
+            self.list, self.uiCommands, self.settings, self.categories,
+            bitmap=kwargs['bitmap'])
+        
+    newSubTaskDialog = newSubItemDialog
            
             
 class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
@@ -672,6 +680,13 @@ class CategoryViewer(TreeViewer):
         return command.DeleteCommand(self.list, self.curselection())
     
     deleteCategoryCommand = deleteItemCommand
+    
+    def newSubItemDialog(self, *args, **kwargs):
+        return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self), 
+            command.NewSubCategoryCommand(self.list, self.curselection()),
+            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+        
+    newSubCategoryDialog = newSubItemDialog
     
     
 class EffortViewer(UpdatePerSecondViewer):
