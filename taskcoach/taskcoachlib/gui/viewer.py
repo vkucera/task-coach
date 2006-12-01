@@ -535,12 +535,13 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
+        imageList = self.createImageList() # Has side-effects
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
             self.getItemAttr, self.getItemId, self.getRootIndices, 
             self.getChildIndices, self.onSelect, self.uiCommands['edittask'], 
             self.uiCommands['draganddroptask'], self.createTaskPopupMenu(),
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(self.createImageList())
+        widget.AssignImageList(imageList)
         return widget
     
     def createFilter(self, taskList):
@@ -595,13 +596,14 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
 class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
     def createWidget(self):
         self._columns = self._createColumns()
+        imageList = self.createImageList() # Has side-effects
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
             self.getItemImage, self.getItemAttr, self.getItemId, 
             self.getRootIndices, self.getChildIndices, self.onSelect, 
             self.uiCommands['edittask'], self.uiCommands['draganddroptask'],
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(self.createImageList())
+        widget.AssignImageList(imageList)
         return widget    
 
 

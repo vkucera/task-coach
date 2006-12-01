@@ -372,19 +372,20 @@ class PrinterSettings(object):
 
 printerSettings = PrinterSettings()
 
-def createPrintout(viewer):
-    htmlText = persistence.viewer2html(viewer)
-    printout = wx.html.HtmlPrintout()
-    printout.SetHtmlText(htmlText)
-    printout.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
-    printout.SetFonts('Arial', 'Courier')
-    global printerSettings
-    top, left = printerSettings.pageSetupData.GetMarginTopLeft()
-    bottom, right = printerSettings.pageSetupData.GetMarginBottomRight()
-    printout.SetMargins(top, bottom, left, right)
-    return printout
+class Printout(wx.html.HtmlPrintout):
+    def __init__(self, viewer, printSelectionOnly=False, *args, **kwargs):
+        super(Printout, self).__init__(*args, **kwargs)
+        htmlText = persistence.viewer2html(viewer, 
+                                           selectionOnly=printSelectionOnly)
+        self.SetHtmlText(htmlText)
+        self.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
+        self.SetFonts('Arial', 'Courier')
+        global printerSettings
+        top, left = printerSettings.pageSetupData.GetMarginTopLeft()
+        bottom, right = printerSettings.pageSetupData.GetMarginBottomRight()
+        self.SetMargins(top, bottom, left, right)
 
-
+                
 class PrintPageSetup(MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(PrintPageSetup, self).__init__(\
@@ -411,8 +412,8 @@ class PrintPreview(ViewerCommand, MainWindowCommand):
 
     def doCommand(self, event):
         global printerSettings 
-        printout = createPrintout(self.viewer)
-        printout2 = createPrintout(self.viewer)
+        printout = Printout(self.viewer)
+        printout2 = Printout(self.viewer)
         preview = wx.PrintPreview(printout, printout2, 
             printerSettings.printData)
         previewFrame = wx.PreviewFrame(preview, self.mainwindow, 
@@ -430,10 +431,18 @@ class Print(ViewerCommand, MainWindowCommand):
 
     def doCommand(self, event):
         global printerSettings 
-        printout = createPrintout(self.viewer)
         printDialogData = wx.PrintDialogData(printerSettings.printData)
-        printDialog = wx.Printer(printDialogData)
-        printDialog.Print(self.mainwindow, printout, prompt=True)
+        printDialogData.EnableSelection(True)
+        printer = wx.Printer(printDialogData)
+        printer.PrintDialog(self.mainwindow)
+        printout = Printout(self.viewer, 
+            printSelectionOnly=printer.PrintDialogData.Selection)
+        # If the user checks the selection radio button, the ToPage property 
+        # gets set to 1. Looks like a bug to me. The simple work-around is to
+        # reset the ToPage property to the MaxPage value if necessary:
+        if printer.PrintDialogData.Selection:
+            printer.PrintDialogData.ToPage = printer.PrintDialogData.MaxPage
+        printer.Print(self.mainwindow, printout, prompt=False)
  
 
 class FileExportAsICS(IOCommand):
