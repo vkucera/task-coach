@@ -214,8 +214,12 @@ class Listbook(Book, wx.Listbook):
         return super(Listbook, self).onDragOver(x, y, defaultResult, 
             pageSelectionArea=self.GetListView())
     
-
-class AUINotebook(Book, wx.aui.AuiMultiNotebook):
+try:
+    AuiNotebook = wx.aui.AuiMultiNotebook
+except AttributeError:
+    AuiNotebook = wx.aui.AuiNotebook
+    
+class AUINotebook(Book, AuiNotebook):
     pageChangedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED
     
     def __init__(self, *args, **kwargs):
@@ -230,4 +234,4 @@ class AUINotebook(Book, wx.aui.AuiMultiNotebook):
     
     def AddPage(self, page, name, bitmap=None):
         bitmap = wx.ArtProvider.GetBitmap(bitmap)
-        wx.aui.AuiMultiNotebook.AddPage(self, page, name, bitmap=bitmap)
+        AuiNotebook.AddPage(self, page, name, bitmap=bitmap)
