@@ -27,6 +27,14 @@ class Set(set):
     def __new__(class_, iterable=None, *args, **kwargs):
         return set.__new__(class_, iterable)
 
+    def __cmp__(self, other):
+        # If set.__cmp__ is called we get a TypeError in Python 2.5, so
+        # call set.__eq__ instead
+        if self == other:
+            return 0
+        else:
+            return -1
+
 
 class Event(object):
     ''' Event represents notification events. '''
@@ -86,8 +94,12 @@ class Publisher(object):
             method that should expect one argument, an instance of Event.
             The eventType can be anything hashable, typically a string. '''
         observerList = self.__observers.setdefault(eventType, [])
-        if observer not in observerList:
-            observerList.append(observer)
+        try:
+            if observer not in observerList:
+                observerList.append(observer)
+        except TypeError:
+            raise
+            #print observer, type(observer), observer.im_self
         
     def removeObserver(self, observer, eventType=None):
         ''' Remove an observer. If no event type is specified, the observer

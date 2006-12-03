@@ -14,6 +14,10 @@ class MainWindowTest(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(dummy.IOController(),
             self.taskFile, [], self.settings)
+        
+    def tearDown(self):
+        del self.mainwindow
+        super(MainWindowTest, self).tearDown()
 
     def testStatusBar_Show(self):
         self.settings.set('view', 'statusbar', 'True')

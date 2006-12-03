@@ -3,6 +3,10 @@
 from changetypes import *
 
 releases = [
+Release('0.61.4', 'December ?, 2006',
+    bugsFixed=[
+        Bug('''Make Task Coach work with Python 2.5.''')]),
+        
 Release('0.61.3', 'November 19, 2006',
     bugsFixed=[
         Bug('''If saving the TaskCoach.ini file would fail, displaying

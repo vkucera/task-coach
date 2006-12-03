@@ -21,20 +21,10 @@ class TextCtrlTest(test.wxTestCase):
 
 
 class DatePickerCtrlTest(test.wxTestCase):
-    def testStyleDP_ALLOWNONEOnlyWorksOnWindows(self):
-        dpc = wx.DatePickerCtrl(self.frame, style=wx.DP_ALLOWNONE)
-        value = dpc.GetValue()
-        if '__WXMSW__' in wx.PlatformInfo:
-            self.failIf(value.IsValid())
-        else:
-            self.failUnless(value.IsValid())
-
-    def testAssertionOnGetValueOnWxPython2_7_1(self):
-        dpc = wx.DatePickerCtrl(self.frame)
-        today = wx.DateTime()
-        today.SetToCurrent()
-        dpc.SetValue(today)
-        if wx.VERSION < (2,7) or '__WXMAC__' in wx.PlatformInfo:
-            dpc.GetValue()
-        else:
-            self.assertRaises(wx.PyAssertionError, dpc.GetValue)
+    def testCreatingDatePickerWithStyleDP_ALLOWNONEFailsWithWxPython2_7_2(self):
+        try:
+            dpc = wx.DatePickerCtrl(self.frame, style=wx.DP_ALLOWNONE)
+            self.fail('Successfully created DatePickerCtrl with style=DP_ALLOWNONE')
+        except wx.PyAssertionError:
+            pass
+            

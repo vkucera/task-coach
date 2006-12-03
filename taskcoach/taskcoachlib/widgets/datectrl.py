@@ -55,15 +55,19 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(Panel):
         return self.__datePicker.IsEnabled()
 
 
+def styleDP_ALLOWNONEIsBroken():
+    return not ('__MSW__' in wx.PlatformInfo and wx.VERSION[0:2] == (2, 7))
+    # DP_ALLOWNONE is not supported on Mac OS and Linux, and on Windows 
+    # passing style=wx.DP_ALLOWNONE without a valid date currently causes 
+    # an exception (wxPython 2.7.2.0, wxPython 2.8 seems to be ok).
+
+
 def DatePickerCtrl(*args, **kwargs):
     ''' Factory function that returns _DatePickerCtrlThatFixesAllowNoneStyle 
         when necessary and wx.DatePickerCtrl otherwise. '''
 
     def styleIncludesDP_ALLOWNONE(style):
         return (style & wx.DP_ALLOWNONE) == wx.DP_ALLOWNONE 
-
-    def styleDP_ALLOWNONEIsBroken():
-        return not ('__WXMSW__' in wx.PlatformInfo)
 
     style = kwargs.get('style', wx.DP_DEFAULT)
     if styleIncludesDP_ALLOWNONE(style) and styleDP_ALLOWNONEIsBroken():
