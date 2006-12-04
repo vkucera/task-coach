@@ -29,6 +29,13 @@ class ViewerContainer(object):
         ''' Return a function that will call the method on the first viewer 
             that both has the requested method and does not raise an exception.
             Start looking in the current viewer. '''
+            
+        if method == '__length_hint__':
+            print method
+            import traceback
+            print ''.join(traceback.format_stack())
+            while True:
+                pass
         def findFirstViewer(*args, **kwargs):
             for viewer in [self[self.__currentPageNumber]] + list(self):
                 if hasattr(viewer, method):
@@ -39,7 +46,13 @@ class ViewerContainer(object):
             else:
                 raise AttributeError
         return findFirstViewer
-        
+    
+    def __length_hint__(self):
+        # Needed for python 2.5. Apparently, the call to list(self) above
+        # silently calls self.__length_hint__(). If that method does not
+        # exist a endless recursive loop starts, hanging the app as result.
+        return self.GetPageCount()
+    
     def onSelect(self, event):
         patterns.Publisher().notifyObservers(patterns.Event(self, 
             self.selectEventType(), *event.values()))
