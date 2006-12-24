@@ -119,12 +119,14 @@ class NewTaskTest(TaskEditorTestCase):
             self.errorMessage = args[0]
         item = wx.ListItem()
         item.SetId(0)
-        item.SetText('tÃƒÂ©st.tsk')
+        item.SetText('tÃƒÂ©st.ÃƒÂ©')
         item.SetState(wx.LIST_STATE_SELECTED)
         self.editor[0][4]._listCtrl.InsertItem(item)
         self.editor[0][4].onOpen(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo and sys.version_info < (2,5):
-            errorMessageStart = "'ascii' codec can't encode character"    
+            errorMessageStart = "'ascii' codec can't encode character"
+        elif '__WXMAC__' in wx.PlatformInfo and sys.version_info >= (2,5):
+            errorMessageStart = ""    
         else:
             errorMessageStart = "[Error 2] The system cannot find the file specified"
         self.failUnless(self.errorMessage.startswith(errorMessageStart))
