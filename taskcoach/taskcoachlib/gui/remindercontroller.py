@@ -21,11 +21,12 @@ class ReminderController(object):
         self.__removeRemindersForTasks(event.values())
                 
     def onSetReminder(self, event):
-        task, reminderDateTime = event.source(), event.value()
-        previousReminderDateTime = self.__tasksWithReminders.get(task, None)
-        if previousReminderDateTime:
-            self.__removeReminder(task, previousReminderDateTime)
-        self.__registerReminder(task)
+        task, newReminderDateTime = event.source(), event.value()
+        oldReminderDateTime = self.__tasksWithReminders.get(task, None)
+        if oldReminderDateTime:
+            self.__removeReminder(task, oldReminderDateTime)
+        if newReminderDateTime:
+            self.__registerReminder(task, newReminderDateTime)
         
     def onReminder(self, event):
         now = event.value()
@@ -47,8 +48,8 @@ class ReminderController(object):
             if task in self.__tasksWithReminders:
                 self.__removeReminder(task)
 
-    def __registerReminder(self, task):
-        reminderDateTime = task.reminder()
+    def __registerReminder(self, task, reminderDateTime=None):
+        reminderDateTime = reminderDateTime or task.reminder()
         if not reminderDateTime in self.__tasksWithReminders.values():
             self.__changeDateTimeObservation(reminderDateTime, 'registerObserver')
         self.__tasksWithReminders[task] = reminderDateTime

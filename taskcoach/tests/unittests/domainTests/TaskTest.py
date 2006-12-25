@@ -1058,6 +1058,10 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTests):
     def testNewReminderCancelsPreviousReminder(self):
         self.task.setReminder()
         self.assertEqual(None, self.events[0].value())
+        
+    def testMarkCompletedCancelsReminder(self):
+        self.task.setCompletionDate()
+        self.assertReminder(None)
 
 
 class TaskSettingTestCase(TaskTestCase, CommonTaskTests):
