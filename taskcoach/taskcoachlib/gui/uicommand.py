@@ -760,7 +760,7 @@ class TaskEdit(NeedsSelectedTasks, MainWindowCommand, TaskListCommand,
 class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMarkCompleted, self).__init__(bitmap='markcompleted',
-            menuText=_('&Mark completed\tCtrl+ENTER'),
+            menuText=_('&Mark completed\tCtrl+RETURN'),
             helpText=_('Mark the selected task(s) completed'), *args, **kwargs)
 
     def doCommand(self, event):

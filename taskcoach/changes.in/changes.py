@@ -7,7 +7,8 @@ Release('0.61.4', 'December ?, 2006',
     bugsFixed=[
         Bug('Make Task Coach work with Python 2.5.'),
         Bug('Cancel reminders when marking a task completed.', '1606990'),
-        Bug('Unchecking a reminder would cause an exception.', '1606990')]),
+        Bug('Unchecking a reminder would cause an exception.', '1606990'),
+        Bug('Column resizing is less jumpy.', '1606319')]),
         
 Release('0.61.3', 'November 19, 2006',
     bugsFixed=[

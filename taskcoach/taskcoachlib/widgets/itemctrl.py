@@ -2,7 +2,7 @@
     and TreeListCtrl. '''
 
 
-import wx, wx.lib.mixins.listctrl, draganddrop
+import wx, wx.lib.mixins.listctrl, draganddrop, autowidth
 
 
 class _CtrlWithItems(object):
@@ -205,47 +205,11 @@ class _BaseCtrlWithColumns(object):
         raise ValueError, '%s: unknown column header'%columnHeader
 
  
-class _CtrlWithAutoResizeableColumns(_BaseCtrlWithColumns, wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin):
+class _CtrlWithAutoResizeableColumns(_BaseCtrlWithColumns, autowidth.AutoColumnWidthMixin):
     ''' This class is responsible for automatic resizing of a column. The 
         resizeable column should be passed as resizeableColumn keyword argument
         to the constructor. '''
-        
-    def __init__(self, *args, **kwargs):
-        self.__resizeableColumn = kwargs.pop('resizeableColumn')
-        self.__minColumnWidth = 80 # Some rather arbitrary minimum width
-        super(_CtrlWithAutoResizeableColumns, self).__init__(*args, **kwargs)
-      
-    def _setColumns(self, *args, **kwargs):
-        # We initialize ListCtrlAutoWidthMixin here, because _setColumns() is
-        # invoked by _BaseCtrlWithColumns.__init__() and ListCtrlAutoWidthMixin
-        # must be initialized before the first column is added (which happens in
-        # _BaseCtrlWithColumns._setColumns().
-        wx.lib.mixins.listctrl.ListCtrlAutoWidthMixin.__init__(self)
-        super(_CtrlWithAutoResizeableColumns, self)._setColumns(*args, **kwargs)
-        self.setResizeColumn(self.__resizeableColumn)
-    
-    # Override all methods that manipulate columns to be able to resize the
-    # columns after any additions or removals.
-    
-    def InsertColumn(self, *args, **kwargs):
-        ''' Insert the new column and then resize. '''
-        super(_CtrlWithAutoResizeableColumns, self).InsertColumn(*args, **kwargs)
-        self.resizeColumn(self.__minColumnWidth)
-        
-    def DeleteColumn(self, *args, **kwargs):
-        ''' Delete the column and then resize. '''
-        super(_CtrlWithAutoResizeableColumns, self).DeleteColumn(*args, **kwargs)
-        self.resizeColumn(self.__minColumnWidth)
-        
-    def RemoveColumn(self, *args, **kwargs):
-        ''' Remove the column and then resize. '''
-        super(_CtrlWithAutoResizeableColumns, self).RemoveColumn(*args, **kwargs)
-        self.resizeColumn(self.__minColumnWidth)
-
-    def AddColumn(self, *args, **kwargs):
-        ''' Add the column and then resize. '''
-        super(_CtrlWithAutoResizeableColumns, self).AddColumn(*args, **kwargs)
-        self.resizeColumn(self.__minColumnWidth)
+    pass
         
         
 class _CtrlWithHideableColumns(_BaseCtrlWithColumns):        

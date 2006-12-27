@@ -75,8 +75,8 @@ footer = '''
                     <a href="http://www.jrsoftware.org">Inno Setup</a><br>
                     <a href="http://www.bluerobot.com">Bluerobot.com</a><br>
                     <a href="http://sourceforge.net"><img
-                src="http://sourceforge.net/sflogo.php?group_id=130831&type=1"
-                width="88" height="31" border="0" alt="SourceForge.net Logo"/></a>
+                src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&amp;type=1"
+                width="88" height="31" border="0" alt="SourceForge.net"/></a>
                 </p>
             </div>
             <div class="navbox">
