@@ -210,7 +210,7 @@ class _CtrlWithAutoResizeableColumns(_BaseCtrlWithColumns, autowidth.AutoColumnW
         resizeable column should be passed as resizeableColumn keyword argument
         to the constructor. '''
     pass
-        
+
         
 class _CtrlWithHideableColumns(_BaseCtrlWithColumns):        
     ''' This class supports hiding columns. '''

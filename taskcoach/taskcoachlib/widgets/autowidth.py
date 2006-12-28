@@ -30,7 +30,8 @@ class AutoColumnWidthMixin(object):
         else:
             # Temporarily unbind the EVT_SIZE to prevent resizing during dragging
             self.Unbind(wx.EVT_SIZE)
-            event.Skip()
+            if '__WXMAC__' not in wx.PlatformInfo:
+                event.Skip()
         
     def OnEndColumnDrag(self, event):
         self.Bind(wx.EVT_SIZE, self.OnResize)
@@ -38,10 +39,10 @@ class AutoColumnWidthMixin(object):
         event.Skip()
         
     def OnResize(self, event):
-        if 'gtk2' in wx.PlatformInfo:
-            self.DoResize()
-        else:
+        if '__WXMSW__' in wx.PlatformInfo:
             wx.CallAfter(self.DoResize)
+        else:
+            self.DoResize()
         event.Skip()
 
     def DoResize(self):
@@ -74,7 +75,7 @@ class AutoColumnWidthMixin(object):
         availableWidth = self.GetClientSize().width
         if wx.Platform != '__WXMSW__' and self.GetItemCount() > self.GetCountPerPage():
             scrollbarWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
-            availableWidth -= scrollbarWidth
+            availableWidth -= scrollbarWidth            
         return availableWidth
     
     AvailableWidth = property(GetAvailableWidth)
