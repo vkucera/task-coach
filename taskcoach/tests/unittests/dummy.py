@@ -56,6 +56,9 @@ class DummyUICommand(gui.uicommand.UICommand):
     def onCommandActivate(self, event):
         self.activated = True
 
+    def getHelpText(self):
+        return 'Help text'
+
 
 class DummyUICommands(gui.uicommand.UICommands):
     def __init__(self, iocontroller=None, taskList=None, effortList=None):
