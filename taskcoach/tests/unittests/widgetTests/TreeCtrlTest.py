@@ -65,8 +65,7 @@ class TreeCtrlTestCase(test.wxTestCase):
             self.assertEqual(nrChildren, self.treeCtrl.GetChildrenCount(item))
     
     def assertSelection(self, selected=None, notSelected=None):
-        if not ('__WXMSW__' in wx.PlatformInfo and sys.version_info >= (2, 5)):
-            wx.Yield()
+        wx.Yield()
         for index in selected or []:
             self.failUnless(self.treeCtrl.IsSelected(self.treeCtrl[index]))
         for index in notSelected or []:
