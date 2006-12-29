@@ -165,12 +165,16 @@ class CategoryFilter(Filter):
     def __init__(self, *args, **kwargs):
         self.__settings = kwargs.pop('settings')
         self.__categories = kwargs.pop('categories')
+        patterns.Publisher().registerObserver(self.onCategoryChanged,
+            eventType=self.__categories.addItemEventType())
+        patterns.Publisher().registerObserver(self.onCategoryChanged,
+            eventType=self.__categories.removeItemEventType())
         patterns.Publisher().registerObserver(self.onSettingChanged, 
             eventType='view.taskcategoryfiltermatchall')
         patterns.Publisher().registerObserver(self.onSettingChanged,
             eventType='category.filter')
         super(CategoryFilter, self).__init__(*args, **kwargs)
-
+        
     def filter(self, tasks):
         filteredCategories = [category for category in self.__categories 
                               if category.isFiltered()]
@@ -189,3 +193,6 @@ class CategoryFilter(Filter):
             return False not in matches
         else:
             return True in matches
+        
+    def onCategoryChanged(self, event):
+        self.reset()

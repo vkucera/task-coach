@@ -2,9 +2,8 @@ import test, gui, config, TaskViewerTest, wx
 from unittests import dummy
 from gui import render
 from i18n import _
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
+from domain import task, effort, date, category
+
 
 class CommonTests:
     ''' Tests common to all TaskListViewers, i.e. TaskListViewer and
@@ -65,12 +64,13 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
     def setUp(self):
         super(TaskListViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
+        self.categories = category.CategoryList()
         self.taskList = task.sorter.Sorter(task.TaskList(), 
             settings=self.settings)
         self.settings.set('view', 'sortby', 'subject')
         self.task = task.Task('task')
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
-            dummy.DummyUICommands(), self.settings, categories=[])
+            dummy.DummyUICommands(), self.settings, categories=self.categories)
         
     def assertItems(self, *tasks):
         self.assertEqual(len(tasks), self.viewer.size())

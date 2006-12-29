@@ -21,7 +21,7 @@ wx.SystemOptions.SetOptionInt('mac.listctrl.always_use_generic', 1)
 class wxApp(wx.App):
     def OnInit(self):
         return True
-
+    
 
 class App(object):
     def __init__(self, options=None, args=None, **kwargs):

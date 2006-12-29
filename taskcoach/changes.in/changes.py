@@ -12,7 +12,10 @@ Release('0.61.4', 'December ?, 2006',
         Bug('MSVCP71.DLL was missing from the Windows distribution.', 
             '1602364'),
         Bug('''Marking a task completed while completed tasks are hidden 
-wouldn't immediately hide the completed task.''', '1572920')]),
+wouldn't immediately hide the completed task.''', '1572920'),
+        Bug('''The category filter was not applied correctly on launch; 
+showing categories as filtered but not hiding the associated tasks.''', 
+'1603846')]),
         
 Release('0.61.3', 'November 19, 2006',
     bugsFixed=[

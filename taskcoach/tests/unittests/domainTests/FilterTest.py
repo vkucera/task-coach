@@ -326,7 +326,25 @@ class CategoryFilterFixtureAndCommonTests(CategoryFilterHelpers):
                               
     def testInitial(self):
         self.assertEqual(2, len(self.filter))
-    
+        
+    def testInitialWhenOneCategoryFiltered(self):
+        self.unusedCategory.setFiltered()
+        self.filter = task.filter.CategoryFilter(self.list,
+            categories=self.categories, settings=self.settings,
+            treeMode=self.treeMode)
+        self.assertEqual(0, len(self.filter))
+        
+    def testAddFilteredCategory(self):
+        newCategory = category.Category('new')
+        newCategory.setFiltered()
+        self.categories.append(newCategory)
+        self.assertEqual(0, len(self.filter))
+        
+    def testRemoveFilteredCategory(self):
+        self.unusedCategory.setFiltered()
+        self.categories.remove(self.unusedCategory)
+        self.assertEqual(2, len(self.filter))
+        
     def testFilterOnCategoryNotPresent(self):
         self.unusedCategory.setFiltered()
         self.assertEqual(0, len(self.filter))

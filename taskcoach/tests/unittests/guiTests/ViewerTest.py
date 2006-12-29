@@ -1,6 +1,6 @@
 import test, gui, wx, config, patterns
 from unittests import dummy
-from domain import task, effort, date
+from domain import task, effort, date, category
 
 class ViewerTest(test.wxTestCase):
     def setUp(self):
@@ -48,10 +48,12 @@ class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
         self.task = task.Task()
         self.settings = config.Settings(load=False)
+        self.categories = category.CategoryList()
         self.taskList = task.sorter.Sorter(task.TaskList([self.task]), 
             settings=self.settings)
         self.viewer = TaskListViewerUnderTest(self.frame,
-            self.taskList, dummy.DummyUICommands(), self.settings, categories=[])
+            self.taskList, dummy.DummyUICommands(), self.settings, 
+            categories=self.categories)
 
     def testGetTimeSpent(self):
         timeSpent = self.viewer.getItemText(0, self.viewer.columns()[7])
@@ -152,8 +154,9 @@ class UpdatePerSecondViewerTests(object):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
+        self.categories = category.CategoryList()
         self.updateViewer = self.ListViewerClass(self.frame, self.taskList, 
-            dummy.DummyUICommands(), self.settings, categories=[])
+            dummy.DummyUICommands(), self.settings, categories=self.categories)
         self.trackedTask = task.Task(subject='tracked')
         self.trackedTask.addEffort(effort.Effort(self.trackedTask))
         self.taskList.append(self.trackedTask)
