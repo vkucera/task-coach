@@ -54,12 +54,11 @@ class ViewFilter(Filter):
         self.addOrRemoveTask(event.source())
 
     def addOrRemoveTask(self, task):
-        if self.filter([task]):
+        if self.filterTask(task, *self.filterSettings()):
             if task in self.observable() and task not in self:
                 self.extendSelf([task])
         else:
-            if task in self and task not in self.observable():
-                self.removeItemsFromSelf([task])
+            self.removeItemsFromSelf([task])
         
     def getViewTasksDueBeforeDate(self):
         dateFactory = { 'Today' : date.Today, 
@@ -72,11 +71,15 @@ class ViewFilter(Filter):
         return dateFactory[self.__settings.get('view', 'tasksdue')]()
         
     def filter(self, tasks):
+        return [task for task in tasks if 
+                self.filterTask(task, *self.filterSettings())]
+    
+    def filterSettings(self):
         settings = [not self.__settings.getboolean('view', setting) \
                     for setting in ('completedtasks', 'inactivetasks', 
                     'overduetasks', 'activetasks', 'overbudgettasks')]
         settings.append(self.getViewTasksDueBeforeDate())
-        return [task for task in tasks if self.filterTask(task, *settings)]
+        return settings
     
     def filterTask(self, task, hideCompletedTasks, hideInactiveTasks, 
                    hideOverdueTasks, hideActiveTasks, hideOverBudgetTasks,

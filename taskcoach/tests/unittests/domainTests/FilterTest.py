@@ -97,6 +97,26 @@ class ViewFilterTest(test.TestCase):
         self.settings.set('view', 'completedtasks', 'False')
         self.assertEqual(0, len(self.filter.rootItems()))
 
+    def testMarkTaskCompleted(self):
+        self.settings.set('view', 'completedtasks', 'False')
+        self.list.append(self.task)
+        self.task.setCompletionDate()
+        self.assertEqual(0, len(self.filter))
+
+    def testMarkTaskUncompleted(self):
+        self.settings.set('view', 'completedtasks', 'False')
+        self.task.setCompletionDate()
+        self.list.append(self.task)
+        self.task.setCompletionDate(date.Date())
+        self.assertEqual(1, len(self.filter))
+        
+    def testChangeCompletionDateOfAlreadyCompletedTask(self):
+        self.settings.set('view', 'completedtasks', 'False')
+        self.task.setCompletionDate()
+        self.list.append(self.task)
+        self.task.setCompletionDate(date.Tomorrow())
+        self.assertEqual(0, len(self.filter))
+
     def testFilterDueToday(self):
         self.filter.extend([self.task, self.dueToday])
         self.assertEqual(2, len(self.filter))

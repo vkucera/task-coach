@@ -8,7 +8,11 @@ Release('0.61.4', 'December ?, 2006',
         Bug('Make Task Coach work with Python 2.5.'),
         Bug('Cancel reminders when marking a task completed.', '1606990'),
         Bug('Unchecking a reminder would cause an exception.', '1606990'),
-        Bug('Column resizing is less jumpy.', '1606319')]),
+        Bug('Column resizing is now less jumpy.', '1606319'),
+        Bug('MSVCP71.DLL was missing from the Windows distribution.', 
+            '1602364'),
+        Bug('''Marking a task completed while completed tasks are hidden 
+wouldn't immediately hide the completed task.''', '1572920')]),
         
 Release('0.61.3', 'November 19, 2006',
     bugsFixed=[
