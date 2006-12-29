@@ -127,6 +127,8 @@ class NewTaskTest(TaskEditorTestCase):
             errorMessageStart = "'ascii' codec can't encode character"
         elif '__WXMAC__' in wx.PlatformInfo and sys.version_info >= (2,5):
             errorMessageStart = ""    
+        elif '__WXGTK__' in wx.PlatformInfo:
+            errorMessageStart = ""
         else:
             errorMessageStart = "[Error 2] The system cannot find the file specified"
         self.failUnless(self.errorMessage.startswith(errorMessageStart))
