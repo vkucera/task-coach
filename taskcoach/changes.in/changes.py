@@ -15,7 +15,9 @@ Release('0.61.4', 'December ?, 2006',
 wouldn't immediately hide the completed task.''', '1572920'),
         Bug('''The category filter was not applied correctly on launch; 
 showing categories as filtered but not hiding the associated tasks.''', 
-'1603846')]),
+'1603846'),
+        Bug('''Turning on filtering for a category didn't mark the
+task file as changed.''', '1603846')]),
         
 Release('0.61.3', 'November 19, 2006',
     bugsFixed=[
