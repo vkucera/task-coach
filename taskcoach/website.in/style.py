@@ -84,7 +84,7 @@ footer = '''
                 <p>
                     %(name)s is currently alpha-state software. 
                     New releases are made available approximately 
-                    twice a month and old releases are not supported.
+                    monthly and old releases are not supported.
                     There are no separate stable and development branches, 
                     just a development branch. New versions usually contain 
                     a mix of new or changed features and bugfixes, and 
