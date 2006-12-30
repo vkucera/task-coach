@@ -3,7 +3,9 @@
 from changetypes import *
 
 releases = [
-Release('0.61.4', 'December ?, 2006',
+Release('0.61.4', 'December 30, 2006',
+    featuresAdded=[
+        Feature('Added RPM and Debian distributions.')], 
     bugsFixed=[
         Bug('Make Task Coach work with Python 2.5.'),
         Bug('Cancel reminders when marking a task completed.', '1606990'),

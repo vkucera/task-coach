@@ -6,8 +6,8 @@ well-known task managers, such as those provided with Outlook or Lotus
 Notes, do not provide facilities for composite tasks. Often, tasks and
 other things todo consist of several activities. Task Coach is designed
 to deal with composite tasks. '''
-version = '0.61.3'
-date = 'November 19, 2006'
+version = '0.61.4'
+date = 'December 30, 2006'
 author = 'Frank Niessink'
 author_email = 'frank@niessink.com'
 url = 'http://www.taskcoach.org/'
