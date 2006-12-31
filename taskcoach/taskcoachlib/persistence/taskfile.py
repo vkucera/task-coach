@@ -39,7 +39,11 @@ class TaskFile(task.TaskList):
             # get a notification through 'task.effort.add'                
             patterns.Publisher().registerObserver(self.onEffortChanged, 
                                                   eventType=eventType)
-        
+        for eventType in ('category.filter', 
+                category.Category.subjectChangedEventType()):
+            patterns.Publisher().registerObserver(self.onCategoryChanged, 
+                eventType=eventType)
+
     def __str__(self):
         return self.filename()
 
@@ -61,6 +65,10 @@ class TaskFile(task.TaskList):
             
     def onEffortChanged(self, event):
         if event.source().task() in self.tasks():
+            self.markDirty()
+            
+    def onCategoryChanged(self, event):
+        if event.source() in self.categories():
             self.markDirty()
 
     def setFilename(self, filename):

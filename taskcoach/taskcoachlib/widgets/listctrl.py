@@ -25,7 +25,7 @@ class _ListCtrl(wx.ListCtrl):
 class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtrl):
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
             selectCommand=None, editCommand=None, itemPopupMenu=None, 
-            columnPopupMenu=None, resizeableColumn=1, *args, **kwargs):
+            columnPopupMenu=None, resizeableColumn=0, *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent, -1, 
             style=wx.LC_REPORT|wx.LC_VIRTUAL, columns=columns, 
             resizeableColumn=resizeableColumn, itemPopupMenu=itemPopupMenu, 

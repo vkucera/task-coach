@@ -1,7 +1,5 @@
 import test, config, gui
-import domain.task as task
-import domain.category as category
-import unittests.dummy as dummy
+from domain import task, effort, category
 
 
 class TaskViewerAndCategoryFilterIntegrationTestFixture(test.wxTestCase):
@@ -13,7 +11,9 @@ class TaskViewerAndCategoryFilterIntegrationTestFixture(test.wxTestCase):
         self.categories.append(self.category)
         self.settings.set('view', 'sortby', 'subject')
         self.viewer = self.TaskViewerClass(self.frame, self.taskList, 
-            dummy.DummyUICommands(), self.settings, categories=self.categories)
+            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
+            self.taskList, effort.EffortList(self.taskList), self.categories), 
+            self.settings, categories=self.categories)
         parent = task.Task('parent')
         child = task.Task('child')
         parent.addChild(child)

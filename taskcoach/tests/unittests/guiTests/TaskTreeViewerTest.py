@@ -1,7 +1,7 @@
 import test, gui, widgets, config, TaskViewerTest
 from unittests import dummy
-import domain.task as task
-import domain.date as date
+from domain import task, date, category
+
 
 class TaskTreeViewerTestCase(test.wxTestCase):
     def setUp(self):
@@ -11,6 +11,7 @@ class TaskTreeViewerTestCase(test.wxTestCase):
         self.taskList = task.sorter.Sorter(task.filter.ViewFilter( \
             task.TaskList(), settings=self.settings, treeMode=True), 
             settings=self.settings, treeMode=True)
+        self.categories = category.CategoryList()
         
     def assertItems(self, *tasks):
         self.viewer.widget.expandAllItems()
@@ -161,5 +162,5 @@ class TaskTreeViewerTest(CommonTests, TaskTreeViewerTestCase):
     def setUp(self):
         super(TaskTreeViewerTest, self).setUp()
         self.viewer = TaskTreeViewerUnderTest(self.frame, self.taskList, {}, 
-            self.settings, categories=[])
+            self.settings, categories=self.categories)
         

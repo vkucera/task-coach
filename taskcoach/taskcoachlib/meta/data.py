@@ -1,17 +1,23 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
 version = '0.62.0'
-date = 'November ?, 2006'
+date = 'January ?, 2007'
+long_description = '''Task Coach is a simple open source todo manager to
+manage personal tasks and todo lists. It grew out of a frustration that
+well-known task managers, such as those provided with Outlook or Lotus
+Notes, do not provide facilities for composite tasks. Often, tasks and
+other things todo consist of several activities. Task Coach is designed
+to deal with composite tasks. '''
 author = 'Frank Niessink'
 author_email = 'frank@niessink.com'
-url = 'http://taskcoach.niessink.com/'
+url = 'http://www.taskcoach.org/'
 copyright = 'Copyright (C) 2004-2006 Frank Niessink'
 license = 'GNU GENERAL PUBLIC LICENSE Version 2, June 1991'
 platform = 'Any'
 filename = 'TaskCoach'
 filename_lower = filename.lower()
-pythonversion = '2.4.1'
-wxpythonversion = '2.6.3.2-unicode'
+pythonversion = '2.5'
+wxpythonversion = '2.8-unicode'
 languages = {
     'English': None, 
     'French': 'fr_FR', 

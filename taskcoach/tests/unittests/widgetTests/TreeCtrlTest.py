@@ -1,4 +1,4 @@
-import test, widgets, wx
+import test, widgets, wx, sys
 import unittests.dummy as dummy
         
 class TreeCtrlTestCase(test.wxTestCase):

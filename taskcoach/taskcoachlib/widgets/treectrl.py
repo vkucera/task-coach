@@ -488,7 +488,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
             itemPopupMenu=None, columnPopupMenu=None, *args, **kwargs):
         self._count = 0 # Need to set this early because InsertColumn invokes refreshColumn
         super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
-            columns=columns, resizeableColumn=1, itemPopupMenu=itemPopupMenu,
+            columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices)

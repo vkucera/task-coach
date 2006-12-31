@@ -75,8 +75,8 @@ footer = '''
                     <a href="http://www.jrsoftware.org">Inno Setup</a><br>
                     <a href="http://www.bluerobot.com">Bluerobot.com</a><br>
                     <a href="http://sourceforge.net"><img
-                src="http://sourceforge.net/sflogo.php?group_id=130831&type=1"
-                width="88" height="31" border="0" alt="SourceForge.net Logo"/></a>
+                src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&amp;type=1"
+                width="88" height="31" border="0" alt="SourceForge.net"/></a>
                 </p>
             </div>
             <div class="navbox">
@@ -84,7 +84,7 @@ footer = '''
                 <p>
                     %(name)s is currently alpha-state software. 
                     New releases are made available approximately 
-                    twice a month and old releases are not supported.
+                    monthly and old releases are not supported.
                     There are no separate stable and development branches, 
                     just a development branch. New versions usually contain 
                     a mix of new or changed features and bugfixes, and 

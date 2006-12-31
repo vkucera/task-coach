@@ -51,12 +51,13 @@ class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
         self.task = task.Task()
         self.settings = config.Settings(load=False)
+        self.categories = category.CategoryList()
         self.taskList = task.sorter.Sorter(task.TaskList([self.task]), 
             settings=self.settings)
         self.viewer = TaskListViewerUnderTest(self.frame,
             self.taskList, gui.uicommand.UICommands(self.frame, None, None, 
                 self.settings, self.taskList, effort.EffortList(self.taskList), 
-                category.CategoryList()), self.settings, categories=[])
+                self.categories), self.settings, categories=self.categories)
 
     def testGetTimeSpent(self):
         timeSpent = self.viewer.getItemText(0, self.viewer.columns()[7])
@@ -161,9 +162,11 @@ class UpdatePerSecondViewerTests(object):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
+        self.categories = category.CategoryList()
         self.updateViewer = self.ListViewerClass(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, None, self.settings, self.taskList,
-                effort.EffortList(self.taskList), category.CategoryList()), self.settings, categories=[])
+            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
+            self.taskList, effort.EffortList(self.taskList), self.categories),
+            self.settings, categories=self.categories)
         self.trackedTask = task.Task(subject='tracked')
         self.trackedTask.addEffort(effort.Effort(self.trackedTask))
         self.taskList.append(self.trackedTask)
