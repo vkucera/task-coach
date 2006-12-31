@@ -27,6 +27,14 @@ class Set(set):
     def __new__(class_, iterable=None, *args, **kwargs):
         return set.__new__(class_, iterable)
 
+    def __cmp__(self, other):
+        # If set.__cmp__ is called we get a TypeError in Python 2.5, so
+        # call set.__eq__ instead
+        if self == other:
+            return 0
+        else:
+            return -1
+
 
 class Event(object):
     ''' Event represents notification events. '''
@@ -55,7 +63,26 @@ class Event(object):
     def values(self):
         return self.__values
 
+
+class MethodProxy(object):
+    ''' Wrap methods in a class that allows for comparing methods. Comparison
+        if instance methods was changed in python 2.5. In python 2.5, instance
+        methods are equal when their instances compare equal, which is not
+        the behaviour we need for callbacks. So we wrap callbacks in this class
+        to get back the old (correct, imho) behaviour. '''
         
+    def __init__(self, method):
+        self.method = method
+        
+    def __call__(self, *args, **kwargs):
+        return self.method(*args, **kwargs)
+        
+    def __eq__(self, other):
+        return self.method.im_class is other.method.im_class and \
+               self.method.im_self is other.method.im_self and \
+               self.method.im_func is other.method.im_func
+
+
 class Publisher(object):
     ''' Publisher is used to register for event notifications. It supports
         the publisher/subscribe pattern, also known as the observer pattern.
@@ -85,6 +112,7 @@ class Publisher(object):
         ''' Register an observer for an event type. The observer is a callback 
             method that should expect one argument, an instance of Event.
             The eventType can be anything hashable, typically a string. '''
+        observer = MethodProxy(observer)
         observerList = self.__observers.setdefault(eventType, [])
         if observer not in observerList:
             observerList.append(observer)
@@ -93,6 +121,7 @@ class Publisher(object):
         ''' Remove an observer. If no event type is specified, the observer
             is removed for all event types. If an event type is specified
             the observer is removed for that event type only. '''
+        observer = MethodProxy(observer)
         if eventType:
             observerListsToScan = [self.__observers.get(eventType, [])]
         else:
@@ -112,11 +141,12 @@ class Publisher(object):
         ''' Get the currently registered observers. Optionally specify
             a specific event type to get observers for that event type only. '''
         if eventType:
-            return self.__observers.get(eventType, [])
+            observerProxies = self.__observers.get(eventType, [])
         else:
-            return [observer for observersForEventType in \
+            observerProxies = [observer for observersForEventType in \
                     self.__observers.values() for observer in \
                     observersForEventType]
+        return [proxy.method for proxy in observerProxies]
     
     def stopNotifying(self):
         ''' Temporarily stop notifying. Calls to stopNotifying and 
@@ -184,9 +214,10 @@ class ObservableCollection(Observable):
 class ObservableSet(ObservableCollection, Set):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self is other
+            result = self is other
         else:
-            return list(self) == other
+            result = list(self) == other
+        return result
 
     def append(self, item):
         self.add(item)

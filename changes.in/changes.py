@@ -3,10 +3,12 @@
 from changetypes import *
 
 releases = [
+
 Release('0.62.0', 'November ?, 2006',
     dependenciesChanged=[
-        Dependency('''Task Coach now requires wxPython 2.7.1.3-unicode or newer
-(this is only relevant if you use the source distribution).''')],
+        Dependency('''Task Coach now requires Python 2.5 and 
+wxPython 2.8-unicode or newer (this is only relevant if you use the 
+source distribution).''')],
     featuresAdded=[
         Feature('''Printing a selection is enabled.'''),
         Feature('''The notebook that contains the different views allows for
@@ -19,6 +21,24 @@ behavior.'''),
         Feature('''The toolbar buttons for 'new item', 'new sub item',
 'edit item' and 'delete item' now work for tasks, effort records
 and categories.''')]),
+        
+Release('0.61.4', 'December 30, 2006',
+    featuresAdded=[
+        Feature('Added RPM and Debian distributions.')], 
+    bugsFixed=[
+        Bug('Make Task Coach work with Python 2.5.'),
+        Bug('Cancel reminders when marking a task completed.', '1606990'),
+        Bug('Unchecking a reminder would cause an exception.', '1606990'),
+        Bug('Column resizing is now less jumpy.', '1606319'),
+        Bug('MSVCP71.DLL was missing from the Windows distribution.', 
+            '1602364'),
+        Bug('''Marking a task completed while completed tasks are hidden 
+wouldn't immediately hide the completed task.''', '1572920'),
+        Bug('''The category filter was not applied correctly on launch; 
+showing categories as filtered but not hiding the associated tasks.''', 
+'1603846'),
+        Bug('''Turning on filtering for a category didn't mark the
+task file as changed.''', '1603846')]),
         
 Release('0.61.3', 'November 19, 2006',
     bugsFixed=[

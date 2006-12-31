@@ -36,6 +36,10 @@ wininstaller:
 sdist: icons changes i18n
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
+lindist: icons changes i18n
+	$(PYTHON) make.py bdist_rpm
+	cd dist; sudo alien --keep-version *.noarch.rpm; cd ..
+
 macdist: icons i18n
 	$(PYTHON) make.py py2app
 	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach.dmg

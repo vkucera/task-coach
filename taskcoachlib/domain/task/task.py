@@ -223,6 +223,8 @@ class Task(patterns.ObservableComposite):
             self.setLastModificationTime()
             self.__notifyObservers(patterns.Event(self, 'task.completionDate', 
                 completionDate))
+            if completionDate != date.Date():
+                self.setReminder(None)
         
     def completed(self):
         return self.completionDate() != date.Date()

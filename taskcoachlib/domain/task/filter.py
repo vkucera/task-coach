@@ -54,12 +54,11 @@ class ViewFilter(Filter):
         self.addOrRemoveTask(event.source())
 
     def addOrRemoveTask(self, task):
-        if self.filter([task]):
+        if self.filterTask(task, *self.filterSettings()):
             if task in self.observable() and task not in self:
                 self.extendSelf([task])
         else:
-            if task in self and task not in self.observable():
-                self.removeItemsFromSelf([task])
+            self.removeItemsFromSelf([task])
         
     def getViewTasksDueBeforeDate(self):
         dateFactory = { 'Today' : date.Today, 
@@ -72,11 +71,15 @@ class ViewFilter(Filter):
         return dateFactory[self.__settings.get('view', 'tasksdue')]()
         
     def filter(self, tasks):
+        return [task for task in tasks if 
+                self.filterTask(task, *self.filterSettings())]
+    
+    def filterSettings(self):
         settings = [not self.__settings.getboolean('view', setting) \
                     for setting in ('completedtasks', 'inactivetasks', 
                     'overduetasks', 'activetasks', 'overbudgettasks')]
         settings.append(self.getViewTasksDueBeforeDate())
-        return [task for task in tasks if self.filterTask(task, *settings)]
+        return settings
     
     def filterTask(self, task, hideCompletedTasks, hideInactiveTasks, 
                    hideOverdueTasks, hideActiveTasks, hideOverBudgetTasks,
@@ -162,12 +165,16 @@ class CategoryFilter(Filter):
     def __init__(self, *args, **kwargs):
         self.__settings = kwargs.pop('settings')
         self.__categories = kwargs.pop('categories')
+        patterns.Publisher().registerObserver(self.onCategoryChanged,
+            eventType=self.__categories.addItemEventType())
+        patterns.Publisher().registerObserver(self.onCategoryChanged,
+            eventType=self.__categories.removeItemEventType())
         patterns.Publisher().registerObserver(self.onSettingChanged, 
             eventType='view.taskcategoryfiltermatchall')
         patterns.Publisher().registerObserver(self.onSettingChanged,
             eventType='category.filter')
         super(CategoryFilter, self).__init__(*args, **kwargs)
-
+        
     def filter(self, tasks):
         filteredCategories = [category for category in self.__categories 
                               if category.isFiltered()]
@@ -186,3 +193,6 @@ class CategoryFilter(Filter):
             return False not in matches
         else:
             return True in matches
+        
+    def onCategoryChanged(self, event):
+        self.reset()

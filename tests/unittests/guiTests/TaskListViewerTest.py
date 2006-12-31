@@ -63,6 +63,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
     def setUp(self):
         super(TaskListViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
+        self.categories = category.CategoryList()
         self.taskList = task.sorter.Sorter(task.TaskList(), 
             settings=self.settings)
         self.settings.set('view', 'sortby', 'subject')
@@ -70,7 +71,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, None, self.settings, 
                 self.taskList, effort.EffortList(self.taskList), 
-                category.CategoryList()), self.settings, categories=[])
+                self.categories), self.settings, categories=self.categories)
         
     def assertItems(self, *tasks):
         self.assertEqual(len(tasks), self.viewer.size())

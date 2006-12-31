@@ -514,7 +514,7 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
         return widget
-        
+    
     def createFilter(self, taskList):
         return task.filter.CategoryFilter(task.filter.CompositeFilter( \
             task.filter.ViewFilter(task.filter.SearchFilter(taskList, 
@@ -767,7 +767,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             self.onSelect, uiCommands['editeffort'], 
             menu.EffortPopupMenu(self.parent, uiCommands), 
             menu.EffortViewerColumnPopupMenu(self.parent, uiCommands), 
-            resizeableColumn=2, **self.widgetCreationKeywordArguments())
+            resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
         return widget
     

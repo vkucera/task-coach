@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import sys, unittest, os, wx, time, glob, coverage
+import sys, unittest, os, time, glob, coverage
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 import taskcoach
+import wx
     
 
 class TestCase(unittest.TestCase):

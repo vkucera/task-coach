@@ -48,7 +48,7 @@ pages['donations'] = \
             <LI><A HREF="https://sourceforge.net/donate/index.php?group_id=130831">Donate
             via SourceForge</A>. Fees are deducted for PayPal and 
             SourceForge.
-        Peevious donations made via SourceForge are listed <A
+        Previous donations made via SourceForge are listed <A
         HREF="https://sourceforge.net/project/project_donations.php?group_id=130831">here</A>.
             <LI>Donate directly via <A HREF="http://www.paypal.com">PayPal</A>.
             Please use the email address &lt;%(author_email)s&gt;.</P>

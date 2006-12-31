@@ -299,6 +299,20 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.categories().remove(self.category)
         self.failUnless(self.taskFile.needSave())
         
+    def testNeedSave_AfterFilteringCategory(self):
+        self.taskFile.categories().append(self.category)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.category.setFiltered()
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterCategorySubjectChanged(self):
+        self.taskFile.categories().append(self.category)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.category.setSubject('new subject')
+        self.failUnless(self.taskFile.needSave())
+        
     def testLastFilename_IsEmptyInitially(self):
         self.assertEqual('', self.taskFile.lastFilename())
         

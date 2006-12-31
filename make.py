@@ -108,7 +108,7 @@ if sys.argv[1] == 'py2exe':
             'optimize' : 2, 
             'packages' : ['i18n'],
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}},
-        'data_files': [('', ['dist.in/gdiplus.dll'])]})
+        'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL'])]})
  
 elif sys.argv[1] == 'py2app':
     from setuptools import setup

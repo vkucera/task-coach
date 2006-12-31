@@ -54,10 +54,11 @@ class DatePickerCtrlFactoryTest(test.wxTestCase):
 
     def testFactoryFunctionStyleIncludesDP_ALLOWNONE(self):
         dpc = widgets.DatePickerCtrl(self.frame, style=wx.DP_ALLOWNONE)
-        if '__WXMSW__' in wx.PlatformInfo:
-            self.failUnless(self.isWxDatePickerCtrl(dpc))
-        else:
+        # style=wx.DP_ALLOWNONE is broken on some platforms/wxPython versions:
+        if widgets.datectrl.styleDP_ALLOWNONEIsBroken():
             self.failIf(self.isWxDatePickerCtrl(dpc))
+        else:
+            self.failUnless(self.isWxDatePickerCtrl(dpc))
             
             
 class StyleTest(test.TestCase):            

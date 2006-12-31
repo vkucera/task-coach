@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import test, gui, command, wx, config
+import test, gui, command, wx, config, sys
 from unittests import dummy
 import domain.task as task
 import domain.effort as effort
@@ -50,7 +50,7 @@ class TaskEditorTestCase(test.wxTestCase):
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
-        if '__WXMAC__' not in wx.PlatformInfo:
+        if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
             wx.Yield() 
         super(TaskEditorTestCase, self).tearDown()
         
@@ -122,15 +122,19 @@ class NewTaskTest(TaskEditorTestCase):
             self.errorMessage = args[0]
         item = wx.ListItem()
         item.SetId(0)
-        item.SetText('tÃ©st.tsk')
+        item.SetText('tÃƒÂ©st.ÃƒÂ©')
         item.SetState(wx.LIST_STATE_SELECTED)
         self.editor[0][4]._listCtrl.InsertItem(item)
         self.editor[0][4].onOpen(None, showerror=onError)
-        if '__WXMSW__' in wx.PlatformInfo:
-            self.failUnless(self.errorMessage.startswith("'ascii' codec can't encode character"))
+        if '__WXMSW__' in wx.PlatformInfo and sys.version_info < (2,5):
+            errorMessageStart = "'ascii' codec can't encode character"
+        elif '__WXMAC__' in wx.PlatformInfo and sys.version_info >= (2,5):
+            errorMessageStart = ""    
+        elif '__WXGTK__' in wx.PlatformInfo:
+            errorMessageStart = ""
         else:
-            self.assertEqual('', self.errorMessage)
-        
+            errorMessageStart = "[Error 2] The system cannot find the file specified"
+        self.failUnless(self.errorMessage.startswith(errorMessageStart))
         
 class NewSubTaskTest(TaskEditorTestCase):
     def createCommand(self):
@@ -305,7 +309,7 @@ class FocusTest(TaskEditorTestCase):
         # in order to get wx.Window_FindFocus to not return None.
         if '__WXGTK__' in wx.PlatformInfo:
             self.editor.Show()
-        if '__WXMAC__' not in wx.PlatformInfo:
+        if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
             wx.Yield()
         self.assertEqual(self.editor[0][0]._subjectEntry, wx.Window_FindFocus())
         if '__WXGTK__' in wx.PlatformInfo:
@@ -352,4 +356,3 @@ class EffortEditorTest(TaskEditorTestCase):
         self.editor.ok()
         self.assertEqual(self.task2, self.effort.task())
         self.failIf(self.effort in self.task1.efforts())
-
