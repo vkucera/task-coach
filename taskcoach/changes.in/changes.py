@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.62.0', 'November ?, 2006',
+Release('0.62.0', 'January ?, 2007',
     dependenciesChanged=[
         Dependency('''Task Coach now requires Python 2.5 and 
 wxPython 2.8-unicode or newer (this is only relevant if you use the 
@@ -20,7 +20,7 @@ or is static is now a setting (see Edit -> Preferences -> Window
 behavior.'''),
         Feature('''The toolbar buttons for 'new item', 'new sub item',
 'edit item' and 'delete item' now work for tasks, effort records
-and categories.''')]),
+and categories, depending on what view is active.''')]),
         
 Release('0.61.4', 'December 30, 2006',
     featuresAdded=[
