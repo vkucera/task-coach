@@ -1,56 +1,29 @@
 import wx
+import wx.lib.customtreectrl as customtree
 import widgets, patterns
 from i18n import _ 
-try:
-    import wx.lib.customtreectrl as customtree # for wxPython >= 2.7.1
-except:
-    import thirdparty.CustomTreeCtrl as customtree # for wxPython < 2.7.1
-import domain.category as category
+from domain import category
 
-class SubjectFilterPanel(wx.Panel):
-    def __init__(self, parent, viewer, settings, *args, **kwargs):
-        super(SubjectFilterPanel, self).__init__(parent, *args, **kwargs)
-        self.__viewer = viewer
-        self.__settings = settings
-        self.createInterior()
-        self.layoutInterior()
+
+class SearchCtrl(wx.SearchCtrl):
+    def __init__(self, *args, **kwargs):
+        self.__callback = kwargs.pop('callback')
+        super(SearchCtrl, self).__init__(*args, **kwargs)
+        self.ShowCancelButton(True)
+        self.__timer = wx.Timer(self)
+        self.__recentSearches = []
+        self.__maxRecentSearches = 5
         self.bindEventHandlers()
         
-    def createInterior(self):
-        self.__timer = wx.Timer(self)
-        self._about = widgets.StaticTextWithToolTip(self, label= \
-            _('Type a search string (a regular expression) ' 
-              'and press enter.') + '\n')
-        self._about.SetBackgroundColour(self.GetBackgroundColour())
-        searchString = self.__settings.get('view', 'tasksearchfilterstring')
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, searchString,
-            style=wx.TE_PROCESS_ENTER)
-        self._caseCheckBox = wx.CheckBox(self, label=_('Match case'))
-        self._clearButton = wx.Button(self, label=_('Clear'))
-
     def bindEventHandlers(self):
-        for eventSource, eventType, eventHandler in \
-            [(self, wx.EVT_TIMER, self.onFind),
-             (self._subjectEntry, wx.EVT_TEXT_ENTER, self.onFind),
-             (self._subjectEntry, wx.EVT_TEXT, self.onFindLater),
-             (self._caseCheckBox, wx.EVT_CHECKBOX, self.onFind),
-             (self._clearButton, wx.EVT_BUTTON, self.clear)]:
-            eventSource.Bind(eventType, eventHandler)
-        
-    def layoutInterior(self):
-        verticalSizer = wx.BoxSizer(wx.VERTICAL)
-        self._about.SetMinSize((1,-1))
-        verticalSizer.Add(self._about, flag=wx.EXPAND|wx.ALL, border=5)
-        verticalSizer.Add(self._subjectEntry, flag=wx.EXPAND|wx.ALL, 
-            border=5)
-        horizontalSizer = wx.BoxSizer(wx.HORIZONTAL)
-        horizontalSizer.Add(self._caseCheckBox,
-            flag=wx.ALIGN_CENTER_VERTICAL|wx.ALL, border=5)
-        horizontalSizer.Add((1,1), flag=wx.EXPAND, proportion=1)
-        horizontalSizer.Add(self._clearButton,
-            flag=wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, border=5)
-        verticalSizer.Add(horizontalSizer, flag=wx.EXPAND)
-        self.SetSizerAndFit(verticalSizer)        
+        for eventType, eventHandler in \
+            [(wx.EVT_TIMER, self.onFind),
+             (wx.EVT_TEXT_ENTER, self.onFind),
+             (wx.EVT_TEXT, self.onFindLater),
+             (wx.EVT_SEARCHCTRL_CANCEL_BTN, self.onCancel)]:
+            self.Bind(eventType, eventHandler)
+        self.Bind(wx.EVT_MENU_RANGE, self.onMenuItem, id=1, 
+            id2=self.__maxRecentSearches)
 
     def onFindLater(self, event):
         # Start the timer so that the actual filtering will be done
@@ -60,16 +33,69 @@ class SubjectFilterPanel(wx.Panel):
     def onFind(self, event):
         if self.__timer.IsRunning():
             self.__timer.Stop()
-        searchString = self._subjectEntry.GetValue()
+        searchString = self.GetValue()
+        if searchString:
+            self.rememberSearchString(searchString)
+        self.__callback(searchString)
+
+    def onCancel(self, event):
+        self.SetValue('')
+        self.onFind(event)
+        
+    def onMenuItem(self, event):
+        self.SetValue(self.__recentSearches[event.GetId()-1])
+        self.onFind(event)
+
+    def rememberSearchString(self, searchString):
+        if searchString in self.__recentSearches:
+            self.__recentSearches.remove(searchString)
+        self.__recentSearches.insert(0, searchString)
+        if len(self.__recentSearches) > self.__maxRecentSearches:
+            self.__recentSearches.pop()
+        self.SetMenu(self.makeMenu())
+                
+    def makeMenu(self):
+        menu = wx.Menu()
+        item = menu.Append(-1, _('Recent searches'))
+        item.Enable(False)
+        for index, searchString in enumerate(self.__recentSearches):
+            menu.Append(index+1, searchString)
+        return menu
+    
+
+
+class SubjectFilterPanel(wx.Panel):
+    def __init__(self, parent, viewer, settings, *args, **kwargs):
+        super(SubjectFilterPanel, self).__init__(parent, *args, **kwargs)
+        self.__viewer = viewer
+        self.__settings = settings
+        self.createInterior()
+        self.layoutInterior()
+        
+    def createInterior(self):
+        self._about = widgets.StaticTextWithToolTip(self, label= \
+            _('Type a search string (a regular expression) ' 
+              'and press enter.') + '\n')
+        self._about.SetBackgroundColour(self.GetBackgroundColour())
+        searchString = self.__settings.get('view', 'tasksearchfilterstring')
+        self._subjectEntry = SearchCtrl(self, value=searchString,
+            style=wx.TE_PROCESS_ENTER, callback=self.onFind)
+        self._caseCheckBox = wx.CheckBox(self, label=_('Match case'))
+        self._caseCheckBox.Bind(wx.EVT_CHECKBOX, self._subjectEntry.onFind)
+        
+    def layoutInterior(self):
+        verticalSizer = wx.BoxSizer(wx.VERTICAL)
+        self._about.SetMinSize((1,-1))
+        for control in self._about, self._subjectEntry, self._caseCheckBox:
+            verticalSizer.Add(control, flag=wx.EXPAND|wx.ALL, border=5)
+        self.SetSizerAndFit(verticalSizer)        
+
+    def onFind(self, searchString):
         self.__settings.set('view', 'tasksearchfilterstring', searchString)
         self.__settings.set('view', 'tasksearchfiltermatchcase', 
             str(self._caseCheckBox.GetValue()))
         if searchString:
             self.__viewer.expandAll()
-
-    def clear(self, event=None):
-        self._subjectEntry.SetValue('')
-        self.onFind(event)
 
 
 class StatusFilterPanel(wx.Panel):
