@@ -3,14 +3,12 @@ from gui import render, viewercontainer, viewerfactory
 import widgets.draganddrop as draganddrop
 import wx, datetime
 import wx.lib.masked as masked
+import wx.lib.customtreectrl as customtree
+import wx.lib.combotreebox as combotreebox
 from i18n import _
-import domain.date as date
-import domain.task as task
-import domain.category as category
+from domain import task, category, date
 import thirdparty.desktop as desktop
-import thirdparty.CustomTreeCtrl as customtree
 import os.path
-
 
 
 class DateEntry(widgets.PanelWithBoxSizer):
@@ -241,14 +239,14 @@ class CategoriesPage(TaskEditorPage):
         categoriesBox = widgets.BoxWithBoxSizer(self, label=_('Categories'))
         self._treeCtrl = widgets.CheckTreeCtrl(categoriesBox, 
             lambda index: self.__categories[index].subject(),
-            lambda index: (-1, -1), lambda index: customtree.TreeItemAttr(),
+            lambda index, expanded=False: -1, lambda index: customtree.TreeItemAttr(),
             lambda index: id(self.__categories[index]), 
             lambda: sorted([index for index in range(len(self.__categories)) if \
                      self.__categories[index] in self.__categories.rootItems()]),
             lambda parentIndex: [index for index in range(len(self.__categories)) if \
                      self.__categories[index] in self.__categories[parentIndex].children()], 
             lambda index: task in self.__categories[index].tasks(),
-            lambda *args: None, lambda *args: None,
+            lambda *args: None, lambda *args: None, lambda *args: None,
             lambda *args: None)
         categoriesBox.add(self._treeCtrl, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
@@ -298,7 +296,7 @@ class AttachmentPage(TaskEditorPage):
         self.add(filenameBox, proportion=0, border=5)
         self.fit()
         self.bindEventHandlers()
-        self.onFileDrop(0, 0, task.attachments())
+        self.onFileDrop(task.attachments())
         if task.attachments():
             self._listCtrl.SetItemState(0, wx.LIST_STATE_SELECTED, 
                                         wx.LIST_STATE_SELECTED)
@@ -309,7 +307,9 @@ class AttachmentPage(TaskEditorPage):
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelectItem)
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onDeselectItem)
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onOpen)
-        dropTarget = draganddrop.FileDropTarget(self.onFileDrop)
+        #dropTarget = draganddrop.FileDropTarget(self.onFileDrop)
+        dropTarget = draganddrop.DropTarget(self.onURLDrop, self.onFileDrop,
+            self.onThunderbirdMailDrop)
         self._listCtrl.SetDropTarget(dropTarget)
             
     def addAttachmentToListCtrl(self, filename):
@@ -321,9 +321,15 @@ class AttachmentPage(TaskEditorPage):
     def onAdd(self, *args, **kwargs):
         self.addAttachmentToListCtrl(self._urlEntry.GetValue())
         
-    def onFileDrop(self, x, y, filenames):
+    def onFileDrop(self, filenames):
         for filename in filenames:
             self.addAttachmentToListCtrl(filename)
+            
+    def onURLDrop(self, url):
+        self.addAttachmentToListCtrl(url)
+
+    def onThunderbirdMailDrop(self, text):
+        print 'onTextDrop(text=%s)'%text
         
     def onBrowse(self, *args, **kwargs):
         filename = widgets.AttachmentSelector()
@@ -436,7 +442,7 @@ class EffortEditBook(widgets.BookPage):
         self.fit()
 
     def addTaskEntry(self):
-        self._taskEntry = widgets.ComboTreeBox(self, 
+        self._taskEntry = combotreebox.ComboTreeBox(self, 
             style=wx.CB_READONLY|wx.CB_SORT)
 
         def addTaskRecursively(task, parentItem=None):

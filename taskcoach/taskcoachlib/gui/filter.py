@@ -5,99 +5,6 @@ from i18n import _
 from domain import category
 
 
-class SearchCtrl(wx.SearchCtrl):
-    def __init__(self, *args, **kwargs):
-        self.__callback = kwargs.pop('callback')
-        super(SearchCtrl, self).__init__(*args, **kwargs)
-        self.ShowCancelButton(True)
-        self.__timer = wx.Timer(self)
-        self.__recentSearches = []
-        self.__maxRecentSearches = 5
-        self.bindEventHandlers()
-        
-    def bindEventHandlers(self):
-        for eventType, eventHandler in \
-            [(wx.EVT_TIMER, self.onFind),
-             (wx.EVT_TEXT_ENTER, self.onFind),
-             (wx.EVT_TEXT, self.onFindLater),
-             (wx.EVT_SEARCHCTRL_CANCEL_BTN, self.onCancel)]:
-            self.Bind(eventType, eventHandler)
-        self.Bind(wx.EVT_MENU_RANGE, self.onMenuItem, id=1, 
-            id2=self.__maxRecentSearches)
-
-    def onFindLater(self, event):
-        # Start the timer so that the actual filtering will be done
-        # only when the user pauses typing (at least 0.5 second)
-        self.__timer.Start(500, oneShot=True)
-
-    def onFind(self, event):
-        if self.__timer.IsRunning():
-            self.__timer.Stop()
-        searchString = self.GetValue()
-        if searchString:
-            self.rememberSearchString(searchString)
-        self.__callback(searchString)
-
-    def onCancel(self, event):
-        self.SetValue('')
-        self.onFind(event)
-        
-    def onMenuItem(self, event):
-        self.SetValue(self.__recentSearches[event.GetId()-1])
-        self.onFind(event)
-
-    def rememberSearchString(self, searchString):
-        if searchString in self.__recentSearches:
-            self.__recentSearches.remove(searchString)
-        self.__recentSearches.insert(0, searchString)
-        if len(self.__recentSearches) > self.__maxRecentSearches:
-            self.__recentSearches.pop()
-        self.SetMenu(self.makeMenu())
-                
-    def makeMenu(self):
-        menu = wx.Menu()
-        item = menu.Append(-1, _('Recent searches'))
-        item.Enable(False)
-        for index, searchString in enumerate(self.__recentSearches):
-            menu.Append(index+1, searchString)
-        return menu
-    
-
-
-class SubjectFilterPanel(wx.Panel):
-    def __init__(self, parent, viewer, settings, *args, **kwargs):
-        super(SubjectFilterPanel, self).__init__(parent, *args, **kwargs)
-        self.__viewer = viewer
-        self.__settings = settings
-        self.createInterior()
-        self.layoutInterior()
-        
-    def createInterior(self):
-        self._about = widgets.StaticTextWithToolTip(self, label= \
-            _('Type a search string (a regular expression) ' 
-              'and press enter.') + '\n')
-        self._about.SetBackgroundColour(self.GetBackgroundColour())
-        searchString = self.__settings.get('view', 'tasksearchfilterstring')
-        self._subjectEntry = SearchCtrl(self, value=searchString,
-            style=wx.TE_PROCESS_ENTER, callback=self.onFind)
-        self._caseCheckBox = wx.CheckBox(self, label=_('Match case'))
-        self._caseCheckBox.Bind(wx.EVT_CHECKBOX, self._subjectEntry.onFind)
-        
-    def layoutInterior(self):
-        verticalSizer = wx.BoxSizer(wx.VERTICAL)
-        self._about.SetMinSize((1,-1))
-        for control in self._about, self._subjectEntry, self._caseCheckBox:
-            verticalSizer.Add(control, flag=wx.EXPAND|wx.ALL, border=5)
-        self.SetSizerAndFit(verticalSizer)        
-
-    def onFind(self, searchString):
-        self.__settings.set('view', 'tasksearchfilterstring', searchString)
-        self.__settings.set('view', 'tasksearchfiltermatchcase', 
-            str(self._caseCheckBox.GetValue()))
-        if searchString:
-            self.__viewer.expandAll()
-
-
 class StatusFilterPanel(wx.Panel):
     def __init__(self, parent, taskList, settings, *args, **kwargs):
         super(StatusFilterPanel, self).__init__(parent, *args, **kwargs)
@@ -161,14 +68,14 @@ class CategoriesFilterPanel(wx.Panel):
                     'Unselect all categories to reset the filter.') + '\n') 
         self._treeCtrl = widgets.CheckTreeCtrl(self, 
             lambda index: self.__categories[index].subject(),
-            lambda index: (-1, -1), lambda index: customtree.TreeItemAttr(),
+            lambda index, expanded=False: -1, lambda index: customtree.TreeItemAttr(),
             lambda index: id(self.__categories[index]), 
             lambda: sorted([index for index in range(len(self.__categories)) if \
                      self.__categories[index] in self.__categories.rootItems()]),
             lambda parentIndex: [index for index in range(len(self.__categories)) if \
                      self.__categories[index] in self.__categories[parentIndex].children()], 
             lambda index: self.__categories[index].isFiltered(),
-            lambda *args: None, lambda *args: None,
+            lambda *args: None, self.onCheckCategory, lambda *args: None,
             lambda *args: None)
         self._radioBox = wx.RadioBox(self, majorDimension=1, 
             label=_('Show tasks that match'),
@@ -195,7 +102,6 @@ class CategoriesFilterPanel(wx.Panel):
         self.GetParent().ResizePanel()
 
     def bindEventHandlers(self):
-        self._treeCtrl.Bind(customtree.EVT_TREE_ITEM_CHECKED, self.onCheckCategory)
         self._radioBox.Bind(wx.EVT_RADIOBOX, self.onCheckMatchAll)
         patterns.Publisher().registerObserver(self.onMatchAllChanged,
             'view.taskcategoryfiltermatchall')

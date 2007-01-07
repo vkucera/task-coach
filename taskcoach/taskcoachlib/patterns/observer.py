@@ -81,6 +81,11 @@ class MethodProxy(object):
         return self.method.im_class is other.method.im_class and \
                self.method.im_self is other.method.im_self and \
                self.method.im_func is other.method.im_func
+               
+    def get_im_self(self):
+        return self.method.im_self
+    
+    im_self = property(get_im_self)
 
 
 class Publisher(object):
@@ -129,6 +134,13 @@ class Publisher(object):
         for observerList in observerListsToScan:
             if observer in observerList:
                 observerList.remove(observer)
+                
+    def removeInstance(self, instance):
+        ''' Remove all observers that are methods of instance. '''
+        for observerList in self.__observers.values():
+            for observer in observerList[:]:
+                if observer.im_self is instance:
+                    observerList.remove(observer) 
         
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type is extracted from
@@ -196,12 +208,12 @@ class ObservableCollection(Observable):
 
     def addItemEventType(self):
         ''' The event type used to notify observers that one or more items
-            have been added to the list. '''
+            have been added to the collection. '''
         return '%s (%s).add'%(self.__class__, id(self))
     
     def removeItemEventType(self):
         ''' The event type used to notify observers that one or more items
-            have been removed from the list. '''
+            have been removed from the collection. '''
         return '%s (%s).remove'%(self.__class__, id(self))
 
     def notifyObserversOfItemsAdded(self, *items):

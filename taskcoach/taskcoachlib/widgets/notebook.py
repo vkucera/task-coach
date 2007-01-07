@@ -64,20 +64,8 @@ class BookPage(wx.Panel):
             flags with flags passed by the caller. '''
         flagsPassed = flagsPassed or [None] * len(controls)
         defaultFlags = self.__defaultFlags(controls)
-        flags = []
-        for flagPassed, defaultFlag in zip(flagsPassed, defaultFlags):
-            if flagPassed is None:
-                flag = defaultFlag
-            else:
-                flag = flagPassed
-            flags.append(flag)
-        return flags 
-        '''
-        # Note how brief the above can be written using a conditional 
-        # expression (which will be available in Python 2.5):
         return [defaultFlag if flagPassed is None else flagPassed 
                 for flagPassed, defaultFlag in zip(flagsPassed, defaultFlags)]
-        '''
 
     def __addControl(self, columnIndex, control, flag, lastColumn):
         if type(control) in [type(''), type(u'')]:
@@ -161,10 +149,11 @@ class Book(object):
         ''' When the user drags something (currently limited to files because
             the DropTarget created in __init__ is a FileDropTarget) over a tab
             raise the appropriate page. '''
-        # NB: HitTest is currently only implemented under wxMSW and wxUniv.
-        # FIXME: This will probably give errors on Linux and Mac, need to test.
+        # FIXME: HitTest doesn't seem to work with wx.aui.AuiNotebook
         pageSelectionArea = pageSelectionArea or self
-        pageIndex, flags = pageSelectionArea.HitTest((x, y))
+        pageIndex = pageSelectionArea.HitTest((x, y))
+        if type(pageIndex) == type((),):
+            pageIndex = pageIndex[0]
         if pageIndex != wx.NOT_FOUND:
             self.SetSelection(pageIndex)
         return wx.DragNone
@@ -214,24 +203,24 @@ class Listbook(Book, wx.Listbook):
         return super(Listbook, self).onDragOver(x, y, defaultResult, 
             pageSelectionArea=self.GetListView())
     
-try:
-    AuiNotebook = wx.aui.AuiMultiNotebook
-except AttributeError:
-    AuiNotebook = wx.aui.AuiNotebook
     
-class AUINotebook(Book, AuiNotebook):
+class AUINotebook(Book, wx.aui.AuiNotebook):
     pageChangedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED
     
     def __init__(self, *args, **kwargs):
         super(AUINotebook, self).__init__(*args, **kwargs)
-        self.Bind(wx.aui.EVT_AUINOTEBOOK_BUTTON, self.onClosePane)
+        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.onClosePage)
         
-    def onClosePane(self, event):
-        pass # Don't allow closing of panes.
-        
+    def onClosePage(self, event):
+        self.GetPage(event.Selection).detach()
+        if self.GetPageCount() == 2:
+            self.ToggleWindowStyle(wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
+            
     def createImageList(self):
         pass
     
     def AddPage(self, page, name, bitmap=None):
-        bitmap = wx.ArtProvider.GetBitmap(bitmap)
-        AuiNotebook.AddPage(self, page, name, bitmap=bitmap)
+        bitmap = wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, self._bitmapSize)
+        wx.aui.AuiNotebook.AddPage(self, page, name, bitmap=bitmap)
+        if self.GetPageCount() > 1:
+            self.SetWindowStyle(self.GetWindowStyleFlag() | wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)

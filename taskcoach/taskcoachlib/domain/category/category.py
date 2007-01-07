@@ -11,6 +11,10 @@ class Category(patterns.ObservableComposite):
     @classmethod
     def subjectChangedEventType(class_):
         return 'category.subject'
+    
+    @classmethod
+    def filterChangedEventType(class_):
+        return 'category.filter'
         
     def __getstate__(self):
         state = super(Category, self).__getstate__()
@@ -62,8 +66,8 @@ class Category(patterns.ObservableComposite):
     def setFiltered(self, filtered=True):
         if filtered != self.__filtered:
             self.__filtered = filtered
-            self.notifyObservers(patterns.Event(self, 'category.filter', 
-                filtered))
+            self.notifyObservers(patterns.Event(self, 
+                self.filterChangedEventType(), filtered))
         for child in self.children():
             child.setFiltered(filtered)
 

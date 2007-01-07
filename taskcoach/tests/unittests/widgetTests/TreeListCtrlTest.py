@@ -29,6 +29,9 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
         else:
             return '%s in %s'%(itemText, column.header())
     
+    def getItemImage(self, index, column=None, expanded=False):
+        return super(TreeListCtrlTestCase, self).getItemImage(index)
+    
     
 class TreeListCtrlTest(TreeListCtrlTestCase, TreeCtrlTest.CommonTests):
     pass

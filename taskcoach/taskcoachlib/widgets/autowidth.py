@@ -75,7 +75,10 @@ class AutoColumnWidthMixin(object):
         availableWidth = self.GetClientSize().width
         if wx.Platform != '__WXMSW__' and self.GetItemCount() > self.GetCountPerPage():
             scrollbarWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
-            availableWidth -= scrollbarWidth            
+            availableWidth -= scrollbarWidth
+        if wx.Platform == '__WXMSW__' and isinstance(self, wx.gizmos.TreeListCtrl) and self.GetItemCount() > self.GetCountPerPage():
+            scrollbarWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
+            availableWidth -= scrollbarWidth
         return availableWidth
     
     AvailableWidth = property(GetAvailableWidth)

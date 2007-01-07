@@ -18,11 +18,11 @@ class TreeCtrlTestCase(test.wxTestCase):
     def getItemText(self, index):
         return self._tree[index][0]
 
-    def getItemImage(self, index):
+    def getItemImage(self, index, expanded=False):
         if self.getChildIndices(index):
-            return 1, 1
+            return 1
         else:
-            return 0, 0
+            return 0
         
     def getItemAttr(self, index):
         return wx.ListItemAttr()
@@ -312,11 +312,14 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
         self.treeCtrl = widgets.CheckTreeCtrl(self.frame, self.getItemText,
             self.getItemImage, self.getItemAttr,
             self.getItemId, self.getRootIndices, self.getChildIndices, 
-            self.getIsItemChecked, self.onSelect, dummy.DummyUICommand(),
-            dummy.DummyUICommand())
+            self.getIsItemChecked, self.onSelect, self.onCheck, 
+            dummy.DummyUICommand(), dummy.DummyUICommand())
     
     def getIsItemChecked(self, index):
         return False
+    
+    def onCheck(self, event):
+        pass
     
     def testCheckParentChecksChild(self):
         self.setTree(('parent', 1), 'child')

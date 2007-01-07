@@ -518,7 +518,7 @@ class Task(patterns.ObservableComposite):
     
     def attachments(self):
         return self._attachments
-    
+        
     def addAttachments(self, *attachments):
         if attachments:
             self._attachments.extend(attachments)

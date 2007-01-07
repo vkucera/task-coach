@@ -208,7 +208,10 @@ class ViewAllTasksTest(ViewMenuTestCase):
             categories=self.categories), settings=self.settings)
 
     def invokeViewAllTasks(self):
-        self.menu.invokeMenuItem(self.menu.FindItemByPosition(0))
+        viewAllTasksMenuText = self.uiCommands['viewalltasks'].menuText
+        viewAllTasksMenuItemId = self.menu.FindItem(viewAllTasksMenuText)
+        viewAllTasksMenuItem = self.menu.FindItemById(viewAllTasksMenuItemId)
+        self.menu.invokeMenuItem(viewAllTasksMenuItem)
         
     def testInvokingViewAllTasksResetsTasksDue(self):
         self.settings.set('view', 'tasksdue', 'Today')

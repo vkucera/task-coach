@@ -27,6 +27,11 @@ class Viewer(wx.Panel):
             eventType=self.list.removeItemEventType())
         patterns.Publisher().registerObserver(self.onSorted, 
             eventType=self.list.sortEventType())
+        self.refresh()
+                
+    def detach(self):
+        ''' Should be called by viewercontainer before closing the viewer '''
+        patterns.Publisher().removeInstance(self)
         
     def selectEventType(self):
         return '%s (%s).select'%(self.__class__, id(self))
@@ -94,43 +99,11 @@ class Viewer(wx.Panel):
     def itemEditor(self, *args, **kwargs):
         raise NotImplementedError
     
-    """
-    def onActivateViewer(self):
-        ''' Called by ViewerContainer when a viewer becomes active, i.e. the
-            foremost tab. '''
-        print '%s.onActivateViewer'%self.__class__
-        self.refresh()
-        patterns.Publisher().registerObserver(self.onAddItem, 
-            eventType=self.list.addItemEventType())
-        patterns.Publisher().registerObserver(self.onRemoveItem, 
-            eventType=self.list.removeItemEventType())
-        patterns.Publisher().registerObserver(self.onSorted, 
-            eventType=self.list.sortEventType())
-        
-    def onDeactivateViewer(self):
-        ''' Called by ViewerContainer when a viewer is no longer the active
-            viewer, i.e. no longer the foremost tab. '''
-        print '%s.onDeactivateViewer'%self.__class__
-        patterns.Publisher().removeObserver(self.onAddItem, 
-            eventType=self.list.addItemEventType())
-        patterns.Publisher().removeObserver(self.onRemoveItem, 
-            eventType=self.list.removeItemEventType())
-        patterns.Publisher().removeObserver(self.onSorted, 
-            eventType=self.list.sortEventType())
-    """     
         
 class ListViewer(Viewer):
-    def getItemImage(self, index):
-        item = self.list[index]
-        normalImageIndex, expandedImageIndex = self.getImageIndices(item) 
-        if item.children():
-            return expandedImageIndex
-        else:
-            return normalImageIndex
-
     def isTreeViewer(self):
         return False
-        
+            
 
 class TreeViewer(Viewer):
     def expandAll(self):
@@ -166,7 +139,8 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
             eventType=self.trackStartEventType())
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=self.trackStopEventType())
-                
+        self.addTrackedItems(self.trackedItems(self.list))
+                        
     def trackStartEventType(self):
         raise NotImplementedError
     
@@ -230,7 +204,7 @@ class ViewerWithColumns(Viewer):
     def __init__(self, *args, **kwargs):
         super(ViewerWithColumns, self).__init__(*args, **kwargs)
         self.initColumns()
-
+                    
     def initColumns(self):
         for column in self.columns():
             self.initColumn(column)
@@ -286,9 +260,18 @@ class ViewerWithColumns(Viewer):
         column = self.visibleColumns()[visibleColumnIndex]
         return column.visibilitySetting() != None
         
-    def getItemText(self, index, column):
+    def getItemText(self, index, column=None):
         item = self.list[index]
+        if not column:
+            column = self.columns()[0]
         return column.render(item)
+    
+    def getItemImage(self, index, column=None, expanded=False):
+        item = self.list[index]
+        if not column:
+            column = self.columns()[0]
+        return column.imageIndex(item, expanded) if expanded \
+            else column.imageIndex(item)
 
     def __startObserving(self, eventTypes):
         for eventType in eventTypes:
@@ -306,7 +289,7 @@ class TaskViewer(UpdatePerSecondViewer):
         self.categories = kwargs.pop('categories')
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.__registerForColorChanges()
-    
+            
     def isShowingTasks(self): 
         return True
     
@@ -351,7 +334,7 @@ class TaskViewer(UpdatePerSecondViewer):
             'tasks_open', 'tasks_inactive', 'tasks_inactive_open', 
             'tasks_completed', 'tasks_completed_open', 'tasks_duetoday', 
             'tasks_duetoday_open', 'tasks_overdue', 'tasks_overdue_open', 
-            'start', 'ascending', 'descending']):
+            'start', 'ascending', 'descending', 'attachment']):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList
@@ -392,19 +375,17 @@ class TaskViewer(UpdatePerSecondViewer):
     # of domain object related UICommands. The generic variant works on
     # whatever type of domain object is shown in the current viewer. The
     # specific variant works on one specific type of domain object.
-    # When a generic UICommand is invoked, e.g. uicommand.NewDomainObject, 
+    # When a generic UICommand is invoked, e.g. uicommand.EditDomainObject, 
     # it will use 'itemEditor' to get a domain object editor for the current 
-    # viewer. But when a specific UICommand is invoked, e.g. uicommand.NewTask, 
+    # viewer. But when a specific UICommand is invoked, e.g. uicommand.EditTask, 
     # a TaskEditor needs to be returned, independently of which viewer is 
     # current. So, uicommand.NewTask will call taskEditor() to force a 
-    # task editor.
+    # task editor. 
     
     def newItemDialog(self, *args, **kwargs):
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self), 
             command.NewTaskCommand(self.list), self.list, self.uiCommands, 
             self.settings, self.categories, bitmap=kwargs['bitmap'])
-    
-    newTaskDialog = newItemDialog
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
@@ -442,7 +423,15 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
                 'task.dueDate', 'task.startDate',
                 'task.track.start', 'task.track.stop', sortKey='subject', 
                 sortCallback=self.uiCommands['viewsortbysubject'], 
+                imageIndexCallback=self.subjectImageIndex,
                 renderCallback=self.renderSubject)] + \
+            [widgets.Column('', 'task.attachment.add', 
+                'task.attachment.remove', width=28,
+                alignment=wx.LIST_FORMAT_LEFT,
+                visibilitySetting=('view', 'attachments'), 
+                imageIndexCallback=self.attachmentImageIndex,
+                headerImageIndex=self.imageIndex['attachment'],
+                renderCallback=lambda task: '')] + \
             [widgets.Column(columnHeader, eventType,
              visibilitySetting=('view', setting.lower()), sortKey=setting, 
              sortCallback=self.uiCommands['viewsortby' + setting.lower()],
@@ -487,17 +476,15 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
         self.showSortOrder(event.value() == 'True')
 
     def showSortOrder(self, ascending):
-        if ascending:
-            sortOrder = 'ascending'
-        else:
-            sortOrder = 'descending'
+        sortOrder = 'ascending' if ascending else 'descending'
         self.widget.showSortOrder(self.imageIndex[sortOrder])
-    
-    def getItemText(self, index, column=None):
-        task = self.list[index]
-        if not column:
-            column = self.columns()[0]
-        return column.render(task)
+            
+    def subjectImageIndex(self, task, expanded=False):
+        normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
+        return expandedImageIndex if expanded else normalImageIndex
+                    
+    def attachmentImageIndex(self, task):
+        return self.imageIndex['attachment'] if task.attachments() else -1
                 
     def createColumnPopupMenu(self):
         return menu.TaskViewerColumnPopupMenu(self.parent, self.uiCommands)
@@ -505,6 +492,7 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
 
 class TaskListViewer(TaskViewerWithColumns, ListViewer):
     def createWidget(self):
+        imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemImage, self.getItemAttr, 
@@ -512,7 +500,7 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
             self.createTaskPopupMenu(),
             self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(self.createImageList(), wx.IMAGE_LIST_SMALL)
+        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)
         return widget
     
     def createFilter(self, taskList):
@@ -559,9 +547,10 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         task = self.list[index]
         return task.subject()
     
-    def getItemImage(self, index):
+    def getItemImage(self, index, expanded=False):
         task = self.list[index]
-        return self.getImageIndices(task) 
+        normalImageIndex, expandedImageIndex = self.getImageIndices(task)
+        return expandedImageIndex if expanded else normalImageIndex
         
     def getItemChildIndex(self, index):
         task = self.list[index]
@@ -595,8 +584,8 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
 
 class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
     def createWidget(self):
-        self._columns = self._createColumns()
         imageList = self.createImageList() # Has side-effects
+        self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
             self.getItemImage, self.getItemAttr, self.getItemId, 
             self.getRootIndices, self.getChildIndices, self.onSelect, 
@@ -606,17 +595,26 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         widget.AssignImageList(imageList)
         return widget    
 
+    def getItemText(self, *args, **kwargs):
+        return TaskViewerWithColumns.getItemText(self, *args, **kwargs)
 
+    def getItemImage(self, *args, **kwargs):
+        return TaskViewerWithColumns.getItemImage(self, *args, **kwargs)
+    
+    
 class CategoryViewer(TreeViewer):
     def __init__(self, *args, **kwargs):
         super(CategoryViewer, self).__init__(*args, **kwargs)
-        patterns.Publisher().registerObserver(self.onSubjectChanged, 
-            category.Category.subjectChangedEventType())
+        for eventType in category.Category.subjectChangedEventType(), \
+                         category.Category.filterChangedEventType():
+            patterns.Publisher().registerObserver(self.onCategoryChanged, 
+                eventType)
         
     def createWidget(self):
-        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage,
+        widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemImage,
             self.getItemAttr, self.getItemId, self.getRootIndices, 
-            self.getChildIndices, self.onSelect, 
+            self.getChildIndices, self.getIsItemChecked, self.onSelect, 
+            self.onCheck,
             self.uiCommands['editcategory'], 
             self.uiCommands['draganddropcategory'], 
             self.createCategoryPopupMenu())
@@ -625,17 +623,22 @@ class CategoryViewer(TreeViewer):
     def createCategoryPopupMenu(self):
         return menu.CategoryPopupMenu(self.parent, self.uiCommands)
 
-    def onSubjectChanged(self, event):
-        item = event.source()
-        if item in self.list:
-            self.widget.refreshItem(self.list.index(item))
+    def onCategoryChanged(self, event):
+        category = event.source()
+        if category in self.list:
+            self.widget.refreshItem(self.list.index(category))
 
+    def onCheck(self, event):
+        category = self.list[self.widget.index(event.GetItem())]
+        category.setFiltered(event.GetItem().IsChecked())
+        self.onSelect(event) # Notify status bar
+            
     def getItemText(self, index):    # FIXME: pull up to TreeViewer
         category = self.list[index]
         return category.subject()
     
-    def getItemImage(self, index):
-        return -1, -1
+    def getItemImage(self, index, expanded=False):
+        return -1
     
     def getItemAttr(self, index):
         return wx.ListItemAttr()
@@ -656,20 +659,27 @@ class CategoryViewer(TreeViewer):
         childIndices.sort()
         return childIndices
     
+    def getIsItemChecked(self, index):
+        return self.list[index].isFiltered()
+    
     def createSorter(self, categoryContainer):
         return category.CategorySorter(categoryContainer)
     
     def isShowingCategories(self):
         return True
 
-    # See TaskViewer for why the methods below have two names.
-    
+    def statusMessages(self):
+        status1 = _('Categories: %d selected, %d total')%\
+            (len(self.curselection()), len(self.list))
+        status2 = _('Status: %d filtered')%len([category for category in self.list if category.isFiltered()])
+        return status1, status2
+
     def newItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self), 
             command.NewCategoryCommand(self.list),
             self.list, self.uiCommands, bitmap=kwargs['bitmap'])
     
-    newCategoryDialog = newItemDialog
+    # See TaskViewer for why the methods below have two names.
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
@@ -789,7 +799,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     def createFilter(self, taskList):
         return effort.EffortList(taskList)
             
-    def getItemImage(self, index):
+    def getItemImage(self, index, column=None):
         return -1
     
     def getItemAttr(self, index):

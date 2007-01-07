@@ -1,9 +1,6 @@
 import wx, itemctrl, thirdparty
 import wx.gizmos as gizmos
-try:
-    import wx.lib.customtreectrl as customtree # for wxPython >= 2.7.1
-except ImportError:
-    import thirdparty.CustomTreeCtrl as customtree # for wxPython < 2.7.1
+import wx.lib.customtreectrl as customtree
 
         
 class TreeMixin(object):
@@ -55,12 +52,12 @@ class TreeMixin(object):
         
     def draggedItems(self):
         return [self.index(self.dragItem)]
-        
+            
     def onEndDrag(self, event):
         self.GetMainWindow().Unbind(wx.EVT_MOTION)
         self.Unbind(wx.EVT_TREE_END_DRAG)
         self.__resetCursor()
-        if self.__isValidDropTarget(event.GetItem()):
+        if self._isValidDropTarget(event.GetItem()):
             self.dragAndDropCommand(event)
 
     def onDragging(self, event):
@@ -70,7 +67,7 @@ class TreeMixin(object):
             self.__resetCursor()
             return
         item, flags, column = self.HitTest(wx.Point(event.GetX(), event.GetY()))
-        if self.__isValidDropTarget(item):
+        if self._isValidDropTarget(item):
             self.__setCursorToDragging()
         else:
             self.__setCursorToDroppingImpossible()
@@ -89,7 +86,7 @@ class TreeMixin(object):
             self.UnselectAll()
         event.Skip()
         
-    def __isValidDropTarget(self, dropTarget):
+    def _isValidDropTarget(self, dropTarget):
         if dropTarget: 
             return self.dragItem != dropTarget and \
                 self.GetItemParent(self.dragItem) != dropTarget and \
@@ -269,10 +266,11 @@ class TreeMixin(object):
         return insertAfterChild
             
     def renderNode(self, node, index):
-        normalImageIndex, expandedImageIndex = self.getItemImage(index)
-        if self.getChildIndices(index):
-            self.SetItemImage(node, expandedImageIndex, wx.TreeItemIcon_Expanded)
+        normalImageIndex = self.getItemImage(index)
         self.SetItemImage(node, normalImageIndex, wx.TreeItemIcon_Normal)
+        if self.getChildIndices(index):
+            expandedImageIndex = self.getItemImage(index, expanded=True)
+            self.SetItemImage(node, expandedImageIndex, wx.TreeItemIcon_Expanded)
         self.SetItemTextColour(node, self.getItemAttr(index).GetTextColour())
         self.SetItemText(node, self.getItemText(index))
 
@@ -430,7 +428,7 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, customtree.CustomTreeCtrl, TreeMixi
             getItemId, getRootIndices, getChildIndices)
         self.refresh()
             
-    # Adapters to make the TreeCtrl API more like the TreeListCtrl API:
+    # Adapters to make the CustomTreeCtrl API more like the TreeListCtrl API:
         
     def SelectAll(self):
         for item in self.getChildren(recursively=True):
@@ -452,17 +450,20 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, customtree.CustomTreeCtrl, TreeMixi
 class CheckTreeCtrl(CustomTreeCtrl):
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices, getIsItemChecked,
-            selectCommand, editCommand, dragAndDropCommand, 
+            selectCommand, checkCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu=None, *args, **kwargs):
         self.getIsItemChecked = getIsItemChecked
         super(CheckTreeCtrl, self).__init__(parent, getItemText, getItemImage, 
             getItemAttr, getItemId, getRootIndices, getChildIndices, 
             selectCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu, *args, **kwargs)
+        self.Bind(customtree.EVT_TREE_ITEM_CHECKED, checkCommand)
         
     def renderNode(self, node, index):
         super(CheckTreeCtrl, self).renderNode(node, index)
-        self.CheckItem(node, checked=self.getIsItemChecked(index))
+        shouldItemBeChecked = self.getIsItemChecked(index)
+        if shouldItemBeChecked != node.IsChecked():
+            self.CheckItem(node, checked=shouldItemBeChecked)
         
     def itemUnchanged(self, item, index, itemChildIndex):
         return super(CheckTreeCtrl, self).itemUnchanged(item, index, itemChildIndex) \
@@ -482,6 +483,14 @@ class CheckTreeCtrl(CustomTreeCtrl):
         
 
 class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, gizmos.TreeListCtrl):
+    # TreeListCtrl uses ALIGN_LEFT, ..., ListCtrl uses LIST_FORMAT_LEFT, ... for
+    # specifying alignment of columns. This dictionary allows us to map from the 
+    # ListCtrl constants to the TreeListCtrl constants:
+    alignmentMap = {wx.LIST_FORMAT_LEFT: wx.ALIGN_LEFT, 
+                    wx.LIST_FORMAT_CENTRE: wx.ALIGN_CENTRE,
+                    wx.LIST_FORMAT_CENTER: wx.ALIGN_CENTER,
+                    wx.LIST_FORMAT_RIGHT: wx.ALIGN_RIGHT}
+    
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices, selectCommand, 
             editCommand, dragAndDropCommand,
@@ -510,16 +519,21 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
         super(TreeListCtrl, self).renderNode(item, rowIndex)
         for columnIndex in range(1, self.GetColumnCount()):
             column = self._getColumn(columnIndex)
-            self.SetItemText(item, self.getItemText(rowIndex, column), columnIndex)
+            self.refreshCell(item, column, rowIndex, columnIndex)
                         
     def refreshColumn(self, columnIndex):
         column = self._getColumn(columnIndex)
         for rowIndex, item in self.allItems():
-            self.SetItemText(item, self.getItemText(rowIndex, column), columnIndex)
-
+            self.refreshCell(item, column, rowIndex, columnIndex)
+            
     def refreshColumns(self):
         for columnIndex in range(1, self.GetColumnCount()):
             self.refreshColumn(columnIndex)
+
+    def refreshCell(self, item, column, rowIndex, columnIndex):
+        self.SetItemText(item, self.getItemText(rowIndex, column), columnIndex)
+        self.SetItemImage(item, self.getItemImage(rowIndex, column), 
+            wx.TreeItemIcon_Normal, columnIndex)
         
     def allItems(self):
         for rowIndex in range(self._count):
@@ -555,8 +569,8 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
         ''' TreeListCtrl doesn't have a ToggleItemSelection. '''
         self.SelectItem(item, not self.IsSelected(item))
         
-    def SetItemImage(self, item, imageIndex, which):
-        super(TreeListCtrl, self).SetItemImage(item, imageIndex, column=0, which=which)
+    def SetItemImage(self, item, imageIndex, which, column=0):
+        super(TreeListCtrl, self).SetItemImage(item, imageIndex, column, which)
         
     # Adapters to make the TreeListCtrl more like the ListCtrl
     
@@ -565,7 +579,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
         self.refreshColumns()
         
     def InsertColumn(self, columnIndex, columnHeader, *args, **kwargs):
-        format = kwargs.pop('format', wx.LIST_FORMAT_LEFT)
+        format = self.alignmentMap[kwargs.pop('format', wx.LIST_FORMAT_LEFT)]
         if columnIndex == self.GetColumnCount():
             self.AddColumn(columnHeader, *args, **kwargs)
         else:
@@ -573,17 +587,15 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
                 *args, **kwargs)
         self.SetColumnAlignment(columnIndex, format)
         self.refreshColumns()
-
-    def SelectAll(self):
-        super(TreeListCtrl, self).SelectAll()
-        #self.selectItems(*[item for rowIndex, item in self.allItems()])
-
+    
     def GetCountPerPage(self):
         ''' ListCtrlAutoWidthMixin expects a GetCountPerPage() method,
             else it will throw an AttributeError. So for controls that have
             no such method (such as TreeListCtrl), we have to add it
             ourselves. '''
-        # We currently return -1 which makes ListCtrlAutoWithMixin think
-        # that we have a scrollbar always. We'll have to think of a
-        # better solution later.
-        return -1
+        count = 0
+        item = self.GetFirstVisibleItem()
+        while item:
+            count += 1
+            item = self.GetNextVisible(item)
+        return count
