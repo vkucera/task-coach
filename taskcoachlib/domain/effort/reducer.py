@@ -1,4 +1,4 @@
-import patterns, effort, effortlist
+import patterns, effort, effortlist, wx
 from domain import date
 from domain import task
 
@@ -28,7 +28,7 @@ class EffortAggregator(patterns.SetDecorator,
     def removeItems(self, efforts):
         for effort in efforts:
             effort.task().removeEffort(effort)
-
+            
     def extendSelf(self, tasks):
         ''' extendSelf is called when an item is added to the observed
             list. The default behavior of extendSelf is to add the item

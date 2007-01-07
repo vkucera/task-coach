@@ -124,19 +124,20 @@ class SelectMenu(Menu):
 class ViewMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewMenu, self).__init__(mainwindow)
+        self.appendMenu(_('New viewer'), 
+            ViewViewerMenu(mainwindow, uiCommands), 'viewnewviewer')
         self.appendUICommands(uiCommands, ['viewalltasks'])
         self.appendMenu(_('Tas&ks that are'), 
             ViewTaskStatesMenu(mainwindow, uiCommands))
         self.appendMenu(_('Tasks &due before end of'),
             ViewTasksByDueDateMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('Task &columns'), ViewTaskColumnsMenu(mainwindow, uiCommands))
         self.appendMenu(_('Effort &columns'), ViewEffortColumnsMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
-        self.appendMenu(_('Task &list options'), 
-            ViewTaskListMenu(mainwindow, uiCommands), 'listview')
-        self.appendMenu(_('Task &tree options'), 
-            ViewTaskTreeMenu(mainwindow, uiCommands), 'treeview')
+        self.appendMenu(_('&List options'), 
+            ViewListOptionsMenu(mainwindow, uiCommands), 'listview')
+        self.appendMenu(_('&Tree options'), 
+            ViewTreeOptionsMenu(mainwindow, uiCommands), 'treeview')
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
@@ -145,6 +146,15 @@ class ViewMenu(Menu):
             'viewfiltersidebar'])   
 
 
+class ViewViewerMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(ViewViewerMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['viewtasklistviewer', 
+            'viewtasktreeviewer', None, 'viewcategoryviewer', None,
+            'vieweffortdetailviewer', 'vieweffortperdayviewer', 
+            'vieweffortperweekviewer', 'vieweffortpermonthviewer'])
+        
+        
 class ViewTaskColumnsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewTaskColumnsMenu, self).__init__(mainwindow)
@@ -154,8 +164,9 @@ class ViewTaskColumnsMenu(Menu):
             _ViewTaskBudgetColumnsMenu(mainwindow, uiCommands))
         self.appendMenu(_('&Financial'), 
             _ViewTaskFinancialColumnsMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, ['viewpriority', 'viewtotalpriority', 
-        'viewlastmodificationtime', 'viewtotallastmodificationtime'])
+        self.appendUICommands(uiCommands, ['viewattachments', 'viewpriority', 
+            'viewtotalpriority', 'viewlastmodificationtime', 
+            'viewtotallastmodificationtime'])
 
 
 class _ViewTaskDateColumnsMenu(Menu):
@@ -198,15 +209,15 @@ class ViewTaskStatesMenu(Menu):
             'viewoverduetasks', 'viewoverbudgettasks'])
 
                 
-class ViewTaskListMenu(Menu):
+class ViewListOptionsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
-        super(ViewTaskListMenu, self).__init__(mainwindow)
+        super(ViewListOptionsMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewcompositetasks'])
 
            
-class ViewTaskTreeMenu(Menu):
+class ViewTreeOptionsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
-        super(ViewTaskTreeMenu, self).__init__(mainwindow)
+        super(ViewTreeOptionsMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['viewexpandselected', 
             'viewcollapseselected', None, 'viewexpandall', 'viewcollapseall'])
 
@@ -305,7 +316,8 @@ class CategoryPopupMenu(Menu):
         super(CategoryPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None, 
             'newtask', None, 'newcategory', 'newsubcategory', 'editcategory', 
-            'deletecategory', None, 'stopeffort'])
+            'deletecategory', None, 'stopeffort', None, 'viewexpandselected',
+            'viewcollapseselected'])
         
         
 # Column header popup menu's
@@ -342,8 +354,9 @@ class TaskViewerColumnPopupMenu(_ColumnPopupMenu):
             _ViewTaskBudgetColumnsMenu(window, uiCommands)),
         self.appendMenu(_('&Financial'), 
             _ViewTaskFinancialColumnsMenu(window, uiCommands))
-        self.appendUICommands(uiCommands, ['viewpriority', 'viewtotalpriority',
-            'viewlastmodificationtime', 'viewtotallastmodificationtime'])
+        self.appendUICommands(uiCommands, ['viewattachments', 'viewpriority', 
+            'viewtotalpriority', 'viewlastmodificationtime', 
+            'viewtotallastmodificationtime'])
 
 
 class EffortViewerColumnPopupMenu(_ColumnPopupMenu):

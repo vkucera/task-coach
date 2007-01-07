@@ -382,7 +382,13 @@ class PublisherTest(test.TestCase):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.removeObserver(self.onEvent, eventType='otherType')
         self.assertEqual([self.onEvent], self.publisher.observers())
-
+        
+    def testRemoveObserversForSpecificInstance(self):
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        self.publisher.registerObserver(self.onEvent, eventType='otherType')
+        self.publisher.removeInstance(self)
+        self.assertEqual([], self.publisher.observers())
+        
     def testClear(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.clear()

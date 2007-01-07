@@ -13,4 +13,4 @@ from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer, BoxWithBoxSizer
 from colorselect import ColorSelect
 from foldpanelbar import FoldPanelBar
-from thirdparty.ComboTreeBox import ComboTreeBox
+from searchctrl import SearchCtrl

@@ -20,7 +20,11 @@ or is static is now a setting (see Edit -> Preferences -> Window
 behavior.'''),
         Feature('''The toolbar buttons for 'new item', 'new sub item',
 'edit item' and 'delete item' now work for tasks, effort records
-and categories, depending on what view is active.''')]),
+and categories, depending on what view is active.'''),
+        Feature('''Added an attachment column that shows whether a task
+has one or more attachments.''')],
+    featuresChanged=[
+        Feature('''Moved search filter from filter sidebar to toolbar.''')]),
         
 Release('0.61.4', 'December 30, 2006',
     featuresAdded=[

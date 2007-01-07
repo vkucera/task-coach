@@ -1,4 +1,4 @@
-import viewer
+import viewer, wx
 from i18n import _
 
     
@@ -31,3 +31,4 @@ def addCategoryViewers(viewerContainer, categoryContainer, uiCommands,
     categoryViewer = viewer.CategoryViewer(viewerContainer, categoryContainer,
                                            uiCommands, settings)
     viewerContainer.addViewer(categoryViewer, _('Categories'), 'category')
+

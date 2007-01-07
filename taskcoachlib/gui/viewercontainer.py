@@ -1,5 +1,6 @@
 import patterns, wx, widgets
 
+
 class ViewerContainer(object):
     def __init__(self, parent, settings, setting, *args, **kwargs):
         self.__settings = settings
@@ -11,7 +12,7 @@ class ViewerContainer(object):
         except ValueError:
             self.__desiredPageNumber = 0
         super(ViewerContainer, self).__init__(parent, *args, **kwargs)
-
+        
     def addViewer(self, viewer, pageName, bitmap=None):
         self.AddPage(viewer, pageName, bitmap)
         if self.GetPageCount() - 1 == self.__desiredPageNumber:
@@ -29,13 +30,6 @@ class ViewerContainer(object):
         ''' Return a function that will call the method on the first viewer 
             that both has the requested method and does not raise an exception.
             Start looking in the current viewer. '''
-            
-        if method == '__length_hint__':
-            print method
-            import traceback
-            print ''.join(traceback.format_stack())
-            while True:
-                pass
         def findFirstViewer(*args, **kwargs):
             for viewer in [self[self.__currentPageNumber]] + list(self):
                 if hasattr(viewer, method):
@@ -58,10 +52,8 @@ class ViewerContainer(object):
             self.selectEventType(), *event.values()))
 
     def onPageChanged(self, event):
-        #self[self.__currentPageNumber].onDeactivateViewer()
         self.__currentPageNumber = event.GetSelection()
         self.__settings.set('view', self.__setting, str(self.__currentPageNumber))
-        #self[self.__currentPageNumber].onActivateViewer()
         patterns.Publisher().notifyObservers(patterns.Event(self, 
             self.viewerChangeEventType(), self.__currentPageNumber))
         event.Skip()

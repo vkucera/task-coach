@@ -130,6 +130,7 @@ class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithFileDropTarget):
 class Column(object):
     def __init__(self, columnHeader, *eventTypes, **kwargs):
         self.__columnHeader = columnHeader
+        self.width = kwargs.pop('width', wx.gizmos.DEFAULT_COL_WIDTH)
         # The event types to use for registering an oberver that is
         # interested in changes that affect this column:
         self.__eventTypes = eventTypes
@@ -139,9 +140,17 @@ class Column(object):
         self.__renderCallback = kwargs.pop('renderCallback',
             self.defaultRenderer)
         self.__alignment = kwargs.pop('alignment', wx.LIST_FORMAT_LEFT)
+        self.__imageIndexCallback = kwargs.pop('imageIndexCallback', 
+            self.defaultImageIndex)
+        # NB: because the header image is needed for sorting a fixed header
+        # image cannot be combined with a sortable column
+        self.__headerImageIndex = kwargs.pop('headerImageIndex', -1)
         
     def header(self):
         return self.__columnHeader
+    
+    def headerImageIndex(self):
+        return self.__headerImageIndex
 
     def eventTypes(self):
         return self.__eventTypes
@@ -164,28 +173,37 @@ class Column(object):
 
     def alignment(self):
         return self.__alignment
+    
+    def defaultImageIndex(self, *args, **kwargs):
+        return -1
+    
+    def imageIndex(self, *args, **kwargs):
+        return self.__imageIndexCallback(*args, **kwargs)
         
     def __eq__(self, other):
         return self.header() == other.header()
         
 
 class _BaseCtrlWithColumns(object):
-    ''' A base class for all controls with columns. Note that most manipulation 
-        of columns (in derived classes) is done by use of the column header 
-        instead of a column index. This class provides two utility methods to 
-        help converting column indices to column headers and vice versa. Note 
-        that this class and its subclasses do not support addition or deletion 
-        of columns after the initial setting of columns. '''
+    ''' A base class for all controls with columns. Note that this class and 
+        its subclasses do not support addition or deletion of columns after 
+        the initial setting of columns. '''
 
     def __init__(self, *args, **kwargs):
         self.__allColumns = kwargs.pop('columns')
         super(_BaseCtrlWithColumns, self).__init__(*args, **kwargs)
         self._setColumns()
-
+        
     def _setColumns(self):
         for columnIndex, column in enumerate(self.__allColumns):
-            self.InsertColumn(columnIndex, column.header(), 
-                format=column.alignment())
+            self._insertColumn(columnIndex, column)
+            
+    def _insertColumn(self, columnIndex, column):
+        self.InsertColumn(columnIndex, column.header(), 
+            format=column.alignment(), width=column.width)
+        columnInfo = self.GetColumn(columnIndex)
+        columnInfo.SetImage(column.headerImageIndex())
+        self.SetColumn(columnIndex, columnInfo)
             
     def _allColumns(self):
         return self.__allColumns
@@ -204,13 +222,6 @@ class _BaseCtrlWithColumns(object):
                 return columnIndex
         raise ValueError, '%s: unknown column header'%columnHeader
 
- 
-class _CtrlWithAutoResizeableColumns(_BaseCtrlWithColumns, autowidth.AutoColumnWidthMixin):
-    ''' This class is responsible for automatic resizing of a column. The 
-        resizeable column should be passed as resizeableColumn keyword argument
-        to the constructor. '''
-    pass
-
         
 class _CtrlWithHideableColumns(_BaseCtrlWithColumns):        
     ''' This class supports hiding columns. '''
@@ -222,8 +233,7 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
             '''
         columnIndex = self._getColumnIndex(column.header())
         if show and not self.isColumnVisible(column):
-            self.InsertColumn(columnIndex, column.header(),
-                format=column.alignment())
+            self._insertColumn(columnIndex, column)
         elif not show and self.isColumnVisible(column):
             self.DeleteColumn(columnIndex)
 
@@ -292,7 +302,7 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
             self.SetColumn(columnIndex, columnInfo)
 
 
-class CtrlWithColumns(_CtrlWithAutoResizeableColumns, _CtrlWithHideableColumns,
+class CtrlWithColumns(autowidth.AutoColumnWidthMixin, _CtrlWithHideableColumns,
                       _CtrlWithSortableColumns, _CtrlWithColumnPopupMenu):
     ''' CtrlWithColumns combines the functionality of its four parent classes: 
         automatic resizing of columns, hideable columns, columns with sort 

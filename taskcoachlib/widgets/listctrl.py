@@ -26,7 +26,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
     def __init__(self, parent, columns, getItemText, getItemImage, getItemAttr, 
             selectCommand=None, editCommand=None, itemPopupMenu=None, 
             columnPopupMenu=None, resizeableColumn=0, *args, **kwargs):
-        super(VirtualListCtrl, self).__init__(parent, -1, 
+        super(VirtualListCtrl, self).__init__(parent,
             style=wx.LC_REPORT|wx.LC_VIRTUAL, columns=columns, 
             resizeableColumn=resizeableColumn, itemPopupMenu=itemPopupMenu, 
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
@@ -47,13 +47,16 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
     def OnGetItemText(self, rowIndex, columnIndex):
         return self.getItemText(rowIndex, self._getColumn(columnIndex))
 
-    def OnGetItemImage(self, index):
-        return self.getItemImage(index)
+    def OnGetItemImage(self, rowIndex):
+        return self.getItemImage(rowIndex, self._getColumn(0))[0]
+    
+    def OnGetItemColumnImage(self, rowIndex, columnIndex):
+        return self.getItemImage(rowIndex, self._getColumn(columnIndex))
 
-    def OnGetItemAttr(self, index):
+    def OnGetItemAttr(self, rowIndex):
         # We need to keep a reference to the item attribute to prevent it
         # from being garbage collected too soon.
-        self.__itemAttribute = self.getItemAttr(index)
+        self.__itemAttribute = self.getItemAttr(rowIndex)
         return self.__itemAttribute
         
     def onSelect(self, event):

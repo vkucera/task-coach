@@ -277,6 +277,10 @@ class NeedsItems(object):
     def enabled(self, event):
         return self.viewer.size() 
 
+class NeedsTreeViewer(object):
+    def enabled(self, event):
+        return super(NeedsTreeViewer, self).enabled(event) and \
+            self.viewer.isTreeViewer()
 
 # Commands:
 
@@ -638,6 +642,22 @@ class ViewAllTasks(SettingsCommand, UICommandsCommand, CategoriesCommand):
             category.setFiltered(False)
 
 
+class ViewViewer(ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        self.viewerClass = kwargs['viewerClass']
+        self.viewerArgs = kwargs['viewerArgs']
+        self.viewerKwargs = kwargs.get('viewerKwargs', {})
+        self.viewerTitle = kwargs['viewerTitle']
+        self.viewerBitmap = kwargs['viewerBitmap']
+        super(ViewViewer, self).__init__(*args, **kwargs)
+        
+    def doCommand(self, event):
+        self.viewer.Freeze()
+        newViewer = self.viewerClass(self.viewer, *self.viewerArgs, **self.viewerKwargs)
+        self.viewer.addViewer(newViewer, self.viewerTitle, self.viewerBitmap)
+        self.viewer.Thaw()
+
+
 class HideCurrentColumn(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(HideCurrentColumn, self).__init__(menuText=_('&Hide this column'),
@@ -651,30 +671,31 @@ class HideCurrentColumn(ViewerCommand):
         # Unfortunately the event (an UpdateUIEvent) does not give us any
         # information to determine the current column, so we have to find 
         # the column ourselves. We use the current mouse position to do so.
-
         widget = self.viewer.getWidget()
         x, y = widget.ScreenToClient(wx.GetMousePosition())
-        item, flag, columnIndex = widget.HitTest((x, y))
+        # Use wx.Point because CustomTreeCtrl assumes a wx.Point instance:
+        item, flag, columnIndex = widget.HitTest(wx.Point(x, y))
         return self.viewer.isHideableColumn(columnIndex)
     
     
-class ViewExpandAll(ViewerCommand):
+class ViewExpandAll(NeedsTreeViewer, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewExpandAll, self).__init__( \
-            menuText=_('&Expand all tasks\tShift+Ctrl+E'),
-            helpText=_('Expand all tasks with subtasks'), *args, **kwargs)
+            menuText=_('&Expand all items\tShift+Ctrl+E'),
+            helpText=_('Expand all items with subitems'), *args, **kwargs)
 
     def enabled(self, event):
-        return self.viewer.isAnyItemExpandable()
+        return super(ViewExpandAll, self).enabled(event) and \
+            self.viewer.isAnyItemExpandable()
                 
     def doCommand(self, event):
         self.viewer.expandAll()
 
 
-class ViewExpandSelected(NeedsSelectedTasks, ViewerCommand):
+class ViewExpandSelected(NeedsSelection, NeedsTreeViewer, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewExpandSelected, self).__init__(bitmap='viewexpand',
-            menuText=_('E&xpand'), helpText=_('Expand the selected task(s)'),
+            menuText=_('E&xpand'), helpText=_('Expand the selected item(s)'),
             *args, **kwargs)
     
     def enabled(self, event):
@@ -685,24 +706,25 @@ class ViewExpandSelected(NeedsSelectedTasks, ViewerCommand):
         self.viewer.expandSelectedItems()
             
 
-class ViewCollapseAll(ViewerCommand):
+class ViewCollapseAll(NeedsTreeViewer, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewCollapseAll, self).__init__( \
-            menuText=_('&Collapse all tasks\tShift+Ctrl+C'),
-            helpText=_('Collapse all tasks with subtasks'), *args, **kwargs)
+            menuText=_('&Collapse all items\tShift+Ctrl+C'),
+            helpText=_('Collapse all items with subitems'), *args, **kwargs)
     
     def enabled(self, event):
-        return self.viewer.isAnyItemCollapsable()
+        return super(ViewCollapseAll, self).enabled(event) and \
+            self.viewer.isAnyItemCollapsable()
     
     def doCommand(self, event):
         self.viewer.collapseAll()
         
 
-class ViewCollapseSelected(NeedsSelectedTasks, ViewerCommand):
+class ViewCollapseSelected(NeedsTreeViewer, NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewCollapseSelected, self).__init__(bitmap='viewcollapse',
             menuText=_('C&ollapse'),
-            helpText=_('Collapse the selected tasks with subtasks'), 
+            helpText=_('Collapse the selected items with subitems'), 
             *args, **kwargs)
 
     def enabled(self, event):
@@ -786,7 +808,8 @@ class DeleteDomainObject(NeedsSelection, ViewerCommand):
         return self.viewer.model().deleteItemMenuText
 
         
-class TaskNew(ViewerCommand, TaskListCommand):
+class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand, 
+              UICommandsCommand, MainWindowCommand):
     def __init__(self, *args, **kwargs):
         taskList = kwargs['taskList']
         super(TaskNew, self).__init__(bitmap='new', 
@@ -794,8 +817,10 @@ class TaskNew(ViewerCommand, TaskListCommand):
             helpText=taskList.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        dialog = self.viewer.newTaskDialog(bitmap=self.bitmap)
-        dialog.Show()
+        newTaskDialog = gui.dialog.editor.TaskEditor(self.mainwindow, 
+            command.NewTaskCommand(self.taskList), self.taskList, 
+            self.uiCommands, self.settings, self.categories, bitmap=self.bitmap)
+        newTaskDialog.Show()
 
 
 class TaskNewSubTask(NeedsSelectedTasks,  TaskListCommand, ViewerCommand):
@@ -899,7 +924,7 @@ class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
                 
 
 class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand, 
-                TaskListCommand):
+                TaskListCommand, MainWindowCommand, UICommandsCommand):
     def __init__(self, *args, **kwargs):
         effortList = kwargs['effortList']
         super(EffortNew, self).__init__(bitmap='new',  
@@ -910,10 +935,15 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
         if self.viewer.isShowingTasks() and self.viewer.curselection():
             selectedTasks = self.viewer.curselection()
         else:
-            selectedTasks = None
-        dialog = self.viewer.newEffortDialog(bitmap=self.bitmap, 
-            selectedTasks=selectedTasks)
-        dialog.Show()
+            subjectDecoratedTaskList = [(render.subject(task, recursively=True), 
+                task) for task in self.taskList]
+            subjectDecoratedTaskList.sort() # Sort by subject
+            selectedTasks = [subjectDecoratedTaskList[0][1]]
+
+        newEffortDialog = gui.dialog.editor.EffortEditor(self.mainwindow, 
+            command.NewEffortCommand(self.effortList, selectedTasks),
+            self.uiCommands, self.effortList, self.taskList, bitmap=self.bitmap)
+        newEffortDialog.Show()
 
 
 class EffortEdit(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
@@ -975,7 +1005,7 @@ class EffortStop(TaskListCommand):
                      task.isBeingTracked()])
 
 
-class CategoryNew(ViewerCommand, CategoriesCommand):
+class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
     def __init__(self, *args, **kwargs):
         categories = kwargs['categories']
         super(CategoryNew, self).__init__(bitmap='new', 
@@ -983,8 +1013,10 @@ class CategoryNew(ViewerCommand, CategoriesCommand):
             helpText=categories.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        dialog = self.viewer.newCategoryDialog(bitmap=self.bitmap)
-        dialog.Show(show)
+        newCategoryDialog = gui.dialog.editor.CategoryEditor(self.mainwindow, 
+            command.NewCategoryCommand(self.categories),
+            self.categories, self.uiCommands, bitmap=self.bitmap)
+        newCategoryDialog.Show(show)
         
 
 class CategoryNewSubCategory(NeedsSelectedCategory, CategoriesCommand, 
@@ -1026,9 +1058,15 @@ class CategoryEdit(NeedsSelectedCategory, ViewerCommand, CategoriesCommand):
 
 class CategoryDragAndDrop(CategoriesCommand, ViewerCommand):
     def doCommand(self, event):
+        # CustomTreeCtrl doesn't change the selection to the drop item when
+        # dropping, so we have to get the drop item from the event
+        if event.GetItem():
+            dropItemIndex = self.viewer.getWidget().index(event.GetItem())
+            dropItems = [self.viewer.model()[dropItemIndex]]
+        else:
+            dropItems = []
         dragAndDropCommand = command.DragAndDropCategoryCommand( \
-            self.categories, self.viewer.draggedItems(), 
-            drop=self.viewer.curselection())
+            self.categories, self.viewer.draggedItems(), drop=dropItems)
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
 
@@ -1104,6 +1142,31 @@ class MainWindowRestore(MainWindowCommand):
         self.mainwindow.restore(event)
     
 
+class Search(MainWindowCommand, ViewerCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(Search, self).__init__(*args, **kwargs)
+        self.searchControl = None
+        patterns.Publisher().registerObserver(self.onSearchStringChanged, 
+            'view.tasksearchfilterstring')
+        
+    def onSearchStringChanged(self, event):
+        if self.searchControl:
+            self.searchControl.SetValue(event.value())
+        
+    def onFind(self, searchString, matchCase):
+        self.settings.set('view', 'tasksearchfilterstring', searchString)
+        self.settings.setboolean('view', 'tasksearchfiltermatchcase', matchCase)
+        if searchString and self.viewer.isTreeViewer():
+            self.viewer.expandAll()
+
+    def appendToToolBar(self, toolbar):
+        searchString = self.settings.get('view', 'tasksearchfilterstring')
+        matchCase = self.settings.getboolean('view', 'tasksearchfiltermatchcase')
+        self.searchControl = widgets.SearchCtrl(toolbar, value=searchString,
+            style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
+            callback=self.onFind)
+        toolbar.AddControl(self.searchControl)
+
 
 class UICommands(dict):
     def __init__(self, mainwindow, iocontroller, viewer, settings, 
@@ -1170,7 +1233,8 @@ class UICommands(dict):
         
         # Column show/hide commands
         for menuText, helpText, setting in \
-            [(_('&Start date'), _('Show/hide start date column'), 'startdate'),
+            [(_('Attachments'), _('Show/hide attachment column'), 'attachments'),
+             (_('&Start date'), _('Show/hide start date column'), 'startdate'),
              (_('&Due date'), _('Show/hide due date column'), 'duedate'),
              (_('D&ays left'), _('Show/hide days left column'), 'timeleft'),
              (_('Co&mpletion date'), _('Show/hide completion date column'), 'completiondate'),
@@ -1256,6 +1320,40 @@ class UICommands(dict):
             self[key] = UIRadioCommand(settings=settings, setting='sortby', value=value,
                                        menuText=menuText, helpText=helpText)
         
+        for key, menuText, helpText, viewerClass, viewerArgs, viewerKwargs, viewerTitle, bitmap in \
+            (('viewtasklistviewer', _('Task list'), 
+            _('Open a new tab with a viewer that displays tasks in a list'), 
+            gui.viewer.TaskListViewer, (taskList, self, settings), 
+            dict(categories=categories), _('Task list'), 'listview'),
+            ('viewtasktreeviewer', _('Task tree'),
+            _('Open a new tab with a viewer that displays tasks in a tree'),
+            gui.viewer.TaskTreeListViewer, (taskList, self, settings),
+            dict(categories=categories), _('Task tree'), 'treeview'),
+            ('viewcategoryviewer', _('Category'),
+            _('Open a new tab with a viewer that displays categories'),
+            gui.viewer.CategoryViewer, (categories, self, settings), {},
+            _('Categories'), 'category'),
+            ('vieweffortdetailviewer', _('Effort detail'),
+            _('Open a new tab with a viewer that displays effort details'),
+            gui.viewer.EffortListViewer, (taskList, self, settings), {},
+            _('Effort details'), 'start'),
+            ('vieweffortperdayviewer', _('Effort per day'),
+            _('Open a new tab with a viewer that displays effort per day'),
+            gui.viewer.EffortPerDayViewer, (taskList, self, settings), {},
+            _('Effort per day'), 'date'),
+            ('vieweffortperweekviewer', _('Effort per week'),
+            _('Open a new tab with a viewer that displays effort per week'),
+            gui.viewer.EffortPerWeekViewer, (taskList, self, settings), {},
+            _('Effort per week'), 'date'),
+            ('vieweffortpermonthviewer', _('Effort per month'),
+            _('Open a new tab with a viewer that displays effort per month'),
+            gui.viewer.EffortPerMonthViewer, (taskList, self, settings), {},
+            _('Effort per month'), 'date')):
+            self[key] = ViewViewer(viewer=viewer, menuText=menuText, 
+                helpText=helpText, bitmap=bitmap, viewerClass=viewerClass,
+                viewerArgs=viewerArgs, viewerKwargs=viewerKwargs, 
+                viewerTitle=viewerTitle, viewerBitmap=bitmap)
+        
         # Toolbar size commands                
         for key, value, menuText, helpText in \
             [('hide', None, _('&Hide'), _('Hide the toolbar')),
@@ -1295,7 +1393,8 @@ class UICommands(dict):
         self['newsub'] = NewSubDomainObject(viewer=viewer)
         
         # Task menu
-        self['newtask'] = TaskNew(viewer=viewer, taskList=taskList)
+        self['newtask'] = TaskNew(mainwindow=mainwindow, taskList=taskList,
+            settings=settings, uicommands=self, categories=categories)
         self['newsubtask'] = TaskNewSubTask(taskList=taskList, viewer=viewer)
         self['edittask'] = TaskEdit(taskList=taskList, viewer=viewer)
         self['markcompleted'] = TaskMarkCompleted(taskList=taskList,
@@ -1309,7 +1408,7 @@ class UICommands(dict):
 
         # Effort menu
         self['neweffort'] = EffortNew(viewer=viewer, effortList=effortList,
-            taskList=taskList)
+            taskList=taskList, mainwindow=mainwindow, uicommands=self)
         self['editeffort'] = EffortEdit(viewer=viewer, effortList=effortList)
         self['deleteeffort'] = EffortDelete(effortList=effortList, 
                                             viewer=viewer)
@@ -1317,7 +1416,8 @@ class UICommands(dict):
         self['stopeffort'] = EffortStop(taskList=taskList)
         
         # Categorymenu
-        self['newcategory'] = CategoryNew(viewer=viewer, categories=categories)
+        self['newcategory'] = CategoryNew(mainwindow=mainwindow, 
+            categories=categories, uiCommands=self)
         self['newsubcategory'] = CategoryNewSubCategory(viewer=viewer, 
             categories=categories)
         self['deletecategory'] = CategoryDelete(viewer=viewer, 
@@ -1333,6 +1433,9 @@ class UICommands(dict):
 
         # Taskbar menu
         self['restore'] = MainWindowRestore(mainwindow=mainwindow)
+        
+        # Toolbar specific
+        self['search'] = Search(mainwindow=mainwindow, viewer=viewer, settings=settings)
         
         # Drag and drop related, not on any menu:
         self['draganddroptask'] = TaskDragAndDrop(taskList=taskList, 
