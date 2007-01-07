@@ -114,8 +114,10 @@ class Publisher(object):
             The eventType can be anything hashable, typically a string. '''
         observer = MethodProxy(observer)
         observerList = self.__observers.setdefault(eventType, [])
-        if observer not in observerList:
-            observerList.append(observer)
+        # Note: it's the caller's responsibility to not add the same observer
+        # twice (checking whether the observer is already in the observerList
+        # impacts performance too much).
+        observerList.append(observer)
         
     def removeObserver(self, observer, eventType=None):
         ''' Remove an observer. If no event type is specified, the observer

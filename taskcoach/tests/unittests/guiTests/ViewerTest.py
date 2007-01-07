@@ -78,7 +78,7 @@ class TaskListViewerTest(test.wxTestCase):
     def testChangeStartDateWhileColumnNotShown(self):
         self.settings.set('view', 'startdate', 'False')
         self.task.setStartDate(date.Yesterday())
-        self.failIf(self.viewer.events)
+        self.assertEqual(1, len(self.viewer.events))
 
     def testChangeDueDate(self):
         self.task.setDueDate(date.Today())

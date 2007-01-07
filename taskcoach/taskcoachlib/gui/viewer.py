@@ -295,7 +295,7 @@ class ViewerWithColumns(Viewer):
     def __stopObserving(self, eventTypes):
         for eventType in eventTypes:
             patterns.Publisher().removeObserver(self.onAttributeChanged, 
-                eventType=eventType)                                        
+                eventType=eventType)
 
 
 class TaskViewer(UpdatePerSecondViewer):

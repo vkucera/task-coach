@@ -3,6 +3,12 @@
 from changetypes import *
 
 releases = [
+Release('0.61.5', 'January 7?, 2007',
+    bugsFixed=[
+        Bug('''Opening a Task Coach file with many effort records is slow.
+Opening an edit dialog for a task with many effort records is slow too.''', 
+'1630102')]),
+
 Release('0.61.4', 'December 30, 2006',
     featuresAdded=[
         Feature('Added RPM and Debian distributions.')], 
