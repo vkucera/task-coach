@@ -3,7 +3,7 @@
 from changetypes import *
 
 releases = [
-Release('0.61.5', 'January 7?, 2007',
+Release('0.61.5', 'January 10, 2007',
     bugsFixed=[
         Bug('''Opening a Task Coach file with many effort records is slow.
 Opening an edit dialog for a task with many effort records is slow too.''', 
