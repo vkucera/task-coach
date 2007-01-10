@@ -3,4 +3,4 @@ recursive-include tests *.py
 include TODO.tsk
 include setup.py
 exclude make.py
-prune standards
+prune dist.in

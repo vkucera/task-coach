@@ -304,7 +304,8 @@ class PublisherTest(test.TestCase):
     def testRegisterObserver_Twice(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([self.onEvent], self.publisher.observers())
+        self.assertEqual([self.onEvent, self.onEvent], 
+                         self.publisher.observers())
         
     def testRegisterObserver_ForTwoDifferentTypes(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType1')
