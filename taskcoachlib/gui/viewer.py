@@ -270,8 +270,10 @@ class ViewerWithColumns(Viewer):
         item = self.list[index]
         if not column:
             column = self.columns()[0]
-        return column.imageIndex(item, expanded) if expanded \
-            else column.imageIndex(item)
+        if expanded:
+            return column.imageIndex(item, expanded) 
+        else:
+            return column.imageIndex(item)
 
     def __startObserving(self, eventTypes):
         for eventType in eventTypes:
@@ -476,15 +478,24 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
         self.showSortOrder(event.value() == 'True')
 
     def showSortOrder(self, ascending):
-        sortOrder = 'ascending' if ascending else 'descending'
+        if ascending:
+            sortOrder = 'ascending' 
+        else: 
+            sortOrder = 'descending'
         self.widget.showSortOrder(self.imageIndex[sortOrder])
             
     def subjectImageIndex(self, task, expanded=False):
         normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
-        return expandedImageIndex if expanded else normalImageIndex
+        if expanded:
+            return expandedImageIndex 
+        else:
+            return normalImageIndex
                     
     def attachmentImageIndex(self, task):
-        return self.imageIndex['attachment'] if task.attachments() else -1
+        if task.attachments():
+            return self.imageIndex['attachment'] 
+        else:
+            return -1
                 
     def createColumnPopupMenu(self):
         return menu.TaskViewerColumnPopupMenu(self.parent, self.uiCommands)
@@ -550,7 +561,10 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
     def getItemImage(self, index, expanded=False):
         task = self.list[index]
         normalImageIndex, expandedImageIndex = self.getImageIndices(task)
-        return expandedImageIndex if expanded else normalImageIndex
+        if expanded:
+            return expandedImageIndex 
+        else:
+            return normalImageIndex
         
     def getItemChildIndex(self, index):
         task = self.list[index]
