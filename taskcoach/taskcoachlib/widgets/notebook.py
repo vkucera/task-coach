@@ -64,9 +64,19 @@ class BookPage(wx.Panel):
             flags with flags passed by the caller. '''
         flagsPassed = flagsPassed or [None] * len(controls)
         defaultFlags = self.__defaultFlags(controls)
+        flags = []
+        for flagPassed, defaultFlag in zip(flagsPassed, defaultFlags):
+            if flagPassed is None:
+                flag = defaultFlag
+            else:
+                flag = flagPassed
+            flags.append(flag)
+        return flags
+        '''
+        # If we drop support for Python 2.4, change above lines to this:
         return [defaultFlag if flagPassed is None else flagPassed 
                 for flagPassed, defaultFlag in zip(flagsPassed, defaultFlags)]
-
+        '''
     def __addControl(self, columnIndex, control, flag, lastColumn):
         if type(control) in [type(''), type(u'')]:
             control = wx.StaticText(self, label=control)
