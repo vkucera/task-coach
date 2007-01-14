@@ -6,11 +6,11 @@ releases = [
 
 Release('0.62.0', 'January ?, 2007',
     dependenciesChanged=[
-        Dependency('''Task Coach now requires Python 2.5 and 
+        Dependency('''Task Coach now requires 
 wxPython 2.8-unicode or newer (this is only relevant if you use the 
 source distribution).''')],
     featuresAdded=[
-        Feature('''Printing a selection is enabled.'''),
+        Feature('''Printing a selection is enabled (except on Mac OSX.'''),
         Feature('''The notebook that contains the different views allows for
 dragging and dropping of tabs, enabling you to create almost any layout you
 like. Unfortunately, this widget does not yet provide functionality to store
@@ -22,7 +22,8 @@ behavior.'''),
 'edit item' and 'delete item' now work for tasks, effort records
 and categories, depending on what view is active.'''),
         Feature('''Added an attachment column that shows whether a task
-has one or more attachments.''')],
+has one or more attachments.'''),
+        Feature('''Added an 'Open all attachments' menu item for tasks''')],
     featuresChanged=[
         Feature('''Moved search filter from filter sidebar to toolbar.''')]),
         

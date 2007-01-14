@@ -108,8 +108,10 @@ class UICommand(object):
         if self.toolbar:
             if not self.helpText:
                 self.toolbar.SetToolLongHelp(self.id, self.getHelpText())
-            if self.menuText == '?':
-                self.toolbar.SetToolShortHelp(self.id, self.getMenuText())
+            if self.menuText == '?':            
+                shortHelp = wx.MenuItem.GetLabelFromText(self.getMenuText())
+                self.toolbar.SetToolShortHelp(self.id, shortHelp)
+                #print self.toolbar.GetToolShortHelp(self.id)
 
     def enabled(self, event):
         ''' Can be overridden in a subclass. '''
@@ -262,6 +264,11 @@ class NeedsCategoryViewer(object):
                      
 class NeedsSelectedTasks(NeedsTaskViewer, NeedsSelection):
     pass
+
+class NeedsSelectedTasksWithAttachments(NeedsSelectedTasks):
+    def enabled(self, event):
+        return super(NeedsSelectedTasksWithAttachments, self).enabled(event) and \
+            bool([task for task in self.viewer.curselection() if task.attachments()])
 
 class NeedsSelectedEffort(NeedsEffortViewer, NeedsSelection):
     pass
@@ -921,7 +928,24 @@ class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
                 self.taskList, self.viewer.curselection(), 
                 attachments=[filename])
             addAttachmentCommand.do()
-                
+
+
+class TaskOpenAllAttachments(NeedsSelectedTasksWithAttachments, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(TaskOpenAllAttachments, self).__init__(menuText=_('&Open all attachments'),
+           helpText=_('Open all attachments of the selected task(s)'),
+           bitmap='attachment', *args, **kwargs)
+        
+    def doCommand(self, event):
+        for task in self.viewer.curselection():
+            for attachment in task.attachments():
+                attachment = os.path.normpath(attachment)
+                try:    
+                    desktop.open(attachment)
+                except Exception, instance:
+                    showerror(str(instance), 
+                        caption=_('Error opening attachment'), style=wx.ICON_ERROR)
+
 
 class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand, 
                 TaskListCommand, MainWindowCommand, UICommandsCommand):
@@ -1168,6 +1192,13 @@ class Search(MainWindowCommand, ViewerCommand, SettingsCommand):
         toolbar.AddControl(self.searchControl)
 
 
+class Filter(SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(Filter, self).__init__(*args, **kwargs)
+
+
+
+
 class UICommands(dict):
     def __init__(self, mainwindow, iocontroller, viewer, settings, 
             taskList, effortList, categories):
@@ -1405,6 +1436,7 @@ class UICommands(dict):
             bitmap='email')
         self['addattachmenttotask'] = TaskAddAttachment(taskList=taskList,
                                                         viewer=viewer)
+        self['openalltaskattachments'] = TaskOpenAllAttachments(viewer=viewer)
 
         # Effort menu
         self['neweffort'] = EffortNew(viewer=viewer, effortList=effortList,
@@ -1446,3 +1478,4 @@ class UICommands(dict):
     def createRecentFileOpenUICommand(self, filename, index):
         return RecentFileOpen(filename=filename, index=index, 
             iocontroller=self.__iocontroller)
+        
