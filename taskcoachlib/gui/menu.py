@@ -49,7 +49,26 @@ class MainMenu(wx.MenuBar):
         self.Append(CategoryMenu(mainwindow, uiCommands), _('&Category'))
         self.Append(HelpMenu(mainwindow, uiCommands), _('&Help'))
 
-
+'''
+class OpenAttachmentsMenu(Menu):
+    def __init__(self, mainwindow, uiCommands, settings):
+        super(OpenAttachmentsMenu, self).__init__(mainwindow)
+        self.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
+        
+    def opOpenMenu(self, event):
+        if event.GetMenu() == self:
+            self.__clear()
+            self.__fill()
+        event.Skip()
+        
+    def __clear(self):
+        for item in self.GetMenuItems():
+            self.Delete(item)
+            
+    def __fill(self):
+        pass
+'''
+       
 class FileMenu(Menu):
     def __init__(self, mainwindow, uiCommands, settings):
         super(FileMenu, self).__init__(mainwindow)
@@ -259,7 +278,7 @@ class TaskMenu(Menu):
         super(TaskMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['newtask', 'newsubtask', 
             None, 'edittask', 'markcompleted', None, 'deletetask', None, 
-            'mailtask', 'addattachmenttotask'])
+            'mailtask', 'addattachmenttotask', 'openalltaskattachments'])
             
             
 class EffortMenu(Menu):
@@ -295,7 +314,7 @@ class TaskPopupMenu(Menu):
         commandsToAppend = ['cut', 'copy', 'paste',
             'pasteintotask', None, 'newtask', 'newsubtask', None, 'edittask', 
             'markcompleted', None, 'deletetask', None, 'mailtask', 
-            'addattachmenttotask', None, 
+            'addattachmenttotask', 'openalltaskattachments', None, 
             'neweffort', 'starteffort', 'stopeffort']
         if treeViewer:
             commandsToAppend.extend([None, 'viewexpandselected', 
