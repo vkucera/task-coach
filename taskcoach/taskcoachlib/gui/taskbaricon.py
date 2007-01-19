@@ -38,9 +38,11 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__stopTicking()
 
     def onStartTracking(self, event):
+        self.__setTooltipText()
         self.__startTicking()
 
     def onStopTracking(self, event):
+        self.__setTooltipText()
         self.__stopTicking()
 
     def onChangeDueDate(self, event):
@@ -87,15 +89,25 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             self.__setDefaultBitmap()
             self.__setIcon()
 
+    toolTipMessages = \
+        [('nrOverdue', _('one task overdue'), _('%d tasks overdue')),
+         ('nrDueToday', _('one task due today'), _('%d tasks due today')),
+         ('nrBeingTracked', _('tracking effort for one task'), 
+                        _('tracking effort for %d tasks'))]
+    
     def __setTooltipText(self):
-        nrDueToday = self.__taskList.nrDueToday()
-        if nrDueToday == 0:
-            nrTasksText = _('No tasks due today')
-        elif nrDueToday == 1:
-            nrTasksText = _('One task due today')
+        textParts = []
+        for getCountMethodName, singular, plural in self.toolTipMessages:
+            count = getattr(self.__taskList, getCountMethodName)()
+            if count == 1:
+                textParts.append(singular)
+            elif count > 1:
+                textParts.append(plural%count)
+        text = ', '.join(textParts)
+        if text:
+            self.__tooltipText = '%s - %s'%(meta.name, text)
         else:
-            nrTasksText = _('%d tasks due today')%nrDueToday
-        self.__tooltipText = '%s - %s'%(meta.name, nrTasksText)
+            self.__tooltipText = meta.name
 
     def __setDefaultBitmap(self):
         self.__bitmap = self.__defaultBitmap
