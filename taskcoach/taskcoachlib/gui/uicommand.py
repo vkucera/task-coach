@@ -744,7 +744,8 @@ class ViewCollapseSelected(NeedsTreeViewer, NeedsSelection, ViewerCommand):
 
 class NewDomainObject(ViewerCommand, TaskListCommand):
     def __init__(self, *args, **kwargs):
-        super(NewDomainObject, self).__init__(bitmap='new', *args, **kwargs)
+        super(NewDomainObject, self).__init__(menuText=_('New item'),
+            bitmap='new', *args, **kwargs)
         
     def doCommand(self, event, show=True):
         dialog = self.viewer.newItemDialog(bitmap=self.bitmap)
@@ -766,8 +767,8 @@ class NewDomainObject(ViewerCommand, TaskListCommand):
 
 class NewSubDomainObject(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(NewSubDomainObject, self).__init__(bitmap='newsub', *args, 
-            **kwargs)
+        super(NewSubDomainObject, self).__init__(menuText=_('New subitem'),
+            bitmap='newsub', *args, **kwargs)
         
     def doCommand(self, event, show=True):
         dialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
@@ -786,7 +787,8 @@ class NewSubDomainObject(NeedsSelection, ViewerCommand):
 
 class EditDomainObject(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(EditDomainObject, self).__init__(bitmap='edit', *args, **kwargs)
+        super(EditDomainObject, self).__init__(menuText=('Edit item'),
+            bitmap='edit', *args, **kwargs)
         
     def doCommand(self, event, show=True):
         dialog = self.viewer.editItemDialog(bitmap=self.bitmap)
@@ -801,8 +803,8 @@ class EditDomainObject(NeedsSelection, ViewerCommand):
 
 class DeleteDomainObject(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(DeleteDomainObject, self).__init__(bitmap='delete', *args, 
-            **kwargs)
+        super(DeleteDomainObject, self).__init__(menuText=_('Delete item'),
+            bitmap='delete', *args, **kwargs)
         
     def doCommand(self, event):
         deleteCommand = self.viewer.deleteItemCommand()
