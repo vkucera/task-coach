@@ -194,7 +194,7 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         cat.addTask(self.parent)
         self.delete([self.parent])
         self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
-            lambda: self.assertEqual([self.parent, self.child], cat.tasks()))
+            lambda: self.assertEqualLists([self.parent, self.child], cat.tasks()))
 
 
 class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
