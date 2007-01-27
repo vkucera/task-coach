@@ -1,5 +1,5 @@
 import test, command
-import domain.task as task
+from domain import task, category
 from TaskCommandsTest import TaskCommandTestCase, CommandWithChildrenTestCase, \
     CommandWithEffortTestCase
 
@@ -20,6 +20,14 @@ class CutCommandWithTasksTest(TaskCommandTestCase):
         self.cut('all')
         self.assertDoUndoRedo(self.assertEmptyTaskList, 
             lambda: self.assertTaskList(self.originalList))
+        
+    def testCutTaskThatBelongsToCategory(self):
+        cat = category.Category('category')
+        self.categories.append(cat)
+        cat.addTask(self.task1)
+        self.cut('all')
+        self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()),
+                              lambda: self.assertEqual([self.task1], cat.tasks()))
 
 
 class CutCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):

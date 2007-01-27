@@ -17,7 +17,7 @@ class XMLWriter:
         for task in taskList.rootItems():
             self.document.documentElement.appendChild(self.taskNode(task))
         for category in categoryContainer.rootItems():
-            self.document.documentElement.appendChild(self.categoryNode(category))
+            self.document.documentElement.appendChild(self.categoryNode(category, taskList))
         self.document.writexml(self.__fd)
             
     def taskNode(self, task):
@@ -64,16 +64,17 @@ class XMLWriter:
             node.appendChild(self.textNode('description', effort.getDescription()))
         return node
     
-    def categoryNode(self, category):
+    def categoryNode(self, category, taskList):
         node = self.document.createElement('category')
         node.setAttribute('subject', category.subject())
         if category.isFiltered():
             node.setAttribute('filtered', str(category.isFiltered()))
-        if category.tasks():
-            node.setAttribute('tasks', 
-                ' '.join([task.id() for task in category.tasks()]))
+        # Make sure the task referenced is actually in the tasklist
+        taskIds = ' '.join([task.id() for task in category.tasks() if task in taskList])
+        if taskIds:            
+            node.setAttribute('tasks', taskIds)
         for child in category.children():
-            node.appendChild(self.categoryNode(child))
+            node.appendChild(self.categoryNode(child, taskList))
         return node
         
     def budgetAsAttribute(self, budget):

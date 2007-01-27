@@ -38,8 +38,8 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('subject="Subject"')
         
     def testTaskSubjectWithUnicode(self):
-        self.task.setSubject(u'ײַפֿﭖ')
-        self.expectInXML(u'subject="ײַפֿﭖ"')
+        self.task.setSubject(u'ï¬Ÿï­Žï­–')
+        self.expectInXML(u'subject="ï¬Ÿï­Žï­–"')
             
     def testTaskDescription(self):
         self.task.setDescription('Description')
@@ -122,6 +122,7 @@ class XMLWriterTest(test.TestCase):
         
     def testOneCategoryWithSubTask(self):
         child = task.Task()
+        self.taskList.append(child)
         self.task.addChild(child)
         self.categoryContainer.append(category.Category('test', [child]))
         self.expectInXML('<category subject="test" tasks="%s"/>'%child.id())
@@ -149,9 +150,15 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('<category filtered="True" subject="test"/>')
 
     def testCategoryWithUnicodeSubject(self):
-        unicodeCategory = category.Category(u'ײַפֿﭖ')
+        unicodeCategory = category.Category(u'ï¬Ÿï­Žï­–')
         self.categoryContainer.extend([unicodeCategory])
-        self.expectInXML(u'<category subject="ײַפֿﭖ"/>')
+        self.expectInXML(u'<category subject="ï¬Ÿï­Žï­–"/>')
+        
+    def testCategoryWithDeletedTask(self):
+        aCategory = category.Category('category', tasks=[self.task])
+        self.categoryContainer.append(aCategory)
+        self.taskList.remove(self.task)
+        self.expectInXML('<category subject="category"/>')
         
     def testDefaultPriority(self):
         self.expectNotInXML('priority')

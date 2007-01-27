@@ -1,5 +1,6 @@
-#Sun Dec 24 15:21:42 CET 2006
+#Sat Jan 27 15:15:43 CET 2007
 eclipse.preferences.version=1
 encoding//changes.in/changes.py=ISO8859-1
 encoding//tests/unittests/ConfigTest.py=UTF-8
 encoding//tests/unittests/guiTests/TaskEditorTest.py=UTF-8
+encoding//tests/unittests/persistenceTests/XMLWriterTest.py=UTF-8

@@ -3,6 +3,14 @@
 from changetypes import *
 
 releases = [
+Release('0.61.6', 'January 27, 2007',
+    bugsFixed=[
+        Bug('''Crash on trying to use down-arrow to move to sub-task.''', 
+'1640806'),
+        Bug('''When deleting a task that has subtasks that belong to categories,
+the task file gets 'corrupted', giving errors when loading it.''', 
+'1638419', '1589993')]),
+
 Release('0.61.5', 'January 10, 2007',
     bugsFixed=[
         Bug('''Opening a Task Coach file with many effort records is slow.

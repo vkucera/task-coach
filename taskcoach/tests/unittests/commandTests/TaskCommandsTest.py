@@ -1,10 +1,7 @@
 import test, command, patterns, config
 from unittests import asserts, dummy
 from CommandTestCase import CommandTestCase
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
-import domain.category as category
+from domain import task, effort, date, category
 
 
 class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
@@ -128,6 +125,16 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
         self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
             lambda: self.assertEqual([self.task1], cat.tasks()))
         
+    def testDeleteTaskWithTwoCategories(self):
+        cat1 = category.Category('category 1')
+        cat2 = category.Category('category 2')
+        self.categories.extend([cat1, cat2])
+        cat1.addTask(self.task1)
+        cat2.addTask(self.task1)
+        self.delete('all')
+        self.assertDoUndoRedo(lambda: self.failIf(cat1.tasks() or cat2.tasks()), 
+            lambda: self.failUnless([self.task1] == cat1.tasks() == cat2.tasks()))
+        
 
 class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
     def assertDeleteWorks(self):
@@ -160,6 +167,34 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         self.assertDoUndoRedo(
             lambda: self.failUnless(self.parent.completed()), 
             lambda: self.failIf(self.parent.completed()))
+        
+    def testDeleteParentAndChildWhenChildBelongsToCategory(self):
+        cat = category.Category('category')
+        self.categories.append(cat)
+        cat.addTask(self.child)
+        self.delete([self.parent])
+        self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
+            lambda: self.assertEqual([self.child], cat.tasks()))
+
+    def testDeleteParentAndChildWhenParentAndChildBelongToDifferentCategories(self):
+        cat1 = category.Category('category 1')
+        cat2 = category.Category('category 2')
+        self.categories.extend([cat1, cat2])
+        cat1.addTask(self.child)
+        cat2.addTask(self.parent)
+        self.delete([self.parent])
+        self.assertDoUndoRedo(lambda: self.failIf(cat1.tasks() or cat2.tasks()), 
+            lambda: self.failUnless([self.child] == cat1.tasks() and \
+                                    [self.parent] == cat2.tasks()))
+
+    def testDeleteParentAndChildWhenParentAndChildBelongToSameCategory(self):
+        cat = category.Category('category')
+        self.categories.append(cat)
+        cat.addTask(self.child)
+        cat.addTask(self.parent)
+        self.delete([self.parent])
+        self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
+            lambda: self.assertEqual([self.parent, self.child], cat.tasks()))
 
 
 class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):

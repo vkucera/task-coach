@@ -43,7 +43,9 @@ class XMLReader:
                                        False)
         taskIds = categoryNode.getAttribute('tasks')
         if taskIds:
-            categoryTasks = [tasksById[id] for id in taskIds.split(' ')]
+            # The category tasks attribute might contain id's that refer to tasks that
+            # have been deleted (a bug in release 0.61.5), be prepared:
+            categoryTasks = [tasksById[id] for id in taskIds.split(' ') if id in tasksById]
         else:
             categoryTasks = []
         children = self.__parseCategoryNodes(categoryNode.childNodes, tasksById)

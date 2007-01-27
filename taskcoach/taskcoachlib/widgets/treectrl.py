@@ -209,8 +209,7 @@ class TreeMixin(object):
     def addItemsRecursively(self, parent, indices):
         for itemChildIndex, index in enumerate(indices):
             item = self.appendItem(parent, index, itemChildIndex)
-            if self.IsExpanded(item) or \
-                    self.itemsToExpandOrCollapse.get(item, False):
+            if self.IsExpanded(item):
                 self.addItemsRecursively(item, self.getChildIndices(index))
             elif self.getChildIndices(index) and not self.ItemHasChildren(item):
                 self.SetItemHasChildren(item)
@@ -234,7 +233,7 @@ class TreeMixin(object):
                 self.itemsToExpandOrCollapse[parent] = True
             if oldItem:
                 if self.IsSelected(oldItem):            
-                    self.itemsToSelect.append(newItem)
+                    self.itemsToSelect.append(index)
                 self.itemsToExpandOrCollapse[newItem] = self.IsExpanded(oldItem)
         if oldItem and len(self.getChildIndices(index)) > self.GetPyData(oldItem)[2]:
             self.itemsToExpandOrCollapse[newItem] = True
@@ -308,12 +307,11 @@ class TreeMixin(object):
             else:
                 self.CollapseAndReset(item)
         wx.CallAfter(self.restoreSelection)
-
+        
     def restoreSelection(self):
         self.UnselectAll()
-        for item in self.itemsToSelect:
-            if item:
-                self.SelectItem(item)
+        for index in self.itemsToSelect:
+            self.SelectItem(self[index])
 
     def itemUnchanged(self, item, index, itemChildIndex):
         oldIndex, oldId, oldChildrenCount, oldImage, oldText, \
