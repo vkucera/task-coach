@@ -149,7 +149,13 @@ class XMLWriterTest(test.TestCase):
         unicodeCategory = category.Category(u'ï¬Ÿï­Žï­–')
         self.categoryContainer.extend([unicodeCategory])
         self.expectInXML(u'<category subject="ï¬Ÿï­Žï­–"/>')
-        
+
+    def testCategoryWithDeletedTask(self):
+        aCategory = category.Category('category', tasks=[self.task])
+        self.categoryContainer.append(aCategory)
+        self.taskList.remove(self.task)
+        self.expectInXML('<category subject="category"/>')
+ 
     def testDefaultPriority(self):
         self.expectNotInXML('priority')
         
@@ -212,3 +218,4 @@ class XMLWriterTest(test.TestCase):
         attachments = ['whatever.txt', '/home/frank/attachment.doc']
         self.task.addAttachments(*attachments)
         self.expectInXML('<attachment>%s</attachment>'*2%tuple(attachments))
+

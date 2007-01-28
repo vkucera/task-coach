@@ -16,8 +16,8 @@ license = 'GNU GENERAL PUBLIC LICENSE Version 2, June 1991'
 platform = 'Any'
 filename = 'TaskCoach'
 filename_lower = filename.lower()
-pythonversion = '2.5'
-wxpythonversion = '2.8-unicode'
+pythonversion = '2.4'
+wxpythonversion = '2.8.1-unicode'
 languages = {
     'English': None, 
     'French': 'fr_FR', 

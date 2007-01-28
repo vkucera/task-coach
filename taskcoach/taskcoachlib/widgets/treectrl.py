@@ -23,7 +23,7 @@ class TreeMixin(object):
         self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
         # prepare for dragging of tree items
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.onBeginDrag)
-        
+     
     def onBeginDrag(self, event):
         self.dragItem = self.__getDraggedItem()
         if self.dragItem and self.dragAndDropCommand:
@@ -59,7 +59,7 @@ class TreeMixin(object):
         self.__resetCursor()
         if self._isValidDropTarget(event.GetItem()):
             self.dragAndDropCommand(event)
-
+ 
     def onDragging(self, event):
         if not event.Dragging():
             self.GetMainWindow().Unbind(wx.EVT_MOTION)
@@ -85,7 +85,7 @@ class TreeMixin(object):
         else:
             self.UnselectAll()
         event.Skip()
-        
+    
     def _isValidDropTarget(self, dropTarget):
         if dropTarget: 
             return self.dragItem != dropTarget and \
@@ -94,7 +94,7 @@ class TreeMixin(object):
                 recursively=True)
         else:
             return True
-            
+    
     def onSetFocus(self, event):
         # When the TreeCtrl gets focus sometimes the selection is changed.
         # We want to prevent that from happening, so we need to keep track
@@ -122,7 +122,7 @@ class TreeMixin(object):
             return
         itemIndex = self.index(item)
         self.addItemsRecursively(item, self.getChildIndices(itemIndex))
-        
+ 
     def onCollapse(self, event):
         if self.__collapsing:
             event.Veto()
@@ -206,12 +206,11 @@ class TreeMixin(object):
     def addItemsRecursively(self, parent, indices):
         for itemChildIndex, index in enumerate(indices):
             item = self.appendItem(parent, index, itemChildIndex)
-            if self.IsExpanded(item) or \
-                    self.itemsToExpandOrCollapse.get(item, False):
+            if self.IsExpanded(item):
                 self.addItemsRecursively(item, self.getChildIndices(index))
             elif self.getChildIndices(index) and not self.ItemHasChildren(item):
                 self.SetItemHasChildren(item)
-        
+ 
     def appendItem(self, parent, index, itemChildIndex):
         itemId = self.getItemId(index)
         oldItem = self.findItem(itemId)
@@ -231,7 +230,7 @@ class TreeMixin(object):
                 self.itemsToExpandOrCollapse[parent] = True
             if oldItem:
                 if self.IsSelected(oldItem):            
-                    self.itemsToSelect.append(newItem)
+                    self.itemsToSelect.append(index)
                 self.itemsToExpandOrCollapse[newItem] = self.IsExpanded(oldItem)
         if oldItem and len(self.getChildIndices(index)) > self.GetPyData(oldItem)[2]:
             self.itemsToExpandOrCollapse[newItem] = True
@@ -306,12 +305,11 @@ class TreeMixin(object):
             else:
                 self.CollapseAndReset(item)
         wx.CallAfter(self.restoreSelection)
-
+ 
     def restoreSelection(self):
         self.UnselectAll()
-        for item in self.itemsToSelect:
-            if item:
-                self.SelectItem(item)
+        for index in self.itemsToSelect:
+            self.SelectItem(self[index])
 
     def itemUnchanged(self, item, index, itemChildIndex):
         oldIndex, oldId, oldChildrenCount, oldImage, oldText, \
@@ -398,7 +396,7 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices)
         self.refresh()
-        
+     
     def getStyle(self):
         # Adding wx.TR_LINES_AT_ROOT is necessary to make the buttons 
         # (wx.TR_HAS_BUTTONS) appear. I think this is a bug in wx.TreeCtrl.

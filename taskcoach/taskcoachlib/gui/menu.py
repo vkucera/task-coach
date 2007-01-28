@@ -13,7 +13,7 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
         return uiCommand.appendToMenu(self, self._window)    
     
     def appendMenu(self, text, subMenu, bitmap=None):
-        subMenuItem = wx.MenuItem(self, text=text, subMenu=subMenu)
+        subMenuItem = wx.MenuItem(self, id=wx.NewId(), text=text, subMenu=subMenu)
         if not bitmap and '__WXMSW__' in wx.PlatformInfo:
             # hack to force a 16 bit margin. SetMarginWidth doesn't work
             bitmap = 'nobitmap'
