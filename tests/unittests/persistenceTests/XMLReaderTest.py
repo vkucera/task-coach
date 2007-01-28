@@ -455,3 +455,11 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
         </tasks>''')
         self.failUnless(categories[0].isFiltered())
     
+    def testCategoryWithDeletedTasks(self):
+        ''' There's a bug in release 0.61.5 that causes the task file to contain
+            references to deleted tasks. Ignore these when loading the task file.'''
+        task, categories = self.writeAndRead('''
+        <tasks>
+            <category subject="cat" tasks="some_task_id"/>
+        </tasks>''')
+        self.failIf(categories[0].tasks())

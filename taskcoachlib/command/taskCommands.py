@@ -1,8 +1,7 @@
 import base
 from i18n import _
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
+from domain import task, effort, date
+
 
 class SaveTaskStateMixin(base.SaveStateMixin, base.CompositeMixin):
     pass
@@ -27,7 +26,7 @@ class DragAndDropTaskCommand(base.DragAndDropCommand):
         return _('Drag and drop task')
 
 
-class DeleteTaskCommand(base.DeleteCommand):
+class DeleteTaskCommand(base.DeleteCommand, base.CompositeMixin):
     def __init__(self, *args, **kwargs):
         self.__categories = kwargs.pop('categories')
         self.__map = {}
@@ -35,7 +34,7 @@ class DeleteTaskCommand(base.DeleteCommand):
 
     def do_command(self):
         for category in self.__categories:
-            for task in self.items:
+            for task in self.items + self.getAllChildren(self.items):
                 if task in category.tasks():
                     category.removeTask(task)
                     self.__map.setdefault(task, []).append(category)

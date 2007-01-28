@@ -33,8 +33,8 @@ class UICommand(object):
         methods to attach the command to a menu or toolbar. Subclasses should 
         implement doCommand() and optionally override enabled(). '''
     
-    def __init__(self, menuText='?', helpText='', bitmap='nobitmap',
-            kind=wx.ITEM_NORMAL, id=None, *args, **kwargs):
+    def __init__(self, menuText='?', helpText='', bitmap='nobitmap', 
+             kind=wx.ITEM_NORMAL, id=None, *args, **kwargs):
         super(UICommand, self).__init__(*args, **kwargs)
         self.menuText = menuText
         self.helpText = helpText
@@ -152,7 +152,7 @@ class UICheckCommand(BooleanSettingsCommand):
     def getBitmap(self):
         if '__WXMSW__' in wx.PlatformInfo:
             # Use pretty Nuvola checkmark bitmap
-            return 'on' 
+            return None #'on' 
         else:
             # Use default checkmark. Providing our own bitmap causes
             # "(python:8569): Gtk-CRITICAL **: gtk_check_menu_item_set_active: 
@@ -163,9 +163,9 @@ class UICheckCommand(BooleanSettingsCommand):
 
 class UIRadioCommand(BooleanSettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(UIRadioCommand, self).__init__(kind=wx.ITEM_RADIO, bitmap=None,
-            *args, **kwargs)
-            
+        super(UIRadioCommand, self).__init__(kind=wx.ITEM_RADIO, bitmap='', 
+                                             *args, **kwargs)
+        
     def isSettingChecked(self):
         return self.settings.get(self.section, self.setting) == str(self.value)
 
