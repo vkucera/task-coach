@@ -119,6 +119,7 @@ class XMLWriterTest(test.TestCase):
         
     def testOneCategoryWithSubTask(self):
         child = task.Task()
+        self.taskList.append(child)
         self.task.addChild(child)
         self.categoryContainer.append(category.Category('test', [child]))
         self.expectInXML('<category subject="test" tasks="%s"/>'%child.id())
