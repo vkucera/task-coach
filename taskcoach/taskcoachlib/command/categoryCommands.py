@@ -1,6 +1,6 @@
 import base
 from i18n import _
-import domain.category as category
+from domain import category
 
 class NewCategoryCommand(base.BaseCommand):
     def name(self):

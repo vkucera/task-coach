@@ -72,4 +72,8 @@ class ViewerListbook(ViewerContainer, widgets.Listbook):
 
 
 class ViewerAUINotebook(ViewerContainer, widgets.AUINotebook):
-    pass
+    def onClosePage(self, event):
+        self.GetPage(event.Selection).detach()
+        super(ViewerAUINotebook, self).onClosePage(event)
+        
+        
