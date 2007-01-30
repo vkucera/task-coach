@@ -222,8 +222,8 @@ class AUINotebook(Book, wx.aui.AuiNotebook):
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.onClosePage)
         
     def onClosePage(self, event):
-        self.GetPage(event.Selection).detach()
         if self.GetPageCount() == 2:
+            # Prevent last tab from being closed
             self.ToggleWindowStyle(wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
             
     def createImageList(self):

@@ -2,8 +2,7 @@ import wx, meta, patterns, widgets, command
 import viewer, viewercontainer, viewerfactory, help, toolbar, uicommand,\
     remindercontroller, filter 
 from i18n import _
-import domain.task as task
-import domain.effort as effort
+from domain import task, effort
 
 
 class WindowWithPersistentDimensions(wx.Frame):
@@ -212,6 +211,16 @@ class MainWindow(WindowWithPersistentDimensions):
         # Clear task file specific settings (FIXME: save these in the task file)
         self.settings.set('view', 'tasksearchfilterstring', '') 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
+        # Save the number of viewers for each viewer type:
+        counts = dict(tasklistviewercount=0, tasktreelistviewercount=0, 
+                      categoryviewercount=0, effortlistviewercount=0,
+                      effortperdayviewercount=0, effortperweekviewercount=0,
+                      effortpermonthviewercount=0)
+        for viewer in self.viewer:
+            setting = viewer.__class__.__name__.lower() + 'count'
+            counts[setting] += 1
+        for key, value in counts.items():
+            self.settings.set('view', key, str(value))
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()
         self.savePosition()

@@ -1,5 +1,12 @@
 defaults = { \
 'view': { \
+    'tasklistviewercount': '1',
+    'tasktreelistviewercount': '1',
+    'categoryviewercount': '1',
+    'effortlistviewercount': '1',
+    'effortperdayviewercount': '0',
+    'effortperweekviewercount': '0',
+    'effortpermonthviewercount': '0',
     'filtersidebar': 'False',
     'filtersidebarwidth': '250',
     'statusbar': 'True',
@@ -14,6 +21,7 @@ defaults = { \
     'duedate': 'True',
     'timeleft': 'False',
     'completiondate': 'False',
+    'categories': 'False',
     'budget': 'False',
     'totalbudget': 'False',
     'timespent': 'False',

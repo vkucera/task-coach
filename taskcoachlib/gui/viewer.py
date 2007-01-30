@@ -2,10 +2,7 @@ import patterns, command, widgets, uicommand, menu, color, render, dialog
 import wx
 from i18n import _
 import wx.grid as grid
-import domain.task as task
-import domain.category as category
-import domain.effort as effort
-import domain.date as date
+from domain import task, category, effort, date
 
 
 class Viewer(wx.Panel):
@@ -28,7 +25,7 @@ class Viewer(wx.Panel):
         patterns.Publisher().registerObserver(self.onSorted, 
             eventType=self.list.sortEventType())
         self.refresh()
-                
+        
     def detach(self):
         ''' Should be called by viewercontainer before closing the viewer '''
         patterns.Publisher().removeInstance(self)
@@ -763,7 +760,7 @@ class EffortViewer(UpdatePerSecondViewer):
     deleteEffortCommand = deleteItemCommand
     
 
-class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
+class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):  
     def __init__(self, parent, list, *args, **kwargs):
         self.taskList = list
         super(EffortListViewer, self).__init__(parent, list, *args, **kwargs)

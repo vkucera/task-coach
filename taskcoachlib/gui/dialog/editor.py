@@ -1,5 +1,5 @@
 import widgets
-from gui import render, viewercontainer, viewerfactory
+from gui import render, viewercontainer, viewer
 import widgets.draganddrop as draganddrop
 import wx, datetime
 import wx.lib.masked as masked
@@ -225,11 +225,26 @@ class EffortPage(TaskEditorPage):
         self._viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 
             'effortviewerineditor')
         singleTaskList = task.SingleTaskList()
-        viewerfactory.addEffortViewers(self._viewerContainer, singleTaskList, 
-            uiCommands, settings)
+        self.addEffortViewers(singleTaskList, uiCommands, settings)
         self.add(self._viewerContainer, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
         singleTaskList.append(theTask)
         self.fit()
+    
+    def addEffortViewers(self, taskList, uiCommands, settings):
+        effortViewer = viewer.EffortListViewer(self._viewerContainer, taskList, 
+            uiCommands, settings)
+        self._viewerContainer.addViewer(effortViewer, _('Effort details'), 'start')
+        effortPerDayViewer = viewer.EffortPerDayViewer(self._viewerContainer,
+            taskList, uiCommands, settings)
+        self._viewerContainer.addViewer(effortPerDayViewer, _('Effort per day'), 'date')
+        effortPerWeekViewer = viewer.EffortPerWeekViewer(self._viewerContainer,
+            taskList, uiCommands, settings)
+        self._viewerContainer.addViewer(effortPerWeekViewer, _('Effort per week'), 
+            'date')
+        effortPerMonthViewer = viewer.EffortPerMonthViewer(self._viewerContainer,
+            taskList, uiCommands, settings)
+        self._viewerContainer.addViewer(effortPerMonthViewer, _('Effort per month'), 
+            'date')    
 
 
 class CategoriesPage(TaskEditorPage):

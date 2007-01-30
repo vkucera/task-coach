@@ -3,32 +3,36 @@ from i18n import _
 
     
 def addEffortViewers(viewerContainer, taskList, uiCommands, settings):
-    effortViewer = viewer.EffortListViewer(viewerContainer, taskList, 
-        uiCommands, settings)
-    viewerContainer.addViewer(effortViewer, _('Effort details'), 'start')
-    effortPerDayViewer = viewer.EffortPerDayViewer(viewerContainer,
-        taskList, uiCommands, settings)
-    viewerContainer.addViewer(effortPerDayViewer, _('Effort per day'), 'date')
-    effortPerWeekViewer = viewer.EffortPerWeekViewer(viewerContainer,
-        taskList, uiCommands, settings)
-    viewerContainer.addViewer(effortPerWeekViewer, _('Effort per week'), 
-        'date')
-    effortPerMonthViewer = viewer.EffortPerMonthViewer(viewerContainer,
-        taskList, uiCommands, settings)
-    viewerContainer.addViewer(effortPerMonthViewer, _('Effort per month'), 
-        'date')    
+    _addViewers(viewerContainer, viewer.EffortListViewer, (taskList, 
+                uiCommands, settings), {}, _('Effort details'), 'start', 
+                settings)
+    _addViewers(viewerContainer, viewer.EffortPerDayViewer, (taskList, 
+                uiCommands, settings), {}, _('Effort per day'), 'date', 
+                settings)
+    _addViewers(viewerContainer, viewer.EffortPerWeekViewer, (taskList, 
+                uiCommands, settings), {}, _('Effort per week'), 'date', 
+                settings)
+    _addViewers(viewerContainer, viewer.EffortPerMonthViewer, (taskList, 
+                uiCommands, settings), {}, _('Effort per month'), 'date', 
+                settings)
 
 def addTaskViewers(viewerContainer, taskList, uiCommands, settings, categories):
-    listViewer = viewer.TaskListViewer(viewerContainer, taskList, 
-        uiCommands, settings, categories=categories)
-    viewerContainer.addViewer(listViewer, _('Task list'), 'listview')
-    treeListViewer = viewer.TaskTreeListViewer(viewerContainer, taskList,
-        uiCommands, settings, categories=categories)
-    viewerContainer.addViewer(treeListViewer, _('Task tree'), 'treeview')
+    _addViewers(viewerContainer, viewer.TaskListViewer, (taskList, uiCommands,
+                settings), dict(categories=categories), _('Task list'), 
+                'listview', settings)
+    _addViewers(viewerContainer, viewer.TaskTreeListViewer, (taskList,
+                uiCommands, settings), dict(categories=categories), 
+                _('Task tree'), 'treeview', settings)
 
 def addCategoryViewers(viewerContainer, categoryContainer, uiCommands, 
                        settings):
-    categoryViewer = viewer.CategoryViewer(viewerContainer, categoryContainer,
-                                           uiCommands, settings)
-    viewerContainer.addViewer(categoryViewer, _('Categories'), 'category')
+    _addViewers(viewerContainer, viewer.CategoryViewer, (categoryContainer, 
+                uiCommands, settings), {}, _('Categories'), 'category', settings)
 
+def _addViewers(viewerContainer, viewerClass, viewerArgs, viewerKwArgs, title, 
+                bitmap, settings):
+    numberOfViewersToAdd = settings.getint('view', 
+        viewerClass.__name__.lower() + 'count')
+    for i in range(numberOfViewersToAdd):
+        viewerInstance = viewerClass(viewerContainer, *viewerArgs, **viewerKwArgs)
+        viewerContainer.addViewer(viewerInstance, title, bitmap)
