@@ -431,6 +431,11 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
                 imageIndexCallback=self.attachmentImageIndex,
                 headerImageIndex=self.imageIndex['attachment'],
                 renderCallback=lambda task: '')] + \
+            [widgets.Column(_('Categories'), 'task.category.add', 
+                'task.category.remove', sortKey='categories',
+                sortCallback=self.uiCommands['viewsortbycategories'],
+                visibilitySetting=('view', 'categories'),
+                renderCallback=lambda task: str(task.categories()))] + \
             [widgets.Column(columnHeader, eventType,
              visibilitySetting=('view', setting.lower()), sortKey=setting, 
              sortCallback=self.uiCommands['viewsortby' + setting.lower()],

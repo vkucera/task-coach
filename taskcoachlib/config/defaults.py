@@ -17,6 +17,7 @@ defaults = { \
     'overduetasks': 'True',
     'overbudgettasks': 'True',
     'compositetasks': 'True',
+    'categories': 'False',
     'startdate': 'True',
     'duedate': 'True',
     'timeleft': 'False',

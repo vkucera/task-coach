@@ -183,8 +183,8 @@ class ViewTaskColumnsMenu(Menu):
             _ViewTaskBudgetColumnsMenu(mainwindow, uiCommands))
         self.appendMenu(_('&Financial'), 
             _ViewTaskFinancialColumnsMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, ['viewattachments', 'viewpriority', 
-            'viewtotalpriority', 'viewlastmodificationtime', 
+        self.appendUICommands(uiCommands, ['viewattachments', 'viewcategories',
+            'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime', 
             'viewtotallastmodificationtime'])
 
 
@@ -248,9 +248,10 @@ class SortMenu(Menu):
         # ascending/descending order
         self.appendUICommands(uiCommands, ['viewsortorder', 
             'viewsortcasesensitive', 'viewsortbystatusfirst', None, 
-            'viewsortbysubject', 'viewsortbystartdate', 'viewsortbyduedate',
-            'viewsortbytimeleft', 'viewsortbycompletiondate',
-            'viewsortbybudget', 'viewsortbytotalbudget', 'viewsortbytimespent',
+            'viewsortbysubject', 'viewsortbycategories', 'viewsortbystartdate',
+            'viewsortbyduedate', 'viewsortbytimeleft', 
+            'viewsortbycompletiondate', 'viewsortbybudget', 
+            'viewsortbytotalbudget', 'viewsortbytimespent',
             'viewsortbytotaltimespent', 'viewsortbybudgetleft',
             'viewsortbytotalbudgetleft', 'viewsortbypriority',
             'viewsortbytotalpriority', 'viewsortbyhourlyfee',
@@ -373,8 +374,8 @@ class TaskViewerColumnPopupMenu(_ColumnPopupMenu):
             _ViewTaskBudgetColumnsMenu(window, uiCommands)),
         self.appendMenu(_('&Financial'), 
             _ViewTaskFinancialColumnsMenu(window, uiCommands))
-        self.appendUICommands(uiCommands, ['viewattachments', 'viewpriority', 
-            'viewtotalpriority', 'viewlastmodificationtime', 
+        self.appendUICommands(uiCommands, ['viewattachments', 'viewcategories',
+            'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime', 
             'viewtotallastmodificationtime'])
 
 
