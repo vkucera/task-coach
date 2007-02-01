@@ -1267,6 +1267,7 @@ class UICommands(dict):
         # Column show/hide commands
         for menuText, helpText, setting in \
             [(_('Attachments'), _('Show/hide attachment column'), 'attachments'),
+             (_('&Categories'), _('Show/hide categories column'), 'categories'),
              (_('&Start date'), _('Show/hide start date column'), 'startdate'),
              (_('&Due date'), _('Show/hide due date column'), 'duedate'),
              (_('D&ays left'), _('Show/hide days left column'), 'timeleft'),
@@ -1329,6 +1330,7 @@ class UICommands(dict):
         # Sort by column commands
         for menuText, helpText, value in \
             [(_('Sub&ject'), _('Sort tasks by subject'), 'subject'),
+             (_('&Category'), _('Sort tasks by category'), 'categories'),
              (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
              (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
              (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
