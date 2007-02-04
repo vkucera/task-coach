@@ -110,19 +110,36 @@ class TreeMixin(object):
             event.Skip()
         
     def onSelect(self, event):
+        print 'onSelect:begin'
         if not self._refreshing:
             self.selectCommand()
         event.Skip()
+        print 'onSelect:end'
                     
     def onExpand(self, event):
+        print 'onExpand:begin'
         item = event.GetItem()
+        root = self.GetRootItem()
+        for i in self.getChildren(root, True):
+            if item == i:
+                print 'onExpand: item found'
+                break
+        else:
+            self.Delete(item)
+            print 'onExpand:item not found, exiting'
+            return
+        print 'onExpand:item = %s ok=%s, rootItem=%s'%(item, item.IsOk(), item == self.GetRootItem())
+        print 'onExpand:itemtext=%s'%self.GetItemText(item)
         # Apparently, this event handler is called for the root item somehow. This
         # only happens with the TreeListCtrl, not with the TreeCtrl.
         if item == self.GetRootItem(): 
+            print 'onExpand:end (item==self.GetRootItem())'
             return
         itemIndex = self.index(item)
+        print 'onExpand:addItemsRecursively(index=%d)'%itemIndex
         self.addItemsRecursively(item, self.getChildIndices(itemIndex))
- 
+        print 'onExpand:end'
+        
     def onCollapse(self, event):
         if self.__collapsing:
             event.Veto()
@@ -183,6 +200,7 @@ class TreeMixin(object):
             pass # Hidden item
 
     def refresh(self, count=0):
+        print 'refresh:begin(count=%d)'%count
         self._count = count
         self._refreshing = True
         self._validItems = []
@@ -196,13 +214,14 @@ class TreeMixin(object):
         self.restoreItemState()
         self.Thaw()
         self._refreshing = False
+        print 'refresh:end'
 
     def __getOrCreateRootItem(self):
         rootItem = self.GetRootItem()
         if not rootItem:
             rootItem = self.AddRoot('root')
         return rootItem
-        
+            
     def addItemsRecursively(self, parent, indices):
         for itemChildIndex, index in enumerate(indices):
             item = self.appendItem(parent, index, itemChildIndex)
@@ -301,10 +320,12 @@ class TreeMixin(object):
     def restoreItemState(self):
         for item, expand in self.itemsToExpandOrCollapse.items():
             if expand:
+                print 'restoreItemState:Expand item=%s'%item
                 self.Expand(item)
             else:
+                print 'restoreItemState:CollapseAndReset item=%s'%item
                 self.CollapseAndReset(item)
-        wx.CallAfter(self.restoreSelection)
+        #wx.CallAfter(self.restoreSelection)
  
     def restoreSelection(self):
         self.UnselectAll()
@@ -345,7 +366,7 @@ class TreeMixin(object):
 
     def curselection(self):
         return [self.index(item) for item in self.GetSelections()]
-
+        
     def clearselection(self):
         self.UnselectAll()
         self.selectCommand()
@@ -480,7 +501,8 @@ class CheckTreeCtrl(CustomTreeCtrl):
         return super(CheckTreeCtrl, self).PrependItem(*args, **kwargs)
         
 
-class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, gizmos.TreeListCtrl):
+class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
+                   gizmos.TreeListCtrl):
     # TreeListCtrl uses ALIGN_LEFT, ..., ListCtrl uses LIST_FORMAT_LEFT, ... for
     # specifying alignment of columns. This dictionary allows us to map from the 
     # ListCtrl constants to the TreeListCtrl constants:

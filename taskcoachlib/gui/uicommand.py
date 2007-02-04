@@ -890,12 +890,13 @@ class TaskDragAndDrop(TaskListCommand, ViewerCommand):
         super(TaskDragAndDrop, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
+        print 'drop %s on %s'%(self.viewer.draggedItems(), self.viewer.curselection())
         dragAndDropCommand = command.DragAndDropTaskCommand( \
             self.taskList, self.viewer.draggedItems(), 
             drop=self.viewer.curselection())
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
-
+        print 'drop:end'
 
 class TaskMail(NeedsSelectedTasks, ViewerCommand):
     def doCommand(self, event):
@@ -1177,7 +1178,9 @@ class Search(MainWindowCommand, ViewerCommand, SettingsCommand):
         
     def onSearchStringChanged(self, event):
         if self.searchControl:
-            self.searchControl.SetValue(event.value())
+            newSearchString = event.value()
+            if newSearchString != self.searchControl.GetValue():
+                self.searchControl.SetValue(newSearchString)
         
     def onFind(self, searchString, matchCase):
         self.settings.set('view', 'tasksearchfilterstring', searchString)
@@ -1192,13 +1195,6 @@ class Search(MainWindowCommand, ViewerCommand, SettingsCommand):
             style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
             callback=self.onFind)
         toolbar.AddControl(self.searchControl)
-
-
-class Filter(SettingsCommand):
-    def __init__(self, *args, **kwargs):
-        super(Filter, self).__init__(*args, **kwargs)
-
-
 
 
 class UICommands(dict):

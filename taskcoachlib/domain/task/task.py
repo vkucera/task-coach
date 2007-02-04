@@ -397,6 +397,7 @@ class Task(patterns.ObservableComposite):
     def addCategory(self, category):
         if category not in self._categories:
             self._categories.add(category)
+            category.addTask(self)
             self.setLastModificationTime()
             self.__notifyObservers(patterns.Event(self, 'task.category.add', 
                 category))
@@ -404,6 +405,7 @@ class Task(patterns.ObservableComposite):
     def removeCategory(self, category):
         if category in self._categories:
             self._categories.discard(category)
+            category.removeTask(self)
             self.setLastModificationTime()
             self.__notifyObservers(patterns.Event(self, 'task.category.remove', 
                 category))

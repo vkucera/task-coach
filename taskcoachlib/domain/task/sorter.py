@@ -100,6 +100,8 @@ class Sorter(patterns.ListDecorator):
         if not self.__settings.getboolean('view', 'sortcasesensitive') \
             and sortKeyName == 'subject':
             prepareSortValue = lambda subject: subject.lower()
+        elif sortKeyName == 'categories':
+            prepareSortValue = lambda categories: sorted([category.subject() for category in categories])
         else:
             prepareSortValue = lambda value: value
         kwargs = {}

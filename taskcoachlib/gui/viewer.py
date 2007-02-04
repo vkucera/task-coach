@@ -1,7 +1,6 @@
 import patterns, command, widgets, uicommand, menu, color, render, dialog
 import wx
 from i18n import _
-import wx.grid as grid
 from domain import task, category, effort, date
 
 
@@ -435,7 +434,7 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
                 'task.category.remove', sortKey='categories',
                 sortCallback=self.uiCommands['viewsortbycategories'],
                 visibilitySetting=('view', 'categories'),
-                renderCallback=lambda task: str(task.categories()))] + \
+                renderCallback=self.renderCategory)] + \
             [widgets.Column(columnHeader, eventType,
              visibilitySetting=('view', setting.lower()), sortKey=setting, 
              sortCallback=self.uiCommands['viewsortby' + setting.lower()],
@@ -501,7 +500,10 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
                 
     def createColumnPopupMenu(self):
         return menu.TaskViewerColumnPopupMenu(self.parent, self.uiCommands)
-    
+
+    def renderCategory(self, task):
+        return ', '.join(sorted([category.subject() for category in task.categories()]))
+
 
 class TaskListViewer(TaskViewerWithColumns, ListViewer):
     def createWidget(self):
