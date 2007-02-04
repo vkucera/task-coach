@@ -4,23 +4,24 @@ from changetypes import *
 
 releases = [
 
-Release('0.62.0', 'January ?, 2007',
+Release('0.62.0', 'February ?, 2007',
     dependenciesChanged=[
         Dependency('''Task Coach now requires 
 wxPython 2.8-unicode or newer (this is only relevant if you use the 
 source distribution).''')],
     featuresAdded=[
-        Feature('''Printing a selection is enabled (except on Mac OSX.'''),
+        Feature('''Printing a selection is enabled (except on Mac OSX).'''),
         Feature('''The notebook that contains the different views allows for
 dragging and dropping of tabs, enabling you to create almost any layout you
 like. Unfortunately, this widget does not yet provide functionality to store
 the layout in the TaskCoach.ini file.'''),
-        Feature('''Whether the clock icon in the task bar actually blinks
-or is static is now a setting (see Edit -> Preferences -> Window 
+        Feature('''Whether the clock icon in the task bar blinks
+or not is now a setting (see Edit -> Preferences -> Window 
 behavior.'''),
         Feature('''The toolbar buttons for 'new item', 'new sub item',
 'edit item' and 'delete item' now work for tasks, effort records
 and categories, depending on what view is active.'''),
+        Feature('''Added a category column for task viewers.''', '?'),
         Feature('''Added an attachment column that shows whether a task
 has one or more attachments.'''),
         Feature('''Added an 'Open all attachments' menu item for tasks''')],

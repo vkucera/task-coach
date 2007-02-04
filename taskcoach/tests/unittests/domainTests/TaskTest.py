@@ -1,8 +1,6 @@
 import test, wx, sets, patterns
 import unittests.asserts as asserts
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
+from domain import task, effort, date, category
 
 
 ''' I'm rearranging these unittests to be more fixture based instead of 
@@ -31,6 +29,7 @@ class TaskTestCase(test.TestCase):
             setattr(self, effortLabel, effort)
             
     def setUp(self):
+        self.category = category.Category('category')
         self.tasks = self.createTasks()
         self.task = self.tasks[0]
         self.events = []
@@ -161,7 +160,10 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         
     def testTaskHasNoRecursiveHourlyFeeByDefault(self):
         self.assertEqual(0, self.task.hourlyFee(recursive=True))
-                    
+   
+    def testTaskDoesNotBelongToAnyCategoryByDefault(self):
+        self.failIf(self.task.categories())
+             
     # Setters
 
     def testSetStartDate(self):
@@ -424,7 +426,17 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.addEffort(activeEffort)
         self.assertEqual([patterns.Event(self.task, 'task.track.start', 
             activeEffort)], self.events)
-
+        
+    # Add category
+        
+    def testAddCategory(self):
+        self.task.addCategory(self.category)
+        self.assertEqual(set([self.category]), self.task.categories())
+        
+    def testAddCategoryAlsoAddsTaskToCategory(self):
+        self.task.addCategory(self.category)
+        self.assertEqual([self.task], self.category.tasks())
+        
     # State (FIXME: need to test other attributes too)
  
     def testTaskStateIncludesPriority(self):
@@ -1172,56 +1184,58 @@ class TaskWithAllAttachmentsRemovedFixture(TaskWithAttachmentAddedTestCase):
 
 class TaskWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
-        return [{'categories': ['category a']}]
+        return [{'categories': [self.category]}]
 
     def testCategories(self):
-        self.assertEqual(set(['category a']), self.task.categories())
+        self.assertEqual(set([self.category]), self.task.categories())
 
     def testAddCategory(self):
-        self.task.addCategory('category b')
-        self.assertEqual(set(['category a', 'category b']), 
+        cat2 = category.Category('category 2')
+        self.task.addCategory(cat2)
+        self.assertEqual(set([self.category, cat2]), 
             self.task.categories())
 
     def testAddCategoryNotification(self):
         self.registerObserver('task.category.add')
-        self.task.addCategory('category b')
-        self.assertEqual('category b', self.events[0].value())
+        cat2 = category.Category('category 2')
+        self.task.addCategory(cat2)
+        self.assertEqual(cat2, self.events[0].value())
 
     def testAddCategoryTwice(self):
-        self.task.addCategory('category a')
-        self.assertEqual(set(['category a']), self.task.categories())
+        self.task.addCategory(self.category)
+        self.assertEqual(set([self.category]), self.task.categories())
 
     def testAddCategoryTwiceCausesNoNotification(self):
-        self.task.addCategory('category a')
+        self.task.addCategory(self.category)
         self.failIf(self.events)
 
     def testRemoveCategory(self):
-        self.task.removeCategory('category a')
+        self.task.removeCategory(self.category)
         self.assertEqual(set(), self.task.categories())
 
     def testRemoveCategoryNotification(self):
         self.registerObserver('task.category.remove')
-        self.task.removeCategory('category a')
-        self.assertEqual('category a', self.events[0].value())
+        self.task.removeCategory(self.category)
+        self.assertEqual(self.category, self.events[0].value())
 
     def testRemoveCategoryTwice(self):
-        self.task.removeCategory('category a')
-        self.task.removeCategory('category a')
+        self.task.removeCategory(self.category)
+        self.task.removeCategory(self.category)
         self.assertEqual(set(), self.task.categories())
 
     def testRemoveCategoryTwiceNotification(self):
         self.registerObserver('task.category.remove')
-        self.task.removeCategory('category a')
-        self.task.removeCategory('category a')
+        self.task.removeCategory(self.category)
+        self.task.removeCategory(self.category)
         self.assertEqual(1, len(self.events))
 
 
 class ChildAndParentWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
-        return [{'categories': ['category a'], 'children': [task.Task()]}]
+        return [{'categories': [self.category], 'children': [task.Task()]}]
     
     def testGetCategoriesRecursiveFromParent(self):
-        self.assertEqual(set(['category a']), 
+        self.assertEqual(set([self.category]), 
             self.task1_1.categories(recursive=True))
 
     def testGetCategoriesNotRecursive(self):
@@ -1230,7 +1244,7 @@ class ChildAndParentWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
     def testGetCategoriesRecursiveFromGrandParent(self):
         grandchild = task.Task()
         self.task1_1.addChild(grandchild)
-        self.assertEqual(set(['category a']), 
+        self.assertEqual(set([self.category]), 
             grandchild.categories(recursive=True))
 
 
@@ -1337,13 +1351,14 @@ class TaskLastModificationTimeTest(test.TestCase):
         self.assertLastModificationTimeIsNow(self.task)
         
     def testAddCategoryAffectsLastModificationTime(self):
-        self.task.addCategory('New category')
+        self.task.addCategory(category.Category('New category'))
         self.assertLastModificationTimeIsNow(self.task)
 
     def testRemoveCategoryAffectsLastModificationTime(self):
-        self.task.addCategory('New category')
+        cat = category.Category('New category')
+        self.task.addCategory(cat)
         self.task.setLastModificationTime(date.DateTime(2004,1,1))
-        self.task.removeCategory('New category')
+        self.task.removeCategory(cat)
         self.assertLastModificationTimeIsNow(self.task)
         
     def testAddEffortAffectsLastModificationTime(self):
