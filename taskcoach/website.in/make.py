@@ -310,6 +310,11 @@ for title, text in pages.items():
     htmlfile.write(text)
     htmlfile.close()
 
+pad = file('pad.xml').read()
+padfile = file(os.path.join(dist, 'pad.xml'), 'w')
+padfile.write(pad%meta.metaDict)
+padfile.close()
+
 import shutil, glob
 for file in glob.glob('*.png') + glob.glob('*.ico') + glob.glob('*.css') + \
     glob.glob('../i18n.in/*.po') + ['../i18n.in/messages.pot', 
