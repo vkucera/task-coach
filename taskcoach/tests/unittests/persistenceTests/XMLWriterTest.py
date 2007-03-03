@@ -77,6 +77,20 @@ class XMLWriterTest(test.TestCase):
         self.task.addEffort(taskEffort)
         self.expectInXML('<effort start="%s" stop="%s"><description>description\nline 2</description></effort>'% \
             (taskEffort.getStart(), taskEffort.getStop()))
+        
+    def testThatEffortTimesDoNotContainMilliseconds(self):
+        self.task.addEffort(effort.Effort(self.task, 
+            date.DateTime(2004,1,1,10,0,0,123456), 
+            date.DateTime(2004,1,1,10,0,10,654310)))
+        self.expectInXML('start="2004-01-01 10:00:00"')
+        self.expectInXML('stop="2004-01-01 10:00:10"')
+        
+    def testThatEffortStartAndStopAreNotEqual(self):
+        self.task.addEffort(effort.Effort(self.task, 
+            date.DateTime(2004,1,1,10,0,0,123456), 
+            date.DateTime(2004,1,1,10,0,0,654310)))
+        self.expectInXML('start="2004-01-01 10:00:00"')
+        self.expectInXML('stop="2004-01-01 10:00:01"')
             
     def testEmptyEffortDescriptionIsNotWritten(self):
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
@@ -168,7 +182,8 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('id="%s"'%self.task.id())
         
     def testLastModificationTime(self):
-        self.expectInXML('lastModificationTime="%s"'%self.task.lastModificationTime())
+        formattedModificationTime = self.task.lastModificationTime().strftime("%Y-%m-%d %H:%M:%S")
+        self.expectInXML('lastModificationTime="%s"'%formattedModificationTime)
 
     def testTwoTasks(self):
         self.task.setSubject('task 1')

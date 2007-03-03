@@ -123,10 +123,26 @@ class XMLReaderVersion13Test(XMLReaderTestCase):
         anotherCategory = categories[1]
         self.assertEqual("1", testCategory.tasks()[0].id())
         self.assertEqual("1.1", anotherCategory.tasks()[0].id())         
-                
-    
-class XMLReaderVersion14Test(XMLReaderTestCase):   
+
+
+class XMLReaderVersion14Test(XMLReaderTestCase):
     tskversion = 14
+    
+    def testEffortWithMilliseconds(self):
+        tasks, categories = self.writeAndRead('''
+        <tasks>
+            <task>
+                <effort start="2004-01-01 10:00:00.123000" 
+                        stop="2004-01-01 10:30:00.123000"/>
+            </task>
+        </tasks>''')
+        self.assertEqual(1, len(tasks[0].efforts()))
+        self.assertEqual(date.TimeDelta(minutes=30), tasks[0].timeSpent())
+        self.assertEqual(tasks[0], tasks[0].efforts()[0].task())
+            
+    
+class XMLReaderVersion15Test(XMLReaderTestCase):
+    tskversion = 15
            
     def testReadEmptyStream(self):
         try:
@@ -253,8 +269,8 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
         tasks, categories = self.writeAndRead('''
         <tasks>
             <task>
-                <effort start="2004-01-01 10:00:00.123000" 
-                        stop="2004-01-01 10:30:00.123000"/>
+                <effort start="2004-01-01 10:00:00" 
+                        stop="2004-01-01 10:30:00"/>
             </task>
         </tasks>''')
         self.assertEqual(1, len(tasks[0].efforts()))
@@ -266,8 +282,8 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
         <tasks>
             <task>
                 <task>
-                    <effort start="2004-01-01 10:00:00.123000" 
-                            stop="2004-01-01 10:30:00.123000"/>
+                    <effort start="2004-01-01 10:00:00" 
+                            stop="2004-01-01 10:30:00"/>
                 </task>
             </task>
         </tasks>''')
@@ -281,7 +297,7 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
         tasks, categories = self.writeAndRead('''
         <tasks>
             <task>
-                <effort start="2004-01-01 10:00:00.123000">
+                <effort start="2004-01-01 10:00:00">
                     <description>%s</description>
                 </effort>
             </task>
@@ -292,7 +308,7 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
         tasks, categories = self.writeAndRead('''
         <tasks>
             <task>
-                <effort start="2004-01-01 10:00:00.123000"/>
+                <effort start="2004-01-01 10:00:00"/>
             </task>
         </tasks>''')
         self.assertEqual(1, len(tasks[0].efforts()))
@@ -310,9 +326,9 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
     def testLastModificationTime(self):
         tasks, categories = self.writeAndRead('''
         <tasks>
-            <task lastModificationTime="2004-01-01 10:00:00.123000"/>
+            <task lastModificationTime="2004-01-01 10:00:00"/>
         </tasks>''')
-        self.assertEqual(date.DateTime(2004,1,1,10,0,0,123000), tasks[0].lastModificationTime())
+        self.assertEqual(date.DateTime(2004,1,1,10,0,0,0), tasks[0].lastModificationTime())
         
     def testHourlyFee(self):
         tasks, categories = self.writeAndRead('''
@@ -336,9 +352,9 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
     def testReminder(self):
         tasks, categories = self.writeAndRead('''
         <tasks>
-            <task reminder="2004-01-01 10:00:00.123000"/>
+            <task reminder="2004-01-01 10:00:00"/>
         </tasks>''')
-        self.assertEqual(date.DateTime(2004,1,1,10,0,0,123000), 
+        self.assertEqual(date.DateTime(2004,1,1,10,0,0,0), 
                          tasks[0].reminder())
         
     def testMarkCompletedWhenAllChildrenCompletedSetting_True(self):

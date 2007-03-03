@@ -11,37 +11,28 @@ def viewer2html(viewer, selectionOnly=False):
     for column, alignment in zip(visibleColumns, columnAlignments):
         htmlText += '<th align="%s">%s</th>'%(alignment, column.header())
     htmlText += '</tr>\n'
-    if viewer.isTreeViewer():
-        model2html = treeModel2html
-    else:
-        model2html = listModel2html
-    htmlText += model2html(viewer.model(), visibleColumns, columnAlignments, 
-                           selectionOnly, viewer.curselection())
-    htmlText += '</table></body></html>\n'
-    return htmlText
- 
-def listModel2html(model, visibleColumns, columnAlignments, selectionOnly, 
-                   selection):
-    htmlText = ''
-    for item in model:
+    tree = viewer.isTreeViewer()
+    if selectionOnly:
+        selection = viewer.curselection()
+        if tree:
+            selection = extendedWithAncestors(selection)
+    for item in viewer.visibleItems():
         if selectionOnly and item not in selection:
             continue
         htmlText += '<tr>'
-        for column, alignment in zip(visibleColumns, columnAlignments):
+        if tree:
+            space = '&nbsp;' * len(item.ancestors()) * 3
+        else:
+            space = ''
+        htmlText += '<td align="%s">%s%s</td>'%(columnAlignments[0], space,
+            visibleColumns[0].render(item))
+        for column, alignment in zip(visibleColumns[1:], columnAlignments[1:]):
             htmlText += '<td align="%s">%s</td>'%(alignment,
                 column.render(item))
         htmlText += '</tr>\n'
+    htmlText += '</table></body></html>\n'
     return htmlText
-
-def treeModel2html(model, visibleColumns, columnAlignments, selectionOnly, 
-                   selection):
-    selection = extendedWithAncestors(selection)
-    htmlText = ''
-    for item in model.rootItems():
-        htmlText += node2html(item, visibleColumns, columnAlignments, 
-                              selectionOnly, selection)
-    return htmlText
-
+ 
 def extendedWithAncestors(selection):
     extendedSelection = selection[:]
     for item in selection:
@@ -49,18 +40,3 @@ def extendedWithAncestors(selection):
             if ancestor not in extendedSelection:
                 extendedSelection.append(ancestor)
     return extendedSelection
-
-def node2html(item, visibleColumns, columnAlignments, selectionOnly, selection, 
-              level=0):
-    if selectionOnly and item not in selection:
-        return ''
-    htmlText = '<tr>'
-    for column, alignment in zip(visibleColumns, columnAlignments):
-        space = '&nbsp;' * level * 3
-        htmlText += '<td align="%s">%s%s</td>'%(alignment, space, 
-            column.render(item))
-    htmlText += '</tr>\n'
-    for child in item.children():
-        htmlText += node2html(child, visibleColumns, columnAlignments, 
-                              selectionOnly, selection, level+1)
-    return htmlText

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import test, gui, command, wx, config, sys
 from unittests import dummy
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
-import domain.category as category
+from domain import task, effort, date, category
+
 
 class DummyViewer:
     def __init__(self):

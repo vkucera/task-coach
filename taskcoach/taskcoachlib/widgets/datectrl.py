@@ -1,5 +1,5 @@
 import wx
-import domain.date as date
+from domain import date
 
 
 class Panel(wx.Panel):
@@ -14,7 +14,8 @@ class Panel(wx.Panel):
     def _layout(self):
         self._sizer = wx.BoxSizer(wx.HORIZONTAL)
         for control in self._controls:
-            self._sizer.Add(control, flag=wx.ALIGN_CENTER_VERTICAL)
+            self._sizer.Add(control, border=2, 
+                            flag=wx.RIGHT|wx.ALIGN_CENTER_VERTICAL)
         self.SetSizerAndFit(self._sizer)
 
 
@@ -56,10 +57,10 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(Panel):
 
 
 def styleDP_ALLOWNONEIsBroken():
-    return not ('__MSW__' in wx.PlatformInfo and wx.VERSION[0:2] == (2, 7))
-    # DP_ALLOWNONE is not supported on Mac OS and Linux, and on Windows 
-    # passing style=wx.DP_ALLOWNONE without a valid date currently causes 
-    # an exception (wxPython 2.7.2.0, wxPython 2.8 seems to be ok).
+    # DP_ALLOWNONE is not supported on Mac OS and Linux, and currently 
+    # (wxPython 2.8.1), Windows because one can't set the date to None, 
+    # despite style=wx.DP_ALLOWNONE:
+    return True #not ('__WXMSW__' in wx.PlatformInfo)
 
 
 def DatePickerCtrl(*args, **kwargs):
@@ -108,10 +109,12 @@ class DateCtrl(Panel):
         style = wx.DP_DROPDOWN
         if self._noneAllowed:
             style |= wx.DP_ALLOWNONE
-        return [DatePickerCtrl(self, style=style)]
+        return [DatePickerCtrl(self, dt=wx.DateTime_Today(), style=style)]
 
     def SetValue(self, value):
-        self._controls[0].SetValue(date2wxDateTime(value))
+        wxDate = date2wxDateTime(value)
+        if wxDate.IsValid() or self._noneAllowed:
+            self._controls[0].SetValue(wxDate)
 
     def GetValue(self):
         return wxDateTime2Date(self._controls[0].GetValue())

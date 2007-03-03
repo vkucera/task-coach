@@ -1,9 +1,9 @@
-import wx, itemctrl, thirdparty
+import wx, itemctrl
 import wx.gizmos as gizmos
-import wx.lib.customtreectrl as customtree
-
+from wx.lib import customtreectrl as customtree
+from thirdparty import treemixin
         
-class TreeMixin(object):
+class TreeMixin(treemixin.DragAndDrop):
     ''' Methods common to both TreeCtrl and TreeListCtrl. '''
     
     def bindEventHandlers(self, selectCommand, editCommand, dragAndDropCommand):
@@ -21,80 +21,14 @@ class TreeMixin(object):
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
         self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
-        # prepare for dragging of tree items
-        self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.onBeginDrag)
-     
-    def onBeginDrag(self, event):
-        self.dragItem = self.__getDraggedItem()
-        if self.dragItem and self.dragAndDropCommand:
-            event.Allow()
-            self.GetMainWindow().Bind(wx.EVT_MOTION, self.onDragging)
-            self.Bind(wx.EVT_TREE_END_DRAG, self.onEndDrag)
-            self.__setCursorToDragging()
+         
+    def OnDrop(self, dropItem, dragItem):
+        if dropItem == self.GetRootItem():
+            dropItemIndex = -1
         else:
-            event.Veto()
-            
-    def __getDraggedItem(self):
-        selectedItems = self.GetSelections()
-        if selectedItems:
-            return selectedItems[0]
-        else:
-            return None
-        
-    def __setCursorToDragging(self):
-        self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
-        
-    def __setCursorToDroppingImpossible(self):
-        self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
-        
-    def __resetCursor(self):
-        self.SetCursor(wx.STANDARD_CURSOR)
-        
-    def draggedItems(self):
-        return [self.index(self.dragItem)]
-            
-    def onEndDrag(self, event):
-        self.GetMainWindow().Unbind(wx.EVT_MOTION)
-        self.Unbind(wx.EVT_TREE_END_DRAG)
-        self.__resetCursor()
-        if self._isValidDropTarget(event.GetItem()):
-            self.dragAndDropCommand(event)
- 
-    def onDragging(self, event):
-        if not event.Dragging():
-            self.GetMainWindow().Unbind(wx.EVT_MOTION)
-            self.Unbind(wx.EVT_TREE_END_DRAG)
-            self.__resetCursor()
-            return
-        item, flags, column = self.HitTest(wx.Point(event.GetX(), event.GetY()))
-        if self._isValidDropTarget(item):
-            self.__setCursorToDragging()
-        else:
-            self.__setCursorToDroppingImpossible()
-        if flags & wx.TREE_HITTEST_ONITEMBUTTON:
-            self.Expand(item)
-        elif flags & (wx.TREE_HITTEST_NOWHERE | wx.TREE_HITTEST_BELOW | 
-                      wx.TREE_HITTEST_ABOVE | wx.TREE_HITTEST_TOLEFT |
-                      wx.TREE_HITTEST_TORIGHT):
-            self.UnselectAll()
-        selections = self.GetSelections()
-        if item:
-            if selections != [item]:
-                self.UnselectAll()
-                self.SelectItem(item)
-        else:
-            self.UnselectAll()
-        event.Skip()
-    
-    def _isValidDropTarget(self, dropTarget):
-        if dropTarget: 
-            return self.dragItem != dropTarget and \
-                self.GetItemParent(self.dragItem) != dropTarget and \
-                dropTarget not in self.getChildren(self.dragItem,
-                recursively=True)
-        else:
-            return True
-    
+            dropItemIndex = self.index(dropItem)
+        self.dragAndDropCommand(dropItemIndex, self.index(dragItem))
+                
     def onSetFocus(self, event):
         # When the TreeCtrl gets focus sometimes the selection is changed.
         # We want to prevent that from happening, so we need to keep track
@@ -110,35 +44,35 @@ class TreeMixin(object):
             event.Skip()
         
     def onSelect(self, event):
-        print 'onSelect:begin'
+        #print 'onSelect:begin'
         if not self._refreshing:
             self.selectCommand()
         event.Skip()
-        print 'onSelect:end'
+        #print 'onSelect:end'
                     
     def onExpand(self, event):
-        print 'onExpand:begin'
+        #print 'onExpand:begin'
         item = event.GetItem()
         root = self.GetRootItem()
         for i in self.getChildren(root, True):
             if item == i:
-                print 'onExpand: item found'
+                #print 'onExpand: item found'
                 break
         else:
             self.Delete(item)
-            print 'onExpand:item not found, exiting'
+            #print 'onExpand:item not found, exiting'
             return
-        print 'onExpand:item = %s ok=%s, rootItem=%s'%(item, item.IsOk(), item == self.GetRootItem())
-        print 'onExpand:itemtext=%s'%self.GetItemText(item)
+        #print 'onExpand:item = %s ok=%s, rootItem=%s'%(item, item.IsOk(), item == self.GetRootItem())
+        #print 'onExpand:itemtext=%s'%self.GetItemText(item)
         # Apparently, this event handler is called for the root item somehow. This
         # only happens with the TreeListCtrl, not with the TreeCtrl.
         if item == self.GetRootItem(): 
-            print 'onExpand:end (item==self.GetRootItem())'
+            #print 'onExpand:end (item==self.GetRootItem())'
             return
         itemIndex = self.index(item)
-        print 'onExpand:addItemsRecursively(index=%d)'%itemIndex
+        #print 'onExpand:addItemsRecursively(index=%d)'%itemIndex
         self.addItemsRecursively(item, self.getChildIndices(itemIndex))
-        print 'onExpand:end'
+        #print 'onExpand:end'
         
     def onCollapse(self, event):
         if self.__collapsing:
@@ -200,7 +134,7 @@ class TreeMixin(object):
             pass # Hidden item
 
     def refresh(self, count=0):
-        print 'refresh:begin(count=%d)'%count
+        #print 'refresh:begin(count=%d)'%count
         self._count = count
         self._refreshing = True
         self._validItems = []
@@ -214,7 +148,7 @@ class TreeMixin(object):
         self.restoreItemState()
         self.Thaw()
         self._refreshing = False
-        print 'refresh:end'
+        #print 'refresh:end'
 
     def __getOrCreateRootItem(self):
         rootItem = self.GetRootItem()
@@ -320,10 +254,10 @@ class TreeMixin(object):
     def restoreItemState(self):
         for item, expand in self.itemsToExpandOrCollapse.items():
             if expand:
-                print 'restoreItemState:Expand item=%s'%item
+                #print 'restoreItemState:Expand item=%s'%item
                 self.Expand(item)
             else:
-                print 'restoreItemState:CollapseAndReset item=%s'%item
+                #print 'restoreItemState:CollapseAndReset item=%s'%item
                 self.CollapseAndReset(item)
         #wx.CallAfter(self.restoreSelection)
  
@@ -428,19 +362,14 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
     def SelectAll(self):
         for item in self.getChildren(recursively=True):
             self.SelectItem(item)
-
-    def HitTest(self, *args, **kwargs):
-        item, flags = super(TreeCtrl, self).HitTest(*args, **kwargs)
-        column = 0
-        return item, flags, column
     
 
-class CustomTreeCtrl(itemctrl.CtrlWithItems, customtree.CustomTreeCtrl, TreeMixin): 
+class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtrl): 
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
             getItemId, getRootIndices, getChildIndices, selectCommand,
             editCommand, dragAndDropCommand, 
             itemPopupMenu=None, *args, **kwargs):
-        super(CustomTreeCtrl, self).__init__(parent, ctstyle=self.getStyle(), 
+        super(CustomTreeCtrl, self).__init__(parent, style=self.getStyle(), 
             itemPopupMenu=itemPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
@@ -452,18 +381,9 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, customtree.CustomTreeCtrl, TreeMixi
     def SelectAll(self):
         for item in self.getChildren(recursively=True):
             self.SelectItem(item)
-
-    def HitTest(self, *args, **kwargs):
-        item, flags = super(CustomTreeCtrl, self).HitTest(*args, **kwargs)
-        column = 0
-        return item, flags, column
     
-    def GetItemCount(self):
-        if self.GetWindowStyle() & wx.TR_HIDE_ROOT:
-            hiddenRoot = 1
-        else:
-            hiddenRoot = 0
-        return super(CustomTreeCtrl, self).GetItemCount() - hiddenRoot
+    def getStyle(self):
+        return super(CustomTreeCtrl, self).getStyle() & ~wx.TR_LINES_AT_ROOT
 
 
 class CheckTreeCtrl(CustomTreeCtrl):
@@ -488,10 +408,6 @@ class CheckTreeCtrl(CustomTreeCtrl):
         return super(CheckTreeCtrl, self).itemUnchanged(item, index, itemChildIndex) \
             and self.getIsItemChecked(index) == item.IsChecked()
         
-    def getStyle(self):
-        return super(CheckTreeCtrl, self).getStyle() | \
-            customtree.TR_AUTO_CHECK_CHILD
-            
     def InsertItem(self, *args, **kwargs):
         kwargs['ct_type'] = 1
         return super(CheckTreeCtrl, self).InsertItem(*args, **kwargs)
@@ -588,9 +504,6 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin,
     def ToggleItemSelection(self, item):
         ''' TreeListCtrl doesn't have a ToggleItemSelection. '''
         self.SelectItem(item, not self.IsSelected(item))
-        
-    def SetItemImage(self, item, imageIndex, which, column=0):
-        super(TreeListCtrl, self).SetItemImage(item, imageIndex, column, which)
         
     # Adapters to make the TreeListCtrl more like the ListCtrl
     

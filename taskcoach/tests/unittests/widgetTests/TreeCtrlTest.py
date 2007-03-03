@@ -321,8 +321,8 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
     def onCheck(self, event):
         pass
     
-    def testCheckParentChecksChild(self):
+    def testCheckParentDoesNotCheckChild(self):
         self.setTree(('parent', 1), 'child')
         self.treeCtrl.Expand(self.treeCtrl[0])
         self.treeCtrl.CheckItem(self.treeCtrl[0])
-        self.failUnless(self.treeCtrl[1].IsChecked())
+        self.failIf(self.treeCtrl[1].IsChecked())

@@ -2,8 +2,8 @@ import xml.dom, meta
 import domain.date as date
 
 
-class XMLWriter:
-    def __init__(self, fd, versionnr=14):
+class XMLWriter:    
+    def __init__(self, fd, versionnr=15):
         self.__fd = fd
         self.__versionnr = versionnr
         
@@ -25,7 +25,7 @@ class XMLWriter:
         node.setAttribute('subject', task.subject())
         node.setAttribute('id', task.id())
         node.setAttribute('lastModificationTime', 
-            str(task.lastModificationTime()))
+            self.formatDateTime(task.lastModificationTime()))
         if task.startDate() != date.Date():
             node.setAttribute('startdate', str(task.startDate()))
         if task.dueDate() != date.Date():
@@ -57,9 +57,15 @@ class XMLWriter:
         
     def effortNode(self, effort):
         node = self.document.createElement('effort')
-        node.setAttribute('start', str(effort.getStart()))
-        if effort.getStop() != None:
-            node.setAttribute('stop', str(effort.getStop()))
+        formattedStart = self.formatDateTime(effort.getStart())
+        node.setAttribute('start', formattedStart)
+        stop = effort.getStop()
+        if stop != None:
+            formattedStop = self.formatDateTime(stop)
+            if formattedStop == formattedStart:
+                # Make sure the effort duration is at least one second
+                formattedStop = self.formatDateTime(stop + date.TimeDelta(seconds=1))
+            node.setAttribute('stop', formattedStop)
         if effort.getDescription():
             node.appendChild(self.textNode('description', effort.getDescription()))
         return node
@@ -85,3 +91,6 @@ class XMLWriter:
         textNode = self.document.createTextNode(text)
         node.appendChild(textNode)
         return node
+
+    def formatDateTime(self, dateTime):
+        return dateTime.strftime('%Y-%m-%d %H:%M:%S')

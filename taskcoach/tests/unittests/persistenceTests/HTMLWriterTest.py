@@ -2,7 +2,7 @@ import test, persistence, StringIO, gui, config
 from domain import task, category, effort
 from unittests import dummy
 
-class HTMLWriterTestCase(object):
+class HTMLWriterTestCase(test.wxTestCase):
     def setUp(self):
         super(HTMLWriterTestCase, self).setUp()
         self.fd = StringIO.StringIO()
@@ -27,6 +27,8 @@ class HTMLWriterTestCase(object):
         html = self.__writeAndRead(selectionOnly)
         self.failIf(htmlFragment in html, '%s in %s'%(htmlFragment, html))
 
+
+class TaskTests(object):
     def testTaskSubject(self):
         self.expectInHTML('>Task subject<')
         
@@ -39,9 +41,12 @@ class HTMLWriterTestCase(object):
         self.taskList.append(child)
         self.selectItem(1)
         self.expectInHTML('>Task subject<')
+        
+    def testSubjectColumnAlignment(self):
+        self.expectInHTML('<td align="left">Task subject</td>')
+        
 
-
-class HTMLListWriterTest(HTMLWriterTestCase, test.wxTestCase):
+class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, None, self.settings, 
@@ -52,7 +57,7 @@ class HTMLListWriterTest(HTMLWriterTestCase, test.wxTestCase):
         self.viewer.widget.SelectItem(index)
                     
 
-class HTMLTreeWriterTest(HTMLWriterTestCase, test.wxTestCase):
+class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
         self.viewer = gui.viewer.TaskTreeViewer(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, None, self.settings, 
@@ -61,4 +66,21 @@ class HTMLTreeWriterTest(HTMLWriterTestCase, test.wxTestCase):
 
     def selectItem(self, index):
         self.viewer.widget.SelectItem(self.viewer.widget[1])
-                    
+        
+
+class EffortWriterTest(HTMLWriterTestCase):
+    def setUp(self):
+        super(EffortWriterTest, self).setUp()
+        self.task.addEffort(effort.Effort(self.task))
+
+    def createViewer(self):
+        self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList,
+            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
+                self.taskList, self.effortList, self.categories), self.settings)
+
+    def testTaskSubject(self):
+        self.expectInHTML('>Task subject<')
+        
+    def testEffortDuration(self):
+        self.expectInHTML('>0:00:00<')
+      

@@ -20,6 +20,7 @@ wx.SystemOptions.SetOptionInt('mac.listctrl.always_use_generic', 1)
 
 class wxApp(wx.App):
     def OnInit(self):
+        self.SetAssertMode(wx.PYAPP_ASSERT_DIALOG)
         return True
     
 

@@ -139,6 +139,79 @@ class ViewerBaseClassTest(test.wxTestCase):
             pass
 
 
+class ViewerIteratorTestCase(test.wxTestCase):
+    def setUp(self):
+        self.settings = config.Settings(load=False)
+        self.settings.set('view', 'sortby', 'subject')
+        self.taskList = task.TaskList()
+        self.effortList = effort.EffortList(self.taskList)
+        self.categories = category.CategoryList()
+        self.viewer = self.createViewer()
+
+    def getItemsFromIterator(self):
+        result = []
+        for item in self.viewer.visibleItems():
+            result.append(item)
+        return result
+
+
+class ViewerIteratorTests(object):
+    def testEmptyModel(self):
+        self.assertEqual([], self.getItemsFromIterator())
+        
+    def testOneItem(self):
+        self.taskList.append(task.Task())
+        self.assertEqual(self.taskList, self.getItemsFromIterator())
+        
+    def testOneParentAndOneChild(self):
+        parent = task.Task('Z')
+        child = task.Task('A')
+        parent.addChild(child)
+        self.taskList.append(parent)
+        self.assertEqual(self.expectedParentAndChildOrder(parent, child), 
+                         self.getItemsFromIterator())
+
+    def testOneParentOneChildAndOneGrandChild(self):
+        parent = task.Task()
+        child = task.Task()
+        grandChild = task.Task()
+        parent.addChild(child)
+        child.addChild(grandChild)
+        self.taskList.append(parent)
+        self.assertEqual([parent, child, grandChild], 
+                         self.getItemsFromIterator())
+    
+    def testThatTasksNotInModelAreExcluded(self):
+        parent = task.Task('parent')
+        child = task.Task('child')
+        parent.addChild(child)
+        self.taskList.append(parent)
+        self.settings.set('view', 'tasksearchfilterstring', 'parent')
+        self.assertEqual([parent], self.getItemsFromIterator())
+        
+    
+class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
+    def createViewer(self):
+        return gui.viewer.TaskTreeViewer(self.frame, self.taskList,
+            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
+            self.taskList, self.effortList, self.categories), self.settings, 
+            categories=self.categories)
+    
+    def expectedParentAndChildOrder(self, parent, child):
+        return [parent, child]
+            
+        
+class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
+    def createViewer(self):
+        return gui.viewer.TaskListViewer(self.frame, self.taskList,
+            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
+                self.taskList, self.effortList, self.categories), 
+                self.settings, categories=self.categories)
+
+    def expectedParentAndChildOrder(self, parent, child):
+        return [child, parent]
+
+
 class CompositeEffortListViewerTest(test.wxTestCase):
     def setUp(self):
         taskList = task.TaskList()
