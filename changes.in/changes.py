@@ -4,11 +4,19 @@ from changetypes import *
 
 releases = [
 
-Release('0.62.0', 'February ?, 2007',
+Release('0.62.0', 'March ?, 2007',
     dependenciesChanged=[
         Dependency('''Task Coach now requires 
 wxPython 2.8-unicode or newer (this is only relevant if you use the 
 source distribution).''')],
+    bugsFixed=[
+        Bug('''When saving timestamps in a task file, e.g. for effort start
+and stop times, microseconds are no longer saved as part of the timestamp. 
+The microseconds caused problems for people who import Task Coach data in
+Excel.''', '1660670'),
+        Bug('''When exporting tasks to HTML or CSV format from the task
+tree viewer, child tasks hidden by a filter would still be exported.''', 
+'1659307')],
     featuresAdded=[
         Feature('''Printing a selection is enabled (except on Mac OSX).'''),
         Feature('''The notebook that contains the different views allows for
@@ -24,9 +32,12 @@ and categories, depending on what view is active.'''),
         Feature('''Added a category column for task viewers.''', '?'),
         Feature('''Added an attachment column that shows whether a task
 has one or more attachments.'''),
-        Feature('''Added an 'Open all attachments' menu item for tasks''')],
+        Feature('''Added an 'Open all attachments' menu item for tasks'''),
+        Feature('''Added snooze option to reminders.''')],
     featuresChanged=[
-        Feature('''Moved search filter from filter sidebar to toolbar.''')]),
+        Feature('''Removed filter sidebar. Filter options previously available 
+on the sidebar are now available via the search filter on the toolbar, the
+category tab and the view menu. ''')]),
         
 Release('0.61.6', 'January 27, 2007',
     bugsFixed=[

@@ -161,8 +161,7 @@ class ViewMenu(Menu):
         self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
-        self.appendUICommands(uiCommands, ['viewstatusbar', 
-            'viewfiltersidebar'])   
+        self.appendUICommands(uiCommands, ['viewstatusbar'])   
 
 
 class ViewViewerMenu(Menu):

@@ -1,6 +1,7 @@
 import wx, patterns
 from i18n import _
-import domain.date as date
+from domain import date
+from gui.dialog import reminder
 
 class ReminderController(object):
     def __init__(self, taskList, *args, **kwargs):
@@ -26,18 +27,36 @@ class ReminderController(object):
         if oldReminderDateTime:
             self.__removeReminder(task, oldReminderDateTime)
         if newReminderDateTime:
-            self.__registerReminder(task, newReminderDateTime)
+            self.__registerReminder(task, newReminderDateTime)            
         
     def onReminder(self, event):
-        now = event.value()
+        now = event.value() + date.TimeDelta(seconds=1)
         for task, reminderDateTime in self.__tasksWithReminders.items():
             if reminderDateTime <= now:
-                self.showReminderMessage(task.subject())
+                self.showReminderMessage(task)
                 self.__removeReminder(task)
 
-    def showReminderMessage(self, message):
-        wx.MessageBox(message, caption=_('Reminder'), style=wx.ICON_WARNING)
-
+    def showReminderMessage(self, task):
+        mainWindow = wx.GetApp().GetTopWindow()
+        reminderDialog = reminder.ReminderDialog(task, mainWindow)
+        reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)
+        if not mainWindow.IsShown():
+            mainWindow.Show()
+        if not mainWindow.IsActive():
+            mainWindow.RequestUserAttention()
+        reminderDialog.Show()
+        
+    def onCloseReminderDialog(self, event):
+        dialog = event.EventObject
+        snoozeOptions = dialog.snoozeOptions
+        snoozeTimeDelta = snoozeOptions.GetClientData(snoozeOptions.Selection)
+        if snoozeTimeDelta:
+            newReminder = date.DateTime.now() + snoozeTimeDelta
+        else:
+            newReminder = None
+        dialog.task.setReminder(newReminder)
+        dialog.Destroy()
+        
     def __registerRemindersForTasks(self, tasks):
         for task in tasks:
             if task.reminder():
@@ -50,14 +69,16 @@ class ReminderController(object):
 
     def __registerReminder(self, task, reminderDateTime=None):
         reminderDateTime = reminderDateTime or task.reminder()
-        if not reminderDateTime in self.__tasksWithReminders.values():
+        if reminderDateTime < date.DateTime.now():
+            reminderDateTime = date.DateTime.now() + date.TimeDelta(seconds=2)
+        if reminderDateTime not in self.__tasksWithReminders.values():
             self.__changeDateTimeObservation(reminderDateTime, 'registerObserver')
         self.__tasksWithReminders[task] = reminderDateTime
             
     def __removeReminder(self, task, reminderDateTime=None):
         reminderDateTime = reminderDateTime or task.reminder()
         del self.__tasksWithReminders[task]
-        if not reminderDateTime in self.__tasksWithReminders.values():
+        if reminderDateTime not in self.__tasksWithReminders.values():
             self.__changeDateTimeObservation(reminderDateTime, 'removeObserver')
     
     def __changeDateTimeObservation(self, reminderDateTime, registrationMethod):

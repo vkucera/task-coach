@@ -99,6 +99,11 @@ class Viewer(wx.Panel):
 class ListViewer(Viewer):
     def isTreeViewer(self):
         return False
+
+    def visibleItems(self):
+        ''' Iterate over the items in the model. '''
+        for item in self.model():
+            yield item
             
 
 class TreeViewer(Viewer):
@@ -126,6 +131,19 @@ class TreeViewer(Viewer):
     def isTreeViewer(self):
         return True
         
+    def visibleItems(self):
+        ''' Iterate over the items in the model. '''            
+        def yieldAllChildren(parent):
+            for item in self.model():
+                if item.parent() and item.parent() == parent:
+                    yield item
+                    for child in yieldAllChildren(item):
+                        yield child
+        for item in self.model().rootItems():
+            yield item
+            for child in yieldAllChildren(item):
+                yield child
+
 
 class UpdatePerSecondViewer(Viewer, date.ClockObserver):
     def __init__(self, *args, **kwargs):

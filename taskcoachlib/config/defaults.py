@@ -7,8 +7,6 @@ defaults = { \
     'effortperdayviewercount': '0',
     'effortperweekviewercount': '0',
     'effortpermonthviewercount': '0',
-    'filtersidebar': 'False',
-    'filtersidebarwidth': '250',
     'statusbar': 'True',
     'toolbar': '(32, 32)',
     'completedtasks': 'True',

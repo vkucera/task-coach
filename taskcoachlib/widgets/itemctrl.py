@@ -169,7 +169,7 @@ class Column(object):
         return self.__renderCallback(*args, **kwargs)
 
     def defaultRenderer(self, *args, **kwargs):
-        return args[0]
+        return unicode(args[0])
 
     def alignment(self):
         return self.__alignment

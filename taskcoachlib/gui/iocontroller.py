@@ -1,7 +1,7 @@
 import wx, os, sys, codecs, traceback
 import meta, persistence
 from i18n import _
-import domain.task as task
+from domain import task
 
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,

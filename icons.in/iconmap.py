@@ -63,8 +63,6 @@ iconlist = [
 ('colorize', 'actions', 'colorize', [22]),
 ('windows', 'apps', 'window_list', [22]),
 ('email', 'apps', 'email', [16]),
-('fold', 'actions', '2uparrow', [16]),
-('unfold', 'actions', '2downarrow', [16]),
 ('behavior', 'actions', 'misc', [22]),
 ('attachment', 'actions', 'attach', [16, 22])]
 

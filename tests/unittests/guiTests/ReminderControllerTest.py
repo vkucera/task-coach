@@ -28,7 +28,7 @@ class ReminderControllerTest(test.TestCase):
     def testClockTriggersReminder(self):
         self.task.setReminder(self.reminderDateTime)
         date.Clock().notify(now=self.reminderDateTime)
-        self.assertEqual([self.task.subject()], 
+        self.assertEqual([self.task], 
                          self.reminderController.messages)
         
     def testAfterReminderClockEventIsRemovedFromPublisher(self):
@@ -75,24 +75,22 @@ class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
 
     def testClockNotificationResultsInTwoMessages(self):
         date.Clock().notify(now=self.reminderDateTime)
-        self.assertEqualLists([self.task1.subject(), self.task2.subject()], 
+        self.assertEqualLists([self.task1, self.task2], 
             self.reminderController.messages)
 
     def testChangeOneReminder(self):
         self.task1.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
         date.Clock().notify(now=self.reminderDateTime + date.TimeDelta(hours=1))
-        self.assertEqualLists([task.subject() for task in self.task1, 
-            self.task2], self.reminderController.messages)
+        self.assertEqualLists([self.task1, self.task2], 
+                              self.reminderController.messages)
                          
     def testChangeOneReminderDoesNotAffectTheOther(self):
         self.task1.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
         date.Clock().notify(now=self.reminderDateTime)
-        self.assertEqual([self.task2.subject()], 
-                         self.reminderController.messages)
+        self.assertEqual([self.task2], self.reminderController.messages)
                                                   
     def testRemoveOneTaskDoesNotAffectTheOther(self):
         self.taskList.remove(self.task1)
         date.Clock().notify(now=self.reminderDateTime)
-        self.assertEqual([self.task2.subject()], 
-                         self.reminderController.messages)
+        self.assertEqual([self.task2], self.reminderController.messages)
         

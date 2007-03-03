@@ -23,7 +23,7 @@ class SettingsTestCase(test.TestCase):
 class SettingsTest(SettingsTestCase):
     def testDefaults(self):
         self.failUnless(self.settings.has_section('view'))
-        self.assertEqual('False', self.settings.get('view', 'filtersidebar'))
+        self.assertEqual('True', self.settings.get('view', 'statusbar'))
 
     def testSet(self):
         self.settings.set('view', 'toolbarsize', '16')

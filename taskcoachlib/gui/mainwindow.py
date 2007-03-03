@@ -47,14 +47,12 @@ class MainWindow(WindowWithPersistentDimensions):
         self.settings = settings
         self.effortList = effortList
         self.Bind(wx.EVT_CLOSE, self.onClose)
-        self.Bind(wx.EVT_SIZE, self.onSize)
-
         self.splash = splash
-
         self.createWindowComponents()
         self.initWindowComponents()
         self.initWindow()
         self.registerForWindowComponentChanges()
+        wx.CallAfter(self.hideSplash)
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
@@ -63,7 +61,6 @@ class MainWindow(WindowWithPersistentDimensions):
             self.settings, 'mainviewer') 
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.taskFile, self.effortList, self.taskFile.categories())
-        self.createFilterSideBar()
         self.initLayout()
         viewerfactory.addTaskViewers(self.viewer, self.taskFile, 
             self.uiCommands, self.settings, self.taskFile.categories())
@@ -78,36 +75,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.createTaskBarIcon(self.uiCommands)
         self.reminderController = \
             remindercontroller.ReminderController(self.taskFile)
-        
-    def createFilterSideBar(self):
-        defaultWidth = self.settings.getint('view', 'filtersidebarwidth')
-        self.filterSideBarWindow = wx.SashLayoutWindow(self,
-            style=wx.NO_BORDER|wx.SW_3D|wx.CLIP_CHILDREN)
-        self.filterSideBarWindow.SetSashVisible(wx.SASH_RIGHT, True)
-        self.filterSideBarWindow.SetOrientation(wx.LAYOUT_VERTICAL)
-        self.filterSideBarWindow.SetAlignment(wx.LAYOUT_LEFT)
-        self.filterSideBarWindow.SetDefaultSize((defaultWidth, 1000))
-        self.filterSideBarWindow.Bind(wx.EVT_SASH_DRAGGED, self.onDragSash)
-        self.filterSideBarFoldPanel = \
-            widgets.FoldPanelBar(self.filterSideBarWindow)
-        images = wx.ImageList(16, 16)
-        images.Add(wx.ArtProvider_GetBitmap('unfold', size=(16, 16)))
-        images.Add(wx.ArtProvider_GetBitmap('fold', size=(16, 16)))
-        panel = self.filterSideBarFoldPanel.AddFoldPanel( \
-            _("Filter by category"), collapsed=False, foldIcons=images)
-        categoriesPanel = filter.CategoriesFilterPanel(panel, 
-            self.taskFile.categories(), self.settings)
-        self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, categoriesPanel)
-        panel = self.filterSideBarFoldPanel.AddFoldPanel( \
-            _("Filter by status"), collapsed=False, foldIcons=images)
-        statusPanel = filter.StatusFilterPanel(panel, self.taskFile, 
-            self.settings)
-        self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, statusPanel)
-        panel = self.filterSideBarFoldPanel.AddFoldPanel( \
-            _("Filter by due date"), collapsed=False, foldIcons=images)
-        dueDatePanel = filter.DueDateFilterPanel(panel, self.settings)
-        self.filterSideBarFoldPanel.AddFoldPanelWindow(panel, dueDatePanel)
-        
+                
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
         self._sizer.Add(self.viewer, proportion=1, flag=wx.EXPAND)
@@ -130,7 +98,6 @@ class MainWindow(WindowWithPersistentDimensions):
 
     def initWindowComponents(self):
         self.onShowToolBar()
-        self.onShowFilterSideBar()
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
         wx.CallAfter(self.onShowStatusBar) 
@@ -142,40 +109,20 @@ class MainWindow(WindowWithPersistentDimensions):
             eventType='view.statusbar')
         patterns.Publisher().registerObserver(self.onShowToolBar, 
             eventType='view.toolbar')
-        patterns.Publisher().registerObserver(self.onShowFilterSideBar,
-            eventType='view.filtersidebar')
 
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
-            if self.splash:
-                self.splash.Hide()
             help.showTips(self, self.settings)
-
-    def onSize(self, event):
-        wx.LayoutAlgorithm().LayoutWindow(self, self.panel)
-        # Make sure WindowWithPersistentDimensions.onSize is invoked too:
-        event.Skip() 
-
-    def onDragSash(self, event):
-        width = event.GetDragRect().width
-        if width < 50:
-            self.settings.set('view', 'filtersidebar', 'False')
-        else:
-            self.settings.set('view', 'filtersidebarwidth', str(width))
-            self.filterSideBarWindow.SetDefaultSize((width, 1000))
-            wx.LayoutAlgorithm().LayoutWindow(self, self.panel)
+            
+    def hideSplash(self):
+        if self.splash:
+            self.splash.Hide()
                          
     def onShowStatusBar(self, *args, **kwargs):
         self.showStatusBar(self.settings.getboolean('view', 'statusbar'))
 
     def onShowToolBar(self, *args, **kwargs):
         self.showToolBar(eval(self.settings.get('view', 'toolbar')))
-
-    def onShowFilterSideBar(self, *args, **kwargs):
-        self.filterSideBarWindow.Show(self.settings.getboolean('view',
-            'filtersidebar'))
-        wx.LayoutAlgorithm().LayoutWindow(self, self.panel)
-        self.filterSideBarFoldPanel.SetFocus()
 
     def createTaskBarIcon(self, uiCommands):
         if self.canCreateTaskBarIcon():

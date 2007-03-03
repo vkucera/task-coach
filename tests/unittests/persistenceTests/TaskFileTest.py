@@ -198,15 +198,15 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
-        self.task.addCategory('category')
+        self.task.addCategory(self.category)
         self.failUnless(self.taskFile.needSave())
     
     def testNeedSave_AfterRemoveCategory(self):
-        self.task.addCategory('category')
+        self.task.addCategory(self.category)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
-        self.task.removeCategory('category')
+        self.task.removeCategory(self.category)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterChangePriority(self):

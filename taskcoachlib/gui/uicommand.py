@@ -1,7 +1,7 @@
 import wx, patterns, config, gui, meta, command, help, widgets, urllib, os
 from gui import render
 from i18n import _
-import domain.task as task
+from domain import task
 import thirdparty.desktop as desktop
 import persistence.html
 
@@ -98,8 +98,9 @@ class UICommand(object):
         if self.enabled(event):
             self.doCommand(event)
             
-    __call__ = onCommandActivate
-
+    def __call__(self, *args, **kwargs):
+        return self.onCommandActivate(*args, **kwargs)
+        
     def doCommand(self, event):
         raise NotImplementedError
 
@@ -111,7 +112,6 @@ class UICommand(object):
             if self.menuText == '?':            
                 shortHelp = wx.MenuItem.GetLabelFromText(self.getMenuText())
                 self.toolbar.SetToolShortHelp(self.id, shortHelp)
-                #print self.toolbar.GetToolShortHelp(self.id)
 
     def enabled(self, event):
         ''' Can be overridden in a subclass. '''
@@ -885,18 +885,28 @@ class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
              if not task.completed()]
 
 
-class TaskDragAndDrop(TaskListCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(TaskDragAndDrop, self).__init__(*args, **kwargs)
-        
-    def doCommand(self, event):
-        print 'drop %s on %s'%(self.viewer.draggedItems(), self.viewer.curselection())
-        dragAndDropCommand = command.DragAndDropTaskCommand( \
-            self.taskList, self.viewer.draggedItems(), 
-            drop=self.viewer.curselection())
+class DragAndDropCommand(ViewerCommand):
+    def onCommandActivate(self, dropItemIndex, dragItemIndex):
+        ''' Override omCommandActivate to be able to accept two items instead
+            of one event. '''
+        self.doCommand(dropItemIndex, dragItemIndex)
+
+    def doCommand(self, dropItemIndex, dragItemIndex):
+        dragItem = [self.viewer.model()[dragItemIndex]]
+        if dropItemIndex >= 0:
+            dropItem = [self.viewer.model()[dropItemIndex]]
+        else:
+            dropItem = None
+        dragAndDropCommand = self.createCommand(dragItem, dropItem)
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
-        print 'drop:end'
+
+
+class TaskDragAndDrop(TaskListCommand, DragAndDropCommand):
+    def createCommand(self, dragItem, dropItem):
+        return command.DragAndDropTaskCommand(self.taskList, dragItem, 
+                                              drop=dropItem)
+
 
 class TaskMail(NeedsSelectedTasks, ViewerCommand):
     def doCommand(self, event):
@@ -1083,19 +1093,10 @@ class CategoryEdit(NeedsSelectedCategory, ViewerCommand, CategoriesCommand):
         dialog.Show(show)
 
 
-class CategoryDragAndDrop(CategoriesCommand, ViewerCommand):
-    def doCommand(self, event):
-        # CustomTreeCtrl doesn't change the selection to the drop item when
-        # dropping, so we have to get the drop item from the event
-        if event.GetItem():
-            dropItemIndex = self.viewer.getWidget().index(event.GetItem())
-            dropItems = [self.viewer.model()[dropItemIndex]]
-        else:
-            dropItems = []
-        dragAndDropCommand = command.DragAndDropCategoryCommand( \
-            self.categories, self.viewer.draggedItems(), drop=dropItems)
-        if dragAndDropCommand.canDo():
-            dragAndDropCommand.do()
+class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
+    def createCommand(self, dragItem, dropItem):
+        return command.DragAndDropCategoryCommand(self.categories, dragItem, 
+                                                  drop=dropItem)
 
                                                         
 class DialogCommand(UICommand):
@@ -1398,10 +1399,6 @@ class UICommands(dict):
         self['viewstatusbar'] = UICheckCommand(settings=settings, 
             menuText=_('Status&bar'), helpText=_('Show/hide status bar'), 
             setting='statusbar')
-        self['viewfiltersidebar'] = UICheckCommand(settings=settings,
-            menuText=_('&Filter sidebar'), 
-            helpText=_('Show/hide filter sidebar'),
-            setting='filtersidebar')
 
         # View tasks due before commands
         for value, menuText, helpText in \

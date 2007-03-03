@@ -27,14 +27,6 @@ class MainWindowTest(test.wxTestCase):
         self.settings.set('view', 'statusbar', 'False')
         self.failIf(self.mainwindow.GetStatusBar().IsShown())
 
-    def testFilterSideBar_Show(self):
-        self.settings.set('view', 'filtersidebar', 'True')
-        self.failUnless(self.mainwindow.filterSideBarWindow.IsShown())
-        
-    def testFilterSideBar_Hide(self):
-        self.settings.set('view', 'filtersidebar', 'False')
-        self.failIf(self.mainwindow.filterSideBarWindow.IsShown())
-
     def testTitle_Default(self):
         self.assertEqual(meta.name, self.mainwindow.GetTitle())
         
