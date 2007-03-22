@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 import widgets, wx, meta
 from i18n import _
 
@@ -88,16 +90,17 @@ class LanguagePage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(LanguagePage, self).__init__(*args, **kwargs)
         self.addChoiceSetting('view', 'language', _('Language'), 
-            [('en_US', _('English (US)')), 
-             ('en_GB', _('English (UK)')),
-             ('de_DE', _('German')),
-             ('nl_NL', _('Dutch')),
-             ('fr_FR', _('French')),
-             ('zh_CN', _('Simplified Chinese')),
-             ('ja_JP', _('Japanese')),
-             ('ru_RU', _('Russian')),
-             ('es_ES', _('Spanish')),
-             ('hu_HU', _('Hungarian'))],
+            [('en_US', 'English (US)'), 
+             ('en_GB', 'English (UK)'),
+             ('de_DE', 'Deutsch (German)'),
+             ('nl_NL', 'Nederlands (Dutch)'),
+             ('fr_FR', u'Français (French)'),
+             ('zh_CN', u'简体中文 (Simplified Chinese)'),
+             ('ja_JP', u'日本語 (Japanese)'),
+             ('ru_RU', u'Русский (Russian)'),
+             ('es_ES', u'Español (Spanish)'),
+             ('sk_SK', u'Slovenčina (Slovak)'),
+             ('hu_HU', 'Magyar (Hungarian)')],
              _('This setting will take effect after you restart %s')%meta.name)
         self.fit()
 

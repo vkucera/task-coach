@@ -66,10 +66,13 @@ class Viewer(wx.Panel):
             self.selectEventType(), self.curselection()))
     
     def refresh(self):
-        self.widget.refresh(len(self.list))
+        if self.list:
+            self.widget.refresh(len(self.list))
+        else:
+            self.widget.refresh(len(self.list))
         
     def curselection(self):
-        return [self.list[index] for index in self.widget.curselection()]
+        return [self.getItemWithIndex(index) for index in self.widget.curselection()]
         
     def size(self):
         return self.widget.GetItemCount()
@@ -104,7 +107,13 @@ class ListViewer(Viewer):
         ''' Iterate over the items in the model. '''
         for item in self.model():
             yield item
+    
+    def getItemWithIndex(self, index):
+        return self.model()[index]
             
+    def getIndexOfItem(self, item):
+        return self.model().index(item)
+    
 
 class TreeViewer(Viewer):
     def expandAll(self):
@@ -125,9 +134,6 @@ class TreeViewer(Viewer):
     def isSelectionCollapsable(self):
         return self.widget.isSelectionCollapsable()
         
-    def draggedItems(self):
-        return [self.list[index] for index in self.widget.draggedItems()]
-
     def isTreeViewer(self):
         return True
         
@@ -144,7 +150,28 @@ class TreeViewer(Viewer):
             for child in yieldAllChildren(item):
                 yield child
 
+    def getItemWithIndex(self, index):
+        children = [child for child in self.model() if child in self.model().rootItems()]
+        for i in index:
+            item = children[i]
+            children = [child for child in self.model() if child in item.children()]
+        return item
 
+    def getIndexOfItem(self, item):
+        parent = item.parent()
+        if parent:
+            return self.getIndexOfItem(parent) + (parent.children().index(item),)
+        else:
+            return (self.model().rootItems().index(item),)
+        
+    def getChildrenCount(self, index):
+        if index == ():
+            return len(self.model().rootItems())
+        else:
+            item = self.getItemWithIndex(index)
+            return len([child for child in item.children() if child in self.model()])
+    
+    
 class UpdatePerSecondViewer(Viewer, date.ClockObserver):
     def __init__(self, *args, **kwargs):
         self.__trackedItems = set()
@@ -162,12 +189,12 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
         raise NotImplementedError
 
     def onAddItem(self, event):
-        super(UpdatePerSecondViewer, self).onAddItem(event)
         self.addTrackedItems(self.trackedItems(event.values()))
+        super(UpdatePerSecondViewer, self).onAddItem(event)
 
     def onRemoveItem(self, event):
-        super(UpdatePerSecondViewer, self).onRemoveItem(event)
         self.removeTrackedItems(self.trackedItems(event.values()))
+        super(UpdatePerSecondViewer, self).onRemoveItem(event)
 
     def onStartTracking(self, event):
         item = event.source()
@@ -186,7 +213,7 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
             # notification before we receive a 'remove item' notification for
             # an item that has been removed from the observed collection.
             try:
-                self.widget.refreshItem(self.list.index(item))
+                self.widget.RefreshItem(self.getIndexOfItem(item))
             except ValueError:
                 trackedItemsToRemove.append(item)
         self.removeTrackedItems(trackedItemsToRemove)
@@ -250,7 +277,7 @@ class ViewerWithColumns(Viewer):
     def onAttributeChanged(self, event):
         item = event.source()
         if item in self.list:
-            self.widget.refreshItem(self.list.index(item))
+            self.widget.RefreshItem(self.getIndexOfItem(item))
         
     def columns(self):
         return self._columns
@@ -274,16 +301,14 @@ class ViewerWithColumns(Viewer):
         column = self.visibleColumns()[visibleColumnIndex]
         return column.visibilitySetting() != None
         
-    def getItemText(self, index, column=None):
-        item = self.list[index]
-        if not column:
-            column = self.columns()[0]
+    def getItemText(self, index, column=0):
+        item = self.getItemWithIndex(index)
+        column = self.visibleColumns()[column]
         return column.render(item)
     
-    def getItemImage(self, index, column=None, expanded=False):
-        item = self.list[index]
-        if not column:
-            column = self.columns()[0]
+    def getItemImage(self, index, column=0, expanded=False):
+        item = self.getItemWithIndex(index)
+        column = self.visibleColumns()[column]
         if expanded:
             return column.imageIndex(item, expanded) 
         else:
@@ -329,7 +354,7 @@ class TaskViewer(UpdatePerSecondViewer):
             self.isTreeViewer())
 
     def getItemAttr(self, index):
-        task = self.list[index]
+        task = self.getItemWithIndex(index)
         return wx.ListItemAttr(color.taskColor(task, self.settings))
 
     def __registerForColorChanges(self):
@@ -379,7 +404,7 @@ class TaskViewer(UpdatePerSecondViewer):
         ''' This method is called by the widget when one or more files
             are dropped on a task. '''
         addAttachment = command.AddAttachmentToTaskCommand(self.list,
-            [self.list[index]], attachments=filenames)
+            [self.getItemWithIndex(index)], attachments=filenames)
         addAttachment.do()
 
     def widgetCreationKeywordArguments(self):
@@ -510,7 +535,7 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
         else:
             return normalImageIndex
                     
-    def attachmentImageIndex(self, task):
+    def attachmentImageIndex(self, task, expanded=False):
         if task.attachments():
             return self.imageIndex['attachment'] 
         else:
@@ -558,8 +583,8 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
-            self.getItemAttr, self.getItemId, self.getRootIndices, 
-            self.getChildIndices, self.onSelect, self.uiCommands['edittask'], 
+            self.getItemAttr,
+            self.getChildrenCount, self.onSelect, self.uiCommands['edittask'], 
             self.uiCommands['draganddroptask'], self.createTaskPopupMenu(),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)
@@ -577,43 +602,17 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
             treeMode=True)
     
     def getItemText(self, index):
-        task = self.list[index]
+        task = self.getItemWithIndex(index)
         return task.subject()
     
     def getItemImage(self, index, expanded=False):
-        task = self.list[index]
+        task = self.getItemWithIndex(index)
         normalImageIndex, expandedImageIndex = self.getImageIndices(task)
         if expanded:
             return expandedImageIndex 
         else:
             return normalImageIndex
-        
-    def getItemChildIndex(self, index):
-        task = self.list[index]
-        if task.parent():
-            parentIndex = self.list.index(task.parent())
-            childrenBeforeThisTask = [child for child in \
-                self.list[parentIndex+1:index] \
-                if task.parent() == child.parent()]
-            return len(childrenBeforeThisTask)
-        else:
-            return len([child for child in self.list[:index] \
-                        if child.parent() is None])
-                   
-    def getItemId(self, index):
-        task = self.list[index]
-        return task.id()
-
-    def getRootIndices(self):
-        return [self.list.index(task) for task in self.list.rootItems()]
-        
-    def getChildIndices(self, index):
-        task = self.list[index]
-        childIndices = [self.list.index(child) for child in task.children() \
-                        if child in self.list]
-        childIndices.sort()
-        return childIndices
-
+                           
     def renderSubject(self, task):
         return render.subject(task, recursively=False)
 
@@ -623,8 +622,8 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
-            self.getItemImage, self.getItemAttr, self.getItemId, 
-            self.getRootIndices, self.getChildIndices, self.onSelect, 
+            self.getItemImage, self.getItemAttr,
+            self.getChildrenCount, self.onSelect, 
             self.uiCommands['edittask'], self.uiCommands['draganddroptask'],
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
@@ -636,7 +635,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
 
     def getItemImage(self, *args, **kwargs):
         return TaskViewerWithColumns.getItemImage(self, *args, **kwargs)
-    
+
     
 class CategoryViewer(TreeViewer):
     def __init__(self, *args, **kwargs):
@@ -648,9 +647,8 @@ class CategoryViewer(TreeViewer):
         
     def createWidget(self):
         widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemImage,
-            self.getItemAttr, self.getItemId, self.getRootIndices, 
-            self.getChildIndices, self.getIsItemChecked, self.onSelect, 
-            self.onCheck,
+            self.getItemAttr, self.getChildrenCount, self.getIsItemChecked, 
+            self.onSelect, self.onCheck,
             self.uiCommands['editcategory'], 
             self.uiCommands['draganddropcategory'], 
             self.createCategoryPopupMenu())
@@ -662,15 +660,15 @@ class CategoryViewer(TreeViewer):
     def onCategoryChanged(self, event):
         category = event.source()
         if category in self.list:
-            self.widget.refreshItem(self.list.index(category))
+            self.widget.RefreshItem(self.getIndexOfItem(category))
 
     def onCheck(self, event):
-        category = self.list[self.widget.index(event.GetItem())]
+        category = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
         category.setFiltered(event.GetItem().IsChecked())
         self.onSelect(event) # Notify status bar
             
     def getItemText(self, index):    # FIXME: pull up to TreeViewer
-        category = self.list[index]
+        category = self.getItemWithIndex(index)
         return category.subject()
     
     def getItemImage(self, index, expanded=False):
@@ -679,24 +677,8 @@ class CategoryViewer(TreeViewer):
     def getItemAttr(self, index):
         return wx.ListItemAttr()
     
-    def getItemId(self, index):
-        category = self.list[index]
-        return id(category)
-    
-    def getRootIndices(self):
-        result = [self.list.index(category) for category in self.list.rootItems()]
-        result.sort()
-        return result
-    
-    def getChildIndices(self, index):    # FIXME: pull up to TreeViewer
-        category = self.list[index]
-        childIndices = [self.list.index(child) for child in category.children() \
-                        if child in self.list]
-        childIndices.sort()
-        return childIndices
-    
     def getIsItemChecked(self, index):
-        return self.list[index].isFiltered()
+        return self.getItemWithIndex(index).isFiltered()
     
     def createSorter(self, categoryContainer):
         return category.CategorySorter(categoryContainer)

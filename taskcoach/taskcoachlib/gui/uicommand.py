@@ -892,9 +892,9 @@ class DragAndDropCommand(ViewerCommand):
         self.doCommand(dropItemIndex, dragItemIndex)
 
     def doCommand(self, dropItemIndex, dragItemIndex):
-        dragItem = [self.viewer.model()[dragItemIndex]]
+        dragItem = [self.viewer.getItemWithIndex(dragItemIndex)]
         if dropItemIndex >= 0:
-            dropItem = [self.viewer.model()[dropItemIndex]]
+            dropItem = [self.viewer.getItemWithIndex(dropItemIndex)]
         else:
             dropItem = None
         dragAndDropCommand = self.createCommand(dragItem, dropItem)

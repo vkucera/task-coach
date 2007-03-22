@@ -45,13 +45,13 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
             self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, editCommand)  
 
     def OnGetItemText(self, rowIndex, columnIndex):
-        return self.getItemText(rowIndex, self._getColumn(columnIndex))
+        return self.getItemText(rowIndex, columnIndex)
 
     def OnGetItemImage(self, rowIndex):
-        return self.getItemImage(rowIndex, self._getColumn(0))[0]
+        return self.getItemImage(rowIndex, 0)[0]
     
     def OnGetItemColumnImage(self, rowIndex, columnIndex):
-        return self.getItemImage(rowIndex, self._getColumn(columnIndex))
+        return self.getItemImage(rowIndex, columnIndex)
 
     def OnGetItemAttr(self, rowIndex):
         # We need to keep a reference to the item attribute to prevent it
@@ -61,6 +61,12 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
         
     def onSelect(self, event):
         self.selectCommand()
+
+    def RefreshItems(self):
+        startRow = self.GetTopItem()
+        stopRow = min(startRow + self.GetCountPerPage(), 
+                      self.GetItemCount() - 1)
+        super(VirtualListCtrl, self).RefreshItems(startRow, stopRow)
         
     def refresh(self, count):
         ''' Refresh the contents of the (visible part of the) ListCtrl '''
@@ -68,10 +74,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
         if count == 0:
             self.DeleteAllItems()
         else:
-            startRow = self.GetTopItem()
-            stopRow = min(startRow + self.GetCountPerPage(), 
-                          self.GetItemCount() - 1)
-            self.RefreshItems(startRow, stopRow)
+            self.RefreshItems()
         
     def refreshItem(self, index):
         self.RefreshItem(index)

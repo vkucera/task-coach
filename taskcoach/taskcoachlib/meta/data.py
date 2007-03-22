@@ -1,7 +1,7 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
 version = '0.62.0'
-release_month = 'February'
+release_month = 'March'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 'June', 
                     'July', 'August', 'September', 'October', 'November', 
                     'December'].index(release_month) + 1)
@@ -42,6 +42,7 @@ languages = {
     'ChineseSimplified': 'zh_CN',
     'Japanese': 'ja_JP',
     'Spanish': 'es_ES',
+    'Slovak': 'sk_SK',
     'Hungarian': 'hu_HU'}
 languages_list = ','.join(languages.keys())
 

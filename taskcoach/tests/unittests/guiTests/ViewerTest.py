@@ -60,11 +60,13 @@ class TaskListViewerTest(test.wxTestCase):
                 self.categories), self.settings, categories=self.categories)
 
     def testGetTimeSpent(self):
-        timeSpent = self.viewer.getItemText(0, self.viewer.columns()[7])
+        self.settings.set('view', 'timespent', 'True')
+        timeSpent = self.viewer.getItemText(0, 3)
         self.assertEqual("0:00:00", timeSpent)
 
     def testGetTotalTimeSpent(self):
-        totalTimeSpent = self.viewer.getItemText(0, self.viewer.columns()[8])
+        self.settings.set('view', 'totaltimespent', 'True')
+        totalTimeSpent = self.viewer.getItemText(0, 3)
         self.assertEqual("0:00:00", totalTimeSpent)
 
     def testChangeSubject(self):
@@ -223,12 +225,10 @@ class CompositeEffortListViewerTest(test.wxTestCase):
             taskList, {}, self.settings)
             
     def testGetItemText_TimeSpent(self):
-        self.assertEqual('0:00:00', 
-                         self.viewer.getItemText(0, self.viewer.columns()[2]))
+        self.assertEqual('0:00:00', self.viewer.getItemText(0, 2))
         
     def testGetItemText_Revenue(self):
-        self.assertEqual('0.00', 
-                         self.viewer.getItemText(0, self.viewer.columns()[3]))
+        self.assertEqual('0.00', self.viewer.getItemText(0, 3))
     
 
 class UpdatePerSecondViewerTests(object):

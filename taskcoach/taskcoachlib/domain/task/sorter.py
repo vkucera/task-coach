@@ -42,7 +42,7 @@ class Sorter(patterns.ListDecorator):
         super(Sorter, self).__init__(*args, **kwargs)
         
     def sortEventType(self):
-        return '%s.sorted'%self.__class__
+        return '%s(%s).sorted'%(self.__class__, id(self))
 
     def extendSelf(self, tasks):
         super(Sorter, self).extendSelf(tasks)

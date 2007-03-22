@@ -253,28 +253,41 @@ class CategoriesPage(TaskEditorPage):
         self.__categories = category.CategorySorter(categories)
         categoriesBox = widgets.BoxWithBoxSizer(self, label=_('Categories'))
         self._treeCtrl = widgets.CheckTreeCtrl(categoriesBox, 
-            lambda index: self.__categories[index].subject(),
+            lambda index: self.getCategoryWithIndex(index).subject(),
             lambda index, expanded=False: -1, lambda index: customtree.TreeItemAttr(),
-            lambda index: id(self.__categories[index]), 
-            lambda: sorted([index for index in range(len(self.__categories)) if \
-                     self.__categories[index] in self.__categories.rootItems()]),
-            lambda parentIndex: [index for index in range(len(self.__categories)) if \
-                     self.__categories[index] in self.__categories[parentIndex].children()], 
-            lambda index: task in self.__categories[index].tasks(),
+            self.getChildrenCount,
+            lambda index: task in self.getCategoryWithIndex(index).tasks(),
             lambda *args: None, lambda *args: None, lambda *args: None,
             lambda *args: None)
         categoriesBox.add(self._treeCtrl, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
         self.add(categoriesBox)
         self.fit()
+
+    def getCategoryWithIndex(self, index):
+        children = self.__categories.rootItems()
+        for i in index:
+            category = children[i]
+            children = [child for child in category.children() \
+                        if child in self.__categories]
+        return category
+    
+    def getChildrenCount(self, index): # FIXME: duplication with viewers
+        if index == ():
+            return len(self.__categories.rootItems())
+        else:
+            category = self.getCategoryWithIndex(index)
+            return len(category.children())
         
     def ok(self):
         self._treeCtrl.ExpandAll(self._treeCtrl.GetRootItem())
-        for index in range(len(self.__categories)):
-            if self._treeCtrl[index].IsChecked():
-                self.__categories[index].addTask(self._task)
+        for item in self._treeCtrl.GetItemChildren(recursively=True):
+            index = self._treeCtrl.GetIndexOfItem(item)
+            category = self.getCategoryWithIndex(index)
+            if item.IsChecked():
+                category.addTask(self._task)
             else:
-                self.__categories[index].removeTask(self._task)
+                category.removeTask(self._task)
     
 
 class AttachmentPage(TaskEditorPage):
