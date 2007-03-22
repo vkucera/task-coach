@@ -29,7 +29,7 @@ behavior.'''),
         Feature('''The toolbar buttons for 'new item', 'new sub item',
 'edit item' and 'delete item' now work for tasks, effort records
 and categories, depending on what view is active.'''),
-        Feature('''Added a category column for task viewers.''', '?'),
+        Feature('''Added a category column for task viewers.''', '1629283'),
         Feature('''Added an attachment column that shows whether a task
 has one or more attachments.'''),
         Feature('''Added an 'Open all attachments' menu item for tasks'''),

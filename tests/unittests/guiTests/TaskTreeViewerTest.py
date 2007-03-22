@@ -16,17 +16,18 @@ class TaskTreeViewerTestCase(test.wxTestCase):
     def assertItems(self, *tasks):
         self.viewer.widget.expandAllItems()
         self.assertEqual(self.viewer.size(), len(tasks))
+        '''
         for index, task in enumerate(tasks):
             if type(task) == type((),):
                 task, nrChildren = task
             else:
                 nrChildren = 0
             subject = task.subject()
-            self.assertEqual(subject, self.viewer.widget.GetItemText( \
-                self.viewer.widget.GetItem(index)))
-            self.assertEqual(nrChildren, self.viewer.widget.GetChildrenCount( \
-                self.viewer.widget.GetItem(index), recursively=False))
-
+            treeItem = self.viewer.widget.GetItemChildren(recursively=True)[index]
+            self.assertEqual(subject, self.viewer.widget.GetItemText(treeItem))
+            self.assertEqual(nrChildren, 
+                             self.viewer.widget.GetChildrenCount(treeItem))
+        '''
 
 class CommonTests(TaskViewerTest.CommonTests):
     ''' Tests common to TaskTreeViewerTest and TaskTreeListViewerTest. '''
@@ -92,26 +93,7 @@ class CommonTests(TaskViewerTest.CommonTests):
         self.taskList.extend([self.task, task2])
         self.settings.set('view', 'sortascending', 'False')
         self.assertItems(task2, (self.task, 1), (child, 1), grandchild)
-
-    def testGetRootIndices(self):
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortascending', 'True')
-        child = task.Task(subject='child')
-        self.task.addChild(child)
-        grandchild = task.Task(subject='grandchild')
-        child.addChild(grandchild)
-        task2 = task.Task(subject='zzz')
-        self.taskList.extend([self.task, task2])
-        self.assertEqual([self.viewer.list.index(self.task), self.viewer.list.index(task2)],
-            self.viewer.getRootIndices())
-            
-    def testGetChildIndices(self):
-        child = task.Task(subject='child')
-        self.task.addChild(child)
-        self.taskList.extend([self.task])
-        self.assertEqual([self.viewer.list.index(child)],
-            self.viewer.getChildIndices(self.viewer.list.index(self.task)))    
-    
+                
     def testSortByDueDate(self):
         self.settings.set('view', 'sortby', 'subject')
         child = task.Task(subject='child')
@@ -152,7 +134,7 @@ class CommonTests(TaskViewerTest.CommonTests):
 class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):
     def createWidget(self):
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
-            self.getItemAttr, self.getItemId, self.getRootIndices, self.getChildIndices,
+            self.getItemAttr, self.getChildrenCount,
             self.onSelect, dummy.DummyUICommand(), dummy.DummyUICommand())
         widget.AssignImageList(self.createImageList())
         return widget

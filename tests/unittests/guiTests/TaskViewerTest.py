@@ -51,5 +51,5 @@ class CommonTests(object):
     
     def testOnDropFiles(self):
         self.taskList.append(task.Task())
-        self.viewer.onDropFiles(0, ['filename'])
+        self.viewer.onDropFiles((0,), ['filename'])
         self.assertEqual(['filename'], self.taskList[0].attachments())

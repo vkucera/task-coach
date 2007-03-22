@@ -29,7 +29,10 @@ class DummyWidget(wx.Frame):
     def refresh(self, *args, **kwargs):
         pass
 
-    def refreshItem(self, index, ):
+    def RefreshItem(self, index):
+        self.refreshedItems.append(index)
+        
+    def refreshItem(self, index):
         self.refreshedItems.append(index)
 
     def GetColumnWidth(self, column):
@@ -79,6 +82,9 @@ class ViewerWithDummyWidget(gui.viewer.Viewer):
 
     def _createColumns(self):
         return []
+    
+    def getItemWithIndex(self, index):
+        return self.model()[index]
 
     
 class TaskViewerWithDummyWidget(ViewerWithDummyWidget, gui.viewer.TaskViewer):
