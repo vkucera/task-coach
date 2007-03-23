@@ -52,7 +52,8 @@ class _CtrlWithItemPopupMenu(_CtrlWithPopupMenu):
         # Make sure the item under the mouse is selected because that
         # is what users expect and what is most user-friendly. Not all
         # widgets do this by default, e.g. the TreeListCtrl does not.
-        item, flags, column = self.HitTest(event.GetPoint())
+        item, flags, column = self.HitTest(event.GetPoint(), 
+                                           alwaysReturnColumn=True)
         if not self._itemIsOk(item):
             return
         if not self.IsSelected(item):
@@ -94,12 +95,12 @@ class _CtrlWithFileDropTarget(_CtrlWithItems):
             self.GetMainWindow().SetDropTarget(dropTarget)
 
     def onDropFiles(self, x, y, filenames):
-        item, flags, column = self.HitTest((x, y))
+        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
         if self._itemIsOk(item):
             self.__onDropFilesCallback(self.index(item), filenames)
         
     def onDragOver(self, x, y, defaultResult):
-        item, flags, column = self.HitTest((x, y))
+        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
         if self._itemIsOk(item):
             if flags & wx.TREE_HITTEST_ONITEMBUTTON:
                 self.Expand(item)

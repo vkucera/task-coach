@@ -362,7 +362,7 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
     def RefreshItemRecursively(self, item, itemIndex):
         ''' Refresh the item and its children recursively. '''
         hasChildren = bool(self.OnGetChildrenCount(itemIndex))
-        self.DoRefreshItem(item, itemIndex, hasChildren)
+        item = self.DoRefreshItem(item, itemIndex, hasChildren)
         # We need to refresh the children when the item is expanded and
         # when the item has no children, because in the latter case we
         # might have to delete old children from the tree:
@@ -380,16 +380,14 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         self.RefreshBackgroundColour(item, index)
         self.RefreshItemImage(item, index, hasChildren)
         self.RefreshCheckedState(item, index)
+        return item
 
     def RefreshItemText(self, item, index):
         self.__refreshAttribute(item, index, 'ItemText')
 
     def RefreshColumns(self, item, index):
-        print 'RefreshColumns(item=%s, index=%s)'%(item, index)
         for columnIndex in range(1, self.GetColumnCount()):
-            print 'RefreshColumns columnIndex=%d'%columnIndex
             self.__refreshAttribute(item, index, 'ItemText', columnIndex)
-        print 'RefreshColumns(item=%s, index=%s) done'%(item, index)
 
     def RefreshItemFont(self, item, index):
         self.__refreshAttribute(item, index, 'ItemFont')
