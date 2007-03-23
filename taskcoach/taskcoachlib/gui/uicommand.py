@@ -681,7 +681,8 @@ class HideCurrentColumn(ViewerCommand):
         widget = self.viewer.getWidget()
         x, y = widget.ScreenToClient(wx.GetMousePosition())
         # Use wx.Point because CustomTreeCtrl assumes a wx.Point instance:
-        item, flag, columnIndex = widget.HitTest(wx.Point(x, y))
+        item, flag, columnIndex = widget.HitTest(wx.Point(x, y), 
+                                                 alwaysReturnColumn=True)
         return self.viewer.isHideableColumn(columnIndex)
     
     

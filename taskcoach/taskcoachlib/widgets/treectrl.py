@@ -63,11 +63,9 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
             event.Skip()
         
     def onSelect(self, event):
-        #print 'onSelect:begin'
         if not self._refreshing:
             self.selectCommand()
         event.Skip()
-        #print 'onSelect:end'
                     
     def onDoubleClick(self, event):
         if not self.isCollapseExpandButtonClicked(event):
@@ -75,7 +73,8 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         event.Skip(False)
 
     def isCollapseExpandButtonClicked(self, event):
-        item, flags, column = self.HitTest(event.GetPosition())
+        item, flags, column = self.HitTest(event.GetPosition(), 
+                                           alwaysReturnColumn=True)
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
     
     def __getitem__(self, index):
