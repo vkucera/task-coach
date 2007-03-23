@@ -199,11 +199,14 @@ class _BaseCtrlWithColumns(object):
             self._insertColumn(columnIndex, column)
             
     def _insertColumn(self, columnIndex, column):
+        print '_BaseCtrlWithColumns._insertColumn(columnIndex=%s, column=%s)'%(columnIndex, column.header())
         self.InsertColumn(columnIndex, column.header(), 
             format=column.alignment(), width=column.width)
+        print '_BaseCtrlWithColumn._insertColumn after calling self.InsertColumn'
         columnInfo = self.GetColumn(columnIndex)
         columnInfo.SetImage(column.headerImageIndex())
         self.SetColumn(columnIndex, columnInfo)
+        print '_BaseCtrlWithColumn._insertColumn done'
             
     def _allColumns(self):
         return self.__allColumns

@@ -66,10 +66,7 @@ class Viewer(wx.Panel):
             self.selectEventType(), self.curselection()))
     
     def refresh(self):
-        if self.list:
-            self.widget.refresh(len(self.list))
-        else:
-            self.widget.refresh(len(self.list))
+        self.widget.refresh(len(self.list))
         
     def curselection(self):
         return [self.getItemWithIndex(index) for index in self.widget.curselection()]
@@ -263,15 +260,18 @@ class ViewerWithColumns(Viewer):
             self.__startObserving(column.eventTypes())
     
     def onShowColumn(self, event):
+        print 'ViewerWithColumns.onShowColumn'
         visibilitySetting = tuple(event.type().split('.'))
         for column in self.columns():
             if column.visibilitySetting() == visibilitySetting:
                 show = event.value() == 'True'
+                print '   about to show %s'%column.header()
                 self.widget.showColumn(column, show)
                 if show:
                     self.__startObserving(column.eventTypes())
                 else:
                     self.__stopObserving(column.eventTypes())
+                print '   done showing %s'%column.header()
                 break
                 
     def onAttributeChanged(self, event):
@@ -306,14 +306,11 @@ class ViewerWithColumns(Viewer):
         column = self.visibleColumns()[column]
         return column.render(item)
     
-    def getItemImage(self, index, column=0, expanded=False):
+    def getItemImage(self, index, which, column=0):
         item = self.getItemWithIndex(index)
         column = self.visibleColumns()[column]
-        if expanded:
-            return column.imageIndex(item, expanded) 
-        else:
-            return column.imageIndex(item)
-
+        return column.imageIndex(item, which) 
+        
     def __startObserving(self, eventTypes):
         for eventType in eventTypes:
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
@@ -528,14 +525,14 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             sortOrder = 'descending'
         self.widget.showSortOrder(self.imageIndex[sortOrder])
             
-    def subjectImageIndex(self, task, expanded=False):
+    def subjectImageIndex(self, task, which):
         normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
-        if expanded:
+        if which in [wx.TreeItemIcon_Expanded, wx.TreeItemIcon_SelectedExpanded]:
             return expandedImageIndex 
         else:
             return normalImageIndex
                     
-    def attachmentImageIndex(self, task, expanded=False):
+    def attachmentImageIndex(self, task, which):
         if task.attachments():
             return self.imageIndex['attachment'] 
         else:
@@ -605,10 +602,10 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         task = self.getItemWithIndex(index)
         return task.subject()
     
-    def getItemImage(self, index, expanded=False):
+    def getItemImage(self, index, which):
         task = self.getItemWithIndex(index)
         normalImageIndex, expandedImageIndex = self.getImageIndices(task)
-        if expanded:
+        if which in [wx.TreeItemIcon_Expanded, wx.TreeItemIcon_SelectedExpanded]:
             return expandedImageIndex 
         else:
             return normalImageIndex
@@ -671,7 +668,7 @@ class CategoryViewer(TreeViewer):
         category = self.getItemWithIndex(index)
         return category.subject()
     
-    def getItemImage(self, index, expanded=False):
+    def getItemImage(self, index, which):
         return -1
     
     def getItemAttr(self, index):
@@ -817,7 +814,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     def createFilter(self, taskList):
         return effort.EffortList(taskList)
             
-    def getItemImage(self, index, column=None):
+    def getItemImage(self, index, which, column=0):
         return -1
     
     def getItemAttr(self, index):

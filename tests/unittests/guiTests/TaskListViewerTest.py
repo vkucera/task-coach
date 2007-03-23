@@ -8,18 +8,19 @@ class CommonTests:
     ''' Tests common to all TaskListViewers, i.e. TaskListViewer and
         TaskTreeListViewer. '''
 
+    
     def testSubjectColumnIsVisible(self):
         self.assertEqual(_('Subject'), self.viewer.GetColumn(0).GetText())
-
+    
     def testStartDateColumnIsVisibleByDefault(self):
         self.assertEqual(_('Start date'), self.viewer.GetColumn(1).GetText())
-
+        
     def testDueDateColumnIsVisibleByDefault(self):
         self.assertEqual(_('Due date'), self.viewer.GetColumn(2).GetText())
 
     def testThreeColumnsByDefault(self):
         self.assertEqual(3, self.viewer.GetColumnCount())
-
+    
     def testTurnOffStartDateColumn(self):
         self.settings.set('view', 'startdate', 'False')
         self.assertEqual(_('Due date'), self.viewer.GetColumn(1).GetText())
@@ -31,7 +32,7 @@ class CommonTests:
         self.settings.set('view', 'sortby', 'subject')
         self.assertNotEqual(-1, self.viewer.GetColumn(0).GetImage())
         self.assertEqual(-1, self.viewer.GetColumn(1).GetImage())
-        
+    
     def testColorWhenTaskIsCompleted(self):
         self.taskList.append(self.task)
         self.task.setCompletionDate()

@@ -179,13 +179,21 @@ class TreeAPIHarmonizer(object):
 
     def ExpandAll(self, item=None):
         # TreeListCtrl wants an item as argument. That's an inconsistency with
-        # the TreeCtrl API. 
+        # the TreeCtrl API. Also, TreeCtrl raises a PyAssertionError 
+        # when invoking ExpandAll on a tree with hidden root node. Fix that.
         try:
             super(TreeAPIHarmonizer, self).ExpandAll()
         except TypeError:
             if item is None:
                 item = self.GetRootItem()
             super(TreeAPIHarmonizer, self).ExpandAll(item)
+        except wx.PyAssertionError:
+            rootItem = self.GetRootItem()
+            if rootItem:
+                child, cookie = self.GetFirstChild(rootItem)
+                while child:
+                    self.ExpandAllChildren(child)
+                    child, cookie = self.GetNextChild(rootItem, cookie)
 
 
 class TreeHelper(object):
@@ -196,6 +204,8 @@ class TreeHelper(object):
         ''' Return the children of item as a list. '''
         if not item:
             item = self.GetRootItem()
+            if not item:
+                return []
         children = []
         child, cookie = self.GetFirstChild(item)
         while child:
@@ -375,8 +385,11 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         self.__refreshAttribute(item, index, 'ItemText')
 
     def RefreshColumns(self, item, index):
+        print 'RefreshColumns(item=%s, index=%s)'%(item, index)
         for columnIndex in range(1, self.GetColumnCount()):
+            print 'RefreshColumns columnIndex=%d'%columnIndex
             self.__refreshAttribute(item, index, 'ItemText', columnIndex)
+        print 'RefreshColumns(item=%s, index=%s) done'%(item, index)
 
     def RefreshItemFont(self, item, index):
         self.__refreshAttribute(item, index, 'ItemFont')
