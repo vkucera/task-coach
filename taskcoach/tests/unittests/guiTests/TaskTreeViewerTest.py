@@ -16,7 +16,6 @@ class TaskTreeViewerTestCase(test.wxTestCase):
     def assertItems(self, *tasks):
         self.viewer.widget.expandAllItems()
         self.assertEqual(self.viewer.size(), len(tasks))
-        '''
         for index, task in enumerate(tasks):
             if type(task) == type((),):
                 task, nrChildren = task
@@ -26,8 +25,8 @@ class TaskTreeViewerTestCase(test.wxTestCase):
             treeItem = self.viewer.widget.GetItemChildren(recursively=True)[index]
             self.assertEqual(subject, self.viewer.widget.GetItemText(treeItem))
             self.assertEqual(nrChildren, 
-                             self.viewer.widget.GetChildrenCount(treeItem))
-        '''
+                self.viewer.widget.GetChildrenCount(treeItem, recursively=False))
+
 
 class CommonTests(TaskViewerTest.CommonTests):
     ''' Tests common to TaskTreeViewerTest and TaskTreeListViewerTest. '''

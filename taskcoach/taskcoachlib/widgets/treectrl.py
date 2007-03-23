@@ -112,8 +112,7 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         self.RefreshItems()
                  
     def expandAllItems(self):
-        for item in self.GetItemChildren(recursively=True):
-            self.Expand(item)
+        self.ExpandAll()
 
     def collapseAllItems(self):
         for item in self.GetItemChildren():
@@ -315,8 +314,13 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin,
         else:
             super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader, 
                 *args, **kwargs)
+        # Put a default value in the new column otherwise GetItemText will fail
+        for item in self.GetItemChildren(recursively=True):
+            self.SetItemText(item, '', columnIndex)
         self.SetColumnAlignment(columnIndex, format)
+        print 'treectrl.TreeListCtrl.InsertColumn %s done, before refresh'%columnHeader
         self.RefreshItems()
+        print 'treectrl.TreeListCtrl.InsertColumn %s done, after refresh'%columnHeader
     
     def GetCountPerPage(self):
         ''' ListCtrlAutoWidthMixin expects a GetCountPerPage() method,

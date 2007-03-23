@@ -50,6 +50,7 @@ class CommonTests(object):
             self.viewer.statusMessages())
     
     def testOnDropFiles(self):
-        self.taskList.append(task.Task())
-        self.viewer.onDropFiles((0,), ['filename'])
+        aTask = task.Task()
+        self.taskList.append(aTask)
+        self.viewer.onDropFiles(self.viewer.getIndexOfItem(aTask), ['filename'])
         self.assertEqual(['filename'], self.taskList[0].attachments())
