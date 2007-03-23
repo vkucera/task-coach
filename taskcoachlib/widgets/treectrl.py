@@ -82,7 +82,7 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         ''' Return the item at position index in the *model* which is not
             necessarily the same index as in the Tree(List)Ctrl. '''
         for item in self.GetItemChildren(recursively=True):
-            if self.GetIndexForItem(item) == index:
+            if self.GetIndexOfItem(item) == index:
                 return item
         raise IndexError
         
@@ -304,6 +304,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin,
     # Adapters to make the TreeListCtrl more like the ListCtrl
     
     def DeleteColumn(self, columnIndex):
+        assert columnIndex < self.GetColumnCount()
         self.RemoveColumn(columnIndex)
         self.RefreshItems()
         
