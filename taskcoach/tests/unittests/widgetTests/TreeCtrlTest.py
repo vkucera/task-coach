@@ -3,67 +3,51 @@ import unittests.dummy as dummy
         
 class TreeCtrlTestCase(test.wxTestCase):
     def setTree(self, *items, **kwargs):
-        self._tree = []
-        for item in items:
-            if type(item) == type(''):
-                itemInfo = (item, 0, item) # subject, nrChildren, Id
-            elif len(item) == 2:
-                itemInfo = (item[0], item[1], item[0])
-            else:
-                itemInfo = item
-            self._tree.append(itemInfo)
+        self._tree = items
         if kwargs.get('refresh', True):
             self.treeCtrl.refresh()
+            
+    def getItem(self, index):
+        item, children = 'root item', self._tree
+        for i in index:
+            try: 
+                item, children = children[i]
+            except ValueError:
+                item, children = children[i], []
+        return item, children
         
     def getItemText(self, index):
-        return self._tree[index][0]
+        return self.getItem(index)[0]
 
-    def getItemImage(self, index, expanded=False):
-        if self.getChildIndices(index):
+    def getItemImage(self, index, *args, **kwargs):
+        if self.getChildrenCount(index):
             return 1
         else:
             return 0
         
     def getItemAttr(self, index):
         return wx.ListItemAttr()
-                        
-    def getItemId(self, index):
-        return self._tree[index][2]
-               
-    def getRootIndices(self):
-        allIndices = range(len(self._tree))
-        allChildIndices = []
-        for index in allIndices:
-            allChildIndices.extend(self.getChildIndices(index))
-        rootIndices = [index for index in allIndices \
-                       if index not in allChildIndices]
-        return rootIndices
-        
-    def getChildIndices(self, index):
-        nrChildren = self._tree[index][1]
-        childIndices = []
-        childIndex = index+1
-        while nrChildren > 0:
-            childIndices.append(childIndex)
-            childIndex += self._tree[childIndex][1] + 1
-            nrChildren -= 1
-        return childIndices
-        
+                                
+    def getChildrenCount(self, index):
+        return len(self.getItem(index)[1])
+            
     def onSelect(self, *args, **kwargs):
         pass
-
+    
+    def assertNodes(self, index, treeItem):
+        self.assertEqual(self.getItemText(index), self.treeCtrl.GetItemText(treeItem))
+        childrenCount = self.getChildrenCount(index)
+        self.assertEqual(childrenCount, self.treeCtrl.GetChildrenCount(treeItem))
+        for childIndex, treeChild in zip(range(childrenCount), self.treeCtrl.GetItemChildren(treeItem)):
+            self.assertNodes(index + (childIndex,), treeChild)
+    
     def assertTree(self, *items):
         self.setTree(*items)
         self.treeCtrl.expandAllItems()
-        self.assertEqual(len(items), self.treeCtrl.GetItemCount())    
-        for index, itemInfo in enumerate(items):
-            if type(itemInfo) != type((),):
-                itemInfo = (itemInfo, 0)
-            itemText, nrChildren = itemInfo
-            item = self.treeCtrl[index]
-            self.assertEqual(itemText, self.treeCtrl.GetItemText(item))
-            self.assertEqual(nrChildren, self.treeCtrl.GetChildrenCount(item))
-    
+        self.assertEqual(len(items), len(self.treeCtrl.GetItemChildren()))
+        for index, treeItem in zip(range(len(self._tree)), self.treeCtrl.GetItemChildren()):            
+            self.assertNodes((index,), treeItem)
+            
     def assertSelection(self, selected=None, notSelected=None):
         wx.Yield()
         for index in selected or []:
@@ -92,8 +76,9 @@ class CommonTests(object):
         self.assertTree()
 
     def testOneParentAndOneChild(self):
-        self.assertTree(('item 0', 1), 'item 1')
+        self.assertTree(('item 0', ('item 1',)))
 
+    '''
     def testOneParentAndTwoChildren(self):
         self.assertTree(('item 0', 2), 'item 1', 'item 2')
    
@@ -269,15 +254,14 @@ class CommonTests(object):
         self.setTree(('parent', 1), 'child')
         self.treeCtrl.Expand(self.treeCtrl[0])
         self.failIf(self.treeCtrl.isAnyItemExpandable())
-        
+    '''
 
 class TreeCtrlTest(TreeCtrlTestCase, CommonTests):            
     def setUp(self):
         super(TreeCtrlTest, self).setUp()
         self.treeCtrl = widgets.TreeCtrl(self.frame, self.getItemText,
             self.getItemImage, self.getItemAttr,
-            self.getItemId, self.getRootIndices,
-            self.getChildIndices, self.onSelect, dummy.DummyUICommand(),
+            self.getChildrenCount, self.onSelect, dummy.DummyUICommand(),
             dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         for bitmapName in ['task', 'tasks']:
@@ -291,8 +275,7 @@ class CustomTreeCtrlTest(TreeCtrlTestCase, CommonTests):
         super(CustomTreeCtrlTest, self).setUp()
         self.treeCtrl = widgets.CustomTreeCtrl(self.frame, self.getItemText,
             self.getItemImage, self.getItemAttr,
-            self.getItemId, self.getRootIndices,
-            self.getChildIndices, self.onSelect, dummy.DummyUICommand(),
+            self.getChildrenCount, self.onSelect, dummy.DummyUICommand(),
             dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         for bitmapName in ['task', 'tasks']:
@@ -310,8 +293,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
     def setUp(self):
         super(CheckTreeCtrlTest, self).setUp()
         self.treeCtrl = widgets.CheckTreeCtrl(self.frame, self.getItemText,
-            self.getItemImage, self.getItemAttr,
-            self.getItemId, self.getRootIndices, self.getChildIndices, 
+            self.getItemImage, self.getItemAttr, self.getChildrenCount, 
             self.getIsItemChecked, self.onSelect, self.onCheck, 
             dummy.DummyUICommand(), dummy.DummyUICommand())
     
@@ -320,9 +302,12 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
     
     def onCheck(self, event):
         pass
-    
+    '''
     def testCheckParentDoesNotCheckChild(self):
-        self.setTree(('parent', 1), 'child')
-        self.treeCtrl.Expand(self.treeCtrl[0])
-        self.treeCtrl.CheckItem(self.treeCtrl[0])
-        self.failIf(self.treeCtrl[1].IsChecked())
+        self.setTree(('parent', ('child',)))
+        self.treeCtrl.ExpandAll()
+        parent, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        self.treeCtrl.CheckItem(parent)
+        child, cookie = self.treeCtrl.GetFirstChild(parent)
+        self.failIf(child.IsChecked())
+    '''
