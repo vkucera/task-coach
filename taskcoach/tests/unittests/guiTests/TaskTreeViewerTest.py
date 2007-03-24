@@ -31,8 +31,10 @@ class TaskTreeViewerTestCase(test.wxTestCase):
 class CommonTests(TaskViewerTest.CommonTests):
     ''' Tests common to TaskTreeViewerTest and TaskTreeListViewerTest. '''
 
-    def getItemTextColor(self, index):
-        return self.viewer.widget.GetItemTextColour(self.viewer.widget.GetItem(index))
+    def getFirstItemTextColor(self):
+        tree = self.viewer.widget
+        firstItem, cookie = tree.GetFirstChild(tree.GetRootItem())
+        return tree.GetItemTextColour(firstItem)
         
     def testCreate(self):
         self.assertItems()

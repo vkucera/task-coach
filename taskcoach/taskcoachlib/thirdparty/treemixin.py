@@ -179,21 +179,33 @@ class TreeAPIHarmonizer(object):
 
     def ExpandAll(self, item=None):
         # TreeListCtrl wants an item as argument. That's an inconsistency with
-        # the TreeCtrl API. Also, TreeCtrl raises a PyAssertionError 
-        # when invoking ExpandAll on a tree with hidden root node. Fix that.
-        try:
-            super(TreeAPIHarmonizer, self).ExpandAll()
-        except TypeError:
-            if item is None:
-                item = self.GetRootItem()
-            super(TreeAPIHarmonizer, self).ExpandAll(item)
-        except wx.PyAssertionError:
+        # the TreeCtrl API. Also, TreeCtrl doesn't allow invoking ExpandAll 
+        # on a tree with hidden root node, so prevent that.
+        if self.HasFlag(wx.TR_HIDE_ROOT):
             rootItem = self.GetRootItem()
             if rootItem:
                 child, cookie = self.GetFirstChild(rootItem)
                 while child:
                     self.ExpandAllChildren(child)
                     child, cookie = self.GetNextChild(rootItem, cookie)
+        else:
+            try:
+                super(TreeAPIHarmonizer, self).ExpandAll()
+            except TypeError:
+                if item is None:
+                    item = self.GetRootItem()
+                super(TreeAPIHarmonizer, self).ExpandAll(item)
+
+    def ExpandAllChildren(self, item):
+        # TreeListCtrl and CustomTreeCtrl don't have ExpandallChildren
+        try:
+            super(TreeAPIHarmonizer, self).ExpandAllChildren(item)
+        except AttributeError:
+            self.Expand(item)
+            child, cookie = self.GetFirstChild(item) 
+            while child:
+                self.ExpandAllChildren(child)
+                child, cookie = self.GetNextChild(item, cookie)
 
 
 class TreeHelper(object):

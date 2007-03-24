@@ -65,7 +65,8 @@ class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
                 categories=self.categories)
 
     def selectItem(self, index):
-        self.viewer.widget.SelectItem(self.viewer.widget[1])
+        item, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())
+        self.viewer.widget.SelectItem(item)
         
 
 class EffortWriterTest(HTMLWriterTestCase):

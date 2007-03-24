@@ -280,7 +280,7 @@ class CategoriesPage(TaskEditorPage):
             return len(category.children())
         
     def ok(self):
-        self._treeCtrl.ExpandAll(self._treeCtrl.GetRootItem())
+        self._treeCtrl.ExpandAll()
         for item in self._treeCtrl.GetItemChildren(recursively=True):
             index = self._treeCtrl.GetIndexOfItem(item)
             category = self.getCategoryWithIndex(index)

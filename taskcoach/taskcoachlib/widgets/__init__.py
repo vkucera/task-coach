@@ -6,11 +6,9 @@ from buttonbox import ButtonBox
 from itemctrl import Column
 from listctrl import ListCtrl
 from treectrl import TreeCtrl, CustomTreeCtrl, CheckTreeCtrl, TreeListCtrl
-from gridctrl import GridCtrl
 from datectrl import DateCtrl, DateTimeCtrl, DatePickerCtrl
 from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
     MultiLineTextCtrl, StaticTextWithToolTip
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer, BoxWithBoxSizer
 from colorselect import ColorSelect
-from foldpanelbar import FoldPanelBar
 from searchctrl import SearchCtrl
