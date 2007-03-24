@@ -1,6 +1,5 @@
 import wx, test
-import domain.task as task
-import domain.date as date
+from domain import task, date
 
 class CommonTests(object):
     ''' Common test cases for all task viewers. This class is mixed in with
@@ -10,11 +9,11 @@ class CommonTests(object):
         super(CommonTests, self).setUp()
         self.newColor = (100, 200, 100)
         
-    def getItemTextColor(self, index):
+    def getFirstItemTextColor(self):
         raise NotImplementedError
     
     def assertColor(self):    
-        self.assertEqual(wx.Colour(*self.newColor), self.getItemTextColor(0))
+        self.assertEqual(wx.Colour(*self.newColor), self.getFirstItemTextColor())
                          
     def setColor(self, setting):
         self.settings.set('color', setting, str(self.newColor))

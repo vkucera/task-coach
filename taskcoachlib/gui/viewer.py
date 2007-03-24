@@ -260,18 +260,15 @@ class ViewerWithColumns(Viewer):
             self.__startObserving(column.eventTypes())
     
     def onShowColumn(self, event):
-        print 'ViewerWithColumns.onShowColumn'
         visibilitySetting = tuple(event.type().split('.'))
         for column in self.columns():
             if column.visibilitySetting() == visibilitySetting:
                 show = event.value() == 'True'
-                print '   about to show %s'%column.header()
                 self.widget.showColumn(column, show)
                 if show:
                     self.__startObserving(column.eventTypes())
                 else:
                     self.__stopObserving(column.eventTypes())
-                print '   done showing %s'%column.header()
                 break
                 
     def onAttributeChanged(self, event):

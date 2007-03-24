@@ -297,7 +297,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
     
     def onCheck(self, event):
         pass
-    '''
+
     def testCheckParentDoesNotCheckChild(self):
         self.setTree(('parent', ('child',)))
         self.treeCtrl.ExpandAll()
@@ -305,4 +305,3 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
         self.treeCtrl.CheckItem(parent)
         child, cookie = self.treeCtrl.GetFirstChild(parent)
         self.failIf(child.IsChecked())
-    '''

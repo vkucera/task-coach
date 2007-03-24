@@ -200,14 +200,11 @@ class _BaseCtrlWithColumns(object):
             self._insertColumn(columnIndex, column)
             
     def _insertColumn(self, columnIndex, column):
-        print '_BaseCtrlWithColumns._insertColumn(columnIndex=%s, column=%s)'%(columnIndex, column.header())
         self.InsertColumn(columnIndex, column.header(), 
             format=column.alignment(), width=column.width)
-        print '_BaseCtrlWithColumn._insertColumn after calling self.InsertColumn'
         columnInfo = self.GetColumn(columnIndex)
         columnInfo.SetImage(column.headerImageIndex())
         self.SetColumn(columnIndex, columnInfo)
-        print '_BaseCtrlWithColumn._insertColumn done'
             
     def _allColumns(self):
         return self.__allColumns
@@ -235,7 +232,6 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
             The column is actually removed or inserted into the control because 
             although TreeListCtrl supports hiding columns, ListCtrl does not. 
             '''
-        print '_CtrlWithHideableColumns.showColumn(column=%s, show=%s)'%(column.header(), show)
         columnIndex = self._getColumnIndex(column.header())
         if show and not self.isColumnVisible(column):
             self._insertColumn(columnIndex, column)

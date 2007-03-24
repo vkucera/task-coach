@@ -76,23 +76,6 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         item, flags, column = self.HitTest(event.GetPosition(), 
                                            alwaysReturnColumn=True)
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
-    
-    def __getitem__(self, index):
-        ''' Return the item at position index in the *model* which is not
-            necessarily the same index as in the Tree(List)Ctrl. '''
-        for item in self.GetItemChildren(recursively=True):
-            if self.GetIndexOfItem(item) == index:
-                return item
-        raise IndexError
-        
-    def GetItem(self, index):
-        ''' Return the item at position index in the *Tree(List)Ctrl* which is
-            not necessarily the same index as in the model. This method also 
-            mimics the ListCtrl API. '''
-        for cursorIndex, item in enumerate(self.GetItemChildren(recursively=True)):
-            if index == cursorIndex:
-                return item
-        raise IndexError
         
     def getStyle(self):
         return wx.TR_HIDE_ROOT | wx.TR_MULTIPLE | wx.TR_HAS_BUTTONS
@@ -318,9 +301,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin,
         for item in self.GetItemChildren(recursively=True):
             self.SetItemText(item, '', columnIndex)
         self.SetColumnAlignment(columnIndex, format)
-        print 'treectrl.TreeListCtrl.InsertColumn %s done, before refresh'%columnHeader
         self.RefreshItems()
-        print 'treectrl.TreeListCtrl.InsertColumn %s done, after refresh'%columnHeader
     
     def GetCountPerPage(self):
         ''' ListCtrlAutoWidthMixin expects a GetCountPerPage() method,

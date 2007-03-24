@@ -7,7 +7,6 @@ from domain import task, effort, date, category
 class CommonTests:
     ''' Tests common to all TaskListViewers, i.e. TaskListViewer and
         TaskTreeListViewer. '''
-
     
     def testSubjectColumnIsVisible(self):
         self.assertEqual(_('Subject'), self.viewer.GetColumn(0).GetText())
@@ -80,15 +79,15 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
             self.assertEqual(render.subject(task, recursively=True), 
                              self.viewer.widget.GetItemText(index))
                              
-    def getItemTextColor(self, index):
-        return self.viewer.widget.GetItemTextColour(index)
+    def getFirstItemTextColor(self):
+        return self.viewer.widget.GetItemTextColour(0)
 
     def assertColor(self):
         # There seems to be a bug in the ListCtrl causing GetItemTextColour() to
         # always return the 'unknown' colour on Windows. We keep this test like
         # this so it will fail when the bug is fixed.
         if '__WXMSW__' in wx.PlatformInfo:
-            self.assertEqual(wx.NullColour, self.getItemTextColor(0))
+            self.assertEqual(wx.NullColour, self.getFirstItemTextColor())
         else:
             super(TaskListViewerTest, self).assertColor()
         
