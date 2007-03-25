@@ -286,7 +286,6 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin,
     # Adapters to make the TreeListCtrl more like the ListCtrl
     
     def DeleteColumn(self, columnIndex):
-        assert columnIndex < self.GetColumnCount()
         self.RemoveColumn(columnIndex)
         self.RefreshItems()
         

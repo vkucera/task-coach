@@ -28,7 +28,7 @@ class App(object):
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
-        self.wxApp = wxApp(0)
+        self.wxApp = wxApp(redirect=False)
         self.init(**kwargs)
 
     def start(self):
