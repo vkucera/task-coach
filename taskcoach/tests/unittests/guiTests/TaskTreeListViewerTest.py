@@ -31,4 +31,3 @@ class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
         firstItem, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())
         self.assertEqual(render.daysLeft(self.task.timeLeft()), 
             self.viewer.widget.GetItemText(firstItem, 3))
-

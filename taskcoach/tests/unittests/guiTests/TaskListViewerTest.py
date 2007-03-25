@@ -57,6 +57,19 @@ class CommonTests:
         self.settings.set('view', 'fixedfee', 'True')
         self.assertEqual(_('Fixed fee'), self.viewer.GetColumn(3).GetText())
 
+    def testTurnOnPriorityColumn(self):
+        taskWithPriority = task.Task(priority=10)
+        self.taskList.append(taskWithPriority)
+        self.settings.set('view', 'priority', 'True')
+        self.assertEqual(_('Priority'), self.viewer.GetColumn(3).GetText())
+        
+    def testTurnOffPriorityColumn(self):
+        self.settings.set('view', 'priority', 'True')
+        taskWithPriority = task.Task(priority=10)
+        self.taskList.append(taskWithPriority)
+        self.settings.set('view', 'priority', 'False')
+        self.assertEqual(3, self.viewer.GetColumnCount())
+        
 
 class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests, 
         test.wxTestCase):
