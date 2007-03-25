@@ -18,6 +18,7 @@ Excel.''', '1660670'),
 tree viewer, child tasks hidden by a filter would still be exported.''', 
 '1659307')],
     featuresAdded=[
+        Feature('Added Slovak translation thanks to Viliam Búr'),
         Feature('''Printing a selection is enabled (except on Mac OSX).'''),
         Feature('''The notebook that contains the different views allows for
 dragging and dropping of tabs, enabling you to create almost any layout you
