@@ -218,11 +218,12 @@ class AUINotebook(Book, wx.aui.AuiNotebook):
     pageChangedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED
     
     def __init__(self, *args, **kwargs):
+        kwargs['style'] = kwargs.get('style', wx.aui.AUI_NB_DEFAULT_STYLE) & ~wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
         super(AUINotebook, self).__init__(*args, **kwargs)
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.onClosePage)
         
     def onClosePage(self, event):
-        if self.GetPageCount() == 2:
+        if self.GetPageCount() <= 2:
             # Prevent last tab from being closed
             self.ToggleWindowStyle(wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
             
