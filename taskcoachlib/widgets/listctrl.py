@@ -3,19 +3,23 @@ import wx, itemctrl
 class _ListCtrl(wx.ListCtrl):
     ''' Make ListCtrl API more like the TreeList and TreeListCtrl API '''
     
-    def HitTest(self, (x,y)):
-        ''' Allways return a three-tuple (item, flag, column). '''
+    def HitTest(self, (x,y), alwaysReturnColumn=False):
+        ''' Return a three-tuple (item, flag, column) if alwaysReturnColumn is
+        True. '''
         index, flags = super(_ListCtrl, self).HitTest((x,y))
-        column = 0
-        if self.InReportView():
-            # Determine the column in which the user clicked
-            cumulativeColumnWidth = 0
-            for columnIndex in range(self.GetColumnCount()):
-                cumulativeColumnWidth += self.GetColumnWidth(columnIndex)
-                if x <= cumulativeColumnWidth:
-                    column = columnIndex
-                    break
-        return index, flags, column
+        if alwaysReturnColumn:
+            column = 0
+            if self.InReportView():
+                # Determine the column in which the user clicked
+                cumulativeColumnWidth = 0
+                for columnIndex in range(self.GetColumnCount()):
+                    cumulativeColumnWidth += self.GetColumnWidth(columnIndex)
+                    if x <= cumulativeColumnWidth:
+                        column = columnIndex
+                        break
+            return index, flags, column
+        else:
+            return index, flags
 
     def ToggleItemSelection(self, index):
         currentState = self.GetItemState(index, wx.LIST_STATE_SELECTED)
@@ -48,10 +52,10 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, _ListCtr
         return self.getItemText(rowIndex, columnIndex)
 
     def OnGetItemImage(self, rowIndex):
-        return self.getItemImage(rowIndex, 0)[0]
+        return self.getItemImage(rowIndex, wx.TreeItemIcon_Normal, 0)[0]
     
     def OnGetItemColumnImage(self, rowIndex, columnIndex):
-        return self.getItemImage(rowIndex, columnIndex)
+        return self.getItemImage(rowIndex, wx.TreeItemIcon_Normal, columnIndex)
 
     def OnGetItemAttr(self, rowIndex):
         # We need to keep a reference to the item attribute to prevent it
