@@ -147,7 +147,17 @@ class UICheckCommand(BooleanSettingsCommand):
         return self.settings.getboolean(self.section, self.setting)
 
     def doCommand(self, event):
-        self.settings.set(self.section, self.setting, str(event.IsChecked()))
+        # There's a bug in wxPython 2.8.3 on Windows XP that causes 
+        # event.IsChecked() to return the wrong value in the context menu.
+        # The menu on the main window works fine. So we first try to access the
+        # context menu to get the checked state from the menu item itself.
+        # This will fail if the event is coming from the window, but in that
+        # case we can event.IsChecked() to work so we use that.
+        try:
+            isChecked = event.GetEventObject().FindItemById(event.GetId()).IsChecked()
+        except AttributeError:
+            isChecked = event.IsChecked()
+        self.settings.set(self.section, self.setting, str(isChecked))
         
     def getBitmap(self):
         if '__WXMSW__' in wx.PlatformInfo:
