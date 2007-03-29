@@ -103,7 +103,7 @@ class HTMLDialog(Dialog):
         return widgets.ButtonBox(self._panel, (_('OK'), self.ok))
     
     def OnLinkClicked(self, linkInfo):
-        print linkInfo
+        pass
         
         
 def AttachmentSelector(**callerKeywordArguments):
