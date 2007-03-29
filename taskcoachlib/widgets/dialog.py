@@ -83,7 +83,8 @@ class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
             except Error:
                 pass
         if not openedLinkInExternalBrowser:
-            self.base_OnLinkClicked(linkInfo)
+            super(HtmlWindowThatUsesWebBrowserForExternalLinks, 
+                  self).OnLinkClicked(linkInfo)
 
 
 class HTMLDialog(Dialog):
