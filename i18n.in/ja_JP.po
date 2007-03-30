@@ -1,449 +1,681 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: TaskCoach 0.58\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2006-08-18 15:35+0900\n"
-"Last-Translator: yutaka usui <yutakau@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: TaskCoach\n"
+"POT-Creation-Date: 2007-03-27 22:25+CEST\n"
+"PO-Revision-Date: 2007-03-30 00:46+0900\n"
+"Last-Translator: Yutaka Usui <yutakau@gmail.com>\n"
+"Language-Team: Japanese <yutakau@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Javanese\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Poedit-Language: Japanese\n"
 "X-Poedit-Country: JAPAN\n"
 
-#: taskcoachlib\command\base.py:72
+#: taskcoachlib/command/base.py:91
 msgid "Copy"
 msgstr "コピー"
 
-#: taskcoachlib\command\base.py:87
+#: taskcoachlib/command/base.py:106
 msgid "Delete"
 msgstr "削除"
 
-#: taskcoachlib\command\base.py:101
+#: taskcoachlib/command/base.py:120
 msgid "Cut"
 msgstr "カット"
 
-#: taskcoachlib\command\base.py:127
+#: taskcoachlib/command/base.py:146
 msgid "Paste"
 msgstr "貼り付け"
 
-#: taskcoachlib\command\effortCommands.py:8
-msgid "New effort"
-msgstr "新しいエフォート"
-
-#: taskcoachlib\command\effortCommands.py:28
-msgid "Edit effort"
-msgstr "エフォートを編集"
-
-#: taskcoachlib\command\taskCommands.py:27
-msgid "Paste into task"
-msgstr "タスクに貼り付け"
-
-#: taskcoachlib\command\taskCommands.py:47
+#: taskcoachlib/command/base.py:207
 msgid "Drag and drop"
 msgstr "ドラッグ＆ドロップ"
 
-#: taskcoachlib\command\taskCommands.py:87
-#: taskcoachlib\command\taskCommands.py:91
-#: taskcoachlib\domain\task\tasklist.py:40
+#: taskcoachlib/command/categoryCommands.py:7
+#: taskcoachlib/command/categoryCommands.py:14
+msgid "New category"
+msgstr "新規カテゴリ"
+
+#: taskcoachlib/command/categoryCommands.py:28
+#: taskcoachlib/command/categoryCommands.py:31
+msgid "New subcategory"
+msgstr "新規サブカテゴリ"
+
+#: taskcoachlib/command/categoryCommands.py:36
+msgid "Edit category"
+msgstr "カテゴリ編集"
+
+#: taskcoachlib/command/categoryCommands.py:44
+msgid "Drag and drop category"
+msgstr "ドラッグ＆ドロップカテゴリ"
+
+#: taskcoachlib/command/effortCommands.py:8
+msgid "New effort"
+msgstr "新しいエフォート"
+
+#: taskcoachlib/command/effortCommands.py:28
+msgid "Edit effort"
+msgstr "エフォートを編集"
+
+#: taskcoachlib/command/taskCommands.py:12
+msgid "Paste into task"
+msgstr "タスクに貼り付け"
+
+#: taskcoachlib/command/taskCommands.py:26
+msgid "Drag and drop task"
+msgstr "ドラッグ＆ドロップ"
+
+#: taskcoachlib/command/taskCommands.py:58
+#: taskcoachlib/command/taskCommands.py:62
 msgid "New task"
-msgstr "タスクを新規作成"
+msgstr "タスクの新規作成"
 
-#: taskcoachlib\command\taskCommands.py:105
-#: taskcoachlib\command\taskCommands.py:109
+#: taskcoachlib/command/taskCommands.py:76
+#: taskcoachlib/command/taskCommands.py:80
 msgid "New subtask"
-msgstr "サブタスクを新規作成"
+msgstr "サブタスクの新規作成"
 
-#: taskcoachlib\command\taskCommands.py:131
+#: taskcoachlib/command/taskCommands.py:102
 msgid "Edit task"
 msgstr "タスクを編集"
 
-#: taskcoachlib\command\taskCommands.py:155
-#: taskcoachlib\gui\dialog\editor.py:285
-#: taskcoachlib\widgets\dialog.py:103
+#: taskcoachlib/command/taskCommands.py:110
+#: taskcoachlib/gui/dialog/editor.py:319
+#: taskcoachlib/widgets/dialog.py:109
 msgid "Add attachment"
 msgstr "添付ファイルを追加"
 
-#: taskcoachlib\command\taskCommands.py:204
+#: taskcoachlib/command/taskCommands.py:159
 msgid "Mark completed"
-msgstr "完了を入力する"
+msgstr "タスクを完了"
 
-#: taskcoachlib\command\taskCommands.py:220
+#: taskcoachlib/command/taskCommands.py:175
 msgid "Start tracking"
 msgstr "トラッキング開始"
 
-#: taskcoachlib\command\taskCommands.py:246
+#: taskcoachlib/command/taskCommands.py:201
 msgid "Stop tracking"
 msgstr "トラッキング終了"
 
-#: taskcoachlib\gui\dialog\categories.py:24
-msgid "Show tasks that match"
-msgstr "適合するタスクを表示"
+#: taskcoachlib/config/settings.py:84
+msgid ""
+"Error while saving %s.ini:\n"
+"%s\n"
+msgstr ""
+" %s.ini:　保存エラー\n"
+"%s\n"
 
-#: taskcoachlib\gui\dialog\categories.py:25
-msgid "any of the above selected categories"
-msgstr "上で選択したカテゴリのいずれか"
+#: taskcoachlib/config/settings.py:85
+msgid "Save error"
+msgstr "保存エラー"
 
-#: taskcoachlib\gui\dialog\categories.py:26
-msgid "all of the above selected categories"
-msgstr "上で選択したカテゴリの全て"
+#: taskcoachlib/domain/category/categorycontainer.py:5
+msgid "New category..."
+msgstr "新規カテゴリ"
 
-#: taskcoachlib\gui\dialog\editor.py:83
+#: taskcoachlib/domain/category/categorycontainer.py:6
+msgid "Insert a new category"
+msgstr "新規カテゴリを挿入"
+
+#: taskcoachlib/domain/category/categorycontainer.py:7
+msgid "Edit category..."
+msgstr "カテゴリ編集"
+
+#: taskcoachlib/domain/category/categorycontainer.py:8
+msgid "Edit the selected categories"
+msgstr "選択したカテゴリを編集"
+
+#: taskcoachlib/domain/category/categorycontainer.py:9
+msgid "Delete category"
+msgstr "カテゴリ削除"
+
+#: taskcoachlib/domain/category/categorycontainer.py:10
+msgid "Delete the selected categories"
+msgstr "選択したカテゴリを削除"
+
+#: taskcoachlib/domain/category/categorycontainer.py:11
+msgid "New subcategory..."
+msgstr "新規サブカテゴリ"
+
+#: taskcoachlib/domain/category/categorycontainer.py:12
+msgid "Insert a new subcategory"
+msgstr "新規サブカテゴリを挿入する"
+
+#: taskcoachlib/domain/effort/effortlist.py:13
+msgid "&New effort..."
+msgstr "新規エフォート(&N)"
+
+#: taskcoachlib/domain/effort/effortlist.py:14
+msgid "Add an effort period to the selected task(s)"
+msgstr "選択したタスクにエフォートを追加"
+
+#: taskcoachlib/domain/effort/effortlist.py:15
+msgid "&Edit effort..."
+msgstr "エフォート編集(&E)"
+
+#: taskcoachlib/domain/effort/effortlist.py:16
+msgid "Edit the selected effort period(s)"
+msgstr "選択したエフォートを編集"
+
+#: taskcoachlib/domain/effort/effortlist.py:17
+msgid "&Delete effort"
+msgstr "エフォート削除(&D)"
+
+#: taskcoachlib/domain/effort/effortlist.py:18
+msgid "Delete the selected effort period(s)"
+msgstr "選択したエフォートを削除"
+
+#: taskcoachlib/domain/task/tasklist.py:11
+msgid "&New task..."
+msgstr "新規タスク(&N)"
+
+#: taskcoachlib/domain/task/tasklist.py:20
+msgid "New &subtask..."
+msgstr "新規サブタスク(&s)"
+
+#: taskcoachlib/domain/task/tasklist.py:31
+msgid "Insert a new task"
+msgstr "新しいタスクを挿入"
+
+#: taskcoachlib/domain/task/tasklist.py:32
+msgid "&Edit task..."
+msgstr "タスクを編集(&E)"
+
+#: taskcoachlib/domain/task/tasklist.py:33
+msgid "Edit the selected task"
+msgstr "選択したタスクを編集"
+
+#: taskcoachlib/domain/task/tasklist.py:34
+msgid "&Delete task\tCtrl+DEL"
+msgstr "タスク削除(&D)\tCtrl+DEL"
+
+#: taskcoachlib/domain/task/tasklist.py:35
+msgid "Delete the selected task(s)"
+msgstr "選択したタスクを削除"
+
+#: taskcoachlib/domain/task/tasklist.py:37
+msgid "Insert a new subtask into the selected task"
+msgstr "選択したタスクに新規サブタスクを挿入"
+
+#: taskcoachlib/gui/dialog/editor.py:86
 msgid "For this task"
 msgstr "このタスクについて"
 
-#: taskcoachlib\gui\dialog\editor.py:85
+#: taskcoachlib/gui/dialog/editor.py:88
 msgid "For this task including all subtasks"
 msgstr "このタスクと全サブタスクについて"
 
-#: taskcoachlib\gui\dialog\editor.py:98
-#: taskcoachlib\gui\dialog\editor.py:102
-#: taskcoachlib\gui\dialog\editor.py:388
-#: taskcoachlib\gui\dialog\editor.py:454
+#: taskcoachlib/gui/dialog/editor.py:101
+#: taskcoachlib/gui/dialog/editor.py:105
+#: taskcoachlib/gui/dialog/editor.py:447
+#: taskcoachlib/gui/dialog/editor.py:513
 msgid "Description"
 msgstr "内容"
 
-#: taskcoachlib\gui\dialog\editor.py:99
-#: taskcoachlib\gui\viewer.py:237
+#: taskcoachlib/gui/dialog/editor.py:102
+#: taskcoachlib/gui/dialog/editor.py:546
+#: taskcoachlib/gui/viewer.py:93
+#: taskcoachlib/gui/viewer.py:457
 msgid "Subject"
 msgstr "タスク名"
 
-#: taskcoachlib\gui\dialog\editor.py:106
-#: taskcoachlib\gui\dialog\editor.py:107
-#: taskcoachlib\gui\viewer.py:250
+#: taskcoachlib/gui/dialog/editor.py:109
+#: taskcoachlib/gui/dialog/editor.py:110
+#: taskcoachlib/gui/viewer.py:490
 msgid "Priority"
 msgstr "優先度"
 
-#: taskcoachlib\gui\dialog\editor.py:137
-#: taskcoachlib\gui\dialog\editor.py:389
+#: taskcoachlib/gui/dialog/editor.py:140
+#: taskcoachlib/gui/dialog/editor.py:448
 msgid "Dates"
 msgstr "日付"
 
-#: taskcoachlib\gui\dialog\editor.py:139
-#: taskcoachlib\gui\viewer.py:240
+#: taskcoachlib/gui/dialog/editor.py:142
+#: taskcoachlib/gui/viewer.py:480
 msgid "Start date"
 msgstr "開始日"
 
-#: taskcoachlib\gui\dialog\editor.py:140
-#: taskcoachlib\gui\viewer.py:241
+#: taskcoachlib/gui/dialog/editor.py:143
+#: taskcoachlib/gui/viewer.py:481
 msgid "Due date"
 msgstr "完了予定日"
 
-#: taskcoachlib\gui\dialog\editor.py:141
-#: taskcoachlib\gui\viewer.py:243
+#: taskcoachlib/gui/dialog/editor.py:144
+#: taskcoachlib/gui/viewer.py:483
 msgid "Completion date"
 msgstr "完了日"
 
-#: taskcoachlib\gui\dialog\editor.py:154
-#: taskcoachlib\gui\dialog\editor.py:156
-#: taskcoachlib\gui\remindercontroller.py:11
+#: taskcoachlib/gui/dialog/editor.py:157
+#: taskcoachlib/gui/dialog/editor.py:159
+#: taskcoachlib/gui/dialog/reminder.py:14
 msgid "Reminder"
 msgstr "アラーム"
 
-#: taskcoachlib\gui\dialog\editor.py:179
-#: taskcoachlib\gui\dialog\editor.py:197
-#: taskcoachlib\gui\dialog\editor.py:392
-#: taskcoachlib\gui\viewer.py:244
+#: taskcoachlib/gui/dialog/editor.py:182
+#: taskcoachlib/gui/dialog/editor.py:200
+#: taskcoachlib/gui/dialog/editor.py:451
+#: taskcoachlib/gui/viewer.py:484
 msgid "Budget"
 msgstr "予定時間"
 
-#: taskcoachlib\gui\dialog\editor.py:180
-#: taskcoachlib\gui\dialog\editor.py:205
-#: taskcoachlib\gui\viewer.py:255
-#: taskcoachlib\gui\viewer.py:444
+#: taskcoachlib/gui/dialog/editor.py:183
+#: taskcoachlib/gui/dialog/editor.py:208
+#: taskcoachlib/gui/viewer.py:495
+#: taskcoachlib/gui/viewer.py:808
 msgid "Revenue"
 msgstr "収入"
 
-#: taskcoachlib\gui\dialog\editor.py:198
-#: taskcoachlib\gui\viewer.py:246
-#: taskcoachlib\gui\viewer.py:443
+#: taskcoachlib/gui/dialog/editor.py:201
+#: taskcoachlib/gui/viewer.py:486
+#: taskcoachlib/gui/viewer.py:806
 msgid "Time spent"
 msgstr "経過時間"
 
-#: taskcoachlib\gui\dialog\editor.py:199
-#: taskcoachlib\gui\viewer.py:248
+#: taskcoachlib/gui/dialog/editor.py:202
+#: taskcoachlib/gui/viewer.py:488
 msgid "Budget left"
 msgstr "残り時間"
 
-#: taskcoachlib\gui\dialog\editor.py:203
-#: taskcoachlib\gui\viewer.py:252
+#: taskcoachlib/gui/dialog/editor.py:206
+#: taskcoachlib/gui/viewer.py:492
 msgid "Hourly fee"
 msgstr "時間報酬"
 
-#: taskcoachlib\gui\dialog\editor.py:204
-#: taskcoachlib\gui\viewer.py:253
+#: taskcoachlib/gui/dialog/editor.py:207
+#: taskcoachlib/gui/viewer.py:493
 msgid "Fixed fee"
 msgstr "固定報酬"
 
-#: taskcoachlib\gui\dialog\editor.py:235
-#: taskcoachlib\gui\dialog\editor.py:241
-#: taskcoachlib\gui\dialog\editor.py:390
+#: taskcoachlib/gui/dialog/editor.py:236
+#: taskcoachlib/gui/uicommand.py:1372
+#: taskcoachlib/gui/viewerfactory.py:7
+msgid "Effort details"
+msgstr "エフォート詳細"
+
+#: taskcoachlib/gui/dialog/editor.py:239
+#: taskcoachlib/gui/uicommand.py:1373
+#: taskcoachlib/gui/uicommand.py:1376
+#: taskcoachlib/gui/viewerfactory.py:10
+msgid "Effort per day"
+msgstr "1日のエフォート"
+
+#: taskcoachlib/gui/dialog/editor.py:242
+#: taskcoachlib/gui/uicommand.py:1377
+#: taskcoachlib/gui/uicommand.py:1380
+#: taskcoachlib/gui/viewerfactory.py:13
+msgid "Effort per week"
+msgstr "週のエフォート"
+
+#: taskcoachlib/gui/dialog/editor.py:246
+#: taskcoachlib/gui/uicommand.py:1381
+#: taskcoachlib/gui/uicommand.py:1384
+#: taskcoachlib/gui/viewerfactory.py:16
+msgid "Effort per month"
+msgstr "月のエフォート"
+
+#: taskcoachlib/gui/dialog/editor.py:254
+#: taskcoachlib/gui/dialog/editor.py:449
+#: taskcoachlib/gui/uicommand.py:1368
+#: taskcoachlib/gui/viewer.py:470
+#: taskcoachlib/gui/viewerfactory.py:30
 msgid "Categories"
 msgstr "カテゴリー"
 
-#: taskcoachlib\gui\dialog\editor.py:243
-#: taskcoachlib\gui\dialog\editor.py:245
-msgid "New category"
-msgstr "新しいカテゴリー"
-
-#: taskcoachlib\gui\dialog\editor.py:268
-#: taskcoachlib\gui\dialog\editor.py:280
-#: taskcoachlib\gui\dialog\editor.py:396
+#: taskcoachlib/gui/dialog/editor.py:296
+#: taskcoachlib/gui/dialog/editor.py:455
+#: taskcoachlib/gui/uicommand.py:1267
 msgid "Attachments"
 msgstr "添付"
 
-#: taskcoachlib\gui\dialog\editor.py:270
+#: taskcoachlib/gui/dialog/editor.py:298
+msgid "Attachment filenames"
+msgstr "添付ファイル"
+
+#: taskcoachlib/gui/dialog/editor.py:304
 msgid "Open attachment"
 msgstr "添付ファイルを開く"
 
-#: taskcoachlib\gui\dialog\editor.py:271
+#: taskcoachlib/gui/dialog/editor.py:305
 msgid "Remove attachment"
-msgstr "添付ファイルを外す"
+msgstr "添付ファイルから外す"
 
-#: taskcoachlib\gui\dialog\editor.py:272
-msgid "Edit attachment"
-msgstr "添付ファイルを編集"
+#: taskcoachlib/gui/dialog/editor.py:306
+msgid "Edit filename"
+msgstr "ファイル名変更"
 
-#: taskcoachlib\gui\dialog\editor.py:286
-msgid "New attachment"
-msgstr "新しくファイルを添付"
+#: taskcoachlib/gui/dialog/editor.py:310
+msgid "Browse for new attachment..."
+msgstr "添付ファイルを開く"
 
-#: taskcoachlib\gui\dialog\editor.py:289
-msgid "Browse for attachment..."
-msgstr "添付ファイルを見る"
+#: taskcoachlib/gui/dialog/editor.py:317
+msgid "Attachment filename"
+msgstr "添付ファイル"
 
-#: taskcoachlib\gui\dialog\editor.py:328
+#: taskcoachlib/gui/dialog/editor.py:381
+#: taskcoachlib/gui/uicommand.py:961
 msgid "Error opening attachment"
-msgstr "添付ファイルオープンエラー"
+msgstr "添付ファイルエラー"
 
-#: taskcoachlib\gui\dialog\editor.py:364
-#: taskcoachlib\gui\dialog\preferences.py:127
+#: taskcoachlib/gui/dialog/editor.py:419
+#: taskcoachlib/gui/dialog/preferences.py:138
 msgid "Task behavior"
 msgstr "タスクのふるまい"
 
-#: taskcoachlib\gui\dialog\editor.py:366
+#: taskcoachlib/gui/dialog/editor.py:422
 msgid "Use application-wide setting"
-msgstr "アプリケーション全体について設定"
+msgstr "アプリケーション全体設定"
 
-#: taskcoachlib\gui\dialog\editor.py:367
+#: taskcoachlib/gui/dialog/editor.py:423
 msgid "No"
 msgstr "いいえ"
 
-#: taskcoachlib\gui\dialog\editor.py:367
+#: taskcoachlib/gui/dialog/editor.py:423
 msgid "Yes"
 msgstr "はい"
 
-#: taskcoachlib\gui\dialog\editor.py:373
+#: taskcoachlib/gui/dialog/editor.py:430
 msgid "Mark task completed when all children are completed?"
-msgstr "下位階層の全てのサブタスクが完了したときは、タスクが完了したものとしますか？"
+msgstr "下位階層の全サブタスクが完了時に、タスクが完了させる"
 
-#: taskcoachlib\gui\dialog\editor.py:395
-#: taskcoachlib\gui\viewerfactory.py:21
+#: taskcoachlib/gui/dialog/editor.py:454
 msgid "Effort"
 msgstr "エフォート"
 
-#: taskcoachlib\gui\dialog\editor.py:397
+#: taskcoachlib/gui/dialog/editor.py:456
 msgid "Behavior"
 msgstr "ふるまい"
 
-#: taskcoachlib\gui\dialog\editor.py:426
-#: taskcoachlib\gui\viewer.py:440
+#: taskcoachlib/gui/dialog/editor.py:485
+#: taskcoachlib/gui/dialog/reminder.py:19
+#: taskcoachlib/gui/viewer.py:801
 msgid "Task"
 msgstr "タスク"
 
-#: taskcoachlib\gui\dialog\editor.py:432
+#: taskcoachlib/gui/dialog/editor.py:491
 msgid "Start tracking from last stop time"
-msgstr "最後にストップした時間からトラッキングをスタートする"
+msgstr "最終ストップ時間からトラッキングをスタートする"
 
-#: taskcoachlib\gui\dialog\editor.py:442
+#: taskcoachlib/gui/dialog/editor.py:501
 msgid "Start"
 msgstr "スタート"
 
-#: taskcoachlib\gui\dialog\editor.py:444
+#: taskcoachlib/gui/dialog/editor.py:503
 msgid "Stop"
 msgstr "ストップ"
 
-#: taskcoachlib\gui\dialog\preferences.py:58
+#: taskcoachlib/gui/dialog/preferences.py:61
 msgid "Auto save after every change"
-msgstr "変更後に自動保存"
+msgstr "変更後自動保存"
 
-#: taskcoachlib\gui\dialog\preferences.py:60
+#: taskcoachlib/gui/dialog/preferences.py:63
 msgid "Create backup copy before overwriting a %s file"
-msgstr "%s　ファイルの上書き前にバックアップを作成する"
+msgstr "%sファイルの上書き前にバックアップを作成する"
 
-#: taskcoachlib\gui\dialog\preferences.py:62
+#: taskcoachlib/gui/dialog/preferences.py:65
 msgid "Maximum number of recent files to remember"
-msgstr "最近使ったファイルの最大数"
+msgstr "最近使ったファイルの数"
 
-#: taskcoachlib\gui\dialog\preferences.py:70
+#: taskcoachlib/gui/dialog/preferences.py:67
+msgid "Save settings (%s.ini) in same directory as the program"
+msgstr "設定ファイル(%s.ini)をプログラムと同じフォルダに保存"
+
+#: taskcoachlib/gui/dialog/preferences.py:69
+msgid "(For running %s from a removable medium)"
+msgstr "(%s をリムーバブルメディア上に置く場合)"
+
+#: taskcoachlib/gui/dialog/preferences.py:77
 msgid "Show splash screen on startup"
-msgstr "開始時にスプラッシュスクリーンを表示する"
+msgstr "起動時にスプラッシュスクリーンを表示"
 
-#: taskcoachlib\gui\dialog\preferences.py:72
+#: taskcoachlib/gui/dialog/preferences.py:79
 msgid "Show tips window on startup"
-msgstr "開始時にTIPSを表示する"
+msgstr "起動時にTIPSを表示する"
 
-#: taskcoachlib\gui\dialog\preferences.py:74
+#: taskcoachlib/gui/dialog/preferences.py:81
 msgid "Hide main window when iconized"
-msgstr "アイコン化したときにメインウィンドウを隠す"
+msgstr "アイコン化したときメインウィンドウを隠す"
 
-#: taskcoachlib\gui\dialog\preferences.py:76
+#: taskcoachlib/gui/dialog/preferences.py:83
 msgid "Minimize main window when closed"
 msgstr "閉じたときにメインウィンドウを最小化"
 
-#: taskcoachlib\gui\dialog\preferences.py:83
-#: taskcoachlib\gui\dialog\preferences.py:129
+#: taskcoachlib/gui/dialog/preferences.py:85
+msgid "Make clock in the task bar tick when tracking effort"
+msgstr "タスクバーで時計表示する"
+
+#: taskcoachlib/gui/dialog/preferences.py:92
+#: taskcoachlib/gui/dialog/preferences.py:140
 msgid "Language"
 msgstr "言語"
 
-#: taskcoachlib\gui\dialog\preferences.py:84
-msgid "English (US)"
-msgstr "英語（米国）"
-
-#: taskcoachlib\gui\dialog\preferences.py:85
-msgid "English (UK)"
-msgstr "英語(英国）"
-
-#: taskcoachlib\gui\dialog\preferences.py:86
-msgid "German"
-msgstr "ドイツ語"
-
-#: taskcoachlib\gui\dialog\preferences.py:87
-msgid "Dutch"
-msgstr "オランダ語"
-
-#: taskcoachlib\gui\dialog\preferences.py:88
-msgid "French"
-msgstr "フランス語"
-
-#: taskcoachlib\gui\dialog\preferences.py:89
-msgid "Simplified Chinese"
-msgstr "中国語(簡体字）"
-
-#: taskcoachlib\gui\dialog\preferences.py:90
-msgid "Russian"
-msgstr "ロシア語"
-
-#: taskcoachlib\gui\dialog\preferences.py:91
-msgid "Spanish"
-msgstr "スペイン語"
-
-#: taskcoachlib\gui\dialog\preferences.py:92
-msgid "Hungarian"
-msgstr "ハンガリー語"
-
-#: taskcoachlib\gui\dialog\preferences.py:93
+#: taskcoachlib/gui/dialog/preferences.py:104
 msgid "This setting will take effect after you restart %s"
 msgstr "この設定は%sを再起動した後有効です。"
 
-#: taskcoachlib\gui\dialog\preferences.py:101
+#: taskcoachlib/gui/dialog/preferences.py:112
 msgid "Click this button to change the color of active tasks"
 msgstr "アクティブなタスクの色を変える"
 
-#: taskcoachlib\gui\dialog\preferences.py:102
+#: taskcoachlib/gui/dialog/preferences.py:113
 msgid "Click this button to change the color of inactive tasks"
 msgstr "アクティブでないタスクの色を変える"
 
-#: taskcoachlib\gui\dialog\preferences.py:103
+#: taskcoachlib/gui/dialog/preferences.py:114
 msgid "Click this button to change the color of completed tasks"
 msgstr "完了タスクの色を変える"
 
-#: taskcoachlib\gui\dialog\preferences.py:104
+#: taskcoachlib/gui/dialog/preferences.py:115
 msgid "Click this button to change the color of over due tasks"
 msgstr "期限遅れタスクの色を変える"
 
-#: taskcoachlib\gui\dialog\preferences.py:105
+#: taskcoachlib/gui/dialog/preferences.py:116
 msgid "Click this button to change the color of tasks due today"
 msgstr "本日完了予定のタスクの色を変える"
 
-#: taskcoachlib\gui\dialog\preferences.py:114
+#: taskcoachlib/gui/dialog/preferences.py:125
 msgid "Mark parent task completed when all children are completed"
 msgstr "サブタスクが全て完了したとき、親タスクも完了させる"
 
-#: taskcoachlib\gui\dialog\preferences.py:126
+#: taskcoachlib/gui/dialog/preferences.py:137
 msgid "Window behavior"
 msgstr "ウィンドウ"
 
-#: taskcoachlib\gui\dialog\preferences.py:128
+#: taskcoachlib/gui/dialog/preferences.py:139
 msgid "Files"
 msgstr "ファイル"
 
-#: taskcoachlib\gui\dialog\preferences.py:130
+#: taskcoachlib/gui/dialog/preferences.py:141
 msgid "Colors"
 msgstr "色"
 
-#: taskcoachlib\gui\find.py:17
-msgid "Find: "
-msgstr "検索:"
+#: taskcoachlib/gui/dialog/reminder.py:7
+msgid "Don't snooze"
+msgstr "スヌーズしない"
 
-#: taskcoachlib\gui\find.py:19
-msgid "Type search string (a regular expression) here and press enter"
-msgstr "検索文字列（正規表現）を入力してEnterを押してください"
+#: taskcoachlib/gui/dialog/reminder.py:7
+msgid "Five minutes"
+msgstr "5分"
 
-#: taskcoachlib\gui\find.py:21
-msgid "Match case"
-msgstr "大文字・小文字を区別する"
+#: taskcoachlib/gui/dialog/reminder.py:7
+msgid "Ten minutes"
+msgstr "10分"
 
-#: taskcoachlib\gui\find.py:22
-msgid "Clear"
-msgstr "クリア"
+#: taskcoachlib/gui/dialog/reminder.py:8
+msgid "Fifteen minutes"
+msgstr "15分"
 
-#: taskcoachlib\gui\iocontroller.py:17
+#: taskcoachlib/gui/dialog/reminder.py:8
+msgid "Half an hour"
+msgstr "30分"
+
+#: taskcoachlib/gui/dialog/reminder.py:8
+msgid "One hour"
+msgstr "1時間"
+
+#: taskcoachlib/gui/dialog/reminder.py:9
+msgid "Two hours"
+msgstr "2時間"
+
+#: taskcoachlib/gui/dialog/reminder.py:19
+msgid "Snooze"
+msgstr "スヌーズ"
+
+#: taskcoachlib/gui/filter.py:18
+msgid "Active tasks"
+msgstr "アクティブタスク"
+
+#: taskcoachlib/gui/filter.py:19
+msgid "Inactive tasks"
+msgstr "非アクティブタスク"
+
+#: taskcoachlib/gui/filter.py:20
+msgid "Completed tasks"
+msgstr "完了タスク"
+
+#: taskcoachlib/gui/filter.py:21
+msgid "Over due tasks"
+msgstr "期限切れタスク"
+
+#: taskcoachlib/gui/filter.py:22
+msgid "Over budget tasks"
+msgstr "時間切れタスク"
+
+#: taskcoachlib/gui/filter.py:67
+msgid "Show tasks that belong to the categories selected below. Unselect all categories to reset the filter."
+msgstr "選択したカテゴリに含まれるタスクを表示"
+
+#: taskcoachlib/gui/filter.py:81
+msgid "Show tasks that match"
+msgstr "合致するタスクを表示"
+
+#: taskcoachlib/gui/filter.py:82
+msgid "any of the above selected categories"
+msgstr "選択したカテゴリのいずれか"
+
+#: taskcoachlib/gui/filter.py:83
+msgid "all of the above selected categories"
+msgstr "選択したカテゴリの全て"
+
+#: taskcoachlib/gui/filter.py:158
+msgid "Show tasks due before"
+msgstr "期限内のタスクを表示"
+
+#: taskcoachlib/gui/filter.py:159
+#: taskcoachlib/gui/uicommand.py:1406
+msgid "&Today"
+msgstr "今日(&T)"
+
+#: taskcoachlib/gui/filter.py:160
+#: taskcoachlib/gui/uicommand.py:1407
+msgid "T&omorrow"
+msgstr "明日(&o)"
+
+#: taskcoachlib/gui/filter.py:161
+msgid "Wo&rkweek"
+msgstr "今週（平日）(&r)"
+
+#: taskcoachlib/gui/filter.py:162
+#: taskcoachlib/gui/uicommand.py:1409
+msgid "&Week"
+msgstr "今週(&W)"
+
+#: taskcoachlib/gui/filter.py:163
+#: taskcoachlib/gui/uicommand.py:1410
+msgid "&Month"
+msgstr "月(&M)"
+
+#: taskcoachlib/gui/filter.py:164
+#: taskcoachlib/gui/uicommand.py:1411
+msgid "&Year"
+msgstr "年(&Y)"
+
+#: taskcoachlib/gui/filter.py:165
+#: taskcoachlib/gui/uicommand.py:1412
+msgid "&Unlimited"
+msgstr "期限なし(&U)"
+
+#: taskcoachlib/gui/iocontroller.py:18
 msgid "%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*"
-msgstr "%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*"
+msgstr "%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|全てのファイル (*.*)|*"
 
-#: taskcoachlib\gui\iocontroller.py:20
+#: taskcoachlib/gui/iocontroller.py:21
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
-msgstr "iCalendar ファイル (*.ics)|*.ics|All files (*.*)|*"
+msgstr "iCalendar ファイル (*.ics)|*.ics|すべてのファイル (*.*)|*"
 
-#: taskcoachlib\gui\iocontroller.py:30
+#: taskcoachlib/gui/iocontroller.py:24
+msgid "HTML files (*.html)|*.html|All files (*.*)|*"
+msgstr "HTML ファイル (*.html)|*.html|全てのファイル (*.*)|*"
+
+#: taskcoachlib/gui/iocontroller.py:27
+msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
+msgstr "CSV ファイル (*.csv)|*.csv|テキストファイル (*.txt)|*.txt|全てのファイル (*.*)|*"
+
+#: taskcoachlib/gui/iocontroller.py:37
 msgid "Open"
 msgstr "開く"
 
-#: taskcoachlib\gui\iocontroller.py:38
-msgid ""
-"Error while reading %s.\n"
-"Are you sure it is a %s-file?"
-msgstr ""
-"%s　リードエラー\n"
-"%sファイルで宜しいですか?"
+#: taskcoachlib/gui/iocontroller.py:45
+msgid "Error while reading %s:\n"
+msgstr "%s:　読み込みエラー:\n"
 
-#: taskcoachlib\gui\iocontroller.py:40
+#: taskcoachlib/gui/iocontroller.py:47
+msgid "Are you sure it is a %s-file?"
+msgstr "%s-file でよろしいですか"
+
+#: taskcoachlib/gui/iocontroller.py:48
 msgid "File error"
 msgstr "ファイルエラー"
 
-#: taskcoachlib\gui\iocontroller.py:42
+#: taskcoachlib/gui/iocontroller.py:50
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
-msgstr "%(filename)s から %(nrtasks)dを読み込みました"
+msgstr "%(nrtasks)d 件のタスクを　 %(filename)s　から読み込みました"
 
-#: taskcoachlib\gui\iocontroller.py:47
+#: taskcoachlib/gui/iocontroller.py:55
 msgid "Merge"
 msgstr "マージ"
 
-#: taskcoachlib\gui\iocontroller.py:50
+#: taskcoachlib/gui/iocontroller.py:58
 msgid "Merged %(filename)s"
-msgstr " %(filename)sをマージしました"
+msgstr "%(filename)s をマージしました"
 
-#: taskcoachlib\gui\iocontroller.py:56
-#: taskcoachlib\gui\iocontroller.py:68
-#: taskcoachlib\gui\iocontroller.py:81
+#: taskcoachlib/gui/iocontroller.py:64
+#: taskcoachlib/gui/iocontroller.py:76
+#: taskcoachlib/gui/iocontroller.py:89
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
-msgstr "%(nrtasks)dを %(filename)s へ保存しました"
+msgstr "%(nrtasks)d 件のタスクを %(filename)s　に保存しました"
 
-#: taskcoachlib\gui\iocontroller.py:65
-#: taskcoachlib\gui\iocontroller.py:76
+#: taskcoachlib/gui/iocontroller.py:73
+#: taskcoachlib/gui/iocontroller.py:84
 msgid "Save as..."
 msgstr "名前をつけて保存"
 
-#: taskcoachlib\gui\iocontroller.py:93
+#: taskcoachlib/gui/iocontroller.py:101
 msgid "Export as iCalendar..."
-msgstr "iCalendarにエクスポート"
+msgstr "iCalendarエクスポート"
 
-#: taskcoachlib\gui\iocontroller.py:99
+#: taskcoachlib/gui/iocontroller.py:107
 msgid "Exported %(nrtasks)d tasks to %(filename)s"
-msgstr "%(nrtasks)dタスク　を %(filename)s　にエクスポート"
+msgstr " %(nrtasks)d 件のタスクを %(filename)sにエクスポートしました"
 
-#: taskcoachlib\gui\iocontroller.py:118
+#: taskcoachlib/gui/iocontroller.py:114
+msgid "Export as HTML..."
+msgstr "HTMLエクスポート"
+
+#: taskcoachlib/gui/iocontroller.py:120
+#: taskcoachlib/gui/iocontroller.py:133
+msgid "Exported %(nrtasks)d items to %(filename)s"
+msgstr "%(nrtasks)d wo %(filename)s"
+
+#: taskcoachlib/gui/iocontroller.py:127
+msgid "Export as CSV..."
+msgstr "CSVエクスポート"
+
+#: taskcoachlib/gui/iocontroller.py:152
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -451,1030 +683,1068 @@ msgstr ""
 "保存していない変更があります。\n"
 "保存しますか？"
 
-#: taskcoachlib\gui\iocontroller.py:119
+#: taskcoachlib/gui/iocontroller.py:153
 msgid "%s: save changes?"
 msgstr "%s: 変更を保存しますか？"
 
-#: taskcoachlib\gui\iocontroller.py:129
+#: taskcoachlib/gui/iocontroller.py:163
 msgid "Closed %s"
 msgstr "%sを閉じました"
 
-#: taskcoachlib\gui\mainwindow.py:88
+#: taskcoachlib/gui/mainwindow.py:88
 msgid "Welcome to %(name)s version %(version)s"
 msgstr " %(name)s バージョン %(version)s　へようこそ！"
 
-#: taskcoachlib\gui\menu.py:42
+#: taskcoachlib/gui/menu.py:44
 msgid "&File"
 msgstr "ファイル(&F)"
 
-#: taskcoachlib\gui\menu.py:43
+#: taskcoachlib/gui/menu.py:45
 msgid "&Edit"
 msgstr "編集(&E)"
 
-#: taskcoachlib\gui\menu.py:44
+#: taskcoachlib/gui/menu.py:46
 msgid "&View"
 msgstr "ビュー(&V)"
 
-#: taskcoachlib\gui\menu.py:45
+#: taskcoachlib/gui/menu.py:47
 msgid "&Task"
 msgstr "タスク(&T)"
 
-#: taskcoachlib\gui\menu.py:46
+#: taskcoachlib/gui/menu.py:48
 msgid "Eff&ort"
 msgstr "エフォート(&o)"
 
-#: taskcoachlib\gui\menu.py:47
+#: taskcoachlib/gui/menu.py:49
+#: taskcoachlib/gui/uicommand.py:1331
+msgid "&Category"
+msgstr "カテゴリ(&C)"
+
+#: taskcoachlib/gui/menu.py:50
 msgid "&Help"
 msgstr "ヘルプ(&H)"
 
-#: taskcoachlib\gui\menu.py:102
+#: taskcoachlib/gui/menu.py:82
+msgid "&Export"
+msgstr "エクスポート(&E)"
+
+#: taskcoachlib/gui/menu.py:132
 msgid "&Select"
 msgstr "選択(&S)"
 
-#: taskcoachlib\gui\menu.py:117
+#: taskcoachlib/gui/menu.py:146
+msgid "New viewer"
+msgstr "新規ビューワー"
+
+#: taskcoachlib/gui/menu.py:149
 msgid "Tas&ks that are"
 msgstr "タスクステータス(&k)"
 
-#: taskcoachlib\gui\menu.py:119
+#: taskcoachlib/gui/menu.py:151
 msgid "Tasks &due before end of"
 msgstr "タスク(期限別）"
 
-#: taskcoachlib\gui\menu.py:122
+#: taskcoachlib/gui/menu.py:153
 msgid "Task &columns"
 msgstr "タスク"
 
-#: taskcoachlib\gui\menu.py:123
+#: taskcoachlib/gui/menu.py:154
 msgid "Effort &columns"
 msgstr "エフォート"
 
-#: taskcoachlib\gui\menu.py:125
-msgid "Task &list options"
-msgstr "タスクリストオプション(&l)"
+#: taskcoachlib/gui/menu.py:156
+msgid "&List options"
+msgstr "リストオプション(&L)"
 
-#: taskcoachlib\gui\menu.py:127
-msgid "Task &tree options"
-msgstr "タスクツリーオプション(&t)"
+#: taskcoachlib/gui/menu.py:158
+msgid "&Tree options"
+msgstr "ツリーオプション(&T)"
 
-#: taskcoachlib\gui\menu.py:130
+#: taskcoachlib/gui/menu.py:161
 msgid "&Sort"
 msgstr "並べかえ(&S)"
 
-#: taskcoachlib\gui\menu.py:132
+#: taskcoachlib/gui/menu.py:163
 msgid "T&oolbar"
 msgstr "ツールバー(&o)"
 
-#: taskcoachlib\gui\menu.py:139
-#: taskcoachlib\gui\menu.py:309
+#: taskcoachlib/gui/menu.py:179
+#: taskcoachlib/gui/menu.py:370
 msgid "&Dates"
 msgstr "日付(&D)"
 
-#: taskcoachlib\gui\menu.py:141
-#: taskcoachlib\gui\menu.py:311
-#: taskcoachlib\gui\uicommand.py:933
-#: taskcoachlib\gui\uicommand.py:995
+#: taskcoachlib/gui/menu.py:181
+#: taskcoachlib/gui/menu.py:372
+#: taskcoachlib/gui/uicommand.py:1273
+#: taskcoachlib/gui/uicommand.py:1336
 msgid "&Budget"
 msgstr "予定時間(&B)"
 
-#: taskcoachlib\gui\menu.py:143
-#: taskcoachlib\gui\menu.py:313
+#: taskcoachlib/gui/menu.py:183
+#: taskcoachlib/gui/menu.py:374
 msgid "&Financial"
 msgstr "報酬(&F)"
 
-#: taskcoachlib\gui\render.py:26
+#: taskcoachlib/gui/render.py:26
 msgid "Infinite"
 msgstr "-"
 
-#: taskcoachlib\gui\render.py:50
+#: taskcoachlib/gui/render.py:50
 msgid "now"
 msgstr "現在"
 
-#: taskcoachlib\gui\taskbaricon.py:42
-msgid "No tasks due today"
-msgstr "本日が期限のタスクはなし"
+#: taskcoachlib/gui/taskbaricon.py:93
+msgid "%d tasks overdue"
+msgstr "&d件のタスクが期限遅れ"
 
-#: taskcoachlib\gui\taskbaricon.py:44
-msgid "One task due today"
+#: taskcoachlib/gui/taskbaricon.py:93
+msgid "one task overdue"
+msgstr "1件のタスクが期限遅れ"
+
+#: taskcoachlib/gui/taskbaricon.py:94
+msgid "%d tasks due today"
+msgstr "本日が期限のタスク　%d 件"
+
+#: taskcoachlib/gui/taskbaricon.py:94
+msgid "one task due today"
 msgstr "本日が期限のタスクは1件"
 
-#: taskcoachlib\gui\taskbaricon.py:46
-msgid "%d tasks due today"
-msgstr "本日が期限のタスク　%d "
+#: taskcoachlib/gui/taskbaricon.py:95
+msgid "tracking effort for one task"
+msgstr "1件のタスクにトラッキングエフォート"
 
-#: taskcoachlib\gui\uicommand.py:248
+#: taskcoachlib/gui/taskbaricon.py:96
+msgid "tracking effort for %d tasks"
+msgstr "%d件のタスクにトラッキングエフォート"
+
+#: taskcoachlib/gui/uicommand.py:296
 msgid "&Open...\tCtrl+O"
 msgstr "開く(&O)\tCtrl+O"
 
-#: taskcoachlib\gui\uicommand.py:249
+#: taskcoachlib/gui/uicommand.py:297
 msgid "Open a %s file"
 msgstr "%sファイルを開く"
 
-#: taskcoachlib\gui\uicommand.py:261
+#: taskcoachlib/gui/uicommand.py:309
 msgid "Open %s"
 msgstr "%sを開く"
 
-#: taskcoachlib\gui\uicommand.py:269
+#: taskcoachlib/gui/uicommand.py:317
 msgid "&Merge..."
 msgstr "マージ(&M)"
 
-#: taskcoachlib\gui\uicommand.py:270
+#: taskcoachlib/gui/uicommand.py:318
 msgid "Merge tasks from another file with the current file"
-msgstr "他のファイルと現在のファイルのタスクをマージ"
+msgstr "他のファイルのタスクと現在のファイルを結合"
 
-#: taskcoachlib\gui\uicommand.py:279
+#: taskcoachlib/gui/uicommand.py:327
 msgid "&Close"
 msgstr "閉じる(&C)"
 
-#: taskcoachlib\gui\uicommand.py:280
+#: taskcoachlib/gui/uicommand.py:328
 msgid "Close the current file"
 msgstr "現在のファイルを閉じる"
 
-#: taskcoachlib\gui\uicommand.py:289
+#: taskcoachlib/gui/uicommand.py:337
 msgid "&Save\tCtrl+S"
 msgstr "保存(&s)\tCtrl+S"
 
-#: taskcoachlib\gui\uicommand.py:290
+#: taskcoachlib/gui/uicommand.py:338
 msgid "Save the current file"
-msgstr "保存"
+msgstr "現在のファイルを保存"
 
-#: taskcoachlib\gui\uicommand.py:301
+#: taskcoachlib/gui/uicommand.py:350
 msgid "S&ave as..."
 msgstr "名前をつけて保存(&a)"
 
-#: taskcoachlib\gui\uicommand.py:302
+#: taskcoachlib/gui/uicommand.py:351
 msgid "Save the current file under a new name"
-msgstr "現在のファイルを別の名前で保存する"
+msgstr "現在のファイルを新しい名前で保存"
 
-#: taskcoachlib\gui\uicommand.py:310
+#: taskcoachlib/gui/uicommand.py:360
 msgid "Sa&ve selection..."
 msgstr "保存(&v)"
 
-#: taskcoachlib\gui\uicommand.py:311
+#: taskcoachlib/gui/uicommand.py:361
 msgid "Save the selected tasks to a separate file"
-msgstr "選択したタスクを別のファイルに保存する"
+msgstr "選択したタスクのみ保存"
 
-#: taskcoachlib\gui\uicommand.py:320
+#: taskcoachlib/gui/uicommand.py:392
+msgid "Page"
+msgstr "ページ"
+
+#: taskcoachlib/gui/uicommand.py:403
+msgid "Page setup..."
+msgstr "ページ設定"
+
+#: taskcoachlib/gui/uicommand.py:404
+msgid "Setup the characteristics of the printer page"
+msgstr "印刷設定"
+
+#: taskcoachlib/gui/uicommand.py:420
+#: taskcoachlib/gui/uicommand.py:431
+msgid "Print preview"
+msgstr "印刷プレビュー"
+
+#: taskcoachlib/gui/uicommand.py:421
+msgid "Show a preview of what the print will look like"
+msgstr "印刷プレビューを表示"
+
+#: taskcoachlib/gui/uicommand.py:439
+msgid "Print..."
+msgstr "印刷"
+
+#: taskcoachlib/gui/uicommand.py:440
+msgid "Print the current file"
+msgstr "現在のファイルを印刷"
+
+#: taskcoachlib/gui/uicommand.py:461
 msgid "Export as &iCalendar..."
-msgstr "iCalendarにエクスポート(&i)"
+msgstr "&iCalendarにエクスポート"
 
-#: taskcoachlib\gui\uicommand.py:321
+#: taskcoachlib/gui/uicommand.py:462
 msgid "Export the current file in iCalendar (*.ics) format"
-msgstr "現在のファイルをiCalendar(*.ics)フォーマットで保存"
+msgstr "iCalendar(*.ics)フォーマットで現在のファイルをエクスポート"
 
-#: taskcoachlib\gui\uicommand.py:330
+#: taskcoachlib/gui/uicommand.py:471
+msgid "Export as &HTML..."
+msgstr "&HTMLにエクスポート"
+
+#: taskcoachlib/gui/uicommand.py:472
+msgid "Export the current view as HTML file"
+msgstr "現在のファイルをHTMLフォーマットで保存"
+
+#: taskcoachlib/gui/uicommand.py:481
+msgid "Export as &CSV..."
+msgstr "&CSVにエクスポート"
+
+#: taskcoachlib/gui/uicommand.py:482
+msgid "Export the current view in Comma Separated Values (CSV) format"
+msgstr "CSVフォーマットで現在の画面をエクスポート"
+
+#: taskcoachlib/gui/uicommand.py:491
 msgid "&Quit\tCtrl+Q"
 msgstr "終了(&Q)\tCtrl+Q"
 
-#: taskcoachlib\gui\uicommand.py:331
+#: taskcoachlib/gui/uicommand.py:492
 msgid "Exit %s"
-msgstr "%sを終了"
+msgstr "終了 %s"
 
-#: taskcoachlib\gui\uicommand.py:339
+#: taskcoachlib/gui/uicommand.py:500
 msgid "&Undo"
-msgstr "&Undo"
+msgstr "アンドゥ(&U)"
 
-#: taskcoachlib\gui\uicommand.py:344
+#: taskcoachlib/gui/uicommand.py:505
 msgid "Undo the last command"
-msgstr "最後のコマンドを取り消す"
+msgstr "最後のコマンドをアンドゥ"
 
-#: taskcoachlib\gui\uicommand.py:359
+#: taskcoachlib/gui/uicommand.py:520
 msgid "&Redo"
 msgstr "&Redo"
 
-#: taskcoachlib\gui\uicommand.py:364
+#: taskcoachlib/gui/uicommand.py:525
 msgid "Redo the last command that was undone"
 msgstr "取り消した最後のコマンドを再実行"
 
-#: taskcoachlib\gui\uicommand.py:380
+#: taskcoachlib/gui/uicommand.py:541
 msgid "Cu&t\tCtrl+X"
 msgstr "カット(&t)\tCtrl+X"
 
-#: taskcoachlib\gui\uicommand.py:381
+#: taskcoachlib/gui/uicommand.py:542
 msgid "Cut the selected item(s) to the clipboard"
 msgstr "切り取ります"
 
-#: taskcoachlib\gui\uicommand.py:392
+#: taskcoachlib/gui/uicommand.py:553
 msgid "&Copy\tCtrl+C"
 msgstr "コピー(&C)\tCtrl+C"
 
-#: taskcoachlib\gui\uicommand.py:393
+#: taskcoachlib/gui/uicommand.py:554
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "クリップボードにコピーします"
 
-#: taskcoachlib\gui\uicommand.py:404
+#: taskcoachlib/gui/uicommand.py:565
 msgid "&Paste\tCtrl+V"
 msgstr "貼り付け(&P)\tCtrl+V"
 
-#: taskcoachlib\gui\uicommand.py:405
+#: taskcoachlib/gui/uicommand.py:566
 msgid "Paste item(s) from the clipboard"
 msgstr "クリップボードから貼り付けます"
 
-#: taskcoachlib\gui\uicommand.py:418
+#: taskcoachlib/gui/uicommand.py:579
 msgid "P&aste into task"
 msgstr "タスクに貼り付け(&a)"
 
-#: taskcoachlib\gui\uicommand.py:419
+#: taskcoachlib/gui/uicommand.py:580
 msgid "Paste item(s) from the clipboard into the selected task"
 msgstr "クリップボードの情報を選択したタスクにはりつける"
 
-#: taskcoachlib\gui\uicommand.py:433
+#: taskcoachlib/gui/uicommand.py:594
 msgid "Preferences..."
 msgstr "設定"
 
-#: taskcoachlib\gui\uicommand.py:434
-#: taskcoachlib\gui\uicommand.py:439
+#: taskcoachlib/gui/uicommand.py:595
+#: taskcoachlib/gui/uicommand.py:600
 msgid "Edit preferences"
 msgstr "設定変更"
 
-#: taskcoachlib\gui\uicommand.py:445
+#: taskcoachlib/gui/uicommand.py:606
 msgid "&All\tCtrl+A"
 msgstr "全て選択(&A)\tCtrl+A"
 
-#: taskcoachlib\gui\uicommand.py:446
+#: taskcoachlib/gui/uicommand.py:607
 msgid "Select all items in the current view"
 msgstr "すべて選択します"
 
-#: taskcoachlib\gui\uicommand.py:456
+#: taskcoachlib/gui/uicommand.py:617
 msgid "&Invert selection\tCtrl+I"
 msgstr "選択を反転(&I)\tCtrl+I"
 
-#: taskcoachlib\gui\uicommand.py:457
+#: taskcoachlib/gui/uicommand.py:618
 msgid "Select unselected items and unselect selected items"
 msgstr "選択と非選択のアイテムを入れ替えます"
 
-#: taskcoachlib\gui\uicommand.py:466
+#: taskcoachlib/gui/uicommand.py:627
 msgid "&Clear selection"
 msgstr "クリア(&C)"
 
-#: taskcoachlib\gui\uicommand.py:467
+#: taskcoachlib/gui/uicommand.py:628
 msgid "Unselect all items"
-msgstr "全ての選択を外します"
+msgstr "全ての選択をクリアします"
 
-#: taskcoachlib\gui\uicommand.py:475
+#: taskcoachlib/gui/uicommand.py:636
 msgid "&All tasks"
 msgstr "全てのタスク(&A)"
 
-#: taskcoachlib\gui\uicommand.py:476
+#: taskcoachlib/gui/uicommand.py:637
 msgid "Show all tasks (reset all filters)"
 msgstr "全てのタスクを表示"
 
-#: taskcoachlib\gui\uicommand.py:492
+#: taskcoachlib/gui/uicommand.py:670
 msgid "&Hide this column"
 msgstr "このコラムを隠す(&H)"
 
-#: taskcoachlib\gui\uicommand.py:493
+#: taskcoachlib/gui/uicommand.py:671
 msgid "Hide the selected column"
 msgstr "選択した項目を隠す"
 
-#: taskcoachlib\gui\uicommand.py:513
-msgid "Tasks by catego&ries..."
-msgstr "カテゴリ別表示(&r)"
+#: taskcoachlib/gui/uicommand.py:692
+msgid "&Expand all items\tShift+Ctrl+E"
+msgstr "全てのアイテムを広げる(&E)\tShift+Ctrl+E"
 
-#: taskcoachlib\gui\uicommand.py:514
-msgid "Show/hide tasks by category"
-msgstr "タスクをカテゴリごとに表示"
+#: taskcoachlib/gui/uicommand.py:693
+msgid "Expand all items with subitems"
+msgstr "サブアイテムのある全てのアイテムを広げる"
 
-#: taskcoachlib\gui\uicommand.py:519
-msgid "View categories"
-msgstr "カテゴリを見る"
-
-#: taskcoachlib\gui\uicommand.py:529
-msgid "&Expand all tasks"
-msgstr "サブタスクを表示(&E)"
-
-#: taskcoachlib\gui\uicommand.py:530
-msgid "Expand all tasks with subtasks"
-msgstr "全てのサブタスクを表示"
-
-#: taskcoachlib\gui\uicommand.py:539
+#: taskcoachlib/gui/uicommand.py:706
 msgid "E&xpand"
 msgstr "広げる(&x)"
 
-#: taskcoachlib\gui\uicommand.py:539
-msgid "Expand the selected task(s)"
+#: taskcoachlib/gui/uicommand.py:706
+msgid "Expand the selected item(s)"
 msgstr "選択したタスクの下位階層を表示する"
 
-#: taskcoachlib\gui\uicommand.py:548
-msgid "&Collapse all tasks"
-msgstr "全てのタスクを折りたたむ"
+#: taskcoachlib/gui/uicommand.py:720
+msgid "&Collapse all items\tShift+Ctrl+C"
+msgstr "全てのアイテムを折りたたむ(&C)\tShift+Ctrl+C"
 
-#: taskcoachlib\gui\uicommand.py:549
-msgid "Collapse all tasks with subtasks"
-msgstr "全タスクのサブタスクを折りたたむ"
+#: taskcoachlib/gui/uicommand.py:721
+msgid "Collapse all items with subitems"
+msgstr "サブアイテムのある全てのアイテムを折りたたむ"
 
-#: taskcoachlib\gui\uicommand.py:558
+#: taskcoachlib/gui/uicommand.py:734
 msgid "C&ollapse"
 msgstr "折りたたむ(&o)"
 
-#: taskcoachlib\gui\uicommand.py:559
-msgid "Collapse the selected tasks with subtasks"
+#: taskcoachlib/gui/uicommand.py:735
+msgid "Collapse the selected items with subitems"
 msgstr "選択したタスクのサブタスクを折りたたむ"
 
-#: taskcoachlib\gui\uicommand.py:570
-msgid "Insert a new task"
-msgstr "新しいタスクを挿入します"
+#: taskcoachlib/gui/uicommand.py:748
+msgid "New item"
+msgstr "新規アイテム"
 
-#: taskcoachlib\gui\uicommand.py:585
-msgid "&New task..."
-msgstr "新しいタスク(&N)"
+#: taskcoachlib/gui/uicommand.py:771
+msgid "New subitem"
+msgstr "新規サブアイテム"
 
-#: taskcoachlib\gui\uicommand.py:598
-msgid "Insert a new subtask into the selected task"
-msgstr "新しいサブタスクを挿入します"
+#: taskcoachlib/gui/uicommand.py:807
+msgid "Delete item"
+msgstr "アイテム削除"
 
-#: taskcoachlib\gui\uicommand.py:614
-msgid "New &subtask..."
-msgstr "新しいサブタスク(&s)"
-
-#: taskcoachlib\gui\uicommand.py:626
-msgid "&Edit task..."
-msgstr "タスクを編集(&E)"
-
-#: taskcoachlib\gui\uicommand.py:626
-msgid "Edit the selected task"
-msgstr "選択タスクを編集"
-
-#: taskcoachlib\gui\uicommand.py:640
-msgid "&Mark completed\tCtrl+ENTER"
+#: taskcoachlib/gui/uicommand.py:875
+msgid "&Mark completed\tCtrl+RETURN"
 msgstr "完了(&M)\tCtrl+ENTER"
 
-#: taskcoachlib\gui\uicommand.py:641
+#: taskcoachlib/gui/uicommand.py:876
 msgid "Mark the selected task(s) completed"
-msgstr "選択したタスクが完了したことを入力"
+msgstr "選択したタスクの完了を入力"
 
-#: taskcoachlib\gui\uicommand.py:658
-msgid "&Delete task\tCtrl+DEL"
-msgstr "タスクを削除(&D)\tCtrl+DEL"
-
-#: taskcoachlib\gui\uicommand.py:659
-msgid "Delete the selected task(s)"
-msgstr "選択したタスクを削除する"
-
-#: taskcoachlib\gui\uicommand.py:683
+#: taskcoachlib/gui/uicommand.py:916
 msgid "Tasks"
 msgstr "タスク"
 
-#: taskcoachlib\gui\uicommand.py:695
+#: taskcoachlib/gui/uicommand.py:928
 msgid "Please enter recipient"
 msgstr "受信者を入力してください"
 
-#: taskcoachlib\gui\uicommand.py:701
+#: taskcoachlib/gui/uicommand.py:934
 msgid "&Add attachment"
 msgstr "添付ファイルを追加(&A)"
 
-#: taskcoachlib\gui\uicommand.py:702
+#: taskcoachlib/gui/uicommand.py:935
 msgid "Browse for files to add as attachment to the selected task(s)"
 msgstr "タスクに添付するファイルを見る"
 
-#: taskcoachlib\gui\uicommand.py:718
-msgid "&New effort..."
-msgstr "新しいエフォート(&N)"
+#: taskcoachlib/gui/uicommand.py:949
+msgid "&Open all attachments"
+msgstr "全ての添付ファイルを開く(&O)"
 
-#: taskcoachlib\gui\uicommand.py:719
-msgid "Add an effort period to the selected task(s)"
-msgstr "選択したタスクにエフォートを新しく追加"
+#: taskcoachlib/gui/uicommand.py:950
+msgid "Open all attachments of the selected task(s)"
+msgstr "選択タスクの全ての添付ファイルを開く"
 
-#: taskcoachlib\gui\uicommand.py:740
-msgid "&Edit effort..."
-msgstr "エフォートを編集(&E)"
-
-#: taskcoachlib\gui\uicommand.py:741
-msgid "Edit the selected effort period(s)"
-msgstr "選択したエフォートを編集"
-
-#: taskcoachlib\gui\uicommand.py:754
-msgid "&Delete effort"
-msgstr "エフォートを削除(&D)"
-
-#: taskcoachlib\gui\uicommand.py:755
-msgid "Delete the selected effort period(s)"
-msgstr "選択したエフォートを削除"
-
-#: taskcoachlib\gui\uicommand.py:766
+#: taskcoachlib/gui/uicommand.py:1014
 msgid "&Start tracking effort"
 msgstr "トラッキングスタート(&S)"
 
-#: taskcoachlib\gui\uicommand.py:767
+#: taskcoachlib/gui/uicommand.py:1015
 msgid "Start tracking effort for the selected task(s)"
-msgstr "アクティブタスクのろたっキングを開始する"
+msgstr "アクティブタスクのトラッキングを開始"
 
-#: taskcoachlib\gui\uicommand.py:786
+#: taskcoachlib/gui/uicommand.py:1033
 msgid "St&op tracking effort"
 msgstr "トラッキングストップ(&o)"
 
-#: taskcoachlib\gui\uicommand.py:787
+#: taskcoachlib/gui/uicommand.py:1034
 msgid "Stop tracking effort for the active task(s)"
 msgstr "アクティブタスクのトラッキングを停止する"
 
-#: taskcoachlib\gui\uicommand.py:824
+#: taskcoachlib/gui/uicommand.py:1128
 msgid "&Help contents"
 msgstr "ヘルプ(&H)"
 
-#: taskcoachlib\gui\uicommand.py:825
+#: taskcoachlib/gui/uicommand.py:1129
 msgid "Help about the program"
-msgstr "このプログラムのヘルプ"
+msgstr "ヘルプ"
 
-#: taskcoachlib\gui\uicommand.py:826
+#: taskcoachlib/gui/uicommand.py:1130
 msgid "Help"
 msgstr "ヘルプ"
 
-#: taskcoachlib\gui\uicommand.py:832
+#: taskcoachlib/gui/uicommand.py:1136
 msgid "&Tips"
 msgstr "&Tips"
 
-#: taskcoachlib\gui\uicommand.py:833
+#: taskcoachlib/gui/uicommand.py:1137
 msgid "Tips about the program"
 msgstr "プログラムのチップス"
 
-#: taskcoachlib\gui\uicommand.py:846
+#: taskcoachlib/gui/uicommand.py:1150
 msgid "&About %s"
-msgstr "%sについて(&A)"
+msgstr "&About %s"
 
-#: taskcoachlib\gui\uicommand.py:847
+#: taskcoachlib/gui/uicommand.py:1151
 msgid "Version and contact information about %s"
 msgstr "%sのバージョンとコンタクトインフォメーション"
 
-#: taskcoachlib\gui\uicommand.py:848
+#: taskcoachlib/gui/uicommand.py:1152
 msgid "Help: About %s"
 msgstr "%sについてのヘルプ"
 
-#: taskcoachlib\gui\uicommand.py:854
+#: taskcoachlib/gui/uicommand.py:1158
 msgid "&License"
 msgstr "ライセンス(&L)"
 
-#: taskcoachlib\gui\uicommand.py:855
+#: taskcoachlib/gui/uicommand.py:1159
 msgid "%s license"
 msgstr "%s ライセンス"
 
-#: taskcoachlib\gui\uicommand.py:856
+#: taskcoachlib/gui/uicommand.py:1160
 msgid "Help: %s license"
 msgstr "ヘルプ: %s ライセンス"
 
-#: taskcoachlib\gui\uicommand.py:862
+#: taskcoachlib/gui/uicommand.py:1166
 msgid "&Restore"
 msgstr "復元(&R)"
 
-#: taskcoachlib\gui\uicommand.py:863
+#: taskcoachlib/gui/uicommand.py:1167
 msgid "Restore the window to its previous state"
 msgstr "ウィンドウを復元"
 
-#: taskcoachlib\gui\uicommand.py:904
+#: taskcoachlib/gui/uicommand.py:1245
 msgid "&Completed"
 msgstr "完了(&C)"
 
-#: taskcoachlib\gui\uicommand.py:905
+#: taskcoachlib/gui/uicommand.py:1246
 msgid "Show/hide completed tasks"
-msgstr "完了したタスクを表示/隠す"
+msgstr "完了タスクを表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:907
+#: taskcoachlib/gui/uicommand.py:1248
 msgid "&Inactive"
 msgstr "非アクティブ(&I)"
 
-#: taskcoachlib\gui\uicommand.py:908
+#: taskcoachlib/gui/uicommand.py:1249
 msgid "Show/hide inactive tasks (tasks with a start date in the future)"
 msgstr "非アクティブタスクを表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:910
+#: taskcoachlib/gui/uicommand.py:1251
 msgid "&Active"
 msgstr "アクティブ(&A)"
 
-#: taskcoachlib\gui\uicommand.py:911
-#: taskcoachlib\gui\uicommand.py:914
+#: taskcoachlib/gui/uicommand.py:1252
 msgid "Show/hide active tasks (tasks with a start date in the past and a due date in the future)"
 msgstr "アクティブタスク(開始日が過去で完了予定日が未来のタスク)を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:913
+#: taskcoachlib/gui/uicommand.py:1254
 msgid "&Over due"
 msgstr "期限遅れ(&O)"
 
-#: taskcoachlib\gui\uicommand.py:916
+#: taskcoachlib/gui/uicommand.py:1255
+msgid "Show/hide over due tasks (tasks with a due date in the past)"
+msgstr "期限遅れタスクを表示/隠す"
+
+#: taskcoachlib/gui/uicommand.py:1257
 msgid "Over &budget"
 msgstr "時間切れ(&b)"
 
-#: taskcoachlib\gui\uicommand.py:917
+#: taskcoachlib/gui/uicommand.py:1258
 msgid "Show/hide tasks that are over budget"
 msgstr "残り時間がなくなったタスクを表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:920
+#: taskcoachlib/gui/uicommand.py:1261
 msgid "Tasks &with subtasks"
 msgstr "サブタスクのあるタスク(&w)"
 
-#: taskcoachlib\gui\uicommand.py:921
+#: taskcoachlib/gui/uicommand.py:1262
 msgid "Show/hide tasks with subtasks"
 msgstr "サブタスクのあるタスクを表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:929
+#: taskcoachlib/gui/uicommand.py:1267
+msgid "Show/hide attachment column"
+msgstr "添付ファイルを表示/隠す"
+
+#: taskcoachlib/gui/uicommand.py:1268
+msgid "&Categories"
+msgstr "カテゴリ(&C)"
+
+#: taskcoachlib/gui/uicommand.py:1268
+msgid "Show/hide categories column"
+msgstr "カテゴリを表示/隠す"
+
+#: taskcoachlib/gui/uicommand.py:1269
 msgid "Show/hide start date column"
 msgstr "開始日を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:929
-#: taskcoachlib\gui\uicommand.py:991
+#: taskcoachlib/gui/uicommand.py:1269
+#: taskcoachlib/gui/uicommand.py:1332
 msgid "&Start date"
 msgstr "開始日(&S)"
 
-#: taskcoachlib\gui\uicommand.py:930
+#: taskcoachlib/gui/uicommand.py:1270
 msgid "Show/hide due date column"
 msgstr "完了予定日を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:930
-#: taskcoachlib\gui\uicommand.py:992
+#: taskcoachlib/gui/uicommand.py:1270
+#: taskcoachlib/gui/uicommand.py:1333
 msgid "&Due date"
 msgstr "完了予定日(&D)"
 
-#: taskcoachlib\gui\uicommand.py:931
-msgid "D&ays left"
-msgstr "残り日数(&a)"
-
-#: taskcoachlib\gui\uicommand.py:931
+#: taskcoachlib/gui/uicommand.py:1271
 msgid "Show/hide days left column"
 msgstr "残り日数を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:932
+#: taskcoachlib/gui/uicommand.py:1271
+#: taskcoachlib/gui/uicommand.py:1335
+msgid "D&ays left"
+msgstr "残り日数(&a)"
+
+#: taskcoachlib/gui/uicommand.py:1272
 msgid "Co&mpletion date"
-msgstr "完了日(&m)"
+msgstr "完了日(&C)"
 
-#: taskcoachlib\gui\uicommand.py:932
+#: taskcoachlib/gui/uicommand.py:1272
 msgid "Show/hide completion date column"
-msgstr "完了日を表示/閉じる"
+msgstr "完了日を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:933
+#: taskcoachlib/gui/uicommand.py:1273
 msgid "Show/hide budget column"
 msgstr "予定時間を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:934
+#: taskcoachlib/gui/uicommand.py:1274
 msgid "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr "予定時間を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:934
-#: taskcoachlib\gui\uicommand.py:996
+#: taskcoachlib/gui/uicommand.py:1274
+#: taskcoachlib/gui/uicommand.py:1337
 msgid "Total b&udget"
 msgstr "合計予定時間(&u)"
 
-#: taskcoachlib\gui\uicommand.py:935
-#: taskcoachlib\gui\uicommand.py:948
+#: taskcoachlib/gui/uicommand.py:1275
+#: taskcoachlib/gui/uicommand.py:1288
 msgid "Show/hide time spent column"
 msgstr "経過時間を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:935
-#: taskcoachlib\gui\uicommand.py:948
-#: taskcoachlib\gui\uicommand.py:997
+#: taskcoachlib/gui/uicommand.py:1275
+#: taskcoachlib/gui/uicommand.py:1288
+#: taskcoachlib/gui/uicommand.py:1338
 msgid "&Time spent"
 msgstr "経過時間(&T)"
 
-#: taskcoachlib\gui\uicommand.py:936
+#: taskcoachlib/gui/uicommand.py:1276
 msgid "Show/hide total time spent column (total time includes time spent on subtasks)"
 msgstr "合計経過時間を表示/隠す（合計経過時間にはサブタスクも含まれます）"
 
-#: taskcoachlib\gui\uicommand.py:936
-#: taskcoachlib\gui\uicommand.py:949
-#: taskcoachlib\gui\uicommand.py:998
+#: taskcoachlib/gui/uicommand.py:1276
+#: taskcoachlib/gui/uicommand.py:1289
+#: taskcoachlib/gui/uicommand.py:1339
 msgid "T&otal time spent"
 msgstr "合計経過時間(&o)"
 
-#: taskcoachlib\gui\uicommand.py:937
+#: taskcoachlib/gui/uicommand.py:1277
 msgid "Show/hide budget left column"
 msgstr "残り時間を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:937
-#: taskcoachlib\gui\uicommand.py:999
+#: taskcoachlib/gui/uicommand.py:1277
+#: taskcoachlib/gui/uicommand.py:1340
 msgid "Budget &left"
-msgstr "残り時間(&l)"
+msgstr "残り日数(&D)"
 
-#: taskcoachlib\gui\uicommand.py:938
+#: taskcoachlib/gui/uicommand.py:1278
 msgid "Show/hide total budget left column (total budget left includes budget left for subtasks)"
 msgstr "合計残り時間を表示/隠す（合計残り時間にはサブタスクも含まれます）"
 
-#: taskcoachlib\gui\uicommand.py:938
-#: taskcoachlib\gui\uicommand.py:1000
+#: taskcoachlib/gui/uicommand.py:1278
+#: taskcoachlib/gui/uicommand.py:1341
 msgid "Total budget l&eft"
 msgstr "合計残り時間(&e)"
 
-#: taskcoachlib\gui\uicommand.py:939
+#: taskcoachlib/gui/uicommand.py:1279
 msgid "Show/hide priority column"
 msgstr "優先度を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:939
-#: taskcoachlib\gui\uicommand.py:1001
+#: taskcoachlib/gui/uicommand.py:1279
+#: taskcoachlib/gui/uicommand.py:1342
 msgid "&Priority"
 msgstr "優先度(&P)"
 
-#: taskcoachlib\gui\uicommand.py:940
+#: taskcoachlib/gui/uicommand.py:1280
 msgid "O&verall priority"
-msgstr "最高の優先度(&v)"
+msgstr "全体の優先度(&v)"
 
-#: taskcoachlib\gui\uicommand.py:940
+#: taskcoachlib/gui/uicommand.py:1280
 msgid "Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)"
-msgstr "最高の優先度を表示/隠す(最高の優先度とは、タスクとサブタスクの優先度の中で最高のものです）"
+msgstr "全体の優先度を表示/隠す(全体の優先度とは、タスクとサブタスクの優先度の中で最高のものです）"
 
-#: taskcoachlib\gui\uicommand.py:941
+#: taskcoachlib/gui/uicommand.py:1281
 msgid "Show/hide hourly fee column"
 msgstr "時間報酬を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:941
-#: taskcoachlib\gui\uicommand.py:1003
+#: taskcoachlib/gui/uicommand.py:1281
+#: taskcoachlib/gui/uicommand.py:1344
 msgid "&Hourly fee"
 msgstr "時間報酬(&H)"
 
-#: taskcoachlib\gui\uicommand.py:942
+#: taskcoachlib/gui/uicommand.py:1282
 msgid "Show/hide fixed fee column"
 msgstr "固定報酬を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:942
-#: taskcoachlib\gui\uicommand.py:1004
+#: taskcoachlib/gui/uicommand.py:1282
+#: taskcoachlib/gui/uicommand.py:1345
 msgid "&Fixed fee"
 msgstr "固定報酬(&F)"
 
-#: taskcoachlib\gui\uicommand.py:943
+#: taskcoachlib/gui/uicommand.py:1283
 msgid "&Total fixed fee"
 msgstr "合計固定報酬(&T)"
 
-#: taskcoachlib\gui\uicommand.py:943
+#: taskcoachlib/gui/uicommand.py:1283
 msgid "Show/hide total fixed fee column"
 msgstr "合計固定報酬を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:944
-#: taskcoachlib\gui\uicommand.py:950
+#: taskcoachlib/gui/uicommand.py:1284
+#: taskcoachlib/gui/uicommand.py:1290
 msgid "Show/hide revenue column"
 msgstr "収入を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:944
-#: taskcoachlib\gui\uicommand.py:950
-#: taskcoachlib\gui\uicommand.py:1006
+#: taskcoachlib/gui/uicommand.py:1284
+#: taskcoachlib/gui/uicommand.py:1290
+#: taskcoachlib/gui/uicommand.py:1347
 msgid "&Revenue"
 msgstr "収入(&R)"
 
-#: taskcoachlib\gui\uicommand.py:945
+#: taskcoachlib/gui/uicommand.py:1285
 msgid "T&otal revenue"
 msgstr "合計収入(&o)"
 
-#: taskcoachlib\gui\uicommand.py:945
-#: taskcoachlib\gui\uicommand.py:951
+#: taskcoachlib/gui/uicommand.py:1285
+#: taskcoachlib/gui/uicommand.py:1291
 msgid "Show/hide total revenue column"
-msgstr "合計収入を表示/隠す"
+msgstr "収入を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:946
+#: taskcoachlib/gui/uicommand.py:1286
 msgid "Show/hide last modification time column"
 msgstr "最終更新時刻を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:946
-#: taskcoachlib\gui\uicommand.py:1008
-#: taskcoachlib\gui\viewer.py:257
+#: taskcoachlib/gui/uicommand.py:1286
+#: taskcoachlib/gui/uicommand.py:1349
+#: taskcoachlib/gui/viewer.py:497
 msgid "Last modification time"
 msgstr "最終更新時刻"
 
-#: taskcoachlib\gui\uicommand.py:947
-msgid "Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks"
+#: taskcoachlib/gui/uicommand.py:1287
+msgid "Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks)"
 msgstr "全体最終更新時刻を表示/隠す（全体最終更新時刻は、サブタスクの中で最も最新の更新があった時刻）"
 
-#: taskcoachlib\gui\uicommand.py:947
-#: taskcoachlib\gui\uicommand.py:1009
-#: taskcoachlib\gui\viewer.py:258
+#: taskcoachlib/gui/uicommand.py:1287
+#: taskcoachlib/gui/uicommand.py:1350
+#: taskcoachlib/gui/viewer.py:498
 msgid "Overall last modification time"
 msgstr "全体最終更新時刻"
 
-#: taskcoachlib\gui\uicommand.py:949
+#: taskcoachlib/gui/uicommand.py:1289
 msgid "Show/hide total time spent column"
 msgstr "合計経過時間を表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:951
+#: taskcoachlib/gui/uicommand.py:1291
 msgid "To&tal revenue"
 msgstr "合計収入(&t)"
 
-#: taskcoachlib\gui\uicommand.py:955
+#: taskcoachlib/gui/uicommand.py:1295
 msgid "All date columns"
 msgstr "日付関連すべて"
 
-#: taskcoachlib\gui\uicommand.py:956
+#: taskcoachlib/gui/uicommand.py:1296
 msgid "Show/hide all date-related columns"
 msgstr "日付に関連した項目をすべて表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:960
+#: taskcoachlib/gui/uicommand.py:1300
 msgid "All budget columns"
 msgstr "予定時間関連すべて"
 
-#: taskcoachlib\gui\uicommand.py:961
+#: taskcoachlib/gui/uicommand.py:1301
 msgid "Show/hide all budget-related columns"
 msgstr "時間に関連した項目をすべて表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:965
+#: taskcoachlib/gui/uicommand.py:1305
 msgid "All financial columns"
 msgstr "収入関連すべて"
 
-#: taskcoachlib\gui\uicommand.py:966
+#: taskcoachlib/gui/uicommand.py:1306
 msgid "Show/hide all finance-related columns"
 msgstr "収入に関連した項目を全て表示/隠す"
 
-#: taskcoachlib\gui\uicommand.py:978
+#: taskcoachlib/gui/uicommand.py:1318
 msgid "&Ascending"
 msgstr "昇順(&A)"
 
-#: taskcoachlib\gui\uicommand.py:979
+#: taskcoachlib/gui/uicommand.py:1319
 msgid "Sort tasks ascending (checked) or descending (unchecked)"
 msgstr "タスクを昇順(チェック）または降順（チェックなし）に並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:981
+#: taskcoachlib/gui/uicommand.py:1321
 msgid "Sort case sensitive"
 msgstr "大文字・小文字区別"
 
-#: taskcoachlib\gui\uicommand.py:982
+#: taskcoachlib/gui/uicommand.py:1322
 msgid "When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)"
-msgstr "大小文字区別して(チェック）、または区別なし（チェックなし）並びかえ"
+msgstr "大小文字区別する(チェック）、区別なし（チェックなし）"
 
-#: taskcoachlib\gui\uicommand.py:984
+#: taskcoachlib/gui/uicommand.py:1324
 msgid "Sort by status &first"
 msgstr "ステータス優先に並び替え(&f)"
 
-#: taskcoachlib\gui\uicommand.py:985
+#: taskcoachlib/gui/uicommand.py:1325
 msgid "Sort tasks by status (active/inactive/completed) first"
-msgstr "ステータス(アクティブ/非アクティブ/完了)順にまず並びかえ"
+msgstr "アクティブ/非アクティブ/完了順に並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:990
+#: taskcoachlib/gui/uicommand.py:1330
 msgid "Sort tasks by subject"
 msgstr "タスク名で並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:990
+#: taskcoachlib/gui/uicommand.py:1330
 msgid "Sub&ject"
 msgstr "タスク名(&s)"
 
-#: taskcoachlib\gui\uicommand.py:991
+#: taskcoachlib/gui/uicommand.py:1331
+msgid "Sort tasks by category"
+msgstr "カテゴリで並び替え"
+
+#: taskcoachlib/gui/uicommand.py:1332
 msgid "Sort tasks by start date"
 msgstr "開始日順に並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:992
+#: taskcoachlib/gui/uicommand.py:1333
 msgid "Sort tasks by due date"
 msgstr "完了予定日でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:993
+#: taskcoachlib/gui/uicommand.py:1334
 msgid "&Completion date"
 msgstr "完了日(&C)"
 
-#: taskcoachlib\gui\uicommand.py:993
+#: taskcoachlib/gui/uicommand.py:1334
 msgid "Sort tasks by completion date"
 msgstr "完了日でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:994
-msgid "&Days left"
-msgstr "残り日数(&D)"
-
-#: taskcoachlib\gui\uicommand.py:994
+#: taskcoachlib/gui/uicommand.py:1335
 msgid "Sort tasks by number of days left"
 msgstr "残り日数でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:995
+#: taskcoachlib/gui/uicommand.py:1336
 msgid "Sort tasks by budget"
 msgstr "予定時間でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:996
+#: taskcoachlib/gui/uicommand.py:1337
 msgid "Sort tasks by total budget"
 msgstr "合計予定時間でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:997
+#: taskcoachlib/gui/uicommand.py:1338
 msgid "Sort tasks by time spent"
 msgstr "経過時間でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:998
+#: taskcoachlib/gui/uicommand.py:1339
 msgid "Sort tasks by total time spent"
 msgstr "合計経過時間でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:999
+#: taskcoachlib/gui/uicommand.py:1340
 msgid "Sort tasks by budget left"
 msgstr "残り時間でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1000
+#: taskcoachlib/gui/uicommand.py:1341
 msgid "Sort tasks by total budget left"
 msgstr "合計残り時間でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1001
+#: taskcoachlib/gui/uicommand.py:1342
 msgid "Sort tasks by priority"
 msgstr "優先度でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1002
+#: taskcoachlib/gui/uicommand.py:1343
 msgid "Sort tasks by overall priority"
 msgstr "全体優先度でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1002
-#: taskcoachlib\gui\viewer.py:251
+#: taskcoachlib/gui/uicommand.py:1343
+#: taskcoachlib/gui/viewer.py:491
 msgid "Overall priority"
 msgstr "全体優先度"
 
-#: taskcoachlib\gui\uicommand.py:1003
+#: taskcoachlib/gui/uicommand.py:1344
 msgid "Sort tasks by hourly fee"
 msgstr "時間報酬でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1004
+#: taskcoachlib/gui/uicommand.py:1345
 msgid "Sort tasks by fixed fee"
 msgstr "固定報酬でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1005
+#: taskcoachlib/gui/uicommand.py:1346
 msgid "Sort tasks by total fixed fee"
 msgstr "合計固定報酬でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1005
+#: taskcoachlib/gui/uicommand.py:1346
 msgid "Total fi&xed fee"
 msgstr "合計固定報酬"
 
-#: taskcoachlib\gui\uicommand.py:1006
+#: taskcoachlib/gui/uicommand.py:1347
 msgid "Sort tasks by revenue"
 msgstr "収入でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1007
+#: taskcoachlib/gui/uicommand.py:1348
 msgid "Sort tasks by total revenue"
 msgstr "合計収入でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1007
+#: taskcoachlib/gui/uicommand.py:1348
 msgid "Total re&venue"
 msgstr "合計収入(&v)"
 
-#: taskcoachlib\gui\uicommand.py:1008
+#: taskcoachlib/gui/uicommand.py:1349
 msgid "Sort tasks by last modification time"
 msgstr "最終更新時刻でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1009
+#: taskcoachlib/gui/uicommand.py:1350
 msgid "Sort tasks by overall last modification time"
 msgstr "全体最終更新時刻でタスクを並びかえ"
 
-#: taskcoachlib\gui\uicommand.py:1017
-msgid "&Hide"
-msgstr "隠す(&H)"
-
-#: taskcoachlib\gui\uicommand.py:1017
-msgid "Hide the toolbar"
-msgstr "ツールバーを隠す"
-
-#: taskcoachlib\gui\uicommand.py:1018
-msgid "&Small images"
-msgstr "アイコンサイズ小(&S)"
-
-#: taskcoachlib\gui\uicommand.py:1018
-msgid "Small images (16x16) on the toolbar"
-msgstr "ツールバーのアイコン小サイズ(16x16)"
-
-#: taskcoachlib\gui\uicommand.py:1019
-msgid "&Medium-sized images"
-msgstr "アイコンサイズ中(&M)"
-
-#: taskcoachlib\gui\uicommand.py:1019
-msgid "Medium-sized images (22x22) on the toolbar"
-msgstr "ツールバーのアイコン中サイズ(22x22)"
-
-#: taskcoachlib\gui\uicommand.py:1020
-msgid "&Large images"
-msgstr "アイコンサイズ大(&L)"
-
-#: taskcoachlib\gui\uicommand.py:1020
-msgid "Large images (32x32) on the toolbar"
-msgstr "ツールバーのアイコン大サイズ(32x32)"
-
-#: taskcoachlib\gui\uicommand.py:1026
-msgid "&Find dialog"
-msgstr "検索(&F)"
-
-#: taskcoachlib\gui\uicommand.py:1026
-msgid "Show/hide find dialog"
-msgstr "検索ダイアログ表示/非表示"
-
-#: taskcoachlib\gui\uicommand.py:1029
-msgid "Show/hide status bar"
-msgstr "ステータスバー表示/非表示"
-
-#: taskcoachlib\gui\uicommand.py:1029
-msgid "Status&bar"
-msgstr "ステータスバー(&b)"
-
-#: taskcoachlib\gui\uicommand.py:1034
-msgid "&Today"
-msgstr "今日(&T)"
-
-#: taskcoachlib\gui\uicommand.py:1034
-msgid "Only show tasks due today"
-msgstr "今日中に期限のタスクのみ表示"
-
-#: taskcoachlib\gui\uicommand.py:1035
-msgid "Only show tasks due today and tomorrow"
-msgstr "今日か明日に期限のタスクのみ表示"
-
-#: taskcoachlib\gui\uicommand.py:1035
-msgid "T&omorrow"
-msgstr "明日(&o)"
-
-#: taskcoachlib\gui\uicommand.py:1036
-msgid "Only show tasks due this work week (i.e. before Friday)"
-msgstr "今週中までのタスクを表示（金曜日まで）"
-
-#: taskcoachlib\gui\uicommand.py:1036
-msgid "Wo&rk week"
-msgstr "今週（平日）(&r)"
-
-#: taskcoachlib\gui\uicommand.py:1037
-msgid "&Week"
-msgstr "今週(&W)"
-
-#: taskcoachlib\gui\uicommand.py:1037
-msgid "Only show tasks due this week (i.e. before Sunday)"
-msgstr "今週中までのタスクを表示（日曜日まで）"
-
-#: taskcoachlib\gui\uicommand.py:1038
-msgid "&Month"
-msgstr "月(&M)"
-
-#: taskcoachlib\gui\uicommand.py:1038
-msgid "Only show tasks due this month"
-msgstr "今月中にするタスクのみ表示"
-
-#: taskcoachlib\gui\uicommand.py:1039
-msgid "&Year"
-msgstr "年(&Y)"
-
-#: taskcoachlib\gui\uicommand.py:1039
-msgid "Only show tasks due this year"
-msgstr "今年中にするタスクのみ表示"
-
-#: taskcoachlib\gui\uicommand.py:1040
-msgid "&Unlimited"
-msgstr "期限なし(&U)"
-
-#: taskcoachlib\gui\uicommand.py:1040
-msgid "Show all tasks"
-msgstr "すべてのタスクを表示"
-
-#: taskcoachlib\gui\uicommand.py:1058
-msgid "Mail task"
-msgstr "タスクをメール"
-
-#: taskcoachlib\gui\uicommand.py:1059
-msgid "Mail the task, using your default mailer"
-msgstr "タスクをメールする（デフォルトメーラー使用）"
-
-#: taskcoachlib\gui\viewer.py:160
-msgid "Tasks: %d selected, %d visible, %d total"
-msgstr "タスク: %d 選択済み, %d 可視, %d 合計"
-
-#: taskcoachlib\gui\viewer.py:163
-msgid "Status: %d over due, %d inactive, %d completed"
-msgstr "ステータス: %d 期限遅れ, %d 非アクティブ, %d 完了"
-
-#: taskcoachlib\gui\viewer.py:242
-msgid "Days left"
-msgstr "残り日数"
-
-#: taskcoachlib\gui\viewer.py:245
-msgid "Total budget"
-msgstr "合計予定時間"
-
-#: taskcoachlib\gui\viewer.py:247
-#: taskcoachlib\gui\viewer.py:475
-msgid "Total time spent"
-msgstr "合計経過時間"
-
-#: taskcoachlib\gui\viewer.py:249
-msgid "Total budget left"
-msgstr "合計残り時間"
-
-#: taskcoachlib\gui\viewer.py:254
-msgid "Total fixed fee"
-msgstr "合計固定報酬"
-
-#: taskcoachlib\gui\viewer.py:256
-#: taskcoachlib\gui\viewer.py:477
-msgid "Total revenue"
-msgstr "合計収入"
-
-#: taskcoachlib\gui\viewer.py:401
-msgid "Effort: %d selected, %d visible, %d total"
-msgstr "エフォート: %d 選択済み, %d 可視, %d 合計"
-
-#: taskcoachlib\gui\viewer.py:404
-msgid "Status: %d tracking"
-msgstr "Status: %d トラッキング中"
-
-#: taskcoachlib\gui\viewer.py:439
-msgid "Period"
-msgstr "期間"
-
-#: taskcoachlib\gui\viewerfactory.py:7
-msgid "Effort list"
-msgstr "エフォートリスト"
-
-#: taskcoachlib\gui\viewerfactory.py:10
-msgid "Effort per day"
-msgstr "本日のエフォート"
-
-#: taskcoachlib\gui\viewerfactory.py:13
-msgid "Effort per week"
-msgstr "今週のエフォート"
-
-#: taskcoachlib\gui\viewerfactory.py:16
-msgid "Effort per month"
-msgstr "今月のエフォート"
-
-#: taskcoachlib\gui\viewerfactory.py:26
+#: taskcoachlib/gui/uicommand.py:1357
+#: taskcoachlib/gui/uicommand.py:1360
+#: taskcoachlib/gui/viewerfactory.py:21
 msgid "Task list"
 msgstr "タスクリスト"
 
-#: taskcoachlib\gui\viewerfactory.py:29
+#: taskcoachlib/gui/uicommand.py:1358
+msgid "Open a new tab with a viewer that displays tasks in a list"
+msgstr "タスクリスト表示タブを開く"
+
+#: taskcoachlib/gui/uicommand.py:1361
+#: taskcoachlib/gui/uicommand.py:1364
+#: taskcoachlib/gui/viewerfactory.py:25
 msgid "Task tree"
 msgstr "タスクツリー"
 
-#: taskcoachlib\help\__init__.py:5
+#: taskcoachlib/gui/uicommand.py:1362
+msgid "Open a new tab with a viewer that displays tasks in a tree"
+msgstr "タスクツリー表示タブを開く"
+
+#: taskcoachlib/gui/uicommand.py:1365
+msgid "Category"
+msgstr "カテゴリ"
+
+#: taskcoachlib/gui/uicommand.py:1366
+msgid "Open a new tab with a viewer that displays categories"
+msgstr "カテゴリ表示タブを開く"
+
+#: taskcoachlib/gui/uicommand.py:1369
+msgid "Effort detail"
+msgstr "エフォート詳細"
+
+#: taskcoachlib/gui/uicommand.py:1370
+msgid "Open a new tab with a viewer that displays effort details"
+msgstr "エフォート詳細表示タブを開く"
+
+#: taskcoachlib/gui/uicommand.py:1374
+msgid "Open a new tab with a viewer that displays effort per day"
+msgstr "1日のエフォート表示タブを開く"
+
+#: taskcoachlib/gui/uicommand.py:1378
+msgid "Open a new tab with a viewer that displays effort per week"
+msgstr "週のエフォート表示タブを開く"
+
+#: taskcoachlib/gui/uicommand.py:1382
+msgid "Open a new tab with a viewer that displays effort per month"
+msgstr "月のエフォート表示タブを開く"
+
+#: taskcoachlib/gui/uicommand.py:1392
+msgid "&Hide"
+msgstr "隠す(&H)"
+
+#: taskcoachlib/gui/uicommand.py:1392
+msgid "Hide the toolbar"
+msgstr "ツールバーを隠す"
+
+#: taskcoachlib/gui/uicommand.py:1393
+msgid "&Small images"
+msgstr "アイコンサイズ小(&S)"
+
+#: taskcoachlib/gui/uicommand.py:1393
+msgid "Small images (16x16) on the toolbar"
+msgstr "ツールバーのアイコン小サイズ(16x16)"
+
+#: taskcoachlib/gui/uicommand.py:1394
+msgid "&Medium-sized images"
+msgstr "アイコンサイズ中(&M)"
+
+#: taskcoachlib/gui/uicommand.py:1394
+msgid "Medium-sized images (22x22) on the toolbar"
+msgstr "ツールバーのアイコン中サイズ(22x22)"
+
+#: taskcoachlib/gui/uicommand.py:1395
+msgid "&Large images"
+msgstr "アイコンサイズ大(&L)"
+
+#: taskcoachlib/gui/uicommand.py:1395
+msgid "Large images (32x32) on the toolbar"
+msgstr "ツールバーのアイコン大サイズ(32x32)"
+
+#: taskcoachlib/gui/uicommand.py:1401
+msgid "Show/hide status bar"
+msgstr "ステータスバー表示/非表示"
+
+#: taskcoachlib/gui/uicommand.py:1401
+msgid "Status&bar"
+msgstr "ステータスバー(&b)"
+
+#: taskcoachlib/gui/uicommand.py:1406
+msgid "Only show tasks due today"
+msgstr "今日中に期限のタスクのみ表示"
+
+#: taskcoachlib/gui/uicommand.py:1407
+msgid "Only show tasks due today and tomorrow"
+msgstr "今日か明日に期限のタスクのみ表示"
+
+#: taskcoachlib/gui/uicommand.py:1408
+msgid "Only show tasks due this work week (i.e. before Friday)"
+msgstr "今週中までのタスクを表示（金曜日まで）"
+
+#: taskcoachlib/gui/uicommand.py:1408
+msgid "Wo&rk week"
+msgstr "今週（平日）(&r)"
+
+#: taskcoachlib/gui/uicommand.py:1409
+msgid "Only show tasks due this week (i.e. before Sunday)"
+msgstr "今週中までのタスクを表示（日曜日まで）"
+
+#: taskcoachlib/gui/uicommand.py:1410
+msgid "Only show tasks due this month"
+msgstr "今月中にするタスクのみ表示"
+
+#: taskcoachlib/gui/uicommand.py:1411
+msgid "Only show tasks due this year"
+msgstr "今年中にするタスクのみ表示"
+
+#: taskcoachlib/gui/uicommand.py:1412
+msgid "Show all tasks"
+msgstr "すべてのタスクを表示"
+
+#: taskcoachlib/gui/uicommand.py:1432
+msgid "Mail task"
+msgstr "タスクをメール"
+
+#: taskcoachlib/gui/uicommand.py:1433
+msgid "Mail the task, using your default mailer"
+msgstr "タスクをメールする（デフォルトメーラー使用）"
+
+#: taskcoachlib/gui/viewer.py:338
+msgid "Tasks: %d selected, %d visible, %d total"
+msgstr "タスク: 選択済み%d 件, 可視%d件, 合計%d件 "
+
+#: taskcoachlib/gui/viewer.py:341
+msgid "Status: %d over due, %d inactive, %d completed"
+msgstr "ステータス: 期限遅れ%d件 , 非アクティブ%d件 , 完了%d件"
+
+#: taskcoachlib/gui/viewer.py:482
+msgid "Days left"
+msgstr "残り日数"
+
+#: taskcoachlib/gui/viewer.py:485
+msgid "Total budget"
+msgstr "合計予定時間"
+
+#: taskcoachlib/gui/viewer.py:487
+#: taskcoachlib/gui/viewer.py:842
+msgid "Total time spent"
+msgstr "合計経過時間"
+
+#: taskcoachlib/gui/viewer.py:489
+msgid "Total budget left"
+msgstr "合計残り時間"
+
+#: taskcoachlib/gui/viewer.py:494
+msgid "Total fixed fee"
+msgstr "合計固定報酬"
+
+#: taskcoachlib/gui/viewer.py:496
+#: taskcoachlib/gui/viewer.py:844
+msgid "Total revenue"
+msgstr "合計収入"
+
+#: taskcoachlib/gui/viewer.py:684
+msgid "Categories: %d selected, %d total"
+msgstr "カテゴリ: 選択　%d件, 合計 %d件"
+
+#: taskcoachlib/gui/viewer.py:686
+msgid "Status: %d filtered"
+msgstr "ステータス: フィルタ %d件 "
+
+#: taskcoachlib/gui/viewer.py:730
+msgid "Effort: %d selected, %d visible, %d total"
+msgstr "エフォート:  選択済み%d件, 可視%d 件, 合計%d 件"
+
+#: taskcoachlib/gui/viewer.py:733
+msgid "Status: %d tracking"
+msgstr "ステータス: トラッキング中%d件 "
+
+#: taskcoachlib/gui/viewer.py:800
+msgid "Period"
+msgstr "期間"
+
+#: taskcoachlib/help/__init__.py:5
 msgid ""
 "<h3>Table of contents</h3>\n"
 "<ul>\n"
@@ -1510,11 +1780,11 @@ msgstr ""
 "</li>\n"
 "</ul>\n"
 
-#: taskcoachlib\help\__init__.py:23
+#: taskcoachlib/help/__init__.py:23
 msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
 msgstr "<h3><a name=\"tasks\">タスク</a></h3>\n"
 
-#: taskcoachlib\help\__init__.py:26
+#: taskcoachlib/help/__init__.py:26
 msgid ""
 "<h4><a name=\"abouttasks\">About tasks</a></h4>\n"
 " \n"
@@ -1528,7 +1798,7 @@ msgstr ""
 "<p>タスクは仕事の基本単位です。タスクはちょっとした簡単な、しなければいけないことです。\n"
 "例えばだれかにプレゼントを買うようなものです。たくさんのタスクがあってプロジェクトは成り立ちます。</p>\n"
 
-#: taskcoachlib\help\__init__.py:34
+#: taskcoachlib/help/__init__.py:34
 msgid ""
 "<h4><a name=\"taskproperties\">Task \n"
 "properties</a></h4>\n"
@@ -1603,7 +1873,7 @@ msgstr ""
 "<li>合計収入:　タスクの収入と全てのサブタスク収入の合計。</li>\n"
 "</ul></p>\n"
 
-#: taskcoachlib\help\__init__.py:74
+#: taskcoachlib/help/__init__.py:74
 msgid ""
 "<h4><a name=\"taskstates\">Task states</a></h4>\n"
 "\n"
@@ -1643,7 +1913,7 @@ msgstr ""
 "</ul></p>\n"
 " "
 
-#: taskcoachlib\help\__init__.py:93
+#: taskcoachlib/help/__init__.py:93
 msgid ""
 "<h4><a name=\"taskcolors\">Task colors</a></h4>\n"
 "\n"
@@ -1667,14 +1937,14 @@ msgstr ""
 "<li>アクティブなタスクは黒い文字で青いアイコン;</li>\n"
 "<li>未来のタスクは灰色、終了タスクは緑</li>\n"
 "</ul>\n"
-"This all assumes you have not changed the text colors through the preferences \n"
-"dialog, of course.</p>\n"
+"もちろんこれは色の設定を変えなかった場合です。 \n"
+"</p>\n"
 
-#: taskcoachlib\help\__init__.py:107
+#: taskcoachlib/help/__init__.py:107
 msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
 msgstr "<h3><a name=\"effort\">エフォート</a></h3>\n"
 
-#: taskcoachlib\help\__init__.py:110
+#: taskcoachlib/help/__init__.py:110
 msgid ""
 "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
 "\n"
@@ -1689,7 +1959,7 @@ msgstr ""
 "タスクを選択して　エフォートメニューかツールバーボタンまたはコンテキストメニューの\n"
 "'エフォートを開始’を選択します。</p>\n"
 
-#: taskcoachlib\help\__init__.py:118
+#: taskcoachlib/help/__init__.py:118
 msgid ""
 "<h4><a name=\"effortproperties\">Effort\n"
 "properties</a></h4>\n"
@@ -1731,7 +2001,7 @@ msgstr ""
 "<li>合計収入:　このタスクで得た報酬の合計</li>\n"
 "</ul></p>\n"
 
-#: taskcoachlib\help\__init__.py:145
+#: taskcoachlib/help/__init__.py:145
 msgid ""
 "<h4>%(name)s - %(description)s</h4>\n"
 "<h5>Version %(version)s, %(date)s</h5>\n"
@@ -1747,7 +2017,7 @@ msgstr ""
 "<p>%(copyright)s</p>\n"
 "<p>%(license)s</p>\n"
 
-#: taskcoachlib\help\__init__.py:157
+#: taskcoachlib/help/__init__.py:157
 msgid ""
 "\n"
 "Version %(version)s, %(date)s\n"
@@ -1771,44 +2041,60 @@ msgstr ""
 "%(license)s\n"
 "\n"
 
-#: taskcoachlib\help\tips.py:5
+#: taskcoachlib/help/tips.py:5
 msgid "%(name)s has a mailinglist where you can discuss usage of %(name)s with fellow users, discuss and request features and complain about bugs. Go to %(url)s and join today!"
-msgstr "%(name)sにはメーリングリストがあります。%(name)sの使い方を聞いたり、新機能の提案をしたりバグ報告ができます。%(url)sで登録しましょう！"
+msgstr "%(name)sにはメーリングリストがあります。%(name)sの使い方を聞いたり、新機能の提案をしたりバグ報告ができます。%(url)sで登録しましょう。"
 
-#: taskcoachlib\help\tips.py:6
+#: taskcoachlib/help/tips.py:6
 msgid "%(name)s has unlimited undo and redo. Any change that you make, be it editing a task description, or deleting an effort record, is undoable. Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards through your edit history."
 msgstr "%(name)sでは何度でも undoとredo動作を行えます。タスクの編集やエフォートの削除など、どのような変更もundoできます。'編集'->'Undo'メニュー、または'編集'->'Redo'メニューを使用してください。"
 
-#: taskcoachlib\help\tips.py:7
-msgid "%(name)s is available in a number of different languages. Select 'Edit' -> 'Preferences' to see whether your language is one of them. If your language is not available or the translation needs improvement, please consider to help translating %(name)s. Visit %(url)s for more information about how you can help."
+#: taskcoachlib/help/tips.py:7
+msgid "%(name)s is available in a number of different languages. Select 'Edit' -> 'Preferences' to see whether your language is one of them. If your language is not available or the translation needs improvement, please consider helping with the translation of %(name)s. Visit %(url)s for more information about how you can help."
 msgstr "%(name)sをさまざまな言語で使用できます。'編集'　->　'設定'　メニューで使いたい言語がないか見てみましょう。もし使いたい言語がないか、翻訳に修正が必要なら、%(name)sの翻訳の手伝いを考えてみてください。詳しくは%(url)sを参照してください。"
 
-#: taskcoachlib\help\tips.py:8
-msgid "If you enter a URL (e.g. %(url)s) in a task or effort description, it becomes clickable. Clicking such a URL will open your default webbrowser and load the referred webpage."
+#: taskcoachlib/help/tips.py:8
+msgid "If you enter a URL (e.g. %(url)s) in a task or effort description, it becomes a link. Clicking on the link will open the URL in your default web browser."
 msgstr " %(url)sのようにURLを入力した場合、クリックすれば開きます。"
 
-#: taskcoachlib\help\tips.py:9
-msgid "You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks."
-msgstr "タスク間の親子関係は、ツリービューでドラッグ＆ドロップすれば変更できます。"
+#: taskcoachlib/help/tips.py:9
+msgid "You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks. The same goes for categories."
+msgstr "タスク間の親子関係は、ツリービューでドラッグ＆ドロップすれば変更できます。カテゴリも同じです。"
 
-#: taskcoachlib\help\tips.py:10
+#: taskcoachlib/help/tips.py:10
 msgid "You can drag files from a file browser onto a task to create attachments. Dragging the files over a tab will raise the appropriate page, dragging the files over a collapsed task (the boxed + sign) in the tree view will expand the task to show its subtasks."
-msgstr "ファイルブラウザからファイルをタスクへドラッグすれば添付できます。タブをまたがってドラッグすれば開きますし、折りたたんだタスクへドラッグすればサブタスクが表示されます。"
+msgstr "ファイルをドラッグ＆ドロップして、添付ファイルにすることができます。"
 
-#: taskcoachlib\widgets\buttonbox.py:5
-#: taskcoachlib\widgets\dialog.py:24
-#: taskcoachlib\widgets\dialog.py:37
-#: taskcoachlib\widgets\dialog.py:40
-#: taskcoachlib\widgets\dialog.py:96
+#: taskcoachlib/help/tips.py:11
+msgid "What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc."
+msgstr "ファイルメニューの印刷では、現在表示されている画面が印刷できます。"
+
+#: taskcoachlib/widgets/buttonbox.py:5
+#: taskcoachlib/widgets/dialog.py:30
+#: taskcoachlib/widgets/dialog.py:43
+#: taskcoachlib/widgets/dialog.py:46
+#: taskcoachlib/widgets/dialog.py:102
 msgid "OK"
 msgstr "OK"
 
-#: taskcoachlib\widgets\buttonbox.py:5
-#: taskcoachlib\widgets\dialog.py:25
+#: taskcoachlib/widgets/buttonbox.py:5
+#: taskcoachlib/widgets/dialog.py:31
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: taskcoachlib\widgets\dialog.py:105
+#: taskcoachlib/widgets/dialog.py:111
 msgid "All files (*.*)|*"
-msgstr "全て(*.*)|*"
+msgstr "All files (*.*)|*"
+
+#: taskcoachlib/widgets/searchctrl.py:70
+msgid "Match case"
+msgstr "大文字・小文字の区別"
+
+#: taskcoachlib/widgets/searchctrl.py:71
+msgid "Match case when filtering"
+msgstr "フィルタ時に大文字・小文字を区別する"
+
+#: taskcoachlib/widgets/searchctrl.py:79
+msgid "Recent searches"
+msgstr "最近の検索"
 
