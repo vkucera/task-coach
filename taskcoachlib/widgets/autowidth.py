@@ -73,12 +73,11 @@ class AutoColumnWidthMixin(object):
         # NOTE: on GTK, the scrollbar is included in the client size, but on
         # Windows it is not included
         availableWidth = self.GetClientSize().width
-        if wx.Platform != '__WXMSW__' and self.GetItemCount() > self.GetCountPerPage():
-            scrollbarWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
-            availableWidth -= scrollbarWidth
-        if wx.Platform == '__WXMSW__' and isinstance(self, wx.gizmos.TreeListCtrl) and self.GetItemCount() > self.GetCountPerPage():
-            scrollbarWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
-            availableWidth -= scrollbarWidth
+        if self.GetItemCount() > self.GetCountPerPage():
+            if (wx.Platform != '__WXMSW__') or (wx.Platform == '__WXMSW__' and \
+                    isinstance(self, wx.gizmos.TreeListCtrl)):
+                scrollbarWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
+                availableWidth -= scrollbarWidth
         return availableWidth
     
     AvailableWidth = property(GetAvailableWidth)

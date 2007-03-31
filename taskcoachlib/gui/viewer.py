@@ -240,8 +240,15 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
         
 class ViewerWithColumns(Viewer):
     def __init__(self, *args, **kwargs):
+        self.__initDone = False
         super(ViewerWithColumns, self).__init__(*args, **kwargs)
         self.initColumns()
+        self.__initDone = True
+        self.refresh()
+        
+    def refresh(self, *args, **kwargs):
+        if self.__initDone:
+            super(ViewerWithColumns, self).refresh(*args, **kwargs)
                     
     def initColumns(self):
         for column in self.columns():
@@ -265,6 +272,7 @@ class ViewerWithColumns(Viewer):
             if column.visibilitySetting() == visibilitySetting:
                 show = event.value() == 'True'
                 self.widget.showColumn(column, show)
+                self.widget.RefreshItems()
                 if show:
                     self.__startObserving(column.eventTypes())
                 else:

@@ -26,7 +26,7 @@ The VirtualTree and DragAndDrop mixins force the wx.TR_HIDE_ROOT style.
 Author: Frank Niessink <frank@niessink.com>
 License: wxWidgets license
 Version: 0.9
-Date: 18 March 2007
+Date: 24 March 2007
 
 ExpansionState is based on code and ideas from Karsten Hilbert.
 Andrea Gavana provided help with the CustomTreeCtrl integration.
@@ -154,6 +154,14 @@ class TreeAPIHarmonizer(object):
             if rootItem and rootItem in selections:
                 selections.remove(rootItem)
         return selections
+
+    def GetFirstVisibleItem(self):
+        # TreeListCtrl raises an exception or even crashes when invoking 
+        # GetFirstVisibleItem on an empty tree.
+        if self.GetRootItem():
+            return super(TreeAPIHarmonizer, self).GetFirstVisibleItem()
+        else:
+            return wx.TreeItemId()
 
     def SelectItem(self, item, *args, **kwargs):
         # Prevent the hidden root from being selected, otherwise TreeCtrl

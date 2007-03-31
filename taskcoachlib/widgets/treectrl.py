@@ -78,7 +78,8 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
         
     def getStyle(self):
-        return wx.TR_HIDE_ROOT | wx.TR_MULTIPLE | wx.TR_HAS_BUTTONS
+        return wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE | \
+            wx.TR_HAS_BUTTONS
 
     def setItemGetters(self, getItemText, getItemImage, getItemAttr,
             getChildrenCount):
@@ -177,14 +178,14 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
 
 class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtrl): 
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
-            getChildrenCount, selectCommand,
-            editCommand, dragAndDropCommand, 
+            getChildrenCount, selectCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu=None, *args, **kwargs):
         super(CustomTreeCtrl, self).__init__(parent, style=self.getStyle(), 
             itemPopupMenu=itemPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
         self.setItemGetters(getItemText, getItemImage, getItemAttr,
             getChildrenCount)
+        self.SetTreeStyle(self.getStyle()) # FIXME: Why is this necessary?
         self.refresh()
             
     # Adapters to make the CustomTreeCtrl API more like the TreeListCtrl API:
@@ -194,8 +195,8 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtr
             self.SelectItem(item)
     
     def getStyle(self):
-        return super(CustomTreeCtrl, self).getStyle() & ~wx.TR_LINES_AT_ROOT
-
+        return wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE
+    
 
 class CheckTreeCtrl(CustomTreeCtrl):
     def __init__(self, parent, getItemText, getItemImage, getItemAttr,
@@ -208,13 +209,13 @@ class CheckTreeCtrl(CustomTreeCtrl):
             selectCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu, *args, **kwargs)
         self.Bind(customtree.EVT_TREE_ITEM_CHECKED, checkCommand)
-    
+        
     def OnGetItemType(self, index):
         return 1
     
     def OnGetItemChecked(self, index):
         return self.getIsItemChecked(index)
-                
+                    
 
 class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin, 
                    gizmos.TreeListCtrl):
@@ -236,7 +237,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin,
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
-        self.refresh()
+        #self.refresh()
         
     # Extend CtrlWithColumns with TreeListCtrl specific behaviour:
         
@@ -287,7 +288,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin,
     
     def DeleteColumn(self, columnIndex):
         self.RemoveColumn(columnIndex)
-        self.RefreshItems()
+        #self.RefreshItems()
         
     def InsertColumn(self, columnIndex, columnHeader, *args, **kwargs):
         format = self.alignmentMap[kwargs.pop('format', wx.LIST_FORMAT_LEFT)]
@@ -298,9 +299,10 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin,
                 *args, **kwargs)
         # Put a default value in the new column otherwise GetItemText will fail
         for item in self.GetItemChildren(recursively=True):
-            self.SetItemText(item, '', columnIndex)
+            self.SetItemText(item, '', self.GetColumnCount()-1)
+            self.SetItemImage(item, -1, column=self.GetColumnCount()-1)
         self.SetColumnAlignment(columnIndex, format)
-        self.RefreshItems()
+        #self.RefreshItems()
     
     def GetCountPerPage(self):
         ''' ListCtrlAutoWidthMixin expects a GetCountPerPage() method,
