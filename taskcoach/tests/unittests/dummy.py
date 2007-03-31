@@ -29,6 +29,9 @@ class DummyWidget(wx.Frame):
     def refresh(self, *args, **kwargs):
         pass
 
+    def RefreshItems(self, *args, **kwargs):
+        pass
+
     def RefreshItem(self, index):
         self.refreshedItems.append(index)
         

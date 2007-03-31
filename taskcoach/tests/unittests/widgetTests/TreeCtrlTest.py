@@ -213,7 +213,7 @@ class CommonTests(object):
         self.treeCtrl.SelectItem(parent1)
         parent2, cookie = self.treeCtrl.GetNextChild(self.treeCtrl.GetRootItem(), cookie)
         self.treeCtrl.SelectItem(parent2)
-        self.failUnless(self.treeCtrl.isSelectionCollapsable())
+        self.failUnless(self.treeCtrl.isSelectionExpandable())
 
     def testIsAnyItemCollapsable_NoItems(self):
         self.failIf(self.treeCtrl.isAnyItemCollapsable())
