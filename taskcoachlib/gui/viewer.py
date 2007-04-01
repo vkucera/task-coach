@@ -148,7 +148,7 @@ class TreeViewer(Viewer):
                 yield child
 
     def getItemWithIndex(self, index):
-        children = [child for child in self.model() if child in self.model().rootItems()]
+        children = self.model().rootItems()
         for i in index:
             item = children[i]
             children = [child for child in self.model() if child in item.children()]
