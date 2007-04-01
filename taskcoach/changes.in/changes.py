@@ -4,15 +4,15 @@ from changetypes import *
 
 releases = [
 
-Release('0.62.0', 'March ?, 2007',
+Release('0.62.0', 'April 1, 2007',
     dependenciesChanged=[
         Dependency('''Task Coach now requires 
-wxPython 2.8-unicode or newer (this is only relevant if you use the 
+wxPython 2.8.3-unicode or newer (this is only relevant if you use the 
 source distribution).''')],
     bugsFixed=[
         Bug('''When saving timestamps in a task file, e.g. for effort start
 and stop times, microseconds are no longer saved as part of the timestamp. 
-The microseconds caused problems for people who import Task Coach data in
+The microseconds caused problems when importing Task Coach data in
 Excel.''', '1660670'),
         Bug('''When exporting tasks to HTML or CSV format from the task
 tree viewer, child tasks hidden by a filter would still be exported.''', 

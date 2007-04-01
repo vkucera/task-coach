@@ -12,10 +12,16 @@ header = '''
     </head>
     <body>
         <div class="content">
-            <h1>
-                <img align="center" src="taskcoach.png"/>
-                &nbsp;%(name)s - %(description)s
-            </h1>
+            <table cellspacing=5>
+                <tr>
+                    <td valign=top>
+                        <img align="center" src="taskcoach.png"/>
+                    </td>
+                    <td>
+                        <h1>%(name)s - %(description)s</h1>
+                    </td>
+                </tr>
+            </table>
         </div>
         <div class="content">
 '''%meta.metaDict

@@ -89,8 +89,7 @@ pages['features'] = \
             <LI>Tasks can be sorted by all task attributes, e.g. subject,
             budget, budget left, due date, etc.
             <LI>Several filters to e.g. hide completed tasks or view
-            only tasks that are due today. Filters can be managed through
-            the filter side bar.
+            only tasks that are due today. 
             <LI>Task status depends on its subtask and vice versa. E.g. if 
             you mark the last uncompleted subtask as completed, the parent 
             task is automatically marked as completed too.
@@ -104,30 +103,31 @@ pages['features'] = \
             <LI>The %(name)s file format (.tsk) is XML. 
             <LI>Tasks can be exported to HTML. Effort can be exported to
             XML and iCalendar/ICS format.
-            <LI>Tasks and effort can be printed. When printing, Task
-            Coach print the information that is visible in the current
+            <LI>Tasks, effort and categories can be printed. When printing, 
+            %(name)s prints the information that is visible in the current
             view, including any filters and sort order. 
             <LI>%(name)s can be run from a removable medium.
         </UL>
         <H3>Missing features</H3>
-        <P>The main feature that is currently missing is the possibility to
-        assign or be assigned tasks to/by other people via the 
-        iCalendar standard.
-        </P>
-        <H3>Requested features</H3>
-        See <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">feature requests</A>.
+        <P>The main features that are currently missing are:
+        <UL>
+            <LI>The possibility to assign or be assigned tasks to/by 
+            other people via the iCalendar standard.</LI>
+            <LI>Recurring tasks</LI>
+        </UL>
+        Also see the list of <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">requested features</A>.
         </P>'''
 
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
 
 pages['screenshots'] = \
 '''       <H3>Screenshots</H3>         
-        <P>Here are a couple of screenshots from version 0.22 that show 
-        the list view, the task view, the effort view and the task editor.</P>
-        <P><IMG SRC="screenshot-0.22-listview.png" ALT="List view"></P>
-        <P><IMG SRC="screenshot-0.22-treeview.png" ALT="Tree view"></P>
-        <P><IMG SRC="screenshot-0.22-effortview.png" ALT="Effort view"></P>
-        <P><IMG SRC="screenshot-0.22-taskeditor.png" ALT="Task editor"></P>'''
+        <P>Here are a couple of screenshots from version 0.62 that show 
+        the main window, the print preview, and the task editor.</P>
+        <P><IMG SRC="screenshot-0.62-treeview.png" ALT="Main window with task tree view"></P>
+        <P><IMG SRC="screenshot-0.62-listview.png" ALT="Main window with task list view"></P>
+        <P><IMG SRC="screenshot-0.62-printpreview.png" ALT="Print preview"></P>
+        <P><IMG SRC="screenshot-0.62-taskeditor.png" ALT="Task editor"></P>'''
 
 pages['i18n'] = \
 '''        <H3>Internationalization</H3>
@@ -222,9 +222,9 @@ pages['roadmap'] = \
     hours spent on projects, taking notes, etc. It should also be as
     intuitive as possible for users to deal with and not require any technical
     knowledge.</p>
-    <p>Currently, %(name)s knows about two domain concepts: tasks and
-    effort. Other domain concepts that might be added include note
-    and contact person.</p>
+    <p>Currently, %(name)s knows about three domain concepts: tasks, 
+    effort, and categories. Other domain concepts that might be added 
+    in the future include note and contact person.</p>
     <p>In the long run, it might be worthwile to allow
     users to add their own concepts. So, for example, if you want to keep
     a list of books to read you could define a book concept and accompanying
@@ -232,7 +232,7 @@ pages['roadmap'] = \
     also need the file format to be very flexible.</p>
     <p>Currently, the focus of %(name)s is to support single users. In the long
     run, support for exchange of tasks with other users should be possible,
-    probably via the iCal standard.</p>
+    probably via the iCalendar standard.</p>
     <p>Anyway, this is it for now, I'll add more as soon as my thoughts
     on the subject crystalize into a more coherent picture of the future 
     direction for %(name)s.</p>
@@ -287,8 +287,9 @@ pages['devinfo'] = \
     All the necessary packaging code is in make.py
     and driven from the Makefile (<tt>macdist</tt> target).</p>
     <h5>Linux</h5>
-    <p>Currently, Linux users have to install python and wxPython
-    themselves (if not installed by default) and use the source
+    <p>I create RPM and DEB distributions on Ubuntu (<tt>lindist</tt> target).
+    Alternatively, Linux users that have installed python and wxPython
+    themselves (if not installed by default) can also use the source
     distribution. The source distributions are created by the
     <tt>sdist</tt> Makefile target.</p>
     <h4>Coding style</h4>
