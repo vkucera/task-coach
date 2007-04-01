@@ -1,11 +1,11 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
 version = '0.62.0'
-release_month = 'March'
+release_month = 'April'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 'June', 
                     'July', 'August', 'September', 'October', 'November', 
                     'December'].index(release_month) + 1)
-release_day = '22'
+release_day = '1'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2007'
 release_status = 'Alpha'
