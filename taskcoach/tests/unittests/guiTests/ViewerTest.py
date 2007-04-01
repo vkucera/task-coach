@@ -174,9 +174,9 @@ class ViewerIteratorTests(object):
                          self.getItemsFromIterator())
 
     def testOneParentOneChildAndOneGrandChild(self):
-        parent = task.Task()
-        child = task.Task()
-        grandChild = task.Task()
+        parent = task.Task('a-parent')
+        child = task.Task('b-child')
+        grandChild = task.Task('c-grandchild')
         parent.addChild(child)
         child.addChild(grandChild)
         self.taskList.append(parent)

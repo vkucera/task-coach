@@ -2,5 +2,5 @@ include *.txt
 recursive-include tests *.py
 include TODO.tsk
 include setup.py
-exclude make.py
+include make.py
 prune dist.in
