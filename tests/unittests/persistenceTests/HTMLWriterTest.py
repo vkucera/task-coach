@@ -1,5 +1,5 @@
 import test, persistence, StringIO, gui, config
-from domain import task, category, effort
+from domain import task, category, effort, date
 from unittests import dummy
 
 class HTMLWriterTestCase(test.wxTestCase):
@@ -45,7 +45,25 @@ class TaskTests(object):
     def testSubjectColumnAlignment(self):
         self.expectInHTML('<td align="left">Task subject</td>')
         
+    def testOverdueTask(self):
+        self.task.setDueDate(date.Yesterday())
+        self.expectInHTML('<font color="#FF0000">Task subject</font>')
 
+    def testCompletedTask(self):
+        self.task.setCompletionDate()
+        self.expectInHTML('<font color="#00FF00">Task subject</font>')
+
+    def testTaskDueToday(self):
+        self.task.setDueDate(date.Today())
+        expectedColor = '%02X%02X%02X'%eval(self.settings.get('color', 'duetodaytasks'))[:3]
+        self.expectInHTML('<font color="#%s">Task subject</font>'%expectedColor)
+        
+    def testInactiveTask(self):
+        self.task.setStartDate(date.Tomorrow())
+        expectedColor = '%02X%02X%02X'%eval(self.settings.get('color', 'inactivetasks'))[:3]
+        self.expectInHTML('<font color="#%s">Task subject</font>'%expectedColor)
+
+        
 class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 

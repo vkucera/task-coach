@@ -455,7 +455,8 @@ class Print(ViewerCommand, MainWindowCommand):
         printDialogData = wx.PrintDialogData(printerSettings.printData)
         printDialogData.EnableSelection(True)
         printer = wx.Printer(printDialogData)
-        printer.PrintDialog(self.mainwindow)
+        if not printer.PrintDialog(self.mainwindow):
+            return
         printout = Printout(self.viewer, 
             printSelectionOnly=printer.PrintDialogData.Selection)
         # If the user checks the selection radio button, the ToPage property 
@@ -1274,8 +1275,10 @@ class UICommands(dict):
         
         # Column show/hide commands
         for menuText, helpText, setting in \
-            [(_('Attachments'), _('Show/hide attachment column'), 'attachments'),
+            [(_('&Attachments'), _('Show/hide attachment column'), 'attachments'),
              (_('&Categories'), _('Show/hide categories column'), 'categories'),
+             (_('&Description'), _('Show/hide description column'), 'taskdescription'),
+             (_('&Reminder'), _('sHow/hide reminder column'), 'reminder'),
              (_('&Start date'), _('Show/hide start date column'), 'startdate'),
              (_('&Due date'), _('Show/hide due date column'), 'duedate'),
              (_('D&ays left'), _('Show/hide days left column'), 'timeleft'),
@@ -1298,7 +1301,8 @@ class UICommands(dict):
              (_('&Time spent'), _('Show/hide time spent column'), 'efforttimespent'),
              (_('T&otal time spent'), _('Show/hide total time spent column'), 'totalefforttimespent'),
              (_('&Revenue'), _('Show/hide revenue column'), 'effortrevenue'),
-             (_('To&tal revenue'), _('Show/hide total revenue column'), 'totaleffortrevenue')]:
+             (_('To&tal revenue'), _('Show/hide total revenue column'), 'totaleffortrevenue'),
+             (_('&Description'), _('Show/hide description column'), 'effortdescription')]:
             key = 'view' + setting
             self[key] = UICheckCommand(menuText=menuText, helpText=helpText, setting=setting, settings=settings)
     
@@ -1338,6 +1342,7 @@ class UICommands(dict):
         # Sort by column commands
         for menuText, helpText, value in \
             [(_('Sub&ject'), _('Sort tasks by subject'), 'subject'),
+             (_('&Description'), _('Sort tasks by description'), 'description'),
              (_('&Category'), _('Sort tasks by category'), 'categories'),
              (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
              (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
@@ -1356,6 +1361,7 @@ class UICommands(dict):
              (_('Total fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalfixedFee'),
              (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
              (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalrevenue'),
+             (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder'),
              (_('Last modification time'), _('Sort tasks by last modification time'), 'lastModificationTime'),
              (_('Overall last modification time'), _('Sort tasks by overall last modification time'), 'totallastModificationTime')]:
             key = 'viewsortby' + value

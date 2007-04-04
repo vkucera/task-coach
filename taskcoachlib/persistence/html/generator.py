@@ -24,15 +24,25 @@ def viewer2html(viewer, selectionOnly=False):
             space = '&nbsp;' * len(item.ancestors()) * 3
         else:
             space = ''
+        color = viewer.getColor(item)
         htmlText += '<td align="%s">%s%s</td>'%(columnAlignments[0], space,
-            visibleColumns[0].render(item))
+            render(item, visibleColumns[0], color))
         for column, alignment in zip(visibleColumns[1:], columnAlignments[1:]):
             htmlText += '<td align="%s">%s</td>'%(alignment,
-                column.render(item))
+                render(item, column, color))
         htmlText += '</tr>\n'
     htmlText += '</table></body></html>\n'
     return htmlText
- 
+
+
+def render(item, column, color):
+    if color[:3] != (0, 0, 0):
+        color = '#%02X%02X%02X'%(color[0], color[1], color[2])
+        return '<font color="%s">%s</font>'%(color, column.render(item))
+    else:
+        return column.render(item)
+    
+
 def extendedWithAncestors(selection):
     extendedSelection = selection[:]
     for item in selection:

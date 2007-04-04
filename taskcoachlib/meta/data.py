@@ -1,11 +1,11 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
-version = '0.62.0'
+version = '0.63.0'
 release_month = 'April'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 'June', 
                     'July', 'August', 'September', 'October', 'November', 
                     'December'].index(release_month) + 1)
-release_day = '1'
+release_day = '8'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2007'
 release_status = 'Alpha'
@@ -22,17 +22,17 @@ author_last = 'Niessink'
 author = author_first + ' ' + author_last
 author_email = 'frank@niessink.com'
 url = 'http://www.taskcoach.org/'
-screenshot = url + 'screenshot-0.22-listview.png'
+screenshot = url + 'screenshot-0.62-treeview.png'
 icon = url + 'taskcoach.png'
 pad = url + 'pad.xml'
 download = url + 'download.html'
-copyright = 'Copyright (C) 2004-2007 Frank Niessink'
+copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)
 license = 'GNU GENERAL PUBLIC LICENSE Version 2, June 1991'
 platform = 'Any'
 filename = 'TaskCoach'
 filename_lower = filename.lower()
 pythonversion = '2.4'
-wxpythonversion = '2.8.1-unicode'
+wxpythonversion = '2.8.3-unicode'
 languages = {
     'English': None, 
     'French': 'fr_FR', 

@@ -43,7 +43,10 @@ def budget(aBudget):
     return timeSpent(aBudget)
         
 def dateTime(dateTime):
-    return dateTime.strftime('%Y-%m-%d %H:%M')
+    if dateTime:
+        return dateTime.strftime('%Y-%m-%d %H:%M')
+    else:
+        return ''
     
 def dateTimePeriod(start, stop):
     if stop is None:
