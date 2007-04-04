@@ -126,6 +126,27 @@ class TaskListViewerTest(test.wxTestCase):
 
     # Test all attributes...
 
+    def testGetColorForDefaultTask(self):
+        self.assertEqual(wx.BLACK, self.viewer.getColor(self.task))
+
+    def testGetColorForCompletedTask(self):
+        self.task.setCompletionDate()
+        self.assertEqual(wx.GREEN, self.viewer.getColor(self.task))
+        
+    def testColorForOverDueTask(self):
+        self.task.setDueDate(date.Yesterday())
+        self.assertEqual(wx.RED, self.viewer.getColor(self.task))
+        
+    def testColorForTaskDueToday(self):
+        self.task.setDueDate(date.Today())
+        expectedColor = wx.Color(*eval(self.settings.get('color', 'duetodaytasks')))
+        self.assertEqual(expectedColor, self.viewer.getColor(self.task))
+
+    def testColorForInactiveTasks(self):
+        self.task.setStartDate(date.Tomorrow())
+        expectedColor = wx.Color(*eval(self.settings.get('color', 'inactivetasks')))
+        self.assertEqual(expectedColor, self.viewer.getColor(self.task))
+
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
         taskList = task.TaskList()

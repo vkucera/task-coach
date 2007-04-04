@@ -182,9 +182,10 @@ class ViewTaskColumnsMenu(Menu):
             _ViewTaskBudgetColumnsMenu(mainwindow, uiCommands))
         self.appendMenu(_('&Financial'), 
             _ViewTaskFinancialColumnsMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, ['viewattachments', 'viewcategories',
-            'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime', 
-            'viewtotallastmodificationtime'])
+        self.appendUICommands(uiCommands, ['viewtaskdescription', 'viewattachments', 
+            'viewcategories', 'viewpriority', 'viewtotalpriority',
+            'viewreminder', 
+            'viewlastmodificationtime', 'viewtotallastmodificationtime'])
 
 
 class _ViewTaskDateColumnsMenu(Menu):
@@ -214,9 +215,9 @@ class _ViewTaskFinancialColumnsMenu(Menu):
 class ViewEffortColumnsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewEffortColumnsMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewefforttimespent',
-            'viewtotalefforttimespent', 'vieweffortrevenue',
-            'viewtotaleffortrevenue'])
+        self.appendUICommands(uiCommands, ['vieweffortdescription', 
+            'viewefforttimespent', 'viewtotalefforttimespent', 
+            'vieweffortrevenue', 'viewtotaleffortrevenue'])
 
            
 class ViewTaskStatesMenu(Menu):
@@ -247,14 +248,16 @@ class SortMenu(Menu):
         # ascending/descending order
         self.appendUICommands(uiCommands, ['viewsortorder', 
             'viewsortcasesensitive', 'viewsortbystatusfirst', None, 
-            'viewsortbysubject', 'viewsortbycategories', 'viewsortbystartdate',
+            'viewsortbysubject', 'viewsortbydescription',
+            'viewsortbycategories', 'viewsortbystartdate',
             'viewsortbyduedate', 'viewsortbytimeleft', 
             'viewsortbycompletiondate', 'viewsortbybudget', 
             'viewsortbytotalbudget', 'viewsortbytimespent',
             'viewsortbytotaltimespent', 'viewsortbybudgetleft',
             'viewsortbytotalbudgetleft', 'viewsortbypriority',
             'viewsortbytotalpriority', 'viewsortbyhourlyfee',
-            'viewsortbyfixedfee', 'viewsortbylastmodificationtime', 
+            'viewsortbyfixedfee', 'viewsortbyreminder', 
+            'viewsortbylastmodificationtime', 
             'viewsortbytotallastmodificationtime'])
                 
     
@@ -373,16 +376,19 @@ class TaskViewerColumnPopupMenu(_ColumnPopupMenu):
             _ViewTaskBudgetColumnsMenu(window, uiCommands)),
         self.appendMenu(_('&Financial'), 
             _ViewTaskFinancialColumnsMenu(window, uiCommands))
-        self.appendUICommands(uiCommands, ['viewattachments', 'viewcategories',
-            'viewpriority', 'viewtotalpriority', 'viewlastmodificationtime', 
+        self.appendUICommands(uiCommands, ['viewtaskdescription', 
+            'viewattachments', 'viewcategories', 'viewpriority', 
+            'viewtotalpriority', 'viewreminder', 
+            'viewlastmodificationtime', 
             'viewtotallastmodificationtime'])
 
 
 class EffortViewerColumnPopupMenu(_ColumnPopupMenu):
     def _fillMenu(self, window, uiCommands):
         self.appendUICommands(uiCommands, ['hidecurrentcolumn', None, 
-            'viewefforttimespent', 'viewtotalefforttimespent',
-            'vieweffortrevenue', 'viewtotaleffortrevenue'])
+            'vieweffortdescription', 'viewefforttimespent',
+            'viewtotalefforttimespent', 'vieweffortrevenue', 
+            'viewtotaleffortrevenue'])
         
 
 

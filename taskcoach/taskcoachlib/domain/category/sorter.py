@@ -13,6 +13,9 @@ class CategorySorter(patterns.ListDecorator):
     def extendSelf(self, categories):
         super(CategorySorter, self).extendSelf(categories)
         self.reset()
+    
+    def rootItems(self):
+        return [category for category in self if category.parent() is None]
 
     # We don't override removeItemsFromSelf because there is no need to 
     # call self.reset() when items are removed since after removing items

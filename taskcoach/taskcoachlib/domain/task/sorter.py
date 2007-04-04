@@ -1,4 +1,5 @@
 import patterns
+from domain import date
 
 class SortOrderReverser(object):
     ''' This class is responsible for reversing the sort order from ascending
@@ -102,6 +103,8 @@ class Sorter(patterns.ListDecorator):
             prepareSortValue = lambda subject: subject.lower()
         elif sortKeyName == 'categories':
             prepareSortValue = lambda categories: sorted([category.subject() for category in categories])
+        elif sortKeyName == 'reminder':
+            prepareSortValue = lambda reminder: reminder or date.DateTime.max
         else:
             prepareSortValue = lambda value: value
         kwargs = {}

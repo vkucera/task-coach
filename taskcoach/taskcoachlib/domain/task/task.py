@@ -86,7 +86,7 @@ class Task(patterns.ObservableComposite):
         
     _description = TaskProperty(__getDescription, __setDescription)
 
-    def description(self):
+    def description(self, recursive=False):
         return self._description
 
     def setDescription(self, description):
@@ -504,7 +504,7 @@ class Task(patterns.ObservableComposite):
         
     # reminder
     
-    def reminder(self):
+    def reminder(self, recursive=False):
         return self._reminder
 
     def setReminder(self, reminderDateTime=None):

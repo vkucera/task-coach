@@ -115,16 +115,16 @@ class CategoryTest(test.TestCase):
         filteredCategory = category.Category('test', filtered=True)
         self.failUnless(filteredCategory.isFiltered())
         
-    def testSetFilteredOnAffectsChild(self):
+    def testSetFilteredOnDoesNotAffectChild(self):
         self.category.addChild(self.subCategory)
         self.category.setFiltered()
-        self.failUnless(self.subCategory.isFiltered())
+        self.failIf(self.subCategory.isFiltered())
         
-    def testSetFilteredOffAffectsChild(self):
+    def testSetFilteredOffDoesNotAffectChild(self):
         self.subCategory.setFiltered()
         self.category.addChild(self.subCategory)
         self.category.setFiltered(False)
-        self.failIf(self.subCategory.isFiltered())
+        self.failUnless(self.subCategory.isFiltered())
         
     def testContains_NoTasks(self):
         self.failIf(self.category.contains(self.task))

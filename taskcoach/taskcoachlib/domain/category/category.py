@@ -72,9 +72,7 @@ class Category(patterns.ObservableComposite):
             self.__filtered = filtered
             self.notifyObservers(patterns.Event(self, 
                 self.filterChangedEventType(), filtered))
-        for child in self.children():
-            child.setFiltered(filtered)
-
+        
     def copy(self):
         return super(Category, self).copy(subject=self.subject(), 
             filtered=self.isFiltered(), tasks=self.tasks()[:])

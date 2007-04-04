@@ -95,6 +95,9 @@ class Viewer(wx.Panel):
     def itemEditor(self, *args, **kwargs):
         raise NotImplementedError
     
+    def getColor(self, item):
+        return wx.BLACK
+    
         
 class ListViewer(Viewer):
     def isTreeViewer(self):
@@ -355,9 +358,12 @@ class TaskViewer(UpdatePerSecondViewer):
         return menu.TaskPopupMenu(self.parent, self.uiCommands, 
             self.isTreeViewer())
 
+    def getColor(self, task):
+        return color.taskColor(task, self.settings)
+    
     def getItemAttr(self, index):
         task = self.getItemWithIndex(index)
-        return wx.ListItemAttr(color.taskColor(task, self.settings))
+        return wx.ListItemAttr(self.getColor(task))
 
     def __registerForColorChanges(self):
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
@@ -468,6 +474,11 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
                 sortCallback=self.uiCommands['viewsortbysubject'], 
                 imageIndexCallback=self.subjectImageIndex,
                 renderCallback=self.renderSubject)] + \
+            [widgets.Column(_('Description'), 'task.description', 
+                sortKey='description', 
+                sortCallback=self.uiCommands['viewsortbydescription'],
+                renderCallback=lambda task: task.description(),
+                visibilitySetting=('view', 'taskdescription'))] + \
             [widgets.Column('', 'task.attachment.add', 
                 'task.attachment.remove', width=28,
                 alignment=wx.LIST_FORMAT_LEFT,
@@ -502,6 +513,7 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
             (_('Total fixed fee'), 'task.totalFixedFee', 'totalfixedfee', lambda task: render.amount(task.fixedFee(recursive=True))),
             (_('Revenue'), 'task.revenue', 'revenue', lambda task: render.amount(task.revenue())),
             (_('Total revenue'), 'task.totalRevenue', 'totalrevenue', lambda task: render.amount(task.revenue(recursive=True))),
+            (_('Reminder'), 'task.reminder', 'reminder', lambda task: render.dateTime(task.reminder())),
             (_('Last modification time'), 'task.lastModificationTime', 'lastModificationTime', lambda task: render.dateTime(task.lastModificationTime())),
             (_('Overall last modification time'),
             'task.totalLastModificationTime', 'totallastModificationTime', lambda task: render.dateTime(task.lastModificationTime(recursive=True)))]
@@ -807,6 +819,9 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             for columnHeader, eventType, renderCallback in \
             (_('Period'), 'effort.duration', self.renderPeriod),
             (_('Task'), 'effort.task', lambda effort: render.subject(effort.task(), recursively=True))] + \
+            [widgets.Column(_('Description'), 'effort.description', 
+             visibilitySetting=('view', 'effortdescription'), 
+             renderCallback=lambda effort: effort.getDescription())] + \
             [widgets.Column(columnHeader, eventType, 
              visibilitySetting=('view', setting), 
              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
