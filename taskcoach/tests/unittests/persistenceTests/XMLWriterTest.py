@@ -2,7 +2,7 @@
 
 import test, persistence
 import StringIO # We cannot use CStringIO since unicode strings are used below.
-from domain import task, effort, date, category
+from domain import task, effort, date, category, note
 
 class XMLWriterTest(test.TestCase):
     def setUp(self):
@@ -11,9 +11,11 @@ class XMLWriterTest(test.TestCase):
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
         self.categoryContainer = category.CategoryList()
+        self.noteContainer = note.NoteContainer()
             
     def __writeAndRead(self):
-        self.writer.write(self.taskList, self.categoryContainer)
+        self.writer.write(self.taskList, self.categoryContainer, 
+            self.noteContainer)
         return self.fd.getvalue()
     
     def expectInXML(self, xmlFragment):
@@ -235,3 +237,21 @@ class XMLWriterTest(test.TestCase):
         self.task.addAttachments(*attachments)
         self.expectInXML('<attachment>%s</attachment>'*2%tuple(attachments))
 
+    def testNote(self):
+        self.noteContainer.append(note.Note())
+        self.expectInXML('<note/>')
+        
+    def testNoteWithSubject(self):
+        self.noteContainer.append(note.Note('Note'))
+        self.expectInXML('<note subject="Note"/>')
+        
+    def testNoteWithDescription(self):
+        self.noteContainer.append(note.Note(description='Description'))
+        self.expectInXML('<note><description>Description</description></note>')
+        
+    def testNoteWithChild(self):
+        aNote = note.Note()
+        child = note.Note()
+        aNote.addChild(child)
+        self.noteContainer.append(aNote)
+        self.expectInXML('<note><note/></note>')

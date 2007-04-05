@@ -1,9 +1,7 @@
 import test, persistence
 import cStringIO as StringIO
-import domain.task as task
-import domain.category as category
-import domain.effort as effort
-import domain.date as date
+from domain import task, category, effort, date, note
+
 
 class IntegrationTestCase(test.TestCase):
     def setUp(self):
@@ -12,17 +10,19 @@ class IntegrationTestCase(test.TestCase):
         self.writer = persistence.XMLWriter(self.fd)
         self.taskList = task.TaskList()
         self.categories = category.CategoryList()
+        self.notes = note.NoteContainer()
         self.fillContainers()
-        tasks, categories = self.readAndWrite()
+        tasks, categories, notes = self.readAndWrite()
         self.tasksWrittenAndRead = task.TaskList(tasks)
         self.categoriesWrittenAndRead = category.CategoryList(categories)
+        self.notesWrittenAndRead = note.NoteContainer(notes)
 
     def fillContainers(self):
         pass
 
     def readAndWrite(self):
         self.fd.reset()
-        self.writer.write(self.taskList, self.categories)
+        self.writer.write(self.taskList, self.categories, self.notes)
         self.fd.reset()
         return self.reader.read()
 
@@ -55,6 +55,9 @@ class IntegrationTest(IntegrationTestCase):
         self.task.addAttachments('/home/frank/whatever.txt')
         self.task2 = task.Task('Task 2', priority=-1954)
         self.taskList.extend([self.task, self.task2])
+        self.notes = note.NoteContainer()
+        self.notes.append(note.Note('Note', 'Description', 
+            children=[note.Note('Child')]))
 
     def getTaskWrittenAndRead(self, id):
         return [task for task in self.tasksWrittenAndRead if task.id() == id][0]
@@ -147,3 +150,14 @@ class IntegrationTest(IntegrationTestCase):
  
     def testAttachment(self):
         self.assertAttributeWrittenAndRead(self.task, 'attachments')
+        
+    def testNote(self):
+        self.assertEqual(len(self.notes), len(self.notesWrittenAndRead))
+
+    def testRootNote(self):
+        self.assertEqual(self.notes.rootItems()[0].subject(), 
+            self.notesWrittenAndRead.rootItems()[0].subject())
+        
+    def testChildNote(self):
+        self.assertEqual(self.notes.rootItems()[0].children()[0].subject(), 
+            self.notesWrittenAndRead.rootItems()[0].children()[0].subject())

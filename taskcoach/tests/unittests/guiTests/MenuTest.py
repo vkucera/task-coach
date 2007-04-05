@@ -1,7 +1,7 @@
 import test, gui, wx, config
 from unittests import dummy
 from gui import uicommand
-from domain import task, effort, category
+from domain import task, effort, category, note
 
 
 class MenuTestCase(test.wxTestCase):
@@ -92,7 +92,7 @@ class RecentFilesMenuTest(test.wxTestCase):
     def createFileMenu(self):
         return gui.menu.FileMenu(self.frame, gui.uicommand.UICommands(self.frame,
             self.ioController, None, self.settings, self.taskList, 
-            self.effortList, self.categories), self.settings)
+            self.effortList, self.categories, note.NoteContainer()), self.settings)
         
     def setRecentFilesAndCreateMenu(self, *filenames):
         self.addRecentFiles(*filenames)
@@ -160,7 +160,8 @@ class ViewMenuTestCase(test.wxTestCase):
         self.filteredTaskList = self.createFilteredTaskList()
         self.uiCommands = uicommand.UICommands(self.mainWindow, None, None, 
             self.settings, self.filteredTaskList, 
-            effort.EffortList(self.filteredTaskList), category.CategoryList())
+            effort.EffortList(self.filteredTaskList), category.CategoryList(),
+            note.NoteContainer())
         self.menu = self.createMenu()
         menuBar = wx.MenuBar()
         menuBar.Append(self.menu, 'menu')

@@ -60,6 +60,7 @@ iconlist = [
 ('ascending', 'actions', 'up', [16]),
 ('descending', 'actions', 'down', [16]),
 ('category', 'filesystems', 'folder_download', [16, 22]),
+('note', 'apps', 'knotes', [16, 22]),
 ('colorize', 'actions', 'colorize', [22]),
 ('windows', 'apps', 'window_list', [22]),
 ('email', 'apps', 'email', [16]),

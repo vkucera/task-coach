@@ -17,6 +17,14 @@ class EffortListAsserts(object):
         self.assertEqualLists(expected, self.effortList)
         
         
+class NoteContainerAsserts(object):
+    def assertNoteContainer(self, expected):
+        for note in expected:
+            self.failUnless(note in self.noteContainer)
+        for note in self.noteContainer:
+            self.failUnless(note in expected)
+
+                
 class EffortAsserts(object):
     def assertEqualEfforts(self, effort1, effort2):
         self.assertEqual(effort1.task(), effort2.task())
@@ -82,5 +90,5 @@ class CommandAsserts(object):
         assertRedone()
 
 class Mixin(CommandAsserts, TaskAsserts, EffortAsserts, TaskListAsserts, 
-            EffortListAsserts):
+            EffortListAsserts, NoteContainerAsserts):
     pass

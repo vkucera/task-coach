@@ -1,8 +1,6 @@
 import test, os, persistence
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
-import domain.category as category
+from domain import task, effort, date, category, note
+
 
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
@@ -13,6 +11,8 @@ class TaskFileTestCase(test.TestCase):
         self.taskFile.tasks().append(self.task)
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2)))
+        self.note = note.Note()
+        self.taskFile.notes().append(self.note)
         self.filename = 'test.tsk'
         self.filename2 = 'test.tsk'
         
@@ -67,6 +67,11 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.close()
         self.failUnless(self.taskFile.isEmpty())
 
+    def testClose_TaskFileWithNotesDeletesNotes(self):
+        self.taskFile.notes().append(note.Note())
+        self.taskFile.close()
+        self.failUnless(self.taskFile.isEmpty())
+        
     def testDoesNotNeedSave_Initial(self):
         self.failIf(self.emptyTaskFile.needSave())
 
@@ -78,6 +83,15 @@ class TaskFileTest(TaskFileTestCase):
         newTask = task.Task(subject='Task')
         self.emptyTaskFile.append(newTask)
         self.failUnless(self.emptyTaskFile.needSave())
+
+    def testNeedSave_AfterNewNoteAdded(self):
+        newNote = note.Note('Note')
+        self.emptyTaskFile.notes().append(newNote)
+        self.failUnless(self.emptyTaskFile.needSave())
+    
+    def testNeedSave_AfterNoteRemoved(self):
+        self.taskFile.notes().remove(self.note)
+        self.failUnless(self.taskFile.needSave())
         
     def testDoesNotNeedSave_AfterSave(self):
         self.emptyTaskFile.append(task.Task())
@@ -313,6 +327,32 @@ class TaskFileTest(TaskFileTestCase):
         self.category.setSubject('new subject')
         self.failUnless(self.taskFile.needSave())
         
+    def testNeedSave_AfterNoteSubjectChanged(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        list(self.taskFile.notes())[0].setSubject('new subject')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterNoteDescriptionChanged(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        list(self.taskFile.notes())[0].setDescription('new description')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterAddNoteChild(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        list(self.taskFile.notes())[0].addChild(note.Note())
+        self.failUnless(self.taskFile.needSave())
+    
+    def testNeedSave_AfterRemoveNoteChild(self):
+        child = note.Note()
+        list(self.taskFile.notes())[0].addChild(child)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        list(self.taskFile.notes())[0].removeChild(child)
+        self.failUnless(self.taskFile.needSave())
+        
     def testLastFilename_IsEmptyInitially(self):
         self.assertEqual('', self.taskFile.lastFilename())
         
@@ -342,17 +382,21 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         super(TaskFileSaveAndLoadTest, self).setUp()
         self.emptyTaskFile.setFilename(self.filename)
         
-    def saveAndLoad(self, tasks, categories=None):
+    def saveAndLoad(self, tasks, categories=None, notes=None):
         categories = categories or []
+        notes = notes or []
         self.emptyTaskFile.tasks().extend(tasks)
         self.emptyTaskFile.categories().extend(categories)
+        self.emptyTaskFile.notes().extend(notes)
         self.emptyTaskFile.save()
         self.emptyTaskFile.load()
         self.assertEqual([task.subject() for task in tasks], 
             [task.subject() for task in self.emptyTaskFile.tasks()])
         self.assertEqual([category.subject() for category in categories],
             [category.subject() for category in self.emptyTaskFile.categories()])
-
+        self.assertEqual([note.subject() for note in notes],
+            [note.subject() for note in self.emptyTaskFile.notes()])
+        
     def testSaveAndLoad(self):
         self.saveAndLoad([task.Task(subject='ABC'), 
             task.Task(duedate=date.Tomorrow())])
@@ -364,6 +408,9 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
 
     def testSaveAndLoadCategory(self):
         self.saveAndLoad([], [self.category])
+    
+    def testSaveAndLoadNotes(self):
+        self.saveAndLoad([], [], [self.note])
         
     def testSaveAs(self):
         self.taskFile.saveas('new.tsk')
@@ -418,3 +465,7 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.assertEqual(aTask.id(), 
                          list(self.taskFile.categories())[0].tasks()[0].id())
                          
+    def testMerge_Notes(self):
+        self.mergeFile.notes().append(self.note)
+        self.merge()
+        self.assertEqual(self.note.subject(), list(self.taskFile.notes())[0].subject())

@@ -41,8 +41,7 @@ class App(object):
         settings = config.Settings(loadSettings)
         i18n.Translator(settings.get('view', 'language'))
         import gui, persistence
-        import domain.task as task
-        import domain.effort as effort
+        from domain import task, effort
         import meta
         self.wxApp.SetAppName(meta.name)
         self.wxApp.SetVendorName(meta.author)

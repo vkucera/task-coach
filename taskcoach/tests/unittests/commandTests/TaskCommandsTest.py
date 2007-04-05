@@ -26,16 +26,11 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         command.DeleteTaskCommand(self.list, items or [], 
             categories=self.categories).do()
  
-    def cut(self, items=None):
-        if items == 'all':
-            items = list(self.list)
-        command.CutCommand(self.list, items or []).do()
-
     def paste(self, items=None):
         if items:
             command.PasteIntoTaskCommand(self.taskList, items).do()
         else:
-            command.PasteCommand(self.list).do()
+            super(TaskCommandTestCase, self).paste()
 
     def copy(self, items=None):
         command.CopyCommand(self.list, items or []).do()

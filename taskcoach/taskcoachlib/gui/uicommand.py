@@ -211,6 +211,12 @@ class CategoriesCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self.categories = kwargs.pop('categories', None)
         super(CategoriesCommand, self).__init__(*args, **kwargs)
+
+
+class NotesCommand(UICommand):
+    def __init__(self, *args, **kwargs):
+        self.notes = kwargs.pop('notes', None)
+        super(NotesCommand, self).__init__(*args, **kwargs)
         
 
 class ViewerCommand(UICommand):
@@ -271,7 +277,12 @@ class NeedsCategoryViewer(object):
     def enabled(self, event):
         return super(NeedsCategoryViewer, self).enabled(event) and \
             self.viewer.isShowingCategories()
-                     
+
+class NeedsNoteViewer(object):
+    def enabled(self, event):
+        return super(NeedsNoteViewer, self).enabled(event) and \
+            self.viewer.isShowingNotes()
+            
 class NeedsSelectedTasks(NeedsTaskViewer, NeedsSelection):
     pass
 
@@ -284,6 +295,9 @@ class NeedsSelectedEffort(NeedsEffortViewer, NeedsSelection):
     pass
 
 class NeedsSelectedCategory(NeedsCategoryViewer, NeedsSelection):
+    pass
+
+class NeedsSelectedNote(NeedsNoteViewer, NeedsSelection):
     pass
 
 class NeedsAtLeastOneTask(object):
@@ -1110,6 +1124,62 @@ class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
         return command.DragAndDropCategoryCommand(self.categories, dragItem, 
                                                   drop=dropItem)
 
+
+class NoteNew(MainWindowCommand, NotesCommand, UICommandsCommand):
+    def __init__(self, *args, **kwargs):
+        notes = kwargs['notes']
+        super(NoteNew, self).__init__(bitmap='new', 
+            menuText=notes.newItemMenuText,
+            helpText=notes.newItemHelpText, *args, **kwargs)
+
+    def doCommand(self, event, show=True):
+        newNoteDialog = gui.dialog.editor.NoteEditor(self.mainwindow, 
+            command.NewNoteCommand(self.notes),
+            self.notes, self.uiCommands, bitmap=self.bitmap)
+        newNoteDialog.Show(show)
+    
+
+class NoteNewSubNote(NeedsSelectedNote, NotesCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        notes = kwargs['notes']
+        super(NoteNewSubNote, self).__init__(bitmap='newsub', 
+            menuText=notes.newSubItemMenuText, 
+            helpText=notes.newSubItemHelpText, *args, **kwargs)
+
+    def doCommand(self, event, show=True):
+        dialog = self.viewer.newSubNoteDialog(bitmap=self.bitmap)
+        dialog.Show(show)
+
+
+class NoteDelete(NeedsSelectedCategory, NotesCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        notes = kwargs['notes']
+        super(NoteDelete, self).__init__(bitmap='delete',
+            menuText=notes.deleteItemMenuText, 
+            helpText=notes.deleteItemHelpText, *args, **kwargs)
+        
+    def doCommand(self, event):
+        delete = self.viewer.deleteNoteCommand()
+        delete.do()
+
+
+class NoteEdit(NeedsSelectedNote, ViewerCommand, NotesCommand):
+    def __init__(self, *args, **kwargs):
+        notes = kwargs['notes']
+        super(NoteEdit, self).__init__(bitmap='edit',
+            menuText=notes.editItemMenuText,
+            helpText=notes.editItemHelpText, *args, **kwargs)
+        
+    def doCommand(self, event, show=True):
+        dialog = self.viewer.editNoteDialog(bitmap=self.bitmap)
+        dialog.Show(show)
+
+
+class NoteDragAndDrop(NotesCommand, DragAndDropCommand):
+    def createCommand(self, dragItem, dropItem):
+        return command.DragAndDropNoteCommand(self.notes, dragItem, 
+                                                  drop=dropItem)
+                         
                                                         
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
@@ -1212,7 +1282,7 @@ class Search(MainWindowCommand, ViewerCommand, SettingsCommand):
 
 class UICommands(dict):
     def __init__(self, mainwindow, iocontroller, viewer, settings, 
-            taskList, effortList, categories):
+            taskList, effortList, categories, notes):
         super(UICommands, self).__init__()
         self.__iocontroller = iocontroller
     
@@ -1397,7 +1467,11 @@ class UICommands(dict):
             ('vieweffortpermonthviewer', _('Effort per month'),
             _('Open a new tab with a viewer that displays effort per month'),
             gui.viewer.EffortPerMonthViewer, (taskList, self, settings), {},
-            _('Effort per month'), 'date')):
+            _('Effort per month'), 'date'),
+            ('viewnoteviewer', _('Note'), 
+            _('Open a new tab with a viewer that displays notes'),
+            gui.viewer.NoteViewer, (notes, self, settings), {}, _('Notes'),
+            'note')):
             self[key] = ViewViewer(viewer=viewer, menuText=menuText, 
                 helpText=helpText, bitmap=bitmap, viewerClass=viewerClass,
                 viewerArgs=viewerArgs, viewerKwargs=viewerKwargs, 
@@ -1461,7 +1535,7 @@ class UICommands(dict):
         self['starteffort'] = EffortStart(taskList=taskList, viewer=viewer)
         self['stopeffort'] = EffortStop(taskList=taskList)
         
-        # Categorymenu
+        # Category menu
         self['newcategory'] = CategoryNew(mainwindow=mainwindow, 
             categories=categories, uiCommands=self)
         self['newsubcategory'] = CategoryNewSubCategory(viewer=viewer, 
@@ -1470,6 +1544,13 @@ class UICommands(dict):
             categories=categories)
         self['editcategory'] = CategoryEdit(viewer=viewer, 
             categories=categories)
+        
+        # Note menu
+        self['newnote'] = NoteNew(mainwindow=mainwindow, 
+            notes=notes, uiCommands=self)
+        self['newsubnote'] = NoteNewSubNote(viewer=viewer, notes=notes)
+        self['deletenote'] = NoteDelete(viewer=viewer, notes=notes)
+        self['editnote'] = NoteEdit(viewer=viewer, notes=notes)
         
         # Help menu
         self['help'] = Help()
@@ -1488,6 +1569,7 @@ class UICommands(dict):
                                                   viewer=viewer)
         self['draganddropcategory'] = CategoryDragAndDrop(viewer=viewer,
             categories=categories)
+        self['draganddropnote'] = NoteDragAndDrop(viewer=viewer, notes=notes)
 
     def createRecentFileOpenUICommand(self, filename, index):
         return RecentFileOpen(filename=filename, index=index, 

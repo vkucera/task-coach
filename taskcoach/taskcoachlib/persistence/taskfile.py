@@ -1,7 +1,5 @@
 import os, patterns, codecs, shutil, xml
-import domain.date as date
-import domain.task as task
-import domain.category as category
+from domain import date, task, category, note
 
 # FIXME: TaskFile currently inherits from TaskList. It should contain a 
 # task list instead, just like it contains a CategoryContainer.
@@ -11,13 +9,16 @@ class TaskFile(task.TaskList):
         self.__filename = self.__lastFilename = filename
         self.__needSave = self.__loading = False
         self.__categories = category.CategoryList()
+        self.__notes = note.NoteContainer()
         super(TaskFile, self).__init__(*args, **kwargs)
         # Register for tasks, categories, and efforts being changed so we 
         # can monitor when the task file needs saving (i.e. is 'dirty'):
         for eventType in (self.tasks().addItemEventType(), 
                           self.tasks().removeItemEventType(), 
                           self.categories().addItemEventType(),
-                          self.categories().removeItemEventType()):
+                          self.categories().removeItemEventType(),
+                          self.notes().addItemEventType(),
+                          self.notes().removeItemEventType()):
             patterns.Publisher().registerObserver(self.onDomainObjectAddedOrRemoved, 
                                                   eventType)
 
@@ -39,6 +40,11 @@ class TaskFile(task.TaskList):
             # get a notification through 'task.effort.add'                
             patterns.Publisher().registerObserver(self.onEffortChanged, 
                                                   eventType=eventType)
+        for eventType in ('note.subject', 'note.description', 
+                note.Note.addChildEventType(), 
+                note.Note.removeChildEventType()):
+            patterns.Publisher().registerObserver(self.onNoteChanged, 
+                                                  eventType=eventType)
         for eventType in ('category.filter', 
                 category.Category.subjectChangedEventType()):
             patterns.Publisher().registerObserver(self.onCategoryChanged, 
@@ -50,11 +56,14 @@ class TaskFile(task.TaskList):
     def categories(self):
         return self.__categories
     
+    def notes(self):
+        return self.__notes
+    
     def tasks(self):
         return self
     
     def isEmpty(self):
-        return 0 == len(self.categories()) == len(self.tasks())
+        return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
             
     def onDomainObjectAddedOrRemoved(self, event):
         self.markDirty()
@@ -69,6 +78,10 @@ class TaskFile(task.TaskList):
             
     def onCategoryChanged(self, event):
         if event.source() in self.categories():
+            self.markDirty()
+            
+    def onNoteChanged(self, event):
+        if event.source() in self.notes():
             self.markDirty()
 
     def setFilename(self, filename):
@@ -96,6 +109,7 @@ class TaskFile(task.TaskList):
     def _clear(self):
         self.tasks().removeItems(list(self.tasks()))
         self.categories().removeItems(list(self.categories()))
+        self.notes().removeItems(list(self.notes()))
         
     def close(self):
         self.setFilename('')
@@ -119,14 +133,16 @@ class TaskFile(task.TaskList):
         try:
             if self.exists():
                 fd = self._openForRead()
-                tasks, categories = self._read(fd)
+                tasks, categories, notes = self._read(fd)
                 fd.close()
             else: 
                 tasks = []
                 categories = []
+                notes = []
             self._clear()
             self.tasks().extend(tasks)
             self.categories().extend(categories)
+            self.notes().extend(notes)
         finally:
             self.__loading = False
             self.__needSave = False
@@ -134,7 +150,7 @@ class TaskFile(task.TaskList):
     def save(self):
         self.notifyObservers(patterns.Event(self, 'taskfile.aboutToSave'))
         fd = self._openForWrite()
-        xml.XMLWriter(fd).write(self.tasks(), self.categories())
+        xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes())
         fd.close()
         self.__needSave = False
         

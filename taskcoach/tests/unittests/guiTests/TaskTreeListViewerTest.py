@@ -1,7 +1,7 @@
 import test, gui, widgets, TaskTreeViewerTest, TaskListViewerTest
 from unittests import dummy
 from gui import render
-from domain import task, date, effort, category
+from domain import task, date, effort, category, note
 
 class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
     def createWidgetWithColumns(self):
@@ -21,8 +21,8 @@ class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
         categories = category.CategoryList()
         self.viewer = TaskTreeListViewerUnderTest(self.frame,
             self.taskList, gui.uicommand.UICommands(self.frame, None, None, 
-                self.settings, self.taskList, effortList, categories), 
-                self.settings, categories=categories)
+                self.settings, self.taskList, effortList, categories, 
+                note.NoteContainer()), self.settings, categories=categories)
           
     def testOneDayLeft(self):
         self.settings.set('view', 'timeleft', 'True')

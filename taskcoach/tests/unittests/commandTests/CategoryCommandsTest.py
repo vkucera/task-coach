@@ -1,7 +1,7 @@
 import test, command, patterns
 from unittests import asserts
 from CommandTestCase import CommandTestCase
-import domain.category as category
+from domain import category
 
 
 class CategoryCommandTestCase(CommandTestCase, asserts.CommandAsserts):

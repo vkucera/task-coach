@@ -1,5 +1,5 @@
 import test, wx, gui, config
-from domain import task, effort, category
+from domain import task, effort, category, note
 from unittests import dummy
 
 class UICommandTest(test.wxTestCase):
@@ -39,7 +39,7 @@ class UICommandsTest(test.wxTestCase):
         effortList = effort.EffortList(taskList)
         categories = category.CategoryList()
         gui.uicommand.UICommands(self.frame, None, None, None, taskList, 
-            effortList, categories)
+            effortList, categories, note.NoteContainer())
 
 
 class ViewAllTasksTest(test.wxTestCase):
@@ -48,7 +48,8 @@ class ViewAllTasksTest(test.wxTestCase):
         taskList = task.TaskList()
         categories = category.CategoryList()
         uiCommands = gui.uicommand.UICommands(self.frame, None, None, settings,
-            taskList, effort.EffortList(taskList), categories)
+            taskList, effort.EffortList(taskList), categories, 
+            note.NoteContainer())
         aCategory = category.Category('category')
         categories.append(aCategory)
         aCategory.setFiltered()

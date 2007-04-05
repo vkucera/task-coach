@@ -60,13 +60,16 @@ class MainWindow(WindowWithPersistentDimensions):
         self.viewer = viewercontainer.ViewerAUINotebook(self.panel, 
             self.settings, 'mainviewer') 
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
-            self.viewer, self.settings, self.taskFile, self.effortList, self.taskFile.categories())
+            self.viewer, self.settings, self.taskFile, self.effortList, 
+            self.taskFile.categories(), self.taskFile.notes())
         self.initLayout()
         viewerfactory.addTaskViewers(self.viewer, self.taskFile, 
             self.uiCommands, self.settings, self.taskFile.categories())
         viewerfactory.addEffortViewers(self.viewer, self.taskFile, 
             self.uiCommands, self.settings)
         viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
+            self.uiCommands, self.settings)
+        viewerfactory.addNoteViewers(self.viewer, self.taskFile.notes(),
             self.uiCommands, self.settings)
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))

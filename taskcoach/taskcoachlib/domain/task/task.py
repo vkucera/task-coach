@@ -1,5 +1,5 @@
 import patterns, time, copy
-import domain.date as date
+from domain import date
 
 
 class TaskProperty(property):
