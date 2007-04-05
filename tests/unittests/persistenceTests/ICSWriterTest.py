@@ -1,8 +1,6 @@
 import test, meta, persistence
 import cStringIO as StringIO
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
+from domain import task, effort, date
 
 
 class ICSTestCase(test.TestCase):

@@ -1,5 +1,7 @@
 import test, command
-from domain import task, category
+from unittests import asserts
+from domain import task, category, note
+from CommandTestCase import CommandTestCase
 from TaskCommandsTest import TaskCommandTestCase, CommandWithChildrenTestCase, \
     CommandWithEffortTestCase
 
@@ -65,7 +67,32 @@ class CutCommandWithEffortTest(CommandWithEffortTestCase):
         self.assertDoUndoRedo(lambda: self.assertEffortList([]),
                               lambda: self.assertEffortList(self.originalEffortList))
 
-                              
+
+class NoteCommandTestCase(CommandTestCase, asserts.Mixin):
+    def setUp(self):
+        super(NoteCommandTestCase, self).setUp()
+        self.note1 = note.Note()
+        self.note2 = note.Note()
+        self.list = self.noteContainer = note.NoteContainer([self.note1, self.note2])
+        self.original = note.NoteContainer([self.note1, self.note2])
+
+
+class CutCommandWithNotes(NoteCommandTestCase):        
+    def testCutNotes_WithoutSelection(self):
+        self.cut()
+        self.assertDoUndoRedo(lambda: self.assertNoteContainer(self.original))
+
+    def testCutNotes_Selection(self):
+        self.cut([self.note1])
+        self.assertDoUndoRedo(lambda: self.assertNoteContainer(note.NoteContainer([self.note2])),
+            lambda: self.assertNoteContainer(self.original))
+        
+    def testCutNotes_All(self):
+        self.cut('all')
+        self.assertDoUndoRedo(lambda: self.assertNoteContainer(note.NoteContainer()),
+            lambda: self.assertNoteContainer(self.original))
+        
+
 class PasteCommandWithTasksTest(TaskCommandTestCase):
     def testPasteWithoutPreviousCut(self):
         self.paste()
@@ -84,6 +111,18 @@ class PasteCommandWithTasksTest(TaskCommandTestCase):
             lambda: self.assertEqual([], task.Clipboard()._contents), 
             lambda: self.assertEqual([self.task1], task.Clipboard()._contents))
 
+
+class PasteCommandWithNotesTest(NoteCommandTestCase):
+    def testPasteWithoutPreviousCut(self):
+        self.paste()
+        self.assertDoUndoRedo(lambda: self.assertNoteContainer(self.original))
+        
+    def testPaste(self):
+        self.cut([self.note1])
+        self.paste()
+        self.assertDoUndoRedo(lambda: self.assertNoteContainer(self.original),
+            lambda: self.assertNoteContainer([self.note2]))
+            
 
 class PasteCommandWithEffortTest(CommandWithEffortTestCase):
     def testPasteWithoutPreviousCut(self):

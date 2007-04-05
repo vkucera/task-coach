@@ -1,6 +1,6 @@
 import test, gui
 from unittests import dummy
-from domain import task, effort, category
+from domain import task, effort, category, note
 
 class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
@@ -9,7 +9,7 @@ class CategoryViewerTest(test.wxTestCase):
         self.categories = category.CategoryList()
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
             gui.uicommand.UICommands(self.frame, None, None, None, self.taskList,
-                self.effortList, self.categories))
+                self.effortList, self.categories, note.NoteContainer()))
         
     def testInitialSize(self):
         self.assertEqual(0, self.viewer.size())

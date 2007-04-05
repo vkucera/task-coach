@@ -1,7 +1,7 @@
 import test, gui, config, TaskViewerTest, wx
 from gui import render
 from i18n import _
-from domain import task, effort, date, category
+from domain import task, effort, date, category, note
 
 
 class CommonTests:
@@ -84,7 +84,8 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, None, self.settings, 
                 self.taskList, effort.EffortList(self.taskList), 
-                self.categories), self.settings, categories=self.categories)
+                self.categories, note.NoteContainer()), self.settings, 
+                categories=self.categories)
         
     def assertItems(self, *tasks):
         self.assertEqual(len(tasks), self.viewer.size())

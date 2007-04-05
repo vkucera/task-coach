@@ -1,7 +1,7 @@
 import patterns, command, widgets, uicommand, menu, color, render, dialog
 import wx
 from i18n import _
-from domain import task, category, effort, date
+from domain import task, category, effort, date, note
 
 
 class Viewer(wx.Panel):
@@ -87,6 +87,9 @@ class Viewer(wx.Panel):
         return False
     
     def isShowingCategories(self):
+        return False
+    
+    def isShowingNotes(self):
         return False
     
     def visibleColumns(self):
@@ -731,6 +734,79 @@ class CategoryViewer(TreeViewer):
             self.list, self.uiCommands, bitmap=kwargs['bitmap'])
         
     newSubCategoryDialog = newSubItemDialog
+
+
+class NoteViewer(TreeViewer):
+    def __init__(self, *args, **kwargs):
+        super(NoteViewer, self).__init__(*args, **kwargs)
+        for eventType in [note.Note.subjectChangedEventType()]:
+            patterns.Publisher().registerObserver(self.onNoteChanged, 
+                eventType)
+        
+    def createWidget(self):
+        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage,
+            self.getItemAttr, self.getChildrenCount,
+            self.onSelect,
+            self.uiCommands['editnote'], 
+            self.uiCommands['draganddropnote'], 
+            self.createNotePopupMenu())
+        return widget
+
+    def createNotePopupMenu(self):
+        return menu.NotePopupMenu(self.parent, self.uiCommands)
+
+    def onNoteChanged(self, event):
+        note = event.source()
+        if note in self.list:
+            self.widget.RefreshItem(self.getIndexOfItem(note))
+            
+    def getItemText(self, index):    # FIXME: pull up to TreeViewer
+        note = self.getItemWithIndex(index)
+        return note.subject()
+    
+    def getItemImage(self, index, which):
+        return -1
+    
+    def getItemAttr(self, index):
+        return wx.ListItemAttr()
+    
+    def createSorter(self, noteContainer):
+        return note.NoteSorter(noteContainer)
+    
+    def isShowingNotes(self):
+        return True
+
+    def statusMessages(self):
+        status1 = _('Notes: %d selected, %d total')%\
+            (len(self.curselection()), len(self.list))
+        status2 = _('Status: n/a')
+        return status1, status2
+
+    def newItemDialog(self, *args, **kwargs):
+        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self), 
+            command.NewNoteCommand(self.list),
+            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+    
+    # See TaskViewer for why the methods below have two names.
+    
+    def editItemDialog(self, *args, **kwargs):
+        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
+            command.EditNoteCommand(self.list, self.curselection()),
+            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+    
+    editNoteDialog = editItemDialog
+    
+    def deleteItemCommand(self):
+        return command.DeleteCommand(self.list, self.curselection())
+    
+    deleteNoteCommand = deleteItemCommand
+    
+    def newSubItemDialog(self, *args, **kwargs):
+        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self), 
+            command.NewSubNoteCommand(self.list, self.curselection()),
+            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+        
+    newSubNoteDialog = newSubItemDialog
     
     
 class EffortViewer(UpdatePerSecondViewer):

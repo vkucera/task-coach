@@ -3,11 +3,11 @@ import domain.date as date
 
 
 class XMLWriter:    
-    def __init__(self, fd, versionnr=15):
+    def __init__(self, fd, versionnr=16):
         self.__fd = fd
         self.__versionnr = versionnr
         
-    def write(self, taskList, categoryContainer):
+    def write(self, taskList, categoryContainer, noteContainer):
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None)
         pi = self.document.createProcessingInstruction('taskcoach', 
@@ -18,6 +18,8 @@ class XMLWriter:
             self.document.documentElement.appendChild(self.taskNode(task))
         for category in categoryContainer.rootItems():
             self.document.documentElement.appendChild(self.categoryNode(category, taskList))
+        for note in noteContainer.rootItems():
+            self.document.documentElement.appendChild(self.noteNode(note))
         self.document.writexml(self.__fd)
             
     def taskNode(self, task):
@@ -81,6 +83,16 @@ class XMLWriter:
             node.setAttribute('tasks', taskIds)
         for child in category.children():
             node.appendChild(self.categoryNode(child, taskList))
+        return node
+    
+    def noteNode(self, note):
+        node = self.document.createElement('note')
+        if note.subject():
+            node.setAttribute('subject', note.subject())
+        if note.description():
+            node.appendChild(self.textNode('description', note.description()))
+        for child in note.children():
+            node.appendChild(self.noteNode(child))
         return node
         
     def budgetAsAttribute(self, budget):

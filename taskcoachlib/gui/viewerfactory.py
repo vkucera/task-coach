@@ -28,6 +28,10 @@ def addCategoryViewers(viewerContainer, categoryContainer, uiCommands,
                        settings):
     _addViewers(viewerContainer, viewer.CategoryViewer, (categoryContainer, 
                 uiCommands, settings), {}, _('Categories'), 'category', settings)
+    
+def addNoteViewers(viewerContainer, noteContainer, uiCommands, settings):
+    _addViewers(viewerContainer, viewer.NoteViewer, (noteContainer, uiCommands,
+                settings), {}, _('Notes'), 'note', settings)
 
 def _addViewers(viewerContainer, viewerClass, viewerArgs, viewerKwArgs, title, 
                 bitmap, settings):

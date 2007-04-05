@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import test, gui, command, wx, config, sys
 from unittests import dummy
-from domain import task, effort, date, category
+from domain import task, effort, date, category, note
 
 
 class DummyViewer:
@@ -42,7 +42,8 @@ class TaskEditorTestCase(test.wxTestCase):
         effortList = effort.EffortList(self.taskList)
         return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
             self.taskList, gui.uicommand.UICommands(self.frame, None, None, 
-                settings, self.taskList, effortList, categories),
+                settings, self.taskList, effortList, categories, 
+                note.NoteContainer()),
             settings, categories, raiseDialog=False)
 
     def tearDown(self):

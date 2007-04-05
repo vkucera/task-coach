@@ -1,5 +1,5 @@
 import test, persistence, StringIO, gui, config
-from domain import task, category, effort, date
+from domain import task, category, effort, date, note
 from unittests import dummy
 
 class HTMLWriterTestCase(test.wxTestCase):
@@ -11,6 +11,7 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.taskList = task.TaskList([self.task])
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
+        self.notes = note.NoteContainer()
         self.settings = config.Settings(load=False)
         self.createViewer()
 
@@ -68,8 +69,8 @@ class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, None, self.settings, 
-                self.taskList, self.effortList, self.categories), self.settings, 
-                categories=self.categories)
+                self.taskList, self.effortList, self.categories, self.notes), 
+                self.settings, categories=self.categories)
         
     def selectItem(self, index):
         self.viewer.widget.SelectItem(index)
@@ -79,8 +80,8 @@ class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
         self.viewer = gui.viewer.TaskTreeViewer(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, None, self.settings, 
-                self.taskList, self.effortList, self.categories), self.settings, 
-                categories=self.categories)
+                self.taskList, self.effortList, self.categories, self.notes), 
+                self.settings, categories=self.categories)
 
     def selectItem(self, index):
         item, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())
@@ -95,7 +96,8 @@ class EffortWriterTest(HTMLWriterTestCase):
     def createViewer(self):
         self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList,
             gui.uicommand.UICommands(self.frame, None, None, self.settings, 
-                self.taskList, self.effortList, self.categories), self.settings)
+                self.taskList, self.effortList, self.categories, self.notes), 
+                self.settings)
 
     def testTaskSubject(self):
         self.expectInHTML('>Task subject<')

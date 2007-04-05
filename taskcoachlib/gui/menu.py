@@ -47,6 +47,7 @@ class MainMenu(wx.MenuBar):
         self.Append(TaskMenu(mainwindow, uiCommands), _('&Task'))
         self.Append(EffortMenu(mainwindow, uiCommands), _('Eff&ort'))
         self.Append(CategoryMenu(mainwindow, uiCommands), _('&Category'))
+        self.Append(NoteMenu(mainwindow, uiCommands), _('&Note'))
         self.Append(HelpMenu(mainwindow, uiCommands), _('&Help'))
 
 '''
@@ -170,7 +171,8 @@ class ViewViewerMenu(Menu):
         self.appendUICommands(uiCommands, ['viewtasklistviewer', 
             'viewtasktreeviewer', None, 'viewcategoryviewer', None,
             'vieweffortdetailviewer', 'vieweffortperdayviewer', 
-            'vieweffortperweekviewer', 'vieweffortpermonthviewer'])
+            'vieweffortperweekviewer', 'vieweffortpermonthviewer', None,
+            'viewnoteviewer'])
         
         
 class ViewTaskColumnsMenu(Menu):
@@ -298,6 +300,13 @@ class CategoryMenu(Menu):
             'editcategory', 'deletecategory'])
         
         
+class NoteMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(NoteMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['newnote', 'newsubnote', 'editnote',
+            'deletenote'])
+        
+        
 class HelpMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(HelpMenu, self).__init__(mainwindow)
@@ -339,6 +348,15 @@ class CategoryPopupMenu(Menu):
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None, 
             'newtask', None, 'newcategory', 'newsubcategory', 'editcategory', 
             'deletecategory', None, 'stopeffort', None, 'viewexpandselected',
+            'viewcollapseselected'])
+
+
+class NotePopupMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(NotePopupMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None,
+            'newtask', None, 'newnote', 'newsubnote', 'editnote', 'deletenote',
+            None, 'stopeffort', None, 'viewexpandselected', 
             'viewcollapseselected'])
         
         

@@ -6,7 +6,7 @@ import wx.lib.masked as masked
 import wx.lib.customtreectrl as customtree
 import wx.lib.combotreebox as combotreebox
 from i18n import _
-from domain import task, category, date
+from domain import task, category, date, note
 import thirdparty.desktop as desktop
 import os.path
 
@@ -549,6 +549,31 @@ class CategoryEditBook(widgets.BookPage):
         self._category.setSubject(self._subjectEntry.GetValue())
 
 
+class NoteEditBook(widgets.BookPage):
+    def __init__(self, parent, theNote, editor, *args, **kwargs):
+        super(NoteEditBook, self).__init__(parent, columns=2, *args, **kwargs)
+        self._editor = editor
+        self._note = theNote
+        self.addSubjectEntry()
+        self.addDescriptionEntry()
+        self.fit()
+
+    def addSubjectEntry(self):
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._note.subject())
+        self.addEntry(_('Subject'), self._subjectEntry, flags=[None, wx.ALL|wx.EXPAND])
+        
+    def addDescriptionEntry(self):
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, 
+            self._note.description())
+        self._descriptionEntry.SetSizeHints(300, 150)
+        self.addEntry(_('Description'), self._descriptionEntry, 
+            flags=[None, wx.ALL|wx.EXPAND], growable=True)
+
+    def ok(self):
+        self._note.setSubject(self._subjectEntry.GetValue())
+        self._note.setDescription(self._descriptionEntry.GetValue())
+        
+
 class EditorWithCommand(widgets.NotebookDialog):
     def __init__(self, parent, command, uiCommands, *args, **kwargs):
         self._uiCommands = uiCommands
@@ -626,3 +651,27 @@ class CategoryEditor(EditorWithCommand):
     def addPage(self, category):
         page = CategoryEditBook(self._interior, category, self)
         self._interior.AddPage(page, category.subject())
+
+
+class NoteEditor(EditorWithCommand):
+    def __init__(self, parent, command, uiCommands, notes, *args, **kwargs):
+        self._notes = notes
+        super(NoteEditor, self).__init__(parent, command, uiCommands, 
+                                             *args, **kwargs)
+        self[0]._subjectEntry.SetSelection(-1, -1)
+        # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
+        self.setFocus() 
+        # This works on Windows XP, but fails silently on Linux Ubuntu 5.10:
+        wx.CallAfter(self.setFocus) 
+        # So we did just do it twice, guess it doesn't hurt
+
+    def setFocus(self, *args, **kwargs):
+        self[0]._subjectEntry.SetFocus()
+        
+    def addPages(self):
+        for note in self._command.items:
+            self.addPage(note)
+            
+    def addPage(self, note):
+        page = NoteEditBook(self._interior, note, self)
+        self._interior.AddPage(page, note.subject())

@@ -28,7 +28,7 @@ class DummyTaskFile(persistence.TaskFile):
         if self._throw:
             raise IOError
         else:
-            return [task.Task()], [category.Category('category')]
+            return [task.Task()], [category.Category('category')], []
         
     def exists(self, *args, **kwargs):
         return True

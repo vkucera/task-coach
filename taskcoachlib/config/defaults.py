@@ -7,6 +7,7 @@ defaults = { \
     'effortperdayviewercount': '0',
     'effortperweekviewercount': '0',
     'effortpermonthviewercount': '0',
+    'noteviewercount': '0',
     'statusbar': 'True',
     'toolbar': '(32, 32)',
     'completedtasks': 'True',

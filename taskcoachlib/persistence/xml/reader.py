@@ -1,8 +1,6 @@
 import time, xml.dom.minidom, re
-import domain.date as date
-import domain.effort as effort
-import domain.task as task
-import domain.category as category
+from domain import date, effort, task, category, note
+
 
 class XMLReader:
     def __init__(self, fd):
@@ -22,7 +20,11 @@ class XMLReader:
         else:
             categories = self.__parseCategoryNodes( \
                 domDocument.documentElement.childNodes, tasksById)
-        return tasks, categories
+        if self.__tskversion <= 15:
+            notes = []
+        else:
+            notes = self.__parseNoteNodes(domDocument.documentElement.childNodes)
+        return tasks, categories, notes
 
     def __parseTskVersionNumber(self, domDocument):
         processingInstruction = domDocument.firstChild.data
@@ -36,6 +38,10 @@ class XMLReader:
     def __parseCategoryNodes(self, nodes, tasks):
         return [self.__parseCategoryNode(node, tasks) for node in nodes \
                 if node.nodeName == 'category']
+        
+    def __parseNoteNodes(self, nodes):
+        return [self.__parseNoteNode(node) for node in nodes \
+                if node.nodeName == 'note']
 
     def __parseCategoryNode(self, categoryNode, tasksById):        
         subject = categoryNode.getAttribute('subject')
@@ -97,7 +103,7 @@ class XMLReader:
             categories = []
         children = self.__parseTaskNodes(taskNode.childNodes)
         efforts = self.__parseEffortNodes(taskNode.childNodes)
-        parent = task.Task(subject, description, id_=id, startDate=startDate, 
+        return task.Task(subject, description, id_=id, startDate=startDate, 
             dueDate=dueDate, completionDate=completionDate, budget=budget, 
             priority=priority, lastModificationTime=lastModificationTime, 
             hourlyFee=hourlyFee, fixedFee=fixedFee, reminder=reminder, 
@@ -105,7 +111,12 @@ class XMLReader:
             efforts=efforts,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 shouldMarkCompletedWhenAllChildrenCompleted)
-        return parent        
+    
+    def __parseNoteNode(self, noteNode):
+        subject = noteNode.getAttribute('subject')
+        description = self.__parseDescription(noteNode)
+        children = self.__parseNoteNodes(noteNode.childNodes)
+        return note.Note(subject, description, children=children)
         
     def __parseCategoryNodesWithinTaskNode(self, nodes):
         return [self.__parseTextNode(node) for node in nodes \
