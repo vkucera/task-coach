@@ -248,7 +248,8 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, TreeMixin,
     # Extend TreeMixin with TreeListCtrl specific behaviour:
 
     def getStyle(self):
-        return super(TreeListCtrl, self).getStyle() | wx.TR_FULL_ROW_HIGHLIGHT
+        return super(TreeListCtrl, self).getStyle() | wx.TR_FULL_ROW_HIGHLIGHT \
+            | wx.WANTS_CHARS
         
     def allItems(self):
         for rowIndex in range(self._count):
