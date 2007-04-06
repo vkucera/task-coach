@@ -1,5 +1,4 @@
-import patterns, wx, time
-import dateandtime
+import patterns, wx, time, dateandtime
 
 class Clock(object):
     __metaclass__ = patterns.Singleton
