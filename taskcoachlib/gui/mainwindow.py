@@ -26,6 +26,9 @@ class WindowWithPersistentDimensions(wx.Frame):
         width, height = self.getSetting('size')
         x, y = self.getSetting('position')
         self.SetDimensions(x, y, width, height)
+        # Check that the window is on a valid display and move if necessary:
+        if wx.Display.GetFromWindow(self) == wx.NOT_FOUND:
+            self.SetDimensions(0, 0, width, height)
 
     def onChangeSize(self, event):
         self.setSetting('size', event.GetSize())
