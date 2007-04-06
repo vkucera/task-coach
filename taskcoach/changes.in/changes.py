@@ -9,14 +9,18 @@ Release('0.63.0', '?',
         Feature('''Export to HTML and printing of tasks colors tasks 
 appropriately.'''),
         Feature('''Added description columns to the task and effort viewers. 
-Like other columns, the description column is printed and exported if visible.'''),
+Like other columns, the description column is printed and exported if 
+visible.'''),
         Feature('''Added reminder column to the task viewers.''')),
     bugsFixed=(
         Bug("""Cancelling printing would give a 'Task Coach Error'"""),
+        Bug('''Make sure the main window is on a visible display when starting. 
+This is for laptop users that sometimes extend their desktop to a second 
+display.''', '1667120'),
         Bug('''Sort categories alphabetically in the categories viewer.'''),
-        Bug('''Filtering a category no longer automatically checks all subcategories.
-However, tasks belonging to a subcategory are still filtered (since they belong to the
-filtered category via the subcategory).'''))),
+        Bug('''Filtering a category no longer automatically checks all 
+subcategories. However, tasks belonging to a subcategory are still filtered 
+(since they belong to the filtered category via the subcategory).'''))),
         
 Release('0.62.0', 'April 1, 2007',
     dependenciesChanged=[
