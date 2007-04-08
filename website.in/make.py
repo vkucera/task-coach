@@ -47,11 +47,15 @@ pages['donations'] = \
         <UL>
             <LI><A HREF="https://sourceforge.net/donate/index.php?group_id=130831">Donate
             via SourceForge</A>. Fees are deducted for PayPal and 
-            SourceForge.
-        Previous donations made via SourceForge are listed <A
-        HREF="https://sourceforge.net/project/project_donations.php?group_id=130831">here</A>.
-            <LI>Donate directly via <A HREF="http://www.paypal.com">PayPal</A>.
-            Please use the email address &lt;%(author_email)s&gt;.</P>
+            SourceForge. This gets you <A
+        HREF="https://sourceforge.net/project/project_donations.php?group_id=130831">listed</A> as donator.
+            <LI><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" name="submit" alt="Donate via PayPal">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+">
+</form>
         </UL>
         </P>
 '''
