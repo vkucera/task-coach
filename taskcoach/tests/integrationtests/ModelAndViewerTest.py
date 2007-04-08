@@ -1,5 +1,5 @@
 import test, config, gui
-from domain import task, effort, category
+from domain import task, effort, category, note
 
 
 class TaskViewerAndCategoryFilterIntegrationTestFixture(test.wxTestCase):
@@ -9,10 +9,12 @@ class TaskViewerAndCategoryFilterIntegrationTestFixture(test.wxTestCase):
         self.categories = category.CategoryList()
         self.category = category.Category('category')
         self.categories.append(self.category)
+        self.notes = note.NoteContainer()
         self.settings.set('view', 'sortby', 'subject')
         self.viewer = self.TaskViewerClass(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, None, self.settings, 
-            self.taskList, effort.EffortList(self.taskList), self.categories), 
+            self.taskList, effort.EffortList(self.taskList), self.categories,
+            self.notes), 
             self.settings, categories=self.categories)
         parent = task.Task('parent')
         child = task.Task('child')
