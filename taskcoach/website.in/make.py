@@ -146,6 +146,12 @@ pages['i18n'] = \
         Please be aware that, next to providing the initial translation,
         you will be expected to keep your translation up to date as new
         versions of %(name)s are released.</P>
+        <P>A Yahoo!Groups mailinglist is available for discussing the development
+        and translation of %(name)s. You can join by sending mail to <tt><a 
+        href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
+        or alternatively, if you have a Yahoo id (or don't mind creating one), 
+        join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
+
         <P>To create a new translation, please follow these steps:
         <OL>
             <LI>Install a gettext catalogs editor. I recommend 
@@ -246,6 +252,14 @@ pages['devinfo'] = \
 '''    <h3>Information for developers</h3>
     <p>Here's some information for developers that either want to hack
     on %(name)s or reuse code.</p>
+    <h4>Mailinglist</h4>
+    <P>A Yahoo!Groups mailinglist is available for discussing the development
+    of %(name)s. You can join by sending mail to <tt><a 
+    href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
+    or alternatively, if you have a Yahoo id (or don't mind creating one), 
+    join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
+    <P>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
+    of messages</a> without subscribing to the mailinglist.</P>
     <h4>Dependencies</h4>
     <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
     using <A HREF="http://www.wxpython.org">wxPython</A> for the
