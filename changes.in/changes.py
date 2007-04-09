@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.63.0', '?',
+Release('0.63.0', 'April 9, 2007',
     featuresAdded=(
         Feature('''Export to HTML and printing of tasks colors tasks 
 appropriately.'''),
