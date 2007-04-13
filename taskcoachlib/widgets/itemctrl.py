@@ -97,7 +97,7 @@ class _CtrlWithFileDropTarget(_CtrlWithItems):
     def onDropFiles(self, x, y, filenames):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
         if self._itemIsOk(item):
-            self.__onDropFilesCallback(self.index(item), filenames)
+            self.__onDropFilesCallback(self.GetIndexOfItem(item), filenames)
         
     def onDragOver(self, x, y, defaultResult):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
@@ -108,12 +108,12 @@ class _CtrlWithFileDropTarget(_CtrlWithItems):
         else:
             return wx.DragNone
         
-    def index(self, item):
+    def GetIndexOfItem(self, item):
         # Convert the item into an index. For ListCtrls this is not 
         # necessary, so an AttributeError will be raised. In that case the
         # item is already an index, so we can simply return the item.
         try:
-            return super(_CtrlWithFileDropTarget, self).index(item)
+            return super(_CtrlWithFileDropTarget, self).GetIndexOfItem(item)
         except AttributeError:
             return item
 
