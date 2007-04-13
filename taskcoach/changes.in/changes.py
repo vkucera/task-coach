@@ -4,6 +4,10 @@ from changetypes import *
 
 releases = [
 
+Release('0.63.1', 'April ?, 2007',
+    bugsFixed=(
+        Bug('''Dropping a file on a task in the tree viewer didn't work.'''))),
+
 Release('0.63.0', 'April 9, 2007',
     featuresAdded=(
         Feature('''Export to HTML and printing of tasks colors tasks 
