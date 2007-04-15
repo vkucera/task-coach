@@ -891,13 +891,12 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     
     def _createColumns(self):
         return [widgets.Column(columnHeader, eventType, 
-                renderCallback=renderCallback) \
-            for columnHeader, eventType, renderCallback in \
-            (_('Period'), 'effort.duration', self.renderPeriod),
-            (_('Task'), 'effort.task', lambda effort: render.subject(effort.task(), recursively=True))] + \
-            [widgets.Column(_('Description'), 'effort.description', 
-             visibilitySetting=('view', 'effortdescription'), 
-             renderCallback=lambda effort: effort.getDescription())] + \
+                renderCallback=renderCallback, 
+                visibilitySetting=visibilitySetting) \
+            for columnHeader, eventType, renderCallback, visibilitySetting in \
+            (_('Period'), 'effort.duration', self.renderPeriod, None),
+            (_('Task'), 'effort.task', lambda effort: render.subject(effort.task(), recursively=True), None),
+            (_('Description'), 'effort.description', lambda effort: effort.getDescription(), ('view', 'effortdescription'))] + \
             [widgets.Column(columnHeader, eventType, 
              visibilitySetting=('view', setting), 
              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
