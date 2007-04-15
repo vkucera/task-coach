@@ -10,3 +10,4 @@ Vaults of Parnassus   http://py.vaults.ca
 Python Packages Index http://www.python.org/pypi
 Freeware Home         http://www.freewarehome.com/ 
 Wikipedia             http://en.wikipedia.org/wiki/Task_Coach
+MacSoftwareUsingPython http://wiki.python.org/moin/MacPython/MacSoftwareUsingPython
