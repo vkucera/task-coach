@@ -11,3 +11,6 @@ Python Packages Index http://www.python.org/pypi
 Freeware Home         http://www.freewarehome.com/ 
 Wikipedia             http://en.wikipedia.org/wiki/Task_Coach
 MacSoftwareUsingPython http://wiki.python.org/moin/MacPython/MacSoftwareUsingPython
+FreeSoftware.nl       http://www.freesoftware.nl (submitted 2007-04-11)
+FSF/UNESCO Free Software Directory http://directory.fsf.org (submitted 2007-04-11)
+CNET Upload.com       http://www.upload.com (submitted 2007-04-11)
