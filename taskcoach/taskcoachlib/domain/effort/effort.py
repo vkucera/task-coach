@@ -221,3 +221,6 @@ class CompositeEffort(EffortBase):
             patterns.Publisher().notifyObservers(patterns.Event(self,
                 'effort.track.stop', stoppedEffort))
 
+    def getDescription(self):
+        effortDescriptions = [effort.getDescription() for effort in self.__getEfforts(False) if effort.getDescription()]
+        return '\n'.join(effortDescriptions)

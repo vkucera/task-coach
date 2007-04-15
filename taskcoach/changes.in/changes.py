@@ -6,7 +6,9 @@ releases = [
 
 Release('0.63.1', 'April ?, 2007',
     bugsFixed=(
-        Bug('''Dropping a file on a task in the tree viewer didn't work.'''))),
+        Bug('''Dropping a file on a task in the tree viewer didn't work.'''),
+        Bug('''Showing the description column in the composite effort viewers 
+(effort per day, per week, per month) caused exceptions.'''))),
 
 Release('0.63.0', 'April 9, 2007',
     featuresAdded=(

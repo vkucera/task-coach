@@ -239,6 +239,30 @@ class CompositeEffortTest(test.TestCase):
         self.assertEqual([patterns.Event(self.composite,
             'effort.composite.empty')], self.events)
         
+    def testGetDescription_ZeroEfforts(self):
+        self.assertEqual('', self.composite.getDescription())
+        
+    def testGetDescription_OneEffort(self):
+        self.task.addEffort(self.effort1)
+        for description in ('', 'Description'):
+            self.effort1.setDescription(description)
+            self.assertEqual(description, self.composite.getDescription())
+        
+    def testGetDescription_TwoEfforts(self):
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        for description1, description2 in (('', ''), ('descripion1', ''), 
+                                           ('', 'description2'), 
+                                           ('description1', 'description2')):
+            self.effort1.setDescription(description1)
+            self.effort2.setDescription(description2)
+            if description1 and description2:
+                seperator = '\n'
+            else:
+                seperator = ''
+            expectedDescription = description1 + seperator + description2
+            self.assertEqual(expectedDescription, self.composite.getDescription())
+
 
 class CompositeEffortWithSubTasksTest(test.TestCase):
     def setUp(self):
