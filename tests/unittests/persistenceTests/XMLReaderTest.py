@@ -392,12 +392,32 @@ class XMLReaderVersion16Test(XMLReaderTestCase):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <task>
+                <attachment>FILE:whatever.tsk</attachment>
+            </task>
+        </tasks>''')
+        self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
+        
+    def testTwoAttachments(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
+                <attachment>FILE:whatever.tsk</attachment>
+                <attachment>FILE:another.txt</attachment>
+            </task>
+        </tasks>''')
+        self.assertEqual(['whatever.tsk', 'another.txt'], 
+                         map(unicode, tasks[0].attachments()))
+
+    def testOneAttachmentCompat(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
                 <attachment>whatever.tsk</attachment>
             </task>
         </tasks>''')
-        self.assertEqual(['whatever.tsk'], tasks[0].attachments())
+        self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
         
-    def testTwoAttachments(self):
+    def testTwoAttachmentsCompat(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <task>
@@ -406,7 +426,7 @@ class XMLReaderVersion16Test(XMLReaderTestCase):
             </task>
         </tasks>''')
         self.assertEqual(['whatever.tsk', 'another.txt'], 
-                         tasks[0].attachments())
+                         map(unicode, tasks[0].attachments()))
         
     def testOneCategory(self):
         tasks, categories, notes = \

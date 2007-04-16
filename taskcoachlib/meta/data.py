@@ -1,6 +1,6 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
-version = '0.63.1'
+version = '0.64.0'
 release_month = 'April'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 'June', 
                     'July', 'August', 'September', 'October', 'November', 

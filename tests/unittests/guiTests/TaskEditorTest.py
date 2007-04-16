@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import test, gui, command, wx, config, sys
 from unittests import dummy
-from domain import task, effort, date, category, note
+from domain import task, effort, date, category, note, attachment
 
 
 class DummyViewer:
@@ -119,11 +119,15 @@ class NewTaskTest(TaskEditorTestCase):
         self.errorMessage = ''
         def onError(*args, **kwargs):
             self.errorMessage = args[0]
+        att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
+        id_ = wx.NewId()
         item = wx.ListItem()
         item.SetId(0)
-        item.SetText('tÃƒÂ©st.ÃƒÂ©')
+        item.SetText(unicode(att))
+        item.SetData(id_)
         item.SetState(wx.LIST_STATE_SELECTED)
         self.editor[0][4]._listCtrl.InsertItem(item)
+        self.editor[0][4]._listData[id_] = att
         self.editor[0][4].onOpen(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo and sys.version_info < (2,5):
             errorMessageStart = "'ascii' codec can't encode character"
@@ -164,7 +168,7 @@ class EditTaskTest(TaskEditorTestCase):
 
     def createTasks(self):
         self.task = task.Task('Task to edit')
-        self.task.addAttachments('some attachment')
+        self.task.addAttachments(attachment.FileAttachment('some attachment'))
         return [self.task]
 
     def testOk(self):
@@ -213,7 +217,7 @@ class EditTaskTest(TaskEditorTestCase):
     def testAddAttachment(self):
         self.editor[0][4].onFileDrop(['filename'])
         self.editor.ok()
-        self.failUnless('filename' in self.task.attachments())
+        self.failUnless('filename' in map(unicode, self.task.attachments()))
         
     def testRemoveAttachment(self):
         self.editor[0][4]._listCtrl.DeleteItem(0)

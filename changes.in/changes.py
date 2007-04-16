@@ -4,6 +4,13 @@ from changetypes import *
 
 releases = [
 
+Release('0.64.0', 'April ?, 2007',
+    featuresAdded=(
+        Feature('''Allow for dragging emails from Thunderbird and Outlook to 
+the attachment pane of tasks to create email attachments. Opening an attached 
+email will open it in the user's default mail program. Patch provided by 
+Jerome Laheurte.''')
+
 Release('0.63.1', 'April 16, 2007',
     bugsFixed=(
         Bug('''Dropping a file on a task in the tree viewer didn't work.'''),

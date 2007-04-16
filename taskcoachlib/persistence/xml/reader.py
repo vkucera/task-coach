@@ -1,6 +1,5 @@
 import time, xml.dom.minidom, re
-from domain import date, effort, task, category, note
-
+from domain import date, effort, task, category, note, attachment
 
 class XMLReader:
     def __init__(self, fd):
@@ -123,7 +122,7 @@ class XMLReader:
                 if node.nodeName == 'category']
         
     def __parseAttachmentNodes(self, nodes):
-        return [self.__parseTextNode(node) for node in nodes \
+        return [attachment.AttachmentFactory(self.__parseTextNode(node)) for node in nodes \
                 if node.nodeName == 'attachment']
 
     def __parseEffortNodes(self, nodes):

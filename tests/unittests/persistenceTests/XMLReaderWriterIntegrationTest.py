@@ -1,6 +1,6 @@
 import test, persistence
 import cStringIO as StringIO
-from domain import task, category, effort, date, note
+from domain import task, category, effort, date, note, attachment
 
 
 class IntegrationTestCase(test.TestCase):
@@ -52,7 +52,7 @@ class IntegrationTest(IntegrationTestCase):
             stop=date.DateTime(2004,1,2), description=self.description))
         self.category = category.Category('test', [self.task], filtered=True)
         self.categories.append(self.category)
-        self.task.addAttachments('/home/frank/whatever.txt')
+        self.task.addAttachments(attachment.FileAttachment('/home/frank/whatever.txt'))
         self.task2 = task.Task('Task 2', priority=-1954)
         self.taskList.extend([self.task, self.task2])
         self.notes = note.NoteContainer()

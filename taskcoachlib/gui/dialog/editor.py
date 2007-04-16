@@ -1,13 +1,15 @@
 import widgets
 from gui import render, viewercontainer, viewer
 import widgets.draganddrop as draganddrop
+import domain.attachment as attachment
 import wx, datetime
 import wx.lib.masked as masked
 import wx.lib.customtreectrl as customtree
 import wx.lib.combotreebox as combotreebox
 from i18n import _
 from domain import task, category, date, note
-import thirdparty.desktop as desktop
+from thirdparty import desktop
+from mailer import outlook, thunderbird
 import os.path
 
 
@@ -298,6 +300,7 @@ class AttachmentPage(TaskEditorPage):
         self._listCtrl.InsertColumn(0, _('Attachment filenames'))
         self._listCtrl.SetColumnWidth(0, 500)
         attachmentBox.add(self._listCtrl, flag=wx.EXPAND|wx.ALL, proportion=1)
+        self._listData = {}
 
         boxSizer = wx.BoxSizer(wx.HORIZONTAL)
         self._buttonBox = widgets.ButtonBox(attachmentBox, 
@@ -324,7 +327,8 @@ class AttachmentPage(TaskEditorPage):
         self.add(filenameBox, proportion=0, border=5)
         self.fit()
         self.bindEventHandlers()
-        self.onFileDrop(task.attachments())
+        for att in task.attachments():
+            self.addAttachmentToListCtrl(att)
         if task.attachments():
             self._listCtrl.SetItemState(0, wx.LIST_STATE_SELECTED, 
                                         wx.LIST_STATE_SELECTED)
@@ -337,32 +341,38 @@ class AttachmentPage(TaskEditorPage):
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onOpen)
         #dropTarget = draganddrop.FileDropTarget(self.onFileDrop)
         dropTarget = draganddrop.DropTarget(self.onURLDrop, self.onFileDrop,
-            self.onThunderbirdMailDrop)
+            self.onThunderbirdMailDrop, self.onOutlookMailDrop)
         self._listCtrl.SetDropTarget(dropTarget)
             
-    def addAttachmentToListCtrl(self, filename):
+    def addAttachmentToListCtrl(self, att):
         item = wx.ListItem()
-        item.SetText(filename)
+        item.SetData(wx.NewId())
+        item.SetText(unicode(att))
         index = self._listCtrl.InsertItem(item)
         self._listCtrl.Select(index)
+        self._listData[item.GetData()] = att
             
     def onAdd(self, *args, **kwargs):
-        self.addAttachmentToListCtrl(self._urlEntry.GetValue())
+        self.addAttachmentToListCtrl(attachment.URIAttachment(self._urlEntry.GetValue()))
         
     def onFileDrop(self, filenames):
         for filename in filenames:
-            self.addAttachmentToListCtrl(filename)
+            self.addAttachmentToListCtrl(attachment.FileAttachment(filename))
             
     def onURLDrop(self, url):
-        self.addAttachmentToListCtrl(url)
+        self.addAttachmentToListCtrl(attachment.URIAttachment(url))
 
-    def onThunderbirdMailDrop(self, text):
-        print 'onTextDrop(text=%s)'%text
-        
+    def onThunderbirdMailDrop(self, id_):
+        self.addAttachmentToListCtrl(attachment.MailAttachment(thunderbird.getMail(id_)))
+
+    def onOutlookMailDrop(self):
+        for filename in outlook.getCurrentSelection():
+            self.addAttachmentToListCtrl(attachment.MailAttachment(filename))
+
     def onBrowse(self, *args, **kwargs):
         filename = widgets.AttachmentSelector()
         if filename:
-            self.addAttachmentToListCtrl(filename)
+            self.addAttachmentToListCtrl(attachment.FileAttachment(filename))
         
     def onOpen(self, event, showerror=wx.MessageBox):
         index = -1
@@ -371,11 +381,9 @@ class AttachmentPage(TaskEditorPage):
                 state=wx.LIST_STATE_SELECTED)
             if index == -1:
                 break
-            attachment = self._listCtrl.GetItemText(index)
-            # Make sure the path is properly encoded for Win32:
-            attachment = os.path.normpath(attachment)
+            attachment = self._listData[self._listCtrl.GetItemData(index)]
             try:    
-                desktop.open(attachment)
+                attachment.open()
             except Exception, instance:
                 showerror(str(instance), 
                     caption=_('Error opening attachment'), style=wx.ICON_ERROR)
@@ -387,9 +395,11 @@ class AttachmentPage(TaskEditorPage):
                 state=wx.LIST_STATE_SELECTED)
             if index == -1:
                 break
+            del self._listData[self._listCtrl.GetItemData(index)]
             self._listCtrl.DeleteItem(index)
             
     def onEdit(self, *args, **kwargs):
+        # FIXME: disable editing for certain types of attachment, fix this
         index = self._listCtrl.GetNextItem(-1, state=wx.LIST_STATE_SELECTED)
         attachment = self._listCtrl.GetItem(index).GetText()
         self._listCtrl.DeleteItem(index)
@@ -404,11 +414,11 @@ class AttachmentPage(TaskEditorPage):
         if self._listCtrl.GetSelectedItemCount() == 0:
             for button in self._buttonBox.buttonLabels():
                 self._buttonBox.disable(button)
-        
+
     def ok(self):
         self._task.removeAllAttachments()
-        attachments = [self._listCtrl.GetItem(index).GetText() \
-                       for index in range(self._listCtrl.GetItemCount())]
+        ids = [ self._listCtrl.GetItemData(i) for i in xrange(self._listCtrl.GetItemCount()) ]
+        attachments = [v for id_, v in self._listData.items() if id_ in ids]
         self._task.addAttachments(*attachments)
                                      
             

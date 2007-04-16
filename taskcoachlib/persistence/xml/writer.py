@@ -50,7 +50,7 @@ class XMLWriter:
         if task.description():
             node.appendChild(self.textNode('description', task.description()))
         for attachment in task.attachments():
-            node.appendChild(self.textNode('attachment', attachment))
+            node.appendChild(self.textNode('attachment', repr(attachment)))
         for child in task.children():
             node.appendChild(self.taskNode(child))
         for effort in task.efforts():

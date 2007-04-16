@@ -1,7 +1,7 @@
 import test, command, patterns, config
 from unittests import asserts, dummy
 from CommandTestCase import CommandTestCase
-from domain import task, effort, date, category
+from domain import task, effort, date, category, attachment
 
 
 class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
@@ -50,7 +50,7 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         command.DragAndDropTaskCommand(self.taskList, tasks or [], 
                                        drop=dropTarget).do()
         
-    def addAttachment(self, tasks=None, attachment='attachment'):
+    def addAttachment(self, tasks=None, attachment=attachment.FileAttachment('attachment')):
         self.attachment = attachment
         addAttachmentCommand = command.AddAttachmentToTaskCommand(self.taskList,
             tasks or [], attachments=[attachment])
@@ -267,10 +267,11 @@ class EditTaskCommandTest(TaskCommandTestCase):
             task.setDescription('New description')
             task.setBudget(date.TimeDelta(hours=1))
             task.setCompletionDate()
-            if 'attachment' in task.attachments():
-                task.removeAttachments('attachment')
+            att = attachment.FileAttachment('attachment')
+            if att in task.attachments():
+                task.removeAttachments(att)
             else:
-                task.addAttachments('attachment')
+                task.addAttachments(att)
         editcommand.do()
 
     def testEditTask(self):
@@ -307,15 +308,15 @@ class EditTaskCommandTest(TaskCommandTestCase):
     def testAddAttachment(self):
         self.edit([self.task1])
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(['attachment'], self.task1.attachments()),
+            lambda: self.assertEqual([attachment.FileAttachment('attachment')], self.task1.attachments()),
             lambda: self.assertEqual([], self.task1.attachments()))
             
     def testRemoveAttachment(self):
-        self.task1.addAttachments('attachment')
+        self.task1.addAttachments(attachment.FileAttachment('attachment'))
         self.edit([self.task1])
         self.assertDoUndoRedo(
             lambda: self.assertEqual([], self.task1.attachments()),
-            lambda: self.assertEqual(['attachment'], self.task1.attachments()))
+            lambda: self.assertEqual([attachment.FileAttachment('attachment')], self.task1.attachments()))
             
             
 class MarkCompletedCommandTest(CommandWithChildrenTestCase):
