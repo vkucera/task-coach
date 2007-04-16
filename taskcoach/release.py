@@ -2,11 +2,11 @@
 Release steps:
 - make clean all 
 - make releasetests 
-- Use releaseforge to release distributions to Sourceforge.
-  * Upload distributions
-  * Post project news.
-- Run this script to generate MD5 digests and publish to Sourceforge 
-  Website, Chello (my ISP) and PyPI.
+- Run this script to upload the distributions to sourceforge, generate MD5 
+  digests and publish to Sourceforge Website, Chello (my ISP) and PyPI 
+  (Python Package Index).
+- Add file releases on sourceforge.net by hand
+- Post project news on sourceforge.net by hand.
 - Post release notification on freshmeat.net by hand.
 - Tag source code: cvs tag ReleaseX_Y.
 - Email taskcoach@yahoogroups.com and python-announce@python.org.
@@ -14,6 +14,11 @@ Release steps:
 '''
 
 import ftplib, taskcoachlib.meta, os, glob, sys, md5
+
+def uploadDistributionsToSourceForge():
+    print 'Uploading distributions to SourceForge...'
+    os.system('ncftpput upload.sourceforge.net incoming dist/*')
+    print 'Done uploading distributions to SourceForge.'
 
 def generateMD5Digests():
     print 'Generating MD5 digests...'
@@ -70,7 +75,7 @@ class SimpleFTP(ftplib.FTP, object):
             self.storbinary('STOR %s'%filename, fd)
             print 'Stored %s'%filename
 
-def ftpToChello():
+def ftpWebsiteToChello():
     print "Uploading website to Chello..."
     chello = SimpleFTP('members.chello.nl', 'f.niessink', '.chello_password')
     os.chdir('website.out')
@@ -79,7 +84,7 @@ def ftpToChello():
     os.chdir('..')
     print 'Done uploading website to Chello.'
 
-def scpToSourceForge():
+def scpWebsiteToSourceForge():
     print 'Uploading website to SourceForge...'
     os.system('scp website.out/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
     print 'Done uploading website to SourceForge.'
@@ -94,8 +99,9 @@ def registerWithPyPI():
     setup(**setupOptions)
     print 'Done registering with PyPI.'
 
+#uploadDistributionsToSourceForge()
 generateMD5Digests()
 generateWebsite()
-ftpToChello()
-scpToSourceForge()
+ftpWebsiteToChello()
+scpWebsiteToSourceForge()
 registerWithPyPI()
