@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.63.1', 'April ?, 2007',
+Release('0.63.1', 'April 16, 2007',
     bugsFixed=(
         Bug('''Dropping a file on a task in the tree viewer didn't work.'''),
         Bug('''Showing the description column in the composite effort viewers 
