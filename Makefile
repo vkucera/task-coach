@@ -23,6 +23,7 @@ endif
 
 WEBCHECKER=$(PYTHONTOOLDIR)/webchecker/webchecker.py
 
+TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.version")
 
 all: windist sdist website
 
@@ -43,7 +44,7 @@ lindist: icons changes i18n
 
 macdist: icons i18n
 	$(PYTHON) make.py py2app
-	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach.dmg
+	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach-$(TCVERSION).dmg
 
 icons:
 	cd icons.in; $(PYTHON) make.py
