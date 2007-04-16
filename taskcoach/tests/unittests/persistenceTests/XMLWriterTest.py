@@ -2,7 +2,7 @@
 
 import test, persistence
 import StringIO # We cannot use CStringIO since unicode strings are used below.
-from domain import task, effort, date, category, note
+from domain import task, effort, date, category, note, attachment
 
 class XMLWriterTest(test.TestCase):
     def setUp(self):
@@ -229,13 +229,15 @@ class XMLWriterTest(test.TestCase):
         self.expectNotInXML('attachment')
         
     def testOneAttachment(self):
-        self.task.addAttachments('whatever.txt')
-        self.expectInXML('<attachment>whatever.txt</attachment>')
+        self.task.addAttachments(attachment.FileAttachment('whatever.txt'))
+        self.expectInXML('<attachment>FILE:whatever.txt</attachment>')
         
     def testTwoAttachments(self):
-        attachments = ['whatever.txt', '/home/frank/attachment.doc']
-        self.task.addAttachments(*attachments)
-        self.expectInXML('<attachment>%s</attachment>'*2%tuple(attachments))
+        attachments = ['whatever.txt',
+                       '/home/frank/attachment.doc']
+        for a in attachments:
+            self.task.addAttachments(attachment.FileAttachment(a))
+        self.expectInXML('<attachment>FILE:%s</attachment>'*2%tuple(attachments))
 
     def testNote(self):
         self.noteContainer.append(note.Note())

@@ -978,9 +978,8 @@ class TaskOpenAllAttachments(NeedsSelectedTasksWithAttachments, ViewerCommand):
     def doCommand(self, event):
         for task in self.viewer.curselection():
             for attachment in task.attachments():
-                attachment = os.path.normpath(attachment)
                 try:    
-                    desktop.open(attachment)
+                    attachment.open()
                 except Exception, instance:
                     showerror(str(instance), 
                         caption=_('Error opening attachment'), style=wx.ICON_ERROR)

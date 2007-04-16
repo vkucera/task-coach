@@ -32,17 +32,19 @@ class TextDropTarget(wx.TextDropTarget):
 
 class DropTarget(wx.DropTarget):
     def __init__(self, onDropURLCallback, onDropFileCallback,
-            onDropThunderbirdMailCallback):
+            onDropThunderbirdMailCallback, onDropOutlookMailCallback):
         super(DropTarget, self).__init__()
         self.__onDropURLCallback = onDropURLCallback
         self.__onDropFileCallback = onDropFileCallback
         self.__onDropThunderbirdMailCallback = onDropThunderbirdMailCallback
+        self.__onDropOutlookMailCallback = onDropOutlookMailCallback
         self.__compositeDataObject = wx.DataObjectComposite()
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
         self.__thunderbirdMailDataObject = wx.CustomDataObject('text/x-moz-message')
+        self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         for dataObject in self.__fileDataObject, self.__urlDataObject, \
-                          self.__thunderbirdMailDataObject:
+                          self.__thunderbirdMailDataObject, self.__outlookDataObject:
             # NB: First data object added is the preferred data object
             self.__compositeDataObject.Add(dataObject)
         self.SetDataObject(self.__compositeDataObject)
@@ -52,16 +54,12 @@ class DropTarget(wx.DropTarget):
     
     def OnData(self, x, y, result):
         self.GetData()
-        if self.__urlDataObject.GetTextLength() > 1:
-            url = self.__urlDataObject.GetText()
-            scheme, server = urlparse.urlparse(url)[:2]
-            if scheme and (scheme == 'file' or server):
-                self.__onDropURLCallback(url)
-            else:
-                result = wx.DragNone
-        elif self.__thunderbirdMailDataObject.GetData():
-            data = self.__thunderbirdMailDataObject.GetData().decode('unicode_internal')
-            self.__onDropThunderbirdMailCallback(data)
+        if self.__thunderbirdMailDataObject.GetData():
+            self.__onDropThunderbirdMailCallback(self.__thunderbirdMailDataObject.GetData().decode('unicode_internal'))
         else:
-            self.__onDropFileCallback(self.__fileDataObject.GetFilenames())
+            files = self.__fileDataObject.GetFilenames()
+            if files:
+                self.__onDropFileCallback(files)
+            else:
+                self.__onDropOutlookMailCallback()
         return result
