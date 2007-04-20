@@ -131,6 +131,15 @@ class CommonTests(TaskViewerTest.CommonTests):
         self.taskList.append(self.task)
         self.assertItems((self.task, 1), notCompletedChild)
         
+    def testGetItemIndexOfChildTask(self):
+        child1 = task.Task('1')
+        child2 = task.Task('2')
+        self.task.addChild(child1)
+        self.task.addChild(child2)
+        self.taskList.append(self.task)
+        self.settings.set('view', 'sortascending', 'False')
+        self.assertEqual((0, 1), self.viewer.getIndexOfItem(child1))
+        
         
 class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):
     def createWidget(self):

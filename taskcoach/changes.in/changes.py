@@ -4,8 +4,10 @@ from changetypes import *
 
 releases = [
             
-Release('0.63.2', 'April ?, 2007',
-    bugsFixed=[]),
+Release('0.63.2', 'April 20, 2007',
+    bugsFixed=[
+        Bug('''Task tree view does not refresh tasks after task editing.''', 
+            '1701368')]),
 
 Release('0.63.1', 'April 16, 2007',
     bugsFixed=(
