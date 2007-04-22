@@ -1,5 +1,5 @@
 import wx, urlparse
-
+from mailer import thunderbird, outlook
 
 class FileDropTarget(wx.FileDropTarget):
     def __init__(self, onDropCallback=None, onDragOverCallback=None):
@@ -28,7 +28,36 @@ class TextDropTarget(wx.TextDropTarget):
         
     def OnDropText(self, x, y, text):
         self.__onDropCallback(text)
-        
+
+
+class MailDropTarget(wx.DropTarget):
+    def __init__(self, onDropCallback):
+        wx.DropTarget.__init__(self)
+        self.__onDropCallback = onDropCallback
+        self.reinit()
+
+    def OnDrop(self, x, y):
+        return True
+
+    def OnData(self, x, y, result):
+        self.GetData()
+        if self.__thunderbirdDataObject.GetData():
+            self.__onDropCallback(thunderbird.getMail(self.__thunderbirdDataObject.GetData().decode('unicode_internal')))
+        else:
+            for filename in outlook.getCurrentSelection():
+                self.__onDropCallback(filename)
+
+        self.reinit()
+        return result
+
+    def reinit(self):
+        self.__compositeDataObject = wx.DataObjectComposite()
+        self.__thunderbirdDataObject = wx.CustomDataObject('text/x-moz-message')
+        self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
+        for dataObject in self.__thunderbirdDataObject, self.__outlookDataObject:
+            self.__compositeDataObject.Add(dataObject)
+
+        self.SetDataObject(self.__compositeDataObject)
 
 class DropTarget(wx.DropTarget):
     def __init__(self, onDropURLCallback, onDropFileCallback,
@@ -38,6 +67,10 @@ class DropTarget(wx.DropTarget):
         self.__onDropFileCallback = onDropFileCallback
         self.__onDropThunderbirdMailCallback = onDropThunderbirdMailCallback
         self.__onDropOutlookMailCallback = onDropOutlookMailCallback
+
+        self.reinit()
+
+    def reinit(self):
         self.__compositeDataObject = wx.DataObjectComposite()
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
@@ -48,7 +81,7 @@ class DropTarget(wx.DropTarget):
             # NB: First data object added is the preferred data object
             self.__compositeDataObject.Add(dataObject)
         self.SetDataObject(self.__compositeDataObject)
-        
+
     def OnDrop(self, x, y):
         return True
     
@@ -62,4 +95,6 @@ class DropTarget(wx.DropTarget):
                 self.__onDropFileCallback(files)
             else:
                 self.__onDropOutlookMailCallback()
+
+        self.reinit()
         return result
