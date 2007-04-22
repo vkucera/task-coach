@@ -58,8 +58,10 @@ class NewTaskCommand(base.BaseCommand):
         return _('New task')
 
     def __init__(self, *args, **kwargs):
+        subject = kwargs.pop('subject', _('New task'))
+        description = kwargs.pop('description', '')
         super(NewTaskCommand, self).__init__(*args, **kwargs)
-        self.items = [task.Task(subject=_('New task'))]
+        self.items = [task.Task(subject=subject, description=description)]
         
     def do_command(self):
         self.list.extend(self.items)

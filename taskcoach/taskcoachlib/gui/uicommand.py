@@ -1,4 +1,4 @@
-import wx, patterns, config, gui, meta, command, help, widgets, urllib, os
+import wx, patterns, config, gui, meta, command, help, widgets, urllib, os, re
 from gui import render
 from i18n import _
 from domain import task
@@ -1279,6 +1279,65 @@ class Search(MainWindowCommand, ViewerCommand, SettingsCommand):
         toolbar.AddControl(self.searchControl)
 
 
+class Mail(TaskListCommand, CategoriesCommand, SettingsCommand,
+           UICommandsCommand, MainWindowCommand):
+    def __init__(self, *args, **kwargs):
+        taskList = kwargs['taskList']
+        super(Mail, self).__init__(bitmap='new',
+                                   menuText=taskList.newItemMenuText,
+                                   helpText=taskList.newItemHelpText,
+                                   *args, **kwargs)
+        self.mailControl = None
+
+    def appendToToolBar(self, toolbar):
+        self.mailControl = widgets.MailCtrl(toolbar, callback=self.onDropMail)
+        toolbar.AddControl(self.mailControl)
+
+    def onDropMail(self, filename):
+        subject = None
+        description = ''
+        encoding = None
+        s = 0
+        rx = re.compile('charset=([-0-9a-zA-Z]+)')
+
+        for line in file(filename, 'r'):
+            if s == 0:
+                if line.lower().startswith('subject: '):
+                    subject = line[9:].strip()
+                if line.strip() == '':
+                    s = 1
+                mt = rx.search(line)
+                if mt:
+                    encoding = mt.group(1)
+            elif s == 1:
+                description += line
+
+        os.remove(filename)
+
+        if encoding is None:
+            encoding = wx.Locale_GetSystemEncodingName()
+
+        if subject is None:
+            subject = _('New task')
+        else:
+            subject = subject.decode(encoding)
+
+        description = description.decode(encoding)
+
+        cmd = command.NewTaskCommand(self.taskList,
+                                     subject=subject,
+                                     description=description)
+
+        newTaskDialog = gui.dialog.editor.TaskEditor(self.mainwindow,
+                                                     cmd,
+                                                     self.taskList,
+                                                     self.uiCommands,
+                                                     self.settings,
+                                                     self.categories,
+                                                     bitmap=self.bitmap)
+        newTaskDialog.Show()
+
+
 class UICommands(dict):
     def __init__(self, mainwindow, iocontroller, viewer, settings, 
             taskList, effortList, categories, notes):
@@ -1562,6 +1621,8 @@ class UICommands(dict):
         
         # Toolbar specific
         self['search'] = Search(mainwindow=mainwindow, viewer=viewer, settings=settings)
+        self['mail'] = Mail(mainwindow=mainwindow, taskList=taskList,
+            settings=settings, uicommands=self, categories=categories)
         
         # Drag and drop related, not on any menu:
         self['draganddroptask'] = TaskDragAndDrop(taskList=taskList, 

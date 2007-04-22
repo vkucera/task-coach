@@ -11,7 +11,8 @@ class ToolBar(wx.ToolBar, uicommand.UICommandContainer):
     def commandNames(self):
         return ['open', 'save', None, 'undo', 'redo', None, 'cut', 'copy', 
             'paste', None, 'new', 'newsub', 'edit', 'delete', None,
-            'markcompleted', 'starteffort', 'stopeffort', None, 'search']
+            'markcompleted', 'starteffort', 'stopeffort', None, 'search',
+            None, 'mail']
         
     def AppendSeparator(self):
         ''' This little adapter is needed for 
