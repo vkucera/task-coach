@@ -601,7 +601,7 @@ class EditPaste(UICommand):
 
 class EditPasteIntoTask(NeedsSelectedTasks, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(EditPasteIntoTask, self).__init__(menuText=_('P&aste into task'), 
+        super(EditPasteIntoTask, self).__init__(menuText=_('P&aste into task\tShift-Ctrl+V'), 
             helpText=_('Paste item(s) from the clipboard into the selected task'),
             bitmap='pasteintotask', *args, **kwargs)
 
