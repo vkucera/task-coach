@@ -4,6 +4,7 @@
 
 import wx, wx.lib.mixins.listctrl, draganddrop, autowidth
 
+from mailer import outlook, thunderbird
 
 class _CtrlWithItems(object):
     ''' Base class for controls with items, such as ListCtrl, TreeCtrl,
@@ -84,21 +85,44 @@ class _CtrlWithColumnPopupMenu(_CtrlWithPopupMenu):
         self.PopupMenu(self.__popupMenu, event.GetPosition())
         
 
-class _CtrlWithFileDropTarget(_CtrlWithItems):
-    ''' Control that accepts files being dropped onto items. '''
+class _CtrlWithDropTarget(_CtrlWithItems):
+    ''' Control that accepts files, e-mails or URLs being dropped onto items. '''
     
     def __init__(self, *args, **kwargs):
+        self.__onDropURLCallback = kwargs.pop('onDropURL', None)
         self.__onDropFilesCallback = kwargs.pop('onDropFiles', None)
-        super(_CtrlWithFileDropTarget, self).__init__(*args, **kwargs)
-        if self.__onDropFilesCallback:
-            dropTarget = draganddrop.FileDropTarget(self.onDropFiles, self.onDragOver)
+        self.__onDropMailCallback = kwargs.pop('onDropMail', None)
+        super(_CtrlWithDropTarget, self).__init__(*args, **kwargs)
+        if self.__onDropURLCallback or self.__onDropFilesCallback or self.__onDropMailCallback:
+            dropTarget = draganddrop.DropTarget(self.onDropURL,
+                                                self.onDropFiles,
+                                                self.onDropThunderbird,
+                                                self.onDropOutlook,
+                                                self.onDragOver)
             self.GetMainWindow().SetDropTarget(dropTarget)
+
+    def onDropURL(self, x, y, url):
+        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        if self._itemIsOk(item) and self.__onDropURLCallback:
+            self.__onDropURLCallback(self.GetIndexOfItem(item), url)
 
     def onDropFiles(self, x, y, filenames):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
-        if self._itemIsOk(item):
+        if self._itemIsOk(item) and self.__onDropFilesCallback:
             self.__onDropFilesCallback(self.GetIndexOfItem(item), filenames)
-        
+
+    def onDropMail(self, x, y, mail):
+        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        if self._itemIsOk(item) and self.__onDropMailCallback:
+            self.__onDropMailCallback(self.GetIndexOfItem(item), mail)
+
+    def onDropThunderbird(self, x, y, id_):
+        self.onDropMail(x, y, thunderbird.getMail(id_))
+
+    def onDropOutlook(self, x, y):
+        for mail in outlook.getCurrentSelection():
+            self.onDropMail(x, y, mail)
+
     def onDragOver(self, x, y, defaultResult):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
         if self._itemIsOk(item):
@@ -113,18 +137,18 @@ class _CtrlWithFileDropTarget(_CtrlWithItems):
         # necessary, so an AttributeError will be raised. In that case the
         # item is already an index, so we can simply return the item.
         try:
-            return super(_CtrlWithFileDropTarget, self).GetIndexOfItem(item)
+            return super(_CtrlWithDropTarget, self).GetIndexOfItem(item)
         except AttributeError:
             return item
 
     def GetMainWindow(self):
         try:
-            return super(_CtrlWithFileDropTarget, self).GetMainWindow()
+            return super(_CtrlWithDropTarget, self).GetMainWindow()
         except AttributeError:
             return self
-        
-        
-class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithFileDropTarget):
+
+
+class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithDropTarget):
     pass
 
 

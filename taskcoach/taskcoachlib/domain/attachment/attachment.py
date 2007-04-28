@@ -41,6 +41,12 @@ class URIAttachment(Attachment):
     def __unicode__(self):
         return self.uri
 
+    def __cmp__(self, other):
+        try:
+            return cmp(self.uri, other.uri)
+        except AttributeError:
+            return 1
+
 class MailAttachment(Attachment):
     rx = re.compile('charset=([-0-9a-zA-Z]+)')
 
@@ -75,6 +81,12 @@ class MailAttachment(Attachment):
 
     def __unicode__(self):
         return self.subject
+
+    def __cmp__(self, other):
+        try:
+            return cmp(self.filename, other.filename)
+        except AttributeError:
+            return 1
 
 
 #==============================================================================

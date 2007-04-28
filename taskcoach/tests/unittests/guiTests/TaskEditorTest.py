@@ -215,7 +215,7 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
 
     def testAddAttachment(self):
-        self.editor[0][4].onFileDrop(['filename'])
+        self.editor[0][4].onFileDrop(0, 0, ['filename'])
         self.editor.ok()
         self.failUnless('filename' in map(unicode, self.task.attachments()))
         

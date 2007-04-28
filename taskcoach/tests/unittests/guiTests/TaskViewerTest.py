@@ -1,5 +1,5 @@
-import wx, test
-from domain import task, date
+import wx, test, os
+from domain import task, date, attachment
 
 class CommonTests(object):
     ''' Common test cases for all task viewers. This class is mixed in with
@@ -8,7 +8,15 @@ class CommonTests(object):
     def setUp(self):
         super(CommonTests, self).setUp()
         self.newColor = (100, 200, 100)
-        
+        file('test.mail', 'wb').write('Subject: foo\r\n\r\nBody\r\n')
+
+    def tearDown(self):
+        super(CommonTests, self).tearDown()
+        try:
+            os.remove('test.mail')
+        except OSError:
+            pass
+
     def getFirstItemTextColor(self):
         raise NotImplementedError
     
@@ -52,4 +60,16 @@ class CommonTests(object):
         aTask = task.Task()
         self.taskList.append(aTask)
         self.viewer.onDropFiles(self.viewer.getIndexOfItem(aTask), ['filename'])
-        self.assertEqual(['filename'], self.taskList[0].attachments())
+        self.assertEqual([attachment.FileAttachment('filename')], self.taskList[0].attachments())
+
+    def testOnDropURL(self):
+        aTask = task.Task()
+        self.taskList.append(aTask)
+        self.viewer.onDropURL(self.viewer.getIndexOfItem(aTask), 'http://www.example.com/')
+        self.assertEqual([attachment.URIAttachment('http://www.example.com/')], self.taskList[0].attachments())
+
+    def testOnDropMail(self):
+        aTask = task.Task()
+        self.taskList.append(aTask)
+        self.viewer.onDropMail(self.viewer.getIndexOfItem(aTask), 'test.mail')
+        self.assertEqual([attachment.MailAttachment('test.mail')], self.taskList[0].attachments())
