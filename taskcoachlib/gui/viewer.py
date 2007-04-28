@@ -1,7 +1,7 @@
 import patterns, command, widgets, uicommand, menu, color, render, dialog
 import wx
 from i18n import _
-from domain import task, category, effort, date, note
+from domain import task, category, effort, date, note, attachment
 
 
 class Viewer(wx.Panel):
@@ -410,17 +410,32 @@ class TaskViewer(UpdatePerSecondViewer):
         if task.isBeingTracked():
             bitmap = bitmap_selected = 'start'
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
-        
+
+    def onDropURL(self, index, url):
+        addAttachment = command.AddAttachmentToTaskCommand(self.list,
+            [self.getItemWithIndex(index)],
+                       attachments=[attachment.URIAttachment(url)])
+        addAttachment.do()
+
     def onDropFiles(self, index, filenames):
         ''' This method is called by the widget when one or more files
             are dropped on a task. '''
         addAttachment = command.AddAttachmentToTaskCommand(self.list,
-            [self.getItemWithIndex(index)], attachments=filenames)
+            [self.getItemWithIndex(index)],
+                       attachments=[attachment.FileAttachment(name) for name in filenames])
+        addAttachment.do()
+
+    def onDropMail(self, index, mail):
+        addAttachment = command.AddAttachmentToTaskCommand(self.list,
+            [self.getItemWithIndex(index)],
+                       attachments=[attachment.MailAttachment(mail)])
         addAttachment.do()
 
     def widgetCreationKeywordArguments(self):
         kwargs = super(TaskViewer, self).widgetCreationKeywordArguments()
+        kwargs['onDropURL'] = self.onDropURL
         kwargs['onDropFiles'] = self.onDropFiles
+        kwargs['onDropMail'] = self.onDropMail
         return kwargs
     
     # The methods below have two names. This is because there are two types

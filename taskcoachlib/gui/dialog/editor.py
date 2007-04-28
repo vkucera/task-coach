@@ -339,7 +339,6 @@ class AttachmentPage(TaskEditorPage):
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelectItem)
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onDeselectItem)
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onOpen)
-        #dropTarget = draganddrop.FileDropTarget(self.onFileDrop)
         dropTarget = draganddrop.DropTarget(self.onURLDrop, self.onFileDrop,
             self.onThunderbirdMailDrop, self.onOutlookMailDrop)
         self._listCtrl.SetDropTarget(dropTarget)
@@ -355,17 +354,17 @@ class AttachmentPage(TaskEditorPage):
     def onAdd(self, *args, **kwargs):
         self.addAttachmentToListCtrl(attachment.URIAttachment(self._urlEntry.GetValue()))
         
-    def onFileDrop(self, filenames):
+    def onFileDrop(self, x, y, filenames):
         for filename in filenames:
             self.addAttachmentToListCtrl(attachment.FileAttachment(filename))
             
-    def onURLDrop(self, url):
+    def onURLDrop(self, x, y, url):
         self.addAttachmentToListCtrl(attachment.URIAttachment(url))
 
-    def onThunderbirdMailDrop(self, id_):
+    def onThunderbirdMailDrop(self, x, y, id_):
         self.addAttachmentToListCtrl(attachment.MailAttachment(thunderbird.getMail(id_)))
 
-    def onOutlookMailDrop(self):
+    def onOutlookMailDrop(self, x, y):
         for filename in outlook.getCurrentSelection():
             self.addAttachmentToListCtrl(attachment.MailAttachment(filename))
 
