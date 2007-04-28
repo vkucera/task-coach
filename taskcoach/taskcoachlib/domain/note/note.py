@@ -26,7 +26,6 @@ class Note(patterns.ObservableComposite):
         patterns.Publisher().notifyObservers(patterns.Event(self, 
             'note.description', description))
 
-
     def __getstate__(self):
         state = super(Note, self).__getstate__()
         state.update(dict(subject=self.subject(), 
