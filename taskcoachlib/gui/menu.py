@@ -47,7 +47,7 @@ class MainMenu(wx.MenuBar):
         self.Append(TaskMenu(mainwindow, uiCommands), _('&Task'))
         self.Append(EffortMenu(mainwindow, uiCommands), _('Eff&ort'))
         self.Append(CategoryMenu(mainwindow, uiCommands), _('&Category'))
-        #self.Append(NoteMenu(mainwindow, uiCommands), _('&Note'))
+        self.Append(NoteMenu(mainwindow, uiCommands), _('&Note'))
         self.Append(HelpMenu(mainwindow, uiCommands), _('&Help'))
 
 '''
@@ -171,8 +171,8 @@ class ViewViewerMenu(Menu):
         self.appendUICommands(uiCommands, ['viewtasklistviewer', 
             'viewtasktreeviewer', None, 'viewcategoryviewer', None,
             'vieweffortdetailviewer', 'vieweffortperdayviewer', 
-            'vieweffortperweekviewer', 'vieweffortpermonthviewer'])#, None,
-            #'viewnoteviewer'])
+            'vieweffortperweekviewer', 'vieweffortpermonthviewer', None,
+            'viewnoteviewer'])
         
         
 class ViewTaskColumnsMenu(Menu):
