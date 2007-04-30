@@ -163,7 +163,8 @@ class TreeViewer(Viewer):
     def getIndexOfItem(self, item):
         parent = item.parent()
         if parent:
-            return self.getIndexOfItem(parent) + (parent.children().index(item),)
+            children = [child for child in self.model() if child.parent() == parent]
+            return self.getIndexOfItem(parent) + (children.index(item),)
         else:
             return (self.model().rootItems().index(item),)
         

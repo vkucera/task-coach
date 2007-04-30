@@ -60,7 +60,7 @@ def styleDP_ALLOWNONEIsBroken():
     # DP_ALLOWNONE is not supported on Mac OS and Linux, and currently 
     # (wxPython 2.8.1), Windows because one can't set the date to None, 
     # despite style=wx.DP_ALLOWNONE:
-    return True #not ('__WXMSW__' in wx.PlatformInfo)
+    return not ('__WXMSW__' in wx.PlatformInfo)
 
 
 def DatePickerCtrl(*args, **kwargs):

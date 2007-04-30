@@ -3,6 +3,11 @@
 from changetypes import *
 
 releases = [
+            
+Release('0.63.2', 'April 20, 2007',
+    bugsFixed=[
+        Bug('''Task tree view does not refresh tasks after task editing.''', 
+            '1701368')]),
 
 Release('0.64.0', 'May ?, 2007',
     featuresAdded=(
