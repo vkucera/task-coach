@@ -13,3 +13,4 @@ from panel import PanelWithBoxSizer, BoxWithFlexGridSizer, BoxWithBoxSizer
 from colorselect import ColorSelect
 from searchctrl import SearchCtrl
 from mailctrl import MailCtrl
+from tooltip import ToolTipMixin, SimpleToolTip

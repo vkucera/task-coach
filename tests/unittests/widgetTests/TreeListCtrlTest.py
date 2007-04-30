@@ -6,8 +6,8 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
         super(TreeListCtrlTestCase, self).setUp()
         self.createColumns()
         self.treeCtrl = widgets.TreeListCtrl(self.frame, self.columns(), 
-            self.getItemText, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount,
+            self.getItemText, self.getItemDescription, self.getItemImage,
+            self.getItemAttr,self.getChildrenCount,
             self.onSelect, dummy.DummyUICommand(), dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         for bitmapName in ['task', 'tasks']:
