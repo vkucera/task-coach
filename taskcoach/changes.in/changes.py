@@ -4,8 +4,11 @@ from changetypes import *
 
 releases = [
 
-Release('0.64.0', 'April ?, 2007',
+Release('0.64.0', 'May ?, 2007',
     featuresAdded=(
+        Feature('''Show a tooltip with a task's description when the mouse
+is hovering over a task. Patch provided by Jerome Laheurte.''', '1642608',
+'1619521', '1578623'),
         Feature('''Allow for dragging emails from Thunderbird and Outlook to 
 the attachment pane of tasks to create email attachments. Opening an attached 
 email will open it in the user's default mail program. Patch provided by 

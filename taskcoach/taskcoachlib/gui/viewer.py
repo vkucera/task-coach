@@ -316,7 +316,12 @@ class ViewerWithColumns(Viewer):
         item = self.getItemWithIndex(index)
         column = self.visibleColumns()[column]
         return column.render(item)
-    
+
+    def getItemDescription(self, index, column=0):
+        item = self.getItemWithIndex(index)
+        column = self.visibleColumns()[column]
+        return column.renderDescription(item)
+
     def getItemImage(self, index, which, column=0):
         item = self.getItemWithIndex(index)
         column = self.visibleColumns()[column]
@@ -491,11 +496,13 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
                 'task.track.start', 'task.track.stop', sortKey='subject', 
                 sortCallback=self.uiCommands['viewsortbysubject'], 
                 imageIndexCallback=self.subjectImageIndex,
-                renderCallback=self.renderSubject)] + \
+                renderCallback=self.renderSubject,
+                renderDescriptionCallback=lambda task: task.description())] + \
             [widgets.Column(_('Description'), 'task.description', 
                 sortKey='description', 
                 sortCallback=self.uiCommands['viewsortbydescription'],
                 renderCallback=lambda task: task.description(),
+                renderDescriptionCallback=lambda task: task.description(),
                 visibilitySetting=('view', 'taskdescription'))] + \
             [widgets.Column('', 'task.attachment.add', 
                 'task.attachment.remove', width=28,
@@ -503,16 +510,20 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
                 visibilitySetting=('view', 'attachments'), 
                 imageIndexCallback=self.attachmentImageIndex,
                 headerImageIndex=self.imageIndex['attachment'],
-                renderCallback=lambda task: '')] + \
+                renderCallback=lambda task: '',
+                renderDescriptionCallback=lambda task: task.description())] + \
             [widgets.Column(_('Categories'), 'task.category.add', 
                 'task.category.remove', sortKey='categories',
                 sortCallback=self.uiCommands['viewsortbycategories'],
                 visibilitySetting=('view', 'categories'),
+                renderDescriptionCallback=lambda task: task.description(),
                 renderCallback=self.renderCategory)] + \
             [widgets.Column(columnHeader, eventType,
              visibilitySetting=('view', setting.lower()), sortKey=setting, 
              sortCallback=self.uiCommands['viewsortby' + setting.lower()],
-             renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
+             renderCallback=renderCallback,
+             renderDescriptionCallback=lambda task: task.description(),
+             alignment=wx.LIST_FORMAT_RIGHT) \
              for columnHeader, eventType, setting, renderCallback in \
             (_('Start date'), 'task.startDate', 'startDate', lambda task: render.date(task.startDate())),
             (_('Due date'), 'task.dueDate', 'dueDate', lambda task: render.date(task.dueDate())),
@@ -585,8 +596,8 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
-            self.getItemText, self.getItemImage, self.getItemAttr, 
-            self.onSelect, self.uiCommands['edittask'], 
+            self.getItemText, self.getItemDescription, self.getItemImage,
+            self.getItemAttr, self.onSelect, self.uiCommands['edittask'], 
             self.createTaskPopupMenu(),
             self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
@@ -614,8 +625,8 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
 class TaskTreeViewer(TaskViewer, TreeViewer):
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
-        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage, 
-            self.getItemAttr,
+        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemDescription,
+            self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.onSelect, self.uiCommands['edittask'], 
             self.uiCommands['draganddroptask'], self.createTaskPopupMenu(),
             **self.widgetCreationKeywordArguments())
@@ -636,7 +647,11 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
     def getItemText(self, index):
         task = self.getItemWithIndex(index)
         return task.subject()
-    
+
+    def getItemDescription(self, index):
+        task = self.getItemWithIndex(index)
+        return task.description()
+
     def getItemImage(self, index, which):
         task = self.getItemWithIndex(index)
         normalImageIndex, expandedImageIndex = self.getImageIndices(task)
@@ -654,7 +669,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
-            self.getItemImage, self.getItemAttr,
+            self.getItemDescription, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.onSelect, 
             self.uiCommands['edittask'], self.uiCommands['draganddroptask'],
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
@@ -664,6 +679,9 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
 
     def getItemText(self, *args, **kwargs):
         return TaskViewerWithColumns.getItemText(self, *args, **kwargs)
+
+    def getItemDescription(self, *args, **kwargs):
+        return TaskViewerWithColumns.getItemDescription(self, *args, **kwargs)
 
     def getItemImage(self, *args, **kwargs):
         return TaskViewerWithColumns.getItemImage(self, *args, **kwargs)
@@ -678,9 +696,9 @@ class CategoryViewer(TreeViewer):
                 eventType)
         
     def createWidget(self):
-        widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemImage,
-            self.getItemAttr, self.getChildrenCount, self.getIsItemChecked, 
-            self.onSelect, self.onCheck,
+        widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemDescription,
+            self.getItemImage, self.getItemAttr, self.getChildrenCount,
+            self.getIsItemChecked, self.onSelect, self.onCheck,
             self.uiCommands['editcategory'], 
             self.uiCommands['draganddropcategory'], 
             self.createCategoryPopupMenu())
@@ -702,7 +720,10 @@ class CategoryViewer(TreeViewer):
     def getItemText(self, index):    # FIXME: pull up to TreeViewer
         category = self.getItemWithIndex(index)
         return category.subject()
-    
+
+    def getItemDescription(self, index):
+        return None
+
     def getItemImage(self, index, which):
         return -1
     
@@ -759,8 +780,8 @@ class NoteViewer(TreeViewer):
                 eventType)
         
     def createWidget(self):
-        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemImage,
-            self.getItemAttr, self.getChildrenCount,
+        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemDescription,
+            self.getItemImage, self.getItemAttr, self.getChildrenCount,
             self.onSelect,
             self.uiCommands['editnote'], 
             self.uiCommands['draganddropnote'], 
@@ -778,7 +799,11 @@ class NoteViewer(TreeViewer):
     def getItemText(self, index):    # FIXME: pull up to TreeViewer
         note = self.getItemWithIndex(index)
         return note.subject()
-    
+
+    def getItemDescription(self, index):
+        note = self.getItemWithIndex(index)
+        return note.description()
+
     def getItemImage(self, index, which):
         return -1
     
@@ -896,8 +921,8 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
-            self.getItemText, self.getItemImage, self.getItemAttr,
-            self.onSelect, uiCommands['editeffort'], 
+            self.getItemText, self.getItemDescription, self.getItemImage,
+            self.getItemAttr, self.onSelect, uiCommands['editeffort'], 
             menu.EffortPopupMenu(self.parent, uiCommands), 
             menu.EffortViewerColumnPopupMenu(self.parent, uiCommands), 
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
@@ -906,7 +931,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     
     def _createColumns(self):
         return [widgets.Column(columnHeader, eventType, 
-                renderCallback=renderCallback, 
+                renderCallback=renderCallback,
                 visibilitySetting=visibilitySetting) \
             for columnHeader, eventType, renderCallback, visibilitySetting in \
             (_('Period'), 'effort.duration', self.renderPeriod, None),

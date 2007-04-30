@@ -2,7 +2,7 @@
     and TreeListCtrl. '''
 
 
-import wx, wx.lib.mixins.listctrl, draganddrop, autowidth
+import wx, wx.lib.mixins.listctrl, draganddrop, autowidth, tooltip
 
 from mailer import outlook, thunderbird
 
@@ -148,6 +148,28 @@ class _CtrlWithDropTarget(_CtrlWithItems):
             return self
 
 
+class CtrlWithToolTip(_CtrlWithItems, tooltip.ToolTipMixin):
+    ''' Control that has a different tooltip for each item '''
+    def __init__(self, *args, **kwargs):
+        super(CtrlWithToolTip, self).__init__(*args, **kwargs)
+        self.__tip = tooltip.SimpleToolTip(self)
+        
+    def GetIndexOfItem(self, item):
+        try:
+            return super(CtrlWithToolTip, self).GetIndexOfItem(item)
+        except AttributeError:
+            return item
+
+    def OnBeforeShowToolTip(self, x, y):
+        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        if self._itemIsOk(item):
+            description = self.OnGetItemDescription(self.GetIndexOfItem(item), column)
+            if description:
+                self.__tip.SetText(description)
+                return self.__tip
+        return None
+
+
 class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithDropTarget):
     pass
 
@@ -164,6 +186,8 @@ class Column(object):
         self.__sortCallback = kwargs.pop('sortCallback', None)
         self.__renderCallback = kwargs.pop('renderCallback',
             self.defaultRenderer)
+        self.__renderDescriptionCallback = kwargs.pop('renderDescriptionCallback',
+            self.defaultDescriptionRenderer)
         self.__alignment = kwargs.pop('alignment', wx.LIST_FORMAT_LEFT)
         self.__imageIndexCallback = kwargs.pop('imageIndexCallback', 
             self.defaultImageIndex)
@@ -193,8 +217,14 @@ class Column(object):
     def render(self, *args, **kwargs):
         return self.__renderCallback(*args, **kwargs)
 
+    def renderDescription(self, *args, **kwargs):
+        return self.__renderDescriptionCallback(*args, **kwargs)
+
     def defaultRenderer(self, *args, **kwargs):
         return unicode(args[0])
+
+    def defaultDescriptionRenderer(self, *args, **kwargs):
+        return None
 
     def alignment(self):
         return self.__alignment
