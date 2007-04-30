@@ -99,7 +99,7 @@ def registerWithPyPI():
     setup(**setupOptions)
     print 'Done registering with PyPI.'
 
-#uploadDistributionsToSourceForge()
+uploadDistributionsToSourceForge()
 generateMD5Digests()
 generateWebsite()
 ftpWebsiteToChello()
