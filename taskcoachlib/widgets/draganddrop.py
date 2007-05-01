@@ -61,13 +61,11 @@ class MailDropTarget(wx.DropTarget):
 
 class DropTarget(wx.DropTarget):
     def __init__(self, onDropURLCallback, onDropFileCallback,
-            onDropThunderbirdMailCallback, onDropOutlookMailCallback,
-                 onDragOverCallback=None):
+            onDropMailCallback, onDragOverCallback=None):
         super(DropTarget, self).__init__()
         self.__onDropURLCallback = onDropURLCallback
         self.__onDropFileCallback = onDropFileCallback
-        self.__onDropThunderbirdMailCallback = onDropThunderbirdMailCallback
-        self.__onDropOutlookMailCallback = onDropOutlookMailCallback
+        self.__onDropMailCallback = onDropMailCallback
         self.__onDragOverCallback = onDragOverCallback
 
         self.reinit()
@@ -95,16 +93,17 @@ class DropTarget(wx.DropTarget):
     def OnData(self, x, y, result):
         self.GetData()
         if self.__thunderbirdMailDataObject.GetData():
-            if self.__onDropThunderbirdMailCallback:
-                self.__onDropThunderbirdMailCallback(x, y, self.__thunderbirdMailDataObject.GetData().decode('unicode_internal'))
+            if self.__onDropMailCallback:
+                self.__onDropMailCallback(x, y, thunderbird.getMail(self.__thunderbirdMailDataObject.GetData().decode('unicode_internal')))
         else:
             files = self.__fileDataObject.GetFilenames()
             if files:
                 if self.__onDropFileCallback:
                     self.__onDropFileCallback(x, y, files)
             else:
-                if self.__onDropOutlookMailCallback:
-                    self.__onDropOutlookMailCallback(x, y)
+                if self.__onDropMailCallback:
+                    for mail in outlook.getCurrentSelection():
+                        self.__onDropMailCallback(x, y, mail)
 
         self.reinit()
         return result

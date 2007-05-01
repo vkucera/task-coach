@@ -1,9 +1,9 @@
 
 from thirdparty import desktop
-from mailer import thunderbird, outlook
+from mailer import thunderbird, outlook, readMail
 from i18n import _
 
-import os, tempfile, re, wx
+import os
 
 class Attachment(object):
     def open(self):
@@ -48,30 +48,13 @@ class URIAttachment(Attachment):
             return 1
 
 class MailAttachment(Attachment):
-    rx = re.compile('charset=([-0-9a-zA-Z]+)')
-
     def __init__(self, filename):
         self.filename = filename
 
-        encoding = None
-        self.subject = None
-
-        for line in file(self.filename, 'r'):
-            if line.lower().startswith('subject:'):
-                self.subject = line[8:].strip()
-            mt = self.rx.search(line)
-            if mt:
-                encoding = mt.group(1)
-            if line.strip() == '':
-                break
-
-        if encoding is None:
-            encoding = wx.Locale_GetSystemEncodingName()
+        self.subject, self.description = readMail(filename)
 
         if self.subject is None:
             self.subject = _('Untitled e-mail')
-        else:
-            self.subject = self.subject.decode(encoding)
 
     def open(self):
         desktop.open(self.filename) # FIXME

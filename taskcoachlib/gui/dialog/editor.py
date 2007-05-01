@@ -9,7 +9,6 @@ import wx.lib.combotreebox as combotreebox
 from i18n import _
 from domain import task, category, date, note
 from thirdparty import desktop
-from mailer import outlook, thunderbird
 import os.path
 
 
@@ -341,7 +340,7 @@ class AttachmentPage(TaskEditorPage):
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onDeselectItem)
         self._listCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onOpen)
         dropTarget = draganddrop.DropTarget(self.onURLDrop, self.onFileDrop,
-            self.onThunderbirdMailDrop, self.onOutlookMailDrop)
+            self.onMailDrop)
         self._listCtrl.SetDropTarget(dropTarget)
             
     def addAttachmentToListCtrl(self, att):
@@ -362,12 +361,8 @@ class AttachmentPage(TaskEditorPage):
     def onURLDrop(self, x, y, url):
         self.addAttachmentToListCtrl(attachment.URIAttachment(url))
 
-    def onThunderbirdMailDrop(self, x, y, id_):
-        self.addAttachmentToListCtrl(attachment.MailAttachment(thunderbird.getMail(id_)))
-
-    def onOutlookMailDrop(self, x, y):
-        for filename in outlook.getCurrentSelection():
-            self.addAttachmentToListCtrl(attachment.MailAttachment(filename))
+    def onMailDrop(self, x, y, mail):
+        self.addAttachmentToListCtrl(attachment.MailAttachment(mail))
 
     def onBrowse(self, *args, **kwargs):
         filename = widgets.AttachmentSelector()
