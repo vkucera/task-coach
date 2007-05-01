@@ -4,8 +4,6 @@
 
 import wx, wx.lib.mixins.listctrl, draganddrop, autowidth, tooltip
 
-from mailer import outlook, thunderbird
-
 class _CtrlWithItems(object):
     ''' Base class for controls with items, such as ListCtrl, TreeCtrl,
         TreeListCtrl, etc. '''
@@ -96,41 +94,40 @@ class _CtrlWithDropTarget(_CtrlWithItems):
         if self.__onDropURLCallback or self.__onDropFilesCallback or self.__onDropMailCallback:
             dropTarget = draganddrop.DropTarget(self.onDropURL,
                                                 self.onDropFiles,
-                                                self.onDropThunderbird,
-                                                self.onDropOutlook,
+                                                self.onDropMail,
                                                 self.onDragOver)
             self.GetMainWindow().SetDropTarget(dropTarget)
 
     def onDropURL(self, x, y, url):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
-        if self._itemIsOk(item) and self.__onDropURLCallback:
-            self.__onDropURLCallback(self.GetIndexOfItem(item), url)
+        if self.__onDropURLCallback:
+            if self._itemIsOk(item):
+                self.__onDropURLCallback(self.GetIndexOfItem(item), url)
+            else:
+                self.__onDropURLCallback(None, url)
 
     def onDropFiles(self, x, y, filenames):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
-        if self._itemIsOk(item) and self.__onDropFilesCallback:
-            self.__onDropFilesCallback(self.GetIndexOfItem(item), filenames)
+        if self.__onDropFilesCallback:
+            if self._itemIsOk(item):
+                self.__onDropFilesCallback(self.GetIndexOfItem(item), filenames)
+            else:
+                self.__onDropFilesCallback(None, filenames)
 
     def onDropMail(self, x, y, mail):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
-        if self._itemIsOk(item) and self.__onDropMailCallback:
-            self.__onDropMailCallback(self.GetIndexOfItem(item), mail)
-
-    def onDropThunderbird(self, x, y, id_):
-        self.onDropMail(x, y, thunderbird.getMail(id_))
-
-    def onDropOutlook(self, x, y):
-        for mail in outlook.getCurrentSelection():
-            self.onDropMail(x, y, mail)
+        if self.__onDropMailCallback:
+            if self._itemIsOk(item):
+                self.__onDropMailCallback(self.GetIndexOfItem(item), mail)
+            else:
+                self.__onDropMailCallback(None, mail)
 
     def onDragOver(self, x, y, defaultResult):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
         if self._itemIsOk(item):
             if flags & wx.TREE_HITTEST_ONITEMBUTTON:
                 self.Expand(item)
-            return defaultResult
-        else:
-            return wx.DragNone
+        return defaultResult
         
     def GetIndexOfItem(self, item):
         # Convert the item into an index. For ListCtrls this is not 

@@ -1,4 +1,4 @@
-import patterns, command, widgets, uicommand, menu, color, render, dialog
+import patterns, command, widgets, uicommand, menu, color, render, dialog, mailer
 import wx
 from i18n import _
 from domain import task, category, effort, date, note, attachment
@@ -418,24 +418,39 @@ class TaskViewer(UpdatePerSecondViewer):
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
 
     def onDropURL(self, index, url):
-        addAttachment = command.AddAttachmentToTaskCommand(self.list,
-            [self.getItemWithIndex(index)],
-                       attachments=[attachment.URIAttachment(url)])
-        addAttachment.do()
+        if index is not None:
+            addAttachment = command.AddAttachmentToTaskCommand(self.list,
+                [self.getItemWithIndex(index)],
+                           attachments=[attachment.URIAttachment(url)])
+            addAttachment.do()
 
     def onDropFiles(self, index, filenames):
         ''' This method is called by the widget when one or more files
             are dropped on a task. '''
-        addAttachment = command.AddAttachmentToTaskCommand(self.list,
-            [self.getItemWithIndex(index)],
-                       attachments=[attachment.FileAttachment(name) for name in filenames])
-        addAttachment.do()
+        if index is None:
+            newTaskDialog = self.newItemDialog(bitmap='new',
+                                               attachments=[attachment.FileAttachment(name) for name in filenames])
+            newTaskDialog.Show()
+        else:
+            addAttachment = command.AddAttachmentToTaskCommand(self.list,
+                [self.getItemWithIndex(index)],
+                           attachments=[attachment.FileAttachment(name) for name in filenames])
+            addAttachment.do()
 
     def onDropMail(self, index, mail):
-        addAttachment = command.AddAttachmentToTaskCommand(self.list,
-            [self.getItemWithIndex(index)],
-                       attachments=[attachment.MailAttachment(mail)])
-        addAttachment.do()
+        if index is None:
+            subject, description = mailer.readMail(mail)
+
+            newTaskDialog = self.newItemDialog(bitmap='new',
+                                               subject=subject,
+                                               description=description,
+                                               attachments=[attachment.MailAttachment(mail)])
+            newTaskDialog.Show()
+        else:
+            addAttachment = command.AddAttachmentToTaskCommand(self.list,
+                [self.getItemWithIndex(index)],
+                           attachments=[attachment.MailAttachment(mail)])
+            addAttachment.do()
 
     def widgetCreationKeywordArguments(self):
         kwargs = super(TaskViewer, self).widgetCreationKeywordArguments()
@@ -456,9 +471,10 @@ class TaskViewer(UpdatePerSecondViewer):
     # task editor. 
     
     def newItemDialog(self, *args, **kwargs):
+        bitmap = kwargs.pop('bitmap')
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self), 
-            command.NewTaskCommand(self.list), self.list, self.uiCommands, 
-            self.settings, self.categories, bitmap=kwargs['bitmap'])
+            command.NewTaskCommand(self.list, *args, **kwargs), self.list, self.uiCommands, 
+            self.settings, self.categories, bitmap=bitmap)
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
