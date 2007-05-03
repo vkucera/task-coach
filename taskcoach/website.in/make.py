@@ -316,6 +316,23 @@ pages['devinfo'] = \
     StudlyCaps. At first I thought that was ugly, a mixture of two
     styles. But it turned out to be quite handy, since you can easily
     see whether some method is a wxPython method or not.</p>
+    <h4>CVS usage conventions</h4>
+    <p>Releases are tagged Releasex_y_z (where x has always been 0 so far) 
+    and for each Releasex_y_0 a branch (Releasex_y_Branch) is created to
+    facilitate bug fix releases. The release tagging and branching is part of 
+    the release process as documented in release.py.</p>
+    <p>For new features, feature-specific branches are created to facilitate 
+    parallel development, checking in changes while developing, and keep 
+    the code on the main trunk releaseable. The process is as follows:</p>
+    <ul>
+    <li>The feature is dicussed on taskcoach-dev.</li>
+    <li>If all agree it's a good feature to work on, a
+    Feature_&lt;FeatureName&gt;_Branch branch is created and used for
+    development of the feature.</li>
+    <li>When the feature is done, it is announced on taskcoach-dev.</li>
+    <li>The feature is tested on all platforms.</li>
+    <li>The changes are merged back to main trunk.</li>
+    </ul>
 '''
 
 dist = os.path.join('..', 'website.out')
