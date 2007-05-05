@@ -165,13 +165,10 @@ class MainWindow(WindowWithPersistentDimensions):
         self.settings.set('view', 'tasksearchfilterstring', '') 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
         # Save the number of viewers for each viewer type:
-        counts = dict(tasklistviewercount=0, tasktreelistviewercount=0, 
-                      categoryviewercount=0, effortlistviewercount=0,
-                      effortperdayviewercount=0, effortperweekviewercount=0,
-                      effortpermonthviewercount=0)
+        counts = {}
         for viewer in self.viewer:
             setting = viewer.__class__.__name__.lower() + 'count'
-            counts[setting] += 1
+            counts[setting] = counts.get(setting, 0) + 1
         for key, value in counts.items():
             self.settings.set('view', key, str(value))
         if hasattr(self, 'taskBarIcon'):
