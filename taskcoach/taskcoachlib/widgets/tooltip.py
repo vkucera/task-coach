@@ -23,7 +23,23 @@ class ToolTipMixin(object):
         wx.EVT_TIMER(self, self.__timer.GetId(), self.__OnTimer)
 
     def ShowTip(self, x, y):
-        self.__tip.MoveXY(x, y)
+        # Ensure we're  not too  big (in Y  direction anyway)  for the
+        # desktop display  area.  This  doesn't work on  Linux because
+        # ClientDisplayRect()  returns  the  whole display  size,  not
+        # taking the taskbar into account...
+
+        dx, dy, dw, dh = wx.ClientDisplayRect()
+        myW, myH = self.__tip.GetSizeTuple()
+
+        if myH > dh:
+            # Too big. Take as much space as possible.
+            y = 5
+            myH = dh - 10
+        elif y + myH > dy + dh:
+            # Adjust y so that the whole tip is visible.
+            y = dy + dh - myH - 5
+
+        self.__tip.SetDimensions(x, y, myW, myH)
         if '__WXMSW__' not in wx.PlatformInfo:
             self.__tip.Show()
 
