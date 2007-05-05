@@ -1,3 +1,5 @@
+import meta
+
 defaults = { \
 'view': { \
     'tasklistviewercount': '1',
@@ -82,6 +84,9 @@ defaults = { \
     'overduetasks': '(255, 0, 0)',
     'inactivetasks': '(192, 192, 192)',
     'duetodaytasks': '(255, 128, 0)'},
+'version': { \
+    'notified': meta.data.version,
+    'notify': 'True'},
 'behavior': { \
     'markparentcompletedwhenallchildrencompleted': 'True'}}
 

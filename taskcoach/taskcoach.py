@@ -18,6 +18,7 @@ if not hasattr(sys, "frozen"):
 import wx
 wx.SystemOptions.SetOptionInt('mac.listctrl.always_use_generic', 1)
 
+        
 class wxApp(wx.App):
     def OnInit(self):
         self.SetAssertMode(wx.PYAPP_ASSERT_DIALOG)
@@ -33,12 +34,16 @@ class App(object):
 
     def start(self):
         ''' Call this to start the App. '''
+        if self.settings.getboolean('version', 'notify'):
+            import meta.versionchecker as vc
+            self.vc = vc.VersionChecker(self.settings)
+            self.vc.start()
         self.mainwindow.Show()
         self.wxApp.MainLoop()
-
+        
     def init(self, loadSettings=True, loadTaskFile=True): 
         import config, i18n
-        settings = config.Settings(loadSettings)
+        self.settings = settings = config.Settings(loadSettings)
         i18n.Translator(settings.get('view', 'language'))
         import gui, persistence
         from domain import task, effort
