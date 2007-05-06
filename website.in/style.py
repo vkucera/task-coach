@@ -82,7 +82,8 @@ footer = '''
                     <a href="http://www.bluerobot.com">Bluerobot.com</a><br>
                     <a href="http://sourceforge.net"><img
                 src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&amp;type=1"
-                width="88" height="31" border="0" alt="SourceForge.net"/></a>
+                width="88" height="31" border="0" alt="SourceForge.net"/></a><br>
+                    <SCRIPT type='text/javascript' language='JavaScript' src='http://www.ohloh.net/projects/5109;badge_js'></SCRIPT>
                 </p>
             </div>
             <div class="navbox">
