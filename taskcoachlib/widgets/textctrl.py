@@ -10,11 +10,18 @@ for ordinal in range(0x20):
 class BaseTextCtrl(wx.TextCtrl):
     def __init__(self, parent, *args, **kwargs):
         super(BaseTextCtrl, self).__init__(parent, -1, *args, **kwargs)
+        self.__data = None
 
     def GetValue(self, *args, **kwargs):
         value = super(BaseTextCtrl, self).GetValue(*args, **kwargs)
         # Don't allow unicode control characters:
         return value.translate(UNICODE_CONTROL_CHARACTERS_TO_WEED)
+
+    def SetData(self, data):
+        self.__data = data
+
+    def GetData(self):
+        return self.__data
 
 
 class SingleLineTextCtrl(BaseTextCtrl):
@@ -75,7 +82,7 @@ class SingleLineTextCtrlWithEnterButton(wx.Panel):
         self.__bindEventHandlers()
         self.__layoutControls(spacerWidth)
         self.onTextCtrlChanged()
-        
+
     def __createControls(self, label):
         self.__textCtrl = SingleLineTextCtrl(self, style=wx.TE_PROCESS_ENTER)
         self.__button = wx.Button(self, label=label)
@@ -103,7 +110,13 @@ class SingleLineTextCtrlWithEnterButton(wx.Panel):
         
     def GetValue(self, *args, **kwargs):
         return self.__textCtrl.GetValue(*args, **kwargs)
-    
+
+    def SetData(self, *args, **kwargs):
+        return self.__textCtrl.SetData(*args, **kwargs)
+
+    def GetData(self, *args, **kwargs):
+        return self.__textCtrl.GetData(*args, **kwargs)
+
     # callbacks
     
     def onTextCtrlChanged(self, *args, **kwargs):

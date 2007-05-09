@@ -439,11 +439,11 @@ class TaskViewer(UpdatePerSecondViewer):
 
     def onDropMail(self, index, mail):
         if index is None:
-            subject, description = mailer.readMail(mail)
+            subject, description, content = mailer.readMail(mail)
 
             newTaskDialog = self.newItemDialog(bitmap='new',
                                                subject=subject,
-                                               description=description,
+                                               description=content,
                                                attachments=[attachment.MailAttachment(mail)])
             newTaskDialog.Show()
         else:
