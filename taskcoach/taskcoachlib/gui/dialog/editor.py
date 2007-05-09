@@ -352,7 +352,12 @@ class AttachmentPage(TaskEditorPage):
         self._listData[item.GetData()] = att
             
     def onAdd(self, *args, **kwargs):
-        self.addAttachmentToListCtrl(attachment.URIAttachment(self._urlEntry.GetValue()))
+        att = self._urlEntry.GetData()
+        if att is None:
+            att = attachment.URIAttachment(self._urlEntry.GetValue())
+        else:
+            att.setDescription(self._urlEntry.GetValue())
+        self.addAttachmentToListCtrl(att)
         
     def onFileDrop(self, x, y, filenames):
         for filename in filenames:
@@ -394,11 +399,11 @@ class AttachmentPage(TaskEditorPage):
             self._listCtrl.DeleteItem(index)
             
     def onEdit(self, *args, **kwargs):
-        # FIXME: disable editing for certain types of attachment, fix this
         index = self._listCtrl.GetNextItem(-1, state=wx.LIST_STATE_SELECTED)
-        attachment = self._listCtrl.GetItem(index).GetText()
+        attachment = self._listData[self._listCtrl.GetItemData(index)]
         self._listCtrl.DeleteItem(index)
-        self._urlEntry.SetValue(attachment)
+        self._urlEntry.SetValue(unicode(attachment))
+        self._urlEntry.SetData(attachment)
         self._urlEntry.SetFocus()
     
     def onSelectItem(self, *args, **kwargs):

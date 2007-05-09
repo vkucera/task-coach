@@ -101,12 +101,7 @@ class ThunderbirdMailboxReader(object):
         return Iterator(self.fp)
 
     def saveToFile(self, fp):
-        """Saves the mail content to a file, not taking up too much
-        memory if it is big..."""
-        bf = self.read(4096)
-        while bf:
-            fp.write(bf)
-            bf = self.read(4096)
+        fp.write(self.read())
 
 class ThunderbirdImapReader(object):
     _PASSWORDS = {}
