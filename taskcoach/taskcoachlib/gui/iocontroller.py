@@ -1,7 +1,26 @@
-import wx, os, sys, codecs, traceback
+import wx, wxaddons.sized_controls, os, sys, codecs, traceback
 import meta, persistence
 from i18n import _
 from domain import task
+
+class EmailAndPasswordDialog(wxaddons.sized_controls.SizedDialog):
+    def __init__(self, *args, **kwargs):
+        super(EmailAndPasswordDialog, self).__init__(*args, **kwargs)
+        pane = self.GetContentsPane()
+        pane.SetSizerType("form")
+        wx.StaticText(pane, label="Email")
+        self.email = wx.TextCtrl(pane, value="Your email here")
+        self.email.SetSizerProps(expand=True)
+        wx.StaticText(pane, label="Password")
+        self.password = wx.TextCtrl(pane, style=wx.TE_PASSWORD)
+        self.password.SetSizerProps(expand=True)
+        self.SetButtonSizer(self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL))
+        # Make sure that the dialog can't be resized to less screen space 
+        # than the controls need:
+        self.email.SetFocus()
+        self.Fit()
+        self.SetMinSize(self.GetSize())
+
 
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,
@@ -109,6 +128,54 @@ class IOController(object):
         else:
             return False
 
+    def exportToGoogleCalendar(self, showerror=wx.MessageBox):
+        email, password = self.__askUserForEmailAndPassword()
+        if email and password:
+            import atom, gdata.calendar, gdata.calendar.service, urllib
+            calendarService = gdata.calendar.service.CalendarService()
+            calendarService.email = email
+            calendarService.password = password
+            try:
+                calendarService.ProgrammaticLogin()
+            except gdata.service.BadAuthentication:
+                showerror(_('Wrong username or password'), 
+                    caption=_('Authentication error'), 
+                    style=wx.ICON_ERROR)
+                return
+            except:
+                showerror(_("Could'nt connect to Google"), 
+                    caption=_('Connection error'), 
+                    style=wx.ICON_ERROR)
+                return
+            calendars = {}
+            for calendar in calendarService.GetCalendarListFeed().entry:
+                calendars[calendar.title.text] = urllib.unquote(\
+                    calendar.GetSelfLink().href[ \
+                        len('http://www.google.com/calendar/feeds/default/'):])
+            if len(calendars) > 1:
+                dialog = wx.SingleChoiceDialog(wx.GetApp().GetTopWindow(),
+                    _('Which calendar should the effort be exported to?'),
+                    _('Choose calendar'), sorted(calendars.keys()))
+                if dialog.ShowModal() == wx.ID_OK:
+                    calendar = calendars[dialog.GetStringSelection()]
+                    dialog.Destroy()
+                else:
+                    dialog.Destroy()
+                    return
+            else:
+                calendar = 'default'
+            calendar = '/calendar/feeds/%s/private/full'%calendar
+            for effort in self.__taskFile.efforts():
+                event = gdata.calendar.CalendarEventEntry()
+                start = effort.getStart().strftime('%Y-%m-%dT%H:%M:%S.000Z')
+                stop = effort.getStop().strftime('%Y-%m-%dT%H:%M:%S.000Z')
+                event.when.append(gdata.calendar.When(start_time=start, 
+                    end_time=stop))
+                event.title = atom.Title(text=effort.task().subject())
+                calendarService.InsertEvent(event, calendar)
+            showerror(_('Successfully exported effort to your Google Calendar'),
+                caption=_('Export finished'), style=wx.ICON_INFORMATION)
+
     def exportAsHTML(self, viewer, filename=None):
         if not filename:
             filename = self.__askUserForFile(_('Export as HTML...'),
@@ -147,6 +214,17 @@ class IOController(object):
     def __askUserForFile(self, title, fileDialogOpts=None, flags=wx.OPEN):
         fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts
         return wx.FileSelector(title, flags=flags, **fileDialogOpts)
+
+    def __askUserForEmailAndPassword(self):
+        dialog = EmailAndPasswordDialog(wx.GetApp().GetTopWindow())
+        dialog.CenterOnScreen()
+        if wx.ID_OK == dialog.ShowModal():
+            email = dialog.email.GetValue()
+            password = dialog.password.GetValue()
+        else:
+            email, password = None, None
+        dialog.Destroy()
+        return email, password
 
     def __saveUnsavedChanges(self):
         result = wx.MessageBox(_('You have unsaved changes.\n'

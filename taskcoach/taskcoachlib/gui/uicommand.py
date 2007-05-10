@@ -510,7 +510,18 @@ class FileExportAsCSV(IOCommand, ViewerCommand):
     def doCommand(self, event):
         self.iocontroller.exportAsCSV(self.viewer)
         
+
+class FileExportToGoogleCalendar(IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportToGoogleCalendar, self).__init__(\
+            menuText=_('Export effort to &Google Calendar...'),
+            helpText=_('Export effort to your Google Calendar'),
+            bitmap='exporttogcal', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportToGoogleCalendar()
         
+
 class FileQuit(MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
@@ -1297,11 +1308,13 @@ class UICommands(dict):
         self['printpreview'] = PrintPreview(mainwindow=mainwindow, 
             viewer=viewer)
         self['print'] = Print(mainwindow=mainwindow, viewer=viewer)
-        self['exportasics'] = FileExportAsICS(iocontroller=iocontroller)
         self['exportashtml'] = FileExportAsHTML(iocontroller=iocontroller, 
             viewer=viewer)
         self['exportascsv'] = FileExportAsCSV(iocontroller=iocontroller,
             viewer=viewer)
+        self['exportasics'] = FileExportAsICS(iocontroller=iocontroller)
+        self['exporttogcal'] = \
+            FileExportToGoogleCalendar(iocontroller=iocontroller)
         self['quit'] = FileQuit(mainwindow=mainwindow)
 
         # menuEdit commands
