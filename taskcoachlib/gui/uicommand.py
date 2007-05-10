@@ -483,8 +483,9 @@ class Print(ViewerCommand, MainWindowCommand):
 
 class FileExportAsICS(IOCommand):
     def __init__(self, *args, **kwargs):
-        super(FileExportAsICS, self).__init__(menuText=_('Export as &iCalendar...'), 
-            helpText=_('Export the current file in iCalendar (*.ics) format'),
+        super(FileExportAsICS, self).__init__(\
+            menuText=_('Export effort as &iCalendar...'), 
+            helpText=_('Export effort in iCalendar (*.ics) format'),
             bitmap='exportasics', *args, **kwargs)
 
     def doCommand(self, event):
