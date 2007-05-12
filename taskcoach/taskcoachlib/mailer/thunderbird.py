@@ -126,6 +126,7 @@ class ThunderbirdImapReader(object):
         idx = 1
         port = None
         stype = None
+        isSecure = False
         while True:
             name = 'mail.server.server%d' % idx
             if config.has_key(name + '.hostname'):
@@ -135,11 +136,13 @@ class ThunderbirdImapReader(object):
                             port = int(config[name + '.port'])
                         if config.has_key(name + '.socketType'):
                             stype = config[name + '.socketType']
+                        if config.has_key(name + '.isSecure'):
+                            isSecure = int(config[name + '.isSecure'])
             else:
                 break
             idx += 1
 
-        if stype == 3:
+        if stype == 3 or isSecure:
             self.ssl = True
             if port is None:
                 self.port = 993
