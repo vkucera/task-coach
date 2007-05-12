@@ -27,6 +27,8 @@ def readMail(filename, readContent=True):
 
     if encoding is None:
         encoding = wx.Locale_GetSystemEncodingName()
+	if not encoding:
+	    encoding = 'ISO-8859-1'
 
     if subject is None:
         subject = _('Untitled e-mail')

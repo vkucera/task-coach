@@ -5,7 +5,9 @@ _RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
 _RX_IMAP    = re.compile('imap-message://([^@]+)@(.+)/(.*)#([0-9]+)')
 
 def getThunderbirdDir():
-    if os.name == 'posix':
+    if '__WXMAC__' in wx.PlatformInfo:
+	path = os.path.join(os.environ['HOME'], 'Library', 'Thunderbird')
+    elif os.name == 'posix':
         path = os.path.join(os.environ['HOME'], '.thunderbird')
     elif os.name == 'nt':
         path = os.path.join(os.environ['APPDATA'], 'Thunderbird')
