@@ -41,7 +41,9 @@ class MailDropTarget(wx.DropTarget):
 
     def OnData(self, x, y, result):
         self.GetData()
-        if self.__thunderbirdDataObject.GetData():
+	if self.__macThunderbirdDataObject.GetData():
+	    self.__onDropCallback(thunderbird.getMail(self.__macThunderbirdDataObject.GetData().decode('unicode_internal')))
+        elif self.__thunderbirdDataObject.GetData():
             self.__onDropCallback(thunderbird.getMail(self.__thunderbirdDataObject.GetData().decode('unicode_internal')))
         else:
             for filename in outlook.getCurrentSelection():
@@ -53,8 +55,10 @@ class MailDropTarget(wx.DropTarget):
     def reinit(self):
         self.__compositeDataObject = wx.DataObjectComposite()
         self.__thunderbirdDataObject = wx.CustomDataObject('text/x-moz-message')
+	self.__macThunderbirdDataObject = wx.CustomDataObject('MZ\x00\x00')
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
-        for dataObject in self.__thunderbirdDataObject, self.__outlookDataObject:
+        for dataObject in (self.__thunderbirdDataObject, self.__outlookDataObject,
+	           self.__macThunderbirdDataObject):
             self.__compositeDataObject.Add(dataObject)
 
         self.SetDataObject(self.__compositeDataObject)
@@ -75,9 +79,11 @@ class DropTarget(wx.DropTarget):
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
         self.__thunderbirdMailDataObject = wx.CustomDataObject('text/x-moz-message')
+	self.__macThunderbirdMailDataObject = wx.CustomDataObject('MZ\x00\x00')
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         for dataObject in self.__fileDataObject, self.__urlDataObject, \
-                          self.__thunderbirdMailDataObject, self.__outlookDataObject:
+                          self.__thunderbirdMailDataObject, self.__outlookDataObject, \
+                          self.__macThunderbirdMailDataObject:
             # NB: First data object added is the preferred data object
             self.__compositeDataObject.Add(dataObject)
         self.SetDataObject(self.__compositeDataObject)
@@ -95,6 +101,9 @@ class DropTarget(wx.DropTarget):
         if self.__thunderbirdMailDataObject.GetData():
             if self.__onDropMailCallback:
                 self.__onDropMailCallback(x, y, thunderbird.getMail(self.__thunderbirdMailDataObject.GetData().decode('unicode_internal')))
+        elif self.__macThunderbirdMailDataObject.GetData():
+            if self.__onDropMailCallback:
+                self.__onDropMailCallback(x, y, thunderbird.getMail(self.__macThunderbirdMailDataObject.GetData().decode('unicode_internal')))
         else:
             files = self.__fileDataObject.GetFilenames()
             if files:
