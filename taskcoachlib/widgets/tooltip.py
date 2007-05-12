@@ -18,6 +18,8 @@ class ToolTipMixin(object):
         self.__position = (0, 0)
         self.__text = None
 
+        self.__maxX, self.__maxY = wx.DisplaySize()
+
         wx.EVT_MOTION(self, self.__OnMotion)
         wx.EVT_LEAVE_WINDOW(self, self.__OnLeave)
         wx.EVT_TIMER(self, self.__timer.GetId(), self.__OnTimer)
@@ -40,12 +42,12 @@ class ToolTipMixin(object):
             y = dy + dh - myH - 5
 
         self.__tip.SetDimensions(x, y, myW, myH)
-        if '__WXMSW__' not in wx.PlatformInfo:
+        if not ('__WXMSW__' in wx.PlatformInfo or '__WXMAC__' in wx.PlatformInfo):
             self.__tip.Show()
 
     def HideTip(self):
-        if '__WXMSW__' in wx.PlatformInfo:
-            self.__tip.MoveXY(32767, 32767)
+        if '__WXMSW__' in wx.PlatformInfo or '__WXMAC__' in wx.PlatformInfo:
+            self.__tip.MoveXY(self.__maxX, self.__maxY)
         else:
             self.__tip.Hide()
 
@@ -67,10 +69,14 @@ class ToolTipMixin(object):
 
         if ret is not None:
             self.__tip = ret
+            wx.EVT_MOTION(self.__tip, self.__OnTipMotion)
             self.__position = (x + 3, y + 10)
             self.__timer.Start(200, True)
 
         evt.Skip()
+
+    def __OnTipMotion(self, evt):
+        self.HideTip()
 
     def __OnLeave(self, evt):
         self.__timer.Stop()
@@ -95,15 +101,14 @@ class SimpleToolTip(wx.Frame):
                                             wx.FRAME_FLOAT_ON_PARENT| \
                                             wx.NO_BORDER)
 
-        if '__WXMSW__' in wx.PlatformInfo:
-            self.MoveXY(32767, 32767)
+        self.lines = []
+
+        if '__WXMSW__' in wx.PlatformInfo or '__WXMAC__' in wx.PlatformInfo:
+            maxX, maxY = wx.DisplaySize()
+            self.MoveXY(maxX, maxY)
             self.Show()
 
-        wx.EVT_MOTION(self, self.OnMotion)
         wx.EVT_PAINT(self, self.OnPaint)
-
-    def OnMotion(self, evt):
-        self.Hide()
 
     def SetText(self, text):
         width = 0
