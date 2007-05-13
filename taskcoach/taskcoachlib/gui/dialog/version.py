@@ -17,7 +17,7 @@ class VersionDialog(sized_controls.SizedDialog):
         message = _('Version %(version)s of %(name)s is available from')%messageInfo
         wx.StaticText(panel, label=message)
         hyperlink.HyperLinkCtrl(panel, label=meta.data.url)
-        self.check = wx.CheckBox(pane, label="Notify me of new versions.")
+        self.check = wx.CheckBox(pane, label=_('Notify me of new versions.'))
         self.check.SetValue(True)
         self.SetButtonSizer(self.CreateStdDialogButtonSizer(wx.OK))
         self.Fit()
