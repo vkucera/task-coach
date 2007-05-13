@@ -418,38 +418,41 @@ class TaskViewer(UpdatePerSecondViewer):
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
 
     def onDropURL(self, index, url):
-        if index is not None:
+        attachments = [attachment.URIAttachment(url)]
+        if index is None:
+            newTaskDialog = self.newItemDialog(bitmap='new',
+                                               attachments=attachments)
+            newTaskDialog.Show()
+        else:
             addAttachment = command.AddAttachmentToTaskCommand(self.list,
-                [self.getItemWithIndex(index)],
-                           attachments=[attachment.URIAttachment(url)])
+                [self.getItemWithIndex(index)], attachments=attachments)
             addAttachment.do()
 
     def onDropFiles(self, index, filenames):
         ''' This method is called by the widget when one or more files
             are dropped on a task. '''
+        attachments = [attachment.FileAttachment(name) for name in filenames]
         if index is None:
             newTaskDialog = self.newItemDialog(bitmap='new',
-                                               attachments=[attachment.FileAttachment(name) for name in filenames])
+                                               attachments=attachments)
             newTaskDialog.Show()
         else:
             addAttachment = command.AddAttachmentToTaskCommand(self.list,
-                [self.getItemWithIndex(index)],
-                           attachments=[attachment.FileAttachment(name) for name in filenames])
+                [self.getItemWithIndex(index)], attachments=attachments)
             addAttachment.do()
 
     def onDropMail(self, index, mail):
+        attachments = [attachment.MailAttachment(mail)]
         if index is None:
             subject, description, content = mailer.readMail(mail)
-
             newTaskDialog = self.newItemDialog(bitmap='new',
                                                subject=subject,
                                                description=content,
-                                               attachments=[attachment.MailAttachment(mail)])
+                                               attachments=attachments)
             newTaskDialog.Show()
         else:
             addAttachment = command.AddAttachmentToTaskCommand(self.list,
-                [self.getItemWithIndex(index)],
-                           attachments=[attachment.MailAttachment(mail)])
+                [self.getItemWithIndex(index)], attachments=attachments)
             addAttachment.do()
 
     def widgetCreationKeywordArguments(self):

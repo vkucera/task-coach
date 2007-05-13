@@ -97,7 +97,10 @@ class DropTarget(wx.DropTarget):
     
     def OnData(self, x, y, result):
         self.GetData()
-        if self.__thunderbirdMailDataObject.GetData():
+        if self.__urlDataObject.GetText():
+            if self.__onDropURLCallback:
+                self.__onDropURLCallback(x, y, self.__urlDataObject.GetText())
+        elif self.__thunderbirdMailDataObject.GetData():
             if self.__onDropMailCallback:
                 self.__onDropMailCallback(x, y, thunderbird.getMail(self.__thunderbirdMailDataObject.GetData().decode('unicode_internal')))
         elif self.__macThunderbirdMailDataObject.GetData():
