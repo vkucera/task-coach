@@ -260,6 +260,8 @@ pages['devinfo'] = \
     join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
     <P>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
     of messages</a> without subscribing to the mailinglist.</P>
+    <P>A Sourceforge mailinglist is available for receiving CVS commit messages.
+    If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join this mailinglist</a>.
     <h4>Dependencies</h4>
     <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
     using <A HREF="http://www.wxpython.org">wxPython</A> for the
