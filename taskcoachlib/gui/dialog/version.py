@@ -1,7 +1,7 @@
-from wxaddons import sized_controls
 from wx.lib import hyperlink
 from i18n import _
 import wx, meta
+from widgets import sized_controls
 
 class VersionDialog(sized_controls.SizedDialog):
     def __init__(self, *args, **kwargs):

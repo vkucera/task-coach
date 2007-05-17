@@ -13,3 +13,7 @@ from panel import PanelWithBoxSizer, BoxWithFlexGridSizer, BoxWithBoxSizer
 from colorselect import ColorSelect
 from searchctrl import SearchCtrl
 from tooltip import ToolTipMixin, SimpleToolTip
+try:
+    from wxaddons import sized_controls
+except ImportError:
+    from thirdparty import sized_controls

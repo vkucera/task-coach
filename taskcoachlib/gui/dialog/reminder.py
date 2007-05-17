@@ -1,5 +1,5 @@
 import wx, meta
-from wxaddons import sized_controls
+from widgets import sized_controls
 from i18n import _
 from domain import date
 
