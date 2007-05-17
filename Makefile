@@ -38,7 +38,7 @@ sdist: icons changes i18n
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
 lindist: icons changes i18n
-	$(PYTHON) make.py bdist_rpm --requires "python>=2.4,python-wxgtk>=2.8.3,python-wxaddons" --group "Applications/Productivity"
+	$(PYTHON) make.py bdist_rpm --requires "python>=2.5,python-wxgtk>=2.8.4,python-wxaddons" --group "Applications/Productivity"
 	export EMAIL="frank@niessink.com"
 	cd dist; sudo alien --keep-version *.noarch.rpm; cd ..
 
