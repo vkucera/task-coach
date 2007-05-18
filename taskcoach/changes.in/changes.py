@@ -7,7 +7,12 @@ releases = [
 Release('0.64.0', 'May ?, 2007',
     bugsFixed=[
         Bug('''Ubuntu users had to manually install the wxaddons package. 
-This package is now included in the Task Coach distribution.''')],
+This package is now included in the Task Coach distribution.'''),
+        Bug('''Don't hide the main window when it's iconized by default 
+because on Linux with some window managers the main window receives minimize 
+events in other situations as well, most notably when changing virtual 
+desktops. So, to reduce the chances of confusing new users this option is off 
+by default.''', '1721166')],
     featuresAdded=[
         Feature('''Show a tooltip with a task's description when the mouse
 is hovering over a task. Patch provided by Jerome Laheurte.''', '1642608',
