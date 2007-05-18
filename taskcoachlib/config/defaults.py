@@ -66,7 +66,7 @@ defaults = { \
     'position': '(-1, -1)',
     'iconized': 'False',
     'splash': 'True',
-    'hidewheniconized': 'True',
+    'hidewheniconized': 'False',
     'hidewhenclosed': 'False',
     'tips': 'True',
     'tipsindex': '0',
