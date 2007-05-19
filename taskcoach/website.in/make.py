@@ -68,18 +68,59 @@ try:
 except IOError:
     md5 = ''
 
+prerequisites = '''<a href="http://www.python.org/download/">Python</a> 
+<strong>%(pythonversion)s</strong> (or newer)
+and <a href="http://www.wxpython.org/download.php">wxPython</a>
+<strong>%(wxpythonversion)s</strong> (or newer).'''
+
 pages['download'] = \
-'''        <H3>Download %(name)s</H3>
-        <P>You can download either the source distribution, in which
-        case you need Python <strong>%(pythonversion)s</strong> (or higher) 
-        and wxPython <strong>%(wxpythonversion)s</strong> (or higher), or
-        you can download an executable distribution for Windows or Mac
-        OSX.</P>
-        <P>I test %(name)s on Windows XP SP2, Linux Ubuntu 6, and Mac
-        OSX 10.4. I'd appreciate some feedback if you are able to run it 
-        (or not) on other platforms.</P>
-        <P>Download %(name)s from <A HREF="https://sourceforge.net/project/showfiles.php?group_id=130831">Sourceforge</A>.
+'''        <H3>Download %(name)s (release %(version)s)</H3>
+        <p>
+        <table>
+        <tr><td rowspan=4><img src="windows.png" alt="Windows"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe">Windows 
+        installer</a></b></td></tr>
+        <tr><td>Windows versions supported: Windows 2000, XP, Vista</td></tr>
+        <tr><td>Prerequisites: none.</td></tr>
+        <tr><td>Installation: run the installer; it will guide you through
+        the installation process.</td></tr>
+        </table>
+        </p>
+        <p>
+        <table>
+        <tr><td rowspan=4><img src="mac.png" alt="Mac OS X"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.dmg">Mac OSX package</a></b></td></tr>
+        <tr><td>Mac OS X versions supported: Mac OS X Tiger/10.4 
+        (Universal).</td></tr>
+        <tr><td>Prerequisites: none.</td></tr>
+        <tr><td>Installation: double click the package and drop the %(name)s 
+        application in your programs folder.</td></tr>
+        </table>
+        </p>
+        <p>
+        <table>
+        <tr><td rowspan=5><img src="linux.png" alt="Linux"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm">RPM package</a></b></td></tr>
+        <tr><td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb">Debian package</a></b></td></tr>
+        <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
+        <tr><td>Installation: tbd</td></tr>
+        </table>
+        </p>
+        <p>
+        <table>
+        <tr><td rowspan=6><img src="source.png" alt="Source code"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.src.rpm">Source RPM package</a></b></td></tr>
+        <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.zip">Source zip archive</a></b></td></tr>
+        <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz">Source tar archive</a></b></td></tr>
+        <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
+        <tr><td>Installation: tbd</td></tr>
+        </table>
+        </p>
+        <h3>Download previous releases of %(name)s</h3>
+        <P>Download previous releases of %(name)s from 
+        <A HREF="%(dist_download_prefix)s">Sourceforge</A>.
         </P>
+        <h3>MD5 Digests</h3>
 ''' + md5 
 
 pages['features'] = \

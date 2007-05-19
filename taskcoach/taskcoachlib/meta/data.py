@@ -21,18 +21,19 @@ author_first = 'Frank'
 author_last = 'Niessink'
 author = author_first + ' ' + author_last
 author_email = 'frank@niessink.com'
+filename = 'TaskCoach'
+filename_lower = filename.lower()
 url = 'http://www.taskcoach.org/'
 screenshot = url + 'screenshot-0.62-treeview.png'
 icon = url + 'taskcoach.png'
 pad = url + 'pad.xml'
 download = url + 'download.html'
+dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
 copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)
 license = 'GNU GENERAL PUBLIC LICENSE Version 2, June 1991'
 platform = 'Any'
-filename = 'TaskCoach'
-filename_lower = filename.lower()
 pythonversion = '2.4'
-wxpythonversion = '2.8.3-unicode'
+wxpythonversion = '2.8.4-unicode'
 languages = {
     'English': None, 
     'French': 'fr_FR', 
