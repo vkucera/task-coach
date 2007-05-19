@@ -1,18 +1,18 @@
 Task Coach is listed at the following webpages:
 
-Task Coach Homepage   http://www.taskcoach.org
-Sourceforge homepage  http://www.sourceforge.net/projects/taskcoach
-Freshmeat homepage    http://freshmeat.net/projects/taskcoach
-wxPythonPit           http://wiki.wxpython.org/index.cgi/wxPythonPit_20Apps
-PythonInfo Wiki       http://www.python.org/moin/Applications
-Open Directory        http://dmoz.org/Computers/Software/Freeware/Personal_Information_Managers/
-Vaults of Parnassus   http://py.vaults.ca
-Python Packages Index http://www.python.org/pypi
-Freeware Home         http://www.freewarehome.com/ 
-Wikipedia             http://en.wikipedia.org/wiki/Task_Coach
+Task Coach Homepage    http://www.taskcoach.org
+Sourceforge homepage   http://www.sourceforge.net/projects/taskcoach
+Freshmeat homepage     http://freshmeat.net/projects/taskcoach
+wxPythonPit            http://wiki.wxpython.org/index.cgi/wxPythonPit_20Apps
+PythonInfo Wiki        http://www.python.org/moin/Applications
+Open Directory         http://dmoz.org/Computers/Software/Freeware/Personal_Information_Managers/
+Vaults of Parnassus    http://py.vaults.ca
+Python Packages Index  http://www.python.org/pypi
+Freeware Home          http://www.freewarehome.com/ 
+Wikipedia              http://en.wikipedia.org/wiki/Task_Coach
 MacSoftwareUsingPython http://wiki.python.org/moin/MacPython/MacSoftwareUsingPython
 FSF/UNESCO Free Software Directory http://directory.fsf.org (submitted 2007-04-11)
-CNET Upload.com       http://www.upload.com
-Ohloh                 http://www.ohloh.net/projects/5109
-Apple                 http://www.apple.com/downloads/macosx/productivity_tools/ (submitted 2007-05-06)
-CIA                   http://cia.vc/project/taskcoach
+CNET Upload.com        http://www.upload.com
+Ohloh                  http://www.ohloh.net/projects/5109
+Apple                  http://www.apple.com/downloads/macosx/unix_open_source/taskcoach.html
+CIA                    http://cia.vc/project/taskcoach
