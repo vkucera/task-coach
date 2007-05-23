@@ -103,7 +103,8 @@ pages['download'] = \
         <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm">RPM package</a></b></td></tr>
         <tr><td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb">Debian package</a></b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
-        <tr><td>Installation: tbd</td></tr>
+        <tr><td>Installation: use your package manager to install the 
+        package</td></tr>
         </table>
         </p>
         <p>
@@ -113,7 +114,8 @@ pages['download'] = \
         <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.zip">Source zip archive</a></b></td></tr>
         <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz">Source tar archive</a></b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
-        <tr><td>Installation: tbd</td></tr>
+        <tr><td>Installation: decompress the archive and run <tt>python 
+        setup.py install</tt></td></tr>
         </table>
         </p>
         <h3>Download previous releases of %(name)s</h3>
