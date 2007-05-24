@@ -54,6 +54,7 @@ of stacking order (z-index). */
     z-index:1; /* This allows the content to overlap the right menu in
 narrow windows in good browsers. */
 	-moz-border-radius: 2em;
+	border-radius: 2em;
     }
 
 #navAlpha {
@@ -81,4 +82,5 @@ body>#navBeta {width:190px;}
     padding:10px;
     margin:0px 0px 20px 0px;
     -moz-border-radius: 2em;
+	border-radius: 2em;
     }
