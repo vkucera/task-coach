@@ -14,6 +14,7 @@ events in other situations as well, most notably when changing virtual
 desktops. So, to reduce the chances of confusing new users this option is off 
 by default.''', '1721166')],
     featuresAdded=[
+        Feature('''Added Breton translation thanks to Ronan Le Déroff'''),
         Feature('''Show a tooltip with a task's description when the mouse
 is hovering over a task. Patch provided by Jerome Laheurte.''', '1642608',
 '1619521', '1578623'),
