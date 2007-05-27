@@ -498,7 +498,10 @@ class DragAndDrop(TreeAPIHarmonizer, TreeHelper):
 
     def OnBeginDrag(self, event):
         # We allow only one item to be dragged at a time, to keep it simple
-        self._dragItem = event.GetItem()
+        if self.GetSelections():
+            self._dragItem = self.GetSelections()[0]
+        else:
+            self._dragItem = event.GetItem()
         if self._dragItem and self._dragItem != self.GetRootItem(): 
             self.StartDragging()
             event.Allow()
