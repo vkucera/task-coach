@@ -103,7 +103,7 @@ class LanguagePage(SettingsPage):
              ('es_ES', u'Español (Spanish)'),
              ('sk_SK', u'Slovenčina (Slovak)'),
              ('hu_HU', 'Magyar (Hungarian)'),
-             ('br', 'Brezhoneg (Breton)')],
+             ('br_FR', 'Brezhoneg (Breton)')],
              _('This setting will take effect after you restart %s')%meta.name)
         self.fit()
 
