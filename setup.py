@@ -15,7 +15,7 @@ setupOptions = {
     'packages': ['taskcoachlib'] + 
         ['taskcoachlib.' + subpackage for subpackage in ('meta', 'config', 
         'command', 'widgets', 'gui', 'gui.dialog', 'i18n', 'patterns', 
-        'help', 'domain', 'persistence', 'thirdparty')] +
+        'mailer', 'help', 'domain', 'persistence', 'thirdparty')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
