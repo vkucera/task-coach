@@ -43,11 +43,12 @@ class MainMenu(wx.MenuBar):
         super(MainMenu, self).__init__()
         self.Append(FileMenu(mainwindow, uiCommands, settings), _('&File'))
         self.Append(EditMenu(mainwindow, uiCommands), _('&Edit'))
-        self.Append(ViewMenu(mainwindow, uiCommands), _('&View'))
+        self.Append(ViewMenu(mainwindow, uiCommands, settings), _('&View'))
         self.Append(TaskMenu(mainwindow, uiCommands), _('&Task'))
         self.Append(EffortMenu(mainwindow, uiCommands), _('Eff&ort'))
         self.Append(CategoryMenu(mainwindow, uiCommands), _('&Category'))
-        self.Append(NoteMenu(mainwindow, uiCommands), _('&Note'))
+        if settings.getboolean('feature', 'notes'):
+            self.Append(NoteMenu(mainwindow, uiCommands), _('&Note'))
         self.Append(HelpMenu(mainwindow, uiCommands), _('&Help'))
 
 '''
@@ -142,10 +143,10 @@ class SelectMenu(Menu):
 
 
 class ViewMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, uiCommands, settings):
         super(ViewMenu, self).__init__(mainwindow)
         self.appendMenu(_('New viewer'), 
-            ViewViewerMenu(mainwindow, uiCommands), 'viewnewviewer')
+            ViewViewerMenu(mainwindow, uiCommands, settings), 'viewnewviewer')
         self.appendUICommands(uiCommands, ['viewalltasks'])
         self.appendMenu(_('Tas&ks that are'), 
             ViewTaskStatesMenu(mainwindow, uiCommands))
@@ -166,13 +167,15 @@ class ViewMenu(Menu):
 
 
 class ViewViewerMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, uiCommands, settings):
         super(ViewViewerMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewtasklistviewer', 
+        viewViewerCommands = ['viewtasklistviewer', 
             'viewtasktreeviewer', None, 'viewcategoryviewer', None,
             'vieweffortdetailviewer', 'vieweffortperdayviewer', 
-            'vieweffortperweekviewer', 'vieweffortpermonthviewer', None,
-            'viewnoteviewer'])
+            'vieweffortperweekviewer', 'vieweffortpermonthviewer']
+        if settings.getboolean('feature', 'notes'):
+            viewViewerCommands.extend([None, 'viewnoteviewer'])
+        self.appendUICommands(uiCommands, viewViewerCommands)
         
         
 class ViewTaskColumnsMenu(Menu):

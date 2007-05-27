@@ -88,5 +88,6 @@ defaults = { \
     'notified': meta.data.version,
     'notify': 'True'},
 'behavior': { \
-    'markparentcompletedwhenallchildrencompleted': 'True'}}
-
+    'markparentcompletedwhenallchildrencompleted': 'True'},
+'feature': { \
+    'notes': 'False'}}
