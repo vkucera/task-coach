@@ -72,8 +72,9 @@ class MainWindow(WindowWithPersistentDimensions):
             self.uiCommands, self.settings)
         viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
             self.uiCommands, self.settings)
-        viewerfactory.addNoteViewers(self.viewer, self.taskFile.notes(),
-            self.uiCommands, self.settings)
+        if self.settings.getboolean('feature', 'notes'):
+            viewerfactory.addNoteViewers(self.viewer, self.taskFile.notes(),
+                                         self.uiCommands, self.settings)
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         import menu
