@@ -1,12 +1,12 @@
-
 import os, re, imaplib, ConfigParser, wx, tempfile
+from i18n import _
 
 _RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
 _RX_IMAP    = re.compile('imap-message://([^@]+)@(.+)/(.*)#([0-9]+)')
 
 def getThunderbirdDir():
     if '__WXMAC__' in wx.PlatformInfo:
-	path = os.path.join(os.environ['HOME'], 'Library', 'Thunderbird')
+        path = os.path.join(os.environ['HOME'], 'Library', 'Thunderbird')
     elif os.name == 'posix':
         path = os.path.join(os.environ['HOME'], '.thunderbird')
     elif os.name == 'nt':
@@ -38,6 +38,7 @@ def getDefaultProfileDir():
 
     raise ValueError('No default section in profiles.ini')
 
+
 class ThunderbirdMailboxReader(object):
     """Extracts an e-mail from a Thunderbird file. Behaves like a
     stream object to read this e-mail."""
@@ -51,8 +52,7 @@ class ThunderbirdMailboxReader(object):
         self.url = url
         self.path = mt.group(1).replace('%20', ' ').split('/')
         self.offset = long(mt.group(2))
-        self.filename = os.path.join(getDefaultProfileDir(),
-                                     'Mail',
+        self.filename = os.path.join(getDefaultProfileDir(), 'Mail',
                                      os.path.join(*tuple(self.path)))
 
         self.fp = file(self.filename, 'rb')
@@ -105,6 +105,7 @@ class ThunderbirdMailboxReader(object):
     def saveToFile(self, fp):
         fp.write(self.read())
 
+
 class ThunderbirdImapReader(object):
     _PASSWORDS = {}
 
@@ -125,37 +126,28 @@ class ThunderbirdImapReader(object):
             if line.startswith('user_pref('):
                 exec line in { 'user_pref': user_pref, 'true': True, 'false': False }
 
-        idx = 1
         port = None
         stype = None
         isSecure = False
-        while True:
-            name = 'mail.server.server%d' % idx
-            if config.has_key(name + '.hostname'):
-                if config[name + '.hostname'] == self.server:
-                    if config[name + '.type'] == 'imap':
-                        if config.has_key(name + '.port'):
-                            port = int(config[name + '.port'])
-                        if config.has_key(name + '.socketType'):
-                            stype = config[name + '.socketType']
-                        if config.has_key(name + '.isSecure'):
-                            isSecure = int(config[name + '.isSecure'])
-            else:
+        # We iterate over a maximum of 100 mailservers. You'd think that
+        # mailservers would be numbered consecutively, but apparently
+        # that is not always the case, so we cannot assume that because
+        # serverX does not exist, serverX+1 won't either. 
+        for serverIndex in range(100): 
+            name = 'mail.server.server%d' % serverIndex
+            if config.has_key(name + '.hostname') and \
+               config[name + '.hostname'] == self.server and \
+               config[name + '.type'] == 'imap':
+                if config.has_key(name + '.port'):
+                    port = int(config[name + '.port'])
+                if config.has_key(name + '.socketType'):
+                    stype = config[name + '.socketType']
+                if config.has_key(name + '.isSecure'):
+                    isSecure = int(config[name + '.isSecure'])
                 break
-            idx += 1
 
-        if stype == 3 or isSecure:
-            self.ssl = True
-            if port is None:
-                self.port = 993
-            else:
-                self.port = port
-        else:
-            self.ssl = False
-            if port is None:
-                self.port = 143
-            else:
-                self.port = port
+        self.ssl = bool(stype == 3 or isSecure)
+        self.port = port or {True: 993, False: 143}[self.ssl]
 
     def _getMail(self):
         if self.ssl:
@@ -166,9 +158,8 @@ class ThunderbirdImapReader(object):
         if self._PASSWORDS.has_key((self.server, self.user, self.port)):
             pwd = self._PASSWORDS[(self.server, self.user, self.port)]
         else:
-            pwd = wx.GetPasswordFromUser('Please enter password for user %s on %s:%d' % (self.user,
-                                                                                         self.server,
-                                                                                         self.port))
+            pwd = wx.GetPasswordFromUser(_('Please enter password for user %(user)s on %(server)s:%(port)d') % \
+                                         dict(user=self.user, server=self.server, port=self.port))
             if pwd == '':
                 raise ValueError('User cancelled')
 
@@ -181,7 +172,7 @@ class ThunderbirdImapReader(object):
             if response == 'OK':
                 break
 
-            pwd = wx.GetPasswordFromUser('Wrong password. Please try again.')
+            pwd = wx.GetPasswordFromUser(_('Wrong password. Please try again.'))
             if pwd == '':
                 raise ValueError('User cancelled')
 
@@ -195,14 +186,13 @@ class ThunderbirdImapReader(object):
         response, params = cn.uid('FETCH', str(self.uid), '(RFC822)')
 
         if response != 'OK':
-            raise ValueError('Not such mail: %d' % self.uid)
+            raise ValueError('No such mail: %d' % self.uid)
 
         return params[0][1]
 
     def saveToFile(self, fp):
         fp.write(self._getMail())
 
-
 #==============================================================================
 #
 
