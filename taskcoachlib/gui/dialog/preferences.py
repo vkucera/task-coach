@@ -102,7 +102,8 @@ class LanguagePage(SettingsPage):
              ('ru_RU', u'Русский (Russian)'),
              ('es_ES', u'Español (Spanish)'),
              ('sk_SK', u'Slovenčina (Slovak)'),
-             ('hu_HU', 'Magyar (Hungarian)')],
+             ('hu_HU', 'Magyar (Hungarian)'),
+             ('br', 'Brezhoneg (Breton)')],
              _('This setting will take effect after you restart %s')%meta.name)
         self.fit()
 
