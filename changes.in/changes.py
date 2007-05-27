@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.64.0', 'May ?, 2007',
+Release('0.64.0', 'May 28, 2007',
     bugsFixed=[
         Bug('''Ubuntu users had to manually install the wxaddons package. 
 This package is now included in the Task Coach distribution.'''),
