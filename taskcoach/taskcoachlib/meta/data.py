@@ -36,15 +36,15 @@ pythonversion = '2.4'
 wxpythonversion = '2.8.4-unicode'
 languages = {
     'English': None, 
-    'French': 'fr_FR', 
-    'German': 'de_DE',
-    'Dutch': 'nl_NL',
-    'Russian': 'ru_RU',
-    'ChineseSimplified': 'zh_CN',
-    'Japanese': 'ja_JP',
-    'Spanish': 'es_ES',
-    'Slovak': 'sk_SK',
-    'Hungarian': 'hu_HU',
+    'French': 'fr', 
+    'German': 'de',
+    'Dutch': 'nl',
+    'Russian': 'ru',
+    'ChineseSimplified': 'zh',
+    'Japanese': 'ja',
+    'Spanish': 'es',
+    'Slovak': 'sk',
+    'Hungarian': 'hu',
     'Breton': 'br'}
 languages_list = ','.join(languages.keys())
 
