@@ -197,7 +197,7 @@ class ViewSortMenuTest(ViewMenuTestCase):
 
 class ViewAllTasksTest(ViewMenuTestCase):
     def createMenu(self):
-        return gui.menu.ViewMenu(self.frame, self.uiCommands)
+        return gui.menu.ViewMenu(self.frame, self.uiCommands, self.settings)
 
     def createMainWindow(self):
         return dummy.MainWindow()
