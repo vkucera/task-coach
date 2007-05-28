@@ -137,6 +137,11 @@ pages['features'] = \
             budget, budget left, due date, etc.
             <LI>Several filters to e.g. hide completed tasks or view
             only tasks that are due today. 
+            <LI>Tasks can be created by dragging an e-mail message from 
+            Outlook or Thunderbird onto a task viewer.
+            <LI>Attachments can be added to task by dragging and dropping
+            files, e-mail messages from Outlook or Thunderbird, or URL's onto
+            a task.
             <LI>Task status depends on its subtask and vice versa. E.g. if 
             you mark the last uncompleted subtask as completed, the parent 
             task is automatically marked as completed too.
@@ -195,30 +200,34 @@ pages['i18n'] = \
         or alternatively, if you have a Yahoo id (or don't mind creating one), 
         join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
 
-        <P>To create a new translation, please follow these steps:
+        <P>To create a new translation or update an existing translation, 
+        please follow these steps:
         <OL>
-            <LI>Install a gettext catalogs editor. I recommend 
-            <A HREF="http://www.poedit.org/">poEdit</A>. 
-            <LI>Download the message catalog:
-            <A HREF="messages.pot"><TT>messages.pot</TT></A>. This file
-            contains all text strings to be translated.
-            <LI>Rename <TT>messages.pot</TT> into <TT>yourlanguage.po</TT>.
-            <LI>Start poEdit and load <TT>yourlanguage.po</TT> and 
-            create the translation. Please make sure you understand how
+            <LI>Register at <A HREF="http://launchpad.net">Launchpad</A> and
+            don't forget to set your preferred languages, i.e. the language(s)
+            you want to translate to.
+            <LI>Learn more about 
+            <A HREF="http://translations.launchpad.net/+about">translation 
+            support by Launchpad</A>.
+            <LI>Go to <A HREF="https://launchpad.net/taskcoach">%(name)s at 
+            Launchpad</A> and click "Help translate".
+            <LI>Start contributing to an existing translation or create a new
+            one.
+            <LI>Please make sure you understand how
             <A HREF="http://docs.python.org/lib/typesseq-strings.html">Python
             string formatting</A> works since %(name)s uses both the regular
             '%%s' type of string formatting as well as the mapping key form 
-            '%%(mapping_key)s'.
-            <LI>Mail me the resulting <TT>yourlanguage.po</TT> file. I will
-            include it into %(name)s.
+            '%%(mapping_key)s'. If string formatting is used in the English
+            version of a string, the same formatting should occur in the 
+            translated string. In addition, formatting of the form '%%s' 
+            needs to be in the same order in the translated string as it is 
+            in the English version. Formatting in the form '%%(mapping_key)s'
+            can be ordered differently in the translated string than in the 
+            English version.
         </OL>
-        When a new release of %(name)s is ready, I will make the new
-        <A HREF="messages.pot"><TT>messages.pot</TT></A> available here 
-        so you can update your <TT>.po</TT> file. This is when using poEdit 
-        will really pay off, because it will mark for you which strings have
-        been added or changed and require your attention.</P>
-        <P>These are the language .po files in the current version
-        (%(version)s) of %(name)s:
+        <P>This is the current <A HREF="messages.pot"><TT>message 
+        catalog</TT></A>. These are the language .po files in the current 
+        version (%(version)s) of %(name)s:
         <UL>
         ''' + '\n'.join(['<LI><A HREF="%s.po">%s</A></LI>'%(code, language) for
         language, code in meta.languages.items() if language != 'English']) + '</UL></P>'
