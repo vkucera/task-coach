@@ -1348,7 +1348,7 @@ class UICommands(dict):
             [(_('&Attachments'), _('Show/hide attachment column'), 'attachments'),
              (_('&Categories'), _('Show/hide categories column'), 'categories'),
              (_('&Description'), _('Show/hide description column'), 'taskdescription'),
-             (_('&Reminder'), _('sHow/hide reminder column'), 'reminder'),
+             (_('&Reminder'), _('Show/hide reminder column'), 'reminder'),
              (_('&Start date'), _('Show/hide start date column'), 'startdate'),
              (_('&Due date'), _('Show/hide due date column'), 'duedate'),
              (_('D&ays left'), _('Show/hide days left column'), 'timeleft'),
