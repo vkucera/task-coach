@@ -4,6 +4,10 @@ from changetypes import *
 
 releases = [
             
+Release('0.64.1', 'June ?, 2007',
+    bugsFixed=[
+        Bug('''...''')]),
+            
 Release('0.64.0', 'May 28, 2007',
     bugsFixed=[
         Bug('''Ubuntu users had to manually install the wxaddons package. 
