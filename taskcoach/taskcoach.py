@@ -7,7 +7,13 @@ if not hasattr(sys, "frozen"):
         wxversion.ensureMinimal("2.8-unicode", optionsRequired=True)
     except:
         pass
-    import taskcoachlib
+    try:
+        import taskcoachlib
+    except ImportError:
+        sys.stderr.write('''ERROR: cannot import the library 'taskcoachlib'.
+Please see http://www.taskcoach.org/faq.html for more information and
+possible resolutions.''')
+        sys.exit(1)
     # We don't want to use 'from taskcoachlib import X' all the time, so we add 
     # the taskcoachlib directory to the search path:
     libpath = taskcoachlib.__path__[0]

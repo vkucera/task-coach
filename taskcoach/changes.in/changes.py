@@ -8,7 +8,10 @@ Release('0.64.1', 'June ?, 2007',
     bugsFixed=[
         Bug('''Task Coach would complain about an error when closing the 
 application. This was due to a missing package in the Windows executable
-distribution.''', '1727237')]),
+distribution.''', '1727237'),
+        Bug('''On Linux, Task Coach was not very helpful when the 
+taskcoachlib package is installed for a different python version than the one
+the user is starting Task Coach with. ''', '1728485')]),
             
 Release('0.64.0', 'May 28, 2007',
     bugsFixed=[
