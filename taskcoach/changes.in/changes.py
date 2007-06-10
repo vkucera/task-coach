@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.64.1', 'June ?, 2007',
+Release('0.64.1', 'June 10, 2007',
     bugsFixed=[
         Bug('''Task Coach would complain about an error when closing the 
 application. This was due to a missing package in the Windows executable

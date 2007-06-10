@@ -13,7 +13,7 @@ class VersionChecker(threading.Thread):
     def run(self):
         latestVersion = self.getLatestVersion()
         lastVersionNotified = self.settings.get('version', 'notified')
-        if latestVersion > lastVersionNotified or True:
+        if latestVersion > lastVersionNotified:
             self.settings.set('version', 'notified', latestVersion)
             self.notifyUser(latestVersion)
             
