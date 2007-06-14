@@ -4,6 +4,11 @@ from changetypes import *
 
 releases = [
             
+Release('0.64.2', 'June ?, 2007',
+    bugsFixed=[
+        Bug('''Don't block OS shutdown on Windows.''', '1735532', '1484652',
+            '1489870')]),
+            
 Release('0.64.1', 'June 10, 2007',
     bugsFixed=[
         Bug('''Task Coach would complain about an error when closing the 
