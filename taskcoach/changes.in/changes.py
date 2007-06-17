@@ -6,6 +6,8 @@ releases = [
             
 Release('0.64.2', 'June ?, 2007',
     bugsFixed=[
+        Bug('''Don't take child task priority into account when sorting by 
+priority in the task tree view.''', '1732968'),
         Bug('''Don't block OS shutdown on Windows.''', '1735532', '1484652',
             '1489870')]),
             
