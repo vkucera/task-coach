@@ -173,6 +173,7 @@ installText = header + '''
 You need Python version %(pythonversion)s or higher and wxPython 
 version %(wxpythonversion)s or higher.
 
+
 --- Testing ----------------------------------------------------
 
 Before installing, you may want to run the unittests included.
@@ -204,6 +205,11 @@ to let Python install %(name)s for you. In that case run the
 following command:
 
   python setup.py install
+
+If you have a previous version of %(name)s installed, you may
+need to force old files to be overwritten, like this:
+
+  python setup.py install --force
 
 '''%meta.metaDict + doubleline
 

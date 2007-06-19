@@ -115,7 +115,9 @@ pages['download'] = \
         <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz">Source tar archive</a></b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
         <tr><td>Installation: decompress the archive and run <tt>python 
-        setup.py install</tt></td></tr>
+        setup.py install</tt>. If you have a previous version of %(name)s 
+        installed, you may need to force old files to be overwritten: 
+        <tt>python setup.py install --force</tt>.</td></tr>
         </table>
         </p>
         <h3>Download previous releases of %(name)s</h3>
