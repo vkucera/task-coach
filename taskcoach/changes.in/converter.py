@@ -80,7 +80,7 @@ class ReleaseConverter(object):
                 'y' : len(listToCount) > 1 and 'ies' or 'y' }
 
     def convert(self, release):
-        result = [self.header(release)]
+        result = [self.header(release), self.summary(release)]
         for section, list in [('Bug%(s)s fixed', release.bugsFixed),
                 ('Feature%(s)s added', release.featuresAdded),
                 ('Feature%(s)s changed', release.featuresChanged),
@@ -99,6 +99,9 @@ class ReleaseConverter(object):
     def header(self, release):
         return 'Release %s - %s'%(release.number, release.date)
 
+    def summary(self, release):
+        return release.summary
+    
     def sectionHeader(self, section, list):
         return '\n%s:'%(section%self._addS(list))
         
@@ -122,3 +125,10 @@ class ReleaseToHTMLConverter(ReleaseConverter):
 
     def sectionFooter(self, section, list):
         return '</UL>'
+
+    def summary(self, release):
+        summaryText = super(ReleaseToHTMLConverter, self).summary(release)
+        if summaryText:
+            return '<P>%s</P>'%summaryText
+        else:
+            return ''

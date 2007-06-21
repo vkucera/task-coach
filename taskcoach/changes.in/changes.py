@@ -5,6 +5,8 @@ from changetypes import *
 releases = [
             
 Release('0.64.2', 'June ?, 2007',
+    summary='''This release fixes sorting of tasks by priority
+and makes sure that Task Coach does not block OS shutdown.''',
     bugsFixed=[
         Bug('''Don't take child task priority into account when sorting by 
 priority in the task tree view.''', '1732968'),
