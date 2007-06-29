@@ -28,6 +28,7 @@ class Translator:
         except (AttributeError, KeyError):
             return string
         
-def _(string):
+def translate(string):
     return Translator().translate(string)
 
+_ = translate # This prevents a warning from pygettext.py
