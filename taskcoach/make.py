@@ -120,7 +120,10 @@ elif sys.argv[1] == 'py2app':
             plist=dict(CFBundleIconFile='taskcoach.icns')))))
 else:
     from distutils.core import setup
-    # Prevent bdist_rpm complaining about unpackaged files
+    # Prevent bdist_rpm complaining about most unpackaged files
+    # To keep the rpm build process going when it finds unpackaged files
+    # you also need to create ~/.rpmmacros file containing the line
+    # '%_unpackaged_files_terminate_build 0'.
     setupOptions.update(dict(optimize=1)) 
 
 
