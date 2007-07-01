@@ -1,8 +1,6 @@
 import test, patterns, config
 from unittests import dummy
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
+from domain import task, effort, date
 
 class TaskSorterTest(test.TestCase):
     def setUp(self):
@@ -210,6 +208,15 @@ class TaskSorterTreeModeTest(test.TestCase):
     def testSortByPriority(self):
         self.settings.set('view', 'sortby', 'priority')
         self.settings.set('view', 'sortascending', 'False')
+        self.parent1.setPriority(5)
+        self.child2.setPriority(10)
+        self.failUnless(list(self.sorter).index(self.parent1) < \
+            list(self.sorter).index(self.parent2))
+
+    def testSortByTotalPriority(self):
+        self.settings.set('view', 'sortby', 'totalpriority')
+        self.settings.set('view', 'sortascending', 'False')
+        self.parent1.setPriority(5)
         self.child2.setPriority(10)
         self.failUnless(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))

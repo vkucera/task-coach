@@ -1,7 +1,9 @@
 import threading, wx, meta, urllib2
 from i18n import _
 import gui.dialog.version
-
+# We don't use cElementTree because py2exe somehow does not
+# include cElementTree. ElementTree is no problem though...
+import xml.etree.ElementTree 
     
 class VersionChecker(threading.Thread):
     def __init__(self, settings):
@@ -16,12 +18,11 @@ class VersionChecker(threading.Thread):
             self.notifyUser(latestVersion)
             
     def getLatestVersion(self):
-        import xml.etree.cElementTree
         try:
             padFile = self.retrievePadFile()
         except urllib2.URLError:
             return self.settings.get('version', 'notified')
-        pad = xml.etree.cElementTree.parse(padFile)
+        pad = xml.etree.ElementTree.parse(padFile)
         return pad.findtext('Program_Info/Program_Version')
     
     def retrievePadFile(self):

@@ -108,11 +108,19 @@ class Sorter(patterns.ListDecorator):
         else:
             prepareSortValue = lambda value: value
         kwargs = {}
-        if sortKeyName.startswith('total') or self.__treeMode:
+        if sortKeyName.startswith('total') or (self.__treeMode and sortKeyName != 'priority'):
             kwargs['recursive'] = True
             sortKeyName = sortKeyName.replace('total', '')
         return lambda task: [prepareSortValue(getattr(task, 
             sortKeyName)(**kwargs))]
+    
+    def __capitalize(self, eventType):
+        # eventTypes for task attributes are capitalized if they start with 'total',
+        # but sort keys are not (FIXME)
+        if eventType.startswith('task.total'):
+            return 'task.total' + eventType[len('task.total'):].capitalize()
+        else:
+            return eventType
         
     def __registerObserverForTaskAttribute(self, eventType):
         # Sorter is always observing completion date and start date because
@@ -121,10 +129,11 @@ class Sorter(patterns.ListDecorator):
         # key.
         if eventType not in ('task.completionDate', 'task.startDate'):
             patterns.Publisher().registerObserver(self.reset, 
-                                                  eventType=eventType)
+                                                  eventType=self.__capitalize(eventType))
             
     def __removeObserverForTaskAttribute(self, eventType):
          # See comment at __registerObserverForTaskAttribute.
         if eventType not in ('task.completionDate', 'task.startDate'):
-            patterns.Publisher().removeObserver(self.reset, eventType=eventType)
+            patterns.Publisher().removeObserver(self.reset, 
+                                                eventType=self.__capitalize(eventType))
          

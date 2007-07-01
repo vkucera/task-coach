@@ -4,9 +4,10 @@ class Release:
     def __init__(self, number, date, bugsFixed=None, featuresAdded=None,
             featuresRemoved=None, featuresChanged=None, 
             dependenciesChanged=None, implementationChanged=None,
-            websiteChanges=None):
+            websiteChanges=None, summary=''):
         self.number = number
         self.date = date
+        self.summary = summary
         self.bugsFixed = bugsFixed or []
         self.featuresAdded = featuresAdded or []
         self.featuresRemoved = featuresRemoved or []
