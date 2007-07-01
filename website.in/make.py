@@ -115,7 +115,9 @@ pages['download'] = \
         <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz">Source tar archive</a></b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
         <tr><td>Installation: decompress the archive and run <tt>python 
-        setup.py install</tt></td></tr>
+        setup.py install</tt>. If you have a previous version of %(name)s 
+        installed, you may need to force old files to be overwritten: 
+        <tt>python setup.py install --force</tt>.</td></tr>
         </table>
         </p>
         <h3>Download previous releases of %(name)s</h3>
@@ -255,11 +257,26 @@ pages['faq'] = \
     are just fine. The TaskCoach.ini file is located in C:\Documents and
     Settings\&lt;yourname&gt;\Application Data\TaskCoach if you're on Windows 
     and in /home/&lt;yourname&gt;/.TaskCoach if you're on Linux.</P>
-    <P><I>Can I track effort for more than one task at the same
-    time?</I></P>
-    <P>Yes, when you are tracking effort for a task, select the second
-    task, right-click and select 'New effort...'. When you don't fill in
-    an end-time, effort for that second task will be tracked too.</P>
+    <P><I>I'm on Linux and after running taskcoach.py I get the message 
+    "ERROR: cannot import the library 'taskcoachlib' " and I was redirected 
+    here.</I></P>
+    <P>This probably means that the python version you are using to run
+    taskcoach.py is different than the python version where the taskcoachlib 
+    folder was installed to, and hence python cannot find the library. 
+    The taskcoachlib folder is located in 
+    /usr/lib/python2.X/site-packages. If you find the taskcoachlib folder and
+    run taskcoach.py with the same python version, Task Coach should run. So 
+    if taskcoachlib is in /usr/lib/python2.X/site-packages and taskcoach.py is
+    located in /usr/bin than 'python2.X /usr/bin/taskcaoch.py' should work. To
+    solve this more permanently you can move the taskcoachlib folder to the
+    site-packages folder of your default python. To find out what your default
+    python is, just start python from the command line, look for the version
+    number and then exit with Control-D. Next, move the taskcoachlib folder 
+    from its current location to the site-packages folder of your default python
+    version as follows (2.D is the version number of your default python
+    version, 2.C is the version number where taskcoachlib was installed):
+    'mv /usr/lib/python2.C/site-packages/taskcoachlib 
+    /usr/lib/python2.D/site-packages'. Now running taskcoach.py should work.</P> 
     <P><I>I'm on Linux, using a window manager with virtual desktops. If
     I switch (back) to the virtual desktop where %(name)s was running, I can 
     no longer find it. Where did %(name)s go?</I></P>
@@ -272,6 +289,11 @@ pages['faq'] = \
     the user minimizing the window. If you run into this issue, you may
     want to change the setting 'Hide main window when iconized', see
     'Edit' -> 'Preferences'.</P>
+    <P><I>Can I track effort for more than one task at the same
+    time?</I></P>
+    <P>Yes, when you are tracking effort for a task, select the second
+    task, right-click and select 'New effort...'. When you don't fill in
+    an end-time, effort for that second task will be tracked too.</P>
     <P><I>How can I mark a task 'inactive'?</I></P>
     <P>Set the start date of the task to a future data or don't set 
     a start date at all by unchecking the start date check box.</P>

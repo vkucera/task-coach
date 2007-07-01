@@ -120,6 +120,9 @@ elif sys.argv[1] == 'py2app':
             plist=dict(CFBundleIconFile='taskcoach.icns')))))
 else:
     from distutils.core import setup
+    # On Fedora, to keep the rpm build process going when it finds 
+    # unpackaged files you need to create a ~/.rpmmacros file 
+    # containing the line '%_unpackaged_files_terminate_build 0'.
 
 
 if __name__ == '__main__':

@@ -7,7 +7,13 @@ if not hasattr(sys, "frozen"):
         wxversion.ensureMinimal("2.8-unicode", optionsRequired=True)
     except:
         pass
-    import taskcoachlib
+    try:
+        import taskcoachlib
+    except ImportError:
+        sys.stderr.write('''ERROR: cannot import the library 'taskcoachlib'.
+Please see http://www.taskcoach.org/faq.html for more information and
+possible resolutions.''')
+        sys.exit(1)
     # We don't want to use 'from taskcoachlib import X' all the time, so we add 
     # the taskcoachlib directory to the search path:
     libpath = taskcoachlib.__path__[0]
@@ -21,8 +27,13 @@ wx.SystemOptions.SetOptionInt('mac.listctrl.always_use_generic', 1)
         
 class wxApp(wx.App):
     def OnInit(self):
+        self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
         self.SetAssertMode(wx.PYAPP_ASSERT_DIALOG)
         return True
+    
+    def onQueryEndSession(self, event):
+        # This makes sure we don't block shutdown on Windows
+        pass
     
 
 class App(object):

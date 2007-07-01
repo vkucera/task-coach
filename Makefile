@@ -4,24 +4,9 @@
 
 PYTHON="python" # python should be on the path
 
-ifeq ($(shell uname),Linux)
-    PYTHONTOOLDIR="/usr/share/doc/python2.4/examples/Tools"
-    GETTEXT="pygettext"
-endif
-
-ifeq ($(shell uname),Darwin)
-    PYTHONTOOLDIR="/Applications/MacPython 2.4/Extras/Tools"
-    GETTEXT=python $(PYTHONTOOLDIR)/i18n/pygettext.py
-endif
-
 ifeq ($(shell uname),CYGWIN_NT-5.1)
-    PYTHONEXEDIR=$(shell python -c "import sys, re; print re.sub('/cygdrive/([a-z])', r'\1:', '\ '.join(sys.argv[1:])).strip('python')" $(shell which $(PYTHON)))
-    PYTHONTOOLDIR=$(PYTHONEXEDIR)/Tools
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
-    GETTEXT=python $(PYTHONTOOLDIR)/i18n/pygettext.py
 endif
-
-WEBCHECKER=$(PYTHONTOOLDIR)/webchecker/webchecker.py
 
 TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.version")
 
@@ -31,18 +16,17 @@ windist: icons i18n
 	$(PYTHON) make.py py2exe
 	$(INNOSETUP) build/taskcoach.iss
 
-wininstaller:
-	$(INNOSETUP) build/taskcoach.iss
-
 sdist: icons changes i18n
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
-lindist: icons changes i18n
+rpm: icons changes i18n
 	$(PYTHON) make.py bdist_rpm --requires "python>=2.5,python-wxgtk>=2.8.4,python-wxaddons" --group "Applications/Productivity"
+
+deb: rpm
 	export EMAIL="frank@niessink.com"
 	cd dist; sudo alien --keep-version *.noarch.rpm; cd ..
 
-macdist: icons i18n
+dmg: icons i18n
 	$(PYTHON) make.py py2app
 	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach-$(TCVERSION).dmg
 
@@ -51,10 +35,10 @@ icons:
 
 website: changes
 	cd website.in; $(PYTHON) make.py; cd ..
-	$(PYTHON) $(WEBCHECKER) website.out/index.html
+	$(PYTHON) tools/webchecker.py website.out/index.html
 
 i18n:
-	$(GETTEXT) --output-dir i18n.in taskcoachlib
+	$(PYTHON) tools/pygettext.py --output-dir i18n.in taskcoachlib
 	cd i18n.in; $(PYTHON) make.py
 
 changes:
