@@ -10,7 +10,7 @@ class TaskTreeViewerTestCase(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.taskList = task.sorter.Sorter(task.filter.ViewFilter( \
             task.TaskList(), settings=self.settings, treeMode=True), 
-            settings=self.settings, treeMode=True)
+            treeMode=True)
         self.categories = category.CategoryList()
         
     def assertItems(self, *tasks):
@@ -55,8 +55,6 @@ class CommonTests(TaskViewerTest.CommonTests):
         self.assertItems()
 
     def testChildOrder(self):
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortascending', 'True')
         child1 = task.Task(subject='1')
         self.task.addChild(child1)
         child2 = task.Task(subject='2')
@@ -73,41 +71,6 @@ class CommonTests(TaskViewerTest.CommonTests):
         self.taskList.extend([self.task, task2])
         self.assertItems((self.task, 1), child, task2)
             
-    def testReverseSortOrder(self):
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortascending', 'True')
-        child = task.Task(subject='child')
-        self.task.addChild(child)
-        task2 = task.Task(subject='zzz')
-        self.taskList.extend([self.task, task2])
-        self.settings.set('view', 'sortascending', 'False')
-        self.assertItems(task2, (self.task, 1), child)
-
-    def testReverseSortOrderWithGrandchildren(self):
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortascending', 'True')
-        child = task.Task(subject='child')
-        self.task.addChild(child)
-        grandchild = task.Task(subject='grandchild')
-        child.addChild(grandchild)
-        task2 = task.Task(subject='zzz')
-        self.taskList.extend([self.task, task2])
-        self.settings.set('view', 'sortascending', 'False')
-        self.assertItems(task2, (self.task, 1), (child, 1), grandchild)
-                
-    def testSortByDueDate(self):
-        self.settings.set('view', 'sortby', 'subject')
-        child = task.Task(subject='child')
-        self.task.addChild(child)
-        task2 = task.Task('zzz')
-        child2 = task.Task('child 2')
-        task2.addChild(child2)
-        self.taskList.extend([self.task, task2])
-        self.assertItems((self.task, 1), child, (task2, 1), child2)
-        child2.setDueDate(date.Today())
-        self.settings.set('view', 'sortby', 'dueDate')
-        self.assertItems((task2, 1), child2, (self.task, 1), child)
-        
     def testViewDueTodayHidesTasksNotDueToday(self):
         self.settings.set('view', 'tasksdue', 'Today')
         child = task.Task(subject='child')
@@ -137,9 +100,7 @@ class CommonTests(TaskViewerTest.CommonTests):
         self.task.addChild(child1)
         self.task.addChild(child2)
         self.taskList.append(self.task)
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortascending', 'False')
-        self.assertEqual((0, 1), self.viewer.getIndexOfItem(child1))
+        self.assertEqual((0, 0), self.viewer.getIndexOfItem(child1))
         
         
 class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):

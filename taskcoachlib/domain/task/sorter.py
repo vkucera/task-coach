@@ -1,45 +1,18 @@
 import patterns
 from domain import date
 
-class SortOrderReverser(object):
-    ''' This class is responsible for reversing the sort order from ascending
-        to descending or vice versa when the sort key setting is set to the 
-        same sort key twice in a row. In other words, this class will flip the 
-        sort order when a user clicks on the same column in a list view twice
-        in a row. '''
-
-    # SortOrderReverser is a singleton so it can be used by multiple 
-    # (Task)Sorter's.
-    __metaclass__ = patterns.Singleton 
-    
-    def __init__(self, previousSortKey, *args, **kwargs):
-        self.__previousSortKey = previousSortKey
-        super(SortOrderReverser, self).__init__(*args, **kwargs)    
-        patterns.Publisher().registerObserver(self.onSortKeyChanged, 
-            eventType='view.sortby')
-            
-    def onSortKeyChanged(self, event):
-        settings, newSortKey = event.source(), event.value()
-        if newSortKey == self.__previousSortKey:
-            newSortOrder = not settings.getboolean('view', 'sortascending')
-            settings.set('view', 'sortascending', str(newSortOrder))
-        else:        
-            self.__previousSortKey = newSortKey
-
 
 class Sorter(patterns.ListDecorator):
     def __init__(self, *args, **kwargs):
-        self.__settings = kwargs.pop('settings')
         self.__treeMode = kwargs.pop('treeMode', False)
-        self.__previousSortKey = self.__settings.get('view', 'sortby')
-        patterns.Publisher().registerObserver(self.onSortKeyChanged, 
-            eventType='view.sortby')
-        for eventType in ('view.sortascending', 'view.sortbystatusfirst', 
-            'view.sortcasesensitive', 'task.startDate', 'task.completionDate'):
+        self.__sortKey = kwargs.pop('sortBy', 'subject')
+        self.__sortAscending = kwargs.pop('sortAscending', True)
+        self.__sortCaseSensitive = kwargs.pop('sortCaseSensitive', True)
+        self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
+        for eventType in ('task.startDate', 'task.completionDate'):
             patterns.Publisher().registerObserver(self.reset, 
                                                   eventType=eventType)
-        self.__registerObserverForTaskAttribute('task.%s'%self.__previousSortKey)
-        SortOrderReverser(self.__previousSortKey)
+        self.__registerObserverForTaskAttribute('task.%s'%self.__sortKey)
         super(Sorter, self).__init__(*args, **kwargs)
         
     def sortEventType(self):
@@ -52,24 +25,31 @@ class Sorter(patterns.ListDecorator):
     # We don't need to call self.reset when removing items because removing
     # items does not influence the sort order.
     
-    def onSortKeyChanged(self, event):
-        newSortKey, previousSortKey = event.value(), self.__previousSortKey
-        if newSortKey == previousSortKey:
-            # We don't call self.reset() because the sort order will be changed
-            # by the SortOrderReverser, which will trigger another event
-            pass
-        else:
-            self.__removeObserverForTaskAttribute('task.%s'%previousSortKey)
-            self.__registerObserverForTaskAttribute('task.%s'%newSortKey)
-            self.__previousSortKey = newSortKey
-            self.reset()
-     
+    def sortBy(self, sortKey):
+        if sortKey == self.__sortKey:
+            return # no need to sort
+        self.__removeObserverForTaskAttribute('task.%s'%self.__sortKey)
+        self.__registerObserverForTaskAttribute('task.%s'%sortKey)
+        self.__sortKey = sortKey
+        self.reset()
+            
+    def sortAscending(self, sortAscending):
+        self.__sortAscending = sortAscending
+        self.reset()
+        
+    def sortByTaskStatusFirst(self, sortByTaskStatusFirst):
+        self.__sortByTaskStatusFirst = sortByTaskStatusFirst
+        self.reset()
+        
+    def sortCaseSensitive(self, sortCaseSensitive):
+        self.__sortCaseSensitive = sortCaseSensitive
+        self.reset()
+        
     def reset(self, event=None):
         ''' reset does the actual sorting. If the order of the list changes, 
             observers are notified by means of the list-sorted event. '''
         oldSelf = self[:]
-        self.sort(key=self.__createSortKey(), 
-            reverse=not self.__settings.getboolean('view', 'sortascending'))
+        self.sort(key=self.__createSortKey(), reverse=not self.__sortAscending)
         if self != oldSelf:
             patterns.Publisher().notifyObservers(patterns.Event(self, 
                 self.sortEventType()))
@@ -88,8 +68,8 @@ class Sorter(patterns.ListDecorator):
         return lambda task: statusSortKey(task) + regularSortKey(task)
 
     def __createStatusSortKey(self):
-        if self.__settings.getboolean('view', 'sortbystatusfirst'):
-            if self.__settings.getboolean('view', 'sortascending'):
+        if self.__sortByTaskStatusFirst:
+            if self.__sortAscending:
                 return lambda task: [task.completed(), task.inactive()]
             else:
                 return lambda task: [not task.completed(), not task.inactive()]
@@ -97,9 +77,8 @@ class Sorter(patterns.ListDecorator):
             return lambda task: []
 
     def __createRegularSortKey(self):
-        sortKeyName = self.__settings.get('view', 'sortby')
-        if not self.__settings.getboolean('view', 'sortcasesensitive') \
-            and sortKeyName == 'subject':
+        sortKeyName = self.__sortKey
+        if not self.__sortCaseSensitive and sortKeyName == 'subject':
             prepareSortValue = lambda subject: subject.lower()
         elif sortKeyName == 'categories':
             prepareSortValue = lambda categories: sorted([category.subject() for category in categories])

@@ -25,10 +25,8 @@ class CommonTests:
         self.assertEqual(_('Due date'), self.viewer.GetColumn(1).GetText())
         self.assertEqual(2, self.viewer.GetColumnCount())
         
-    def DONTRUNtestShowSort_Subject(self):
-        # This tests only fails for the TaskList (i.e. the ListCtrl),
-        # but succeeds for the TaskTreeList (i.e. the TreeListCtrl . Weird.
-        self.settings.set('view', 'sortby', 'subject')
+    def testShowSort_Subject(self):
+        self.viewer.sortBy('subject')
         self.assertNotEqual(-1, self.viewer.GetColumn(0).GetImage())
         self.assertEqual(-1, self.viewer.GetColumn(1).GetImage())
     
@@ -77,16 +75,17 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         super(TaskListViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
-        self.taskList = task.sorter.Sorter(task.TaskList(), 
-            settings=self.settings)
-        self.settings.set('view', 'sortby', 'subject')
+        self.taskList = task.sorter.Sorter(task.TaskList())
         self.task = task.Task('task')
+        viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+            self.settings, 'mainviewer')
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
-                self.taskList, effort.EffortList(self.taskList), 
+            gui.uicommand.UICommands(self.frame, None, viewerContainer, 
+                self.settings, self.taskList, effort.EffortList(self.taskList), 
                 self.categories, note.NoteContainer()), self.settings, 
                 categories=self.categories)
-        
+        self.viewer.sortBy('subject')
+                
     def assertItems(self, *tasks):
         self.assertEqual(len(tasks), self.viewer.size())
         for index, task in enumerate(tasks):
@@ -136,8 +135,6 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.assertItems(child, self.task)
            
     def testMarkCompleted(self):
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortascending', 'True')
         task2 = task.Task(subject='task2')
         self.taskList.extend([self.task, task2])
         self.assertItems(self.task, task2)
@@ -145,8 +142,8 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.assertItems(task2, self.task)
             
     def testSortByDueDate(self):
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortascending', 'True')
+        self.viewer.sortBy('subject')
+        self.viewer.setSortOrderAscending(True)
         child = task.Task(subject='child')
         self.task.addChild(child)
         task2 = task.Task('zzz')
@@ -155,6 +152,6 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.taskList.extend([self.task, task2])
         self.assertItems(child, child2, self.task, task2) 
         child2.setDueDate(date.Today())
-        self.settings.set('view', 'sortby', 'dueDate')
+        self.viewer.sortBy('dueDate')
         self.assertItems(child2, child, self.task, task2)
 

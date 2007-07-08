@@ -6,18 +6,76 @@ class ViewerTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.task = task.Task()
-        self.taskList = task.sorter.Sorter(task.TaskList([self.task]), 
-            settings=self.settings)
+        self.taskList = task.sorter.Sorter(task.TaskList([self.task]))
         effortList = effort.EffortList(self.taskList)
         categories = category.CategoryList()
         notes = note.NoteContainer()
         self.viewer = dummy.ViewerWithDummyWidget(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, None, self.settings, self.taskList, 
-            effortList, categories, notes), self.settings)
+            gui.uicommand.UICommands(self.frame, None, None, 
+                self.settings, self.taskList, effortList, categories, notes), 
+            self.settings)
 
     def testSelectAll(self):
         self.viewer.selectall()
         self.assertEqual([self.task], self.viewer.curselection())
+
+
+class ViewerWithColumnsTest(test.wxTestCase):
+    def setUp(self):
+        self.settings = config.Settings(load=False)
+        self.task = task.Task()
+        self.taskList = task.sorter.Sorter(task.TaskList([self.task]))
+        effortList = effort.EffortList(self.taskList)
+        categories = category.CategoryList()
+        notes = note.NoteContainer()
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+            self.settings, 'mainviewer')
+        self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
+            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+                self.settings, self.taskList, effortList, categories, notes), 
+            self.settings, categories=categories)
+        
+    def testIsSortable(self):
+        self.failUnless(self.viewer.isSortable())
+    
+    def testSortBy(self):
+        self.viewer.sortBy('subject')
+        self.assertEqual('subject', 
+            self.settings.get(self.viewer.settingsSection(), 'sortby'))
+        
+    def testSortByTwiceFlipsSortOrder(self):
+        self.viewer.sortBy('subject')
+        self.viewer.setSortOrderAscending(True)
+        self.viewer.sortBy('subject')
+        self.failIf(self.viewer.isSortOrderAscending())
+
+    def testIsSortedBy(self):
+        self.viewer.sortBy('description')
+        self.failUnless(self.viewer.isSortedBy('description'))
+        
+    def testSortOrderAscending(self):
+        self.viewer.setSortOrderAscending(True)
+        self.failUnless(self.viewer.isSortOrderAscending())
+
+    def testSortOrderDescending(self):
+        self.viewer.setSortOrderAscending(False)
+        self.failIf(self.viewer.isSortOrderAscending())
+                
+    def testSetSortCaseSensitive(self):
+        self.viewer.setSortCaseSensitive(True)
+        self.failUnless(self.viewer.isSortCaseSensitive())
+        
+    def testSetSortCaseInsensitive(self):
+        self.viewer.setSortCaseSensitive(False)
+        self.failIf(self.viewer.isSortCaseSensitive())
+
+    def testSetSortByTaskStatusFirst(self):
+        self.viewer.setSortByTaskStatusFirst(True)
+        self.failUnless(self.viewer.isSortByTaskStatusFirst())
+        
+    def testSetNoSortByTaskStatusFirst(self):
+        self.viewer.setSortByTaskStatusFirst(False)
+        self.failIf(self.viewer.isSortByTaskStatusFirst())
 
 
 class TaskListViewerUnderTest(dummy.TaskListViewerWithDummyWidget):
@@ -54,13 +112,14 @@ class TaskListViewerTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
-        self.taskList = task.sorter.Sorter(task.TaskList([self.task]), 
-            settings=self.settings)
+        self.taskList = task.sorter.Sorter(task.TaskList([self.task]))
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+            self.settings, 'mainviewer')
         self.viewer = TaskListViewerUnderTest(self.frame,
-            self.taskList, gui.uicommand.UICommands(self.frame, None, None, 
-                self.settings, self.taskList, effort.EffortList(self.taskList), 
-                self.categories, self.notes), self.settings, 
-                categories=self.categories)
+            self.taskList, gui.uicommand.UICommands(self.frame, None, 
+                self.viewerContainer, self.settings, self.taskList, 
+                effort.EffortList(self.taskList), self.categories, self.notes), 
+            self.settings, categories=self.categories)
 
     def testGetTimeSpent(self):
         self.settings.set('view', 'timespent', 'True')
@@ -150,6 +209,7 @@ class TaskListViewerTest(test.wxTestCase):
         expectedColor = wx.Color(*eval(self.settings.get('color', 'inactivetasks')))
         self.assertEqual(expectedColor, self.viewer.getColor(self.task))
 
+
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
         taskList = task.TaskList()
@@ -157,10 +217,12 @@ class ViewerBaseClassTest(test.wxTestCase):
         categories = category.CategoryList()
         notes = note.NoteContainer()
         settings = config.Settings(load=False)
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+            settings, 'mainviewer')
         try:
             baseViewer = gui.viewer.Viewer(self.frame, taskList,
-                gui.uicommand.UICommands(self.frame, None, None, settings, taskList,
-                    effortList, categories, notes), {})
+                gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+                    settings, taskList, effortList, categories, notes), {})
             self.fail('Expected NotImplementedError')
         except NotImplementedError:
             pass
@@ -174,6 +236,8 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+            self.settings, 'mainviewer')
         self.viewer = self.createViewer()
 
     def getItemsFromIterator(self):
@@ -221,8 +285,9 @@ class ViewerIteratorTests(object):
 class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
     def createViewer(self):
         return gui.viewer.TaskTreeViewer(self.frame, self.taskList,
-            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
-            self.taskList, self.effortList, self.categories, self.notes), 
+            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+                self.settings, self.taskList, self.effortList, self.categories, 
+                self.notes), 
             self.settings, categories=self.categories)
     
     def expectedParentAndChildOrder(self, parent, child):
@@ -232,9 +297,10 @@ class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
 class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
     def createViewer(self):
         return gui.viewer.TaskListViewer(self.frame, self.taskList,
-            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
-                self.taskList, self.effortList, self.categories, self.notes), 
-                self.settings, categories=self.categories)
+            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+                self.settings, self.taskList, self.effortList, self.categories, 
+                self.notes), 
+            self.settings, categories=self.categories)
 
     def expectedParentAndChildOrder(self, parent, child):
         return [child, parent]
@@ -260,9 +326,11 @@ class CompositeEffortListViewerTest(test.wxTestCase):
 class UpdatePerSecondViewerTests(object):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.taskList = task.sorter.Sorter(task.TaskList(), settings=self.settings)
+        self.taskList = task.sorter.Sorter(task.TaskList(), sortBy='dueDate')
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+            self.settings, 'mainviewer')
         self.updateViewer = self.createUpdateViewer()
         self.trackedTask = task.Task(subject='tracked')
         self.trackedTask.addEffort(effort.Effort(self.trackedTask))
@@ -270,9 +338,10 @@ class UpdatePerSecondViewerTests(object):
         
     def createUpdateViewer(self):
         return self.ListViewerClass(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
-            self.taskList, effort.EffortList(self.taskList), self.categories, 
-            self.notes), self.settings, categories=self.categories)
+            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+                self.settings, self.taskList, effort.EffortList(self.taskList), 
+                self.categories, self.notes), 
+            self.settings, categories=self.categories)
         
     def testViewerHasRegisteredWithClock(self):
         self.failUnless(self.updateViewer.onEverySecond in
@@ -288,8 +357,7 @@ class UpdatePerSecondViewerTests(object):
         self.taskList.append(task.Task('not tracked'))
         self.updateViewer.onEverySecond(patterns.Event(date.Clock(),
             'clock.second'))
-        self.assertEqual([self.taskList.index(self.trackedTask)], 
-            self.updateViewer.widget.refreshedItems)
+        self.assertEqual(1, len(self.updateViewer.widget.refreshedItems))
 
     def testStopTrackingRemovesViewerFromClockObservers(self):
         self.trackedTask.stopTracking()

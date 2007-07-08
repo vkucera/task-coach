@@ -321,9 +321,13 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
         self.Bind(wx.EVT_LIST_COL_CLICK, self.onColumnClick)
         self.__currentSortColumn = self._getColumn(0)
         self.__currentSortImageIndex = -1
-        
+                
     def onColumnClick(self, event):
-        self._getColumn(event.GetColumn()).sort(event)
+        column = self._getColumn(event.GetColumn())
+        event.Skip()
+        # Use CallAfter to make sure the tab this control is in is activated 
+        # before we process the column click:
+        wx.CallAfter(column.sort, event)
         
     def showSortColumn(self, column):
         if column != self.__currentSortColumn:

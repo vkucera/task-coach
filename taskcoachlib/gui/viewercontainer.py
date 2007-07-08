@@ -25,11 +25,12 @@ class ViewerContainer(object):
     
     def viewerChangeEventType(self):
         return '%s (%s).viewerChange'%(self.__class__, id(self))
-            
+    
     def __getattr__(self, method):
         ''' Return a function that will call the method on the first viewer 
             that both has the requested method and does not raise an exception.
-            Start looking in the current viewer. '''
+            Start looking in the current viewer. NB: this auto forwarding only 
+            works for methods, not for properties. '''
         def findFirstViewer(*args, **kwargs):
             for viewer in [self[self.__currentPageNumber]] + list(self):
                 if hasattr(viewer, method):

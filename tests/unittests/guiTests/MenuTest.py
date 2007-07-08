@@ -76,23 +76,26 @@ class MockIOController:
     def open(self, *args, **kwargs):
         self.openCalled = True
 
+
     
 class RecentFilesMenuTest(test.wxTestCase):
     def setUp(self):
         self.ioController = MockIOController()
         self.settings = config.Settings(load=False)
-        self.taskList = task.TaskList()
+        self.taskList = task.sorter.Sorter(task.TaskList())
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
+        self.notes = note.NoteContainer()
+        self.uiCommands = gui.uicommand.UICommands(self.frame, 
+            self.ioController, None, self.settings, self.taskList, 
+            self.effortList, self.categories, self.notes)
         self.initialFileMenuLength = len(self.createFileMenu())
         self.filename1 = 'c:/Program Files/TaskCoach/test.tsk'
         self.filename2 = 'c:/two.tsk'
         self.filenames = []
         
     def createFileMenu(self):
-        return gui.menu.FileMenu(self.frame, gui.uicommand.UICommands(self.frame,
-            self.ioController, None, self.settings, self.taskList, 
-            self.effortList, self.categories, note.NoteContainer()), self.settings)
+        return gui.menu.FileMenu(self.frame, self.uiCommands, self.settings)
         
     def setRecentFilesAndCreateMenu(self, *filenames):
         self.addRecentFiles(*filenames)
@@ -153,19 +156,49 @@ class RecentFilesMenuTest(test.wxTestCase):
         self.assertRecentFileMenuItems(self.filename1)
 
 
+class MockViewerContainer:
+    def __init__(self, *args, **kwargs):
+        self.__sortBy = 'subject'
+        self.__ascending = True
+        
+    def isSortable(self):
+        return True
+        
+    def setSortBy(self, sortKey):
+        self.__sortBy = sortKey
+        
+    def isSortedBy(self, sortKey):
+        return sortKey == self.__sortBy
+
+    def isSortOrderAscending(self, *args, **kwargs):
+        return self.__ascending
+    
+    def setSortOrderAscending(self, ascending=True):
+        self.__ascending = ascending
+
+    def isSortByTaskStatusFirst(self):
+        return True
+    
+    def isSortCaseSensitive(self):
+        return True
+    
+
 class ViewMenuTestCase(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.mainWindow = self.createMainWindow()
         self.filteredTaskList = self.createFilteredTaskList()
-        self.uiCommands = uicommand.UICommands(self.mainWindow, None, None, 
-            self.settings, self.filteredTaskList, 
+        self.viewerContainer = MockViewerContainer()
+        self.uiCommands = uicommand.UICommands(self.mainWindow, None, 
+            self.viewerContainer, self.settings, self.filteredTaskList, 
             effort.EffortList(self.filteredTaskList), category.CategoryList(),
             note.NoteContainer())
+        self.menuBar = wx.MenuBar()
+        self.parentMenu = wx.Menu()
+        self.menuBar.Append(self.parentMenu, 'parentMenu')
         self.menu = self.createMenu()
-        menuBar = wx.MenuBar()
-        menuBar.Append(self.menu, 'menu')
-        self.frame.SetMenuBar(menuBar)
+        self.parentMenu.AppendSubMenu(self.menu, 'menu')
+        self.frame.SetMenuBar(self.menuBar)
         
     def createMainWindow(self):
         return None
@@ -176,20 +209,22 @@ class ViewMenuTestCase(test.wxTestCase):
 
 class ViewSortMenuTest(ViewMenuTestCase):
     def createMenu(self):
-        return gui.menu.SortMenu(self.frame, self.uiCommands)
+        self.frame.viewer = self.viewerContainer
+        return gui.menu.SortMenu(self.frame, self.uiCommands, self.parentMenu, 
+            'menu')
         
     def testSortOrderAscending(self):
-        self.settings.set('view', 'sortascending', 'True')
+        self.viewerContainer.setSortOrderAscending(True)
         self.menu.openMenu()
         self.failUnless(self.menu.FindItemByPosition(0).IsChecked())
         
     def testSortOrderDescending(self):
-        self.settings.set('view', 'sortascending', 'False')
+        self.viewerContainer.setSortOrderAscending(False)
         self.menu.openMenu()
         self.failIf(self.menu.FindItemByPosition(0).IsChecked())
 
     def testSortBySubject(self):
-        self.settings.set('view', 'sortby', 'subject')
+        self.viewerContainer.setSortBy('subject')
         self.menu.openMenu()
         self.failIf(self.menu.FindItemByPosition(3).IsChecked())
         self.failUnless(self.menu.FindItemByPosition(4).IsChecked())

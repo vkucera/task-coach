@@ -160,7 +160,7 @@ class ViewMenu(Menu):
         self.appendMenu(_('&Tree options'), 
             ViewTreeOptionsMenu(mainwindow, uiCommands), 'treeview')
         self.appendUICommands(uiCommands, [None])
-        self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands))
+        self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands, self, _('&Sort')))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
         self.appendUICommands(uiCommands, ['viewstatusbar'])   
@@ -247,8 +247,10 @@ class ViewTreeOptionsMenu(Menu):
 
 
 class SortMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, uiCommands, parentMenu, labelInParentMenu):
         super(SortMenu, self).__init__(mainwindow)
+        self._parentMenu = parentMenu
+        self._labelInParentMenu = labelInParentMenu
         # NOTE: 'viewsortorder' needs to be added first to properly initialize 
         # ascending/descending order
         self.appendUICommands(uiCommands, ['viewsortorder', 
@@ -264,7 +266,12 @@ class SortMenu(Menu):
             'viewsortbyfixedfee', 'viewsortbyreminder', 
             'viewsortbylastmodificationtime', 
             'viewsortbytotallastmodificationtime'])
-                
+        mainwindow.Bind(wx.EVT_UPDATE_UI, self.onUpdateUI)
+
+    def onUpdateUI(self, event):
+        myId = self._parentMenu.FindItem(self._labelInParentMenu)
+        self._parentMenu.Enable(myId, self._window.viewer.isSortable())
+        event.Skip()
     
 class ToolBarMenu(Menu):
     def __init__(self, mainwindow, uiCommands):

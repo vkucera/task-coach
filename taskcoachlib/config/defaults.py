@@ -54,13 +54,19 @@ defaults = { \
     'mainviewer': '0',
     'effortviewerineditor': '0',
     'language': 'en_US',
-    'sortby': 'dueDate',
-    'sortascending': 'True',
-    'sortbystatusfirst': 'True',
-    'sortcasesensitive': 'True',
     'tasksearchfilterstring': '',
     'tasksearchfiltermatchcase': 'False',
     'taskcategoryfiltermatchall': 'True'},
+'tasklistviewer': { \
+    'sortby': 'dueDate',
+    'sortascending': 'True',
+    'sortbystatusfirst': 'True',
+    'sortcasesensitive': 'True' },
+'tasktreelistviewer': { \
+    'sortby': 'dueDate',
+    'sortascending': 'True',
+    'sortbystatusfirst': 'True',
+    'sortcasesensitive': 'True' },
 'window': { \
     'size': '(600, 500)',
     'position': '(-1, -1)',

@@ -8,8 +8,7 @@ class Viewer(wx.Panel):
     ''' A Viewer shows the contents of a model (a list of tasks or a list of 
         efforts) by means of a widget (e.g. a ListCtrl or a TreeListCtrl).'''
         
-    def __init__(self, parent, list, uiCommands, settings=None, *args, **kwargs):
-        # FIXME: Are settings still optional?
+    def __init__(self, parent, list, uiCommands, settings, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1) # FIXME: Pass *args, **kwargs
         self.parent = parent # FIXME: Make instance variables private
         self.settings = settings
@@ -100,6 +99,12 @@ class Viewer(wx.Panel):
     
     def getColor(self, item):
         return wx.BLACK
+    
+    def settingsSection(self):
+        return 'view'
+    
+    def isSortable(self):
+        return False
     
         
 class ListViewer(Viewer):
@@ -327,6 +332,44 @@ class ViewerWithColumns(Viewer):
         item = self.getItemWithIndex(index)
         column = self.visibleColumns()[column]
         return column.imageIndex(item, which) 
+    
+    def isSortable(self):
+        return True
+
+    def sortBy(self, sortKey):
+        if self.isSortedBy(sortKey):
+            self.setSortOrderAscending(not self.isSortOrderAscending())
+        else:
+            self.settings.set(self.settingsSection(), 'sortby', sortKey)
+            self.model().sortBy(sortKey)
+        
+    def isSortedBy(self, sortKey):
+        return sortKey == self.settings.get(self.settingsSection(), 'sortby')
+
+    def isSortOrderAscending(self):
+        return self.settings.getboolean(self.settingsSection(), 
+            'sortascending')
+    
+    def setSortOrderAscending(self, ascending):
+        self.settings.set(self.settingsSection(), 'sortascending', 
+            str(ascending))
+        self.model().sortAscending(ascending)
+        
+    def isSortCaseSensitive(self):
+        return self.settings.getboolean(self.settingsSection(), 
+            'sortcasesensitive')
+        
+    def setSortCaseSensitive(self, caseSensitive):
+        self.settings.set(self.settingsSection(), 'sortcasesensitive', 
+            str(caseSensitive))
+        
+    def isSortByTaskStatusFirst(self):
+        return self.settings.getboolean(self.settingsSection(),
+            'sortbystatusfirst')
+        
+    def setSortByTaskStatusFirst(self, sortByTaskStatusFirst):
+        self.settings.set(self.settingsSection(), 'sortbystatusfirst',
+            str(sortByTaskStatusFirst))
         
     def __startObserving(self, eventTypes):
         for eventType in eventTypes:
@@ -506,9 +549,9 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
     def __init__(self, *args, **kwargs):
         super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
         patterns.Publisher().registerObserver(self.onSortKeyChanged, 
-            eventType='view.sortby')
+            eventType=self.settingsSection()+'.sortby')
         patterns.Publisher().registerObserver(self.onSortOrderChanged, 
-            eventType='view.sortascending')
+            eventType=self.settingsSection()+'.sortascending')
             
     def _createColumns(self):
         return [widgets.Column(_('Subject'), 'task.subject', 'task.completionDate',
@@ -569,9 +612,9 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
 
     def initColumn(self, column):
         super(TaskViewerWithColumns, self).initColumn(column)
-        if self.settings.get('view', 'sortby') == column.sortKey():
+        if self.settings.get(self.settingsSection(), 'sortby') == column.sortKey():
             self.widget.showSortColumn(column)
-            self.showSortOrder(self.settings.getboolean('view',
+            self.showSortOrder(self.settings.getboolean(self.settingsSection(),
                 'sortascending'))
         
     def onSortKeyChanged(self, event):
@@ -612,6 +655,9 @@ class TaskViewerWithColumns(TaskViewer, ViewerWithColumns):
 
 
 class TaskListViewer(TaskViewerWithColumns, ListViewer):
+    def settingsSection(self):
+        return 'tasklistviewer'
+    
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
@@ -632,8 +678,7 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
                 categories=self.categories)
         
     def createSorter(self, taskList):
-        return task.sorter.Sorter(taskList, settings=self.settings, 
-            treeMode=False)
+        return task.sorter.Sorter(taskList, treeMode=False)
     
     def setViewCompositeTasks(self, viewCompositeTasks):
         self.list.setViewCompositeTasks(viewCompositeTasks)
@@ -661,8 +706,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         
     def createSorter(self, taskList):
         # FIMXE: pull up
-        return task.sorter.Sorter(taskList, settings=self.settings, 
-            treeMode=True)
+        return task.sorter.Sorter(taskList, treeMode=True)
     
     def getItemText(self, index):
         task = self.getItemWithIndex(index)
@@ -685,6 +729,9 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
 
 
 class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
+    def settingsSection(self):
+        return 'tasktreelistviewer'
+    
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
@@ -870,6 +917,9 @@ class NoteViewer(TreeViewer):
     
     
 class EffortViewer(UpdatePerSecondViewer):
+    def isSortable(self):
+        return False # FIXME: make effort viewers sortable too?
+    
     def isShowingEffort(self):
         return True
         

@@ -146,7 +146,7 @@ class UICheckCommand(BooleanSettingsCommand):
     def isSettingChecked(self):
         return self.settings.getboolean(self.section, self.setting)
 
-    def doCommand(self, event):
+    def _isMenuItemChecked(self, event):
         # There's a bug in wxPython 2.8.3 on Windows XP that causes 
         # event.IsChecked() to return the wrong value in the context menu.
         # The menu on the main window works fine. So we first try to access the
@@ -154,10 +154,13 @@ class UICheckCommand(BooleanSettingsCommand):
         # This will fail if the event is coming from the window, but in that
         # case we can event.IsChecked() to work so we use that.
         try:
-            isChecked = event.GetEventObject().FindItemById(event.GetId()).IsChecked()
+            return event.GetEventObject().FindItemById(event.GetId()).IsChecked()
         except AttributeError:
-            isChecked = event.IsChecked()
-        self.settings.set(self.section, self.setting, str(isChecked))
+            return event.IsChecked()
+        
+    def doCommand(self, event):
+        self.settings.set(self.section, self.setting, 
+            str(self._isMenuItemChecked(event)))
         
     def getBitmap(self):
         if '__WXMSW__' in wx.PlatformInfo:
@@ -224,6 +227,38 @@ class ViewerCommand(UICommand):
         self.viewer = kwargs.pop('viewer', None)
         super(ViewerCommand, self).__init__(*args, **kwargs)
 
+
+class ViewerSortByCommand(ViewerCommand, UIRadioCommand):        
+    def isSettingChecked(self):
+        return self.viewer.isSortedBy(self.value)
+    
+    def doCommand(self, event):
+        self.viewer.sortBy(self.value)
+
+
+class ViewerSortOrderCommand(ViewerCommand, UICheckCommand):
+    def isSettingChecked(self):
+        return self.viewer.isSortOrderAscending()
+    
+    def doCommand(self, event):
+        self.viewer.setSortOrderAscending(self._isMenuItemChecked(event))
+    
+    
+class ViewerSortCaseSensitive(ViewerCommand, UICheckCommand):
+    def isSettingChecked(self):
+        return self.viewer.isSortCaseSensitive()
+    
+    def doCommand(self, event):
+        self.viewer.setSortCaseSensitive(self._isMenuItemChecked(event))
+
+
+class ViewerSortByTaskStatusFirst(ViewerCommand, UICheckCommand):
+    def isSettingChecked(self):
+        return self.viewer.isSortByTaskStatusFirst()
+    
+    def doCommand(self, event):
+        self.viewer.setSortByTaskStatusFirst(self._isMenuItemChecked(event))
+                
 
 class UICommandsCommand(UICommand):
     def __init__(self, *args, **kwargs):
@@ -1399,16 +1434,16 @@ class UICommands(dict):
         self['viewexpandselected'] = ViewExpandSelected(viewer=viewer)
         self['viewcollapseselected'] = ViewCollapseSelected(viewer=viewer)
                 
-        self['viewsortorder'] = UICheckCommand(menuText=_('&Ascending'),
+        self['viewsortorder'] = ViewerSortOrderCommand(menuText=_('&Ascending'),
             helpText=_('Sort tasks ascending (checked) or descending (unchecked)'),
-            setting='sortascending', settings=settings)
-        self['viewsortcasesensitive'] = UICheckCommand(menuText=_('Sort case sensitive'),
-            helpText=_('When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)'),
-            setting='sortcasesensitive', settings=settings)
-        self['viewsortbystatusfirst'] = UICheckCommand(menuText=_('Sort by status &first'),
-            helpText=_('Sort tasks by status (active/inactive/completed) first'),
-            setting='sortbystatusfirst', settings=settings)
-        
+            viewer=viewer)
+        self['viewsortcasesensitive'] = ViewerSortCaseSensitive(\
+            viewer=viewer, menuText=_('Sort case sensitive'),
+            helpText=_('When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)'))
+        self['viewsortbystatusfirst'] = ViewerSortByTaskStatusFirst(\
+            viewer=viewer, menuText=_('Sort by status &first'),
+            helpText=_('Sort tasks by status (active/inactive/completed) first'))
+            
         # Sort by column commands
         for menuText, helpText, value in \
             [(_('Sub&ject'), _('Sort tasks by subject'), 'subject'),
@@ -1436,8 +1471,8 @@ class UICommands(dict):
              (_('Overall last modification time'), _('Sort tasks by overall last modification time'), 'totallastModificationTime')]:
             key = 'viewsortby' + value
             key = key.lower()
-            self[key] = UIRadioCommand(settings=settings, setting='sortby', value=value,
-                                       menuText=menuText, helpText=helpText)
+            self[key] = ViewerSortByCommand(viewer=viewer, value=value,
+                menuText=menuText, helpText=helpText)
         
         for key, menuText, helpText, viewerClass, viewerArgs, viewerKwargs, viewerTitle, bitmap in \
             (('viewtasklistviewer', _('Task list'), 
@@ -1477,7 +1512,7 @@ class UICommands(dict):
                 viewerArgs=viewerArgs, viewerKwargs=viewerKwargs, 
                 viewerTitle=viewerTitle, viewerBitmap=bitmap)
         
-        # Toolbar size commands                
+        # Toolbar size commands
         for key, value, menuText, helpText in \
             [('hide', None, _('&Hide'), _('Hide the toolbar')),
              ('small', (16, 16), _('&Small images'), _('Small images (16x16) on the toolbar')),

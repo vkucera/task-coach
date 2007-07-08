@@ -9,12 +9,10 @@ class TaskSorterTest(test.TestCase):
         c = self.c = task.Task('c')
         d = self.d = task.Task('d')
         self.list = dummy.TaskList([d, b, c, a])
-        self.settings = config.Settings(load=False)
-        self.settings.set('view', 'sortby', 'subject')
-        self.sorter = task.sorter.Sorter(self.list, settings=self.settings)
+        self.sorter = task.sorter.Sorter(self.list)
 
     def testInitiallyEmpty(self):
-        sorter = task.sorter.Sorter(dummy.TaskList(), settings=self.settings)
+        sorter = task.sorter.Sorter(dummy.TaskList())
         self.assertEqual(0, len(sorter))
 
     def testLength(self):
@@ -46,26 +44,22 @@ class TaskSorterTest(test.TestCase):
 class TaskSorterSettingsTest(test.TestCase):        
     def setUp(self):
         self.taskList = task.TaskList()
-        self.settings = config.Settings(load=False)
-        self.sorter = task.sorter.Sorter(self.taskList, settings=self.settings)        
+        self.sorter = task.sorter.Sorter(self.taskList)        
         self.task1 = task.Task(subject='A', dueDate=date.Tomorrow())
         self.task2 = task.Task(subject='B', dueDate=date.Today())
         self.taskList.extend([self.task1, self.task2])
 
-    def tearDown(self):
-        super(TaskSorterSettingsTest, self).tearDown()
-        task.sorter.SortOrderReverser.deleteInstance()
-        
     def testSortDueDate(self):
+        self.sorter.sortBy('dueDate')
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
     def testSortBySubject(self):
-        self.settings.set('view', 'sortby', 'subject')
+        self.sorter.sortBy('subject')
         self.assertEqual([self.task1, self.task2], list(self.sorter))
         
     def testSortBySubject_TurnOff(self):
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortby', 'dueDate')
+        self.sorter.sortBy('subject')
+        self.sorter.sortBy('dueDate')
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
     def testSortByCompletionStatus(self):
@@ -77,89 +71,85 @@ class TaskSorterSettingsTest(test.TestCase):
         self.assertEqual([self.task1, self.task2], list(self.sorter))
     
     def testSortBySubjectDescending(self):
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortascending', 'False')
+        self.sorter.sortBy('subject')
+        self.sorter.sortAscending(False)
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
     def testSortByStartDate(self):
-        self.settings.set('view', 'sortby', 'startDate')
+        self.sorter.sortBy('startDate')
         self.task1.setDueDate(date.Yesterday())
         self.task2.setStartDate(date.Yesterday())
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
     def testDescending(self):
-        self.settings.set('view', 'sortascending', 'False')
+        self.sorter.sortBy('dueDate')
+        self.sorter.sortAscending(False)
         self.assertEqual([self.task1, self.task2], list(self.sorter))
         
     def testByDueDateWithoutFirstSortingByStatus(self):
-        self.settings.set('view', 'sortbystatusfirst', 'False')
+        self.sorter.sortBy('dueDate')
+        self.sorter.sortByTaskStatusFirst(False)
         self.task2.setCompletionDate(date.Today())
         self.assertEqual([self.task2, self.task1], list(self.sorter))
 
     def testSortBySubjectWithFirstSortingByStatus(self):
-        self.settings.set('view', 'sortbystatusfirst', 'True')
-        self.settings.set('view', 'sortby', 'subject')
+        self.sorter.sortByTaskStatusFirst(True)
+        self.sorter.sortBy('subject')
         self.task1.setCompletionDate(date.Today())
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
     def testSortBySubjectWithoutFirstSortingByStatus(self):
-        self.settings.set('view', 'sortbystatusfirst', 'False')
-        self.settings.set('view', 'sortby', 'subject')
+        self.sorter.sortByTaskStatusFirst(False)
+        self.sorter.sortBy('subject')
         self.task1.setCompletionDate(date.Today())
         self.assertEqual([self.task1, self.task2], list(self.sorter))
                 
     def testSortCaseSensitive(self):
-        self.settings.set('view', 'sortcasesensitive', 'True')
-        self.settings.set('view', 'sortby', 'subject')
+        self.sorter.sortCaseSensitive(True)
+        self.sorter.sortBy('subject')
         task3 = task.Task('a')
         self.taskList.append(task3)
         self.assertEqual([self.task1, self.task2, task3], list(self.sorter))
 
     def testSortCaseInsensitive(self):
-        self.settings.set('view', 'sortcasesensitive', 'False')
-        self.settings.set('view', 'sortby', 'subject')
+        self.sorter.sortCaseSensitive(False)
+        self.sorter.sortBy('subject')
         task3 = task.Task('a')
         self.taskList.append(task3)
         self.assertEqual([self.task1, task3, self.task2], list(self.sorter))
     
-    def testFlipSortOrder(self):
-        self.settings.set('view', 'sortascending', 'True')
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortby', 'subject')
-        self.assertEqual('False', self.settings.get('view', 'sortascending'))
-
     def testSortByTotalTimeLeftAscending(self):
-        self.settings.set('view', 'sortascending', 'True')
-        self.settings.set('view', 'sortby', 'totaltimeLeft')
+        self.sorter.sortAscending(True)
+        self.sorter.sortBy('totaltimeLeft')
         self.assertEqual([self.task2, self.task1], list(self.sorter))
 
     def testSortByTotalTimeLeftDescending(self):
-        self.settings.set('view', 'sortascending', 'False')
-        self.settings.set('view', 'sortby', 'totaltimeLeft')
+        self.sorter.sortAscending(False)
+        self.sorter.sortBy('totaltimeLeft')
         self.assertEqual([self.task1, self.task2], list(self.sorter))
 
     def testSortByBudgetAscending(self):
-        self.settings.set('view', 'sortascending', 'True')
-        self.settings.set('view', 'sortby', 'budget')
+        self.sorter.sortAscending(True)
+        self.sorter.sortBy('budget')
         self.task1.setBudget(date.TimeDelta(100))
         self.assertEqual([self.task2, self.task1], list(self.sorter))
 
     def testSortByBudgetDescending(self):
-        self.settings.set('view', 'sortascending', 'False')
-        self.settings.set('view', 'sortby', 'budget')
+        self.sorter.sortAscending(False)
+        self.sorter.sortBy('budget')
         self.task1.setBudget(date.TimeDelta(100))
         self.assertEqual([self.task1, self.task2], list(self.sorter))
 
     def testSortByTimeSpentAscending(self):
-        self.settings.set('view', 'sortascending', 'True')
-        self.settings.set('view', 'sortby', 'timeSpent')
+        self.sorter.sortAscending(True)
+        self.sorter.sortBy('timeSpent')
         self.task1.addEffort(effort.Effort(self.task1,
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
         self.assertEqual([self.task2, self.task1], list(self.sorter))
 
     def testSortByTimeSpentDescending(self):
-        self.settings.set('view', 'sortascending', 'False')
-        self.settings.set('view', 'sortby', 'timeSpent')
+        self.sorter.sortAscending(False)
+        self.sorter.sortBy('timeSpent')
         self.task1.addEffort(effort.Effort(self.task1,
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
         self.assertEqual([self.task1, self.task2], list(self.sorter))
@@ -169,8 +159,8 @@ class TaskSorterSettingsTest(test.TestCase):
             even when the completion date is not the sort key, because sorting
             on task status (active, completed, etc.) depends on the completion
             date. '''
-        self.settings.set('view', 'sortby', 'completionDate')
-        self.settings.set('view', 'sortby', 'subject')
+        self.sorter.sortBy('completionDate')
+        self.sorter.sortBy('subject')
         self.task1.setCompletionDate()
         self.assertEqual([self.task2, self.task1], list(self.sorter))
 
@@ -179,8 +169,8 @@ class TaskSorterSettingsTest(test.TestCase):
             even when the start date is not the sort key, because sorting
             on task status (active, completed, etc.) depends on the start
             date. '''
-        self.settings.set('view', 'sortby', 'startDate')
-        self.settings.set('view', 'sortby', 'subject')
+        self.sorter.sortBy('startDate')
+        self.sorter.sortBy('subject')
         self.task1.setStartDate(date.Tomorrow())
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
@@ -188,9 +178,7 @@ class TaskSorterSettingsTest(test.TestCase):
 class TaskSorterTreeModeTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
-        self.settings = config.Settings(load=False)
-        self.sorter = task.sorter.Sorter(self.taskList, 
-            settings=self.settings, treeMode=True)        
+        self.sorter = task.sorter.Sorter(self.taskList, treeMode=True)        
         self.parent1 = task.Task(subject='parent 1')
         self.child1 = task.Task(subject='child 1')
         self.parent1.addChild(self.child1)
@@ -200,22 +188,22 @@ class TaskSorterTreeModeTest(test.TestCase):
         self.taskList.extend([self.parent1, self.parent2])
         
     def testSortByDueDate(self):
-        self.settings.set('view', 'sortby', 'dueDate')
+        self.sorter.sortBy('dueDate')
         self.child2.setDueDate(date.Today())
         self.failUnless(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
 
     def testSortByPriority(self):
-        self.settings.set('view', 'sortby', 'priority')
-        self.settings.set('view', 'sortascending', 'False')
+        self.sorter.sortBy('priority')
+        self.sorter.sortAscending(False)
         self.parent1.setPriority(5)
         self.child2.setPriority(10)
         self.failUnless(list(self.sorter).index(self.parent1) < \
             list(self.sorter).index(self.parent2))
 
     def testSortByTotalPriority(self):
-        self.settings.set('view', 'sortby', 'totalpriority')
-        self.settings.set('view', 'sortascending', 'False')
+        self.sorter.sortBy('totalpriority')
+        self.sorter.sortAscending(False)
         self.parent1.setPriority(5)
         self.child2.setPriority(10)
         self.failUnless(list(self.sorter).index(self.parent2) < \

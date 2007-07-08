@@ -9,8 +9,10 @@ class EffortViewerTest(test.wxTestCase):
         
     def testCreate(self):
         effortViewer = gui.viewer.EffortListViewer(self.frame, self.effortList, 
-            gui.uicommand.UICommands(self.frame, None, None, self.settings,
-                self.taskList, self.effortList, category.CategoryList(),
-                note.NoteContainer()), 
+            gui.uicommand.UICommands(self.frame, None, 
+                gui.viewercontainer.ViewerContainer(None, self.settings, 
+                    'mainviewer'), 
+                self.settings, self.taskList, self.effortList, 
+                category.CategoryList(), note.NoteContainer()), 
                 self.settings, taskList=self.taskList)
         self.assertEqual(0, effortViewer.size())
