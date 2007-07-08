@@ -243,8 +243,18 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl.Ct
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
-        #self.refresh()
+        self.GetHeaderWindow().Bind(wx.EVT_LEFT_DOWN, 
+            self.onHeaderWindowMouseClick)
         
+    def onHeaderWindowMouseClick(self, event):
+        # Mouse clicks in the header window seem not to be propagated to 
+        # containing windows, but mouse clicks in the main window do. By 
+        # simulating a mouse click in the main window we make sure that
+        # if the TreeListCtrl is in a AUINotebook tab, the tab is properly
+        # activated when the user clicks a column header.
+        self.GetMainWindow().ProcessEvent(wx.MouseEvent(wx.wxEVT_LEFT_DOWN))
+        event.Skip()
+
     # Extend CtrlWithColumns with TreeListCtrl specific behaviour:
         
     def _setColumns(self, *args, **kwargs):

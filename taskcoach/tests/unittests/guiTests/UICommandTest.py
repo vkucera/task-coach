@@ -35,11 +35,14 @@ class UICommandTest(test.wxTestCase):
 
 class UICommandsTest(test.wxTestCase):
     def testCreate(self):
+        settings = config.Settings(load=False)
         taskList = task.TaskList()
         effortList = effort.EffortList(taskList)
         categories = category.CategoryList()
-        gui.uicommand.UICommands(self.frame, None, None, None, taskList, 
-            effortList, categories, note.NoteContainer())
+        viewerContainer = gui.viewercontainer.ViewerContainer(None, settings,
+            'mainviewer')
+        gui.uicommand.UICommands(self.frame, None, viewerContainer, None, 
+            taskList, effortList, categories, note.NoteContainer())
 
 
 class ViewAllTasksTest(test.wxTestCase):
@@ -47,8 +50,10 @@ class ViewAllTasksTest(test.wxTestCase):
         settings = config.Settings(load=False)
         taskList = task.TaskList()
         categories = category.CategoryList()
-        uiCommands = gui.uicommand.UICommands(self.frame, None, None, settings,
-            taskList, effort.EffortList(taskList), categories, 
+        viewerContainer= gui.viewercontainer.ViewerContainer(None, settings,
+            'mainviewer')
+        uiCommands = gui.uicommand.UICommands(self.frame, None, viewerContainer, 
+            settings, taskList, effort.EffortList(taskList), categories, 
             note.NoteContainer())
         aCategory = category.Category('category')
         categories.append(aCategory)

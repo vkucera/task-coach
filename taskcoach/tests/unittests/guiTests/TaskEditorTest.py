@@ -34,17 +34,19 @@ class TaskEditorTestCase(test.wxTestCase):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.taskList.extend(self.createTasks())
+        self.settings = config.Settings(load=False)
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+            self.settings, 'mainviewer')
         self.editor = self.createEditor()
         
     def createEditor(self):
-        settings = config.Settings(load=False)
         categories = category.CategoryList()
         effortList = effort.EffortList(self.taskList)
         return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
-            self.taskList, gui.uicommand.UICommands(self.frame, None, None, 
-                settings, self.taskList, effortList, categories, 
-                note.NoteContainer()),
-            settings, categories, raiseDialog=False)
+            self.taskList, gui.uicommand.UICommands(self.frame, None, 
+                self.viewerContainer, self.settings, self.taskList, effortList, 
+                categories, note.NoteContainer()),
+            self.settings, categories, raiseDialog=False)
 
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
