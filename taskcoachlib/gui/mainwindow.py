@@ -12,9 +12,17 @@ class WindowWithPersistentDimensions(wx.Frame):
         self._section = 'window'
         self.setDimensions()
         self.Bind(wx.EVT_SIZE, self.onChangeSize)
-        if self.getSetting('iconized'):
+        if self.startIconized():
             self.Iconize(True)
             wx.CallAfter(self.Hide)
+            
+    def startIconized(self):
+        startIconized = self._settings.get(self._section, 'starticonized')
+        if startIconized == 'Always':
+            return True
+        if startIconized == 'Never':
+            return False
+        return self.getSetting('iconized') 
         
     def setSetting(self, setting, value):
         self._settings.set(self._section, setting, str(value))

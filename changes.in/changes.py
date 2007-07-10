@@ -3,7 +3,14 @@
 from changetypes import *
 
 releases = [
-            
+
+Release('0.65.0', 'August ?, 2007', 
+    summary='TBD',
+    featuresAdded=[
+        Feature('''Added a setting to start Task Coach iconized either 
+always, never, or only when Task Coach was iconized when last 
+quitted.''', '1749886')]),
+             
 Release('0.64.2', 'June 30, 2007',
     summary='''This release fixes sorting of tasks by priority
 and makes sure that Task Coach does not block OS shutdown.''',

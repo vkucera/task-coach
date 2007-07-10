@@ -77,6 +77,11 @@ class WindowBehaviorPage(SettingsPage):
             _('Show splash screen on startup'))
         self.addBooleanSetting('window', 'tips', 
             _('Show tips window on startup'))
+        self.addChoiceSetting('window', 'starticonized',
+            _('Start with the main window iconized'),
+            [('Never', _('Never')), ('Always', _('Always')), 
+             ('WhenClosedIconized', 
+              _('When the main windows was iconized last session'))])
         self.addBooleanSetting('version', 'notify',
             _('Check for new version of %(name)s on startup')%meta.data.metaDict)
         self.addBooleanSetting('window', 'hidewheniconized', 
