@@ -71,6 +71,7 @@ defaults = { \
     'size': '(600, 500)',
     'position': '(-1, -1)',
     'iconized': 'False',
+    'starticonized': 'WhenClosedIconized', # 'Never', 'Always', 'WhenClosedIconized'
     'splash': 'True',
     'hidewheniconized': 'False',
     'hidewhenclosed': 'False',
