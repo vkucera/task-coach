@@ -18,7 +18,13 @@ class ToolTipMixin(object):
         self.__position = (0, 0)
         self.__text = None
 
-        self.__maxX, self.__maxY = wx.DisplaySize()
+        if '__WXMAC__' in wx.PlatformInfo:
+            self.__maxX, self.__maxY = wx.DisplaySize()
+        elif '__WXMSW__' in wx.PlatformInfo:
+            self.__maxX, self.__maxY = 32768, 32768 # wx.DisplaySize()
+                                                    # is  not  fit for
+                                                    # multiple-monitors
+                                                    # displays.
 
         wx.EVT_MOTION(self, self.__OnMotion)
         wx.EVT_LEAVE_WINDOW(self, self.__OnLeave)
@@ -103,9 +109,12 @@ class SimpleToolTip(wx.Frame):
 
         self.lines = []
 
-        if '__WXMSW__' in wx.PlatformInfo or '__WXMAC__' in wx.PlatformInfo:
+        if '__WXMAC__' in wx.PlatformInfo:
             maxX, maxY = wx.DisplaySize()
             self.MoveXY(maxX, maxY)
+            self.Show()
+        elif '__WXMSW__' in wx.PlatformInfo:
+            self.MoveXY(32768, 32768)
             self.Show()
 
         wx.EVT_PAINT(self, self.OnPaint)
