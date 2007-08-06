@@ -1,21 +1,12 @@
 import xml.dom, meta
-from domain import date, attachment
 import domain.date as date
-import os
+
 
 class XMLWriter:    
     def __init__(self, fd, versionnr=16):
         self.__fd = fd
         self.__versionnr = versionnr
-
-        # Determine where to save attachments.
-        path, name = os.path.split(os.path.abspath(self.__fd.name))
-        name, ext = os.path.splitext(name)
-        attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-        if not os.path.exists(attdir):
-            os.mkdir(attdir)
-        attachment.MailAttachment.attdir = attdir
-
+        
     def write(self, taskList, categoryContainer, noteContainer):
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None)
@@ -30,7 +21,7 @@ class XMLWriter:
         for note in noteContainer.rootItems():
             self.document.documentElement.appendChild(self.noteNode(note))
         self.document.writexml(self.__fd)
-
+            
     def taskNode(self, task):
         node = self.document.createElement('task')
         node.setAttribute('subject', task.subject())

@@ -138,7 +138,7 @@ class NewTaskTest(TaskEditorTestCase):
         elif '__WXGTK__' in wx.PlatformInfo:
             errorMessageStart = ""
         else:
-            errorMessageStart = "[Error 2] The system cannot find the file specified"
+            errorMessageStart = "[Error 2] "
         self.failUnless(self.errorMessage.startswith(errorMessageStart))
         
 class NewSubTaskTest(TaskEditorTestCase):

@@ -1,17 +1,9 @@
-import time, xml.dom.minidom, re, os
+import time, xml.dom.minidom, re
 from domain import date, effort, task, category, note, attachment
 
 class XMLReader:
     def __init__(self, fd):
         self.__fd = fd
-
-        # Determine where are attachments.
-        path, name = os.path.split(os.path.abspath(self.__fd.name))
-        name, ext = os.path.splitext(name)
-        attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-        if not os.path.exists(attdir):
-            os.mkdir(attdir)
-        attachment.MailAttachment.attdir = attdir
 
     def read(self):
         domDocument = xml.dom.minidom.parse(self.__fd)
@@ -31,7 +23,6 @@ class XMLReader:
             notes = []
         else:
             notes = self.__parseNoteNodes(domDocument.documentElement.childNodes)
-
         return tasks, categories, notes
 
     def __parseTskVersionNumber(self, domDocument):
