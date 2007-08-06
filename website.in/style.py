@@ -75,8 +75,12 @@ footer = '''
             <div class="navbox">
                 <h2>Links</h2>
                 <p>
-                    <a href="http://www.python.org">Python</a><br>
-                    <a href="http://www.wxpython.org">wxPython</a><br>
+                    <a href="http://www.python.org"><img
+                    src="python-powered-w-70x28.png" alt="Python"
+                    width="70" height="28" border="0"></a><br>
+                    <a href="http://www.wxpython.org"><img
+                    src="powered-by-wxpython-80x15.png"
+                    alt="wxPython" width="80" height="15" border="0"></a><br>
                     <a href="http://www.icon-king.com">Nuvola icon set</a><br>
                     <a href="http://www.jrsoftware.org">Inno Setup</a><br>
                     <a href="http://www.bluerobot.com">Bluerobot.com</a><br>
