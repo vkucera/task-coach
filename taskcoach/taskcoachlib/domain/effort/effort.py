@@ -17,6 +17,9 @@ class EffortBase(object):
     def getStop(self):
         return self._stop
 
+    def subject(self, *args, **kwargs):
+        return self._task.subject(*args, **kwargs)
+    
 
 class Effort(EffortBase):
     def __init__(self, task, start=None, stop=None, description='', 

@@ -27,7 +27,7 @@ class TaskTreeViewerTestCase(test.wxTestCase):
             self.assertEqual(nrChildren, 
                 self.viewer.widget.GetChildrenCount(treeItem, recursively=False))
 
-
+                
 class CommonTests(TaskViewerTest.CommonTests):
     ''' Tests common to TaskTreeViewerTest and TaskTreeListViewerTest. '''
 
@@ -63,8 +63,8 @@ class CommonTests(TaskViewerTest.CommonTests):
         self.assertItems((self.task, 2), child1, child2)
 
     def testSortOrder(self):
-        self.settings.set('view', 'sortby', 'subject')
-        self.settings.set('view', 'sortascending', 'True')
+        self.viewer.sortBy('subject')
+        self.viewer.setSortOrderAscending()
         child = task.Task(subject='child')
         self.task.addChild(child)
         task2 = task.Task(subject='zzz')
@@ -72,21 +72,21 @@ class CommonTests(TaskViewerTest.CommonTests):
         self.assertItems((self.task, 1), child, task2)
             
     def testViewDueTodayHidesTasksNotDueToday(self):
-        self.settings.set('view', 'tasksdue', 'Today')
+        self.viewer.setFilteredByDueDate('Today')
         child = task.Task(subject='child')
         self.task.addChild(child)
         self.taskList.append(self.task)
         self.assertItems()
         
     def testViewDueTodayShowsTasksWhoseChildrenAreDueToday(self):
-        self.settings.set('view', 'tasksdue', 'Today')
+        self.viewer.setFilteredByDueDate('Today')
         child = task.Task(subject='child', dueDate=date.Today())
         self.task.addChild(child)
         self.taskList.append(self.task)
         self.assertItems((self.task, 1), child)
         
     def testFilterCompletedTasks(self):
-        self.settings.set('view', 'completedtasks', 'False')
+        self.viewer.hideCompletedTasks()
         completedChild = task.Task(completionDate=date.Today())
         notCompletedChild = task.Task()
         self.task.addChild(notCompletedChild)

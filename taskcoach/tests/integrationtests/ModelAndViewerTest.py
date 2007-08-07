@@ -11,8 +11,11 @@ class TaskViewerAndCategoryFilterIntegrationTestFixture(test.wxTestCase):
         self.categories.append(self.category)
         self.notes = note.NoteContainer()
         self.settings.set('view', 'sortby', 'subject')
+        viewerContainer = gui.viewercontainer.ViewerContainer(self.frame, 
+            self.settings, 'mainviewer')
         self.viewer = self.TaskViewerClass(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, None, self.settings, 
+            gui.uicommand.UICommands(self.frame, None, viewerContainer, 
+            self.settings, 
             self.taskList, effort.EffortList(self.taskList), self.categories,
             self.notes), 
             self.settings, categories=self.categories)

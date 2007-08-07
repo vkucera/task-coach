@@ -25,6 +25,9 @@ class CommonTests(object):
                          
     def setColor(self, setting):
         self.settings.set('color', setting, str(self.newColor))
+
+    def showColumn(self, columnName, show=True):
+        self.viewer.showColumnByName(columnName, show)
         
     def testChangeActiveTaskColor(self):
         self.taskList.append(task.Task(subject='test'))

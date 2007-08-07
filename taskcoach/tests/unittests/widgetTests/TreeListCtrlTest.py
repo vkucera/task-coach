@@ -16,8 +16,8 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
         self.treeCtrl.AssignImageList(imageList)
 
     def createColumns(self):
-        columnHeaders = ['Tree Column'] + ['Column %d'%index for index in range(1, 5)]
-        self._columns = [widgets.Column(columnHeader, ('view', 'whatever'), None) for columnHeader in columnHeaders]
+        names = ['treeColumn'] + ['column%d'%index for index in range(1, 5)]
+        self._columns = [widgets.Column(name, name, ('view', 'whatever'), None) for name in names]
         
     def columns(self):
         return self._columns
@@ -51,8 +51,8 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
             self.assertEqual(self.getItemText((0,), columnIndex), 
                              self.treeCtrl.GetItemText(item, columnIndex))
     
-    def showColumn(self, columnHeader, show=True):
-        column = widgets.Column(columnHeader, ('view', 'whatever'), None)
+    def showColumn(self, name, show=True):
+        column = widgets.Column(name, name, ('view', 'whatever'), None)
         self.treeCtrl.showColumn(column, show)
         if show:
             index = self.columns()[1:].index(column)
@@ -64,16 +64,16 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
         self.assertColumns()
         
     def testHideColumn(self):
-        self.showColumn('Column 1', False)
+        self.showColumn('column1', False)
         self.assertColumns()
         
     def testHideLastColumn(self):
-        lastColumnHeader = 'Column %d'%len(self.visibleColumns)
+        lastColumnHeader = 'column%d'%len(self.visibleColumns)
         self.showColumn(lastColumnHeader, False)
         self.assertColumns()
         
     def testShowColumn(self):
-        self.showColumn('Column 2', False)
-        self.showColumn('Column 2', True)
+        self.showColumn('column2', False)
+        self.showColumn('column2', True)
         self.assertColumns()
         

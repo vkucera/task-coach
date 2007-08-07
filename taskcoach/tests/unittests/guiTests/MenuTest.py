@@ -4,8 +4,14 @@ from gui import uicommand
 from domain import task, effort, category, note
 
 
+class MockViewerContainer(object):
+    def getColumnUICommands(self):
+        return []
+    
+
 class MenuTestCase(test.wxTestCase):
     def setUp(self):
+        self.frame.viewer = MockViewerContainer()
         self.menu = gui.menu.Menu(self.frame)
         menuBar = wx.MenuBar()
         menuBar.Append(self.menu, 'menu')
@@ -77,6 +83,61 @@ class MockIOController:
         self.openCalled = True
 
 
+class MockViewerContainer:
+    def __init__(self, *args, **kwargs):
+        self.__sortBy = 'subject'
+        self.__ascending = True
+        
+    def viewerChangeEventType(self):
+        return 'bla'
+    
+    def isSortable(self):
+        return True
+        
+    def setSortBy(self, sortKey):
+        self.__sortBy = sortKey
+        
+    def isSortedBy(self, sortKey):
+        return sortKey == self.__sortBy
+
+    def isSortOrderAscending(self, *args, **kwargs):
+        return self.__ascending
+    
+    def setSortOrderAscending(self, ascending=True):
+        self.__ascending = ascending
+
+    def isSortByTaskStatusFirst(self):
+        return True
+    
+    def isSortCaseSensitive(self):
+        return True
+
+    def getSortUICommands(self):
+        return ['viewsortorder', 'viewsortcasesensitive', 
+                'viewsortbystatusfirst', None, 'viewsortbysubject', 
+                'viewsortbydescription']
+        
+    def isVisibleColumnByName(self, *args, **kwargs):
+        return True
+    
+    def hasHideableColumns(self):
+        return False
+    
+    def getColumnUICommands(self):
+        return []
+    
+    def isFilteredByDueDate(self, *args, **kwargs):
+        return False
+    
+    def isFilterable(self):
+        return False
+    
+    def getFilterUICommands(self):
+        return []
+    
+    def resetFilter(self):
+        pass
+    
     
 class RecentFilesMenuTest(test.wxTestCase):
     def setUp(self):
@@ -87,7 +148,7 @@ class RecentFilesMenuTest(test.wxTestCase):
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
         self.uiCommands = gui.uicommand.UICommands(self.frame, 
-            self.ioController, None, self.settings, self.taskList, 
+            self.ioController, MockViewerContainer(), self.settings, self.taskList, 
             self.effortList, self.categories, self.notes)
         self.initialFileMenuLength = len(self.createFileMenu())
         self.filename1 = 'c:/Program Files/TaskCoach/test.tsk'
@@ -156,33 +217,6 @@ class RecentFilesMenuTest(test.wxTestCase):
         self.assertRecentFileMenuItems(self.filename1)
 
 
-class MockViewerContainer:
-    def __init__(self, *args, **kwargs):
-        self.__sortBy = 'subject'
-        self.__ascending = True
-        
-    def isSortable(self):
-        return True
-        
-    def setSortBy(self, sortKey):
-        self.__sortBy = sortKey
-        
-    def isSortedBy(self, sortKey):
-        return sortKey == self.__sortBy
-
-    def isSortOrderAscending(self, *args, **kwargs):
-        return self.__ascending
-    
-    def setSortOrderAscending(self, ascending=True):
-        self.__ascending = ascending
-
-    def isSortByTaskStatusFirst(self):
-        return True
-    
-    def isSortCaseSensitive(self):
-        return True
-    
-
 class ViewMenuTestCase(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
@@ -229,37 +263,3 @@ class ViewSortMenuTest(ViewMenuTestCase):
         self.failIf(self.menu.FindItemByPosition(3).IsChecked())
         self.failUnless(self.menu.FindItemByPosition(4).IsChecked())
 
-
-class ViewAllTasksTest(ViewMenuTestCase):
-    def createMenu(self):
-        return gui.menu.ViewMenu(self.frame, self.uiCommands, self.settings)
-
-    def createMainWindow(self):
-        return dummy.MainWindow()
-        
-    def createFilteredTaskList(self):
-        self.categories = category.CategoryList()
-        return task.filter.SearchFilter(task.filter.CategoryFilter(task.filter.ViewFilter(task.TaskList(), 
-            settings=self.settings), settings=self.settings, 
-            categories=self.categories), settings=self.settings)
-
-    def invokeViewAllTasks(self):
-        viewAllTasksMenuText = self.uiCommands['viewalltasks'].menuText
-        viewAllTasksMenuItemId = self.menu.FindItem(viewAllTasksMenuText)
-        viewAllTasksMenuItem = self.menu.FindItemById(viewAllTasksMenuItemId)
-        self.menu.invokeMenuItem(viewAllTasksMenuItem)
-        
-    def testInvokingViewAllTasksResetsTasksDue(self):
-        self.settings.set('view', 'tasksdue', 'Today')
-        self.invokeViewAllTasks()
-        self.failUnless('Unlimited', self.settings.get('view', 'tasksdue'))
-        
-    def testInvokingViewAllTasksResetsViewCompletedTasks(self):
-        self.settings.set('view', 'completedtasks', 'False')
-        self.invokeViewAllTasks()
-        self.failUnless(self.settings.getboolean('view', 'completedtasks'))
-        
-    def testInvokingViewAllTasksResetsSearchFilter(self):
-        self.settings.set('view', 'tasksearchfilterstring', 'test')
-        self.invokeViewAllTasks()
-        self.assertEqual('', self.settings.get('view', 'tasksearchfilterstring'))

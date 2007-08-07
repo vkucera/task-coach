@@ -4,7 +4,7 @@ from i18n import _
 from domain import task, effort, date, category, note
 
 
-class CommonTests:
+class CommonTests(object):
     ''' Tests common to all TaskListViewers, i.e. TaskListViewer and
         TaskTreeListViewer. '''
     
@@ -21,7 +21,7 @@ class CommonTests:
         self.assertEqual(3, self.viewer.GetColumnCount())
     
     def testTurnOffStartDateColumn(self):
-        self.settings.set('view', 'startdate', 'False')
+        self.showColumn('startDate', False)
         self.assertEqual(_('Due date'), self.viewer.GetColumn(1).GetText())
         self.assertEqual(2, self.viewer.GetColumnCount())
         
@@ -38,34 +38,34 @@ class CommonTests:
         self.assertColor()
 
     def testTurnOnHourlyFeeColumn(self):
-        self.settings.set('view', 'hourlyfee', 'True')
+        self.showColumn('hourlyFee')
         self.assertEqual(_('Hourly fee'), self.viewer.GetColumn(3).GetText())
 
     def testTurnOnFixedFeeColumn(self):
-        self.settings.set('view', 'fixedfee', 'True')
+        self.showColumn('fixedFee')
         self.assertEqual(_('Fixed fee'), self.viewer.GetColumn(3).GetText())
 
     def testTurnOnTotalFixedFeeColumn(self):
-        self.settings.set('view', 'totalfixedfee', 'True')
+        self.showColumn('totalFixedFee')
         self.assertEqual(_('Total fixed fee'), self.viewer.GetColumn(3).GetText())
 
     def testTurnOnFixedFeeColumnWithItemsInTheList(self):
         taskWithFixedFee = task.Task(fixedFee=100)
         self.taskList.append(taskWithFixedFee)
-        self.settings.set('view', 'fixedfee', 'True')
+        self.showColumn('fixedFee')
         self.assertEqual(_('Fixed fee'), self.viewer.GetColumn(3).GetText())
 
     def testTurnOnPriorityColumn(self):
         taskWithPriority = task.Task(priority=10)
         self.taskList.append(taskWithPriority)
-        self.settings.set('view', 'priority', 'True')
+        self.showColumn('priority')
         self.assertEqual(_('Priority'), self.viewer.GetColumn(3).GetText())
         
     def testTurnOffPriorityColumn(self):
-        self.settings.set('view', 'priority', 'True')
+        self.showColumn('priority')
         taskWithPriority = task.Task(priority=10)
         self.taskList.append(taskWithPriority)
-        self.settings.set('view', 'priority', 'False')
+        self.showColumn('priority', False)
         self.assertEqual(3, self.viewer.GetColumnCount())
         
 
@@ -122,7 +122,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.assertEqual([self.task], self.viewer.curselection())
 
     def testOneDayLeft(self):
-        self.settings.set('view', 'timeleft', 'True')
+        self.showColumn('timeLeft')
         self.task.setDueDate(date.Tomorrow())
         self.taskList.append(self.task)
         self.assertEqual(render.daysLeft(self.task.timeLeft()), 
