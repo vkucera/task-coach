@@ -1,6 +1,7 @@
 import wx, uicommand
 from i18n import _
-   
+
+
 class Menu(wx.Menu, uicommand.UICommandContainer):
     def __init__(self, window):
         super(Menu, self).__init__()
@@ -36,6 +37,57 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
         # on other platforms, but it doesn't hurt either.
         self._window.UpdateWindowUI() 
         self._window.ProcessEvent(wx.MenuEvent(wx.wxEVT_MENU_OPEN, menu=self))
+
+
+class StaticMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(StaticMenu, self).__init__(mainwindow)
+        wx.CallAfter(self.appendUICommands, uiCommands, self.getUICommands())
+        
+    def getUICommands(self):
+        raise NotImplementedError
+        
+        
+class DynamicMenu(Menu):
+    def __init__(self, mainwindow, uiCommands, parentMenu=None, 
+                 labelInParentMenu=None):
+        super(DynamicMenu, self).__init__(mainwindow)
+        self._parentMenu = parentMenu
+        self._labelInParentMenu = labelInParentMenu
+        self._uiCommands = uiCommands
+        self._uiCommandNames = None
+        mainwindow.Bind(wx.EVT_UPDATE_UI, self.onUpdateUI)
+
+    def onUpdateUI(self, event):
+        self.updateUI()
+        event.Skip()
+        
+    def updateUI(self):
+        self.updateMenuItemInParentMenu()
+        self.updateMenuItems()
+        
+    def updateMenuItemInParentMenu(self):
+        if self._parentMenu:
+            myId = self._parentMenu.FindItem(self._labelInParentMenu)
+            if myId != wx.NOT_FOUND:
+                self._parentMenu.Enable(myId, self.enabled())
+
+    def updateMenuItems(self):
+        newCommandNames = self.getUICommands()
+        if newCommandNames != self._uiCommandNames:
+            self.clearAndFillMenu(newCommandNames)
+            self._uiCommandNames = newCommandNames
+        
+    def clearAndFillMenu(self, commandNames):
+        for menuItem in self.MenuItems:
+            self.DestroyItem(menuItem)
+        self.appendUICommands(self._uiCommands, commandNames)
+        
+    def enabled(self):
+        return True
+
+    def getUICommands(self):
+        raise NotImplementedError
 
 
 class MainMenu(wx.MenuBar):
@@ -147,20 +199,13 @@ class ViewMenu(Menu):
         super(ViewMenu, self).__init__(mainwindow)
         self.appendMenu(_('New viewer'), 
             ViewViewerMenu(mainwindow, uiCommands, settings), 'viewnewviewer')
-        self.appendUICommands(uiCommands, ['viewalltasks'])
-        self.appendMenu(_('Tas&ks that are'), 
-            ViewTaskStatesMenu(mainwindow, uiCommands))
-        self.appendMenu(_('Tasks &due before end of'),
-            ViewTasksByDueDateMenu(mainwindow, uiCommands))
-        self.appendMenu(_('Task &columns'), ViewTaskColumnsMenu(mainwindow, uiCommands))
-        self.appendMenu(_('Effort &columns'), ViewEffortColumnsMenu(mainwindow, uiCommands))
         self.appendUICommands(uiCommands, [None])
-        self.appendMenu(_('&List options'), 
-            ViewListOptionsMenu(mainwindow, uiCommands), 'listview')
+        self.appendMenu(_('&Filter'), FilterMenu(mainwindow, uiCommands, self, _('&Filter')))
+        self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands, self, _('&Sort')))
+        self.appendMenu(_('&Columns'), ColumnMenu(mainwindow, uiCommands, self, _('&Columns')))
+        self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('&Tree options'), 
             ViewTreeOptionsMenu(mainwindow, uiCommands), 'treeview')
-        self.appendUICommands(uiCommands, [None])
-        self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands, self, _('&Sort')))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
         self.appendUICommands(uiCommands, ['viewstatusbar'])   
@@ -177,68 +222,7 @@ class ViewViewerMenu(Menu):
             viewViewerCommands.extend([None, 'viewnoteviewer'])
         self.appendUICommands(uiCommands, viewViewerCommands)
         
-        
-class ViewTaskColumnsMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(ViewTaskColumnsMenu, self).__init__(mainwindow)
-        self.appendMenu(_('&Dates'), 
-            _ViewTaskDateColumnsMenu(mainwindow, uiCommands))
-        self.appendMenu(_('&Budget'), 
-            _ViewTaskBudgetColumnsMenu(mainwindow, uiCommands))
-        self.appendMenu(_('&Financial'), 
-            _ViewTaskFinancialColumnsMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, ['viewtaskdescription', 'viewattachments', 
-            'viewcategories', 'viewpriority', 'viewtotalpriority',
-            'viewreminder', 
-            'viewlastmodificationtime', 'viewtotallastmodificationtime'])
-
-
-class _ViewTaskDateColumnsMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(_ViewTaskDateColumnsMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewalldatecolumns', None, 
-            'viewstartdate', 'viewduedate', 'viewcompletiondate', 
-            'viewtimeleft'])
-
-
-class _ViewTaskBudgetColumnsMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(_ViewTaskBudgetColumnsMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewallbudgetcolumns', None, 
-            'viewbudget', 'viewtotalbudget', 'viewtimespent',
-            'viewtotaltimespent', 'viewbudgetleft', 'viewtotalbudgetleft'])
-
-
-class _ViewTaskFinancialColumnsMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(_ViewTaskFinancialColumnsMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewallfinancialcolumns', None, 
-            'viewhourlyfee', 'viewfixedfee', 'viewtotalfixedfee', 
-            'viewrevenue', 'viewtotalrevenue'])
-
-
-class ViewEffortColumnsMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(ViewEffortColumnsMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['vieweffortdescription', 
-            'viewefforttimespent', 'viewtotalefforttimespent', 
-            'vieweffortrevenue', 'viewtotaleffortrevenue'])
-
-           
-class ViewTaskStatesMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(ViewTaskStatesMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewactivetasks',
-            'viewinactivetasks', 'viewcompletedtasks', None,
-            'viewoverduetasks', 'viewoverbudgettasks'])
-
-                
-class ViewListOptionsMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(ViewListOptionsMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewcompositetasks'])
-
-           
+                                      
 class ViewTreeOptionsMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ViewTreeOptionsMenu, self).__init__(mainwindow)
@@ -246,46 +230,35 @@ class ViewTreeOptionsMenu(Menu):
             'viewcollapseselected', None, 'viewexpandall', 'viewcollapseall'])
 
 
-class SortMenu(Menu):
-    def __init__(self, mainwindow, uiCommands, parentMenu, labelInParentMenu):
-        super(SortMenu, self).__init__(mainwindow)
-        self._parentMenu = parentMenu
-        self._labelInParentMenu = labelInParentMenu
-        # NOTE: 'viewsortorder' needs to be added first to properly initialize 
-        # ascending/descending order
-        self.appendUICommands(uiCommands, ['viewsortorder', 
-            'viewsortcasesensitive', 'viewsortbystatusfirst', None, 
-            'viewsortbysubject', 'viewsortbydescription',
-            'viewsortbycategories', 'viewsortbystartdate',
-            'viewsortbyduedate', 'viewsortbytimeleft', 
-            'viewsortbycompletiondate', 'viewsortbybudget', 
-            'viewsortbytotalbudget', 'viewsortbytimespent',
-            'viewsortbytotaltimespent', 'viewsortbybudgetleft',
-            'viewsortbytotalbudgetleft', 'viewsortbypriority',
-            'viewsortbytotalpriority', 'viewsortbyhourlyfee',
-            'viewsortbyfixedfee', 'viewsortbyreminder', 
-            'viewsortbylastmodificationtime', 
-            'viewsortbytotallastmodificationtime'])
-        mainwindow.Bind(wx.EVT_UPDATE_UI, self.onUpdateUI)
-
-    def onUpdateUI(self, event):
-        myId = self._parentMenu.FindItem(self._labelInParentMenu)
-        self._parentMenu.Enable(myId, self._window.viewer.isSortable())
-        event.Skip()
+class FilterMenu(DynamicMenu):
+    def enabled(self):
+        return self._window.viewer.isFilterable()
     
+    def getUICommands(self):
+        return self._window.viewer.getFilterUICommands()
+    
+    
+class ColumnMenu(DynamicMenu):
+    def enabled(self):
+        return self._window.viewer.hasHideableColumns()
+    
+    def getUICommands(self):
+        return self._window.viewer.getColumnUICommands()
+        
+
+class SortMenu(DynamicMenu):
+    def enabled(self):
+        return self._window.viewer.isSortable()
+    
+    def getUICommands(self):
+        return self._window.viewer.getSortUICommands()
+
+
 class ToolBarMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(ToolBarMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['toolbarhide', 'toolbarsmall',
             'toolbarmedium', 'toolbarbig'])
-
-
-class ViewTasksByDueDateMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
-        super(ViewTasksByDueDateMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewdueunlimited', 'viewduetoday',
-            'viewduetomorrow', 'viewdueworkweek', 'viewdueweek',
-            'viewduemonth', 'viewdueyear'])
 
 
 class TaskMenu(Menu):
@@ -370,16 +343,9 @@ class NotePopupMenu(Menu):
             'viewcollapseselected'])
         
         
-# Column header popup menu's
+# Column header popup menu
 
-class _ColumnPopupMenu(Menu):
-    def __init__(self, window, uiCommands, *args, **kwargs):
-        super(_ColumnPopupMenu, self).__init__(window, *args, **kwargs)
-        # FIXME: Can't remember why we need a wx.FutureCall here? Maybe
-        # because we need time for the viewer to add columns, so these commands
-        # can then hide the right columns?
-        wx.FutureCall(1000, lambda: self._fillMenu(window, uiCommands))
-    
+class ColumnPopupMenu(StaticMenu):           
     def __setColumn(self, columnIndex):
         self.__columnIndex = columnIndex
     
@@ -391,32 +357,6 @@ class _ColumnPopupMenu(Menu):
     # widgets._CtrlWithColumnPopupMenu.
     columnIndex = property(__getColumn, __setColumn) 
                             
-    def _fillMenu(self, window, uiCommands):
-        raise NotImplementedError
-    
-
-class TaskViewerColumnPopupMenu(_ColumnPopupMenu):        
-    def _fillMenu(self, window, uiCommands):
-        self.appendUICommands(uiCommands, ['hidecurrentcolumn', None])
-        self.appendMenu(_('&Dates'), 
-            _ViewTaskDateColumnsMenu(window, uiCommands)),
-        self.appendMenu(_('&Budget'), 
-            _ViewTaskBudgetColumnsMenu(window, uiCommands)),
-        self.appendMenu(_('&Financial'), 
-            _ViewTaskFinancialColumnsMenu(window, uiCommands))
-        self.appendUICommands(uiCommands, ['viewtaskdescription', 
-            'viewattachments', 'viewcategories', 'viewpriority', 
-            'viewtotalpriority', 'viewreminder', 
-            'viewlastmodificationtime', 
-            'viewtotallastmodificationtime'])
-
-
-class EffortViewerColumnPopupMenu(_ColumnPopupMenu):
-    def _fillMenu(self, window, uiCommands):
-        self.appendUICommands(uiCommands, ['hidecurrentcolumn', None, 
-            'vieweffortdescription', 'viewefforttimespent',
-            'viewtotalefforttimespent', 'vieweffortrevenue', 
-            'viewtotaleffortrevenue'])
-        
-
-
+    def getUICommands(self):
+        return ['hidecurrentcolumn', None] + \
+            self._window.getColumnUICommands()

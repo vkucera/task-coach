@@ -5,8 +5,19 @@ from changetypes import *
 releases = [
 
 Release('0.65.0', 'August ?, 2007', 
-    summary='TBD',
+    summary='''This release adds the ability to record notes and improves the 
+flexibility of the different views.''',
     featuresAdded=[
+        Feature('''Notes. Notes have a subject and an optional description.
+Notes can be hierarchical, i.e. notes may contain subnotes. Notes can be sorted
+and searched (filtered), printed, and exported. This feature can be turned
+on or off via the preferences dialog.'''),
+        Feature('''Categories can be searched (filtered) using the search
+control on the toolbar. '''),
+        Feature('''Category sorting can be changed: ascending or descending,
+case sensitive or case insensitive.'''),
+        Feature('''Each type of viewer/tab has its own settings for sort order
+and visible columns.'''),
         Feature('''Added a setting to start Task Coach iconized either 
 always, never, or only when Task Coach was iconized when last 
 quitted.''', '1749886')]),

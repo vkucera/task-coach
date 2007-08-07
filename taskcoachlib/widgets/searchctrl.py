@@ -29,6 +29,10 @@ class SearchCtrl(wx.SearchCtrl):
         self.__matchCaseMenuItemId = wx.NewId()
         self.Bind(wx.EVT_MENU, self.onMatchCaseMenuItem, 
             id=self.__matchCaseMenuItemId)
+        
+    def setMatchCase(self, matchCase):
+        self.__matchCase = matchCase
+        self.SetMenu(self.makeMenu())
 
     def onFindLater(self, event):
         # Start the timer so that the actual filtering will be done
@@ -38,6 +42,8 @@ class SearchCtrl(wx.SearchCtrl):
     def onFind(self, event):
         if self.__timer.IsRunning():
             self.__timer.Stop()
+        if not self.IsEnabled():
+            return
         searchString = self.GetValue()
         if searchString:
             self.rememberSearchString(searchString)
@@ -80,4 +86,15 @@ class SearchCtrl(wx.SearchCtrl):
         item.Enable(False)
         for index, searchString in enumerate(self.__recentSearches):
             menu.Append(index+1, searchString)
-
+            
+    def Enable(self, enable=True):
+        ''' When wx.SearchCtrl is disabled it doesn't grey out the buttons,
+            so we remove those. '''
+        if enable:
+            self.SetMenu(self.makeMenu())
+        else:
+            self.SetValue(_('Viewer not searchable'))
+            self.SetMenu(None)
+        super(SearchCtrl, self).Enable(enable)
+        self.ShowCancelButton(enable and bool(self.GetValue()))
+        self.ShowSearchButton(enable)

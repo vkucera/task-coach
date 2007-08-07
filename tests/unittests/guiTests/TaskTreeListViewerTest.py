@@ -28,7 +28,7 @@ class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
             self.settings, categories=categories)
           
     def testOneDayLeft(self):
-        self.settings.set('view', 'timeleft', 'True')
+        self.showColumn('timeLeft')
         self.task.setDueDate(date.Tomorrow())
         self.taskList.append(self.task)
         firstItem, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())

@@ -233,17 +233,20 @@ class EffortPage(TaskEditorPage):
     
     def addEffortViewers(self, taskList, uiCommands, settings):
         effortViewer = viewer.EffortListViewer(self._viewerContainer, taskList, 
-            uiCommands, settings)
+            uiCommands, settings, settingsSection='effortviewerintaskeditor')
         self._viewerContainer.addViewer(effortViewer, _('Effort details'), 'start')
         effortPerDayViewer = viewer.EffortPerDayViewer(self._viewerContainer,
-            taskList, uiCommands, settings)
+            taskList, uiCommands, settings, 
+            settingsSection='compositeeffortviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerDayViewer, _('Effort per day'), 'date')
         effortPerWeekViewer = viewer.EffortPerWeekViewer(self._viewerContainer,
-            taskList, uiCommands, settings)
+            taskList, uiCommands, settings, 
+            settingsSection='compositeeffortviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerWeekViewer, _('Effort per week'), 
             'date')
         effortPerMonthViewer = viewer.EffortPerMonthViewer(self._viewerContainer,
-            taskList, uiCommands, settings)
+            taskList, uiCommands, settings, 
+            settingsSection='compositeeffortviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerMonthViewer, _('Effort per month'), 
             'date')    
 

@@ -13,7 +13,7 @@ class ViewerContainerTest(test.wxTestCase):
                 self.container, self.settings, self.taskList, 
                 effort.EffortList(self.taskList), category.CategoryList(), 
                 note.NoteContainer()), 
-            self.settings), 'Dummy')
+            self.settings, settingsSection='bla'), 'Dummy')
 
     def testCreate(self):
         self.assertEqual(0, self.container.size())

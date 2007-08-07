@@ -73,14 +73,18 @@ class _CtrlWithColumnPopupMenu(_CtrlWithPopupMenu):
         if self.__popupMenu is not None:
             self._attachPopupMenu(self, [wx.EVT_LIST_COL_RIGHT_CLICK],
                 self.onColumnPopupMenu)
-        
+            
     def onColumnPopupMenu(self, event):
         # We store the columnIndex in the menu, because it's near to 
         # impossible for commands in the menu to determine on what column the
         # menu was popped up.
         columnIndex = event.GetColumn()
         self.__popupMenu.columnIndex = columnIndex
+        # Because right-clicking on column headers does not automatically give
+        # focus to the control, we force the focus:
+        event.GetEventObject().MainWindow.SetFocus()
         self.PopupMenu(self.__popupMenu, event.GetPosition())
+        event.Skip()
         
 
 class _CtrlWithDropTarget(_CtrlWithItems):
@@ -172,14 +176,13 @@ class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithDropTarget):
 
 
 class Column(object):
-    def __init__(self, columnHeader, *eventTypes, **kwargs):
+    def __init__(self, name, columnHeader, *eventTypes, **kwargs):
+        self.__name = name
         self.__columnHeader = columnHeader
         self.width = kwargs.pop('width', wx.gizmos.DEFAULT_COL_WIDTH)
         # The event types to use for registering an oberver that is
         # interested in changes that affect this column:
         self.__eventTypes = eventTypes
-        self.__visibilitySetting = kwargs.pop('visibilitySetting', None)
-        self.__sortKey = kwargs.pop('sortKey', None)
         self.__sortCallback = kwargs.pop('sortCallback', None)
         self.__renderCallback = kwargs.pop('renderCallback',
             self.defaultRenderer)
@@ -192,6 +195,9 @@ class Column(object):
         # image cannot be combined with a sortable column
         self.__headerImageIndex = kwargs.pop('headerImageIndex', -1)
         
+    def name(self):
+        return self.__name
+        
     def header(self):
         return self.__columnHeader
     
@@ -201,12 +207,6 @@ class Column(object):
     def eventTypes(self):
         return self.__eventTypes
 
-    def visibilitySetting(self):
-        return self.__visibilitySetting
-
-    def sortKey(self):
-        return self.__sortKey
-    
     def sort(self, *args, **kwargs):
         if self.__sortCallback:
             self.__sortCallback(*args, **kwargs)

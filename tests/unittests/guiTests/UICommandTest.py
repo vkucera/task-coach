@@ -44,21 +44,3 @@ class UICommandsTest(test.wxTestCase):
         gui.uicommand.UICommands(self.frame, None, viewerContainer, None, 
             taskList, effortList, categories, note.NoteContainer())
 
-
-class ViewAllTasksTest(test.wxTestCase):
-    def testTurnOfFilteredCategory(self):
-        settings = config.Settings(load=False)
-        taskList = task.TaskList()
-        categories = category.CategoryList()
-        viewerContainer= gui.viewercontainer.ViewerContainer(None, settings,
-            'mainviewer')
-        uiCommands = gui.uicommand.UICommands(self.frame, None, viewerContainer, 
-            settings, taskList, effort.EffortList(taskList), categories, 
-            note.NoteContainer())
-        aCategory = category.Category('category')
-        categories.append(aCategory)
-        aCategory.setFiltered()
-        viewAllTasks = gui.uicommand.ViewAllTasks(settings=settings, 
-            uiCommands=uiCommands, categories=categories)
-        viewAllTasks.doCommand(None)
-        self.failIf(aCategory.isFiltered())

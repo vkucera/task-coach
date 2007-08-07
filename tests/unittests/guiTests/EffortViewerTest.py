@@ -1,13 +1,14 @@
 import test, gui, config
 from unittests import dummy
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
+from domain import task, effort, date
 
 
-class EffortViewerUnderTest(gui.viewer.EffortViewer):
+class EffortViewerUnderTest(gui.viewer.EffortListViewer):
     def createWidget(self):
         return dummy.DummyWidget(self)
+    
+    def columns(self):
+        return []
 
 
 class EffortViewerTest(test.wxTestCase):
@@ -20,8 +21,7 @@ class EffortViewerTest(test.wxTestCase):
             date.DateTime(2006,1,2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006,1,2),
             date.DateTime(2006,1,3))
-        self.effortList = effort.EffortList(self.taskList)
-        self.viewer = EffortViewerUnderTest(self.frame, self.effortList, {}, 
+        self.viewer = EffortViewerUnderTest(self.frame, self.taskList, {}, 
             self.settings)
             
     def assertStatusMessages(self, message1, message2):

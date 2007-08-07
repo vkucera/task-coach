@@ -22,7 +22,8 @@ class VirtualListCtrlTestCase(test.wxTestCase):
     def createColumns(self, nrColumns):
         columns = []
         for columnIndex in range(1, nrColumns+1):
-            columns.append(widgets.Column('column%d'%columnIndex, None, None))
+            name = 'column%d'%columnIndex
+            columns.append(widgets.Column(name, name, None, None))
         return columns
 
     def setUp(self):

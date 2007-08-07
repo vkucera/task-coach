@@ -70,7 +70,9 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         
     def onSelect(self, event):
         if not self._refreshing:
-            self.selectCommand()
+             # Use CallAfter to prevent handling the select while items are 
+             # being deleted:
+             wx.CallAfter(self.selectCommand) 
         event.Skip()
                     
     def onDoubleClick(self, event):

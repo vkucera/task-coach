@@ -167,6 +167,9 @@ class EffortTest(test.TestCase, asserts.Mixin):
             date.DateTime(2005,1,1,10,0), date.DateTime(2005,1,1,22,0)))
         self.assertEqual(2./3*1000., self.effort.revenue())
 
+    def testSubject(self):
+        self.assertEqual(self.task.subject(), self.effort.subject())
+
 
 class EffortWithoutTaskTest(test.TestCase):   
     def setUp(self):
