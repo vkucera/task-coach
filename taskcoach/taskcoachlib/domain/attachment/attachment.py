@@ -3,7 +3,7 @@ from thirdparty import desktop
 from mailer import thunderbird, outlook, readMail, setMailDescription
 from i18n import _
 
-import os
+import os, shutil, tempfile
 
 class Attachment(object):
     def open(self):
@@ -57,10 +57,16 @@ class URIAttachment(Attachment):
             return 1
 
 class MailAttachment(Attachment):
-    def __init__(self, filename):
-        self.filename = filename
+    attdir =  None #  This is  filled in before  saving or  reading by
+                   # xml.writer and xml.reader
 
-        self.subject, self.description, unused = readMail(filename, False)
+    def __init__(self, filename):
+        if os.path.isabs(filename):
+            self.filename = os.path.normpath(filename)
+        else:
+            self.filename = os.path.normpath(os.path.join(self.attdir, filename))
+
+        self.subject, self.description, unused = readMail(self.filename, False)
 
     def open(self):
         desktop.open(self.filename)
@@ -69,7 +75,17 @@ class MailAttachment(Attachment):
         setMailDescription(self.filename, descr)
 
     def __repr__(self):
-        return 'MAIL:' + self.filename
+        path, name = os.path.split(self.filename)
+
+        if self.attdir is not None:
+            if path != self.attdir:
+                fd, filename = tempfile.mkstemp(suffix='.eml', dir=self.attdir)
+                os.close(fd)
+                shutil.move(self.filename, filename)
+                self.filename = os.path.normpath(filename)
+                path, name = os.path.split(self.filename)
+
+        return 'MAIL:' + name
 
     def __unicode__(self):
         return self.description

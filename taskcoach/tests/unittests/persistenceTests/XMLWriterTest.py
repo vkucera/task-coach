@@ -7,6 +7,7 @@ from domain import task, effort, date, category, note, attachment
 class XMLWriterTest(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
+        self.fd.name = 'testfile.tsk'
         self.writer = persistence.XMLWriter(self.fd)
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
