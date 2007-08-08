@@ -5,6 +5,7 @@ class SearchCtrl(wx.SearchCtrl):
     def __init__(self, *args, **kwargs):
         self.__callback = kwargs.pop('callback')
         self.__matchCase = kwargs.pop('matchCase', False)
+        self.__includeSubItems = kwargs.pop('includeSubItems', False)
         size = kwargs.pop('size', (16, 16))
         super(SearchCtrl, self).__init__(*args, **kwargs)
         self.SetSearchMenuBitmap(wx.ArtProvider_GetBitmap('searchmenu', wx.ART_TOOLBAR, size))
@@ -29,9 +30,16 @@ class SearchCtrl(wx.SearchCtrl):
         self.__matchCaseMenuItemId = wx.NewId()
         self.Bind(wx.EVT_MENU, self.onMatchCaseMenuItem, 
             id=self.__matchCaseMenuItemId)
+        self.__includeSubItemsMenuItemId = wx.NewId()
+        self.Bind(wx.EVT_MENU, self.onIncludeSubItemsMenuItem,
+            id=self.__includeSubItemsMenuItemId)
         
     def setMatchCase(self, matchCase):
         self.__matchCase = matchCase
+        self.SetMenu(self.makeMenu())
+        
+    def setIncludeSubItems(self, includeSubItems):
+        self.__includeSubItems = includeSubItems
         self.SetMenu(self.makeMenu())
 
     def onFindLater(self, event):
@@ -48,14 +56,19 @@ class SearchCtrl(wx.SearchCtrl):
         if searchString:
             self.rememberSearchString(searchString)
         self.ShowCancelButton(bool(searchString))
-        self.__callback(searchString, self.__matchCase)
+        self.__callback(searchString, self.__matchCase, self.__includeSubItems)
 
     def onCancel(self, event):
         self.SetValue('')
         self.onFind(event)
     
     def onMatchCaseMenuItem(self, event):
-        self.__matchCase = event.IsChecked()
+        self.__matchCase = self._isMenuItemChecked(event)
+        self.SetMenu(self.makeMenu())
+        self.onFind(event)
+        
+    def onIncludeSubItemsMenuItem(self, event):
+        self.__includeSubItems = self._isMenuItemChecked(event)
         self.SetMenu(self.makeMenu())
         self.onFind(event)
         
@@ -76,6 +89,10 @@ class SearchCtrl(wx.SearchCtrl):
         menu.AppendCheckItem(self.__matchCaseMenuItemId, _('Match case'), 
             _('Match case when filtering'))
         menu.Check(self.__matchCaseMenuItemId, self.__matchCase)
+        menu.AppendCheckItem(self.__includeSubItemsMenuItemId, 
+            _('Include sub items'), 
+            _('Include sub items of matching itemns in the search results'))
+        menu.Check(self.__includeSubItemsMenuItemId, self.__includeSubItems)
         if self.__recentSearches:
             self.addRecentSearches(menu)
         return menu
@@ -98,3 +115,16 @@ class SearchCtrl(wx.SearchCtrl):
         super(SearchCtrl, self).Enable(enable)
         self.ShowCancelButton(enable and bool(self.GetValue()))
         self.ShowSearchButton(enable)
+        
+    def _isMenuItemChecked(self, event):
+        # There's a bug in wxPython 2.8.3 on Windows XP that causes 
+        # event.IsChecked() to return the wrong value in the context menu.
+        # The menu on the main window works fine. So we first try to access the
+        # context menu to get the checked state from the menu item itself.
+        # This will fail if the event is coming from the window, but in that
+        # case we can event.IsChecked() expect to work so we use that.
+        try:
+            return event.GetEventObject().FindItemById(event.GetId()).IsChecked()
+        except AttributeError:
+            return event.IsChecked()
+        

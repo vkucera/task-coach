@@ -1387,19 +1387,20 @@ class Search(MainWindowCommand, ViewerCommand, SettingsCommand):
         if self.searchControl:
             searchable = self.viewer.isSearchable()
             if searchable:
-                searchString, matchCase = self.viewer.getSearchFilter()
-                self.searchControl.setMatchCase(matchCase)
+                searchString, matchCase, includeSubItems = self.viewer.getSearchFilter()
                 self.searchControl.SetValue(searchString)
+                self.searchControl.setMatchCase(matchCase)
+                self.searchControl.setIncludeSubItems(includeSubItems)
             self.searchControl.Enable(searchable)
                     
-    def onFind(self, searchString, matchCase):
-        self.viewer.setSearchFilter(searchString, matchCase)
+    def onFind(self, searchString, matchCase, includeSubItems):
+        self.viewer.setSearchFilter(searchString, matchCase, includeSubItems)
 
     def appendToToolBar(self, toolbar):
-        searchString, matchCase = self.viewer.getSearchFilter()
+        searchString, matchCase, includeSubItems = self.viewer.getSearchFilter()
         self.searchControl = widgets.SearchCtrl(toolbar, value=searchString,
             style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
-            callback=self.onFind)
+            includeSubItems=includeSubItems, callback=self.onFind)
         toolbar.AddControl(self.searchControl)
 
 

@@ -18,6 +18,10 @@ control on the toolbar. '''),
 case sensitive or case insensitive.'''),
         Feature('''Each type of viewer/tab has its own settings for sort order
 and visible columns.'''),
+        Feature('''The search control on the toolbar can (optionally) include
+subitems in the search result. This makes it easy to show
+one task and its subtasks in a task viewer or show effort for one task and 
+its subtasks in an effort viewer.'''),
         Feature('''Added a setting to start Task Coach iconized either 
 always, never, or only when Task Coach was iconized when last 
 quitted.''', '1749886')]),
