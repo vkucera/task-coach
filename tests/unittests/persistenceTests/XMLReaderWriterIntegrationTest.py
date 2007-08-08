@@ -1,11 +1,12 @@
 import test, persistence
-import cStringIO as StringIO
+import StringIO
 from domain import task, category, effort, date, note, attachment
 
 
 class IntegrationTestCase(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
+        self.fd.name = 'testfile.tsk'
         self.reader = persistence.XMLReader(self.fd)
         self.writer = persistence.XMLWriter(self.fd)
         self.taskList = task.TaskList()
@@ -21,9 +22,9 @@ class IntegrationTestCase(test.TestCase):
         pass
 
     def readAndWrite(self):
-        self.fd.reset()
+        self.fd.seek(0)
         self.writer.write(self.taskList, self.categories, self.notes)
-        self.fd.reset()
+        self.fd.seek(0)
         return self.reader.read()
 
 

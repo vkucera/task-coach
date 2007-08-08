@@ -9,9 +9,16 @@ class CommonTests(object):
         super(CommonTests, self).setUp()
         self.newColor = (100, 200, 100)
         file('test.mail', 'wb').write('Subject: foo\r\n\r\nBody\r\n')
+        attachment.MailAttachment.attdir = os.getcwd()
 
     def tearDown(self):
         super(CommonTests, self).tearDown()
+        attachment.MailAttachment.attdir = None
+
+        for name in os.listdir('.'):
+            if os.path.isdir(name) and name.endswith('_attachments'):
+                os.rmdir(name)
+
         try:
             os.remove('test.mail')
         except OSError:

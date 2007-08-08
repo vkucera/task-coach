@@ -12,6 +12,8 @@ class DummySettings(dict):
 
 
 class DummyFile:
+    name = 'testfile.tsk'
+
     def close(self, *args, **kwargs):
         pass
 
