@@ -15,21 +15,25 @@ class SearchableViewer(object):
         return base.SearchFilter(model, **self.searchOptions())
 
     def searchOptions(self):
-        searchString, matchCase = self.getSearchFilter()
+        searchString, matchCase, includeSubItems = self.getSearchFilter()
         return dict(searchString=searchString, matchCase=matchCase, 
+                    includeSubItems=includeSubItems, 
                     treeMode=self.isTreeViewer())
     
-    def setSearchFilter(self, searchString, matchCase):
+    def setSearchFilter(self, searchString, matchCase=False, 
+                        includeSubItems=False):
         section = self.settingsSection()
         self.settings.set(section, 'searchfilterstring', searchString)
         self.settings.set(section, 'searchfiltermatchcase', str(matchCase))
-        self.model().setSearchFilter(searchString, matchCase)
+        self.settings.set(section, 'searchfilterincludesubitems', str(includeSubItems))
+        self.model().setSearchFilter(searchString, matchCase, includeSubItems)
         
     def getSearchFilter(self):
         section = self.settingsSection()
         searchString = self.settings.get(section, 'searchfilterstring')
         matchCase = self.settings.getboolean(section, 'searchfiltermatchcase')
-        return searchString, matchCase
+        includeSubItems = self.settings.getboolean(section, 'searchfilterincludesubitems')
+        return searchString, matchCase, includeSubItems
     
 
 class FilterableViewer(object):
@@ -926,8 +930,8 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
     def renderSubject(self, task):
         return render.subject(task, recursively=False)
 
-    def setSearchFilter(self, searchString, matchCase):
-        super(TaskTreeViewer, self).setSearchFilter(searchString, matchCase)
+    def setSearchFilter(self, searchString, *args, **kwargs):
+        super(TaskTreeViewer, self).setSearchFilter(searchString, *args, **kwargs)
         if searchString:
             self.expandAll()
 

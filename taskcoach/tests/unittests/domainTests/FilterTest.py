@@ -242,8 +242,9 @@ class SearchFilterTest(test.TestCase):
         self.list = task.TaskList([self.parent, self.child])
         self.filter = base.SearchFilter(self.list)
 
-    def setSearchString(self, searchString, matchCase=False):
-        self.filter.setSearchFilter(searchString, matchCase)
+    def setSearchString(self, searchString, matchCase=False,
+                        includeSubItems=False):
+        self.filter.setSearchFilter(searchString, matchCase, includeSubItems)
         
     def testNoMatch(self):
         self.setSearchString('XYZ')
@@ -294,6 +295,10 @@ class SearchFilterTest(test.TestCase):
         self.setSearchString('DEF')
         self.list.remove(self.child)
         self.failIf(self.filter)
+        
+    def testIncludeSubItems(self):
+        self.setSearchString('ABC', includeSubItems=True)
+        self.assertEqual(2, len(self.filter))
 
 
 class CategoryFilterHelpers(object):

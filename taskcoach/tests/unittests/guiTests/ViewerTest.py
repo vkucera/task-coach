@@ -95,17 +95,44 @@ class SearchableViewerTest(test.TestCase):
     def testIsSearchable(self):
         self.failUnless(self.viewer.isSearchable())
         
+    def testDefaultSearchFilter(self):
+        self.assertEqual(('', False, False), self.viewer.getSearchFilter())
+        
     def testSetSearchFilterString(self):
         self.viewer.setSearchFilter('bla', matchCase=True)
         self.assertEqual('bla', self.settings.get(self.viewer.settingsSection(),
                                                   'searchfilterstring'))
+
+    def testSetSearchFilterString_AffectsModel(self):
+        self.taskList.append(task.Task())
+        self.viewer.setSearchFilter('bla')
+        self.failIf(self.taskList)
         
     def testSearchMatchCase(self):
-        self.viewer.setSearchFilter('bla', matchCase=False)
-        self.assertEqual(False, 
+        self.viewer.setSearchFilter('bla', matchCase=True)
+        self.assertEqual(True, 
             self.settings.getboolean(self.viewer.settingsSection(), 
                                      'searchfiltermatchcase'))
         
+    def testSearchMatchCase_AffectsModel(self):
+        self.taskList.append(task.Task('BLA'))
+        self.viewer.setSearchFilter('bla', matchCase=True)
+        self.failIf(self.taskList)
+        
+    def testSearchIncludesSubItems(self):
+        self.viewer.setSearchFilter('bla', includeSubItems=True)
+        self.assertEqual(True, 
+            self.settings.getboolean(self.viewer.settingsSection(), 
+                                     'searchfilterincludesubitems'))
+        
+    def testSearchIncludesSubItems_AffectsModel(self):
+        parent = task.Task('parent')
+        child = task.Task('child')
+        parent.addChild(child)
+        self.taskList.append(parent)
+        self.viewer.setSearchFilter('parent', includeSubItems=True)
+        self.assertEqual(2, len(self.taskList))
+
 
 class FilterableViewerTest(test.TestCase):
     def setUp(self):

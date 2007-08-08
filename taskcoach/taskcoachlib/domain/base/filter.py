@@ -40,10 +40,13 @@ class SearchFilter(Filter):
     def __init__(self, *args, **kwargs):
         self.__searchString = kwargs.pop('searchString', u'')
         self.__matchCase = kwargs.pop('matchCase', False)
+        self.__includeSubItems = kwargs.pop('includeSubItems', False)
         super(SearchFilter, self).__init__(*args, **kwargs)
 
-    def setSearchFilter(self, searchString, matchCase):
+    def setSearchFilter(self, searchString, matchCase=False, 
+                        includeSubItems=False):
         self.__searchString = searchString
+        self.__includeSubItems = includeSubItems
         if matchCase:
             self.__matchCase = 0
         else:
@@ -57,6 +60,11 @@ class SearchFilter(Filter):
         
     def __itemSubject(self, item):
         subject = item.subject()
+        if self.__includeSubItems:
+            parent = item.parent()
+            while parent:
+                subject += parent.subject()
+                parent = parent.parent()
         if self.treeMode():
             subject += ' '.join([child.subject() for child in \
                 item.children(recursive=True) if child in self.observable()])
