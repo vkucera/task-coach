@@ -48,7 +48,9 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
             self._entry = wx.StaticText(self, label=render.timeSpent(timeDelta))
         else:
             self._entry = masked.TextCtrl(self, mask='#{6}:##:##',
-                formatcodes='RrFS')
+                fields=[masked.Field(formatcodes='rRFS'), 
+                        masked.Field(formatcodes='RFS'), 
+                        masked.Field(formatcodes='RFS')])
             hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
             self._entry.SetFieldParameters(0, defaultValue='%6d'%hours)
             self._entry.SetFieldParameters(1, defaultValue='%02d'%minutes)
