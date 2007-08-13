@@ -26,10 +26,16 @@ class ViewerTest(test.wxTestCase):
 class SortableViewerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.viewer = gui.viewer.SortableViewer()
-        self.viewer.settings = self.settings
-        self.viewer.settingsSection = lambda: 'tasktreelistviewer'
-        self.viewer.model = lambda: task.sorter.Sorter(task.TaskList())
+        self.viewer = self.createViewer()
+        
+    def createViewer(self):
+        viewer = gui.viewer.SortableViewer()
+        viewer.settings = self.settings
+        viewer.settingsSection = lambda: 'tasktreelistviewer'
+        viewer.SorterClass = task.sorter.Sorter
+        model = viewer.createSorter(task.TaskList())
+        viewer.model = lambda: model
+        return viewer
         
     def testIsSortable(self):
         self.failUnless(self.viewer.isSortable())
@@ -64,6 +70,14 @@ class SortableViewerTest(test.TestCase):
     def testSetSortCaseInsensitive(self):
         self.viewer.setSortCaseSensitive(False)
         self.failIf(self.viewer.isSortCaseSensitive())
+        
+    def testApplySettingsWhenCreatingViewer(self):
+        self.settings.set(self.viewer.settingsSection(), 'sortby', 'description')
+        self.settings.set(self.viewer.settingsSection(), 'sortascending', 'True')
+        anotherViewer = self.createViewer()
+        anotherViewer.model().extend([task.Task(description='B'), 
+                                      task.Task(description='A')])
+        self.assertEqual(['A', 'B'], [t.description() for t in anotherViewer.model()])
 
 
 class SortableViewerForTasksTest(test.TestCase):
@@ -81,16 +95,32 @@ class SortableViewerForTasksTest(test.TestCase):
     def testSetNoSortByTaskStatusFirst(self):
         self.viewer.setSortByTaskStatusFirst(False)
         self.failIf(self.viewer.isSortByTaskStatusFirst())
-        
 
+      
+class DummyViewer(object):
+    def isTreeViewer(self):
+        return False
+    
+    def createFilter(self, model):
+        return model
+
+
+class SearchableViewerUnderTest(gui.viewer.SearchableViewer, DummyViewer):
+    pass   
+
+    
 class SearchableViewerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.taskList = base.SearchFilter(task.TaskList())
-        self.viewer = gui.viewer.SearchableViewer()
-        self.viewer.settings = self.settings
-        self.viewer.settingsSection = lambda: 'tasktreelistviewer'
-        self.viewer.model = lambda: self.taskList
+        self.viewer = self.createViewer()
+        
+    def createViewer(self):
+        viewer = SearchableViewerUnderTest()
+        viewer.settings = self.settings
+        viewer.settingsSection = lambda: 'tasktreelistviewer'
+        model = viewer.createFilter(task.TaskList())
+        viewer.model = lambda: model
+        return viewer
         
     def testIsSearchable(self):
         self.failUnless(self.viewer.isSearchable())
@@ -104,9 +134,9 @@ class SearchableViewerTest(test.TestCase):
                                                   'searchfilterstring'))
 
     def testSetSearchFilterString_AffectsModel(self):
-        self.taskList.append(task.Task())
+        self.viewer.model().append(task.Task())
         self.viewer.setSearchFilter('bla')
-        self.failIf(self.taskList)
+        self.failIf(self.viewer.model())
         
     def testSearchMatchCase(self):
         self.viewer.setSearchFilter('bla', matchCase=True)
@@ -115,9 +145,9 @@ class SearchableViewerTest(test.TestCase):
                                      'searchfiltermatchcase'))
         
     def testSearchMatchCase_AffectsModel(self):
-        self.taskList.append(task.Task('BLA'))
+        self.viewer.model().append(task.Task('BLA'))
         self.viewer.setSearchFilter('bla', matchCase=True)
-        self.failIf(self.taskList)
+        self.failIf(self.viewer.model())
         
     def testSearchIncludesSubItems(self):
         self.viewer.setSearchFilter('bla', includeSubItems=True)
@@ -129,9 +159,15 @@ class SearchableViewerTest(test.TestCase):
         parent = task.Task('parent')
         child = task.Task('child')
         parent.addChild(child)
-        self.taskList.append(parent)
+        self.viewer.model().append(parent)
         self.viewer.setSearchFilter('parent', includeSubItems=True)
-        self.assertEqual(2, len(self.taskList))
+        self.assertEqual(2, len(self.viewer.model()))
+        
+    def testApplySettingsWhenCreatingViewer(self):
+        self.settings.set(self.viewer.settingsSection(), 'searchfilterstring', 'whatever')
+        anotherViewer = self.createViewer()
+        anotherViewer.model().append(task.Task())
+        self.failIf(anotherViewer.model())
 
 
 class FilterableViewerTest(test.TestCase):
@@ -140,17 +176,26 @@ class FilterableViewerTest(test.TestCase):
         
     def testIsFilterable(self):
         self.failUnless(self.viewer.isFilterable())
+
+
+class FilterableViewerForTasksUnderTest(gui.viewer.FilterableViewerForTasks, DummyViewer):
+    pass
         
         
 class FilterableViewerForTasks(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.viewer = gui.viewer.FilterableViewerForTasks()
-        self.taskList = task.filter.ViewFilter(task.TaskList())
-        self.viewer.settings = self.settings
-        self.viewer.settingsSection = lambda: 'tasklistviewer'
-        self.viewer.model = lambda: self.taskList
+        self.viewer = self.createViewer()
         
+    def createViewer(self):
+        viewer = FilterableViewerForTasksUnderTest()
+        viewer.categories = category.CategoryList()
+        viewer.settings = self.settings
+        viewer.settingsSection = lambda: 'tasklistviewer'
+        model = viewer.createFilter(task.TaskList())
+        viewer.model = lambda: model
+        return viewer
+    
     def testIsFilterByDueDate_IsUnlimitedByDefault(self):
         self.failUnless(self.viewer.isFilteredByDueDate('Unlimited'))
         
@@ -164,15 +209,15 @@ class FilterableViewerForTasks(test.TestCase):
         self.assertEqual('Today', setting)
     
     def testSetFilterByDueDate_AffectsModel(self):
-        self.taskList.append(task.Task(dueDate=date.Tomorrow()))
+        self.viewer.model().append(task.Task(dueDate=date.Tomorrow()))
         self.viewer.setFilteredByDueDate('Today')
-        self.failIf(self.taskList)
+        self.failIf(self.viewer.model())
         
     def testSetFilterByDueDate_BackToUnlimited(self):
-        self.taskList.append(task.Task(dueDate=date.Tomorrow()))
+        self.viewer.model().append(task.Task(dueDate=date.Tomorrow()))
         self.viewer.setFilteredByDueDate('Today')
         self.viewer.setFilteredByDueDate('Unlimited')
-        self.failUnless(self.taskList)
+        self.failUnless(self.viewer.model())
         
     def testIsNotHidingActiveTasksByDefault(self):
         self.failIf(self.viewer.isHidingActiveTasks())
@@ -187,15 +232,15 @@ class FilterableViewerForTasks(test.TestCase):
                                                  'hideactivetasks'))
 
     def testHideActiveTasks_AffectsModel(self):
-        self.taskList.append(task.Task())
+        self.viewer.model().append(task.Task())
         self.viewer.hideActiveTasks()
-        self.failIf(self.taskList)
+        self.failIf(self.viewer.model())
         
     def testUnhideActiveTasks(self):
-        self.taskList.append(task.Task())
+        self.viewer.model().append(task.Task())
         self.viewer.hideActiveTasks()
         self.viewer.hideActiveTasks(False)
-        self.failUnless(self.taskList)
+        self.failUnless(self.viewer.model())
 
     def testIsNotHidingInactiveTasksByDefault(self):
         self.failIf(self.viewer.isHidingInactiveTasks())
@@ -210,15 +255,15 @@ class FilterableViewerForTasks(test.TestCase):
                                                  'hideinactivetasks'))
 
     def testHideInactiveTasks_AffectsModel(self):
-        self.taskList.append(task.Task(startDate=date.Tomorrow()))
+        self.viewer.model().append(task.Task(startDate=date.Tomorrow()))
         self.viewer.hideInactiveTasks()
-        self.failIf(self.taskList)
+        self.failIf(self.viewer.model())
     
     def testUnhideInactiveTasks(self):
-        self.taskList.append(task.Task(startDate=date.Tomorrow()))
+        self.viewer.model().append(task.Task(startDate=date.Tomorrow()))
         self.viewer.hideInactiveTasks()
         self.viewer.hideInactiveTasks(False)
-        self.failUnless(self.taskList)
+        self.failUnless(self.viewer.model())
     
     def testIsNotHidingCompletedTasksByDefault(self):
         self.failIf(self.viewer.isHidingCompletedTasks())
@@ -233,15 +278,15 @@ class FilterableViewerForTasks(test.TestCase):
                                                  'hidecompletedtasks'))
     
     def testHideCompletedTasks_AffectsModel(self):
-        self.taskList.append(task.Task(completionDate=date.Today()))
+        self.viewer.model().append(task.Task(completionDate=date.Today()))
         self.viewer.hideCompletedTasks()
-        self.failIf(self.taskList)
+        self.failIf(self.viewer.model())
         
     def testUnhideCompletedTasks(self):    
-        self.taskList.append(task.Task(completionDate=date.Today()))
+        self.viewer.model().append(task.Task(completionDate=date.Today()))
         self.viewer.hideCompletedTasks()
         self.viewer.hideCompletedTasks(False)
-        self.failUnless(self.taskList)
+        self.failUnless(self.viewer.model())
         
     def testIsNotHidingOverdueTasksByDefault(self):
         self.failIf(self.viewer.isHidingOverdueTasks())
@@ -256,15 +301,15 @@ class FilterableViewerForTasks(test.TestCase):
                                                  'hideoverduetasks'))
         
     def testHideOverdueTasks_AffectsModel(self):
-        self.taskList.append(task.Task(dueDate=date.Yesterday()))
+        self.viewer.model().append(task.Task(dueDate=date.Yesterday()))
         self.viewer.hideOverdueTasks()
-        self.failIf(self.taskList)
+        self.failIf(self.viewer.model())
         
     def testUnhideOverdueTasks(self):
-        self.taskList.append(task.Task(dueDate=date.Yesterday()))
+        self.viewer.model().append(task.Task(dueDate=date.Yesterday()))
         self.viewer.hideOverdueTasks()
         self.viewer.hideOverdueTasks(False)
-        self.failUnless(self.taskList)
+        self.failUnless(self.viewer.model())
         
     def testIsNotHidingOverbudgetTasksByDefault(self):
         self.failIf(self.viewer.isHidingOverbudgetTasks())
@@ -281,17 +326,17 @@ class FilterableViewerForTasks(test.TestCase):
     def testHideOverbudgetTasks_AffectsModel(self):
         overBudgetTask = task.Task(budget=date.TimeDelta(hours=10))
         overBudgetTask.addEffort(effort.Effort(overBudgetTask, date.Date(2000,1,1), date.Date(2000,1,2)))
-        self.taskList.append(overBudgetTask)
+        self.viewer.model().append(overBudgetTask)
         self.viewer.hideOverbudgetTasks()
-        self.failIf(self.taskList)
+        self.failIf(self.viewer.model())
         
     def testUnhideOverdueTasks(self):
         overBudgetTask = task.Task(budget=date.TimeDelta(hours=10))
         overBudgetTask.addEffort(effort.Effort(overBudgetTask, date.Date(2000,1,1), date.Date(2000,1,2)))
-        self.taskList.append(overBudgetTask)
+        self.viewer.model().append(overBudgetTask)
         self.viewer.hideOverbudgetTasks()
         self.viewer.hideOverbudgetTasks(False)
-        self.failUnless(self.taskList)
+        self.failUnless(self.viewer.model())
 
     def testIsNotHidingCompositeTasksByDefault(self):
         self.failIf(self.viewer.isHidingCompositeTasks())
@@ -310,17 +355,17 @@ class FilterableViewerForTasks(test.TestCase):
         parent = task.Task()
         child = task.Task()
         parent.addChild(child)
-        self.taskList.append(parent)
-        self.assertEqual([child], self.taskList)
+        self.viewer.model().append(parent)
+        self.assertEqual([child], self.viewer.model())
         
     def testUnhideCompositeTasks(self):
         self.viewer.hideCompositeTasks()
         parent = task.Task()
         child = task.Task()
         parent.addChild(child)
-        self.taskList.append(parent)
+        self.viewer.model().append(parent)
         self.viewer.hideCompositeTasks(False)
-        self.assertEqual(2, len(self.taskList))
+        self.assertEqual(2, len(self.viewer.model()))
         
     def testClearAllFilters(self):
         self.viewer.hideActiveTasks()
@@ -337,7 +382,13 @@ class FilterableViewerForTasks(test.TestCase):
         self.failIf(self.viewer.isHidingOverdueTasks())
         self.failIf(self.viewer.isHidingOverbudgetTasks())
         self.failIf(self.viewer.isHidingCompositeTasks())
-        self.failUnless(self.viewer.isFilteredByDueDate('Unlimited'))        
+        self.failUnless(self.viewer.isFilteredByDueDate('Unlimited'))     
+        
+    def testApplySettingsWhenCreatingViewer(self):
+        self.settings.set(self.viewer.settingsSection(), 'hidecompletedtasks', 'True')
+        anotherViewer = self.createViewer()
+        anotherViewer.model().append(task.Task(completionDate=date.Today()))
+        self.failIf(anotherViewer.model())   
 
 
 class TaskListViewerUnderTest(gui.viewer.TaskListViewer):

@@ -93,33 +93,33 @@ class ViewFilter(base.Filter):
 
 class CategoryFilter(base.Filter):
     def __init__(self, *args, **kwargs):
-        self.__settings = kwargs.pop('settings')
         self.__categories = kwargs.pop('categories')
+        self.__filterOnlyWhenAllCategoriesMatch = \
+            kwargs.pop('filterOnlyWhenAllCategoriesMatch', False)
         patterns.Publisher().registerObserver(self.onCategoryChanged,
             eventType=self.__categories.addItemEventType())
         patterns.Publisher().registerObserver(self.onCategoryChanged,
             eventType=self.__categories.removeItemEventType())
-        patterns.Publisher().registerObserver(self.onSettingChanged, 
-            eventType='view.taskcategoryfiltermatchall')
-        patterns.Publisher().registerObserver(self.onSettingChanged,
+        patterns.Publisher().registerObserver(self.onCategoryChanged,
             eventType='category.filter')
         super(CategoryFilter, self).__init__(*args, **kwargs)
+    
+    def setFilterOnlyWhenAllCategoriesMatch(self, filterOnlyWhenAllCategoriesMatch=True):
+        self.__filterOnlyWhenAllCategoriesMatch = filterOnlyWhenAllCategoriesMatch
         
     def filter(self, tasks):
         filteredCategories = [category for category in self.__categories 
                               if category.isFiltered()]
-        if not filteredCategories:
+        if filteredCategories:
+            return [task for task in tasks if \
+                    self.filterTask(task, filteredCategories)]
+        else:
             return tasks
-        filterOnlyWhenAllCategoriesMatch = self.__settings.getboolean('view', 
-            'taskcategoryfiltermatchall')
-        return [task for task in tasks if self.filterTask(task, 
-                filteredCategories, filterOnlyWhenAllCategoriesMatch)]
         
-    def filterTask(self, task, filteredCategories, 
-                   filterOnlyWhenAllCategoriesMatch):
+    def filterTask(self, task, filteredCategories):
         matches = [category.contains(task, self.treeMode()) 
                    for category in filteredCategories]
-        if filterOnlyWhenAllCategoriesMatch:
+        if self.__filterOnlyWhenAllCategoriesMatch:
             return False not in matches
         else:
             return True in matches
