@@ -41,9 +41,32 @@ class FilterableViewer(object):
 
     def isFilterable(self):
         return True
-        
+    
+    '''
+    def createFilter(self, model):
+        model = super(FilterableViewer, self).createFilter(model)
+        return self.FilterClass(model, **self.filterOptions())
+    '''    
         
 class FilterableViewerForTasks(FilterableViewer):
+    def createFilter(self, taskList):
+        taskList = super(FilterableViewerForTasks, self).createFilter(taskList)
+        return task.filter.CategoryFilter( \
+            task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
+                                   **self.viewFilterOptions()), 
+            categories=self.categories, treeMode=self.isTreeViewer())
+    
+    def viewFilterOptions(self):
+        options = dict(dueDateFilter=self.getFilteredByDueDate(),
+                       hideActiveTasks=self.isHidingActiveTasks(),
+                       hideCompletedTasks=self.isHidingCompletedTasks(),
+                       hideInactiveTasks=self.isHidingInactiveTasks(),
+                       hideOverdueTasks=self.isHidingOverdueTasks(),
+                       hideOverBudgetTasks=self.isHidingOverbudgetTasks())
+        if not self.isTreeViewer():
+            options['hideCompositeTasks'] = self.isHidingCompositeTasks()
+        return options
+    
     def isFilteredByDueDate(self, dueDateString):
         return dueDateString == self.settings.get(self.settingsSection(), 
                                                   'tasksdue')
@@ -52,6 +75,9 @@ class FilterableViewerForTasks(FilterableViewer):
         self.settings.set(self.settingsSection(), 'tasksdue', dueDateString)
         self.model().setFilteredByDueDate(dueDateString)
         
+    def getFilteredByDueDate(self):
+        return self.settings.get(self.settingsSection(), 'tasksdue')
+    
     def hideActiveTasks(self, hide=True):
         self.__setBooleanSetting('hideactivetasks', hide)
         self.model().hideActiveTasks(hide)
@@ -166,6 +192,8 @@ class SortableViewer(object):
 
         
 class SortableViewerForTasks(SortableViewer):
+    SorterClass = task.sorter.Sorter
+    
     def isSortByTaskStatusFirst(self):
         return self.settings.getboolean(self.settingsSection(),
             'sortbystatusfirst')
@@ -614,8 +642,6 @@ class SortableViewerWithColumns(SortableViewer, ViewerWithColumns):
 
 class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks, 
                  SearchableViewer, UpdatePerSecondViewer):
-    SorterClass = task.sorter.Sorter
-    
     def __init__(self, *args, **kwargs):
         self.categories = kwargs.pop('categories')
         super(TaskViewer, self).__init__(*args, **kwargs)
@@ -624,12 +650,6 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     def isShowingTasks(self): 
         return True
     
-    def createFilter(self, taskList):
-        taskList = super(TaskViewer, self).createFilter(taskList)
-        return task.filter.CategoryFilter( \
-            task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer()), 
-            settings=self.settings, categories=self.categories, treeMode=self.isTreeViewer())
-                
     def getColumnUICommands(self):
         return [(_('&Dates'), 'viewalldatecolumns', None, 'viewstartDate', 
                  'viewdueDate', 'viewcompletionDate', 'viewtimeLeft'),
