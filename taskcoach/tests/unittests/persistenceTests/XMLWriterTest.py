@@ -163,6 +163,11 @@ class XMLWriterTest(test.TestCase):
         self.categoryContainer.extend([filteredCategory])
         self.expectInXML('<category filtered="True" subject="test"/>')
 
+    def testCategoryWithDescription(self):
+        aCategory = category.Category('subject', description='Description')
+        self.categoryContainer.append(aCategory)
+        self.expectInXML('<category subject="subject"><description>Description</description></category>')
+        
     def testCategoryWithUnicodeSubject(self):
         unicodeCategory = category.Category(u'ï¬Ÿï­Žï­–')
         self.categoryContainer.extend([unicodeCategory])
@@ -245,7 +250,7 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('<note/>')
         
     def testNoteWithSubject(self):
-        self.noteContainer.append(note.Note('Note'))
+        self.noteContainer.append(note.Note(subject='Note'))
         self.expectInXML('<note subject="Note"/>')
         
     def testNoteWithDescription(self):

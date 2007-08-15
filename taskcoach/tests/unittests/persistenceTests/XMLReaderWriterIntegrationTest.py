@@ -51,7 +51,8 @@ class IntegrationTest(IntegrationTestCase):
         self.child.addChild(self.grandChild)
         self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
             stop=date.DateTime(2004,1,2), description=self.description))
-        self.category = category.Category('test', [self.task], filtered=True)
+        self.category = category.Category('test', [self.task], filtered=True,
+                                          description='Description')
         self.categories.append(self.category)
         self.task.addAttachments(attachment.FileAttachment('/home/frank/whatever.txt'))
         self.task2 = task.Task('Task 2', priority=-1954)
@@ -162,3 +163,7 @@ class IntegrationTest(IntegrationTestCase):
     def testChildNote(self):
         self.assertEqual(self.notes.rootItems()[0].children()[0].subject(), 
             self.notesWrittenAndRead.rootItems()[0].children()[0].subject())
+        
+    def testCategoryDescription(self):
+        self.assertEqual(self.categories[0].description(), 
+                         self.categoriesWrittenAndRead[0].description())

@@ -554,14 +554,23 @@ class CategoryEditBook(widgets.BookPage):
         self._editor = editor
         self._category = category
         self.addSubjectEntry()
+        self.addDescriptionEntry()
         self.fit()
 
     def addSubjectEntry(self):
         self._subjectEntry = widgets.SingleLineTextCtrl(self, self._category.subject())
         self.addEntry(_('Subject'), self._subjectEntry, flags=[None, wx.ALL|wx.EXPAND])
 
+    def addDescriptionEntry(self):
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, 
+            self._category.description())
+        self._descriptionEntry.SetSizeHints(300, 150)
+        self.addEntry(_('Description'), self._descriptionEntry, 
+            flags=[None, wx.ALL|wx.EXPAND], growable=True)
+
     def ok(self):
         self._category.setSubject(self._subjectEntry.GetValue())
+        self._category.setDescription(self._descriptionEntry.GetValue())
 
 
 class NoteEditBook(widgets.BookPage):

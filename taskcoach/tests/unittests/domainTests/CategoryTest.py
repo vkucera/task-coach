@@ -38,6 +38,10 @@ class CategoryTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, eventType)
         self.category.setSubject(self.category.subject())
         self.failIf(self.events)
+        
+    def testCreateWithDescription(self):
+        aCategory = category.Category('subject', description='Description')
+        self.assertEqual('Description', aCategory.description())
 
     def testNoTasksAfterCreation(self):
         self.assertEqual([], self.category.tasks())

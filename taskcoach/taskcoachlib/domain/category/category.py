@@ -1,50 +1,41 @@
 import patterns
+from domain import base
 
-class Category(patterns.ObservableComposite):
+class Category(base.Object, patterns.ObservableComposite):
     def __init__(self, subject, tasks=None, children=None, filtered=False, 
-                 parent=None):
-        super(Category, self).__init__(children=children or [], parent=parent)
-        self.__subject = subject
+                 parent=None, description=''):
+        super(Category, self).__init__(subject=subject, children=children or [], 
+                                       parent=parent, description=description)
         self.__tasks = []
         for task in tasks or []:
             self.addTask(task)
         self.__filtered = filtered
-        
-    @classmethod
-    def subjectChangedEventType(class_):
-        return 'category.subject'
-    
+            
     @classmethod
     def filterChangedEventType(class_):
         return 'category.filter'
         
     def __getstate__(self):
         state = super(Category, self).__getstate__()
-        state.update(dict(subject=self.__subject, tasks=self.__tasks[:], 
+        state.update(dict(tasks=self.__tasks[:], 
                           filtered=self.__filtered))
         return state
         
     def __setstate__(self, state):
         super(Category, self).__setstate__(state)
-        self.__subject = state['subject']
         self.__tasks = state['tasks']
         self.__filtered = state['filtered']
         
     def __repr__(self):
-        return self.__subject
-            
-    def setSubject(self, newSubject):
-        if newSubject != self.__subject:
-            self.__subject = newSubject
-            self.notifyObservers(patterns.Event(self, 
-                self.subjectChangedEventType(), newSubject))
-        
+        return self.subject()
+                    
     def subject(self, recursive=False):
+        mySubject = super(Category, self).subject()
         if recursive and self.parent():
             return '%s -> %s'%(self.parent().subject(recursive=True), 
-                               self.__subject)
+                               mySubject)
         else:
-            return self.__subject
+            return mySubject
     
     def tasks(self, recursive=False):
         result = []
@@ -73,10 +64,6 @@ class Category(patterns.ObservableComposite):
             self.notifyObservers(patterns.Event(self, 
                 self.filterChangedEventType(), filtered))
         
-    def copy(self):
-        return super(Category, self).copy(subject=self.subject(), 
-            filtered=self.isFiltered(), tasks=self.tasks()[:])
-
     def contains(self, task, treeMode=False):
         containedTasks = self.tasks(recursive=True)
         if treeMode:

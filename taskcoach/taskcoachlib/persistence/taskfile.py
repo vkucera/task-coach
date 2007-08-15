@@ -40,7 +40,8 @@ class TaskFile(task.TaskList):
             # get a notification through 'task.effort.add'                
             patterns.Publisher().registerObserver(self.onEffortChanged, 
                                                   eventType=eventType)
-        for eventType in ('note.subject', 'note.description', 
+        for eventType in (note.Note.subjectChangedEventType(), 
+                note.Note.descriptionChangedEventType(), 
                 note.Note.addChildEventType(), 
                 note.Note.removeChildEventType()):
             patterns.Publisher().registerObserver(self.onNoteChanged, 

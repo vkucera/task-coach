@@ -140,16 +140,10 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
         self.assertEqual(1, len(tasks[0].efforts()))
         self.assertEqual(date.TimeDelta(minutes=30), tasks[0].timeSpent())
         self.assertEqual(tasks[0], tasks[0].efforts()[0].task())
-            
-    
-class XMLReaderVersion15Test(XMLReaderTestCase):
-    tskversion = 15
-    
-    # tskversion 16 is the same as 15 except that it adds notes.           
+                    
         
-        
-class XMLReaderVersion16Test(XMLReaderTestCase):
-    tskversion = 16
+class XMLReaderVersion17Test(XMLReaderTestCase):
+    tskversion = 17
            
     def testReadEmptyStream(self):
         try:
@@ -442,7 +436,16 @@ class XMLReaderVersion16Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(['cat1', 'cat2'], 
             [category.subject() for category in categories])
-            
+    
+    def testCategoryWithDescription(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <category subject="cat">
+                <description>Description</description>
+            </category>
+        </tasks>''')
+        self.assertEqual('Description', categories[0].description())
+        
     def testOneTaskWithCategory(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>

@@ -49,7 +49,7 @@ class NewSubNoteCommandTest(NoteCommandTestCase):
 class EditNoteCommandTest(NoteCommandTestCase):
     def setUp(self):
         super(EditNoteCommandTest, self).setUp()
-        self.note = note.Note('Note')
+        self.note = note.Note(subject='Note')
         self.notes.append(self.note)
         
     def editNote(self, notes=None):

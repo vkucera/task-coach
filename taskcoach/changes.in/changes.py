@@ -16,6 +16,7 @@ on or off via the preferences dialog.'''),
 control on the toolbar. '''),
         Feature('''Category sorting can be changed: ascending or descending,
 case sensitive or case insensitive.'''),
+        Feature('''Categories can have a description.'''),
         Feature('''Each type of viewer/tab has its own settings for sort order
 and visible columns.'''),
         Feature('''The search control on the toolbar can (optionally) include

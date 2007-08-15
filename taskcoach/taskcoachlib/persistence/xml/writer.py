@@ -84,6 +84,8 @@ class XMLWriter:
     def categoryNode(self, category, taskList):
         node = self.document.createElement('category')
         node.setAttribute('subject', category.subject())
+        if category.description():
+            node.appendChild(self.textNode('description', category.description()))
         if category.isFiltered():
             node.setAttribute('filtered', str(category.isFiltered()))
         # Make sure the task referenced is actually in the tasklist
