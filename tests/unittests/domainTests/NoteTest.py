@@ -15,7 +15,7 @@ class NoteTest(test.TestCase):
         self.assertEqual('', self.note.subject())
         
     def testGivenSubject(self):
-        aNote = note.Note('Note')
+        aNote = note.Note(subject='Note')
         self.assertEqual('Note', aNote.subject())
         
     def testSetSubject(self):
@@ -23,10 +23,11 @@ class NoteTest(test.TestCase):
         self.assertEqual('Note', self.note.subject())
         
     def testSubjectChangeNotification(self):
-        patterns.Publisher().registerObserver(self.onEvent, 'note.subject')
+        patterns.Publisher().registerObserver(self.onEvent, 
+            self.note.subjectChangedEventType())
         self.note.setSubject('Note')
-        self.assertEqual(patterns.Event(self.note, 'note.subject', 'Note'), 
-            self.events[0])
+        self.assertEqual(patterns.Event(self.note, 
+            self.note.subjectChangedEventType(), 'Note'), self.events[0])
         
     def testDefaultDescription(self):
         self.assertEqual('', self.note.description())
@@ -40,10 +41,12 @@ class NoteTest(test.TestCase):
         self.assertEqual('Description', self.note.description())
         
     def testDescriptionChangeNotification(self):
-        patterns.Publisher().registerObserver(self.onEvent, 'note.description')
+        patterns.Publisher().registerObserver(self.onEvent, 
+            self.note.descriptionChangedEventType())
         self.note.setDescription('Description')
-        self.assertEqual(patterns.Event(self.note, 'note.description', 
-            'Description'), self.events[0])
+        self.assertEqual(patterns.Event(self.note, 
+            self.note.descriptionChangedEventType(), 'Description'), 
+            self.events[0])
         
     def testAddChild(self):
         self.note.addChild(self.child)

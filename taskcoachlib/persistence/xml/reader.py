@@ -53,6 +53,7 @@ class XMLReader:
 
     def __parseCategoryNode(self, categoryNode, tasksById):        
         subject = categoryNode.getAttribute('subject')
+        description = self.__parseDescription(categoryNode)
         filtered = self.__parseBoolean(categoryNode.getAttribute('filtered'), 
                                        False)
         taskIds = categoryNode.getAttribute('tasks')
@@ -63,7 +64,8 @@ class XMLReader:
         else:
             categoryTasks = []
         children = self.__parseCategoryNodes(categoryNode.childNodes, tasksById)
-        return category.Category(subject, categoryTasks, children, filtered)
+        return category.Category(subject, categoryTasks, children, filtered, 
+                                 description=description)
                       
     def __parseCategoryNodesFromTaskNodes(self, document, tasks):
         taskNodes = document.getElementsByTagName('task')
@@ -124,7 +126,8 @@ class XMLReader:
         subject = noteNode.getAttribute('subject')
         description = self.__parseDescription(noteNode)
         children = self.__parseNoteNodes(noteNode.childNodes)
-        return note.Note(subject, description, children=children)
+        return note.Note(subject=subject, description=description, 
+                         children=children)
         
     def __parseCategoryNodesWithinTaskNode(self, nodes):
         return [self.__parseTextNode(node) for node in nodes \
