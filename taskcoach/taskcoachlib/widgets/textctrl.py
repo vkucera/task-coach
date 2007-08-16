@@ -29,6 +29,8 @@ class SingleLineTextCtrl(BaseTextCtrl):
 
 
 class MultiLineTextCtrl(BaseTextCtrl):
+    CheckSpelling = True
+    
     def __init__(self, parent, text='', *args, **kwargs):
         super(MultiLineTextCtrl, self).__init__(parent,
             style=wx.TE_MULTILINE|wx.TE_RICH|wx.TE_AUTO_URL, *args, **kwargs)
@@ -38,6 +40,7 @@ class MultiLineTextCtrl(BaseTextCtrl):
             self.__webbrowser = webbrowser.get()
         except:
             self.__webbrowser = None
+        self.MacCheckSpelling(self.CheckSpelling)
         
     def onURLClicked(self, event):
         mouseEvent = event.GetMouseEvent()

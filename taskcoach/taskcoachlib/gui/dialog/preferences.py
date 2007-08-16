@@ -142,6 +142,19 @@ class TaskBehaviorPage(SettingsPage):
         self.fit()
         
         
+class EditorPage(SettingsPage):
+    def __init__(self, *args, **kwargs):
+        super(EditorPage, self).__init__(*args, **kwargs)
+        self.addBooleanSetting('editor', 'maccheckspelling',
+            _('Check spelling in editors'))
+        self.fit()
+        
+    def ok(self):
+        super(EditorPage, self).ok()
+        widgets.MultiLineTextCtrl.CheckSpelling = \
+            self.settings.getboolean('editor', 'maccheckspelling')
+        
+        
 class Preferences(widgets.ListbookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
@@ -149,11 +162,14 @@ class Preferences(widgets.ListbookDialog):
                    
     def addPages(self):
         self.SetMinSize((300, 300))
-        for page, title, bitmap in [\
+        pages = [\
             (WindowBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Window behavior'), 'windows'),
             (TaskBehaviorPage(parent=self._interior, columns=2, settings=self.settings), _('Task behavior'), 'behavior'),
             (SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), 'save'),
             (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'language'),
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'colorize'),
-            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior')]:
+            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior')]
+        if '__WXMSW__' in wx.PlatformInfo:
+            pages.append((EditorPage(parent=self._interior, columns=2, settings=self.settings), _('Editor'), 'edit'))
+        for page, title, bitmap in pages:
             self._interior.AddPage(page, title, bitmap=bitmap)
