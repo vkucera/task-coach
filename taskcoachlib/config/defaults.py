@@ -126,11 +126,13 @@ defaults = { \
     'completedtasks': '(0, 255, 0)',
     'overduetasks': '(255, 0, 0)',
     'inactivetasks': '(192, 192, 192)',
-    'duetodaytasks': '(255, 128, 0)'},
+    'duetodaytasks': '(255, 128, 0)' },
+'editor': { \
+    'maccheckspelling': 'True' },
 'version': { \
     'notified': meta.data.version,
-    'notify': 'True'},
+    'notify': 'True' },
 'behavior': { \
-    'markparentcompletedwhenallchildrencompleted': 'True'},
+    'markparentcompletedwhenallchildrencompleted': 'True' },
 'feature': { \
-    'notes': 'True'}}
+    'notes': 'True' }}

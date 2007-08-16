@@ -25,7 +25,11 @@ one task and its subtasks in a task viewer or show effort for one task and
 its subtasks in an effort viewer.'''),
         Feature('''Added a setting to start Task Coach iconized either 
 always, never, or only when Task Coach was iconized when last 
-quitted.''', '1749886')]),
+quitted.''', '1749886'),
+        Feature('''Added a setting to turn off spell checking 
+(Mac OSX only)''', '1768330')],
+    bugsFixed=[
+        Bug('''Bla''')]),
              
 Release('0.64.2', 'June 30, 2007',
     summary='''This release fixes sorting of tasks by priority
