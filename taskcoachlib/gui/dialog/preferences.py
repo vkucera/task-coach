@@ -169,7 +169,7 @@ class Preferences(widgets.ListbookDialog):
             (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'language'),
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'colorize'),
             (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior')]
-        if '__WXMSW__' in wx.PlatformInfo:
+        if '__WXMAC__' in wx.PlatformInfo:
             pages.append((EditorPage(parent=self._interior, columns=2, settings=self.settings), _('Editor'), 'edit'))
         for page, title, bitmap in pages:
             self._interior.AddPage(page, title, bitmap=bitmap)
