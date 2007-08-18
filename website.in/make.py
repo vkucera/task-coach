@@ -297,6 +297,14 @@ pages['faq'] = \
     <P><I>How can I mark a task 'inactive'?</I></P>
     <P>Set the start date of the task to a future data or don't set 
     a start date at all by unchecking the start date check box.</P>
+    <P><I>How does resizing of columns work?</I>
+    <P>In all viewers with columns, the subject column is automatically
+    resized to fill up any remaining space. To resize a column, drag the 
+    <b>right</b> border of the header of the column you want to resize. If you
+    make the subject column wider all other columns will be made
+    smaller. If you make the subject column smaller all other columns will be
+    made wider. If you make another column wider, the subject column will be 
+    made smaller and vice versa.</P>
 '''
 
 pages['roadmap'] = \

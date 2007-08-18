@@ -1,5 +1,6 @@
 import wx
-
+    
+    
 class AutoColumnWidthMixin(object):
     """ A mix-in class that automatically resizes one column to take up
         the remaining width of a control with columns (i.e. ListCtrl, 
@@ -25,15 +26,17 @@ class AutoColumnWidthMixin(object):
         self.Bind(wx.EVT_LIST_COL_END_DRAG, self.OnEndColumnDrag)
         
     def OnBeginColumnDrag(self, event):
-        if event.GetColumn() == self.ResizeColumn:
-            event.Veto()
-        else:
-            # Temporarily unbind the EVT_SIZE to prevent resizing during dragging
-            self.Unbind(wx.EVT_SIZE)
-            if '__WXMAC__' not in wx.PlatformInfo:
-                event.Skip()
+        if event.Column == self.ResizeColumn:
+            self.__oldResizeColumnWidth = self.GetColumnWidth(self.ResizeColumn)
+        # Temporarily unbind the EVT_SIZE to prevent resizing during dragging
+        self.Unbind(wx.EVT_SIZE)
+        if '__WXMAC__' not in wx.PlatformInfo:
+            event.Skip()
         
     def OnEndColumnDrag(self, event):
+        if event.Column == self.ResizeColumn and self.ColumnCount > 1:
+            extraWidth = self.__oldResizeColumnWidth - self.GetColumnWidth(self.ResizeColumn)
+            self.DistributeWidthAcrossColumns(extraWidth)
         self.Bind(wx.EVT_SIZE, self.OnResize)
         self.OnResize(event)
         event.Skip()
@@ -57,6 +60,18 @@ class AutoColumnWidthMixin(object):
         unusedWidth = max(self.AvailableWidth - self.NecessaryWidth, 0)
         resizeColumnWidth += unusedWidth
         self.SetColumnWidth(self.ResizeColumn, resizeColumnWidth)
+        
+    def DistributeWidthAcrossColumns(self, extraWidth):
+        # When the user resizes the ResizeColumn distribute the extra available
+        # space across the other columns, or get the extra needed space from
+        # the other columns. The other columns are resized proportionally to 
+        # their previous width.
+        otherColumns = [index for index in range(self.ColumnCount) if index != self.ResizeColumn]
+        totalWidth = float(sum(self.GetColumnWidth(index) for index in otherColumns))
+        for columnIndex in otherColumns:
+            thisColumnWidth = self.GetColumnWidth(columnIndex)
+            thisColumnWidth += thisColumnWidth / totalWidth * extraWidth
+            self.SetColumnWidth(columnIndex, thisColumnWidth)
         
     def GetResizeColumn(self):
         if self._resizeColumn == -1:
@@ -120,4 +135,3 @@ class AutoColumnWidthMixin(object):
         self.DoResize()
         return result
 
-        
