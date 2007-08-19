@@ -127,7 +127,7 @@ class IOController(object):
             filename = self.__askUserForFile(_('Export as CSV...'),
                 flags=wx.SAVE, fileDialogOpts=self.__csvFileDialogOpts)
         if filename:
-            csvFile = codecs.open(filename, 'w', 'utf-8')
+            csvFile =  codecs.open(filename, 'wb', 'utf-8')
             persistence.CSVWriter(csvFile).write(viewer)
             csvFile.close()
             self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%{'nrtasks': viewer.size(), 'filename': filename})
