@@ -29,7 +29,9 @@ quitted.''', '1749886'),
         Feature('''Added a setting to turn off spell checking 
 (Mac OSX only)''', '1768330')],
     bugsFixed=[
-        Bug('''Made subject column resizable.''', '1702270', '1766664')]),
+        Bug('''Made subject column resizable.''', '1702270', '1766664'),
+        Bug('''Enable export of data containing non-ASCII 
+characters to CSV.''', '1753422')]),
              
 Release('0.64.2', 'June 30, 2007',
     summary='''This release fixes sorting of tasks by priority
