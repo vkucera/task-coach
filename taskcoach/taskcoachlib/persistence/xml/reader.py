@@ -9,8 +9,6 @@ class XMLReader:
         path, name = os.path.split(os.path.abspath(self.__fd.name))
         name, ext = os.path.splitext(name)
         attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-        if not os.path.exists(attdir):
-            os.mkdir(attdir)
         attachment.MailAttachment.attdir = attdir
 
     def read(self):
