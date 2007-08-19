@@ -83,10 +83,7 @@ class App(object):
         else:
             filename = settings.get('file', 'lastfile')
         if load and filename:
-            import time
-            t0 = time.time()
             self.io.open(filename)
-            print 'io.open:', int(time.time() - t0)
 
     def displayMessage(self, message):
         self.mainwindow.displayMessage(message)
