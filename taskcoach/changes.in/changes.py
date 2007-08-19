@@ -29,7 +29,7 @@ quitted.''', '1749886'),
         Feature('''Added a setting to turn off spell checking 
 (Mac OSX only)''', '1768330')],
     bugsFixed=[
-        Bug('''Bla''')]),
+        Bug('''Made subject column resizable.''', '1702270', '1766664')]),
              
 Release('0.64.2', 'June 30, 2007',
     summary='''This release fixes sorting of tasks by priority
