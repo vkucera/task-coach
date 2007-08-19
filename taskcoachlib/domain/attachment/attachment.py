@@ -79,6 +79,11 @@ class MailAttachment(Attachment):
 
         if self.attdir is not None:
             if path != self.attdir:
+                try:
+                    os.makedirs(self.attdir)
+                except OSError:
+                    pass
+
                 fd, filename = tempfile.mkstemp(suffix='.eml', dir=self.attdir)
                 os.close(fd)
                 shutil.move(self.filename, filename)
