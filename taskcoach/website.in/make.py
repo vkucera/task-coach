@@ -305,6 +305,11 @@ pages['faq'] = \
     smaller. If you make the subject column smaller all other columns will be
     made wider. If you make another column wider, the subject column will be 
     made smaller and vice versa.</P>
+    <P><I>Can I run Task Coach from a USB stick?</I></P>
+    <P>Yes, just install it on a USB stick. In addition, in the files tab of
+    the preferences dialog ('Edit' -> 'Preferences'), check 'Save settings 
+    (TaskCoach.ini) in the same directory as the program' to make sure your
+    settings are saved on the USB stick.</P>
 '''
 
 pages['roadmap'] = \
