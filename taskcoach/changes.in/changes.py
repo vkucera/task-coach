@@ -31,7 +31,9 @@ quitted.''', '1749886'),
     bugsFixed=[
         Bug('''Made subject column resizable.''', '1702270', '1766664'),
         Bug('''Enable export of data containing non-ASCII 
-characters to CSV.''', '1753422')]),
+characters to CSV.''', '1753422'),
+        Bug('''Don't activate another viewer when another application is
+minimized (Windows only)''', '1765103')]),
              
 Release('0.64.2', 'June 30, 2007',
     summary='''This release fixes sorting of tasks by priority

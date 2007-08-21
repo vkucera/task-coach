@@ -16,7 +16,10 @@ class ViewerContainer(object):
     def addViewer(self, viewer, pageName, bitmap=None):
         self.AddPage(viewer, pageName, bitmap)
         if self.GetPageCount() - 1 == self.__desiredPageNumber:
-            self.SetSelection(self.__desiredPageNumber)
+            # We need to use CallAfter because the AuiNotebook doesn't allow
+            # PAGE_CHANGING events while the window is not active. See 
+            # widgets/notebook.py
+            wx.CallAfter(self.SetSelection, self.__desiredPageNumber)
         patterns.Publisher().registerObserver(self.onSelect, 
             eventType=viewer.selectEventType())
             
