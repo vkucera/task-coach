@@ -167,7 +167,7 @@ class Book(object):
         if pageIndex != wx.NOT_FOUND:
             self.SetSelection(pageIndex)
         return wx.DragNone
-
+    
     def onPageChanged(self, event):
         ''' Can be overridden in a subclass to do something useful '''
         event.Skip()    
@@ -221,7 +221,17 @@ class AUINotebook(Book, wx.aui.AuiNotebook):
         kwargs['style'] = kwargs.get('style', wx.aui.AUI_NB_DEFAULT_STYLE) & ~wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
         super(AUINotebook, self).__init__(*args, **kwargs)
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.onClosePage)
+        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGING, self.onPageChanging)
         
+    def onPageChanging(self, event):
+        # On Windows, the AuiNotebook changes its pages when other applications
+        # are minimized. Prevent this by vetoing PAGE_CHANGING events when our
+        # top level window is not active:
+        if self.GetTopLevelParent().IsActive():
+            event.Skip()
+        else:
+            event.Veto()
+                    
     def onClosePage(self, event):
         if self.GetPageCount() <= 2:
             # Prevent last tab from being closed
