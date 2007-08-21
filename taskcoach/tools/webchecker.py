@@ -103,7 +103,7 @@ rooturl   -- URL to start checking
 """
 
 
-__version__ = "$Revision: 1.2 $"
+__version__ = "$Revision: 1.3 $"
 
 
 import sys
