@@ -80,10 +80,13 @@ class DropTarget(wx.DropTarget):
         self.__thunderbirdMailDataObject = wx.CustomDataObject('text/x-moz-message')
         self.__macThunderbirdMailDataObject = wx.CustomDataObject('MZ\x00\x00')
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
-        for dataObject in self.__fileDataObject, self.__urlDataObject, \
+        for dataObject in self.__fileDataObject, \
                           self.__thunderbirdMailDataObject, self.__outlookDataObject, \
-                          self.__macThunderbirdMailDataObject:
-            # NB: First data object added is the preferred data object
+                          self.__macThunderbirdMailDataObject, \
+                          self.__urlDataObject:
+            # Note: The first data object added is the preferred data object.
+            # We add urlData as last so that Outlook messages are not 
+            # interpreted as text objects.
             self.__compositeDataObject.Add(dataObject)
         self.SetDataObject(self.__compositeDataObject)
 
