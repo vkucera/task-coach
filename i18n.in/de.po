@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
-"POT-Creation-Date: 2005-05-22 21:27+W. Europe Daylight Time\n"
-"PO-Revision-Date: 2007-05-28 21:34+0100\n"
-"Last-Translator: Stephan Hassenbach <stephan.hassenbach@gmx.de>\n"
+"POT-Creation-Date: 2007-05-28 00:08+W. Europe Daylight Time\n"
+"PO-Revision-Date: 2007-08-24 18:56+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Stephan Hassenbach <stephan.hassenbach@gmx.de>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -15,6 +15,7 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
+"X-Rosetta-Export-Date: 2007-08-24 19:48:11+0000\n"
 
 #: taskcoachlib\command\base.py:91
 msgid "Copy"
@@ -34,7 +35,7 @@ msgstr "Einfügen"
 
 #: taskcoachlib\command\base.py:207
 msgid "Drag and drop"
-msgstr "Drag && Drop"
+msgstr "Drag und Drop"
 
 #: taskcoachlib\command\categoryCommands.py:7
 #: taskcoachlib\command\categoryCommands.py:14
@@ -52,7 +53,7 @@ msgstr "Kategorie bearbeiten"
 
 #: taskcoachlib\command\categoryCommands.py:44
 msgid "Drag and drop category"
-msgstr "Drag && Drop Kategorie"
+msgstr "Drag und Drop Kategorie"
 
 #: taskcoachlib\command\effortCommands.py:7
 msgid "New effort"
@@ -78,45 +79,44 @@ msgstr "Notiz bearbeiten"
 
 #: taskcoachlib\command\noteCommands.py:44
 msgid "Drag and drop note"
-msgstr "Drag && Drop Notiz"
+msgstr "Drag und Drop Notiz"
 
 #: taskcoachlib\command\taskCommands.py:12
 msgid "Paste into task"
-msgstr "In Aufgabe einfügen"
+msgstr "Als Teilaufgabe einfügen"
 
 #: taskcoachlib\command\taskCommands.py:26
 msgid "Drag and drop task"
-msgstr "Drag && Drop Aufgabe"
+msgstr "Drag und Drop Aufgabe"
 
 #: taskcoachlib\command\taskCommands.py:58
-#: taskcoachlib\command\taskCommands.py:62
+#: taskcoachlib\command\taskCommands.py:61
 msgid "New task"
 msgstr "Neue Aufgabe"
 
-#: taskcoachlib\command\taskCommands.py:76
-#: taskcoachlib\command\taskCommands.py:80
+#: taskcoachlib\command\taskCommands.py:79
+#: taskcoachlib\command\taskCommands.py:83
 msgid "New subtask"
 msgstr "Neue Teilaufgabe"
 
-#: taskcoachlib\command\taskCommands.py:102
+#: taskcoachlib\command\taskCommands.py:105
 msgid "Edit task"
 msgstr "Aufgabe bearbeiten"
 
-#: taskcoachlib\command\taskCommands.py:110
-#: taskcoachlib\gui\dialog\editor.py:319
-#: taskcoachlib\widgets\dialog.py:110
+#: taskcoachlib\command\taskCommands.py:113
+#: taskcoachlib\gui\dialog\editor.py:322 taskcoachlib\widgets\dialog.py:110
 msgid "Add attachment"
 msgstr "Anlage hinzufügen"
 
-#: taskcoachlib\command\taskCommands.py:159
+#: taskcoachlib\command\taskCommands.py:162
 msgid "Mark completed"
 msgstr "Als erledigt markieren"
 
-#: taskcoachlib\command\taskCommands.py:175
+#: taskcoachlib\command\taskCommands.py:178
 msgid "Start tracking"
 msgstr "Stoppuhr starten"
 
-#: taskcoachlib\command\taskCommands.py:201
+#: taskcoachlib\command\taskCommands.py:204
 msgid "Stop tracking"
 msgstr "Stoppuhr anhalten"
 
@@ -210,7 +210,7 @@ msgstr "Notiz löschen"
 
 #: taskcoachlib\domain\note\notecontainer.py:10
 msgid "Delete the selected notes"
-msgstr "Ausgewählte Notizen löschen"
+msgstr "Ausgewählte Notiz(en) löschen"
 
 #: taskcoachlib\domain\note\notecontainer.py:11
 msgid "New subnote..."
@@ -218,7 +218,7 @@ msgstr "Neue Unternotiz..."
 
 #: taskcoachlib\domain\note\notecontainer.py:12
 msgid "Insert a new subnote"
-msgstr "Eine neue Unternotiz anlegen"
+msgstr "Eine neue Unternotiz hinzufügen"
 
 #: taskcoachlib\domain\task\tasklist.py:11
 msgid "&New task..."
@@ -226,7 +226,7 @@ msgstr "&Neue Aufgabe..."
 
 #: taskcoachlib\domain\task\tasklist.py:20
 msgid "New &subtask..."
-msgstr "Neue Teilaufgabe..."
+msgstr "Neue &Teilaufgabe..."
 
 #: taskcoachlib\domain\task\tasklist.py:31
 msgid "Insert a new task"
@@ -242,7 +242,7 @@ msgstr "Ausgewählte Aufgabe bearbeiten"
 
 #: taskcoachlib\domain\task\tasklist.py:34
 msgid "&Delete task\tCtrl+DEL"
-msgstr "Aufgabe &löschen\tStrg+Entf"
+msgstr "Aufgabe &löschen\tCtrl+DEL"
 
 #: taskcoachlib\domain\task\tasklist.py:35
 msgid "Delete the selected task(s)"
@@ -252,213 +252,183 @@ msgstr "Ausgewählte Aufgabe(n) löschen"
 msgid "Insert a new subtask into the selected task"
 msgstr "Neue Teilaufgabe für die ausgewählte Aufgabe hinzufügen"
 
-#: taskcoachlib\gui\dialog\editor.py:86
+#: taskcoachlib\gui\dialog\editor.py:87
 msgid "For this task"
 msgstr "Für diese Aufgabe"
 
-#: taskcoachlib\gui\dialog\editor.py:88
+#: taskcoachlib\gui\dialog\editor.py:89
 msgid "For this task including all subtasks"
 msgstr "Für diese Aufgabe inkl. Teilaufgaben"
 
-#: taskcoachlib\gui\dialog\editor.py:101
-#: taskcoachlib\gui\dialog\editor.py:105
-#: taskcoachlib\gui\dialog\editor.py:447
-#: taskcoachlib\gui\dialog\editor.py:513
-#: taskcoachlib\gui\dialog\editor.py:569
-#: taskcoachlib\gui\viewer.py:481
-#: taskcoachlib\gui\viewer.py:900
+#: taskcoachlib\gui\dialog\editor.py:102 taskcoachlib\gui\dialog\editor.py:106
+#: taskcoachlib\gui\dialog\editor.py:457 taskcoachlib\gui\dialog\editor.py:523
+#: taskcoachlib\gui\dialog\editor.py:579 taskcoachlib\gui\viewer.py:521
+#: taskcoachlib\gui\viewer.py:959
 msgid "Description"
 msgstr "Beschreibung"
 
-#: taskcoachlib\gui\dialog\editor.py:102
-#: taskcoachlib\gui\dialog\editor.py:546
-#: taskcoachlib\gui\dialog\editor.py:563
-#: taskcoachlib\gui\viewer.py:96
-#: taskcoachlib\gui\viewer.py:475
+#: taskcoachlib\gui\dialog\editor.py:103 taskcoachlib\gui\dialog\editor.py:556
+#: taskcoachlib\gui\dialog\editor.py:573 taskcoachlib\gui\viewer.py:96
+#: taskcoachlib\gui\viewer.py:514
 msgid "Subject"
 msgstr "Betreff"
 
-#: taskcoachlib\gui\dialog\editor.py:109
-#: taskcoachlib\gui\dialog\editor.py:110
-#: taskcoachlib\gui\viewer.py:513
+#: taskcoachlib\gui\dialog\editor.py:110 taskcoachlib\gui\dialog\editor.py:111
+#: taskcoachlib\gui\viewer.py:558
 msgid "Priority"
 msgstr "Priorität"
 
-#: taskcoachlib\gui\dialog\editor.py:140
-#: taskcoachlib\gui\dialog\editor.py:448
+#: taskcoachlib\gui\dialog\editor.py:141 taskcoachlib\gui\dialog\editor.py:458
 msgid "Dates"
 msgstr "Termine"
 
-#: taskcoachlib\gui\dialog\editor.py:142
-#: taskcoachlib\gui\viewer.py:503
+#: taskcoachlib\gui\dialog\editor.py:143 taskcoachlib\gui\viewer.py:548
 msgid "Start date"
 msgstr "Gestartet am"
 
-#: taskcoachlib\gui\dialog\editor.py:143
-#: taskcoachlib\gui\viewer.py:504
+#: taskcoachlib\gui\dialog\editor.py:144 taskcoachlib\gui\viewer.py:549
 msgid "Due date"
 msgstr "Fällig am"
 
-#: taskcoachlib\gui\dialog\editor.py:144
-#: taskcoachlib\gui\viewer.py:506
+#: taskcoachlib\gui\dialog\editor.py:145 taskcoachlib\gui\viewer.py:551
 msgid "Completion date"
 msgstr "Erledigt am"
 
-#: taskcoachlib\gui\dialog\editor.py:157
-#: taskcoachlib\gui\dialog\editor.py:159
-#: taskcoachlib\gui\dialog\reminder.py:14
-#: taskcoachlib\gui\viewer.py:520
+#: taskcoachlib\gui\dialog\editor.py:158 taskcoachlib\gui\dialog\editor.py:160
+#: taskcoachlib\gui\dialog\reminder.py:14 taskcoachlib\gui\viewer.py:565
 msgid "Reminder"
 msgstr "Erinnerung"
 
-#: taskcoachlib\gui\dialog\editor.py:182
-#: taskcoachlib\gui\dialog\editor.py:200
-#: taskcoachlib\gui\dialog\editor.py:451
-#: taskcoachlib\gui\viewer.py:507
+#: taskcoachlib\gui\dialog\editor.py:183 taskcoachlib\gui\dialog\editor.py:201
+#: taskcoachlib\gui\dialog\editor.py:461 taskcoachlib\gui\viewer.py:552
 msgid "Budget"
 msgstr "Budget"
 
-#: taskcoachlib\gui\dialog\editor.py:183
-#: taskcoachlib\gui\dialog\editor.py:208
-#: taskcoachlib\gui\viewer.py:518
-#: taskcoachlib\gui\viewer.py:907
+#: taskcoachlib\gui\dialog\editor.py:184 taskcoachlib\gui\dialog\editor.py:209
+#: taskcoachlib\gui\viewer.py:563 taskcoachlib\gui\viewer.py:966
 msgid "Revenue"
 msgstr "Umsatz"
 
-#: taskcoachlib\gui\dialog\editor.py:201
-#: taskcoachlib\gui\viewer.py:509
-#: taskcoachlib\gui\viewer.py:905
+#: taskcoachlib\gui\dialog\editor.py:202 taskcoachlib\gui\viewer.py:554
+#: taskcoachlib\gui\viewer.py:964
 msgid "Time spent"
 msgstr "Aufwand"
 
-#: taskcoachlib\gui\dialog\editor.py:202
-#: taskcoachlib\gui\viewer.py:511
+#: taskcoachlib\gui\dialog\editor.py:203 taskcoachlib\gui\viewer.py:556
 msgid "Budget left"
 msgstr "Restbudget"
 
-#: taskcoachlib\gui\dialog\editor.py:206
-#: taskcoachlib\gui\viewer.py:515
+#: taskcoachlib\gui\dialog\editor.py:207 taskcoachlib\gui\viewer.py:560
 msgid "Hourly fee"
 msgstr "Stundensatz"
 
-#: taskcoachlib\gui\dialog\editor.py:207
-#: taskcoachlib\gui\viewer.py:516
+#: taskcoachlib\gui\dialog\editor.py:208 taskcoachlib\gui\viewer.py:561
 msgid "Fixed fee"
 msgstr "Festbetrag"
 
-#: taskcoachlib\gui\dialog\editor.py:236
-#: taskcoachlib\gui\uicommand.py:1458
+#: taskcoachlib\gui\dialog\editor.py:237 taskcoachlib\gui\uicommand.py:1458
 #: taskcoachlib\gui\viewerfactory.py:7
 msgid "Effort details"
-msgstr "Aufwand"
+msgstr "Aufwand-Details"
 
-#: taskcoachlib\gui\dialog\editor.py:239
-#: taskcoachlib\gui\uicommand.py:1459
-#: taskcoachlib\gui\uicommand.py:1462
-#: taskcoachlib\gui\viewerfactory.py:10
+#: taskcoachlib\gui\dialog\editor.py:240 taskcoachlib\gui\uicommand.py:1459
+#: taskcoachlib\gui\uicommand.py:1462 taskcoachlib\gui\viewerfactory.py:10
 msgid "Effort per day"
 msgstr "Aufwand pro Tag"
 
-#: taskcoachlib\gui\dialog\editor.py:242
-#: taskcoachlib\gui\uicommand.py:1463
-#: taskcoachlib\gui\uicommand.py:1466
-#: taskcoachlib\gui\viewerfactory.py:13
+#: taskcoachlib\gui\dialog\editor.py:243 taskcoachlib\gui\uicommand.py:1463
+#: taskcoachlib\gui\uicommand.py:1466 taskcoachlib\gui\viewerfactory.py:13
 msgid "Effort per week"
 msgstr "Aufwand pro Woche"
 
-#: taskcoachlib\gui\dialog\editor.py:246
-#: taskcoachlib\gui\uicommand.py:1467
-#: taskcoachlib\gui\uicommand.py:1470
-#: taskcoachlib\gui\viewerfactory.py:16
+#: taskcoachlib\gui\dialog\editor.py:247 taskcoachlib\gui\uicommand.py:1467
+#: taskcoachlib\gui\uicommand.py:1470 taskcoachlib\gui\viewerfactory.py:16
 msgid "Effort per month"
 msgstr "Aufwand pro Monat"
 
-#: taskcoachlib\gui\dialog\editor.py:254
-#: taskcoachlib\gui\dialog\editor.py:449
-#: taskcoachlib\gui\uicommand.py:1454
-#: taskcoachlib\gui\viewer.py:493
+#: taskcoachlib\gui\dialog\editor.py:255 taskcoachlib\gui\dialog\editor.py:459
+#: taskcoachlib\gui\uicommand.py:1454 taskcoachlib\gui\viewer.py:535
 #: taskcoachlib\gui\viewerfactory.py:30
 msgid "Categories"
 msgstr "Kategorien"
 
-#: taskcoachlib\gui\dialog\editor.py:296
-#: taskcoachlib\gui\dialog\editor.py:455
+#: taskcoachlib\gui\dialog\editor.py:298 taskcoachlib\gui\dialog\editor.py:465
 msgid "Attachments"
 msgstr "Anlagen"
 
-#: taskcoachlib\gui\dialog\editor.py:298
+#: taskcoachlib\gui\dialog\editor.py:300
 msgid "Attachment filenames"
 msgstr "Dateinamen der Anlagen"
 
-#: taskcoachlib\gui\dialog\editor.py:304
+#: taskcoachlib\gui\dialog\editor.py:307
 msgid "Open attachment"
 msgstr "Anlage öffnen"
 
-#: taskcoachlib\gui\dialog\editor.py:305
+#: taskcoachlib\gui\dialog\editor.py:308
 msgid "Remove attachment"
 msgstr "Anlage löschen"
 
-#: taskcoachlib\gui\dialog\editor.py:306
+#: taskcoachlib\gui\dialog\editor.py:309
 msgid "Edit filename"
 msgstr "Dateiname bearbeiten"
 
-#: taskcoachlib\gui\dialog\editor.py:310
+#: taskcoachlib\gui\dialog\editor.py:313
 msgid "Browse for new attachment..."
 msgstr "Anlage hinzufügen..."
 
-#: taskcoachlib\gui\dialog\editor.py:317
+#: taskcoachlib\gui\dialog\editor.py:320
 msgid "Attachment filename"
 msgstr "Dateiname der Anlage"
 
-#: taskcoachlib\gui\dialog\editor.py:381
-#: taskcoachlib\gui\uicommand.py:986
+#: taskcoachlib\gui\dialog\editor.py:389 taskcoachlib\gui\uicommand.py:986
 msgid "Error opening attachment"
 msgstr "Fehler beim Öffnen der Anlage"
 
-#: taskcoachlib\gui\dialog\editor.py:419
-#: taskcoachlib\gui\dialog\preferences.py:138
+#: taskcoachlib\gui\dialog\editor.py:429
+#: taskcoachlib\gui\dialog\preferences.py:141
 msgid "Task behavior"
 msgstr "Aufgaben"
 
-#: taskcoachlib\gui\dialog\editor.py:422
+#: taskcoachlib\gui\dialog\editor.py:432
+#, fuzzy
 msgid "Use application-wide setting"
-msgstr "(Systemeinstellung)"
+msgstr "Systemeinstellung brauchen"
 
-#: taskcoachlib\gui\dialog\editor.py:423
+#: taskcoachlib\gui\dialog\editor.py:433
 msgid "No"
 msgstr "Nein"
 
-#: taskcoachlib\gui\dialog\editor.py:423
+#: taskcoachlib\gui\dialog\editor.py:433
 msgid "Yes"
 msgstr "Ja"
 
-#: taskcoachlib\gui\dialog\editor.py:430
+#: taskcoachlib\gui\dialog\editor.py:440
 msgid "Mark task completed when all children are completed?"
-msgstr "Als erledigt markieren, wenn alle Teilaufgaben erledigt sind?"
+msgstr ""
+"Aufgabe als erledigt markieren, wenn alle Teilaufgaben erledigt sind?"
 
-#: taskcoachlib\gui\dialog\editor.py:454
+#: taskcoachlib\gui\dialog\editor.py:464
 msgid "Effort"
 msgstr "Aufwand"
 
-#: taskcoachlib\gui\dialog\editor.py:456
+#: taskcoachlib\gui\dialog\editor.py:466
 msgid "Behavior"
 msgstr "Verhalten"
 
-#: taskcoachlib\gui\dialog\editor.py:485
-#: taskcoachlib\gui\dialog\reminder.py:19
-#: taskcoachlib\gui\viewer.py:899
+#: taskcoachlib\gui\dialog\editor.py:495
+#: taskcoachlib\gui\dialog\reminder.py:19 taskcoachlib\gui\viewer.py:958
 msgid "Task"
 msgstr "Aufgabe"
 
-#: taskcoachlib\gui\dialog\editor.py:491
+#: taskcoachlib\gui\dialog\editor.py:501
 msgid "Start tracking from last stop time"
 msgstr "Zeit rückwirkend ab letztem Zeitstopp erfassen"
 
-#: taskcoachlib\gui\dialog\editor.py:501
+#: taskcoachlib\gui\dialog\editor.py:511
 msgid "Start"
 msgstr "Gestartet am"
 
-#: taskcoachlib\gui\dialog\editor.py:503
+#: taskcoachlib\gui\dialog\editor.py:513
 msgid "Stop"
 msgstr "Angehalten am"
 
@@ -491,59 +461,64 @@ msgid "Show tips window on startup"
 msgstr "Tipp des Tages beim Starten anzeigen"
 
 #: taskcoachlib\gui\dialog\preferences.py:81
+msgid "Check for new version of %(name)s on startup"
+msgstr "Nach neue Versionen beim Starten von %(name)s suchen"
+
+#: taskcoachlib\gui\dialog\preferences.py:83
 msgid "Hide main window when iconized"
 msgstr "Hauptfenster ausblenden wenn minimiert"
 
-#: taskcoachlib\gui\dialog\preferences.py:83
+#: taskcoachlib\gui\dialog\preferences.py:85
 msgid "Minimize main window when closed"
 msgstr "Hauptfenster beim Schließen minimieren"
 
-#: taskcoachlib\gui\dialog\preferences.py:85
+#: taskcoachlib\gui\dialog\preferences.py:87
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Uhr tickt beim Erfassen der Zeit"
 
-#: taskcoachlib\gui\dialog\preferences.py:92
-#: taskcoachlib\gui\dialog\preferences.py:140
+#: taskcoachlib\gui\dialog\preferences.py:94
+#: taskcoachlib\gui\dialog\preferences.py:143
 msgid "Language"
 msgstr "Sprache"
 
-#: taskcoachlib\gui\dialog\preferences.py:104
+#: taskcoachlib\gui\dialog\preferences.py:107
 msgid "This setting will take effect after you restart %s"
 msgstr "Einstellung wird nach Neustart von %s wirksam"
 
-#: taskcoachlib\gui\dialog\preferences.py:112
+#: taskcoachlib\gui\dialog\preferences.py:115
 msgid "Click this button to change the color of active tasks"
 msgstr "Farbe aktiver Aufgaben ändern"
 
-#: taskcoachlib\gui\dialog\preferences.py:113
+#: taskcoachlib\gui\dialog\preferences.py:116
 msgid "Click this button to change the color of inactive tasks"
 msgstr "Farbe inaktiver Aufgaben ändern"
 
-#: taskcoachlib\gui\dialog\preferences.py:114
+#: taskcoachlib\gui\dialog\preferences.py:117
 msgid "Click this button to change the color of completed tasks"
 msgstr "Farbe abgeschlossener Aufgaben ändern"
 
-#: taskcoachlib\gui\dialog\preferences.py:115
+#: taskcoachlib\gui\dialog\preferences.py:118
 msgid "Click this button to change the color of over due tasks"
 msgstr "Farbe überfälliger Aufgaben ändern"
 
-#: taskcoachlib\gui\dialog\preferences.py:116
+#: taskcoachlib\gui\dialog\preferences.py:119
 msgid "Click this button to change the color of tasks due today"
 msgstr "Farbe von heute fälligen Aufgaben ändern"
 
-#: taskcoachlib\gui\dialog\preferences.py:125
+#: taskcoachlib\gui\dialog\preferences.py:128
 msgid "Mark parent task completed when all children are completed"
-msgstr "Aufgabe als erledigt kennzeichnen, wenn alle Teilaufgaben erledigt sind"
+msgstr ""
+"Aufgabe als erledigt kennzeichnen, wenn alle Teilaufgaben erledigt sind"
 
-#: taskcoachlib\gui\dialog\preferences.py:137
+#: taskcoachlib\gui\dialog\preferences.py:140
 msgid "Window behavior"
 msgstr "Fenster"
 
-#: taskcoachlib\gui\dialog\preferences.py:139
+#: taskcoachlib\gui\dialog\preferences.py:142
 msgid "Files"
 msgstr "Dateien"
 
-#: taskcoachlib\gui\dialog\preferences.py:141
+#: taskcoachlib\gui\dialog\preferences.py:144
 msgid "Colors"
 msgstr "Farben"
 
@@ -553,31 +528,43 @@ msgstr "Nicht schlummern"
 
 #: taskcoachlib\gui\dialog\reminder.py:7
 msgid "Five minutes"
-msgstr "5 Minuten"
+msgstr "Fünf Minuten"
 
 #: taskcoachlib\gui\dialog\reminder.py:7
 msgid "Ten minutes"
-msgstr "10 Minuten"
+msgstr "Zehn Minuten"
 
 #: taskcoachlib\gui\dialog\reminder.py:8
 msgid "Fifteen minutes"
-msgstr "15 Minuten"
+msgstr "Fünfzehn Minuten"
 
 #: taskcoachlib\gui\dialog\reminder.py:8
 msgid "Half an hour"
-msgstr "30 Minuten"
+msgstr "Eine halbe Stunde"
 
 #: taskcoachlib\gui\dialog\reminder.py:8
 msgid "One hour"
-msgstr "1 Stunde"
+msgstr "Eine Stunde"
 
 #: taskcoachlib\gui\dialog\reminder.py:9
 msgid "Two hours"
-msgstr "2 Stunden"
+msgstr "Zwei Stunden"
 
 #: taskcoachlib\gui\dialog\reminder.py:19
 msgid "Snooze"
 msgstr "Schlummern"
+
+#: taskcoachlib\gui\dialog\version.py:10
+msgid "New version of %(name)s available"
+msgstr "Eine neue Version von %(name)s ist verfügbar"
+
+#: taskcoachlib\gui\dialog\version.py:17
+msgid "Version %(version)s of %(name)s is available from"
+msgstr "Version %(version)s von %(name)s ist verfügbar bei"
+
+#: taskcoachlib\gui\dialog\version.py:20
+msgid "Notify me of new versions."
+msgstr "Über neue Versionen informieren."
 
 #: taskcoachlib\gui\filter.py:18
 msgid "Active tasks"
@@ -600,12 +587,16 @@ msgid "Over budget tasks"
 msgstr "Aufgaben über Budget"
 
 #: taskcoachlib\gui\filter.py:67
-msgid "Show tasks that belong to the categories selected below. Unselect all categories to reset the filter."
-msgstr "Aufgaben, die zur u.g. Kategorien gehören unten anzeigen. Auswahl aller Kategorien aufheben, um den Filter zurück zu setzen."
+msgid ""
+"Show tasks that belong to the categories selected below. Unselect all "
+"categories to reset the filter."
+msgstr ""
+"Aufgaben, die zur u.g. Kategorien gehören unten anzeigen. Auswahl aller "
+"Kategorien aufheben, um den Filter zurück zu setzen."
 
 #: taskcoachlib\gui\filter.py:81
 msgid "Show tasks that match"
-msgstr "Zeige Aufgaben übereinstimmend mit"
+msgstr "Aufgaben gefiltert nach"
 
 #: taskcoachlib\gui\filter.py:82
 msgid "any of the above selected categories"
@@ -617,45 +608,40 @@ msgstr "jede der o.g. Katetorien"
 
 #: taskcoachlib\gui\filter.py:158
 msgid "Show tasks due before"
-msgstr "Zeige Aufgaben fällig vor"
+msgstr "Aufgaben mit Fälligkeit vor"
 
-#: taskcoachlib\gui\filter.py:159
-#: taskcoachlib\gui\uicommand.py:1496
+#: taskcoachlib\gui\filter.py:159 taskcoachlib\gui\uicommand.py:1496
 msgid "&Today"
 msgstr "&Heute"
 
-#: taskcoachlib\gui\filter.py:160
-#: taskcoachlib\gui\uicommand.py:1497
+#: taskcoachlib\gui\filter.py:160 taskcoachlib\gui\uicommand.py:1497
 msgid "T&omorrow"
 msgstr "M&orgen"
 
 #: taskcoachlib\gui\filter.py:161
 msgid "Wo&rkweek"
-msgstr "Diese &Arbeitswoche"
+msgstr "&Arbeitswoche"
 
-#: taskcoachlib\gui\filter.py:162
-#: taskcoachlib\gui\uicommand.py:1499
+#: taskcoachlib\gui\filter.py:162 taskcoachlib\gui\uicommand.py:1499
 msgid "&Week"
 msgstr "Diese &Woche"
 
-#: taskcoachlib\gui\filter.py:163
-#: taskcoachlib\gui\uicommand.py:1500
+#: taskcoachlib\gui\filter.py:163 taskcoachlib\gui\uicommand.py:1500
 msgid "&Month"
 msgstr "Dieser &Monat"
 
-#: taskcoachlib\gui\filter.py:164
-#: taskcoachlib\gui\uicommand.py:1501
+#: taskcoachlib\gui\filter.py:164 taskcoachlib\gui\uicommand.py:1501
 msgid "&Year"
 msgstr "Dieses &Jahr"
 
-#: taskcoachlib\gui\filter.py:165
-#: taskcoachlib\gui\uicommand.py:1502
+#: taskcoachlib\gui\filter.py:165 taskcoachlib\gui\uicommand.py:1502
 msgid "&Unlimited"
 msgstr "&Unbegrenzt"
 
 #: taskcoachlib\gui\iocontroller.py:18
 msgid "%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*"
-msgstr "%s-Dateien (*.tsk)|*.tsk|XML-Dateien (*.xml)|*.xml|Alle Dateien (*.*)|*"
+msgstr ""
+"%s-Dateien (*.tsk)|*.tsk|XML-Dateien (*.xml)|*.xml|Alle Dateien (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:21
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
@@ -667,7 +653,8 @@ msgstr "HTML-Dateien (*.html)|*.html|Alle Dateien (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:27
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
-msgstr "CSV-Dateien (*.csv)|*.csv|Text-Dateien (*.txt)|*.txt|Alle Dateien (*.*)|*"
+msgstr ""
+"CSV-Dateien (*.csv)|*.csv|Textdateien (*.txt)|*.txt|Alle Dateien (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:37
 msgid "Open"
@@ -697,14 +684,12 @@ msgstr "Einfügen"
 msgid "Merged %(filename)s"
 msgstr "%(filename)s eingefügt"
 
-#: taskcoachlib\gui\iocontroller.py:64
-#: taskcoachlib\gui\iocontroller.py:76
+#: taskcoachlib\gui\iocontroller.py:64 taskcoachlib\gui\iocontroller.py:76
 #: taskcoachlib\gui\iocontroller.py:89
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "%(nrtasks)d Aufgaben in %(filename)s gespeichert"
 
-#: taskcoachlib\gui\iocontroller.py:73
-#: taskcoachlib\gui\iocontroller.py:84
+#: taskcoachlib\gui\iocontroller.py:73 taskcoachlib\gui\iocontroller.py:84
 msgid "Save as..."
 msgstr "Speichern unter..."
 
@@ -714,16 +699,15 @@ msgstr "Als iCalendar exportieren..."
 
 #: taskcoachlib\gui\iocontroller.py:107
 msgid "Exported %(nrtasks)d tasks to %(filename)s"
-msgstr "%(nrtasks)d Aufgaben in %(filename)s exportiert"
+msgstr "%(nrtasks)d Aufgaben in %(filename)s gespeichert"
 
 #: taskcoachlib\gui\iocontroller.py:114
 msgid "Export as HTML..."
 msgstr "Als HTML-Datei exportieren..."
 
-#: taskcoachlib\gui\iocontroller.py:120
-#: taskcoachlib\gui\iocontroller.py:133
+#: taskcoachlib\gui\iocontroller.py:120 taskcoachlib\gui\iocontroller.py:133
 msgid "Exported %(nrtasks)d items to %(filename)s"
-msgstr "%(nrtasks)d Elemente in %(filename)s exportiert"
+msgstr "%(nrtasks)d Einträge in %(filename)s gespeichert"
 
 #: taskcoachlib\gui\iocontroller.py:127
 msgid "Export as CSV..."
@@ -745,7 +729,7 @@ msgstr "%s: Änderungen speichern?"
 msgid "Closed %s"
 msgstr "%s wurde geschlossen."
 
-#: taskcoachlib\gui\mainwindow.py:94
+#: taskcoachlib\gui\mainwindow.py:95
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Willkommen zu %(name)s Version %(version)s"
 
@@ -769,73 +753,72 @@ msgstr "Auf&gabe"
 msgid "Eff&ort"
 msgstr "Auf&wand"
 
-#: taskcoachlib\gui\menu.py:49
-#: taskcoachlib\gui\uicommand.py:1416
+#: taskcoachlib\gui\menu.py:49 taskcoachlib\gui\uicommand.py:1416
 msgid "&Category"
 msgstr "&Kategorie"
 
 #: taskcoachlib\gui\menu.py:51
-msgid "&Help"
-msgstr "&?"
+msgid "&Note"
+msgstr "&Notiz"
 
-#: taskcoachlib\gui\menu.py:83
+#: taskcoachlib\gui\menu.py:52
+msgid "&Help"
+msgstr "&Hilfe"
+
+#: taskcoachlib\gui\menu.py:84
 msgid "&Export"
 msgstr "E&xportieren"
 
-#: taskcoachlib\gui\menu.py:133
+#: taskcoachlib\gui\menu.py:134
 msgid "&Select"
 msgstr "Auswä&hlen"
 
-#: taskcoachlib\gui\menu.py:147
+#: taskcoachlib\gui\menu.py:148
 msgid "New viewer"
 msgstr "&Neues Register"
 
-#: taskcoachlib\gui\menu.py:150
+#: taskcoachlib\gui\menu.py:151
 msgid "Tas&ks that are"
 msgstr "Aufgaben &markiert als"
 
-#: taskcoachlib\gui\menu.py:152
+#: taskcoachlib\gui\menu.py:153
 msgid "Tasks &due before end of"
 msgstr "Aufgaben &fällig"
 
-#: taskcoachlib\gui\menu.py:154
+#: taskcoachlib\gui\menu.py:155
 msgid "Task &columns"
 msgstr "Auf&gaben-Spalten"
 
-#: taskcoachlib\gui\menu.py:155
+#: taskcoachlib\gui\menu.py:156
 msgid "Effort &columns"
 msgstr "Auf&wand-Spalten"
 
-#: taskcoachlib\gui\menu.py:157
+#: taskcoachlib\gui\menu.py:158
 msgid "&List options"
 msgstr "Aufgaben&liste-Optionen"
 
-#: taskcoachlib\gui\menu.py:159
+#: taskcoachlib\gui\menu.py:160
 msgid "&Tree options"
 msgstr "Aufgaben&baum-Optionen"
 
-#: taskcoachlib\gui\menu.py:162
+#: taskcoachlib\gui\menu.py:163
 msgid "&Sort"
 msgstr "&Sortieren"
 
-#: taskcoachlib\gui\menu.py:164
+#: taskcoachlib\gui\menu.py:165
 msgid "T&oolbar"
 msgstr "S&ymbolleiste"
 
-#: taskcoachlib\gui\menu.py:181
-#: taskcoachlib\gui\menu.py:391
+#: taskcoachlib\gui\menu.py:184 taskcoachlib\gui\menu.py:394
 msgid "&Dates"
 msgstr "&Termine"
 
-#: taskcoachlib\gui\menu.py:183
-#: taskcoachlib\gui\menu.py:393
-#: taskcoachlib\gui\uicommand.py:1356
-#: taskcoachlib\gui\uicommand.py:1421
+#: taskcoachlib\gui\menu.py:186 taskcoachlib\gui\menu.py:396
+#: taskcoachlib\gui\uicommand.py:1356 taskcoachlib\gui\uicommand.py:1421
 msgid "&Budget"
 msgstr "&Budget"
 
-#: taskcoachlib\gui\menu.py:185
-#: taskcoachlib\gui\menu.py:395
+#: taskcoachlib\gui\menu.py:188 taskcoachlib\gui\menu.py:398
 msgid "&Financial"
 msgstr "&Finanzen"
 
@@ -849,31 +832,31 @@ msgstr "jetzt"
 
 #: taskcoachlib\gui\taskbaricon.py:93
 msgid "%d tasks overdue"
-msgstr "%d Aufgaben sind überfällig."
+msgstr "%d Aufgaben sind überfällig"
 
 #: taskcoachlib\gui\taskbaricon.py:93
 msgid "one task overdue"
-msgstr "Eine Aufgabe ist überfällig."
+msgstr "Eine Aufgabe ist überfällig"
 
 #: taskcoachlib\gui\taskbaricon.py:94
 msgid "%d tasks due today"
-msgstr "%d Aufgaben sind heute fällig."
+msgstr "%d Aufgaben sind heute fällig"
 
 #: taskcoachlib\gui\taskbaricon.py:94
 msgid "one task due today"
-msgstr "Eine Aufgabe ist heute fällig."
+msgstr "Eine Aufgabe ist heute fällig"
 
 #: taskcoachlib\gui\taskbaricon.py:95
 msgid "tracking effort for one task"
-msgstr "Aufwandserfassung für eine Aufgabe"
+msgstr "Erfasse Zeitaufwand für eine Aufgabe"
 
 #: taskcoachlib\gui\taskbaricon.py:96
 msgid "tracking effort for %d tasks"
-msgstr "Aufwandserfassung für %d Aufgaben"
+msgstr "Erfasse Zeitaufwand für %d Aufgabe"
 
 #: taskcoachlib\gui\uicommand.py:320
 msgid "&Open...\tCtrl+O"
-msgstr "Ö&ffnen...\tStrg+O"
+msgstr "&Öffnen...\tCtrl+O"
 
 #: taskcoachlib\gui\uicommand.py:321
 msgid "Open a %s file"
@@ -901,7 +884,7 @@ msgstr "Aktuelle Datei schließen"
 
 #: taskcoachlib\gui\uicommand.py:361
 msgid "&Save\tCtrl+S"
-msgstr "&Speichern\tStrg+S"
+msgstr "&Speichern\tCtrl+S"
 
 #: taskcoachlib\gui\uicommand.py:362
 msgid "Save the current file"
@@ -929,16 +912,15 @@ msgstr "Seite"
 
 #: taskcoachlib\gui\uicommand.py:427
 msgid "Page setup..."
-msgstr "Seite einr&ichten..."
+msgstr "Seite einrichten..."
 
 #: taskcoachlib\gui\uicommand.py:428
 msgid "Setup the characteristics of the printer page"
 msgstr "Eigenschaften der Druckseite einstellen"
 
-#: taskcoachlib\gui\uicommand.py:444
-#: taskcoachlib\gui\uicommand.py:455
+#: taskcoachlib\gui\uicommand.py:444 taskcoachlib\gui\uicommand.py:455
 msgid "Print preview"
-msgstr "Seiten&ansicht"
+msgstr "Seitenansicht"
 
 #: taskcoachlib\gui\uicommand.py:445
 msgid "Show a preview of what the print will look like"
@@ -952,210 +934,209 @@ msgstr "&Drucken..."
 msgid "Print the current file"
 msgstr "Aktuelle Datei drucken"
 
-#: taskcoachlib\gui\uicommand.py:486
-msgid "Export as &iCalendar..."
-msgstr "Als &iCalendar exportieren..."
-
 #: taskcoachlib\gui\uicommand.py:487
-msgid "Export the current file in iCalendar (*.ics) format"
-msgstr "Die aktuelle Datei als iCalendar (*.ics) Datei exportieren"
+msgid "Export effort as &iCalendar..."
+msgstr "Aufwand als &iCalendar exportieren..."
 
-#: taskcoachlib\gui\uicommand.py:496
+#: taskcoachlib\gui\uicommand.py:488
+msgid "Export effort in iCalendar (*.ics) format"
+msgstr "Aufwand in iCalendar (*.ics) Datei exportieren"
+
+#: taskcoachlib\gui\uicommand.py:497
 msgid "Export as &HTML..."
 msgstr "Als &HTML-Datei exportieren..."
 
-#: taskcoachlib\gui\uicommand.py:497
+#: taskcoachlib\gui\uicommand.py:498
 msgid "Export the current view as HTML file"
 msgstr "Aktuelle Ansicht als HTML-Datei exportieren"
 
-#: taskcoachlib\gui\uicommand.py:506
+#: taskcoachlib\gui\uicommand.py:507
 msgid "Export as &CSV..."
 msgstr "Als &CSV-Datei exportieren..."
 
-#: taskcoachlib\gui\uicommand.py:507
+#: taskcoachlib\gui\uicommand.py:508
 msgid "Export the current view in Comma Separated Values (CSV) format"
 msgstr "Aktuelle Ansicht als Comma Separated Values (CSV) Datei exportieren"
 
-#: taskcoachlib\gui\uicommand.py:516
-msgid "&Quit\tCtrl+Q"
-msgstr "&Beenden\tStrg+Q"
-
 #: taskcoachlib\gui\uicommand.py:517
+msgid "&Quit\tCtrl+Q"
+msgstr "&Beenden\tCtrl+Q"
+
+#: taskcoachlib\gui\uicommand.py:518
 msgid "Exit %s"
 msgstr "%s verlassen"
 
-#: taskcoachlib\gui\uicommand.py:525
+#: taskcoachlib\gui\uicommand.py:526
 msgid "&Undo"
-msgstr "&Rückgängig:"
+msgstr "&Rückgängig"
 
-#: taskcoachlib\gui\uicommand.py:530
+#: taskcoachlib\gui\uicommand.py:531
 msgid "Undo the last command"
 msgstr "Letzte Änderung rückgängig machen"
 
-#: taskcoachlib\gui\uicommand.py:545
+#: taskcoachlib\gui\uicommand.py:546
 msgid "&Redo"
-msgstr "&Wiederholen:"
+msgstr "&Wiederholen"
 
-#: taskcoachlib\gui\uicommand.py:550
+#: taskcoachlib\gui\uicommand.py:551
 msgid "Redo the last command that was undone"
 msgstr "Letzte Änderung wiederholen"
 
-#: taskcoachlib\gui\uicommand.py:566
-msgid "Cu&t\tCtrl+X"
-msgstr "&Ausschneiden\tStrg+X"
-
 #: taskcoachlib\gui\uicommand.py:567
-msgid "Cut the selected item(s) to the clipboard"
-msgstr "Ausgewählte Elemente in die Zwischenablage verschieben"
+msgid "Cu&t\tCtrl+X"
+msgstr "&Ausschneiden\tCtrl+X"
 
-#: taskcoachlib\gui\uicommand.py:578
-msgid "&Copy\tCtrl+C"
-msgstr "&Kopieren\tStrg+C"
+#: taskcoachlib\gui\uicommand.py:568
+msgid "Cut the selected item(s) to the clipboard"
+msgstr "Ausgewählte Aufgabe(n) in Zwischenablage verschieben"
 
 #: taskcoachlib\gui\uicommand.py:579
+msgid "&Copy\tCtrl+C"
+msgstr "&Kopieren\tCtrl+C"
+
+#: taskcoachlib\gui\uicommand.py:580
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "Ausgewählte Elemente in die Zwischenablage kopieren"
 
-#: taskcoachlib\gui\uicommand.py:590
-msgid "&Paste\tCtrl+V"
-msgstr "&Einfügen\tStrg+V"
-
 #: taskcoachlib\gui\uicommand.py:591
+msgid "&Paste\tCtrl+V"
+msgstr "&Einfügen\tCtrl+V"
+
+#: taskcoachlib\gui\uicommand.py:592
 msgid "Paste item(s) from the clipboard"
 msgstr "Elemente aus der Zwischenablage einfügen"
 
-#: taskcoachlib\gui\uicommand.py:604
-msgid "P&aste into task"
-msgstr "Einfügen als &Teilaufgabe"
-
 #: taskcoachlib\gui\uicommand.py:605
+msgid "P&aste into task\tShift-Ctrl+V"
+msgstr "In Aufgabe &einfügen\tShift-Ctrl+V"
+
+#: taskcoachlib\gui\uicommand.py:606
 msgid "Paste item(s) from the clipboard into the selected task"
 msgstr "Elemente aus der Zwischenablage in die ausgewählte Aufgabe einfügen"
 
-#: taskcoachlib\gui\uicommand.py:619
+#: taskcoachlib\gui\uicommand.py:620
 msgid "Preferences..."
 msgstr "Ein&stellungen..."
 
-#: taskcoachlib\gui\uicommand.py:620
-#: taskcoachlib\gui\uicommand.py:625
+#: taskcoachlib\gui\uicommand.py:621 taskcoachlib\gui\uicommand.py:626
 msgid "Edit preferences"
 msgstr "Einstellungen bearbeiten"
 
-#: taskcoachlib\gui\uicommand.py:631
-msgid "&All\tCtrl+A"
-msgstr "&Alle auswählen\tStrg+A"
-
 #: taskcoachlib\gui\uicommand.py:632
+msgid "&All\tCtrl+A"
+msgstr "&Alle\tCtrl+A"
+
+#: taskcoachlib\gui\uicommand.py:633
 msgid "Select all items in the current view"
 msgstr "Alle Elemente in dieser Ansicht auswählen"
 
-#: taskcoachlib\gui\uicommand.py:642
-msgid "&Invert selection\tCtrl+I"
-msgstr "Auswahl &vertauschen\tStrg+I"
-
 #: taskcoachlib\gui\uicommand.py:643
+msgid "&Invert selection\tCtrl+I"
+msgstr "Auswahl &vertauschen\tCtrl+I"
+
+#: taskcoachlib\gui\uicommand.py:644
 msgid "Select unselected items and unselect selected items"
 msgstr "Selektion ausgewählter und nicht ausgewählter Aufgaben umkehren"
 
-#: taskcoachlib\gui\uicommand.py:652
+#: taskcoachlib\gui\uicommand.py:653
 msgid "&Clear selection"
 msgstr "A&uswahl aufheben"
 
-#: taskcoachlib\gui\uicommand.py:653
+#: taskcoachlib\gui\uicommand.py:654
 msgid "Unselect all items"
 msgstr "Auswahl aufheben"
 
-#: taskcoachlib\gui\uicommand.py:661
+#: taskcoachlib\gui\uicommand.py:662
 msgid "&All tasks"
 msgstr "&Alle Aufgaben"
 
-#: taskcoachlib\gui\uicommand.py:662
+#: taskcoachlib\gui\uicommand.py:663
 msgid "Show all tasks (reset all filters)"
 msgstr "Alle Aufgaben anzeigen (alle Filter aufheben)"
 
-#: taskcoachlib\gui\uicommand.py:695
+#: taskcoachlib\gui\uicommand.py:696
 msgid "&Hide this column"
 msgstr "Diese Spalte &ausblenden"
 
-#: taskcoachlib\gui\uicommand.py:696
+#: taskcoachlib\gui\uicommand.py:697
 msgid "Hide the selected column"
 msgstr "Ausgewählte Spalten ausblenden"
 
-#: taskcoachlib\gui\uicommand.py:717
-msgid "&Expand all items\tShift+Ctrl+E"
-msgstr "Alle Elemente e&inblenden\tShift+Strg+E"
-
 #: taskcoachlib\gui\uicommand.py:718
+msgid "&Expand all items\tShift+Ctrl+E"
+msgstr "Alle Elemente e&inblenden\tShift+Ctrl+E"
+
+#: taskcoachlib\gui\uicommand.py:719
 msgid "Expand all items with subitems"
 msgstr "Alle Elemente mit Unterelementen einblenden"
 
-#: taskcoachlib\gui\uicommand.py:731
+#: taskcoachlib\gui\uicommand.py:732
 msgid "E&xpand"
 msgstr "&Einblenden"
 
-#: taskcoachlib\gui\uicommand.py:731
+#: taskcoachlib\gui\uicommand.py:732
 msgid "Expand the selected item(s)"
 msgstr "Ausgewählte Elemente mit Unterelementen einblenden"
 
-#: taskcoachlib\gui\uicommand.py:745
-msgid "&Collapse all items\tShift+Ctrl+C"
-msgstr "Alle Elemente a&usblenden\tShift+Strg+C"
-
 #: taskcoachlib\gui\uicommand.py:746
+msgid "&Collapse all items\tShift+Ctrl+C"
+msgstr "Alle Elemente a&usblenden\tShift+Ctrl+C"
+
+#: taskcoachlib\gui\uicommand.py:747
 msgid "Collapse all items with subitems"
 msgstr "Alle Elemente mit Unterelementen ausblenden"
 
-#: taskcoachlib\gui\uicommand.py:759
+#: taskcoachlib\gui\uicommand.py:760
 msgid "C&ollapse"
 msgstr "&Ausblenden"
 
-#: taskcoachlib\gui\uicommand.py:760
+#: taskcoachlib\gui\uicommand.py:761
 msgid "Collapse the selected items with subitems"
 msgstr "Ausgewählte Elemente mit Unterelementen ausblenden"
 
-#: taskcoachlib\gui\uicommand.py:773
+#: taskcoachlib\gui\uicommand.py:774
 msgid "New item"
-msgstr "Neue Aufgabe"
+msgstr "Neuer Eintrag"
 
-#: taskcoachlib\gui\uicommand.py:796
+#: taskcoachlib\gui\uicommand.py:797
 msgid "New subitem"
-msgstr "Neue Teilaufgabe"
+msgstr "Neuer Untereintrag"
 
-#: taskcoachlib\gui\uicommand.py:832
+#: taskcoachlib\gui\uicommand.py:833
 msgid "Delete item"
-msgstr "Aufgabe löschen"
-
-#: taskcoachlib\gui\uicommand.py:900
-msgid "&Mark completed\tCtrl+RETURN"
-msgstr "Als &erledigt kennzeichnen\tStrg+Enter"
+msgstr "Eintrag löschen"
 
 #: taskcoachlib\gui\uicommand.py:901
+msgid "&Mark completed\tCtrl+RETURN"
+msgstr "Als &erledigt kennzeichnen\tCtrl+RETURN"
+
+#: taskcoachlib\gui\uicommand.py:902
 msgid "Mark the selected task(s) completed"
 msgstr "Ausgewählte Aufgabe(n) als erledigt kennzeichnen"
 
-#: taskcoachlib\gui\uicommand.py:941
+#: taskcoachlib\gui\uicommand.py:942
 msgid "Tasks"
 msgstr "Aufgaben"
 
-#: taskcoachlib\gui\uicommand.py:953
+#: taskcoachlib\gui\uicommand.py:954
 msgid "Please enter recipient"
 msgstr "Empfänger bitte eingeben"
 
-#: taskcoachlib\gui\uicommand.py:959
+#: taskcoachlib\gui\uicommand.py:960
 msgid "&Add attachment"
 msgstr "Anlage &hinzufügen"
 
-#: taskcoachlib\gui\uicommand.py:960
+#: taskcoachlib\gui\uicommand.py:961
 msgid "Browse for files to add as attachment to the selected task(s)"
-msgstr "Nach Anlagen für die ausgewählten Aufgabe(n) durchsuchen"
+msgstr "Nach Anlagen für ausgewählte Aufgabe(n) durchsuchen"
 
-#: taskcoachlib\gui\uicommand.py:974
+#: taskcoachlib\gui\uicommand.py:975
 msgid "&Open all attachments"
 msgstr "Alle Anlagen ö&ffnen"
 
-#: taskcoachlib\gui\uicommand.py:975
+#: taskcoachlib\gui\uicommand.py:976
 msgid "Open all attachments of the selected task(s)"
-msgstr "Alle Anlage der ausgewählten Aufgabe(n) öffnen"
+msgstr "Alle Anlagen der ausgewählten Aufgabe(n) öffnen"
 
 #: taskcoachlib\gui\uicommand.py:1039
 msgid "&Start tracking effort"
@@ -1246,8 +1227,12 @@ msgid "&Active"
 msgstr "&Aktiv"
 
 #: taskcoachlib\gui\uicommand.py:1333
-msgid "Show/hide active tasks (tasks with a start date in the past and a due date in the future)"
-msgstr "Anzeigen/Ausblenden aktiver Aufgaben (Starttermin in der Vergangenheit, Stichtag in der Zukunft)"
+msgid ""
+"Show/hide active tasks (tasks with a start date in the past and a due date "
+"in the future)"
+msgstr ""
+"Anzeigen/Ausblenden aktiver Aufgaben (Starttermin in der Vergangenheit, "
+"Stichtag in der Zukunft)"
 
 #: taskcoachlib\gui\uicommand.py:1335
 msgid "&Over due"
@@ -1255,7 +1240,8 @@ msgstr "Über&fällig"
 
 #: taskcoachlib\gui\uicommand.py:1336
 msgid "Show/hide over due tasks (tasks with a due date in the past)"
-msgstr "Anzeigen/Ausblenden überfälliger Aufgaben (Stichtag in der Vergangenheit)"
+msgstr ""
+"Anzeigen/Ausblenden überfälliger Aufgaben (Stichtag in der Vergangenheit)"
 
 #: taskcoachlib\gui\uicommand.py:1338
 msgid "Over &budget"
@@ -1289,13 +1275,11 @@ msgstr "&Kategorien"
 msgid "Show/hide categories column"
 msgstr "Anzeigen/Ausblenden der Kategorien-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1350
-#: taskcoachlib\gui\uicommand.py:1375
+#: taskcoachlib\gui\uicommand.py:1350 taskcoachlib\gui\uicommand.py:1375
 msgid "Show/hide description column"
 msgstr "Anzeigen/Ausblenden der Beschreibung-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1350
-#: taskcoachlib\gui\uicommand.py:1375
+#: taskcoachlib\gui\uicommand.py:1350 taskcoachlib\gui\uicommand.py:1375
 #: taskcoachlib\gui\uicommand.py:1415
 msgid "&Description"
 msgstr "&Beschreibung"
@@ -1304,8 +1288,7 @@ msgstr "&Beschreibung"
 msgid "sHow/hide reminder column"
 msgstr "Anzeigen/Ausblenden der Erinnerung-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1351
-#: taskcoachlib\gui\uicommand.py:1434
+#: taskcoachlib\gui\uicommand.py:1351 taskcoachlib\gui\uicommand.py:1434
 msgid "&Reminder"
 msgstr "&Erinnerung"
 
@@ -1313,8 +1296,7 @@ msgstr "&Erinnerung"
 msgid "Show/hide start date column"
 msgstr "Anzeigen/Ausblenden der 'Gestartet am'-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1352
-#: taskcoachlib\gui\uicommand.py:1417
+#: taskcoachlib\gui\uicommand.py:1352 taskcoachlib\gui\uicommand.py:1417
 msgid "&Start date"
 msgstr "&Gestartet am"
 
@@ -1322,8 +1304,7 @@ msgstr "&Gestartet am"
 msgid "Show/hide due date column"
 msgstr "Anzeigen/Ausblenden der 'Fällig am'-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1353
-#: taskcoachlib\gui\uicommand.py:1418
+#: taskcoachlib\gui\uicommand.py:1353 taskcoachlib\gui\uicommand.py:1418
 msgid "&Due date"
 msgstr "&Fällig am"
 
@@ -1331,8 +1312,7 @@ msgstr "&Fällig am"
 msgid "Show/hide days left column"
 msgstr "Anzeigen/Ausblenden der Resttage-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1354
-#: taskcoachlib\gui\uicommand.py:1420
+#: taskcoachlib\gui\uicommand.py:1354 taskcoachlib\gui\uicommand.py:1420
 msgid "D&ays left"
 msgstr "&Resttage"
 
@@ -1349,31 +1329,34 @@ msgid "Show/hide budget column"
 msgstr "Anzeigen/Ausblenden der Budget-Spalte"
 
 #: taskcoachlib\gui\uicommand.py:1357
-msgid "Show/hide total budget column (total budget includes budget for subtasks)"
-msgstr "Anzeigen/Ausblenden der 'Budget gesamt'-Spalte (inkl. Budgets für Teilaufgaben)"
+msgid ""
+"Show/hide total budget column (total budget includes budget for subtasks)"
+msgstr ""
+"Anzeigen/Ausblenden der 'Budget gesamt'-Spalte (inkl. Budgets für "
+"Teilaufgaben)"
 
-#: taskcoachlib\gui\uicommand.py:1357
-#: taskcoachlib\gui\uicommand.py:1422
+#: taskcoachlib\gui\uicommand.py:1357 taskcoachlib\gui\uicommand.py:1422
 msgid "Total b&udget"
 msgstr "B&udget gesamt"
 
-#: taskcoachlib\gui\uicommand.py:1358
-#: taskcoachlib\gui\uicommand.py:1371
+#: taskcoachlib\gui\uicommand.py:1358 taskcoachlib\gui\uicommand.py:1371
 msgid "Show/hide time spent column"
 msgstr "Anzeigen/Ausblenden der Aufwand-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1358
-#: taskcoachlib\gui\uicommand.py:1371
+#: taskcoachlib\gui\uicommand.py:1358 taskcoachlib\gui\uicommand.py:1371
 #: taskcoachlib\gui\uicommand.py:1423
 msgid "&Time spent"
 msgstr "&Aufwand"
 
 #: taskcoachlib\gui\uicommand.py:1359
-msgid "Show/hide total time spent column (total time includes time spent on subtasks)"
-msgstr "Anzeigen/Ausblenden der 'Aufwand gesamt'-Spalte (inkl. Aufwand für Teilaufgaben)"
+msgid ""
+"Show/hide total time spent column (total time includes time spent on "
+"subtasks)"
+msgstr ""
+"Anzeigen/Ausblenden der 'Aufwand gesamt'-Spalte (inkl. Aufwand für "
+"Teilaufgaben)"
 
-#: taskcoachlib\gui\uicommand.py:1359
-#: taskcoachlib\gui\uicommand.py:1372
+#: taskcoachlib\gui\uicommand.py:1359 taskcoachlib\gui\uicommand.py:1372
 #: taskcoachlib\gui\uicommand.py:1424
 msgid "T&otal time spent"
 msgstr "Z&eitaufwand gesamt"
@@ -1382,17 +1365,19 @@ msgstr "Z&eitaufwand gesamt"
 msgid "Show/hide budget left column"
 msgstr "Anzeigen/Ausblenden der Restbudget-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1360
-#: taskcoachlib\gui\uicommand.py:1425
+#: taskcoachlib\gui\uicommand.py:1360 taskcoachlib\gui\uicommand.py:1425
 msgid "Budget &left"
 msgstr "Rest&budget"
 
 #: taskcoachlib\gui\uicommand.py:1361
-msgid "Show/hide total budget left column (total budget left includes budget left for subtasks)"
-msgstr "Anzeigen/Ausblenden der 'Restbudget gesamt'-Spalte (inkl. Restbudgets für Teilaufgaben)"
+msgid ""
+"Show/hide total budget left column (total budget left includes budget left "
+"for subtasks)"
+msgstr ""
+"Anzeigen/Ausblenden der 'Restbudget gesamt'-Spalte (inkl. Restbudgets für "
+"Teilaufgaben)"
 
-#: taskcoachlib\gui\uicommand.py:1361
-#: taskcoachlib\gui\uicommand.py:1426
+#: taskcoachlib\gui\uicommand.py:1361 taskcoachlib\gui\uicommand.py:1426
 msgid "Total budget l&eft"
 msgstr "Restb&udget gesamt"
 
@@ -1400,8 +1385,7 @@ msgstr "Restb&udget gesamt"
 msgid "Show/hide priority column"
 msgstr "Anzeigen/Ausblenden der Prioritäts-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1362
-#: taskcoachlib\gui\uicommand.py:1427
+#: taskcoachlib\gui\uicommand.py:1362 taskcoachlib\gui\uicommand.py:1427
 msgid "&Priority"
 msgstr "&Priorität"
 
@@ -1410,15 +1394,18 @@ msgid "O&verall priority"
 msgstr "P&riorität gesamt"
 
 #: taskcoachlib\gui\uicommand.py:1363
-msgid "Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)"
-msgstr "Anzeigen/Ausblenden der 'Priorität gesamt'-Spalte (die höchste Priorität einer Aufgabe einschließlich Teilaufgaben)"
+msgid ""
+"Show/hide overall priority column (overall priority is the maximum priority "
+"of a task and all its subtasks)"
+msgstr ""
+"Anzeigen/Ausblenden der 'Priorität gesamt'-Spalte (die höchste Priorität "
+"einer Aufgabe einschließlich Teilaufgaben)"
 
 #: taskcoachlib\gui\uicommand.py:1364
 msgid "Show/hide hourly fee column"
 msgstr "Anzeigen/Ausblenden der Stundensatz-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1364
-#: taskcoachlib\gui\uicommand.py:1429
+#: taskcoachlib\gui\uicommand.py:1364 taskcoachlib\gui\uicommand.py:1429
 msgid "&Hourly fee"
 msgstr "&Stundensatz"
 
@@ -1426,8 +1413,7 @@ msgstr "&Stundensatz"
 msgid "Show/hide fixed fee column"
 msgstr "Anzeigen/Ausblenden der Festbetrag-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1365
-#: taskcoachlib\gui\uicommand.py:1430
+#: taskcoachlib\gui\uicommand.py:1365 taskcoachlib\gui\uicommand.py:1430
 msgid "&Fixed fee"
 msgstr "&Festbetrag"
 
@@ -1439,13 +1425,11 @@ msgstr "F&estbetrag gesamt"
 msgid "Show/hide total fixed fee column"
 msgstr "Anzeigen/Ausblenden der 'Festbetrag gesamt'-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1367
-#: taskcoachlib\gui\uicommand.py:1373
+#: taskcoachlib\gui\uicommand.py:1367 taskcoachlib\gui\uicommand.py:1373
 msgid "Show/hide revenue column"
 msgstr "Anzeigen/Ausblenden der Umsatz-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1367
-#: taskcoachlib\gui\uicommand.py:1373
+#: taskcoachlib\gui\uicommand.py:1367 taskcoachlib\gui\uicommand.py:1373
 #: taskcoachlib\gui\uicommand.py:1432
 msgid "&Revenue"
 msgstr "&Umsatz"
@@ -1454,28 +1438,29 @@ msgstr "&Umsatz"
 msgid "T&otal revenue"
 msgstr "U&msatz gesamt"
 
-#: taskcoachlib\gui\uicommand.py:1368
-#: taskcoachlib\gui\uicommand.py:1374
+#: taskcoachlib\gui\uicommand.py:1368 taskcoachlib\gui\uicommand.py:1374
 msgid "Show/hide total revenue column"
-msgstr "Anzeigen/Ausblenden der 'Umsatz gesamt'-Spalte"
+msgstr "Anzeigen/Ausblenden der Gesamtumsatz-Spalte"
 
 #: taskcoachlib\gui\uicommand.py:1369
 msgid "Show/hide last modification time column"
 msgstr "Anzeigen/Ausblenden der 'Geändert am'-Spalte"
 
-#: taskcoachlib\gui\uicommand.py:1369
-#: taskcoachlib\gui\uicommand.py:1435
-#: taskcoachlib\gui\viewer.py:521
+#: taskcoachlib\gui\uicommand.py:1369 taskcoachlib\gui\uicommand.py:1435
+#: taskcoachlib\gui\viewer.py:566
 msgid "Last modification time"
 msgstr "Geändert am"
 
 #: taskcoachlib\gui\uicommand.py:1370
-msgid "Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks)"
-msgstr "Anzeigen/Ausblenden der Spalte, die die letzte Änderung einer Aufgabe einschließlich Teilaufgaben anzeigt"
+msgid ""
+"Show/hide overall last modification time column (overall last modification "
+"time is the most recent modification time of a task and all it subtasks)"
+msgstr ""
+"Anzeigen/Ausblenden der Spalte, die die letzte Änderung einer Aufgabe "
+"einschließlich Teilaufgaben anzeigt"
 
-#: taskcoachlib\gui\uicommand.py:1370
-#: taskcoachlib\gui\uicommand.py:1436
-#: taskcoachlib\gui\viewer.py:522
+#: taskcoachlib\gui\uicommand.py:1370 taskcoachlib\gui\uicommand.py:1436
+#: taskcoachlib\gui\viewer.py:567
 msgid "Overall last modification time"
 msgstr "Geändert am (gesamt)"
 
@@ -1524,8 +1509,12 @@ msgid "Sort case sensitive"
 msgstr "Nach &Groß-/Kleinschreibung sortieren"
 
 #: taskcoachlib\gui\uicommand.py:1406
-msgid "When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)"
-msgstr "Wenn Text sortiert wird, wird die Groß-/Kleinschreibung ignoriert (aktiviert) oder berücksichtigt (nicht aktiviert)"
+msgid ""
+"When comparing text, sorting is case sensitive (checked) or insensitive "
+"(unchecked)"
+msgstr ""
+"Wenn Text sortiert wird, wird die Groß-/Kleinschreibung ignoriert "
+"(aktiviert) oder berücksichtigt (nicht aktiviert)"
 
 #: taskcoachlib\gui\uicommand.py:1408
 msgid "Sort by status &first"
@@ -1603,10 +1592,9 @@ msgstr "Sortieren nach Priorität"
 msgid "Sort tasks by overall priority"
 msgstr "Sortieren nach Priorität gesamt"
 
-#: taskcoachlib\gui\uicommand.py:1428
-#: taskcoachlib\gui\viewer.py:514
+#: taskcoachlib\gui\uicommand.py:1428 taskcoachlib\gui\viewer.py:559
 msgid "Overall priority"
-msgstr "P&riorität gesamt"
+msgstr "Priorität gesamt"
 
 #: taskcoachlib\gui\uicommand.py:1429
 msgid "Sort tasks by hourly fee"
@@ -1648,8 +1636,7 @@ msgstr "Sortieren nach letzte Änderung"
 msgid "Sort tasks by overall last modification time"
 msgstr "Sortieren nach letzte Änderung gesamt"
 
-#: taskcoachlib\gui\uicommand.py:1443
-#: taskcoachlib\gui\uicommand.py:1446
+#: taskcoachlib\gui\uicommand.py:1443 taskcoachlib\gui\uicommand.py:1446
 #: taskcoachlib\gui\viewerfactory.py:21
 msgid "Task list"
 msgstr "Aufgabenliste"
@@ -1658,8 +1645,7 @@ msgstr "Aufgabenliste"
 msgid "Open a new tab with a viewer that displays tasks in a list"
 msgstr "Einen neuen Reiter mit einer Aufgabenlisten öffnen"
 
-#: taskcoachlib\gui\uicommand.py:1447
-#: taskcoachlib\gui\uicommand.py:1450
+#: taskcoachlib\gui\uicommand.py:1447 taskcoachlib\gui\uicommand.py:1450
 #: taskcoachlib\gui\viewerfactory.py:25
 msgid "Task tree"
 msgstr "Aufgabenbaum"
@@ -1704,8 +1690,7 @@ msgstr "Notiz"
 msgid "Open a new tab with a viewer that displays notes"
 msgstr "Einen neuen Reiter mit den Notizen öffnen"
 
-#: taskcoachlib\gui\uicommand.py:1473
-#: taskcoachlib\gui\viewerfactory.py:34
+#: taskcoachlib\gui\uicommand.py:1473 taskcoachlib\gui\viewerfactory.py:34
 msgid "Notes"
 msgstr "Notizen"
 
@@ -1759,7 +1744,9 @@ msgstr "Nur Aufgaben anzeigen, die morgen fällig sind"
 
 #: taskcoachlib\gui\uicommand.py:1498
 msgid "Only show tasks due this work week (i.e. before Friday)"
-msgstr "Nur Aufgaben anzeigen, die innerhalb dieser Arbeitswoche fällig sind (d.h. bis Freitag)"
+msgstr ""
+"Nur Aufgaben anzeigen, die innerhalb dieser Arbeitswoche fällig sind (d.h. "
+"bis Freitag)"
 
 #: taskcoachlib\gui\uicommand.py:1498
 msgid "Wo&rk week"
@@ -1767,7 +1754,9 @@ msgstr "&Arbeitswoche"
 
 #: taskcoachlib\gui\uicommand.py:1499
 msgid "Only show tasks due this week (i.e. before Sunday)"
-msgstr "Nur Aufgaben anzeigen, die innerhalb dieser Woche fällig sind (d.h. bis Sonntag)"
+msgstr ""
+"Nur Aufgaben anzeigen, die innerhalb dieser Woche fällig sind (d.h. bis "
+"Sonntag)"
 
 #: taskcoachlib\gui\uicommand.py:1500
 msgid "Only show tasks due this month"
@@ -1789,65 +1778,63 @@ msgstr "Aufgabe &versenden"
 msgid "Mail the task, using your default mailer"
 msgstr "Aufgabe mit dem Standard E-Mail Programm senden"
 
-#: taskcoachlib\gui\viewer.py:353
+#: taskcoachlib\gui\viewer.py:358
 msgid "Tasks: %d selected, %d visible, %d total"
 msgstr "Aufgaben: %d ausgewählt, %d sichtbar, %d gesamt"
 
-#: taskcoachlib\gui\viewer.py:356
+#: taskcoachlib\gui\viewer.py:361
 msgid "Status: %d over due, %d inactive, %d completed"
 msgstr "Status: %d überfällig, %d inaktiv, %d erledigt"
 
-#: taskcoachlib\gui\viewer.py:505
+#: taskcoachlib\gui\viewer.py:550
 msgid "Days left"
 msgstr "Resttage"
 
-#: taskcoachlib\gui\viewer.py:508
+#: taskcoachlib\gui\viewer.py:553
 msgid "Total budget"
 msgstr "Budget gesamt"
 
-#: taskcoachlib\gui\viewer.py:510
-#: taskcoachlib\gui\viewer.py:941
+#: taskcoachlib\gui\viewer.py:555 taskcoachlib\gui\viewer.py:1000
 msgid "Total time spent"
 msgstr "Aufwand gesamt"
 
-#: taskcoachlib\gui\viewer.py:512
+#: taskcoachlib\gui\viewer.py:557
 msgid "Total budget left"
 msgstr "Restbudget gesamt"
 
-#: taskcoachlib\gui\viewer.py:517
+#: taskcoachlib\gui\viewer.py:562
 msgid "Total fixed fee"
 msgstr "Festbetrag gesamt"
 
-#: taskcoachlib\gui\viewer.py:519
-#: taskcoachlib\gui\viewer.py:943
+#: taskcoachlib\gui\viewer.py:564 taskcoachlib\gui\viewer.py:1002
 msgid "Total revenue"
 msgstr "Umsatz gesamt"
 
-#: taskcoachlib\gui\viewer.py:708
+#: taskcoachlib\gui\viewer.py:763
 msgid "Categories: %d selected, %d total"
 msgstr "Kategorien: %d ausgewählt, %d gesamt"
 
-#: taskcoachlib\gui\viewer.py:710
+#: taskcoachlib\gui\viewer.py:765
 msgid "Status: %d filtered"
 msgstr "Status: %d gefiltered"
 
-#: taskcoachlib\gui\viewer.py:781
+#: taskcoachlib\gui\viewer.py:840
 msgid "Notes: %d selected, %d total"
 msgstr "Notizen: %d ausgewählt, %d gesamt"
 
-#: taskcoachlib\gui\viewer.py:783
+#: taskcoachlib\gui\viewer.py:842
 msgid "Status: n/a"
 msgstr "Status: n.Z."
 
-#: taskcoachlib\gui\viewer.py:827
+#: taskcoachlib\gui\viewer.py:886
 msgid "Effort: %d selected, %d visible, %d total"
 msgstr "Aufwand: %d ausgewählt, %d sichtbar, %d gesamt"
 
-#: taskcoachlib\gui\viewer.py:830
+#: taskcoachlib\gui\viewer.py:889
 msgid "Status: %d tracking"
 msgstr "Status: %d verfolgen"
 
-#: taskcoachlib\gui\viewer.py:898
+#: taskcoachlib\gui\viewer.py:957
 msgid "Period"
 msgstr "Zeitraum"
 
@@ -1882,7 +1869,8 @@ msgstr ""
 "<li><a href=\"#effort\">Aufwand</a>\n"
 "    <ul>\n"
 "        <li><a href=\"#abouteffort\">Über Aufwände</a></li>\n"
-"        <li><a href=\"#effortproperties\">Eigenschaften von Aufwänden</a></li>\n"
+"        <li><a href=\"#effortproperties\">Eigenschaften von "
+"Aufwänden</a></li>\n"
 "    </ul>\n"
 "</li>\n"
 "</ul>\n"
@@ -1896,8 +1884,10 @@ msgid ""
 "<h4><a name=\"abouttasks\">About tasks</a></h4>\n"
 " \n"
 "<p>Tasks are the basic objects that you manipulate. Tasks can\n"
-"represent anything from a simple little thing you have to do, like buying a gift\n"
-"for your loved one, to a complete project, consisting of different phases, and\n"
+"represent anything from a simple little thing you have to do, like buying a "
+"gift\n"
+"for your loved one, to a complete project, consisting of different phases, "
+"and\n"
 "numerous activities.</p>\n"
 msgstr ""
 "<h4><a name=\"abouttasks\">Über Aufgaben</a></h4>\n"
@@ -1918,30 +1908,36 @@ msgid ""
 "<li>Description: a multi-line description of the task.</li>\n"
 "<li>Due date: the date the task should be finished. This can be 'None' \n"
 "indicating that this task has no fixed due date.</li>\n"
-"<li>Start date: the first date on which the task can be started. The start date \n"
-"defaults to the date the task is created. It can also be 'None' indicating that\n"
+"<li>Start date: the first date on which the task can be started. The start "
+"date \n"
+"defaults to the date the task is created. It can also be 'None' indicating "
+"that\n"
 "you don't really want to start this task. This can be convenient for e.g. \n"
 "registering sick leave.</li>\n"
 "<li>Completion date: this date is 'None' as long as the task has not been \n"
-"completed. It is set to the current date when you mark the task as completed. \n"
+"completed. It is set to the current date when you mark the task as "
+"completed. \n"
 "The completion date can also be entered manually.</li>\n"
 "<li>Budget: amount of hours available for the task.</li>\n"
 "<li>Hourly fee: the amount of money earned with the task per hour.</li>\n"
-"<li>Fixed fee: the amount of money earned with the task regardless of the time\n"
+"<li>Fixed fee: the amount of money earned with the task regardless of the "
+"time\n"
 "spent.</li>\n"
 "</ul></p>\n"
 "\n"
 "<p>The following properties are calculated from the properties above:\n"
 "<ul>\n"
 "<li>Days left: the number of days left until the due date.</li>\n"
-"<li>Total budget: sum of task budget and the budgets of all subtasks of the \n"
+"<li>Total budget: sum of task budget and the budgets of all subtasks of the "
+"\n"
 "task, recursively.</li>\n"
 "<li>Time spent: effort spent on the task.</li>\n"
 "<li>Total time spent: effort spent on the task and all subtasks, \n"
 "recursively.</li>\n"
 "<li>Budget left: task budget minus time spent on the task.</li>\n"
 "<li>Total budget left: total task budget minus total time spent.</li>\n"
-"<li>Total fixed fee: sum of fixed fee of the task and the fixed fees of all \n"
+"<li>Total fixed fee: sum of fixed fee of the task and the fixed fees of all "
+"\n"
 "subtasks of the task, recursively.</li>\n"
 "<li>Revenue: hourly fee times hours spent plus fixed fee.</li>\n"
 "<li>Total revenue: sum of task revenue and revenue of all subtasks, \n"
@@ -1955,16 +1951,20 @@ msgstr ""
 "<ul>\n"
 "<li>Betreff: eine Zeile, die die Aufgabe zusammenfasst.</li>\n"
 "<li>Beschreibung: eine mehrzeilige Beschreibung der Aufgabe.</li>\n"
-"<li>Fällig am: das Datum, an dem die Aufgabe erledigt sein sollte. Dies kann 'Keine'\n"
+"<li>Fällig am: das Datum, an dem die Aufgabe erledigt sein sollte. Dies kann "
+"'Keine'\n"
 "sein um zu kennzeichnen, dass es kein bestimmtest Datum gibt.</li>\n"
-"<li>Gestartet am: der frühester Termin, an dem die Aufgabe gestartet werden kann. Standardmäßig\n"
+"<li>Gestartet am: der frühester Termin, an dem die Aufgabe gestartet werden "
+"kann. Standardmäßig\n"
 "wird der Tag der Erstellung der Aufgabe angegeben. Dies kann 'Keine'\n"
 "sein um anzuzeigen, dass man diese Aufgabe noch nicht starten möchte.\n"
-"Dies kann dann sinnvoll sein, um Krankheitstage berücksichtigen zu können.</li>\n"
+"Dies kann dann sinnvoll sein, um Krankheitstage berücksichtigen zu "
+"können.</li>\n"
 "<li>Erledigt am: hier wird 'Keine' angegeben, bis die Aufgabe erledigt ist.\n"
 "Hier wird das aktuelle Datum eingetragen, wenn Sie die Aufgabe als erledigt\n"
 "kennzeichnen. Das Datum kann auch per Hand eingetragen werden.</li>\n"
-"<li>Budget: Anzahl der Stunden, die für diese Aufgabe noch zur Verfügung stehen.</li>\n"
+"<li>Budget: Anzahl der Stunden, die für diese Aufgabe noch zur Verfügung "
+"stehen.</li>\n"
 "<li>Stundensatz: wie viel Sie pro Stunde für diese Aufgabe verdienen.</li>\n"
 "<li>Festbetrag: wie viel Sie für die Aufgabe verdienen (unabhängig von der\n"
 "Anzahl der benötigen Stunden).</li>\n"
@@ -1979,7 +1979,8 @@ msgid ""
 "\n"
 "<p>Tasks always have exactly one of the following states:\n"
 "<ul>\n"
-"<li>Active: the start date is in the past and the due date in the future;</li>\n"
+"<li>Active: the start date is in the past and the due date in the "
+"future;</li>\n"
 "<li>Inactive: the start date is in the future, or</li>\n"
 "<li>Completed: the task has been completed.</li>\n"
 "</ul></p>\n"
@@ -1998,7 +1999,8 @@ msgstr ""
 "\n"
 "<p>Aufgaben können in einem der folgenden Zuständen sein::\n"
 "<ul>\n"
-"<li>Aktiv: das Startdatum liegt in der Vergangenheit und das Fälligkeitsdatum in der Zukunft;</li>\n"
+"<li>Aktiv: das Startdatum liegt in der Vergangenheit und das "
+"Fälligkeitsdatum in der Zukunft;</li>\n"
 "<li>Inaktiv: das Startdatum liegt in der Zukunft, oder</li>\n"
 "<li>Erledigt: die Aufgabe wurde erledigt.</li>\n"
 "</ul></p>\n"
@@ -2025,7 +2027,8 @@ msgid ""
 "<li>Future tasks are gray, and</li>\n"
 "<li>Completed tasks are green.</li>\n"
 "</ul>\n"
-"This all assumes you have not changed the text colors through the preferences \n"
+"This all assumes you have not changed the text colors through the "
+"preferences \n"
 "dialog, of course.</p>\n"
 msgstr ""
 "<h4><a name=\"taskcolors\">Aufgabenfarben</a></h4>\n"
@@ -2050,8 +2053,10 @@ msgid ""
 "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
 "\n"
 "<p>Whenever you spent time on tasks, you can record the amount of time\n"
-"spent by tracking effort. Select a task and invoke 'Start tracking effort' in\n"
-"the Effort menu or the context menu or via the 'Start tracking effort' toolbar \n"
+"spent by tracking effort. Select a task and invoke 'Start tracking effort' "
+"in\n"
+"the Effort menu or the context menu or via the 'Start tracking effort' "
+"toolbar \n"
 "button.</p>\n"
 msgstr ""
 "<h4><a name=\"abouteffort\">Über Aufwand</a></h4>\n"
@@ -2070,7 +2075,8 @@ msgid ""
 "<ul>\n"
 "<li>Task: the task the effort belongs to.</li>\n"
 "<li>Start date/time: start date and time of the effort.</li>\n"
-"<li>Stop date/time: stop date and time of the effort. This can be 'None' as \n"
+"<li>Stop date/time: stop date and time of the effort. This can be 'None' as "
+"\n"
 "long as you are still working on the task.</li>\n"
 "<li>Description: a multi-line description of the effort.</li>\n"
 "</ul></p>\n"
@@ -2090,8 +2096,10 @@ msgstr ""
 "<p>Aufwände haben folgende Eigenschaften, die Sie anpassen können:\n"
 "<ul>\n"
 "<li>Aufgabe: die Aufgabe zu der der Aufwand gehört.</li>\n"
-"<li>Gestartet am: Datum und Uhrzeit, an dem der Aufwand gestartet wurde.</li>\n"
-"<li>Angehalten am: Datum und Uhrzeit, wo der Aufwand gestoppt wurde. Dieser kann 'keiner' sein,\n"
+"<li>Gestartet am: Datum und Uhrzeit, an dem der Aufwand gestartet "
+"wurde.</li>\n"
+"<li>Angehalten am: Datum und Uhrzeit, wo der Aufwand gestoppt wurde. Dieser "
+"kann 'keiner' sein,\n"
 "so lange Sie noch an der Aufgabe arbeiten.</li>\n"
 "<li>Beschreibung: eine mehrzeilige Beschreibung des Aufwands.</li>\n"
 "</ul></p>\n"
@@ -2099,7 +2107,8 @@ msgstr ""
 "<p>Die folgenden Eigenschaften werden aus den o.g. Eigenschaften berechnet:\n"
 "<ul>\n"
 "<li>Aufwand: wie viel Zeit, Sie mit der Aufgabe verbracht haben.</li>\n"
-"<li>Aufwand gesamt: Summer des Aufwands der Aufgabe inkl. aller Teilaufgaben.</li>\n"
+"<li>Aufwand gesamt: Summer des Aufwands der Aufgabe inkl. aller "
+"Teilaufgaben.</li>\n"
 "<li>Umsatz: Verdienst des Aufwands.</li>\n"
 "<li>Umsatz gesamt: Verdienst des Gesamtaufwands.</li>\n"
 "</ul></p>\n"
@@ -2145,47 +2154,117 @@ msgstr ""
 "\n"
 
 #: taskcoachlib\help\tips.py:5
-msgid "%(name)s has a mailinglist where you can discuss usage of %(name)s with fellow users, discuss and request features and complain about bugs. Go to %(url)s and join today!"
-msgstr "Für %(name)s gibt es eine Verteilerliste, wo Sie die Benutzung von %(name)s mit anderen Nutzern diskutieren können, neue Features vorschlagen können und Bugs melden können. Unter %(url)s können Sie sich heute anmelden!"
+msgid ""
+"%(name)s has a mailinglist where you can discuss usage of %(name)s with "
+"fellow users, discuss and request features and complain about bugs. Go to "
+"%(url)s and join today!"
+msgstr ""
+"Für %(name)s gibt es eine Verteilerliste, wo Sie die Benutzung von %(name)s "
+"mit anderen Nutzern diskutieren können, neue Features vorschlagen können und "
+"Bugs melden können. Unter %(url)s können Sie sich heute anmelden!"
 
 #: taskcoachlib\help\tips.py:6
-msgid "%(name)s has unlimited undo and redo. Any change that you make, be it editing a task description, or deleting an effort record, is undoable. Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards through your edit history."
-msgstr "Mit %(name)s kann man Aktionen beliebig oft rückgängig machen bzw. wiederholen. Egal was Sie machen, sei es die Beschreibung einer Aufgabe ändern oder einen Aufwands-Datensatz löschen, kann rückgängig gemacht werden. Wählen Sie 'Bearbeiten' -> 'Rückgängig' oder 'Wiederholen', um rückwärts bzw. vorwärts durch das Änderungsprotokoll zu steigen."
+msgid ""
+"%(name)s has unlimited undo and redo. Any change that you make, be it "
+"editing a task description, or deleting an effort record, is undoable. "
+"Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards "
+"through your edit history."
+msgstr ""
+"Mit %(name)s kann man Aktionen beliebig oft rückgängig machen bzw. "
+"wiederholen. Egal was Sie machen, sei es die Beschreibung einer Aufgabe "
+"ändern oder einen Aufwands-Datensatz löschen, kann rückgängig gemacht "
+"werden. Wählen Sie 'Bearbeiten' -> 'Rückgängig' oder 'Wiederholen', um "
+"rückwärts bzw. vorwärts durch das Änderungsprotokoll zu steigen."
 
 #: taskcoachlib\help\tips.py:7
-msgid "%(name)s is available in a number of different languages. Select 'Edit' -> 'Preferences' to see whether your language is one of them. If your language is not available or the translation needs improvement, please consider helping with the translation of %(name)s. Visit %(url)s for more information about how you can help."
-msgstr "%(name)s ist in mehreren Sprachen verfügbar. 'Bearbeiten' -> 'Eigenschaften' auswählen um zu sehen, ob Ihrer Sprache verfügbar ist. Sollte Ihre Sprache nicht verfügbar sein oder die Übersetzung verbesserungswürdig sein, überlegen Sie sich, uns beim Übersetzen von %(name)s zu unterstützen. Besuchen Sie uns unter %(url)s."
+msgid ""
+"%(name)s is available in a number of different languages. Select 'Edit' -> "
+"'Preferences' to see whether your language is one of them. If your language "
+"is not available or the translation needs improvement, please consider "
+"helping with the translation of %(name)s. Visit %(url)s for more information "
+"about how you can help."
+msgstr ""
+"%(name)s ist in mehreren Sprachen verfügbar. 'Bearbeiten' -> 'Eigenschaften' "
+"auswählen um zu sehen, ob Ihrer Sprache verfügbar ist. Sollte Ihre Sprache "
+"nicht verfügbar sein oder die Übersetzung verbesserungswürdig sein, "
+"überlegen Sie sich, uns beim Übersetzen von %(name)s zu unterstützen. "
+"Besuchen Sie uns unter %(url)s."
 
 #: taskcoachlib\help\tips.py:8
-msgid "If you enter a URL (e.g. %(url)s) in a task or effort description, it becomes a link. Clicking on the link will open the URL in your default web browser."
-msgstr "Wenn Sie eine URL (e.g. %(url)s) in eine Aufgabe oder Aufwandsbeschreibung eingeben, wird sie in ein Link umgewandelt. Wenn Sie auf diesem Link klicken, wird die Seite im Standardbrowser geöffnet."
+msgid ""
+"If you enter a URL (e.g. %(url)s) in a task or effort description, it "
+"becomes a link. Clicking on the link will open the URL in your default web "
+"browser."
+msgstr ""
+"Wenn Sie eine URL (e.g. %(url)s) in eine Aufgabe oder Aufwandsbeschreibung "
+"eingeben, wird sie in ein Link umgewandelt. Wenn Sie auf diesem Link "
+"klicken, wird die Seite im Standardbrowser geöffnet."
 
 #: taskcoachlib\help\tips.py:9
-msgid "You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks. The same goes for categories."
-msgstr "Sie können Aufgaben innerhalb eines Aufgabenbaums per Drag && Drop ziehen, um die Beziehungen der Aufgaben anzupassen. Das Gleiche gilt für Kategorien."
+msgid ""
+"You can drag and drop tasks in the tree view to rearrange parent-child "
+"relationships between tasks. The same goes for categories."
+msgstr ""
+"Sie können Aufgaben innerhalb eines Aufgabenbaums per Drag und Drop ziehen, "
+"um die Beziehungen der Aufgaben anzupassen. Das Gleiche gilt für Kategorien."
 
 #: taskcoachlib\help\tips.py:10
-msgid "You can drag files from a file browser onto a task to create attachments. Dragging the files over a tab will raise the appropriate page, dragging the files over a collapsed task (the boxed + sign) in the tree view will expand the task to show its subtasks."
-msgstr "Sie können Dateien von einem Datei-Browser (z.B. Windows Explorer) auf eine Aufgabe ziehen, um Anlagen zu erstellen. Wenn Sie die Dateien über einen Reiter ziehen, wird die entsprechende Seite angezeigt. Wenn Sie die Dateien über eine ausgeblendete Aufgabe (das + Symbol) ziehen, werden alle Teilaufgaben eingeblendet."
+msgid ""
+"You can drag files from a file browser onto a task to create attachments. "
+"Dragging the files over a tab will raise the appropriate page, dragging the "
+"files over a collapsed task (the boxed + sign) in the tree view will expand "
+"the task to show its subtasks."
+msgstr ""
+"Sie können Dateien von einem Datei-Browser (z.B. Windows Explorer) auf eine "
+"Aufgabe ziehen, um Anlagen zu erstellen. Wenn Sie die Dateien über einen "
+"Reiter ziehen, wird die entsprechende Seite angezeigt. Wenn Sie die Dateien "
+"über eine ausgeblendete Aufgabe (das + Symbol) ziehen, werden alle "
+"Teilaufgaben eingeblendet."
 
 #: taskcoachlib\help\tips.py:11
-msgid "You can create any viewer layout you want by dragging and dropping the tabs. Unfortunately, due to a limitation of the current version of the graphical toolkit (wxPython), the layout cannot be saved for reuse in the next session."
-msgstr "Sie können eine beliebige Viewer-Layout erstellen, in dem Sie Reiter per Drag && Drop verschieben. Leider lässt die aktuelle Version des Grafik-Toolkits (wxPython) eine Speicherung dieser Änderungen nicht zu."
+msgid ""
+"You can create any viewer layout you want by dragging and dropping the tabs. "
+"Unfortunately, due to a limitation of the current version of the graphical "
+"toolkit (wxPython), the layout cannot be saved for reuse in the next session."
+msgstr ""
+"Sie können eine beliebige Viewer-Layout erstellen, in dem Sie Reiter per "
+"Drag und Drop verschieben. Leider lässt die aktuelle Version des Grafik-"
+"Toolkits (wxPython) eine Speicherung dieser Änderungen nicht zu."
 
 #: taskcoachlib\help\tips.py:12
-msgid "What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc."
-msgstr "Was tatsächlich gedruckt wird, wenn Sie 'Datei' -> 'Drucken' auswählen hängt von der aktuellen Ansicht ab. Wenn die Aufgabenliste anzeigt wird, wird eine Liste der Aufgaben gedruckt. Wenn die Aufwände pro Monat anzeigt werden, werden diese gedruckt. Das Gleiche gilt für angezeigte Spalten, Sortierungsreihenfolge, gefilterte Aufgaben, usw."
+msgid ""
+"What is actually printed when you select 'File' -> 'Print' depends on the "
+"current view. If the current view shows the task list, a list of tasks will "
+"be printed, if the current view shows effort grouped by month, that will be "
+"printed. The same goes for visible columns, sort order, filtered tasks, etc."
+msgstr ""
+"Was tatsächlich gedruckt wird, wenn Sie 'Datei' -> 'Drucken' auswählen hängt "
+"von der aktuellen Ansicht ab. Wenn die Aufgabenliste anzeigt wird, wird eine "
+"Liste der Aufgaben gedruckt. Wenn die Aufwände pro Monat anzeigt werden, "
+"werden diese gedruckt. Das Gleiche gilt für angezeigte Spalten, "
+"Sortierungsreihenfolge, gefilterte Aufgaben, usw."
 
-#: taskcoachlib\widgets\buttonbox.py:5
-#: taskcoachlib\widgets\dialog.py:30
-#: taskcoachlib\widgets\dialog.py:43
-#: taskcoachlib\widgets\dialog.py:46
+#: taskcoachlib\mailer\__init__.py:34
+msgid "Untitled e-mail"
+msgstr "Unbenannte E-Mail"
+
+#: taskcoachlib\mailer\thunderbird.py:161
+msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
+msgstr ""
+"Geben Sie bitte das Kennwort für Benutzer %(user)s auf %(server)s:%(port)d "
+"ein"
+
+#: taskcoachlib\mailer\thunderbird.py:175
+msgid "Wrong password. Please try again."
+msgstr "Falsches Kennwort. Bitte erneut versuchen."
+
+#: taskcoachlib\widgets\buttonbox.py:5 taskcoachlib\widgets\dialog.py:30
+#: taskcoachlib\widgets\dialog.py:43 taskcoachlib\widgets\dialog.py:46
 #: taskcoachlib\widgets\dialog.py:103
 msgid "OK"
 msgstr "OK"
 
-#: taskcoachlib\widgets\buttonbox.py:5
-#: taskcoachlib\widgets\dialog.py:31
+#: taskcoachlib\widgets\buttonbox.py:5 taskcoachlib\widgets\dialog.py:31
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -2195,7 +2274,7 @@ msgstr "Alle Dateien (*.*)|*"
 
 #: taskcoachlib\widgets\searchctrl.py:70
 msgid "Match case"
-msgstr "Groß-/Kleinschreibung"
+msgstr "Groß-/Kleinschreibung beachten"
 
 #: taskcoachlib\widgets\searchctrl.py:71
 msgid "Match case when filtering"
@@ -2205,3 +2284,11 @@ msgstr "Groß-/Kleinschreibung beachten"
 msgid "Recent searches"
 msgstr "Letzte Suche"
 
+#~ msgid "Export as &iCalendar..."
+#~ msgstr "Als &iCalendar exportieren..."
+
+#~ msgid "Export the current file in iCalendar (*.ics) format"
+#~ msgstr "Die aktuelle Datei als iCalendar (*.ics) Datei exportieren"
+
+#~ msgid "P&aste into task"
+#~ msgstr "Einfügen als &Teilaufgabe"
