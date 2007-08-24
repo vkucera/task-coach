@@ -91,7 +91,7 @@ class SearchCtrl(wx.SearchCtrl):
         menu.Check(self.__matchCaseMenuItemId, self.__matchCase)
         menu.AppendCheckItem(self.__includeSubItemsMenuItemId, 
             _('Include sub items'), 
-            _('Include sub items of matching itemns in the search results'))
+            _('Include sub items of matching items in the search results'))
         menu.Check(self.__includeSubItemsMenuItemId, self.__includeSubItems)
         if self.__recentSearches:
             self.addRecentSearches(menu)
