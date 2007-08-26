@@ -1,5 +1,5 @@
-
 import wx, os, re, tempfile
+from i18n import _
 
 def readMail(filename, readContent=True):
     subject = None
