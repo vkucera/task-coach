@@ -30,39 +30,6 @@ class TextDropTarget(wx.TextDropTarget):
         self.__onDropCallback(text)
 
 
-class MailDropTarget(wx.DropTarget):
-    def __init__(self, onDropCallback):
-        wx.DropTarget.__init__(self)
-        self.__onDropCallback = onDropCallback
-        self.reinit()
-
-    def OnDrop(self, x, y):
-        return True
-
-    def OnData(self, x, y, result):
-        self.GetData()
-        if self.__macThunderbirdDataObject.GetData():
-            self.__onDropCallback(thunderbird.getMail(self.__macThunderbirdDataObject.GetData().decode('unicode_internal')))
-        elif self.__thunderbirdDataObject.GetData():
-            self.__onDropCallback(thunderbird.getMail(self.__thunderbirdDataObject.GetData().decode('unicode_internal')))
-        else:
-            for filename in outlook.getCurrentSelection():
-                self.__onDropCallback(filename)
-        self.reinit()
-        return result
-
-    def reinit(self):
-        self.__compositeDataObject = wx.DataObjectComposite()
-        self.__thunderbirdDataObject = wx.CustomDataObject('text/x-moz-message')
-        self.__macThunderbirdDataObject = wx.CustomDataObject('MZ\x00\x00')
-        self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
-        for dataObject in (self.__thunderbirdDataObject, 
-                           self.__outlookDataObject,
-                           self.__macThunderbirdDataObject):
-            self.__compositeDataObject.Add(dataObject)
-        self.SetDataObject(self.__compositeDataObject)
-
-
 class DropTarget(wx.DropTarget):
     def __init__(self, onDropURLCallback, onDropFileCallback,
             onDropMailCallback, onDragOverCallback=None):
