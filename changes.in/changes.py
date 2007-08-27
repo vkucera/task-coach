@@ -35,7 +35,8 @@ characters to CSV.''', '1753422'),
         Bug('''Don't activate another viewer when another application is
 minimized (Windows only).''', '1765103'),
         Bug('''Outlook 2003 email messages added as attachment couldn't be
-opened from Task Coach.''', '1748738')]),
+opened from Task Coach.''', '1748738'),
+        Bug('''German translation had wrong menu accelerators.''', '1772019')]),
              
 Release('0.64.2', 'June 30, 2007',
     summary='''This release fixes sorting of tasks by priority
