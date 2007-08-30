@@ -1,5 +1,5 @@
 import test, taskcoach, os, mock
-import domain.task as task
+from domain import task
 
 
 class SaveTest(test.TestCase):

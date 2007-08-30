@@ -1,5 +1,5 @@
 import taskcoach
-import domain.task as task
+from domain import task
 
 class MockWxApp(object):
     def SetAppName(self, *args, **kwargs):
