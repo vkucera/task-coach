@@ -304,6 +304,13 @@ class NeedsTreeViewer(object):
     def enabled(self, event):
         return super(NeedsTreeViewer, self).enabled(event) and \
             self.viewer.isTreeViewer()
+            
+class DisableWhenTextCtrlHasFocus(object):
+    def enabled(self, event):
+        if isinstance(wx.Window.FindFocus(), wx.TextCtrl):
+            return False
+        else:
+            return super(DisableWhenTextCtrlHasFocus, self).enabled(event)
 
 # Commands:
 
@@ -523,14 +530,23 @@ class EditUndo(UICommand):
             id=wx.ID_UNDO, *args, **kwargs)
             
     def doCommand(self, event):
-        patterns.CommandHistory().undo()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            windowWithFocus.Undo()
+        else:
+            patterns.CommandHistory().undo()
 
     def onUpdateUI(self, event):
         event.SetText(getUndoMenuText())
         super(EditUndo, self).onUpdateUI(event)
 
     def enabled(self, event):
-        return patterns.CommandHistory().hasHistory()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            return windowWithFocus.CanUndo()
+        else:
+            return patterns.CommandHistory().hasHistory() and \
+                super(EditUndo, self).enabled(event)
 
 
 def getRedoMenuText():
@@ -543,14 +559,23 @@ class EditRedo(UICommand):
             id=wx.ID_REDO, *args, **kwargs)
 
     def doCommand(self, event):
-        patterns.CommandHistory().redo()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            windowWithFocus.Redo()
+        else:
+            patterns.CommandHistory().redo()
 
     def onUpdateUI(self, event):
         event.SetText(getRedoMenuText())
         super(EditRedo, self).onUpdateUI(event)
 
     def enabled(self, event):
-        return patterns.CommandHistory().hasFuture()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            return windowWithFocus.CanRedo()
+        else:
+            return patterns.CommandHistory().hasFuture() and \
+                super(EditRedo, self).enabled(event)
 
 
 class EditCut(NeedsSelection, ViewerCommand):
@@ -560,9 +585,20 @@ class EditCut(NeedsSelection, ViewerCommand):
             bitmap='cut', id=wx.ID_CUT, *args, **kwargs)
 
     def doCommand(self, event):
-        cutCommand = command.CutCommand(self.viewer.model(),
-                                        self.viewer.curselection())
-        cutCommand.do()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            windowWithFocus.Cut()
+        else:
+            cutCommand = command.CutCommand(self.viewer.model(),
+                                            self.viewer.curselection())
+            cutCommand.do()
+
+    def enabled(self, event):
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            return windowWithFocus.CanCut()
+        else:
+            return super(EditCut, self).enabled(event)
 
 
 class EditCopy(NeedsSelection, ViewerCommand):
@@ -572,10 +608,21 @@ class EditCopy(NeedsSelection, ViewerCommand):
             bitmap='copy', id=wx.ID_COPY, *args, **kwargs)
 
     def doCommand(self, event):
-        copyCommand = command.CopyCommand(self.viewer.model(), 
-                                          self.viewer.curselection())
-        copyCommand.do()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            windowWithFocus.Copy()
+        else:
+            copyCommand = command.CopyCommand(self.viewer.model(), 
+                                              self.viewer.curselection())
+            copyCommand.do()
 
+    def enabled(self, event):
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            return windowWithFocus.CanCopy()
+        else:
+            return super(EditCopy, self).enabled(event)
+        
 
 class EditPaste(UICommand):
     def __init__(self, *args, **kwargs):
@@ -584,11 +631,19 @@ class EditPaste(UICommand):
             id=wx.ID_PASTE, *args, **kwargs)
 
     def doCommand(self, event):
-        pasteCommand = command.PasteCommand()
-        pasteCommand.do()
-
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            windowWithFocus.Paste()
+        else:
+            pasteCommand = command.PasteCommand()
+            pasteCommand.do()
+    
     def enabled(self, event):
-        return task.Clipboard()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            return windowWithFocus.CanPaste()
+        else:
+            return task.Clipboard() and super(EditPaste, self).enabled(event)
 
 
 class EditPasteIntoTask(NeedsSelectedTasks, ViewerCommand):
