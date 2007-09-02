@@ -3,12 +3,12 @@ import patterns, wx, widgets
 
 class ViewerContainer(object):
     def __init__(self, parent, settings, setting, *args, **kwargs):
-        self.__settings = settings
+        self._settings = settings
         self.__setting = setting
         self.__currentPageNumber = 0
         # Prepare for an exception, because this setting used to be a string
         try:
-            self.__desiredPageNumber = int(self.__settings.get('view', setting))
+            self.__desiredPageNumber = int(self._settings.get('view', setting))
         except ValueError:
             self.__desiredPageNumber = 0
         super(ViewerContainer, self).__init__(parent, *args, **kwargs)
@@ -57,7 +57,7 @@ class ViewerContainer(object):
 
     def onPageChanged(self, event):
         self.__currentPageNumber = event.GetSelection()
-        self.__settings.set('view', self.__setting, str(self.__currentPageNumber))
+        self._settings.set('view', self.__setting, str(self.__currentPageNumber))
         patterns.Publisher().notifyObservers(patterns.Event(self, 
             self.viewerChangeEventType(), self.__currentPageNumber))
         event.Skip()
@@ -77,7 +77,11 @@ class ViewerListbook(ViewerContainer, widgets.Listbook):
 
 class ViewerAUINotebook(ViewerContainer, widgets.AUINotebook):
     def onClosePage(self, event):
-        self.GetPage(event.Selection).detach()
+        viewer = self.GetPage(event.Selection)
+        viewer.detach()
+        setting = viewer.__class__.__name__.lower() + 'count'
+        viewerCount = self._settings.getint('view', setting)
+        self._settings.set('view', setting, str(viewerCount-1))
         super(ViewerAUINotebook, self).onClosePage(event)
         
         

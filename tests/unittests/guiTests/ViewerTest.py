@@ -8,19 +8,31 @@ class ViewerTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.task = task.Task()
         self.taskList = task.sorter.Sorter(task.TaskList([self.task]))
-        effortList = effort.EffortList(self.taskList)
-        categories = category.CategoryList()
-        notes = note.NoteContainer()
+        self.effortList = effort.EffortList(self.taskList)
+        self.categories = category.CategoryList()
+        self.notes = note.NoteContainer()
         self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
             self.settings, 'mainviewer')
-        self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
+        self.viewer = self.createViewer()
+        
+    def createViewer(self):
+        return gui.viewer.TaskListViewer(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
-                self.settings, self.taskList, effortList, categories, notes), 
-            self.settings, categories=categories)
-
+                self.settings, self.taskList, self.effortList, self.categories, 
+                self.notes), 
+            self.settings, categories=self.categories)
+        
     def testSelectAll(self):
         self.viewer.selectall()
         self.assertEqual([self.task], self.viewer.curselection())
+        
+    def testFirstViewerInstanceSettingsSection(self):
+        self.assertEqual('tasklistviewer', self.viewer.settingsSection())
+        
+    def testSecondViewerInstanceHasAnotherSettingsSection(self):
+        viewer2 = self.createViewer()
+        self.assertEqual('tasklistviewer1', viewer2.settingsSection())
+        
 
 
 class SortableViewerTest(test.TestCase):

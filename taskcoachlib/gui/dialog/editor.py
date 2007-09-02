@@ -226,7 +226,7 @@ class EffortPage(TaskEditorPage):
                  *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
         self._viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 
-            'effortviewerineditor')
+            'effortviewerintaskeditor')
         singleTaskList = task.SingleTaskList()
         self.addEffortViewers(singleTaskList, uiCommands, settings)
         self.add(self._viewerContainer, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
@@ -235,20 +235,20 @@ class EffortPage(TaskEditorPage):
     
     def addEffortViewers(self, taskList, uiCommands, settings):
         effortViewer = viewer.EffortListViewer(self._viewerContainer, taskList, 
-            uiCommands, settings, settingsSection='effortviewerintaskeditor')
+            uiCommands, settings, settingsSection='effortlistviewerintaskeditor')
         self._viewerContainer.addViewer(effortViewer, _('Effort details'), 'start')
         effortPerDayViewer = viewer.EffortPerDayViewer(self._viewerContainer,
             taskList, uiCommands, settings, 
-            settingsSection='compositeeffortviewerintaskeditor')
+            settingsSection='effortperdayviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerDayViewer, _('Effort per day'), 'date')
         effortPerWeekViewer = viewer.EffortPerWeekViewer(self._viewerContainer,
             taskList, uiCommands, settings, 
-            settingsSection='compositeeffortviewerintaskeditor')
+            settingsSection='effortperweekviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerWeekViewer, _('Effort per week'), 
             'date')
         effortPerMonthViewer = viewer.EffortPerMonthViewer(self._viewerContainer,
             taskList, uiCommands, settings, 
-            settingsSection='compositeeffortviewerintaskeditor')
+            settingsSection='effortpermonthviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerMonthViewer, _('Effort per month'), 
             'date')    
 

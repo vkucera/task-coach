@@ -2,18 +2,19 @@ import meta
 
 defaults = { \
 'view': { \
-    'tasklistviewercount': '1',
-    'tasktreelistviewercount': '1',
-    'categoryviewercount': '1',
-    'effortlistviewercount': '1',
-    'effortperdayviewercount': '0',
-    'effortperweekviewercount': '0',
-    'effortpermonthviewercount': '0',
-    'noteviewercount': '0',
     'statusbar': 'True',
     'toolbar': '(22, 22)',
-    'mainviewer': '0',
-    'effortviewerineditor': '0',
+    'mainviewer': '0',               # Index of active viewer in main window
+    'effortviewerintaskeditor': '0', # Index of active effort viewer in task editor
+    'tasklistviewercount': '1',      # Number of task list viewers in main window
+    'tasktreeviewercount': '0',      # (This viewer is currently not used)
+    'tasktreelistviewercount': '1',  # Number of task tree list viewers in main window
+    'categoryviewercount': '1',      # etc.
+    'noteviewercount': '0',
+    'effortlistviewercount': '1',
+    'effortperdayviewercount': '1',
+    'effortperweekviewercount': '0',
+    'effortpermonthviewercount': '0',
     'language': 'en_US',
     'taskcategoryfiltermatchall': 'True'},
 'tasklistviewer': { \
@@ -79,25 +80,49 @@ defaults = { \
     'searchfilterincludesubitems': 'False',
     'columns': "[]",
     'columnsalwaysvisible': "['subject']" },
-'effortviewer': { \
+'effortlistviewer': { \
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
-'compositeeffortviewer': { \
+'effortlistviewerintaskeditor': { \
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
-'effortviewerintaskeditor': { \
+'effortperdayviewer': { \
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
-'compositeeffortviewerintaskeditor': { \
+'effortperdayviewerintaskeditor': { \
+    'columns': "['timeSpent', 'revenue']",
+    'columnsalwaysvisible': "['period', 'task']",
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False' },
+'effortperweekviewer': { \
+    'columns': "['timeSpent', 'revenue']",
+    'columnsalwaysvisible': "['period', 'task']",
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False' },
+'effortperweekviewerintaskeditor': { \
+    'columns': "['timeSpent', 'revenue']",
+    'columnsalwaysvisible': "['period', 'task']",
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False' },
+'effortpermonthviewer': { 
+    'columns': "['timeSpent', 'revenue']",
+    'columnsalwaysvisible': "['period', 'task']",
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False' },
+'effortpermonthviewerintaskeditor': { 
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'searchfilterstring': '',
