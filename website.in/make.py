@@ -147,7 +147,7 @@ pages['features'] = \
             <LI>Task status depends on its subtask and vice versa. E.g. if 
             you mark the last uncompleted subtask as completed, the parent 
             task is automatically marked as completed too.
-            <LI>Tasks can be assigned to user-defined categories. 
+            <LI>Tasks and notes can be assigned to user-defined categories. 
             <LI>Settings are persistent and saved automatically. The
             last opened file is loaded automatically when starting
             %(name)s.
@@ -155,9 +155,10 @@ pages['features'] = \
             Time spent can be viewed by individual effort period, by day, 
             by week, and by month.
             <LI>The %(name)s file format (.tsk) is XML. 
-            <LI>Tasks can be exported to HTML. Effort can be exported to
-            XML and iCalendar/ICS format.
-            <LI>Tasks, effort and categories can be printed. When printing, 
+            <LI>Tasks, notes, effort, and categories can be exported to HTML
+            and CSV (Comma separated format). Effort can be exported to 
+            iCalendar/ICS format as well.
+            <LI>Tasks, effort, notes, and categories can be printed. When printing, 
             %(name)s prints the information that is visible in the current
             view, including any filters and sort order. 
             <LI>%(name)s can be run from a removable medium.
@@ -319,9 +320,9 @@ pages['roadmap'] = \
     hours spent on projects, taking notes, etc. It should also be as
     intuitive as possible for users to deal with and not require any technical
     knowledge.</p>
-    <p>Currently, %(name)s knows about three domain concepts: tasks, 
-    effort, and categories. Other domain concepts that might be added 
-    in the future include note and contact person.</p>
+    <p>Currently, %(name)s knows about four domain concepts: tasks, 
+    effort, notes, and categories. A domain concepts that might be added 
+    in the future is contact person.</p>
     <p>In the long run, it might be worthwile to allow
     users to add their own concepts. So, for example, if you want to keep
     a list of books to read you could define a book concept and accompanying
@@ -410,7 +411,7 @@ pages['devinfo'] = \
     and for each Releasex_y_0 a branch (Releasex_y_Branch) is created to
     facilitate bug fix releases. The release tagging and branching is part of 
     the release process as documented in release.py.</p>
-    <p>For new features, feature-specific branches are created to facilitate 
+    <p>For new big features, feature-specific branches are created to facilitate 
     parallel development, checking in changes while developing, and keep 
     the code on the main trunk releaseable. The process is as follows:</p>
     <ul>
@@ -422,6 +423,8 @@ pages['devinfo'] = \
     <li>The feature is tested on all platforms.</li>
     <li>The changes are merged back to main trunk.</li>
     </ul>
+    For small new features, development is done on the trunk, but all unittests
+    should succeed before committing.
 '''
 
 dist = os.path.join('..', 'website.out')
