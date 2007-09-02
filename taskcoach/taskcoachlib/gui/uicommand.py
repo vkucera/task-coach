@@ -718,18 +718,30 @@ class ViewViewer(SettingsCommand, ViewerCommand):
         self.viewerClass = kwargs['viewerClass']
         self.viewerArgs = kwargs['viewerArgs']
         self.viewerKwargs = kwargs.get('viewerKwargs', {})
-        self.viewerTitle = kwargs['viewerTitle']
         self.viewerBitmap = kwargs['viewerBitmap']
         super(ViewViewer, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
         self.viewer.Freeze()
         newViewer = self.viewerClass(self.viewer, *self.viewerArgs, **self.viewerKwargs)
-        self.viewer.addViewer(newViewer, self.viewerTitle, self.viewerBitmap)
+        self.viewer.addViewer(newViewer, newViewer.title(), self.viewerBitmap)
         setting = self.viewerClass.__name__.lower() + 'count'
         viewerCount = self.settings.getint('view', setting)
         self.settings.set('view', setting, str(viewerCount+1))
         self.viewer.Thaw()
+        
+
+class RenameViewer(SettingsCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(RenameViewer, self).__init__(menuText=_('&Rename viewer...'),
+            helpText=_('Rename the selected viewer'), *args, **kwargs)
+        
+    def doCommand(self, event):
+        dialog = wx.TextEntryDialog(self.viewer, _('New title for the viewer:'),
+            _('Rename viewer'), self.viewer.title())
+        if dialog.ShowModal() == wx.ID_OK:
+            self.viewer.setTitle(dialog.GetValue())
+        dialog.Destroy()
 
 
 class HideCurrentColumn(ViewerCommand):
@@ -1561,6 +1573,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['clearselection'] = ClearSelection(viewer=viewer)
 
         # View commands
+        self['renameviewer'] = RenameViewer(viewer=viewer, settings=settings)
         self['resetfilter'] = ResetFilter(viewer=viewer)
         self['hidecompletedtasks'] = ViewerHideCompletedTasks(viewer=viewer)
         self['hideinactivetasks'] = ViewerHideInactiveTasks(viewer=viewer)
@@ -1616,43 +1629,42 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             self[key] = ViewerSortByCommand(viewer=viewer, value=value,
                 menuText=menuText, helpText=helpText)
         
-        for key, menuText, helpText, viewerClass, viewerArgs, viewerKwargs, viewerTitle, bitmap in \
-            (('viewtasklistviewer', _('Task list'), 
+        for key, menuText, helpText, viewerClass, viewerArgs, viewerKwargs, bitmap in \
+            (('viewtasklistviewer', _('Task &list'), 
             _('Open a new tab with a viewer that displays tasks in a list'), 
             gui.viewer.TaskListViewer, (taskList, self, settings), 
-            dict(categories=categories), _('Task list'), 'listview'),
-            ('viewtasktreeviewer', _('Task tree'),
+            dict(categories=categories), 'listview'),
+            ('viewtasktreeviewer', _('Task &tree'),
             _('Open a new tab with a viewer that displays tasks in a tree'),
             gui.viewer.TaskTreeListViewer, (taskList, self, settings),
-            dict(categories=categories), _('Task tree'), 'treeview'),
-            ('viewcategoryviewer', _('Category'),
+            dict(categories=categories), 'treeview'),
+            ('viewcategoryviewer', _('&Category'),
             _('Open a new tab with a viewer that displays categories'),
             gui.viewer.CategoryViewer, (categories, self, settings), {},
-            _('Categories'), 'category'),
-            ('vieweffortdetailviewer', _('Effort detail'),
+            'category'),
+            ('vieweffortdetailviewer', _('&Effort detail'),
             _('Open a new tab with a viewer that displays effort details'),
-            gui.viewer.EffortListViewer, (taskList, self, settings), {},
-            _('Effort details'), 'start'),
-            ('vieweffortperdayviewer', _('Effort per day'),
+            gui.viewer.EffortListViewer, (taskList, self, settings), {}, 
+            'start'),
+            ('vieweffortperdayviewer', _('Effort per &day'),
             _('Open a new tab with a viewer that displays effort per day'),
             gui.viewer.EffortPerDayViewer, (taskList, self, settings), {},
-            _('Effort per day'), 'date'),
-            ('vieweffortperweekviewer', _('Effort per week'),
+            'date'),
+            ('vieweffortperweekviewer', _('Effort per &week'),
             _('Open a new tab with a viewer that displays effort per week'),
             gui.viewer.EffortPerWeekViewer, (taskList, self, settings), {},
-            _('Effort per week'), 'date'),
-            ('vieweffortpermonthviewer', _('Effort per month'),
+            'date'),
+            ('vieweffortpermonthviewer', _('Effort per &month'),
             _('Open a new tab with a viewer that displays effort per month'),
             gui.viewer.EffortPerMonthViewer, (taskList, self, settings), {},
-            _('Effort per month'), 'date'),
-            ('viewnoteviewer', _('Note'), 
+            'date'),
+            ('viewnoteviewer', _('&Note'), 
             _('Open a new tab with a viewer that displays notes'),
-            gui.viewer.NoteViewer, (notes, self, settings), {}, _('Notes'),
-            'note')):
+            gui.viewer.NoteViewer, (notes, self, settings), {}, 'note')):
             self[key] = ViewViewer(viewer=viewer, menuText=menuText, 
                 helpText=helpText, bitmap=bitmap, viewerClass=viewerClass,
                 viewerArgs=viewerArgs, viewerKwargs=viewerKwargs, 
-                viewerTitle=viewerTitle, viewerBitmap=bitmap, settings=settings)
+                viewerBitmap=bitmap, settings=settings)
         
         # Toolbar size commands
         for key, value, menuText, helpText in \

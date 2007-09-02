@@ -11,12 +11,13 @@ class ViewerTest(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+        self.viewerContainer = gui.viewercontainer.ViewerAUINotebook(self.frame, 
             self.settings, 'mainviewer')
         self.viewer = self.createViewer()
+        self.viewerContainer.addViewer(self.viewer, self.viewer.title())
         
     def createViewer(self):
-        return gui.viewer.TaskListViewer(self.frame, self.taskList, 
+        return gui.viewer.TaskListViewer(self.viewerContainer, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
                 self.settings, self.taskList, self.effortList, self.categories, 
                 self.notes), 
@@ -33,6 +34,20 @@ class ViewerTest(test.wxTestCase):
         viewer2 = self.createViewer()
         self.assertEqual('tasklistviewer1', viewer2.settingsSection())
         
+    def testTitle(self):
+        self.assertEqual('Task list', self.viewer.title())
+        
+    def testSetTitle(self):
+        self.viewer.setTitle('New title')
+        self.assertEqual('New title', self.viewer.title())
+        
+    def testSetTitleSavesTitleInSettings(self):
+        self.viewer.setTitle('New title')
+        self.assertEqual('New title', self.settings.get(self.viewer.settingsSection(), 'title'))        
+
+    def testSetTitleChangesTabTitle(self):
+        self.viewer.setTitle('New title')
+        self.assertEqual('New title', self.viewerContainer.GetPageText(0))
 
 
 class SortableViewerTest(test.TestCase):
