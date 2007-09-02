@@ -5,8 +5,8 @@ from changetypes import *
 releases = [
 
 Release('0.65.0', 'August ?, 2007', 
-    summary='''This release adds the ability to record notes and improves the 
-flexibility of the different views.''',
+    summary='''This release adds the ability to record notes, improves the 
+flexibility of the different views, and fixes several bugs.''',
     featuresAdded=[
         Feature('''Notes. Notes have a subject and an optional description.
 Notes can be hierarchical, i.e. notes may contain subnotes. Notes can be sorted
@@ -17,7 +17,7 @@ control on the toolbar. '''),
         Feature('''Category sorting can be changed: ascending or descending,
 case sensitive or case insensitive.'''),
         Feature('''Categories can have a description.'''),
-        Feature('''Each type of viewer/tab has its own settings for sort order
+        Feature('''Each viewer/tab has its own settings for sort order
 and visible columns.'''),
         Feature('''The search control on the toolbar can (optionally) include
 subitems in the search result. This makes it easy to show
@@ -38,7 +38,7 @@ minimized (Windows only).''', '1765103'),
 opened from Task Coach.''', '1748738'),
         Bug('''German translation had wrong menu accelerators.''', '1772019'),
         Bug('''Apply undo/redo/cut/copy/paste actions to text if a text control
-is visible and has the focus (Mac OSX only)''', '1768315')]),
+is visible and has focus (Mac OSX only)''', '1768315')]),
              
 Release('0.64.2', 'June 30, 2007',
     summary='''This release fixes sorting of tasks by priority

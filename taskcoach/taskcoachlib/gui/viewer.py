@@ -242,6 +242,8 @@ class SortableViewerForNotes(SortableViewer):
         
     
 class Viewer(wx.Panel):
+    __metaclass__ = patterns.NumberedInstances
+    
     ''' A Viewer shows the contents of a model (a list of tasks or a list of 
         efforts) by means of a widget (e.g. a ListCtrl or a TreeListCtrl).'''
         
@@ -250,6 +252,7 @@ class Viewer(wx.Panel):
         self.parent = parent # FIXME: Make instance variables private
         self.settings = settings
         self.__settingsSection = kwargs.pop('settingsSection')
+        self.__instanceNumber = kwargs.pop('instanceNumber')
         self.uiCommands = uiCommands
         self.list = self.createSorter(self.createFilter(list))
         self.widget = self.createWidget()
@@ -265,7 +268,7 @@ class Viewer(wx.Panel):
     def detach(self):
         ''' Should be called by viewercontainer before closing the viewer '''
         patterns.Publisher().removeInstance(self)
-        
+
     def selectEventType(self):
         return '%s (%s).select'%(self.__class__, id(self))
 
@@ -339,7 +342,20 @@ class Viewer(wx.Panel):
         return wx.BLACK
     
     def settingsSection(self):
-        return self.__settingsSection
+        section = self.__settingsSection
+        if self.__instanceNumber > 0:
+            previousSectionNumber = self.__instanceNumber - 1
+            while previousSectionNumber > 0:
+                previousSection = section + str(previousSectionNumber)
+                if self.settings.has_section(previousSection):
+                    break
+                previousSectionNumber -= 1
+            else:
+                previousSection = section
+            section += str(self.__instanceNumber)
+            if not self.settings.has_section(section):
+                self.settings.add_section(section, copyFromSection=previousSection)
+        return section
     
     def isSortable(self):
         return False
@@ -1182,10 +1198,6 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
                    UpdatePerSecondViewer):
     SorterClass = effort.EffortSorter
     
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('settingsSection', 'effortviewer')
-        super(EffortViewer, self).__init__(*args, **kwargs)
-
     def isSortable(self):
         return False # FIXME: make effort viewers sortable too?
     
@@ -1236,6 +1248,7 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
 class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):  
     def __init__(self, parent, list, *args, **kwargs):
         self.taskList = list
+        kwargs.setdefault('settingsSection', 'effortlistviewer')
         super(EffortListViewer, self).__init__(parent, list, *args, **kwargs)
         
     def createWidget(self):
@@ -1298,10 +1311,6 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         
 
 class CompositeEffortListViewer(EffortListViewer):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('settingsSection', 'compositeeffortviewer')
-        super(CompositeEffortListViewer, self).__init__(*args, **kwargs)
-
     def _createColumns(self):
         return super(CompositeEffortListViewer, self)._createColumns() + \
             [widgets.Column(name, columnHeader, eventType, 
@@ -1328,6 +1337,10 @@ class CompositeEffortListViewer(EffortListViewer):
 
 class EffortPerDayViewer(CompositeEffortListViewer):
     EffortPerPeriod = effort.EffortPerDay
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'effortperdayviewer')
+        super(EffortPerDayViewer, self).__init__(*args, **kwargs)
     
     def renderEntirePeriod(self, compositeEffort):
         return render.date(compositeEffort.getStart().date())
@@ -1335,6 +1348,10 @@ class EffortPerDayViewer(CompositeEffortListViewer):
         
 class EffortPerWeekViewer(CompositeEffortListViewer):
     EffortPerPeriod = effort.EffortPerWeek
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'effortperweekviewer')
+        super(EffortPerWeekViewer, self).__init__(*args, **kwargs)
         
     def renderEntirePeriod(self, compositeEffort):
         return render.weekNumber(compositeEffort.getStart())
@@ -1342,7 +1359,11 @@ class EffortPerWeekViewer(CompositeEffortListViewer):
 
 class EffortPerMonthViewer(CompositeEffortListViewer):
     EffortPerPeriod = effort.EffortPerMonth
-    
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'effortpermonthviewer')
+        super(EffortPerMonthViewer, self).__init__(*args, **kwargs)
+
     def renderEntirePeriod(self, compositeEffort):
         return render.month(compositeEffort.getStart())
 

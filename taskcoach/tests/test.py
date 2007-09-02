@@ -17,6 +17,7 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         import patterns
         patterns.Publisher().clear()
+        patterns.NumberedInstances.count = dict()
         super(TestCase, self).tearDown()
         
 

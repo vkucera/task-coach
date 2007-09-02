@@ -55,6 +55,13 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         noisySettings = [('window', 'splash'), ('window', 'tips')]
         for section, setting in noisySettings:
             self.set(section, setting, 'False')
+            
+    def add_section(self, section, copyFromSection=None):
+        result = super(Settings, self).add_section(section)
+        if copyFromSection:
+            for name, value in self.items(copyFromSection):
+                self.set(section, name, value)
+        return result
                 
     def set(self, section, option, value):
         super(Settings, self).set(section, option, value)

@@ -713,7 +713,7 @@ class ResetFilter(ViewerCommand):
         self.viewer.resetFilter()
 
 
-class ViewViewer(ViewerCommand):
+class ViewViewer(SettingsCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         self.viewerClass = kwargs['viewerClass']
         self.viewerArgs = kwargs['viewerArgs']
@@ -726,6 +726,9 @@ class ViewViewer(ViewerCommand):
         self.viewer.Freeze()
         newViewer = self.viewerClass(self.viewer, *self.viewerArgs, **self.viewerKwargs)
         self.viewer.addViewer(newViewer, self.viewerTitle, self.viewerBitmap)
+        setting = self.viewerClass.__name__.lower() + 'count'
+        viewerCount = self.settings.getint('view', setting)
+        self.settings.set('view', setting, str(viewerCount+1))
         self.viewer.Thaw()
 
 
@@ -1649,7 +1652,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             self[key] = ViewViewer(viewer=viewer, menuText=menuText, 
                 helpText=helpText, bitmap=bitmap, viewerClass=viewerClass,
                 viewerArgs=viewerArgs, viewerKwargs=viewerKwargs, 
-                viewerTitle=viewerTitle, viewerBitmap=bitmap)
+                viewerTitle=viewerTitle, viewerBitmap=bitmap, settings=settings)
         
         # Toolbar size commands
         for key, value, menuText, helpText in \
