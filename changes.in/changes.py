@@ -39,7 +39,11 @@ minimized (Windows only).''', '1765103'),
 opened from Task Coach.''', '1748738'),
         Bug('''German translation had wrong menu accelerators.''', '1772019'),
         Bug('''Apply undo/redo/cut/copy/paste actions to text if a text control
-is visible and has focus (Mac OSX only)''', '1768315')]),
+is visible and has focus (Mac OSX only)''', '1768315'),
+        Bug('''Added a copy of the ElementTree package to the Task Coach 
+source code, so the source code distribution of Task Coach
+works with Python 2.4, without needing to install ElementTree.''', 
+'1783575')]),
              
 Release('0.64.2', 'June 30, 2007',
     summary='''This release fixes sorting of tasks by priority
