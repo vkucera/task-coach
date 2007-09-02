@@ -271,6 +271,13 @@ class Viewer(wx.Panel):
 
     def selectEventType(self):
         return '%s (%s).select'%(self.__class__, id(self))
+    
+    def title(self):
+        return self.settings.get(self.settingsSection(), 'title') or self.defaultTitle
+    
+    def setTitle(self, title):
+        self.settings.set(self.settingsSection(), 'title', title)
+        self.parent.SetPageText(self.parent.GetPageIndex(self), title)
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
@@ -907,10 +914,12 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
 
 
 class TaskListViewer(TaskViewerWithColumns, ListViewer):
+    defaultTitle = _('Task list')
+    
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'tasklistviewer')
         super(TaskListViewer, self).__init__(*args, **kwargs)
-        
+    
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
@@ -933,9 +942,11 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
 
 
 class TaskTreeViewer(TaskViewer, TreeViewer):
+    defaultTitle = _('Task tree') 
+    
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'tasktreeviewer')
-        super(TaskTreeViewer, self).__init__(*args, **kwargs)        
+        super(TaskTreeViewer, self).__init__(*args, **kwargs)       
 
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
@@ -1001,6 +1012,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
     
 class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
     SorterClass = category.CategorySorter
+    defaultTitle = _('Categories')
     
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'categoryviewer')
@@ -1009,7 +1021,7 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
                          category.Category.filterChangedEventType():
             patterns.Publisher().registerObserver(self.onCategoryChanged, 
                 eventType)
-
+    
     def createWidget(self):
         widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemDescription,
             self.getItemImage, self.getItemAttr, self.getChildrenCount,
@@ -1090,6 +1102,7 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
 class NoteViewer(SearchableViewer, SortableViewerWithColumns, 
                  SortableViewerForNotes, TreeViewer):
     SorterClass = note.NoteSorter
+    defaultTitle = _('Notes')
     
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'noteviewer')
@@ -1245,7 +1258,9 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
     deleteEffortCommand = deleteItemCommand
     
 
-class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):  
+class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns): 
+    defaultTitle = _('Effort details')  
+    
     def __init__(self, parent, list, *args, **kwargs):
         self.taskList = list
         kwargs.setdefault('settingsSection', 'effortlistviewer')
@@ -1337,6 +1352,7 @@ class CompositeEffortListViewer(EffortListViewer):
 
 class EffortPerDayViewer(CompositeEffortListViewer):
     EffortPerPeriod = effort.EffortPerDay
+    defaultTitle = _('Effort per day')
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'effortperdayviewer')
@@ -1348,22 +1364,24 @@ class EffortPerDayViewer(CompositeEffortListViewer):
         
 class EffortPerWeekViewer(CompositeEffortListViewer):
     EffortPerPeriod = effort.EffortPerWeek
+    defaultTitle = _('Effort per week')
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'effortperweekviewer')
         super(EffortPerWeekViewer, self).__init__(*args, **kwargs)
-        
+
     def renderEntirePeriod(self, compositeEffort):
         return render.weekNumber(compositeEffort.getStart())
 
 
 class EffortPerMonthViewer(CompositeEffortListViewer):
     EffortPerPeriod = effort.EffortPerMonth
-
+    defaultTitle = _('Effort per month')
+    
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'effortpermonthviewer')
         super(EffortPerMonthViewer, self).__init__(*args, **kwargs)
-
+    
     def renderEntirePeriod(self, compositeEffort):
         return render.month(compositeEffort.getStart())
 

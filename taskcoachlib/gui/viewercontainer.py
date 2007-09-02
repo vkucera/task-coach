@@ -13,7 +13,7 @@ class ViewerContainer(object):
             self.__desiredPageNumber = 0
         super(ViewerContainer, self).__init__(parent, *args, **kwargs)
         
-    def addViewer(self, viewer, pageName, bitmap=None):
+    def addViewer(self, viewer, pageName, bitmap=''):
         self.AddPage(viewer, pageName, bitmap)
         if self.GetPageCount() - 1 == self.__desiredPageNumber:
             # We need to use CallAfter because the AuiNotebook doesn't allow

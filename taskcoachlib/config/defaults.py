@@ -18,6 +18,7 @@ defaults = { \
     'language': 'en_US',
     'taskcategoryfiltermatchall': 'True'},
 'tasklistviewer': { \
+    'title': '',
     'sortby': 'dueDate',
     'sortascending': 'True',
     'sortbystatusfirst': 'True',
@@ -35,6 +36,7 @@ defaults = { \
     'hideoverbudgettasks': 'False',
     'hidecompositetasks': 'False', },
 'tasktreeviewer': { \
+    'title': '',
     'sortby': 'dueDate',
     'sortascending': 'True',
     'sortbystatusfirst': 'True',
@@ -49,6 +51,7 @@ defaults = { \
     'hideoverduetasks': 'False',
     'hideoverbudgettasks': 'False' },
 'tasktreelistviewer': { \
+    'title': '',
     'sortby': 'dueDate',
     'sortascending': 'True',
     'sortbystatusfirst': 'True',
@@ -65,6 +68,7 @@ defaults = { \
     'hideoverduetasks': 'False',
     'hideoverbudgettasks': 'False' },
 'categoryviewer': { \
+    'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'True',
@@ -72,6 +76,7 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
 'noteviewer': { \
+    'title': '',
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'True',
@@ -81,6 +86,7 @@ defaults = { \
     'columns': "[]",
     'columnsalwaysvisible': "['subject']" },
 'effortlistviewer': { \
+    'title': '',
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'searchfilterstring': '',
@@ -93,6 +99,7 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
 'effortperdayviewer': { \
+    'title': '',
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'searchfilterstring': '',
@@ -105,6 +112,7 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
 'effortperweekviewer': { \
+    'title': '',
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'searchfilterstring': '',
@@ -117,6 +125,7 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
 'effortpermonthviewer': { 
+    'title': '',
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'searchfilterstring': '',

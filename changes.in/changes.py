@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.65.0', 'August ?, 2007', 
+Release('0.65.0', 'September ?, 2007', 
     summary='''This release adds the ability to record notes, improves the 
 flexibility of the different views, and fixes several bugs.''',
     featuresAdded=[
@@ -18,7 +18,8 @@ control on the toolbar. '''),
 case sensitive or case insensitive.'''),
         Feature('''Categories can have a description.'''),
         Feature('''Each viewer/tab has its own settings for sort order
-and visible columns.'''),
+and visible columns. Viewers can be renamed. This makes it possible to
+e.g. create a 'Todo today'.'''),
         Feature('''The search control on the toolbar can (optionally) include
 subitems in the search result. This makes it easy to show
 one task and its subtasks in a task viewer or show effort for one task and 

@@ -240,7 +240,7 @@ class AUINotebook(Book, wx.aui.AuiNotebook):
     def createImageList(self):
         pass
     
-    def AddPage(self, page, name, bitmap=None):
+    def AddPage(self, page, name, bitmap=''):
         bitmap = wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, self._bitmapSize)
         wx.aui.AuiNotebook.AddPage(self, page, name, bitmap=bitmap)
         if self.GetPageCount() > 1:

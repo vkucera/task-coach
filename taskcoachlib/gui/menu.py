@@ -197,9 +197,9 @@ class SelectMenu(Menu):
 class ViewMenu(Menu):
     def __init__(self, mainwindow, uiCommands, settings):
         super(ViewMenu, self).__init__(mainwindow)
-        self.appendMenu(_('New viewer'), 
+        self.appendMenu(_('&New viewer'), 
             ViewViewerMenu(mainwindow, uiCommands, settings), 'viewnewviewer')
-        self.appendUICommands(uiCommands, [None])
+        self.appendUICommands(uiCommands, ['renameviewer', None])
         self.appendMenu(_('&Filter'), FilterMenu(mainwindow, uiCommands, self, _('&Filter')))
         self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands, self, _('&Sort')))
         self.appendMenu(_('&Columns'), ColumnMenu(mainwindow, uiCommands, self, _('&Columns')))
