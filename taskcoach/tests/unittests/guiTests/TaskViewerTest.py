@@ -70,16 +70,20 @@ class CommonTests(object):
         aTask = task.Task()
         self.taskList.append(aTask)
         self.viewer.onDropFiles(self.viewer.getIndexOfItem(aTask), ['filename'])
-        self.assertEqual([attachment.FileAttachment('filename')], self.taskList[0].attachments())
+        self.assertEqual([attachment.FileAttachment('filename')],
+                         self.viewer.model()[0].attachments())
 
     def testOnDropURL(self):
         aTask = task.Task()
         self.taskList.append(aTask)
-        self.viewer.onDropURL(self.viewer.getIndexOfItem(aTask), 'http://www.example.com/')
-        self.assertEqual([attachment.URIAttachment('http://www.example.com/')], self.taskList[0].attachments())
+        self.viewer.onDropURL(self.viewer.getIndexOfItem(aTask), 
+                              'http://www.example.com/')
+        self.assertEqual([attachment.URIAttachment('http://www.example.com/')],
+                         self.viewer.model()[0].attachments())
 
     def testOnDropMail(self):
         aTask = task.Task()
         self.taskList.append(aTask)
         self.viewer.onDropMail(self.viewer.getIndexOfItem(aTask), 'test.mail')
-        self.assertEqual([attachment.MailAttachment('test.mail')], self.taskList[0].attachments())
+        self.assertEqual([attachment.MailAttachment('test.mail')],
+                         self.viewer.model()[0].attachments())

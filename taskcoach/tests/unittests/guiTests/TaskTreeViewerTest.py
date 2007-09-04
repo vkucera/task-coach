@@ -8,9 +8,7 @@ class TaskTreeViewerTestCase(test.wxTestCase):
         super(TaskTreeViewerTestCase, self).setUp()
         self.task = task.Task(subject='task')
         self.settings = config.Settings(load=False)
-        self.taskList = task.sorter.Sorter(task.filter.ViewFilter( \
-            task.TaskList(), settings=self.settings, treeMode=True), 
-            treeMode=True)
+        self.taskList = task.TaskList()
         self.categories = category.CategoryList()
         
     def assertItems(self, *tasks):
@@ -117,4 +115,6 @@ class TaskTreeViewerTest(CommonTests, TaskTreeViewerTestCase):
         super(TaskTreeViewerTest, self).setUp()
         self.viewer = TaskTreeViewerUnderTest(self.frame, self.taskList, {}, 
             self.settings, categories=self.categories)
-        
+        self.viewer.sortBy('subject')
+        self.viewer.setSortOrderAscending()        
+
