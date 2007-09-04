@@ -227,10 +227,11 @@ class AUINotebook(Book, wx.aui.AuiNotebook):
         # On Windows, the AuiNotebook changes its pages when other applications
         # are minimized. Prevent this by vetoing PAGE_CHANGING events when our
         # top level window is not active:
-        if self.GetTopLevelParent().IsActive():
-            event.Skip()
-        else:
+        if '__WXMSW__' in wx.PlatformInfo and \
+                not self.GetTopLevelParent().IsActive():
             event.Veto()
+        else:
+            event.Skip()
                     
     def onClosePage(self, event):
         if self.GetPageCount() <= 2:
