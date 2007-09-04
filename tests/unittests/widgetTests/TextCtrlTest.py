@@ -3,7 +3,8 @@ import test, widgets
 
 class BaseTextCtrlTest(test.wxTestCase):
     def testRemoveAnyControlCharactersEnteredByUser(self):
-        textctrl = widgets.textctrl.BaseTextCtrl(self.frame, u'T\x02\x01est\x09')
+        textctrl = widgets.textctrl.BaseTextCtrl(self.frame, 
+                                                 u'T\x02\x01est\x09')
         self.assertEqual(u'Test\t', textctrl.GetValue())    
     
     
