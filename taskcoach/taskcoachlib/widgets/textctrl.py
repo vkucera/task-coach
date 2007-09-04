@@ -49,22 +49,10 @@ class MultiLineTextCtrl(BaseTextCtrl):
             self.__webbrowser.open(url)
      
     def __initializeText(self, text):
-        # Work around a bug in wxPython 2.6.0 and 2.6.1 that causes a
-        # wx._core.PyAssertionError: C++ assertion "ucf.GotUpdate()" failed in 
-        # ..\..\src\msw\textctrl.cpp(813): EM_STREAMIN didn't send EN_UPDATE?
-        # when text is empty. Also see GetValue() below.
-        if text == '':
-            text = ' '
         self.AppendText(text)
         self.SetInsertionPoint(0)
 
-    def GetValue(self, *args, **kwargs):
-        value = super(MultiLineTextCtrl, self).GetValue(*args, **kwargs)
-        if value == ' ':
-            value = ''
-        return value
-    
-            
+
 class StaticTextWithToolTip(wx.StaticText):
     def __init__(self, *args, **kwargs):
         super(StaticTextWithToolTip, self).__init__(*args, **kwargs)
@@ -133,10 +121,10 @@ class SingleLineTextCtrlWithEnterButton(wx.Panel):
         ''' Called when the user hits enter or clicks the button. '''
         self.__onEnterCallback(self.__textCtrl.GetValue())
         self.__textCtrl.Clear()
-        if '__WXMAC__' in wx.PlatformInfo:
-            # textCtrl.Clear() does not fire an EVT_TEXT event on Mac OSX
-            # so we have to force a call to onTextCtrlChanged ourselves...
-            self.onTextCtrlChanged()
+        # TextCtrl.Clear() does not fire an EVT_TEXT event on all platforms
+        # so we call onTextCtrlChanged ourselves to be sure that the button 
+        # is correctly enabled or disabled.
+        self.onTextCtrlChanged()
     
     def onTextDrop(self, text):
         ''' Called when the user drags text and drops it on the textCtrl. '''
