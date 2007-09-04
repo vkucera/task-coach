@@ -1,6 +1,6 @@
 import wx, meta, patterns, widgets, command
 import viewer, viewercontainer, viewerfactory, help, toolbar, uicommand,\
-    remindercontroller, filter 
+    remindercontroller
 from i18n import _
 from domain import task, effort
 
