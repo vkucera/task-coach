@@ -36,16 +36,20 @@ pythonversion = '2.4'
 wxpythonversion = '2.8.4-unicode'
 languages = {
     'English': None, 
+    'Brazilian Portuguese': 'pt_BR',
+    'Breton': 'br',
+    'Czech': 'cs',
+    'Dutch': 'nl',
     'French': 'fr', 
     'German': 'de',
-    'Dutch': 'nl',
+    'Latvian': 'lv',
+    'Polish': 'pl',
     'Russian': 'ru',
-    'ChineseSimplified': 'zh',
+    'ChineseSimplified': 'zh_CN',
     'Japanese': 'ja',
     'Spanish': 'es',
     'Slovak': 'sk',
-    'Hungarian': 'hu',
-    'Breton': 'br'}
+    'Hungarian': 'hu'}
 languages_list = ','.join(languages.keys())
 
 def __createDict(locals):

@@ -28,7 +28,10 @@ its subtasks in an effort viewer.'''),
 always, never, or only when Task Coach was iconized when last 
 quitted.''', '1749886'),
         Feature('''Added a setting to turn off spell checking 
-(Mac OSX only)''', '1768330')],
+(Mac OSX only)''', '1768330'),
+        Feature('''Added (incomplete) translations in Brazilian Portuguese, 
+Czech, Latvian and Polish. See http://www.taskcoach.org/i18n.html for more
+information about translations and on how you can help.''')],
     bugsFixed=[
         Bug('''Made subject column resizable.''', '1702270', '1766664'),
         Bug('''Enable export of data containing non-ASCII 

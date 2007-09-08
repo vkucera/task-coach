@@ -20,8 +20,22 @@ class TranslationIntegrityTests(object):
         # original as the translated string have zero or one accelerators. '''
         for string in self.englishString, self.translatedString:
             self.failUnless(string.count('&') in [0,1], 
-                "'%s' has more than one '&'"%string) 
-        
+                "'%s' has more than one '&'"%string)
+            
+    def testMatchingShortCut(self):
+        for shortcutPrefix in ('Ctrl+', 'Shift+', 'Alt+',
+                               'Shift+Ctrl+', 'Shift+Alt+'):
+            self.assertEqual(self.englishString.count(shortcutPrefix),
+                             self.translatedString.count(shortcutPrefix),
+                             "Shortcut prefix ('%s') doesn't match for '%s' and '%s'"%(shortcutPrefix,
+                                 self.englishString, self.translatedString))
+
+    def testMatchingEllipses(self):
+        ellipsis = '...'
+        self.assertEqual(self.englishString.count(ellipsis),
+                         self.translatedString.count(ellipsis),
+                         "Ellipses ('...') don't match for '%s' and '%s'"%(self.englishString, self.translatedString))
+
 
 def getLanguages():
     return [language for language in meta.data.languages.values() \
