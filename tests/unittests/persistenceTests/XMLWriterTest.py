@@ -236,14 +236,14 @@ class XMLWriterTest(test.TestCase):
         
     def testOneAttachment(self):
         self.task.addAttachments(attachment.FileAttachment('whatever.txt'))
-        self.expectInXML('<attachment>FILE:whatever.txt</attachment>')
+        self.expectInXML('<attachment type="file"><description>whatever.txt</description><data>whatever.txt</data></attachment>')
         
     def testTwoAttachments(self):
-        attachments = ['whatever.txt',
-                       '/home/frank/attachment.doc']
+        attachments = [attachment.FileAttachment('whatever.txt'),
+                       attachment.FileAttachment('/home/frank/attachment.doc')]
         for a in attachments:
-            self.task.addAttachments(attachment.FileAttachment(a))
-        self.expectInXML('<attachment>FILE:%s</attachment>'*2%tuple(attachments))
+            self.task.addAttachments(a)
+        self.expectInXML(''.join(['<attachment type="file"><description>%s</description><data>%s</data></attachment>' % (unicode(k), unicode(k)) for k in attachments]))
 
     def testNote(self):
         self.noteContainer.append(note.Note())

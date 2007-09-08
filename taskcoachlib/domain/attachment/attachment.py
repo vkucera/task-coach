@@ -1,19 +1,26 @@
 
 from thirdparty import desktop
-from mailer import thunderbird, outlook, readMail, setMailDescription
+from mailer import thunderbird, outlook, readMail
 from i18n import _
 
 import os, shutil, tempfile
 
 class Attachment(object):
+    type_ = None
+
     def open(self):
+        raise NotImplementedError
+
+    def data(self):
         raise NotImplementedError
 
     def setDescription(self, descr):
         raise NotImplementedError
 
 class FileAttachment(Attachment):
-    def __init__(self, filename):
+    type_ = 'file'
+
+    def __init__(self, filename, description=None):
         self.filename = filename
 
     def open(self):
@@ -22,8 +29,8 @@ class FileAttachment(Attachment):
     def setDescription(self, descr):
         self.filename = descr
 
-    def __repr__(self):
-        return 'FILE:%s' % self.filename
+    def data(self):
+        return self.filename
 
     def __unicode__(self):
         return unicode(self.filename)
@@ -35,7 +42,9 @@ class FileAttachment(Attachment):
             return 1
 
 class URIAttachment(Attachment):
-    def __init__(self, uri):
+    type_ = 'uri'
+
+    def __init__(self, uri, description=None):
         self.uri = uri
 
     def open(self):
@@ -44,8 +53,8 @@ class URIAttachment(Attachment):
     def setDescription(self, descr):
         self.uri = descr
 
-    def __repr__(self):
-        return 'URI:%s' % self.uri
+    def data(self):
+        return self.uri
 
     def __unicode__(self):
         return self.uri
@@ -57,24 +66,29 @@ class URIAttachment(Attachment):
             return 1
 
 class MailAttachment(Attachment):
+    type_ = 'mail'
+
     attdir =  None #  This is  filled in before  saving or  reading by
                    # xml.writer and xml.reader
 
-    def __init__(self, filename):
+    def __init__(self, filename, description=None):
         if os.path.isabs(filename):
             self.filename = os.path.normpath(filename)
         else:
             self.filename = os.path.normpath(os.path.join(self.attdir, filename))
 
-        self.subject, self.description, unused = readMail(self.filename, False)
+        if description is None:
+            self.description, unused = readMail(self.filename)
+        else:
+            self.description = description
 
     def open(self):
         desktop.open(self.filename)
 
-    def setDescription(self, descr):
-        setMailDescription(self.filename, descr)
+    def setDescription(self, description):
+        self.description = description
 
-    def __repr__(self):
+    def data(self):
         path, name = os.path.split(self.filename)
 
         if self.attdir is not None:
@@ -90,7 +104,7 @@ class MailAttachment(Attachment):
                 self.filename = os.path.normpath(filename)
                 path, name = os.path.split(self.filename)
 
-        return 'MAIL:' + name
+        return name
 
     def __unicode__(self):
         return self.description
@@ -105,14 +119,20 @@ class MailAttachment(Attachment):
 #==============================================================================
 #
 
-def AttachmentFactory(s):
-    if s.startswith('URI:'):
-        return URIAttachment(s[4:])
-    elif s.startswith('FILE:'):
-        return FileAttachment(s[5:])
-    elif s.startswith('MAIL:'):
-        return MailAttachment(s[5:])
+def AttachmentFactory(data, description=None, type_=None):
+    if type_ is None:
+        if data.startswith('URI:'):
+            return URIAttachment(data[4:])
+        elif data.startswith('FILE:'):
+            return FileAttachment(data[5:])
+        elif data.startswith('MAIL:'):
+            return MailAttachment(data[5:])
 
-    # Assume old task file
+        return FileAttachment(data)
 
-    return FileAttachment(s)
+    try:
+        return { 'file': FileAttachment,
+                 'uri': URIAttachment,
+                 'mail': MailAttachment }[type_](data, description)
+    except KeyError:
+        raise TypeError, 'Unknown attachment type: %s' % type_

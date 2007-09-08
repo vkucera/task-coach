@@ -1,6 +1,16 @@
 import test, os, persistence
 from domain import task, effort, date, category, note
 
+class FakeAttachment(object):
+    def __init__(self, type_, filename):
+        self.type_ = type_
+        self.filename = filename
+
+    def data(self):
+        return self.filename
+
+    def __unicode__(self):
+        return self.filename
 
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
@@ -254,19 +264,20 @@ class TaskFileTest(TaskFileTestCase):
     def testNeedSave_AfterAttachmentAdded(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
-        self.task.addAttachments('attachment')
+        self.task.addAttachments(FakeAttachment('file', 'attachment'))
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterAttachmentRemoved(self):
         self.taskFile.setFilename(self.filename)
-        self.task.addAttachments('attachment')
+        att = FakeAttachment('file', 'attachment')
+        self.task.addAttachments(att)
         self.taskFile.save()
-        self.task.removeAttachments('attachment')
+        self.task.removeAttachments(att)
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterAllAttachmentsRemoved(self):
         self.taskFile.setFilename(self.filename)
-        self.task.addAttachments('attachment')
+        self.task.addAttachments(FakeAttachment('file', 'attachment'))
         self.taskFile.save()
         self.task.removeAllAttachments()
         self.failUnless(self.taskFile.needSave())
