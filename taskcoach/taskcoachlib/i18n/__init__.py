@@ -6,12 +6,15 @@ class Translator:
     def __init__(self, languageAndCountry=None):
         if languageAndCountry:
             language = languageAndCountry[:2] # e.g. 'nl_NL'[:2] == 'nl'
-            self._importTranslation(language)
+            self._importTranslation(languageAndCountry, language)
             self._setLocale(languageAndCountry, language)
 
-    def _importTranslation(self, language):
-        if language != 'en': 
-            module = __import__(language, globals())
+    def _importTranslation(self, languageAndCountry, language):
+        if language != 'en':
+            try: 
+                module = __import__(languageAndCountry, globals())
+            except ImportError:
+                module = __import__(language, globals())
             self.__language = module.dict
             self.__encoding = module.encoding
 

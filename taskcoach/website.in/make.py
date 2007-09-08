@@ -204,7 +204,7 @@ pages['i18n'] = \
         join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
 
         <P>To create a new translation or update an existing translation, 
-        please follow these steps:
+        please follow these steps and guidelines:
         <OL>
             <LI>Register at <A HREF="http://launchpad.net">Launchpad</A> and
             don't forget to set your preferred languages, i.e. the language(s)
@@ -227,14 +227,17 @@ pages['i18n'] = \
             in the English version. Formatting in the form '%%(mapping_key)s'
             can be ordered differently in the translated string than in the 
             English version.
+            <LI>Don't translate the string formatting keys: e.g. when you see
+            '%%(name)s', don't translate the word 'name'.</LI>
+            <LI>Don't translate keyboard shortcuts: e.g. when you see 
+            'Shift+Ctrl+V',
+            don't translate the words 'Shift' and 'Ctrl', even if your 
+            keyboard uses 
+            different labels for those keys. Picking a different letter is 
+            possible, but please make sure each letter is used only once.</LI>
         </OL>
-        <P>This is the current <A HREF="messages.pot"><TT>message 
-        catalog</TT></A>. These are the language .po files in the current 
-        version (%(version)s) of %(name)s:
-        <UL>
-        ''' + '\n'.join(['<LI><A HREF="%s.po">%s</A></LI>'%(code, language) for
-        language, code in meta.languages.items() if language != 'English']) + '</UL></P>'
-
+        </P>'''
+        
 pages['mailinglist'] = \
 '''       <H3>Mailinglist</H3>         
         <P>A Yahoo!Groups mailinglist is available for discussing

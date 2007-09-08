@@ -97,18 +97,22 @@ class LanguagePage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(LanguagePage, self).__init__(*args, **kwargs)
         self.addChoiceSetting('view', 'language', _('Language'), 
-            [('en_US', 'English (US)'), 
-             ('en_GB', 'English (UK)'),
-             ('de_DE', 'Deutsch (German)'),
-             ('nl_NL', 'Nederlands (Dutch)'),
-             ('fr_FR', u'Français (French)'),
+            [('pt_BR', u'Português brasileiro (Brazilian Portuguese)'),
+             ('br_FR', 'Brezhoneg (Breton)'),
              ('zh_CN', u'简体中文 (Simplified Chinese)'),
-             ('ja_JP', u'日本語 (Japanese)'),
-             ('ru_RU', u'Русский (Russian)'),
-             ('es_ES', u'Español (Spanish)'),
-             ('sk_SK', u'Slovenčina (Slovak)'),
+             ('cs_CS', u'Čeština (Czech)'),
+             ('nl_NL', 'Nederlands (Dutch)'),
+             ('en_GB', 'English (UK)'),
+             ('en_US', 'English (US)'), 
+             ('fr_FR', u'Français (French)'),
+             ('de_DE', 'Deutsch (German)'),
              ('hu_HU', 'Magyar (Hungarian)'),
-             ('br_FR', 'Brezhoneg (Breton)')],
+             ('ja_JP', u'日本語 (Japanese)'),
+             ('lv_LV', u'Latviešu (Latvian)'),
+             ('pl_PL', u'Język polski (Polish)'),
+             ('ru_RU', u'Русский (Russian)'),
+             ('sk_SK', u'Slovenčina (Slovak)'),
+             ('es_ES', u'Español (Spanish)')],
              _('This setting will take effect after you restart %s')%meta.name)
         self.fit()
 
