@@ -57,13 +57,20 @@ class XMLWriter:
         if task.description():
             node.appendChild(self.textNode('description', task.description()))
         for attachment in task.attachments():
-            node.appendChild(self.textNode('attachment', repr(attachment)))
+            node.appendChild(self.attachmentNode(attachment))
         for child in task.children():
             node.appendChild(self.taskNode(child))
         for effort in task.efforts():
             node.appendChild(self.effortNode(effort))
         return node
-        
+
+    def attachmentNode(self, att):
+        node = self.document.createElement('attachment')
+        node.setAttribute('type', att.type_)
+        node.appendChild(self.textNode('description', unicode(att)))
+        node.appendChild(self.textNode('data', att.data()))
+        return node
+
     def effortNode(self, effort):
         node = self.document.createElement('effort')
         formattedStart = self.formatDateTime(effort.getStart())

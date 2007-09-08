@@ -132,8 +132,24 @@ class XMLReader:
                 if node.nodeName == 'category']
         
     def __parseAttachmentNodes(self, nodes):
-        return [attachment.AttachmentFactory(self.__parseTextNode(node)) for node in nodes \
-                if node.nodeName == 'attachment']
+        attachments = []
+
+        for node in nodes:
+            if node.nodeName == 'attachment':
+                child = node.firstChild
+
+                if child.nodeType == node.TEXT_NODE:
+                    # "Old-style"
+                    attachments.append(attachment.AttachmentFactory(child.data))
+                else:
+                    attachments.append(attachment.AttachmentFactory(self.__parseTextNode(node.getElementsByTagName('data')[0]),
+                                                                    self.__parseTextNode(node.getElementsByTagName('description')[0]),
+                                                                    node.getAttribute('type')))
+
+        return attachments
+
+##         return [attachment.AttachmentFactory(self.__parseTextNode(node)) for node in nodes \
+##                 if node.nodeName == 'attachment']
 
     def __parseEffortNodes(self, nodes):
         return [self.__parseEffortNode(node) for node in nodes \

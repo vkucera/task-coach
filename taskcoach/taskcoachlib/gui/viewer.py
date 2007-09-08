@@ -782,7 +782,7 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     def onDropMail(self, index, mail):
         attachments = [attachment.MailAttachment(mail)]
         if index is None:
-            subject, description, content = mailer.readMail(mail)
+            subject, content = mailer.readMail(mail)
             newTaskDialog = self.newItemDialog(bitmap='new',
                                                subject=subject,
                                                description=content,
