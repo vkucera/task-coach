@@ -1,7 +1,8 @@
 '''
 Release steps:
+- get latest translations from launchpad
 - make clean all 
-- make releasetests 
+- make alltests 
 - Run this script to upload the distributions to sourceforge, generate MD5 
   digests and publish to Sourceforge Website, Chello (my ISP) and PyPI 
   (Python Package Index).
