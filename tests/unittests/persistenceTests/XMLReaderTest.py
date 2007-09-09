@@ -140,7 +140,49 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
         self.assertEqual(1, len(tasks[0].efforts()))
         self.assertEqual(date.TimeDelta(minutes=30), tasks[0].timeSpent())
         self.assertEqual(tasks[0], tasks[0].efforts()[0].task())
-                    
+
+class XMLReaderVersion16Text(XMLReaderTestCase):
+    tskversion = 16
+
+    def testOneAttachmentCompat(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
+                <attachment>whatever.tsk</attachment>
+            </task>
+        </tasks>''')
+        self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
+        
+    def testTwoAttachmentsCompat(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
+                <attachment>whatever.tsk</attachment>
+                <attachment>another.txt</attachment>
+            </task>
+        </tasks>''')
+        self.assertEqual(['whatever.tsk', 'another.txt'], 
+                         map(unicode, tasks[0].attachments()))
+        
+    def testOneAttachment(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
+                <attachment>FILE:whatever.tsk</attachment>
+            </task>
+        </tasks>''')
+        self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
+        
+    def testTwoAttachments(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
+                <attachment>FILE:whatever.tsk</attachment>
+                <attachment>FILE:another.txt</attachment>
+            </task>
+        </tasks>''')
+        self.assertEqual(['whatever.tsk', 'another.txt'], 
+                         map(unicode, tasks[0].attachments()))
         
 class XMLReaderVersion17Test(XMLReaderTestCase):
     tskversion = 17
@@ -387,7 +429,7 @@ class XMLReaderVersion17Test(XMLReaderTestCase):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <task>
-                <attachment>FILE:whatever.tsk</attachment>
+                <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
             </task>
         </tasks>''')
         self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
@@ -396,28 +438,8 @@ class XMLReaderVersion17Test(XMLReaderTestCase):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <task>
-                <attachment>FILE:whatever.tsk</attachment>
-                <attachment>FILE:another.txt</attachment>
-            </task>
-        </tasks>''')
-        self.assertEqual(['whatever.tsk', 'another.txt'], 
-                         map(unicode, tasks[0].attachments()))
-
-    def testOneAttachmentCompat(self):
-        tasks, categories, notes = self.writeAndRead('''
-        <tasks>
-            <task>
-                <attachment>whatever.tsk</attachment>
-            </task>
-        </tasks>''')
-        self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
-        
-    def testTwoAttachmentsCompat(self):
-        tasks, categories, notes = self.writeAndRead('''
-        <tasks>
-            <task>
-                <attachment>whatever.tsk</attachment>
-                <attachment>another.txt</attachment>
+                <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
+                <attachment type="file"><description>another.txt</description><data>another.txt</data></attachment>
             </task>
         </tasks>''')
         self.assertEqual(['whatever.tsk', 'another.txt'], 
