@@ -448,7 +448,6 @@ padfile.close()
 
 import shutil, glob
 for file in glob.glob('*.png') + glob.glob('*.ico') + glob.glob('*.css') + \
-    glob.glob('../i18n.in/*.po') + ['../i18n.in/messages.pot', 
-    '../icons.in/splash.png']:
+    ['../icons.in/splash.png']:
     print file
     shutil.copyfile(file, os.path.join(dist, os.path.basename(file)))
