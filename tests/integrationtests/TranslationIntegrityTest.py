@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 import test, i18n, meta, string
 
 
@@ -29,11 +31,14 @@ class TranslationIntegrityTests(object):
                              self.translatedString.count(shortcutPrefix),
                              "Shortcut prefix ('%s') doesn't match for '%s' and '%s'"%(shortcutPrefix,
                                  self.englishString, self.translatedString))
-
+    
+    @staticmethod
+    def ellipsisCount(string):
+        return string.count('...') + string.count('…')
+    
     def testMatchingEllipses(self):
-        ellipsis = '...'
-        self.assertEqual(self.englishString.count(ellipsis),
-                         self.translatedString.count(ellipsis),
+        self.assertEqual(self.ellipsisCount(self.englishString),
+                         self.ellipsisCount(self.translatedString),
                          "Ellipses ('...') don't match for '%s' and '%s'"%(self.englishString, self.translatedString))
 
 
