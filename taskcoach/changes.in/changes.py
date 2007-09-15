@@ -4,6 +4,11 @@ from changetypes import *
 
 releases = [
 
+Release('0.66.0', 'September ?, 2007',
+    summary='''Added another translation.''',
+    featuresAdded=[
+        Feature('Added Traditional Chinese translation thanks to Joey Weng.')]),
+        
 Release('0.65.0', 'September 9, 2007', 
     summary='''This release adds the ability to record notes, improves the 
 flexibility of the different views, and fixes several bugs.''',
