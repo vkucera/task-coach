@@ -4,6 +4,12 @@ from changetypes import *
 
 releases = [
 
+Release('0.65.1', 'September ?, 2007',
+    bugsFixed=[
+        Bug('''Tooltip windows steals keyboard focus on some platforms.''',
+        '1791627'),
+        Bug('''Taskbar icon is not transparent on Linux.''', '1648082')]),
+
 Release('0.65.0', 'September 9, 2007', 
     summary='''This release adds the ability to record notes, improves the 
 flexibility of the different views, and fixes several bugs.''',
