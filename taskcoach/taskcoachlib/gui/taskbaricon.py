@@ -119,8 +119,18 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             self.__bitmap = self.__tickBitmap
 
     def __setIcon(self):
-        self.SetIcon(wx.ArtProvider_GetIcon(self.__bitmap, wx.ART_FRAME_ICON, 
-            self.__iconSize), self.__tooltipText)
+        bmp = wx.ArtProvider_GetBitmap(self.__bitmap, wx.ART_FRAME_ICON,
+                                       self.__iconSize)
+        img = wx.ImageFromBitmap(bmp)
+        img.ConvertAlphaToMask()
+
+        # How to create an empty icon ?
+
+        icn = wx.ArtProvider_GetIcon(self.__bitmap, wx.ART_FRAME_ICON, 
+                                     self.__iconSize)
+        icn.CopyFromBitmap(img.ConvertToBitmap())
+
+        self.SetIcon(icn, self.__tooltipText)
 
     def __determineIconSize(self):
         if '__WXMAC__' in wx.PlatformInfo:
