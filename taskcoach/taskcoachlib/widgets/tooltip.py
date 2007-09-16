@@ -18,14 +18,6 @@ class ToolTipMixin(object):
         self.__position = (0, 0)
         self.__text = None
 
-        if '__WXMAC__' in wx.PlatformInfo:
-            self.__maxX, self.__maxY = wx.DisplaySize()
-        elif '__WXMSW__' in wx.PlatformInfo:
-            self.__maxX, self.__maxY = 32768, 32768 # wx.DisplaySize()
-                                                    # is  not  fit for
-                                                    # multiple-monitors
-                                                    # displays.
-
         wx.EVT_MOTION(self, self.__OnMotion)
         wx.EVT_LEAVE_WINDOW(self, self.__OnLeave)
         wx.EVT_TIMER(self, self.__timer.GetId(), self.__OnTimer)
@@ -47,15 +39,10 @@ class ToolTipMixin(object):
             # Adjust y so that the whole tip is visible.
             y = dy + dh - myH - 5
 
-        self.__tip.SetDimensions(x, y, myW, myH)
-        if not ('__WXMSW__' in wx.PlatformInfo or '__WXMAC__' in wx.PlatformInfo):
-            self.__tip.Show()
+        self.__tip.Show(x, y, myW, myH)
 
     def HideTip(self):
-        if '__WXMSW__' in wx.PlatformInfo or '__WXMAC__' in wx.PlatformInfo:
-            self.__tip.MoveXY(self.__maxX, self.__maxY)
-        else:
-            self.__tip.Hide()
+        self.__tip.Hide()
 
     def OnBeforeShowToolTip(self, x, y):
         """Should return a wx.Frame instance that will be displayed as
@@ -76,7 +63,7 @@ class ToolTipMixin(object):
         if ret is not None:
             self.__tip = ret
             wx.EVT_MOTION(self.__tip, self.__OnTipMotion)
-            self.__position = (x + 3, y + 10)
+            self.__position = (x + 20, y + 10)
             self.__timer.Start(200, True)
 
         evt.Skip()
@@ -100,22 +87,52 @@ class ToolTipMixin(object):
 #==============================================================================
 #
 
-class SimpleToolTip(wx.Frame):
+if '__WXMSW__' in wx.PlatformInfo:
+    class ToolTipBase(wx.MiniFrame):
+        def __init__(self, parent):
+            super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'Tooltip',
+                                              style=wx.FRAME_NO_TASKBAR| \
+                                              wx.FRAME_FLOAT_ON_PARENT| \
+                                              wx.NO_BORDER)
+
+        def Show(self, x, y, w, h):
+            self.SetDimensions(x, y, w, h)
+            super(ToolTipBase, self).Show()
+
+elif '__WXMAC__' in wx.PlatformInfo:
+    class ToolTipBase(wx.Frame):
+        def __init__(self, parent):
+            super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'ToolTip',
+                                              style=wx.FRAME_NO_TASKBAR| \
+                                              wx.FRAME_FLOAT_ON_PARENT| \
+                                              wx.NO_BORDER)
+
+            self.__maxW, self.__maxH = wx.GetDisplaySize()
+
+            self.MoveXY(self.__maxW, self.__maxH)
+            super(ToolTipBase, self).Show()
+
+        def Show(self, x, y, w, h):
+            self.SetDimensions(x, y, w, h)
+
+        def Hide(self):
+            self.MoveXY(self.__maxW, self.__maxH)
+
+else:
+    class ToolTipBase(wx.PopupWindow):
+        def __init__(self, parent):
+            super(ToolTipBase, self).__init__(parent, wx.ID_ANY)
+
+        def Show(self, x, y, w, h):
+            self.SetDimensions(x, y, w, h)
+            super(ToolTipBase, self).Show()
+
+
+class SimpleToolTip(ToolTipBase):
     def __init__(self, parent):
-        super(SimpleToolTip, self).__init__(parent, wx.ID_ANY, 'Tooltip',
-                                            style=wx.FRAME_NO_TASKBAR| \
-                                            wx.FRAME_FLOAT_ON_PARENT| \
-                                            wx.NO_BORDER)
+        super(SimpleToolTip, self).__init__(parent)
 
         self.lines = []
-
-        if '__WXMAC__' in wx.PlatformInfo:
-            maxX, maxY = wx.DisplaySize()
-            self.MoveXY(maxX, maxY)
-            self.Show()
-        elif '__WXMSW__' in wx.PlatformInfo:
-            self.MoveXY(32768, 32768)
-            self.Show()
 
         wx.EVT_PAINT(self, self.OnPaint)
 
