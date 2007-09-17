@@ -42,7 +42,8 @@ class ToolTipMixin(object):
         self.__tip.Show(x, y, myW, myH)
 
     def HideTip(self):
-        self.__tip.Hide()
+        if self.__tip:
+            self.__tip.Hide()
 
     def OnBeforeShowToolTip(self, x, y):
         """Should return a wx.Frame instance that will be displayed as
