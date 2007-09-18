@@ -1,5 +1,5 @@
 import test, wx, sets, patterns
-import unittests.asserts as asserts
+from unittests import asserts
 from domain import task, effort, date, category
 
 
@@ -128,13 +128,13 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.failIf(self.task.allChildrenCompleted())
 
     def testTaskHasNoEffortByDefault(self):
-        self.assertEqual(date.TimeDelta(), self.task.timeSpent())
-
-    def testTaskHasNoRecursiveEffortByDefault(self):
-        self.assertEqual(date.TimeDelta(), self.task.timeSpent(recursive=True))
+        zero = date.TimeDelta()
+        for recursive in False, True:
+            self.assertEqual(zero, self.task.timeSpent(recursive=recursive))
 
     def testTaskPriorityIsZeroByDefault(self):
-        self.assertEqual(0, self.task.priority())
+        for recursive in False, True:
+            self.assertEqual(0, self.task.priority(recursive=recursive))
 
     def testTaskHasNoReminderSetByDefault(self):
         self.assertReminder(None)
@@ -147,22 +147,20 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.assertEqual([], self.task.attachments())
         
     def testTaskHasNoFixedFeeByDefault(self):
-        self.assertEqual(0, self.task.fixedFee())
+        for recursive in False, True:
+            self.assertEqual(0, self.task.fixedFee(recursive=recursive))
         
     def testTaskHasNoRevenueByDefault(self):
-        self.assertEqual(0, self.task.revenue())
-        
-    def testTaskHasNoRecursiveRevenueByDefault(self):
-        self.assertEqual(0, self.task.revenue(recursive=True))
+        for recursive in False, True:
+            self.assertEqual(0, self.task.revenue(recursive=recursive))
         
     def testTaskHasNoHourlyFeeByDefault(self):
-        self.assertEqual(0, self.task.hourlyFee())
+        for recursive in False, True:
+            self.assertEqual(0, self.task.hourlyFee(recursive=recursive))
         
-    def testTaskHasNoRecursiveHourlyFeeByDefault(self):
-        self.assertEqual(0, self.task.hourlyFee(recursive=True))
-   
     def testTaskDoesNotBelongToAnyCategoryByDefault(self):
-        self.failIf(self.task.categories())
+        for recursive in False, True:
+            self.failIf(self.task.categories(recursive=recursive))
              
     # Setters
 
@@ -436,6 +434,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testAddCategoryAlsoAddsTaskToCategory(self):
         self.task.addCategory(self.category)
         self.assertEqual([self.task], self.category.tasks())
+        
+    def testAddCategoryNotification(self):
+        self.registerObserver('task.category.add')
+        self.task.addCategory(self.category)
+        self.assertEqual([patterns.Event(self.task, 'task.category.add',
+            self.category)], self.events)
         
     # State (FIXME: need to test other attributes too)
  
@@ -838,6 +842,13 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.setFixedFee(1000)
         self.assertEqual(3000, self.task.revenue(recursive=True))
         
+    def testAddParentToCategory(self):
+        self.registerObserver('task.totalCategory.add')
+        cat = category.Category('Parent category')
+        self.task1.addCategory(cat)
+        self.assertEqual([patterns.Event(self.task1_1, 'task.totalCategory.add',
+            cat)], self.events)
+        
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def taskCreationKeywordArguments(self):
@@ -1234,18 +1245,32 @@ class ChildAndParentWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
         return [{'categories': [self.category], 'children': [task.Task()]}]
     
-    def testGetCategoriesRecursiveFromParent(self):
+    def testParentCategoryIncludedInChildRecursiveCategories(self):
         self.assertEqual(set([self.category]), 
             self.task1_1.categories(recursive=True))
 
-    def testGetCategoriesNotRecursive(self):
+    def testParentCategoryNotIncludedInChildCategories(self):
         self.assertEqual(set(), self.task1_1.categories(recursive=False))
         
-    def testGetCategoriesRecursiveFromGrandParent(self):
+    def testGrandParentCategoryIncludedInGrandChildRecursiveCategories(self):
         grandchild = task.Task()
         self.task1_1.addChild(grandchild)
         self.assertEqual(set([self.category]), 
             grandchild.categories(recursive=True))
+        
+    def testGrandParentAndParentCategoriesIncludedInGrandChildRecursiveCategories(self):
+        grandchild = task.Task()
+        self.task1_1.addChild(grandchild)
+        childCategory = category.Category('Child category')
+        self.task1_1.addCategory(childCategory)
+        self.assertEqual(set([self.category, childCategory]), 
+            grandchild.categories(recursive=True))
+        
+    def testRemoveCategoryCausesChildNotification(self):
+        self.registerObserver('task.totalCategory.remove')
+        self.task1.removeCategory(self.category)
+        self.assertEqual([patterns.Event(self.task1_1, 'task.totalCategory.remove',
+            self.category)], self.events)
 
 
 class RecursivePriorityFixture(TaskTestCase, CommonTaskTests):

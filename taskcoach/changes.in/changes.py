@@ -7,7 +7,10 @@ releases = [
 Release('0.66.0', 'September ?, 2007',
     summary='''Added another translation.''',
     featuresAdded=[
-        Feature('Added Traditional Chinese translation thanks to Joey Weng.')]),
+        Feature('Added Traditional Chinese translation thanks to Joey Weng.'),
+        Feature('''Added an 'overall categories' column that recursively shows 
+the categories a task belongs to, i.e. its own categories and the categories
+of its parent task(s).''', '1790054')]),
         
 Release('0.65.0', 'September 9, 2007', 
     summary='''This release adds the ability to record notes, improves the 
