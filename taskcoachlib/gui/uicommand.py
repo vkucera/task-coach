@@ -1479,6 +1479,7 @@ class ViewColumnUICommandsMixin(object):
         for menuText, helpText, columnName in \
             [(_('&Attachments'), _('Show/hide attachment column'), 'attachments'),
              (_('&Categories'), _('Show/hide categories column'), 'categories'),
+             (_('Overall categories'), _('Show/hide overall categories column (overall categories includes all parent task categories, recursively)'), 'totalCategories'),
              (_('&Description'), _('Show/hide description column'), 'description'),
              (_('&Reminder'), _('Show/hide reminder column'), 'reminder'),
              (_('&Start date'), _('Show/hide start date column'), 'startDate'),
@@ -1605,6 +1606,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             [(_('Sub&ject'), _('Sort by subject'), 'subject'),
              (_('&Description'), _('Sort by description'), 'description'),
              (_('&Category'), _('Sort tasks by category'), 'categories'),
+             (_('Overall categories'), _('Sort tasks by overall categories'), 'totalCategories'),
              (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
              (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
              (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),

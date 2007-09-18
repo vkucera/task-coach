@@ -401,6 +401,7 @@ class Task(patterns.ObservableComposite):
             self.setLastModificationTime()
             self.__notifyObservers(patterns.Event(self, 'task.category.add', 
                 category))
+            self.notifyChildObserversOfCategoryChange(category, 'add')
         
     def removeCategory(self, category):
         if category in self._categories:
@@ -409,10 +410,17 @@ class Task(patterns.ObservableComposite):
             self.setLastModificationTime()
             self.__notifyObservers(patterns.Event(self, 'task.category.remove', 
                 category))
-
+            self.notifyChildObserversOfCategoryChange(category, 'remove')
+                
     def setCategories(self, categories):
         self._categories = categories # FIXME: no notification?
 
+    def notifyChildObserversOfCategoryChange(self, category, change):
+        assert change in ('add', 'remove')
+        for child in self.children(recursive=True):
+            self.__notifyObservers(patterns.Event(child, 
+                                   'task.totalCategory.%s'%change, category))
+            
     # priority
     
     def priority(self, recursive=False):

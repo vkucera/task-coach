@@ -213,8 +213,8 @@ class SortableViewerForTasks(SortableViewer):
         return ['viewsortorder', 
             'viewsortcasesensitive', 'viewsortbystatusfirst', None, 
             'viewsortbysubject', 'viewsortbydescription',
-            'viewsortbycategories', 'viewsortbystartdate',
-            'viewsortbyduedate', 'viewsortbytimeleft', 
+            'viewsortbycategories', 'viewsortbytotalcategories',
+            'viewsortbystartdate', 'viewsortbyduedate', 'viewsortbytimeleft', 
             'viewsortbycompletiondate', 'viewsortbybudget', 
             'viewsortbytotalbudget', 'viewsortbytimespent',
             'viewsortbytotaltimespent', 'viewsortbybudgetleft',
@@ -683,6 +683,7 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
                  'viewhourlyFee', 'viewfixedFee', 'viewtotalFixedFee', 
                 'viewrevenue', 'viewtotalRevenue'),
                 'viewdescription', 'viewattachments', 'viewcategories', 
+                'viewtotalCategories',
                 'viewpriority', 'viewtotalPriority', 'viewreminder', 
                 'viewlastModificationTime', 'viewtotalLastModificationTime']
  
@@ -865,6 +866,11 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
                 sortCallback=self.uiCommands['viewsortbycategories'],
                 renderDescriptionCallback=lambda task: task.description(),
                 renderCallback=self.renderCategory)] + \
+            [widgets.Column('totalCategories', _('Overall categories'),
+                'task.totalCategory.add', 'task.totalCategory.remove',
+                sortCallback=self.uiCommands['viewsortbytotalcategories'],
+                renderDescriptionCallback=lambda task: task.description(),
+                renderCallback=lambda task: self.renderCategory(task, recursive=True))] + \
             [widgets.Column(name, columnHeader, 'task.'+name, 
              sortCallback=self.uiCommands['viewsortby' + name.lower()],
              renderCallback=renderCallback,
@@ -909,8 +915,9 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self, self.uiCommands)
 
-    def renderCategory(self, task):
-        return ', '.join(sorted([category.subject() for category in task.categories()]))
+    def renderCategory(self, task, recursive=False):
+        return ', '.join(sorted([category.subject() for category in \
+                                 task.categories(recursive=recursive)]))
 
 
 class TaskListViewer(TaskViewerWithColumns, ListViewer):
