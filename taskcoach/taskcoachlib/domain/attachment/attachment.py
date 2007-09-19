@@ -1,6 +1,6 @@
 
 from thirdparty import desktop
-from mailer import thunderbird, outlook, readMail
+from mailer import readMail
 from i18n import _
 
 import os, shutil, tempfile

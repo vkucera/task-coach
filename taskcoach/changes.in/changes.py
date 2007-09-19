@@ -8,7 +8,9 @@ Release('0.65.1', 'September ?, 2007',
     bugsFixed=[
         Bug('''Tooltip windows steals keyboard focus on some platforms.''',
         '1791627'),
-        Bug('''Taskbar icon is not transparent on Linux.''', '1648082')]),
+        Bug('''Taskbar icon is not transparent on Linux.''', '1648082'),
+        Bug('''Saving a task file after adding attachments via the
+'add attachment' menu or context menu fails.''', '1796829')]),
 
 Release('0.65.0', 'September 9, 2007', 
     summary='''This release adds the ability to record notes, improves the 

@@ -1,7 +1,7 @@
 import wx, patterns, gui, meta, command, help, widgets, persistence
 from gui import render
 from i18n import _
-from domain import task
+from domain import task, attachment
 from thirdparty import desktop
 
 
@@ -1160,7 +1160,7 @@ class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
         if filename:
             addAttachmentCommand = command.AddAttachmentToTaskCommand( \
                 self.taskList, self.viewer.curselection(), 
-                attachments=[filename])
+                attachments=[attachment.FileAttachment(filename)])
             addAttachmentCommand.do()
 
 
