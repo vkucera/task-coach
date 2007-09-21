@@ -33,6 +33,7 @@ setupOptions = {
         'Natural Language :: Hungarian',
         'Natural Language :: Russian',
         'Natural Language :: Chinese (Simplified)',
+        'Natural Language :: Chinese (Traditional)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Office/Business :: Scheduling']}
