@@ -1,10 +1,12 @@
-#!/usr/bin/env python
-
 from taskcoachlib import meta
 import sys, os, glob
 from setup import setupOptions
 import taskcoach # to add taskcoachlib to the searchpath
+from buildlib import clean
 
+
+setupOptions['cmdclass'] = dict(clean=clean)
+                                
 distdir = 'dist'
 builddir = 'build'
 
