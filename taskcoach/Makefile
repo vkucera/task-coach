@@ -4,7 +4,7 @@
 
 PYTHON="python" # python should be on the path
 
-ifeq ($(shell uname),CYGWIN_NT-5.1)
+ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
 endif
 
