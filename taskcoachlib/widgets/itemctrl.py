@@ -188,6 +188,7 @@ class Column(object):
             self.defaultRenderer)
         self.__renderDescriptionCallback = kwargs.pop('renderDescriptionCallback',
             self.defaultDescriptionRenderer)
+        self.__resizeCallback = kwargs.pop('resizeCallback', None)
         self.__alignment = kwargs.pop('alignment', wx.LIST_FORMAT_LEFT)
         self.__imageIndexCallback = kwargs.pop('imageIndexCallback', 
             self.defaultImageIndex)
@@ -206,6 +207,11 @@ class Column(object):
 
     def eventTypes(self):
         return self.__eventTypes
+    
+    def setWidth(self, width):
+        self.width = width
+        if self.__resizeCallback:
+            self.__resizeCallback(self, width)
 
     def sort(self, *args, **kwargs):
         if self.__sortCallback:
@@ -290,13 +296,13 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
             self.DeleteColumn(columnIndex)
 
     def isColumnVisible(self, column):
-        return column in self.__visibleColumns()
+        return column in self._visibleColumns()
 
     def _getColumnIndex(self, columnHeader):
         ''' _getColumnIndex returns the actual columnIndex of the column if it 
             is visible, or the position it would have if it were visible. '''
         columnIndexWhenAllColumnsVisible = super(_CtrlWithHideableColumns, self)._getColumnIndex(columnHeader)
-        for columnIndex, visibleColumn in enumerate(self.__visibleColumns()):
+        for columnIndex, visibleColumn in enumerate(self._visibleColumns()):
             if super(_CtrlWithHideableColumns, self)._getColumnIndex(visibleColumn.header()) >= columnIndexWhenAllColumnsVisible:
                 return columnIndex
         return self.GetColumnCount() # Column header not found
@@ -308,7 +314,7 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
                 return column
         raise IndexError
 
-    def __visibleColumns(self):
+    def _visibleColumns(self):
         return [self._getColumn(columnIndex) for columnIndex in range(self.GetColumnCount())]
 
 
@@ -358,7 +364,14 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
             self.SetColumn(columnIndex, columnInfo)
 
 
-class CtrlWithColumns(autowidth.AutoColumnWidthMixin, _CtrlWithHideableColumns,
+class _CtrlWithAutoResizedColumns(autowidth.AutoColumnWidthMixin):
+    def DoResize(self, *args, **kwargs):
+        super(_CtrlWithAutoResizedColumns, self).DoResize(*args, **kwargs)
+        for index, column in enumerate(self._visibleColumns()):
+            column.setWidth(self.GetColumnWidth(index))
+
+
+class CtrlWithColumns(_CtrlWithAutoResizedColumns, _CtrlWithHideableColumns,
                       _CtrlWithSortableColumns, _CtrlWithColumnPopupMenu):
     ''' CtrlWithColumns combines the functionality of its four parent classes: 
         automatic resizing of columns, hideable columns, columns with sort 
@@ -379,4 +392,5 @@ class CtrlWithColumns(autowidth.AutoColumnWidthMixin, _CtrlWithHideableColumns,
         # Only show the sort image if the column in question is visible
         if self.isColumnVisible(self._currentSortColumn()):
             super(CtrlWithColumns, self)._showSortImage()
-        
+            
+

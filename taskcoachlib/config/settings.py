@@ -77,6 +77,9 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
     def setlist(self, section, option, value):
         self.set(section, option, str(value))
         
+    getdict = getlist
+    setdict = setlist
+        
     def save(self, showerror=wx.MessageBox):
         if not self.__loadAndSave:
             return
