@@ -610,7 +610,17 @@ class ViewerWithColumns(Viewer):
         column = self.visibleColumns()[visibleColumnIndex]
         return column.name() not in self.settings.getlist(self.settingsSection(), 
                                                           'columnsalwaysvisible')
-        
+
+    def getColumnWidth(self, columnName):
+        columnWidths = self.settings.getdict(self.settingsSection(),
+                                             'columnwidths')
+        return columnWidths.get(columnName, wx.gizmos.DEFAULT_COL_WIDTH)
+
+    def onResizeColumn(self, column, width):
+        columnWidths = self.settings.getdict(self.settingsSection(), 'columnwidths')
+        columnWidths[column.name()] = width
+        self.settings.setdict(self.settingsSection(), 'columnwidths', columnWidths)
+                            
     def getItemText(self, index, column=0):
         item = self.getItemWithIndex(index)
         column = self.visibleColumns()[column]
@@ -841,41 +851,42 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     newSubTaskDialog = newSubItemDialog
            
             
-class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
+class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):                    
     def _createColumns(self):
+        kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
+                      resizeCallback=self.onResizeColumn)
         return [widgets.Column('subject', _('Subject'), 'task.subject', 
                 'task.completionDate', 'task.dueDate', 'task.startDate',
                 'task.track.start', 'task.track.stop', 
-                sortCallback=self.uiCommands['viewsortbysubject'], 
+                sortCallback=self.uiCommands['viewsortbysubject'],
+                width=self.getColumnWidth('subject'), 
                 imageIndexCallback=self.subjectImageIndex,
-                renderCallback=self.renderSubject,
-                renderDescriptionCallback=lambda task: task.description())] + \
+                renderCallback=self.renderSubject, **kwargs)] + \
             [widgets.Column('description', _('Description'), 'task.description', 
                 sortCallback=self.uiCommands['viewsortbydescription'],
-                renderCallback=lambda task: task.description(),
-                renderDescriptionCallback=lambda task: task.description())] + \
+                renderCallback=lambda task: task.description(), 
+                width=self.getColumnWidth('description'), **kwargs)] + \
             [widgets.Column('attachments', '', 'task.attachment.add', 
-                'task.attachment.remove', width=28,
+                'task.attachment.remove',
+                width=self.getColumnWidth('attachments'),
                 alignment=wx.LIST_FORMAT_LEFT,
                 imageIndexCallback=self.attachmentImageIndex,
                 headerImageIndex=self.imageIndex['attachment'],
-                renderCallback=lambda task: '',
-                renderDescriptionCallback=lambda task: task.description())] + \
+                renderCallback=lambda task: '', **kwargs)] + \
             [widgets.Column('categories', _('Categories'), 'task.category.add', 
                 'task.category.remove', 
                 sortCallback=self.uiCommands['viewsortbycategories'],
-                renderDescriptionCallback=lambda task: task.description(),
-                renderCallback=self.renderCategory)] + \
+                width=self.getColumnWidth('categories'),
+                renderCallback=self.renderCategory, **kwargs)] + \
             [widgets.Column('totalCategories', _('Overall categories'),
                 'task.totalCategory.add', 'task.totalCategory.remove',
                 sortCallback=self.uiCommands['viewsortbytotalcategories'],
-                renderDescriptionCallback=lambda task: task.description(),
-                renderCallback=lambda task: self.renderCategory(task, recursive=True))] + \
+                renderCallback=lambda task: self.renderCategory(task, recursive=True),
+                width=self.getColumnWidth('totalCategories'), **kwargs)] + \
             [widgets.Column(name, columnHeader, 'task.'+name, 
              sortCallback=self.uiCommands['viewsortby' + name.lower()],
-             renderCallback=renderCallback,
-             renderDescriptionCallback=lambda task: task.description(),
-             alignment=wx.LIST_FORMAT_RIGHT) \
+             renderCallback=renderCallback, width=self.getColumnWidth(name),
+             alignment=wx.LIST_FORMAT_RIGHT, **kwargs) \
              for name, columnHeader, renderCallback in \
             ('startDate', _('Start date'), lambda task: render.date(task.startDate())),
             ('dueDate', _('Due date'), lambda task: render.date(task.dueDate())),
@@ -1151,7 +1162,9 @@ class NoteViewer(SearchableViewer, SortableViewerWithColumns,
         return menu.ColumnPopupMenu(self, self.uiCommands)
 
     def _createColumns(self):
-        return [widgets.Column(name, columnHeader, 'note.'+name, 
+        return [widgets.Column(name, columnHeader, 'note.'+name,
+                width=self.getColumnWidth(name), 
+                resizeCallback=self.onResizeColumn,
                 renderCallback=renderCallback, 
                 sortCallback=self.uiCommands['viewsortby' + name.lower()]) \
             for name, columnHeader, renderCallback in \
@@ -1292,12 +1305,14 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     
     def _createColumns(self):
         return [widgets.Column(name, columnHeader, eventType, 
-                renderCallback=renderCallback) \
+                renderCallback=renderCallback, width=self.getColumnWidth(name),
+                resizeCallback=self.onResizeColumn) \
             for name, columnHeader, eventType, renderCallback in \
             ('period', _('Period'), 'effort.duration', self.renderPeriod),
             ('task', _('Task'), 'effort.task', lambda effort: render.subject(effort.task(), recursively=True)),
             ('description', _('Description'), 'effort.description', lambda effort: effort.getDescription())] + \
             [widgets.Column(name, columnHeader, eventType, 
+             width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn,
              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
             for name, columnHeader, eventType, renderCallback in \
             ('timeSpent', _('Time spent'), 'effort.duration', 
@@ -1336,7 +1351,8 @@ class CompositeEffortListViewer(EffortListViewer):
     def _createColumns(self):
         return super(CompositeEffortListViewer, self)._createColumns() + \
             [widgets.Column(name, columnHeader, eventType, 
-              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
+              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
+              width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn) \
              for name, columnHeader, eventType, renderCallback in \
                 ('totalTimeSpent', _('Total time spent'), 'effort.totalDuration',  
                  lambda effort: render.timeSpent(effort.duration(recursive=True))),
