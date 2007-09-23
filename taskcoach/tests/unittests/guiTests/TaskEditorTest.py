@@ -322,9 +322,6 @@ class FocusTest(TaskEditorTestCase):
 
 
 class EffortEditorTest(TaskEditorTestCase):      
-    def tearDown(self):
-        pass
-
     def createCommand(self):
         return command.EditEffortCommand(self.effortList, self.effortList)
         
