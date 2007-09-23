@@ -5,6 +5,7 @@ from changetypes import *
 releases = [
 
 Release('0.65.1', 'September 23, 2007',
+    summary='''This release fixes one critical bug and two minor bugs.''',
     bugsFixed=[
         Bug('''Tooltip windows steals keyboard focus on some platforms.''',
         '1791627'),
