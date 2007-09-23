@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.65.1', 'September ?, 2007',
+Release('0.65.1', 'September 23, 2007',
     bugsFixed=[
         Bug('''Tooltip windows steals keyboard focus on some platforms.''',
         '1791627'),
