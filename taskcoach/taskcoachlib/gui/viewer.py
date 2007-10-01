@@ -411,7 +411,7 @@ class TreeViewer(Viewer):
         
     def expandSelected(self):
         self.widget.expandSelectedItems()
-        
+
     def collapseSelected(self):
         self.widget.collapseSelectedItems()
         
@@ -438,11 +438,20 @@ class TreeViewer(Viewer):
                 yield child
 
     def getItemWithIndex(self, index):
-        children = self.model().rootItems()
-        for i in index:
+        ''' Return the item in the model with the specified index. index
+            is a tuple of indices that specifies the path to the item. E.g.,
+            (0,2,1) is (read the tuple from right to left) the second child 
+            of the third child of the first root item. '''
+        # This is performance critical code
+        model = self.model()
+        children = model.rootItems()
+        for i in index[:-1]:
             item = children[i]
-            children = [child for child in self.model() if child in item.children()]
-        return item
+            childIndices = [model.index(child) for child in item.children() \
+                            if child in model]
+            childIndices.sort()
+            children = [model[childIndex] for childIndex in childIndices]
+        return children[index[-1]]
 
     def getIndexOfItem(self, item):
         parent = item.parent()
