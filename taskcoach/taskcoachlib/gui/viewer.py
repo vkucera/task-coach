@@ -541,6 +541,7 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
 class ViewerWithColumns(Viewer):
     def __init__(self, *args, **kwargs):
         self.__initDone = False
+        self.__visibleColumns = []
         super(ViewerWithColumns, self).__init__(*args, **kwargs)
         self.initColumns()
         self.__initDone = True
@@ -568,6 +569,7 @@ class ViewerWithColumns(Viewer):
             show = column.name() in self.settings.getlist(self.settingsSection(), 'columns')
             self.widget.showColumn(column, show=show)
         if show:
+            self.__visibleColumns.append(column)
             self.__startObserving(column.eventTypes())
     
     def showColumnByName(self, columnName, show=True):
@@ -577,14 +579,14 @@ class ViewerWithColumns(Viewer):
                 break
 
     def showColumn(self, column, show=True):
-        visibleColumns = self.settings.getlist(self.settingsSection(), 'columns')
         if show:
+            self.__visibleColumns.append(column)
             self.__startObserving(column.eventTypes())
-            visibleColumns.append(column.name())
         else:
+            self.__visibleColumns.remove(column)
             self.__stopObserving(column.eventTypes())
-            visibleColumns.remove(column.name())
-        self.settings.set(self.settingsSection(), 'columns', str(visibleColumns))
+        self.settings.set(self.settingsSection(), 'columns', 
+            str([column.name() for column in self.__visibleColumns]))
         self.widget.showColumn(column, show)
         self.widget.RefreshItems()
 
@@ -601,15 +603,13 @@ class ViewerWithColumns(Viewer):
         return self._columns
     
     def isVisibleColumnByName(self, columnName):
-        return columnName in (self.settings.getlist(self.settingsSection(), 
-            'columnsalwaysvisible') + self.settings.getlist(self.settingsSection(), 'columns'))
+        return columnName in [column.name() for column in self.__visibleColumns]
         
     def isVisibleColumn(self, column):
-        return self.isVisibleColumnByName(column.name())
+        return column in self.__visibleColumns
     
     def visibleColumns(self):
-        return [column for column in self._columns if \
-                self.isVisibleColumn(column)]
+        return self.__visibleColumns
         
     def hideableColumns(self):
         return [column for column in self._columns if column.name() not in \
