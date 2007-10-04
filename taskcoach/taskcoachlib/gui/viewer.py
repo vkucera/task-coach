@@ -575,19 +575,25 @@ class ViewerWithColumns(Viewer):
     def showColumnByName(self, columnName, show=True):
         for column in self.hideableColumns():
             if columnName == column.name():
-                self.showColumn(column, show)
+                isVisibleColumn = self.isVisibleColumn(column)
+                if (show and not isVisibleColumn) or \
+                   (not show and isVisibleColumn):
+                    self.showColumn(column, show)
                 break
 
     def showColumn(self, column, show=True):
+        self.widget.showColumn(column, show)
         if show:
             self.__visibleColumns.append(column)
+            # Make sure we keep the columns in the right order:
+            self.__visibleColumns = [c for c in self.columns() if \
+                                     c in self.__visibleColumns]
             self.__startObserving(column.eventTypes())
         else:
             self.__visibleColumns.remove(column)
             self.__stopObserving(column.eventTypes())
         self.settings.set(self.settingsSection(), 'columns', 
             str([column.name() for column in self.__visibleColumns]))
-        self.widget.showColumn(column, show)
         self.widget.RefreshItems()
 
     def hideColumn(self, visibleColumnIndex):
