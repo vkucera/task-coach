@@ -1610,21 +1610,21 @@ class UICommands(dict, ViewColumnUICommandsMixin):
              (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
              (_('D&ays left'), _('Sort tasks by number of days left'), 'timeLeft'),
              (_('&Budget'), _('Sort tasks by budget'), 'budget'),
-             (_('Total b&udget'), _('Sort tasks by total budget'), 'totalbudget'),
+             (_('Total b&udget'), _('Sort tasks by total budget'), 'totalBudget'),
              (_('&Time spent'), _('Sort tasks by time spent'), 'timeSpent'),
-             (_('T&otal time spent'), _('Sort tasks by total time spent'), 'totaltimeSpent'),
+             (_('T&otal time spent'), _('Sort tasks by total time spent'), 'totalTimeSpent'),
              (_('Budget &left'), _('Sort tasks by budget left'), 'budgetLeft'),
-             (_('Total budget l&eft'), _('Sort tasks by total budget left'), 'totalbudgetLeft'),
+             (_('Total budget l&eft'), _('Sort tasks by total budget left'), 'totalBudgetLeft'),
              (_('&Priority'), _('Sort tasks by priority'), 'priority'),
-             (_('Overall priority'), _('Sort tasks by overall priority'), 'totalpriority'),
+             (_('Overall priority'), _('Sort tasks by overall priority'), 'totalPriority'),
              (_('&Hourly fee'), _('Sort tasks by hourly fee'), 'hourlyFee'),
              (_('&Fixed fee'), _('Sort tasks by fixed fee'), 'fixedFee'),
-             (_('Total fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalfixedFee'),
+             (_('Total fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalFixedFee'),
              (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
-             (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalrevenue'),
+             (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalRevenue'),
              (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder'),
              (_('Last modification time'), _('Sort tasks by last modification time'), 'lastModificationTime'),
-             (_('Overall last modification time'), _('Sort tasks by overall last modification time'), 'totallastModificationTime')]:
+             (_('Overall last modification time'), _('Sort tasks by overall last modification time'), 'totalLastModificationTime')]:
             key = 'viewsortby' + value.lower()
             self[key] = ViewerSortByCommand(viewer=viewer, value=value,
                 menuText=menuText, helpText=helpText)
