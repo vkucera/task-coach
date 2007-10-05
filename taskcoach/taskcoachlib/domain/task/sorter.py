@@ -6,6 +6,7 @@ class Sorter(base.Sorter):
     EventTypePrefix = 'task'
     
     def __init__(self, *args, **kwargs):
+        self.__rootItems = None
         self.__treeMode = kwargs.pop('treeMode', False)
         self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
         super(Sorter, self).__init__(*args, **kwargs)
@@ -13,6 +14,23 @@ class Sorter(base.Sorter):
             patterns.Publisher().registerObserver(self.reset, 
                                                   eventType=eventType)
                             
+    def reset(self, *args, **kwargs):
+        self.__rootItems = None     # Invalidate the root items cache
+        super(Sorter, self).reset(*args, **kwargs)
+        
+    def extendSelf(self, *args, **kwargs):
+        self.__rootItems = None     # Invalidate the root items cache
+        super(Sorter, self).extendSelf(*args, **kwargs)
+
+    def removeItemsFromSelf(self, *args, **kwargs):
+        self.__rootItems = None     # Invalidate the root items cache
+        super(Sorter, self).removeItemsFromSelf(*args, **kwargs)
+
+    def rootItems(self):
+        if self.__rootItems is None:
+            self.__rootItems = [item for item in self if item.parent() is None]
+        return self.__rootItems
+
     def sortByTaskStatusFirst(self, sortByTaskStatusFirst):
         self.__sortByTaskStatusFirst = sortByTaskStatusFirst
         self.reset()
