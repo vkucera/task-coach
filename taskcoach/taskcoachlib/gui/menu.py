@@ -1,4 +1,4 @@
-import wx, uicommand
+import wx, uicommand, patterns
 from i18n import _
 
 
@@ -56,16 +56,16 @@ class DynamicMenu(Menu):
         self._labelInParentMenu = labelInParentMenu
         self._uiCommands = uiCommands
         self._uiCommandNames = None
-        mainwindow.Bind(wx.EVT_UPDATE_UI, self.onUpdateUI)
+        patterns.Publisher().registerObserver(self.updateMenu, 
+            mainwindow.viewer.viewerChangeEventType())
 
-    def onUpdateUI(self, event):
-        self.updateUI()
-        event.Skip()
-        
-    def updateUI(self):
+    def updateMenu(self, event):
+        wx.CallAfter(self.updateMenuInIdleTime)
+    
+    def updateMenuInIdleTime(self):
         self.updateMenuItemInParentMenu()
         self.updateMenuItems()
-        
+            
     def updateMenuItemInParentMenu(self):
         if self._parentMenu:
             myId = self._parentMenu.FindItem(self._labelInParentMenu)
