@@ -403,6 +403,10 @@ class ListViewer(Viewer):
     
 
 class TreeViewer(Viewer):
+    def __init__(self, *args, **kwargs):
+        self.__itemsByIndex = dict()
+        super(TreeViewer, self).__init__(*args, **kwargs)
+
     def expandAll(self):
         self.widget.expandAllItems()
 
@@ -423,7 +427,19 @@ class TreeViewer(Viewer):
         
     def isTreeViewer(self):
         return True
-        
+
+    def onAddItem(self, *args, **kwargs):
+        self.__itemsByIndex = dict()
+        super(TreeViewer, self).onAddItem(*args, **kwargs)
+
+    def onRemoveItem(self, *args, **kwargs):
+        self.__itemsByIndex = dict()
+        super(TreeViewer, self).onRemoveItem(*args, **kwargs)
+
+    def onSorted(self, *args, **kwargs):
+        self.__itemsByIndex = dict()
+        super(TreeViewer, self).onSorted(*args, **kwargs)
+    
     def visibleItems(self):
         ''' Iterate over the items in the model. '''            
         def yieldAllChildren(parent):
@@ -443,6 +459,10 @@ class TreeViewer(Viewer):
             (0,2,1) is (read the tuple from right to left) the second child 
             of the third child of the first root item. '''
         # This is performance critical code
+        try:
+            return self.__itemsByIndex[index]
+        except KeyError:
+            pass
         model = self.model()
         children = model.rootItems()
         for i in index[:-1]:
@@ -451,7 +471,8 @@ class TreeViewer(Viewer):
                             if child in model]
             childIndices.sort()
             children = [model[childIndex] for childIndex in childIndices]
-        return children[index[-1]]
+        self.__itemsByIndex[index] = item = children[index[-1]]
+        return item
 
     def getIndexOfItem(self, item):
         parent = item.parent()
