@@ -58,8 +58,9 @@ class DynamicMenu(Menu):
         self._uiCommandNames = None
         patterns.Publisher().registerObserver(self.updateMenu, 
             mainwindow.viewer.viewerChangeEventType())
-
+        
     def updateMenu(self, event):
+        # Rebuilding the menu may take some time, so do it in idle time
         wx.CallAfter(self.updateMenuInIdleTime)
     
     def updateMenuInIdleTime(self):

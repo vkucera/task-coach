@@ -244,22 +244,29 @@ class ViewMenuTestCase(test.wxTestCase):
 class ViewSortMenuTest(ViewMenuTestCase):
     def createMenu(self):
         self.frame.viewer = self.viewerContainer
-        return gui.menu.SortMenu(self.frame, self.uiCommands, self.parentMenu, 
+        menu = gui.menu.SortMenu(self.frame, self.uiCommands, self.parentMenu, 
             'menu')
+        menu.updateMenuInIdleTime()
+        return menu
         
     def testSortOrderAscending(self):
         self.viewerContainer.setSortOrderAscending(True)
-        self.menu.openMenu()
+        self.menu.UpdateUI()
         self.failUnless(self.menu.FindItemByPosition(0).IsChecked())
         
     def testSortOrderDescending(self):
         self.viewerContainer.setSortOrderAscending(False)
-        self.menu.openMenu()
+        self.menu.UpdateUI()
         self.failIf(self.menu.FindItemByPosition(0).IsChecked())
 
     def testSortBySubject(self):
         self.viewerContainer.setSortBy('subject')
-        self.menu.openMenu()
-        self.failIf(self.menu.FindItemByPosition(3).IsChecked())
+        self.menu.UpdateUI()
         self.failUnless(self.menu.FindItemByPosition(4).IsChecked())
+        self.failIf(self.menu.FindItemByPosition(5).IsChecked())
 
+    def testSortByDescription(self):
+        self.viewerContainer.setSortBy('description')
+        self.menu.UpdateUI()
+        self.failIf(self.menu.FindItemByPosition(4).IsChecked())
+        self.failUnless(self.menu.FindItemByPosition(5).IsChecked())
