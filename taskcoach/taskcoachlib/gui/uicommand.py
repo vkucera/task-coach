@@ -1258,8 +1258,9 @@ class EffortStop(TaskListCommand):
         stop.do()
 
     def enabled(self, event):
-        return bool([task for task in self.taskList if \
-                     task.isBeingTracked()])
+        # FIXME: when support for python 2.4 is dropped use:
+        # return any(True for task in self.taskList if task.isBeingTracked())
+        return True in (True for task in self.taskList if task.isBeingTracked())
 
 
 class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
