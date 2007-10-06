@@ -257,9 +257,6 @@ class Task(patterns.ObservableComposite):
         return [effort for effort in self.efforts(recursive) \
             if effort.isBeingTracked()]
 
-    def nrActiveEfforts(self):
-        return len(self.activeEfforts())
-
     def isBeingTracked(self, recursive=False):
         return self.activeEfforts(recursive)
         
