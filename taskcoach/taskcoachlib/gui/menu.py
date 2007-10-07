@@ -58,8 +58,9 @@ class DynamicMenu(Menu):
         self._uiCommandNames = None
         patterns.Publisher().registerObserver(self.updateMenu, 
             mainwindow.viewer.viewerChangeEventType())
+        self.updateMenu()
         
-    def updateMenu(self, event):
+    def updateMenu(self, event=None):
         # Rebuilding the menu may take some time, so do it in idle time
         wx.CallAfter(self.updateMenuInIdleTime)
     
@@ -69,7 +70,17 @@ class DynamicMenu(Menu):
             
     def updateMenuItemInParentMenu(self):
         if self._parentMenu:
-            myId = self._parentMenu.FindItem(self._labelInParentMenu)
+            # I'd rather use wx.Menu.FindItem, but it seems that that 
+            # method currently does not work for menu items with accelerators 
+            # (wxPython 2.8.6 on Ubuntu). When that is fixed replace the 7
+            # lines below with this one:
+            # myId = self._parentMenu.FindItem(self._labelInParentMenu)
+            for item in self._parentMenu.MenuItems:
+                if item.ItemLabel == self._labelInParentMenu:
+                    myId = item.Id
+                    break
+            else:
+                myId = wx.NOT_FOUND
             if myId != wx.NOT_FOUND:
                 self._parentMenu.Enable(myId, self.enabled())
 

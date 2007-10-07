@@ -94,7 +94,7 @@ class MockViewerContainer:
     def isSortable(self):
         return True
         
-    def setSortBy(self, sortKey):
+    def sortBy(self, sortKey):
         self.__sortBy = sortKey
         
     def isSortedBy(self, sortKey):
@@ -262,14 +262,14 @@ class ViewSortMenuTest(ViewMenuTestCase):
         self.failIf(self.menu.FindItemByPosition(0).IsChecked())
 
     def testSortBySubject(self):
-        self.viewerContainer.setSortBy('subject')
+        self.viewerContainer.sortBy('subject')
         self.menu.UpdateUI()
         self.menu.openMenu()
         self.failUnless(self.menu.FindItemByPosition(4).IsChecked())
         self.failIf(self.menu.FindItemByPosition(5).IsChecked())
 
     def testSortByDescription(self):
-        self.viewerContainer.setSortBy('description')
+        self.viewerContainer.sortBy('description')
         self.menu.UpdateUI()
         self.menu.openMenu()
         self.failIf(self.menu.FindItemByPosition(4).IsChecked())

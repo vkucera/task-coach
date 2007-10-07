@@ -193,6 +193,10 @@ class UIRadioCommand(BooleanSettingsCommand):
         super(UIRadioCommand, self).__init__(kind=wx.ITEM_RADIO, bitmap='', 
                                              *args, **kwargs)
         
+    def onUpdateUI(self, event):
+        if self.isSettingChecked():
+            super(UIRadioCommand, self).onUpdateUI(event)
+
     def isSettingChecked(self):
         return self.settings.get(self.section, self.setting) == str(self.value)
 

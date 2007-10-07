@@ -220,8 +220,9 @@ class SortableViewerForTasks(SortableViewer):
             'viewsortbytotaltimespent', 'viewsortbybudgetleft',
             'viewsortbytotalbudgetleft', 'viewsortbypriority',
             'viewsortbytotalpriority', 'viewsortbyhourlyfee',
-            'viewsortbyfixedfee', 'viewsortbyreminder', 
-            'viewsortbylastmodificationtime', 
+            'viewsortbyfixedfee', 'viewsortbytotalfixedfee',
+            'viewsortbyrevenue', 'viewsortbytotalrevenue', 
+            'viewsortbyreminder', 'viewsortbylastmodificationtime', 
             'viewsortbytotallastmodificationtime']
 
 
