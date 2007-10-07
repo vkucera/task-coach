@@ -45,6 +45,7 @@ OutputDir=../dist
 OutputBaseFilename=%(filename)s-%(version)s-win32
 ChangesAssociations=yes 
 WizardImageFile=..\icons.in\splash_inno.bmp
+PrivilegesRequired=none
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
@@ -60,10 +61,14 @@ Source: "%(filename)s-%(version)s-win32exe\*"; DestDir: "{app}"; Flags: ignoreve
 Filename: "{app}\%(filename)s.url"; Section: "InternetShortcut"; Key: "URL"; String: "%(url)s"
 
 [Registry]
-Root: HKCR; Subkey: ".tsk"; ValueType: string; ValueName: ""; ValueData: "TaskCoach"; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "TaskCoach"; ValueType: string; ValueName: ""; ValueData: "%(name)s File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "TaskCoach\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\%(filename)s.EXE,0"
-Root: HKCR; Subkey: "TaskCoach\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\%(filename)s.EXE"" ""%%1"""
+Root: HKCR; Subkey: ".tsk"; ValueType: string; ValueName: ""; ValueData: "TaskCoach"; Flags: uninsdeletevalue; Check: IsAdminLoggedOn
+Root: HKCR; Subkey: "TaskCoach"; ValueType: string; ValueName: ""; ValueData: "%(name)s File"; Flags: uninsdeletekey; Check: IsAdminLoggedOn
+Root: HKCR; Subkey: "TaskCoach\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\%(filename)s.EXE,0"; Check: IsAdminLoggedOn
+Root: HKCR; Subkey: "TaskCoach\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\%(filename)s.EXE"" ""%%1"""; Check: IsAdminLoggedOn
+Root: HKCU; Subkey: "Software\Classes\.tsk"; ValueType: string; ValueName: ""; ValueData: "TaskCoachFile"; Flags: uninsdeletevalue; Check: not IsAdminLoggedOn
+Root: HKCU; Subkey: "Software\Classes\TaskCoachFile"; ValueType: string; ValueName: ""; ValueData: "%(name)s File"; Flags: uninsdeletekey; Check: not IsAdminLoggedOn
+Root: HKCU; Subkey: "Software\Classes\TaskCoachFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\%(filename)s.EXE,0"; Check: not IsAdminLoggedOn
+Root: HKCU; Subkey: "Software\Classes\TaskCoachFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\%(filename)s.EXE"" ""%%1"""; Check: not IsAdminLoggedOn
 
 [Icons]
 Name: "{group}\%(name)s"; Filename: "{app}\%(filename)s.exe"; WorkingDir: "{app}"

@@ -7,7 +7,8 @@ releases = [
 Release('0.65.2', 'October 7, 2007',
     summary='This release is aimed at better performance.',
     bugsFixed=[
-        Bug('''Slow performance.''', '1806001', '1794007')]),
+        Bug('''Slow performance.''', '1806001', '1794007'),
+        Bug('''Don't require administrator priviliges on Windows XP/Vista.''')]),
         
 Release('0.65.1', 'September 23, 2007',
     summary='''This release fixes one critical bug and two minor bugs.''',
