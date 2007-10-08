@@ -76,7 +76,7 @@ class DynamicMenu(Menu):
             # lines below with this one:
             # myId = self._parentMenu.FindItem(self._labelInParentMenu)
             for item in self._parentMenu.MenuItems:
-                if item.ItemLabel == self._labelInParentMenu:
+                if item.GetText() == self._labelInParentMenu:
                     myId = item.Id
                     break
             else:
