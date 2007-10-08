@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.65.2', 'October 7, 2007',
+Release('0.65.2', 'October 8, 2007',
     summary='This release is aimed at better performance.',
     bugsFixed=[
         Bug('''Slow performance.''', '1806001', '1794007'),
