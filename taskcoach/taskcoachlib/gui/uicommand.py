@@ -3,7 +3,7 @@ from gui import render
 from i18n import _
 from domain import task, attachment
 from thirdparty import desktop
-
+import urllib
 
 ''' User interface commands (subclasses of UICommand) are actions that can
     be invoked by the user via the user interface (menu's, toolbar, etc.).
