@@ -261,6 +261,11 @@ pages['faq'] = \
     are just fine. The TaskCoach.ini file is located in C:\Documents and
     Settings\&lt;yourname&gt;\Application Data\TaskCoach if you're on Windows 
     and in /home/&lt;yourname&gt;/.TaskCoach if you're on Linux.</P>
+    <P><I>I'm on Windows and when installing a new version of %(name)s the
+    installer complains it cannot replace the MSVCP7.dll.</I></P>
+    <P>Make sure the old version of %(name)s is not still running, nor 
+    any applications started via %(name)s (e.g. a browser started by clicking 
+    on a link inside %(name)s).</P>
     <P><I>I'm on Linux and after running taskcoach.py I get the message 
     "ERROR: cannot import the library 'taskcoachlib' " and I was redirected 
     here.</I></P>
