@@ -17,7 +17,7 @@ class TaskBarIconTestCase(test.TestCase):
             self.settings)
 
     def tearDown(self):
-        if '__WXMAC__' in wx.PlatformInfo:
+        if '__WXMAC__' in wx.PlatformInfo: 
             self.icon.RemoveIcon()
         else:
             self.icon.Destroy()
