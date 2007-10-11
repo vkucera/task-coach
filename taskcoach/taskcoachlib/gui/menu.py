@@ -53,7 +53,7 @@ class DynamicMenu(Menu):
                  labelInParentMenu=None):
         super(DynamicMenu, self).__init__(mainwindow)
         self._parentMenu = parentMenu
-        self._labelInParentMenu = labelInParentMenu
+        self._labelInParentMenu = self.__GetLabelText(labelInParentMenu)
         self._uiCommands = uiCommands
         self._uiCommandNames = None
         patterns.Publisher().registerObserver(self.updateMenu, 
@@ -76,13 +76,16 @@ class DynamicMenu(Menu):
             # lines below with this one:
             # myId = self._parentMenu.FindItem(self._labelInParentMenu)
             for item in self._parentMenu.MenuItems:
-                if item.GetText() == self._labelInParentMenu:
+                if self.__GetLabelText(item.GetText()) == self._labelInParentMenu:
                     myId = item.Id
                     break
             else:
                 myId = wx.NOT_FOUND
             if myId != wx.NOT_FOUND:
                 self._parentMenu.Enable(myId, self.enabled())
+
+    def __GetLabelText(self, menuText):
+        return menuText.replace('&', '').replace('_', '')
 
     def updateMenuItems(self):
         newCommandNames = self.getUICommands()
