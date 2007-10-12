@@ -2,7 +2,7 @@ import patterns
 from domain import base, date
 
 
-class Sorter(base.Sorter):
+class Sorter(base.TreeSorter):
     EventTypePrefix = 'task'
     
     def __init__(self, *args, **kwargs):
@@ -28,7 +28,7 @@ class Sorter(base.Sorter):
 
     def rootItems(self):
         if self.__rootItems is None:
-            self.__rootItems = [item for item in self if item.parent() is None]
+            self.__rootItems = super(Sorter, self).rootItems()
         return self.__rootItems
 
     def sortByTaskStatusFirst(self, sortByTaskStatusFirst):

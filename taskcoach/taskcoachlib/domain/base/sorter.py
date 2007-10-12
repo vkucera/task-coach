@@ -68,3 +68,8 @@ class Sorter(patterns.ListDecorator):
 
     def _createEventTypeFromAttribute(self, attribute):
         return '%s.%s'%(self.EventTypePrefix, attribute)
+
+
+class TreeSorter(Sorter):
+    def rootItems(self):
+        return [item for item in self if item.parent() is None]

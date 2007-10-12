@@ -7,7 +7,8 @@ releases = [
 Release('0.65.3', 'October ?, 2007',
     summary='Bugfix release',
     bugsFixed=[
-        Bug('''Mail task doesn't work.''', '1810356')]),
+        Bug('''Mail task doesn't work.''', '1810356'),
+        Bug('''Categories not sorted correctly.''', '1810469')]),
 
 Release('0.65.2', 'October 8, 2007',
     summary='This release is aimed at better performance.',
