@@ -7,6 +7,8 @@ releases = [
 Release('0.65.3', 'October ?, 2007',
     summary='Bugfix release',
     bugsFixed=[
+        Bug('''Mail disappears from Outlook when dropped in TaskCoach. Try to
+use Outlook to open mail attachment when it's the "default" mailer.''', '1812399'),
         Bug('''Mail task doesn't work.''', '1810356'),
         Bug('''Categories not sorted correctly.''', '1810469')]),
 

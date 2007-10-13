@@ -1,6 +1,6 @@
 
 from thirdparty import desktop
-from mailer import readMail
+from mailer import readMail, openMail
 from i18n import _
 
 import os, shutil, tempfile
@@ -83,7 +83,7 @@ class MailAttachment(Attachment):
             self.description = description
 
     def open(self):
-        desktop.open(self.filename)
+        openMail(self.filename)
 
     def setDescription(self, description):
         self.description = description
