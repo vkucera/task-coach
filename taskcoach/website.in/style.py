@@ -35,8 +35,8 @@ footer = '''
                     <a href="index.html" title="%(name)s homepage">Home</a><br>
                     <a href="https://sourceforge.net/projects/taskcoach/"
                        title="%(name)s at Sourceforge">Sourceforge home</a><br>
-                    <a href="download.html" 
-                       title="Get %(name)s here">Download</a><br>
+                    <strong><em><a href="download.html" 
+                       title="Get %(name)s here">Download</a></em></strong><br>
                     <a href="screenshots.html" 
                        title="View some screenshots of %(name)s here">
                          Screenshots</a><br>
@@ -44,7 +44,7 @@ footer = '''
                        title="List of features in the current version of %(name)s">Features</a><br>
                     <a href="i18n.html">Translations</a><br>
                     <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Known bugs</a><br>
-                    <a href="http://taskcoach.blogspot.com">Blog</a><br>
+                    <a href="http://taskcoach.blogspot.com">Frank's blog</a><br>
                     <a href="changes.html">Change history</a><br>
                     <a href="roadmap.html" 
                        title="Future plans for %(name)s">Roadmap</a><br>

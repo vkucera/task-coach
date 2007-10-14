@@ -10,18 +10,25 @@ pages = {}
 pages['index'] = \
 '''        <P><IMG SRC="banner.png" ALT="Banner image"></P>
         <P>%(name)s is a simple open source todo manager to manage personal 
-        tasks and todo lists. It grew out of my frustration that well-known 
+        tasks and todo lists. It grew out of Frank's frustration that well-known 
         task managers, such as those provided with Outlook or Lotus Notes, do
         not provide facilities for composite tasks. Often, tasks and
         other things todo consist of several activities. %(name)s is
         designed to deal with composite tasks.</P>
-        <P>Currently, %(name)s is at version %(version)s. I use it on a daily
-        basis, but there are still a lot of features missing. If there's
-        anything you'd like to see included, please let me know.
-        <P>You might want to see some <A
-        HREF="screenshots.html">screenshots</A>, read the <A
-        HREF="license.html">license</A> (which is the %(license)s) or 
-        <A HREF="download.html">download</A> %(name)s.</P>
+        <P>%(name)s is developed by Frank Niessink and Jerome Laheurte, with 
+        help of different people providing translations. Currently, %(name)s 
+        is at version %(version)s. Many people use it on a daily basis, but 
+        there are still a lot of 
+        features missing. If there's anything you'd like to see included, 
+        <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">please let us know</a>.
+        <P>%(name)s is licensed under the %(license)s and free to use for both 
+        individuals and companies. If %(name)s is a useful product for you, 
+        please consider supporting the development of %(name)s. You can support 
+        further development by spreading the word, <A HREF="i18n.html">help 
+        translate</A> %(name)s in your language, 
+        <A HREF="devinfo.html">help develop</A> new features and/or 
+        <A HREF="donations.html">donate some money</A> (to help recover 
+        costs; any amount is appreciated).</P>
         <P>%(name)s is developed using a number of open source products.
         See <A HREF="credits.html">credits</A> for details.</P>
         <P>Enjoy, %(author)s &lt;%(author_email)s&gt;</P>
