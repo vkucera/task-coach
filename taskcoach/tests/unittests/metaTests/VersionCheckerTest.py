@@ -4,7 +4,8 @@ import meta.versionchecker as vc
 class VersionCheckerUnderTest(vc.VersionChecker):
     def __init__(self, *args, **kwargs):
         self.version = kwargs.pop('version')
-        self.fail = kwargs.pop('fail')
+        self.fail = kwargs.pop('fail', False)
+        self.userNotified = False
         super(VersionCheckerUnderTest, self).__init__(*args, **kwargs)
         
     def retrievePadFile(self):
@@ -19,17 +20,21 @@ class VersionCheckerUnderTest(vc.VersionChecker):
                                      '</Program_Info></XML_DIZ_INFO>'%self.version)
             
     def notifyUser(self, *args, **kwargs):
-        pass
+        self.userNotified = True
     
 
 class VersionCheckerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         
-    def assertLastVersionNotified(self, version, fail=False):
+    def checkVersion(self, version, fail=False):
         checker = VersionCheckerUnderTest(self.settings, version=version, 
                                           fail=fail)
         checker.run()
+        return checker
+        
+    def assertLastVersionNotified(self, version, fail=False):
+        self.checkVersion(version, fail)
         self.assertEqual(version, self.settings.get('version', 'notified'))
         
     def testLatestVersionIsNewerThanLastVersionNotified(self):
@@ -41,3 +46,7 @@ class VersionCheckerTest(test.TestCase):
     def testErrorWhileGettingPadFile(self):
         self.assertLastVersionNotified(meta.data.version, True)
         
+    def testDontNotifyWhenCurrentVersionIsNewerThanLastVersionNotified(self):
+        self.settings.set('version', 'notified', '0.0')
+        checker = self.checkVersion(meta.data.version)
+        self.failIf(checker.userNotified)
