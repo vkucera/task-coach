@@ -11,8 +11,8 @@ def readMail(filename, readContent=True):
 
     for line in file(filename, 'r'):
         if s == 0:
-            if line.lower().startswith('subject: '):
-                subject = line[9:].strip()
+            if line.lower().startswith('subject:'):
+                subject = line[8:].strip()
             if line.strip() == '':
                 if not readContent:
                     break
