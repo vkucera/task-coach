@@ -13,6 +13,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap
         self.__iconSize = self.__determineIconSize()
+        self.__iconCache = {}
         patterns.Publisher().registerObserver(self.onAddItem,
             eventType=self.__taskList.addItemEventType())
         patterns.Publisher().registerObserver(self.onRemoveItem, 
@@ -119,18 +120,23 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             self.__bitmap = self.__tickBitmap
 
     def __setIcon(self):
-        bmp = wx.ArtProvider_GetBitmap(self.__bitmap, wx.ART_FRAME_ICON,
-                                       self.__iconSize)
-        img = wx.ImageFromBitmap(bmp)
-        img.ConvertAlphaToMask()
-
-        # How to create an empty icon ?
-
-        icn = wx.ArtProvider_GetIcon(self.__bitmap, wx.ART_FRAME_ICON, 
-                                     self.__iconSize)
-        icn.CopyFromBitmap(img.ConvertToBitmap())
-
-        self.SetIcon(icn, self.__tooltipText)
+        icon = self.__getIcon(self.__bitmap, self.__iconSize)
+        self.SetIcon(icon, self.__tooltipText)
+        
+    def __getIcon(self, bitmap, iconSize):
+        ''' Return the icon, converting alpha channel to mask. Use a cache
+            to prevent leakage of GDI object count. '''
+        try:
+            return self.__iconCache[(bitmap, iconSize)]
+        except KeyError:
+            bmp = wx.ArtProvider_GetBitmap(bitmap, wx.ART_FRAME_ICON, iconSize)
+            image = wx.ImageFromBitmap(bmp)
+            image.ConvertAlphaToMask()
+            # How to create an empty icon ?
+            icon = wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON, iconSize)
+            icon.CopyFromBitmap(image.ConvertToBitmap())
+            self.__iconCache[(bitmap, iconSize)] = icon
+            return icon
 
     def __determineIconSize(self):
         if '__WXMAC__' in wx.PlatformInfo:
