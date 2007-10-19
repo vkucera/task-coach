@@ -1,6 +1,6 @@
 import meta, wx, patterns
 from i18n import _
-import domain.date as date
+from domain import date
         
 class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList, settings, 

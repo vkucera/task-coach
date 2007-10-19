@@ -5,8 +5,10 @@ from changetypes import *
 releases = [
 
 Release('0.65.3', 'October ?, 2007',
-    summary='Bugfix release',
+    summary='Bugfix release.',
     bugsFixed=[
+        Bug('''Don't leak GDI objects on Windows.''', '1813632', '1811058',
+            '1810297', '1806004', '1803085'),
         Bug('''Don't notify of new version when the user has just installed 
 that version.'''),
         Bug('''Mail disappears from Outlook when dropped in TaskCoach. Try to

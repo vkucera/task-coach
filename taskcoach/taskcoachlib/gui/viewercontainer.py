@@ -45,6 +45,9 @@ class ViewerContainer(object):
                 raise AttributeError
         return findFirstViewer
     
+    def __del__(self):
+        pass # Don't forward del to one of the viewers.
+    
     def __length_hint__(self):
         # Needed for python 2.5. Apparently, the call to list(self) above
         # silently calls self.__length_hint__(). If that method does not

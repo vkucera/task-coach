@@ -1389,14 +1389,15 @@ class DialogCommand(UICommand):
         
     def doCommand(self, event):
         self.closed = False
-        dialog = widgets.HTMLDialog(self._dialogTitle, self._dialogText, 
+        self.dialog = widgets.HTMLDialog(self._dialogTitle, self._dialogText, 
                                     bitmap=self.bitmap)
         for event in wx.EVT_CLOSE, wx.EVT_BUTTON:
-            dialog.Bind(event, self.onClose)
-        dialog.Show()
+            self.dialog.Bind(event, self.onClose)
+        self.dialog.Show()
         
     def onClose(self, event):
         self.closed = True
+        self.dialog.Destroy()
         event.Skip()
         
     def enabled(self, event):
