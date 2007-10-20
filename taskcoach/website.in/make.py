@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os, sys, glob
-sys.path.append('..')
+sys.path.insert(0, '..')
 from taskcoachlib import meta
 import style
 
