@@ -5,7 +5,9 @@ from changetypes import *
 releases = [
 
 Release('0.65.3', 'October 20, 2007',
-    summary='Bugfix release.',
+    summary='''This bugfix release fixes one critical bug that affects 
+users on the Windows platform and several minor bugs that affect users on all 
+platforms.''',
     bugsFixed=[
         Bug('''Don't leak GDI objects on Windows.''', '1813632', '1811058',
             '1810297', '1806004', '1803085'),
