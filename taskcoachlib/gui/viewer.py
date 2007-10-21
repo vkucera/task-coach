@@ -604,7 +604,6 @@ class ViewerWithColumns(Viewer):
                 break
 
     def showColumn(self, column, show=True):
-        self.widget.showColumn(column, show)
         if show:
             self.__visibleColumns.append(column)
             # Make sure we keep the columns in the right order:
@@ -614,6 +613,7 @@ class ViewerWithColumns(Viewer):
         else:
             self.__visibleColumns.remove(column)
             self.__stopObserving(column.eventTypes())
+        self.widget.showColumn(column, show)
         self.settings.set(self.settingsSection(), 'columns', 
             str([column.name() for column in self.__visibleColumns]))
         self.widget.RefreshItems()
@@ -668,7 +668,7 @@ class ViewerWithColumns(Viewer):
         column = self.visibleColumns()[column]
         return column.renderDescription(item)
 
-    def getItemImage(self, index, which, column=0):
+    def getItemImage(self, index, which, column=0): 
         item = self.getItemWithIndex(index)
         column = self.visibleColumns()[column]
         return column.imageIndex(item, which) 
