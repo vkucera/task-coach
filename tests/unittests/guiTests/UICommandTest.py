@@ -44,3 +44,6 @@ class UICommandsTest(test.wxTestCase):
         gui.uicommand.UICommands(self.frame, None, viewerContainer, None, 
             taskList, effortList, categories, note.NoteContainer())
 
+class MailTaskTest(test.TestCase):
+    def testCreate(self):
+        mailTask = gui.uicommand.TaskMail()

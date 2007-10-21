@@ -22,10 +22,11 @@ class Dialog(wx.Dialog):
         self._verticalSizer.Add(self._buttonBox, 0, wx.ALIGN_CENTER)
         self._panel.SetSizerAndFit(self._verticalSizer)
         self.SetSizerAndFit(self._panelSizer)
+        self.Bind(wx.EVT_CLOSE, self.onClose)
         if raiseDialog:
             wx.CallAfter(self.Raise)
         wx.CallAfter(self._panel.SetFocus)
-
+        
     def createButtonBox(self):
         return widgets.ButtonBox(self._panel, (_('OK'), self.ok), 
                                  (_('Cancel'), self.cancel))
@@ -33,18 +34,28 @@ class Dialog(wx.Dialog):
     def fillInterior(self):
         pass
         
-    def ok(self, *args, **kwargs):
-        self.Close()
+    def ok(self, event=None):
+        if event:
+            event.Skip()
+        self.Close(True)
+        self.Destroy()
         
-    def cancel(self, *args, **kwargs):
-        self.Close()
-
+    def cancel(self, event=None):
+        if event:
+            event.Skip()
+        self.Close(True)
+        self.Destroy()
+        
+    def onClose(self, event):
+        event.Skip()
+        self.Destroy()
+        
     def disableOK(self):
         self._buttonBox.disable(_('OK'))
         
     def enableOK(self):
         self._buttonBox.enable(_('OK'))
-          
+                 
            
 class BookDialog(Dialog):    
     def fillInterior(self):

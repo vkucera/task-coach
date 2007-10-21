@@ -4,8 +4,9 @@ from changetypes import *
 
 releases = [
 
-Release('0.66.0', 'September ?, 2007',
-    summary='''Added another translation.''',
+Release('0.66.0', 'October ?, 2007',
+    summary='''Small feature enhancements and a translation in 
+Traditional Chinese.''',
     featuresAdded=[
         Feature('Added Traditional Chinese translation thanks to Joey Weng.'),
         Feature('''Added an 'overall categories' column that recursively shows 
@@ -13,6 +14,36 @@ the categories a task belongs to, i.e. its own categories and the categories
 of its parent task(s).''', '1790054'),
         Feature('Column widths are saved between sessions.', '1799998')]),
         
+Release('0.65.3', 'October 20, 2007',
+    summary='''This bugfix release fixes one critical bug that affects 
+users on the Windows platform and several minor bugs that affect users on all 
+platforms.''',
+    bugsFixed=[
+        Bug('''Don't leak GDI objects on Windows.''', '1813632', '1811058',
+            '1810297', '1806004', '1803085'),
+        Bug('''Don't notify of new version when the user has just installed 
+that version.'''),
+        Bug('''Mail disappears from Outlook when dropped in TaskCoach. Try to
+use Outlook to open mail attachment when it's the "default" mailer.''', '1812399'),
+        Bug('''Mail task doesn't work.''', '1810356'),
+        Bug('''Categories not sorted correctly.''', '1810469')]),
+
+Release('0.65.2', 'October 8, 2007',
+    summary='This release is aimed at better performance.',
+    bugsFixed=[
+        Bug('''Slow performance.''', '1806001', '1794007'),
+        Bug('''Don't require administrator privileges for installation
+on Windows XP/Vista.''')]),
+        
+Release('0.65.1', 'September 23, 2007',
+    summary='''This release fixes one critical bug and two minor bugs.''',
+    bugsFixed=[
+        Bug('''Tooltip windows steals keyboard focus on some platforms.''',
+        '1791627'),
+        Bug('''Taskbar icon is not transparent on Linux.''', '1648082'),
+        Bug('''Saving a task file after adding attachments via the
+'add attachment' menu or context menu fails.''', '1796829')]),
+
 Release('0.65.0', 'September 9, 2007', 
     summary='''This release adds the ability to record notes, improves the 
 flexibility of the different views, and fixes several bugs.''',

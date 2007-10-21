@@ -193,6 +193,9 @@ class Notebook(Book, wx.Notebook):
 
 class Choicebook(Book, wx.Choicebook):
     pageChangedEvent = wx.EVT_CHOICEBOOK_PAGE_CHANGED
+    
+    def createImageList(self):
+        pass # Choicebooks have no icons
 
     def onDragOver(self, *args, **kwargs):
         ''' onDragOver cannot work for Choicebooks because the choice control

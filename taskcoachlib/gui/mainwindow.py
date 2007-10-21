@@ -63,7 +63,7 @@ class MainWindow(WindowWithPersistentDimensions):
         self.initWindowComponents()
         self.initWindow()
         self.registerForWindowComponentChanges()
-        wx.CallAfter(self.hideSplash)
+        wx.CallAfter(self.closeSplash)
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
@@ -129,9 +129,9 @@ class MainWindow(WindowWithPersistentDimensions):
         if self.settings.getboolean('window', 'tips'):
             help.showTips(self, self.settings)
             
-    def hideSplash(self):
+    def closeSplash(self):
         if self.splash:
-            self.splash.Hide()
+            self.splash.Destroy()
                          
     def onShowStatusBar(self, *args, **kwargs):
         self.showStatusBar(self.settings.getboolean('view', 'statusbar'))

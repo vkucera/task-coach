@@ -15,13 +15,13 @@ class Sorter(patterns.ListDecorator):
     def sortEventType(self):
         return '%s(%s).sorted'%(self.__class__, id(self))
     
-    def extendSelf(self, items):
-        super(Sorter, self).extendSelf(items)
+    def extendSelf(self, *args, **kwargs):
+        super(Sorter, self).extendSelf(*args, **kwargs)
         self.reset()
 
-    # We don't override removeItemsFromSelf because there is no need to 
-    # call self.reset() when items are removed since after removing items
-    # the remaining items are still in the right order.
+    # We don't implement removeItemsFromSelf() because there is no need 
+    # to resort when items are removed since after removing items the 
+    # remaining items are still in the right order.
 
     def sortBy(self, sortKey):
         if sortKey == self._sortKey:
@@ -39,9 +39,6 @@ class Sorter(patterns.ListDecorator):
         self._sortCaseSensitive = caseSensitive
         self.reset()
     
-    def rootItems(self):
-        return [item for item in self if item.parent() is None]
-
     def reset(self, event=None):
         ''' reset does the actual sorting. If the order of the list changes, 
             observers are notified by means of the list-sorted event. '''
@@ -71,3 +68,8 @@ class Sorter(patterns.ListDecorator):
 
     def _createEventTypeFromAttribute(self, attribute):
         return '%s.%s'%(self.EventTypePrefix, attribute)
+
+
+class TreeSorter(Sorter):
+    def rootItems(self):
+        return [item for item in self if item.parent() is None]

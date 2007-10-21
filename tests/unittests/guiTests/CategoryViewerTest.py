@@ -27,3 +27,11 @@ class CategoryViewerTest(test.wxTestCase):
         self.categories.append(copy)
         self.viewer.expandAll()
         self.assertEqual(4, self.viewer.size())
+
+    def testSortInWidget(self):
+        cat1 = category.Category('1')
+        cat2 = category.Category('2')
+        self.categories.extend([cat2, cat1])
+        widget = self.viewer.widget
+        for item, cat in zip(widget.GetItemChildren(), self.viewer.model()):
+            self.assertEqual(cat.subject(), widget.GetItemText(item))

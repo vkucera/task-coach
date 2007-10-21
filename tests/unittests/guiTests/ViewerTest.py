@@ -673,6 +673,9 @@ class MockWidget(object):
     def RefreshItem(self, index):
         self.refreshedItems.append(index)
     
+    def curselection(self):
+        return []
+
 
 class UpdatePerSecondViewerTests(object):
     def setUp(self):

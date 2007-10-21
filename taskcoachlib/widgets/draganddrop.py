@@ -60,7 +60,8 @@ class DropTarget(wx.DropTarget):
     def OnDragOver(self, x, y, result):
         if self.__onDragOverCallback is None:
             return result
-        return self.__onDragOverCallback(x, y, result)
+        self.__onDragOverCallback(x, y, result)
+        return wx.DragCopy
 
     def OnDrop(self, x, y):
         return True
@@ -86,4 +87,4 @@ class DropTarget(wx.DropTarget):
                     for mail in outlook.getCurrentSelection():
                         self.__onDropMailCallback(x, y, mail)
         self.reinit()
-        return result
+        return wx.DragCopy

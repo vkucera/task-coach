@@ -1,4 +1,5 @@
 import wx, os, re, tempfile
+from thirdparty import desktop
 from i18n import _
 
 def readMail(filename, readContent=True):
@@ -10,8 +11,8 @@ def readMail(filename, readContent=True):
 
     for line in file(filename, 'r'):
         if s == 0:
-            if line.lower().startswith('subject: '):
-                subject = line[9:].strip()
+            if line.lower().startswith('subject:'):
+                subject = line[8:].strip()
             if line.strip() == '':
                 if not readContent:
                     break
@@ -35,3 +36,41 @@ def readMail(filename, readContent=True):
     content = content.decode(encoding)
 
     return subject, content
+
+def openMailWithOutlook(filename):
+    id_ = None
+    for line in file(filename, 'r'):
+        if line.startswith('X-Outlook-ID:'):
+            id_ = line[13:].strip()
+            break
+        elif line.strip() == '':
+            break
+
+    if id_ is None:
+        return False
+
+    from win32com.client import GetActiveObject
+    app = GetActiveObject('Outlook.Application')
+    app.ActiveExplorer().Session.GetItemFromID(id_).Display()
+
+    return True
+
+def openMail(filename):
+    if os.name == 'nt':
+        # Find out if Outlook is the so-called 'default' mailer.
+        import _winreg
+        key = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT,
+                              r'mailto\shell\open\command')
+        try:
+            value, type_ = _winreg.QueryValueEx(key, '')
+            if type_ in [_winreg.REG_SZ, _winreg.REG_EXPAND_SZ]:
+                if 'outlook.exe' in value.lower():
+                    try:
+                        if openMailWithOutlook(filename):
+                            return
+                    except:
+                        pass
+        finally:
+            _winreg.CloseKey(key)
+
+    desktop.open(filename)

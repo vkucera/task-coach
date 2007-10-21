@@ -4,7 +4,7 @@
 
 PYTHON="python" # python should be on the path
 
-ifeq ($(shell uname),CYGWIN_NT-5.1)
+ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
 endif
 
@@ -20,7 +20,7 @@ sdist: icons changes i18n
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
 rpm: icons changes i18n
-	$(PYTHON) make.py bdist_rpm --requires "python>=2.5,python-wxgtk>=2.8.4,python-wxaddons" --group "Applications/Productivity"
+	$(PYTHON) make.py bdist_rpm --requires "python2.5,python-wxgtk2.8" --group "Applications/Productivity"
 
 deb: rpm
 	export EMAIL="frank@niessink.com"

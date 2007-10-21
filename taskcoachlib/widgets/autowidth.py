@@ -53,7 +53,7 @@ class AutoColumnWidthMixin(object):
             return # Avoid a potential PyDeadObject error
         if self.GetSize().height < 32:
             return # Avoid an endless update bug when the height is small.
-        if self.GetColumnCount() == 0:
+        if self.GetColumnCount() <= self.ResizeColumn:
             return # Nothing to resize.
 
         resizeColumnWidth = self.ResizeColumnMinWidth

@@ -1,4 +1,4 @@
-import wx, uicommand
+import wx, uicommand, patterns
 from i18n import _
 
 
@@ -53,24 +53,39 @@ class DynamicMenu(Menu):
                  labelInParentMenu=None):
         super(DynamicMenu, self).__init__(mainwindow)
         self._parentMenu = parentMenu
-        self._labelInParentMenu = labelInParentMenu
+        self._labelInParentMenu = self.__GetLabelText(labelInParentMenu)
         self._uiCommands = uiCommands
         self._uiCommandNames = None
-        mainwindow.Bind(wx.EVT_UPDATE_UI, self.onUpdateUI)
-
-    def onUpdateUI(self, event):
-        self.updateUI()
-        event.Skip()
+        patterns.Publisher().registerObserver(self.updateMenu, 
+            mainwindow.viewer.viewerChangeEventType())
+        self.updateMenu()
         
-    def updateUI(self):
+    def updateMenu(self, event=None):
+        # Rebuilding the menu may take some time, so do it in idle time
+        wx.CallAfter(self.updateMenuInIdleTime)
+    
+    def updateMenuInIdleTime(self):
         self.updateMenuItemInParentMenu()
         self.updateMenuItems()
-        
+            
     def updateMenuItemInParentMenu(self):
         if self._parentMenu:
-            myId = self._parentMenu.FindItem(self._labelInParentMenu)
+            # I'd rather use wx.Menu.FindItem, but it seems that that 
+            # method currently does not work for menu items with accelerators 
+            # (wxPython 2.8.6 on Ubuntu). When that is fixed replace the 7
+            # lines below with this one:
+            # myId = self._parentMenu.FindItem(self._labelInParentMenu)
+            for item in self._parentMenu.MenuItems:
+                if self.__GetLabelText(item.GetText()) == self._labelInParentMenu:
+                    myId = item.Id
+                    break
+            else:
+                myId = wx.NOT_FOUND
             if myId != wx.NOT_FOUND:
                 self._parentMenu.Enable(myId, self.enabled())
+
+    def __GetLabelText(self, menuText):
+        return menuText.replace('&', '').replace('_', '')
 
     def updateMenuItems(self):
         newCommandNames = self.getUICommands()

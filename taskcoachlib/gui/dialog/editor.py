@@ -225,32 +225,42 @@ class EffortPage(TaskEditorPage):
     def __init__(self, parent, theTask, taskList, settings, uiCommands, 
                  *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
-        self._viewerContainer = viewercontainer.ViewerChoicebook(self, settings, 
-            'effortviewerintaskeditor')
+        self._viewerContainer = viewercontainer.ViewerChoicebook(self, 
+            settings, 'effortviewerintaskeditor')
         singleTaskList = task.SingleTaskList()
-        self.addEffortViewers(singleTaskList, uiCommands, settings)
-        self.add(self._viewerContainer, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
+        self.addEffortViewers(singleTaskList, uiCommands, settings)       
+        self.add(self._viewerContainer, proportion=1, flag=wx.EXPAND|wx.ALL, 
+                 border=5)
         singleTaskList.append(theTask)
+        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self.fit()
+        
+    def onClose(self, event):
+        # Don't notify the viewers about any changes anymore, they are about
+        # to be deleted.
+        for viewer in self._viewerContainer:
+            viewer.detach()
+        event.Skip()
     
     def addEffortViewers(self, taskList, uiCommands, settings):
         effortViewer = viewer.EffortListViewer(self._viewerContainer, taskList, 
-            uiCommands, settings, settingsSection='effortlistviewerintaskeditor')
-        self._viewerContainer.addViewer(effortViewer, _('Effort details'), 'start')
+            uiCommands, settings, 
+            settingsSection='effortlistviewerintaskeditor')
+        self._viewerContainer.addViewer(effortViewer, _('Effort details')) 
         effortPerDayViewer = viewer.EffortPerDayViewer(self._viewerContainer,
             taskList, uiCommands, settings, 
             settingsSection='effortperdayviewerintaskeditor')
-        self._viewerContainer.addViewer(effortPerDayViewer, _('Effort per day'), 'date')
+        self._viewerContainer.addViewer(effortPerDayViewer, _('Effort per day'))
         effortPerWeekViewer = viewer.EffortPerWeekViewer(self._viewerContainer,
             taskList, uiCommands, settings, 
             settingsSection='effortperweekviewerintaskeditor')
-        self._viewerContainer.addViewer(effortPerWeekViewer, _('Effort per week'), 
-            'date')
+        self._viewerContainer.addViewer(effortPerWeekViewer, 
+            _('Effort per week'))
         effortPerMonthViewer = viewer.EffortPerMonthViewer(self._viewerContainer,
             taskList, uiCommands, settings, 
             settingsSection='effortpermonthviewerintaskeditor')
-        self._viewerContainer.addViewer(effortPerMonthViewer, _('Effort per month'), 
-            'date')    
+        self._viewerContainer.addViewer(effortPerMonthViewer, 
+            _('Effort per month'))    
 
 
 class CategoriesPage(TaskEditorPage):
@@ -605,8 +615,8 @@ class EditorWithCommand(widgets.NotebookDialog):
         super(EditorWithCommand, self).__init__(parent, command.name(), *args, **kwargs)
         
     def ok(self, *args, **kwargs):
-        super(EditorWithCommand, self).ok(*args, **kwargs)
         self._command.do()
+        super(EditorWithCommand, self).ok(*args, **kwargs)
 
             
 class TaskEditor(EditorWithCommand):
