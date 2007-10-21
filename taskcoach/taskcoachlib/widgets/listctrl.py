@@ -109,7 +109,6 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
         self.selectCommand()            
 
 
-
 class ListCtrl(VirtualListCtrl):
     pass
     
