@@ -78,7 +78,7 @@ class DragAndDropNoteCommand(NoteCommandTestCase):
         self.grandchild = note.Note('grandchild')
         self.parent.addChild(self.child)
         self.child.addChild(self.grandchild)
-        self.notes.extend([self.parent, self.child])
+        self.notes.extend([self.parent])
     
     def dragAndDrop(self, dropTarget, notes=None):
         command.DragAndDropNoteCommand(self.notes, notes or [], 

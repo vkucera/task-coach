@@ -1,16 +1,19 @@
+#!/usr/bin/env python
+
 '''
 Release steps:
-- get latest translations from launchpad
+- Get latest translations from launchpad
 - make clean all 
 - make alltests 
-- Run this script to upload the distributions to sourceforge, generate MD5 
-  digests and publish to Sourceforge Website, Chello (my ISP) and PyPI 
-  (Python Package Index).
-- Add file releases on sourceforge.net by hand
+- Run this script (phase1) to upload the distributions to sourceforge, 
+  generate MD5 digests and generate website.
+- Add file releases on sourceforge.net by hand.
+- Run this script (phase2) to publish to Sourceforge Website, Chello (my ISP) 
+  and PyPI (Python Package Index).
 - Post project news on sourceforge.net by hand.
 - Post release notification on freshmeat.net by hand.
-- Tag source code: cvs tag ReleaseX_Y.
 - Email taskcoach@yahoogroups.com and python-announce@python.org.
+- Tag source code: cvs tag ReleaseX_Y.
 - Add release to Sourceforge bug tracker groups.
 '''
 
@@ -96,13 +99,18 @@ def registerWithPyPI():
     from distutils.core import setup
     import sys, os
     os.environ['HOME'] = '.'
+    del sys.argv[1:]
     sys.argv.append('register')
     setup(**setupOptions)
     print 'Done registering with PyPI.'
 
-uploadDistributionsToSourceForge()
-generateMD5Digests()
-generateWebsite()
-ftpWebsiteToChello()
-scpWebsiteToSourceForge()
-registerWithPyPI()
+if len(sys.argv) > 1 and sys.argv[1] == 'phase1':
+    uploadDistributionsToSourceForge()
+    generateMD5Digests()
+    generateWebsite()
+elif len(sys.argv) > 1 and sys.argv[1] == 'phase2':
+    ftpWebsiteToChello()
+    scpWebsiteToSourceForge()
+    registerWithPyPI()
+else:
+    print 'Please enter release phase (phase1 or phase2)'

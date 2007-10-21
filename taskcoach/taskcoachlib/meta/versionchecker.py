@@ -1,5 +1,4 @@
 import threading, wx, meta, urllib2
-from i18n import _
 import gui.dialog.version
 
 # We don't use cElementTree because py2exe somehow does not
@@ -21,7 +20,7 @@ class VersionChecker(threading.Thread):
     def run(self):
         latestVersion = self.getLatestVersion()
         lastVersionNotified = self.settings.get('version', 'notified')
-        if latestVersion > lastVersionNotified:
+        if latestVersion > lastVersionNotified and latestVersion > meta.data.version:
             self.settings.set('version', 'notified', latestVersion)
             self.notifyUser(latestVersion)
             

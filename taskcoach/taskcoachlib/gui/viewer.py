@@ -220,8 +220,9 @@ class SortableViewerForTasks(SortableViewer):
             'viewsortbytotaltimespent', 'viewsortbybudgetleft',
             'viewsortbytotalbudgetleft', 'viewsortbypriority',
             'viewsortbytotalpriority', 'viewsortbyhourlyfee',
-            'viewsortbyfixedfee', 'viewsortbyreminder', 
-            'viewsortbylastmodificationtime', 
+            'viewsortbyfixedfee', 'viewsortbytotalfixedfee',
+            'viewsortbyrevenue', 'viewsortbytotalrevenue', 
+            'viewsortbyreminder', 'viewsortbylastmodificationtime', 
             'viewsortbytotallastmodificationtime']
 
 
@@ -403,6 +404,10 @@ class ListViewer(Viewer):
     
 
 class TreeViewer(Viewer):
+    def __init__(self, *args, **kwargs):
+        self.__itemsByIndex = dict()
+        super(TreeViewer, self).__init__(*args, **kwargs)
+
     def expandAll(self):
         self.widget.expandAllItems()
 
@@ -411,7 +416,7 @@ class TreeViewer(Viewer):
         
     def expandSelected(self):
         self.widget.expandSelectedItems()
-        
+
     def collapseSelected(self):
         self.widget.collapseSelectedItems()
         
@@ -423,7 +428,19 @@ class TreeViewer(Viewer):
         
     def isTreeViewer(self):
         return True
-        
+
+    def onAddItem(self, *args, **kwargs):
+        self.__itemsByIndex = dict()
+        super(TreeViewer, self).onAddItem(*args, **kwargs)
+
+    def onRemoveItem(self, *args, **kwargs):
+        self.__itemsByIndex = dict()
+        super(TreeViewer, self).onRemoveItem(*args, **kwargs)
+
+    def onSorted(self, *args, **kwargs):
+        self.__itemsByIndex = dict()
+        super(TreeViewer, self).onSorted(*args, **kwargs)
+    
     def visibleItems(self):
         ''' Iterate over the items in the model. '''            
         def yieldAllChildren(parent):
@@ -438,10 +455,24 @@ class TreeViewer(Viewer):
                 yield child
 
     def getItemWithIndex(self, index):
-        children = self.model().rootItems()
-        for i in index:
+        ''' Return the item in the model with the specified index. index
+            is a tuple of indices that specifies the path to the item. E.g.,
+            (0,2,1) is (read the tuple from right to left) the second child 
+            of the third child of the first root item. '''
+        # This is performance critical code
+        try:
+            return self.__itemsByIndex[index]
+        except KeyError:
+            pass
+        model = self.model()
+        children = model.rootItems()
+        for i in index[:-1]:
             item = children[i]
-            children = [child for child in self.model() if child in item.children()]
+            childIndices = [model.index(child) for child in item.children() \
+                            if child in model]
+            childIndices.sort()
+            children = [model[childIndex] for childIndex in childIndices]
+        self.__itemsByIndex[index] = item = children[index[-1]]
         return item
 
     def getIndexOfItem(self, item):
@@ -532,6 +563,7 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
 class ViewerWithColumns(Viewer):
     def __init__(self, *args, **kwargs):
         self.__initDone = False
+        self.__visibleColumns = []
         super(ViewerWithColumns, self).__init__(*args, **kwargs)
         self.initColumns()
         self.__initDone = True
@@ -559,24 +591,31 @@ class ViewerWithColumns(Viewer):
             show = column.name() in self.settings.getlist(self.settingsSection(), 'columns')
             self.widget.showColumn(column, show=show)
         if show:
+            self.__visibleColumns.append(column)
             self.__startObserving(column.eventTypes())
     
     def showColumnByName(self, columnName, show=True):
         for column in self.hideableColumns():
             if columnName == column.name():
-                self.showColumn(column, show)
+                isVisibleColumn = self.isVisibleColumn(column)
+                if (show and not isVisibleColumn) or \
+                   (not show and isVisibleColumn):
+                    self.showColumn(column, show)
                 break
 
     def showColumn(self, column, show=True):
-        visibleColumns = self.settings.getlist(self.settingsSection(), 'columns')
-        if show:
-            self.__startObserving(column.eventTypes())
-            visibleColumns.append(column.name())
-        else:
-            self.__stopObserving(column.eventTypes())
-            visibleColumns.remove(column.name())
-        self.settings.set(self.settingsSection(), 'columns', str(visibleColumns))
         self.widget.showColumn(column, show)
+        if show:
+            self.__visibleColumns.append(column)
+            # Make sure we keep the columns in the right order:
+            self.__visibleColumns = [c for c in self.columns() if \
+                                     c in self.__visibleColumns]
+            self.__startObserving(column.eventTypes())
+        else:
+            self.__visibleColumns.remove(column)
+            self.__stopObserving(column.eventTypes())
+        self.settings.set(self.settingsSection(), 'columns', 
+            str([column.name() for column in self.__visibleColumns]))
         self.widget.RefreshItems()
 
     def hideColumn(self, visibleColumnIndex):
@@ -592,15 +631,13 @@ class ViewerWithColumns(Viewer):
         return self._columns
     
     def isVisibleColumnByName(self, columnName):
-        return columnName in (self.settings.getlist(self.settingsSection(), 
-            'columnsalwaysvisible') + self.settings.getlist(self.settingsSection(), 'columns'))
+        return columnName in [column.name() for column in self.__visibleColumns]
         
     def isVisibleColumn(self, column):
-        return self.isVisibleColumnByName(column.name())
+        return column in self.__visibleColumns
     
     def visibleColumns(self):
-        return [column for column in self._columns if \
-                self.isVisibleColumn(column)]
+        return self.__visibleColumns
         
     def hideableColumns(self):
         return [column for column in self._columns if column.name() not in \

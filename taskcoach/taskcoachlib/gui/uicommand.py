@@ -1,9 +1,9 @@
 import wx, patterns, gui, meta, command, help, widgets, persistence
 from gui import render
 from i18n import _
-from domain import task
+from domain import task, attachment
 from thirdparty import desktop
-
+import urllib
 
 ''' User interface commands (subclasses of UICommand) are actions that can
     be invoked by the user via the user interface (menu's, toolbar, etc.).
@@ -193,6 +193,10 @@ class UIRadioCommand(BooleanSettingsCommand):
         super(UIRadioCommand, self).__init__(kind=wx.ITEM_RADIO, bitmap='', 
                                              *args, **kwargs)
         
+    def onUpdateUI(self, event):
+        if self.isSettingChecked():
+            super(UIRadioCommand, self).onUpdateUI(event)
+
     def isSettingChecked(self):
         return self.settings.get(self.section, self.setting) == str(self.value)
 
@@ -1160,7 +1164,7 @@ class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
         if filename:
             addAttachmentCommand = command.AddAttachmentToTaskCommand( \
                 self.taskList, self.viewer.curselection(), 
-                attachments=[filename])
+                attachments=[attachment.FileAttachment(filename)])
             addAttachmentCommand.do()
 
 
@@ -1258,8 +1262,9 @@ class EffortStop(TaskListCommand):
         stop.do()
 
     def enabled(self, event):
-        return bool([task for task in self.taskList if \
-                     task.isBeingTracked()])
+        # FIXME: when support for python 2.4 is dropped use:
+        # return any(True for task in self.taskList if task.isBeingTracked())
+        return True in (True for task in self.taskList if task.isBeingTracked())
 
 
 class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
@@ -1384,14 +1389,15 @@ class DialogCommand(UICommand):
         
     def doCommand(self, event):
         self.closed = False
-        dialog = widgets.HTMLDialog(self._dialogTitle, self._dialogText, 
+        self.dialog = widgets.HTMLDialog(self._dialogTitle, self._dialogText, 
                                     bitmap=self.bitmap)
         for event in wx.EVT_CLOSE, wx.EVT_BUTTON:
-            dialog.Bind(event, self.onClose)
-        dialog.Show()
+            self.dialog.Bind(event, self.onClose)
+        self.dialog.Show()
         
     def onClose(self, event):
         self.closed = True
+        self.dialog.Destroy()
         event.Skip()
         
     def enabled(self, event):
@@ -1612,21 +1618,21 @@ class UICommands(dict, ViewColumnUICommandsMixin):
              (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
              (_('D&ays left'), _('Sort tasks by number of days left'), 'timeLeft'),
              (_('&Budget'), _('Sort tasks by budget'), 'budget'),
-             (_('Total b&udget'), _('Sort tasks by total budget'), 'totalbudget'),
+             (_('Total b&udget'), _('Sort tasks by total budget'), 'totalBudget'),
              (_('&Time spent'), _('Sort tasks by time spent'), 'timeSpent'),
-             (_('T&otal time spent'), _('Sort tasks by total time spent'), 'totaltimeSpent'),
+             (_('T&otal time spent'), _('Sort tasks by total time spent'), 'totalTimeSpent'),
              (_('Budget &left'), _('Sort tasks by budget left'), 'budgetLeft'),
-             (_('Total budget l&eft'), _('Sort tasks by total budget left'), 'totalbudgetLeft'),
+             (_('Total budget l&eft'), _('Sort tasks by total budget left'), 'totalBudgetLeft'),
              (_('&Priority'), _('Sort tasks by priority'), 'priority'),
-             (_('Overall priority'), _('Sort tasks by overall priority'), 'totalpriority'),
+             (_('Overall priority'), _('Sort tasks by overall priority'), 'totalPriority'),
              (_('&Hourly fee'), _('Sort tasks by hourly fee'), 'hourlyFee'),
              (_('&Fixed fee'), _('Sort tasks by fixed fee'), 'fixedFee'),
-             (_('Total fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalfixedFee'),
+             (_('Total fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalFixedFee'),
              (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
-             (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalrevenue'),
+             (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalRevenue'),
              (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder'),
              (_('Last modification time'), _('Sort tasks by last modification time'), 'lastModificationTime'),
-             (_('Overall last modification time'), _('Sort tasks by overall last modification time'), 'totallastModificationTime')]:
+             (_('Overall last modification time'), _('Sort tasks by overall last modification time'), 'totalLastModificationTime')]:
             key = 'viewsortby' + value.lower()
             self[key] = ViewerSortByCommand(viewer=viewer, value=value,
                 menuText=menuText, helpText=helpText)
