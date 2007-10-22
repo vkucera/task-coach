@@ -62,6 +62,27 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
             for name, value in self.items(copyFromSection):
                 self.set(section, name, value)
         return result
+
+    def get(self, section, option):
+        try:
+            return super(Settings, self).get(section, option)
+        except ConfigParser.NoOptionError:
+            if section[-1].isdigit(): 
+                # Find a section that has this setting. Normally, if the 
+                # section exists, the setting should exist also. But, changes 
+                # in the .ini format may cause sections not to have all 
+                # settings yet.
+                import re
+                sectionName, sectionNumber = re.match('(\w+)(\d+)', 
+                                                      section).groups()
+                sectionNumber = int(sectionNumber) 
+                if sectionNumber > 1:
+                    section = sectionName + str(sectionNumber - 1)
+                else:
+                    section = sectionName 
+                return self.get(section, option) # recursive call
+            else:
+                raise
                 
     def set(self, section, option, value):
         super(Settings, self).set(section, option, value)
