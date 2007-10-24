@@ -746,7 +746,16 @@ class RenameViewer(SettingsCommand, ViewerCommand):
         if dialog.ShowModal() == wx.ID_OK:
             self.viewer.setTitle(dialog.GetValue())
         dialog.Destroy()
+        
+        
+class ActivateViewer(ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        self.direction = kwargs.pop('forward')
+        super(ActivateViewer, self).__init__(*args, **kwargs)
 
+    def doCommand(self, event):
+        self.viewer.AdvanceSelection(self.direction)
+        
 
 class HideCurrentColumn(ViewerCommand):
     def __init__(self, *args, **kwargs):
@@ -1581,6 +1590,14 @@ class UICommands(dict, ViewColumnUICommandsMixin):
 
         # View commands
         self['renameviewer'] = RenameViewer(viewer=viewer, settings=settings)
+        self['activatenextviewer'] = ActivateViewer(viewer=viewer,
+            menuText=_('&Activate next viewer\tCtrl+PgDn'),
+            helpText=_('Activate the next open viewer'), forward=True,
+            bitmap='activatenextviewer')
+        self['activatepreviousviewer'] = ActivateViewer(viewer=viewer,
+            menuText=_('Activate &previous viewer\tCtrl+PgUp'),
+            helpText=_('Activate the previous open viewer'), forward=False,
+            bitmap='activatepreviousviewer')
         self['resetfilter'] = ResetFilter(viewer=viewer)
         self['hidecompletedtasks'] = ViewerHideCompletedTasks(viewer=viewer)
         self['hideinactivetasks'] = ViewerHideInactiveTasks(viewer=viewer)

@@ -214,10 +214,15 @@ class ViewMenu(Menu):
         super(ViewMenu, self).__init__(mainwindow)
         self.appendMenu(_('&New viewer'), 
             ViewViewerMenu(mainwindow, uiCommands, settings), 'viewnewviewer')
-        self.appendUICommands(uiCommands, ['renameviewer', None])
-        self.appendMenu(_('&Filter'), FilterMenu(mainwindow, uiCommands, self, _('&Filter')))
-        self.appendMenu(_('&Sort'), SortMenu(mainwindow, uiCommands, self, _('&Sort')))
-        self.appendMenu(_('&Columns'), ColumnMenu(mainwindow, uiCommands, self, _('&Columns')))
+        self.appendUICommands(uiCommands,
+            ['activatenextviewer', 'activatepreviousviewer', 'renameviewer', 
+             None])
+        self.appendMenu(_('&Filter'), 
+            FilterMenu(mainwindow, uiCommands, self, _('&Filter')))
+        self.appendMenu(_('&Sort'),
+            SortMenu(mainwindow, uiCommands, self, _('&Sort')))
+        self.appendMenu(_('&Columns'), 
+            ColumnMenu(mainwindow, uiCommands, self, _('&Columns')))
         self.appendUICommands(uiCommands, [None])
         self.appendMenu(_('&Tree options'), 
             ViewTreeOptionsMenu(mainwindow, uiCommands), 'treeview')

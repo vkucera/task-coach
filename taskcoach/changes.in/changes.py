@@ -12,7 +12,9 @@ Traditional Chinese.''',
         Feature('''Added an 'overall categories' column that recursively shows 
 the categories a task belongs to, i.e. its own categories and the categories
 of its parent task(s).''', '1790054'),
-        Feature('Column widths are saved between sessions.', '1799998')]),
+        Feature('Column widths are saved between sessions.', '1799998'),
+        Feature('''Ctrl-PageUp and Ctrl-PageDown can be used to cycle through 
+open viewers.''', '1818428')]),
         
 Release('0.65.3', 'October 20, 2007',
     summary='''This bugfix release fixes one critical bug that affects 
