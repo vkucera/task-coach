@@ -249,3 +249,19 @@ class AUINotebook(Book, wx.aui.AuiNotebook):
         wx.aui.AuiNotebook.AddPage(self, page, name, bitmap=bitmap)
         if self.GetPageCount() > 1:
             self.SetWindowStyle(self.GetWindowStyleFlag() | wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
+
+    def AdvanceSelection(self, forward=True):
+        ''' This method is part of the Notebook API but missing from the 
+            AuiNotebook API. '''
+        if self.PageCount <= 1:
+            return # Not enough viewers to advance selection
+        if forward:
+            if 0 <= self.Selection < self.PageCount - 1:
+                self.Selection += 1
+            else:
+                self.Selection = 0
+        else:
+            if 1 <= self.Selection < self.PageCount:
+                self.Selection -= 1
+            else:
+                self.Selection = self.PageCount - 1
