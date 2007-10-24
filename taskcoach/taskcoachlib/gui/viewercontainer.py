@@ -15,7 +15,7 @@ class ViewerContainer(object):
         
     def addViewer(self, viewer, pageName, bitmap=''):
         self.AddPage(viewer, pageName, bitmap)
-        if self.GetPageCount() - 1 == self.__desiredPageNumber:
+        if self.PageCount - 1 == self.__desiredPageNumber:
             # We need to use CallAfter because the AuiNotebook doesn't allow
             # PAGE_CHANGING events while the window is not active. See 
             # widgets/notebook.py
