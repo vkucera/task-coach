@@ -756,6 +756,9 @@ class ActivateViewer(ViewerCommand):
     def doCommand(self, event):
         self.viewer.AdvanceSelection(self.direction)
         
+    def enabled(self, event):
+        return self.viewer.PageCount > 1
+        
 
 class HideCurrentColumn(ViewerCommand):
     def __init__(self, *args, **kwargs):
