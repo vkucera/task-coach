@@ -15,23 +15,38 @@ class CategoryViewerTest(test.wxTestCase):
                 self.effortList, self.categories, note.NoteContainer()), 
             self.settings)
         
+    def addTwoCategories(self):
+        cat1 = category.Category('1')
+        cat2 = category.Category('2')
+        self.categories.extend([cat2, cat1])
+        return cat1, cat2
+        
     def testInitialSize(self):
         self.assertEqual(0, self.viewer.size())
 
     def testCopyCategoryWithChildren(self):
-        parent = category.Category('parent')
-        child = category.Category('child')
+        parent, child = self.addTwoCategories()
         parent.addChild(child)
-        self.categories.append(parent)
         copy = parent.copy()
         self.categories.append(copy)
         self.viewer.expandAll()
         self.assertEqual(4, self.viewer.size())
 
     def testSortInWidget(self):
-        cat1 = category.Category('1')
-        cat2 = category.Category('2')
-        self.categories.extend([cat2, cat1])
+        self.addTwoCategories()
         widget = self.viewer.widget
         for item, cat in zip(widget.GetItemChildren(), self.viewer.model()):
             self.assertEqual(cat.subject(), widget.GetItemText(item))
+            
+    def testSelectAll(self):
+        self.addTwoCategories()
+        self.viewer.widget.SelectItem(self.viewer.widget.GetFirstVisibleItem())
+        self.viewer.selectall()
+        self.assertEqual(2, len(self.viewer.curselection()))
+        
+    def testInvertSelection(self):
+        self.addTwoCategories()
+        self.viewer.invertselection()
+        self.assertEqual(2, len(self.viewer.curselection()))
+
+        

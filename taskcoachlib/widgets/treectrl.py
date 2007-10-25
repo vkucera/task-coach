@@ -201,7 +201,8 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtr
         
     def SelectAll(self):
         for item in self.GetItemChildren(recursively=True):
-            self.SelectItem(item)
+            if not self.IsSelected(item):
+                self.SelectItem(item)
     
     def getStyle(self):
         return wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE
@@ -224,6 +225,7 @@ class CheckTreeCtrl(CustomTreeCtrl):
     
     def OnGetItemChecked(self, index):
         return self.getIsItemChecked(index)
+
 
 class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl.CtrlWithToolTip,
                    TreeMixin, gizmos.TreeListCtrl):
@@ -307,7 +309,6 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl.Ct
     
     def DeleteColumn(self, columnIndex):
         self.RemoveColumn(columnIndex)
-        #self.RefreshItems()
         
     def InsertColumn(self, columnIndex, columnHeader, *args, **kwargs):
         format = self.alignmentMap[kwargs.pop('format', wx.LIST_FORMAT_LEFT)]
@@ -321,7 +322,6 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl.Ct
             self.SetItemText(item, '', self.GetColumnCount()-1)
             self.SetItemImage(item, -1, column=self.GetColumnCount()-1)
         self.SetColumnAlignment(columnIndex, format)
-        #self.RefreshItems()
     
     def GetCountPerPage(self):
         ''' ListCtrlAutoWidthMixin expects a GetCountPerPage() method,
