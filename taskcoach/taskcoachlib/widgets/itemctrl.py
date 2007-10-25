@@ -14,10 +14,10 @@ class _CtrlWithItems(object):
         except AttributeError:
             return item != wx.NOT_FOUND # for ListCtrl
 
-    def SelectItem(self, item, **kwargs):
+    def SelectItem(self, item, *args, **kwargs):
         try:
             # Tree(List)Ctrl:
-            super(_CtrlWithItems, self).SelectItem(item, **kwargs)
+            super(_CtrlWithItems, self).SelectItem(item, *args, **kwargs)
         except AttributeError:
             # ListCtrl:
             select = kwargs.get('select', True)
