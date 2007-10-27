@@ -6,9 +6,7 @@ class Category(base.Object, patterns.ObservableComposite):
                  parent=None, description=''):
         super(Category, self).__init__(subject=subject, children=children or [], 
                                        parent=parent, description=description)
-        self.__tasks = []
-        for task in tasks or []:
-            self.addTask(task)
+        self.__tasks = tasks or []
         self.__filtered = filtered
             
     @classmethod
@@ -48,12 +46,10 @@ class Category(base.Object, patterns.ObservableComposite):
     def addTask(self, task):
         if task not in self.__tasks: # FIXME: use set
             self.__tasks.append(task)
-            task.addCategory(self)
             
     def removeTask(self, task):
         if task in self.__tasks:
             self.__tasks.remove(task)
-            task.removeCategory(self)
         
     def isFiltered(self):
         return self.__filtered

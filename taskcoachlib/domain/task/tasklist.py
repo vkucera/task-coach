@@ -1,6 +1,6 @@
 import patterns, wx
 from i18n import _
-import domain.date as date
+from domain import date
 import task
 
 def newTaskMenuText():

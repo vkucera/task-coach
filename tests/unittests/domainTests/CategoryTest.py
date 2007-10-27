@@ -1,6 +1,6 @@
 import test, patterns
-import domain.category as category
-import domain.task as task
+from domain import category, task
+
 
 class CategoryTest(test.TestCase):
     def setUp(self):
@@ -49,13 +49,15 @@ class CategoryTest(test.TestCase):
     def testAddTask(self):
         self.category.addTask(self.task)
         self.assertEqual([self.task], self.category.tasks())
-        self.assertEqual(set([self.category]), self.task.categories())
+        
+    def testAddTaskDoesNotAddCategoryToTask(self):
+        self.category.addTask(self.task)
+        self.assertEqual(set([]), self.task.categories())
         
     def testAddTaskTwice(self):
         self.category.addTask(self.task)
         self.category.addTask(self.task)
         self.assertEqual([self.task], self.category.tasks())
-        self.assertEqual(set([self.category]), self.task.categories())
         
     def testRemoveTask(self):
         self.category.addTask(self.task)
@@ -71,7 +73,10 @@ class CategoryTest(test.TestCase):
     def testCreateWithTasks(self):
         cat = category.Category('category', [self.task])
         self.assertEqual([self.task], cat.tasks())
-        self.assertEqual(set([cat]), self.task.categories())
+        
+    def testCreateWithTasksDoesNotSetTaskCategories(self):
+        cat = category.Category('category', [self.task])
+        self.assertEqual(set([]), self.task.categories())
     
     def testAddTaskToSubCategory(self):
         self.category.addChild(self.subCategory)

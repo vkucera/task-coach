@@ -42,3 +42,4 @@ class EditCategoryCommand(base.EditCommand):
 class DragAndDropCategoryCommand(base.DragAndDropCommand):
     def name(self):
         return _('Drag and drop category')
+

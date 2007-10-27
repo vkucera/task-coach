@@ -27,30 +27,27 @@ class DragAndDropTaskCommand(base.DragAndDropCommand):
 
 
 class DeleteTaskCommand(base.DeleteCommand, base.CompositeMixin):
-    def __init__(self, *args, **kwargs):
-        self.__categories = kwargs.pop('categories')
-        self.__map = {}
-        super(DeleteTaskCommand, self).__init__(*args, **kwargs)
-
     def do_command(self):
-        for category in self.__categories:
-            for task in self.items + self.getAllChildren(self.items):
-                if task in category.tasks():
-                    category.removeTask(task)
-                    self.__map.setdefault(task, []).append(category)
+        self.removeTasksFromCategories()
         super(DeleteTaskCommand, self).do_command()
         
     def undo_command(self):
-        for task in self.__map:
-            for category in self.__map[task]:
-                category.addTask(task)
+        self.addTasksToCategories()
         super(DeleteTaskCommand, self).undo_command()
         
     def redo_command(self):
-        for task in self.__map:
-            for category in self.__map[task]:
-                category.removeTask(task)
+        self.removeTasksFromCategories()
         super(DeleteTaskCommand, self).redo_command()
+
+    def addTasksToCategories(self):
+        for task in self.items + self.getAllChildren(self.items):
+            for category in task.categories():
+                category.addTask(task)
+
+    def removeTasksFromCategories(self):
+        for task in self.items + self.getAllChildren(self.items):
+            for category in task.categories():
+                category.removeTask(task)
 
 
 class NewTaskCommand(base.BaseCommand):

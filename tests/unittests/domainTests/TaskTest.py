@@ -431,9 +431,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.addCategory(self.category)
         self.assertEqual(set([self.category]), self.task.categories())
         
-    def testAddCategoryAlsoAddsTaskToCategory(self):
+    def testAddCategoryDoesNotAddTaskToCategory(self):
         self.task.addCategory(self.category)
-        self.assertEqual([self.task], self.category.tasks())
+        self.assertEqual([], self.category.tasks())
         
     def testAddCategoryNotification(self):
         self.registerObserver('task.category.add')

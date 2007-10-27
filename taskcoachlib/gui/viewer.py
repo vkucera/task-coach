@@ -874,8 +874,7 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     editTaskDialog = editItemDialog
     
     def deleteItemCommand(self):
-        return command.DeleteTaskCommand(self.list, self.curselection(),
-            categories=self.categories)
+        return command.DeleteTaskCommand(self.list, self.curselection())
         
     deleteTaskCommand = deleteItemCommand
     

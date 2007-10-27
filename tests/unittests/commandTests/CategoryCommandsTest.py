@@ -1,7 +1,7 @@
 import test, command, patterns
 from unittests import asserts
 from CommandTestCase import CommandTestCase
-from domain import category
+from domain import category, task
 
 
 class CategoryCommandTestCase(CommandTestCase, asserts.CommandAsserts):
@@ -71,9 +71,9 @@ class EditCategoryCommandTest(CategoryCommandTestCase):
             lambda: self.assertEqual('category', self.category.subject()))
 
 
-class DragAndDropCategoryCommand(CategoryCommandTestCase):
+class DragAndDropCategoryCommandTest(CategoryCommandTestCase):
     def setUp(self):
-        super(DragAndDropCategoryCommand, self).setUp()
+        super(DragAndDropCategoryCommandTest, self).setUp()
         self.parent = category.Category('parent')
         self.child = category.Category('child')
         self.grandchild = category.Category('grandchild')
@@ -102,3 +102,42 @@ class DragAndDropCategoryCommand(CategoryCommandTestCase):
         self.assertDoUndoRedo(lambda: self.assertEqual(None, 
             self.grandchild.parent()), lambda:
             self.assertEqual(self.child, self.grandchild.parent()))
+        
+        
+class CopyAndPasteCommandTest(CategoryCommandTestCase):
+    def setUp(self):
+        super(CopyAndPasteCommandTest, self).setUp()
+        self.original = category.Category('original')
+        self.categories.append(self.original)
+        self.task = task.Task()
+        
+    def copy(self, categoriesToCopy):
+        command.CopyCommand(self.categories, categoriesToCopy).do()
+        
+    def paste(self):
+        command.PasteCommand(self.categories).do()
+        
+    def testPasteOneCategory(self):
+        self.copy([self.original])
+        self.paste()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(2, len(self.categories)),
+            lambda: self.assertEqual([self.original], self.categories))
+        
+    def testCopyOneCategoryWithTasks(self):
+        self.original.addTask(self.task)
+        self.task.addCategory(self.original)
+        self.copy([self.original])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([self.original]), 
+                                     self.task.categories()))
+        
+    def testPasteOneCategoryWithTasks(self):
+        self.original.addTask(self.task)
+        self.task.addCategory(self.original)
+        self.copy([self.original])
+        self.paste()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(2, len(self.task.categories())),
+            lambda: self.assertEqual(set([self.original]), 
+                                     self.task.categories()))
