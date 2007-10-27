@@ -185,6 +185,13 @@ class CategoryTest(test.TestCase):
         copy = self.category.copy()
         self.assertEqual(copy.subject(), self.category.subject())
         
+    def testCopy_SubjectIsDifferentFromOriginalSubject(self):
+        self.subCategory.setSubject('New subject')
+        self.category.addChild(self.subCategory)
+        copy = self.category.copy()
+        self.subCategory.setSubject('Other subject')
+        self.assertEqual('New subject', copy.children()[0].subject())
+        
     def testCopy_FilteredStatusIsCopied(self):
         self.category.setFiltered()
         copy = self.category.copy()

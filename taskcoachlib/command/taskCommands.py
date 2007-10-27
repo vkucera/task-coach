@@ -28,15 +28,15 @@ class DragAndDropTaskCommand(base.DragAndDropCommand):
 
 class DeleteTaskCommand(base.DeleteCommand, base.CompositeMixin):
     def do_command(self):
-        self.removeTasksFromCategories()
+        #self.removeTasksFromCategories()
         super(DeleteTaskCommand, self).do_command()
         
     def undo_command(self):
-        self.addTasksToCategories()
+        #self.addTasksToCategories()
         super(DeleteTaskCommand, self).undo_command()
         
     def redo_command(self):
-        self.removeTasksFromCategories()
+        #self.removeTasksFromCategories()
         super(DeleteTaskCommand, self).redo_command()
 
     def addTasksToCategories(self):
