@@ -13,13 +13,13 @@ class CategoryList(patterns.CompositeList):
     
     def extend(self, categories):
         super(CategoryList, self).extend(categories)
-        for category in categories:
+        for category in self._compositesAndAllChildren(categories):
             for task in category.tasks():
                 task.addCategory(category)
                 
     def removeItems(self, categories):
         super(CategoryList, self).removeItems(categories)
-        for category in categories:
+        for category in self._compositesAndAllChildren(categories):
             for task in category.tasks():
                 task.removeCategory(category)
         

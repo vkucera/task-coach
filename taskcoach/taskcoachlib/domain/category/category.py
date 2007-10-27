@@ -24,6 +24,12 @@ class Category(base.Object, patterns.ObservableComposite):
         self.__tasks = state['tasks']
         self.__filtered = state['filtered']
         
+    def copy(self):
+        return self.__class__(self.subject(), self.tasks(), 
+                              [child.copy() for child in self.children()],
+                              self.isFiltered(), self.parent(), 
+                              self.description())
+        
     def __repr__(self):
         return self.subject()
                     

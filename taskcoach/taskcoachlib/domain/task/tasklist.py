@@ -36,6 +36,18 @@ class TaskList(patterns.CompositeSet):
     newSubItemMenuText = newSubTaskMenuText()
     newSubItemHelpText = _('Insert a new subtask into the selected task')
     
+    def extend(self, tasks):
+        super(TaskList, self).extend(tasks)
+        for task in self._compositesAndAllChildren(tasks):
+            for category in task.categories():
+                category.addTask(task)
+                
+    def removeItems(self, tasks):
+        super(TaskList, self).removeItems(tasks)
+        for task in self._compositesAndAllChildren(tasks):
+            for category in task.categories():
+                category.removeTask(task)
+    
     def _nrInterestingTasks(self, isInteresting):
         interestingTasks = [task for task in self if isInteresting(task)]
         return len(interestingTasks)
