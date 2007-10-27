@@ -10,3 +10,17 @@ class CategoryList(patterns.CompositeList):
     deleteItemHelpText = _('Delete the selected categories')
     newSubItemMenuText = _('New subcategory...')
     newSubItemHelpText = _('Insert a new subcategory')
+    
+    def extend(self, categories):
+        super(CategoryList, self).extend(categories)
+        for category in categories:
+            for task in category.tasks():
+                task.addCategory(category)
+                
+    def removeItems(self, categories):
+        super(CategoryList, self).removeItems(categories)
+        for category in categories:
+            for task in category.tasks():
+                task.removeCategory(category)
+        
+        

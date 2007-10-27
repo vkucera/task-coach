@@ -303,8 +303,10 @@ class CategoriesPage(TaskEditorPage):
             category = self.getCategoryWithIndex(index)
             if item.IsChecked():
                 category.addTask(self._task)
+                self._task.addCategory(category)
             else:
                 category.removeTask(self._task)
+                self._task.removeCategory(category)
     
 
 class AttachmentPage(TaskEditorPage):

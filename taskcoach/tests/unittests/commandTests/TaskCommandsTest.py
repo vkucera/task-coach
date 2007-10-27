@@ -23,8 +23,7 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
     def delete(self, items=None):
         if items == 'all':
             items = list(self.list)
-        command.DeleteTaskCommand(self.list, items or [], 
-            categories=self.categories).do()
+        command.DeleteTaskCommand(self.list, items or []).do()
  
     def paste(self, items=None):
         if items:
@@ -116,6 +115,7 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
         cat = category.Category('category')
         self.categories.append(cat)
         cat.addTask(self.task1)
+        self.task1.addCategory(cat)
         self.delete('all')
         self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
             lambda: self.assertEqual([self.task1], cat.tasks()))
@@ -124,8 +124,9 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
         cat1 = category.Category('category 1')
         cat2 = category.Category('category 2')
         self.categories.extend([cat1, cat2])
-        cat1.addTask(self.task1)
-        cat2.addTask(self.task1)
+        for cat in cat1, cat2:
+            cat.addTask(self.task1)
+            self.task1.addCategory(cat)
         self.delete('all')
         self.assertDoUndoRedo(lambda: self.failIf(cat1.tasks() or cat2.tasks()), 
             lambda: self.failUnless([self.task1] == cat1.tasks() == cat2.tasks()))
@@ -167,6 +168,7 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         cat = category.Category('category')
         self.categories.append(cat)
         cat.addTask(self.child)
+        self.child.addCategory(cat)
         self.delete([self.parent])
         self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
             lambda: self.assertEqual([self.child], cat.tasks()))
@@ -176,7 +178,9 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         cat2 = category.Category('category 2')
         self.categories.extend([cat1, cat2])
         cat1.addTask(self.child)
+        self.child.addCategory(cat1)
         cat2.addTask(self.parent)
+        self.parent.addCategory(cat2)
         self.delete([self.parent])
         self.assertDoUndoRedo(lambda: self.failIf(cat1.tasks() or cat2.tasks()), 
             lambda: self.failUnless([self.child] == cat1.tasks() and \
@@ -185,8 +189,9 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
     def testDeleteParentAndChildWhenParentAndChildBelongToSameCategory(self):
         cat = category.Category('category')
         self.categories.append(cat)
-        cat.addTask(self.child)
-        cat.addTask(self.parent)
+        for task in self.parent, self.child:
+            cat.addTask(task)
+            task.addCategory(cat)
         self.delete([self.parent])
         self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
             lambda: self.assertEqualLists([self.parent, self.child], cat.tasks()))
@@ -199,14 +204,6 @@ class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(1, len(self.effortList)),
             lambda: self.assertEqual(2, len(self.effortList)))
-            
-    def testDeleteEffort(self):
-        self.delete([self.effort1])
-        self.assertDoUndoRedo(
-            lambda: self.assertEffortList([self.effort2]) and \
-                self.assertEqual(0, len(self.task1.efforts())),
-            lambda: self.assertEffortList(self.originalEffortList) and \
-                self.assertEqual(1, len(self.task1.efforts())))
 
 
 class NewTaskCommandTest(TaskCommandTestCase):
