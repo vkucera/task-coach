@@ -26,28 +26,9 @@ class DragAndDropTaskCommand(base.DragAndDropCommand):
         return _('Drag and drop task')
 
 
-class DeleteTaskCommand(base.DeleteCommand, base.CompositeMixin):
-    def do_command(self):
-        #self.removeTasksFromCategories()
-        super(DeleteTaskCommand, self).do_command()
-        
-    def undo_command(self):
-        #self.addTasksToCategories()
-        super(DeleteTaskCommand, self).undo_command()
-        
-    def redo_command(self):
-        #self.removeTasksFromCategories()
-        super(DeleteTaskCommand, self).redo_command()
-
-    def addTasksToCategories(self):
-        for task in self.items + self.getAllChildren(self.items):
-            for category in task.categories():
-                category.addTask(task)
-
-    def removeTasksFromCategories(self):
-        for task in self.items + self.getAllChildren(self.items):
-            for category in task.categories():
-                category.removeTask(task)
+class DeleteTaskCommand(base.DeleteCommand):
+    def name(self):
+        return _('Delete task')
 
 
 class NewTaskCommand(base.BaseCommand):
