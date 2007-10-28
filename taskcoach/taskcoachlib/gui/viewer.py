@@ -310,8 +310,9 @@ class Viewer(wx.Panel):
         self.refresh()
 
     def onSelect(self, *args):
-        patterns.Publisher().notifyObservers(patterns.Event(self, 
-            self.selectEventType(), self.curselection()))
+        # Be sure all wx events are handled before we notify our observers: 
+        wx.CallAfter(lambda: patterns.Publisher().notifyObservers(\
+            patterns.Event(self, self.selectEventType(), self.curselection())))
     
     def refresh(self):
         self.widget.refresh(len(self.list))
