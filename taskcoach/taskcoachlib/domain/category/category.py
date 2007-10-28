@@ -40,6 +40,11 @@ class Category(base.Object, patterns.ObservableComposite):
                                mySubject)
         else:
             return mySubject
+        
+    def setSubject(self, *args, **kwargs):
+        super(Category, self).setSubject(*args, **kwargs)
+        for task in self.tasks():
+            task.notifyObserversOfCategorySubjectChange(self)
     
     def tasks(self, recursive=False):
         result = []

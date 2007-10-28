@@ -1194,6 +1194,8 @@ class TaskWithAllAttachmentsRemovedFixture(TaskWithAttachmentAddedTestCase):
 
 
 class TaskWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
+    eventTypes = ['task.category.subject', 'task.totalCategory.subject']
+    
     def taskCreationKeywordArguments(self):
         return [{'categories': [self.category]}]
 
@@ -1239,6 +1241,21 @@ class TaskWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
         self.task.removeCategory(self.category)
         self.task.removeCategory(self.category)
         self.assertEqual(1, len(self.events))
+        
+    def testCategorySubjectChanged(self):
+        self.task.addCategory(self.category)
+        self.category.addTask(self.task)
+        self.category.setSubject('New subject')
+        # Expect task.category.subject and task.totalCategory.subject
+        self.assertEqual(2, len(self.events)) 
+        
+    def testCategorySubjectChanged_NotifiySubtasksToo(self):
+        self.task.addChild(task.Task())
+        self.task.addCategory(self.category)
+        self.category.addTask(self.task)
+        self.category.setSubject('New subject')
+        # Expect task.category.subject and 2x task.totalCategory.subject 
+        self.assertEqual(3, len(self.events))
 
 
 class ChildAndParentWithOneCategoryFixture(TaskTestCase, CommonTaskTests):

@@ -911,12 +911,13 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
                 headerImageIndex=self.imageIndex['attachment'],
                 renderCallback=lambda task: '', **kwargs)] + \
             [widgets.Column('categories', _('Categories'), 'task.category.add', 
-                'task.category.remove', 
+                'task.category.remove', 'task.category.subject',
                 sortCallback=self.uiCommands['viewsortbycategories'],
                 width=self.getColumnWidth('categories'),
                 renderCallback=self.renderCategory, **kwargs)] + \
             [widgets.Column('totalCategories', _('Overall categories'),
                 'task.totalCategory.add', 'task.totalCategory.remove',
+                'task.totalCategory.subject',
                 sortCallback=self.uiCommands['viewsortbytotalcategories'],
                 renderCallback=lambda task: self.renderCategory(task, recursive=True),
                 width=self.getColumnWidth('totalCategories'), **kwargs)] + \

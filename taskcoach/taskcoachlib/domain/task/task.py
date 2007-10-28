@@ -416,6 +416,17 @@ class Task(patterns.ObservableComposite):
             self.__notifyObservers(patterns.Event(child, 
                                    'task.totalCategory.%s'%change, category))
             
+    def notifyObserversOfCategorySubjectChange(self, category):
+        if category in self._categories:
+            self.__notifyObservers(patterns.Event(self, 
+                'task.category.subject', category.subject()))
+            self.notifyObserversOfTotalCategorySubjectChange(category)
+    
+    def notifyObserversOfTotalCategorySubjectChange(self, category):
+        for task in [self] + self.children(recursive=True):
+            self.__notifyObservers(patterns.Event(task, 
+                'task.totalCategory.subject', category.subject()))
+            
     # priority
     
     def priority(self, recursive=False):
