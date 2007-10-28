@@ -43,7 +43,7 @@ class Category(base.Object, patterns.ObservableComposite):
         
     def setSubject(self, *args, **kwargs):
         super(Category, self).setSubject(*args, **kwargs)
-        for task in self.tasks():
+        for task in self.tasks(recursive=True):
             task.notifyObserversOfCategorySubjectChange(self)
     
     def tasks(self, recursive=False):

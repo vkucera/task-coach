@@ -965,7 +965,7 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
         return menu.ColumnPopupMenu(self, self.uiCommands)
 
     def renderCategory(self, task, recursive=False):
-        return ', '.join(sorted([category.subject() for category in \
+        return ', '.join(sorted([category.subject(recursive=True) for category in \
                                  task.categories(recursive=recursive)]))
 
 
