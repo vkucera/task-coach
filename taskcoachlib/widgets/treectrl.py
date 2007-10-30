@@ -42,10 +42,16 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         self.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelect)
         self.Bind(wx.EVT_TREE_SEL_CHANGING, self.onSelectionChanging)
-        self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, editCommand)
+        self.Bind(wx.EVT_TREE_KEY_DOWN, self.onKeyDown)
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
         self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
+               
+    def onKeyDown(self, event):
+        if event.GetKeyCode() == wx.WXK_RETURN:
+            self.editCommand(event)
+        else:
+            event.Skip()
          
     def OnDrop(self, dropItem, dragItem):
         if dropItem == self.GetRootItem():
@@ -205,7 +211,8 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtr
                 self.SelectItem(item)
     
     def getStyle(self):
-        return wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE
+        return wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE | \
+            wx.WANTS_CHARS
     
 
 class CheckTreeCtrl(CustomTreeCtrl):
