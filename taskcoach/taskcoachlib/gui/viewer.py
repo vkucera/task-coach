@@ -310,6 +310,8 @@ class Viewer(wx.Panel):
         self.refresh()
 
     def onSelect(self, *args):
+        if self.IsBeingDeleted():
+            return
         # Be sure all wx events are handled before we notify our observers: 
         wx.CallAfter(lambda: patterns.Publisher().notifyObservers(\
             patterns.Event(self, self.selectEventType(), self.curselection())))
