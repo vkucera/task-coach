@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.66.0', 'October ?, 2007',
+Release('0.66.0', 'October 31, 2007',
     summary='''Small feature enhancements and a translation in 
 Traditional Chinese.''',
     featuresAdded=[

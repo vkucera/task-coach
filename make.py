@@ -1,8 +1,8 @@
 from taskcoachlib import meta
 import sys, os, glob
 from setup import setupOptions
-import taskcoach # to add taskcoachlib to the searchpath
 from buildlib import clean
+import taskcoach # to add taskcoachlib to the searchpath
 
 
 setupOptions['cmdclass'] = dict(clean=clean)
