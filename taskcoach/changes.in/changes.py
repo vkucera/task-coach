@@ -7,6 +7,7 @@ releases = [
 Release('0.66.1', 'November ?, 2007',
     summary='Bugfix release',
     bugsFixed=[
+        Bug('Sort categories alphabetically in task editor.', '1824180'),
         Bug('''Double clicking a task in the tree view did not open
 the task edit dialog.'''),
         Bug('''When filtering on a specific category, a newly added task

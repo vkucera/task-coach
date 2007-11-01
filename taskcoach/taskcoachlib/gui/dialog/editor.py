@@ -285,8 +285,11 @@ class CategoriesPage(TaskEditorPage):
         children = self.__categories.rootItems()
         for i in index:
             category = children[i]
-            children = [child for child in category.children() \
-                        if child in self.__categories]
+            childIndices = [self.__categories.index(child) for child in \
+                            category.children() if child in self.__categories]
+            childIndices.sort()
+            children = [self.__categories[childIndex] for childIndex \
+                        in childIndices]
         return category
     
     def getChildrenCount(self, index): # FIXME: duplication with viewers
