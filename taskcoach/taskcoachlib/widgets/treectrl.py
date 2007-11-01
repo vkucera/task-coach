@@ -43,6 +43,7 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelect)
         self.Bind(wx.EVT_TREE_SEL_CHANGING, self.onSelectionChanging)
         self.Bind(wx.EVT_TREE_KEY_DOWN, self.onKeyDown)
+        self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.onItemActivated)
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
         self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
@@ -84,6 +85,10 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
     def onDoubleClick(self, event):
         if not self.isCollapseExpandButtonClicked(event):
             self.editCommand(event)
+        event.Skip(False)
+        
+    def onItemActivated(self, event):
+        self.editCommand(event)
         event.Skip(False)
 
     def isCollapseExpandButtonClicked(self, event):
@@ -213,6 +218,11 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtr
     def getStyle(self):
         return wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE | \
             wx.WANTS_CHARS
+            
+    def onItemActivated(self, event):
+        # Don't open the editor (see TreeMixin.onItemActivated) but let the 
+        # default event handler (un)check the item:
+        event.Skip()
     
 
 class CheckTreeCtrl(CustomTreeCtrl):
