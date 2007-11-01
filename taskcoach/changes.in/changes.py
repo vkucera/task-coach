@@ -6,9 +6,11 @@ releases = [
 
 Release('0.66.1', 'November ?, 2007',
     summary='Bugfix release',
-    bugsFixed=
-        [Bug('''Double clicking a task in the tree view did not open
-the task edit dialog.''')]),
+    bugsFixed=[
+        Bug('''Double clicking a task in the tree view did not open
+the task edit dialog.'''),
+        Bug('''When filtering on a specific category, a newly added task
+belonging to that category was not shown in the task viewers.''')]),
         
 Release('0.66.0', 'October 31, 2007',
     summary='''Small feature enhancements and a translation in 

@@ -12,7 +12,15 @@ class Category(base.Object, patterns.ObservableComposite):
     @classmethod
     def filterChangedEventType(class_):
         return 'category.filter'
-        
+    
+    @classmethod
+    def taskAddedEventType(class_):
+        return 'category.task.added'
+    
+    @classmethod
+    def taskRemovedEventType(class_):
+        return 'category.task.removed'
+            
     def __getstate__(self):
         state = super(Category, self).__getstate__()
         state.update(dict(tasks=self.__tasks[:], 
@@ -57,10 +65,14 @@ class Category(base.Object, patterns.ObservableComposite):
     def addTask(self, task):
         if task not in self.__tasks: # FIXME: use set
             self.__tasks.append(task)
+            self.notifyObservers(patterns.Event(self, 
+                self.taskAddedEventType(), task))
             
     def removeTask(self, task):
         if task in self.__tasks:
             self.__tasks.remove(task)
+            self.notifyObservers(patterns.Event(self, 
+                self.taskRemovedEventType(), task))
         
     def isFiltered(self):
         return self.__filtered
