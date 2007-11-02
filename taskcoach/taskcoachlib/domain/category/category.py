@@ -39,9 +39,6 @@ class Category(base.CompositeObject):
                               self.isFiltered(), self.parent(), 
                               self.description())
         
-    def __repr__(self):
-        return self.subject()
-        
     def setSubject(self, *args, **kwargs):
         if super(Category, self).setSubject(*args, **kwargs):
             for task in self.tasks(recursive=True):

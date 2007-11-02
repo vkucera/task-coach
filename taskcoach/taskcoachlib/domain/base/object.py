@@ -6,6 +6,9 @@ class Object(patterns.Observable):
         self.__subject = kwargs.pop('subject', '')
         self.__description = kwargs.pop('description', '')
         super(Object, self).__init__(*args, **kwargs)
+        
+    def __repr__(self):
+        return self.subject()
     
     def __getstate__(self):
         try:

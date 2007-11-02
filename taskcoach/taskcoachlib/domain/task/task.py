@@ -61,9 +61,6 @@ class Task(base.CompositeObject):
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
         
-    def __repr__(self):
-        return self.subject()
-        
     def id(self):
         return self._id
 
