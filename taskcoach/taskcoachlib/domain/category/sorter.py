@@ -1,7 +1,8 @@
 from domain import base
+import category
 
 
 class CategorySorter(base.TreeSorter):
-    EventTypePrefix = 'category'
+    DomainObjectClass = category.Category
 
 

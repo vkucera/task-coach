@@ -271,11 +271,14 @@ class CategoriesPage(TaskEditorPage):
         self._treeCtrl = widgets.CheckTreeCtrl(categoriesBox, 
             lambda index: self.getCategoryWithIndex(index).subject(),
             lambda *args: None,
-            lambda index, expanded=False: -1, lambda index: customtree.TreeItemAttr(),
-            self.getChildrenCount,
+            lambda index, expanded=False: -1, 
+            lambda index: customtree.TreeItemAttr(),
+            self.getChildrenCount, 
+            lambda index: 'Undetermined', 
             lambda index: task in self.getCategoryWithIndex(index).tasks(),
             lambda *args: None, lambda *args: None, lambda *args: None,
             lambda *args: None)
+        self._treeCtrl.expandAllItems()
         categoriesBox.add(self._treeCtrl, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
         self.add(categoriesBox)

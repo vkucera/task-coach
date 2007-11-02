@@ -64,6 +64,10 @@ class Object(patterns.Observable):
 
 
 class CompositeObject(Object, patterns.ObservableComposite):
+    def __init__(self, *args, **kwargs):
+        self.__expanded = kwargs.get('expand', False)
+        super(CompositeObject, self).__init__(*args, **kwargs)
+        
     def subject(self, recursive=False):
         subject = super(CompositeObject, self).subject()
         if recursive and self.parent():
@@ -74,4 +78,10 @@ class CompositeObject(Object, patterns.ObservableComposite):
         # Allow for the recursive flag, but ignore it
         return super(CompositeObject, self).description()
     
+    def isExpanded(self):
+        return self.__expanded
+    
+    def expand(self, expand=True):
+        self.__expanded = expand
+        
     

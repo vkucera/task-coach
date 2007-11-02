@@ -7,6 +7,8 @@ releases = [
 Release('0.66.1', 'November ?, 2007',
     summary='Bugfix release',
     bugsFixed=[
+        Bug('''When changing the sort order in a tree viewer, keep 
+collapsed items collapsed and expanded items expanded.''', '1791638'),
         Bug('Sort categories alphabetically in task editor.', '1824180'),
         Bug('''Double clicking a task in the tree view did not open
 the task edit dialog.'''),
