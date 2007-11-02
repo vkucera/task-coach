@@ -894,14 +894,16 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
     def _createColumns(self):
         kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
                       resizeCallback=self.onResizeColumn)
-        return [widgets.Column('subject', _('Subject'), 'task.subject', 
+        return [widgets.Column('subject', _('Subject'), 
+                task.Task.subjectChangedEventType(), 
                 'task.completionDate', 'task.dueDate', 'task.startDate',
                 'task.track.start', 'task.track.stop', 
                 sortCallback=self.uiCommands['viewsortbysubject'],
                 width=self.getColumnWidth('subject'), 
                 imageIndexCallback=self.subjectImageIndex,
                 renderCallback=self.renderSubject, **kwargs)] + \
-            [widgets.Column('description', _('Description'), 'task.description', 
+            [widgets.Column('description', _('Description'), 
+                task.Task.descriptionChangedEventType(), 
                 sortCallback=self.uiCommands['viewsortbydescription'],
                 renderCallback=lambda task: task.description(), 
                 width=self.getColumnWidth('description'), **kwargs)] + \

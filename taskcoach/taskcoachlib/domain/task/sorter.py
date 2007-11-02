@@ -1,8 +1,9 @@
-import patterns
+import patterns, task
 from domain import base, date
 
 
 class Sorter(base.TreeSorter):
+    DomainObjectClass = task.Task # What are we sorting
     EventTypePrefix = 'task'
     
     def __init__(self, *args, **kwargs):

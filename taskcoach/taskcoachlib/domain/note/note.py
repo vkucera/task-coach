@@ -1,6 +1,5 @@
-import patterns
 from domain import base
 
-class Note(base.Object, patterns.ObservableComposite):
+class Note(base.CompositeObject):
     pass    
         

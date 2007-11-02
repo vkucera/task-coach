@@ -1,7 +1,8 @@
 import patterns
 from domain import base
 
-class Category(base.Object, patterns.ObservableComposite):
+
+class Category(base.CompositeObject):
     def __init__(self, subject, tasks=None, children=None, filtered=False, 
                  parent=None, description=''):
         super(Category, self).__init__(subject=subject, children=children or [], 
@@ -40,19 +41,11 @@ class Category(base.Object, patterns.ObservableComposite):
         
     def __repr__(self):
         return self.subject()
-                    
-    def subject(self, recursive=False):
-        mySubject = super(Category, self).subject()
-        if recursive and self.parent():
-            return '%s -> %s'%(self.parent().subject(recursive=True), 
-                               mySubject)
-        else:
-            return mySubject
         
     def setSubject(self, *args, **kwargs):
-        super(Category, self).setSubject(*args, **kwargs)
-        for task in self.tasks(recursive=True):
-            task.notifyObserversOfCategorySubjectChange(self)
+        if super(Category, self).setSubject(*args, **kwargs):
+            for task in self.tasks(recursive=True):
+                task.notifyObserversOfCategorySubjectChange(self)
     
     def tasks(self, recursive=False):
         result = []

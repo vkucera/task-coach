@@ -35,6 +35,9 @@ class Object(patterns.Observable):
             self.__subject = subject
             self.notifyObservers(patterns.Event(self, 
                 self.subjectChangedEventType(), subject))
+            return True # Subject was changed
+        else:
+            return False # Subject was not changed
     
     @classmethod    
     def subjectChangedEventType(class_):
@@ -48,7 +51,24 @@ class Object(patterns.Observable):
             self.__description = description
             self.notifyObservers(patterns.Event(self, 
                     self.descriptionChangedEventType(), description))
+            return True # Description was changed
+        else:
+            return False # Description was not changed
         
     @classmethod    
     def descriptionChangedEventType(class_):
         return '%s.description'%class_
+
+
+class CompositeObject(Object, patterns.ObservableComposite):
+    def subject(self, recursive=False):
+        subject = super(CompositeObject, self).subject()
+        if recursive and self.parent():
+            subject = '%s -> %s'%(self.parent().subject(recursive=True), subject)
+        return subject
+        
+    def description(self, recursive=False):
+        # Allow for the recursive flag, but ignore it
+        return super(CompositeObject, self).description()
+    
+    
