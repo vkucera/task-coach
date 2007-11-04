@@ -15,8 +15,8 @@ class TreeViewerTest(test.wxTestCase):
                 self.viewerContainer, self.settings, self.taskList, 
                 effort.EffortList(self.taskList), self.categories, self.notes), 
             self.settings, categories=self.categories)
-        self.parent = task.Task()
-        self.child = task.Task()
+        self.parent = task.Task('parent')
+        self.child = task.Task('child')
         self.parent.addChild(self.child)
         self.child.setParent(self.parent)
         self.taskList.extend([self.parent, self.child])

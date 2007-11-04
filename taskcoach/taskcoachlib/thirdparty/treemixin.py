@@ -149,9 +149,17 @@ class TreeAPIHarmonizer(object):
 
     def GetFirstVisibleItem(self):
         # TreeListCtrl raises an exception or even crashes when invoking 
-        # GetFirstVisibleItem on an empty tree.
-        if self.GetRootItem():
-            return super(TreeAPIHarmonizer, self).GetFirstVisibleItem()
+        # GetFirstVisibleItem on an empty tree, so don't do that.
+        rootItem = self.GetRootItem()
+        if rootItem:
+            # wxPython 2.8.6.1 on Linux returns the hidden root item as first 
+            # visible item, fix that if necessary
+            firstVisibleItem = super(TreeAPIHarmonizer, 
+                                     self).GetFirstVisibleItem()
+            if self.HasFlag(wx.TR_HIDE_ROOT) and firstVisibleItem == rootItem:
+                return self.GetNextVisible(firstVisibleItem)
+            else:
+                return firstVisibleItem
         else:
             return wx.TreeItemId()
 
