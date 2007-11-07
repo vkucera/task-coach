@@ -2,19 +2,21 @@
 
 '''
 Release steps:
-- Get latest translations from launchpad
+- Get latest translations from Launchpad
 - make clean all 
 - make alltests 
-- Run this script (phase1) to upload the distributions to sourceforge, 
+- Run this script (phase1) to upload the distributions to Sourceforge, 
   generate MD5 digests and generate website.
-- Add file releases on sourceforge.net by hand.
-- Run this script (phase2) to publish to Sourceforge Website, Chello (my ISP) 
+- Add file releases on Sourceforge by hand.
+- Run this script (phase2) to publish to Sourceforge website, Chello (my ISP) 
   and PyPI (Python Package Index).
-- Post project news on sourceforge.net by hand.
-- Post release notification on freshmeat.net by hand.
+- Post project news on Sourceforge by hand.
+- Post release notification on Freshmeat by hand.
 - Email taskcoach@yahoogroups.com and python-announce@python.org.
-- Tag source code: cvs tag ReleaseX_Y.
+- Tag source code: cvs tag ReleaseX_Y_Z.
+- Create branch if feature release: cvs tag -b ReleaseX_Y_Branch 
 - Add release to Sourceforge bug tracker groups.
+- Set bug reports and/or feature requests to Pending state.
 '''
 
 import ftplib, taskcoachlib.meta, os, glob, sys, md5
