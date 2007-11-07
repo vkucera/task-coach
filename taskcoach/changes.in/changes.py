@@ -4,8 +4,8 @@ from changetypes import *
 
 releases = [
 
-Release('0.66.1', 'November ?, 2007',
-    summary='Bugfix release',
+Release('0.66.1', 'November 7, 2007',
+    summary='This release fixes a number of minor bugs.',
     bugsFixed=[
         Bug('''When changing the sort order in a tree viewer, keep 
 collapsed items collapsed and expanded items expanded.''', '1791638'),
