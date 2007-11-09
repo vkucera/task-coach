@@ -4,10 +4,10 @@ from changetypes import *
 
 releases = [
 
-Release('0.66.2', 'November ?, 2007',
+Release('0.66.2', 'November 9, 2007',
     summary='Bug fix release.',
     bugsFixed=[
-        Bug('''Don't crash.''')]),
+        Bug('''Don't crash when refreshing a tree view.''', '1828846')]),
         
 Release('0.66.1', 'November 7, 2007',
     summary='This release fixes a number of minor bugs.',
