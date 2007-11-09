@@ -5,7 +5,7 @@ from changetypes import *
 releases = [
 
 Release('0.66.2', 'November 9, 2007',
-    summary='Bug fix release.',
+    summary='Bug fix release to address crashes.',
     bugsFixed=[
         Bug('''Don't crash when refreshing a tree view.''', '1828846')]),
         
