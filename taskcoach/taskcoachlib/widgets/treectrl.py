@@ -123,7 +123,7 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
 
     def collapseAllItems(self):
         for item in self.GetItemChildren():
-            self.CollapseAndReset(item)
+            self.Collapse(item)
             
     def expandSelectedItems(self):
         for item in self.GetSelections():
@@ -133,7 +133,7 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
                 
     def collapseSelectedItems(self):
         for item in self.GetSelections():
-            self.CollapseAndReset(item)
+            self.Collapse(item)
 
     def curselection(self):
         return [self.GetIndexOfItem(item) for item in self.GetSelections()]

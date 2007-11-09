@@ -293,8 +293,6 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         kwargs['style'] = kwargs.get('style', wx.TR_DEFAULT_STYLE) | \
                           wx.TR_HIDE_ROOT
         super(VirtualTree, self).__init__(*args, **kwargs)
-        self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.OnItemExpanding)
-        self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed)
 
     def OnGetChildrenCount(self, index):
         """ This function *must* be overloaded in the derived class.
@@ -386,25 +384,21 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
             else:
                 child = self.AppendItem(item, '')
             self.RefreshItemRecursively(child, childIndex)
-        for child in reusableChildren:
-            self.Delete(child)
-
+        for unusedChild in reusableChildren:
+            self.Delete(unusedChild)
+        
     def RefreshItemRecursively(self, item, itemIndex):
         """ Refresh the item and its children recursively. """
         hasChildren = bool(self.OnGetChildrenCount(itemIndex))
         item = self.DoRefreshItem(item, itemIndex, hasChildren)
-        itemShouldBeExpanded = self.OnGetItemExpanded(itemIndex)
-        itemIsExpanded = self.IsExpanded(item)
-        if itemShouldBeExpanded == 'Undetermined':
-            itemShouldBeExpanded = itemIsExpanded
-        else:
-            if itemShouldBeExpanded and not itemIsExpanded:
-                wx.CallAfter(self.Expand, item)
-            elif not itemShouldBeExpanded and itemIsExpanded:
-                self.Collapse(item)
-        if itemShouldBeExpanded == itemIsExpanded or not hasChildren:
+        if hasChildren:
             self.RefreshChildrenRecursively(item, itemIndex)
-        self.SetItemHasChildren(item, hasChildren)
+            # Expanding and collapsing trigger events, and the event handlers
+            # might query the tree before we're done refreshing, so postpone
+            # expanding and collapsing items until we're done refreshing.
+            wx.CallAfter(self.RefreshExpansionState, item, itemIndex)
+        else:
+            self.DeleteChildren(item)
  
     def DoRefreshItem(self, item, index, hasChildren):
         """ Refresh one item. """
@@ -460,21 +454,28 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
     def RefreshCheckedState(self, item, index):
         self.__refreshAttribute(item, index, 'ItemChecked')
 
+    def RefreshExpansionState(self, item, itemIndex):
+        # We need to careful with the itemIndex here, because 
+        # RefreshExpansionState is called by wx.CallAfter. If there are two 
+        # updates right after one another, this method is called after the 
+        # second update and the itemIndex passed to this method may not be 
+        # valid anymore
+        try:
+            itemShouldBeExpanded = self.OnGetItemExpanded(itemIndex)
+        except:
+            return
+        if itemShouldBeExpanded == 'Undetermined':
+            return
+        itemIsExpanded = self.IsExpanded(item)
+        if itemShouldBeExpanded and not itemIsExpanded:
+            self.Expand(item)
+        elif not itemShouldBeExpanded and itemIsExpanded:
+            self.Collapse(item)        
+        
     def ChildIndices(self, itemIndex):
         childrenCount = self.OnGetChildrenCount(itemIndex) 
         return [itemIndex + (childNumber,) for childNumber \
                 in range(childrenCount)]
-
-    def OnItemExpanding(self, event):
-        self.RefreshChildrenRecursively(event.GetItem())
-        event.Skip()
-
-    def OnItemCollapsed(self, event):
-        parent = self.GetItemParent(event.GetItem())
-        if not parent:
-            parent = self.GetRootItem()
-        self.RefreshChildrenRecursively(parent)
-        event.Skip()
 
     def __refreshAttribute(self, item, index, attribute, *args):
         """ Refresh the specified attribute if necessary. """
