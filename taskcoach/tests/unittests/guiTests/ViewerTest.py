@@ -476,7 +476,8 @@ class TaskListViewerTest(test.wxTestCase):
 
     def testChangeSubject(self):
         self.task.setSubject('New subject')
-        self.assertEqual('task.subject', self.viewer.events[0].type())
+        self.assertEqual(task.Task.subjectChangedEventType(), 
+                         self.viewer.events[0].type())
 
     def testChangeStartDateWhileColumnShown(self):
         self.task.setStartDate(date.Yesterday())

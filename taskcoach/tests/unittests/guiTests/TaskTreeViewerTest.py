@@ -103,9 +103,10 @@ class CommonTests(TaskViewerTest.CommonTests):
         
 class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):
     def createWidget(self):
-        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemDescription,
-            self.getItemImage, self.getItemAttr, self.getChildrenCount,
-            self.onSelect, dummy.DummyUICommand(), dummy.DummyUICommand())
+        widget = widgets.TreeCtrl(self, self.getItemText, 
+            self.getItemDescription, self.getItemImage, self.getItemAttr, 
+            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
+            dummy.DummyUICommand(), dummy.DummyUICommand())
         widget.AssignImageList(self.createImageList())
         return widget
 

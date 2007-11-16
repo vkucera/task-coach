@@ -31,9 +31,6 @@ class Filter(patterns.SetDecorator):
 
     def rootItems(self):
         return [item for item in self if item.parent() is None]
-
-    def onSettingChanged(self, event):
-        self.reset()
         
 
 class SearchFilter(Filter):

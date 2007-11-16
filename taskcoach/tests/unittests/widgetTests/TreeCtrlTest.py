@@ -16,6 +16,9 @@ class TreeCtrlTestCase(test.wxTestCase):
                 item, children = children[i], []
         return item, children
         
+    def getItemExpanded(self, index):
+        return False
+    
     def getItemText(self, index):
         return self.getItem(index)[0]
 
@@ -258,8 +261,8 @@ class TreeCtrlTest(TreeCtrlTestCase, CommonTests):
         super(TreeCtrlTest, self).setUp()
         self.treeCtrl = widgets.TreeCtrl(self.frame, self.getItemText,
             self.getItemDescription, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.onSelect, dummy.DummyUICommand(),
-            dummy.DummyUICommand())
+            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
+            dummy.DummyUICommand(), dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         for bitmapName in ['task', 'tasks']:
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
@@ -272,8 +275,8 @@ class CustomTreeCtrlTest(TreeCtrlTestCase, CommonTests):
         super(CustomTreeCtrlTest, self).setUp()
         self.treeCtrl = widgets.CustomTreeCtrl(self.frame, self.getItemText,
             self.getItemDescription, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.onSelect, dummy.DummyUICommand(),
-            dummy.DummyUICommand())
+            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
+            dummy.DummyUICommand(), dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         for bitmapName in ['task', 'tasks']:
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
@@ -291,7 +294,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
         super(CheckTreeCtrlTest, self).setUp()
         self.treeCtrl = widgets.CheckTreeCtrl(self.frame, self.getItemText,
             self.getItemDescription, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.getIsItemChecked, 
+            self.getChildrenCount, self.getItemExpanded, self.getIsItemChecked, 
             self.onSelect, self.onCheck, 
             dummy.DummyUICommand(), dummy.DummyUICommand())
     
