@@ -89,3 +89,25 @@ class ObjectTest(test.TestCase):
     def testCopy_ShouldUseSubclassForCopy(self):
         copy = self.subclassObject.copy()
         self.assertEqual(copy.__class__, self.subclassObject.__class__)
+        
+        
+class CompositeObjectTest(test.TestCase):
+    def setUp(self):
+        self.compositeObject = base.CompositeObject()
+        
+    def testIsExpanded(self):
+        self.failIf(self.compositeObject.isExpanded())
+        
+    def testExpand(self):
+        self.compositeObject.expand()
+        self.failUnless(self.compositeObject.isExpanded())
+        
+    def testCollapse(self):
+        self.compositeObject.expand()
+        self.compositeObject.expand(False)
+        self.failIf(self.compositeObject.isExpanded())
+        
+    def testSetExpansionStateViaConstructor(self):
+        compositeObject = base.CompositeObject(expand=True)
+        self.failUnless(compositeObject.isExpanded())
+        

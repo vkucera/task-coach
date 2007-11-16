@@ -410,6 +410,18 @@ class TreeViewer(Viewer):
     def __init__(self, *args, **kwargs):
         self.__itemsByIndex = dict()
         super(TreeViewer, self).__init__(*args, **kwargs)
+        self.widget.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.onItemExpanded)
+        self.widget.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.onItemCollapsed)
+
+    def onItemExpanded(self, event):
+        item = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
+        item.expand()
+        event.Skip()
+        
+    def onItemCollapsed(self, event):
+        item = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
+        item.expand(False)
+        event.Skip()
 
     def expandAll(self):
         self.widget.expandAllItems()
@@ -492,6 +504,10 @@ class TreeViewer(Viewer):
         else:
             item = self.getItemWithIndex(index)
             return len([child for child in item.children() if child in self.model()])
+    
+    def getItemExpanded(self, index):
+        item = self.getItemWithIndex(index)
+        return item.isExpanded()
     
     
 class UpdatePerSecondViewer(Viewer, date.ClockObserver):
@@ -894,14 +910,16 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
     def _createColumns(self):
         kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
                       resizeCallback=self.onResizeColumn)
-        return [widgets.Column('subject', _('Subject'), 'task.subject', 
+        return [widgets.Column('subject', _('Subject'), 
+                task.Task.subjectChangedEventType(), 
                 'task.completionDate', 'task.dueDate', 'task.startDate',
                 'task.track.start', 'task.track.stop', 
                 sortCallback=self.uiCommands['viewsortbysubject'],
                 width=self.getColumnWidth('subject'), 
                 imageIndexCallback=self.subjectImageIndex,
                 renderCallback=self.renderSubject, **kwargs)] + \
-            [widgets.Column('description', _('Description'), 'task.description', 
+            [widgets.Column('description', _('Description'), 
+                task.Task.descriptionChangedEventType(), 
                 sortCallback=self.uiCommands['viewsortbydescription'],
                 renderCallback=lambda task: task.description(), 
                 width=self.getColumnWidth('description'), **kwargs)] + \
@@ -1010,7 +1028,8 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         imageList = self.createImageList() # Has side-effects
         widget = widgets.TreeCtrl(self, self.getItemText, self.getItemDescription,
             self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.onSelect, self.uiCommands['edittask'], 
+            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
+            self.uiCommands['edittask'], 
             self.uiCommands['draganddroptask'], self.createTaskPopupMenu(),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)
@@ -1051,7 +1070,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
             self.getItemDescription, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.onSelect, 
+            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
             self.uiCommands['edittask'], self.uiCommands['draganddroptask'],
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
@@ -1083,6 +1102,7 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
     def createWidget(self):
         widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemDescription,
             self.getItemImage, self.getItemAttr, self.getChildrenCount,
+            self.getItemExpanded,
             self.getIsItemChecked, self.onSelect, self.onCheck,
             self.uiCommands['editcategory'], 
             self.uiCommands['draganddropcategory'], 
@@ -1174,7 +1194,7 @@ class NoteViewer(SearchableViewer, SortableViewerWithColumns,
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText, 
             self.getItemDescription, self.getItemImage, self.getItemAttr, 
-            self.getChildrenCount, self.onSelect,
+            self.getChildrenCount, self.getItemExpanded, self.onSelect,
             self.uiCommands['editnote'], 
             self.uiCommands['draganddropnote'], 
             self.createNotePopupMenu(), self.createColumnPopupMenu())
@@ -1202,14 +1222,14 @@ class NoteViewer(SearchableViewer, SortableViewerWithColumns,
         return menu.ColumnPopupMenu(self, self.uiCommands)
 
     def _createColumns(self):
-        return [widgets.Column(name, columnHeader, 'note.'+name,
+        return [widgets.Column(name, columnHeader, eventType,
                 width=self.getColumnWidth(name), 
                 resizeCallback=self.onResizeColumn,
                 renderCallback=renderCallback, 
                 sortCallback=self.uiCommands['viewsortby' + name.lower()]) \
-            for name, columnHeader, renderCallback in \
-            ('subject', _('Subject'), lambda note: render.subject(note, recursively=False)),
-            ('description', _('Description'), lambda note: note.description())]
+            for name, columnHeader, eventType, renderCallback in \
+            ('subject', _('Subject'), note.Note.subjectChangedEventType(), lambda note: render.subject(note, recursively=False)),
+            ('description', _('Description'), note.Note.descriptionChangedEventType(), lambda note: note.description())]
                      
     def onNoteChanged(self, event):
         note = event.source()

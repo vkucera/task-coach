@@ -4,6 +4,22 @@ from changetypes import *
 
 releases = [
 
+Release('0.66.2', 'November 9, 2007',
+    summary='Bug fix release to address crashes.',
+    bugsFixed=[
+        Bug('''Don't crash when refreshing a tree view.''', '1828846')]),
+        
+Release('0.66.1', 'November 7, 2007',
+    summary='This release fixes a number of minor bugs.',
+    bugsFixed=[
+        Bug('''When changing the sort order in a tree viewer, keep 
+collapsed items collapsed and expanded items expanded.''', '1791638'),
+        Bug('Sort categories alphabetically in task editor.', '1824180'),
+        Bug('''Double clicking a task in the tree view did not open
+the task edit dialog.'''),
+        Bug('''When filtering on a specific category, a newly added task
+belonging to that category was not shown in the task viewers.''')]),
+        
 Release('0.66.0', 'October 31, 2007',
     summary='''Small feature enhancements and a translation in 
 Traditional Chinese.''',

@@ -1,8 +1,9 @@
 from domain import base
+import note
 
 
-class NoteSorter(base.Sorter):
-    EventTypePrefix = 'note'
+class NoteSorter(base.TreeSorter):
+    DomainObjectClass = note.Note
                         
     def createSortKeyFunction(self):
         sortKeyName = self._sortKey

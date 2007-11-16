@@ -1,5 +1,5 @@
 import patterns, re, task
-from domain import base, date
+from domain import base, date, category
     
 
 class ViewFilter(base.Filter):
@@ -96,12 +96,13 @@ class CategoryFilter(base.Filter):
         self.__categories = kwargs.pop('categories')
         self.__filterOnlyWhenAllCategoriesMatch = \
             kwargs.pop('filterOnlyWhenAllCategoriesMatch', False)
-        patterns.Publisher().registerObserver(self.onCategoryChanged,
-            eventType=self.__categories.addItemEventType())
-        patterns.Publisher().registerObserver(self.onCategoryChanged,
-            eventType=self.__categories.removeItemEventType())
-        patterns.Publisher().registerObserver(self.onCategoryChanged,
-            eventType='category.filter')
+        eventTypes = [self.__categories.addItemEventType(),
+                      self.__categories.removeItemEventType()]
+        for eventName in ('taskAdded', 'taskRemoved', 'filterChanged'):
+            eventTypes.append(getattr(category.Category, '%sEventType'%eventName)())
+        for eventType in eventTypes:
+            patterns.Publisher().registerObserver(self.onCategoryChanged,
+                                                  eventType=eventType)
         super(CategoryFilter, self).__init__(*args, **kwargs)
     
     def setFilterOnlyWhenAllCategoriesMatch(self, filterOnlyWhenAllCategoriesMatch=True):

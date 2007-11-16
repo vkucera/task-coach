@@ -220,12 +220,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.assertEqual('A new description', self.task.description())
 
     def testSetDescriptionNotification(self):
-        self.registerObserver('task.description')
+        self.registerObserver(task.Task.descriptionChangedEventType())
         self.task.setDescription('A new description')
         self.failUnless('A new description', self.events[0].value())
 
     def testSetDescriptionUnchangedCausesNoNotification(self):
-        self.registerObserver('task.description')
+        self.registerObserver(task.Task.descriptionChangedEventType())
         self.task.setDescription(self.task.description())
         self.failIf(self.events)
 
@@ -539,7 +539,7 @@ class InactiveTaskTest(TaskTestCase, CommonTaskTests):
 
 
 class TaskWithSubject(TaskTestCase, CommonTaskTests):
-    eventTypes = ['task.subject']
+    eventTypes = [task.Task.subjectChangedEventType()]
 
     def taskCreationKeywordArguments(self):
         return [{'subject': 'Subject'}]

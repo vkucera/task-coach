@@ -22,9 +22,9 @@ class TaskFile(task.TaskList):
             patterns.Publisher().registerObserver(self.onDomainObjectAddedOrRemoved, 
                                                   eventType)
 
-        for eventType in ('task.subject',
-            'task.description', 'task.startDate', 'task.dueDate',
-            'task.completionDate', 'task.priority', 
+        for eventType in (task.Task.subjectChangedEventType(), 
+            task.Task.descriptionChangedEventType(), 'task.startDate', 
+            'task.dueDate', 'task.completionDate', 'task.priority', 
             'task.budget', 'task.hourlyFee', 'task.fixedFee',
             'task.timeSpent', 'task.reminder',
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',

@@ -211,3 +211,16 @@ class CategoryTest(test.TestCase):
         self.category.addChild(self.subCategory)
         copy = self.category.copy()
         self.assertEqual(self.subCategory.subject(), copy.children()[0].subject())
+
+    def testAddTaskNotification(self):
+        eventType = category.Category.taskAddedEventType()
+        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.category.addTask(self.task)
+        self.assertEqual(1, len(self.events))
+        
+    def testRemoveTaskNotification(self):
+        eventType = category.Category.taskRemovedEventType()
+        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.category.addTask(self.task)
+        self.category.removeTask(self.task)
+        self.assertEqual(1, len(self.events))

@@ -67,7 +67,10 @@ class Sorter(patterns.ListDecorator):
         patterns.Publisher().removeObserver(self.reset, eventType=eventType)
 
     def _createEventTypeFromAttribute(self, attribute):
-        return '%s.%s'%(self.EventTypePrefix, attribute)
+        try:
+            return getattr(self.DomainObjectClass, '%sChangedEventType'%attribute)()
+        except AttributeError:
+            return '%s.%s'%(self.EventTypePrefix, attribute)
 
 
 class TreeSorter(Sorter):

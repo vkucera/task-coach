@@ -387,6 +387,21 @@ class CategoryFilterFixtureAndCommonTests(CategoryFilterHelpers):
     def testFilterOnAllCategories_NoCategoriesSelected(self):
         self.setFilterOnAllCategories()
         self.assertEqual(2, len(self.filter))
+        
+    def testAddTaskWithFilteredCategory(self):
+        self.unusedCategory.setFiltered()
+        newTask = task.Task()
+        newTask.addCategory(self.unusedCategory)
+        self.list.extend([newTask])
+        self.assertEqual(1, len(self.filter))
+        
+    def testRemoveTaskWithFilteredCategory(self):
+        self.unusedCategory.setFiltered()
+        newTask = task.Task()
+        newTask.addCategory(self.unusedCategory)
+        self.list.extend([newTask])
+        self.list.remove(newTask)
+        self.assertEqual(0, len(self.filter))
 
 
 class CategoryFilterInListModeTest(CategoryFilterFixtureAndCommonTests, 

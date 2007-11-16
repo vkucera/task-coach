@@ -1,20 +1,17 @@
 import patterns, time, copy
-from domain import date
+from domain import date, base
 
 
-class TaskProperty(property):
-    pass
-
-class Task(patterns.ObservableComposite):
+class Task(base.CompositeObject):
     def __init__(self, subject='', description='', dueDate=None, 
             startDate=None, completionDate=None, budget=None, 
             priority=0, id_=None, lastModificationTime=None, hourlyFee=0,
             fixedFee=0, reminder=None, attachments=None, categories=None,
             efforts=None,
             shouldMarkCompletedWhenAllChildrenCompleted=None, *args, **kwargs):
+        kwargs['subject'] = subject
+        kwargs['description'] = description
         super(Task, self).__init__(*args, **kwargs)
-        self._subject        = subject
-        self._description    = description 
         self._dueDate        = dueDate or date.Date()
         self._startDate      = startDate or date.Today()
         self._completionDate = completionDate or date.Date()
@@ -34,8 +31,7 @@ class Task(patterns.ObservableComposite):
         self.setLastModificationTime(lastModificationTime)
             
     def __setstate__(self, state):
-        self.setSubject(state['subject'])
-        self.setDescription(state['description'])
+        super(Task, self).__setstate__(state)
         self.setId(state['id'])
         self.setStartDate(state['startDate'])
         self.setDueDate(state['dueDate'])
@@ -53,48 +49,27 @@ class Task(patterns.ObservableComposite):
             state['shouldMarkCompletedWhenAllChildrenCompleted']
             
     def __getstate__(self):
-        return dict(subject=self._subject, description=self._description, 
-            id=self._id, dueDate=self._dueDate, startDate=self._startDate, 
-            completionDate=self._completionDate, children=self.children(), 
-            parent=self.parent(), efforts=self._efforts, budget=self._budget, 
+        state = super(Task, self).__getstate__()
+        state.update(dict(id=self._id, dueDate=self._dueDate, 
+            startDate=self._startDate, completionDate=self._completionDate, 
+            children=self.children(), parent=self.parent(), 
+            efforts=self._efforts, budget=self._budget,
             categories=set(self._categories), priority=self._priority, 
             attachments=self._attachments[:], hourlyFee=self._hourlyFee, 
             fixedFee=self._fixedFee, 
             shouldMarkCompletedWhenAllChildrenCompleted=\
-                self._shouldMarkCompletedWhenAllChildrenCompleted)
-        
-    def __repr__(self):
-        return self._subject
+                self._shouldMarkCompletedWhenAllChildrenCompleted))
+        return state
         
     def id(self):
         return self._id
 
     def setId(self, id):
         self._id = id
-    
-    def __notifyObservers(self, event):
-        patterns.Publisher().notifyObservers(event)
-    
-    # I want to use properties more, but I still need to make all the changes.
-    # So, only description is a property right now.
-        
-    def __getDescription(self):
-        return self.__description
-    
-    def __setDescription(self, description):
-        self.__description = description
-        
-    _description = TaskProperty(__getDescription, __setDescription)
-
-    def description(self, recursive=False):
-        return self._description
 
     def setDescription(self, description):
-        if description != self._description:
-            self._description = description
+        if super(Task, self).setDescription(description):
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.description', 
-                description))
     
     def allChildrenCompleted(self):
         if not self.children():
@@ -130,7 +105,7 @@ class Task(patterns.ObservableComposite):
         oldTotalPriority = self.priority(recursive=True)
         super(Task, self).addChild(child)
         self.setLastModificationTime()
-        self.__notifyObservers(patterns.Event(self, Task.addChildEventType(), child))
+        self.notifyObservers(patterns.Event(self, Task.addChildEventType(), child))
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
         if child.budget(recursive=True):
             self.notifyObserversOfTotalBudgetChange()
@@ -167,16 +142,9 @@ class Task(patterns.ObservableComposite):
             self.isBeingTracked(recursive=True):
             self.notifyObserversOfStopTracking(*child.activeEfforts(recursive=True))
 
-    def subject(self, recursive=False):
-        ''' The recursive flag is allowed, but ignored. This makes 
-            task.sorter.Sorter.__createRegularSortKey easier. '''
-        return self._subject
-
     def setSubject(self, subject):
-        if subject != self._subject:
-            self._subject = subject
+        if super(Task, self).setSubject(subject):
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.subject', subject))
 
     def dueDate(self, recursive=False):
         if recursive:
@@ -189,7 +157,7 @@ class Task(patterns.ObservableComposite):
         if dueDate != self._dueDate:
             self._dueDate = dueDate
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.dueDate', dueDate))
+            self.notifyObservers(patterns.Event(self, 'task.dueDate', dueDate))
 
     def startDate(self, recursive=False):
         if recursive:
@@ -202,7 +170,7 @@ class Task(patterns.ObservableComposite):
         if startDate != self._startDate:
             self._startDate = startDate
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.startDate', 
+            self.notifyObservers(patterns.Event(self, 'task.startDate', 
                 startDate))
 
     def timeLeft(self, recursive=False):
@@ -221,7 +189,7 @@ class Task(patterns.ObservableComposite):
         if completionDate != self._completionDate:
             self._completionDate = completionDate
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.completionDate', 
+            self.notifyObservers(patterns.Event(self, 'task.completionDate', 
                 completionDate))
             if completionDate != date.Date():
                 self.setReminder(None)
@@ -265,7 +233,7 @@ class Task(patterns.ObservableComposite):
         if effort not in self._efforts:
             self._efforts.append(effort)
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.effort.add', 
+            self.notifyObservers(patterns.Event(self, 'task.effort.add', 
                 effort))
             if effort.isBeingTracked() and not wasTracking:
                 self.notifyObserversOfStartTracking(effort)
@@ -275,7 +243,7 @@ class Task(patterns.ObservableComposite):
         if effort in self._efforts:
             self._efforts.remove(effort)
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.effort.remove', 
+            self.notifyObservers(patterns.Event(self, 'task.effort.remove', 
                 effort))
             if effort.isBeingTracked() and not self.isBeingTracked():
                 self.notifyObserversOfStopTracking(effort)
@@ -329,30 +297,30 @@ class Task(patterns.ObservableComposite):
             for child in self.children()], date.TimeDelta())
 
     def notifyObserversOfBudgetChange(self):
-        self.__notifyObservers(patterns.Event(self, 'task.budget', self.budget()))
+        self.notifyObservers(patterns.Event(self, 'task.budget', self.budget()))
         self.notifyObserversOfTotalBudgetChange()
 
     def notifyObserversOfTotalBudgetChange(self):
-        self.__notifyObservers(patterns.Event(self, 'task.totalBudget',
+        self.notifyObservers(patterns.Event(self, 'task.totalBudget',
             self.budget(recursive=True)))
         parent = self.parent()
         if parent: 
             parent.notifyObserversOfTotalBudgetChange()
 
     def notifyObserversOfBudgetLeftChange(self):
-        self.__notifyObservers(patterns.Event(self, 'task.budgetLeft',
+        self.notifyObservers(patterns.Event(self, 'task.budgetLeft',
             self.budgetLeft()))
         self.notifyObserversOfTotalBudgetLeftChange()
         
     def notifyObserversOfTotalBudgetLeftChange(self):
-        self.__notifyObservers(patterns.Event(self, 'task.totalBudgetLeft', 
+        self.notifyObservers(patterns.Event(self, 'task.totalBudgetLeft', 
             self.budgetLeft(recursive=True)))
         parent = self.parent()
         if parent: 
             parent.notifyObserversOfTotalBudgetLeftChange()
         
     def notifyObserversOfTimeSpentChange(self):
-        self.__notifyObservers(patterns.Event(self, 'task.timeSpent', 
+        self.notifyObservers(patterns.Event(self, 'task.timeSpent', 
             self.timeSpent()))
         self.notifyObserversOfTotalTimeSpentChange()
         if self.budget():
@@ -363,21 +331,21 @@ class Task(patterns.ObservableComposite):
             self.notifyObserversOfRevenueChange()
 
     def notifyObserversOfTotalTimeSpentChange(self):
-        self.__notifyObservers(patterns.Event(self, 'task.totalTimeSpent', 
+        self.notifyObservers(patterns.Event(self, 'task.totalTimeSpent', 
             self.timeSpent(recursive=True)))
         parent = self.parent()
         if parent: 
             parent.notifyObserversOfTotalTimeSpentChange()
 
     def notifyObserversOfStartTracking(self, *trackedEfforts):
-        self.__notifyObservers(patterns.Event(self, 'task.track.start',
+        self.notifyObservers(patterns.Event(self, 'task.track.start',
             *trackedEfforts))
         parent = self.parent()
         if parent: 
             parent.notifyObserversOfStartTracking(*trackedEfforts)
 
     def notifyObserversOfStopTracking(self, *trackedEfforts):
-        self.__notifyObservers(patterns.Event(self, 'task.track.stop',
+        self.notifyObservers(patterns.Event(self, 'task.track.stop',
             *trackedEfforts))
         parent = self.parent()
         if parent: 
@@ -395,7 +363,7 @@ class Task(patterns.ObservableComposite):
         if category not in self._categories:
             self._categories.add(category)
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.category.add', 
+            self.notifyObservers(patterns.Event(self, 'task.category.add', 
                 category))
             self.notifyChildObserversOfCategoryChange(category, 'add')
         
@@ -403,7 +371,7 @@ class Task(patterns.ObservableComposite):
         if category in self._categories:
             self._categories.discard(category)
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.category.remove', 
+            self.notifyObservers(patterns.Event(self, 'task.category.remove', 
                 category))
             self.notifyChildObserversOfCategoryChange(category, 'remove')
                 
@@ -413,17 +381,17 @@ class Task(patterns.ObservableComposite):
     def notifyChildObserversOfCategoryChange(self, category, change):
         assert change in ('add', 'remove')
         for child in self.children(recursive=True):
-            self.__notifyObservers(patterns.Event(child, 
+            self.notifyObservers(patterns.Event(child, 
                                    'task.totalCategory.%s'%change, category))
             
     def notifyObserversOfCategorySubjectChange(self, category):
-        self.__notifyObservers(patterns.Event(self, 
+        self.notifyObservers(patterns.Event(self, 
             'task.category.subject', category.subject()))
         self.notifyObserversOfTotalCategorySubjectChange(category)
     
     def notifyObserversOfTotalCategorySubjectChange(self, category):
         for task in [self] + self.children(recursive=True):
-            self.__notifyObservers(patterns.Event(task, 
+            self.notifyObservers(patterns.Event(task, 
                 'task.totalCategory.subject', category.subject()))
             
     # priority
@@ -443,13 +411,13 @@ class Task(patterns.ObservableComposite):
             self.notifyObserversOfPriorityChange()
         
     def notifyObserversOfPriorityChange(self):
-        self.__notifyObservers(patterns.Event(self, 'task.priority', 
+        self.notifyObservers(patterns.Event(self, 'task.priority', 
             self.priority()))
         self.notifyObserversOfTotalPriorityChange()
 
     def notifyObserversOfTotalPriorityChange(self):
         myTotalPriority = self.priority(recursive=True)
-        self.__notifyObservers(patterns.Event(self, 'task.totalPriority', 
+        self.notifyObservers(patterns.Event(self, 'task.totalPriority', 
             myTotalPriority))
         parent = self.parent()
         if parent and myTotalPriority == parent.priority(recursive=True):
@@ -476,7 +444,7 @@ class Task(patterns.ObservableComposite):
         if hourlyFee != self._hourlyFee:
             self._hourlyFee = hourlyFee
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.hourlyFee',
+            self.notifyObservers(patterns.Event(self, 'task.hourlyFee',
                 hourlyFee))
             if self.timeSpent() > date.TimeDelta():
                 self.notifyObserversOfRevenueChange()
@@ -499,17 +467,17 @@ class Task(patterns.ObservableComposite):
         if fixedFee != self._fixedFee:
             self._fixedFee = fixedFee
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.fixedFee',
+            self.notifyObservers(patterns.Event(self, 'task.fixedFee',
                 fixedFee))
             self.notifyObserversOfRevenueChange()
 
     def notifyObserversOfRevenueChange(self):
-        self.__notifyObservers(patterns.Event(self, 'task.revenue', 
+        self.notifyObservers(patterns.Event(self, 'task.revenue', 
             self.revenue()))
         self.notifyObserversOfTotalRevenueChange()
         
     def notifyObserversOfTotalRevenueChange(self):
-        self.__notifyObservers(patterns.Event(self, 'task.totalRevenue', 
+        self.notifyObservers(patterns.Event(self, 'task.totalRevenue', 
             self.revenue(recursive=True)))
         parent = self.parent()
         if parent:
@@ -526,7 +494,7 @@ class Task(patterns.ObservableComposite):
         if reminderDateTime != self._reminder:
             self._reminder = reminderDateTime
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.reminder', 
+            self.notifyObservers(patterns.Event(self, 'task.reminder', 
                 self._reminder))
         
     # attachments
@@ -538,7 +506,7 @@ class Task(patterns.ObservableComposite):
         if attachments:
             self._attachments.extend(attachments)
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.attachment.add', 
+            self.notifyObservers(patterns.Event(self, 'task.attachment.add', 
                 *attachments))
         
     def removeAttachments(self, *attachments):
@@ -549,7 +517,7 @@ class Task(patterns.ObservableComposite):
                 attachmentsRemoved.append(attachment)
         if attachmentsRemoved:
             self.setLastModificationTime()
-            self.__notifyObservers(patterns.Event(self, 'task.attachment.remove', 
+            self.notifyObservers(patterns.Event(self, 'task.attachment.remove', 
                 *attachmentsRemoved))
             
     def removeAllAttachments(self):
@@ -560,14 +528,14 @@ class Task(patterns.ObservableComposite):
 
     # behavior
     
-    # To experiment, this attribute is coded by means of a proporty, which
+    # To experiment, this attribute is coded by means of a property, which
     # means you can set it like this: task.shouldMark... = True
     
     def __setShouldMarkCompletedWhenAllChildrenCompleted(self, newValue):
         if newValue == self._shouldMarkCompletedWhenAllChildrenCompleted:
             return
         self._shouldMarkCompletedWhenAllChildrenCompleted = newValue
-        self.__notifyObservers(patterns.Event(self,
+        self.notifyObservers(patterns.Event(self,
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
             newValue))
 
