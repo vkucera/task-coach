@@ -43,11 +43,12 @@ class UICommand(object):
         implement doCommand() and optionally override enabled(). '''
     
     def __init__(self, menuText='?', helpText='', bitmap='nobitmap', 
-             kind=wx.ITEM_NORMAL, id=None, *args, **kwargs):
+             kind=wx.ITEM_NORMAL, id=None, bitmap2=None, *args, **kwargs):
         super(UICommand, self).__init__(*args, **kwargs)
         self.menuText = menuText
         self.helpText = helpText
         self.bitmap = bitmap
+        self.bitmap2 = bitmap2
         self.kind = kind
         self.id = id or wx.NewId()
         self.toolbar = None
@@ -58,7 +59,13 @@ class UICommand(object):
         menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
             self.kind)
         self.menuItems.append(menuItem)
-        if self.bitmap:
+        if self.bitmap2:
+            bitmap1 = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
+                (16, 16))
+            bitmap2 = wx.ArtProvider_GetBitmap(self.bitmap2, wx.ART_MENU, 
+                (16, 16))
+            menuItem.SetBitmaps(bitmap1, bitmap2)
+        elif self.bitmap:
             menuItem.SetBitmap(wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
                 (16, 16)))
         if position is None:
@@ -120,8 +127,8 @@ class UICommand(object):
                 self.toolbar.SetToolLongHelp(self.id, self.getHelpText())
             if self.menuText == '?':            
                 shortHelp = wx.MenuItem.GetLabelFromText(self.getMenuText())
-                self.toolbar.SetToolShortHelp(self.id, shortHelp)
-
+                self.toolbar.SetToolShortHelp(self.id, shortHelp)            
+        
     def enabled(self, event):
         ''' Can be overridden in a subclass. '''
         return True
@@ -156,7 +163,7 @@ class UICheckCommand(BooleanSettingsCommand):
     def __init__(self, *args, **kwargs):
         super(UICheckCommand, self).__init__(kind=wx.ITEM_CHECK, 
             bitmap=self.getBitmap(), *args, **kwargs)
-            
+        
     def isSettingChecked(self):
         return self.settings.getboolean(self.section, self.setting)
 
@@ -1108,9 +1115,19 @@ class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
 class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMarkCompleted, self).__init__(bitmap='markcompleted',
+            bitmap2='marknotcompleted',
             menuText=_('&Mark completed\tCtrl+RETURN'),
-            helpText=_('Mark the selected task(s) completed'), *args, **kwargs)
-
+            helpText=_('Mark the selected task(s) completed'), 
+            kind=wx.ITEM_CHECK, *args, **kwargs)
+        
+    def onUpdateUI(self, event):
+        checked = self.allTasksInSelectionAreCompleted()
+        # NB: We assume this UI command is on the toolbar.
+        self.toolbar.ToggleTool(self.id, checked)
+        for menuItem in self.menuItems:
+            menuItem.Check(not checked)
+        super(TaskMarkCompleted, self).onUpdateUI(event)
+            
     def doCommand(self, event):
         markCompletedCommand = command.MarkCompletedCommand( \
             self.taskList, self.viewer.curselection())
@@ -1118,10 +1135,22 @@ class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
 
     def enabled(self, event):
         return super(TaskMarkCompleted, self).enabled(event) and \
-            [task for task in self.viewer.curselection() \
-             if not task.completed()]
-
-
+            self.allTasksInSelectionHaveSameCompletionState()
+    
+    def allTasksInSelectionHaveSameCompletionState(self):
+        nrSelectedTasks, nrCompletedTasks = self.nrSelectedAndCompletedTasks()
+        return nrCompletedTasks in (0, nrSelectedTasks)  
+    
+    def allTasksInSelectionAreCompleted(self):
+        nrSelectedTasks, nrCompletedTasks = self.nrSelectedAndCompletedTasks()
+        return nrCompletedTasks == nrSelectedTasks
+    
+    def nrSelectedAndCompletedTasks(self):
+        selectedTasks = self.viewer.curselection()
+        return (len(selectedTasks), 
+                len([task for task in selectedTasks if task.completed()]))
+    
+    
 class DragAndDropCommand(ViewerCommand):
     def onCommandActivate(self, dropItemIndex, dragItemIndex):
         ''' Override omCommandActivate to be able to accept two items instead

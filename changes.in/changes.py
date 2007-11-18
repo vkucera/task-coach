@@ -5,7 +5,10 @@ from changetypes import *
 releases = [
             
 Release('0.67.0', 'November ?, 2007',
-    summary='?'),
+    summary='?',
+    featuresAdded=[
+        Feature('''The 'mark task completed' button can now also be
+used to mark tasks as not completed.''')]),
 
 Release('0.66.2', 'November 9, 2007',
     summary='Bug fix release to address crashes.',

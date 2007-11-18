@@ -17,6 +17,8 @@ iconlist = [
 ('search', 'actions', 'viewmag', [16]),
 ('searchmenu', 'actions', 'searchmenu', [16]),
 ('markcompleted', 'apps', 'korganizer_todo', [16, 22, 32]),
+('marknotcompleted', 'actions', 'klipper_dock', [16, 32]),
+('marknotcompleted', 'actions', 'tool_clipboard', [22]),
 ('new', 'actions', 'filenew', [16, 22, 32]),
 ('newsub', 'actions', 'new_sub', [16, 22, 32]),
 ('on', 'actions', 'apply', [16]),
