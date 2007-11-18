@@ -142,11 +142,15 @@ class MarkCompletedCommand(EditTaskCommand, EffortCommand):
     def do_command(self):
         super(MarkCompletedCommand, self).do_command()
         for task in self.items:
-            task.setCompletionDate()
+            if task.completed():
+                task.setCompletionDate(date.Date())
+            else:
+                task.setCompletionDate()
 
+    '''
     def undo_command(self):
         super(MarkCompletedCommand, self).undo_command()
-
+    '''
     def tasksToStopTracking(self):
         return self.items
 

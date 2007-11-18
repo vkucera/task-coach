@@ -326,7 +326,9 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
     def testMarkCompleted_TaskAlreadyCompleted(self):
         self.task1.setCompletionDate()
         self.markCompleted([self.task1])
-        self.assertDoUndoRedo(lambda: self.failUnless(self.task1.completed()))
+        self.assertDoUndoRedo(
+            lambda: self.failIf(self.task1.completed()),
+            lambda: self.failUnless(self.task1.completed()))
 
     def testMarkCompletedParent(self):
         self.markCompleted([self.parent])
