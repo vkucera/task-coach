@@ -175,6 +175,7 @@ defaults = { \
 'editor': { \
     'maccheckspelling': 'True' },
 'version': { \
+    'current': meta.data.version,
     'notified': meta.data.version,
     'notify': 'True' },
 'behavior': { \
