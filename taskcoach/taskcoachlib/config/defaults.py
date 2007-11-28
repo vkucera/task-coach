@@ -1,4 +1,4 @@
-import meta
+import meta, sys, wx
 
 defaults = { \
 'view': { \
@@ -175,6 +175,9 @@ defaults = { \
 'editor': { \
     'maccheckspelling': 'True' },
 'version': { \
+    'python': '', # Filled in by the Settings class when saving the settings
+    'wxpython': '', # Idem
+    'pythonfrozen': '', # Idem
     'current': meta.data.version,
     'notified': meta.data.version,
     'notify': 'True' },

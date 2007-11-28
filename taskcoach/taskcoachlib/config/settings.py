@@ -102,6 +102,9 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
     setdict = setlist
         
     def save(self, showerror=wx.MessageBox):
+        self.set('version', 'python', sys.version)
+        self.set('version', 'wxpython', '%s-%s @ %s'%(wx.VERSION_STRING, wx.PlatformInfo[2], wx.PlatformInfo[1]))
+        self.set('version', 'pythonfrozen', str(hasattr(sys, 'frozen')))
         if not self.__loadAndSave:
             return
         try:
