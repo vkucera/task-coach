@@ -1161,10 +1161,13 @@ class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
             return _('Mark the selected task(s) completed')
         
     def allSelectedTasksAreCompleted(self):
-        for task in self.viewer.curselection():
-            if not task.completed():
-                return False
-        return True
+        if self.viewer.isShowingTasks():
+            for task in self.viewer.curselection():
+                if not task.completed():
+                    return False
+            return True
+        else:
+            return False
     
     def allSelectedTasksHaveSameCompletionState(self):
         selectedTasks = self.viewer.curselection()
