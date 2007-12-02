@@ -64,7 +64,7 @@ class DummyViewer(object):
 class MarkCompletedTest(test.TestCase):
     def assertMarkCompletedIsEnabled(self, selection, shouldBeEnabled=True):
         viewer = DummyViewer(selection)
-        markCompleted = gui.uicommand.TaskMarkCompleted(viewer=viewer)
+        markCompleted = gui.uicommand.TaskToggleCompletion(viewer=viewer)
         isEnabled = markCompleted.enabled(None)
         if shouldBeEnabled:
             self.failUnless(isEnabled)
