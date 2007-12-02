@@ -284,8 +284,8 @@ class ToolBarMenu(Menu):
 class TaskMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(TaskMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['newtask', 'newsubtask', 
-            None, 'edittask', 'markcompleted', None, 'deletetask', None, 
+        self.appendUICommands(uiCommands, ['newtask', 'newsubtask', None, 
+            'edittask', 'toggletaskcompletion', None, 'deletetask', None, 
             'mailtask', 'addattachmenttotask', 'openalltaskattachments'])
             
             
@@ -328,9 +328,9 @@ class TaskPopupMenu(Menu):
         super(TaskPopupMenu, self).__init__(mainwindow)
         commandsToAppend = ['cut', 'copy', 'paste',
             'pasteintotask', None, 'newtask', 'newsubtask', None, 'edittask', 
-            'markcompleted', None, 'deletetask', None, 'mailtask', 
-            'addattachmenttotask', 'openalltaskattachments', None, 
-            'neweffort', 'starteffort', 'stopeffort']
+            'toggletaskcompletion', None, 'deletetask', 
+            None, 'mailtask', 'addattachmenttotask', 'openalltaskattachments', 
+            None, 'neweffort', 'starteffort', 'stopeffort']
         if treeViewer:
             commandsToAppend.extend([None, 'viewexpandselected', 
                 'viewcollapseselected'])

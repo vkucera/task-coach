@@ -59,7 +59,7 @@ class UICommand(object):
         menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
             self.kind)
         self.menuItems.append(menuItem)
-        if self.bitmap2:
+        if self.bitmap2 and self.kind == wx.ITEM_CHECK:
             bitmap1 = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
                 (16, 16))
             bitmap2 = wx.ArtProvider_GetBitmap(self.bitmap2, wx.ART_MENU, 
@@ -1112,43 +1112,64 @@ class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
         deleteCommand.do()
 
 
-class TaskMarkCompleted(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(TaskMarkCompleted, self).__init__(bitmap='markcompleted',
-            bitmap2='marknotcompleted',
-            menuText=_('&Mark completed\tCtrl+RETURN'),
-            helpText=_('Mark the selected task(s) completed'), 
+        super(TaskToggleCompletion, self).__init__(bitmap='markcompleted',
+            bitmap2='markuncompleted', 
             kind=wx.ITEM_CHECK, *args, **kwargs)
+        self.currentBitmap = self.bitmap
         
-    def onUpdateUI(self, event):
-        checked = self.allTasksInSelectionAreCompleted()
-        # NB: We assume this UI command is on the toolbar.
-        self.toolbar.ToggleTool(self.id, checked)
-        for menuItem in self.menuItems:
-            menuItem.Check(not checked)
-        super(TaskMarkCompleted, self).onUpdateUI(event)
-            
     def doCommand(self, event):
         markCompletedCommand = command.MarkCompletedCommand( \
             self.taskList, self.viewer.curselection())
         markCompletedCommand.do()
 
     def enabled(self, event):
-        return super(TaskMarkCompleted, self).enabled(event) and \
-            self.allTasksInSelectionHaveSameCompletionState()
+        return super(TaskToggleCompletion, self).enabled(event) and \
+            self.allSelectedTasksHaveSameCompletionState()
+            
+    def onUpdateUI(self, event):
+        allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
+        self.toolbar.ToggleTool(self.id, allSelectedTasksAreCompleted)
+        if allSelectedTasksAreCompleted:
+            bitmapName = self.bitmap2
+        else:
+            bitmapName = self.bitmap
+        if bitmapName != self.currentBitmap:
+            self.currentBitmap = bitmapName
+            bitmap = wx.ArtProvider_GetBitmap(bitmapName, wx.ART_TOOLBAR, 
+                                              self.toolbar.GetToolBitmapSize())
+            self.toolbar.SetToolNormalBitmap(self.id, bitmap)
+            menuText = self.getMenuText()
+            helpText = self.getHelpText()
+            for menuItem in self.menuItems:
+                menuItem.Check(not allSelectedTasksAreCompleted)
+                menuItem.SetItemLabel(menuText)
+                menuItem.SetHelp(helpText)
+        super(TaskToggleCompletion, self).onUpdateUI(event)
+        
+    def getMenuText(self):
+        if self.allSelectedTasksAreCompleted():
+            return _('&Mark task uncompleted\tCtrl+RETURN')
+        else:
+            return _('&Mark task completed\tCtrl+RETURN')
+        
+    def getHelpText(self):
+        if self.allSelectedTasksAreCompleted():
+            return _('Mark the selected task(s) uncompleted')
+        else:
+            return _('Mark the selected task(s) completed')
+        
+    def allSelectedTasksAreCompleted(self):
+        for task in self.viewer.curselection():
+            if not task.completed():
+                return False
+        return True
     
-    def allTasksInSelectionHaveSameCompletionState(self):
-        nrSelectedTasks, nrCompletedTasks = self.nrSelectedAndCompletedTasks()
-        return nrCompletedTasks in (0, nrSelectedTasks)  
-    
-    def allTasksInSelectionAreCompleted(self):
-        nrSelectedTasks, nrCompletedTasks = self.nrSelectedAndCompletedTasks()
-        return nrCompletedTasks == nrSelectedTasks
-    
-    def nrSelectedAndCompletedTasks(self):
+    def allSelectedTasksHaveSameCompletionState(self):
         selectedTasks = self.viewer.curselection()
-        return (len(selectedTasks), 
-                len([task for task in selectedTasks if task.completed()]))
+        nrCompleted = len([task for task in selectedTasks if task.completed()])
+        return nrCompleted in (0, len(selectedTasks))
     
     
 class DragAndDropCommand(ViewerCommand):
@@ -1762,8 +1783,8 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             settings=settings, uicommands=self, categories=categories)
         self['newsubtask'] = TaskNewSubTask(taskList=taskList, viewer=viewer)
         self['edittask'] = TaskEdit(taskList=taskList, viewer=viewer)
-        self['markcompleted'] = TaskMarkCompleted(taskList=taskList,
-            viewer=viewer)
+        self['toggletaskcompletion'] = TaskToggleCompletion(taskList=taskList,
+                                                            viewer=viewer)
         self['deletetask'] = TaskDelete(taskList=taskList, viewer=viewer)
         self['mailtask'] = TaskMail(viewer=viewer, menuText=_('Mail task'), 
             helpText=_('Mail the task, using your default mailer'), 
