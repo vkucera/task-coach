@@ -4,11 +4,12 @@ from domain import base
 
 class Category(base.CompositeObject):
     def __init__(self, subject, tasks=None, children=None, filtered=False, 
-                 parent=None, description=''):
+                 parent=None, description='', color=None):
         super(Category, self).__init__(subject=subject, children=children or [], 
                                        parent=parent, description=description)
         self.__tasks = tasks or []
         self.__filtered = filtered
+        self.__color = color
             
     @classmethod
     def filterChangedEventType(class_):
@@ -21,23 +22,28 @@ class Category(base.CompositeObject):
     @classmethod
     def taskRemovedEventType(class_):
         return 'category.task.removed'
+    
+    @classmethod
+    def colorChangedEventType(class_):
+        return 'category.color'
             
     def __getstate__(self):
         state = super(Category, self).__getstate__()
         state.update(dict(tasks=self.__tasks[:], 
-                          filtered=self.__filtered))
+                          filtered=self.__filtered), color=self.__color)
         return state
         
     def __setstate__(self, state):
         super(Category, self).__setstate__(state)
         self.__tasks = state['tasks']
         self.__filtered = state['filtered']
+        self.__color = state['color']
         
     def copy(self):
         return self.__class__(self.subject(), self.tasks(), 
                               [child.copy() for child in self.children()],
                               self.isFiltered(), self.parent(), 
-                              self.description())
+                              self.description(), self.color())
         
     def setSubject(self, *args, **kwargs):
         if super(Category, self).setSubject(*args, **kwargs):
@@ -83,3 +89,31 @@ class Category(base.CompositeObject):
             if task in containedTasks:
                 return True
         return False
+    
+    def color(self):
+        if self.__color is None and self.parent():
+            return self.parent().color()
+        else:
+            return self.__color
+    
+    def setColor(self, color):
+        if color != self.__color:
+            self.__color = color
+            self.notifyObserversOfColorChange(color)
+            
+    def notifyObserversOfColorChange(self, color):
+        self.notifyObservers(patterns.Event(self, 
+            self.colorChangedEventType(), color))
+        for child in self.children():
+            child.notifyObserversOfParentColorChange(color)
+                
+    def notifyObserversOfParentColorChange(self, color):
+        ''' If this category has its own color, do nothing. If this category
+            uses the color of its parent, notify its observers of the color 
+            change. And similarly for the children of this category. '''
+        if self.__color is None:
+            self.notifyObservers(patterns.Event(self, 
+                                 self.colorChangedEventType(), color))
+            for child in self.children():
+                child.notifyObserversOfParentColorChange(color)
+        

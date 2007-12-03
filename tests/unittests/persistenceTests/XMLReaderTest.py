@@ -1,4 +1,4 @@
-import test, xml.parsers.expat, sets, persistence
+import test, xml.parsers.expat, sets, persistence, wx
 import StringIO
 from domain import task, date
 
@@ -141,6 +141,7 @@ class XMLReaderVersion14Test(XMLReaderTestCase):
         self.assertEqual(date.TimeDelta(minutes=30), tasks[0].timeSpent())
         self.assertEqual(tasks[0], tasks[0].efforts()[0].task())
 
+
 class XMLReaderVersion16Text(XMLReaderTestCase):
     tskversion = 16
 
@@ -183,9 +184,15 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(['whatever.tsk', 'another.txt'], 
                          map(unicode, tasks[0].attachments()))
-        
-class XMLReaderVersion17Test(XMLReaderTestCase):
-    tskversion = 17
+
+
+# There's no XMLReaderVersion17Test because the only difference between version
+# 17 and 18 is the addition of an optional color attribute to categories in
+# version 18. So the tests for version 18 test version 17 as well.
+
+
+class XMLReaderVersion18Test(XMLReaderTestCase):
+    tskversion = 18
            
     def testReadEmptyStream(self):
         try:
@@ -467,6 +474,13 @@ class XMLReaderVersion17Test(XMLReaderTestCase):
             </category>
         </tasks>''')
         self.assertEqual('Description', categories[0].description())
+    
+    def testCategoryWithColor(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <category subject="cat" color="(255, 0, 0, 255)"/>
+        </tasks>''')
+        self.assertEqual(wx.RED, categories[0].color())
         
     def testOneTaskWithCategory(self):
         tasks, categories, notes = self.writeAndRead('''
