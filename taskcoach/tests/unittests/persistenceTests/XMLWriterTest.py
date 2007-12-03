@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import test, persistence
+import test, persistence, wx
 import StringIO # We cannot use CStringIO since unicode strings are used below.
 from domain import task, effort, date, category, note, attachment
 
@@ -263,3 +263,7 @@ class XMLWriterTest(test.TestCase):
         aNote.addChild(child)
         self.noteContainer.append(aNote)
         self.expectInXML('<note><note/></note>')
+
+    def testCategoryColor(self):
+        self.categoryContainer.append(category.Category('test', color=wx.RED))
+        self.expectInXML('<category color="(255, 0, 0, 255)" subject="test"/>')

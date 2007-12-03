@@ -54,6 +54,7 @@ class XMLReader:
         description = self.__parseDescription(categoryNode)
         filtered = self.__parseBoolean(categoryNode.getAttribute('filtered'), 
                                        False)
+        color = self.__parseTuple(categoryNode.getAttribute('color'), None)
         taskIds = categoryNode.getAttribute('tasks')
         if taskIds:
             # The category tasks attribute might contain id's that refer to tasks that
@@ -63,7 +64,7 @@ class XMLReader:
             categoryTasks = []
         children = self.__parseCategoryNodes(categoryNode.childNodes, tasksById)
         return category.Category(subject, categoryTasks, children, filtered, 
-                                 description=description)
+                                 description=description, color=color)
                       
     def __parseCategoryNodesFromTaskNodes(self, document, tasks):
         taskNodes = document.getElementsByTagName('task')
@@ -193,6 +194,12 @@ class XMLReader:
                 raise ValueError, "Expected 'True' or 'False'"
         return self.__parse(booleanText, textToBoolean, defaultValue)
         
+    def __parseTuple(self, tupleText, defaultValue=None):
+        if tupleText.startswith('(') and tupleText.endswith(')'):
+            return self.__parse(tupleText, eval, defaultValue)
+        else:
+            return defaultValue
+    
     def __parse(self, text, parseFunction, defaultValue):
         try:
             return parseFunction(text)

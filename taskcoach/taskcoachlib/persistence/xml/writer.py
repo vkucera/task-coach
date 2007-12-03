@@ -1,10 +1,9 @@
-import xml.dom, meta
+import xml.dom, meta, os
 from domain import date, attachment
-import domain.date as date
-import os
+
 
 class XMLWriter:    
-    def __init__(self, fd, versionnr=17):
+    def __init__(self, fd, versionnr=18):
         self.__fd = fd
         self.__versionnr = versionnr
 
@@ -93,6 +92,8 @@ class XMLWriter:
             node.appendChild(self.textNode('description', category.description()))
         if category.isFiltered():
             node.setAttribute('filtered', str(category.isFiltered()))
+        if category.color():
+            node.setAttribute('color', str(category.color()))
         # Make sure the task referenced is actually in the tasklist
         taskIds = ' '.join([task.id() for task in category.tasks() if task in taskList])
         if taskIds:            

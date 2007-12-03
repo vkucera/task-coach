@@ -1,4 +1,4 @@
-import test, patterns
+import test, patterns, wx
 from domain import category, task
 
 
@@ -224,3 +224,33 @@ class CategoryTest(test.TestCase):
         self.category.addTask(self.task)
         self.category.removeTask(self.task)
         self.assertEqual(1, len(self.events))
+        
+    def testGetDefaultColor(self):
+        self.assertEqual(None, self.category.color())
+        
+    def testSetColor(self):
+        self.category.setColor(wx.RED)
+        self.assertEqual(wx.RED, self.category.color())
+        
+    def testCopy_ColorIsCopied(self):
+        self.category.setColor(wx.RED)
+        copy = self.category.copy()
+        self.assertEqual(wx.RED, copy.color())
+        
+    def testColorChangeNotification(self):
+        eventType = category.Category.colorChangedEventType()
+        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.category.setColor(wx.RED)
+        self.assertEqual(1, len(self.events))
+        
+    def testSubCategoryWithoutColorHasParentColor(self):
+        self.category.addChild(self.subCategory)
+        self.category.setColor(wx.RED)
+        self.assertEqual(wx.RED, self.subCategory.color())
+        
+    def testParentColorChangeNotification(self):
+        eventType = category.Category.colorChangedEventType()
+        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.category.addChild(self.subCategory)
+        self.category.setColor(wx.RED)
+        self.assertEqual(2, len(self.events))
