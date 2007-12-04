@@ -573,6 +573,7 @@ class CategoryEditBook(widgets.BookPage):
         self._category = category
         self.addSubjectEntry()
         self.addDescriptionEntry()
+        self.addColorEntry()
         self.fit()
 
     def addSubjectEntry(self):
@@ -585,10 +586,16 @@ class CategoryEditBook(widgets.BookPage):
         self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry, 
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
+        
+    def addColorEntry(self):
+        self._colorButton = widgets.ColorSelect(self, -1, 
+            _('Select the color for this category'), self._category.color())
+        self.addEntry(_('Color'), self._colorButton)
 
     def ok(self):
         self._category.setSubject(self._subjectEntry.GetValue())
         self._category.setDescription(self._descriptionEntry.GetValue())
+        self._category.setColor(self._colorButton.GetColour())
 
 
 class NoteEditBook(widgets.BookPage):
