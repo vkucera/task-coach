@@ -46,8 +46,10 @@ class TaskFile(task.TaskList):
                 note.Note.removeChildEventType()):
             patterns.Publisher().registerObserver(self.onNoteChanged, 
                                                   eventType=eventType)
-        for eventType in ('category.filter', 
-                category.Category.subjectChangedEventType()):
+        for eventType in (category.Category.filterChangedEventType(), 
+                category.Category.subjectChangedEventType(),
+                category.Category.descriptionChangedEventType(),
+                category.Category.colorChangedEventType()):
             patterns.Publisher().registerObserver(self.onCategoryChanged, 
                 eventType=eventType)
 

@@ -36,6 +36,9 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         
     def OnGetItemTextColour(self, index):
         return self.getItemAttr(index).GetTextColour()
+    
+    def OnGetItemBackgroundColour(self, index):
+        return self.getItemAttr(index).GetBackgroundColour()
 
     def bindEventHandlers(self, selectCommand, editCommand, dragAndDropCommand):
         self.selectCommand = selectCommand

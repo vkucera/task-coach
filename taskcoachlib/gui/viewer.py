@@ -775,9 +775,20 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     def getColor(self, task):
         return color.taskColor(task, self.settings)
     
+    def getBackgroundColor(self, task):
+        categories = list(task.categories())
+        if categories:
+            return categories[0].color() 
+            # FIXME: what if first category has no color, but second does?
+            # FIXME: mix different colors somehow
+            # FIXME: move to task class?
+        else:
+            return None
+    
     def getItemAttr(self, index):
         task = self.getItemWithIndex(index)
-        return wx.ListItemAttr(self.getColor(task))
+        return wx.ListItemAttr(self.getColor(task), 
+                               self.getBackgroundColor(task))
 
     def __registerForColorChanges(self):
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
@@ -785,6 +796,8 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
         for colorSetting in colorSettings:
             patterns.Publisher().registerObserver(self.onColorChange, 
                 eventType=colorSetting)
+        patterns.Publisher().registerObserver(self.onColorChange,
+                eventType=category.Category.colorChangedEventType())
         
     def onColorChange(self, *args, **kwargs):
         self.refresh()
@@ -1136,7 +1149,11 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
         return -1
     
     def getItemAttr(self, index):
-        return wx.ListItemAttr()
+        itemAttr = wx.ListItemAttr()
+        category = self.getItemWithIndex(index)
+        if category.color() is not None:
+            itemAttr.SetBackgroundColour(category.color())
+        return itemAttr
     
     def getIsItemChecked(self, index):
         return self.getItemWithIndex(index).isFiltered()

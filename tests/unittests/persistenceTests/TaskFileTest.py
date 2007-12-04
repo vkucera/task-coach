@@ -1,4 +1,4 @@
-import test, os, persistence
+import test, os, persistence, wx
 from domain import task, effort, date, category, note
 
 class FakeAttachment(object):
@@ -336,6 +336,20 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()        
         self.category.setSubject('new subject')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterCategoryDescriptionChanged(self):
+        self.taskFile.categories().append(self.category)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.category.setDescription('new description')
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterChangingCategoryColor(self):
+        self.taskFile.categories().append(self.category)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.category.setColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterNoteSubjectChanged(self):
