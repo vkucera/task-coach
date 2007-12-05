@@ -352,6 +352,9 @@ class Viewer(wx.Panel):
     def getColor(self, item):
         return wx.BLACK
     
+    def getBackgroundColor(self, item):
+        return None
+    
     def settingsSection(self):
         section = self.__settingsSection
         if self.__instanceNumber > 0:
@@ -775,10 +778,13 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     def getColor(self, task):
         return color.taskColor(task, self.settings)
     
+    def getBackgroundColor(self, task):
+        return task.categoryColor()
+    
     def getItemAttr(self, index):
         task = self.getItemWithIndex(index)
         return wx.ListItemAttr(self.getColor(task), 
-                               task.categoryColor())
+                               self.getBackgroundColor(task))
 
     def __registerForColorChanges(self):
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
@@ -1138,9 +1144,12 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
     def getItemImage(self, index, which):
         return -1
     
+    def getBackgroundColor(self, category):
+        return category.color()
+    
     def getItemAttr(self, index):
         category = self.getItemWithIndex(index)
-        return wx.ListItemAttr(colBack=category.color())
+        return wx.ListItemAttr(colBack=self.getBackgroundColor(category))
     
     def getIsItemChecked(self, index):
         return self.getItemWithIndex(index).isFiltered()

@@ -19,12 +19,21 @@ def viewer2html(viewer, selectionOnly=False):
     for item in viewer.visibleItems():
         if selectionOnly and item not in selection:
             continue
-        htmlText += '<tr>'
+        bgColor = viewer.getBackgroundColor(item)
+        if bgColor:
+            try:
+                bgColor = bgColor.GetAsString(wx.C2S_HTML_SYNTAX)
+            except AttributeError:
+                bgColor = wx.Color(*bgColor).GetAsString(wx.C2S_HTML_SYNTAX)
+            htmlText += '<tr bgcolor="%s">'%bgColor
+        else:
+            htmlText += '<tr>'
         if tree:
             space = '&nbsp;' * len(item.ancestors()) * 3
         else:
             space = ''
         color = viewer.getColor(item)
+        
         htmlText += '<td align="%s">%s%s</td>'%(columnAlignments[0], space,
             render(item, visibleColumns[0], color))
         for column, alignment in zip(visibleColumns[1:], columnAlignments[1:]):
