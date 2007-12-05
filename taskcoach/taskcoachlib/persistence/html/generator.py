@@ -2,7 +2,7 @@ import wx
 
 def viewer2html(viewer, selectionOnly=False):
     visibleColumns = viewer.visibleColumns()
-    htmlText = '<html>\n<head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"></head>\n<body><table border=1>\n'
+    htmlText = '<html>\n<head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"></head>\n<body><table border=1 cellpadding=2>\n'
     columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left',
                          wx.LIST_FORMAT_CENTRE: 'center',
                          wx.LIST_FORMAT_RIGHT: 'right'}[column.alignment()]
