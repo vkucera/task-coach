@@ -161,6 +161,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testTaskDoesNotBelongToAnyCategoryByDefault(self):
         for recursive in False, True:
             self.failIf(self.task.categories(recursive=recursive))
+            
+    def testTaskCategoryColor(self):
+        self.assertEqual(None, self.task.categoryColor())
              
     # Setters
 
@@ -1256,6 +1259,51 @@ class TaskWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
         self.category.setSubject('New subject')
         # Expect task.category.subject and 2x task.totalCategory.subject 
         self.assertEqual(3, len(self.events))
+        
+    def testTaskColor(self):
+        self.category.setColor(wx.RED)
+        self.assertEqual(wx.RED, self.task.categoryColor())
+        
+    def testTaskColorWithTupleColor(self):
+        self.category.setColor((255, 0, 0, 255))
+        self.assertEqual(wx.RED, self.task.categoryColor())
+        
+    def testSubtaskUsesParentColor(self):
+        child = task.Task()
+        self.task.addChild(child)
+        child.setParent(self.task)
+        self.category.setColor(wx.RED)
+        self.assertEqual(wx.RED, child.categoryColor())
+
+
+class TaskWithTwoCategoriesFixture(TaskTestCase, CommonTaskTests):
+    def taskCreationKeywordArguments(self):
+        self.category2 = category.Category('category 2')
+        return [{'categories': [self.category, self.category2]}]
+
+    def testCategories(self):
+        self.assertEqual(set([self.category, self.category2]), 
+                         self.task.categories())
+        
+    def testTaskColorWhenCategory1HasColor(self):
+        self.category.setColor(wx.RED)
+        self.assertEqual(wx.RED, self.task.categoryColor())
+        
+    def testTaskColorWhenCategory2HasColor(self):
+        self.category2.setColor(wx.BLUE)
+        self.assertEqual(wx.BLUE, self.task.categoryColor())
+        
+    def testTaskColorWhenBothCategoriesHaveSameColor(self):
+        for category in [self.category, self.category2]:
+            category.setColor(wx.RED)
+        self.assertEqual(wx.RED, self.task.categoryColor())
+        
+    def testTaskColorWhenBothCategoriesHaveDifferentColors(self):
+        self.category.setColor(wx.RED)
+        self.category2.setColor(wx.BLUE)
+        expectedColor = wx.Color(127, 0, 127, 255)
+        self.assertEqual(expectedColor, self.task.categoryColor())
+        
 
 
 class ChildAndParentWithOneCategoryFixture(TaskTestCase, CommonTaskTests):

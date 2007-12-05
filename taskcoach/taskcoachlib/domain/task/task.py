@@ -377,6 +377,30 @@ class Task(base.CompositeObject):
                 
     def setCategories(self, categories):
         self._categories = categories # FIXME: no notification?
+        
+    def categoryColor(self):
+        ''' If a task belongs to a category that has a color associated with 
+            it, the task is colored accordingly. When a task belongs to 
+            multiple categories, the color is mixed. If a task has no color
+            of its own, it uses its parent's color. '''
+        colorSum, colorCount = [0, 0, 0, 0], 0
+        for category in self.categories():
+            categoryColor = category.color()
+            if categoryColor:
+                try:
+                    categoryColor = categoryColor.Get(includeAlpha=True)
+                except AttributeError:
+                    pass # categoryColor is already a tuple
+                for colorIndex in range(4): 
+                    colorSum[colorIndex] += categoryColor[colorIndex]
+                colorCount += 1
+        if colorCount:
+            return (colorSum[0]/colorCount, colorSum[1]/colorCount,
+                    colorSum[2]/colorCount, colorSum[3]/colorCount)
+        elif self.parent():
+            return self.parent().categoryColor()
+        else:
+            return None
 
     def notifyChildObserversOfCategoryChange(self, category, change):
         assert change in ('add', 'remove')

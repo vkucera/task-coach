@@ -7,8 +7,10 @@ releases = [
 Release('0.67.0', 'November ?, 2007',
     summary='?',
     featuresAdded=[
+        Feature('''You can assign a color to a category. Tasks are colored 
+according to the color of the categories they belong to.''', '1466159'),
         Feature('''The 'mark task completed' button and menu items can now 
-also be used to mark tasks as not completed.''')]),
+also be used to mark tasks as not completed.''', '1449714')]),
 
 Release('0.66.2', 'November 9, 2007',
     summary='Bug fix release to address crashes.',
