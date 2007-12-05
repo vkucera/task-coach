@@ -1,4 +1,4 @@
-import test, persistence, StringIO, gui, config
+import test, persistence, StringIO, gui, config, wx
 from domain import task, category, effort, date, note
 from unittests import dummy
 
@@ -66,6 +66,16 @@ class TaskTests(object):
         expectedColor = '%02X%02X%02X'%eval(self.settings.get('color', 'inactivetasks'))[:3]
         self.expectInHTML('<font color="#%s">Task subject</font>'%expectedColor)
 
+    def testCategoryColor(self):
+        cat = category.Category('cat', color=wx.RED)
+        self.task.addCategory(cat)
+        self.expectInHTML('<tr bgcolor="#FF0000">')
+
+    def testCategoryColorAsTuple(self):
+        cat = category.Category('cat', color=(255, 0, 0, 0))
+        self.task.addCategory(cat)
+        self.expectInHTML('<tr bgcolor="#FF0000">')
+        
         
 class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
