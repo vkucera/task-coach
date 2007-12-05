@@ -7,6 +7,7 @@ releases = [
 Release('0.67.0', 'November ?, 2007',
     summary='?',
     featuresAdded=[
+        Feature('''Added Hebrew translation thanks to Ziv Barcesat.'''),
         Feature('''You can assign a color to a category. Tasks are colored 
 according to the color of the categories they belong to.''', '1466159'),
         Feature('''The 'mark task completed' button and menu items can now 

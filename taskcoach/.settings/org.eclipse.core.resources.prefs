@@ -1,6 +1,7 @@
-#Fri Sep 21 23:18:38 CEST 2007
+#Wed Dec 05 23:48:30 CET 2007
 eclipse.preferences.version=1
 encoding//changes.in/changes.py=ISO8859-1
+encoding//i18n.in/he.po=UTF-8
 encoding//i18n.in/zh_TW.po=UTF-8
 encoding//taskcoachlib/gui/dialog/preferences.py=UTF-8
 encoding//taskcoachlib/i18n/de.py=UTF-8

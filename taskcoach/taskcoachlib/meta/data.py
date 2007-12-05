@@ -50,7 +50,8 @@ languages = {
     'Japanese': 'ja',
     'Spanish': 'es',
     'Slovak': 'sk',
-    'Hungarian': 'hu'}
+    'Hungarian': 'hu',
+    'Hebrew': 'he'}
 languages_list = ','.join(languages.keys())
 
 def __createDict(locals):
