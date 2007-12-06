@@ -639,7 +639,7 @@ msgstr "מוזג %(filename)s"
 #: taskcoachlib\gui\iocontroller.py:64 taskcoachlib\gui\iocontroller.py:76
 #: taskcoachlib\gui\iocontroller.py:89
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
-msgstr "נשמרו %(nrtasks) משימות מתוך %(filename)s"
+msgstr "נשמרו %(nrtasks)d משימות מתוך %(filename)s"
 
 #: taskcoachlib\gui\iocontroller.py:73 taskcoachlib\gui\iocontroller.py:84
 msgid "Save as..."
