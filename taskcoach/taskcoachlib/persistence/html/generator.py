@@ -23,7 +23,7 @@ def viewer2html(viewer, selectionOnly=False):
         if bgColor:
             try:
                 bgColor = bgColor.GetAsString(wx.C2S_HTML_SYNTAX)
-            except AttributeError:
+            except AttributeError: # bgColor is a tuple
                 bgColor = wx.Color(*bgColor).GetAsString(wx.C2S_HTML_SYNTAX)
             htmlText += '<tr bgcolor="%s">'%bgColor
         else:
