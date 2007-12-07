@@ -1104,7 +1104,8 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
         kwargs.setdefault('settingsSection', 'categoryviewer')
         super(CategoryViewer, self).__init__(*args, **kwargs)
         for eventType in category.Category.subjectChangedEventType(), \
-                         category.Category.filterChangedEventType():
+                         category.Category.filterChangedEventType(), \
+                         category.Category.colorChangedEventType():
             patterns.Publisher().registerObserver(self.onCategoryChanged, 
                 eventType)
     

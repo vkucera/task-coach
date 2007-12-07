@@ -568,7 +568,7 @@ class EffortEditBook(widgets.BookPage):
 
 class CategoryEditBook(widgets.BookPage):
     def __init__(self, parent, category, editor, *args, **kwargs):
-        super(CategoryEditBook, self).__init__(parent, columns=2, *args, **kwargs)
+        super(CategoryEditBook, self).__init__(parent, columns=3, *args, **kwargs)
         self._editor = editor
         self._category = category
         self.addSubjectEntry()
@@ -588,14 +588,20 @@ class CategoryEditBook(widgets.BookPage):
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
         
     def addColorEntry(self):
-        self._colorButton = widgets.ColorSelect(self, -1, 
-            _('Select the color for this category'), self._category.color())
-        self.addEntry(_('Color'), self._colorButton)
+        self._checkBox = wx.CheckBox(self, label=_('Use this color:'))
+        self._checkBox.SetValue(self._category.color() is not None)
+        self._colorButton = wx.ColourPickerCtrl(self, -1, self._category.color() or wx.WHITE, size=(40,-1))
+        self._colorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda event: self._checkBox.SetValue(True))
+        self.addEntry(_('Color'), self._checkBox, self._colorButton)
 
     def ok(self):
         self._category.setSubject(self._subjectEntry.GetValue())
         self._category.setDescription(self._descriptionEntry.GetValue())
-        self._category.setColor(self._colorButton.GetColour())
+        if self._checkBox.IsChecked():
+            color = self._colorButton.GetColour()
+        else:
+            color = None
+        self._category.setColor(color)
 
 
 class NoteEditBook(widgets.BookPage):
