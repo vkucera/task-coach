@@ -251,8 +251,8 @@ class CheckTreeCtrl(CustomTreeCtrl):
         return self.getIsItemChecked(index)
 
 
-class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl.CtrlWithToolTip,
-                   TreeMixin, gizmos.TreeListCtrl):
+class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, 
+                   itemctrl.CtrlWithToolTip, TreeMixin, gizmos.TreeListCtrl):
     # TreeListCtrl uses ALIGN_LEFT, ..., ListCtrl uses LIST_FORMAT_LEFT, ... for
     # specifying alignment of columns. This dictionary allows us to map from the 
     # ListCtrl constants to the TreeListCtrl constants:
