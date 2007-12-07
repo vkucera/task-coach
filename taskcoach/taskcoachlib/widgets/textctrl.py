@@ -1,4 +1,4 @@
-import wx, webbrowser, draganddrop
+import wx, webbrowser, draganddrop, i18n
 
 
 UNICODE_CONTROL_CHARACTERS_TO_WEED = {}
@@ -32,8 +32,12 @@ class MultiLineTextCtrl(BaseTextCtrl):
     CheckSpelling = True
     
     def __init__(self, parent, text='', *args, **kwargs):
-        super(MultiLineTextCtrl, self).__init__(parent,
-            style=wx.TE_MULTILINE|wx.TE_RICH|wx.TE_AUTO_URL, *args, **kwargs)
+        if i18n.Translator().currentLanguageIsRightToLeft():
+            style = wx.TE_MULTILINE
+        else:
+            style = wx.TE_MULTILINE|wx.TE_RICH|wx.TE_AUTO_URL
+        super(MultiLineTextCtrl, self).__init__(parent, style=style, 
+                                                *args, **kwargs)#
         self.__initializeText(text)
         self.Bind(wx.EVT_TEXT_URL, self.onURLClicked)
         try:
