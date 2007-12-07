@@ -31,6 +31,11 @@ class Translator:
         except (AttributeError, KeyError):
             return string
         
+    def currentLanguageIsRightToLeft(self):
+        return self.__locale.GetLanguage() in (wx.LANGUAGE_HEBREW, 
+                                               wx.LANGUAGE_ARABIC)
+        
+
 def translate(string):
     return Translator().translate(string)
 
