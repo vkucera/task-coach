@@ -1449,13 +1449,15 @@ class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self._dialogTitle = kwargs.pop('dialogTitle')
         self._dialogText = kwargs.pop('dialogText')
+        self._direction = kwargs.pop('direction', None)
         self.closed = True
         super(DialogCommand, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
         self.closed = False
         self.dialog = widgets.HTMLDialog(self._dialogTitle, self._dialogText, 
-                                    bitmap=self.bitmap)
+                                    bitmap=self.bitmap, 
+                                    direction=self._direction)
         for event in wx.EVT_CLOSE, wx.EVT_BUTTON:
             self.dialog.Bind(event, self.onClose)
         self.dialog.Show()
@@ -1504,7 +1506,8 @@ class HelpLicense(InfoCommand):
         super(HelpLicense, self).__init__(menuText=_('&License'),
             helpText=_('%s license')%meta.name,
             dialogTitle=_('Help: %s license')%meta.name, 
-            dialogText=meta.licenseHTML, *args, **kwargs)
+            dialogText=meta.licenseHTML, direction=wx.Layout_LeftToRight, 
+            *args, **kwargs)
 
 
 class MainWindowRestore(MainWindowCommand):
