@@ -2,7 +2,8 @@ import wx, wx.html, widgets, os
 from i18n import _
 
 class Dialog(wx.Dialog):
-    def __init__(self, parent, title, bitmap='edit', *args, **kwargs):
+    def __init__(self, parent, title, bitmap='edit', 
+                 direction=None, *args, **kwargs):
         # On wxGTK, calling Raise() on the dialog causes it to be shown, which
         # is rather undesirable during testing, so provide a way to instruct 
         # the dialog to not call self.Raise():
@@ -15,6 +16,7 @@ class Dialog(wx.Dialog):
         self._panel = wx.Panel(self)
         self._panelSizer = wx.GridSizer(1, 1)
         self._panelSizer.Add(self._panel, flag=wx.EXPAND)
+        self._direction = direction
         self._interior = self.createInterior()
         self.fillInterior()
         self._verticalSizer.Add(self._interior, 1, flag=wx.EXPAND)
@@ -104,8 +106,11 @@ class HTMLDialog(Dialog):
         super(HTMLDialog, self).__init__(None, title, *args, **kwargs)
         
     def createInterior(self):
-        return HtmlWindowThatUsesWebBrowserForExternalLinks(self._panel, 
+        interior = HtmlWindowThatUsesWebBrowserForExternalLinks(self._panel, 
             -1, size=(550,400))
+        if self._direction:
+            interior.SetLayoutDirection(self._direction)
+        return interior
         
     def fillInterior(self):
         self._interior.AppendToPage(self._htmlText)
