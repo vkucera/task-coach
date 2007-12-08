@@ -3,7 +3,7 @@ import wx, icons, i18n
 class SplashScreen(wx.SplashScreen):
     def __init__(self):
         splash = icons.catalog['splash']
-        if i18n.Translator().currentLanguageIsRightToLeft():
+        if i18n.currentLanguageIsRightToLeft():
             # RTL languages cause the bitmap to be mirrored too, but because
             # the splash image is not internationalized, we have to mirror it
             # (back). Unfortunately using SetLayoutDirection() on the 

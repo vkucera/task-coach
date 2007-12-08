@@ -32,12 +32,15 @@ class MultiLineTextCtrl(BaseTextCtrl):
     CheckSpelling = True
     
     def __init__(self, parent, text='', *args, **kwargs):
-        if i18n.Translator().currentLanguageIsRightToLeft():
+        if i18n.currentLanguageIsRightToLeft():
+            # Using wx.TE_RICH will remove the RTL specific menu items
+            # from the right-click menu in the TextCtrl, so we don't use 
+            # wx.TE_RICH if the language is RTL.
             style = wx.TE_MULTILINE
         else:
             style = wx.TE_MULTILINE|wx.TE_RICH|wx.TE_AUTO_URL
         super(MultiLineTextCtrl, self).__init__(parent, style=style, 
-                                                *args, **kwargs)#
+                                                *args, **kwargs)
         self.__initializeText(text)
         self.Bind(wx.EVT_TEXT_URL, self.onURLClicked)
         try:
