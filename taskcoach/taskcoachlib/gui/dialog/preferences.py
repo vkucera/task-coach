@@ -107,7 +107,7 @@ class LanguagePage(SettingsPage):
              ('en_US', 'English (US)'), 
              ('fr_FR', u'Français (French)'),
              ('de_DE', 'Deutsch (German)'),
-             ('he_IL', 'עברית (Hebrew)'),
+             ('he_IL', u'עברית (Hebrew)'),
              ('hu_HU', 'Magyar (Hungarian)'),
              ('ja_JP', u'日本語 (Japanese)'),
              ('lv_LV', u'Latviešu (Latvian)'),
