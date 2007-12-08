@@ -33,7 +33,7 @@ copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)
 license = 'GNU GENERAL PUBLIC LICENSE Version 2, June 1991'
 platform = 'Any'
 pythonversion = '2.4'
-wxpythonversion = '2.8.4-unicode'
+wxpythonversion = '2.8.6.0-unicode'
 languages = {
     'English': None, 
     'Brazilian Portuguese': 'pt_BR',
