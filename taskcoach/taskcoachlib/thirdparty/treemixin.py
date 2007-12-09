@@ -214,7 +214,19 @@ class TreeAPIHarmonizer(object):
             while child:
                 self.ExpandAllChildren(child)
                 child, cookie = self.GetNextChild(item, cookie)
-
+                
+    def GetCurrentItem(self):
+        try:
+            return super(TreeAPIHarmonizer, self).GetCurrentItem()
+        except AttributeError:
+            return wx.TreeItemId()
+        
+    def SetCurrentItem(self, item):
+        try:
+            return super(TreeAPIHarmonizer, self).SetCurrentItem(item)
+        except AttributeError:
+            pass
+        
 
 class TreeHelper(object):
     """ This class provides methods that are not part of the API of any 
@@ -359,7 +371,11 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         rootItem = self.GetRootItem()
         if not rootItem:
             rootItem = self.AddRoot('Hidden root')
-        self.RefreshChildrenRecursively(rootItem)
+        # There's a bug in TreeListCtrl.DeleteChildren that may make the
+        # current item point to a non-existing item. Prevent that by making
+        # the root item the current item:
+        self.SetCurrentItem(rootItem)
+        self.RefreshChildrenRecursively(rootItem)      
 
     def RefreshItem(self, index):
         """ Redraws the item with the specified index. """
@@ -386,7 +402,7 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
             self.RefreshItemRecursively(child, childIndex)
         for unusedChild in reusableChildren:
             self.Delete(unusedChild)
-        
+              
     def RefreshItemRecursively(self, item, itemIndex):
         """ Refresh the item and its children recursively. """
         hasChildren = bool(self.OnGetChildrenCount(itemIndex))
