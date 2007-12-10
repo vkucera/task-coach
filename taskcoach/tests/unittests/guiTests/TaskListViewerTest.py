@@ -94,6 +94,9 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
                              
     def getFirstItemTextColor(self):
         return self.viewer.widget.GetItemTextColour(0)
+    
+    def getFirstItemBackgroundColor(self):
+        return self.viewer.widget.GetItemBackgroundColour(0)
 
     def assertColor(self):
         # There seems to be a bug in the ListCtrl causing GetItemTextColour() to
@@ -103,6 +106,16 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
             self.assertEqual(wx.NullColour, self.getFirstItemTextColor())
         else:
             super(TaskListViewerTest, self).assertColor()
+
+    def assertBackgroundColor(self):
+        # There seems to be a bug in the ListCtrl causing 
+        # GetItemBackgroundColour() to always return the 'unknown' colour on 
+        # Windows. We keep this test like this so it will fail when the bug is 
+        # fixed.
+        if '__WXMSW__' in wx.PlatformInfo:
+            self.assertEqual(wx.NullColour, self.getFirstItemBackgroundColor())
+        else:
+            super(TaskListViewerTest, self).assertBackgroundColor()
         
     def testEmptyTaskList(self):
         self.assertItems()
