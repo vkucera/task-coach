@@ -1,5 +1,5 @@
 import wx, test, os
-from domain import task, date, attachment
+from domain import task, date, attachment, category
 
 class CommonTests(object):
     ''' Common test cases for all task viewers. This class is mixed in with
@@ -7,7 +7,7 @@ class CommonTests(object):
     
     def setUp(self):
         super(CommonTests, self).setUp()
-        self.newColor = (100, 200, 100)
+        self.newColor = (100, 200, 100, 255)
         file('test.mail', 'wb').write('Subject: foo\r\n\r\nBody\r\n')
         attachment.MailAttachment.attdir = os.getcwd()
 
@@ -27,8 +27,16 @@ class CommonTests(object):
     def getFirstItemTextColor(self):
         raise NotImplementedError
     
+    def getFirstItemBackgroundColor(self):
+        raise NotImplementedError
+    
     def assertColor(self):    
-        self.assertEqual(wx.Colour(*self.newColor), self.getFirstItemTextColor())
+        self.assertEqual(wx.Colour(*self.newColor), 
+                         self.getFirstItemTextColor())
+        
+    def assertBackgroundColor(self):
+        self.assertEqual(wx.Colour(*self.newColor), 
+                         self.getFirstItemBackgroundColor())
                          
     def setColor(self, setting):
         self.settings.set('color', setting, str(self.newColor))
@@ -87,3 +95,11 @@ class CommonTests(object):
         self.viewer.onDropMail(self.viewer.getIndexOfItem(aTask), 'test.mail')
         self.assertEqual([attachment.MailAttachment('test.mail')],
                          self.viewer.model()[0].attachments())
+        
+    def testCategoryColor(self):
+        cat = category.Category('category with color', color=self.newColor)
+        aTask = task.Task()
+        cat.addTask(aTask)
+        aTask.addCategory(cat)
+        self.taskList.append(aTask)
+        self.assertBackgroundColor()

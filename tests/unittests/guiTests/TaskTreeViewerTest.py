@@ -33,6 +33,11 @@ class CommonTests(TaskViewerTest.CommonTests):
         tree = self.viewer.widget
         firstItem, cookie = tree.GetFirstChild(tree.GetRootItem())
         return tree.GetItemTextColour(firstItem)
+    
+    def getFirstItemBackgroundColor(self):
+        tree = self.viewer.widget
+        firstItem, cookie = tree.GetFirstChild(tree.GetRootItem())
+        return tree.GetItemBackgroundColour(firstItem)
         
     def testCreate(self):
         self.assertItems()
