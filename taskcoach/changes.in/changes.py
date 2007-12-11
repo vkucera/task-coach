@@ -3,6 +3,13 @@
 from changetypes import *
 
 releases = [
+            
+Release('0.66.3', 'December 11, 2007',
+    summary='Bug fix release to address crashes.',
+    bugsFixed=[
+        Bug('''Work around a bug in the TreeListCtrl widget that caused
+crashes. The TreeListCtrl widget is used by Task Coach for the task tree 
+view.''', '1846906', '1840111', '1832490', '1829622', '1821858', '1820497')]),
 
 Release('0.66.2', 'November 9, 2007',
     summary='Bug fix release to address crashes.',
