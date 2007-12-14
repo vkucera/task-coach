@@ -12,9 +12,11 @@ Release('0.67.0', 'December ?, 2007',
 according to the color of the categories they belong to.''', '1466159'),
         Feature('''The 'mark task completed' button and menu items can now 
 also be used to mark tasks as not completed.''', '1449714')],
-    bugsFixed=[
-        Bug('''A bug in the underlying TreeListCtrl widget, used for the 
-task tree viewer, caused crashes.''', '1840111', '1832490', '1846906')]),
+    dependenciesChanged=[
+        Dependency('''Task Coach now needs at least wxPython 
+2.8.6.0-unicode. Since the Windows installer and the Mac OSX dmg package have
+wxPython included, this only affects users of the RPM, Debian, and source
+distributions.''')]),
             
 Release('0.66.3', 'December 11, 2007',
     summary='Bug fix release to address crashes.',
