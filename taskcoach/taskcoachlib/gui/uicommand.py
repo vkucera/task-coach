@@ -59,13 +59,13 @@ class UICommand(object):
         menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
             self.kind)
         self.menuItems.append(menuItem)
-        if self.bitmap2 and self.kind == wx.ITEM_CHECK:
+        if self.bitmap2 and self.kind == wx.ITEM_CHECK and not '__WXGTK__' in wx.PlatformInfo:
             bitmap1 = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
                 (16, 16))
             bitmap2 = wx.ArtProvider_GetBitmap(self.bitmap2, wx.ART_MENU, 
                 (16, 16))
             menuItem.SetBitmaps(bitmap1, bitmap2)
-        elif self.bitmap:
+        elif self.bitmap and self.kind == wx.ITEM_NORMAL:
             menuItem.SetBitmap(wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
                 (16, 16)))
         if position is None:
@@ -122,16 +122,20 @@ class UICommand(object):
 
     def onUpdateUI(self, event):
         event.Enable(bool(self.enabled(event)))
-        if self.toolbar:
-            if not self.helpText:
-                self.toolbar.SetToolLongHelp(self.id, self.getHelpText())
-            if self.menuText == '?':            
-                shortHelp = wx.MenuItem.GetLabelFromText(self.getMenuText())
-                self.toolbar.SetToolShortHelp(self.id, shortHelp)            
+        if self.toolbar and (not self.helpText or self.menuText == '?'):
+            self.updateToolbarHelp()
         
     def enabled(self, event):
         ''' Can be overridden in a subclass. '''
         return True
+
+    def updateToolbarHelp(self):
+        shortHelp = wx.MenuItem.GetLabelFromText(self.getMenuText())
+        if shortHelp != self.toolbar.GetToolShortHelp(self.id):
+            self.toolbar.SetToolShortHelp(self.id, shortHelp)
+        longHelp = self.getHelpText()
+        if longHelp != self.toolbar.GetToolLongHelp(self.id):
+            self.toolbar.SetToolLongHelp(self.id, longHelp)
 
 
 class SettingsCommand(UICommand):
@@ -1113,9 +1117,13 @@ class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
 
 
 class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+    defaultMenuText = _('&Mark task completed\tCtrl+RETURN')
+    defaultHelpText = _('Mark the selected task(s) completed')
+    
     def __init__(self, *args, **kwargs):
-        super(TaskToggleCompletion, self).__init__(bitmap='markcompleted',
-            bitmap2='markuncompleted', 
+        super(TaskToggleCompletion, self).__init__(bitmap='markuncompleted',
+            bitmap2='markcompleted', menuText=self.defaultMenuText,
+            helpText=self.defaultHelpText,
             kind=wx.ITEM_CHECK, *args, **kwargs)
         self.currentBitmap = self.bitmap
         
@@ -1129,39 +1137,50 @@ class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
             self.allSelectedTasksHaveSameCompletionState()
             
     def onUpdateUI(self, event):
+        super(TaskToggleCompletion, self).onUpdateUI(event)
         allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
-        self.toolbar.ToggleTool(self.id, allSelectedTasksAreCompleted)
+        if allSelectedTasksAreCompleted != self.toolbar.GetToolState(self.id): 
+            self.toolbar.ToggleTool(self.id, allSelectedTasksAreCompleted)
         if allSelectedTasksAreCompleted:
-            bitmapName = self.bitmap2
-        else:
             bitmapName = self.bitmap
+        else:
+            bitmapName = self.bitmap2
         if bitmapName != self.currentBitmap:
             self.currentBitmap = bitmapName
             bitmap = wx.ArtProvider_GetBitmap(bitmapName, wx.ART_TOOLBAR, 
                                               self.toolbar.GetToolBitmapSize())
+            # On wxGTK, changing the bitmap doesn't work when the tool is 
+            # disabled, so we first enable it if necessary:
+            disable = False
+            if not self.toolbar.GetToolEnabled(self.id):
+                self.toolbar.EnableTool(self.id, True)
+                disable = True
             self.toolbar.SetToolNormalBitmap(self.id, bitmap)
+            if disable:
+                self.toolbar.EnableTool(self.id, False)
+            
+            self.updateToolbarHelp()
             menuText = self.getMenuText()
             helpText = self.getHelpText()
             for menuItem in self.menuItems:
-                menuItem.Check(not allSelectedTasksAreCompleted)
+                menuItem.Check(allSelectedTasksAreCompleted)
                 menuItem.SetItemLabel(menuText)
                 menuItem.SetHelp(helpText)
-        super(TaskToggleCompletion, self).onUpdateUI(event)
         
     def getMenuText(self):
         if self.allSelectedTasksAreCompleted():
             return _('&Mark task uncompleted\tCtrl+RETURN')
         else:
-            return _('&Mark task completed\tCtrl+RETURN')
+            return self.defaultMenuText
         
     def getHelpText(self):
         if self.allSelectedTasksAreCompleted():
             return _('Mark the selected task(s) uncompleted')
         else:
-            return _('Mark the selected task(s) completed')
+            return self.defaultHelpText
         
     def allSelectedTasksAreCompleted(self):
-        if self.viewer.isShowingTasks():
+        if self.viewer.isShowingTasks() and self.viewer.curselection():
             for task in self.viewer.curselection():
                 if not task.completed():
                     return False
