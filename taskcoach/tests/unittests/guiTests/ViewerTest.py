@@ -453,7 +453,7 @@ class TaskListViewerTest(test.wxTestCase):
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
         self.taskList = task.sorter.Sorter(task.TaskList([self.task]))
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+        self.viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
             self.settings, 'mainviewer')
         self.viewer = TaskListViewerUnderTest(self.frame,
             self.taskList, gui.uicommand.UICommands(self.frame, None, 
@@ -561,7 +561,7 @@ class ViewerBaseClassTest(test.wxTestCase):
         categories = category.CategoryList()
         notes = note.NoteContainer()
         settings = config.Settings(load=False)
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+        self.viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
             settings, 'mainviewer')
         try:
             baseViewer = gui.viewer.Viewer(self.frame, taskList,
@@ -579,7 +579,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+        self.viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
             self.settings, 'mainviewer')
         self.viewer = self.createViewer()
         self.viewer.sortBy('subject')
@@ -684,7 +684,7 @@ class UpdatePerSecondViewerTests(object):
         self.taskList = task.sorter.Sorter(task.TaskList(), sortBy='dueDate')
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+        self.viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
             self.settings, 'mainviewer')
         self.updateViewer = self.createUpdateViewer()
         self.trackedTask = task.Task(subject='tracked')
