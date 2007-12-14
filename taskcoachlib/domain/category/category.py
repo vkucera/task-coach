@@ -90,8 +90,8 @@ class Category(base.CompositeObject):
                 return True
         return False
     
-    def color(self):
-        if self.__color is None and self.parent():
+    def color(self, recursive=True):
+        if self.__color is None and recursive and self.parent():
             return self.parent().color()
         else:
             return self.__color
@@ -100,6 +100,8 @@ class Category(base.CompositeObject):
         if color != self.__color:
             self.__color = color
             self.notifyObserversOfColorChange(color)
+            for task in self.tasks(recursive=True):
+                task.notifyObserversOfCategoryColorChange()
             
     def notifyObserversOfColorChange(self, color):
         self.notifyObservers(patterns.Event(self, 

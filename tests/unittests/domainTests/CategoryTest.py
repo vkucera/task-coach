@@ -248,6 +248,11 @@ class CategoryTest(test.TestCase):
         self.category.setColor(wx.RED)
         self.assertEqual(wx.RED, self.subCategory.color())
         
+    def testSubCategoryWithoutColorHasNoOwnColor(self):
+        self.category.addChild(self.subCategory)
+        self.category.setColor(wx.RED)
+        self.assertEqual(None, self.subCategory.color(recursive=False))
+                
     def testParentColorChangeNotification(self):
         eventType = category.Category.colorChangedEventType()
         patterns.Publisher().registerObserver(self.onEvent, eventType)
