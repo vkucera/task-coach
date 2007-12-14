@@ -35,7 +35,7 @@ class TaskEditorTestCase(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.taskList.extend(self.createTasks())
         self.settings = config.Settings(load=False)
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+        self.viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
             self.settings, 'mainviewer')
         self.editor = self.createEditor()
         

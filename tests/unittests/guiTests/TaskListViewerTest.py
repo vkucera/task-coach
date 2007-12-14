@@ -77,7 +77,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.categories = category.CategoryList()
         self.taskList = task.sorter.Sorter(task.TaskList())
         self.task = task.Task('task')
-        viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+        viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
             self.settings, 'mainviewer')
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, viewerContainer, 

@@ -10,7 +10,7 @@ class EffortViewerTest(test.wxTestCase):
     def testCreate(self):
         effortViewer = gui.viewer.EffortListViewer(self.frame, self.effortList, 
             gui.uicommand.UICommands(self.frame, None, 
-                gui.viewercontainer.ViewerContainer(None, self.settings, 
+                gui.viewercontainer.ViewerNotebook(self.frame, self.settings, 
                     'mainviewer'), 
                 self.settings, self.taskList, self.effortList, 
                 category.CategoryList(), note.NoteContainer()), 

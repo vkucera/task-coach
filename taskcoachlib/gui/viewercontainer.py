@@ -1,7 +1,7 @@
 import patterns, wx, widgets
 
 
-class ViewerContainer(object):
+class _ViewerContainer(object):
     def __init__(self, parent, settings, setting, *args, **kwargs):
         self._settings = settings
         self.__setting = setting
@@ -11,7 +11,7 @@ class ViewerContainer(object):
             self.__desiredPageNumber = int(self._settings.get('view', setting))
         except ValueError:
             self.__desiredPageNumber = 0
-        super(ViewerContainer, self).__init__(parent, *args, **kwargs)
+        super(_ViewerContainer, self).__init__(parent, *args, **kwargs)
         
     def addViewer(self, viewer, pageName, bitmap=''):
         self.AddPage(viewer, pageName, bitmap)
@@ -66,19 +66,19 @@ class ViewerContainer(object):
         event.Skip()
     
         
-class ViewerNotebook(ViewerContainer, widgets.Notebook):
+class ViewerNotebook(_ViewerContainer, widgets.Notebook):
     pass
         
         
-class ViewerChoicebook(ViewerContainer, widgets.Choicebook):
+class ViewerChoicebook(_ViewerContainer, widgets.Choicebook):
     pass
 
 
-class ViewerListbook(ViewerContainer, widgets.Listbook):
+class ViewerListbook(_ViewerContainer, widgets.Listbook):
     pass
 
 
-class ViewerAUINotebook(ViewerContainer, widgets.AUINotebook):
+class ViewerAUINotebook(_ViewerContainer, widgets.AUINotebook):
     def onClosePage(self, event):
         viewer = self.GetPage(event.Selection)
         viewer.detach()

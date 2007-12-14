@@ -18,7 +18,7 @@ class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
     def setUp(self):
         super(TaskTreeListViewerTest, self).setUp()
         effortList = effort.EffortList(self.taskList)
-        viewerContainer = gui.viewercontainer.ViewerContainer(None, 
+        viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
             self.settings, 'mainviewer')
         self.viewer = TaskTreeListViewerUnderTest(self.frame,
             self.taskList, gui.uicommand.UICommands(self.frame, None, 

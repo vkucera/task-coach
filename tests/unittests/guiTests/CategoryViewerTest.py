@@ -10,7 +10,7 @@ class CategoryViewerTest(test.wxTestCase):
         self.categories = category.CategoryList()
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
             gui.uicommand.UICommands(self.frame, None, 
-                gui.viewercontainer.ViewerContainer(None, self.settings, 
+                gui.viewercontainer.ViewerNotebook(self.frame, self.settings, 
                     'mainviewer'), None, self.taskList,
                 self.effortList, self.categories, note.NoteContainer()), 
             self.settings)

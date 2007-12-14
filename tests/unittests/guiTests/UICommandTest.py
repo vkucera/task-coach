@@ -39,8 +39,8 @@ class UICommandsTest(test.wxTestCase):
         taskList = task.TaskList()
         effortList = effort.EffortList(taskList)
         categories = category.CategoryList()
-        viewerContainer = gui.viewercontainer.ViewerContainer(None, settings,
-            'mainviewer')
+        viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
+            settings, 'mainviewer')
         gui.uicommand.UICommands(self.frame, None, viewerContainer, None, 
             taskList, effortList, categories, note.NoteContainer())
 
