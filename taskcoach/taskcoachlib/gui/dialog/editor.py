@@ -588,10 +588,13 @@ class CategoryEditBook(widgets.BookPage):
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
         
     def addColorEntry(self):
+        currentColor = self._category.color(recursive=False)
         self._checkBox = wx.CheckBox(self, label=_('Use this color:'))
-        self._checkBox.SetValue(self._category.color() is not None)
-        self._colorButton = wx.ColourPickerCtrl(self, -1, self._category.color() or wx.WHITE, size=(40,-1))
-        self._colorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda event: self._checkBox.SetValue(True))
+        self._checkBox.SetValue(currentColor is not None)
+        self._colorButton = wx.ColourPickerCtrl(self, -1, 
+            currentColor or wx.WHITE, size=(40,-1))
+        self._colorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, 
+            lambda event: self._checkBox.SetValue(True))
         self.addEntry(_('Color'), self._checkBox, self._colorButton)
 
     def ok(self):

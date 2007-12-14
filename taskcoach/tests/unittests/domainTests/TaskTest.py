@@ -1197,7 +1197,8 @@ class TaskWithAllAttachmentsRemovedFixture(TaskWithAttachmentAddedTestCase):
 
 
 class TaskWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
-    eventTypes = ['task.category.subject', 'task.totalCategory.subject']
+    eventTypes = ['task.category.subject', 'task.totalCategory.subject',
+                  'task.category.color']
     
     def taskCreationKeywordArguments(self):
         return [{'categories': [self.category]}]
@@ -1252,7 +1253,7 @@ class TaskWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
         # Expect task.category.subject and task.totalCategory.subject
         self.assertEqual(2, len(self.events)) 
         
-    def testCategorySubjectChanged_NotifiySubtasksToo(self):
+    def testCategorySubjectChanged_NotifySubtasksToo(self):
         self.task.addChild(task.Task())
         self.task.addCategory(self.category)
         self.category.addTask(self.task)
@@ -1274,6 +1275,48 @@ class TaskWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
         child.setParent(self.task)
         self.category.setColor(wx.RED)
         self.assertEqual(wx.RED, child.categoryColor())
+        
+    def testCategoryColorChanged(self):
+        self.task.addCategory(self.category)
+        self.category.addTask(self.task)
+        self.category.setColor(wx.RED)
+        self.assertEqual(1, len(self.events))
+
+    def testCategoryColorChanged_NotifySubtasksToo(self):
+        self.task.addChild(task.Task())
+        self.task.addCategory(self.category)
+        self.category.addTask(self.task)
+        self.category.setColor(wx.RED)
+        self.assertEqual(2, len(self.events))
+        
+    def testParentCategoryColorChanged(self):
+        subCategory = category.Category('Subcategory')
+        self.category.addChild(subCategory)
+        subCategory.setParent(self.category)
+        self.task.addCategory(subCategory)
+        subCategory.addTask(self.task)
+        self.category.setColor(wx.RED)
+        self.assertEqual(1, len(self.events))
+        
+    def testAddCategoryWithColor(self):
+        newCategory = category.Category('New category')
+        newCategory.setColor(wx.RED)
+        self.task.addCategory(newCategory)
+        self.assertEqual(1, len(self.events))
+        
+    def testAddCategoryWithParentWithColor(self):
+        parentCategory = category.Category('Parent')
+        parentCategory.setColor(wx.RED)
+        childCategory = category.Category('Child')
+        parentCategory.addChild(childCategory)
+        childCategory.setParent(parentCategory)
+        self.task.addCategory(childCategory)
+        self.assertEqual(1, len(self.events))
+        
+    def testRemoveCategoryWithColor(self):
+        self.category.setColor(wx.RED)
+        self.task.removeCategory(self.category)
+        self.assertEqual(1, len(self.events))
 
 
 class TaskWithTwoCategoriesFixture(TaskTestCase, CommonTaskTests):

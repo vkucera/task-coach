@@ -366,6 +366,8 @@ class Task(base.CompositeObject):
             self.notifyObservers(patterns.Event(self, 'task.category.add', 
                 category))
             self.notifyChildObserversOfCategoryChange(category, 'add')
+            if category.color():
+                self.notifyObserversOfCategoryColorChange()
         
     def removeCategory(self, category):
         if category in self._categories:
@@ -374,6 +376,8 @@ class Task(base.CompositeObject):
             self.notifyObservers(patterns.Event(self, 'task.category.remove', 
                 category))
             self.notifyChildObserversOfCategoryChange(category, 'remove')
+            if category.color():
+                self.notifyObserversOfCategoryColorChange()
                 
     def setCategories(self, categories):
         self._categories = categories # FIXME: no notification?
@@ -417,6 +421,11 @@ class Task(base.CompositeObject):
         for task in [self] + self.children(recursive=True):
             self.notifyObservers(patterns.Event(task, 
                 'task.totalCategory.subject', category.subject()))
+            
+    def notifyObserversOfCategoryColorChange(self):
+        for task in [self] + self.children(recursive=True):
+            self.notifyObservers(patterns.Event(task,
+                'task.category.color', task.categoryColor()))
             
     # priority
     
