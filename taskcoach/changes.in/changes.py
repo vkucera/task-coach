@@ -5,7 +5,9 @@ from changetypes import *
 releases = [
             
 Release('0.67.0', 'December ?, 2007',
-    summary='?',
+    summary='''This release make it possible to associate color with
+categories, adds a translation in Hebrew, and makes it easier to mark 
+tasks as not completed.''',
     featuresAdded=[
         Feature('''Added Hebrew translation thanks to Ziv Barcesat.'''),
         Feature('''You can assign a color to a category. Tasks are colored 
