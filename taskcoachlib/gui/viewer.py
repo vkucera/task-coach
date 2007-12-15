@@ -417,11 +417,15 @@ class TreeViewer(Viewer):
         self.widget.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.onItemCollapsed)
 
     def onItemExpanded(self, event):
+        if event.GetItem() == self.widget.GetRootItem():
+            return
         item = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
         item.expand()
         event.Skip()
         
     def onItemCollapsed(self, event):
+        if event.GetItem() == self.widget.GetRootItem():
+            return
         item = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
         item.expand(False)
         event.Skip()
