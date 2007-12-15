@@ -25,8 +25,8 @@ The VirtualTree and DragAndDrop mixins force the wx.TR_HIDE_ROOT style.
 
 Author: Frank Niessink <frank@niessink.com>
 License: wxWidgets license
-Version: 1.1
-Date: 2 November 2007
+Version: 1.2
+Date: 15 December 2007
 
 ExpansionState is based on code and ideas from Karsten Hilbert.
 Andrea Gavana provided help with the CustomTreeCtrl integration.
@@ -367,16 +367,41 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         return False 
 
     def RefreshItems(self):
-        """ Redraws all visible items. """
+        """ Redraws all items. """
         rootItem = self.GetRootItem()
         if not rootItem:
             rootItem = self.AddRoot('Hidden root')
-        # There's a bug in TreeListCtrl.DeleteChildren that may make the
-        # current item point to a non-existing item. Prevent that by making
-        # the root item the current item:
+        self.SaveSelection(rootItem)
+        self.RefreshChildrenRecursively(rootItem)
+        self.RestoreSelection()
+                        
+    def SaveSelection(self, rootItem):
+        self.__indexOfCurrentSelection = None
+        if self.GetSelections():
+            self.__indexOfCurrentSelection = \
+                self.GetIndexOfItem(self.GetSelections()[0])
+        # There's a bug in TreeListCtrl.DeleteChildren (wxPython 2.8.7.1) that 
+        # may make the current item point to a non-existing item. Prevent that 
+        # by making the root item the current item:
         self.SetCurrentItem(rootItem)
-        self.RefreshChildrenRecursively(rootItem)      
 
+    def RestoreSelection(self):
+        if self.GetSelections():
+            self.SetCurrentItem(self.GetSelections()[0])
+            return
+        indexOfCurrentSelection = self.__indexOfCurrentSelection
+        while indexOfCurrentSelection:
+            try:
+                item = self.GetItemByIndex(indexOfCurrentSelection)
+                self.SelectItem(item)
+                self.SetCurrentItem(item)
+                break
+            except IndexError:
+                indexOfCurrentSelection, lastIndex = \
+                    indexOfCurrentSelection[:-1], indexOfCurrentSelection[-1]                    
+                if lastIndex > 0:
+                    indexOfCurrentSelection += (lastIndex - 1,)
+        
     def RefreshItem(self, index):
         """ Redraws the item with the specified index. """
         try:

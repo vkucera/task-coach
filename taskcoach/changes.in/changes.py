@@ -5,7 +5,7 @@ from changetypes import *
 releases = [
             
 Release('0.67.0', 'December ?, 2007',
-    summary='''This release make it possible to associate color with
+    summary='''This release make it possible to color tasks via their
 categories, adds a translation in Hebrew, and makes it easier to mark 
 tasks as not completed.''',
     featuresAdded=[
@@ -14,6 +14,9 @@ tasks as not completed.''',
 according to the color of the categories they belong to.''', '1466159'),
         Feature('''The 'mark task completed' button and menu items can now 
 also be used to mark tasks as not completed.''', '1449714')],
+    bugsFixed=[
+        Bug('''Don't move selection to the first line of the task tree viewer
+when deleting a subtask.''', '1849171')],
     dependenciesChanged=[
         Dependency('''Task Coach now needs at least wxPython 
 2.8.6.0-unicode. Since the Windows installer and the Mac OSX dmg package have
