@@ -22,7 +22,6 @@ possible resolutions.''')
     del taskcoachlib
 
 import wx
-wx.SystemOptions.SetOptionInt('mac.listctrl.always_use_generic', 1)
 
         
 class wxApp(wx.App):
