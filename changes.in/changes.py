@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.67.0', 'December ?, 2007',
+Release('0.67.0', 'December 16, 2007',
     summary='''This release make it possible to color tasks via their
 categories, adds a translation in Hebrew, and makes it easier to mark 
 tasks as not completed.''',
