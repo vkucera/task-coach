@@ -4,7 +4,7 @@ from domain import date
 from gui.dialog import reminder
 
 class ReminderController(object):
-    def __init__(self, taskList, *args, **kwargs):
+    def __init__(self, taskList, settings, uiCommands, *args, **kwargs):
         super(ReminderController, self).__init__(*args, **kwargs)
         patterns.Publisher().registerObserver(self.onSetReminder,
             eventType='task.reminder')
@@ -14,6 +14,9 @@ class ReminderController(object):
             eventType=taskList.removeItemEventType())
         self.__tasksWithReminders = {} # {task: reminderDateTime}
         self.__registerRemindersForTasks(taskList)
+        self.settings = settings
+        self.uiCommands = uiCommands
+        self.taskList = taskList
     
     def onAddTask(self, event):
         self.__registerRemindersForTasks(event.values())
@@ -38,7 +41,9 @@ class ReminderController(object):
 
     def showReminderMessage(self, task):
         mainWindow = wx.GetApp().GetTopWindow()
-        reminderDialog = reminder.ReminderDialog(task, mainWindow)
+        reminderDialog = reminder.ReminderDialog(task, 
+            self.taskList.categories(), self.uiCommands, self.settings, 
+            mainWindow)
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)
         if not mainWindow.IsShown():
             mainWindow.Show()

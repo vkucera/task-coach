@@ -89,7 +89,8 @@ class MainWindow(WindowWithPersistentDimensions):
         self.SetMenuBar(menu.MainMenu(self, self.uiCommands, self.settings))
         self.createTaskBarIcon(self.uiCommands)
         self.reminderController = \
-            remindercontroller.ReminderController(self.taskFile)
+            remindercontroller.ReminderController(self.taskFile, self.settings,
+                self.uiCommands)
                 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)

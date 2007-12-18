@@ -3,7 +3,13 @@
 from changetypes import *
 
 releases = [
-            
+
+Release('0.68.0', 'December ?, 2007',
+    summary='?',
+    featuresAdded=[
+        Feature('''It is now possible to open a task from the reminder 
+dialog.''')]),
+        
 Release('0.67.0', 'December 16, 2007',
     summary='''This release make it possible to color tasks via their
 categories, adds a translation in Hebrew, and makes it easier to mark 
