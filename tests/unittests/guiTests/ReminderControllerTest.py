@@ -1,6 +1,6 @@
-import test, gui, patterns
-import domain.task as task
-import domain.date as date
+import test, gui, patterns, config
+from domain import task, date
+
 
 class ReminderControllerUnderTest(gui.ReminderController):
     def __init__(self, *args, **kwargs):
@@ -16,7 +16,8 @@ class ReminderControllerTest(test.TestCase):
         self.taskList = task.TaskList()
         self.task = task.Task('Task')
         self.taskList.append(self.task)
-        self.reminderController = ReminderControllerUnderTest(self.taskList)
+        self.reminderController = ReminderControllerUnderTest(self.taskList,
+            config.Settings(load=False), {})
         self.reminderDateTime = date.DateTime.now() + date.TimeDelta(hours=1)
         
     def testSetTaskReminderAddsClockEventToPublisher(self):
@@ -71,7 +72,8 @@ class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
         self.task1 = task.Task('Task 1', reminder=self.reminderDateTime)
         self.task2 = task.Task('Task 2', reminder=self.reminderDateTime)
         self.taskList.extend([self.task1, self.task2])
-        self.reminderController = ReminderControllerUnderTest(self.taskList)
+        self.reminderController = ReminderControllerUnderTest(self.taskList,
+            config.Settings(load=False), {})
 
     def testClockNotificationResultsInTwoMessages(self):
         date.Clock().notify(now=self.reminderDateTime)
