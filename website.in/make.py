@@ -370,8 +370,9 @@ pages['devinfo'] = \
     <h4>Dependencies</h4>
     <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
     using <A HREF="http://www.wxpython.org">wxPython</A> for the
-    graphical user interface. The few other libraries (other than those
-    provided by Python and wxPython) that are used are put into the
+    graphical user interface. On Windows, <A HREF="http://starship.python.net/crew/mhammond/win32/">Pywin32</A> is used as well.
+    The few other libraries (other than those
+    provided by Python, wxPython and Pywin32) that are used are put into the
     taskcoachlib/thirdparty package and included in the CVS
     repository.</p>
     <h4>Getting the source</h4>
