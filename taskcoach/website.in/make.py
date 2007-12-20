@@ -20,8 +20,10 @@ pages['index'] = \
         is at version %(version)s. Many people use it on a daily basis, but 
         there are still a lot of 
         features missing. If there's anything you'd like to see included, 
-        <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">please let us know</a>.
-        <P>%(name)s is licensed under the %(license)s and free to use for both 
+        <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">please 
+        let us know</a>.
+        <P>%(name)s is licensed under the <A HREF="license.html">%(license)s</A> 
+        and free to use for both 
         individuals and companies. If %(name)s is a useful product for you, 
         please consider supporting the development of %(name)s. You can support 
         further development by spreading the word, <A HREF="i18n.html">help 
