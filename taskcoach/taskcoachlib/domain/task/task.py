@@ -237,7 +237,7 @@ class Task(base.CompositeObject):
                 effort))
             if effort.isBeingTracked() and not wasTracking:
                 self.notifyObserversOfStartTracking(effort)
-            self.notifyObserversOfTimeSpentChange()
+            self.notifyObserversOfTimeSpentChange(effort)
         
     def removeEffort(self, effort):
         if effort in self._efforts:
@@ -247,7 +247,7 @@ class Task(base.CompositeObject):
                 effort))
             if effort.isBeingTracked() and not self.isBeingTracked():
                 self.notifyObserversOfStopTracking(effort)
-            self.notifyObserversOfTimeSpentChange()
+            self.notifyObserversOfTimeSpentChange(effort)
 
     def setEfforts(self, efforts):
         self._efforts = efforts # FIXME: no notification?
@@ -319,33 +319,51 @@ class Task(base.CompositeObject):
         if parent: 
             parent.notifyObserversOfTotalBudgetLeftChange()
         
-    def notifyObserversOfTimeSpentChange(self):
+    def notifyObserversOfTimeSpentChange(self, changedEffort):
         self.notifyObservers(patterns.Event(self, 'task.timeSpent', 
             self.timeSpent()))
-        self.notifyObserversOfTotalTimeSpentChange()
+        self.notifyObserversOfTotalTimeSpentChange(changedEffort)
         if self.budget():
             self.notifyObserversOfBudgetLeftChange()
         elif self.budget(recursive=True):
             self.notifyObserversOfTotalBudgetLeftChange()
         if self.hourlyFee() > 0:
             self.notifyObserversOfRevenueChange()
+    
+    def totalTimeSpentChangedEventType(self):
+        return 'task(%s).totalTimeSpent'%self.id()
 
-    def notifyObserversOfTotalTimeSpentChange(self):
+    def notifyObserversOfTotalTimeSpentChange(self, changedEffort=None):
+        totalTimeSpent = self.timeSpent(recursive=True)
         self.notifyObservers(patterns.Event(self, 'task.totalTimeSpent', 
-            self.timeSpent(recursive=True)))
+            totalTimeSpent))
+        self.notifyObservers(patterns.Event(self, 
+            self.totalTimeSpentChangedEventType(), changedEffort))
         parent = self.parent()
         if parent: 
-            parent.notifyObserversOfTotalTimeSpentChange()
+            parent.notifyObserversOfTotalTimeSpentChange(changedEffort)
+
+    def trackStartEventType(self):
+        return 'task(%s).track.start'%self.id()
 
     def notifyObserversOfStartTracking(self, *trackedEfforts):
+        # Notify observers interested in any task that starts tracking effort
         self.notifyObservers(patterns.Event(self, 'task.track.start',
+            *trackedEfforts))
+        # Notify observers interested in this task
+        self.notifyObservers(patterns.Event(self, self.trackStartEventType(),
             *trackedEfforts))
         parent = self.parent()
         if parent: 
             parent.notifyObserversOfStartTracking(*trackedEfforts)
 
+    def trackStopEventType(self):
+        return 'task(%s).track.stop'%self.id()
+    
     def notifyObserversOfStopTracking(self, *trackedEfforts):
         self.notifyObservers(patterns.Event(self, 'task.track.stop',
+            *trackedEfforts))
+        self.notifyObservers(patterns.Event(self, self.trackStopEventType(),
             *trackedEfforts))
         parent = self.parent()
         if parent: 

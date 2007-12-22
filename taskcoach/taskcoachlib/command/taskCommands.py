@@ -147,10 +147,6 @@ class MarkCompletedCommand(EditTaskCommand, EffortCommand):
             else:
                 task.setCompletionDate()
 
-    '''
-    def undo_command(self):
-        super(MarkCompletedCommand, self).undo_command()
-    '''
     def tasksToStopTracking(self):
         return self.items
 
@@ -178,8 +174,7 @@ class StartEffortCommand(EffortCommand):
         super(StartEffortCommand, self).redo_command()
         for task, effort in zip(self.items, self.efforts):
             task.addEffort(effort)
-        
-    
+            
         
 class StopEffortCommand(EffortCommand):
     def name(self):
@@ -187,5 +182,3 @@ class StopEffortCommand(EffortCommand):
                   
     def canDo(self):
         return True    
-               
- 
