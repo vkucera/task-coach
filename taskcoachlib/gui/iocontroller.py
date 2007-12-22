@@ -101,7 +101,7 @@ class IOController(object):
             filename = self.__askUserForFile(_('Export as iCalendar...'),
                 flags=wx.SAVE, fileDialogOpts=self.__icsFileDialogOpts)
         if filename:
-            icsFile = codecs.open(filename, 'w', 'utf-8')
+            icsFile = self.__openFileForWriting(filename)
             persistence.ICSWriter(icsFile).write(self.__taskFile)
             icsFile.close()
             self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': filename})
@@ -114,7 +114,7 @@ class IOController(object):
             filename = self.__askUserForFile(_('Export as HTML...'),
                 flags=wx.SAVE, fileDialogOpts=self.__htmlFileDialogOpts)
         if filename:
-            htmlFile = codecs.open(filename, 'w', 'utf-8')
+            htmlFile = self.__openFileForWriting(filename)
             persistence.HTMLWriter(htmlFile).write(viewer)
             htmlFile.close()
             self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%{'nrtasks': viewer.size(), 'filename': filename})
@@ -127,13 +127,16 @@ class IOController(object):
             filename = self.__askUserForFile(_('Export as CSV...'),
                 flags=wx.SAVE, fileDialogOpts=self.__csvFileDialogOpts)
         if filename:
-            csvFile =  codecs.open(filename, 'wb', 'utf-8')
+            csvFile = self.__openFileForWriting(filename)
             persistence.CSVWriter(csvFile).write(viewer)
             csvFile.close()
             self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%{'nrtasks': viewer.size(), 'filename': filename})
             return True
         else:
             return False
+        
+    def __openFileForWriting(self, filename, mode='w', encoding='utf-8'):
+        return codecs.open(filename, mode, encoding)
         
     def __addRecentFile(self, fileName):
         recentFiles = self.__settings.getlist('file', 'recentfiles')
