@@ -76,7 +76,7 @@ class Effort(EffortBase):
         if startDatetime == self._start:
             return
         self._start = startDatetime
-        self.task().notifyObserversOfTimeSpentChange()
+        self.task().notifyObserversOfTimeSpentChange(self)
         self.task().setLastModificationTime()
         patterns.Publisher().notifyObservers(patterns.Event(self,
             'effort.start', self._start))
@@ -92,7 +92,7 @@ class Effort(EffortBase):
             previousStop = self._stop
             self._stop = newStop
             self.notifyStopOrStartTracking(previousStop, newStop)
-            self.task().notifyObserversOfTimeSpentChange()
+            self.task().notifyObserversOfTimeSpentChange(self)
             self.task().setLastModificationTime()
             patterns.Publisher().notifyObservers(patterns.Event(self, 
                 'effort.stop', newStop))
@@ -145,11 +145,11 @@ class CompositeEffort(EffortBase):
         self.__effortCache = {} # {True: [efforts recursively], False: [efforts]}
         self.__invalidateCache()
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
-            eventType='task.totalTimeSpent')
+            eventType=task.totalTimeSpentChangedEventType())
         patterns.Publisher().registerObserver(self.onStartTracking,
-            eventType='task.track.start')
+            eventType=task.trackStartEventType())
         patterns.Publisher().registerObserver(self.onStopTracking,
-            eventType='task.track.stop')
+            eventType=task.trackStopEventType())
 
     def __hash__(self):
         return hash((self.task(), self.getStart()))
@@ -180,6 +180,9 @@ class CompositeEffort(EffortBase):
             self.__effortCache[recursive] = \
                 [effort for effort in self.task().efforts(recursive=recursive) \
                  if self.__inPeriod(effort)]
+                
+    def __inCache(self, effort):
+        return effort in self.__effortCache[True]
 
     def __getEfforts(self, recursive):
         return self.__effortCache[recursive]
@@ -195,32 +198,28 @@ class CompositeEffort(EffortBase):
         return self.getStart() <= effort.getStart() <= self.getStop()
 
     def onTimeSpentChanged(self, event):
-        task = event.source()
-        if task != self.task():
-            return
-        self.__invalidateCache()
-        duration = self.duration(recursive=True)
-        patterns.Publisher().notifyObservers(patterns.Event(self,
-            'effort.duration', duration))
-        if not self.__getEfforts(recursive=True):
-            patterns.Publisher().notifyObservers(patterns.Event(self, 
-                'effort.composite.empty'))
+        changedEffort = event.value()
+        if changedEffort is None or self.__inPeriod(changedEffort) or \
+                                    self.__inCache(changedEffort):
+            self.__invalidateCache()
+            duration = self.duration(recursive=True)
+            patterns.Publisher().notifyObservers(patterns.Event(self,
+                'effort.duration', duration))
+            if not self.__getEfforts(recursive=True):
+                patterns.Publisher().notifyObservers(patterns.Event(self, 
+                    'effort.composite.empty'))
 
     def onStartTracking(self, event):
-        if event.source() != self.task():
-            return
-        self.__invalidateCache()
         startedEffort = event.value()
         if self.__inPeriod(startedEffort):
+            self.__invalidateCache()
             patterns.Publisher().notifyObservers(patterns.Event(self,
                 'effort.track.start', startedEffort))
 
     def onStopTracking(self, event):
-        if event.source() != self.task():
-            return
-        self.__invalidateCache()
         stoppedEffort = event.value()
         if self.__inPeriod(stoppedEffort):
+            self.__invalidateCache()
             patterns.Publisher().notifyObservers(patterns.Event(self,
                 'effort.track.stop', stoppedEffort))
 

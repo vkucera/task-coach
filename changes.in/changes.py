@@ -8,7 +8,10 @@ Release('0.68.0', 'December ?, 2007',
     summary='?',
     featuresAdded=[
         Feature('''It is now possible to open a task from the reminder 
-dialog.''')]),
+dialog.''')],
+    bugsFixed=[
+        Bug('''Start and stop tracking effort is now faster for tasks that 
+have a large number of associated effort records.''')]),
         
 Release('0.67.0', 'December 16, 2007',
     summary='''This release make it possible to color tasks via their
