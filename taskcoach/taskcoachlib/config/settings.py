@@ -13,13 +13,14 @@ class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
     
 
 class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser):
-    def __init__(self, load=True, *args, **kwargs):
+    def __init__(self, load=True, iniFile=None, *args, **kwargs):
         # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we 
         # have to call the superclass __init__ explicitly:
         super(Settings, self).__init__(*args, **kwargs)
         UnicodeAwareConfigParser.__init__(self, *args, **kwargs) 
         self.setDefaults()
         self.__loadAndSave = load
+        self.__iniFileSpecifiedOnCommandLine = iniFile
         if load:
             # First, try to load the settings file from the program directory,
             # if that fails, load the settings file from the settings directory
@@ -40,7 +41,7 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         saveIniFileInProgramDir = event.value() == 'True'
         if not saveIniFileInProgramDir:
             try:
-                os.remove(self.filename(forceProgramDir=True))
+                os.remove(self.generatedIniFilename(forceProgramDir=True))
             except:
                 return
             
@@ -120,11 +121,16 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
                       style=wx.ICON_ERROR)
 
     def filename(self, forceProgramDir=False):
-        return os.path.join(self.path(forceProgramDir), '%s.ini'%meta.filename)
+        if self.__iniFileSpecifiedOnCommandLine:
+            return self.__iniFileSpecifiedOnCommandLine
+        else:
+            return self.generatedIniFilename(forceProgramDir) 
     
     def path(self, forceProgramDir=False, environ=os.environ):
-        if forceProgramDir or self.getboolean('file', 
-                                              'saveinifileinprogramdir'):
+        if self.__iniFileSpecifiedOnCommandLine:
+            return self.pathToIniFileSpecifiedOnCommandLine()
+        elif forceProgramDir or self.getboolean('file', 
+                                                'saveinifileinprogramdir'):
             return self.pathToProgramDir()
         else:
             return self.pathToConfigDir(environ)
@@ -145,4 +151,10 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
                 path = os.getcwd()
             path = os.path.join(path, '.%s'%meta.filename)
         return path
+    
+    def pathToIniFileSpecifiedOnCommandLine(self):
+        return os.path.dirname(self.__iniFileSpecifiedOnCommandLine)
+    
+    def generatedIniFilename(self, forceProgramDir):
+        return os.path.join(self.path(forceProgramDir), '%s.ini'%meta.filename)
 

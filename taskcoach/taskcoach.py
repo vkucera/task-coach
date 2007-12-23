@@ -53,7 +53,11 @@ class App(object):
         
     def init(self, loadSettings=True, loadTaskFile=True): 
         import config, i18n
-        self.settings = settings = config.Settings(loadSettings)
+        if self._options:
+            iniFile = self._options.iniFile
+        else:
+            iniFile = None
+        self.settings = settings = config.Settings(loadSettings, iniFile)
         i18n.Translator(settings.get('view', 'language'))
         import gui, persistence
         from domain import task, effort
