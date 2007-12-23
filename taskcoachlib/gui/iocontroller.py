@@ -55,8 +55,10 @@ class IOController(object):
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})
             self.__addRecentFile(filename)
         else:
-            wx.CallAfter(showerror, _("Cannot open %s because it doesn't exist")%filename,
-                      **errorMessageOptions)
+            # Use CallAfter because otherwise the app will hang on Mac OSX:
+            wx.CallAfter(showerror, 
+                         _("Cannot open %s because it doesn't exist")%filename,
+                         **errorMessageOptions)
             self.__removeRecentFile(filename)
             
     def merge(self, filename=None):
