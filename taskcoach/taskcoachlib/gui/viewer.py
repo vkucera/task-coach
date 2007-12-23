@@ -417,19 +417,26 @@ class TreeViewer(Viewer):
         self.widget.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.onItemCollapsed)
 
     def onItemExpanded(self, event):
-        if event.GetItem() == self.widget.GetRootItem():
-            return
-        item = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
-        item.expand()
-        event.Skip()
+        self.__handleExpandedOrCollapsedItem(event, expanded=True)
         
     def onItemCollapsed(self, event):
-        if event.GetItem() == self.widget.GetRootItem():
-            return
-        item = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
-        item.expand(False)
+        self.__handleExpandedOrCollapsedItem(event, expanded=False)
+        
+    def __handleExpandedOrCollapsedItem(self, event, expanded):
         event.Skip()
-
+        treeItem = event.GetItem()
+        # If we get an expanded or collapsed event for the root item, ignore it
+        if treeItem == self.widget.GetRootItem():
+            return
+        # Somehow we can get expanded or collapsed events for items that are
+        # not the root item, but don't have a parent item either, resulting
+        # in an empty index. I don't really understand how that can happen.
+        # Ignore these items. See SF bug report #1840111.
+        index = self.widget.GetIndexOfItem(treeItem)
+        if index:
+            item = self.getItemWithIndex(index)
+            item.expand(expanded)
+    
     def expandAll(self):
         self.widget.expandAllItems()
 

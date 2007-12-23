@@ -17,7 +17,9 @@ have a large number of associated effort records.'''),
         Bug('''Task Coach now gives an error message if the file that it tries
 to open doesn't exist.''', '1857093'),
         Bug('''When selecting all text in a text control with '<cmd>a',
-indeed select all text and not all tasks (Max OSX only).''', '1857091')]),
+indeed select all text and not all tasks (Max OSX only).''', '1857091'),
+        Bug('''Attempt to prevent crashes on Fedora 8 that sometimes happen
+when adding top level tasks.''', '1840111')]),
         
 Release('0.67.0', 'December 16, 2007',
     summary='''This release make it possible to color tasks via their
