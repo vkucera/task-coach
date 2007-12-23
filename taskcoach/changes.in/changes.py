@@ -15,7 +15,9 @@ be used to specify where the ini file is located.''')],
         Bug('''Start and stop tracking effort is now faster for tasks that 
 have a large number of associated effort records.'''),
         Bug('''Task Coach now gives an error message if the file that it tries
-to open doesn't exist.''', '1857093')]),
+to open doesn't exist.''', '1857093'),
+        Bug('''When selecting all text in a text control with '<cmd>a',
+indeed select all text and not all tasks (Max OSX only).''', '1857091')]),
         
 Release('0.67.0', 'December 16, 2007',
     summary='''This release make it possible to color tasks via their

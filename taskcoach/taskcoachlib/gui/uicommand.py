@@ -695,7 +695,11 @@ class SelectAll(NeedsItems, ViewerCommand):
             bitmap='selectall', id=wx.ID_SELECTALL, *args, **kwargs)
         
     def doCommand(self, event):
-        self.viewer.selectall()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            windowWithFocus.SetSelection(-1, -1) # Select all text
+        else:
+            self.viewer.selectall()
 
 
 class InvertSelection(NeedsItems, ViewerCommand):
