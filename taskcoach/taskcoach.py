@@ -54,7 +54,7 @@ class App(object):
     def init(self, loadSettings=True, loadTaskFile=True): 
         import config, i18n
         if self._options:
-            iniFile = self._options.iniFile
+            iniFile = self._options.inifile
         else:
             iniFile = None
         self.settings = settings = config.Settings(loadSettings, iniFile)

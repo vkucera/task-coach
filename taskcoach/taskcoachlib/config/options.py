@@ -36,5 +36,5 @@ class ApplicationOptionParser(OptionParser):
             action='store_true', help=optparse.SUPPRESS_HELP)
 
     def iniOption(self):
-        return optparse.Option('-i', '--ini', dest='inifile', 
+        return optparse.Option('-i', '--ini', dest='inifile',
             help='use the specified INIFILE for storing settings')
