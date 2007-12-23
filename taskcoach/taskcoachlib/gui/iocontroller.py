@@ -55,7 +55,7 @@ class IOController(object):
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})
             self.__addRecentFile(filename)
         else:
-            showerror(_("Cannot open %s because it doesn't exist")%filename,
+            wx.CallAfter(showerror, _("Cannot open %s because it doesn't exist")%filename,
                       **errorMessageOptions)
             self.__removeRecentFile(filename)
             
