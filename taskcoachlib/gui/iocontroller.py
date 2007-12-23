@@ -29,13 +29,18 @@ class IOController(object):
     def needSave(self):
         return self.__taskFile.needSave()
         
-    def open(self, filename=None, showerror=wx.MessageBox, *args):
+    def open(self, filename=None, showerror=wx.MessageBox, 
+             fileExists=os.path.exists, *args):
+        errorMessageOptions = dict(caption=_('%s file error')%meta.name, 
+                                   style=wx.ICON_ERROR)
         if self.__taskFile.needSave():
             if not self.__saveUnsavedChanges():
                 return
         if not filename:
             filename = self.__askUserForFile(_('Open'))
-        if filename:
+        if not filename:
+            return
+        if fileExists(filename):
             self.__closeUnconditionally() 
             self.__taskFile.setFilename(filename)
             try:
@@ -45,10 +50,14 @@ class IOController(object):
                 showerror(_('Error while reading %s:\n')%filename + \
                     ''.join(traceback.format_exception(*sys.exc_info())) + \
                     _('Are you sure it is a %s-file?')%meta.name, 
-                    caption=_('File error'), style=wx.ICON_ERROR)
+                    **errorMessageOptions)
                 return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})
             self.__addRecentFile(filename)
+        else:
+            showerror(_("Cannot open %s because it doesn't exist")%filename,
+                      **errorMessageOptions)
+            self.__removeRecentFile(filename)
             
     def merge(self, filename=None):
         if not filename:
@@ -146,6 +155,12 @@ class IOController(object):
         maximumNumberOfRecentFiles = self.__settings.getint('file', 'maxrecentfiles')
         recentFiles = recentFiles[:maximumNumberOfRecentFiles]
         self.__settings.setlist('file', 'recentfiles', recentFiles)
+        
+    def __removeRecentFile(self, fileName):
+        recentFiles = self.__settings.getlist('file', 'recentfiles')
+        if fileName in recentFiles:
+            recentFiles.remove(fileName)
+            self.__settings.setlist('file', 'recentfiles', recentFiles)
         
     def __askUserForFile(self, title, fileDialogOpts=None, flags=wx.OPEN):
         fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts

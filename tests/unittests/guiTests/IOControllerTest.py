@@ -28,7 +28,7 @@ class IOControllerTest(test.TestCase):
     
     def doIO(self, open, saveas, saveselection, merge):
         for filename in open:
-            self.iocontroller.open(filename)
+            self.iocontroller.open(filename, fileExists=lambda filename: True)
         for filename in saveas:
             self.iocontroller.saveas(filename)
         for filename in saveselection:
