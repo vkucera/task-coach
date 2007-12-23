@@ -1,13 +1,14 @@
-#Wed Dec 05 23:48:30 CET 2007
-eclipse.preferences.version=1
-encoding//changes.in/changes.py=ISO8859-1
-encoding//i18n.in/he.po=UTF-8
-encoding//i18n.in/zh_TW.po=UTF-8
-encoding//taskcoachlib/gui/dialog/preferences.py=UTF-8
-encoding//taskcoachlib/i18n/de.py=UTF-8
+#Sun Dec 23 16:18:00 GMT+01:00 2007
 encoding//taskcoachlib/i18n/es.py=UTF-8
-encoding//tests/integrationtests/TranslationIntegrityTest.py=UTF-8
-encoding//tests/unittests/ConfigTest.py=UTF-8
-encoding//tests/unittests/guiTests/TaskEditorTest.py=UTF-8
 encoding//tests/unittests/persistenceTests/XMLWriterTest.py=UTF-8
+encoding//i18n.in/he.po=UTF-8
 instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
+encoding//tests/unittests/ConfigTest.py=UTF-8
+encoding//taskcoachlib/i18n/de.py=UTF-8
+encoding//tests/unittests/guiTests/TaskEditorTest.py=UTF-8
+encoding//i18n.in/zh_TW.po=UTF-8
+encoding//i18n.in/po2dict.py=iso-8859-1
+encoding//taskcoachlib/gui/dialog/preferences.py=UTF-8
+eclipse.preferences.version=1
+encoding//tests/integrationtests/TranslationIntegrityTest.py=UTF-8
+encoding//changes.in/changes.py=UTF-8

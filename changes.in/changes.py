@@ -1,4 +1,4 @@
-# -*- coding: ISO8859-1 -*-
+# -*- coding: utf-8 -*-
 
 from changetypes import *
 
@@ -8,7 +8,9 @@ Release('0.68.0', 'December ?, 2007',
     summary='?',
     featuresAdded=[
         Feature('''It is now possible to open a task from the reminder 
-dialog.''')],
+dialog.'''),
+        Feature('''Task Coach now has a --ini command line option that can
+be used to specify where the ini file is located.''')],
     bugsFixed=[
         Bug('''Start and stop tracking effort is now faster for tasks that 
 have a large number of associated effort records.''')]),
@@ -171,7 +173,7 @@ events in other situations as well, most notably when changing virtual
 desktops. So, to reduce the chances of confusing new users this option is off 
 by default.''', '1721166')],
     featuresAdded=[
-        Feature('''Added Breton translation thanks to Ronan Le Déroff'''),
+        Feature('''Added Breton translation thanks to Ronan Le DÃ©roff'''),
         Feature('''Show a tooltip with a task's description when the mouse
 is hovering over a task. Patch provided by Jerome Laheurte.''', '1642608',
 '1619521', '1578623'),
@@ -226,7 +228,7 @@ Excel.''', '1660670'),
 tree viewer, child tasks hidden by a filter would still be exported.''', 
 '1659307')],
     featuresAdded=[
-        Feature('Added Slovak translation thanks to Viliam Búr'),
+        Feature('Added Slovak translation thanks to Viliam BÃºr'),
         Feature('''Printing a selection is enabled (except on Mac OSX).'''),
         Feature('''The notebook that contains the different views allows for
 dragging and dropping of tabs, enabling you to create almost any layout you
@@ -580,7 +582,7 @@ instead of 'Ctrl-D' and 'Ctrl-Enter' marks the selected task(s) completed.''',
     featuresAdded=[
         Feature('''Double-clicking the system tray icon when Task Coach
 is not minimized will raise the Task Coach window.''', '1242520'),
-        Feature('''Added Spanish translation thanks to Juan José.''')],
+        Feature('''Added Spanish translation thanks to Juan JosÃ©.''')],
     implementationChanged=[
         Implementation('''Task ids are now persistent, i.e. they are saved to
 and loaded from the Task Coach (XML) file. This will make it easier, in the future,
