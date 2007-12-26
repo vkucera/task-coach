@@ -4,6 +4,11 @@ from changetypes import *
 
 releases = [
 
+Release('0.69.0', 'January ?, 2008',
+    summary='''?''',
+    featuresAdded=[
+        Feature('''...''')]),
+    
 Release('0.68.0', 'December 26, 2007',
     summary='''This release makes it possible to open a task from its reminder dialog, adds
 a command line option to facilitate the PortableApps.com Task Coach distribution, makes 

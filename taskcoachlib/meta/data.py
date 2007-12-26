@@ -1,13 +1,13 @@
 name = 'Task Coach'
 description = 'Your friendly task manager'
-version = '0.68.0'
-release_month = 'December'
+version = '0.69.0'
+release_month = 'January'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
                     'November', 'December'].index(release_month) + 1)
-release_day = '26'
+release_day = '0'
 release_day_nr = '%02d'%int(release_day)
-release_year = '2007'
+release_year = '2008'
 release_status = 'Alpha'
 date = release_month + ' ' + release_day + ', ' + release_year
 long_description = 'Task Coach is a simple open source todo manager to manage' \
