@@ -22,7 +22,8 @@ class PerformanceTest(test.TestCase):
 
     def testRead(self):
         start = time.time()
-        self.mockApp = mock.App(args=[self.taskfilename])
+        self.mockApp = mock.App()
+        self.mockApp.io.open(self.taskfilename)
         end = time.time()
         self.assertEqual(self.nrTasks, len(self.mockApp.taskFile))
         self.failUnless(end-start < self.nrTasks/10)
