@@ -17,7 +17,7 @@ class App(taskcoach.App):
         self.init()
 
     def init(self):
-        super(App, self).init(loadSettings=False)
+        super(App, self).init(loadSettings=False, loadTaskFile=False)
 
     def addTasks(self):
         self.parent = task.Task()
