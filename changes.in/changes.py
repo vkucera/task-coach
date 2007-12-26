@@ -4,15 +4,17 @@ from changetypes import *
 
 releases = [
 
-Release('0.68.0', 'December ?, 2007',
-    summary='?',
+Release('0.68.0', 'December 26, 2007',
+    summary='''This release makes it possible to open a task from its reminder dialog, adds
+a command line option to facilitate the PortableApps.com Task Coach distribution, makes 
+starting and stopping effort tracking quicker and fixes a number of bugs.''',
     featuresAdded=[
-        Feature('''It is now possible to open a task from the reminder 
+        Feature('''It is possible to open a task from its reminder 
 dialog.'''),
-        Feature('''Task Coach now has a --ini command line option that can
+        Feature('''Task Coach has a --ini command line option that can
 be used to specify where the ini file is located.''')],
     bugsFixed=[
-        Bug('''Start and stop tracking effort is now faster for tasks that 
+        Bug('''Start and stop tracking effort is faster for tasks that 
 have a large number of associated effort records.'''),
         Bug('''Task Coach now gives an error message if the file that it tries
 to open doesn't exist.''', '1857093'),
