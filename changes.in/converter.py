@@ -5,13 +5,16 @@ import textwrap, changetypes, re
 
 class ChangeConverter(object):
     def convert(self, change):
-        result = change.description
+        result = self.preProcess(change.description)
         if hasattr(change, 'url'):
             result += ' (%s)'%self.convertURL(change.url)
         if change.sourceForgeIds:
             convertedIds = self.convertSourceForgeIds(change)
             result += ' (%s)'%', '.join(convertedIds)
         return self.postProcess(result)
+    
+    def preProcess(self, changeToBeConverted):
+        return changeToBeConverted
 
     def postProcess(self, convertedChange):
         return convertedChange
@@ -53,6 +56,11 @@ noLink = '%(id)s'
 
 class ChangeToHTMLConverter(ChangeConverter):
 
+    def preProcess(self, changeToBeConverted):
+        changeToBeConverted = re.sub('<', '&lt;', changeToBeConverted)
+        changeToBeConverted = re.sub('>', '&gt;', changeToBeConverted)
+        return changeToBeConverted
+    
     def postProcess(self, convertedChange):
         return '<LI>%s</LI>'%convertedChange
 
