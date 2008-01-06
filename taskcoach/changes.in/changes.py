@@ -9,9 +9,9 @@ Release('0.69.0', 'January ?, 2008',
     featuresAdded=[
         Feature('''Notes can be assigned to categories.'''),
         Feature('''Whether descriptions of tasks, effort records, categories and
-notes are shown in a popup tooltip window is now a setting.'''),
+notes are shown in a popup tooltip window is now a setting.''', '1857098'),
         Feature('''Added menu items for increasing, decreasing, maximizing, and 
-minimizing task priority.'''),
+minimizing task priority.''', '1768210', '1570616'),
         Feature('''Clicking a column header in a task viewer now iterates
 through the following sort orders: 'ascending, after sorting by task status first', 
 'descending, after sorting by task status first', 'ascending, without sorting
@@ -66,7 +66,7 @@ tasks as not completed.''',
     featuresAdded=[
         Feature('''Added Hebrew translation thanks to Ziv Barcesat.'''),
         Feature('''You can assign a color to a category. Tasks are colored 
-according to the color of the categories they belong to.''', '1466159'),
+according to the color of the categories they belong to.''', '1466159', '1784932'),
         Feature('''The 'mark task completed' button and menu items can now 
 also be used to mark tasks as not completed.''', '1449714')],
     bugsFixed=[
