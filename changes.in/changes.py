@@ -30,6 +30,9 @@ the number of days left for tasks without a due date, instead of the word
         Feature('''Task Coach no longer keeps track of the 'last modification 
 time' of tasks.''')],
     bugsFixed=[
+        Bug('''The reminder dialog didn't close when opening the task from
+the reminder dialog. If the user had entered a snooze option in the reminder
+dialog, that snooze option would be overwritten by the task editor.''', '1862286'),
         Bug('''Sorting by total categories in the task viewers didn't sort
 correctly.'''),
         Bug('''Save didn't work for task files without a file name and
