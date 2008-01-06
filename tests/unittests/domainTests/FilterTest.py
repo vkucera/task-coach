@@ -313,16 +313,16 @@ class CategoryFilterFixtureAndCommonTests(CategoryFilterHelpers):
     def setUp(self):
         self.parent = task.Task('parent')
         self.parentCategory = category.Category('parent')
-        self.parentCategory.addTask(self.parent)
+        self.parentCategory.addCategorizable(self.parent)
         self.child = task.Task()
         self.childCategory = category.Category('child')
-        self.childCategory.addTask(self.child)
+        self.childCategory.addCategorizable(self.child)
         self.parent.addChild(self.child)
         self.unusedCategory = category.Category('unused')
         self.list = task.TaskList([self.parent, self.child])
         self.categories = category.CategoryList([self.parentCategory, 
             self.childCategory, self.unusedCategory])
-        self.filter = task.filter.CategoryFilter(self.list, 
+        self.filter = category.filter.CategoryFilter(self.list, 
             categories=self.categories, treeMode=self.treeMode)
                               
     def testInitial(self):
@@ -330,7 +330,7 @@ class CategoryFilterFixtureAndCommonTests(CategoryFilterHelpers):
         
     def testInitialWhenOneCategoryFiltered(self):
         self.unusedCategory.setFiltered()
-        self.filter = task.filter.CategoryFilter(self.list,
+        self.filter = category.filter.CategoryFilter(self.list,
             categories=self.categories, treeMode=self.treeMode)
         self.assertEqual(0, len(self.filter))
         
@@ -441,7 +441,7 @@ class OriginalLengthTest(test.TestCase, CategoryFilterHelpers):
         self.list = task.TaskList()
         self.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
-        self.filter = task.filter.CategoryFilter(self.list,
+        self.filter = category.filter.CategoryFilter(self.list,
             categories=self.categories, settings=self.settings)
         
     def testEmptyList(self):

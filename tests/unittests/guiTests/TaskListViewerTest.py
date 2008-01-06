@@ -89,7 +89,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
     def assertItems(self, *tasks):
         self.assertEqual(len(tasks), self.viewer.size())
         for index, task in enumerate(tasks):
-            self.assertEqual(render.subject(task, recursively=True), 
+            self.assertEqual(task.subject(recursive=True), 
                              self.viewer.widget.GetItemText(index))
                              
     def getFirstItemTextColor(self):
@@ -138,7 +138,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.showColumn('timeLeft')
         self.task.setDueDate(date.Tomorrow())
         self.taskList.append(self.task)
-        self.assertEqual(render.daysLeft(self.task.timeLeft()), 
+        self.assertEqual(render.daysLeft(self.task.timeLeft(), False), 
             self.viewer.widget.GetItem(0, 3).GetText())
 
     def testChildSubjectRendering(self):

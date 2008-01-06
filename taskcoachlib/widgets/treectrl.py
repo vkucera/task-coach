@@ -22,11 +22,11 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
     def OnGetItemExpanded(self, index):
         return self.getItemExpanded(index)
 
-    def OnGetItemDescription(self, index, column=0):
+    def OnGetItemTooltipText(self, index, column=0):
         if column:
-            return self.getItemDescription(index, column)
+            return self.getItemTooltipText(index, column)
         else:
-            return self.getItemDescription(index)
+            return self.getItemTooltipText(index)
 
     def OnGetItemImage(self, index, which, column=0):
         if column:
@@ -106,10 +106,10 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         return wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE | \
             wx.TR_HAS_BUTTONS
 
-    def setItemGetters(self, getItemText, getItemDescription, getItemImage, getItemAttr,
+    def setItemGetters(self, getItemText, getItemTooltipText, getItemImage, getItemAttr,
             getChildrenCount, getItemExpanded):
         self.getItemText = getItemText
-        self.getItemDescription = getItemDescription
+        self.getItemTooltipText = getItemTooltipText
         self.getItemImage = getItemImage
         self.getItemAttr = getItemAttr
         self.getChildrenCount = getChildrenCount
@@ -181,13 +181,13 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
 
 
 class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
-    def __init__(self, parent, getItemText, getItemDescription, getItemImage,
+    def __init__(self, parent, getItemText, getItemTooltipText, getItemImage,
             getItemAttr, getChildrenCount, getItemExpanded, selectCommand, editCommand,
             dragAndDropCommand, itemPopupMenu=None, *args, **kwargs):
         super(TreeCtrl, self).__init__(parent, style=self.getStyle(), 
             itemPopupMenu=itemPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
-        self.setItemGetters(getItemText, getItemDescription, getItemImage, getItemAttr,
+        self.setItemGetters(getItemText, getItemTooltipText, getItemImage, getItemAttr,
             getChildrenCount, getItemExpanded)
         self.refresh()
      
@@ -204,13 +204,13 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
     
 
 class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtrl): 
-    def __init__(self, parent, getItemText, getItemDescription, getItemImage,
+    def __init__(self, parent, getItemText, getItemTooltipText, getItemImage,
             getItemAttr, getChildrenCount, getItemExpanded, selectCommand, editCommand,
             dragAndDropCommand, itemPopupMenu=None, *args, **kwargs):
         super(CustomTreeCtrl, self).__init__(parent, style=self.getStyle(), 
             itemPopupMenu=itemPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
-        self.setItemGetters(getItemText, getItemDescription, getItemImage, getItemAttr,
+        self.setItemGetters(getItemText, getItemTooltipText, getItemImage, getItemAttr,
             getChildrenCount, getItemExpanded)
         self.SetTreeStyle(self.getStyle()) # FIXME: Why is this necessary?
         self.refresh()
@@ -233,12 +233,12 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtr
     
 
 class CheckTreeCtrl(CustomTreeCtrl):
-    def __init__(self, parent, getItemText, getItemDescription, getItemImage,
+    def __init__(self, parent, getItemText, getItemTooltipText, getItemImage,
             getItemAttr, getChildrenCount, getItemExpanded, getIsItemChecked,
             selectCommand, checkCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu=None, *args, **kwargs):
         self.getIsItemChecked = getIsItemChecked
-        super(CheckTreeCtrl, self).__init__(parent, getItemText, getItemDescription,
+        super(CheckTreeCtrl, self).__init__(parent, getItemText, getItemTooltipText,
             getItemImage, getItemAttr, getChildrenCount, getItemExpanded,
             selectCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu, *args, **kwargs)
@@ -261,11 +261,11 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
                     wx.LIST_FORMAT_CENTER: wx.ALIGN_CENTER,
                     wx.LIST_FORMAT_RIGHT: wx.ALIGN_RIGHT}
     
-    def __init__(self, parent, columns, getItemText, getItemDescription, getItemImage,
+    def __init__(self, parent, columns, getItemText, getItemTooltipText, getItemImage,
             getItemAttr, getChildrenCount, getItemExpanded, selectCommand, 
             editCommand, dragAndDropCommand,
             itemPopupMenu=None, columnPopupMenu=None, *args, **kwargs):    
-        self.setItemGetters(getItemText, getItemDescription, getItemImage, getItemAttr,
+        self.setItemGetters(getItemText, getItemTooltipText, getItemImage, getItemAttr,
             getChildrenCount, getItemExpanded)
         super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,

@@ -1,10 +1,16 @@
-import patterns
+# -*- coding: utf-8 -*-
+
+import patterns, time
+from domain import date
 
     
 class Object(patterns.Observable):
     def __init__(self, *args, **kwargs):
         self.__subject = kwargs.pop('subject', '')
         self.__description = kwargs.pop('description', '')
+        self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
+        # FIXME: Not a valid XML id
+        # FIXME: When dropping support for python 2.4, use the uuid module
         super(Object, self).__init__(*args, **kwargs)
         
     def __repr__(self):
@@ -15,7 +21,7 @@ class Object(patterns.Observable):
             state = super(Object, self).__getstate__()
         except AttributeError:
             state = dict()
-        state.update(dict(subject=self.__subject, 
+        state.update(dict(id=self.__id, subject=self.__subject, 
                           description=self.__description))
         return state
     
@@ -24,11 +30,20 @@ class Object(patterns.Observable):
             super(Object, self).__setstate__(state)
         except AttributeError:
             pass
+        self.setId(state['id'])
         self.setSubject(state['subject'])
         self.setDescription(state['description'])
     
     def copy(self):
-        return self.__class__(**self.__getstate__())
+        state = self.__getstate__()
+        del state['id'] # Don't copy the id
+        return self.__class__(**state)
+    
+    def id(self):
+        return self.__id
+    
+    def setId(self, id):
+        self.__id = id
     
     def subject(self):
         return self.__subject
@@ -65,13 +80,13 @@ class Object(patterns.Observable):
 
 class CompositeObject(Object, patterns.ObservableComposite):
     def __init__(self, *args, **kwargs):
-        self.__expanded = kwargs.get('expand', False)
+        self.__expanded = kwargs.pop('expand', False)
         super(CompositeObject, self).__init__(*args, **kwargs)
         
     def subject(self, recursive=False):
         subject = super(CompositeObject, self).subject()
         if recursive and self.parent():
-            subject = '%s -> %s'%(self.parent().subject(recursive=True), subject)
+            subject = u'%s → %s'%(self.parent().subject(recursive=True), subject)
         return subject
         
     def description(self, recursive=False):

@@ -16,7 +16,8 @@ defaults = { \
     'effortperweekviewercount': '0',
     'effortpermonthviewercount': '0',
     'language': 'en_US',
-    'taskcategoryfiltermatchall': 'True'},
+    'taskcategoryfiltermatchall': 'True',
+    'descriptionpopups': 'True'},
 'tasklistviewer': { \
     'title': '',
     'sortby': 'dueDate',

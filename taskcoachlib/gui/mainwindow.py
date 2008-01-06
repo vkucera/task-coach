@@ -50,13 +50,12 @@ class WindowWithPersistentDimensions(wx.Frame):
 
         
 class MainWindow(WindowWithPersistentDimensions):
-    def __init__(self, iocontroller, taskFile, effortList, settings, 
+    def __init__(self, iocontroller, taskFile, settings, 
                  splash=None, *args, **kwargs):
         super(MainWindow, self).__init__(settings, *args, **kwargs)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
         self.settings = settings
-        self.effortList = effortList
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.splash = splash
         self.createWindowComponents()
@@ -71,26 +70,28 @@ class MainWindow(WindowWithPersistentDimensions):
         self.viewer = viewercontainer.ViewerAUINotebook(self.panel, 
             self.settings, 'mainviewer') 
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
-            self.viewer, self.settings, self.taskFile, self.effortList, 
-            self.taskFile.categories(), self.taskFile.notes())
+            self.viewer, self.settings, self.taskFile.tasks(), 
+            self.taskFile.efforts(), self.taskFile.categories(), 
+            self.taskFile.notes())
         self.initLayout()
-        viewerfactory.addTaskViewers(self.viewer, self.taskFile, 
+        viewerfactory.addTaskViewers(self.viewer, self.taskFile.tasks(), 
             self.uiCommands, self.settings, self.taskFile.categories())
-        viewerfactory.addEffortViewers(self.viewer, self.taskFile, 
+        viewerfactory.addEffortViewers(self.viewer, self.taskFile.tasks(), 
             self.uiCommands, self.settings)
         viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
             self.uiCommands, self.settings)
         if self.settings.getboolean('feature', 'notes'):
             viewerfactory.addNoteViewers(self.viewer, self.taskFile.notes(),
-                                         self.uiCommands, self.settings)
+                                         self.uiCommands, self.settings,
+                                         self.taskFile.categories())
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         import menu
         self.SetMenuBar(menu.MainMenu(self, self.uiCommands, self.settings))
         self.createTaskBarIcon(self.uiCommands)
         self.reminderController = \
-            remindercontroller.ReminderController(self.taskFile, self.settings,
-                self.uiCommands)
+            remindercontroller.ReminderController(self.taskFile.tasks(), 
+                self.taskFile.categories(), self.settings, self.uiCommands)
                 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
@@ -143,8 +144,8 @@ class MainWindow(WindowWithPersistentDimensions):
     def createTaskBarIcon(self, uiCommands):
         if self.canCreateTaskBarIcon():
             import taskbaricon, menu
-            self.taskBarIcon = taskbaricon.TaskBarIcon(self, self.taskFile, 
-                self.settings)
+            self.taskBarIcon = taskbaricon.TaskBarIcon(self, 
+                self.taskFile.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon,
                 uiCommands))
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
@@ -170,9 +171,8 @@ class MainWindow(WindowWithPersistentDimensions):
 
     def quit(self):
         if not self.iocontroller.close():
-            return 
-        # Clear task file specific settings (FIXME: save these in the task file)
-        self.settings.set('view', 'tasksearchfilterstring', '') 
+            return
+        # Remember what the user was working on: 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
         # Save the number of viewers for each viewer type:
         counts = {}

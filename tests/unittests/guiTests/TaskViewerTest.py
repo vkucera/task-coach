@@ -99,7 +99,7 @@ class CommonTests(object):
     def testCategoryColor(self):
         cat = category.Category('category with color', color=self.newColor)
         aTask = task.Task()
-        cat.addTask(aTask)
+        cat.addCategorizable(aTask)
         aTask.addCategory(cat)
         self.taskList.append(aTask)
         self.assertBackgroundColor()

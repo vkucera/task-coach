@@ -24,9 +24,9 @@ def addCategoryViewers(viewerContainer, categoryContainer, uiCommands,
     _addViewers(viewerContainer, viewer.CategoryViewer, (categoryContainer, 
                 uiCommands, settings), {}, 'category', settings)
     
-def addNoteViewers(viewerContainer, noteContainer, uiCommands, settings):
+def addNoteViewers(viewerContainer, noteContainer, uiCommands, settings, categories):
     _addViewers(viewerContainer, viewer.NoteViewer, (noteContainer, uiCommands,
-                settings), {}, 'note', settings)
+                settings), dict(categories=categories), 'note', settings)
 
 def _addViewers(viewerContainer, viewerClass, viewerArgs, viewerKwArgs, 
                 bitmap, settings):

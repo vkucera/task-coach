@@ -28,7 +28,17 @@ class IOController(object):
 
     def needSave(self):
         return self.__taskFile.needSave()
-        
+    
+    def openAfterStart(self, commandLineArgs):
+        ''' Open either the file specified on the command line, or the file
+            the user was working on previously, or none at all. '''
+        if commandLineArgs:
+            filename = commandLineArgs[0].decode(sys.getfilesystemencoding())
+        else:
+            filename = self.__settings.get('file', 'lastfile')
+        if filename:
+            self.open(filename)
+            
     def open(self, filename=None, showerror=wx.MessageBox, 
              fileExists=os.path.exists, *args):
         errorMessageOptions = dict(caption=_('%s file error')%meta.name, 
@@ -52,7 +62,9 @@ class IOController(object):
                     _('Are you sure it is a %s-file?')%meta.name, 
                     **errorMessageOptions)
                 return
-            self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})
+            self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%\
+                {'nrtasks': len(self.__taskFile.tasks()), 
+                 'filename': self.__taskFile.filename()})
             self.__addRecentFile(filename)
         else:
             # Use CallAfter because otherwise the app will hang on Mac OSX:
@@ -72,9 +84,9 @@ class IOController(object):
     def save(self, *args):
         if self.__taskFile.filename():
             self.__taskFile.save()
-            self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': self.__taskFile.filename()})
+            self.__showSaveMessage(self.__taskFile)
             return True
-        elif len(self.__taskFile) > 0:
+        elif not self.__taskFile.isEmpty():
             return self.saveas()
         else:
             return False
@@ -84,7 +96,7 @@ class IOController(object):
             filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
         if filename:
             self.__taskFile.saveas(filename)
-            self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': filename})
+            self.__showSaveMessage(self.__taskFile)
             self.__addRecentFile(filename)
             return True
         else:
@@ -95,9 +107,9 @@ class IOController(object):
             filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
         if filename:
             selectionFile = persistence.TaskFile(filename)
-            selectionFile.extend(tasks)
+            selectionFile.tasks().extend(tasks)
             selectionFile.save()
-            self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(selectionFile), 'filename': filename})
+            self.__showSaveMessage(selectionFile)        
             self.__addRecentFile(filename)
 
     def close(self):
@@ -113,9 +125,10 @@ class IOController(object):
                 flags=wx.SAVE, fileDialogOpts=self.__icsFileDialogOpts)
         if filename:
             icsFile = self.__openFileForWriting(filename)
-            persistence.ICSWriter(icsFile).write(self.__taskFile)
+            persistence.ICSWriter(icsFile).write(self.__taskFile.tasks())
             icsFile.close()
-            self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s')%{'nrtasks': len(self.__taskFile), 'filename': filename})
+            self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s')%\
+                {'nrtasks': len(self.__taskFile.tasks()), 'filename': filename})
             return True
         else:
             return False
@@ -128,7 +141,8 @@ class IOController(object):
             htmlFile = self.__openFileForWriting(filename)
             persistence.HTMLWriter(htmlFile).write(viewer)
             htmlFile.close()
-            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%{'nrtasks': viewer.size(), 'filename': filename})
+            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%\
+                {'nrtasks': viewer.size(), 'filename': filename})
             return True
         else:
             return False
@@ -141,7 +155,8 @@ class IOController(object):
             csvFile = self.__openFileForWriting(filename)
             persistence.CSVWriter(csvFile).write(viewer)
             csvFile.close()
-            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%{'nrtasks': viewer.size(), 'filename': filename})
+            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%\
+                {'nrtasks': viewer.size(), 'filename': filename})
             return True
         else:
             return False
@@ -184,4 +199,8 @@ class IOController(object):
         self.__taskFile.close()
         import patterns
         patterns.CommandHistory().clear()
-        
+    
+    def __showSaveMessage(self, savedFile):    
+        self.__messageCallback(_('Saved %(nrtasks)d tasks to %(filename)s')%\
+            {'nrtasks': len(savedFile.tasks()), 
+             'filename': savedFile.filename()})

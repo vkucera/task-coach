@@ -3,7 +3,7 @@ from domain import date, attachment
 
 
 class XMLWriter:    
-    def __init__(self, fd, versionnr=18):
+    def __init__(self, fd, versionnr=19):
         self.__fd = fd
         self.__versionnr = versionnr
 
@@ -23,7 +23,7 @@ class XMLWriter:
         for task in taskList.rootItems():
             self.document.documentElement.appendChild(self.taskNode(task))
         for category in categoryContainer.rootItems():
-            self.document.documentElement.appendChild(self.categoryNode(category, taskList))
+            self.document.documentElement.appendChild(self.categoryNode(category, taskList, noteContainer))
         for note in noteContainer.rootItems():
             self.document.documentElement.appendChild(self.noteNode(note))
         self.document.writexml(self.__fd)
@@ -32,8 +32,6 @@ class XMLWriter:
         node = self.document.createElement('task')
         node.setAttribute('subject', task.subject())
         node.setAttribute('id', task.id())
-        node.setAttribute('lastModificationTime', 
-            self.formatDateTime(task.lastModificationTime()))
         if task.startDate() != date.Date():
             node.setAttribute('startdate', str(task.startDate()))
         if task.dueDate() != date.Date():
@@ -85,25 +83,34 @@ class XMLWriter:
             node.appendChild(self.textNode('description', effort.getDescription()))
         return node
     
-    def categoryNode(self, category, taskList):
+    def categoryNode(self, category, *categorizableContainers):
+        def inCategorizableContainer(categorizable):
+            for container in categorizableContainers:
+                if categorizable in container:
+                    return True
+            return False
         node = self.document.createElement('category')
         node.setAttribute('subject', category.subject())
+        node.setAttribute('id', category.id())
         if category.description():
             node.appendChild(self.textNode('description', category.description()))
         if category.isFiltered():
             node.setAttribute('filtered', str(category.isFiltered()))
         if category.color():
             node.setAttribute('color', str(category.color()))
-        # Make sure the task referenced is actually in the tasklist
-        taskIds = ' '.join([task.id() for task in category.tasks() if task in taskList])
-        if taskIds:            
-            node.setAttribute('tasks', taskIds)
+        # Make sure the categorizables referenced are actually in the 
+        # categorizableContainer, i.e. they are not deleted
+        categorizableIds = ' '.join([categorizable.id() for categorizable in \
+            category.categorizables() if inCategorizableContainer(categorizable)])
+        if categorizableIds:            
+            node.setAttribute('categorizables', categorizableIds)
         for child in category.children():
-            node.appendChild(self.categoryNode(child, taskList))
+            node.appendChild(self.categoryNode(child, *categorizableContainers))
         return node
     
     def noteNode(self, note):
         node = self.document.createElement('note')
+        node.setAttribute('id', note.id())
         if note.subject():
             node.setAttribute('subject', note.subject())
         if note.description():

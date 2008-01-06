@@ -81,9 +81,34 @@ class NewSubTaskCommand(base.BaseCommand, SaveTaskStateMixin):
 class EditTaskCommand(base.EditCommand):
     def name(self):
         return _('Edit task')
+    
+    def __init__(self, *args, **kwargs):
+        super(EditTaskCommand, self).__init__(*args, **kwargs)
+        self.oldCategories = [task.categories() for task in self.items]
         
+    def do_command(self):
+        super(EditTaskCommand, self).do_command()
+        self.newCategories = [task.categories() for task in self.items]
+        self.updateCategories(self.oldCategories, self.newCategories)
+        
+    def undo_command(self):
+        super(EditTaskCommand, self).undo_command()
+        self.updateCategories(self.newCategories, self.oldCategories)
+        
+    def redo_command(self):
+        super(EditTaskCommand, self).redo_command()
+        self.updateCategories(self.oldCategories, self.newCategories)
+
     def getItemsToSave(self):
         return set([relative for task in self.items for relative in task.family()])
+        
+    def updateCategories(self, oldCategories, newCategories):
+        for task, categories in zip(self.items, oldCategories):
+            for category in categories:
+                category.removeCategorizable(task)
+        for task, categories in zip(self.items, newCategories):
+            for category in categories:
+                category.addCategorizable(task)
         
         
 class AddAttachmentToTaskCommand(base.BaseCommand):
@@ -182,3 +207,88 @@ class StopEffortCommand(EffortCommand):
                   
     def canDo(self):
         return True    
+
+
+
+class ExtremePriorityCommand(base.BaseCommand):
+    def __init__(self, *args, **kwargs):
+        super(ExtremePriorityCommand, self).__init__(*args, **kwargs)
+        self.oldPriorities = [task.priority() for task in self.items]
+        self.oldExtremePriority = self.oldExtremePriority() 
+
+    def setNewExtremePriority(self):
+        newExtremePriority = self.oldExtremePriority + self.delta 
+        for task in self.items:
+            task.setPriority(newExtremePriority)
+            
+    def newExtremePriority(self):
+        raise NotImplementedError
+        
+    def restorePriorities(self):
+        for task, oldPriority in zip(self.items, self.oldPriorities):
+            task.setPriority(oldPriority)
+
+    def do_command(self):
+        super(ExtremePriorityCommand, self).do_command()
+        self.setNewExtremePriority()
+        
+    def undo_command(self):
+        self.restorePriorities()
+        super(ExtremePriorityCommand, self).undo_command()
+        
+    def redo_command(self):
+        super(ExtremePriorityCommand, self).redo_command()
+        self.setNewExtremePriority()
+
+
+class MaxPriorityCommand(ExtremePriorityCommand):
+    def name(self):
+        return _('Maximize priority')
+    
+    delta = +1
+    
+    def oldExtremePriority(self):
+        return self.list.maxPriority()
+    
+
+class MinPriorityCommand(ExtremePriorityCommand):
+    def name(self):
+        return _('Minimize priority')
+    
+    delta = -1
+                    
+    def oldExtremePriority(self):
+        return self.list.minPriority()
+    
+
+class ChangePriorityCommand(base.BaseCommand):
+    def changePriorities(self, delta):
+        for task in self.items:
+            task.setPriority(task.priority() + delta)
+
+    def do_command(self):
+        super(ChangePriorityCommand, self).do_command()
+        self.changePriorities(self.delta)
+
+    def undo_command(self):
+        self.changePriorities(-self.delta)
+        super(ChangePriorityCommand, self).undo_command()
+
+    def redo_command(self):
+        super(ChangePriorityCommand, self).redo_command()
+        self.changePriorities(self.delta)
+
+
+class IncPriorityCommand(ChangePriorityCommand):
+    def name(self):
+        return _('Increase priority')
+
+    delta = +1
+
+
+class DecPriorityCommand(ChangePriorityCommand):
+    def name(self):
+        return _('Decrease priority')
+
+    delta = -1
+    

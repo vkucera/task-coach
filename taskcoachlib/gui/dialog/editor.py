@@ -275,7 +275,7 @@ class CategoriesPage(TaskEditorPage):
             lambda index: customtree.TreeItemAttr(),
             self.getChildrenCount, 
             lambda index: 'Undetermined', 
-            lambda index: task in self.getCategoryWithIndex(index).tasks(),
+            lambda index: task in self.getCategoryWithIndex(index).categorizables(),
             lambda *args: None, lambda *args: None, lambda *args: None,
             lambda *args: None)
         self._treeCtrl.expandAllItems()
@@ -308,10 +308,10 @@ class CategoriesPage(TaskEditorPage):
             index = self._treeCtrl.GetIndexOfItem(item)
             category = self.getCategoryWithIndex(index)
             if item.IsChecked():
-                category.addTask(self._task)
+                category.addCategorizable(self._task)
                 self._task.addCategory(category)
             else:
-                category.removeTask(self._task)
+                category.removeCategorizable(self._task)
                 self._task.removeCategory(category)
     
 
@@ -567,9 +567,8 @@ class EffortEditBook(widgets.BookPage):
 
 
 class CategoryEditBook(widgets.BookPage):
-    def __init__(self, parent, category, editor, *args, **kwargs):
+    def __init__(self, parent, category, *args, **kwargs):
         super(CategoryEditBook, self).__init__(parent, columns=3, *args, **kwargs)
-        self._editor = editor
         self._category = category
         self.addSubjectEntry()
         self.addDescriptionEntry()
@@ -607,10 +606,9 @@ class CategoryEditBook(widgets.BookPage):
         self._category.setColor(color)
 
 
-class NoteEditBook(widgets.BookPage):
-    def __init__(self, parent, theNote, editor, *args, **kwargs):
-        super(NoteEditBook, self).__init__(parent, columns=2, *args, **kwargs)
-        self._editor = editor
+class NoteSubjectPage(widgets.BookPage):
+    def __init__(self, parent, theNote, *args, **kwargs):
+        super(NoteSubjectPage, self).__init__(parent, columns=2, *args, **kwargs)
         self._note = theNote
         self.addSubjectEntry()
         self.addDescriptionEntry()
@@ -630,7 +628,68 @@ class NoteEditBook(widgets.BookPage):
     def ok(self):
         self._note.setSubject(self._subjectEntry.GetValue())
         self._note.setDescription(self._descriptionEntry.GetValue())
+
+
+class NoteCategoriesPage(widgets.BookPage): # FIXME: duplication with (Task)CategoriesPage
+    def __init__(self, parent, theNote, categories, *args, **kwargs):
+        super(NoteCategoriesPage, self).__init__(parent, columns=1, *args, **kwargs)
+        self._note = theNote
+        self.__categories = category.CategorySorter(categories)
+        categoriesBox = widgets.BoxWithBoxSizer(self, label=_('Categories'))
+        self._treeCtrl = widgets.CheckTreeCtrl(categoriesBox, 
+            lambda index: self.getCategoryWithIndex(index).subject(),
+            lambda *args: None,
+            lambda index, expanded=False: -1, 
+            lambda index: customtree.TreeItemAttr(),
+            self.getChildrenCount, 
+            lambda index: 'Undetermined', 
+            lambda index: theNote in self.getCategoryWithIndex(index).categorizables(),
+            lambda *args: None, lambda *args: None, lambda *args: None,
+            lambda *args: None)
+        self._treeCtrl.expandAllItems()
+        categoriesBox.add(self._treeCtrl, proportion=1, flag=wx.EXPAND|wx.ALL)
+        categoriesBox.fit()
+        self.addEntry(categoriesBox, growable=True)
+        self.fit()
+
+    def getCategoryWithIndex(self, index):
+        children = self.__categories.rootItems()
+        for i in index:
+            category = children[i]
+            childIndices = [self.__categories.index(child) for child in \
+                            category.children() if child in self.__categories]
+            childIndices.sort()
+            children = [self.__categories[childIndex] for childIndex \
+                        in childIndices]
+        return category
+    
+    def getChildrenCount(self, index): # FIXME: duplication with viewers
+        if index == ():
+            return len(self.__categories.rootItems())
+        else:
+            category = self.getCategoryWithIndex(index)
+            return len(category.children())
         
+    def ok(self):
+        self._treeCtrl.ExpandAll()
+        for item in self._treeCtrl.GetItemChildren(recursively=True):
+            index = self._treeCtrl.GetIndexOfItem(item)
+            category = self.getCategoryWithIndex(index)
+            if item.IsChecked():
+                category.addCategorizable(self._note)
+                self._note.addCategory(category)
+            else:
+                category.removeCategorizable(self._note)
+                self._note.removeCategory(category)
+
+
+class NoteEditBook(widgets.Listbook):
+    def __init__(self, parent, theNote, categories, *args, **kwargs):
+        super(NoteEditBook, self).__init__(parent, *args, **kwargs)
+        self.AddPage(NoteSubjectPage(self, theNote), _('Description'), 'description')
+        self.AddPage(NoteCategoriesPage(self, theNote, categories), _('Categories'), 
+                     'category')
+
 
 class EditorWithCommand(widgets.NotebookDialog):
     def __init__(self, parent, command, uiCommands, *args, **kwargs):
@@ -707,16 +766,15 @@ class CategoryEditor(EditorWithCommand):
             self.addPage(category)
             
     def addPage(self, category):
-        page = CategoryEditBook(self._interior, category, self)
+        page = CategoryEditBook(self._interior, category)
         self._interior.AddPage(page, category.subject())
 
 
 class NoteEditor(EditorWithCommand):
-    def __init__(self, parent, command, uiCommands, notes, *args, **kwargs):
-        self._notes = notes
-        super(NoteEditor, self).__init__(parent, command, uiCommands, 
-                                             *args, **kwargs)
-        self[0]._subjectEntry.SetSelection(-1, -1)
+    def __init__(self, parent, command, categories, *args, **kwargs):
+        self._categories = categories
+        super(NoteEditor, self).__init__(parent, command, None, *args, **kwargs)
+        self[0][0]._subjectEntry.SetSelection(-1, -1)
         # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
         self.setFocus() 
         # This works on Windows XP, but fails silently on Linux Ubuntu 5.10:
@@ -724,12 +782,12 @@ class NoteEditor(EditorWithCommand):
         # So we did just do it twice, guess it doesn't hurt
 
     def setFocus(self, *args, **kwargs):
-        self[0]._subjectEntry.SetFocus()
+        self[0][0]._subjectEntry.SetFocus()
         
     def addPages(self):
         for note in self._command.items:
             self.addPage(note)
             
     def addPage(self, note):
-        page = NoteEditBook(self._interior, note, self)
+        page = NoteEditBook(self._interior, note, self._categories)
         self._interior.AddPage(page, note.subject())

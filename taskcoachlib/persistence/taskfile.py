@@ -1,17 +1,17 @@
 import os, patterns, codecs, shutil, xml
-from domain import date, task, category, note
+from domain import date, task, category, note, effort
 
-# FIXME: TaskFile currently inherits from TaskList. It should contain a 
-# task list instead, just like it contains a CategoryContainer.
 
-class TaskFile(task.TaskList):
+class TaskFile(patterns.Observable):
     def __init__(self, filename='', *args, **kwargs):
         self.__filename = self.__lastFilename = filename
         self.__needSave = self.__loading = False
+        self.__tasks = task.TaskList()
         self.__categories = category.CategoryList()
         self.__notes = note.NoteContainer()
+        self.__efforts = effort.EffortList(self.tasks())
         super(TaskFile, self).__init__(*args, **kwargs)
-        # Register for tasks, categories, and efforts being changed so we 
+        # Register for tasks, categories, efforts and notes being changed so we 
         # can monitor when the task file needs saving (i.e. is 'dirty'):
         for eventType in (self.tasks().addItemEventType(), 
                           self.tasks().removeItemEventType(), 
@@ -30,7 +30,8 @@ class TaskFile(task.TaskList):
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
             task.Task.addChildEventType(), task.Task.removeChildEventType(),
             'task.effort.add', 'task.effort.remove', 
-            'task.category.add', 'task.category.remove', 
+            task.Task.categoryAddedEventType(), 
+            task.Task.categoryRemovedEventType(), 
             'task.attachment.add', 'task.attachment.remove'):
             patterns.Publisher().registerObserver(self.onTaskChanged, 
                                                   eventType=eventType)
@@ -63,7 +64,10 @@ class TaskFile(task.TaskList):
         return self.__notes
     
     def tasks(self):
-        return self
+        return self.__tasks
+    
+    def efforts(self):
+        return self.__efforts
     
     def isEmpty(self):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())

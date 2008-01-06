@@ -64,6 +64,9 @@ class DummyUICommand(gui.uicommand.UICommand):
 
     def getHelpText(self):
         return 'Help text'
+    
+    def getMenuText(self):
+        return 'Menu text'
 
 
 class DummyUICommands(gui.uicommand.UICommands):

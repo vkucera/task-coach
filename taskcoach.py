@@ -60,7 +60,7 @@ class App(object):
         self.settings = settings = config.Settings(loadSettings, iniFile)
         i18n.Translator(settings.get('view', 'language'))
         import gui, persistence
-        from domain import task, effort
+        from domain import task
         import meta
         self.wxApp.SetAppName(meta.name)
         self.wxApp.SetVendorName(meta.author)
@@ -72,22 +72,13 @@ class App(object):
         
         self.taskFile = persistence.TaskFile()
         self.autoSaver = persistence.AutoSaver(settings)
-        self.taskRelationshipManager = task.TaskRelationshipManager(taskList=self.taskFile.tasks(), settings=settings)
-        effortList = effort.EffortList(self.taskFile.tasks())
+        self.taskRelationshipManager = task.TaskRelationshipManager( \
+            taskList=self.taskFile.tasks(), settings=settings)
         self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
-        self.mainwindow = gui.MainWindow(self.io, self.taskFile, effortList, 
-                                         settings, splash)
-        self.processCommandLineArguments(settings, loadTaskFile)
+        self.mainwindow = gui.MainWindow(self.io, self.taskFile, settings, splash)
+        if loadTaskFile:
+            self.io.openAfterStart(self._args)
         
-    def processCommandLineArguments(self, settings, load=True):
-        # FIXME: move to IOController
-        if self._args:
-            filename = self._args[0].decode(sys.getfilesystemencoding())
-        else:
-            filename = settings.get('file', 'lastfile')
-        if load and filename:
-            self.io.open(filename)
-
     def displayMessage(self, message):
         self.mainwindow.displayMessage(message)
 
@@ -102,6 +93,7 @@ def start():
         profiler.runcall(app.start)
     else:
         app.start()
+
 
 if __name__ == '__main__':
     start()

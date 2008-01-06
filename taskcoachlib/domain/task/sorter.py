@@ -54,7 +54,7 @@ class Sorter(base.TreeSorter):
         sortKeyName = self._sortKey
         if not self._sortCaseSensitive and sortKeyName == 'subject':
             prepareSortValue = lambda subject: subject.lower()
-        elif sortKeyName == 'categories':
+        elif sortKeyName in ('categories', 'totalCategories'):
             prepareSortValue = lambda categories: sorted([category.subject() for category in categories])
         elif sortKeyName == 'reminder':
             prepareSortValue = lambda reminder: reminder or date.DateTime.max

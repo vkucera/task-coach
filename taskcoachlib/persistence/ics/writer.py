@@ -1,5 +1,4 @@
-import meta
-import time
+import meta, time
 
 # FIXME: Use thirdparty product.
 
@@ -27,31 +26,26 @@ class ICSWriter:
 
         self += 'END:VCALENDAR'
 
-    def writeTask(self, task, parentName=None):
-        if parentName == None :
-            name = task.subject()
-        else :
-            name = parentName + ' -> ' + task.subject() # don't use magic constant
-
+    def writeTask(self, task):
         for child in task.children():
-            self.writeTask(child, name)
+            self.writeTask(child)
 
         for effort in task.efforts():
-            self.writeEffort(task, effort, name)
+            self.writeEffort(task, effort)
 
-    def writeEffort(self, task, effort, name):
+    def writeEffort(self, task, effort):
         self += 'BEGIN:VEVENT'
 
-        self += 'SUMMARY:%s'%name
+        self += 'SUMMARY:%s'%task.subject(recursive=True)
 
         description = ''
-        if task.description() != '' :
+        if task.description():
             description = task.description()
-        if effort.getDescription() != '' :
-            if description != '' :
+        if effort.getDescription():
+            if description:
                 description += '\n----\n'
             description += effort.getDescription()
-        if description != '' :
+        if description:
             self += 'DESCRIPTION:%s'%description.replace('\n','\\n')
 
         start = effort.getStart().strftime('%Y%m%dT%H%M%SZ')

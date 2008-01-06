@@ -15,20 +15,24 @@ class XMLReader:
         domDocument = xml.dom.minidom.parse(self.__fd)
         self.__tskversion = self.__parseTskVersionNumber(domDocument)
         tasks = self.__parseTaskNodes(domDocument.documentElement.childNodes)
-        tasksAndAllChildren = tasks[:]
+        categorizables = tasks[:]
         for task in tasks:
-            tasksAndAllChildren.extend(task.children(recursive=True))
-        tasksById = dict([(task.id(), task) for task in tasksAndAllChildren])
-        if self.__tskversion <= 13:
-            categories = self.__parseCategoryNodesFromTaskNodes(domDocument, 
-                                                                tasksById)
-        else:
-            categories = self.__parseCategoryNodes( \
-                domDocument.documentElement.childNodes, tasksById)
+            categorizables.extend(task.children(recursive=True))
         if self.__tskversion <= 15:
             notes = []
         else:
             notes = self.__parseNoteNodes(domDocument.documentElement.childNodes)
+        categorizables.extend(notes)
+        for note in notes:
+            categorizables.extend(note.children(recursive=True))
+        categorizablesById = dict([(categorizable.id(), categorizable) for \
+                                   categorizable in categorizables])
+        if self.__tskversion <= 13:
+            categories = self.__parseCategoryNodesFromTaskNodes(domDocument, 
+                                                                categorizablesById)
+        else:
+            categories = self.__parseCategoryNodes( \
+                domDocument.documentElement.childNodes, categorizablesById)
 
         return tasks, categories, notes
 
@@ -49,22 +53,28 @@ class XMLReader:
         return [self.__parseNoteNode(node) for node in nodes \
                 if node.nodeName == 'note']
 
-    def __parseCategoryNode(self, categoryNode, tasksById):        
+    def __parseCategoryNode(self, categoryNode, categorizablesById):        
         subject = categoryNode.getAttribute('subject')
+        categoryId = categoryNode.getAttribute('id')
         description = self.__parseDescription(categoryNode)
         filtered = self.__parseBoolean(categoryNode.getAttribute('filtered'), 
                                        False)
         color = self.__parseTuple(categoryNode.getAttribute('color'), None)
-        taskIds = categoryNode.getAttribute('tasks')
-        if taskIds:
+        if self.__tskversion < 19:
+            categorizableIds = categoryNode.getAttribute('tasks')
+        else:
+            categorizableIds = categoryNode.getAttribute('categorizables')
+        if categorizableIds:
             # The category tasks attribute might contain id's that refer to tasks that
             # have been deleted (a bug in release 0.61.5), be prepared:
-            categoryTasks = [tasksById[id] for id in taskIds.split(' ') if id in tasksById]
+            categorizables = [categorizablesById[id] for id in \
+                              categorizableIds.split(' ') \
+                              if id in categorizablesById]
         else:
-            categoryTasks = []
-        children = self.__parseCategoryNodes(categoryNode.childNodes, tasksById)
-        return category.Category(subject, categoryTasks, children, filtered, 
-                                 description=description, color=color)
+            categorizables = []
+        children = self.__parseCategoryNodes(categoryNode.childNodes, categorizablesById)
+        return category.Category(subject, categorizables, children, filtered, 
+                                 id=categoryId, description=description, color=color)
                       
     def __parseCategoryNodesFromTaskNodes(self, document, tasks):
         taskNodes = document.getElementsByTagName('task')
@@ -77,7 +87,7 @@ class XMLReader:
                 else:
                     cat = category.Category(subject)
                     subjectCategoryMapping[subject] = cat
-                cat.addTask(tasks[taskId])
+                cat.addCategorizable(tasks[taskId])
         return subjectCategoryMapping.values()
     
     def __parseCategoryNodesWithinTaskNodes(self, taskNodes, tasks):
@@ -91,15 +101,13 @@ class XMLReader:
         
     def __parseTaskNode(self, taskNode):
         subject = taskNode.getAttribute('subject')
-        id = taskNode.getAttribute('id')
+        id = taskNode.getAttribute('id') 
         description = self.__parseDescription(taskNode)
         startDate = date.parseDate(taskNode.getAttribute('startdate'))
         dueDate = date.parseDate(taskNode.getAttribute('duedate'))
         completionDate = date.parseDate(taskNode.getAttribute('completiondate'))
         budget = date.parseTimeDelta(taskNode.getAttribute('budget'))
         priority = self.__parseInteger(taskNode.getAttribute('priority'))
-        lastModificationTime = \
-            self.__parseDateTime(taskNode.getAttribute('lastModificationTime'))
         hourlyFee = self.__parseFloat(taskNode.getAttribute('hourlyFee'))
         fixedFee = self.__parseFloat(taskNode.getAttribute('fixedFee'))
         reminder = self.__parseDateTime(taskNode.getAttribute('reminder'))
@@ -112,20 +120,20 @@ class XMLReader:
             categories = []
         children = self.__parseTaskNodes(taskNode.childNodes)
         efforts = self.__parseEffortNodes(taskNode.childNodes)
-        return task.Task(subject, description, id_=id, startDate=startDate, 
+        return task.Task(subject, description, id=id, startDate=startDate, 
             dueDate=dueDate, completionDate=completionDate, budget=budget, 
-            priority=priority, lastModificationTime=lastModificationTime, 
-            hourlyFee=hourlyFee, fixedFee=fixedFee, reminder=reminder, 
-            categories=categories, attachments=attachments, children=children,
-            efforts=efforts,
+            priority=priority, hourlyFee=hourlyFee, fixedFee=fixedFee, 
+            reminder=reminder, categories=categories, attachments=attachments, 
+            children=children, efforts=efforts,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 shouldMarkCompletedWhenAllChildrenCompleted)
     
     def __parseNoteNode(self, noteNode):
         subject = noteNode.getAttribute('subject')
+        id = noteNode.getAttribute('id')
         description = self.__parseDescription(noteNode)
         children = self.__parseNoteNodes(noteNode.childNodes)
-        return note.Note(subject=subject, description=description, 
+        return note.Note(id=id, subject=subject, description=description, 
                          children=children)
         
     def __parseCategoryNodesWithinTaskNode(self, nodes):

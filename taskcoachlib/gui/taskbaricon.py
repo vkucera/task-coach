@@ -106,7 +106,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
                 textParts.append(plural%count)
         text = ', '.join(textParts)
         if text:
-            self.__tooltipText = '%s - %s'%(meta.name, text)
+            self.__tooltipText = u'%s - %s'%(meta.name, text)
         else:
             self.__tooltipText = meta.name
 

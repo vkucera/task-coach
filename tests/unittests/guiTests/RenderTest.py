@@ -1,36 +1,26 @@
+# -*- coding: utf-8 -*-
+
 import test
 from gui import render
-import domain.task as task
-import domain.date as date
-
-class RenderSubjectTest(test.TestCase):
-    def setUp(self):
-        self.parent = task.Task(subject='Parent')
-        self.child = task.Task(subject='Child')
-        self.parent.addChild(self.child)
-        
-    def testSubject(self):
-        self.assertEqual('Parent', render.subject(self.parent))
-
-    def testSubjectWithChild(self):
-        self.assertEqual('Parent+Child', 
-            render.subject(self.child, recursively=True, sep='+'))
-
-    def testSubjectRecursively(self):
-        self.assertEqual('Child',
-            render.subject(self.child, recursively=False, sep='+'))
+from domain import task, date
 
 
 class RenderDaysLeftTest(test.TestCase):
     def testOneDayLeft(self):
-        self.assertEqual('1', render.daysLeft(date.TimeDelta(days=1)))
+        self.assertEqual('1', render.daysLeft(date.TimeDelta(days=1), False))
+        
+    def testDueToday(self):
+        self.assertEqual('0', render.daysLeft(date.TimeDelta(days=0), False))
 
     def testOneDayLate(self):
-        self.assertEqual('-1', render.daysLeft(date.TimeDelta(days=-1)))
+        self.assertEqual('-1', render.daysLeft(date.TimeDelta(days=-1), False))
 
     def testInfiniteTimeLeft(self):
-        self.assertEqual('Infinite', render.daysLeft(date.TimeDelta.max))
+        self.assertEqual(u'∞', render.daysLeft(date.TimeDelta.max, False))
 
+    def testCompletedTask(self):
+        self.assertEqual('', render.daysLeft(date.TimeDelta.max, True))
+        
 
 class RenderTimeSpentTest(test.TestCase):
     def testZeroTime(self):

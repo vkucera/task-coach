@@ -17,7 +17,7 @@ class ReminderControllerTest(test.TestCase):
         self.task = task.Task('Task')
         self.taskList.append(self.task)
         self.reminderController = ReminderControllerUnderTest(self.taskList,
-            config.Settings(load=False), {})
+            [], config.Settings(load=False), {})
         self.reminderDateTime = date.DateTime.now() + date.TimeDelta(hours=1)
         
     def testSetTaskReminderAddsClockEventToPublisher(self):
@@ -73,7 +73,7 @@ class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
         self.task2 = task.Task('Task 2', reminder=self.reminderDateTime)
         self.taskList.extend([self.task1, self.task2])
         self.reminderController = ReminderControllerUnderTest(self.taskList,
-            config.Settings(load=False), {})
+            [], config.Settings(load=False), {})
 
     def testClockNotificationResultsInTwoMessages(self):
         date.Clock().notify(now=self.reminderDateTime)

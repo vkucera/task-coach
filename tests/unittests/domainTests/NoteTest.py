@@ -77,11 +77,11 @@ class NoteTest(test.TestCase):
         self.assertEqual('child', child.subject())
         
     def testGetState(self):
-        self.assertEqual(dict(subject='', description='', parent=None,
-            children=self.note.children()), self.note.__getstate__())
+        self.assertEqual(dict(id=self.note.id(), subject='', description='', parent=None,
+            categories=set(), children=self.note.children()), self.note.__getstate__())
         
     def testSetState(self):
-        self.note.__setstate__(dict(subject='new', description='new', 
+        self.note.__setstate__(dict(id='id', subject='new', description='new', 
             parent=None, children=[]))
         self.assertEqual('new', self.note.description())
         

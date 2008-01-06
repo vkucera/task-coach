@@ -1,11 +1,12 @@
 import test, gui, config, os
 from unittests import dummy
-import domain.task as task
+from domain import task, note
 
 class IOControllerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.iocontroller = gui.IOController(dummy.TaskFile(), 
+        self.taskFile = dummy.TaskFile()
+        self.iocontroller = gui.IOController(self.taskFile, 
             lambda *args: None, self.settings)
         self.filename1 = 'whatever.tsk'
         self.filename2 = 'another.tsk' 
@@ -70,4 +71,13 @@ class IOControllerTest(test.TestCase):
         self.doIOAndCheckRecentFiles(filenames, 
                                      expectedFilenames=filenames[1:])
         
+    def testSaveTaskFileWithoutTasksButWithNotes(self):
+        self.taskFile.notes().append(note.Note('Note'))
+        def saveasReplacement(self):
+            self.saveAsCalled = True
+        originalSaveAs = self.iocontroller.__class__.saveas
+        self.iocontroller.__class__.saveas = saveasReplacement
+        self.iocontroller.save()
+        self.failUnless(self.iocontroller.saveAsCalled)
+        self.iocontroller.__class__.saveas = originalSaveAs
     

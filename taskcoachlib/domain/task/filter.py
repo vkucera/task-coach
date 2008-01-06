@@ -1,5 +1,5 @@
-import patterns, re, task
-from domain import base, date, category
+import patterns, task
+from domain import base, date
     
 
 class ViewFilter(base.Filter):
@@ -89,41 +89,3 @@ class ViewFilter(base.Filter):
                         'Year' : date.LastDayOfCurrentYear, 
                         'Unlimited' : date.Date }        
         return dateFactory[dueDateString]()
-                    
-
-class CategoryFilter(base.Filter):
-    def __init__(self, *args, **kwargs):
-        self.__categories = kwargs.pop('categories')
-        self.__filterOnlyWhenAllCategoriesMatch = \
-            kwargs.pop('filterOnlyWhenAllCategoriesMatch', False)
-        eventTypes = [self.__categories.addItemEventType(),
-                      self.__categories.removeItemEventType()]
-        for eventName in ('taskAdded', 'taskRemoved', 'filterChanged'):
-            eventTypes.append(getattr(category.Category, '%sEventType'%eventName)())
-        for eventType in eventTypes:
-            patterns.Publisher().registerObserver(self.onCategoryChanged,
-                                                  eventType=eventType)
-        super(CategoryFilter, self).__init__(*args, **kwargs)
-    
-    def setFilterOnlyWhenAllCategoriesMatch(self, filterOnlyWhenAllCategoriesMatch=True):
-        self.__filterOnlyWhenAllCategoriesMatch = filterOnlyWhenAllCategoriesMatch
-        
-    def filter(self, tasks):
-        filteredCategories = [category for category in self.__categories 
-                              if category.isFiltered()]
-        if filteredCategories:
-            return [task for task in tasks if \
-                    self.filterTask(task, filteredCategories)]
-        else:
-            return tasks
-        
-    def filterTask(self, task, filteredCategories):
-        matches = [category.contains(task, self.treeMode()) 
-                   for category in filteredCategories]
-        if self.__filterOnlyWhenAllCategoriesMatch:
-            return False not in matches
-        else:
-            return True in matches
-        
-    def onCategoryChanged(self, event):
-        self.reset()

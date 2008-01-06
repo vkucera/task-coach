@@ -125,7 +125,7 @@ class CopyAndPasteCommandTest(CategoryCommandTestCase):
             lambda: self.assertEqual([self.original], self.categories))
         
     def testCopyOneCategoryWithTasks(self):
-        self.original.addTask(self.task)
+        self.original.addCategorizable(self.task)
         self.task.addCategory(self.original)
         self.copy([self.original])
         self.assertDoUndoRedo(
@@ -133,7 +133,7 @@ class CopyAndPasteCommandTest(CategoryCommandTestCase):
                                      self.task.categories()))
         
     def testPasteOneCategoryWithTasks(self):
-        self.original.addTask(self.task)
+        self.original.addCategorizable(self.task)
         self.task.addCategory(self.original)
         self.copy([self.original])
         self.paste()
@@ -147,7 +147,7 @@ class CopyAndPasteCommandTest(CategoryCommandTestCase):
         self.categories.append(childCat)
         self.original.addChild(childCat)
         self.task.addCategory(childCat)
-        childCat.addTask(self.task)
+        childCat.addCategorizable(self.task)
         self.copy([self.original])
         self.paste()
         self.assertDoUndoRedo(

@@ -12,6 +12,7 @@ class FakeAttachment(object):
     def __unicode__(self):
         return self.filename
 
+
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
         self.taskFile = persistence.TaskFile()
@@ -38,8 +39,20 @@ class TaskFileTestCase(test.TestCase):
 
 class TaskFileTest(TaskFileTestCase):
     def testIsEmptyInitially(self):
-        self.failUnless(persistence.TaskFile().isEmpty())
+        self.failUnless(self.emptyTaskFile.isEmpty())
+    
+    def testHasNoTasksInitially(self):
+        self.failIf(self.emptyTaskFile.tasks())
         
+    def testHasNoCategoriesInitially(self):
+        self.failIf(self.emptyTaskFile.categories())
+        
+    def testHasNoNotesInitially(self):
+        self.failIf(self.emptyTaskFile.notes())
+        
+    def testHasNoEffortsInitially(self):
+        self.failIf(self.emptyTaskFile.efforts())
+            
     def testFileNameAfterCreate(self):
         self.assertEqual('', self.taskFile.filename())
 
@@ -91,7 +104,7 @@ class TaskFileTest(TaskFileTestCase):
 
     def testNeedSave_AfterNewTaskAdded(self):
         newTask = task.Task(subject='Task')
-        self.emptyTaskFile.append(newTask)
+        self.emptyTaskFile.tasks().append(newTask)
         self.failUnless(self.emptyTaskFile.needSave())
 
     def testNeedSave_AfterNewNoteAdded(self):
@@ -104,7 +117,7 @@ class TaskFileTest(TaskFileTestCase):
         self.failUnless(self.taskFile.needSave())
         
     def testDoesNotNeedSave_AfterSave(self):
-        self.emptyTaskFile.append(task.Task())
+        self.emptyTaskFile.tasks().append(task.Task())
         self.emptyTaskFile.setFilename(self.filename)
         self.emptyTaskFile.save()
         self.failIf(self.emptyTaskFile.needSave())
@@ -120,7 +133,7 @@ class TaskFileTest(TaskFileTestCase):
         self.failUnless(self.emptyTaskFile.needSave())
         
     def testDoesNotNeedSave_AfterLoad(self):
-        self.taskFile.append(task.Task())
+        self.taskFile.tasks().append(task.Task())
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.taskFile.close()
@@ -209,7 +222,7 @@ class TaskFileTest(TaskFileTestCase):
 
     def testNeedSave_AfterEditEffortTask(self):
         task2 = task.Task()
-        self.taskFile.append(task2)
+        self.taskFile.tasks().append(task2)
         newEffort = effort.Effort(self.task)
         self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
@@ -285,7 +298,7 @@ class TaskFileTest(TaskFileTestCase):
     def testNeedSave_AfterAddChild(self):
         self.taskFile.setFilename(self.filename)
         child = task.Task()
-        self.taskFile.append(child)
+        self.taskFile.tasks().append(child)
         self.taskFile.save()
         self.task.addChild(child)
         self.failUnless(self.taskFile.needSave())
@@ -293,7 +306,7 @@ class TaskFileTest(TaskFileTestCase):
     def testNeedSave_AfterRemoveChild(self):
         self.taskFile.setFilename(self.filename)
         child = task.Task()
-        self.taskFile.append(child)
+        self.taskFile.tasks().append(child)
         self.task.addChild(child)
         self.taskFile.save()
         self.task.removeChild(child)
@@ -485,10 +498,10 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.mergeFile.categories().append(self.category)
         aTask = task.Task(subject='merged task')
         self.mergeFile.tasks().append(aTask)
-        self.category.addTask(aTask)
+        self.category.addCategorizable(aTask)
         self.merge()
         self.assertEqual(aTask.id(), 
-                         list(self.taskFile.categories())[0].tasks()[0].id())
+                         list(self.taskFile.categories())[0].categorizables()[0].id())
                          
     def testMerge_Notes(self):
         self.mergeFile.notes().append(self.note)

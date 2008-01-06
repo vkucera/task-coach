@@ -1,5 +1,5 @@
-import test, taskcoach, os, sys, mock
-import domain.task as task
+import test, taskcoach, os, sys, mock, wx
+from domain import task
 
 
 class LoadTest(test.TestCase):
@@ -28,4 +28,9 @@ class LoadTest(test.TestCase):
         self.assertEqual('Line 1\n', lines[0])
         self.assertEqual('Line 2\n', lines[1])
 
-
+    def testLoadNonExistingFileGivesErrorMessage(self):
+        self.mockApp.io.open("I don't exist.tsk", 
+                             showerror=self.mockErrorDialog,
+                             fileExists=lambda filename: False)
+        wx.Yield() # io.open uses wx.CallAfter
+        self.failUnless(self.errorDialogCalled)

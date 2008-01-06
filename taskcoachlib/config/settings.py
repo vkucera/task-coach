@@ -86,9 +86,11 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
                 raise
                 
     def set(self, section, option, value):
-        super(Settings, self).set(section, option, value)
-        self.notifyObservers(patterns.Event(self, '%s.%s'%(section, option), 
-                             value))
+        currentValue = self.get(section, option)
+        if value != currentValue:
+            super(Settings, self).set(section, option, value)
+            self.notifyObservers(patterns.Event(self, '%s.%s'%(section, option), 
+                                 value))
             
     def setboolean(self, section, option, value):
         self.set(section, option, str(value))

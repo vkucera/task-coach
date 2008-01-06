@@ -1,5 +1,5 @@
-from domain import base
+from domain import category
 
-class Note(base.CompositeObject):
+class Note(category.CategorizableCompositeObject):
     pass    
         

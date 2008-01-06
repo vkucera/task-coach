@@ -9,6 +9,7 @@ _TOC = _('''<h3>Table of contents</h3>
         <li><a href="#abouttasks">About tasks</a></li>
         <li><a href="#taskproperties">Task properties</a></li>
         <li><a href="#taskstates">Task states</a></li>
+        <li><a href="#taskcolors">Task colors</a></li>
     </ul>
 </li>
 <li><a href="#effort">Effort</a>
@@ -17,6 +18,11 @@ _TOC = _('''<h3>Table of contents</h3>
         <li><a href="#effortproperties">Effort properties</a></li>
     </ul>
 </li>
+<li><a href="#categories">Categories</a>
+    <ul>
+        <li><a href="#aboutcategories">About categories</a></li>
+        <li><a href="#categoryproperties">Category properties</a></li>
+    </ul>
 </ul>
 ''')
 
@@ -92,7 +98,7 @@ _taskStatesSubsection = _('''<h4><a name="taskstates">Task states</a></h4>
 
 _taskColorsSubsection = _('''<h4><a name="taskcolors">Task colors</a></h4>
 
-<p>Tasks are colored according to the following rules:
+<p>The text of tasks is colored according to the following rules:
 <ul>
 <li>Over due tasks are red;</li>
 <li>Tasks due today are orange;</li>
@@ -102,6 +108,9 @@ _taskColorsSubsection = _('''<h4><a name="taskcolors">Task colors</a></h4>
 </ul>
 This all assumes you have not changed the text colors through the preferences 
 dialog, of course.</p>
+<p>The background color of tasks is determined by the categories the task
+belongs to, see the section about 
+<a href="#categoryproperties">category properties</a> below.</p>
 ''')
 
 _effortSection = _('''<h3><a name="effort">Effort</a></h3>
@@ -137,10 +146,40 @@ recursively.</li>
 </ul></p>
 ''')
 
+_categorySection = _('''<h3><a name="categories">Categories</a></h3>
+''')
+
+_aboutCategoriesSubSection = _('''<h4><a name="aboutcategories">About 
+categories</a></h4>
+
+<p>Tasks may belong to one or more categories. First, you need to create the
+category that you want to use via the 'Category' menu. Then, you can add a task to
+one or more categories by editing the task and checking the relevant categories
+for that task in the category pane of the task editor.</p>
+
+<p>You can limit the tasks shown in the task viewers to one or more categories
+by checking a category in the category viewer. For example, if you have a 
+category 'phone calls' and you check that category, the task viewers will 
+only show tasks belonging to that category; in other words the phone calls 
+you need to make.</p>
+''')
+
+_categoryPropertiesSubSection = _('''<h4><a name="categoryproperties">Category 
+properties</a></h4>
+
+<p>Categories have a subject, a description, and a color. The color is used
+to render the background of the category and the background of tasks that
+belong to that category. If a category has no color of its own, but it has
+a parent category with a color, the parent's color will be used.  
+If a task belongs to multiple categories that each have a color associated with
+them, a mixture of the colors will be used to render the background of that
+task.</p>
+''')
+
 helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
-    _taskPropertiesSubsection + _taskStatesSubsection + \
-    _taskColorsSubsection + _effortSection + _aboutEffortSubsection + \
-    _effortPropertiesSubsection
+    _taskPropertiesSubsection + _taskStatesSubsection + _taskColorsSubsection + \
+    _effortSection + _aboutEffortSubsection + _effortPropertiesSubsection + \
+    _categorySection + _aboutCategoriesSubSection + _categoryPropertiesSubSection
     
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
 <h5>Version %(version)s, %(date)s</h5>

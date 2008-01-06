@@ -33,7 +33,7 @@ class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
         self.task.setDueDate(date.Tomorrow())
         self.taskList.append(self.task)
         firstItem, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())
-        self.assertEqual(render.daysLeft(self.task.timeLeft()), 
+        self.assertEqual(render.daysLeft(self.task.timeLeft(), False), 
             self.viewer.widget.GetItemText(firstItem, 3))
         
     def testReverseSortOrderWithGrandchildren(self):

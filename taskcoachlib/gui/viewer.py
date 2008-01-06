@@ -47,11 +47,18 @@ class FilterableViewer(object):
         model = super(FilterableViewer, self).createFilter(model)
         return self.FilterClass(model, **self.filterOptions())
     '''    
-        
+
+class FilterableViewerForNotes(FilterableViewer):
+    def createFilter(self, notesContainer):
+        notesContainer = super(FilterableViewerForNotes, self).createFilter(notesContainer)
+        return category.filter.CategoryFilter(notesContainer, 
+            categories=self.categories, treeMode=self.isTreeViewer())
+
+            
 class FilterableViewerForTasks(FilterableViewer):
     def createFilter(self, taskList):
         taskList = super(FilterableViewerForTasks, self).createFilter(taskList)
-        return task.filter.CategoryFilter( \
+        return category.filter.CategoryFilter( \
             task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
                                    **self.viewFilterOptions()), 
             categories=self.categories, treeMode=self.isTreeViewer())
@@ -222,8 +229,7 @@ class SortableViewerForTasks(SortableViewer):
             'viewsortbytotalpriority', 'viewsortbyhourlyfee',
             'viewsortbyfixedfee', 'viewsortbytotalfixedfee',
             'viewsortbyrevenue', 'viewsortbytotalrevenue', 
-            'viewsortbyreminder', 'viewsortbylastmodificationtime', 
-            'viewsortbytotallastmodificationtime']
+            'viewsortbyreminder']
 
 
 class SortableViewerForEffort(SortableViewer):
@@ -239,7 +245,8 @@ class SortableViewerForCategories(SortableViewer):
 class SortableViewerForNotes(SortableViewer):
     def getSortUICommands(self):
         return ['viewsortorder', 'viewsortcasesensitive', None, 
-                'viewsortbysubject', 'viewsortbydescription']
+                'viewsortbysubject', 'viewsortbydescription', 
+                'viewsortbycategories', 'viewsortbytotalcategories']
         
     
 class Viewer(wx.Panel):
@@ -696,10 +703,13 @@ class ViewerWithColumns(Viewer):
         column = self.visibleColumns()[column]
         return column.render(item)
 
-    def getItemDescription(self, index, column=0):
-        item = self.getItemWithIndex(index)
-        column = self.visibleColumns()[column]
-        return column.renderDescription(item)
+    def getItemTooltipText(self, index, column=0):
+        if self.settings.getboolean('view', 'descriptionpopups'):
+            item = self.getItemWithIndex(index)
+            column = self.visibleColumns()[column]
+            return column.renderDescription(item)
+        else:
+            return ''
 
     def getItemImage(self, index, which, column=0): 
         item = self.getItemWithIndex(index)
@@ -716,32 +726,41 @@ class ViewerWithColumns(Viewer):
             patterns.Publisher().removeObserver(self.onAttributeChanged, 
                 eventType=eventType)
 
+    def renderCategory(self, task, recursive=False):
+        return ', '.join(sorted([category.subject(recursive=True) for category in \
+                                 task.categories(recursive=recursive)]))
+
 
 class SortableViewerWithColumns(SortableViewer, ViewerWithColumns):
     def initColumn(self, column):
         super(SortableViewerWithColumns, self).initColumn(column)
         if self.isSortedBy(column.name()):
             self.widget.showSortColumn(column)
-            self._showSortOrder()
-
-    def _showSortOrder(self):
-        if self.isSortOrderAscending():
-            sortOrder = 'ascending' 
-        else: 
-            sortOrder = 'descending'
-        self.widget.showSortOrder(self.imageIndex[sortOrder])
+            self.showSortOrder()
 
     def setSortOrderAscending(self, *args, **kwargs):
         super(SortableViewerWithColumns, self).setSortOrderAscending(*args, **kwargs)
-        self._showSortOrder()
+        self.showSortOrder()
         
     def sortBy(self, *args, **kwargs):
         super(SortableViewerWithColumns, self).sortBy(*args, **kwargs)
+        self.showSortColumn()
+
+    def showSortColumn(self):
         for column in self.columns():
             if self.isSortedBy(column.name()):
                 self.widget.showSortColumn(column)
                 break
-            
+
+    def showSortOrder(self):
+        self.widget.showSortOrder(self.imageIndex[self.getSortOrderImageIndex()])
+        
+    def getSortOrderImageIndex(self):
+        if self.isSortOrderAscending():
+            return 'ascending' 
+        else: 
+            return 'descending'
+
 
 class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks, 
                  SearchableViewer, UpdatePerSecondViewer):
@@ -764,8 +783,7 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
                 'viewrevenue', 'viewtotalRevenue'),
                 'viewdescription', 'viewattachments', 'viewcategories', 
                 'viewtotalCategories',
-                'viewpriority', 'viewtotalPriority', 'viewreminder', 
-                'viewlastModificationTime', 'viewtotalLastModificationTime']
+                'viewpriority', 'viewtotalPriority', 'viewreminder']
  
     def trackStartEventType(self):
         return 'task.track.start'
@@ -804,7 +822,7 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
             patterns.Publisher().registerObserver(self.onColorChange, 
                 eventType=colorSetting)
         patterns.Publisher().registerObserver(self.onColorChange,
-                eventType='task.category.color')
+            eventType=task.Task.categoryColorChangedEventType())
         
     def onColorChange(self, *args, **kwargs):
         self.refresh()
@@ -817,7 +835,8 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
             'tasks_open', 'tasks_inactive', 'tasks_inactive_open', 
             'tasks_completed', 'tasks_completed_open', 'tasks_duetoday', 
             'tasks_duetoday_open', 'tasks_overdue', 'tasks_overdue_open', 
-            'start', 'ascending', 'descending', 'attachment']):
+            'start', 'ascending', 'descending', 'ascending_with_status',
+            'descending_with_status', 'attachment']):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList
@@ -926,7 +945,11 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     newSubTaskDialog = newSubItemDialog
            
             
-class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):                    
+class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
+    def __init__(self, *args, **kwargs):
+        self.__sortKeyUnchangedCount = 0
+        super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
+                            
     def _createColumns(self):
         kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
                       resizeCallback=self.onResizeColumn)
@@ -950,14 +973,17 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
                 imageIndexCallback=self.attachmentImageIndex,
                 headerImageIndex=self.imageIndex['attachment'],
                 renderCallback=lambda task: '', **kwargs)] + \
-            [widgets.Column('categories', _('Categories'), 'task.category.add', 
-                'task.category.remove', 'task.category.subject',
+            [widgets.Column('categories', _('Categories'), 
+                task.Task.categoryAddedEventType(), 
+                task.Task.categoryRemovedEventType(), 
+                task.Task.categorySubjectChangedEventType(),
                 sortCallback=self.uiCommands['viewsortbycategories'],
                 width=self.getColumnWidth('categories'),
                 renderCallback=self.renderCategory, **kwargs)] + \
             [widgets.Column('totalCategories', _('Overall categories'),
-                'task.totalCategory.add', 'task.totalCategory.remove',
-                'task.totalCategory.subject',
+                task.Task.totalCategoryAddedEventType(),
+                task.Task.totalCategoryRemovedEventType(),
+                task.Task.totalCategorySubjectChangedEventType(),
                 sortCallback=self.uiCommands['viewsortbytotalcategories'],
                 renderCallback=lambda task: self.renderCategory(task, recursive=True),
                 width=self.getColumnWidth('totalCategories'), **kwargs)] + \
@@ -968,7 +994,7 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
              for name, columnHeader, renderCallback in \
             ('startDate', _('Start date'), lambda task: render.date(task.startDate())),
             ('dueDate', _('Due date'), lambda task: render.date(task.dueDate())),
-            ('timeLeft', _('Days left'), lambda task: render.daysLeft(task.timeLeft())),
+            ('timeLeft', _('Days left'), lambda task: render.daysLeft(task.timeLeft(), task.completed())),
             ('completionDate', _('Completion date'), lambda task: render.date(task.completionDate())),
             ('budget', _('Budget'), lambda task: render.budget(task.budget())),
             ('totalBudget', _('Total budget'), lambda task: render.budget(task.budget(recursive=True))),
@@ -983,11 +1009,8 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
             ('totalFixedFee', _('Total fixed fee'), lambda task: render.amount(task.fixedFee(recursive=True))),
             ('revenue', _('Revenue'), lambda task: render.amount(task.revenue())),
             ('totalRevenue', _('Total revenue'), lambda task: render.amount(task.revenue(recursive=True))),
-            ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder())),
-            ('lastModificationTime', _('Last modification time'), lambda task: render.dateTime(task.lastModificationTime())),
-            ('totalLastModificationTime', _('Overall last modification time'),
-            lambda task: render.dateTime(task.lastModificationTime(recursive=True)))]
-            
+            ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder()))]
+                        
     def subjectImageIndex(self, task, which):
         normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
         if which in [wx.TreeItemIcon_Expanded, wx.TreeItemIcon_SelectedExpanded]:
@@ -1004,10 +1027,28 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self, self.uiCommands)
 
-    def renderCategory(self, task, recursive=False):
-        return ', '.join(sorted([category.subject(recursive=True) for category in \
-                                 task.categories(recursive=recursive)]))
-
+    def sortBy(self, sortKey):
+        # If the user sets clicks the same column for the third time, toggle
+        # the SortyByTaskStatusFirst setting:
+        if self.isSortedBy(sortKey):
+            self.__sortKeyUnchangedCount += 1
+        else:
+            self.__sortKeyUnchangedCount = 0
+        if self.__sortKeyUnchangedCount > 1:
+            self.setSortByTaskStatusFirst(not self.isSortByTaskStatusFirst())
+            self.__sortKeyUnchangedCount = 0
+        super(TaskViewerWithColumns, self).sortBy(sortKey)
+            
+    def setSortByTaskStatusFirst(self, *args, **kwargs):
+        super(TaskViewerWithColumns, self).setSortByTaskStatusFirst(*args, **kwargs)
+        self.showSortOrder()
+        
+    def getSortOrderImageIndex(self):
+        sortOrderImageIndex = super(TaskViewerWithColumns, self).getSortOrderImageIndex()
+        if self.isSortByTaskStatusFirst():
+            sortOrderImageIndex += '_with_status' 
+        return sortOrderImageIndex
+            
 
 class TaskListViewer(TaskViewerWithColumns, ListViewer):
     defaultTitle = _('Task list')
@@ -1020,7 +1061,7 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
-            self.getItemText, self.getItemDescription, self.getItemImage,
+            self.getItemText, self.getItemTooltipText, self.getItemImage,
             self.getItemAttr, self.onSelect, self.uiCommands['edittask'], 
             self.createTaskPopupMenu(),
             self.createColumnPopupMenu(),
@@ -1029,7 +1070,7 @@ class TaskListViewer(TaskViewerWithColumns, ListViewer):
         return widget
                 
     def renderSubject(self, task):
-        return render.subject(task, recursively=True)
+        return task.subject(recursive=True)
 
     def getFilterUICommands(self):
         uiCommands = super(TaskListViewer, self).getFilterUICommands()
@@ -1046,7 +1087,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
 
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
-        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemDescription,
+        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemTooltipText,
             self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.onSelect, 
             self.uiCommands['edittask'], 
@@ -1059,9 +1100,12 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
         task = self.getItemWithIndex(index)
         return task.subject()
 
-    def getItemDescription(self, index):
-        task = self.getItemWithIndex(index)
-        return task.description()
+    def getItemTooltipText(self, index):
+        if self.settings.getboolean('view', 'descriptionpopups'):
+            task = self.getItemWithIndex(index)
+            return task.description()
+        else:
+            return ''
 
     def getItemImage(self, index, which):
         task = self.getItemWithIndex(index)
@@ -1072,7 +1116,7 @@ class TaskTreeViewer(TaskViewer, TreeViewer):
             return normalImageIndex
                            
     def renderSubject(self, task):
-        return render.subject(task, recursively=False)
+        return task.subject(recursive=False)
 
     def setSearchFilter(self, searchString, *args, **kwargs):
         super(TaskTreeViewer, self).setSearchFilter(searchString, *args, **kwargs)
@@ -1089,7 +1133,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
-            self.getItemDescription, self.getItemImage, self.getItemAttr,
+            self.getItemTooltipText, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.onSelect, 
             self.uiCommands['edittask'], self.uiCommands['draganddroptask'],
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
@@ -1100,8 +1144,8 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
     def getItemText(self, *args, **kwargs):
         return TaskViewerWithColumns.getItemText(self, *args, **kwargs)
 
-    def getItemDescription(self, *args, **kwargs):
-        return TaskViewerWithColumns.getItemDescription(self, *args, **kwargs)
+    def getItemTooltipText(self, *args, **kwargs):
+        return TaskViewerWithColumns.getItemTooltipText(self, *args, **kwargs)
 
     def getItemImage(self, *args, **kwargs):
         return TaskViewerWithColumns.getItemImage(self, *args, **kwargs)
@@ -1121,7 +1165,7 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
                 eventType)
     
     def createWidget(self):
-        widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemDescription,
+        widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemTooltipText,
             self.getItemImage, self.getItemAttr, self.getChildrenCount,
             self.getItemExpanded,
             self.getIsItemChecked, self.onSelect, self.onCheck,
@@ -1150,8 +1194,12 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
         category = self.getItemWithIndex(index)
         return category.subject()
 
-    def getItemDescription(self, index):
-        return None
+    def getItemTooltipText(self, index):
+        if self.settings.getboolean('view', 'descriptionpopups'):
+            category = self.getItemWithIndex(index)
+            return category.description()
+        else:
+            return ''
 
     def getItemImage(self, index, which):
         return -1
@@ -1202,23 +1250,29 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
     newSubCategoryDialog = newSubItemDialog
 
 
-class NoteViewer(SearchableViewer, SortableViewerWithColumns, 
-                 SortableViewerForNotes, TreeViewer):
+class NoteViewer(FilterableViewerForNotes, SearchableViewer, 
+                 SortableViewerWithColumns, SortableViewerForNotes, TreeViewer):
     SorterClass = note.NoteSorter
     defaultTitle = _('Notes')
     
     def __init__(self, *args, **kwargs):
+        self.categories = kwargs.pop('categories')
         kwargs.setdefault('settingsSection', 'noteviewer')
         super(NoteViewer, self).__init__(*args, **kwargs)
         for eventType in [note.Note.subjectChangedEventType()]:
             patterns.Publisher().registerObserver(self.onNoteChanged, 
                 eventType)
+        patterns.Publisher().registerObserver(self.onColorChange,
+            eventType=note.Note.categoryColorChangedEventType())
+        
+    def onColorChange(self, *args, **kwargs):
+        self.refresh()
 
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText, 
-            self.getItemDescription, self.getItemImage, self.getItemAttr, 
+            self.getItemTooltipText, self.getItemImage, self.getItemAttr, 
             self.getChildrenCount, self.getItemExpanded, self.onSelect,
             self.uiCommands['editnote'], 
             self.uiCommands['draganddropnote'], 
@@ -1227,6 +1281,7 @@ class NoteViewer(SearchableViewer, SortableViewerWithColumns,
         return widget
     
     def createFilter(self, notes):
+        notes = super(NoteViewer, self).createFilter(notes)
         return base.SearchFilter(notes, treeMode=True)
     
     def createImageList(self):
@@ -1238,7 +1293,7 @@ class NoteViewer(SearchableViewer, SortableViewerWithColumns,
         return imageList
 
     def getColumnUICommands(self):
-        return ['viewdescription']
+        return ['viewdescription', 'viewcategories', 'viewtotalCategories']
 
     def createNotePopupMenu(self):
         return menu.NotePopupMenu(self.parent, self.uiCommands)
@@ -1247,14 +1302,23 @@ class NoteViewer(SearchableViewer, SortableViewerWithColumns,
         return menu.ColumnPopupMenu(self, self.uiCommands)
 
     def _createColumns(self):
-        return [widgets.Column(name, columnHeader, eventType,
+        return [widgets.Column(name, columnHeader,
                 width=self.getColumnWidth(name), 
                 resizeCallback=self.onResizeColumn,
                 renderCallback=renderCallback, 
-                sortCallback=self.uiCommands['viewsortby' + name.lower()]) \
-            for name, columnHeader, eventType, renderCallback in \
-            ('subject', _('Subject'), note.Note.subjectChangedEventType(), lambda note: render.subject(note, recursively=False)),
-            ('description', _('Description'), note.Note.descriptionChangedEventType(), lambda note: note.description())]
+                sortCallback=self.uiCommands['viewsortby' + name.lower()],
+                *eventTypes) \
+            for name, columnHeader, eventTypes, renderCallback in \
+            ('subject', _('Subject'), (note.Note.subjectChangedEventType(),), lambda note: note.subject(recursive=False)),
+            ('description', _('Description'), (note.Note.descriptionChangedEventType(),), lambda note: note.description()),
+            ('categories', _('Categories'), (note.Note.categoryAddedEventType(), 
+             note.Note.categoryRemovedEventType(), 
+             note.Note.categorySubjectChangedEventType()), 
+             self.renderCategory),
+            ('totalCategories', _('Overall categories'), 
+             (note.Note.totalCategoryAddedEventType(),
+              note.Note.totalCategoryRemovedEventType(),
+              note.Note.totalCategorySubjectChangedEventType()), self.renderCategory)]
                      
     def onNoteChanged(self, event):
         note = event.source()
@@ -1266,16 +1330,23 @@ class NoteViewer(SearchableViewer, SortableViewerWithColumns,
         column = self.visibleColumns()[column]
         return column.render(item)
 
-    def getItemDescription(self, index, column=0):
-        note = self.getItemWithIndex(index)
-        return note.description()
+    def getItemTooltipText(self, index, column=0):
+        if self.settings.getboolean('view', 'descriptionpopups'):
+            note = self.getItemWithIndex(index)
+            return note.description()
+        else:
+            return None
 
     def getItemImage(self, index, which, column=0):
         return -1
+
+    def getBackgroundColor(self, note):
+        return note.categoryColor()
     
     def getItemAttr(self, index):
-        return wx.ListItemAttr()
-        
+        note = self.getItemWithIndex(index)
+        return wx.ListItemAttr(None, self.getBackgroundColor(note))
+                
     def isShowingNotes(self):
         return True
 
@@ -1288,14 +1359,14 @@ class NoteViewer(SearchableViewer, SortableViewerWithColumns,
     def newItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self), 
             command.NewNoteCommand(self.list),
-            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+            self.categories, bitmap=kwargs['bitmap'])
     
     # See TaskViewer for why the methods below have two names.
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
             command.EditNoteCommand(self.list, self.curselection()),
-            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+            self.categories, bitmap=kwargs['bitmap'])
     
     editNoteDialog = editItemDialog
     
@@ -1307,7 +1378,7 @@ class NoteViewer(SearchableViewer, SortableViewerWithColumns,
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self), 
             command.NewSubNoteCommand(self.list, self.curselection()),
-            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+            self.categories, bitmap=kwargs['bitmap'])
         
     newSubNoteDialog = newSubItemDialog
     
@@ -1340,8 +1411,8 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
     def newItemDialog(self, *args, **kwargs):
         selectedTasks = kwargs.get('selectedTasks', [])
         if not selectedTasks:
-            subjectDecoratedTaskList = [(render.subject(task, 
-                recursively=True), task) for task in self.taskList]
+            subjectDecoratedTaskList = [(task.subject(recursive=True), task) \
+                                        for task in self.taskList]
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
@@ -1380,7 +1451,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         uiCommands.update(uicommand.EditorUICommands(self, self.list))        
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
-            self.getItemText, self.getItemDescription, self.getItemImage,
+            self.getItemText, self.getItemTooltipText, self.getItemImage,
             self.getItemAttr, self.onSelect, uiCommands['editeffort'], 
             menu.EffortPopupMenu(self.parent, uiCommands), 
             menu.ColumnPopupMenu(self, uiCommands), 
@@ -1394,7 +1465,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
                 resizeCallback=self.onResizeColumn) \
             for name, columnHeader, eventType, renderCallback in \
             ('period', _('Period'), 'effort.duration', self.renderPeriod),
-            ('task', _('Task'), 'effort.task', lambda effort: render.subject(effort.task(), recursively=True)),
+            ('task', _('Task'), 'effort.task', lambda effort: effort.task().subject(recursive=True)),
             ('description', _('Description'), 'effort.description', lambda effort: effort.getDescription())] + \
             [widgets.Column(name, columnHeader, eventType, 
              width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn,

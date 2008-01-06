@@ -1,41 +1,291 @@
 import test, patterns, wx
-from domain import category, task
+from domain import category
 
 
+class CategorizableCompositeObjectTest(test.TestCase):
+    def setUp(self):
+        self.categorizable = category.CategorizableCompositeObject('categorizable')
+        self.category = category.Category('category')
+        
+    categoryAddedEventType = category.CategorizableCompositeObject.categoryAddedEventType()
+    categoryRemovedEventType = category.CategorizableCompositeObject.categoryRemovedEventType()
+    totalCategoryAddedEventType = category.CategorizableCompositeObject.totalCategoryAddedEventType()
+    totalCategoryRemovedEventType = category.CategorizableCompositeObject.totalCategoryRemovedEventType()
+    categorySubjectChangedEventType = category.CategorizableCompositeObject.categorySubjectChangedEventType()
+    totalCategorySubjectChangedEventType = category.CategorizableCompositeObject.totalCategorySubjectChangedEventType()
+    categoryColorChangedEventType = category.CategorizableCompositeObject.categoryColorChangedEventType()
+        
+    def testCategorizableDoesNotBelongToAnyCategoryByDefault(self):
+        for recursive in False, True:
+            self.failIf(self.categorizable.categories(recursive=recursive))
+    
+    def testCategorizableHasNoCategoryColorByDefault(self):
+        self.assertEqual(None, self.categorizable.categoryColor())
+    
+    def testAddCategory(self):
+        self.categorizable.addCategory(self.category)
+        self.assertEqual(set([self.category]), self.categorizable.categories())
+
+    def testAddCategoryNotification(self):
+        self.registerObserver(self.categoryAddedEventType)
+        self.categorizable.addCategory(self.category)
+        self.assertEqual([patterns.Event(self.categorizable, 
+            self.categoryAddedEventType, self.category)], self.events)    
+        
+    def testAddSecondCategory(self):
+        self.categorizable.addCategory(self.category)
+        cat2 = category.Category('category 2')
+        self.categorizable.addCategory(cat2)
+        self.assertEqual(set([self.category, cat2]), 
+            self.categorizable.categories())
+        
+    def testAddSameCategoryTwice(self):
+        self.categorizable.addCategory(self.category)
+        self.categorizable.addCategory(self.category)
+        self.assertEqual(set([self.category]), self.categorizable.categories())
+        
+    def testAddSameCategoryTwiceCausesNoNotification(self):
+        self.categorizable.addCategory(self.category)
+        self.registerObserver(self.categoryAddedEventType)
+        self.categorizable.addCategory(self.category)
+        self.failIf(self.events)
+    
+    def testAddCategoryViaConstructor(self):
+        categorizable = category.CategorizableCompositeObject(categories=[self.category])
+        self.assertEqual(set([self.category]), categorizable.categories())
+        
+    def testAddCategoriesViaConstructor(self):
+        anotherCategory = category.Category('Another category')
+        categories = [self.category, anotherCategory]
+        categorizable = category.CategorizableCompositeObject(categories= \
+            categories)
+        self.assertEqual(set(categories), categorizable.categories())
+        
+    def testAddCategoryDoesNotAddCategorizableToCategory(self):
+        self.categorizable.addCategory(self.category)
+        self.assertEqual([], self.category.categorizables())
+        
+    def testAddParentToCategory(self):
+        self.registerObserver(self.totalCategoryAddedEventType)
+        child = category.CategorizableCompositeObject('child')
+        self.categorizable.addChild(child)
+        child.setParent(self.categorizable)
+        cat = category.Category('Parent category')
+        self.categorizable.addCategory(cat)
+        self.assertEqual([patterns.Event(child, self.totalCategoryAddedEventType, 
+            cat)], self.events)
+        
+    def testRemoveCategory(self):
+        self.categorizable.addCategory(self.category)
+        self.categorizable.removeCategory(self.category)
+        self.assertEqual(set(), self.categorizable.categories())
+        
+    def testRemoveCategoryNotification(self):
+        self.categorizable.addCategory(self.category)
+        self.registerObserver(self.categoryRemovedEventType)
+        self.categorizable.removeCategory(self.category)
+        self.assertEqual(self.category, self.events[0].value())
+
+    def testRemoveCategoryTwice(self):
+        self.categorizable.addCategory(self.category)
+        self.categorizable.removeCategory(self.category)
+        self.categorizable.removeCategory(self.category)
+        self.assertEqual(set(), self.categorizable.categories())
+
+    def testRemoveCategoryTwiceNotification(self):
+        self.categorizable.addCategory(self.category)
+        self.registerObserver(self.categoryRemovedEventType)
+        self.categorizable.removeCategory(self.category)
+        self.categorizable.removeCategory(self.category)
+        self.assertEqual(1, len(self.events))
+        
+    def testCategorySubjectChanged(self):
+        self.registerObserver(self.categorySubjectChangedEventType)
+        self.registerObserver(self.totalCategorySubjectChangedEventType)
+        self.categorizable.addCategory(self.category)
+        self.category.addCategorizable(self.categorizable)
+        self.category.setSubject('New subject')
+        # Expect categorySubjectChangedEventType and 
+        # totalCategorySubjectChangedEventType:
+        self.assertEqual(2, len(self.events)) 
+
+    def testCategorySubjectChanged_NotifySubItemsToo(self):
+        self.registerObserver(self.categorySubjectChangedEventType)
+        self.registerObserver(self.totalCategorySubjectChangedEventType)
+        self.categorizable.addChild(category.CategorizableCompositeObject())
+        self.categorizable.addCategory(self.category)
+        self.category.addCategorizable(self.categorizable)
+        self.category.setSubject('New subject')
+        # Expect categorySubjectChangedEventType and 2x 
+        # totalCategorySubjectChangedEventType: 
+        self.assertEqual(3, len(self.events))        
+
+    def testColor(self):
+        self.categorizable.addCategory(self.category)
+        self.category.setColor(wx.RED)
+        self.assertEqual(wx.RED, self.categorizable.categoryColor())
+
+    def testColorWithTupleColor(self):
+        self.categorizable.addCategory(self.category)
+        self.category.setColor((255, 0, 0, 255))
+        self.assertEqual(wx.RED, self.categorizable.categoryColor())
+    
+    def testSubItemUsesParentColor(self):
+        self.categorizable.addCategory(self.category)
+        child = category.CategorizableCompositeObject()
+        self.categorizable.addChild(child)
+        child.setParent(self.categorizable)
+        self.category.setColor(wx.RED)
+        self.assertEqual(wx.RED, child.categoryColor())
+    
+    def testColorChanged(self):
+        self.categorizable.addCategory(self.category)
+        self.category.addCategorizable(self.categorizable)
+        self.registerObserver(self.categoryColorChangedEventType)
+        self.category.setColor(wx.RED)
+        self.assertEqual(1, len(self.events))
+
+    def testColorChanged_NotifySubItemsToo(self):
+        self.registerObserver(self.categoryColorChangedEventType)
+        self.categorizable.addChild(category.CategorizableCompositeObject())
+        self.categorizable.addCategory(self.category)
+        self.category.addCategorizable(self.categorizable)
+        self.category.setColor(wx.RED)
+        self.assertEqual(2, len(self.events))
+        
+    def testParentColorChanged(self):
+        self.registerObserver(self.categoryColorChangedEventType)
+        subCategory = category.Category('Subcategory')
+        self.category.addChild(subCategory)
+        subCategory.setParent(self.category)
+        self.categorizable.addCategory(subCategory)
+        subCategory.addCategorizable(self.categorizable)
+        self.category.setColor(wx.RED)
+        self.assertEqual(1, len(self.events))
+        
+    def testAddCategoryWithColor(self):
+        self.registerObserver(self.categoryColorChangedEventType)
+        newCategory = category.Category('New category')
+        newCategory.setColor(wx.RED)
+        self.categorizable.addCategory(newCategory)
+        self.assertEqual(1, len(self.events))
+        
+    def testAddCategoryWithParentWithColor(self):
+        self.registerObserver(self.categoryColorChangedEventType)
+        parentCategory = category.Category('Parent')
+        parentCategory.setColor(wx.RED)
+        childCategory = category.Category('Child')
+        parentCategory.addChild(childCategory)
+        childCategory.setParent(parentCategory)
+        self.categorizable.addCategory(childCategory)
+        self.assertEqual(1, len(self.events))
+        
+    def testRemoveCategoryWithColor(self):
+        self.categorizable.addCategory(self.category)
+        self.category.setColor(wx.RED)
+        self.registerObserver(self.categoryColorChangedEventType)
+        self.categorizable.removeCategory(self.category)
+        self.assertEqual(1, len(self.events))
+        
+    def testColorWhenOneOutOfTwoCategoriesHasColor(self):
+        self.categorizable.addCategory(self.category)
+        self.categorizable.addCategory(category.Category('Another category'))
+        self.category.setColor(wx.RED)
+        self.assertEqual(wx.RED, self.categorizable.categoryColor())
+        
+    def testColorWhenBothCategoriesHaveSameColor(self):
+        self.categorizable.addCategory(self.category)
+        anotherCategory = category.Category('Another category')
+        self.categorizable.addCategory(anotherCategory)
+        for cat in [self.category, anotherCategory]:
+            cat.setColor(wx.RED)
+        self.assertEqual(wx.RED, self.categorizable.categoryColor())
+                
+    def testColorWhenBothCategoriesHaveDifferentColors(self):
+        self.categorizable.addCategory(self.category)
+        anotherCategory = category.Category('Another category')
+        self.categorizable.addCategory(anotherCategory)
+        self.category.setColor(wx.RED)
+        anotherCategory.setColor(wx.BLUE)
+        expectedColor = wx.Color(127, 0, 127, 255)
+        self.assertEqual(expectedColor, self.categorizable.categoryColor())
+                
+    def testParentCategoryIncludedInChildRecursiveCategories(self):
+        self.categorizable.addCategory(self.category)
+        child = category.CategorizableCompositeObject()
+        self.categorizable.addChild(child)
+        self.assertEqual(set([self.category]), child.categories(recursive=True))
+
+    def testParentCategoryNotIncludedInChildCategories(self):
+        self.categorizable.addCategory(self.category)
+        child = category.CategorizableCompositeObject()
+        self.categorizable.addChild(child)
+        self.assertEqual(set(), child.categories(recursive=False))
+        
+    def testGrandParentCategoryIncludedInGrandChildRecursiveCategories(self):
+        self.categorizable.addCategory(self.category)
+        child = category.CategorizableCompositeObject()
+        self.categorizable.addChild(child)
+        grandchild = category.CategorizableCompositeObject()
+        child.addChild(grandchild)
+        self.assertEqual(set([self.category]), 
+                         grandchild.categories(recursive=True))
+        
+    def testGrandParentAndParentCategoriesIncludedInGrandChildRecursiveCategories(self):
+        self.categorizable.addCategory(self.category)
+        child = category.CategorizableCompositeObject()
+        self.categorizable.addChild(child)
+        grandchild = category.CategorizableCompositeObject()
+        child.addChild(grandchild)
+        childCategory = category.Category('Child category')
+        child.addCategory(childCategory)
+        self.assertEqual(set([self.category, childCategory]), 
+            grandchild.categories(recursive=True))
+        
+    def testRemoveCategoryCausesChildNotification(self):
+        self.categorizable.addCategory(self.category)
+        child = category.CategorizableCompositeObject()
+        self.categorizable.addChild(child)
+        self.registerObserver(self.totalCategoryRemovedEventType)
+        self.categorizable.removeCategory(self.category)
+        self.assertEqual([patterns.Event(child, 
+            self.totalCategoryRemovedEventType, self.category)], self.events)
+
+
+                
 class CategoryTest(test.TestCase):
     def setUp(self):
         self.category = category.Category('category')
         self.subCategory = category.Category('subcategory')
-        self.task = task.Task('task')
-        self.child = task.Task('child')
-        self.events = []
+        self.categorizable = category.CategorizableCompositeObject('parent')
+        self.child = category.CategorizableCompositeObject('child')
         
-    def onEvent(self, event):
-        self.events.append(event)
+    def testGetState_Subject(self):
+        self.assertEqual('category', self.category.__getstate__()['subject'])
+        
+    def testGetState_Description(self):
+        self.assertEqual('', self.category.__getstate__()['description'])
+        
+    def testGetState_Color(self):
+        self.assertEqual(None, self.category.__getstate__()['color'])
         
     def testCreateWithSubject(self):
         self.assertEqual('category', self.category.subject())
     
-    def testRecursiveSubject(self):
-        self.category.addChild(self.subCategory)
-        self.assertEqual('%s -> %s'%(self.category.subject(),
-                         self.subCategory.subject()), 
-                         self.subCategory.subject(recursive=True))
-        
     def testSetSubject(self):
         self.category.setSubject('New')
         self.assertEqual('New', self.category.subject())
         
     def testSetSubjectNotification(self):
         eventType = category.Category.subjectChangedEventType()
-        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.registerObserver(eventType)
         self.category.setSubject('New')
         self.assertEqual([patterns.Event(self.category, eventType, 'New')], 
             self.events)
         
     def testSetSubjectCausesNoNotificationWhenNewSubjectEqualsOldSubject(self):
         eventType = category.Category.subjectChangedEventType()
-        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.registerObserver(eventType)
         self.category.setSubject(self.category.subject())
         self.failIf(self.events)
         
@@ -43,45 +293,46 @@ class CategoryTest(test.TestCase):
         aCategory = category.Category('subject', description='Description')
         self.assertEqual('Description', aCategory.description())
 
-    def testNoTasksAfterCreation(self):
-        self.assertEqual([], self.category.tasks())
+    def testNoCategorizablesAfterCreation(self):
+        self.assertEqual([], self.category.categorizables())
       
-    def testAddTask(self):
-        self.category.addTask(self.task)
-        self.assertEqual([self.task], self.category.tasks())
+    def testAddCategorizable(self):
+        self.category.addCategorizable(self.categorizable)
+        self.assertEqual([self.categorizable], self.category.categorizables())
         
-    def testAddTaskDoesNotAddCategoryToTask(self):
-        self.category.addTask(self.task)
-        self.assertEqual(set([]), self.task.categories())
+    def testAddCategorizableDoesNotAddCategoryToCategorizable(self):
+        self.category.addCategorizable(self.categorizable)
+        self.assertEqual(set([]), self.categorizable.categories())
         
-    def testAddTaskTwice(self):
-        self.category.addTask(self.task)
-        self.category.addTask(self.task)
-        self.assertEqual([self.task], self.category.tasks())
+    def testAddCategorizableTwice(self):
+        self.category.addCategorizable(self.categorizable)
+        self.category.addCategorizable(self.categorizable)
+        self.assertEqual([self.categorizable], self.category.categorizables())
         
-    def testRemoveTask(self):
-        self.category.addTask(self.task)
-        self.category.removeTask(self.task)
-        self.failIf(self.category.tasks())
-        self.failIf(self.task.categories())
+    def testRemoveCategorizable(self):
+        self.category.addCategorizable(self.categorizable)
+        self.category.removeCategorizable(self.categorizable)
+        self.failIf(self.category.categorizables())
+        self.failIf(self.categorizable.categories())
         
-    def testRemoveTaskThatsNotInThisCategory(self):
-        self.category.removeTask(self.task)
-        self.failIf(self.category.tasks())
-        self.failIf(self.task.categories())
+    def testRemovecategorizableThatsNotInThisCategory(self):
+        self.category.removeCategorizable(self.categorizable)
+        self.failIf(self.category.categorizables())
+        self.failIf(self.categorizable.categories())
     
-    def testCreateWithTasks(self):
-        cat = category.Category('category', [self.task])
-        self.assertEqual([self.task], cat.tasks())
+    def testCreateWithCategorizable(self):
+        cat = category.Category('category', [self.categorizable])
+        self.assertEqual([self.categorizable], cat.categorizables())
         
-    def testCreateWithTasksDoesNotSetTaskCategories(self):
-        cat = category.Category('category', [self.task])
-        self.assertEqual(set([]), self.task.categories())
+    def testCreateWithCategorizableDoesNotSetCategorizableCategories(self):
+        cat = category.Category('category', [self.categorizable])
+        self.assertEqual(set([]), self.categorizable.categories())
     
-    def testAddTaskToSubCategory(self):
+    def testAddCategorizableToSubCategory(self):
         self.category.addChild(self.subCategory)
-        self.subCategory.addTask(self.task)
-        self.assertEqual([self.task], self.category.tasks(recursive=True))
+        self.subCategory.addCategorizable(self.categorizable)
+        self.assertEqual([self.categorizable], 
+                         self.category.categorizables(recursive=True))
      
     def testAddSubCategory(self):
         self.category.addChild(self.subCategory)
@@ -135,50 +386,50 @@ class CategoryTest(test.TestCase):
         self.category.setFiltered(False)
         self.failUnless(self.subCategory.isFiltered())
         
-    def testContains_NoTasks(self):
-        self.failIf(self.category.contains(self.task))
+    def testContains_NoCategorizables(self):
+        self.failIf(self.category.contains(self.categorizable))
         
-    def testContains_TasksInCategory(self):
-        self.category.addTask(self.task)
-        self.failUnless(self.category.contains(self.task))
+    def testContains_CategorizablesInCategory(self):
+        self.category.addCategorizable(self.categorizable)
+        self.failUnless(self.category.contains(self.categorizable))
         
-    def testContains_TaskInSubCategory(self):
-        self.subCategory.addTask(self.task)
+    def testContains_CategorizableInSubCategory(self):
+        self.subCategory.addCategorizable(self.categorizable)
         self.category.addChild(self.subCategory)
-        self.failUnless(self.category.contains(self.task))
+        self.failUnless(self.category.contains(self.categorizable))
         
     def testContains_ParentInCategory(self):
-        self.category.addTask(self.task)
-        self.task.addChild(self.child)
+        self.category.addCategorizable(self.categorizable)
+        self.categorizable.addChild(self.child)
         self.failUnless(self.category.contains(self.child))
         
     def testContains_ParentInSubCategory(self):
-        self.subCategory.addTask(self.task)
+        self.subCategory.addCategorizable(self.categorizable)
         self.category.addChild(self.subCategory)
-        self.task.addChild(self.child)
+        self.categorizable.addChild(self.child)
         self.failUnless(self.category.contains(self.child))
     
     def testContains_ChildInCategory(self):
-        self.task.addChild(self.child)
-        self.category.addTask(self.child)
-        self.failIf(self.category.contains(self.task))
+        self.categorizable.addChild(self.child)
+        self.category.addCategorizable(self.child)
+        self.failIf(self.category.contains(self.categorizable))
         
     def testContains_ChildInSubCategory(self):
-        self.task.addChild(self.child)
-        self.subCategory.addTask(self.child)
+        self.categorizable.addChild(self.child)
+        self.subCategory.addCategorizable(self.child)
         self.category.addChild(self.subCategory)
-        self.failIf(self.category.contains(self.task))
+        self.failIf(self.category.contains(self.categorizable))
         
     def testRecursiveContains_ChildInCategory(self):
-        self.task.addChild(self.child)
-        self.category.addTask(self.child)
-        self.failUnless(self.category.contains(self.task, treeMode=True))
+        self.categorizable.addChild(self.child)
+        self.category.addCategorizable(self.child)
+        self.failUnless(self.category.contains(self.categorizable, treeMode=True))
         
     def testRecursiveContains_ChildInSubcategory(self):
-        self.task.addChild(self.child)
-        self.subCategory.addTask(self.child)
+        self.categorizable.addChild(self.child)
+        self.subCategory.addCategorizable(self.child)
         self.category.addChild(self.subCategory)
-        self.failUnless(self.category.contains(self.task, treeMode=True))
+        self.failUnless(self.category.contains(self.categorizable, treeMode=True))
         
     def testCopy_SubjectIsCopied(self):
         self.category.setSubject('New subject')
@@ -197,15 +448,15 @@ class CategoryTest(test.TestCase):
         copy = self.category.copy()
         self.assertEqual(copy.isFiltered(), self.category.isFiltered())
         
-    def testCopy_TasksAreCopied(self):
-        self.category.addTask(self.task)
+    def testCopy_CategorizablesAreCopied(self):
+        self.category.addCategorizable(self.categorizable)
         copy = self.category.copy()
-        self.assertEqual(copy.tasks(), self.category.tasks())
+        self.assertEqual(copy.categorizables(), self.category.categorizables())
         
-    def testCopy_TasksAreCopiedIntoADifferentList(self):
+    def testCopy_CategorizablesAreCopiedIntoADifferentList(self):
         copy = self.category.copy()
-        self.category.addTask(self.task)
-        self.failIf(self.task in copy.tasks())
+        self.category.addCategorizable(self.categorizable)
+        self.failIf(self.categorizable in copy.categorizables())
 
     def testCopy_ChildrenAreCopied(self):
         self.category.addChild(self.subCategory)
@@ -213,16 +464,16 @@ class CategoryTest(test.TestCase):
         self.assertEqual(self.subCategory.subject(), copy.children()[0].subject())
 
     def testAddTaskNotification(self):
-        eventType = category.Category.taskAddedEventType()
-        patterns.Publisher().registerObserver(self.onEvent, eventType)
-        self.category.addTask(self.task)
+        eventType = category.Category.categorizableAddedEventType()
+        self.registerObserver(eventType)
+        self.category.addCategorizable(self.categorizable)
         self.assertEqual(1, len(self.events))
         
     def testRemoveTaskNotification(self):
-        eventType = category.Category.taskRemovedEventType()
-        patterns.Publisher().registerObserver(self.onEvent, eventType)
-        self.category.addTask(self.task)
-        self.category.removeTask(self.task)
+        eventType = category.Category.categorizableRemovedEventType()
+        self.registerObserver(eventType)
+        self.category.addCategorizable(self.categorizable)
+        self.category.removeCategorizable(self.categorizable)
         self.assertEqual(1, len(self.events))
         
     def testGetDefaultColor(self):
@@ -239,7 +490,7 @@ class CategoryTest(test.TestCase):
         
     def testColorChangeNotification(self):
         eventType = category.Category.colorChangedEventType()
-        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.registerObserver(eventType)
         self.category.setColor(wx.RED)
         self.assertEqual(1, len(self.events))
         
@@ -255,7 +506,7 @@ class CategoryTest(test.TestCase):
                 
     def testParentColorChangeNotification(self):
         eventType = category.Category.colorChangedEventType()
-        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        self.registerObserver(eventType)
         self.category.addChild(self.subCategory)
         self.category.setColor(wx.RED)
         self.assertEqual(2, len(self.events))

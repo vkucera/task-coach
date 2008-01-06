@@ -7,7 +7,35 @@ releases = [
 Release('0.69.0', 'January ?, 2008',
     summary='''?''',
     featuresAdded=[
-        Feature('''...''')]),
+        Feature('''Notes can be assigned to categories.'''),
+        Feature('''Whether descriptions of tasks, effort records, categories and
+notes are shown in a popup tooltip window is now a setting.'''),
+        Feature('''Added menu items for increasing, decreasing, maximizing, and 
+minimizing task priority.'''),
+        Feature('''Clicking a column header in a task viewer now iterates
+through the following sort orders: 'ascending, after sorting by task status first', 
+'descending, after sorting by task status first', 'ascending, without sorting
+by task status first', 'descending, without sorting by task status first'.''')],
+    featureChanged=[
+        Feature('''Previously, unset dates were displayed as 'None' in   
+date columns. To be consistent with how other attributes are displayed in 
+columns, Task Coach now simply displays nothing for unset dates in date
+columns.'''),
+        Feature('''Task Coach now uses the infinity symbol ('∞') to display
+the number of days left for tasks without a due date, instead of the word 
+'Infinite'.'''),
+        Feature('''Task Coach now uses a real arrow symbol ('→') instead of 
+'->' for separating parent and child subjects in the different viewers.''')],
+    featuresRemoved=[
+        Feature('''Task Coach no longer keeps track of the 'last modification 
+time' of tasks.''')],
+    bugsFixed=[
+        Bug('''Sorting by total categories in the task viewers didn't sort
+correctly.'''),
+        Bug('''Save didn't work for task files without a file name and
+without tasks, but with categories or notes.'''),
+        Bug('''Adding a task to a category or removing it from a category
+was not undoable.''')]),
     
 Release('0.68.0', 'December 26, 2007',
     summary='''This release makes it possible to open a task from its reminder dialog, adds

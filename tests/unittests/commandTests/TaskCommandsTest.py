@@ -8,6 +8,8 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
     def setUp(self):
         self.list = self.taskList = task.TaskList()
         self.categories = category.CategoryList()
+        self.category = category.Category('cat')
+        self.categories.append(self.category)
         self.task1 = task.Task('task1')
         self.task2 = task.Task('task2')
         self.taskList.append(self.task1)
@@ -112,24 +114,22 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
             lambda: self.assertTaskList(self.originalList))
         
     def testDeleteTaskWithCategory(self):
-        cat = category.Category('category')
-        self.categories.append(cat)
-        cat.addTask(self.task1)
-        self.task1.addCategory(cat)
+        self.category.addCategorizable(self.task1)
+        self.task1.addCategory(self.category)
         self.delete('all')
-        self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
-            lambda: self.assertEqual([self.task1], cat.tasks()))
+        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()), 
+            lambda: self.assertEqual([self.task1], self.category.categorizables()))
         
     def testDeleteTaskWithTwoCategories(self):
         cat1 = category.Category('category 1')
         cat2 = category.Category('category 2')
         self.categories.extend([cat1, cat2])
         for cat in cat1, cat2:
-            cat.addTask(self.task1)
+            cat.addCategorizable(self.task1)
             self.task1.addCategory(cat)
         self.delete('all')
-        self.assertDoUndoRedo(lambda: self.failIf(cat1.tasks() or cat2.tasks()), 
-            lambda: self.failUnless([self.task1] == cat1.tasks() == cat2.tasks()))
+        self.assertDoUndoRedo(lambda: self.failIf(cat1.categorizables() or cat2.categorizables()), 
+            lambda: self.failUnless([self.task1] == cat1.categorizables() == cat2.categorizables()))
         
 
 class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
@@ -165,36 +165,32 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
             lambda: self.failIf(self.parent.completed()))
         
     def testDeleteParentAndChildWhenChildBelongsToCategory(self):
-        cat = category.Category('category')
-        self.categories.append(cat)
-        cat.addTask(self.child)
-        self.child.addCategory(cat)
+        self.category.addCategorizable(self.child)
+        self.child.addCategory(self.category)
         self.delete([self.parent])
-        self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
-            lambda: self.assertEqual([self.child], cat.tasks()))
+        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()), 
+            lambda: self.assertEqual([self.child], self.category.categorizables()))
 
     def testDeleteParentAndChildWhenParentAndChildBelongToDifferentCategories(self):
         cat1 = category.Category('category 1')
         cat2 = category.Category('category 2')
         self.categories.extend([cat1, cat2])
-        cat1.addTask(self.child)
+        cat1.addCategorizable(self.child)
         self.child.addCategory(cat1)
-        cat2.addTask(self.parent)
+        cat2.addCategorizable(self.parent)
         self.parent.addCategory(cat2)
         self.delete([self.parent])
-        self.assertDoUndoRedo(lambda: self.failIf(cat1.tasks() or cat2.tasks()), 
-            lambda: self.failUnless([self.child] == cat1.tasks() and \
-                                    [self.parent] == cat2.tasks()))
+        self.assertDoUndoRedo(lambda: self.failIf(cat1.categorizables() or cat2.categorizables()), 
+            lambda: self.failUnless([self.child] == cat1.categorizables() and \
+                                    [self.parent] == cat2.categorizables()))
 
     def testDeleteParentAndChildWhenParentAndChildBelongToSameCategory(self):
-        cat = category.Category('category')
-        self.categories.append(cat)
         for task in self.parent, self.child:
-            cat.addTask(task)
-            task.addCategory(cat)
+            self.category.addCategorizable(task)
+            task.addCategory(self.category)
         self.delete([self.parent])
-        self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()), 
-            lambda: self.assertEqualLists([self.parent, self.child], cat.tasks()))
+        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()), 
+            lambda: self.assertEqualLists([self.parent, self.child], self.category.categorizables()))
 
 
 class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
@@ -269,6 +265,10 @@ class EditTaskCommandTest(TaskCommandTestCase):
                 task.removeAttachments(att)
             else:
                 task.addAttachments(att)
+            if self.category in task.categories():
+                task.removeCategory(self.category)
+            else:
+                task.addCategory(self.category)
         editcommand.do()
 
     def testEditTask(self):
@@ -314,8 +314,36 @@ class EditTaskCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual([], self.task1.attachments()),
             lambda: self.assertEqual([attachment.FileAttachment('attachment')], self.task1.attachments()))
-            
-            
+        
+    def testAddCategory(self):
+        self.edit([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([self.category]), self.task1.categories()),
+            lambda: self.failIf(self.task1.categories()))
+
+    def testAddCategory_AffectsCategory(self):
+        self.edit([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual([self.task1], self.category.categorizables()),
+            lambda: self.failIf(self.category.categorizables()))
+        
+    def testRemoveCategory(self):
+        self.task1.addCategory(self.category)
+        self.category.addCategorizable(self.task1)
+        self.edit([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.failIf(self.task1.categories()),
+            lambda: self.assertEqual(set([self.category]), self.task1.categories()))
+        
+    def testRemoveCategory_AffectsCategory(self):
+        self.task1.addCategory(self.category)
+        self.category.addCategorizable(self.task1)
+        self.edit([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.failIf(self.category.categorizables()),
+            lambda: self.assertEqual([self.task1], self.category.categorizables()))
+
+
 class MarkCompletedCommandTest(CommandWithChildrenTestCase):
     def testMarkCompleted(self):
         self.markCompleted([self.task1])
@@ -395,4 +423,105 @@ class AddAttachmentToTaskCommandTest(TaskCommandTestCase):
             self.task1.attachments() == self.task2.attachments()), 
             lambda: self.failUnless([] == self.task1.attachments() == \
             self.task2.attachments()))
+    
+
+class PriorityCommandTestCase(TaskCommandTestCase):
+    def setUp(self):
+        super(PriorityCommandTestCase, self).setUp()
+        self.taskList.append(self.task2)
+
+    def assertDoUndoRedo(self, priority1do, priority2do, priority1undo, priority2undo):
+        super(PriorityCommandTestCase, self).assertDoUndoRedo(
+            lambda: self.failUnless(priority1do == self.task1.priority() and
+                    priority2do == self.task2.priority()),
+            lambda: self.failUnless(priority1undo == self.task1.priority() and
+                    priority2undo == self.task2.priority()))
+
+        
+class MaxPriorityCommandTest(PriorityCommandTestCase):
+    def maxPriority(self, tasks=None):
+        command.MaxPriorityCommand(self.taskList, tasks or []).do()        
+        
+    def testEmptySelection(self):
+        self.maxPriority()
+        self.assertDoUndoRedo(0, 0, 0, 0)
+        
+    def testOneTaskWhenBothTasksHaveSamePriority(self):
+        self.maxPriority([self.task1])
+        self.assertDoUndoRedo(1, 0, 0, 0)
+        
+    def testBothTasksWhenBothTasksHaveSamePriority(self):
+        self.maxPriority([self.task1, self.task2])
+        self.assertDoUndoRedo(1, 1, 0, 0)
+        
+    def testMakeLowestPriorityTheMaxPriority(self):
+        self.task2.setPriority(2)
+        self.maxPriority([self.task1])
+        self.assertDoUndoRedo(3, 2, 0, 2)
+
+
+class MinPriorityCommandTest(PriorityCommandTestCase):        
+    def minPriority(self, tasks=None):
+        command.MinPriorityCommand(self.taskList, tasks or []).do()        
+
+    def testEmptySelection(self):
+        self.minPriority()
+        self.assertDoUndoRedo(0, 0, 0, 0)
+        
+    def testOneTaskWhenBothTasksHaveSamePriority(self):
+        self.minPriority([self.task1])
+        self.assertDoUndoRedo(-1, 0, 0, 0)
+        
+    def testBothTasksWhenBothTasksHaveSamePriority(self):
+        self.minPriority([self.task1, self.task2])
+        self.assertDoUndoRedo(-1, -1, 0, 0)
+        
+    def testMakeLowestPriorityTheMaxPriority(self):
+        self.task2.setPriority(-2)
+        self.minPriority([self.task1])
+        self.assertDoUndoRedo(-3, -2, 0, -2)
+
+
+class IncreasePriorityCommandTest(PriorityCommandTestCase):
+    def incPriority(self, tasks=None):
+        command.IncPriorityCommand(self.taskList, tasks or []).do()
+        
+    def testEmptySelection(self):
+        self.incPriority()
+        self.assertDoUndoRedo(0, 0, 0, 0)
+        
+    def testOneTaskWhenBothTasksHaveSamePriority(self):
+        self.incPriority([self.task1])
+        self.assertDoUndoRedo(1, 0, 0, 0)
+        
+    def testBothTasksWhenBothTasksHaveSamePriority(self):
+        self.incPriority([self.task1, self.task2])
+        self.assertDoUndoRedo(1, 1, 0, 0)
+        
+    def testIncLowestPriority(self):
+        self.task2.setPriority(-2)
+        self.incPriority([self.task2])
+        self.assertDoUndoRedo(0, -1, 0, -2)
+    
+
+class DecreasePriorityCommandTest(PriorityCommandTestCase):
+    def decPriority(self, tasks=None):
+        command.DecPriorityCommand(self.taskList, tasks or []).do()
+        
+    def testEmptySelection(self):
+        self.decPriority()
+        self.assertDoUndoRedo(0, 0, 0, 0)
+        
+    def testOneTaskWhenBothTasksHaveSamePriority(self):
+        self.decPriority([self.task1])
+        self.assertDoUndoRedo(-1, 0, 0, 0)
+        
+    def testBothTasksWhenBothTasksHaveSamePriority(self):
+        self.decPriority([self.task1, self.task2])
+        self.assertDoUndoRedo(-1, -1, 0, 0)
+        
+    def testDecLowestPriority(self):
+        self.task2.setPriority(-2)
+        self.decPriority([self.task2])
+        self.assertDoUndoRedo(0, -3, 0, -2)
     
