@@ -1,5 +1,4 @@
 import wx, patterns, gui, meta, command, help, widgets, persistence
-from gui import render
 from i18n import _
 from domain import task, attachment
 from thirdparty import desktop
@@ -188,15 +187,11 @@ class UICheckCommand(BooleanSettingsCommand):
             str(self._isMenuItemChecked(event)))
         
     def getBitmap(self):
-        if '__WXMSW__' in wx.PlatformInfo:
-            # Use pretty Nuvola checkmark bitmap
-            return None #'on' 
-        else:
-            # Use default checkmark. Providing our own bitmap causes
-            # "(python:8569): Gtk-CRITICAL **: gtk_check_menu_item_set_active: 
-            # assertion `GTK_IS_CHECK_MENU_ITEM (check_menu_item)' failed"
-            # on systems that use Gtk
-            return None
+        # Using our own bitmap for checkable menu items does not work on
+        # all platforms, most notably Gtk where providing our own bitmap causes
+        # "(python:8569): Gtk-CRITICAL **: gtk_check_menu_item_set_active: 
+        # assertion `GTK_IS_CHECK_MENU_ITEM (check_menu_item)' failed"
+        return None
 
 
 class UIRadioCommand(BooleanSettingsCommand):
@@ -1198,6 +1193,58 @@ class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
         return nrCompleted in (0, len(selectedTasks))
     
     
+class TaskMaxPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(TaskMaxPriority, self).__init__(
+            menuText=_('Maximize priority\tShift+Ctrl+P'),
+            helpText=_('Make the selected task(s) the highest priority task(s)'), 
+            bitmap='maxpriority', *args, **kwargs)
+        
+    def doCommand(self, event):
+        maxPriority = command.MaxPriorityCommand(self.taskList, 
+                                                 self.viewer.curselection())
+        maxPriority.do()
+    
+
+class TaskMinPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(TaskMinPriority, self).__init__(
+            menuText=_('Minimize priority\tShift+Ctrl+M'),
+            helpText=_('Make the selected task(s) the lowest priority task(s)'), 
+            bitmap='minpriority', *args, **kwargs)
+        
+    def doCommand(self, event):
+        minPriority = command.MinPriorityCommand(self.taskList, 
+                                                 self.viewer.curselection())
+        minPriority.do()
+
+
+class TaskIncPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):    
+    def __init__(self, *args, **kwargs):
+        super(TaskIncPriority, self).__init__(
+            menuText=_('Increase priority\tShift+P'),
+            helpText=_('Increase the priority of the selected task(s)'), 
+            bitmap='incpriority', *args, **kwargs)
+        
+    def doCommand(self, event):
+        incPriority = command.IncPriorityCommand(self.taskList, 
+                                                 self.viewer.curselection())
+        incPriority.do()
+
+
+class TaskDecPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):    
+    def __init__(self, *args, **kwargs):
+        super(TaskDecPriority, self).__init__(
+            menuText=_('Decrease priority\tShift+M'),
+            helpText=_('Decrease the priority of the selected task(s)'), 
+            bitmap='decpriority', *args, **kwargs)
+        
+    def doCommand(self, event):
+        decPriority = command.DecPriorityCommand(self.taskList, 
+                                                 self.viewer.curselection())
+        decPriority.do()
+
+
 class DragAndDropCommand(ViewerCommand):
     def onCommandActivate(self, dropItemIndex, dragItemIndex):
         ''' Override omCommandActivate to be able to accept two items instead
@@ -1228,12 +1275,12 @@ class TaskMail(NeedsSelectedTasks, ViewerCommand):
             subject = _('Tasks')
             bodyLines = []
             for task in tasks:
-                bodyLines.append(render.subject(task, recursively=True) + '\n')
+                bodyLines.append(task.subject(recursive=True) + '\n')
                 if task.description():
                     bodyLines.extend(task.description().splitlines())
                     bodyLines.append('\n')
         else:
-            subject = render.subject(tasks[0], recursively=True)
+            subject = tasks[0].subject(recursive=True)
             bodyLines = tasks[0].description().splitlines()
         body = urllib.quote('\r\n'.join(bodyLines))
         mailToURL = 'mailto:%s?subject=%s&body=%s'%( \
@@ -1284,7 +1331,7 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
         if self.viewer.isShowingTasks() and self.viewer.curselection():
             selectedTasks = self.viewer.curselection()
         else:
-            subjectDecoratedTaskList = [(render.subject(task, recursively=True), 
+            subjectDecoratedTaskList = [(task.subject(recursive=True), 
                 task) for task in self.taskList]
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
@@ -1412,7 +1459,7 @@ class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
                                                   drop=dropItem)
 
 
-class NoteNew(MainWindowCommand, NotesCommand, UICommandsCommand):
+class NoteNew(NotesCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         notes = kwargs['notes']
         super(NoteNew, self).__init__(bitmap='new', 
@@ -1420,10 +1467,8 @@ class NoteNew(MainWindowCommand, NotesCommand, UICommandsCommand):
             helpText=notes.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        newNoteDialog = gui.dialog.editor.NoteEditor(self.mainwindow, 
-            command.NewNoteCommand(self.notes),
-            self.notes, self.uiCommands, bitmap=self.bitmap)
-        newNoteDialog.Show(show)
+        dialog = self.viewer.newNoteDialog(bitmap=self.bitmap)
+        dialog.Show(show)
     
 
 class NoteNewSubNote(NeedsSelectedNote, NotesCommand, ViewerCommand):
@@ -1595,9 +1640,7 @@ class ViewColumnUICommandsMixin(object):
              (_('&Fixed fee'), _('Show/hide fixed fee column'), 'fixedFee'),
              (_('&Total fixed fee'), _('Show/hide total fixed fee column'), 'totalFixedFee'),
              (_('&Revenue'), _('Show/hide revenue column'), 'revenue'),
-             (_('T&otal revenue'), _('Show/hide total revenue column'), 'totalRevenue'),
-             (_('Last modification time'), _('Show/hide last modification time column'), 'lastModificationTime'),
-             (_('Overall last modification time'), _('Show/hide overall last modification time column (overall last modification time is the most recent modification time of a task and all it subtasks)'), 'totalLastModificationTime'),]:
+             (_('T&otal revenue'), _('Show/hide total revenue column'), 'totalRevenue')]:
             key = 'view' + columnName
             self[key] = ViewColumn(menuText=menuText, helpText=helpText, setting=columnName, viewer=viewer)
 
@@ -1710,8 +1753,8 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         for menuText, helpText, value in \
             [(_('Sub&ject'), _('Sort by subject'), 'subject'),
              (_('&Description'), _('Sort by description'), 'description'),
-             (_('&Category'), _('Sort tasks by category'), 'categories'),
-             (_('Overall categories'), _('Sort tasks by overall categories'), 'totalCategories'),
+             (_('&Category'), _('Sort by category'), 'categories'),
+             (_('Overall categories'), _('Sort by overall categories'), 'totalCategories'),
              (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
              (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
              (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
@@ -1729,9 +1772,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
              (_('Total fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalFixedFee'),
              (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
              (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalRevenue'),
-             (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder'),
-             (_('Last modification time'), _('Sort tasks by last modification time'), 'lastModificationTime'),
-             (_('Overall last modification time'), _('Sort tasks by overall last modification time'), 'totalLastModificationTime')]:
+             (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder')]:
             key = 'viewsortby' + value.lower()
             self[key] = ViewerSortByCommand(viewer=viewer, value=value,
                 menuText=menuText, helpText=helpText)
@@ -1767,7 +1808,8 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             'date'),
             ('viewnoteviewer', _('&Note'), 
             _('Open a new tab with a viewer that displays notes'),
-            gui.viewer.NoteViewer, (notes, self, settings), {}, 'note')):
+            gui.viewer.NoteViewer, (notes, self, settings), 
+            dict(categories=categories), 'note')):
             self[key] = ViewViewer(viewer=viewer, menuText=menuText, 
                 helpText=helpText, bitmap=bitmap, viewerClass=viewerClass,
                 viewerArgs=viewerArgs, viewerKwargs=viewerKwargs, 
@@ -1821,7 +1863,11 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['addattachmenttotask'] = TaskAddAttachment(taskList=taskList,
                                                         viewer=viewer)
         self['openalltaskattachments'] = TaskOpenAllAttachments(viewer=viewer)
-
+        self['incpriority'] = TaskIncPriority(taskList=taskList, viewer=viewer)
+        self['decpriority'] = TaskDecPriority(taskList=taskList, viewer=viewer)
+        self['maxpriority'] = TaskMaxPriority(taskList=taskList, viewer=viewer)
+        self['minpriority'] = TaskMinPriority(taskList=taskList, viewer=viewer)
+        
         # Effort menu
         self['neweffort'] = EffortNew(viewer=viewer, effortList=effortList,
             taskList=taskList, mainwindow=mainwindow, uicommands=self)
@@ -1842,8 +1888,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             categories=categories)
         
         # Note menu
-        self['newnote'] = NoteNew(mainwindow=mainwindow, 
-            notes=notes, uiCommands=self)
+        self['newnote'] = NoteNew(viewer=viewer, notes=notes)
         self['newsubnote'] = NoteNewSubNote(viewer=viewer, notes=notes)
         self['deletenote'] = NoteDelete(viewer=viewer, notes=notes)
         self['editnote'] = NoteEdit(viewer=viewer, notes=notes)

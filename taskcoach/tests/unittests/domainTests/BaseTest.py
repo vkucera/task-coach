@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import test, patterns
-from domain import base
+from domain import base, date
 
 class ObjectSubclass(base.Object):
     pass
@@ -68,11 +70,11 @@ class ObjectTest(test.TestCase):
         self.failIf(self.eventsReceived)
         
     def testGetState(self):
-        self.assertEqual(dict(subject='', description=''), 
+        self.assertEqual(dict(subject='', description='', id=self.object.id()), 
                          self.object.__getstate__())
 
     def testSetState(self):
-        newState = dict(subject='New', description='New')
+        newState = dict(subject='New', description='New', id=None)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
@@ -90,7 +92,22 @@ class ObjectTest(test.TestCase):
         copy = self.subclassObject.copy()
         self.assertEqual(copy.__class__, self.subclassObject.__class__)
         
+    def testSetIdOnCreation(self):
+        object = base.Object(id='123')
+        self.assertEqual('123', object.id())
         
+    def testIdIsAString(self):
+        self.assertEqual(type(''), type(self.object.id()))
+        
+    def testDifferentObjectsHaveDifferentIds(self):
+        self.assertNotEqual(base.Object().id(), self.object.id())
+        
+    def testCopyHasDifferentId(self):
+        objectId = self.object.id() # Force generation of id
+        copy = self.object.copy()
+        self.assertNotEqual(copy.id(), objectId)
+        
+
 class CompositeObjectTest(test.TestCase):
     def setUp(self):
         self.compositeObject = base.CompositeObject()
@@ -111,3 +128,9 @@ class CompositeObjectTest(test.TestCase):
         compositeObject = base.CompositeObject(expand=True)
         self.failUnless(compositeObject.isExpanded())
         
+    def testRecursiveSubject(self):
+        self.compositeObject.setSubject('parent')
+        child = base.CompositeObject(subject='child')
+        self.compositeObject.addChild(child)
+        self.assertEqual(u'parent → child', child.subject(recursive=True))
+                            

@@ -1,6 +1,5 @@
-import test, gui, wx, config, persistence, meta
+import test, gui, config, persistence, meta
 from unittests import dummy
-from domain import task, effort
 
 
 class MainWindowUnderTest(gui.MainWindow):
@@ -13,7 +12,7 @@ class MainWindowTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(dummy.IOController(),
-            self.taskFile, effort.EffortList(self.taskFile), self.settings)
+            self.taskFile, self.settings)
         
     def tearDown(self):
         del self.mainwindow

@@ -90,6 +90,8 @@ class WindowBehaviorPage(SettingsPage):
             _('Minimize main window when closed'))
         self.addBooleanSetting('window', 'blinktaskbariconwhentrackingeffort',
             _('Make clock in the task bar tick when tracking effort'))
+        self.addBooleanSetting('view', 'descriptionpopups',
+            _('Show a popup with the description of an item when hovering over it'))
         self.fit()
 
 

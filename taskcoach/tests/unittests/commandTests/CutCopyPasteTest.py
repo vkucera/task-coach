@@ -26,10 +26,10 @@ class CutCommandWithTasksTest(TaskCommandTestCase):
     def FIXMEtestCutTaskThatBelongsToCategory(self):
         cat = category.Category('category')
         self.categories.append(cat)
-        cat.addTask(self.task1)
+        cat.addCategorizable(self.task1)
         self.cut('all')
-        self.assertDoUndoRedo(lambda: self.failIf(cat.tasks()),
-                              lambda: self.assertEqual([self.task1], cat.tasks()))
+        self.assertDoUndoRedo(lambda: self.failIf(cat.categorizables()),
+                              lambda: self.assertEqual([self.task1], cat.categorizables()))
 
 
 class CutCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):

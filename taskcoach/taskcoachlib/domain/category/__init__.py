@@ -1,3 +1,4 @@
-from category import Category
+from category import Category, CategorizableCompositeObject
 from categorycontainer import CategoryList
 from sorter import CategorySorter
+import filter

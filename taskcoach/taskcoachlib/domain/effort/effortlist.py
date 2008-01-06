@@ -9,6 +9,7 @@ class MaxDateTimeMixin:
         else:
             return None
 
+
 class EffortUICommandNamesMixin(object):
     newItemMenuText = _('&New effort...')
     newItemHelpText =  _('Add an effort period to the selected task(s)')

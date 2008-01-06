@@ -26,8 +26,8 @@ class SettingsTest(SettingsTestCase):
         self.assertEqual('True', self.settings.get('view', 'statusbar'))
 
     def testSet(self):
-        self.settings.set('view', 'toolbarsize', '16')
-        self.assertEqual('16', self.settings.get('view', 'toolbarsize'))
+        self.settings.set('view', 'toolbar', '(16, 16)')
+        self.assertEqual('(16, 16)', self.settings.get('view', 'toolbar'))
 
     def testPathWithAppData(self):
         environ = {'APPDATA' : 'test' }
@@ -108,14 +108,14 @@ class SettingsObservableTest(SettingsTestCase):
         super(SettingsObservableTest, self).setUp()
         self.events = []
         patterns.Publisher().registerObserver(self.onEvent, 
-            eventType='view.toolbarsize')
+            eventType='view.toolbar')
         
     def onEvent(self, event):
         self.events.append(event)
         
     def testChangingTheSettingCausesNotification(self):
-        self.settings.set('view', 'toolbarsize', '16')
-        self.assertEqual('16', self.events[0].value())
+        self.settings.set('view', 'toolbar', '(16, 16)')
+        self.assertEqual('(16, 16)', self.events[0].value())
         
     def testChangingAnotherSettingDoesNotCauseANotification(self):
         self.settings.set('view', 'statusbar', 'True')

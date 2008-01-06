@@ -63,13 +63,19 @@ iconlist = [
 ('language', 'apps', 'edu_languages', [22]),
 ('ascending', 'actions', 'up', [16]),
 ('descending', 'actions', 'down', [16]),
+('ascending_with_status', 'actions', 'sort_ascending_with_status', [16]),
+('descending_with_status', 'actions', 'sort_descending_with_status', [16]),
 ('category', 'filesystems', 'folder_download', [16, 22]),
 ('note', 'apps', 'knotes', [16, 22]),
 ('colorize', 'actions', 'colorize', [22]),
 ('windows', 'apps', 'window_list', [22]),
 ('email', 'apps', 'email', [16, 22]),
 ('behavior', 'actions', 'misc', [22]),
-('attachment', 'actions', 'attach', [16, 22])]
+('attachment', 'actions', 'attach', [16, 22]),
+('maxpriority', 'actions', '2uparrow', [16]),
+('minpriority', 'actions', '2downarrow', [16]),
+('incpriority', 'actions', '1uparrow', [16]),
+('decpriority', 'actions', '1downarrow', [16])]
 
 icons = {}
 

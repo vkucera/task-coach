@@ -1,8 +1,9 @@
-''' render.py - functions to render various objects, like dates, task
-subjects, etc. '''
+# -*- coding: utf-8 -*-
+
+''' render.py - functions to render various objects, like date, time, etc. '''
+
 from i18n import _
-    
-taskSeparator = ' -> '
+
 
 def date(date):
     ''' render a date (of type date.Date) '''
@@ -11,19 +12,14 @@ def date(date):
 def priority(priority):
     ''' Render an (integer) priority '''
     return str(priority)
-
-def subject(aTask, recursively=False, sep=taskSeparator):
-    ''' render a task subject '''
-    prefix = ''
-    if recursively and aTask.parent():
-        prefix = subject(aTask.parent(), recursively) + sep 
-    return prefix + aTask.subject()
    
-def daysLeft(timeLeft):
-    ''' render time left (of type date.TimeDelta) in days '''
-    import domain.date as date
+def daysLeft(timeLeft, completedTask):
+    ''' Render time left (of type date.TimeDelta) in days. '''
+    if completedTask:
+        return ''
+    from domain import date
     if timeLeft == date.TimeDelta.max:
-        return _('Infinite')
+        return u'∞' # Infinite
     else:
         return str(timeLeft.days)
 

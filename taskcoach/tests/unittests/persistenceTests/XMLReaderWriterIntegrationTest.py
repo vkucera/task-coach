@@ -42,8 +42,8 @@ class IntegrationTest(IntegrationTestCase):
         self.task = task.Task('Subject', self.description, 
             startdate=date.Yesterday(), duedate=date.Tomorrow(), 
             completiondate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
-            priority=4, lastModificationTime=date.DateTime(2004,1,1), 
-            hourlyFee=100.5, fixedFee=1000, reminder=date.DateTime(2004,1,1),
+            priority=4, hourlyFee=100.5, fixedFee=1000, 
+            reminder=date.DateTime(2004,1,1),
             shouldMarkCompletedWhenAllChildrenCompleted=True)
         self.child = task.Task()
         self.task.addChild(self.child)
@@ -57,9 +57,9 @@ class IntegrationTest(IntegrationTestCase):
         self.task.addAttachments(attachment.FileAttachment('/home/frank/whatever.txt'))
         self.task2 = task.Task('Task 2', priority=-1954)
         self.taskList.extend([self.task, self.task2])
-        self.notes = note.NoteContainer()
-        self.notes.append(note.Note('Note', 'Description', 
-            children=[note.Note('Child')]))
+        self.note = note.Note('Note', 'Description', children=[note.Note('Child')])
+        self.notes.append(self.note)
+        self.category.addCategorizable(self.note)
 
     def getTaskWrittenAndRead(self, id):
         return [task for task in self.tasksWrittenAndRead if task.id() == id][0]
@@ -114,7 +114,7 @@ class IntegrationTest(IntegrationTestCase):
        
     def testCategory(self):
         self.assertEqual(self.task.id(), 
-                         self.categoriesWrittenAndRead[0].tasks()[0].id())
+                         self.categoriesWrittenAndRead[0].categorizables()[0].id())
 
     def testFilteredCategory(self):
         self.failUnless(self.categoriesWrittenAndRead[0].isFiltered())
@@ -125,11 +125,6 @@ class IntegrationTest(IntegrationTestCase):
     def testNegativePriority(self):
         self.assertAttributeWrittenAndRead(self.task2, 'priority')
         
-    def testLastModificationTime(self):
-        delta = abs(self.task.lastModificationTime() - \
-                    self.getTaskWrittenAndRead(self.task.id()).lastModificationTime())
-        self.failUnless(delta < date.TimeDelta(seconds=1))
-
     def testHourlyFee(self):
         self.assertAttributeWrittenAndRead(self.task, 'hourlyFee')
 
@@ -167,3 +162,15 @@ class IntegrationTest(IntegrationTestCase):
     def testCategoryDescription(self):
         self.assertEqual(self.categories[0].description(), 
                          self.categoriesWrittenAndRead[0].description())
+
+    def testNoteId(self):
+        self.assertEqual(self.notes.rootItems()[0].id(),
+                         self.notesWrittenAndRead.rootItems()[0].id())
+        
+    def testCategoryId(self):
+        self.assertEqual(self.category.id(),
+                         self.categoriesWrittenAndRead[0].id())
+        
+    def testNoteWithCategory(self):
+        self.failUnless(self.notesWrittenAndRead.rootItems()[0] in \
+                        self.categoriesWrittenAndRead[0].categorizables())

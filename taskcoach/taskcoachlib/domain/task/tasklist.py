@@ -1,7 +1,7 @@
-import patterns, wx
+import patterns, wx, task
 from i18n import _
 from domain import date
-import task
+
 
 def newTaskMenuText():
     # There is a bug in wxWidget/wxPython on the Mac that causes the 
@@ -40,13 +40,13 @@ class TaskList(patterns.CompositeSet):
         super(TaskList, self).extend(tasks)
         for task in self._compositesAndAllChildren(tasks):
             for category in task.categories():
-                category.addTask(task)
+                category.addCategorizable(task)
                 
     def removeItems(self, tasks):
         super(TaskList, self).removeItems(tasks)
         for task in self._compositesAndAllChildren(tasks):
             for category in task.categories():
-                category.removeTask(task)
+                category.removeCategorizable(task)
     
     def _nrInterestingTasks(self, isInteresting):
         interestingTasks = [task for task in self if isInteresting(task)]
@@ -76,25 +76,31 @@ class TaskList(patterns.CompositeSet):
         for task in self:
             result.extend(task.efforts())
         return result
+        
+    def originalLength(self):
+        ''' Provide a way for bypassing the __len__ method of decorators. '''
+        return len(self)
     
-    def __allDates(self):        
-        realDates = [aDate for task in self 
-            for aDate in (task.startDate(), task.dueDate(), task.completionDate()) 
-            if aDate != date.Date()]
-        if realDates:
-            return realDates
-        else:
-            return [date.Date()]
-            
     def minDate(self):      
         return min(self.__allDates())
           
     def maxDate(self):
         return max(self.__allDates())
+
+    def __allDates(self):        
+        realDates = [aDate for task in self 
+            for aDate in (task.startDate(), task.dueDate(), task.completionDate()) 
+            if aDate != date.Date()]
+        return realDates or [date.Date()]            
+
+    def minPriority(self):
+        return min(self.__allPriorities())
         
-    def originalLength(self):
-        ''' Provide a way for bypassing the __len__ method of decorators. '''
-        return len(self)
+    def maxPriority(self):
+        return max(self.__allPriorities())
+        
+    def __allPriorities(self):
+        return [task.priority() for task in self] or (0,)
 
         
 class SingleTaskList(TaskList):

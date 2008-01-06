@@ -9,8 +9,10 @@ _('''If you enter a URL (e.g. %(url)s) in a task or effort description, it becom
 _('''You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks. The same goes for categories.'''),
 _('''You can drag files from a file browser onto a task to create attachments. Dragging the files over a tab will raise the appropriate page, dragging the files over a collapsed task (the boxed + sign) in the tree view will expand the task to show its subtasks.'''),
 _('''You can create any viewer layout you want by dragging and dropping the tabs. Unfortunately, due to a limitation of the current version of the graphical toolkit (wxPython), the layout cannot be saved for reuse in the next session.'''),
-_('''What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc.''')
+_('''What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc.'''),
+_('''Left-click a column header to sort by that column. Click the column header again to change the sort order from ascending to descending and back again. Right-click a column header to hide that column or make additional columns visible.''')
 ]
+
 
 class TipProvider(wx.PyTipProvider):
     def __init__(self, tipIndex):
@@ -33,4 +35,3 @@ def showTips(parent, settings):
     keepShowingTips = wx.ShowTip(parent, tipProvider)
     settings.set('window', 'tips', str(keepShowingTips))
     settings.set('window', 'tipsindex', str(tipProvider.GetCurrentTip()))
-    

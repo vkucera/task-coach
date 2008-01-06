@@ -13,12 +13,23 @@ class TestCase(unittest.TestCase):
         self.assertEqual(len(expectedList), len(actualList))
         for item in expectedList:
             self.failUnless(item in actualList)
+            
+    def registerObserver(self, eventType):
+        if not hasattr(self, 'events'):
+            self.events = []
+        import patterns
+        patterns.Publisher().registerObserver(self.onEvent, eventType=eventType)
+        
+    def onEvent(self, event):
+        self.events.append(event)
 
     def tearDown(self):
         import patterns
         patterns.Publisher().clear()
         patterns.CommandHistory().clear()
         patterns.NumberedInstances.count = dict()
+        if hasattr(self, 'events'):
+            del self.events
         super(TestCase, self).tearDown()
         
 
@@ -27,7 +38,7 @@ class wxTestCase(TestCase):
     frame = wx.Frame(None, -1, 'Frame')
     from taskcoachlib import gui
     gui.init()
-        
+    
 
 def cvsCommit():
     os.system('cvs commit')

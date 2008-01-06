@@ -24,7 +24,7 @@ class DateTest(test.TestCase):
         self.assertEqual(None, adate.day)
         self.assertEqual(None, adate.weekday())
         self.assertEqual(None, adate.weeknumber())
-        self.assertEqual('None', str(adate))
+        self.assertEqual('', str(adate))
 
     def testCreateInfiniteDateWithMaxValues(self):
         max = datetime.date.max

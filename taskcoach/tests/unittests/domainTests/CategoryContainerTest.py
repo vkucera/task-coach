@@ -14,7 +14,7 @@ class CategoryContainerTest(test.TestCase):
     def testRemoveCategoryWithTask(self):
         aTask = task.Task()
         self.categories.append(self.category)
-        self.category.addTask(aTask)
+        self.category.addCategorizable(aTask)
         aTask.addCategory(self.category)
         self.categories.removeItems([self.category])
         self.failIf(aTask.categories())

@@ -1,8 +1,7 @@
 import test, sets, patterns
-import unittests.asserts as asserts
-import domain.task as task
-import domain.effort as effort
-import domain.date as date
+from unittests import asserts
+from domain import task, effort, date
+
 
 class TaskListTest(test.TestCase):
     def setUp(self):
@@ -83,3 +82,33 @@ class TaskListTest(test.TestCase):
         
     def testOriginalLength(self):
         self.assertEqual(0, self.taskList.originalLength())
+
+    def testMinPriority_EmptyTaskList(self):
+        self.assertEqual(0, self.taskList.minPriority())
+        
+    def testMinPriority_OneTaskWithDefaultPriority(self):
+        self.taskList.append(self.task1)
+        self.assertEqual(self.task1.priority(), self.taskList.minPriority())
+        
+    def testMinPriority_OneTaskWithNonDefaultPriority(self):
+        self.taskList.append(task.Task(priority=-5))
+        self.assertEqual(-5, self.taskList.minPriority())
+        
+    def testMinPriority_TwoTasks(self):
+        self.taskList.extend([task.Task(priority=3), task.Task(priority=5)])
+        self.assertEqual(3, self.taskList.minPriority())
+        
+    def testMaxPriority_EmptyTaskList(self):
+        self.assertEqual(0, self.taskList.maxPriority())
+        
+    def testMaxPriority_OneTaskWithDefaultPriority(self):
+        self.taskList.append(self.task1)
+        self.assertEqual(self.task1.priority(), self.taskList.maxPriority())
+        
+    def testMaxPriority_OneTaskWithNonDefaultPriority(self):
+        self.taskList.append(task.Task(priority=-5))
+        self.assertEqual(-5, self.taskList.maxPriority())
+        
+    def testMaxPriority_TwoTasks(self):
+        self.taskList.extend([task.Task(priority=3), task.Task(priority=5)])
+        self.assertEqual(5, self.taskList.maxPriority())

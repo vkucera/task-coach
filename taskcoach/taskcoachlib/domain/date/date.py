@@ -62,7 +62,7 @@ class InfiniteDate(datetime.date):
     day = property(_getday)
 
     def __str__(self):
-        return 'None'
+        return ''
 
     def weekday(self):
         return None

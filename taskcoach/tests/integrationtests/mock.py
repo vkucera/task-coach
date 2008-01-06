@@ -23,6 +23,6 @@ class App(taskcoach.App):
         self.parent = task.Task()
         self.child = task.Task()
         self.parent.addChild(self.child)
-        self.taskFile.extend([self.parent])
+        self.taskFile.tasks().extend([self.parent])
 
 

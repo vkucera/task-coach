@@ -1,26 +1,26 @@
 import patterns, time, copy
-from domain import date, base
+from domain import date, category
 
 
-class Task(base.CompositeObject):
+class Task(category.CategorizableCompositeObject):
     def __init__(self, subject='', description='', dueDate=None, 
             startDate=None, completionDate=None, budget=None, 
-            priority=0, id_=None, lastModificationTime=None, hourlyFee=0,
+            priority=0, id=None, hourlyFee=0,
             fixedFee=0, reminder=None, attachments=None, categories=None,
             efforts=None,
             shouldMarkCompletedWhenAllChildrenCompleted=None, *args, **kwargs):
+        kwargs['id'] = id
         kwargs['subject'] = subject
         kwargs['description'] = description
+        kwargs['categories'] = categories
         super(Task, self).__init__(*args, **kwargs)
         self._dueDate        = dueDate or date.Date()
         self._startDate      = startDate or date.Today()
         self._completionDate = completionDate or date.Date()
         self._budget         = budget or date.TimeDelta()
-        self._id             = id_ or '%s:%s'%(id(self), time.time()) # FIXME: Not a valid XML id
         self._efforts        = efforts or []
         for effort in self._efforts:
             effort.setTask(self)
-        self._categories     = set(categories or [])
         self._priority       = priority
         self._hourlyFee      = hourlyFee
         self._fixedFee       = fixedFee
@@ -28,11 +28,9 @@ class Task(base.CompositeObject):
         self._attachments    = attachments or []
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
-        self.setLastModificationTime(lastModificationTime)
             
     def __setstate__(self, state):
         super(Task, self).__setstate__(state)
-        self.setId(state['id'])
         self.setStartDate(state['startDate'])
         self.setDueDate(state['dueDate'])
         self.setCompletionDate(state['completionDate'])
@@ -50,7 +48,7 @@ class Task(base.CompositeObject):
             
     def __getstate__(self):
         state = super(Task, self).__getstate__()
-        state.update(dict(id=self._id, dueDate=self._dueDate, 
+        state.update(dict(dueDate=self._dueDate, 
             startDate=self._startDate, completionDate=self._completionDate, 
             children=self.children(), parent=self.parent(), 
             efforts=self._efforts, budget=self._budget,
@@ -61,16 +59,6 @@ class Task(base.CompositeObject):
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
         
-    def id(self):
-        return self._id
-
-    def setId(self, id):
-        self._id = id
-
-    def setDescription(self, description):
-        if super(Task, self).setDescription(description):
-            self.setLastModificationTime()
-    
     def allChildrenCompleted(self):
         if not self.children():
             return False
@@ -104,7 +92,6 @@ class Task(base.CompositeObject):
         oldTotalBudgetLeft = self.budgetLeft(recursive=True)
         oldTotalPriority = self.priority(recursive=True)
         super(Task, self).addChild(child)
-        self.setLastModificationTime()
         self.notifyObservers(patterns.Event(self, Task.addChildEventType(), child))
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
         if child.budget(recursive=True):
@@ -126,7 +113,6 @@ class Task(base.CompositeObject):
         oldTotalBudgetLeft = self.budgetLeft(recursive=True)
         oldTotalPriority = self.priority(recursive=True)
         super(Task, self).removeChild(child)
-        self.setLastModificationTime()
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
         if child.budget(recursive=True):
             self.notifyObserversOfTotalBudgetChange()
@@ -142,10 +128,6 @@ class Task(base.CompositeObject):
             self.isBeingTracked(recursive=True):
             self.notifyObserversOfStopTracking(*child.activeEfforts(recursive=True))
 
-    def setSubject(self, subject):
-        if super(Task, self).setSubject(subject):
-            self.setLastModificationTime()
-
     def dueDate(self, recursive=False):
         if recursive:
             childrenDueDates = [child.dueDate(recursive=True) for child in self.children() if not child.completed()]
@@ -156,7 +138,6 @@ class Task(base.CompositeObject):
     def setDueDate(self, dueDate):
         if dueDate != self._dueDate:
             self._dueDate = dueDate
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.dueDate', dueDate))
 
     def startDate(self, recursive=False):
@@ -169,7 +150,6 @@ class Task(base.CompositeObject):
     def setStartDate(self, startDate):
         if startDate != self._startDate:
             self._startDate = startDate
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.startDate', 
                 startDate))
 
@@ -188,7 +168,6 @@ class Task(base.CompositeObject):
         completionDate = completionDate or date.Today()
         if completionDate != self._completionDate:
             self._completionDate = completionDate
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.completionDate', 
                 completionDate))
             if completionDate != date.Date():
@@ -232,7 +211,6 @@ class Task(base.CompositeObject):
         wasTracking = self.isBeingTracked()
         if effort not in self._efforts:
             self._efforts.append(effort)
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.effort.add', 
                 effort))
             if effort.isBeingTracked() and not wasTracking:
@@ -242,7 +220,6 @@ class Task(base.CompositeObject):
     def removeEffort(self, effort):
         if effort in self._efforts:
             self._efforts.remove(effort)
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.effort.remove', 
                 effort))
             if effort.isBeingTracked() and not self.isBeingTracked():
@@ -263,8 +240,6 @@ class Task(base.CompositeObject):
         for effort in self.activeEfforts():
             effort.setStop()
             stoppedEfforts.append(effort)
-        if stoppedEfforts:
-            self.setLastModificationTime()
         return stoppedEfforts
                 
     def budget(self, recursive=False):
@@ -277,7 +252,6 @@ class Task(base.CompositeObject):
     def setBudget(self, budget):
         if budget != self._budget:
             self._budget = budget
-            self.setLastModificationTime()
             self.notifyObserversOfBudgetChange()
             self.notifyObserversOfBudgetLeftChange()
         
@@ -369,82 +343,6 @@ class Task(base.CompositeObject):
         if parent: 
             parent.notifyObserversOfStopTracking(*trackedEfforts)
 
-    # categories
-    
-    def categories(self, recursive=False):
-        result = set(self._categories)
-        if recursive and self.parent() is not None:
-            result |= self.parent().categories(recursive=True)
-        return result
-        
-    def addCategory(self, category):
-        if category not in self._categories:
-            self._categories.add(category)
-            self.setLastModificationTime()
-            self.notifyObservers(patterns.Event(self, 'task.category.add', 
-                category))
-            self.notifyChildObserversOfCategoryChange(category, 'add')
-            if category.color():
-                self.notifyObserversOfCategoryColorChange()
-        
-    def removeCategory(self, category):
-        if category in self._categories:
-            self._categories.discard(category)
-            self.setLastModificationTime()
-            self.notifyObservers(patterns.Event(self, 'task.category.remove', 
-                category))
-            self.notifyChildObserversOfCategoryChange(category, 'remove')
-            if category.color():
-                self.notifyObserversOfCategoryColorChange()
-                
-    def setCategories(self, categories):
-        self._categories = categories # FIXME: no notification?
-        
-    def categoryColor(self):
-        ''' If a task belongs to a category that has a color associated with 
-            it, the task is colored accordingly. When a task belongs to 
-            multiple categories, the color is mixed. If a task has no color
-            of its own, it uses its parent's color. '''
-        colorSum, colorCount = [0, 0, 0, 0], 0
-        for category in self.categories():
-            categoryColor = category.color()
-            if categoryColor:
-                try:
-                    categoryColor = categoryColor.Get(includeAlpha=True)
-                except AttributeError:
-                    pass # categoryColor is already a tuple
-                for colorIndex in range(4): 
-                    colorSum[colorIndex] += categoryColor[colorIndex]
-                colorCount += 1
-        if colorCount:
-            return (colorSum[0]/colorCount, colorSum[1]/colorCount,
-                    colorSum[2]/colorCount, colorSum[3]/colorCount)
-        elif self.parent():
-            return self.parent().categoryColor()
-        else:
-            return None
-
-    def notifyChildObserversOfCategoryChange(self, category, change):
-        assert change in ('add', 'remove')
-        for child in self.children(recursive=True):
-            self.notifyObservers(patterns.Event(child, 
-                                   'task.totalCategory.%s'%change, category))
-            
-    def notifyObserversOfCategorySubjectChange(self, category):
-        self.notifyObservers(patterns.Event(self, 
-            'task.category.subject', category.subject()))
-        self.notifyObserversOfTotalCategorySubjectChange(category)
-    
-    def notifyObserversOfTotalCategorySubjectChange(self, category):
-        for task in [self] + self.children(recursive=True):
-            self.notifyObservers(patterns.Event(task, 
-                'task.totalCategory.subject', category.subject()))
-            
-    def notifyObserversOfCategoryColorChange(self):
-        for task in [self] + self.children(recursive=True):
-            self.notifyObservers(patterns.Event(task,
-                'task.category.color', task.categoryColor()))
-            
     # priority
     
     def priority(self, recursive=False):
@@ -458,7 +356,6 @@ class Task(base.CompositeObject):
     def setPriority(self, priority):
         if priority != self._priority:
             self._priority = priority
-            self.setLastModificationTime()
             self.notifyObserversOfPriorityChange()
         
     def notifyObserversOfPriorityChange(self):
@@ -474,18 +371,6 @@ class Task(base.CompositeObject):
         if parent and myTotalPriority == parent.priority(recursive=True):
             parent.notifyObserversOfTotalPriorityChange()
 
-    # modifications
-    
-    def lastModificationTime(self, recursive=False):
-        if recursive:
-            childModificationTimes = [child.lastModificationTime(recursive=True) for child in self.children()]
-            return max(childModificationTimes + [self._lastModificationTime])
-        else:
-            return self._lastModificationTime
-
-    def setLastModificationTime(self, time=None):
-        self._lastModificationTime = time or date.DateTime.now()
-
     # revenue
     
     def hourlyFee(self, recursive=False):
@@ -494,7 +379,6 @@ class Task(base.CompositeObject):
     def setHourlyFee(self, hourlyFee):
         if hourlyFee != self._hourlyFee:
             self._hourlyFee = hourlyFee
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.hourlyFee',
                 hourlyFee))
             if self.timeSpent() > date.TimeDelta():
@@ -517,7 +401,6 @@ class Task(base.CompositeObject):
     def setFixedFee(self, fixedFee):
         if fixedFee != self._fixedFee:
             self._fixedFee = fixedFee
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.fixedFee',
                 fixedFee))
             self.notifyObserversOfRevenueChange()
@@ -544,7 +427,6 @@ class Task(base.CompositeObject):
             reminderDateTime = None
         if reminderDateTime != self._reminder:
             self._reminder = reminderDateTime
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.reminder', 
                 self._reminder))
         
@@ -556,7 +438,6 @@ class Task(base.CompositeObject):
     def addAttachments(self, *attachments):
         if attachments:
             self._attachments.extend(attachments)
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.attachment.add', 
                 *attachments))
         
@@ -567,7 +448,6 @@ class Task(base.CompositeObject):
                 self._attachments.remove(attachment)
                 attachmentsRemoved.append(attachment)
         if attachmentsRemoved:
-            self.setLastModificationTime()
             self.notifyObservers(patterns.Event(self, 'task.attachment.remove', 
                 *attachmentsRemoved))
             

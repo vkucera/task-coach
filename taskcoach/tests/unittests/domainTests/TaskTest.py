@@ -1,6 +1,6 @@
 import test, wx, sets, patterns
 from unittests import asserts
-from domain import task, effort, date, category
+from domain import task, effort, date
 
 
 ''' I'm rearranging these unittests to be more fixture based instead of 
@@ -29,18 +29,15 @@ class TaskTestCase(test.TestCase):
             setattr(self, effortLabel, effort)
             
     def setUp(self):
-        self.category = category.Category('category')
         self.tasks = self.createTasks()
         self.task = self.tasks[0]
-        self.events = []
         for index, task in enumerate(self.tasks):
             taskLabel = 'task%d'%(index+1)
             setattr(self, taskLabel, task)
             self.labelTaskChildrenAndEffort(task, taskLabel)
             self.labelEfforts(task, taskLabel)
         for eventType in self.eventTypes:
-            patterns.Publisher().registerObserver(self.onEvent,
-                eventType=eventType)
+            self.registerObserver(eventType)
             
     def createTasks(self):
         return [task.Task(**kwargs) for kwargs in \
@@ -49,12 +46,6 @@ class TaskTestCase(test.TestCase):
     def taskCreationKeywordArguments(self):
         return [{}]
 
-    def onEvent(self, event):
-        self.events.append(event)
-        
-    def registerObserver(self, eventType):
-        patterns.Publisher().registerObserver(self.onEvent, eventType=eventType)
-    
     def addEffort(self, hours, task=None):
         task = task or self.task
         start = date.DateTime(2005,1,1)
@@ -118,12 +109,6 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testTaskHasNoDescriptionByDefault(self):
         self.assertEqual('', self.task.description())
 
-    def testFirstPartOfTaskIdEqualsTheObjectId(self):
-        self.assertEqual(str(id(self.task)), self.task.id().split(':')[0])
-
-    def testTaskIdHasStringType(self):
-        self.assertEqual(type(''), type(self.task.id()))
-
     def testTaskHasNoChildrenByDefaultSoNotAllChildrenAreCompleted(self):
         self.failIf(self.task.allChildrenCompleted())
 
@@ -157,14 +142,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testTaskHasNoHourlyFeeByDefault(self):
         for recursive in False, True:
             self.assertEqual(0, self.task.hourlyFee(recursive=recursive))
-        
-    def testTaskDoesNotBelongToAnyCategoryByDefault(self):
-        for recursive in False, True:
-            self.failIf(self.task.categories(recursive=recursive))
-            
-    def testTaskCategoryColor(self):
-        self.assertEqual(None, self.task.categoryColor())
-             
+                         
     # Setters
 
     def testSetStartDate(self):
@@ -428,22 +406,6 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.assertEqual([patterns.Event(self.task, 'task.track.start', 
             activeEffort)], self.events)
         
-    # Add category
-        
-    def testAddCategory(self):
-        self.task.addCategory(self.category)
-        self.assertEqual(set([self.category]), self.task.categories())
-        
-    def testAddCategoryDoesNotAddTaskToCategory(self):
-        self.task.addCategory(self.category)
-        self.assertEqual([], self.category.tasks())
-        
-    def testAddCategoryNotification(self):
-        self.registerObserver('task.category.add')
-        self.task.addCategory(self.category)
-        self.assertEqual([patterns.Event(self.task, 'task.category.add',
-            self.category)], self.events)
-        
     # State (FIXME: need to test other attributes too)
  
     def testTaskStateIncludesPriority(self):
@@ -577,22 +539,11 @@ class TaskWithDescriptionTest(TaskTestCase, CommonTaskTests):
         self.task.setDescription('New description')
         self.assertEqual('New description', self.task.description())
 
-
-class TaskWithId(TaskTestCase, CommonTaskTests):
-    def taskCreationKeywordArguments(self):
-        return [{'id_': 'id'}]
-        
-    def testTaskId(self):
-        self.assertEqual('id', self.task.id())
-
                 
 class TwoTasksTest(TaskTestCase):
     def taskCreationKeywordArguments(self):
         return [{}, {}]
         
-    def testTwoTasksHaveDifferentIds(self):
-        self.assertNotEqual(self.task1.id(), self.task2.id())
-
     def testTwoDefaultTasksAreNotEqual(self):
         self.assertNotEqual(self.task1, self.task2)
 
@@ -844,13 +795,6 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.setFixedFee(2000)
         self.task1_1.setFixedFee(1000)
         self.assertEqual(3000, self.task.revenue(recursive=True))
-        
-    def testAddParentToCategory(self):
-        self.registerObserver('task.totalCategory.add')
-        cat = category.Category('Parent category')
-        self.task1.addCategory(cat)
-        self.assertEqual([patterns.Event(self.task1_1, 'task.totalCategory.add',
-            cat)], self.events)
         
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
@@ -1195,192 +1139,7 @@ class TaskWithAllAttachmentsRemovedFixture(TaskWithAttachmentAddedTestCase):
     def testRemoveAllAttachmentsCausesNotification(self):
         self.assertEqual(2, len(self.events))
 
-
-class TaskWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
-    eventTypes = ['task.category.subject', 'task.totalCategory.subject',
-                  'task.category.color']
-    
-    def taskCreationKeywordArguments(self):
-        return [{'categories': [self.category]}]
-
-    def testCategories(self):
-        self.assertEqual(set([self.category]), self.task.categories())
-
-    def testAddCategory(self):
-        cat2 = category.Category('category 2')
-        self.task.addCategory(cat2)
-        self.assertEqual(set([self.category, cat2]), 
-            self.task.categories())
-
-    def testAddCategoryNotification(self):
-        self.registerObserver('task.category.add')
-        cat2 = category.Category('category 2')
-        self.task.addCategory(cat2)
-        self.assertEqual(cat2, self.events[0].value())
-
-    def testAddCategoryTwice(self):
-        self.task.addCategory(self.category)
-        self.assertEqual(set([self.category]), self.task.categories())
-
-    def testAddCategoryTwiceCausesNoNotification(self):
-        self.task.addCategory(self.category)
-        self.failIf(self.events)
-
-    def testRemoveCategory(self):
-        self.task.removeCategory(self.category)
-        self.assertEqual(set(), self.task.categories())
-
-    def testRemoveCategoryNotification(self):
-        self.registerObserver('task.category.remove')
-        self.task.removeCategory(self.category)
-        self.assertEqual(self.category, self.events[0].value())
-
-    def testRemoveCategoryTwice(self):
-        self.task.removeCategory(self.category)
-        self.task.removeCategory(self.category)
-        self.assertEqual(set(), self.task.categories())
-
-    def testRemoveCategoryTwiceNotification(self):
-        self.registerObserver('task.category.remove')
-        self.task.removeCategory(self.category)
-        self.task.removeCategory(self.category)
-        self.assertEqual(1, len(self.events))
         
-    def testCategorySubjectChanged(self):
-        self.task.addCategory(self.category)
-        self.category.addTask(self.task)
-        self.category.setSubject('New subject')
-        # Expect task.category.subject and task.totalCategory.subject
-        self.assertEqual(2, len(self.events)) 
-        
-    def testCategorySubjectChanged_NotifySubtasksToo(self):
-        self.task.addChild(task.Task())
-        self.task.addCategory(self.category)
-        self.category.addTask(self.task)
-        self.category.setSubject('New subject')
-        # Expect task.category.subject and 2x task.totalCategory.subject 
-        self.assertEqual(3, len(self.events))
-        
-    def testTaskColor(self):
-        self.category.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.task.categoryColor())
-        
-    def testTaskColorWithTupleColor(self):
-        self.category.setColor((255, 0, 0, 255))
-        self.assertEqual(wx.RED, self.task.categoryColor())
-        
-    def testSubtaskUsesParentColor(self):
-        child = task.Task()
-        self.task.addChild(child)
-        child.setParent(self.task)
-        self.category.setColor(wx.RED)
-        self.assertEqual(wx.RED, child.categoryColor())
-        
-    def testCategoryColorChanged(self):
-        self.task.addCategory(self.category)
-        self.category.addTask(self.task)
-        self.category.setColor(wx.RED)
-        self.assertEqual(1, len(self.events))
-
-    def testCategoryColorChanged_NotifySubtasksToo(self):
-        self.task.addChild(task.Task())
-        self.task.addCategory(self.category)
-        self.category.addTask(self.task)
-        self.category.setColor(wx.RED)
-        self.assertEqual(2, len(self.events))
-        
-    def testParentCategoryColorChanged(self):
-        subCategory = category.Category('Subcategory')
-        self.category.addChild(subCategory)
-        subCategory.setParent(self.category)
-        self.task.addCategory(subCategory)
-        subCategory.addTask(self.task)
-        self.category.setColor(wx.RED)
-        self.assertEqual(1, len(self.events))
-        
-    def testAddCategoryWithColor(self):
-        newCategory = category.Category('New category')
-        newCategory.setColor(wx.RED)
-        self.task.addCategory(newCategory)
-        self.assertEqual(1, len(self.events))
-        
-    def testAddCategoryWithParentWithColor(self):
-        parentCategory = category.Category('Parent')
-        parentCategory.setColor(wx.RED)
-        childCategory = category.Category('Child')
-        parentCategory.addChild(childCategory)
-        childCategory.setParent(parentCategory)
-        self.task.addCategory(childCategory)
-        self.assertEqual(1, len(self.events))
-        
-    def testRemoveCategoryWithColor(self):
-        self.category.setColor(wx.RED)
-        self.task.removeCategory(self.category)
-        self.assertEqual(1, len(self.events))
-
-
-class TaskWithTwoCategoriesFixture(TaskTestCase, CommonTaskTests):
-    def taskCreationKeywordArguments(self):
-        self.category2 = category.Category('category 2')
-        return [{'categories': [self.category, self.category2]}]
-
-    def testCategories(self):
-        self.assertEqual(set([self.category, self.category2]), 
-                         self.task.categories())
-        
-    def testTaskColorWhenCategory1HasColor(self):
-        self.category.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.task.categoryColor())
-        
-    def testTaskColorWhenCategory2HasColor(self):
-        self.category2.setColor(wx.BLUE)
-        self.assertEqual(wx.BLUE, self.task.categoryColor())
-        
-    def testTaskColorWhenBothCategoriesHaveSameColor(self):
-        for category in [self.category, self.category2]:
-            category.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.task.categoryColor())
-        
-    def testTaskColorWhenBothCategoriesHaveDifferentColors(self):
-        self.category.setColor(wx.RED)
-        self.category2.setColor(wx.BLUE)
-        expectedColor = wx.Color(127, 0, 127, 255)
-        self.assertEqual(expectedColor, self.task.categoryColor())
-        
-
-
-class ChildAndParentWithOneCategoryFixture(TaskTestCase, CommonTaskTests):
-    def taskCreationKeywordArguments(self):
-        return [{'categories': [self.category], 'children': [task.Task()]}]
-    
-    def testParentCategoryIncludedInChildRecursiveCategories(self):
-        self.assertEqual(set([self.category]), 
-            self.task1_1.categories(recursive=True))
-
-    def testParentCategoryNotIncludedInChildCategories(self):
-        self.assertEqual(set(), self.task1_1.categories(recursive=False))
-        
-    def testGrandParentCategoryIncludedInGrandChildRecursiveCategories(self):
-        grandchild = task.Task()
-        self.task1_1.addChild(grandchild)
-        self.assertEqual(set([self.category]), 
-            grandchild.categories(recursive=True))
-        
-    def testGrandParentAndParentCategoriesIncludedInGrandChildRecursiveCategories(self):
-        grandchild = task.Task()
-        self.task1_1.addChild(grandchild)
-        childCategory = category.Category('Child category')
-        self.task1_1.addCategory(childCategory)
-        self.assertEqual(set([self.category, childCategory]), 
-            grandchild.categories(recursive=True))
-        
-    def testRemoveCategoryCausesChildNotification(self):
-        self.registerObserver('task.totalCategory.remove')
-        self.task1.removeCategory(self.category)
-        self.assertEqual([patterns.Event(self.task1_1, 'task.totalCategory.remove',
-            self.category)], self.events)
-
-
 class RecursivePriorityFixture(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
         return [{'priority': 1, 'children': [task.Task(priority=2)]}]
@@ -1428,154 +1187,5 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTests):
         self.registerObserver('task.revenue')
         self.task.addEffort(self.effort)
         self.assertEqual([patterns.Event(self.task, 'task.revenue', 100)], 
-            self.events)    
-            
-# FIXME: tests below still need to be reorganized by fixture.
-        
-        
-class TaskLastModificationTimeTest(test.TestCase):
-    def setUp(self):
-        self.time = date.DateTime(2004,1,1)
-        self.task = task.Task(lastModificationTime=self.time)
-    
-    def assertEqualTimes(self, time1, time2):
-        delta = time1 - time2
-        self.failUnless(abs(delta) < date.TimeDelta(seconds=1))
-        
-    def assertLastModificationTimeIsNow(self, task, recursive=False):
-        self.assertEqualTimes(date.DateTime.now(), task.lastModificationTime(recursive))
-        
-    def testNewlyCreatedTask(self):
-        self.assertLastModificationTimeIsNow(task.Task())
-        
-    def testSetLastModificationTime(self):
-        self.task.setLastModificationTime(date.DateTime.now())
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testSetLastModificationTime_ThroughConstructor(self):
-        self.assertEqualTimes(self.time, self.task.lastModificationTime())
-        
-    def testChangeSubjectAffectsLastModificationTime(self):
-        self.task.setSubject('New subject')
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testChangeDescriptionAffectsLastModificationTime(self):
-        self.task.setDescription('New description')
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testChangeStartDateAffectsLastModificationTime(self):
-        self.task.setStartDate(date.Yesterday())
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testChangeDueDateAffectsLastModificationTime(self):
-        self.task.setDueDate(date.Tomorrow())
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testChangeCompletionDateAffectsLastModificationTime(self):
-        self.task.setCompletionDate()
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testChangeBudgetAffectsLastModificationTime(self):
-        self.task.setBudget(date.TimeDelta(hours=100))
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testChangePriorityAffectsLastModificationTime(self):
-        self.task.setPriority(42)
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testAddCategoryAffectsLastModificationTime(self):
-        self.task.addCategory(category.Category('New category'))
-        self.assertLastModificationTimeIsNow(self.task)
-
-    def testRemoveCategoryAffectsLastModificationTime(self):
-        cat = category.Category('New category')
-        self.task.addCategory(cat)
-        self.task.setLastModificationTime(date.DateTime(2004,1,1))
-        self.task.removeCategory(cat)
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testAddEffortAffectsLastModificationTime(self):
-        self.task.addEffort(effort.Effort(self.task))
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testRemoveEffortAffectsLastModificationTime(self):
-        anEffort = effort.Effort(self.task)
-        self.task.addEffort(anEffort)
-        self.task.setLastModificationTime(self.time)
-        self.task.removeEffort(anEffort)
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testChangeEffortAffectsLastModificationTime(self):
-        anEffort = effort.Effort(self.task)
-        self.task.addEffort(anEffort)
-        self.task.setLastModificationTime(self.time)
-        anEffort.setStop()
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testStopTrackingAffectsLastModificationTime(self):
-        anEffort = effort.Effort(self.task)
-        self.task.addEffort(anEffort)
-        self.task.setLastModificationTime(self.time)
-        self.task.stopTracking()
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testAddChildAffectsLastModificationTime(self):
-        self.task.addChild(task.Task())
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testRemoveChildAffectsLastModificationTime(self):
-        child = task.Task()
-        self.task.addChild(child)
-        self.task.setLastModificationTime(self.time)
-        self.task.removeChild(child)
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testChangeChildSubjectDoesNotAffectLastModificationTime(self):
-        child = task.Task()
-        self.task.addChild(child)
-        self.task.setLastModificationTime(self.time)
-        child.setSubject('New subject')
-        self.assertEqualTimes(self.time, self.task.lastModificationTime())
-        
-    def testAddChildEffortDoesNotAffectLastModificationTime(self):
-        child = task.Task()
-        self.task.addChild(child)
-        self.task.setLastModificationTime(self.time)
-        child.addEffort(effort.Effort(child))
-        self.assertEqualTimes(self.time, self.task.lastModificationTime())
-        
-    def testSetReminderAffectsLastModificationTime(self):
-        self.task.setReminder(date.DateTime.now())
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testGetLastModifictionTimeRecursively(self):
-        child = task.Task()
-        self.task.addChild(child)
-        self.task.setLastModificationTime(self.time)
-        self.assertLastModificationTimeIsNow(self.task, recursive=True)
-   
-    def testAddAttachmentAffectsLastModificationTime(self):
-        self.task.addAttachments('attachment')
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testRemoveAttachmentAffectsLastModificationTime(self):
-        self.task.addAttachments('attachment')
-        self.task.setLastModificationTime(self.time)
-        self.task.removeAttachments('attachment')
-        self.assertLastModificationTimeIsNow(self.task)
-        
-    def testRemoveAllAttachmentsAffectsLastModificationTime(self):
-        self.task.addAttachments('attachment')
-        self.task.setLastModificationTime(self.time)
-        self.task.removeAllAttachments()
-        self.assertLastModificationTimeIsNow(self.task)
-
-    def testSetHourlyFeeAffectsLastModificationTime(self):
-        self.task.setHourlyFee(100)
-        self.assertLastModificationTimeIsNow(self.task)
-
-    def testSetFixedFeeAffectsLastModificationTime(self):
-        self.task.setFixedFee(1000)
-        self.assertLastModificationTimeIsNow(self.task)
-
+            self.events)
             

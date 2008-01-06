@@ -164,9 +164,9 @@ class CtrlWithToolTip(_CtrlWithItems, tooltip.ToolTipMixin):
     def OnBeforeShowToolTip(self, x, y):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
         if self._itemIsOk(item):
-            description = self.OnGetItemDescription(self.GetIndexOfItem(item), column)
-            if description:
-                self.__tip.SetText(description)
+            tooltipText = self.OnGetItemTooltipText(self.GetIndexOfItem(item), column)
+            if tooltipText:
+                self.__tip.SetText(tooltipText)
                 return self.__tip
         return None
 

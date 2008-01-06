@@ -1,7 +1,6 @@
 import test, persistence
-import domain.task as task
-import domain.category as category
-import domain.date as date
+from domain import task, category, date
+
 
 class DummySettings(dict):        
     def set(self, section, setting, value):
@@ -64,23 +63,23 @@ class AutoSaverTestCase(test.TestCase):
         self.failIf(self.taskFile.saveCalled)
         
     def testFileChanged_ButNoFilenameAndAutoSaveOff(self):
-        self.taskFile.append(task.Task())
+        self.taskFile.tasks().append(task.Task())
         self.failIf(self.taskFile.saveCalled)
         
     def testFileChanged_ButAutoSaveOff(self):
         self.taskFile.setFilename('whatever.tsk')
-        self.taskFile.append(task.Task())
+        self.taskFile.tasks().append(task.Task())
         self.failIf(self.taskFile.saveCalled)
                 
     def testFileChanged_ButNoFilename(self):
         self.settings.set('file', 'autosave', 'True')
-        self.taskFile.append(task.Task())
+        self.taskFile.tasks().append(task.Task())
         self.failIf(self.taskFile.saveCalled)
         
     def testFileChanged(self):
         self.settings.set('file', 'autosave', 'True')
         self.taskFile.setFilename('whatever.tsk')
-        self.taskFile.append(task.Task())
+        self.taskFile.tasks().append(task.Task())
         self.assertEqual(1, self.taskFile.saveCalled)
         
     def testSaveAsDoesNotTriggerAutoSave(self):
@@ -92,7 +91,7 @@ class AutoSaverTestCase(test.TestCase):
     def testCloseDoesNotTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')
         self.taskFile.setFilename('whatever.tsk')
-        self.taskFile.append(task.Task())
+        self.taskFile.tasks().append(task.Task())
         self.taskFile.close()
         self.assertEqual(1, self.taskFile.saveCalled)
         
@@ -148,14 +147,14 @@ class AutoSaverBackupTestCase(test.TestCase):
     def testCreateBackupOnSave_ButBackupOff(self):
         self.settings.set('file', 'backup', 'False')
         self.taskFile.setFilename('whatever.tsk')
-        self.taskFile.append(task.Task())
+        self.taskFile.tasks().append(task.Task())
         self.taskFile.save()
         self.failIf(self.autoSaver.copyCalled)
         
     def testCreateBackupOnSave(self):
         self.settings.set('file', 'backup', 'True')
         self.taskFile.setFilename('whatever.tsk')
-        self.taskFile.append(task.Task())
+        self.taskFile.tasks().append(task.Task())
         self.taskFile.save()
         self.failUnless(self.autoSaver.copyCalled)
                 

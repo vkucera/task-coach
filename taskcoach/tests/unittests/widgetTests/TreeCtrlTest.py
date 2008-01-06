@@ -22,7 +22,7 @@ class TreeCtrlTestCase(test.wxTestCase):
     def getItemText(self, index):
         return self.getItem(index)[0]
 
-    def getItemDescription(self, index):
+    def getItemTooltipText(self, index):
         return None
 
     def getItemImage(self, index, *args, **kwargs):
@@ -260,7 +260,7 @@ class TreeCtrlTest(TreeCtrlTestCase, CommonTests):
     def setUp(self):
         super(TreeCtrlTest, self).setUp()
         self.treeCtrl = widgets.TreeCtrl(self.frame, self.getItemText,
-            self.getItemDescription, self.getItemImage, self.getItemAttr,
+            self.getItemTooltipText, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.onSelect, 
             dummy.DummyUICommand(), dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
@@ -274,7 +274,7 @@ class CustomTreeCtrlTest(TreeCtrlTestCase, CommonTests):
     def setUp(self):
         super(CustomTreeCtrlTest, self).setUp()
         self.treeCtrl = widgets.CustomTreeCtrl(self.frame, self.getItemText,
-            self.getItemDescription, self.getItemImage, self.getItemAttr,
+            self.getItemTooltipText, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.onSelect, 
             dummy.DummyUICommand(), dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
@@ -293,7 +293,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
     def setUp(self):
         super(CheckTreeCtrlTest, self).setUp()
         self.treeCtrl = widgets.CheckTreeCtrl(self.frame, self.getItemText,
-            self.getItemDescription, self.getItemImage, self.getItemAttr,
+            self.getItemTooltipText, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.getIsItemChecked, 
             self.onSelect, self.onCheck, 
             dummy.DummyUICommand(), dummy.DummyUICommand())

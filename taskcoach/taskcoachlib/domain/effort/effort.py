@@ -77,7 +77,6 @@ class Effort(EffortBase):
             return
         self._start = startDatetime
         self.task().notifyObserversOfTimeSpentChange(self)
-        self.task().setLastModificationTime()
         patterns.Publisher().notifyObservers(patterns.Event(self,
             'effort.start', self._start))
         patterns.Publisher().notifyObservers(patterns.Event(self,
@@ -93,7 +92,6 @@ class Effort(EffortBase):
             self._stop = newStop
             self.notifyStopOrStartTracking(previousStop, newStop)
             self.task().notifyObserversOfTimeSpentChange(self)
-            self.task().setLastModificationTime()
             patterns.Publisher().notifyObservers(patterns.Event(self, 
                 'effort.stop', newStop))
             patterns.Publisher().notifyObservers(patterns.Event(self,

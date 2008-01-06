@@ -2,12 +2,143 @@ import patterns
 from domain import base
 
 
+class CategorizableCompositeObject(base.CompositeObject):
+    ''' CategorizableCompositeObjects are composite objects that can be
+        categorized by adding them to one or more categories. Examples of
+        categorizable composite objects are tasks and notes. '''
+        
+    def __init__(self, *args, **kwargs):
+        self._categories = set(kwargs.pop('categories', None) or [])
+        super(CategorizableCompositeObject, self).__init__(*args, **kwargs)
+        
+    def __getstate__(self):
+        state = super(CategorizableCompositeObject, self).__getstate__()
+        state.update(dict(categories=self.categories()))
+        return state
+    
+    def __setstate(self, state):
+        super(CategorizableCompositeObject, self).__setstate__(state)
+        self.setCategories(state['categories'])
+        
+    def categories(self, recursive=False):
+        result = set(self._categories)
+        if recursive and self.parent() is not None:
+            result |= self.parent().categories(recursive=True)
+        return result
+    
+    @classmethod
+    def categoryAddedEventType(class_):
+        return 'categorizable.category.add'
+
+    def addCategory(self, category):
+        if category not in self._categories:
+            self._categories.add(category)
+            self.notifyObservers(patterns.Event(self, 
+                self.categoryAddedEventType(), category))
+            self.notifyChildObserversOfCategoryChange(category, 'add')
+            if category.color():
+                self.notifyObserversOfCategoryColorChange()
+                
+    @classmethod
+    def categoryRemovedEventType(class_):
+        return 'categorizable.category.remove'
+    
+    def removeCategory(self, category):
+        if category in self._categories:
+            self._categories.discard(category)
+            self.notifyObservers(patterns.Event(self, 
+                self.categoryRemovedEventType(), category))
+            self.notifyChildObserversOfCategoryChange(category, 'remove')
+            if category.color():
+                self.notifyObserversOfCategoryColorChange()
+                
+    def setCategories(self, categories):
+        oldCategories = set(self._categories)
+        for category in oldCategories:
+            if category not in categories:
+                self.removeCategory(category)
+        for category in categories:
+            self.addCategory(category)
+        
+    def categoryColor(self):
+        ''' If a categorizable object belongs to a category that has a color 
+            associated with it, the categorizable object is colored accordingly. 
+            When a categorizable object belongs to multiple categories, the 
+            color is mixed. If a categorizable composite object has no color of 
+            its own, it uses its parent's color. '''
+        colorSum, colorCount = [0, 0, 0, 0], 0
+        for category in self.categories():
+            categoryColor = category.color()
+            if categoryColor:
+                try:
+                    categoryColor = categoryColor.Get(includeAlpha=True)
+                except AttributeError:
+                    pass # categoryColor is already a tuple
+                for colorIndex in range(4): 
+                    colorSum[colorIndex] += categoryColor[colorIndex]
+                colorCount += 1
+        if colorCount:
+            return (colorSum[0]/colorCount, colorSum[1]/colorCount,
+                    colorSum[2]/colorCount, colorSum[3]/colorCount)
+        elif self.parent():
+            return self.parent().categoryColor()
+        else:
+            return None
+
+    @classmethod
+    def totalCategoryAddedEventType(class_):
+        return 'categorizable.totalCategory.add'
+
+    @classmethod
+    def totalCategoryRemovedEventType(class_):
+        return 'categorizable.totalCategory.remove'
+            
+    def notifyChildObserversOfCategoryChange(self, category, change):
+        assert change in ('add', 'remove')
+        if change == 'add':
+            eventType = self.totalCategoryAddedEventType()
+        else:
+            eventType = self.totalCategoryRemovedEventType()
+        for child in self.children(recursive=True):
+            self.notifyObservers(patterns.Event(child, eventType, category))
+   
+    @classmethod
+    def categorySubjectChangedEventType(class_):
+        return 'categorizable.category.subject'
+             
+    def notifyObserversOfCategorySubjectChange(self, category):
+        self.notifyObservers(patterns.Event(self, 
+            self.categorySubjectChangedEventType(), category.subject()))
+        self.notifyObserversOfTotalCategorySubjectChange(category)
+    
+    @classmethod
+    def totalCategorySubjectChangedEventType(class_):
+        return 'categorizable.totalCategory.subject'
+    
+    def notifyObserversOfTotalCategorySubjectChange(self, category):
+        for categorizable in [self] + self.children(recursive=True):
+            self.notifyObservers(patterns.Event(categorizable, 
+                self.totalCategorySubjectChangedEventType(), 
+                category.subject()))
+            
+    @classmethod
+    def categoryColorChangedEventType(class_):
+        return 'categorizable.category.color'
+            
+    def notifyObserversOfCategoryColorChange(self):
+        for categorizable in [self] + self.children(recursive=True):
+            self.notifyObservers(patterns.Event(categorizable,
+                self.categoryColorChangedEventType(), 
+                categorizable.categoryColor()))
+
+            
 class Category(base.CompositeObject):
-    def __init__(self, subject, tasks=None, children=None, filtered=False, 
-                 parent=None, description='', color=None):
+    def __init__(self, subject, categorizables=None, children=None, filtered=False, 
+                 parent=None, description='', color=None, *args, **kwargs):
         super(Category, self).__init__(subject=subject, children=children or [], 
-                                       parent=parent, description=description)
-        self.__tasks = tasks or []
+                                       parent=parent, description=description,
+                                       *args, **kwargs)
+        self.__categorizables = categorizables or []
         self.__filtered = filtered
         self.__color = color
             
@@ -16,12 +147,12 @@ class Category(base.CompositeObject):
         return 'category.filter'
     
     @classmethod
-    def taskAddedEventType(class_):
-        return 'category.task.added'
+    def categorizableAddedEventType(class_):
+        return 'category.categorizable.added'
     
     @classmethod
-    def taskRemovedEventType(class_):
-        return 'category.task.removed'
+    def categorizableRemovedEventType(class_):
+        return 'category.categorizable.removed'
     
     @classmethod
     def colorChangedEventType(class_):
@@ -29,47 +160,47 @@ class Category(base.CompositeObject):
             
     def __getstate__(self):
         state = super(Category, self).__getstate__()
-        state.update(dict(tasks=self.__tasks[:], 
-                          filtered=self.__filtered), color=self.__color)
+        state.update(dict(categorizables=self.__categorizables[:], 
+                          filtered=self.__filtered, color=self.__color))
         return state
         
     def __setstate__(self, state):
         super(Category, self).__setstate__(state)
-        self.__tasks = state['tasks']
+        self.__categorizables = state['categorizables']
         self.__filtered = state['filtered']
         self.__color = state['color']
         
     def copy(self):
-        return self.__class__(self.subject(), self.tasks(), 
+        return self.__class__(self.subject(), self.categorizables(), 
                               [child.copy() for child in self.children()],
                               self.isFiltered(), self.parent(), 
                               self.description(), self.color())
         
     def setSubject(self, *args, **kwargs):
         if super(Category, self).setSubject(*args, **kwargs):
-            for task in self.tasks(recursive=True):
-                task.notifyObserversOfCategorySubjectChange(self)
+            for categorizable in self.categorizables(recursive=True):
+                categorizable.notifyObserversOfCategorySubjectChange(self)
     
-    def tasks(self, recursive=False):
+    def categorizables(self, recursive=False):
         result = []
         if recursive:
             for child in self.children():
-                result.extend(child.tasks(recursive))
-        result.extend(self.__tasks)
+                result.extend(child.categorizables(recursive))
+        result.extend(self.__categorizables)
         return result
     
-    def addTask(self, task):
-        if task not in self.__tasks: # FIXME: use set
-            self.__tasks.append(task)
+    def addCategorizable(self, categorizable):
+        if categorizable not in self.__categorizables: # FIXME: use set
+            self.__categorizables.append(categorizable)
             self.notifyObservers(patterns.Event(self, 
-                self.taskAddedEventType(), task))
+                self.categorizableAddedEventType(), categorizable))
             
-    def removeTask(self, task):
-        if task in self.__tasks:
-            self.__tasks.remove(task)
+    def removeCategorizable(self, categorizable):
+        if categorizable in self.__categorizables:
+            self.__categorizables.remove(categorizable)
             self.notifyObservers(patterns.Event(self, 
-                self.taskRemovedEventType(), task))
-        
+                self.categorizableRemovedEventType(), categorizable))
+            
     def isFiltered(self):
         return self.__filtered
     
@@ -79,14 +210,14 @@ class Category(base.CompositeObject):
             self.notifyObservers(patterns.Event(self, 
                 self.filterChangedEventType(), filtered))
         
-    def contains(self, task, treeMode=False):
-        containedTasks = self.tasks(recursive=True)
+    def contains(self, categorizable, treeMode=False):
+        containedCategorizables = self.categorizables(recursive=True)
         if treeMode:
-            tasksToInvestigate = task.family()
+            categorizablesToInvestigate = categorizable.family()
         else:
-            tasksToInvestigate = [task] + task.ancestors()
-        for task in tasksToInvestigate:
-            if task in containedTasks:
+            categorizablesToInvestigate = [categorizable] + categorizable.ancestors()
+        for categorizableToInvestigate in categorizablesToInvestigate:
+            if categorizableToInvestigate in containedCategorizables:
                 return True
         return False
     
@@ -100,8 +231,8 @@ class Category(base.CompositeObject):
         if color != self.__color:
             self.__color = color
             self.notifyObserversOfColorChange(color)
-            for task in self.tasks(recursive=True):
-                task.notifyObserversOfCategoryColorChange()
+            for categorizable in self.categorizables(recursive=True):
+                categorizable.notifyObserversOfCategoryColorChange()
             
     def notifyObserversOfColorChange(self, color):
         self.notifyObservers(patterns.Event(self, 

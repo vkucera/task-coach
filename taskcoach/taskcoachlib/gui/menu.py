@@ -252,7 +252,8 @@ class ViewTreeOptionsMenu(Menu):
 
 class FilterMenu(DynamicMenu):
     def enabled(self):
-        return self._window.viewer.isFilterable()
+        return self._window.viewer.isFilterable() and \
+            bool(self._window.viewer.getFilterUICommands())
     
     def getUICommands(self):
         return self._window.viewer.getFilterUICommands()
@@ -285,7 +286,8 @@ class TaskMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(TaskMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['newtask', 'newsubtask', None, 
-            'edittask', 'toggletaskcompletion', None, 'deletetask', None, 
+            'edittask', 'toggletaskcompletion', 'incpriority', 'decpriority',
+            'maxpriority', 'minpriority', None, 'deletetask', None, 
             'mailtask', 'addattachmenttotask', 'openalltaskattachments'])
             
             
@@ -328,9 +330,10 @@ class TaskPopupMenu(Menu):
         super(TaskPopupMenu, self).__init__(mainwindow)
         commandsToAppend = ['cut', 'copy', 'paste',
             'pasteintotask', None, 'newtask', 'newsubtask', None, 'edittask', 
-            'toggletaskcompletion', None, 'deletetask', 
-            None, 'mailtask', 'addattachmenttotask', 'openalltaskattachments', 
-            None, 'neweffort', 'starteffort', 'stopeffort']
+            'toggletaskcompletion', 'incpriority', 'decpriority', 'maxpriority', 
+            'minpriority', None, 'deletetask', None, 'mailtask', 
+            'addattachmenttotask', 'openalltaskattachments', None, 'neweffort', 
+            'starteffort', 'stopeffort']
         if treeViewer:
             commandsToAppend.extend([None, 'viewexpandselected', 
                 'viewcollapseselected'])
