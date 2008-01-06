@@ -1,7 +1,7 @@
-import wx, patterns
+import wx, patterns, command
 from i18n import _
 from domain import date
-from gui.dialog import reminder
+from gui.dialog import reminder, editor
 
 class ReminderController(object):
     def __init__(self, taskList, categories, settings, uiCommands, *args, **kwargs):
@@ -41,26 +41,30 @@ class ReminderController(object):
                 self.__removeReminder(task)
 
     def showReminderMessage(self, task):
-        mainWindow = wx.GetApp().GetTopWindow()
-        reminderDialog = reminder.ReminderDialog(task, 
-            self.categories, self.uiCommands, self.settings, 
-            mainWindow)
+        self.mainWindow = wx.GetApp().GetTopWindow()
+        reminderDialog = reminder.ReminderDialog(task, self.mainWindow)
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)
-        if not mainWindow.IsShown():
-            mainWindow.Show()
-        if not mainWindow.IsActive():
-            mainWindow.RequestUserAttention()
+        if not self.mainWindow.IsShown():
+            self.mainWindow.Show()
+        if not self.mainWindow.IsActive():
+            self.mainWindow.RequestUserAttention()
         reminderDialog.Show()
         
     def onCloseReminderDialog(self, event):
         dialog = event.EventObject
+        task = dialog.task
         snoozeOptions = dialog.snoozeOptions
         snoozeTimeDelta = snoozeOptions.GetClientData(snoozeOptions.Selection)
         if snoozeTimeDelta:
             newReminder = date.DateTime.now() + snoozeTimeDelta
         else:
             newReminder = None
-        dialog.task.setReminder(newReminder)
+        task.setReminder(newReminder) # FIXME: not undoable, need to use command object
+        if dialog.openTaskAfterClose:
+            editTask = editor.TaskEditor(self.mainWindow,
+                command.EditTaskCommand([task], [task]), [task], 
+                self.uiCommands, self.settings, self.categories, bitmap='edit')
+            editTask.Show()
         dialog.Destroy()
         
     def __registerRemindersForTasks(self, tasks):

@@ -1,8 +1,9 @@
-import wx, meta, editor, command
+import wx, meta
 from widgets import sized_controls
 from i18n import _
 from domain import date
 from gui import render
+
 
 class ReminderDialog(sized_controls.SizedDialog):
     snoozeChoices = [_("Don't snooze"), _('Five minutes'), _('Ten minutes'),
@@ -11,13 +12,11 @@ class ReminderDialog(sized_controls.SizedDialog):
     snoozeTimes = [date.TimeDelta(minutes=minutes) for minutes in \
                    (0, 5, 10, 15, 30, 60, 120, 24*60)]
     
-    def __init__(self, task, categories, uiCommands, settings, *args, **kwargs):
+    def __init__(self, task, *args, **kwargs):
         kwargs['title'] = kwargs.get('title', meta.name + ' ' + _('Reminder'))
         super(ReminderDialog, self).__init__(*args, **kwargs)
         self.task = task
-        self.categories = categories
-        self.uiCommands = uiCommands
-        self.settings = settings
+        self.openTaskAfterClose = False
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
         wx.StaticText(pane, label=_('Task') + ':')
@@ -35,19 +34,7 @@ class ReminderDialog(sized_controls.SizedDialog):
         self.Fit()
 
     def onOpenTask(self, event):
-        self.openTask.Enable(False)
-        editTask = editor.TaskEditor(self.Parent,
-            command.EditTaskCommand([self.task], [self.task]),
-            [self.task], self.uiCommands, self.settings, self.categories,
-            bitmap='edit')
-        editTask.Show()
-        editTask.Bind(wx.EVT_CLOSE, self.onCloseTask)
+        self.openTaskAfterClose = True
+        self.Close()
 
-    def onCloseTask(self, event):
-        # This dialog may have been closed when the user closes the task editor
-        try:
-            self.openTask.Enable()
-        except wx.PyDeadObjectError: 
-            pass
-        event.Skip()
-        
+    
