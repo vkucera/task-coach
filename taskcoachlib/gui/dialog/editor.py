@@ -1,15 +1,12 @@
+import wx, datetime, os.path
 import widgets
 from gui import render, viewercontainer, viewer
-import widgets.draganddrop as draganddrop
-import domain.attachment as attachment
-import wx, datetime
-import wx.lib.masked as masked
+from widgets import draganddrop
+from wx.lib import masked, combotreebox
 import wx.lib.customtreectrl as customtree
-import wx.lib.combotreebox as combotreebox
 from i18n import _
-from domain import task, category, date, note
+from domain import task, category, date, note, attachment
 from thirdparty import desktop
-import os.path
 
 
 class DateEntry(widgets.PanelWithBoxSizer):
@@ -163,19 +160,35 @@ class DatesPage(TaskEditorPage):
         self._reminderDateTimeEntry = widgets.DateTimeCtrl(reminderBox, 
             task.reminder())
         reminderBox.add(self._reminderDateTimeEntry)
-        for box in datesBox, reminderBox:
+        
+        recurrenceBox = widgets.BoxWithFlexGridSizer(self, 
+            label=_('Recurrence'), cols=2)
+        recurrenceBox.add(_('Recurrence'))
+        self._recurrenceEntry = wx.Choice(recurrenceBox, 
+            choices=[_('None'), _('Daily'), _('Weekly')])
+        self.setRecurrence(task.recurrence())
+        recurrenceBox.add(self._recurrenceEntry)
+        
+        for box in datesBox, reminderBox, recurrenceBox:
             box.fit()
-            self.add(box, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
+            self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
         self.fit()
 
-    def ok(self):                   
+    def ok(self):
+        recurrenceDict = {0: None, 1: 'daily', 2: 'weekly'}
+        recurrence = recurrenceDict[self._recurrenceEntry.Selection]
+        self._task.setRecurrence(recurrence)
         self._task.setStartDate(self._startDateEntry.get())
         self._task.setDueDate(self._dueDateEntry.get())
         self._task.setCompletionDate(self._completionDateEntry.get())
         self._task.setReminder(self._reminderDateTimeEntry.GetValue())
-
-    def setReminder(self, newReminder):
-        self._reminderDateTimeEntry.SetValue(newReminder)
+        
+    def setReminder(self, reminder):
+        self._reminderDateTimeEntry.SetValue(reminder)
+        
+    def setRecurrence(self, recurrence):
+        index = {None: 0, 'daily': 1, 'weekly': 2}[recurrence]
+        self._recurrenceEntry.Selection = index
         
 
 class BudgetPage(TaskEditorPage):
@@ -212,7 +225,7 @@ class BudgetPage(TaskEditorPage):
             revenueBox.add(entry, flag=wx.ALIGN_RIGHT)
         for box in budgetBox, revenueBox:
             box.fit()
-            self.add(box, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
+            self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
         self.fit()
         
     def ok(self):

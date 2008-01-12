@@ -68,7 +68,20 @@ class CommonTests(object):
         self.showColumn('priority', False)
         self.assertEqual(3, self.viewer.GetColumnCount())
         
+    def testTurnOnRecurrenceColumn(self):
+        taskWithRecurrence = task.Task(recurrence='weekly')
+        self.taskList.append(taskWithRecurrence)
+        self.showColumn('recurrence')
+        self.assertEqual(_('Recurrence'), self.viewer.GetColumn(3).GetText())
 
+    def testTurnOffRecurrenceColumn(self):
+        self.showColumn('recurrence')
+        taskWithRecurrence = task.Task(recurrence='weekly')
+        self.taskList.append(taskWithRecurrence)
+        self.showColumn('recurrence', False)
+        self.assertEqual(3, self.viewer.GetColumnCount())
+
+        
 class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests, 
         test.wxTestCase):
     def setUp(self):

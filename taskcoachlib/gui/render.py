@@ -32,7 +32,11 @@ def timeSpent(timeSpent):
     else:
         sign = ''
     return sign + '%d:%02d:%02d'%timeSpent.hoursMinutesSeconds()
-    
+
+def recurrence(recurrenceValue):
+    return {None: '', 'weekly': _('Weekly'), 
+            'daily': _('Daily')}[recurrenceValue]
+
 def budget(aBudget):
     ''' render budget (of type date.TimeDelta) as
     "<hours>:<minutes>:<seconds>". '''

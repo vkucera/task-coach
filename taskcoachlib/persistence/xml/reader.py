@@ -106,6 +106,7 @@ class XMLReader:
         startDate = date.parseDate(taskNode.getAttribute('startdate'))
         dueDate = date.parseDate(taskNode.getAttribute('duedate'))
         completionDate = date.parseDate(taskNode.getAttribute('completiondate'))
+        recurrence = taskNode.getAttribute('recurrence')
         budget = date.parseTimeDelta(taskNode.getAttribute('budget'))
         priority = self.__parseInteger(taskNode.getAttribute('priority'))
         hourlyFee = self.__parseFloat(taskNode.getAttribute('hourlyFee'))
@@ -124,7 +125,7 @@ class XMLReader:
             dueDate=dueDate, completionDate=completionDate, budget=budget, 
             priority=priority, hourlyFee=hourlyFee, fixedFee=fixedFee, 
             reminder=reminder, categories=categories, attachments=attachments, 
-            children=children, efforts=efforts,
+            children=children, efforts=efforts, recurrence=recurrence,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 shouldMarkCompletedWhenAllChildrenCompleted)
     

@@ -1,6 +1,7 @@
 import wx, test, os
 from domain import task, date, attachment, category
 
+
 class CommonTests(object):
     ''' Common test cases for all task viewers. This class is mixed in with
         TaskListViewerTest, TaskTreeListViewerTest, etc. '''

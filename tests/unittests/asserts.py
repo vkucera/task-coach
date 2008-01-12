@@ -51,6 +51,7 @@ class TaskAsserts(object):
         self.assertEqual(orig.subject(), copy.subject())
         self.assertEqual(orig.dueDate(), copy.dueDate())
         self.assertEqual(orig.startDate(), copy.startDate())
+        self.assertEqual(orig.recurrence(), copy.recurrence())
         self.assertEqual(orig.budget(), copy.budget())
         if orig.parent():
             self.failIf(copy in orig.parent().children()) 

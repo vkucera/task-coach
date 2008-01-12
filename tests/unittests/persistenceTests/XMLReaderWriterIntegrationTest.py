@@ -42,7 +42,7 @@ class IntegrationTest(IntegrationTestCase):
         self.task = task.Task('Subject', self.description, 
             startdate=date.Yesterday(), duedate=date.Tomorrow(), 
             completiondate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
-            priority=4, hourlyFee=100.5, fixedFee=1000, 
+            priority=4, hourlyFee=100.5, fixedFee=1000, recurrence='weekly',
             reminder=date.DateTime(2004,1,1),
             shouldMarkCompletedWhenAllChildrenCompleted=True)
         self.child = task.Task()
@@ -147,7 +147,10 @@ class IntegrationTest(IntegrationTestCase):
  
     def testAttachment(self):
         self.assertAttributeWrittenAndRead(self.task, 'attachments')
-        
+
+    def testRecurrence(self):
+        self.assertAttributeWrittenAndRead(self.task, 'recurrence')
+                
     def testNote(self):
         self.assertEqual(len(self.notes), len(self.notesWrittenAndRead))
 
@@ -174,3 +177,4 @@ class IntegrationTest(IntegrationTestCase):
     def testNoteWithCategory(self):
         self.failUnless(self.notesWrittenAndRead.rootItems()[0] in \
                         self.categoriesWrittenAndRead[0].categorizables())
+        
