@@ -598,3 +598,25 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
             <note id="noteId"/>
         </tasks>''')
         self.assertEqual('noteId', notes[0].id())
+        
+    def testNoRecurrence(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task/>
+        </tasks>''')
+        self.failIf(tasks[0].recurrence())
+
+    def testWeeklyRecurrence(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrence="weekly"/>
+        </tasks>''')
+        self.assertEqual('weekly', tasks[0].recurrence())
+        
+    def testDailyRecurrence(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrence="daily"/>
+        </tasks>''')
+        self.assertEqual('daily', tasks[0].recurrence())
+        

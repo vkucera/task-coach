@@ -283,3 +283,10 @@ class XMLWriterTest(test.TestCase):
     def testCategoryColor(self):
         self.categoryContainer.append(category.Category('test', color=wx.RED))
         self.expectInXML('color="(255, 0, 0, 255)"')
+        
+    def testNoRecurencce(self):
+        self.expectNotInXML('recurrence=')
+        
+    def testRecurrence(self):
+        self.task.setRecurrence('weekly')
+        self.expectInXML('recurrence="weekly"')

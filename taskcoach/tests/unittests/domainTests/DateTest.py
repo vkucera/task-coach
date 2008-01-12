@@ -1,5 +1,5 @@
 import test, time, datetime, pickle
-import domain.date as date
+from domain import date
 
 class DateTest(test.TestCase):
     def testCreateNormalDate(self):
@@ -33,6 +33,9 @@ class DateTest(test.TestCase):
 
     def testInfiniteDateIsSingleton(self):
         self.failUnless(date.Date() is date.Date())
+        
+    def testAddTimeDeltaToInfiniteDate(self):
+        self.assertEqual(date.Date(), date.Date() + date.TimeDelta(days=2))
 
     def testWeeknumber(self):
         adate = date.Date(2002, 1, 5)

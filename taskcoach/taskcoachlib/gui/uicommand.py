@@ -1628,6 +1628,7 @@ class ViewColumnUICommandsMixin(object):
              (_('&Due date'), _('Show/hide due date column'), 'dueDate'),
              (_('D&ays left'), _('Show/hide days left column'), 'timeLeft'),
              (_('Co&mpletion date'), _('Show/hide completion date column'), 'completionDate'),
+             (_('&Recurrence'), _('Show/hide recurrence column'), 'recurrence'),
              (_('&Budget'), _('Show/hide budget column'), 'budget'),
              (_('Total b&udget'), _('Show/hide total budget column (total budget includes budget for subtasks)'), 'totalBudget'),
              (_('&Time spent'), _('Show/hide time spent column'), 'timeSpent'),
@@ -1646,7 +1647,7 @@ class ViewColumnUICommandsMixin(object):
 
         self['viewalldatecolumns'] = ViewColumns(menuText=_('All date columns'), 
               helpText=_('Show/hide all date-related columns'), 
-              setting=['startDate', 'dueDate', 'timeLeft', 'completionDate'], 
+              setting=['startDate', 'dueDate', 'timeLeft', 'completionDate', 'recurrence'], 
               viewer=viewer)
         self['viewallbudgetcolumns'] = ViewColumns(menuText=_('All budget columns'),
               helpText=_('Show/hide all budget-related columns'),
@@ -1759,6 +1760,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
              (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
              (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
              (_('D&ays left'), _('Sort tasks by number of days left'), 'timeLeft'),
+             (_('&Recurrence'), _('Sort tasks by recurrence'), 'recurrence'), 
              (_('&Budget'), _('Sort tasks by budget'), 'budget'),
              (_('Total b&udget'), _('Sort tasks by total budget'), 'totalBudget'),
              (_('&Time spent'), _('Sort tasks by time spent'), 'timeSpent'),

@@ -252,7 +252,7 @@ class NewSubTaskCommandTest(TaskCommandTestCase):
 
 
 class EditTaskCommandTest(TaskCommandTestCase):
-    def edit(self, tasks=None):
+    def edit(self, tasks=None, edits=None):
         tasks = tasks or []
         editcommand = command.EditTaskCommand(self.taskList, tasks)
         for task in tasks:
@@ -269,6 +269,8 @@ class EditTaskCommandTest(TaskCommandTestCase):
                 task.removeCategory(self.category)
             else:
                 task.addCategory(self.category)
+            for edit in edits or []:
+                edit()
         editcommand.do()
 
     def testEditTask(self):
@@ -282,7 +284,7 @@ class EditTaskCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.failUnless(self.task1.completed()),
             lambda: self.failIf(self.task1.completed()))
-
+        
     def testEditTaskWithChildren_MarkCompleted(self):
         self.newSubTask([self.task1])
         self.edit([self.task1])
@@ -343,6 +345,19 @@ class EditTaskCommandTest(TaskCommandTestCase):
             lambda: self.failIf(self.category.categorizables()),
             lambda: self.assertEqual([self.task1], self.category.categorizables()))
 
+    def testAddRecurrence(self):
+        self.edit([self.task1], edits=[lambda: self.task1.setRecurrence('weekly')])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual('weekly', self.task1.recurrence()),
+            lambda: self.failIf(self.task1.recurrence()))
+
+    def testResetRecurrence(self):
+        self.task1.setRecurrence('weekly')
+        self.edit([self.task1], edits=[lambda: self.task1.setRecurrence()])
+        self.assertDoUndoRedo(
+            lambda: self.failIf(self.task1.recurrence()),
+            lambda: self.assertEqual('weekly', self.task1.recurrence()))
+        
 
 class MarkCompletedCommandTest(CommandWithChildrenTestCase):
     def testMarkCompleted(self):
@@ -388,7 +403,30 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
         self.parent.addEffort(effort.Effort(self.parent))
         self.markCompleted([self.child])
         self.assertDoUndoRedo(lambda: self.failUnless(self.parent.isBeingTracked()))
+        
+    def testMarkRecurringTaskCompleted_CompletionDateIsNotSet(self):
+        self.task1.setRecurrence('weekly')
+        self.markCompleted([self.task1])
+        self.assertDoUndoRedo(lambda: self.failIf(self.task1.completed()))
 
+    def testMarkRecurringTaskCompleted_StartDateIsIncreased(self):
+        self.task1.setRecurrence('weekly')
+        startDate = self.task1.startDate()
+        newStartDate = startDate + date.TimeDelta(days=7)
+        self.markCompleted([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newStartDate, self.task1.startDate()),
+            lambda: self.assertEqual(startDate, self.task1.startDate()))
+
+    def testMarkRecurringTaskCompleted_DueDateIsIncreased(self):
+        self.task1.setRecurrence('weekly')
+        dueDate = date.Tomorrow()
+        self.task1.setDueDate(dueDate)
+        newDueDate = dueDate + date.TimeDelta(days=7)
+        self.markCompleted([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(newDueDate, self.task1.dueDate()),
+            lambda: self.assertEqual(dueDate, self.task1.dueDate()))
         
 class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
     def testCannotDropOnParent(self):

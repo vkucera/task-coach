@@ -8,7 +8,8 @@ class Task(category.CategorizableCompositeObject):
             priority=0, id=None, hourlyFee=0,
             fixedFee=0, reminder=None, attachments=None, categories=None,
             efforts=None,
-            shouldMarkCompletedWhenAllChildrenCompleted=None, *args, **kwargs):
+            shouldMarkCompletedWhenAllChildrenCompleted=None, 
+            recurrence=None, *args, **kwargs):
         kwargs['id'] = id
         kwargs['subject'] = subject
         kwargs['description'] = description
@@ -26,6 +27,7 @@ class Task(category.CategorizableCompositeObject):
         self._fixedFee       = fixedFee
         self._reminder       = reminder
         self._attachments    = attachments or []
+        self._recurrence     = recurrence
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
             
@@ -34,6 +36,7 @@ class Task(category.CategorizableCompositeObject):
         self.setStartDate(state['startDate'])
         self.setDueDate(state['dueDate'])
         self.setCompletionDate(state['completionDate'])
+        self.setRecurrence(state['recurrence'])
         self.replaceChildren(state['children'])
         self.replaceParent(state['parent'])
         self.setEfforts(state['efforts'])
@@ -54,7 +57,7 @@ class Task(category.CategorizableCompositeObject):
             efforts=self._efforts, budget=self._budget,
             categories=set(self._categories), priority=self._priority, 
             attachments=self._attachments[:], hourlyFee=self._hourlyFee, 
-            fixedFee=self._fixedFee, 
+            fixedFee=self._fixedFee, recurrence=self._recurrence,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -75,7 +78,7 @@ class Task(category.CategorizableCompositeObject):
             budget=self.budget(), priority=self.priority(), 
             categories=set(self.categories()), fixedFee=self.fixedFee(),
             hourlyFee=self.hourlyFee(), attachments=self.attachments()[:],
-            reminder=self.reminder(), 
+            reminder=self.reminder(), recurrence=self.recurrence(),
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self.shouldMarkCompletedWhenAllChildrenCompleted,
             children=[child.copy() for child in self.children()])
@@ -167,11 +170,15 @@ class Task(category.CategorizableCompositeObject):
     def setCompletionDate(self, completionDate=None):
         completionDate = completionDate or date.Today()
         if completionDate != self._completionDate:
-            self._completionDate = completionDate
-            self.notifyObservers(patterns.Event(self, 'task.completionDate', 
-                completionDate))
-            if completionDate != date.Date():
-                self.setReminder(None)
+            if self.recurrence():
+                self.setStartDate(self.nextRecurrence(self.startDate()))
+                self.setDueDate(self.nextRecurrence(self.dueDate()))
+            else:
+                self._completionDate = completionDate
+                self.notifyObservers(patterns.Event(self, 'task.completionDate', 
+                    completionDate))
+                if completionDate != date.Date():
+                    self.setReminder(None)
         
     def completed(self):
         return self.completionDate() != date.Date()
@@ -456,6 +463,21 @@ class Task(category.CategorizableCompositeObject):
             
     def setAttachments(self, attachments):
         self._attachments = attachments # FIXME: no notification?
+
+    # Recurrence
+    
+    def recurrence(self):
+        return self._recurrence
+    
+    def setRecurrence(self, recurrence=None):
+        self._recurrence = recurrence
+
+    def nextRecurrence(self, dateTime):
+        if self.recurrence() == 'weekly':
+            days = 7
+        else:
+            days = 1
+        return dateTime + date.TimeDelta(days=days)
 
     # behavior
     

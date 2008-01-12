@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import test, gui, command, wx, config, sys
 from unittests import dummy
 from domain import task, effort, date, category, note, attachment
@@ -67,6 +68,9 @@ class TaskEditorTestCase(test.wxTestCase):
     def setReminder(self, newReminderDateTime, index=0):
         self.editor[index][1].setReminder(newReminderDateTime)
         
+    def setRecurrence(self, newRecurrence, index=0):
+        self.editor[index][1].setRecurrence(newRecurrence)
+        
 
 class NewTaskTest(TaskEditorTestCase):
     def createCommand(self):
@@ -114,6 +118,11 @@ class NewTaskTest(TaskEditorTestCase):
         self.setReminder(reminderDateTime)
         self.editor.ok()
         self.assertEqual(reminderDateTime, self.task.reminder())
+        
+    def testSetRecurrence(self):
+        self.setRecurrence('weekly')
+        self.editor.ok()
+        self.assertEqual('weekly', self.task.recurrence())
     
     def testOpenAttachmentWithNonAsciiFileNameThrowsException(self):
         ''' os.startfile() does not accept unicode filenames. This will be 

@@ -76,6 +76,10 @@ class InfiniteDate(datetime.date):
         else:
             return timedelta.TimeDelta.max
 
+    def __add__(self, delta):
+        # Whatever is added to InfiniteDate, we're still infinite:
+        return self
+
 # factories:
 
 def parseDate(dateString, default=None):

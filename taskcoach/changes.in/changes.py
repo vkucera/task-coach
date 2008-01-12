@@ -7,6 +7,8 @@ releases = [
 Release('0.69.0', 'January ?, 2008',
     summary='''?''',
     featuresAdded=[
+        Feature('''Tasks can recur on a daily or weekly basis.''', '1623364', 
+                '1464793', '1264210'),
         Feature('''Notes can be assigned to categories.'''),
         Feature('''Whether descriptions of tasks, effort records, categories and
 notes are shown in a popup tooltip window is now a setting.''', '1857098'),
@@ -32,7 +34,8 @@ time' of tasks.''')],
     bugsFixed=[
         Bug('''The reminder dialog didn't close when opening the task from
 the reminder dialog. If the user had entered a snooze option in the reminder
-dialog, that snooze option would be overwritten by the task editor.''', '1862286'),
+dialog, that snooze option would be overwritten when closing the task 
+editor.''', '1862286'),
         Bug('''Sorting by total categories in the task viewers didn't sort
 correctly.'''),
         Bug('''Save didn't work for task files without a file name and
