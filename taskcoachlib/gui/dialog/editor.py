@@ -175,7 +175,7 @@ class DatesPage(TaskEditorPage):
         self.fit()
 
     def ok(self):
-        recurrenceDict = {0: None, 1: 'daily', 2: 'weekly'}
+        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly'}
         recurrence = recurrenceDict[self._recurrenceEntry.Selection]
         self._task.setRecurrence(recurrence)
         self._task.setStartDate(self._startDateEntry.get())
@@ -187,7 +187,7 @@ class DatesPage(TaskEditorPage):
         self._reminderDateTimeEntry.SetValue(reminder)
         
     def setRecurrence(self, recurrence):
-        index = {None: 0, 'daily': 1, 'weekly': 2}[recurrence]
+        index = {'': 0, 'daily': 1, 'weekly': 2}[recurrence]
         self._recurrenceEntry.Selection = index
         
 

@@ -39,7 +39,7 @@ class XMLWriter:
         if task.completionDate() != date.Date():
             node.setAttribute('completiondate', str(task.completionDate()))
         if task.recurrence():
-            node.setAttribute('recurrence', str(task.recurrence())) 
+            node.setAttribute('recurrence', task.recurrence()) 
         if task.budget() != date.TimeDelta():
             node.setAttribute('budget', self.budgetAsAttribute(task.budget()))
         if task.priority() != 0:
