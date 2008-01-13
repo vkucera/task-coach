@@ -68,7 +68,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
         return self.__itemAttribute
         
     def onSelect(self, event):
-        self.selectCommand()
+        self.selectCommand(event)
 
     def RefreshItems(self):
         if self.GetItemCount(): 
