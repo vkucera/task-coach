@@ -9,7 +9,7 @@ class Task(category.CategorizableCompositeObject):
             fixedFee=0, reminder=None, attachments=None, categories=None,
             efforts=None,
             shouldMarkCompletedWhenAllChildrenCompleted=None, 
-            recurrence=None, *args, **kwargs):
+            recurrence='', *args, **kwargs):
         kwargs['id'] = id
         kwargs['subject'] = subject
         kwargs['description'] = description
@@ -469,7 +469,7 @@ class Task(category.CategorizableCompositeObject):
     def recurrence(self):
         return self._recurrence
     
-    def setRecurrence(self, recurrence=None):
+    def setRecurrence(self, recurrence=''):
         self._recurrence = recurrence
 
     def nextRecurrence(self, dateTime):
