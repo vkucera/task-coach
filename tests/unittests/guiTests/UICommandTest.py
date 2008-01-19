@@ -85,3 +85,27 @@ class MarkCompletedTest(test.TestCase):
         self.assertMarkCompletedIsEnabled(
             selection=[task.Task(completionDate=date.Today()), task.Task()], 
             shouldBeEnabled=False)
+        
+        
+class TaskNewTest(test.TestCase):
+    def testNewTaskWithCategories(self):
+        cat = category.Category('cat', filtered=True)
+        categories = category.CategoryList([cat])
+        taskNew = gui.uicommand.TaskNew(taskList=task.TaskList(), 
+                                        categories=categories)
+        dialog = taskNew.doCommand(None, show=False)
+        tree = dialog[0][2]._treeCtrl
+        firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
+        self.failUnless(firstChild.IsChecked())
+        
+
+class NoteNewTest(test.TestCase):
+    def testNewNoteWithCategories(self):
+        cat = category.Category('cat', filtered=True)
+        categories = category.CategoryList([cat])
+        noteNew = gui.uicommand.NoteNew(notes=note.NoteContainer(), 
+                                        categories=categories)
+        dialog = noteNew.doCommand(None, show=False)
+        tree = dialog[0][1]._treeCtrl
+        firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
+        self.failUnless(firstChild.IsChecked())

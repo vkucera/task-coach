@@ -10,6 +10,10 @@ Release('0.69.0', 'January ?, 2008',
         Feature('''Tasks can recur on a daily or weekly basis.''', '1623364', 
                 '1464793', '1264210'),
         Feature('''Notes can be assigned to categories.'''),
+        Feature('''When filtering by one or more categories, new tasks and 
+notes are automatically added to those categories. Of course, you can still
+change the categories in the category tab of the edit dialog before pressing
+the OK button.'''),
         Feature('''Whether descriptions of tasks, effort records, categories and
 notes are shown in a popup tooltip window is now a setting.''', '1857098'),
         Feature('''Added menu items for increasing, decreasing, maximizing, and 

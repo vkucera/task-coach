@@ -203,8 +203,8 @@ class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
 
 
 class NewTaskCommandTest(TaskCommandTestCase):
-    def new(self):
-        newTaskCommand = command.NewTaskCommand(self.taskList)
+    def new(self, categories=None):
+        newTaskCommand = command.NewTaskCommand(self.taskList, categories=categories or [])
         newTask = newTaskCommand.items[0]
         newTaskCommand.do()
         return newTask
@@ -213,6 +213,13 @@ class NewTaskCommandTest(TaskCommandTestCase):
         newTask = self.new()
         self.assertDoUndoRedo(
             lambda: self.assertTaskList([self.task1, newTask]),
+            lambda: self.assertTaskList(self.originalList))
+        
+    def testNewTaskWithCategory(self):
+        cat = category.Category('cat')
+        newTask = self.new(categories=[cat])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([cat]), newTask.categories()),
             lambda: self.assertTaskList(self.originalList))
 
 

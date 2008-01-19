@@ -7,11 +7,12 @@ class NewNoteCommand(base.BaseCommand):
         return _('New note')
 
     def __init__(self, *args, **kwargs):
+        self.categories = kwargs.get('categories',  None)
         super(NewNoteCommand, self).__init__(*args, **kwargs)
         self.items = self.createNewNotes()
         
     def createNewNotes(self):
-        return [note.Note(subject=_('New note'))]
+        return [note.Note(subject=_('New note'), categories=self.categories)]
         
     def do_command(self):
         self.list.extend(self.items)

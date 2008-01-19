@@ -1073,11 +1073,15 @@ class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand,
             helpText=taskList.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
+        filteredCategories = [category for category in self.categories if
+                             category.isFiltered()]
         newTaskDialog = gui.dialog.editor.TaskEditor(self.mainwindow, 
-            command.NewTaskCommand(self.taskList), self.taskList, 
-            self.uiCommands, self.settings, self.categories, bitmap=self.bitmap)
-        newTaskDialog.Show()
-
+            command.NewTaskCommand(self.taskList, categories=filteredCategories), 
+            self.taskList, self.uiCommands, self.settings, self.categories, 
+            bitmap=self.bitmap)
+        newTaskDialog.Show(show)
+        return newTaskDialog # for testing purposes
+    
 
 class TaskNewSubTask(NeedsSelectedTasks,  TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
@@ -1459,7 +1463,7 @@ class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
                                                   drop=dropItem)
 
 
-class NoteNew(NotesCommand, ViewerCommand):
+class NoteNew(NotesCommand, MainWindowCommand, CategoriesCommand):
     def __init__(self, *args, **kwargs):
         notes = kwargs['notes']
         super(NoteNew, self).__init__(bitmap='new', 
@@ -1467,8 +1471,13 @@ class NoteNew(NotesCommand, ViewerCommand):
             helpText=notes.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        dialog = self.viewer.newNoteDialog(bitmap=self.bitmap)
+        filteredCategories = [category for category in self.categories if
+                             category.isFiltered()]    
+        dialog = gui.dialog.editor.NoteEditor(self.mainwindow, 
+            command.NewNoteCommand(self.notes, categories=filteredCategories),
+            self.categories, bitmap=self.bitmap)
         dialog.Show(show)
+        return dialog # for testing purposes
     
 
 class NoteNewSubNote(NeedsSelectedNote, NotesCommand, ViewerCommand):
@@ -1483,7 +1492,7 @@ class NoteNewSubNote(NeedsSelectedNote, NotesCommand, ViewerCommand):
         dialog.Show(show)
 
 
-class NoteDelete(NeedsSelectedCategory, NotesCommand, ViewerCommand):
+class NoteDelete(NeedsSelectedNote, NotesCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         notes = kwargs['notes']
         super(NoteDelete, self).__init__(bitmap='delete',
@@ -1890,7 +1899,8 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             categories=categories)
         
         # Note menu
-        self['newnote'] = NoteNew(viewer=viewer, notes=notes)
+        self['newnote'] = NoteNew(mainwindow=mainwindow, notes=notes, 
+                                  categories=categories)
         self['newsubnote'] = NoteNewSubNote(viewer=viewer, notes=notes)
         self['deletenote'] = NoteDelete(viewer=viewer, notes=notes)
         self['editnote'] = NoteEdit(viewer=viewer, notes=notes)
