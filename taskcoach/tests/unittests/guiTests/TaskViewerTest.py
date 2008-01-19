@@ -9,7 +9,6 @@ class CommonTests(object):
     def setUp(self):
         super(CommonTests, self).setUp()
         self.newColor = (100, 200, 100, 255)
-        file('test.mail', 'wb').write('Subject: foo\r\n\r\nBody\r\n')
         attachment.MailAttachment.attdir = os.getcwd()
 
     def tearDown(self):
@@ -20,10 +19,6 @@ class CommonTests(object):
             if os.path.isdir(name) and name.endswith('_attachments'):
                 os.rmdir(name)
 
-        try:
-            os.remove('test.mail')
-        except OSError:
-            pass
 
     def getFirstItemTextColor(self):
         raise NotImplementedError
@@ -91,11 +86,13 @@ class CommonTests(object):
                          self.viewer.model()[0].attachments())
 
     def testOnDropMail(self):
+        file('test.mail', 'wb').write('Subject: foo\r\n\r\nBody\r\n')
         aTask = task.Task()
         self.taskList.append(aTask)
         self.viewer.onDropMail(self.viewer.getIndexOfItem(aTask), 'test.mail')
         self.assertEqual([attachment.MailAttachment('test.mail')],
                          self.viewer.model()[0].attachments())
+        os.remove('test.mail')
         
     def testCategoryColor(self):
         cat = category.Category('category with color', color=self.newColor)
@@ -104,3 +101,10 @@ class CommonTests(object):
         aTask.addCategory(cat)
         self.taskList.append(aTask)
         self.assertBackgroundColor()
+        
+    def testNewItem(self):
+        self.categories.append(category.Category('cat', filtered=True))
+        dialog = self.viewer.newItemDialog(bitmap='new')
+        tree = dialog[0][2]._treeCtrl
+        firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
+        self.failUnless(firstChild.IsChecked())

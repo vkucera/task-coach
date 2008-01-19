@@ -288,7 +288,7 @@ class CategoriesPage(TaskEditorPage):
             lambda index: customtree.TreeItemAttr(),
             self.getChildrenCount, 
             lambda index: 'Undetermined', 
-            lambda index: task in self.getCategoryWithIndex(index).categorizables(),
+            lambda index: self.getCategoryWithIndex(index) in task.categories(),
             lambda *args: None, lambda *args: None, lambda *args: None,
             lambda *args: None)
         self._treeCtrl.expandAllItems()
@@ -656,7 +656,7 @@ class NoteCategoriesPage(widgets.BookPage): # FIXME: duplication with (Task)Cate
             lambda index: customtree.TreeItemAttr(),
             self.getChildrenCount, 
             lambda index: 'Undetermined', 
-            lambda index: theNote in self.getCategoryWithIndex(index).categorizables(),
+            lambda index: self.getCategoryWithIndex(index) in theNote.categories(),
             lambda *args: None, lambda *args: None, lambda *args: None,
             lambda *args: None)
         self._treeCtrl.expandAllItems()

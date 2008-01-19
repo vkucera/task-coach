@@ -920,6 +920,8 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
+        kwargs['categories'] = [category for category in self.categories
+                                if category.isFiltered()]
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self), 
             command.NewTaskCommand(self.list, *args, **kwargs), self.list, self.uiCommands, 
             self.settings, self.categories, bitmap=bitmap)
@@ -1359,8 +1361,10 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
         return status1, status2
 
     def newItemDialog(self, *args, **kwargs):
+        filteredCategories = [category for category in self.categories if
+                              category.isFiltered()]
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self), 
-            command.NewNoteCommand(self.list),
+            command.NewNoteCommand(self.list, categories=filteredCategories),
             self.categories, bitmap=kwargs['bitmap'])
     
     # See TaskViewer for why the methods below have two names.

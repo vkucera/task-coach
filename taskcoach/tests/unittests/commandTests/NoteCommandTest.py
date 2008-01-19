@@ -1,7 +1,7 @@
 import test, command, patterns
 from unittests import asserts
 from CommandTestCase import CommandTestCase
-from domain import note
+from domain import note, category
 
 
 class NoteCommandTestCase(CommandTestCase, asserts.CommandAsserts):
@@ -10,8 +10,9 @@ class NoteCommandTestCase(CommandTestCase, asserts.CommandAsserts):
         
 
 class NewNoteCommandTest(NoteCommandTestCase):
-    def new(self):
-        newNoteCommand = command.NewNoteCommand(self.notes)
+    def new(self, categories=None):
+        newNoteCommand = command.NewNoteCommand(self.notes, 
+                                                categories=categories or [])
         newNote = newNoteCommand.items[0]
         newNoteCommand.do()
         return newNote
@@ -21,6 +22,14 @@ class NewNoteCommandTest(NoteCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual([newNote], self.notes),
             lambda: self.assertEqual([], self.notes))
+        
+    def testNewNoteWithCategory(self):
+        cat = category.Category('cat')
+        newNote = self.new(categories=[cat])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([cat]), newNote.categories()),
+            lambda: self.assertEqual([], self.notes))
+
         
 
 class NewSubNoteCommandTest(NoteCommandTestCase):
