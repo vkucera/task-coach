@@ -1256,13 +1256,15 @@ class TaskWithDailyRecurrenceFixture(RecurringTaskTestCase,
     increment = date.TimeDelta(days=1)
 
 
-class TaskWithWeeklyRecurreceWithChildFixture(RecurringTaskWithChildTestCase,
+class TaskWithWeeklyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
                                               CommonRecurrenceTests):
     recurrence = 'weekly'
     increment = date.TimeDelta(days=7)
     
 
-class TaskWithDailyRecurreceWithChildFixture(RecurringTaskWithChildTestCase,
+class TaskWithDailyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
                                              CommonRecurrenceTests):
     recurrence = 'daily'
     increment = date.TimeDelta(days=1)
+    
+

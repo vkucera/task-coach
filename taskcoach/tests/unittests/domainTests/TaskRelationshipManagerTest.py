@@ -1,7 +1,5 @@
 import test, config
-import domain.task as task
-import domain.date as date
-import domain.effort as effort
+from domain import task, date, effort
 
 
 class CommonTaskRelationshipManagerTests(object):
@@ -76,6 +74,16 @@ class CommonTaskRelationshipManagerTests(object):
         self.child.addEffort(effort.Effort(self.child))
         self.child.setCompletionDate()
         self.failIf(self.child.isBeingTracked())
+        
+    def testMarkParentCompletedStopsChildRecurrence(self):
+        self.child.setRecurrence('daily')
+        self.parent.setCompletionDate()
+        self.failIf(self.child.recurrence())
+        
+    def testRecurringChildIsCompletedWhenParentIsCompleted(self):
+        self.child.setRecurrence('daily')
+        self.parent.setCompletionDate()
+        self.failUnless(self.child.completed())
 
     # due date
         

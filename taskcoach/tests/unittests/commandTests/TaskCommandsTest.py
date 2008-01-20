@@ -435,6 +435,21 @@ class MarkCompletedCommandTest(CommandWithChildrenTestCase):
             lambda: self.assertEqual(newDueDate, self.task1.dueDate()),
             lambda: self.assertEqual(dueDate, self.task1.dueDate()))
         
+    def testMarkParentWithRecurringChildCompleted_RemovesChildRecurrence(self):
+        self.child.setRecurrence('daily')
+        self.markCompleted([self.parent])
+        self.assertDoUndoRedo(
+            lambda: self.failIf(self.child.recurrence()),
+            lambda: self.assertEqual('daily', self.child.recurrence()))
+
+    def testMarkParentWithRecurringChildCompleted_MakesChildCompleted(self):
+        self.child.setRecurrence('daily')
+        self.markCompleted([self.parent])
+        self.assertDoUndoRedo(
+            lambda: self.failUnless(self.child.completed()),
+            lambda: self.failIf(self.child.completed()))
+        
+        
 class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
     def testCannotDropOnParent(self):
         self.dragAndDrop([self.parent], [self.child])

@@ -3,9 +3,9 @@ RelationshipManager does not (at the moment) keep of list of relations, but
 instead alters objects based on their relations. For example, if a task is
 marked completed, the RelationshipManager will mark all children completed. '''
 
-import domain.date as date
-import task
-import patterns
+from domain import date
+import task, patterns
+
 
 class TaskRelationshipManager(object):
     def __init__(self, *args, **kwargs):
@@ -79,23 +79,27 @@ class TaskRelationshipManager(object):
             task.setCompletionDate(date.Date())
 
     def __markUncompletedChildrenCompleted(self, task):
+        taskCompletionDate = task.completionDate()
         for child in task.children():
             if not child.completed():
-                child.setCompletionDate(task.completionDate())
+                child.setRecurrence()
+                child.setCompletionDate(taskCompletionDate)
     
     def __setDueDateChildren(self, task):
+        taskDueDate = task.dueDate()
         for child in task.children():
-            if child.dueDate() > task.dueDate():
-                child.setDueDate(task.dueDate())
+            if child.dueDate() > taskDueDate:
+                child.setDueDate(taskDueDate)
                 
     def __setDueDateParent(self, parent, child):
         if child.dueDate() > parent.dueDate():
             parent.setDueDate(child.dueDate())
             
     def __setStartDateChildren(self, task):
+        taskStartDate = task.startDate()
         for child in task.children():
-            if task.startDate() > child.startDate():
-                child.setStartDate(task.startDate())
+            if taskStartDate > child.startDate():
+                child.setStartDate(taskStartDate)
     
     def __setStartDateParent(self, parent, child):
         if child.startDate() < parent.startDate():
