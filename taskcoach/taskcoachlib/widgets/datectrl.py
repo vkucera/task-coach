@@ -106,10 +106,12 @@ class DateCtrl(Panel):
         self.Bind(wx.EVT_DATE_CHANGED, self._callback)
         
     def _createControls(self, callback):
-        style = wx.DP_DROPDOWN
+        options = dict(style=wx.DP_DROPDOWN, dt=wx.DateTime_Today())
         if self._noneAllowed:
-            style |= wx.DP_ALLOWNONE
-        return [DatePickerCtrl(self, dt=wx.DateTime_Today(), style=style)]
+            options['style'] |= wx.DP_ALLOWNONE
+        if '__WXMSW__' in wx.PlatformInfo:
+            options['size'] = (100, -1)
+        return [DatePickerCtrl(self, **options)]
 
     def SetValue(self, value):
         wxDate = date2wxDateTime(value)
