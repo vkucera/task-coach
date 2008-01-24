@@ -9,7 +9,8 @@ class Task(category.CategorizableCompositeObject):
             fixedFee=0, reminder=None, attachments=None, categories=None,
             efforts=None,
             shouldMarkCompletedWhenAllChildrenCompleted=None, 
-            recurrence='', *args, **kwargs):
+            recurrence='', recurrenceCount=0, maxRecurrenceCount=0,
+            *args, **kwargs):
         kwargs['id'] = id
         kwargs['subject'] = subject
         kwargs['description'] = description
@@ -28,6 +29,8 @@ class Task(category.CategorizableCompositeObject):
         self._reminder       = reminder
         self._attachments    = attachments or []
         self._recurrence     = recurrence
+        self._recurrenceCount = recurrenceCount
+        self._maxRecurrenceCount = maxRecurrenceCount
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
             
@@ -37,6 +40,8 @@ class Task(category.CategorizableCompositeObject):
         self.setDueDate(state['dueDate'])
         self.setCompletionDate(state['completionDate'])
         self.setRecurrence(state['recurrence'])
+        self.setRecurrenceCount(state['recurrenceCount'])
+        self.setMaxRecurrenceCount(state['maxRecurrenceCount'])
         self.replaceChildren(state['children'])
         self.replaceParent(state['parent'])
         self.setEfforts(state['efforts'])
@@ -58,6 +63,8 @@ class Task(category.CategorizableCompositeObject):
             categories=set(self._categories), priority=self._priority, 
             attachments=self._attachments[:], hourlyFee=self._hourlyFee, 
             fixedFee=self._fixedFee, recurrence=self._recurrence,
+            recurrenceCount=self._recurrenceCount, 
+            maxRecurrenceCount=self._maxRecurrenceCount,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -79,6 +86,8 @@ class Task(category.CategorizableCompositeObject):
             categories=set(self.categories()), fixedFee=self.fixedFee(),
             hourlyFee=self.hourlyFee(), attachments=self.attachments()[:],
             reminder=self.reminder(), recurrence=self.recurrence(),
+            recurrenceCount=self.recurrenceCount(), 
+            maxRecurrenceCount=self.maxRecurrenceCount(),
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self.shouldMarkCompletedWhenAllChildrenCompleted,
             children=[child.copy() for child in self.children()])
@@ -482,12 +491,27 @@ class Task(category.CategorizableCompositeObject):
         return dateTime + date.TimeDelta(days=days)
     
     def recur(self):
+        self._recurrenceCount += 1
         self.setCompletionDate(date.Date())
         self.setStartDate(self.nextRecurrence(self.startDate()))
         self.setDueDate(self.nextRecurrence(self.dueDate()))
         for child in self.children():
             child.recur()
+        if self.maxRecurrenceCount() and self.recurrenceCount() >= self.maxRecurrenceCount():
+            self.setRecurrence()
+            
+    def recurrenceCount(self):
+        return self._recurrenceCount
+    
+    def setRecurrenceCount(self, recurrenceCount):
+        self._recurrenceCount = recurrenceCount
 
+    def maxRecurrenceCount(self):
+        return self._maxRecurrenceCount
+
+    def setMaxRecurrenceCount(self, maxRecurrenceCount):
+        self._maxRecurrenceCount = maxRecurrenceCount
+    
     # behavior
     
     # To experiment, this attribute is coded by means of a property, which

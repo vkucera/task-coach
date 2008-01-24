@@ -1,6 +1,7 @@
 import time, xml.dom.minidom, re, os
 from domain import date, effort, task, category, note, attachment
 
+
 class XMLReader:
     def __init__(self, fd):
         self.__fd = fd
@@ -100,42 +101,37 @@ class XMLReader:
         return categoryMapping
         
     def __parseTaskNode(self, taskNode):
-        subject = taskNode.getAttribute('subject')
-        id = taskNode.getAttribute('id') 
-        description = self.__parseDescription(taskNode)
-        startDate = date.parseDate(taskNode.getAttribute('startdate'))
-        dueDate = date.parseDate(taskNode.getAttribute('duedate'))
-        completionDate = date.parseDate(taskNode.getAttribute('completiondate'))
-        recurrence = taskNode.getAttribute('recurrence')
-        budget = date.parseTimeDelta(taskNode.getAttribute('budget'))
-        priority = self.__parseInteger(taskNode.getAttribute('priority'))
-        hourlyFee = self.__parseFloat(taskNode.getAttribute('hourlyFee'))
-        fixedFee = self.__parseFloat(taskNode.getAttribute('fixedFee'))
-        reminder = self.__parseDateTime(taskNode.getAttribute('reminder'))
-        attachments = self.__parseAttachmentNodes(taskNode.childNodes)
-        shouldMarkCompletedWhenAllChildrenCompleted = \
-            self.__parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted'))
+        kwargs = dict(subject=taskNode.getAttribute('subject'),
+            description=self.__parseDescription(taskNode),
+            id=taskNode.getAttribute('id'),
+            startDate=date.parseDate(taskNode.getAttribute('startdate')),
+            dueDate=date.parseDate(taskNode.getAttribute('duedate')),
+            completionDate=date.parseDate(taskNode.getAttribute('completiondate')),
+            recurrence=taskNode.getAttribute('recurrence'),
+            recurrenceCount=self.__parseInteger(taskNode.getAttribute('recurrenceCount')),
+            maxRecurrenceCount=self.__parseInteger(taskNode.getAttribute('maxRecurrenceCount')),
+            budget=date.parseTimeDelta(taskNode.getAttribute('budget')),
+            priority=self.__parseInteger(taskNode.getAttribute('priority')),
+            hourlyFee=self.__parseFloat(taskNode.getAttribute('hourlyFee')),
+            fixedFee=self.__parseFloat(taskNode.getAttribute('fixedFee')),
+            reminder=self.__parseDateTime(taskNode.getAttribute('reminder')),
+            attachments=self.__parseAttachmentNodes(taskNode.childNodes),
+            shouldMarkCompletedWhenAllChildrenCompleted= \
+                self.__parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted')),
+            children=self.__parseTaskNodes(taskNode.childNodes),
+            efforts=self.__parseEffortNodes(taskNode.childNodes))
         if self.__tskversion <= 13:
-            categories = self.__parseCategoryNodesWithinTaskNode(taskNode.childNodes)
+            kwargs['categories'] = self.__parseCategoryNodesWithinTaskNode(taskNode.childNodes)
         else:
-            categories = []
-        children = self.__parseTaskNodes(taskNode.childNodes)
-        efforts = self.__parseEffortNodes(taskNode.childNodes)
-        return task.Task(subject, description, id=id, startDate=startDate, 
-            dueDate=dueDate, completionDate=completionDate, budget=budget, 
-            priority=priority, hourlyFee=hourlyFee, fixedFee=fixedFee, 
-            reminder=reminder, categories=categories, attachments=attachments, 
-            children=children, efforts=efforts, recurrence=recurrence,
-            shouldMarkCompletedWhenAllChildrenCompleted=\
-                shouldMarkCompletedWhenAllChildrenCompleted)
+            kwargs['categories'] = []
+        return task.Task(**kwargs)
     
     def __parseNoteNode(self, noteNode):
-        subject = noteNode.getAttribute('subject')
-        id = noteNode.getAttribute('id')
-        description = self.__parseDescription(noteNode)
-        children = self.__parseNoteNodes(noteNode.childNodes)
-        return note.Note(id=id, subject=subject, description=description, 
-                         children=children)
+        kwargs = dict(subject=noteNode.getAttribute('subject'),
+            id=noteNode.getAttribute('id'),
+            description=self.__parseDescription(noteNode),
+            children=self.__parseNoteNodes(noteNode.childNodes))
+        return note.Note(**kwargs)
         
     def __parseCategoryNodesWithinTaskNode(self, nodes):
         return [self.__parseTextNode(node) for node in nodes \
@@ -143,16 +139,15 @@ class XMLReader:
         
     def __parseAttachmentNodes(self, nodes):
         attachments = []
-
         for node in nodes:
             if node.nodeName == 'attachment':
                 if self.__tskversion <= 16:
-                    attachments.append(attachment.AttachmentFactory(self.__parseTextNode(node)))
+                    args = (self.__parseTextNode(node),)
                 else:
-                    attachments.append(attachment.AttachmentFactory(self.__parseTextNode(node.getElementsByTagName('data')[0]),
-                                                                    self.__parseTextNode(node.getElementsByTagName('description')[0]),
-                                                                    node.getAttribute('type')))
-
+                    args = (self.__parseTextNode(node.getElementsByTagName('data')[0]),
+                            self.__parseTextNode(node.getElementsByTagName('description')[0]),
+                            node.getAttribute('type'))
+                attachments.append(attachment.AttachmentFactory(*args))
         return attachments
 
     def __parseEffortNodes(self, nodes):
