@@ -171,8 +171,7 @@ class Task(category.CategorizableCompositeObject):
         completionDate = completionDate or date.Today()
         if completionDate != self._completionDate:
             if self.recurrence():
-                self.setStartDate(self.nextRecurrence(self.startDate()))
-                self.setDueDate(self.nextRecurrence(self.dueDate()))
+                self.recur()
             else:
                 self._completionDate = completionDate
                 self.notifyObservers(patterns.Event(self, 'task.completionDate', 
@@ -467,7 +466,10 @@ class Task(category.CategorizableCompositeObject):
     # Recurrence
     
     def recurrence(self):
-        return self._recurrence
+        if not self._recurrence and self.parent():
+            return self.parent().recurrence()
+        else:
+            return self._recurrence
     
     def setRecurrence(self, recurrence=''):
         self._recurrence = recurrence
@@ -478,6 +480,12 @@ class Task(category.CategorizableCompositeObject):
         else:
             days = 1
         return dateTime + date.TimeDelta(days=days)
+    
+    def recur(self):
+        self.setStartDate(self.nextRecurrence(self.startDate()))
+        self.setDueDate(self.nextRecurrence(self.dueDate()))
+        for child in self.children():
+            child.recur()
 
     # behavior
     

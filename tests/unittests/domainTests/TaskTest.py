@@ -1256,15 +1256,44 @@ class TaskWithDailyRecurrenceFixture(RecurringTaskTestCase,
     increment = date.TimeDelta(days=1)
 
 
+class CommonRecurrenceTestsWithChild(CommonRecurrenceTests):
+    def testChildStartDateRecursToo(self):
+        self.task.setCompletionDate()
+        self.assertEqual(self.task.startDate(), 
+                         self.task.children()[0].startDate())
+
+    def testChildDueDateRecursToo_ParentAndChildHaveNoDueDate(self):
+        self.task.setCompletionDate()
+        self.assertEqual(self.task.dueDate(), 
+                         self.task.children()[0].dueDate())
+
+    def testChildDueDateRecursToo_ParentAndChildHaveSameDueDate(self):
+        child = self.task.children()[0]
+        self.task.setDueDate(date.Tomorrow())
+        child.setDueDate(date.Tomorrow())
+        self.task.setCompletionDate()
+        self.assertEqual(self.task.dueDate(), 
+                         self.task.children()[0].dueDate())
+
+    def testChildDueDateRecursToo_ChildHasEarlierDueDate(self):
+        child = self.task.children()[0]
+        self.task.setDueDate(date.Tomorrow())
+        child.setDueDate(date.Today())
+        self.task.setCompletionDate()
+        self.assertEqual(date.Today() + self.increment, 
+                         self.task.children()[0].dueDate())
+
+
 class TaskWithWeeklyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
-                                              CommonRecurrenceTests):
+                                              CommonRecurrenceTestsWithChild):
     recurrence = 'weekly'
     increment = date.TimeDelta(days=7)
     
 
 class TaskWithDailyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
-                                             CommonRecurrenceTests):
+                                             CommonRecurrenceTestsWithChild):
     recurrence = 'daily'
     increment = date.TimeDelta(days=1)
+    
     
 
