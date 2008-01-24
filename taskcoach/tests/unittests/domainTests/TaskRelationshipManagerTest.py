@@ -4,11 +4,12 @@ from domain import task, date, effort
 
 class CommonTaskRelationshipManagerTests(object):
     def setUp(self):
-        self.parent = task.Task()
-        self.child = task.Task()
+        self.parent = task.Task('parent')
+        self.child = task.Task('child')
         self.parent.addChild(self.child)
-        self.child2 = task.Task()
-        self.grandchild = task.Task()
+        self.child.setParent(self.parent)
+        self.child2 = task.Task('child2')
+        self.grandchild = task.Task('grandchild')
         settings = config.Settings(load=False)
         settings.set('behavior', 'markparentcompletedwhenallchildrencompleted', 
             str(self.markParentCompletedWhenAllChildrenCompleted))
@@ -74,6 +75,8 @@ class CommonTaskRelationshipManagerTests(object):
         self.child.addEffort(effort.Effort(self.child))
         self.child.setCompletionDate()
         self.failIf(self.child.isBeingTracked())
+    
+    # recurrence
         
     def testMarkParentCompletedStopsChildRecurrence(self):
         self.child.setRecurrence('daily')
@@ -84,6 +87,69 @@ class CommonTaskRelationshipManagerTests(object):
         self.child.setRecurrence('daily')
         self.parent.setCompletionDate()
         self.failUnless(self.child.completed())
+        
+    def shouldMarkCompletedWhenAllChildrenCompleted(self, task):
+        return task.shouldMarkCompletedWhenAllChildrenCompleted == True or \
+            (task.shouldMarkCompletedWhenAllChildrenCompleted == None and \
+             self.markParentCompletedWhenAllChildrenCompleted == True)
+        
+    def testMarkLastChildCompletedMakesParentRecur(self):
+        self.parent.setRecurrence('weekly')
+        self.child.setCompletionDate()
+        if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
+            self.assertEqual(date.Today() + date.TimeDelta(days=7), 
+                             self.parent.startDate())
+        else:
+            self.assertEqual(date.Today(), self.parent.startDate())
+
+    def testMarkLastChildCompletedMakesParentRecur_AndThusChildToo(self):
+        self.parent.setRecurrence('weekly')
+        self.child.setCompletionDate()
+        if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
+            self.assertEqual(date.Today() + date.TimeDelta(days=7), 
+                             self.child.startDate())
+        else:
+            self.assertEqual(date.Today(), self.child.startDate())
+
+    def testMarkLastChildCompletedMakesParentRecur_AndThusChildIsNotCompleted(self):
+        self.parent.setRecurrence('weekly')
+        self.child.setCompletionDate()
+        if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
+            self.failIf(self.child.completed())
+        else:
+            self.failUnless(self.child.completed())
+
+    def testMarkLastGrandChildCompletedMakesParentRecur(self):
+        self.parent.setRecurrence('weekly')
+        self.child.addChild(self.grandchild)
+        self.grandchild.setParent(self.child)
+        self.grandchild.setCompletionDate()
+        if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
+            self.assertEqual(date.Today() + date.TimeDelta(days=7), 
+                             self.parent.startDate())
+        else:
+            self.assertEqual(date.Today(), self.parent.startDate())
+
+    def testMarkLastGrandChildCompletedMakesParentRecur_AndThusGrandChildToo(self):
+        self.parent.setRecurrence('weekly')
+        self.child.addChild(self.grandchild)
+        self.grandchild.setParent(self.child)
+        self.grandchild.setCompletionDate()
+        if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
+            self.assertEqual(date.Today() + date.TimeDelta(days=7), 
+                             self.grandchild.startDate())
+        else:
+            self.assertEqual(date.Today(), self.grandchild.startDate())
+
+    def testMarkLastChildCompletedMakesParentRecur_AndThusChildIsNotCompleted(self):
+        self.parent.setRecurrence('weekly')
+        self.child.addChild(self.grandchild)
+        self.grandchild.setParent(self.child)
+        self.grandchild.setCompletionDate()
+        if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
+            self.failIf(self.grandchild.completed())
+        else:
+            self.failUnless(self.grandchild.completed())
 
     # due date
         

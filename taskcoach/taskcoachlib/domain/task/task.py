@@ -170,7 +170,7 @@ class Task(category.CategorizableCompositeObject):
     def setCompletionDate(self, completionDate=None):
         completionDate = completionDate or date.Today()
         if completionDate != self._completionDate:
-            if self.recurrence():
+            if completionDate != date.Date() and self.recurrence():
                 self.recur()
             else:
                 self._completionDate = completionDate
@@ -465,23 +465,24 @@ class Task(category.CategorizableCompositeObject):
 
     # Recurrence
     
-    def recurrence(self):
-        if not self._recurrence and self.parent():
-            return self.parent().recurrence()
+    def recurrence(self, recursive=False):
+        if not self._recurrence and recursive and self.parent():
+            return self.parent().recurrence(recursive)
         else:
             return self._recurrence
-    
+        
     def setRecurrence(self, recurrence=''):
         self._recurrence = recurrence
 
     def nextRecurrence(self, dateTime):
-        if self.recurrence() == 'weekly':
+        if self.recurrence(True) == 'weekly':
             days = 7
         else:
             days = 1
         return dateTime + date.TimeDelta(days=days)
     
     def recur(self):
+        self.setCompletionDate(date.Date())
         self.setStartDate(self.nextRecurrence(self.startDate()))
         self.setDueDate(self.nextRecurrence(self.dueDate()))
         for child in self.children():

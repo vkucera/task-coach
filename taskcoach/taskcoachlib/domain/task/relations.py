@@ -22,7 +22,9 @@ class TaskRelationshipManager(object):
 
     def onStartDate(self, event):
         task = event.source()
-        self.__setStartDateChildren(task)
+        if not task.recurrence(True): 
+            # Let Task.recur() handle the change in start date
+            self.__setStartDateChildren(task)
         if task.parent():
             self.__setStartDateParent(task.parent(), task)
 
