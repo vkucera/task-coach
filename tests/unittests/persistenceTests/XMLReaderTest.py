@@ -198,7 +198,7 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
         
 
 class XMLReaderVersion18Test(XMLReaderTestCase):
-    tskversion = 19
+    tskversion = 19 # For release 0.69.0
            
     def testReadEmptyStream(self):
         try:
@@ -620,3 +620,16 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual('daily', tasks[0].recurrence())
         
+    def testRecurrenceCount(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrenceCount="10"/>
+        </tasks>''')
+        self.assertEqual(10, tasks[0].recurrenceCount())
+        
+    def testMaxRecurrenceCount(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task maxRecurrenceCount="10"/>
+        </tasks>''')
+        self.assertEqual(10, tasks[0].maxRecurrenceCount())

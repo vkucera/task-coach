@@ -160,24 +160,39 @@ class DatesPage(TaskEditorPage):
         self._reminderDateTimeEntry = widgets.DateTimeCtrl(reminderBox, 
             task.reminder())
         reminderBox.add(self._reminderDateTimeEntry)
-        
+
         recurrenceBox = widgets.BoxWithFlexGridSizer(self, 
             label=_('Recurrence'), cols=2)
         recurrenceBox.add(_('Recurrence'))
         self._recurrenceEntry = wx.Choice(recurrenceBox, 
             choices=[_('None'), _('Daily'), _('Weekly')])
-        self.setRecurrence(task.recurrence())
+        self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrenceChanged)
         recurrenceBox.add(self._recurrenceEntry)
+        recurrenceBox.add(_('Maximum number of recurrences'))
+        self._maxRecurrenceCountEntry = wx.SpinCtrl(recurrenceBox, size=(50,-1),
+            value=str(task.maxRecurrenceCount()), style=wx.SP_ARROW_KEYS)
+        # Can't use sys.maxint because Python and wxPython disagree on what the 
+        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
+        # an Overflow exception, so we use a constant:
+        maxint = 2147483647
+        self._maxRecurrenceCountEntry.SetRange(0, maxint)
+        self.setRecurrence(task.recurrence())
+        recurrenceBox.add(self._maxRecurrenceCountEntry)
         
         for box in datesBox, reminderBox, recurrenceBox:
             box.fit()
             self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
         self.fit()
+        
+    def onRecurrenceChanged(self, event):
+        event.Skip()
+        self._maxRecurrenceCountEntry.Enable(event.String != _('None'))
 
     def ok(self):
         recurrenceDict = {0: '', 1: 'daily', 2: 'weekly'}
         recurrence = recurrenceDict[self._recurrenceEntry.Selection]
         self._task.setRecurrence(recurrence)
+        self._task.setMaxRecurrenceCount(self._maxRecurrenceCountEntry.Value)
         self._task.setStartDate(self._startDateEntry.get())
         self._task.setDueDate(self._dueDateEntry.get())
         self._task.setCompletionDate(self._completionDateEntry.get())
@@ -189,6 +204,10 @@ class DatesPage(TaskEditorPage):
     def setRecurrence(self, recurrence):
         index = {'': 0, 'daily': 1, 'weekly': 2}[recurrence]
         self._recurrenceEntry.Selection = index
+        self._maxRecurrenceCountEntry.Enable(bool(recurrence))
+        
+    def setMaxRecurrenceCount(self, maxRecurrence):
+        self._maxRecurrenceCountEntry.Value = maxRecurrence
         
 
 class BudgetPage(TaskEditorPage):

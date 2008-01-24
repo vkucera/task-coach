@@ -36,8 +36,8 @@ class TaskEditorTestCase(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.taskList.extend(self.createTasks())
         self.settings = config.Settings(load=False)
-        self.viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
-            self.settings, 'mainviewer')
+        self.viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame,
+                self.settings, 'mainviewer')
         self.editor = self.createEditor()
         
     def createEditor(self):
@@ -70,6 +70,9 @@ class TaskEditorTestCase(test.wxTestCase):
         
     def setRecurrence(self, newRecurrence, index=0):
         self.editor[index][1].setRecurrence(newRecurrence)
+
+    def setMaxRecurrenceCount(self, maxRecurrence, index=0):
+        self.editor[index][1].setMaxRecurrenceCount(maxRecurrence)
         
 
 class NewTaskTest(TaskEditorTestCase):
@@ -123,6 +126,12 @@ class NewTaskTest(TaskEditorTestCase):
         self.setRecurrence('weekly')
         self.editor.ok()
         self.assertEqual('weekly', self.task.recurrence())
+        
+    def testSetMaxRecurrence(self):
+        self.setRecurrence('weekly')
+        self.setMaxRecurrenceCount(10)
+        self.editor.ok()
+        self.assertEqual(10, self.task.maxRecurrenceCount())
     
     def testOpenAttachmentWithNonAsciiFileNameThrowsException(self):
         ''' os.startfile() does not accept unicode filenames. This will be 

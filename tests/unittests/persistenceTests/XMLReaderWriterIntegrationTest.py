@@ -150,6 +150,12 @@ class IntegrationTest(IntegrationTestCase):
 
     def testRecurrence(self):
         self.assertAttributeWrittenAndRead(self.task, 'recurrence')
+    
+    def testRecurrenceCount(self):
+        self.assertAttributeWrittenAndRead(self.task, 'recurrenceCount')
+
+    def testMaxRecurrenceCount(self):
+        self.assertAttributeWrittenAndRead(self.task, 'maxRecurrenceCount')
                 
     def testNote(self):
         self.assertEqual(len(self.notes), len(self.notesWrittenAndRead))
@@ -177,4 +183,5 @@ class IntegrationTest(IntegrationTestCase):
     def testNoteWithCategory(self):
         self.failUnless(self.notesWrittenAndRead.rootItems()[0] in \
                         self.categoriesWrittenAndRead[0].categorizables())
+        
         

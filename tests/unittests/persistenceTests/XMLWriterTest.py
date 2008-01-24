@@ -4,6 +4,7 @@ import test, persistence, wx
 import StringIO # We cannot use CStringIO since unicode strings are used below.
 from domain import task, effort, date, category, note, attachment
 
+
 class XMLWriterTest(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
@@ -290,3 +291,11 @@ class XMLWriterTest(test.TestCase):
     def testRecurrence(self):
         self.task.setRecurrence('weekly')
         self.expectInXML('recurrence="weekly"')
+        
+    def testRecurrenceCount(self):
+        self.task.setRecurrenceCount(5)
+        self.expectInXML('recurrenceCount="5"')
+
+    def testMaxRecurrenceCount(self):
+        self.task.setMaxRecurrenceCount(5)
+        self.expectInXML('maxRecurrenceCount="5"')

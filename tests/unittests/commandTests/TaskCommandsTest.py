@@ -365,6 +365,13 @@ class EditTaskCommandTest(TaskCommandTestCase):
             lambda: self.failIf(self.task1.recurrence()),
             lambda: self.assertEqual('weekly', self.task1.recurrence()))
         
+    def testRecurrenceCount(self):
+        self.task1.setRecurrence('daily')
+        self.edit([self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(1, self.task1.recurrenceCount()),
+            lambda: self.assertEqual(0, self.task1.recurrenceCount()))
+        
 
 class MarkCompletedCommandTest(CommandWithChildrenTestCase):
     def testMarkCompleted(self):
