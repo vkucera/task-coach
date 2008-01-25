@@ -40,6 +40,7 @@ time' of tasks.''')],
 the reminder dialog. If the user had entered a snooze option in the reminder
 dialog, that snooze option would be overwritten when closing the task 
 editor.''', '1862286'),
+        Bug('''Don't allow filtering by both a parent and a child category.'''),
         Bug('''Sorting by total categories in the task viewers didn't sort
 correctly.'''),
         Bug('''Save didn't work for task files without a file name and
