@@ -209,6 +209,20 @@ class Category(base.CompositeObject):
             self.__filtered = filtered
             self.notifyObservers(patterns.Event(self, 
                 self.filterChangedEventType(), filtered))
+        if filtered:
+            self._turnOffFilteringOfParent()
+            self._turnOffFilteringOfChildren()
+            
+    def _turnOffFilteringOfChildren(self):
+        for child in self.children():
+            child.setFiltered(False)
+            child._turnOffFilteringOfChildren()
+            
+    def _turnOffFilteringOfParent(self):
+        parent = self.parent()
+        if parent:
+            parent.setFiltered(False)
+            parent._turnOffFilteringOfParent()
         
     def contains(self, categorizable, treeMode=False):
         containedCategorizables = self.categorizables(recursive=True)

@@ -252,7 +252,6 @@ class CategorizableCompositeObjectTest(test.TestCase):
             self.totalCategoryRemovedEventType, self.category)], self.events)
 
 
-                
 class CategoryTest(test.TestCase):
     def setUp(self):
         self.category = category.Category('category')
@@ -375,16 +374,33 @@ class CategoryTest(test.TestCase):
         filteredCategory = category.Category('test', filtered=True)
         self.failUnless(filteredCategory.isFiltered())
         
-    def testSetFilteredOnDoesNotAffectChild(self):
+    def testSetFilteredOnTurnsOffFilteringForChild(self):
         self.category.addChild(self.subCategory)
+        self.subCategory.setFiltered()
         self.category.setFiltered()
         self.failIf(self.subCategory.isFiltered())
-        
-    def testSetFilteredOffDoesNotAffectChild(self):
-        self.subCategory.setFiltered()
+
+    def testSetFilteredOnTurnsOffFilteringForGrandChild(self):
         self.category.addChild(self.subCategory)
-        self.category.setFiltered(False)
-        self.failUnless(self.subCategory.isFiltered())
+        grandChild = category.Category('grand child')
+        self.subCategory.addChild(grandChild)
+        grandChild.setFiltered()
+        self.category.setFiltered()
+        self.failIf(grandChild.isFiltered())
+        
+    def testSetFilteredOnForChildTurnsOffFilteringForParent(self):
+        self.category.setFiltered()
+        self.category.addChild(self.subCategory)
+        self.subCategory.setFiltered()
+        self.failIf(self.category.isFiltered())
+
+    def testSetFilteredOnForGrandChildTurnsOffFilteringForGrandParent(self):
+        self.category.setFiltered()
+        self.category.addChild(self.subCategory)
+        grandChild = category.Category('grand child')
+        self.subCategory.addChild(grandChild)
+        grandChild.setFiltered()
+        self.failIf(self.category.isFiltered())
         
     def testContains_NoCategorizables(self):
         self.failIf(self.category.contains(self.categorizable))
