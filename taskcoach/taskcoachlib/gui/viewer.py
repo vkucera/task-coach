@@ -820,13 +820,15 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
             'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
         for colorSetting in colorSettings:
-            patterns.Publisher().registerObserver(self.onColorChange, 
+            patterns.Publisher().registerObserver(lambda event: self.refresh(), 
                 eventType=colorSetting)
         patterns.Publisher().registerObserver(self.onColorChange,
             eventType=task.Task.categoryColorChangedEventType())
         
-    def onColorChange(self, *args, **kwargs):
-        self.refresh()
+    def onColorChange(self, event):
+        task = event.source()
+        if task in self.model():
+            self.widget.RefreshItem(self.getIndexOfItem(task))
 
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
@@ -1269,8 +1271,10 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
         patterns.Publisher().registerObserver(self.onColorChange,
             eventType=note.Note.categoryColorChangedEventType())
         
-    def onColorChange(self, *args, **kwargs):
-        self.refresh()
+    def onColorChange(self, event):
+        note = event.source()
+        if note in self.model():
+            self.widget.RefreshItem(self.getIndexOfItem(note))
 
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
