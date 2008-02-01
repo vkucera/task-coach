@@ -36,9 +36,9 @@ class CategorizableCompositeObject(base.CompositeObject):
             self.notifyObservers(patterns.Event(self, 
                 self.categoryAddedEventType(), category))
             self.notifyChildObserversOfCategoryChange(category, 'add')
-            if category.color():
+            if category.color(): 
                 self.notifyObserversOfCategoryColorChange()
-                
+
     @classmethod
     def categoryRemovedEventType(class_):
         return 'categorizable.category.remove'
