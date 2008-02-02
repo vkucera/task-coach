@@ -104,7 +104,7 @@ class LanguagePage(SettingsPage):
         self.addChoiceSetting('view', 'language', _('Language'), 
             [('pt_BR', u'Português brasileiro (Brazilian Portuguese)'),
              ('br_FR', 'Brezhoneg (Breton)'),
-             ('bg_BG', 'български (Bulgarian)'),
+             ('bg_BG', u'български (Bulgarian)'),
              ('zh_CN', u'简体中文 (Simplified Chinese)'),
              ('zh_TW', u'正體字 (Traditional Chinese)'),
              ('cs_CS', u'Čeština (Czech)'),
