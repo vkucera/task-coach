@@ -4,8 +4,10 @@ from changetypes import *
 
 releases = [
 
-Release('0.69.0', 'January ?, 2008',
-    summary='''?''',
+Release('0.69.0', 'February 2, 2008',
+    summary='''This release makes it possible to repeat tasks on either a daily 
+or a weekly basis, to add notes to categories and a number of other changes
+and bug fixes.''',
     featuresAdded=[
         Feature('''Tasks can recur on a daily or weekly basis.''', '1623364', 
                 '1464793', '1264210'),
@@ -40,7 +42,8 @@ time' of tasks.''')],
 the reminder dialog. If the user had entered a snooze option in the reminder
 dialog, that snooze option would be overwritten when closing the task 
 editor.''', '1862286'),
-        Bug('''Don't allow filtering by both a parent and a child category.'''),
+        Bug('''Don't allow filtering by both a parent and a child category at
+the same time.'''),
         Bug('''Sorting by total categories in the task viewers didn't sort
 correctly.'''),
         Bug('''Save didn't work for task files without a file name and
