@@ -8,7 +8,10 @@ class TranslationIntegrityTests(object):
         translated string in each language. '''
         
     def testMatchingNonLiterals(self):
-        for symbol in '\t', '|', '%s', '%d', '%.2f', '%(name)s', '%(version)s':
+        for symbol in '\t', '|', '%s', '%d', '%.2f', '%(name)s', '%(version)s',\
+            '%(filename)s', '%(nrtasks)d', '%(url)s', '%(description)s',\
+            '%(copyright)s', '%(author)s', '%(author_email)s', '%(license)s',\
+            '%(date)s':
             self.assertEqual(self.englishString.count(symbol), 
                 self.translatedString.count(symbol),
                 "Symbol ('%s') doesn't match for '%s' and '%s'"%(symbol,
