@@ -108,6 +108,7 @@ class LanguagePage(SettingsPage):
              ('zh_CN', u'简体中文 (Simplified Chinese)'),
              ('zh_TW', u'正體字 (Traditional Chinese)'),
              ('cs_CS', u'Čeština (Czech)'),
+             ('da_DA', 'Dansk (Danish)'),
              ('nl_NL', 'Nederlands (Dutch)'),
              ('en_GB', 'English (UK)'),
              ('en_US', 'English (US)'), 
@@ -115,12 +116,16 @@ class LanguagePage(SettingsPage):
              ('de_DE', 'Deutsch (German)'),
              ('he_IL', u'עברית (Hebrew)'),
              ('hu_HU', 'Magyar (Hungarian)'),
+             ('it_IT', 'Italiano (Italian)'),
              ('ja_JP', u'日本語 (Japanese)'),
              ('lv_LV', u'Latviešu (Latvian)'),
              ('pl_PL', u'Język polski (Polish)'),
+             ('pt_PT', u'Português (Portuguese)'),
              ('ru_RU', u'Русский (Russian)'),
              ('sk_SK', u'Slovenčina (Slovak)'),
-             ('es_ES', u'Español (Spanish)')],
+             ('es_ES', u'Español (Spanish)'),
+             ('sv_SE', 'Svenska (Swedish)'),
+             ('tr_TR', u'Türkçe (Turkish)')],
              _('This setting will take effect after you restart %s')%meta.name)
         
         panel = wx.Panel(self)

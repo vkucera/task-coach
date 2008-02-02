@@ -5,7 +5,7 @@ release_month = 'February'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
                     'November', 'December'].index(release_month) + 1)
-release_day = '2'
+release_day = '3'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2008'
 release_status = 'Alpha'
@@ -40,16 +40,20 @@ languages = {
     'Breton': 'br',
     'Bulgarian': 'bg',
     'Czech': 'cs',
+    'Danish': 'da',
     'Dutch': 'nl',
     'French': 'fr', 
     'German': 'de',
+    'Italian': 'it',
     'Latvian': 'lv',
     'Polish': 'pl',
+    'Portuguese': 'pt',
     'Russian': 'ru',
     'ChineseSimplified': 'zh_CN',
     'ChineseTraditional': 'zh_TW',
     'Japanese': 'ja',
     'Spanish': 'es',
+    'Swedish': 'sv',
     'Slovak': 'sk',
     'Hungarian': 'hu',
     'Hebrew': 'he'}
