@@ -6,12 +6,13 @@ releases = [
 
 Release('0.69.0', 'February 2, 2008',
     summary='''This release makes it possible to repeat tasks on either a daily 
-or a weekly basis, to add notes to categories and a number of other changes
-and bug fixes.''',
+or a weekly basis and to add notes to categories. It also contains a number of 
+other changes and bug fixes.''',
     featuresAdded=[
         Feature('''Tasks can recur on a daily or weekly basis.''', '1623364', 
                 '1464793', '1264210'),
         Feature('''Notes can be assigned to categories.'''),
+        Feature('''Added Bulgarian translation, thanks to Rumen Belev.'''),
         Feature('''When filtering by one or more categories, new tasks and 
 notes are automatically added to those categories. Of course, you can still
 change the categories in the category tab of the edit dialog before pressing

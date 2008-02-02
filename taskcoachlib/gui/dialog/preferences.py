@@ -41,6 +41,9 @@ class SettingsPage(widgets.BookPage):
             eval(self.settings.get(section, setting)))
         self.addEntry(None, colorButton)
         self._colorSettings.append((section, setting, colorButton))
+        
+    def addText(self, label, text):
+        self.addEntry(label, text)
                 
     def ok(self):
         for section, setting, checkBox in self._booleanSettings:
@@ -101,6 +104,7 @@ class LanguagePage(SettingsPage):
         self.addChoiceSetting('view', 'language', _('Language'), 
             [('pt_BR', u'Português brasileiro (Brazilian Portuguese)'),
              ('br_FR', 'Brezhoneg (Breton)'),
+             ('bg_BG', 'български (Bulgarian)'),
              ('zh_CN', u'简体中文 (Simplified Chinese)'),
              ('zh_TW', u'正體字 (Traditional Chinese)'),
              ('cs_CS', u'Čeština (Czech)'),
@@ -118,6 +122,18 @@ class LanguagePage(SettingsPage):
              ('sk_SK', u'Slovenčina (Slovak)'),
              ('es_ES', u'Español (Spanish)')],
              _('This setting will take effect after you restart %s')%meta.name)
+        
+        panel = wx.Panel(self)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        text = wx.StaticText(panel, 
+            label=_('''If your language is not available, or the translation needs 
+improving, please consider helping. See:'''))
+        sizer.Add(text)
+        url = meta.url + 'i18n.html'
+        urlCtrl = wx.HyperlinkCtrl(panel, -1, label=url, url=url)
+        sizer.Add(urlCtrl)
+        panel.SetSizerAndFit(sizer)
+        self.addText(_('Language not found?'), panel)
         self.fit()
 
 

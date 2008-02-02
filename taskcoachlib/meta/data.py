@@ -38,6 +38,7 @@ languages = {
     'English': None, 
     'Brazilian Portuguese': 'pt_BR',
     'Breton': 'br',
+    'Bulgarian': 'bg',
     'Czech': 'cs',
     'Dutch': 'nl',
     'French': 'fr', 
