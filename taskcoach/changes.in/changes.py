@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.69.0', 'February 2, 2008',
+Release('0.69.0', 'February 3, 2008',
     summary='''This release makes it possible to repeat tasks on either a daily 
 or a weekly basis and to add notes to categories. It also contains a number of 
 other changes and bug fixes.''',
@@ -13,6 +13,11 @@ other changes and bug fixes.''',
                 '1464793', '1264210'),
         Feature('''Notes can be assigned to categories.'''),
         Feature('''Added Bulgarian translation, thanks to Rumen Belev.'''),
+        Feature('''Added Danish translation, thanks to different translators.'''),
+        Feature('''Added a number of rather incomplete translations (Italian,
+Portuguese, Swedish, and Turkish).
+See http://www.taskcoach.org/i18n.html for how you can help improve these 
+translations.'''),
         Feature('''When filtering by one or more categories, new tasks and 
 notes are automatically added to those categories. Of course, you can still
 change the categories in the category tab of the edit dialog before pressing
