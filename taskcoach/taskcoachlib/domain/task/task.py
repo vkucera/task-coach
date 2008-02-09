@@ -496,7 +496,8 @@ class Task(category.CategorizableCompositeObject):
         self.setStartDate(self.nextRecurrence(self.startDate()))
         self.setDueDate(self.nextRecurrence(self.dueDate()))
         for child in self.children():
-            child.recur()
+            if not child.recurrence():
+                child.recur()
         if self.maxRecurrenceCount() and self.recurrenceCount() >= self.maxRecurrenceCount():
             self.setRecurrence()
             
