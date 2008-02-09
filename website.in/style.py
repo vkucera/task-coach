@@ -5,7 +5,7 @@ header = '''
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD html 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <style type="text/css" media="screen">@import "default.css";</style>
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <title>%(name)s</title>

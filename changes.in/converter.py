@@ -62,6 +62,13 @@ class ChangeToHTMLConverter(ChangeConverter):
         return changeToBeConverted
     
     def postProcess(self, convertedChange):
+        listOfUrlAndTextFragments = re.split('(http://\S+)', convertedChange)
+        listOfConvertedUrlsAndTextFragments = []
+        for fragment in listOfUrlAndTextFragments:
+            if fragment.startswith('http://'):
+                fragment = self.convertURL(fragment)
+            listOfConvertedUrlsAndTextFragments.append(fragment)
+        convertedChange = ''.join(listOfConvertedUrlsAndTextFragments)
         return '<LI>%s</LI>'%convertedChange
 
     def convertSourceForgeId(self, change, sourceForgeId):

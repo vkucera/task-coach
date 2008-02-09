@@ -30,7 +30,7 @@ minimizing task priority.''', '1768210', '1570616'),
 through the following sort orders: 'ascending, after sorting by task status first', 
 'descending, after sorting by task status first', 'ascending, without sorting
 by task status first', 'descending, without sorting by task status first'.''')],
-    featureChanged=[
+    featuresChanged=[
         Feature('''Previously, unset dates were displayed as 'None' in   
 date columns. To be consistent with how other attributes are displayed in 
 columns, Task Coach now simply displays nothing for unset dates in date
