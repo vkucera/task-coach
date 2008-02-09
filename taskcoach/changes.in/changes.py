@@ -4,7 +4,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.69.0', 'February 3, 2008',
+Release('0.69.0', 'February 9, 2008',
     summary='''This release makes it possible to repeat tasks on either a daily 
 or a weekly basis and to add notes to categories. It also contains a number of 
 other changes and bug fixes.''',
