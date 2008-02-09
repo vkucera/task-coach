@@ -9,8 +9,10 @@ Release('0.69.0', 'February 9, 2008',
 or a weekly basis and to add notes to categories. It also contains a number of 
 other changes and bug fixes.''',
     featuresAdded=[
-        Feature('''Tasks can recur on a daily or weekly basis.''', '1623364', 
-                '1464793', '1264210'),
+        Feature('''Tasks can recur on a daily or weekly basis. This feature is
+not complete yet. Most obviously, recurring on a monthly basis is missing. 
+Also, recurring tasks with recurring subtasks do not behave entirely 
+correctly yet.''', '1623364', '1464793', '1264210'),
         Feature('''Notes can be assigned to categories.'''),
         Feature('''Added Bulgarian translation, thanks to Rumen Belev.'''),
         Feature('''Added Danish translation, thanks to different translators.'''),
