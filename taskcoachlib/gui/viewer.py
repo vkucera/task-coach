@@ -438,8 +438,13 @@ class TreeViewer(Viewer):
         # Somehow we can get expanded or collapsed events for items that are
         # not the root item, but don't have a parent item either, resulting
         # in an empty index. I don't really understand how that can happen.
-        # Ignore these items. See SF bug report #1840111.
-        index = self.widget.GetIndexOfItem(treeItem)
+        # Ignore these items. See SF bug report #1840111. Also, it seems we
+        # can get events for items that have a parent, but are not a child 
+        # of that parent item, in which case GetIndexOfItem raises a ValueError.
+        try:
+            index = self.widget.GetIndexOfItem(treeItem)
+        except ValueError:
+            index = None
         if index:
             item = self.getItemWithIndex(index)
             item.expand(expanded)
