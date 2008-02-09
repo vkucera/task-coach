@@ -252,7 +252,7 @@ class TreeHelper(object):
         parent = self.GetItemParent(item)
         if parent:
             parentIndices = self.GetIndexOfItem(parent)
-            ownIndex = self.GetItemChildren(parent).index(item)
+            ownIndex = self.GetItemChildren(parent).index(item) # FIXME: Can raise ValueError: list.index(x): x not in list
             return parentIndices + (ownIndex,)
         else:
             return ()
