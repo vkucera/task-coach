@@ -1252,6 +1252,13 @@ class RecurringTaskWithChildTestCase(TaskTestCase):
                      children=[task.Task(subject='child')])]
 
 
+class RecurringTaskWithRecurringChildTestCase(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        return [dict(recurrence=self.recurrence,
+                     children=[task.Task(subject='child', 
+                               recurrence=self.recurrence)])]
+
+
 class CommonRecurrenceTests(CommonTaskTests):    
     initialRecurrenceCount = 0
     maxRecurrenceCount = 0    
@@ -1357,6 +1364,13 @@ class CommonRecurrenceTestsWithChild(CommonRecurrenceTests):
                          self.task.children()[0].dueDate())
 
 
+class CommonRecurrenceTestsWithRecurringChild(CommonRecurrenceTests):
+    def testChildDoesNotRecurWhenParentDoes(self):
+        origStartDate = self.task.children()[0].startDate()
+        self.task.setCompletionDate()
+        self.assertEqual(origStartDate, self.task.children()[0].startDate())
+        
+        
 class TaskWithWeeklyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
                                               CommonRecurrenceTestsWithChild):
     recurrence = 'weekly'
@@ -1369,4 +1383,13 @@ class TaskWithDailyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
     increment = date.TimeDelta(days=1)
     
     
+class TaskWithWeeklyRecurrenceWithRecurringChildFixture(\
+    RecurringTaskWithRecurringChildTestCase, CommonRecurrenceTestsWithRecurringChild):
+    recurrence = 'weekly'
+    increment = date.TimeDelta(days=7)
 
+    
+class TaskWithDailyRecurrenceWithRecurringChildFixture(\
+    RecurringTaskWithRecurringChildTestCase, CommonRecurrenceTestsWithRecurringChild):
+    recurrence = 'daily'
+    increment = date.TimeDelta(days=1)
