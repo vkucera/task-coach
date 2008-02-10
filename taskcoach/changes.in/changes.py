@@ -7,7 +7,10 @@ releases = [
 Release('0.69.1', 'February ?, 2008',
     summary='',
     bugsFixed=[
-        Bug('''Exception when closing a task editor dialog.''')]),
+        Bug('''Exception when closing a task editor dialog.'''),
+        Bug('''On Mac OS X, users couldn't enter 'P' and 'M' in text boxes,
+because these were mapped to menu items. Reorganized keyboard shortcuts to fix 
+this.''', '1890566')]),
     
 Release('0.69.0', 'February 9, 2008',
     summary='''This release makes it possible to repeat tasks on either a daily 

@@ -700,7 +700,7 @@ class SelectAll(NeedsItems, ViewerCommand):
 class InvertSelection(NeedsItems, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(InvertSelection, self).__init__( \
-            menuText=_('&Invert selection\tCtrl+I'),
+            menuText=_('&Invert selection\tShift+Ctrl+I'),
             helpText=_('Select unselected items and unselect selected items'), 
             *args, **kwargs)
 
@@ -1200,7 +1200,7 @@ class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
 class TaskMaxPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMaxPriority, self).__init__(
-            menuText=_('Maximize priority\tShift+Ctrl+P'),
+            menuText=_('Maximize priority\tCtrl+P'),
             helpText=_('Make the selected task(s) the highest priority task(s)'), 
             bitmap='maxpriority', *args, **kwargs)
         
@@ -1213,7 +1213,7 @@ class TaskMaxPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
 class TaskMinPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMinPriority, self).__init__(
-            menuText=_('Minimize priority\tShift+Ctrl+M'),
+            menuText=_('Minimize priority\tCtrl+M'),
             helpText=_('Make the selected task(s) the lowest priority task(s)'), 
             bitmap='minpriority', *args, **kwargs)
         
@@ -1226,7 +1226,7 @@ class TaskMinPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
 class TaskIncPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):    
     def __init__(self, *args, **kwargs):
         super(TaskIncPriority, self).__init__(
-            menuText=_('Increase priority\tShift+P'),
+            menuText=_('Increase priority\tCtrl+I'),
             helpText=_('Increase the priority of the selected task(s)'), 
             bitmap='incpriority', *args, **kwargs)
         
@@ -1239,7 +1239,7 @@ class TaskIncPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
 class TaskDecPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):    
     def __init__(self, *args, **kwargs):
         super(TaskDecPriority, self).__init__(
-            menuText=_('Decrease priority\tShift+M'),
+            menuText=_('Decrease priority\tCtrl+D'),
             helpText=_('Decrease the priority of the selected task(s)'), 
             bitmap='decpriority', *args, **kwargs)
         
