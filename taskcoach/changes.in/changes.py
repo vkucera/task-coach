@@ -4,6 +4,11 @@ from changetypes import *
 
 releases = [
 
+Release('0.69.1', 'February ?, 2008',
+    summary='',
+    bugsFixed=[
+        Bug('''Exception when closing a task editor dialog.''')]),
+    
 Release('0.69.0', 'February 9, 2008',
     summary='''This release makes it possible to repeat tasks on either a daily 
 or a weekly basis and to add notes to categories. It also contains a number of 
