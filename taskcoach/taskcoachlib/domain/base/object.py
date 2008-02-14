@@ -86,7 +86,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def subject(self, recursive=False):
         subject = super(CompositeObject, self).subject()
         if recursive and self.parent():
-            subject = u'%s → %s'%(self.parent().subject(recursive=True), subject)
+            subject = u'%s -> %s'%(self.parent().subject(recursive=True), subject)
         return subject
         
     def description(self, recursive=False):

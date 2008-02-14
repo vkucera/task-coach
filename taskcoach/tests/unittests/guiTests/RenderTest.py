@@ -16,7 +16,7 @@ class RenderDaysLeftTest(test.TestCase):
         self.assertEqual('-1', render.daysLeft(date.TimeDelta(days=-1), False))
 
     def testInfiniteTimeLeft(self):
-        self.assertEqual(u'∞', render.daysLeft(date.TimeDelta.max, False))
+        self.assertEqual('Infinite', render.daysLeft(date.TimeDelta.max, False))
 
     def testCompletedTask(self):
         self.assertEqual('', render.daysLeft(date.TimeDelta.max, True))
