@@ -4,10 +4,11 @@ from changetypes import *
 
 releases = [
 
-Release('0.69.1', 'February ?, 2008',
+Release('0.69.1', 'February 14, 2008',
     summary='',
     bugsFixed=[
-        Bug('''Exception when closing a task editor dialog.'''),
+        Bug('''Exception when closing a task editor dialog. This also 
+caused updates of task states not to be displayed properly.'''),
         Bug('''On Mac OS X, users couldn't enter 'P' and 'M' in text boxes,
 because these were mapped to menu items. Reorganized keyboard shortcuts to fix 
 this.''', '1890566')]),
