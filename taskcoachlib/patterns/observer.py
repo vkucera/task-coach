@@ -117,6 +117,7 @@ class Publisher(object):
         ''' Register an observer for an event type. The observer is a callback 
             method that should expect one argument, an instance of Event.
             The eventType can be anything hashable, typically a string. '''
+        assert hasattr(observer, 'im_self')
         observer = MethodProxy(observer)
         observerList = self.__observers.setdefault(eventType, [])
         # Note: it's the caller's responsibility to not add the same observer

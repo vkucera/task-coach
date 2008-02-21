@@ -19,7 +19,7 @@ def daysLeft(timeLeft, completedTask):
         return ''
     from domain import date
     if timeLeft == date.TimeDelta.max:
-        return u'∞' # Infinite
+        return _('Infinite') # u'∞' 
     else:
         return str(timeLeft.days)
 

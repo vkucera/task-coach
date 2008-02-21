@@ -132,5 +132,5 @@ class CompositeObjectTest(test.TestCase):
         self.compositeObject.setSubject('parent')
         child = base.CompositeObject(subject='child')
         self.compositeObject.addChild(child)
-        self.assertEqual(u'parent → child', child.subject(recursive=True))
+        self.assertEqual(u'parent -> child', child.subject(recursive=True))
                             

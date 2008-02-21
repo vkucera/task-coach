@@ -4,6 +4,20 @@ from changetypes import *
 
 releases = [
 
+Release('0.69.1', 'February 14, 2008',
+    summary='Bug fix release.',
+    bugsFixed=[
+        Bug('''Exception when closing a task editor dialog. This 
+causes updates of task states not to be displayed properly. The bug itself
+does not cause data loss, but it might trick users into saving an empty
+task file over their existing data.''', '1893634'),
+        Bug('''On Mac OS X, users couldn't enter 'P' and 'M' in text boxes,
+because these were mapped to menu items. Reorganized keyboard shortcuts to fix 
+this.''', '1890566'),
+        Bug('''The arrow ('→') and infinity symbol ('∞') are not 
+visible on all computers, so Task Coach is back to using '->' and 'Infinite'
+again.''')]),
+    
 Release('0.69.0', 'February 9, 2008',
     summary='''This release makes it possible to repeat tasks on either a daily 
 or a weekly basis and to add notes to categories. It also contains a number of 
