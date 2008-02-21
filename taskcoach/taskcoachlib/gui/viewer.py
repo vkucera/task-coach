@@ -825,10 +825,13 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
             'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
         for colorSetting in colorSettings:
-            patterns.Publisher().registerObserver(lambda event: self.refresh(), 
+            patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
         patterns.Publisher().registerObserver(self.onColorChange,
             eventType=task.Task.categoryColorChangedEventType())
+        
+    def onColorSettingChange(self, event):
+        self.refresh()
         
     def onColorChange(self, event):
         task = event.source()
