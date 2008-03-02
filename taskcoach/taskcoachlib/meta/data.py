@@ -1,11 +1,31 @@
+'''
+Task Coach - Your friendly task manager
+Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+
+Task Coach is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Task Coach is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+'''
+
+import re
+
 name = 'Task Coach'
 description = 'Your friendly task manager'
-version = '0.69.1'
-release_month = 'February'
+version = '0.70.0'
+release_month = 'March'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
                     'November', 'December'].index(release_month) + 1)
-release_day = '14'
+release_day = '0'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2008'
 release_status = 'Alpha'
@@ -30,7 +50,19 @@ pad = url + 'pad.xml'
 download = url + 'download.html'
 dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
 copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)
-license = 'GNU GENERAL PUBLIC LICENSE Version 2, June 1991'
+license = 'GNU General Public License version 3 or any later version'
+license_notice = '''Task Coach is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Task Coach is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+'''
+license_notice_html = '<p>%s</p>'%license_notice.replace('\n\n', '</p><p>')
+
 platform = 'Any'
 pythonversion = '2.4'
 wxpythonversion = '2.8.6.0-unicode'
