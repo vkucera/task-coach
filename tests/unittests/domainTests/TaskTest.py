@@ -1,3 +1,21 @@
+'''
+Task Coach - Your friendly task manager
+Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+
+Task Coach is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Task Coach is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+'''
+
 import test, wx, sets, patterns
 from unittests import asserts
 from domain import task, effort, date
@@ -1269,13 +1287,15 @@ class CommonRecurrenceTests(CommonTaskTests):
     def testMarkCompletedSetsNewStartDateIfItWasSetPreviously(self):
         startDate = self.task.startDate()
         self.task.setCompletionDate()
-        self.assertEqual(startDate + self.increment, self.task.startDate())
+        self.assertEqual(date.next(startDate, self.recurrence), 
+                         self.task.startDate())
 
     def testMarkCompletedSetsNewDueDateIfItWasSetPreviously(self):
         dueDate = date.Tomorrow()
         self.task.setDueDate(dueDate)
         self.task.setCompletionDate()
-        self.assertEqual(dueDate + self.increment, self.task.dueDate())
+        self.assertEqual(date.next(dueDate, self.recurrence), 
+                         self.task.dueDate())
 
     def testMarkCompletedDoesNotSetStartDateIfItWasNotSetPreviously(self):
         self.task.setStartDate(date.Date())
@@ -1303,26 +1323,27 @@ class CommonRecurrenceTests(CommonTaskTests):
 class TaskWithWeeklyRecurrenceFixture(RecurringTaskTestCase,  
                                       CommonRecurrenceTests):
     recurrence = 'weekly'
-    increment = date.TimeDelta(days=7)
         
         
 class TaskWithDailyRecurrenceFixture(RecurringTaskTestCase, 
                                      CommonRecurrenceTests):
     recurrence = 'daily'
-    increment = date.TimeDelta(days=1)
-    
+
+
+class TaskWithMonthlyRecurrenceFixture(RecurringTaskTestCase,
+                                       CommonRecurrenceTests):
+    recurrence = 'monthly'
+        
 
 class TaskWithDailyRecurrenceThatHasRecurredFixture( \
         RecurringTaskThatHasRecurredTestCase, CommonRecurrenceTests):
     recurrence = 'daily'
-    increment = date.TimeDelta(days=1)
     initialRecurrenceCount = 3
 
 
 class TaskWithDailyRecurrenceThatHasMaxRecurrenceCountFixture( \
         RecurringTaskThatHasMaxRecurrenceCountTestCase, CommonRecurrenceTests):
     recurrence = 'daily'
-    increment = date.TimeDelta(days=1)
     maxRecurrenceCount = 1
 
     def testRecurLessThanMaxRecurrenceCount(self):
@@ -1360,7 +1381,7 @@ class CommonRecurrenceTestsWithChild(CommonRecurrenceTests):
         self.task.setDueDate(date.Tomorrow())
         child.setDueDate(date.Today())
         self.task.setCompletionDate()
-        self.assertEqual(date.Today() + self.increment, 
+        self.assertEqual(date.next(date.Today(), self.recurrence), 
                          self.task.children()[0].dueDate())
 
 
@@ -1374,22 +1395,23 @@ class CommonRecurrenceTestsWithRecurringChild(CommonRecurrenceTests):
 class TaskWithWeeklyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
                                               CommonRecurrenceTestsWithChild):
     recurrence = 'weekly'
-    increment = date.TimeDelta(days=7)
     
 
 class TaskWithDailyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
                                              CommonRecurrenceTestsWithChild):
     recurrence = 'daily'
-    increment = date.TimeDelta(days=1)
     
     
 class TaskWithWeeklyRecurrenceWithRecurringChildFixture(\
-    RecurringTaskWithRecurringChildTestCase, CommonRecurrenceTestsWithRecurringChild):
+    RecurringTaskWithRecurringChildTestCase, 
+    CommonRecurrenceTestsWithRecurringChild):
+    
     recurrence = 'weekly'
-    increment = date.TimeDelta(days=7)
 
     
 class TaskWithDailyRecurrenceWithRecurringChildFixture(\
-    RecurringTaskWithRecurringChildTestCase, CommonRecurrenceTestsWithRecurringChild):
+    RecurringTaskWithRecurringChildTestCase, 
+    CommonRecurrenceTestsWithRecurringChild):
+    
     recurrence = 'daily'
-    increment = date.TimeDelta(days=1)
+

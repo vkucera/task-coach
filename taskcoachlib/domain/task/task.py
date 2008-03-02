@@ -1,3 +1,21 @@
+'''
+Task Coach - Your friendly task manager
+Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+
+Task Coach is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Task Coach is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+'''
+
 import patterns, time, copy
 from domain import date, category
 
@@ -483,12 +501,8 @@ class Task(category.CategorizableCompositeObject):
     def setRecurrence(self, recurrence=''):
         self._recurrence = recurrence
 
-    def nextRecurrence(self, dateTime):
-        if self.recurrence(True) == 'weekly':
-            days = 7
-        else:
-            days = 1
-        return dateTime + date.TimeDelta(days=days)
+    def nextRecurrence(self, aDate):
+        return date.next(aDate, self.recurrence(True))
     
     def recur(self):
         self._recurrenceCount += 1
@@ -532,3 +546,4 @@ class Task(category.CategorizableCompositeObject):
     shouldMarkCompletedWhenAllChildrenCompleted = \
         property(fget=__getShouldMarkCompletedWhenAllChildrenCompleted,
                  fset=__setShouldMarkCompletedWhenAllChildrenCompleted)
+

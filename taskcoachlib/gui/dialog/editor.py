@@ -1,3 +1,21 @@
+'''
+Task Coach - Your friendly task manager
+Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+
+Task Coach is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Task Coach is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+'''
+
 import wx, datetime, os.path
 import widgets
 from gui import render, viewercontainer, viewer
@@ -165,7 +183,7 @@ class DatesPage(TaskEditorPage):
             label=_('Recurrence'), cols=2)
         recurrenceBox.add(_('Recurrence'))
         self._recurrenceEntry = wx.Choice(recurrenceBox, 
-            choices=[_('None'), _('Daily'), _('Weekly')])
+            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly')])
         self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrenceChanged)
         recurrenceBox.add(self._recurrenceEntry)
         recurrenceBox.add(_('Maximum number of recurrences'))
@@ -205,7 +223,7 @@ class DatesPage(TaskEditorPage):
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
 
     def ok(self):
-        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly'}
+        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly'}
         recurrence = recurrenceDict[self._recurrenceEntry.Selection]
         self._task.setRecurrence(recurrence)
         if self._maxRecurrenceCheckBox.IsChecked():
@@ -219,7 +237,7 @@ class DatesPage(TaskEditorPage):
         self._reminderDateTimeEntry.SetValue(reminder)
         
     def setRecurrence(self, recurrence):
-        index = {'': 0, 'daily': 1, 'weekly': 2}[recurrence]
+        index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3}[recurrence]
         self._recurrenceEntry.Selection = index
         self._maxRecurrenceCheckBox.Enable(bool(recurrence))
         self._maxRecurrenceCountEntry.Enable(bool(recurrence) and \

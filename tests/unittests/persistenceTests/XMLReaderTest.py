@@ -1,3 +1,21 @@
+'''
+Task Coach - Your friendly task manager
+Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+
+Task Coach is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Task Coach is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+'''
+
 import test, xml.parsers.expat, sets, persistence, wx
 import StringIO
 from domain import task, date
@@ -606,19 +624,26 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
         </tasks>''')
         self.failIf(tasks[0].recurrence())
 
+    def testDailyRecurrence(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrence="daily"/>
+        </tasks>''')
+        self.assertEqual('daily', tasks[0].recurrence())    
+
     def testWeeklyRecurrence(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <task recurrence="weekly"/>
         </tasks>''')
         self.assertEqual('weekly', tasks[0].recurrence())
-        
-    def testDailyRecurrence(self):
+
+    def testMonthlyRecurrence(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
-            <task recurrence="daily"/>
+            <task recurrence="monthly"/>
         </tasks>''')
-        self.assertEqual('daily', tasks[0].recurrence())
+        self.assertEqual('monthly', tasks[0].recurrence())
         
     def testRecurrenceCount(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -633,3 +658,4 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
             <task maxRecurrenceCount="10"/>
         </tasks>''')
         self.assertEqual(10, tasks[0].maxRecurrenceCount())
+
