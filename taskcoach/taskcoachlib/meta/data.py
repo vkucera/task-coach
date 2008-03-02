@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re
 
 name = 'Task Coach'
 description = 'Your friendly task manager'
@@ -37,10 +36,10 @@ long_description = 'Task Coach is a simple open source todo manager to manage' \
 'other things todo consist of several activities. Task Coach is designed ' \
 'to deal with composite tasks. '
 keywords = 'task manager, todo list, pim, time registration, track effort'
-author_first = 'Frank'
-author_last = 'Niessink'
-author = author_first + ' ' + author_last
-author_email = 'frank@niessink.com'
+author_first = 'Frank' # Needed for PAD file
+author_last = 'Niessink'# Needed for PAD file
+author = '%s %s and Jerome Laheurte'%(author_first, author_last)
+author_email = 'developers@taskcoach.org'
 filename = 'TaskCoach'
 filename_lower = filename.lower()
 url = 'http://www.taskcoach.org/'
