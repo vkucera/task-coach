@@ -1189,6 +1189,21 @@ class RecursivePriorityFixture(TaskTestCase, CommonTaskTests):
 
     def testPriority_RecursiveWhenParentHasLowestPriority(self):
         self.assertEqual(2, self.task1.priority(recursive=True))
+        
+    def testPriority_RecursiveWhenChildHasHighestPriorityAndIsCompleted(self):
+        self.task1_1.setCompletionDate()
+        self.assertEqual(1, self.task1.priority(recursive=True))
+        
+    def testTotalPriorityNotificationWhenMarkingChildCompleted(self):
+        self.registerObserver('task.totalPriority')
+        self.task1_1.setCompletionDate()
+        self.assertEqual(1, self.events[0].value())
+        
+    def testTotalPriorityNotificationWhenMarkingChildUncompleted(self):
+        self.task1_1.setCompletionDate()
+        self.registerObserver('task.totalPriority')
+        self.task1_1.setCompletionDate(date.Date())
+        self.assertEqual(2, self.events[0].value())
 
 
 class TaskWithFixedFeeFixture(TaskTestCase, CommonTaskTests):

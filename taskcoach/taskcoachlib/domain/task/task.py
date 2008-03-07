@@ -112,7 +112,7 @@ class Task(category.CategorizableCompositeObject):
             self.notifyObserversOfTotalBudgetLeftChange()
         if child.timeSpent(recursive=True):
             self.notifyObserversOfTotalTimeSpentChange()
-        if child.priority(recursive=True) > oldTotalPriority:
+        if self.priority(recursive=True) != oldTotalPriority:
             self.notifyObserversOfTotalPriorityChange()
         if child.revenue(recursive=True):
             self.notifyObserversOfTotalRevenueChange()
@@ -132,7 +132,7 @@ class Task(category.CategorizableCompositeObject):
             self.notifyObserversOfTotalBudgetLeftChange()
         if child.timeSpent(recursive=True):
             self.notifyObserversOfTotalTimeSpentChange()
-        if child.priority(recursive=True) == oldTotalPriority:
+        if self.priority(recursive=True) != oldTotalPriority:
             self.notifyObserversOfTotalPriorityChange()
         if child.revenue(recursive=True):
             self.notifyObserversOfTotalRevenueChange()
@@ -182,9 +182,15 @@ class Task(category.CategorizableCompositeObject):
             if completionDate != date.Date() and self.recurrence():
                 self.recur()
             else:
+                parent = self.parent()
+                if parent:
+                    oldParentTotalPriority = parent.priority(recursive=True) 
                 self._completionDate = completionDate
                 self.notifyObservers(patterns.Event(self, 'task.completionDate', 
                     completionDate))
+                if parent and parent.priority(recursive=True) != \
+                              oldParentTotalPriority:
+                    parent.notifyObserversOfTotalPriorityChange()                    
                 if completionDate != date.Date():
                     self.setReminder(None)
         
@@ -363,7 +369,8 @@ class Task(category.CategorizableCompositeObject):
     def priority(self, recursive=False):
         if recursive:
             childPriorities = [child.priority(recursive=True) \
-                               for child in self.children()]
+                               for child in self.children() \
+                               if not child.completed()]
             return max(childPriorities + [self._priority])
         else:
             return self._priority
