@@ -133,7 +133,8 @@ class FilterableViewerForTasks(FilterableViewer):
         self.hideCompletedTasks(False)
         self.hideOverdueTasks(False)
         self.hideOverbudgetTasks(False)
-        self.hideCompositeTasks(False)
+        if not self.isTreeViewer():
+            self.hideCompositeTasks(False)
         self.setFilteredByDueDate('Unlimited')
         
     def getFilterUICommands(self):
