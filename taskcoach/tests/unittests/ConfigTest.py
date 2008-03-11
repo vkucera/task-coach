@@ -83,6 +83,10 @@ class SettingsTest(SettingsTestCase):
         self.assertRaises(ConfigParser.NoOptionError,
             self.settings.getlist, 'effortpermonthviewer2', 'nonexisting')
 
+    def testAddSectionAndSkipOne(self):
+        self.settings.add_section('effortpermonthviewer2', 
+            copyFromSection='effortpermonthviewer')
+        
 
 class SettingsIOTest(SettingsTestCase):
     def setUp(self):

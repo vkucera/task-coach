@@ -61,7 +61,7 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         result = super(Settings, self).add_section(section)
         if copyFromSection:
             for name, value in self.items(copyFromSection):
-                self.set(section, name, value)
+                super(Settings, self).set(section, name, value)
         return result
 
     def get(self, section, option):

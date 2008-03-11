@@ -7,6 +7,9 @@ releases = [
 Release('0.69.2', 'March ?, 2008',
     summary='Bug fix release.',
     bugsFixed=[
+        Bug('''Exception when reopening closed viewers (with the message
+"ConfigParser.NoSectionError: No section: 'effortperdayviewer1'" in the log 
+file).''', '1894488'),
         Bug('''Exception when resetting all filters in the task tree viewer
 (with the message "No option 'hidecompositetasks' in section: 
 'tasktreelistview'" in the log file).''', '1903679'),
