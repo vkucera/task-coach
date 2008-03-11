@@ -208,7 +208,10 @@ class AutoSaver(patterns.Observer):
         
     def _backupFilename(self, taskFile, now=date.DateTime.now):
         now = now().strftime('%Y%m%d-%H%M%S')
-        return taskFile.filename() + '.%s.bak'%now
+        root, ext = os.path.splitext(taskFile.filename())
+        if ext == '.bak':
+            root, ext = os.path.splitext(root)
+        return root + '.' + now + ext + '.bak'
         
     def _isOn(self, booleanSetting):
         return self.__settings.getboolean('file', booleanSetting)

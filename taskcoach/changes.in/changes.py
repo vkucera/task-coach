@@ -7,14 +7,18 @@ releases = [
 Release('0.69.2', 'March ?, 2008',
     summary='Bug fix release.',
     bugsFixed=[
-        Bug('''Exception when reopening closed viewers (with the message
+        Bug('''Exception when reopening a closed viewer (with the message
 "ConfigParser.NoSectionError: No section: 'effortperdayviewer1'" in the log 
 file).''', '1894488'),
         Bug('''Exception when resetting all filters in the task tree viewer
 (with the message "No option 'hidecompositetasks' in section: 
 'tasktreelistview'" in the log file).''', '1903679'),
         Bug('''Don't take the priority of completed subtasks into account when
-calculating the overall priority of a task.''', '1905774')]),
+calculating the overall priority of a task.''', '1905774')],
+        Bug('''It was not clear that backup files can be opened in Task Coach.
+Backup files now have the extension '.tsk.bak'. The file open dialog has 
+'*.tsk.bak' as selectable file type to make it easier to open backup files.''', 
+'1911538'),
     
 Release('0.69.1', 'February 14, 2008',
     summary='Bug fix release.',
