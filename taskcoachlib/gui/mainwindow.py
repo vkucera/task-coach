@@ -69,8 +69,66 @@ class WindowDimensionsTracker(object):
             self.setSetting('position', self._window.GetPosition())
         self.setSetting('iconized', iconized)
 
+
+class AuiManagedFrameWithNotebookAPI(wx.Frame):
+    ''' An AUI managed frame that provides (part of) the notebook API. This
+        class is to be moved to the widgets package. '''
+
+    def __init__(self, *args, **kwargs):
+        super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
+        self.manager = wx.aui.AuiManager(self, 
+            wx.aui.AUI_MGR_DEFAULT|wx.aui.AUI_MGR_ALLOW_ACTIVE_PANE)
+
+    def AddPage(self, page, caption, name): 
+        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left()
+        if not self.manager.GetAllPanes():
+            paneInfo = paneInfo.Center().CloseButton(False)
+        self.manager.AddPane(page, paneInfo)
+        self.manager.Update()
+
+    def SetPageText(self, index, title):
+        self.manager.GetAllPanes()[index].Caption(title)
+
+    def GetPageIndex(self, window):
+        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            if paneInfo.window == window:
+                return index
+        return wx.NOT_FOUND
+     
+    def AdvanceSelection(self, forward=True):
+        if self.PageCount <= 1:
+            return # Not enough viewers to advance selection
+        if forward:
+            if 0 <= self.Selection < self.PageCount - 1:
+                self.Selection += 1
+            else:
+                self.Selection = 0
+        else:
+            if 1 <= self.Selection < self.PageCount:
+                self.Selection -= 1
+            else:
+                self.Selection = self.PageCount - 1
+
+    def GetPageCount(self):
+        return len(self.manager.GetAllPanes())
+    
+    PageCount = property(GetPageCount)
         
-class MainWindow(wx.Frame):
+    def GetSelection(self):
+        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            if paneInfo.HasFlag(wx.aui.AuiPaneInfo.optionActive):
+                return index
+        return wx.NOT_FOUND
+
+    def SetSelection(self, targetIndex, *args):
+        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            self.manager.GetAllPanes()[index].SetFlag(wx.aui.AuiPaneInfo.optionActive, index==targetIndex)
+        self.manager.Update()
+        
+    Selection = property(GetSelection, SetSelection)
+    
+    
+class MainWindow(AuiManagedFrameWithNotebookAPI):
     pageClosedEvent = wx.aui.EVT_AUI_PANE_CLOSE
     
     def __init__(self, iocontroller, taskFile, settings, 
@@ -90,8 +148,6 @@ class MainWindow(wx.Frame):
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
-        self.manager = wx.aui.AuiManager(self, 
-            wx.aui.AUI_MGR_DEFAULT|wx.aui.AUI_MGR_ALLOW_ACTIVE_PANE)
         self.viewer = viewercontainer.ViewerContainer(self,
             self.settings, 'mainviewer') 
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
@@ -123,23 +179,7 @@ class MainWindow(wx.Frame):
         
     def AddPage(self, page, caption, *args):
         name = page.settingsSection()
-        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left()
-        if not self.manager.GetAllPanes():
-            paneInfo = paneInfo.Center().CloseButton(False)
-        self.manager.AddPane(page, paneInfo)
-        self.manager.Update()
-        
-    def SetSelection(self, index, *args):
-        self.manager.GetAllPanes()[index].SetFlag(wx.aui.AuiPaneInfo.optionActive, True)
-        
-    def SetPageText(self, index, title):
-        self.manager.GetAllPanes()[index].Caption(title)
-
-    def GetPageIndex(self, window):
-        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
-            if paneInfo.window == window:
-                return index
-        return wx.NOT_FOUND
+        super(MainWindow, self).AddPage(page, caption, name)
 
     def initWindow(self):
         wx.GetApp().SetTopWindow(self)
