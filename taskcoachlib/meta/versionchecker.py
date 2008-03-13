@@ -47,7 +47,12 @@ class VersionChecker(threading.Thread):
             padFile = self.retrievePadFile()
         except urllib2.URLError:
             return self.settings.get('version', 'notified')
-        pad = ElementTree.parse(padFile)
+	try:
+            pad = ElementTree.parse(padFile)
+        except ElementTree.ExpatError:
+            # This can happen e.g. when connected to a hotel network that
+            # returns the same webpage for each url requested
+            return self.settings.get('version', 'notified')
         return pad.findtext('Program_Info/Program_Version')
     
     def retrievePadFile(self):

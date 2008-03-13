@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, command, wx, config, sys
+import test, gui, command, wx, config, sys, widgets
 from unittests import dummy
 from domain import task, effort, date, category, note, attachment
 
@@ -54,8 +54,8 @@ class TaskEditorTestCase(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.taskList.extend(self.createTasks())
         self.settings = config.Settings(load=False)
-        self.viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame,
-                self.settings, 'mainviewer')
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(\
+            widgets.Notebook(self.frame), self.settings, 'mainviewer')
         self.editor = self.createEditor()
         
     def createEditor(self):

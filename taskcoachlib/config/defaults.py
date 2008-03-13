@@ -33,6 +33,7 @@ defaults = { \
     'effortperdayviewercount': '1',
     'effortperweekviewercount': '0',
     'effortpermonthviewercount': '0',
+    'perspective': '',
     'language': 'en_US',
     'taskcategoryfiltermatchall': 'True',
     'descriptionpopups': 'True'},
@@ -54,7 +55,7 @@ defaults = { \
     'hideactivetasks': 'False',
     'hideoverduetasks': 'False',
     'hideoverbudgettasks': 'False',
-    'hidecompositetasks': 'False', },
+    'hidecompositetasks': 'False' },
 'tasktreeviewer': { \
     'title': '',
     'sortby': 'dueDate',

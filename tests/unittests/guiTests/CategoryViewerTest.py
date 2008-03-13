@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, config
+import test, gui, config, widgets
 from unittests import dummy
 from domain import task, effort, category, note
 
@@ -28,8 +28,9 @@ class CategoryViewerTest(test.wxTestCase):
         self.categories = category.CategoryList()
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
             gui.uicommand.UICommands(self.frame, None, 
-                gui.viewercontainer.ViewerNotebook(self.frame, self.settings, 
-                    'mainviewer'), None, self.taskList,
+                gui.viewercontainer.ViewerContainer(widgets.Notebook(self.frame), 
+                    self.settings, 'mainviewer'), 
+                None, self.taskList,
                 self.effortList, self.categories, note.NoteContainer()), 
             self.settings)
         

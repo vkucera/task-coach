@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, config, TaskViewerTest, wx
+import test, gui, config, TaskViewerTest, wx, widgets
 from gui import render
 from i18n import _
 from domain import task, effort, date, category, note
@@ -108,7 +108,8 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.categories = category.CategoryList()
         self.taskList = task.sorter.Sorter(task.TaskList())
         self.task = task.Task('task')
-        viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
+        self.notebook = widgets.Notebook(self.frame)
+        viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, viewerContainer, 

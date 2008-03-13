@@ -31,11 +31,11 @@ def addEffortViewers(viewerContainer, taskList, uiCommands, settings):
                 uiCommands, settings), {}, 'date', settings)
 
 def addTaskViewers(viewerContainer, taskList, uiCommands, settings, categories):
-    _addViewers(viewerContainer, viewer.TaskListViewer, (taskList, uiCommands,
-                settings), dict(categories=categories), 'listview', settings)
     _addViewers(viewerContainer, viewer.TaskTreeListViewer, (taskList,
                 uiCommands, settings), dict(categories=categories), 
                 'treeview', settings)
+    _addViewers(viewerContainer, viewer.TaskListViewer, (taskList, uiCommands,
+                settings), dict(categories=categories), 'listview', settings)
 
 def addCategoryViewers(viewerContainer, categoryContainer, uiCommands, 
                        settings):
@@ -51,6 +51,6 @@ def _addViewers(viewerContainer, viewerClass, viewerArgs, viewerKwArgs,
     numberOfViewersToAdd = settings.getint('view', 
         viewerClass.__name__.lower() + 'count')
     for i in range(numberOfViewersToAdd):
-        viewerInstance = viewerClass(viewerContainer, *viewerArgs, **viewerKwArgs)
+        viewerInstance = viewerClass(viewerContainer.containerWidget, *viewerArgs, **viewerKwArgs)
         viewerContainer.addViewer(viewerInstance, viewerInstance.title(), bitmap)
 

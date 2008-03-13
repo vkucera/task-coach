@@ -297,11 +297,12 @@ class EffortPage(TaskEditorPage):
     def __init__(self, parent, theTask, taskList, settings, uiCommands, 
                  *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
-        self._viewerContainer = viewercontainer.ViewerChoicebook(self, 
+        self.containerWidget = widgets.Choicebook(self)
+        self._viewerContainer = viewercontainer.ViewerContainer(self.containerWidget, 
             settings, 'effortviewerintaskeditor')
         singleTaskList = task.SingleTaskList()
         self.addEffortViewers(singleTaskList, uiCommands, settings)       
-        self.add(self._viewerContainer, proportion=1, flag=wx.EXPAND|wx.ALL, 
+        self.add(self.containerWidget, proportion=1, flag=wx.EXPAND|wx.ALL, 
                  border=5)
         singleTaskList.append(theTask)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
@@ -315,20 +316,20 @@ class EffortPage(TaskEditorPage):
         event.Skip()
     
     def addEffortViewers(self, taskList, uiCommands, settings):
-        effortViewer = viewer.EffortListViewer(self._viewerContainer, taskList, 
+        effortViewer = viewer.EffortListViewer(self.containerWidget, taskList, 
             uiCommands, settings, 
             settingsSection='effortlistviewerintaskeditor')
         self._viewerContainer.addViewer(effortViewer, _('Effort details')) 
-        effortPerDayViewer = viewer.EffortPerDayViewer(self._viewerContainer,
+        effortPerDayViewer = viewer.EffortPerDayViewer(self.containerWidget,
             taskList, uiCommands, settings, 
             settingsSection='effortperdayviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerDayViewer, _('Effort per day'))
-        effortPerWeekViewer = viewer.EffortPerWeekViewer(self._viewerContainer,
+        effortPerWeekViewer = viewer.EffortPerWeekViewer(self.containerWidget,
             taskList, uiCommands, settings, 
             settingsSection='effortperweekviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerWeekViewer, 
             _('Effort per week'))
-        effortPerMonthViewer = viewer.EffortPerMonthViewer(self._viewerContainer,
+        effortPerMonthViewer = viewer.EffortPerMonthViewer(self.containerWidget,
             taskList, uiCommands, settings, 
             settingsSection='effortpermonthviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerMonthViewer, 

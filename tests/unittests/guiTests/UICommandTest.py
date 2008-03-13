@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx, gui, config
+import test, wx, gui, config, widgets
 from domain import task, effort, category, note, date
 from unittests import dummy
 
@@ -57,7 +57,8 @@ class UICommandsTest(test.wxTestCase):
         taskList = task.TaskList()
         effortList = effort.EffortList(taskList)
         categories = category.CategoryList()
-        viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
+        self.notebook = widgets.Notebook(self.frame)
+        viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
             settings, 'mainviewer')
         gui.uicommand.UICommands(self.frame, None, viewerContainer, None, 
             taskList, effortList, categories, note.NoteContainer())

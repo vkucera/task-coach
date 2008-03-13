@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, wx, config
+import test, gui, wx, config, widgets
 from unittests import dummy
 from domain import task, effort, category, note
 
@@ -24,9 +24,10 @@ class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.taskList = task.sorter.Sorter(task.TaskList())
-        self.container = gui.viewercontainer.ViewerNotebook(self.frame, 
+        notebook = widgets.Notebook(self.frame)
+        self.container = gui.viewercontainer.ViewerContainer(notebook, 
             self.settings, 'mainviewer')
-        self.container.addViewer(dummy.ViewerWithDummyWidget(self.container,
+        self.container.addViewer(dummy.ViewerWithDummyWidget(notebook,
             self.taskList, gui.uicommand.UICommands(self.frame, None, 
                 self.container, self.settings, self.taskList, 
                 effort.EffortList(self.taskList), category.CategoryList(), 
