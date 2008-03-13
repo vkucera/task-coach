@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, config
+import test, gui, config, widgets
 from domain import task, effort, category, note
 
 class EffortViewerTest(test.wxTestCase):
@@ -28,8 +28,8 @@ class EffortViewerTest(test.wxTestCase):
     def testCreate(self):
         effortViewer = gui.viewer.EffortListViewer(self.frame, self.effortList, 
             gui.uicommand.UICommands(self.frame, None, 
-                gui.viewercontainer.ViewerNotebook(self.frame, self.settings, 
-                    'mainviewer'), 
+                gui.viewercontainer.ViewerContainer(widgets.Notebook(self.frame), 
+                    self.settings, 'mainviewer'), 
                 self.settings, self.taskList, self.effortList, 
                 category.CategoryList(), note.NoteContainer()), 
                 self.settings, taskList=self.taskList)

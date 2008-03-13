@@ -334,6 +334,11 @@ class NeedsTreeViewer(object):
         return super(NeedsTreeViewer, self).enabled(event) and \
             self.viewer.isTreeViewer()
             
+class NeedsListViewer(object):
+    def enabled(self, event):
+        return super(NeedsListViewer, self).enabled(event) and \
+            (not self.viewer.isTreeViewer())
+
 class DisableWhenTextCtrlHasFocus(object):
     def enabled(self, event):
         if isinstance(wx.Window.FindFocus(), wx.TextCtrl):
@@ -756,7 +761,8 @@ class ViewViewer(SettingsCommand, ViewerCommand):
         
     def doCommand(self, event):
         self.viewer.Freeze()
-        newViewer = self.viewerClass(self.viewer, *self.viewerArgs, **self.viewerKwargs)
+        newViewer = self.viewerClass(self.viewer.containerWidget, 
+		*self.viewerArgs, **self.viewerKwargs)
         self.viewer.addViewer(newViewer, newViewer.title(), self.viewerBitmap)
         setting = self.viewerClass.__name__.lower() + 'count'
         viewerCount = self.settings.getint('view', setting)
@@ -770,8 +776,9 @@ class RenameViewer(SettingsCommand, ViewerCommand):
             helpText=_('Rename the selected viewer'), *args, **kwargs)
         
     def doCommand(self, event):
-        dialog = wx.TextEntryDialog(self.viewer, _('New title for the viewer:'),
-            _('Rename viewer'), self.viewer.title())
+        dialog = wx.TextEntryDialog(wx.GetApp().TopWindow, 
+            _('New title for the viewer:'), _('Rename viewer'), 
+            self.viewer.title())
         if dialog.ShowModal() == wx.ID_OK:
             self.viewer.setTitle(dialog.GetValue())
         dialog.Destroy()
@@ -996,7 +1003,7 @@ class ViewerHideOverbudgetTasks(ViewerCommand, UICheckCommand):
         self.viewer.hideOverbudgetTasks(self._isMenuItemChecked(event))
 
 
-class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
+class ViewerHideCompositeTasks(ViewerCommand, NeedsListViewer, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerHideCompositeTasks, self).__init__(menuText=_('Hide tasks &with subtasks'),
             helpText=_('Show/hide tasks with subtasks'), *args, **kwargs)

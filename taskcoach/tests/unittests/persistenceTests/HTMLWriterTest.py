@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, persistence, StringIO, gui, config, wx
+import test, persistence, StringIO, gui, config, wx, widgets
 from domain import task, category, effort, date, note
 from unittests import dummy
 
@@ -31,8 +31,8 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
         self.settings = config.Settings(load=False)
-        self.viewerContainer = gui.viewercontainer.ViewerNotebook(self.frame, 
-            self.settings, 'mainviewer')
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(\
+            widgets.Notebook(self.frame), self.settings, 'mainviewer')
         self.createViewer()
 
     def __writeAndRead(self, selectionOnly):

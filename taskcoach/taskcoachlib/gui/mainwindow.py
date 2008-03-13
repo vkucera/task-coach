@@ -23,16 +23,19 @@ from i18n import _
 from domain import task, effort
 
 
-class WindowWithPersistentDimensions(wx.Frame):
-    def __init__(self, settings, *args, **kwargs):
-        super(WindowWithPersistentDimensions, self).__init__(None, -1, '')
+class WindowDimensionsTracker(object):
+    ''' Track the dimensions (position and size) of a window in the 
+        settings. '''
+    def __init__(self, window, settings, *args, **kwargs):
+        super(WindowDimensionsTracker, self).__init__(*args, **kwargs)
         self._settings = settings
         self._section = 'window'
+        self._window = window
         self.setDimensions()
-        self.Bind(wx.EVT_SIZE, self.onChangeSize)
+        self._window.Bind(wx.EVT_SIZE, self.onChangeSize)
         if self.startIconized():
-            self.Iconize(True)
-            wx.CallAfter(self.Hide)
+            self._window.Iconize(True)
+            wx.CallAfter(self._window.Hide)
             
     def startIconized(self):
         startIconized = self._settings.get(self._section, 'starticonized')
@@ -51,26 +54,29 @@ class WindowWithPersistentDimensions(wx.Frame):
     def setDimensions(self):
         width, height = self.getSetting('size')
         x, y = self.getSetting('position')
-        self.SetDimensions(x, y, width, height)
+        self._window.SetDimensions(x, y, width, height)
         # Check that the window is on a valid display and move if necessary:
-        if wx.Display.GetFromWindow(self) == wx.NOT_FOUND:
-            self.SetDimensions(0, 0, width, height)
+        if wx.Display.GetFromWindow(self._window) == wx.NOT_FOUND:
+            self._window.SetDimensions(0, 0, width, height)
 
     def onChangeSize(self, event):
         self.setSetting('size', event.GetSize())
         event.Skip()
                 
     def savePosition(self):
-        iconized = self.IsIconized()
+        iconized = self._window.IsIconized()
         if not iconized:
-            self.setSetting('position', self.GetPosition())
+            self.setSetting('position', self._window.GetPosition())
         self.setSetting('iconized', iconized)
 
         
-class MainWindow(WindowWithPersistentDimensions):
+class MainWindow(wx.Frame):
+    pageClosedEvent = wx.aui.EVT_AUI_PANE_CLOSE
+    
     def __init__(self, iocontroller, taskFile, settings, 
                  splash=None, *args, **kwargs):
-        super(MainWindow, self).__init__(settings, *args, **kwargs)
+        super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
+        self.dimensionsTracker = WindowDimensionsTracker(self, settings)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
         self.settings = settings
@@ -84,14 +90,14 @@ class MainWindow(WindowWithPersistentDimensions):
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
-        self.panel = wx.Panel(self)
-        self.viewer = viewercontainer.ViewerAUINotebook(self.panel, 
+        self.manager = wx.aui.AuiManager(self, 
+            wx.aui.AUI_MGR_DEFAULT|wx.aui.AUI_MGR_ALLOW_ACTIVE_PANE)
+        self.viewer = viewercontainer.ViewerContainer(self,
             self.settings, 'mainviewer') 
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.taskFile.tasks(), 
             self.taskFile.efforts(), self.taskFile.categories(), 
             self.taskFile.notes())
-        self.initLayout()
         viewerfactory.addTaskViewers(self.viewer, self.taskFile.tasks(), 
             self.uiCommands, self.settings, self.taskFile.categories())
         viewerfactory.addEffortViewers(self.viewer, self.taskFile.tasks(), 
@@ -110,11 +116,30 @@ class MainWindow(WindowWithPersistentDimensions):
         self.reminderController = \
             remindercontroller.ReminderController(self.taskFile.tasks(), 
                 self.taskFile.categories(), self.settings, self.uiCommands)
-                
-    def initLayout(self):
-        self._sizer = wx.BoxSizer(wx.VERTICAL)
-        self._sizer.Add(self.viewer, proportion=1, flag=wx.EXPAND)
-        self.panel.SetSizerAndFit(self._sizer)
+	perspective = self.settings.get('view', 'perspective')
+        if perspective:
+            self.manager.LoadPerspective(perspective)
+        self.manager.Update()
+        
+    def AddPage(self, page, caption, *args):
+	name = page.settingsSection()
+	paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left()
+	if not self.manager.GetAllPanes():
+            paneInfo = paneInfo.Center().CloseButton(False)
+        self.manager.AddPane(page, paneInfo)
+        self.manager.Update()
+        
+    def SetSelection(self, index, *args):
+        self.manager.GetAllPanes()[index].SetFlag(wx.aui.AuiPaneInfo.optionActive, True)
+        
+    def SetPageText(self, index, title):
+        self.manager.GetAllPanes()[index].Caption(title)
+
+    def GetPageIndex(self, window):
+        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            if paneInfo.window == window:
+                return index
+        return wx.NOT_FOUND
 
     def initWindow(self):
         wx.GetApp().SetTopWindow(self)
@@ -201,7 +226,8 @@ class MainWindow(WindowWithPersistentDimensions):
             self.settings.set('view', key, str(value))
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()
-        self.savePosition()
+	self.settings.set('view', 'perspective', self.manager.SavePerspective())
+        self.dimensionsTracker.savePosition()
         self.settings.save()
         wx.GetApp().ProcessIdle()
         wx.GetApp().ExitMainLoop()
@@ -232,7 +258,6 @@ class MainWindow(WindowWithPersistentDimensions):
         # FIXME: First hiding the statusbar, then hiding the toolbar, then
         # showing the statusbar puts it in the wrong place (only on Linux?)
         self.GetStatusBar().Show(show)
-        self._sizer.Layout()
         self.SendSizeEvent()
 
     def showToolBar(self, size):
