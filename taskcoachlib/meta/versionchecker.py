@@ -47,7 +47,7 @@ class VersionChecker(threading.Thread):
             padFile = self.retrievePadFile()
         except urllib2.URLError:
             return self.settings.get('version', 'notified')
-	try:
+        try:
             pad = ElementTree.parse(padFile)
         except ElementTree.ExpatError:
             # This can happen e.g. when connected to a hotel network that

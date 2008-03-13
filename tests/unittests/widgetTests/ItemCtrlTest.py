@@ -77,7 +77,7 @@ class CtrlWithColumnsUnderTest(widgets.itemctrl.CtrlWithColumns, wx.ListCtrl):
 class CtrlWithColumnsTest(CtrlWithColumnsTestCase, 
         CtrlWithHideableColumnsTests, CtrlWithSortableColumnsTests):
     def createControl(self):
-	# NOTE: the resizeableColumn is the column that is not hidden
+        # NOTE: the resizeableColumn is the column that is not hidden
         return CtrlWithColumnsUnderTest(self.frame, style=wx.LC_REPORT,
             columns=[self.column1, self.column2], resizeableColumn=1, 
             columnPopupMenu=None)

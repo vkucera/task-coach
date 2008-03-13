@@ -762,7 +762,7 @@ class ViewViewer(SettingsCommand, ViewerCommand):
     def doCommand(self, event):
         self.viewer.Freeze()
         newViewer = self.viewerClass(self.viewer.containerWidget, 
-		*self.viewerArgs, **self.viewerKwargs)
+                                     *self.viewerArgs, **self.viewerKwargs)
         self.viewer.addViewer(newViewer, newViewer.title(), self.viewerBitmap)
         setting = self.viewerClass.__name__.lower() + 'count'
         viewerCount = self.settings.getint('view', setting)

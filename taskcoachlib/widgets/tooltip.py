@@ -168,7 +168,7 @@ class SimpleToolTip(ToolTipBase):
         height += 6
 
         self.SetSize(wx.Size(width, height))
-	self.Refresh() # Needed on MacOS X
+        self.Refresh() # Needed on MacOS X
 
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
@@ -176,11 +176,11 @@ class SimpleToolTip(ToolTipBase):
         try:
             dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
-	    w, h = self.GetClientSizeTuple()
-	    brush = wx.Brush(wx.Colour(0xff, 0xff, 0xe1))
-	    dc.SetBrush(brush)
-	    dc.SetPen(wx.BLACK_PEN)
-	    dc.DrawRectangle(0, 0, w, h)
+            w, h = self.GetClientSizeTuple()
+            brush = wx.Brush(wx.Colour(0xff, 0xff, 0xe1))
+            dc.SetBrush(brush)
+            dc.SetPen(wx.BLACK_PEN)
+            dc.DrawRectangle(0, 0, w, h)
 
             x = 3
             y = 3
