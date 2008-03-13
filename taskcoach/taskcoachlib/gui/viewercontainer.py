@@ -76,9 +76,9 @@ class ViewerContainer(object):
         return findFirstViewer
 
     def activeViewer(self):
-	windowWithFocus = wx.Window.FindFocus()
-	while windowWithFocus:
-	    for viewer in self.viewers:
+        windowWithFocus = wx.Window.FindFocus()
+        while windowWithFocus:
+            for viewer in self.viewers:
                 if viewer == windowWithFocus:
                     return viewer
             windowWithFocus = windowWithFocus.Parent

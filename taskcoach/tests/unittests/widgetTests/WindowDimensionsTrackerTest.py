@@ -45,7 +45,7 @@ class WindowTest(test.wxTestCase):
         
     def testMove(self):
         self.frame.ProcessEvent(wx.MoveEvent((200, 200)))
-	self.tracker.savePosition()
+        self.tracker.savePosition()
         #The move is not processed, dunno why:
         self.assertEqual((100, 100), eval(self.settings.get(self.section, 'position')))
 

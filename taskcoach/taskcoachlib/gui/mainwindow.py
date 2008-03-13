@@ -116,15 +116,15 @@ class MainWindow(wx.Frame):
         self.reminderController = \
             remindercontroller.ReminderController(self.taskFile.tasks(), 
                 self.taskFile.categories(), self.settings, self.uiCommands)
-	perspective = self.settings.get('view', 'perspective')
+        perspective = self.settings.get('view', 'perspective')
         if perspective:
             self.manager.LoadPerspective(perspective)
         self.manager.Update()
         
     def AddPage(self, page, caption, *args):
-	name = page.settingsSection()
-	paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left()
-	if not self.manager.GetAllPanes():
+        name = page.settingsSection()
+        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left()
+        if not self.manager.GetAllPanes():
             paneInfo = paneInfo.Center().CloseButton(False)
         self.manager.AddPane(page, paneInfo)
         self.manager.Update()
@@ -226,7 +226,7 @@ class MainWindow(wx.Frame):
             self.settings.set('view', key, str(value))
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()
-	self.settings.set('view', 'perspective', self.manager.SavePerspective())
+        self.settings.set('view', 'perspective', self.manager.SavePerspective())
         self.dimensionsTracker.savePosition()
         self.settings.save()
         wx.GetApp().ProcessIdle()
