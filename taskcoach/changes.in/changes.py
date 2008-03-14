@@ -7,6 +7,8 @@ releases = [
 Release('0.69.2', 'March ?, 2008',
     summary='Bug fix release.',
     bugsFixed=[
+        Bug('''Exception when starting Task Coach ("AttributeError: 
+'CategoryList' object has no attribute 'EventTypePrefix'").''', '1901385'),
         Bug('''Exception when reopening a closed viewer (with the message
 "ConfigParser.NoSectionError: No section: 'effortperdayviewer1'" in the log 
 file).''', '1894488'),
