@@ -95,7 +95,8 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
                 return index
         return wx.NOT_FOUND
      
-    def AdvanceSelection(self, forward=True):
+    def AdvanceSelection(self, forward=True): 
+        # FIXME: duplicated from widgets.AUINotebook.AdvanceSelection
         if self.PageCount <= 1:
             return # Not enough viewers to advance selection
         if forward:
