@@ -1073,14 +1073,21 @@ class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand,
             helpText=taskList.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        filteredCategories = [category for category in self.categories if
-                             category.isFiltered()]
         newTaskDialog = gui.dialog.editor.TaskEditor(self.mainwindow, 
-            command.NewTaskCommand(self.taskList, categories=filteredCategories), 
+            command.NewTaskCommand(self.taskList, 
+            categories=self.categoriesForTheNewTask()), 
             self.taskList, self.uiCommands, self.settings, self.categories, 
             bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
+
+    def categoriesForTheNewTask(self):
+        return [category for category in self.categories if category.isFiltered()]
+
+
+class NewTaskWithSelectedCategories(TaskNew, ViewerCommand):
+    def categoriesForTheNewTask(self):
+        return self.viewer.curselection()
     
 
 class TaskNewSubTask(NeedsSelectedTasks,  TaskListCommand, ViewerCommand):
@@ -1863,6 +1870,10 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         # Task menu
         self['newtask'] = TaskNew(mainwindow=mainwindow, taskList=taskList,
             settings=settings, uicommands=self, categories=categories)
+        self['newtaskwithselectedcategories'] = \
+            NewTaskWithSelectedCategories(mainwindow=mainwindow,
+                taskList=taskList, settings=settings, uicommands=self,
+                categories=categories, viewer=viewer)
         self['newsubtask'] = TaskNewSubTask(taskList=taskList, viewer=viewer)
         self['edittask'] = TaskEdit(taskList=taskList, viewer=viewer)
         self['toggletaskcompletion'] = TaskToggleCompletion(taskList=taskList,

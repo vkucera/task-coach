@@ -7,6 +7,8 @@ releases = [
 Release('0.69.2', 'March ?, 2008',
     summary='Bug fix release.',
     bugsFixed=[
+        Bug('''Tasks created via the context menu of the category view now 
+automatically belong to the selected category.''', '1592103'),
         Bug('''Update task status and colors at midnight.''', '1183043'),
         Bug('''Exception when starting Task Coach ("AttributeError: 
 'CategoryList' object has no attribute 'EventTypePrefix'").''', '1901385'),

@@ -352,9 +352,9 @@ class CategoryPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(CategoryPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None, 
-            'newtask', None, 'newcategory', 'newsubcategory', 'editcategory', 
-            'deletecategory', None, 'stopeffort', None, 'viewexpandselected',
-            'viewcollapseselected'])
+            'newtaskwithselectedcategories', None, 'newcategory', 
+            'newsubcategory', 'editcategory', 'deletecategory', None, 
+            'stopeffort', None, 'viewexpandselected', 'viewcollapseselected'])
 
 
 class NotePopupMenu(Menu):
