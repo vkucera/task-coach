@@ -23,6 +23,9 @@ class Clock(object):
         for eventType in 'clock.second', Clock.eventType(now):
             patterns.Publisher().notifyObservers(patterns.Event(self,
                 eventType, now))
+        if now.hour == now.minute == now.second == 0:
+            patterns.Publisher().notifyObservers(patterns.Event(self,
+                'clock.midnight', now))
        
     @staticmethod    
     def eventType(dateTime):

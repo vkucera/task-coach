@@ -19,7 +19,6 @@ class CommonTests(object):
             if os.path.isdir(name) and name.endswith('_attachments'):
                 os.rmdir(name)
 
-
     def getFirstItemTextColor(self):
         raise NotImplementedError
     
@@ -108,3 +107,15 @@ class CommonTests(object):
         tree = dialog[0][2]._treeCtrl
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
         self.failUnless(firstChild.IsChecked())
+        
+    def testMidnightStatusUpdate(self):
+        self.taskList.append(task.Task(subject='test', dueDate=date.Tomorrow()))
+        tomorrow = date.Tomorrow()
+        midnight = date.DateTime(tomorrow.year, tomorrow.month, tomorrow.day)
+        self.newColor = (255,128,0) # Expected color
+        originalToday = date.Today
+        date.Today = lambda: date.Tomorrow() # Make it tomorrow
+        date.Clock().notify(now=midnight)
+        self.assertColor()
+        date.Today = originalToday
+        

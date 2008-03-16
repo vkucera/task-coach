@@ -830,6 +830,11 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
                 eventType=colorSetting)
         patterns.Publisher().registerObserver(self.onColorChange,
             eventType=task.Task.categoryColorChangedEventType())
+        patterns.Publisher().registerObserver(self.atMidnight,
+            eventType='clock.midnight')
+        
+    def atMidnight(self, event):
+        self.refresh()
         
     def onColorSettingChange(self, event):
         self.refresh()
