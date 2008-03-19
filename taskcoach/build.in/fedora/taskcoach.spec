@@ -1,0 +1,82 @@
+#%%{!?python_sitelib: %%define python_sitelib %%(%%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%%define		originalName	TaskCoach
+
+Name: 		%(filename_lower)s
+Summary: 	%(description)s
+Version: 	%(version)s
+Release: 	1%%{?dist}
+License: 	%(license_abbrev)s
+Group: 		Applications/Productivity
+URL: 		%(url)s
+Source:		%(dist_download_prefix)s/TaskCoach-%%{version}.tar.gz
+Source1:	taskcoach.png
+Source2:	taskcoach.desktop
+BuildRoot: 	%%{_tmppath}/%%{name}-%%{version}-%%{release}-root-%%(%%{__id_u} -n)
+BuildArch:	noarch
+Requires: 	python >= 2.4
+#author specifies it as "2.8.6.0-unicode", but 2.8.4 seems to be fine
+Requires:	wxPython >= 2.8.4
+
+# Must have setuptools to build the package
+# The build portions moved to a subpackage in F-8
+%%if 0%%{?fedora} >= 8
+BuildRequires: python-setuptools-devel
+%%else
+BuildRequires: python-setuptools
+%%endif
+
+%%description
+%(long_description)s
+
+
+%%prep
+%%setup -q -n %%{originalName}-%%{version}
+
+%%build
+CFLAGS="%%{optflags}" %%{__python} make.py build
+
+%%install
+%%{__rm} -rf %%{buildroot}
+# --root $RPM_BUILD_ROOT makes the package install with a single, expanded
+# directory in %%{python_sitelib} and a separate egginfo directory.
+%%{__python} setup.py install --skip-build --root="%%{buildroot}" --prefix="%%{_prefix}"
+%%{__mkdir} -p %%{buildroot}%%{_datadir}/pixmaps
+%%{__cp} -a %%{SOURCE1} %%{buildroot}%%{_datadir}/pixmaps/
+
+desktop-file-install --vendor fedora \
+        --dir %%{buildroot}%%{_datadir}/applications \
+        %%{SOURCE2}
+
+%%clean
+%%{__rm} -rf %%{buildroot}
+
+%%files
+%%defattr(0644,root,root,0755)
+%%attr(0755,root,root) %%{_bindir}/taskcoach.py
+%%{_bindir}/taskcoach.pyc
+%%{_bindir}/taskcoach.pyo
+#python_sitelib definition should be used instead of
+#%%dir %%{python_sitelib}/taskcoachlib
+%%{_libdir}/python*/site-packages/taskcoachlib/*
+%%{_datadir}/applications/fedora-taskcoach.desktop
+%%{_datadir}/pixmaps/taskcoach.png
+%%doc CHANGES.txt LICENSE.txt PUBLICITY.txt README.txt TODO.tsk
+
+%%exclude %%{_bindir}/taskcoach.pyw
+%%exclude %%{_libdir}/python*/site-packages/buildlib/*.py*
+
+%%changelog
+* Wed Mar 19 2008 Frank Niessink <frank ATT niessink DOTT com> - 0.70.0-1
+- integrate Fedora RPM build step into Task Coach build process
+
+* Tue Feb 12 2008 Marcin Zajaczkowski <mszpak ATT wp DOTT pl> - 0.69.0-2
+- clean up spec file (official RPM packages with be built from that SPEC)
+
+* Sun Feb 10 2008 Marcin Zajaczkowski <mszpak ATT wp DOTT pl> - 0.69.0-1
+- updated to 0.69.0
+
+* Fri Jan 25 2008 Marcin Zajaczkowski <mszpak ATT wp DOTT pl> - 0.68.0-2
+- .desktop file and icon added
+
+* Sun Jan 06 2008 Marcin Zajaczkowski <mszpak ATT wp DOTT pl> - 0.68.0-1
+- initial internal release

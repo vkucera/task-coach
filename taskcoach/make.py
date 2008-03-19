@@ -19,14 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta
 import sys, os, glob
 from setup import setupOptions
-from buildlib import clean
+from buildlib import clean, bdist_rpm_fedora
 import taskcoach # to add taskcoachlib to the searchpath
 
 
-setupOptions['cmdclass'] = dict(clean=clean)
+setupOptions['cmdclass'] = dict(clean=clean,
+                                bdist_rpm_fedora=bdist_rpm_fedora)
                                 
 distdir = 'dist'
 builddir = 'build'
+
 
 manifest = """
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -105,6 +107,8 @@ Type: files; Name: "{app}\%(filename)s.url"
 '''
 
 def writeFile(filename, text, directory='.'):
+    if not os.path.exists(directory):
+        os.mkdir(directory)
     file = open(os.path.join(directory, filename), 'w')
     file.write(text)
     file.close()
@@ -143,6 +147,13 @@ elif sys.argv[1] == 'py2app':
             dist_dir=builddir, optimize=2, iconfile='icons.in/taskcoach.icns', 
             packages=['i18n'],
             plist=dict(CFBundleIconFile='taskcoach.icns')))))
+elif sys.argv[1] == 'bdist_rpm_fedora':
+    from distutils.core import setup
+    spec_file = file('build.in/fedora/taskcoach.spec').read()%meta.metaDict
+    spec_file = spec_file.split('\n')
+    setupOptions.update(dict(options=dict(bdist_rpm_fedora=dict(\
+        spec_file=spec_file, icon='icons.in/taskcoach.png', 
+        desktop_file='build.in/fedora/taskcoach.desktop'))))
 else:
     from distutils.core import setup
     # On Fedora, to keep the rpm build process going when it finds 

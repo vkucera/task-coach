@@ -39,6 +39,9 @@ sdist: icons changes i18n
 rpm: icons changes i18n
 	$(PYTHON) make.py bdist_rpm --requires "python2.5,python-wxgtk2.8" --group "Applications/Productivity"
 
+fedora: icons changes i18n
+	$(PYTHON) make.py bdist_rpm_fedora 
+
 deb: rpm
 	export EMAIL="frank@niessink.com"
 	cd dist; sudo alien --keep-version *.noarch.rpm; cd ..
