@@ -6,6 +6,9 @@ releases = [
 
 Release('0.69.2', 'March ?, 2008',
     summary='Bug fix release.',
+    featuresAdded=[
+        Feature('''Task Coach now suggests a reminder date based
+on the due date or start date of a task.''')],
     bugsFixed=[
         Bug('''Tasks created via the context menu of the category view now 
 automatically belong to the selected category.''', '1592103'),

@@ -111,6 +111,8 @@ class DateCtrl(Panel):
             options['style'] |= wx.DP_ALLOWNONE
         if '__WXMSW__' in wx.PlatformInfo:
             options['size'] = (100, -1)
+        elif '__WXGTK__' in wx.PlatformInfo:
+            options['size'] = (110, -1)
         return [DatePickerCtrl(self, **options)]
 
     def SetValue(self, value):
@@ -127,7 +129,8 @@ class TimeCtrl(Panel):
         super(TimeCtrl, self).__init__(parent, callback, *args, **kwargs)
         
     def SetValue(self, time):
-        self._controls[0].SetValue('%02d:%02d'%(time.hour, time.minute))
+        if time is not None:
+            self._controls[0].SetValue('%02d:%02d'%(time.hour, time.minute))
     
     def _createControls(self, callback):
         # TODO: use wx.lib.masked.ComboBox or wx.lib.masked.TimeCtrl?
@@ -192,8 +195,7 @@ class DateTimeCtrl(Panel):
         
     def SetValue(self, dateTime):
         if dateTime is None:
-            datePart = None
-            timePart = date.Time()
+            datePart = timePart = None
         else:
             datePart = dateTime.date()
             timePart = dateTime.time()
