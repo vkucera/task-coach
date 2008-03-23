@@ -26,7 +26,9 @@ calculating the overall priority of a task.''', '1905774'),
         Bug('''It was not clear that backup files can be opened in Task Coach.
 Backup files now have the extension '.tsk.bak'. The file open dialog has 
 '*.tsk.bak' as selectable file type to make it easier to open backup files.''', 
-'1911538')]),
+'1911538'),
+        Bug('''Exception when opening the task menu while the toolbar 
+is hidden.''')]),
     
 Release('0.69.1', 'February 14, 2008',
     summary='Bug fix release.',
