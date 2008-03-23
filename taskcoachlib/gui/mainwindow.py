@@ -81,6 +81,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
 
     def AddPage(self, page, caption, name): 
         paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left()
+        # To ensure we have a center pane we make the first pane the center pane:
         if not self.manager.GetAllPanes():
             paneInfo = paneInfo.Center().CloseButton(False)
         self.manager.AddPane(page, paneInfo)
@@ -302,9 +303,28 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.SendSizeEvent()
 
     def showToolBar(self, size):
+        '''
         if self.GetToolBar():
             self.GetToolBar().Destroy()
         if size is not None:
             self.SetToolBar(toolbar.ToolBar(self, self.uiCommands, size=size))
         self.SendSizeEvent()
+        '''
+        currentToolbar = self.manager.GetPane('toolbar')
+        if currentToolbar.IsOk():
+            self.manager.DetachPane(currentToolbar.window)
+            currentToolbar.window.Destroy()
+        if size is not None:
+            bar = toolbar.ToolBar(self, self.uiCommands, size=size)
+            self.manager.AddPane(bar, wx.aui.AuiPaneInfo().Name('toolbar').
+                                 Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
+                                 LeftDockable(False).RightDockable(False))
+            self.Bind(self.pageClosedEvent, self.onCloseToolBar)
+        else:
+            self.Unbind(self.pageClosedEvent)
+        self.manager.Update()
 
+    def onCloseToolBar(self, event):
+        if event.GetPane().IsToolbar():
+            self.settings.set('view', 'toolbar', 'None')
+        # Don't call event.Skip(), it crashes TC on Ubuntu. Don't know why.
