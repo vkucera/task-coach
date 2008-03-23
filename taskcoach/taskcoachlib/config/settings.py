@@ -84,7 +84,7 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
 
     def get(self, section, option):
         try:
-            return super(Settings, self).get(section, option)
+            result = super(Settings, self).get(section, option)
         except ConfigParser.NoOptionError:
             if section[-1].isdigit(): 
                 # Find a section that has this setting. Normally, if the 
@@ -99,9 +99,14 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
                     section = sectionName + str(sectionNumber - 1)
                 else:
                     section = sectionName 
-                return self.get(section, option) # recursive call
+                result = self.get(section, option) # recursive call
             else:
                 raise
+        # Some settings may have a minimum value, make sure we return at least that 
+        # minimum value:
+        if section in defaults.minimum and option in defaults.minimum[section]:
+            result = min(result, defaults.minimum[section][option])
+        return result
                 
     def set(self, section, option, value):
         currentValue = self.get(section, option)

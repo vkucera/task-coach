@@ -210,4 +210,12 @@ class SettingsFileLocationTest(SettingsTestCase):
     def testSettingSaveIniFileInProgramDirToFalseRemovesIniFile(self):
         self.settings.setboolean('file', 'saveinifileinprogramdir', True)
         self.settings.setboolean('file', 'saveinifileinprogramdir', False)
- 
+        
+
+class MinimumSettingsTest(SettingsTestCase):
+    def testAtLeastOneTaskTreeListViewer(self):
+        self.assertEqual(1, self.settings.get('view', 'tasktreelistviewercount'))
+
+    def testAtLeastTwoCategoryViewers(self):
+        config.defaults.minimum['view']['categoryviewercount'] = 2
+        self.assertEqual(2, self.settings.get('view', 'categoryviewercount'))
