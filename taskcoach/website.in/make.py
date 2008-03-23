@@ -258,6 +258,9 @@ pages['mailinglist'] = \
         <P>You can browse the <a
         href="http://groups.yahoo.com/group/taskcoach/messages">archive
         of messages</a> without subscribing to the mailinglist.</P>
+        <p>The mailinglist is also available as the newsgroup 
+        <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach">gmane.comp.sysutils.pim.taskcoach</a>
+        on <a href="http://gmane.org">Gmane</a>.</p>
 '''
 
 pages['faq'] = \
