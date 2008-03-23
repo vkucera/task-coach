@@ -78,7 +78,7 @@ integrationtests:
 	cd tests; $(PYTHON) test.py --integrationtests --no-unittests
     
 
-CLEANFILES=dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
+CLEANFILES=build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
 REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 
 clean:
