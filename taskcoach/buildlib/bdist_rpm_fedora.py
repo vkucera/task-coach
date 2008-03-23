@@ -30,7 +30,7 @@ class bdist_rpm_fedora(bdist_rpm):
         self.desktop_file = ''
 
     def _make_spec_file(self):
-        ''' We don't want the spec file to be generated, but the rpm build
+        ''' We don't want the spec file to be generated, instead the rpm build
         process should just use the provided spec file. '''
         return self.spec_file
         
