@@ -26,6 +26,7 @@ releases = [
 Release('0.70.0', 'March ?, 2008',
     summary='...',
     featuresAdded=[
+        Feature('Paths to file attachments may be relative.'),
         Feature('Monthly and yearly recurrence of tasks.')],
     dependenciesChanged=[
         Dependency('''Task Coach is now distributed under the GNU General 

@@ -20,7 +20,7 @@ import patterns, time, copy
 from domain import date, category
 
 
-class Task(category.CategorizableCompositeObject):
+class Task(category.CategorizableCompositeObject, patterns.Observer):
     def __init__(self, subject='', description='', dueDate=None, 
             startDate=None, completionDate=None, budget=None, 
             priority=0, id=None, hourlyFee=0,
@@ -51,7 +51,9 @@ class Task(category.CategorizableCompositeObject):
         self._maxRecurrenceCount = maxRecurrenceCount
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
-            
+
+        self.registerObserver(self.onAttachmentChanged, 'attachment.changed')
+
     def __setstate__(self, state):
         super(Task, self).__setstate__(state)
         self.setStartDate(state['startDate'])
@@ -483,7 +485,10 @@ class Task(category.CategorizableCompositeObject):
         if attachmentsRemoved:
             self.notifyObservers(patterns.Event(self, 'task.attachment.remove', 
                 *attachmentsRemoved))
-            
+
+    def onAttachmentChanged(self, evt):
+        self.notifyObservers(patterns.Event(self, 'task.attachment.changed'))
+
     def removeAllAttachments(self):
         self.removeAttachments(*self._attachments)
             

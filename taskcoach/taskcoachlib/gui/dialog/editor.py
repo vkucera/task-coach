@@ -389,8 +389,9 @@ class CategoriesPage(TaskEditorPage):
     
 
 class AttachmentPage(TaskEditorPage):
-    def __init__(self, parent, task, *args, **kwargs):
+    def __init__(self, parent, task, settings, *args, **kwargs):
         super(AttachmentPage, self).__init__(parent, task, *args, **kwargs)
+        self.settings = settings
         attachmentBox = widgets.BoxWithBoxSizer(self, label=_('Attachments'))
         self._listCtrl = wx.ListCtrl(attachmentBox, style=wx.LC_REPORT)
         self._listCtrl.InsertColumn(0, _('Attachment filenames'))
@@ -456,8 +457,14 @@ class AttachmentPage(TaskEditorPage):
         self.addAttachmentToListCtrl(att)
         
     def onFileDrop(self, x, y, filenames):
+        base = self.settings.get('file', 'attachmentbase')
         for filename in filenames:
-            self.addAttachmentToListCtrl(attachment.FileAttachment(filename))
+            if base:
+                path = attachment.getRelativePath(filename, base)
+            else:
+                path = filename
+
+            self.addAttachmentToListCtrl(attachment.FileAttachment(path))
             
     def onURLDrop(self, x, y, url):
         self.addAttachmentToListCtrl(attachment.URIAttachment(url))
@@ -468,7 +475,13 @@ class AttachmentPage(TaskEditorPage):
     def onBrowse(self, *args, **kwargs):
         filename = widgets.AttachmentSelector()
         if filename:
-            self.addAttachmentToListCtrl(attachment.FileAttachment(filename))
+            base = self.settings.get('file', 'attachmentbase')
+            if base:
+                path = attachment.getRelativePath(filename, base)
+            else:
+                path = filename
+
+            self.addAttachmentToListCtrl(attachment.FileAttachment(path))
         
     def onOpen(self, event, showerror=wx.MessageBox):
         index = -1
@@ -479,7 +492,7 @@ class AttachmentPage(TaskEditorPage):
                 break
             attachment = self._listData[self._listCtrl.GetItemData(index)]
             try:    
-                attachment.open()
+                attachment.open(self.settings.get('file', 'attachmentbase'))
             except Exception, instance:
                 showerror(str(instance), 
                     caption=_('Error opening attachment'), style=wx.ICON_ERROR)
@@ -558,7 +571,7 @@ class TaskEditBook(widgets.Listbook):
         if task.timeSpent(recursive=True):
             effortPage = EffortPage(self, task, taskList, settings, uiCommands)
             self.AddPage(effortPage, _('Effort'), 'start')
-        self.AddPage(AttachmentPage(self, task), _('Attachments'), 'attachment')
+        self.AddPage(AttachmentPage(self, task, settings), _('Attachments'), 'attachment')
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior') 
 
 
