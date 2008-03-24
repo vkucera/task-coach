@@ -29,6 +29,7 @@ class SettingsPage(widgets.BookPage):
         self._choiceSettings = []
         self._integerSettings = []
         self._colorSettings = []
+        self._pathSettings = []
         
     def addBooleanSetting(self, section, setting, text, helpText=''):
         checkBox = wx.CheckBox(self, -1)
@@ -59,7 +60,13 @@ class SettingsPage(widgets.BookPage):
             eval(self.settings.get(section, setting)))
         self.addEntry(None, colorButton)
         self._colorSettings.append((section, setting, colorButton))
-        
+
+    def addPathSetting(self, section, setting, text, helpText=''):
+        pathChooser = widgets.DirectoryChooser(self, wx.ID_ANY)
+        pathChooser.SetPath(self.settings.get(section, setting))
+        self.addEntry(text, pathChooser, helpText)
+        self._pathSettings.append((section, setting, pathChooser))
+
     def addText(self, label, text):
         self.addEntry(label, text)
                 
@@ -73,7 +80,8 @@ class SettingsPage(widgets.BookPage):
             self.settings.set(section, setting, str(spin.GetValue()))
         for section, setting, colorButton in self._colorSettings:
             self.settings.set(section, setting, str(colorButton.GetColour()))
-            
+        for section, setting, btn in self._pathSettings:
+            self.settings.set(section, setting, btn.GetPath())
 
 class SavePage(SettingsPage):
     def __init__(self, *args, **kwargs):
@@ -88,6 +96,8 @@ class SavePage(SettingsPage):
             _('Save settings (%s.ini) in same directory as the program') \
               %meta.filename, 
             _('(For running %s from a removable medium)')%meta.name)
+        self.addPathSetting('file', 'attachmentbase', _('Attachement base directory'),
+                            _('When adding an attachment, try to make its path\nrelative to this one.'))
         self.fit()
             
                

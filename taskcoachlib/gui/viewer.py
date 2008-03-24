@@ -905,7 +905,12 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     def onDropFiles(self, index, filenames):
         ''' This method is called by the widget when one or more files
             are dropped on a task. '''
-        attachments = [attachment.FileAttachment(name) for name in filenames]
+        base = self.settings.get('file', 'attachmentbase')
+        if base:
+            func = lambda x: attachment.getRelativePath(x, base)
+        else:
+            func = lambda x: x
+        attachments = [attachment.FileAttachment(func(name)) for name in filenames]
         if index is None:
             newTaskDialog = self.newItemDialog(bitmap='new',
                                                attachments=attachments)

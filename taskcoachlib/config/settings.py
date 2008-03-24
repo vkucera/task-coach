@@ -111,6 +111,8 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
     def set(self, section, option, value):
         currentValue = self.get(section, option)
         if value != currentValue:
+            self.notifyObservers(patterns.Event(self, 'before.%s.%s'%(section, option), 
+                                 value))
             super(Settings, self).set(section, option, value)
             self.notifyObservers(patterns.Event(self, '%s.%s'%(section, option), 
                                  value))

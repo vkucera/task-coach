@@ -1318,7 +1318,7 @@ class TaskMail(NeedsSelectedTasks, ViewerCommand):
         desktop.open(mailToURL)
 
 
-class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskAddAttachment, self).__init__(menuText=_('&Add attachment'),
             helpText=_('Browse for files to add as attachment to the selected task(s)'),
@@ -1327,23 +1327,28 @@ class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def doCommand(self, event):
         filename = widgets.AttachmentSelector()
         if filename:
+            base = self.settings.get('file', 'attachmentbase')
+            if base:
+                filename = attachment.getRelativePath(filename, base)
+
             addAttachmentCommand = command.AddAttachmentToTaskCommand( \
                 self.taskList, self.viewer.curselection(), 
                 attachments=[attachment.FileAttachment(filename)])
             addAttachmentCommand.do()
 
 
-class TaskOpenAllAttachments(NeedsSelectedTasksWithAttachments, ViewerCommand):
+class TaskOpenAllAttachments(NeedsSelectedTasksWithAttachments, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskOpenAllAttachments, self).__init__(menuText=_('&Open all attachments'),
            helpText=_('Open all attachments of the selected task(s)'),
            bitmap='attachment', *args, **kwargs)
         
     def doCommand(self, event):
+        base = self.settings.get('file', 'attachmentbase')
         for task in self.viewer.curselection():
             for attachment in task.attachments():
                 try:    
-                    attachment.open()
+                    attachment.open(base)
                 except Exception, instance:
                     showerror(str(instance), 
                         caption=_('Error opening attachment'), style=wx.ICON_ERROR)
@@ -1898,8 +1903,9 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             helpText=_('Mail the task, using your default mailer'), 
             bitmap='email')
         self['addattachmenttotask'] = TaskAddAttachment(taskList=taskList,
-                                                        viewer=viewer)
-        self['openalltaskattachments'] = TaskOpenAllAttachments(viewer=viewer)
+                                                        viewer=viewer,
+                                                        settings=settings)
+        self['openalltaskattachments'] = TaskOpenAllAttachments(viewer=viewer, settings=settings)
         self['incpriority'] = TaskIncPriority(taskList=taskList, viewer=viewer)
         self['decpriority'] = TaskDecPriority(taskList=taskList, viewer=viewer)
         self['maxpriority'] = TaskMaxPriority(taskList=taskList, viewer=viewer)

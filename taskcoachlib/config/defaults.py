@@ -186,7 +186,8 @@ defaults = { \
     'lastfile': '',
     'autosave': 'False',
     'backup': 'False',
-    'saveinifileinprogramdir': 'False' },
+    'saveinifileinprogramdir': 'False',
+    'attachmentbase': '' },
 'color': { \
     'activetasks': '(0, 0, 0)',
     'completedtasks': '(0, 255, 0)',
