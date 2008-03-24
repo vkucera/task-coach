@@ -368,6 +368,9 @@ pages['devinfo'] = \
     join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
     <P>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
     of messages</a> without subscribing to the mailinglist.</P>
+    <p>The mailinglist is also available as the newsgroup 
+    <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
+    on <a href="http://gmane.org">Gmane</a>.</p>
     <P>A Sourceforge mailinglist is available for receiving CVS commit messages.
     If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join this mailinglist</a>.
     <h4>Dependencies</h4>
