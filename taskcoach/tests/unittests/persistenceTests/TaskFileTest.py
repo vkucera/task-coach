@@ -28,6 +28,9 @@ class FakeAttachment(object):
     def data(self):
         return self.filename
 
+    def setTask(self, task):
+        pass
+
     def __unicode__(self):
         return self.filename
 

@@ -53,7 +53,8 @@ class Task(category.CategorizableCompositeObject, patterns.Observer):
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
 
-        self.registerObserver(self.onAttachmentChanged, 'attachment.changed')
+        for attachment in self._attachments:
+            attachment.setTask(self)
 
     def __setstate__(self, state):
         super(Task, self).__setstate__(state)
@@ -473,6 +474,8 @@ class Task(category.CategorizableCompositeObject, patterns.Observer):
         
     def addAttachments(self, *attachments):
         if attachments:
+            for attachment in attachments:
+                attachment.setTask(self)
             self._attachments.extend(attachments)
             self.notifyObservers(patterns.Event(self, 'task.attachment.add', 
                 *attachments))
@@ -487,13 +490,16 @@ class Task(category.CategorizableCompositeObject, patterns.Observer):
             self.notifyObservers(patterns.Event(self, 'task.attachment.remove', 
                 *attachmentsRemoved))
 
-    def onAttachmentChanged(self, evt):
+    def onAttachmentChanged(self, attachment):
         self.notifyObservers(patterns.Event(self, 'task.attachment.changed'))
 
     def removeAllAttachments(self):
         self.removeAttachments(*self._attachments)
             
     def setAttachments(self, attachments):
+        for attachment in attachments:
+            attachment.setTask(self)
+
         self._attachments = attachments # FIXME: no notification?
 
     # Recurrence
