@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx, sets, patterns
 from unittests import asserts
-from domain import task, effort, date
+from domain import task, effort, date, attachment
 
 
 ''' I'm rearranging these unittests to be more fixture based instead of 
@@ -58,7 +58,12 @@ class TaskTestCase(test.TestCase):
             self.registerObserver(eventType)
             
     def createTasks(self):
-        return [task.Task(**kwargs) for kwargs in \
+        def createAttachments(dic):
+            if dic.has_key('attachments'):
+                dic['attachments'] = map(lambda x: attachment.FileAttachment(x), dic['attachments'])
+            return dic
+
+        return [task.Task(**createAttachments(kwargs)) for kwargs in \
                 self.taskCreationKeywordArguments()]
 
     def taskCreationKeywordArguments(self):
@@ -1149,19 +1154,20 @@ class TaskWithAttachmentFixture(AttachmentTestCase):
         return [{'attachments': ['/home/frank/attachment.txt']}]
 
     def testAttachments(self):
-        self.assertEqual(self.taskCreationKeywordArguments()[0]['attachments'],
-                         self.task.attachments())
+        for idx, name in enumerate(self.taskCreationKeywordArguments()[0]['attachments']):
+            self.assertEqual(attachment.FileAttachment(name), self.task.attachments()[idx])
                                  
     def testRemoveNonExistingAttachment(self):
         self.task.removeAttachments('Non-existing attachment')
-        self.assertEqual(self.taskCreationKeywordArguments()[0]['attachments'],
-                         self.task.attachments())
+
+        for idx, name in enumerate(self.taskCreationKeywordArguments()[0]['attachments']):
+            self.assertEqual(attachment.FileAttachment(name), self.task.attachments()[idx])
 
 
 class TaskWithAttachmentAddedTestCase(AttachmentTestCase):
     def setUp(self):
         super(TaskWithAttachmentAddedTestCase, self).setUp()
-        self.attachment = './test.txt'
+        self.attachment = attachment.FileAttachment('./test.txt')
         self.task.addAttachments(self.attachment)
 
 

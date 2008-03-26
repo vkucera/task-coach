@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from thirdparty import desktop
 from mailer import readMail, openMail
-from patterns import Observer, Observable, Event
+from patterns import Observer
 from i18n import _
 
 import os, shutil, tempfile
@@ -42,6 +42,10 @@ def getRelativePath(path, base=os.getcwd()):
     if pth1.startswith(pth2):
         if pth1 == pth2:
             return ''
+
+        if pth2 == os.path.sep:
+            return pth1[1:]
+
         return pth1[len(pth2) + 1:]
 
     pth1 = pth1.split(os.path.sep)
@@ -58,11 +62,20 @@ def getRelativePath(path, base=os.getcwd()):
     return os.path.join(*pth1)
 
 
-class Attachment(Observer, Observable):
+class Attachment(Observer):
     type_ = None
 
     def __init__(self, *args, **kwargs):
         super(Attachment, self).__init__(*args, **kwargs)
+
+        self.__task = None
+
+    def setTask(self, task):
+        self.__task = task
+
+    def changed(self):
+        if self.__task is not None:
+            self.__task.onAttachmentChanged(self)
 
     def open(self, workingDir=None):
         raise NotImplementedError
@@ -87,8 +100,8 @@ class FileAttachment(Attachment):
         if os.path.isabs(self.filename):
             oldpath = self.filename
         else:
-            oldpath = os.path.join(evt.source().get('file', 'attachmentbase'),
-                                   self.filename)
+            oldpath = os.path.normpath(os.path.join(evt.source().get('file', 'attachmentbase'),
+                                                    self.filename))
 
         if os.path.exists(oldpath):
             if evt.value():
@@ -96,7 +109,7 @@ class FileAttachment(Attachment):
             else:
                 self.filename = oldpath
 
-            self.notifyObservers(Event(self, 'attachment.changed'))
+            self.changed()
 
     def open(self, workingDir=None):
         if workingDir is not None and not os.path.isabs(self.filename):
