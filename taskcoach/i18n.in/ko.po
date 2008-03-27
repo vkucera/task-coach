@@ -1,21 +1,23 @@
+# translation of ko.po to Nederlands
 # Korean translation for taskcoach
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the taskcoach package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Frank Niessink <frank@niessink.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: taskcoach\n"
+"Project-Id-Version: ko\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-01-26 16:36+0000\n"
-"PO-Revision-Date: 2008-03-18 16:30+0000\n"
-"Last-Translator: corean <younsoo.kim@gmail.com>\n"
-"Language-Team: Korean <ko@li.org>\n"
+"PO-Revision-Date: 2008-03-27 22:02+0100\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2008-03-27 18:56+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: taskcoachlib/command/base.py:92
 msgid "Copy"
@@ -154,7 +156,7 @@ msgstr "저장 에러"
 
 #: taskcoachlib/domain/category/categorycontainer.py:5
 msgid "New category..."
-msgstr "새 분류"
+msgstr "새 분류..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:6
 msgid "Insert a new category"
@@ -162,7 +164,7 @@ msgstr "새 분류넣기"
 
 #: taskcoachlib/domain/category/categorycontainer.py:7
 msgid "Edit category..."
-msgstr "분류 수정"
+msgstr "분류 수정..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:8
 msgid "Edit the selected categories"
@@ -178,7 +180,7 @@ msgstr ""
 
 #: taskcoachlib/domain/category/categorycontainer.py:11
 msgid "New subcategory..."
-msgstr "새 하위분류"
+msgstr "새 하위분류..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:12
 msgid "Insert a new subcategory"
@@ -242,11 +244,11 @@ msgstr "새 하위노트 넣기"
 
 #: taskcoachlib/domain/task/tasklist.py:11
 msgid "&New task..."
-msgstr "새 작업 &n"
+msgstr "새 작업 &n..."
 
 #: taskcoachlib/domain/task/tasklist.py:20
 msgid "New &subtask..."
-msgstr "새 하위작업 &s"
+msgstr "새 하위작업 &s..."
 
 #: taskcoachlib/domain/task/tasklist.py:31
 msgid "Insert a new task"
@@ -254,7 +256,7 @@ msgstr "새 작업 넣기"
 
 #: taskcoachlib/domain/task/tasklist.py:32
 msgid "&Edit task..."
-msgstr "작업 수정 &e"
+msgstr "작업 수정 &e..."
 
 #: taskcoachlib/domain/task/tasklist.py:33
 msgid "Edit the selected task"
@@ -413,7 +415,7 @@ msgstr "파일 수정"
 
 #: taskcoachlib/gui/dialog/editor.py:389
 msgid "Browse for new attachment..."
-msgstr "새 첨부파일 가져오기"
+msgstr "새 첨부파일 가져오기..."
 
 #: taskcoachlib/gui/dialog/editor.py:396
 msgid "Attachment filename"
@@ -1389,8 +1391,7 @@ msgid "&Budget"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1642
-msgid ""
-"Show/hide total budget column (total budget includes budget for subtasks)"
+msgid "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1642 taskcoachlib/gui/uicommand.py:1774
@@ -2272,3 +2273,4 @@ msgstr ""
 #: taskcoachlib/widgets/searchctrl.py:113
 msgid "Viewer not searchable"
 msgstr ""
+

@@ -1,21 +1,23 @@
+# translation of nb.po to Nederlands
 # Norwegian Bokmal translation for taskcoach
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the taskcoach package.
-# Amund Amundsen <amundka@online.no>, 2008.
 #
+# Amund Amundsen <amundka@online.no>, 2008.
+# Frank Niessink <frank@niessink.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: taskcoach\n"
+"Project-Id-Version: nb\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-01-26 16:36+0000\n"
-"PO-Revision-Date: 2008-02-08 17:45+0000\n"
-"Last-Translator: Amund Amundsen <amundka@online.no>\n"
-"Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"PO-Revision-Date: 2008-03-27 22:00+0100\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2008-03-27 18:56+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Generator: KBabel 1.11.4\n"
 "X-Poedit-Country: NORWAY\n"
 "X-Poedit-Language: Norwegian Bokmal\n"
 
@@ -579,8 +581,7 @@ msgstr "Tillat notater"
 
 #: taskcoachlib/gui/dialog/preferences.py:149
 msgid "Mark parent task completed when all children are completed"
-msgstr ""
-"Merk overordnet oppgave som avsluttet når alle underoppgaver er avsluttet"
+msgstr "Merk overordnet oppgave som avsluttet når alle underoppgaver er avsluttet"
 
 #: taskcoachlib/gui/dialog/preferences.py:157
 msgid "Check spelling in editors"
@@ -899,7 +900,7 @@ msgstr "Side"
 
 #: taskcoachlib/gui/uicommand.py:435
 msgid "Page setup..."
-msgstr "Sideoppsett"
+msgstr "Sideoppsett..."
 
 #: taskcoachlib/gui/uicommand.py:436
 msgid "Setup the characteristics of the printer page"
@@ -923,7 +924,7 @@ msgstr "Skriv ut aktiv fil"
 
 #: taskcoachlib/gui/uicommand.py:495
 msgid "Export effort as &iCalendar..."
-msgstr "Eksporter timeregistrering som &iCalendar"
+msgstr "Eksporter timeregistrering som &iCalendar..."
 
 #: taskcoachlib/gui/uicommand.py:496
 msgid "Export effort in iCalendar (*.ics) format"
@@ -931,7 +932,7 @@ msgstr "Eksporterer timeregistrering i iCalendar-format (*.ics)"
 
 #: taskcoachlib/gui/uicommand.py:505
 msgid "Export as &HTML..."
-msgstr "Eksporter timeregistrering som &HTML"
+msgstr "Eksporter timeregistrering som &HTML..."
 
 #: taskcoachlib/gui/uicommand.py:506
 msgid "Export the current view as HTML file"
@@ -939,7 +940,7 @@ msgstr "Eksporterer den aktive visningen som en HTML-fil"
 
 #: taskcoachlib/gui/uicommand.py:515
 msgid "Export as &CSV..."
-msgstr "Eksporter som &CSV"
+msgstr "Eksporter som &CSV..."
 
 #: taskcoachlib/gui/uicommand.py:516
 msgid "Export the current view in Comma Separated Values (CSV) format"
@@ -971,7 +972,7 @@ msgstr "Annuller siste angrete handling"
 
 #: taskcoachlib/gui/uicommand.py:593
 msgid "Cu&t\tCtrl+X"
-msgstr "Klipp &ut\tCtrl-X"
+msgstr "Klipp &ut\tCtrl+X"
 
 #: taskcoachlib/gui/uicommand.py:594
 msgid "Cut the selected item(s) to the clipboard"
@@ -1043,7 +1044,7 @@ msgstr "Vis alle elementer (tilbakestill alle filtre til standard)"
 
 #: taskcoachlib/gui/uicommand.py:750
 msgid "&Rename viewer..."
-msgstr "&Omdøp visning"
+msgstr "&Omdøp visning..."
 
 #: taskcoachlib/gui/uicommand.py:751
 msgid "Rename the selected viewer"
@@ -1223,8 +1224,7 @@ msgstr "&Legg til vedlegg"
 
 #: taskcoachlib/gui/uicommand.py:1298
 msgid "Browse for files to add as attachment to the selected task(s)"
-msgstr ""
-"Finn filer som skal legges til som vedlegg til de(n) valgte oppgaven(e)"
+msgstr "Finn filer som skal legges til som vedlegg til de(n) valgte oppgaven(e)"
 
 #: taskcoachlib/gui/uicommand.py:1312
 msgid "&Open all attachments"
@@ -1397,8 +1397,7 @@ msgid "&Budget"
 msgstr "&Budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1642
-msgid ""
-"Show/hide total budget column (total budget includes budget for subtasks)"
+msgid "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr ""
 "Vis eller skjul kolonne for sum av budsjett (sum av budsjett inkluderer "
 "budsjett på underoppgaver)"
@@ -2499,3 +2498,4 @@ msgstr "Sist utførte søk"
 #: taskcoachlib/widgets/searchctrl.py:113
 msgid "Viewer not searchable"
 msgstr "Kan ikke søke i denne visningen"
+
