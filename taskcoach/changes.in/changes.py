@@ -4,11 +4,13 @@ from changetypes import *
 
 releases = [
 
-Release('0.69.2', 'March ?, 2008',
+Release('0.69.2', 'March 28, 2008',
     summary='Bug fix release.',
     featuresAdded=[
-        Feature('''Task Coach now suggests a reminder date based
-on the due date or start date of a task.''')],
+        Feature('''Task Coach now suggests a reminder date, based
+on the due date or start date of a task.'''),
+        Feature('''Added a complete Norwegion Bokmal translation thanks to Amund Amundsen
+and incomplete Galician, Korean and Romanian translations.''')],
     bugsFixed=[
         Bug('''Tasks created via the context menu of the category view now 
 automatically belong to the selected category.''', '1592103'),

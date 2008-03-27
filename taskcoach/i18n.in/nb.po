@@ -1,282 +1,286 @@
-# Indonesian translation for taskcoach
-# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# Norwegian Bokmal translation for taskcoach
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the taskcoach package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+# Amund Amundsen <amundka@online.no>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-01-26 16:36+0000\n"
-"PO-Revision-Date: 2007-05-23 08:15+0000\n"
-"Last-Translator: tunggul arif siswoyo <tunggul@gmail.com>\n"
-"Language-Team: Indonesian <id@li.org>\n"
+"PO-Revision-Date: 2008-02-08 17:45+0000\n"
+"Last-Translator: Amund Amundsen <amundka@online.no>\n"
+"Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2008-03-27 18:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+"X-Poedit-Country: NORWAY\n"
+"X-Poedit-Language: Norwegian Bokmal\n"
 
 #: taskcoachlib/command/base.py:92
 msgid "Copy"
-msgstr "Copy"
+msgstr "Kopiér"
 
 #: taskcoachlib/command/base.py:107
 msgid "Delete"
-msgstr "Hapus"
+msgstr "Slett"
 
 #: taskcoachlib/command/base.py:121
 msgid "Cut"
-msgstr "Potong"
+msgstr "Klipp ut"
 
 #: taskcoachlib/command/base.py:147
 msgid "Paste"
-msgstr "Tempel"
+msgstr "Lim inn"
 
 #: taskcoachlib/command/base.py:208
 msgid "Drag and drop"
-msgstr ""
+msgstr "Dra og slipp"
 
 #: taskcoachlib/command/categoryCommands.py:7
 #: taskcoachlib/command/categoryCommands.py:14
 msgid "New category"
-msgstr ""
+msgstr "Ny kategori"
 
 #: taskcoachlib/command/categoryCommands.py:28
 #: taskcoachlib/command/categoryCommands.py:31
 msgid "New subcategory"
-msgstr ""
+msgstr "Ny underkategori"
 
 #: taskcoachlib/command/categoryCommands.py:36
 msgid "Edit category"
-msgstr ""
+msgstr "Rediger kategori"
 
 #: taskcoachlib/command/categoryCommands.py:44
 msgid "Drag and drop category"
-msgstr ""
+msgstr "Dra og slipp kategori"
 
 #: taskcoachlib/command/effortCommands.py:7
 msgid "New effort"
-msgstr ""
+msgstr "Ny timeregistrering"
 
 #: taskcoachlib/command/effortCommands.py:27
 msgid "Edit effort"
-msgstr ""
+msgstr "Endre timeregistrering"
 
 #: taskcoachlib/command/noteCommands.py:7
 #: taskcoachlib/command/noteCommands.py:15
 msgid "New note"
-msgstr ""
+msgstr "Nytt notat"
 
 #: taskcoachlib/command/noteCommands.py:29
 #: taskcoachlib/command/noteCommands.py:32
 msgid "New subnote"
-msgstr ""
+msgstr "Nytt undernotat"
 
 #: taskcoachlib/command/noteCommands.py:37
 msgid "Edit note"
-msgstr ""
+msgstr "Rediger notat"
 
 #: taskcoachlib/command/noteCommands.py:45
 msgid "Drag and drop note"
-msgstr ""
+msgstr "Dra og slipp notat"
 
 #: taskcoachlib/command/taskCommands.py:12
 msgid "Paste into task"
-msgstr "Tempel ke tugas"
+msgstr "Lim inn i oppgave"
 
 #: taskcoachlib/command/taskCommands.py:26
 msgid "Drag and drop task"
-msgstr ""
+msgstr "Dra og slipp oppgave"
 
 #: taskcoachlib/command/taskCommands.py:31
 msgid "Delete task"
-msgstr ""
+msgstr "Slett oppgave"
 
 #: taskcoachlib/command/taskCommands.py:36
 #: taskcoachlib/command/taskCommands.py:39
 msgid "New task"
-msgstr "Tugas baru"
+msgstr "Ny oppgave"
 
 #: taskcoachlib/command/taskCommands.py:59
 #: taskcoachlib/command/taskCommands.py:63
 msgid "New subtask"
-msgstr ""
+msgstr "Ny underoppgave"
 
 #: taskcoachlib/command/taskCommands.py:85
 msgid "Edit task"
-msgstr ""
+msgstr "Rediger oppgave"
 
 #: taskcoachlib/command/taskCommands.py:118
 #: taskcoachlib/gui/dialog/editor.py:398 taskcoachlib/widgets/dialog.py:126
 msgid "Add attachment"
-msgstr ""
+msgstr "Legg til vedlegg"
 
 #: taskcoachlib/command/taskCommands.py:167
 msgid "Mark completed"
-msgstr ""
+msgstr "Merk som utført"
 
 #: taskcoachlib/command/taskCommands.py:183
 msgid "Start tracking"
-msgstr ""
+msgstr "Start timeregistrering"
 
 #: taskcoachlib/command/taskCommands.py:208
 msgid "Stop tracking"
-msgstr ""
+msgstr "Stopp timeregistrering"
 
 #: taskcoachlib/command/taskCommands.py:248
 msgid "Maximize priority"
-msgstr ""
+msgstr "Sett høyeste prioritet"
 
 #: taskcoachlib/command/taskCommands.py:258
 msgid "Minimize priority"
-msgstr ""
+msgstr "Sett laveste prioritet"
 
 #: taskcoachlib/command/taskCommands.py:286
 msgid "Increase priority"
-msgstr ""
+msgstr "Øk prioritet"
 
 #: taskcoachlib/command/taskCommands.py:293
 msgid "Decrease priority"
-msgstr ""
+msgstr "Reduser prioritet"
 
 #: taskcoachlib/config/settings.py:121
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
 msgstr ""
+"Det oppsto en feil ved lagring av %s.ini:\n"
+"%s\n"
 
 #: taskcoachlib/config/settings.py:122
 msgid "Save error"
-msgstr ""
+msgstr "Feil ved lagring"
 
 #: taskcoachlib/domain/category/categorycontainer.py:5
 msgid "New category..."
-msgstr ""
+msgstr "Ny kategori..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:6
 msgid "Insert a new category"
-msgstr ""
+msgstr "Sett inn en ny kategori"
 
 #: taskcoachlib/domain/category/categorycontainer.py:7
 msgid "Edit category..."
-msgstr ""
+msgstr "Rediger kategori..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:8
 msgid "Edit the selected categories"
-msgstr ""
+msgstr "Rediger de valgte kategoriene"
 
 #: taskcoachlib/domain/category/categorycontainer.py:9
 msgid "Delete category"
-msgstr ""
+msgstr "Slett kategori"
 
 #: taskcoachlib/domain/category/categorycontainer.py:10
 msgid "Delete the selected categories"
-msgstr ""
+msgstr "Slett de valgte kategoriene"
 
 #: taskcoachlib/domain/category/categorycontainer.py:11
 msgid "New subcategory..."
-msgstr ""
+msgstr "Ny underkategori..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:12
 msgid "Insert a new subcategory"
-msgstr ""
+msgstr "Sett inn en ny underkategori"
 
 #: taskcoachlib/domain/effort/effortlist.py:14
 msgid "&New effort..."
-msgstr ""
+msgstr "&Ny timeregistrering..."
 
 #: taskcoachlib/domain/effort/effortlist.py:15
 msgid "Add an effort period to the selected task(s)"
-msgstr ""
+msgstr "Registrer tid på de(n) valgte oppgaven(e)"
 
 #: taskcoachlib/domain/effort/effortlist.py:16
 msgid "&Edit effort..."
-msgstr ""
+msgstr "&Endre timeregistrering..."
 
 #: taskcoachlib/domain/effort/effortlist.py:17
 msgid "Edit the selected effort period(s)"
-msgstr ""
+msgstr "Rediger perioden(e) for de(n) valgte timeregistreringen(e)"
 
 #: taskcoachlib/domain/effort/effortlist.py:18
 msgid "&Delete effort"
-msgstr ""
+msgstr "&Slett timeregistrering"
 
 #: taskcoachlib/domain/effort/effortlist.py:19
 msgid "Delete the selected effort period(s)"
-msgstr ""
+msgstr "Slett de(n) valgte timeregisteringen(e)"
 
 #: taskcoachlib/domain/note/notecontainer.py:5
 msgid "New note..."
-msgstr ""
+msgstr "Nytt notat..."
 
 #: taskcoachlib/domain/note/notecontainer.py:6
 msgid "Insert a new note"
-msgstr ""
+msgstr "Sett inn et nytt notat"
 
 #: taskcoachlib/domain/note/notecontainer.py:7
 msgid "Edit note..."
-msgstr ""
+msgstr "Rediger notat..."
 
 #: taskcoachlib/domain/note/notecontainer.py:8
 msgid "Edit the selected notes"
-msgstr ""
+msgstr "Rediger de valgte notatene"
 
 #: taskcoachlib/domain/note/notecontainer.py:9
 msgid "Delete note"
-msgstr ""
+msgstr "Slett notat"
 
 #: taskcoachlib/domain/note/notecontainer.py:10
 msgid "Delete the selected notes"
-msgstr ""
+msgstr "Slett de valgte notatene"
 
 #: taskcoachlib/domain/note/notecontainer.py:11
 msgid "New subnote..."
-msgstr ""
+msgstr "Nytt undernotat..."
 
 #: taskcoachlib/domain/note/notecontainer.py:12
 msgid "Insert a new subnote"
-msgstr ""
+msgstr "Sett inn et nytt undernotat"
 
 #: taskcoachlib/domain/task/tasklist.py:11
 msgid "&New task..."
-msgstr ""
+msgstr "&Ny oppgave..."
 
 #: taskcoachlib/domain/task/tasklist.py:20
 msgid "New &subtask..."
-msgstr ""
+msgstr "Ny &underoppgave..."
 
 #: taskcoachlib/domain/task/tasklist.py:31
 msgid "Insert a new task"
-msgstr ""
+msgstr "Sett inn en ny oppgave"
 
 #: taskcoachlib/domain/task/tasklist.py:32
 msgid "&Edit task..."
-msgstr ""
+msgstr "R&ediger oppgave..."
 
 #: taskcoachlib/domain/task/tasklist.py:33
 msgid "Edit the selected task"
-msgstr ""
+msgstr "Rediger den valgte oppgaven"
 
 #: taskcoachlib/domain/task/tasklist.py:34
 msgid "&Delete task\tCtrl+DEL"
-msgstr ""
+msgstr "&Slett oppgave\tCtrl+DEL"
 
 #: taskcoachlib/domain/task/tasklist.py:35
 msgid "Delete the selected task(s)"
-msgstr ""
+msgstr "Slett de(n) valgte oppgaven(e)"
 
 #: taskcoachlib/domain/task/tasklist.py:37
 msgid "Insert a new subtask into the selected task"
-msgstr ""
+msgstr "Sett inn en ny underoppgave i den valgte oppgaven"
 
 #: taskcoachlib/gui/dialog/editor.py:86
 msgid "For this task"
-msgstr ""
+msgstr "For denne oppgaven"
 
 #: taskcoachlib/gui/dialog/editor.py:88
 msgid "For this task including all subtasks"
-msgstr ""
+msgstr "For denne oppgaven, inkludert alle underoppgaver"
 
 #: taskcoachlib/gui/dialog/editor.py:101 taskcoachlib/gui/dialog/editor.py:105
 #: taskcoachlib/gui/dialog/editor.py:533 taskcoachlib/gui/dialog/editor.py:599
@@ -284,1636 +288,1652 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:742 taskcoachlib/gui/viewer.py:967
 #: taskcoachlib/gui/viewer.py:1317 taskcoachlib/gui/viewer.py:1475
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #: taskcoachlib/gui/dialog/editor.py:102 taskcoachlib/gui/dialog/editor.py:633
 #: taskcoachlib/gui/dialog/editor.py:672 taskcoachlib/gui/viewer.py:354
 #: taskcoachlib/gui/viewer.py:959 taskcoachlib/gui/viewer.py:1316
 msgid "Subject"
-msgstr ""
+msgstr "Emne"
 
 #: taskcoachlib/gui/dialog/editor.py:109 taskcoachlib/gui/dialog/editor.py:110
 #: taskcoachlib/gui/viewer.py:1009
 msgid "Priority"
-msgstr ""
+msgstr "Prioritet"
 
 #: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/dialog/editor.py:534
 msgid "Dates"
-msgstr ""
+msgstr "Datoer"
 
 #: taskcoachlib/gui/dialog/editor.py:142 taskcoachlib/gui/viewer.py:998
 msgid "Start date"
-msgstr ""
+msgstr "Startdato"
 
 #: taskcoachlib/gui/dialog/editor.py:143 taskcoachlib/gui/viewer.py:999
 msgid "Due date"
-msgstr ""
+msgstr "Forfallsdato"
 
 #: taskcoachlib/gui/dialog/editor.py:144 taskcoachlib/gui/viewer.py:1001
 msgid "Completion date"
-msgstr ""
+msgstr "Ferdigstillingsdato"
 
 #: taskcoachlib/gui/dialog/editor.py:157 taskcoachlib/gui/dialog/editor.py:159
 #: taskcoachlib/gui/dialog/reminder.py:16 taskcoachlib/gui/viewer.py:1016
 msgid "Reminder"
-msgstr ""
+msgstr "Påminnelse"
 
 #: taskcoachlib/gui/dialog/editor.py:165 taskcoachlib/gui/dialog/editor.py:166
 #: taskcoachlib/gui/viewer.py:1002
 msgid "Recurrence"
-msgstr ""
+msgstr "Gjentakelse"
 
 #: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/dialog/editor.py:197
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/render.py:37
 msgid "Weekly"
-msgstr ""
+msgstr "Ukentlig"
 
 #: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/render.py:38
 msgid "Daily"
-msgstr ""
+msgstr "Daglig"
 
 #: taskcoachlib/gui/dialog/editor.py:171
 msgid "Maximum number of recurrences"
-msgstr ""
+msgstr "Maksimalt antall gjentakelser"
 
 #: taskcoachlib/gui/dialog/editor.py:238 taskcoachlib/gui/dialog/editor.py:256
 #: taskcoachlib/gui/dialog/editor.py:537 taskcoachlib/gui/viewer.py:1003
 msgid "Budget"
-msgstr ""
+msgstr "Budsjett"
 
 #: taskcoachlib/gui/dialog/editor.py:239 taskcoachlib/gui/dialog/editor.py:264
 #: taskcoachlib/gui/viewer.py:1014 taskcoachlib/gui/viewer.py:1482
 msgid "Revenue"
-msgstr ""
+msgstr "Fortjeneste"
 
 #: taskcoachlib/gui/dialog/editor.py:257 taskcoachlib/gui/viewer.py:1005
 #: taskcoachlib/gui/viewer.py:1480
 msgid "Time spent"
-msgstr ""
+msgstr "Brukt tid"
 
 #: taskcoachlib/gui/dialog/editor.py:258 taskcoachlib/gui/viewer.py:1007
 msgid "Budget left"
-msgstr ""
+msgstr "Ubenyttet budsjettbeløp"
 
 #: taskcoachlib/gui/dialog/editor.py:262 taskcoachlib/gui/viewer.py:1011
 msgid "Hourly fee"
-msgstr ""
+msgstr "Timesats"
 
 #: taskcoachlib/gui/dialog/editor.py:263 taskcoachlib/gui/viewer.py:1012
 msgid "Fixed fee"
-msgstr ""
+msgstr "Fast beløp"
 
 #: taskcoachlib/gui/dialog/editor.py:302 taskcoachlib/gui/viewer.py:1444
 msgid "Effort details"
-msgstr ""
+msgstr "Tidsforbruksdetaljer"
 
 #: taskcoachlib/gui/dialog/editor.py:306 taskcoachlib/gui/viewer.py:1540
 msgid "Effort per day"
-msgstr ""
+msgstr "Timeregistreringer pr. dag"
 
 #: taskcoachlib/gui/dialog/editor.py:311 taskcoachlib/gui/viewer.py:1552
 msgid "Effort per week"
-msgstr ""
+msgstr "Timeregistreringer pr. uke"
 
 #: taskcoachlib/gui/dialog/editor.py:316 taskcoachlib/gui/viewer.py:1564
 msgid "Effort per month"
-msgstr ""
+msgstr "Timeregistreringer pr. måned"
 
 #: taskcoachlib/gui/dialog/editor.py:323 taskcoachlib/gui/dialog/editor.py:535
 #: taskcoachlib/gui/dialog/editor.py:691 taskcoachlib/gui/dialog/editor.py:743
 #: taskcoachlib/gui/viewer.py:979 taskcoachlib/gui/viewer.py:1160
 #: taskcoachlib/gui/viewer.py:1318
 msgid "Categories"
-msgstr ""
+msgstr "Kategorier"
 
 #: taskcoachlib/gui/dialog/editor.py:374 taskcoachlib/gui/dialog/editor.py:541
 msgid "Attachments"
-msgstr ""
+msgstr "Vedlegg"
 
 #: taskcoachlib/gui/dialog/editor.py:376
 msgid "Attachment filenames"
-msgstr ""
+msgstr "Filnavn for vedlegg"
 
 #: taskcoachlib/gui/dialog/editor.py:383
 msgid "Open attachment"
-msgstr ""
+msgstr "Åpne vedlegg"
 
 #: taskcoachlib/gui/dialog/editor.py:384
 msgid "Remove attachment"
-msgstr ""
+msgstr "Fjern vedlegg"
 
 #: taskcoachlib/gui/dialog/editor.py:385
 msgid "Edit filename"
-msgstr ""
+msgstr "Endre filnavn"
 
 #: taskcoachlib/gui/dialog/editor.py:389
 msgid "Browse for new attachment..."
-msgstr ""
+msgstr "Søk etter nytt vedlegg..."
 
 #: taskcoachlib/gui/dialog/editor.py:396
 msgid "Attachment filename"
-msgstr ""
+msgstr "Vedleggets filnavn"
 
 #: taskcoachlib/gui/dialog/editor.py:465 taskcoachlib/gui/uicommand.py:1323
 msgid "Error opening attachment"
-msgstr ""
+msgstr "Feil ved åpning av vedlegg"
 
 #: taskcoachlib/gui/dialog/editor.py:505
 #: taskcoachlib/gui/dialog/preferences.py:175
 msgid "Task behavior"
-msgstr ""
+msgstr "Oppgaveoppførsel"
 
 #: taskcoachlib/gui/dialog/editor.py:508
 msgid "Use application-wide setting"
-msgstr ""
+msgstr "Bruk oppsett for hele applikasjonen"
 
 #: taskcoachlib/gui/dialog/editor.py:509
 msgid "No"
-msgstr ""
+msgstr "Nei"
 
 #: taskcoachlib/gui/dialog/editor.py:509
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: taskcoachlib/gui/dialog/editor.py:516
 msgid "Mark task completed when all children are completed?"
-msgstr ""
+msgstr "Skal oppgave merkes som fullført når alle underoppgaver er fullført?"
 
 #: taskcoachlib/gui/dialog/editor.py:540
 msgid "Effort"
-msgstr ""
+msgstr "Timeregistrering"
 
 #: taskcoachlib/gui/dialog/editor.py:542
 msgid "Behavior"
-msgstr ""
+msgstr "Oppførsel"
 
 #: taskcoachlib/gui/dialog/editor.py:571
 #: taskcoachlib/gui/dialog/reminder.py:22 taskcoachlib/gui/viewer.py:1474
 msgid "Task"
-msgstr ""
+msgstr "Oppgave"
 
 #: taskcoachlib/gui/dialog/editor.py:577
 msgid "Start tracking from last stop time"
-msgstr ""
+msgstr "Start timeregistrering fra forrige registrerings slutt"
 
 #: taskcoachlib/gui/dialog/editor.py:587
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: taskcoachlib/gui/dialog/editor.py:589
 msgid "Stop"
-msgstr ""
+msgstr "Stopp"
 
 #: taskcoachlib/gui/dialog/editor.py:644
 msgid "Use this color:"
-msgstr ""
+msgstr "Bruk denne fargen:"
 
 #: taskcoachlib/gui/dialog/editor.py:650
 msgid "Color"
-msgstr ""
+msgstr "Farge"
 
 #: taskcoachlib/gui/dialog/preferences.py:61
 msgid "Auto save after every change"
-msgstr ""
+msgstr "Automatisk lagring etter hver endring"
 
 #: taskcoachlib/gui/dialog/preferences.py:63
 msgid "Create backup copy before overwriting a %s file"
-msgstr ""
+msgstr "Lage sikkerhetskopi før overskriving av en %s-fil"
 
 #: taskcoachlib/gui/dialog/preferences.py:65
 msgid "Maximum number of recent files to remember"
-msgstr ""
+msgstr "Maksimalt antall nylig åpnede filer som skal huskes"
 
 #: taskcoachlib/gui/dialog/preferences.py:67
 msgid "Save settings (%s.ini) in same directory as the program"
-msgstr ""
+msgstr "Lagre oppsett (%s.ini) i samme mappe som programmet"
 
 #: taskcoachlib/gui/dialog/preferences.py:69
 msgid "(For running %s from a removable medium)"
-msgstr ""
+msgstr "(For å kjøre %s fra usb-minne etc.)"
 
 #: taskcoachlib/gui/dialog/preferences.py:77
 msgid "Show splash screen on startup"
-msgstr ""
+msgstr "Vis intro-bilde på skjermen ved oppstart"
 
 #: taskcoachlib/gui/dialog/preferences.py:79
 msgid "Show tips window on startup"
-msgstr ""
+msgstr "Vis programtips ved oppstart"
 
 #: taskcoachlib/gui/dialog/preferences.py:81
 msgid "Start with the main window iconized"
-msgstr ""
+msgstr "Start med programmet minimert"
 
 #: taskcoachlib/gui/dialog/preferences.py:82
 msgid "Always"
-msgstr ""
+msgstr "Alltid"
 
 #: taskcoachlib/gui/dialog/preferences.py:82
 msgid "Never"
-msgstr ""
+msgstr "Aldri"
 
 #: taskcoachlib/gui/dialog/preferences.py:84
 msgid "When the main windows was iconized last session"
-msgstr ""
+msgstr "Når hovedvinduene var minimert sist gang programmet kjørte"
 
 #: taskcoachlib/gui/dialog/preferences.py:86
 msgid "Check for new version of %(name)s on startup"
-msgstr ""
+msgstr "Se etter ny versjon av %(name)s ved oppstart"
 
 #: taskcoachlib/gui/dialog/preferences.py:88
 msgid "Hide main window when iconized"
-msgstr ""
+msgstr "Skjul hovedvindu ved minimering til oppgavelinjen"
 
 #: taskcoachlib/gui/dialog/preferences.py:90
 msgid "Minimize main window when closed"
-msgstr ""
+msgstr "Minimer hovedvindu til oppgavelinjen ved lukking"
 
 #: taskcoachlib/gui/dialog/preferences.py:92
 msgid "Make clock in the task bar tick when tracking effort"
-msgstr ""
+msgstr "Vis klokken på oppgavelinjen mens timer registreres"
 
 #: taskcoachlib/gui/dialog/preferences.py:94
 msgid "Show a popup with the description of an item when hovering over it"
-msgstr ""
+msgstr "Vis popup med beskrivelse når musen beveges over et element"
 
 #: taskcoachlib/gui/dialog/preferences.py:101
 #: taskcoachlib/gui/dialog/preferences.py:177
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 #: taskcoachlib/gui/dialog/preferences.py:120
 #: taskcoachlib/gui/dialog/preferences.py:141
 msgid "This setting will take effect after you restart %s"
-msgstr ""
+msgstr "Denne innstillingen blir aktiv etter restart av %s"
 
 #: taskcoachlib/gui/dialog/preferences.py:128
 msgid "Click this button to change the color of active tasks"
-msgstr ""
+msgstr "Klikk på denne knappen for å endre farge på aktive oppgaver"
 
 #: taskcoachlib/gui/dialog/preferences.py:129
 msgid "Click this button to change the color of inactive tasks"
-msgstr ""
+msgstr "Klikk på denne knappen for å endre farge på inaktive oppgaver"
 
 #: taskcoachlib/gui/dialog/preferences.py:130
 msgid "Click this button to change the color of completed tasks"
-msgstr ""
+msgstr "Klikk på denne knappen for å endre farge på avsluttede oppgaver"
 
 #: taskcoachlib/gui/dialog/preferences.py:131
 msgid "Click this button to change the color of over due tasks"
-msgstr ""
+msgstr "Klikk på denne knappen for å endre farge på forfalte oppgaver"
 
 #: taskcoachlib/gui/dialog/preferences.py:132
 msgid "Click this button to change the color of tasks due today"
-msgstr ""
+msgstr "Klikk på denne knappen for å endre farge på oppgaver forfalt i dag"
 
 #: taskcoachlib/gui/dialog/preferences.py:140
 msgid "Allow for taking notes"
-msgstr ""
+msgstr "Tillat notater"
 
 #: taskcoachlib/gui/dialog/preferences.py:149
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
+"Merk overordnet oppgave som avsluttet når alle underoppgaver er avsluttet"
 
 #: taskcoachlib/gui/dialog/preferences.py:157
 msgid "Check spelling in editors"
-msgstr ""
+msgstr "Kontrollér staving i tekstfelt"
 
 #: taskcoachlib/gui/dialog/preferences.py:174
 msgid "Window behavior"
-msgstr ""
+msgstr "Vindusoppførsel"
 
 #: taskcoachlib/gui/dialog/preferences.py:176
 msgid "Files"
-msgstr ""
+msgstr "Filer"
 
 #: taskcoachlib/gui/dialog/preferences.py:178
 msgid "Colors"
-msgstr ""
+msgstr "Farger"
 
 #: taskcoachlib/gui/dialog/preferences.py:179
 msgid "Features"
-msgstr ""
+msgstr "Funksjoner"
 
 #: taskcoachlib/gui/dialog/preferences.py:181
 msgid "Editor"
-msgstr ""
+msgstr "Tekstredigering"
 
 #: taskcoachlib/gui/dialog/reminder.py:9
 msgid "Don't snooze"
-msgstr ""
+msgstr "Ikke utsett varsling"
 
 #: taskcoachlib/gui/dialog/reminder.py:9
 msgid "Five minutes"
-msgstr ""
+msgstr "Fem minutter"
 
 #: taskcoachlib/gui/dialog/reminder.py:9
 msgid "Ten minutes"
-msgstr ""
+msgstr "Ti minutter"
 
 #: taskcoachlib/gui/dialog/reminder.py:10
 msgid "Fifteen minutes"
-msgstr ""
+msgstr "Femten minutter"
 
 #: taskcoachlib/gui/dialog/reminder.py:10
 msgid "Half an hour"
-msgstr ""
+msgstr "Halvtime"
 
 #: taskcoachlib/gui/dialog/reminder.py:10
 msgid "One hour"
-msgstr ""
+msgstr "En time"
 
 #: taskcoachlib/gui/dialog/reminder.py:11
 msgid "Two hours"
-msgstr ""
+msgstr "To timer"
 
 #: taskcoachlib/gui/dialog/reminder.py:25
 msgid "Reminder date/time"
-msgstr ""
+msgstr "Påminnelse dato/klokkeslett"
 
 #: taskcoachlib/gui/dialog/reminder.py:26
 msgid "Snooze"
-msgstr ""
+msgstr "Utsett varsling"
 
 #: taskcoachlib/gui/dialog/version.py:10
 msgid "New version of %(name)s available"
-msgstr ""
+msgstr "Ny versjon av %(name)s er tilgjengelig"
 
 #: taskcoachlib/gui/dialog/version.py:17
 msgid "Version %(version)s of %(name)s is available from"
-msgstr ""
+msgstr "Versjon %(version)s av %(name)s er tilgjengelig fra"
 
 #: taskcoachlib/gui/dialog/version.py:20
 msgid "Notify me of new versions."
-msgstr ""
+msgstr "Gi meg beskjed om nye versjoner"
 
 #: taskcoachlib/gui/iocontroller.py:18
 msgid "%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*"
-msgstr ""
+msgstr "%s-filer (*.tsk)|*.tsk|XML-filer (*.xml)|*.xml|Alle filer (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:21
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
-msgstr ""
+msgstr "iCalendar-filer (*.ics)|*.ics|Alle filer (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:24
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
-msgstr ""
+msgstr "HTML-filer (*.html)|*.html|Alle filer (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:27
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
-msgstr ""
+msgstr "CSV-filer (*.csv)|*.csv|Tekstfiler (*.txt)|*.txt|Alle filer (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:44
 msgid "%s file error"
-msgstr ""
+msgstr "Filfeil: %s"
 
 #: taskcoachlib/gui/iocontroller.py:50
 msgid "Open"
-msgstr ""
+msgstr "Åpne"
 
 #: taskcoachlib/gui/iocontroller.py:60
 msgid "Error while reading %s:\n"
-msgstr ""
+msgstr "Feil ved lesing i %s:\n"
 
 #: taskcoachlib/gui/iocontroller.py:62
 msgid "Are you sure it is a %s-file?"
-msgstr ""
+msgstr "Er du sikker på at det er en %s-fil?"
 
 #: taskcoachlib/gui/iocontroller.py:65
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
-msgstr ""
+msgstr "Hentet %(nrtasks)d oppgave(r) fra %(filename)s"
 
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "Cannot open %s because it doesn't exist"
-msgstr ""
+msgstr "Kan ikke åpne %s fordi den ikke eksisterer"
 
 #: taskcoachlib/gui/iocontroller.py:78
 msgid "Merge"
-msgstr ""
+msgstr "Slå sammen"
 
 #: taskcoachlib/gui/iocontroller.py:81
 msgid "Merged %(filename)s"
-msgstr ""
+msgstr "Satt inn %(filename)s"
 
 #: taskcoachlib/gui/iocontroller.py:96 taskcoachlib/gui/iocontroller.py:107
 msgid "Save as..."
-msgstr ""
+msgstr "Lagre som..."
 
 #: taskcoachlib/gui/iocontroller.py:124
 msgid "Export as iCalendar..."
-msgstr ""
+msgstr "Eksporter som iCalendar..."
 
 #: taskcoachlib/gui/iocontroller.py:130
 msgid "Exported %(nrtasks)d tasks to %(filename)s"
-msgstr ""
+msgstr "Eksportert %(nrtasks)d oppgave(r) til %(filename)s"
 
 #: taskcoachlib/gui/iocontroller.py:138
 msgid "Export as HTML..."
-msgstr ""
+msgstr "Eksporter som HTML..."
 
 #: taskcoachlib/gui/iocontroller.py:144 taskcoachlib/gui/iocontroller.py:158
 msgid "Exported %(nrtasks)d items to %(filename)s"
-msgstr ""
+msgstr "Eksportert %(nrtasks)d element(er) til %(filename)s"
 
 #: taskcoachlib/gui/iocontroller.py:152
 msgid "Export as CSV..."
-msgstr ""
+msgstr "Eksporter som CSV..."
 
 #: taskcoachlib/gui/iocontroller.py:187
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
-msgstr ""
+msgstr "Du har ulagrede endringer."
 
 #: taskcoachlib/gui/iocontroller.py:188
 msgid "%s: save changes?"
-msgstr ""
+msgstr "%s: Lagre endringer?"
 
 #: taskcoachlib/gui/iocontroller.py:198
 msgid "Closed %s"
-msgstr ""
+msgstr "Lukket %s"
 
 #: taskcoachlib/gui/iocontroller.py:204
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
-msgstr ""
+msgstr "Lagret %(nrtasks)d oppgaver i %(filename)s"
 
 #: taskcoachlib/gui/mainwindow.py:105
 msgid "Welcome to %(name)s version %(version)s"
-msgstr ""
+msgstr "Velkommen til %(name)s versjon %(version)s"
 
 #: taskcoachlib/gui/menu.py:111
 msgid "&File"
-msgstr ""
+msgstr "&Fil"
 
 #: taskcoachlib/gui/menu.py:112
 msgid "&Edit"
-msgstr ""
+msgstr "&Rediger"
 
 #: taskcoachlib/gui/menu.py:113
 msgid "&View"
-msgstr ""
+msgstr "&Vis"
 
 #: taskcoachlib/gui/menu.py:114
 msgid "&Task"
-msgstr ""
+msgstr "&Oppgave"
 
 #: taskcoachlib/gui/menu.py:115
 msgid "Eff&ort"
-msgstr ""
+msgstr "&Timeregistrering"
 
 #: taskcoachlib/gui/menu.py:116 taskcoachlib/gui/uicommand.py:1766
 #: taskcoachlib/gui/uicommand.py:1800
 msgid "&Category"
-msgstr ""
+msgstr "&Kategori"
 
 #: taskcoachlib/gui/menu.py:118 taskcoachlib/gui/uicommand.py:1820
 msgid "&Note"
-msgstr ""
+msgstr "&Notat"
 
 #: taskcoachlib/gui/menu.py:119
 msgid "&Help"
-msgstr ""
+msgstr "&Hjelp"
 
 #: taskcoachlib/gui/menu.py:151
 msgid "&Export"
-msgstr ""
+msgstr "&Eksport"
 
 #: taskcoachlib/gui/menu.py:201
 msgid "&Select"
-msgstr ""
+msgstr "&Velg"
 
 #: taskcoachlib/gui/menu.py:215
 msgid "&New viewer"
-msgstr ""
+msgstr "&Ny visning"
 
 #: taskcoachlib/gui/menu.py:220 taskcoachlib/gui/menu.py:221
 msgid "&Filter"
-msgstr ""
+msgstr "&Filter"
 
 #: taskcoachlib/gui/menu.py:222 taskcoachlib/gui/menu.py:223
 msgid "&Sort"
-msgstr ""
+msgstr "&Sortér"
 
 #: taskcoachlib/gui/menu.py:224 taskcoachlib/gui/menu.py:225
 msgid "&Columns"
-msgstr ""
+msgstr "Kolonner"
 
 #: taskcoachlib/gui/menu.py:227
 msgid "&Tree options"
-msgstr ""
+msgstr "&Tre-innstillinger"
 
 #: taskcoachlib/gui/menu.py:230
 msgid "T&oolbar"
-msgstr ""
+msgstr "&Verktøylinje"
 
 #: taskcoachlib/gui/render.py:53
 msgid "now"
-msgstr ""
+msgstr "nå"
 
 #: taskcoachlib/gui/taskbaricon.py:94
 msgid "%d tasks overdue"
-msgstr ""
+msgstr "%d forfalte oppgaver"
 
 #: taskcoachlib/gui/taskbaricon.py:94
 msgid "one task overdue"
-msgstr ""
+msgstr "en forfalt oppgave"
 
 #: taskcoachlib/gui/taskbaricon.py:95
 msgid "%d tasks due today"
-msgstr ""
+msgstr "%d oppgaver forfaller i dag"
 
 #: taskcoachlib/gui/taskbaricon.py:95
 msgid "one task due today"
-msgstr ""
+msgstr "en oppgave forfaller i dag"
 
 #: taskcoachlib/gui/taskbaricon.py:96
 msgid "tracking effort for one task"
-msgstr ""
+msgstr "registrerer tidsforbruk for én oppgave"
 
 #: taskcoachlib/gui/taskbaricon.py:97
 msgid "tracking effort for %d tasks"
-msgstr ""
+msgstr "registrerer tidsforbruk for %d oppgaver"
 
 #: taskcoachlib/gui/uicommand.py:329
 msgid "&Open...\tCtrl+O"
-msgstr ""
+msgstr "&Åpne...\tCtrl+O"
 
 #: taskcoachlib/gui/uicommand.py:330
 msgid "Open a %s file"
-msgstr ""
+msgstr "Åpne en %s-fil"
 
 #: taskcoachlib/gui/uicommand.py:342
 msgid "Open %s"
-msgstr ""
+msgstr "Åpne %s"
 
 #: taskcoachlib/gui/uicommand.py:350
 msgid "&Merge..."
-msgstr ""
+msgstr "Slå sa&mmen ..."
 
 #: taskcoachlib/gui/uicommand.py:351
 msgid "Merge tasks from another file with the current file"
-msgstr ""
+msgstr "Slå sammen oppgaver fra en annen fil med den aktive"
 
 #: taskcoachlib/gui/uicommand.py:360
 msgid "&Close"
-msgstr ""
+msgstr "&Lukk"
 
 #: taskcoachlib/gui/uicommand.py:361
 msgid "Close the current file"
-msgstr ""
+msgstr "Lukk aktiv fil"
 
 #: taskcoachlib/gui/uicommand.py:370
 msgid "&Save\tCtrl+S"
-msgstr ""
+msgstr "&Lagre\tCtrl+S"
 
 #: taskcoachlib/gui/uicommand.py:371
 msgid "Save the current file"
-msgstr ""
+msgstr "Lagre aktiv fil"
 
 #: taskcoachlib/gui/uicommand.py:383
 msgid "S&ave as..."
-msgstr ""
+msgstr "Lagre &som..."
 
 #: taskcoachlib/gui/uicommand.py:384
 msgid "Save the current file under a new name"
-msgstr ""
+msgstr "Lagre aktiv fil med nytt navn"
 
 #: taskcoachlib/gui/uicommand.py:393
 msgid "Sa&ve selection..."
-msgstr ""
+msgstr "Lagre &utvalg..."
 
 #: taskcoachlib/gui/uicommand.py:394
 msgid "Save the selected tasks to a separate file"
-msgstr ""
+msgstr "Lagre valgte oppgaver i en egen fil"
 
 #: taskcoachlib/gui/uicommand.py:424
 msgid "Page"
-msgstr ""
+msgstr "Side"
 
 #: taskcoachlib/gui/uicommand.py:435
 msgid "Page setup..."
-msgstr ""
+msgstr "Sideoppsett"
 
 #: taskcoachlib/gui/uicommand.py:436
 msgid "Setup the characteristics of the printer page"
-msgstr ""
+msgstr "Sideoppsett for utskrift"
 
 #: taskcoachlib/gui/uicommand.py:452 taskcoachlib/gui/uicommand.py:463
 msgid "Print preview"
-msgstr ""
+msgstr "Forhåndsvisning"
 
 #: taskcoachlib/gui/uicommand.py:453
 msgid "Show a preview of what the print will look like"
-msgstr ""
+msgstr "Viser hvordan en utskrift vil se ut"
 
 #: taskcoachlib/gui/uicommand.py:471
 msgid "Print..."
-msgstr ""
+msgstr "Skriv ut..."
 
 #: taskcoachlib/gui/uicommand.py:472
 msgid "Print the current file"
-msgstr ""
+msgstr "Skriv ut aktiv fil"
 
 #: taskcoachlib/gui/uicommand.py:495
 msgid "Export effort as &iCalendar..."
-msgstr ""
+msgstr "Eksporter timeregistrering som &iCalendar"
 
 #: taskcoachlib/gui/uicommand.py:496
 msgid "Export effort in iCalendar (*.ics) format"
-msgstr ""
+msgstr "Eksporterer timeregistrering i iCalendar-format (*.ics)"
 
 #: taskcoachlib/gui/uicommand.py:505
 msgid "Export as &HTML..."
-msgstr ""
+msgstr "Eksporter timeregistrering som &HTML"
 
 #: taskcoachlib/gui/uicommand.py:506
 msgid "Export the current view as HTML file"
-msgstr ""
+msgstr "Eksporterer den aktive visningen som en HTML-fil"
 
 #: taskcoachlib/gui/uicommand.py:515
 msgid "Export as &CSV..."
-msgstr ""
+msgstr "Eksporter som &CSV"
 
 #: taskcoachlib/gui/uicommand.py:516
 msgid "Export the current view in Comma Separated Values (CSV) format"
-msgstr ""
+msgstr "Eksporterer den aktive visningen som en kommaseparert fil (CSV)"
 
 #: taskcoachlib/gui/uicommand.py:525
 msgid "&Quit\tCtrl+Q"
-msgstr ""
+msgstr "&Avslutt\tCtrl+Q"
 
 #: taskcoachlib/gui/uicommand.py:526
 msgid "Exit %s"
-msgstr ""
+msgstr "Avslutt %s"
 
 #: taskcoachlib/gui/uicommand.py:534
 msgid "&Undo"
-msgstr ""
+msgstr "&Angre"
 
 #: taskcoachlib/gui/uicommand.py:539
 msgid "Undo the last command"
-msgstr ""
+msgstr "Angre siste handling"
 
 #: taskcoachlib/gui/uicommand.py:563
 msgid "&Redo"
-msgstr ""
+msgstr "&Gjør på ny"
 
 #: taskcoachlib/gui/uicommand.py:568
 msgid "Redo the last command that was undone"
-msgstr ""
+msgstr "Annuller siste angrete handling"
 
 #: taskcoachlib/gui/uicommand.py:593
 msgid "Cu&t\tCtrl+X"
-msgstr ""
+msgstr "Klipp &ut\tCtrl-X"
 
 #: taskcoachlib/gui/uicommand.py:594
 msgid "Cut the selected item(s) to the clipboard"
-msgstr ""
+msgstr "Klipp ut valgt(e) element(er) og plasserer det/dem på utklippstavlen"
 
 #: taskcoachlib/gui/uicommand.py:616
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "&Kopiér\tCtrl+C"
 
 #: taskcoachlib/gui/uicommand.py:617
 msgid "Copy the selected item(s) to the clipboard"
-msgstr ""
+msgstr "Kopiér valgt(e) element(er) til utklippstavlen"
 
 #: taskcoachlib/gui/uicommand.py:639
 msgid "&Paste\tCtrl+V"
-msgstr ""
+msgstr "&Lim inn\tCtrl+V"
 
 #: taskcoachlib/gui/uicommand.py:640
 msgid "Paste item(s) from the clipboard"
-msgstr ""
+msgstr "Lim inn elementer fra utklippstavlen"
 
 #: taskcoachlib/gui/uicommand.py:661
 msgid "P&aste into task\tShift+Ctrl+V"
-msgstr ""
+msgstr "Lim inn i oppg&ave\tShift+Ctrl+V"
 
 #: taskcoachlib/gui/uicommand.py:662
 msgid "Paste item(s) from the clipboard into the selected task"
-msgstr ""
+msgstr "Lim element(er) fra utklippstavlen inn i valgt oppgave"
 
 #: taskcoachlib/gui/uicommand.py:676
 msgid "Preferences..."
-msgstr ""
+msgstr "Innstillinger..."
 
 #: taskcoachlib/gui/uicommand.py:677 taskcoachlib/gui/uicommand.py:682
 msgid "Edit preferences"
-msgstr ""
+msgstr "Rediger innstillinger"
 
 #: taskcoachlib/gui/uicommand.py:688
 msgid "&All\tCtrl+A"
-msgstr ""
+msgstr "&Alle\tCtrl+A"
 
 #: taskcoachlib/gui/uicommand.py:689
 msgid "Select all items in the current view"
-msgstr ""
+msgstr "Velg alle elementer i aktiv visning"
 
 #: taskcoachlib/gui/uicommand.py:703
 msgid "&Invert selection\tCtrl+I"
-msgstr ""
+msgstr "&Inverter utvalg\tCtrl+I"
 
 #: taskcoachlib/gui/uicommand.py:704
 msgid "Select unselected items and unselect selected items"
-msgstr ""
+msgstr "Velg elementer som ikke er valgt og omvendt"
 
 #: taskcoachlib/gui/uicommand.py:713
 msgid "&Clear selection"
-msgstr ""
+msgstr "&Nullstill utvalg"
 
 #: taskcoachlib/gui/uicommand.py:714
 msgid "Unselect all items"
-msgstr ""
+msgstr "Velg ingen"
 
 #: taskcoachlib/gui/uicommand.py:722
 msgid "&Clear all filters"
-msgstr ""
+msgstr "&Nullstill alle filtre"
 
 #: taskcoachlib/gui/uicommand.py:723
 msgid "Show all items (reset all filters)"
-msgstr ""
+msgstr "Vis alle elementer (tilbakestill alle filtre til standard)"
 
 #: taskcoachlib/gui/uicommand.py:750
 msgid "&Rename viewer..."
-msgstr ""
+msgstr "&Omdøp visning"
 
 #: taskcoachlib/gui/uicommand.py:751
 msgid "Rename the selected viewer"
-msgstr ""
+msgstr "Gi nytt navn til den valgte visningen"
 
 #: taskcoachlib/gui/uicommand.py:754
 msgid "New title for the viewer:"
-msgstr ""
+msgstr "Ny tittel for visningen:"
 
 #: taskcoachlib/gui/uicommand.py:755
 msgid "Rename viewer"
-msgstr ""
+msgstr "Gi nytt navn til visning"
 
 #: taskcoachlib/gui/uicommand.py:775
 msgid "&Hide this column"
-msgstr ""
+msgstr "&Skjul denne kolonnen"
 
 #: taskcoachlib/gui/uicommand.py:776
 msgid "Hide the selected column"
-msgstr ""
+msgstr "Skjul den valgte kolonnen"
 
 #: taskcoachlib/gui/uicommand.py:822
 msgid "&Expand all items\tShift+Ctrl+E"
-msgstr ""
+msgstr "Utvid all&e noder\tShift+Ctrl+E"
 
 #: taskcoachlib/gui/uicommand.py:823
 msgid "Expand all items with subitems"
-msgstr ""
+msgstr "Vis alle undernoder"
 
 #: taskcoachlib/gui/uicommand.py:836
 msgid "E&xpand"
-msgstr ""
+msgstr "&Utvid"
 
 #: taskcoachlib/gui/uicommand.py:836
 msgid "Expand the selected item(s)"
-msgstr ""
+msgstr "Utvid de(n) valgte noden(e)"
 
 #: taskcoachlib/gui/uicommand.py:850
 msgid "&Collapse all items\tShift+Ctrl+C"
-msgstr ""
+msgstr "&Minimer alle elementer\tShift+Ctrl+C"
 
 #: taskcoachlib/gui/uicommand.py:851
 msgid "Collapse all items with subitems"
-msgstr ""
+msgstr "Minimer alle elementer med underelementer"
 
 #: taskcoachlib/gui/uicommand.py:864
 msgid "C&ollapse"
-msgstr ""
+msgstr "&Minimer"
 
 #: taskcoachlib/gui/uicommand.py:865
 msgid "Collapse the selected items with subitems"
-msgstr ""
+msgstr "Skjul alle underlementer til de(t) valgte elementet/ene"
 
 #: taskcoachlib/gui/uicommand.py:918
 msgid "&Active"
-msgstr ""
+msgstr "&Aktive"
 
 #: taskcoachlib/gui/uicommand.py:919
 msgid ""
 "Show/hide active tasks (tasks with a start date in the past and a due date "
 "in the future)"
 msgstr ""
+"Vis eller skjul aktive oppgaver (oppgaver med startdato <= i dag , og "
+"forfallsdato >= i dag)"
 
 #: taskcoachlib/gui/uicommand.py:931
 msgid "&Inactive"
-msgstr ""
+msgstr "&Inaktive"
 
 #: taskcoachlib/gui/uicommand.py:932
 msgid "Show/hide inactive tasks (tasks with a start date in the future)"
-msgstr ""
+msgstr "Vis eller skjul inaktive oppgaver (oppgaver med startdato > i dag)"
 
 #: taskcoachlib/gui/uicommand.py:944
 msgid "&Completed"
-msgstr ""
+msgstr "&Avsluttet"
 
 #: taskcoachlib/gui/uicommand.py:945
 msgid "Show/hide completed tasks"
-msgstr ""
+msgstr "Vis eller skjul avsluttede oppgaver"
 
 #: taskcoachlib/gui/uicommand.py:956
 msgid "&Over due"
-msgstr ""
+msgstr "Etter f&orfall"
 
 #: taskcoachlib/gui/uicommand.py:957
 msgid "Show/hide over due tasks (tasks with a due date in the past)"
-msgstr ""
+msgstr "Vis eller skjul forfalte oppgaver (forfallsdato < i dag)"
 
 #: taskcoachlib/gui/uicommand.py:969
 msgid "Over &budget"
-msgstr ""
+msgstr "Overskredet &budsjett"
 
 #: taskcoachlib/gui/uicommand.py:970
 msgid "Show/hide tasks that are over budget"
-msgstr ""
+msgstr "Vis eller skjul oppgaver med overskredet budsjett"
 
 #: taskcoachlib/gui/uicommand.py:982
 msgid "Hide tasks &with subtasks"
-msgstr ""
+msgstr "Skjul oppgaver &med underoppgaver"
 
 #: taskcoachlib/gui/uicommand.py:983
 msgid "Show/hide tasks with subtasks"
-msgstr ""
+msgstr "Vis eller skjul oppgaver som har underoppgaver"
 
 #: taskcoachlib/gui/uicommand.py:994
 msgid "New item"
-msgstr ""
+msgstr "Nytt element"
 
 #: taskcoachlib/gui/uicommand.py:1017
 msgid "New subitem"
-msgstr ""
+msgstr "Nytt underelement"
 
 #: taskcoachlib/gui/uicommand.py:1053
 msgid "Delete item"
-msgstr ""
+msgstr "Slett element"
 
 #: taskcoachlib/gui/uicommand.py:1123
 msgid "&Mark task completed\tCtrl+RETURN"
-msgstr ""
+msgstr "&Merk oppgave avsluttet\tCtrl+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1124
 msgid "Mark the selected task(s) completed"
-msgstr ""
+msgstr "Merk de(n) valgte oppgaven(e) som avsluttet"
 
 #: taskcoachlib/gui/uicommand.py:1175
 msgid "&Mark task uncompleted\tCtrl+RETURN"
-msgstr ""
+msgstr "&Merk oppgave ikke avsluttet\tCtrl+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1181
 msgid "Mark the selected task(s) uncompleted"
-msgstr ""
+msgstr "Merk de(n) valgte oppgaven(e) som ikke avsluttet"
 
 #: taskcoachlib/gui/uicommand.py:1203
 msgid "Maximize priority\tShift+Ctrl+P"
-msgstr ""
+msgstr "Gi høyeste prioritet\tShift+Ctrl+P"
 
 #: taskcoachlib/gui/uicommand.py:1204
 msgid "Make the selected task(s) the highest priority task(s)"
-msgstr ""
+msgstr "Gi de(n) valgte oppgaven(e) høyeste prioritet"
 
 #: taskcoachlib/gui/uicommand.py:1216
 msgid "Minimize priority\tShift+Ctrl+M"
-msgstr ""
+msgstr "Gi laveste prioritet\tShift+Ctrl+M"
 
 #: taskcoachlib/gui/uicommand.py:1217
 msgid "Make the selected task(s) the lowest priority task(s)"
-msgstr ""
+msgstr "Gi de(n) valgte oppgaven(e) laveste prioritet"
 
 #: taskcoachlib/gui/uicommand.py:1229
 msgid "Increase priority\tShift+P"
-msgstr ""
+msgstr "Øk prioritet\tShift+P"
 
 #: taskcoachlib/gui/uicommand.py:1230
 msgid "Increase the priority of the selected task(s)"
-msgstr ""
+msgstr "Øk prioriteten for de(n) valgte oppgaven(e)"
 
 #: taskcoachlib/gui/uicommand.py:1242
 msgid "Decrease priority\tShift+M"
-msgstr ""
+msgstr "Reduser prioritet\tShift+P"
 
 #: taskcoachlib/gui/uicommand.py:1243
 msgid "Decrease the priority of the selected task(s)"
-msgstr ""
+msgstr "Reduser prioriteten for de(n) valgte oppgaven(e)"
 
 #: taskcoachlib/gui/uicommand.py:1279
 msgid "Tasks"
-msgstr ""
+msgstr "Oppgaver"
 
 #: taskcoachlib/gui/uicommand.py:1291
 msgid "Please enter recipient"
-msgstr ""
+msgstr "Vennligst angi mottaker"
 
 #: taskcoachlib/gui/uicommand.py:1297
 msgid "&Add attachment"
-msgstr ""
+msgstr "&Legg til vedlegg"
 
 #: taskcoachlib/gui/uicommand.py:1298
 msgid "Browse for files to add as attachment to the selected task(s)"
 msgstr ""
+"Finn filer som skal legges til som vedlegg til de(n) valgte oppgaven(e)"
 
 #: taskcoachlib/gui/uicommand.py:1312
 msgid "&Open all attachments"
-msgstr ""
+msgstr "Åpne &alle vedlegg"
 
 #: taskcoachlib/gui/uicommand.py:1313
 msgid "Open all attachments of the selected task(s)"
-msgstr ""
+msgstr "Åpne alle vedlegg til de(n) valgte oppgaven(e)"
 
 #: taskcoachlib/gui/uicommand.py:1376
 msgid "&Start tracking effort"
-msgstr ""
+msgstr "&Start timeregistrering"
 
 #: taskcoachlib/gui/uicommand.py:1377
 msgid "Start tracking effort for the selected task(s)"
-msgstr ""
+msgstr "Start timeregistrering for de(n) aktive oppgaven(e)"
 
 #: taskcoachlib/gui/uicommand.py:1395
 msgid "St&op tracking effort"
-msgstr ""
+msgstr "St&opp timeregistrering"
 
 #: taskcoachlib/gui/uicommand.py:1396
 msgid "Stop tracking effort for the active task(s)"
-msgstr ""
+msgstr "Stopp timeregistrering for de(n) aktive oppgaven(e)"
 
 #: taskcoachlib/gui/uicommand.py:1553
 msgid "&Help contents"
-msgstr ""
+msgstr "Innhold i &hjelp"
 
 #: taskcoachlib/gui/uicommand.py:1554
 msgid "Help about the program"
-msgstr ""
+msgstr "Hjelp om programmet"
 
 #: taskcoachlib/gui/uicommand.py:1555
 msgid "Help"
-msgstr ""
+msgstr "Hjelp"
 
 #: taskcoachlib/gui/uicommand.py:1561
 msgid "&Tips"
-msgstr ""
+msgstr "&Tips"
 
 #: taskcoachlib/gui/uicommand.py:1562
 msgid "Tips about the program"
-msgstr ""
+msgstr "Programtips"
 
 #: taskcoachlib/gui/uicommand.py:1575
 msgid "&About %s"
-msgstr ""
+msgstr "&Om %s"
 
 #: taskcoachlib/gui/uicommand.py:1576
 msgid "Version and contact information about %s"
-msgstr ""
+msgstr "Versjon og kontaktinformasjon for %s"
 
 #: taskcoachlib/gui/uicommand.py:1577
 msgid "Help: About %s"
-msgstr ""
+msgstr "Hjelp: Om %s"
 
 #: taskcoachlib/gui/uicommand.py:1583
 msgid "&License"
-msgstr ""
+msgstr "&Lisens"
 
 #: taskcoachlib/gui/uicommand.py:1584
 msgid "%s license"
-msgstr ""
+msgstr "%s-lisens"
 
 #: taskcoachlib/gui/uicommand.py:1585
 msgid "Help: %s license"
-msgstr ""
+msgstr "Hjelp: %s-lisens"
 
 #: taskcoachlib/gui/uicommand.py:1592
 msgid "&Restore"
-msgstr ""
+msgstr "Gjenopp&rett"
 
 #: taskcoachlib/gui/uicommand.py:1593
 msgid "Restore the window to its previous state"
-msgstr ""
+msgstr "Gjenopprett vinduet slik det var"
 
 #: taskcoachlib/gui/uicommand.py:1631
 msgid "&Attachments"
-msgstr ""
+msgstr "&Vedlegg"
 
 #: taskcoachlib/gui/uicommand.py:1631
 msgid "Show/hide attachment column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for vedlegg"
 
 #: taskcoachlib/gui/uicommand.py:1632
 msgid "&Categories"
-msgstr ""
+msgstr "&Kategorier"
 
 #: taskcoachlib/gui/uicommand.py:1632
 msgid "Show/hide categories column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for kategorier"
 
 #: taskcoachlib/gui/uicommand.py:1633
 msgid ""
 "Show/hide overall categories column (overall categories includes all parent "
 "task categories, recursively)"
 msgstr ""
+"Vis eller skjul kolonne for overordnede kategorier (overordnede kategorier "
+"inkluderer rekursivt kategorier for alle overordnede oppgaver)"
 
 #: taskcoachlib/gui/uicommand.py:1633 taskcoachlib/gui/uicommand.py:1767
 #: taskcoachlib/gui/viewer.py:986 taskcoachlib/gui/viewer.py:1322
 msgid "Overall categories"
-msgstr ""
+msgstr "Overordnede kategorier"
 
 #: taskcoachlib/gui/uicommand.py:1634
 msgid "Show/hide description column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for beskrivelse"
 
 #: taskcoachlib/gui/uicommand.py:1634 taskcoachlib/gui/uicommand.py:1765
 msgid "&Description"
-msgstr ""
+msgstr "&Beskrivelse"
 
 #: taskcoachlib/gui/uicommand.py:1635
 msgid "Show/hide reminder column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for påminnelse"
 
 #: taskcoachlib/gui/uicommand.py:1635 taskcoachlib/gui/uicommand.py:1786
 msgid "&Reminder"
-msgstr ""
+msgstr "&Påminnelse"
 
 #: taskcoachlib/gui/uicommand.py:1636
 msgid "Show/hide start date column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for startdato"
 
 #: taskcoachlib/gui/uicommand.py:1636 taskcoachlib/gui/uicommand.py:1768
 msgid "&Start date"
-msgstr ""
+msgstr "&Startdato"
 
 #: taskcoachlib/gui/uicommand.py:1637
 msgid "Show/hide due date column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for forfallsdato"
 
 #: taskcoachlib/gui/uicommand.py:1637 taskcoachlib/gui/uicommand.py:1769
 msgid "&Due date"
-msgstr ""
+msgstr "Forfalls&dato"
 
 #: taskcoachlib/gui/uicommand.py:1638
 msgid "Show/hide days left column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for antall dager igjen"
 
 #: taskcoachlib/gui/uicommand.py:1638 taskcoachlib/gui/uicommand.py:1771
 msgid "D&ays left"
-msgstr ""
+msgstr "D&ager igjen"
 
 #: taskcoachlib/gui/uicommand.py:1639
 msgid "Co&mpletion date"
-msgstr ""
+msgstr "&Avsluttetdato"
 
 #: taskcoachlib/gui/uicommand.py:1639
 msgid "Show/hide completion date column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for avslutningsdato"
 
 #: taskcoachlib/gui/uicommand.py:1640
 msgid "Show/hide recurrence column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for gjentakelse"
 
 #: taskcoachlib/gui/uicommand.py:1640 taskcoachlib/gui/uicommand.py:1772
 msgid "&Recurrence"
-msgstr ""
+msgstr "&Gjentakelse"
 
 #: taskcoachlib/gui/uicommand.py:1641
 msgid "Show/hide budget column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1641 taskcoachlib/gui/uicommand.py:1773
 #: taskcoachlib/gui/viewer.py:779
 msgid "&Budget"
-msgstr ""
+msgstr "&Budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1642
 msgid ""
 "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr ""
+"Vis eller skjul kolonne for sum av budsjett (sum av budsjett inkluderer "
+"budsjett på underoppgaver)"
 
 #: taskcoachlib/gui/uicommand.py:1642 taskcoachlib/gui/uicommand.py:1774
 msgid "Total b&udget"
-msgstr ""
+msgstr "Sum av b&udsjett"
 
 #: taskcoachlib/gui/uicommand.py:1643
 msgid "Show/hide time spent column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for tidsforbruk"
 
 #: taskcoachlib/gui/uicommand.py:1643 taskcoachlib/gui/uicommand.py:1775
 msgid "&Time spent"
-msgstr ""
+msgstr "&Tid brukt"
 
 #: taskcoachlib/gui/uicommand.py:1644
 msgid ""
 "Show/hide total time spent column (total time includes time spent on "
 "subtasks)"
 msgstr ""
+"Vis eller skjul sum av tidsforbruk (sum av tidsforbruk inkluderer "
+"tidsforbruk på underoppgaver)"
 
 #: taskcoachlib/gui/uicommand.py:1644 taskcoachlib/gui/uicommand.py:1776
 msgid "T&otal time spent"
-msgstr ""
+msgstr "T&otalt tidsforbruk"
 
 #: taskcoachlib/gui/uicommand.py:1645
 msgid "Show/hide budget left column"
-msgstr ""
+msgstr "Vis eller skjul kolonne for gjenværende budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1645 taskcoachlib/gui/uicommand.py:1777
 msgid "Budget &left"
-msgstr ""
+msgstr "&Gjenværende budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1646
 msgid ""
 "Show/hide total budget left column (total budget left includes budget left "
 "for subtasks)"
 msgstr ""
+"Vis eller skjul kolonne for sum av gjenværende budsjett (sum av alle "
+"gjenværende budsjett i underoppgaver)"
 
 #: taskcoachlib/gui/uicommand.py:1646 taskcoachlib/gui/uicommand.py:1778
 msgid "Total budget l&eft"
-msgstr ""
+msgstr "Sum av gj&enværende budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1647
 msgid "Show/hide priority column"
-msgstr ""
+msgstr "Vis eller skjul kolonne med prioritet"
 
 #: taskcoachlib/gui/uicommand.py:1647 taskcoachlib/gui/uicommand.py:1779
 msgid "&Priority"
-msgstr ""
+msgstr "&Prioritet"
 
 #: taskcoachlib/gui/uicommand.py:1648
 msgid "O&verall priority"
-msgstr ""
+msgstr "O&verordnet prioritet"
 
 #: taskcoachlib/gui/uicommand.py:1648
 msgid ""
 "Show/hide overall priority column (overall priority is the maximum priority "
 "of a task and all its subtasks)"
 msgstr ""
+"Vis eller skjul kolonne med overordnet prioritet (overordnet prioritet er "
+"den høyeste prioritet for en oppgave og alle dens underoppgaver)"
 
 #: taskcoachlib/gui/uicommand.py:1649
 msgid "Show/hide hourly fee column"
-msgstr ""
+msgstr "Vis eller skjul kolonne med timesats"
 
 #: taskcoachlib/gui/uicommand.py:1649 taskcoachlib/gui/uicommand.py:1781
 msgid "&Hourly fee"
-msgstr ""
+msgstr "&Timesats"
 
 #: taskcoachlib/gui/uicommand.py:1650
 msgid "Show/hide fixed fee column"
-msgstr ""
+msgstr "Vis eller skjul kolonne med fast beløp"
 
 #: taskcoachlib/gui/uicommand.py:1650 taskcoachlib/gui/uicommand.py:1782
 msgid "&Fixed fee"
-msgstr ""
+msgstr "&Fastbeløp"
 
 #: taskcoachlib/gui/uicommand.py:1651
 msgid "&Total fixed fee"
-msgstr ""
+msgstr "&Total av fastpris"
 
 #: taskcoachlib/gui/uicommand.py:1651
 msgid "Show/hide total fixed fee column"
-msgstr ""
+msgstr "Vis eller skjul kolonne med sum av fast beløp"
 
 #: taskcoachlib/gui/uicommand.py:1652
 msgid "Show/hide revenue column"
-msgstr ""
+msgstr "Vis eller skjul kolonne med fortjeneste"
 
 #: taskcoachlib/gui/uicommand.py:1652 taskcoachlib/gui/uicommand.py:1784
 msgid "&Revenue"
-msgstr ""
+msgstr "&Fortjeneste"
 
 #: taskcoachlib/gui/uicommand.py:1653
 msgid "Show/hide total revenue column"
-msgstr ""
+msgstr "Vis eller skjul kolonne med sum av fortjeneste"
 
 #: taskcoachlib/gui/uicommand.py:1653
 msgid "T&otal revenue"
-msgstr ""
+msgstr "T&otal fortjeneste"
 
 #: taskcoachlib/gui/uicommand.py:1657
 msgid "All date columns"
-msgstr ""
+msgstr "Alle datokolonner"
 
 #: taskcoachlib/gui/uicommand.py:1658
 msgid "Show/hide all date-related columns"
-msgstr ""
+msgstr "Vis eller skjul alle datokolonner"
 
 #: taskcoachlib/gui/uicommand.py:1661
 msgid "All budget columns"
-msgstr ""
+msgstr "Alle budsjettkolonner"
 
 #: taskcoachlib/gui/uicommand.py:1662
 msgid "Show/hide all budget-related columns"
-msgstr ""
+msgstr "Vis eller skjul alle budsjettkolonner"
 
 #: taskcoachlib/gui/uicommand.py:1665
 msgid "All financial columns"
-msgstr ""
+msgstr "Alle økonomikolonner"
 
 #: taskcoachlib/gui/uicommand.py:1666
 msgid "Show/hide all finance-related columns"
-msgstr ""
+msgstr "Vis eller skjul alle økonomirelaterte kolonner"
 
 #: taskcoachlib/gui/uicommand.py:1729
 msgid "&Activate next viewer\tCtrl+PgDn"
-msgstr ""
+msgstr "Gå til &neste åpne visning\tCtrl+PgUp"
 
 #: taskcoachlib/gui/uicommand.py:1730
 msgid "Activate the next open viewer"
-msgstr ""
+msgstr "Gå til neste åpne visning"
 
 #: taskcoachlib/gui/uicommand.py:1733
 msgid "Activate &previous viewer\tCtrl+PgUp"
-msgstr ""
+msgstr "Gå til forrige å&pne visning\tCtrl+PgUp"
 
 #: taskcoachlib/gui/uicommand.py:1734
 msgid "Activate the previous open viewer"
-msgstr ""
+msgstr "Aktiver den forrige åpne visningen"
 
 #: taskcoachlib/gui/uicommand.py:1752
 msgid "&Ascending"
-msgstr ""
+msgstr "&Stigende"
 
 #: taskcoachlib/gui/uicommand.py:1753
 msgid "Sort ascending (checked) or descending (unchecked)"
-msgstr ""
+msgstr "Sortér stigende (avkrysset) eller synkende (ikke avkrysset)"
 
 #: taskcoachlib/gui/uicommand.py:1756
 msgid "Sort case sensitive"
-msgstr ""
+msgstr "Sortering av store/små bokstaver"
 
 #: taskcoachlib/gui/uicommand.py:1757
 msgid ""
 "When comparing text, sorting is case sensitive (checked) or insensitive "
 "(unchecked)"
 msgstr ""
+"Sortering av tekst tar hensyn til store/små bokstaver (avkrysset) eller "
+"ignorerer store/små bokstaver (ikke avkrysset)"
 
 #: taskcoachlib/gui/uicommand.py:1759
 msgid "Sort by status &first"
-msgstr ""
+msgstr "Sortér etter status &først"
 
 #: taskcoachlib/gui/uicommand.py:1760
 msgid "Sort tasks by status (active/inactive/completed) first"
-msgstr ""
+msgstr "Sortér oppgaver etter status (aktiv/inaktiv/avsluttet) først"
 
 #: taskcoachlib/gui/uicommand.py:1764
 msgid "Sort by subject"
-msgstr ""
+msgstr "Sortér etter emne"
 
 #: taskcoachlib/gui/uicommand.py:1764
 msgid "Sub&ject"
-msgstr ""
+msgstr "&Emne"
 
 #: taskcoachlib/gui/uicommand.py:1765
 msgid "Sort by description"
-msgstr ""
+msgstr "Sortér etter beskrivelse"
 
 #: taskcoachlib/gui/uicommand.py:1766
 msgid "Sort by category"
-msgstr ""
+msgstr "Sortér etter kategori"
 
 #: taskcoachlib/gui/uicommand.py:1767
 msgid "Sort by overall categories"
-msgstr ""
+msgstr "Sortér etter overordnet kategori"
 
 #: taskcoachlib/gui/uicommand.py:1768
 msgid "Sort tasks by start date"
-msgstr ""
+msgstr "Sortér oppgaver etter startdato"
 
 #: taskcoachlib/gui/uicommand.py:1769
 msgid "Sort tasks by due date"
-msgstr ""
+msgstr "Sortér oppgaver etter forfallsdato"
 
 #: taskcoachlib/gui/uicommand.py:1770
 msgid "&Completion date"
-msgstr ""
+msgstr "&Avsluttetdato"
 
 #: taskcoachlib/gui/uicommand.py:1770
 msgid "Sort tasks by completion date"
-msgstr ""
+msgstr "Sortér oppgaver etter avsluttetdato"
 
 #: taskcoachlib/gui/uicommand.py:1771
 msgid "Sort tasks by number of days left"
-msgstr ""
+msgstr "Sortér oppgaver etter dager igjen"
 
 #: taskcoachlib/gui/uicommand.py:1772
 msgid "Sort tasks by recurrence"
-msgstr ""
+msgstr "Sortér oppgaver etter gjentakelse"
 
 #: taskcoachlib/gui/uicommand.py:1773
 msgid "Sort tasks by budget"
-msgstr ""
+msgstr "Sortér oppgaver etter budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1774
 msgid "Sort tasks by total budget"
-msgstr ""
+msgstr "Sortér oppgaver etter sum av budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1775
 msgid "Sort tasks by time spent"
-msgstr ""
+msgstr "Sortér oppgaver etter tidsforbruk"
 
 #: taskcoachlib/gui/uicommand.py:1776
 msgid "Sort tasks by total time spent"
-msgstr ""
+msgstr "Sortér oppgaver etter sum av tidsforbruk"
 
 #: taskcoachlib/gui/uicommand.py:1777
 msgid "Sort tasks by budget left"
-msgstr ""
+msgstr "Sortér oppgaver etter gjenstående budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1778
 msgid "Sort tasks by total budget left"
-msgstr ""
+msgstr "Sortér oppgaver etter sum av gjenstående budsjett"
 
 #: taskcoachlib/gui/uicommand.py:1779
 msgid "Sort tasks by priority"
-msgstr ""
+msgstr "Sortér oppgaver etter prioritet"
 
 #: taskcoachlib/gui/uicommand.py:1780
 msgid "Sort tasks by overall priority"
-msgstr ""
+msgstr "Sortér oppgaver etter overordnet prioritet"
 
 #: taskcoachlib/gui/uicommand.py:1780 taskcoachlib/gui/viewer.py:1010
 msgid "Overall priority"
-msgstr ""
+msgstr "Overordnet prioritet"
 
 #: taskcoachlib/gui/uicommand.py:1781
 msgid "Sort tasks by hourly fee"
-msgstr ""
+msgstr "Sortér oppgaver etter timesats"
 
 #: taskcoachlib/gui/uicommand.py:1782
 msgid "Sort tasks by fixed fee"
-msgstr ""
+msgstr "Sortér oppgaver etter fastpris"
 
 #: taskcoachlib/gui/uicommand.py:1783
 msgid "Sort tasks by total fixed fee"
-msgstr ""
+msgstr "Sortér oppgaver etter sum av fastpris"
 
 #: taskcoachlib/gui/uicommand.py:1783
 msgid "Total fi&xed fee"
-msgstr ""
+msgstr "Sum av &fastpris"
 
 #: taskcoachlib/gui/uicommand.py:1784
 msgid "Sort tasks by revenue"
-msgstr ""
+msgstr "Sortér oppgaver etter fortjeneste"
 
 #: taskcoachlib/gui/uicommand.py:1785
 msgid "Sort tasks by total revenue"
-msgstr ""
+msgstr "Sortér oppgaver etter sum av fortjeneste"
 
 #: taskcoachlib/gui/uicommand.py:1785
 msgid "Total re&venue"
-msgstr ""
+msgstr "Sum av f&ortjeneste"
 
 #: taskcoachlib/gui/uicommand.py:1786
 msgid "Sort tasks by reminder date and time"
-msgstr ""
+msgstr "Sortér oppgaver etter påminnelsestid"
 
 #: taskcoachlib/gui/uicommand.py:1792
 msgid "Task &list"
-msgstr ""
+msgstr "Oppgave&liste"
 
 #: taskcoachlib/gui/uicommand.py:1793
 msgid "Open a new tab with a viewer that displays tasks in a list"
-msgstr ""
+msgstr "Åpne en ny fane med visning av oppgaver i en liste"
 
 #: taskcoachlib/gui/uicommand.py:1796
 msgid "Task &tree"
-msgstr ""
+msgstr "Oppgave&tre"
 
 #: taskcoachlib/gui/uicommand.py:1797
 msgid "Open a new tab with a viewer that displays tasks in a tree"
-msgstr ""
+msgstr "Åpne en ny fane med visning av oppgaver i trestruktur"
 
 #: taskcoachlib/gui/uicommand.py:1801
 msgid "Open a new tab with a viewer that displays categories"
-msgstr ""
+msgstr "Åpne en ny fane med visning av kategorier"
 
 #: taskcoachlib/gui/uicommand.py:1804
 msgid "&Effort detail"
-msgstr ""
+msgstr "Tidsforbruksd&etaljer"
 
 #: taskcoachlib/gui/uicommand.py:1805
 msgid "Open a new tab with a viewer that displays effort details"
-msgstr ""
+msgstr "Åpne en ny fane med visning av detaljer for tidsforbruk"
 
 #: taskcoachlib/gui/uicommand.py:1808
 msgid "Effort per &day"
-msgstr ""
+msgstr "Tidsforbruk pr. &dag"
 
 #: taskcoachlib/gui/uicommand.py:1809
 msgid "Open a new tab with a viewer that displays effort per day"
-msgstr ""
+msgstr "Åpne en ny fane med visning av tidsforbruk pr. dag"
 
 #: taskcoachlib/gui/uicommand.py:1812
 msgid "Effort per &week"
-msgstr ""
+msgstr "Tidsforbruk pr. &uke"
 
 #: taskcoachlib/gui/uicommand.py:1813
 msgid "Open a new tab with a viewer that displays effort per week"
-msgstr ""
+msgstr "Åpne en ny fane med visning av tidsforbruk pr. uke"
 
 #: taskcoachlib/gui/uicommand.py:1816
 msgid "Effort per &month"
-msgstr ""
+msgstr "Tidsforbruk pr. &måned"
 
 #: taskcoachlib/gui/uicommand.py:1817
 msgid "Open a new tab with a viewer that displays effort per month"
-msgstr ""
+msgstr "Åpne en ny fane med visning av tidsforbruk pr. måned"
 
 #: taskcoachlib/gui/uicommand.py:1821
 msgid "Open a new tab with a viewer that displays notes"
-msgstr ""
+msgstr "Åpne en ny fane med visning av notater"
 
 #: taskcoachlib/gui/uicommand.py:1831
 msgid "&Hide"
-msgstr ""
+msgstr "Skj&ul"
 
 #: taskcoachlib/gui/uicommand.py:1831
 msgid "Hide the toolbar"
-msgstr ""
+msgstr "Skjul verktøylinjen"
 
 #: taskcoachlib/gui/uicommand.py:1832
 msgid "&Small images"
-msgstr ""
+msgstr "&Små ikoner"
 
 #: taskcoachlib/gui/uicommand.py:1832
 msgid "Small images (16x16) on the toolbar"
-msgstr ""
+msgstr "Små ikoner (16x16) på verktøylinjen"
 
 #: taskcoachlib/gui/uicommand.py:1833
 msgid "&Medium-sized images"
-msgstr ""
+msgstr "&Mellomstore ikoner"
 
 #: taskcoachlib/gui/uicommand.py:1833
 msgid "Medium-sized images (22x22) on the toolbar"
-msgstr ""
+msgstr "Mellomstore ikoner (22x22) på verktøylinjen"
 
 #: taskcoachlib/gui/uicommand.py:1834
 msgid "&Large images"
-msgstr ""
+msgstr "S&tore ikoner"
 
 #: taskcoachlib/gui/uicommand.py:1834
 msgid "Large images (32x32) on the toolbar"
-msgstr ""
+msgstr "Små ikoner (32x32) på verktøylinjen"
 
 #: taskcoachlib/gui/uicommand.py:1840
 msgid "Show/hide status bar"
-msgstr ""
+msgstr "Vis eller skjul statuslinjen"
 
 #: taskcoachlib/gui/uicommand.py:1840
 msgid "Status&bar"
-msgstr ""
+msgstr "Status&linje"
 
 #: taskcoachlib/gui/uicommand.py:1845
 msgid "&Today"
-msgstr ""
+msgstr "I &dag"
 
 #: taskcoachlib/gui/uicommand.py:1845
 msgid "Only show tasks due today"
-msgstr ""
+msgstr "Vis kun oppgaver som forfaller i dag"
 
 #: taskcoachlib/gui/uicommand.py:1846
 msgid "Only show tasks due today and tomorrow"
-msgstr ""
+msgstr "Vis kun oppgaver som forfaller i dag eller i morgen"
 
 #: taskcoachlib/gui/uicommand.py:1846
 msgid "T&omorrow"
-msgstr ""
+msgstr "I m&orgen"
 
 #: taskcoachlib/gui/uicommand.py:1847
 msgid "Only show tasks due this work week (i.e. before Friday)"
-msgstr ""
+msgstr "Vis kun oppgaver som forfaller denne arbeidsuken (dvs. t.o.m fredag)"
 
 #: taskcoachlib/gui/uicommand.py:1847
 msgid "Wo&rk week"
-msgstr ""
+msgstr "A&rbeidsuke"
 
 #: taskcoachlib/gui/uicommand.py:1848
 msgid "&Week"
-msgstr ""
+msgstr "&Uke"
 
 #: taskcoachlib/gui/uicommand.py:1848
 msgid "Only show tasks due this week (i.e. before Sunday)"
-msgstr ""
+msgstr "Vis kun oppgaver som forfaller denne uken (dvs t.o.m søndag)"
 
 #: taskcoachlib/gui/uicommand.py:1849
 msgid "&Month"
-msgstr ""
+msgstr "&Måned"
 
 #: taskcoachlib/gui/uicommand.py:1849
 msgid "Only show tasks due this month"
-msgstr ""
+msgstr "Vis kun oppgaver som forfaller denne måneden"
 
 #: taskcoachlib/gui/uicommand.py:1850
 msgid "&Year"
-msgstr ""
+msgstr "&År"
 
 #: taskcoachlib/gui/uicommand.py:1850
 msgid "Only show tasks due this year"
-msgstr ""
+msgstr "Vis kun oppgaver som forfaller i år"
 
 #: taskcoachlib/gui/uicommand.py:1851
 msgid "&Unlimited"
-msgstr ""
+msgstr "&Ubegrenset"
 
 #: taskcoachlib/gui/uicommand.py:1851
 msgid "Show all tasks"
-msgstr ""
+msgstr "Vis alle oppgaver"
 
 #: taskcoachlib/gui/uicommand.py:1871
 msgid "Mail task"
-msgstr ""
+msgstr "Send oppgave"
 
 #: taskcoachlib/gui/uicommand.py:1872
 msgid "Mail the task, using your default mailer"
-msgstr ""
+msgstr "Send oppgave som epost, med ditt standard-epostprogram"
 
 #: taskcoachlib/gui/viewer.py:141
 msgid "Show only tasks &due before end of"
-msgstr ""
+msgstr "Vis kun oppgaver som &forfaller før slutten av"
 
 #: taskcoachlib/gui/viewer.py:144
 msgid "&Hide tasks that are"
-msgstr ""
+msgstr "&Skjul oppgaver som er"
 
 #: taskcoachlib/gui/viewer.py:776
 msgid "&Dates"
-msgstr ""
+msgstr "&Datoer"
 
 #: taskcoachlib/gui/viewer.py:782
 msgid "&Financial"
-msgstr ""
+msgstr "&Økonomisk"
 
 #: taskcoachlib/gui/viewer.py:796
 msgid "Tasks: %d selected, %d visible, %d total"
-msgstr ""
+msgstr "Oppgaver: %d valgt(e), %d vises, %d totalt"
 
 #: taskcoachlib/gui/viewer.py:799
 msgid "Status: %d over due, %d inactive, %d completed"
-msgstr ""
+msgstr "Status: %d forfalt(e), %d inaktiv(e), %d avsluttet"
 
 #: taskcoachlib/gui/viewer.py:1000
 msgid "Days left"
-msgstr ""
+msgstr "Dager igjen"
 
 #: taskcoachlib/gui/viewer.py:1004
 msgid "Total budget"
-msgstr ""
+msgstr "Sum av budsjett"
 
 #: taskcoachlib/gui/viewer.py:1006 taskcoachlib/gui/viewer.py:1519
 msgid "Total time spent"
-msgstr ""
+msgstr "Sum av timeforbruk"
 
 #: taskcoachlib/gui/viewer.py:1008
 msgid "Total budget left"
-msgstr ""
+msgstr "Sum av gjenstående budsjett"
 
 #: taskcoachlib/gui/viewer.py:1013
 msgid "Total fixed fee"
-msgstr ""
+msgstr "Sum av fastpris"
 
 #: taskcoachlib/gui/viewer.py:1015 taskcoachlib/gui/viewer.py:1521
 msgid "Total revenue"
-msgstr ""
+msgstr "Sum av fortjeneste"
 
 #: taskcoachlib/gui/viewer.py:1058
 msgid "Task list"
-msgstr ""
+msgstr "Oppgaveliste"
 
 #: taskcoachlib/gui/viewer.py:1086
 msgid "Task tree"
-msgstr ""
+msgstr "Oppgavetre"
 
 #: taskcoachlib/gui/viewer.py:1225
 msgid "Categories: %d selected, %d total"
-msgstr ""
+msgstr "Kategorier: %d valgt(e), %d totalt"
 
 #: taskcoachlib/gui/viewer.py:1227
 msgid "Status: %d filtered"
-msgstr ""
+msgstr "Status: %d filtrerte"
 
 #: taskcoachlib/gui/viewer.py:1260
 msgid "Notes"
-msgstr ""
+msgstr "Notater"
 
 #: taskcoachlib/gui/viewer.py:1358
 msgid "Notes: %d selected, %d total"
-msgstr ""
+msgstr "Notater: %d valgte, %d totalt"
 
 #: taskcoachlib/gui/viewer.py:1360
 msgid "Status: n/a"
-msgstr ""
+msgstr "Status: n/a"
 
 #: taskcoachlib/gui/viewer.py:1409
 msgid "Effort: %d selected, %d visible, %d total"
-msgstr ""
+msgstr "Timeregistreringer: %d valgt(e), %d vises, %d totalt"
 
 #: taskcoachlib/gui/viewer.py:1412
 msgid "Status: %d tracking"
-msgstr ""
+msgstr "Status: %d registreres nå"
 
 #: taskcoachlib/gui/viewer.py:1473
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #: taskcoachlib/help/__init__.py:5
 msgid ""
@@ -1940,10 +1960,34 @@ msgid ""
 "    </ul>\n"
 "</ul>\n"
 msgstr ""
+"<h3>Innholdsfortegnelse</h3>\n"
+"<ul>\n"
+"<li><a href=\"#tasks\">Oppgaver</a>\n"
+"    <ul>\n"
+"        <li><a href=\"#abouttasks\">Om oppgave</a></li>\n"
+"        <li><a href=\"#taskproperties\">Egenskaper for oppgave</a></li>\n"
+"        <li><a href=\"#taskstates\">Status for oppgaver</a></li>\n"
+"        <li><a href=\"#taskcolors\">Farger for oppgaver</a></li>\n"
+"    </ul>\n"
+"</li>\n"
+"<li><a href=\"#effort\">Timeregistreringer</a>\n"
+"    <ul>\n"
+"        <li><a href=\"#abouteffort\">Om timeregistreringer</a></li>\n"
+"        <li><a href=\"#effortproperties\">Egenskaper for "
+"timeregistreringer</a></li>\n"
+"    </ul>\n"
+"</li>\n"
+"<li><a href=\"#categories\">Kategorier</a>\n"
+"    <ul>\n"
+"        <li><a href=\"#aboutcategories\">Om kategorier</a></li>\n"
+"        <li><a href=\"#categoryproperties\">Egenskaper for "
+"Kategorier</a></li>\n"
+"    </ul>\n"
+"</ul>\n"
 
 #: taskcoachlib/help/__init__.py:29
 msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
-msgstr ""
+msgstr "<h3><a name=\"tasks\">Oppgaver</a></h3>\n"
 
 #: taskcoachlib/help/__init__.py:32
 msgid ""
@@ -1956,6 +2000,13 @@ msgid ""
 "and\n"
 "numerous activities.</p>\n"
 msgstr ""
+"<h4><a name=\"abouttasks\">Om oppgaver</a></h4>\n"
+" \n"
+"<p>Oppgaver er basisobjektene du bruker. Oppgaver kan\n"
+"være hva som helst fra en enkel liten ting som skal gjøres, som å kjøpe en "
+"gave\n"
+"til kjæresten, til et komplett prosjekt med ulike faser og\n"
+"mange aktiviteter.</p>\n"
 
 #: taskcoachlib/help/__init__.py:40
 msgid ""
@@ -2004,6 +2055,43 @@ msgid ""
 "recursively.</li>\n"
 "</ul></p>\n"
 msgstr ""
+"<h4><a name=\"taskproperties\">Egenskaper \n"
+"for oppgaver</a></h4>\n"
+"\n"
+"<p>Oppgaver har følgende egenskaper som kan endres:\n"
+"<ul>\n"
+"<li>Emne: En linje som oppsummerer oppgaven.</li>\n"
+"<li>Beskrivelse: Tekst med en eller flere linjer.</li>\n"
+"<li>Forfallsdato: Datoen oppgaven bør være ferdig til. Den kan være blank \n"
+"for oppgaver uten noen gitt forfallsdato.</li>\n"
+"<li>Startdato: Tidligste oppstartsdato for oppgaven. Om ikke annet angis, \n"
+"settes startdatoen lik opprettelsesdatoen. Den kan også være blank for å "
+"indikere at \n"
+"oppgaven er satt på vent. Dette kan f.eks brukes ved sykefravær.</li>\n"
+"<li>Avsluttet dato: Denne datoen er blank inntil oppgaven avsluttes. \n"
+"Den settes til dagens dato når oppgaven merkes som avsluttet, men kan også \n"
+"settes manuelt.</li>\n"
+"<li>Budsjett: Antall timer som er tilgjengelig for oppgaven.</li>\n"
+"<li>Timesats: Fortjeneste pr. time for oppgaven.</li>\n"
+"<li>Fastpris: Fortjeneste som er uavhengig av tidsforbruket.</li>\n"
+"</ul></p>\n"
+"\n"
+"<p>Følgende egenskaper beregnes fra egenskapene over:\n"
+"<ul>\n"
+"<li>Dager igjen: Antall dager til forfallsdato.</li>\n"
+"<li>Totalt budsjett: Sum av budsjett på oppgaven og alle "
+"underoppgaver.</li>\n"
+"<li>Tid brukt: Tid brukt på oppgaven.</li>\n"
+"<li>Sum av tid brukt: Tid brukt på oppgaven og alle underoppgaver.</li>\n"
+"<li>Gjenværende budsjett: Oppgavens budsjett minus tid brukt på "
+"oppgaven.</li>\n"
+"<li>Totalt gjenværende budsjett: total task budget minus total time "
+"spent.</li>\n"
+"<li>Total fastpris: Sum av fastpris på oppgaven og alle underoppgaver.</li>\n"
+"<li>Fortjeneste: Fastpris pluss timesats multiplisert med tid brukt.</li>\n"
+"<li>Sum av fortjeneste: Sum av fortjeneste på oppgaven og alle "
+"underoppgaver.</li>\n"
+"</ul></p>\n"
 
 #: taskcoachlib/help/__init__.py:80
 msgid ""
@@ -2027,6 +2115,24 @@ msgid ""
 "</ul></p>\n"
 " "
 msgstr ""
+"<h4><a name=\\\"taskstates\\\">Oppgavestatus</a></h4>\n"
+"\n"
+"<p>Oppgaver har én av følgende statuser:\n"
+"<ul>\n"
+"<li>Aktiv: Startdatoen er passert.</li>\n"
+"<li>Inaktiv: Startdatoen ligger i framtiden, eller</li>\n"
+"<li>Avsluttet: Oppgaven er avsluttet og har avsluttetdato.</li>\n"
+"</ul></p>\n"
+"\n"
+"<p>I tillegg kan oppgaver betegnes som:\n"
+"<ul>\n"
+"<li>Forfalt: Forfallsdatoen er passert.</li>\n"
+"<li>Forfaller i dag: Forfallsdatoen er i dag.</li>\n"
+"<li>Over budsjett: Budsjett er brukt opp.</li>\n"
+"<li>Under budsjett: Der er mer igjen av budsjettet.</li>\n"
+"<li>Uten budsjett: Oppgaven har ikke budsjett.</li>\n"
+"</ul></p>\n"
+" "
 
 #: taskcoachlib/help/__init__.py:99
 msgid ""
@@ -2047,10 +2153,26 @@ msgid ""
 "belongs to, see the section about \n"
 "<a href=\"#categoryproperties\">category properties</a> below.</p>\n"
 msgstr ""
+"<h4><a name=\"taskcolors\">Oppgavefarger</a></h4>\n"
+"\n"
+"<p>Teksten på oppgaver er farget etter følgende regler:\n"
+"<ul>\n"
+"<li>Forfalte oppgaver er røde;</li>\n"
+"<li>Oppgaver som forfaller i dag er orange;</li>\n"
+"<li>Aktive oppgaver har svart tekst med blått ikon;</li>\n"
+"<li>Framtidige oppgaver er grå, og</li>\n"
+"<li>Avsluttede oppgaver er grønne.</li>\n"
+"</ul>\n"
+"Denne beskrivelsen forutsetter at ingen tekstfarger er endret i "
+"instillingene. \n"
+"</p>\n"
+"<p>Bakgrunnsfargen for oppgaver bestemmes av kategorien(e) de tilhører. \n"
+"Se <a href=\"#categoryproperties\">egenskaper for kategporier</a> "
+"under.</p>\n"
 
 #: taskcoachlib/help/__init__.py:116
 msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
-msgstr ""
+msgstr "<h3><a name=\"effort\">Timeregistrering</a></h3>\n"
 
 #: taskcoachlib/help/__init__.py:119
 msgid ""
@@ -2063,6 +2185,14 @@ msgid ""
 "toolbar \n"
 "button.</p>\n"
 msgstr ""
+"<h4><a name=\"abouteffort\">Om timeregistrering</a></h4>\n"
+"\n"
+"<p>Når du skal bruke tid på en oppgave kan du registrere tidsforbruket \n"
+"ved å først velge den aktuelle oppgaven og deretter 'Start timeregistrering' "
+"i \n"
+"Timeregistreringsmenyen, ved å høyreklikke på oppgaven eller via \n"
+"knappen for 'Start timeregistrering' på verktøylinjen. \n"
+"</p>\n"
 
 #: taskcoachlib/help/__init__.py:127
 msgid ""
@@ -2088,10 +2218,32 @@ msgid ""
 "<li>Total revenue: money earned with the total time spent.</li>\n"
 "</ul></p>\n"
 msgstr ""
+"<h4><a name=\"effortproperties\">Egenskaper\n"
+"for timeregistreringer</a></h4>\n"
+"\n"
+"<p>Timeregistreringer har følgende egenskaper som kan endres:\n"
+"<ul>\n"
+"<li>Oppgave: oppgaven som tidsforbruket er registrert på.</li>\n"
+"<li>Startdato/tid: Tidsforbrukets startdato og -tidspunkt.</li>\n"
+"<li>Sluttdato/tid: Tidsforbrukets sluttdato og -tidspunkt. Dette kan være "
+"blankt \n"
+"dersom timeregistreringen pågår.</li>\n"
+"<li>Beskrivelse: en beskrivende tekst som kan ha flere linjer.</li>\n"
+"</ul></p>\n"
+"\n"
+"<p>De følgende egenskapene beregnes fra egenskapene over:\n"
+"<ul>\n"
+"<li>Antall timer: Hvor lang tid du har brukt på oppgaven.</li>\n"
+"<li>Totalt antall timer: Sum av tid som er brukt på oppgaven, inkludert "
+"underoppgaver.</li>\n"
+"<li>Fortjeneste: Timesats fra oppgaven multiplisert med tidsforbruket.</li>\n"
+"<li>Sum av fortjeneste: Timesats fra oppgaven multiplisert med totalt antall "
+"timer.</li>\n"
+"</ul></p>\n"
 
 #: taskcoachlib/help/__init__.py:149
 msgid "<h3><a name=\"categories\">Categories</a></h3>\n"
-msgstr ""
+msgstr "<h3><a name=\"categories\">Kategorier</a></h3>\n"
 
 #: taskcoachlib/help/__init__.py:152
 msgid ""
@@ -2113,6 +2265,26 @@ msgid ""
 "only show tasks belonging to that category; in other words the phone calls \n"
 "you need to make.</p>\n"
 msgstr ""
+"<h4><a name=\"aboutcategories\">Om \n"
+"kategorier</a></h4>\n"
+"\n"
+"<p>Oppgaver kan tilhøre en eller flere kategorier. Kategorier opprettes \n"
+"via menyen 'Kategori'. Deretter kan oppgaver legges til en eller flere "
+"kategorier \n"
+"ved at man merker de relevante kategoriene på kategorifanen i "
+"redigeringsbildet \n"
+"for oppgaver.\n"
+"</p>\n"
+"\n"
+"<p>Du kan begrense hvilke oppgaver som skal vises i en oppgavevisning ved å "
+"\n"
+"krysse av for aktuelle kategorier i kategorivisningen. F.eks, hvis du har en "
+"kategori \n"
+"'telefonsamtaler' og du merker denne, vil oppgavevisningene kun vise "
+"oppgaver \n"
+"som tilhører denne kategorien. Eller med andre ord: De telefonsamtalene du "
+"må ta.\n"
+"</p>\n"
 
 #: taskcoachlib/help/__init__.py:167
 msgid ""
@@ -2128,6 +2300,17 @@ msgid ""
 "them, a mixture of the colors will be used to render the background of that\n"
 "task.</p>\n"
 msgstr ""
+"<h4><a name=\"categoryproperties\">Egenskaper \n"
+"for kategori</a></h4>\n"
+"\n"
+"<p>Kategorier har et emne, en beskrivelse og en farge. Fargen brukes som\n"
+"bakgrunnsfarge for kategorien og oppgaver som tilhører den.\n"
+"Hvis en kategori ikke har sin egen farge, men er underkategori til en "
+"kategori med farge,\n"
+"vil fargen til den overordnede benyttes.  \n"
+"For oppgaver som tilhører flere kategorier som har ulike farger,\n"
+"vil en sammensetning av disse fargene bli brukt. \n"
+"</p>\n"
 
 #: taskcoachlib/help/__init__.py:184
 msgid ""
@@ -2138,6 +2321,12 @@ msgid ""
 "<p>%(copyright)s</p>\n"
 "<p>%(license)s</p>\n"
 msgstr ""
+"<h4>%(name)s - %(description)s</h4>\n"
+"<h5>Versjon %(version)s, %(date)s</h5>\n"
+"<p>Av %(author)s <%(author_email)s><p>\n"
+"<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
+"<p>%(copyright)s</p>\n"
+"<p>%(license)s</p>\n"
 
 #: taskcoachlib/help/__init__.py:196
 msgid ""
@@ -2152,6 +2341,16 @@ msgid ""
 "%(license)s\n"
 "\n"
 msgstr ""
+"\n"
+"Versjon %(version)s, %(date)s\n"
+"\n"
+"Av %(author)s <%(author_email)s>\n"
+"\n"
+"%(url)s\n"
+"\n"
+"%(copyright)s\n"
+"%(license)s\n"
+"\n"
 
 #: taskcoachlib/help/tips.py:5
 msgid ""
@@ -2159,6 +2358,9 @@ msgid ""
 "fellow users, discuss and request features and complain about bugs. Go to "
 "%(url)s and join today!"
 msgstr ""
+"%(name)s har en epostliste hvor man kan diskutere bruken av %(name)s med "
+"andre brukere, diskutere og foreslå nye funksjoner eller rapportere feil. Gå "
+"til %(url)s for å registrere deg."
 
 #: taskcoachlib/help/tips.py:6
 msgid ""
@@ -2167,6 +2369,10 @@ msgid ""
 "Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards "
 "through your edit history."
 msgstr ""
+"%(name)s har ubegrenset endringshistorikk. Enhver endring, enten det er en "
+"oppgavebeskrivelse eller sletting av en timeregistrering kan angres. Velg "
+"'Rediger' -> 'Angre' eller 'Rediger' -> 'Gjør på ny' for å gå bakover eller "
+"forover i endringshistorikken."
 
 #: taskcoachlib/help/tips.py:7
 msgid ""
@@ -2176,6 +2382,11 @@ msgid ""
 "helping with the translation of %(name)s. Visit %(url)s for more information "
 "about how you can help."
 msgstr ""
+"%(name)s er tilgjengelig med forskjellige språk. Veld 'Rediger' -> "
+"'Innstillinger' for å se om ditt språk er tilgjengelig. Dersom det ikke er "
+"det, eller hvis oversettelsen har mangler, ber vi deg vurdere om du kan "
+"bidra til oversettelsen av %(name)s. Gå til %(url)s for nærmere informasjon "
+"om hvordan du kan hjelpe."
 
 #: taskcoachlib/help/tips.py:8
 msgid ""
@@ -2183,12 +2394,17 @@ msgid ""
 "becomes a link. Clicking on the link will open the URL in your default web "
 "browser."
 msgstr ""
+"Dersom man angir en URL (f.eks %(url)s) i beskrivelsen av en oppgave eller "
+"en timeregistrering blir den en link. Denne linken kan klikkes på og vil da "
+"åpnes i standard nettleser."
 
 #: taskcoachlib/help/tips.py:9
 msgid ""
 "You can drag and drop tasks in the tree view to rearrange parent-child "
 "relationships between tasks. The same goes for categories."
 msgstr ""
+"Oppgaver kan dras og slippes i en trevisning for å endre plassering i "
+"hierarkiet. Det samme gjelder for kategorier."
 
 #: taskcoachlib/help/tips.py:10
 msgid ""
@@ -2197,6 +2413,10 @@ msgid ""
 "files over a collapsed task (the boxed + sign) in the tree view will expand "
 "the task to show its subtasks."
 msgstr ""
+"Filer kan dras fra en filutforsker og slippes på en oppgave for å opprette "
+"vedlegg. Ved å dra en fil over en fane vil den tilhørende siden aktiveres, "
+"og ved å dra en fil over en minimert node i en trevisning vil noden bli "
+"ekspandert slik at underoppgavene vises."
 
 #: taskcoachlib/help/tips.py:11
 msgid ""
@@ -2204,6 +2424,9 @@ msgid ""
 "Unfortunately, due to a limitation of the current version of the graphical "
 "toolkit (wxPython), the layout cannot be saved for reuse in the next session."
 msgstr ""
+"Visningsoppsett kan endres etter ønske ved å dra og slippe faner. Pga. en "
+"begrensing i det grafiske rammeverket som er brukt (wxPython) kan dessverre "
+"ikke slike egendefinerte oppsett lagres for gjenbruk."
 
 #: taskcoachlib/help/tips.py:12
 msgid ""
@@ -2212,6 +2435,9 @@ msgid ""
 "be printed, if the current view shows effort grouped by month, that will be "
 "printed. The same goes for visible columns, sort order, filtered tasks, etc."
 msgstr ""
+"Når man velger 'Fil' -> 'Skriv ut' er det innholdet i den aktive visningen "
+"som skrives ut. Innholdet skrives ut med den grupperingen/sorteringen og de "
+"synlige kolonnene som visningen har."
 
 #: taskcoachlib/help/tips.py:13
 msgid ""
@@ -2220,53 +2446,56 @@ msgid ""
 "Right-click a column header to hide that column or make additional columns "
 "visible."
 msgstr ""
+"Venstreklikk på kolonneoverskrifter for å sortere. Klikk en gang til for å "
+"endre sorteringsretning fra stigende til synkende eller omvendt. Høyreklikk "
+"en kolonneoverskrift for å skjule den, eller for å velge flere kolonner."
 
 #: taskcoachlib/mailer/__init__.py:32
 msgid "Untitled e-mail"
-msgstr ""
+msgstr "Epost uten tittel"
 
 #: taskcoachlib/mailer/thunderbird.py:161
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
-msgstr ""
+msgstr "Angi passord for bruker %(user)s på %(server)s:%(port)d"
 
 #: taskcoachlib/mailer/thunderbird.py:175
 msgid "Wrong password. Please try again."
-msgstr ""
+msgstr "Ugyldig passord. Prøv igjen."
 
 #: taskcoachlib/widgets/buttonbox.py:5 taskcoachlib/widgets/dialog.py:33
 #: taskcoachlib/widgets/dialog.py:56 taskcoachlib/widgets/dialog.py:59
 #: taskcoachlib/widgets/dialog.py:119
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: taskcoachlib/widgets/buttonbox.py:5 taskcoachlib/widgets/dialog.py:34
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #: taskcoachlib/widgets/dialog.py:128
 msgid "All files (*.*)|*"
-msgstr ""
+msgstr "Alle filer (*.*)|*"
 
 #: taskcoachlib/widgets/searchctrl.py:89
 msgid "Match case"
-msgstr ""
+msgstr "Forskjell på store/små bokstaver"
 
 #: taskcoachlib/widgets/searchctrl.py:90
 msgid "Match case when filtering"
-msgstr ""
+msgstr "Behandle store/små bokstaver som ulike i filtrering"
 
 #: taskcoachlib/widgets/searchctrl.py:93
 msgid "Include sub items"
-msgstr ""
+msgstr "Inkluder underelementer"
 
 #: taskcoachlib/widgets/searchctrl.py:94
 msgid "Include sub items of matching items in the search results"
-msgstr ""
+msgstr "Inkluder underelementer til elementer i søkeresultatet"
 
 #: taskcoachlib/widgets/searchctrl.py:102
 msgid "Recent searches"
-msgstr ""
+msgstr "Sist utførte søk"
 
 #: taskcoachlib/widgets/searchctrl.py:113
 msgid "Viewer not searchable"
-msgstr ""
+msgstr "Kan ikke søke i denne visningen"

@@ -1,16 +1,16 @@
-# Indonesian translation for taskcoach
-# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# Korean translation for taskcoach
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the taskcoach package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-01-26 16:36+0000\n"
-"PO-Revision-Date: 2007-05-23 08:15+0000\n"
-"Last-Translator: tunggul arif siswoyo <tunggul@gmail.com>\n"
-"Language-Team: Indonesian <id@li.org>\n"
+"PO-Revision-Date: 2008-03-18 16:30+0000\n"
+"Last-Translator: corean <younsoo.kim@gmail.com>\n"
+"Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,41 +19,41 @@ msgstr ""
 
 #: taskcoachlib/command/base.py:92
 msgid "Copy"
-msgstr "Copy"
+msgstr "복사"
 
 #: taskcoachlib/command/base.py:107
 msgid "Delete"
-msgstr "Hapus"
+msgstr "삭제"
 
 #: taskcoachlib/command/base.py:121
 msgid "Cut"
-msgstr "Potong"
+msgstr "잘라내기"
 
 #: taskcoachlib/command/base.py:147
 msgid "Paste"
-msgstr "Tempel"
+msgstr "붙여넣기"
 
 #: taskcoachlib/command/base.py:208
 msgid "Drag and drop"
-msgstr ""
+msgstr "끌어다 놓기"
 
 #: taskcoachlib/command/categoryCommands.py:7
 #: taskcoachlib/command/categoryCommands.py:14
 msgid "New category"
-msgstr ""
+msgstr "새 분류"
 
 #: taskcoachlib/command/categoryCommands.py:28
 #: taskcoachlib/command/categoryCommands.py:31
 msgid "New subcategory"
-msgstr ""
+msgstr "새 하위분류"
 
 #: taskcoachlib/command/categoryCommands.py:36
 msgid "Edit category"
-msgstr ""
+msgstr "카테고리 편집"
 
 #: taskcoachlib/command/categoryCommands.py:44
 msgid "Drag and drop category"
-msgstr ""
+msgstr "분류 끌어다놓기"
 
 #: taskcoachlib/command/effortCommands.py:7
 msgid "New effort"
@@ -66,105 +66,107 @@ msgstr ""
 #: taskcoachlib/command/noteCommands.py:7
 #: taskcoachlib/command/noteCommands.py:15
 msgid "New note"
-msgstr ""
+msgstr "새 노트"
 
 #: taskcoachlib/command/noteCommands.py:29
 #: taskcoachlib/command/noteCommands.py:32
 msgid "New subnote"
-msgstr ""
+msgstr "새 하위노트"
 
 #: taskcoachlib/command/noteCommands.py:37
 msgid "Edit note"
-msgstr ""
+msgstr "노트 수정"
 
 #: taskcoachlib/command/noteCommands.py:45
 msgid "Drag and drop note"
-msgstr ""
+msgstr "노트 끌어다놓기"
 
 #: taskcoachlib/command/taskCommands.py:12
 msgid "Paste into task"
-msgstr "Tempel ke tugas"
+msgstr "작업 붙여넣기"
 
 #: taskcoachlib/command/taskCommands.py:26
 msgid "Drag and drop task"
-msgstr ""
+msgstr "작업 끌어다놓기"
 
 #: taskcoachlib/command/taskCommands.py:31
 msgid "Delete task"
-msgstr ""
+msgstr "작업 삭제"
 
 #: taskcoachlib/command/taskCommands.py:36
 #: taskcoachlib/command/taskCommands.py:39
 msgid "New task"
-msgstr "Tugas baru"
+msgstr "새 작업"
 
 #: taskcoachlib/command/taskCommands.py:59
 #: taskcoachlib/command/taskCommands.py:63
 msgid "New subtask"
-msgstr ""
+msgstr "새 하위작업"
 
 #: taskcoachlib/command/taskCommands.py:85
 msgid "Edit task"
-msgstr ""
+msgstr "작업 수정"
 
 #: taskcoachlib/command/taskCommands.py:118
 #: taskcoachlib/gui/dialog/editor.py:398 taskcoachlib/widgets/dialog.py:126
 msgid "Add attachment"
-msgstr ""
+msgstr "첨부화일 추가"
 
 #: taskcoachlib/command/taskCommands.py:167
 msgid "Mark completed"
-msgstr ""
+msgstr "마크 완료"
 
 #: taskcoachlib/command/taskCommands.py:183
 msgid "Start tracking"
-msgstr ""
+msgstr "트래킹 시작"
 
 #: taskcoachlib/command/taskCommands.py:208
 msgid "Stop tracking"
-msgstr ""
+msgstr "트래킹 정지"
 
 #: taskcoachlib/command/taskCommands.py:248
 msgid "Maximize priority"
-msgstr ""
+msgstr "최고 우선순위"
 
 #: taskcoachlib/command/taskCommands.py:258
 msgid "Minimize priority"
-msgstr ""
+msgstr "최저 우선순위"
 
 #: taskcoachlib/command/taskCommands.py:286
 msgid "Increase priority"
-msgstr ""
+msgstr "우선순위 올림"
 
 #: taskcoachlib/command/taskCommands.py:293
 msgid "Decrease priority"
-msgstr ""
+msgstr "우선순위 내림"
 
 #: taskcoachlib/config/settings.py:121
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
 msgstr ""
+"%s.ini 저장중 오류:\n"
+"%s\n"
 
 #: taskcoachlib/config/settings.py:122
 msgid "Save error"
-msgstr ""
+msgstr "저장 에러"
 
 #: taskcoachlib/domain/category/categorycontainer.py:5
 msgid "New category..."
-msgstr ""
+msgstr "새 분류"
 
 #: taskcoachlib/domain/category/categorycontainer.py:6
 msgid "Insert a new category"
-msgstr ""
+msgstr "새 분류넣기"
 
 #: taskcoachlib/domain/category/categorycontainer.py:7
 msgid "Edit category..."
-msgstr ""
+msgstr "분류 수정"
 
 #: taskcoachlib/domain/category/categorycontainer.py:8
 msgid "Edit the selected categories"
-msgstr ""
+msgstr "선택한 분류 수정"
 
 #: taskcoachlib/domain/category/categorycontainer.py:9
 msgid "Delete category"
@@ -176,11 +178,11 @@ msgstr ""
 
 #: taskcoachlib/domain/category/categorycontainer.py:11
 msgid "New subcategory..."
-msgstr ""
+msgstr "새 하위분류"
 
 #: taskcoachlib/domain/category/categorycontainer.py:12
 msgid "Insert a new subcategory"
-msgstr ""
+msgstr "새 하위분류 넣기"
 
 #: taskcoachlib/domain/effort/effortlist.py:14
 msgid "&New effort..."
@@ -208,75 +210,75 @@ msgstr ""
 
 #: taskcoachlib/domain/note/notecontainer.py:5
 msgid "New note..."
-msgstr ""
+msgstr "새 노트..."
 
 #: taskcoachlib/domain/note/notecontainer.py:6
 msgid "Insert a new note"
-msgstr ""
+msgstr "새 노트 넣기"
 
 #: taskcoachlib/domain/note/notecontainer.py:7
 msgid "Edit note..."
-msgstr ""
+msgstr "노트 수정..."
 
 #: taskcoachlib/domain/note/notecontainer.py:8
 msgid "Edit the selected notes"
-msgstr ""
+msgstr "선택한 노트 수정"
 
 #: taskcoachlib/domain/note/notecontainer.py:9
 msgid "Delete note"
-msgstr ""
+msgstr "노트 삭제"
 
 #: taskcoachlib/domain/note/notecontainer.py:10
 msgid "Delete the selected notes"
-msgstr ""
+msgstr "선택한 노트 삭제"
 
 #: taskcoachlib/domain/note/notecontainer.py:11
 msgid "New subnote..."
-msgstr ""
+msgstr "새 하위노트..."
 
 #: taskcoachlib/domain/note/notecontainer.py:12
 msgid "Insert a new subnote"
-msgstr ""
+msgstr "새 하위노트 넣기"
 
 #: taskcoachlib/domain/task/tasklist.py:11
 msgid "&New task..."
-msgstr ""
+msgstr "새 작업 &n"
 
 #: taskcoachlib/domain/task/tasklist.py:20
 msgid "New &subtask..."
-msgstr ""
+msgstr "새 하위작업 &s"
 
 #: taskcoachlib/domain/task/tasklist.py:31
 msgid "Insert a new task"
-msgstr ""
+msgstr "새 작업 넣기"
 
 #: taskcoachlib/domain/task/tasklist.py:32
 msgid "&Edit task..."
-msgstr ""
+msgstr "작업 수정 &e"
 
 #: taskcoachlib/domain/task/tasklist.py:33
 msgid "Edit the selected task"
-msgstr ""
+msgstr "선택한 작업 수정"
 
 #: taskcoachlib/domain/task/tasklist.py:34
 msgid "&Delete task\tCtrl+DEL"
-msgstr ""
+msgstr "작업 삭제 &d \t Ctrl+DEL"
 
 #: taskcoachlib/domain/task/tasklist.py:35
 msgid "Delete the selected task(s)"
-msgstr ""
+msgstr "선택한 작업 삭제"
 
 #: taskcoachlib/domain/task/tasklist.py:37
 msgid "Insert a new subtask into the selected task"
-msgstr ""
+msgstr "선택한 작업에 하위작업 추가"
 
 #: taskcoachlib/gui/dialog/editor.py:86
 msgid "For this task"
-msgstr ""
+msgstr "이 작업"
 
 #: taskcoachlib/gui/dialog/editor.py:88
 msgid "For this task including all subtasks"
-msgstr ""
+msgstr "모든 하위작업을 포함하는 작업"
 
 #: taskcoachlib/gui/dialog/editor.py:101 taskcoachlib/gui/dialog/editor.py:105
 #: taskcoachlib/gui/dialog/editor.py:533 taskcoachlib/gui/dialog/editor.py:599
@@ -284,87 +286,87 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:742 taskcoachlib/gui/viewer.py:967
 #: taskcoachlib/gui/viewer.py:1317 taskcoachlib/gui/viewer.py:1475
 msgid "Description"
-msgstr ""
+msgstr "설명"
 
 #: taskcoachlib/gui/dialog/editor.py:102 taskcoachlib/gui/dialog/editor.py:633
 #: taskcoachlib/gui/dialog/editor.py:672 taskcoachlib/gui/viewer.py:354
 #: taskcoachlib/gui/viewer.py:959 taskcoachlib/gui/viewer.py:1316
 msgid "Subject"
-msgstr ""
+msgstr "제목"
 
 #: taskcoachlib/gui/dialog/editor.py:109 taskcoachlib/gui/dialog/editor.py:110
 #: taskcoachlib/gui/viewer.py:1009
 msgid "Priority"
-msgstr ""
+msgstr "우선순위"
 
 #: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/dialog/editor.py:534
 msgid "Dates"
-msgstr ""
+msgstr "날짜"
 
 #: taskcoachlib/gui/dialog/editor.py:142 taskcoachlib/gui/viewer.py:998
 msgid "Start date"
-msgstr ""
+msgstr "날짜일"
 
 #: taskcoachlib/gui/dialog/editor.py:143 taskcoachlib/gui/viewer.py:999
 msgid "Due date"
-msgstr ""
+msgstr "마감일"
 
 #: taskcoachlib/gui/dialog/editor.py:144 taskcoachlib/gui/viewer.py:1001
 msgid "Completion date"
-msgstr ""
+msgstr "완료일"
 
 #: taskcoachlib/gui/dialog/editor.py:157 taskcoachlib/gui/dialog/editor.py:159
 #: taskcoachlib/gui/dialog/reminder.py:16 taskcoachlib/gui/viewer.py:1016
 msgid "Reminder"
-msgstr ""
+msgstr "알림"
 
 #: taskcoachlib/gui/dialog/editor.py:165 taskcoachlib/gui/dialog/editor.py:166
 #: taskcoachlib/gui/viewer.py:1002
 msgid "Recurrence"
-msgstr ""
+msgstr "반복"
 
 #: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/dialog/editor.py:197
 msgid "None"
-msgstr ""
+msgstr "없음"
 
 #: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/render.py:37
 msgid "Weekly"
-msgstr ""
+msgstr "매주"
 
 #: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/render.py:38
 msgid "Daily"
-msgstr ""
+msgstr "매일"
 
 #: taskcoachlib/gui/dialog/editor.py:171
 msgid "Maximum number of recurrences"
-msgstr ""
+msgstr "반복설정 초과"
 
 #: taskcoachlib/gui/dialog/editor.py:238 taskcoachlib/gui/dialog/editor.py:256
 #: taskcoachlib/gui/dialog/editor.py:537 taskcoachlib/gui/viewer.py:1003
 msgid "Budget"
-msgstr ""
+msgstr "예산"
 
 #: taskcoachlib/gui/dialog/editor.py:239 taskcoachlib/gui/dialog/editor.py:264
 #: taskcoachlib/gui/viewer.py:1014 taskcoachlib/gui/viewer.py:1482
 msgid "Revenue"
-msgstr ""
+msgstr "수입"
 
 #: taskcoachlib/gui/dialog/editor.py:257 taskcoachlib/gui/viewer.py:1005
 #: taskcoachlib/gui/viewer.py:1480
 msgid "Time spent"
-msgstr ""
+msgstr "시간지출"
 
 #: taskcoachlib/gui/dialog/editor.py:258 taskcoachlib/gui/viewer.py:1007
 msgid "Budget left"
-msgstr ""
+msgstr "남은 예산"
 
 #: taskcoachlib/gui/dialog/editor.py:262 taskcoachlib/gui/viewer.py:1011
 msgid "Hourly fee"
-msgstr ""
+msgstr "시간당 지출"
 
 #: taskcoachlib/gui/dialog/editor.py:263 taskcoachlib/gui/viewer.py:1012
 msgid "Fixed fee"
-msgstr ""
+msgstr "지출 고정"
 
 #: taskcoachlib/gui/dialog/editor.py:302 taskcoachlib/gui/viewer.py:1444
 msgid "Effort details"
@@ -387,39 +389,39 @@ msgstr ""
 #: taskcoachlib/gui/viewer.py:979 taskcoachlib/gui/viewer.py:1160
 #: taskcoachlib/gui/viewer.py:1318
 msgid "Categories"
-msgstr ""
+msgstr "분류"
 
 #: taskcoachlib/gui/dialog/editor.py:374 taskcoachlib/gui/dialog/editor.py:541
 msgid "Attachments"
-msgstr ""
+msgstr "첨부"
 
 #: taskcoachlib/gui/dialog/editor.py:376
 msgid "Attachment filenames"
-msgstr ""
+msgstr "첨부파일들"
 
 #: taskcoachlib/gui/dialog/editor.py:383
 msgid "Open attachment"
-msgstr ""
+msgstr "첨부파일 열기"
 
 #: taskcoachlib/gui/dialog/editor.py:384
 msgid "Remove attachment"
-msgstr ""
+msgstr "첨부화일 삭제"
 
 #: taskcoachlib/gui/dialog/editor.py:385
 msgid "Edit filename"
-msgstr ""
+msgstr "파일 수정"
 
 #: taskcoachlib/gui/dialog/editor.py:389
 msgid "Browse for new attachment..."
-msgstr ""
+msgstr "새 첨부파일 가져오기"
 
 #: taskcoachlib/gui/dialog/editor.py:396
 msgid "Attachment filename"
-msgstr ""
+msgstr "첨부파일"
 
 #: taskcoachlib/gui/dialog/editor.py:465 taskcoachlib/gui/uicommand.py:1323
 msgid "Error opening attachment"
-msgstr ""
+msgstr "첨부파일 오류"
 
 #: taskcoachlib/gui/dialog/editor.py:505
 #: taskcoachlib/gui/dialog/preferences.py:175
@@ -432,15 +434,15 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:509
 msgid "No"
-msgstr ""
+msgstr "아니오"
 
 #: taskcoachlib/gui/dialog/editor.py:509
 msgid "Yes"
-msgstr ""
+msgstr "예"
 
 #: taskcoachlib/gui/dialog/editor.py:516
 msgid "Mark task completed when all children are completed?"
-msgstr ""
+msgstr "모든 아이가 완료하였을때 작업 완료를 마크"
 
 #: taskcoachlib/gui/dialog/editor.py:540
 msgid "Effort"
@@ -448,16 +450,16 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:542
 msgid "Behavior"
-msgstr ""
+msgstr "동작"
 
 #: taskcoachlib/gui/dialog/editor.py:571
 #: taskcoachlib/gui/dialog/reminder.py:22 taskcoachlib/gui/viewer.py:1474
 msgid "Task"
-msgstr ""
+msgstr "작업"
 
 #: taskcoachlib/gui/dialog/editor.py:577
 msgid "Start tracking from last stop time"
-msgstr ""
+msgstr "마지막 작업에서 트래킹 시작"
 
 #: taskcoachlib/gui/dialog/editor.py:587
 msgid "Start"
@@ -465,23 +467,23 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:589
 msgid "Stop"
-msgstr ""
+msgstr "중지"
 
 #: taskcoachlib/gui/dialog/editor.py:644
 msgid "Use this color:"
-msgstr ""
+msgstr "이 색상 사용:"
 
 #: taskcoachlib/gui/dialog/editor.py:650
 msgid "Color"
-msgstr ""
+msgstr "색상"
 
 #: taskcoachlib/gui/dialog/preferences.py:61
 msgid "Auto save after every change"
-msgstr ""
+msgstr "모든 수정사항 자동저장"
 
 #: taskcoachlib/gui/dialog/preferences.py:63
 msgid "Create backup copy before overwriting a %s file"
-msgstr ""
+msgstr "%s 파일 저장전 백업파일 생성"
 
 #: taskcoachlib/gui/dialog/preferences.py:65
 msgid "Maximum number of recent files to remember"
