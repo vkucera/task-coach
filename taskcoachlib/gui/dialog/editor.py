@@ -163,7 +163,8 @@ class DatesPage(TaskEditorPage):
                                       (_('Completion date'), 'completionDate')]:
             datesBox.add(label)
             taskMethod = getattr(task, taskMethodName)
-            entry = DateEntry(datesBox, taskMethod())
+            entry = DateEntry(datesBox, taskMethod(), 
+                              callback=self.onDateChanged)
             setattr(self, '_%sEntry'%taskMethodName, entry)
             datesBox.add(entry)
             if task.children():
@@ -178,6 +179,10 @@ class DatesPage(TaskEditorPage):
         reminderBox.add(_('Reminder'))
         self._reminderDateTimeEntry = widgets.DateTimeCtrl(reminderBox, 
             task.reminder())
+        # If the users has not set a reminder, make sure that the default 
+        # date time in the reminder entry is a reasonable suggestion:
+        if self._reminderDateTimeEntry.GetValue() == date.DateTime.max:
+            self.suggestReminder()
         reminderBox.add(self._reminderDateTimeEntry)
 
         recurrenceBox = widgets.BoxWithFlexGridSizer(self, 
@@ -223,6 +228,13 @@ class DatesPage(TaskEditorPage):
         maxRecurrenceOn = event.IsChecked()
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
 
+    def onDateChanged(self, event):
+        ''' Called when one of the DateEntries is changed by the user. Update
+            the suggested reminder if no reminder was set by the user. '''
+        event.Skip()
+        if self._reminderDateTimeEntry.GetValue() == date.DateTime.max:
+            self.suggestReminder()
+
     def ok(self):
         recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly'}
         recurrence = recurrenceDict[self._recurrenceEntry.Selection]
@@ -248,7 +260,29 @@ class DatesPage(TaskEditorPage):
         self._maxRecurrenceCountEntry.Value = maxRecurrence
         self._maxRecurrenceCheckBox.Enable(self._recurrenceEntry.Selection != 0)
         self._maxRecurrenceCheckBox.SetValue(maxRecurrence > 0)
-        
+
+    def suggestReminder(self):
+        ''' suggestReminder populates the reminder entry with a reasonable
+            suggestion for a reminder date and time, but does not enable the
+            reminder entry. '''
+        # The suggested date for the reminder is the first date from the 
+        # list of candidates that is a real date:
+        candidates = [self._dueDateEntry.get(), self._startDateEntry.get(), 
+                      date.Tomorrow()]
+        suggestedDate = [candidate for candidate in candidates \
+                         if date.Today() <= candidate < date.Date()][0]
+        # Add a suggested time of 8:00 AM:
+        suggestedDateTime = date.DateTime(suggestedDate.year,
+                                          suggestedDate.month, 
+                                          suggestedDate.day, 8, 0, 0)
+        # Now, make sure the suggested date time is set in the control
+        self.setReminder(suggestedDateTime)
+        # And then disable the control (because the SetValue in the
+        # previous statement enables the control)
+        self.setReminder(None)
+        # Now, when the user clicks the check box to enable the
+        # control it will show the suggested date time
+    
 
 class BudgetPage(TaskEditorPage):
     def __init__(self, parent, task, *args, **kwargs):

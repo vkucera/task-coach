@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-01-26 16:36+0000\n"
-"PO-Revision-Date: 2007-09-15 20:28+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2008-03-18 15:45+0000\n"
+"Last-Translator: 邪惡藍 <evildeepblue@gmail.com>\n"
 "Language-Team: Traditional Chinese <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-02 16:04+0000\n"
+"X-Launchpad-Export-Date: 2008-03-27 18:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: taskcoachlib/command/base.py:92
@@ -91,7 +91,7 @@ msgstr "拖曳工作"
 
 #: taskcoachlib/command/taskCommands.py:31
 msgid "Delete task"
-msgstr ""
+msgstr "刪除工作"
 
 #: taskcoachlib/command/taskCommands.py:36
 #: taskcoachlib/command/taskCommands.py:39
@@ -126,19 +126,19 @@ msgstr "停止追蹤"
 
 #: taskcoachlib/command/taskCommands.py:248
 msgid "Maximize priority"
-msgstr ""
+msgstr "最大優先權"
 
 #: taskcoachlib/command/taskCommands.py:258
 msgid "Minimize priority"
-msgstr ""
+msgstr "最小優先權"
 
 #: taskcoachlib/command/taskCommands.py:286
 msgid "Increase priority"
-msgstr ""
+msgstr "提昇優先權"
 
 #: taskcoachlib/command/taskCommands.py:293
 msgid "Decrease priority"
-msgstr ""
+msgstr "降低優先權"
 
 #: taskcoachlib/config/settings.py:121
 msgid ""
@@ -323,23 +323,23 @@ msgstr "提醒"
 #: taskcoachlib/gui/dialog/editor.py:165 taskcoachlib/gui/dialog/editor.py:166
 #: taskcoachlib/gui/viewer.py:1002
 msgid "Recurrence"
-msgstr ""
+msgstr "循環"
 
 #: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/dialog/editor.py:197
 msgid "None"
-msgstr ""
+msgstr "無"
 
 #: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/render.py:37
 msgid "Weekly"
-msgstr ""
+msgstr "每週"
 
 #: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/render.py:38
 msgid "Daily"
-msgstr ""
+msgstr "每天"
 
 #: taskcoachlib/gui/dialog/editor.py:171
 msgid "Maximum number of recurrences"
-msgstr ""
+msgstr "最大循環次數"
 
 #: taskcoachlib/gui/dialog/editor.py:238 taskcoachlib/gui/dialog/editor.py:256
 #: taskcoachlib/gui/dialog/editor.py:537 taskcoachlib/gui/viewer.py:1003
@@ -471,11 +471,11 @@ msgstr "停止"
 
 #: taskcoachlib/gui/dialog/editor.py:644
 msgid "Use this color:"
-msgstr ""
+msgstr "使用這個顏色"
 
 #: taskcoachlib/gui/dialog/editor.py:650
 msgid "Color"
-msgstr ""
+msgstr "顏色"
 
 #: taskcoachlib/gui/dialog/preferences.py:61
 msgid "Auto save after every change"
@@ -539,7 +539,7 @@ msgstr "追蹤工作量時讓工作列上的時鐘計時"
 
 #: taskcoachlib/gui/dialog/preferences.py:94
 msgid "Show a popup with the description of an item when hovering over it"
-msgstr ""
+msgstr "當滑鼠移到項目上時，備註使用彈跳視窗顯示"
 
 #: taskcoachlib/gui/dialog/preferences.py:101
 #: taskcoachlib/gui/dialog/preferences.py:177
@@ -633,7 +633,7 @@ msgstr "2 小時"
 
 #: taskcoachlib/gui/dialog/reminder.py:25
 msgid "Reminder date/time"
-msgstr ""
+msgstr "提醒日期/時間"
 
 #: taskcoachlib/gui/dialog/reminder.py:26
 msgid "Snooze"
@@ -669,7 +669,7 @@ msgstr "CSV 檔案 (*.csv)|*.csv|文字檔案 (*.txt)|*.txt|所有檔案 (*.*)|*
 
 #: taskcoachlib/gui/iocontroller.py:44
 msgid "%s file error"
-msgstr ""
+msgstr "檔案 %s 發生錯誤"
 
 #: taskcoachlib/gui/iocontroller.py:50
 msgid "Open"
@@ -689,7 +689,7 @@ msgstr "已從 %(filename)s 載入 %(nrtasks)d 筆工作"
 
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "Cannot open %s because it doesn't exist"
-msgstr ""
+msgstr "無法開啟 %s ，因為檔案不存在"
 
 #: taskcoachlib/gui/iocontroller.py:78
 msgid "Merge"
@@ -1160,7 +1160,7 @@ msgstr "刪除項目"
 
 #: taskcoachlib/gui/uicommand.py:1123
 msgid "&Mark task completed\tCtrl+RETURN"
-msgstr ""
+msgstr "標示工作已完成(&M)\tCtrl+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1124
 msgid "Mark the selected task(s) completed"
@@ -1168,15 +1168,15 @@ msgstr "將選取工作標示為已完成"
 
 #: taskcoachlib/gui/uicommand.py:1175
 msgid "&Mark task uncompleted\tCtrl+RETURN"
-msgstr ""
+msgstr "標示工作未完成(&M)\tCtrl+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1181
 msgid "Mark the selected task(s) uncompleted"
-msgstr ""
+msgstr "標示已選工作未完城"
 
 #: taskcoachlib/gui/uicommand.py:1203
 msgid "Maximize priority\tShift+Ctrl+P"
-msgstr ""
+msgstr "最大優先權\tShift+Ctrl+P"
 
 #: taskcoachlib/gui/uicommand.py:1204
 msgid "Make the selected task(s) the highest priority task(s)"
@@ -1379,7 +1379,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1640 taskcoachlib/gui/uicommand.py:1772
 msgid "&Recurrence"
-msgstr ""
+msgstr "循環 (&R)"
 
 #: taskcoachlib/gui/uicommand.py:1641
 msgid "Show/hide budget column"
@@ -1573,7 +1573,7 @@ msgstr "以說明排序"
 
 #: taskcoachlib/gui/uicommand.py:1766
 msgid "Sort by category"
-msgstr ""
+msgstr "依分類排序"
 
 #: taskcoachlib/gui/uicommand.py:1767
 msgid "Sort by overall categories"
@@ -1601,7 +1601,7 @@ msgstr "以剩餘天數排序工作"
 
 #: taskcoachlib/gui/uicommand.py:1772
 msgid "Sort tasks by recurrence"
-msgstr ""
+msgstr "依循環排序工作"
 
 #: taskcoachlib/gui/uicommand.py:1773
 msgid "Sort tasks by budget"

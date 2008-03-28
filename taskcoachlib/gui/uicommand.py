@@ -141,13 +141,13 @@ class UICommand(object):
     def onUpdateUI(self, event):
         event.Enable(bool(self.enabled(event)))
         if self.toolbar and (not self.helpText or self.menuText == '?'):
-            self.updateToolbarHelp()
+            self.updateToolHelp()
         
     def enabled(self, event):
         ''' Can be overridden in a subclass. '''
         return True
 
-    def updateToolbarHelp(self):
+    def updateToolHelp(self):
         shortHelp = wx.MenuItem.GetLabelFromText(self.getMenuText())
         if shortHelp != self.toolbar.GetToolShortHelp(self.id):
             self.toolbar.SetToolShortHelp(self.id, shortHelp)
@@ -1099,14 +1099,21 @@ class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand,
             helpText=taskList.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        filteredCategories = [category for category in self.categories if
-                             category.isFiltered()]
         newTaskDialog = gui.dialog.editor.TaskEditor(self.mainwindow, 
-            command.NewTaskCommand(self.taskList, categories=filteredCategories), 
+            command.NewTaskCommand(self.taskList, 
+            categories=self.categoriesForTheNewTask()), 
             self.taskList, self.uiCommands, self.settings, self.categories, 
             bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
+
+    def categoriesForTheNewTask(self):
+        return [category for category in self.categories if category.isFiltered()]
+
+
+class NewTaskWithSelectedCategories(TaskNew, ViewerCommand):
+    def categoriesForTheNewTask(self):
+        return self.viewer.curselection()
     
 
 class TaskNewSubTask(NeedsSelectedTasks,  TaskListCommand, ViewerCommand):
@@ -1168,33 +1175,43 @@ class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def onUpdateUI(self, event):
         super(TaskToggleCompletion, self).onUpdateUI(event)
         allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
-        if allSelectedTasksAreCompleted != self.toolbar.GetToolState(self.id): 
-            self.toolbar.ToggleTool(self.id, allSelectedTasksAreCompleted)
+        self.updateToolState(allSelectedTasksAreCompleted)
         if allSelectedTasksAreCompleted:
             bitmapName = self.bitmap
         else:
             bitmapName = self.bitmap2
         if bitmapName != self.currentBitmap:
             self.currentBitmap = bitmapName
-            bitmap = wx.ArtProvider_GetBitmap(bitmapName, wx.ART_TOOLBAR, 
-                                              self.toolbar.GetToolBitmapSize())
-            # On wxGTK, changing the bitmap doesn't work when the tool is 
-            # disabled, so we first enable it if necessary:
-            disable = False
-            if not self.toolbar.GetToolEnabled(self.id):
-                self.toolbar.EnableTool(self.id, True)
-                disable = True
-            self.toolbar.SetToolNormalBitmap(self.id, bitmap)
-            if disable:
-                self.toolbar.EnableTool(self.id, False)
-            
-            self.updateToolbarHelp()
-            menuText = self.getMenuText()
-            helpText = self.getHelpText()
-            for menuItem in self.menuItems:
-                menuItem.Check(allSelectedTasksAreCompleted)
-                menuItem.SetItemLabel(menuText)
-                menuItem.SetHelp(helpText)
+            self.updateToolBitmap(bitmapName)
+            self.updateToolHelp()     
+            self.updateMenuItems(allSelectedTasksAreCompleted)
+    
+    def updateToolState(self, allSelectedTasksAreCompleted):
+        if not self.toolbar: return # Toolbar is hidden        
+        if allSelectedTasksAreCompleted != self.toolbar.GetToolState(self.id): 
+            self.toolbar.ToggleTool(self.id, allSelectedTasksAreCompleted)
+
+    def updateToolBitmap(self, bitmapName):
+        if not self.toolbar: return # Toolbar is hidden
+        bitmap = wx.ArtProvider_GetBitmap(bitmapName, wx.ART_TOOLBAR, 
+                                          self.toolbar.GetToolBitmapSize())
+        # On wxGTK, changing the bitmap doesn't work when the tool is 
+        # disabled, so we first enable it if necessary:
+        disable = False
+        if not self.toolbar.GetToolEnabled(self.id):
+            self.toolbar.EnableTool(self.id, True)
+            disable = True
+        self.toolbar.SetToolNormalBitmap(self.id, bitmap)
+        if disable:
+            self.toolbar.EnableTool(self.id, False)     
+    
+    def updateMenuItems(self, allSelectedTasksAreCompleted):
+        menuText = self.getMenuText()
+        helpText = self.getHelpText()
+        for menuItem in self.menuItems:
+            menuItem.Check(allSelectedTasksAreCompleted)
+            menuItem.SetItemLabel(menuText)
+            menuItem.SetHelp(helpText)
         
     def getMenuText(self):
         if self.allSelectedTasksAreCompleted():
@@ -1894,6 +1911,10 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         # Task menu
         self['newtask'] = TaskNew(mainwindow=mainwindow, taskList=taskList,
             settings=settings, uicommands=self, categories=categories)
+        self['newtaskwithselectedcategories'] = \
+            NewTaskWithSelectedCategories(mainwindow=mainwindow,
+                taskList=taskList, settings=settings, uicommands=self,
+                categories=categories, viewer=viewer)
         self['newsubtask'] = TaskNewSubTask(taskList=taskList, viewer=viewer)
         self['edittask'] = TaskEdit(taskList=taskList, viewer=viewer)
         self['toggletaskcompletion'] = TaskToggleCompletion(taskList=taskList,

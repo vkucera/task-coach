@@ -33,7 +33,7 @@ class IOController(object):
         self.__settings = settings
         self.__tskFileDialogOpts = {'default_path': os.getcwd(), 
             'default_extension': 'tsk', 'wildcard': 
-            _('%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*')%meta.name }
+            _('%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*')%meta.name }
         self.__icsFileDialogOpts = {'default_path': os.getcwd(), 
             'default_extension': 'ics', 'wildcard': 
             _('iCalendar files (*.ics)|*.ics|All files (*.*)|*') }

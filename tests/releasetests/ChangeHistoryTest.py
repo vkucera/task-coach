@@ -41,5 +41,4 @@ class ChangeHistoryTestCase(test.TestCase):
         self.failUnless(self.latestRelease.number > changes.releases[1].number)
         
     def testLatestReleaseSummaryLength(self):
-        self.failUnless(25 <= len(self.latestRelease.summary) < 600)
-
+        self.failUnless(10 <= len(self.latestRelease.summary) < 600)

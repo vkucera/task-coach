@@ -1,21 +1,23 @@
+# translation of lv.po to Nederlands
 # Latvian translation for taskcoach
 # Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
 # This file is distributed under the same license as the taskcoach package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
 #
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+# Frank Niessink <frank@niessink.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: taskcoach\n"
+"Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-01-26 16:36+0000\n"
-"PO-Revision-Date: 2008-02-02 23:20+0100\n"
+"PO-Revision-Date: 2008-03-27 20:39+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
-"Language-Team: Latvian <lv@li.org>\n"
+"Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-02 16:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2008-03-27 18:56+0000\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: taskcoachlib/command/base.py:92
 msgid "Copy"
@@ -108,8 +110,7 @@ msgid "Edit task"
 msgstr "Labot uzdevumu"
 
 #: taskcoachlib/command/taskCommands.py:118
-#: taskcoachlib/gui/dialog/editor.py:398
-#: taskcoachlib/widgets/dialog.py:126
+#: taskcoachlib/gui/dialog/editor.py:398 taskcoachlib/widgets/dialog.py:126
 msgid "Add attachment"
 msgstr "Pievienot pielikumu"
 
@@ -281,79 +282,60 @@ msgstr "Šim uzdevumam"
 msgid "For this task including all subtasks"
 msgstr "Šim uzdevumam un tā apakšuzdevumiem"
 
-#: taskcoachlib/gui/dialog/editor.py:101
-#: taskcoachlib/gui/dialog/editor.py:105
-#: taskcoachlib/gui/dialog/editor.py:533
-#: taskcoachlib/gui/dialog/editor.py:599
-#: taskcoachlib/gui/dialog/editor.py:639
-#: taskcoachlib/gui/dialog/editor.py:678
-#: taskcoachlib/gui/dialog/editor.py:742
-#: taskcoachlib/gui/viewer.py:967
-#: taskcoachlib/gui/viewer.py:1317
-#: taskcoachlib/gui/viewer.py:1475
+#: taskcoachlib/gui/dialog/editor.py:101 taskcoachlib/gui/dialog/editor.py:105
+#: taskcoachlib/gui/dialog/editor.py:533 taskcoachlib/gui/dialog/editor.py:599
+#: taskcoachlib/gui/dialog/editor.py:639 taskcoachlib/gui/dialog/editor.py:678
+#: taskcoachlib/gui/dialog/editor.py:742 taskcoachlib/gui/viewer.py:967
+#: taskcoachlib/gui/viewer.py:1317 taskcoachlib/gui/viewer.py:1475
 msgid "Description"
 msgstr "Apraksts"
 
-#: taskcoachlib/gui/dialog/editor.py:102
-#: taskcoachlib/gui/dialog/editor.py:633
-#: taskcoachlib/gui/dialog/editor.py:672
-#: taskcoachlib/gui/viewer.py:354
-#: taskcoachlib/gui/viewer.py:959
-#: taskcoachlib/gui/viewer.py:1316
+#: taskcoachlib/gui/dialog/editor.py:102 taskcoachlib/gui/dialog/editor.py:633
+#: taskcoachlib/gui/dialog/editor.py:672 taskcoachlib/gui/viewer.py:354
+#: taskcoachlib/gui/viewer.py:959 taskcoachlib/gui/viewer.py:1316
 msgid "Subject"
 msgstr "Tēma"
 
-#: taskcoachlib/gui/dialog/editor.py:109
-#: taskcoachlib/gui/dialog/editor.py:110
+#: taskcoachlib/gui/dialog/editor.py:109 taskcoachlib/gui/dialog/editor.py:110
 #: taskcoachlib/gui/viewer.py:1009
 msgid "Priority"
 msgstr "Prioritāte"
 
-#: taskcoachlib/gui/dialog/editor.py:140
-#: taskcoachlib/gui/dialog/editor.py:534
+#: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/dialog/editor.py:534
 msgid "Dates"
 msgstr "Datumi"
 
-#: taskcoachlib/gui/dialog/editor.py:142
-#: taskcoachlib/gui/viewer.py:998
+#: taskcoachlib/gui/dialog/editor.py:142 taskcoachlib/gui/viewer.py:998
 msgid "Start date"
 msgstr "Sākuma datums"
 
-#: taskcoachlib/gui/dialog/editor.py:143
-#: taskcoachlib/gui/viewer.py:999
+#: taskcoachlib/gui/dialog/editor.py:143 taskcoachlib/gui/viewer.py:999
 msgid "Due date"
 msgstr "Beigu datums"
 
-#: taskcoachlib/gui/dialog/editor.py:144
-#: taskcoachlib/gui/viewer.py:1001
+#: taskcoachlib/gui/dialog/editor.py:144 taskcoachlib/gui/viewer.py:1001
 msgid "Completion date"
 msgstr "Izpildes datums"
 
-#: taskcoachlib/gui/dialog/editor.py:157
-#: taskcoachlib/gui/dialog/editor.py:159
-#: taskcoachlib/gui/dialog/reminder.py:16
-#: taskcoachlib/gui/viewer.py:1016
+#: taskcoachlib/gui/dialog/editor.py:157 taskcoachlib/gui/dialog/editor.py:159
+#: taskcoachlib/gui/dialog/reminder.py:16 taskcoachlib/gui/viewer.py:1016
 msgid "Reminder"
 msgstr "Atgādinājums"
 
-#: taskcoachlib/gui/dialog/editor.py:165
-#: taskcoachlib/gui/dialog/editor.py:166
+#: taskcoachlib/gui/dialog/editor.py:165 taskcoachlib/gui/dialog/editor.py:166
 #: taskcoachlib/gui/viewer.py:1002
 msgid "Recurrence"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:168
-#: taskcoachlib/gui/dialog/editor.py:197
+#: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/dialog/editor.py:197
 msgid "None"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:168
-#: taskcoachlib/gui/render.py:37
+#: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/render.py:37
 msgid "Weekly"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:168
-#: taskcoachlib/gui/render.py:38
+#: taskcoachlib/gui/dialog/editor.py:168 taskcoachlib/gui/render.py:38
 msgid "Daily"
 msgstr ""
 
@@ -361,73 +343,57 @@ msgstr ""
 msgid "Maximum number of recurrences"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:238
-#: taskcoachlib/gui/dialog/editor.py:256
-#: taskcoachlib/gui/dialog/editor.py:537
-#: taskcoachlib/gui/viewer.py:1003
+#: taskcoachlib/gui/dialog/editor.py:238 taskcoachlib/gui/dialog/editor.py:256
+#: taskcoachlib/gui/dialog/editor.py:537 taskcoachlib/gui/viewer.py:1003
 msgid "Budget"
 msgstr "Budžets"
 
-#: taskcoachlib/gui/dialog/editor.py:239
-#: taskcoachlib/gui/dialog/editor.py:264
-#: taskcoachlib/gui/viewer.py:1014
-#: taskcoachlib/gui/viewer.py:1482
+#: taskcoachlib/gui/dialog/editor.py:239 taskcoachlib/gui/dialog/editor.py:264
+#: taskcoachlib/gui/viewer.py:1014 taskcoachlib/gui/viewer.py:1482
 msgid "Revenue"
 msgstr "Ieņēmumi"
 
-#: taskcoachlib/gui/dialog/editor.py:257
-#: taskcoachlib/gui/viewer.py:1005
+#: taskcoachlib/gui/dialog/editor.py:257 taskcoachlib/gui/viewer.py:1005
 #: taskcoachlib/gui/viewer.py:1480
 msgid "Time spent"
 msgstr "Patērētais laiks"
 
-#: taskcoachlib/gui/dialog/editor.py:258
-#: taskcoachlib/gui/viewer.py:1007
+#: taskcoachlib/gui/dialog/editor.py:258 taskcoachlib/gui/viewer.py:1007
 msgid "Budget left"
 msgstr "Atlikušais budžets"
 
-#: taskcoachlib/gui/dialog/editor.py:262
-#: taskcoachlib/gui/viewer.py:1011
+#: taskcoachlib/gui/dialog/editor.py:262 taskcoachlib/gui/viewer.py:1011
 msgid "Hourly fee"
 msgstr "Stundas likme"
 
-#: taskcoachlib/gui/dialog/editor.py:263
-#: taskcoachlib/gui/viewer.py:1012
+#: taskcoachlib/gui/dialog/editor.py:263 taskcoachlib/gui/viewer.py:1012
 msgid "Fixed fee"
 msgstr "Fiksētā likme"
 
-#: taskcoachlib/gui/dialog/editor.py:302
-#: taskcoachlib/gui/viewer.py:1444
+#: taskcoachlib/gui/dialog/editor.py:302 taskcoachlib/gui/viewer.py:1444
 msgid "Effort details"
 msgstr "Noslodzes saturs"
 
-#: taskcoachlib/gui/dialog/editor.py:306
-#: taskcoachlib/gui/viewer.py:1540
+#: taskcoachlib/gui/dialog/editor.py:306 taskcoachlib/gui/viewer.py:1540
 msgid "Effort per day"
 msgstr "Noslodze dienā"
 
-#: taskcoachlib/gui/dialog/editor.py:311
-#: taskcoachlib/gui/viewer.py:1552
+#: taskcoachlib/gui/dialog/editor.py:311 taskcoachlib/gui/viewer.py:1552
 msgid "Effort per week"
 msgstr "Noslodze nedēļā"
 
-#: taskcoachlib/gui/dialog/editor.py:316
-#: taskcoachlib/gui/viewer.py:1564
+#: taskcoachlib/gui/dialog/editor.py:316 taskcoachlib/gui/viewer.py:1564
 msgid "Effort per month"
 msgstr "Noslodze mēnesī"
 
-#: taskcoachlib/gui/dialog/editor.py:323
-#: taskcoachlib/gui/dialog/editor.py:535
-#: taskcoachlib/gui/dialog/editor.py:691
-#: taskcoachlib/gui/dialog/editor.py:743
-#: taskcoachlib/gui/viewer.py:979
-#: taskcoachlib/gui/viewer.py:1160
+#: taskcoachlib/gui/dialog/editor.py:323 taskcoachlib/gui/dialog/editor.py:535
+#: taskcoachlib/gui/dialog/editor.py:691 taskcoachlib/gui/dialog/editor.py:743
+#: taskcoachlib/gui/viewer.py:979 taskcoachlib/gui/viewer.py:1160
 #: taskcoachlib/gui/viewer.py:1318
 msgid "Categories"
 msgstr "Kategorijas"
 
-#: taskcoachlib/gui/dialog/editor.py:374
-#: taskcoachlib/gui/dialog/editor.py:541
+#: taskcoachlib/gui/dialog/editor.py:374 taskcoachlib/gui/dialog/editor.py:541
 msgid "Attachments"
 msgstr "Pielikumi"
 
@@ -455,8 +421,7 @@ msgstr "Lūkoties pēc pielikuma..."
 msgid "Attachment filename"
 msgstr "Pielikuma nosaukums"
 
-#: taskcoachlib/gui/dialog/editor.py:465
-#: taskcoachlib/gui/uicommand.py:1323
+#: taskcoachlib/gui/dialog/editor.py:465 taskcoachlib/gui/uicommand.py:1323
 msgid "Error opening attachment"
 msgstr "Kļūda atverot pielikumu"
 
@@ -491,8 +456,7 @@ msgid "Behavior"
 msgstr "Izturēšanās"
 
 #: taskcoachlib/gui/dialog/editor.py:571
-#: taskcoachlib/gui/dialog/reminder.py:22
-#: taskcoachlib/gui/viewer.py:1474
+#: taskcoachlib/gui/dialog/reminder.py:22 taskcoachlib/gui/viewer.py:1474
 msgid "Task"
 msgstr "Uzdevums"
 
@@ -740,8 +704,7 @@ msgstr "Apvienot"
 msgid "Merged %(filename)s"
 msgstr "%(filename)s sapludināti"
 
-#: taskcoachlib/gui/iocontroller.py:96
-#: taskcoachlib/gui/iocontroller.py:107
+#: taskcoachlib/gui/iocontroller.py:96 taskcoachlib/gui/iocontroller.py:107
 msgid "Save as..."
 msgstr "Saglabāt kā..."
 
@@ -757,8 +720,7 @@ msgstr "%(nrtasks)d uzdevumi eksportēti uz %(filename)s"
 msgid "Export as HTML..."
 msgstr "Eksportēt HTML formātā..."
 
-#: taskcoachlib/gui/iocontroller.py:144
-#: taskcoachlib/gui/iocontroller.py:158
+#: taskcoachlib/gui/iocontroller.py:144 taskcoachlib/gui/iocontroller.py:158
 msgid "Exported %(nrtasks)d items to %(filename)s"
 msgstr "%(nrtasks)d vienības eksportētas uz %(filename)s"
 
@@ -784,7 +746,7 @@ msgstr "%s aizvērts"
 
 #: taskcoachlib/gui/iocontroller.py:204
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
-msgstr "%(filename)s saglabāti  %(nrtasks)d uzdevumi"
+msgstr "%(filename)s saglabāti %(nrtasks)d uzdevumi"
 
 #: taskcoachlib/gui/mainwindow.py:105
 msgid "Welcome to %(name)s version %(version)s"
@@ -810,14 +772,12 @@ msgstr "&Uzdevums"
 msgid "Eff&ort"
 msgstr "N&oslodze"
 
-#: taskcoachlib/gui/menu.py:116
-#: taskcoachlib/gui/uicommand.py:1766
+#: taskcoachlib/gui/menu.py:116 taskcoachlib/gui/uicommand.py:1766
 #: taskcoachlib/gui/uicommand.py:1800
 msgid "&Category"
 msgstr "&Kategorija"
 
-#: taskcoachlib/gui/menu.py:118
-#: taskcoachlib/gui/uicommand.py:1820
+#: taskcoachlib/gui/menu.py:118 taskcoachlib/gui/uicommand.py:1820
 msgid "&Note"
 msgstr "&Piezīme"
 
@@ -837,18 +797,15 @@ msgstr "&Iezīmēt"
 msgid "&New viewer"
 msgstr "jau&ns pārlūks"
 
-#: taskcoachlib/gui/menu.py:220
-#: taskcoachlib/gui/menu.py:221
+#: taskcoachlib/gui/menu.py:220 taskcoachlib/gui/menu.py:221
 msgid "&Filter"
 msgstr "&Filtrēt"
 
-#: taskcoachlib/gui/menu.py:222
-#: taskcoachlib/gui/menu.py:223
+#: taskcoachlib/gui/menu.py:222 taskcoachlib/gui/menu.py:223
 msgid "&Sort"
 msgstr "Šķirot"
 
-#: taskcoachlib/gui/menu.py:224
-#: taskcoachlib/gui/menu.py:225
+#: taskcoachlib/gui/menu.py:224 taskcoachlib/gui/menu.py:225
 msgid "&Columns"
 msgstr "&Kolonnas"
 
@@ -894,7 +851,7 @@ msgstr "&Atvērt...\tCtrl+O"
 
 #: taskcoachlib/gui/uicommand.py:330
 msgid "Open a %s file"
-msgstr "Atvēt failu %s"
+msgstr "Atvēt %s datni"
 
 #: taskcoachlib/gui/uicommand.py:342
 msgid "Open %s"
@@ -952,8 +909,7 @@ msgstr "Lapas uzstādījumi..."
 msgid "Setup the characteristics of the printer page"
 msgstr "Norādīt izdrukas lapas raksturlielumus"
 
-#: taskcoachlib/gui/uicommand.py:452
-#: taskcoachlib/gui/uicommand.py:463
+#: taskcoachlib/gui/uicommand.py:452 taskcoachlib/gui/uicommand.py:463
 msgid "Print preview"
 msgstr "Drukas priekšskatījums"
 
@@ -1054,8 +1010,7 @@ msgstr ""
 msgid "Preferences..."
 msgstr "Uzstādījumi..."
 
-#: taskcoachlib/gui/uicommand.py:677
-#: taskcoachlib/gui/uicommand.py:682
+#: taskcoachlib/gui/uicommand.py:677 taskcoachlib/gui/uicommand.py:682
 msgid "Edit preferences"
 msgstr "Labot uzstādījumus"
 
@@ -1153,7 +1108,9 @@ msgid "&Active"
 msgstr "&Aktīvs"
 
 #: taskcoachlib/gui/uicommand.py:919
-msgid "Show/hide active tasks (tasks with a start date in the past and a due date in the future)"
+msgid ""
+"Show/hide active tasks (tasks with a start date in the past and a due date "
+"in the future)"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:931
@@ -1270,7 +1227,9 @@ msgstr "&Pievienot pielikumu"
 
 #: taskcoachlib/gui/uicommand.py:1298
 msgid "Browse for files to add as attachment to the selected task(s)"
-msgstr "Lūkoties pēc datnēm, kuras pievienot kā pielikumu izvēlētajam(iem) uzdevumam(iem)"
+msgstr ""
+"Lūkoties pēc datnēm, kuras pievienot kā pielikumu izvēlētajam(iem) "
+"uzdevumam(iem)"
 
 #: taskcoachlib/gui/uicommand.py:1312
 msgid "&Open all attachments"
@@ -1365,13 +1324,13 @@ msgid "Show/hide categories column"
 msgstr "Rādīt/slēpt kategoriju kollonu"
 
 #: taskcoachlib/gui/uicommand.py:1633
-msgid "Show/hide overall categories column (overall categories includes all parent task categories, recursively)"
+msgid ""
+"Show/hide overall categories column (overall categories includes all parent "
+"task categories, recursively)"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1633
-#: taskcoachlib/gui/uicommand.py:1767
-#: taskcoachlib/gui/viewer.py:986
-#: taskcoachlib/gui/viewer.py:1322
+#: taskcoachlib/gui/uicommand.py:1633 taskcoachlib/gui/uicommand.py:1767
+#: taskcoachlib/gui/viewer.py:986 taskcoachlib/gui/viewer.py:1322
 msgid "Overall categories"
 msgstr ""
 
@@ -1379,8 +1338,7 @@ msgstr ""
 msgid "Show/hide description column"
 msgstr "Rādīt slēpt aprakstu kollonu"
 
-#: taskcoachlib/gui/uicommand.py:1634
-#: taskcoachlib/gui/uicommand.py:1765
+#: taskcoachlib/gui/uicommand.py:1634 taskcoachlib/gui/uicommand.py:1765
 msgid "&Description"
 msgstr "Apraksti"
 
@@ -1388,8 +1346,7 @@ msgstr "Apraksti"
 msgid "Show/hide reminder column"
 msgstr "Rādīt/slēpt atgādinājumu kollonu"
 
-#: taskcoachlib/gui/uicommand.py:1635
-#: taskcoachlib/gui/uicommand.py:1786
+#: taskcoachlib/gui/uicommand.py:1635 taskcoachlib/gui/uicommand.py:1786
 msgid "&Reminder"
 msgstr ""
 
@@ -1397,8 +1354,7 @@ msgstr ""
 msgid "Show/hide start date column"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1636
-#: taskcoachlib/gui/uicommand.py:1768
+#: taskcoachlib/gui/uicommand.py:1636 taskcoachlib/gui/uicommand.py:1768
 msgid "&Start date"
 msgstr "&Sākt ar"
 
@@ -1406,8 +1362,7 @@ msgstr "&Sākt ar"
 msgid "Show/hide due date column"
 msgstr "Rādīt/noslēpt termiņu"
 
-#: taskcoachlib/gui/uicommand.py:1637
-#: taskcoachlib/gui/uicommand.py:1769
+#: taskcoachlib/gui/uicommand.py:1637 taskcoachlib/gui/uicommand.py:1769
 msgid "&Due date"
 msgstr "&Termiņš"
 
@@ -1415,8 +1370,7 @@ msgstr "&Termiņš"
 msgid "Show/hide days left column"
 msgstr "Rādīt/noslēpt atlikušās dienas"
 
-#: taskcoachlib/gui/uicommand.py:1638
-#: taskcoachlib/gui/uicommand.py:1771
+#: taskcoachlib/gui/uicommand.py:1638 taskcoachlib/gui/uicommand.py:1771
 msgid "D&ays left"
 msgstr "&Atlikušās dienas"
 
@@ -1432,8 +1386,7 @@ msgstr "Rādīt/noslēpt pabeigšanas datumu"
 msgid "Show/hide recurrence column"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1640
-#: taskcoachlib/gui/uicommand.py:1772
+#: taskcoachlib/gui/uicommand.py:1640 taskcoachlib/gui/uicommand.py:1772
 msgid "&Recurrence"
 msgstr ""
 
@@ -1441,8 +1394,7 @@ msgstr ""
 msgid "Show/hide budget column"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1641
-#: taskcoachlib/gui/uicommand.py:1773
+#: taskcoachlib/gui/uicommand.py:1641 taskcoachlib/gui/uicommand.py:1773
 #: taskcoachlib/gui/viewer.py:779
 msgid "&Budget"
 msgstr "&Budžets"
@@ -1451,8 +1403,7 @@ msgstr "&Budžets"
 msgid "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1642
-#: taskcoachlib/gui/uicommand.py:1774
+#: taskcoachlib/gui/uicommand.py:1642 taskcoachlib/gui/uicommand.py:1774
 msgid "Total b&udget"
 msgstr ""
 
@@ -1460,17 +1411,17 @@ msgstr ""
 msgid "Show/hide time spent column"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1643
-#: taskcoachlib/gui/uicommand.py:1775
+#: taskcoachlib/gui/uicommand.py:1643 taskcoachlib/gui/uicommand.py:1775
 msgid "&Time spent"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1644
-msgid "Show/hide total time spent column (total time includes time spent on subtasks)"
+msgid ""
+"Show/hide total time spent column (total time includes time spent on "
+"subtasks)"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1644
-#: taskcoachlib/gui/uicommand.py:1776
+#: taskcoachlib/gui/uicommand.py:1644 taskcoachlib/gui/uicommand.py:1776
 msgid "T&otal time spent"
 msgstr ""
 
@@ -1478,17 +1429,17 @@ msgstr ""
 msgid "Show/hide budget left column"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1645
-#: taskcoachlib/gui/uicommand.py:1777
+#: taskcoachlib/gui/uicommand.py:1645 taskcoachlib/gui/uicommand.py:1777
 msgid "Budget &left"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1646
-msgid "Show/hide total budget left column (total budget left includes budget left for subtasks)"
+msgid ""
+"Show/hide total budget left column (total budget left includes budget left "
+"for subtasks)"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1646
-#: taskcoachlib/gui/uicommand.py:1778
+#: taskcoachlib/gui/uicommand.py:1646 taskcoachlib/gui/uicommand.py:1778
 msgid "Total budget l&eft"
 msgstr ""
 
@@ -1496,8 +1447,7 @@ msgstr ""
 msgid "Show/hide priority column"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1647
-#: taskcoachlib/gui/uicommand.py:1779
+#: taskcoachlib/gui/uicommand.py:1647 taskcoachlib/gui/uicommand.py:1779
 msgid "&Priority"
 msgstr "&Prioritāte"
 
@@ -1506,15 +1456,16 @@ msgid "O&verall priority"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1648
-msgid "Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks)"
+msgid ""
+"Show/hide overall priority column (overall priority is the maximum priority "
+"of a task and all its subtasks)"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1649
 msgid "Show/hide hourly fee column"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1649
-#: taskcoachlib/gui/uicommand.py:1781
+#: taskcoachlib/gui/uicommand.py:1649 taskcoachlib/gui/uicommand.py:1781
 msgid "&Hourly fee"
 msgstr "&Stundas likme"
 
@@ -1522,8 +1473,7 @@ msgstr "&Stundas likme"
 msgid "Show/hide fixed fee column"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1650
-#: taskcoachlib/gui/uicommand.py:1782
+#: taskcoachlib/gui/uicommand.py:1650 taskcoachlib/gui/uicommand.py:1782
 msgid "&Fixed fee"
 msgstr "&Fiksētā likme"
 
@@ -1539,8 +1489,7 @@ msgstr ""
 msgid "Show/hide revenue column"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1652
-#: taskcoachlib/gui/uicommand.py:1784
+#: taskcoachlib/gui/uicommand.py:1652 taskcoachlib/gui/uicommand.py:1784
 msgid "&Revenue"
 msgstr "&Nopelnītais"
 
@@ -1605,7 +1554,9 @@ msgid "Sort case sensitive"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1757
-msgid "When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)"
+msgid ""
+"When comparing text, sorting is case sensitive (checked) or insensitive "
+"(unchecked)"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1759
@@ -1692,8 +1643,7 @@ msgstr "Kārtot uzdevumus pēc prioritātes"
 msgid "Sort tasks by overall priority"
 msgstr ""
 
-#: taskcoachlib/gui/uicommand.py:1780
-#: taskcoachlib/gui/viewer.py:1010
+#: taskcoachlib/gui/uicommand.py:1780 taskcoachlib/gui/viewer.py:1010
 msgid "Overall priority"
 msgstr ""
 
@@ -1921,8 +1871,7 @@ msgstr "Atlikušas dienas"
 msgid "Total budget"
 msgstr ""
 
-#: taskcoachlib/gui/viewer.py:1006
-#: taskcoachlib/gui/viewer.py:1519
+#: taskcoachlib/gui/viewer.py:1006 taskcoachlib/gui/viewer.py:1519
 msgid "Total time spent"
 msgstr ""
 
@@ -1934,8 +1883,7 @@ msgstr "Kopā atlikušais budžets"
 msgid "Total fixed fee"
 msgstr "Kopējā fiksētā samaksa"
 
-#: taskcoachlib/gui/viewer.py:1015
-#: taskcoachlib/gui/viewer.py:1521
+#: taskcoachlib/gui/viewer.py:1015 taskcoachlib/gui/viewer.py:1521
 msgid "Total revenue"
 msgstr "Kopējie ienākumi"
 
@@ -2014,8 +1962,10 @@ msgid ""
 "<h4><a name=\"abouttasks\">About tasks</a></h4>\n"
 " \n"
 "<p>Tasks are the basic objects that you manipulate. Tasks can\n"
-"represent anything from a simple little thing you have to do, like buying a gift\n"
-"for your loved one, to a complete project, consisting of different phases, and\n"
+"represent anything from a simple little thing you have to do, like buying a "
+"gift\n"
+"for your loved one, to a complete project, consisting of different phases, "
+"and\n"
 "numerous activities.</p>\n"
 msgstr ""
 
@@ -2030,30 +1980,36 @@ msgid ""
 "<li>Description: a multi-line description of the task.</li>\n"
 "<li>Due date: the date the task should be finished. This can be 'None' \n"
 "indicating that this task has no fixed due date.</li>\n"
-"<li>Start date: the first date on which the task can be started. The start date \n"
-"defaults to the date the task is created. It can also be 'None' indicating that\n"
+"<li>Start date: the first date on which the task can be started. The start "
+"date \n"
+"defaults to the date the task is created. It can also be 'None' indicating "
+"that\n"
 "you don't really want to start this task. This can be convenient for e.g. \n"
 "registering sick leave.</li>\n"
 "<li>Completion date: this date is 'None' as long as the task has not been \n"
-"completed. It is set to the current date when you mark the task as completed. \n"
+"completed. It is set to the current date when you mark the task as "
+"completed. \n"
 "The completion date can also be entered manually.</li>\n"
 "<li>Budget: amount of hours available for the task.</li>\n"
 "<li>Hourly fee: the amount of money earned with the task per hour.</li>\n"
-"<li>Fixed fee: the amount of money earned with the task regardless of the time\n"
+"<li>Fixed fee: the amount of money earned with the task regardless of the "
+"time\n"
 "spent.</li>\n"
 "</ul></p>\n"
 "\n"
 "<p>The following properties are calculated from the properties above:\n"
 "<ul>\n"
 "<li>Days left: the number of days left until the due date.</li>\n"
-"<li>Total budget: sum of task budget and the budgets of all subtasks of the \n"
+"<li>Total budget: sum of task budget and the budgets of all subtasks of the "
+"\n"
 "task, recursively.</li>\n"
 "<li>Time spent: effort spent on the task.</li>\n"
 "<li>Total time spent: effort spent on the task and all subtasks, \n"
 "recursively.</li>\n"
 "<li>Budget left: task budget minus time spent on the task.</li>\n"
 "<li>Total budget left: total task budget minus total time spent.</li>\n"
-"<li>Total fixed fee: sum of fixed fee of the task and the fixed fees of all \n"
+"<li>Total fixed fee: sum of fixed fee of the task and the fixed fees of all "
+"\n"
 "subtasks of the task, recursively.</li>\n"
 "<li>Revenue: hourly fee times hours spent plus fixed fee.</li>\n"
 "<li>Total revenue: sum of task revenue and revenue of all subtasks, \n"
@@ -2067,7 +2023,8 @@ msgid ""
 "\n"
 "<p>Tasks always have exactly one of the following states:\n"
 "<ul>\n"
-"<li>Active: the start date is in the past and the due date in the future;</li>\n"
+"<li>Active: the start date is in the past and the due date in the "
+"future;</li>\n"
 "<li>Inactive: the start date is in the future, or</li>\n"
 "<li>Completed: the task has been completed.</li>\n"
 "</ul></p>\n"
@@ -2095,7 +2052,8 @@ msgid ""
 "<li>Future tasks are gray, and</li>\n"
 "<li>Completed tasks are green.</li>\n"
 "</ul>\n"
-"This all assumes you have not changed the text colors through the preferences \n"
+"This all assumes you have not changed the text colors through the "
+"preferences \n"
 "dialog, of course.</p>\n"
 "<p>The background color of tasks is determined by the categories the task\n"
 "belongs to, see the section about \n"
@@ -2111,8 +2069,10 @@ msgid ""
 "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
 "\n"
 "<p>Whenever you spent time on tasks, you can record the amount of time\n"
-"spent by tracking effort. Select a task and invoke 'Start tracking effort' in\n"
-"the Effort menu or the context menu or via the 'Start tracking effort' toolbar \n"
+"spent by tracking effort. Select a task and invoke 'Start tracking effort' "
+"in\n"
+"the Effort menu or the context menu or via the 'Start tracking effort' "
+"toolbar \n"
 "button.</p>\n"
 msgstr ""
 
@@ -2125,7 +2085,8 @@ msgid ""
 "<ul>\n"
 "<li>Task: the task the effort belongs to.</li>\n"
 "<li>Start date/time: start date and time of the effort.</li>\n"
-"<li>Stop date/time: stop date and time of the effort. This can be 'None' as \n"
+"<li>Stop date/time: stop date and time of the effort. This can be 'None' as "
+"\n"
 "long as you are still working on the task.</li>\n"
 "<li>Description: a multi-line description of the effort.</li>\n"
 "</ul></p>\n"
@@ -2149,12 +2110,16 @@ msgid ""
 "<h4><a name=\"aboutcategories\">About \n"
 "categories</a></h4>\n"
 "\n"
-"<p>Tasks may belong to one or more categories. First, you need to create the\n"
-"category that you want to use via the 'Category' menu. Then, you can add a task to\n"
-"one or more categories by editing the task and checking the relevant categories\n"
+"<p>Tasks may belong to one or more categories. First, you need to create "
+"the\n"
+"category that you want to use via the 'Category' menu. Then, you can add a "
+"task to\n"
+"one or more categories by editing the task and checking the relevant "
+"categories\n"
 "for that task in the category pane of the task editor.</p>\n"
 "\n"
-"<p>You can limit the tasks shown in the task viewers to one or more categories\n"
+"<p>You can limit the tasks shown in the task viewers to one or more "
+"categories\n"
 "by checking a category in the category viewer. For example, if you have a \n"
 "category 'phone calls' and you check that category, the task viewers will \n"
 "only show tasks belonging to that category; in other words the phone calls \n"
@@ -2170,7 +2135,8 @@ msgid ""
 "to render the background of the category and the background of tasks that\n"
 "belong to that category. If a category has no color of its own, but it has\n"
 "a parent category with a color, the parent's color will be used.  \n"
-"If a task belongs to multiple categories that each have a color associated with\n"
+"If a task belongs to multiple categories that each have a color associated "
+"with\n"
 "them, a mixture of the colors will be used to render the background of that\n"
 "task.</p>\n"
 msgstr ""
@@ -2200,39 +2166,71 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/help/tips.py:5
-msgid "%(name)s has a mailinglist where you can discuss usage of %(name)s with fellow users, discuss and request features and complain about bugs. Go to %(url)s and join today!"
+msgid ""
+"%(name)s has a mailinglist where you can discuss usage of %(name)s with "
+"fellow users, discuss and request features and complain about bugs. Go to "
+"%(url)s and join today!"
 msgstr ""
 
 #: taskcoachlib/help/tips.py:6
-msgid "%(name)s has unlimited undo and redo. Any change that you make, be it editing a task description, or deleting an effort record, is undoable. Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards through your edit history."
+msgid ""
+"%(name)s has unlimited undo and redo. Any change that you make, be it "
+"editing a task description, or deleting an effort record, is undoable. "
+"Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards "
+"through your edit history."
 msgstr ""
 
 #: taskcoachlib/help/tips.py:7
-msgid "%(name)s is available in a number of different languages. Select 'Edit' -> 'Preferences' to see whether your language is one of them. If your language is not available or the translation needs improvement, please consider helping with the translation of %(name)s. Visit %(url)s for more information about how you can help."
+msgid ""
+"%(name)s is available in a number of different languages. Select 'Edit' -> "
+"'Preferences' to see whether your language is one of them. If your language "
+"is not available or the translation needs improvement, please consider "
+"helping with the translation of %(name)s. Visit %(url)s for more information "
+"about how you can help."
 msgstr ""
 
 #: taskcoachlib/help/tips.py:8
-msgid "If you enter a URL (e.g. %(url)s) in a task or effort description, it becomes a link. Clicking on the link will open the URL in your default web browser."
+msgid ""
+"If you enter a URL (e.g. %(url)s) in a task or effort description, it "
+"becomes a link. Clicking on the link will open the URL in your default web "
+"browser."
 msgstr ""
 
 #: taskcoachlib/help/tips.py:9
-msgid "You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks. The same goes for categories."
+msgid ""
+"You can drag and drop tasks in the tree view to rearrange parent-child "
+"relationships between tasks. The same goes for categories."
 msgstr ""
 
 #: taskcoachlib/help/tips.py:10
-msgid "You can drag files from a file browser onto a task to create attachments. Dragging the files over a tab will raise the appropriate page, dragging the files over a collapsed task (the boxed + sign) in the tree view will expand the task to show its subtasks."
+msgid ""
+"You can drag files from a file browser onto a task to create attachments. "
+"Dragging the files over a tab will raise the appropriate page, dragging the "
+"files over a collapsed task (the boxed + sign) in the tree view will expand "
+"the task to show its subtasks."
 msgstr ""
 
 #: taskcoachlib/help/tips.py:11
-msgid "You can create any viewer layout you want by dragging and dropping the tabs. Unfortunately, due to a limitation of the current version of the graphical toolkit (wxPython), the layout cannot be saved for reuse in the next session."
+msgid ""
+"You can create any viewer layout you want by dragging and dropping the tabs. "
+"Unfortunately, due to a limitation of the current version of the graphical "
+"toolkit (wxPython), the layout cannot be saved for reuse in the next session."
 msgstr ""
 
 #: taskcoachlib/help/tips.py:12
-msgid "What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc."
+msgid ""
+"What is actually printed when you select 'File' -> 'Print' depends on the "
+"current view. If the current view shows the task list, a list of tasks will "
+"be printed, if the current view shows effort grouped by month, that will be "
+"printed. The same goes for visible columns, sort order, filtered tasks, etc."
 msgstr ""
 
 #: taskcoachlib/help/tips.py:13
-msgid "Left-click a column header to sort by that column. Click the column header again to change the sort order from ascending to descending and back again. Right-click a column header to hide that column or make additional columns visible."
+msgid ""
+"Left-click a column header to sort by that column. Click the column header "
+"again to change the sort order from ascending to descending and back again. "
+"Right-click a column header to hide that column or make additional columns "
+"visible."
 msgstr ""
 
 #: taskcoachlib/mailer/__init__.py:32
@@ -2247,16 +2245,13 @@ msgstr ""
 msgid "Wrong password. Please try again."
 msgstr "Nepareiza parole. Mēģini vēlreiz"
 
-#: taskcoachlib/widgets/buttonbox.py:5
-#: taskcoachlib/widgets/dialog.py:33
-#: taskcoachlib/widgets/dialog.py:56
-#: taskcoachlib/widgets/dialog.py:59
+#: taskcoachlib/widgets/buttonbox.py:5 taskcoachlib/widgets/dialog.py:33
+#: taskcoachlib/widgets/dialog.py:56 taskcoachlib/widgets/dialog.py:59
 #: taskcoachlib/widgets/dialog.py:119
 msgid "OK"
 msgstr "Labi"
 
-#: taskcoachlib/widgets/buttonbox.py:5
-#: taskcoachlib/widgets/dialog.py:34
+#: taskcoachlib/widgets/buttonbox.py:5 taskcoachlib/widgets/dialog.py:34
 msgid "Cancel"
 msgstr "Atlikt"
 
