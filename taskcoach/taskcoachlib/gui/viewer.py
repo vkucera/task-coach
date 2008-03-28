@@ -152,7 +152,8 @@ class FilterableViewerForTasks(FilterableViewer):
         self.hideCompletedTasks(False)
         self.hideOverdueTasks(False)
         self.hideOverbudgetTasks(False)
-        self.hideCompositeTasks(False)
+        if not self.isTreeViewer():
+            self.hideCompositeTasks(False)
         self.setFilteredByDueDate('Unlimited')
         
     def getFilterUICommands(self):
@@ -848,6 +849,11 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
                 eventType=colorSetting)
         patterns.Publisher().registerObserver(self.onColorChange,
             eventType=task.Task.categoryColorChangedEventType())
+        patterns.Publisher().registerObserver(self.atMidnight,
+            eventType='clock.midnight')
+        
+    def atMidnight(self, event):
+        self.refresh()
         
     def onColorSettingChange(self, event):
         self.refresh()

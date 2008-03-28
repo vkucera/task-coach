@@ -1,20 +1,21 @@
+# translation of it.po to Nederlands
 # Task Coach
 # Copyright (C) 2004-2006 Frank Niessink
-# Frank Niessink <frank@niessink.com>, 2006.
 #
+# Frank Niessink <frank@niessink.com>, 2006, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: Task Coach\n"
+"Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To:  \n"
 "POT-Creation-Date: 2008-01-26 16:36+0000\n"
-"PO-Revision-Date: 2007-12-12 13:36+0000\n"
-"Last-Translator: Andrea Bertani <bertans@gmail.com>\n"
-"Language-Team: Italian <bertans@gmail.com>\n"
+"PO-Revision-Date: 2008-03-27 20:42+0100\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-02 16:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2008-03-27 18:56+0000\n"
+"X-Generator: KBabel 1.11.4\n"
 "Generated-By: pygettext.py 1.5\n"
 
 #: taskcoachlib/command/base.py:92
@@ -125,20 +126,21 @@ msgid "Stop tracking"
 msgstr "Arresta"
 
 #: taskcoachlib/command/taskCommands.py:248
+#, fuzzy
 msgid "Maximize priority"
-msgstr ""
+msgstr "Massimizza Priorità"
 
 #: taskcoachlib/command/taskCommands.py:258
 msgid "Minimize priority"
-msgstr ""
+msgstr "Minimizza Priorità"
 
 #: taskcoachlib/command/taskCommands.py:286
 msgid "Increase priority"
-msgstr ""
+msgstr "Incrementa Priorità"
 
 #: taskcoachlib/command/taskCommands.py:293
 msgid "Decrease priority"
-msgstr ""
+msgstr "Decrementa Priorità"
 
 #: taskcoachlib/config/settings.py:121
 msgid ""
@@ -148,7 +150,7 @@ msgstr ""
 
 #: taskcoachlib/config/settings.py:122
 msgid "Save error"
-msgstr ""
+msgstr "Errore durante il salvataggio"
 
 #: taskcoachlib/domain/category/categorycontainer.py:5
 msgid "New category..."
@@ -1391,8 +1393,7 @@ msgid "&Budget"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1642
-msgid ""
-"Show/hide total budget column (total budget includes budget for subtasks)"
+msgid "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1642 taskcoachlib/gui/uicommand.py:1774
@@ -2245,11 +2246,11 @@ msgstr ""
 
 #: taskcoachlib/widgets/buttonbox.py:5 taskcoachlib/widgets/dialog.py:34
 msgid "Cancel"
-msgstr ""
+msgstr "Cancella"
 
 #: taskcoachlib/widgets/dialog.py:128
 msgid "All files (*.*)|*"
-msgstr ""
+msgstr "Tutti i file (*.*)|*"
 
 #: taskcoachlib/widgets/searchctrl.py:89
 msgid "Match case"
@@ -2274,3 +2275,4 @@ msgstr ""
 #: taskcoachlib/widgets/searchctrl.py:113
 msgid "Viewer not searchable"
 msgstr ""
+

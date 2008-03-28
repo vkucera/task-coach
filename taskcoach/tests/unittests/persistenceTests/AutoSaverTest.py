@@ -149,7 +149,13 @@ class AutoSaverBackupTestCase(test.TestCase):
     def testBackupFilename(self):
         now = date.DateTime(2004,1,1)
         self.taskFile.setFilename('whatever.tsk')
-        self.assertEqual('whatever.tsk.20040101-000000.bak', 
+        self.assertEqual('whatever.20040101-000000.tsk.bak', 
+            self.autoSaver._backupFilename(self.taskFile, lambda: now))
+        
+    def testBackupFilenameOfBackupFilename(self):
+        self.taskFile.setFilename('whatever.20040101-000000.tsk.bak')
+        now = date.DateTime(2004,1,2)
+        self.assertEqual('whatever.20040101-000000.20040102-000000.tsk.bak', 
             self.autoSaver._backupFilename(self.taskFile, lambda: now))
 
     def testDontCreateBackupWhenSettingFilename(self):

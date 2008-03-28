@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx, gui, config, widgets
+import test, wx, gui, config
 from domain import task, effort, category, note, date
 from unittests import dummy
 
@@ -51,17 +51,41 @@ class UICommandTest(test.wxTestCase):
         self.failUnless(self.uicommand.activated)
 
 
-class UICommandsTest(test.wxTestCase):
-    def testCreate(self):
-        settings = config.Settings(load=False)
-        taskList = task.TaskList()
-        effortList = effort.EffortList(taskList)
-        categories = category.CategoryList()
-        self.notebook = widgets.Notebook(self.frame)
-        viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
-            settings, 'mainviewer')
-        gui.uicommand.UICommands(self.frame, None, viewerContainer, None, 
-            taskList, effortList, categories, note.NoteContainer())
+class NewTaskWithSelectedCategoryTest(test.wxTestCase):
+    def setUp(self):
+        self.settings = config.Settings(load=False)
+        self.taskList = task.TaskList()
+        self.effortList = effort.EffortList(self.taskList)
+        self.categories = category.CategoryList()
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(self.frame, 
+            self.settings, 'mainviewer')         
+        self.uiCommands = gui.uicommand.UICommands(self.frame, None, 
+            self.viewerContainer, self.settings, self.taskList, 
+            self.effortList, self.categories, note.NoteContainer())
+        self.categories.append(category.Category('cat'))
+        self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
+            self.uiCommands, self.settings)
+        
+    def createNewTask(self):
+        taskNew = gui.uicommand.NewTaskWithSelectedCategories(taskList=self.taskList,
+                                                viewer=self.viewer,
+                                                categories=self.categories)
+        dialog = taskNew.doCommand(None, show=False)
+        tree = dialog[0][2]._treeCtrl
+        return tree.GetFirstChild(tree.GetRootItem())[0]
+
+    def selectFirstCategory(self):
+        tree = self.viewer.widget
+        tree.SelectItem(tree.GetFirstChild(tree.GetRootItem())[0])
+
+    def testNewTaskWithSelectedCategory(self):
+        self.selectFirstCategory()
+        firstCategoryInTaskDialog = self.createNewTask()
+        self.failUnless(firstCategoryInTaskDialog.IsChecked())
+        
+    def testNewTaskWithoutSelectedCategory(self):
+        firstCategoryInTaskDialog = self.createNewTask()
+        self.failIf(firstCategoryInTaskDialog.IsChecked())
 
 
 class MailTaskTest(test.TestCase):

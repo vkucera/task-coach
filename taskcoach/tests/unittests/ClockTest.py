@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx, patterns
 from domain import date
+
         
 class ClockTest(test.wxTestCase):
     def setUp(self):
@@ -51,3 +52,15 @@ class ClockTest(test.wxTestCase):
             eventType=date.Clock.eventType(realSoonNow))
         self.clock.notify(now=realSoonNow)
         self.assertEqual(1, len(self.events))
+
+    def testRegisterForDateChange_Midnight(self):
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='clock.midnight')
+        self.clock.notify(now=date.DateTime(2000,1,1,0,0,0))
+        self.assertEqual(1, len(self.events))
+        
+    def testRegisterForDateChange_BeforeMidnight(self):
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='clock.midnight')
+        self.clock.notify(now=date.DateTime(2000,1,1,23,59,59))
+        self.failIf(self.events)

@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, i18n, meta, string
+import test, i18n, meta, string, re
 
 
 class TranslationIntegrityTests(object):
@@ -41,7 +41,8 @@ class TranslationIntegrityTests(object):
         # because we're just starting testing for this, the current version
         # of this test is a bit less strict and we only make sure both the 
         # original as the translated string have zero or one accelerators. '''
-        for string in self.englishString, self.translatedString:
+        translatedString = self.removeUmlauts(self.translatedString)
+        for string in self.englishString, translatedString:
             self.failUnless(string.count('&') in [0,1], 
                 "'%s' has more than one '&'"%string)
             
@@ -61,6 +62,11 @@ class TranslationIntegrityTests(object):
         self.assertEqual(self.ellipsisCount(self.englishString),
                          self.ellipsisCount(self.translatedString),
                          "Ellipses ('...') don't match for '%s' and '%s'"%(self.englishString, self.translatedString))
+
+    umlautRE = re.compile(r'&[A-Za-z]uml;')
+    @classmethod
+    def removeUmlauts(cls, string):
+        return re.sub(cls.umlautRE, '', string)
 
 
 def getLanguages():

@@ -34,6 +34,34 @@ Public License version 3 or (at your option) any later version. This only
 affects you if you want to distribute changed versions of Task Coach or 
 want to include source code from Task Coach in other software.''')]),
     
+Release('0.69.2', 'March 28, 2008',
+    summary='Bug fix release.',
+    featuresAdded=[
+        Feature('''Task Coach now suggests a reminder date, based
+on the due date or start date of a task.'''),
+        Feature('''Added a complete Norwegion Bokmal translation thanks to Amund Amundsen
+and incomplete Galician, Korean and Romanian translations.''')],
+    bugsFixed=[
+        Bug('''Tasks created via the context menu of the category view now 
+automatically belong to the selected category.''', '1592103'),
+        Bug('''Update task status and colors at midnight.''', '1183043'),
+        Bug('''Exception when starting Task Coach ("AttributeError: 
+'CategoryList' object has no attribute 'EventTypePrefix'").''', '1901385'),
+        Bug('''Exception when reopening a closed viewer (with the message
+"ConfigParser.NoSectionError: No section: 'effortperdayviewer1'" in the log 
+file).''', '1894488'),
+        Bug('''Exception when resetting all filters in the task tree viewer
+(with the message "No option 'hidecompositetasks' in section: 
+'tasktreelistview'" in the log file).''', '1903679'),
+        Bug('''Don't take the priority of completed subtasks into account when
+calculating the overall priority of a task.''', '1905774'),
+        Bug('''It was not clear that backup files can be opened in Task Coach.
+Backup files now have the extension '.tsk.bak'. The file open dialog has 
+'*.tsk.bak' as selectable file type to make it easier to open backup files.''', 
+'1911538'),
+        Bug('''Exception when opening the task menu while the toolbar 
+is hidden.''')]),
+    
 Release('0.69.1', 'February 14, 2008',
     summary='Bug fix release.',
     bugsFixed=[

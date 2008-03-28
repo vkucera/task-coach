@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-01-26 16:36+0000\n"
-"PO-Revision-Date: 2007-12-23 00:01+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2008-02-22 07:44+0000\n"
+"Last-Translator: ujk <ujk7107@hotmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-02 16:04+0000\n"
+"X-Launchpad-Export-Date: 2008-03-27 18:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: taskcoachlib/command/base.py:92
@@ -79,7 +79,7 @@ msgstr "Notu düzenle"
 
 #: taskcoachlib/command/noteCommands.py:45
 msgid "Drag and drop note"
-msgstr ""
+msgstr "Notu sürükle ve bırak"
 
 #: taskcoachlib/command/taskCommands.py:12
 msgid "Paste into task"
@@ -87,7 +87,7 @@ msgstr "Görevlere yapıştır"
 
 #: taskcoachlib/command/taskCommands.py:26
 msgid "Drag and drop task"
-msgstr ""
+msgstr "Görevi sürükle ve bırak"
 
 #: taskcoachlib/command/taskCommands.py:31
 msgid "Delete task"
@@ -126,19 +126,19 @@ msgstr "İzlemeyi bırak"
 
 #: taskcoachlib/command/taskCommands.py:248
 msgid "Maximize priority"
-msgstr ""
+msgstr "En büyük öncelik"
 
 #: taskcoachlib/command/taskCommands.py:258
 msgid "Minimize priority"
-msgstr ""
+msgstr "En düşük öncelik"
 
 #: taskcoachlib/command/taskCommands.py:286
 msgid "Increase priority"
-msgstr ""
+msgstr "Önceliği arttır"
 
 #: taskcoachlib/command/taskCommands.py:293
 msgid "Decrease priority"
-msgstr ""
+msgstr "Önceliği düşür"
 
 #: taskcoachlib/config/settings.py:121
 msgid ""
@@ -154,7 +154,7 @@ msgstr ""
 
 #: taskcoachlib/domain/category/categorycontainer.py:5
 msgid "New category..."
-msgstr "Yeni Kategori"
+msgstr "Yeni kategori..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:6
 msgid "Insert a new category"
@@ -162,7 +162,7 @@ msgstr "Yeni Kategori Ekle"
 
 #: taskcoachlib/domain/category/categorycontainer.py:7
 msgid "Edit category..."
-msgstr "Kategoriyi Düzenle"
+msgstr "Kategoriyi düzenle..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:8
 msgid "Edit the selected categories"
@@ -190,15 +190,15 @@ msgstr "&Yeni çaba..."
 
 #: taskcoachlib/domain/effort/effortlist.py:15
 msgid "Add an effort period to the selected task(s)"
-msgstr ""
+msgstr "Seçili görev(ler)e çalışma zamanı ekle"
 
 #: taskcoachlib/domain/effort/effortlist.py:16
 msgid "&Edit effort..."
-msgstr ""
+msgstr "&Çabayı düzenle.."
 
 #: taskcoachlib/domain/effort/effortlist.py:17
 msgid "Edit the selected effort period(s)"
-msgstr ""
+msgstr "Seçili çalışma zaman(lar)ını düzenle"
 
 #: taskcoachlib/domain/effort/effortlist.py:18
 msgid "&Delete effort"
@@ -206,7 +206,7 @@ msgstr "&Çabayı sil"
 
 #: taskcoachlib/domain/effort/effortlist.py:19
 msgid "Delete the selected effort period(s)"
-msgstr ""
+msgstr "Seçili çalışma zaman(lar)ını sil"
 
 #: taskcoachlib/domain/note/notecontainer.py:5
 msgid "New note..."
@@ -234,7 +234,7 @@ msgstr "Seçili notları sil"
 
 #: taskcoachlib/domain/note/notecontainer.py:11
 msgid "New subnote..."
-msgstr "Yeni alt not"
+msgstr "Yeni alt not..."
 
 #: taskcoachlib/domain/note/notecontainer.py:12
 msgid "Insert a new subnote"
@@ -246,7 +246,7 @@ msgstr "&Yeni görev..."
 
 #: taskcoachlib/domain/task/tasklist.py:20
 msgid "New &subtask..."
-msgstr "Yen &alt not..."
+msgstr "Yeni &alt not..."
 
 #: taskcoachlib/domain/task/tasklist.py:31
 msgid "Insert a new task"
@@ -266,7 +266,7 @@ msgstr "&Görevi sil\tCtrl+Del"
 
 #: taskcoachlib/domain/task/tasklist.py:35
 msgid "Delete the selected task(s)"
-msgstr "Seçili görevleri sil"
+msgstr "Seçili görev(ler)i sil"
 
 #: taskcoachlib/domain/task/tasklist.py:37
 msgid "Insert a new subtask into the selected task"
@@ -1749,15 +1749,15 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1833
 msgid "Medium-sized images (22x22) on the toolbar"
-msgstr ""
+msgstr "Araç çubuğunda (22x22) orta-boy resimler"
 
 #: taskcoachlib/gui/uicommand.py:1834
 msgid "&Large images"
-msgstr ""
+msgstr "&Büyük resimler"
 
 #: taskcoachlib/gui/uicommand.py:1834
 msgid "Large images (32x32) on the toolbar"
-msgstr ""
+msgstr "Araç çubuğunda (32x32) büyük-boy resimler"
 
 #: taskcoachlib/gui/uicommand.py:1840
 msgid "Show/hide status bar"
@@ -1769,7 +1769,7 @@ msgstr "Durum &çubuğu"
 
 #: taskcoachlib/gui/uicommand.py:1845
 msgid "&Today"
-msgstr ""
+msgstr "&Bugün"
 
 #: taskcoachlib/gui/uicommand.py:1845
 msgid "Only show tasks due today"
@@ -1786,7 +1786,7 @@ msgstr "Y&arın"
 #: taskcoachlib/gui/uicommand.py:1847
 msgid "Only show tasks due this work week (i.e. before Friday)"
 msgstr ""
-"Sadece bu çalışma haftasında bitecek görevleri göster )ör. Cuma'dan önce)"
+"Sadece bu çalışma haftasında bitecek görevleri göster (ör. Cuma'dan önce)"
 
 #: taskcoachlib/gui/uicommand.py:1847
 msgid "Wo&rk week"
@@ -1826,11 +1826,11 @@ msgstr "Bütün görevleri göster"
 
 #: taskcoachlib/gui/uicommand.py:1871
 msgid "Mail task"
-msgstr ""
+msgstr "Görevi postala"
 
 #: taskcoachlib/gui/uicommand.py:1872
 msgid "Mail the task, using your default mailer"
-msgstr ""
+msgstr "Görevi varsayılan mail programınla gönder"
 
 #: taskcoachlib/gui/viewer.py:141
 msgid "Show only tasks &due before end of"
@@ -1838,11 +1838,11 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer.py:144
 msgid "&Hide tasks that are"
-msgstr ""
+msgstr "&Görevleri gizle"
 
 #: taskcoachlib/gui/viewer.py:776
 msgid "&Dates"
-msgstr ""
+msgstr "&Tarihler"
 
 #: taskcoachlib/gui/viewer.py:782
 msgid "&Financial"
@@ -1850,11 +1850,11 @@ msgstr "&Finansal"
 
 #: taskcoachlib/gui/viewer.py:796
 msgid "Tasks: %d selected, %d visible, %d total"
-msgstr ""
+msgstr "Görevler: %d seçili, %d görünür, %d toplam"
 
 #: taskcoachlib/gui/viewer.py:799
 msgid "Status: %d over due, %d inactive, %d completed"
-msgstr ""
+msgstr "Durum: %d zamanı geçmiş, %d pasif, %d tamamlanmış"
 
 #: taskcoachlib/gui/viewer.py:1000
 msgid "Days left"
@@ -1890,23 +1890,23 @@ msgstr "Görev ağacı"
 
 #: taskcoachlib/gui/viewer.py:1225
 msgid "Categories: %d selected, %d total"
-msgstr ""
+msgstr "Kategoriler: %d seçili, %d toplam"
 
 #: taskcoachlib/gui/viewer.py:1227
 msgid "Status: %d filtered"
-msgstr ""
+msgstr "Durum: %d süzülmüş"
 
 #: taskcoachlib/gui/viewer.py:1260
 msgid "Notes"
-msgstr "&Notlar"
+msgstr "Notlar"
 
 #: taskcoachlib/gui/viewer.py:1358
 msgid "Notes: %d selected, %d total"
-msgstr ""
+msgstr "Notlar: %d seçili, % toplam"
 
 #: taskcoachlib/gui/viewer.py:1360
 msgid "Status: n/a"
-msgstr ""
+msgstr "Durum : n/a"
 
 #: taskcoachlib/gui/viewer.py:1409
 msgid "Effort: %d selected, %d visible, %d total"
@@ -1948,7 +1948,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:29
 msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
-msgstr ""
+msgstr "<h3><a name=\"tasks\">Görevler</a></h3>\n"
 
 #: taskcoachlib/help/__init__.py:32
 msgid ""
@@ -2055,7 +2055,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:116
 msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
-msgstr ""
+msgstr "<h3><a name=\"effort\">Çaba</a></h3>\n"
 
 #: taskcoachlib/help/__init__.py:119
 msgid ""
@@ -2188,12 +2188,17 @@ msgid ""
 "becomes a link. Clicking on the link will open the URL in your default web "
 "browser."
 msgstr ""
+"Eğer bir görev yada çaba açıklamasında bir URL girerseniz (e.g. %(url)s), "
+"bir bağlantı şeklini alır. Bağlantıya tıklayınca geçerli web tarayıcısında "
+"URL açılır."
 
 #: taskcoachlib/help/tips.py:9
 msgid ""
 "You can drag and drop tasks in the tree view to rearrange parent-child "
 "relationships between tasks. The same goes for categories."
 msgstr ""
+"Görevler arasındaki ana-yavru bağlantısını değiştirmek için ağaç görüntüde "
+"görevleri sürükleyip bırakabilirsiniz. Aynısı kategoriler için de geçerlidir."
 
 #: taskcoachlib/help/tips.py:10
 msgid ""
@@ -2202,6 +2207,10 @@ msgid ""
 "files over a collapsed task (the boxed + sign) in the tree view will expand "
 "the task to show its subtasks."
 msgstr ""
+"Bir göreve dosya ataş etmek için dosyaları gezginden sürükleyebilirsiniz. "
+"Ekranda bir sekme üzerine sürüklediğinizde sekme açılır, kapalı bir ana "
+"görev üzerine sürüklenince (yanında + işareti olan görev) görev açılarak alt "
+"görevler görünür."
 
 #: taskcoachlib/help/tips.py:11
 msgid ""
@@ -2217,6 +2226,11 @@ msgid ""
 "be printed, if the current view shows effort grouped by month, that will be "
 "printed. The same goes for visible columns, sort order, filtered tasks, etc."
 msgstr ""
+"'Dosya' -> 'Yazdır' komutu ile seçili sekmedeki görüntü yazdırılır. Eğer "
+"seçili görüntü görev listesiyse, yazıcıdan görev listesi olan sayfa çıkar, "
+"eğer seçili görüntüde aylara göre çabalar varsa, bunlar bastırılır. Aynı "
+"şeyler görünen sütunlar, sıralama, filtrelenmiş görevler vb. için de "
+"geçerlidir."
 
 #: taskcoachlib/help/tips.py:13
 msgid ""
@@ -2225,6 +2239,9 @@ msgid ""
 "Right-click a column header to hide that column or make additional columns "
 "visible."
 msgstr ""
+"Bir sütuna göre sıralama yapmak için sütun başlığını sol tıklayın. Tekrar "
+"tıklanınca sıralama artan veya azalan olarak değişir. Sütun başlığına sağ "
+"tıklayınca hangi sütunların görüneceğini belirtir bir menü açılır."
 
 #: taskcoachlib/mailer/__init__.py:32
 msgid "Untitled e-mail"
@@ -2232,7 +2249,7 @@ msgstr "Başlıksız e-posta"
 
 #: taskcoachlib/mailer/thunderbird.py:161
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
-msgstr ""
+msgstr "Lütfen kullanıcı %(user) için %(server):%(port) portunda şifre girin"
 
 #: taskcoachlib/mailer/thunderbird.py:175
 msgid "Wrong password. Please try again."
@@ -2242,7 +2259,7 @@ msgstr "Yanlış şifre. Lütfen yeniden deneyin."
 #: taskcoachlib/widgets/dialog.py:56 taskcoachlib/widgets/dialog.py:59
 #: taskcoachlib/widgets/dialog.py:119
 msgid "OK"
-msgstr "Tamam"
+msgstr "TAMAM"
 
 #: taskcoachlib/widgets/buttonbox.py:5 taskcoachlib/widgets/dialog.py:34
 msgid "Cancel"
@@ -2254,24 +2271,24 @@ msgstr "Bütün doyalar (*.*)|*"
 
 #: taskcoachlib/widgets/searchctrl.py:89
 msgid "Match case"
-msgstr ""
+msgstr "Büyük/küçük harf duyarlı olarak eşit"
 
 #: taskcoachlib/widgets/searchctrl.py:90
 msgid "Match case when filtering"
-msgstr ""
+msgstr "Filtrelerken harf boyutuna duyarlı eşit"
 
 #: taskcoachlib/widgets/searchctrl.py:93
 msgid "Include sub items"
-msgstr ""
+msgstr "Alt elemanları da içer"
 
 #: taskcoachlib/widgets/searchctrl.py:94
 msgid "Include sub items of matching items in the search results"
-msgstr ""
+msgstr "Arama sonuçlarında eşitlenen elemanların alt elemanlarını da içer"
 
 #: taskcoachlib/widgets/searchctrl.py:102
 msgid "Recent searches"
-msgstr ""
+msgstr "Son aramalar"
 
 #: taskcoachlib/widgets/searchctrl.py:113
 msgid "Viewer not searchable"
-msgstr ""
+msgstr "İzleme penceresinde arama yapılamaz"

@@ -104,19 +104,19 @@ pages['download'] = \
 '''        <H3>Download %(name)s (release %(version)s)</H3>
         <p>
         <table>
-        <tr><td rowspan=4><img src="windows.png" alt="Windows"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe">Windows 
-        installer</a></b></td></tr>
+        <tr><td rowspan=4 valign=top><img src="windows.png" alt="Windows"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe">Installer</a> for Microsoft Windows</b></td></tr>
         <tr><td>Windows versions supported: Windows 2000, XP, Vista</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
         <tr><td>Installation: run the installer; it will guide you through
         the installation process.</td></tr>
         </table>
         </p>
+        <hr>
         <p>
         <table>
-        <tr><td rowspan=4><img src="mac.png" alt="Mac OS X"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.dmg">Mac OSX package</a></b></td></tr>
+        <tr><td rowspan=4 valign=top><img src="mac.png" alt="Mac OS X"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.dmg">Disk image (dmg)</a> for Mac OS X</b></td></tr>
         <tr><td>Mac OS X versions supported: Mac OS X Tiger/10.4 
         (Universal).</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
@@ -124,19 +124,47 @@ pages['download'] = \
         application in your programs folder.</td></tr>
         </table>
         </p>
+        <hr>
         <p>
         <table>
-        <tr><td rowspan=5><img src="linux.png" alt="Linux"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm">RPM package</a></b></td></tr>
-        <tr><td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb">Debian package</a></b></td></tr>
+        <tr><td rowspan=5 valign=top><img src="debian.png" alt="Debian"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb">Debian package (deb)</a> for Debian</b></td></tr>
+        <tr><td>Prerequisites: ''' + prerequisites + '''
+        <tr><td>Installation: 
+        Unfortunately Debian does not ship with wxPython 2.8 which is required 
+        for %(name)s. You will need to add the wxWidgets repositories to your 
+        apt sources list following <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these instructions</a>. 
+        You can then continue by following the Ubuntu instructions.</td></tr>
+        </table>
+        </p>
+        <hr>
+        <p>
+        <table>
+        <tr><td rowspan=5 valign=top><img src="ubuntu.png" alt="Ubuntu"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb">Debian package (deb)</a> for Ubuntu</b></td></tr>
+        <tr><td>Prerequisites: ''' + prerequisites + '''
+        <tr><td>Installation:
+        The Debian package of %(name)s does not install the wxPython 2.8 
+        dependency automatically. You may need to install it manually:<br>
+        <tt>$ sudo apt-get install python-wxgtk2.8</tt><br>
+        Afterwards you can install %(name)s by:<br>
+        <tt>$ sudo dpkg -i %(filename_lower)s_*</tt></td></tr>
+        </table>
+        </p>
+        <hr>
+        <p>
+        <table>
+        <tr><td rowspan=5 valign=top><img src="linux.png" alt="Linux"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm">RPM package</a> for RPM-based Linux distributions</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
         <tr><td>Installation: use your package manager to install the 
         package</td></tr>
         </table>
         </p>
+        <hr>
         <p>
         <table>
-        <tr><td rowspan=6><img src="source.png" alt="Source code"></td>
+        <tr><td rowspan=6 valign=top><img src="source.png" alt="Source code"></td>
         <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.src.rpm">Source RPM package</a></b></td></tr>
         <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.zip">Source zip archive</a></b></td></tr>
         <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz">Source tar archive</a></b></td></tr>
@@ -160,7 +188,8 @@ pages['features'] = \
         <UL>
             <LI>Creating, editing, and deleting tasks and subtasks.
             <LI>Tasks have a subject, description, priority, start date, 
-            due date, a completion date and an optional reminder.
+            due date, a completion date and an optional reminder. Tasks can
+            recur on a daily, weekly or monthly basis.
             <LI>Tasks can be viewed as a list or as a tree.
             <LI>Tasks can be sorted by all task attributes, e.g. subject,
             budget, budget left, due date, etc.
@@ -191,13 +220,9 @@ pages['features'] = \
             <LI>%(name)s can be run from a removable medium.
         </UL>
         <H3>Missing features</H3>
-        <P>The main features that are currently missing are:
-        <UL>
-            <LI>The possibility to assign or be assigned tasks to/by 
-            other people via the iCalendar standard.</LI>
-            <LI>Recurring tasks</LI>
-        </UL>
-        Also see the list of <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">requested features</A>.
+        <P>
+        See the list of <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">requested features</A> 
+        for features that people miss.
         </P>'''
 
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
@@ -276,6 +301,9 @@ pages['mailinglist'] = \
         <P>You can browse the <a
         href="http://groups.yahoo.com/group/taskcoach/messages">archive
         of messages</a> without subscribing to the mailinglist.</P>
+        <p>The mailinglist is also available as the newsgroup 
+        <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach">gmane.comp.sysutils.pim.taskcoach</a>
+        on <a href="http://gmane.org">Gmane</a>.</p>
 '''
 
 pages['faq'] = \
@@ -383,6 +411,9 @@ pages['devinfo'] = \
     join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
     <P>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
     of messages</a> without subscribing to the mailinglist.</P>
+    <p>The mailinglist is also available as the newsgroup 
+    <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
+    on <a href="http://gmane.org">Gmane</a>.</p>
     <P>A Sourceforge mailinglist is available for receiving CVS commit messages.
     If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join this mailinglist</a>.
     <h4>Dependencies</h4>
