@@ -42,6 +42,8 @@ class TestCase(unittest.TestCase):
         self.events.append(event)
 
     def tearDown(self):
+        # Prevent processing of pending events after the test has finished:
+        wx.GetApp().Disconnect(wx.ID_ANY) 
         import patterns
         patterns.Publisher().clear()
         patterns.CommandHistory().clear()
