@@ -154,6 +154,16 @@ pages['download'] = \
         <hr>
         <p>
         <table>
+        <tr><td rowspan=5 valign=top><img src="fedora.png" alt="Fedora"></td>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.fedora8.noarch.rpm">RPM package</a> for Fedora 8</b></td></tr>
+        <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
+        <tr><td>Installation: use your package manager to install the 
+        package</td></tr>
+        </table>
+        </p>
+        <hr>
+        <p>
+        <table>
         <tr><td rowspan=5 valign=top><img src="linux.png" alt="Linux"></td>
         <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm">RPM package</a> for RPM-based Linux distributions</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
