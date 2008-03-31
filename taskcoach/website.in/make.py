@@ -148,17 +148,16 @@ pages['download'] = \
         dependency automatically. You may need to install it manually:<br>
         <tt>$ sudo apt-get install python-wxgtk2.8</tt><br>
         Afterwards you can install %(name)s by:<br>
-        <tt>$ sudo dpkg -i %(filename_lower)s_*</tt></td></tr>
+        <tt>$ sudo dpkg -i %(filename_lower)s_%(version)s-1_all.deb</tt></td></tr>
         </table>
         </p>
         <hr>
         <p>
         <table>
         <tr><td rowspan=5 valign=top><img src="fedora.png" alt="Fedora"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.fedora8.noarch.rpm">RPM package</a> for Fedora 8</b></td></tr>
+        <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc8.noarch.rpm">RPM package</a> for Fedora 8</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
-        <tr><td>Installation: use your package manager to install the 
-        package</td></tr>
+        <tr><td>Installation: <tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc8.noarch.rpm</tt></td></tr>
         </table>
         </p>
         <hr>
