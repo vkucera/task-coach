@@ -148,11 +148,15 @@ class TimeCtrl(Panel):
         
     def SetValue(self, time):
         if time is not None:
-            self._controls[0].SetValue('%02d:%02d'%(time.hour, time.minute))
+            value = '%02d:%02d'%(time.hour, time.minute)
+            if time.second != 0:
+                value += ':%02d'%time.second
+            self._controls[0].SetValue(value)
     
     def _createControls(self, callback):
         # TODO: use wx.lib.masked.ComboBox or wx.lib.masked.TimeCtrl?
-        control = wx.ComboBox(self, value='00:00', choices=self._choices())
+        control = wx.ComboBox(self, value='00:00', choices=self._choices(), 
+                              size=(75,-1))
         control.Bind(wx.EVT_TEXT, callback)
         control.Bind(wx.EVT_COMBOBOX, callback)
         return [control]
@@ -167,8 +171,8 @@ class TimeCtrl(Panel):
     def GetValue(self):
         value = self._controls[0].GetValue()
         try:
-            hour, minute = value.split(':')
-            time = date.Time(int(hour), int(minute))
+            timeComponents = [int(component) for component in value.split(':')]
+            time = date.Time(*timeComponents)
         except:
             time = date.Time()
         return time

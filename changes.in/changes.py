@@ -23,11 +23,13 @@ from changetypes import *
 
 releases = [
 
-Release('0.70.0', 'March ?, 2008',
+Release('0.70.0', 'April ?, 2008',
     summary='...',
     featuresAdded=[
         Feature('Paths to file attachments may be relative.'),
         Feature('Monthly and yearly recurrence of tasks.')],
+    bugsFixed=[
+        Bug('''Allow for editing seconds in effort editor.''', '1925748')],
     dependenciesChanged=[
         Dependency('''Task Coach is now distributed under the GNU General 
 Public License version 3 or (at your option) any later version. This only 
