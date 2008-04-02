@@ -381,7 +381,7 @@ class FileMerge(IOCommand):
 
 class FileClose(IOCommand):
     def __init__(self, *args, **kwargs):
-        super(FileClose, self).__init__(menuText=_('&Close'),
+        super(FileClose, self).__init__(menuText=_('&Close\tCtrl+W'),
             helpText=_('Close the current file'), bitmap='close',
             id=wx.ID_CLOSE, *args, **kwargs)
 
@@ -404,7 +404,7 @@ class FileSave(IOCommand):
 
 class FileSaveAs(IOCommand):
     def __init__(self, *args, **kwargs):
-        super(FileSaveAs, self).__init__(menuText=_('S&ave as...'),
+        super(FileSaveAs, self).__init__(menuText=_('S&ave as...\tShift+Ctrl+S'),
             helpText=_('Save the current file under a new name'), 
             bitmap='saveas', id=wx.ID_SAVEAS, *args, **kwargs)
 
@@ -456,7 +456,7 @@ class Printout(wx.html.HtmlPrintout):
 class PrintPageSetup(MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(PrintPageSetup, self).__init__(\
-            menuText=_('Page setup...'), 
+            menuText=_('Page setup...\tShift+Ctrl+P'), 
             helpText=_('Setup the characteristics of the printer page'), 
             bitmap='pagesetup', id=wx.ID_PRINT_SETUP, *args, **kwargs)
 
@@ -492,7 +492,7 @@ class PrintPreview(ViewerCommand, MainWindowCommand):
 class Print(ViewerCommand, MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(Print, self).__init__(\
-            menuText=_('Print...'), 
+            menuText=_('Print...\tCtrl+P'), 
             helpText=_('Print the current file'), 
             bitmap='print', id=wx.ID_PRINT, *args, **kwargs)
 
@@ -724,7 +724,7 @@ class SelectAll(NeedsItems, ViewerCommand):
 class InvertSelection(NeedsItems, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(InvertSelection, self).__init__( \
-            menuText=_('&Invert selection\tShift+Ctrl+I'),
+            menuText=_('&Invert selection'),
             helpText=_('Select unselected items and unselect selected items'), 
             *args, **kwargs)
 
@@ -1243,7 +1243,7 @@ class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
 class TaskMaxPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMaxPriority, self).__init__(
-            menuText=_('Maximize priority\tCtrl+P'),
+            menuText=_('Maximize priority\tShift+Ctrl+I'),
             helpText=_('Make the selected task(s) the highest priority task(s)'), 
             bitmap='maxpriority', *args, **kwargs)
         
@@ -1256,7 +1256,7 @@ class TaskMaxPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
 class TaskMinPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMinPriority, self).__init__(
-            menuText=_('Minimize priority\tCtrl+M'),
+            menuText=_('Minimize priority\tShift+Ctrl+D'),
             helpText=_('Make the selected task(s) the lowest priority task(s)'), 
             bitmap='minpriority', *args, **kwargs)
         
@@ -1598,7 +1598,7 @@ class DialogCommand(UICommand):
         
 class Help(DialogCommand):
     def __init__(self, *args, **kwargs):
-        super(Help, self).__init__(menuText=_('&Help contents'),
+        super(Help, self).__init__(menuText=_('&Help contents\tCtrl+?'),
             helpText=_('Help about the program'), bitmap='help', 
             dialogTitle=_('Help'), dialogText=help.helpHTML, id=wx.ID_HELP, 
             *args, **kwargs)
