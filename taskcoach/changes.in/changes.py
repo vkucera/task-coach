@@ -27,7 +27,8 @@ Release('0.70.0', 'April ?, 2008',
     summary='...',
     featuresAdded=[
         Feature('Paths to file attachments may be relative.'),
-        Feature('Monthly and yearly recurrence of tasks.')],
+        Feature('Monthly and yearly recurrence of tasks.'),
+        Feature('Added and reorganized keyboard short cuts.', '1857101')],
     bugsFixed=[
         Bug('''Allow for editing seconds in effort editor.''', '1925748')],
     dependenciesChanged=[
