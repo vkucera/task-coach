@@ -29,6 +29,9 @@ Release('0.70.0', 'April ?, 2008',
         Feature('Paths to file attachments may be relative.'),
         Feature('Monthly and yearly recurrence of tasks.', '1933222'),
         Feature('Added and reorganized keyboard short cuts.', '1857101')],
+    featureChanged=[
+        Feature('''Slightly higher preference window so all icons fit and
+no scrolling is needed.''', '1918678')],
     bugsFixed=[
         Bug('''Allow for editing seconds in effort editor.''', '1925748')],
     dependenciesChanged=[
