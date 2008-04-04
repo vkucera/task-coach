@@ -223,7 +223,7 @@ class Preferences(widgets.ListbookDialog):
         super(Preferences, self).__init__(bitmap='configure', *args, **kwargs) 
                    
     def addPages(self):
-        self.SetMinSize((300, 300))
+        self.SetMinSize((300, 400))
         pages = [\
             (WindowBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Window behavior'), 'windows'),
             (TaskBehaviorPage(parent=self._interior, columns=2, settings=self.settings), _('Task behavior'), 'behavior'),
