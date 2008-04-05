@@ -37,6 +37,9 @@ no scrolling is needed.''', '1918678')],
     bugsFixed=[
         Bug('''Allow for editing seconds in effort editor.''', '1925748')],
     dependenciesChanged=[
+        Dependency('''Task Coach now uses Subversion for version control. See
+http://sourceforge.net/svn/?group_id=130831. This only affects you if
+you want to develop or use Task Coach source code.'''),
         Dependency('''Task Coach is now distributed under the GNU General 
 Public License version 3 or (at your option) any later version. This only 
 affects you if you want to distribute changed versions of Task Coach or 
