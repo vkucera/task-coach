@@ -88,3 +88,27 @@ def weekNumber(dateTime):
 def amount(aFloat):
     return '%.2f'%aFloat
 
+def taskBitmapNames(task):
+    ''' Return two bitmap names for the task, one for deselected tasks and
+    one for selected tasks. The bitmaps depend on the state of the task and 
+    whether the task has children. '''
+     
+    bitmap = 'task'            
+    if task.children():
+        bitmap += 's'
+    if task.completed():
+        bitmap += '_completed'
+    elif task.overdue():
+        bitmap += '_overdue'
+    elif task.dueToday():
+        bitmap += '_duetoday'
+    elif task.inactive():
+        bitmap += '_inactive'
+    if task.children():
+        bitmap_selected = bitmap + '_open'
+    else:
+        bitmap_selected = bitmap
+    if task.isBeingTracked():
+        bitmap = bitmap_selected = 'start'
+    return bitmap, bitmap_selected
+

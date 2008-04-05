@@ -876,25 +876,9 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList
-
+    
     def getImageIndices(self, task):
-        bitmap = 'task'
-        if task.children():
-            bitmap += 's'
-        if task.completed():
-            bitmap += '_completed'
-        elif task.overdue():
-            bitmap += '_overdue'
-        elif task.dueToday():
-            bitmap += '_duetoday'
-        elif task.inactive():
-            bitmap += '_inactive'
-        if task.children():
-            bitmap_selected = bitmap + '_open'
-        else:
-            bitmap_selected = bitmap
-        if task.isBeingTracked():
-            bitmap = bitmap_selected = 'start'
+        bitmap, bitmap_selected = render.taskBitmapNames(task)
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
 
     def onDropURL(self, index, url):

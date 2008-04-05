@@ -1419,6 +1419,8 @@ class EffortDelete(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
 
 
 class EffortStart(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+    ''' UICommand to start tracking effort for the selected task(s). '''
+    
     def __init__(self, *args, **kwargs):
         super(EffortStart, self).__init__(bitmap='start', 
             menuText=_('&Start tracking effort'), 
@@ -1436,6 +1438,27 @@ class EffortStart(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
         return [task for task in self.viewer.curselection() if not
             (task.isBeingTracked() or task.completed() or task.inactive())]
 
+
+class EffortStartForTask(TaskListCommand):
+    ''' UICommand to start tracking for a specific task. This command can
+        be used to build a menu with seperate menu items for all tasks. 
+        See gui.menu.StartEffortForTaskMenu. '''
+        
+    def __init__(self, *args, **kwargs):
+        self.task = kwargs.pop('task')
+        subject = self.task.subject()
+        super(EffortStartForTask, self).__init__( \
+            bitmap=gui.render.taskBitmapNames(self.task)[0], menuText=subject,
+            helpText=_('Start tracking effort for %s')%subject, 
+            *args, **kwargs)
+        
+    def doCommand(self, event):
+        start = command.StartEffortCommand(self.taskList, [self.task])
+        start.do()
+        
+    def enabled(self, event):
+        return not self.task.isBeingTracked() and not self.task.completed()      
+        
 
 class EffortStop(TaskListCommand):
     def __init__(self, *args, **kwargs):
