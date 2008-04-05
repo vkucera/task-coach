@@ -232,7 +232,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             self.taskBarIcon = taskbaricon.TaskBarIcon(self, 
                 self.taskFile.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon,
-                uiCommands))
+                uiCommands, self.taskFile.tasks()))
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
 
     def canCreateTaskBarIcon(self):

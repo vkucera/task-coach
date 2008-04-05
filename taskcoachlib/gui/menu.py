@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, uicommand, patterns
+from domain import task
 from i18n import _
 
 
@@ -64,27 +65,30 @@ class StaticMenu(Menu):
         
     def getUICommands(self):
         raise NotImplementedError
-        
-        
+
+
 class DynamicMenu(Menu):
-    def __init__(self, mainwindow, uiCommands, parentMenu=None, 
-                 labelInParentMenu=None):
+    def __init__(self, mainwindow, parentMenu, labelInParentMenu):
         super(DynamicMenu, self).__init__(mainwindow)
         self._parentMenu = parentMenu
         self._labelInParentMenu = self.__GetLabelText(labelInParentMenu)
-        self._uiCommands = uiCommands
-        self._uiCommandNames = None
-        patterns.Publisher().registerObserver(self.updateMenu, 
-            mainwindow.viewer.viewerChangeEventType())
+        self.registerForMenuUpdate()
         self.updateMenu()
         
+    def registerForMenuUpdate(self):
+        raise NotImplementedError
+
     def updateMenu(self, event=None):
         # Rebuilding the menu may take some time, so do it in idle time
         wx.CallAfter(self.updateMenuInIdleTime)
-    
+
     def updateMenuInIdleTime(self):
         self.updateMenuItemInParentMenu()
         self.updateMenuItems()
+        
+    def clearMenu(self):
+        for menuItem in self.MenuItems:
+            self.DestroyItem(menuItem)       
             
     def updateMenuItemInParentMenu(self):
         if self._parentMenu:
@@ -102,23 +106,38 @@ class DynamicMenu(Menu):
             if myId != wx.NOT_FOUND:
                 self._parentMenu.Enable(myId, self.enabled())
 
-    def __GetLabelText(self, menuText):
+    def updateMenuItems(self):
+        pass
+    
+    def enabled(self):
+        return True
+    
+    @staticmethod
+    def __GetLabelText(menuText):
         return menuText.replace('&', '').replace('_', '')
+
+            
+class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
+    def __init__(self, mainwindow, uiCommands, parentMenu=None, 
+                 labelInParentMenu=None):
+        super(DynamicMenuThatGetsUICommandsFromViewer, self).__init__(mainwindow, parentMenu, labelInParentMenu)
+        self._uiCommands = uiCommands
+        self._uiCommandNames = None
+
+    def registerForMenuUpdate(self):
+        patterns.Publisher().registerObserver(self.updateMenu, 
+            self._window.viewer.viewerChangeEventType())
 
     def updateMenuItems(self):
         newCommandNames = self.getUICommands()
         if newCommandNames != self._uiCommandNames:
-            self.clearAndFillMenu(newCommandNames)
+            self.clearMenu()
+            self.fillMenu(newCommandNames)
             self._uiCommandNames = newCommandNames
         
-    def clearAndFillMenu(self, commandNames):
-        for menuItem in self.MenuItems:
-            self.DestroyItem(menuItem)
+    def fillMenu(self, commandNames):
         self.appendUICommands(self._uiCommands, commandNames)
         
-    def enabled(self):
-        return True
-
     def getUICommands(self):
         raise NotImplementedError
 
@@ -268,7 +287,7 @@ class ViewTreeOptionsMenu(Menu):
             'viewcollapseselected', None, 'viewexpandall', 'viewcollapseall'])
 
 
-class FilterMenu(DynamicMenu):
+class FilterMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):
         return self._window.viewer.isFilterable() and \
             bool(self._window.viewer.getFilterUICommands())
@@ -277,7 +296,7 @@ class FilterMenu(DynamicMenu):
         return self._window.viewer.getFilterUICommands()
     
     
-class ColumnMenu(DynamicMenu):
+class ColumnMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):
         return self._window.viewer.hasHideableColumns()
     
@@ -285,7 +304,7 @@ class ColumnMenu(DynamicMenu):
         return self._window.viewer.getColumnUICommands()
         
 
-class SortMenu(DynamicMenu):
+class SortMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def enabled(self):
         return self._window.viewer.isSortable()
     
@@ -337,11 +356,55 @@ class HelpMenu(Menu):
 
 
 class TaskBarMenu(Menu):
-    def __init__(self, taskBarIcon, uiCommands):
+    def __init__(self, taskBarIcon, uiCommands, tasks):
         super(TaskBarMenu, self).__init__(taskBarIcon)
-        self.appendUICommands(uiCommands, ['newtask', 'neweffort', 'stopeffort', 
-            None, 'restore', 'quit'])
+        self.appendUICommands(uiCommands, ['newtask', 'neweffort', None])
+        label = _('&Start tracking effort')
+        self.appendMenu(label,
+            StartEffortForTaskMenu(taskBarIcon, tasks, self, label), 'start')                      
+        self.appendUICommands(uiCommands, ['stopeffort', None, 'restore', 
+                                           'quit'])
+        
+                   
+class StartEffortForTaskMenu(DynamicMenu):
+    def __init__(self, taskBarIcon, tasks, parentMenu, labelInParentMenu):
+        self.tasks = tasks
+        super(StartEffortForTaskMenu, self).__init__(taskBarIcon, parentMenu, 
+                                                     labelInParentMenu)
 
+    def registerForMenuUpdate(self):
+        for eventType in (self.tasks.addItemEventType(), 
+                          self.tasks.removeItemEventType(),
+                          task.Task.subjectChangedEventType(),
+                          'task.track.start', 'task.track.stop',
+                          'task.startDate', 'task.dueDate', 
+                          'task.completionDate'):
+            patterns.Publisher().registerObserver(self.updateMenu, eventType)
+    
+    def updateMenuItems(self):
+        self.clearMenu()
+        activeRootTasks = self._activeRootTasks()
+        activeRootTasks.sort(key=lambda task: task.subject())
+        for task in activeRootTasks:
+            self.addMenuItemForTask(task, self)
+                
+    def addMenuItemForTask(self, task, menu):
+        uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
+        uiCommand.appendToMenu(menu, self._window)
+        activeChildren = [child for child in task.children() if child.active()]
+        if activeChildren:
+            activeChildren.sort(key=lambda task: task.subject())
+            subMenu = wx.Menu()
+            for child in activeChildren:
+                self.addMenuItemForTask(child, subMenu)
+            menu.AppendSubMenu(subMenu, _('%s (subtasks)')%task.subject())
+                        
+    def enabled(self):
+        return bool(self._activeRootTasks())
+
+    def _activeRootTasks(self):
+        return [task for task in self.tasks.rootItems() if task.active()]
+    
 
 class TaskPopupMenu(Menu):
     def __init__(self, mainwindow, uiCommands, treeViewer):
