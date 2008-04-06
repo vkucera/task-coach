@@ -423,7 +423,7 @@ pages['devinfo'] = \
     <p>The mailinglist is also available as the newsgroup 
     <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
     on <a href="http://gmane.org">Gmane</a>.</p>
-    <P>A Sourceforge mailinglist is available for receiving CVS commit messages.
+    <P>A Sourceforge mailinglist is available for receiving SVN commit messages.
     If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join this mailinglist</a>.
     <h4>Dependencies</h4>
     <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
@@ -431,13 +431,13 @@ pages['devinfo'] = \
     graphical user interface. On Windows, <A HREF="http://starship.python.net/crew/mhammond/win32/">Pywin32</A> is used as well.
     The few other libraries (other than those
     provided by Python, wxPython and Pywin32) that are used are put into the
-    taskcoachlib/thirdparty package and included in the CVS
+    taskcoachlib/thirdparty package and included in the SVN
     repository.</p>
     <h4>Getting the source</h4>
-    <p>%(name)s source code is hosted at <A
-    HREF="https://sourceforge.net/cvs/?group_id=130831">SourceForge</A>.
-    You can check out the code from CVS directly or <A
-    HREF="http://taskcoach.cvs.sourceforge.net/taskcoach/">browse the
+    <p>%(name)s source code is hosted in a <A
+    HREF="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
+    at SourceForge</A>. You can check out the code from the repository 
+    directly or <A HREF="http://taskcoach.svn.sourceforge.net/">browse the
     repository</A>.</p>
     <h4>Tests</h4>
     <p>Tests can be run from the Makefile. There are targets for
@@ -449,10 +449,10 @@ pages['devinfo'] = \
     <h4>Building the distributions</h4>
     <p>The Makefile is used to build the different distributions of
     %(name)s. Currently, a Windows installer is built, a Mac OSX dmg
-    file, and the sources are packaged as compressed archives (.zip and 
-    .tar.gz). The Makefile contains targets for each of the
-    distributions. Most of the code for the actual building of the
-    distributions, using the python distutils package, is located in 
+    file, RPM and Debian packages are created and the sources are packaged 
+    as compressed archives (.zip and .tar.gz). The Makefile contains targets 
+    for each of the distributions. Most of the code for the actual building 
+    of the distributions, using the python distutils package, is located in 
     make.py. In turn, make.py imports setup.py. These two files were
     split so that setup.py only contains distutils information related
     to <i>installing</i>, while make.py contains all information related
@@ -471,7 +471,8 @@ pages['devinfo'] = \
     All the necessary packaging code is in make.py
     and driven from the Makefile (<tt>macdist</tt> target).</p>
     <h5>Linux</h5>
-    <p>I create RPM and DEB distributions on Ubuntu (<tt>lindist</tt> target).
+    <p>I create RPM and DEB packages on Ubuntu (<tt>rpm</tt> and <tt>deb</tt>
+    targets) and a Fedora RPM package on Fedora (<tt>fedora</tt> target). 
     Alternatively, Linux users that have installed python and wxPython
     themselves (if not installed by default) can also use the source
     distribution. The source distributions are created by the
@@ -482,7 +483,7 @@ pages['devinfo'] = \
     StudlyCaps. At first I thought that was ugly, a mixture of two
     styles. But it turned out to be quite handy, since you can easily
     see whether some method is a wxPython method or not.</p>
-    <h4>CVS usage conventions</h4>
+    <h4>SVN usage conventions</h4>
     <p>Releases are tagged Releasex_y_z (where x has always been 0 so far) 
     and for each Releasex_y_0 a branch (Releasex_y_Branch) is created to
     facilitate bug fix releases. The release tagging and branching is part of 
