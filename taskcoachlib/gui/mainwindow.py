@@ -78,9 +78,19 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
         super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
         self.manager = wx.aui.AuiManager(self, 
             wx.aui.AUI_MGR_DEFAULT|wx.aui.AUI_MGR_ALLOW_ACTIVE_PANE)
+        self.Bind(wx.aui.EVT_AUI_RENDER, self.onRender)
+        
+    def onRender(self, event):
+        ''' Whenever the AUI managed frames get rendered, make sure the active
+            pane has focus. '''
+        for pane in self.manager.GetAllPanes():
+            if pane.HasFlag(wx.aui.AuiPaneInfo.optionActive):
+                pane.window.SetFocus()
+                break
+        event.Skip()
 
     def AddPage(self, page, caption, name): 
-        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left()
+        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().FloatingSize((300,200))
         # To ensure we have a center pane we make the first pane the center pane:
         if not self.manager.GetAllPanes():
             paneInfo = paneInfo.Center().CloseButton(False)

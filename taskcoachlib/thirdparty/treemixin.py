@@ -25,8 +25,8 @@ The VirtualTree and DragAndDrop mixins force the wx.TR_HIDE_ROOT style.
 
 Author: Frank Niessink <frank@niessink.com>
 License: wxWidgets license
-Version: 1.2
-Date: 15 December 2007
+Version: 1.3
+Date: 12 April 2008
 
 ExpansionState is based on code and ideas from Karsten Hilbert.
 Andrea Gavana provided help with the CustomTreeCtrl integration.
@@ -88,6 +88,8 @@ class TreeAPIHarmonizer(object):
         # Only TreeListCtrl has a separate main window, return self if we are 
         # mixed in with another tree control.
         return self.__callSuper('GetMainWindow', self, *args, **kwargs)
+    
+    MainWindow = property(fget=GetMainWindow)
 
     def GetItemImage(self, item, which=wx.TreeItemIcon_Normal, column=-1):
         # CustomTreeCtrl always wants the which argument, so provide it
