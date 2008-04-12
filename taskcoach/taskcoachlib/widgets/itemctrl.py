@@ -67,6 +67,8 @@ class _CtrlWithItemPopupMenu(_CtrlWithPopupMenu):
                 self.onItemPopupMenu)
 
     def onItemPopupMenu(self, event):
+        # Make sure the window this control is in has focus:
+        event.GetEventObject().MainWindow.SetFocus()
         # Make sure the item under the mouse is selected because that
         # is what users expect and what is most user-friendly. Not all
         # widgets do this by default, e.g. the TreeListCtrl does not.
@@ -350,8 +352,10 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
     def onColumnClick(self, event):
         column = self._getColumn(event.GetColumn())
         event.Skip()
-        # Use CallAfter to make sure the tab this control is in is activated 
-        # before we process the column click:
+        # Make sure the window this control is in has focus:
+        event.GetEventObject().MainWindow.SetFocus()
+        # Use CallAfter to make sure the window this control is in is 
+        # activated before we process the column click:
         wx.CallAfter(column.sort, event)
         
     def showSortColumn(self, column):

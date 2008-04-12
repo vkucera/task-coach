@@ -20,6 +20,14 @@ import patterns, wx
 
 
 class ViewerContainer(object):
+    ''' ViewerContainer is a container of viewers. It has a containerWidget
+        that displays the viewers. The containerWidget can be a notebook or
+        a AUI managed frame. The ViewerContainer knows which of its viewers
+        is active and dispatches method calls to the active viewer or to the
+        first viewer that can handle the method. This allows other GUI 
+        components, e.g. menu's, to talk to the ViewerContainer as were
+        it a regular viewer. '''
+        
     def __init__(self, containerWidget, settings, setting, *args, **kwargs):
         self.containerWidget = containerWidget
         self.bindContainerWidgetEvents()
@@ -76,12 +84,19 @@ class ViewerContainer(object):
         return findFirstViewer
 
     def activeViewer(self):
+        ''' Return the active viewer, i.e. the viewer that has the focus. '''
+        # We try to find the active viewer by starting with the window 
+        # that has the focus and then see whether that window is a viewer
+        # or a child of a viewer
         windowWithFocus = wx.Window.FindFocus()
         while windowWithFocus:
             for viewer in self.viewers:
                 if viewer == windowWithFocus:
+                    self.__currentPageNumber = self.viewers.index(windowWithFocus)
                     return viewer
             windowWithFocus = windowWithFocus.Parent
+        # If there is no viewer (or child of a viewer) that has the focus
+        # we return the viewer that was last active
         return self.viewers[self.__currentPageNumber]
     
     def __del__(self):
