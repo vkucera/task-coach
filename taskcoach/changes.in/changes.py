@@ -31,7 +31,7 @@ Release('0.70.0', 'April ?, 2008',
         Feature('Added and reorganized keyboard short cuts.', '1857101'),
         Feature('''Start tracking effort for any active task using the 
 system tray icon right-click menu.''', '1934738', '1739666')],
-    featureChanged=[
+    featuresChanged=[
         Feature('''Slightly higher preference window so all icons fit and
 no scrolling is needed.''', '1918678')],
     bugsFixed=[
