@@ -48,7 +48,7 @@ of stacking order (z-index). */
     width:auto;
     min-width:120px;
     margin:0px 210px 20px 210px;
-    background-color:#ddf;
+    background-color:#eee;
     padding:10px;
     overflow: auto;
     z-index:1; /* This allows the content to overlap the right menu in
@@ -78,7 +78,7 @@ body>#navBeta {width:190px;}
  
 .navbox {
     position:relative;
-    background-color:#eee;
+    background-color:#ebedff;
     padding:10px;
     margin:0px 0px 20px 0px;
     -moz-border-radius: 2em;
