@@ -154,6 +154,16 @@ pages['download'] = \
         <hr>
         <p>
         <table>
+        <tr><td rowspan=5 valign=top><img src="gentoo.png" alt="Gentoo"></td>
+        <td><b><a href="http://packages.gentoo.org/package/app-office/taskcoach">Ebuild</a> for Gentoo</b></td></tr>
+        <tr><td>Installation:
+        %(name)s is included in Gentoo Portage. Install with emerge:<br>
+        <tt>$ emerge taskcoach</tt><td></tr>
+        </table>
+        </p>
+        <hr>
+        <p>
+        <table>
         <tr><td rowspan=5 valign=top><img src="fedora.png" alt="Fedora"></td>
         <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc8.noarch.rpm">RPM package</a> for Fedora 8</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
