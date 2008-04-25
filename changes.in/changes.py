@@ -35,7 +35,9 @@ system tray icon right-click menu.''', '1934738', '1739666')],
         Feature('''Slightly higher preference window so all icons fit and
 no scrolling is needed.''', '1918678')],
     bugsFixed=[
-        Bug('''Allow for editing seconds in effort editor.''', '1925748')],
+        Bug('''Allow for editing seconds in effort editor.''', '1925748'),
+        Bug('''Reset invalid input in the priority field of the task editor
+to 0 instead of to the minimum priority (a large negative value).''', '1949222')],
     dependenciesChanged=[
         Dependency('''Task Coach now uses Subversion for version control. See
 http://sourceforge.net/svn/?group_id=130831. This only affects you if

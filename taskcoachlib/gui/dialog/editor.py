@@ -112,7 +112,28 @@ class TaskEditorPage(widgets.PanelWithBoxSizer):
         
     def ok(self):
         pass
-    
+
+
+class PrioritySpinCtrl(wx.SpinCtrl):
+    def __init__(self, *args, **kwargs):
+        kwargs['style'] = wx.SP_ARROW_KEYS
+        super(PrioritySpinCtrl, self).__init__(*args, **kwargs)
+        # Can't use sys.maxint because Python and wxPython disagree on what the 
+        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
+        # an Overflow exception, so we use a constant:
+        maxint = 2147483647
+        self.SetRange(-maxint, maxint)
+        self.Bind(wx.EVT_SPINCTRL, self.onValueChanged)
+
+    def onValueChanged(self, event):
+        ''' wx.SpinCtrl resets invalid values (e.g. text or an empty string)
+            to wx.SpinCtrl.GetMin(). The minimum priority value is a large
+            (negative) number. It makes more sense to reset the SpinCtrl to 0 
+            in case of invalid input. '''
+        if self.GetValue() == self.GetMin():
+            wx.CallAfter(self.SetValue, 0)
+        event.Skip()
+            
         
 class SubjectPage(TaskEditorPage):
     def __init__(self, parent, task, *args, **kwargs):
@@ -127,13 +148,8 @@ class SubjectPage(TaskEditorPage):
         
         priorityBox = widgets.BoxWithFlexGridSizer(self, _('Priority'), cols=2)
         priorityBox.add(_('Priority'))
-        self._prioritySpinner = wx.SpinCtrl(priorityBox, value=render.priority(task.priority()), 
-            style=wx.SP_ARROW_KEYS)
-        # Can't use sys.maxint because Python and wxPython disagree on what the 
-        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
-        # an Overflow exception, so we use a constant:
-        maxint = 2147483647
-        self._prioritySpinner.SetRange(-maxint, maxint)
+        self._prioritySpinner = PrioritySpinCtrl(priorityBox, 
+            value=render.priority(task.priority()))
         priorityBox.add(self._prioritySpinner)
 
         for box, proportion in [(descriptionBox, 1), (priorityBox, 0)]:
