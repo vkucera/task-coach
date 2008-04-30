@@ -23,6 +23,9 @@ PYTHON="python" # python should be on the path
 
 ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
+    EPYDOC=$(PYTHON) c:/Program\ Files/Python25/Scripts/epydoc.py 
+else
+    EPYDOC="epydoc"
 endif
 
 TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.version")
@@ -55,6 +58,7 @@ icons:
 
 website: changes
 	cd website.in; $(PYTHON) make.py; cd ..
+	$(PYTHON) c:/Program\ Files/Python25/Scripts/epydoc.py taskcoachlib taskcoach.py* -o website.out/epydoc
 	$(PYTHON) tools/webchecker.py website.out/index.html
 
 i18n:
