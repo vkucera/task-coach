@@ -422,6 +422,7 @@ pages['devinfo'] = \
 '''    <h3>Information for developers</h3>
     <p>Here's some information for developers that either want to hack
     on %(name)s or reuse code.</p>
+    
     <h4>Mailinglist</h4>
     <P>A Yahoo!Groups mailinglist is available for discussing the development
     of %(name)s. You can join by sending mail to <tt><a 
@@ -433,22 +434,29 @@ pages['devinfo'] = \
     <p>The mailinglist is also available as the newsgroup 
     <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
     on <a href="http://gmane.org">Gmane</a>.</p>
-    <P>A Sourceforge mailinglist is available for receiving SVN commit messages.
+    <P>A Sourceforge mailinglist is available for receiving commit messages.
     If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join this mailinglist</a>.
+    
     <h4>Dependencies</h4>
     <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
     using <A HREF="http://www.wxpython.org">wxPython</A> for the
-    graphical user interface. On Windows, <A HREF="http://starship.python.net/crew/mhammond/win32/">Pywin32</A> is used as well.
-    The few other libraries (other than those
+    graphical user interface. On Windows, 
+    <A HREF="http://starship.python.net/crew/mhammond/win32/">Pywin32</A> 
+    is used as well. For generating the API documentation you need to have
+    <A HREF="http://epydoc.sourceforge.net/">Epydoc</A> installed.</p>
+    <p>The few other libraries (other than those
     provided by Python, wxPython and Pywin32) that are used are put into the
-    taskcoachlib/thirdparty package and included in the SVN
+    taskcoachlib/thirdparty package and included in the source code
     repository.</p>
+    
     <h4>Getting the source</h4>
     <p>%(name)s source code is hosted in a <A
     HREF="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
     at SourceForge</A>. You can check out the code from the repository 
     directly or <A HREF="http://taskcoach.svn.sourceforge.net/">browse the
-    repository</A>.</p>
+    repository</A>. You can also browse the
+    <A HREF="epydoc/index.html">epydoc-generated documentation.</A></p>
+    
     <h4>Tests</h4>
     <p>Tests can be run from the Makefile. There are targets for
     <tt>unittests</tt>, <tt>integrationtests</tt>,
@@ -456,6 +464,7 @@ pages['devinfo'] = \
     invoke the tests/test.py script. Run <tt>tests/test.py --help</tt> for 
     many more test options (including profiling, timing, measuring test 
     coverage, etc.).</p>
+    
     <h4>Building the distributions</h4>
     <p>The Makefile is used to build the different distributions of
     %(name)s. Currently, a Windows installer is built, a Mac OSX dmg
@@ -487,12 +496,14 @@ pages['devinfo'] = \
     themselves (if not installed by default) can also use the source
     distribution. The source distributions are created by the
     <tt>sdist</tt> Makefile target.</p>
+    
     <h4>Coding style</h4>
     <p>Class names are StudlyCaps. Method names are camelCase, except
     for wxPython methods that are called or overridden because those are
     StudlyCaps. At first I thought that was ugly, a mixture of two
     styles. But it turned out to be quite handy, since you can easily
     see whether some method is a wxPython method or not.</p>
+    
     <h4>SVN usage conventions</h4>
     <p>Releases are tagged Releasex_y_z (where x has always been 0 so far) 
     and for each Releasex_y_0 a branch (Releasex_y_Branch) is created to
@@ -502,7 +513,7 @@ pages['devinfo'] = \
     parallel development, checking in changes while developing, and keep 
     the code on the main trunk releaseable. The process is as follows:</p>
     <ul>
-    <li>The feature is dicussed on taskcoach-dev.</li>
+    <li>The feature is discussed on taskcoach-dev.</li>
     <li>If all agree it's a good feature to work on, a
     Feature_&lt;FeatureName&gt;_Branch branch is created and used for
     development of the feature.</li>
