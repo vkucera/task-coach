@@ -39,6 +39,8 @@ setupOptions = {
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
         'ics', 'html', 'csv')] + ['buildlib'],
     'scripts': ['taskcoach.py', 'taskcoach.pyw'],
+    # FIXME: this only makes sense on Linux systems:
+    'data_files': [('share/applications', ['build.in/fedora/taskcoach.desktop']), ('share/pixmaps', ['icons.in/taskcoach.png'])],
     'classifiers': [\
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',

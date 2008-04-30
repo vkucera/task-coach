@@ -45,9 +45,12 @@ rpm: icons changes i18n
 fedora: icons changes i18n
 	$(PYTHON) make.py bdist_rpm_fedora 
 
-deb: rpm
-	export EMAIL="frank@niessink.com"
-	cd dist; sudo alien --keep-version *.noarch.rpm; cd ..
+deb: sdist
+	cp dist/TaskCoach-$(TCVERSION).tar.gz build/taskcoach_$(TCVERSION).orig.tar.gz
+	cd build; tar zxvf taskcoach_$(TCVERSION).orig.tar.gz; mv TaskCoach-$(TCVERSION) taskcoach_$(TCVERSION); cd ..
+	cp -r build.in/debian build/taskcoach_$(TCVERSION)
+	cd build/taskcoach_$(TCVERSION); debuild -S; dpkg-buildpackage -rfakeroot; cd ..
+	mv build/taskcoach_$(TCVERSION)-1_all.deb dist
 
 dmg: icons i18n
 	$(PYTHON) make.py py2app

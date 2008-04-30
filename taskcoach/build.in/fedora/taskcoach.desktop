@@ -1,9 +1,8 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Task Coach
 GenericName=Task Coach
 Comment=Your friendly task manager
-Exec=taskcoach.py
+Exec=taskcoach.py %f
 Icon=taskcoach
 Terminal=false
 Type=Application
