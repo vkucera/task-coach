@@ -1,0 +1,6 @@
+?package(taskcoach):needs="X11"\
+ section="Applications/Office"\
+ title="Task Coach"\
+ description="Your friendly task manager"\
+ command="/usr/bin/taskcoach.py"
+

@@ -1,0 +1,16 @@
+Source: taskcoach
+Section: office
+Priority: optional
+Maintainer: Frank Niessink <frank@niessink.com>
+Build-Depends: cdbs (>= 0.4.43), debhelper (>= 5), python, dpatch
+Build-Depends-Indep: python-support (>= 0.5.3)
+Standards-Version: 3.7.3
+Homepage: http://www.taskcoach.org/
+
+Package: taskcoach
+Architecture: all
+Depends: ${python:Depends}, python-wxgtk2.8, python-wxversion, ${misc:Depends}
+Description: Your friendly taskmanager.
+ Bla bla.
+ . 
+ Bla bla.
