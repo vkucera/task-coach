@@ -17,10 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import patterns, command, widgets, uicommand, menu, color, render, dialog, mailer
 import wx
-from i18n import _
-from domain import base, task, category, effort, date, note, attachment
+from taskcoachlib import patterns, command, widgets, mailer
+from taskcoachlib.domain import base, task, category, effort, date, note, attachment
+from taskcoachlib.i18n import _
+import uicommand, menu, color, render, dialog
 
 
 class SearchableViewer(object):

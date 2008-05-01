@@ -16,10 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, config, TaskViewerTest, wx, widgets
-from gui import render
-from i18n import _
-from domain import task, effort, date, category, note
+import wx
+import test, TaskViewerTest
+from taskcoachlib import gui, config, widgets
+from taskcoachlib.gui import render
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import task, effort, date, category, note
 
 
 class CommonTests(object):

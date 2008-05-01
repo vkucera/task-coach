@@ -16,9 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, uicommand, patterns
-from domain import task
-from i18n import _
+import wx
+from taskcoachlib import patterns
+from taskcoachlib.domain import task
+from taskcoachlib.i18n import _
+import uicommand
 
 
 class Menu(wx.Menu, uicommand.UICommandContainer):

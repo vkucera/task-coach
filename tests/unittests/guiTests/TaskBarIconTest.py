@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx, meta, gui.taskbaricon, config
-from domain import task, effort, date
+import wx
+import test
+from taskcoachlib import meta, config, gui
+#from taskcoachlib.gui import taskbaricon
+from taskcoachlib.domain import task, effort, date
 
 
 class MainWindowMock:
@@ -31,7 +34,7 @@ class TaskBarIconTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.settings = config.Settings(load=False)
-        self.icon = gui.taskbaricon.TaskBarIcon(MainWindowMock(), self.taskList,
+        self.icon = gui.TaskBarIcon(MainWindowMock(), self.taskList,
             self.settings)
 
     def tearDown(self):

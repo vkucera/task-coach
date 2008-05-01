@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from domain import category, task
+from taskcoachlib.domain import category, task
+
 
 class CategoryContainerTest(test.TestCase):
     def setUp(self):

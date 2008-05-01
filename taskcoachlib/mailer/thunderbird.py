@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, re, imaplib, ConfigParser, wx, tempfile
-from i18n import _
+from taskcoachlib.i18n import _
+
 
 _RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
 _RX_IMAP    = re.compile('imap-message://([^@]+)@(.+)/(.*)#([0-9]+)')

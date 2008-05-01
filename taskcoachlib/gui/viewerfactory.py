@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import viewer, wx
-from i18n import _
+import wx
+from taskcoachlib.i18n import _
+import viewer
 
     
 def addEffortViewers(viewerContainer, taskList, uiCommands, settings):

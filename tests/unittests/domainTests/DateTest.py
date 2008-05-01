@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, time, datetime, pickle
-from domain import date
+from taskcoachlib.domain import date
+
 
 class DateTest(test.TestCase):
     def testCreateNormalDate(self):

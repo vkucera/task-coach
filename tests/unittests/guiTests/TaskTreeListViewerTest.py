@@ -16,10 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, widgets, TaskTreeViewerTest, TaskListViewerTest
+import test, TaskTreeViewerTest, TaskListViewerTest
 from unittests import dummy
-from gui import render
-from domain import task, date, effort, category, note
+from taskcoachlib import gui, widgets
+from taskcoachlib.gui import render
+from taskcoachlib.domain import task, date, effort, category, note
+
 
 class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
     def createWidgetWithColumns(self):

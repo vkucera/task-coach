@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, taskcoach, os, mock
-from domain import task
+import os
+import test, mock
+from taskcoachlib.domain import task
 
 
 class SaveTest(test.TestCase):

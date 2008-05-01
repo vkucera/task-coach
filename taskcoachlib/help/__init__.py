@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import meta
-from i18n import _
+from taskcoachlib import meta
+from taskcoachlib.i18n import _
 from tips import showTips
+
 
 _TOC = _('''<h3>Table of contents</h3>
 <ul>

@@ -16,9 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import patterns, wx, task
-from i18n import _
-from domain import date
+import wx
+from taskcoachlib import patterns
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import date
+import task
 
 
 def newTaskMenuText():

@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import taskcoach
-from domain import task
+from taskcoachlib import application
+from taskcoachlib.domain import task
+
 
 class MockWxApp(object):
     def SetAppName(self, *args, **kwargs):
@@ -27,7 +28,7 @@ class MockWxApp(object):
         pass
 
     
-class App(taskcoach.App):
+class App(application.App):
     def __init__(self, args=None):
         self._options = None
         self._args = args or []

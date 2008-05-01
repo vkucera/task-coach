@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, widgets, wx
+import wx
+import test
 from unittests import dummy
+from taskcoachlib import widgets
+
 
 class VirtualListCtrlTestCase(test.wxTestCase):
     def getItemText(self, index, column):

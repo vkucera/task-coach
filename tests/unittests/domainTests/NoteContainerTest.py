@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from domain import note
+from taskcoachlib.domain import note
+
 
 class NoteContainerTest(test.TestCase):
     def setUp(self):

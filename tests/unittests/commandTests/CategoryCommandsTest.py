@@ -16,10 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, command, patterns
+import test
 from unittests import asserts
 from CommandTestCase import CommandTestCase
-from domain import category, task
+from taskcoachlib import patterns, command
+from taskcoachlib.domain import category, task
 
 
 class CategoryCommandTestCase(CommandTestCase, asserts.CommandAsserts):

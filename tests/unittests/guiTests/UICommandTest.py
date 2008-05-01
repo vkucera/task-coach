@@ -16,9 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx, gui, config
-from domain import task, effort, category, note, date
+import wx
+import test
 from unittests import dummy
+from taskcoachlib import gui, config
+from taskcoachlib.domain import task, effort, category, note, date
+
 
 class UICommandTest(test.wxTestCase):
     def setUp(self):
@@ -152,3 +155,11 @@ class NoteNewTest(test.TestCase):
         tree = dialog[0][1]._treeCtrl
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
         self.failUnless(firstChild.IsChecked())
+
+
+class EditPreferencesTest(test.TestCase):
+    def testEditPreferences(self):
+        self.settings = config.Settings(load=False)
+        editPreferences = gui.uicommand.EditPreferences(settings=self.settings)
+        editPreferences.doCommand(None, show=False)
+        # No assert, just checking whether it works without exceptions

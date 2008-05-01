@@ -18,9 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, command, wx, config, sys, widgets
+import wx, sys
+import test
 from unittests import dummy
-from domain import task, effort, date, category, note, attachment
+from taskcoachlib import gui, command, config, widgets
+from taskcoachlib.domain import task, effort, date, category, note, attachment
 
 
 class DummyViewer:

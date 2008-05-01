@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, xml.parsers.expat, sets, persistence, wx
-import StringIO
-from domain import task, date
+import xml.parsers.expat, sets, wx, StringIO
+import test
+from taskcoachlib import persistence
+from taskcoachlib.domain import task, date
 
 
 class XMLReaderTestCase(test.TestCase):

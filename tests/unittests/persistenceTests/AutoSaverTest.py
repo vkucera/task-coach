@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, persistence
-from domain import task, category, date
+import test
+from taskcoachlib import persistence
+from taskcoachlib.domain import task, category, date
 
 
 class DummySettings(dict):        

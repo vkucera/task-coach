@@ -18,7 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, sys, os, meta, config, patterns, ConfigParser
+import test, sys, os, ConfigParser
+from taskcoachlib import patterns, config, meta
+
 
 class SettingsUnderTest(config.Settings):
     def __init__(self, *args, **kwargs):
@@ -150,7 +152,8 @@ class UnicodeAwareConfigParserTest(test.TestCase):
         for UnicodeAwareConfigParser. '''
         
     def setUp(self):
-        import config.settings, StringIO
+        from taskcoachlib import config
+        import StringIO
         self.parser = config.settings.UnicodeAwareConfigParser()
         self.parser.add_section('section')
         self.iniFile = StringIO.StringIO()

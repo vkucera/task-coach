@@ -16,9 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, os, test, meta
+import sys, os
+import test
+from taskcoachlib import meta
 sys.path.append(os.path.join(test.projectRoot, 'changes.in'))
 import changes
+
 
 class ChangeHistoryTestCase(test.TestCase):
     def setUp(self):

@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx, sets, patterns
+import test, wx, sets
 from unittests import asserts
-from domain import task, effort, date, attachment
+from taskcoachlib import patterns
+from taskcoachlib.domain import task, effort, date, attachment
 
 
 ''' I'm rearranging these unittests to be more fixture based instead of 

@@ -16,10 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, wx, config
+import wx
+import test
 from unittests import dummy
-from gui import uicommand
-from domain import task, effort, category, note
+from taskcoachlib import gui, config
+from taskcoachlib.gui import uicommand
+from taskcoachlib.domain import task, effort, category, note
 
 
 class MockViewerContainer(object):

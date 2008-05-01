@@ -16,9 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, config, os
+import os
+import test
 from unittests import dummy
-from domain import task, note
+from taskcoachlib import gui, config
+from taskcoachlib.domain import task, note
+
 
 class IOControllerTest(test.TestCase):
     def setUp(self):

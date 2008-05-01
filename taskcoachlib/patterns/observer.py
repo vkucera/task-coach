@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import patterns
+import singleton
 
 
 class List(list):
@@ -120,7 +120,7 @@ class Publisher(object):
         observers have to use exactly one registry to be sure that all
         observables can reach all observers. '''
         
-    __metaclass__ = patterns.Singleton
+    __metaclass__ = singleton.Singleton
     
     def __init__(self, *args, **kwargs):
         super(Publisher, self).__init__(*args, **kwargs)
@@ -197,8 +197,8 @@ class Publisher(object):
 
 class Observer(object):
     def __init__(self, *args, **kwargs):
-        self.registerObserver = patterns.Publisher().registerObserver
-        self.removeObserver = patterns.Publisher().removeObserver
+        self.registerObserver = Publisher().registerObserver
+        self.removeObserver = Publisher().removeObserver
         super(Observer, self).__init__(*args, **kwargs)
         
         
@@ -216,9 +216,9 @@ class Decorator(Observer):
 
 class Observable(object):
     def __init__(self, *args, **kwargs):
-        self.notifyObservers = patterns.Publisher().notifyObservers
-        self.startNotifying = patterns.Publisher().startNotifying
-        self.stopNotifying = patterns.Publisher().stopNotifying
+        self.notifyObservers = Publisher().notifyObservers
+        self.startNotifying = Publisher().startNotifying
+        self.stopNotifying = Publisher().stopNotifying
         super(Observable, self).__init__(*args, **kwargs)
 
 

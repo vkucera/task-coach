@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from i18n import _
+from taskcoachlib.i18n import _
+
 
 class SearchCtrl(wx.SearchCtrl):
     def __init__(self, *args, **kwargs):

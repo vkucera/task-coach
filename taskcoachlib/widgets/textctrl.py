@@ -17,7 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, webbrowser, draganddrop, i18n
+import wx, webbrowser
+from taskcoachlib import i18n
+import draganddrop
 
 
 UNICODE_CONTROL_CHARACTERS_TO_WEED = {}

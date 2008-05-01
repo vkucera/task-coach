@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import threading, wx, meta, urllib2
-import gui.dialog.version
+import threading, wx, urllib2
+import data
+
 
 # We don't use cElementTree because py2exe somehow does not
 # include cElementTree. ElementTree is no problem though...
@@ -38,7 +39,7 @@ class VersionChecker(threading.Thread):
     def run(self):
         latestVersion = self.getLatestVersion()
         lastVersionNotified = self.settings.get('version', 'notified')
-        if latestVersion > lastVersionNotified and latestVersion > meta.data.version:
+        if latestVersion > lastVersionNotified and latestVersion > data.version:
             self.settings.set('version', 'notified', latestVersion)
             self.notifyUser(latestVersion)
             
@@ -56,13 +57,14 @@ class VersionChecker(threading.Thread):
         return pad.findtext('Program_Info/Program_Version')
     
     def retrievePadFile(self):
-        return urllib2.urlopen(meta.data.pad)
+        return urllib2.urlopen(data.pad)
     
     def notifyUser(self, latestVersion):
         # Must use CallAfter because this is a non-GUI thread
         wx.CallAfter(self.showDialog, latestVersion)
         
     def showDialog(self, version):
+        from taskcoachlib import gui # import here to prevent circular import
         dialog = gui.dialog.version.VersionDialog(wx.GetApp().GetTopWindow(), 
                                                   version=version)   
         dialog.ShowModal()
