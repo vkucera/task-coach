@@ -16,8 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, config, widgets
-from domain import task, effort, category, note
+import test
+from taskcoachlib import gui, config, widgets
+from taskcoachlib.domain import task, effort, category, note
+
 
 class EffortViewerTest(test.wxTestCase):
     def setUp(self):

@@ -19,8 +19,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import widgets, wx, meta
-from i18n import _
+import wx
+from taskcoachlib import meta, widgets
+from taskcoachlib.i18n import _
+
 
 class SettingsPage(widgets.BookPage):
     def __init__(self, settings=None, *args, **kwargs):

@@ -17,8 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, os, persistence, wx
-from domain import task, effort, date, category, note
+import os, wx
+import test
+from taskcoachlib import persistence
+from taskcoachlib.domain import task, effort, date, category, note
+
 
 class FakeAttachment(object):
     def __init__(self, type_, filename):

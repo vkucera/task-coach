@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, meta, persistence
 import cStringIO as StringIO
-from domain import task, effort, date
+import test
+from taskcoachlib import meta, persistence
+from taskcoachlib.domain import task, effort, date
 
 
 class ICSTestCase(test.TestCase):

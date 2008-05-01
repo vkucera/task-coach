@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import patterns
-from i18n import _
-from domain import task
+from taskcoachlib import patterns
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import task
 
 
 class BaseCommand(patterns.Command):

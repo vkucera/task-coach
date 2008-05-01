@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, widgets
+import test
+from taskcoachlib import widgets
 
 
 class BaseTextCtrlTest(test.wxTestCase):

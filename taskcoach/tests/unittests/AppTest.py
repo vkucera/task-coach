@@ -16,13 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, meta, taskcoach, wx, sys
+import test, wx, sys
+from taskcoachlib import meta, application
+
 
 class AppTests(test.TestCase):
     def testAppProperties(self):
         # Normally I prefer one assert per test, but creating the app is
         # expensive, so we do all the queries in one test method.
-        app = taskcoach.App(loadSettings=False, loadTaskFile=False)
+        app = application.App(loadSettings=False, loadTaskFile=False)
         wxApp = wx.GetApp()
         self.assertEqual(meta.name, wxApp.GetAppName())
         self.assertEqual(meta.author, wxApp.GetVendorName())

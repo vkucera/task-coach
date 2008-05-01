@@ -22,8 +22,9 @@ RelationshipManager does not (at the moment) keep of list of relations, but
 instead alters objects based on their relations. For example, if a task is
 marked completed, the RelationshipManager will mark all children completed. '''
 
-from domain import date
-import task, patterns
+from taskcoachlib import patterns
+from taskcoachlib.domain import date
+import task
 
 
 class TaskRelationshipManager(object):

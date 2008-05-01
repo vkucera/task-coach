@@ -16,7 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, icons, i18n
+import wx
+from taskcoachlib import i18n
+import icons
+
 
 class SplashScreen(wx.SplashScreen):
     def __init__(self):

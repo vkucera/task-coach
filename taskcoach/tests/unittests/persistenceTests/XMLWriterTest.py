@@ -19,9 +19,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, persistence, wx
-import StringIO # We cannot use CStringIO since unicode strings are used below.
-from domain import task, effort, date, category, note, attachment
+import wx, StringIO # We cannot use CStringIO since unicode strings are used below.
+import test
+from taskcoachlib import persistence
+from taskcoachlib.domain import task, effort, date, category, note, attachment
 
 
 class XMLWriterTest(test.TestCase):
@@ -50,7 +51,7 @@ class XMLWriterTest(test.TestCase):
     # tests
         
     def testVersion(self):
-        import meta
+        from taskcoachlib import meta
         self.expectInXML('<?taskcoach release="%s"'%meta.data.version)
         
     def testTaskSubject(self):

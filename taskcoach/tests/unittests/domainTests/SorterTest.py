@@ -16,9 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, patterns, config
+import test
 from unittests import dummy
-from domain import task, effort, date
+from taskcoachlib import patterns, config
+from taskcoachlib.domain import task, effort, date
+
 
 class TaskSorterTest(test.TestCase):
     def setUp(self):

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import time, xml.dom.minidom, re, os
-from domain import date, effort, task, category, note, attachment
+from taskcoachlib.domain import date, effort, task, category, note, attachment
 
 
 class XMLReader:

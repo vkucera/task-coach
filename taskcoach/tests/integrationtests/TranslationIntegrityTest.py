@@ -18,7 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, i18n, meta, string, re
+import string, re
+import test
+from taskcoachlib import i18n, meta
 
 
 class TranslationIntegrityTests(object):
@@ -100,7 +102,7 @@ def createTestCaseClass(className, language, englishString, translatedString):
 
 
 for language in getLanguages():
-    translation = __import__('i18n.%s'%language, fromlist=['dict'])
+    translation = __import__('taskcoachlib.i18n.%s'%language, fromlist=['dict'])
     for englishString, translatedString in translation.dict.iteritems():        
         className = createTestCaseClassName(language, englishString)
         class_ = createTestCaseClass(className, language, englishString,

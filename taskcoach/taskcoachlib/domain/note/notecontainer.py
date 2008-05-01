@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import patterns
-from i18n import _
+from taskcoachlib import patterns
+from taskcoachlib.i18n import _
+
 
 class NoteContainer(patterns.CompositeSet):
     newItemMenuText = _('New note...')

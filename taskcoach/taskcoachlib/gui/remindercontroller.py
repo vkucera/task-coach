@@ -16,10 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, patterns, command
-from i18n import _
-from domain import date
-from gui.dialog import reminder, editor
+import wx
+from taskcoachlib import patterns, command
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import date
+from taskcoachlib.gui.dialog import reminder, editor
+
 
 class ReminderController(object):
     def __init__(self, taskList, categories, settings, uiCommands, *args, **kwargs):

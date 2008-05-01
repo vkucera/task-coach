@@ -18,8 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, re, tempfile
-from thirdparty import desktop
-from i18n import _
+from taskcoachlib.thirdparty import desktop
+from taskcoachlib.i18n import _
+
 
 def readMail(filename, readContent=True):
     subject = None

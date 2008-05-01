@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, sets, patterns
+import test, sets
 from unittests import asserts
-from domain import task, effort, date
+from taskcoachlib import patterns
+from taskcoachlib.domain import task, effort, date
 
 
 class TaskListTest(test.TestCase):

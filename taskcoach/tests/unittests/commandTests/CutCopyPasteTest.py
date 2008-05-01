@@ -16,12 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, command
+import test
 from unittests import asserts
-from domain import task, category, note
 from CommandTestCase import CommandTestCase
 from TaskCommandsTest import TaskCommandTestCase, CommandWithChildrenTestCase, \
     CommandWithEffortTestCase
+from taskcoachlib import command
+from taskcoachlib.domain import task, category, note
+
 
 class CutCommandWithTasksTest(TaskCommandTestCase):
     def testCutTasks_WithoutSelection(self):

@@ -93,7 +93,7 @@ class TaskAsserts(object):
 
 class CommandAsserts(object):
     def assertHistoryAndFuture(self, expectedHistory, expectedFuture):
-        import patterns
+        from taskcoachlib import patterns
         commands = patterns.CommandHistory()
         self.assertEqual(expectedHistory, commands.getHistory())
         self.assertEqual(expectedFuture, commands.getFuture())

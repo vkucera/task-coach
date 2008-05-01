@@ -16,10 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, config, meta
-import meta.versionchecker as vc
+import test
+from taskcoachlib import config, meta
+#from taskcoachlib.meta import versionchecker
 
-class VersionCheckerUnderTest(vc.VersionChecker):
+
+class VersionCheckerUnderTest(meta.VersionChecker):
     def __init__(self, *args, **kwargs):
         self.version = kwargs.pop('version')
         self.fail = kwargs.pop('fail', False)

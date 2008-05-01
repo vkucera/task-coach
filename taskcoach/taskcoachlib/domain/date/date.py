@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import patterns
 import time, string, datetime, timedelta
+from taskcoachlib import patterns
+
 
 infinite = datetime.date.max
 minimumDate = datetime.date.min

@@ -17,8 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import ConfigParser, os, sys, meta, defaults, patterns, wx
-from i18n import _
+import ConfigParser, os, sys, wx
+from taskcoachlib import meta, patterns
+from taskcoachlib.i18n import _
+import defaults
+
 
 class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
     def set(self, section, setting, value):

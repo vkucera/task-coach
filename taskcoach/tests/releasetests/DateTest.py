@@ -20,7 +20,7 @@ import test
 
 class DateTest(test.TestCase):
     def testNoQuestionMarkInMetaDataDate(self):
-        import meta
+        from taskcoachlib import meta
         self.failIf('?' in meta.date)
 
     def testNoQuestionMarkInChangeLog(self):

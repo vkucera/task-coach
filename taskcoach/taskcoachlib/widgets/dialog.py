@@ -16,8 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, wx.html, widgets, os
-from i18n import _
+import wx, wx.html, os
+from taskcoachlib.i18n import _
+import buttonbox, notebook
+
 
 class Dialog(wx.Dialog):
     def __init__(self, parent, title, bitmap='edit', 
@@ -48,8 +50,8 @@ class Dialog(wx.Dialog):
         wx.CallAfter(self._panel.SetFocus)
         
     def createButtonBox(self):
-        return widgets.ButtonBox(self._panel, (_('OK'), self.ok), 
-                                 (_('Cancel'), self.cancel))
+        return buttonbox.ButtonBox(self._panel, (_('OK'), self.ok), 
+                                   (_('Cancel'), self.cancel))
 
     def fillInterior(self):
         pass
@@ -95,12 +97,12 @@ class BookDialog(Dialog):
         
 class NotebookDialog(BookDialog):
     def createInterior(self):
-        return widgets.Notebook(self._panel)
+        return notebook.Notebook(self._panel)
 
         
 class ListbookDialog(BookDialog):
     def createInterior(self):
-        return widgets.Listbook(self._panel)
+        return notebook.Listbook(self._panel)
 
 
 class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
@@ -134,7 +136,7 @@ class HTMLDialog(Dialog):
         self._interior.AppendToPage(self._htmlText)
         
     def createButtonBox(self):
-        return widgets.ButtonBox(self._panel, (_('OK'), self.ok))
+        return buttonbox.ButtonBox(self._panel, (_('OK'), self.ok))
     
     def OnLinkClicked(self, linkInfo):
         pass

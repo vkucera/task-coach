@@ -16,8 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, meta
-from i18n import _
+import wx
+from taskcoachlib import meta
+from taskcoachlib.i18n import _
+
 
 tips = [
 _('''%(name)s is currently alpha software. Although the %(name)s developers try hard to prevent them, bugs do happen. So, backing up your work on a regular basis is strongly advised.''')%meta.metaDict,

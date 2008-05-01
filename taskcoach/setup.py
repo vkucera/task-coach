@@ -31,8 +31,8 @@ setupOptions = {
     'url': meta.url,
     'license': meta.license,
     'packages': ['taskcoachlib'] + 
-        ['taskcoachlib.' + subpackage for subpackage in ('meta', 'config', 
-        'command', 'widgets', 'gui', 'gui.dialog', 'i18n', 'patterns', 
+        ['taskcoachlib.' + subpackage for subpackage in ('application', 'meta', 
+        'config', 'command', 'widgets', 'gui', 'gui.dialog', 'i18n', 'patterns', 
         'mailer', 'help', 'domain', 'persistence', 'thirdparty')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note', 'attachment')] +

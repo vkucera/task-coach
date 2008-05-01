@@ -16,8 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import category, patterns
-from domain import base
+from taskcoachlib import patterns
+from taskcoachlib.domain import base
+import category
+
 
 class CategoryFilter(base.Filter):
     def __init__(self, *args, **kwargs):

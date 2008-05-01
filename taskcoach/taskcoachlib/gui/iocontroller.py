@@ -17,9 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, sys, codecs, traceback
-import meta, persistence
-from i18n import _
-from domain import task
+from taskcoachlib import meta, persistence
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import task
+
 
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,
@@ -85,10 +86,12 @@ class IOController(object):
                  'filename': self.__taskFile.filename()})
             self.__addRecentFile(filename)
         else:
-            # Use CallAfter because otherwise the app will hang on Mac OSX:
-            wx.CallAfter(showerror, 
-                         _("Cannot open %s because it doesn't exist")%filename,
-                         **errorMessageOptions)
+            errorMessage = _("Cannot open %s because it doesn't exist")%filename
+            # Use CallAfter on Mac OSX because otherwise the app will hang:
+            if '__WXMAC__' in wx.PlatformInfo:
+                wx.CallAfter(showerror, errorMessage, **errorMessageOptions)
+            else:
+                showerror(errorMessage, **errorMessageOptions)
             self.__removeRecentFile(filename)
             
     def merge(self, filename=None):
@@ -215,7 +218,7 @@ class IOController(object):
     def __closeUnconditionally(self):
         self.__messageCallback(_('Closed %s')%self.__taskFile.filename())
         self.__taskFile.close()
-        import patterns
+        from taskcoachlib import patterns
         patterns.CommandHistory().clear()
     
     def __showSaveMessage(self, savedFile):    

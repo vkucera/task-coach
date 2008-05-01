@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, mock
-from domain import task, category
+from taskcoachlib.domain import task, category
 
 
 class TaskViewerAndCategoryFilterIntegrationTestFixture(test.wxTestCase):
@@ -38,7 +38,7 @@ class TaskListViewerAndCategoryFilterIntegrationTest( \
         TaskViewerAndCategoryFilterIntegrationTestFixture):
             
     def testFilterOnCategoryChildDoesHideParent(self):
-        self.assertEqual(1, self.app.mainwindow.viewer[0].widget.GetItemCount())
+        self.assertEqual(1, self.app.mainwindow.viewer[1].widget.GetItemCount())
 
 
 class TaskTreeListViewerAndCategoryFilterIntegrationTest( \
@@ -46,6 +46,6 @@ class TaskTreeListViewerAndCategoryFilterIntegrationTest( \
             
     def testFilterOnCategoryChildDoesNotHideParent(self):
         self.app.mainwindow.viewer[1].expandAll()
-        self.assertEqual(2, self.app.mainwindow.viewer[1].widget.GetItemCount())
+        self.assertEqual(2, self.app.mainwindow.viewer[0].widget.GetItemCount())
         
     

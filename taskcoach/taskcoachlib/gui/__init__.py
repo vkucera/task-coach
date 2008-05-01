@@ -23,3 +23,4 @@ from dialog.preferences import Preferences
 from iocontroller import IOController
 from remindercontroller import ReminderController
 from artprovider import init
+from taskbaricon import TaskBarIcon

@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, datetime
-from domain import date 
+from taskcoachlib.domain import date
+
 
 class PyDateTimeTest(test.TestCase):
     def testReplaceCannotBeEasilyUsedToFindTheLastDayofTheMonth(self):

@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import patterns
+import observer
+
 
 class Composite(object):
     def __init__(self, *args, **kwargs):
@@ -86,7 +87,7 @@ class Composite(object):
         self.__parent = parent
         
 
-class ObservableComposite(Composite, patterns.Observable):
+class ObservableComposite(Composite, observer.Observable):
     @classmethod
     def addChildEventType(class_):
         return 'composite(%s).child.add'%class_
@@ -97,12 +98,12 @@ class ObservableComposite(Composite, patterns.Observable):
     
     def addChild(self, child):
         super(ObservableComposite, self).addChild(child)
-        self.notifyObservers(patterns.Event(self, self.addChildEventType(), 
+        self.notifyObservers(observer.Event(self, self.addChildEventType(), 
                                             child))
                                             
     def removeChild(self, child):
         super(ObservableComposite, self).removeChild(child)
-        self.notifyObservers(patterns.Event(self, self.removeChildEventType(),
+        self.notifyObservers(observer.Event(self, self.removeChildEventType(),
                                             child))
 
 
@@ -124,7 +125,7 @@ class CompositeCollection(object):
         self.startNotifying()
         self.notifyObserversOfItemsAdded(*compositesAndAllChildren)
         for parent, children in parentsWithChildrenAdded.items():
-            self.notifyObservers(patterns.Event(parent,
+            self.notifyObservers(observer.Event(parent,
                 parent.addChildEventType(), *children))
             
     def _compositesAndAllChildren(self, composites):
@@ -159,7 +160,7 @@ class CompositeCollection(object):
         self.notifyObserversOfItemsRemoved(*compositesAndAllChildren)
         for parent, children in parentsWithChildrenRemoved.items():
             if parent in self:
-                self.notifyObservers(patterns.Event(parent,
+                self.notifyObservers(observer.Event(parent,
                     parent.removeChildEventType(), *children))
 
     def _splitCompositesInParentsAndChildren(self, composites):
@@ -197,10 +198,10 @@ class CompositeCollection(object):
                 composite.parent() not in self]                                            
 
 
-class CompositeSet(CompositeCollection, patterns.ObservableSet):
+class CompositeSet(CompositeCollection, observer.ObservableSet):
     pass
 
     
-class CompositeList(CompositeCollection, patterns.ObservableList):
+class CompositeList(CompositeCollection, observer.ObservableList):
     pass
 

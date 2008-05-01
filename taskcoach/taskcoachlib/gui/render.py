@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ''' render.py - functions to render various objects, like date, time, etc. '''
 
-from i18n import _
+from taskcoachlib.i18n import _
 
 
 def date(date):
@@ -35,7 +35,7 @@ def daysLeft(timeLeft, completedTask):
     ''' Render time left (of type date.TimeDelta) in days. '''
     if completedTask:
         return ''
-    from domain import date
+    from taskcoachlib.domain import date
     if timeLeft == date.TimeDelta.max:
         return _('Infinite') # u'∞' 
     else:
@@ -44,7 +44,7 @@ def daysLeft(timeLeft, completedTask):
 def timeSpent(timeSpent):
     ''' render time spent (of type date.TimeDelta) as
     "<hours>:<minutes>:<seconds>" '''
-    import domain.date as date
+    from taskcoachlib.domain import date
     if timeSpent < date.TimeDelta():
         sign = '-'
     else:

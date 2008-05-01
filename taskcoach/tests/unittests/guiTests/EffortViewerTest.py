@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, config
+import test
 from unittests import dummy
-from domain import task, effort, date
+from taskcoachlib import gui, config
+from taskcoachlib.domain import task, effort, date
 
 
 class EffortViewerUnderTest(gui.viewer.EffortListViewer):

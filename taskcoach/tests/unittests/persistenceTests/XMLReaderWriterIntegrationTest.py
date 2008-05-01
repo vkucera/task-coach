@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, persistence
 import StringIO
-from domain import task, category, effort, date, note, attachment
+import test
+from taskcoachlib import persistence
+from taskcoachlib.domain import task, category, effort, date, note, attachment
 
 
 class IntegrationTestCase(test.TestCase):

@@ -16,8 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, time, os, persistence, mock
-from domain import task, category, note
+import time, os
+import test, mock
+from taskcoachlib import persistence
+from taskcoachlib.domain import task, category, note
 
 
 class PerformanceTest(test.TestCase):

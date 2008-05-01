@@ -16,8 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, wx, config
-from domain import task, date
+import wx
+import test
+from taskcoachlib import gui, config
+from taskcoachlib.domain import task, date
 
 
 class TaskColorTest(test.TestCase):

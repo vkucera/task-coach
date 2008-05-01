@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, datetime, os.path
-import widgets
-from gui import render, viewercontainer, viewer
-from widgets import draganddrop
 from wx.lib import masked, combotreebox
 import wx.lib.customtreectrl as customtree
-from i18n import _
-from domain import task, category, date, note, attachment
-from thirdparty import desktop
+from taskcoachlib import widgets
+from taskcoachlib.gui import render, viewercontainer, viewer
+from taskcoachlib.widgets import draganddrop
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import task, category, date, note, attachment
+from taskcoachlib.thirdparty import desktop
 
 
 class DateEntry(widgets.PanelWithBoxSizer):

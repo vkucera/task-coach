@@ -16,9 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import meta, wx, patterns
-from i18n import _
-from domain import date
+import wx
+from taskcoachlib import meta, patterns
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import date
+
         
 class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList, settings, 

@@ -19,7 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, itemctrl
 import wx.gizmos as gizmos
 from wx.lib import customtreectrl as customtree
-from thirdparty import treemixin
+from taskcoachlib.thirdparty import treemixin
+
         
 class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
     ''' Methods common to both TreeCtrl and TreeListCtrl. '''

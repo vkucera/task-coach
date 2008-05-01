@@ -17,11 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, patterns, gui, meta, command, help, widgets, persistence
-from i18n import _
-from domain import task, attachment
-from thirdparty import desktop
-import urllib
+import wx, urllib
+from taskcoachlib import patterns, meta, command, help, widgets, persistence
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import task, attachment
+from taskcoachlib.thirdparty import desktop
+import dialog, render, viewer
+
 
 ''' User interface commands (subclasses of UICommand) are actions that can
     be invoked by the user via the user interface (menu's, toolbar, etc.).
@@ -48,7 +50,8 @@ class UICommandContainer(object):
             self.appendUICommand(commandName)
 
     def appendSubMenuWithUICommands(self, uiCommands, menuTitle, uiCommandNames):
-        subMenu = gui.menu.Menu(self._window)
+        import menu
+        subMenu = menu.Menu(self._window)
         self.appendMenu(menuTitle, subMenu)
         subMenu.appendUICommands(uiCommands, uiCommandNames)
         
@@ -440,9 +443,9 @@ class PrinterSettings(object):
 printerSettings = PrinterSettings()
 
 class Printout(wx.html.HtmlPrintout):
-    def __init__(self, viewer, printSelectionOnly=False, *args, **kwargs):
+    def __init__(self, aViewer, printSelectionOnly=False, *args, **kwargs):
         super(Printout, self).__init__(*args, **kwargs)
-        htmlText = persistence.viewer2html(viewer, 
+        htmlText = persistence.viewer2html(aViewer, 
                                            selectionOnly=printSelectionOnly)
         self.SetHtmlText(htmlText)
         self.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
@@ -701,10 +704,10 @@ class EditPreferences(MainWindowCommand, SettingsCommand):
             helpText=_('Edit preferences'), bitmap='configure', 
             *args, **kwargs)
             
-    def doCommand(self, event):
-        editor = gui.Preferences(parent=self.mainwindow, 
+    def doCommand(self, event, show=True):
+        editor = dialog.preferences.Preferences(parent=self.mainwindow, 
             title=_('Edit preferences'), settings=self.settings)
-        editor.Show()
+        editor.Show(show=show)
 
 
 class SelectAll(NeedsItems, ViewerCommand):
@@ -1099,7 +1102,7 @@ class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand,
             helpText=taskList.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        newTaskDialog = gui.dialog.editor.TaskEditor(self.mainwindow, 
+        newTaskDialog = dialog.editor.TaskEditor(self.mainwindow, 
             command.NewTaskCommand(self.taskList, 
             categories=self.categoriesForTheNewTask()), 
             self.taskList, self.uiCommands, self.settings, self.categories, 
@@ -1388,7 +1391,7 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
 
-        newEffortDialog = gui.dialog.editor.EffortEditor(self.mainwindow, 
+        newEffortDialog = dialog.editor.EffortEditor(self.mainwindow, 
             command.NewEffortCommand(self.effortList, selectedTasks),
             self.uiCommands, self.effortList, self.taskList, bitmap=self.bitmap)
         newEffortDialog.Show()
@@ -1448,7 +1451,7 @@ class EffortStartForTask(TaskListCommand):
         self.task = kwargs.pop('task')
         subject = self.task.subject()
         super(EffortStartForTask, self).__init__( \
-            bitmap=gui.render.taskBitmapNames(self.task)[0], menuText=subject,
+            bitmap=render.taskBitmapNames(self.task)[0], menuText=subject,
             helpText=_('Start tracking effort for %s')%subject, 
             *args, **kwargs)
         
@@ -1485,7 +1488,7 @@ class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
             helpText=categories.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        newCategoryDialog = gui.dialog.editor.CategoryEditor(self.mainwindow, 
+        newCategoryDialog = dialog.editor.CategoryEditor(self.mainwindow, 
             command.NewCategoryCommand(self.categories),
             self.categories, self.uiCommands, bitmap=self.bitmap)
         newCategoryDialog.Show(show)
@@ -1544,11 +1547,11 @@ class NoteNew(NotesCommand, MainWindowCommand, CategoriesCommand):
     def doCommand(self, event, show=True):
         filteredCategories = [category for category in self.categories if
                              category.isFiltered()]    
-        dialog = gui.dialog.editor.NoteEditor(self.mainwindow, 
+        noteDialog = dialog.editor.NoteEditor(self.mainwindow, 
             command.NewNoteCommand(self.notes, categories=filteredCategories),
             self.categories, bitmap=self.bitmap)
-        dialog.Show(show)
-        return dialog # for testing purposes
+        noteDialog.Show(show)
+        return noteDialog # for testing purposes
     
 
 class NoteNewSubNote(NeedsSelectedNote, NotesCommand, ViewerCommand):
@@ -1697,7 +1700,7 @@ class Search(MainWindowCommand, ViewerCommand, SettingsCommand):
 
 
 class ViewColumnUICommandsMixin(object):
-    def addViewColumnUICommands(self, viewer):
+    def addViewColumnUICommands(self, viewerContainer):
         for menuText, helpText, columnName in \
             [(_('&Attachments'), _('Show/hide attachment column'), 'attachments'),
              (_('&Categories'), _('Show/hide categories column'), 'categories'),
@@ -1723,39 +1726,39 @@ class ViewColumnUICommandsMixin(object):
              (_('&Revenue'), _('Show/hide revenue column'), 'revenue'),
              (_('T&otal revenue'), _('Show/hide total revenue column'), 'totalRevenue')]:
             key = 'view' + columnName
-            self[key] = ViewColumn(menuText=menuText, helpText=helpText, setting=columnName, viewer=viewer)
+            self[key] = ViewColumn(menuText=menuText, helpText=helpText, setting=columnName, viewer=viewerContainer)
 
         self['viewalldatecolumns'] = ViewColumns(menuText=_('All date columns'), 
               helpText=_('Show/hide all date-related columns'), 
               setting=['startDate', 'dueDate', 'timeLeft', 'completionDate', 'recurrence'], 
-              viewer=viewer)
+              viewer=viewerContainer)
         self['viewallbudgetcolumns'] = ViewColumns(menuText=_('All budget columns'),
               helpText=_('Show/hide all budget-related columns'),
               setting=['budget', 'totalBudget', 'timeSpent', 'totalTimeSpent', 
-              'budgetLeft','totalBudgetLeft'], viewer=viewer)
+              'budgetLeft','totalBudgetLeft'], viewer=viewerContainer)
         self['viewallfinancialcolumns'] = ViewColumns(menuText=_('All financial columns'),
               helpText=_('Show/hide all finance-related columns'),
               setting=['hourlyFee', 'fixedFee', 'totalFixedFee', 'revenue', 
-              'totalRevenue'], viewer=viewer)
-        self['hidecurrentcolumn'] = HideCurrentColumn(viewer=viewer)
+              'totalRevenue'], viewer=viewerContainer)
+        self['hidecurrentcolumn'] = HideCurrentColumn(viewer=viewerContainer)
 
 
 class EditorUICommands(dict, ViewColumnUICommandsMixin):
     ''' UICommands that need to be seperately created for each (task) editor. '''
-    def __init__(self, viewer, effortList):
+    def __init__(self, viewerContainer, effortList):
         super(EditorUICommands, self).__init__()
-        self['editeffort'] = EffortEdit(viewer=viewer, effortList=effortList)
+        self['editeffort'] = EffortEdit(viewer=viewerContainer, effortList=effortList)
         self['deleteeffort'] = EffortDelete(effortList=effortList, 
-                                            viewer=viewer)
-        self['cut'] = EditCut(viewer=viewer)
-        self['copy'] = EditCopy(viewer=viewer)
-        self['pasteintotask'] = EditPasteIntoTask(viewer=viewer)
-        self.addViewColumnUICommands(viewer)
+                                            viewer=viewerContainer)
+        self['cut'] = EditCut(viewer=viewerContainer)
+        self['copy'] = EditCopy(viewer=viewerContainer)
+        self['pasteintotask'] = EditPasteIntoTask(viewer=viewerContainer)
+        self.addViewColumnUICommands(viewerContainer)
 
 
 class UICommands(dict, ViewColumnUICommandsMixin):
     ''' All UICommands for the mainwindow. '''
-    def __init__(self, mainwindow, iocontroller, viewer, settings, 
+    def __init__(self, mainwindow, iocontroller, viewerContainer, settings, 
             taskList, effortList, categories, notes):
         super(UICommands, self).__init__()
         self.__iocontroller = iocontroller
@@ -1767,67 +1770,67 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['save'] = FileSave(iocontroller=iocontroller)
         self['saveas'] = FileSaveAs(iocontroller=iocontroller)
         self['saveselection'] = FileSaveSelection(iocontroller=iocontroller, 
-            viewer=viewer)
+            viewer=viewerContainer)
         self['printpagesetup'] = PrintPageSetup(mainwindow=mainwindow)
         self['printpreview'] = PrintPreview(mainwindow=mainwindow, 
-            viewer=viewer)
-        self['print'] = Print(mainwindow=mainwindow, viewer=viewer)
+            viewer=viewerContainer)
+        self['print'] = Print(mainwindow=mainwindow, viewer=viewerContainer)
         self['exportasics'] = FileExportAsICS(iocontroller=iocontroller)
         self['exportashtml'] = FileExportAsHTML(iocontroller=iocontroller, 
-            viewer=viewer)
+            viewer=viewerContainer)
         self['exportascsv'] = FileExportAsCSV(iocontroller=iocontroller,
-            viewer=viewer)
+            viewer=viewerContainer)
         self['quit'] = FileQuit(mainwindow=mainwindow)
 
         # menuEdit commands
         self['undo'] = EditUndo()
         self['redo'] = EditRedo()
-        self['cut'] = EditCut(viewer=viewer)
-        self['copy'] = EditCopy(viewer=viewer)
+        self['cut'] = EditCut(viewer=viewerContainer)
+        self['copy'] = EditCopy(viewer=viewerContainer)
         self['paste'] = EditPaste()
-        self['pasteintotask'] = EditPasteIntoTask(viewer=viewer)
+        self['pasteintotask'] = EditPasteIntoTask(viewer=viewerContainer)
         self['editpreferences'] = EditPreferences(mainwindow=mainwindow, 
                                                   settings=settings)
         
         # Selection commands
-        self['selectall'] = SelectAll(viewer=viewer)
-        self['invertselection'] = InvertSelection(viewer=viewer)
-        self['clearselection'] = ClearSelection(viewer=viewer)
+        self['selectall'] = SelectAll(viewer=viewerContainer)
+        self['invertselection'] = InvertSelection(viewer=viewerContainer)
+        self['clearselection'] = ClearSelection(viewer=viewerContainer)
 
         # View commands
-        self['renameviewer'] = RenameViewer(viewer=viewer, settings=settings)
-        self['activatenextviewer'] = ActivateViewer(viewer=viewer,
+        self['renameviewer'] = RenameViewer(viewer=viewerContainer, settings=settings)
+        self['activatenextviewer'] = ActivateViewer(viewer=viewerContainer,
             menuText=_('&Activate next viewer\tCtrl+PgDn'),
             helpText=_('Activate the next open viewer'), forward=True,
             bitmap='activatenextviewer')
-        self['activatepreviousviewer'] = ActivateViewer(viewer=viewer,
+        self['activatepreviousviewer'] = ActivateViewer(viewer=viewerContainer,
             menuText=_('Activate &previous viewer\tCtrl+PgUp'),
             helpText=_('Activate the previous open viewer'), forward=False,
             bitmap='activatepreviousviewer')
-        self['resetfilter'] = ResetFilter(viewer=viewer)
-        self['hidecompletedtasks'] = ViewerHideCompletedTasks(viewer=viewer)
-        self['hideinactivetasks'] = ViewerHideInactiveTasks(viewer=viewer)
-        self['hideactivetasks'] = ViewerHideActiveTasks(viewer=viewer)    
-        self['hideoverduetasks'] = ViewerHideOverdueTasks(viewer=viewer)    
-        self['hideoverbudgettasks'] = ViewerHideOverbudgetTasks(viewer=viewer)
-        self['hidecompositetasks'] = ViewerHideCompositeTasks(viewer=viewer)
+        self['resetfilter'] = ResetFilter(viewer=viewerContainer)
+        self['hidecompletedtasks'] = ViewerHideCompletedTasks(viewer=viewerContainer)
+        self['hideinactivetasks'] = ViewerHideInactiveTasks(viewer=viewerContainer)
+        self['hideactivetasks'] = ViewerHideActiveTasks(viewer=viewerContainer)    
+        self['hideoverduetasks'] = ViewerHideOverdueTasks(viewer=viewerContainer)    
+        self['hideoverbudgettasks'] = ViewerHideOverbudgetTasks(viewer=viewerContainer)
+        self['hidecompositetasks'] = ViewerHideCompositeTasks(viewer=viewerContainer)
         
         # Column show/hide commands
-        self.addViewColumnUICommands(viewer)    
+        self.addViewColumnUICommands(viewerContainer)    
               
-        self['viewexpandall'] = ViewExpandAll(viewer=viewer)
-        self['viewcollapseall'] = ViewCollapseAll(viewer=viewer)
-        self['viewexpandselected'] = ViewExpandSelected(viewer=viewer)
-        self['viewcollapseselected'] = ViewCollapseSelected(viewer=viewer)
+        self['viewexpandall'] = ViewExpandAll(viewer=viewerContainer)
+        self['viewcollapseall'] = ViewCollapseAll(viewer=viewerContainer)
+        self['viewexpandselected'] = ViewExpandSelected(viewer=viewerContainer)
+        self['viewcollapseselected'] = ViewCollapseSelected(viewer=viewerContainer)
                 
         self['viewsortorder'] = ViewerSortOrderCommand(menuText=_('&Ascending'),
             helpText=_('Sort ascending (checked) or descending (unchecked)'),
-            viewer=viewer)
+            viewer=viewerContainer)
         self['viewsortcasesensitive'] = ViewerSortCaseSensitive(\
-            viewer=viewer, menuText=_('Sort case sensitive'),
+            viewer=viewerContainer, menuText=_('Sort case sensitive'),
             helpText=_('When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)'))
         self['viewsortbystatusfirst'] = ViewerSortByTaskStatusFirst(\
-            viewer=viewer, menuText=_('Sort by status &first'),
+            viewer=viewerContainer, menuText=_('Sort by status &first'),
             helpText=_('Sort tasks by status (active/inactive/completed) first'))
             
         # Sort by column commands
@@ -1856,43 +1859,43 @@ class UICommands(dict, ViewColumnUICommandsMixin):
              (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalRevenue'),
              (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder')]:
             key = 'viewsortby' + value.lower()
-            self[key] = ViewerSortByCommand(viewer=viewer, value=value,
+            self[key] = ViewerSortByCommand(viewer=viewerContainer, value=value,
                 menuText=menuText, helpText=helpText)
         
         for key, menuText, helpText, viewerClass, viewerArgs, viewerKwargs, bitmap in \
             (('viewtasklistviewer', _('Task &list'), 
             _('Open a new tab with a viewer that displays tasks in a list'), 
-            gui.viewer.TaskListViewer, (taskList, self, settings), 
+            viewer.TaskListViewer, (taskList, self, settings), 
             dict(categories=categories), 'listview'),
             ('viewtasktreeviewer', _('Task &tree'),
             _('Open a new tab with a viewer that displays tasks in a tree'),
-            gui.viewer.TaskTreeListViewer, (taskList, self, settings),
+            viewer.TaskTreeListViewer, (taskList, self, settings),
             dict(categories=categories), 'treeview'),
             ('viewcategoryviewer', _('&Category'),
             _('Open a new tab with a viewer that displays categories'),
-            gui.viewer.CategoryViewer, (categories, self, settings), {},
+            viewer.CategoryViewer, (categories, self, settings), {},
             'category'),
             ('vieweffortdetailviewer', _('&Effort detail'),
             _('Open a new tab with a viewer that displays effort details'),
-            gui.viewer.EffortListViewer, (taskList, self, settings), {}, 
+            viewer.EffortListViewer, (taskList, self, settings), {}, 
             'start'),
             ('vieweffortperdayviewer', _('Effort per &day'),
             _('Open a new tab with a viewer that displays effort per day'),
-            gui.viewer.EffortPerDayViewer, (taskList, self, settings), {},
+            viewer.EffortPerDayViewer, (taskList, self, settings), {},
             'date'),
             ('vieweffortperweekviewer', _('Effort per &week'),
             _('Open a new tab with a viewer that displays effort per week'),
-            gui.viewer.EffortPerWeekViewer, (taskList, self, settings), {},
+            viewer.EffortPerWeekViewer, (taskList, self, settings), {},
             'date'),
             ('vieweffortpermonthviewer', _('Effort per &month'),
             _('Open a new tab with a viewer that displays effort per month'),
-            gui.viewer.EffortPerMonthViewer, (taskList, self, settings), {},
+            viewer.EffortPerMonthViewer, (taskList, self, settings), {},
             'date'),
             ('viewnoteviewer', _('&Note'), 
             _('Open a new tab with a viewer that displays notes'),
-            gui.viewer.NoteViewer, (notes, self, settings), 
+            viewer.NoteViewer, (notes, self, settings), 
             dict(categories=categories), 'note')):
-            self[key] = ViewViewer(viewer=viewer, menuText=menuText, 
+            self[key] = ViewViewer(viewer=viewerContainer, menuText=menuText, 
                 helpText=helpText, bitmap=bitmap, viewerClass=viewerClass,
                 viewerArgs=viewerArgs, viewerKwargs=viewerKwargs, 
                 viewerBitmap=bitmap, settings=settings)
@@ -1922,14 +1925,14 @@ class UICommands(dict, ViewColumnUICommandsMixin):
              ('Unlimited', _('&Unlimited'), _('Show all tasks'))]:
             key = 'viewdue' + value.lower()
             self[key] = ViewerFilterByDueDate(menuText=menuText,
-                                            helpText=helpText, viewer=viewer,
+                                            helpText=helpText, viewer=viewerContainer,
                                             value=value)
             
         # Generic domain object commands
-        self['new'] = NewDomainObject(viewer=viewer, taskList=taskList)
-        self['edit'] = EditDomainObject(viewer=viewer)
-        self['delete'] = DeleteDomainObject(viewer=viewer)
-        self['newsub'] = NewSubDomainObject(viewer=viewer)
+        self['new'] = NewDomainObject(viewer=viewerContainer, taskList=taskList)
+        self['edit'] = EditDomainObject(viewer=viewerContainer)
+        self['delete'] = DeleteDomainObject(viewer=viewerContainer)
+        self['newsub'] = NewSubDomainObject(viewer=viewerContainer)
         
         # Task menu
         self['newtask'] = TaskNew(mainwindow=mainwindow, taskList=taskList,
@@ -1937,49 +1940,49 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['newtaskwithselectedcategories'] = \
             NewTaskWithSelectedCategories(mainwindow=mainwindow,
                 taskList=taskList, settings=settings, uicommands=self,
-                categories=categories, viewer=viewer)
-        self['newsubtask'] = TaskNewSubTask(taskList=taskList, viewer=viewer)
-        self['edittask'] = TaskEdit(taskList=taskList, viewer=viewer)
+                categories=categories, viewer=viewerContainer)
+        self['newsubtask'] = TaskNewSubTask(taskList=taskList, viewer=viewerContainer)
+        self['edittask'] = TaskEdit(taskList=taskList, viewer=viewerContainer)
         self['toggletaskcompletion'] = TaskToggleCompletion(taskList=taskList,
-                                                            viewer=viewer)
-        self['deletetask'] = TaskDelete(taskList=taskList, viewer=viewer)
-        self['mailtask'] = TaskMail(viewer=viewer, menuText=_('Mail task'), 
+                                                            viewer=viewerContainer)
+        self['deletetask'] = TaskDelete(taskList=taskList, viewer=viewerContainer)
+        self['mailtask'] = TaskMail(viewer=viewerContainer, menuText=_('Mail task'), 
             helpText=_('Mail the task, using your default mailer'), 
             bitmap='email')
         self['addattachmenttotask'] = TaskAddAttachment(taskList=taskList,
-                                                        viewer=viewer,
+                                                        viewer=viewerContainer,
                                                         settings=settings)
-        self['openalltaskattachments'] = TaskOpenAllAttachments(viewer=viewer, settings=settings)
-        self['incpriority'] = TaskIncPriority(taskList=taskList, viewer=viewer)
-        self['decpriority'] = TaskDecPriority(taskList=taskList, viewer=viewer)
-        self['maxpriority'] = TaskMaxPriority(taskList=taskList, viewer=viewer)
-        self['minpriority'] = TaskMinPriority(taskList=taskList, viewer=viewer)
+        self['openalltaskattachments'] = TaskOpenAllAttachments(viewer=viewerContainer, settings=settings)
+        self['incpriority'] = TaskIncPriority(taskList=taskList, viewer=viewerContainer)
+        self['decpriority'] = TaskDecPriority(taskList=taskList, viewer=viewerContainer)
+        self['maxpriority'] = TaskMaxPriority(taskList=taskList, viewer=viewerContainer)
+        self['minpriority'] = TaskMinPriority(taskList=taskList, viewer=viewerContainer)
         
         # Effort menu
-        self['neweffort'] = EffortNew(viewer=viewer, effortList=effortList,
+        self['neweffort'] = EffortNew(viewer=viewerContainer, effortList=effortList,
             taskList=taskList, mainwindow=mainwindow, uicommands=self)
-        self['editeffort'] = EffortEdit(viewer=viewer, effortList=effortList)
+        self['editeffort'] = EffortEdit(viewer=viewerContainer, effortList=effortList)
         self['deleteeffort'] = EffortDelete(effortList=effortList, 
-                                            viewer=viewer)
-        self['starteffort'] = EffortStart(taskList=taskList, viewer=viewer)
+                                            viewer=viewerContainer)
+        self['starteffort'] = EffortStart(taskList=taskList, viewer=viewerContainer)
         self['stopeffort'] = EffortStop(taskList=taskList)
         
         # Category menu
         self['newcategory'] = CategoryNew(mainwindow=mainwindow, 
             categories=categories, uiCommands=self)
-        self['newsubcategory'] = CategoryNewSubCategory(viewer=viewer, 
+        self['newsubcategory'] = CategoryNewSubCategory(viewer=viewerContainer, 
             categories=categories)
-        self['deletecategory'] = CategoryDelete(viewer=viewer, 
+        self['deletecategory'] = CategoryDelete(viewer=viewerContainer, 
             categories=categories)
-        self['editcategory'] = CategoryEdit(viewer=viewer, 
+        self['editcategory'] = CategoryEdit(viewer=viewerContainer, 
             categories=categories)
         
         # Note menu
         self['newnote'] = NoteNew(mainwindow=mainwindow, notes=notes, 
                                   categories=categories)
-        self['newsubnote'] = NoteNewSubNote(viewer=viewer, notes=notes)
-        self['deletenote'] = NoteDelete(viewer=viewer, notes=notes)
-        self['editnote'] = NoteEdit(viewer=viewer, notes=notes)
+        self['newsubnote'] = NoteNewSubNote(viewer=viewerContainer, notes=notes)
+        self['deletenote'] = NoteDelete(viewer=viewerContainer, notes=notes)
+        self['editnote'] = NoteEdit(viewer=viewerContainer, notes=notes)
         
         # Help menu
         self['help'] = Help()
@@ -1991,14 +1994,14 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['restore'] = MainWindowRestore(mainwindow=mainwindow)
         
         # Toolbar specific
-        self['search'] = Search(mainwindow=mainwindow, viewer=viewer, settings=settings)
+        self['search'] = Search(mainwindow=mainwindow, viewer=viewerContainer, settings=settings)
         
         # Drag and drop related, not on any menu:
         self['draganddroptask'] = TaskDragAndDrop(taskList=taskList, 
-                                                  viewer=viewer)
-        self['draganddropcategory'] = CategoryDragAndDrop(viewer=viewer,
+                                                  viewer=viewerContainer)
+        self['draganddropcategory'] = CategoryDragAndDrop(viewer=viewerContainer,
             categories=categories)
-        self['draganddropnote'] = NoteDragAndDrop(viewer=viewer, notes=notes)
+        self['draganddropnote'] = NoteDragAndDrop(viewer=viewerContainer, notes=notes)
 
     def createRecentFileOpenUICommand(self, filename, index):
         return RecentFileOpen(filename=filename, index=index, 

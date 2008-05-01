@@ -20,7 +20,6 @@ from taskcoachlib import meta
 import sys, os, glob
 from setup import setupOptions
 from buildlib import clean, bdist_rpm_fedora
-import taskcoach # to add taskcoachlib to the searchpath
 
 
 setupOptions['cmdclass'] = dict(clean=clean,
@@ -55,7 +54,7 @@ def writeFile(filename, text, directory='.'):
     file.close()
 
 def createDocumentation():
-    import help
+    from taskcoachlib import help
     writeFile('README.txt',  help.aboutText)
     writeFile('INSTALL.txt', help.installText)
     writeFile('LICENSE.txt', meta.licenseText)

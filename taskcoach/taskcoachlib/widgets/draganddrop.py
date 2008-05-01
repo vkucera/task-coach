@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, urlparse
-from mailer import thunderbird, outlook
+from taskcoachlib.mailer import thunderbird, outlook
+
 
 class FileDropTarget(wx.FileDropTarget):
     def __init__(self, onDropCallback=None, onDragOverCallback=None):

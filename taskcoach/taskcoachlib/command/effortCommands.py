@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import effort, date
 import base
-from i18n import _
-from domain import effort, date
+
 
 class NewEffortCommand(base.BaseCommand):
     def name(self):

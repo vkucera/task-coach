@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from i18n import _
+from taskcoachlib.i18n import _
+
 
 class ButtonBox(wx.Panel):
     stockItems = {_('OK'): wx.ID_OK, _('Cancel'): wx.ID_CANCEL }

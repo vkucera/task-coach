@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from thirdparty import desktop
-from mailer import readMail, openMail
-from patterns import Observer
-from i18n import _
-
 import os, shutil, tempfile
+from taskcoachlib import patterns
+from taskcoachlib.thirdparty import desktop
+from taskcoachlib.mailer import readMail, openMail
+from taskcoachlib.i18n import _
+
 
 def getRelativePath(path, base=os.getcwd()):
     """Tries to guess the relative version of 'path' from 'base'. If
@@ -62,7 +62,7 @@ def getRelativePath(path, base=os.getcwd()):
     return os.path.join(*pth1)
 
 
-class Attachment(Observer):
+class Attachment(patterns.Observer):
     type_ = None
 
     def __init__(self, *args, **kwargs):

@@ -16,7 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, wx.aui, widgets, draganddrop
+import wx, wx.aui
+import draganddrop
+
 
 class GridCursor:
     ''' Utility class to help when adding controls to a GridBagSizer. '''

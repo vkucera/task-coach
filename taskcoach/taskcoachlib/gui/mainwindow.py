@@ -16,11 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, meta, patterns, widgets, command
-import viewer, viewercontainer, viewerfactory, help, toolbar, uicommand,\
+import wx
+from taskcoachlib import meta, patterns, widgets, command, help
+from taskcoachlib.i18n import _
+from taskcoachlib.domain import task, effort
+import viewer, viewercontainer, viewerfactory, toolbar, uicommand,\
     remindercontroller
-from i18n import _
-from domain import task, effort
+
 
 
 class WindowDimensionsTracker(object):

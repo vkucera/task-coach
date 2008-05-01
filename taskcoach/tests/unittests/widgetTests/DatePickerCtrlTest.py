@@ -16,7 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, widgets, wx
+import wx
+import test
+from taskcoachlib import widgets
+
 
 class DatePickerCtrlThatFixesAllowNoneStyleTest(test.wxTestCase):
     def setUp(self):

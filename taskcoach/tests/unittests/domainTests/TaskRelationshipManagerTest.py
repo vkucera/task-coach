@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, config
-from domain import task, date, effort
+import test
+from taskcoachlib import config
+from taskcoachlib.domain import task, date, effort
 
 
 class CommonTaskRelationshipManagerTests(object):

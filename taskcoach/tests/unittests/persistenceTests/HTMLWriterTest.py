@@ -16,9 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, persistence, StringIO, gui, config, wx, widgets
-from domain import task, category, effort, date, note
+import wx, StringIO
+import test
 from unittests import dummy
+from taskcoachlib import persistence, gui, config, widgets
+from taskcoachlib.domain import task, category, effort, date, note
+
 
 class HTMLWriterTestCase(test.wxTestCase):
     def setUp(self):

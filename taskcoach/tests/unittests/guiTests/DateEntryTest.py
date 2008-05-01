@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from gui.dialog import editor 
-from domain import date
+from taskcoachlib.gui.dialog import editor 
+from taskcoachlib.domain import date
+
 
 class DateEntryTest(test.wxTestCase):
     def setUp(self):

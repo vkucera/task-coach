@@ -18,12 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, unittest, os, time, glob, coverage
+import sys, unittest, os, time, glob, coverage, wx
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
-import taskcoach
-import wx
     
 
 class TestCase(unittest.TestCase):
@@ -35,7 +33,7 @@ class TestCase(unittest.TestCase):
     def registerObserver(self, eventType):
         if not hasattr(self, 'events'):
             self.events = []
-        import patterns
+        from taskcoachlib import patterns
         patterns.Publisher().registerObserver(self.onEvent, eventType=eventType)
         
     def onEvent(self, event):
@@ -44,7 +42,7 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         # Prevent processing of pending events after the test has finished:
         wx.GetApp().Disconnect(wx.ID_ANY) 
-        import patterns
+        from taskcoachlib import patterns
         patterns.Publisher().clear()
         patterns.CommandHistory().clear()
         patterns.NumberedInstances.count = dict()
@@ -170,7 +168,7 @@ class AllTests(unittest.TestSuite):
         return result
 
 
-import config
+from taskcoachlib import config
 class TestOptionParser(config.OptionParser):
     def __init__(self):
         super(TestOptionParser, self).__init__(usage='usage: %prog [options] [testfiles]')

@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, widgets, wx, sys
+import wx, sys
+import test
 from unittests import dummy
+from taskcoachlib import widgets
+
         
 class TreeCtrlTestCase(test.wxTestCase):
     def setTree(self, *items, **kwargs):

@@ -17,7 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import meta, sys, wx
+import sys, wx
+from taskcoachlib import meta
+
 
 defaults = { \
 'view': { \

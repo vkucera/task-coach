@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, taskcoach, os, sys, mock, wx
-from domain import task
+import os, sys, wx
+import test, mock
+from taskcoachlib.domain import task
 
 
 class LoadTest(test.TestCase):
@@ -50,5 +51,5 @@ class LoadTest(test.TestCase):
         self.mockApp.io.open("I don't exist.tsk", 
                              showerror=self.mockErrorDialog,
                              fileExists=lambda filename: False)
-        wx.Yield() # io.open uses wx.CallAfter
+        wx.GetApp().Yield() # io.open uses wx.CallAfter
         self.failUnless(self.errorDialogCalled)

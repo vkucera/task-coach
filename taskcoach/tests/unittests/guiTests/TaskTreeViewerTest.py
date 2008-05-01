@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, gui, widgets, config, TaskViewerTest
+import test, TaskViewerTest
 from unittests import dummy
-from domain import task, date, category
+from taskcoachlib import gui, widgets, config
+from taskcoachlib.domain import task, date, category
 
 
 class TaskTreeViewerTestCase(test.wxTestCase):

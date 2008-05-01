@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, test, os
-from domain import task, date, attachment, category
+import wx, os
+import test
+from taskcoachlib.domain import task, date, attachment, category
 
 
 class CommonTests(object):
@@ -37,6 +38,8 @@ class CommonTests(object):
         for name in os.listdir('.'):
             if os.path.isdir(name) and name.endswith('_attachments'):
                 os.rmdir(name)
+        if os.path.isfile('test.mail'):
+            os.remove('test.mail')
 
     def getFirstItemTextColor(self):
         raise NotImplementedError
@@ -110,7 +113,6 @@ class CommonTests(object):
         self.viewer.onDropMail(self.viewer.getIndexOfItem(aTask), 'test.mail')
         self.assertEqual([attachment.MailAttachment('test.mail')],
                          self.viewer.model()[0].attachments())
-        os.remove('test.mail')
         
     def testCategoryColor(self):
         cat = category.Category('category with color', color=self.newColor)
