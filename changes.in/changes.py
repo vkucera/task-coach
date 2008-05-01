@@ -38,7 +38,8 @@ no scrolling is needed.''', '1918678')],
         Bug('''Allow for editing seconds in effort editor.''', '1925748'),
         Bug('''Reset invalid input in the priority field of the task editor
 to 0 instead of to the minimum priority (a large negative value).''', '1949222'),
-        Bug('''Debian package now installs a menu item for Task Coach in the 
+        Bug('''Task Coach now is packaged as a proper Debian package, thanks to
+Stani Michiels. The Debian package installs a menu item for Task Coach in the 
 Applications/Office menu.''', '1792706', '1792711', '1896796')],
     dependenciesChanged=[
         Dependency('''Task Coach now uses Subversion for version control. See
