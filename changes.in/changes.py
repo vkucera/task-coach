@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.70.0', 'April ?, 2008',
+Release('0.70.0', 'May ?, 2008',
     summary='...',
     featuresAdded=[
         Feature('Paths to file attachments may be relative.'),
@@ -37,7 +37,9 @@ no scrolling is needed.''', '1918678')],
     bugsFixed=[
         Bug('''Allow for editing seconds in effort editor.''', '1925748'),
         Bug('''Reset invalid input in the priority field of the task editor
-to 0 instead of to the minimum priority (a large negative value).''', '1949222')],
+to 0 instead of to the minimum priority (a large negative value).''', '1949222'),
+        Bug('''Debian package now installs a menu item for Task Coach in the 
+Applications/Office menu.''', '1792706', '1792711', '1896796')],
     dependenciesChanged=[
         Dependency('''Task Coach now uses Subversion for version control. See
 http://sourceforge.net/svn/?group_id=130831. This only affects you if
