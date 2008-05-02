@@ -36,6 +36,10 @@ system tray icon right-click menu.''', '1934738', '1739666')],
 no scrolling is needed.''', '1918678')],
     bugsFixed=[
         Bug('''Allow for editing seconds in effort editor.''', '1925748'),
+        Bug('''The combobox in the effort detail editor always picked the 
+first task when multiple tasks had the same subject, effectively prohibiting
+the user to move an effort record to another task with the same subject.''', 
+            '1918033'),
         Bug('''Reset invalid input in the priority field of the task editor
 to 0 instead of to the minimum priority (a large negative value).''', '1949222'),
         Bug('''Task Coach now is packaged as a proper Debian package, thanks to

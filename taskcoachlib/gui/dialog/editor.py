@@ -18,14 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, datetime, os.path
-from wx.lib import masked, combotreebox
 import wx.lib.customtreectrl as customtree
 from taskcoachlib import widgets
 from taskcoachlib.gui import render, viewercontainer, viewer
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
-from taskcoachlib.thirdparty import desktop
+from taskcoachlib.thirdparty import desktop, combotreebox
 
 
 class DateEntry(widgets.PanelWithBoxSizer):
@@ -625,6 +624,51 @@ class TaskEditBook(widgets.Listbook):
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior') 
 
 
+class TaskComboTreeBox(wx.Panel):
+    ''' A ComboTreeBox with tasks. This class does not inherit from the
+        ComboTreeBox widget, because that widget is created using a 
+        factory function. '''
+    
+    def __init__(self, parent, rootTasks, selectedTask):
+        ''' Initialize the ComboTreeBox, add the root tasks recursively and 
+            set the selection. '''
+        super(TaskComboTreeBox, self).__init__(parent)
+        self._createInterior()
+        self._addTasks(rootTasks)
+        self.SetSelection(selectedTask)
+        
+    def _createInterior(self):
+        ''' Create the ComboTreebox widget. '''
+        self._comboTreeBox = combotreebox.ComboTreeBox(self, 
+            style=wx.CB_READONLY|wx.CB_SORT)
+        boxSizer = wx.BoxSizer()
+        boxSizer.Add(self._comboTreeBox, flag=wx.EXPAND, proportion=1)
+        self.SetSizerAndFit(boxSizer)
+        
+    def _addTasks(self, rootTasks):
+        ''' Add the root tasks to the ComboTreeBox, including all their 
+            subtasks. '''
+        for task in rootTasks:
+            self._addTaskRecursively(task)
+        
+    def _addTaskRecursively(self, task, parentItem=None):
+        ''' Add a task to the ComboTreeBox and then recursively add its
+            subtasks. '''
+        item = self._comboTreeBox.Append(task.subject(), parent=parentItem, 
+                                         clientData=task)
+        for child in task.children():
+            self._addTaskRecursively(child, item)
+            
+    def SetSelection(self, task):
+        ''' Select the given task. '''
+        self._comboTreeBox.SetClientDataSelection(task)
+        
+    def GetSelection(self):
+        ''' Return the selected task. '''
+        selection = self._comboTreeBox.GetSelection()
+        return self._comboTreeBox.GetClientData(selection)
+
+
 class EffortEditBook(widgets.BookPage):
     def __init__(self, parent, effort, editor, effortList, taskList, 
                  *args, **kwargs):
@@ -639,19 +683,13 @@ class EffortEditBook(widgets.BookPage):
         self.fit()
 
     def addTaskEntry(self):
-        self._taskEntry = combotreebox.ComboTreeBox(self, 
-            style=wx.CB_READONLY|wx.CB_SORT)
-
-        def addTaskRecursively(task, parentItem=None):
-            item = self._taskEntry.Append(task.subject(), 
-                parent=parentItem, clientData=task)
-            for child in task.children():
-                addTaskRecursively(child, item)
-
-        for task in self._taskList.rootItems():
-            addTaskRecursively(task)
-        self._taskEntry.SetClientDataSelection(self._effort.task())
-        self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])
+        ''' Add an entry for changing the task that this effort record
+            belongs to. '''
+        self._taskEntry = TaskComboTreeBox(self, 
+            rootTasks=self._taskList.rootItems(), 
+            selectedTask=self._effort.task())
+        self.addEntry(_('Task'), self._taskEntry, 
+                      flags=[None, wx.ALL|wx.EXPAND])
 
     def addStartAndStopEntries(self):
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
@@ -683,7 +721,7 @@ class EffortEditBook(widgets.BookPage):
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
         
     def ok(self):
-        self._effort.setTask(self._taskEntry.GetClientData(self._taskEntry.GetSelection()))
+        self._effort.setTask(self._taskEntry.GetSelection())
         self._effort.setStart(self._startEntry.GetValue())
         self._effort.setStop(self._stopEntry.GetValue())
         self._effort.setDescription(self._descriptionEntry.GetValue())
