@@ -42,6 +42,8 @@ the user to move an effort record to another task with the same subject.''',
             '1918033'),
         Bug('''Reset invalid input in the priority field of the task editor
 to 0 instead of to the minimum priority (a large negative value).''', '1949222'),
+        Bug('''"View->Filter->Reset all filters" now also unchecks all 
+categories.'''),
         Bug('''Task Coach now is packaged as a proper Debian package, thanks to
 Stani Michiels. The Debian package installs a menu item for Task Coach in the 
 Applications/Office menu.''', '1792706', '1792711', '1896796')],
