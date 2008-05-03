@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, datetime, os.path
+from wx.lib import masked
 import wx.lib.customtreectrl as customtree
 from taskcoachlib import widgets
 from taskcoachlib.gui import render, viewercontainer, viewer
@@ -636,6 +637,12 @@ class TaskComboTreeBox(wx.Panel):
         self._createInterior()
         self._addTasks(rootTasks)
         self.SetSelection(selectedTask)
+        
+    def __getattr__(self, attr):
+        ''' Delegate unknown attributes to the ComboTreeBox. This is needed
+            since we cannot inherit from ComboTreeBox, but have to use
+            delegation. '''
+        return getattr(self._comboTreeBox, attr)
         
     def _createInterior(self):
         ''' Create the ComboTreebox widget. '''
