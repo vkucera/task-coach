@@ -266,7 +266,7 @@ class ViewSortMenuTest(ViewMenuTestCase):
         self.frame.viewer = self.viewerContainer
         menu = gui.menu.SortMenu(self.frame, self.uiCommands, self.parentMenu, 
             'menu')
-        menu.updateMenuInIdleTime()
+        menu.updateMenu()
         return menu
         
     def testSortOrderAscending(self):

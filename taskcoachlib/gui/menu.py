@@ -70,29 +70,46 @@ class StaticMenu(Menu):
 
 
 class DynamicMenu(Menu):
+    ''' A menu that registers for events and then updates itself whenever the
+        event is fired. '''
     def __init__(self, mainwindow, parentMenu, labelInParentMenu):
+        ''' Initialize the menu. labelInParentMenu is needed to be able to
+            find this menu in its parentMenu. '''
         super(DynamicMenu, self).__init__(mainwindow)
         self._parentMenu = parentMenu
         self._labelInParentMenu = self.__GetLabelText(labelInParentMenu)
         self.registerForMenuUpdate()
         self.updateMenu()
-        
+         
     def registerForMenuUpdate(self):
+        ''' Subclasses are responsible for binding an event to onUpdateMenu so
+            that the menu gets a chance to update itself at the right time. '''
         raise NotImplementedError
 
-    def updateMenu(self, event=None):
-        # Rebuilding the menu may take some time, so do it in idle time
-        wx.CallAfter(self.updateMenuInIdleTime)
-
-    def updateMenuInIdleTime(self):
+    def onUpdateMenu(self, event):
+        ''' This event handler should be called at the right times so that
+            the menu has a chance to update itself. '''
+        # If this is called by wx, 'skip' the event so that other event
+        # handlers get a chance too:
+        if hasattr(event, 'Skip'):
+            event.Skip()
+        self.updateMenu()
+        
+    def updateMenu(self):
+        ''' Updating the menu consists of two steps: updating the menu item
+            of this menu in its parent menu, e.g. to enable or disable it, and
+            updating the menu items of this menu. '''
         self.updateMenuItemInParentMenu()
         self.updateMenuItems()
         
     def clearMenu(self):
+        ''' Remove all menu items. '''
         for menuItem in self.MenuItems:
             self.DestroyItem(menuItem)       
             
     def updateMenuItemInParentMenu(self):
+        ''' Enable or disable the menu item in the parent menu, depending on
+            what enabled() returns. '''
         if self._parentMenu:
             # I'd rather use wx.Menu.FindItem, but it seems that that 
             # method currently does not work for menu items with accelerators 
@@ -109,27 +126,39 @@ class DynamicMenu(Menu):
                 self._parentMenu.Enable(myId, self.enabled())
 
     def updateMenuItems(self):
+        ''' Update the menu items of this menu. '''
         pass
     
     def enabled(self):
+        ''' Return a boolean indicating whether this menu should be enabled in
+            its parent menu. This method is called by 
+            updateMenuItemInParentMenu(). It returns True by default. Override
+            in a subclass as needed.'''
         return True
     
     @staticmethod
     def __GetLabelText(menuText):
+        ''' Remove accelerators from the menuText. This is necessary because on
+            some platforms '&' is changed into '_' so menuTexts would compare
+            different even though they are really the same. '''
         return menuText.replace('&', '').replace('_', '')
 
             
 class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
     def __init__(self, mainwindow, uiCommands, parentMenu=None, 
                  labelInParentMenu=None):
-        super(DynamicMenuThatGetsUICommandsFromViewer, self).__init__(mainwindow, parentMenu, labelInParentMenu)
         self._uiCommands = uiCommands
         self._uiCommandNames = None
+        super(DynamicMenuThatGetsUICommandsFromViewer, self).__init__(\
+            mainwindow, parentMenu, labelInParentMenu)
 
     def registerForMenuUpdate(self):
-        patterns.Publisher().registerObserver(self.updateMenu, 
-            self._window.viewer.viewerChangeEventType())
-
+        # I would've liked to update the menu whenever the active viewer 
+        # changes but with the aui managed frame there is no way that I know of 
+        # to get notified when the active frame (i.e. viewer) changes. So, 
+        # we'll just have to update the menu whenever it is opened:
+        self._window.Bind(wx.EVT_MENU_OPEN, self.onUpdateMenu)
+        
     def updateMenuItems(self):
         newCommandNames = self.getUICommands()
         if newCommandNames != self._uiCommandNames:
@@ -381,7 +410,7 @@ class StartEffortForTaskMenu(DynamicMenu):
                           'task.track.start', 'task.track.stop',
                           'task.startDate', 'task.dueDate', 
                           'task.completionDate'):
-            patterns.Publisher().registerObserver(self.updateMenu, eventType)
+            patterns.Publisher().registerObserver(self.onUpdateMenu, eventType)
     
     def updateMenuItems(self):
         self.clearMenu()
