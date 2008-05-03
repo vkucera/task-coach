@@ -73,7 +73,7 @@ class FilterableViewerForNotes(FilterableViewer):
         notesContainer = super(FilterableViewerForNotes, self).createFilter(notesContainer)
         return category.filter.CategoryFilter(notesContainer, 
             categories=self.categories, treeMode=self.isTreeViewer())
-
+        
             
 class FilterableViewerForTasks(FilterableViewer):
     def createFilter(self, taskList):
@@ -156,6 +156,8 @@ class FilterableViewerForTasks(FilterableViewer):
         if not self.isTreeViewer():
             self.hideCompositeTasks(False)
         self.setFilteredByDueDate('Unlimited')
+        for category in self.categories:
+            category.setFiltered(False)
         
     def getFilterUICommands(self):
         return ['resetfilter', None, 
