@@ -22,7 +22,8 @@ import wx, uicommand
 
 class ToolBar(wx.ToolBar, uicommand.UICommandContainer):
     def __init__(self, window, uiCommands, size=(32, 32)):
-        super(ToolBar, self).__init__(window, style=wx.TB_TEXT)
+        super(ToolBar, self).__init__(window, 
+            style=wx.TB_TEXT|wx.TB_NODIVIDER|wx.TB_FLAT)
         self.SetToolBitmapSize(size) 
         self.appendUICommands(uiCommands, self.commandNames())
         self.Realize()
