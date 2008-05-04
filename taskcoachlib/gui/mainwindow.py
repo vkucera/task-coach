@@ -186,10 +186,6 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.reminderController = \
             remindercontroller.ReminderController(self.taskFile.tasks(), 
                 self.taskFile.categories(), self.settings, self.uiCommands)
-        perspective = self.settings.get('view', 'perspective')
-        if perspective:
-            self.manager.LoadPerspective(perspective)
-        self.manager.Update()
         
     def AddPage(self, page, caption, *args):
         name = page.settingsSection()
@@ -215,6 +211,10 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
         wx.CallAfter(self.onShowStatusBar) 
+        perspective = self.settings.get('view', 'perspective')
+        if perspective:
+            self.manager.LoadPerspective(perspective)
+        self.manager.Update()
                 
     def registerForWindowComponentChanges(self):
         patterns.Publisher().registerObserver(self.onFilenameChanged, 
