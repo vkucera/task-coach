@@ -315,26 +315,33 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.SendSizeEvent()
 
     def showToolBar(self, size):
-        '''
-        if self.GetToolBar():
-            self.GetToolBar().Destroy()
-        if size is not None:
-            self.SetToolBar(toolbar.ToolBar(self, self.uiCommands, size=size))
-        self.SendSizeEvent()
-        '''
-        currentToolbar = self.manager.GetPane('toolbar')
-        if currentToolbar.IsOk():
-            self.manager.DetachPane(currentToolbar.window)
-            currentToolbar.window.Destroy()
-        if size is not None:
-            bar = toolbar.ToolBar(self, self.uiCommands, size=size)
-            self.manager.AddPane(bar, wx.aui.AuiPaneInfo().Name('toolbar').
-                                 Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
-                                 LeftDockable(False).RightDockable(False))
-            self.Bind(self.pageClosedEvent, self.onCloseToolBar)
+        # Current version of wxPython (2.7.8.1) has a bug 
+        # (https://sourceforge.net/tracker/?func=detail&atid=109863&aid=1742682&group_id=9863)
+        # that makes adding controls to a toolbar not working. Also, when the 
+        # toolbar is visible it's nearly impossible to enter text into text
+        # controls. Immediately after you click on a text control the focus
+        # is removed. We work around it by not having AUI manage the toolbar
+        # on Mac OS X:
+        if '__WXMAC__' in wx.PlatformInfo:
+            if self.GetToolBar():
+                self.GetToolBar().Destroy()
+            if size is not None:
+                self.SetToolBar(toolbar.ToolBar(self, self.uiCommands, size=size))
+            self.SendSizeEvent()
         else:
-            self.Unbind(self.pageClosedEvent)
-        self.manager.Update()
+            currentToolbar = self.manager.GetPane('toolbar')
+            if currentToolbar.IsOk():
+                self.manager.DetachPane(currentToolbar.window)
+                currentToolbar.window.Destroy()
+            if size is None:
+                self.Unbind(self.pageClosedEvent)
+            else:
+                bar = toolbar.ToolBar(self, self.uiCommands, size=size)
+                self.manager.AddPane(bar, wx.aui.AuiPaneInfo().Name('toolbar').
+                                     Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
+                                     LeftDockable(False).RightDockable(False))
+                self.Bind(self.pageClosedEvent, self.onCloseToolBar)
+            self.manager.Update()
 
     def onCloseToolBar(self, event):
         if event.GetPane().IsToolbar():
