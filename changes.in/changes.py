@@ -27,7 +27,7 @@ Release('0.70.0', 'May ?, 2008',
     summary='...',
     featuresAdded=[
         Feature('Paths to file attachments may be relative.'),
-        Feature('Monthly and yearly recurrence of tasks.', '1933222'),
+        Feature('Monthly and yearly recurrence of tasks.', '1933222', '1957687'),
         Feature('Added and reorganized keyboard short cuts.', '1857101'),
         Feature('''Start tracking effort for any active task using the 
 system tray icon right-click menu.''', '1934738', '1739666')],
