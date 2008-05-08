@@ -50,7 +50,7 @@ download = url + 'download.html'
 dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
 copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)
 license = 'GNU General Public License version 3 or any later version'
-license_abbrev = 'GPLv3'
+license_abbrev = 'GPLv3+'
 license_notice = '''Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
