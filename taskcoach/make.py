@@ -111,7 +111,6 @@ if __name__ == '__main__':
     for directory in builddir, distdir:
         if not os.path.exists(directory):
             os.mkdir(directory)
-    createInnoSetupScript()
     createDocumentation()
     setup(**setupOptions)
     if sys.argv[1] == 'py2exe':
