@@ -45,7 +45,7 @@ setupOptions = {
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: GNU General Public License (GPL)',
-        'Natural Language :: English',
+        'Natural Language :: English', # FIXME: get languages from meta data
         'Natural Language :: Dutch',
         'Natural Language :: French',
         'Natural Language :: German',

@@ -78,10 +78,10 @@ if sys.argv[1] == 'py2exe':
             'icon_resources': [(1, 'icons.in/taskcoach.ico')]}],
         'options' : {'py2exe' : {
             'compressed' : 1, 
-            'includes' : ['xml.dom.minidom', 'gui.dialog.editor'],
-            'excludes' : ['taskcoachlib'],
             'optimize' : 2, 
-            'packages' : ['i18n'],
+            # We need to explicitly include i18n because its 
+            # contents are imported implicitly via __import__:
+            'packages' : ['taskcoachlib.i18n'], 
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}},
         'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL'])]})
  
