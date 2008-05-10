@@ -1,9 +1,13 @@
-#Sat Feb 02 23:46:14 CET 2008
+#Sat May 10 22:36:37 CEST 2008
 eclipse.preferences.version=1
 encoding//build/lib/taskcoachlib/i18n/de.py=UTF-8
 encoding//changes.in/changes.py=UTF-8
+encoding//i18n.in/el.po=UTF-8
+encoding//i18n.in/fa.po=UTF-8
+encoding//i18n.in/fi.po=UTF-8
 encoding//i18n.in/he.po=UTF-8
 encoding//i18n.in/po2dict.py=iso-8859-1
+encoding//i18n.in/th.po=UTF-8
 encoding//i18n.in/zh_TW.po=UTF-8
 encoding//taskcoachlib/domain/base/object.py=UTF-8
 encoding//taskcoachlib/gui/dialog/preferences.py=UTF-8
