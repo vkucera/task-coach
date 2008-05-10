@@ -28,7 +28,7 @@ class MockWxApp(object):
         pass
 
     
-class App(application.App):
+class App(application.Application):
     def __init__(self, args=None):
         self._options = None
         self._args = args or []
@@ -39,8 +39,8 @@ class App(application.App):
         super(App, self).init(loadSettings=False, loadTaskFile=False)
 
     def addTasks(self):
-        self.parent = task.Task()
-        self.child = task.Task()
+        self.parent = task.Task('Parent')
+        self.child = task.Task('Child')
         self.parent.addChild(self.child)
         self.taskFile.tasks().extend([self.parent])
 
