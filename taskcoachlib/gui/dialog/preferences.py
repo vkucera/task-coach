@@ -143,9 +143,11 @@ class LanguagePage(SettingsPage):
              ('nl_NL', 'Nederlands (Dutch)'),
              ('en_GB', 'English (UK)'),
              ('en_US', 'English (US)'), 
+             ('fi_FI', 'Suomi (Finnish)'),
              ('fr_FR', u'Français (French)'),
              ('gl_ES', 'Galego (Galician)'),
              ('de_DE', 'Deutsch (German)'),
+             ('el_GR', u'ελληνικά (Greek)'),
              ('he_IL', u'עברית (Hebrew)'),
              ('hu_HU', 'Magyar (Hungarian)'),
              ('it_IT', 'Italiano (Italian)'),
@@ -153,6 +155,7 @@ class LanguagePage(SettingsPage):
              ('ko_KO', u'한국어/조선말 (Korean)'),
              ('lv_LV', u'Latviešu (Latvian)'),
              ('nb_NO', u'Bokmål (Norwegian Bokmal)'),
+             ('fa_IR', u'فارسی (Persian)'),
              ('pl_PL', u'Język polski (Polish)'),
              ('pt_PT', u'Português (Portuguese)'),
              ('ro_RO', u'Română (Romanian)'),
@@ -160,7 +163,9 @@ class LanguagePage(SettingsPage):
              ('sk_SK', u'Slovenčina (Slovak)'),
              ('es_ES', u'Español (Spanish)'),
              ('sv_SE', 'Svenska (Swedish)'),
-             ('tr_TR', u'Türkçe (Turkish)')],
+             ('th_TH', u'ภาษาไทย (Thai)'),
+             ('tr_TR', u'Türkçe (Turkish)'),
+             ('uk_UA', u'украї́нська мо́ва (Ukranian)')],
              _('This setting will take effect after you restart %s')%meta.name)
         
         panel = wx.Panel(self)

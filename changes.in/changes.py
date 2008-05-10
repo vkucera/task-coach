@@ -30,7 +30,9 @@ Release('0.70.0', 'May ?, 2008',
         Feature('Monthly and yearly recurrence of tasks.', '1933222', '1957687'),
         Feature('Added and reorganized keyboard short cuts.', '1857101'),
         Feature('''Start tracking effort for any active task using the 
-system tray icon right-click menu.''', '1934738', '1739666')],
+system tray icon right-click menu.''', '1934738', '1739666'),
+        Feature('''Added a largely complete Ukranian translation thanks to
+Vitovt and incomplete Finnish, Greek, Persian and Thai translations.''')],
     featuresChanged=[
         Feature('''Slightly higher preference window so all icons fit and
 no scrolling is needed.''', '1918678')],

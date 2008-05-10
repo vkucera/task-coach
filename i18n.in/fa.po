@@ -1,378 +1,93 @@
-# Breton translation for taskcoach
-# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# Persian translation for taskcoach
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the taskcoach package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-03-27 20:39+0000\n"
-"PO-Revision-Date: 2008-03-27 21:36+0000\n"
-"Last-Translator: Ronan Le Déroff <rldmv@laposte.net>\n"
-"Language-Team: Breton <br@li.org>\n"
+"PO-Revision-Date: 2008-03-29 07:15+0000\n"
+"Last-Translator: Artin <Unknown>\n"
+"Language-Team: Persian <fa@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2008-05-10 17:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#~ msgid "Show tasks that match"
-#~ msgstr "Diskwel ar gefridioù a glot"
-
-#~ msgid "any of the above selected categories"
-#~ msgstr "nep eus ar rummadoù diuzet a-us"
-
-#~ msgid "all of the above selected categories"
-#~ msgstr "an holl eus ar rummadoù diuzet a-us"
-
-#~ msgid "English (US)"
-#~ msgstr "Saozneg (Stadoù-Unanet Amerika)"
-
-#~ msgid "English (UK)"
-#~ msgstr "Saozneg (Rouantelezh-Unanet)"
-
-#~ msgid "German"
-#~ msgstr "Alamaneg"
-
-#~ msgid "Dutch"
-#~ msgstr "Nederlandeg"
-
-#~ msgid "French"
-#~ msgstr "Galleg"
-
-#~ msgid "Simplified Chinese"
-#~ msgstr "Sinaeg eeunaet"
-
-#~ msgid "Russian"
-#~ msgstr "Rusianeg"
-
-#~ msgid "Spanish"
-#~ msgstr "Spagnoleg"
-
-#~ msgid "Hungarian"
-#~ msgstr "Hungareg"
-
-#~ msgid "Type search string (a regular expression) here and press enter"
-#~ msgstr ""
-#~ "Bizskrivit amañ an hedad klask (un troienn reolataet) ha gwaskit Enankañ"
-
-#~ msgid "Clear"
-#~ msgstr "Goullonderiñ"
-
-#~ msgid "%s files (*.tsk)|*.tsk|XML files (*.xml)|*.xml|All files (*.*)|*"
-#~ msgstr ""
-#~ "Restroù %s (*.tsk)|*.tsk|Restroù XML (*.xml)|*.xml|An holl restroù (*.*)|*"
-
-#~ msgid "File error"
-#~ msgstr "Fazi restr"
-
-#~ msgid "Tas&ks that are"
-#~ msgstr "Ar c'hefridioù a zo"
-
-#~ msgid "Tasks &due before end of"
-#~ msgstr "Kefridioù &dleet a-raok penn ar"
-
-#~ msgid "Task &columns"
-#~ msgstr "&Bannoù kefridi"
-
-#~ msgid "Effort &columns"
-#~ msgstr "&Bannoù striv"
-
-#~ msgid "Task &list options"
-#~ msgstr "Dibarzhioù &roll ar c'hefridioù"
-
-#~ msgid "Task &tree options"
-#~ msgstr "Dibarzhioù &gwezenn ar c'hefridioù"
-
-#~ msgid "No tasks due today"
-#~ msgstr "Kefridioù dleet ebet hiziv"
-
-#~ msgid "One task due today"
-#~ msgstr "Ur gefridi dleet hiziv"
-
-#~ msgid "Export as &iCalendar..."
-#~ msgstr "Ezporzhiañ evel &iCalendar..."
-
-#~ msgid "Export the current file in iCalendar (*.ics) format"
-#~ msgstr "Ezporzhiañ ar restr red er furmad iCalendar (*.ics)"
-
-#~ msgid "P&aste into task"
-#~ msgstr "&Pegañ er gefridi"
-
-#~ msgid "&All tasks"
-#~ msgstr "An &holl gefridioù"
-
-#~ msgid "Show all tasks (reset all filters)"
-#~ msgstr "Diskwel an holl gefridioù (adkorañ an holl siloù)"
-
-#~ msgid "Tasks by catego&ries..."
-#~ msgstr "Kefridioù dre &rummadoù..."
-
-#~ msgid "Show/hide tasks by category"
-#~ msgstr "diskwel/Kuzhat ar gefridioù dre rummad"
-
-#~ msgid "View categories"
-#~ msgstr "Diskwel ar rummadoù"
-
-#~ msgid "Expand all tasks with subtasks"
-#~ msgstr "Digeriñ gwezenn an holl gefridioù a zo iskefridioù enno"
-
-#~ msgid "Expand the selected task(s)"
-#~ msgstr "Digeriñ gwezenn ar g(c'h)efridi(où) diuzet"
-
-#~ msgid "Collapse all tasks with subtasks"
-#~ msgstr "Serriñ gwezenn an holl gefridioù hag an o iskefridioù"
-
-#~ msgid "Collapse the selected tasks with subtasks"
-#~ msgstr "Serriñ gwezenn ar gefridioù diuzet hag o iskefridioù"
-
-#~ msgid "&Mark completed\tCtrl+ENTER"
-#~ msgstr "&Merkañ evel peurechu\tCtrl+Enankañ"
-
-#~ msgid "Tasks &with subtasks"
-#~ msgstr "Kefridioù gant iskefridioù"
-
-#~ msgid "Show/hide last modification time column"
-#~ msgstr "Diskwel/Kuzhat bann ar c'houlzioù kemm diwezhañ"
-
-#~ msgid "Last modification time"
-#~ msgstr "Koulz kemm diwezhañ"
-
-#~ msgid ""
-#~ "Show/hide overall last modification time column (overall last modification "
-#~ "time is the most recent modification time of a task and all it subtasks"
-#~ msgstr ""
-#~ "Diskwel/Kuzhat bann ar c'houlzioù kemm diwezhañ pennañ (ar c'houlz kemm "
-#~ "diwezhañ pennañ eo koulz kemm nevesañ ur gefridi hag he holl iskefridioù)"
-
-#~ msgid "Overall last modification time"
-#~ msgstr "Koulz kemm diwezhañ pennañ"
-
-#~ msgid "Show/hide total time spent column"
-#~ msgstr "Diskwel/Kuzhat ar bann hollad an amzer implijet"
-
-#~ msgid "To&tal revenue"
-#~ msgstr "&Hollad ar gounidoù"
-
-#~ msgid "Sort tasks ascending (checked) or descending (unchecked)"
-#~ msgstr ""
-#~ "Rummañ ar c'hefridioù dre sevel (gwiriekaet) pe dre ziskenn (diwiriekaet)"
-
-#~ msgid "Sort tasks by subject"
-#~ msgstr "Rummañ ar gefridioù dre zanvez"
-
-#~ msgid "&Days left"
-#~ msgstr "&Devezhioù a chom"
-
-#~ msgid "Sort tasks by last modification time"
-#~ msgstr "Rummañ ar c'hefridioù dre goulz kemm diwezhañ"
-
-#~ msgid "Sort tasks by overall last modification time"
-#~ msgstr "Rummañ ar c'hefridioù dre goulz kemm diwezhañ pennañ"
-
-#~ msgid "Effort list"
-#~ msgstr "Roll ar strivoù"
-
-#~ msgid ""
-#~ "<h3>Table of contents</h3>\n"
-#~ "<ul>\n"
-#~ "<li><a href=\"#tasks\">Tasks</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouttasks\">About tasks</a></li>\n"
-#~ "        <li><a href=\"#taskproperties\">Task properties</a></li>\n"
-#~ "        <li><a href=\"#taskstates\">Task states</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#effort\">Effort</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouteffort\">About effort</a></li>\n"
-#~ "        <li><a href=\"#effortproperties\">Effort properties</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "</ul>\n"
-#~ msgstr ""
-#~ "<h3>Tolenn an danvezioù</h3>\n"
-#~ "<ul>\n"
-#~ "<li><a href=\"#tasks\">Kefridioù</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouttasks\">Diwar-benn ar c'hefridioù</a></li>\n"
-#~ "        <li><a href=\"#taskproperties\">Perzhioù ar c'hefridioù</a></li>\n"
-#~ "        <li><a href=\"#taskstates\">Stadoù ar c'hefridioù</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#effort\">Striv</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouteffort\">Diwar-benn striv</a></li>\n"
-#~ "        <li><a href=\"#effortproperties\">Perzhioù ar striv</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "</ul>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskcolors\">Task colors</a></h4>\n"
-#~ "\n"
-#~ "<p>Tasks are colored according to the following rules:\n"
-#~ "<ul>\n"
-#~ "<li>Over due tasks are red;</li>\n"
-#~ "<li>Tasks due today are orange;</li>\n"
-#~ "<li>Active tasks are black text with a blue icon;</li>\n"
-#~ "<li>Future tasks are gray, and</li>\n"
-#~ "<li>Completed tasks are green.</li>\n"
-#~ "</ul>\n"
-#~ "This all assumes you have not changed the text colors through the "
-#~ "preferences \n"
-#~ "dialog, of course.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"taskcolors\">Livioù ar c'hefridioù</a></h4>\n"
-#~ "\n"
-#~ "<p>Livet e vez ar c'hefridioù hervez ar reizhoù da heul:\n"
-#~ "<ul>\n"
-#~ "<li>Ruz e vez ar c'hefridioù dreist an termen;</li>\n"
-#~ "<li>Orañjez e vez ar c'hefridioù dleet hiziv;</li>\n"
-#~ "<li>Du e vez skrid ar c'hefridioù vev gant un arlun glaz;</li>\n"
-#~ "<li>Louet e vez ar c'hefridioù en dazont, ha</li>\n"
-#~ "<li>Gwer e vez ar c'hefridioù peurechu.</li>\n"
-#~ "</ul>\n"
-#~ "An traoù-se a empleg n'ho pefe ket kemmet al livioù skrid dre brenestr ar\n"
-#~ "penndibaboù, evel just.</p>\n"
-
-#~ msgid ""
-#~ "You can drag and drop tasks in the tree view to rearrange parent-child "
-#~ "relationships between tasks."
-#~ msgstr ""
-#~ "Gallout a rit riklañ-dilec'hiañ er gwel gwezenn evit adkempenn al liammoù "
-#~ "kar-bugel etre ar c'hefridioù."
-
-#~ msgid "Type a search string (a regular expression) and press enter."
-#~ msgstr "Bizskrivit un hedad klask (un droienn reolataet) ha gwaskit enankañ"
-
-#~ msgid "Active tasks"
-#~ msgstr "Kefridioù bev"
-
-#~ msgid "Inactive tasks"
-#~ msgstr "Kefridioù marv"
-
-#~ msgid "Completed tasks"
-#~ msgstr "Kefridioù peurechu"
-
-#~ msgid "Over due tasks"
-#~ msgstr "Kefridioù dreist an termen"
-
-#~ msgid "Over budget tasks"
-#~ msgstr "Kefridioù a-us d'ar budjed"
-
-#~ msgid ""
-#~ "Show tasks that belong to the categories selected below. Unselect all "
-#~ "categories to reset the filter."
-#~ msgstr ""
-#~ "Diskwel ar c'hefridioù a zo d'ar rummadoù diuzet a-is. Diziuzit an holl "
-#~ "rummadoù evit adderaouiñ ar sil."
-
-#~ msgid "Show tasks due before"
-#~ msgstr "Diskwel ar c'hefridioù dleet a-raok"
-
-#~ msgid "Wo&rkweek"
-#~ msgstr "&Sizhunvezhiad labour"
-
-#~ msgid "Filter by subject"
-#~ msgstr "Silañ dre zanvez"
-
-#~ msgid "Filter by category"
-#~ msgstr "Silañ dre rummad"
-
-#~ msgid "Filter by status"
-#~ msgstr "Silañ dre stad"
-
-#~ msgid "Filter by due date"
-#~ msgstr "Silañ dre zeiziad dleet"
-
-#~ msgid "&Expand all tasks\tShift+Ctrl+E"
-#~ msgstr "&Digeriñ gwezenn an holl gefridioù\tPennlizherenn+Reol+E"
-
-#~ msgid "&Collapse all tasks\tShift+Ctrl+C"
-#~ msgstr "&Seriñ gwezenn an holl gefridioù\tPennlizherenn+Reol+C"
-
-#~ msgid "&Filter sidebar"
-#~ msgstr "Barren gostez silañ"
-
-#~ msgid "Show/hide filter sidebar"
-#~ msgstr "Diskwel/Kuzhat ar varenn gostez silañ"
-
-#~ msgid "Japanese"
-#~ msgstr "Japaneg"
-
 #: taskcoachlib/command/base.py:92
 msgid "Copy"
-msgstr "Eilañ"
+msgstr "نسخه‌برداری"
 
 #: taskcoachlib/command/base.py:107
 msgid "Delete"
-msgstr "Dilemel"
+msgstr "حذف"
 
 #: taskcoachlib/command/base.py:121
 msgid "Cut"
-msgstr "Troc'hañ"
+msgstr "برش"
 
 #: taskcoachlib/command/base.py:147
 msgid "Paste"
-msgstr "Pegañ"
+msgstr "چسباندن"
 
 #: taskcoachlib/command/base.py:208
 msgid "Drag and drop"
-msgstr "Riklañ-dilec'hiañ"
+msgstr ""
 
 #: taskcoachlib/command/categoryCommands.py:7
 #: taskcoachlib/command/categoryCommands.py:14
 msgid "New category"
-msgstr "Rummad nevez"
+msgstr "دسته‌ی جدید"
 
 #: taskcoachlib/command/categoryCommands.py:28
 #: taskcoachlib/command/categoryCommands.py:31
 msgid "New subcategory"
-msgstr "Isrummad nevez"
+msgstr ""
 
 #: taskcoachlib/command/categoryCommands.py:36
 msgid "Edit category"
-msgstr "Aozañ ar rummad"
+msgstr "ویرایش دسته"
 
 #: taskcoachlib/command/categoryCommands.py:44
 msgid "Drag and drop category"
-msgstr "Riklañ-dilec'hiañ ar rummad"
+msgstr ""
 
 #: taskcoachlib/command/effortCommands.py:7
 msgid "New effort"
-msgstr "Striv nevez"
+msgstr ""
 
 #: taskcoachlib/command/effortCommands.py:27
 msgid "Edit effort"
-msgstr "Aozañ ar striv"
+msgstr ""
 
 #: taskcoachlib/command/noteCommands.py:7
 #: taskcoachlib/command/noteCommands.py:15
 msgid "New note"
-msgstr "Notenn nevez"
+msgstr "یادداشتِ جدید"
 
 #: taskcoachlib/command/noteCommands.py:29
 #: taskcoachlib/command/noteCommands.py:32
 msgid "New subnote"
-msgstr "Isnotenn nevez"
+msgstr ""
 
 #: taskcoachlib/command/noteCommands.py:37
 msgid "Edit note"
-msgstr "Aozañ an notenn"
+msgstr "ویرایش یادداشت"
 
 #: taskcoachlib/command/noteCommands.py:45
 msgid "Drag and drop note"
-msgstr "Riklañ-dilec'hiañ an notenn"
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:12
 msgid "Paste into task"
-msgstr "Pegañ er gefridi"
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:26
 msgid "Drag and drop task"
-msgstr "Riklañ-dilec'hiañ ar gefridi"
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:31
 msgid "Delete task"
@@ -381,33 +96,33 @@ msgstr ""
 #: taskcoachlib/command/taskCommands.py:36
 #: taskcoachlib/command/taskCommands.py:39
 msgid "New task"
-msgstr "Kefridi nevez"
+msgstr "تکلیف جدید"
 
 #: taskcoachlib/command/taskCommands.py:59
 #: taskcoachlib/command/taskCommands.py:63
 msgid "New subtask"
-msgstr "Iskefridi nevez"
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:85
 msgid "Edit task"
-msgstr "Aozañ ar gefridi"
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:118
 #: taskcoachlib/gui/dialog/editor.py:432 taskcoachlib/widgets/dialog.py:126
 msgid "Add attachment"
-msgstr "Ouzhpennañ ar restr stag"
+msgstr "افزودن ضمیمه"
 
 #: taskcoachlib/command/taskCommands.py:167
 msgid "Mark completed"
-msgstr "Merkañ evel peurechu"
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:183
 msgid "Start tracking"
-msgstr "Loc'añ an heuliañ"
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:208
 msgid "Stop tracking"
-msgstr "Paouez an heuliañ"
+msgstr ""
 
 #: taskcoachlib/command/taskCommands.py:248
 msgid "Maximize priority"
@@ -430,140 +145,138 @@ msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
 msgstr ""
-"Fazi oc'h enrollañ %s.ini:\n"
-"%s\n"
 
 #: taskcoachlib/config/settings.py:122
 msgid "Save error"
-msgstr "Fazi enrollañ"
+msgstr "ذخیره‌ کردن خطا"
 
 #: taskcoachlib/domain/category/categorycontainer.py:5
 msgid "New category..."
-msgstr "Rummad nevez..."
+msgstr "دسته‌ی جدید..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:6
 msgid "Insert a new category"
-msgstr "Enlakaat ur rummad nevez"
+msgstr ""
 
 #: taskcoachlib/domain/category/categorycontainer.py:7
 msgid "Edit category..."
-msgstr "Aozañ ar rummad..."
+msgstr "ویرایش بخش..."
 
 #: taskcoachlib/domain/category/categorycontainer.py:8
 msgid "Edit the selected categories"
-msgstr "Aozañ ar rummadoù diuzet"
+msgstr ""
 
 #: taskcoachlib/domain/category/categorycontainer.py:9
 msgid "Delete category"
-msgstr "Dilemel ar rummad"
+msgstr "حذف بخش"
 
 #: taskcoachlib/domain/category/categorycontainer.py:10
 msgid "Delete the selected categories"
-msgstr "Dilemel ar rummadoù diuzet"
+msgstr ""
 
 #: taskcoachlib/domain/category/categorycontainer.py:11
 msgid "New subcategory..."
-msgstr "Isrummad nevez..."
+msgstr ""
 
 #: taskcoachlib/domain/category/categorycontainer.py:12
 msgid "Insert a new subcategory"
-msgstr "Enlakaat un isrummad nevez"
+msgstr ""
 
 #: taskcoachlib/domain/effort/effortlist.py:14
 msgid "&New effort..."
-msgstr "Striv &nevez..."
+msgstr ""
 
 #: taskcoachlib/domain/effort/effortlist.py:15
 msgid "Add an effort period to the selected task(s)"
-msgstr "Ouzhpennañ ur mare striv d'ar g(c'h)efridi(où) diuzet"
+msgstr ""
 
 #: taskcoachlib/domain/effort/effortlist.py:16
 msgid "&Edit effort..."
-msgstr "&Aozañ ar striv..."
+msgstr ""
 
 #: taskcoachlib/domain/effort/effortlist.py:17
 msgid "Edit the selected effort period(s)"
-msgstr "Aozañ ar mare(où) striv diuzet"
+msgstr ""
 
 #: taskcoachlib/domain/effort/effortlist.py:18
 msgid "&Delete effort"
-msgstr "&Dilemel ar striv"
+msgstr ""
 
 #: taskcoachlib/domain/effort/effortlist.py:19
 msgid "Delete the selected effort period(s)"
-msgstr "Dilemel ar mare(où) striv diuzet"
+msgstr ""
 
 #: taskcoachlib/domain/note/notecontainer.py:5
 msgid "New note..."
-msgstr "Notenn nevez..."
+msgstr ""
 
 #: taskcoachlib/domain/note/notecontainer.py:6
 msgid "Insert a new note"
-msgstr "Enlakaat un notenn nevez"
+msgstr ""
 
 #: taskcoachlib/domain/note/notecontainer.py:7
 msgid "Edit note..."
-msgstr "Aozañ an notenn..."
+msgstr ""
 
 #: taskcoachlib/domain/note/notecontainer.py:8
 msgid "Edit the selected notes"
-msgstr "Aozañ an notennoù diuzet"
+msgstr ""
 
 #: taskcoachlib/domain/note/notecontainer.py:9
 msgid "Delete note"
-msgstr "Dilemel an notenn"
+msgstr ""
 
 #: taskcoachlib/domain/note/notecontainer.py:10
 msgid "Delete the selected notes"
-msgstr "Dilemel an notennoù diuzet"
+msgstr ""
 
 #: taskcoachlib/domain/note/notecontainer.py:11
 msgid "New subnote..."
-msgstr "Isnotenn nevez..."
+msgstr ""
 
 #: taskcoachlib/domain/note/notecontainer.py:12
 msgid "Insert a new subnote"
-msgstr "Enlakaat un isnotenn nevez"
+msgstr ""
 
 #: taskcoachlib/domain/task/tasklist.py:11
 msgid "&New task..."
-msgstr "&Kefridi nevez..."
+msgstr ""
 
 #: taskcoachlib/domain/task/tasklist.py:20
 msgid "New &subtask..."
-msgstr "&Iskefridi nevez..."
+msgstr ""
 
 #: taskcoachlib/domain/task/tasklist.py:31
 msgid "Insert a new task"
-msgstr "Enlakaat ur gefridi nevez"
+msgstr "درچ یک تکلیف جدید"
 
 #: taskcoachlib/domain/task/tasklist.py:32
 msgid "&Edit task..."
-msgstr "&Aozañ ar gefridi..."
+msgstr ""
 
 #: taskcoachlib/domain/task/tasklist.py:33
 msgid "Edit the selected task"
-msgstr "Aozañ ar gefridi diuzet"
+msgstr ""
 
 #: taskcoachlib/domain/task/tasklist.py:34
 msgid "&Delete task\tCtrl+DEL"
-msgstr "&Dilemel ar gefridi\tCtrl+DEL"
+msgstr ""
 
 #: taskcoachlib/domain/task/tasklist.py:35
 msgid "Delete the selected task(s)"
-msgstr "Dilemel ar gefridi(où) diuzet"
+msgstr ""
 
 #: taskcoachlib/domain/task/tasklist.py:37
 msgid "Insert a new subtask into the selected task"
-msgstr "Enlakaat un iskefridi nevez er gefridi diuzet"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:86
 msgid "For this task"
-msgstr "Evit ar gefridi-mañ"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:88
 msgid "For this task including all subtasks"
-msgstr "Evit ar gefridi-mañ hag an holl iskefridioù enni"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:101 taskcoachlib/gui/dialog/editor.py:105
 #: taskcoachlib/gui/dialog/editor.py:567 taskcoachlib/gui/dialog/editor.py:633
@@ -571,56 +284,56 @@ msgstr "Evit ar gefridi-mañ hag an holl iskefridioù enni"
 #: taskcoachlib/gui/dialog/editor.py:776 taskcoachlib/gui/viewer.py:983
 #: taskcoachlib/gui/viewer.py:1335 taskcoachlib/gui/viewer.py:1493
 msgid "Description"
-msgstr "Deskrivadur"
+msgstr "شرح"
 
 #: taskcoachlib/gui/dialog/editor.py:102 taskcoachlib/gui/dialog/editor.py:667
 #: taskcoachlib/gui/dialog/editor.py:706 taskcoachlib/gui/viewer.py:355
 #: taskcoachlib/gui/viewer.py:975 taskcoachlib/gui/viewer.py:1334
 msgid "Subject"
-msgstr "Danvez"
+msgstr "موضوع‌"
 
 #: taskcoachlib/gui/dialog/editor.py:109 taskcoachlib/gui/dialog/editor.py:110
 #: taskcoachlib/gui/viewer.py:1025
 msgid "Priority"
-msgstr "Renk"
+msgstr "اولویت"
 
 #: taskcoachlib/gui/dialog/editor.py:140 taskcoachlib/gui/dialog/editor.py:568
 msgid "Dates"
-msgstr "Deiziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:142 taskcoachlib/gui/viewer.py:1014
 msgid "Start date"
-msgstr "Deiziad loc'hañ"
+msgstr "تاریخ شروع"
 
 #: taskcoachlib/gui/dialog/editor.py:143 taskcoachlib/gui/viewer.py:1015
 msgid "Due date"
-msgstr "Deiziad dleet"
+msgstr "تاریخ مقرر"
 
 #: taskcoachlib/gui/dialog/editor.py:144 taskcoachlib/gui/viewer.py:1017
 msgid "Completion date"
-msgstr "Deiziad ar peurechuiñ"
+msgstr "تاریخ انجام"
 
 #: taskcoachlib/gui/dialog/editor.py:158 taskcoachlib/gui/dialog/editor.py:160
 #: taskcoachlib/gui/dialog/reminder.py:16 taskcoachlib/gui/viewer.py:1032
 msgid "Reminder"
-msgstr "Dalc'her-soñjoù"
+msgstr "یادآوری"
 
 #: taskcoachlib/gui/dialog/editor.py:170 taskcoachlib/gui/dialog/editor.py:171
 #: taskcoachlib/gui/viewer.py:1018
 msgid "Recurrence"
-msgstr ""
+msgstr "تکرار"
 
 #: taskcoachlib/gui/dialog/editor.py:173 taskcoachlib/gui/dialog/editor.py:202
 msgid "None"
-msgstr ""
+msgstr "هیچ‌کدام"
 
 #: taskcoachlib/gui/dialog/editor.py:173 taskcoachlib/gui/render.py:37
 msgid "Weekly"
-msgstr ""
+msgstr "هفتگی‌"
 
 #: taskcoachlib/gui/dialog/editor.py:173 taskcoachlib/gui/render.py:38
 msgid "Daily"
-msgstr ""
+msgstr "روزانه‌"
 
 #: taskcoachlib/gui/dialog/editor.py:176
 msgid "Maximum number of recurrences"
@@ -629,130 +342,130 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:272 taskcoachlib/gui/dialog/editor.py:290
 #: taskcoachlib/gui/dialog/editor.py:571 taskcoachlib/gui/viewer.py:1019
 msgid "Budget"
-msgstr "Budjed"
+msgstr "بودجه"
 
 #: taskcoachlib/gui/dialog/editor.py:273 taskcoachlib/gui/dialog/editor.py:298
 #: taskcoachlib/gui/viewer.py:1030 taskcoachlib/gui/viewer.py:1500
 msgid "Revenue"
-msgstr "Gounid"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:291 taskcoachlib/gui/viewer.py:1021
 #: taskcoachlib/gui/viewer.py:1498
 msgid "Time spent"
-msgstr "Amzer implijet"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:292 taskcoachlib/gui/viewer.py:1023
 msgid "Budget left"
-msgstr "Budjed hegerz"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:296 taskcoachlib/gui/viewer.py:1027
 msgid "Hourly fee"
-msgstr "Treziad dre eurvezh"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:297 taskcoachlib/gui/viewer.py:1028
 msgid "Fixed fee"
-msgstr "Treziad"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:336 taskcoachlib/gui/viewer.py:1462
 msgid "Effort details"
-msgstr "Munudoù ar striv"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:340 taskcoachlib/gui/viewer.py:1558
 msgid "Effort per day"
-msgstr "Striv dre zeiz"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:345 taskcoachlib/gui/viewer.py:1570
 msgid "Effort per week"
-msgstr "Striv dre sizhun"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:350 taskcoachlib/gui/viewer.py:1582
 msgid "Effort per month"
-msgstr "Striv dre viz"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:357 taskcoachlib/gui/dialog/editor.py:569
 #: taskcoachlib/gui/dialog/editor.py:725 taskcoachlib/gui/dialog/editor.py:777
 #: taskcoachlib/gui/viewer.py:995 taskcoachlib/gui/viewer.py:1176
 #: taskcoachlib/gui/viewer.py:1336
 msgid "Categories"
-msgstr "Rummadoù"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:408 taskcoachlib/gui/dialog/editor.py:575
 msgid "Attachments"
-msgstr "Restroù stag"
+msgstr "ضمیمه‌ها"
 
 #: taskcoachlib/gui/dialog/editor.py:410
 msgid "Attachment filenames"
-msgstr "Anvioù ar restroù stag"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:417
 msgid "Open attachment"
-msgstr "Digeriñ ar restr stag"
+msgstr "بازکردن ضمیمه"
 
 #: taskcoachlib/gui/dialog/editor.py:418
 msgid "Remove attachment"
-msgstr "Lemel ar restr stag"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:419
 msgid "Edit filename"
-msgstr "Aozañ an anv restr"
+msgstr "ویرایش کردن نام پرونده"
 
 #: taskcoachlib/gui/dialog/editor.py:423
 msgid "Browse for new attachment..."
-msgstr "Furchal da gavout ur restr stag nevez..."
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:430
 msgid "Attachment filename"
-msgstr "Anv ar restr stag"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:499 taskcoachlib/gui/uicommand.py:1340
 msgid "Error opening attachment"
-msgstr "Fazi o tigeriñ ar restr stag"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:539
 #: taskcoachlib/gui/dialog/preferences.py:196
 msgid "Task behavior"
-msgstr "Emzalc'h ar gefridi"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:542
 msgid "Use application-wide setting"
-msgstr "Implij kefluniadur an arload a-bezh"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:543
 msgid "No"
-msgstr "Ket"
+msgstr "خیر"
 
 #: taskcoachlib/gui/dialog/editor.py:543
 msgid "Yes"
-msgstr "Ya"
+msgstr "بله"
 
 #: taskcoachlib/gui/dialog/editor.py:550
 msgid "Mark task completed when all children are completed?"
-msgstr "Merkañ ar gefridi evel peurechu pa vez peurechu ar vugale?"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:574
 msgid "Effort"
-msgstr "Striv"
+msgstr "تلاش"
 
 #: taskcoachlib/gui/dialog/editor.py:576
 msgid "Behavior"
-msgstr "Emzalc'h"
+msgstr "رفتار"
 
 #: taskcoachlib/gui/dialog/editor.py:605
 #: taskcoachlib/gui/dialog/reminder.py:22 taskcoachlib/gui/viewer.py:1492
 msgid "Task"
-msgstr "Kefridi"
+msgstr "تکلیف"
 
 #: taskcoachlib/gui/dialog/editor.py:611
 msgid "Start tracking from last stop time"
-msgstr "Loc'hañ an heuliañ adalek ar c'houlz paouez diwezhañ"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:621
 msgid "Start"
-msgstr "Loc'hañ"
+msgstr "شروع"
 
 #: taskcoachlib/gui/dialog/editor.py:623
 msgid "Stop"
-msgstr "Paouez"
+msgstr "توقف"
 
 #: taskcoachlib/gui/dialog/editor.py:678
 msgid "Use this color:"
@@ -764,7 +477,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:64
 msgid "Auto save after every change"
-msgstr "Enrollañ emgefreek goude pep kemm"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:66
 msgid "Create backup copy before overwriting a %s file"
@@ -772,23 +485,23 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:68
 msgid "Maximum number of recent files to remember"
-msgstr "Niver uhelañ a restroù nevez da zelc'her soñj enno"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:70
 msgid "Save settings (%s.ini) in same directory as the program"
-msgstr "Enrollañ an arventennoù (%s.ini) e kavlec'h ar programm"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:72
 msgid "(For running %s from a removable medium)"
-msgstr "(Evit lañsañ %s diouzh ur media helam)"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:80
 msgid "Show splash screen on startup"
-msgstr "Diskwel ar skramm degemer d'al loc'hañ"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:82
 msgid "Show tips window on startup"
-msgstr "Diskwel prenestr an tunioù d'al loc'hañ"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:84
 msgid "Start with the main window iconized"
@@ -796,11 +509,11 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:85
 msgid "Always"
-msgstr "Bepred"
+msgstr "همیشه"
 
 #: taskcoachlib/gui/dialog/preferences.py:85
 msgid "Never"
-msgstr "Morse"
+msgstr "هرگز‌"
 
 #: taskcoachlib/gui/dialog/preferences.py:87
 msgid "When the main windows was iconized last session"
@@ -812,11 +525,11 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:91
 msgid "Hide main window when iconized"
-msgstr "Kuzhat ar prenestr pennañ pa vez arlunet"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:93
 msgid "Minimize main window when closed"
-msgstr "Izelaat ar prenestr pennañ pa vez serret"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:95
 msgid "Make clock in the task bar tick when tracking effort"
@@ -829,12 +542,12 @@ msgstr ""
 #: taskcoachlib/gui/dialog/preferences.py:104
 #: taskcoachlib/gui/dialog/preferences.py:198
 msgid "Language"
-msgstr "Yezh"
+msgstr "زبان"
 
 #: taskcoachlib/gui/dialog/preferences.py:129
 #: taskcoachlib/gui/dialog/preferences.py:162
 msgid "This setting will take effect after you restart %s"
-msgstr "Efedus 'vo an arventenn-mañ goude adloc'hañ %s"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:134
 msgid ""
@@ -848,23 +561,23 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:149
 msgid "Click this button to change the color of active tasks"
-msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù vev"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:150
 msgid "Click this button to change the color of inactive tasks"
-msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù varv"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:151
 msgid "Click this button to change the color of completed tasks"
-msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù beurechu"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:152
 msgid "Click this button to change the color of over due tasks"
-msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù dreist an termen"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:153
 msgid "Click this button to change the color of tasks due today"
-msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù dleet hiziv"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:161
 msgid "Allow for taking notes"
@@ -872,7 +585,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:170
 msgid "Mark parent task completed when all children are completed"
-msgstr "Merkañ ar gefridi gar evel peurechu pa vez peurechu an holl vugale"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:178
 msgid "Check spelling in editors"
@@ -880,23 +593,23 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:195
 msgid "Window behavior"
-msgstr "Emzalc'h ar prenestr"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:197
 msgid "Files"
-msgstr "Restroù"
+msgstr "پرونده‌ها"
 
 #: taskcoachlib/gui/dialog/preferences.py:199
 msgid "Colors"
-msgstr "Livioù"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:200
 msgid "Features"
-msgstr ""
+msgstr "ویژگیها"
 
 #: taskcoachlib/gui/dialog/preferences.py:202
 msgid "Editor"
-msgstr "Aozer"
+msgstr "ویرایشگر"
 
 #: taskcoachlib/gui/dialog/reminder.py:9
 msgid "Don't snooze"
@@ -904,27 +617,27 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/reminder.py:9
 msgid "Five minutes"
-msgstr "Pemp munutenn"
+msgstr "پنج دقیقه"
 
 #: taskcoachlib/gui/dialog/reminder.py:9
 msgid "Ten minutes"
-msgstr "Dek munutenn"
+msgstr "ده دقیقه"
 
 #: taskcoachlib/gui/dialog/reminder.py:10
 msgid "Fifteen minutes"
-msgstr "Pemzek munutenn"
+msgstr "پانزده دقیقه"
 
 #: taskcoachlib/gui/dialog/reminder.py:10
 msgid "Half an hour"
-msgstr "Un hanter eur"
+msgstr "نیم ساعت"
 
 #: taskcoachlib/gui/dialog/reminder.py:10
 msgid "One hour"
-msgstr "Un eur"
+msgstr "یک ساعت"
 
 #: taskcoachlib/gui/dialog/reminder.py:11
 msgid "Two hours"
-msgstr "Div eur"
+msgstr "دو ساعت"
 
 #: taskcoachlib/gui/dialog/reminder.py:25
 msgid "Reminder date/time"
@@ -953,17 +666,15 @@ msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:21
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
-msgstr "Restroù iCalendar (*.ics)|*.ics|An holl restroù (*.*)|*"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:24
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
-msgstr "Restroù HTML (*.html)|*.html|An holl restroù (*.*)|*"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:27
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
-"Restroù CSV (*.csv)|*.csv|Restroù Testenn (*.txt)|*.txt|An holl restroù "
-"(*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:44
 msgid "%s file error"
@@ -971,19 +682,19 @@ msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:50
 msgid "Open"
-msgstr "Digeriñ"
+msgstr "باز کردن"
 
 #: taskcoachlib/gui/iocontroller.py:60
 msgid "Error while reading %s:\n"
-msgstr "Fazi en ur lenn %s:\n"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:62
 msgid "Are you sure it is a %s-file?"
-msgstr "Sur oc'h ez eo ur restr %s?"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:65
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
-msgstr "%(nrtasks)d (g)kefridioù karget eus %(filename)s"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:72
 msgid "Cannot open %s because it doesn't exist"
@@ -991,100 +702,98 @@ msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:78
 msgid "Merge"
-msgstr "Kendeuziñ"
+msgstr "ادغام"
 
 #: taskcoachlib/gui/iocontroller.py:81
 msgid "Merged %(filename)s"
-msgstr "%(filename)s kendeuzet"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:96 taskcoachlib/gui/iocontroller.py:107
 msgid "Save as..."
-msgstr "Enrollañ e..."
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:124
 msgid "Export as iCalendar..."
-msgstr "Ezporzhiañ evel iCalendar..."
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:130
 msgid "Exported %(nrtasks)d tasks to %(filename)s"
-msgstr "%(nrtasks)d ezporzhiet da %(filename)s"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:138
 msgid "Export as HTML..."
-msgstr "Ezporzhiañ evel HTML..."
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:144 taskcoachlib/gui/iocontroller.py:158
 msgid "Exported %(nrtasks)d items to %(filename)s"
-msgstr "%(nrtasks)d elfenn ezporzhiet da %(filename)s"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:152
 msgid "Export as CSV..."
-msgstr "Ezporzhiañ evel CSV..."
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:187
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
 msgstr ""
-"Kemmoù dienroll ho peus.\n"
-"Enrollañ a-raok serriñ?"
 
 #: taskcoachlib/gui/iocontroller.py:188
 msgid "%s: save changes?"
-msgstr "%s: enrollañ ar c'hemmoù?"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:198
 msgid "Closed %s"
-msgstr "%s serret"
+msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:204
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
-msgstr "%(nrtasks)d enrollet e %(filename)s"
+msgstr ""
 
 #: taskcoachlib/gui/mainwindow.py:105
 msgid "Welcome to %(name)s version %(version)s"
-msgstr "Degemer mat e %(name)s aozadur %(version)s"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:111
 msgid "&File"
-msgstr "&Restr"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:112
 msgid "&Edit"
-msgstr "&Aozañ"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:113
 msgid "&View"
-msgstr "&Diskwel"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:114
 msgid "&Task"
-msgstr "&Kefridi"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:115
 msgid "Eff&ort"
-msgstr "&Striv"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:116 taskcoachlib/gui/uicommand.py:1783
 #: taskcoachlib/gui/uicommand.py:1817
 msgid "&Category"
-msgstr "&Rummad"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:118 taskcoachlib/gui/uicommand.py:1837
 msgid "&Note"
-msgstr "&Notenn"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:119
 msgid "&Help"
-msgstr "&Skoazell"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:151
 msgid "&Export"
-msgstr "&Ezporzhiañ"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:201
 msgid "&Select"
-msgstr "&Diuzañ"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:215
 msgid "&New viewer"
@@ -1092,15 +801,15 @@ msgstr ""
 
 #: taskcoachlib/gui/menu.py:220 taskcoachlib/gui/menu.py:221
 msgid "&Filter"
-msgstr "&Sil"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:222 taskcoachlib/gui/menu.py:223
 msgid "&Sort"
-msgstr "&Rummañ"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:224 taskcoachlib/gui/menu.py:225
 msgid "&Columns"
-msgstr "&Bannoù"
+msgstr ""
 
 #: taskcoachlib/gui/menu.py:227
 msgid "&Tree options"
@@ -1108,15 +817,15 @@ msgstr ""
 
 #: taskcoachlib/gui/menu.py:230
 msgid "T&oolbar"
-msgstr "Barren &Ostilhoù"
+msgstr ""
 
 #: taskcoachlib/gui/render.py:22
 msgid "Infinite"
-msgstr "didermen"
+msgstr ""
 
 #: taskcoachlib/gui/render.py:53
 msgid "now"
-msgstr "bremañ"
+msgstr ""
 
 #: taskcoachlib/gui/taskbaricon.py:94
 msgid "%d tasks overdue"
@@ -1128,11 +837,11 @@ msgstr ""
 
 #: taskcoachlib/gui/taskbaricon.py:95
 msgid "%d tasks due today"
-msgstr "%d (g)kefridi dleet hiziv"
+msgstr ""
 
 #: taskcoachlib/gui/taskbaricon.py:95
 msgid "one task due today"
-msgstr "ur gefridi dleet hiziv"
+msgstr ""
 
 #: taskcoachlib/gui/taskbaricon.py:96
 msgid "tracking effort for one task"
@@ -1144,87 +853,87 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:329
 msgid "&Open...\tCtrl+O"
-msgstr "&Digeriñ...\tCtrl+O"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:330
 msgid "Open a %s file"
-msgstr "Digeriñ ur restr %s"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:342
 msgid "Open %s"
-msgstr "Digeriñ %s"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:350
 msgid "&Merge..."
-msgstr "&Kendeuziñ..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:351
 msgid "Merge tasks from another file with the current file"
-msgstr "Kendeuziñ kefridioù eus ur restr all gant ar restr red"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:360
 msgid "&Close"
-msgstr "&Serriñ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:361
 msgid "Close the current file"
-msgstr "Serriñ ar restr red"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:370
 msgid "&Save\tCtrl+S"
-msgstr "&Enrollañ\tCtrl+S"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:371
 msgid "Save the current file"
-msgstr "Enrollañ ar restr red"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:383
 msgid "S&ave as..."
-msgstr "&Enrollañ e..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:384
 msgid "Save the current file under a new name"
-msgstr "Enrollañ ar restr red gant un anv nevez"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:393
 msgid "Sa&ve selection..."
-msgstr "&Enrollañ an diuzadenn..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:394
 msgid "Save the selected tasks to a separate file"
-msgstr "Enrollañ ar c'hefridioù diuzet d'ur restr distag"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:424
 msgid "Page"
-msgstr "Pajenn"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:435
 msgid "Page setup..."
-msgstr "Kefluniadur ar bajenn..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:436
 msgid "Setup the characteristics of the printer page"
-msgstr "Kefluniañ perzhioù ar bajenn voulerez"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:452 taskcoachlib/gui/uicommand.py:463
 msgid "Print preview"
-msgstr "Rakgwel ar moullañ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:453
 msgid "Show a preview of what the print will look like"
-msgstr "Diskwel ur rakgwel eus an neuz a vo gant ar mouladur"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:471
 msgid "Print..."
-msgstr "Moullañ..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:472
 msgid "Print the current file"
-msgstr "Moullañ ar restr red"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:495
 msgid "Export effort as &iCalendar..."
-msgstr "Ezporzhiañ ar striv evel &iCalendar..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:496
 msgid "Export effort in iCalendar (*.ics) format"
@@ -1232,15 +941,15 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:505
 msgid "Export as &HTML..."
-msgstr "Ezporzhiañ evel &HTML..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:506
 msgid "Export the current view as HTML file"
-msgstr "Ezporzhiañ ar gwel red en ur restr HTML"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:515
 msgid "Export as &CSV..."
-msgstr "Ezporzhiañ evel &CSV..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:516
 msgid "Export the current view in Comma Separated Values (CSV) format"
@@ -1248,51 +957,51 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:525
 msgid "&Quit\tCtrl+Q"
-msgstr "&Kuitaat\tCtrl+Q"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:526
 msgid "Exit %s"
-msgstr "Kuitaat %s"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:534
 msgid "&Undo"
-msgstr "&Dizober"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:539
 msgid "Undo the last command"
-msgstr "Dizober an urzhiad diwezhañ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:563
 msgid "&Redo"
-msgstr "&Adober"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:568
 msgid "Redo the last command that was undone"
-msgstr "Adober an urzhiad diwezhañ bet disgraet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:593
 msgid "Cu&t\tCtrl+X"
-msgstr "&Troc'hañ\tCtrl+X"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:594
 msgid "Cut the selected item(s) to the clipboard"
-msgstr "Troc'hañ ar g(c'h)efridi(où) diuzet d'ar golver"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:616
 msgid "&Copy\tCtrl+C"
-msgstr "&Eilañ\tCtrl+C"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:617
 msgid "Copy the selected item(s) to the clipboard"
-msgstr "Eilañ an elfenn(où) diuzet d'ar golver"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:639
 msgid "&Paste\tCtrl+V"
-msgstr "&Pegañ\tCtrl+V"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:640
 msgid "Paste item(s) from the clipboard"
-msgstr "Pegañ an elfenn(où) eus ar golver"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:661
 msgid "P&aste into task\tShift+Ctrl+V"
@@ -1300,23 +1009,23 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:662
 msgid "Paste item(s) from the clipboard into the selected task"
-msgstr "Pegañ (un) elfenn(où) eus ar golver d'ar gefridi diuzet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:676
 msgid "Preferences..."
-msgstr "Penndibaboù..."
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:677 taskcoachlib/gui/uicommand.py:682
 msgid "Edit preferences"
-msgstr "Aozañ ar penndibaboù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:688
 msgid "&All\tCtrl+A"
-msgstr "An &holl\tCtrl+A"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:689
 msgid "Select all items in the current view"
-msgstr "Diuzañ an holl elfennoù er gwel red"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:703
 msgid "&Invert selection\tShift+Ctrl+I"
@@ -1324,15 +1033,15 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:704
 msgid "Select unselected items and unselect selected items"
-msgstr "Diuzañ an elfennoù ezdiuzet hag ezdiuzañ an elfennoù diuzet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:713
 msgid "&Clear selection"
-msgstr "&Goullonderiñ an diuzadenn"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:714
 msgid "Unselect all items"
-msgstr "Ezdiuzañ an holl elfennoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:722
 msgid "&Clear all filters"
@@ -1360,11 +1069,11 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:775
 msgid "&Hide this column"
-msgstr "&Kuzhat ar bann-mañ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:776
 msgid "Hide the selected column"
-msgstr "Kuzhat ar bann diuzet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:822
 msgid "&Expand all items\tShift+Ctrl+E"
@@ -1372,15 +1081,15 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:823
 msgid "Expand all items with subitems"
-msgstr "&Digeriñ gwezenn an holl elfennoù gant an iselfennoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:836
 msgid "E&xpand"
-msgstr "&Digeriñ ar wezenn"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:836
 msgid "Expand the selected item(s)"
-msgstr "&Digeriñ gwezenn an elfenn(où) diuzet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:850
 msgid "&Collapse all items\tShift+Ctrl+C"
@@ -1388,63 +1097,57 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:851
 msgid "Collapse all items with subitems"
-msgstr "&Serriñ gwezenn an holl elfennoù gant an iselfennoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:864
 msgid "C&ollapse"
-msgstr "&Serriñ ar wezenn"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:865
 msgid "Collapse the selected items with subitems"
-msgstr "&Serriñ gwezenn an elfennoù diuzet gant an iselfennoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:918
 msgid "&Active"
-msgstr "&Bev"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:919
 msgid ""
 "Show/hide active tasks (tasks with a start date in the past and a due date "
 "in the future)"
 msgstr ""
-"Diskwel/Kuzhat ar c'hefridioù vev (kefridioù gant o deiziad loc'hañ en amzer-"
-"dremenet hag o deiziad dleet en dazont)"
 
 #: taskcoachlib/gui/uicommand.py:931
 msgid "&Inactive"
-msgstr "&Marv"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:932
 msgid "Show/hide inactive tasks (tasks with a start date in the future)"
 msgstr ""
-"Diskwel/Kuzhat ar c'hefridioù marv (ar c'hefridioù a zo un deiziad loc'hañ "
-"en dazont ganto)"
 
 #: taskcoachlib/gui/uicommand.py:944
 msgid "&Completed"
-msgstr "&Peurechu"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:945
 msgid "Show/hide completed tasks"
-msgstr "Diskwel/Kuzhat ar c'hefridioù peurechu"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:956
 msgid "&Over due"
-msgstr "&Dreist an termen"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:957
 msgid "Show/hide over due tasks (tasks with a due date in the past)"
 msgstr ""
-"Diskwel/Kuzhat ar c'hefridioù dreist an termen (kefridioù gant o deiziad "
-"dleet en amzer-dremenet)"
 
 #: taskcoachlib/gui/uicommand.py:969
 msgid "Over &budget"
-msgstr "A-us d'ar budjed"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:970
 msgid "Show/hide tasks that are over budget"
-msgstr "Diskwel/Kuzhat ar c'hefridioù a zo a-us d'ar budjed"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:982
 msgid "Hide tasks &with subtasks"
@@ -1452,19 +1155,19 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:983
 msgid "Show/hide tasks with subtasks"
-msgstr "Diskwel/Kuzhat ar c'hefridioù iskefridioù ganto"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:994
 msgid "New item"
-msgstr "Elfenn nevez"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1017
 msgid "New subitem"
-msgstr "Iselfenn nevez"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1053
 msgid "Delete item"
-msgstr "Dilemel an elfenn"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1130
 msgid "&Mark task completed\tCtrl+RETURN"
@@ -1472,7 +1175,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1131
 msgid "Mark the selected task(s) completed"
-msgstr "Merkañ ar g(c'h)efridi(où) evel peurechu"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1192
 msgid "&Mark task uncompleted\tCtrl+RETURN"
@@ -1516,99 +1219,99 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1296
 msgid "Tasks"
-msgstr "Kefridioù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1308
 msgid "Please enter recipient"
-msgstr "Roit ar resever mar plij"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1314
 msgid "&Add attachment"
-msgstr "&Ouzhpennañ ur restr stag"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1315
 msgid "Browse for files to add as attachment to the selected task(s)"
-msgstr "Furchal da gavout restroù da ouzhpennañ d'ar g(c'h)efridi(où) diuzet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1329
 msgid "&Open all attachments"
-msgstr "&Digeriñ an holl restroù stag"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1330
 msgid "Open all attachments of the selected task(s)"
-msgstr "&Digeriñ holl restroù stag ar gefridi(où) diuzet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1393
 msgid "&Start tracking effort"
-msgstr "&Loc'hañ an heuliañ striv"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1394
 msgid "Start tracking effort for the selected task(s)"
-msgstr "Loc'hañ an heuliañ striv evit ar gefridi(où) diuzet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1412
 msgid "St&op tracking effort"
-msgstr "&Paouez an heuliañ striv"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1413
 msgid "Stop tracking effort for the active task(s)"
-msgstr "Paouez an heuliañ striv ar g(c'h)efridi(où) v(b)ev"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1570
 msgid "&Help contents"
-msgstr "Danvezioù ar skoazell"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1571
 msgid "Help about the program"
-msgstr "Skoazell diwar-benn ar programm"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1572
 msgid "Help"
-msgstr "Skoazell"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1578
 msgid "&Tips"
-msgstr "&Tunioù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1579
 msgid "Tips about the program"
-msgstr "Tunioù diwar-benn ar programm"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1592
 msgid "&About %s"
-msgstr "&Diwar-benn %s"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1593
 msgid "Version and contact information about %s"
-msgstr "Aozadur ha titourou darempred diwar-benn %s"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1594
 msgid "Help: About %s"
-msgstr "Skoazell: Diwar-benn %s"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1600
 msgid "&License"
-msgstr "&Aotre"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1601
 msgid "%s license"
-msgstr "aotre %s"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1602
 msgid "Help: %s license"
-msgstr "Skoazell: aotre %s"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1609
 msgid "&Restore"
-msgstr "&Adsevel"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1610
 msgid "Restore the window to its previous state"
-msgstr "Adsevel ar prenestr d'e stad kent"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1648
 msgid "&Attachments"
-msgstr "&Restroù stag"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1648
 msgid "Show/hide attachment column"
@@ -1616,11 +1319,11 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1649
 msgid "&Categories"
-msgstr "&Rummadoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1649
 msgid "Show/hide categories column"
-msgstr "Diskwel/Kuzhat bann ar rummadoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1650
 msgid ""
@@ -1635,11 +1338,11 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1651
 msgid "Show/hide description column"
-msgstr "Diskwel/Kuzhat bann an deskrivadurioù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1651 taskcoachlib/gui/uicommand.py:1782
 msgid "&Description"
-msgstr "&Deskrivadur"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1652
 msgid "Show/hide reminder column"
@@ -1651,35 +1354,35 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1653
 msgid "Show/hide start date column"
-msgstr "Diskwel/Kuzhat bann an deiziadoù loc'hañ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1653 taskcoachlib/gui/uicommand.py:1785
 msgid "&Start date"
-msgstr "&Deiziad loc'hañ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1654
 msgid "Show/hide due date column"
-msgstr "Diskwel/Kuzhat bann an deiziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1654 taskcoachlib/gui/uicommand.py:1786
 msgid "&Due date"
-msgstr "Deiziad &dleet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1655
 msgid "Show/hide days left column"
-msgstr "Diskwel/Kuzhat bann an devezhioù a chom"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1655 taskcoachlib/gui/uicommand.py:1788
 msgid "D&ays left"
-msgstr "&Devezhioù a chom"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1656
 msgid "Co&mpletion date"
-msgstr "Deiziad &peurechu"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1656
 msgid "Show/hide completion date column"
-msgstr "Diskwel/Kuzhat bann an deiziadoù peurechu"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1657
 msgid "Show/hide recurrence column"
@@ -1691,147 +1394,139 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1658
 msgid "Show/hide budget column"
-msgstr "Diskwel/Kuzhat bann ar vudjedoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1658 taskcoachlib/gui/uicommand.py:1790
 #: taskcoachlib/gui/viewer.py:785
 msgid "&Budget"
-msgstr "&Budjed"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1659
 msgid ""
 "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr ""
-"Diskwel/Kuzhat bann holladoù ar budjedoù (hollad ar budjed a zo budjed an "
-"iskefridioù ennañ)"
 
 #: taskcoachlib/gui/uicommand.py:1659 taskcoachlib/gui/uicommand.py:1791
 msgid "Total b&udget"
-msgstr "Hollad ar b&udjed"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1660
 msgid "Show/hide time spent column"
-msgstr "Diskwel/Kuzhat bann an amzerioù implijet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1660 taskcoachlib/gui/uicommand.py:1792
 msgid "&Time spent"
-msgstr "&Amzer implijet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1661
 msgid ""
 "Show/hide total time spent column (total time includes time spent on "
 "subtasks)"
 msgstr ""
-"Diskwel/Kuzhat bann holladoù an amzerioù implijet (hollad an amzer a zo an "
-"amzer implijet gant an iskefridioù ennañ)"
 
 #: taskcoachlib/gui/uicommand.py:1661 taskcoachlib/gui/uicommand.py:1793
 msgid "T&otal time spent"
-msgstr "H&ollad an amzer implijet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1662
 msgid "Show/hide budget left column"
-msgstr "Diskwel/Kuzhad bann ar budjed hegerz"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1662 taskcoachlib/gui/uicommand.py:1794
 msgid "Budget &left"
-msgstr "Budjed &hegerz"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1663
 msgid ""
 "Show/hide total budget left column (total budget left includes budget left "
 "for subtasks)"
 msgstr ""
-"Diskwel/Kuzhat bann hollad ar budjedoù hegerz (hollad ar budjedoù hegerz a "
-"zo budjed hegerz an iskefridioù ennañ)"
 
 #: taskcoachlib/gui/uicommand.py:1663 taskcoachlib/gui/uicommand.py:1795
 msgid "Total budget l&eft"
-msgstr "Hollad ar budjed hegerz"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1664
 msgid "Show/hide priority column"
-msgstr "Diskwel/Kuzhat bann ar renkoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1664 taskcoachlib/gui/uicommand.py:1796
 msgid "&Priority"
-msgstr "&Renk"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1665
 msgid "O&verall priority"
-msgstr "&Pennrenk"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1665
 msgid ""
 "Show/hide overall priority column (overall priority is the maximum priority "
 "of a task and all its subtasks)"
 msgstr ""
-"Diskwel/Kuzhat bann ar pennrenkoù (ar pennrenk eo renk uhelañ ur gefridi hag "
-"he holl iskefridioù)"
 
 #: taskcoachlib/gui/uicommand.py:1666
 msgid "Show/hide hourly fee column"
-msgstr "Diskwel/Kuzhat bann an treziadoù dre eurvezh"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1666 taskcoachlib/gui/uicommand.py:1798
 msgid "&Hourly fee"
-msgstr "Treziad dre &eurvezh"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1667
 msgid "Show/hide fixed fee column"
-msgstr "Diskwel/Kuzhat bann an treziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1667 taskcoachlib/gui/uicommand.py:1799
 msgid "&Fixed fee"
-msgstr "&Treziad"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1668
 msgid "&Total fixed fee"
-msgstr "&Hollad an treziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1668
 msgid "Show/hide total fixed fee column"
-msgstr "Diskwel/Kuzhat bann holladoù an treziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1669
 msgid "Show/hide revenue column"
-msgstr "Diskwel/Kuzhat bann ar gounidoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1669 taskcoachlib/gui/uicommand.py:1801
 msgid "&Revenue"
-msgstr "&Gounid"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1670
 msgid "Show/hide total revenue column"
-msgstr "Diskwel/Kuzhat bann holladoù ar gounidoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1670
 msgid "T&otal revenue"
-msgstr "&Hollad ar gounidoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1674
 msgid "All date columns"
-msgstr "Holl bannou an deiziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1675
 msgid "Show/hide all date-related columns"
-msgstr "Diskwel/Kuzhat an holl vannoù a ra dave d'un deiziad bennak"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1678
 msgid "All budget columns"
-msgstr "An holl vannoù budjed"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1679
 msgid "Show/hide all budget-related columns"
-msgstr "Diskwel/Kuzhat an holl vannoù a ra dave d'ur budjed bennak"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1682
 msgid "All financial columns"
-msgstr "An holl vannoù arc'hanterezh"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1683
 msgid "Show/hide all finance-related columns"
-msgstr "Diskwel/Kuzhat an holl vannoù a ra dave d'an arc'hanterezh"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1746
 msgid "&Activate next viewer\tCtrl+PgDn"
@@ -1851,7 +1546,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1769
 msgid "&Ascending"
-msgstr "Dre &sevel"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1770
 msgid "Sort ascending (checked) or descending (unchecked)"
@@ -1859,7 +1554,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1773
 msgid "Sort case sensitive"
-msgstr "Rummañ en ur deuler evezh ouzh ar c'hef"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1774
 msgid ""
@@ -1869,11 +1564,11 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1776
 msgid "Sort by status &first"
-msgstr "Rummañ dre stad da &gentañ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1777
 msgid "Sort tasks by status (active/inactive/completed) first"
-msgstr "Rummañ dre stad (bev/marv/peurechu) da gentañ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1781
 msgid "Sort by subject"
@@ -1881,7 +1576,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1781
 msgid "Sub&ject"
-msgstr "&Danvez"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1782
 msgid "Sort by description"
@@ -1897,23 +1592,23 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1785
 msgid "Sort tasks by start date"
-msgstr "Rummañ ar gefridioù dre zeiziad"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1786
 msgid "Sort tasks by due date"
-msgstr "Rummañ ar c'hefridioù dre zeiziad dleet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1787
 msgid "&Completion date"
-msgstr "Deidiaz &peurechuiñ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1787
 msgid "Sort tasks by completion date"
-msgstr "Rummañ ar c'hefridioù dre zeiziad peurechuiñ"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1788
 msgid "Sort tasks by number of days left"
-msgstr "Rummañ ar c'hefridioù dre niver a zevezhioù a chom"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1789
 msgid "Sort tasks by recurrence"
@@ -1921,67 +1616,67 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1790
 msgid "Sort tasks by budget"
-msgstr "Rummañ ar c'hefridioù dre vudjed"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1791
 msgid "Sort tasks by total budget"
-msgstr "Rummañ ar c'hefridioù dre hollad ar budjed"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1792
 msgid "Sort tasks by time spent"
-msgstr "Rummañ ar gefridioù dre amzer implijet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1793
 msgid "Sort tasks by total time spent"
-msgstr "Rummañ ar gefridioù dre hollad an amzer implijet"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1794
 msgid "Sort tasks by budget left"
-msgstr "Rummañ ar c'hefridioù dre vudjed hegerz"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1795
 msgid "Sort tasks by total budget left"
-msgstr "Rummañ ar c'hefridioù dre hollad ar budjedoù hegerz"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1796
 msgid "Sort tasks by priority"
-msgstr "Rummañ ar gefridioù dre renk"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1797
 msgid "Sort tasks by overall priority"
-msgstr "Rummañ ar gefridioù dre bennrenk"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1797 taskcoachlib/gui/viewer.py:1026
 msgid "Overall priority"
-msgstr "Pennrenk"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1798
 msgid "Sort tasks by hourly fee"
-msgstr "Rummañ ar c'hefridioù dre dreziad dre eurvezh"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1799
 msgid "Sort tasks by fixed fee"
-msgstr "Rummañ ar c'hefridioù dre dreziad"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1800
 msgid "Sort tasks by total fixed fee"
-msgstr "Rummañ ar c'hefridioù dre hollad an treziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1800
 msgid "Total fi&xed fee"
-msgstr "Hollad an &treziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1801
 msgid "Sort tasks by revenue"
-msgstr "Rummañ ar c'hefridioù dre c'hounid"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1802
 msgid "Sort tasks by total revenue"
-msgstr "Rummañ ar c'hefridioù dre hollad ar gounidoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1802
 msgid "Total re&venue"
-msgstr "Hollad ar &gounidoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1803
 msgid "Sort tasks by reminder date and time"
@@ -2045,109 +1740,107 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1848
 msgid "&Hide"
-msgstr "&Kuzhat"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1848
 msgid "Hide the toolbar"
-msgstr "Kuzhat ar varenn ostilhoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1849
 msgid "&Small images"
-msgstr "Skeudennoù &vihan"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1849
 msgid "Small images (16x16) on the toolbar"
-msgstr "Skeudennoù vihan (16x16) war ar varrenn ostilhoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1850
 msgid "&Medium-sized images"
-msgstr "Skeudennoù &grenn"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1850
 msgid "Medium-sized images (22x22) on the toolbar"
-msgstr "Skeudennoù grenn (22x22) war ar varrenn ostilhoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1851
 msgid "&Large images"
-msgstr "Skeudennoù &vras"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1851
 msgid "Large images (32x32) on the toolbar"
-msgstr "Skeudennoù vras (32x32) war ar varrenn ostilhoù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1857
 msgid "Show/hide status bar"
-msgstr "Diskwel/Kuzhat ar varren stad"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1857
 msgid "Status&bar"
-msgstr "&Barrenn stad"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1862
 msgid "&Today"
-msgstr "&Hiziv"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1862
 msgid "Only show tasks due today"
-msgstr "Diskwel ar c'hefridioù dleet hiziv hepken"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1863
 msgid "Only show tasks due today and tomorrow"
-msgstr "Diskwel ar c'hefridioù dleet hiziv ha warc'hoazh hepken"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1863
 msgid "T&omorrow"
-msgstr "&Warc'hoazh"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1864
 msgid "Only show tasks due this work week (i.e. before Friday)"
 msgstr ""
-"Diskwel ar c'hefridioù dleet er sizhunvezhiad labour-mañ hepken (da lâret eo "
-"a-raok ar gwener)"
 
 #: taskcoachlib/gui/uicommand.py:1864
 msgid "Wo&rk week"
-msgstr "Sizhunvezhiad labour"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1865
 msgid "&Week"
-msgstr "&Sizhunvezh"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1865
 msgid "Only show tasks due this week (i.e. before Sunday)"
-msgstr "Diskwel ar gefridi dleet er sizhun-mañ (da lâret eo a-raok disadorn)"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1866
 msgid "&Month"
-msgstr "&Mizvezh"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1866
 msgid "Only show tasks due this month"
-msgstr "Diskwel ar c'hefridioù dleet er miz-mañ hepken"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1867
 msgid "&Year"
-msgstr "&Bloavezh"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1867
 msgid "Only show tasks due this year"
-msgstr "Diskwel ar c'hefridioù dleet er bloaz-mañ hepken"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1868
 msgid "&Unlimited"
-msgstr "&Didermen"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1868
 msgid "Show all tasks"
-msgstr "Diskwel an holl gefridioù"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1892
 msgid "Mail task"
-msgstr "Postelañ ar gefridi"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1893
 msgid "Mail the task, using your default mailer"
-msgstr "Postelañ ar gefridi, dre ho posteler dre ziouer"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:142
 msgid "Show only tasks &due before end of"
@@ -2159,51 +1852,51 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer.py:782
 msgid "&Dates"
-msgstr "&Deiziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:788
 msgid "&Financial"
-msgstr "&Arc'hanterezh"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:802
 msgid "Tasks: %d selected, %d visible, %d total"
-msgstr "Kefridioù: %d diuzet, %d gwelus, %d en holl"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:805
 msgid "Status: %d over due, %d inactive, %d completed"
-msgstr "Stad: %d dreist an termen, %d marv, %d peurechu"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1016
 msgid "Days left"
-msgstr "Devezhioù a chom"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1020
 msgid "Total budget"
-msgstr "Hollad ar budjed"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1022 taskcoachlib/gui/viewer.py:1537
 msgid "Total time spent"
-msgstr "Hollad an amzer implijet"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1024
 msgid "Total budget left"
-msgstr "Hollad ar budjedoù hegerz"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1029
 msgid "Total fixed fee"
-msgstr "Hollad an treziadoù"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1031 taskcoachlib/gui/viewer.py:1539
 msgid "Total revenue"
-msgstr "Hollad ar gounidoù"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1074
 msgid "Task list"
-msgstr "Roll ar c'hefridioù"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1102
 msgid "Task tree"
-msgstr "Gwezenn ar gefridioù"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1241
 msgid "Categories: %d selected, %d total"
@@ -2215,7 +1908,7 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1276
 msgid "Notes"
-msgstr "Notennoù"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1376
 msgid "Notes: %d selected, %d total"
@@ -2227,15 +1920,15 @@ msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1427
 msgid "Effort: %d selected, %d visible, %d total"
-msgstr "Striv: %d diuzet, %d gwelus, %d en holl"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1430
 msgid "Status: %d tracking"
-msgstr "Stad: %d heuliañ"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1491
 msgid "Period"
-msgstr "Mare"
+msgstr ""
 
 #: taskcoachlib/help/__init__.py:5
 msgid ""
@@ -2265,7 +1958,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:29
 msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
-msgstr "<h3><a name=\"tasks\">Kefridioù</a></h3>\n"
+msgstr ""
 
 #: taskcoachlib/help/__init__.py:32
 msgid ""
@@ -2278,14 +1971,6 @@ msgid ""
 "and\n"
 "numerous activities.</p>\n"
 msgstr ""
-"<h4><a name=\"abouttasks\">Diwar-benn ar c'hefridioù</a></h4>\n"
-" \n"
-"<p>Ar c'hefridioù eo an draezennoù diazez a zo dornataet ganeoc'h. Ar "
-"c'hefridioù a c'hell\n"
-"ober evit n'eus forzh petra eus un dra vihan eeun ho peus da ober, evel "
-"prenañ ur prof\n"
-"d'ho karedig, betek ur raktres klok, c'hoarvezet e prantadoù disheñvel, hag\n"
-"obererezhioù lies.</p>\n"
 
 #: taskcoachlib/help/__init__.py:40
 msgid ""
@@ -2357,25 +2042,6 @@ msgid ""
 "</ul></p>\n"
 " "
 msgstr ""
-"<h4><a name=\"taskstates\">Stadoù ar c'hefridioù</a></h4>\n"
-"\n"
-"<p>Ar c'hefridioù a zo unan dres eus ar stadoù da heul ganto:\n"
-"<ul>\n"
-"<li>Bev: en amzer-dremenet emañ an deiziad loc'hañ hag en dazont an deiziad "
-"dleet;</li>\n"
-"<li>Marv: en dazont emañ an deiziad loc'hañ, pe</li>\n"
-"<li>Peurechu: peurechuet eo bet ar gefridi.</li>\n"
-"</ul></p>\n"
-"\n"
-"<p>war ar marc'had e c'hellont ar c'hefridioù bezañ meneget evel:\n"
-"<ul>\n"
-"<li>Dreist an termen: en amzer-dremenet emañ an deiziad dleet;</li>\n"
-"<li>Dleet hiziv: hiziv eo an deiziad dleet;</li>\n"
-"<li>A-us d'ar budjed: ne chom ket budjed hegerz ken;</li>\n"
-"<li>A-is d'ar budjed: chom a ra budjed hegerz c'hoazh;</li>\n"
-"<li>Divudjed: n'eus budjed ebet d'ar gefridi.</li>\n"
-"</ul></p>\n"
-" "
 
 #: taskcoachlib/help/__init__.py:99
 msgid ""
@@ -2399,7 +2065,7 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:116
 msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
-msgstr "<h3><a name=\"effort\">Striv</a></h3>\n"
+msgstr ""
 
 #: taskcoachlib/help/__init__.py:119
 msgid ""
@@ -2412,13 +2078,6 @@ msgid ""
 "toolbar \n"
 "button.</p>\n"
 msgstr ""
-"<h4><a name=\"abouteffort\">Diwar-benn striv</a></h4>\n"
-"\n"
-"<p>Pa emaoc'h oc'h implijout amzer war kefridioù e c'hallit enrollañ ar "
-"sammad amzer implijet dre an heuliañ striv. Diuzit ur gefridi ha dibabit "
-"'Loc'hañ an heuliañ striv' er\n"
-"meuziad Striv pe er meuziad kemperzhel pe dre an afell barrenn ostilhoù "
-"'Loc'hañ an heuliañ striv'.</p>\n"
 
 #: taskcoachlib/help/__init__.py:127
 msgid ""
@@ -2444,28 +2103,6 @@ msgid ""
 "<li>Total revenue: money earned with the total time spent.</li>\n"
 "</ul></p>\n"
 msgstr ""
-"<h4><a name=\"effortproperties\">Perzhioù ar striv</a></h4>\n"
-"\n"
-"<p>An enrolladurioù striv a zo ar perzhioù da heul a c'hellit kemm dezho:\n"
-"<ul>\n"
-"<li>Kefridi: ar gefridi a zo ar striv dezhi.</li>\n"
-"<li>Loc'hañ deiziad/amzer: loc'hañ deiziad hag amzer ar striv.</li>\n"
-"<li>Paouez deiziad/amzer: paouez deiziad hag amzer ar striv. 'hini ebet' a "
-"c'hell bezañ se ma \n"
-"emaoc'h o labourat war ar gefridi c'hoazh.</li>\n"
-"<li>Deskrivadur: un deskrivadur lieslinenn eus ar striv.</li>\n"
-"</ul></p>\n"
-"\n"
-"<p>Ar perzhioù da heul a vez jedet diouzh ar perzhioù a-us:\n"
-"<ul>\n"
-"<li>Amzer implijet: an amzer hoc'h eus implijet o labourat war ar "
-"gefridi.</li>\n"
-"<li>Hollad an amzerioù implijet: sammad an amzerioù implijet evit ar gefridi "
-"hag he holl iskefridioù.</li>\n"
-"<li>Gounid: arc'hant gounezet gant an amzer implijet.</li>\n"
-"<li>Hollad ar gounidoù: arc'hant gounezet gant hollad an amzerioù "
-"implijet.</li>\n"
-"</ul></p>\n"
 
 #: taskcoachlib/help/__init__.py:149
 msgid "<h3><a name=\"categories\">Categories</a></h3>\n"
@@ -2516,12 +2153,6 @@ msgid ""
 "<p>%(copyright)s</p>\n"
 "<p>%(license)s</p>\n"
 msgstr ""
-"<h4>%(name)s - %(description)s</h4>\n"
-"<h5>Aozadur %(version)s, %(date)s</h5>\n"
-"<p>Gant %(author)s <%(author_email)s><p>\n"
-"<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-"<p>%(copyright)s</p>\n"
-"<p>%(license)s</p>\n"
 
 #: taskcoachlib/help/__init__.py:196
 msgid ""
@@ -2536,16 +2167,6 @@ msgid ""
 "%(license)s\n"
 "\n"
 msgstr ""
-"\n"
-"Aozadur %(version)s, %(date)s\n"
-"\n"
-"Gant %(author)s <%(author_email)s>\n"
-"\n"
-"%(url)s\n"
-"\n"
-"%(copyright)s\n"
-"%(license)s\n"
-"\n"
 
 #: taskcoachlib/help/tips.py:5
 msgid ""
@@ -2560,9 +2181,6 @@ msgid ""
 "fellow users, discuss and request features and complain about bugs. Go to "
 "%(url)s and join today!"
 msgstr ""
-"%(name)s en deus ur roll skignañ e-lec'h ma c'hellit eskemm gant implijerien "
-"boas diwar-benn implij %(name)s, kaozeal ha goulenn keweriusteroù ha klemm "
-"diwar-benn bogoù. Kit da %(url)s hag emellit hiziv!"
 
 #: taskcoachlib/help/tips.py:7
 msgid ""
@@ -2571,10 +2189,6 @@ msgid ""
 "Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards "
 "through your edit history."
 msgstr ""
-"Gant %(name)s e vez diharz an disober hag an adober. Posubl e vez disober "
-"pep kemm a rafec'h, ma vefe aozañ deskrivadur ur gefridi pe dilemel un "
-"enrolladur striv. Diuzit 'Aozañ' -> 'Disober' hag \"Aozañ' -> 'Adober' evit "
-"mont war-gil ha war-raok en hoc'h istoradur aozañ."
 
 #: taskcoachlib/help/tips.py:8
 msgid ""
@@ -2591,9 +2205,6 @@ msgid ""
 "becomes a link. Clicking on the link will open the URL in your default web "
 "browser."
 msgstr ""
-"Ma skrivit un URL (%(url)s da skouer) e deskrivadur ur gefridi pe "
-"deskrivadur ur striv e teu anezhi da vezañ ul liamm. Klikañ war al liamm a "
-"zigero an URL en ho furcher kenrouedad dre ziouer."
 
 #: taskcoachlib/help/tips.py:10
 msgid ""
@@ -2623,11 +2234,6 @@ msgid ""
 "be printed, if the current view shows effort grouped by month, that will be "
 "printed. The same goes for visible columns, sort order, filtered tasks, etc."
 msgstr ""
-"Ar pezh a vo moulet e gwirionez pa diuzit 'Restr' -> 'Moulañ' a vez diouzh "
-"ar gwel red. Ma eo kinniget roll ar c'hefridioù er gwel red e vo moulet ur "
-"roll kefridioù, ma eo kinniget ar strivoù strollet dre viz er gwel red e vo "
-"moulet evel-se. Memes tra evit ar vannoù welus, ar renk rummañ, ar "
-"c'hefridioù silet, h.a."
 
 #: taskcoachlib/help/tips.py:14
 msgid ""
@@ -2639,7 +2245,7 @@ msgstr ""
 
 #: taskcoachlib/mailer/__init__.py:32
 msgid "Untitled e-mail"
-msgstr "Postel hep titl"
+msgstr ""
 
 #: taskcoachlib/mailer/thunderbird.py:161
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
@@ -2653,19 +2259,19 @@ msgstr ""
 #: taskcoachlib/widgets/dialog.py:56 taskcoachlib/widgets/dialog.py:59
 #: taskcoachlib/widgets/dialog.py:119
 msgid "OK"
-msgstr "Mat eo"
+msgstr ""
 
 #: taskcoachlib/widgets/buttonbox.py:5 taskcoachlib/widgets/dialog.py:34
 msgid "Cancel"
-msgstr "Nullañ"
+msgstr ""
 
 #: taskcoachlib/widgets/dialog.py:128
 msgid "All files (*.*)|*"
-msgstr "An holl restroù (*.*)|*"
+msgstr ""
 
 #: taskcoachlib/widgets/searchctrl.py:89
 msgid "Match case"
-msgstr "Teuler evezh ouzh ar c'hef"
+msgstr ""
 
 #: taskcoachlib/widgets/searchctrl.py:90
 msgid "Match case when filtering"
