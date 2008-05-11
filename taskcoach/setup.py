@@ -18,8 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import platform
 from distutils.core import setup
 from taskcoachlib import meta
+
 
 setupOptions = { 
     'name': meta.filename,
@@ -39,8 +41,6 @@ setupOptions = {
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
         'ics', 'html', 'csv')] + ['buildlib'],
     'scripts': ['taskcoach.py', 'taskcoach.pyw'],
-    # FIXME: this only makes sense on Linux systems:
-    'data_files': [('share/applications', ['build.in/fedora/taskcoach.desktop']), ('share/pixmaps', ['icons.in/taskcoach.png'])],
     'classifiers': [\
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',
@@ -57,6 +57,12 @@ setupOptions = {
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Office/Business :: Scheduling']}
+
+if 'debian' in platform.dist():
+    setupOptions['data_files'] = [\
+        ('share/applications', ['build.in/fedora/taskcoach.desktop']), 
+        ('share/pixmaps', ['icons.in/taskcoach.png'])]
+
 
 if __name__ == '__main__':
     setup(**setupOptions)
