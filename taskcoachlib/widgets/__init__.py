@@ -36,4 +36,4 @@ from dirchooser import DirectoryChooser
 try:
     from wxaddons import sized_controls
 except ImportError:
-    from thirdparty import sized_controls
+    from taskcoachlib.thirdparty import sized_controls
