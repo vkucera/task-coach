@@ -45,19 +45,16 @@ setupOptions = {
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: GNU General Public License (GPL)',
-        'Natural Language :: English', # FIXME: get languages from meta data
-        'Natural Language :: Dutch',
-        'Natural Language :: French',
-        'Natural Language :: German',
-        'Natural Language :: Spanish',
-        'Natural Language :: Hungarian',
-        'Natural Language :: Russian',
-        'Natural Language :: Chinese (Simplified)',
-        'Natural Language :: Chinese (Traditional)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Office/Business :: Scheduling']}
 
+# Add available translations:
+languages = sorted(meta.data.languages.keys())
+for language in languages:
+    setupOptions['classifiers'].append('Natural Language :: %s'%language)
+
+# Add data files for Debian-based systems:
 if 'debian' in platform.dist():
     setupOptions['data_files'] = [\
         ('share/applications', ['build.in/fedora/taskcoach.desktop']), 
