@@ -23,8 +23,9 @@ from changetypes import *
 
 releases = [
 
-Release('0.70.0', 'May ?, 2008',
-    summary='...',
+Release('0.70.0', 'May 12, 2008',
+    summary='''Small feature enhancements, more translations and several bug 
+fixes. Task Coach is now distributed under the GPLv3+.''',
     featuresAdded=[
         Feature('Paths to file attachments may be relative.'),
         Feature('Monthly and yearly recurrence of tasks.', '1933222', '1957687'),
