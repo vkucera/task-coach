@@ -90,11 +90,11 @@ class ObjectTest(test.TestCase):
         self.failIf(self.eventsReceived)
         
     def testGetState(self):
-        self.assertEqual(dict(subject='', description='', id=self.object.id()), 
+        self.assertEqual(dict(subject='', description='', id=self.object.id(), dirtyFlags=base.DIRTYMASK), 
                          self.object.__getstate__())
 
     def testSetState(self):
-        newState = dict(subject='New', description='New', id=None)
+        newState = dict(subject='New', description='New', id=None, dirtyFlags=0)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         

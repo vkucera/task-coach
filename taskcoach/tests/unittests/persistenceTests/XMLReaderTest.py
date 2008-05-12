@@ -21,6 +21,7 @@ import xml.parsers.expat, sets, wx, StringIO
 import test
 from taskcoachlib import persistence
 from taskcoachlib.domain import task, date
+from taskcoachlib.domain import base
 
 
 class XMLReaderTestCase(test.TestCase):
@@ -234,6 +235,10 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
         tasks, categories, notes = self.writeAndRead('<tasks><task/></tasks>\n')
         self.assertEqual(1, len(tasks))
         self.assertEqual('', tasks[0].subject())
+
+    def testDirtyMaskDefault(self):
+        tasks, categories, notes = self.writeAndRead('<tasks><task/></tasks>\n')
+        self.assertEqual(tasks[0].dirtyFlags(), base.DIRTYMASK)
 
     def testTwoTasks(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -660,4 +665,3 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
             <task maxRecurrenceCount="10"/>
         </tasks>''')
         self.assertEqual(10, tasks[0].maxRecurrenceCount())
-

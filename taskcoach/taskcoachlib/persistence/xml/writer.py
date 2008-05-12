@@ -23,7 +23,7 @@ from taskcoachlib.domain import date, attachment
 
 
 class XMLWriter:    
-    def __init__(self, fd, versionnr=19):
+    def __init__(self, fd, versionnr=20):
         self.__fd = fd
         self.__versionnr = versionnr
 
@@ -77,6 +77,7 @@ class XMLWriter:
         if task.shouldMarkCompletedWhenAllChildrenCompleted != None:
             node.setAttribute('shouldMarkCompletedWhenAllChildrenCompleted', 
                               str(task.shouldMarkCompletedWhenAllChildrenCompleted))
+        node.setAttribute('dirtyflags', str(task.dirtyFlags()))
         if task.description():
             node.appendChild(self.textNode('description', task.description()))
         for attachment in task.attachments():

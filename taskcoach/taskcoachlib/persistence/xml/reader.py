@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import time, xml.dom.minidom, re, os
-from taskcoachlib.domain import date, effort, task, category, note, attachment
+from taskcoachlib.domain import base, date, effort, task, category, note, attachment
 
 
 class XMLReader:
@@ -143,6 +143,10 @@ class XMLReader:
             kwargs['categories'] = self.__parseCategoryNodesWithinTaskNode(taskNode.childNodes)
         else:
             kwargs['categories'] = []
+        if self.__tskversion <= 19:
+            kwargs['dirtyFlags'] = base.DIRTYMASK
+        else:
+            kwargs['dirtyFlags'] = self.__parseInteger(taskNode.getAttribute('dirtyflags'))
         return task.Task(**kwargs)
     
     def __parseNoteNode(self, noteNode):

@@ -22,12 +22,16 @@ import time
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 
+
+DIRTYMASK = 0xFF # Up to 8 external stores for now.
+
     
 class Object(patterns.Observable):
     def __init__(self, *args, **kwargs):
         self.__subject = kwargs.pop('subject', '')
         self.__description = kwargs.pop('description', '')
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
+        self.__dirtyFlags = kwargs.pop('dirtyFlags', DIRTYMASK)
         # FIXME: Not a valid XML id
         # FIXME: When dropping support for python 2.4, use the uuid module
         super(Object, self).__init__(*args, **kwargs)
@@ -41,7 +45,8 @@ class Object(patterns.Observable):
         except AttributeError:
             state = dict()
         state.update(dict(id=self.__id, subject=self.__subject, 
-                          description=self.__description))
+                          description=self.__description,
+                          dirtyFlags=self.__dirtyFlags))
         return state
     
     def __setstate__(self, state):
@@ -52,6 +57,7 @@ class Object(patterns.Observable):
         self.setId(state['id'])
         self.setSubject(state['subject'])
         self.setDescription(state['description'])
+        self.setDirtyFlags(state['dirtyFlags'])
     
     def copy(self):
         state = self.__getstate__()
@@ -95,6 +101,15 @@ class Object(patterns.Observable):
     @classmethod    
     def descriptionChangedEventType(class_):
         return '%s.description'%class_
+
+    def setDirtyFlags(self, flags=DIRTYMASK):
+        self.__dirtyFlags = flags
+
+    def dirtyFlags(self):
+        return self.__dirtyFlags
+
+    def cleanDirtyFlag(self, flag):
+        self.__dirtyFlags = self._dirtyFlags & ~(1 << flag)
 
 
 class CompositeObject(Object, patterns.ObservableComposite):

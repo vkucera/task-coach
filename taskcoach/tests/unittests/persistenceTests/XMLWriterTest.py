@@ -327,3 +327,7 @@ class XMLWriterTest(test.TestCase):
     def testMaxRecurrenceCount(self):
         self.task.setMaxRecurrenceCount(5)
         self.expectInXML('maxRecurrenceCount="5"')
+
+    def testDirtyFlags(self):
+        self.task.setDirtyFlags(0xDEADBEEF)
+        self.expectInXML('dirtyflags="%d"' % 0xDEADBEEF)

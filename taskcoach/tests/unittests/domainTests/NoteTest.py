@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from taskcoachlib import patterns
-from taskcoachlib.domain import note
+from taskcoachlib.domain import base, note
 
 
 class NoteTest(test.TestCase):
@@ -97,10 +97,10 @@ class NoteTest(test.TestCase):
         
     def testGetState(self):
         self.assertEqual(dict(id=self.note.id(), subject='', description='', parent=None,
-            categories=set(), children=self.note.children()), self.note.__getstate__())
+            categories=set(), children=self.note.children(), dirtyFlags=base.DIRTYMASK), self.note.__getstate__())
         
     def testSetState(self):
         self.note.__setstate__(dict(id='id', subject='new', description='new', 
-            parent=None, children=[]))
+            parent=None, children=[], dirtyFlags=base.DIRTYMASK))
         self.assertEqual('new', self.note.description())
 
