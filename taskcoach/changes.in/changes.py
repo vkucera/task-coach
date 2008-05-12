@@ -22,6 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+Release('0.70.1', '??',
+    summary='''Bugfix release.''',
+    bugsFixed=[
+        Bug('''Prevent crash under Windows XP when dropping e-mail from
+Thunderbird if the APPDATA environment variable is not defined.''', '1960827')]),
 
 Release('0.70.0', 'May 12, 2008',
     summary='''Small feature enhancements, more translations and several bug 
