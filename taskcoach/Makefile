@@ -61,7 +61,7 @@ icons:
 
 website: changes
 	cd website.in; $(PYTHON) make.py; cd ..
-	$(EPYDOC) taskcoachlib taskcoach.py* -o website.out/epydoc
+	$(EPYDOC) --parse-only -o website.out/epydoc taskcoachlib taskcoach.py
 	$(PYTHON) tools/webchecker.py website.out/index.html
 
 i18n:
