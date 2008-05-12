@@ -91,8 +91,12 @@ elif sys.argv[1] == 'py2app':
         setup_requires=['py2app'],
         options=dict(py2app=dict(argv_emulation=True, compressed=True,
             dist_dir=builddir, optimize=2, iconfile='icons.in/taskcoach.icns', 
-            packages=['i18n'],
+            # We need to explicitly include i18n modules because they 
+            # are imported implicitly via __import__:
+            includes=[filename[:-3].replace('/', '.') for filename \
+                      in glob.glob('taskcoachlib/i18n/*.py')],
             plist=dict(CFBundleIconFile='taskcoach.icns')))))
+    
 elif sys.argv[1] == 'bdist_rpm_fedora':
     from distutils.core import setup
     spec_file = file('build.in/fedora/taskcoach.spec').read()%meta.metaDict
