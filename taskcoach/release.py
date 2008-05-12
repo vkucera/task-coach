@@ -95,6 +95,9 @@ class SimpleFTP(ftplib.FTP, object):
 
     def put(self, filenames):
         for filename in filenames:
+            if os.path.isdir(filename):
+                continue
+            print filename
             fd = file(filename, 'rb')
             self.storbinary('STOR %s'%filename, fd)
             print 'Stored %s'%filename
@@ -103,14 +106,14 @@ def ftpWebsiteToChello():
     print "Uploading website to Chello..."
     chello = SimpleFTP('members.chello.nl', 'f.niessink', '.chello_password')
     os.chdir('website.out')
-    chello.put(glob.glob('*'))
+    chello.put(glob.glob('*') + glob.glob('*/*'))
     chello.quit()
     os.chdir('..')
     print 'Done uploading website to Chello.'
 
 def scpWebsiteToSourceForge():
     print 'Uploading website to SourceForge...'
-    os.system('scp website.out/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
+    os.system('scp -r website.out/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
     print 'Done uploading website to SourceForge.'
     
 def registerWithPyPI():
