@@ -25,14 +25,22 @@ _RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
 _RX_IMAP    = re.compile('imap-message://([^@]+)@(.+)/(.*)#([0-9]+)')
 
 def getThunderbirdDir():
+    path = None
+
     if '__WXMAC__' in wx.PlatformInfo:
         path = os.path.join(os.environ['HOME'], 'Library', 'Thunderbird')
     elif os.name == 'posix':
         path = os.path.join(os.environ['HOME'], '.thunderbird')
     elif os.name == 'nt':
-        path = os.path.join(os.environ['APPDATA'], 'Thunderbird')
+        if os.environ.has_key('APPDATA'):
+            path = os.path.join(os.environ['APPDATA'], 'Thunderbird')
+        elif os.environ.has_key('USERPROFILE'):
+            path = os.path.join(os.environ['USERPROFILE'], 'Application Data', 'Thunderbird')
     else:
         raise EnvironmentError('Unsupported platform: %s' % os.name)
+
+    if path is None:
+        raise RuntimeError, 'Could not find Thunderbird data dir'
 
     return path
 
