@@ -26,7 +26,12 @@ Release('0.70.1', '??',
     summary='''Bugfix release.''',
     bugsFixed=[
         Bug('''Prevent crash under Windows XP when dropping e-mail from
-Thunderbird if the APPDATA environment variable is not defined.''', '1960827')]),
+Thunderbird if the APPDATA environment variable is not defined.''', '1960827'),
+        Bug('''ImportError: No module named thirdparty.ElementTree. This 
+exception would happen when using a source distribution of Task Coach or a 
+package (rpm, deb) for Linux *and* when the default version of Python on the 
+system is Python 2.4. Task Coach tried to import a module 
+from the wrong package.''')]),
 
 Release('0.70.0', 'May 12, 2008',
     summary='''Small feature enhancements, more translations and several bug 
