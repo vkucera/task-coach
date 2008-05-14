@@ -31,7 +31,7 @@ Thunderbird if the APPDATA environment variable is not defined.''', '1960827'),
 exception would happen when using a source distribution of Task Coach or a 
 package (rpm, deb) for Linux *and* when the default version of Python on the 
 system is Python 2.4. Task Coach tried to import a module 
-from the wrong package.''')]),
+from the wrong package.''', '1964069')]),
 
 Release('0.70.0', 'May 12, 2008',
     summary='''Small feature enhancements, more translations and several bug 
