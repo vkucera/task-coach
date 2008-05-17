@@ -99,7 +99,7 @@ class SavePage(SettingsPage):
             _('Save settings (%s.ini) in same directory as the program') \
               %meta.filename, 
             _('(For running %s from a removable medium)')%meta.name)
-        self.addPathSetting('file', 'attachmentbase', _('Attachement base directory'),
+        self.addPathSetting('file', 'attachmentbase', _('Attachment base directory'),
                             _('When adding an attachment, try to make its path\nrelative to this one.'))
         self.fit()
             
