@@ -28,7 +28,7 @@ Group: 		Applications/Productivity
 URL: 		%(url)s
 Source:		%(dist_download_prefix)s/TaskCoach-%%{version}.tar.gz
 Source1:	taskcoach.png
-Source2:	taskcoach.desktop
+Source2:	build.in/fedora/taskcoach.desktop
 BuildRoot: 	%%{_tmppath}/%%{name}-%%{version}-%%{release}-root-%%(%%{__id_u} -n)
 BuildArch:	noarch
 Requires: 	python >= 2.4
