@@ -372,7 +372,8 @@ class EffortEditorTest(TaskEditorTestCase):
     
     def createEditor(self):
         return gui.dialog.editor.EffortEditor(self.frame, self.createCommand(), 
-            {}, self.effortList, self.taskList, raiseDialog=False)
+            {}, self.effortList, self.taskList, self.settings, 
+            raiseDialog=False)
     
     def testCreate(self):
         self.assertEqual(self.effort.getStart().date(), 

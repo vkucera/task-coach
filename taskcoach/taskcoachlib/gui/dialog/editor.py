@@ -2,6 +2,7 @@
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -677,13 +678,14 @@ class TaskComboTreeBox(wx.Panel):
 
 
 class EffortEditBook(widgets.BookPage):
-    def __init__(self, parent, effort, editor, effortList, taskList, 
+    def __init__(self, parent, effort, editor, effortList, taskList, settings,
                  *args, **kwargs):
         super(EffortEditBook, self).__init__(parent, columns=3, *args, **kwargs)
         self._editor = editor
         self._effort = effort
         self._effortList = effortList
         self._taskList = taskList
+        self._settings = settings
         self.addTaskEntry()
         self.addStartAndStopEntries()
         self.addDescriptionEntry()
@@ -699,8 +701,12 @@ class EffortEditBook(widgets.BookPage):
                       flags=[None, wx.ALL|wx.EXPAND])
 
     def addStartAndStopEntries(self):
+        starthour = self._settings.getint('view', 'efforthourstart')
+        endhour = self._settings.getint('view', 'efforthourend')
+        interval = self._settings.getint('view', 'effortminuteinterval')
         self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
-            self.onPeriodChanged, noneAllowed=False)
+            self.onPeriodChanged, noneAllowed=False,
+            starthour=starthour, endhour=endhour, interval=interval)
         startFromLastEffortButton = wx.Button(self, 
             label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, 
@@ -709,7 +715,8 @@ class EffortEditBook(widgets.BookPage):
             startFromLastEffortButton.Disable()
         
         self._stopEntry = widgets.DateTimeCtrl(self, self._effort.getStop(),
-            self.onPeriodChanged, noneAllowed=True)
+            self.onPeriodChanged, noneAllowed=True,
+            starthour=starthour, endhour=endhour, interval=interval)
         
         flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
         self.addEntry(_('Start'), self._startEntry, 
@@ -911,9 +918,10 @@ class TaskEditor(EditorWithCommand):
     
 class EffortEditor(EditorWithCommand):
     def __init__(self, parent, command, uiCommands, effortList, taskList, 
-                 *args, **kwargs):
+                 settings, *args, **kwargs):
         self._effortList = effortList
         self._taskList = taskList
+        self._settings = settings
         super(EffortEditor, self).__init__(parent, command, uiCommands, 
                                            *args, **kwargs)
         
@@ -923,7 +931,7 @@ class EffortEditor(EditorWithCommand):
 
     def addPage(self, effort):
         page = EffortEditBook(self._interior, effort, self, self._effortList, 
-            self._taskList)
+            self._taskList, self._settings)
         self._interior.AddPage(page, effort.task().subject())
 
 

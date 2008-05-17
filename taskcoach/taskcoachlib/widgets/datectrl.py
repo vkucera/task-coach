@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -143,7 +144,11 @@ class DateCtrl(Panel):
         
 
 class TimeCtrl(Panel):
-    def __init__(self, parent, callback=None, *args, **kwargs):
+    def __init__(self, parent, callback=None, starthour=8, endhour=18, 
+                 interval=15, *args, **kwargs):
+        self._starthour = starthour
+        self._endhour = endhour
+        self._interval = interval
         super(TimeCtrl, self).__init__(parent, callback, *args, **kwargs)
         
     def SetValue(self, time):
@@ -163,8 +168,8 @@ class TimeCtrl(Panel):
         
     def _choices(self):
         choices = []
-        for hour in range(8, 18):
-            for minute in range(0, 60, 15):
+        for hour in range(self._starthour, self._endhour):
+            for minute in range(0, 60, self._interval):
                 choices.append('%02d:%02d'%(hour, minute))
         return choices
         
@@ -179,9 +184,13 @@ class TimeCtrl(Panel):
 
 
 class DateTimeCtrl(Panel):
-    def __init__(self, parent, dateTime, callback=None, noneAllowed=True, 
+    def __init__(self, parent, dateTime, callback=None, noneAllowed=True,
+                 starthour=8, endhour=18, interval=15, 
                  *args, **kwargs):
         self._noneAllowed = noneAllowed
+        self._starthour = starthour
+        self._endhour = endhour
+        self._interval = interval
         super(DateTimeCtrl, self).__init__(parent, callback, *args, **kwargs)
         self._callback = callback or self.__nullCallback
         self.SetValue(dateTime)
@@ -193,7 +202,8 @@ class DateTimeCtrl(Panel):
         self._dateCtrl = DateCtrl(self, self._dateCtrlCallback, 
             self._noneAllowed)
         self._dateCtrl.Bind(wx.EVT_CHECKBOX, self.onEnableDatePicker)
-        self._timeCtrl = TimeCtrl(self, self._timeCtrlCallback)
+        self._timeCtrl = TimeCtrl(self, self._timeCtrlCallback,
+                                  self._starthour, self._endhour, self._interval)
         return [self._dateCtrl, self._timeCtrl]
         
     def onEnableDatePicker(self, event):
