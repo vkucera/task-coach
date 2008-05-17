@@ -93,6 +93,6 @@ clean:
 	rm -rf $(CLEANFILES)
 
 reallyclean:
-	$(PYTHON) make.py clean --really-cleans
+	$(PYTHON) make.py clean --really-clean
 	rm -rf $(CLEANFILES) $(REALLYCLEANFILES)
 
