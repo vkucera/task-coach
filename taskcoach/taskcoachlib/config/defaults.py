@@ -190,7 +190,8 @@ defaults = { \
     'autosave': 'False',
     'backup': 'False',
     'saveinifileinprogramdir': 'False',
-    'attachmentbase': '' },
+    'attachmentbase': '',
+    'psppath': '' },
 'color': { \
     'activetasks': '(0, 0, 0)',
     'completedtasks': '(0, 255, 0)',

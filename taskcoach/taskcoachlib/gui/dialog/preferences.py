@@ -101,6 +101,8 @@ class SavePage(SettingsPage):
             _('(For running %s from a removable medium)')%meta.name)
         self.addPathSetting('file', 'attachmentbase', _('Attachement base directory'),
                             _('When adding an attachment, try to make its path\nrelative to this one.'))
+        self.addPathSetting('file', 'psppath', _('PSP mount point'),
+                            _('Path to your PSP mount point (drive for Windows)'))
         self.fit()
             
                
