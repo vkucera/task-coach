@@ -4,6 +4,7 @@
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -200,6 +201,13 @@ class FeaturesPage(SettingsPage):
         super(FeaturesPage, self).__init__(*args, **kwargs)
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'), 
             _('This setting will take effect after you restart %s')%meta.name)
+        self.addIntegerSetting('view', 'efforthourstart',
+            _('Hour of start of work day'), minimum=0, maximum=23)
+        self.addIntegerSetting('view', 'efforthourend',
+            _('Hour of end of work day'), minimum=1, maximum=24)
+        self.addChoiceSetting('view', 'effortminuteinterval',
+            _('Minutes between task start/end times'),
+            [('5', '5'), ('10', '10'), ('15', '15'), ('20', '20'), ('30', '30')])
         self.fit()
         
 

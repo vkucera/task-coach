@@ -22,6 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+
+Release('0.71.0', '?',
+    summary='''?''',
+    featuresAdded=[
+        Feature('''The times used in the drop down menus of the start and stop
+entries of the effort dialog can now be changed via the preferences dialog. 
+Patch supplied by Rob McMullen.''')]),
+
 Release('0.70.1', '??',
     summary='''Bugfix release.''',
     bugsFixed=[

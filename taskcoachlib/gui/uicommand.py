@@ -2,6 +2,7 @@
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1375,7 +1376,8 @@ class TaskOpenAllAttachments(NeedsSelectedTasksWithAttachments, ViewerCommand, S
 
 
 class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand, 
-                TaskListCommand, MainWindowCommand, UICommandsCommand):
+                TaskListCommand, MainWindowCommand, UICommandsCommand,
+                SettingsCommand):
     def __init__(self, *args, **kwargs):
         effortList = kwargs['effortList']
         super(EffortNew, self).__init__(bitmap='new',  
@@ -1393,7 +1395,8 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
 
         newEffortDialog = dialog.editor.EffortEditor(self.mainwindow, 
             command.NewEffortCommand(self.effortList, selectedTasks),
-            self.uiCommands, self.effortList, self.taskList, bitmap=self.bitmap)
+            self.uiCommands, self.effortList, self.taskList, 
+            self.settings, bitmap=self.bitmap)
         newEffortDialog.Show()
 
 
@@ -1959,8 +1962,9 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['minpriority'] = TaskMinPriority(taskList=taskList, viewer=viewerContainer)
         
         # Effort menu
-        self['neweffort'] = EffortNew(viewer=viewerContainer, effortList=effortList,
-            taskList=taskList, mainwindow=mainwindow, uicommands=self)
+        self['neweffort'] = EffortNew(viewer=viewerContainer, 
+            effortList=effortList, taskList=taskList, mainwindow=mainwindow, 
+            uicommands=self ,settings=settings)
         self['editeffort'] = EffortEdit(viewer=viewerContainer, effortList=effortList)
         self['deleteeffort'] = EffortDelete(effortList=effortList, 
                                             viewer=viewerContainer)
