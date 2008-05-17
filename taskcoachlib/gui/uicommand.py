@@ -702,7 +702,7 @@ class EditPreferences(MainWindowCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(EditPreferences, self).__init__(menuText=_('Preferences...'),
             helpText=_('Edit preferences'), bitmap='configure', 
-            *args, **kwargs)
+            id=wx.ID_PREFERENCES, *args, **kwargs)
             
     def doCommand(self, event, show=True):
         editor = dialog.preferences.Preferences(parent=self.mainwindow, 

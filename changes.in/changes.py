@@ -25,6 +25,8 @@ releases = [
 Release('0.70.1', '??',
     summary='''Bugfix release.''',
     bugsFixed=[
+        Bug('''On Max OS X, put preferences menu item in the TaskCoach menu 
+instead of the Edit menu to conform with Mac OS X standards.''', '1965861'),
         Bug('''Prevent crash under Windows XP when dropping e-mail from
 Thunderbird if the APPDATA environment variable is not defined.''', '1960827'),
         Bug('''ImportError: No module named thirdparty.ElementTree. This 
