@@ -210,6 +210,11 @@ class Task(category.CategorizableCompositeObject):
                 self._completionDate = completionDate
                 self.notifyObservers(patterns.Event(self, 'task.completionDate', 
                     completionDate))
+                # Warning:  While testing  the sync  framework, remote
+                # storages  are  only able  to  change the  completion
+                # date;  later,  setDirtyFlags()  will be  called  for
+                # other changes.
+                self.setDirtyFlags()
                 if parent and parent.priority(recursive=True) != \
                               oldParentTotalPriority:
                     parent.notifyObserversOfTotalPriorityChange()                    

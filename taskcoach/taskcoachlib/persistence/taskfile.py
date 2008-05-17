@@ -43,7 +43,8 @@ class TaskFile(patterns.Observable):
                                                   eventType)
 
         for eventType in (task.Task.subjectChangedEventType(), 
-            task.Task.descriptionChangedEventType(), 'task.startDate', 
+            task.Task.descriptionChangedEventType(),
+            task.Task.dirtyFlagsChangedEventType(), 'task.startDate', 
             'task.dueDate', 'task.completionDate', 'task.priority', 
             'task.budget', 'task.hourlyFee', 'task.fixedFee',
             'task.timeSpent', 'task.reminder',

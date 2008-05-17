@@ -102,15 +102,30 @@ class Object(patterns.Observable):
     def descriptionChangedEventType(class_):
         return '%s.description'%class_
 
+
+    @classmethod
+    def dirtyFlagsChangedEventType(class_):
+        return '%s.dirtyflags' % class_
+
     def setDirtyFlags(self, flags=DIRTYMASK):
-        self.__dirtyFlags = flags
+        if flags != self.__dirtyFlags:
+            self.__dirtyFlags = flags
+            self.notifyObservers(patterns.Event(self,
+                                                self.dirtyFlagsChangedEventType(),
+                                                flags))
 
     def dirtyFlags(self):
         return self.__dirtyFlags
 
     def cleanDirtyFlag(self, flag):
-        self.__dirtyFlags = self._dirtyFlags & ~(1 << flag)
+        if self.isDirty(flag):
+            self.__dirtyFlags = self.__dirtyFlags & ~(1 << flag)
+            self.notifyObservers(patterns.Event(self,
+                                                self.dirtyFlagsChangedEventType(),
+                                                self.__dirtyFlags))
 
+    def isDirty(self, flag):
+        return (self.__dirtyFlags & (1 << flag)) != 0
 
 class CompositeObject(Object, patterns.ObservableComposite):
     def __init__(self, *args, **kwargs):

@@ -218,6 +218,8 @@ class FileMenu(Menu):
             'printpreview', 'print', None])
         self.appendMenu(_('&Export'), ExportMenu(mainwindow, uiCommands),
             'export')
+        self.appendMenu(_('&Synchronize'), SyncMenu(mainwindow, uiCommands),
+            'sync')
         self.__recentFilesStartPosition = len(self) 
         self.appendUICommands(uiCommands, [None, 'quit'])
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
@@ -259,6 +261,11 @@ class ExportMenu(Menu):
         self.appendUICommands(uiCommands, ['exportashtml', 'exportasics', 
                                            'exportascsv'])
         
+
+class SyncMenu(Menu):
+    def __init__(self, mainwindow, uiCommands):
+        super(SyncMenu, self).__init__(mainwindow)
+        self.appendUICommands(uiCommands, [])
 
 class EditMenu(Menu):
     def __init__(self, mainwindow, uiCommands):

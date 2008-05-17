@@ -27,6 +27,7 @@ iconlist = [
 ('exportasics', 'mimetypes', 'vcalendar', [16]),
 ('exportashtml', 'mimetypes', 'html', [16]),
 ('exportascsv', 'mimetypes', 'txt', [16]),
+('syncwithpsp', 'devices', 'pda', [16]),
 ('close', 'actions', 'fileclose', [16]),
 ('exit', 'actions', 'exit', [16]),
 ('help', 'actions', 'help', [16]),
