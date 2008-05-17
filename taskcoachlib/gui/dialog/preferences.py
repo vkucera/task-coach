@@ -34,6 +34,11 @@ class SettingsPage(widgets.BookPage):
         self._colorSettings = []
         self._pathSettings = []
         
+    def addEntry(self, text, control, helpText=''):
+        if helpText == 'restart':
+            helpText = _('This setting will take effect\nafter you restart %s')%meta.name
+        super(SettingsPage, self).addEntry(text, control, helpText)
+        
     def addBooleanSetting(self, section, setting, text, helpText=''):
         checkBox = wx.CheckBox(self, -1)
         checkBox.SetValue(self.settings.getboolean(section, setting))
@@ -92,15 +97,15 @@ class SavePage(SettingsPage):
         self.addBooleanSetting('file', 'autosave', 
             _('Auto save after every change'))
         self.addBooleanSetting('file', 'backup', 
-            _('Create backup copy before overwriting a %s file')%meta.name)
+            _('Create a backup copy before\noverwriting a %s file')%meta.name)
         self.addIntegerSetting('file', 'maxrecentfiles',
             _('Maximum number of recent files to remember'), minimum=0, maximum=9)
         self.addBooleanSetting('file', 'saveinifileinprogramdir',
-            _('Save settings (%s.ini) in same directory as the program') \
+            _('Save settings (%s.ini) in the same\ndirectory as the program') \
               %meta.filename, 
-            _('(For running %s from a removable medium)')%meta.name)
+            _('(For running %s\nfrom a removable medium)')%meta.name)
         self.addPathSetting('file', 'attachmentbase', _('Attachment base directory'),
-                            _('When adding an attachment, try to make its path\nrelative to this one.'))
+                            _('When adding an attachment, try to make\nits path relative to this one.'))
         self.fit()
             
                
@@ -115,7 +120,7 @@ class WindowBehaviorPage(SettingsPage):
             _('Start with the main window iconized'),
             [('Never', _('Never')), ('Always', _('Always')), 
              ('WhenClosedIconized', 
-              _('When the main window was iconized last session'))])
+              _('If it was iconized last session'))])
         self.addBooleanSetting('version', 'notify',
             _('Check for new version of %(name)s on startup')%meta.data.metaDict)
         self.addBooleanSetting('window', 'hidewheniconized', 
@@ -125,7 +130,13 @@ class WindowBehaviorPage(SettingsPage):
         self.addBooleanSetting('window', 'blinktaskbariconwhentrackingeffort',
             _('Make clock in the task bar tick when tracking effort'))
         self.addBooleanSetting('view', 'descriptionpopups',
-            _('Show a popup with the description of an item when hovering over it'))
+            _('Show a popup with the description of an item\nwhen hovering over it'))
+        self.addBooleanSetting('view', 'tabbedmainwindow',
+            _('''Use a tabbed user interface for the main window
+(Note: the layout you create by dragging and
+dropping tabs cannot be saved. This is a limitation
+of the underlying toolkit).'''), 
+            helpText='restart')
         self.fit()
 
 
@@ -166,7 +177,7 @@ class LanguagePage(SettingsPage):
              ('th_TH', u'ภาษาไทย (Thai)'),
              ('tr_TR', u'Türkçe (Turkish)'),
              ('uk_UA', u'украї́нська мо́ва (Ukranian)')],
-             _('This setting will take effect after you restart %s')%meta.name)
+            helpText='restart')
         
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -198,8 +209,8 @@ class ColorsPage(SettingsPage):
 class FeaturesPage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(FeaturesPage, self).__init__(*args, **kwargs)
-        self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'), 
-            _('This setting will take effect after you restart %s')%meta.name)
+        self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
+            helpText='restart') 
         self.fit()
         
 

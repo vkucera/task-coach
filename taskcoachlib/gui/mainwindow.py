@@ -162,7 +162,12 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
-        self.viewer = viewercontainer.ViewerContainer(self,
+        self.__usingTabbedMainWindow = self.settings.getboolean('view', 'tabbedmainwindow') 
+        if self.__usingTabbedMainWindow:
+            containerWidget = widgets.AUINotebook(self)
+        else:
+            containerWidget = self
+        self.viewer = viewercontainer.ViewerContainer(containerWidget,
             self.settings, 'mainviewer') 
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.taskFile.tasks(), 
@@ -210,11 +215,12 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.onShowToolBar()
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
-        wx.CallAfter(self.onShowStatusBar) 
-        perspective = self.settings.get('view', 'perspective')
-        if perspective:
-            self.manager.LoadPerspective(perspective)
-        self.manager.Update()
+        wx.CallAfter(self.onShowStatusBar)
+        if not self.__usingTabbedMainWindow:
+            perspective = self.settings.get('view', 'perspective')
+            if perspective:
+                self.manager.LoadPerspective(perspective)
+            self.manager.Update()
                 
     def registerForWindowComponentChanges(self):
         patterns.Publisher().registerObserver(self.onFilenameChanged, 
@@ -280,7 +286,11 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             self.settings.set('view', key, str(value))
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()
-        self.settings.set('view', 'perspective', self.manager.SavePerspective())
+        if self.__usingTabbedMainWindow:
+            perspective = ''
+        else:
+            perspective = self.manager.SavePerspective()
+        self.settings.set('view', 'perspective', perspective)
         self.dimensionsTracker.savePosition()
         self.settings.save()
         wx.GetApp().ProcessIdle()
@@ -322,7 +332,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         # controls. Immediately after you click on a text control the focus
         # is removed. We work around it by not having AUI manage the toolbar
         # on Mac OS X:
-        if '__WXMAC__' in wx.PlatformInfo:
+        if '__WXMAC__' in wx.PlatformInfo or self.__usingTabbedMainWindow:
             if self.GetToolBar():
                 self.GetToolBar().Destroy()
             if size is not None:

@@ -72,10 +72,11 @@ class BookPage(wx.Panel):
         labelInFirstColumn = type(controls[0]) in [type(''), type(u'')]
         flags = []
         for columnIndex in range(len(controls)):
+            flag = wx.ALL|wx.ALIGN_CENTER_VERTICAL
             if columnIndex == 0 and labelInFirstColumn:
-                flag = wx.ALL|wx.ALIGN_LEFT
+                flag |= wx.ALIGN_LEFT
             else:
-                flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND
+                flag |= wx.ALIGN_RIGHT|wx.EXPAND
             flags.append(flag)
         return flags
 
@@ -239,6 +240,7 @@ class Listbook(Book, wx.Listbook):
     
 class AUINotebook(Book, wx.aui.AuiNotebook):
     pageChangedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED
+    pageClosedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE
     
     def __init__(self, *args, **kwargs):
         kwargs['style'] = kwargs.get('style', wx.aui.AUI_NB_DEFAULT_STYLE) & ~wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
@@ -257,6 +259,7 @@ class AUINotebook(Book, wx.aui.AuiNotebook):
             event.Skip()
                     
     def onClosePage(self, event):
+        event.Skip()
         if self.GetPageCount() <= 2:
             # Prevent last tab from being closed
             self.ToggleWindowStyle(wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
