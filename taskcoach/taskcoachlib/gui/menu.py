@@ -265,7 +265,7 @@ class ExportMenu(Menu):
 class SyncMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(SyncMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, [])
+        self.appendUICommands(uiCommands, ['syncwithpsp'])
 
 class EditMenu(Menu):
     def __init__(self, mainwindow, uiCommands):

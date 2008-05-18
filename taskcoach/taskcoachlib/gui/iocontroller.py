@@ -183,14 +183,14 @@ class IOController(object):
         else:
             return False
         
-    def synchronize(self, klass, taskList):
-        isReady, msg = klass.isReady()
+    def synchronize(self, klass):
+        isReady, msg = klass.isReady(self.__settings)
         if not isReady:
             wx.MessageBox(msg, wx.OK)
             return
 
         sync = klass(self.__settings, self.__conflictCallback)
-        sync.synchronize(taskList)
+        sync.synchronize(self.__taskFile.tasks())
 
     def __conflictCallback(self, msg):
         dlg = dialog.ConflitDialog(None, msg)

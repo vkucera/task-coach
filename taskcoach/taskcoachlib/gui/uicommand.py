@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, urllib
-from taskcoachlib import patterns, meta, command, help, widgets, persistence
+from taskcoachlib import patterns, meta, command, help, widgets, persistence, synchronization
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, attachment
 from taskcoachlib.thirdparty import desktop
@@ -342,6 +342,17 @@ class NeedsListViewer(object):
         return super(NeedsListViewer, self).enabled(event) and \
             (not self.viewer.isTreeViewer())
 
+class NeedsSetting(object):
+    def __init__(self, *args, **kwargs):
+        self.__section = kwargs.pop('section')
+        self.__setting = kwargs.pop('setting')
+
+        super(NeedsSetting, self).__init__(*args, **kwargs)
+
+    def enabled(self, event):
+        return super(NeedsSetting, self).enabled(event) and \
+               bool(self.settings.get(self.__section, self.__setting))
+
 class DisableWhenTextCtrlHasFocus(object):
     def enabled(self, event):
         if isinstance(wx.Window.FindFocus(), wx.TextCtrl):
@@ -556,6 +567,18 @@ class FileQuit(MainWindowCommand):
     def doCommand(self, event):
         self.mainwindow.Close(force=True)
 
+
+class SyncWithPSP(NeedsSetting, IOCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        kwargs['section'] = 'file'
+        kwargs['setting'] = 'psppath'
+
+        super(SyncWithPSP, self).__init__(menuText=_('Synchronize with PSP...'),
+            helpText=_('Synchronize the current task list with your PSP'),
+            *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.synchronize(synchronization.PSPSynchronizer)
 
 def getUndoMenuText():
     return '%s\tCtrl+Z'%patterns.CommandHistory().undostr(_('&Undo')) 
@@ -1781,6 +1804,8 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['exportascsv'] = FileExportAsCSV(iocontroller=iocontroller,
             viewer=viewerContainer)
         self['quit'] = FileQuit(mainwindow=mainwindow)
+        self['syncwithpsp'] = SyncWithPSP(iocontroller=iocontroller,
+                                          settings=settings)
 
         # menuEdit commands
         self['undo'] = EditUndo()
