@@ -17,9 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, sys, codecs, traceback
-from taskcoachlib import meta, persistence
+from taskcoachlib import meta, persistence, synchronization
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task
+from taskcoachlib.widgets import dialog
 
 
 class IOController(object): 
@@ -182,6 +183,22 @@ class IOController(object):
         else:
             return False
         
+    def synchronize(self, klass, taskList):
+        isReady, msg = klass.isReady()
+        if not isReady:
+            wx.MessageBox(msg, wx.OK)
+            return
+
+        sync = klass(self.__settings, self.__conflictCallback)
+        sync.synchronize(taskList)
+
+    def __conflictCallback(self, msg):
+        dlg = dialog.ConflitDialog(None, msg)
+        try:
+            return dlg.ShowModal() == wx.ID_OK
+        finally:
+            dlg.Destroy()
+
     def __openFileForWriting(self, filename, mode='w', encoding='utf-8'):
         return codecs.open(filename, mode, encoding)
         

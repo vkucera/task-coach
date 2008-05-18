@@ -149,3 +149,30 @@ def AttachmentSelector(**callerKeywordArguments):
               'flags': wx.OPEN}
     kwargs.update(callerKeywordArguments)
     return wx.FileSelector(**kwargs)
+
+
+class SyncConflictDialog(wx.Dialog):
+    def __init__(self, msg, parent, *args, **kwargs):
+        super(SyncConflictDialog, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
+
+        btnRemote = wx.Button(self, wx.ID_ANY, _('Remote'))
+        btnLocal = wx.Button(self, wx.ID_ANY, _('Local'))
+
+        vsz = wx.BoxSizer(wx.VERTICAL)
+        vsz.Add(wx.StaticText(self, wx.ID_ANY, msg), 1, wx.EXPAND|wx.ALL, 3)
+
+        hsz = wx.BoxSizer(wx.HORIZONTAL)
+        hsz.Add(btnRemote, 1, wx.ALL, 3)
+        hsz.Add(btnLocal, 1, wx.ALL, 3)
+        vsz.ADd(hsz, 0, wx.EXPAND)
+
+        self.SetSizer(vsz)
+
+        wx.EVT_BUTTON(btnRemote, wx.ID_ANY, self.OnRemote)
+        wx.EVT_BUTTON(btnLocal, wx.ID_ANY, self.OnLocal)
+
+    def OnRemote(self, evt):
+        self.EndModal(wx.ID_OK)
+
+    def OnLocal(self, evt):
+        self.EndModal(wx.ID_CANCEL)
