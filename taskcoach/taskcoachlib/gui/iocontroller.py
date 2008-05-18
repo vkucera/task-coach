@@ -186,14 +186,14 @@ class IOController(object):
     def synchronize(self, klass):
         isReady, msg = klass.isReady(self.__settings)
         if not isReady:
-            wx.MessageBox(msg, wx.OK)
+            wx.MessageBox(msg, _('Not ready'), wx.OK)
             return
 
         sync = klass(self.__settings, self.__conflictCallback)
         sync.synchronize(self.__taskFile.tasks())
 
     def __conflictCallback(self, msg):
-        dlg = dialog.ConflitDialog(None, msg)
+        dlg = dialog.SyncConflictDialog(msg, None, _('Synchronization conflict'))
         try:
             return dlg.ShowModal() == wx.ID_OK
         finally:

@@ -164,7 +164,7 @@ class SyncConflictDialog(wx.Dialog):
         hsz = wx.BoxSizer(wx.HORIZONTAL)
         hsz.Add(btnRemote, 1, wx.ALL, 3)
         hsz.Add(btnLocal, 1, wx.ALL, 3)
-        vsz.ADd(hsz, 0, wx.EXPAND)
+        vsz.Add(hsz, 0, wx.EXPAND)
 
         self.SetSizer(vsz)
 
