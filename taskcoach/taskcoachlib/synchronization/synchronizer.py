@@ -1,6 +1,7 @@
 
 from taskcoachlib.domain import date
 from taskcoachlib.domain.task import Task
+from taskcoachlib.i18n import _
 
 class Synchronizer(object):
     """Base class for synchronization with remote stores (examples:
@@ -31,14 +32,20 @@ class Synchronizer(object):
 
         raise NotImplementedError
 
-    def __init__(self, settings, *args, **kwargs):
+    def __init__(self, settings, conflictCallback, *args, **kwargs):
         """Constructor. This should probably not be overriden.
 
-        @todo: use a callback for user messages"""
+        @param settings: A Settings instance.
+        @param conflictCallback: A callback that will be used whenever there
+            is a conflict between the local and remote store (i.e. a task
+            that has been changed on both). It takes one argument (message
+            for the user) and must return True if the remote store is to be used,
+            False if the local store is to be used."""
 
         super(Synchronizer, self).__init__(*args, **kwargs)
 
         self.settings = settings
+        self.conflictCallback = conflictCallback
 
     def __getAttribute(self, task, name):
         value = getattr(task, name)()
@@ -87,7 +94,9 @@ class Synchronizer(object):
                 for attrName in self.attributeNames:
                     if self.__getAttribute(localTask, attrName) != remoteTask[attrName]:
                         if localTask.isDirty(self.dirtyIndex):
-                            raise NotImplementedError, 'Should ask the user...'
+                            if self.conflictCallback(_('''Task "%s" has been modified both on the remote and local
+store. Which should I use ?''') % localTask.subject()): # TODO: more explicit...
+                                self.__setAttribute(localTask, attrName, remoteTask[attrName])
                         else:
                             self.__setAttribute(localTask, attrName, remoteTask[attrName])
 

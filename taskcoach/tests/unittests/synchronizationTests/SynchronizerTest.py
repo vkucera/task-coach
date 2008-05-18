@@ -11,6 +11,13 @@ class SynchronizerTest(test.TestCase, Synchronizer):
     dirtyIndex = 0
     attributeNames = ['startDate']
 
+    def __init__(self, *args, **kwargs):
+        test.TestCase.__init__(self, *args, **kwargs)
+        Synchronizer.__init__(self, None, self.__conflictCallback)
+
+    def __conflictCallback(self, msg):
+        return self.__conflict
+
     def testNewOnDesktopNoDate(self):
         localTasks = FakeTaskList([task.Task('subject', startDate=date.Date())])
         self.remoteTasks = []
@@ -104,6 +111,44 @@ class SynchronizerTest(test.TestCase, Synchronizer):
         self.assertEqual(len(localTasks), 1)
         self.assertEqual(localTasks[0].subject(), u'subject1')
         self.assertEqual(localTasks[0].startDate(), date.Date(2008, 5, 16))
+        self.failIf(localTasks[0].isDirty(self.dirtyIndex))
+        self.failIf(self.remoteTasks[0]['dirty'])
+
+    def testConflictRemote(self):
+        localTasks = FakeTaskList([task.Task(u'subject1', startDate=date.Date(2008, 5, 17))])
+        self.remoteTasks = [{'id': localTasks[0].id(),
+                             'subject': 'subject2',
+                             'startDate': '2008-05-16',
+                             'dirty': True}]
+
+        self.__conflict = True
+        self.synchronize(localTasks)
+
+        self.assertEqual(len(localTasks), 1)
+        self.assertEqual(localTasks[0].subject(), u'subject1')
+        self.assertEqual(localTasks[0].startDate(), date.Date(2008, 5, 16))
+        self.assertEqual(len(self.remoteTasks), 1)
+        self.assertEqual(self.remoteTasks[0]['subject'], 'subject2')
+        self.assertEqual(self.remoteTasks[0]['startDate'], '2008-05-16')
+        self.failIf(localTasks[0].isDirty(self.dirtyIndex))
+        self.failIf(self.remoteTasks[0]['dirty'])
+
+    def testConflictLocal(self):
+        localTasks = FakeTaskList([task.Task(u'subject1', startDate=date.Date(2008, 5, 17))])
+        self.remoteTasks = [{'id': localTasks[0].id(),
+                             'subject': 'subject2',
+                             'startDate': '2008-05-16',
+                             'dirty': True}]
+
+        self.__conflict = False
+        self.synchronize(localTasks)
+
+        self.assertEqual(len(localTasks), 1)
+        self.assertEqual(localTasks[0].subject(), u'subject1')
+        self.assertEqual(localTasks[0].startDate(), date.Date(2008, 5, 17))
+        self.assertEqual(len(self.remoteTasks), 1)
+        self.assertEqual(self.remoteTasks[0]['subject'], 'subject2')
+        self.assertEqual(self.remoteTasks[0]['startDate'], '2008-05-17')
         self.failIf(localTasks[0].isDirty(self.dirtyIndex))
         self.failIf(self.remoteTasks[0]['dirty'])
 
