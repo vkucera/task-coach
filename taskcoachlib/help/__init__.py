@@ -42,6 +42,14 @@ _TOC = _('''<h3>Table of contents</h3>
         <li><a href="#aboutcategories">About categories</a></li>
         <li><a href="#categoryproperties">Category properties</a></li>
     </ul>
+</li>
+<li><a href="#email">E-mail (Outlook &amp; Thunderbird) integration</a>
+  <ul>
+    <li><a href="#aboutemail">About e-mail integration</a></li>
+    <li><a href="#emailattach">Attaching an e-mail to a task</a></li>
+    <li><a href="#emailcreate">Creating a task from an e-mail</a></li>
+  </ul>
+</li>
 </ul>
 ''')
 
@@ -195,10 +203,48 @@ them, a mixture of the colors will be used to render the background of that
 task.</p>
 ''')
 
+_emailSection = _('''<h3><a name="email">E-mail (Outlook &amp; Thunderbird) integration</a></h3>
+''')
+
+_aboutEmailSubsection = _('''<h4><a name="aboutemail">About e-mail integration</a></h4>
+
+<p>%(name)s integrates with both Outlook and Thunderbird mail user
+agents, through drag and drop. This has some limitations; e-mails are
+copied in a directory next to the %(name)s file, as .eml files and are
+later opened using whatever program is associated with this file type
+on your system. On the other hand, this allows you to open these
+e-mail attachments on a system which is different from the one you
+created it first.</p>
+
+<p>Due to a Thunderbird limitation, you can't drag and drop several
+e-mails from Thunderbird. This does not apply to Outlook.</p>
+''') % meta.metaDict
+
+_emailAttachingSubsection = _('''<h4><a name="emailattach">Attaching an e-mail to a task</a></h4>
+
+<p>There are two ways to attach an e-mail to a task; you can
+
+<ul>
+  <li>Drop it on a task either in the task tree or the task list.</li>
+  <li>Drop it in the attachment pane in the task editor.</li>
+</ul>
+
+</p>
+''')
+
+_emailCreatingSubsection = _('''<h4><a name="emailcreate">Creating a task from an e-mail</a></h4>
+
+<p>Dropping an e-mail on an empty part of the task tree or task list
+creates a new task. Its subject is the subject of the mail, its
+description is its content. Additionnaly, the mail is automatically
+attached to the newly created task.</p>
+''')
+
 helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _taskPropertiesSubsection + _taskStatesSubsection + _taskColorsSubsection + \
     _effortSection + _aboutEffortSubsection + _effortPropertiesSubsection + \
-    _categorySection + _aboutCategoriesSubSection + _categoryPropertiesSubSection
+    _categorySection + _aboutCategoriesSubSection + _categoryPropertiesSubSection + \
+    _emailSection + _aboutEmailSubsection + _emailAttachingSubsection + _emailCreatingSubsection
     
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
 <h5>Version %(version)s, %(date)s</h5>
