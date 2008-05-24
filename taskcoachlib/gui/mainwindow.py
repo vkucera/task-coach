@@ -35,6 +35,8 @@ class WindowDimensionsTracker(object):
         self._window = window
         self.setDimensions()
         self._window.Bind(wx.EVT_SIZE, self.onChangeSize)
+        self._window.Bind(wx.EVT_MOVE, self.onChangePosition)
+        self._window.Bind(wx.EVT_MAXIMIZE, self.onMaximize)
         if self.startIconized():
             self._window.Iconize(True)
             wx.CallAfter(self._window.Hide)
@@ -57,18 +59,34 @@ class WindowDimensionsTracker(object):
         width, height = self.getSetting('size')
         x, y = self.getSetting('position')
         self._window.SetDimensions(x, y, width, height)
+        if self.getSetting('maximized'):
+            self._window.Maximize()
         # Check that the window is on a valid display and move if necessary:
         if wx.Display.GetFromWindow(self._window) == wx.NOT_FOUND:
             self._window.SetDimensions(0, 0, width, height)
 
     def onChangeSize(self, event):
-        self.setSetting('size', event.GetSize())
+        # Ignore the EVT_SIZE when the window is maximized. Note how this 
+        # depends on the EVT_MAXIMIZE being sent before the EVT_SIZE
+        if not self._window.IsMaximized():
+            self.setSetting('size', event.GetSize())
+            self.setSetting('maximized', False)
+        event.Skip()
+        
+    def onChangePosition(self, event):
+        # Ignore the EVT_MOVE when the window is maximized. Note how this
+        # depends on the EVT_MAXIMIZE being sent before the EVT_MOVE.
+        if not self._window.IsMaximized():
+            self.setSetting('position', self._window.GetPosition())
+            self.setSetting('maximized', False)
+        event.Skip()
+        
+    def onMaximize(self, event):
+        self.setSetting('maximized', True)
         event.Skip()
                 
     def savePosition(self):
         iconized = self._window.IsIconized()
-        if not iconized:
-            self.setSetting('position', self._window.GetPosition())
         self.setSetting('iconized', iconized)
 
 

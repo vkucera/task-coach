@@ -34,6 +34,8 @@ exception would happen when using a source distribution of Task Coach or a
 package (rpm, deb) for Linux *and* when the default version of Python on the 
 system is Python 2.4. Task Coach tried to import a module 
 from the wrong package.''', '1964069'),
+        Bug('''Remember whether the main window was maximized and if so, 
+maximize the main window when starting the next time.''', '1969266'),
         Bug('''Keep newlines in descriptions when printing or exporting to
 HTML.''')],
     featuresAdded=[
