@@ -22,17 +22,43 @@ import time
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 
-
-class Object(patterns.Observable):
+class SynchronizedObject(object):
     STATUS_NONE    = 0
     STATUS_NEW     = 1
     STATUS_CHANGED = 2
 
     def __init__(self, *args, **kwargs):
-        self.__subject = kwargs.pop('subject', '')
-        self.__description = kwargs.pop('description', '')
         self.__status = kwargs.pop('status', self.STATUS_NEW)
         self.__frozenStatus = False
+        super(SynchronizedObject, self).__init__(*args, **kwargs)
+
+    def freezeStatus(self):
+        self.__frozenStatus = True
+
+    def thawStatus(self):
+        self.__frozenStatus = False
+
+    def getStatus(self):
+        return self.__status
+
+    def markDirty(self):
+        if self.__status == self.STATUS_NONE and not self.__frozenStatus:
+            self.__status = self.STATUS_CHANGED
+
+    def cleanDirty(self):
+        if not self.__frozenStatus:
+            self.__status = self.STATUS_NONE
+
+    def isNew(self):
+        return self.__status == self.STATUS_NEW
+
+    def isModified(self):
+        return self.__status == self.STATUS_CHANGED
+
+class Object(SynchronizedObject, patterns.Observable):
+    def __init__(self, *args, **kwargs):
+        self.__subject = kwargs.pop('subject', '')
+        self.__description = kwargs.pop('description', '')
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
         # FIXME: Not a valid XML id
         # FIXME: When dropping support for python 2.4, use the uuid module
@@ -58,29 +84,6 @@ class Object(patterns.Observable):
         self.setId(state['id'])
         self.setSubject(state['subject'])
         self.setDescription(state['description'])
-
-    def freezeStatus(self):
-        self.__frozenStatus = True
-
-    def thawStatus(self):
-        self.__frozenStatus = False
-
-    def getStatus(self):
-        return self.__status
-
-    def markDirty(self):
-        if self.__status == self.STATUS_NONE and not self.__frozenStatus:
-            self.__status = self.STATUS_CHANGED
-
-    def cleanDirty(self):
-        if not self.__frozenStatus:
-            self.__status = self.STATUS_NONE
-
-    def isNew(self):
-        return self.__status == self.STATUS_NEW
-
-    def isModified(self):
-        return self.__status == self.STATUS_CHANGED
 
     def copy(self):
         state = self.__getstate__()

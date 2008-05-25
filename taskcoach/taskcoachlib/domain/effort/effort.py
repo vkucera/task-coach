@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import date
+from taskcoachlib.domain import date, base
 
 
-class EffortBase(object):
+class EffortBase(base.SynchronizedObject):
     def __init__(self, task, start, stop, *args, **kwargs):
         self._task = task
         self._start = start
