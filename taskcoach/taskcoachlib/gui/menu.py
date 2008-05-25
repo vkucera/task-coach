@@ -218,6 +218,7 @@ class FileMenu(Menu):
             'printpreview', 'print', None])
         self.appendMenu(_('&Export'), ExportMenu(mainwindow, uiCommands),
             'export')
+        self.appendUICommands(uiCommands, [None, 'synchronize'])
         self.__recentFilesStartPosition = len(self) 
         self.appendUICommands(uiCommands, [None, 'quit'])
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)

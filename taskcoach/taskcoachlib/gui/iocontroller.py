@@ -20,6 +20,7 @@ import wx, os, sys, codecs, traceback
 from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task
+from taskcoachlib.syncml import sync
 
 
 class IOController(object): 
@@ -182,6 +183,11 @@ class IOController(object):
         else:
             return False
         
+    def synchronize(self, url, username, password, taskdbname, synctasks):
+        synchronizer = sync.Synchronizer(self.__taskFile, url, username, password,
+                                         taskdbname, synctasks)
+        return synchronizer.synchronize()
+
     def __openFileForWriting(self, filename, mode='w', encoding='utf-8'):
         return codecs.open(filename, mode, encoding)
         

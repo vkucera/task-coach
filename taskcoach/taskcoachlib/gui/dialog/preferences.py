@@ -34,6 +34,7 @@ class SettingsPage(widgets.BookPage):
         self._integerSettings = []
         self._colorSettings = []
         self._pathSettings = []
+        self._textSettings = []
         
     def addBooleanSetting(self, section, setting, text, helpText=''):
         checkBox = wx.CheckBox(self, -1)
@@ -71,6 +72,11 @@ class SettingsPage(widgets.BookPage):
         self.addEntry(text, pathChooser, helpText)
         self._pathSettings.append((section, setting, pathChooser))
 
+    def addTextSetting(self, section, setting, text, helpText=''):
+        textChooser = wx.TextCtrl(self, wx.ID_ANY, self.settings.get(section, setting))
+        self.addEntry(text, textChooser, helpText)
+        self._textSettings.append((section, setting, textChooser))
+
     def addText(self, label, text):
         self.addEntry(label, text)
                 
@@ -86,6 +92,8 @@ class SettingsPage(widgets.BookPage):
             self.settings.set(section, setting, str(colorButton.GetColour()))
         for section, setting, btn in self._pathSettings:
             self.settings.set(section, setting, btn.GetPath())
+        for section, setting, txt in self._textSettings:
+            self.settings.set(section, setting, txt.GetValue())
 
 class SavePage(SettingsPage):
     def __init__(self, *args, **kwargs):
@@ -230,22 +238,39 @@ class EditorPage(SettingsPage):
         super(EditorPage, self).ok()
         widgets.MultiLineTextCtrl.CheckSpelling = \
             self.settings.getboolean('editor', 'maccheckspelling')
-        
-        
+
+
+class SyncMLPage(SettingsPage):
+    def __init__(self, *args, **kwargs):
+        super(SyncMLPage, self).__init__(*args, **kwargs)
+
+        self.addBooleanSetting('syncml', 'synctasks', _('Enable tasks synchronization'))
+##         self.addBooleanSetting('syncml', 'syncnotes', _('Enable notes synchronization'))
+##         self.addBooleanSetting('syncml', 'syncefforts', _('Enable efforts synchronization'))
+
+        self.addTextSetting('syncml', 'url', _('SyncML server URL'))
+        self.addTextSetting('syncml', 'username', _('User name/ID'))
+        self.addTextSetting('syncml', 'taskdbname', _('Tasks database name'))
+##         self.addTextSetting('syncml', 'notedbname', _('Notes database name'))
+##         self.addTextSetting('syncml', 'effortdbname', _('Efforts database name'))
+
+        self.fit()
+
 class Preferences(widgets.ListbookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
         super(Preferences, self).__init__(bitmap='configure', *args, **kwargs) 
                    
     def addPages(self):
-        self.SetMinSize((300, 400))
+        self.SetMinSize((300, 430))
         pages = [\
             (WindowBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Window behavior'), 'windows'),
             (TaskBehaviorPage(parent=self._interior, columns=2, settings=self.settings), _('Task behavior'), 'behavior'),
             (SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), 'save'),
             (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'language'),
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'colorize'),
-            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior')]
+            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior'),
+            (SyncMLPage(parent=self._interior, columns=3, settings=self.settings), _('SyncML'), 'sync')]
         if '__WXMAC__' in wx.PlatformInfo:
             pages.append((EditorPage(parent=self._interior, columns=2, settings=self.settings), _('Editor'), 'edit'))
         for page, title, bitmap in pages:

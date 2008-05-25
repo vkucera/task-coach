@@ -343,6 +343,17 @@ class NeedsListViewer(object):
         return super(NeedsListViewer, self).enabled(event) and \
             (not self.viewer.isTreeViewer())
 
+class NeedsSetting(object):
+    def __init__(self, *args, **kwargs):
+        self.__section = kwargs.pop('section')
+        self.__setting = kwargs.pop('setting')
+
+        super(NeedsSetting, self).__init__(*args, **kwargs)
+
+    def enabled(self, event):
+        return super(NeedsSetting, self).enabled(event) and \
+               bool(self.settings.get(self.__section, self.__setting))
+
 class DisableWhenTextCtrlHasFocus(object):
     def enabled(self, event):
         if isinstance(wx.Window.FindFocus(), wx.TextCtrl):
@@ -546,8 +557,27 @@ class FileExportAsCSV(IOCommand, ViewerCommand):
 
     def doCommand(self, event):
         self.iocontroller.exportAsCSV(self.viewer)
-        
-        
+
+
+class FileSynchronize(NeedsSetting, IOCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        kwargs['section'] = 'syncml'
+        kwargs['setting'] = 'url'
+
+        super(FileSynchronize, self).__init__(menuText=_('S&yncML synchronization'),
+            helpText=_('Synchronize with a SyncML server'),
+            bitmap='sync', *args, **kwargs)
+
+    def doCommand(self, event):
+        pwd = wx.GetPasswordFromUser(_('Please enter your password.'), _('Password prompt'))
+        if pwd:
+            self.iocontroller.synchronize(self.settings.get('syncml', 'url'),
+                                          self.settings.get('syncml', 'username'),
+                                          pwd,
+                                          self.settings.get('syncml', 'taskdbname'),
+                                          self.settings.get('syncml', 'synctasks'))
+
+
 class FileQuit(MainWindowCommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
@@ -1783,6 +1813,8 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             viewer=viewerContainer)
         self['exportascsv'] = FileExportAsCSV(iocontroller=iocontroller,
             viewer=viewerContainer)
+        self['synchronize'] = FileSynchronize(iocontroller=iocontroller,
+                                              settings=settings)
         self['quit'] = FileQuit(mainwindow=mainwindow)
 
         # menuEdit commands

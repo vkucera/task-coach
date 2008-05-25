@@ -23,7 +23,7 @@ from taskcoachlib.domain import date, attachment
 
 
 class XMLWriter:    
-    def __init__(self, fd, versionnr=19):
+    def __init__(self, fd, versionnr=20):
         self.__fd = fd
         self.__versionnr = versionnr
 
@@ -52,6 +52,7 @@ class XMLWriter:
         node = self.document.createElement('task')
         node.setAttribute('subject', task.subject())
         node.setAttribute('id', task.id())
+        node.setAttribute('status', str(task.getStatus()))
         if task.startDate() != date.Date():
             node.setAttribute('startdate', str(task.startDate()))
         if task.dueDate() != date.Date():
@@ -97,6 +98,7 @@ class XMLWriter:
     def effortNode(self, effort):
         node = self.document.createElement('effort')
         formattedStart = self.formatDateTime(effort.getStart())
+        node.setAttribute('status', str(effort.getStatus()))
         node.setAttribute('start', formattedStart)
         stop = effort.getStop()
         if stop != None:
@@ -137,6 +139,7 @@ class XMLWriter:
     def noteNode(self, note):
         node = self.document.createElement('note')
         node.setAttribute('id', note.id())
+        node.setAttribute('status', str(note.getStatus()))
         if note.subject():
             node.setAttribute('subject', note.subject())
         if note.description():
