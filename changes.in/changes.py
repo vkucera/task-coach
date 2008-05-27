@@ -23,7 +23,8 @@ from changetypes import *
 
 releases = [
 Release('0.70.1', '??',
-    summary='''Bugfix release.''',
+    summary='''Bugfix release that, optionally, brings back the tabbed user 
+interface that was removed in the previous release.''',
     bugsFixed=[
         Bug('''On Max OS X, put preferences menu item in the TaskCoach menu 
 instead of the Edit menu to conform with Mac OS X standards.''', '1965861'),
@@ -36,6 +37,8 @@ system is Python 2.4. Task Coach tried to import a module
 from the wrong package.''', '1964069'),
         Bug('''Remember whether the main window was maximized and if so, 
 maximize the main window when starting the next time.''', '1969266'),
+        Bug('''Correctly sort tasks on startup when sort column is 'Overall
+categories'.''', '1962003'),
         Bug('''Keep newlines in descriptions when printing or exporting to
 HTML.''')],
     featuresAdded=[
