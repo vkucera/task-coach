@@ -39,7 +39,7 @@ defaults = { \
     'language': 'en_US',
     'taskcategoryfiltermatchall': 'True',
     'descriptionpopups': 'True',
-    'perspective': 'layout2|name=tasktreelistviewer;caption=Task tree;state=18428;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=categoryviewer;caption=Categories;state=2099196;dir=2;layer=0;row=1;pos=0;prop=100000;bestw=100;besth=80;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=19;floaty=124;floatw=108;floath=104|name=toolbar;caption=Toolbar;state=2112240;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=661;besth=36;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|dock_size(1,10,0)=38|dock_size(2,0,1)=147|',
+    'perspective': '',
     'tabbedmainwindow': 'False'},
 'tasklistviewer': { \
     'title': '',
