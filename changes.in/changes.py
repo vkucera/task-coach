@@ -23,8 +23,8 @@ from changetypes import *
 
 releases = [
 Release('0.70.1', '??',
-    summary='''Bugfix release that, optionally, brings back the tabbed user 
-interface that was removed in the previous release.''',
+    summary='''This release optionally brings back the tabbed user 
+interface that was removed in the previous release and fixes a few bugs.''',
     bugsFixed=[
         Bug('''On Max OS X, put preferences menu item in the TaskCoach menu 
 instead of the Edit menu to conform with Mac OS X standards.''', '1965861'),
