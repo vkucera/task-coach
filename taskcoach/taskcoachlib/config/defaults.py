@@ -218,6 +218,7 @@ defaults = { \
     'notes': 'True' },
 'syncml': { \
     'url': '',
+    'client': 'TaskCoach',
     'username': '',
     'verbose': 'True',
     'taskdbname': 'task',

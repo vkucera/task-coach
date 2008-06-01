@@ -7,18 +7,20 @@ from taskcoachlib.i18n import _
 from _pysyncml import *
 
 class Synchronizer(object):
-    def __init__(self, verbose, reportCallback, taskFile, url, username, password,
+    def __init__(self, verbose, clientName, reportCallback, taskFile, url, username, password,
                  taskdbname, synctasks,
                  notedbname, syncnotes,
                  *args, **kwargs):
         super(Synchronizer, self).__init__(*args, **kwargs)
 
+        clientName = clientName.encode('UTF-8')
+
         self.verbose = verbose
         self.reportCallback = reportCallback
         self.taskFile = taskFile
 
-        self.dmt = DMTClientConfig('TaskCoach')
-        if not (self.dmt.read() and self.dmt.deviceConfig.devID == 'TaskCoach'):
+        self.dmt = DMTClientConfig(clientName)
+        if not (self.dmt.read() and self.dmt.deviceConfig.devID == clientName):
             self.dmt.setClientDefaults()
 
         ac = self.dmt.accessConfig
@@ -30,7 +32,7 @@ class Synchronizer(object):
         self.dmt.accessConfig = ac
 
         dc = self.dmt.deviceConfig
-        dc.devID = 'TaskCoach'
+        dc.devID = clientName
         self.dmt.deviceConfig = dc
 
         # Tasks source configuration
@@ -43,7 +45,7 @@ class Synchronizer(object):
             except ValueError:
                 cfg = SyncSourceConfig()
 
-            cfg.name = 'TaskCoach.Tasks'
+            cfg.name = '%s.Tasks' % clientName
             cfg.URI = taskdbname.encode('UTF-8')
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/vcard:3.0'
@@ -53,15 +55,15 @@ class Synchronizer(object):
 
             self.sources.append(TaskSource(taskFile.tasks(),
                                            taskFile.categories(),
-                                           'TaskCoach.Tasks', cfg))
+                                           '%s.Tasks' % clientName, cfg))
 
         if syncnotes:
             try:
-                cfg = self.dmt.getSyncSourceConfig('TaskCoach.Notes')
+                cfg = self.dmt.getSyncSourceConfig('%s.Notes' % clientName)
             except ValueError:
                 cfg = SyncSourceConfig()
 
-            cfg.name = 'TaskCoach.Notes'
+            cfg.name = '%s.Notes' % clientName
             cfg.URI = notedbname.encode('UTF-8')
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/plain'
@@ -70,7 +72,7 @@ class Synchronizer(object):
             self.dmt.setSyncSourceConfig(cfg)
 
             self.sources.append(NoteSource(taskFile.notes(),
-                                           'TaskCoach.Notes', cfg))
+                                           '%s.Notes' % clientName, cfg))
 
     def synchronize(self):
         self.taskFile.beginSync()

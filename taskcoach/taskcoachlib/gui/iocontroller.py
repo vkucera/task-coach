@@ -185,6 +185,7 @@ class IOController(object):
         
     def synchronize(self, password):
         synchronizer = sync.Synchronizer(self.__settings.get('syncml', 'verbose'),
+                                         self.__settings.get('syncml', 'client'),
                                          self.__syncReport, self.__taskFile,
                                          self.__settings.get('syncml', 'url'),
                                          self.__settings.get('syncml', 'username'),

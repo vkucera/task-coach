@@ -244,6 +244,7 @@ class SyncMLPage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(SyncMLPage, self).__init__(*args, **kwargs)
 
+        self.addTextSetting('syncml', 'client', _('Client name'))
         self.addBooleanSetting('syncml', 'verbose', _('Always display synchronization report'))
         self.addBooleanSetting('syncml', 'synctasks', _('Enable tasks synchronization'))
         self.addBooleanSetting('syncml', 'syncnotes', _('Enable notes synchronization'))
