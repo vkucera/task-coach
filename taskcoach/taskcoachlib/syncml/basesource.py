@@ -26,6 +26,15 @@ class BaseSource(SyncSource):
             return None, None
 
         item = SyncItem(obj.id())
+
+        if obj.getStatus() == obj.STATUS_NONE:
+            item.state = ord(' ')
+        elif obj.getStatus() == obj.STATUS_NEW:
+            item.state = ord('N')
+        elif obj.getStatus() == obj.STATUS_CHANGED:
+            item.state = ord('U')
+        # TODO: deleted...
+
         return item, obj
 
     def _parseObject(self, item):
