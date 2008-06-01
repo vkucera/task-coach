@@ -124,9 +124,12 @@ class VTodoParser(VCalendarParser):
 def quoteString(s):
     # 'quoted-printable' codec  doesn't encode  \n, but tries  to fold
     # lines with \n instead of  CRLF and generally does strange things
-    # that ScheduleWorld does not understand.
+    # that ScheduleWorld does not understand. Same thing with \r.
 
-    s = s.encode('UTF-8').encode('quoted-printable').replace('=\n', '')
+    s = s.encode('UTF-8').encode('quoted-printable')
+    s = s.replace('=\r', '')
+    s = s.replace('=\n', '')
+    s = s.replace('\r', '=0D')
     s = s.replace('\n', '=0A')
 
     return s
