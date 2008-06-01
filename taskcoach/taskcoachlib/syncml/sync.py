@@ -1,12 +1,16 @@
 
 from taskcoachlib.syncml.tasksource import TaskSource
+from taskcoachlib.i18n import _
+
 from _pysyncml import *
 
 class Synchronizer(object):
-    def __init__(self, taskFile, url, username, password,
+    def __init__(self, verbose, reportCallback, taskFile, url, username, password,
                  taskdbname, synctasks, *args, **kwargs):
         super(Synchronizer, self).__init__(*args, **kwargs)
 
+        self.verbose = verbose
+        self.reportCallback = reportCallback
         self.taskFile = taskFile
 
         self.dmt = DMTClientConfig('TaskCoach')
@@ -52,8 +56,16 @@ class Synchronizer(object):
         try:
             client = SyncClient()
             client.sync(self.dmt, self.sources)
-            self.dmt.save()
         finally:
             self.taskFile.endSync()
-        print client.report # TMP
-        return client.report
+
+        code = client.report.getLastErrorCode()
+        if code:
+            self.reportCallback(_('An error occurred in the synchronization.\nError code: %d; message: %s') % (code, client.report.getLastErrorMsg()))
+            return False
+
+        if self.verbose:
+            self.reportCallback(_('Synchronization over. Report:\n\n') + str(client.report))
+
+        self.dmt.save()
+        return True

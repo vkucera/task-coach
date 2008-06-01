@@ -219,6 +219,7 @@ defaults = { \
 'syncml': { \
     'url': '',
     'username': '',
+    'verbose': 'True',
     'taskdbname': 'task',
 ##     'notedbname': 'note',
 ##     'effortdbname': 'cal',

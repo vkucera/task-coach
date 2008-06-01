@@ -27,11 +27,9 @@ class TaskSource(SyncSource):
         raise KeyError, 'No such task: %s' % key
 
     def getFirstItemKey(self):
-        print 'FIK'
         return None
 
     def getNextItemKey(self):
-        print 'NIK'
         return None
 
     def __getitem(self, ls):
@@ -44,35 +42,27 @@ class TaskSource(SyncSource):
         item.data = vcal.VCalFromTask(obj)
         item.dataType = 'text/x-vcalendar'
 
-        print 'GOT', item.data # TMP
-
         return item
 
     def getFirstItem(self):
-        print 'FI'
         self.allTasksCopy = self.allTasks[:]
         return self.__getitem(self.allTasksCopy)
 
     def getNextItem(self):
-        print 'NI'
         return self.__getitem(self.allTasksCopy)
 
     def getFirstNewItem(self):
-        print 'FNI'
         self.newTasksCopy = self.newTasks[:]
         return self.__getitem(self.newTasksCopy)
 
     def getNextNewItem(self):
-        print 'NNI'
         return self.__getitem(self.newTasksCopy)
 
     def getFirstUpdatedItem(self):
-        print 'FUI'
         self.changedTasksCopy = self.changedTasks[:]
         return self.__getitem(self.changedTasksCopy)
 
     def getNextUpdatedItem(self):
-        print 'NUI'
         return self.__getitem(self.changedTasksCopy)
 
     def getFirstDeletedItem(self):
@@ -99,8 +89,6 @@ class TaskSource(SyncSource):
         return task
 
     def addItem(self, item):
-        print 'ADD', item.data
-
         task = self.__parseTask(item)
         self.taskList.append(task)
         item.key = task.id() # For ID mapping
@@ -111,8 +99,6 @@ class TaskSource(SyncSource):
         return 201
 
     def updateItem(self, item):
-        print 'UPDATE', item.data
-
         task = self.__parseTask(item)
 
         try:

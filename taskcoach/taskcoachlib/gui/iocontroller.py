@@ -184,9 +184,13 @@ class IOController(object):
             return False
         
     def synchronize(self, url, username, password, taskdbname, synctasks):
-        synchronizer = sync.Synchronizer(self.__taskFile, url, username, password,
+        synchronizer = sync.Synchronizer(self.__settings.get('syncml', 'verbose'),
+                                         self.__syncReport, self.__taskFile, url, username, password,
                                          taskdbname, synctasks)
         return synchronizer.synchronize()
+
+    def __syncReport(self, msg):
+        wx.MessageBox(msg, _('Synchronization status'), style=wx.OK|wx.ICON_ERROR)
 
     def __openFileForWriting(self, filename, mode='w', encoding='utf-8'):
         return codecs.open(filename, mode, encoding)
