@@ -96,20 +96,25 @@ class TaskFile(patterns.Observable):
         self.markDirty()
         
     def onTaskChanged(self, event):
-        if event.source() in self.tasks():
+        if event.source() in self.tasks() and not self.__loading:
             self.markDirty()
+            event.source().markDirty()
             
     def onEffortChanged(self, event):
-        if event.source().task() in self.tasks():
+        if event.source().task() in self.tasks() and not self.__loading:
             self.markDirty()
+            event.source().markDirty()
             
     def onCategoryChanged(self, event):
-        if event.source() in self.categories():
+        if event.source() in self.categories() and not self.__loading:
             self.markDirty()
+            for categorizable in event.source().categorizables():
+                categorizable.markDirty()
             
     def onNoteChanged(self, event):
-        if event.source() in self.notes():
+        if event.source() in self.notes() and not self.__loading:
             self.markDirty()
+            event.source().markDirty()
 
     def setFilename(self, filename):
         self.__lastFilename = self.__filename or filename
@@ -196,7 +201,14 @@ class TaskFile(patterns.Observable):
 
     def needSave(self):
         return not self.__loading and self.__needSave
- 
+
+    def beginSync(self):
+        self.__loading = True
+
+    def endSync(self):
+        self.__loading = False
+        self.__needSave = True
+
 
 class AutoSaver(patterns.Observer):
     def __init__(self, settings, *args, **kwargs):

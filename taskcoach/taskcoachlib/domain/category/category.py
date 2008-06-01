@@ -77,7 +77,7 @@ class CategorizableCompositeObject(base.CompositeObject):
                 self.removeCategory(category)
         for category in categories:
             self.addCategory(category)
-        
+
     def categoryColor(self):
         ''' If a categorizable object belongs to a category that has a color 
             associated with it, the categorizable object is colored accordingly. 

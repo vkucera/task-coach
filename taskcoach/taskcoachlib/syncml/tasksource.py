@@ -4,14 +4,18 @@ from _pysyncml import SyncSource, SyncItem, SYNC_TWO_WAY
 import traceback
 
 from taskcoachlib.syncml import vcal
+from taskcoachlib.domain.task import Task
+from taskcoachlib.domain.category import Category
 
 class TaskSource(SyncSource):
-    def __init__(self, taskList, *args, **kwargs):
+    def __init__(self, taskList, categoryList, *args, **kwargs):
         super(TaskSource, self).__init__(*args, **kwargs)
 
         self.preferredSyncMode = SYNC_TWO_WAY
 
         self.taskList = taskList
+        self.categoryList = categoryList
+
         self.allTasks = [task for task in taskList]
         self.newTasks = [task for task in taskList if task.isNew()]
         self.changedTasks = [task for task in taskList if task.isModified()]
@@ -77,24 +81,39 @@ class TaskSource(SyncSource):
     def getNextDeletedItem(self):
         print 'NDI' # TODO
 
+    def __parseTask(self, item):
+        parser = vcal.VCalendarParser()
+        parser.parse(map(lambda x: x.rstrip('\r'), item.data.split('\n')))
+
+        categories = parser.tasks[0].pop('categories')
+
+        task = Task(**parser.tasks[0])
+
+        for category in categories:
+            categoryObject = self.categoryList.findCategoryByName(category)
+            if categoryObject is None:
+                categoryObject = Category(category)
+                self.categoryList.extend([categoryObject])
+            task.addCategory(categoryObject)
+
+        return task
+
     def addItem(self, item):
         print 'ADD', item.data
 
-        parser = vcal.VCalendarParser()
-        parser.parse(map(lambda x: x.rstrip('\r'), item.data.split('\n')))
-        task = parser.tasks[0]
-
+        task = self.__parseTask(item)
         self.taskList.append(task)
         item.key = task.id() # For ID mapping
+
+        for category in task.categories():
+            category.addCategorizable(task)
 
         return 201
 
     def updateItem(self, item):
         print 'UPDATE', item.data
 
-        parser = vcal.VCalendarParser()
-        parser.parse(map(lambda x: x.rstrip('\r'), item.data.split('\n')))
-        task = parser.tasks[0]
+        task = self.__parseTask(item)
 
         try:
             local = self.__getTask(item.key)
@@ -106,6 +125,14 @@ class TaskSource(SyncSource):
         local.setDescription(task.description())
         local.setSubject(task.subject())
         local.setPriority(task.priority())
+
+        for category in local.categories():
+            category.removeCategorizable(local)
+
+        local.setCategories(task.categories())
+
+        for category in local.categories():
+            category.addCategorizable(local)
 
         return 200 # FIXME
 

@@ -17,7 +17,6 @@ END:VTODO
 END:VCALENDAR
 """
 
-from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.base import Object
 from taskcoachlib.domain.date import date
 
@@ -102,7 +101,7 @@ class VCalendarParser(object):
 class VTodoParser(VCalendarParser):
     def onFinish(self):
         self.kwargs['status'] = Object.STATUS_NONE
-        self.tasks.append(Task(**self.kwargs))
+        self.tasks.append(self.kwargs)
 
     def acceptItem(self, name, value):
         if name == 'DTSTART':
@@ -114,7 +113,7 @@ class VTodoParser(VCalendarParser):
         elif name == 'SUMMARY':
             self.kwargs['subject'] = value
         elif name == 'CATEGORIES':
-            pass # TODO!!!
+            self.kwargs['categories'] = value.split(',')
         else:
             super(VTodoParser, self).acceptItem(name, value)
 
@@ -137,7 +136,8 @@ def VCalFromTask(task):
 
     values = { 'description': quoteString(task.description()),
                'subject': quoteString(task.subject()),
-               'priority': task.priority() }
+               'priority': task.priority(),
+               'categories': ','.join(map(quoteString, [unicode(c) for c in task.categories()])) }
 
     components.append('BEGIN:VCALENDAR')
     components.append('VERSION: 1.0')
@@ -150,6 +150,9 @@ def VCalFromTask(task):
     if task.dueDate() != date.Date():
         components.append('DUE:%(dueDate)s')
         values['dueDate'] = fmtDate(task.dueDate())
+
+    if task.categories():
+        components.append('CATEGORIES;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(categories)s')
 
     components.append('DESCRIPTION;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(description)s')
     components.append('PRIORITY:%(priority)d')

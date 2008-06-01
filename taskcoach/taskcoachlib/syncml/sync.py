@@ -43,12 +43,17 @@ class Synchronizer(object):
 
             self.dmt.setSyncSourceConfig(cfg)
 
-            self.sources.append(TaskSource(taskFile.tasks(), 'TaskCoach.Tasks', cfg))
+            self.sources.append(TaskSource(taskFile.tasks(),
+                                           taskFile.categories(),
+                                           'TaskCoach.Tasks', cfg))
 
     def synchronize(self):
-        client = SyncClient()
-        client.sync(self.dmt, self.sources)
-        self.dmt.save()
-        self.taskFile.markDirty()
+        self.taskFile.beginSync()
+        try:
+            client = SyncClient()
+            client.sync(self.dmt, self.sources)
+            self.dmt.save()
+        finally:
+            self.taskFile.endSync()
         print client.report # TMP
         return client.report

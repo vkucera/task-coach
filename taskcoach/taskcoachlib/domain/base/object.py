@@ -29,7 +29,7 @@ class SynchronizedObject(object):
 
     def __init__(self, *args, **kwargs):
         self.__status = kwargs.pop('status', self.STATUS_NEW)
-        self.__frozenStatus = False
+        self.__frozenStatus = kwargs.pop('frozenStatus', False)
         super(SynchronizedObject, self).__init__(*args, **kwargs)
 
     def freezeStatus(self):
@@ -104,7 +104,6 @@ class Object(SynchronizedObject, patterns.Observable):
             self.__subject = subject
             self.notifyObservers(patterns.Event(self, 
                 self.subjectChangedEventType(), subject))
-            self.markDirty()
             return True # Subject was changed
         else:
             return False # Subject was not changed
@@ -121,7 +120,6 @@ class Object(SynchronizedObject, patterns.Observable):
             self.__description = description
             self.notifyObservers(patterns.Event(self, 
                     self.descriptionChangedEventType(), description))
-            self.markDirty()
             return True # Description was changed
         else:
             return False # Description was not changed
