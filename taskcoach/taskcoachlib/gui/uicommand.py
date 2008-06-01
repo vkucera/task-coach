@@ -571,11 +571,7 @@ class FileSynchronize(NeedsSetting, IOCommand, SettingsCommand):
     def doCommand(self, event):
         pwd = wx.GetPasswordFromUser(_('Please enter your password.'), _('Password prompt'))
         if pwd:
-            self.iocontroller.synchronize(self.settings.get('syncml', 'url'),
-                                          self.settings.get('syncml', 'username'),
-                                          pwd,
-                                          self.settings.get('syncml', 'taskdbname'),
-                                          self.settings.get('syncml', 'synctasks'))
+            self.iocontroller.synchronize(pwd)
 
 
 class FileQuit(MainWindowCommand):

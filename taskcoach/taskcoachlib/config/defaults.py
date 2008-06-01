@@ -221,10 +221,10 @@ defaults = { \
     'username': '',
     'verbose': 'True',
     'taskdbname': 'task',
-##     'notedbname': 'note',
+    'notedbname': 'note',
 ##     'effortdbname': 'cal',
     'synctasks': 'True',
-##     'syncnotes': 'True',
+    'syncnotes': 'True',
 ##     'syncefforts': 'False'
     },
 }

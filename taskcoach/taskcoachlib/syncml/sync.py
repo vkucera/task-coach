@@ -1,12 +1,16 @@
 
 from taskcoachlib.syncml.tasksource import TaskSource
+from taskcoachlib.syncml.notesource import NoteSource
+
 from taskcoachlib.i18n import _
 
 from _pysyncml import *
 
 class Synchronizer(object):
     def __init__(self, verbose, reportCallback, taskFile, url, username, password,
-                 taskdbname, synctasks, *args, **kwargs):
+                 taskdbname, synctasks,
+                 notedbname, syncnotes,
+                 *args, **kwargs):
         super(Synchronizer, self).__init__(*args, **kwargs)
 
         self.verbose = verbose
@@ -50,6 +54,23 @@ class Synchronizer(object):
             self.sources.append(TaskSource(taskFile.tasks(),
                                            taskFile.categories(),
                                            'TaskCoach.Tasks', cfg))
+
+        if syncnotes:
+            try:
+                cfg = self.dmt.getSyncSourceConfig('TaskCoach.Notes')
+            except ValueError:
+                cfg = SyncSourceConfig()
+
+            cfg.name = 'TaskCoach.Notes'
+            cfg.URI = notedbname.encode('UTF-8')
+            cfg.syncModes = 'two-way'
+            cfg.supportedTypes = 'text/plain'
+            cfg.version = '1.0'
+
+            self.dmt.setSyncSourceConfig(cfg)
+
+            self.sources.append(NoteSource(taskFile.notes(),
+                                           'TaskCoach.Notes', cfg))
 
     def synchronize(self):
         self.taskFile.beginSync()

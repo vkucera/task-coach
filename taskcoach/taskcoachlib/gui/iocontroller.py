@@ -183,10 +183,16 @@ class IOController(object):
         else:
             return False
         
-    def synchronize(self, url, username, password, taskdbname, synctasks):
+    def synchronize(self, password):
         synchronizer = sync.Synchronizer(self.__settings.get('syncml', 'verbose'),
-                                         self.__syncReport, self.__taskFile, url, username, password,
-                                         taskdbname, synctasks)
+                                         self.__syncReport, self.__taskFile,
+                                         self.__settings.get('syncml', 'url'),
+                                         self.__settings.get('syncml', 'username'),
+                                         password,
+                                         self.__settings.get('syncml', 'taskdbname'),
+                                         self.__settings.get('syncml', 'synctasks'),
+                                         self.__settings.get('syncml', 'notedbname'),
+                                         self.__settings.get('syncml', 'syncnotes'))
         return synchronizer.synchronize()
 
     def __syncReport(self, msg):
