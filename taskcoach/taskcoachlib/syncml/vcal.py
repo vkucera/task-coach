@@ -28,8 +28,6 @@ def parseDate(dt):
     return date.Date(int(dt[:4]), int(dt[4:6]), int(dt[6:8]))
 
 def fmtDate(dt):
-    if dt == date.Date():
-        return '00000000T000000' # FIXME
     return '%04d%02d%02dT000000' % (dt.year, dt.month, dt.day)
 
 class VCalendarParser(object):
@@ -51,34 +49,48 @@ class VCalendarParser(object):
         self.init()
 
     def parse(self, lines):
-        for line in lines:
-            if line.startswith('BEGIN:'):
-                try:
-                    self.setState(self.stateMap[line[6:]])
-                except KeyError:
-                    raise TypeError, 'Unrecognized vcal type: %s' % line[6:]
-            elif line.startswith('END:'):
-                if line[4:] == 'VCALENDAR':
-                    break
-                else:
-                    self.onFinish()
-                    self.setState(VCalendarParser)
+        currentLine = lines[0]
+
+        for line in lines[1:]:
+            if line.startswith(' ') or line.startswith('\t'):
+                currentLine += line[1:]
             else:
-                try:
-                    idx = line.index(':')
-                except ValueError:
-                    raise RuntimeError, 'Malformed vcal line: %s' % line
+                if self.handleLine(currentLine):
+                    return
+                currentLine = line
 
-                details, value = line[:idx].split(';'), line[idx + 1:]
-                name, specs = details[0], details[1:]
-                specs = dict([tuple(v.split('=')) for v in specs])
+        self.handleLine(currentLine)
 
-                if specs.has_key('ENCODING'):
-                    value = value.decode(specs['ENCODING'].lower())
-                if specs.has_key('CHARSET'):
-                    value = value.decode(specs['CHARSET'].lower())
+    def handleLine(self, line):
+        if line.startswith('BEGIN:'):
+            try:
+                self.setState(self.stateMap[line[6:]])
+            except KeyError:
+                raise TypeError, 'Unrecognized vcal type: %s' % line[6:]
+        elif line.startswith('END:'):
+            if line[4:] == 'VCALENDAR':
+                return True
+            else:
+                self.onFinish()
+                self.setState(VCalendarParser)
+        else:
+            try:
+                idx = line.index(':')
+            except ValueError:
+                raise RuntimeError, 'Malformed vcal line: %s' % line
 
-                self.acceptItem(name, value)
+            details, value = line[:idx].split(';'), line[idx + 1:]
+            name, specs = details[0], details[1:]
+            specs = dict([tuple(v.split('=')) for v in specs])
+
+            if specs.has_key('ENCODING'):
+                value = value.decode(specs['ENCODING'].lower())
+            if specs.has_key('CHARSET'):
+                value = value.decode(specs['CHARSET'].lower())
+
+            self.acceptItem(name, value)
+
+        return False
 
     def onFinish(self):
         raise NotImplementedError
@@ -110,25 +122,58 @@ class VTodoParser(VCalendarParser):
 #==============================================================================
 #
 
-def VCalFromTask(task):
-    r = """BEGIN:VCALENDAR
-VERSION:1.0
-BEGIN:VTODO"""
-    if task.startDate() != date.Date():
-        r += """
-DTSTART:%(startDate)s"""
-    if task.dueDate() != date.Date():
-        r += """
-DUE:%(dueDate)s"""
-    r += """
-DESCRIPTION;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(description)s
-PRIORITY:%(priority)d
-SUMMARY;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(subject)s
-END:VTODO
-END:VCALENDAR"""
+def quoteString(s):
+    # 'quoted-printable' codec  doesn't encode  \n, but tries  to fold
+    # lines with \n instead of  CRLF and generally does strange things
+    # that ScheduleWorld does not understand.
 
-    return r % { 'startDate': fmtDate(task.startDate()),
-                 'dueDate':   fmtDate(task.dueDate()),
-                 'description': task.description().encode('UTF-8').encode('quoted-printable'),
-                 'subject': task.subject().encode('UTF-8').encode('quoted-printable'),
-                 'priority': task.priority() }
+    s = s.encode('UTF-8').encode('quoted-printable').replace('=\n', '')
+    s = s.replace('\n', '=0A')
+
+    return s
+
+def VCalFromTask(task):
+    components = []
+
+    values = { 'description': quoteString(task.description()),
+               'subject': quoteString(task.subject()),
+               'priority': task.priority() }
+
+    components.append('BEGIN:VCALENDAR')
+    components.append('VERSION: 1.0')
+    components.append('BEGIN:VTODO')
+
+    if task.startDate() != date.Date():
+        components.append('DTSTART:%(startDate)s')
+        values['startDate'] = fmtDate(task.startDate())
+
+    if task.dueDate() != date.Date():
+        components.append('DUE:%(dueDate)s')
+        values['dueDate'] = fmtDate(task.dueDate())
+
+    components.append('DESCRIPTION;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(description)s')
+    components.append('PRIORITY:%(priority)d')
+    components.append('SUMMARY;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(subject)s')
+    components.append('END:VTODO')
+    components.append('END:VCALENDAR')
+
+    text = ''
+
+    for component in components:
+        line = component % values
+
+        if len(line) < 75:
+            text += line + '\r\n'
+        else:
+            text += line[:75] + '\r\n'
+            line = line[75:]
+
+            while True:
+                if len(line) < 75:
+                    text += ' ' + line + '\r\n'
+                    break
+                else:
+                    text += ' ' + line[:75] + '\r\n'
+                    line = line[75:]
+
+    return text

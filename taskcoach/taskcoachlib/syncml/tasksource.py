@@ -40,6 +40,8 @@ class TaskSource(SyncSource):
         item.data = vcal.VCalFromTask(obj)
         item.dataType = 'text/x-vcalendar'
 
+        print 'GOT', item.data # TMP
+
         return item
 
     def getFirstItem(self):
