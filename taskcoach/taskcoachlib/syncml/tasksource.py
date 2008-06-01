@@ -75,7 +75,7 @@ class TaskSource(SyncSource):
         parser = vcal.VCalendarParser()
         parser.parse(map(lambda x: x.rstrip('\r'), item.data.split('\n')))
 
-        categories = parser.tasks[0].pop('categories')
+        categories = parser.tasks[0].pop('categories', [])
 
         task = Task(**parser.tasks[0])
 
