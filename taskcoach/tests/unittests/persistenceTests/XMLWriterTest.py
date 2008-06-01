@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, StringIO # We cannot use CStringIO since unicode strings are used below.
 import test
 from taskcoachlib import persistence
-from taskcoachlib.domain import task, effort, date, category, note, attachment
+from taskcoachlib.domain import base, task, effort, date, category, note, attachment
 
 
 class XMLWriterTest(test.TestCase):
@@ -99,8 +99,8 @@ class XMLWriterTest(test.TestCase):
         taskEffort = effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2), 'description\nline 2')
         self.task.addEffort(taskEffort)
-        self.expectInXML('<effort start="%s" stop="%s"><description>description\nline 2</description></effort>'% \
-            (taskEffort.getStart(), taskEffort.getStop()))
+        self.expectInXML('<effort start="%s" status="%d" stop="%s"><description>description\nline 2</description></effort>'% \
+            (taskEffort.getStart(), base.SynchronizedObject.STATUS_NEW, taskEffort.getStop()))
         
     def testThatEffortTimesDoNotContainMilliseconds(self):
         self.task.addEffort(effort.Effort(self.task, 
@@ -123,7 +123,7 @@ class XMLWriterTest(test.TestCase):
         
     def testActiveEffort(self):
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1)))
-        self.expectInXML('<effort start="%s"/>'%self.task.efforts()[0].getStart()) 
+        self.expectInXML('<effort start="%s" status="%d"/>'%(self.task.efforts()[0].getStart(), base.SynchronizedObject.STATUS_NEW))
                 
     def testNoEffortByDefault(self):
         self.expectNotInXML('<efforts>')
@@ -276,22 +276,23 @@ class XMLWriterTest(test.TestCase):
 
     def testNote(self):
         self.noteContainer.append(note.Note(id='id'))
-        self.expectInXML('<note id="id"/>')
+        self.expectInXML('<note id="id" status="%d"/>' % base.SynchronizedObject.STATUS_NEW)
         
     def testNoteWithSubject(self):
         self.noteContainer.append(note.Note(subject='Note', id='id'))
-        self.expectInXML('<note id="id" subject="Note"/>')
+        self.expectInXML('<note id="id" status="%d" subject="Note"/>' % base.SynchronizedObject.STATUS_NEW)
         
     def testNoteWithDescription(self):
         self.noteContainer.append(note.Note(description='Description', id='id'))
-        self.expectInXML('<note id="id"><description>Description</description></note>')
+        self.expectInXML('<note id="id" status="%d"><description>Description</description></note>' % base.SynchronizedObject.STATUS_NEW)
         
     def testNoteWithChild(self):
         aNote = note.Note(id='parent')
         child = note.Note(id='child')
         aNote.addChild(child)
         self.noteContainer.append(aNote)
-        self.expectInXML('<note id="parent"><note id="child"/></note>')
+        self.expectInXML('<note id="parent" status="%d"><note id="child" status="%d"/></note>' % (base.SynchronizedObject.STATUS_NEW,
+                                                                                                  base.SynchronizedObject.STATUS_NEW))
         
     def testNoteWithCategory(self):
         cat = category.Category('cat', id='catId')
