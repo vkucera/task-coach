@@ -147,6 +147,11 @@ class NewTaskTest(TaskEditorTestCase):
         self.editor.ok()
         self.assertEqual('weekly', self.task.recurrence())
         
+    def testSetYearlyRecurrence(self):
+        self.setRecurrence('yearly')
+        self.editor.ok()
+        self.assertEqual('yearly', self.task.recurrence())
+        
     def testSetMaxRecurrence(self):
         self.setRecurrence('weekly')
         self.setMaxRecurrenceCount(10)

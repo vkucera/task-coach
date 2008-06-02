@@ -74,3 +74,43 @@ class MonthlyRecurrenceTest(test.TestCase):
     def testNextDateWithInfiniteDate(self):
         self.assertEqual(date.Date(), date.next(date.Date(), 'monthly'))
 
+
+class YearlyRecurrenceTest(test.TestCase):
+    def testJanuary1(self):
+        self.assertEqual(date.Date(2002,1,1), 
+                         date.next(date.Date(2001,1,1), 'yearly'))
+        
+    def testJanuary1_LeapYear(self):
+        self.assertEqual(date.Date(2001,1,1), 
+                         date.next(date.Date(2000,1,1), 'yearly'))
+
+    def testMarch1_LeapYear(self):
+        self.assertEqual(date.Date(2001,3,1), 
+                         date.next(date.Date(2000,3,1), 'yearly'))
+        
+    def testMarch1_YearBeforeLeapYear(self):
+        self.assertEqual(date.Date(2004,3,1), 
+                         date.next(date.Date(2003,3,1), 'yearly'))
+
+    def testFebruary1_YearBeforeLeapYear(self):
+        self.assertEqual(date.Date(2004,2,1), 
+                         date.next(date.Date(2003,2,1), 'yearly'))
+
+    def testFebruary28(self):
+        self.assertEqual(date.Date(2003,2,28), 
+                         date.next(date.Date(2002,2,28), 'yearly'))
+
+    def testFebruary28_LeapYear(self):
+        self.assertEqual(date.Date(2005,2,28), 
+                         date.next(date.Date(2004,2,28), 'yearly'))
+
+    def testFebruary28_YearBeforeLeapYear(self):
+        self.assertEqual(date.Date(2004,2,28), 
+                         date.next(date.Date(2003,2,28), 'yearly'))
+
+    def testFebruary29(self):
+        self.assertEqual(date.Date(2005,2,28), 
+                         date.next(date.Date(2004,2,29), 'yearly'))
+        
+    def testNextDateWithInfiniteDate(self):
+        self.assertEqual(date.Date(), date.next(date.Date(), 'yearly'))

@@ -206,7 +206,7 @@ class DatesPage(TaskEditorPage):
             label=_('Recurrence'), cols=2)
         recurrenceBox.add(_('Recurrence'))
         self._recurrenceEntry = wx.Choice(recurrenceBox, 
-            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly')])
+            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])
         self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrenceChanged)
         recurrenceBox.add(self._recurrenceEntry)
         recurrenceBox.add(_('Maximum number of recurrences'))
@@ -253,7 +253,7 @@ class DatesPage(TaskEditorPage):
             self.suggestReminder()
 
     def ok(self):
-        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly'}
+        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
         recurrence = recurrenceDict[self._recurrenceEntry.Selection]
         self._task.setRecurrence(recurrence)
         if self._maxRecurrenceCheckBox.IsChecked():
@@ -267,7 +267,7 @@ class DatesPage(TaskEditorPage):
         self._reminderDateTimeEntry.SetValue(reminder)
         
     def setRecurrence(self, recurrence):
-        index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3}[recurrence]
+        index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3, 'yearly': 4}[recurrence]
         self._recurrenceEntry.Selection = index
         self._maxRecurrenceCheckBox.Enable(bool(recurrence))
         self._maxRecurrenceCountEntry.Enable(bool(recurrence) and \

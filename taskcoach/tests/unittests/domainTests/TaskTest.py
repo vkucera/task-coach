@@ -311,6 +311,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testSetRecurrence(self):
         self.task.setRecurrence('weekly')
         self.assertEqual('weekly', self.task.recurrence())
+
+    def testSetRecurrenceCausesNotification(self):
+        self.registerObserver('task.recurrence')
+        self.task.setRecurrence('weekly')
+        self.assertEqual([patterns.Event(self.task, 'task.recurrence',
+            'weekly')], self.events)
         
     def testSetRecurrenceCount(self):
         self.task.setRecurrenceCount(2)
@@ -1356,7 +1362,12 @@ class TaskWithDailyRecurrenceFixture(RecurringTaskTestCase,
 class TaskWithMonthlyRecurrenceFixture(RecurringTaskTestCase,
                                        CommonRecurrenceTests):
     recurrence = 'monthly'
-        
+
+
+class TaskWithYearlyRecurrenceFixture(RecurringTaskTestCase,
+                                      CommonRecurrenceTests):
+    recurrence = 'yearly'
+       
 
 class TaskWithDailyRecurrenceThatHasRecurredFixture( \
         RecurringTaskThatHasRecurredTestCase, CommonRecurrenceTests):

@@ -518,7 +518,10 @@ class Task(category.CategorizableCompositeObject):
             return self._recurrence
         
     def setRecurrence(self, recurrence=''):
-        self._recurrence = recurrence
+        if recurrence != self._recurrence:
+            self._recurrence = recurrence
+            self.notifyObservers(patterns.Event(self, 'task.recurrence', 
+                                                recurrence))
 
     def nextRecurrence(self, aDate):
         return date.next(aDate, self.recurrence(True))
