@@ -17,7 +17,7 @@ class BaseSource(SyncSource):
         for obj in self.allObjectsList:
             if obj.id() == key:
                 return obj
-        return None
+        raise KeyError, 'No such object: %s' % key
 
     def _getItem(self, ls):
         try:
@@ -88,7 +88,7 @@ class BaseSource(SyncSource):
         except KeyError:
             return 404
 
-        self.doUpdateItem(obj, local)
+        return self.doUpdateItem(obj, local)
 
     def doUpdateItem(self, obj, local):
         raise NotImplementedError

@@ -114,7 +114,7 @@ class VTodoParser(VCalendarParser):
         elif name == 'DUE':
             self.kwargs['dueDate'] = parseDate(value)
         elif name == 'UID':
-            self.kwargs['id'] = value
+            self.kwargs['id'] = value.decode('UTF-8')
         elif name == 'PRIORITY':
             self.kwargs['priority'] = int(value)
         elif name == 'SUMMARY':
@@ -147,12 +147,12 @@ def VCalFromTask(task):
     values = { 'description': quoteString(task.description()),
                'subject': quoteString(task.subject()),
                'priority': task.priority(),
-               'categories': ','.join(map(quoteString, [unicode(c) for c in task.categories()])) }
+               'categories': ','.join(map(quoteString, [unicode(c).encode('UTF-8') for c in task.categories()])) }
 
     components.append('BEGIN:VCALENDAR')
     components.append('VERSION: 1.0')
     components.append('BEGIN:VTODO')
-    components.append('UID:%s' % task.id())
+    components.append('UID:%s' % task.id().encode('UTF-8'))
 
     if task.startDate() != date.Date():
         components.append('DTSTART:%(startDate)s')
