@@ -23,9 +23,10 @@ from changetypes import *
 
 releases = [
 
-Release('0.71.0', '?',
+Release('0.71.0', 'June ??, 2008',
     summary='''?''',
     featuresAdded=[
+        Feature('''Yearly recurrence of tasks.'''),
         Feature('''The times used in the drop down menus of the start and stop
 entries of the effort dialog can now be changed via the preferences dialog. 
 Patch supplied by Rob McMullen.''')]),
@@ -41,7 +42,7 @@ Release('0.70.0', 'May 12, 2008',
 fixes. Task Coach is now distributed under the GPLv3+.''',
     featuresAdded=[
         Feature('Paths to file attachments may be relative.'),
-        Feature('Monthly and yearly recurrence of tasks.', '1933222', '1957687'),
+        Feature('Monthly recurrence of tasks.', '1933222', '1957687'),
         Feature('Added and reorganized keyboard short cuts.', '1857101'),
         Feature('''Start tracking effort for any active task using the 
 system tray icon right-click menu.''', '1934738', '1739666'),

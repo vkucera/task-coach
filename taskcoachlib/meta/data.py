@@ -19,12 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 name = 'Task Coach'
 description = 'Your friendly task manager'
-version = '0.70.0'
-release_month = 'May'
+version = '0.71.0'
+release_month = 'June'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
                     'November', 'December'].index(release_month) + 1)
-release_day = '12'
+release_day = '0'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2008'
 release_status = 'Alpha'

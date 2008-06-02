@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ''' Utilities for recurring dates. '''
 
+import calendar
 import timedelta, date
 
 def _addDays(aDate, nrOfDays):
@@ -36,12 +37,23 @@ def _addMonth(aDate):
         except ValueError:
             day -= 1
 
+def _addYear(aDate):
+    if (calendar.isleap(aDate.year) and aDate.month <= 2 and aDate.day <=28) or \
+       (calendar.isleap(aDate.year + 1) and aDate.month >=3): 
+        days = 366
+    else:
+        days = 365
+    return aDate + timedelta.TimeDelta(days=days)
+
+
 def next(aDate, recurrence):
     ''' Compute the next date, starting from aDate, with a given recurrence.
         The recurrence can be 'daily', 'weekly', or 'monthly'. '''
     if date.Date() == aDate:
         return aDate
-    if recurrence == 'monthly':
+    if recurrence == 'yearly':
+        return _addYear(aDate)
+    elif recurrence == 'monthly':
         return _addMonth(aDate)
     else:
         return _addDays(aDate, dict(daily=1, weekly=7)[recurrence])
