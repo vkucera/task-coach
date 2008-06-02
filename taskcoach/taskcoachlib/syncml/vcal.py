@@ -100,6 +100,11 @@ class VCalendarParser(object):
 
 class VTodoParser(VCalendarParser):
     def onFinish(self):
+        if not self.kwargs.has_key('startDate'):
+            # This means no start  date, but the task constructor will
+            # take today, so force.
+            self.kwargs['startDate'] = date.Date()
+
         self.kwargs['status'] = Object.STATUS_NONE
         self.tasks.append(self.kwargs)
 
