@@ -11,6 +11,12 @@ class BaseSource(SyncSource):
         self.newObjectsList = [obj for obj in objectList if obj.isNew()]
         self.changedObjectsList = [obj for obj in objectList if obj.isModified()]
 
+    def beginSync(self):
+        print 'Sync begin:', self.syncMode
+
+    def endSync(self):
+        print 'Sync end.'
+
     def _getObject(self, key):
         for obj in self.allObjectsList:
             if obj.id() == key:
