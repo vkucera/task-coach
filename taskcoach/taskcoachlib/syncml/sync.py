@@ -7,7 +7,8 @@ from taskcoachlib.i18n import _
 from _pysyncml import *
 
 class Synchronizer(object):
-    def __init__(self, verbose, clientName, reportCallback, taskFile, url, username, password,
+    def __init__(self, mode, verbose, clientName, reportCallback,
+                 taskFile, url, username, password,
                  taskdbname, synctasks,
                  notedbname, syncnotes,
                  *args, **kwargs):
@@ -73,6 +74,9 @@ class Synchronizer(object):
 
             self.sources.append(NoteSource(taskFile.notes(),
                                            '%s.Notes' % clientName, cfg))
+
+        for source in self.sources:
+            source.preferredSyncMode = globals()[mode] # Hum
 
     def synchronize(self):
         self.taskFile.beginSync()

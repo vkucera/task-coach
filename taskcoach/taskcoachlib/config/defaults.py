@@ -220,6 +220,7 @@ defaults = { \
     'url': '',
     'client': 'TaskCoach',
     'username': '',
+    'preferredsyncmode': 'TWO_WAY',
     'verbose': 'True',
     'taskdbname': 'task',
     'notedbname': 'note',

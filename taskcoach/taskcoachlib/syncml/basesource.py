@@ -5,8 +5,6 @@ class BaseSource(SyncSource):
     def __init__(self, objectList, *args, **kwargs):
         super(BaseSource, self).__init__(*args, **kwargs)
 
-        self.preferredSyncMode = TWO_WAY
-
         self.objectList = objectList
 
         self.allObjectsList = [obj for obj in objectList]

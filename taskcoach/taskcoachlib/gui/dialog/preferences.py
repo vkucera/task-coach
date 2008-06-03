@@ -245,6 +245,14 @@ class SyncMLPage(SettingsPage):
         super(SyncMLPage, self).__init__(*args, **kwargs)
 
         self.addTextSetting('syncml', 'client', _('Client name'))
+        self.addChoiceSetting('syncml', 'preferredsyncmode', _('Preferred synchonization mode'),
+                              [('TWO_WAY', _('Two way')),
+                               ('SLOW', _('Slow')),
+                               ('ONE_WAY_FROM_CLIENT', _('One way from client')),
+                               ('REFRESH_FROM_CLIENT', _('Refresh from client')),
+                               ('ONE_WAY_FROM_SERVER', _('One way from server')),
+                               ('REFRESH_FROM_SERVER', _('Refresh from server'))])
+
         self.addBooleanSetting('syncml', 'verbose', _('Always display synchronization report'))
         self.addBooleanSetting('syncml', 'synctasks', _('Enable tasks synchronization'))
         self.addBooleanSetting('syncml', 'syncnotes', _('Enable notes synchronization'))
