@@ -2,8 +2,6 @@
 from taskcoachlib.domain.note import Note
 from taskcoachlib.syncml.basesource import BaseSource
 
-from _pysyncml import SyncSource, SyncItem, SYNC_TWO_WAY
-
 class NoteSource(BaseSource):
     def _getItem(self, ls):
         item, note = super(NoteSource, self)._getItem(ls)

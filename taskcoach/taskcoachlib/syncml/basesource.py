@@ -1,11 +1,11 @@
 
-from _pysyncml import SyncSource, SyncItem, SYNC_TWO_WAY
+from _pysyncml import *
 
 class BaseSource(SyncSource):
     def __init__(self, objectList, *args, **kwargs):
         super(BaseSource, self).__init__(*args, **kwargs)
 
-        self.preferredSyncMode = SYNC_TWO_WAY
+        self.preferredSyncMode = TWO_WAY
 
         self.objectList = objectList
 
@@ -28,11 +28,11 @@ class BaseSource(SyncSource):
         item = SyncItem(obj.id())
 
         if obj.getStatus() == obj.STATUS_NONE:
-            item.state = ord(' ')
+            item.state = STATE_NONE
         elif obj.getStatus() == obj.STATUS_NEW:
-            item.state = ord('N')
+            item.state = STATE_NEW
         elif obj.getStatus() == obj.STATUS_CHANGED:
-            item.state = ord('U')
+            item.state = STATE_UPDATED
         # TODO: deleted...
 
         return item, obj
