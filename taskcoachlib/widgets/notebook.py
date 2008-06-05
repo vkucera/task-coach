@@ -163,6 +163,7 @@ class Book(object):
         dropTarget = draganddrop.FileDropTarget(onDragOverCallback=self.onDragOver)
         self.SetDropTarget(dropTarget)
         self.Bind(self.pageChangedEvent, self.onPageChanged)
+        #self.Bind(wx.EVT_NAVIGATION_KEY, self.onNavigation)
         self.createImageList()
         
     def createImageList(self):
@@ -175,6 +176,17 @@ class Book(object):
             return self.GetPage(index)
         else:
             raise IndexError
+        
+    def onNavigation(self, event):
+        print self.__class__.__name__, event.GetCurrentFocus()
+        if event.GetCurrentFocus() == None:
+            self[0].SetFocus() 
+            print 'SetFocus called'
+            print wx.Window.FindFocus()
+        else:
+            event.Skip()
+        #self.Navigate()
+        event.Skip()
         
     def onDragOver(self, x, y, defaultResult, pageSelectionArea=None):
         ''' When the user drags something (currently limited to files because
@@ -229,6 +241,17 @@ class Listbook(Book, wx.Listbook):
     _bitmapSize = (22, 22)
     pageChangedEvent = wx.EVT_LISTBOOK_PAGE_CHANGED
 
+    def __init__(self, *args, **kwargs):
+        super(Listbook, self).__init__(*args, **kwargs)
+        self.Bind(wx.EVT_NAVIGATION_KEY, self.onNavigate)
+        
+    def onNavigate(self, event):
+        if event.GetDirection() and (wx.Window.FindFocus() == self.GetParent()):
+            # Tabbing forward from parent into the listbook
+            self.GetListView().SetFocus()
+        else:
+            event.Skip()
+                        
     def onDragOver(self, x, y, defaultResult):
         ''' onDragOver will only work for Listbooks if we query the list 
             control (instead of the Listbook itself) with HitTest, so we pass
