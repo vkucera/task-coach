@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from taskcoachlib.gui import render
+from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date
 
 
@@ -65,4 +66,44 @@ class RenderWeekNumberTest(test.TestCase):
         
     def testWeek53(self):
         self.assertEqual('2004-53', render.weekNumber(date.DateTime(2004,12,31)))
+        
+        
+class RenderRecurrenceTest(test.TestCase):
+    def testNoRecurrence(self):
+        self.assertEqual('', render.recurrence(''))
+        
+    def testDailyRecurrence(self):
+        self.assertEqual(_('Daily'), render.recurrence('daily'))
+        
+    def testWeeklyRecurrence(self):
+        self.assertEqual(_('Weekly'), render.recurrence('weekly'))
+        
+    def testMonthlyRecurrence(self):
+        self.assertEqual(_('Monthly'), render.recurrence('monthly'))
 
+    def testYearlyRecurrence(self):
+        self.assertEqual(_('Yearly'), render.recurrence('yearly'))
+
+    def testEveryOtherDay(self):
+        self.assertEqual(_('Every other day'), render.recurrence('daily', 2))
+        
+    def testEveryOtherWeek(self):
+        self.assertEqual(_('Every other week'), render.recurrence('weekly', 2))
+        
+    def testEveryOtherMonth(self):
+        self.assertEqual(_('Every other month'), render.recurrence('monthly', 2))
+        
+    def testEveryOtherYear(self):
+        self.assertEqual(_('Every other year'), render.recurrence('yearly', 2))
+        
+    def testThreeDaily(self):
+        self.assertEqual('Every 3 days', render.recurrence('daily', 3)) 
+        
+    def testThreeWeekly(self):
+        self.assertEqual('Every 3 weeks', render.recurrence('weekly', 3)) 
+        
+    def testThreeMonthly(self):
+        self.assertEqual('Every 3 months', render.recurrence('monthly', 3)) 
+        
+    def testThreeYearly(self):
+        self.assertEqual('Every 3 years', render.recurrence('yearly', 3)) 

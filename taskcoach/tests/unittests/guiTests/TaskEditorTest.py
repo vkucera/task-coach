@@ -94,6 +94,9 @@ class TaskEditorTestCase(test.wxTestCase):
     def setMaxRecurrenceCount(self, maxRecurrence, index=0):
         self.editor[index][1].setMaxRecurrenceCount(maxRecurrence)
         
+    def setRecurrenceFrequency(self, recurrenceFrequency, index=0):
+        self.editor[index][1].setRecurrenceFrequency(recurrenceFrequency)
+        
 
 class NewTaskTest(TaskEditorTestCase):
     def createCommand(self):
@@ -157,6 +160,12 @@ class NewTaskTest(TaskEditorTestCase):
         self.setMaxRecurrenceCount(10)
         self.editor.ok()
         self.assertEqual(10, self.task.maxRecurrenceCount())
+        
+    def testSetRecurrenceFrequency(self):
+        self.setRecurrence('weekly')
+        self.setRecurrenceFrequency(3)
+        self.editor.ok()
+        self.assertEqual(3, self.task.recurrenceFrequency())
     
     def testOpenAttachmentWithNonAsciiFileNameThrowsException(self):
         ''' os.startfile() does not accept unicode filenames. This will be 

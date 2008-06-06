@@ -23,9 +23,6 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import task, effort, date, attachment
 
 
-''' I'm rearranging these unittests to be more fixture based instead of 
-'subject' (e.g. budget, effort, priority) based to see how that feels. '''
-
 # Handy globals
 zeroHour = date.TimeDelta(hours=0)
 oneHour = date.TimeDelta(hours=1)
@@ -176,6 +173,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         
     def testDefaultTaskMaxRecurrenceCount(self):
         self.assertEqual(0, self.task.maxRecurrenceCount())
+        
+    def testDefaultTaskRecurrenceFrequency(self):
+        self.assertEqual(1, self.task.recurrenceFrequency())
                          
     # Setters
 
@@ -325,7 +325,17 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testSetMaxRecurrenceCount(self):
         self.task.setMaxRecurrenceCount(2)
         self.assertEqual(2, self.task.maxRecurrenceCount())
-    
+        
+    def testSetRecurrenceFrequency(self):
+        self.task.setRecurrenceFrequency(2)
+        self.assertEqual(2, self.task.recurrenceFrequency())
+
+    def testSetRecurrenceFrequencyCausesNotification(self):
+        self.registerObserver('task.recurrence')
+        self.task.setRecurrenceFrequency(2)
+        self.assertEqual([patterns.Event(self.task, 'task.recurrence', 2)], 
+                         self.events)
+        
     # Add child
         
     def testAddChildNotification(self):
@@ -483,6 +493,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.setMaxRecurrenceCount(3)
         self.task.__setstate__(state)
         self.assertEqual(0, self.task.maxRecurrenceCount())
+        
+    def testTaskStateIncludesRecurrenceFrequency(self):
+        state = self.task.__getstate__()
+        self.task.setRecurrenceFrequency(4)
+        self.task.__setstate__(state)
+        self.assertEqual(1, self.task.recurrenceFrequency())
         
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
@@ -1347,8 +1363,24 @@ class CommonRecurrenceTests(CommonTaskTests):
             self.assertEqual(min(count + self.initialRecurrenceCount, maxCount), 
                              self.task.recurrenceCount())
             self.task.setCompletionDate()
-    
+            
+    def testCopyRecurrence(self):
+        self.assertEqual(self.task.copy().recurrence(), self.task.recurrence())
+        
+    def testCopyRecurrenceCount(self):
+        self.assertEqual(self.task.copy().recurrenceCount(), 
+                         self.task.recurrenceCount())
 
+    def testCopyMaxRecurrenceCount(self):
+        self.assertEqual(self.task.copy().maxRecurrenceCount(), 
+                         self.task.maxRecurrenceCount())
+
+    def testCopyRecurrenceFrequency(self):
+        self.task.setRecurrenceFrequency(2)
+        self.assertEqual(self.task.copy().recurrenceFrequency(),
+                         self.task.recurrenceFrequency())
+        
+        
 class TaskWithWeeklyRecurrenceFixture(RecurringTaskTestCase,  
                                       CommonRecurrenceTests):
     recurrence = 'weekly'

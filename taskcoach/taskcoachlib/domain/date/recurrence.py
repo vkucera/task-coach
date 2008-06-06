@@ -46,11 +46,13 @@ def _addYear(aDate):
     return aDate + timedelta.TimeDelta(days=days)
 
 
-def next(aDate, recurrence):
+def next(aDate, recurrence, frequency=1):
     ''' Compute the next date, starting from aDate, with a given recurrence.
         The recurrence can be 'daily', 'weekly', or 'monthly'. '''
     if date.Date() == aDate:
         return aDate
+    if frequency > 1:
+        aDate = next(aDate, recurrence, frequency-1)
     if recurrence == 'yearly':
         return _addYear(aDate)
     elif recurrence == 'monthly':
