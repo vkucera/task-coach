@@ -47,14 +47,18 @@ class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
             self.settings, categories=self.categories)
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()
+
+    def getItemText(self, row, column):
+        assert row==0
+        firstItem, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())
+        return self.viewer.widget.GetItemText(firstItem, column)
           
     def testOneDayLeft(self):
         self.showColumn('timeLeft')
         self.task.setDueDate(date.Tomorrow())
         self.taskList.append(self.task)
-        firstItem, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())
         self.assertEqual(render.daysLeft(self.task.timeLeft(), False), 
-            self.viewer.widget.GetItemText(firstItem, 3))
+            self.getItemText(0, 3))
         
     def testReverseSortOrderWithGrandchildren(self):
         child = task.Task(subject='child')

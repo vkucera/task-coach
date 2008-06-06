@@ -114,3 +114,25 @@ class YearlyRecurrenceTest(test.TestCase):
         
     def testNextDateWithInfiniteDate(self):
         self.assertEqual(date.Date(), date.next(date.Date(), 'yearly'))
+        
+        
+class RecurrenceFrequencyTest(test.TestCase):    
+    def testEveryOtherDay(self):
+        self.assertEqual(date.Tomorrow(), 
+                         date.next(date.Yesterday(), 'daily', 2))
+        
+    def testEveryThirdDay(self):
+        self.assertEqual(date.Date(2000,1,4), 
+                         date.next(date.Date(2000,1,1), 'daily', 3))
+        
+    def testEveryOtherWeek(self):
+        self.assertEqual(date.Date(2000,1,15), 
+                         date.next(date.Date(2000,1,1), 'weekly', 2))
+        
+    def testEveryOtherMonth(self):
+        self.assertEqual(date.Date(2000,3,1), 
+                         date.next(date.Date(2000,1,1), 'monthly', 2))
+
+    def testEveryOtherYear(self):
+        self.assertEqual(date.Date(2004,3,1), 
+                         date.next(date.Date(2002,3,1), 'yearly', 2))

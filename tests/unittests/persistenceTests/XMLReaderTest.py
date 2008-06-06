@@ -215,10 +215,15 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
             <task lastModificationTime="2004-01-01 10:00:00"/>
         </tasks>''')
         self.assertEqual(1, len(tasks)) # Ignore lastModificationTime
+
+
+# There's no XMLReaderVersion19Test because the only difference between version
+# 19 and 20 is the addition of an optional recurrenceFrequency attribute to 
+# tasks in version 20. So the tests for version 20 test version 19 as well.
         
 
-class XMLReaderVersion18Test(XMLReaderTestCase):
-    tskversion = 19 # For release 0.69.0
+class XMLReaderVersion20Test(XMLReaderTestCase):
+    tskversion = 20 # New in release 0.71.0
            
     def testReadEmptyStream(self):
         try:
@@ -647,6 +652,13 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual('monthly', tasks[0].recurrence())
         
+    def testYearlyRecurrence(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrence="yearly"/>
+        </tasks>''')
+        self.assertEqual('yearly', tasks[0].recurrence())
+        
     def testRecurrenceCount(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
@@ -661,3 +673,9 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual(10, tasks[0].maxRecurrenceCount())
 
+    def testRecurrenceFrequency(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrenceFrequency="3"/>
+        </tasks>''')
+        self.assertEqual(3, tasks[0].recurrenceFrequency())

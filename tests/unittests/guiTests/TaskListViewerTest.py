@@ -100,6 +100,12 @@ class CommonTests(object):
         self.taskList.append(taskWithRecurrence)
         self.showColumn('recurrence', False)
         self.assertEqual(3, self.viewer.GetColumnCount())
+        
+    def testRenderRecurrence(self):
+        taskWithRecurrence = task.Task(recurrence='weekly', recurrenceFrequency=2)
+        self.showColumn('recurrence')
+        self.taskList.append(taskWithRecurrence)
+        self.assertEqual('Every other week', self.getItemText(0,3))
 
         
 class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests, 
@@ -119,6 +125,9 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
                 self.categories, note.NoteContainer()), self.settings, 
                 categories=self.categories)
         self.viewer.sortBy('subject')
+        
+    def getItemText(self, row, column):
+        return self.viewer.widget.GetItem(row, column).GetText()
                 
     def assertItems(self, *tasks):
         self.assertEqual(len(tasks), self.viewer.size())

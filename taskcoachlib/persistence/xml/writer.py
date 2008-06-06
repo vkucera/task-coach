@@ -23,7 +23,7 @@ from taskcoachlib.domain import date, attachment
 
 
 class XMLWriter:    
-    def __init__(self, fd, versionnr=19):
+    def __init__(self, fd, versionnr=20):
         self.__fd = fd
         self.__versionnr = versionnr
 
@@ -64,6 +64,8 @@ class XMLWriter:
             node.setAttribute('recurrenceCount', str(task.recurrenceCount()))
         if task.maxRecurrenceCount():
             node.setAttribute('maxRecurrenceCount', str(task.maxRecurrenceCount()))
+        if task.recurrenceFrequency() > 1:
+            node.setAttribute('recurrenceFrequency', str(task.recurrenceFrequency()))
         if task.budget() != date.TimeDelta():
             node.setAttribute('budget', self.budgetAsAttribute(task.budget()))
         if task.priority() != 0:

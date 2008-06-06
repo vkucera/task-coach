@@ -128,6 +128,7 @@ class XMLReader:
             completionDate=date.parseDate(taskNode.getAttribute('completiondate')),
             recurrence=taskNode.getAttribute('recurrence'),
             recurrenceCount=self.__parseInteger(taskNode.getAttribute('recurrenceCount')),
+            recurrenceFrequency=self.__parseInteger(taskNode.getAttribute('recurrenceFrequency'), default=1),
             maxRecurrenceCount=self.__parseInteger(taskNode.getAttribute('maxRecurrenceCount')),
             budget=date.parseTimeDelta(taskNode.getAttribute('budget')),
             priority=self.__parseInteger(taskNode.getAttribute('priority')),
@@ -200,11 +201,11 @@ class XMLReader:
     def __parseTextNode(self, node):
         return node.firstChild.data
     
-    def __parseInteger(self, integerText):
-        return self.__parse(integerText, int, 0)
+    def __parseInteger(self, integerText, default=0):
+        return self.__parse(integerText, int, default)
 
-    def __parseFloat(self, floatText):
-        return self.__parse(floatText, float, 0.0)
+    def __parseFloat(self, floatText, default=0.0):
+        return self.__parse(floatText, float, default)
                     
     def __parseDateTime(self, dateTimeText):
         return self.__parse(dateTimeText, date.parseDateTime, None)

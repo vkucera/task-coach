@@ -205,10 +205,29 @@ class DatesPage(TaskEditorPage):
         recurrenceBox = widgets.BoxWithFlexGridSizer(self, 
             label=_('Recurrence'), cols=2)
         recurrenceBox.add(_('Recurrence'))
-        self._recurrenceEntry = wx.Choice(recurrenceBox, 
+        panel = wx.Panel(recurrenceBox)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+        self._recurrenceEntry = wx.Choice(panel, 
             choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])
         self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrenceChanged)
-        recurrenceBox.add(self._recurrenceEntry)
+        panelSizer.Add(self._recurrenceEntry, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add((3,-1))
+        staticText = wx.StaticText(panel, label=_(', every'))
+        panelSizer.Add(staticText, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add((3,-1))
+        self._recurrenceFrequencyEntry = wx.SpinCtrl(panel, size=(50,-1),
+            style=wx.SP_ARROW_KEYS)
+        # Can't use sys.maxint because Python and wxPython disagree on what the 
+        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
+        # an Overflow exception, so we use a constant:
+        maxint = 2147483647
+        self._recurrenceFrequencyEntry.SetRange(1, maxint)
+        panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add((3,-1))
+        self._recurrenceStaticText = wx.StaticText(panel, size=(100,-1))
+        panelSizer.Add(self._recurrenceStaticText, flag=wx.ALIGN_CENTER_VERTICAL)
+        panel.SetSizerAndFit(panelSizer)
+        recurrenceBox.add(panel)
         recurrenceBox.add(_('Maximum number of recurrences'))
         panel = wx.Panel(recurrenceBox)
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -217,16 +236,15 @@ class DatesPage(TaskEditorPage):
         panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
         self._maxRecurrenceCountEntry = wx.SpinCtrl(panel, size=(50,-1),
-            value=str(task.maxRecurrenceCount()), style=wx.SP_ARROW_KEYS)
-        # Can't use sys.maxint because Python and wxPython disagree on what the 
-        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
-        # an Overflow exception, so we use a constant:
-        maxint = 2147483647
+            style=wx.SP_ARROW_KEYS)
         self._maxRecurrenceCountEntry.SetRange(1, maxint)
-        self.setRecurrence(task.recurrence())
         panelSizer.Add(self._maxRecurrenceCountEntry)
         panel.SetSizerAndFit(panelSizer)
         recurrenceBox.add(panel)
+        
+        self.setRecurrence(task.recurrence())
+        self.setRecurrenceFrequency(task.recurrenceFrequency())
+        self.setMaxRecurrenceCount(task.maxRecurrenceCount())
         
         for box in datesBox, reminderBox, recurrenceBox:
             box.fit()
@@ -237,8 +255,10 @@ class DatesPage(TaskEditorPage):
         event.Skip()
         recurrenceOn = event.String != _('None')
         self._maxRecurrenceCheckBox.Enable(recurrenceOn)
+        self._recurrenceFrequencyEntry.Enable(recurrenceOn)
         self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
             self._maxRecurrenceCheckBox.IsChecked())
+        self.updateRecurrenceLabel()
         
     def onMaxRecurrenceChecked(self, event):
         event.Skip()
@@ -258,6 +278,8 @@ class DatesPage(TaskEditorPage):
         self._task.setRecurrence(recurrence)
         if self._maxRecurrenceCheckBox.IsChecked():
             self._task.setMaxRecurrenceCount(self._maxRecurrenceCountEntry.Value)
+        if recurrence:
+            self._task.setRecurrenceFrequency(self._recurrenceFrequencyEntry.Value)
         self._task.setStartDate(self._startDateEntry.get())
         self._task.setDueDate(self._dueDateEntry.get())
         self._task.setCompletionDate(self._completionDateEntry.get())
@@ -277,7 +299,18 @@ class DatesPage(TaskEditorPage):
         self._maxRecurrenceCountEntry.Value = maxRecurrence
         self._maxRecurrenceCheckBox.Enable(self._recurrenceEntry.Selection != 0)
         self._maxRecurrenceCheckBox.SetValue(maxRecurrence > 0)
-
+        
+    def setRecurrenceFrequency(self, recurrenceFrequency):
+        self._recurrenceFrequencyEntry.SetValue(recurrenceFrequency)
+        self._recurrenceFrequencyEntry.Enable(self._recurrenceEntry.Selection != 0)
+        self.updateRecurrenceLabel()
+        
+    def updateRecurrenceLabel(self):
+        recurrenceDict = {0: _('period'), 1: _('day(s)'), 2: _('week(s)'), 
+                          3: _('month(s)'), 4: _('year(s)')}
+        recurrenceLabel = recurrenceDict[self._recurrenceEntry.Selection]
+        self._recurrenceStaticText.SetLabel(recurrenceLabel)
+        
     def suggestReminder(self):
         ''' suggestReminder populates the reminder entry with a reasonable
             suggestion for a reminder date and time, but does not enable the

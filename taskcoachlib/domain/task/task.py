@@ -29,7 +29,7 @@ class Task(category.CategorizableCompositeObject):
             efforts=None,
             shouldMarkCompletedWhenAllChildrenCompleted=None, 
             recurrence='', recurrenceCount=0, maxRecurrenceCount=0,
-            *args, **kwargs):
+            recurrenceFrequency=1, *args, **kwargs):
         kwargs['id'] = id
         kwargs['subject'] = subject
         kwargs['description'] = description
@@ -50,6 +50,7 @@ class Task(category.CategorizableCompositeObject):
         self._recurrence     = recurrence
         self._recurrenceCount = recurrenceCount
         self._maxRecurrenceCount = maxRecurrenceCount
+        self._recurrenceFrequency = recurrenceFrequency
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
 
@@ -64,6 +65,7 @@ class Task(category.CategorizableCompositeObject):
         self.setRecurrence(state['recurrence'])
         self.setRecurrenceCount(state['recurrenceCount'])
         self.setMaxRecurrenceCount(state['maxRecurrenceCount'])
+        self.setRecurrenceFrequency(state['recurrenceFrequency'])
         self.replaceChildren(state['children'])
         self.replaceParent(state['parent'])
         self.setEfforts(state['efforts'])
@@ -87,6 +89,7 @@ class Task(category.CategorizableCompositeObject):
             fixedFee=self._fixedFee, recurrence=self._recurrence,
             recurrenceCount=self._recurrenceCount, 
             maxRecurrenceCount=self._maxRecurrenceCount,
+            recurrenceFrequency=self._recurrenceFrequency,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -110,6 +113,7 @@ class Task(category.CategorizableCompositeObject):
             reminder=self.reminder(), recurrence=self.recurrence(),
             recurrenceCount=self.recurrenceCount(), 
             maxRecurrenceCount=self.maxRecurrenceCount(),
+            recurrenceFrequency=self.recurrenceFrequency(),
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self.shouldMarkCompletedWhenAllChildrenCompleted,
             children=[child.copy() for child in self.children()])
@@ -549,6 +553,15 @@ class Task(category.CategorizableCompositeObject):
     def setMaxRecurrenceCount(self, maxRecurrenceCount):
         self._maxRecurrenceCount = maxRecurrenceCount
     
+    def recurrenceFrequency(self):
+        return self._recurrenceFrequency
+    
+    def setRecurrenceFrequency(self, frequency):
+        if frequency != self._recurrenceFrequency:
+            self._recurrenceFrequency = frequency
+            self.notifyObservers(patterns.Event(self, 'task.recurrence',
+                                                frequency))
+        
     # behavior
     
     # To experiment, this attribute is coded by means of a property, which
