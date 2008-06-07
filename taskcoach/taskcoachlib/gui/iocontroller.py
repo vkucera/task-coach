@@ -185,16 +185,16 @@ class IOController(object):
         
     def synchronize(self, password):
         synchronizer = sync.Synchronizer(self.__settings.get('syncml', 'preferredsyncmode'),
-                                         self.__settings.get('syncml', 'verbose'),
+                                         self.__settings.getboolean('syncml', 'verbose'),
                                          self.__settings.get('syncml', 'client'),
                                          self.__syncReport, self.__taskFile,
                                          self.__settings.get('syncml', 'url'),
                                          self.__settings.get('syncml', 'username'),
                                          password,
                                          self.__settings.get('syncml', 'taskdbname'),
-                                         self.__settings.get('syncml', 'synctasks'),
+                                         self.__settings.getboolean('syncml', 'synctasks'),
                                          self.__settings.get('syncml', 'notedbname'),
-                                         self.__settings.get('syncml', 'syncnotes'))
+                                         self.__settings.getboolean('syncml', 'syncnotes'))
         return synchronizer.synchronize()
 
     def __syncReport(self, msg):

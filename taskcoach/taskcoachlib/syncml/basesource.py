@@ -129,6 +129,8 @@ class BaseSource(SyncSource):
         raise NotImplementedError
 
     def deleteItem(self, item):
+        print 'DELETE', item.key
+
         try:
             obj = self._getObject(item.key)
         except KeyError:
@@ -136,10 +138,14 @@ class BaseSource(SyncSource):
 
         self.objectList.remove(obj)
 
+        print 'DELETED', item.key
+
         return 200
 
     def setItemStatus(self, key, status):
         obj = self._getObject(key)
+
+        print 'STATUS', key, status
 
         if status in [200, 201, 211, 418]:
             # 200: Generic OK

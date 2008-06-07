@@ -94,7 +94,7 @@ class Synchronizer(object):
 
     def error(self, code, msg):
         self.reportCallback(_('An error occurred in the synchronization.\nError code: %d; message: %s') \
-                            % (code, client.report.getLastErrorMsg()))
+                            % (code, msg))
 
     def synchronize(self):
         self.taskFile.beginSync()
@@ -104,7 +104,7 @@ class Synchronizer(object):
 
             code = client.report.getLastErrorCode()
             if code:
-                self.error(code, client.getLastErrorMsg())
+                self.error(code, client.report.getLastErrorMsg())
                 # TODO: undo local modifications ?
                 return False
 
@@ -117,7 +117,7 @@ class Synchronizer(object):
 
 ##             code = client.report.getLastErrorCode()
 ##             if code:
-##                 self.error(code, client.getLastErrorMsg())
+##                 self.error(code, client.report.getLastErrorMsg())
 ##                 # TODO: undo local modifications ?
 ##                 return False
 
