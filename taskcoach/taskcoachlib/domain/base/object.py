@@ -22,15 +22,33 @@ import time
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 
-class SynchronizedObject(object):
+class SynchronizedObject(patterns.Observable):
     STATUS_NONE    = 0
     STATUS_NEW     = 1
     STATUS_CHANGED = 2
+    STATUS_DELETED = 3
 
     def __init__(self, *args, **kwargs):
         self.__status = kwargs.pop('status', self.STATUS_NEW)
         self.__frozenStatus = kwargs.pop('frozenStatus', False)
         super(SynchronizedObject, self).__init__(*args, **kwargs)
+
+    def __getstate__(self):
+        try:
+            state = super(SynchronizedObject, self).__getstate__()
+        except AttributeError:
+            pass
+
+        state['status'] = self.__status
+        return state
+
+    def __setstate__(self, state):
+        try:
+            super(SynchronizedObject, self).__setstate__(state)
+        except AttributeError:
+            pass
+
+        self.__status = state['status']
 
     def freezeStatus(self):
         self.__frozenStatus = True
@@ -45,6 +63,12 @@ class SynchronizedObject(object):
         if self.__status == self.STATUS_NONE and not self.__frozenStatus:
             self.__status = self.STATUS_CHANGED
 
+    def markDeleted(self):
+        if not self.__frozenStatus:
+            self.__status = self.STATUS_DELETED
+            self.notifyObservers(patterns.Event(self, 
+                self.deletedEventType(), self.__status))
+
     def cleanDirty(self):
         if not self.__frozenStatus:
             self.__status = self.STATUS_NONE
@@ -55,7 +79,14 @@ class SynchronizedObject(object):
     def isModified(self):
         return self.__status == self.STATUS_CHANGED
 
-class Object(SynchronizedObject, patterns.Observable):
+    def isDeleted(self):
+        return self.__status == self.STATUS_DELETED
+    
+    @classmethod    
+    def deletedEventType(class_):
+        return '%s.deleted'%class_
+
+class Object(SynchronizedObject):
     def __init__(self, *args, **kwargs):
         self.__subject = kwargs.pop('subject', '')
         self.__description = kwargs.pop('description', '')
