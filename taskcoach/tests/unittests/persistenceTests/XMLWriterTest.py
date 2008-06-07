@@ -57,7 +57,11 @@ class XMLWriterTest(test.TestCase):
     def testTaskSubject(self):
         self.task.setSubject('Subject')
         self.expectInXML('subject="Subject"')
-        
+
+    def testTaskMarkedDeleted(self):
+        self.task.markDeleted()
+        self.expectInXML('status="3"')
+
     def testTaskSubjectWithUnicode(self):
         self.task.setSubject(u'ï¬Ÿï­Žï­–')
         self.expectInXML(u'subject="ï¬Ÿï­Žï­–"')
