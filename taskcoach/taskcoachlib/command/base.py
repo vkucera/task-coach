@@ -120,7 +120,7 @@ class CopyCommand(BaseCommand):
         task.Clipboard().put(self.__copies, self.list)
 
         
-class DeleteCommand(BaseCommand):
+class DeleteCommand(BaseCommand, SaveStateMixin):
     def __init__(self, *args, **kwargs):
         self.__shadow = kwargs.pop('shadow', False)
         super(DeleteCommand, self).__init__(*args, **kwargs)
@@ -130,19 +130,22 @@ class DeleteCommand(BaseCommand):
 
     def do_command(self):
         if self.__shadow:
+            self.saveStates(self.items)
+
             for item in self.items:
                 item.markDeleted()
         else:
             self.list.removeItems(self.items)
 
     def undo_command(self):
-        if not self.__shadow:
+        if self.__shadow:
+            self.undoStates()
+        else:
             self.list.extend(self.items)
 
     def redo_command(self):
         if self.__shadow:
-            for item in self.items:
-                item.markDeleted()
+            self.redoStates()
         else:
             self.list.removeItems(self.items)
 

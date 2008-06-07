@@ -39,7 +39,8 @@ class TaskFile(patterns.Observable):
                           self.categories().removeItemEventType(),
                           self.notes().addItemEventType(),
                           self.notes().removeItemEventType(),
-                          'object.markdeleted'):
+                          'object.markdeleted',
+                          'object.marknotdeleted'):
             patterns.Publisher().registerObserver(self.onDomainObjectAddedOrRemoved, 
                                                   eventType)
 

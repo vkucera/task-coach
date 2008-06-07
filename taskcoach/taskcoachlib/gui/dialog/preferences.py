@@ -256,15 +256,13 @@ class SyncMLPage(SettingsPage):
         self.addBooleanSetting('syncml', 'verbose', _('Always display synchronization report'))
         self.addBooleanSetting('syncml', 'synctasks', _('Enable tasks synchronization'))
         self.addBooleanSetting('syncml', 'syncnotes', _('Enable notes synchronization'))
-
-##         self.addBooleanSetting('syncml', 'syncefforts', _('Enable efforts synchronization'))
+        self.addBooleanSetting('syncml', 'syncefforts', _('Enable efforts synchronization'))
 
         self.addTextSetting('syncml', 'url', _('SyncML server URL'))
         self.addTextSetting('syncml', 'username', _('User name/ID'))
         self.addTextSetting('syncml', 'taskdbname', _('Tasks database name'))
         self.addTextSetting('syncml', 'notedbname', _('Notes database name'))
-
-##         self.addTextSetting('syncml', 'effortdbname', _('Efforts database name'))
+        self.addTextSetting('syncml', 'effortdbname', _('Efforts database name'))
 
         self.fit()
 

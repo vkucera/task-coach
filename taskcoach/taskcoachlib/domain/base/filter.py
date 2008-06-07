@@ -91,11 +91,18 @@ class DeletedFilter(Filter):
     def __init__(self, *args, **kwargs):
         super(DeletedFilter, self).__init__(*args, **kwargs)
 
-        patterns.Publisher().registerObserver(self.onObjectMarkedDeleted,
-                      eventType='object.markdeleted')
+        for eventType in ['object.markdeleted', 'object.marknotdeleted']:
+            patterns.Publisher().registerObserver(self.onObjectMarkedDeletedOrNot,
+                          eventType=eventType)
 
-    def onObjectMarkedDeleted(self, event):
-        self.removeItemsFromSelf([event.source()])
+    def onObjectMarkedDeletedOrNot(self, event):
+        obj = event.source()
+
+        if obj.isDeleted():
+            self.removeItemsFromSelf([obj])
+        else:
+            if obj in self.observable() and not obj in self:
+                self.extendSelf([obj])
 
     def filter(self, items):
         return [item for item in items if not item.isDeleted()]

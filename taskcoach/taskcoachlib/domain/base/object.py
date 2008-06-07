@@ -48,7 +48,15 @@ class SynchronizedObject(patterns.Observable):
         except AttributeError:
             pass
 
+        oldstatus = self.__status
         self.__status = state['status']
+
+        if oldstatus == self.STATUS_DELETED:
+            self.notifyObservers(patterns.Event(self,
+                         'object.marknotdeleted'))
+        elif self.__status == self.STATUS_DELETED:
+            self.notifyObservers(patterns.Event(self,
+                         'object.markdeleted'))
 
     def freezeStatus(self):
         self.__frozenStatus = True

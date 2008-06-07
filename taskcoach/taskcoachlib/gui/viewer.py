@@ -1467,7 +1467,8 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
     editEffortDialog = editItemDialog
     
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection())
+        return command.DeleteCommand(self.list, self.curselection(),
+                    shadow=self.settings.get('syncml', 'syncefforts'))
     
     deleteEffortCommand = deleteItemCommand
     
@@ -1515,7 +1516,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
                 lambda effort: render.amount(effort.revenue()))]
 
     def createFilter(self, taskList):
-        return effort.EffortList(base.SearchFilter(taskList))
+        return base.DeletedFilter(effort.EffortList(base.SearchFilter(taskList)))
 
     def getColumnUICommands(self):
         return ['viewdescription', 'viewtimeSpent', 'viewrevenue']
@@ -1558,7 +1559,7 @@ class CompositeEffortListViewer(EffortListViewer):
         return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
 
     def createFilter(self, taskList):
-        return self.EffortPerPeriod(base.SearchFilter(taskList))
+        return base.DeletedFilter(self.EffortPerPeriod(base.SearchFilter(taskList)))
 
     def getColumnUICommands(self):
         commands = super(CompositeEffortListViewer, self).getColumnUICommands()
