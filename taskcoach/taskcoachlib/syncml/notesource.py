@@ -3,14 +3,9 @@ from taskcoachlib.domain.note import Note
 from taskcoachlib.syncml.basesource import BaseSource
 
 class NoteSource(BaseSource):
-    def _getItem(self, ls):
-        item, note = super(NoteSource, self)._getItem(ls)
-
-        if item is not None:
-            item.data = (note.subject() + '\n' + note.description()).encode('UTF-8')
-            item.dataType = 'text/plain'
-
-        return item
+    def updateItemProperties(self, item, note):
+        item.data = (note.subject() + '\n' + note.description()).encode('UTF-8')
+        item.dataType = 'text/plain'
 
     def _parseObject(self, item):
         data = item.data.decode('UTF-8')

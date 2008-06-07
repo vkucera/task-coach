@@ -18,16 +18,22 @@ class BaseSource(SyncSource):
         print 'Sync end.'
 
     def _getObject(self, key):
+        """Returns the domain object with local ID 'key', or raise
+        KeyError if not found."""
+
         for obj in self.allObjectsList:
             if obj.id() == key:
                 return obj
         raise KeyError, 'No such object: %s' % key
 
     def _getItem(self, ls):
+        """Returns a SyncItem instance representing the first domain
+        object in the 'ls' sequence."""
+
         try:
             obj = ls.pop(0)
         except IndexError:
-            return None, None
+            return None
 
         item = SyncItem(obj.id())
 
@@ -39,10 +45,22 @@ class BaseSource(SyncSource):
             item.state = STATE_UPDATED
         # TODO: deleted...
 
-        return item, obj
+        self.updateItemProperties(item, obj)
+
+        return item
+
+    def updateItemProperties(self, item, obj):
+        """Set item properties (data, dataType...) according to the
+        domain object 'obj'. You must overload this in subclasses."""
+
+        raise NotImplementedError
 
     def _parseObject(self, item):
+        """Must return a new domain object from a SyncItem instance."""
+
         raise NotImplementedError
+
+    # These two methods seem to be obsolete.
 
     def getFirstItemKey(self):
         return None
@@ -51,24 +69,30 @@ class BaseSource(SyncSource):
         return None
 
     def getFirstItem(self):
+        print 'FI'
         self.allObjectsListCopy = self.allObjectsList[:]
         return self._getItem(self.allObjectsListCopy)
 
     def getNextItem(self):
+        print 'NI'
         return self._getItem(self.allObjectsListCopy)
 
     def getFirstNewItem(self):
+        print 'FNI'
         self.newObjectsListCopy = self.newObjectsList[:]
         return self._getItem(self.newObjectsListCopy)
 
     def getNextNewItem(self):
+        print 'NNI'
         return self._getItem(self.newObjectsListCopy)
 
     def getFirstUpdatedItem(self):
+        print 'FUI'
         self.changedObjectsListCopy = self.changedObjectsList[:]
         return self._getItem(self.changedObjectsListCopy)
 
     def getNextUpdatedItem(self):
+        print 'NUI'
         return self._getItem(self.changedObjectsListCopy)
 
     def getFirstDeletedItem(self):
@@ -95,13 +119,16 @@ class BaseSource(SyncSource):
         return self.doUpdateItem(obj, local)
 
     def doUpdateItem(self, obj, local):
+        """Must update the 'local' domain object according to 'obj'
+        (which is a 'temporary' domain object)"""
+
         raise NotImplementedError
 
     def deleteItem(self, item):
         try:
             obj = self._getObject(item.key)
         except KeyError:
-            return 404
+            return 210
 
         self.objectList.remove(obj)
 

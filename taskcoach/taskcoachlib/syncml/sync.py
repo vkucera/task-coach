@@ -14,85 +14,120 @@ class Synchronizer(object):
                  *args, **kwargs):
         super(Synchronizer, self).__init__(*args, **kwargs)
 
-        clientName = clientName.encode('UTF-8')
-
+        self.clientName = clientName.encode('UTF-8')
         self.verbose = verbose
         self.reportCallback = reportCallback
         self.taskFile = taskFile
 
-        self.dmt = DMTClientConfig(clientName)
-        if not (self.dmt.read() and self.dmt.deviceConfig.devID == clientName):
+        self.username = username.encode('UTF-8') # Hum...
+        self.password = password.encode('UTF-8')
+        self.url = url.encode('UTF-8')
+
+        self.synctasks = synctasks
+        self.syncnotes = syncnotes
+        self.taskdbname = taskdbname.encode('UTF-8')
+        self.notedbname = notedbname.encode('UTF-8')
+
+        self.mode = mode
+
+        self.init()
+
+    def init(self):
+        self.dmt = DMTClientConfig(self.clientName)
+        if not (self.dmt.read() and \
+                self.dmt.deviceConfig.devID == self.clientName):
             self.dmt.setClientDefaults()
 
         ac = self.dmt.accessConfig
-        ac.username = username.encode('UTF-8') # Hum...
-        ac.password = password.encode('UTF-8')
+        ac.username = self.username
+        ac.password = self.password
 
         ac.useProxy = 0
-        ac.syncURL = url.encode('UTF-8')
+        ac.syncURL = self.url
         self.dmt.accessConfig = ac
 
         dc = self.dmt.deviceConfig
-        dc.devID = clientName
+        dc.devID = self.clientName
         self.dmt.deviceConfig = dc
 
         # Tasks source configuration
 
         self.sources = []
 
-        if synctasks:
+        if self.synctasks:
             try:
-                cfg = self.dmt.getSyncSourceConfig('TaskCoach.Tasks')
+                cfg = self.dmt.getSyncSourceConfig('%s.Tasks' % self.clientName)
             except ValueError:
                 cfg = SyncSourceConfig()
 
-            cfg.name = '%s.Tasks' % clientName
-            cfg.URI = taskdbname.encode('UTF-8')
+            cfg.name = '%s.Tasks' % self.clientName
+            cfg.URI = self.taskdbname
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/vcard:3.0'
             cfg.version = '1.0'
 
             self.dmt.setSyncSourceConfig(cfg)
 
-            self.sources.append(TaskSource(taskFile.tasks(),
-                                           taskFile.categories(),
-                                           '%s.Tasks' % clientName, cfg))
+            self.sources.append(TaskSource(self.taskFile.tasks(),
+                                           self.taskFile.categories(),
+                                           '%s.Tasks' % self.clientName, cfg))
 
-        if syncnotes:
+        if self.syncnotes:
             try:
-                cfg = self.dmt.getSyncSourceConfig('%s.Notes' % clientName)
+                cfg = self.dmt.getSyncSourceConfig('%s.Notes' % self.clientName)
             except ValueError:
                 cfg = SyncSourceConfig()
 
-            cfg.name = '%s.Notes' % clientName
-            cfg.URI = notedbname.encode('UTF-8')
+            cfg.name = '%s.Notes' % self.clientName
+            cfg.URI = self.notedbname
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/plain'
             cfg.version = '1.0'
 
             self.dmt.setSyncSourceConfig(cfg)
 
-            self.sources.append(NoteSource(taskFile.notes(),
-                                           '%s.Notes' % clientName, cfg))
+            self.sources.append(NoteSource(self.taskFile.notes(),
+                                           '%s.Notes' % self.clientName, cfg))
 
         for source in self.sources:
-            source.preferredSyncMode = globals()[mode] # Hum
+            source.preferredSyncMode = globals()[self.mode] # Hum
+
+    def error(self, code, msg):
+        self.reportCallback(_('An error occurred in the synchronization.\nError code: %d; message: %s') \
+                            % (code, client.report.getLastErrorMsg()))
 
     def synchronize(self):
         self.taskFile.beginSync()
         try:
             client = SyncClient()
             client.sync(self.dmt, self.sources)
+
+            code = client.report.getLastErrorCode()
+            if code:
+                self.error(code, client.getLastErrorMsg())
+                # TODO: undo local modifications ?
+                return False
+
+            # TODO: distinct SyncSource behaviours for second sync
+
+##             self.dmt.save()
+##             self.init()
+##             client = SyncClient()
+##             client.sync(self.dmt, self.sources)
+
+##             code = client.report.getLastErrorCode()
+##             if code:
+##                 self.error(code, client.getLastErrorMsg())
+##                 # TODO: undo local modifications ?
+##                 return False
+
+##             # We should  restore Last anchor  from first sync  so that
+##             # objects added/changed after it  are accounted for on the
+##             # next sync, but when I  do that, the server forces a slow
+##             # sync the next time...
+
+            self.dmt.save()
         finally:
             self.taskFile.endSync()
 
-        code = client.report.getLastErrorCode()
-        if code:
-            self.reportCallback(_('An error occurred in the synchronization.\nError code: %d; message: %s') % (code, client.report.getLastErrorMsg()))
-            return False
-
-        if self.verbose:
-            self.reportCallback(_('Synchronization over. Report:\n\n') + str(client.report))
-
-        self.dmt.save()
         return True

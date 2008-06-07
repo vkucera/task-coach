@@ -9,14 +9,9 @@ class TaskSource(basesource.BaseSource):
 
         self.categoryList = categoryList
 
-    def _getItem(self, ls):
-        item, task = super(TaskSource, self)._getItem(ls)
-
-        if item is not None:
-            item.data = vcal.VCalFromTask(task)
-            item.dataType = 'text/x-vcalendar'
-
-        return item
+    def updateItemProperties(self, item, task):
+        item.data = vcal.VCalFromTask(task)
+        item.dataType = 'text/x-vcalendar'
 
     def _parseObject(self, item):
         parser = vcal.VCalendarParser()
@@ -36,6 +31,8 @@ class TaskSource(basesource.BaseSource):
         return task
 
     def addItem(self, item):
+        print 'ADD', item.data
+
         task = super(TaskSource, self).addItem(item)
 
         for category in task.categories():
@@ -44,6 +41,8 @@ class TaskSource(basesource.BaseSource):
         return 201
 
     def doUpdateItem(self, task, local):
+        print 'UPDATE', local.id()
+
         local.setStartDate(task.startDate())
         local.setDueDate(task.dueDate())
         local.setDescription(task.description())
