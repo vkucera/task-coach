@@ -86,3 +86,16 @@ class SearchFilter(Filter):
             subject += ' '.join([child.subject() for child in \
                 item.children(recursive=True) if child in self.observable()])
         return subject
+
+class DeletedFilter(Filter):
+    def __init__(self, *args, **kwargs):
+        super(DeletedFilter, self).__init__(*args, **kwargs)
+
+        patterns.Publisher().registerObserver(self.onObjectMarkedDeleted,
+                      eventType='object.markdeleted')
+
+    def onObjectMarkedDeleted(self, event):
+        self.removeItemsFromSelf([event.source()])
+
+    def filter(self, items):
+        return [item for item in items if not item.isDeleted()]

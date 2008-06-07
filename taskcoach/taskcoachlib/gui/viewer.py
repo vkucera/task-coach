@@ -329,7 +329,7 @@ class Viewer(wx.Panel):
         return collection
         
     def createFilter(self, collection):
-        return collection
+        return base.DeletedFilter(collection)
 
     def onAddItem(self, event):
         self.refresh()
@@ -963,7 +963,8 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     editTaskDialog = editItemDialog
     
     def deleteItemCommand(self):
-        return command.DeleteTaskCommand(self.list, self.curselection())
+        return command.DeleteTaskCommand(self.list, self.curselection(),
+                  shadow=self.settings.get('syncml', 'synctasks'))
         
     deleteTaskCommand = deleteItemCommand
     
@@ -1407,7 +1408,8 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
     editNoteDialog = editItemDialog
     
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection())
+        return command.DeleteCommand(self.list, self.curselection(),
+                  shadow=self.settings.get('syncml', 'syncnotes'))
     
     deleteNoteCommand = deleteItemCommand
     

@@ -67,7 +67,7 @@ class SynchronizedObject(patterns.Observable):
         if not self.__frozenStatus:
             self.__status = self.STATUS_DELETED
             self.notifyObservers(patterns.Event(self, 
-                self.deletedEventType(), self.__status))
+                'object.markdeleted', self.__status))
 
     def cleanDirty(self):
         if not self.__frozenStatus:
@@ -81,10 +81,6 @@ class SynchronizedObject(patterns.Observable):
 
     def isDeleted(self):
         return self.__status == self.STATUS_DELETED
-    
-    @classmethod    
-    def deletedEventType(class_):
-        return '%s.deleted'%class_
 
 class Object(SynchronizedObject):
     def __init__(self, *args, **kwargs):

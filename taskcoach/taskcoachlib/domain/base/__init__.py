@@ -17,5 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from object import Object, CompositeObject, SynchronizedObject
-from filter import Filter, SearchFilter
+from filter import Filter, SearchFilter, DeletedFilter
 from sorter import Sorter, TreeSorter
