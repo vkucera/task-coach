@@ -10,6 +10,7 @@ class BaseSource(SyncSource):
         self.allObjectsList = [obj for obj in objectList]
         self.newObjectsList = [obj for obj in objectList if obj.isNew()]
         self.changedObjectsList = [obj for obj in objectList if obj.isModified()]
+        self.deletedObjectsList = [obj for obj in objectList if obj.isDeleted()]
 
     def beginSync(self):
         print 'Sync begin:', self.syncMode
@@ -96,10 +97,13 @@ class BaseSource(SyncSource):
         return self._getItem(self.changedObjectsListCopy)
 
     def getFirstDeletedItem(self):
-        print 'FDI' # TODO
+        print 'FDI'
+        self.deletedObjectsListCopy = self.deletedObjectsList[:]
+        return self._getItem(self.deletedObjectsListCopy)
 
     def getNextDeletedItem(self):
-        print 'NDI' # TODO
+        print 'NDI'
+        return self._getItem(self.deletedObjectsListCopy)
 
     def addItem(self, item):
         obj = self._parseObject(item)
@@ -128,7 +132,7 @@ class BaseSource(SyncSource):
         try:
             obj = self._getObject(item.key)
         except KeyError:
-            return 210
+            return 211
 
         self.objectList.remove(obj)
 
@@ -137,12 +141,17 @@ class BaseSource(SyncSource):
     def setItemStatus(self, key, status):
         obj = self._getObject(key)
 
-        if status in [200, 201, 418]:
+        if status in [200, 201, 211, 418]:
             # 200: Generic OK
             # 201: Added.
+            # 211: Item not deleted (not found)
             # 418: Already exists.
 
-            obj.cleanDirty()
+            if obj.isDeleted():
+                self.objectList.remove(obj)
+            else:
+                obj.cleanDirty()
+
             return 200
 
         print 'UNHANDLED ITEM STATUS %s %d' % (key, status)

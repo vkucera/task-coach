@@ -37,7 +37,7 @@ class SynchronizedObject(patterns.Observable):
         try:
             state = super(SynchronizedObject, self).__getstate__()
         except AttributeError:
-            pass
+            state = dict()
 
         state['status'] = self.__status
         return state
