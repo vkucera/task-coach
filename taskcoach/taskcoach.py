@@ -37,11 +37,11 @@ possible resolutions.''')
         sys.exit(1)
 
     if sys.platform == 'linux2':
-        sys.path.insert(os.path.join(os.getcwd(), 'bin.in', 'linux'))
+        sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'linux'))
     elif sys.platform == 'darwin':
         raise RuntimeError, 'Not implemented yet'
     else:
-        sys.path.insert(os.path.join(os.getcwd(), 'bin.in', 'windows'))
+        sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'windows'))
 
 def start():
     from taskcoachlib import config, application
