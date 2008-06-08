@@ -39,7 +39,7 @@ possible resolutions.''')
     if sys.platform == 'linux2':
         sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'linux'))
     elif sys.platform == 'darwin':
-        raise RuntimeError, 'Not implemented yet'
+        sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'macos'))
     else:
         sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'windows'))
 

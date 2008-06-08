@@ -26,7 +26,7 @@ if projectRoot not in sys.path:
 if sys.platform == 'linux2':
     sys.path.insert(0, os.path.join(projectRoot, 'bin.in', 'linux'))
 elif sys.platform == 'darwin':
-    raise RuntimeError, 'Not implemented yet'
+    sys.path.insert(0, os.path.join(projectRoot, 'bin.in', 'macos'))
 else:
     sys.path.insert(0, os.path.join(projectRoot, 'bin.in', 'windows'))
 
