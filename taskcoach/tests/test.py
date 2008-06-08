@@ -22,7 +22,13 @@ import sys, unittest, os, time, glob, coverage, wx
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
-    
+
+if sys.platform == 'linux2':
+    sys.path.insert(0, os.path.join(projectRoot, 'bin.in', 'linux'))
+elif sys.platform == 'darwin':
+    raise RuntimeError, 'Not implemented yet'
+else:
+    sys.path.insert(0, os.path.join(projectRoot, 'bin.in', 'windows'))
 
 class TestCase(unittest.TestCase):
     def assertEqualLists(self, expectedList, actualList):
