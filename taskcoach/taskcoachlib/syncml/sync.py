@@ -30,8 +30,6 @@ class Synchronizer(object):
 
         self.mode = mode
 
-        self.init()
-
     def init(self):
         self.dmt = DMTClientConfig(self.clientName)
         if not (self.dmt.read() and \
@@ -99,34 +97,40 @@ class Synchronizer(object):
     def synchronize(self):
         self.taskFile.beginSync()
         try:
-            client = SyncClient()
-            client.sync(self.dmt, self.sources)
+            # Actually  make  two  synchronizations. Funambol  servers
+            # seem  to do  conflict resolution  without  notifying the
+            # client. Here, we make a first sync "pretending" no local
+            # items  are modified,  so that  the server  sends  us its
+            # modifications  and new  items.  On the  second pass,  we
+            # ignore  remote modifications  and new  items  but upload
+            # local modifications. The last anchors of each source are
+            # finally set to their value after the first sync, so that
+            # items added/deleted/modified between  the two are synced
+            # on the next synchronization...
 
-            code = client.report.getLastErrorCode()
-            if code:
-                self.error(code, client.report.getLastErrorMsg())
-                # TODO: undo local modifications ?
-                return False
+            # See BaseSource for the state mechanism itself. This only
+            # holds for two-way syncs.
 
-            # TODO: distinct SyncSource behaviours for second sync
+            self.init()
+            states = [dict() for source in self.sources]
 
-##             self.dmt.save()
-##             self.init()
-##             client = SyncClient()
-##             client.sync(self.dmt, self.sources)
+            for idx in xrange(2):
+                for idx, state in enumerate(states):
+                    self.sources[idx].__setstate__(state)
 
-##             code = client.report.getLastErrorCode()
-##             if code:
-##                 self.error(code, client.report.getLastErrorMsg())
-##                 # TODO: undo local modifications ?
-##                 return False
+                client = SyncClient()
+                client.sync(self.dmt, self.sources)
 
-##             # We should  restore Last anchor  from first sync  so that
-##             # objects added/changed after it  are accounted for on the
-##             # next sync, but when I  do that, the server forces a slow
-##             # sync the next time...
+                code = client.report.getLastErrorCode()
+                if code:
+                    self.error(code, client.report.getLastErrorMsg())
+                    # TODO: undo local modifications ?
+                    return False
 
-            self.dmt.save()
+                self.dmt.save()
+
+                states = [source.__getstate__() for source in self.sources]
+                self.init()
         finally:
             self.taskFile.endSync()
 

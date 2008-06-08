@@ -67,9 +67,13 @@ class SynchronizedObject(patterns.Observable):
     def getStatus(self):
         return self.__status
 
-    def markDirty(self):
-        if self.__status == self.STATUS_NONE and not self.__frozenStatus:
+    def markDirty(self, force=False):
+        if (self.__status == self.STATUS_NONE or force) and not self.__frozenStatus:
             self.__status = self.STATUS_CHANGED
+
+    def markNew(self):
+        if not self.__frozenStatus:
+            self.__status = self.STATUS_NEW
 
     def markDeleted(self):
         if not self.__frozenStatus:
@@ -79,7 +83,12 @@ class SynchronizedObject(patterns.Observable):
 
     def cleanDirty(self):
         if not self.__frozenStatus:
+            oldstatus = self.__status
             self.__status = self.STATUS_NONE
+
+            if oldstatus == self.STATUS_DELETED:
+                self.notifyObservers(patterns.Event(self, 
+                     'object.marknotdeleted', self.__status))
 
     def isNew(self):
         return self.__status == self.STATUS_NEW

@@ -290,9 +290,10 @@ _syncmlLimitsSubsection = _('''<h4><a name="syncmllimits">Limitations</a></h4>
   <ul>
     <li>Task and category hierarchy are lost to the server.</li>
     <li>Recurrence and reminders are not supported yet.</li>
-    <li>Funambol servers seem to silently resolve conflicts on the server side,
-        without letting the client decide what to do.</li>
     <li>Note categories are lost to the server.</li>
+    <li>The conflict detection/resolution system is a work around a Funambol
+        limitation. It should work in most cases, but if many applications
+        synchronize with the same server at the same time, problems may rise.</li>
     <li>Probably some others...</li>
   </ul>
 </p>
