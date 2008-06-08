@@ -224,10 +224,8 @@ defaults = { \
     'verbose': 'True',
     'taskdbname': 'task',
     'notedbname': 'note',
-    'effortdbname': 'cal',
     'synctasks': 'False',
     'syncnotes': 'False',
-    'syncefforts': 'False'
     },
 }
 
