@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys
+import sys, os
 if not hasattr(sys, "frozen"):
     # These checks are only necessary in a non-frozen environment, i.e. we
     # skip these checks when run from a py2exe-fied application
@@ -36,6 +36,12 @@ Please see http://www.taskcoach.org/faq.html for more information and
 possible resolutions.''')
         sys.exit(1)
 
+    if sys.platform == 'linux2':
+        sys.path.insert(os.path.join(os.getcwd(), 'bin.in', 'linux'))
+    elif sys.platform == 'darwin':
+        raise RuntimeError, 'Not implemented yet'
+    else:
+        sys.path.insert(os.path.join(os.getcwd(), 'bin.in', 'windows'))
 
 def start():
     from taskcoachlib import config, application
