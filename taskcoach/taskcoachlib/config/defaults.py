@@ -225,8 +225,8 @@ defaults = { \
     'taskdbname': 'task',
     'notedbname': 'note',
     'effortdbname': 'cal',
-    'synctasks': 'True',
-    'syncnotes': 'True',
+    'synctasks': 'False',
+    'syncnotes': 'False',
     'syncefforts': 'False'
     },
 }
