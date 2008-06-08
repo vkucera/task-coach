@@ -1467,8 +1467,7 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
     editEffortDialog = editItemDialog
     
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection(),
-                    shadow=self.settings.getboolean('syncml', 'syncefforts'))
+        return command.DeleteCommand(self.list, self.curselection())
     
     deleteEffortCommand = deleteItemCommand
     
