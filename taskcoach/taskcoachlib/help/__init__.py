@@ -50,6 +50,13 @@ _TOC = _('''<h3>Table of contents</h3>
     <li><a href="#emailcreate">Creating a task from an e-mail</a></li>
   </ul>
 </li>
+<li><a href="#syncml">SyncML support</a>
+  <ul>
+    <li><a href="#aboutsyncml">What is SyncML</a></li>
+    <li><a href="#syncmlsetup">Setup</a></li>
+    <li><a href="#syncmllimits">Limitations</a></li>
+  </ul>
+</li>
 </ul>
 ''')
 
@@ -240,12 +247,65 @@ description is its content. Additionnaly, the mail is automatically
 attached to the newly created task.</p>
 ''')
 
+_syncmlSection = _('''<h3><a name="syncml">SyncML support</a></h3>
+''')
+
+_aboutSyncmlSubsection = _('''<h4><a name="aboutsyncml">What is SyncML</a></h4>
+
+<p>SyncML  is   an  XML  protocol  designed   to  synchronize  several
+applications  with  a  server.  A  popular open-source  server  is  <a
+href="http://www.funambol.com/">Funambol</a>.  Synchronization clients
+are available  for many devices and applications  (Outlook, Pocket PC,
+iPod, iPhone,  Evolution, etc...),  as well as  so-called "connectors"
+which allow the server  to synchronize with Exchange, Google Calendar,
+etc.</p>
+
+<p>%(name)s has built-in SyncML client support. This means you can
+setup %(name)s to synchronize with the same SyncML server you
+synchronize with with Outlook and have all Outlook tasks and notes in
+your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or
+your Pocket PC.</p>
+
+''') % meta.metaDict
+
+_syncmlSetupSubsection = _('''<h4><a name="syncmlsetup">Setup</a></h4>
+
+<p>To setup SyncML, edit your preferences. Fill in the synchronization
+URL, your ID on the server and choose which items to synchronize
+(tasks and/or notes). The URL depends on the server you choose; some
+examples are:
+
+<ul>
+  <li><a href="http://www.scheduleworld.com/">ScheduleWorld</a>: http://sync.scheduleworld.com/funambol/ds</li>
+  <li><a href="http://memotoo.com">MemoToo</a>: http://sync.memotoo.com/syncml</li>
+</ul>
+
+The database names are pretty standard; the default values should work.</p>
+''')
+
+_syncmlLimitsSubsection = _('''<h4><a name="syncmllimits">Limitations</a></h4>
+
+<p>Some limitations are due to the fact that, the underlying data type being vcalendar, some TaskCoach features cannot be presented to the server.
+
+  <ul>
+    <li>Task and category hierarchy are lost to the server.</li>
+    <li>Recurrence and reminders are not supported yet.</li>
+    <li>Funambol servers seem to silently resolve conflicts on the server side,
+        without letting the client decide what to do.</li>
+    <li>Note categories are lost to the server.</li>
+    <li>Probably some others...</li>
+  </ul>
+</p>
+''')
+
 helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _taskPropertiesSubsection + _taskStatesSubsection + _taskColorsSubsection + \
     _effortSection + _aboutEffortSubsection + _effortPropertiesSubsection + \
     _categorySection + _aboutCategoriesSubSection + _categoryPropertiesSubSection + \
-    _emailSection + _aboutEmailSubsection + _emailAttachingSubsection + _emailCreatingSubsection
-    
+    _emailSection + _aboutEmailSubsection + _emailAttachingSubsection + _emailCreatingSubsection + \
+    _syncmlSection + _aboutSyncmlSubsection + _syncmlSetupSubsection + \
+    _syncmlLimitsSubsection
+
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
 <h5>Version %(version)s, %(date)s</h5>
 <p>By %(author)s &lt;%(author_email)s&gt;<p>
