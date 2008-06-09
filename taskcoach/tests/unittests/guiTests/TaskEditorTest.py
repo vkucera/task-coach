@@ -146,26 +146,29 @@ class NewTaskTest(TaskEditorTestCase):
         self.assertEqual(reminderDateTime, self.task.reminder())
         
     def testSetRecurrence(self):
-        self.setRecurrence('weekly')
+        self.setRecurrence(date.Recurrence('weekly'))
         self.editor.ok()
-        self.assertEqual('weekly', self.task.recurrence())
+        self.assertEqual('weekly', self.task.recurrence().unit)
         
     def testSetYearlyRecurrence(self):
-        self.setRecurrence('yearly')
+        self.setRecurrence(date.Recurrence('yearly'))
         self.editor.ok()
-        self.assertEqual('yearly', self.task.recurrence())
+        self.assertEqual('yearly', self.task.recurrence().unit)
         
     def testSetMaxRecurrence(self):
-        self.setRecurrence('weekly')
-        self.setMaxRecurrenceCount(10)
+        self.setRecurrence(date.Recurrence('weekly', max=10))
         self.editor.ok()
-        self.assertEqual(10, self.task.maxRecurrenceCount())
+        self.assertEqual(10, self.task.recurrence().max)
         
     def testSetRecurrenceFrequency(self):
-        self.setRecurrence('weekly')
-        self.setRecurrenceFrequency(3)
+        self.setRecurrence(date.Recurrence('weekly', amount=3))
         self.editor.ok()
-        self.assertEqual(3, self.task.recurrenceFrequency())
+        self.assertEqual(3, self.task.recurrence().amount)
+        
+    def testSetRecurrenceSameWeekday(self):
+        self.setRecurrence(date.Recurrence('monthly', sameWeekday=True))
+        self.editor.ok()
+        self.failUnless(self.task.recurrence().sameWeekday)
     
     def testOpenAttachmentWithNonAsciiFileNameThrowsException(self):
         ''' os.startfile() does not accept unicode filenames. This will be 

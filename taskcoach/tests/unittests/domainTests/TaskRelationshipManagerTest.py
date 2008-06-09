@@ -98,12 +98,12 @@ class CommonTaskRelationshipManagerTests(object):
     # recurrence
         
     def testMarkParentCompletedStopsChildRecurrence(self):
-        self.child.setRecurrence('daily')
+        self.child.setRecurrence(date.Recurrence('daily'))
         self.parent.setCompletionDate()
         self.failIf(self.child.recurrence())
         
     def testRecurringChildIsCompletedWhenParentIsCompleted(self):
-        self.child.setRecurrence('daily')
+        self.child.setRecurrence(date.Recurrence('daily'))
         self.parent.setCompletionDate()
         self.failUnless(self.child.completed())
         
@@ -113,7 +113,7 @@ class CommonTaskRelationshipManagerTests(object):
              self.markParentCompletedWhenAllChildrenCompleted == True)
         
     def testMarkLastChildCompletedMakesParentRecur(self):
-        self.parent.setRecurrence('weekly')
+        self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.setCompletionDate()
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
             self.assertEqual(date.Today() + date.TimeDelta(days=7), 
@@ -122,7 +122,7 @@ class CommonTaskRelationshipManagerTests(object):
             self.assertEqual(date.Today(), self.parent.startDate())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusChildToo(self):
-        self.parent.setRecurrence('weekly')
+        self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.setCompletionDate()
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
             self.assertEqual(date.Today() + date.TimeDelta(days=7), 
@@ -131,7 +131,7 @@ class CommonTaskRelationshipManagerTests(object):
             self.assertEqual(date.Today(), self.child.startDate())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusChildIsNotCompleted(self):
-        self.parent.setRecurrence('weekly')
+        self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.setCompletionDate()
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
             self.failIf(self.child.completed())
@@ -139,7 +139,7 @@ class CommonTaskRelationshipManagerTests(object):
             self.failUnless(self.child.completed())
 
     def testMarkLastGrandChildCompletedMakesParentRecur(self):
-        self.parent.setRecurrence('weekly')
+        self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.addChild(self.grandchild)
         self.grandchild.setParent(self.child)
         self.grandchild.setCompletionDate()
@@ -150,7 +150,7 @@ class CommonTaskRelationshipManagerTests(object):
             self.assertEqual(date.Today(), self.parent.startDate())
 
     def testMarkLastGrandChildCompletedMakesParentRecur_AndThusGrandChildToo(self):
-        self.parent.setRecurrence('weekly')
+        self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.addChild(self.grandchild)
         self.grandchild.setParent(self.child)
         self.grandchild.setCompletionDate()
@@ -161,7 +161,7 @@ class CommonTaskRelationshipManagerTests(object):
             self.assertEqual(date.Today(), self.grandchild.startDate())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusChildIsNotCompleted(self):
-        self.parent.setRecurrence('weekly')
+        self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.addChild(self.grandchild)
         self.grandchild.setParent(self.child)
         self.grandchild.setCompletionDate()

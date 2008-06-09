@@ -1027,7 +1027,7 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
             ('dueDate', _('Due date'), lambda task: render.date(task.dueDate())),
             ('timeLeft', _('Days left'), lambda task: render.daysLeft(task.timeLeft(), task.completed())),
             ('completionDate', _('Completion date'), lambda task: render.date(task.completionDate())),
-            ('recurrence', _('Recurrence'), lambda task: render.recurrence(task.recurrence(), task.recurrenceFrequency())),
+            ('recurrence', _('Recurrence'), lambda task: render.recurrence(task.recurrence())),
             ('budget', _('Budget'), lambda task: render.budget(task.budget())),
             ('totalBudget', _('Total budget'), lambda task: render.budget(task.budget(recursive=True))),
             ('timeSpent', _('Time spent'), lambda task: render.timeSpent(task.timeSpent())),

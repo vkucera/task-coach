@@ -51,19 +51,19 @@ def timeSpent(timeSpent):
         sign = ''
     return sign + '%d:%02d:%02d'%timeSpent.hoursMinutesSeconds()
 
-def recurrence(recurrenceValue, recurrenceFrequency=1):
-    if not recurrenceValue:
+def recurrence(recurrence):
+    if not recurrence:
         return ''
-    if recurrenceFrequency > 2:
+    if recurrence.amount > 2:
         labels = [_('Every %(frequency)d days'), _('Every %(frequency)d weeks'),
                   _('Every %(frequency)d months'), _('Every %(frequency)d years')] 
-    elif recurrenceFrequency == 2:
+    elif recurrence.amount == 2:
         labels = [_('Every other day'), _('Every other week'),
                   _('Every other month'), _('Every other year')]
     else:
         labels = [_('Daily'), _('Weekly'), _('Monthly'), _('Yearly')] 
     mapping = dict(zip(['daily', 'weekly', 'monthly', 'yearly'], labels))
-    return mapping.get(recurrenceValue, recurrenceValue)%dict(frequency=recurrenceFrequency)
+    return mapping.get(recurrence.unit, recurrence.amount)%dict(frequency=recurrence.amount)
 
 def budget(aBudget):
     ''' render budget (of type date.TimeDelta) as

@@ -59,7 +59,7 @@ class BoxWithFlexGridSizer(wx.Panel):
         if type(control) in (type(''), type(u'')):
             control = wx.StaticText(self, label=control)
             if 'flag' not in kwargs:
-                kwargs['flag'] = wx.ALIGN_RIGHT
+                kwargs['flag'] = wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL
         self.__entriesSizer.Add(control, *args, **kwargs)
         
 

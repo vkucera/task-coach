@@ -26,10 +26,8 @@ class Task(category.CategorizableCompositeObject):
             startDate=None, completionDate=None, budget=None, 
             priority=0, id=None, hourlyFee=0,
             fixedFee=0, reminder=None, attachments=None, categories=None,
-            efforts=None,
-            shouldMarkCompletedWhenAllChildrenCompleted=None, 
-            recurrence='', recurrenceCount=0, maxRecurrenceCount=0,
-            recurrenceFrequency=1, *args, **kwargs):
+            efforts=None, shouldMarkCompletedWhenAllChildrenCompleted=None, 
+            recurrence=None, *args, **kwargs):
         kwargs['id'] = id
         kwargs['subject'] = subject
         kwargs['description'] = description
@@ -47,10 +45,9 @@ class Task(category.CategorizableCompositeObject):
         self._fixedFee       = fixedFee
         self._reminder       = reminder
         self._attachments    = attachments or []
+        if recurrence is None:
+            recurrence = date.Recurrence()
         self._recurrence     = recurrence
-        self._recurrenceCount = recurrenceCount
-        self._maxRecurrenceCount = maxRecurrenceCount
-        self._recurrenceFrequency = recurrenceFrequency
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
 
@@ -63,9 +60,6 @@ class Task(category.CategorizableCompositeObject):
         self.setDueDate(state['dueDate'])
         self.setCompletionDate(state['completionDate'])
         self.setRecurrence(state['recurrence'])
-        self.setRecurrenceCount(state['recurrenceCount'])
-        self.setMaxRecurrenceCount(state['maxRecurrenceCount'])
-        self.setRecurrenceFrequency(state['recurrenceFrequency'])
         self.replaceChildren(state['children'])
         self.replaceParent(state['parent'])
         self.setEfforts(state['efforts'])
@@ -86,10 +80,7 @@ class Task(category.CategorizableCompositeObject):
             efforts=self._efforts, budget=self._budget,
             categories=set(self._categories), priority=self._priority, 
             attachments=self._attachments[:], hourlyFee=self._hourlyFee, 
-            fixedFee=self._fixedFee, recurrence=self._recurrence,
-            recurrenceCount=self._recurrenceCount, 
-            maxRecurrenceCount=self._maxRecurrenceCount,
-            recurrenceFrequency=self._recurrenceFrequency,
+            fixedFee=self._fixedFee, recurrence=self._recurrence.copy(),
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -110,10 +101,7 @@ class Task(category.CategorizableCompositeObject):
             budget=self.budget(), priority=self.priority(), 
             categories=set(self.categories()), fixedFee=self.fixedFee(),
             hourlyFee=self.hourlyFee(), attachments=self.attachments()[:],
-            reminder=self.reminder(), recurrence=self.recurrence(),
-            recurrenceCount=self.recurrenceCount(), 
-            maxRecurrenceCount=self.maxRecurrenceCount(),
-            recurrenceFrequency=self.recurrenceFrequency(),
+            reminder=self.reminder(), recurrence=self.recurrence().copy(),
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self.shouldMarkCompletedWhenAllChildrenCompleted,
             children=[child.copy() for child in self.children()])
@@ -521,47 +509,22 @@ class Task(category.CategorizableCompositeObject):
         else:
             return self._recurrence
         
-    def setRecurrence(self, recurrence=''):
+    def setRecurrence(self, recurrence=None):
+        recurrence = recurrence or date.Recurrence()
         if recurrence != self._recurrence:
             self._recurrence = recurrence
             self.notifyObservers(patterns.Event(self, 'task.recurrence', 
                                                 recurrence))
 
-    def nextRecurrence(self, aDate):
-        return date.next(aDate, self.recurrence(True))
-    
     def recur(self):
-        self._recurrenceCount += 1
-        self.setCompletionDate(date.Date())
-        self.setStartDate(self.nextRecurrence(self.startDate()))
-        self.setDueDate(self.nextRecurrence(self.dueDate()))
         for child in self.children():
             if not child.recurrence():
                 child.recur()
-        if self.maxRecurrenceCount() and self.recurrenceCount() >= self.maxRecurrenceCount():
-            self.setRecurrence()
-            
-    def recurrenceCount(self):
-        return self._recurrenceCount
-    
-    def setRecurrenceCount(self, recurrenceCount):
-        self._recurrenceCount = recurrenceCount
-
-    def maxRecurrenceCount(self):
-        return self._maxRecurrenceCount
-
-    def setMaxRecurrenceCount(self, maxRecurrenceCount):
-        self._maxRecurrenceCount = maxRecurrenceCount
-    
-    def recurrenceFrequency(self):
-        return self._recurrenceFrequency
-    
-    def setRecurrenceFrequency(self, frequency):
-        if frequency != self._recurrenceFrequency:
-            self._recurrenceFrequency = frequency
-            self.notifyObservers(patterns.Event(self, 'task.recurrence',
-                                                frequency))
-        
+        self.setCompletionDate(date.Date())
+        self.setStartDate(self.recurrence(recursive=True)(self.startDate(), next=False))
+        self.setDueDate(self.recurrence(recursive=True)(self.dueDate(), next=False))
+        self.recurrence()(next=True)
+                        
     # behavior
     
     # To experiment, this attribute is coded by means of a property, which

@@ -59,13 +59,7 @@ class XMLWriter:
         if task.completionDate() != date.Date():
             node.setAttribute('completiondate', str(task.completionDate()))
         if task.recurrence():
-            node.setAttribute('recurrence', task.recurrence()) 
-        if task.recurrenceCount():
-            node.setAttribute('recurrenceCount', str(task.recurrenceCount()))
-        if task.maxRecurrenceCount():
-            node.setAttribute('maxRecurrenceCount', str(task.maxRecurrenceCount()))
-        if task.recurrenceFrequency() > 1:
-            node.setAttribute('recurrenceFrequency', str(task.recurrenceFrequency()))
+            node.appendChild(self.recurrenceNode(task.recurrence()))
         if task.budget() != date.TimeDelta():
             node.setAttribute('budget', self.budgetAsAttribute(task.budget()))
         if task.priority() != 0:
@@ -94,6 +88,19 @@ class XMLWriter:
         node.setAttribute('type', att.type_)
         node.appendChild(self.textNode('description', unicode(att)))
         node.appendChild(self.textNode('data', att.data()))
+        return node
+    
+    def recurrenceNode(self, recurrence):
+        node = self.document.createElement('recurrence')
+        node.setAttribute('unit', recurrence.unit)
+        if recurrence.amount > 1:
+            node.setAttribute('amount', str(recurrence.amount))
+        if recurrence.count > 0:
+            node.setAttribute('count', str(recurrence.count))
+        if recurrence.max > 0:
+            node.setAttribute('max', str(recurrence.max))
+        if recurrence.sameWeekday:
+            node.setAttribute('sameWeekday', 'True')
         return node
 
     def effortNode(self, effort):

@@ -306,28 +306,32 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('color="(255, 0, 0, 255)"')
         
     def testNoRecurencce(self):
-        self.expectNotInXML('recurrence=')
+        self.expectNotInXML('recurrence')
         
     def testDailyRecurrence(self):
-        self.task.setRecurrence('daily')
-        self.expectInXML('recurrence="daily"')
+        self.task.setRecurrence(date.Recurrence('daily'))
+        self.expectInXML('<recurrence unit="daily"/>')
         
     def testWeeklyRecurrence(self):
-        self.task.setRecurrence('weekly')
-        self.expectInXML('recurrence="weekly"')
+        self.task.setRecurrence(date.Recurrence('weekly'))
+        self.expectInXML('<recurrence unit="weekly"/>')
 
     def testMonthlyRecurrence(self):
-        self.task.setRecurrence('monthly')
-        self.expectInXML('recurrence="monthly"')
+        self.task.setRecurrence(date.Recurrence('monthly'))
+        self.expectInXML('<recurrence unit="monthly"/>')
+
+    def testYearlyRecurrence(self):
+        self.task.setRecurrence(date.Recurrence('yearly'))
+        self.expectInXML('<recurrence unit="yearly"/>')
         
     def testRecurrenceCount(self):
-        self.task.setRecurrenceCount(5)
-        self.expectInXML('recurrenceCount="5"')
+        self.task.setRecurrence(date.Recurrence('daily', count=5))
+        self.expectInXML('count="5"')
 
     def testMaxRecurrenceCount(self):
-        self.task.setMaxRecurrenceCount(5)
-        self.expectInXML('maxRecurrenceCount="5"')
+        self.task.setRecurrence(date.Recurrence('daily', max=5))
+        self.expectInXML('max="5"')
         
     def testRecurrenceFrequency(self):
-        self.task.setRecurrenceFrequency(2)
-        self.expectInXML('recurrenceFrequency="2"')
+        self.task.setRecurrence(date.Recurrence('daily', amount=2))
+        self.expectInXML('amount="2"')
