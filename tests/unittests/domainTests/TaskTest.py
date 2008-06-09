@@ -57,10 +57,10 @@ class TaskTestCase(test.TestCase):
             self.registerObserver(eventType)
             
     def createTasks(self):
-        def createAttachments(dic):
-            if dic.has_key('attachments'):
-                dic['attachments'] = map(lambda x: attachment.FileAttachment(x), dic['attachments'])
-            return dic
+        def createAttachments(kwargs):
+            if kwargs.has_key('attachments'):
+                kwargs['attachments'] = [attachment.FileAttachment(filename) for filename in kwargs['attachments']]
+            return kwargs
 
         return [task.Task(**createAttachments(kwargs)) for kwargs in \
                 self.taskCreationKeywordArguments()]
@@ -167,16 +167,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
             
     def testTaskDoesNotRecurByDefault(self):
         self.failIf(self.task.recurrence())
-        
-    def testDefaultTaskRecurrenceCount(self):
-        self.assertEqual(0, self.task.recurrenceCount())
-        
-    def testDefaultTaskMaxRecurrenceCount(self):
-        self.assertEqual(0, self.task.maxRecurrenceCount())
-        
-    def testDefaultTaskRecurrenceFrequency(self):
-        self.assertEqual(1, self.task.recurrenceFrequency())
-                         
+                                         
     # Setters
 
     def testSetStartDate(self):
@@ -309,33 +300,15 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
             100)], self.events)
   
     def testSetRecurrence(self):
-        self.task.setRecurrence('weekly')
-        self.assertEqual('weekly', self.task.recurrence())
+        self.task.setRecurrence(date.Recurrence('weekly'))
+        self.assertEqual(date.Recurrence('weekly'), self.task.recurrence())
 
     def testSetRecurrenceCausesNotification(self):
         self.registerObserver('task.recurrence')
-        self.task.setRecurrence('weekly')
+        self.task.setRecurrence(date.Recurrence('weekly'))
         self.assertEqual([patterns.Event(self.task, 'task.recurrence',
-            'weekly')], self.events)
-        
-    def testSetRecurrenceCount(self):
-        self.task.setRecurrenceCount(2)
-        self.assertEqual(2, self.task.recurrenceCount())
-
-    def testSetMaxRecurrenceCount(self):
-        self.task.setMaxRecurrenceCount(2)
-        self.assertEqual(2, self.task.maxRecurrenceCount())
-        
-    def testSetRecurrenceFrequency(self):
-        self.task.setRecurrenceFrequency(2)
-        self.assertEqual(2, self.task.recurrenceFrequency())
-
-    def testSetRecurrenceFrequencyCausesNotification(self):
-        self.registerObserver('task.recurrence')
-        self.task.setRecurrenceFrequency(2)
-        self.assertEqual([patterns.Event(self.task, 'task.recurrence', 2)], 
-                         self.events)
-        
+            date.Recurrence('weekly'))], self.events)
+                        
     # Add child
         
     def testAddChildNotification(self):
@@ -481,25 +454,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.setRecurrence('weekly')
         self.task.__setstate__(state)
         self.failIf(self.task.recurrence())
-        
-    def testTaskStateIncludesRecurrenceCount(self):
-        state = self.task.__getstate__()
-        self.task.setRecurrenceCount(3)
-        self.task.__setstate__(state)
-        self.assertEqual(0, self.task.recurrenceCount())
-
-    def testTaskStateIncludesMaxRecurrenceCount(self):
-        state = self.task.__getstate__()
-        self.task.setMaxRecurrenceCount(3)
-        self.task.__setstate__(state)
-        self.assertEqual(0, self.task.maxRecurrenceCount())
-        
-    def testTaskStateIncludesRecurrenceFrequency(self):
-        state = self.task.__getstate__()
-        self.task.setRecurrenceFrequency(4)
-        self.task.__setstate__(state)
-        self.assertEqual(1, self.task.recurrenceFrequency())
-        
+                        
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
@@ -1294,53 +1249,36 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTests):
 
 class RecurringTaskTestCase(TaskTestCase):
     def taskCreationKeywordArguments(self):
-        return [dict(recurrence=self.recurrence)]
+        return [dict(recurrence=self.createRecurrence())]
     
-
-class RecurringTaskThatHasRecurredTestCase(TaskTestCase):
-    def taskCreationKeywordArguments(self):
-        return [dict(recurrence=self.recurrence, 
-                     recurrenceCount=self.initialRecurrenceCount)]
-
-
-class RecurringTaskThatHasMaxRecurrenceCountTestCase(TaskTestCase):
-    def taskCreationKeywordArguments(self):
-        return [dict(recurrence=self.recurrence, 
-                     maxRecurrenceCount=self.maxRecurrenceCount)]
-
 
 class RecurringTaskWithChildTestCase(TaskTestCase):
     def taskCreationKeywordArguments(self):
-        return [dict(recurrence=self.recurrence,
+        return [dict(recurrence=self.createRecurrence(),
                      children=[task.Task(subject='child')])]
 
 
 class RecurringTaskWithRecurringChildTestCase(TaskTestCase):
     def taskCreationKeywordArguments(self):
-        return [dict(recurrence=self.recurrence,
+        return [dict(recurrence=self.createRecurrence(),
                      children=[task.Task(subject='child', 
-                               recurrence=self.recurrence)])]
+                               recurrence=self.createRecurrence())])]
 
 
-class CommonRecurrenceTests(CommonTaskTests):    
-    initialRecurrenceCount = 0
-    maxRecurrenceCount = 0    
-    
+class CommonRecurrenceTests(CommonTaskTests):        
     def testSetRecurrenceViaConstructor(self):
-        self.assertEqual(self.recurrence, self.task.recurrence())
+        self.assertEqual(self.createRecurrence(), self.task.recurrence())
 
     def testMarkCompletedSetsNewStartDateIfItWasSetPreviously(self):
         startDate = self.task.startDate()
         self.task.setCompletionDate()
-        self.assertEqual(date.next(startDate, self.recurrence), 
-                         self.task.startDate())
+        self.assertEqual(self.createRecurrence()(startDate), self.task.startDate())
 
     def testMarkCompletedSetsNewDueDateIfItWasSetPreviously(self):
         dueDate = date.Tomorrow()
         self.task.setDueDate(dueDate)
         self.task.setCompletionDate()
-        self.assertEqual(date.next(dueDate, self.recurrence), 
-                         self.task.dueDate())
+        self.assertEqual(self.createRecurrence()(dueDate), self.task.dueDate())
 
     def testMarkCompletedDoesNotSetStartDateIfItWasNotSetPreviously(self):
         self.task.setStartDate(date.Date())
@@ -1355,62 +1293,49 @@ class CommonRecurrenceTests(CommonTaskTests):
         self.task.setCompletionDate()
         self.failIf(self.task.completed())
         
-    def testReccurenceCount(self):
-        maxCount = self.task.maxRecurrenceCount()
-        if not maxCount:
-            maxCount = 999
-        for count in range(3):
-            self.assertEqual(min(count + self.initialRecurrenceCount, maxCount), 
-                             self.task.recurrenceCount())
-            self.task.setCompletionDate()
-            
     def testCopyRecurrence(self):
         self.assertEqual(self.task.copy().recurrence(), self.task.recurrence())
-        
-    def testCopyRecurrenceCount(self):
-        self.assertEqual(self.task.copy().recurrenceCount(), 
-                         self.task.recurrenceCount())
-
-    def testCopyMaxRecurrenceCount(self):
-        self.assertEqual(self.task.copy().maxRecurrenceCount(), 
-                         self.task.maxRecurrenceCount())
-
-    def testCopyRecurrenceFrequency(self):
-        self.task.setRecurrenceFrequency(2)
-        self.assertEqual(self.task.copy().recurrenceFrequency(),
-                         self.task.recurrenceFrequency())
-        
+                
         
 class TaskWithWeeklyRecurrenceFixture(RecurringTaskTestCase,  
                                       CommonRecurrenceTests):
-    recurrence = 'weekly'
+    def createRecurrence(self):
+        return date.Recurrence('weekly')
         
         
 class TaskWithDailyRecurrenceFixture(RecurringTaskTestCase, 
                                      CommonRecurrenceTests):
-    recurrence = 'daily'
+    def createRecurrence(self):
+        return date.Recurrence('daily')
 
 
 class TaskWithMonthlyRecurrenceFixture(RecurringTaskTestCase,
                                        CommonRecurrenceTests):
-    recurrence = 'monthly'
+    def createRecurrence(self):
+        return date.Recurrence('monthly')
 
 
 class TaskWithYearlyRecurrenceFixture(RecurringTaskTestCase,
                                       CommonRecurrenceTests):
-    recurrence = 'yearly'
+    def createRecurrence(self):
+        return date.Recurrence('yearly')
        
 
 class TaskWithDailyRecurrenceThatHasRecurredFixture( \
-        RecurringTaskThatHasRecurredTestCase, CommonRecurrenceTests):
-    recurrence = 'daily'
+        RecurringTaskTestCase, CommonRecurrenceTests):
     initialRecurrenceCount = 3
+    
+    def createRecurrence(self):
+        return date.Recurrence('daily', count=self.initialRecurrenceCount)
+    
 
 
 class TaskWithDailyRecurrenceThatHasMaxRecurrenceCountFixture( \
-        RecurringTaskThatHasMaxRecurrenceCountTestCase, CommonRecurrenceTests):
-    recurrence = 'daily'
-    maxRecurrenceCount = 1
+        RecurringTaskTestCase, CommonRecurrenceTests):
+    maxRecurrenceCount = 2
+    
+    def createRecurrence(self):
+        return date.Recurrence('daily', max=self.maxRecurrenceCount)
 
     def testRecurLessThanMaxRecurrenceCount(self):
         for i in range(self.maxRecurrenceCount):
@@ -1447,7 +1372,7 @@ class CommonRecurrenceTestsWithChild(CommonRecurrenceTests):
         self.task.setDueDate(date.Tomorrow())
         child.setDueDate(date.Today())
         self.task.setCompletionDate()
-        self.assertEqual(date.next(date.Today(), self.recurrence), 
+        self.assertEqual(self.createRecurrence()(date.Today()),
                          self.task.children()[0].dueDate())
 
 
@@ -1460,24 +1385,28 @@ class CommonRecurrenceTestsWithRecurringChild(CommonRecurrenceTests):
         
 class TaskWithWeeklyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
                                               CommonRecurrenceTestsWithChild):
-    recurrence = 'weekly'
+    def createRecurrence(self):
+        return date.Recurrence('weekly')
     
 
 class TaskWithDailyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
                                              CommonRecurrenceTestsWithChild):
-    recurrence = 'daily'
+    def createRecurrence(self):
+        return date.Recurrence('daily')
     
     
 class TaskWithWeeklyRecurrenceWithRecurringChildFixture(\
     RecurringTaskWithRecurringChildTestCase, 
     CommonRecurrenceTestsWithRecurringChild):
     
-    recurrence = 'weekly'
+    def createRecurrence(self):
+        return date.Recurrence('weekly')
 
     
 class TaskWithDailyRecurrenceWithRecurringChildFixture(\
     RecurringTaskWithRecurringChildTestCase, 
     CommonRecurrenceTestsWithRecurringChild):
     
-    recurrence = 'daily'
+    def createRecurrence(self):
+        return date.Recurrence('daily')
 

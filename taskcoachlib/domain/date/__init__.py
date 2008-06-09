@@ -22,5 +22,5 @@ from dateandtime import DateTime, parseDateTime
 from timedelta import TimeDelta, oneDay, oneYear, parseTimeDelta
 from timeclass import Time
 from clock import Clock, ClockObserver
-from recurrence import next
+from recurrence import Recurrence
 

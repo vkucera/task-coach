@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import time, xml.dom.minidom, re, os
+import time, xml.dom.minidom, re, os, sys
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 
 
@@ -126,10 +126,6 @@ class XMLReader:
             startDate=date.parseDate(taskNode.getAttribute('startdate')),
             dueDate=date.parseDate(taskNode.getAttribute('duedate')),
             completionDate=date.parseDate(taskNode.getAttribute('completiondate')),
-            recurrence=taskNode.getAttribute('recurrence'),
-            recurrenceCount=self.__parseInteger(taskNode.getAttribute('recurrenceCount')),
-            recurrenceFrequency=self.__parseInteger(taskNode.getAttribute('recurrenceFrequency'), default=1),
-            maxRecurrenceCount=self.__parseInteger(taskNode.getAttribute('maxRecurrenceCount')),
             budget=date.parseTimeDelta(taskNode.getAttribute('budget')),
             priority=self.__parseInteger(taskNode.getAttribute('priority')),
             hourlyFee=self.__parseFloat(taskNode.getAttribute('hourlyFee')),
@@ -140,11 +136,39 @@ class XMLReader:
                 self.__parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted')),
             children=self.__parseTaskNodes(taskNode.childNodes),
             efforts=self.__parseEffortNodes(taskNode.childNodes))
+        if self.__tskversion <= 19:
+            recurrenceUnit = taskNode.getAttribute('recurrence')
+            recurrenceCount = self.__parseInteger(taskNode.getAttribute('recurrenceCount'))
+            recurrenceFrequency = self.__parseInteger(taskNode.getAttribute('recurrenceFrequency'), default=1)
+            maxRecurrenceCount = self.__parseInteger(taskNode.getAttribute('maxRecurrenceCount'))
+            recurrence = date.Recurrence(unit=recurrenceUnit, 
+                amount=recurrenceFrequency, count=recurrenceCount,
+                max=maxRecurrenceCount)
+        else:
+            recurrence = self.__parseRecurrenceNode(taskNode.childNodes)
+        kwargs['recurrence'] = recurrence
         if self.__tskversion <= 13:
             kwargs['categories'] = self.__parseCategoryNodesWithinTaskNode(taskNode.childNodes)
         else:
             kwargs['categories'] = []
         return task.Task(**kwargs)
+    
+    def __parseRecurrenceNode(self, nodes):
+        unit = ''
+        amount = 1
+        count = 0
+        max = 0
+        sameWeekday = False
+        for node in nodes:
+            if node.nodeName == 'recurrence':
+                unit = node.getAttribute('unit')
+                amount = self.__parseInteger(node.getAttribute('amount'), 1)
+                count = self.__parseInteger(node.getAttribute('count'))
+                max = self.__parseInteger(node.getAttribute('max'))
+                sameWeekday = self.__parseBoolean(node.getAttribute('sameWeekday'), False)
+                break
+        return date.Recurrence(unit=unit, amount=amount, count=count, max=max,
+                               sameWeekday=sameWeekday)
     
     def __parseNoteNode(self, noteNode):
         kwargs = dict(subject=noteNode.getAttribute('subject'),

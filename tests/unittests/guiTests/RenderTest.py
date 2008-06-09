@@ -70,40 +70,48 @@ class RenderWeekNumberTest(test.TestCase):
         
 class RenderRecurrenceTest(test.TestCase):
     def testNoRecurrence(self):
-        self.assertEqual('', render.recurrence(''))
+        self.assertEqual('', render.recurrence(date.Recurrence()))
         
     def testDailyRecurrence(self):
-        self.assertEqual(_('Daily'), render.recurrence('daily'))
+        self.assertEqual(_('Daily'), render.recurrence(date.Recurrence('daily')))
         
     def testWeeklyRecurrence(self):
-        self.assertEqual(_('Weekly'), render.recurrence('weekly'))
+        self.assertEqual(_('Weekly'), render.recurrence(date.Recurrence('weekly')))
         
     def testMonthlyRecurrence(self):
-        self.assertEqual(_('Monthly'), render.recurrence('monthly'))
+        self.assertEqual(_('Monthly'), render.recurrence(date.Recurrence('monthly')))
 
     def testYearlyRecurrence(self):
-        self.assertEqual(_('Yearly'), render.recurrence('yearly'))
+        self.assertEqual(_('Yearly'), render.recurrence(date.Recurrence('yearly')))
 
     def testEveryOtherDay(self):
-        self.assertEqual(_('Every other day'), render.recurrence('daily', 2))
+        self.assertEqual(_('Every other day'), 
+                         render.recurrence(date.Recurrence('daily', amount=2)))
         
     def testEveryOtherWeek(self):
-        self.assertEqual(_('Every other week'), render.recurrence('weekly', 2))
+        self.assertEqual(_('Every other week'), 
+                         render.recurrence(date.Recurrence('weekly', amount=2)))
         
     def testEveryOtherMonth(self):
-        self.assertEqual(_('Every other month'), render.recurrence('monthly', 2))
+        self.assertEqual(_('Every other month'), 
+                         render.recurrence(date.Recurrence('monthly', amount=2)))
         
     def testEveryOtherYear(self):
-        self.assertEqual(_('Every other year'), render.recurrence('yearly', 2))
+        self.assertEqual(_('Every other year'), 
+                         render.recurrence(date.Recurrence('yearly', amount=2)))
         
     def testThreeDaily(self):
-        self.assertEqual('Every 3 days', render.recurrence('daily', 3)) 
+        self.assertEqual('Every 3 days', 
+                         render.recurrence(date.Recurrence('daily', amount=3))) 
         
     def testThreeWeekly(self):
-        self.assertEqual('Every 3 weeks', render.recurrence('weekly', 3)) 
+        self.assertEqual('Every 3 weeks', 
+                         render.recurrence(date.Recurrence('weekly', amount=3))) 
         
     def testThreeMonthly(self):
-        self.assertEqual('Every 3 months', render.recurrence('monthly', 3)) 
+        self.assertEqual('Every 3 months', 
+                         render.recurrence(date.Recurrence('monthly', 3))) 
         
     def testThreeYearly(self):
-        self.assertEqual('Every 3 years', render.recurrence('yearly', 3)) 
+        self.assertEqual('Every 3 years', 
+                         render.recurrence(date.Recurrence('yearly', 3))) 

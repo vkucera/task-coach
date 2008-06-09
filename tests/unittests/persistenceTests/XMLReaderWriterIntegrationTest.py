@@ -62,8 +62,9 @@ class IntegrationTest(IntegrationTestCase):
         self.task = task.Task('Subject', self.description, 
             startdate=date.Yesterday(), duedate=date.Tomorrow(), 
             completiondate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
-            priority=4, hourlyFee=100.5, fixedFee=1000, recurrence='weekly',
-            recurrenceFrequency=2, reminder=date.DateTime(2004,1,1),
+            priority=4, hourlyFee=100.5, fixedFee=1000, 
+            recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
+            reminder=date.DateTime(2004,1,1),
             shouldMarkCompletedWhenAllChildrenCompleted=True)
         self.child = task.Task()
         self.task.addChild(self.child)
@@ -170,16 +171,7 @@ class IntegrationTest(IntegrationTestCase):
 
     def testRecurrence(self):
         self.assertAttributeWrittenAndRead(self.task, 'recurrence')
-    
-    def testRecurrenceCount(self):
-        self.assertAttributeWrittenAndRead(self.task, 'recurrenceCount')
-
-    def testMaxRecurrenceCount(self):
-        self.assertAttributeWrittenAndRead(self.task, 'maxRecurrenceCount')
-    
-    def testRecurrenceFrequency(self):
-        self.assertAttributeWrittenAndRead(self.task, 'recurrenceFrequency')
-                    
+                            
     def testNote(self):
         self.assertEqual(len(self.notes), len(self.notesWrittenAndRead))
 

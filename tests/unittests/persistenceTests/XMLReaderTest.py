@@ -217,10 +217,51 @@ class XMLReaderVersion18Test(XMLReaderTestCase):
         self.assertEqual(1, len(tasks)) # Ignore lastModificationTime
 
 
-# There's no XMLReaderVersion19Test because the only difference between version
-# 19 and 20 is the addition of an optional recurrenceFrequency attribute to 
-# tasks in version 20. So the tests for version 20 test version 19 as well.
+class XMLReaderVersion19Test(XMLReaderTestCase):
+    tskversion = 19 # New in release 0.69.0?        
+
+    def testDailyRecurrence(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrence="daily"/>
+        </tasks>''')
+        self.assertEqual('daily', tasks[0].recurrence().unit)    
+
+    def testWeeklyRecurrence(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrence="weekly"/>
+        </tasks>''')
+        self.assertEqual('weekly', tasks[0].recurrence().unit)
+
+    def testMonthlyRecurrence(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrence="monthly"/>
+        </tasks>''')
+        self.assertEqual('monthly', tasks[0].recurrence().unit)
+                
+    def testRecurrenceCount(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrenceCount="10"/>
+        </tasks>''')
+        self.assertEqual(10, tasks[0].recurrence().count)
         
+    def testMaxRecurrenceCount(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task maxRecurrenceCount="10"/>
+        </tasks>''')
+        self.assertEqual(10, tasks[0].recurrence().max)
+
+    def testRecurrenceFrequency(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task recurrenceFrequency="3"/>
+        </tasks>''')
+        self.assertEqual(3, tasks[0].recurrence().amount)
+
 
 class XMLReaderVersion20Test(XMLReaderTestCase):
     tskversion = 20 # New in release 0.71.0
@@ -634,48 +675,41 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
     def testDailyRecurrence(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
-            <task recurrence="daily"/>
+            <task><recurrence unit="daily"/></task>
         </tasks>''')
-        self.assertEqual('daily', tasks[0].recurrence())    
+        self.assertEqual('daily', tasks[0].recurrence().unit)    
 
     def testWeeklyRecurrence(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
-            <task recurrence="weekly"/>
+            <task><recurrence unit="weekly"/></task>
         </tasks>''')
-        self.assertEqual('weekly', tasks[0].recurrence())
+        self.assertEqual('weekly', tasks[0].recurrence().unit)    
 
-    def testMonthlyRecurrence(self):
+    def testRecurrenceAmount(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
-            <task recurrence="monthly"/>
+            <task><recurrence unit="daily" amount="2"/></task>
         </tasks>''')
-        self.assertEqual('monthly', tasks[0].recurrence())
-        
-    def testYearlyRecurrence(self):
+        self.assertEqual(2, tasks[0].recurrence().amount)    
+
+    def testRecurrenceMax(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
-            <task recurrence="yearly"/>
+            <task><recurrence unit="daily" max="2"/></task>
         </tasks>''')
-        self.assertEqual('yearly', tasks[0].recurrence())
-        
+        self.assertEqual(2, tasks[0].recurrence().max)    
+
     def testRecurrenceCount(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
-            <task recurrenceCount="10"/>
+            <task><recurrence unit="daily" count="2"/></task>
         </tasks>''')
-        self.assertEqual(10, tasks[0].recurrenceCount())
-        
-    def testMaxRecurrenceCount(self):
-        tasks, categories, notes = self.writeAndRead('''
-        <tasks>
-            <task maxRecurrenceCount="10"/>
-        </tasks>''')
-        self.assertEqual(10, tasks[0].maxRecurrenceCount())
+        self.assertEqual(2, tasks[0].recurrence().count)    
 
-    def testRecurrenceFrequency(self):
+    def testRecurrenceSameWeekday(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
-            <task recurrenceFrequency="3"/>
+            <task><recurrence unit="daily" sameWeekday="True"/></task>
         </tasks>''')
-        self.assertEqual(3, tasks[0].recurrenceFrequency())
+        self.failUnless(tasks[0].recurrence().sameWeekday)    

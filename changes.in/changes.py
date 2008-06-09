@@ -26,14 +26,18 @@ releases = [
 Release('0.71.0', 'June ??, 2008',
     summary='''?''',
     featuresAdded=[
-        Feature('''Yearly recurrence of tasks.'''),
-        Feature('''Recurrence frequency, e.g. every other week.'''),
+        Feature('''More task recurrence options. Tasks can now also recur 
+yearly, in addition to daily, weekly, and monthly. Tasks can now also recur 
+with a multiple period frequency, e.g. every other week or every three months.
+Monthly recurring tasks can be set to recur on the same week day (e.g. first
+Monday of the month).'''),
         Feature('''The times used in the drop down menus of the start and stop
 entries of the effort dialog can now be changed via the preferences dialog. 
 Patch supplied by Rob McMullen.''')],
     implementationChanged=[
-        Implementation('''The task file format (now at version 20) now allows 
-tasks to have a recurrenceFrequency attribute.''')]),
+        Implementation('''The task file format (version 20) was changed.  
+Task nodes may have a recurrence node that contains the recurrence state of
+the task.''')]),
 
 Release('0.70.1', '??',
     summary='''Bugfix release.''',

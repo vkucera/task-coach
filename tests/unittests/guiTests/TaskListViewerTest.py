@@ -89,20 +89,20 @@ class CommonTests(object):
         self.assertEqual(3, self.viewer.GetColumnCount())
         
     def testTurnOnRecurrenceColumn(self):
-        taskWithRecurrence = task.Task(recurrence='weekly')
+        taskWithRecurrence = task.Task(recurrence=date.Recurrence('weekly'))
         self.taskList.append(taskWithRecurrence)
         self.showColumn('recurrence')
         self.assertEqual(_('Recurrence'), self.viewer.GetColumn(3).GetText())
 
     def testTurnOffRecurrenceColumn(self):
         self.showColumn('recurrence')
-        taskWithRecurrence = task.Task(recurrence='weekly')
+        taskWithRecurrence = task.Task(recurrence=date.Recurrence('weekly'))
         self.taskList.append(taskWithRecurrence)
         self.showColumn('recurrence', False)
         self.assertEqual(3, self.viewer.GetColumnCount())
         
     def testRenderRecurrence(self):
-        taskWithRecurrence = task.Task(recurrence='weekly', recurrenceFrequency=2)
+        taskWithRecurrence = task.Task(recurrence=date.Recurrence('weekly', amount=2))
         self.showColumn('recurrence')
         self.taskList.append(taskWithRecurrence)
         self.assertEqual('Every other week', self.getItemText(0,3))

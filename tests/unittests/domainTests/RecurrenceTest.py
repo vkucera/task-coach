@@ -20,119 +20,189 @@ import test
 from taskcoachlib.domain import date
 
 
-class DailyRecurrenceTest(test.TestCase):        
+class CommonRecurrenceTests(object):
+    def testNextDateWithInfiniteDate(self):
+        self.assertEqual(date.Date(), self.recur(date.Date()))
+
+    def testCopy(self):
+        copy = self.recur.copy()
+        self.assertEqual(copy, self.recur)
+
+    def testNotEqualToNone(self):
+        self.assertNotEqual(None, self.recur)
+
+    def testSetMaxRecurrenceCount(self):
+        self.recur.max = 1
+        self.recur(date.Today())
+        self.failIf(self.recur)
+        
+    def testSetMaxRecurrenceCount_GetMultipleDates(self):
+        self.recur.max = 1
+        self.recur(date.Today(), next=False)
+        self.failUnless(self.recur)
+        
+
+class NoRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence()
+        
     def testNextDate(self):
-        self.assertEqual(date.Tomorrow(), date.next(date.Today(), 'daily'))
+        self.assertEqual(date.Today(), self.recur(date.Today()))
+        
+    def testBool(self):
+        self.failIf(self.recur)
+
+    def testSetMaxRecurrenceCount_GetMultipleDates(self):
+        pass
+    
+
+class DailyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('daily')
+                
+    def testNextDate(self):
+        self.assertEqual(date.Tomorrow(), self.recur(date.Today()))
+        
+    def testMultipleNextDates(self):
+        self.assertEqual((date.Tomorrow(), date.Today()),
+                         self.recur(date.Today(), date.Yesterday()))
         
     def testNextDateTwice(self):
-        today = date.next(date.Yesterday(), 'daily')
-        self.assertEqual(date.Tomorrow(), date.next(today, 'daily'))
+        today = self.recur(date.Yesterday())
+        self.assertEqual(date.Tomorrow(), self.recur(today))
         
-    def testNextDateWithInfiniteDate(self):
-        self.assertEqual(date.Date(), date.next(date.Date(), 'daily'))
+
+class BiDailyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('daily', amount=2)
         
+    def testEveryOtherDay(self):
+        self.assertEqual(date.Tomorrow(), self.recur(date.Yesterday()))
+
+
+class TriDailyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('daily', amount=3)
         
-class WeeklyRecurrenceTest(test.TestCase):
+    def testEveryThirdDay(self):
+        self.assertEqual(date.Date(2000,1,4), self.recur(date.Date(2000,1,1)))
+            
+        
+class WeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
     def setUp(self):
         self.January1 = date.Date(2000,1,1)
         self.January8 = date.Date(2000,1,8)
         self.January15 = date.Date(2000,1,15)
+        self.recur = date.Recurrence('weekly')
         
     def testNextDate(self):
-        self.assertEqual(self.January8, 
-                         date.next(self.January1, 'weekly'))
+        self.assertEqual(self.January8, self.recur(self.January1))
         
     def testNextDateTwice(self):
-        January8 = date.next(self.January1, 'weekly')
-        self.assertEqual(self.January15, date.next(January8, 'weekly'))
+        January8 = self.recur(self.January1)
+        self.assertEqual(self.January15, self.recur(January8))
 
-    def testNextDateWithInfiniteDate(self):
-        self.assertEqual(date.Date(), date.next(date.Date(), 'weekly'))
-    
 
-class MonthlyRecurrenceTest(test.TestCase):
+class BiWeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('weekly', amount=2)
+                
+    def testEveryOtherWeek(self):
+        self.assertEqual(date.Date(2000,1,15), self.recur(date.Date(2000,1,1)))
+
+
+class MonthlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('monthly')
+        
     def testFirstDayOf31DayMonth(self):
-        self.assertEqual(date.Date(2000,2,1), 
-                         date.next(date.Date(2000,1,1), 'monthly'))
+        self.assertEqual(date.Date(2000,2,1), self.recur(date.Date(2000,1,1)))
         
     def testFirstDayOf30DayMonth(self):
-        self.assertEqual(date.Date(2000,5,1),
-                         date.next(date.Date(2000,4,1), 'monthly'))
+        self.assertEqual(date.Date(2000,5,1), self.recur(date.Date(2000,4,1)))
         
     def testFirstDayOfDecember(self):
-        self.assertEqual(date.Date(2001,1,1),
-                         date.next(date.Date(2000,12,1), 'monthly'))
+        self.assertEqual(date.Date(2001,1,1), self.recur(date.Date(2000,12,1)))
         
     def testLastDayOf31DayMonth(self):
-        self.assertEqual(date.Date(2000,4,30), 
-                         date.next(date.Date(2000,3,31), 'monthly'))
+        self.assertEqual(date.Date(2000,4,30), self.recur(date.Date(2000,3,31)))
         
     def testLastDayOf30DayMonth(self):
-        self.assertEqual(date.Date(2000,5,30), 
-                         date.next(date.Date(2000,4,30), 'monthly'))
+        self.assertEqual(date.Date(2000,5,30), self.recur(date.Date(2000,4,30)))
         
-    def testNextDateWithInfiniteDate(self):
-        self.assertEqual(date.Date(), date.next(date.Date(), 'monthly'))
 
-
-class YearlyRecurrenceTest(test.TestCase):
-    def testJanuary1(self):
-        self.assertEqual(date.Date(2002,1,1), 
-                         date.next(date.Date(2001,1,1), 'yearly'))
-        
-    def testJanuary1_LeapYear(self):
-        self.assertEqual(date.Date(2001,1,1), 
-                         date.next(date.Date(2000,1,1), 'yearly'))
-
-    def testMarch1_LeapYear(self):
-        self.assertEqual(date.Date(2001,3,1), 
-                         date.next(date.Date(2000,3,1), 'yearly'))
-        
-    def testMarch1_YearBeforeLeapYear(self):
-        self.assertEqual(date.Date(2004,3,1), 
-                         date.next(date.Date(2003,3,1), 'yearly'))
-
-    def testFebruary1_YearBeforeLeapYear(self):
-        self.assertEqual(date.Date(2004,2,1), 
-                         date.next(date.Date(2003,2,1), 'yearly'))
-
-    def testFebruary28(self):
-        self.assertEqual(date.Date(2003,2,28), 
-                         date.next(date.Date(2002,2,28), 'yearly'))
-
-    def testFebruary28_LeapYear(self):
-        self.assertEqual(date.Date(2005,2,28), 
-                         date.next(date.Date(2004,2,28), 'yearly'))
-
-    def testFebruary28_YearBeforeLeapYear(self):
-        self.assertEqual(date.Date(2004,2,28), 
-                         date.next(date.Date(2003,2,28), 'yearly'))
-
-    def testFebruary29(self):
-        self.assertEqual(date.Date(2005,2,28), 
-                         date.next(date.Date(2004,2,29), 'yearly'))
-        
-    def testNextDateWithInfiniteDate(self):
-        self.assertEqual(date.Date(), date.next(date.Date(), 'yearly'))
-        
-        
-class RecurrenceFrequencyTest(test.TestCase):    
-    def testEveryOtherDay(self):
-        self.assertEqual(date.Tomorrow(), 
-                         date.next(date.Yesterday(), 'daily', 2))
-        
-    def testEveryThirdDay(self):
-        self.assertEqual(date.Date(2000,1,4), 
-                         date.next(date.Date(2000,1,1), 'daily', 3))
-        
-    def testEveryOtherWeek(self):
-        self.assertEqual(date.Date(2000,1,15), 
-                         date.next(date.Date(2000,1,1), 'weekly', 2))
+class BiMontlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('monthly', amount=2)
         
     def testEveryOtherMonth(self):
-        self.assertEqual(date.Date(2000,3,1), 
-                         date.next(date.Date(2000,1,1), 'monthly', 2))
+        self.assertEqual(date.Date(2000,3,1), self.recur(date.Date(2000,1,1)))
 
+
+class MonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('monthly', sameWeekday=True)
+        
+    def testFirstSaturdayOfTheMonth(self):
+        self.assertEqual(date.Date(2008,7,5), self.recur(date.Date(2008,6,7)))
+        
+    def testSecondSaturdayOfTheMonth(self):
+        self.assertEqual(date.Date(2008,7,12), self.recur(date.Date(2008,6,14)))
+
+    def testThirdSaturdayOfTheMonth(self):
+        self.assertEqual(date.Date(2008,7,19), self.recur(date.Date(2008,6,21)))
+
+    def testFourthSaturdayOfTheMonth(self):
+        self.assertEqual(date.Date(2008,7,26), self.recur(date.Date(2008,6,28)))
+
+    def testFifthSaturdayOfTheMonth_ResultsInFourthSaterdayOfTheNextMonth(self):
+        self.assertEqual(date.Date(2008,6,28), self.recur(date.Date(2008,5,31)))
+
+
+class BiMonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('monthly', amount=2, sameWeekday=True)
+        
+    def testFourthSaturdayOfTheMonth(self):
+        self.assertEqual(date.Date(2008,8,23), self.recur(date.Date(2008,6,28)))
+
+
+class YearlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('yearly')
+        
+    def testJanuary1(self):
+        self.assertEqual(date.Date(2002,1,1), self.recur(date.Date(2001,1,1)))
+
+    def testJanuary1_LeapYear(self):
+        self.assertEqual(date.Date(2001,1,1), self.recur(date.Date(2000,1,1)))
+
+    def testMarch1_LeapYear(self):
+        self.assertEqual(date.Date(2001,3,1), self.recur(date.Date(2000,3,1)))
+        
+    def testMarch1_YearBeforeLeapYear(self):
+        self.assertEqual(date.Date(2004,3,1), self.recur(date.Date(2003,3,1)))
+
+    def testFebruary1_YearBeforeLeapYear(self):
+        self.assertEqual(date.Date(2004,2,1), self.recur(date.Date(2003,2,1)))
+
+    def testFebruary28(self):
+        self.assertEqual(date.Date(2003,2,28), self.recur(date.Date(2002,2,28)))
+
+    def testFebruary28_LeapYear(self):
+        self.assertEqual(date.Date(2005,2,28), self.recur(date.Date(2004,2,28)))
+
+    def testFebruary28_YearBeforeLeapYear(self):
+        self.assertEqual(date.Date(2004,2,28), self.recur(date.Date(2003,2,28)))
+
+    def testFebruary29(self):
+        self.assertEqual(date.Date(2005,2,28), self.recur(date.Date(2004,2,29)))
+                
+        
+class BiYearlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('yearly', amount=2)
+        
     def testEveryOtherYear(self):
-        self.assertEqual(date.Date(2004,3,1), 
-                         date.next(date.Date(2002,3,1), 'yearly', 2))
+        self.assertEqual(date.Date(2004,3,1), self.recur(date.Date(2002,3,1)))
+            
