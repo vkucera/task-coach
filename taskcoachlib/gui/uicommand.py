@@ -151,6 +151,7 @@ class UICommand(object):
         return True
 
     def updateToolHelp(self):
+        if not self.toolbar: return # Not attached to a toolbar or it's hidden
         shortHelp = wx.MenuItem.GetLabelFromText(self.getMenuText())
         if shortHelp != self.toolbar.GetToolShortHelp(self.id):
             self.toolbar.SetToolShortHelp(self.id, shortHelp)
@@ -1018,7 +1019,7 @@ class ViewerHideCompositeTasks(ViewerCommand, NeedsListViewer, UICheckCommand):
         self.viewer.hideCompositeTasks(self._isMenuItemChecked(event))
 
 
-class NewDomainObject(ViewerCommand, TaskListCommand):
+class NewDomainObject(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(NewDomainObject, self).__init__(menuText=_('New item'),
             bitmap='new', *args, **kwargs)
@@ -1028,11 +1029,8 @@ class NewDomainObject(ViewerCommand, TaskListCommand):
         dialog.Show(show)
         
     def enabled(self, event):
-        if self.viewer.isShowingEffort():
-            enabled = len(self.taskList) > 0
-        else:
-            enabled = True
-        return enabled and super(NewDomainObject, self).enabled(event)
+        return self.viewer.canCreateNewDomainObject() and \
+            super(NewDomainObject, self).enabled(event)
     
     def getHelpText(self):
         return self.viewer.model().newItemHelpText
@@ -1155,7 +1153,7 @@ class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
         deleteCommand.do()
 
 
-class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+class TaskToggleCompletion(NeedsSelectedTasks, ViewerCommand):
     defaultMenuText = _('&Mark task completed\tCtrl+RETURN')
     defaultHelpText = _('Mark the selected task(s) completed')
     
@@ -1168,7 +1166,7 @@ class TaskToggleCompletion(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
         
     def doCommand(self, event):
         markCompletedCommand = command.MarkCompletedCommand( \
-            self.taskList, self.viewer.curselection())
+            self.viewer.model(), self.viewer.curselection())
         markCompletedCommand.do()
 
     def enabled(self, event):
@@ -1421,7 +1419,7 @@ class EffortDelete(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
         delete.do()
 
 
-class EffortStart(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
+class EffortStart(NeedsSelectedTasks, ViewerCommand):
     ''' UICommand to start tracking effort for the selected task(s). '''
     
     def __init__(self, *args, **kwargs):
@@ -1431,7 +1429,7 @@ class EffortStart(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
             *args, **kwargs)
     
     def doCommand(self, event):
-        start = command.StartEffortCommand(self.taskList, 
+        start = command.StartEffortCommand(self.viewer.model(), 
             self.viewer.curselection())
         start.do()
         
@@ -1461,7 +1459,30 @@ class EffortStartForTask(TaskListCommand):
         
     def enabled(self, event):
         return not self.task.isBeingTracked() and not self.task.completed()      
+
+
+class EffortStartButton(MainWindowCommand, TaskListCommand):
+    def __init__(self, *args, **kwargs):
+        super(EffortStartButton, self).__init__(bitmap='startmenu',
+            menuText=_('&Start tracking effort'),
+            helpText=_('Select a task via the menu and start tracking effort for it'),
+            *args, **kwargs)
         
+    def doCommand(self, event):
+        import menu
+        popupMenu = menu.StartEffortForTaskMenu(self.mainwindow, self.taskList)
+        if self.toolbar:
+            x, y = self.toolbar.GetPosition()
+            w, h = self.toolbar.GetSize()
+            menuX = wx.GetMousePosition()[0] - self.mainwindow.GetPosition()[0] - 0.5 * self.toolbar.GetToolSize()[0]
+            menuY = y + h
+            self.mainwindow.PopupMenu(popupMenu, (menuX, menuY))
+        else:
+            self.mainwindow.PopupMenu(popupMenu)
+    
+    def enabled(self, event):
+        return len(self.taskList) > 0
+    
 
 class EffortStop(TaskListCommand):
     def __init__(self, *args, **kwargs):
@@ -1624,7 +1645,7 @@ class DialogCommand(UICommand):
         
 class Help(DialogCommand):
     def __init__(self, *args, **kwargs):
-        super(Help, self).__init__(menuText=_('&Help contents\tCtrl+?'),
+        super(Help, self).__init__(menuText=_('&Help contents\tCtrl+H'),
             helpText=_('Help about the program'), bitmap='help', 
             dialogTitle=_('Help'), dialogText=help.helpHTML, id=wx.ID_HELP, 
             *args, **kwargs)
@@ -1671,23 +1692,12 @@ class MainWindowRestore(MainWindowCommand):
         self.mainwindow.restore(event)
     
 
-class Search(MainWindowCommand, ViewerCommand, SettingsCommand):
+class Search(ViewerCommand, SettingsCommand):
+    # Search can only be attached to a real viewer, not to a viewercontainer
     def __init__(self, *args, **kwargs):
         super(Search, self).__init__(*args, **kwargs)
-        self.searchControl = None
-        patterns.Publisher().registerObserver(self.onViewerChanged,
-            self.viewer.viewerChangeEventType())
-        
-    def onViewerChanged(self, event):
-        if self.searchControl:
-            searchable = self.viewer.isSearchable()
-            if searchable:
-                searchString, matchCase, includeSubItems = self.viewer.getSearchFilter()
-                self.searchControl.SetValue(searchString)
-                self.searchControl.setMatchCase(matchCase)
-                self.searchControl.setIncludeSubItems(includeSubItems)
-            self.searchControl.Enable(searchable)
-                    
+        assert self.viewer.isSearchable()
+                           
     def onFind(self, searchString, matchCase, includeSubItems):
         self.viewer.setSearchFilter(searchString, matchCase, includeSubItems)
 
@@ -1929,7 +1939,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
                                             value=value)
             
         # Generic domain object commands
-        self['new'] = NewDomainObject(viewer=viewerContainer, taskList=taskList)
+        self['new'] = NewDomainObject(viewer=viewerContainer)
         self['edit'] = EditDomainObject(viewer=viewerContainer)
         self['delete'] = DeleteDomainObject(viewer=viewerContainer)
         self['newsub'] = NewSubDomainObject(viewer=viewerContainer)
@@ -1943,8 +1953,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
                 categories=categories, viewer=viewerContainer)
         self['newsubtask'] = TaskNewSubTask(taskList=taskList, viewer=viewerContainer)
         self['edittask'] = TaskEdit(taskList=taskList, viewer=viewerContainer)
-        self['toggletaskcompletion'] = TaskToggleCompletion(taskList=taskList,
-                                                            viewer=viewerContainer)
+        self['toggletaskcompletion'] = TaskToggleCompletion(viewer=viewerContainer)
         self['deletetask'] = TaskDelete(taskList=taskList, viewer=viewerContainer)
         self['mailtask'] = TaskMail(viewer=viewerContainer, menuText=_('Mail task'), 
             helpText=_('Mail the task, using your default mailer'), 
@@ -1964,7 +1973,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['editeffort'] = EffortEdit(viewer=viewerContainer, effortList=effortList)
         self['deleteeffort'] = EffortDelete(effortList=effortList, 
                                             viewer=viewerContainer)
-        self['starteffort'] = EffortStart(taskList=taskList, viewer=viewerContainer)
+        self['starteffort'] = EffortStart(viewer=viewerContainer)
         self['stopeffort'] = EffortStop(taskList=taskList)
         
         # Category menu
@@ -1992,10 +2001,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
 
         # Taskbar menu
         self['restore'] = MainWindowRestore(mainwindow=mainwindow)
-        
-        # Toolbar specific
-        self['search'] = Search(mainwindow=mainwindow, viewer=viewerContainer, settings=settings)
-        
+                
         # Drag and drop related, not on any menu:
         self['draganddroptask'] = TaskDragAndDrop(taskList=taskList, 
                                                   viewer=viewerContainer)

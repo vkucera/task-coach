@@ -26,6 +26,9 @@ Release('0.70.1', '??',
     summary='''This release optionally brings back the tabbed user 
 interface that was removed in the previous release and fixes a few bugs.''',
     bugsFixed=[
+        Bug('''The search control in the toolbar did not maintain state 
+correctly for different viewers. Task Coach viewers now each have their own
+toolbar with search control.''', '1977196'),
         Bug('''On Max OS X, put preferences menu item in the TaskCoach menu 
 instead of the Edit menu to conform with Mac OS X standards.''', '1965861'),
         Bug('''Prevent crash under Windows XP when dropping e-mail from

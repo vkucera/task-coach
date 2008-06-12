@@ -22,6 +22,7 @@ import wx, uicommand
 
 class ToolBar(wx.ToolBar, uicommand.UICommandContainer):
     def __init__(self, window, uiCommands, size=(32, 32)):
+        self.__window = window
         super(ToolBar, self).__init__(window, 
             style=wx.TB_FLAT|wx.TB_NODIVIDER)
         self.SetToolBitmapSize(size) 
@@ -29,11 +30,8 @@ class ToolBar(wx.ToolBar, uicommand.UICommandContainer):
         self.Realize()
 
     def commandNames(self):
-        return ['open', 'save', None, 'undo', 'redo', None, 'cut', 'copy', 
-            'paste', None, 'new', 'newsub', 'edit', 'delete', None,
-            'toggletaskcompletion', None, 'starteffort', 
-            'stopeffort', None, 'search']
-        
+        return self.__window.getToolBarUICommands()
+
     def AppendSeparator(self):
         ''' This little adapter is needed for 
         uicommand.UICommandContainer.appendUICommands'''

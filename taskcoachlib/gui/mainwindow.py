@@ -341,7 +341,14 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         # showing the statusbar puts it in the wrong place (only on Linux?)
         self.GetStatusBar().Show(show)
         self.SendSizeEvent()
-
+        
+    def getToolBarUICommands(self):
+        startEffortButton = uicommand.EffortStartButton(mainwindow=self, 
+            taskList=self.taskFile.tasks())
+        ''' Names of UI commands to put on the toolbar of this window. '''
+        return ['open', 'save', 'print', None, 'undo', 'redo', None, 
+                startEffortButton, 'stopeffort']
+        
     def showToolBar(self, size):
         # Current version of wxPython (2.7.8.1) has a bug 
         # (https://sourceforge.net/tracker/?func=detail&atid=109863&aid=1742682&group_id=9863)
