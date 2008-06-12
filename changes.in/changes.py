@@ -44,6 +44,8 @@ maximize the main window when starting the next time.''', '1969266'),
 categories'.''', '1962003'),
         Bug('''Correctly redraw toolbar when it is 'damaged' by other 
 windows''', '1977208'),
+        Bug('''Correctly sort effort for subtasks in effort per day, per week, 
+and per month effort viewers.''', '1989553'),
         Bug('''Better navigation with tab key in dialogs.'''),
         Bug('''Keep newlines in descriptions when printing or exporting to
 HTML.''')],

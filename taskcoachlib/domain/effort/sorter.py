@@ -32,5 +32,6 @@ class EffortSorter(base.Sorter):
     
     def createSortKeyFunction(self):
         # Sort by start of effort first, then by task subject
-        return lambda effort: (effort.getStart(), effort.task().subject())
+        return lambda effort: (effort.getStart(), 
+                               effort.task().subject(recursive=True))
 
