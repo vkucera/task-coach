@@ -97,12 +97,11 @@ class SimpleFTP(ftplib.FTP, object):
         for filename in filenames:
             if os.path.isdir(filename):
                 continue
-            print filename
             fd = file(filename, 'rb')
             self.storbinary('STOR %s'%filename, fd)
             print 'Stored %s'%filename
 
-def ftpWebsiteToChello():
+def uploadWebsiteToChello():
     print "Uploading website to Chello..."
     chello = SimpleFTP('members.chello.nl', 'f.niessink', '.chello_password')
     os.chdir('website.out')
@@ -111,7 +110,7 @@ def ftpWebsiteToChello():
     os.chdir('..')
     print 'Done uploading website to Chello.'
 
-def scpWebsiteToSourceForge():
+def uploadWebsiteToSourceForge():
     print 'Uploading website to SourceForge...'
     os.system('scp -r website.out/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
     print 'Done uploading website to SourceForge.'
@@ -127,13 +126,22 @@ def registerWithPyPI():
     setup(**setupOptions)
     print 'Done registering with PyPI.'
 
-if len(sys.argv) > 1 and sys.argv[1] == 'phase1':
+def uploadWebsite():
+    uploadWebsiteToChello()
+    uploadWebsiteToSourceForge()
+    
+def phase1():
     uploadDistributionsToSourceForge()
     generateMD5Digests()
     generateWebsite()
-elif len(sys.argv) > 1 and sys.argv[1] == 'phase2':
-    ftpWebsiteToChello()
-    scpWebsiteToSourceForge()
+    
+def phase2():
+    uploadWebsite()
     registerWithPyPI()
-else:
-    print 'Please enter release phase (phase1 or phase2)'
+
+
+commands = dict(phase1=phase1, phase2=phase2, website=uploadWebsite)
+try:
+    commands[sys.argv[1]]()
+except (KeyError, IndexError):
+    print 'Usage: release.py [phase1|phase2|website]'
