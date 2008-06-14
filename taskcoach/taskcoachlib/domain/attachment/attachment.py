@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, shutil, tempfile
-from taskcoachlib import patterns
 from taskcoachlib.thirdparty import desktop
 from taskcoachlib.mailer import readMail, openMail
 from taskcoachlib.i18n import _
@@ -62,20 +61,16 @@ def getRelativePath(path, base=os.getcwd()):
     return os.path.join(*pth1)
 
 
-class Attachment(patterns.Observer):
+class Attachment(object):
+    ''' Abstract base class for attachments. '''
     type_ = None
 
     def __init__(self, *args, **kwargs):
         super(Attachment, self).__init__(*args, **kwargs)
-
         self.__task = None
 
     def setTask(self, task):
         self.__task = task
-
-    def changed(self):
-        if self.__task is not None:
-            self.__task.onAttachmentChanged(self)
 
     def open(self, workingDir=None):
         raise NotImplementedError
@@ -86,38 +81,21 @@ class Attachment(patterns.Observer):
     def setDescription(self, descr):
         raise NotImplementedError
 
+
 class FileAttachment(Attachment):
     type_ = 'file'
 
     def __init__(self, filename, description=None, **kwargs):
         super(FileAttachment, self).__init__(**kwargs)
-
         self.filename = filename
 
-        self.registerObserver(self.onBaseChange, 'before.file.attachmentbase')
-
-    def onBaseChange(self, evt):
-        if os.path.isabs(self.filename):
-            oldpath = self.filename
-        else:
-            oldpath = os.path.normpath(os.path.join(evt.source().get('file', 'attachmentbase'),
-                                                    self.filename))
-
-        if os.path.exists(oldpath):
-            if evt.value():
-                self.filename = getRelativePath(oldpath, evt.value())
-            else:
-                self.filename = oldpath
-
-            self.changed()
-
-    def open(self, workingDir=None):
+    def open(self, workingDir=None, openAttachment=desktop.open):
         if workingDir is not None and not os.path.isabs(self.filename):
             path = os.path.join(workingDir, self.filename)
         else:
             path = self.filename
 
-        desktop.open(os.path.normpath(path))
+        openAttachment(os.path.normpath(path))
 
     def setDescription(self, descr):
         self.filename = descr
@@ -134,12 +112,12 @@ class FileAttachment(Attachment):
         except AttributeError:
             return 1
 
+
 class URIAttachment(Attachment):
     type_ = 'uri'
 
     def __init__(self, uri, description=None, **kwargs):
         super(URIAttachment, self).__init__(**kwargs)
-
         self.uri = uri
 
     def open(self, workingDir=None):
@@ -159,6 +137,7 @@ class URIAttachment(Attachment):
             return cmp(self.uri, other.uri)
         except AttributeError:
             return 1
+
 
 class MailAttachment(Attachment):
     type_ = 'mail'
@@ -212,9 +191,6 @@ class MailAttachment(Attachment):
         except AttributeError:
             return 1
 
-
-#==============================================================================
-#
 
 def AttachmentFactory(data, description=None, type_=None):
     if type_ is None:
