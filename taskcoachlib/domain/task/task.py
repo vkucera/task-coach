@@ -489,9 +489,6 @@ class Task(category.CategorizableCompositeObject):
             self.notifyObservers(patterns.Event(self, 'task.attachment.remove', 
                 *attachmentsRemoved))
 
-    def onAttachmentChanged(self, attachment):
-        self.notifyObservers(patterns.Event(self, 'task.attachment.changed'))
-
     def removeAllAttachments(self):
         self.removeAttachments(*self._attachments)
             

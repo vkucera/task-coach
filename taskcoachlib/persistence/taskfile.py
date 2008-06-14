@@ -52,7 +52,7 @@ class TaskFile(patterns.Observable):
             'task.effort.add', 'task.effort.remove', 
             task.Task.categoryAddedEventType(), 
             task.Task.categoryRemovedEventType(), 
-            'task.attachment.add', 'task.attachment.remove', 'task.attachment.changed'):
+            'task.attachment.add', 'task.attachment.remove'):
             patterns.Publisher().registerObserver(self.onTaskChanged, 
                                                   eventType=eventType)
         for eventType in ('effort.description', 'effort.start', 'effort.stop'):
