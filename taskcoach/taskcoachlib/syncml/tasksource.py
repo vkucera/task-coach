@@ -73,8 +73,6 @@ class TaskSource(basesource.BaseSource):
         return 201
 
     def doUpdateItem(self, task, local):
-        print 'UPDATE', local.id()
-
         local.setStartDate(task.startDate())
         local.setDueDate(task.dueDate())
         local.setDescription(task.description())

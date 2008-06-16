@@ -116,7 +116,11 @@ class VTodoParser(VCalendarParser):
         elif name == 'UID':
             self.kwargs['id'] = value.decode('UTF-8')
         elif name == 'PRIORITY':
-            self.kwargs['priority'] = int(value)
+            # On ScheduleWorld,  priority may be 1  (high), 2 (medium)
+            # or  3 (low).  Other  values are  ignored. In  TaskCoach,
+            # priority  is  any  positive  or  nul  number,  and  it's
+            # positively correlated with the actual task priority...
+            self.kwargs['priority'] = max(0, 3 - int(value))
         elif name == 'SUMMARY':
             self.kwargs['subject'] = value
         elif name == 'CATEGORIES':
@@ -146,7 +150,7 @@ def VCalFromTask(task):
 
     values = { 'description': quoteString(task.description()),
                'subject': quoteString(task.subject()),
-               'priority': task.priority(),
+               'priority': max(1, 3 - task.priority()),
                'categories': ','.join(map(quoteString, [unicode(c).encode('UTF-8') for c in task.categories()])) }
 
     components.append('BEGIN:VCALENDAR')
