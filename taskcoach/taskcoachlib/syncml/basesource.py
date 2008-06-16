@@ -18,10 +18,6 @@ class BaseSource(SyncSource):
         self.changedObjectsList = [obj for obj in objectList if obj.isModified()]
         self.deletedObjectsList = [obj for obj in objectList if obj.isDeleted()]
 
-        print 'CHANGED', len(self.changedObjectsList)
-        print 'NEW', len(self.newObjectsList)
-        print 'DELETED', len(self.deletedObjectsList)
-
         self.state = self.STATE_NONE
         self.lastLast = None
 
@@ -32,10 +28,6 @@ class BaseSource(SyncSource):
         self.__dict__.update(state)
 
     def beginSync(self):
-        print 'Sync begin:', self.syncMode
-        print 'Last anchor:', self.lastAnchor
-        print 'State:', self.state
-
         if self.state == self.STATE_NONE:
             if self.syncMode == TWO_WAY:
                 self.lastLast = self.lastAnchor
@@ -52,8 +44,6 @@ class BaseSource(SyncSource):
             self.state = self.STATE_FINISHED
 
     def endSync(self):
-        print 'Sync end.'
-
         if self.state in [self.STATE_SECONDPASS, self.STATE_FINISHED]:
             self.lastAnchor = self.lastLast
 
@@ -83,7 +73,8 @@ class BaseSource(SyncSource):
             item.state = STATE_NEW
         elif obj.getStatus() == obj.STATUS_CHANGED:
             item.state = STATE_UPDATED
-        # TODO: deleted...
+        elif obj.getStatus() == obj.STATUS_DELETED:
+            item.state = STATE_DELETED
 
         self.updateItemProperties(item, obj)
 
@@ -116,46 +107,38 @@ class BaseSource(SyncSource):
         return None
 
     def getFirstItem(self):
-        print 'FI'
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             self.allObjectsListCopy = self.allObjectsList[:]
             return self._getItem(self.allObjectsListCopy)
 
     def getNextItem(self):
-        print 'NI'
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             return self._getItem(self.allObjectsListCopy)
 
     def getFirstNewItem(self):
-        print 'FNI'
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             self.newObjectsListCopy = self.newObjectsList[:]
             return self._getItem(self.newObjectsListCopy)
 
     def getNextNewItem(self):
-        print 'NNI'
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             return self._getItem(self.newObjectsListCopy)
 
     def getFirstUpdatedItem(self):
-        print 'FUI'
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             self.changedObjectsListCopy = self.changedObjectsList[:]
             return self._getItem(self.changedObjectsListCopy)
 
     def getNextUpdatedItem(self):
-        print 'NUI'
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             return self._getItem(self.changedObjectsListCopy)
 
     def getFirstDeletedItem(self):
-        print 'FDI'
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             self.deletedObjectsListCopy = self.deletedObjectsList[:]
             return self._getItem(self.deletedObjectsListCopy)
 
     def getNextDeletedItem(self):
-        print 'NDI'
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             return self._getItem(self.deletedObjectsListCopy)
 
@@ -193,7 +176,6 @@ class BaseSource(SyncSource):
             elif local.isDeleted():
                 if self.objectRemovedOnClient(local):
                     self.doUpdateItem(obj, local)
-                    print 'CLEAN'
                     local.cleanDirty()
                     return 200
 
@@ -209,8 +191,6 @@ class BaseSource(SyncSource):
 
     def deleteItem(self, item):
         if self.state in [self.STATE_NORMAL, self.STATE_FIRSTPASS]:
-            print 'DELETE', item.key
-
             try:
                 obj = self._getObject(item.key)
             except KeyError:
@@ -223,8 +203,6 @@ class BaseSource(SyncSource):
                     self.objectList.remove(obj)
             else:
                 self.objectList.remove(obj)
-
-            print 'DELETED', item.key
 
         return 200
 
@@ -249,8 +227,6 @@ class BaseSource(SyncSource):
     def setItemStatus(self, key, status):
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             obj = self._getObject(key)
-
-            print 'STATUS', key, status
 
             if status in [200, 201, 211, 418]:
                 # 200: Generic OK
