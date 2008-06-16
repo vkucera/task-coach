@@ -21,7 +21,7 @@ from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task
 from taskcoachlib.syncml import sync
-
+from taskcoachlib.widgets import conflict
 
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,
@@ -187,7 +187,7 @@ class IOController(object):
         synchronizer = sync.Synchronizer(self.__settings.get('syncml', 'preferredsyncmode'),
                                          self.__settings.getboolean('syncml', 'verbose'),
                                          self.__settings.get('syncml', 'client'),
-                                         self.__syncReport, self.__taskFile,
+                                         self.__syncReport, self, self.__taskFile,
                                          self.__settings.get('syncml', 'url'),
                                          self.__settings.get('syncml', 'username'),
                                          password,
@@ -196,6 +196,28 @@ class IOController(object):
                                          self.__settings.get('syncml', 'notedbname'),
                                          self.__settings.getboolean('syncml', 'syncnotes'))
         return synchronizer.synchronize()
+
+    def resolveNoteConflict(self, flags, local, remote):
+        dlg = conflict.ConflictDialog(conflict.NoteConflictPanel,
+                                      flags, local, remote,
+                                      None, wx.ID_ANY, _('Note conflict'))
+        try:
+            dlg.ShowModal()
+        finally:
+            dlg.Destroy()
+
+        return dlg.resolved
+
+    def resolveTaskConflict(self, flags, local, remote):
+        dlg = conflict.ConflictDialog(conflict.TaskConflictPanel,
+                                      flags, local, remote,
+                                      None, wx.ID_ANY, _('Task conflict'))
+        try:
+            dlg.ShowModal()
+        finally:
+            dlg.Destroy()
+
+        return dlg.resolved
 
     def __syncReport(self, msg):
         wx.MessageBox(msg, _('Synchronization status'), style=wx.OK|wx.ICON_ERROR)

@@ -8,7 +8,7 @@ from _pysyncml import *
 
 class Synchronizer(object):
     def __init__(self, mode, verbose, clientName, reportCallback,
-                 taskFile, url, username, password,
+                 conflictCallback, taskFile, url, username, password,
                  taskdbname, synctasks,
                  notedbname, syncnotes,
                  *args, **kwargs):
@@ -17,6 +17,7 @@ class Synchronizer(object):
         self.clientName = clientName.encode('UTF-8')
         self.verbose = verbose
         self.reportCallback = reportCallback
+        self.conflictCallback = conflictCallback
         self.taskFile = taskFile
 
         self.username = username.encode('UTF-8') # Hum...
@@ -66,7 +67,8 @@ class Synchronizer(object):
 
             self.dmt.setSyncSourceConfig(cfg)
 
-            self.sources.append(TaskSource(self.taskFile.tasks(),
+            self.sources.append(TaskSource(self,
+                                           self.taskFile.tasks(),
                                            self.taskFile.categories(),
                                            '%s.Tasks' % self.clientName, cfg))
 
@@ -84,7 +86,8 @@ class Synchronizer(object):
 
             self.dmt.setSyncSourceConfig(cfg)
 
-            self.sources.append(NoteSource(self.taskFile.notes(),
+            self.sources.append(NoteSource(self,
+                                           self.taskFile.notes(),
                                            '%s.Notes' % self.clientName, cfg))
 
         for source in self.sources:
@@ -147,3 +150,9 @@ class Synchronizer(object):
             self.taskFile.endSync()
 
         return True
+
+    def resolveNoteConflict(self, flags, local, remote):
+        return self.conflictCallback.resolveNoteConflict(flags, local, remote)
+
+    def resolveTaskConflict(self, flags, local, remote):
+        return self.conflictCallback.resolveTaskConflict(flags, local, remote)

@@ -2,6 +2,10 @@
 from taskcoachlib.domain.note import Note
 from taskcoachlib.syncml.basesource import BaseSource
 
+from taskcoachlib.i18n import _
+
+import wx
+
 class NoteSource(BaseSource):
     CONFLICT_SUBJECT       = 0x01
     CONFLICT_DESCRIPTION   = 0x02
@@ -39,12 +43,7 @@ class NoteSource(BaseSource):
         return 200
 
     def doResolveConflict(self, note, local, result):
-        if wx.MessageBox(_('Note "%s" has been both remotely and locally modified.\n') % note.subject() + \
-                         _('Should I keep the local version ?'),
-                         _('Synchronization conflict'), wx.YES_NO) == wx.YES:
-            return local
-        else:
-            return note
+        return self.callback.resolveNoteConflict(result, local, note)
 
     def objectRemovedOnServer(self, note):
         return wx.MessageBox(_('Note "%s" has been deleted on server,\n') % note.subject() + \

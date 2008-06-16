@@ -8,9 +8,10 @@ class BaseSource(SyncSource):
     STATE_NORMAL       = 3
     STATE_FINISHED     = 4
 
-    def __init__(self, objectList, *args, **kwargs):
+    def __init__(self, callback, objectList, *args, **kwargs):
         super(BaseSource, self).__init__(*args, **kwargs)
 
+        self.callback = callback
         self.objectList = objectList
 
         self.allObjectsList = [obj for obj in objectList]

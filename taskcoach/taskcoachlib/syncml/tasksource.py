@@ -15,8 +15,8 @@ class TaskSource(basesource.BaseSource):
     CONFLICT_PRIORITY         = 0x10
     CONFLICT_CATEGORIES       = 0x20
 
-    def __init__(self, taskList, categoryList, *args, **kwargs):
-        super(TaskSource, self).__init__(taskList, *args, **kwargs)
+    def __init__(self, callback, taskList, categoryList, *args, **kwargs):
+        super(TaskSource, self).__init__(callback, taskList, *args, **kwargs)
 
         self.categoryList = categoryList
 
@@ -92,12 +92,7 @@ class TaskSource(basesource.BaseSource):
         return 200 # FIXME
 
     def doResolveConflict(self, task, local, result):
-        if wx.MessageBox(_('Task "%s" has been both remotely and locally modified.\n') % task.subject() + \
-                         _('Should I keep the local version ?'),
-                         _('Synchronization conflict'), wx.YES_NO) == wx.YES:
-            return local
-        else:
-            return task
+        return self.callback.resolveTaskConflict(result, local, task)
 
     def objectRemovedOnServer(self, task):
         return wx.MessageBox(_('Task "%s" has been deleted on server,\n') % task.subject() + \
