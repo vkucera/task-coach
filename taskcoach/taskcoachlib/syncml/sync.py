@@ -124,20 +124,10 @@ class Synchronizer(object):
                 client = SyncClient()
                 client.sync(self.dmt, self.sources)
 
-                try:
-                    code = client.report.lastErrorCode
-                except AttributeError:
-                    # TEMPORARY  until I can  build the  new _pysyncml
-                    # for Win32
-                    code = client.report.getLastErrorCode()
+                code = client.report.lastErrorCode
 
                 if code:
-                    try:
-                        self.error(code, client.report.lastErrorMsg)
-                    except AttributeError:
-                        # TEMPORARY  until I can  build the  new _pysyncml
-                        # for Win32
-                        self.error(code, client.report.getLastErrorMsg())
+                    self.error(code, client.report.lastErrorMsg)
 
                     # TODO: undo local modifications ?
                     return False
