@@ -56,7 +56,9 @@ dmg: icons i18n
 	$(PYTHON) make.py py2app
 	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach-$(TCVERSION).dmg
 
-icons:
+icons: taskcoachlib/gui/icons.py
+
+taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip
 	cd icons.in; $(PYTHON) make.py
 
 website: changes
@@ -64,7 +66,9 @@ website: changes
 	$(EPYDOC) --parse-only -o website.out/epydoc taskcoachlib taskcoach.py
 	$(PYTHON) tools/webchecker.py website.out/index.html
 
-i18n:
+i18n: taskcoachlib/i18n/nl.py
+
+taskcoachlib/i18n/nl.py: i18n.in/messages.pot
 	$(PYTHON) tools/pygettext.py --output-dir i18n.in taskcoachlib
 	cd i18n.in; $(PYTHON) make.py
 
