@@ -103,11 +103,32 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
     def onRender(self, event):
         ''' Whenever the AUI managed frames get rendered, make sure the active
             pane has focus. '''
+        event.Skip()
+        self.SetFocusToActivePane()
+        
+    def SetFocusToActivePane(self):
+        windowWithFocus = wx.Window.FindFocus()
+        if windowWithFocus not in self.GetAllPanesAndChildren():
+            return # Focus is outside this Frame, don't change the focus
         for pane in self.manager.GetAllPanes():
             if pane.HasFlag(wx.aui.AuiPaneInfo.optionActive):
-                pane.window.SetFocus()
+                if pane.window != windowWithFocus:
+                    pane.window.SetFocus()
                 break
-        event.Skip()
+        
+    def GetAllPanesAndChildren(self):
+        ''' Yield all managed windows and their children, recursively. '''
+        for pane in self.manager.GetAllPanes():
+            yield pane
+            for child in self.GetAllChildren(pane.window):
+                yield child
+    
+    def GetAllChildren(self, window):
+        ''' Yield all child windows of window, recursively. '''                
+        for child in window.GetChildren():
+            yield child
+            for grandChild in self.GetAllChildren(child):
+                yield grandChild
 
     def AddPage(self, page, caption, name): 
         paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().FloatingSize((300,200))

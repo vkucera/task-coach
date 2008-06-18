@@ -31,6 +31,8 @@ correctly for different viewers. Task Coach viewers now each have their own
 toolbar with search control.''', '1977196'),
         Bug('''On Max OS X, put preferences menu item in the TaskCoach menu 
 instead of the Edit menu to conform with Mac OS X standards.''', '1965861'),
+        Bug('''On Mac OS X, text could'nt be edited while the timer
+was running.''', '1995469'),
         Bug('''Prevent crash under Windows XP when dropping e-mail from
 Thunderbird if the APPDATA environment variable is not defined.''', '1960827'),
         Bug('''ImportError: No module named thirdparty.ElementTree. This 
