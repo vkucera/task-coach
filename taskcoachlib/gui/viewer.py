@@ -293,7 +293,7 @@ class Viewer(wx.Panel):
         self.uiCommands = uiCommands
         self.list = self.createSorter(self.createFilter(list))
         self.widget = self.createWidget()
-        self.toolbar = toolbar.ToolBar(self, self.uiCommands, (16,16))
+        self.toolbar = toolbar.ToolBar(self, self.uiCommands, (16, 16))
         self.initLayout()
         patterns.Publisher().registerObserver(self.onAddItem, 
             eventType=self.list.addItemEventType())
