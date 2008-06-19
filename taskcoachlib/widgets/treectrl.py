@@ -232,6 +232,7 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtr
         self.setItemGetters(getItemText, getItemTooltipText, getItemImage, getItemAttr,
             getChildrenCount, getItemExpanded)
         self.SetTreeStyle(self.getStyle()) # FIXME: Why is this necessary?
+        self.SetBackgroundColour(wx.TreeCtrl.GetClassDefaultAttributes().colBg)
         self.refresh()
             
     # Adapters to make the CustomTreeCtrl API more like the TreeListCtrl API:
