@@ -20,11 +20,21 @@ END:VCALENDAR
 from taskcoachlib.domain.base import Object
 from taskcoachlib.domain.date import date
 
+import time, calendar
+
 # Utility functions
 
-def parseDate(dt):
-    dt, tm = dt.split('T')
-    return date.Date(int(dt[:4]), int(dt[4:6]), int(dt[6:8]))
+def parseDate(fulldate):
+    dt, tm = fulldate.split('T')
+    year, month, day = int(dt[:4]), int(dt[4:6]), int(dt[6:8])
+    hour, minute, second = int(tm[:2]), int(tm[2:4]), int(tm[4:6])
+
+    if fulldate.endswith('Z'):
+        # GMT. Convert this to local time.
+        localTime = time.localtime(calendar.timegm((year, month, day, hour, minute, second, 0, 0, -1)))
+        year, month, day = localTime[:3]
+
+    return date.Date(year, month, day)
 
 def fmtDate(dt):
     return '%04d%02d%02dT000000' % (dt.year, dt.month, dt.day)
