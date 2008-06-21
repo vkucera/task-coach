@@ -4,15 +4,17 @@ from taskcoachlib.syncml.notesource import NoteSource
 
 from taskcoachlib.i18n import _
 
+import wx
+
 from _pysyncml import *
 
-class Synchronizer(object):
+class Synchronizer(wx.ProgressDialog):
     def __init__(self, mode, verbose, clientName, reportCallback,
                  conflictCallback, taskFile, url, username, password,
                  taskdbname, synctasks,
-                 notedbname, syncnotes,
-                 *args, **kwargs):
-        super(Synchronizer, self).__init__(*args, **kwargs)
+                 notedbname, syncnotes):
+        super(Synchronizer, self).__init__(_('Synchronization'),
+                                           _('Synchronizing. Please wait.\n\n\n'))
 
         self.clientName = clientName.encode('UTF-8')
         self.verbose = verbose
@@ -93,11 +95,36 @@ class Synchronizer(object):
         for source in self.sources:
             source.preferredSyncMode = globals()[self.mode] # Hum
 
+    def onAddItem(self):
+        self.added += 1
+        self.pulse()
+
+    def onUpdateItem(self):
+        self.updated += 1
+        self.pulse()
+
+    def onDeleteItem(self):
+        self.deleted += 1
+        self.pulse()
+
+    def pulse(self):
+        msg = _('%d items added.\n%d items updated.\n%d items deleted.') % (self.added,
+                                                                            self.updated,
+                                                                            self.deleted)
+        self.Pulse(msg)
+
     def error(self, code, msg):
         self.reportCallback(_('An error occurred in the synchronization.\nError code: %d; message: %s') \
                             % (code, msg))
 
     def synchronize(self):
+        self.Centre()
+        self.Show()
+
+        self.added = 0
+        self.updated = 0
+        self.deleted = 0
+
         self.taskFile.beginSync()
         try:
             # Actually  make  two  synchronizations. Funambol  servers

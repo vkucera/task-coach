@@ -195,7 +195,12 @@ class IOController(object):
                                          self.__settings.getboolean('syncml', 'synctasks'),
                                          self.__settings.get('syncml', 'notedbname'),
                                          self.__settings.getboolean('syncml', 'syncnotes'))
-        return synchronizer.synchronize()
+        try:
+            synchronizer.synchronize()
+        finally:
+            synchronizer.Destroy()
+
+        self.__messageCallback(_('Synchronization over.'))
 
     def resolveNoteConflict(self, flags, local, remote):
         dlg = conflict.ConflictDialog(conflict.NoteConflictPanel,

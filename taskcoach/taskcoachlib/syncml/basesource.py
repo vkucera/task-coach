@@ -129,46 +129,64 @@ class BaseSource(SyncSource):
         return None
 
     def getFirstItem(self):
+        self.callback.pulse()
+
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             self.allObjectsListCopy = self.allObjectsList[:]
             return self._getItem(self.allObjectsListCopy)
 
     def getNextItem(self):
+        self.callback.pulse()
+
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             return self._getItem(self.allObjectsListCopy)
 
     def getFirstNewItem(self):
+        self.callback.pulse()
+
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             self.newObjectsListCopy = self.newObjectsList[:]
             return self._getItem(self.newObjectsListCopy)
 
     def getNextNewItem(self):
+        self.callback.pulse()
+
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             return self._getItem(self.newObjectsListCopy)
 
     def getFirstUpdatedItem(self):
+        self.callback.pulse()
+
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             self.changedObjectsListCopy = self.changedObjectsList[:]
             return self._getItem(self.changedObjectsListCopy)
 
     def getNextUpdatedItem(self):
+        self.callback.pulse()
+
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             return self._getItem(self.changedObjectsListCopy)
 
     def getFirstDeletedItem(self):
+        self.callback.pulse()
+
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             self.deletedObjectsListCopy = self.deletedObjectsList[:]
             return self._getItem(self.deletedObjectsListCopy)
 
     def getNextDeletedItem(self):
+        self.callback.pulse()
+
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             return self._getItem(self.deletedObjectsListCopy)
 
     def addItem(self, item):
+        self.callback.onAddItem()
+
         if self.state in [self.STATE_NORMAL, self.STATE_FIRSTPASS]:
             obj = self._parseObject(item)
             self.objectList.append(obj)
-            item.key = obj.id()
+            item.key = obj.id().encode('UTF-8')
 
             return self.doAddItem(obj)
 
@@ -181,6 +199,8 @@ class BaseSource(SyncSource):
         return 201
 
     def updateItem(self, item):
+        self.callback.onUpdateItem()
+
         if self.state in [self.STATE_NORMAL, self.STATE_FIRSTPASS]:
             obj = self._parseObject(item)
 
@@ -212,6 +232,8 @@ class BaseSource(SyncSource):
         raise NotImplementedError
 
     def deleteItem(self, item):
+        self.callback.onDeleteItem()
+
         if self.state in [self.STATE_NORMAL, self.STATE_FIRSTPASS]:
             try:
                 obj = self._getObject(item.key)
@@ -247,6 +269,8 @@ class BaseSource(SyncSource):
         raise NotImplementedError
 
     def setItemStatus(self, key, status):
+        self.callback.pulse()
+
         if self.state in [self.STATE_NORMAL, self.STATE_SECONDPASS]:
             obj = self._getObject(key)
 
