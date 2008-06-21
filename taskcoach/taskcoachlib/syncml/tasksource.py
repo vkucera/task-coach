@@ -14,6 +14,7 @@ class TaskSource(basesource.BaseSource):
     CONFLICT_SUBJECT          = 0x08
     CONFLICT_PRIORITY         = 0x10
     CONFLICT_CATEGORIES       = 0x20
+    CONFLICT_COMPLETIONDATE   = 0x40
 
     def __init__(self, callback, taskList, categoryList, *args, **kwargs):
         super(TaskSource, self).__init__(callback, taskList, *args, **kwargs)
@@ -37,6 +38,8 @@ class TaskSource(basesource.BaseSource):
             result |= self.CONFLICT_SUBJECT
         if local.priority() != remote.priority():
             result |= self.CONFLICT_PRIORITY
+        if local.completionDate() != remote.completionDate():
+            result |= self.CONFLICT_COMPLETIONDATE
 
         localCategories = map(unicode, local.categories())
         remoteCategories = map(unicode, remote.categories())
@@ -78,6 +81,7 @@ class TaskSource(basesource.BaseSource):
         local.setDescription(task.description())
         local.setSubject(task.subject())
         local.setPriority(task.priority())
+        local.setCompletionDate(task.completionDate())
 
         for category in local.categories():
             category.removeCategorizable(local)
@@ -102,6 +106,8 @@ class TaskSource(basesource.BaseSource):
             local.setDueDate(resolved['dueDate'])
         if resolved.has_key('priority'):
             local.setPriority(resolved['priority'])
+        if resolved.has_key('completionDate'):
+            local.setCompletionDate(resolved['completionDate'])
         if resolved.has_key('categories'):
             # Ahah,      tricky       part.      This      is      why
             # callback.resolvedXXXConflict return dictionaries instead

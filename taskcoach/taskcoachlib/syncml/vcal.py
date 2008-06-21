@@ -119,6 +119,14 @@ class VTodoParser(VCalendarParser):
             # take today, so force.
             self.kwargs['startDate'] = date.Date()
 
+        if self.kwargs.has_key('vcardStatus'):
+            if self.kwargs['vcardStatus'] == 'COMPLETED' and not self.kwargs.has_key('completionDate'):
+                # Some servers only give the status, and not the date (SW)
+                if self.kwargs.has_key('last-modified'):
+                    self.kwargs['completionDate'] = parseDate(self.kwargs['last-modified'])
+                else:
+                    self.kwargs['completionDate'] = date.Today()
+
         self.kwargs['status'] = Object.STATUS_NONE
         self.tasks.append(self.kwargs)
 
@@ -127,6 +135,8 @@ class VTodoParser(VCalendarParser):
             self.kwargs['startDate'] = parseDate(value)
         elif name == 'DUE':
             self.kwargs['dueDate'] = parseDate(value)
+        elif name == 'COMPLETED':
+            self.kwargs['completionDate'] = parseDate(value)
         elif name == 'UID':
             self.kwargs['id'] = value.decode('UTF-8')
         elif name == 'PRIORITY':
@@ -138,6 +148,8 @@ class VTodoParser(VCalendarParser):
             self.kwargs['subject'] = value
         elif name == 'CATEGORIES':
             self.kwargs['categories'] = value.split(',')
+        elif name == 'STATUS':
+            self.kwargs['vcardStatus'] = value
         else:
             super(VTodoParser, self).acceptItem(name, value)
 
@@ -180,8 +192,19 @@ def VCalFromTask(task):
         components.append('DUE:%(dueDate)s')
         values['dueDate'] = fmtDate(task.dueDate())
 
+    if task.completionDate() != date.Date():
+        components.append('COMPLETED:%(completionDate)s')
+        values['completionDate'] = fmtDate(task.completionDate())
+
     if task.categories():
         components.append('CATEGORIES;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(categories)s')
+
+    if task.completed():
+        components.append('STATUS:COMPLETED')
+    elif task.active():
+        components.append('STATUS:NEEDS-ACTION')
+    else:
+        components.append('STATUS:CANCELLED') # Hum...
 
     components.append('DESCRIPTION;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(description)s')
     components.append('PRIORITY:%(priority)d')

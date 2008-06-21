@@ -188,6 +188,11 @@ class TaskConflictPanel(BaseConflictPanel):
                                                   DateField,
                                                   self.local.dueDate(),
                                                   self.remote.dueDate())
+        if self.flags & TaskSource.CONFLICT_COMPLETIONDATE:
+            self.idCompletionDate = self.AddConflictItem(_('Completion date'),
+                                                         DateField,
+                                                         self.local.completionDate(),
+                                                         self.remote.completionDate())
         if self.flags & TaskSource.CONFLICT_PRIORITY:
             self.idPriority = self.AddConflictItem(_('Priority'),
                                                    IntegerField,
@@ -221,6 +226,9 @@ class TaskConflictPanel(BaseConflictPanel):
         if self.flags & TaskSource.CONFLICT_CATEGORIES:
             localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idCategories]
             resolved['categories'] = fusionWidget.GetValue()
+        if self.flags & TaskSource.CONFLICT_COMPLETIONDATE:
+            localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idCompletionDate]
+            resolved['completionDate'] = fusionWidget.GetValue()
 
         return resolved
 
