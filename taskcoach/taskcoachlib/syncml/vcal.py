@@ -134,7 +134,8 @@ class VTodoParser(VCalendarParser):
 def quoteString(s):
     # 'quoted-printable' codec  doesn't encode  \n, but tries  to fold
     # lines with \n instead of  CRLF and generally does strange things
-    # that ScheduleWorld does not understand. Same thing with \r.
+    # that  ScheduleWorld  does  not  understand (me  neither,  to  an
+    # extent). Same thing with \r.
 
     s = s.encode('UTF-8').encode('quoted-printable')
     s = s.replace('=\r', '')
@@ -150,7 +151,7 @@ def VCalFromTask(task):
     values = { 'description': quoteString(task.description()),
                'subject': quoteString(task.subject()),
                'priority': min(3, task.priority() + 1),
-               'categories': ','.join(map(quoteString, [unicode(c).encode('UTF-8') for c in task.categories()])) }
+               'categories': ','.join(map(quoteString, [unicode(c) for c in task.categories()])) }
 
     components.append('BEGIN:VCALENDAR')
     components.append('VERSION: 1.0')
