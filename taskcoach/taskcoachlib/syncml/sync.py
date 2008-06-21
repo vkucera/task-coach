@@ -115,12 +115,29 @@ class Synchronizer(object):
             # holds for two-way syncs.
 
             self.init()
-            states = [dict() for source in self.sources]
 
-            for idx in xrange(2):
-                for idx, state in enumerate(states):
-                    self.sources[idx].__setstate__(state)
+            client = SyncClient()
+            client.sync(self.dmt, self.sources)
 
+            code = client.report.lastErrorCode
+
+            if code:
+                self.error(code, client.report.lastErrorMsg)
+
+                # TODO: undo local modifications ?
+                return False
+
+            self.dmt.save()
+
+            states = [source.__getstate__() for source in self.sources]
+            self.init()
+            for idx, state in enumerate(states):
+                self.sources[idx].__setstate__(state)
+
+            # Some sources may not need a second sync.
+            self.sources = [source for source in self.sources if source.state != source.STATE_NORMAL]
+
+            if self.sources:
                 client = SyncClient()
                 client.sync(self.dmt, self.sources)
 
@@ -133,9 +150,6 @@ class Synchronizer(object):
                     return False
 
                 self.dmt.save()
-
-                states = [source.__getstate__() for source in self.sources]
-                self.init()
         finally:
             self.taskFile.endSync()
 
