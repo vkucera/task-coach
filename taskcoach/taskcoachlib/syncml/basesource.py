@@ -6,7 +6,6 @@ class BaseSource(SyncSource):
     STATE_FIRSTPASS    = 1
     STATE_SECONDPASS   = 2
     STATE_NORMAL       = 3
-    STATE_FINISHED     = 4
 
     def __init__(self, callback, objectList, *args, **kwargs):
         super(BaseSource, self).__init__(*args, **kwargs)
@@ -40,12 +39,9 @@ class BaseSource(SyncSource):
             self.lastAnchor = self.lastLast
             self.lastLast = lastLast
             self.state = self.STATE_SECONDPASS
-        elif self.state == self.STATE_NORMAL:
-            self.lastLast = self.lastAnchor
-            self.state = self.STATE_FINISHED
 
     def endSync(self):
-        if self.state in [self.STATE_SECONDPASS, self.STATE_FINISHED]:
+        if self.state == self.STATE_SECONDPASS:
             self.lastAnchor = self.lastLast
 
     def _getObject(self, key):
