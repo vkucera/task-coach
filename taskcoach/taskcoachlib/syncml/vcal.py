@@ -86,6 +86,10 @@ class VCalendarParser(object):
                 value = value.decode(specs['ENCODING'].lower())
             if specs.has_key('CHARSET'):
                 value = value.decode(specs['CHARSET'].lower())
+            else:
+                # Some  servers only  specify CHARSET  when  there are
+                # non-ASCII characters :)
+                value = value.decode('ascii')
 
             self.acceptItem(name, value)
 

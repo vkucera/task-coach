@@ -31,7 +31,7 @@ class TaskSource(basesource.BaseSource):
             result |= self.CONFLICT_STARTDATE
         if local.dueDate() != remote.dueDate():
             result |= self.CONFLICT_DUEDATE
-        if local.description() != remote.description:
+        if local.description() != remote.description():
             result |= self.CONFLICT_DESCRIPTION
         if local.subject() != remote.subject():
             result |= self.CONFLICT_SUBJECT
@@ -90,7 +90,38 @@ class TaskSource(basesource.BaseSource):
         return 200 # FIXME
 
     def doResolveConflict(self, task, local, result):
-        return self.callback.resolveTaskConflict(result, local, task)
+        resolved = self.callback.resolveTaskConflict(result, local, task)
+
+        if resolved.has_key('subject'):
+            local.setSubject(resolved['subject'])
+        if resolved.has_key('description'):
+            local.setDescription(resolved['description'])
+        if resolved.has_key('startDate'):
+            local.setStartDate(resolved['startDate'])
+        if resolved.has_key('dueDate'):
+            local.setDueDate(resolved['dueDate'])
+        if resolved.has_key('priority'):
+            local.setPriority(resolved['priority'])
+        if resolved.has_key('categories'):
+            # Ahah,      tricky       part.      This      is      why
+            # callback.resolvedXXXConflict return dictionaries instead
+            # of Task object.
+
+            for category in local.categories().copy():
+                category.removeCategorizable(local)
+                local.removeCategory(category)
+
+            for category in resolved['categories'].split(','):
+                categoryObject = self.categoryList.findCategoryByName(category)
+                if categoryObject is None:
+                    categoryObject = Category(category)
+                    self.categoryList.extend([categoryObject])
+                local.addCategory(categoryObject)
+
+            for category in local.categories():
+                category.addCategorizable(local)
+
+        return local
 
     def objectRemovedOnServer(self, task):
         return wx.MessageBox(_('Task "%s" has been deleted on server,\n') % task.subject() + \

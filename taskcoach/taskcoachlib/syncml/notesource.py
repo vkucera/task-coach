@@ -43,7 +43,14 @@ class NoteSource(BaseSource):
         return 200
 
     def doResolveConflict(self, note, local, result):
-        return self.callback.resolveNoteConflict(result, local, note)
+        resolved = self.callback.resolveNoteConflict(result, local, note)
+
+        if resolved.has_key('subject'):
+            local.setSubject(resolved['subject'])
+        if resolved.has_key('description'):
+            local.setDescription(resolved['description'])
+
+        return local
 
     def objectRemovedOnServer(self, note):
         return wx.MessageBox(_('Note "%s" has been deleted on server,\n') % note.subject() + \

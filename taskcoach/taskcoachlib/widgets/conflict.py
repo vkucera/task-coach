@@ -152,13 +152,16 @@ class NoteConflictPanel(BaseConflictPanel):
                                                       self.remote.description())
 
     def getResolved(self):
+        resolved = {}
+
         if self.flags & NoteSource.CONFLICT_SUBJECT:
             localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idSubject]
-            self.local.setSubject(fusionWidget.GetValue())
+            resolved['subject'] = fusionWidget.GetValue()
         if self.flags & NoteSource.CONFLICT_DESCRIPTION:
             localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idDescription]
-            self.local.setDescription(fusionWidget.GetValue())
-        return self.local
+            resolved['description'] = fusionWidget.GetValue()
+
+        return resolved
 
 
 class TaskConflictPanel(BaseConflictPanel):
@@ -198,25 +201,28 @@ class TaskConflictPanel(BaseConflictPanel):
                                                      False)
 
     def getResolved(self):
+        resolved = {}
+
         if self.flags & TaskSource.CONFLICT_SUBJECT:
             localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idSubject]
-            self.local.setSubject(fusionWidget.GetValue())
+            resolved['subject'] = fusionWidget.GetValue()
         if self.flags & TaskSource.CONFLICT_DESCRIPTION:
             localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idDescription]
-            self.local.setDescription(fusionWidget.GetValue())
+            resolved['description'] = fusionWidget.GetValue()
         if self.flags & TaskSource.CONFLICT_STARTDATE:
             localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idStartDate]
-            self.local.setStartDate(fusionWidget.GetValue())
+            resolved['startDate'] = fusionWidget.GetValue()
         if self.flags & TaskSource.CONFLICT_DUEDATE:
             localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idDueDate]
-            self.local.setDueDate(fusionWidget.GetValue())
+            resolved['dueDate'] = fusionWidget.GetValue()
         if self.flags & TaskSource.CONFLICT_PRIORITY:
             localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idPriority]
-            self.local.setPriority(fusionWidget.GetValue())
+            resolved['priority'] = fusionWidget.GetValue()
         if self.flags & TaskSource.CONFLICT_CATEGORIES:
-            pass # TODO... Is this really necessary ?
+            localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idCategories]
+            resolved['categories'] = fusionWidget.GetValue()
 
-        return self.local
+        return resolved
 
 
 class ConflictDialog(wx.Dialog):
