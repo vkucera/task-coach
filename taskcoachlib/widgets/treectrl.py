@@ -159,6 +159,12 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
 
     def curselection(self):
         return [self.GetIndexOfItem(item) for item in self.GetSelections()]
+    
+    def select(self, selection):
+        for item in self.GetItemChildren(recursively=True):
+            self.SelectItem(item, self.GetIndexOfItem(item) in selection)
+        if self.GetSelections():
+            self.SetCurrentItem(self.GetSelections()[0])
         
     def clearselection(self):
         self.UnselectAll()
@@ -291,8 +297,10 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
-        self.GetHeaderWindow().Bind(wx.EVT_LEFT_DOWN, 
-            self.onHeaderWindowMouseClick)
+        # Next lines commented out because it causes extra select events and
+        # this code doesn't seem to be necessary on wxGtk (Ubuntu) anyway.
+        #self.GetHeaderWindow().Bind(wx.EVT_LEFT_DOWN, 
+        #    self.onHeaderWindowMouseClick)
         
     def onHeaderWindowMouseClick(self, event):
         # Mouse clicks in the header window seem not to be propagated to 

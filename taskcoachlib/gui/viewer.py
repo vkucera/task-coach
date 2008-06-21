@@ -290,6 +290,7 @@ class Viewer(wx.Panel):
         self.settings = settings
         self.__settingsSection = kwargs.pop('settingsSection')
         self.__instanceNumber = kwargs.pop('instanceNumber')
+        self.__selection = []
         self.uiCommands = uiCommands
         self.list = self.createSorter(self.createFilter(list))
         self.widget = self.createWidget()
@@ -353,9 +354,12 @@ class Viewer(wx.Panel):
         # Be sure all wx events are handled before we notify our observers: 
         wx.CallAfter(lambda: patterns.Publisher().notifyObservers(\
             patterns.Event(self, self.selectEventType(), self.curselection())))
-    
+        self.__selection = self.curselection()
+        
     def refresh(self):
         self.widget.refresh(len(self.list))
+        self.widget.select([self.getIndexOfItem(item) for item \
+                            in self.__selection if item in self.model()])
         
     def curselection(self):
         return [self.getItemWithIndex(index) for index in self.widget.curselection()]

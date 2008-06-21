@@ -30,6 +30,8 @@ bugs.''',
         Bug('''The search control in the toolbar did not maintain 
 state correctly for different viewers. Task Coach viewers now each 
 have their own toolbar with search control.''', '1977196'),
+        Bug('''Marking tasks completed or changing their priority would change
+the selection.''', '1888598', '1926362'),
         Bug('''On Max OS X, put preferences menu item in the TaskCoach 
 menu instead of the Edit menu to conform with Mac OS X standards.''', 
             '1965861'),
