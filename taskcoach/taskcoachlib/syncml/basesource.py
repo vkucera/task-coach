@@ -1,6 +1,10 @@
 
 from _pysyncml import *
 
+from taskcoachlib.i18n import _
+
+import wx
+
 class BaseSource(SyncSource):
     STATE_NONE         = 0
     STATE_FIRSTPASS    = 1
@@ -33,6 +37,27 @@ class BaseSource(SyncSource):
                 self.lastLast = self.lastAnchor
                 self.state = self.STATE_FIRSTPASS
             else:
+                if self.syncMode in [REFRESH_FROM_SERVER,
+                                     REFRESH_FROM_SERVER_BY_SERVER]:
+                    if self.objectList:
+                        if wx.MessageBox(_('The synchronization for source %s') % self.name + \
+                                         _('will be a refresh from server. All local items will\n' \
+                                           'be deleted. Do you wish to continue ?'),
+                                         _('Refresh from server'), wx.YES_NO) != wx.YES:
+                            return 514 # Not sure of this
+                        self.objectList.clear()
+                        self.allObjectsList = []
+                        self.newObjectsList = []
+                        self.changedObjectsList = []
+                        self.deletedObjectsList = []
+                elif self.syncMode in [REFRESH_FROM_CLIENT,
+                                       REFRESH_FROM_CLIENT_BY_SERVER]:
+                    if wx.MessageBox(_('The synchronization for source %s') % self.name + \
+                                     _('will be a refresh from client. All remote items will\n' \
+                                       'be deleted. Do you wish to continue ?'),
+                                     _('Refresh from server'), wx.YES_NO) != wx.YES:
+                        return 514 # Not sure of this
+
                 self.state = self.STATE_NORMAL
         elif self.state == self.STATE_FIRSTPASS:
             lastLast = self.lastAnchor
