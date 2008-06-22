@@ -128,6 +128,7 @@ class SortableViewerTest(test.TestCase):
         self.assertEqual(['A', 'B'], [t.description() for t in anotherViewer.model()])
 
 
+
 class SortableViewerForTasksTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
@@ -469,7 +470,7 @@ class EffortPerDayViewerUnderTest(dummy.EffortPerDayViewerWithDummyWidget):
 
 class TaskListViewerTest(test.wxTestCase):
     def setUp(self):
-        self.task = task.Task()
+        self.task = task.Task('A')
         self.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
@@ -495,7 +496,18 @@ class TaskListViewerTest(test.wxTestCase):
         self.showColumn('totalTimeSpent')
         totalTimeSpent = self.viewer.getItemText(0, 3)
         self.assertEqual("0:00:00", totalTimeSpent)
+        
+    def testGetSelection(self):
+        self.viewer.model().append(task.Task('B'))
+        self.viewer.widget.select([0])
+        self.assertEqual('A', self.viewer.curselection()[0].subject())
 
+    def testGetSelection_AfterResort(self):
+        self.viewer.model().append(task.Task('B'))
+        self.viewer.widget.select([0])
+        self.viewer.setSortOrderAscending(False)
+        self.assertEqual('A', self.viewer.curselection()[0].subject())
+        
     def testChangeSubject(self):
         self.task.setSubject('New subject')
         self.assertEqual(task.Task.subjectChangedEventType(), 
