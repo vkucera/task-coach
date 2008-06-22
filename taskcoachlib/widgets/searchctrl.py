@@ -33,33 +33,47 @@ class SearchCtrl(wx.SearchCtrl):
         self.__timer = wx.Timer(self)
         self.__recentSearches = []
         self.__maxRecentSearches = 5
+        self.createMenu()
         self.bindEventHandlers()
-        self.SetMenu(self.makeMenu())
         self.onFind(None)
         
+    def createMenu(self):
+        menu = wx.Menu()
+        self.__matchCaseMenuItem = menu.AppendCheckItem(wx.ID_ANY, 
+            _('Match case'), _('Match case when filtering'))
+        self.__matchCaseMenuItem.Check(self.__matchCase)
+        self.__includeSubItemsMenuItem = menu.AppendCheckItem(wx.ID_ANY, 
+            _('Include sub items'), 
+            _('Include sub items of matching items in the search results'))
+        self.__includeSubItemsMenuItem.Check(self.__includeSubItems)
+        self.SetMenu(menu)
+        
     def bindEventHandlers(self):
-        for eventType, eventHandler in \
-            [(wx.EVT_TIMER, self.onFind),
-             (wx.EVT_TEXT_ENTER, self.onFind),
-             (wx.EVT_TEXT, self.onFindLater),
-             (wx.EVT_SEARCHCTRL_CANCEL_BTN, self.onCancel)]:
-            self.Bind(eventType, eventHandler)
-        self.Bind(wx.EVT_MENU_RANGE, self.onRecentSearchMenuItem, id=1, 
-            id2=self.__maxRecentSearches)
-        self.__matchCaseMenuItemId = wx.NewId()
-        self.Bind(wx.EVT_MENU, self.onMatchCaseMenuItem, 
-            id=self.__matchCaseMenuItemId)
-        self.__includeSubItemsMenuItemId = wx.NewId()
-        self.Bind(wx.EVT_MENU, self.onIncludeSubItemsMenuItem,
-            id=self.__includeSubItemsMenuItemId)
+        for args in [(wx.EVT_TIMER, self.onFind),
+                     (wx.EVT_TEXT_ENTER, self.onFind),
+                     (wx.EVT_TEXT, self.onFindLater),
+                     (wx.EVT_SEARCHCTRL_CANCEL_BTN, self.onCancel),
+                     (wx.EVT_MENU, self.onMatchCaseMenuItem, 
+                         self.__matchCaseMenuItem),
+                     (wx.EVT_MENU, self.onIncludeSubItemsMenuItem, 
+                         self.__includeSubItemsMenuItem)]:
+            self.Bind(*args)
+        # Precreate menu item ids for the recent searches and bind the event
+        # handler for those menu item ids. It's no problem that the actual menu
+        # items don't exist yet. 
+        self.__recentSearchMenuItemIds = \
+            [wx.NewId() for i in range(self.__maxRecentSearches)]
+        self.Bind(wx.EVT_MENU_RANGE, self.onRecentSearchMenuItem, 
+            id=self.__recentSearchMenuItemIds[0], 
+            id2=self.__recentSearchMenuItemIds[-1])
         
     def setMatchCase(self, matchCase):
         self.__matchCase = matchCase
-        self.SetMenu(self.makeMenu())
+        self.__matchCaseMenuItem.Check(matchCase)
         
     def setIncludeSubItems(self, includeSubItems):
         self.__includeSubItems = includeSubItems
-        self.SetMenu(self.makeMenu())
+        self.__includeSubItemsMenuItem.Check(includeSubItems)
 
     def onFindLater(self, event):
         # Start the timer so that the actual filtering will be done
@@ -80,20 +94,22 @@ class SearchCtrl(wx.SearchCtrl):
     def onCancel(self, event):
         self.SetValue('')
         self.onFind(event)
+        event.Skip()
     
     def onMatchCaseMenuItem(self, event):
         self.__matchCase = self._isMenuItemChecked(event)
-        self.SetMenu(self.makeMenu())
         self.onFind(event)
+        event.Skip()
         
     def onIncludeSubItemsMenuItem(self, event):
         self.__includeSubItems = self._isMenuItemChecked(event)
-        self.SetMenu(self.makeMenu())
         self.onFind(event)
+        event.Skip()
         
     def onRecentSearchMenuItem(self, event):
-        self.SetValue(self.__recentSearches[event.GetId()-1])
+        self.SetValue(self.__recentSearches[event.GetId()-self.__recentSearchMenuItemIds[0]])
         self.onFind(event)
+        event.Skip()
                 
     def rememberSearchString(self, searchString):
         if searchString in self.__recentSearches:
@@ -101,36 +117,32 @@ class SearchCtrl(wx.SearchCtrl):
         self.__recentSearches.insert(0, searchString)
         if len(self.__recentSearches) > self.__maxRecentSearches:
             self.__recentSearches.pop()
-        self.SetMenu(self.makeMenu())
-                
-    def makeMenu(self):
-        menu = wx.Menu()
-        menu.AppendCheckItem(self.__matchCaseMenuItemId, _('Match case'), 
-            _('Match case when filtering'))
-        menu.Check(self.__matchCaseMenuItemId, self.__matchCase)
-        menu.AppendCheckItem(self.__includeSubItemsMenuItemId, 
-            _('Include sub items'), 
-            _('Include sub items of matching items in the search results'))
-        menu.Check(self.__includeSubItemsMenuItemId, self.__includeSubItems)
-        if self.__recentSearches:
-            self.addRecentSearches(menu)
-        return menu
-    
+        self.updateRecentSearches()
+                   
+    def updateRecentSearches(self):
+        menu = self.GetMenu()
+        self.removeRecentSearches(menu)
+        self.addRecentSearches(menu)
+        
+    def removeRecentSearches(self, menu):
+        while menu.GetMenuItemCount() > 2:
+            item = menu.FindItemByPosition(2)
+            menu.DestroyItem(item)
+
     def addRecentSearches(self, menu):
         menu.AppendSeparator()
-        item = menu.Append(-1, _('Recent searches'))
+        item = menu.Append(wx.ID_ANY, _('Recent searches'))
         item.Enable(False)
         for index, searchString in enumerate(self.__recentSearches):
-            menu.Append(index+1, searchString)
+            menu.Append(self.__recentSearchMenuItemIds[index], searchString)
             
     def Enable(self, enable=True):
         ''' When wx.SearchCtrl is disabled it doesn't grey out the buttons,
             so we remove those. '''
         if enable:
-            self.SetMenu(self.makeMenu())
+            self.SetValue('')
         else:
             self.SetValue(_('Viewer not searchable'))
-            self.SetMenu(None)
         super(SearchCtrl, self).Enable(enable)
         self.ShowCancelButton(enable and bool(self.GetValue()))
         self.ShowSearchButton(enable)
