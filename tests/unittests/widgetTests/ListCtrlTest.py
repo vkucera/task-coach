@@ -29,7 +29,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
     def getItemImage(self, index):
         return -1
     
-    def getItemAttr(self, index):
+    def getItemAttr(self, *args):
         return wx.ListItemAttr()
         
     def onSelect(self, *args):
