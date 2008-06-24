@@ -35,8 +35,10 @@ the selection.''', '1888598', '1926362'),
         Bug('''On Max OS X, put preferences menu item in the TaskCoach 
 menu instead of the Edit menu to conform with Mac OS X standards.''', 
             '1965861'),
-        Bug('''On Mac OS X, text couldn't be edited while the timer
-was running.''', '1995469'),
+        Bug('''Focus issues: On Mac OS X, text couldn't be edited while the 
+timer was running. On Windows, notifications from other programs overlapping 
+with the main window would take away focus from dialogs.''', '1995469', 
+'2000152'),
         Bug('''Prevent crash under Windows XP when dropping e-mail 
 from Thunderbird if the APPDATA environment variable is not 
 defined.''', '1960827'),
