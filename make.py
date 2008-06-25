@@ -19,11 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta
 import sys, os, glob
 from setup import setupOptions
-from buildlib import clean, bdist_rpm_fedora
+from buildlib import clean, bdist_rpm_fedora, bdist_deb
 
 
 setupOptions['cmdclass'] = dict(clean=clean,
-                                bdist_rpm_fedora=bdist_rpm_fedora)
+                                bdist_rpm_fedora=bdist_rpm_fedora,
+                                bdist_deb=bdist_deb)
                                 
 distdir = 'dist'
 builddir = 'build'
@@ -104,6 +105,23 @@ elif sys.argv[1] == 'bdist_rpm_fedora':
     setupOptions.update(dict(options=dict(bdist_rpm_fedora=dict(\
         spec_file=spec_file, icon='icons.in/taskcoach.png', 
         desktop_file='build.in/fedora/taskcoach.desktop'))))
+
+elif sys.argv[1] == 'bdist_deb':
+    from distutils.core import setup
+    setupOptions.update(dict(options=dict(bdist_deb=dict(\
+        package=meta.data.filename_lower, title=meta.data.name, 
+        description=meta.data.description, 
+        long_description=meta.data.long_description, 
+        version=meta.data.version,
+        author=meta.data.author, author_email=meta.data.author_email,
+        copyright=meta.data.copyright,
+        license=meta.data.license_title_and_version, 
+        license_abbrev=meta.data.license_title_and_version_abbrev,
+        license_path='/usr/share/common-licenses/GPL-3',
+        license_summary=meta.data.license_notice, 
+        subsection='Office', url=meta.data.url,
+        command='/usr/bin/taskcoach.py'))))
+    
 else:
     from distutils.core import setup
     # On Fedora, to keep the rpm build process going when it finds 

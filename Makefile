@@ -36,7 +36,9 @@ windist: icons i18n
 	$(PYTHON) make.py py2exe
 	$(INNOSETUP) build/taskcoach.iss
 
-sdist: icons changes i18n
+sdist: icons changes i18n dist/TaskCoach-$(TCVERSION).tar.gz
+
+dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
 rpm: icons changes i18n
@@ -46,11 +48,7 @@ fedora: icons changes i18n
 	$(PYTHON) make.py bdist_rpm_fedora 
 
 deb: sdist
-	cp dist/TaskCoach-$(TCVERSION).tar.gz build/taskcoach_$(TCVERSION).orig.tar.gz
-	cd build; tar zxvf taskcoach_$(TCVERSION).orig.tar.gz; mv TaskCoach-$(TCVERSION) taskcoach_$(TCVERSION); cd ..
-	cp -r build.in/debian build/taskcoach_$(TCVERSION)
-	cd build/taskcoach_$(TCVERSION); debuild -S; dpkg-buildpackage -rfakeroot; cd ..
-	mv build/taskcoach_$(TCVERSION)-1_all.deb dist
+	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz
 
 dmg: icons i18n
 	$(PYTHON) make.py py2app
