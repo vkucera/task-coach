@@ -437,7 +437,7 @@ pages['devinfo'] = \
     <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
     using <A HREF="http://www.wxpython.org">wxPython</A> for the
     graphical user interface. On Windows, 
-    <A HREF="http://starship.python.net/crew/mhammond/win32/">Pywin32</A> 
+    <A HREF="http://sourceforge.net/projects/pywin32/">Pywin32</A> 
     is used as well. For generating the API documentation you need to have
     <A HREF="http://epydoc.sourceforge.net/">Epydoc</A> installed.</p>
     <p>The few other libraries (other than those
