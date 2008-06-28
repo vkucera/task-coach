@@ -81,8 +81,7 @@ footer = '''
             </div>
             <div class="navbox">
                 <h2>Give support</h2>
-                <p>
-                    <a href="http://sourceforge.net/awards/cca/?project_name=TaskCoach&project_url=https://sourceforge.net/projects/taskcoach/"><img src="http://sourceforge.net/awards/cca/badge_img.php?project_name=TaskCoach&project_url=https://sourceforge.net/projects/taskcoach/&style=4" border="0"/></a><br>
+                <p>                    
                     <a href="i18n.html">Help translate</a><br>
                     <a href="devinfo.html">Help develop</a><br>
                     <a href="donations.html">Donate</a><br>
