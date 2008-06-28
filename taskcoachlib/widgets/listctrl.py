@@ -112,7 +112,8 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
     def select(self, indices):
         for index in range(self.GetItemCount()):
             self.Select(index, index in indices)
-        self.Focus(self.GetFirstSelected())        
+        if self.curselection():
+            self.Focus(self.GetFirstSelected())        
     
     def clearselection(self):
         for index in self.curselection():
