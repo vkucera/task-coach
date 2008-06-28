@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-Release('0.70.1', '??',
+Release('0.70.1', 'June 28, 2008',
     summary='''This release optionally brings back the tabbed user 
 interface that was removed in the previous release and fixes a few 
 bugs.''',
