@@ -118,9 +118,9 @@ def uploadWebsiteToSourceForge():
 def registerWithPyPI():
     print 'Registering with PyPI...'
     from setup import setupOptions
-    setupOptions['classifiers'].remove('Natural Language :: Breton')
-    setupOptions['classifiers'].remove('Natural Language :: Galician')
-    setupOptions['classifiers'].remove('Natural Language :: Norwegian (Bokmal)')
+    languagesThatPyPIDoesNotRecognize = ['Breton', 'Galician', 'Norwegian (Bokmal)']
+    for language in languagesThatPyPIDoesNotRecognize:
+        setupOptions['classifiers'].remove('Natural Language :: %s'%language)
     from distutils.core import setup
     import sys, os
     os.environ['HOME'] = '.'
