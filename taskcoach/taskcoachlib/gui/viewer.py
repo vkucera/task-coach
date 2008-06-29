@@ -22,7 +22,7 @@ import wx
 from taskcoachlib import patterns, command, widgets, mailer
 from taskcoachlib.domain import base, task, category, effort, date, note, attachment
 from taskcoachlib.i18n import _
-import uicommand, menu, color, render, dialog
+import uicommand, menu, color, render, dialog, toolbar
 
 
 class SearchableViewer(object):
@@ -56,6 +56,12 @@ class SearchableViewer(object):
         includeSubItems = self.settings.getboolean(section, 'searchfilterincludesubitems')
         return searchString, matchCase, includeSubItems
     
+    def getToolBarUICommands(self):
+        ''' Names of UI commands to put on the toolbar of this viewer. '''
+        searchUICommand = uicommand.Search(viewer=self, settings=self.settings)
+        return super(SearchableViewer, self).getToolBarUICommands() + \
+            [None, searchUICommand]
+            
 
 class FilterableViewer(object):
     ''' A viewer that is filterable. This is a mixin class. '''
@@ -285,9 +291,11 @@ class Viewer(wx.Panel):
         self.settings = settings
         self.__settingsSection = kwargs.pop('settingsSection')
         self.__instanceNumber = kwargs.pop('instanceNumber')
+        self.__selection = []
         self.uiCommands = uiCommands
         self.list = self.createSorter(self.createFilter(list))
         self.widget = self.createWidget()
+        self.toolbar = toolbar.ToolBar(self, self.uiCommands, (16, 16))
         self.initLayout()
         patterns.Publisher().registerObserver(self.onAddItem, 
             eventType=self.list.addItemEventType())
@@ -313,6 +321,7 @@ class Viewer(wx.Panel):
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
+        self._sizer.Add(self.toolbar, flag=wx.EXPAND)
         self._sizer.Add(self.widget, 1, wx.EXPAND)
         self.SetSizerAndFit(self._sizer)
     
@@ -346,9 +355,12 @@ class Viewer(wx.Panel):
         # Be sure all wx events are handled before we notify our observers: 
         wx.CallAfter(lambda: patterns.Publisher().notifyObservers(\
             patterns.Event(self, self.selectEventType(), self.curselection())))
-    
+        self.__selection = self.curselection()
+        
     def refresh(self):
         self.widget.refresh(len(self.list))
+        self.widget.select([self.getIndexOfItem(item) for item \
+                            in self.__selection if item in self.model()])
         
     def curselection(self):
         return [self.getItemWithIndex(index) for index in self.widget.curselection()]
@@ -422,7 +434,21 @@ class Viewer(wx.Panel):
     
     def getFilterUICommands(self):
         return []
-        
+    
+    def getToolBarUICommands(self):
+        ''' UI commands to put on the toolbar of this viewer. '''
+        cut = uicommand.EditCut(viewer=self)
+        copy = uicommand.EditCopy(viewer=self)
+        paste = uicommand.EditPaste()
+        new = uicommand.NewDomainObject(viewer=self)
+        newsub = uicommand.NewSubDomainObject(viewer=self)
+        edit = uicommand.EditDomainObject(viewer=self)
+        delete = uicommand.DeleteDomainObject(viewer=self)
+        return [cut, copy, paste, None, new, newsub, edit, delete]
+    
+    def canCreateNewDomainObject(self):
+        return True
+    
         
 class ListViewer(Viewer):
     def isTreeViewer(self):
@@ -814,6 +840,15 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
                 'viewdescription', 'viewattachments', 'viewcategories', 
                 'viewtotalCategories',
                 'viewpriority', 'viewtotalPriority', 'viewreminder']
+
+    def getToolBarUICommands(self):
+        ''' UI commands to put on the toolbar of this viewer. '''
+        toggleTaskCompletion = uicommand.TaskToggleCompletion(viewer=self)
+        effortstart = uicommand.EffortStart(viewer=self)
+        effortstop = uicommand.EffortStop(taskList=self.model())
+        commands = super(TaskViewer, self).getToolBarUICommands() 
+        return commands[:-1] + [toggleTaskCompletion, None, effortstart, 
+            effortstop, None] + commands[-1:]
  
     def trackStartEventType(self):
         return 'task.track.start'
@@ -1468,6 +1503,9 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
         return command.DeleteCommand(self.list, self.curselection())
     
     deleteEffortCommand = deleteItemCommand
+    
+    def canCreateNewDomainObject(self):
+        return len(self.taskList) > 0
     
 
 class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns): 

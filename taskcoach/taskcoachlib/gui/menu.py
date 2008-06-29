@@ -72,7 +72,7 @@ class StaticMenu(Menu):
 class DynamicMenu(Menu):
     ''' A menu that registers for events and then updates itself whenever the
         event is fired. '''
-    def __init__(self, mainwindow, parentMenu, labelInParentMenu):
+    def __init__(self, mainwindow, parentMenu=None, labelInParentMenu=''):
         ''' Initialize the menu. labelInParentMenu is needed to be able to
             find this menu in its parentMenu. '''
         super(DynamicMenu, self).__init__(mainwindow)
@@ -146,7 +146,7 @@ class DynamicMenu(Menu):
             
 class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
     def __init__(self, mainwindow, uiCommands, parentMenu=None, 
-                 labelInParentMenu=None):
+                 labelInParentMenu=''):
         self._uiCommands = uiCommands
         self._uiCommandNames = None
         super(DynamicMenuThatGetsUICommandsFromViewer, self).__init__(\
@@ -398,7 +398,7 @@ class TaskBarMenu(Menu):
         
                    
 class StartEffortForTaskMenu(DynamicMenu):
-    def __init__(self, taskBarIcon, tasks, parentMenu, labelInParentMenu):
+    def __init__(self, taskBarIcon, tasks, parentMenu=None, labelInParentMenu=''):
         self.tasks = tasks
         super(StartEffortForTaskMenu, self).__init__(taskBarIcon, parentMenu, 
                                                      labelInParentMenu)

@@ -108,7 +108,17 @@ class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
         
     def selectItem(self, index):
         self.viewer.widget.SelectItem(index)
-                    
+
+    def testTaskDescription(self):
+        self.task.setDescription('Task description')
+        self.viewer.showColumnByName('description')
+        self.expectInHTML('>Task description<')
+    
+    def testTaskDescriptionWithNewLine(self):
+        self.task.setDescription('Line1\nLine2')
+        self.viewer.showColumnByName('description')
+        self.expectInHTML('>Line1<br>Line2<')
+                      
 
 class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):

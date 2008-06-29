@@ -31,8 +31,8 @@ Release steps:
 - Post project news on Sourceforge by hand.
 - Post release notification on Freshmeat by hand.
 - Email taskcoach@yahoogroups.com and python-announce@python.org.
-- Tag source code: cvs tag ReleaseX_Y_Z.
-- Create branch if feature release: cvs tag -b ReleaseX_Y_Branch 
+- Tag source code with tag ReleaseX_Y_Z.
+- Create branch if feature release.
 - Add release to Sourceforge bug tracker groups.
 - Set bug reports and/or feature requests to Pending state.
 '''
@@ -41,7 +41,7 @@ import ftplib, taskcoachlib.meta, os, glob, sys, md5
 
 def uploadDistributionsToSourceForge():
     print 'Uploading distributions to SourceForge...'
-    os.system('ncftpput upload.sourceforge.net incoming dist/*')
+    os.system('rsync -avP -e ssh dist/* fniessink@frs.sourceforge.net:uploads/')
     print 'Done uploading distributions to SourceForge.'
 
 def generateMD5Digests():
@@ -85,33 +85,31 @@ class SimpleFTP(ftplib.FTP, object):
         password = file(password_file).read()
         super(SimpleFTP, self).__init__(server, login, password)
 
-    def delete(self, filenames):
-        for filename in filenames:
-            try:
-                super(SimpleFTP, self).delete(filename)
-                print 'Deleted %s'%filename
-            except ftplib.error_perm:
-                print "Couldn't delete %s"%filename
+    def put(self, folder):
+        for root, dirs, filenames in os.walk(folder):
+            if root != folder:
+                print 'Change into %s'%root
+                self.cwd(os.path.basename(root))
+            for dir in dirs:
+                print 'Create %s'%os.path.join(root, dir)
+                try:
+                    self.mkd(dir)
+                except ftplib.error_perm, info:
+                    print info
+            for filename in filenames:
+                print 'Store %s'%os.path.join(root, filename)
+                self.storbinary('STOR %s'%filename, file(os.path.join(root, filename), 'rb'))
 
-    def put(self, filenames):
-        for filename in filenames:
-            if os.path.isdir(filename):
-                continue
-            print filename
-            fd = file(filename, 'rb')
-            self.storbinary('STOR %s'%filename, fd)
-            print 'Stored %s'%filename
-
-def ftpWebsiteToChello():
+def uploadWebsiteToChello():
     print "Uploading website to Chello..."
     chello = SimpleFTP('members.chello.nl', 'f.niessink', '.chello_password')
     os.chdir('website.out')
-    chello.put(glob.glob('*') + glob.glob('*/*'))
+    chello.put('.')
     chello.quit()
     os.chdir('..')
     print 'Done uploading website to Chello.'
 
-def scpWebsiteToSourceForge():
+def uploadWebsiteToSourceForge():
     print 'Uploading website to SourceForge...'
     os.system('scp -r website.out/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
     print 'Done uploading website to SourceForge.'
@@ -119,6 +117,9 @@ def scpWebsiteToSourceForge():
 def registerWithPyPI():
     print 'Registering with PyPI...'
     from setup import setupOptions
+    languagesThatPyPIDoesNotRecognize = ['Breton', 'Galician', 'Norwegian (Bokmal)']
+    for language in languagesThatPyPIDoesNotRecognize:
+        setupOptions['classifiers'].remove('Natural Language :: %s'%language)
     from distutils.core import setup
     import sys, os
     os.environ['HOME'] = '.'
@@ -127,13 +128,25 @@ def registerWithPyPI():
     setup(**setupOptions)
     print 'Done registering with PyPI.'
 
-if len(sys.argv) > 1 and sys.argv[1] == 'phase1':
+def uploadWebsite():
+    uploadWebsiteToChello()
+    uploadWebsiteToSourceForge()
+    
+def phase1():
     uploadDistributionsToSourceForge()
     generateMD5Digests()
     generateWebsite()
-elif len(sys.argv) > 1 and sys.argv[1] == 'phase2':
-    ftpWebsiteToChello()
-    scpWebsiteToSourceForge()
+    
+def phase2():
+    uploadWebsite()
     registerWithPyPI()
-else:
-    print 'Please enter release phase (phase1 or phase2)'
+
+
+commands = dict(phase1=phase1, phase2=phase2, website=uploadWebsite, 
+                websiteChello=uploadWebsiteToChello, 
+                websiteSF=uploadWebsiteToSourceForge, 
+                pypi=registerWithPyPI)
+try:
+    commands[sys.argv[1]]()
+except (KeyError, IndexError):
+    print 'Usage: release.py [%s]'%'|'.join(sorted(commands.keys()))

@@ -28,7 +28,7 @@ import data
 try:
     import xml.etree.ElementTree as ElementTree
 except ImportError:
-    import thirdparty.ElementTree as ElementTree
+    from taskcoachlib.thirdparty import ElementTree
    
    
 class VersionChecker(threading.Thread):

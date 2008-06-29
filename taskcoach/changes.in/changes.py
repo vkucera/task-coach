@@ -39,11 +39,51 @@ Patch supplied by Rob McMullen.''')],
 Task nodes may have a recurrence node that contains the recurrence state of
 the task.''')]),
 
-Release('0.70.1', '??',
-    summary='''Bugfix release.''',
+Release('0.70.1', 'June 28, 2008',
+    summary='''This release optionally brings back the tabbed user 
+interface that was removed in the previous release and fixes a few 
+bugs.''',
     bugsFixed=[
-        Bug('''Prevent crash under Windows XP when dropping e-mail from
-Thunderbird if the APPDATA environment variable is not defined.''', '1960827')]),
+        Bug('''The search control in the toolbar did not maintain 
+state correctly for different viewers. Task Coach viewers now each 
+have their own toolbar with search control.''', '1977196'),
+        Bug('''Marking tasks completed or changing their priority would change
+the selection.''', '1888598', '1926362'),
+        Bug('''On Max OS X, put preferences menu item in the TaskCoach 
+menu instead of the Edit menu to conform with Mac OS X standards.''', 
+            '1965861'),
+        Bug('''Focus issues: On Mac OS X, text couldn't be edited while the 
+timer was running. On Windows, notifications from other programs overlapping 
+with the main window would take away focus from dialogs.''', '1995469', 
+'2000152'),
+        Bug('''Prevent crash under Windows XP when dropping e-mail 
+from Thunderbird if the APPDATA environment variable is not 
+defined.''', '1960827'),
+        Bug('''ImportError: No module named thirdparty.ElementTree. 
+This exception would happen when using a source distribution of Task 
+Coach or a package (rpm, deb) for Linux *and* when the default version 
+of Python on the system is Python 2.4. Task Coach tried to import a 
+module from the wrong package.''', '1964069'),
+        Bug('''On Linux, when using a dark theme, use appropriate 
+background colors for the category viewer and the text color buttons 
+in the preferences dialog.''', '1988160'),
+        Bug('''Remember whether the main window was maximized and if 
+so, maximize the main window when starting the next time.''', 
+            '1969266'),
+        Bug('''Correctly sort tasks on startup when sort column is 
+'Overall categories'.''', '1962003'),
+        Bug('''Correctly redraw toolbar when it is 'damaged' by other 
+windows''', '1977208'),
+        Bug('''Correctly sort effort for subtasks in effort per day, 
+per week, and per month effort viewers.''', '1989553'),
+        Bug('''Better navigation with tab key in dialogs.'''),
+        Bug('''Keep newlines in descriptions when printing or 
+exporting to HTML.''')],
+    featuresAdded=[
+        Feature('''Task Coach can now use either the old tabbed user interface
+(whose layout still cannot be saved, by the way) or the 'managed frame' 
+interface introduced in release 0.70.0. This can be changed in the Preferences
+dialog.''', '1964213')]),
 
 Release('0.70.0', 'May 12, 2008',
     summary='''Small feature enhancements, more translations and several bug 

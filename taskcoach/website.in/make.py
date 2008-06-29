@@ -144,11 +144,7 @@ pages['download'] = \
         <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb">Debian package (deb)</a> for Ubuntu</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''
         <tr><td>Installation:
-        The Debian package of %(name)s does not install the wxPython 2.8 
-        dependency automatically. You may need to install it manually:<br>
-        <tt>$ sudo apt-get install python-wxgtk2.8</tt><br>
-        Afterwards you can install %(name)s by:<br>
-        <tt>$ sudo dpkg -i %(filename_lower)s_%(version)s-1_all.deb</tt></td></tr>
+        double click the package to start the installer.</td></tr> 
         </table>
         </p>
         <hr>
@@ -441,7 +437,7 @@ pages['devinfo'] = \
     <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
     using <A HREF="http://www.wxpython.org">wxPython</A> for the
     graphical user interface. On Windows, 
-    <A HREF="http://starship.python.net/crew/mhammond/win32/">Pywin32</A> 
+    <A HREF="http://sourceforge.net/projects/pywin32/">Pywin32</A> 
     is used as well. For generating the API documentation you need to have
     <A HREF="http://epydoc.sourceforge.net/">Epydoc</A> installed.</p>
     <p>The few other libraries (other than those
