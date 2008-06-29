@@ -118,6 +118,9 @@ def uploadWebsiteToSourceForge():
 def registerWithPyPI():
     print 'Registering with PyPI...'
     from setup import setupOptions
+    setupOptions['classifiers'].remove('Natural Language :: Breton')
+    setupOptions['classifiers'].remove('Natural Language :: Galician')
+    setupOptions['classifiers'].remove('Natural Language :: Norwegian (Bokmal)')
     from distutils.core import setup
     import sys, os
     os.environ['HOME'] = '.'
@@ -140,8 +143,11 @@ def phase2():
     registerWithPyPI()
 
 
-commands = dict(phase1=phase1, phase2=phase2, website=uploadWebsite)
+commands = dict(phase1=phase1, phase2=phase2, website=uploadWebsite, 
+                websiteChello=uploadWebsiteToChello, 
+                websiteSF=uploadWebsiteToSourceForge, 
+                pypi=registerWithPyPI)
 try:
     commands[sys.argv[1]]()
 except (KeyError, IndexError):
-    print 'Usage: release.py [phase1|phase2|website]'
+    print 'Usage: release.py [%s]'%'|'.join(sorted(commands.keys()))
