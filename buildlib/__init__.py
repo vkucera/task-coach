@@ -18,3 +18,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from clean import clean
 from bdist_rpm_fedora import bdist_rpm_fedora
+from bdist_deb import bdist_deb

@@ -63,11 +63,12 @@ def viewer2html(viewer, selectionOnly=False):
 
 
 def render(item, column, color):
+    renderedItem = column.render(item)
+    renderedItem = renderedItem.replace('\n', '<br>')
     if color[:3] != (0, 0, 0):
         color = '#%02X%02X%02X'%(color[0], color[1], color[2])
-        return '<font color="%s">%s</font>'%(color, column.render(item))
-    else:
-        return column.render(item)
+        renderedItem = '<font color="%s">%s</font>'%(color, renderedItem)
+    return renderedItem
     
 
 def extendedWithAncestors(selection):

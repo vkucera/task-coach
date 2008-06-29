@@ -81,7 +81,7 @@ footer = '''
             </div>
             <div class="navbox">
                 <h2>Give support</h2>
-                <p>
+                <p>                    
                     <a href="i18n.html">Help translate</a><br>
                     <a href="devinfo.html">Help develop</a><br>
                     <a href="donations.html">Donate</a><br>

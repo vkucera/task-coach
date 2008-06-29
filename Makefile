@@ -36,7 +36,9 @@ windist: icons i18n
 	$(PYTHON) make.py py2exe
 	$(INNOSETUP) build/taskcoach.iss
 
-sdist: icons changes i18n
+sdist: icons changes i18n dist/TaskCoach-$(TCVERSION).tar.gz
+
+dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
 rpm: icons changes i18n
@@ -46,17 +48,15 @@ fedora: icons changes i18n
 	$(PYTHON) make.py bdist_rpm_fedora 
 
 deb: sdist
-	cp dist/TaskCoach-$(TCVERSION).tar.gz build/taskcoach_$(TCVERSION).orig.tar.gz
-	cd build; tar zxvf taskcoach_$(TCVERSION).orig.tar.gz; mv TaskCoach-$(TCVERSION) taskcoach_$(TCVERSION); cd ..
-	cp -r build.in/debian build/taskcoach_$(TCVERSION)
-	cd build/taskcoach_$(TCVERSION); debuild -S; dpkg-buildpackage -rfakeroot; cd ..
-	mv build/taskcoach_$(TCVERSION)-1_all.deb dist
+	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz
 
 dmg: icons i18n
 	$(PYTHON) make.py py2app
 	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach-$(TCVERSION).dmg
 
-icons:
+icons: taskcoachlib/gui/icons.py
+
+taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip
 	cd icons.in; $(PYTHON) make.py
 
 website: changes
@@ -64,9 +64,13 @@ website: changes
 	$(EPYDOC) --parse-only -o website.out/epydoc taskcoachlib taskcoach.py
 	$(PYTHON) tools/webchecker.py website.out/index.html
 
-i18n:
-	$(PYTHON) tools/pygettext.py --output-dir i18n.in taskcoachlib
+i18n: taskcoachlib/i18n/nl.py
+
+taskcoachlib/i18n/nl.py: i18n.in/messages.pot
 	cd i18n.in; $(PYTHON) make.py
+
+i18n.in/messages.pot: $(shell find taskcoachlib -name '*.py' | grep -v i18n)
+	$(PYTHON) tools/pygettext.py --output-dir i18n.in taskcoachlib
 
 changes:
 	$(PYTHON) changes.in/make.py text > CHANGES.txt
@@ -93,6 +97,6 @@ clean:
 	rm -rf $(CLEANFILES)
 
 reallyclean:
-	$(PYTHON) make.py clean --really-cleans
+	$(PYTHON) make.py clean --really-clean
 	rm -rf $(CLEANFILES) $(REALLYCLEANFILES)
 

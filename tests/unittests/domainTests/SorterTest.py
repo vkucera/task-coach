@@ -235,7 +235,7 @@ class EffortSorterTest(test.TestCase):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.sorter = effort.EffortSorter(self.effortList)
-        self.task = task.Task()
+        self.task = task.Task('Task')
         self.oldestEffort = effort.Effort(self.task,
             date.DateTime(2004,1,1), date.DateTime(2004,1,2))
         self.newestEffort = effort.Effort(self.task,
@@ -261,4 +261,15 @@ class EffortSorterTest(test.TestCase):
         self.task.addEffort(evenNewerEffort)
         self.assertEqual([evenNewerEffort, self.newestEffort, 
             self.oldestEffort], self.sorter)
+        
+    def testTaskEffortComesBeforeChildEffort(self):
+        child = task.Task('Child')
+        child.setParent(self.task)
+        self.task.addChild(child)
+        self.taskList.append(child)
+        childEffort = effort.Effort(child, date.DateTime(2004,1,1), 
+                                      date.DateTime(2008,1,2))
+        child.addEffort(childEffort)
+        self.assertEqual([self.newestEffort, childEffort, self.oldestEffort],
+            self.sorter)
 

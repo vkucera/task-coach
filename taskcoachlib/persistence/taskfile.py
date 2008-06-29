@@ -167,8 +167,8 @@ class TaskFile(patterns.Observable):
                 categories = []
                 notes = []
             self._clear()
-            self.tasks().extend(tasks)
             self.categories().extend(categories)
+            self.tasks().extend(tasks)
             self.notes().extend(notes)
         finally:
             self.__loading = False

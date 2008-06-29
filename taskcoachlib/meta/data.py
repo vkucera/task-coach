@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import re
 
 name = 'Task Coach'
 description = 'Your friendly task manager'
@@ -49,8 +50,12 @@ pad = url + 'pad.xml'
 download = url + 'download.html'
 dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
 copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)
-license = 'GNU General Public License version 3 or any later version'
-license_abbrev = 'GPLv3+'
+license_title = 'GNU General Public License'
+license_version = '3'
+license_title_and_version = '%s version %s'%(license_title, license_version) 
+license = '%s or any later version'%license_title_and_version
+license_title_and_version_abbrev = 'GPLv%s'%license_version
+license_abbrev = '%s+'%license_title_and_version_abbrev
 license_notice = '''Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -60,8 +65,12 @@ Task Coach is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
-'''
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
+
 license_notice_html = '<p>%s</p>'%license_notice.replace('\n\n', '</p><p>')
+license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank">http\1</a>', license_notice_html)
 
 platform = 'Any'
 pythonversion = '2.4'

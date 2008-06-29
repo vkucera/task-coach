@@ -41,16 +41,19 @@ class TreeViewerTest(test.wxTestCase):
         self.parent.addChild(self.child)
         self.child.setParent(self.parent)
         self.taskList.extend([self.parent, self.child])
+        self.viewer.refresh()
+        self.widget = self.viewer.widget
+                
+    def testWidgetDisplayAllItems(self):
+        self.assertEqual(2, self.viewer.widget.GetCount())
         
     def testExpand(self):
-        self.viewer.refresh()
-        widget = self.viewer.widget
-        widget.Expand(widget.GetFirstVisibleItem())
+        self.widget.Expand(self.widget.GetFirstVisibleItem())
         self.failUnless(self.parent.isExpanded())
         
     def testCollapse(self):
-        self.viewer.refresh()
-        widget = self.viewer.widget
-        widget.Expand(widget.GetFirstVisibleItem())
-        widget.Collapse(widget.GetFirstVisibleItem())
+        firstVisibleItem = self.widget.GetFirstVisibleItem()
+        self.widget.Expand(firstVisibleItem)
+        self.widget.Collapse(firstVisibleItem)
         self.failIf(self.parent.isExpanded())
+        

@@ -20,7 +20,8 @@ import wx, wx.lib.colourselect
 
 class ColorSelect(wx.lib.colourselect.ColourSelect):            
     def MakeBitmap(self):
-        ''' This code was copied and adapted from ColourSelect.MakeBitmap. '''
+        ''' This code was copied and adapted from 
+            ColourSelect.MakeBitmap. '''
         bdr = 8
         width, height = self.GetSize()
 
@@ -34,7 +35,7 @@ class ColorSelect(wx.lib.colourselect.ColourSelect):
         dc.SetFont(self.GetFont())
         label = self.GetLabel()
         # Just make a little colored bitmap
-        dc.SetBackground(wx.Brush(wx.WHITE))
+        dc.SetBackground(wx.Brush(wx.TreeCtrl.GetClassDefaultAttributes().colBg))
         dc.Clear()
 
         if label:

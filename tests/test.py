@@ -57,6 +57,10 @@ class wxTestCase(TestCase):
     from taskcoachlib import gui
     gui.init()
     
+    def tearDown(self):
+        super(wxTestCase, self).tearDown()
+        self.frame.DestroyChildren() # Clean up GDI objects on Windows
+
 
 def cvsCommit():
     os.system('cvs commit')

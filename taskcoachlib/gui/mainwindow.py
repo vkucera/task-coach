@@ -35,6 +35,8 @@ class WindowDimensionsTracker(object):
         self._window = window
         self.setDimensions()
         self._window.Bind(wx.EVT_SIZE, self.onChangeSize)
+        self._window.Bind(wx.EVT_MOVE, self.onChangePosition)
+        self._window.Bind(wx.EVT_MAXIMIZE, self.onMaximize)
         if self.startIconized():
             self._window.Iconize(True)
             wx.CallAfter(self._window.Hide)
@@ -57,18 +59,34 @@ class WindowDimensionsTracker(object):
         width, height = self.getSetting('size')
         x, y = self.getSetting('position')
         self._window.SetDimensions(x, y, width, height)
+        if self.getSetting('maximized'):
+            self._window.Maximize()
         # Check that the window is on a valid display and move if necessary:
         if wx.Display.GetFromWindow(self._window) == wx.NOT_FOUND:
             self._window.SetDimensions(0, 0, width, height)
 
     def onChangeSize(self, event):
-        self.setSetting('size', event.GetSize())
+        # Ignore the EVT_SIZE when the window is maximized. Note how this 
+        # depends on the EVT_MAXIMIZE being sent before the EVT_SIZE
+        if not self._window.IsMaximized():
+            self.setSetting('size', event.GetSize())
+            self.setSetting('maximized', False)
+        event.Skip()
+        
+    def onChangePosition(self, event):
+        # Ignore the EVT_MOVE when the window is maximized. Note how this
+        # depends on the EVT_MAXIMIZE being sent before the EVT_MOVE.
+        if not self._window.IsMaximized():
+            self.setSetting('position', self._window.GetPosition())
+            self.setSetting('maximized', False)
+        event.Skip()
+        
+    def onMaximize(self, event):
+        self.setSetting('maximized', True)
         event.Skip()
                 
     def savePosition(self):
         iconized = self._window.IsIconized()
-        if not iconized:
-            self.setSetting('position', self._window.GetPosition())
         self.setSetting('iconized', iconized)
 
 
@@ -85,11 +103,32 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
     def onRender(self, event):
         ''' Whenever the AUI managed frames get rendered, make sure the active
             pane has focus. '''
+        event.Skip()
+        self.SetFocusToActivePane()
+        
+    def SetFocusToActivePane(self):
+        windowWithFocus = wx.Window.FindFocus()
+        if windowWithFocus not in self.GetAllPanesAndChildren():
+            return # Focus is outside this Frame, don't change the focus
         for pane in self.manager.GetAllPanes():
             if pane.HasFlag(wx.aui.AuiPaneInfo.optionActive):
-                pane.window.SetFocus()
+                if pane.window != windowWithFocus:
+                    pane.window.SetFocus()
                 break
-        event.Skip()
+        
+    def GetAllPanesAndChildren(self):
+        ''' Yield all managed windows and their children, recursively. '''
+        for pane in self.manager.GetAllPanes():
+            yield pane
+            for child in self.GetAllChildren(pane.window):
+                yield child
+    
+    def GetAllChildren(self, window):
+        ''' Yield all child windows of window, recursively. '''                
+        for child in window.GetChildren():
+            yield child
+            for grandChild in self.GetAllChildren(child):
+                yield grandChild
 
     def AddPage(self, page, caption, name): 
         paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().FloatingSize((300,200))
@@ -162,7 +201,12 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
-        self.viewer = viewercontainer.ViewerContainer(self,
+        self.__usingTabbedMainWindow = self.settings.getboolean('view', 'tabbedmainwindow') 
+        if self.__usingTabbedMainWindow:
+            containerWidget = widgets.AUINotebook(self)
+        else:
+            containerWidget = self
+        self.viewer = viewercontainer.ViewerContainer(containerWidget,
             self.settings, 'mainviewer') 
         self.uiCommands = uicommand.UICommands(self, self.iocontroller,
             self.viewer, self.settings, self.taskFile.tasks(), 
@@ -210,11 +254,12 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.onShowToolBar()
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
-        wx.CallAfter(self.onShowStatusBar) 
-        perspective = self.settings.get('view', 'perspective')
-        if perspective:
-            self.manager.LoadPerspective(perspective)
-        self.manager.Update()
+        wx.CallAfter(self.onShowStatusBar)
+        if not self.__usingTabbedMainWindow:
+            perspective = self.settings.get('view', 'perspective')
+            if perspective:
+                self.manager.LoadPerspective(perspective)
+            self.manager.Update()
                 
     def registerForWindowComponentChanges(self):
         patterns.Publisher().registerObserver(self.onFilenameChanged, 
@@ -280,7 +325,11 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             self.settings.set('view', key, str(value))
         if hasattr(self, 'taskBarIcon'):
             self.taskBarIcon.RemoveIcon()
-        self.settings.set('view', 'perspective', self.manager.SavePerspective())
+        if self.__usingTabbedMainWindow:
+            perspective = ''
+        else:
+            perspective = self.manager.SavePerspective()
+        self.settings.set('view', 'perspective', perspective)
         self.dimensionsTracker.savePosition()
         self.settings.save()
         wx.GetApp().ProcessIdle()
@@ -313,7 +362,14 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         # showing the statusbar puts it in the wrong place (only on Linux?)
         self.GetStatusBar().Show(show)
         self.SendSizeEvent()
-
+        
+    def getToolBarUICommands(self):
+        startEffortButton = uicommand.EffortStartButton(mainwindow=self, 
+            taskList=self.taskFile.tasks())
+        ''' Names of UI commands to put on the toolbar of this window. '''
+        return ['open', 'save', 'print', None, 'undo', 'redo', None, 
+                startEffortButton, 'stopeffort']
+        
     def showToolBar(self, size):
         # Current version of wxPython (2.7.8.1) has a bug 
         # (https://sourceforge.net/tracker/?func=detail&atid=109863&aid=1742682&group_id=9863)
@@ -322,7 +378,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         # controls. Immediately after you click on a text control the focus
         # is removed. We work around it by not having AUI manage the toolbar
         # on Mac OS X:
-        if '__WXMAC__' in wx.PlatformInfo:
+        if '__WXMAC__' in wx.PlatformInfo or self.__usingTabbedMainWindow:
             if self.GetToolBar():
                 self.GetToolBar().Destroy()
             if size is not None:
