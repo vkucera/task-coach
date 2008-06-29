@@ -31,8 +31,8 @@ Release steps:
 - Post project news on Sourceforge by hand.
 - Post release notification on Freshmeat by hand.
 - Email taskcoach@yahoogroups.com and python-announce@python.org.
-- Tag source code: cvs tag ReleaseX_Y_Z.
-- Create branch if feature release: cvs tag -b ReleaseX_Y_Branch 
+- Tag source code with tag ReleaseX_Y_Z.
+- Create branch if feature release.
 - Add release to Sourceforge bug tracker groups.
 - Set bug reports and/or feature requests to Pending state.
 '''
@@ -85,27 +85,26 @@ class SimpleFTP(ftplib.FTP, object):
         password = file(password_file).read()
         super(SimpleFTP, self).__init__(server, login, password)
 
-    def delete(self, filenames):
-        for filename in filenames:
-            try:
-                super(SimpleFTP, self).delete(filename)
-                print 'Deleted %s'%filename
-            except ftplib.error_perm:
-                print "Couldn't delete %s"%filename
-
-    def put(self, filenames):
-        for filename in filenames:
-            if os.path.isdir(filename):
-                continue
-            fd = file(filename, 'rb')
-            self.storbinary('STOR %s'%filename, fd)
-            print 'Stored %s'%filename
+    def put(self, folder):
+        for root, dirs, filenames in os.walk(folder):
+            if root != folder:
+                print 'Change into %s'%root
+                self.cwd(os.path.basename(root))
+            for dir in dirs:
+                print 'Create %s'%os.path.join(root, dir)
+                try:
+                    self.mkd(dir)
+                except ftplib.error_perm, info:
+                    print info
+            for filename in filenames:
+                print 'Store %s'%os.path.join(root, filename)
+                self.storbinary('STOR %s'%filename, file(os.path.join(root, filename), 'rb'))
 
 def uploadWebsiteToChello():
     print "Uploading website to Chello..."
     chello = SimpleFTP('members.chello.nl', 'f.niessink', '.chello_password')
     os.chdir('website.out')
-    chello.put(glob.glob('*') + glob.glob('*/*'))
+    chello.put('.')
     chello.quit()
     os.chdir('..')
     print 'Done uploading website to Chello.'
