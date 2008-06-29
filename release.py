@@ -41,7 +41,7 @@ import ftplib, taskcoachlib.meta, os, glob, sys, md5
 
 def uploadDistributionsToSourceForge():
     print 'Uploading distributions to SourceForge...'
-    os.system('ncftpput upload.sourceforge.net incoming dist/*')
+    os.system('rsync -avP -e ssh dist/* fniessink@frs.sourceforge.net:uploads/')
     print 'Done uploading distributions to SourceForge.'
 
 def generateMD5Digests():
