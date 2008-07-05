@@ -88,23 +88,27 @@ class DropTarget(wx.DropTarget):
     
     def OnData(self, x, y, result):
         self.GetData()
-        if self.__urlDataObject.GetText():
+
+        format = self.__compositeDataObject.GetReceivedFormat()
+
+        if format.GetType() in [ wx.DF_TEXT, wx.DF_UNICODETEXT ]:
             if self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, self.__urlDataObject.GetText())
-        elif self.__thunderbirdMailDataObject.GetData():
+        elif format.GetType() == wx.DF_FILENAME:
+            if self.__onDropFileCallback:
+                self.__onDropFileCallback(x, y, self.__fileDataObject.GetFilenames())
+        elif format.GetId() == 'text/x-moz-message':
             if self.__onDropMailCallback:
-                self.__onDropMailCallback(x, y, thunderbird.getMail(self.__thunderbirdMailDataObject.GetData().decode('unicode_internal')))
-        elif self.__macThunderbirdMailDataObject.GetData():
+                self.__onDropMailCallback(x, y,
+                     thunderbird.getMail(self.__thunderbirdMailDataObject.GetData().decode('unicode_internal')))
+        elif format.GetId() == 'MZ\x00\x00':
             if self.__onDropMailCallback:
-                self.__onDropMailCallback(x, y, thunderbird.getMail(self.__macThunderbirdMailDataObject.GetData().decode('unicode_internal')))
-        else:
-            files = self.__fileDataObject.GetFilenames()
-            if files:
-                if self.__onDropFileCallback:
-                    self.__onDropFileCallback(x, y, files)
-            else:
-                if self.__onDropMailCallback:
-                    for mail in outlook.getCurrentSelection():
-                        self.__onDropMailCallback(x, y, mail)
+                self.__onDropMailCallback(x, y,
+                     thunderbird.getMail(self.__macThunderbirdMailDataObject.GetData().decode('unicode_internal')))
+        elif format.GetId() == 'Object Descriptor':
+            if self.__onDropMailCallback:
+                for mail in outlook.getCurrentSelection():
+                    self.__onDropMailCallback(x, y, mail)
+
         self.reinit()
         return wx.DragCopy
