@@ -143,7 +143,7 @@ class XMLReader:
             kwargs['categories'] = self.__parseCategoryNodesWithinTaskNode(taskNode.childNodes)
         else:
             kwargs['categories'] = []
-        if self.__tskversion >= 20:
+        if self.__tskversion >= 21:
             kwargs['status'] = int(taskNode.getAttribute('status'))
         return task.Task(**kwargs)
     
@@ -152,7 +152,7 @@ class XMLReader:
             id=noteNode.getAttribute('id'),
             description=self.__parseDescription(noteNode),
             children=self.__parseNoteNodes(noteNode.childNodes))
-        if self.__tskversion >= 20:
+        if self.__tskversion >= 21:
             kwargs['status'] = int(noteNode.getAttribute('status'))
         return note.Note(**kwargs)
         
@@ -179,7 +179,7 @@ class XMLReader:
         
     def __parseEffortNode(self, effortNode):
         kwargs = {}
-        if self.__tskversion >= 20:
+        if self.__tskversion >= 21:
             kwargs['status'] = int(effortNode.getAttribute('status'))
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')

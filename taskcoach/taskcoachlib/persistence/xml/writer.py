@@ -23,7 +23,7 @@ from taskcoachlib.domain import date, attachment
 
 
 class XMLWriter:    
-    def __init__(self, fd, versionnr=20):
+    def __init__(self, fd, versionnr=21):
         self.__fd = fd
         self.__versionnr = versionnr
 
