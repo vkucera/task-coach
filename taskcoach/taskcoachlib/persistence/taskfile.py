@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, codecs, shutil, xml
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, task, category, note, effort
+from taskcoachlib.syncml.config import SyncMLConfigNode
+from taskcoachlib.thirdparty.guid import generate
 
 
 class TaskFile(patterns.Observable):
@@ -30,6 +32,8 @@ class TaskFile(patterns.Observable):
         self.__categories = category.CategoryList()
         self.__notes = note.NoteContainer()
         self.__efforts = effort.EffortList(self.tasks())
+        self.__syncMLConfig = SyncMLConfigNode('root')
+        self.__guid = generate()
         super(TaskFile, self).__init__(*args, **kwargs)
         # Register for tasks, categories, efforts and notes being changed so we 
         # can monitor when the task file needs saving (i.e. is 'dirty'):
@@ -90,7 +94,16 @@ class TaskFile(patterns.Observable):
     
     def efforts(self):
         return self.__efforts
-    
+
+    def syncMLConfig(self):
+        return self.__syncMLConfig
+
+    def guid(self):
+        return self.__guid
+
+    def setSyncMLConfig(self, config):
+        self.__syncMLConfig = config
+
     def isEmpty(self):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
             
@@ -147,6 +160,7 @@ class TaskFile(patterns.Observable):
         
     def close(self):
         self.setFilename('')
+        self.__guid = generate()
         self._clear()
         self.__needSave = False
 
@@ -167,16 +181,20 @@ class TaskFile(patterns.Observable):
         try:
             if self.exists():
                 fd = self._openForRead()
-                tasks, categories, notes = self._read(fd)
+                tasks, categories, notes, syncMLConfig, guid = self._read(fd)
                 fd.close()
             else: 
                 tasks = []
                 categories = []
                 notes = []
+                syncMLConfig = SyncMLConfigNode('root')
+                guid = generate()
             self._clear()
             self.tasks().extend(tasks)
             self.categories().extend(categories)
             self.notes().extend(notes)
+            self.__syncMLConfig = syncMLConfig
+            self.__guid = guid
         finally:
             self.__loading = False
             self.__needSave = False
@@ -184,7 +202,8 @@ class TaskFile(patterns.Observable):
     def save(self):
         self.notifyObservers(patterns.Event(self, 'taskfile.aboutToSave'))
         fd = self._openForWrite()
-        xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes())
+        xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
+                                self.syncMLConfig(), self.guid())
         fd.close()
         self.__needSave = False
         

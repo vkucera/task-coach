@@ -21,6 +21,7 @@ import StringIO
 import test
 from taskcoachlib import persistence
 from taskcoachlib.domain import task, category, effort, date, note, attachment
+from taskcoachlib.syncml.config import SyncMLConfigNode
 
 
 class IntegrationTestCase(test.TestCase):
@@ -32,18 +33,22 @@ class IntegrationTestCase(test.TestCase):
         self.taskList = task.TaskList()
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
+        self.syncMLConfig = SyncMLConfigNode('root')
+        self.guid = u'GUID'
         self.fillContainers()
-        tasks, categories, notes = self.readAndWrite()
+        tasks, categories, notes, syncMLConfig, guid = self.readAndWrite()
         self.tasksWrittenAndRead = task.TaskList(tasks)
         self.categoriesWrittenAndRead = category.CategoryList(categories)
         self.notesWrittenAndRead = note.NoteContainer(notes)
+        self.syncMLConfigWrittenAndRead = syncMLConfig
+        self.guidWrittenAndRead = guid
 
     def fillContainers(self):
         pass
 
     def readAndWrite(self):
         self.fd.seek(0)
-        self.writer.write(self.taskList, self.categories, self.notes)
+        self.writer.write(self.taskList, self.categories, self.notes, self.syncMLConfig, self.guid)
         self.fd.seek(0)
         return self.reader.read()
 
@@ -205,3 +210,9 @@ class IntegrationTest(IntegrationTestCase):
                         self.categoriesWrittenAndRead[0].categorizables())
         
 
+    def testSyncMLConfig(self):
+        self.assertEqual(self.syncMLConfigWrittenAndRead.name,
+                         self.syncMLConfig.name)
+
+    def testGUID(self):
+        self.assertEqual(self.guidWrittenAndRead, self.guid)

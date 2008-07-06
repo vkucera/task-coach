@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time, xml.dom.minidom, re, os
 from taskcoachlib.domain import date, effort, task, category, note, attachment
+from taskcoachlib.syncml.config import SyncMLConfigNode
+from taskcoachlib.thirdparty.guid import generate
 
 
 class XMLReader:
@@ -54,7 +56,10 @@ class XMLReader:
             categories = self.__parseCategoryNodes( \
                 domDocument.documentElement.childNodes, categorizablesById)
 
-        return tasks, categories, notes
+        syncMLConfig = self.__parseSyncMLNode(domDocument.documentElement.childNodes)
+        guid = self.__findGUIDNode(domDocument.documentElement.childNodes)
+
+        return tasks, categories, notes, syncMLConfig, guid
 
     def __parseTskVersionNumber(self, domDocument):
         processingInstruction = domDocument.firstChild.data
@@ -186,7 +191,31 @@ class XMLReader:
         description = self.__parseDescription(effortNode)
         return effort.Effort(None, date.parseDateTime(start), 
             date.parseDateTime(stop), description, **kwargs)
-        
+
+    def __parseSyncMLNode(self, nodes):
+        syncML = SyncMLConfigNode('root')
+
+        for node in nodes:
+            if node.nodeName == 'syncml':
+                self.__parseSyncMLNodes(node.childNodes, syncML)
+
+        return syncML
+
+    def __parseSyncMLNodes(self, nodes, cfgNode):
+        for node in nodes:
+            if node.nodeName == 'property':
+                cfgNode.set(node.getAttribute('name'), self.__parseTextNodeOrEmpty(node))
+            else:
+                childCfgNode = SyncMLConfigNode(node.nodeName)
+                cfgNode.addChild(childCfgNode)
+                self.__parseSyncMLNodes(node.childNodes, childCfgNode)
+
+    def __findGUIDNode(self, nodes):
+        for node in nodes:
+            if node.nodeName == 'guid':
+                return self.__parseTextNode(node)
+        return generate()
+
     def __getNode(self, parent, tagName):
         for child in parent.childNodes:
             if child.nodeName == tagName:
@@ -207,6 +236,11 @@ class XMLReader:
     def __parseTextNode(self, node):
         return node.firstChild.data
     
+    def __parseTextNodeOrEmpty(self, node):
+        if node.firstChild:
+            return node.firstChild.data
+        return u''
+
     def __parseInteger(self, integerText):
         return self.__parse(integerText, int, 0)
 

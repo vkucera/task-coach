@@ -32,6 +32,8 @@ class BaseSource(SyncSource):
         self.__dict__.update(state)
 
     def beginSync(self):
+        print 'LAST', self.lastAnchor
+
         if self.state == self.STATE_NONE:
             if self.syncMode == TWO_WAY:
                 self.lastLast = self.lastAnchor

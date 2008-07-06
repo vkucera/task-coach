@@ -244,7 +244,6 @@ class SyncMLPage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(SyncMLPage, self).__init__(*args, **kwargs)
 
-        self.addTextSetting('syncml', 'client', _('Client name'))
         self.addChoiceSetting('syncml', 'preferredsyncmode', _('Preferred synchonization mode'),
                               [('TWO_WAY', _('Two way')),
                                ('SLOW', _('Slow')),

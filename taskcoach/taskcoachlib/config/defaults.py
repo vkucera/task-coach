@@ -218,7 +218,6 @@ defaults = { \
     'notes': 'True' },
 'syncml': { \
     'url': '',
-    'client': 'TaskCoach',
     'username': '',
     'preferredsyncmode': 'TWO_WAY',
     'verbose': 'True',

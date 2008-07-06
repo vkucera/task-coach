@@ -23,6 +23,7 @@ import wx, StringIO # We cannot use CStringIO since unicode strings are used bel
 import test
 from taskcoachlib import persistence
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
+from taskcoachlib.syncml.config import SyncMLConfigNode
 
 
 class XMLWriterTest(test.TestCase):
@@ -37,7 +38,7 @@ class XMLWriterTest(test.TestCase):
             
     def __writeAndRead(self):
         self.writer.write(self.taskList, self.categoryContainer, 
-            self.noteContainer)
+            self.noteContainer, SyncMLConfigNode('root'), u'GUID')
         return self.fd.getvalue()
     
     def expectInXML(self, xmlFragment):
@@ -53,7 +54,10 @@ class XMLWriterTest(test.TestCase):
     def testVersion(self):
         from taskcoachlib import meta
         self.expectInXML('<?taskcoach release="%s"'%meta.data.version)
-        
+
+    def testGUID(self):
+        self.expectInXML('<guid>GUID</guid>')
+
     def testTaskSubject(self):
         self.task.setSubject('Subject')
         self.expectInXML('subject="Subject"')
@@ -97,7 +101,7 @@ class XMLWriterTest(test.TestCase):
         
     def testChildTask(self):
         self.task.addChild(task.Task(subject='child'))
-        self.expectInXML('subject="child"/></task></tasks>')
+        self.expectInXML('subject="child"/></task><syncml/><guid>GUID</guid></tasks>')
 
     def testEffort(self):
         taskEffort = effort.Effort(self.task, date.DateTime(2004,1,1),
