@@ -56,6 +56,10 @@ class ToolTipMixin(object):
 
         self.__tip.Show(x, y, myW, myH)
 
+    def DoShowTip(self, x, y, tip):
+        self.__tip = tip
+        self.ShowTip(x, y)
+
     def HideTip(self):
         if self.__tip:
             self.__tip.Hide()
