@@ -256,7 +256,7 @@ class ViewFilter_HideCompositeTasksTest(test.TestCase):
 
 class SearchFilterTest(test.TestCase):
     def setUp(self):
-        self.parent = task.Task(subject='ABC')
+        self.parent = task.Task(subject='*ABC')
         self.child = task.Task(subject='DEF')
         self.parent.addChild(self.child)
         self.list = task.TaskList([self.parent, self.child])
@@ -319,6 +319,10 @@ class SearchFilterTest(test.TestCase):
     def testIncludeSubItems(self):
         self.setSearchString('ABC', includeSubItems=True)
         self.assertEqual(2, len(self.filter))
+
+    def testInvalidRegex(self):
+        self.setSearchString('*')
+        self.assertEqual(1, len(self.filter))
 
 
 class CategoryFilterHelpers(object):
