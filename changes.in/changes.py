@@ -22,6 +22,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+Release('0.70.2', '???',
+        summary='''This release fixes a search bug and brings back
+the Fedora RPM.''',
+        bugsFixed=[
+          Bug('''When an invalid regular expression was entered inn
+a search control, no items were displayed. Additionnaly, if it was
+saved in TaskCoach.ini, TaskCoach would crash on launch later.'''),
+          Bug('''Mention of non-existing files in taskcoach.spec
+prevented the Fedora RPM from being built.''')
+          ],
+        featuresAdded=[
+          Feature('''Display a tooltip to warn user when a search
+string is an invalid regular expression. In this case, default to
+substring search.'''),
+          ],
+        ),
+
 Release('0.70.1', 'June 28, 2008',
     summary='''This release optionally brings back the tabbed user 
 interface that was removed in the previous release and fixes a few 
