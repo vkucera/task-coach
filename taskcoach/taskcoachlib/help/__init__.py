@@ -271,10 +271,10 @@ your Pocket PC.</p>
 
 _syncmlSetupSubsection = _('''<h4><a name="syncmlsetup">Setup</a></h4>
 
-<p>To setup SyncML, edit your preferences. Fill in the synchronization
-URL, your ID on the server and choose which items to synchronize
-(tasks and/or notes). The URL depends on the server you choose; some
-examples are:
+<p>To setup SyncML, edit the SyncML preferences in Edit/SyncML preferences.
+Fill in the synchronization URL, your ID on the server and choose which
+items to synchronize (tasks and/or notes). The URL depends on the server
+you choose; some examples are:
 
 <ul>
   <li><a href="http://www.scheduleworld.com/">ScheduleWorld</a>: http://sync.scheduleworld.com/funambol/ds</li>
@@ -282,7 +282,9 @@ examples are:
 </ul>
 
 The database names are pretty standard; the default values should work.</p>
-''')
+
+<p>Each task file has its own client ID, so that two different task files
+will de considered different "devices" by the server.</p>''')
 
 _syncmlLimitsSubsection = _('''<h4><a name="syncmllimits">Limitations</a></h4>
 
