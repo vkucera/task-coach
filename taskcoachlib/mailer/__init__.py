@@ -108,6 +108,11 @@ def writeMail(to, subject, body):
                 chars.append(urllib.quote(c))
         return ''.join(chars)
 
+    # FIXME: Very  strange things happen on  MacOS X. If  there is one
+    # non-ASCII character in the body, it works. If there is more than
+    # one, it fails.  Maybe we should use Mail.app  directly ? What if
+    # the user uses something else ?
+
     desktop.open(u'mailto:%s?subject=%s&body=%s' % (to,
                                                     unicode_quote(subject),
                                                     unicode_quote(body)))
