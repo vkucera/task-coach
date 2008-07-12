@@ -157,6 +157,11 @@ class NoteNewTest(test.TestCase):
         self.failUnless(firstChild.IsChecked())
 
 
+class MailNoteTest(test.TestCase):
+    def testCreate(self):
+        mailNote = gui.uicommand.NoteMail()
+
+
 class EditPreferencesTest(test.TestCase):
     def testEditPreferences(self):
         self.settings = config.Settings(load=False)

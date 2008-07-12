@@ -1614,6 +1614,24 @@ class NoteDragAndDrop(NotesCommand, DragAndDropCommand):
         return command.DragAndDropNoteCommand(self.notes, dragItem, 
                                                   drop=dropItem)
                          
+
+class NoteMail(NeedsSelectedNote, ViewerCommand):
+    def doCommand(self, event):
+        notes = self.viewer.curselection()
+        if len(notes) > 1:
+            subject = _('Notes')
+            bodyLines = []
+            for note in notes:
+                bodyLines.append(note.subject(recursive=True) + '\n')
+                if note.description():
+                    bodyLines.extend(note.description().splitlines())
+                    bodyLines.append('\n')
+        else:
+            subject = notes[0].subject(recursive=True)
+            bodyLines = notes[0].description().splitlines()
+        body = '\r\n'.join(bodyLines)
+        writeMail(_('Please enter recipient'), subject, body)
+
                                                         
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
@@ -1989,6 +2007,9 @@ class UICommands(dict, ViewColumnUICommandsMixin):
                                   categories=categories)
         self['newsubnote'] = NoteNewSubNote(viewer=viewerContainer, notes=notes)
         self['deletenote'] = NoteDelete(viewer=viewerContainer, notes=notes)
+        self['mailnote'] = NoteMail(viewer=viewerContainer, menuText=_('Mail note'),
+            helpText=_('Mail the note, using your default mailer'),
+            bitmap='email')
         self['editnote'] = NoteEdit(viewer=viewerContainer, notes=notes)
         
         # Help menu

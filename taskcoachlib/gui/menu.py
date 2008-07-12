@@ -377,7 +377,7 @@ class NoteMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(NoteMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['newnote', 'newsubnote', 'editnote',
-            'deletenote'])
+            'deletenote', 'mailnote'])
         
         
 class HelpMenu(Menu):
@@ -474,7 +474,7 @@ class NotePopupMenu(Menu):
         super(NotePopupMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None,
             'newtask', None, 'newnote', 'newsubnote', 'editnote', 'deletenote',
-            None, 'stopeffort', None, 'viewexpandselected', 
+            None, 'mailnote', None, 'stopeffort', None, 'viewexpandselected', 
             'viewcollapseselected'])
         
         

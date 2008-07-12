@@ -35,6 +35,7 @@ saved in TaskCoach.ini, TaskCoach would crash on launch later.'''),
 prevented the Fedora RPM from being built.''')
           ],
         featuresAdded=[
+          Feature('''Notes can be e-mailed.'''),
           Feature('''Display a tooltip to warn user when a search
 string is an invalid regular expression. In this case, default to
 substring search.'''),
