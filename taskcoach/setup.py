@@ -22,7 +22,6 @@ import platform
 from distutils.core import setup
 from taskcoachlib import meta
 
-
 setupOptions = { 
     'name': meta.filename,
     'author': meta.author,
@@ -35,7 +34,7 @@ setupOptions = {
     'packages': ['taskcoachlib'] + 
         ['taskcoachlib.' + subpackage for subpackage in ('application', 'meta', 
         'config', 'command', 'widgets', 'gui', 'gui.dialog', 'i18n', 'patterns', 
-        'mailer', 'help', 'domain', 'persistence', 'thirdparty')] +
+        'mailer', 'help', 'domain', 'persistence', 'thirdparty', 'syncml')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note', 'attachment')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
