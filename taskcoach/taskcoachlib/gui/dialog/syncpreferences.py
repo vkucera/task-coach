@@ -115,18 +115,18 @@ class SyncMLPreferences(widgets.ListbookDialog):
     def __init__(self, iocontroller=None, *args, **kwargs):
         self.iocontroller = iocontroller
 
-        super(SyncMLPreferences, self).__init__(bitmap='iocontrollerure', *args, **kwargs)
+        super(SyncMLPreferences, self).__init__(bitmap='configure', *args, **kwargs)
 
     def addPages(self):
-        self.SetMinSize((300, 500))
+        self.SetMinSize((300, 300))
 
         pages = [ (SyncMLAccessPage(parent=self._interior, columns=3, iocontroller=self.iocontroller,
                                     growableColumn=1),
-                   _('Access'), 'windows'),
+                   _('Access'), 'access'),
                   (SyncMLTaskPage(parent=self._interior, columns=3, iocontroller=self.iocontroller),
-                   _('Tasks'), 'windows'),
+                   _('Tasks'), 'taskcoach'),
                   (SyncMLNotePage(parent=self._interior, columns=3, iocontroller=self.iocontroller),
-                   _('Notes'), 'windows') ]
+                   _('Notes'), 'note') ]
 
         for page, title, bitmap in pages:
             self._interior.AddPage(page, title, bitmap=bitmap)
