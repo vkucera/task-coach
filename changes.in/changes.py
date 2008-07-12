@@ -26,6 +26,8 @@ Release('0.70.2', '???',
         summary='''This release fixes some bugs and brings back
 the Fedora RPM.''',
         bugsFixed=[
+          Bug('''Under KDE, the maximized state of the main window
+would not be restored.'''),
           Bug('''One couldn't e-mail tasks with non-ASCII characters
 in their description.'''),
           Bug('''When an invalid regular expression was entered inn

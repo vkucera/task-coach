@@ -68,7 +68,11 @@ class WindowDimensionsTracker(object):
     def onChangeSize(self, event):
         # Ignore the EVT_SIZE when the window is maximized. Note how this 
         # depends on the EVT_MAXIMIZE being sent before the EVT_SIZE
-        if not self._window.IsMaximized():
+        # Jerome, 2008/07/12: On my system (KDE 3.5.7), EVT_MAXIMIZE
+        # is not triggered, so set 'maximized' to True here...
+        if self._window.IsMaximized():
+            self.setSetting('maximized', True)
+        else:
             self.setSetting('size', event.GetSize())
             self.setSetting('maximized', False)
         event.Skip()
