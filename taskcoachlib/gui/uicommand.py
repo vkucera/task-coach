@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, urllib
+import wx
 from taskcoachlib import patterns, meta, command, help, widgets, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, attachment
-from taskcoachlib.thirdparty import desktop
+from taskcoachlib.mailer import writeMail
 import dialog, render, viewer
 
 
@@ -1330,10 +1330,8 @@ class TaskMail(NeedsSelectedTasks, ViewerCommand):
         else:
             subject = tasks[0].subject(recursive=True)
             bodyLines = tasks[0].description().splitlines()
-        body = urllib.quote('\r\n'.join(bodyLines))
-        mailToURL = 'mailto:%s?subject=%s&body=%s'%( \
-            _('Please enter recipient'), subject, body)
-        desktop.open(mailToURL)
+        body = '\r\n'.join(bodyLines)
+        writeMail(_('Please enter recipient'), subject, body)
 
 
 class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand, SettingsCommand):

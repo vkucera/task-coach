@@ -23,9 +23,11 @@ from changetypes import *
 
 releases = [
 Release('0.70.2', '???',
-        summary='''This release fixes a search bug and brings back
+        summary='''This release fixes some bugs and brings back
 the Fedora RPM.''',
         bugsFixed=[
+          Bug('''One couldn't e-mail tasks with non-ASCII characters
+in their description.'''),
           Bug('''When an invalid regular expression was entered inn
 a search control, no items were displayed. Additionnaly, if it was
 saved in TaskCoach.ini, TaskCoach would crash on launch later.'''),
