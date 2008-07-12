@@ -89,7 +89,7 @@ iconlist = [
 ('windows', 'apps', 'window_list', [22]),
 ('email', 'apps', 'email', [16, 22]),
 ('behavior', 'actions', 'misc', [22]),
-('sync', 'actions', 'mail_send', [16, 22]),
+('sync', 'actions', 'kaboodleloop', [16, 22]),
 ('attachment', 'actions', 'attach', [16, 22]),
 ('maxpriority', 'actions', '2uparrow', [16]),
 ('minpriority', 'actions', '2downarrow', [16]),
