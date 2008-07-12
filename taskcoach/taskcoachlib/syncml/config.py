@@ -28,3 +28,9 @@ class SyncMLConfigNode(object):
 
     def set(self, name, value):
         self.__properties[name] = value
+
+    def __getitem__(self, name):
+        for child in self.__children:
+            if child.name == name:
+                return child
+        raise KeyError, name

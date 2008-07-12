@@ -46,6 +46,12 @@ class IOController(object):
             'default_extension': 'csv', 'wildcard': 
             _('CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*')}
 
+    def syncMLConfig(self):
+        return self.__taskFile.syncMLConfig()
+
+    def setSyncMLConfig(self, config):
+        self.__taskFile.setSyncMLConfig(config)
+
     def needSave(self):
         return self.__taskFile.needSave()
     
@@ -184,16 +190,8 @@ class IOController(object):
             return False
         
     def synchronize(self, password):
-        synchronizer = sync.Synchronizer(self.__settings.get('syncml', 'preferredsyncmode'),
-                                         self.__settings.getboolean('syncml', 'verbose'),
-                                         self.__syncReport, self, self.__taskFile,
-                                         self.__settings.get('syncml', 'url'),
-                                         self.__settings.get('syncml', 'username'),
-                                         password,
-                                         self.__settings.get('syncml', 'taskdbname'),
-                                         self.__settings.getboolean('syncml', 'synctasks'),
-                                         self.__settings.get('syncml', 'notedbname'),
-                                         self.__settings.getboolean('syncml', 'syncnotes'))
+        synchronizer = sync.Synchronizer(self.__syncReport, self, self.__taskFile,
+                                         password)
         try:
             synchronizer.synchronize()
         finally:

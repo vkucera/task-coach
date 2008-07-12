@@ -737,6 +737,19 @@ class EditPreferences(MainWindowCommand, SettingsCommand):
         editor.Show(show=show)
 
 
+class EditSyncPreferences(MainWindowCommand, IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(EditSyncPreferences, self).__init__(menuText=_('SyncML preferences...'),
+            helpText=_('Edit SyncML preferences'), bitmap='sync',
+            *args, **kwargs)
+
+    def doCommand(self, event, show=True):
+        editor = dialog.syncpreferences.SyncMLPreferences(parent=self.mainwindow,
+            iocontroller=self.iocontroller,
+            title=_('Edit SyncML preferences'))
+        editor.Show(show=show)
+
+
 class SelectAll(NeedsItems, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(SelectAll, self).__init__(menuText=_('&All\tCtrl+A'),
@@ -1822,7 +1835,9 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['pasteintotask'] = EditPasteIntoTask(viewer=viewerContainer)
         self['editpreferences'] = EditPreferences(mainwindow=mainwindow, 
                                                   settings=settings)
-        
+        self['editsyncpreferences'] = EditSyncPreferences(mainwindow=mainwindow,
+                                                          iocontroller=iocontroller)
+
         # Selection commands
         self['selectall'] = SelectAll(viewer=viewerContainer)
         self['invertselection'] = InvertSelection(viewer=viewerContainer)

@@ -24,6 +24,27 @@ from taskcoachlib.syncml.config import SyncMLConfigNode
 from taskcoachlib.thirdparty.guid import generate
 
 
+def createDefaultSyncConfig(uid):
+    cfg = SyncMLConfigNode('root')
+    root = SyncMLConfigNode('TaskCoach-%s' % uid)
+    cfg.addChild(root)
+    spds = SyncMLConfigNode('spds')
+    root.addChild(spds)
+    sources = SyncMLConfigNode('sources')
+    spds.addChild(sources)
+    syncml = SyncMLConfigNode('syncml')
+    spds.addChild(syncml)
+    tasks = SyncMLConfigNode('TaskCoach-%s.Tasks' % uid)
+    sources.addChild(tasks)
+    notes = SyncMLConfigNode('TaskCoach-%s.Notes' % uid)
+    sources.addChild(notes)
+    auth = SyncMLConfigNode('Auth')
+    syncml.addChild(auth)
+    conn = SyncMLConfigNode('Conn')
+    syncml.addChild(conn)
+
+    return cfg
+
 class TaskFile(patterns.Observable):
     def __init__(self, filename='', *args, **kwargs):
         self.__filename = self.__lastFilename = filename
@@ -32,8 +53,8 @@ class TaskFile(patterns.Observable):
         self.__categories = category.CategoryList()
         self.__notes = note.NoteContainer()
         self.__efforts = effort.EffortList(self.tasks())
-        self.__syncMLConfig = SyncMLConfigNode('root')
         self.__guid = generate()
+        self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
         super(TaskFile, self).__init__(*args, **kwargs)
         # Register for tasks, categories, efforts and notes being changed so we 
         # can monitor when the task file needs saving (i.e. is 'dirty'):
@@ -103,6 +124,7 @@ class TaskFile(patterns.Observable):
 
     def setSyncMLConfig(self, config):
         self.__syncMLConfig = config
+        self.markDirty()
 
     def isEmpty(self):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
@@ -157,6 +179,8 @@ class TaskFile(patterns.Observable):
         self.tasks().removeItems(list(self.tasks()))
         self.categories().removeItems(list(self.categories()))
         self.notes().removeItems(list(self.notes()))
+        self.__guid = generate()
+        self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
         
     def close(self):
         self.setFilename('')
@@ -187,8 +211,8 @@ class TaskFile(patterns.Observable):
                 tasks = []
                 categories = []
                 notes = []
-                syncMLConfig = SyncMLConfigNode('root')
                 guid = generate()
+                syncMLConfig = createDefaultSyncConfig(guid)
             self._clear()
             self.tasks().extend(tasks)
             self.categories().extend(categories)

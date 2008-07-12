@@ -268,7 +268,7 @@ class EditMenu(Menu):
             'copy', 'paste', 'pasteintotask', None])
         # the spaces are to leave room for command names in the Undo and Redo menuitems:
         self.appendMenu(_('&Select')+' '*50, SelectMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, [None, 'editpreferences'])
+        self.appendUICommands(uiCommands, [None, 'editpreferences', 'editsyncpreferences'])
 
 
 class SelectMenu(Menu):

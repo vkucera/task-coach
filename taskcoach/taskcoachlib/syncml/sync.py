@@ -73,29 +73,29 @@ class TaskCoachDMTClientConfig(DMTClientConfig):
         return TaskCoachDMTree(self.__syncMLConfig, rootContext)
 
 class Synchronizer(wx.ProgressDialog):
-    def __init__(self, mode, verbose, reportCallback,
-                 conflictCallback, taskFile, url, username, password,
-                 taskdbname, synctasks,
-                 notedbname, syncnotes):
+    def __init__(self, reportCallback, conflictCallback, taskFile, password):
         super(Synchronizer, self).__init__(_('Synchronization'),
                                            _('Synchronizing. Please wait.\n\n\n'))
 
         self.clientName = 'TaskCoach-%s' % taskFile.guid().encode('UTF-8')
-        self.verbose = verbose
         self.reportCallback = reportCallback
         self.conflictCallback = conflictCallback
         self.taskFile = taskFile
 
-        self.username = username.encode('UTF-8') # Hum...
+        cfg = taskFile.syncMLConfig()
+
+        self.username = cfg[self.clientName]['spds']['syncml']['Auth'].get('username').encode('UTF-8') # Hum...
         self.password = password.encode('UTF-8')
-        self.url = url.encode('UTF-8')
+        self.url = cfg[self.clientName]['spds']['syncml']['Conn'].get('syncUrl').encode('UTF-8')
 
-        self.synctasks = synctasks
-        self.syncnotes = syncnotes
-        self.taskdbname = taskdbname.encode('UTF-8')
-        self.notedbname = notedbname.encode('UTF-8')
+        self.synctasks = cfg[self.clientName]['spds']['sources']['%s.Tasks' % self.clientName].get('dosync') == 'True'
+        self.syncnotes = cfg[self.clientName]['spds']['sources']['%s.Notes' % self.clientName].get('dosync') == 'True'
 
-        self.mode = mode
+        self.taskdbname = cfg[self.clientName]['spds']['sources']['%s.Tasks' % self.clientName].get('uri').encode('UTF-8')
+        self.notedbname = cfg[self.clientName]['spds']['sources']['%s.Notes' % self.clientName].get('uri').encode('UTF-8')
+
+        self.taskmode = cfg[self.clientName]['spds']['sources']['%s.Tasks' % self.clientName].get('preferredsyncmode')
+        self.notemode = cfg[self.clientName]['spds']['sources']['%s.Notes' % self.clientName].get('preferredsyncmode')
 
     def init(self):
         self.dmt = TaskCoachDMTClientConfig(self.taskFile.syncMLConfig(), self.clientName)
@@ -134,10 +134,12 @@ class Synchronizer(wx.ProgressDialog):
 
             self.dmt.setSyncSourceConfig(cfg)
 
-            self.sources.append(TaskSource(self,
-                                           self.taskFile.tasks(),
-                                           self.taskFile.categories(),
-                                           '%s.Tasks' % self.clientName, cfg))
+            src = TaskSource(self,
+                             self.taskFile.tasks(),
+                             self.taskFile.categories(),
+                             '%s.Tasks' % self.clientName, cfg)
+            src.preferredSyncMode = globals()[self.taskmode]
+            self.sources.append(src)
 
         if self.syncnotes:
             try:
@@ -153,12 +155,11 @@ class Synchronizer(wx.ProgressDialog):
 
             self.dmt.setSyncSourceConfig(cfg)
 
-            self.sources.append(NoteSource(self,
-                                           self.taskFile.notes(),
-                                           '%s.Notes' % self.clientName, cfg))
-
-        for source in self.sources:
-            source.preferredSyncMode = globals()[self.mode] # Hum
+            src = NoteSource(self,
+                             self.taskFile.notes(),
+                             '%s.Notes' % self.clientName, cfg)
+            src.preferredSyncMode = globals()[self.notemode]
+            self.sources.append(src)
 
     def onAddItem(self):
         self.added += 1

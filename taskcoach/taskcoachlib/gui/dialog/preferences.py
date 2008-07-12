@@ -25,10 +25,9 @@ from taskcoachlib import meta, widgets
 from taskcoachlib.i18n import _
 
 
-class SettingsPage(widgets.BookPage):
-    def __init__(self, settings=None, *args, **kwargs):
-        super(SettingsPage, self).__init__(*args, **kwargs)
-        self.settings = settings
+class SettingsPageBase(widgets.BookPage):
+    def __init__(self, *args, **kwargs):
+        super(SettingsPageBase, self).__init__(*args, **kwargs)
         self._booleanSettings = []
         self._choiceSettings = []
         self._integerSettings = []
@@ -38,7 +37,7 @@ class SettingsPage(widgets.BookPage):
         
     def addBooleanSetting(self, section, setting, text, helpText=''):
         checkBox = wx.CheckBox(self, -1)
-        checkBox.SetValue(self.settings.getboolean(section, setting))
+        checkBox.SetValue(self.getboolean(section, setting))
         self.addEntry(text, checkBox, helpText)
         self._booleanSettings.append((section, setting, checkBox))
 
@@ -46,7 +45,7 @@ class SettingsPage(widgets.BookPage):
         choice = wx.Choice(self, -1)
         for choiceValue, choiceText in choices:
             choice.Append(choiceText, choiceValue)
-            if choiceValue == self.settings.get(section, setting):
+            if choiceValue == self.get(section, setting):
                 choice.SetSelection(choice.GetCount()-1)
         if choice.GetSelection() == wx.NOT_FOUND: # force a selection if necessary
             choice.SetSelection(0)
@@ -56,44 +55,76 @@ class SettingsPage(widgets.BookPage):
     def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100,
             helpText=''):
         spin = wx.SpinCtrl(self, min=minimum, max=maximum, size=(40, -1),
-            value=str(self.settings.getint(section, setting)))
+            value=str(self.getint(section, setting)))
         self.addEntry(text, spin, helpText)
         self._integerSettings.append((section, setting, spin))
 
     def addColorSetting(self, section, setting, text):
         colorButton = widgets.ColorSelect(self, -1, text,
-            eval(self.settings.get(section, setting)))
+            eval(self.get(section, setting)))
         self.addEntry(None, colorButton)
         self._colorSettings.append((section, setting, colorButton))
 
     def addPathSetting(self, section, setting, text, helpText=''):
         pathChooser = widgets.DirectoryChooser(self, wx.ID_ANY)
-        pathChooser.SetPath(self.settings.get(section, setting))
+        pathChooser.SetPath(self.get(section, setting))
         self.addEntry(text, pathChooser, helpText)
         self._pathSettings.append((section, setting, pathChooser))
 
     def addTextSetting(self, section, setting, text, helpText=''):
-        textChooser = wx.TextCtrl(self, wx.ID_ANY, self.settings.get(section, setting))
+        textChooser = wx.TextCtrl(self, wx.ID_ANY, self.get(section, setting))
         self.addEntry(text, textChooser, helpText)
         self._textSettings.append((section, setting, textChooser))
 
     def addText(self, label, text):
         self.addEntry(label, text)
-                
+
     def ok(self):
         for section, setting, checkBox in self._booleanSettings:
-            self.settings.set(section, setting, str(checkBox.IsChecked()))
+            self.set(section, setting, str(checkBox.IsChecked()))
         for section, setting, choice in self._choiceSettings:
-            self.settings.set(section, setting, 
+            self.set(section, setting, 
                               choice.GetClientData(choice.GetSelection()))
         for section, setting, spin in self._integerSettings:
-            self.settings.set(section, setting, str(spin.GetValue()))
+            self.set(section, setting, str(spin.GetValue()))
         for section, setting, colorButton in self._colorSettings:
-            self.settings.set(section, setting, str(colorButton.GetColour()))
+            self.set(section, setting, str(colorButton.GetColour()))
         for section, setting, btn in self._pathSettings:
-            self.settings.set(section, setting, btn.GetPath())
+            self.set(section, setting, btn.GetPath())
         for section, setting, txt in self._textSettings:
-            self.settings.set(section, setting, txt.GetValue())
+            self.set(section, setting, txt.GetValue())
+
+    def get(self, section, name):
+        raise NotImplementedError
+
+    def getint(self, section, name):
+        return int(self.get(section, name))
+
+    def getboolean(self, section, name):
+        return self.get(section, name) == 'True'
+
+    def set(self, section, name, value):
+        raise NotImplementedError
+
+
+class SettingsPage(SettingsPageBase):
+    def __init__(self, settings=None, *args, **kwargs):
+        self.settings = settings
+
+        super(SettingsPage, self).__init__(*args, **kwargs)
+
+    def get(self, section, name):
+        return self.settings.get(section, name)
+
+    def getint(self, section, name):
+        return self.settings.getint(section, name)
+
+    def getboolean(self, section, name):
+        return self.settings.getboolean(section, name)
+
+    def set(self, section, name, value):
+        self.settings.set(section, name, value)
+
 
 class SavePage(SettingsPage):
     def __init__(self, *args, **kwargs):
@@ -240,29 +271,6 @@ class EditorPage(SettingsPage):
             self.settings.getboolean('editor', 'maccheckspelling')
 
 
-class SyncMLPage(SettingsPage):
-    def __init__(self, *args, **kwargs):
-        super(SyncMLPage, self).__init__(*args, **kwargs)
-
-        self.addChoiceSetting('syncml', 'preferredsyncmode', _('Preferred synchonization mode'),
-                              [('TWO_WAY', _('Two way')),
-                               ('SLOW', _('Slow')),
-                               ('ONE_WAY_FROM_CLIENT', _('One way from client')),
-                               ('REFRESH_FROM_CLIENT', _('Refresh from client')),
-                               ('ONE_WAY_FROM_SERVER', _('One way from server')),
-                               ('REFRESH_FROM_SERVER', _('Refresh from server'))])
-
-        self.addBooleanSetting('syncml', 'verbose', _('Always display synchronization report'))
-        self.addBooleanSetting('syncml', 'synctasks', _('Enable tasks synchronization'))
-        self.addBooleanSetting('syncml', 'syncnotes', _('Enable notes synchronization'))
-
-        self.addTextSetting('syncml', 'url', _('SyncML server URL'))
-        self.addTextSetting('syncml', 'username', _('User name/ID'))
-        self.addTextSetting('syncml', 'taskdbname', _('Tasks database name'))
-        self.addTextSetting('syncml', 'notedbname', _('Notes database name'))
-
-        self.fit()
-
 class Preferences(widgets.ListbookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
@@ -276,8 +284,7 @@ class Preferences(widgets.ListbookDialog):
             (SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), 'save'),
             (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'language'),
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'colorize'),
-            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior'),
-            (SyncMLPage(parent=self._interior, columns=3, settings=self.settings), _('SyncML'), 'sync')]
+            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior')]
         if '__WXMAC__' in wx.PlatformInfo:
             pages.append((EditorPage(parent=self._interior, columns=2, settings=self.settings), _('Editor'), 'edit'))
         for page, title, bitmap in pages:
