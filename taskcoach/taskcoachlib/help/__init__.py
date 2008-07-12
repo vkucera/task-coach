@@ -55,6 +55,7 @@ _TOC = _('''<h3>Table of contents</h3>
     <li><a href="#aboutsyncml">What is SyncML</a></li>
     <li><a href="#syncmlsetup">Setup</a></li>
     <li><a href="#syncmllimits">Limitations</a></li>
+    <li><a href="#syncmltrouble">Troubleshooting</a></li>
   </ul>
 </li>
 </ul>
@@ -299,13 +300,31 @@ _syncmlLimitsSubsection = _('''<h4><a name="syncmllimits">Limitations</a></h4>
 </p>
 ''')
 
+_syncmlTroubleSubsection = _('''<h4><a name="syncmltrouble">Troubleshooting</a></h4>
+
+<p>The SyncML menu items are only present if youur platform is supported.
+Currently supported platforms are:
+
+  <ul>
+    <li>Windows, 32 bits (see below)</li>
+    <li>Linux, 32 bits</li>
+    <li>Mac OS 10.3 and later, both Intel and PPC</li>
+  </ul>
+
+You may experience problems under Windows if you don't have the Microsoft
+Visual 8 runtime installed. You can download it on the
+<a href="http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en">
+Microsoft download site</a>.
+</p>
+''')
+
 helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _taskPropertiesSubsection + _taskStatesSubsection + _taskColorsSubsection + \
     _effortSection + _aboutEffortSubsection + _effortPropertiesSubsection + \
     _categorySection + _aboutCategoriesSubSection + _categoryPropertiesSubSection + \
     _emailSection + _aboutEmailSubsection + _emailAttachingSubsection + _emailCreatingSubsection + \
     _syncmlSection + _aboutSyncmlSubsection + _syncmlSetupSubsection + \
-    _syncmlLimitsSubsection
+    _syncmlLimitsSubsection + _syncmlTroubleSubsection
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
 <h5>Version %(version)s, %(date)s</h5>
