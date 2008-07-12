@@ -20,30 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, codecs, shutil, xml
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, task, category, note, effort
-from taskcoachlib.syncml.config import SyncMLConfigNode
+from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 
-
-def createDefaultSyncConfig(uid):
-    cfg = SyncMLConfigNode('root')
-    root = SyncMLConfigNode('TaskCoach-%s' % uid)
-    cfg.addChild(root)
-    spds = SyncMLConfigNode('spds')
-    root.addChild(spds)
-    sources = SyncMLConfigNode('sources')
-    spds.addChild(sources)
-    syncml = SyncMLConfigNode('syncml')
-    spds.addChild(syncml)
-    tasks = SyncMLConfigNode('TaskCoach-%s.Tasks' % uid)
-    sources.addChild(tasks)
-    notes = SyncMLConfigNode('TaskCoach-%s.Notes' % uid)
-    sources.addChild(notes)
-    auth = SyncMLConfigNode('Auth')
-    syncml.addChild(auth)
-    conn = SyncMLConfigNode('Conn')
-    syncml.addChild(conn)
-
-    return cfg
 
 class TaskFile(patterns.Observable):
     def __init__(self, filename='', *args, **kwargs):

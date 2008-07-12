@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time, xml.dom.minidom, re, os
 from taskcoachlib.domain import date, effort, task, category, note, attachment
-from taskcoachlib.syncml.config import SyncMLConfigNode
+from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 
 
@@ -56,8 +56,8 @@ class XMLReader:
             categories = self.__parseCategoryNodes( \
                 domDocument.documentElement.childNodes, categorizablesById)
 
-        syncMLConfig = self.__parseSyncMLNode(domDocument.documentElement.childNodes)
         guid = self.__findGUIDNode(domDocument.documentElement.childNodes)
+        syncMLConfig = self.__parseSyncMLNode(domDocument.documentElement.childNodes, guid)
 
         return tasks, categories, notes, syncMLConfig, guid
 
@@ -192,8 +192,8 @@ class XMLReader:
         return effort.Effort(None, date.parseDateTime(start), 
             date.parseDateTime(stop), description, **kwargs)
 
-    def __parseSyncMLNode(self, nodes):
-        syncML = SyncMLConfigNode('root')
+    def __parseSyncMLNode(self, nodes, guid):
+        syncML = createDefaultSyncConfig(guid)
 
         for node in nodes:
             if node.nodeName == 'syncml':

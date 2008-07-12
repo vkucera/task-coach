@@ -12,6 +12,7 @@ class SyncMLBasePage(SettingsPageBase):
         self.config = iocontroller.syncMLConfig()
 
     def get(self, section, name):
+        print self.config.children()
         if section == 'access':
             if name in [ 'syncUrl' ]:
                 return str(self.config.children()[0]['spds']['syncml']['Conn'].get(name))

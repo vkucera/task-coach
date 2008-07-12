@@ -34,3 +34,24 @@ class SyncMLConfigNode(object):
             if child.name == name:
                 return child
         raise KeyError, name
+
+def createDefaultSyncConfig(uid):
+    cfg = SyncMLConfigNode('root')
+    root = SyncMLConfigNode('TaskCoach-%s' % uid)
+    cfg.addChild(root)
+    spds = SyncMLConfigNode('spds')
+    root.addChild(spds)
+    sources = SyncMLConfigNode('sources')
+    spds.addChild(sources)
+    syncml = SyncMLConfigNode('syncml')
+    spds.addChild(syncml)
+    tasks = SyncMLConfigNode('TaskCoach-%s.Tasks' % uid)
+    sources.addChild(tasks)
+    notes = SyncMLConfigNode('TaskCoach-%s.Notes' % uid)
+    sources.addChild(notes)
+    auth = SyncMLConfigNode('Auth')
+    syncml.addChild(auth)
+    conn = SyncMLConfigNode('Conn')
+    syncml.addChild(conn)
+
+    return cfg
