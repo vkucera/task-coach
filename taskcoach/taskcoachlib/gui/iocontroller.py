@@ -20,8 +20,13 @@ import wx, os, sys, codecs, traceback
 from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task
-from taskcoachlib.syncml import sync
-from taskcoachlib.widgets import conflict
+
+try:
+    from taskcoachlib.syncml import sync
+    from taskcoachlib.widgets import conflict
+except ImportError:
+    # Unsupported platform.
+    pass
 
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,

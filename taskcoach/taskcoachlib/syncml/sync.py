@@ -184,6 +184,10 @@ class Synchronizer(wx.ProgressDialog):
                             % (code, msg))
 
     def synchronize(self):
+        if not self.username:
+            self.reportCallback(_('You must first edit your SyncML Settings, in Edit/SyncML preferences.'))
+            return False
+
         self.Centre()
         self.Show()
 

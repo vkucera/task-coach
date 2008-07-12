@@ -218,7 +218,12 @@ class FileMenu(Menu):
             'printpreview', 'print', None])
         self.appendMenu(_('&Export'), ExportMenu(mainwindow, uiCommands),
             'export')
-        self.appendUICommands(uiCommands, [None, 'synchronize'])
+        try:
+            import _pysyncml
+        except ImportError:
+            pass
+        else:
+            self.appendUICommands(uiCommands, [None, 'synchronize'])
         self.__recentFilesStartPosition = len(self) 
         self.appendUICommands(uiCommands, [None, 'quit'])
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
@@ -268,7 +273,13 @@ class EditMenu(Menu):
             'copy', 'paste', 'pasteintotask', None])
         # the spaces are to leave room for command names in the Undo and Redo menuitems:
         self.appendMenu(_('&Select')+' '*50, SelectMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, [None, 'editpreferences', 'editsyncpreferences'])
+        self.appendUICommands(uiCommands, [None, 'editpreferences'])
+        try:
+            import _pysyncml
+        except ImportError:
+            pass
+        else:
+            self.appendUICommands(uiCommands, ['editsyncpreferences'])
 
 
 class SelectMenu(Menu):

@@ -559,11 +559,8 @@ class FileExportAsCSV(IOCommand, ViewerCommand):
         self.iocontroller.exportAsCSV(self.viewer)
 
 
-class FileSynchronize(NeedsSetting, IOCommand, SettingsCommand):
+class FileSynchronize(IOCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        kwargs['section'] = 'syncml'
-        kwargs['setting'] = 'url'
-
         super(FileSynchronize, self).__init__(menuText=_('S&yncML synchronization'),
             helpText=_('Synchronize with a SyncML server'),
             bitmap='sync', *args, **kwargs)
