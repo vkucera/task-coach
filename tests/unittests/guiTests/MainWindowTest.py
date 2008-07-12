@@ -84,4 +84,5 @@ class MainWindowMaximizedTest(MainWindowMaximizeTest):
     maximized = True
 
     def testCreate(self):
-        self.failUnless(self.mainwindow.IsMaximized())
+        if '__WXMAC__' not in wx.PlatformInfo:
+            self.failUnless(self.mainwindow.IsMaximized())
