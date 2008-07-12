@@ -12,7 +12,6 @@ class SyncMLBasePage(SettingsPageBase):
         self.config = iocontroller.syncMLConfig()
 
     def get(self, section, name):
-        print self.config.children()
         if section == 'access':
             if name in [ 'syncUrl' ]:
                 return str(self.config.children()[0]['spds']['syncml']['Conn'].get(name))
@@ -119,7 +118,7 @@ class SyncMLPreferences(widgets.ListbookDialog):
         super(SyncMLPreferences, self).__init__(bitmap='iocontrollerure', *args, **kwargs)
 
     def addPages(self):
-        self.SetMinSize((300, 300))
+        self.SetMinSize((300, 500))
 
         pages = [ (SyncMLAccessPage(parent=self._interior, columns=3, iocontroller=self.iocontroller,
                                     growableColumn=1),

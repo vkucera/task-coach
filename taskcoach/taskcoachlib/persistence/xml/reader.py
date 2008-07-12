@@ -206,8 +206,12 @@ class XMLReader:
             if node.nodeName == 'property':
                 cfgNode.set(node.getAttribute('name'), self.__parseTextNodeOrEmpty(node))
             else:
-                childCfgNode = SyncMLConfigNode(node.nodeName)
-                cfgNode.addChild(childCfgNode)
+                for childCfgNode in cfgNode.children():
+                    if childCfgNode.name == node.nodeName:
+                        break
+                else:
+                    childCfgNode = SyncMLConfigNode(node.nodeName)
+                    cfgNode.addChild(childCfgNode)
                 self.__parseSyncMLNodes(node.childNodes, childCfgNode)
 
     def __findGUIDNode(self, nodes):
