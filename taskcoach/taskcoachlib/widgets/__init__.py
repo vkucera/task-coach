@@ -33,6 +33,7 @@ from colorselect import ColorSelect
 from searchctrl import SearchCtrl
 from tooltip import ToolTipMixin, SimpleToolTip
 from dirchooser import DirectoryChooser
+from syncmlwarning import SyncMLWarningDialog
 try:
     try:
         from wx.lib import sized_controls # wx 2.8.8 and later

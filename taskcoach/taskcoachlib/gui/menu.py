@@ -220,8 +220,8 @@ class FileMenu(Menu):
             'export')
         try:
             import _pysyncml
-        except ImportError:
-            pass
+        except ImportError, e:
+            print str(e)
         else:
             self.appendUICommands(uiCommands, [None, 'synchronize'])
         self.__recentFilesStartPosition = len(self) 

@@ -38,7 +38,7 @@ class WindowDimensionsTracker(object):
         if self.startIconized():
             self._window.Iconize(True)
             wx.CallAfter(self._window.Hide)
-            
+
     def startIconized(self):
         startIconized = self._settings.get(self._section, 'starticonized')
         if startIconized == 'Always':
@@ -160,6 +160,17 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.registerForWindowComponentChanges()
         wx.CallAfter(self.closeSplash)
         wx.CallAfter(self.showTips)
+
+        try:
+            import _pysyncml
+        except ImportError, e:
+            if settings.getboolean('syncml', 'showwarning'):
+                dlg = widgets.SyncMLWarningDialog(self)
+                try:
+                    if dlg.ShowModal() == wx.ID_OK:
+                        settings.setboolean('syncml', 'showwarning', False)
+                finally:
+                    dlg.Destroy()
 
     def createWindowComponents(self):
         self.viewer = viewercontainer.ViewerContainer(self,

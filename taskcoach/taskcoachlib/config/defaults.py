@@ -225,6 +225,7 @@ defaults = { \
     'notedbname': 'note',
     'synctasks': 'False',
     'syncnotes': 'False',
+    'showwarning': 'True',
     },
 }
 
