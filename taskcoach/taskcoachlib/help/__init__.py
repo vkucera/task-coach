@@ -304,7 +304,7 @@ _syncmlLimitsSubsection = _('''<h4><a name="syncmllimits">Limitations</a></h4>
 
 _syncmlTroubleSubsection = _('''<h4><a name="syncmltrouble">Troubleshooting</a></h4>
 
-<p>The SyncML menu items are only present if youur platform is supported.
+<p>The SyncML menu items are only present if your platform is supported.
 Currently supported platforms are:
 
   <ul>
