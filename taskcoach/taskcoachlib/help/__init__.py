@@ -315,7 +315,7 @@ Currently supported platforms are:
 
 You may experience problems under Windows if you don't have the Microsoft
 Visual 8 runtime installed. You can download it on the
-<a href="http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en">
+<a target="_blank" href="http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en">
 Microsoft download site</a>.
 </p>
 ''')
