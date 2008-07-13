@@ -163,7 +163,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
 
         try:
             import _pysyncml
-        except ImportError, e:
+        except ImportError:
             if settings.getboolean('syncml', 'showwarning'):
                 dlg = widgets.SyncMLWarningDialog(self)
                 try:

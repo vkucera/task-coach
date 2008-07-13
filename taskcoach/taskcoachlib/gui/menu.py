@@ -221,7 +221,7 @@ class FileMenu(Menu):
         try:
             import _pysyncml
         except ImportError, e:
-            print str(e)
+            pass
         else:
             self.appendUICommands(uiCommands, [None, 'synchronize'])
         self.__recentFilesStartPosition = len(self) 
