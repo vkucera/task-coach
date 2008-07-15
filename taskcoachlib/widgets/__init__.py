@@ -34,6 +34,10 @@ from searchctrl import SearchCtrl
 from tooltip import ToolTipMixin, SimpleToolTip
 from dirchooser import DirectoryChooser
 try:
-    from wxaddons import sized_controls
-except ImportError:
-    from taskcoachlib.thirdparty import sized_controls
+    try:
+        from wx.lib import sized_controls
+    except ImportError:
+        try:
+            from wxaddons import sized_controls
+        except ImportError:
+            from taskcoachlib.thirdparty import sized_controls
