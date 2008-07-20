@@ -41,7 +41,7 @@ class TaskSource(basesource.BaseSource):
         if local.completionDate() != remote.completionDate():
             result |= self.CONFLICT_COMPLETIONDATE
 
-        localCategories = map(unicode, local.categories())
+        localCategories = map(unicode, local.categories(True))
         remoteCategories = map(unicode, remote.categories())
 
         localCategories.sort()

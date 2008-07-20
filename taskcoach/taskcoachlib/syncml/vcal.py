@@ -177,7 +177,7 @@ def VCalFromTask(task):
     values = { 'description': quoteString(task.description()),
                'subject': quoteString(task.subject()),
                'priority': min(3, task.priority() + 1),
-               'categories': ','.join(map(quoteString, [unicode(c) for c in task.categories()])) }
+               'categories': ','.join(map(quoteString, [unicode(c) for c in task.categories(True)])) }
 
     components.append('BEGIN:VCALENDAR')
     components.append('VERSION: 1.0')
@@ -196,7 +196,7 @@ def VCalFromTask(task):
         components.append('COMPLETED:%(completionDate)s')
         values['completionDate'] = fmtDate(task.completionDate())
 
-    if task.categories():
+    if task.categories(True):
         components.append('CATEGORIES;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(categories)s')
 
     if task.completed():
