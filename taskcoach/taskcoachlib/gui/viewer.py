@@ -964,7 +964,7 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
     
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.list, self.curselection(),
-                  shadow=self.settings.getboolean('syncml', 'synctasks'))
+                  shadow=True)
         
     deleteTaskCommand = deleteItemCommand
     
@@ -1409,7 +1409,7 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
     
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection(),
-                  shadow=self.settings.getboolean('syncml', 'syncnotes'))
+                  shadow=True)
     
     deleteNoteCommand = deleteItemCommand
     
