@@ -33,17 +33,28 @@ class Sorter(base.TreeSorter):
         for eventType in ('task.startDate', 'task.completionDate'):
             patterns.Publisher().registerObserver(self.reset, 
                                                   eventType=eventType)
-                            
+    
+    def setTreeMode(self, treeMode=True):
+        self.__treeMode = treeMode
+        try:
+            self.observable().setTreeMode(treeMode)
+        except AttributeError:
+            pass
+        # Make sure we notify our observers even if the sort order does not
+        # change, because when switching from list to tree mode or vice versa
+        # the presentation of the model almost certainly needs to be updated.
+        self.reset(forceNotification=True)
+        
     def reset(self, *args, **kwargs):
-        self.__rootItems = None     # Invalidate the root items cache
+        self._invalidateRootItemCache()
         super(Sorter, self).reset(*args, **kwargs)
         
     def extendSelf(self, *args, **kwargs):
-        self.__rootItems = None     # Invalidate the root items cache
+        self._invalidateRootItemCache()
         super(Sorter, self).extendSelf(*args, **kwargs)
 
     def removeItemsFromSelf(self, *args, **kwargs):
-        self.__rootItems = None     # Invalidate the root items cache
+        self._invalidateRootItemCache()
         super(Sorter, self).removeItemsFromSelf(*args, **kwargs)
 
     def rootItems(self):
@@ -51,6 +62,9 @@ class Sorter(base.TreeSorter):
             self.__rootItems = super(Sorter, self).rootItems()
         return self.__rootItems
 
+    def _invalidateRootItemCache(self):
+        self.__rootItems = None
+        
     def sortByTaskStatusFirst(self, sortByTaskStatusFirst):
         self.__sortByTaskStatusFirst = sortByTaskStatusFirst
         self.reset()

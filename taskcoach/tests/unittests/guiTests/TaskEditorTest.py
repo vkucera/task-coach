@@ -96,7 +96,7 @@ class TaskEditorTestCase(test.wxTestCase):
         
     def setRecurrenceFrequency(self, recurrenceFrequency, index=0):
         self.editor[index][1].setRecurrenceFrequency(recurrenceFrequency)
-        
+                
 
 class NewTaskTest(TaskEditorTestCase):
     def createCommand(self):
@@ -183,9 +183,9 @@ class NewTaskTest(TaskEditorTestCase):
         item.SetText(unicode(att))
         item.SetData(id_)
         item.SetState(wx.LIST_STATE_SELECTED)
-        self.editor[0][4]._listCtrl.InsertItem(item)
-        self.editor[0][4]._listData[id_] = att
-        self.editor[0][4].onOpen(None, showerror=onError)
+        self.editor[0][5]._listCtrl.InsertItem(item)
+        self.editor[0][5]._listData[id_] = att
+        self.editor[0][5].onOpen(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo and sys.version_info < (2,5):
             errorMessageStart = "'ascii' codec can't encode character"
         elif '__WXMAC__' in wx.PlatformInfo and sys.version_info >= (2,5):
@@ -195,7 +195,23 @@ class NewTaskTest(TaskEditorTestCase):
         else:
             errorMessageStart = "[Error 2] "
         self.failUnless(self.errorMessage.startswith(errorMessageStart))
+
+    def testAddNote(self):
+        self.editor[0][4].noteContainer.append(note.Note('New note'))
+        self.editor.ok()
+        self.assertEqual(1, len(self.task.notes()))
         
+    def testAddNoteWithSubnote(self):
+        parent = note.Note('New note')
+        child = note.Note('Child')
+        parent.addChild(child)
+        child.setParent(parent)
+        self.editor[0][4].noteContainer.extend([parent, child])
+        self.editor.ok()
+        # Only the parent note should be added to the notes list:
+        self.assertEqual(1, len(self.task.notes())) 
+        
+
 class NewSubTaskTest(TaskEditorTestCase):
     def createCommand(self):
         newSubTaskCommand = command.NewSubTaskCommand(self.taskList, [self.task])
@@ -267,17 +283,17 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual('New category', self.editor[0][2]._checkListBox.GetString(0))
         
     def testBehaviorMarkCompleted(self):
-        self.editor[0][5]._markTaskCompletedEntry.SetStringSelection('Yes')
+        self.editor[0][6]._markTaskCompletedEntry.SetStringSelection('Yes')
         self.editor.ok()
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
 
     def testAddAttachment(self):
-        self.editor[0][4].onFileDrop(0, 0, ['filename'])
+        self.editor[0][5].onFileDrop(0, 0, ['filename'])
         self.editor.ok()
         self.failUnless('filename' in map(unicode, self.task.attachments()))
         
     def testRemoveAttachment(self):
-        self.editor[0][4]._listCtrl.DeleteItem(0)
+        self.editor[0][5]._listCtrl.DeleteItem(0)
         self.editor.ok()
         self.assertEqual([], self.task.attachments())
 
@@ -353,7 +369,7 @@ class EditTaskWithEffortTest(TaskEditorTestCase):
         return [self.task]
     
     def testEffortIsShown(self):
-        self.assertEqual(1, self.editor[0][4]._viewerContainer[0].GetItemCount())
+        self.assertEqual(1, self.editor[0][4].effortViewer.widget.GetItemCount())
                           
     def testCancel(self):
         self.editor.cancel()
@@ -365,15 +381,9 @@ class FocusTest(TaskEditorTestCase):
         return command.NewTaskCommand(self.taskList)
 
     def testFocus(self):
-        # Unfortunately, it seems we *have* to show to window on Linux (Ubuntu)
-        # in order to get wx.Window_FindFocus to not return None.
-        if '__WXGTK__' in wx.PlatformInfo:
-            self.editor.Show()
         if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
             wx.Yield()
         self.assertEqual(self.editor[0][0]._subjectEntry, wx.Window_FindFocus())
-        if '__WXGTK__' in wx.PlatformInfo:
-            self.editor.Hide()
 
 
 class EffortEditorTest(TaskEditorTestCase):      

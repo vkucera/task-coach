@@ -76,18 +76,18 @@ changes:
 	$(PYTHON) changes.in/make.py text > CHANGES.txt
 	$(PYTHON) changes.in/make.py html > website.in/changes.html
  
-unittests:
+unittests: icons
 	cd tests; $(PYTHON) test.py
 
-alltests:
+alltests: icons
 	cd tests; $(PYTHON) test.py --alltests
 
-releasetests:
+releasetests: icons
 	cd tests; $(PYTHON) test.py --releasetests --no-unittests
 
-integrationtests:
+integrationtests: icons i18n
 	cd tests; $(PYTHON) test.py --integrationtests --no-unittests
-    
+
 
 CLEANFILES=build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
 REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*

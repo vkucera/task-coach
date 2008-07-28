@@ -23,21 +23,32 @@ from changetypes import *
 
 releases = [
 
-Release('0.71.0', 'June ??, 2008',
+Release('0.71.0', 'July ??, 2008',
     summary='''?''',
     featuresAdded=[
         Feature('''More task recurrence options. Tasks can now also recur 
-yearly, in addition to daily, weekly, and monthly. Tasks can now also recur 
+yearly, in addition to daily, weekly, and monthly. Tasks can also recur 
 with a multiple period frequency, e.g. every other week or every three months.
 Monthly recurring tasks can be set to recur on the same week day (e.g. first
 Monday of the month).'''),
         Feature('''The times used in the drop down menus of the start and stop
 entries of the effort dialog can now be changed via the preferences dialog. 
-Patch supplied by Rob McMullen.''')],
+Patch supplied by Rob McMullen.'''),
+        Feature('''Categories and notes can have attachments.'''),
+        Feature('''Tasks and categories can contain notes. '''),
+        Feature('''The four different effort viewers are integrated in one
+viewer that can switch between different effort aggregation modes, i.e. details,
+per day, per week and per month, via the toolbar.'''),
+        Feature('''The two different task viewers are integrated in one
+viewer that can switch between list and tree mode, via the toolbar.''')],
+    bugsFixed=[
+        Bug('''Ctrl-PgDn and Ctrl-PgUp would sometimes need to be pressed
+multiple times before the next or previous viewer would be activated. ''')],
     implementationChanged=[
         Implementation('''The task file format (version 20) was changed.  
 Task nodes may have a recurrence node that contains the recurrence state of
-the task.''')]),
+the task. Categories and notes can contain attachments. Tasks and categories
+can now contain notes.''')]),
 
 Release('0.70.1', 'June 28, 2008',
     summary='''This release optionally brings back the tabbed user 

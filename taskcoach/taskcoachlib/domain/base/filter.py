@@ -22,11 +22,16 @@ from taskcoachlib import patterns
 
 class Filter(patterns.SetDecorator):
     def __init__(self, *args, **kwargs):
-        self.setTreeMode(kwargs.pop('treeMode', False))
+        self.__treeMode = kwargs.pop('treeMode', False)        
         super(Filter, self).__init__(*args, **kwargs)
         
     def setTreeMode(self, treeMode):
         self.__treeMode = treeMode
+        try:
+            self.observable().setTreeMode(treeMode)
+        except AttributeError:
+            pass
+        self.reset()
         
     def treeMode(self):
         return self.__treeMode

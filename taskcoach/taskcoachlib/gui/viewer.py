@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import patterns, command, widgets, mailer
-from taskcoachlib.domain import base, task, category, effort, date, note, attachment
+from taskcoachlib.domain import base, task, category, effort, date, note, \
+    attachment
 from taskcoachlib.i18n import _
 import uicommand, menu, color, render, dialog, toolbar
 
@@ -57,7 +58,7 @@ class SearchableViewer(object):
         return searchString, matchCase, includeSubItems
     
     def getToolBarUICommands(self):
-        ''' Names of UI commands to put on the toolbar of this viewer. '''
+        ''' UI commands to put on the toolbar of this viewer. '''
         searchUICommand = uicommand.Search(viewer=self, settings=self.settings)
         return super(SearchableViewer, self).getToolBarUICommands() + \
             [None, searchUICommand]
@@ -96,9 +97,8 @@ class FilterableViewerForTasks(FilterableViewer):
                        hideCompletedTasks=self.isHidingCompletedTasks(),
                        hideInactiveTasks=self.isHidingInactiveTasks(),
                        hideOverdueTasks=self.isHidingOverdueTasks(),
-                       hideOverBudgetTasks=self.isHidingOverbudgetTasks())
-        if not self.isTreeViewer():
-            options['hideCompositeTasks'] = self.isHidingCompositeTasks()
+                       hideOverBudgetTasks=self.isHidingOverbudgetTasks(),
+                       hideCompositeTasks=self.isHidingCompositeTasks())
         return options
     
     def isFilteredByDueDate(self, dueDateString):
@@ -160,8 +160,7 @@ class FilterableViewerForTasks(FilterableViewer):
         self.hideCompletedTasks(False)
         self.hideOverdueTasks(False)
         self.hideOverbudgetTasks(False)
-        if not self.isTreeViewer():
-            self.hideCompositeTasks(False)
+        self.hideCompositeTasks(False)
         self.setFilteredByDueDate('Unlimited')
         for category in self.categories:
             category.setFiltered(False)
@@ -173,7 +172,7 @@ class FilterableViewerForTasks(FilterableViewer):
                  'viewdueweek', 'viewduemonth', 'viewdueyear'),
                 (_('&Hide tasks that are'), 'hideactivetasks', 'hideinactivetasks',
                  'hidecompletedtasks', None, 'hideoverduetasks', 
-                 'hideoverbudgettasks')]
+                 'hideoverbudgettasks', None, 'hidecompositetasks')]
 
     def __getBooleanSetting(self, setting):
         return self.settings.getboolean(self.settingsSection(), setting)
@@ -239,7 +238,7 @@ class SortableViewerForTasks(SortableViewer):
         self.settings.set(self.settingsSection(), 'sortbystatusfirst',
             str(sortByTaskStatusFirst))
         self.model().sortByTaskStatusFirst(sortByTaskStatusFirst)
-
+        
     def sorterOptions(self):
         options = super(SortableViewerForTasks, self).sorterOptions()
         options.update(treeMode=self.isTreeViewer(), 
@@ -277,8 +276,58 @@ class SortableViewerForNotes(SortableViewer):
         return ['viewsortorder', 'viewsortcasesensitive', None, 
                 'viewsortbysubject', 'viewsortbydescription', 
                 'viewsortbycategories', 'viewsortbytotalcategories']
+
+
+class AttachmentDropTarget(object):
+    ''' Mixin class for viewers that are drop targets for attachments. '''
+
+    def widgetCreationKeywordArguments(self):
+        kwargs = super(AttachmentDropTarget, self).widgetCreationKeywordArguments()
+        kwargs['onDropURL'] = self.onDropURL
+        kwargs['onDropFiles'] = self.onDropFiles
+        kwargs['onDropMail'] = self.onDropMail
+        return kwargs
         
-    
+    def _addAttachments(self, attachments, index, **itemDialogKwargs):
+        ''' Add attachments. If index refers to an existing domain object, 
+            add the attachments to that object. If index is None, use the 
+            newItemDialog to create a new domain object and add the attachments
+            to that new object. '''
+        if index is None:
+            newItemDialog = self.newItemDialog(bitmap='new',
+                attachments=attachments, **itemDialogKwargs)
+            newItemDialog.Show()
+        else:
+            addAttachment = command.AddAttachmentCommand(self.model(),
+                [self.getItemWithIndex(index)], attachments=attachments)
+            addAttachment.do()
+
+    def onDropURL(self, index, url):
+        ''' This method is called by the widget when a URL is dropped on an 
+            item. '''
+        attachments = [attachment.URIAttachment(url)]
+        self._addAttachments(attachments, index)
+
+    def onDropFiles(self, index, filenames):
+        ''' This method is called by the widget when one or more files
+            are dropped on an item. '''
+        base = self.settings.get('file', 'attachmentbase')
+        if base:
+            func = lambda x: attachment.getRelativePath(x, base)
+        else:
+            func = lambda x: x
+        attachments = [attachment.FileAttachment(func(name)) for name in filenames]
+        self._addAttachments(attachments, index)
+
+    def onDropMail(self, index, mail):
+        ''' This method is called by the widget when a mail message is dropped
+            on an item. '''
+        attachments = [attachment.MailAttachment(mail)]
+        subject, content = mailer.readMail(mail)
+        self._addAttachments(attachments, index, subject=subject, 
+                             description=content)
+
+
 class Viewer(wx.Panel):
     __metaclass__ = patterns.NumberedInstances
     
@@ -294,16 +343,21 @@ class Viewer(wx.Panel):
         self.__selection = []
         self.uiCommands = uiCommands
         self.list = self.createSorter(self.createFilter(list))
-        self.widget = self.createWidget()
         self.toolbar = toolbar.ToolBar(self, self.uiCommands, (16, 16))
+        self.widget = self.createWidget()
         self.initLayout()
+        self.registerModelObservers()
+        self.refresh()
+    
+    def registerModelObservers(self):
+        for eventHandler in self.onAddItem, self.onRemoveItem, self.onSorted:
+            patterns.Publisher().removeObserver(eventHandler)
         patterns.Publisher().registerObserver(self.onAddItem, 
             eventType=self.list.addItemEventType())
         patterns.Publisher().registerObserver(self.onRemoveItem, 
             eventType=self.list.removeItemEventType())
         patterns.Publisher().registerObserver(self.onSorted, 
             eventType=self.list.sortEventType())
-        self.refresh()
         
     def detach(self):
         ''' Should be called by viewercontainer before closing the viewer '''
@@ -321,55 +375,86 @@ class Viewer(wx.Panel):
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
-        self._sizer.Add(self.toolbar, flag=wx.EXPAND)
-        self._sizer.Add(self.widget, 1, wx.EXPAND)
+        #self._sizer.Add(self.toolbar)#, flag=wx.EXPAND)
+        self._sizer.Add(self.widget, proportion=1, flag=wx.EXPAND)
         self.SetSizerAndFit(self._sizer)
     
-    def __getattr__(self, attr):
-        return getattr(self.widget, attr)
-        
     def createWidget(self, *args):
         raise NotImplementedError
-    
+
     def getWidget(self):
         return self.widget
- 
+            
     def createSorter(self, collection):
+        ''' This method can be overridden to decorate the model with a 
+            sorter. '''
         return collection
         
     def createFilter(self, collection):
+        ''' This method can be overridden to decorate the model with a 
+            filter. '''
         return collection
 
     def onAddItem(self, event):
+        ''' One or more items were added to our model, refresh the widget. '''
         self.refresh()
 
     def onRemoveItem(self, event):
+        ''' One or more items were removed from our model, refresh the 
+            widget. '''
         self.refresh()
 
     def onSorted(self, event):
+        ''' The sort order of our items was changed, refresh the widget. '''
+        # FIXME: move to SortableViewer?
         self.refresh()
 
     def onSelect(self, *args):
+        ''' The selection of items in the widget has been changed. Notify 
+            our observers and remember the current selection so we can
+            restore it later, e.g. after the sort order is changed. '''
         if self.IsBeingDeleted():
+            # Some widgets change the selection and send selection events when 
+            # deleting all items as part of the Destroy process. Ignore.
             return
         # Be sure all wx events are handled before we notify our observers: 
         wx.CallAfter(lambda: patterns.Publisher().notifyObservers(\
             patterns.Event(self, self.selectEventType(), self.curselection())))
+        # Remember the current selection so we can restore it after a refresh:
         self.__selection = self.curselection()
         
     def refresh(self):
         self.widget.refresh(len(self.list))
+        # Restore the selection:
         self.widget.select([self.getIndexOfItem(item) for item \
                             in self.__selection if item in self.model()])
-        
+                            
     def curselection(self):
-        return [self.getItemWithIndex(index) for index in self.widget.curselection()]
+        ''' Return a list of items (domain objects) currently selected in our
+            widget. '''
+        # Translate indices returned by the widget into actual domain objects:
+        return [self.getItemWithIndex(index) for index in \
+                self.widget.curselection()]
+    
+    def selectall(self):
+        self.widget.selectall()
+        
+    def invertselection(self):
+        self.widget.invertselection()
+        
+    def clearselection(self):
+        self.widget.clearselection()
         
     def size(self):
         return self.widget.GetItemCount()
     
     def model(self):
+        ''' Return the model of the viewer. '''
         return self.list
+        
+    def setModel(self, model):
+        ''' Change the model of the viewer. '''
+        self.list = model
     
     def widgetCreationKeywordArguments(self):
         return {}
@@ -399,20 +484,32 @@ class Viewer(wx.Panel):
         return None
     
     def settingsSection(self):
+        ''' Return the settings section of this viewer. '''
         section = self.__settingsSection
         if self.__instanceNumber > 0:
-            previousSectionNumber = self.__instanceNumber - 1
-            while previousSectionNumber > 0:
-                previousSection = section + str(previousSectionNumber)
-                if self.settings.has_section(previousSection):
-                    break
-                previousSectionNumber -= 1
-            else:
-                previousSection = section
+            # We're not the first viewer of our class, so we need a different
+            # settings section than the default one.
             section += str(self.__instanceNumber)
             if not self.settings.has_section(section):
-                self.settings.add_section(section, copyFromSection=previousSection)
+                # Our section does not exist yet. Create it and copy the 
+                # settings from the previous section as starting point. We're 
+                # copying from the previous section instead of the default
+                # section so that when the user closes a viewer and then opens
+                # a new one, the settings of that closed viewer are reused. 
+                self.settings.add_section(section, 
+                    copyFromSection=self.previousSettingsSection())
         return section
+        
+    def previousSettingsSection(self):
+        ''' Return the settings section of the previous viewer of this 
+            class. '''
+        previousSectionNumber = self.__instanceNumber - 1
+        while previousSectionNumber > 0:
+            previousSection = self.__settingsSection + str(previousSectionNumber)
+            if self.settings.has_section(previousSection):
+                return previousSection
+            previousSectionNumber -= 1
+        return self.__settingsSection
     
     def isSortable(self):
         return False
@@ -443,8 +540,8 @@ class Viewer(wx.Panel):
         new = uicommand.NewDomainObject(viewer=self)
         newsub = uicommand.NewSubDomainObject(viewer=self)
         edit = uicommand.EditDomainObject(viewer=self)
-        delete = uicommand.DeleteDomainObject(viewer=self)
-        return [cut, copy, paste, None, new, newsub, edit, delete]
+        self.deleteUICommand = uicommand.DeleteDomainObject(viewer=self)
+        return [cut, copy, paste, None, new, newsub, edit, self.deleteUICommand]
     
     def canCreateNewDomainObject(self):
         return True
@@ -517,6 +614,12 @@ class TreeViewer(Viewer):
     def isSelectionCollapsable(self):
         return self.widget.isSelectionCollapsable()
         
+    def isAnyItemExpandable(self):
+        return self.widget.isAnyItemExpandable()
+
+    def isAnyItemCollapsable(self):
+        return self.widget.isAnyItemCollapsable()
+        
     def isTreeViewer(self):
         return True
 
@@ -536,11 +639,12 @@ class TreeViewer(Viewer):
         ''' Iterate over the items in the model. '''            
         def yieldAllChildren(parent):
             for item in self.model():
-                if item.parent() and item.parent() == parent:
+                itemParent = self.getItemParent(item)
+                if itemParent and itemParent == parent:
                     yield item
                     for child in yieldAllChildren(item):
                         yield child
-        for item in self.model().rootItems():
+        for item in self.getRootItems():
             yield item
             for child in yieldAllChildren(item):
                 yield child
@@ -555,8 +659,8 @@ class TreeViewer(Viewer):
             return self.__itemsByIndex[index]
         except KeyError:
             pass
+        children = self.getRootItems()
         model = self.model()
-        children = model.rootItems()
         for i in index[:-1]:
             item = children[i]
             childIndices = [model.index(child) for child in item.children() \
@@ -565,18 +669,26 @@ class TreeViewer(Viewer):
             children = [model[childIndex] for childIndex in childIndices]
         self.__itemsByIndex[index] = item = children[index[-1]]
         return item
+        
+    def getRootItems(self):
+        ''' Allow for overriding what the rootItems are. '''
+        return self.model().rootItems()
 
     def getIndexOfItem(self, item):
-        parent = item.parent()
+        parent = self.getItemParent(item)
         if parent:
             children = [child for child in self.model() if child.parent() == parent]
             return self.getIndexOfItem(parent) + (children.index(item),)
         else:
-            return (self.model().rootItems().index(item),)
+            return (self.getRootItems().index(item),)
+            
+    def getItemParent(self, item):
+        ''' Allow for overriding what the parent of an item is. '''
+        return item.parent()
         
     def getChildrenCount(self, index):
         if index == ():
-            return len(self.model().rootItems())
+            return len(self.getRootItems())
         else:
             item = self.getItemWithIndex(index)
             return len([child for child in item.children() if child in self.model()])
@@ -595,6 +707,11 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=self.trackStopEventType())
         self.addTrackedItems(self.trackedItems(self.list))
+        
+    def setModel(self, model):
+        self.removeTrackedItems(self.trackedItems(self.model()))
+        super(UpdatePerSecondViewer, self).setModel(model)
+        self.addTrackedItems(self.trackedItems(self.model()))
                         
     def trackStartEventType(self):
         raise NotImplementedError
@@ -619,6 +736,9 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
         item = event.source()
         if item in self.list:
             self.removeTrackedItems([item])
+            
+    def currentlyTrackedItems(self):
+        return list(self.__trackedItems)
 
     def onEverySecond(self, event):
         trackedItemsToRemove = []
@@ -781,9 +901,9 @@ class ViewerWithColumns(Viewer):
             patterns.Publisher().removeObserver(self.onAttributeChanged, 
                 eventType=eventType)
 
-    def renderCategory(self, task, recursive=False):
+    def renderCategory(self, item, recursive=False):
         return ', '.join(sorted([category.subject(recursive=True) for category in \
-                                 task.categories(recursive=recursive)]))
+                                 item.categories(recursive=recursive)]))
 
 
 class SortableViewerWithColumns(SortableViewer, ViewerWithColumns):
@@ -817,8 +937,9 @@ class SortableViewerWithColumns(SortableViewer, ViewerWithColumns):
             return 'descending'
 
 
-class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks, 
-                 SearchableViewer, UpdatePerSecondViewer):
+class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks, 
+                 SortableViewerForTasks, SearchableViewer, 
+                 UpdatePerSecondViewer):
     def __init__(self, *args, **kwargs):
         self.categories = kwargs.pop('categories')
         super(TaskViewer, self).__init__(*args, **kwargs)
@@ -873,7 +994,7 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
         return color.taskColor(task, self.settings)
     
     def getBackgroundColor(self, task):
-        return task.categoryColor()
+        return task.color()
     
     def getItemAttr(self, index):
         task = self.getItemWithIndex(index)
@@ -887,7 +1008,7 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
         patterns.Publisher().registerObserver(self.onColorChange,
-            eventType=task.Task.categoryColorChangedEventType())
+            eventType=task.Task.colorChangedEventType())
         patterns.Publisher().registerObserver(self.atMidnight,
             eventType='clock.midnight')
         
@@ -920,56 +1041,6 @@ class TaskViewer(FilterableViewerForTasks, SortableViewerForTasks,
         bitmap, bitmap_selected = render.taskBitmapNames(task)
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
 
-    def onDropURL(self, index, url):
-        attachments = [attachment.URIAttachment(url)]
-        if index is None:
-            newTaskDialog = self.newItemDialog(bitmap='new',
-                                               attachments=attachments)
-            newTaskDialog.Show()
-        else:
-            addAttachment = command.AddAttachmentToTaskCommand(self.list,
-                [self.getItemWithIndex(index)], attachments=attachments)
-            addAttachment.do()
-
-    def onDropFiles(self, index, filenames):
-        ''' This method is called by the widget when one or more files
-            are dropped on a task. '''
-        base = self.settings.get('file', 'attachmentbase')
-        if base:
-            func = lambda x: attachment.getRelativePath(x, base)
-        else:
-            func = lambda x: x
-        attachments = [attachment.FileAttachment(func(name)) for name in filenames]
-        if index is None:
-            newTaskDialog = self.newItemDialog(bitmap='new',
-                                               attachments=attachments)
-            newTaskDialog.Show()
-        else:
-            addAttachment = command.AddAttachmentToTaskCommand(self.list,
-                [self.getItemWithIndex(index)], attachments=attachments)
-            addAttachment.do()
-
-    def onDropMail(self, index, mail):
-        attachments = [attachment.MailAttachment(mail)]
-        if index is None:
-            subject, content = mailer.readMail(mail)
-            newTaskDialog = self.newItemDialog(bitmap='new',
-                                               subject=subject,
-                                               description=content,
-                                               attachments=attachments)
-            newTaskDialog.Show()
-        else:
-            addAttachment = command.AddAttachmentToTaskCommand(self.list,
-                [self.getItemWithIndex(index)], attachments=attachments)
-            addAttachment.do()
-
-    def widgetCreationKeywordArguments(self):
-        kwargs = super(TaskViewer, self).widgetCreationKeywordArguments()
-        kwargs['onDropURL'] = self.onDropURL
-        kwargs['onDropFiles'] = self.onDropFiles
-        kwargs['onDropMail'] = self.onDropMail
-        return kwargs
-    
     # The methods below have two names. This is because there are two types
     # of domain object related UICommands. The generic variant works on
     # whatever type of domain object is shown in the current viewer. The
@@ -1032,8 +1103,8 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
                 sortCallback=self.uiCommands['viewsortbydescription'],
                 renderCallback=lambda task: task.description(), 
                 width=self.getColumnWidth('description'), **kwargs)] + \
-            [widgets.Column('attachments', '', 'task.attachment.add', 
-                'task.attachment.remove',
+            [widgets.Column('attachments', '', 
+                task.Task.attachmentsChangedEventType(),
                 width=self.getColumnWidth('attachments'),
                 alignment=wx.LIST_FORMAT_LEFT,
                 imageIndexCallback=self.attachmentImageIndex,
@@ -1095,7 +1166,7 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
         return menu.ColumnPopupMenu(self, self.uiCommands)
 
     def sortBy(self, sortKey):
-        # If the user sets clicks the same column for the third time, toggle
+        # If the user clicks the same column for the third time, toggle
         # the SortyByTaskStatusFirst setting:
         if self.isSortedBy(sortKey):
             self.__sortKeyUnchangedCount += 1
@@ -1115,87 +1186,16 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
         if self.isSortByTaskStatusFirst():
             sortOrderImageIndex += '_with_status' 
         return sortOrderImageIndex
-            
-
-class TaskListViewer(TaskViewerWithColumns, ListViewer):
-    defaultTitle = _('Task list')
-    
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('settingsSection', 'tasklistviewer')
-        super(TaskListViewer, self).__init__(*args, **kwargs)
-    
-    def createWidget(self):
-        imageList = self.createImageList() # Has side-effects
-        self._columns = self._createColumns()
-        widget = widgets.ListCtrl(self, self.columns(),
-            self.getItemText, self.getItemTooltipText, self.getItemImage,
-            self.getItemAttr, self.onSelect, self.uiCommands['edittask'], 
-            self.createTaskPopupMenu(),
-            self.createColumnPopupMenu(),
-            **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)
-        return widget
-                
-    def renderSubject(self, task):
-        return task.subject(recursive=True)
-
-    def getFilterUICommands(self):
-        uiCommands = super(TaskListViewer, self).getFilterUICommands()
-        uiCommands.extend([None, 'hidecompositetasks'])
-        return uiCommands
 
 
-class TaskTreeViewer(TaskViewer, TreeViewer):
-    defaultTitle = _('Task tree') 
-    
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('settingsSection', 'tasktreeviewer')
-        super(TaskTreeViewer, self).__init__(*args, **kwargs)       
-
-    def createWidget(self):
-        imageList = self.createImageList() # Has side-effects
-        widget = widgets.TreeCtrl(self, self.getItemText, self.getItemTooltipText,
-            self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
-            self.uiCommands['edittask'], 
-            self.uiCommands['draganddroptask'], self.createTaskPopupMenu(),
-            **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList)
-        return widget
-    
-    def getItemText(self, index):
-        task = self.getItemWithIndex(index)
-        return task.subject()
-
-    def getItemTooltipText(self, index):
-        if self.settings.getboolean('view', 'descriptionpopups'):
-            task = self.getItemWithIndex(index)
-            return task.description()
-        else:
-            return ''
-
-    def getItemImage(self, index, which):
-        task = self.getItemWithIndex(index)
-        normalImageIndex, expandedImageIndex = self.getImageIndices(task)
-        if which in [wx.TreeItemIcon_Expanded, wx.TreeItemIcon_SelectedExpanded]:
-            return expandedImageIndex 
-        else:
-            return normalImageIndex
-                           
-    def renderSubject(self, task):
-        return task.subject(recursive=False)
-
-    def setSearchFilter(self, searchString, *args, **kwargs):
-        super(TaskTreeViewer, self).setSearchFilter(searchString, *args, **kwargs)
-        if searchString:
-            self.expandAll()
-
-
-class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
+class TaskTreeListViewer(TaskViewerWithColumns, TreeViewer):
+    defaultTitle = _('Tasks')
+     
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'tasktreelistviewer')
         super(TaskTreeListViewer, self).__init__(*args, **kwargs)
-
+        self.treeOrListUICommand.setChoice(self.isTreeViewer())
+        
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
@@ -1208,17 +1208,53 @@ class TaskTreeListViewer(TaskViewerWithColumns, TaskTreeViewer):
         widget.AssignImageList(imageList)
         return widget    
 
-    def getItemText(self, *args, **kwargs):
-        return TaskViewerWithColumns.getItemText(self, *args, **kwargs)
+    def getToolBarUICommands(self):
+        ''' Names of UI commands to put on the toolbar of this viewer. '''
+        toolBarUICommands = super(TaskTreeListViewer, self).getToolBarUICommands() 
+        toolBarUICommands.insert(-2, None) # Separator
+        self.treeOrListUICommand = \
+            uicommand.TaskViewerTreeOrListChoice(viewer=self)
+        toolBarUICommands.insert(-2, self.treeOrListUICommand)
+        return toolBarUICommands
 
-    def getItemTooltipText(self, *args, **kwargs):
-        return TaskViewerWithColumns.getItemTooltipText(self, *args, **kwargs)
+    def setSearchFilter(self, searchString, *args, **kwargs):
+        super(TaskTreeListViewer, self).setSearchFilter(searchString, *args, **kwargs)
+        if searchString:
+            self.expandAll()
 
-    def getItemImage(self, *args, **kwargs):
-        return TaskViewerWithColumns.getItemImage(self, *args, **kwargs)
+    def showTree(self, treeMode):
+        self.settings.set(self.settingsSection(), 'treemode', str(treeMode))
+        self.model().setTreeMode(treeMode)
+        
+    def isTreeViewer(self):
+        return self.settings.getboolean(self.settingsSection(), 'treemode')
+        
+    def renderSubject(self, task):
+        return task.subject(recursive=not self.isTreeViewer())
 
+    def getRootItems(self):
+        ''' If the viewer is in tree mode, return the real root items. If the
+            viewer is in list mode, return all items. '''
+        if self.isTreeViewer():
+            return super(TaskTreeListViewer, self).getRootItems()
+        else:
+            return self.model()
     
-class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
+    def getItemParent(self, item):
+        if self.isTreeViewer():
+            return super(TaskTreeListViewer, self).getItemParent(item)
+        else:
+            return None
+            
+    def getChildrenCount(self, index):
+        if self.isTreeViewer() or (index == ()):
+            return super(TaskTreeListViewer, self).getChildrenCount(index)
+        else:
+            return 0
+
+
+class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories, 
+                     SearchableViewer, TreeViewer):
     SorterClass = category.CategorySorter
     defaultTitle = _('Categories')
     
@@ -1238,7 +1274,8 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
             self.getIsItemChecked, self.onSelect, self.onCheck,
             self.uiCommands['editcategory'], 
             self.uiCommands['draganddropcategory'], 
-            self.createCategoryPopupMenu())
+            self.createCategoryPopupMenu(), 
+            **self.widgetCreationKeywordArguments())
         return widget
 
     def createCategoryPopupMenu(self):
@@ -1258,28 +1295,31 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
         self.onSelect(event) # Notify status bar
             
     def getItemText(self, index):    # FIXME: pull up to TreeViewer
-        category = self.getItemWithIndex(index)
-        return category.subject()
+        item = self.getItemWithIndex(index)
+        return item.subject()
 
     def getItemTooltipText(self, index):
         if self.settings.getboolean('view', 'descriptionpopups'):
-            category = self.getItemWithIndex(index)
-            return category.description()
+            item = self.getItemWithIndex(index)
+            return item.description()
         else:
             return ''
 
     def getItemImage(self, index, which):
         return -1
     
-    def getBackgroundColor(self, category):
-        return category.color()
+    def getBackgroundColor(self, item):
+        return item.color()
     
     def getItemAttr(self, index):
-        category = self.getItemWithIndex(index)
-        return wx.ListItemAttr(colBack=self.getBackgroundColor(category))
+        item = self.getItemWithIndex(index)
+        return wx.ListItemAttr(colBack=self.getBackgroundColor(item))
     
     def getIsItemChecked(self, index):
-        return self.getItemWithIndex(index).isFiltered()
+        item = self.getItemWithIndex(index)
+        if isinstance(item, category.Category):
+            return item.isFiltered()
+        return False
 
     def isShowingCategories(self):
         return True
@@ -1292,15 +1332,15 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
 
     def newItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self), 
-            command.NewCategoryCommand(self.list),
-            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+            command.NewCategoryCommand(self.list, *args, **kwargs),
+            self.uiCommands, self.settings, self.list, bitmap=kwargs['bitmap'])
     
     # See TaskViewer for why the methods below have two names.
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
             command.EditCategoryCommand(self.list, self.curselection()),
-            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+            self.uiCommands, self.settings, self.list, bitmap=kwargs['bitmap'])
     
     editCategoryDialog = editItemDialog
     
@@ -1312,13 +1352,14 @@ class CategoryViewer(SortableViewerForCategories, SearchableViewer, TreeViewer):
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self), 
             command.NewSubCategoryCommand(self.list, self.curselection()),
-            self.list, self.uiCommands, bitmap=kwargs['bitmap'])
+            self.uiCommands, self.settings, self.list, bitmap=kwargs['bitmap'])
         
     newSubCategoryDialog = newSubItemDialog
 
 
-class NoteViewer(FilterableViewerForNotes, SearchableViewer, 
-                 SortableViewerWithColumns, SortableViewerForNotes, TreeViewer):
+class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes, 
+                 SearchableViewer, SortableViewerWithColumns, 
+                 SortableViewerForNotes, TreeViewer):
     SorterClass = note.NoteSorter
     defaultTitle = _('Notes')
     
@@ -1330,7 +1371,7 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
             patterns.Publisher().registerObserver(self.onNoteChanged, 
                 eventType)
         patterns.Publisher().registerObserver(self.onColorChange,
-            eventType=note.Note.categoryColorChangedEventType())
+            eventType=note.Note.colorChangedEventType())
         
     def onColorChange(self, event):
         note = event.source()
@@ -1338,14 +1379,21 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
             self.widget.RefreshItem(self.getIndexOfItem(note))
 
     def createWidget(self):
+        # We need to create new uiCommands here, because the viewer might not
+        # be the effort viewer in the mainwindow, but the effort viewer in the 
+        # task edit window.
+        uiCommands = {}
+        uiCommands.update(self.uiCommands)
+        uiCommands.update(uicommand.EditorUICommands(self, self.list))        
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText, 
             self.getItemTooltipText, self.getItemImage, self.getItemAttr, 
             self.getChildrenCount, self.getItemExpanded, self.onSelect,
-            self.uiCommands['editnote'], 
-            self.uiCommands['draganddropnote'], 
-            self.createNotePopupMenu(), self.createColumnPopupMenu())
+            uiCommands['editnote'], uiCommands['draganddropnote'], 
+            menu.NotePopupMenu(self.parent, uiCommands), 
+            menu.ColumnPopupMenu(self, uiCommands),
+            **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)
         return widget
     
@@ -1356,38 +1404,59 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
         self.imageIndex = {}
-        for index, image in enumerate(['ascending', 'descending']):
+        for index, image in enumerate(['ascending', 'descending', 'attachment']):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList
 
+    def attachmentImageIndex(self, note, which):
+        if note.attachments():
+            return self.imageIndex['attachment'] 
+        else:
+            return -1
+
     def getColumnUICommands(self):
-        return ['viewdescription', 'viewcategories', 'viewtotalCategories']
-
-    def createNotePopupMenu(self):
-        return menu.NotePopupMenu(self.parent, self.uiCommands)
-
-    def createColumnPopupMenu(self):
-        return menu.ColumnPopupMenu(self, self.uiCommands)
+        return ['viewdescription', 'viewattachments', 'viewcategories', 
+                'viewtotalCategories']
 
     def _createColumns(self):
-        return [widgets.Column(name, columnHeader,
+        columns = [widgets.Column(name, columnHeader,
                 width=self.getColumnWidth(name), 
                 resizeCallback=self.onResizeColumn,
                 renderCallback=renderCallback, 
-                sortCallback=self.uiCommands['viewsortby' + name.lower()],
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
+                    value=name.lower(), menuText=sortMenuText, 
+                    helpText=sortHelpText),
                 *eventTypes) \
-            for name, columnHeader, eventTypes, renderCallback in \
-            ('subject', _('Subject'), (note.Note.subjectChangedEventType(),), lambda note: note.subject(recursive=False)),
-            ('description', _('Description'), (note.Note.descriptionChangedEventType(),), lambda note: note.description()),
-            ('categories', _('Categories'), (note.Note.categoryAddedEventType(), 
-             note.Note.categoryRemovedEventType(), 
-             note.Note.categorySubjectChangedEventType()), 
-             self.renderCategory),
+            for name, columnHeader, sortMenuText, sortHelpText, eventTypes, renderCallback in \
+            ('subject', _('Subject'), _('&Subject'), _('Sort notes by subject'), 
+                (note.Note.subjectChangedEventType(),), 
+                lambda note: note.subject(recursive=False)),
+            ('description', _('Description'), _('&Description'), 
+                _('Sort notes by description'), 
+                (note.Note.descriptionChangedEventType(),), 
+                lambda note: note.description()),
+            ('categories', _('Categories'), _('&Categories'), 
+                _('Sort notes by categories'), 
+                (note.Note.categoryAddedEventType(), 
+                 note.Note.categoryRemovedEventType(), 
+                 note.Note.categorySubjectChangedEventType()), 
+                self.renderCategory),
             ('totalCategories', _('Overall categories'), 
-             (note.Note.totalCategoryAddedEventType(),
-              note.Note.totalCategoryRemovedEventType(),
-              note.Note.totalCategorySubjectChangedEventType()), self.renderCategory)]
+                _('&Overall categories'), _('Sort notes by overall categories'),
+                 (note.Note.totalCategoryAddedEventType(),
+                  note.Note.totalCategoryRemovedEventType(),
+                  note.Note.totalCategorySubjectChangedEventType()), 
+                 self.renderCategory)]
+        attachmentsColumn = widgets.Column('attachments', '', 
+            note.Note.attachmentsChangedEventType(),
+            width=self.getColumnWidth('attachments'),
+            alignment=wx.LIST_FORMAT_LEFT,
+            imageIndexCallback=self.attachmentImageIndex,
+            headerImageIndex=self.imageIndex['attachment'],
+            renderCallback=lambda note: '')
+        columns.insert(2, attachmentsColumn)
+        return columns
                      
     def onNoteChanged(self, event):
         note = event.source()
@@ -1405,12 +1474,9 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
             return note.description()
         else:
             return None
-
-    def getItemImage(self, index, which, column=0):
-        return -1
-
+    
     def getBackgroundColor(self, note):
-        return note.categoryColor()
+        return note.color()
     
     def getItemAttr(self, index):
         note = self.getItemWithIndex(index)
@@ -1429,15 +1495,16 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
         filteredCategories = [category for category in self.categories if
                               category.isFiltered()]
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self), 
-            command.NewNoteCommand(self.list, categories=filteredCategories),
-            self.categories, bitmap=kwargs['bitmap'])
+            command.NewNoteCommand(self.list, categories=filteredCategories, 
+            *args, **kwargs),
+            self.settings, self.categories, bitmap=kwargs['bitmap'])
     
     # See TaskViewer for why the methods below have two names.
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
             command.EditNoteCommand(self.list, self.curselection()),
-            self.categories, bitmap=kwargs['bitmap'])
+            self.settings, self.categories, bitmap=kwargs['bitmap'])
     
     editNoteDialog = editItemDialog
     
@@ -1449,7 +1516,7 @@ class NoteViewer(FilterableViewerForNotes, SearchableViewer,
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self), 
             command.NewSubNoteCommand(self.list, self.curselection()),
-            self.categories, bitmap=kwargs['bitmap'])
+            self.settings, self.categories, bitmap=kwargs['bitmap'])
         
     newSubNoteDialog = newSubItemDialog
     
@@ -1469,6 +1536,12 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
     
     def trackStopEventType(self):
         return 'effort.track.stop'
+
+    def getToolBarUICommands(self):
+        ''' Names of UI commands to put on the toolbar of this viewer. '''
+        toolBarUICommands = super(EffortViewer, self).getToolBarUICommands()
+        del toolBarUICommands[5] # Remove 'new subitem'
+        return toolBarUICommands
 
     def statusMessages(self):
         status1 = _('Effort: %d selected, %d visible, %d total')%\
@@ -1509,13 +1582,49 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
     
 
 class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns): 
-    defaultTitle = _('Effort details')  
+    defaultTitle = _('Effort')  
     
     def __init__(self, parent, list, *args, **kwargs):
-        self.taskList = list
+        self.aggregation = 'details'
+        self.taskList = base.SearchFilter(list)
         kwargs.setdefault('settingsSection', 'effortlistviewer')
-        super(EffortListViewer, self).__init__(parent, list, *args, **kwargs)
+        self.__hiddenTotalColumns = []
+        super(EffortListViewer, self).__init__(parent, self.taskList, *args, **kwargs)
+        self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
+        self.aggregationUICommand.setChoice(self.aggregation)
         
+    def showEffortAggregation(self, aggregation):
+        ''' Change the aggregation mode. Can be one of 'details', 'day', 'week'
+            and 'month'. '''
+        assert aggregation in ('details', 'day', 'week', 'month')
+        self.aggregation = aggregation
+        self.settings.set(self.settingsSection(), 'aggregation', aggregation)
+        self.setModel(self.createSorter(self.createAggregator(self.taskList, 
+                                                            aggregation)))
+        self.registerModelObservers()
+        self._showTotalColumns(show=aggregation!='details')
+        self.refresh()
+
+    def createFilter(self, taskList):
+        ''' Return a class that filters the original list. In this case we
+            create an effort aggregator that aggregates the effort records in
+            the taskList, either individually (i.e. no aggregation), per day,
+            per week, or per month. '''
+        aggregation = self.settings.get(self.settingsSection(), 'aggregation')
+        return self.createAggregator(taskList, aggregation)
+                
+    def createAggregator(self, taskList, aggregation):
+        ''' Return an instance of a class that aggregates the effort records 
+            in the taskList, either:
+            - individually (aggregation == 'details'), 
+            - per day (aggregation == 'day'), 
+            - per week ('week'), or 
+            - per month ('month'). '''
+        if aggregation == 'details':
+            return effort.EffortList(taskList)
+        else:
+            return effort.EffortAggregator(taskList, aggregation=aggregation)
+                
     def createWidget(self):
         # We need to create new uiCommands here, because the viewer might not
         # be the effort viewer in the mainwindow, but the effort viewer in the 
@@ -1528,7 +1637,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             self.getItemText, self.getItemTooltipText, self.getItemImage,
             self.getItemAttr, self.onSelect, uiCommands['editeffort'], 
             menu.EffortPopupMenu(self.parent, uiCommands), 
-            menu.ColumnPopupMenu(self, uiCommands), 
+            menu.EffortViewerColumnPopupMenu(self.parent, self, uiCommands), 
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
         return widget
@@ -1540,101 +1649,77 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             for name, columnHeader, eventType, renderCallback in \
             ('period', _('Period'), 'effort.duration', self.renderPeriod),
             ('task', _('Task'), 'effort.task', lambda effort: effort.task().subject(recursive=True)),
-            ('description', _('Description'), 'effort.description', lambda effort: effort.getDescription())] + \
+            ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description())] + \
             [widgets.Column(name, columnHeader, eventType, 
              width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn,
              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
             for name, columnHeader, eventType, renderCallback in \
             ('timeSpent', _('Time spent'), 'effort.duration', 
                 lambda effort: render.timeSpent(effort.duration())),
-            ('revenue', _('Revenue'), 'effort.duration', 
-                lambda effort: render.amount(effort.revenue()))]
+            ('revenue', _('Revenue'), 'effort.revenue', 
+                lambda effort: render.amount(effort.revenue())),
+            ('totalTimeSpent', _('Total time spent'), 'effort.totalDuration',  
+                 lambda effort: render.timeSpent(effort.duration(recursive=True))),
+            ('totalRevenue', _('Total revenue'), 'effort.totalRevenue',
+                 lambda effort: render.amount(effort.revenue(recursive=True)))]
 
-    def createFilter(self, taskList):
-        return effort.EffortList(base.SearchFilter(taskList))
-
+    def _showTotalColumns(self, show=True):
+        if show:
+            columnsToShow = self.__hiddenTotalColumns[:]
+            self.__hiddenTotalColumns = []
+        else:
+            self.__hiddenTotalColumns = columnsToShow = \
+                [column for column in self.visibleColumns() \
+                 if column.name().startswith('total')]
+        for column in columnsToShow:
+            self.showColumn(column, show)
+                        
     def getColumnUICommands(self):
-        return ['viewdescription', 'viewtimeSpent', 'viewrevenue']
-                
+        commands = ['viewdescription', 'viewtimeSpent', 'viewrevenue']
+        if self.aggregation != 'details':
+            commands.insert(-1, 'viewtotalTimeSpent')
+            commands.append('viewtotalRevenue')
+        return commands
+
+    def getToolBarUICommands(self):
+        ''' Names of UI commands to put on the toolbar of this viewer. '''
+        toolBarUICommands = super(EffortListViewer, self).getToolBarUICommands() 
+        toolBarUICommands.insert(-2, None) # Separator
+        self.aggregationUICommand = \
+            uicommand.EffortViewerAggregationChoice(viewer=self) 
+        toolBarUICommands.insert(-2, self.aggregationUICommand)
+        return toolBarUICommands
+
     def getItemImage(self, index, which, column=0):
         return -1
     
     def getItemAttr(self, index):
         return wx.ListItemAttr()
+
+    def curselection(self):
+        selection = super(EffortListViewer, self).curselection()
+        if self.aggregation != 'details':
+            selection = [effort for compositeEffort in selection\
+                                for effort in compositeEffort]
+        return selection
                 
     def renderPeriod(self, effort):
+        if self._hasRepeatedPeriod(effort):
+            return ''
+        start = effort.getStart()
+        if self.aggregation == 'details':
+            return render.dateTimePeriod(start, effort.getStop())
+        elif self.aggregation == 'day':
+            return render.date(start.date())
+        elif self.aggregation == 'week':
+            return render.weekNumber(start)
+        elif self.aggregation == 'month':
+            return render.month(start)
+            
+    def _hasRepeatedPeriod(self, effort):
+        ''' Return whether the effort has the same period as the previous 
+            effort record. '''
         index = self.list.index(effort)
         previousEffort = index > 0 and self.list[index-1] or None
-        if previousEffort and effort.getStart() == previousEffort.getStart():
-            return self.renderRepeatedPeriod(effort)
-        else:
-            return self.renderEntirePeriod(effort)
-
-    def renderRepeatedPeriod(self, effort):
-        return ''
-        
-    def renderEntirePeriod(self, effort):
-        return render.dateTimePeriod(effort.getStart(), effort.getStop())
-        
-
-class CompositeEffortListViewer(EffortListViewer):
-    def _createColumns(self):
-        return super(CompositeEffortListViewer, self)._createColumns() + \
-            [widgets.Column(name, columnHeader, eventType, 
-              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
-              width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn) \
-             for name, columnHeader, eventType, renderCallback in \
-                ('totalTimeSpent', _('Total time spent'), 'effort.totalDuration',  
-                 lambda effort: render.timeSpent(effort.duration(recursive=True))),
-                ('totalRevenue', _('Total revenue'), 'effort.totalDuration',
-                 lambda effort: render.amount(effort.revenue(recursive=True)))]
-        
-    def curselection(self):
-        compositeEfforts = super(CompositeEffortListViewer, self).curselection()
-        return [effort for compositeEffort in compositeEfforts for effort in compositeEffort]
-
-    def createFilter(self, taskList):
-        return self.EffortPerPeriod(base.SearchFilter(taskList))
-
-    def getColumnUICommands(self):
-        commands = super(CompositeEffortListViewer, self).getColumnUICommands()
-        commands.insert(-1, 'viewtotalTimeSpent')
-        commands.append('viewtotalRevenue')
-        return commands
-    
-
-class EffortPerDayViewer(CompositeEffortListViewer):
-    EffortPerPeriod = effort.EffortPerDay
-    defaultTitle = _('Effort per day')
-
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('settingsSection', 'effortperdayviewer')
-        super(EffortPerDayViewer, self).__init__(*args, **kwargs)
-    
-    def renderEntirePeriod(self, compositeEffort):
-        return render.date(compositeEffort.getStart().date())
-
-        
-class EffortPerWeekViewer(CompositeEffortListViewer):
-    EffortPerPeriod = effort.EffortPerWeek
-    defaultTitle = _('Effort per week')
-
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('settingsSection', 'effortperweekviewer')
-        super(EffortPerWeekViewer, self).__init__(*args, **kwargs)
-
-    def renderEntirePeriod(self, compositeEffort):
-        return render.weekNumber(compositeEffort.getStart())
-
-
-class EffortPerMonthViewer(CompositeEffortListViewer):
-    EffortPerPeriod = effort.EffortPerMonth
-    defaultTitle = _('Effort per month')
-    
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('settingsSection', 'effortpermonthviewer')
-        super(EffortPerMonthViewer, self).__init__(*args, **kwargs)
-    
-    def renderEntirePeriod(self, compositeEffort):
-        return render.month(compositeEffort.getStart())
+        return previousEffort and effort.getStart() == previousEffort.getStart()
 

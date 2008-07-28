@@ -19,5 +19,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from effort import Effort, CompositeEffort
 from effortlist import EffortList
 from sorter import EffortSorter
-from reducer import EffortPerDay, EffortPerWeek, EffortPerMonth
+from reducer import EffortAggregator
 

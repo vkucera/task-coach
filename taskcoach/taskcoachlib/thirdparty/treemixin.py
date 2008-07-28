@@ -25,8 +25,8 @@ The VirtualTree and DragAndDrop mixins force the wx.TR_HIDE_ROOT style.
 
 Author: Frank Niessink <frank@niessink.com>
 License: wxWidgets license
-Version: 1.4
-Date: 22 June 2008
+Version: 1.5
+Date: 10 July 2008
 
 ExpansionState is based on code and ideas from Karsten Hilbert.
 Andrea Gavana provided help with the CustomTreeCtrl integration.
@@ -174,17 +174,27 @@ class TreeAPIHarmonizer(object):
             return super(TreeAPIHarmonizer, self).SelectItem(item, *args, 
                                                              **kwargs)
 
-    def HitTest(self, *args, **kwargs):
+    def HitTest(self, point, *args, **kwargs):
         """ HitTest returns a two-tuple (item, flags) for tree controls
         without columns and a three-tuple (item, flags, column) for tree
         controls with columns. Our caller can indicate this method to
         always return a three-tuple no matter what tree control we're mixed
         in with by specifying the optional argument 'alwaysReturnColumn'
-        to be True. """
+        to be True. In addition, CustomTreeCtrl.HitTest is inconsistent with
+        the other tree controls. It wants the point to be a wx.Point, so if 
+        the user supplied a (x, y) tuple, translate it first. Also, when no 
+        item is found under point, CustomTreeCtrl returns None as item. 
+        For consistency, we convert None to an invalid item before returning 
+        it. """
         alwaysReturnColumn = kwargs.pop('alwaysReturnColumn', False)
-        hitTestResult = super(TreeAPIHarmonizer, self).HitTest(*args, **kwargs)
+        if type(point) == type(()):
+            point = wx.Point(point[0], point[1])
+        hitTestResult = super(TreeAPIHarmonizer, self).HitTest(point, *args, 
+                                                               **kwargs)
         if len(hitTestResult) == 2 and alwaysReturnColumn:
             hitTestResult += (0,)
+        if hitTestResult[0] is None:
+            hitTestResult = (wx.TreeItemId(),) + hitTestResult[1:]
         return hitTestResult
 
     def ExpandAll(self, item=None):

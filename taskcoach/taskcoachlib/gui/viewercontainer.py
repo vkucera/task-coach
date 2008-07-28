@@ -23,7 +23,7 @@ from taskcoachlib import patterns
 class ViewerContainer(object):
     ''' ViewerContainer is a container of viewers. It has a containerWidget
         that displays the viewers. The containerWidget can be a notebook or
-        a AUI managed frame. The ViewerContainer knows which of its viewers
+        an AUI managed frame. The ViewerContainer knows which of its viewers
         is active and dispatches method calls to the active viewer or to the
         first viewer that can handle the method. This allows other GUI 
         components, e.g. menu's, to talk to the ViewerContainer as were
@@ -45,7 +45,7 @@ class ViewerContainer(object):
 
     def bindContainerWidgetEvents(self):
         eventsAndHandlers = dict(pageClosedEvent=self.onPageClosed, 
-                                pageChangedEvent=self.onPageChanged)
+                                 pageChangedEvent=self.onPageChanged)
         for event, handler in eventsAndHandlers.items():
             if hasattr(self.containerWidget, event):
                 self.containerWidget.Bind(getattr(self.containerWidget, event),
@@ -61,7 +61,8 @@ class ViewerContainer(object):
             # We need to use CallAfter because the AuiNotebook doesn't allow
             # PAGE_CHANGING events while the window is not active. See 
             # widgets/notebook.py
-            wx.CallAfter(self.containerWidget.SetSelection, self.__desiredPageNumber)
+            wx.CallAfter(self.containerWidget.SetSelection, 
+                         self.__desiredPageNumber)
         patterns.Publisher().registerObserver(self.onSelect, 
             eventType=viewer.selectEventType())
 
@@ -108,22 +109,34 @@ class ViewerContainer(object):
             self.selectEventType(), *event.values()))
 
     def onPageChanged(self, event):
-        self.__currentPageNumber = event.Selection
-        self._settings.set('view', self.__setting, str(self.__currentPageNumber))
-        patterns.Publisher().notifyObservers(patterns.Event(self, 
-            self.viewerChangeEventType(), self.__currentPageNumber))
+        self._changePage(event.Selection)
         event.Skip()
 
     def onPageClosed(self, event):
         try: # Notebooks and similar widgets:
             viewer = self.viewers[event.Selection]
         except AttributeError: # Aui managed frame:
+            if event.GetPane().IsToolbar():
+                return
             viewer = event.GetPane().window
-        # When closing a Aui managed frame, we get two close events, be prepared
+        # When closing an AUI managed frame, we get two close events, 
+        # be prepared:
         if viewer in self.viewers:
-            self.viewers.remove(viewer)
-            viewer.detach()
-            setting = viewer.__class__.__name__.lower() + 'count'
-            viewerCount = self._settings.getint('view', setting)
-            self._settings.set('view', setting, str(viewerCount-1))
+            self._closePage(viewer)
+            if self.__currentPageNumber >= len(self.viewers):
+                self._changePage(0)
         event.Skip()
+        
+    def _closePage(self, viewer):
+        self.viewers.remove(viewer)
+        viewer.detach()
+        setting = viewer.__class__.__name__.lower() + 'count'
+        viewerCount = self._settings.getint('view', setting)
+        self._settings.set('view', setting, str(viewerCount-1))        
+        
+    def _changePage(self, pageNumber):
+        self.__currentPageNumber = pageNumber        
+        self._settings.set('view', self.__setting, str(pageNumber))
+        patterns.Publisher().notifyObservers(patterns.Event(self, 
+            self.viewerChangeEventType(), pageNumber))
+

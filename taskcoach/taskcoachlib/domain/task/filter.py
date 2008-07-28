@@ -92,7 +92,7 @@ class ViewFilter(base.Filter):
         elif self.__hideOverbudgetTasks and \
             task.budgetLeft(recursive=True) < date.TimeDelta():
             result = False
-        elif self.__hideCompositeTasks and task.children():
+        elif self.__hideCompositeTasks and not self.treeMode() and task.children():
             result = False
         elif task.dueDate(recursive=self.treeMode()) > self.__dueDateFilter:
             result = False

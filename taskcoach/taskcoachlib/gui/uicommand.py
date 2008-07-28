@@ -311,11 +311,12 @@ class NeedsNoteViewer(object):
             
 class NeedsSelectedTasks(NeedsTaskViewer, NeedsSelection):
     pass
-
-class NeedsSelectedTasksWithAttachments(NeedsSelectedTasks):
+    
+class NeedsSelectionWithAttachments(NeedsSelection):
     def enabled(self, event):
-        return super(NeedsSelectedTasksWithAttachments, self).enabled(event) and \
-            bool([task for task in self.viewer.curselection() if task.attachments()])
+        return super(NeedsSelectionWithAttachments, self).enabled(event) and \
+            not self.viewer.isShowingEffort() and \
+            bool([item for item in self.viewer.curselection() if item.attachments()])
 
 class NeedsSelectedEffort(NeedsEffortViewer, NeedsSelection):
     pass
@@ -814,7 +815,7 @@ class HideCurrentColumn(ViewerCommand):
         # Unfortunately the event (an UpdateUIEvent) does not give us any
         # information to determine the current column, so we have to find 
         # the column ourselves. We use the current mouse position to do so.
-        widget = self.viewer.getWidget()
+        widget = self.viewer.getWidget() # Must use method to make sure viewer dispatch works!
         x, y = widget.ScreenToClient(wx.GetMousePosition())
         # Use wx.Point because CustomTreeCtrl assumes a wx.Point instance:
         item, flag, columnIndex = widget.HitTest(wx.Point(x, y), 
@@ -872,7 +873,7 @@ class ViewExpandSelected(NeedsSelection, NeedsTreeViewer, ViewerCommand):
             self.viewer.isSelectionExpandable()
                 
     def doCommand(self, event):
-        self.viewer.expandSelectedItems()
+        self.viewer.expandSelected()
             
 
 class ViewCollapseAll(NeedsTreeViewer, ViewerCommand):
@@ -901,7 +902,7 @@ class ViewCollapseSelected(NeedsTreeViewer, NeedsSelection, ViewerCommand):
             self.viewer.isSelectionCollapsable()
     
     def doCommand(self, event):
-        self.viewer.collapseSelectedItems()
+        self.viewer.collapseSelected()
 
 
 class ViewerSortByCommand(ViewerCommand, UIRadioCommand):        
@@ -1008,16 +1009,20 @@ class ViewerHideOverbudgetTasks(ViewerCommand, UICheckCommand):
         self.viewer.hideOverbudgetTasks(self._isMenuItemChecked(event))
 
 
-class ViewerHideCompositeTasks(ViewerCommand, NeedsListViewer, UICheckCommand):
+class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewerHideCompositeTasks, self).__init__(menuText=_('Hide tasks &with subtasks'),
-            helpText=_('Show/hide tasks with subtasks'), *args, **kwargs)
+        super(ViewerHideCompositeTasks, self).__init__(menuText=_('C&omposite'),
+            helpText=_('Show/hide tasks with subtasks in list mode'), 
+            *args, **kwargs)
             
     def isSettingChecked(self):
         return self.viewer.isHidingCompositeTasks()
         
     def doCommand(self, event):
         self.viewer.hideCompositeTasks(self._isMenuItemChecked(event))
+
+    def enabled(self, event):
+        return not self.viewer.isTreeViewer()
 
 
 class NewDomainObject(ViewerCommand):
@@ -1337,41 +1342,116 @@ class TaskMail(NeedsSelectedTasks, ViewerCommand):
         desktop.open(mailToURL)
 
 
-class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand, SettingsCommand):
+class TaskAddNote(NeedsSelectedTasks, ViewerCommand, MainWindowCommand,
+                  CategoriesCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(TaskAddAttachment, self).__init__(menuText=_('&Add attachment'),
-            helpText=_('Browse for files to add as attachment to the selected task(s)'),
+        super(TaskAddNote, self).__init__(menuText=_('Add &note'),
+            helpText=_('Add a note to the selected task(s)'),
+            bitmap='note', *args, **kwargs)
+            
+    def doCommand(self, event, show=True):
+        noteDialog = dialog.editor.NoteEditor(self.mainwindow, 
+            command.AddTaskNoteCommand(self.viewer.model(), 
+                self.viewer.curselection()),
+            self.settings, self.categories, bitmap=self.bitmap)
+        noteDialog.Show(show)
+        return noteDialog # for testing purposes
+
+
+class CategoryAddNote(NeedsSelectedCategory, ViewerCommand, MainWindowCommand,
+                      CategoriesCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(CategoryAddNote, self).__init__(menuText=_('Add &note'),
+            helpText=_('Add a note to the selected category(ies)'),
+            bitmap='note', *args, **kwargs)
+            
+    def doCommand(self, event, show=True):
+        noteDialog = dialog.editor.NoteEditor(self.mainwindow, 
+            command.AddCategoryNoteCommand(self.viewer.model(), 
+                self.viewer.curselection()),
+            self.settings, self.categories, bitmap=self.bitmap)
+        noteDialog.Show(show)
+        return noteDialog # for testing purposes
+        
+
+class AddAttachment(NeedsSelection, ViewerCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(AddAttachment, self).__init__(menuText=_('&Add attachment'),          
             bitmap='attachment', *args, **kwargs)
         
     def doCommand(self, event):
         filename = widgets.AttachmentSelector()
-        if filename:
-            base = self.settings.get('file', 'attachmentbase')
-            if base:
-                filename = attachment.getRelativePath(filename, base)
+        if not filename:
+            return
+        base = self.settings.get('file', 'attachmentbase')
+        if base:
+            filename = attachment.getRelativePath(filename, base)
+        addAttachmentCommand = command.AddAttachmentCommand( \
+            self.viewer.model(), self.viewer.curselection(), 
+            attachments=[attachment.FileAttachment(filename)])
+        addAttachmentCommand.do()
 
-            addAttachmentCommand = command.AddAttachmentToTaskCommand( \
-                self.taskList, self.viewer.curselection(), 
-                attachments=[attachment.FileAttachment(filename)])
-            addAttachmentCommand.do()
 
-
-class TaskOpenAllAttachments(NeedsSelectedTasksWithAttachments, ViewerCommand, SettingsCommand):
+class AddTaskAttachment(NeedsTaskViewer, AddAttachment):
     def __init__(self, *args, **kwargs):
-        super(TaskOpenAllAttachments, self).__init__(menuText=_('&Open all attachments'),
-           helpText=_('Open all attachments of the selected task(s)'),
+        super(AddTaskAttachment, self).__init__(\
+            helpText=_('Browse for files to add as attachment to the selected task(s)'),
+            *args, **kwargs)
+
+
+class AddCategoryAttachment(NeedsCategoryViewer, AddAttachment):
+    def __init__(self, *args, **kwargs):
+        super(AddCategoryAttachment, self).__init__(\
+            helpText=_('Browse for files to add as attachment to the selected categories'),
+            *args, **kwargs)
+
+
+class AddNoteAttachment(NeedsNoteViewer, AddAttachment):
+    def __init__(self, *args, **kwargs):
+        super(AddNoteAttachment, self).__init__(\
+            helpText=_('Browse for files to add as attachment to the selected note(s)'),
+            *args, **kwargs)
+            
+
+class OpenAllAttachments(NeedsSelectionWithAttachments, ViewerCommand, 
+                         SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(OpenAllAttachments, self).__init__(\
+           menuText=_('&Open all attachments'), 
            bitmap='attachment', *args, **kwargs)
         
     def doCommand(self, event):
         base = self.settings.get('file', 'attachmentbase')
-        for task in self.viewer.curselection():
-            for attachment in task.attachments():
+        for item in self.viewer.curselection():
+            for attachment in item.attachments():
                 try:    
                     attachment.open(base)
                 except Exception, instance:
                     showerror(str(instance), 
-                        caption=_('Error opening attachment'), style=wx.ICON_ERROR)
+                        caption=_('Error opening attachment'), 
+                        style=wx.ICON_ERROR)
 
+
+class OpenAllTaskAttachments(NeedsTaskViewer, OpenAllAttachments):
+    def __init__(self, *args, **kwargs):
+        super(OpenAllTaskAttachments, self).__init__(\
+            helpText=_('Open all attachments of the selected task(s)'),
+            *args, **kwargs)
+
+
+class OpenAllCategoryAttachments(NeedsCategoryViewer, OpenAllAttachments):
+    def __init__(self, *args, **kwargs):
+        super(OpenAllCategoryAttachments, self).__init__(\
+            helpText=_('Open all attachments of the selected categories'),
+            *args, **kwargs)
+
+
+class OpenAllNoteAttachments(NeedsNoteViewer, OpenAllAttachments):
+    def __init__(self, *args, **kwargs):
+        super(OpenAllNoteAttachments, self).__init__(\
+            helpText=_('Open all attachments of the selected note(s)'),
+            *args, **kwargs)
+            
 
 class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand, 
                 TaskListCommand, MainWindowCommand, UICommandsCommand,
@@ -1504,7 +1584,8 @@ class EffortStop(TaskListCommand):
         return True in (True for task in self.taskList if task.isBeingTracked())
 
 
-class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
+class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand,
+                  SettingsCommand):
     def __init__(self, *args, **kwargs):
         categories = kwargs['categories']
         super(CategoryNew, self).__init__(bitmap='new', 
@@ -1514,7 +1595,7 @@ class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
     def doCommand(self, event, show=True):
         newCategoryDialog = dialog.editor.CategoryEditor(self.mainwindow, 
             command.NewCategoryCommand(self.categories),
-            self.categories, self.uiCommands, bitmap=self.bitmap)
+            self.uiCommands, self.settings, self.categories, bitmap=self.bitmap)
         newCategoryDialog.Show(show)
         
 
@@ -1561,7 +1642,8 @@ class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
                                                   drop=dropItem)
 
 
-class NoteNew(NotesCommand, MainWindowCommand, CategoriesCommand):
+class NoteNew(NotesCommand, MainWindowCommand, CategoriesCommand, 
+              SettingsCommand):
     def __init__(self, *args, **kwargs):
         notes = kwargs['notes']
         super(NoteNew, self).__init__(bitmap='new', 
@@ -1573,7 +1655,7 @@ class NoteNew(NotesCommand, MainWindowCommand, CategoriesCommand):
                              category.isFiltered()]    
         noteDialog = dialog.editor.NoteEditor(self.mainwindow, 
             command.NewNoteCommand(self.notes, categories=filteredCategories),
-            self.categories, bitmap=self.bitmap)
+            self.settings, self.categories, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
     
@@ -1711,6 +1793,47 @@ class Search(ViewerCommand, SettingsCommand):
             includeSubItems=includeSubItems, callback=self.onFind)
         toolbar.AddControl(self.searchControl)
 
+
+class ToolbarChoiceCommand(ViewerCommand):
+    def appendToToolBar(self, toolbar):
+        ''' Add our choice control to the toolbar. '''
+        self.choiceCtrl = wx.Choice(toolbar, choices=self.choiceLabels)
+        self.currentChoice = self.choiceCtrl.Selection
+        self.choiceCtrl.Bind(wx.EVT_CHOICE, self.onChoice)
+        toolbar.AddControl(self.choiceCtrl)
+        
+    def onChoice(self, event):
+        ''' The user selected a choice from the choice control. '''
+        choiceIndex = event.GetInt()
+        if choiceIndex == self.currentChoice:
+            return
+        self.currentChoice = choiceIndex
+        self.doChoice(self.choiceData[choiceIndex])
+        
+    
+    def setChoice(self, choice):
+        ''' Programmatically set the current choice in the choice control. '''
+        index = self.choiceData.index(choice)
+        self.choiceCtrl.Selection = index
+        self.currentChoice = index
+
+
+class EffortViewerAggregationChoice(ToolbarChoiceCommand):
+    choiceLabels = [_('Effort details'), _('Effort per day'), 
+                         _('Effort per week'), _('Effort per month')]
+    choiceData = ['details', 'day', 'week', 'month']
+
+    def doChoice(self, choice):
+        self.viewer.showEffortAggregation(choice)
+        
+
+class TaskViewerTreeOrListChoice(ToolbarChoiceCommand):
+    choiceLabels = [_('Tree of tasks'), _('List of tasks')]
+    choiceData = [True, False]
+    
+    def doChoice(self, choice):
+        self.viewer.showTree(choice)
+        
 
 class ViewColumnUICommandsMixin(object):
     def addViewColumnUICommands(self, viewerContainer):
@@ -1876,34 +1999,18 @@ class UICommands(dict, ViewColumnUICommandsMixin):
                 menuText=menuText, helpText=helpText)
         
         for key, menuText, helpText, viewerClass, viewerArgs, viewerKwargs, bitmap in \
-            (('viewtasklistviewer', _('Task &list'), 
-            _('Open a new tab with a viewer that displays tasks in a list'), 
-            viewer.TaskListViewer, (taskList, self, settings), 
-            dict(categories=categories), 'listview'),
-            ('viewtasktreeviewer', _('Task &tree'),
-            _('Open a new tab with a viewer that displays tasks in a tree'),
+            (('viewtaskviewer', _('&Task'),
+            _('Open a new tab with a viewer that displays tasks'),
             viewer.TaskTreeListViewer, (taskList, self, settings),
-            dict(categories=categories), 'treeview'),
+            dict(categories=categories), 'task'),
             ('viewcategoryviewer', _('&Category'),
             _('Open a new tab with a viewer that displays categories'),
             viewer.CategoryViewer, (categories, self, settings), {},
             'category'),
-            ('vieweffortdetailviewer', _('&Effort detail'),
-            _('Open a new tab with a viewer that displays effort details'),
+            ('vieweffortviewer', _('&Effort'),
+            _('Open a new tab with a viewer that displays effort'),
             viewer.EffortListViewer, (taskList, self, settings), {}, 
             'start'),
-            ('vieweffortperdayviewer', _('Effort per &day'),
-            _('Open a new tab with a viewer that displays effort per day'),
-            viewer.EffortPerDayViewer, (taskList, self, settings), {},
-            'date'),
-            ('vieweffortperweekviewer', _('Effort per &week'),
-            _('Open a new tab with a viewer that displays effort per week'),
-            viewer.EffortPerWeekViewer, (taskList, self, settings), {},
-            'date'),
-            ('vieweffortpermonthviewer', _('Effort per &month'),
-            _('Open a new tab with a viewer that displays effort per month'),
-            viewer.EffortPerMonthViewer, (taskList, self, settings), {},
-            'date'),
             ('viewnoteviewer', _('&Note'), 
             _('Open a new tab with a viewer that displays notes'),
             viewer.NoteViewer, (notes, self, settings), 
@@ -1961,15 +2068,17 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['mailtask'] = TaskMail(viewer=viewerContainer, menuText=_('Mail task'), 
             helpText=_('Mail the task, using your default mailer'), 
             bitmap='email')
-        self['addattachmenttotask'] = TaskAddAttachment(taskList=taskList,
-                                                        viewer=viewerContainer,
-                                                        settings=settings)
-        self['openalltaskattachments'] = TaskOpenAllAttachments(viewer=viewerContainer, settings=settings)
+        self['addtaskattachment'] = AddTaskAttachment(viewer=viewerContainer,
+                                                      settings=settings)
+        self['openalltaskattachments'] = OpenAllTaskAttachments(viewer=viewerContainer,
+                                                                settings=settings)
         self['incpriority'] = TaskIncPriority(taskList=taskList, viewer=viewerContainer)
         self['decpriority'] = TaskDecPriority(taskList=taskList, viewer=viewerContainer)
         self['maxpriority'] = TaskMaxPriority(taskList=taskList, viewer=viewerContainer)
         self['minpriority'] = TaskMinPriority(taskList=taskList, viewer=viewerContainer)
-        
+        self['taskaddnote'] = TaskAddNote(viewer=viewerContainer, 
+            mainwindow=mainwindow, settings=settings, categories=categories)
+            
         # Effort menu
         self['neweffort'] = EffortNew(viewer=viewerContainer, 
             effortList=effortList, taskList=taskList, mainwindow=mainwindow, 
@@ -1982,20 +2091,30 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         
         # Category menu
         self['newcategory'] = CategoryNew(mainwindow=mainwindow, 
-            categories=categories, uiCommands=self)
+            categories=categories, uiCommands=self, settings=settings)
         self['newsubcategory'] = CategoryNewSubCategory(viewer=viewerContainer, 
             categories=categories)
         self['deletecategory'] = CategoryDelete(viewer=viewerContainer, 
             categories=categories)
         self['editcategory'] = CategoryEdit(viewer=viewerContainer, 
             categories=categories)
+        self['addcategoryattachment'] = AddCategoryAttachment(\
+            viewer=viewerContainer, settings=settings)
+        self['openallcategoryattachments'] = OpenAllCategoryAttachments(\
+            viewer=viewerContainer, settings=settings)
+        self['categoryaddnote'] = CategoryAddNote(viewer=viewerContainer, 
+            mainwindow=mainwindow, settings=settings, categories=categories)
         
         # Note menu
         self['newnote'] = NoteNew(mainwindow=mainwindow, notes=notes, 
-                                  categories=categories)
+                                  categories=categories, settings=settings)
         self['newsubnote'] = NoteNewSubNote(viewer=viewerContainer, notes=notes)
         self['deletenote'] = NoteDelete(viewer=viewerContainer, notes=notes)
         self['editnote'] = NoteEdit(viewer=viewerContainer, notes=notes)
+        self['addnoteattachment'] = AddNoteAttachment(\
+            viewer=viewerContainer, settings=settings)
+        self['openallnoteattachments'] = OpenAllNoteAttachments(\
+            viewer=viewerContainer, settings=settings)
         
         # Help menu
         self['help'] = Help()

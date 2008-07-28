@@ -23,8 +23,7 @@ import wx, uicommand
 class ToolBar(wx.ToolBar, uicommand.UICommandContainer):
     def __init__(self, window, uiCommands, size=(32, 32)):
         self.__window = window
-        super(ToolBar, self).__init__(window, 
-            style=wx.TB_FLAT|wx.TB_NODIVIDER)
+        super(ToolBar, self).__init__(window, style=wx.TB_FLAT|wx.TB_NODIVIDER)
         self.SetToolBitmapSize(size) 
         if '__WXMAC__' in wx.PlatformInfo:
             # Extra margin needed because the search control is too high

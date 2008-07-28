@@ -179,7 +179,7 @@ class MainMenu(wx.MenuBar):
         self.Append(FileMenu(mainwindow, uiCommands, settings), _('&File'))
         self.Append(EditMenu(mainwindow, uiCommands), _('&Edit'))
         self.Append(ViewMenu(mainwindow, uiCommands, settings), _('&View'))
-        self.Append(TaskMenu(mainwindow, uiCommands), _('&Task'))
+        self.Append(TaskMenu(mainwindow, uiCommands, settings), _('&Task'))
         self.Append(EffortMenu(mainwindow, uiCommands), _('Eff&ort'))
         self.Append(CategoryMenu(mainwindow, uiCommands), _('&Category'))
         if settings.getboolean('feature', 'notes'):
@@ -302,12 +302,10 @@ class ViewMenu(Menu):
 class ViewViewerMenu(Menu):
     def __init__(self, mainwindow, uiCommands, settings):
         super(ViewViewerMenu, self).__init__(mainwindow)
-        viewViewerCommands = ['viewtasklistviewer', 
-            'viewtasktreeviewer', None, 'viewcategoryviewer', None,
-            'vieweffortdetailviewer', 'vieweffortperdayviewer', 
-            'vieweffortperweekviewer', 'vieweffortpermonthviewer']
+        viewViewerCommands = ['viewtaskviewer', 'viewcategoryviewer', 
+            'vieweffortviewer']
         if settings.getboolean('feature', 'notes'):
-            viewViewerCommands.extend([None, 'viewnoteviewer'])
+            viewViewerCommands.append('viewnoteviewer')
         self.appendUICommands(uiCommands, viewViewerCommands)
         
                                       
@@ -351,12 +349,15 @@ class ToolBarMenu(Menu):
 
 
 class TaskMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, uiCommands, settings):
         super(TaskMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['newtask', 'newsubtask', None, 
+        uiCommandNames = ['newtask', 'newsubtask', None, 
             'edittask', 'toggletaskcompletion', 'incpriority', 'decpriority',
             'maxpriority', 'minpriority', None, 'deletetask', None, 
-            'mailtask', 'addattachmenttotask', 'openalltaskattachments'])
+            'mailtask', 'addtaskattachment', 'openalltaskattachments']
+        if settings.getboolean('feature', 'notes'):
+            uiCommandNames.append('taskaddnote')
+        self.appendUICommands(uiCommands, uiCommandNames)
             
             
 class EffortMenu(Menu):
@@ -370,14 +371,15 @@ class CategoryMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(CategoryMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['newcategory', 'newsubcategory', 
-            'editcategory', 'deletecategory'])
+            'editcategory', 'deletecategory', None, 'addcategoryattachment',
+            'openallcategoryattachments', 'categoryaddnote'])
         
         
 class NoteMenu(Menu):
     def __init__(self, mainwindow, uiCommands):
         super(NoteMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['newnote', 'newsubnote', 'editnote',
-            'deletenote'])
+            'deletenote', None, 'addnoteattachment', 'openallnoteattachments'])
         
         
 class HelpMenu(Menu):
@@ -444,7 +446,7 @@ class TaskPopupMenu(Menu):
             'pasteintotask', None, 'newtask', 'newsubtask', None, 'edittask', 
             'toggletaskcompletion', 'incpriority', 'decpriority', 'maxpriority', 
             'minpriority', None, 'deletetask', None, 'mailtask', 
-            'addattachmenttotask', 'openalltaskattachments', None, 'neweffort', 
+            'addtaskattachment', 'openalltaskattachments', None, 'neweffort', 
             'starteffort', 'stopeffort']
         if treeViewer:
             commandsToAppend.extend([None, 'viewexpandselected', 
@@ -466,6 +468,7 @@ class CategoryPopupMenu(Menu):
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None, 
             'newtaskwithselectedcategories', None, 'newcategory', 
             'newsubcategory', 'editcategory', 'deletecategory', None, 
+            'addcategoryattachment', 'openallcategoryattachments', None,
             'stopeffort', None, 'viewexpandselected', 'viewcollapseselected'])
 
 
@@ -474,8 +477,8 @@ class NotePopupMenu(Menu):
         super(NotePopupMenu, self).__init__(mainwindow)
         self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None,
             'newtask', None, 'newnote', 'newsubnote', 'editnote', 'deletenote',
-            None, 'stopeffort', None, 'viewexpandselected', 
-            'viewcollapseselected'])
+            None, 'addnoteattachment', 'openallnoteattachments', None, 
+            'stopeffort', None, 'viewexpandselected', 'viewcollapseselected'])
         
         
 # Column header popup menu
@@ -495,4 +498,28 @@ class ColumnPopupMenu(StaticMenu):
     def getUICommands(self):
         return ['hidecurrentcolumn', None] + \
             self._window.getColumnUICommands()
+            
+
+class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
+    def __init__(self, mainwindow, viewer, uiCommands):
+        self.viewer = viewer
+        super(EffortViewerColumnPopupMenu, self).__init__(mainwindow, uiCommands)
+        
+    def __setColumn(self, columnIndex):
+        self.__columnIndex = columnIndex
+    
+    def __getColumn(self):
+        return self.__columnIndex
+    
+    # columnIndex is the index of the column clicked by the user to popup this menu
+    # This property should be set by the control popping up this menu (see 
+    # widgets._CtrlWithColumnPopupMenu.
+    columnIndex = property(__getColumn, __setColumn) 
+
+    def registerForMenuUpdate(self):
+        self._window.Bind(wx.EVT_UPDATE_UI, self.onUpdateMenu)
+                            
+    def getUICommands(self):
+        return ['hidecurrentcolumn', None] + \
+            self.viewer.getColumnUICommands()
 

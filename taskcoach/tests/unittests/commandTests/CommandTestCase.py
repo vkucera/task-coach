@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
+from unittests import asserts
 from taskcoachlib import patterns, command
 
 
-class CommandTestCase(test.wxTestCase):
+class CommandTestCase(test.wxTestCase, asserts.CommandAsserts):
     def tearDown(self):
         super(CommandTestCase, self).tearDown()
         patterns.CommandHistory().clear()

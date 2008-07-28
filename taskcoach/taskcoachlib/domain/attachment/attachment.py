@@ -64,14 +64,7 @@ def getRelativePath(path, base=os.getcwd()):
 class Attachment(object):
     ''' Abstract base class for attachments. '''
     type_ = None
-
-    def __init__(self, *args, **kwargs):
-        super(Attachment, self).__init__(*args, **kwargs)
-        self.__task = None
-
-    def setTask(self, task):
-        self.__task = task
-
+        
     def open(self, workingDir=None):
         raise NotImplementedError
 
@@ -87,6 +80,7 @@ class FileAttachment(Attachment):
 
     def __init__(self, filename, description=None, **kwargs):
         super(FileAttachment, self).__init__(**kwargs)
+        # FIXME: description is ignored
         self.filename = filename
 
     def open(self, workingDir=None, openAttachment=desktop.open):
@@ -118,6 +112,7 @@ class URIAttachment(Attachment):
 
     def __init__(self, uri, description=None, **kwargs):
         super(URIAttachment, self).__init__(**kwargs)
+        # FIXME: description is ignored
         self.uri = uri
 
     def open(self, workingDir=None):

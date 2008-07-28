@@ -55,7 +55,7 @@ class XMLReaderVersion6Test(XMLReaderTestCase):
                         description="Yo"/>
             </task>
         </tasks>''')
-        self.assertEqual('Yo', tasks[0].efforts()[0].getDescription())
+        self.assertEqual('Yo', tasks[0].efforts()[0].description())
 
 
 class XMLReaderVersion8Test(XMLReaderTestCase):   
@@ -424,7 +424,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                 </effort>
             </task>
         </tasks>'''%description)
-        self.assertEqual(description, tasks[0].efforts()[0].getDescription())
+        self.assertEqual(description, tasks[0].efforts()[0].description())
         
     def testActiveEffort(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -444,6 +444,13 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
     def testTaskId(self):
         tasks, categories, notes = self.writeAndRead('<tasks><task id="xyz"/></tasks>')
         self.assertEqual('xyz', tasks[0].id())
+
+    def testTaskColor(self):        
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task color="(255, 0, 0, 255)"/>
+        </tasks>''')
+        self.assertEqual(wx.RED, tasks[0].color())
                 
     def testHourlyFee(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -493,11 +500,19 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         self.assertEqual(None,
                          tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
 
-    def testNoAttachments(self):
+    def testTaskWithoutAttachments(self):
         tasks, categories, notes = self.writeAndRead('<tasks><task/></tasks>')
         self.assertEqual([], tasks[0].attachments())
+
+    def testNoteWithoutAttachments(self):
+        tasks, categories, notes = self.writeAndRead('<tasks><note/></tasks>')
+        self.assertEqual([], notes[0].attachments())
+
+    def testCategoryWithoutAttachments(self):
+        tasks, categories, notes = self.writeAndRead('<tasks><category/></tasks>')
+        self.assertEqual([], categories[0].attachments())
         
-    def testOneAttachment(self):
+    def testTaskWithOneAttachment(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <task>
@@ -505,8 +520,26 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </task>
         </tasks>''')
         self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
+
+    def testNoteWithOneAttachment(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <note>
+                <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
+            </note>
+        </tasks>''')
+        self.assertEqual(['whatever.tsk'], map(unicode, notes[0].attachments()))
+
+    def testCategoryWithOneAttachment(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <category>
+                <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
+            </category>
+        </tasks>''')
+        self.assertEqual(['whatever.tsk'], map(unicode, categories[0].attachments()))
         
-    def testTwoAttachments(self):
+    def testTaskWithTwoAttachments(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <task>
@@ -547,7 +580,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>''')
         self.assertEqual('Description', categories[0].description())
     
-    def testCategoryWithColor(self):
+    def testCategoryColor(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <category subject="cat" color="(255, 0, 0, 255)"/>
@@ -649,6 +682,17 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             </note>
         </tasks>''')
         self.assertEqual(1, len(notes[0].children()))
+
+    def testNoteChildWithAttachment(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <note>
+                <note>
+                    <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
+                </note>
+            </note>
+        </tasks>''')
+        self.assertEqual(['whatever.tsk'], map(unicode, notes[0].children()[0].attachments()))
         
     def testNoteCategory(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -664,6 +708,13 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <note id="noteId"/>
         </tasks>''')
         self.assertEqual('noteId', notes[0].id())
+        
+    def testNoteColor(self):        
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <note color="(255, 0, 0, 255)"/>
+        </tasks>''')
+        self.assertEqual(wx.RED, notes[0].color())
         
     def testNoRecurrence(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -712,4 +763,81 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         <tasks>
             <task><recurrence unit="daily" sameWeekday="True"/></task>
         </tasks>''')
-        self.failUnless(tasks[0].recurrence().sameWeekday)    
+        self.failUnless(tasks[0].recurrence().sameWeekday)
+        
+    def testTaskWithNote(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
+                <note/>
+            </task> 
+        </tasks>''')
+        self.assertEqual(1, len(tasks[0].notes()))
+        
+    def testTaskWithNotes(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
+                <note/><note/>
+            </task> 
+        </tasks>''')
+        self.assertEqual(2, len(tasks[0].notes()))
+        
+    def testTaskWithNestedNotes(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
+                <note>
+                    <note/>
+                </note>
+            </task> 
+        </tasks>''')
+        self.assertEqual(1, len(tasks[0].notes()[0].children()))
+        
+    def testTaskNotesDontGetAddedToOverallNotesList(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task>
+                <note/>
+            </task> 
+        </tasks>''')
+        self.failIf(notes)
+        
+    def testCategoryWithNote(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <category>
+                <note/>
+            </category> 
+        </tasks>''')
+        self.assertEqual(1, len(categories[0].notes()))
+
+    def testCategoryWithNotes(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <category>
+                <note/><note/>
+            </category> 
+        </tasks>''')
+        self.assertEqual(2, len(categories[0].notes()))
+
+    def testCategoryWithNestedNotes(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <category>
+                <note>
+                    <note/>
+                </note>
+            </category> 
+        </tasks>''')
+        self.assertEqual(1, len(categories[0].notes()[0].children()))
+
+    def testCategoryNotesDontGetAddedToOverallNotesList(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <category>
+                <note/>
+            </category> 
+        </tasks>''')
+        self.failIf(notes)
+

@@ -24,19 +24,11 @@ import viewer
 def addEffortViewers(viewerContainer, taskList, uiCommands, settings):
     _addViewers(viewerContainer, viewer.EffortListViewer, (taskList, 
                 uiCommands, settings), {}, 'start', settings)
-    _addViewers(viewerContainer, viewer.EffortPerDayViewer, (taskList, 
-                uiCommands, settings), {}, 'date', settings)
-    _addViewers(viewerContainer, viewer.EffortPerWeekViewer, (taskList, 
-                uiCommands, settings), {}, 'date', settings)
-    _addViewers(viewerContainer, viewer.EffortPerMonthViewer, (taskList, 
-                uiCommands, settings), {}, 'date', settings)
 
 def addTaskViewers(viewerContainer, taskList, uiCommands, settings, categories):
     _addViewers(viewerContainer, viewer.TaskTreeListViewer, (taskList,
                 uiCommands, settings), dict(categories=categories), 
-                'treeview', settings)
-    _addViewers(viewerContainer, viewer.TaskListViewer, (taskList, uiCommands,
-                settings), dict(categories=categories), 'listview', settings)
+                'task', settings)
 
 def addCategoryViewers(viewerContainer, categoryContainer, uiCommands, 
                        settings):

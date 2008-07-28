@@ -31,9 +31,6 @@ class FakeAttachment(object):
     def data(self):
         return self.filename
 
-    def setTask(self, task):
-        pass
-
     def __unicode__(self):
         return self.filename
 
@@ -43,12 +40,13 @@ class TaskFileTestCase(test.TestCase):
         self.taskFile = persistence.TaskFile()
         self.emptyTaskFile = persistence.TaskFile()
         self.task = task.Task()
-        self.category = category.Category('category')
         self.taskFile.tasks().append(self.task)
-        self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
-            date.DateTime(2004,1,2)))
+        self.category = category.Category('category')
+        self.taskFile.categories().append(self.category)
         self.note = note.Note()
         self.taskFile.notes().append(self.note)
+        self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
+            date.DateTime(2004,1,2)))
         self.filename = 'test.tsk'
         self.filename2 = 'test.tsk'
         
@@ -256,19 +254,34 @@ class TaskFileTest(TaskFileTestCase):
         newEffort.setTask(task2)
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterAddCategory(self):
+    def testNeedSave_AfterTaskAddedToCategory(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
         self.task.addCategory(self.category)
         self.failUnless(self.taskFile.needSave())
     
-    def testNeedSave_AfterRemoveCategory(self):
+    def testNeedSave_AfterTaskRemovedFromCategory(self):
         self.task.addCategory(self.category)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
         self.task.removeCategory(self.category)
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterNoteAddedToCategory(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.note.addCategory(self.category)
+        self.failUnless(self.taskFile.needSave())
+    
+    def testNeedSave_AfterNoteRemovedFromCategory(self):
+        self.note.addCategory(self.category)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.note.removeCategory(self.category)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterChangePriority(self):
@@ -299,27 +312,6 @@ class TaskFileTest(TaskFileTestCase):
         self.task.setFixedFee(500)
         self.failUnless(self.taskFile.needSave())        
         
-    def testNeedSave_AfterAttachmentAdded(self):
-        self.taskFile.setFilename(self.filename)
-        self.taskFile.save()
-        self.task.addAttachments(FakeAttachment('file', 'attachment'))
-        self.failUnless(self.taskFile.needSave())
-        
-    def testNeedSave_AfterAttachmentRemoved(self):
-        self.taskFile.setFilename(self.filename)
-        att = FakeAttachment('file', 'attachment')
-        self.task.addAttachments(att)
-        self.taskFile.save()
-        self.task.removeAttachments(att)
-        self.failUnless(self.taskFile.needSave())
-        
-    def testNeedSave_AfterAllAttachmentsRemoved(self):
-        self.taskFile.setFilename(self.filename)
-        self.task.addAttachments(FakeAttachment('file', 'attachment'))
-        self.taskFile.save()
-        self.task.removeAllAttachments()
-        self.failUnless(self.taskFile.needSave())
-
     def testNeedSave_AfterAddChild(self):
         self.taskFile.setFilename(self.filename)
         child = task.Task()
@@ -440,6 +432,55 @@ class TaskFileTest(TaskFileTestCase):
         self.assertEqual(self.filename2, self.taskFile.lastFilename())
 
 
+class ChangingAttachmentsTests(object):        
+    def testNeedSave_AfterAttachmentAdded(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.item.addAttachments(self.attachment)
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterAttachmentRemoved(self):
+        self.taskFile.setFilename(self.filename)
+        self.item.addAttachments(self.attachment)
+        self.taskFile.save()
+        self.item.removeAttachments(self.attachment)
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterAttachmentsReplaced(self):
+        self.taskFile.setFilename(self.filename)
+        self.item.addAttachments(self.attachment)
+        self.taskFile.save()
+        self.item.setAttachments(FakeAttachment('file', 'attachment2'))
+        self.failUnless(self.taskFile.needSave())
+
+
+class TaskFileDirtyWhenChangingAttachmentsTestCase(TaskFileTestCase):
+    def setUp(self):
+        super(TaskFileDirtyWhenChangingAttachmentsTestCase, self).setUp()
+        self.attachment = FakeAttachment('file', 'attachment')
+    
+
+class TaskFileDirtyWhenChangingTaskAttachmentsTestCase(\
+        TaskFileDirtyWhenChangingAttachmentsTestCase, ChangingAttachmentsTests):
+    def setUp(self):
+        super(TaskFileDirtyWhenChangingTaskAttachmentsTestCase, self).setUp()
+        self.item = self.task
+
+        
+class TaskFileDirtyWhenChangingNoteAttachmentsTestCase(\
+        TaskFileDirtyWhenChangingAttachmentsTestCase, ChangingAttachmentsTests):
+    def setUp(self):
+        super(TaskFileDirtyWhenChangingNoteAttachmentsTestCase, self).setUp()
+        self.item = self.note
+
+
+class TaskFileDirtyWhenChangingCategoryAttachmentsTestCase(\
+        TaskFileDirtyWhenChangingAttachmentsTestCase, ChangingAttachmentsTests):
+    def setUp(self):
+        super(TaskFileDirtyWhenChangingCategoryAttachmentsTestCase, self).setUp()
+        self.item = self.category
+
+
 class TaskFileSaveAndLoadTest(TaskFileTestCase):
     def setUp(self):
         super(TaskFileSaveAndLoadTest, self).setUp()
@@ -501,25 +542,25 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.assertEqual(2, len(self.taskFile.tasks()))
 
     def testMerge_OneCategoryInMergeFile(self):
+        self.taskFile.categories().remove(self.category)
         self.mergeFile.categories().append(self.category)
         self.merge()
         self.assertEqual([self.category.subject()], 
                          [cat.subject() for cat in self.taskFile.categories()])
         
     def testMerge_DifferentCategories(self):
-        self.mergeFile.categories().append(self.category)
-        self.taskFile.categories().append(category.Category('another category'))
+        self.mergeFile.categories().append(category.Category('another category'))
         self.merge()
         self.assertEqual(2, len(self.taskFile.categories()))
         
     def testMerge_SameCategory(self):
-        self.mergeFile.categories().append(self.category)
-        self.taskFile.categories().append(category.Category(self.category.subject()))
+        self.mergeFile.categories().append(category.Category(self.category.subject()))
         self.merge()
         self.assertEqual([self.category.subject()]*2, 
                          [cat.subject() for cat in self.taskFile.categories()])
         
     def testMerge_CategoryWithTask(self):
+        self.taskFile.categories().remove(self.category)
         self.mergeFile.categories().append(self.category)
         aTask = task.Task(subject='merged task')
         self.mergeFile.tasks().append(aTask)

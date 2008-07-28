@@ -60,10 +60,10 @@ class ICSWriter:
         description = ''
         if task.description():
             description = task.description()
-        if effort.getDescription():
+        if effort.description():
             if description:
                 description += '\n----\n'
-            description += effort.getDescription()
+            description += effort.description()
         if description:
             self += 'DESCRIPTION:%s'%description.replace('\n','\\n')
 

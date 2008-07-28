@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from category import Category, CategorizableCompositeObject
+from category import Category
+from categorizable import CategorizableCompositeObject
 from categorycontainer import CategoryList
 from sorter import CategorySorter
 import filter

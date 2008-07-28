@@ -99,7 +99,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
         self.manager = wx.aui.AuiManager(self, 
             wx.aui.AUI_MGR_DEFAULT|wx.aui.AUI_MGR_ALLOW_ACTIVE_PANE)
         self.Bind(wx.aui.EVT_AUI_RENDER, self.onRender)
-        
+                
     def onRender(self, event):
         ''' Whenever the AUI managed frames get rendered, make sure the active
             pane has focus. '''
@@ -131,7 +131,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
                 yield grandChild
 
     def AddPage(self, page, caption, name): 
-        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().FloatingSize((300,200))
+        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().FloatingSize((300,200))
         # To ensure we have a center pane we make the first pane the center pane:
         if not self.manager.GetAllPanes():
             paneInfo = paneInfo.Center().CloseButton(False)
@@ -140,6 +140,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
 
     def SetPageText(self, index, title):
         self.manager.GetAllPanes()[index].Caption(title)
+        self.manager.Update()
 
     def GetPageIndex(self, window):
         for index, paneInfo in enumerate(self.manager.GetAllPanes()):
@@ -184,7 +185,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
 class MainWindow(AuiManagedFrameWithNotebookAPI):
     pageClosedEvent = wx.aui.EVT_AUI_PANE_CLOSE
     
-    def __init__(self, iocontroller, taskFile, settings, 
+    def __init__(self, iocontroller, taskFile, settings,                 #self.Bind(self.pageClosedEvent, self.onCloseToolBar)
                  splash=None, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
         self.dimensionsTracker = WindowDimensionsTracker(self, settings)
@@ -201,7 +202,8 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         wx.CallAfter(self.showTips)
 
     def createWindowComponents(self):
-        self.__usingTabbedMainWindow = self.settings.getboolean('view', 'tabbedmainwindow') 
+        self.__usingTabbedMainWindow = self.settings.getboolean('view', 
+            'tabbedmainwindow') 
         if self.__usingTabbedMainWindow:
             containerWidget = widgets.AUINotebook(self)
         else:
@@ -268,6 +270,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             eventType='view.statusbar')
         patterns.Publisher().registerObserver(self.onShowToolBar, 
             eventType='view.toolbar')
+        self.Bind(self.pageClosedEvent, self.onCloseToolBar)
 
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
@@ -389,17 +392,15 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             if currentToolbar.IsOk():
                 self.manager.DetachPane(currentToolbar.window)
                 currentToolbar.window.Destroy()
-            if size is None:
-                self.Unbind(self.pageClosedEvent)
-            else:
+            if size:
                 bar = toolbar.ToolBar(self, self.uiCommands, size=size)
                 self.manager.AddPane(bar, wx.aui.AuiPaneInfo().Name('toolbar').
                                      Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
                                      LeftDockable(False).RightDockable(False))
-                self.Bind(self.pageClosedEvent, self.onCloseToolBar)
             self.manager.Update()
 
     def onCloseToolBar(self, event):
         if event.GetPane().IsToolbar():
             self.settings.set('view', 'toolbar', 'None')
+        event.Skip()
         # Don't call event.Skip(), it crashes TC on Ubuntu. Don't know why.

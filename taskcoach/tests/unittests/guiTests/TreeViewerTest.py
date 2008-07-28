@@ -31,7 +31,7 @@ class TreeViewerTest(test.wxTestCase):
         notebook = widgets.Notebook(self.frame)
         self.viewerContainer = gui.viewercontainer.ViewerContainer(notebook, 
             self.settings, 'mainviewer')
-        self.viewer = gui.viewer.TaskTreeViewer(notebook,
+        self.viewer = gui.viewer.TaskTreeListViewer(notebook,
             self.taskList, gui.uicommand.UICommands(self.frame, None, 
                 self.viewerContainer, self.settings, self.taskList, 
                 effort.EffortList(self.taskList), self.categories, self.notes), 

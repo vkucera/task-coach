@@ -37,6 +37,14 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.viewerContainer = gui.viewercontainer.ViewerContainer(\
             widgets.Notebook(self.frame), self.settings, 'mainviewer')
         self.createViewer()
+        
+    def createViewer(self):
+        self.settings.set('tasktreelistviewer', 'treemode', self.treeMode)
+        self.viewer = gui.viewer.TaskTreeListViewer(self.frame, self.taskList, 
+            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+                self.settings, self.taskList, self.effortList, self.categories, 
+                self.notes), 
+            self.settings, categories=self.categories)
 
     def __writeAndRead(self, selectionOnly):
         self.writer.write(self.viewer, selectionOnly)
@@ -50,6 +58,9 @@ class HTMLWriterTestCase(test.wxTestCase):
     def expectNotInHTML(self, htmlFragment, selectionOnly=False):
         html = self.__writeAndRead(selectionOnly)
         self.failIf(htmlFragment in html, '%s in %s'%(htmlFragment, html))
+
+    def selectItem(self, index):
+        self.viewer.widget.select((index,))
 
 
 class TaskTests(object):
@@ -87,6 +98,10 @@ class TaskTests(object):
         expectedColor = '%02X%02X%02X'%eval(self.settings.get('color', 'inactivetasks'))[:3]
         self.expectInHTML('<font color="#%s">Task subject</font>'%expectedColor)
 
+    def testTaskColor(self):
+        self.task.setColor(wx.RED)
+        self.expectInHTML('<tr bgcolor="#FF0000">')
+        
     def testCategoryColor(self):
         cat = category.Category('cat', color=wx.RED)
         self.task.addCategory(cat)
@@ -99,16 +114,8 @@ class TaskTests(object):
         
         
 class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
-    def createViewer(self):
-        self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
-                self.settings, self.taskList, self.effortList, self.categories, 
-                self.notes), 
-            self.settings, categories=self.categories)
+    treeMode = 'False'
         
-    def selectItem(self, index):
-        self.viewer.widget.SelectItem(index)
-
     def testTaskDescription(self):
         self.task.setDescription('Task description')
         self.viewer.showColumnByName('description')
@@ -121,17 +128,8 @@ class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
                       
 
 class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
-    def createViewer(self):
-        self.viewer = gui.viewer.TaskTreeViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
-                self.settings, self.taskList, self.effortList, self.categories, 
-                self.notes), 
-            self.settings, categories=self.categories)
+    treeMode = 'True'
 
-    def selectItem(self, index):
-        item, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())
-        self.viewer.widget.SelectItem(item)
-        
 
 class EffortWriterTest(HTMLWriterTestCase):
     def setUp(self):

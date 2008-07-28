@@ -49,9 +49,7 @@ class XMLWriter:
         self.document.writexml(self.__fd)
 
     def taskNode(self, task):
-        node = self.document.createElement('task')
-        node.setAttribute('subject', task.subject())
-        node.setAttribute('id', task.id())
+        node = self.baseNode(task, 'task', self.taskNode)
         if task.startDate() != date.Date():
             node.setAttribute('startdate', str(task.startDate()))
         if task.dueDate() != date.Date():
@@ -73,23 +71,12 @@ class XMLWriter:
         if task.shouldMarkCompletedWhenAllChildrenCompleted != None:
             node.setAttribute('shouldMarkCompletedWhenAllChildrenCompleted', 
                               str(task.shouldMarkCompletedWhenAllChildrenCompleted))
-        if task.description():
-            node.appendChild(self.textNode('description', task.description()))
-        for attachment in task.attachments():
-            node.appendChild(self.attachmentNode(attachment))
-        for child in task.children():
-            node.appendChild(self.taskNode(child))
         for effort in task.efforts():
             node.appendChild(self.effortNode(effort))
+        for note in task.notes():
+            node.appendChild(self.noteNode(note))
         return node
 
-    def attachmentNode(self, att):
-        node = self.document.createElement('attachment')
-        node.setAttribute('type', att.type_)
-        node.appendChild(self.textNode('description', unicode(att)))
-        node.appendChild(self.textNode('data', att.data()))
-        return node
-    
     def recurrenceNode(self, recurrence):
         node = self.document.createElement('recurrence')
         node.setAttribute('unit', recurrence.unit)
@@ -114,8 +101,8 @@ class XMLWriter:
                 # Make sure the effort duration is at least one second
                 formattedStop = self.formatDateTime(stop + date.TimeDelta(seconds=1))
             node.setAttribute('stop', formattedStop)
-        if effort.getDescription():
-            node.appendChild(self.textNode('description', effort.getDescription()))
+        if effort.description():
+            node.appendChild(self.textNode('description', effort.description()))
         return node
     
     def categoryNode(self, category, *categorizableContainers):
@@ -124,41 +111,53 @@ class XMLWriter:
                 if categorizable in container:
                     return True
             return False
-        node = self.document.createElement('category')
-        node.setAttribute('subject', category.subject())
-        node.setAttribute('id', category.id())
-        if category.description():
-            node.appendChild(self.textNode('description', category.description()))
+        node = self.baseNode(category, 'category', self.categoryNode, 
+                             categorizableContainers)
         if category.isFiltered():
             node.setAttribute('filtered', str(category.isFiltered()))
-        if category.color():
-            node.setAttribute('color', str(category.color()))
+        for note in category.notes():
+            node.appendChild(self.noteNode(note))
         # Make sure the categorizables referenced are actually in the 
         # categorizableContainer, i.e. they are not deleted
         categorizableIds = ' '.join([categorizable.id() for categorizable in \
             category.categorizables() if inCategorizableContainer(categorizable)])
         if categorizableIds:            
             node.setAttribute('categorizables', categorizableIds)
-        for child in category.children():
-            node.appendChild(self.categoryNode(child, *categorizableContainers))
         return node
     
     def noteNode(self, note):
-        node = self.document.createElement('note')
-        node.setAttribute('id', note.id())
-        if note.subject():
-            node.setAttribute('subject', note.subject())
-        if note.description():
-            node.appendChild(self.textNode('description', note.description()))
-        for child in note.children():
-            node.appendChild(self.noteNode(child))
+        return self.baseNode(note, 'note', self.noteNode)
+        
+    def baseNode(self, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
+        ''' Create a node and add the attributes that all composite domain
+            objects share, such as id, subject, description. Also create child
+            nodes by means of the childNodeFactory. '''
+        node = self.document.createElement(nodeName)
+        node.setAttribute('id', item.id())
+        if item.subject():
+            node.setAttribute('subject', item.subject())
+        if item.description():
+            node.appendChild(self.textNode('description', item.description()))
+        if item.color(recursive=False):
+            node.setAttribute('color', str(item.color(recursive=False)))
+        for attachment in item.attachments():
+            node.appendChild(self.attachmentNode(attachment))
+        for child in item.children():
+            node.appendChild(childNodeFactory(child, *childNodeFactoryArgs))
+        return node
+
+    def attachmentNode(self, attachment):
+        node = self.document.createElement('attachment')
+        node.setAttribute('type', attachment.type_)
+        node.appendChild(self.textNode('description', unicode(attachment)))
+        node.appendChild(self.textNode('data', attachment.data()))
         return node
         
     def budgetAsAttribute(self, budget):
         return '%d:%02d:%02d'%budget.hoursMinutesSeconds()
                 
-    def textNode(self, tagName, text):
-        node = self.document.createElement(tagName)
+    def textNode(self, nodeName, text):
+        node = self.document.createElement(nodeName)
         textNode = self.document.createTextNode(text)
         node.appendChild(textNode)
         return node

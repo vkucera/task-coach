@@ -72,7 +72,9 @@ class NewTaskWithSelectedCategoryTest(test.wxTestCase):
     def createNewTask(self):
         taskNew = gui.uicommand.NewTaskWithSelectedCategories(taskList=self.taskList,
                                                 viewer=self.viewer,
-                                                categories=self.categories)
+                                                categories=self.categories,
+                                                uiCommands=self.uiCommands,
+                                                settings=config.Settings(load=False))
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog[0][2]._treeCtrl
         return tree.GetFirstChild(tree.GetRootItem())[0]
@@ -137,8 +139,13 @@ class TaskNewTest(test.TestCase):
     def testNewTaskWithCategories(self):
         cat = category.Category('cat', filtered=True)
         categories = category.CategoryList([cat])
-        taskNew = gui.uicommand.TaskNew(taskList=task.TaskList(), 
-                                        categories=categories)
+        taskList = task.TaskList()
+        taskNew = gui.uicommand.TaskNew(taskList=taskList, 
+            categories=categories,
+            uiCommands=dummy.DummyUICommands(taskList=taskList, 
+            effortList=effort.EffortList(taskList), categories=categories,
+            notes=note.NoteContainer()),
+            settings=config.Settings(load=False))
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog[0][2]._treeCtrl
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
@@ -163,3 +170,54 @@ class EditPreferencesTest(test.TestCase):
         editPreferences = gui.uicommand.EditPreferences(settings=self.settings)
         editPreferences.doCommand(None, show=False)
         # No assert, just checking whether it works without exceptions
+        
+        
+class EffortViewerAggregationChoiceTest(test.TestCase):
+    def setUp(self):
+        self.selectedAggregation = 'details'
+        self.showAggregationCalled = False
+        self.choice = gui.uicommand.EffortViewerAggregationChoice(viewer=self)
+        self.choice.currentChoice = 0
+        class DummyEvent(object):
+            def __init__(self, selection):
+                self.selection = selection
+            def GetInt(self):
+                return self.selection
+        self.DummyEvent = DummyEvent
+        
+    def showEffortAggregation(self, aggregation):
+        self.selectedAggregation = aggregation
+        self.showAggregationCalled = True
+    
+    def testUserPicksCurrentChoice(self):
+        self.choice.onChoice(self.DummyEvent(0))
+        self.failIf(self.showAggregationCalled)
+
+    def testUserPicksSameChoiceTwice(self):
+        self.choice.onChoice(self.DummyEvent(1))
+        self.showAggregationCalled = False
+        self.choice.onChoice(self.DummyEvent(1))
+        self.failIf(self.showAggregationCalled)
+    
+    def testUserPicksEffortPerDay(self):
+        self.choice.onChoice(self.DummyEvent(1))
+        self.assertEqual('day', self.selectedAggregation)
+
+    def testUserPicksEffortPerWeek(self):
+        self.choice.onChoice(self.DummyEvent(2))
+        self.assertEqual('week', self.selectedAggregation)
+
+    def testUserPicksEffortPerMonth(self):
+        self.choice.onChoice(self.DummyEvent(3))
+        self.assertEqual('month', self.selectedAggregation)
+
+    def testSetChoice(self):
+        class DummyToolBar(wx.Frame):
+            def AddControl(self, *args, **kwargs):
+                pass
+        self.choice.appendToToolBar(DummyToolBar(None))
+        self.choice.setChoice('week')
+        self.assertEqual('Effort per week',
+                         self.choice.choiceCtrl.GetStringSelection())
+        self.assertEqual(2, self.choice.currentChoice)
+

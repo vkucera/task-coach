@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import StringIO
+import StringIO, wx
 import test
 from taskcoachlib import persistence
 from taskcoachlib.domain import task, category, effort, date, note, attachment
@@ -64,7 +64,7 @@ class IntegrationTest(IntegrationTestCase):
             completiondate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
             priority=4, hourlyFee=100.5, fixedFee=1000, 
             recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
-            reminder=date.DateTime(2004,1,1),
+            reminder=date.DateTime(2004,1,1), color=wx.RED,
             shouldMarkCompletedWhenAllChildrenCompleted=True)
         self.child = task.Task()
         self.task.addChild(self.child)
@@ -76,6 +76,7 @@ class IntegrationTest(IntegrationTestCase):
                                           description='Description')
         self.categories.append(self.category)
         self.task.addAttachments(attachment.FileAttachment('/home/frank/whatever.txt'))
+        self.task.addNote(note.Note(subject='Task note'))
         self.task2 = task.Task('Task 2', priority=-1954)
         self.taskList.extend([self.task, self.task2])
         self.note = note.Note('Note', 'Description', children=[note.Note('Child')])
@@ -90,6 +91,11 @@ class IntegrationTest(IntegrationTestCase):
         self.assertEqual(getattr(task, attribute)(), 
                          getattr(taskWrittenAndRead, attribute)())
                          
+    def assertContainedDomainObjectsWrittenAndRead(self, task, attribute):
+        taskWrittenAndRead = self.getTaskWrittenAndRead(task.id())
+        self.assertEqual([obj.id() for obj in getattr(task, attribute)()], 
+                         [obj.id() for obj in getattr(taskWrittenAndRead, attribute)()])
+               
     def assertPropertyWrittenAndRead(self, task, property):
         taskWrittenAndRead = self.getTaskWrittenAndRead(task.id())
         self.assertEqual(getattr(task, property), 
@@ -100,6 +106,9 @@ class IntegrationTest(IntegrationTestCase):
 
     def testDescription(self):
         self.assertAttributeWrittenAndRead(self.task, 'description')
+
+    def testColor(self):
+        self.assertAttributeWrittenAndRead(self.task, 'color')
          
     def testStartDate(self):
         self.assertAttributeWrittenAndRead(self.task, 'startDate')
@@ -122,8 +131,8 @@ class IntegrationTest(IntegrationTestCase):
         self.assertAttributeWrittenAndRead(self.task, 'timeSpent')
         
     def testEffortDescription(self):
-        self.assertEqual(self.task.efforts()[0].getDescription(), 
-            self.getTaskWrittenAndRead(self.task.id()).efforts()[0].getDescription())
+        self.assertEqual(self.task.efforts()[0].description(), 
+            self.getTaskWrittenAndRead(self.task.id()).efforts()[0].description())
         
     def testChildren(self):
         self.assertEqual(len(self.task.children()), 
@@ -199,6 +208,7 @@ class IntegrationTest(IntegrationTestCase):
         self.failUnless(self.notesWrittenAndRead.rootItems()[0] in \
                         self.categoriesWrittenAndRead[0].categorizables())
         
-    
-        
+    def testTaskNote(self):
+        self.assertContainedDomainObjectsWrittenAndRead(self.task, 'notes')
+
 

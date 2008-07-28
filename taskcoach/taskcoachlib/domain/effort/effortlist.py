@@ -108,3 +108,6 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             hand. '''
         for effort in efforts:
             effort.task().addEffort(effort)
+            
+    def sortEventType(self):
+        return 'this event type is not used'

@@ -97,10 +97,72 @@ class NoteTest(test.TestCase):
         
     def testGetState(self):
         self.assertEqual(dict(id=self.note.id(), subject='', description='', parent=None,
-            categories=set(), children=self.note.children()), self.note.__getstate__())
+            categories=set(), attachments=[], children=self.note.children(),
+            color=None), self.note.__getstate__())
         
     def testSetState(self):
         self.note.__setstate__(dict(id='id', subject='new', description='new', 
-            parent=None, children=[]))
+            parent=None, children=[], attachments=[], color=(0,0,0,255)))
         self.assertEqual('new', self.note.description())
+        
+        
+class NoteOwnerTest(test.TestCase):
+    def setUp(self):
+        self.note = note.Note('Note')
+        self.noteOwner = note.NoteOwner()
+        self.events = []
+        
+    def onEvent(self, event):
+        self.events.append(event)
+        
+    def registerObserver(self):
+        patterns.Publisher().registerObserver(self.onEvent,
+            note.NoteOwner.notesChangedEventType())
+        
+    def testAddNote(self):
+        self.noteOwner.addNote(self.note)
+        self.assertEqual([self.note], self.noteOwner.notes())
+
+    def testAddNoteNotification(self):
+        self.registerObserver()
+        self.noteOwner.addNote(self.note)
+        self.assertEqual(patterns.Event(self.noteOwner, 
+            note.NoteOwner.notesChangedEventType(), self.note), self.events[0])
+        
+    def testRemoveNote(self):
+        self.noteOwner.addNote(self.note)
+        self.noteOwner.removeNote(self.note)
+        self.failIf(self.noteOwner.notes())
+
+    def testRemoveNoteNotification(self):
+        self.noteOwner.addNote(self.note)
+        self.registerObserver()
+        self.noteOwner.removeNote(self.note)
+        self.assertEqual(patterns.Event(self.noteOwner, 
+            note.NoteOwner.notesChangedEventType(), *self.noteOwner.notes()), 
+            self.events[0])
+            
+    def testGetState(self):
+        self.noteOwner.addNote(self.note)
+        self.assertEqual(dict(notes=[self.note]), self.noteOwner.__getstate__())
+
+    def testSetState(self):
+        self.noteOwner.addNote(self.note)
+        state = self.noteOwner.__getstate__()
+        self.noteOwner.removeNote(self.note)
+        self.noteOwner.__setstate__(state)
+        self.assertEqual([self.note], self.noteOwner.notes())
+        
+    def testSetState_CausesNotification(self):
+        self.noteOwner.addNote(self.note)
+        state = self.noteOwner.__getstate__()
+        self.noteOwner.removeNote(self.note)
+        self.registerObserver()
+        self.noteOwner.__setstate__(state)
+        self.assertEqual(patterns.Event(self.noteOwner, 
+            note.NoteOwner.notesChangedEventType(), self.note), self.events[0])
+            
+    def testInitializeNotesViaConstructor(self):
+        noteOwner = note.NoteOwner(notes=[self.note])
+        self.assertEqual([self.note], noteOwner.notes())
 

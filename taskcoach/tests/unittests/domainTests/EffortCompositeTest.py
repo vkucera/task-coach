@@ -155,6 +155,14 @@ class CompositeEffortTest(test.TestCase):
         self.task.addEffort(self.effort2)
         self.assertEqual(200, self.composite.revenue())
 
+    def testThatAnHourlyFeeChangeCausesARevenueNotification(self):
+        self.task.addEffort(self.effort1)
+        patterns.Publisher().registerObserver(self.onEvent, 
+            eventType='effort.revenue')
+        self.task.setHourlyFee(100)
+        self.assertEqual(patterns.Event(self.composite, 'effort.revenue', 
+            100.0), self.events[0])
+
     def testIsBeingTracked(self):
         self.task.addEffort(self.effort1)
         self.effort1.setStop(date.Date())
@@ -257,13 +265,13 @@ class CompositeEffortTest(test.TestCase):
             'effort.composite.empty')], self.events)
         
     def testGetDescription_ZeroEfforts(self):
-        self.assertEqual('', self.composite.getDescription())
+        self.assertEqual('', self.composite.description())
         
     def testGetDescription_OneEffort(self):
         self.task.addEffort(self.effort1)
         for description in ('', 'Description'):
             self.effort1.setDescription(description)
-            self.assertEqual(description, self.composite.getDescription())
+            self.assertEqual(description, self.composite.description())
         
     def testGetDescription_TwoEfforts(self):
         self.task.addEffort(self.effort1)
@@ -278,7 +286,7 @@ class CompositeEffortTest(test.TestCase):
             else:
                 seperator = ''
             expectedDescription = description1 + seperator + description2
-            self.assertEqual(expectedDescription, self.composite.getDescription())
+            self.assertEqual(expectedDescription, self.composite.description())
 
 
 class CompositeEffortWithSubTasksTest(test.TestCase):
@@ -436,6 +444,10 @@ class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
             date.DateTime(2004,1,1,0,0,0), date.DateTime(2004,1,1,23,59,59))
         self.task.addEffort(self.taskEffort)
         self.child.addEffort(self.childEffort)
+        self.events = []
+                
+    def onEvent(self, event):
+        self.events.append(event)
  
     def testRevenueWhenParentHasHourlyFee(self):
         self.task.setHourlyFee(100)
@@ -507,3 +519,13 @@ class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
         self.child.setFixedFee(100)
         self.task.setHourlyFee(1000)
         self.assertEqual(1100, self.composite.revenue(recursive=True))
+
+        
+    def testThatAnHourlyFeeChangeCausesATotalRevenueNotification(self):
+        patterns.Publisher().registerObserver(self.onEvent, 
+            eventType='effort.totalRevenue')
+        self.child.setHourlyFee(100)
+        self.assertEqual(patterns.Event(self.composite, 'effort.totalRevenue', 
+            100.0), self.events[0])
+        
+        

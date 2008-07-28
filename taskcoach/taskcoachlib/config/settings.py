@@ -112,8 +112,12 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
             result = min(result, defaults.minimum[section][option])
         return result
                 
-    def set(self, section, option, value):
-        currentValue = self.get(section, option)
+    def set(self, section, option, value, new=False):
+        if new:
+            currentValue = 'a new option, so use something as current value'\
+                ' that is unlikely to be equal to the new value'
+        else:
+            currentValue = self.get(section, option)
         if value != currentValue:
             self.notifyObservers(patterns.Event(self, 'before.%s.%s'%(section, option), 
                                  value))

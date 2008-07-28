@@ -27,6 +27,8 @@ class Object(patterns.Observable):
     def __init__(self, *args, **kwargs):
         self.__subject = kwargs.pop('subject', '')
         self.__description = kwargs.pop('description', '')
+        self.__attachments = kwargs.pop('attachments', [])     
+        self.__color = kwargs.pop('color', None)
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
         # FIXME: Not a valid XML id
         # FIXME: When dropping support for python 2.4, use the uuid module
@@ -34,14 +36,16 @@ class Object(patterns.Observable):
         
     def __repr__(self):
         return self.subject()
-    
+
     def __getstate__(self):
         try:
             state = super(Object, self).__getstate__()
         except AttributeError:
             state = dict()
         state.update(dict(id=self.__id, subject=self.__subject, 
-                          description=self.__description))
+                          description=self.__description,
+                          attachments=self.__attachments[:],
+                          color=self.__color))
         return state
     
     def __setstate__(self, state):
@@ -52,17 +56,23 @@ class Object(patterns.Observable):
         self.setId(state['id'])
         self.setSubject(state['subject'])
         self.setDescription(state['description'])
+        self.setAttachments(*state['attachments'])
+        self.setColor(state['color'])
     
     def copy(self):
         state = self.__getstate__()
         del state['id'] # Don't copy the id
         return self.__class__(**state)
-    
+ 
+    # Id:
+       
     def id(self):
         return self.__id
     
     def setId(self, id):
         self.__id = id
+        
+    # Subject:
     
     def subject(self):
         return self.__subject
@@ -80,6 +90,8 @@ class Object(patterns.Observable):
     def subjectChangedEventType(class_):
         return '%s.subject'%class_
     
+    # Description:
+    
     def description(self):
         return self.__description
     
@@ -87,7 +99,7 @@ class Object(patterns.Observable):
         if description != self.__description:
             self.__description = description
             self.notifyObservers(patterns.Event(self, 
-                    self.descriptionChangedEventType(), description))
+                self.descriptionChangedEventType(), description))
             return True # Description was changed
         else:
             return False # Description was not changed
@@ -95,22 +107,76 @@ class Object(patterns.Observable):
     @classmethod    
     def descriptionChangedEventType(class_):
         return '%s.description'%class_
+    
+    # Attachments:
+    
+    def attachments(self):
+        return self.__attachments
+
+    def addAttachments(self, *attachments):
+        if attachments:
+            self.__attachments.extend(attachments)
+            self.notifyObservers(patterns.Event(self,
+                self.attachmentsChangedEventType(), *self.__attachments))
+                
+    def removeAttachments(self, *attachments):
+        attachmentsRemoved = []
+        for attachment in attachments:
+            if attachment in self.__attachments:
+                self.__attachments.remove(attachment)
+                attachmentsRemoved.append(attachment)
+        if attachmentsRemoved:
+            self.notifyObservers(patterns.Event(self,
+                self.attachmentsChangedEventType(), *self.__attachments))
+                
+    def setAttachments(self, *attachments):
+        self.__attachments = list(attachments)
+        self.notifyObservers(patterns.Event(self,
+            self.attachmentsChangedEventType(), *self.__attachments))
+            
+    @classmethod
+    def attachmentsChangedEventType(class_):
+        return '%s.attachments'%class_
+    
+    # Color:
+    
+    def setColor(self, color):
+        if color != self.__color:
+            self.__color = color
+            self.notifyObserversOfColorChange(color)
+        
+    def color(self):
+        return self.__color
+
+    @classmethod
+    def colorChangedEventType(class_):
+        return '%s.color'%class_
+    
+    def notifyObserversOfColorChange(self, color):
+        self.notifyObservers(patterns.Event(self, 
+            self.colorChangedEventType(), color))
 
 
 class CompositeObject(Object, patterns.ObservableComposite):
     def __init__(self, *args, **kwargs):
         self.__expanded = kwargs.pop('expand', False)
         super(CompositeObject, self).__init__(*args, **kwargs)
-        
+    
+    # Subject:
+    
     def subject(self, recursive=False):
         subject = super(CompositeObject, self).subject()
         if recursive and self.parent():
             subject = u'%s -> %s'%(self.parent().subject(recursive=True), subject)
         return subject
         
+    # Description:
+        
     def description(self, recursive=False):
         # Allow for the recursive flag, but ignore it
         return super(CompositeObject, self).description()
+        
+    # Expansion state:
     
     def isExpanded(self):
         return self.__expanded
@@ -118,4 +184,27 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def expand(self, expand=True):
         self.__expanded = expand
         
+    # Color:
+        
+    def color(self, recursive=True):
+        myColor = super(CompositeObject, self).color()
+        if not myColor and recursive and self.parent():
+            return self.parent().color()
+        else:
+            return myColor
+        
+    def notifyObserversOfColorChange(self, color):
+        super(CompositeObject, self).notifyObserversOfColorChange(color)
+        for child in self.children():
+            child.notifyObserversOfParentColorChange(color)
+
+    def notifyObserversOfParentColorChange(self, color):
+        ''' If this object has its own color, do nothing. If this object
+            uses the color of its parent, notify its observers of the color 
+            change. And similarly for the children of this object. '''
+        if self.color(recursive=False) is None:
+            self.notifyObservers(patterns.Event(self, 
+                self.colorChangedEventType(), color))
+            for child in self.children():
+                child.notifyObserversOfParentColorChange(color)
 

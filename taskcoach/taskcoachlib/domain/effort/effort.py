@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import date
+from taskcoachlib.domain import date, base
 
 
 class EffortBase(object):
@@ -40,10 +40,8 @@ class EffortBase(object):
         return self._task.subject(*args, **kwargs)
     
 
-class Effort(EffortBase):
-    def __init__(self, task, start=None, stop=None, description='', 
-            *args, **kwargs):
-        self._description = description
+class Effort(EffortBase, base.Object):
+    def __init__(self, task=None, start=None, stop=None, *args, **kwargs):
         super(Effort, self).__init__(task, start or date.DateTime.now(), stop, 
             *args, **kwargs)
 
@@ -72,18 +70,17 @@ class Effort(EffortBase):
     __repr__ = __str__
         
     def __getstate__(self):
-        return dict(task=self._task, start=self._start,
-            stop=self._stop, description=self._description)
+        state = super(Effort, self).__getstate__()
+        state.update(dict(task=self._task, start=self._start,
+            stop=self._stop))
+        return state
         
     def __setstate__(self, state):
+        super(Effort, self).__setstate__(state)
         self.setTask(state['task'])
         self.setStart(state['start'])
         self.setStop(state['stop'])
-        self.setDescription(state['description'])
    
-    def copy(self):
-        return Effort(self._task, self._start, self._stop, self._description) 
-
     def duration(self, now=date.DateTime.now):
         if self._stop:
             stop = self._stop
@@ -131,14 +128,6 @@ class Effort(EffortBase):
     def isBeingTracked(self, recursive=False):
         return self._stop is None
 
-    def setDescription(self, description):
-        self._description = description
-        patterns.Publisher().notifyObservers(patterns.Event(self, 
-            'effort.description', description))
-        
-    def getDescription(self):
-        return self._description
-
     def revenue(self):
         task = self.task()
         variableRevenue = self.duration().hours() * task.hourlyFee()
@@ -148,7 +137,11 @@ class Effort(EffortBase):
         else:
             fixedRevenue = 0
         return variableRevenue + fixedRevenue
-        
+    
+    def notifyObserversOfRevenueChange(self):
+        self.notifyObservers(patterns.Event(self, 'effort.revenue', 
+            self.revenue()))
+            
         
 class CompositeEffort(EffortBase):
     ''' CompositeEffort is a lazy list (but cached) of efforts for one task
@@ -167,6 +160,10 @@ class CompositeEffort(EffortBase):
             eventType=task.trackStartEventType())
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=task.trackStopEventType())
+        patterns.Publisher().registerObserver(self.onRevenueChanged,
+            eventType='task.revenue')
+        patterns.Publisher().registerObserver(self.onTotalRevenueChanged,
+            eventType='task.totalRevenue')
 
     def __hash__(self):
         return hash((self.task(), self.getStart()))
@@ -240,6 +237,15 @@ class CompositeEffort(EffortBase):
             patterns.Publisher().notifyObservers(patterns.Event(self,
                 'effort.track.stop', stoppedEffort))
 
-    def getDescription(self):
-        effortDescriptions = [effort.getDescription() for effort in self.__getEfforts(False) if effort.getDescription()]
+    def onRevenueChanged(self, event):
+        patterns.Publisher().notifyObservers(patterns.Event(self,
+                'effort.revenue', self.revenue()))
+
+    def onTotalRevenueChanged(self, event):
+        patterns.Publisher().notifyObservers(patterns.Event(self,
+                'effort.totalRevenue', self.revenue(recursive=True)))
+                
+    def description(self):
+        effortDescriptions = [effort.description() for effort in \
+                              self.__getEfforts(False) if effort.description()]
         return '\n'.join(effortDescriptions)

@@ -36,6 +36,9 @@ class VersionChecker(threading.Thread):
         self.settings = settings
         super(VersionChecker, self).__init__()
         
+    def _set_daemon(self):
+        return True # Don't block application exit
+        
     def run(self):
         latestVersion = self.getLatestVersion()
         lastVersionNotified = self.settings.get('version', 'notified')

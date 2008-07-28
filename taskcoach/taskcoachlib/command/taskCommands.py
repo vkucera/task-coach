@@ -58,7 +58,7 @@ class NewTaskCommand(base.BaseCommand):
     def __init__(self, *args, **kwargs):
         subject = kwargs.pop('subject', _('New task'))
         description = kwargs.pop('description', '')
-        attachments = kwargs.pop('attachments', None)
+        attachments = kwargs.pop('attachments', [])
         categories = kwargs.pop('categories', [])
         super(NewTaskCommand, self).__init__(*args, **kwargs)
         self.items = [task.Task(subject=subject, description=description, 
@@ -131,33 +131,7 @@ class EditTaskCommand(base.EditCommand):
         for task, categories in zip(self.items, newCategories):
             for category in categories:
                 category.addCategorizable(task)
-        
-        
-class AddAttachmentToTaskCommand(base.BaseCommand):
-    def name(self):
-        return _('Add attachment')
-    
-    def __init__(self, *args, **kwargs):
-        self.__attachments = kwargs.pop('attachments')
-        super(AddAttachmentToTaskCommand, self).__init__(*args, **kwargs)
 
-    def addAttachments(self):
-        for task in self.items:
-            task.addAttachments(*self.__attachments)
-        
-    def removeAttachments(self):
-        for task in self.items:
-            task.removeAttachments(*self.__attachments)
-                
-    def do_command(self):
-        self.addAttachments()
-        
-    def undo_command(self):
-        self.removeAttachments()
-
-    def redo_command(self):
-        self.addAttachments()
-        
         
 class EffortCommand(base.BaseCommand):
     def stopTracking(self):
@@ -314,3 +288,8 @@ class DecPriorityCommand(ChangePriorityCommand):
 
     delta = -1
     
+    
+class AddTaskNoteCommand(base.AddNoteCommand):
+    def name(self):
+        return _('Add note to task')
+
