@@ -62,12 +62,12 @@ class CategoryViewerTest(test.wxTestCase):
     def testSelectAll(self):
         self.addTwoCategories()
         self.viewer.widget.SelectItem(self.viewer.widget.GetFirstVisibleItem())
-        self.viewer.selectall()
+        self.viewer.widget.selectall()
         self.assertEqual(2, len(self.viewer.curselection()))
         
     def testInvertSelection(self):
         self.addTwoCategories()
-        self.viewer.invertselection()
+        self.viewer.widget.invertselection()
         self.assertEqual(2, len(self.viewer.curselection()))
 
         

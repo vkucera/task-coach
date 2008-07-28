@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from taskcoachlib import patterns, command
-from unittests import asserts
+from taskcoachlib.domain import attachment, task, note, category
 from CommandTestCase import CommandTestCase
 
-
-class DeleteCommandTest(CommandTestCase, asserts.CommandAsserts):
+    
+class DeleteCommandTest(CommandTestCase):
     def setUp(self):
         super(DeleteCommandTest, self).setUp()
         self.item = 'Item'
@@ -40,3 +40,48 @@ class DeleteCommandTest(CommandTestCase, asserts.CommandAsserts):
         self.deleteItem([self.item])
         self.assertDoUndoRedo(lambda: self.assertEqual([], self.items),
                               lambda: self.assertEqual([self.item], self.items))
+
+
+class AddAttachmentTests(object):
+    def addAttachment(self, selectedItems=None, 
+                      attachment=attachment.FileAttachment('attachment')):
+        self.attachment = attachment
+        addAttachmentCommand = command.AddAttachmentCommand(self.model,
+            selectedItems or [], attachments=[attachment])
+        addAttachmentCommand.do()
+
+    def testAddOneAttachmentToOneItem(self):
+        self.addAttachment([self.item1])
+        self.assertDoUndoRedo(lambda: self.assertEqual([self.attachment], 
+            self.item1.attachments()), lambda: self.assertEqual([], 
+            self.item1.attachments()))
+            
+    def testAddOneAttachmentToTwoItems(self):
+        self.addAttachment([self.item1, self.item2])
+        self.assertDoUndoRedo(lambda: self.failUnless([self.attachment] == \
+            self.item1.attachments() == self.item2.attachments()), 
+            lambda: self.failUnless([] == self.item1.attachments() == \
+            self.item2.attachments()))
+
+
+class AddAttachmentTestCase(CommandTestCase):
+    def setUp(self):
+        super(AddAttachmentTestCase, self).setUp()
+        self.item1 = self.ItemClass('item1')
+        self.item2 = self.ItemClass('item2')
+        self.model = self.ModelClass([self.item1, self.item2])
+
+
+class AddAttachmentCommandWithTasksTest(AddAttachmentTestCase, AddAttachmentTests):
+    ItemClass = task.Task
+    ModelClass = task.TaskList
+
+
+class AddAttachmentCommandWithNotesTest(AddAttachmentTestCase, AddAttachmentTests):
+    ItemClass = note.Note
+    ModelClass = note.NoteContainer
+
+
+class AddAttachmentCommandWithCategoriesTest(AddAttachmentTestCase, AddAttachmentTests):
+    ItemClass = category.Category
+    ModelClass = category.CategoryList

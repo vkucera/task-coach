@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task
+from taskcoachlib.domain import task, note
 
 
 class BaseCommand(patterns.Command):
@@ -260,3 +260,52 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
         self.redoStates()
         self.list.extend(self.items)
         
+
+class AddAttachmentCommand(BaseCommand):
+    def name(self):
+        return _('Add attachment')
+    
+    def __init__(self, *args, **kwargs):
+        self.__attachments = kwargs.pop('attachments')
+        super(AddAttachmentCommand, self).__init__(*args, **kwargs)
+
+    def addAttachments(self):
+        for item in self.items:
+            item.addAttachments(*self.__attachments)
+        
+    def removeAttachments(self):
+        for item in self.items:
+            item.removeAttachments(*self.__attachments)
+                
+    def do_command(self):
+        self.addAttachments()
+        
+    def undo_command(self):
+        self.removeAttachments()
+
+    def redo_command(self):
+        self.addAttachments()
+        
+
+class AddNoteCommand(BaseCommand):
+    def __init__(self, *args, **kwargs):
+        super(AddNoteCommand, self).__init__(*args, **kwargs)
+        self.notes = [note.Note(subject=_('New note'), parent=item) \
+                      for item in self.items]
+
+    def addNotes(self):
+        for item, note in zip(self.items, self.notes):
+            item.addNote(note)
+
+    def removeNotes(self):
+        for item, note in zip(self.items, self.notes):
+            item.removeNote(note)
+    
+    def do_command(self):
+        self.addNotes()
+        
+    def undo_command(self):
+        self.removeNotes()
+        
+    def redo_command(self):
+        self.addNotes()    

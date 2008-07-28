@@ -45,4 +45,4 @@ class FileAttachmentTest(test.TestCase):
         att.open('/home/jerome', openAttachment=self.openAttachment)
         self.assertEqual(os.path.normpath(os.path.join('/home/frank/attachment.txt')), 
                          self.filename)
-        
+                                

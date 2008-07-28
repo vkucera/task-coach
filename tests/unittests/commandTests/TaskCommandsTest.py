@@ -70,12 +70,6 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         command.DragAndDropTaskCommand(self.taskList, tasks or [], 
                                        drop=dropTarget).do()
         
-    def addAttachment(self, tasks=None, attachment=attachment.FileAttachment('attachment')):
-        self.attachment = attachment
-        addAttachmentCommand = command.AddAttachmentToTaskCommand(self.taskList,
-            tasks or [], attachments=[attachment])
-        addAttachmentCommand.do()
-
 
 class CommandWithChildrenTestCase(TaskCommandTestCase):
     def setUp(self):
@@ -243,7 +237,6 @@ class NewTaskCommandTest(TaskCommandTestCase):
 
 
 class NewSubTaskCommandTest(TaskCommandTestCase):
-
     def testNewSubTask_WithoutSelection(self):
         self.newSubTask()
         self.assertDoUndoRedo(lambda: self.assertTaskList(self.originalList))
@@ -492,21 +485,6 @@ class DragAndDropTaskCommandTest(CommandWithChildrenTestCase):
             self.assertEqual(self.child, self.grandchild.parent()))
         
 
-class AddAttachmentToTaskCommandTest(TaskCommandTestCase):
-    def testAddOneAttachmentToOneTask(self):
-        self.addAttachment([self.task1])
-        self.assertDoUndoRedo(lambda: self.assertEqual([self.attachment], 
-            self.task1.attachments()), lambda: self.assertEqual([], 
-            self.task1.attachments()))
-            
-    def testAddOneAttachmentToTwoTasks(self):
-        self.addAttachment([self.task1, self.task2])
-        self.assertDoUndoRedo(lambda: self.failUnless([self.attachment] == \
-            self.task1.attachments() == self.task2.attachments()), 
-            lambda: self.failUnless([] == self.task1.attachments() == \
-            self.task2.attachments()))
-    
-
 class PriorityCommandTestCase(TaskCommandTestCase):
     def setUp(self):
         super(PriorityCommandTestCase, self).setUp()
@@ -606,4 +584,24 @@ class DecreasePriorityCommandTest(PriorityCommandTestCase):
         self.task2.setPriority(-2)
         self.decPriority([self.task2])
         self.assertDoUndoRedo(0, -3, 0, -2)
+        
+
+class AddTaskNoteCommandTest(TaskCommandTestCase):
+    def addNote(self, tasks=None):
+        command.AddTaskNoteCommand(self.taskList, tasks or []).do()
+    
+    def testEmptySelection(self):
+        self.addNote()
+        self.assertDoUndoRedo(lambda: self.failIf(self.task1.notes()))
+        
+    def testAddNote(self):
+        self.addNote([self.task1])
+        self.assertDoUndoRedo(lambda: self.failUnless(self.task1.notes()),
+            lambda: self.failIf(self.task1.notes()))
+            
+    def testAddNoteToMultipleTasksAtOnce(self):
+        self.addNote([self.task1, self.task2])
+        self.assertDoUndoRedo(\
+            lambda: self.failIf(self.task1.notes()[0] == self.task2.notes()[0]),
+            lambda: self.failIf(self.task1.notes() or self.task2.notes()))
     

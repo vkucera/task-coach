@@ -26,11 +26,15 @@ class NewCategoryCommand(base.BaseCommand):
         return _('New category')
 
     def __init__(self, *args, **kwargs):
+        subject = kwargs.pop('subject', self.name())
+        description = kwargs.pop('description', '')
+        attachments = kwargs.pop('attachments', [])
         super(NewCategoryCommand, self).__init__(*args, **kwargs)
-        self.items = self.createNewCategories()
+        self.items = self.createNewCategories(subject=subject, 
+            description=description, attachments=attachments)
         
-    def createNewCategories(self):
-        return [category.Category(subject=_('New category'))]
+    def createNewCategories(self, **kwargs):
+        return [category.Category(**kwargs)]
         
     def do_command(self):
         self.list.extend(self.items)
@@ -46,8 +50,8 @@ class NewSubCategoryCommand(NewCategoryCommand):
     def name(self):
         return _('New subcategory')
             
-    def createNewCategories(self):
-        return [parent.newChild(subject=_('New subcategory')) for parent in self.items]
+    def createNewCategories(self, **kwargs):
+        return [parent.newChild(**kwargs) for parent in self.items]
 
 
 class EditCategoryCommand(base.EditCommand):
@@ -61,4 +65,10 @@ class EditCategoryCommand(base.EditCommand):
 class DragAndDropCategoryCommand(base.DragAndDropCommand):
     def name(self):
         return _('Drag and drop category')
+
+
+class AddCategoryNoteCommand(base.AddNoteCommand):
+    def name(self):
+        return _('Add note to category')
+        
 

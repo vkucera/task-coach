@@ -24,11 +24,14 @@ import effort, effortlist
 class EffortAggregator(patterns.SetDecorator, 
                        effortlist.EffortUICommandNamesMixin):
     ''' This class observes an TaskList and aggregates the individual effort
-        records to CompositeEfforts, e.g. per day or per week. This class is 
-        abstract. Subclasses should implement startOfPeriod(dateTime)
-        and endOfPeriod(dateTime). '''
+        records to CompositeEfforts, e.g. per day or per week. '''
     def __init__(self, *args, **kwargs):
         self.__composites = {}
+        aggregation = kwargs.pop('aggregation')
+        assert aggregation in ('day', 'week', 'month')
+        aggregation = aggregation.capitalize()
+        self.startOfPeriod = getattr(date.DateTime, 'startOf%s'%aggregation)
+        self.endOfPeriod = getattr(date.DateTime, 'endOf%s'%aggregation)
         super(EffortAggregator, self).__init__(*args, **kwargs)
         patterns.Publisher().registerObserver(self.onCompositeEmpty,
             eventType='effort.composite.empty')
@@ -149,18 +152,6 @@ class EffortAggregator(patterns.SetDecorator,
         return (task, self.startOfPeriod(effortStart), 
             self.endOfPeriod(effortStart))
     
-    
-class EffortPerDay(EffortAggregator):        
-    startOfPeriod = date.DateTime.startOfDay
-    endOfPeriod = date.DateTime.endOfDay
-    
-
-class EffortPerWeek(EffortAggregator): 
-    startOfPeriod = date.DateTime.startOfWeek
-    endOfPeriod = date.DateTime.endOfWeek
-
-
-class EffortPerMonth(EffortAggregator):
-    startOfPeriod = date.DateTime.startOfMonth
-    endOfPeriod = date.DateTime.endOfMonth
+    def sortEventType(self):
+        return 'this event type is not used' 
 

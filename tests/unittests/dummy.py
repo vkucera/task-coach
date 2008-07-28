@@ -118,13 +118,13 @@ class TaskViewerWithDummyWidget(ViewerWithDummyWidget, gui.viewer.TaskViewer):
         return super(TaskViewerWithDummyWidget, self).createWidget()
 
 
-class TaskListViewerWithDummyWidget(TaskViewerWithDummyWidget, 
-        gui.viewer.TaskListViewer):
+class TaskTreeListViewerWithDummyWidget(TaskViewerWithDummyWidget, 
+        gui.viewer.TaskTreeListViewer):
     def _createColumns(self):
-        return gui.viewer.TaskListViewer._createColumns(self)
+        return gui.viewer.TaskTreeListViewer._createColumns(self)
 
 
-class EffortListViewerWithDummyWidget(ViewerWithDummyWidget,
+class EffortViewerWithDummyWidget(ViewerWithDummyWidget,
         gui.viewer.EffortListViewer):
     def createSorter(self, *args, **kwargs):
         return gui.viewer.EffortListViewer.createSorter(self, *args, **kwargs)
@@ -132,21 +132,7 @@ class EffortListViewerWithDummyWidget(ViewerWithDummyWidget,
     def _createColumns(self):
         return gui.viewer.EffortListViewer._createColumns(self)
 
-
-class EffortPerDayViewerWithDummyWidget(ViewerWithDummyWidget,
-        gui.viewer.EffortPerDayViewer):
-    def createSorter(self, *args, **kwargs):
-        return gui.viewer.EffortPerDayViewer.createSorter(self, *args, **kwargs)
-
-    def _createColumns(self):
-        return gui.viewer.EffortPerDayViewer._createColumns(self)
-
-        
-class TaskList(patterns.ObservableList):        
-    def rootItems(self):
-        return [task for task in self if task.parent() is None]
-    
-    
+            
 class TaskFile(persistence.TaskFile):
     def load(self, *args, **kwargs):
         pass

@@ -17,9 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from unittests import dummy
 from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date
+
+
+class DummyTaskList(task.TaskList):
+    def __init__(self, *args, **kwargs):
+        self.treeMode = 'not set'
+        super(DummyTaskList, self).__init__(*args, **kwargs)
+        
+    def setTreeMode(self, treeMode):
+        self.treeMode = treeMode
 
 
 class TaskSorterTest(test.TestCase):
@@ -28,11 +36,11 @@ class TaskSorterTest(test.TestCase):
         b = self.b = task.Task('b')
         c = self.c = task.Task('c')
         d = self.d = task.Task('d')
-        self.list = dummy.TaskList([d, b, c, a])
+        self.list = task.TaskList([d, b, c, a])
         self.sorter = task.sorter.Sorter(self.list)
 
     def testInitiallyEmpty(self):
-        sorter = task.sorter.Sorter(dummy.TaskList())
+        sorter = task.sorter.Sorter(task.TaskList())
         self.assertEqual(0, len(sorter))
 
     def testLength(self):
@@ -46,9 +54,8 @@ class TaskSorterTest(test.TestCase):
 
     def testRemoveItem(self):
         self.sorter.remove(self.c)
-        self.assertEqual(3, len(self.sorter))
         self.assertEqual([self.a, self.b, self.d], list(self.sorter))
-        self.assertEqual([self.d, self.b, self.a], self.list)
+        self.assertEqual(3, len(self.list))
 
     def testAppend(self):
         e = task.Task('e')
@@ -197,7 +204,7 @@ class TaskSorterSettingsTest(test.TestCase):
 
 class TaskSorterTreeModeTest(test.TestCase):
     def setUp(self):
-        self.taskList = task.TaskList()
+        self.taskList = DummyTaskList()
         self.sorter = task.sorter.Sorter(self.taskList, treeMode=True)        
         self.parent1 = task.Task(subject='parent 1')
         self.child1 = task.Task(subject='child 1')
@@ -206,6 +213,10 @@ class TaskSorterTreeModeTest(test.TestCase):
         self.child2 = task.Task(subject='child 2')
         self.parent2.addChild(self.child2)
         self.taskList.extend([self.parent1, self.parent2])
+
+    def testDefaultSortOrder(self):
+        self.assertEqual([self.parent1, self.child1, self.parent2, self.child2],
+            list(self.sorter))
         
     def testSortByDueDate(self):
         self.sorter.sortBy('dueDate')
@@ -229,7 +240,21 @@ class TaskSorterTreeModeTest(test.TestCase):
         self.failUnless(list(self.sorter).index(self.parent2) < \
             list(self.sorter).index(self.parent1))
         
+    def testSetSorterToListMode(self):
+        self.sorter.setTreeMode(False)
+        self.assertEqual([self.child1, self.child2, self.parent1, self.parent2],
+            list(self.sorter))
+
+    def testTreeModeDelegation_True(self):
+        self.sorter.setTreeMode(True)
+        self.assertEqual(True, self.taskList.treeMode)
         
+    def testTreeModeDelegation_False(self):
+        self.sorter.setTreeMode(False)
+        self.assertEqual(False, self.taskList.treeMode)
+
+        
+            
 class EffortSorterTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()

@@ -38,25 +38,27 @@ class ViewerTest(test.wxTestCase):
         self.viewerContainer.addViewer(self.viewer, self.viewer.title())
         
     def createViewer(self):
-        return gui.viewer.TaskListViewer(self.notebook, self.taskList, 
+        return gui.viewer.TaskTreeListViewer(self.notebook, self.taskList, 
             gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
                 self.settings, self.taskList, self.effortList, self.categories, 
                 self.notes), 
             self.settings, categories=self.categories)
         
     def testSelectAll(self):
-        self.viewer.selectall()
+        self.viewer.widget.selectall()
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testFirstViewerInstanceSettingsSection(self):
-        self.assertEqual('tasklistviewer', self.viewer.settingsSection())
+        self.assertEqual(self.viewer.__class__.__name__.lower(), 
+                         self.viewer.settingsSection())
         
     def testSecondViewerInstanceHasAnotherSettingsSection(self):
         viewer2 = self.createViewer()
-        self.assertEqual('tasklistviewer1', viewer2.settingsSection())
+        self.assertEqual(self.viewer.settingsSection()+'1', 
+                         viewer2.settingsSection())
         
     def testTitle(self):
-        self.assertEqual('Task list', self.viewer.title())
+        self.assertEqual(self.viewer.defaultTitle, self.viewer.title())
         
     def testSetTitle(self):
         self.viewer.setTitle('New title')
@@ -227,7 +229,8 @@ class FilterableViewerTest(test.TestCase):
         self.failUnless(self.viewer.isFilterable())
 
 
-class FilterableViewerForTasksUnderTest(gui.viewer.FilterableViewerForTasks, DummyViewer):
+class FilterableViewerForTasksUnderTest(gui.viewer.FilterableViewerForTasks, 
+                                        DummyViewer):
     pass
         
         
@@ -240,7 +243,7 @@ class FilterableViewerForTasks(test.TestCase):
         viewer = FilterableViewerForTasksUnderTest()
         viewer.categories = category.CategoryList()
         viewer.settings = self.settings
-        viewer.settingsSection = lambda: 'tasklistviewer'
+        viewer.settingsSection = lambda: 'tasktreelistviewer'
         model = viewer.createFilter(task.TaskList())
         viewer.model = lambda: model
         return viewer
@@ -440,152 +443,23 @@ class FilterableViewerForTasks(test.TestCase):
         self.failIf(anotherViewer.model())   
 
 
-class TaskListViewerUnderTest(gui.viewer.TaskListViewer):
+class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
     def __init__(self, *args, **kwargs):
-        super(TaskListViewerUnderTest, self).__init__(*args, **kwargs)
+        super(TaskTreeListViewerUnderTest, self).__init__(*args, **kwargs)
         self.events = []
 
     def onAttributeChanged(self, event):
-        super(TaskListViewerUnderTest, self).onAttributeChanged(event)
+        super(TaskTreeListViewerUnderTest, self).onAttributeChanged(event)
         self.events.append(event)
 
 
-class EffortListViewerUnderTest(dummy.EffortListViewerWithDummyWidget):
+class EffortViewerUnderTest(dummy.EffortViewerWithDummyWidget):
     def __init__(self, *args, **kwargs):
-        super(EffortListViewerUnderTest, self).__init__(*args, **kwargs)
+        super(EffortViewerUnderTest, self).__init__(*args, **kwargs)
         self.events = []
 
     def onAttributeChanged(self, event):
-        super(EffortListViewerUnderTest, self).onAttributeChanged(event)
-
-
-class EffortPerDayViewerUnderTest(dummy.EffortPerDayViewerWithDummyWidget):
-    def __init__(self, *args, **kwargs):
-        super(EffortPerDayViewerUnderTest, self).__init__(*args, **kwargs)
-        self.events = []
-
-    def onAttributeChanged(self, event):
-        super(EffortPerDayViewerUnderTest, self).onAttributeChanged(event)
-
-
-class TaskListViewerTest(test.wxTestCase):
-    def setUp(self):
-        self.task = task.Task('A')
-        self.settings = config.Settings(load=False)
-        self.categories = category.CategoryList()
-        self.notes = note.NoteContainer()
-        self.taskList = task.sorter.Sorter(task.TaskList([self.task]))
-        self.notebook = widgets.Notebook(self.frame)
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
-            self.settings, 'mainviewer')
-        self.viewer = TaskListViewerUnderTest(self.notebook,
-            self.taskList, gui.uicommand.UICommands(self.frame, None, 
-                self.viewerContainer, self.settings, self.taskList, 
-                effort.EffortList(self.taskList), self.categories, self.notes), 
-            self.settings, categories=self.categories)
-
-    def showColumn(self, columnName, show=True):
-        self.viewer.showColumnByName(columnName, show)
-        
-    def testGetTimeSpent(self):
-        self.showColumn('timeSpent')
-        timeSpent = self.viewer.getItemText(0, 3)
-        self.assertEqual("0:00:00", timeSpent)
-
-    def testGetTotalTimeSpent(self):
-        self.showColumn('totalTimeSpent')
-        totalTimeSpent = self.viewer.getItemText(0, 3)
-        self.assertEqual("0:00:00", totalTimeSpent)
-        
-    def testGetSelection(self):
-        self.viewer.model().append(task.Task('B'))
-        self.viewer.widget.select([0])
-        self.assertEqual('A', self.viewer.curselection()[0].subject())
-
-    def testGetSelection_AfterResort(self):
-        self.viewer.model().append(task.Task('B'))
-        self.viewer.widget.select([0])
-        self.viewer.setSortOrderAscending(False)
-        self.assertEqual('A', self.viewer.curselection()[0].subject())
-        
-    def testChangeSubject(self):
-        self.task.setSubject('New subject')
-        self.assertEqual(task.Task.subjectChangedEventType(), 
-                         self.viewer.events[0].type())
-
-    def testChangeStartDateWhileColumnShown(self):
-        self.task.setStartDate(date.Yesterday())
-        self.assertEqual('task.startDate', self.viewer.events[0].type())
-
-    def testStartTracking(self):
-        self.task.addEffort(effort.Effort(self.task))
-        self.assertEqual('task.track.start', self.viewer.events[0].type())
-
-    def testChangeStartDateWhileColumnNotShown(self):
-        self.showColumn('startDate', False)
-        self.task.setStartDate(date.Yesterday())
-        self.assertEqual(1, len(self.viewer.events))
-
-    def testChangeDueDate(self):
-        self.task.setDueDate(date.Today())
-        self.assertEqual('task.dueDate', self.viewer.events[0].type())
-
-    def testChangeCompletionDateWhileColumnNotShown(self):
-        self.task.setCompletionDate(date.Today())
-        # We still get an event for the subject column:
-        self.assertEqual('task.completionDate', self.viewer.events[0].type())
-
-    def testChangeCompletionDateWhileColumnShown(self):
-        self.showColumn('completionDate')
-        self.task.setCompletionDate(date.Today())
-        self.assertEqual('task.completionDate', self.viewer.events[0].type())
-
-    def testChangePriorityWhileColumnNotShown(self):
-        self.task.setPriority(10)
-        self.failIf(self.viewer.events)
-
-    def testChangePriorityWhileColumnShown(self):
-        self.showColumn('priority')
-        self.task.setPriority(10)
-        self.assertEqual('task.priority', self.viewer.events[0].type())
-
-    def testChangeTotalPriorityWhileColumnNotShown(self):
-        child = task.Task()
-        self.taskList.append(child)
-        self.task.addChild(child)
-        child.setPriority(10)
-        self.failIf(self.viewer.events)
-
-    def testChangePriorityWhileColumnShown(self):
-        self.showColumn('totalPriority')
-        child = task.Task()
-        self.taskList.append(child)
-        self.task.addChild(child)
-        child.setPriority(10)
-        self.assertEqual('task.totalPriority', self.viewer.events[0].type())
-
-    # Test all attributes...
-
-    def testGetColorForDefaultTask(self):
-        self.assertEqual(wx.BLACK, self.viewer.getColor(self.task))
-
-    def testGetColorForCompletedTask(self):
-        self.task.setCompletionDate()
-        self.assertEqual(wx.GREEN, self.viewer.getColor(self.task))
-        
-    def testColorForOverDueTask(self):
-        self.task.setDueDate(date.Yesterday())
-        self.assertEqual(wx.RED, self.viewer.getColor(self.task))
-        
-    def testColorForTaskDueToday(self):
-        self.task.setDueDate(date.Today())
-        expectedColor = wx.Color(*eval(self.settings.get('color', 'duetodaytasks')))
-        self.assertEqual(expectedColor, self.viewer.getColor(self.task))
-
-    def testColorForInactiveTasks(self):
-        self.task.setStartDate(date.Tomorrow())
-        expectedColor = wx.Color(*eval(self.settings.get('color', 'inactivetasks')))
-        self.assertEqual(expectedColor, self.viewer.getColor(self.task))
+        super(EffortViewerUnderTest, self).onAttributeChanged(event)
 
 
 class ViewerBaseClassTest(test.wxTestCase):
@@ -596,12 +470,14 @@ class ViewerBaseClassTest(test.wxTestCase):
         notes = note.NoteContainer()
         settings = config.Settings(load=False)
         self.notebook = widgets.Notebook(self.frame)
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
-            settings, 'mainviewer')
+        self.viewerContainer = gui.viewercontainer.ViewerContainer(\
+            self.notebook, settings, 'mainviewer')
         try:
             baseViewer = gui.viewer.Viewer(self.notebook, taskList,
-                gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
-                    settings, taskList, effortList, categories, notes), {}, settingsSection='bla')
+                gui.uicommand.UICommands(self.frame, None, 
+                    self.viewerContainer, settings, taskList, effortList, 
+                    categories, notes), 
+                {}, settingsSection='bla')
             self.fail('Expected NotImplementedError')
         except NotImplementedError:
             pass
@@ -617,7 +493,13 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.notebook = widgets.Notebook(self.frame)
         self.viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
-        self.viewer = self.createViewer()
+        self.viewer = gui.viewer.TaskTreeListViewer(self.notebook, self.taskList,
+            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+                self.settings, self.taskList, self.effortList, self.categories, 
+                self.notes), 
+            self.settings, categories=self.categories)
+        self.settings.set(self.viewer.settingsSection(), 'treemode', 
+                          self.treeMode)
         self.viewer.sortBy('subject')
 
     def getItemsFromIterator(self):
@@ -639,8 +521,13 @@ class ViewerIteratorTests(object):
         parent = task.Task('Z')
         child = task.Task('A')
         parent.addChild(child)
+        child.setParent(parent)
         self.taskList.append(parent)
-        self.assertEqual(self.expectedParentAndChildOrder(parent, child), 
+        if self.treeMode:
+            expectedParentAndChildOrder = [parent, child]
+        else:
+            expectedParentAndChildOrder = [child, parent]
+        self.assertEqual(expectedParentAndChildOrder, 
                          self.getItemsFromIterator())
 
     def testOneParentOneChildAndOneGrandChild(self):
@@ -663,44 +550,11 @@ class ViewerIteratorTests(object):
         
     
 class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
-    def createViewer(self):
-        return gui.viewer.TaskTreeViewer(self.notebook, self.taskList,
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
-                self.settings, self.taskList, self.effortList, self.categories, 
-                self.notes), 
-            self.settings, categories=self.categories)
-    
-    def expectedParentAndChildOrder(self, parent, child):
-        return [parent, child]
-            
+    treeMode = 'True'
+        
         
 class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
-    def createViewer(self):
-        return gui.viewer.TaskListViewer(self.notebook, self.taskList,
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
-                self.settings, self.taskList, self.effortList, self.categories, 
-                self.notes), 
-            self.settings, categories=self.categories)
-
-    def expectedParentAndChildOrder(self, parent, child):
-        return [child, parent]
-
-
-class CompositeEffortListViewerTest(test.wxTestCase):
-    def setUp(self):
-        taskList = task.TaskList()
-        self.settings = config.Settings(load=False)
-        aTask = task.Task()
-        aTask.addEffort(effort.Effort(aTask))
-        taskList.append(aTask)
-        self.viewer = dummy.EffortPerDayViewerWithDummyWidget(self.frame, 
-            taskList, {}, self.settings)
-            
-    def testGetItemText_TimeSpent(self):
-        self.assertEqual('0:00:00', self.viewer.getItemText(0, 2))
-        
-    def testGetItemText_Revenue(self):
-        self.assertEqual('0.00', self.viewer.getItemText(0, 3))
+    treeMode = 'False'
 
 
 class MockWidget(object):
@@ -743,7 +597,10 @@ class UpdatePerSecondViewerTests(object):
         self.updateViewer.widget = MockWidget()
         self.updateViewer.onEverySecond(patterns.Event(date.Clock(),
             'clock.second'))
-        self.assertEqual([self.taskList.index(self.trackedTask)], 
+        expectedIndex = self.taskList.index(self.trackedTask)
+        if self.updateViewer.isTreeViewer():
+            expectedIndex = (expectedIndex,)
+        self.assertEqual([expectedIndex], 
             self.updateViewer.widget.refreshedItems)
 
     def testClockNotificationResultsInRefreshedItem_OnlyForTrackedItems(self):
@@ -774,16 +631,10 @@ class UpdatePerSecondViewerTests(object):
 
 class TaskListViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTests, 
         test.wxTestCase):
-    ListViewerClass = TaskListViewerUnderTest
+    ListViewerClass = TaskTreeListViewerUnderTest
 
 
 class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTests, 
         test.wxTestCase):
-    ListViewerClass = EffortListViewerUnderTest
-
-
-class EffortPerDayViewerUpdatePerSecondTest(UpdatePerSecondViewerTests, 
-        test.wxTestCase):
-    ListViewerClass = EffortPerDayViewerUnderTest
-
+    ListViewerClass = EffortViewerUnderTest
 

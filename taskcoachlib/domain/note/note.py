@@ -16,9 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.domain import category
+from taskcoachlib.domain.category import categorizable
 
 
-class Note(category.CategorizableCompositeObject):
-    pass    
+class Note(categorizable.CategorizableCompositeObject):
+    ''' This class represents notes. Notes consist of a subject, description, 
+        and attachments. In addition, a note may be assigned to categories. '''
+    pass
 

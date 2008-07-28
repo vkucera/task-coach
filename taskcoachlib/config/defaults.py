@@ -28,15 +28,10 @@ defaults = { \
     'toolbar': '(22, 22)',
     'mainviewer': '0',               # Index of active viewer in main window
     'effortviewerintaskeditor': '0', # Index of active effort viewer in task editor
-    'tasklistviewercount': '0',      # Number of task list viewers in main window
-    'tasktreeviewercount': '0',      # (This viewer is currently not used)
     'tasktreelistviewercount': '1',  # Number of task tree list viewers in main window
-    'categoryviewercount': '1',      # etc.
-    'noteviewercount': '0',
-    'effortlistviewercount': '0',
-    'effortperdayviewercount': '0',
-    'effortperweekviewercount': '0',
-    'effortpermonthviewercount': '0',
+    'categoryviewercount': '1',      # Number of category viewers in main window
+    'noteviewercount': '0',          # Number of note viewers in main window
+    'effortlistviewercount': '0',    # Number of effort viewers in main window
     'language': 'en_US',
     'taskcategoryfiltermatchall': 'True',
     'descriptionpopups': 'True',
@@ -45,10 +40,11 @@ defaults = { \
     'efforthourstart': '8',          # Earliest time, i.e. start of working day
     'efforthourend': '18',           # Last time, i.e. end of working day
     'effortminuteinterval': '15',    # Generate times with this interval
-    'perspective': '',
+    'perspective': '',               # The layout of the viewers in the main window
     'tabbedmainwindow': 'False'},
-'tasklistviewer': { \
+'tasktreelistviewer': { \
     'title': '',
+    'treemode': 'True',
     'sortby': 'dueDate',
     'sortascending': 'True',
     'sortbystatusfirst': 'True',
@@ -66,39 +62,6 @@ defaults = { \
     'hideoverduetasks': 'False',
     'hideoverbudgettasks': 'False',
     'hidecompositetasks': 'False' },
-'tasktreeviewer': { \
-    'title': '',
-    'sortby': 'dueDate',
-    'sortascending': 'True',
-    'sortbystatusfirst': 'True',
-    'sortcasesensitive': 'True',
-    'searchfilterstring': '',
-    'searchfiltermatchcase': 'False',
-    'searchfilterincludesubitems': 'False',
-    'tasksdue': 'Unlimited',
-    'hidecompletedtasks': 'False',
-    'hideinactivetasks': 'False',
-    'hideactivetasks': 'False',
-    'hideoverduetasks': 'False',
-    'hideoverbudgettasks': 'False' },
-'tasktreelistviewer': { \
-    'title': '',
-    'sortby': 'dueDate',
-    'sortascending': 'True',
-    'sortbystatusfirst': 'True',
-    'sortcasesensitive': 'True',
-    'searchfilterstring': '',
-    'searchfiltermatchcase': 'False',
-    'searchfilterincludesubitems': 'False',
-    'columns': "['startDate', 'dueDate']",
-    'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28}",
-    'tasksdue': 'Unlimited',
-    'hidecompletedtasks': 'False',
-    'hideinactivetasks': 'False',
-    'hideactivetasks': 'False',
-    'hideoverduetasks': 'False',
-    'hideoverbudgettasks': 'False' },
 'categoryviewer': { \
     'title': '',
     'sortby': 'subject',
@@ -117,61 +80,28 @@ defaults = { \
     'searchfilterincludesubitems': 'False',
     'columns': "[]",
     'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{}" },
+    'columnwidths': "{'attachments': 28}" },
+'noteviewerintaskeditor': {
+    'sortby': 'subject',
+    'sortascending': 'True',
+    'sortcasesensitive': 'True',
+    'columns': "['subject']",
+    'columnsalwaysvisible': "['subject']",
+    'columnwidths': "{}",
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False' },
 'effortlistviewer': { \
     'title': '',
+    'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'columnwidths': "{}",
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
-'effortlistviewerintaskeditor': { \
-    'columns': "['timeSpent', 'revenue']",
-    'columnsalwaysvisible': "['period', 'task']",
-    'columnwidths': "{}",
-    'searchfilterstring': '',
-    'searchfiltermatchcase': 'False',
-    'searchfilterincludesubitems': 'False' },
-'effortperdayviewer': { \
-    'title': '',
-    'columns': "['timeSpent', 'revenue']",
-    'columnsalwaysvisible': "['period', 'task']",
-    'columnwidths': "{}",
-    'searchfilterstring': '',
-    'searchfiltermatchcase': 'False',
-    'searchfilterincludesubitems': 'False' },
-'effortperdayviewerintaskeditor': { \
-    'columns': "['timeSpent', 'revenue']",
-    'columnsalwaysvisible': "['period', 'task']",
-    'columnwidths': "{}",
-    'searchfilterstring': '',
-    'searchfiltermatchcase': 'False',
-    'searchfilterincludesubitems': 'False' },
-'effortperweekviewer': { \
-    'title': '',
-    'columns': "['timeSpent', 'revenue']",
-    'columnsalwaysvisible': "['period', 'task']",
-    'columnwidths': "{}",
-    'searchfilterstring': '',
-    'searchfiltermatchcase': 'False',
-    'searchfilterincludesubitems': 'False' },
-'effortperweekviewerintaskeditor': { \
-    'columns': "['timeSpent', 'revenue']",
-    'columnsalwaysvisible': "['period', 'task']",
-    'columnwidths': "{}",
-    'searchfilterstring': '',
-    'searchfiltermatchcase': 'False',
-    'searchfilterincludesubitems': 'False' },
-'effortpermonthviewer': { 
-    'title': '',
-    'columns': "['timeSpent', 'revenue']",
-    'columnsalwaysvisible': "['period', 'task']",
-    'columnwidths': "{}",
-    'searchfilterstring': '',
-    'searchfiltermatchcase': 'False',
-    'searchfilterincludesubitems': 'False' },
-'effortpermonthviewerintaskeditor': { 
+'effortviewerintaskeditor': { \
+    'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'columnwidths': "{}",

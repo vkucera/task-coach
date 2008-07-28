@@ -26,12 +26,17 @@ class NewNoteCommand(base.BaseCommand):
         return _('New note')
 
     def __init__(self, *args, **kwargs):
-        self.categories = kwargs.get('categories',  None)
+        subject = kwargs.pop('subject', self.name())
+        description = kwargs.pop('description', '')
+        attachments = kwargs.pop('attachments', [])
+        categories = kwargs.get('categories',  None)
         super(NewNoteCommand, self).__init__(*args, **kwargs)
-        self.items = self.createNewNotes()
+        self.items = self.notes = self.createNewNotes(subject=subject, 
+            description=description, categories=categories, 
+            attachments=attachments)
         
-    def createNewNotes(self):
-        return [note.Note(subject=_('New note'), categories=self.categories)]
+    def createNewNotes(self, **kwargs):
+        return [note.Note(**kwargs)]
         
     def do_command(self):
         self.list.extend(self.items)
@@ -47,11 +52,15 @@ class NewSubNoteCommand(NewNoteCommand):
     def name(self):
         return _('New subnote')
             
-    def createNewNotes(self):
-        return [parent.newChild(subject=_('New subnote')) for parent in self.items]
+    def createNewNotes(self, **kwargs):
+        return [parent.newChild(**kwargs) for parent in self.items]
 
 
 class EditNoteCommand(base.EditCommand):
+    def __init__(self, *args, **kwargs):
+        super(EditNoteCommand, self).__init__(*args, **kwargs)
+        self.notes = self.items
+        
     def name(self):
         return _('Edit note')
     

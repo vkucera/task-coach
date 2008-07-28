@@ -65,21 +65,21 @@ class XMLReader:
         return [self.__parseTaskNode(node) for node in nodes \
                 if node.nodeName == 'task']
                 
-    def __parseCategoryNodes(self, nodes, tasks):
-        return [self.__parseCategoryNode(node, tasks) for node in nodes \
+    def __parseCategoryNodes(self, nodes, categorizablesById):
+        return [self.__parseCategoryNode(node, categorizablesById) for node in nodes \
                 if node.nodeName == 'category']
         
     def __parseNoteNodes(self, nodes):
         return [self.__parseNoteNode(node) for node in nodes \
                 if node.nodeName == 'note']
 
-    def __parseCategoryNode(self, categoryNode, categorizablesById):        
-        subject = categoryNode.getAttribute('subject')
-        categoryId = categoryNode.getAttribute('id')
-        description = self.__parseDescription(categoryNode)
-        filtered = self.__parseBoolean(categoryNode.getAttribute('filtered'), 
-                                       False)
-        color = self.__parseTuple(categoryNode.getAttribute('color'), None)
+    def __parseCategoryNode(self, categoryNode, categorizablesById):
+        kwargs = self.__parseBaseAttributes(categoryNode, 
+            self.__parseCategoryNodes, categorizablesById)
+        kwargs.update(dict(\
+            notes=self.__parseNoteNodes(categoryNode.childNodes),
+            filtered=self.__parseBoolean(categoryNode.getAttribute('filtered'), 
+                                         False)))
         if self.__tskversion < 19:
             categorizableIds = categoryNode.getAttribute('tasks')
         else:
@@ -92,11 +92,11 @@ class XMLReader:
                               if id in categorizablesById]
         else:
             categorizables = []
-        children = self.__parseCategoryNodes(categoryNode.childNodes, categorizablesById)
-        return category.Category(subject, categorizables, children, filtered, 
-                                 id=categoryId, description=description, color=color)
+        kwargs['categorizables'] = categorizables
+        return category.Category(**kwargs)
                       
     def __parseCategoryNodesFromTaskNodes(self, document, tasks):
+        ''' In tskversion <=13 category nodes were subnodes of task nodes. '''
         taskNodes = document.getElementsByTagName('task')
         categoryMapping = self.__parseCategoryNodesWithinTaskNodes(taskNodes, tasks)
         subjectCategoryMapping = {}
@@ -111,6 +111,7 @@ class XMLReader:
         return subjectCategoryMapping.values()
     
     def __parseCategoryNodesWithinTaskNodes(self, taskNodes, tasks):
+        ''' In tskversion <=13 category nodes were subnodes of task nodes. '''
         categoryMapping = {}
         for node in taskNodes:
             taskId = node.getAttribute('id')
@@ -120,9 +121,8 @@ class XMLReader:
         return categoryMapping
         
     def __parseTaskNode(self, taskNode):
-        kwargs = dict(subject=taskNode.getAttribute('subject'),
-            description=self.__parseDescription(taskNode),
-            id=taskNode.getAttribute('id'),
+        kwargs = self.__parseBaseAttributes(taskNode, self.__parseTaskNodes)
+        kwargs.update(dict(
             startDate=date.parseDate(taskNode.getAttribute('startdate')),
             dueDate=date.parseDate(taskNode.getAttribute('duedate')),
             completionDate=date.parseDate(taskNode.getAttribute('completiondate')),
@@ -131,67 +131,78 @@ class XMLReader:
             hourlyFee=self.__parseFloat(taskNode.getAttribute('hourlyFee')),
             fixedFee=self.__parseFloat(taskNode.getAttribute('fixedFee')),
             reminder=self.__parseDateTime(taskNode.getAttribute('reminder')),
-            attachments=self.__parseAttachmentNodes(taskNode.childNodes),
             shouldMarkCompletedWhenAllChildrenCompleted= \
                 self.__parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted')),
-            children=self.__parseTaskNodes(taskNode.childNodes),
-            efforts=self.__parseEffortNodes(taskNode.childNodes))
-        if self.__tskversion <= 19:
-            recurrenceUnit = taskNode.getAttribute('recurrence')
-            recurrenceCount = self.__parseInteger(taskNode.getAttribute('recurrenceCount'))
-            recurrenceFrequency = self.__parseInteger(taskNode.getAttribute('recurrenceFrequency'), default=1)
-            maxRecurrenceCount = self.__parseInteger(taskNode.getAttribute('maxRecurrenceCount'))
-            recurrence = date.Recurrence(unit=recurrenceUnit, 
-                amount=recurrenceFrequency, count=recurrenceCount,
-                max=maxRecurrenceCount)
-        else:
-            recurrence = self.__parseRecurrenceNode(taskNode.childNodes)
-        kwargs['recurrence'] = recurrence
+            efforts=self.__parseEffortNodes(taskNode.childNodes),
+            notes=self.__parseNoteNodes(taskNode.childNodes),
+            recurrence=self.__parseRecurrence(taskNode)))
         if self.__tskversion <= 13:
             kwargs['categories'] = self.__parseCategoryNodesWithinTaskNode(taskNode.childNodes)
         else:
             kwargs['categories'] = []
         return task.Task(**kwargs)
+        
+    def __parseRecurrence(self, taskNode):
+        if self.__tskversion <= 19:
+            parseKwargs = self.__parseRecurrenceAttributesFromTaskNode
+        else:
+            parseKwargs = self.__parseRecurrenceNode
+        return date.Recurrence(**parseKwargs(taskNode))
     
-    def __parseRecurrenceNode(self, nodes):
-        unit = ''
-        amount = 1
-        count = 0
-        max = 0
-        sameWeekday = False
-        for node in nodes:
-            if node.nodeName == 'recurrence':
-                unit = node.getAttribute('unit')
-                amount = self.__parseInteger(node.getAttribute('amount'), 1)
-                count = self.__parseInteger(node.getAttribute('count'))
-                max = self.__parseInteger(node.getAttribute('max'))
-                sameWeekday = self.__parseBoolean(node.getAttribute('sameWeekday'), False)
-                break
-        return date.Recurrence(unit=unit, amount=amount, count=count, max=max,
-                               sameWeekday=sameWeekday)
+    def __parseRecurrenceNode(self, taskNode):
+        ''' Since tskversion >= 20, recurrence information is stored in a 
+            separate node. '''
+        kwargs = dict(unit='', amount=1, count=0, max=0, sameWeekday=False)
+        for node in self.__getNodes(taskNode, 'recurrence'):
+            kwargs = dict(unit=node.getAttribute('unit'),
+                amount=self.__parseInteger(node.getAttribute('amount'), 1),
+                count=self.__parseInteger(node.getAttribute('count')),
+                max=self.__parseInteger(node.getAttribute('max')),
+                sameWeekday=self.__parseBoolean(node.getAttribute('sameWeekday'), False))
+            break
+        return kwargs
+                               
+    def __parseRecurrenceAttributesFromTaskNode(self, taskNode):
+        ''' In tskversion <=19 recurrence information was stored as attributes
+            of task nodes. '''
+        return dict(unit=taskNode.getAttribute('recurrence'),
+            count=self.__parseInteger(taskNode.getAttribute('recurrenceCount')),
+            amount=self.__parseInteger(taskNode.getAttribute('recurrenceFrequency'), default=1),
+            max=self.__parseInteger(taskNode.getAttribute('maxRecurrenceCount')))
     
     def __parseNoteNode(self, noteNode):
-        kwargs = dict(subject=noteNode.getAttribute('subject'),
-            id=noteNode.getAttribute('id'),
-            description=self.__parseDescription(noteNode),
-            children=self.__parseNoteNodes(noteNode.childNodes))
+        ''' Parse the attributes and child notes from the noteNode. '''
+        kwargs = self.__parseBaseAttributes(noteNode, self.__parseNoteNodes)
         return note.Note(**kwargs)
+    
+    def __parseBaseAttributes(self, node, parseChildren, *parseChildrenArgs):
+        ''' Parse the attributes all composite domain objects share, such as
+            id, subject, description, and children and return them as a 
+            keyword arguments dictionary that can be passed to the domain 
+            object constructor. '''
+        return dict(id=node.getAttribute('id'),
+            subject=node.getAttribute('subject'),
+            description=self.__parseDescription(node),
+            attachments=self.__parseAttachments(node),
+            color=self.__parseTuple(node.getAttribute('color'), None),
+            children=parseChildren(node.childNodes, *parseChildrenArgs))
         
     def __parseCategoryNodesWithinTaskNode(self, nodes):
+        ''' In tskversion <= 13, categories of tasks were stored as text 
+            nodes. '''
         return [self.__parseTextNode(node) for node in nodes \
                 if node.nodeName == 'category']
-        
-    def __parseAttachmentNodes(self, nodes):
+
+    def __parseAttachments(self, parent):
         attachments = []
-        for node in nodes:
-            if node.nodeName == 'attachment':
-                if self.__tskversion <= 16:
-                    args = (self.__parseTextNode(node),)
-                else:
-                    args = (self.__parseTextNode(node.getElementsByTagName('data')[0]),
-                            self.__parseTextNode(node.getElementsByTagName('description')[0]),
-                            node.getAttribute('type'))
-                attachments.append(attachment.AttachmentFactory(*args))
+        for node in self.__getNodes(parent, 'attachment'):
+            if self.__tskversion <= 16:
+                args = (self.__parseTextNode(node),)
+            else:
+                args = (self.__parseTextNode(node.getElementsByTagName('data')[0]),
+                        self.__parseTextNode(node.getElementsByTagName('description')[0]),
+                        node.getAttribute('type'))
+            attachments.append(attachment.AttachmentFactory(*args))
         return attachments
 
     def __parseEffortNodes(self, nodes):
@@ -202,14 +213,8 @@ class XMLReader:
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')
         description = self.__parseDescription(effortNode)
-        return effort.Effort(None, date.parseDateTime(start), 
-            date.parseDateTime(stop), description)
-        
-    def __getNode(self, parent, tagName):
-        for child in parent.childNodes:
-            if child.nodeName == tagName:
-                return child
-        return None        
+        return effort.Effort(task=None, start=date.parseDateTime(start), 
+            stop=date.parseDateTime(stop), description=description)
         
     def __parseDescription(self, node):
         if self.__tskversion <= 6:
@@ -221,7 +226,24 @@ class XMLReader:
             else:
                 description = ''
         return description
-    
+
+    def __getNode(self, parent, tagName):
+        ''' Get the child node of parent with tagName. Returns None if no child 
+            node with tagName can be found. '''
+        for child in parent.childNodes:
+            if child.nodeName == tagName:
+                return child
+        return None
+        
+    def __getNodes(self, parent, tagName):
+        ''' Get all child nodes of parent with tagName. Returns an empty list 
+            if no child node with tagName can be found. '''
+        nodes = []
+        for child in parent.childNodes:
+            if child.nodeName == tagName:
+                nodes.append(child)
+        return nodes
+        
     def __parseTextNode(self, node):
         return node.firstChild.data
     

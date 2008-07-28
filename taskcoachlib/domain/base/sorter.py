@@ -57,13 +57,13 @@ class Sorter(patterns.ListDecorator):
         self._sortCaseSensitive = caseSensitive
         self.reset()
     
-    def reset(self, event=None):
+    def reset(self, event=None, forceNotification=False):
         ''' reset does the actual sorting. If the order of the list changes, 
             observers are notified by means of the list-sorted event. '''
         oldSelf = self[:]
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
-        if self != oldSelf:
+        if self != oldSelf or forceNotification:
             patterns.Publisher().notifyObservers(patterns.Event(self, 
                 self.sortEventType()))
 

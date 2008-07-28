@@ -16,10 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import wx
 from wx.lib import hyperlink
-from i18n import _
-import wx, meta
-from widgets import sized_controls
+from taskcoachlib import meta
+from taskcoachlib.i18n import _
+from taskcoachlib.widgets import sized_controls
+
 
 class VersionDialog(sized_controls.SizedDialog):
     def __init__(self, *args, **kwargs):

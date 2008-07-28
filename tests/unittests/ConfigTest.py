@@ -78,34 +78,37 @@ class SettingsTest(SettingsTestCase):
                          self.settings.getlist('file', 'recentfiles'))
         
     def testGetNonExistingSettingFromSection1DefaultsToBaseSection(self):
-        self.settings.add_section('effortpermonthviewer1')
-        self.settings.set('effortpermonthviewer', 'columnwidths', '[10]')
+        self.settings.add_section('effortlistviewer1')
+        self.settings.set('effortlistviewer', 'columnwidths', '[10]')
         self.assertEqual([10], 
-            self.settings.getlist('effortpermonthviewer1', 'columnwidths'))
+            self.settings.getlist('effortlistviewer1', 'columnwidths'))
 
     def testGetNonExistingSettingFromSection2DefaultsToSection1(self):
-        self.settings.add_section('effortpermonthviewer1')
-        self.settings.add_section('effortpermonthviewer2')
-        self.settings.set('effortpermonthviewer1', 'columnwidths', '[10]')
+        self.settings.add_section('effortlistviewer1')
+        self.settings.add_section('effortlistviewer2')
+        self.settings.set('effortlistviewer1', 'columnwidths', '[10]')
         self.assertEqual([10], 
-            self.settings.getlist('effortpermonthviewer2', 'columnwidths'))
+            self.settings.getlist('effortlistviewer2', 'columnwidths'))
 
     def testGetNonExistingSettingFromSection2DefaultsToBaseSection(self):
-        self.settings.add_section('effortpermonthviewer1')
-        self.settings.add_section('effortpermonthviewer2')
-        self.settings.set('effortpermonthviewer', 'columnwidths', '[10]')
+        self.settings.add_section('effortlistviewer1')
+        self.settings.add_section('effortlistviewer2')
+        self.settings.set('effortlistviewer', 'columnwidths', '[10]')
         self.assertEqual([10], 
-            self.settings.getlist('effortpermonthviewer2', 'columnwidths'))
+            self.settings.getlist('effortlistviewer2', 'columnwidths'))
         
     def testGetNonExistingSettingFromSection2RaisesException(self):
-        self.settings.add_section('effortpermonthviewer1')
-        self.settings.add_section('effortpermonthviewer2')
+        self.settings.add_section('effortlistviewer1')
+        self.settings.add_section('effortlistviewer2')
         self.assertRaises(ConfigParser.NoOptionError,
-            self.settings.getlist, 'effortpermonthviewer2', 'nonexisting')
+            self.settings.getlist, 'effortlistviewer2', 'nonexisting')
 
     def testAddSectionAndSkipOne(self):
-        self.settings.add_section('effortpermonthviewer2', 
-            copyFromSection='effortpermonthviewer')
+        self.settings.set('effortlistviewer', 'columnwidths', '[10]')
+        self.settings.add_section('effortlistviewer2', 
+            copyFromSection='effortlistviewer')
+        self.assertEqual([10], 
+            self.settings.getlist('effortlistviewer2', 'columnwidths'))
         
 
 class SettingsIOTest(SettingsTestCase):

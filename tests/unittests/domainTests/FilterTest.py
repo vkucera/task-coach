@@ -74,12 +74,20 @@ class StackedFilterTest(test.TestCase):
     def testDelegation(self):
         self.filter2.test()
         self.assertEqual(1, self.filter1.testcalled)
+        
+    def testSetTreeMode_True(self):
+        self.filter2.setTreeMode(True)
+        self.failUnless(self.filter1.treeMode())
+        
+    def testSetTreeMode_False(self):
+        self.filter2.setTreeMode(False)
+        self.failIf(self.filter1.treeMode())
+        
 
-
-class ViewFilterTest(test.TestCase):
+class ViewFilterTestCase(test.TestCase):
     def setUp(self):
         self.list = task.TaskList()
-        self.filter = task.filter.ViewFilter(self.list)
+        self.filter = task.filter.ViewFilter(self.list, treeMode=self.treeMode)
         self.task = task.Task(subject='task')
         self.dueToday = task.Task(subject='due today', dueDate=date.Today())
         self.dueTomorrow = task.Task(subject='due tomorrow', 
@@ -88,6 +96,8 @@ class ViewFilterTest(test.TestCase):
             dueDate=date.Yesterday())
         self.child = task.Task(subject='child')
 
+
+class ViewFilterTests(object):
     def testCreate(self):
         self.assertEqual(0, len(self.filter))
 
@@ -138,7 +148,16 @@ class ViewFilterTest(test.TestCase):
         self.assertEqual(2, len(self.filter))
         self.filter.setFilteredByDueDate('Today')
         self.assertEqual(1, len(self.filter))
-    
+
+    def testFilterDueToday_ChildDueToday(self):
+        self.task.addChild(self.dueToday)
+        self.list.append(self.task)
+        self.filter.setFilteredByDueDate('Today')
+        if self.filter.treeMode():
+            self.assertEqual(2, len(self.filter))
+        else:
+            self.assertEqual(1, len(self.filter))
+            
     def testFilterDueToday_ShouldIncludeOverdueTasks(self):
         self.filter.append(self.dueYesterday)
         self.filter.setFilteredByDueDate('Today')
@@ -162,31 +181,7 @@ class ViewFilterTest(test.TestCase):
         self.filter.extend([self.dueToday, dueNextWeek])
         self.filter.setFilteredByDueDate('Workweek')
         self.assertEqual(1, len(self.filter))
-        
 
-class ViewFilterInTreeModeTest(test.TestCase):
-    def setUp(self):
-        self.list = task.TaskList()
-        self.filter = task.filter.ViewFilter(self.list, treeMode=True)
-        self.task = task.Task()
-        self.dueToday = task.Task(dueDate=date.Today())
-        self.dueTomorrow = task.Task(dueDate=date.Tomorrow())
-        self.dueYesterday = task.Task(dueDate=date.Yesterday())
-        self.child = task.Task()
-        
-    def testCreate(self):
-        self.assertEqual(0, len(self.filter))
-        
-    def testAddTask(self):
-        self.filter.append(self.task)
-        self.assertEqual(1, len(self.filter))
-
-    def testFilterDueToday(self):
-        self.task.addChild(self.dueToday)
-        self.list.append(self.task)
-        self.filter.setFilteredByDueDate('Today')
-        self.assertEqual(2, len(self.filter))
-        
     def testFilterOverDueTasks(self):
         self.task.addChild(self.dueYesterday)
         self.list.append(self.task)
@@ -199,23 +194,33 @@ class ViewFilterInTreeModeTest(test.TestCase):
         self.list.append(self.task)
         self.filter.hideOverbudgetTasks()
         self.assertEqual(0, len(self.filter))
+
+
+class ViewFilterInListModeTest(ViewFilterTests, ViewFilterTestCase):
+    treeMode = False
+            
+
+class ViewFilterInTreeModeTest(ViewFilterTests, ViewFilterTestCase):
+    treeMode = True
         
         
-class ViewFilter_HideCompositeTasksTest(test.TestCase):
+class HideCompositeTasksTestCase(ViewFilterTestCase):
     def setUp(self):
         self.list = task.TaskList()
-        self.filter = task.filter.ViewFilter(self.list)
+        self.filter = task.filter.ViewFilter(self.list, treeMode=self.treeMode)
         self.task = task.Task(subject='task')
         self.child = task.Task(subject='child')
         self.task.addChild(self.child)
         self.filter.append(self.task)
 
-    def testInitial(self):
-        self.assertEqual(2, len(self.filter))
-                
+
+class HideCompositeTasksTests(object):
     def testTurnOn(self):
         self.filter.hideCompositeTasks()
-        self.assertEqual([self.child], list(self.filter))
+        if self.filter.treeMode():
+            self.assertEqual(2, len(self.filter))
+        else:
+            self.assertEqual([self.child], list(self.filter))
 
     def testTurnOff(self):
         self.filter.hideCompositeTasks()
@@ -227,7 +232,10 @@ class ViewFilter_HideCompositeTasksTest(test.TestCase):
         grandChild = task.Task(subject='grandchild')
         self.list.append(grandChild)
         self.child.addChild(grandChild)
-        self.assertEqual([grandChild], list(self.filter))
+        if self.filter.treeMode():
+            self.assertEqual(3, len(self.filter))
+        else:
+            self.assertEqual([grandChild], list(self.filter))
 
     def testRemoveChild(self):
         self.filter.hideCompositeTasks()
@@ -244,15 +252,31 @@ class ViewFilter_HideCompositeTasksTest(test.TestCase):
     def testAddTwoChildren(self):
         self.filter.hideCompositeTasks()
         self._addTwoGrandChildren()
-        self.assertEqual([self.grandChild1, self.grandChild2], 
-            list(self.filter))
+        if self.filter.treeMode():
+            self.assertEqual(4, len(self.filter))
+        else:
+            self.assertEqual([self.grandChild1, self.grandChild2], 
+                list(self.filter))
 
     def testRemoveTwoChildren(self):
         self._addTwoGrandChildren()
         self.filter.hideCompositeTasks()
         self.list.removeItems([self.grandChild1, self.grandChild2])
-        self.assertEqual([self.child], list(self.filter))
+        if self.filter.treeMode():
+            self.assertEqual(2, len(self.filter))
+        else:
+            self.assertEqual([self.child], list(self.filter))
 
+
+class HideCompositeTasksInListModeTest(HideCompositeTasksTests, 
+                                       HideCompositeTasksTestCase):
+    treeMode = False
+            
+
+class HideCompositeTasksInTreeModeTest(HideCompositeTasksTests, 
+                                       HideCompositeTasksTestCase):
+    treeMode = True
+        
 
 class SearchFilterTest(test.TestCase):
     def setUp(self):
@@ -470,13 +494,13 @@ class OriginalLengthTest(test.TestCase, CategoryFilterHelpers):
     def testNoFilter(self):
         self.list.append(task.Task())
         self.assertEqual(1, self.filter.originalLength())
-    '''    
+
     def testFilter(self):
+        aCategory = category.Category(subject='a Category')
+        self.categories.append(aCategory)
         aTask = task.Task()
-        aTask.addCategory('test')
         self.list.append(aTask)
-        self.addCategory('nottest')
+        aCategory.setFiltered()    
         self.assertEqual(0, len(self.filter))
         self.assertEqual(1, self.filter.originalLength())
-    '''
      

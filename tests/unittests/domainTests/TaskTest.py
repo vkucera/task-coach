@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test, wx, sets
 from unittests import asserts
 from taskcoachlib import patterns
-from taskcoachlib.domain import task, effort, date, attachment
+from taskcoachlib.domain import task, effort, date, attachment, note
 
 
 # Handy globals
@@ -167,6 +167,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
             
     def testTaskDoesNotRecurByDefault(self):
         self.failIf(self.task.recurrence())
+        
+    def testTaskDoesNotHaveNotesByDefault(self):
+        self.failIf(self.task.notes())
                                          
     # Setters
 
@@ -440,6 +443,21 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.addEffort(activeEffort)
         self.assertEqual([patterns.Event(self.task, 'task.track.start', 
             activeEffort)], self.events)
+
+    # Notes:
+    
+    def testAddNote(self):
+        aNote = note.Note()
+        self.task.addNote(aNote)
+        self.assertEqual([aNote], self.task.notes())
+
+    def testAddNoteCausesNotification(self):
+        eventType = task.Task.notesChangedEventType()
+        self.registerObserver(eventType)
+        aNote = note.Note()
+        self.task.addNote(aNote)
+        self.assertEqual([patterns.Event(self.task, eventType, aNote)], 
+                         self.events)
         
     # State (FIXME: need to test other attributes too)
  
@@ -454,7 +472,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.setRecurrence('weekly')
         self.task.__setstate__(state)
         self.failIf(self.task.recurrence())
-                        
+
+    def testTaskStateIncludesNotes(self):
+        state = self.task.__getstate__()
+        self.task.addNote(note.Note())
+        self.task.__setstate__(state)
+        self.failIf(self.task.notes())                        
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
@@ -1112,17 +1135,13 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseFixture(TaskTestCas
         
 
 class AttachmentTestCase(TaskTestCase, CommonTaskTests):
-    eventTypes = ['task.attachment.add', 'task.attachment.remove']
+    eventTypes = [task.Task.attachmentsChangedEventType()]
 
 
 class TaskWithoutAttachmentFixture(AttachmentTestCase):
     def testRemoveNonExistingAttachmentRaisesNoException(self):
         self.task.removeAttachments('Non-existing attachment')
         
-    def testRemoveAllAttachmentsCausesNoNotification(self):
-        self.task.removeAllAttachments()
-        self.failIf(self.events)
-
     def testAddEmptyListOfAttachments(self):
         self.task.addAttachments()
         self.failIf(self.events)
@@ -1167,18 +1186,6 @@ class TaskWithAttachmentRemovedFixture(TaskWithAttachmentAddedTestCase):
         self.failIf(self.attachment in self.task.attachments())
         
     def testNotification(self):
-        self.assertEqual(2, len(self.events))
-
-
-class TaskWithAllAttachmentsRemovedFixture(TaskWithAttachmentAddedTestCase):
-    def setUp(self):
-        super(TaskWithAllAttachmentsRemovedFixture, self).setUp()
-        self.task.removeAllAttachments()
-
-    def testRemoveAllAttachments(self):
-        self.assertEqual([], self.task.attachments())
-
-    def testRemoveAllAttachmentsCausesNotification(self):
         self.assertEqual(2, len(self.events))
 
         

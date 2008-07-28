@@ -50,12 +50,14 @@ class TaskFile(patterns.Observable):
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
             task.Task.addChildEventType(), task.Task.removeChildEventType(),
             'task.effort.add', 'task.effort.remove', 
+            task.Task.notesChangedEventType(),
             task.Task.categoryAddedEventType(), 
             task.Task.categoryRemovedEventType(), 
-            'task.attachment.add', 'task.attachment.remove'):
+            task.Task.attachmentsChangedEventType()):
             patterns.Publisher().registerObserver(self.onTaskChanged, 
                                                   eventType=eventType)
-        for eventType in ('effort.description', 'effort.start', 'effort.stop'):
+        for eventType in (effort.Effort.descriptionChangedEventType(), 
+                          'effort.start', 'effort.stop'):
             # We don't need to observe 'effort.task', because when an
             # effort record is assigned to a different task we already will 
             # get a notification through 'task.effort.add'                
@@ -64,13 +66,18 @@ class TaskFile(patterns.Observable):
         for eventType in (note.Note.subjectChangedEventType(), 
                 note.Note.descriptionChangedEventType(), 
                 note.Note.addChildEventType(), 
-                note.Note.removeChildEventType()):
+                note.Note.removeChildEventType(),
+                note.Note.categoryAddedEventType(),
+                note.Note.categoryRemovedEventType(),
+                note.Note.attachmentsChangedEventType()):
             patterns.Publisher().registerObserver(self.onNoteChanged, 
                                                   eventType=eventType)
         for eventType in (category.Category.filterChangedEventType(), 
                 category.Category.subjectChangedEventType(),
                 category.Category.descriptionChangedEventType(),
-                category.Category.colorChangedEventType()):
+                category.Category.colorChangedEventType(),
+                category.Category.notesChangedEventType(),
+                category.Category.attachmentsChangedEventType()):
             patterns.Publisher().registerObserver(self.onCategoryChanged, 
                 eventType=eventType)
 

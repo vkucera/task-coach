@@ -62,10 +62,6 @@ class wxTestCase(TestCase):
         self.frame.DestroyChildren() # Clean up GDI objects on Windows
 
 
-def cvsCommit():
-    os.system('cvs commit')
-
-
 class TestResultWithTimings(unittest._TextTestResult):
     def __init__(self, *args, **kwargs):
         super(TestResultWithTimings, self).__init__(*args, **kwargs)
@@ -149,8 +145,6 @@ class AllTests(unittest.TestSuite):
             coverage.stop()
             print coverage.report(self.getPyFilesFromDir(os.path.join(projectRoot, 
                 'taskcoachlib')))
-        if self._options.commit and result.wasSuccessful():
-            cvsCommit()
         return result
 
     @staticmethod
@@ -194,19 +188,11 @@ class TestOptionParser(config.OptionParser):
             help='the number of slow tests to report [%default]')
         return testoutput
 
-    def cvsOptionGroup(self):
-        cvs = config.OptionGroup(self, 'CVS', 
-            'Options to interact with CVS.')
-        cvs.add_option('-c', '--commit', default=False, action='store_true', 
-            help='commit if all the tests succeed'
-                 ' (implies --unittests and --integrationtests)')
-        return cvs
-
     def profileOptionGroup(self):
         profile = config.OptionGroup(self, 'Profiling', 
             'Options to profile the tests to see what test code or production '
             'code is taking the most time. Each of these options implies '
-            '--no-commit and --no-coverage.')
+            '--no-coverage.')
         profile.add_option('-p', '--profile', default=False, 
             action='store_true', help='profile the running of all the tests')
         profile.add_option('-r', '--report-only', dest='profile_report_only', 
@@ -271,13 +257,8 @@ class TestOptionParser(config.OptionParser):
             options.unittests = True
             options.integrationtests = True
             options.releasetests = True
-        if options.profile or args:
-            options.commit = False
         if options.profile:
             options.coverage = False
-        if options.commit:
-            options.unittests = True
-            options.integrationtests = True
         return options, args
 
 

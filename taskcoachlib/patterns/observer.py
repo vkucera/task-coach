@@ -204,8 +204,8 @@ class Observer(object):
         
 class Decorator(Observer):
     def __init__(self, observable, *args, **kwargs):
-        super(Decorator, self).__init__(*args, **kwargs)
         self.__observable = observable
+        super(Decorator, self).__init__(*args, **kwargs)
 
     def observable(self):
         return self.__observable 

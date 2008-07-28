@@ -48,7 +48,7 @@ class EffortAsserts(object):
         self.assertEqual(effort1.task(), effort2.task())
         self.assertEqual(effort1.getStart(), effort2.getStart())
         self.assertEqual(effort1.getStop(), effort2.getStop())
-        self.assertEqual(effort1.getDescription(), effort2.getDescription())
+        self.assertEqual(effort1.description(), effort2.description())
         
                 
 class TaskAsserts(object):

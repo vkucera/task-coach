@@ -114,8 +114,9 @@ class CompositeTest(test.TestCase):
         
     def testGetState_WithChildren(self):
         self.composite.addChild(self.child)
-        self.assertEqual(dict(children=[self.child], parent=None), 
-                         self.composite.__getstate__())
+        state = self.composite.__getstate__()
+        self.assertEqual(dict(children=[state['children'][0]], parent=None), 
+                         state)
         
     def testGetState_WithParent(self):
         self.composite.addChild(self.child)

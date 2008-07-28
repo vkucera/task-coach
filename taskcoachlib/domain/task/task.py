@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import date, category
+from taskcoachlib.domain import date, category, note
 
 
-class Task(category.CategorizableCompositeObject):
+class Task(note.NoteOwner, category.CategorizableCompositeObject):
     def __init__(self, subject='', description='', dueDate=None, 
             startDate=None, completionDate=None, budget=None, 
             priority=0, id=None, hourlyFee=0,
-            fixedFee=0, reminder=None, attachments=None, categories=None,
+            fixedFee=0, reminder=None, categories=None,
             efforts=None, shouldMarkCompletedWhenAllChildrenCompleted=None, 
             recurrence=None, *args, **kwargs):
         kwargs['id'] = id
@@ -44,15 +44,11 @@ class Task(category.CategorizableCompositeObject):
         self._hourlyFee      = hourlyFee
         self._fixedFee       = fixedFee
         self._reminder       = reminder
-        self._attachments    = attachments or []
         if recurrence is None:
             recurrence = date.Recurrence()
         self._recurrence     = recurrence
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
-
-        for attachment in self._attachments:
-            attachment.setTask(self)
 
     def __setstate__(self, state):
         super(Task, self).__setstate__(state)
@@ -66,7 +62,6 @@ class Task(category.CategorizableCompositeObject):
         self.setBudget(state['budget'])
         self.setCategories(state['categories'])
         self.setPriority(state['priority'])
-        self.setAttachments(state['attachments'])
         self.setHourlyFee(state['hourlyFee'])
         self.setFixedFee(state['fixedFee'])
         self.shouldMarkCompletedWhenAllChildrenCompleted = \
@@ -79,8 +74,8 @@ class Task(category.CategorizableCompositeObject):
             children=self.children(), parent=self.parent(), 
             efforts=self._efforts, budget=self._budget,
             categories=set(self._categories), priority=self._priority, 
-            attachments=self._attachments[:], hourlyFee=self._hourlyFee, 
-            fixedFee=self._fixedFee, recurrence=self._recurrence.copy(),
+            hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
+            recurrence=self._recurrence.copy(),
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -445,7 +440,9 @@ class Task(category.CategorizableCompositeObject):
         self.notifyObservers(patterns.Event(self, 'task.revenue', 
             self.revenue()))
         self.notifyObserversOfTotalRevenueChange()
-        
+        for effort in self.efforts():
+            effort.notifyObserversOfRevenueChange()
+                    
     def notifyObserversOfTotalRevenueChange(self):
         self.notifyObservers(patterns.Event(self, 'task.totalRevenue', 
             self.revenue(recursive=True)))
@@ -465,39 +462,7 @@ class Task(category.CategorizableCompositeObject):
             self._reminder = reminderDateTime
             self.notifyObservers(patterns.Event(self, 'task.reminder', 
                 self._reminder))
-        
-    # attachments
-    
-    def attachments(self):
-        return self._attachments
-        
-    def addAttachments(self, *attachments):
-        if attachments:
-            for attachment in attachments:
-                attachment.setTask(self)
-            self._attachments.extend(attachments)
-            self.notifyObservers(patterns.Event(self, 'task.attachment.add', 
-                *attachments))
-        
-    def removeAttachments(self, *attachments):
-        attachmentsRemoved = []
-        for attachment in attachments:
-            if attachment in self._attachments:
-                self._attachments.remove(attachment)
-                attachmentsRemoved.append(attachment)
-        if attachmentsRemoved:
-            self.notifyObservers(patterns.Event(self, 'task.attachment.remove', 
-                *attachmentsRemoved))
-
-    def removeAllAttachments(self):
-        self.removeAttachments(*self._attachments)
-            
-    def setAttachments(self, attachments):
-        for attachment in attachments:
-            attachment.setTask(self)
-
-        self._attachments = attachments # FIXME: no notification?
-
+                    
     # Recurrence
     
     def recurrence(self, recursive=False):

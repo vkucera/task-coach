@@ -27,6 +27,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task = task.Task()
         self.effort = effort.Effort(self.task, start=date.DateTime(2004, 1, 1),
             stop=date.DateTime(2004,1,2))
+        self.task.addEffort(self.effort)
         self.events = []
     
     def onEvent(self, event):
@@ -34,7 +35,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         
     def testCreate(self):
         self.assertEqual(self.task, self.effort.task())
-        self.assertEqual('', self.effort.getDescription())
+        self.assertEqual('', self.effort.description())
         
     def testStr(self):
         self.assertEqual('Effort(%s, %s, %s)'%(self.effort.task(), 
@@ -75,7 +76,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         
     def testNotificationForSetDescription(self):
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType='effort.description')
+            eventType=effort.Effort.descriptionChangedEventType())
         self.effort.setDescription('description')
         self.assertEqual('description', self.events[0].value())
 
@@ -99,6 +100,13 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.effort.setStop(date.DateTime.now())
         self.assertEqual('effort.track.stop', self.events[0].type())
 
+    def testRevenueNotificationForTaskHourlyFeeChange(self):
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.revenue')
+        self.task.setHourlyFee(100)
+        self.assertEqual(patterns.Event(self.effort, 'effort.revenue', 2400.0),
+            self.events[0])
+
     def testDefaultStartAndStop(self):
         effortPeriod = effort.Effort(self.task)
         currentTime = date.DateTime.now()
@@ -115,16 +123,16 @@ class EffortTest(test.TestCase, asserts.Mixin):
     def testCopy(self):
         copyEffort = self.effort.copy()
         self.assertEqualEfforts(copyEffort, self.effort)
-        self.assertEqual(copyEffort.getDescription(), 
-            self.effort.getDescription())
+        self.assertEqual(copyEffort.description(), 
+            self.effort.description())
         
     def testDescription(self):
         self.effort.setDescription('description')
-        self.assertEqual('description', self.effort.getDescription())
+        self.assertEqual('description', self.effort.description())
         
     def testDescription_Constructor(self):
         newEffort = effort.Effort(self.task, description='description')
-        self.assertEqual('description', newEffort.getDescription())
+        self.assertEqual('description', newEffort.description())
         
     def testSetStop_None(self):
         self.effort.setStop()
