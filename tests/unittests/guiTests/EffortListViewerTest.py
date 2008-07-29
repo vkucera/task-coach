@@ -161,5 +161,5 @@ class EffortViewerWithAggregationPerMonthTest(CommonTests,
                                               EffortViewerTestCase):
     aggregation = 'month'
     expectedNumberOfItems = 2
-    expectedPeriodRendering = '2008 July'    
+    expectedPeriodRendering = gui.render.month(date.Date(2008,07,01))
 
