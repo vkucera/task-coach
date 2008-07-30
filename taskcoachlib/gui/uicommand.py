@@ -1661,7 +1661,13 @@ class DialogCommand(UICommand):
         
 class Help(DialogCommand):
     def __init__(self, *args, **kwargs):
-        super(Help, self).__init__(menuText=_('&Help contents\tCtrl+H'),
+        if '__WXMAC__' in wx.PlatformInfo:
+            # Use default keyboard shortcut for Mac OS X:
+            menuText = _('&Help contents\tCtrl+?') 
+        else:
+            # Use a letter, because 'Ctrl-?' doesn't work on Windows:
+            menuText = _('&Help contents\tCtrl+H')
+        super(Help, self).__init__(menuText=menuText,
             helpText=_('Help about the program'), bitmap='help', 
             dialogTitle=_('Help'), dialogText=help.helpHTML, id=wx.ID_HELP, 
             *args, **kwargs)

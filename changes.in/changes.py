@@ -38,7 +38,9 @@ saved in TaskCoach.ini, TaskCoach would crash on launch later.'''),
         Bug('''Mention of non-existing files in taskcoach.spec
 prevented the Fedora RPM from being built.'''),
         Bug('''The category viewer would sometimes skip keyboard navigation or
-need an extra mouse-click to get focus.''', '2020816', '2020812')],
+need an extra mouse-click to get focus.''', '2020816', '2020812'),
+        Bug('''On Mac OS X, the keyboard shortcut for 'help' was interfering 
+with the shortcut for 'hide window'.''', '2006455')],
     featuresAdded=[
         Feature('''Notes can be e-mailed.'''),
         Feature('''Display a tool tip to warn user when a search
