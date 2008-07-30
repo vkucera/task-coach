@@ -44,7 +44,13 @@ string is an invalid regular expression. In this case, default to
 substring search.'''),
         Feature('''Optionally put Task Coach in the user's startup menu so
 that Task Coach is started automatically when the user logs on 
-(Windows only).''', '2017400', '1913650')]),
+(Windows only).''', '2017400', '1913650')],
+    featuresRemoved=[
+        Feature('''Don't supply the dummy recipient 'Please enter recipient' to 
+the email program when mailing a task. This only forces the user to perform 
+an extra action to remove that dummy text, while most if not all email 
+programs will warn the user when she forgets to enter a recipient. ''', 
+'2026833')]),
 
 Release('0.70.1', 'June 28, 2008',
     summary='''This release optionally brings back the tabbed user 

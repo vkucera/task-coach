@@ -1331,7 +1331,7 @@ class TaskMail(NeedsSelectedTasks, ViewerCommand):
             subject = tasks[0].subject(recursive=True)
             bodyLines = tasks[0].description().splitlines()
         body = '\r\n'.join(bodyLines)
-        writeMail(_('Please enter recipient'), subject, body)
+        writeMail('', subject, body)
 
 
 class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand, SettingsCommand):
