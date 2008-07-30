@@ -36,7 +36,9 @@ in their description.''', '2025676'),
 a search control, no items were displayed. Additionally, if it was
 saved in TaskCoach.ini, TaskCoach would crash on launch later.'''),
         Bug('''Mention of non-existing files in taskcoach.spec
-prevented the Fedora RPM from being built.''')],
+prevented the Fedora RPM from being built.'''),
+        Bug('''The category viewer would sometimes skip keyboard navigation or
+need an extra mouse-click to get focus.''', '2020816', '2020812')],
     featuresAdded=[
         Feature('''Notes can be e-mailed.'''),
         Feature('''Display a tool tip to warn user when a search
