@@ -31,7 +31,7 @@ mail attachments could result in data loss.'''),
           Bug('''Under KDE, the maximized state of the main window
 would not be restored.'''),
           Bug('''One couldn't e-mail tasks with non-ASCII characters
-in their description.'''),
+in their description.''', '2025676'),
           Bug('''When an invalid regular expression was entered inn
 a search control, no items were displayed. Additionnaly, if it was
 saved in TaskCoach.ini, TaskCoach would crash on launch later.'''),
