@@ -23,28 +23,28 @@ from changetypes import *
 
 releases = [
 Release('0.70.2', '???',
-        summary='''This release fixes some bugs and brings back
+    summary='''This release fixes some bugs and brings back
 the Fedora RPM.''',
-        bugsFixed=[
-          Bug('''Using the "Save selection" feature together with
+    bugsFixed=[
+        Bug('''Using the "Save selection" feature together with
 mail attachments could result in data loss.'''),
-          Bug('''Under KDE, the maximized state of the main window
+        Bug('''Under KDE, the maximized state of the main window
 would not be restored.'''),
-          Bug('''One couldn't e-mail tasks with non-ASCII characters
+        Bug('''One couldn't e-mail tasks with non-ASCII characters
 in their description.''', '2025676'),
-          Bug('''When an invalid regular expression was entered inn
-a search control, no items were displayed. Additionnaly, if it was
+        Bug('''When an invalid regular expression was entered in
+a search control, no items were displayed. Additionally, if it was
 saved in TaskCoach.ini, TaskCoach would crash on launch later.'''),
-          Bug('''Mention of non-existing files in taskcoach.spec
-prevented the Fedora RPM from being built.''')
-          ],
-        featuresAdded=[
-          Feature('''Notes can be e-mailed.'''),
-          Feature('''Display a tooltip to warn user when a search
+        Bug('''Mention of non-existing files in taskcoach.spec
+prevented the Fedora RPM from being built.''')],
+    featuresAdded=[
+        Feature('''Notes can be e-mailed.'''),
+        Feature('''Display a tool tip to warn user when a search
 string is an invalid regular expression. In this case, default to
 substring search.'''),
-          ],
-        ),
+        Feature('''Optionally put Task Coach in the user's startup menu so
+that Task Coach is started automatically when the user logs on 
+(Windows only).''', '2017400', '1913650')]),
 
 Release('0.70.1', 'June 28, 2008',
     summary='''This release optionally brings back the tabbed user 
