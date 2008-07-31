@@ -31,7 +31,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.container = gui.viewercontainer.ViewerContainer(notebook, 
             self.settings, 'mainviewer')
         self.container.addViewer(dummy.ViewerWithDummyWidget(notebook,
-            self.taskList, gui.uicommand.UICommands(self.frame, None, 
+            self.taskList, gui.uicommand.UICommands(None, 
                 self.container, self.settings, self.taskList, 
                 effort.EffortList(self.taskList), category.CategoryList(), 
                 note.NoteContainer()), 

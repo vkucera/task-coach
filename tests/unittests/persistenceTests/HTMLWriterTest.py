@@ -101,7 +101,7 @@ class TaskTests(object):
 class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+            gui.uicommand.UICommands(None, self.viewerContainer, 
                 self.settings, self.taskList, self.effortList, self.categories, 
                 self.notes), 
             self.settings, categories=self.categories)
@@ -123,7 +123,7 @@ class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
 class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
         self.viewer = gui.viewer.TaskTreeViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+            gui.uicommand.UICommands(None, self.viewerContainer, 
                 self.settings, self.taskList, self.effortList, self.categories, 
                 self.notes), 
             self.settings, categories=self.categories)
@@ -140,7 +140,7 @@ class EffortWriterTest(HTMLWriterTestCase):
 
     def createViewer(self):
         self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList,
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+            gui.uicommand.UICommands(None, self.viewerContainer, 
                 self.settings, self.taskList, self.effortList, self.categories, 
                 self.notes), 
             self.settings)

@@ -41,7 +41,7 @@ class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
         viewerContainer = gui.viewercontainer.ViewerContainer(\
             widgets.Notebook(self.frame), self.settings, 'mainviewer')
         self.viewer = TaskTreeListViewerUnderTest(self.frame,
-            self.taskList, gui.uicommand.UICommands(self.frame, None, 
+            self.taskList, gui.uicommand.UICommands(None, 
                 viewerContainer, self.settings, self.taskList, effortList, 
                 self.categories, note.NoteContainer()), 
             self.settings, categories=self.categories)

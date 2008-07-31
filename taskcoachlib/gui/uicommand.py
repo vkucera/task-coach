@@ -158,6 +158,9 @@ class UICommand(object):
         longHelp = self.getHelpText()
         if longHelp != self.toolbar.GetToolLongHelp(self.id):
             self.toolbar.SetToolLongHelp(self.id, longHelp)
+            
+    def mainWindow(self):
+        return wx.GetApp().TopWindow
 
 
 class SettingsCommand(UICommand):
@@ -237,12 +240,6 @@ class IOCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self.iocontroller = kwargs.pop('iocontroller', None)
         super(IOCommand, self).__init__(*args, **kwargs)
-
-
-class MainWindowCommand(UICommand):
-    def __init__(self, *args, **kwargs):
-        self.mainwindow = kwargs.pop('mainwindow', None)
-        super(MainWindowCommand, self).__init__(*args, **kwargs)
 
 
 class TaskListCommand(UICommand):
@@ -457,7 +454,7 @@ class Printout(wx.html.HtmlPrintout):
         self.SetMargins(top, bottom, left, right)
 
                 
-class PrintPageSetup(MainWindowCommand):
+class PrintPageSetup(UICommand):
     def __init__(self, *args, **kwargs):
         super(PrintPageSetup, self).__init__(\
             menuText=_('Page setup...\tShift+Ctrl+P'), 
@@ -466,7 +463,7 @@ class PrintPageSetup(MainWindowCommand):
 
     def doCommand(self, event):
         global printerSettings
-        dialog = wx.PageSetupDialog(self.mainwindow, 
+        dialog = wx.PageSetupDialog(self.mainWindow(), 
             printerSettings.pageSetupData)
         result = dialog.ShowModal()
         if result == wx.ID_OK:
@@ -474,7 +471,7 @@ class PrintPageSetup(MainWindowCommand):
         dialog.Destroy()
 
 
-class PrintPreview(ViewerCommand, MainWindowCommand):
+class PrintPreview(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(PrintPreview, self).__init__(\
             menuText=_('Print preview'), 
@@ -487,13 +484,13 @@ class PrintPreview(ViewerCommand, MainWindowCommand):
         printout2 = Printout(self.viewer)
         preview = wx.PrintPreview(printout, printout2, 
             printerSettings.printData)
-        previewFrame = wx.PreviewFrame(preview, self.mainwindow, 
+        previewFrame = wx.PreviewFrame(preview, self.mainWindow(), 
             _('Print preview'), size=(750, 700))
         previewFrame.Initialize()
         previewFrame.Show()
         
 
-class Print(ViewerCommand, MainWindowCommand):
+class Print(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(Print, self).__init__(\
             menuText=_('Print...\tCtrl+P'), 
@@ -505,7 +502,7 @@ class Print(ViewerCommand, MainWindowCommand):
         printDialogData = wx.PrintDialogData(printerSettings.printData)
         printDialogData.EnableSelection(True)
         printer = wx.Printer(printDialogData)
-        if not printer.PrintDialog(self.mainwindow):
+        if not printer.PrintDialog(self.mainWindow()):
             return
         printout = Printout(self.viewer, 
             printSelectionOnly=printer.PrintDialogData.Selection)
@@ -514,7 +511,7 @@ class Print(ViewerCommand, MainWindowCommand):
         # reset the ToPage property to the MaxPage value if necessary:
         if printer.PrintDialogData.Selection:
             printer.PrintDialogData.ToPage = printer.PrintDialogData.MaxPage
-        printer.Print(self.mainwindow, printout, prompt=False)
+        printer.Print(self.mainWindow(), printout, prompt=False)
  
 
 class FileExportAsICS(IOCommand):
@@ -548,14 +545,14 @@ class FileExportAsCSV(IOCommand, ViewerCommand):
         self.iocontroller.exportAsCSV(self.viewer)
         
         
-class FileQuit(MainWindowCommand):
+class FileQuit(UICommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
             helpText=_('Exit %s')%meta.name, bitmap='exit', 
             id=wx.ID_EXIT, *args, **kwargs)
 
     def doCommand(self, event):
-        self.mainwindow.Close(force=True)
+        self.mainWindow().Close(force=True)
 
 
 def getUndoMenuText():
@@ -699,14 +696,14 @@ class EditPasteIntoTask(NeedsSelectedTasks, ViewerCommand):
         return super(EditPasteIntoTask, self).enabled(event) and task.Clipboard()
 
 
-class EditPreferences(MainWindowCommand, SettingsCommand):
+class EditPreferences(SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(EditPreferences, self).__init__(menuText=_('Preferences...'),
             helpText=_('Edit preferences'), bitmap='configure', 
             id=wx.ID_PREFERENCES, *args, **kwargs)
             
     def doCommand(self, event, show=True):
-        editor = dialog.preferences.Preferences(parent=self.mainwindow, 
+        editor = dialog.preferences.Preferences(parent=self.mainWindow(), 
             title=_('Edit preferences'), settings=self.settings)
         editor.Show(show=show)
 
@@ -780,7 +777,7 @@ class RenameViewer(SettingsCommand, ViewerCommand):
             helpText=_('Rename the selected viewer'), *args, **kwargs)
         
     def doCommand(self, event):
-        dialog = wx.TextEntryDialog(wx.GetApp().TopWindow, 
+        dialog = wx.TextEntryDialog(self.mainWindow(), 
             _('New title for the viewer:'), _('Rename viewer'), 
             self.viewer.title())
         if dialog.ShowModal() == wx.ID_OK:
@@ -1092,7 +1089,7 @@ class DeleteDomainObject(NeedsSelection, ViewerCommand):
 
         
 class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand, 
-              UICommandsCommand, MainWindowCommand):
+              UICommandsCommand):
     def __init__(self, *args, **kwargs):
         taskList = kwargs['taskList']
         super(TaskNew, self).__init__(bitmap='new', 
@@ -1100,7 +1097,7 @@ class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand,
             helpText=taskList.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        newTaskDialog = dialog.editor.TaskEditor(self.mainwindow, 
+        newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             command.NewTaskCommand(self.taskList, 
             categories=self.categoriesForTheNewTask()), 
             self.taskList, self.uiCommands, self.settings, self.categories, 
@@ -1353,7 +1350,8 @@ class TaskAddAttachment(NeedsSelectedTasks, TaskListCommand, ViewerCommand, Sett
             addAttachmentCommand.do()
 
 
-class TaskOpenAllAttachments(NeedsSelectedTasksWithAttachments, ViewerCommand, SettingsCommand):
+class TaskOpenAllAttachments(NeedsSelectedTasksWithAttachments, ViewerCommand, 
+                             SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskOpenAllAttachments, self).__init__(menuText=_('&Open all attachments'),
            helpText=_('Open all attachments of the selected task(s)'),
@@ -1371,7 +1369,7 @@ class TaskOpenAllAttachments(NeedsSelectedTasksWithAttachments, ViewerCommand, S
 
 
 class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand, 
-                TaskListCommand, MainWindowCommand, UICommandsCommand):
+                TaskListCommand, UICommandsCommand):
     def __init__(self, *args, **kwargs):
         effortList = kwargs['effortList']
         super(EffortNew, self).__init__(bitmap='new',  
@@ -1387,7 +1385,7 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
 
-        newEffortDialog = dialog.editor.EffortEditor(self.mainwindow, 
+        newEffortDialog = dialog.editor.EffortEditor(self.mainWindow(), 
             command.NewEffortCommand(self.effortList, selectedTasks),
             self.uiCommands, self.effortList, self.taskList, bitmap=self.bitmap)
         newEffortDialog.Show()
@@ -1459,7 +1457,7 @@ class EffortStartForTask(TaskListCommand):
         return not self.task.isBeingTracked() and not self.task.completed()      
 
 
-class EffortStartButton(MainWindowCommand, TaskListCommand):
+class EffortStartButton(TaskListCommand):
     def __init__(self, *args, **kwargs):
         super(EffortStartButton, self).__init__(bitmap='startmenu',
             menuText=_('&Start tracking effort'),
@@ -1467,16 +1465,17 @@ class EffortStartButton(MainWindowCommand, TaskListCommand):
             *args, **kwargs)
         
     def doCommand(self, event):
+        mainwindow = self.mainWindow()
         import menu
-        popupMenu = menu.StartEffortForTaskMenu(self.mainwindow, self.taskList)
+        popupMenu = menu.StartEffortForTaskMenu(mainwindow, self.taskList)
         if self.toolbar:
             x, y = self.toolbar.GetPosition()
             w, h = self.toolbar.GetSize()
-            menuX = wx.GetMousePosition()[0] - self.mainwindow.GetPosition()[0] - 0.5 * self.toolbar.GetToolSize()[0]
+            menuX = wx.GetMousePosition()[0] - mainwindow.GetPosition()[0] - 0.5 * self.toolbar.GetToolSize()[0]
             menuY = y + h
-            self.mainwindow.PopupMenu(popupMenu, (menuX, menuY))
+            mainwindow.PopupMenu(popupMenu, (menuX, menuY))
         else:
-            self.mainwindow.PopupMenu(popupMenu)
+            mainwindow.PopupMenu(popupMenu)
     
     def enabled(self, event):
         return len(self.taskList) > 0
@@ -1499,7 +1498,7 @@ class EffortStop(TaskListCommand):
         return True in (True for task in self.taskList if task.isBeingTracked())
 
 
-class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
+class CategoryNew(CategoriesCommand, UICommandsCommand):
     def __init__(self, *args, **kwargs):
         categories = kwargs['categories']
         super(CategoryNew, self).__init__(bitmap='new', 
@@ -1507,7 +1506,7 @@ class CategoryNew(MainWindowCommand, CategoriesCommand, UICommandsCommand):
             helpText=categories.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        newCategoryDialog = dialog.editor.CategoryEditor(self.mainwindow, 
+        newCategoryDialog = dialog.editor.CategoryEditor(self.mainWindow(), 
             command.NewCategoryCommand(self.categories),
             self.categories, self.uiCommands, bitmap=self.bitmap)
         newCategoryDialog.Show(show)
@@ -1556,7 +1555,7 @@ class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
                                                   drop=dropItem)
 
 
-class NoteNew(NotesCommand, MainWindowCommand, CategoriesCommand):
+class NoteNew(NotesCommand, CategoriesCommand):
     def __init__(self, *args, **kwargs):
         notes = kwargs['notes']
         super(NoteNew, self).__init__(bitmap='new', 
@@ -1566,7 +1565,7 @@ class NoteNew(NotesCommand, MainWindowCommand, CategoriesCommand):
     def doCommand(self, event, show=True):
         filteredCategories = [category for category in self.categories if
                              category.isFiltered()]    
-        noteDialog = dialog.editor.NoteEditor(self.mainwindow, 
+        noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
             command.NewNoteCommand(self.notes, categories=filteredCategories),
             self.categories, bitmap=self.bitmap)
         noteDialog.Show(show)
@@ -1673,13 +1672,13 @@ class Help(DialogCommand):
             *args, **kwargs)
 
 
-class Tips(SettingsCommand, MainWindowCommand):
+class Tips(SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(Tips, self).__init__(menuText=_('&Tips'),
             helpText=_('Tips about the program'), bitmap='help', *args, **kwargs)
 
     def doCommand(self, event):
-        help.showTips(self.mainwindow, self.settings)
+        help.showTips(self.mainWindow(), self.settings)
         
 
 class InfoCommand(DialogCommand):
@@ -1704,14 +1703,14 @@ class HelpLicense(InfoCommand):
             *args, **kwargs)
 
 
-class MainWindowRestore(MainWindowCommand):
+class MainWindowRestore(UICommand):
     def __init__(self, *args, **kwargs):
         super(MainWindowRestore, self).__init__(menuText=_('&Restore'),
             helpText=_('Restore the window to its previous state'),
             bitmap='restore', *args, **kwargs)
 
     def doCommand(self, event):
-        self.mainwindow.restore(event)
+        self.mainWindow().restore(event)
     
 
 class Search(ViewerCommand, SettingsCommand):
@@ -1790,7 +1789,7 @@ class EditorUICommands(dict, ViewColumnUICommandsMixin):
 
 class UICommands(dict, ViewColumnUICommandsMixin):
     ''' All UICommands for the mainwindow. '''
-    def __init__(self, mainwindow, iocontroller, viewerContainer, settings, 
+    def __init__(self, iocontroller, viewerContainer, settings, 
             taskList, effortList, categories, notes):
         super(UICommands, self).__init__()
         self.__iocontroller = iocontroller
@@ -1803,16 +1802,15 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['saveas'] = FileSaveAs(iocontroller=iocontroller)
         self['saveselection'] = FileSaveSelection(iocontroller=iocontroller, 
             viewer=viewerContainer)
-        self['printpagesetup'] = PrintPageSetup(mainwindow=mainwindow)
-        self['printpreview'] = PrintPreview(mainwindow=mainwindow, 
-            viewer=viewerContainer)
-        self['print'] = Print(mainwindow=mainwindow, viewer=viewerContainer)
+        self['printpagesetup'] = PrintPageSetup()
+        self['printpreview'] = PrintPreview(viewer=viewerContainer)
+        self['print'] = Print(viewer=viewerContainer)
         self['exportasics'] = FileExportAsICS(iocontroller=iocontroller)
         self['exportashtml'] = FileExportAsHTML(iocontroller=iocontroller, 
             viewer=viewerContainer)
         self['exportascsv'] = FileExportAsCSV(iocontroller=iocontroller,
             viewer=viewerContainer)
-        self['quit'] = FileQuit(mainwindow=mainwindow)
+        self['quit'] = FileQuit()
 
         # menuEdit commands
         self['undo'] = EditUndo()
@@ -1821,8 +1819,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['copy'] = EditCopy(viewer=viewerContainer)
         self['paste'] = EditPaste()
         self['pasteintotask'] = EditPasteIntoTask(viewer=viewerContainer)
-        self['editpreferences'] = EditPreferences(mainwindow=mainwindow, 
-                                                  settings=settings)
+        self['editpreferences'] = EditPreferences(settings=settings)
         
         # Selection commands
         self['selectall'] = SelectAll(viewer=viewerContainer)
@@ -1967,12 +1964,11 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['newsub'] = NewSubDomainObject(viewer=viewerContainer)
         
         # Task menu
-        self['newtask'] = TaskNew(mainwindow=mainwindow, taskList=taskList,
-            settings=settings, uicommands=self, categories=categories)
+        self['newtask'] = TaskNew(taskList=taskList, settings=settings, 
+            uicommands=self, categories=categories)
         self['newtaskwithselectedcategories'] = \
-            NewTaskWithSelectedCategories(mainwindow=mainwindow,
-                taskList=taskList, settings=settings, uicommands=self,
-                categories=categories, viewer=viewerContainer)
+            NewTaskWithSelectedCategories(taskList=taskList, settings=settings, 
+                uicommands=self, categories=categories, viewer=viewerContainer)
         self['newsubtask'] = TaskNewSubTask(taskList=taskList, viewer=viewerContainer)
         self['edittask'] = TaskEdit(taskList=taskList, viewer=viewerContainer)
         self['toggletaskcompletion'] = TaskToggleCompletion(viewer=viewerContainer)
@@ -1991,7 +1987,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         
         # Effort menu
         self['neweffort'] = EffortNew(viewer=viewerContainer, effortList=effortList,
-            taskList=taskList, mainwindow=mainwindow, uicommands=self)
+            taskList=taskList, uicommands=self)
         self['editeffort'] = EffortEdit(viewer=viewerContainer, effortList=effortList)
         self['deleteeffort'] = EffortDelete(effortList=effortList, 
                                             viewer=viewerContainer)
@@ -1999,8 +1995,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         self['stopeffort'] = EffortStop(taskList=taskList)
         
         # Category menu
-        self['newcategory'] = CategoryNew(mainwindow=mainwindow, 
-            categories=categories, uiCommands=self)
+        self['newcategory'] = CategoryNew(categories=categories, uiCommands=self)
         self['newsubcategory'] = CategoryNewSubCategory(viewer=viewerContainer, 
             categories=categories)
         self['deletecategory'] = CategoryDelete(viewer=viewerContainer, 
@@ -2009,8 +2004,7 @@ class UICommands(dict, ViewColumnUICommandsMixin):
             categories=categories)
         
         # Note menu
-        self['newnote'] = NoteNew(mainwindow=mainwindow, notes=notes, 
-                                  categories=categories)
+        self['newnote'] = NoteNew(notes=notes, categories=categories)
         self['newsubnote'] = NoteNewSubNote(viewer=viewerContainer, notes=notes)
         self['deletenote'] = NoteDelete(viewer=viewerContainer, notes=notes)
         self['mailnote'] = NoteMail(viewer=viewerContainer, menuText=_('Mail note'),
@@ -2020,12 +2014,12 @@ class UICommands(dict, ViewColumnUICommandsMixin):
         
         # Help menu
         self['help'] = Help()
-        self['tips'] = Tips(settings=settings, mainwindow=mainwindow)
+        self['tips'] = Tips(settings=settings)
         self['about'] = HelpAbout()
         self['license'] = HelpLicense()
 
         # Taskbar menu
-        self['restore'] = MainWindowRestore(mainwindow=mainwindow)
+        self['restore'] = MainWindowRestore()
                 
         # Drag and drop related, not on any menu:
         self['draganddroptask'] = TaskDragAndDrop(taskList=taskList, 

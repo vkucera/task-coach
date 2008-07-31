@@ -39,7 +39,7 @@ class ViewerTest(test.wxTestCase):
         
     def createViewer(self):
         return gui.viewer.TaskListViewer(self.notebook, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+            gui.uicommand.UICommands(None, self.viewerContainer, 
                 self.settings, self.taskList, self.effortList, self.categories, 
                 self.notes), 
             self.settings, categories=self.categories)
@@ -479,7 +479,7 @@ class TaskListViewerTest(test.wxTestCase):
         self.viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
         self.viewer = TaskListViewerUnderTest(self.notebook,
-            self.taskList, gui.uicommand.UICommands(self.frame, None, 
+            self.taskList, gui.uicommand.UICommands(None, 
                 self.viewerContainer, self.settings, self.taskList, 
                 effort.EffortList(self.taskList), self.categories, self.notes), 
             self.settings, categories=self.categories)
@@ -600,7 +600,7 @@ class ViewerBaseClassTest(test.wxTestCase):
             settings, 'mainviewer')
         try:
             baseViewer = gui.viewer.Viewer(self.notebook, taskList,
-                gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+                gui.uicommand.UICommands(None, self.viewerContainer, 
                     settings, taskList, effortList, categories, notes), {}, settingsSection='bla')
             self.fail('Expected NotImplementedError')
         except NotImplementedError:
@@ -665,7 +665,7 @@ class ViewerIteratorTests(object):
 class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
     def createViewer(self):
         return gui.viewer.TaskTreeViewer(self.notebook, self.taskList,
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+            gui.uicommand.UICommands(None, self.viewerContainer, 
                 self.settings, self.taskList, self.effortList, self.categories, 
                 self.notes), 
             self.settings, categories=self.categories)
@@ -677,7 +677,7 @@ class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
 class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
     def createViewer(self):
         return gui.viewer.TaskListViewer(self.notebook, self.taskList,
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+            gui.uicommand.UICommands(None, self.viewerContainer, 
                 self.settings, self.taskList, self.effortList, self.categories, 
                 self.notes), 
             self.settings, categories=self.categories)
@@ -730,7 +730,7 @@ class UpdatePerSecondViewerTests(object):
         
     def createUpdateViewer(self):
         return self.ListViewerClass(self.notebook, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
+            gui.uicommand.UICommands(None, self.viewerContainer, 
                 self.settings, self.taskList, effort.EffortList(self.taskList), 
                 self.categories, self.notes), 
             self.settings, categories=self.categories)

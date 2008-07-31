@@ -114,7 +114,7 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, viewerContainer, 
+            gui.uicommand.UICommands(None, viewerContainer, 
                 self.settings, self.taskList, effort.EffortList(self.taskList), 
                 self.categories, note.NoteContainer()), self.settings, 
                 categories=self.categories)

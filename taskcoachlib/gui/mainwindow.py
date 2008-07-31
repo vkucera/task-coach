@@ -212,7 +212,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             containerWidget = self
         self.viewer = viewercontainer.ViewerContainer(containerWidget,
             self.settings, 'mainviewer') 
-        self.uiCommands = uicommand.UICommands(self, self.iocontroller,
+        self.uiCommands = uicommand.UICommands(self.iocontroller,
             self.viewer, self.settings, self.taskFile.tasks(), 
             self.taskFile.efforts(), self.taskFile.categories(), 
             self.taskFile.notes())
@@ -368,8 +368,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.SendSizeEvent()
         
     def getToolBarUICommands(self):
-        startEffortButton = uicommand.EffortStartButton(mainwindow=self, 
-            taskList=self.taskFile.tasks())
+        startEffortButton = uicommand.EffortStartButton(taskList=self.taskFile.tasks())
         ''' Names of UI commands to put on the toolbar of this window. '''
         return ['open', 'save', 'print', None, 'undo', 'redo', None, 
                 startEffortButton, 'stopeffort']

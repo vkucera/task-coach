@@ -64,7 +64,7 @@ class TaskEditorTestCase(test.wxTestCase):
         categories = category.CategoryList()
         effortList = effort.EffortList(self.taskList)
         return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
-            self.taskList, gui.uicommand.UICommands(self.frame, None, 
+            self.taskList, gui.uicommand.UICommands(None, 
                 self.viewerContainer, self.settings, self.taskList, effortList, 
                 categories, note.NoteContainer()),
             self.settings, categories, raiseDialog=False)

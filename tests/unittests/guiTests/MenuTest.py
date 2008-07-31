@@ -167,8 +167,8 @@ class RecentFilesMenuTest(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
-        self.uiCommands = gui.uicommand.UICommands(self.frame, 
-            self.ioController, MockViewerContainer(), self.settings, self.taskList, 
+        self.uiCommands = gui.uicommand.UICommands(self.ioController, 
+            MockViewerContainer(), self.settings, self.taskList, 
             self.effortList, self.categories, self.notes)
         self.initialFileMenuLength = len(self.createFileMenu())
         self.filename1 = 'c:/Program Files/TaskCoach/test.tsk'
@@ -243,7 +243,7 @@ class ViewMenuTestCase(test.wxTestCase):
         self.mainWindow = self.createMainWindow()
         self.filteredTaskList = self.createFilteredTaskList()
         self.viewerContainer = MockViewerContainer()
-        self.uiCommands = uicommand.UICommands(self.mainWindow, None, 
+        self.uiCommands = uicommand.UICommands(None, 
             self.viewerContainer, self.settings, self.filteredTaskList, 
             effort.EffortList(self.filteredTaskList), category.CategoryList(),
             note.NoteContainer())
