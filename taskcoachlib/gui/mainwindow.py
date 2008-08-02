@@ -212,28 +212,24 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             containerWidget = self
         self.viewer = viewercontainer.ViewerContainer(containerWidget,
             self.settings, 'mainviewer') 
-        self.uiCommands = uicommand.UICommands(self.iocontroller,
-            self.viewer, self.settings, self.taskFile.tasks(), 
-            self.taskFile.efforts(), self.taskFile.categories(), 
-            self.taskFile.notes())
         viewerfactory.addTaskViewers(self.viewer, self.taskFile.tasks(), 
-            self.uiCommands, self.settings, self.taskFile.categories())
+            self.settings, self.taskFile.categories(), self.taskFile.efforts())
         viewerfactory.addEffortViewers(self.viewer, self.taskFile.tasks(), 
-            self.uiCommands, self.settings)
+            self.settings)
         viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
-            self.uiCommands, self.settings)
+            self.settings, self.taskFile.tasks(), self.taskFile.notes())
         if self.settings.getboolean('feature', 'notes'):
             viewerfactory.addNoteViewers(self.viewer, self.taskFile.notes(),
-                                         self.uiCommands, self.settings,
-                                         self.taskFile.categories())
+                 self.settings, self.taskFile.categories())
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         import menu
-        self.SetMenuBar(menu.MainMenu(self, self.uiCommands, self.settings))
-        self.createTaskBarIcon(self.uiCommands)
+        self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller, 
+                                      self.viewer, self.taskFile))
+        self.createTaskBarIcon()
         self.reminderController = \
             remindercontroller.ReminderController(self.taskFile.tasks(), 
-                self.taskFile.categories(), self.settings, self.uiCommands)
+                self.taskFile.categories(), self.settings)
         
     def AddPage(self, page, caption, *args):
         name = page.settingsSection()
@@ -287,13 +283,13 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
     def onShowToolBar(self, *args, **kwargs):
         self.showToolBar(eval(self.settings.get('view', 'toolbar')))
 
-    def createTaskBarIcon(self, uiCommands):
+    def createTaskBarIcon(self):
         if self.canCreateTaskBarIcon():
             import taskbaricon, menu
             self.taskBarIcon = taskbaricon.TaskBarIcon(self, 
                 self.taskFile.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon,
-                uiCommands, self.taskFile.tasks()))
+                self.settings, self.taskFile, self.viewer))
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
 
     def canCreateTaskBarIcon(self):
@@ -368,10 +364,16 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.SendSizeEvent()
         
     def getToolBarUICommands(self):
-        startEffortButton = uicommand.EffortStartButton(taskList=self.taskFile.tasks())
-        ''' Names of UI commands to put on the toolbar of this window. '''
-        return ['open', 'save', 'print', None, 'undo', 'redo', None, 
-                startEffortButton, 'stopeffort']
+        ''' UI commands to put on the toolbar of this window. ''' 
+        return [uicommand.FileOpen(iocontroller=self.iocontroller), 
+                uicommand.FileSave(iocontroller=self.iocontroller), 
+                uicommand.Print(viewer=self.viewer), 
+                None, 
+                uicommand.EditUndo(), 
+                uicommand.EditRedo(), 
+                None, 
+                uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
+                uicommand.EffortStop(taskList=self.taskFile.tasks())]
         
     def showToolBar(self, size):
         # Current version of wxPython (2.7.8.1) has a bug 
@@ -385,7 +387,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             if self.GetToolBar():
                 self.GetToolBar().Destroy()
             if size is not None:
-                self.SetToolBar(toolbar.ToolBar(self, self.uiCommands, size=size))
+                self.SetToolBar(toolbar.ToolBar(self, size=size))
             self.SendSizeEvent()
         else:
             currentToolbar = self.manager.GetPane('toolbar')
@@ -395,7 +397,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             if size is None:
                 self.Unbind(self.pageClosedEvent)
             else:
-                bar = toolbar.ToolBar(self, self.uiCommands, size=size)
+                bar = toolbar.ToolBar(self, size=size)
                 self.manager.AddPane(bar, wx.aui.AuiPaneInfo().Name('toolbar').
                                      Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
                                      LeftDockable(False).RightDockable(False))

@@ -27,7 +27,7 @@ class NoteSorter(base.TreeSorter):
     def createSortKeyFunction(self):
         sortKeyName = self._sortKey
         if not self._sortCaseSensitive and sortKeyName in ('subject', 'description'):
-            prepareSortValue = str.lower
+            prepareSortValue = lambda stringOrUnicode: stringOrUnicode.lower()
         elif sortKeyName in ('categories', 'totalCategories'):
             prepareSortValue = lambda categories: sorted([category.subject() for category in categories])
         else:

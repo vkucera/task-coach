@@ -25,8 +25,64 @@ from taskcoachlib.domain import task, effort, category, note
 
 
 class MockViewerContainer(object):
+    def __init__(self, *args, **kwargs):
+        self.__sortBy = 'subject'
+        self.__ascending = True
+        
+    def viewerChangeEventType(self):
+        return 'bla'
+    
+    def isSortable(self):
+        return True
+        
+    def sortBy(self, sortKey):
+        self.__sortBy = sortKey
+        
+    def isSortedBy(self, sortKey):
+        return sortKey == self.__sortBy
+
+    def isSortOrderAscending(self, *args, **kwargs):
+        return self.__ascending
+    
+    def setSortOrderAscending(self, ascending=True):
+        self.__ascending = ascending
+
+    def isSortByTaskStatusFirst(self):
+        return True
+    
+    def isSortCaseSensitive(self):
+        return True
+
+    def getSortUICommands(self):
+        return [uicommand.ViewerSortOrderCommand(viewer=self), 
+                uicommand.ViewerSortCaseSensitive(viewer=self), 
+                uicommand.ViewerSortByTaskStatusFirst(viewer=self), 
+                None, 
+                uicommand.ViewerSortByCommand(viewer=self, value='subject',
+                    menuText='Sub&ject', helpText='help'), 
+                uicommand.ViewerSortByCommand(viewer=self, value='description',
+                    menuText='&Description', helpText='help')]
+        
+    def isVisibleColumnByName(self, *args, **kwargs):
+        return True
+    
+    def hasHideableColumns(self):
+        return False
+    
     def getColumnUICommands(self):
         return []
+    
+    def isFilteredByDueDate(self, *args, **kwargs):
+        return False
+    
+    def isFilterable(self):
+        return False
+    
+    def getFilterUICommands(self):
+        return []
+    
+    def resetFilter(self):
+        pass
     
 
 class MenuTestCase(test.wxTestCase):
@@ -103,80 +159,19 @@ class MockIOController:
         self.openCalled = True
 
 
-class MockViewerContainer:
-    def __init__(self, *args, **kwargs):
-        self.__sortBy = 'subject'
-        self.__ascending = True
-        
-    def viewerChangeEventType(self):
-        return 'bla'
-    
-    def isSortable(self):
-        return True
-        
-    def sortBy(self, sortKey):
-        self.__sortBy = sortKey
-        
-    def isSortedBy(self, sortKey):
-        return sortKey == self.__sortBy
 
-    def isSortOrderAscending(self, *args, **kwargs):
-        return self.__ascending
-    
-    def setSortOrderAscending(self, ascending=True):
-        self.__ascending = ascending
-
-    def isSortByTaskStatusFirst(self):
-        return True
-    
-    def isSortCaseSensitive(self):
-        return True
-
-    def getSortUICommands(self):
-        return ['viewsortorder', 'viewsortcasesensitive', 
-                'viewsortbystatusfirst', None, 'viewsortbysubject', 
-                'viewsortbydescription']
-        
-    def isVisibleColumnByName(self, *args, **kwargs):
-        return True
-    
-    def hasHideableColumns(self):
-        return False
-    
-    def getColumnUICommands(self):
-        return []
-    
-    def isFilteredByDueDate(self, *args, **kwargs):
-        return False
-    
-    def isFilterable(self):
-        return False
-    
-    def getFilterUICommands(self):
-        return []
-    
-    def resetFilter(self):
-        pass
-    
-    
 class RecentFilesMenuTest(test.wxTestCase):
     def setUp(self):
         self.ioController = MockIOController()
         self.settings = config.Settings(load=False)
-        self.taskList = task.sorter.Sorter(task.TaskList())
-        self.effortList = effort.EffortList(self.taskList)
-        self.categories = category.CategoryList()
-        self.notes = note.NoteContainer()
-        self.uiCommands = gui.uicommand.UICommands(self.ioController, 
-            MockViewerContainer(), self.settings, self.taskList, 
-            self.effortList, self.categories, self.notes)
         self.initialFileMenuLength = len(self.createFileMenu())
         self.filename1 = 'c:/Program Files/TaskCoach/test.tsk'
         self.filename2 = 'c:/two.tsk'
         self.filenames = []
         
     def createFileMenu(self):
-        return gui.menu.FileMenu(self.frame, self.uiCommands, self.settings)
+        return gui.menu.FileMenu(self.frame, self.settings, 
+                                 self.ioController, None)
         
     def setRecentFilesAndCreateMenu(self, *filenames):
         self.addRecentFiles(*filenames)
@@ -240,13 +235,7 @@ class RecentFilesMenuTest(test.wxTestCase):
 class ViewMenuTestCase(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.mainWindow = self.createMainWindow()
-        self.filteredTaskList = self.createFilteredTaskList()
         self.viewerContainer = MockViewerContainer()
-        self.uiCommands = uicommand.UICommands(None, 
-            self.viewerContainer, self.settings, self.filteredTaskList, 
-            effort.EffortList(self.filteredTaskList), category.CategoryList(),
-            note.NoteContainer())
         self.menuBar = wx.MenuBar()
         self.parentMenu = wx.Menu()
         self.menuBar.Append(self.parentMenu, 'parentMenu')
@@ -254,18 +243,9 @@ class ViewMenuTestCase(test.wxTestCase):
         self.parentMenu.AppendSubMenu(self.menu, 'menu')
         self.frame.SetMenuBar(self.menuBar)
         
-    def createMainWindow(self):
-        return None
-        
-    def createFilteredTaskList(self):
-        return task.TaskList()
-
-
-class ViewSortMenuTest(ViewMenuTestCase):
     def createMenu(self):
         self.frame.viewer = self.viewerContainer
-        menu = gui.menu.SortMenu(self.frame, self.uiCommands, self.parentMenu, 
-            'menu')
+        menu = gui.menu.SortMenu(self.frame, self.parentMenu, 'menu')
         menu.updateMenu()
         return menu
         

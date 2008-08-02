@@ -100,11 +100,8 @@ class TaskTests(object):
         
 class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
-        self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(None, self.viewerContainer, 
-                self.settings, self.taskList, self.effortList, self.categories, 
-                self.notes), 
-            self.settings, categories=self.categories)
+        self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList,  
+            self.settings, categories=self.categories, efforts=self.effortList)
         
     def selectItem(self, index):
         self.viewer.widget.SelectItem(index)
@@ -122,11 +119,8 @@ class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
 
 class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
     def createViewer(self):
-        self.viewer = gui.viewer.TaskTreeViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(None, self.viewerContainer, 
-                self.settings, self.taskList, self.effortList, self.categories, 
-                self.notes), 
-            self.settings, categories=self.categories)
+        self.viewer = gui.viewer.TaskTreeViewer(self.frame, self.taskList,  
+            self.settings, categories=self.categories, efforts=self.effortList)
 
     def selectItem(self, index):
         item, cookie = self.viewer.widget.GetFirstChild(self.viewer.widget.GetRootItem())
@@ -140,9 +134,6 @@ class EffortWriterTest(HTMLWriterTestCase):
 
     def createViewer(self):
         self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList,
-            gui.uicommand.UICommands(None, self.viewerContainer, 
-                self.settings, self.taskList, self.effortList, self.categories, 
-                self.notes), 
             self.settings)
 
     def testTaskSubject(self):

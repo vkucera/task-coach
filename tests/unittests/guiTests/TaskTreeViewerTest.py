@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test, TaskViewerTest
 from unittests import dummy
 from taskcoachlib import gui, widgets, config
-from taskcoachlib.domain import task, date, category
+from taskcoachlib.domain import task, date, category, effort
 
 
 class TaskTreeViewerTestCase(test.wxTestCase):
@@ -28,6 +28,7 @@ class TaskTreeViewerTestCase(test.wxTestCase):
         self.task = task.Task(subject='task')
         self.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
+        self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
         
     def assertItems(self, *tasks):
@@ -138,8 +139,8 @@ class TaskTreeViewerUnderTest(gui.viewer.TaskTreeViewer):
 class TaskTreeViewerTest(CommonTests, TaskTreeViewerTestCase):
     def setUp(self):
         super(TaskTreeViewerTest, self).setUp()
-        self.viewer = TaskTreeViewerUnderTest(self.frame, self.taskList, {}, 
-            self.settings, categories=self.categories)
+        self.viewer = TaskTreeViewerUnderTest(self.frame, self.taskList, 
+            self.settings, categories=self.categories, efforts=self.effortList)
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()        
 

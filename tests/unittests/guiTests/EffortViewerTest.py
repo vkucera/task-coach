@@ -40,7 +40,7 @@ class EffortViewerTest(test.wxTestCase):
             date.DateTime(2006,1,2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006,1,2),
             date.DateTime(2006,1,3))
-        self.viewer = EffortViewerUnderTest(self.frame, self.taskList, {}, 
+        self.viewer = EffortViewerUnderTest(self.frame, self.taskList,  
             self.settings)
             
     def assertStatusMessages(self, message1, message2):

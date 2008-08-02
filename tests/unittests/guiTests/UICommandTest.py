@@ -60,14 +60,9 @@ class NewTaskWithSelectedCategoryTest(test.wxTestCase):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(self.frame, 
-            self.settings, 'mainviewer')         
-        self.uiCommands = gui.uicommand.UICommands(None, 
-            self.viewerContainer, self.settings, self.taskList, 
-            self.effortList, self.categories, note.NoteContainer())
         self.categories.append(category.Category('cat'))
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
-            self.uiCommands, self.settings)
+            self.settings, tasks=self.taskList, notes=note.NoteContainer())
         
     def createNewTask(self):
         taskNew = gui.uicommand.NewTaskWithSelectedCategories(taskList=self.taskList,

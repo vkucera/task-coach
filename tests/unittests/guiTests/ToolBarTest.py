@@ -23,14 +23,14 @@ from taskcoachlib import gui
 
 
 class ToolBar(gui.toolbar.ToolBar):
-    def commandNames(self):
+    def uiCommands(self):
         return []
 
 
 class ToolBarTest(test.wxTestCase):
     def testAppendUICommand(self):
         gui.init()
-        toolbar = ToolBar(self.frame, {})
+        toolbar = ToolBar(self.frame)
         uiCommand = dummy.DummyUICommand(menuText='undo', bitmap='undo')
         id = toolbar.appendUICommand(uiCommand)
         self.assertNotEqual(wx.NOT_FOUND, toolbar.GetToolPos(id))
@@ -50,7 +50,7 @@ class ToolBarSizeTest(test.wxTestCase):
         self.createToolBarAndTestSize((32, 32))
 
     def createToolBarAndTestSize(self, size, expectedSize=None):
-        toolbarArgs = [self.frame, {}]
+        toolbarArgs = [self.frame]
         if size:
             toolbarArgs.append(size)
         toolbar = ToolBar(*toolbarArgs)

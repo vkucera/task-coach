@@ -19,23 +19,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import test
 from taskcoachlib import gui, widgets, config
-from taskcoachlib.domain import category, task, note, effort
+from taskcoachlib.domain import category, task, effort
     
        
 class TreeViewerTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
-        self.notes = note.NoteContainer()
         self.taskList = task.sorter.Sorter(task.TaskList())
-        notebook = widgets.Notebook(self.frame)
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(notebook, 
-            self.settings, 'mainviewer')
-        self.viewer = gui.viewer.TaskTreeViewer(notebook,
-            self.taskList, gui.uicommand.UICommands(None, 
-                self.viewerContainer, self.settings, self.taskList, 
-                effort.EffortList(self.taskList), self.categories, self.notes), 
-            self.settings, categories=self.categories)
+        self.effortList = effort.EffortList(self.taskList)
+        self.viewer = gui.viewer.TaskTreeViewer(self.frame, self.taskList,  
+            self.settings, categories=self.categories, efforts=self.effortList)
         self.parent = task.Task('parent')
         self.child = task.Task('child')
         self.parent.addChild(self.child)

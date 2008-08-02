@@ -38,13 +38,8 @@ class TaskTreeListViewerTest(TaskTreeViewerTest.CommonTests,
     def setUp(self):
         super(TaskTreeListViewerTest, self).setUp()
         effortList = effort.EffortList(self.taskList)
-        viewerContainer = gui.viewercontainer.ViewerContainer(\
-            widgets.Notebook(self.frame), self.settings, 'mainviewer')
-        self.viewer = TaskTreeListViewerUnderTest(self.frame,
-            self.taskList, gui.uicommand.UICommands(None, 
-                viewerContainer, self.settings, self.taskList, effortList, 
-                self.categories, note.NoteContainer()), 
-            self.settings, categories=self.categories)
+        self.viewer = TaskTreeListViewerUnderTest(self.frame, self.taskList, 
+            self.settings, categories=self.categories, efforts=effortList)
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()
           

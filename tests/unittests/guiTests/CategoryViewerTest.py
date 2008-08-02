@@ -26,15 +26,9 @@ class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
-        self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
-            gui.uicommand.UICommands(None, 
-                gui.viewercontainer.ViewerContainer(widgets.Notebook(self.frame), 
-                    self.settings, 'mainviewer'), 
-                None, self.taskList,
-                self.effortList, self.categories, note.NoteContainer()), 
-            self.settings)
+            self.settings, tasks=self.taskList, notes=note.NoteContainer())
         
     def addTwoCategories(self):
         cat1 = category.Category('1')

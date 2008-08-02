@@ -344,14 +344,13 @@ class BudgetPage(TaskEditorPage):
 
 
 class EffortPage(TaskEditorPage):        
-    def __init__(self, parent, theTask, taskList, settings, uiCommands, 
-                 *args, **kwargs):
+    def __init__(self, parent, theTask, taskList, settings, *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
         self.containerWidget = widgets.Choicebook(self)
         self._viewerContainer = viewercontainer.ViewerContainer(self.containerWidget, 
             settings, 'effortviewerintaskeditor')
         singleTaskList = task.SingleTaskList()
-        self.addEffortViewers(singleTaskList, uiCommands, settings)       
+        self.addEffortViewers(singleTaskList, settings)       
         self.add(self.containerWidget, proportion=1, flag=wx.EXPAND|wx.ALL, 
                  border=5)
         singleTaskList.append(theTask)
@@ -365,22 +364,21 @@ class EffortPage(TaskEditorPage):
             viewer.detach()
         event.Skip()
     
-    def addEffortViewers(self, taskList, uiCommands, settings):
+    def addEffortViewers(self, taskList, settings):
         effortViewer = viewer.EffortListViewer(self.containerWidget, taskList, 
-            uiCommands, settings, 
-            settingsSection='effortlistviewerintaskeditor')
+            settings, settingsSection='effortlistviewerintaskeditor')
         self._viewerContainer.addViewer(effortViewer, _('Effort details')) 
         effortPerDayViewer = viewer.EffortPerDayViewer(self.containerWidget,
-            taskList, uiCommands, settings, 
+            taskList, settings, 
             settingsSection='effortperdayviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerDayViewer, _('Effort per day'))
         effortPerWeekViewer = viewer.EffortPerWeekViewer(self.containerWidget,
-            taskList, uiCommands, settings, 
+            taskList, settings, 
             settingsSection='effortperweekviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerWeekViewer, 
             _('Effort per week'))
         effortPerMonthViewer = viewer.EffortPerMonthViewer(self.containerWidget,
-            taskList, uiCommands, settings, 
+            taskList, settings, 
             settingsSection='effortpermonthviewerintaskeditor')
         self._viewerContainer.addViewer(effortPerMonthViewer, 
             _('Effort per month'))    
@@ -610,8 +608,8 @@ class BehaviorPage(TaskEditorPage):
 
 
 class TaskEditBook(widgets.Listbook):
-    def __init__(self, parent, task, taskList, uiCommands, settings, 
-                 categories, *args, **kwargs):
+    def __init__(self, parent, task, taskList, settings, categories, 
+                 *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(SubjectPage(self, task), _('Description'), 'description')
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
@@ -619,7 +617,7 @@ class TaskEditBook(widgets.Listbook):
                      'category')
         self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')
         if task.timeSpent(recursive=True):
-            effortPage = EffortPage(self, task, taskList, settings, uiCommands)
+            effortPage = EffortPage(self, task, taskList, settings)
             self.AddPage(effortPage, _('Effort'), 'start')
         self.AddPage(AttachmentPage(self, task, settings), _('Attachments'), 'attachment')
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior') 
@@ -873,10 +871,10 @@ class NoteEditBook(widgets.Listbook):
 
 
 class EditorWithCommand(widgets.NotebookDialog):
-    def __init__(self, parent, command, uiCommands, *args, **kwargs):
-        self._uiCommands = uiCommands
+    def __init__(self, parent, command, *args, **kwargs):
         self._command = command
-        super(EditorWithCommand, self).__init__(parent, command.name(), *args, **kwargs)
+        super(EditorWithCommand, self).__init__(parent, command.name(), 
+                                                *args, **kwargs)
         
     def ok(self, *args, **kwargs):
         self._command.do()
@@ -884,11 +882,11 @@ class EditorWithCommand(widgets.NotebookDialog):
 
             
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, taskList, uiCommands, settings, categories, bitmap='edit', *args, **kwargs):
+    def __init__(self, parent, command, taskList, settings, categories, bitmap='edit', *args, **kwargs):
         self._settings = settings
         self._taskList = taskList
         self._categories = categories
-        super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
+        super(TaskEditor, self).__init__(parent, command, bitmap, *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
         # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
         self.setFocus() 
@@ -905,17 +903,15 @@ class TaskEditor(EditorWithCommand):
 
     def addPage(self, task):
         page = TaskEditBook(self._interior, task, self._taskList, 
-            self._uiCommands, self._settings, self._categories)
+            self._settings, self._categories)
         self._interior.AddPage(page, task.subject())
         
     
 class EffortEditor(EditorWithCommand):
-    def __init__(self, parent, command, uiCommands, effortList, taskList, 
-                 *args, **kwargs):
+    def __init__(self, parent, command, effortList, taskList, *args, **kwargs):
         self._effortList = effortList
         self._taskList = taskList
-        super(EffortEditor, self).__init__(parent, command, uiCommands, 
-                                           *args, **kwargs)
+        super(EffortEditor, self).__init__(parent, command, *args, **kwargs)
         
     def addPages(self):
         for effort in self._command.efforts: # FIXME: use getter
@@ -928,10 +924,9 @@ class EffortEditor(EditorWithCommand):
 
 
 class CategoryEditor(EditorWithCommand):
-    def __init__(self, parent, command, uiCommands, categories, *args, **kwargs):
+    def __init__(self, parent, command, categories, *args, **kwargs):
         self._categories = categories
-        super(CategoryEditor, self).__init__(parent, command, uiCommands, 
-                                             *args, **kwargs)
+        super(CategoryEditor, self).__init__(parent, command, *args, **kwargs)
         self[0]._subjectEntry.SetSelection(-1, -1)
         # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
         self.setFocus() 
@@ -954,7 +949,7 @@ class CategoryEditor(EditorWithCommand):
 class NoteEditor(EditorWithCommand):
     def __init__(self, parent, command, categories, *args, **kwargs):
         self._categories = categories
-        super(NoteEditor, self).__init__(parent, command, None, *args, **kwargs)
+        super(NoteEditor, self).__init__(parent, command, *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
         # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
         self.setFocus() 

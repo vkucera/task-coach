@@ -109,15 +109,10 @@ class TaskListViewerTest(CommonTests, TaskViewerTest.CommonTests,
         self.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
         self.taskList = task.sorter.Sorter(task.TaskList())
+        effortList = effort.EffortList(self.taskList)
         self.task = task.Task('task')
-        self.notebook = widgets.Notebook(self.frame)
-        viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
-            self.settings, 'mainviewer')
         self.viewer = gui.viewer.TaskListViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(None, viewerContainer, 
-                self.settings, self.taskList, effort.EffortList(self.taskList), 
-                self.categories, note.NoteContainer()), self.settings, 
-                categories=self.categories)
+            self.settings, categories=self.categories, efforts=effortList)
         self.viewer.sortBy('subject')
                 
     def assertItems(self, *tasks):

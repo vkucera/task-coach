@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import gui, config, widgets
-from taskcoachlib.domain import task, effort, category, note
+from taskcoachlib import gui, config
+from taskcoachlib.domain import task, effort
 
 
 class EffortViewerTest(test.wxTestCase):
@@ -29,10 +29,5 @@ class EffortViewerTest(test.wxTestCase):
         
     def testCreate(self):
         effortViewer = gui.viewer.EffortListViewer(self.frame, self.effortList, 
-            gui.uicommand.UICommands(None, 
-                gui.viewercontainer.ViewerContainer(widgets.Notebook(self.frame), 
-                    self.settings, 'mainviewer'), 
-                self.settings, self.taskList, self.effortList, 
-                category.CategoryList(), note.NoteContainer()), 
-                self.settings, taskList=self.taskList)
+            self.settings, taskList=self.taskList)
         self.assertEqual(0, effortViewer.size())

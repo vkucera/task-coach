@@ -48,7 +48,8 @@ string is an invalid regular expression. In this case, default to
 substring search.'''),
         Feature('''Optionally put Task Coach in the user's startup menu so
 that Task Coach is started automatically when the user logs on 
-(Windows only).''', '2017400', '1913650')],
+(Windows only).''', '2017400', '1913650'),
+        Feature('''Made (right-click) context menu's more consistent.''')],
     featuresRemoved=[
         Feature('''Don't supply the dummy recipient 'Please enter recipient' to 
 the email program when mailing a task. This only forces the user to perform 
