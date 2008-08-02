@@ -375,7 +375,7 @@ class Viewer(wx.Panel):
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL)
-        #self._sizer.Add(self.toolbar)#, flag=wx.EXPAND)
+        self._sizer.Add(self.toolbar, flag=wx.EXPAND)
         self._sizer.Add(self.widget, proportion=1, flag=wx.EXPAND)
         self.SetSizerAndFit(self._sizer)
     
