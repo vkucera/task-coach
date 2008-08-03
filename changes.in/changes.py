@@ -32,6 +32,8 @@ mail attachments could result in data loss.'''),
 would not be restored.'''),
         Bug('''One couldn't e-mail tasks with non-ASCII characters
 in their description.''', '2025676'),
+        Bug('''Dragging an email message from Thunderbird and dropping it
+on Task Coach could give a "UnicodeDecodeError" on Fedora.''', '1953166'),
         Bug('''When an invalid regular expression was entered in
 a search control, no items were displayed. Additionally, if it was
 saved in TaskCoach.ini, TaskCoach would crash on launch later.'''),

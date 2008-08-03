@@ -93,7 +93,14 @@ class DropTarget(wx.DropTarget):
                 self.__onDropURLCallback(x, y, self.__urlDataObject.GetText())
         elif self.__thunderbirdMailDataObject.GetData():
             if self.__onDropMailCallback:
-                self.__onDropMailCallback(x, y, thunderbird.getMail(self.__thunderbirdMailDataObject.GetData().decode('unicode_internal')))
+                data = self.__thunderbirdMailDataObject.GetData()
+                # We expect the data to be encoded with 'unicode_internal',
+                # but on Fedora it can also be 'utf-16', be prepared:
+                try:
+                    data = data.decode('unicode_internal')
+                except UnicodeDecodeError:
+                    data = data.decode('utf-16')
+                self.__onDropMailCallback(x, y, thunderbird.getMail(data))
         elif self.__macThunderbirdMailDataObject.GetData():
             if self.__onDropMailCallback:
                 self.__onDropMailCallback(x, y, thunderbird.getMail(self.__macThunderbirdMailDataObject.GetData().decode('unicode_internal')))
