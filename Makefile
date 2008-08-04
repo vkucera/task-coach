@@ -79,7 +79,7 @@ changes:
 unittests:
 	cd tests; $(PYTHON) test.py
 
-alltests:
+alltests: icons i18n
 	cd tests; $(PYTHON) test.py --alltests
 
 releasetests:
@@ -100,3 +100,5 @@ reallyclean:
 	$(PYTHON) make.py clean --really-clean
 	rm -rf $(CLEANFILES) $(REALLYCLEANFILES)
 
+nuke:
+	svn st --no-ignore | egrep "^(\?|I)" | cut -c 8- | xargs rm -rf
