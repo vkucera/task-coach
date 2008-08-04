@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-Release('0.70.2', '???',
+Release('0.70.2', 'August 4, 2008',
     summary='''This release fixes some bugs and brings back
 the Fedora RPM.''',
     bugsFixed=[
