@@ -1794,7 +1794,7 @@ class Search(ViewerCommand, SettingsCommand):
         toolbar.AddControl(self.searchControl)
 
 
-class ToolbarChoiceCommand(ViewerCommand):
+class ToolbarChoiceCommand(UICommand):
     def appendToToolBar(self, toolbar):
         ''' Add our choice control to the toolbar. '''
         self.choiceCtrl = wx.Choice(toolbar, choices=self.choiceLabels)
@@ -1818,7 +1818,7 @@ class ToolbarChoiceCommand(ViewerCommand):
         self.currentChoice = index
 
 
-class EffortViewerAggregationChoice(ToolbarChoiceCommand):
+class EffortViewerAggregationChoice(ViewerCommand, ToolbarChoiceCommand):
     choiceLabels = [_('Effort details'), _('Effort per day'), 
                          _('Effort per week'), _('Effort per month')]
     choiceData = ['details', 'day', 'week', 'month']
@@ -1827,13 +1827,22 @@ class EffortViewerAggregationChoice(ToolbarChoiceCommand):
         self.viewer.showEffortAggregation(choice)
         
 
-class TaskViewerTreeOrListChoice(ToolbarChoiceCommand):
+class TaskViewerTreeOrListChoice(ViewerCommand, ToolbarChoiceCommand):
     choiceLabels = [_('Tree of tasks'), _('List of tasks')]
     choiceData = [True, False]
     
     def doChoice(self, choice):
         self.viewer.showTree(choice)
         
+
+class CategoryViewerFilterChoice(SettingsCommand, ToolbarChoiceCommand):
+    choiceLabels = [_('Filter on all checked categories'),
+                    _('Filter on any checked category')]
+    choiceData = [True, False]
+
+    def doChoice(self, choice):
+        self.settings.set('view', 'categoryfiltermatchall', str(choice))
+
 
 class ViewColumnUICommandsMixin(object):
     def addViewColumnUICommands(self, viewerContainer):
