@@ -34,12 +34,15 @@ class CategoryFilter(base.Filter):
         for eventType in eventTypes:
             patterns.Publisher().registerObserver(self.onCategoryChanged,
                                                   eventType=eventType)
+        patterns.Publisher().registerObserver(self.onFilterMatchingChanged,
+            eventType='view.categoryfiltermatchall')
+
         super(CategoryFilter, self).__init__(*args, **kwargs)
     
     def setFilterOnlyWhenAllCategoriesMatch(self, filterOnlyWhenAllCategoriesMatch=True):
         self.__filterOnlyWhenAllCategoriesMatch = filterOnlyWhenAllCategoriesMatch
         
-    def filter(self, categorizables): # FIXME: generalize to categorizable
+    def filter(self, categorizables):
         filteredCategories = [category for category in self.__categories 
                               if category.isFiltered()]
         if filteredCategories:
@@ -56,5 +59,9 @@ class CategoryFilter(base.Filter):
         else:
             return True in matches
         
+    def onFilterMatchingChanged(self, event):
+        self.__filterOnlyWhenAllCategoriesMatch = eval(event.value())
+        self.reset()
+
     def onCategoryChanged(self, event):
         self.reset()

@@ -80,7 +80,9 @@ class FilterableViewerForNotes(FilterableViewer):
     def createFilter(self, notesContainer):
         notesContainer = super(FilterableViewerForNotes, self).createFilter(notesContainer)
         return category.filter.CategoryFilter(notesContainer, 
-            categories=self.categories, treeMode=self.isTreeViewer())
+            categories=self.categories, treeMode=self.isTreeViewer(),
+            filterOnlyWhenAllCategoriesMatch=self.settings.getboolean('view',
+            'categoryfiltermatchall'))
         
             
 class FilterableViewerForTasks(FilterableViewer):
@@ -89,7 +91,9 @@ class FilterableViewerForTasks(FilterableViewer):
         return category.filter.CategoryFilter( \
             task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
                                    **self.viewFilterOptions()), 
-            categories=self.categories, treeMode=self.isTreeViewer())
+            categories=self.categories, treeMode=self.isTreeViewer(),
+            filterOnlyWhenAllCategoriesMatch=self.settings.getboolean('view',
+            'categoryfiltermatchall'))
     
     def viewFilterOptions(self):
         options = dict(dueDateFilter=self.getFilteredByDueDate(),
@@ -1266,6 +1270,8 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
                          category.Category.colorChangedEventType():
             patterns.Publisher().registerObserver(self.onCategoryChanged, 
                 eventType)
+        self.filterUICommand.setChoice(self.settings.getboolean('view',
+            'categoryfiltermatchall'))
     
     def createWidget(self):
         widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemTooltipText,
@@ -1284,6 +1290,15 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
     def createFilter(self, categories):
         return base.SearchFilter(categories, treeMode=True)
     
+    def getToolBarUICommands(self):
+        ''' UI commands to put on the toolbar of this viewer. '''
+        toolBarUICommands = super(CategoryViewer, self).getToolBarUICommands()
+        toolBarUICommands.insert(-2, None) # Separator
+        self.filterUICommand = \
+            uicommand.CategoryViewerFilterChoice(settings=self.settings)
+        toolBarUICommands.insert(-2, self.filterUICommand)
+        return toolBarUICommands
+
     def onCategoryChanged(self, event):
         category = event.source()
         if category in self.list:

@@ -33,7 +33,7 @@ defaults = { \
     'noteviewercount': '0',          # Number of note viewers in main window
     'effortlistviewercount': '0',    # Number of effort viewers in main window
     'language': 'en_US',
-    'taskcategoryfiltermatchall': 'True',
+    'categoryfiltermatchall': 'False',
     'descriptionpopups': 'True',
     # The next three options are used in the effort dialog to populate the
     # drop down menu with start and stop times.
