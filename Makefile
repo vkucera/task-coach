@@ -23,7 +23,7 @@ PYTHON="python" # python should be on the path
 
 ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
-    EPYDOC=$(PYTHON) c:/Program\ Files/Python25/Scripts/epydoc.py 
+    EPYDOC=$(PYTHON) $(shell python -c "import os, sys; print \"'\" + os.path.join(os.path.split(sys.executable)[0], 'Scripts', 'epydoc.py') + \"'\"")
 else
     EPYDOC="epydoc"
 endif
