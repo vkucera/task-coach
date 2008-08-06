@@ -17,12 +17,12 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+da'''
 
 from changetypes import *
 
 releases = [
-Release('0.70.2', 'August ??, 2008',
+Release('0.70.2', 'August 6, 2008',
     summary='''This release fixes some bugs and brings back
 the Fedora RPM.''',
     bugsFixed=[
