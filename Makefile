@@ -63,6 +63,8 @@ website: changes
 	cd website.in; $(PYTHON) make.py; cd ..
 	$(EPYDOC) --parse-only -o website.out/epydoc taskcoachlib taskcoach.py
 	$(PYTHON) tools/webchecker.py website.out/index.html
+	find website.out -type f | xargs chmod 664
+	find website.out -type d | xargs chmod 775
 
 i18n: taskcoachlib/i18n/nl.py
 
