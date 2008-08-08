@@ -129,7 +129,7 @@ def uploadWebsiteToChello():
 
 def uploadWebsiteToSourceForge():
     print 'Uploading website to SourceForge...'
-    os.system('scp -p -r website.out/* %s@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs' % getSFUser())
+    os.system('scp -r website.out/* %s@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs' % getSFUser())
     print 'Done uploading website to SourceForge.'
     
 def registerWithPyPI():
