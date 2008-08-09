@@ -92,6 +92,7 @@ languages = {
     'Greek': 'el',
     'Hebrew': 'he',
     'Hungarian': 'hu',
+    'Indonesian': 'id',
     'Italian': 'it',
     'Japanese': 'ja',
     'Korean': 'ko',
