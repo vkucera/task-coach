@@ -37,17 +37,25 @@ class TranslationIntegrityTests(object):
                 "Symbol ('%s') doesn't match for '%s' and '%s'"%(symbol,
                     self.englishString, self.translatedString))
             
-    def testMatchingAccelerators(self):
-        # Translated strings should have the same number of accelerators (&)
-        # as the original, which in turn should be zero or one. However, 
-        # because we're just starting testing for this, the current version
-        # of this test is a bit less strict and we only make sure both the 
-        # original as the translated string have zero or one accelerators. '''
+    def testMatchingAmpersands(self):
+        # If the original string contains zero or one ampersands, it may be 
+        # an accelerator. In that case, we don't require the translated string
+        # to have an accelerator as well, because many translators don't use 
+        # it and it doesn't break the application. However, if the original
+        # string contains more than one ampersand it's probably HTML. In that
+        # case we do require the number of ampersands to match exactly in the 
+        # original and translated string.
         translatedString = self.removeUmlauts(self.translatedString)
-        for string in self.englishString, translatedString:
-            self.failUnless(string.count('&') in [0,1], 
-                "'%s' has more than one '&'"%string)
-            
+        nrEnglishAmpersand = self.englishString.count('&')
+        nrTranslatedAmpersand = translatedString.count('&')
+        if nrEnglishAmpersand <= 1 and not '\n' in self.englishString:
+            self.failUnless(nrTranslatedAmpersand in [0,1], 
+                "'%s' has more than one '&'"%self.translatedString)
+        else:
+            self.assertEqual(nrEnglishAmpersand, nrTranslatedAmpersand,
+                "'%s' has more or less '&'s than '%s'"%(self.translatedString,
+                self.englishString))
+
     def testMatchingShortCut(self):
         for shortcutPrefix in ('Ctrl+', 'Shift+', 'Alt+',
                                'Shift+Ctrl+', 'Shift+Alt+'):
