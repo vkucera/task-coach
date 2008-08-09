@@ -46,6 +46,8 @@ that match any category or that match all categories. This filtering mode
 can be switched via the toolbar of the category viewer.''', '2024510'),
         Feature('''Added Catalan translation thanks to Ferran Roig, Jordi
 Mallach, Josep-Miquel Ivars, and devaleitzer.'''),
+        Feature('''Added an (incomplete) Arabic translation thanks to 
+Moayyed. Please help finish it. See http://www.taskcoach.org/i18n.html.'''),
         Feature('''Added an almost empty Indonesian translation. Please help
 finish it. See http://www.taskcoach.org/i18n.html.''')],
     bugsFixed=[

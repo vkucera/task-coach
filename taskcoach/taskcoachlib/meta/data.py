@@ -77,6 +77,7 @@ pythonversion = '2.4'
 wxpythonversion = '2.8.6.0-unicode'
 languages = {
     'English': None, 
+    'Arabic': 'ar',
     'Breton': 'br',
     'Bulgarian': 'bg',
     'Catalan': 'ca',
