@@ -145,7 +145,8 @@ class LanguagePage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(LanguagePage, self).__init__(*args, **kwargs)
         self.addChoiceSetting('view', 'language', _('Language'), 
-            [('pt_BR', u'Português brasileiro (Brazilian Portuguese)'),
+            [('ar', u'الْعَرَبيّة (Arabic)'),
+             ('pt_BR', u'Português brasileiro (Brazilian Portuguese)'),
              ('br_FR', 'Brezhoneg (Breton)'),
              ('bg_BG', u'български (Bulgarian)'),
              ('ca_ES', u'Català (Catalan)'),
