@@ -163,6 +163,7 @@ class LanguagePage(SettingsPage):
              ('el_GR', u'ελληνικά (Greek)'),
              ('he_IL', u'עברית (Hebrew)'),
              ('hu_HU', 'Magyar (Hungarian)'),
+             ('id_ID', 'Bahasa Indonesia (Indonesian)'),
              ('it_IT', 'Italiano (Italian)'),
              ('ja_JP', u'日本語 (Japanese)'),
              ('ko_KO', u'한국어/조선말 (Korean)'),
