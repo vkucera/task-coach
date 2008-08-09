@@ -79,6 +79,7 @@ languages = {
     'English': None, 
     'Breton': 'br',
     'Bulgarian': 'bg',
+    'Catalan': 'ca',
     'Chinese (Simplified)': 'zh_CN',
     'Chinese (Traditional)': 'zh_TW',
     'Czech': 'cs',
