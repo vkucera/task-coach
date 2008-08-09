@@ -66,7 +66,7 @@ website: changes
 
 i18n: taskcoachlib/i18n/nl.py
 
-taskcoachlib/i18n/nl.py: i18n.in/messages.pot
+taskcoachlib/i18n/nl.py: i18n.in/messages.pot $(shell find i18n.in -name '*.po')
 	cd i18n.in; $(PYTHON) make.py
 
 i18n.in/messages.pot: $(shell find taskcoachlib -name '*.py' | grep -v i18n)
@@ -87,6 +87,9 @@ releasetests: icons
 
 integrationtests: icons i18n
 	cd tests; $(PYTHON) test.py --integrationtests --no-unittests
+
+languagetests: i18n
+	cd tests; $(PYTHON) test.py integrationtests/TranslationIntegrityTest.py
 
 
 CLEANFILES=build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile

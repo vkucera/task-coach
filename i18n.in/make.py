@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import glob, po2dict, shutil
 
-for poFile in glob.glob('*.po'):
+for poFile in sorted(glob.glob('*.po')):
     print poFile
     pyFile = po2dict.make(poFile)
     shutil.move(pyFile, '../taskcoachlib/i18n/%s'%pyFile)
