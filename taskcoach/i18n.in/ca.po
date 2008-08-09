@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-08-09 20:46+CEST\n"
-"PO-Revision-Date: 2008-08-09 22:13+0100\n"
+"PO-Revision-Date: 2008-08-09 23:54+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -226,7 +226,7 @@ msgstr "Afegeix una nota"
 
 #: taskcoachlib/domain/note/notecontainer.py:26
 msgid "Edit note..."
-msgstr "Edita nota"
+msgstr "Edita nota..."
 
 #: taskcoachlib/domain/note/notecontainer.py:27
 msgid "Edit the selected notes"
@@ -636,7 +636,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:126
 msgid "Check for new version of %(name)s on startup"
-msgstr "Comprova quant comenci si hi ha una versió nova del %(name)"
+msgstr "Comprova quant comenci si hi ha una versió nova del %(name)s"
 
 #: taskcoachlib/gui/dialog/preferences.py:128
 msgid "Hide main window when iconized"
@@ -788,7 +788,7 @@ msgstr "Disponible una versió nova de %(name)s"
 
 #: taskcoachlib/gui/dialog/version.py:37
 msgid "Version %(version)s of %(name)s is available from"
-msgstr "Disponible la versió %(version) de %(name)s des de"
+msgstr "Disponible la versió %(version)s de %(name)s des de"
 
 #: taskcoachlib/gui/dialog/version.py:40
 msgid "Notify me of new versions."
@@ -812,7 +812,7 @@ msgstr "Arxius CSV (*.csv)|*.csv|Arxius de Text (*.txt)|*.txt|Tots els arxius  (
 
 #: taskcoachlib/gui/iocontroller.py:63
 msgid "%s file error"
-msgstr "% arxiu d'error"
+msgstr "%s arxiu d'error"
 
 #: taskcoachlib/gui/iocontroller.py:69
 msgid "Open"
@@ -849,7 +849,7 @@ msgstr "Anomena i desa..."
 
 #: taskcoachlib/gui/iocontroller.py:145
 msgid "Export as iCalendar..."
-msgstr "Exporta com a iCalendar"
+msgstr "Exporta com a iCalendar..."
 
 #: taskcoachlib/gui/iocontroller.py:151
 msgid "Exported %(nrtasks)d tasks to %(filename)s"
@@ -1018,7 +1018,7 @@ msgstr "ara"
 
 #: taskcoachlib/gui/taskbaricon.py:114
 msgid "%d tasks overdue"
-msgstr "%D tasques fora de termini"
+msgstr "%d tasques fora de termini"
 
 #: taskcoachlib/gui/taskbaricon.py:114
 msgid "one task overdue"
@@ -1086,7 +1086,7 @@ msgstr "Desa l'arxiu actual amb un nom nou"
 
 #: taskcoachlib/gui/uicommand.py:423
 msgid "Sa&ve selection..."
-msgstr "De&sa selecció"
+msgstr "De&sa selecció..."
 
 #: taskcoachlib/gui/uicommand.py:424
 msgid "Save the selected tasks to a separate file"
@@ -1370,7 +1370,7 @@ msgstr "Marca les tasques seleccionades com a enllestides"
 
 #: taskcoachlib/gui/uicommand.py:1225
 msgid "&Mark task uncompleted\tCtrl+RETURN"
-msgstr "&Marca tasca pendent"
+msgstr "&Marca tasca pendent\tCtrl+RETURN"
 
 #: taskcoachlib/gui/uicommand.py:1231
 msgid "Mark the selected task(s) uncompleted"
@@ -2631,7 +2631,7 @@ msgstr "%(name)s és un programa encara en evolució. Encara que els programador
 
 #: taskcoachlib/help/tips.py:26
 msgid "%(name)s has a mailinglist where you can discuss usage of %(name)s with fellow users, discuss and request features and complain about bugs. Go to %(url)s and join today!"
-msgstr "%(name)s disposa d'una llista de correu on podeu comentar, amb altres usuaris, qualsevol cosa relacionada amb el programa. Aneu a %(url)s i gaudiu-ne avui mateix!"
+msgstr "%(name)s disposa d'una llista de correu on podeu comentar, amb altres usuaris, qualsevol cosa relacionada amb el programa %(name)s. Aneu a %(url)s i gaudiu-ne avui mateix!"
 
 #: taskcoachlib/help/tips.py:27
 msgid "%(name)s has unlimited undo and redo. Any change that you make, be it editing a task description, or deleting an effort record, is undoable. Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards through your edit history."

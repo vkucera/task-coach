@@ -43,7 +43,9 @@ per day, per week and per month, via the toolbar.'''),
 viewer that can switch between list and tree mode, via the toolbar.'''),
         Feature('''Category filtering is done either by showing tasks and notes
 that match any category or that match all categories. This filtering mode 
-can be switched via the toolbar of the category viewer.''', '2024510')],
+can be switched via the toolbar of the category viewer.''', '2024510'),
+        Feature('''Added Catalan translation thanks to Ferran Roig, Jordi
+Mallach, Josep-Miquel Ivars, and devaleitzer.''')],
     bugsFixed=[
         Bug('''Ctrl-PgDn and Ctrl-PgUp would sometimes need to be pressed
 multiple times before the next or previous viewer would be activated. ''')],
