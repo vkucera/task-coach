@@ -498,14 +498,14 @@ class CategoryMenu(Menu):
                                      categories=categories),
             None,
             uicommand.AddCategoryAttachment(viewer=viewerContainer,
-                                            settings=settings), # FIXMERGE: arguments
+                                            settings=settings),
             uicommand.OpenAllCategoryAttachments(viewer=viewerContainer,
-                                                 settings=settings)) # FIXMERGE: arguments
+                                                 settings=settings))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
                 uicommand.CategoryAddNote(viewer=viewerContainer,
                                           categories=categories,
-                                          settings=settings) # FIXMERGE: arguments
+                                          settings=settings)
                 )
 
         
@@ -522,9 +522,9 @@ class NoteMenu(Menu):
             uicommand.NoteMail(viewer=viewerContainer),
             None,
             uicommand.AddNoteAttachment(viewer=viewerContainer,
-                                        settings=settings), # FIXMERGE: arguments
+                                        settings=settings),
             uicommand.OpenAllNoteAttachments(viewer=viewerContainer,
-                                             settings=settings)) # FIXMERGE: arguments
+                                             settings=settings))
        
         
 class HelpMenu(Menu):
@@ -683,9 +683,9 @@ class CategoryPopupMenu(Menu):
                                      categories=categories),
             None,
             uicommand.AddCategoryAttachment(viewer=categoryViewer,
-                                            settings=settings), # FIXMERGE: arguments
+                                            settings=settings),
             uicommand.OpenAllCategoryAttachments(viewer=categoryViewer,
-                                                 settings=settings), # FIXMERGE: arguments
+                                                 settings=settings),
             None,
             uicommand.ViewExpandSelected(viewer=categoryViewer),
             uicommand.ViewCollapseSelected(viewer=categoryViewer))
@@ -707,9 +707,9 @@ class NotePopupMenu(Menu):
             uicommand.NoteMail(viewer=noteViewer),
             None,
             uicommand.AddNoteAttachment(viewer=noteViewer,
-                                        settings=settings), # FIXMERGE: arguments
+                                        settings=settings),
             uicommand.OpenAllNoteAttachments(viewer=noteViewer,
-                                             settings=settings), # FIXMERGE: arguments
+                                             settings=settings),
             None,
             uicommand.ViewExpandSelected(viewer=noteViewer),
             uicommand.ViewCollapseSelected(viewer=noteViewer))
@@ -754,6 +754,5 @@ class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
         self._window.Bind(wx.EVT_UPDATE_UI, self.onUpdateMenu)
                             
     def getUICommands(self):
-        # FIXMERGE: arguments
-        return [ uicommand.HideCurrentColumn(viewer=self), None ] + \
+        return [ uicommand.HideCurrentColumn(viewer=self.viewer), None ] + \
             self.viewer.getColumnUICommands()
