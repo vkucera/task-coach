@@ -424,8 +424,8 @@ class Viewer(wx.Panel):
         self.__selection = []
         self.__toolbarUICommands = None
         self.list = self.createSorter(self.createFilter(list))
-        self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.widget = self.createWidget()
+        self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.initLayout()
         self.registerModelObservers()
         self.refresh()
