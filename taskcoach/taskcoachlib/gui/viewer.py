@@ -1892,8 +1892,14 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
                                   helpText=_('Show/hide revenue column'),
                                   setting='revenue', viewer=self),]
         if self.aggregation != 'details':
-            commands.insert(-1, 'viewtotalTimeSpent')
-            commands.append('viewtotalRevenue')
+            commands.insert(-1, uicommand.ViewColumn(menuText=_('&Total time spent'),
+                   helpText=_('Show/hide total time spent column'),
+                   setting='totalTimeSpent',
+                   viewer=self))
+            commands.append(uicommand.ViewColumn(menuText=_('Total &revenue'),
+                   helpText=_('Show/hide total revenue column'),
+                   setting='totalRevenue',
+                   viewer=self))
         return commands
 
     def getToolBarUICommands(self):
