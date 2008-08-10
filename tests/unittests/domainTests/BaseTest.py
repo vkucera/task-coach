@@ -180,11 +180,13 @@ class ObjectTest(test.TestCase):
     
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
+                              status=self.object.getStatus(),
                               attachments=[], color=None), 
                          self.object.__getstate__())
 
     def testSetState(self):
-        newState = dict(subject='New', description='New', id=None, 
+        newState = dict(subject='New', description='New', id=None,
+                        status=42,
                         attachments=['attachment'], color=wx.RED)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())

@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time, xml.dom.minidom, re, os, sys
 from taskcoachlib.domain import date, effort, task, category, note, attachment
+from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
+from taskcoachlib.thirdparty.guid import generate
 
 
 class XMLReader:
@@ -54,7 +56,10 @@ class XMLReader:
             categories = self.__parseCategoryNodes( \
                 domDocument.documentElement.childNodes, categorizablesById)
 
-        return tasks, categories, notes
+        guid = self.__findGUIDNode(domDocument.documentElement.childNodes)
+        syncMLConfig = self.__parseSyncMLNode(domDocument.documentElement.childNodes, guid)
+
+        return tasks, categories, notes, syncMLConfig, guid
 
     def __parseTskVersionNumber(self, domDocument):
         processingInstruction = domDocument.firstChild.data
@@ -140,6 +145,8 @@ class XMLReader:
             kwargs['categories'] = self.__parseCategoryNodesWithinTaskNode(taskNode.childNodes)
         else:
             kwargs['categories'] = []
+        if self.__tskversion >= 21:
+            kwargs['status'] = int(taskNode.getAttribute('status'))
         return task.Task(**kwargs)
         
     def __parseRecurrence(self, taskNode):
@@ -173,6 +180,8 @@ class XMLReader:
     def __parseNoteNode(self, noteNode):
         ''' Parse the attributes and child notes from the noteNode. '''
         kwargs = self.__parseBaseAttributes(noteNode, self.__parseNoteNodes)
+        if self.__tskversion >= 21:
+            kwargs['status'] = int(noteNode.getAttribute('status'))
         return note.Note(**kwargs)
     
     def __parseBaseAttributes(self, node, parseChildren, *parseChildrenArgs):
@@ -210,12 +219,46 @@ class XMLReader:
                 if node.nodeName == 'effort']
         
     def __parseEffortNode(self, effortNode):
+        kwargs = {}
+        if self.__tskversion >= 21:
+            kwargs['status'] = int(effortNode.getAttribute('status'))
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')
         description = self.__parseDescription(effortNode)
         return effort.Effort(task=None, start=date.parseDateTime(start), 
-            stop=date.parseDateTime(stop), description=description)
+            stop=date.parseDateTime(stop), description=description, **kwargs)
         
+        return effort.Effort(None, date.parseDateTime(start), 
+            date.parseDateTime(stop), description, **kwargs)
+
+    def __parseSyncMLNode(self, nodes, guid):
+        syncML = createDefaultSyncConfig(guid)
+
+        for node in nodes:
+            if node.nodeName == 'syncml':
+                self.__parseSyncMLNodes(node.childNodes, syncML)
+
+        return syncML
+
+    def __parseSyncMLNodes(self, nodes, cfgNode):
+        for node in nodes:
+            if node.nodeName == 'property':
+                cfgNode.set(node.getAttribute('name'), self.__parseTextNodeOrEmpty(node))
+            else:
+                for childCfgNode in cfgNode.children():
+                    if childCfgNode.name == node.nodeName:
+                        break
+                else:
+                    childCfgNode = SyncMLConfigNode(node.nodeName)
+                    cfgNode.addChild(childCfgNode)
+                self.__parseSyncMLNodes(node.childNodes, childCfgNode)
+
+    def __findGUIDNode(self, nodes):
+        for node in nodes:
+            if node.nodeName == 'guid':
+                return self.__parseTextNode(node)
+        return generate()
+
     def __parseDescription(self, node):
         if self.__tskversion <= 6:
             description = node.getAttribute('description')
@@ -249,6 +292,11 @@ class XMLReader:
     
     def __parseInteger(self, integerText, default=0):
         return self.__parse(integerText, int, default)
+
+    def __parseTextNodeOrEmpty(self, node):
+        if node.firstChild:
+            return node.firstChild.data
+        return u''
 
     def __parseFloat(self, floatText, default=0.0):
         return self.__parse(floatText, float, default)

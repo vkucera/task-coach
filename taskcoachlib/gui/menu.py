@@ -179,7 +179,7 @@ class MainMenu(wx.MenuBar):
         super(MainMenu, self).__init__()
         self.Append(FileMenu(mainwindow, settings, iocontroller,
                              viewerContainer), _('&File'))
-        self.Append(EditMenu(mainwindow, settings, viewerContainer), _('&Edit'))
+        self.Append(EditMenu(mainwindow, settings, iocontroller, viewerContainer), _('&Edit'))
         self.Append(ViewMenu(mainwindow, settings, viewerContainer, taskFile),
                     _('&View'))
         self.Append(TaskMenu(mainwindow, settings, taskFile, viewerContainer),
@@ -238,6 +238,12 @@ class FileMenu(Menu):
         self.appendMenu(_('&Export'),
                         ExportMenu(mainwindow, iocontroller, viewerContainer),
                         'export')
+        try:
+            import _pysyncml
+        except ImportError, e:
+            pass
+        else:
+            self.appendUICommands(uicommand.FileSynchronize(iocontroller=iocontroller, settings=settings))
         self.__recentFilesStartPosition = len(self) 
         self.appendUICommands(None, uicommand.FileQuit())
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
@@ -286,7 +292,7 @@ class ExportMenu(Menu):
        
 
 class EditMenu(Menu):
-    def __init__(self, mainwindow, settings, viewerContainer):
+    def __init__(self, mainwindow, settings, iocontroller, viewerContainer):
         super(EditMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.EditUndo(),
@@ -301,6 +307,13 @@ class EditMenu(Menu):
         self.appendMenu(_('&Select')+' '*50,
                         SelectMenu(mainwindow, viewerContainer))
         self.appendUICommands(None, uicommand.EditPreferences(settings))
+        try:
+            import _pysyncml
+        except ImportError:
+            pass
+        else:
+            self.appendUICommands(uicommand.EditSyncPreferences(mainwindow=mainwindow,
+                                                                iocontroller=iocontroller))
 
 
 class SelectMenu(Menu):

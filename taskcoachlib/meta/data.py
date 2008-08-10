@@ -20,8 +20,8 @@ import re
 
 name = 'Task Coach'
 description = 'Your friendly task manager'
-version = '0.71.0'
-release_month = 'June'
+version = 'syncml-preview1'
+release_month = 'May'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
                     'November', 'December'].index(release_month) + 1)

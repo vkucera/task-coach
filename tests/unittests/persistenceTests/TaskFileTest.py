@@ -130,6 +130,10 @@ class TaskFileTest(TaskFileTestCase):
         self.emptyTaskFile.tasks().append(newTask)
         self.failUnless(self.emptyTaskFile.needSave())
 
+    def testNeedSave_AfterTaskMarkedDeleted(self):
+        self.task.markDeleted()
+        self.failUnless(self.taskFile.needSave())
+
     def testNeedSave_AfterNewNoteAdded(self):
         newNote = note.Note('Note')
         self.emptyTaskFile.notes().append(newNote)
@@ -138,7 +142,7 @@ class TaskFileTest(TaskFileTestCase):
     def testNeedSave_AfterNoteRemoved(self):
         self.taskFile.notes().remove(self.note)
         self.failUnless(self.taskFile.needSave())
-        
+
     def testDoesNotNeedSave_AfterSave(self):
         self.emptyTaskFile.tasks().append(task.Task())
         self.emptyTaskFile.setFilename(self.filename)

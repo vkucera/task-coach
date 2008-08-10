@@ -16,6 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import sys, os
+if sys.platform == 'linux2':
+    sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'linux'))
+elif sys.platform == 'darwin':
+    sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'macos'))
+else:
+    sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'windows'))
+
 from taskcoachlib import meta
 import sys, os, glob
 from setup import setupOptions
@@ -84,7 +92,8 @@ if sys.argv[1] == 'py2exe':
             # contents are imported implicitly via __import__:
             'packages' : ['taskcoachlib.i18n'], 
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}},
-        'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL'])]})
+        'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL',
+                             'dist.in/msvcr80.dll'])]})
  
 elif sys.argv[1] == 'py2app':
     from setuptools import setup

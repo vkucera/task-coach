@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, note
 
-            
+
 class Category(note.NoteOwner, base.CompositeObject):
     def __init__(self, subject, categorizables=None, children=None, filtered=False, 
                  parent=None, description='', color=None, *args, **kwargs):

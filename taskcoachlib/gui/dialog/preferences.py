@@ -25,24 +25,19 @@ from taskcoachlib import meta, widgets
 from taskcoachlib.i18n import _
 
 
-class SettingsPage(widgets.BookPage):
-    def __init__(self, settings=None, *args, **kwargs):
-        super(SettingsPage, self).__init__(*args, **kwargs)
-        self.settings = settings
+class SettingsPageBase(widgets.BookPage):
+    def __init__(self, *args, **kwargs):
+        super(SettingsPageBase, self).__init__(*args, **kwargs)
         self._booleanSettings = []
         self._choiceSettings = []
         self._integerSettings = []
         self._colorSettings = []
         self._pathSettings = []
-        
-    def addEntry(self, text, control, helpText=''):
-        if helpText == 'restart':
-            helpText = _('This setting will take effect\nafter you restart %s')%meta.name
-        super(SettingsPage, self).addEntry(text, control, helpText)
+        self._textSettings = []
         
     def addBooleanSetting(self, section, setting, text, helpText=''):
         checkBox = wx.CheckBox(self, -1)
-        checkBox.SetValue(self.settings.getboolean(section, setting))
+        checkBox.SetValue(self.getboolean(section, setting))
         self.addEntry(text, checkBox, helpText)
         self._booleanSettings.append((section, setting, checkBox))
 
@@ -50,7 +45,7 @@ class SettingsPage(widgets.BookPage):
         choice = wx.Choice(self, -1)
         for choiceValue, choiceText in choices:
             choice.Append(choiceText, choiceValue)
-            if choiceValue == self.settings.get(section, setting):
+            if choiceValue == self.get(section, setting):
                 choice.SetSelection(choice.GetCount()-1)
         if choice.GetSelection() == wx.NOT_FOUND: # force a selection if necessary
             choice.SetSelection(0)
@@ -60,37 +55,81 @@ class SettingsPage(widgets.BookPage):
     def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100,
             helpText=''):
         spin = wx.SpinCtrl(self, min=minimum, max=maximum, size=(40, -1),
-            value=str(self.settings.getint(section, setting)))
+            value=str(self.getint(section, setting)))
         self.addEntry(text, spin, helpText)
         self._integerSettings.append((section, setting, spin))
 
     def addColorSetting(self, section, setting, text):
         colorButton = widgets.ColorSelect(self, -1, text,
-            eval(self.settings.get(section, setting)))
+            eval(self.get(section, setting)))
         self.addEntry(None, colorButton)
         self._colorSettings.append((section, setting, colorButton))
 
     def addPathSetting(self, section, setting, text, helpText=''):
         pathChooser = widgets.DirectoryChooser(self, wx.ID_ANY)
-        pathChooser.SetPath(self.settings.get(section, setting))
+        pathChooser.SetPath(self.get(section, setting))
         self.addEntry(text, pathChooser, helpText)
         self._pathSettings.append((section, setting, pathChooser))
 
+    def addTextSetting(self, section, setting, text, helpText=''):
+        textChooser = wx.TextCtrl(self, wx.ID_ANY, self.get(section, setting))
+        self.addEntry(text, textChooser, helpText)
+        self._textSettings.append((section, setting, textChooser))
+
     def addText(self, label, text):
         self.addEntry(label, text)
-                
+
     def ok(self):
         for section, setting, checkBox in self._booleanSettings:
-            self.settings.set(section, setting, str(checkBox.IsChecked()))
+            self.set(section, setting, str(checkBox.IsChecked()))
         for section, setting, choice in self._choiceSettings:
-            self.settings.set(section, setting, 
+            self.set(section, setting, 
                               choice.GetClientData(choice.GetSelection()))
         for section, setting, spin in self._integerSettings:
-            self.settings.set(section, setting, str(spin.GetValue()))
+            self.set(section, setting, str(spin.GetValue()))
         for section, setting, colorButton in self._colorSettings:
-            self.settings.set(section, setting, str(colorButton.GetColour()))
+            self.set(section, setting, str(colorButton.GetColour()))
         for section, setting, btn in self._pathSettings:
-            self.settings.set(section, setting, btn.GetPath())
+            self.set(section, setting, btn.GetPath())
+        for section, setting, txt in self._textSettings:
+            self.set(section, setting, txt.GetValue())
+
+    def get(self, section, name):
+        raise NotImplementedError
+
+    def getint(self, section, name):
+        return int(self.get(section, name))
+
+    def getboolean(self, section, name):
+        return self.get(section, name) == 'True'
+
+    def set(self, section, name, value):
+        raise NotImplementedError
+
+
+class SettingsPage(SettingsPageBase):
+    def __init__(self, settings=None, *args, **kwargs):
+        self.settings = settings
+
+        super(SettingsPage, self).__init__(*args, **kwargs)
+        
+    def addEntry(self, text, control, helpText=''):
+        if helpText == 'restart':
+            helpText = _('This setting will take effect\nafter you restart %s')%meta.name
+        super(SettingsPage, self).addEntry(text, control, helpText)
+
+    def get(self, section, name):
+        return self.settings.get(section, name)
+
+    def getint(self, section, name):
+        return self.settings.getint(section, name)
+
+    def getboolean(self, section, name):
+        return self.settings.getboolean(section, name)
+
+    def set(self, section, name, value):
+        self.settings.set(section, name, value)
+
 
 class SavePage(SettingsPage):
     def __init__(self, *args, **kwargs):
@@ -244,15 +283,15 @@ class EditorPage(SettingsPage):
         super(EditorPage, self).ok()
         widgets.MultiLineTextCtrl.CheckSpelling = \
             self.settings.getboolean('editor', 'maccheckspelling')
-        
-        
+
+
 class Preferences(widgets.ListbookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
         super(Preferences, self).__init__(bitmap='configure', *args, **kwargs) 
                    
     def addPages(self):
-        self.SetMinSize((300, 400))
+        self.SetMinSize((300, 430))
         pages = [\
             (WindowBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Window behavior'), 'windows'),
             (TaskBehaviorPage(parent=self._interior, columns=2, settings=self.settings), _('Task behavior'), 'behavior'),

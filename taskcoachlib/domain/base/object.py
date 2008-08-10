@@ -22,8 +22,84 @@ import time
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 
-    
-class Object(patterns.Observable):
+class SynchronizedObject(patterns.Observable):
+    STATUS_NONE    = 0
+    STATUS_NEW     = 1
+    STATUS_CHANGED = 2
+    STATUS_DELETED = 3
+
+    def __init__(self, *args, **kwargs):
+        self.__status = kwargs.pop('status', self.STATUS_NEW)
+        self.__frozenStatus = kwargs.pop('frozenStatus', False)
+        super(SynchronizedObject, self).__init__(*args, **kwargs)
+
+    def __getstate__(self):
+        try:
+            state = super(SynchronizedObject, self).__getstate__()
+        except AttributeError:
+            state = dict()
+
+        state['status'] = self.__status
+        return state
+
+    def __setstate__(self, state):
+        try:
+            super(SynchronizedObject, self).__setstate__(state)
+        except AttributeError:
+            pass
+
+        oldstatus = self.__status
+        self.__status = state['status']
+
+        if oldstatus == self.STATUS_DELETED:
+            self.notifyObservers(patterns.Event(self,
+                         'object.marknotdeleted'))
+        elif self.__status == self.STATUS_DELETED:
+            self.notifyObservers(patterns.Event(self,
+                         'object.markdeleted'))
+
+    def freezeStatus(self):
+        self.__frozenStatus = True
+
+    def thawStatus(self):
+        self.__frozenStatus = False
+
+    def getStatus(self):
+        return self.__status
+
+    def markDirty(self, force=False):
+        if (self.__status == self.STATUS_NONE or force) and not self.__frozenStatus:
+            self.__status = self.STATUS_CHANGED
+
+    def markNew(self):
+        if not self.__frozenStatus:
+            self.__status = self.STATUS_NEW
+
+    def markDeleted(self):
+        if not self.__frozenStatus:
+            self.__status = self.STATUS_DELETED
+            self.notifyObservers(patterns.Event(self, 
+                'object.markdeleted', self.__status))
+
+    def cleanDirty(self):
+        if not self.__frozenStatus:
+            oldstatus = self.__status
+            self.__status = self.STATUS_NONE
+
+            if oldstatus == self.STATUS_DELETED:
+                self.notifyObservers(patterns.Event(self, 
+                     'object.marknotdeleted', self.__status))
+
+    def isNew(self):
+        return self.__status == self.STATUS_NEW
+
+    def isModified(self):
+        return self.__status == self.STATUS_CHANGED
+
+    def isDeleted(self):
+        return self.__status == self.STATUS_DELETED
+
+class Object(SynchronizedObject):
     def __init__(self, *args, **kwargs):
         self.__subject = kwargs.pop('subject', '')
         self.__description = kwargs.pop('description', '')

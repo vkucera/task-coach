@@ -1041,7 +1041,11 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
         self.efforts = kwargs.pop('efforts')
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.__registerForColorChanges()
-            
+
+    def createFilter(self, taskList):
+        tasks = super(TaskViewer, self).createFilter(taskList)
+        return base.DeletedFilter(tasks)
+
     def isShowingTasks(self): 
         return True
     
@@ -1249,7 +1253,8 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
     editTaskDialog = editItemDialog
     
     def deleteItemCommand(self):
-        return command.DeleteTaskCommand(self.list, self.curselection())
+        return command.DeleteTaskCommand(self.list, self.curselection(),
+                  shadow=True)
         
     deleteTaskCommand = deleteItemCommand
     
@@ -1472,8 +1477,10 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
         return menu.CategoryPopupMenu(self.parent, self.settings, self.tasks,
                                       self.notes, self.model(), self)
 
-    def createFilter(self, categories):
-        return base.SearchFilter(categories, treeMode=True)
+    # FIXMERGE
+
+    #def createFilter(self, categories):
+    #    return base.SearchFilter(categories, treeMode=True)
     
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
@@ -1595,8 +1602,10 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
     
     def createFilter(self, notes):
         notes = super(NoteViewer, self).createFilter(notes)
-        return base.SearchFilter(notes, treeMode=True)
-    
+        # FIXMERGE
+##         return base.DeletedFilter(base.SearchFilter(notes, treeMode=True))
+        return base.DeletedFilter(notes)
+
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
         self.imageIndex = {}
@@ -1716,7 +1725,8 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
     editNoteDialog = editItemDialog
     
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection())
+        return command.DeleteCommand(self.list, self.curselection(),
+                  shadow=True)
     
     deleteNoteCommand = deleteItemCommand
     
@@ -1892,8 +1902,14 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
                                   helpText=_('Show/hide revenue column'),
                                   setting='revenue', viewer=self),]
         if self.aggregation != 'details':
-            commands.insert(-1, 'viewtotalTimeSpent')
-            commands.append('viewtotalRevenue')
+            commands.insert(-1, uicommand.ViewColumn(menuText=_('&Total time spent'),
+                   helpText=_('Show/hide total time spent column'),
+                   setting='totalTimeSpent',
+                   viewer=self))
+            commands.append(uicommand.ViewColumn(menuText=_('Total &revenue'),
+                   helpText=_('Show/hide total revenue column'),
+                   setting='totalRevenue',
+                   viewer=self))
         return commands
 
     def getToolBarUICommands(self):
@@ -1937,4 +1953,3 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         index = self.list.index(effort)
         previousEffort = index > 0 and self.list[index-1] or None
         return previousEffort and effort.getStart() == previousEffort.getStart()
-

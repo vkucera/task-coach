@@ -23,11 +23,12 @@ from taskcoachlib.domain import date, attachment
 
 
 class XMLWriter:    
-    def __init__(self, fd, versionnr=20):
+    def __init__(self, fd, versionnr=21):
         self.__fd = fd
         self.__versionnr = versionnr
 
-    def write(self, taskList, categoryContainer, noteContainer):
+    def write(self, taskList, categoryContainer,
+              noteContainer, syncMLConfig, guid):
         # Determine where to save attachments.
         path, name = os.path.split(os.path.abspath(self.__fd.name))
         name, ext = os.path.splitext(name)
@@ -46,10 +47,13 @@ class XMLWriter:
             self.document.documentElement.appendChild(self.categoryNode(category, taskList, noteContainer))
         for note in noteContainer.rootItems():
             self.document.documentElement.appendChild(self.noteNode(note))
+        self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
+        self.document.documentElement.appendChild(self.textNode('guid', guid))
         self.document.writexml(self.__fd)
 
     def taskNode(self, task):
         node = self.baseNode(task, 'task', self.taskNode)
+        node.setAttribute('status', str(task.getStatus()))
         if task.startDate() != date.Date():
             node.setAttribute('startdate', str(task.startDate()))
         if task.dueDate() != date.Date():
@@ -93,6 +97,7 @@ class XMLWriter:
     def effortNode(self, effort):
         node = self.document.createElement('effort')
         formattedStart = self.formatDateTime(effort.getStart())
+        node.setAttribute('status', str(effort.getStatus()))
         node.setAttribute('start', formattedStart)
         stop = effort.getStop()
         if stop != None:
@@ -134,6 +139,7 @@ class XMLWriter:
             nodes by means of the childNodeFactory. '''
         node = self.document.createElement(nodeName)
         node.setAttribute('id', item.id())
+        node.setAttribute('status', str(item.getStatus()))
         if item.subject():
             node.setAttribute('subject', item.subject())
         if item.description():
@@ -152,7 +158,23 @@ class XMLWriter:
         node.appendChild(self.textNode('description', unicode(attachment)))
         node.appendChild(self.textNode('data', attachment.data()))
         return node
-        
+
+    def syncMLNode(self, syncMLConfig):
+        node = self.document.createElement('syncml')
+        self.__syncMLNode(syncMLConfig, node)
+        return node
+
+    def __syncMLNode(self, cfg, node):
+        for name, value in cfg.properties():
+            child = self.textNode('property', value)
+            child.setAttribute('name', name)
+            node.appendChild(child)
+
+        for childCfg in cfg.children():
+            child = self.document.createElement(childCfg.name)
+            self.__syncMLNode(childCfg, child)
+            node.appendChild(child)
+
     def budgetAsAttribute(self, budget):
         return '%d:%02d:%02d'%budget.hoursMinutesSeconds()
                 

@@ -331,6 +331,17 @@ class NeedsListViewer(object):
         return super(NeedsListViewer, self).enabled(event) and \
             (not self.viewer.isTreeViewer())
 
+class NeedsSetting(object):
+    def __init__(self, *args, **kwargs):
+        self.__section = kwargs.pop('section')
+        self.__setting = kwargs.pop('setting')
+
+        super(NeedsSetting, self).__init__(*args, **kwargs)
+
+    def enabled(self, event):
+        return super(NeedsSetting, self).enabled(event) and \
+               bool(self.settings.get(self.__section, self.__setting))
+
 class DisableWhenTextCtrlHasFocus(object):
     def enabled(self, event):
         if isinstance(wx.Window.FindFocus(), wx.TextCtrl):
@@ -534,8 +545,20 @@ class FileExportAsCSV(IOCommand, ViewerCommand):
 
     def doCommand(self, event):
         self.iocontroller.exportAsCSV(self.viewer)
-        
-        
+
+
+class FileSynchronize(IOCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileSynchronize, self).__init__(menuText=_('S&yncML synchronization'),
+            helpText=_('Synchronize with a SyncML server'),
+            bitmap='sync', *args, **kwargs)
+
+    def doCommand(self, event):
+        pwd = wx.GetPasswordFromUser(_('Please enter your password.'), _('Password prompt'))
+        if pwd:
+            self.iocontroller.synchronize(pwd)
+
+
 class FileQuit(UICommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
@@ -696,6 +719,19 @@ class EditPreferences(SettingsCommand):
     def doCommand(self, event, show=True):
         editor = dialog.preferences.Preferences(parent=self.mainWindow(), 
             title=_('Edit preferences'), settings=self.settings)
+        editor.Show(show=show)
+
+
+class EditSyncPreferences(IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(EditSyncPreferences, self).__init__(menuText=_('SyncML preferences...'),
+            helpText=_('Edit SyncML preferences'), bitmap='sync',
+            *args, **kwargs)
+
+    def doCommand(self, event, show=True):
+        editor = dialog.syncpreferences.SyncMLPreferences(parent=self.mainWindow(),
+            iocontroller=self.iocontroller,
+            title=_('Edit SyncML preferences'))
         editor.Show(show=show)
 
 
@@ -1859,7 +1895,6 @@ class ToolbarChoiceCommand(UICommand):
         self.currentChoice = choiceIndex
         self.doChoice(self.choiceData[choiceIndex])
         
-    
     def setChoice(self, choice):
         ''' Programmatically set the current choice in the choice control. '''
         index = self.choiceData.index(choice)
