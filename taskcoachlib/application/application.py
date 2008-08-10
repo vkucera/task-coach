@@ -23,7 +23,6 @@ import wx
 class wxApp(wx.App):
     def OnInit(self):
         self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
-        self.SetAssertMode(wx.PYAPP_ASSERT_DIALOG)
         return True
     
     def onQueryEndSession(self, event):
