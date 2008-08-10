@@ -627,12 +627,20 @@ class TaskPopupMenu(Menu):
             uicommand.AddTaskAttachment(taskList=tasks, viewer=taskViewer,
                                         settings=settings),
             uicommand.OpenAllTaskAttachments(viewer=taskViewer,
-                                             settings=settings),
+                                             settings=settings)
+            ]
+        if settings.getboolean('feature', 'notes'):
+            commandsToAppend.append(
+                uicommand.TaskAddNote(viewer=taskViewer,
+                                      settings=settings,
+                                      categories=categories)
+                )
+        commandsToAppend.extend([\
             None,
             uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
                                 taskList=tasks),
             uicommand.EffortStart(viewer=taskViewer),
-            uicommand.EffortStop(taskList=tasks)]
+            uicommand.EffortStop(taskList=tasks)])
         if taskViewer.isTreeViewer():
             commandsToAppend.extend([None,
                 uicommand.ViewExpandSelected(viewer=taskViewer),
@@ -685,7 +693,14 @@ class CategoryPopupMenu(Menu):
             uicommand.AddCategoryAttachment(viewer=categoryViewer,
                                             settings=settings),
             uicommand.OpenAllCategoryAttachments(viewer=categoryViewer,
-                                                 settings=settings),
+                                                 settings=settings))
+        if settings.getboolean('feature', 'notes'):
+            self.appendUICommands(
+                uicommand.CategoryAddNote(viewer=categoryViewer,
+                                          categories=categories,
+                                          settings=settings)
+                )
+        self.appendUICommands(
             None,
             uicommand.ViewExpandSelected(viewer=categoryViewer),
             uicommand.ViewCollapseSelected(viewer=categoryViewer))
