@@ -1618,7 +1618,7 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
                 setting='description', viewer=self),
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachments column'),
-                setting='attachments', viewer=self), # FIXMERGE: check this
+                setting='attachments', viewer=self),
             uicommand.ViewColumn(menuText=_('&Categories'),
                 helpText=_('Show/hide categories column'),
                 setting='categories', viewer=self),
