@@ -110,7 +110,8 @@ languages = {
     'Swedish': 'sv',
     'Thai': 'th',
     'Turkish': 'tr',
-    'Ukranian': 'uk'}
+    'Ukranian': 'uk',
+    'Vietnamese': 'vi'}
 languages_list = ','.join(languages.keys())
 
 def __createDict(locals):
