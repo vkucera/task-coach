@@ -421,3 +421,31 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('><note id="1" subject="Note">'
             '<note id="2" subject="Subnote"/></note></category>')
 
+    def testTaskDefaultExpansionState(self):
+        # Don't write anything if the task is not expanded: 
+        self.expectNotInXML('expandedContexts')
+
+    def testTaskExpansionState(self):
+        self.task.expand()
+        self.expectInXML('''expandedContexts="('None',)"''')
+
+    def testTaskExpansionState_SpecificContext(self):
+        self.task.expand(context='Test')
+        self.expectInXML('''expandedContexts="('Test',)"''')
+
+    def testTaskExpansionState_MultipleContexts(self):
+        self.task.expand(context='Test')
+        self.task.expand(context='Another context')
+        self.expectInXML('''expandedContexts="('Another context', 'Test')"''')
+
+    def testCategoryExpansionState(self):
+        cat = category.Category('cat')
+        self.categoryContainer.append(cat)
+        cat.expand()
+        self.expectInXML('''expandedContexts="('None',)"''')
+
+    def testNoteExpansionState(self):
+        aNote = note.Note()
+        self.noteContainer.append(aNote)
+        aNote.expand()
+        self.expectInXML('''expandedContexts="('None',)"''')

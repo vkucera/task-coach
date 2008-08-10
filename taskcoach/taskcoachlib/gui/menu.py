@@ -760,14 +760,14 @@ class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def __getColumn(self):
         return self.__columnIndex
     
-    # columnIndex is the index of the column clicked by the user to popup this menu
-    # This property should be set by the control popping up this menu (see 
-    # widgets._CtrlWithColumnPopupMenu.
+    # columnIndex is the index of the column clicked by the user to popup 
+    # this menu. This property should be set by the control popping up 
+    # this menu (see widgets._CtrlWithColumnPopupMenu).
     columnIndex = property(__getColumn, __setColumn) 
 
     def registerForMenuUpdate(self):
         self._window.Bind(wx.EVT_UPDATE_UI, self.onUpdateMenu)
                             
     def getUICommands(self):
-        return [ uicommand.HideCurrentColumn(viewer=self.viewer), None ] + \
+        return [uicommand.HideCurrentColumn(viewer=self.viewer), None] + \
             self.viewer.getColumnUICommands()

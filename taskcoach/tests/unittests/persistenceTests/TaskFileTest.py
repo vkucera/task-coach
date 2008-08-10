@@ -407,6 +407,26 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.save()        
         list(self.taskFile.notes())[0].removeChild(child)
         self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterChangingTaskExpansionState(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.task.expand()
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterChangingCategoryExpansionState(self):
+        self.taskFile.categories().append(self.category)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.category.expand()
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterChangingNoteExpansionState(self):
+        self.taskFile.notes().append(self.note)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.note.expand()
+        self.failUnless(self.taskFile.needSave())
         
     def testLastFilename_IsEmptyInitially(self):
         self.assertEqual('', self.taskFile.lastFilename())

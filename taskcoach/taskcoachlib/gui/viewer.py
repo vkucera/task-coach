@@ -223,7 +223,7 @@ class SortableViewer(object):
     ''' A viewer that is sortable. This is a mixin class. '''
 
     def __init__(self, *args, **kwargs):
-        self.__sortUICommands = None
+        self._sortUICommands = []
         super(SortableViewer, self).__init__(*args, **kwargs)
 
     def isSortable(self):
@@ -269,12 +269,15 @@ class SortableViewer(object):
         self.model().sortCaseSensitive(caseSensitive)
 
     def getSortUICommands(self):
-        if not self.__sortUICommands:
-            self.__sortUICommands = self.createSortUICommands()
-        return self.__sortUICommands
+        if not self._sortUICommands:
+            self.createSortUICommands()
+        return self._sortUICommands
 
     def createSortUICommands(self):
-        raise NotImplementedError
+        ''' (Re)Create the UICommands for sorting. These UICommands are put
+            in the View->Sort menu and are used when the user clicks a column
+            header. '''
+        self._sortUICommands = []
 
         
 class SortableViewerForTasks(SortableViewer):
@@ -296,10 +299,11 @@ class SortableViewerForTasks(SortableViewer):
         return options
 
     def createSortUICommands(self):
-        commands = [uicommand.ViewerSortOrderCommand(viewer=self),
-                    uicommand.ViewerSortCaseSensitive(viewer=self),
-                    uicommand.ViewerSortByTaskStatusFirst(viewer=self),
-                    None]
+        self._sortUICommands = \
+            [uicommand.ViewerSortOrderCommand(viewer=self),
+             uicommand.ViewerSortCaseSensitive(viewer=self),
+             uicommand.ViewerSortByTaskStatusFirst(viewer=self),
+             None]
         for menuText, helpText, value in [\
             (_('Sub&ject'), _('Sort tasks by subject'), 'subject'),
             (_('&Description'), _('Sort by description'), 'description'),
@@ -324,9 +328,8 @@ class SortableViewerForTasks(SortableViewer):
             (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
             (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalRevenue'),
             (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder')]:
-            commands.append(uicommand.ViewerSortByCommand(viewer=self,
-                value=value, menuText=menuText, helpText=helpText))
-        return commands
+            self._sortUICommands.append(uicommand.ViewerSortByCommand(\
+                viewer=self, value=value, menuText=menuText, helpText=helpText))
 
 
 class SortableViewerForEffort(SortableViewer):
@@ -336,27 +339,28 @@ class SortableViewerForEffort(SortableViewer):
 
 class SortableViewerForCategories(SortableViewer):
     def createSortUICommands(self):
-        return [uicommand.ViewerSortOrderCommand(viewer=self),
-                uicommand.ViewerSortCaseSensitive(viewer=self)]
+        self._sortUICommands = [uicommand.ViewerSortOrderCommand(viewer=self),
+                                uicommand.ViewerSortCaseSensitive(viewer=self)]
 
 
 class SortableViewerForNotes(SortableViewer):
     def createSortUICommands(self):
-        return [uicommand.ViewerSortOrderCommand(viewer=self),
-                uicommand.ViewerSortCaseSensitive(viewer=self),
-                None,
-                uicommand.ViewerSortByCommand(viewer=self, value='subject',
-                    menuText=_('Sub&ject'),
-                    helpText=_('Sort notes by subject')),
-                uicommand.ViewerSortByCommand(viewer=self, value='description',
-                    menuText=_('&Description'),
-                    helpText=_('Sort notes by description')),
-                uicommand.ViewerSortByCommand(viewer=self, value='categories',
-                    menuText=_('&Category'),
-                    helpText=_('Sort notes by category')),
-                uicommand.ViewerSortByCommand(viewer=self,
-                    value='totalCategories', menuText=_('Overall categories'),
-                    helpText=_('Sort notes by overall categories'))]
+        self._sortUICommands = \
+            [uicommand.ViewerSortOrderCommand(viewer=self),
+             uicommand.ViewerSortCaseSensitive(viewer=self),
+             None,
+             uicommand.ViewerSortByCommand(viewer=self, value='subject',
+                 menuText=_('Sub&ject'),
+                 helpText=_('Sort notes by subject')),
+             uicommand.ViewerSortByCommand(viewer=self, value='description',
+                 menuText=_('&Description'),
+                 helpText=_('Sort notes by description')),
+             uicommand.ViewerSortByCommand(viewer=self, value='categories',
+                 menuText=_('&Category'),
+                 helpText=_('Sort notes by category')),
+             uicommand.ViewerSortByCommand(viewer=self,
+                 value='totalCategories', menuText=_('Overall categories'),
+                 helpText=_('Sort notes by overall categories'))]
 
 
 class AttachmentDropTarget(object):
@@ -684,7 +688,7 @@ class TreeViewer(Viewer):
             index = None
         if index:
             item = self.getItemWithIndex(index)
-            item.expand(expanded)
+            item.expand(expanded, context=self.settingsSection())
     
     def expandAll(self):
         self.widget.expandAllItems()
@@ -785,7 +789,7 @@ class TreeViewer(Viewer):
     
     def getItemExpanded(self, index):
         item = self.getItemWithIndex(index)
-        return item.isExpanded()
+        return item.isExpanded(context=self.settingsSection())
     
     
 class UpdatePerSecondViewer(Viewer, date.ClockObserver):
@@ -869,7 +873,7 @@ class ViewerWithColumns(Viewer):
     def __init__(self, *args, **kwargs):
         self.__initDone = False
         self.__visibleColumns = []
-        self.__columnUICommands = None
+        self.__columnUICommands = []
         super(ViewerWithColumns, self).__init__(*args, **kwargs)
         self.initColumns()
         self.__initDone = True

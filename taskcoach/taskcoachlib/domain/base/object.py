@@ -159,7 +159,9 @@ class Object(patterns.Observable):
 
 class CompositeObject(Object, patterns.ObservableComposite):
     def __init__(self, *args, **kwargs):
-        self.__expanded = kwargs.pop('expand', False)
+        self.__expandedContexts = set()
+        for context in kwargs.pop('expandedContexts', []):
+            self.__expandedContexts.add(context)
         super(CompositeObject, self).__init__(*args, **kwargs)
     
     # Subject:
@@ -177,12 +179,40 @@ class CompositeObject(Object, patterns.ObservableComposite):
         return super(CompositeObject, self).description()
         
     # Expansion state:
+
+    # Note: expansion state is stored by context. A context is a simple string
+    # identifier (without comma's) to distinguish between different contexts,
+    # i.e. viewers. A composite object may be expanded in one context and
+    # collapsed in another.
     
-    def isExpanded(self):
-        return self.__expanded
+    def isExpanded(self, context='None'):
+        ''' Returns a boolean indicating whether the composite object is 
+            expanded in the specified context. ''' 
+        return context in self.__expandedContexts
+
+    def expandedContexts(self):
+        ''' Returns a list of contexts where this composite object is 
+            expanded. ''' 
+        return list(self.__expandedContexts)
     
-    def expand(self, expand=True):
-        self.__expanded = expand
+    def expand(self, expand=True, context='None'):
+        ''' Expands (or collapses) the composite object in the specified 
+            context. ''' 
+        wasExpanded = self.isExpanded(context)
+        if expand:
+            self.__expandedContexts.add(context)
+        else:
+            self.__expandedContexts.remove(context)
+        if expand != wasExpanded:
+            self.notifyObserversOfExpansionChange()
+
+    @classmethod
+    def expansionChangedEventType(class_):
+        return '%s.expanded'%class_
+
+    def notifyObserversOfExpansionChange(self):
+        self.notifyObservers(patterns.Event(self, 
+            self.expansionChangedEventType()))
         
     # Color:
         

@@ -184,6 +184,8 @@ class XMLReader:
             subject=node.getAttribute('subject'),
             description=self.__parseDescription(node),
             attachments=self.__parseAttachments(node),
+            expandedContexts=self.__parseTuple(\
+                node.getAttribute('expandedContexts'), []),
             color=self.__parseTuple(node.getAttribute('color'), None),
             children=parseChildren(node.childNodes, *parseChildrenArgs))
         
@@ -261,7 +263,7 @@ class XMLReader:
             if text in ['True', 'False']:
                 return text == 'True'
             else:
-                raise ValueError, "Expected 'True' or 'False'"
+                raise ValueError, "Expected 'True' or 'False', got '%s'"%booleanText
         return self.__parse(booleanText, textToBoolean, defaultValue)
         
     def __parseTuple(self, tupleText, defaultValue=None):
