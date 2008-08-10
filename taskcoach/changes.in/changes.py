@@ -17,7 +17,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+da'''
 
 from changetypes import *
 
@@ -58,6 +58,43 @@ multiple times before the next or previous viewer would be activated. ''')],
 Task nodes may have a recurrence node that contains the recurrence state of
 the task. Categories and notes can contain attachments. Tasks and categories
 can now contain notes.''')]),
+
+Release('0.70.2', 'August 6, 2008',
+    summary='''This release fixes some bugs and brings back
+the Fedora RPM.''',
+    bugsFixed=[
+        Bug('''Using the "Save selection" feature together with
+mail attachments could result in data loss.'''),
+        Bug('''Under KDE, the maximized state of the main window
+would not be restored.'''),
+        Bug('''One couldn't e-mail tasks with non-ASCII characters
+in their description.''', '2025676'),
+        Bug('''Dragging an email message from Thunderbird and dropping it
+on Task Coach could give a "UnicodeDecodeError" on Fedora.''', '1953166'),
+        Bug('''When an invalid regular expression was entered in
+a search control, no items were displayed. Additionally, if it was
+saved in TaskCoach.ini, TaskCoach would crash on launch later.'''),
+        Bug('''Mention of non-existing files in taskcoach.spec
+prevented the Fedora RPM from being built.'''),
+        Bug('''The category viewer would sometimes skip keyboard navigation or
+need an extra mouse-click to get focus.''', '2020816', '2020812'),
+        Bug('''On Mac OS X, the keyboard shortcut for 'help' was interfering 
+with the shortcut for 'hide window'.''', '2006455')],
+    featuresAdded=[
+        Feature('''Notes can be e-mailed.'''),
+        Feature('''Display a tool tip to warn user when a search
+string is an invalid regular expression. In this case, default to
+substring search.'''),
+        Feature('''Optionally put Task Coach in the user's startup menu so
+that Task Coach is started automatically when the user logs on 
+(Windows only).''', '2017400', '1913650'),
+        Feature('''Made (right-click) context menu's more consistent.''')],
+    featuresRemoved=[
+        Feature('''Don't supply the dummy recipient 'Please enter recipient' to 
+the email program when mailing a task. This only forces the user to perform 
+an extra action to remove that dummy text, while most if not all email 
+programs will warn the user when she forgets to enter a recipient. ''', 
+'2026833')]),
 
 Release('0.70.1', 'June 28, 2008',
     summary='''This release optionally brings back the tabbed user 

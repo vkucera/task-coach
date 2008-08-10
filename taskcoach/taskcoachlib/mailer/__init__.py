@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, os, re, tempfile
 from taskcoachlib.thirdparty import desktop
 from taskcoachlib.i18n import _
+import urllib
 
 
 def readMail(filename, readContent=True):
@@ -94,3 +95,24 @@ def openMail(filename):
             _winreg.CloseKey(key)
 
     desktop.open(filename)
+
+def writeMail(to, subject, body):
+    def unicode_quote(s):
+        # This is like urllib.quote but leaves out Unicode characters,
+        # which urllib.quote does not support.
+        chars = []
+        for c in s:
+            if ord(c) >= 128:
+                chars.append(c)
+            else:
+                chars.append(urllib.quote(c))
+        return ''.join(chars)
+
+    # FIXME: Very  strange things happen on  MacOS X. If  there is one
+    # non-ASCII character in the body, it works. If there is more than
+    # one, it fails.  Maybe we should use Mail.app  directly ? What if
+    # the user uses something else ?
+
+    desktop.open(u'mailto:%s?subject=%s&body=%s' % (to,
+                                                    unicode_quote(subject),
+                                                    unicode_quote(body)))

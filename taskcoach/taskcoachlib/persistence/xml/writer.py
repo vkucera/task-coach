@@ -27,13 +27,13 @@ class XMLWriter:
         self.__fd = fd
         self.__versionnr = versionnr
 
+    def write(self, taskList, categoryContainer, noteContainer):
         # Determine where to save attachments.
         path, name = os.path.split(os.path.abspath(self.__fd.name))
         name, ext = os.path.splitext(name)
         attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
         attachment.MailAttachment.attdir = attdir
 
-    def write(self, taskList, categoryContainer, noteContainer):
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None)
         pi = self.document.createProcessingInstruction('taskcoach', 

@@ -60,21 +60,15 @@ class NewTaskWithSelectedCategoryTest(test.wxTestCase):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(self.frame, 
-            self.settings, 'mainviewer')         
-        self.uiCommands = gui.uicommand.UICommands(self.frame, None, 
-            self.viewerContainer, self.settings, self.taskList, 
-            self.effortList, self.categories, note.NoteContainer())
         self.categories.append(category.Category('cat'))
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
-            self.uiCommands, self.settings)
+            self.settings, tasks=self.taskList, notes=note.NoteContainer())
         
     def createNewTask(self):
         taskNew = gui.uicommand.NewTaskWithSelectedCategories(taskList=self.taskList,
                                                 viewer=self.viewer,
                                                 categories=self.categories,
-                                                uiCommands=self.uiCommands,
-                                                settings=config.Settings(load=False))
+                                                settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog[0][2]._treeCtrl
         return tree.GetFirstChild(tree.GetRootItem())[0]
@@ -139,13 +133,11 @@ class TaskNewTest(test.TestCase):
     def testNewTaskWithCategories(self):
         cat = category.Category('cat', filtered=True)
         categories = category.CategoryList([cat])
+        settings = config.Settings(load=False)
         taskList = task.TaskList()
-        taskNew = gui.uicommand.TaskNew(taskList=taskList, 
-            categories=categories,
-            uiCommands=dummy.DummyUICommands(taskList=taskList, 
-            effortList=effort.EffortList(taskList), categories=categories,
-            notes=note.NoteContainer()),
-            settings=config.Settings(load=False))
+        taskNew = gui.uicommand.TaskNew(taskList=task.TaskList(), 
+                                        categories=categories,
+                                        settings=settings)
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog[0][2]._treeCtrl
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
@@ -162,6 +154,11 @@ class NoteNewTest(test.TestCase):
         tree = dialog[0][1]._treeCtrl
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
         self.failUnless(firstChild.IsChecked())
+
+
+class MailNoteTest(test.TestCase):
+    def testCreate(self):
+        mailNote = gui.uicommand.NoteMail()
 
 
 class EditPreferencesTest(test.TestCase):

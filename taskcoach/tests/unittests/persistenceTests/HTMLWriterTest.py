@@ -41,10 +41,8 @@ class HTMLWriterTestCase(test.wxTestCase):
     def createViewer(self):
         self.settings.set('tasktreelistviewer', 'treemode', self.treeMode)
         self.viewer = gui.viewer.TaskTreeListViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
-                self.settings, self.taskList, self.effortList, self.categories, 
-                self.notes), 
-            self.settings, categories=self.categories)
+            self.settings, categories=self.categories, notes=self.notes,
+            efforts=self.effortList)
 
     def __writeAndRead(self, selectionOnly):
         self.writer.write(self.viewer, selectionOnly)
@@ -138,9 +136,6 @@ class EffortWriterTest(HTMLWriterTestCase):
 
     def createViewer(self):
         self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList,
-            gui.uicommand.UICommands(self.frame, None, self.viewerContainer, 
-                self.settings, self.taskList, self.effortList, self.categories, 
-                self.notes), 
             self.settings)
 
     def testTaskSubject(self):

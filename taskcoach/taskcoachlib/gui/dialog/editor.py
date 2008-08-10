@@ -484,12 +484,11 @@ class BudgetPage(EditorPage, TaskHeaders):
 
 
 class EffortPage(EditorPage, TaskHeaders):
-    def __init__(self, parent, theTask, taskList, settings, uiCommands,
-                 *args, **kwargs):
+    def __init__(self, parent, theTask, taskList, settings, *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
         singleTaskList = task.SingleTaskList()
         self.effortViewer = viewer.EffortListViewer(self, singleTaskList, 
-            uiCommands, settings, settingsSection='effortviewerintaskeditor')
+            settings, settingsSection='effortviewerintaskeditor')
         self.add(self.effortViewer, proportion=1, flag=wx.EXPAND|wx.ALL, 
                  border=5)
         singleTaskList.append(theTask)
@@ -566,13 +565,13 @@ class NoteCategoriesPage(CategoriesPage, NoteHeaders):
 
 
 class NotesPage(EditorPage):
-    def __init__(self, parent, item, uiCommands, settings, categories, 
+    def __init__(self, parent, item, settings, categories, 
                  *args, **kwargs):
         super(NotesPage, self).__init__(parent, item, *args, **kwargs)
         notesBox = widgets.BoxWithBoxSizer(self, label=_('Notes'))
         self.noteContainer = note.NoteContainer(item.notes())
         self.noteViewer = viewer.NoteViewer(notesBox, self.noteContainer, 
-            uiCommands, settings, settingsSection='noteviewerintaskeditor', 
+            settings, settingsSection='noteviewerintaskeditor', 
             categories=categories)
         notesBox.add(self.noteViewer, flag=wx.EXPAND|wx.ALL, proportion=1)
         notesBox.fit()
@@ -767,8 +766,8 @@ class BehaviorPage(EditorPage, TaskHeaders):
 
 
 class TaskEditBook(widgets.Listbook):
-    def __init__(self, parent, task, taskList, uiCommands, settings,
-                 categories, *args, **kwargs):
+    def __init__(self, parent, task, taskList, settings, categories, 
+                 *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(SubjectPage(self, task), _('Description'), 'description')
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
@@ -776,10 +775,10 @@ class TaskEditBook(widgets.Listbook):
                      'category')
         self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')
         if task.timeSpent(recursive=True):
-            effortPage = EffortPage(self, task, taskList, settings, uiCommands)
+            effortPage = EffortPage(self, task, taskList, settings)
             self.AddPage(effortPage, _('Effort'), 'start')
         if settings.getboolean('feature', 'notes'):
-            self.AddPage(NotesPage(self, task, uiCommands, settings, categories), _('Notes'), 'note')
+            self.AddPage(NotesPage(self, task, settings, categories), _('Notes'), 'note')
         self.AddPage(AttachmentPage(self, task, settings), _('Attachments'), 'attachment')
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior')
 
@@ -940,12 +939,12 @@ class CategorySubjectPage(ColorEntryMixin, widgets.BookPage):
         
         
 class CategoryEditBook(widgets.Listbook):
-    def __init__(self, parent, theCategory, uiCommands, settings, categories,
+    def __init__(self, parent, theCategory, settings, categories,
                  *args, **kwargs):
         super(CategoryEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(CategorySubjectPage(self, theCategory), 
                      _('Description'), 'description')
-        self.AddPage(NotesPage(self, theCategory, uiCommands, settings, 
+        self.AddPage(NotesPage(self, theCategory, settings, 
                      categories), _('Notes'), 'note')
         self.AddPage(AttachmentPage(self, theCategory, settings), 
                      _('Attachments'), 'attachment')
@@ -987,13 +986,13 @@ class NoteEditBook(widgets.Listbook):
 
 
 class EditorWithCommand(widgets.NotebookDialog):
-    def __init__(self, parent, command, uiCommands, *args, **kwargs):
-        self._uiCommands = uiCommands
+    def __init__(self, parent, command, *args, **kwargs):
         self._command = command
-        bitmap=kwargs.pop('bitmap','edit') # hack due to bitmap being a positional arg now
-        super(EditorWithCommand, self).__init__(parent, command.name(), bitmap, *args, **kwargs)
-        self.setFocusOnFirstEntry()
-        
+        super(EditorWithCommand, self).__init__(parent, command.name(), 
+                                                *args, **kwargs)
+
+        # FIXMERGE: should we call setFocusOnFirstEntry ?
+
     def setFocusOnFirstEntry(self):
         firstEntry = self[0][0]._subjectEntry
         firstEntry.SetSelection(-1, -1) # Select all text
@@ -1010,11 +1009,11 @@ class EditorWithCommand(widgets.NotebookDialog):
 
 
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, taskList, uiCommands, settings, categories, bitmap='edit', *args, **kwargs):
+    def __init__(self, parent, command, taskList, settings, categories, bitmap='edit', *args, **kwargs):
         self._settings = settings
         self._taskList = taskList
         self._categories = categories
-        super(TaskEditor, self).__init__(parent, command, uiCommands, bitmap, *args, **kwargs)
+        super(TaskEditor, self).__init__(parent, command, bitmap, *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
         # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
         self.setFocus(*args,**kwargs) 
@@ -1062,18 +1061,17 @@ class TaskEditor(EditorWithCommand):
 
     def addPage(self, task):
         page = TaskEditBook(self._interior, task, self._taskList,
-            self._uiCommands, self._settings, self._categories)
+            self._settings, self._categories)
         self._interior.AddPage(page, task.subject())
 
 
 class EffortEditor(EditorWithCommand):
-    def __init__(self, parent, command, uiCommands, effortList, taskList,
+    def __init__(self, parent, command, effortList, taskList,
                  settings, *args, **kwargs):
         self._effortList = effortList
         self._taskList = taskList
         self._settings = settings
-        super(EffortEditor, self).__init__(parent, command, uiCommands,
-                                           *args, **kwargs)
+        super(EffortEditor, self).__init__(parent, command, *args, **kwargs)
 
     def setFocusOnFirstEntry(self):
         pass
@@ -1089,14 +1087,13 @@ class EffortEditor(EditorWithCommand):
 
 
 class CategoryEditor(EditorWithCommand):
-    def __init__(self, parent, command, uiCommands, settings, categories, *args, **kwargs):
+    def __init__(self, parent, command, settings, categories, *args, **kwargs):
         self._settings = settings
         self._categories = categories
-        super(CategoryEditor, self).__init__(parent, command, uiCommands,
-                                             *args, **kwargs)
+        super(CategoryEditor, self).__init__(parent, command, *args, **kwargs)
 
     def addPage(self, category):
-        page = CategoryEditBook(self._interior, category, self._uiCommands, 
+        page = CategoryEditBook(self._interior, category,
                                 self._settings, self._categories)
         self._interior.AddPage(page, category.subject())
 
@@ -1105,7 +1102,7 @@ class NoteEditor(EditorWithCommand):
     def __init__(self, parent, command, settings, categories, *args, **kwargs):
         self._settings = settings
         self._categories = categories
-        super(NoteEditor, self).__init__(parent, command, None, *args, **kwargs)
+        super(NoteEditor, self).__init__(parent, command, *args, **kwargs)
 
     def addPages(self):
         for note in self._command.notes: # FIXME: use getter

@@ -21,22 +21,22 @@ from taskcoachlib.i18n import _
 import viewer
 
     
-def addEffortViewers(viewerContainer, taskList, uiCommands, settings):
+def addEffortViewers(viewerContainer, taskList, settings):
     _addViewers(viewerContainer, viewer.EffortListViewer, (taskList, 
-                uiCommands, settings), {}, 'start', settings)
+                settings), {}, 'start', settings)
 
-def addTaskViewers(viewerContainer, taskList, uiCommands, settings, categories):
+def addTaskViewers(viewerContainer, taskList, settings, categories, efforts):
     _addViewers(viewerContainer, viewer.TaskTreeListViewer, (taskList,
-                uiCommands, settings), dict(categories=categories), 
+                settings), dict(categories=categories, efforts=efforts), 
                 'task', settings)
 
-def addCategoryViewers(viewerContainer, categoryContainer, uiCommands, 
-                       settings):
+def addCategoryViewers(viewerContainer, categoryContainer, settings, tasks, 
+                       notes):
     _addViewers(viewerContainer, viewer.CategoryViewer, (categoryContainer, 
-                uiCommands, settings), {}, 'category', settings)
+                settings), dict(tasks=tasks, notes=notes), 'category', settings)
     
-def addNoteViewers(viewerContainer, noteContainer, uiCommands, settings, categories):
-    _addViewers(viewerContainer, viewer.NoteViewer, (noteContainer, uiCommands,
+def addNoteViewers(viewerContainer, noteContainer, settings, categories):
+    _addViewers(viewerContainer, viewer.NoteViewer, (noteContainer, 
                 settings), dict(categories=categories), 'note', settings)
 
 def _addViewers(viewerContainer, viewerClass, viewerArgs, viewerKwArgs, 

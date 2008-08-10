@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import wx, test
 from unittests import dummy
 from taskcoachlib import gui, config, persistence, meta
 
@@ -52,3 +52,37 @@ class MainWindowTest(test.wxTestCase):
         self.taskFile.setFilename('New filename')
         self.assertEqual('%s - %s'%(meta.name, self.taskFile.filename()), 
             self.mainwindow.GetTitle())
+
+class MainWindowMaximizeTest(test.wxTestCase):
+    maximized = False
+
+    def setUp(self):
+        self.settings = config.Settings(load=False)
+        self.settings.setboolean('window', 'maximized', self.maximized)
+        self.taskFile = persistence.TaskFile()
+        self.mainwindow = MainWindowUnderTest(dummy.IOController(),
+            self.taskFile, self.settings)
+        self.mainwindow.Show() # Or IsMaximized() returns always False...
+
+    def tearDown(self):
+        self.mainwindow.Hide()
+        del self.mainwindow
+        super(MainWindowMaximizeTest, self).tearDown()
+
+
+class MainWindowNotMaximizedTest(MainWindowMaximizeTest):
+    def testCreate(self):
+        self.failIf(self.mainwindow.IsMaximized())
+
+    def testMaximize(self):
+        self.mainwindow.Maximize()
+        wx.Yield()
+        self.failUnless(self.settings.getboolean('window', 'maximized'))
+
+
+class MainWindowMaximizedTest(MainWindowMaximizeTest):
+    maximized = True
+
+    def testCreate(self):
+        if '__WXMAC__' not in wx.PlatformInfo:
+            self.failUnless(self.mainwindow.IsMaximized())
