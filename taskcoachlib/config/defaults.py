@@ -150,5 +150,5 @@ defaults = { \
 
 minimum = { \
 'view': { \
-    'tasktreelistviewercount': 1 }
+    'tasktreelistviewercount': '1' }
 }
