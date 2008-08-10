@@ -53,7 +53,8 @@ class TaskFile(patterns.Observable):
             task.Task.notesChangedEventType(),
             task.Task.categoryAddedEventType(), 
             task.Task.categoryRemovedEventType(), 
-            task.Task.attachmentsChangedEventType()):
+            task.Task.attachmentsChangedEventType(),
+            task.Task.expansionChangedEventType()):
             patterns.Publisher().registerObserver(self.onTaskChanged, 
                                                   eventType=eventType)
         for eventType in (effort.Effort.descriptionChangedEventType(), 
@@ -69,7 +70,8 @@ class TaskFile(patterns.Observable):
                 note.Note.removeChildEventType(),
                 note.Note.categoryAddedEventType(),
                 note.Note.categoryRemovedEventType(),
-                note.Note.attachmentsChangedEventType()):
+                note.Note.attachmentsChangedEventType(),
+                note.Note.expansionChangedEventType()):
             patterns.Publisher().registerObserver(self.onNoteChanged, 
                                                   eventType=eventType)
         for eventType in (category.Category.filterChangedEventType(), 
@@ -77,7 +79,8 @@ class TaskFile(patterns.Observable):
                 category.Category.descriptionChangedEventType(),
                 category.Category.colorChangedEventType(),
                 category.Category.notesChangedEventType(),
-                category.Category.attachmentsChangedEventType()):
+                category.Category.attachmentsChangedEventType(),
+                category.Category.expansionChangedEventType()):
             patterns.Publisher().registerObserver(self.onCategoryChanged, 
                 eventType=eventType)
 

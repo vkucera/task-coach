@@ -44,6 +44,8 @@ viewer that can switch between list and tree mode, via the toolbar.'''),
         Feature('''Category filtering is done either by showing tasks and notes
 that match any category or that match all categories. This filtering mode 
 can be switched via the toolbar of the category viewer.''', '2024510'),
+        Feature('''The expansion state of tasks, categories and notes is 
+saved in the task file.''', '2045453'),
         Feature('''Added Catalan translation thanks to Ferran Roig, Jordi
 Mallach, Josep-Miquel Ivars, and devaleitzer.'''),
         Feature('''Added an (incomplete) Arabic translation thanks to 

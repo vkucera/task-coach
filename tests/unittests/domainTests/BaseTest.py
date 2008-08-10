@@ -253,8 +253,28 @@ class CompositeObjectTest(test.TestCase):
         self.failIf(self.compositeObject.isExpanded())
         
     def testSetExpansionStateViaConstructor(self):
-        compositeObject = base.CompositeObject(expand=True)
+        compositeObject = base.CompositeObject(expandedContexts=['None'])
         self.failUnless(compositeObject.isExpanded())
+
+    def testSetExpansionStatesViaConstructor(self):
+        compositeObject = base.CompositeObject(expandedContexts=['context1',
+            'context2'])
+        self.assertEqual(['context1', 'context2'],
+                         sorted(compositeObject.expandedContexts()))
+
+    def testExpandInContext_DoesNotChangeExpansionStateInDefaultContext(self):
+        self.compositeObject.expand(context='some_viewer')
+        self.failIf(self.compositeObject.isExpanded())
+
+    def testExpandInContext_DoesChangeExpansionStateInGivenContext(self):
+        self.compositeObject.expand(context='some_viewer')
+        self.failUnless(self.compositeObject.isExpanded(context='some_viewer'))
+
+    def testIsExpandedInUnknownContext_ReturnsFalse(self):
+        self.failIf(self.compositeObject.isExpanded(context='whatever'))
+
+    def testGetContextsWhereExpanded(self):
+        self.assertEqual([], self.compositeObject.expandedContexts())
         
     def testRecursiveSubject(self):
         self.compositeObject.setSubject('parent')

@@ -30,6 +30,7 @@ class TreeViewerTest(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.viewer = gui.viewer.TaskTreeListViewer(self.frame, self.taskList,
             self.settings, categories=self.categories, efforts=self.effortList)
+        self.expansionContext = self.viewer.settingsSection()
         self.parent = task.Task('parent')
         self.child = task.Task('child')
         self.parent.addChild(self.child)
@@ -43,11 +44,11 @@ class TreeViewerTest(test.wxTestCase):
         
     def testExpand(self):
         self.widget.Expand(self.widget.GetFirstVisibleItem())
-        self.failUnless(self.parent.isExpanded())
+        self.failUnless(self.parent.isExpanded(context=self.expansionContext))
         
     def testCollapse(self):
         firstVisibleItem = self.widget.GetFirstVisibleItem()
         self.widget.Expand(firstVisibleItem)
         self.widget.Collapse(firstVisibleItem)
-        self.failIf(self.parent.isExpanded())
+        self.failIf(self.parent.isExpanded(context=self.expansionContext))
         

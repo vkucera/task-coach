@@ -140,6 +140,9 @@ class XMLWriter:
             node.appendChild(self.textNode('description', item.description()))
         if item.color(recursive=False):
             node.setAttribute('color', str(item.color(recursive=False)))
+        if item.expandedContexts():
+            node.setAttribute('expandedContexts', 
+                              str(tuple(sorted(item.expandedContexts()))))
         for attachment in item.attachments():
             node.appendChild(self.attachmentNode(attachment))
         for child in item.children():

@@ -64,7 +64,7 @@ class IntegrationTest(IntegrationTestCase):
             completiondate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
             priority=4, hourlyFee=100.5, fixedFee=1000, 
             recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
-            reminder=date.DateTime(2004,1,1), color=wx.RED,
+            reminder=date.DateTime(2004,1,1), color=wx.RED, expand=True,
             shouldMarkCompletedWhenAllChildrenCompleted=True)
         self.child = task.Task()
         self.task.addChild(self.child)
@@ -109,6 +109,9 @@ class IntegrationTest(IntegrationTestCase):
 
     def testColor(self):
         self.assertAttributeWrittenAndRead(self.task, 'color')
+
+    def testExpansionState(self):
+        self.assertAttributeWrittenAndRead(self.task, 'isExpanded')
          
     def testStartDate(self):
         self.assertAttributeWrittenAndRead(self.task, 'startDate')

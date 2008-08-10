@@ -841,3 +841,30 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         </tasks>''')
         self.failIf(notes)
 
+    def testTaskExpansion(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task expandedContexts="('None',)"/>
+        </tasks>''')
+        self.failUnless(tasks[0].isExpanded())
+
+    def testTaskExpansion_MultipleContexts(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <task expandedContexts="('None','Test')"/>
+        </tasks>''')
+        self.failUnless(tasks[0].isExpanded(context='Test'))
+
+    def testCategoryExpansion(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <category expandedContexts="('None',)"/>
+        </tasks>''')
+        self.failUnless(categories[0].isExpanded())
+
+    def testNoteExpansion(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <note expandedContexts="('None',)"/>
+        </tasks>''')
+        self.failUnless(notes[0].isExpanded())
