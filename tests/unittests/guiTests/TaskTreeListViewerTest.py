@@ -45,13 +45,8 @@ class TaskTreeListViewerTestCase(test.wxTestCase):
         self.taskList = task.TaskList()
         self.categories = category.CategoryList()
         effortList = effort.EffortList(self.taskList)
-        viewerContainer = gui.viewercontainer.ViewerContainer(\
-            widgets.Notebook(self.frame), self.settings, 'mainviewer')
-        self.viewer = TaskTreeListViewerUnderTest(self.frame,
-            self.taskList, gui.uicommand.UICommands(self.frame, None, 
-                viewerContainer, self.settings, self.taskList, effortList, 
-                self.categories, note.NoteContainer()), 
-            self.settings, categories=self.categories)
+        self.viewer = TaskTreeListViewerUnderTest(self.frame, self.taskList, 
+            self.settings, categories=self.categories, efforts=effortList)
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()
         self.viewer.showTree(self.treeMode)

@@ -25,13 +25,13 @@ class XMLReader:
     def __init__(self, fd):
         self.__fd = fd
 
+    def read(self):
         # Determine where are attachments.
         path, name = os.path.split(os.path.abspath(self.__fd.name))
         name, ext = os.path.splitext(name)
         attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
         attachment.MailAttachment.attdir = attdir
 
-    def read(self):
         domDocument = xml.dom.minidom.parse(self.__fd)
         self.__tskversion = self.__parseTskVersionNumber(domDocument)
         tasks = self.__parseTaskNodes(domDocument.documentElement.childNodes)

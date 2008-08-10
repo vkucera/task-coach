@@ -21,17 +21,17 @@ import wx, uicommand
 
 
 class ToolBar(wx.ToolBar, uicommand.UICommandContainer):
-    def __init__(self, window, uiCommands, size=(32, 32)):
+    def __init__(self, window, size=(32, 32)):
         self.__window = window
         super(ToolBar, self).__init__(window, style=wx.TB_FLAT|wx.TB_NODIVIDER)
         self.SetToolBitmapSize(size) 
         if '__WXMAC__' in wx.PlatformInfo:
             # Extra margin needed because the search control is too high
             self.SetMargins((0, 7)) 
-        self.appendUICommands(uiCommands, self.commandNames())
+        self.appendUICommands(*self.uiCommands())
         self.Realize()
 
-    def commandNames(self):
+    def uiCommands(self):
         return self.__window.getToolBarUICommands()
 
     def AppendSeparator(self):

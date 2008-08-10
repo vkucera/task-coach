@@ -39,9 +39,24 @@ Release steps:
 
 import ftplib, taskcoachlib.meta, os, glob, sys, md5
 
+def getSFUser():
+    if os.path.exists('.sfuser'):
+        username = file('.sfuser', 'rb').read()
+    else:
+        try:
+            username = raw_input('SourceForge user name [fniessink]: ')
+        except EOFError:
+            username = 'fniessink'
+
+        if not username:
+            username = 'fniessink'
+    file('.sfuser', 'wb').write(username.strip())
+
+    return username
+
 def uploadDistributionsToSourceForge():
     print 'Uploading distributions to SourceForge...'
-    os.system('rsync -avP -e ssh dist/* fniessink@frs.sourceforge.net:uploads/')
+    os.system('rsync -avP -e ssh dist/* %s@frs.sourceforge.net:uploads/' % getSFUser())
     print 'Done uploading distributions to SourceForge.'
 
 def generateMD5Digests():
@@ -101,17 +116,20 @@ class SimpleFTP(ftplib.FTP, object):
                 self.storbinary('STOR %s'%filename, file(os.path.join(root, filename), 'rb'))
 
 def uploadWebsiteToChello():
-    print "Uploading website to Chello..."
-    chello = SimpleFTP('members.chello.nl', 'f.niessink', '.chello_password')
-    os.chdir('website.out')
-    chello.put('.')
-    chello.quit()
-    os.chdir('..')
-    print 'Done uploading website to Chello.'
+    if os.path.exists('.chello_password'):
+        print "Uploading website to Chello..."
+        chello = SimpleFTP('members.chello.nl', 'f.niessink', '.chello_password')
+        os.chdir('website.out')
+        chello.put('.')
+        chello.quit()
+        os.chdir('..')
+        print 'Done uploading website to Chello.'
+    else:
+        print 'Warning: no Chello password in ".".'
 
 def uploadWebsiteToSourceForge():
     print 'Uploading website to SourceForge...'
-    os.system('scp -r website.out/* fniessink@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs')
+    os.system('scp -r website.out/* %s@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs' % getSFUser())
     print 'Done uploading website to SourceForge.'
     
 def registerWithPyPI():

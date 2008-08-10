@@ -39,6 +39,7 @@ PrivilegesRequired=none
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: associate; Description: "{cm:AssocFileExtension,{app},.tsk}"; GroupDescription: "Other tasks:"; Flags: unchecked
+Name: userstartup; Description: "Run %(name)s everytime Windows is started"; GroupDescription: "Other tasks:"; Flags: unchecked
 
 [Files]
 Source: "%(filename)s-%(version)s-win32exe\%(filename)s.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -64,6 +65,7 @@ Name: "{group}\{cm:ProgramOnTheWeb,%(name)s}"; Filename: "{app}\%(filename)s.url
 Name: "{group}\{cm:UninstallProgram,%(name)s}"; Filename: "{uninstallexe}"
 Name: "{userdesktop}\%(name)s"; Filename: "{app}\%(filename)s.exe"; Tasks: desktopicon; WorkingDir: "{app}"
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\%(name)s"; Filename: "{app}\%(filename)s.exe"; Tasks: quicklaunchicon; WorkingDir: "{app}"
+Name: "{userstartup}\%(name)s"; Filename: "{app}\%(filename)s.exe"; Tasks: userstartup
 
 [Run]
 Filename: "{app}\%(filename)s.exe"; Description: "{cm:LaunchProgram,%(name)s}"; Flags: nowait postinstall skipifsilent

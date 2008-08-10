@@ -17,11 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import gui, config, widgets
+from taskcoachlib import gui, config
 from taskcoachlib.domain import task, effort, category, note, date
 
 
 class EffortViewerTestCase(test.wxTestCase):
+    def createViewer(self):
+        return gui.viewer.EffortListViewer(self.frame,
+                                           self.taskList,
+                                           self.settings,
+                                           category.CategoryList(),
+                                           note.NoteContainer())
+
     def setUp(self):
         self.settings = config.Settings(load=False)
         self.settings.set('effortlistviewer', 'aggregation', self.aggregation)
@@ -40,13 +47,7 @@ class EffortViewerTestCase(test.wxTestCase):
         self.task2.addEffort(effort.Effort(self.task2, *mostRecentPeriod))
         
         self.taskList = task.TaskList([self.task, self.task2])
-        self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList, 
-            gui.uicommand.UICommands(self.frame, None, 
-                gui.viewercontainer.ViewerContainer(\
-                    widgets.Notebook(self.frame), self.settings, 'mainviewer'), 
-                self.settings, self.taskList, effort.EffortList(self.taskList), 
-                category.CategoryList(), note.NoteContainer()), 
-            self.settings)
+        self.viewer = self.createViewer()
 
     def switchAggregation(self):
         aggregations = ['details', 'day', 'week', 'month']
@@ -95,7 +96,8 @@ class CommonTests(object):
             expectedLength = 3
         else:
             expectedLength = 5
-        self.assertEqual(expectedLength, len(self.viewer.getColumnUICommands()))
+        self.assertEqual(expectedLength,
+                         len(self.viewer.getColumnUICommands()))
     
     def testDefaultNrOfColumns(self):
         self.assertEqual(4, self.viewer.widget.GetColumnCount())
@@ -115,7 +117,6 @@ class CommonTests(object):
         
     def testShowTotalColumnsWhenSwitchingToAggregatedView(self):
         self.viewer.showColumnByName('totalTimeSpent')
-        self.viewer.showEffortAggregation('details')
         self.viewer.showEffortAggregation(self.aggregation)
         if self.aggregation == 'details':
             expectedColumnCount = 4

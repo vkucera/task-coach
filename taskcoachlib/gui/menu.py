@@ -20,7 +20,7 @@ import wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import task
 from taskcoachlib.i18n import _
-import uicommand
+import uicommand, viewer
 
 
 class Menu(wx.Menu, uicommand.UICommandContainer):
@@ -32,7 +32,7 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
         return self.GetMenuItemCount()
 
     def appendUICommand(self, uiCommand):
-        return uiCommand.appendToMenu(self, self._window)    
+        return uiCommand.appendToMenu(self, self._window)
     
     def appendMenu(self, text, subMenu, bitmap=None):
         subMenuItem = wx.MenuItem(self, id=wx.NewId(), text=text, subMenu=subMenu)
@@ -61,9 +61,9 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
 
 
 class StaticMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow):
         super(StaticMenu, self).__init__(mainwindow)
-        wx.CallAfter(self.appendUICommands, uiCommands, self.getUICommands())
+        wx.CallAfter(self.appendUICommands, *self.getUICommands())
         
     def getUICommands(self):
         raise NotImplementedError
@@ -111,19 +111,21 @@ class DynamicMenu(Menu):
         ''' Enable or disable the menu item in the parent menu, depending on
             what enabled() returns. '''
         if self._parentMenu:
-            # I'd rather use wx.Menu.FindItem, but it seems that that 
-            # method currently does not work for menu items with accelerators 
-            # (wxPython 2.8.6 on Ubuntu). When that is fixed replace the 7
-            # lines below with this one:
-            # myId = self._parentMenu.FindItem(self._labelInParentMenu)
-            for item in self._parentMenu.MenuItems:
-                if self.__GetLabelText(item.GetText()) == self._labelInParentMenu:
-                    myId = item.Id
-                    break
-            else:
-                myId = wx.NOT_FOUND
+            myId = self.myId()
             if myId != wx.NOT_FOUND:
                 self._parentMenu.Enable(myId, self.enabled())
+
+    def myId(self):
+        ''' Return the id of our menu item in the parent menu. '''
+        # I'd rather use wx.Menu.FindItem, but it seems that that
+        # method currently does not work for menu items with accelerators
+        # (wxPython 2.8.6 on Ubuntu). When that is fixed replace the 7
+        # lines below with this one:
+        # myId = self._parentMenu.FindItem(self._labelInParentMenu)
+        for item in self._parentMenu.MenuItems:
+            if self.__GetLabelText(item.GetText()) == self._labelInParentMenu:
+                return item.Id
+        return wx.NOT_FOUND
 
     def updateMenuItems(self):
         ''' Update the menu items of this menu. '''
@@ -145,10 +147,8 @@ class DynamicMenu(Menu):
 
             
 class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
-    def __init__(self, mainwindow, uiCommands, parentMenu=None, 
-                 labelInParentMenu=''):
-        self._uiCommands = uiCommands
-        self._uiCommandNames = None
+    def __init__(self, mainwindow, parentMenu=None, labelInParentMenu=''):
+        self._uiCommands = None
         super(DynamicMenuThatGetsUICommandsFromViewer, self).__init__(\
             mainwindow, parentMenu, labelInParentMenu)
 
@@ -160,35 +160,43 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
         self._window.Bind(wx.EVT_MENU_OPEN, self.onUpdateMenu)
         
     def updateMenuItems(self):
-        newCommandNames = self.getUICommands()
-        if newCommandNames != self._uiCommandNames:
+        newCommands = self.getUICommands()
+        if newCommands != self._uiCommands:
             self.clearMenu()
-            self.fillMenu(newCommandNames)
-            self._uiCommandNames = newCommandNames
+            self.fillMenu(newCommands)
+            self._uiCommands = newCommands
         
-    def fillMenu(self, commandNames):
-        self.appendUICommands(self._uiCommands, commandNames)
+    def fillMenu(self, uiCommands):
+        self.appendUICommands(*uiCommands)
         
     def getUICommands(self):
         raise NotImplementedError
 
 
 class MainMenu(wx.MenuBar):
-    def __init__(self, mainwindow, uiCommands, settings):
+    def __init__(self, mainwindow, settings, iocontroller, viewerContainer,
+                 taskFile):
         super(MainMenu, self).__init__()
-        self.Append(FileMenu(mainwindow, uiCommands, settings), _('&File'))
-        self.Append(EditMenu(mainwindow, uiCommands), _('&Edit'))
-        self.Append(ViewMenu(mainwindow, uiCommands, settings), _('&View'))
-        self.Append(TaskMenu(mainwindow, uiCommands, settings), _('&Task'))
-        self.Append(EffortMenu(mainwindow, uiCommands), _('Eff&ort'))
-        self.Append(CategoryMenu(mainwindow, uiCommands), _('&Category'))
+        self.Append(FileMenu(mainwindow, settings, iocontroller,
+                             viewerContainer), _('&File'))
+        self.Append(EditMenu(mainwindow, settings, viewerContainer), _('&Edit'))
+        self.Append(ViewMenu(mainwindow, settings, viewerContainer, taskFile),
+                    _('&View'))
+        self.Append(TaskMenu(mainwindow, settings, taskFile, viewerContainer),
+                    _('&Task'))
+        self.Append(EffortMenu(mainwindow, taskFile, viewerContainer),
+                    _('Eff&ort'))
+        self.Append(CategoryMenu(mainwindow, settings, taskFile.categories(),
+                                 viewerContainer), _('&Category'))
         if settings.getboolean('feature', 'notes'):
-            self.Append(NoteMenu(mainwindow, uiCommands), _('&Note'))
-        self.Append(HelpMenu(mainwindow, uiCommands), _('&Help'))
+            self.Append(NoteMenu(mainwindow, settings, taskFile,
+                                 viewerContainer),
+                        _('&Note'))
+        self.Append(HelpMenu(mainwindow, settings), _('&Help'))
 
 '''
 class OpenAttachmentsMenu(Menu):
-    def __init__(self, mainwindow, uiCommands, settings):
+    def __init__(self, mainwindow, settings):
         super(OpenAttachmentsMenu, self).__init__(mainwindow)
         self.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
         
@@ -207,19 +215,31 @@ class OpenAttachmentsMenu(Menu):
 '''
        
 class FileMenu(Menu):
-    def __init__(self, mainwindow, uiCommands, settings):
+    def __init__(self, mainwindow, settings, iocontroller, viewerContainer):
         super(FileMenu, self).__init__(mainwindow)
         self.__settings = settings
-        self.__uiCommands = uiCommands
+        self.__iocontroller = iocontroller
         self.__recentFileUICommands = []
         self.__separator = None
-        self.appendUICommands(uiCommands, ['open', 'merge', 'close', None, 
-            'save', 'saveas', 'saveselection', None, 'printpagesetup',
-            'printpreview', 'print', None])
-        self.appendMenu(_('&Export'), ExportMenu(mainwindow, uiCommands),
-            'export')
+        self.appendUICommands(
+            uicommand.FileOpen(iocontroller=iocontroller),
+            uicommand.FileMerge(iocontroller=iocontroller),
+            uicommand.FileClose(iocontroller=iocontroller),
+            None,
+            uicommand.FileSave(iocontroller=iocontroller),
+            uicommand.FileSaveAs(iocontroller=iocontroller),
+            uicommand.FileSaveSelection(iocontroller=iocontroller,
+                                        viewer=viewerContainer),
+            None,
+            uicommand.PrintPageSetup(),
+            uicommand.PrintPreview(viewer=viewerContainer),
+            uicommand.Print(viewer=viewerContainer),
+            None)
+        self.appendMenu(_('&Export'),
+                        ExportMenu(mainwindow, iocontroller, viewerContainer),
+                        'export')
         self.__recentFilesStartPosition = len(self) 
-        self.appendUICommands(uiCommands, [None, 'quit'])
+        self.appendUICommands(None, uicommand.FileQuit())
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
 
     def onOpenMenu(self, event):
@@ -239,7 +259,8 @@ class FileMenu(Menu):
         for index, recentFile in enumerate(recentFiles):
             recentFileNumber = index + 1 # Only computer nerds start counting at 0 :-)
             recentFileMenuPosition = self.__recentFilesStartPosition + 1 + index
-            recentFileOpenUICommand = self.__uiCommands.createRecentFileOpenUICommand(recentFile, recentFileNumber)
+            recentFileOpenUICommand = uicommand.RecentFileOpen(filename=recentFile,
+                index=recentFileNumber, iocontroller=self.__iocontroller)
             recentFileOpenUICommand.appendToMenu(self, self._window, 
                 recentFileMenuPosition)
             self.__recentFileUICommands.append(recentFileOpenUICommand)
@@ -254,66 +275,126 @@ class FileMenu(Menu):
 
 
 class ExportMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, iocontroller, viewerContainer):
         super(ExportMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['exportashtml', 'exportasics', 
-                                           'exportascsv'])
-        
+        self.appendUICommands(
+            uicommand.FileExportAsHTML(iocontroller=iocontroller,
+                                       viewer=viewerContainer),
+            uicommand.FileExportAsICS(iocontroller=iocontroller),
+            uicommand.FileExportAsCSV(iocontroller=iocontroller,
+                                      viewer=viewerContainer))
+       
 
 class EditMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, settings, viewerContainer):
         super(EditMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['undo', 'redo', None, 'cut', 
-            'copy', 'paste', 'pasteintotask', None])
-        # the spaces are to leave room for command names in the Undo and Redo menuitems:
-        self.appendMenu(_('&Select')+' '*50, SelectMenu(mainwindow, uiCommands))
-        self.appendUICommands(uiCommands, [None, 'editpreferences'])
+        self.appendUICommands(
+            uicommand.EditUndo(),
+            uicommand.EditRedo(),
+            None,
+            uicommand.EditCut(viewer=viewerContainer),
+            uicommand.EditCopy(viewer=viewerContainer),
+            uicommand.EditPaste(),
+            uicommand.EditPasteIntoTask(viewer=viewerContainer),
+            None)
+        # Leave sufficient room for command names in the Undo and Redo menu items:
+        self.appendMenu(_('&Select')+' '*50,
+                        SelectMenu(mainwindow, viewerContainer))
+        self.appendUICommands(None, uicommand.EditPreferences(settings))
 
 
 class SelectMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, viewerContainer):
         super(SelectMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['selectall', 'invertselection', 
-            'clearselection'])
+        kwargs = dict(viewer=viewerContainer)
+        self.appendUICommands(uicommand.SelectAll(**kwargs),
+                              uicommand.InvertSelection(**kwargs),
+                              uicommand.ClearSelection(**kwargs))
 
 
 class ViewMenu(Menu):
-    def __init__(self, mainwindow, uiCommands, settings):
+    def __init__(self, mainwindow, settings, viewerContainer, taskFile):
         super(ViewMenu, self).__init__(mainwindow)
         self.appendMenu(_('&New viewer'), 
-            ViewViewerMenu(mainwindow, uiCommands, settings), 'viewnewviewer')
-        self.appendUICommands(uiCommands,
-            ['activatenextviewer', 'activatepreviousviewer', 'renameviewer', 
-             None])
+            ViewViewerMenu(mainwindow, settings, viewerContainer, taskFile),
+                'viewnewviewer')
+        activateNextViewer = uicommand.ActivateViewer(viewer=viewerContainer,
+            menuText=_('&Activate next viewer\tCtrl+PgDn'),
+            helpText=_('Activate the next open viewer'), forward=True,
+            bitmap='activatenextviewer')
+        activatePreviousViewer = uicommand.ActivateViewer(viewer=viewerContainer,
+            menuText=_('Activate &previous viewer\tCtrl+PgUp'),
+            helpText=_('Activate the previous open viewer'), forward=False,
+            bitmap='activatepreviousviewer')
+        self.appendUICommands(
+            activateNextViewer,
+            activatePreviousViewer,
+            uicommand.RenameViewer(viewer=viewerContainer),
+            None)
         self.appendMenu(_('&Filter'), 
-            FilterMenu(mainwindow, uiCommands, self, _('&Filter')))
+                        FilterMenu(mainwindow, self, _('&Filter')))
         self.appendMenu(_('&Sort'),
-            SortMenu(mainwindow, uiCommands, self, _('&Sort')))
+                        SortMenu(mainwindow, self, _('&Sort')))
         self.appendMenu(_('&Columns'), 
-            ColumnMenu(mainwindow, uiCommands, self, _('&Columns')))
-        self.appendUICommands(uiCommands, [None])
+                        ColumnMenu(mainwindow, self, _('&Columns')))
+        self.appendUICommands(None)
         self.appendMenu(_('&Tree options'), 
-            ViewTreeOptionsMenu(mainwindow, uiCommands), 'treeview')
-        self.appendUICommands(uiCommands, [None])
-        self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, uiCommands))        
-        self.appendUICommands(uiCommands, ['viewstatusbar'])   
+                        ViewTreeOptionsMenu(mainwindow, viewerContainer),
+                        'treeview')
+        self.appendUICommands(None)
+        self.appendMenu(_('T&oolbar'), ToolBarMenu(mainwindow, settings))
+        self.appendUICommands(uicommand.UICheckCommand(settings=settings,
+            menuText=_('Status&bar'), helpText=_('Show/hide status bar'),
+            setting='statusbar'))
 
 
 class ViewViewerMenu(Menu):
-    def __init__(self, mainwindow, uiCommands, settings):
+    def __init__(self, mainwindow, settings, viewerContainer, taskFile):
         super(ViewViewerMenu, self).__init__(mainwindow)
-        viewViewerCommands = ['viewtaskviewer', 'viewcategoryviewer', 
-            'vieweffortviewer']
+        ViewViewer = uicommand.ViewViewer
+        tasks = taskFile.tasks()
+        categories = taskFile.categories()
+        notes = taskFile.notes()
+        efforts = taskFile.efforts()
+        viewViewerCommands = [\
+            ViewViewer(viewer=viewerContainer, menuText=_('&Task'),
+                       helpText=_('Open a new tab with a viewer that displays tasks'),
+                       bitmap='task', viewerClass=viewer.TaskTreeListViewer,
+                       viewerArgs=(tasks, settings),
+                       viewerKwargs=dict(categories=categories, efforts=efforts),
+                       viewerBitmap='task', settings=settings),
+            ViewViewer(viewer=viewerContainer, menuText=_('&Category'),
+                       helpText=_('Open a new tab with a viewer that displays categories'),
+                       bitmap='category', viewerClass=viewer.CategoryViewer,
+                       viewerArgs=(categories, settings),
+                       viewerKwargs=dict(tasks=tasks, notes=notes),
+                       viewerBitmap='category', settings=settings),
+            ViewViewer(viewer=viewerContainer, menuText=_('&Effort'),
+                       helpText=_('Open a new tab with a viewer that displays efforts'),
+                       bitmap='start', viewerClass=viewer.EffortListViewer,
+                       viewerArgs=(tasks, settings),
+                       viewerKwargs=dict(), viewerBitmap='start',
+                       settings=settings)]
         if settings.getboolean('feature', 'notes'):
-            viewViewerCommands.append('viewnoteviewer')
-        self.appendUICommands(uiCommands, viewViewerCommands)
-        
+            viewViewerCommands.extend([None,
+                ViewViewer(viewer=viewerContainer, menuText=_('&Note'),
+                       helpText=_('Open a new tab with a viewer that displays notes'),
+                       bitmap='note', viewerClass=viewer.NoteViewer,
+                       viewerArgs=(notes, settings),
+                       viewerKwargs=dict(categories=categories),
+                       viewerBitmap='note', settings=settings)])
+        self.appendUICommands(*viewViewerCommands)
+       
                                       
 class ViewTreeOptionsMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, viewerContainer):
         super(ViewTreeOptionsMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['viewexpandselected', 
-            'viewcollapseselected', None, 'viewexpandall', 'viewcollapseall'])
+        self.appendUICommands(
+            uicommand.ViewExpandSelected(viewer=viewerContainer),
+            uicommand.ViewCollapseSelected(viewer=viewerContainer),
+            None,
+            uicommand.ViewExpandAll(viewer=viewerContainer),
+            uicommand.ViewCollapseAll(viewer=viewerContainer))
 
 
 class FilterMenu(DynamicMenuThatGetsUICommandsFromViewer):
@@ -342,61 +423,141 @@ class SortMenu(DynamicMenuThatGetsUICommandsFromViewer):
 
 
 class ToolBarMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, settings):
         super(ToolBarMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['toolbarhide', 'toolbarsmall',
-            'toolbarmedium', 'toolbarbig'])
+        toolbarCommands = []
+        for value, menuText, helpText in \
+            [(None, _('&Hide'), _('Hide the toolbar')),
+             ((16, 16), _('&Small images'), _('Small images (16x16) on the toolbar')),
+             ((22, 22), _('&Medium-sized images'), _('Medium-sized images (22x22) on the toolbar')),
+             ((32, 32), _('&Large images'), _('Large images (32x32) on the toolbar'))]:
+            toolbarCommands.append(uicommand.UIRadioCommand(settings=settings,
+                setting='toolbar', value=value, menuText=menuText,
+                helpText=helpText))
+        self.appendUICommands(*toolbarCommands)
 
 
 class TaskMenu(Menu):
-    def __init__(self, mainwindow, uiCommands, settings):
+    def __init__(self, mainwindow, settings, taskFile, viewerContainer):
         super(TaskMenu, self).__init__(mainwindow)
-        uiCommandNames = ['newtask', 'newsubtask', None, 
-            'edittask', 'toggletaskcompletion', 'incpriority', 'decpriority',
-            'maxpriority', 'minpriority', None, 'deletetask', None, 
-            'mailtask', 'addtaskattachment', 'openalltaskattachments']
+        tasks = taskFile.tasks()
+        categories = taskFile.categories()
+        self.appendUICommands(
+            uicommand.TaskNew(taskList=tasks, settings=settings,
+                              categories=taskFile.categories()),
+            uicommand.TaskNewSubTask(taskList=tasks,
+                                     viewer=viewerContainer),
+            None,
+            uicommand.TaskEdit(taskList=tasks, viewer=viewerContainer),
+            uicommand.TaskToggleCompletion(viewer=viewerContainer),
+            uicommand.TaskIncPriority(taskList=tasks, viewer=viewerContainer),
+            uicommand.TaskDecPriority(taskList=tasks, viewer=viewerContainer),
+            uicommand.TaskMaxPriority(taskList=tasks, viewer=viewerContainer),
+            uicommand.TaskMinPriority(taskList=tasks, viewer=viewerContainer),
+            None,
+            uicommand.TaskDelete(taskList=tasks, viewer=viewerContainer),
+            None,
+            uicommand.TaskMail(viewer=viewerContainer),
+            uicommand.AddTaskAttachment(taskList=tasks,
+                                        viewer=viewerContainer,
+                                        settings=settings),
+            uicommand.OpenAllTaskAttachments(viewer=viewerContainer,
+                                             settings=settings))
         if settings.getboolean('feature', 'notes'):
-            uiCommandNames.append('taskaddnote')
-        self.appendUICommands(uiCommands, uiCommandNames)
-            
+            self.appendUICommands(
+                uicommand.TaskAddNote(viewer=viewerContainer,
+                                      settings=settings,
+                                      categories=taskFile.categories())
+                )
             
 class EffortMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, taskFile, viewerContainer):
         super(EffortMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['neweffort', 'editeffort', 
-            'deleteeffort', None, 'starteffort', 'stopeffort'])
-        
+        tasks = taskFile.tasks()
+        efforts = taskFile.efforts()
+        self.appendUICommands(
+            uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
+                                taskList=tasks),
+            uicommand.EffortEdit(viewer=viewerContainer, effortList=efforts),
+            uicommand.EffortDelete(viewer=viewerContainer, effortList=efforts),
+            None,
+            uicommand.EffortStart(viewer=viewerContainer),
+            uicommand.EffortStop(taskList=tasks))
+       
 
 class CategoryMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, settings, categories, viewerContainer):
         super(CategoryMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['newcategory', 'newsubcategory', 
-            'editcategory', 'deletecategory', None, 'addcategoryattachment',
-            'openallcategoryattachments', 'categoryaddnote'])
-        
+        self.appendUICommands(
+            uicommand.CategoryNew(categories=categories),
+            uicommand.CategoryNewSubCategory(viewer=viewerContainer,
+                                             categories=categories),
+            uicommand.CategoryEdit(viewer=viewerContainer,
+                                   categories=categories),
+            uicommand.CategoryDelete(viewer=viewerContainer,
+                                     categories=categories),
+            None,
+            uicommand.AddCategoryAttachment(viewer=viewerContainer,
+                                            settings=settings), # FIXMERGE: arguments
+            uicommand.OpenAllCategoryAttachments(viewer=viewerContainer,
+                                                 settings=settings)) # FIXMERGE: arguments
+        if settings.getboolean('feature', 'notes'):
+            self.appendUICommands(
+                uicommand.CategoryAddNote(viewer=viewerContainer,
+                                          categories=categories,
+                                          settings=settings) # FIXMERGE: arguments
+                )
+
         
 class NoteMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, settings, taskFile, viewerContainer):
         super(NoteMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['newnote', 'newsubnote', 'editnote',
-            'deletenote', None, 'addnoteattachment', 'openallnoteattachments'])
-        
+        notes = taskFile.notes()
+        self.appendUICommands(
+            uicommand.NoteNew(notes=notes,
+                              categories=taskFile.categories()),
+            uicommand.NoteNewSubNote(viewer=viewerContainer, notes=notes),
+            uicommand.NoteEdit(viewer=viewerContainer, notes=notes),
+            uicommand.NoteDelete(viewer=viewerContainer, notes=notes),
+            uicommand.NoteMail(viewer=viewerContainer),
+            None,
+            uicommand.AddNoteAttachment(viewer=viewerContainer,
+                                        settings=settings), # FIXMERGE: arguments
+            uicommand.OpenAllNoteAttachments(viewer=viewerContainer,
+                                             settings=settings)) # FIXMERGE: arguments
+       
         
 class HelpMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, settings):
         super(HelpMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['help', 'tips', None, 'about', 'license'])
+        self.appendUICommands(
+            uicommand.Help(),
+            uicommand.Tips(settings=settings),
+            None,
+            uicommand.HelpAbout(),
+            uicommand.HelpLicense())
 
 
 class TaskBarMenu(Menu):
-    def __init__(self, taskBarIcon, uiCommands, tasks):
+    def __init__(self, taskBarIcon, settings, taskFile, viewerContainer):
         super(TaskBarMenu, self).__init__(taskBarIcon)
-        self.appendUICommands(uiCommands, ['newtask', 'neweffort', None])
+        tasks = taskFile.tasks()
+        efforts = taskFile.efforts()
+        categories = taskFile.categories()
+        self.appendUICommands(
+            uicommand.TaskNew(taskList=tasks, settings=settings,
+                              categories=categories),
+            uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
+                                taskList=tasks),
+            None)
         label = _('&Start tracking effort')
         self.appendMenu(label,
-            StartEffortForTaskMenu(taskBarIcon, tasks, self, label), 'start')                      
-        self.appendUICommands(uiCommands, ['stopeffort', None, 'restore', 
-                                           'quit'])
+            StartEffortForTaskMenu(taskBarIcon, tasks, self, label), 'start')
+        self.appendUICommands(
+            uicommand.EffortStop(taskList=tasks),
+            None,
+            uicommand.MainWindowRestore(),
+            uicommand.FileQuit())
         
                    
 class StartEffortForTaskMenu(DynamicMenu):
@@ -440,50 +601,123 @@ class StartEffortForTaskMenu(DynamicMenu):
     
 
 class TaskPopupMenu(Menu):
-    def __init__(self, mainwindow, uiCommands, treeViewer):
+    def __init__(self, mainwindow, settings, tasks, categories, efforts,
+                 taskViewer):
         super(TaskPopupMenu, self).__init__(mainwindow)
-        commandsToAppend = ['cut', 'copy', 'paste',
-            'pasteintotask', None, 'newtask', 'newsubtask', None, 'edittask', 
-            'toggletaskcompletion', 'incpriority', 'decpriority', 'maxpriority', 
-            'minpriority', None, 'deletetask', None, 'mailtask', 
-            'addtaskattachment', 'openalltaskattachments', None, 'neweffort', 
-            'starteffort', 'stopeffort']
-        if treeViewer:
-            commandsToAppend.extend([None, 'viewexpandselected', 
-                'viewcollapseselected'])
-        self.appendUICommands(uiCommands, commandsToAppend)
+        commandsToAppend = [\
+            uicommand.EditCut(viewer=taskViewer),
+            uicommand.EditCopy(viewer=taskViewer),
+            uicommand.EditPaste(),
+            uicommand.EditPasteIntoTask(viewer=taskViewer),
+            None,
+            uicommand.TaskNew(taskList=tasks, settings=settings,
+                              categories=categories),
+            uicommand.TaskNewSubTask(taskList=tasks, viewer=taskViewer),
+            None,
+            uicommand.TaskEdit(taskList=tasks, viewer=taskViewer),
+            uicommand.TaskToggleCompletion(viewer=taskViewer),
+            uicommand.TaskIncPriority(taskList=tasks, viewer=taskViewer),
+            uicommand.TaskDecPriority(taskList=tasks, viewer=taskViewer),
+            uicommand.TaskMaxPriority(taskList=tasks, viewer=taskViewer),
+            uicommand.TaskMinPriority(taskList=tasks, viewer=taskViewer),
+            None,
+            uicommand.TaskDelete(taskList=tasks, viewer=taskViewer),
+            None,
+            uicommand.TaskMail(viewer=taskViewer),
+            uicommand.AddTaskAttachment(taskList=tasks, viewer=taskViewer,
+                                        settings=settings),
+            uicommand.OpenAllTaskAttachments(viewer=taskViewer,
+                                             settings=settings),
+            None,
+            uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
+                                taskList=tasks),
+            uicommand.EffortStart(viewer=taskViewer),
+            uicommand.EffortStop(taskList=tasks)]
+        if taskViewer.isTreeViewer():
+            commandsToAppend.extend([None,
+                uicommand.ViewExpandSelected(viewer=taskViewer),
+                uicommand.ViewCollapseSelected(viewer=taskViewer)])
+        self.appendUICommands(*commandsToAppend)
 
 
 class EffortPopupMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, tasks, efforts, effortViewer):
         super(EffortPopupMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', 
-           'pasteintotask', None, 'newtask', None, 'neweffort', 'editeffort', 
-           'deleteeffort', None, 'stopeffort'])
+        self.appendUICommands(
+            uicommand.EditCut(viewer=effortViewer),
+            uicommand.EditCopy(viewer=effortViewer),
+            uicommand.EditPaste(),
+            None,
+            uicommand.EffortNew(viewer=effortViewer, effortList=efforts,
+                                taskList=tasks),
+            uicommand.EffortEdit(viewer=effortViewer, effortList=efforts),
+            uicommand.EffortDelete(viewer=effortViewer, effortList=efforts),
+            None,
+            uicommand.EffortStop(taskList=tasks))
 
 
 class CategoryPopupMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, settings, tasks, notes, categories,
+                 categoryViewer):
         super(CategoryPopupMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None, 
-            'newtaskwithselectedcategories', None, 'newcategory', 
-            'newsubcategory', 'editcategory', 'deletecategory', None, 
-            'addcategoryattachment', 'openallcategoryattachments', None,
-            'stopeffort', None, 'viewexpandselected', 'viewcollapseselected'])
+        self.appendUICommands(
+            uicommand.EditCut(viewer=categoryViewer),
+            uicommand.EditCopy(viewer=categoryViewer),
+            uicommand.EditPaste(),
+            None,
+            uicommand.NewTaskWithSelectedCategories(taskList=tasks,
+                                                    settings=settings,
+                                                    categories=categories,
+                                                    viewer=categoryViewer),
+            uicommand.NewNoteWithSelectedCategories(notes=notes,
+                                                    settings=settings,
+                                                    categories=categories,
+                                                    viewer=categoryViewer),
+            None,
+            uicommand.CategoryNew(categories=categories),
+            uicommand.CategoryNewSubCategory(viewer=categoryViewer,
+                                             categories=categories),
+            uicommand.CategoryEdit(viewer=categoryViewer,
+                                   categories=categories),
+            uicommand.CategoryDelete(viewer=categoryViewer,
+                                     categories=categories),
+            None,
+            uicommand.AddCategoryAttachment(viewer=categoryViewer,
+                                            settings=settings), # FIXMERGE: arguments
+            uicommand.OpenAllCategoryAttachments(viewer=categoryViewer,
+                                                 settings=settings), # FIXMERGE: arguments
+            None,
+            uicommand.ViewExpandSelected(viewer=categoryViewer),
+            uicommand.ViewCollapseSelected(viewer=categoryViewer))
 
 
 class NotePopupMenu(Menu):
-    def __init__(self, mainwindow, uiCommands):
+    def __init__(self, mainwindow, settings, notes, categories, noteViewer):
         super(NotePopupMenu, self).__init__(mainwindow)
-        self.appendUICommands(uiCommands, ['cut', 'copy', 'paste', None,
-            'newtask', None, 'newnote', 'newsubnote', 'editnote', 'deletenote',
-            None, 'addnoteattachment', 'openallnoteattachments', None, 
-            'stopeffort', None, 'viewexpandselected', 'viewcollapseselected'])
-        
+        self.appendUICommands(
+            uicommand.EditCut(viewer=noteViewer),
+            uicommand.EditCopy(viewer=noteViewer),
+            uicommand.EditPaste(),
+            None,
+            uicommand.NoteNew(notes=notes, categories=categories),
+            uicommand.NoteNewSubNote(viewer=noteViewer, notes=notes),
+            uicommand.NoteEdit(viewer=noteViewer, notes=notes),
+            uicommand.NoteDelete(viewer=noteViewer, notes=notes),
+            None,
+            uicommand.NoteMail(viewer=noteViewer),
+            None,
+            uicommand.AddNoteAttachment(viewer=noteViewer,
+                                        settings=settings), # FIXMERGE: arguments
+            uicommand.OpenAllNoteAttachments(viewer=noteViewer,
+                                             settings=settings), # FIXMERGE: arguments
+            None,
+            uicommand.ViewExpandSelected(viewer=noteViewer),
+            uicommand.ViewCollapseSelected(viewer=noteViewer))
+       
         
 # Column header popup menu
 
-class ColumnPopupMenu(StaticMenu):           
+class ColumnPopupMenu(StaticMenu):
     def __setColumn(self, columnIndex):
         self.__columnIndex = columnIndex
     
@@ -496,14 +730,14 @@ class ColumnPopupMenu(StaticMenu):
     columnIndex = property(__getColumn, __setColumn) 
                             
     def getUICommands(self):
-        return ['hidecurrentcolumn', None] + \
+        return [uicommand.HideCurrentColumn(viewer=self._window), None] + \
             self._window.getColumnUICommands()
             
 
 class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
-    def __init__(self, mainwindow, viewer, uiCommands):
+    def __init__(self, mainwindow, viewer):
         self.viewer = viewer
-        super(EffortViewerColumnPopupMenu, self).__init__(mainwindow, uiCommands)
+        super(EffortViewerColumnPopupMenu, self).__init__(mainwindow)
         
     def __setColumn(self, columnIndex):
         self.__columnIndex = columnIndex
@@ -520,6 +754,6 @@ class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
         self._window.Bind(wx.EVT_UPDATE_UI, self.onUpdateMenu)
                             
     def getUICommands(self):
-        return ['hidecurrentcolumn', None] + \
+        # FIXMERGE: arguments
+        return [ uicommand.HideCurrentColumn(viewer=self), None ] + \
             self.viewer.getColumnUICommands()
-

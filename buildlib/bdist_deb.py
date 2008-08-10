@@ -160,6 +160,7 @@ class bdist_deb(Command, object):
         fd = file(filename, 'w')
         fd.write(contents)
         fd.close()
+        os.chmod(filename, 0755)
         
     def build_debian_package(self):
         os.system('cd %s; debuild -S; dpkg-buildpackage -rfakeroot; cd ..'%self.extracted_dir)

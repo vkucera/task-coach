@@ -88,18 +88,6 @@ class DummyUICommand(gui.uicommand.UICommand):
         return 'Menu text'
 
 
-class DummyUICommands(gui.uicommand.UICommands):
-    def __init__(self, iocontroller=None, taskList=None, effortList=None, categories=None, notes=None, viewer=None):
-        super(DummyUICommands, self).__init__(None, iocontroller, viewer, None, 
-                                              taskList, effortList, categories, notes)
-        
-    def __getitem__(self, key):
-        return DummyUICommand()
-        
-    def keys(self):
-        return ['new', 'stopeffort']
-
-
 class ViewerWithDummyWidget(gui.viewer.Viewer):
     def createWidget(self):
         self._columns = self._createColumns()

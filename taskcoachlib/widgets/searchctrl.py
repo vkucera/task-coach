@@ -16,11 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, re, sre_constants
+from taskcoachlib.widgets import tooltip
 from taskcoachlib.i18n import _
 
 
-class SearchCtrl(wx.SearchCtrl):
+class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
     def __init__(self, *args, **kwargs):
         self.__callback = kwargs.pop('callback')
         self.__matchCase = kwargs.pop('matchCase', False)
@@ -33,10 +34,11 @@ class SearchCtrl(wx.SearchCtrl):
         self.__timer = wx.Timer(self)
         self.__recentSearches = []
         self.__maxRecentSearches = 5
+        self.__tooltip = tooltip.SimpleToolTip(self)
         self.createMenu()
         self.bindEventHandlers()
         self.onFind(None)
-        
+
     def createMenu(self):
         menu = wx.Menu()
         self.__matchCaseMenuItem = menu.AppendCheckItem(wx.ID_ANY, 
@@ -66,7 +68,7 @@ class SearchCtrl(wx.SearchCtrl):
         self.Bind(wx.EVT_MENU_RANGE, self.onRecentSearchMenuItem, 
             id=self.__recentSearchMenuItemIds[0], 
             id2=self.__recentSearchMenuItemIds[-1])
-        
+
     def setMatchCase(self, matchCase):
         self.__matchCase = matchCase
         self.__matchCaseMenuItem.Check(matchCase)
@@ -74,6 +76,13 @@ class SearchCtrl(wx.SearchCtrl):
     def setIncludeSubItems(self, includeSubItems):
         self.__includeSubItems = includeSubItems
         self.__includeSubItemsMenuItem.Check(includeSubItems)
+
+    def isValid(self):
+        try:
+            re.compile(self.GetValue())
+        except sre_constants.error:
+            return False
+        return True
 
     def onFindLater(self, event):
         # Start the timer so that the actual filtering will be done
@@ -85,6 +94,13 @@ class SearchCtrl(wx.SearchCtrl):
             self.__timer.Stop()
         if not self.IsEnabled():
             return
+        if not self.isValid():
+            self.__tooltip.SetText(_('This is an invalid regular expression.\nDefaulting to substring search.'))
+            x, y = self.GetParent().ClientToScreenXY(*self.GetPosition())
+            w, h = self.GetClientSize()
+            self.DoShowTip(x + 3, y + h + 4, self.__tooltip)
+        else:
+            self.HideTip()
         searchString = self.GetValue()
         if searchString:
             self.rememberSearchString(searchString)
@@ -159,3 +175,5 @@ class SearchCtrl(wx.SearchCtrl):
         except AttributeError:
             return event.IsChecked()
         
+    def OnBeforeShowToolTip(self, x, y):
+        return None

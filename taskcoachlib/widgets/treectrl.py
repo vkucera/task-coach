@@ -24,10 +24,6 @@ from taskcoachlib.thirdparty import treemixin
         
 class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
     ''' Methods common to both TreeCtrl and TreeListCtrl. '''
-    
-    def __init__(self, *args, **kwargs):
-        self._refreshing = False
-        super(TreeMixin, self).__init__(*args, **kwargs)
         
     def OnGetChildrenCount(self, index):
         return self.getChildrenCount(index)
@@ -63,10 +59,7 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         self.selectCommand = selectCommand
         self.editCommand = editCommand
         self.dragAndDropCommand = dragAndDropCommand
-        self.__settingFocus = False
-        self.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelect)
-        self.Bind(wx.EVT_TREE_SEL_CHANGING, self.onSelectionChanging)
         self.Bind(wx.EVT_TREE_KEY_DOWN, self.onKeyDown)
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.onItemActivated)
         # We deal with double clicks ourselves, to prevent the default behaviour
@@ -86,25 +79,10 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
             dropItemIndex = self.GetIndexOfItem(dropItem)
         self.dragAndDropCommand(dropItemIndex, self.GetIndexOfItem(dragItem))
                 
-    def onSetFocus(self, event):
-        # When the TreeCtrl gets focus sometimes the selection is changed.
-        # We want to prevent that from happening, so we need to keep track
-        # of the fact that we have just received a EVT_SET_FOCUS
-        self.__settingFocus = True
-        event.Skip()
-
-    def onSelectionChanging(self, event):
-        if self._refreshing or self.__settingFocus:
-            self.__settingFocus = False
-            event.Veto()
-        else:
-            event.Skip()
-        
     def onSelect(self, event):
-        if not self._refreshing:
-             # Use CallAfter to prevent handling the select while items are 
-             # being deleted:
-             wx.CallAfter(self.selectCommand) 
+        # Use CallAfter to prevent handling the select while items are 
+        # being deleted:
+        wx.CallAfter(self.selectCommand) 
         event.Skip()
                     
     def onDoubleClick(self, event):

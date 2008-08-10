@@ -57,10 +57,10 @@ class SearchableViewer(object):
         includeSubItems = self.settings.getboolean(section, 'searchfilterincludesubitems')
         return searchString, matchCase, includeSubItems
     
-    def getToolBarUICommands(self):
+    def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         searchUICommand = uicommand.Search(viewer=self, settings=self.settings)
-        return super(SearchableViewer, self).getToolBarUICommands() + \
+        return super(SearchableViewer, self).createToolBarUICommands() + \
             [None, searchUICommand]
             
 
@@ -86,6 +86,10 @@ class FilterableViewerForNotes(FilterableViewer):
         
             
 class FilterableViewerForTasks(FilterableViewer):
+    def __init__(self, *args, **kwargs):
+        self.__filterUICommands = None
+        super(FilterableViewerForTasks, self).__init__(*args, **kwargs)
+
     def createFilter(self, taskList):
         taskList = super(FilterableViewerForTasks, self).createFilter(taskList)
         return category.filter.CategoryFilter( \
@@ -170,13 +174,43 @@ class FilterableViewerForTasks(FilterableViewer):
             category.setFiltered(False)
         
     def getFilterUICommands(self):
-        return ['resetfilter', None, 
-                (_('Show only tasks &due before end of'), 'viewdueunlimited', 
-                 'viewduetoday', 'viewduetomorrow', 'viewdueworkweek', 
-                 'viewdueweek', 'viewduemonth', 'viewdueyear'),
-                (_('&Hide tasks that are'), 'hideactivetasks', 'hideinactivetasks',
-                 'hidecompletedtasks', None, 'hideoverduetasks', 
-                 'hideoverbudgettasks', None, 'hidecompositetasks')]
+        if not self.__filterUICommands:
+            self.__filterUICommands = self.createFilterUICommands()
+        return self.__filterUICommands
+
+    def createFilterUICommands(self):
+        return [uicommand.ResetFilter(viewer=self),
+                None,
+                (_('Show only tasks &due before end of'),
+                    uicommand.ViewerFilterByDueDate(menuText=_('&Unlimited'),
+                        helpText=_('Show all tasks'), value='Unlimited',
+                        viewer=self),
+                    uicommand.ViewerFilterByDueDate(menuText=_('&Today'),
+                        helpText=_('Only show tasks due today'), value='Today',
+                        viewer=self),
+                    uicommand.ViewerFilterByDueDate(menuText=_('T&omorrow'),
+                        helpText=_('Only show tasks due today and tomorrow'),
+                        value='Tomorrow', viewer=self),
+                    uicommand.ViewerFilterByDueDate(menuText=_('Wo&rkweek'),
+                        helpText=_('Only show tasks due this work week (i.e. before Friday)'),
+                        value='Workweek', viewer=self),
+                    uicommand.ViewerFilterByDueDate(menuText=_('&Week'),
+                        helpText=_('Only show tasks due this week (i.e. before Sunday)'),
+                        value='Week', viewer=self),
+                    uicommand.ViewerFilterByDueDate(menuText=_('&Month'),
+                        helpText=_('Only show tasks due this month'),
+                        value='Month', viewer=self),
+                    uicommand.ViewerFilterByDueDate(menuText=_('&Year'),
+                        helpText=_('Only show tasks due this year'),
+                        value='Year', viewer=self)),
+                (_('&Hide tasks that are'),
+                    uicommand.ViewerHideActiveTasks(viewer=self),
+                    uicommand.ViewerHideInactiveTasks(viewer=self),
+                    uicommand.ViewerHideCompletedTasks(viewer=self),
+                    None,
+                    uicommand.ViewerHideOverdueTasks(viewer=self),
+                    uicommand.ViewerHideOverbudgetTasks(viewer=self),
+                    uicommand.ViewerHideCompositeTasks(viewer=self))]
 
     def __getBooleanSetting(self, setting):
         return self.settings.getboolean(self.settingsSection(), setting)
@@ -187,6 +221,10 @@ class FilterableViewerForTasks(FilterableViewer):
                 
 class SortableViewer(object):
     ''' A viewer that is sortable. This is a mixin class. '''
+
+    def __init__(self, *args, **kwargs):
+        self.__sortUICommands = None
+        super(SortableViewer, self).__init__(*args, **kwargs)
 
     def isSortable(self):
         return True
@@ -230,6 +268,14 @@ class SortableViewer(object):
             str(caseSensitive))
         self.model().sortCaseSensitive(caseSensitive)
 
+    def getSortUICommands(self):
+        if not self.__sortUICommands:
+            self.__sortUICommands = self.createSortUICommands()
+        return self.__sortUICommands
+
+    def createSortUICommands(self):
+        raise NotImplementedError
+
         
 class SortableViewerForTasks(SortableViewer):
     SorterClass = task.sorter.Sorter
@@ -249,20 +295,38 @@ class SortableViewerForTasks(SortableViewer):
             sortByTaskStatusFirst=self.isSortByTaskStatusFirst())
         return options
 
-    def getSortUICommands(self):
-        return ['viewsortorder', 
-            'viewsortcasesensitive', 'viewsortbystatusfirst', None, 
-            'viewsortbysubject', 'viewsortbydescription',
-            'viewsortbycategories', 'viewsortbytotalcategories',
-            'viewsortbystartdate', 'viewsortbyduedate', 'viewsortbytimeleft', 
-            'viewsortbycompletiondate', 'viewsortbyrecurrence',
-            'viewsortbybudget', 'viewsortbytotalbudget', 'viewsortbytimespent',
-            'viewsortbytotaltimespent', 'viewsortbybudgetleft',
-            'viewsortbytotalbudgetleft', 'viewsortbypriority',
-            'viewsortbytotalpriority', 'viewsortbyhourlyfee',
-            'viewsortbyfixedfee', 'viewsortbytotalfixedfee',
-            'viewsortbyrevenue', 'viewsortbytotalrevenue', 
-            'viewsortbyreminder']
+    def createSortUICommands(self):
+        commands = [uicommand.ViewerSortOrderCommand(viewer=self),
+                    uicommand.ViewerSortCaseSensitive(viewer=self),
+                    uicommand.ViewerSortByTaskStatusFirst(viewer=self),
+                    None]
+        for menuText, helpText, value in [\
+            (_('Sub&ject'), _('Sort tasks by subject'), 'subject'),
+            (_('&Description'), _('Sort by description'), 'description'),
+            (_('&Category'), _('Sort by category'), 'categories'),
+            (_('Overall categories'), _('Sort by overall categories'), 'totalCategories'),
+            (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
+            (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
+            (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
+            (_('D&ays left'), _('Sort tasks by number of days left'), 'timeLeft'),
+            (_('&Recurrence'), _('Sort tasks by recurrence'), 'recurrence'),
+            (_('&Budget'), _('Sort tasks by budget'), 'budget'),
+            (_('Total b&udget'), _('Sort tasks by total budget'), 'totalBudget'),
+            (_('&Time spent'), _('Sort tasks by time spent'), 'timeSpent'),
+            (_('T&otal time spent'), _('Sort tasks by total time spent'), 'totalTimeSpent'),
+            (_('Budget &left'), _('Sort tasks by budget left'), 'budgetLeft'),
+            (_('Total budget l&eft'), _('Sort tasks by total budget left'), 'totalBudgetLeft'),
+            (_('&Priority'), _('Sort tasks by priority'), 'priority'),
+            (_('Overall priority'), _('Sort tasks by overall priority'), 'totalPriority'),
+            (_('&Hourly fee'), _('Sort tasks by hourly fee'), 'hourlyFee'),
+            (_('&Fixed fee'), _('Sort tasks by fixed fee'), 'fixedFee'),
+            (_('Total fi&xed fee'), _('Sort tasks by total fixed fee'), 'totalFixedFee'),
+            (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
+            (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalRevenue'),
+            (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder')]:
+            commands.append(uicommand.ViewerSortByCommand(viewer=self,
+                value=value, menuText=menuText, helpText=helpText))
+        return commands
 
 
 class SortableViewerForEffort(SortableViewer):
@@ -271,15 +335,28 @@ class SortableViewerForEffort(SortableViewer):
     
 
 class SortableViewerForCategories(SortableViewer):
-    def getSortUICommands(self):
-        return ['viewsortorder', 'viewsortcasesensitive']
+    def createSortUICommands(self):
+        return [uicommand.ViewerSortOrderCommand(viewer=self),
+                uicommand.ViewerSortCaseSensitive(viewer=self)]
 
 
 class SortableViewerForNotes(SortableViewer):
-    def getSortUICommands(self):
-        return ['viewsortorder', 'viewsortcasesensitive', None, 
-                'viewsortbysubject', 'viewsortbydescription', 
-                'viewsortbycategories', 'viewsortbytotalcategories']
+    def createSortUICommands(self):
+        return [uicommand.ViewerSortOrderCommand(viewer=self),
+                uicommand.ViewerSortCaseSensitive(viewer=self),
+                None,
+                uicommand.ViewerSortByCommand(viewer=self, value='subject',
+                    menuText=_('Sub&ject'),
+                    helpText=_('Sort notes by subject')),
+                uicommand.ViewerSortByCommand(viewer=self, value='description',
+                    menuText=_('&Description'),
+                    helpText=_('Sort notes by description')),
+                uicommand.ViewerSortByCommand(viewer=self, value='categories',
+                    menuText=_('&Category'),
+                    helpText=_('Sort notes by category')),
+                uicommand.ViewerSortByCommand(viewer=self,
+                    value='totalCategories', menuText=_('Overall categories'),
+                    helpText=_('Sort notes by overall categories'))]
 
 
 class AttachmentDropTarget(object):
@@ -338,16 +415,16 @@ class Viewer(wx.Panel):
     ''' A Viewer shows the contents of a model (a list of tasks or a list of 
         efforts) by means of a widget (e.g. a ListCtrl or a TreeListCtrl).'''
         
-    def __init__(self, parent, list, uiCommands, settings, *args, **kwargs):
+    def __init__(self, parent, list, settings, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1) # FIXME: Pass *args, **kwargs
         self.parent = parent # FIXME: Make instance variables private
         self.settings = settings
         self.__settingsSection = kwargs.pop('settingsSection')
         self.__instanceNumber = kwargs.pop('instanceNumber')
         self.__selection = []
-        self.uiCommands = uiCommands
+        self.__toolbarUICommands = None
         self.list = self.createSorter(self.createFilter(list))
-        self.toolbar = toolbar.ToolBar(self, self.uiCommands, (16, 16))
+        self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.widget = self.createWidget()
         self.initLayout()
         self.registerModelObservers()
@@ -537,20 +614,29 @@ class Viewer(wx.Panel):
         return []
     
     def getToolBarUICommands(self):
+        if not self.__toolbarUICommands:
+            self.__toolbarUICommands = self.createToolBarUICommands()
+        return self.__toolbarUICommands
+
+    def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
-        cut = uicommand.EditCut(viewer=self)
-        copy = uicommand.EditCopy(viewer=self)
-        paste = uicommand.EditPaste()
-        new = uicommand.NewDomainObject(viewer=self)
-        newsub = uicommand.NewSubDomainObject(viewer=self)
-        edit = uicommand.EditDomainObject(viewer=self)
+        # Keep this around for unit tests
         self.deleteUICommand = uicommand.DeleteDomainObject(viewer=self)
-        return [cut, copy, paste, None, new, newsub, edit, self.deleteUICommand]
+        return [
+            uicommand.EditCut(viewer=self),
+            uicommand.EditCopy(viewer=self),
+            uicommand.EditPaste(),
+            None,
+            uicommand.NewDomainObject(viewer=self),
+            uicommand.NewSubDomainObject(viewer=self),
+            uicommand.EditDomainObject(viewer=self),
+            self.deleteUICommand]
+
     
     def canCreateNewDomainObject(self):
         return True
     
-        
+
 class ListViewer(Viewer):
     def isTreeViewer(self):
         return False
@@ -783,6 +869,7 @@ class ViewerWithColumns(Viewer):
     def __init__(self, *args, **kwargs):
         self.__initDone = False
         self.__visibleColumns = []
+        self.__columnUICommands = None
         super(ViewerWithColumns, self).__init__(*args, **kwargs)
         self.initColumns()
         self.__initDone = True
@@ -792,6 +879,11 @@ class ViewerWithColumns(Viewer):
         return True
     
     def getColumnUICommands(self):
+        if not self.__columnUICommands:
+            self.__columnUICommands = self.createColumnUICommands()
+        return self.__columnUICommands
+
+    def createColumnUICommands(self):
         raise NotImplementedError
     
     def refresh(self, *args, **kwargs):
@@ -946,32 +1038,115 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
                  UpdatePerSecondViewer):
     def __init__(self, *args, **kwargs):
         self.categories = kwargs.pop('categories')
+        self.efforts = kwargs.pop('efforts')
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.__registerForColorChanges()
             
     def isShowingTasks(self): 
         return True
     
-    def getColumnUICommands(self):
-        return [(_('&Dates'), 'viewalldatecolumns', None, 'viewstartDate', 
-                 'viewdueDate', 'viewcompletionDate', 'viewtimeLeft',
-                 'viewrecurrence'),
-                (_('&Budget'), 'viewallbudgetcolumns', None, 'viewbudget', 
-                 'viewtotalBudget', 'viewtimeSpent', 'viewtotalTimeSpent', 
-                 'viewbudgetLeft', 'viewtotalBudgetLeft'),
-                (_('&Financial'), 'viewallfinancialcolumns', None, 
-                 'viewhourlyFee', 'viewfixedFee', 'viewtotalFixedFee', 
-                'viewrevenue', 'viewtotalRevenue'),
-                'viewdescription', 'viewattachments', 'viewcategories', 
-                'viewtotalCategories',
-                'viewpriority', 'viewtotalPriority', 'viewreminder']
+    def createColumnUICommands(self):
+        return [\
+            (_('&Dates'),
+             uicommand.ViewColumns(menuText=_('All date columns'),
+                helpText=_('Show/hide all date-related columns'),
+                setting=['startDate', 'dueDate', 'timeLeft', 'completionDate',
+                         'recurrence'],
+                viewer=self),
+             None,
+             uicommand.ViewColumn(menuText=_('&Start date'),
+                 helpText=_('Show/hide start date column'),
+                 setting='startDate', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Due date'),
+                 helpText=_('Show/hide due date column'),
+                 setting='dueDate', viewer=self),
+             uicommand.ViewColumn(menuText=_('Co&mpletion date'),
+                 helpText=_('Show/hide completion date column'),
+                 setting='completionDate', viewer=self),
+             uicommand.ViewColumn(menuText=_('D&ays left'),
+                 helpText=_('Show/hide days left column'),
+                 setting='timeLeft', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Recurrence'),
+                 helpText=_('Show/hide recurrence column'),
+                 setting='recurrence', viewer=self)
+            ),
+            (_('&Budget'),
+             uicommand.ViewColumns(menuText=_('All budget columns'),
+                 helpText=_('Show/hide all budget-related columns'),
+                 setting=['budget', 'totalBudget', 'timeSpent',
+                          'totalTimeSpent', 'budgetLeft','totalBudgetLeft'],
+                 viewer=self),
+             None,
+             uicommand.ViewColumn(menuText=_('&Budget'),
+                 helpText=_('Show/hide budget column'),
+                 setting='budget', viewer=self),
+             uicommand.ViewColumn(menuText=_('Total b&udget'),
+                 helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
+                 setting='totalBudget', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Time spent'),
+                 helpText=_('Show/hide time spent column'),
+                 setting='timeSpent', viewer=self),
+             uicommand.ViewColumn(menuText=_('T&otal time spent'),
+                 helpText=_('Show/hide total time spent column (total time includes time spent on subtasks)'),
+                 setting='totalTimeSpent', viewer=self),
+             uicommand.ViewColumn(menuText=_('Budget &left'),
+                 helpText=_('Show/hide budget left column'),
+                 setting='budgetLeft', viewer=self),
+             uicommand.ViewColumn(menuText=_('Total budget l&eft'),
+                 helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
+                 setting='totalBudgetLeft', viewer=self)
+            ),
+            (_('&Financial'),
+             uicommand.ViewColumns(menuText=_('All financial columns'),
+                 helpText=_('Show/hide all finance-related columns'),
+                 setting=['hourlyFee', 'fixedFee', 'totalFixedFee',
+                          'revenue', 'totalRevenue'],
+                 viewer=self),
+             None,
+             uicommand.ViewColumn(menuText=_('&Hourly fee'),
+                 helpText=_('Show/hide hourly fee column'),
+                 setting='hourlyFee', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Fixed fee'),
+                 helpText=_('Show/hide fixed fee column'),
+                 setting='fixedFee', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Total fixed fee'),
+                 helpText=_('Show/hide total fixed fee column'),
+                 setting='totalFixedFee', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Revenue'),
+                 helpText=_('Show/hide revenue column'),
+                 setting='revenue', viewer=self),
+             uicommand.ViewColumn(menuText=_('T&otal revenue'),
+                 helpText=_('Show/hide total revenue column'),
+                 setting='totalRevenue', viewer=self)
+            ),
+            uicommand.ViewColumn(menuText=_('&Description'),
+                helpText=_('Show/hide description column'),
+                setting='description', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Attachments'),
+                helpText=_('Show/hide attachment column'),
+                setting='attachments', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Categories'),
+                helpText=_('Show/hide categories column'),
+                setting='categories', viewer=self),
+            uicommand.ViewColumn(menuText=_('Overall categories'),
+                helpText=_('Show/hide overall categories column'),
+                setting='totalCategories', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Priority'),
+                helpText=_('Show/hide priority column'),
+                setting='priority', viewer=self),
+            uicommand.ViewColumn(menuText=_('O&verall priority'),
+                helpText=_('Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks'),
+                setting='totalPriority', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Reminder'),
+                helpText=_('Show/hide reminder column'),
+                setting='reminder', viewer=self)]
 
-    def getToolBarUICommands(self):
+    def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         toggleTaskCompletion = uicommand.TaskToggleCompletion(viewer=self)
         effortstart = uicommand.EffortStart(viewer=self)
         effortstop = uicommand.EffortStop(taskList=self.model())
-        commands = super(TaskViewer, self).getToolBarUICommands() 
+        commands = super(TaskViewer, self).createToolBarUICommands() 
         return commands[:-1] + [toggleTaskCompletion, None, effortstart, 
             effortstop, None] + commands[-1:]
  
@@ -991,8 +1166,9 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
         return status1, status2
  
     def createTaskPopupMenu(self):
-        return menu.TaskPopupMenu(self.parent, self.uiCommands, 
-            self.isTreeViewer())
+        return menu.TaskPopupMenu(self.parent, self.settings,
+                                  self.model(), self.categories, self.efforts,
+                                  self)
 
     def getColor(self, task):
         return color.taskColor(task, self.settings)
@@ -1061,13 +1237,13 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
         kwargs['categories'] = [category for category in self.categories
                                 if category.isFiltered()]
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self), 
-            command.NewTaskCommand(self.list, *args, **kwargs), self.list, self.uiCommands, 
+            command.NewTaskCommand(self.list, *args, **kwargs), self.list,
             self.settings, self.categories, bitmap=bitmap)
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
             command.EditTaskCommand(self.list, self.curselection()),
-            self.list, self.uiCommands, self.settings, self.categories,
+            self.list, self.settings, self.categories,
             bitmap=kwargs['bitmap'])
     
     editTaskDialog = editItemDialog
@@ -1080,7 +1256,7 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self), 
             command.NewSubTaskCommand(self.list, self.curselection()), 
-            self.list, self.uiCommands, self.settings, self.categories,
+            self.list, self.settings, self.categories,
             bitmap=kwargs['bitmap'])
         
     newSubTaskDialog = newSubItemDialog
@@ -1098,13 +1274,16 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
                 task.Task.subjectChangedEventType(), 
                 'task.completionDate', 'task.dueDate', 'task.startDate',
                 'task.track.start', 'task.track.stop', 
-                sortCallback=self.uiCommands['viewsortbysubject'],
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                           value='subject',
+                    menuText=_('Sub&ject'), helpText=_('Sort by subject')),
                 width=self.getColumnWidth('subject'), 
                 imageIndexCallback=self.subjectImageIndex,
                 renderCallback=self.renderSubject, **kwargs)] + \
             [widgets.Column('description', _('Description'), 
                 task.Task.descriptionChangedEventType(), 
-                sortCallback=self.uiCommands['viewsortbydescription'],
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                           value='description'),
                 renderCallback=lambda task: task.description(), 
                 width=self.getColumnWidth('description'), **kwargs)] + \
             [widgets.Column('attachments', '', 
@@ -1118,18 +1297,20 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
                 task.Task.categoryAddedEventType(), 
                 task.Task.categoryRemovedEventType(), 
                 task.Task.categorySubjectChangedEventType(),
-                sortCallback=self.uiCommands['viewsortbycategories'],
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                           value='categories'),
                 width=self.getColumnWidth('categories'),
                 renderCallback=self.renderCategory, **kwargs)] + \
             [widgets.Column('totalCategories', _('Overall categories'),
                 task.Task.totalCategoryAddedEventType(),
                 task.Task.totalCategoryRemovedEventType(),
                 task.Task.totalCategorySubjectChangedEventType(),
-                sortCallback=self.uiCommands['viewsortbytotalcategories'],
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                           value='totalCategories'),
                 renderCallback=lambda task: self.renderCategory(task, recursive=True),
                 width=self.getColumnWidth('totalCategories'), **kwargs)] + \
             [widgets.Column(name, columnHeader, 'task.'+name, 
-             sortCallback=self.uiCommands['viewsortby' + name.lower()],
+             sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
              renderCallback=renderCallback, width=self.getColumnWidth(name),
              alignment=wx.LIST_FORMAT_RIGHT, **kwargs) \
              for name, columnHeader, renderCallback in \
@@ -1167,7 +1348,7 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
             return -1
                 
     def createColumnPopupMenu(self):
-        return menu.ColumnPopupMenu(self, self.uiCommands)
+        return menu.ColumnPopupMenu(self)
 
     def sortBy(self, sortKey):
         # If the user clicks the same column for the third time, toggle
@@ -1206,14 +1387,15 @@ class TaskTreeListViewer(TaskViewerWithColumns, TreeViewer):
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
             self.getItemTooltipText, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.onSelect, 
-            self.uiCommands['edittask'], self.uiCommands['draganddroptask'],
+            uicommand.TaskEdit(taskList=self.model(), viewer=self),
+            uicommand.TaskDragAndDrop(taskList=self.model(), viewer=self),
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)
         return widget    
 
     def getToolBarUICommands(self):
-        ''' Names of UI commands to put on the toolbar of this viewer. '''
+        ''' UI commands to put on the toolbar of this viewer. '''
         toolBarUICommands = super(TaskTreeListViewer, self).getToolBarUICommands() 
         toolBarUICommands.insert(-2, None) # Separator
         self.treeOrListUICommand = \
@@ -1263,6 +1445,8 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
     defaultTitle = _('Categories')
     
     def __init__(self, *args, **kwargs):
+        self.tasks = kwargs.pop('tasks')
+        self.notes = kwargs.pop('notes')
         kwargs.setdefault('settingsSection', 'categoryviewer')
         super(CategoryViewer, self).__init__(*args, **kwargs)
         for eventType in category.Category.subjectChangedEventType(), \
@@ -1278,14 +1462,15 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
             self.getItemImage, self.getItemAttr, self.getChildrenCount,
             self.getItemExpanded,
             self.getIsItemChecked, self.onSelect, self.onCheck,
-            self.uiCommands['editcategory'], 
-            self.uiCommands['draganddropcategory'], 
+            uicommand.CategoryEdit(viewer=self, categories=self.model()),
+            uicommand.CategoryDragAndDrop(viewer=self, categories=self.model()),
             self.createCategoryPopupMenu(), 
             **self.widgetCreationKeywordArguments())
         return widget
 
     def createCategoryPopupMenu(self):
-        return menu.CategoryPopupMenu(self.parent, self.uiCommands)
+        return menu.CategoryPopupMenu(self.parent, self.settings, self.tasks,
+                                      self.notes, self.model(), self)
 
     def createFilter(self, categories):
         return base.SearchFilter(categories, treeMode=True)
@@ -1348,14 +1533,14 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
     def newItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self), 
             command.NewCategoryCommand(self.list, *args, **kwargs),
-            self.uiCommands, self.settings, self.list, bitmap=kwargs['bitmap'])
+            self.settings, self.list, bitmap=kwargs['bitmap'])
     
     # See TaskViewer for why the methods below have two names.
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
             command.EditCategoryCommand(self.list, self.curselection()),
-            self.uiCommands, self.settings, self.list, bitmap=kwargs['bitmap'])
+            self.settings, self.list, bitmap=kwargs['bitmap'])
     
     editCategoryDialog = editItemDialog
     
@@ -1367,7 +1552,7 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self), 
             command.NewSubCategoryCommand(self.list, self.curselection()),
-            self.uiCommands, self.settings, self.list, bitmap=kwargs['bitmap'])
+            self.settings, self.list, bitmap=kwargs['bitmap'])
         
     newSubCategoryDialog = newSubItemDialog
 
@@ -1394,20 +1579,16 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
             self.widget.RefreshItem(self.getIndexOfItem(note))
 
     def createWidget(self):
-        # We need to create new uiCommands here, because the viewer might not
-        # be the effort viewer in the mainwindow, but the effort viewer in the 
-        # task edit window.
-        uiCommands = {}
-        uiCommands.update(self.uiCommands)
-        uiCommands.update(uicommand.EditorUICommands(self, self.list))        
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText, 
             self.getItemTooltipText, self.getItemImage, self.getItemAttr, 
             self.getChildrenCount, self.getItemExpanded, self.onSelect,
-            uiCommands['editnote'], uiCommands['draganddropnote'], 
-            menu.NotePopupMenu(self.parent, uiCommands), 
-            menu.ColumnPopupMenu(self, uiCommands),
+            uicommand.NoteEdit(viewer=self, notes=self.model()),
+            uicommand.NoteDragAndDrop(viewer=self, notes=self.model()),
+            menu.NotePopupMenu(self.parent, self.settings, self.model(),
+                               self.categories, self), 
+            menu.ColumnPopupMenu(self),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)
         return widget
@@ -1430,9 +1611,20 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
         else:
             return -1
 
-    def getColumnUICommands(self):
-        return ['viewdescription', 'viewattachments', 'viewcategories', 
-                'viewtotalCategories']
+    def createColumnUICommands(self):
+        return [\
+            uicommand.ViewColumn(menuText=_('&Description'),
+                helpText=_('Show/hide description column'),
+                setting='description', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Attachments'),
+                helpText=_('Show/hide attachments column'),
+                setting='attachments', viewer=self), # FIXMERGE: check this
+            uicommand.ViewColumn(menuText=_('&Categories'),
+                helpText=_('Show/hide categories column'),
+                setting='categories', viewer=self),
+            uicommand.ViewColumn(menuText=_('Overall categories'),
+                helpText=_('Show/hide overall categories column'),
+                setting='totalCategories', viewer=self)]
 
     def _createColumns(self):
         columns = [widgets.Column(name, columnHeader,
@@ -1576,14 +1768,14 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
             command.NewEffortCommand(self.list, selectedTasks),
-            self.uiCommands, self.list, self.taskList, self.settings, bitmap=kwargs['bitmap'])
+            self.list, self.taskList, self.settings, bitmap=kwargs['bitmap'])
         
     newEffortDialog = newItemDialog
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
             command.EditEffortCommand(self.list, self.curselection()), 
-            self.uiCommands, self.list, self.taskList, self.settings)
+            self.list, self.taskList, self.settings)
     
     editEffortDialog = editItemDialog
     
@@ -1641,18 +1833,14 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             return effort.EffortAggregator(taskList, aggregation=aggregation)
                 
     def createWidget(self):
-        # We need to create new uiCommands here, because the viewer might not
-        # be the effort viewer in the mainwindow, but the effort viewer in the 
-        # task edit window.
-        uiCommands = {}
-        uiCommands.update(self.uiCommands)
-        uiCommands.update(uicommand.EditorUICommands(self, self.list))        
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemTooltipText, self.getItemImage,
-            self.getItemAttr, self.onSelect, uiCommands['editeffort'], 
-            menu.EffortPopupMenu(self.parent, uiCommands), 
-            menu.EffortViewerColumnPopupMenu(self.parent, self, uiCommands), 
+            self.getItemAttr, self.onSelect,
+            uicommand.EffortEdit(viewer=self, effortList=self.model()),
+            menu.EffortPopupMenu(self.parent, self.taskList,
+                                 self.model(), self),
+            menu.EffortViewerColumnPopupMenu(self.parent, self),
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
         return widget
@@ -1688,16 +1876,28 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
                  if column.name().startswith('total')]
         for column in columnsToShow:
             self.showColumn(column, show)
-                        
+
+    # Since the  aggregation can change  in the viewer's  lifetime and
+    # the UICommands depend on it, this is getColumnUICommands instead
+    # of createColumnUICommands.
+
     def getColumnUICommands(self):
-        commands = ['viewdescription', 'viewtimeSpent', 'viewrevenue']
+        commands = [uicommand.ViewColumn(menuText=_('&Description'),
+                                  helpText=_('Show/hide description column'),
+                                  setting='description', viewer=self),
+                uicommand.ViewColumn(menuText=_('&Time spent'),
+                                  helpText=_('Show/hide time spent column'),
+                                  setting='timeSpent', viewer=self),
+                uicommand.ViewColumn(menuText=_('&Revenue'),
+                                  helpText=_('Show/hide revenue column'),
+                                  setting='revenue', viewer=self),]
         if self.aggregation != 'details':
             commands.insert(-1, 'viewtotalTimeSpent')
             commands.append('viewtotalRevenue')
         return commands
 
     def getToolBarUICommands(self):
-        ''' Names of UI commands to put on the toolbar of this viewer. '''
+        ''' UI commands to put on the toolbar of this viewer. '''
         toolBarUICommands = super(EffortListViewer, self).getToolBarUICommands() 
         toolBarUICommands.insert(-2, None) # Separator
         self.aggregationUICommand = \

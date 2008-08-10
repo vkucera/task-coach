@@ -52,10 +52,7 @@ class ViewerContainerTest(test.wxTestCase):
 
     def createViewer(self):
         return dummy.ViewerWithDummyWidget(self.notebook,
-            self.taskList, gui.uicommand.UICommands(self.frame, None, 
-                self.container, self.settings, self.taskList, 
-                effort.EffortList(self.taskList), category.CategoryList(), 
-                note.NoteContainer()), 
+            self.taskList, None, 
             self.settings, settingsSection='bla')
             
     def onEvent(self, event):

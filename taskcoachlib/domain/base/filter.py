@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re
+import re, sre_constants
 from taskcoachlib import patterns
 
 
@@ -60,25 +60,37 @@ class Filter(patterns.SetDecorator):
 
 class SearchFilter(Filter):
     def __init__(self, *args, **kwargs):
-        self.__searchString = kwargs.pop('searchString', u'')
-        self.__matchCase = kwargs.pop('matchCase', False)
-        self.__includeSubItems = kwargs.pop('includeSubItems', False)
+        searchString = kwargs.pop('searchString', u'')
+        matchCase = kwargs.pop('matchCase', False)
+        includeSubItems = kwargs.pop('includeSubItems', False)
+
+        self.setSearchFilter(searchString, matchCase, includeSubItems, False)
+
         super(SearchFilter, self).__init__(*args, **kwargs)
 
     def setSearchFilter(self, searchString, matchCase=False, 
-                        includeSubItems=False):
-        self.__searchString = searchString
+                        includeSubItems=False, doReset=True):
         self.__includeSubItems = includeSubItems
-        if matchCase:
-            self.__matchCase = 0
+
+        try:
+            if matchCase:
+                rx = re.compile(searchString)
+            else:
+                rx = re.compile(searchString, re.IGNORECASE)
+        except sre_constants.error:
+            if matchCase:
+                self.__searchPredicate = lambda x: x.find(searchString) != -1
+            else:
+                self.__searchPredicate = lambda x: x.lower().find(searchString.lower()) != -1
         else:
-            self.__matchCase = re.IGNORECASE
-        self.reset()
-        
+            self.__searchPredicate = lambda x: bool(rx.search(x))
+
+        if doReset:
+            self.reset()
+
     def filter(self, items):
-        regularExpression = re.compile(self.__searchString, self.__matchCase)
         return [item for item in items if \
-                regularExpression.search(self.__itemSubject(item))]
+                self.__searchPredicate(self.__itemSubject(item))]
         
     def __itemSubject(self, item):
         subject = item.subject()
