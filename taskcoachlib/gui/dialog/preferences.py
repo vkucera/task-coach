@@ -180,7 +180,8 @@ class LanguagePage(SettingsPage):
              ('sv_SE', 'Svenska (Swedish)'),
              ('th_TH', u'ภาษาไทย (Thai)'),
              ('tr_TR', u'Türkçe (Turkish)'),
-             ('uk_UA', u'украї́нська мо́ва (Ukranian)')],
+             ('uk_UA', u'украї́нська мо́ва (Ukranian)'),
+             ('vi_VI', u'tiếng Việt (Vietnamese)')],
             helpText='restart')
         
         panel = wx.Panel(self)
