@@ -72,6 +72,12 @@ class UICommand(object):
         self.toolbar = None
         self.menuItems = [] # uiCommands can be used in multiple menu's
 
+    def __eq__(self, other):
+        try:
+            return self.menuText == other.menuText
+        except AttributeError:
+            return False
+
     def appendToMenu(self, menu, window, position=None):
         # FIXME: rename to addToMenu
         menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
