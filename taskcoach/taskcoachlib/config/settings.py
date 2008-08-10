@@ -106,10 +106,10 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
                 result = self.get(section, option) # recursive call
             else:
                 raise
-        # Some settings may have a minimum value, make sure we return at least that 
-        # minimum value:
+        # Some settings may have a minimum value, make sure we return at 
+        # least that minimum value:
         if section in defaults.minimum and option in defaults.minimum[section]:
-            result = min(result, defaults.minimum[section][option])
+            result = max(result, defaults.minimum[section][option])
         return result
                 
     def set(self, section, option, value, new=False):
@@ -119,11 +119,11 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         else:
             currentValue = self.get(section, option)
         if value != currentValue:
-            self.notifyObservers(patterns.Event(self, 'before.%s.%s'%(section, option), 
-                                 value))
+            self.notifyObservers(\
+                patterns.Event(self, 'before.%s.%s'%(section, option), value))
             super(Settings, self).set(section, option, value)
-            self.notifyObservers(patterns.Event(self, '%s.%s'%(section, option), 
-                                 value))
+            self.notifyObservers(\
+                patterns.Event(self, '%s.%s'%(section, option), value))
             
     def setboolean(self, section, option, value):
         self.set(section, option, str(value))
@@ -136,6 +136,9 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         
     getdict = getlist
     setdict = setlist
+
+    def getint(self, section, option):
+        return int(self.get(section, option))
         
     def save(self, showerror=wx.MessageBox):
         self.set('version', 'python', sys.version)

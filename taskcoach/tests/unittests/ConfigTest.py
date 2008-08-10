@@ -224,8 +224,15 @@ class SettingsFileLocationTest(SettingsTestCase):
 
 class MinimumSettingsTest(SettingsTestCase):
     def testAtLeastOneTaskTreeListViewer(self):
-        self.assertEqual(1, self.settings.get('view', 'tasktreelistviewercount'))
+        self.assertEqual(1, 
+            self.settings.getint('view', 'tasktreelistviewercount'))
 
-    def testAtLeastTwoCategoryViewers(self):
-        config.defaults.minimum['view']['categoryviewercount'] = 2
-        self.assertEqual(2, self.settings.get('view', 'categoryviewercount'))
+    def testTwoTaskTreeListViewers(self):
+        self.settings.set('view', 'tasktreelistviewercount', u'2')
+        self.assertEqual(2, 
+            self.settings.getint('view', 'tasktreelistviewercount'))
+
+    def testAtLeastOneTaskTreeListViewer_EvenWhenSetToZero(self):
+        self.settings.set('view', 'tasktreelistviewercount', u'0')
+        self.assertEqual(1, 
+            self.settings.getint('view', 'tasktreelistviewercount'))
