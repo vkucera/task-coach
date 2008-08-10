@@ -290,7 +290,7 @@ class AddAttachmentCommand(BaseCommand):
 class AddNoteCommand(BaseCommand):
     def __init__(self, *args, **kwargs):
         super(AddNoteCommand, self).__init__(*args, **kwargs)
-        self.notes = [note.Note(subject=_('New note'), parent=item) \
+        self.notes = [note.Note(subject=_('New note')) \
                       for item in self.items]
 
     def addNotes(self):

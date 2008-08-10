@@ -20,13 +20,14 @@ import test
 from unittests import asserts
 from CommandTestCase import CommandTestCase
 from taskcoachlib import command, patterns
-from taskcoachlib.domain import note, category
+from taskcoachlib.domain import note, category, task
 
 
 class NoteCommandTestCase(CommandTestCase, asserts.CommandAsserts):
     def setUp(self):
         self.notes = note.NoteContainer()
-        
+        self.taskList = task.TaskList()
+
 
 class NewNoteCommandTest(NoteCommandTestCase):
     def new(self, categories=None):
@@ -49,6 +50,12 @@ class NewNoteCommandTest(NoteCommandTestCase):
             lambda: self.assertEqual(set([cat]), newNote.categories()),
             lambda: self.assertEqual([], self.notes))
 
+
+class AddNoteCommandTest(NoteCommandTestCase):
+    def testAddedNoteIsRootItem(self):
+        owner = note.NoteOwner()
+        command.AddNoteCommand([owner], [owner]).do()
+        self.failUnless(owner.notes()[0].parent() is None)
         
 
 class NewSubNoteCommandTest(NoteCommandTestCase):
