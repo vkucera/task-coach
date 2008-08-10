@@ -1796,9 +1796,11 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         self.taskList = base.SearchFilter(list)
         kwargs.setdefault('settingsSection', 'effortlistviewer')
         self.__hiddenTotalColumns = []
+        self.__columnUICommands = None
         super(EffortListViewer, self).__init__(parent, self.taskList, *args, **kwargs)
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
+        self.createColumnUICommands()
         
     def showEffortAggregation(self, aggregation):
         ''' Change the aggregation mode. Can be one of 'details', 'day', 'week'
@@ -1809,6 +1811,8 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         self.setModel(self.createSorter(self.createAggregator(self.taskList, 
                                                             aggregation)))
         self.registerModelObservers()
+        # Update the UICommands used for the column popup menu:
+        self.createColumnUICommands() 
         self._showTotalColumns(show=aggregation!='details')
         self.refresh()
 
@@ -1877,30 +1881,33 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         for column in columnsToShow:
             self.showColumn(column, show)
 
-    # Since the  aggregation can change  in the viewer's  lifetime and
-    # the UICommands depend on it, this is getColumnUICommands instead
-    # of createColumnUICommands.
-
     def getColumnUICommands(self):
-        commands = [uicommand.ViewColumn(menuText=_('&Description'),
+        if not self.__columnUICommands:
+            self.createColumnUICommands()
+        return self.__columnUICommands
+
+    def createColumnUICommands(self):
+        self.__columnUICommands = \
+            [uicommand.ViewColumn(menuText=_('&Description'),
                                   helpText=_('Show/hide description column'),
                                   setting='description', viewer=self),
-                uicommand.ViewColumn(menuText=_('&Time spent'),
+             uicommand.ViewColumn(menuText=_('&Time spent'),
                                   helpText=_('Show/hide time spent column'),
                                   setting='timeSpent', viewer=self),
-                uicommand.ViewColumn(menuText=_('&Revenue'),
+             uicommand.ViewColumn(menuText=_('&Revenue'),
                                   helpText=_('Show/hide revenue column'),
                                   setting='revenue', viewer=self),]
         if self.aggregation != 'details':
-            commands.insert(-1, uicommand.ViewColumn(menuText=_('&Total time spent'),
-                   helpText=_('Show/hide total time spent column'),
-                   setting='totalTimeSpent',
-                   viewer=self))
-            commands.append(uicommand.ViewColumn(menuText=_('Total &revenue'),
-                   helpText=_('Show/hide total revenue column'),
-                   setting='totalRevenue',
-                   viewer=self))
-        return commands
+            self.__columnUICommands.insert(-1, 
+                uicommand.ViewColumn(menuText=_('&Total time spent'),
+                    helpText=_('Show/hide total time spent column'),
+                    setting='totalTimeSpent',
+                    viewer=self))
+            self.__columnUICommands.append(\
+                uicommand.ViewColumn(menuText=_('Total &revenue'),
+                    helpText=_('Show/hide total revenue column'),
+                    setting='totalRevenue',
+                    viewer=self))
 
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
