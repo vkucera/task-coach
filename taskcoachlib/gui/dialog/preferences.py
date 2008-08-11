@@ -158,6 +158,7 @@ class LanguagePage(SettingsPage):
              ('en_CA', 'English (Canada)'), 
              ('en_GB', 'English (UK)'),
              ('en_US', 'English (US)'), 
+             ('et_EE', 'Eesti keel (Estonian)'),
              ('fi_FI', 'Suomi (Finnish)'),
              ('fr_FR', u'Français (French)'),
              ('gl_ES', 'Galego (Galician)'),
