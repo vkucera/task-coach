@@ -489,7 +489,7 @@ class CategoryMenu(Menu):
     def __init__(self, mainwindow, settings, categories, viewerContainer):
         super(CategoryMenu, self).__init__(mainwindow)
         self.appendUICommands(
-            uicommand.CategoryNew(categories=categories),
+            uicommand.CategoryNew(categories=categories, settings=settings),
             uicommand.CategoryNewSubCategory(viewer=viewerContainer,
                                              categories=categories),
             uicommand.CategoryEdit(viewer=viewerContainer,
