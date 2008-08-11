@@ -99,6 +99,7 @@ languages = {
     'Japanese': 'ja',
     'Korean': 'ko',
     'Latvian': 'lv',
+    'Lithuanian': 'lt',
     'Norwegian (Bokmal)': 'nb',
     'Persian': 'fa',
     'Polish': 'pl',
