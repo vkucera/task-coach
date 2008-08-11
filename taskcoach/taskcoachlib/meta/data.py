@@ -86,6 +86,7 @@ languages = {
     'Czech': 'cs',
     'Danish': 'da',
     'Dutch': 'nl',
+    'Estonian': 'et',
     'Finnish': 'fi',
     'French': 'fr', 
     'Galician': 'gl',

@@ -50,9 +50,9 @@ saved in the task file.''', '2045453'),
 Mallach, Josep-Miquel Ivars, and devaleitzer.'''),
         Feature('''Added an (incomplete) Arabic translation thanks to 
 Moayyed. Please help finish it. See http://www.taskcoach.org/i18n.html.'''),
-        Feature('''Added largely incomplete Indonesian and Vietnamese
-translations. Please help finish them. 
-See http://www.taskcoach.org/i18n.html.''')],
+        Feature('''Added largely incomplete Estonian, Indonesian and Vietnamese
+translations. Please help finish them. See 
+http://www.taskcoach.org/i18n.html.''')],
     bugsFixed=[
         Bug('''Ctrl-PgDn and Ctrl-PgUp would sometimes need to be pressed
 multiple times before the next or previous viewer would be activated. ''')],
