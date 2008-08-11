@@ -22,6 +22,12 @@ da'''
 from changetypes import *
 
 releases = [
+Release('0.70.3', 'August ?, 2008',
+    summary='''Bug fix release''',
+    bugsFixed=[
+        Bug('''Opening a new task viewer didn't work.'''),
+        Bug('''Closing effort viewers causes exceptions.''')]),
+
 Release('0.70.2', 'August 6, 2008',
     summary='''This release fixes some bugs and brings back
 the Fedora RPM.''',

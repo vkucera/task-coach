@@ -354,18 +354,21 @@ class ViewViewerMenu(Menu):
         tasks = taskFile.tasks()
         categories = taskFile.categories()
         notes = taskFile.notes()
+        efforts = taskFile.efforts()
         viewViewerCommands = [\
             ViewViewer(viewer=viewerContainer, menuText=_('Task &list'), 
                        helpText=_('Open a new tab with a viewer that displays tasks in a list'), 
                        bitmap='listview', viewerClass=viewer.TaskListViewer, 
                        viewerArgs=(tasks, settings), 
-                       viewerKwargs=dict(categories=categories), 
+                       viewerKwargs=dict(categories=categories, 
+                                         efforts=efforts), 
                        viewerBitmap='listview', settings=settings),
             ViewViewer(viewer=viewerContainer, menuText=_('Task &tree'), 
                        helpText=_('Open a new tab with a viewer that displays tasks in a tree'), 
                        bitmap='treeview', viewerClass=viewer.TaskTreeListViewer, 
                        viewerArgs=(tasks, settings), 
-                       viewerKwargs=dict(categories=categories), 
+                       viewerKwargs=dict(categories=categories, 
+                                         efforts=efforts), 
                        viewerBitmap='treeview', settings=settings),
             None, 
             ViewViewer(viewer=viewerContainer, menuText=_('&Category'), 

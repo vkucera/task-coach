@@ -269,7 +269,7 @@ class SortableViewer(object):
         return self.__sortUICommands
     
     def createSortUICommands(self):
-        raise NotImplementedError
+        return []
     
         
 class SortableViewerForTasks(SortableViewer):
