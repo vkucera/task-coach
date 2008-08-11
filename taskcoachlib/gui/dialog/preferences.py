@@ -171,6 +171,7 @@ class LanguagePage(SettingsPage):
              ('ja_JP', u'日本語 (Japanese)'),
              ('ko_KO', u'한국어/조선말 (Korean)'),
              ('lv_LV', u'Latviešu (Latvian)'),
+             ('lt_LT', u'Lietuvių kalba (Lithuanian)'),
              ('nb_NO', u'Bokmål (Norwegian Bokmal)'),
              ('fa_IR', u'فارسی (Persian)'),
              ('pl_PL', u'Język polski (Polish)'),

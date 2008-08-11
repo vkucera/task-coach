@@ -50,8 +50,8 @@ saved in the task file.''', '2045453'),
 Mallach, Josep-Miquel Ivars, and devaleitzer.'''),
         Feature('''Added an (incomplete) Arabic translation thanks to 
 Moayyed. Please help finish it. See http://www.taskcoach.org/i18n.html.'''),
-        Feature('''Added largely incomplete Estonian, Indonesian and Vietnamese
-translations. Please help finish them. See 
+        Feature('''Added largely incomplete Estonian, Indonesian, Lithuanian, 
+and Vietnamese translations. Please help finish them. See 
 http://www.taskcoach.org/i18n.html.''')],
     bugsFixed=[
         Bug('''Ctrl-PgDn and Ctrl-PgUp would sometimes need to be pressed
