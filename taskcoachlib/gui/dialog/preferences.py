@@ -155,6 +155,7 @@ class LanguagePage(SettingsPage):
              ('cs_CS', u'Čeština (Czech)'),
              ('da_DA', 'Dansk (Danish)'),
              ('nl_NL', 'Nederlands (Dutch)'),
+             ('en_CA', 'English (Canada)'), 
              ('en_GB', 'English (UK)'),
              ('en_US', 'English (US)'), 
              ('fi_FI', 'Suomi (Finnish)'),
