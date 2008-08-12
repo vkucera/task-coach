@@ -36,13 +36,29 @@ class AutoColumnWidthMixin(object):
                  OnResize method is called.
     """
     def __init__(self, *args, **kwargs):
+        self._isAutoResizing = False
         self.ResizeColumn = kwargs.pop('resizeableColumn', -1)
         self.ResizeColumnMinWidth = kwargs.pop('resizeableColumnMinWidth', 50)
         super(AutoColumnWidthMixin, self).__init__(*args, **kwargs)
-        self.Bind(wx.EVT_SIZE, self.OnResize)
-        self.Bind(wx.EVT_LIST_COL_BEGIN_DRAG, self.OnBeginColumnDrag)
-        self.Bind(wx.EVT_LIST_COL_END_DRAG, self.OnEndColumnDrag)
-        
+        self.ToggleAutoResizing(True)
+
+    def ToggleAutoResizing(self, on):
+        if on == self._isAutoResizing:
+            return
+        self._isAutoResizing = on
+        if on:
+            self.Bind(wx.EVT_SIZE, self.OnResize)
+            self.Bind(wx.EVT_LIST_COL_BEGIN_DRAG, self.OnBeginColumnDrag)
+            self.Bind(wx.EVT_LIST_COL_END_DRAG, self.OnEndColumnDrag)
+            self.DoResize()
+        else:
+            self.Unbind(wx.EVT_SIZE)
+            self.Unbind(wx.EVT_LIST_COL_BEGIN_DRAG)
+            self.Unbind(wx.EVT_LIST_COL_END_DRAG)
+
+    def IsAutoResizing(self):
+        return self._isAutoResizing
+            
     def OnBeginColumnDrag(self, event):
         if event.Column == self.ResizeColumn:
             self.__oldResizeColumnWidth = self.GetColumnWidth(self.ResizeColumn)
@@ -69,6 +85,8 @@ class AutoColumnWidthMixin(object):
     def DoResize(self):
         if not self:
             return # Avoid a potential PyDeadObject error
+        if not self.IsAutoResizing():
+            return
         if self.GetSize().height < 32:
             return # Avoid an endless update bug when the height is small.
         if self.GetColumnCount() <= self.ResizeColumn:
