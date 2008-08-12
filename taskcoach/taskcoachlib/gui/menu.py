@@ -739,9 +739,9 @@ class ColumnPopupMenu(StaticMenu):
     def __getColumn(self):
         return self.__columnIndex
     
-    # columnIndex is the index of the column clicked by the user to popup this menu
-    # This property should be set by the control popping up this menu (see 
-    # widgets._CtrlWithColumnPopupMenu.
+    # columnIndex is the index of the column clicked by the user to popup 
+    # this menu.  This property should be set by the control popping up this 
+    # menu (see widgets._CtrlWithColumnPopupMenu).
     columnIndex = property(__getColumn, __setColumn) 
                             
     def getUICommands(self):

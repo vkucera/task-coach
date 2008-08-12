@@ -31,6 +31,9 @@ class MockViewerContainer(object):
         
     def viewerChangeEventType(self):
         return 'bla'
+
+    def settingsSection(self):
+        return 'section'
     
     def isSortable(self):
         return True

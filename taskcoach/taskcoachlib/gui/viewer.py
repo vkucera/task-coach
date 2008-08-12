@@ -956,12 +956,14 @@ class ViewerWithColumns(Viewer):
         
     def hideableColumns(self):
         return [column for column in self._columns if column.name() not in \
-                self.settings.getlist(self.settingsSection(), 'columnsalwaysvisible')]
+                self.settings.getlist(self.settingsSection(), 
+                                      'columnsalwaysvisible')]
                 
     def isHideableColumn(self, visibleColumnIndex):
         column = self.visibleColumns()[visibleColumnIndex]
-        return column.name() not in self.settings.getlist(self.settingsSection(), 
-                                                          'columnsalwaysvisible')
+        unhideableColumns = self.settings.getlist(self.settingsSection(), 
+                                                  'columnsalwaysvisible')
+        return column.name() not in unhideableColumns
 
     def getColumnWidth(self, columnName):
         columnWidths = self.settings.getdict(self.settingsSection(),
@@ -1051,6 +1053,9 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
     
     def createColumnUICommands(self):
         return [\
+            uicommand.ToggleAutoColumnResizing(viewer=self,
+                                                settings=self.settings),
+            None,
             (_('&Dates'),
              uicommand.ViewColumns(menuText=_('All date columns'),
                 helpText=_('Show/hide all date-related columns'),
@@ -1617,6 +1622,9 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
 
     def createColumnUICommands(self):
         return [\
+            uicommand.ToggleAutoColumnResizing(viewer=self,
+                                               settings=self.settings),
+            None,
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
@@ -1892,7 +1900,10 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
 
     def createColumnUICommands(self):
         self.__columnUICommands = \
-            [uicommand.ViewColumn(menuText=_('&Description'),
+            [uicommand.ToggleAutoColumnResizing(viewer=self,
+                                                settings=self.settings),
+             None,
+             uicommand.ViewColumn(menuText=_('&Description'),
                                   helpText=_('Show/hide description column'),
                                   setting='description', viewer=self),
              uicommand.ViewColumn(menuText=_('&Time spent'),

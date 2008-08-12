@@ -291,11 +291,13 @@ class _BaseCtrlWithColumns(object):
         return self.__allColumns[columnIndex]
    
     def _getColumnHeader(self, columnIndex):
-        ''' The currently displayed column header in the column with index columnIndex. '''
+        ''' The currently displayed column header in the column with index 
+            columnIndex. '''
         return self.GetColumn(columnIndex).GetText()
 
     def _getColumnIndex(self, columnHeader):
-        ''' The current column index of the column with the column header columnHeader. '''
+        ''' The current column index of the column with the column header 
+            columnHeader. '''
         for columnIndex, column in enumerate(self.__allColumns):
             if column.header() == columnHeader:
                 return columnIndex
@@ -350,8 +352,11 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
         self.__currentSortImageIndex = -1
                 
     def onColumnClick(self, event):
-        column = self._getColumn(event.GetColumn())
         event.Skip()
+        columnIndex = event.GetColumn()
+        if columnIndex >= self.GetColumnCount():
+            return
+        column = self._getColumn(columnIndex)
         # Make sure the window this control is in has focus:
         event.GetEventObject().MainWindow.SetFocus()
         # Use CallAfter to make sure the window this control is in is 

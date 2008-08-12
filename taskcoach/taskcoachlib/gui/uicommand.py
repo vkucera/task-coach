@@ -165,10 +165,12 @@ class UICommand(object):
     def mainWindow(self):
         return wx.GetApp().TopWindow
 
+
 class SettingsCommand(UICommand):
     ''' SettingsCommands are saved in the settings (a ConfigParser). '''
 
-    def __init__(self, settings=None, setting=None, section='view', *args, **kwargs):
+    def __init__(self, settings=None, setting=None, section='view', 
+                 *args, **kwargs):
         self.settings = settings
         self.section = section
         self.setting = setting
@@ -185,7 +187,8 @@ class BooleanSettingsCommand(SettingsCommand):
         super(BooleanSettingsCommand, self).onUpdateUI(event)
 
     def appendToMenu(self, menu, window, position=None):
-        id = super(BooleanSettingsCommand, self).appendToMenu(menu, window, position)
+        id = super(BooleanSettingsCommand, self).appendToMenu(menu, window, 
+                                                              position)
         menuItem = menu.FindItemById(id)
         menuItem.Check(self.isSettingChecked())
         
@@ -272,6 +275,10 @@ class ViewerCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self.viewer = kwargs.pop('viewer', None)
         super(ViewerCommand, self).__init__(*args, **kwargs)
+
+    def __eq__(self, other):
+        return super(ViewerCommand, self).__eq__(other) and \
+            self.viewer.settingsSection() == other.viewer.settingsSection()
 
 
 # Mixins: 
@@ -824,7 +831,8 @@ class ViewColumn(ViewerCommand, UICheckCommand):
         return self.viewer.isVisibleColumnByName(self.setting)
     
     def doCommand(self, event):
-        self.viewer.showColumnByName(self.setting, self._isMenuItemChecked(event))
+        self.viewer.showColumnByName(self.setting, 
+                                     self._isMenuItemChecked(event))
 
 
 class ViewColumns(ViewerCommand, UICheckCommand):
@@ -1897,3 +1905,25 @@ class CategoryViewerFilterChoice(SettingsCommand, ToolbarChoiceCommand):
 
     def doChoice(self, choice):
         self.settings.set('view', 'categoryfiltermatchall', str(choice))
+
+
+class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(ToggleAutoColumnResizing, self).__init__(\
+            menuText=_('&Automatic column resizing'),
+            helpText=_('When checked, automatically resize columns to fill'
+                       ' available space'), 
+            *args, **kwargs)
+        wx.CallAfter(self.updateWidget)
+
+    def updateWidget(self):
+        self.viewer.getWidget().ToggleAutoResizing(self.isSettingChecked())
+
+    def isSettingChecked(self):
+        return self.settings.getboolean(self.viewer.settingsSection(),
+                                        'columnautoresizing')
+    
+    def doCommand(self, event):
+        self.settings.set(self.viewer.settingsSection(), 'columnautoresizing',
+                          str(self._isMenuItemChecked(event)))
+        self.updateWidget()
