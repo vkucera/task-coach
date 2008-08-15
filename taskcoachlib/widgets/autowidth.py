@@ -155,7 +155,7 @@ class AutoColumnWidthMixin(object):
     # Private helper methods:
 
     def __isScrollbarVisible(self):
-        return self.GetItemCount() > self.GetCountPerPage()
+        return self.MainWindow.HasScrollbar(wx.VERTICAL)
 
     def __isScrollbarIncludedInClientSize(self):
         # NOTE: on GTK, the scrollbar is included in the client size, but on
