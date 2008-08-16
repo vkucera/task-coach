@@ -1854,7 +1854,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             self.getItemText, self.getItemTooltipText, self.getItemImage,
             self.getItemAttr, self.onSelect,
             uicommand.EffortEdit(viewer=self, effortList=self.model()),
-            menu.EffortPopupMenu(self.parent, self.taskList,
+            menu.EffortPopupMenu(self.parent, self.taskList, self.settings,
                                  self.model(), self),
             menu.EffortViewerColumnPopupMenu(self.parent, self),
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
