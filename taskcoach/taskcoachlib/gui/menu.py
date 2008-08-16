@@ -184,7 +184,7 @@ class MainMenu(wx.MenuBar):
                     _('&View'))
         self.Append(TaskMenu(mainwindow, settings, taskFile, viewerContainer),
                     _('&Task'))
-        self.Append(EffortMenu(mainwindow, taskFile, viewerContainer),
+        self.Append(EffortMenu(mainwindow, settings, taskFile, viewerContainer),
                     _('Eff&ort'))
         self.Append(CategoryMenu(mainwindow, settings, taskFile.categories(),
                                  viewerContainer), _('&Category'))
@@ -471,13 +471,13 @@ class TaskMenu(Menu):
                 )
             
 class EffortMenu(Menu):
-    def __init__(self, mainwindow, taskFile, viewerContainer):
+    def __init__(self, mainwindow, settings, taskFile, viewerContainer):
         super(EffortMenu, self).__init__(mainwindow)
         tasks = taskFile.tasks()
         efforts = taskFile.efforts()
         self.appendUICommands(
             uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
-                                taskList=tasks),
+                                taskList=tasks, settings=settings),
             uicommand.EffortEdit(viewer=viewerContainer, effortList=efforts),
             uicommand.EffortDelete(viewer=viewerContainer, effortList=efforts),
             None,
@@ -548,7 +548,7 @@ class TaskBarMenu(Menu):
             uicommand.TaskNew(taskList=tasks, settings=settings,
                               categories=categories),
             uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
-                                taskList=tasks),
+                                taskList=tasks, settings=settings),
             None)
         label = _('&Start tracking effort')
         self.appendMenu(label,
@@ -638,7 +638,7 @@ class TaskPopupMenu(Menu):
         commandsToAppend.extend([\
             None,
             uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
-                                taskList=tasks),
+                                taskList=tasks, settings=settings),
             uicommand.EffortStart(viewer=taskViewer),
             uicommand.EffortStop(taskList=tasks)])
         if taskViewer.isTreeViewer():
@@ -649,7 +649,7 @@ class TaskPopupMenu(Menu):
 
 
 class EffortPopupMenu(Menu):
-    def __init__(self, mainwindow, tasks, efforts, effortViewer):
+    def __init__(self, mainwindow, tasks, settings, efforts, effortViewer):
         super(EffortPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.EditCut(viewer=effortViewer),
@@ -657,7 +657,7 @@ class EffortPopupMenu(Menu):
             uicommand.EditPaste(),
             None,
             uicommand.EffortNew(viewer=effortViewer, effortList=efforts,
-                                taskList=tasks),
+                                taskList=tasks, settings=settings),
             uicommand.EffortEdit(viewer=effortViewer, effortList=efforts),
             uicommand.EffortDelete(viewer=effortViewer, effortList=efforts),
             None,
