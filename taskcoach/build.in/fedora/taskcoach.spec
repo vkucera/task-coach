@@ -71,8 +71,6 @@ desktop-file-install --vendor fedora \
 %%files
 %%defattr(0644,root,root,0755)
 %%attr(0755,root,root) %%{_bindir}/taskcoach.py
-%%{_bindir}/taskcoach.pyc
-%%{_bindir}/taskcoach.pyo
 #python_sitelib definition should be used instead of
 #%%dir %%{python_sitelib}/taskcoachlib
 %%{_libdir}/python*/site-packages/taskcoachlib/*
