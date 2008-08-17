@@ -271,24 +271,53 @@ class _BaseCtrlWithColumns(object):
     def __init__(self, *args, **kwargs):
         self.__allColumns = kwargs.pop('columns')
         super(_BaseCtrlWithColumns, self).__init__(*args, **kwargs)
+        # This  is  used to  keep  track  of  which column  has  which
+        # index. The only  other way would be (and  was) find a column
+        # using its header, which causes problems when several columns
+        # have the same header. It's a list of (index, column) tuples.
+        self.__indexMap = []
         self._setColumns()
-        
+
     def _setColumns(self):
         for columnIndex, column in enumerate(self.__allColumns):
             self._insertColumn(columnIndex, column)
             
     def _insertColumn(self, columnIndex, column):
+        newMap = []
+        for colIndex, col in self.__indexMap:
+            if colIndex >= columnIndex:
+                newMap.append((colIndex + 1, col))
+            else:
+                newMap.append((colIndex, col))
+        newMap.append((columnIndex, column))
+        self.__indexMap = newMap
+
         self.InsertColumn(columnIndex, column.header(), 
             format=column.alignment(), width=column.width)
+
         columnInfo = self.GetColumn(columnIndex)
         columnInfo.SetImage(column.headerImageIndex())
         self.SetColumn(columnIndex, columnInfo)
-            
+
+    def _deleteColumn(self, columnIndex):
+        newMap = []
+        for colIndex, col in self.__indexMap:
+            if colIndex > columnIndex:
+                newMap.append((colIndex - 1, col))
+            elif colIndex < columnIndex:
+                newMap.append((colIndex, col))
+        self.__indexMap = newMap
+
+        self.DeleteColumn(columnIndex)
+
     def _allColumns(self):
         return self.__allColumns
 
     def _getColumn(self, columnIndex):
-        return self.__allColumns[columnIndex]
+        for colIndex, col in self.__indexMap:
+            if colIndex == columnIndex:
+                return col
+        raise IndexError
    
     def _getColumnHeader(self, columnIndex):
         ''' The currently displayed column header in the column with index 
@@ -315,7 +344,7 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
         if show and not self.isColumnVisible(column):
             self._insertColumn(columnIndex, column)
         elif not show and self.isColumnVisible(column):
-            self.DeleteColumn(columnIndex)
+            self._deleteColumn(columnIndex)
 
     def isColumnVisible(self, column):
         return column in self._visibleColumns()
@@ -328,13 +357,6 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
             if super(_CtrlWithHideableColumns, self)._getColumnIndex(visibleColumn) >= columnIndexWhenAllColumnsVisible:
                 return columnIndex
         return self.GetColumnCount() # Column header not found
-    
-    def _getColumn(self, columnIndex):
-        columnHeader = self._getColumnHeader(columnIndex)
-        for column in self._allColumns():
-            if columnHeader == column.header():
-                return column
-        raise IndexError
 
     def _visibleColumns(self):
         return [self._getColumn(columnIndex) for columnIndex in range(self.GetColumnCount())]
