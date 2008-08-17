@@ -1134,6 +1134,9 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachment column'),
                 setting='attachments', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Notes'),
+                helpText=_('Show/hide notes column'),
+                setting='notes', viewer=self),
             uicommand.ViewColumn(menuText=_('&Categories'),
                 helpText=_('Show/hide categories column'),
                 setting='categories', viewer=self),
@@ -1221,7 +1224,7 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
             'tasks_completed', 'tasks_completed_open', 'tasks_duetoday', 
             'tasks_duetoday_open', 'tasks_overdue', 'tasks_overdue_open', 
             'start', 'ascending', 'descending', 'ascending_with_status',
-            'descending_with_status', 'attachment']):
+            'descending_with_status', 'attachment', 'note']):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList
@@ -1302,6 +1305,13 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
                 imageIndexCallback=self.attachmentImageIndex,
                 headerImageIndex=self.imageIndex['attachment'],
                 renderCallback=lambda task: '', **kwargs)] + \
+            [widgets.Column('notes', '', 
+                task.Task.notesChangedEventType(),
+                width=self.getColumnWidth('notes'),
+                alignment=wx.LIST_FORMAT_LEFT,
+                imageIndexCallback=self.noteImageIndex,
+                headerImageIndex=self.imageIndex['note'],
+                renderCallback=lambda task: '', **kwargs)] + \
             [widgets.Column('categories', _('Categories'), 
                 task.Task.categoryAddedEventType(), 
                 task.Task.categoryRemovedEventType(), 
@@ -1355,7 +1365,13 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
             return self.imageIndex['attachment'] 
         else:
             return -1
-                
+
+    def noteImageIndex(self, task, which):
+        if task.notes():
+            return self.imageIndex['note'] 
+        else:
+            return -1
+
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
 
