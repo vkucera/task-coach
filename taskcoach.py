@@ -36,13 +36,6 @@ Please see http://www.taskcoach.org/faq.html for more information and
 possible resolutions.''')
         sys.exit(1)
 
-    if sys.platform == 'linux2':
-        sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'linux'))
-    elif sys.platform == 'darwin':
-        sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'macos'))
-    else:
-        sys.path.insert(0, os.path.join(os.getcwd(), 'bin.in', 'windows'))
-
 def start():
     from taskcoachlib import config, application
     options, args = config.ApplicationOptionParser().parse_args()

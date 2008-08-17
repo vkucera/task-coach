@@ -2,12 +2,11 @@
 from taskcoachlib.syncml.tasksource import TaskSource
 from taskcoachlib.syncml.notesource import NoteSource
 from taskcoachlib.syncml.config import SyncMLConfigNode
+from taskcoachlib.syncml.core import *
 
 from taskcoachlib.i18n import _
 
 import wx
-
-from _pysyncml import *
 
 class TaskCoachManagementNode(ManagementNode):
     def __init__(self, syncMLConfig, *args, **kwargs):

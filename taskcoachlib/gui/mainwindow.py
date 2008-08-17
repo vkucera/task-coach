@@ -206,7 +206,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         wx.CallAfter(self.showTips)
 
         try:
-            import _pysyncml
+            import taskcoachlib.syncml.core
         except ImportError:
             if settings.getboolean('syncml', 'showwarning'):
                 dlg = widgets.SyncMLWarningDialog(self)

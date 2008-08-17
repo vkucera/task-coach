@@ -1,7 +1,6 @@
 
 from _pysyncml import *
-
-from taskcoachlib.i18n import _
+from taskcoachlib.syncml.core import *
 
 import wx
 

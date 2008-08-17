@@ -23,13 +23,6 @@ projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 
-if sys.platform == 'linux2':
-    sys.path.insert(0, os.path.join(projectRoot, 'bin.in', 'linux'))
-elif sys.platform == 'darwin':
-    sys.path.insert(0, os.path.join(projectRoot, 'bin.in', 'macos'))
-else:
-    sys.path.insert(0, os.path.join(projectRoot, 'bin.in', 'windows'))
-
 class TestCase(unittest.TestCase):
     def assertEqualLists(self, expectedList, actualList):
         self.assertEqual(len(expectedList), len(actualList))

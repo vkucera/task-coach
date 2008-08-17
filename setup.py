@@ -60,5 +60,9 @@ if 'debian' in platform.dist():
         ('share/pixmaps', ['icons.in/taskcoach.png'])]
 
 
+if platform.system() == 'Linux':
+    setupOptions['package_data'] = {'taskcoachlib': ['bin.in/linux/_pysyncml.so']}
+
+
 if __name__ == '__main__':
     setup(**setupOptions)

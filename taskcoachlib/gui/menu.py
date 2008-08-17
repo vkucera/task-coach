@@ -239,7 +239,7 @@ class FileMenu(Menu):
                         ExportMenu(mainwindow, iocontroller, viewerContainer),
                         'export')
         try:
-            import _pysyncml
+            import taskcoachlib.syncml.core
         except ImportError, e:
             pass
         else:
@@ -308,7 +308,7 @@ class EditMenu(Menu):
                         SelectMenu(mainwindow, viewerContainer))
         self.appendUICommands(None, uicommand.EditPreferences(settings))
         try:
-            import _pysyncml
+            import taskcoachlib.syncml.core
         except ImportError:
             pass
         else:
