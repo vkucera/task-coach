@@ -44,13 +44,13 @@ def getSFUser():
         username = file('.sfuser', 'rb').read()
     else:
         try:
-            username = raw_input('SourceForge user name [fniessink]: ')
+            username = raw_input('SourceForge user name [fniessink]: ').strip()
         except EOFError:
             username = 'fniessink'
 
         if not username:
             username = 'fniessink'
-    file('.sfuser', 'wb').write(username.strip())
+    file('.sfuser', 'wb').write(username)
 
     return username
 
