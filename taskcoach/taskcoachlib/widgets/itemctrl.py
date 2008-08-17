@@ -260,7 +260,7 @@ class Column(object):
         return self.__imageIndexCallback(*args, **kwargs)
         
     def __eq__(self, other):
-        return self.header() == other.header()
+        return self.name() == other.name()
         
 
 class _BaseCtrlWithColumns(object):
@@ -295,13 +295,12 @@ class _BaseCtrlWithColumns(object):
             columnIndex. '''
         return self.GetColumn(columnIndex).GetText()
 
-    def _getColumnIndex(self, columnHeader):
-        ''' The current column index of the column with the column header 
-            columnHeader. '''
-        for columnIndex, column in enumerate(self.__allColumns):
-            if column.header() == columnHeader:
-                return columnIndex
-        raise ValueError, '%s: unknown column header'%columnHeader
+    def _getColumnIndex(self, column):
+        ''' The current column index of the column 'column'. '''
+        try:
+            return self.__allColumns.index(column) # Uses overriden __eq__
+        except ValueError:
+            raise ValueError, '%s: unknown column name' % columnName
 
         
 class _CtrlWithHideableColumns(_BaseCtrlWithColumns):        
@@ -312,7 +311,7 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
             The column is actually removed or inserted into the control because 
             although TreeListCtrl supports hiding columns, ListCtrl does not. 
             '''
-        columnIndex = self._getColumnIndex(column.header())
+        columnIndex = self._getColumnIndex(column)
         if show and not self.isColumnVisible(column):
             self._insertColumn(columnIndex, column)
         elif not show and self.isColumnVisible(column):
@@ -321,12 +320,12 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
     def isColumnVisible(self, column):
         return column in self._visibleColumns()
 
-    def _getColumnIndex(self, columnHeader):
+    def _getColumnIndex(self, column):
         ''' _getColumnIndex returns the actual columnIndex of the column if it 
             is visible, or the position it would have if it were visible. '''
-        columnIndexWhenAllColumnsVisible = super(_CtrlWithHideableColumns, self)._getColumnIndex(columnHeader)
+        columnIndexWhenAllColumnsVisible = super(_CtrlWithHideableColumns, self)._getColumnIndex(column)
         for columnIndex, visibleColumn in enumerate(self._visibleColumns()):
-            if super(_CtrlWithHideableColumns, self)._getColumnIndex(visibleColumn.header()) >= columnIndexWhenAllColumnsVisible:
+            if super(_CtrlWithHideableColumns, self)._getColumnIndex(visibleColumn) >= columnIndexWhenAllColumnsVisible:
                 return columnIndex
         return self.GetColumnCount() # Column header not found
     
@@ -383,7 +382,7 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
         return self.__currentSortColumn
         
     def __setSortColumnImage(self, imageIndex):
-        columnIndex = self._getColumnIndex(self.__currentSortColumn.header())
+        columnIndex = self._getColumnIndex(self.__currentSortColumn)
         columnInfo = self.GetColumn(columnIndex)
         if columnInfo.GetImage() == imageIndex:
             pass # The column is already showing the right image, so we're done
