@@ -22,6 +22,11 @@ import platform
 from distutils.core import setup
 from taskcoachlib import meta
 
+# Import this  here so that py2exe  and py2app can  find the _pysyncml
+# module.
+
+import taskcoachlib.syncml.core
+
 setupOptions = { 
     'name': meta.filename,
     'author': meta.author,
