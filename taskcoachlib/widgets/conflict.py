@@ -235,7 +235,7 @@ class TaskConflictPanel(BaseConflictPanel):
 
 class ConflictDialog(wx.Dialog):
     def __init__(self, type_, flags, local, remote, *args, **kwargs):
-        kwargs['style'] = kwargs.get('style', 0) | wx.RESIZE_BORDER
+        kwargs['style'] = kwargs.get('style', wx.CAPTION) | wx.RESIZE_BORDER
 
         super(ConflictDialog, self).__init__(*args, **kwargs)
 
