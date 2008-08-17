@@ -159,12 +159,14 @@ def registerWithPyPI(settings):
     pypirc = file('.pypirc', 'w')
     pypirc.write('[server-login]\nusername = %s\npassword = %s\n'%\
                  (username, password))
+    pypirc.close()
     from setup import setupOptions
     languagesThatPyPIDoesNotRecognize = ['Breton', 'Galician', 'Norwegian (Bokmal)']
     for language in languagesThatPyPIDoesNotRecognize:
         setupOptions['classifiers'].remove('Natural Language :: %s'%language)
     from distutils.core import setup
     del sys.argv[1:]
+    os.environ['HOME'] = '.'
     sys.argv.append('register')
     setup(**setupOptions)
     os.remove('.pypirc')
