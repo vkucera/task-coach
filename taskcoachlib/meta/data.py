@@ -28,7 +28,7 @@ release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May',
 release_day = '17'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2008'
-release_status = 'Alpha'
+release_status = 'alpha'
 date = release_month + ' ' + release_day + ', ' + release_year
 long_description = 'Task Coach is a simple open source todo manager to manage' \
 ' personal tasks and todo lists. It grew out of a frustration that ' \
