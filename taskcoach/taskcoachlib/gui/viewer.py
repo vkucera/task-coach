@@ -1784,6 +1784,13 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
              self.list.originalLength())         
         status2 = _('Status: %d tracking')% self.list.nrBeingTracked()
         return status1, status2
+
+    def getItemTooltipText(self, index, column=0):
+        if self.settings.getboolean('view', 'descriptionpopups'):
+            item = self.getItemWithIndex(index)
+            return item.description()
+        else:
+            return ''
  
     # See TaskViewer for why the methods below have two names.
     

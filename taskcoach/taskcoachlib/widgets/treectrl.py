@@ -206,7 +206,8 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
             self.SelectItem(item)
     
 
-class CustomTreeCtrl(itemctrl.CtrlWithItems, TreeMixin, customtree.CustomTreeCtrl): 
+class CustomTreeCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithToolTip,
+                     TreeMixin, customtree.CustomTreeCtrl): 
     def __init__(self, parent, getItemText, getItemTooltipText, getItemImage,
             getItemAttr, getChildrenCount, getItemExpanded, selectCommand, editCommand,
             dragAndDropCommand, itemPopupMenu=None, *args, **kwargs):
