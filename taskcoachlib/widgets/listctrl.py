@@ -45,7 +45,7 @@ class _ListCtrl(wx.ListCtrl):
      
         
 class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl.CtrlWithToolTip, _ListCtrl):
-    def __init__(self, parent, columns, getItemText, getItemTooltipText, getItemImage,
+    def __init__(self, parent, columns, getItemText, getItemTooltipData, getItemImage,
             getItemAttr, selectCommand=None, editCommand=None, itemPopupMenu=None, 
             columnPopupMenu=None, resizeableColumn=0, *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent,
@@ -53,7 +53,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
             resizeableColumn=resizeableColumn, itemPopupMenu=itemPopupMenu, 
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.getItemText = getItemText
-        self.getItemTooltipText = getItemTooltipText
+        self.getItemTooltipData = getItemTooltipData
         self.getItemImage = getItemImage
         self.getItemAttr = getItemAttr
         self.bindEventHandlers(selectCommand, editCommand)
@@ -70,8 +70,8 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
     def OnGetItemText(self, rowIndex, columnIndex):
         return self.getItemText(rowIndex, columnIndex)
 
-    def OnGetItemTooltipText(self, rowIndex, columnIndex):
-        return self.getItemTooltipText(rowIndex, columnIndex)
+    def OnGetItemTooltipData(self, rowIndex, columnIndex):
+        return self.getItemTooltipData(rowIndex, columnIndex)
 
     def OnGetItemImage(self, rowIndex):
         return self.getItemImage(rowIndex, wx.TreeItemIcon_Normal, 0)[0]

@@ -149,24 +149,30 @@ class SimpleToolTip(ToolTipBase):
     def __init__(self, parent):
         super(SimpleToolTip, self).__init__(parent)
 
-        self.lines = []
+        self.data = []
 
         wx.EVT_PAINT(self, self.OnPaint)
 
-    def SetText(self, text):
+    def SetData(self, data):
         width = 0
         height = 0
-        self.lines = []
+        iconwidth = 0
+        self.data = data
 
         dc = wx.ClientDC(self)
         dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
 
-        for line in text.split('\n'):
-            s = line.rstrip('\r')
-            self.lines.append(s)
-            w, h = dc.GetTextExtent(s)
-            width = max(width, w)
-            height += h + 1
+        for idx, (icon, lines) in enumerate(self.data):
+            for line in lines:
+                w, h = dc.GetTextExtent(line)
+                width = max(width, w)
+                height += h + 1
+            if idx != 0 and idx != len(self.data) - 1:
+                height += 3
+            if icon is not None:
+                iconwidth = 24
+
+        width += iconwidth
 
         width += 6
         height += 6
@@ -189,10 +195,26 @@ class SimpleToolTip(ToolTipBase):
             x = 3
             y = 3
 
-            for line in self.lines:
-                dc.DrawText(line, x, y)
-                w, h = dc.GetTextExtent(line)
-                y += h + 1
+            for idx, (icon, lines) in enumerate(self.data):
+                if idx != 0 and lines:
+                    dc.DrawLine(3, y + 1, w - 6, y + 1)
+                    y += 3
+
+                if lines and icon is not None:
+                    bmp = wx.ArtProvider.GetBitmap(icon, wx.ART_FRAME_ICON, (16, 16))
+                    dc.DrawBitmap(bmp, x, y, True)
+                    x = 23
+
+                y0 = y + 1
+
+                for line in lines:
+                    dc.DrawText(line, x, y)
+                    tw, th = dc.GetTextExtent(line)
+                    y += th + 1
+
+                if icon is not None:
+                    dc.DrawLine(21, y0, 21, y + 1)
+
+                x = 3
         finally:
             dc.EndDrawing()
-

@@ -980,13 +980,17 @@ class ViewerWithColumns(Viewer):
         column = self.visibleColumns()[column]
         return column.render(item)
 
-    def getItemTooltipText(self, index, column=0):
+    def getItemTooltipData(self, index, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             item = self.getItemWithIndex(index)
             column = self.visibleColumns()[column]
-            return column.renderDescription(item)
+            result = [(None, map(lambda x: x.rstrip('\n'),
+                                 column.renderDescription(item).split('\n')))]
+            result.append(('note', [note.subject() for note in item.notes()]))
+            result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
+            return result
         else:
-            return ''
+            return []
 
     def getItemImage(self, index, which, column=0): 
         item = self.getItemWithIndex(index)
@@ -1410,7 +1414,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TreeViewer):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
-            self.getItemTooltipText, self.getItemImage, self.getItemAttr,
+            self.getItemTooltipData, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.onSelect, 
             uicommand.TaskEdit(taskList=self.model(), viewer=self),
             uicommand.TaskDragAndDrop(taskList=self.model(), viewer=self),
@@ -1483,7 +1487,7 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
             'categoryfiltermatchall'))
     
     def createWidget(self):
-        widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemTooltipText,
+        widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemTooltipData,
             self.getItemImage, self.getItemAttr, self.getChildrenCount,
             self.getItemExpanded,
             self.getIsItemChecked, self.onSelect, self.onCheck,
@@ -1523,12 +1527,16 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
         item = self.getItemWithIndex(index)
         return item.subject()
 
-    def getItemTooltipText(self, index):
+    def getItemTooltipData(self, index):
         if self.settings.getboolean('view', 'descriptionpopups'):
             item = self.getItemWithIndex(index)
-            return item.description()
+            result = [(None, map(lambda x: x.rstrip('\r'),
+                                 item.description().split('\n')))]
+            result.append(('note', [note.subject() for note in item.notes()]))
+            result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
+            return result
         else:
-            return ''
+            return []
 
     def getItemImage(self, index, which):
         return -1
@@ -1607,7 +1615,7 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText, 
-            self.getItemTooltipText, self.getItemImage, self.getItemAttr, 
+            self.getItemTooltipData, self.getItemImage, self.getItemAttr, 
             self.getChildrenCount, self.getItemExpanded, self.onSelect,
             uicommand.NoteEdit(viewer=self, notes=self.model()),
             uicommand.NoteDragAndDrop(viewer=self, notes=self.model()),
@@ -1703,12 +1711,14 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
         column = self.visibleColumns()[column]
         return column.render(item)
 
-    def getItemTooltipText(self, index, column=0):
+    def getItemTooltipData(self, index, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             note = self.getItemWithIndex(index)
-            return note.description()
+            result = [(None, map(lambda x: x.rstrip('\r'), note.description().split('\n')))]
+            result.append(('attachment', [unicode(attachment) for attachment in note.attachments()]))
+            return result
         else:
-            return None
+            return []
     
     def getBackgroundColor(self, note):
         return note.color()
@@ -1785,12 +1795,12 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
         status2 = _('Status: %d tracking')% self.list.nrBeingTracked()
         return status1, status2
 
-    def getItemTooltipText(self, index, column=0):
+    def getItemTooltipData(self, index, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             item = self.getItemWithIndex(index)
-            return item.description()
+            return [(None, map(lambda x: x.rstrip('\r'), item.description().split('\n')))]
         else:
-            return ''
+            return []
  
     # See TaskViewer for why the methods below have two names.
     
@@ -1874,7 +1884,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     def createWidget(self):
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
-            self.getItemText, self.getItemTooltipText, self.getItemImage,
+            self.getItemText, self.getItemTooltipData, self.getItemImage,
             self.getItemAttr, self.onSelect,
             uicommand.EffortEdit(viewer=self, effortList=self.model()),
             menu.EffortPopupMenu(self.parent, self.taskList, self.settings,
