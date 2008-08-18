@@ -30,12 +30,12 @@ Release('0.71.0', 'July ??, 2008',
 yearly, in addition to daily, weekly, and monthly. Tasks can also recur 
 with a multiple period frequency, e.g. every other week or every three months.
 Monthly recurring tasks can be set to recur on the same week day (e.g. first
-Monday of the month).'''),
+Monday of the month).''', '963803'),
         Feature('''The times used in the drop down menus of the start and stop
 entries of the effort dialog can now be changed via the preferences dialog. 
 Patch supplied by Rob McMullen.'''),
         Feature('''Categories and notes can have attachments.'''),
-        Feature('''Tasks and categories can contain notes. '''),
+        Feature('''Tasks and categories can contain notes. ''', '1954879'),
         Feature('''The four different effort viewers are integrated in one
 viewer that can switch between different effort aggregation modes, i.e. details,
 per day, per week and per month, via the toolbar.'''),
