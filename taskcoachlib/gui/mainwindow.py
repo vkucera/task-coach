@@ -66,15 +66,16 @@ class WindowDimensionsTracker(object):
             self._window.SetDimensions(0, 0, width, height)
 
     def onChangeSize(self, event):
-        # Ignore the EVT_SIZE when the window is maximized. Note how this 
-        # depends on the EVT_MAXIMIZE being sent before the EVT_SIZE
-        # Jerome, 2008/07/12: On my system (KDE 3.5.7), EVT_MAXIMIZE
-        # is not triggered, so set 'maximized' to True here...
-        if self._window.IsMaximized():
-            self.setSetting('maximized', True)
-        else:
+        # Ignore the EVT_SIZE when the window is maximized or iconized. 
+        # Note how this depends on the EVT_MAXIMIZE being sent before the 
+        # EVT_SIZE.
+        maximized = self._window.IsMaximized()
+        if not maximized and not self._window.IsIconized():
             self.setSetting('size', event.GetSize())
-            self.setSetting('maximized', False)
+        # Jerome, 2008/07/12: On my system (KDE 3.5.7), EVT_MAXIMIZE
+        # is not triggered, so set 'maximized' to True here as well as in 
+        # onMaximize:
+        self.setSetting('maximized', maximized)
         event.Skip()
         
     def onChangePosition(self, event):

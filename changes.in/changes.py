@@ -22,6 +22,13 @@ da'''
 from changetypes import *
 
 releases = [
+Release('0.70.4', 'August ?, 2008',
+    summary='''Bug fix release''',
+    bugsFixed=[
+        Bug('''The Task Coach main window would get a very small size if it
+was started minimized and had not been restored in the previous session.''',
+'2052910')]),
+        
 Release('0.70.3', 'August 17, 2008',
     summary='''Bug fix release''',
     bugsFixed=[
