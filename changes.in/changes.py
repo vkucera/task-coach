@@ -26,6 +26,9 @@ releases = [
 Release('0.71.0', 'July ??, 2008',
     summary='''?''',
     featuresAdded=[
+        Feature('''The description tooltip now works for efforts and
+categories. It also contains a summary of notes and attachments belonging
+to the hovered object.''', '1642608'),
         Feature('''More task recurrence options. Tasks can now also recur 
 yearly, in addition to daily, weekly, and monthly. Tasks can also recur 
 with a multiple period frequency, e.g. every other week or every three months.
