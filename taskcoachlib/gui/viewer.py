@@ -1898,7 +1898,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             uicommand.EffortEdit(viewer=self, effortList=self.model()),
             menu.EffortPopupMenu(self.parent, self.taskList, self.settings,
                                  self.model(), self),
-            menu.EffortViewerColumnPopupMenu(self.parent, self),
+            menu.EffortViewerColumnPopupMenu(self),
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
         return widget

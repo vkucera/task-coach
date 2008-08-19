@@ -60,22 +60,13 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
         self._window.ProcessEvent(wx.MenuEvent(wx.wxEVT_MENU_OPEN, menu=self))
 
 
-class StaticMenu(Menu):
-    def __init__(self, mainwindow):
-        super(StaticMenu, self).__init__(mainwindow)
-        wx.CallAfter(self.appendUICommands, *self.getUICommands())
-        
-    def getUICommands(self):
-        raise NotImplementedError
-
-
 class DynamicMenu(Menu):
     ''' A menu that registers for events and then updates itself whenever the
         event is fired. '''
-    def __init__(self, mainwindow, parentMenu=None, labelInParentMenu=''):
+    def __init__(self, window, parentMenu=None, labelInParentMenu=''):
         ''' Initialize the menu. labelInParentMenu is needed to be able to
             find this menu in its parentMenu. '''
-        super(DynamicMenu, self).__init__(mainwindow)
+        super(DynamicMenu, self).__init__(window)
         self._parentMenu = parentMenu
         self._labelInParentMenu = self.__GetLabelText(labelInParentMenu)
         self.registerForMenuUpdate()
@@ -147,16 +138,14 @@ class DynamicMenu(Menu):
 
             
 class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
-    def __init__(self, mainwindow, parentMenu=None, labelInParentMenu=''):
+    def __init__(self, viewer, parentMenu=None, labelInParentMenu=''):
         self._uiCommands = None
         super(DynamicMenuThatGetsUICommandsFromViewer, self).__init__(\
-            mainwindow, parentMenu, labelInParentMenu)
+            viewer, parentMenu, labelInParentMenu)
 
     def registerForMenuUpdate(self):
-        # I would've liked to update the menu whenever the active viewer 
-        # changes but with the aui managed frame there is no way that I know of 
-        # to get notified when the active frame (i.e. viewer) changes. So, 
-        # we'll just have to update the menu whenever it is opened:
+        # Refill the menu whenever the menu is opened, because the menu might 
+        # depend on the status of the viewer:
         self._window.Bind(wx.EVT_MENU_OPEN, self.onUpdateMenu)
         
     def updateMenuItems(self):
@@ -732,7 +721,11 @@ class NotePopupMenu(Menu):
         
 # Column header popup menu
 
-class ColumnPopupMenu(StaticMenu):
+class ColumnPopupMenu(Menu):
+    def __init__(self, window):
+        super(ColumnPopupMenu, self).__init__(window)
+        wx.CallAfter(self.appendUICommands, *self.getUICommands())
+        
     def __setColumn(self, columnIndex):
         self.__columnIndex = columnIndex
     
@@ -750,10 +743,6 @@ class ColumnPopupMenu(StaticMenu):
             
 
 class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
-    def __init__(self, mainwindow, viewer):
-        self.viewer = viewer
-        super(EffortViewerColumnPopupMenu, self).__init__(mainwindow)
-        
     def __setColumn(self, columnIndex):
         self.__columnIndex = columnIndex
     
@@ -769,7 +758,7 @@ class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
         self._window.Bind(wx.EVT_UPDATE_UI, self.onUpdateMenu)
                             
     def getUICommands(self):
-        if not self.viewer: # Prevent PyDeadObject exception when running tests
+        if not self._window: # Prevent PyDeadObject exception when running tests
             return []
-        return [uicommand.HideCurrentColumn(viewer=self.viewer), None] + \
-            self.viewer.getColumnUICommands()
+        return [uicommand.HideCurrentColumn(viewer=self._window), None] + \
+            self._window.getColumnUICommands()
