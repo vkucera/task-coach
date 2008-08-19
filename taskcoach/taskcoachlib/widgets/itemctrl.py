@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     and TreeListCtrl. '''
 
 
-import wx, wx.lib.mixins.listctrl, draganddrop, autowidth, tooltip
+import wx, wx.lib.mixins.listctrl, operator, draganddrop, autowidth, tooltip
 
 class _CtrlWithItems(object):
     ''' Base class for controls with items, such as ListCtrl, TreeCtrl,
@@ -185,9 +185,11 @@ class CtrlWithToolTip(_CtrlWithItems, tooltip.ToolTipMixin):
     def OnBeforeShowToolTip(self, x, y):
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
         if self._itemIsOk(item):
-            # TODO: handle icons
             tooltipData = self.OnGetItemTooltipData(self.GetIndexOfItem(item), column)
-            if tooltipData:
+            doShow = reduce(operator.__or__,
+                            map(bool, [data[1] for data in tooltipData]),
+                            False)
+            if doShow:
                 self.__tip.SetData(tooltipData)
                 return self.__tip
         return None
