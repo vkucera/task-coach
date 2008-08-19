@@ -201,7 +201,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
         wasExpanded = self.isExpanded(context)
         if expand:
             self.__expandedContexts.add(context)
-        else:
+        elif context in self.__expandedContexts:
             self.__expandedContexts.remove(context)
         if expand != wasExpanded:
             self.notifyObserversOfExpansionChange()
