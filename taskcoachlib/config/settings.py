@@ -89,7 +89,7 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
     def get(self, section, option):
         try:
             result = super(Settings, self).get(section, option)
-        except ConfigParser.NoOptionError:
+        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
             if section[-1].isdigit(): 
                 # Find a section that has this setting. Normally, if the 
                 # section exists, the setting should exist also. But, changes 

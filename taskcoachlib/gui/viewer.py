@@ -3,6 +3,7 @@ Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
+Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1911,6 +1912,16 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             ('period', _('Period'), 'effort.duration', self.renderPeriod),
             ('task', _('Task'), 'effort.task', lambda effort: effort.task().subject(recursive=True)),
             ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description())] + \
+            [widgets.Column('categories', _('Categories'),
+             width=self.getColumnWidth('categories'),
+             renderCallback=self.renderCategory, 
+             renderDescriptionCallback=lambda effort: effort.description(),
+             resizeCallback=self.onResizeColumn)] + \
+            [widgets.Column('totalCategories', _('Overall categories'),
+             width=self.getColumnWidth('totalCategories'),
+             renderCallback=lambda effort: self.renderCategory(effort, recursive=True),
+             renderDescriptionCallback=lambda effort: effort.description(),
+             resizeCallback=self.onResizeColumn)] + \
             [widgets.Column(name, columnHeader, eventType, 
              width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn,
              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
@@ -1948,6 +1959,12 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
              uicommand.ViewColumn(menuText=_('&Description'),
                                   helpText=_('Show/hide description column'),
                                   setting='description', viewer=self),
+             uicommand.ViewColumn(menuText=_('&Categories'),
+                                  helpText=_('Show/hide categories column'),
+                                  setting='categories', viewer=self),
+             uicommand.ViewColumn(menuText=_('Overall categories'),
+                                  helpText=_('Show/hide categories column'),
+                                  setting='totalCategories', viewer=self),
              uicommand.ViewColumn(menuText=_('&Time spent'),
                                   helpText=_('Show/hide time spent column'),
                                   setting='timeSpent', viewer=self),
@@ -1978,8 +1995,12 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
     def getItemImage(self, index, which, column=0):
         return -1
     
+    def getBackgroundColor(self, effort):
+        return effort.task().color()
+    
     def getItemAttr(self, index):
-        return wx.ListItemAttr()
+        effort = self.getItemWithIndex(index)
+        return wx.ListItemAttr(None, self.getBackgroundColor(effort))
 
     def curselection(self):
         selection = super(EffortListViewer, self).curselection()

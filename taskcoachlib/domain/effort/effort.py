@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,6 +39,10 @@ class EffortBase(object):
 
     def subject(self, *args, **kwargs):
         return self._task.subject(*args, **kwargs)
+
+    def categories(self, recursive=False):
+        return self._task.categories(recursive)
+
     
 
 class Effort(EffortBase, base.Object):
@@ -141,8 +146,8 @@ class Effort(EffortBase, base.Object):
     def notifyObserversOfRevenueChange(self):
         self.notifyObservers(patterns.Event(self, 'effort.revenue', 
             self.revenue()))
-            
-        
+    
+
 class CompositeEffort(EffortBase):
     ''' CompositeEffort is a lazy list (but cached) of efforts for one task
         (and its children) and within a certain time period. The task, start 
