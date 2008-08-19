@@ -509,7 +509,7 @@ class CategoriesPage(EditorPage):
         categoriesBox = widgets.BoxWithBoxSizer(self, label=_('Categories'))
         self._treeCtrl = widgets.CheckTreeCtrl(categoriesBox,
             lambda index: self.getCategoryWithIndex(index).subject(),
-            lambda *args: None,
+            lambda *args: [],
             lambda index, expanded=False: -1,
             lambda index: customtree.TreeItemAttr(),
             self.getChildrenCount,
