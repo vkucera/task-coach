@@ -769,5 +769,7 @@ class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
         self._window.Bind(wx.EVT_UPDATE_UI, self.onUpdateMenu)
                             
     def getUICommands(self):
+        if not self.viewer: # Prevent PyDeadObject exception when running tests
+            return []
         return [uicommand.HideCurrentColumn(viewer=self.viewer), None] + \
             self.viewer.getColumnUICommands()
