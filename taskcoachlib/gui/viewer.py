@@ -984,8 +984,11 @@ class ViewerWithColumns(Viewer):
         if self.settings.getboolean('view', 'descriptionpopups'):
             item = self.getItemWithIndex(index)
             column = self.visibleColumns()[column]
-            result = [(None, map(lambda x: x.rstrip('\n'),
-                                 column.renderDescription(item).split('\n')))]
+            if column.renderDescription(item):
+                result = [(None, map(lambda x: x.rstrip('\n'),
+                                     column.renderDescription(item).split('\n')))]
+            else:
+                result = []
             result.append(('note', [note.subject() for note in item.notes()]))
             result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
             return result
@@ -1530,8 +1533,11 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
     def getItemTooltipData(self, index):
         if self.settings.getboolean('view', 'descriptionpopups'):
             item = self.getItemWithIndex(index)
-            result = [(None, map(lambda x: x.rstrip('\r'),
-                                 item.description().split('\n')))]
+            if item.description():
+                result = [(None, map(lambda x: x.rstrip('\r'),
+                                     item.description().split('\n')))]
+            else:
+                result = []
             result.append(('note', [note.subject() for note in item.notes()]))
             result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
             return result
@@ -1714,7 +1720,10 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
     def getItemTooltipData(self, index, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             note = self.getItemWithIndex(index)
-            result = [(None, map(lambda x: x.rstrip('\r'), note.description().split('\n')))]
+            if note.description():
+                result = [(None, map(lambda x: x.rstrip('\r'), note.description().split('\n')))]
+            else:
+                result = []
             result.append(('attachment', [unicode(attachment) for attachment in note.attachments()]))
             return result
         else:
@@ -1798,9 +1807,9 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
     def getItemTooltipData(self, index, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             item = self.getItemWithIndex(index)
-            return [(None, map(lambda x: x.rstrip('\r'), item.description().split('\n')))]
-        else:
-            return []
+            if item.description():
+                return [(None, map(lambda x: x.rstrip('\r'), item.description().split('\n')))]
+        return []
  
     # See TaskViewer for why the methods below have two names.
     
