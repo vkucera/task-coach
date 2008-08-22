@@ -30,7 +30,7 @@ class Composite(object):
             child.setParent(self)
         
     def __getstate__(self):
-        return dict(children=[child.copy() for child in self.__children], 
+        return dict(children=self.__children[:], 
                     parent=self.__parent)
     
     def __setstate__(self, state):
