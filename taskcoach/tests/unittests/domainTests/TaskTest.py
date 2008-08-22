@@ -479,6 +479,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.__setstate__(state)
         self.failIf(self.task.notes())                        
 
+
 class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
         return [{'dueDate': date.Today()}]
@@ -908,7 +909,7 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTests):
 
     def testRevenueWithEffortButWithZeroFee(self):
         self.assertEqual(0, self.task.revenue())
-        
+
 
 class TaskWithTwoEffortsTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
@@ -1160,6 +1161,20 @@ class TaskWithAttachmentFixture(AttachmentTestCase):
 
         for idx, name in enumerate(self.taskCreationKeywordArguments()[0]['attachments']):
             self.assertEqual(attachment.FileAttachment(name), self.task.attachments()[idx])
+
+    def testCopy_CreatesNewListOfAttachments(self):
+        copy = self.task.copy()
+        self.assertEqual(copy.attachments(), self.task.attachments())
+        self.task.removeAttachments(self.task.attachments()[0])
+        self.assertNotEqual(copy.attachments(), self.task.attachments())
+
+    def testCopy_CopiesIndividualAttachments(self):
+        copy = self.task.copy()
+        self.assertEqual(copy.attachments()[0].data(),
+                         self.task.attachments()[0].data())
+        self.task.attachments()[0].setDescription('new')
+        self.assertNotEqual(copy.attachments()[0].data(),
+                            self.task.attachments()[0].data())
 
 
 class TaskWithAttachmentAddedTestCase(AttachmentTestCase):

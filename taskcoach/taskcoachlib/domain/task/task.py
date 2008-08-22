@@ -38,8 +38,6 @@ class Task(note.NoteOwner, category.CategorizableCompositeObject):
         self._completionDate = completionDate or date.Date()
         self._budget         = budget or date.TimeDelta()
         self._efforts        = efforts or []
-        for effort in self._efforts:
-            effort.setTask(self)
         self._priority       = priority
         self._hourlyFee      = hourlyFee
         self._fixedFee       = fixedFee
@@ -49,6 +47,8 @@ class Task(note.NoteOwner, category.CategorizableCompositeObject):
         self._recurrence     = recurrence
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
+        for effort in self._efforts:
+            effort.setTask(self)
 
     def __setstate__(self, state):
         super(Task, self).__setstate__(state)
@@ -79,6 +79,19 @@ class Task(note.NoteOwner, category.CategorizableCompositeObject):
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
+
+    def __getcopystate__(self):
+        state = super(Task, self).__getcopystate__()
+        state.update(dict(dueDate=self._dueDate, 
+            startDate=self._startDate, completionDate=self._completionDate, 
+            efforts=[effort.copy() for effort in self._efforts], 
+            budget=self._budget, priority=self._priority, 
+            hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
+            recurrence=self._recurrence.copy(),
+            reminder=self.reminder(), 
+            shouldMarkCompletedWhenAllChildrenCompleted=\
+                self._shouldMarkCompletedWhenAllChildrenCompleted))
+        return state
         
     def allChildrenCompleted(self):
         if not self.children():
@@ -88,19 +101,6 @@ class Task(note.NoteOwner, category.CategorizableCompositeObject):
                 return False
         return True
 
-    def copy(self):
-        ''' Copy constructor '''
-        return self.__class__(self.subject(), self.description(), 
-            self.dueDate(), self.startDate(), self.completionDate(),
-            parent=self.parent(), 
-            budget=self.budget(), priority=self.priority(), 
-            categories=set(self.categories()), fixedFee=self.fixedFee(),
-            hourlyFee=self.hourlyFee(), attachments=self.attachments()[:],
-            reminder=self.reminder(), recurrence=self.recurrence().copy(),
-            shouldMarkCompletedWhenAllChildrenCompleted=\
-                self.shouldMarkCompletedWhenAllChildrenCompleted,
-            children=[child.copy() for child in self.children()])
-    
     def newChild(self, subject='New subtask'):
         ''' Subtask constructor '''
         return super(Task, self).newChild(subject=subject, 

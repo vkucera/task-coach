@@ -166,3 +166,17 @@ class NoteOwnerTest(test.TestCase):
         noteOwner = note.NoteOwner(notes=[self.note])
         self.assertEqual([self.note], noteOwner.notes())
 
+    def testCopy(self):
+        self.noteOwner.addNote(self.note)
+        copy = note.NoteOwner(**self.noteOwner.__getcopystate__())
+        self.assertNotEqual(copy.notes()[0].id(), self.note.id())
+        self.assertEqual(copy.notes()[0].subject(), self.note.subject())
+
+    def testCopy_NoteOwnerWithNoteWithSubNote(self):
+        child = note.Note(subject='child')
+        self.note.addChild(child)
+        self.noteOwner.addNote(self.note)
+        copy = note.NoteOwner(**self.noteOwner.__getcopystate__())
+        childCopy = copy.notes()[0].children()[0]
+        self.assertNotEqual(childCopy.id(), child.id())
+        self.assertEqual(childCopy.subject(), child.subject())

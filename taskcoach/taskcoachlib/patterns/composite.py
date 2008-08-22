@@ -36,6 +36,16 @@ class Composite(object):
     def __setstate__(self, state):
         self.__parent = state['parent']
         self.__children = state['children']
+
+    def __getcopystate__(self):
+        ''' Return the information needed to create a copy as a dict. '''
+        try:
+            state = super(Composite, self).__getcopystate__()
+        except AttributeError:
+            state = dict()
+        state.update(dict(children=[child.copy() for child in self.__children], 
+                          parent=self.__parent))
+        return state
     
     def parent(self):
         return self.__parent

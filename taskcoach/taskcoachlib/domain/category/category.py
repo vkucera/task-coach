@@ -52,6 +52,12 @@ class Category(note.NoteOwner, base.CompositeObject):
         self.__categorizables = state['categorizables']
         self.__filtered = state['filtered']
 
+    def __getcopystate__(self):
+        state = super(Category, self).__getcopystate__()
+        state.update(dict(categorizables=self.__categorizables[:], 
+                          filtered=self.__filtered))
+        return state
+
     def setSubject(self, *args, **kwargs):
         if super(Category, self).setSubject(*args, **kwargs):
             for categorizable in self.categorizables(recursive=True):

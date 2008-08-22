@@ -74,14 +74,20 @@ class Attachment(object):
     def setDescription(self, descr):
         raise NotImplementedError
 
+    def copy(self):
+        return self.__class__(**self.__getcopystate__())
+
+    def __getcopystate__(self):
+        return dict(location=self.data())
+
 
 class FileAttachment(Attachment):
     type_ = 'file'
 
-    def __init__(self, filename, description=None, **kwargs):
+    def __init__(self, location='', description=None, **kwargs):
         super(FileAttachment, self).__init__(**kwargs)
         # FIXME: description is ignored
-        self.filename = filename
+        self.filename = location
 
     def open(self, workingDir=None, openAttachment=desktop.open):
         if workingDir is not None and not os.path.isabs(self.filename):
@@ -110,16 +116,16 @@ class FileAttachment(Attachment):
 class URIAttachment(Attachment):
     type_ = 'uri'
 
-    def __init__(self, uri, description=None, **kwargs):
+    def __init__(self, location='', description=None, **kwargs):
         super(URIAttachment, self).__init__(**kwargs)
         # FIXME: description is ignored
-        self.uri = uri
+        self.uri = location
 
     def open(self, workingDir=None):
         desktop.open(self.uri)
 
-    def setDescription(self, descr):
-        self.uri = descr
+    def setDescription(self, description):
+        self.uri = description
 
     def data(self):
         return self.uri
@@ -137,16 +143,16 @@ class URIAttachment(Attachment):
 class MailAttachment(Attachment):
     type_ = 'mail'
 
-    attdir =  None #  This is  filled in before  saving or  reading by
+    attdir =  None # This is filled in before saving or reading by
                    # xml.writer and xml.reader
 
-    def __init__(self, filename, description=None, **kwargs):
+    def __init__(self, location='', description=None, **kwargs):
         super(MailAttachment, self).__init__(**kwargs)
 
-        if os.path.isabs(filename):
-            self.filename = os.path.normpath(filename)
+        if os.path.isabs(location):
+            self.filename = os.path.normpath(location)
         else:
-            self.filename = os.path.normpath(os.path.join(self.attdir, filename))
+            self.filename = os.path.normpath(os.path.join(self.attdir, location))
 
         if description is None:
             self.description, unused = readMail(self.filename)
@@ -187,20 +193,20 @@ class MailAttachment(Attachment):
             return 1
 
 
-def AttachmentFactory(data, description=None, type_=None):
+def AttachmentFactory(location, description=None, type_=None):
     if type_ is None:
-        if data.startswith('URI:'):
-            return URIAttachment(data[4:])
-        elif data.startswith('FILE:'):
-            return FileAttachment(data[5:])
-        elif data.startswith('MAIL:'):
-            return MailAttachment(data[5:])
+        if location.startswith('URI:'):
+            return URIAttachment(location[4:])
+        elif location.startswith('FILE:'):
+            return FileAttachment(location[5:])
+        elif location.startswith('MAIL:'):
+            return MailAttachment(location[5:])
 
-        return FileAttachment(data)
+        return FileAttachment(location)
 
     try:
         return { 'file': FileAttachment,
                  'uri': URIAttachment,
-                 'mail': MailAttachment }[type_](data, description)
+                 'mail': MailAttachment }[type_](location, description)
     except KeyError:
         raise TypeError, 'Unknown attachment type: %s' % type_

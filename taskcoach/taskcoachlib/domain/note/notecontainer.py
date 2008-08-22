@@ -30,3 +30,15 @@ class NoteContainer(patterns.CompositeSet):
     newSubItemMenuText = _('New subnote...')
     newSubItemHelpText = _('Insert a new subnote')
 
+    def extend(self, notes):
+        super(NoteContainer, self).extend(notes)
+        for note in self._compositesAndAllChildren(notes):
+            for category in note.categories():
+                category.addCategorizable(note)
+                
+    def removeItems(self, notes):
+        super(NoteContainer, self).removeItems(notes)
+        for note in self._compositesAndAllChildren(notes):
+            for category in note.categories():
+                category.removeCategorizable(note)
+    
