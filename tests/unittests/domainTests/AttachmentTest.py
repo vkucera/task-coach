@@ -46,3 +46,8 @@ class FileAttachmentTest(test.TestCase):
         self.assertEqual(os.path.normpath(os.path.join('/home/frank/attachment.txt')), 
                          self.filename)
                                 
+    def testCopy(self):
+        copy = self.attachment.copy()
+        self.assertEqual(copy.data(), self.attachment.data())
+        self.attachment.setDescription('new')
+        self.assertNotEqual(copy.data(), self.attachment.data())

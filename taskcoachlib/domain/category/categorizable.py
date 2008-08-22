@@ -33,10 +33,15 @@ class CategorizableCompositeObject(base.CompositeObject):
         state = super(CategorizableCompositeObject, self).__getstate__()
         state.update(dict(categories=self.categories()))
         return state
-    
+
     def __setstate(self, state):
         super(CategorizableCompositeObject, self).__setstate__(state)
         self.setCategories(state['categories'])
+
+    def __getcopystate__(self):
+        state = super(CategorizableCompositeObject, self).__getcopystate__()
+        state.update(dict(categories=self.categories()))
+        return state
         
     def categories(self, recursive=False):
         result = set(self._categories)

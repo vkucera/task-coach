@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib.domain import note
+from taskcoachlib.domain import note, category
 
 
 class NoteContainerTest(test.TestCase):
@@ -25,7 +25,19 @@ class NoteContainerTest(test.TestCase):
         self.container = note.NoteContainer()
         self.note = note.Note()
         
-    def testAddContainer(self):
+    def testAddNote(self):
         self.container.append(self.note)
         self.assertEqual([self.note], self.container)
 
+    def testAddNoteWithCategory(self):
+        cat = category.Category(subject='Cat')
+        self.note.addCategory(cat)
+        self.container.append(self.note)
+        self.failUnless(self.note in cat.categorizables())
+
+    def testRemoveNoteWithCategory(self):
+        cat = category.Category(subject='Cat')
+        self.note.addCategory(cat)
+        self.container.append(self.note)
+        self.container.remove(self.note)
+        self.failIf(self.note in cat.categorizables())

@@ -58,11 +58,26 @@ class Object(patterns.Observable):
         self.setDescription(state['description'])
         self.setAttachments(*state['attachments'])
         self.setColor(state['color'])
+
+    def __getcopystate__(self):
+        ''' Return a dictionary that can be passed to __init__ when creating
+            a copy of the object. 
+            
+            E.g. copy = obj.__class__(**original.__getcopystate__()) '''
+        try:
+            state = super(Object, self).__getcopystate__()
+        except AttributeError:
+            state = dict()
+        # Note: we don't put the id in the state dict, because a copy should
+        # get a new id:
+        state.update(dict(\
+            subject=self.__subject, description=self.__description,
+            attachments=[att.copy() for att in self.__attachments],
+            color=self.__color))
+        return state
     
     def copy(self):
-        state = self.__getstate__()
-        del state['id'] # Don't copy the id
-        return self.__class__(**state)
+        return self.__class__(**self.__getcopystate__())
  
     # Id:
        
@@ -163,7 +178,12 @@ class CompositeObject(Object, patterns.ObservableComposite):
         for context in kwargs.pop('expandedContexts', []):
             self.__expandedContexts.add(context)
         super(CompositeObject, self).__init__(*args, **kwargs)
-    
+
+    def __getcopystate__(self):
+        state = super(CompositeObject, self).__getcopystate__()
+        state.update(dict(expandedContexts=self.expandedContexts()))
+        return state
+
     # Subject:
     
     def subject(self, recursive=False):

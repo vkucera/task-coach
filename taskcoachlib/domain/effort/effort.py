@@ -79,12 +79,18 @@ class Effort(EffortBase, base.Object):
         state.update(dict(task=self._task, start=self._start,
             stop=self._stop))
         return state
-        
+
     def __setstate__(self, state):
         super(Effort, self).__setstate__(state)
         self.setTask(state['task'])
         self.setStart(state['start'])
         self.setStop(state['stop'])
+
+    def __getcopystate__(self):
+        state = super(Effort, self).__getcopystate__()
+        state.update(dict(task=self._task, start=self._start,
+            stop=self._stop))
+        return state
    
     def duration(self, now=date.DateTime.now):
         if self._stop:

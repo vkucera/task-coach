@@ -45,7 +45,16 @@ class NoteOwner(patterns.Observable):
         except AttributeError:
             pass
         self.setNotes(state['notes'])
-             
+
+    def __getcopystate__(self):
+        ''' Return a dict, suitable for creating a copy. '''
+        try:
+            state = super(NoteOwner, self).__getcopystate__()
+        except AttributeError:
+            state = dict()
+        state.update(dict(notes=[note.copy() for note in self.__notes]))
+        return state
+            
     def addNote(self, note):
         ''' Add a note and notify our observers. '''
         self.__notes.append(note)

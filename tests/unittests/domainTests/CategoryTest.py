@@ -283,6 +283,11 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.assertEqual([patterns.Event(child, 
             self.totalCategoryRemovedEventType, self.category)], self.events)
 
+    def testCopy(self):
+        self.categorizable.addCategory(self.category)
+        copy = self.categorizable.copy()
+        self.assertEqual(copy.categories(), self.categorizable.categories())
+
 
 class CategoryTest(test.TestCase):
     def setUp(self):

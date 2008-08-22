@@ -67,6 +67,7 @@ class TaskAsserts(object):
     def assertTaskCopy(self, orig, copy):
         self.failIf(orig == copy)
         self.assertEqual(orig.subject(), copy.subject())
+        self.assertEqual(orig.description(), copy.description())
         self.assertEqual(orig.dueDate(), copy.dueDate())
         self.assertEqual(orig.startDate(), copy.startDate())
         self.assertEqual(orig.recurrence(), copy.recurrence())
@@ -86,8 +87,16 @@ class TaskAsserts(object):
         self.assertEqual(len(orig.children()), len(copy.children()))
         for origChild, copyChild in zip(orig.children(), copy.children()):
             self.assertTaskCopy(origChild, copyChild)
+        for origEffort, copyEffort in zip(orig.efforts(), copy.efforts()):
+            self.assertEffortCopy(origEffort, copyEffort)
 
-      
+    def assertEffortCopy(self, orig, copy):
+        self.failIf(orig.id() == copy.id())
+        self.failIf(orig.task() == copy.task())
+        self.assertEqual(orig.getStart(), copy.getStart())
+        self.assertEqual(orig.getStop(), copy.getStop())
+        self.assertEqual(orig.description(), copy.description())
+
 
 class CommandAsserts(object):
     def assertHistoryAndFuture(self, expectedHistory, expectedFuture):

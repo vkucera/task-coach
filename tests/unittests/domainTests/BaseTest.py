@@ -298,3 +298,10 @@ class CompositeObjectTest(test.TestCase):
         self.compositeObject.setColor(wx.RED)
         self.assertEqual(2, len(self.eventsReceived))
 
+    def testCopy(self):
+        self.compositeObject.expand(context='some_viewer')
+        copy = self.compositeObject.copy()
+        self.assertEqual(copy.expandedContexts(),
+                         self.compositeObject.expandedContexts())
+        self.compositeObject.expand(context='another_viewer')
+        self.failIf('another_viewer' in copy.expandedContexts())
