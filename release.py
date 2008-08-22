@@ -37,29 +37,47 @@ Release steps:
 - Set bug reports and/or feature requests to Pending state.
 '''
 
-import ftplib, taskcoachlib.meta, os, glob, sys, md5
+import ftplib, smtplib, os, glob, sys, getpass, md5, ConfigParser, \
+    taskcoachlib.meta
 
-def getSFUser():
-    if os.path.exists('.sfuser'):
-        username = file('.sfuser', 'rb').read()
-    else:
-        try:
-            username = raw_input('SourceForge user name [fniessink]: ')
-        except EOFError:
-            username = 'fniessink'
+class Settings(ConfigParser.SafeConfigParser, object):
+    def __init__(self):
+        super(Settings, self).__init__()
+        self.setDefaults()
+        self.filename = os.path.expanduser('~/.tcreleaserc')
+        self.read(self.filename)
 
-        if not username:
-            username = 'fniessink'
-    file('.sfuser', 'wb').write(username.strip())
+    def setDefaults(self):
+        defaults = dict(sourceforge=['username', 'password'],
+                        smtp=['hostname', 'port', 'username', 'password',
+                              'sender_name', 'sender_email_address'],
+                        chello=['hostname', 'username', 'password'],
+                        pypi=['username', 'password'])
+        for section in defaults:
+            self.add_section(section)
+            for option in defaults[section]:
+                self.set(section, option, 'ask')
 
-    return username
+    def get(self, section, option):
+        value = super(Settings, self).get(section, option)
+        if value == 'ask':
+            if option == 'password':
+                get_input = getpass.getpass
+            else:
+                get_input = raw_input
+            value = get_input('%s %s: '%(section, option)).strip()
+            self.set(section, option, value)
+            self.write(file(self.filename, 'w'))
+        return value
 
-def uploadDistributionsToSourceForge():
+def uploadDistributionsToSourceForge(settings):
     print 'Uploading distributions to SourceForge...'
-    os.system('rsync -avP -e ssh dist/* %s@frs.sourceforge.net:uploads/' % getSFUser())
+    username = settings.get('sourceforge', 'username')
+    os.system('rsync -avP -e ssh dist/* %s@frs.sourceforge.net:uploads/' % \
+              username)
     print 'Done uploading distributions to SourceForge.'
 
-def generateMD5Digests():
+def generateMD5Digests(settings):
     print 'Generating MD5 digests...'
     contents = '''<TABLE>
     <TR>
@@ -87,7 +105,7 @@ def generateMD5Digests():
     print 'Done generating MD5 digests.'
 
 
-def generateWebsite():
+def generateWebsite(settings):
     print 'Generating website...'
     os.chdir('website.in')
     os.system('python make.py')
@@ -96,10 +114,6 @@ def generateWebsite():
 
 
 class SimpleFTP(ftplib.FTP, object):
-    def __init__(self, server, login, password_file):
-        password = file(password_file).read()
-        super(SimpleFTP, self).__init__(server, login, password)
-
     def put(self, folder):
         for root, dirs, filenames in os.walk(folder):
             if root != folder:
@@ -113,58 +127,129 @@ class SimpleFTP(ftplib.FTP, object):
                     print info
             for filename in filenames:
                 print 'Store %s'%os.path.join(root, filename)
-                self.storbinary('STOR %s'%filename, file(os.path.join(root, filename), 'rb'))
+                self.storbinary('STOR %s'%filename, 
+                                file(os.path.join(root, filename), 'rb'))
 
-def uploadWebsiteToChello():
-    if os.path.exists('.chello_password'):
+def uploadWebsiteToChello(settings):
+    hostname = settings.get('chello', 'hostname')
+    username = settings.get('chello', 'username')
+    password = settings.get('chello', 'password')
+    
+    if hostname and username and password:
         print "Uploading website to Chello..."
-        chello = SimpleFTP('members.chello.nl', 'f.niessink', '.chello_password')
+        chello = SimpleFTP(hostname, username, password)
         os.chdir('website.out')
         chello.put('.')
         chello.quit()
         os.chdir('..')
         print 'Done uploading website to Chello.'
     else:
-        print 'Warning: no Chello password in ".".'
+        print 'Warning: cannot upload website to Chello; missing credentials'
 
-def uploadWebsiteToSourceForge():
+def uploadWebsiteToSourceForge(settings):
     print 'Uploading website to SourceForge...'
-    os.system('scp -r website.out/* %s@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs' % getSFUser())
+    username = settings.get('sourceforge', 'username')
+    os.system('scp -r website.out/* %s@shell.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs' % username)
     print 'Done uploading website to SourceForge.'
     
-def registerWithPyPI():
+def registerWithPyPI(settings):
     print 'Registering with PyPI...'
+    username = settings.get('pypi', 'username')
+    password = settings.get('pypi', 'password')
+    pypirc = file('.pypirc', 'w')
+    pypirc.write('[server-login]\nusername = %s\npassword = %s\n'%\
+                 (username, password))
+    pypirc.close()
     from setup import setupOptions
     languagesThatPyPIDoesNotRecognize = ['Breton', 'Galician', 'Norwegian (Bokmal)']
     for language in languagesThatPyPIDoesNotRecognize:
         setupOptions['classifiers'].remove('Natural Language :: %s'%language)
     from distutils.core import setup
-    import sys, os
-    os.environ['HOME'] = '.'
     del sys.argv[1:]
+    os.environ['HOME'] = '.'
     sys.argv.append('register')
     setup(**setupOptions)
+    os.remove('.pypirc')
     print 'Done registering with PyPI.'
 
-def uploadWebsite():
-    uploadWebsiteToChello()
-    uploadWebsiteToSourceForge()
+def uploadWebsite(settings):
+    uploadWebsiteToChello(settings)
+    uploadWebsiteToSourceForge(settings)
     
-def phase1():
-    uploadDistributionsToSourceForge()
-    generateMD5Digests()
-    generateWebsite()
+def phase1(settings):
+    uploadDistributionsToSourceForge(settings)
+    generateMD5Digests(settings)
+    generateWebsite(settings)
     
-def phase2():
-    uploadWebsite()
-    registerWithPyPI()
+def phase2(settings):
+    uploadWebsite(settings)
+    registerWithPyPI(settings)
+
+def mailAnnouncement(settings):
+    server = settings.get('smtp', 'hostname')
+    port = settings.get('smtp', 'port')
+    username = settings.get('smtp', 'username')
+    password = settings.get('smtp', 'password')
+    sender_name = settings.get('smtp', 'sender_name')
+    sender_email_address = settings.get('smtp', 'sender_email_address')
+    recipients = ['frank@niessink.com']
+    metadata = taskcoachlib.meta.data.metaDict
+    metadata.update(dict(sender_name=sender_name,
+                         sender_email_address=sender_email_address))
+    msg = '''To: frank@niessink.com
+From: %(sender_name)s <%(sender_email_address)s>
+Reply-To: %(author_email)s
+Subject: [ANN] Release %(version)s of %(name)s
+
+Hi,
+
+We're happy to announce release %(version)s of %(name)s. @Insert release
+summary here@
+
+Bugs fixed:
+
+@Insert bugs here@
+
+Feature(s) added:
+
+@Insert features here@
+
+What is %(name)s?
+
+%(name)s is a simple task manager that allows for hierarchical tasks, i.e. tasks in tasks. %(name)s is open source (%(license_abbrev)s) and is developed using Python and wxPython. You can download %(name)s from:
+
+%(url)s
+
+In addition to the source distribution, packaged distributions are available for Windows XP/Vista, Mac OS X, and Linux (Debian and RPM format).
+
+Note that %(name)s is %(release_status)s software. We do our best to prevent bugs, but it is always wise to back up your task file regularly, and especially when upgrading to a new release.
+
+Regards, Jerome and Frank
+'''%metadata
+    session = smtplib.SMTP(server, port)
+    session.set_debuglevel(1)
+    session.helo()
+    session.starttls()
+    session.ehlo()
+    session.login(username, password)
+    smtpresult = session.sendmail(username, recipients, msg)
+
+    if smtpresult:
+        errstr = ""
+        for recip in smtpresult.keys():
+            errstr = """Could not delivery mail to: %s 
+Server said: %s
+%s
+%s""" % (recip, smtpresult[recip][0], smtpresult[recip][1], errstr)
+        raise smtplib.SMTPException, errstr
 
 
 commands = dict(phase1=phase1, phase2=phase2, website=uploadWebsite, 
                 websiteChello=uploadWebsiteToChello, 
                 websiteSF=uploadWebsiteToSourceForge, 
-                pypi=registerWithPyPI)
+                pypi=registerWithPyPI)#, announce=mailAnnouncement)
+settings = Settings()
 try:
-    commands[sys.argv[1]]()
+    commands[sys.argv[1]](settings)
 except (KeyError, IndexError):
     print 'Usage: release.py [%s]'%'|'.join(sorted(commands.keys()))

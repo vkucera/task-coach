@@ -74,6 +74,17 @@ Task nodes may have a recurrence node that contains the recurrence state of
 the task. Categories and notes can contain attachments. Tasks and categories
 can now contain notes.''')]),
 
+Release('0.70.3', 'August 17, 2008',
+    summary='''Bug fix release''',
+    bugsFixed=[
+        Bug('''wxPython 2.8.8.1 generates images in a new, backwards 
+incompatible way, even when told not to do that. This bug affects users 
+that have an older version of wxPython installed and use one of the 
+Linux packages. Fixed by adding the relevant pieces from wxPython 2.8.8.1 to 
+the Task Coach sources.''', '2046084'),
+        Bug('''Opening a new task viewer didn't work.''', '2053008'),
+        Bug('''Closing effort viewers causes exceptions.''', '2053008')]),
+
 Release('0.70.2', 'August 6, 2008',
     summary='''This release fixes some bugs and brings back
 the Fedora RPM.''',

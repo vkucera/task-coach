@@ -383,9 +383,11 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
         column = self._getColumn(columnIndex)
         # Make sure the window this control is in has focus:
         event.GetEventObject().MainWindow.SetFocus()
-        # Use CallAfter to make sure the window this control is in is 
-        # activated before we process the column click:
-        wx.CallAfter(column.sort, event)
+        if 0 <= event.GetColumn() < self.GetColumnCount():
+            column = self._getColumn(event.GetColumn())
+            # Use CallAfter to make sure the window this control is in is 
+            # activated before we process the column click:
+            wx.CallAfter(column.sort, event)
         
     def showSortColumn(self, column):
         if column != self.__currentSortColumn:

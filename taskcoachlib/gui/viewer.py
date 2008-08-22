@@ -280,7 +280,7 @@ class SortableViewer(object):
             header. '''
         self._sortUICommands = []
 
-        
+
 class SortableViewerForTasks(SortableViewer):
     SorterClass = task.sorter.Sorter
     

@@ -26,7 +26,10 @@ def extractIcon(iconZipFile, pngFilename, pngZipped):
     pngFile.close()
 
 def addIcon(pngName, pngFilename, iconPyFile, first):
-    options = ['-i', '-c', '-a', '-n%s'%pngName, pngFilename, iconPyFile]
+    # -F: don't generate backwards compatible access functions, since the 
+    # generated file isn't backwards compatible anyway (a bug in wxPython
+    # 2.8.8.1).
+    options = ['-i', '-c', '-a', '-F', '-n%s'%pngName, pngFilename, iconPyFile]
     if first:
         options.remove('-a')
     wx.tools.img2py.main(options)
@@ -53,9 +56,28 @@ def makeIconPyFile(iconPyFile):
     extractAndAddIcons(iconZipFile, iconPyFile)
     iconZipFile.close()
 
-def makeSplashScreen(splashPyFile):
-    wx.tools.img2py.main(['-c', '-a', '-nsplash', 'splash.png', splashPyFile])
+def makeSplashScreen(iconPyFile):
+    wx.tools.img2py.main(['-c', '-a', '-F', '-nsplash', 'splash.png', 
+                         iconPyFile])
+
+def fixIconFile(iconFileName):
+    ''' wxPython 2.8.8.1 uses a new class for images in the generated image
+        file. Since this class is not available in older versions of wxPython 
+        we include that file in taskcoachlib.thirdparty and change the import 
+        in the generated image file. '''
+    fd = file(iconFileName)
+    contents = fd.readlines()
+    fd.close()
+    fd = file(iconFileName, 'w')
+    for line in contents:
+        if line.startswith('from wx.lib.embeddedimage'):
+            line = 'from taskcoachlib.thirdparty.embeddedimage import PyEmbeddedImage\n'
+        fd.write(line)
+    fd.close()
+
 
 if __name__ == '__main__':
-    makeIconPyFile('../taskcoachlib/gui/icons.py')
-    makeSplashScreen('../taskcoachlib/gui/icons.py')
+    iconFileName = '../taskcoachlib/gui/icons.py'
+    makeIconPyFile(iconFileName)
+    makeSplashScreen(iconFileName)
+    fixIconFile(iconFileName)
