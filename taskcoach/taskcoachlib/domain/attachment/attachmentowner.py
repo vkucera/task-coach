@@ -1,7 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,5 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from attachment import *
-from attachmentowner import AttachmentOwner
+from taskcoachlib import patterns
+from taskcoachlib.domain import base
+
+
+class AttachmentOwner(patterns.Observable):
+    """Mixin class for other domain objects that may have attachments"""
+
+    __metaclass__ = base.DomainObjectOwnerMetaclass
+    __ownedType__ = 'Attachment'

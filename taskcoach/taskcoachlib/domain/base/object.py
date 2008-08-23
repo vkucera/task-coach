@@ -27,7 +27,6 @@ class Object(patterns.Observable):
     def __init__(self, *args, **kwargs):
         self.__subject = kwargs.pop('subject', '')
         self.__description = kwargs.pop('description', '')
-        self.__attachments = kwargs.pop('attachments', [])     
         self.__color = kwargs.pop('color', None)
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
         # FIXME: Not a valid XML id
@@ -44,7 +43,6 @@ class Object(patterns.Observable):
             state = dict()
         state.update(dict(id=self.__id, subject=self.__subject, 
                           description=self.__description,
-                          attachments=self.__attachments[:],
                           color=self.__color))
         return state
     
@@ -56,7 +54,6 @@ class Object(patterns.Observable):
         self.setId(state['id'])
         self.setSubject(state['subject'])
         self.setDescription(state['description'])
-        self.setAttachments(*state['attachments'])
         self.setColor(state['color'])
 
     def __getcopystate__(self):
@@ -72,7 +69,6 @@ class Object(patterns.Observable):
         # get a new id:
         state.update(dict(\
             subject=self.__subject, description=self.__description,
-            attachments=[att.copy() for att in self.__attachments],
             color=self.__color))
         return state
     
@@ -122,36 +118,6 @@ class Object(patterns.Observable):
     @classmethod    
     def descriptionChangedEventType(class_):
         return '%s.description'%class_
-    
-    # Attachments:
-    
-    def attachments(self):
-        return self.__attachments
-
-    def addAttachments(self, *attachments):
-        if attachments:
-            self.__attachments.extend(attachments)
-            self.notifyObservers(patterns.Event(self,
-                self.attachmentsChangedEventType(), *self.__attachments))
-                
-    def removeAttachments(self, *attachments):
-        attachmentsRemoved = []
-        for attachment in attachments:
-            if attachment in self.__attachments:
-                self.__attachments.remove(attachment)
-                attachmentsRemoved.append(attachment)
-        if attachmentsRemoved:
-            self.notifyObservers(patterns.Event(self,
-                self.attachmentsChangedEventType(), *self.__attachments))
-                
-    def setAttachments(self, *attachments):
-        self.__attachments = list(attachments)
-        self.notifyObservers(patterns.Event(self,
-            self.attachmentsChangedEventType(), *self.__attachments))
-            
-    @classmethod
-    def attachmentsChangedEventType(class_):
-        return '%s.attachments'%class_
     
     # Color:
     
