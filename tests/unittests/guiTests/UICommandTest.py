@@ -70,7 +70,7 @@ class NewTaskWithSelectedCategoryTest(test.wxTestCase):
                                                 categories=self.categories,
                                                 settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
-        tree = dialog[0][2]._treeCtrl
+        tree = dialog[0][2]._categoryViewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
 
     def selectFirstCategory(self):
@@ -139,7 +139,7 @@ class TaskNewTest(test.TestCase):
                                         categories=categories,
                                         settings=settings)
         dialog = taskNew.doCommand(None, show=False)
-        tree = dialog[0][2]._treeCtrl
+        tree = dialog[0][2]._categoryViewer.widget
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
         self.failUnless(firstChild.IsChecked())
         
@@ -149,9 +149,10 @@ class NoteNewTest(test.TestCase):
         cat = category.Category('cat', filtered=True)
         categories = category.CategoryList([cat])
         noteNew = gui.uicommand.NoteNew(notes=note.NoteContainer(), 
-                                        categories=categories)
+                                        categories=categories,
+                                        settings=config.Settings(load=False))
         dialog = noteNew.doCommand(None, show=False)
-        tree = dialog[0][1]._treeCtrl
+        tree = dialog[0][1]._categoryViewer.widget
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
         self.failUnless(firstChild.IsChecked())
 

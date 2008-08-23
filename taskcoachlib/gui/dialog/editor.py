@@ -502,28 +502,53 @@ class EffortPage(EditorPage, TaskHeaders):
         event.Skip()
 
 
+class LocalCategoryViewer(viewer.CategoryViewer):
+    def __init__(self, item, *args, **kwargs):
+        # tasks and notes are only  used for the 2 commands that we'll
+        # suppress anyway.
+        kwargs['tasks'] = []
+        kwargs['notes'] = []
+
+        self._item = item
+
+        super(LocalCategoryViewer, self).__init__(*args, **kwargs)
+
+        self.widget.ExpandAll()
+    
+    def getIsItemChecked(self, index):
+        item = self.getItemWithIndex(index)
+        if isinstance(item, category.Category):
+            return item in self._item.categories()
+        return False
+
+    def createCategoryPopupMenu(self):
+        return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)
+
+    def onCheck(self, event):
+        # We don't want  the 'main' category viewer to  be affected by
+        # what's happening here.
+        pass
+
+
 class CategoriesPage(EditorPage):
-    def __init__(self, parent, item, categories, *args, **kwargs):
+    def __init__(self, parent, item, categories, settings, *args, **kwargs):
         super(CategoriesPage, self).__init__(parent, item, *args, **kwargs)
         self.__categories = category.CategorySorter(categories)
         categoriesBox = widgets.BoxWithBoxSizer(self, label=_('Categories'))
-        self._treeCtrl = widgets.CheckTreeCtrl(categoriesBox,
-            lambda index: self.getCategoryWithIndex(index).subject(),
-            lambda *args: [],
-            lambda index, expanded=False: -1,
-            lambda index: customtree.TreeItemAttr(),
-            self.getChildrenCount,
-            lambda index: 'Undetermined',
-            lambda index: self.getCategoryWithIndex(index) in item.categories(),
-            lambda *args: None, lambda *args: None, lambda *args: None,
-            lambda *args: None)
-        self._treeCtrl.expandAllItems()
-        categoriesBox.add(self._treeCtrl, proportion=1, flag=wx.EXPAND|wx.ALL)
+        self._categoryViewer = LocalCategoryViewer(item, categoriesBox, categories,
+                                       tasks=[], notes=[], settings=settings,
+                                       settingsSection=self.settingsSection())
+        categoriesBox.add(self._categoryViewer, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
         self.add(categoriesBox)
         self.fit()
-        self._fieldMap['categories']=self._treeCtrl
-        self._fieldMap['totalCategories']=self._treeCtrl # readOnlyField maps to base 
+        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
+        self._fieldMap['categories']=self._categoryViewer
+        self._fieldMap['totalCategories']=self._categoryViewer # readOnlyField maps to base 
+
+    def onClose(self, event):
+        self._categoryViewer.detach()
+        event.Skip()
 
     def getCategoryWithIndex(self, index):
         children = self.__categories.rootItems()
@@ -536,17 +561,11 @@ class CategoriesPage(EditorPage):
                         in childIndices]
         return category
 
-    def getChildrenCount(self, index): # FIXME: duplication with viewers
-        if index == ():
-            return len(self.__categories.rootItems())
-        else:
-            category = self.getCategoryWithIndex(index)
-            return len(category.children())
-
     def ok(self):
-        self._treeCtrl.ExpandAll()
-        for categoryNode in self._treeCtrl.GetItemChildren(recursively=True):
-            categoryIndex = self._treeCtrl.GetIndexOfItem(categoryNode)
+        treeCtrl = self._categoryViewer.widget
+        treeCtrl.ExpandAll()
+        for categoryNode in treeCtrl.GetItemChildren(recursively=True):
+            categoryIndex = treeCtrl.GetIndexOfItem(categoryNode)
             category = self.getCategoryWithIndex(categoryIndex)
             if categoryNode.IsChecked():
                 category.addCategorizable(self._item)
@@ -557,11 +576,23 @@ class CategoriesPage(EditorPage):
 
 
 class TaskCategoriesPage(CategoriesPage, TaskHeaders):
-    pass
+    def settingsSection(self):
+        return 'categoryviewerintaskeditor'
 
 
 class NoteCategoriesPage(CategoriesPage, NoteHeaders):
-    pass
+    def settingsSection(self):
+        return 'categoryviewerinnoteeditor'
+
+
+class LocalNoteViewer(viewer.NoteViewer):
+    def createFilter(self, notes):
+        # Inside the editor, all notes should be shown.
+        categories = self.categories
+        self.categories = category.CategoryList()
+        notes = super(LocalNoteViewer, self).createFilter(notes)
+        self.categories = categories
+        return notes
 
 
 class NotesPage(EditorPage):
@@ -570,7 +601,7 @@ class NotesPage(EditorPage):
         super(NotesPage, self).__init__(parent, item, *args, **kwargs)
         notesBox = widgets.BoxWithBoxSizer(self, label=_('Notes'))
         self.noteContainer = note.NoteContainer(item.notes())
-        self.noteViewer = viewer.NoteViewer(notesBox, self.noteContainer, 
+        self.noteViewer = LocalNoteViewer(notesBox, self.noteContainer, 
             settings, settingsSection='noteviewerintaskeditor', 
             categories=categories)
         notesBox.add(self.noteViewer, flag=wx.EXPAND|wx.ALL, proportion=1)
@@ -771,7 +802,7 @@ class TaskEditBook(widgets.Listbook):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(SubjectPage(self, task), _('Description'), 'description')
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
-        self.AddPage(TaskCategoriesPage(self, task, categories), _('Categories'),
+        self.AddPage(TaskCategoriesPage(self, task, categories, settings), _('Categories'),
                      'category')
         self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')
         if task.timeSpent(recursive=True):
@@ -980,7 +1011,7 @@ class NoteEditBook(widgets.Listbook):
     def __init__(self, parent, theNote, settings, categories, *args, **kwargs):
         super(NoteEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(NoteSubjectPage(self, theNote), _('Description'), 'description')
-        self.AddPage(NoteCategoriesPage(self, theNote, categories), _('Categories'),
+        self.AddPage(NoteCategoriesPage(self, theNote, categories, settings), _('Categories'),
                      'category')
         self.AddPage(AttachmentPage(self, theNote, settings), _('Attachments'), 'attachment')
 

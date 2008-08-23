@@ -401,7 +401,7 @@ class CommonTests(object):
     def testNewItem(self):
         self.categories.append(category.Category('cat', filtered=True))
         dialog = self.viewer.newItemDialog(bitmap='new')
-        tree = dialog[0][2]._treeCtrl
+        tree = dialog[0][2]._categoryViewer.widget
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
         self.failUnless(firstChild.IsChecked())
         

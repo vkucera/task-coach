@@ -71,6 +71,22 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
+'categoryviewerintaskeditor': { \
+    'title': '',
+    'sortby': 'subject',
+    'sortascending': 'True',
+    'sortcasesensitive': 'True',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False' },
+'categoryviewerinnoteeditor': { \
+    'title': '',
+    'sortby': 'subject',
+    'sortascending': 'True',
+    'sortcasesensitive': 'True',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False' },
 'noteviewer': { \
     'title': '',
     'sortby': 'subject',
