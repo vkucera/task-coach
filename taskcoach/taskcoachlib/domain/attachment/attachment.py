@@ -64,6 +64,9 @@ def getRelativePath(path, base=os.getcwd()):
 class Attachment(object):
     ''' Abstract base class for attachments. '''
     type_ = None
+
+    attdir =  None # This is filled in before saving or reading by
+                   # xml.writer and xml.reader
         
     def open(self, workingDir=None):
         raise NotImplementedError
@@ -142,9 +145,6 @@ class URIAttachment(Attachment):
 
 class MailAttachment(Attachment):
     type_ = 'mail'
-
-    attdir =  None # This is filled in before saving or reading by
-                   # xml.writer and xml.reader
 
     def __init__(self, location='', description=None, **kwargs):
         super(MailAttachment, self).__init__(**kwargs)

@@ -30,7 +30,7 @@ class XMLReader:
         path, name = os.path.split(os.path.abspath(self.__fd.name))
         name, ext = os.path.splitext(name)
         attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-        attachment.MailAttachment.attdir = attdir
+        attachment.Attachment.attdir = attdir
 
         domDocument = xml.dom.minidom.parse(self.__fd)
         self.__tskversion = self.__parseTskVersionNumber(domDocument)

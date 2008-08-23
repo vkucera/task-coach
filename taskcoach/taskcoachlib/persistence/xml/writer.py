@@ -32,7 +32,7 @@ class XMLWriter:
         path, name = os.path.split(os.path.abspath(self.__fd.name))
         name, ext = os.path.splitext(name)
         attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-        attachment.MailAttachment.attdir = attdir
+        attachment.Attachment.attdir = attdir
 
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None)
