@@ -32,9 +32,24 @@ class Command(object):
         return 'command'
 
 
-class CommandHistory:
-    __metaclass__ = patterns.Singleton
+class AggregateCommand(Command):
+    def __init__(self, commands):
+        super(AggregateCommand, self).__init__()
 
+        self.__commands = commands
+
+    def undo(self):
+        commands = self.__commands[:]
+        commands.reverse()
+        for command in commands:
+            command.undo()
+
+    def redo(self):
+        for command in self.__commands:
+            command.redo()
+
+
+class CommandHistoryLayer:
     def __init__(self):
         self.__history = []
         self.__future = []
@@ -84,3 +99,26 @@ class CommandHistory:
         return self._extendLabel(label, self.__future)
 
 
+class CommandHistory:
+    __metaclass__ = patterns.Singleton
+
+    def __init__(self):
+        self.__stack = [CommandHistoryLayer()]
+
+    def push(self):
+        self.__stack.append(CommandHistoryLayer())
+
+    def pop(self, keep=True):
+        layer = self.__stack.pop()
+
+        cmd = AggregateCommand(layer.getHistory())
+        if keep:
+            self.__stack[-1].append(cmd)
+        else:
+            cmd.undo()
+
+    def clear(self):
+        self.__stack = [CommandHistoryLayer()]
+
+    def __getattr__(self, name):
+        return getattr(self.__stack[-1], name)

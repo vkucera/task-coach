@@ -23,12 +23,12 @@ import wx, datetime, os.path, sys
 from wx.lib import masked
 import wx.lib.customtreectrl as customtree
 from taskcoachlib import widgets
-from taskcoachlib.gui import render, viewercontainer, viewer
+from taskcoachlib.gui import render, viewercontainer, viewer, toolbar, uicommand
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
 from taskcoachlib.thirdparty import desktop, combotreebox
-
+from taskcoachlib.patterns import CommandHistory
 
 class DateEntry(widgets.PanelWithBoxSizer):
     defaultDate = date.Date()
@@ -988,10 +988,19 @@ class NoteEditBook(widgets.Listbook):
 class EditorWithCommand(widgets.NotebookDialog):
     def __init__(self, parent, command, *args, **kwargs):
         self._command = command
+        CommandHistory().push()
+        self.__popped = False
+
         super(EditorWithCommand, self).__init__(parent, command.name(), 
                                                 *args, **kwargs)
 
+        bar = toolbar.ToolBar(self, (16, 16))
+        self._verticalSizer.Insert(0, bar, flag=wx.EXPAND)
+
         self.setFocusOnFirstEntry()
+
+    def getToolBarUICommands(self):
+        return [uicommand.EditUndo(), uicommand.EditRedo()]
 
     def setFocusOnFirstEntry(self):
         firstEntry = self[0][0]._subjectEntry
@@ -1004,8 +1013,26 @@ class EditorWithCommand(widgets.NotebookDialog):
             self.addPage(item)
 
     def ok(self, *args, **kwargs):
-        super(EditorWithCommand, self).ok(*args, **kwargs)
         self._command.do()
+        CommandHistory().pop()
+        self.__popped = True
+
+        # Do this after, because onClose will be called.
+        super(EditorWithCommand, self).ok(*args, **kwargs)
+
+    def cancel(self, event=None):
+        CommandHistory().pop(False)
+        self.__popped = True
+
+        super(EditorWithCommand, self).cancel(event)
+
+    def onClose(self, event):
+        if not self.__popped:
+            # The user  closed the dialog through the  system menu; he
+            # didn't click OK or Cancel.
+            CommandHistory().pop(False)
+            self.__popped = True
+        super(EditorWithCommand, self).onClose(event)
 
 
 class TaskEditor(EditorWithCommand):
