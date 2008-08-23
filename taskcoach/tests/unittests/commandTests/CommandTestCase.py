@@ -18,13 +18,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from unittests import asserts
-from taskcoachlib import patterns, command
+from taskcoachlib import patterns
+
+
+class TestCommand(patterns.Command):
+    def __init__(self):
+        self.done = False
+        self.undone = False
+        self.redone = False
+
+    def do(self):
+        super(TestCommand, self).do()
+        self.done = True
+
+    def undo(self):
+        self.undone = True
+
+    def redo(self):
+        self.redone = True
 
 
 class CommandTestCase(test.wxTestCase, asserts.CommandAsserts):
     def tearDown(self):
         super(CommandTestCase, self).tearDown()
         patterns.CommandHistory().clear()
+
+    def push(self):
+        patterns.CommandHistory().push()
+
+    def pop(self, keep=True):
+        patterns.CommandHistory().pop(keep)
+
+    def hasHistory(self):
+        return patterns.CommandHistory().hasHistory()
+
+    def hasFuture(self):
+        return patterns.CommandHistory().hasFuture()
 
     def undo(self):
         patterns.CommandHistory().undo()
