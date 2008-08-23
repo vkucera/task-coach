@@ -26,7 +26,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     class (here assuming a type of 'Foo'):
 
       - __init__, __getstate__, __setstate__, __getcopystate__, __setcopystate__
-      - addFoo, removeFoo
+      - addFoo, removeFoo, addFoos, removeFoos
       - setFoos, foos
       - foosChangedEventType
       - __notifyObservers"""
@@ -72,11 +72,25 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
 
     setattr(klass, 'add%s' % klass.__ownedType__, addObject)
 
+    def addObjects(instance, *objects):
+        for object in objects:
+            getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).append(object)
+        notifyObservers(instance)
+
+    setattr(klass, 'add%ss' % klass.__ownedType__, addObjects)
+
     def removeObject(instance, object):
         getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(object)
         notifyObservers(instance)
 
     setattr(klass, 'remove%s' % klass.__ownedType__, removeObject)
+
+    def removeObjects(instance, *objects):
+        for object in objects:
+            getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(object)
+        notifyObservers(instance)
+
+    setattr(klass, 'remove%ss' % klass.__ownedType__, removeObjects)
 
     def getstate(instance):
         try:
