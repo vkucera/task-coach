@@ -502,7 +502,7 @@ class EffortPage(EditorPage, TaskHeaders):
         event.Skip()
 
 
-class LocalCategoryViewer(viewer.CategoryViewer):
+class LocalCategoryViewer(viewer.BaseCategoryViewer):
     def __init__(self, item, *args, **kwargs):
         # tasks and notes are only  used for the 2 commands that we'll
         # suppress anyway.
@@ -525,7 +525,7 @@ class LocalCategoryViewer(viewer.CategoryViewer):
         return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)
 
     def onCheck(self, event):
-        # We don't want  the 'main' category viewer to  be affected by
+        # We don't want the 'main' category viewer to be affected by
         # what's happening here.
         pass
 

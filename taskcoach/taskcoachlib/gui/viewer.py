@@ -1472,7 +1472,7 @@ class TaskTreeListViewer(TaskViewerWithColumns, TreeViewer):
             return 0
 
 
-class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories, 
+class BaseCategoryViewer(AttachmentDropTarget, SortableViewerForCategories, 
                      SearchableViewer, TreeViewer):
     SorterClass = category.CategorySorter
     defaultTitle = _('Categories')
@@ -1481,14 +1481,12 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
         self.tasks = kwargs.pop('tasks')
         self.notes = kwargs.pop('notes')
         kwargs.setdefault('settingsSection', 'categoryviewer')
-        super(CategoryViewer, self).__init__(*args, **kwargs)
+        super(BaseCategoryViewer, self).__init__(*args, **kwargs)
         for eventType in category.Category.subjectChangedEventType(), \
                          category.Category.filterChangedEventType(), \
                          category.Category.colorChangedEventType():
             patterns.Publisher().registerObserver(self.onCategoryChanged, 
                 eventType)
-        self.filterUICommand.setChoice(self.settings.getboolean('view',
-            'categoryfiltermatchall'))
     
     def createWidget(self):
         widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemTooltipData,
@@ -1508,15 +1506,6 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
     def createFilter(self, categories):
         return base.SearchFilter(categories, treeMode=True)
     
-    def getToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(CategoryViewer, self).getToolBarUICommands()
-        toolBarUICommands.insert(-2, None) # Separator
-        self.filterUICommand = \
-            uicommand.CategoryViewerFilterChoice(settings=self.settings)
-        toolBarUICommands.insert(-2, self.filterUICommand)
-        return toolBarUICommands
-
     def onCategoryChanged(self, event):
         category = event.source()
         if category in self.list:
@@ -1595,6 +1584,22 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
             self.settings, self.list, bitmap=kwargs['bitmap'])
         
     newSubCategoryDialog = newSubItemDialog
+
+
+class CategoryViewer(BaseCategoryViewer):
+    def __init__(self, *args, **kwargs):
+        super(CategoryViewer, self).__init__(*args, **kwargs)
+        self.filterUICommand.setChoice(self.settings.getboolean('view',
+            'categoryfiltermatchall'))
+
+    def getToolBarUICommands(self):
+        ''' UI commands to put on the toolbar of this viewer. '''
+        toolBarUICommands = super(CategoryViewer, self).getToolBarUICommands()
+        toolBarUICommands.insert(-2, None) # Separator
+        self.filterUICommand = \
+            uicommand.CategoryViewerFilterChoice(settings=self.settings)
+        toolBarUICommands.insert(-2, self.filterUICommand)
+        return toolBarUICommands
 
 
 class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes, 
