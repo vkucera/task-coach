@@ -470,7 +470,7 @@ class ChangingAttachmentsTests(object):
         self.taskFile.setFilename(self.filename)
         self.item.addAttachments(self.attachment)
         self.taskFile.save()
-        self.item.setAttachments(FakeAttachment('file', 'attachment2'))
+        self.item.setAttachments([FakeAttachment('file', 'attachment2')])
         self.failUnless(self.taskFile.needSave())
 
 

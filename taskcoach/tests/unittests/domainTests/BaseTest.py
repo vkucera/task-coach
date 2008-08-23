@@ -163,11 +163,11 @@ class ObjectTest(test.TestCase):
                     
     def testSetAttachments(self):
         self.object.addAttachments('attachment1')
-        self.object.setAttachments('attachment2')
+        self.object.setAttachments(['attachment2'])
         self.assertEqual(['attachment2'], self.object.attachments())
 
     def testSetAttachmentsWithNoAttachmentsCausesNotification(self):
-        self.object.setAttachments()
+        self.object.setAttachments([])
         self.assertEqual(patterns.Event(self.object,
             self.object.attachmentsChangedEventType()),
             self.eventsReceived[-1])

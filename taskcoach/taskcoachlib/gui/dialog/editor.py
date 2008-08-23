@@ -763,7 +763,7 @@ class AttachmentPage(EditorPage):
     def ok(self):
         ids = [ self._listCtrl.GetItemData(i) for i in xrange(self._listCtrl.GetItemCount()) ]
         attachments = [v for id_, v in self._listData.items() if id_ in ids]
-        self._item.setAttachments(*attachments)
+        self._item.setAttachments(attachments)
     
     
 class BehaviorPage(EditorPage, TaskHeaders):
