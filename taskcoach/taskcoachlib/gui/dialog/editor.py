@@ -991,7 +991,7 @@ class EditorWithCommand(widgets.NotebookDialog):
         super(EditorWithCommand, self).__init__(parent, command.name(), 
                                                 *args, **kwargs)
 
-        # FIXMERGE: should we call setFocusOnFirstEntry ?
+        self.setFocusOnFirstEntry()
 
     def setFocusOnFirstEntry(self):
         firstEntry = self[0][0]._subjectEntry
