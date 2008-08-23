@@ -655,21 +655,26 @@ class EffortPopupMenu(Menu):
 
 class CategoryPopupMenu(Menu):
     def __init__(self, mainwindow, settings, tasks, notes, categories,
-                 categoryViewer):
+                 categoryViewer, localOnly=False):
         super(CategoryPopupMenu, self).__init__(mainwindow)
+
         self.appendUICommands(
             uicommand.EditCut(viewer=categoryViewer),
             uicommand.EditCopy(viewer=categoryViewer),
-            uicommand.EditPaste(),
-            None,
-            uicommand.NewTaskWithSelectedCategories(taskList=tasks,
-                                                    settings=settings,
-                                                    categories=categories,
-                                                    viewer=categoryViewer),
-            uicommand.NewNoteWithSelectedCategories(notes=notes,
-                                                    settings=settings,
-                                                    categories=categories,
-                                                    viewer=categoryViewer),
+            uicommand.EditPaste())
+        if not localOnly:
+            self.appendUICommands(
+                None,
+                uicommand.NewTaskWithSelectedCategories(taskList=tasks,
+                                                        settings=settings,
+                                                        categories=categories,
+                                                        viewer=categoryViewer),
+                uicommand.NewNoteWithSelectedCategories(notes=notes,
+                                                        settings=settings,
+                                                        categories=categories,
+                                                        viewer=categoryViewer)
+                )
+        self.appendUICommands(
             None,
             uicommand.CategoryNew(categories=categories),
             uicommand.CategoryNewSubCategory(viewer=categoryViewer,

@@ -26,6 +26,9 @@ releases = [
 Release('0.71.0', 'July ??, 2008',
     summary='''?''',
     featuresAdded=[
+        Feature('''The task and note editors now use an actual category
+viewer. It is possible to create and edit categories from these editors.'''),
+        Feature('''Local undo/redo in the item editors.'''),
         Feature('''The description tooltip now works for efforts and
 categories. It also contains a summary of notes and attachments belonging
 to the hovered object.''', '1642608'),
@@ -66,6 +69,8 @@ Moayyed. Please help finish it. See http://www.taskcoach.org/i18n.html.'''),
 and Vietnamese translations. Please help finish them. See 
 http://www.taskcoach.org/i18n.html.''')],
     bugsFixed=[
+        Bug('''Undo wouldnt work well when creating notes in a category or task.'''),
+        Bug('''An IndexError would be raised when undoing then editing.'''),
         Bug('''Ctrl-PgDn and Ctrl-PgUp would sometimes need to be pressed
 multiple times before the next or previous viewer would be activated. ''')],
     implementationChanged=[

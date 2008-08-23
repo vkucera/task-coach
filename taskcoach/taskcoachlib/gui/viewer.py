@@ -1501,9 +1501,9 @@ class CategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
             **self.widgetCreationKeywordArguments())
         return widget
 
-    def createCategoryPopupMenu(self):
+    def createCategoryPopupMenu(self, localOnly=False):
         return menu.CategoryPopupMenu(self.parent, self.settings, self.tasks,
-                                      self.notes, self.model(), self)
+                                      self.notes, self.model(), self, localOnly)
 
     def createFilter(self, categories):
         return base.SearchFilter(categories, treeMode=True)
