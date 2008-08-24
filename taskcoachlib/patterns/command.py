@@ -122,3 +122,28 @@ class CommandHistory:
 
     def __getattr__(self, name):
         return getattr(self.__stack[-1], name)
+
+
+## def _dump(node, indent=0):
+##     if isinstance(node, CommandHistory):
+##         for layer in node._CommandHistory__stack:
+##             _dump(layer)
+##     elif isinstance(node, CommandHistoryLayer):
+##         if not (node.getHistory() or node.getFuture()):
+##             print (' ' * indent) + 'Empty layer'
+##         else:
+##             print (' ' * indent) + 'Layer'
+##             if node.getHistory():
+##                 print (' ' * indent) + 'History:'
+##                 for command in node.getHistory():
+##                     _dump(command, indent + 2)
+##             if node.getFuture():
+##                 print (' ' * indent) + 'Future:'
+##                 for command in node.getFuture():
+##                     _dump(command, indent + 2)
+##     elif isinstance(node, AggregateCommand):
+##         print (' ' * indent) + 'Aggregate command'
+##         for command in node._AggregateCommand__commands:
+##             _dump(command, indent + 2)
+##     else:
+##         print (' ' * indent) + str(node)
