@@ -23,6 +23,7 @@ from taskcoachlib.domain import date
         
 class ClockTest(test.wxTestCase):
     def setUp(self):
+        super(ClockTest, self).setUp()
         self.events = []
         self.clock = date.Clock()
          

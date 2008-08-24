@@ -28,6 +28,7 @@ class MainWindowUnderTest(gui.MainWindow):
 
 class MainWindowTest(test.wxTestCase):
     def setUp(self):
+        super(MainWindowTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(dummy.IOController(),
@@ -57,6 +58,7 @@ class MainWindowMaximizeTest(test.wxTestCase):
     maximized = False
 
     def setUp(self):
+        super(MainWindowMaximizeTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.settings.setboolean('window', 'maximized', self.maximized)
         self.taskFile = persistence.TaskFile()

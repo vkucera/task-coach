@@ -56,9 +56,15 @@ class wxTestCase(TestCase):
     frame = wx.Frame(None, -1, 'Frame')
     from taskcoachlib import gui
     gui.init()
-    
+
+    def setUp(self):
+        from taskcoachlib import widgets
+        widgets.ModalDialogMixin.modalDialogs = False
+
     def tearDown(self):
         super(wxTestCase, self).tearDown()
+        from taskcoachlib import widgets
+        widgets.ModalDialogMixin.modalDialogs = True
         self.frame.DestroyChildren() # Clean up GDI objects on Windows
 
 

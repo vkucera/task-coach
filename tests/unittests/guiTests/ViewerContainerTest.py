@@ -38,6 +38,7 @@ class DummyEvent(object):
 
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
+        super(ViewerContainerTest, self).setUp()
         self.events = []
         self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)

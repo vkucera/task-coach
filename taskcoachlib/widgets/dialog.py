@@ -82,22 +82,23 @@ class Dialog(wx.Dialog):
 class ModalDialogMixin(object):
     """This mixin for Dialog makes it modal."""
 
+    modalDialogs = True # For unit tests...
+
     def Show(self, show):
-        self.ShowModal()
+        if self.modalDialogs:
+            self.ShowModal()
+        else:
+            super(ModalDialogMixin, self).Show(show)
 
     def ok(self, event=None):
-        if event:
-            event.Skip()
-        self.EndModal(wx.ID_OK)
-        self.Close()
-        self.Destroy()
+        if self.modalDialogs:
+            self.EndModal(wx.ID_OK)
+        super(ModalDialogMixin, self).ok(event)
 
     def cancel(self, event=None):
-        if event:
-            event.Skip()
-        self.EndModal(wx.ID_CANCEL)
-        self.Close()
-        self.Destroy()
+        if self.modalDialogs:
+            self.EndModal(wx.ID_CANCEL)
+        super(ModalDialogMixin, self).cancel(event)
 
 
 class BookDialog(Dialog):    

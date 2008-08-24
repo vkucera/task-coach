@@ -23,6 +23,7 @@ from taskcoachlib.domain import date
 
 class TimeCtrlTest(test.wxTestCase):
     def setUp(self):
+        super(TimeCtrlTest, self).setUp()
         self.timeCtrl = widgets.datectrl.TimeCtrl(self.frame)
         
     def testGetValue(self):

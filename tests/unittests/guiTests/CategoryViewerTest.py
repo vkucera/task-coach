@@ -24,6 +24,7 @@ from taskcoachlib.domain import task, effort, category, note
 
 class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
+        super(CategoryViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.categories = category.CategoryList()

@@ -23,6 +23,7 @@ from taskcoachlib.domain import date
 
 class DateEntryTest(test.wxTestCase):
     def setUp(self):
+        super(DateEntryTest, self).setUp()
         self.dateEntry = editor.DateEntry(self.frame)
         self.date = date.Date(2004, 1, 1)
 

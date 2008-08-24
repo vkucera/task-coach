@@ -76,6 +76,7 @@ class TreeCtrlTestCase(test.wxTestCase):
             self.assertNodes((index,), treeItem)
                 
     def setUp(self):
+        super(TreeCtrlTestCase, self).setUp()
         self._tree = []
         
         
