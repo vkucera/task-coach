@@ -25,6 +25,7 @@ from taskcoachlib.domain import task, effort, date, category, note
 
 class ViewerTest(test.wxTestCase):
     def setUp(self):
+        super(ViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.task = task.Task()
         self.taskList = task.sorter.Sorter(task.TaskList([self.task]))
@@ -474,6 +475,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
             self.settings, categories=self.categories, efforts=self.effortList)
 
     def setUp(self):
+        super(ViewerIteratorTestCase, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)

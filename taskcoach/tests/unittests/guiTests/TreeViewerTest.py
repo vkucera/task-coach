@@ -24,6 +24,7 @@ from taskcoachlib.domain import category, task, effort
        
 class TreeViewerTest(test.wxTestCase):
     def setUp(self):
+        super(TreeViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
         self.taskList = task.sorter.Sorter(task.TaskList())

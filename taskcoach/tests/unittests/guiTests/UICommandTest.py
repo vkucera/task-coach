@@ -25,6 +25,7 @@ from taskcoachlib.domain import task, effort, category, note, date
 
 class UICommandTest(test.wxTestCase):
     def setUp(self):
+        super(UICommandTest, self).setUp()
         self.uicommand = dummy.DummyUICommand(menuText='undo', bitmap='undo')
         self.menu = wx.Menu()
         self.frame = wx.Frame(None)
@@ -56,6 +57,7 @@ class UICommandTest(test.wxTestCase):
 
 class NewTaskWithSelectedCategoryTest(test.wxTestCase):
     def setUp(self):
+        super(NewTaskWithSelectedCategoryTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
@@ -129,7 +131,7 @@ class MarkCompletedTest(test.TestCase):
             shouldBeEnabled=False)
         
         
-class TaskNewTest(test.TestCase):
+class TaskNewTest(test.wxTestCase):
     def testNewTaskWithCategories(self):
         cat = category.Category('cat', filtered=True)
         categories = category.CategoryList([cat])
@@ -144,7 +146,7 @@ class TaskNewTest(test.TestCase):
         self.failUnless(firstChild.IsChecked())
         
 
-class NoteNewTest(test.TestCase):
+class NoteNewTest(test.wxTestCase):
     def testNewNoteWithCategories(self):
         cat = category.Category('cat', filtered=True)
         categories = category.CategoryList([cat])

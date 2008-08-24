@@ -30,6 +30,7 @@ class EffortViewerTestCase(test.wxTestCase):
                                            note.NoteContainer())
 
     def setUp(self):
+        super(EffortViewerTestCase, self).setUp()
         self.settings = config.Settings(load=False)
         self.settings.set('effortlistviewer', 'aggregation', self.aggregation)
 

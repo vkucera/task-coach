@@ -40,6 +40,7 @@ class MultiLineTextCtrlTest(test.wxTestCase):
 
 class SingleLineTextCtrlWithEnterButtonTest(test.wxTestCase):
     def setUp(self):
+        super(SingleLineTextCtrlWithEnterButtonTest, self).setUp()
         self.textCtrl = widgets.SingleLineTextCtrlWithEnterButton(self.frame, 
             label='Text', onEnter=self.onEnter)
             

@@ -23,6 +23,7 @@ from taskcoachlib import gui, config
 
 class PreferencesTest(test.wxTestCase):
     def setUp(self):
+        super(PreferencesTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.preferences = gui.Preferences(parent=self.frame, title='Test',
             settings=self.settings, raiseDialog=False)

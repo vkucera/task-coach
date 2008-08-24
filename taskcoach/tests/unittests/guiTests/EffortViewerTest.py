@@ -32,6 +32,7 @@ class EffortViewerUnderTest(gui.viewer.EffortListViewer):
 
 class EffortViewerTest(test.wxTestCase):
     def setUp(self):
+        super(EffortViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.task = task.Task()

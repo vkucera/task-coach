@@ -48,6 +48,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         return columns
 
     def setUp(self):
+        super(VirtualListCtrlTestCase, self).setUp()
         self.columns = self.createColumns(nrColumns=3)
         self.listctrl = self.createListCtrl()
             

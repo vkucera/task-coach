@@ -23,6 +23,7 @@ from taskcoachlib import widgets
 
 class DatePickerCtrlThatFixesAllowNoneStyleTest(test.wxTestCase):
     def setUp(self):
+        super(DatePickerCtrlThatFixesAllowNoneStyleTest, self).setUp()
         self.datePicker = \
             widgets.datectrl._DatePickerCtrlThatFixesAllowNoneStyle(self.frame)
 
@@ -43,6 +44,7 @@ class DatePickerCtrlThatFixesAllowNoneStyleTest(test.wxTestCase):
 
 class DatePickerCtrlWithStyleDP_ALLOWNONETest(test.wxTestCase):
     def setUp(self):
+        super(DatePickerCtrlWithStyleDP_ALLOWNONETest, self).setUp()
         self.datePicker = widgets.DatePickerCtrl(self.frame, 
             style=wx.DP_ALLOWNONE)
 

@@ -52,6 +52,7 @@ class DummyEvent:
 
 class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
+        super(TaskEditorTestCase, self).setUp()
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.taskList.extend(self.createTasks())
