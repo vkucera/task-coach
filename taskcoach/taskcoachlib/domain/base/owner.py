@@ -73,9 +73,10 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     setattr(klass, 'add%s' % klass.__ownedType__, addObject)
 
     def addObjects(instance, *objects):
-        for object in objects:
-            getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).append(object)
-        notifyObservers(instance)
+        if objects:
+            for object in objects:
+                getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).append(object)
+            notifyObservers(instance)
 
     setattr(klass, 'add%ss' % klass.__ownedType__, addObjects)
 
@@ -86,9 +87,17 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     setattr(klass, 'remove%s' % klass.__ownedType__, removeObject)
 
     def removeObjects(instance, *objects):
-        for object in objects:
-            getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(object)
-        notifyObservers(instance)
+        if objects:
+            changed = False
+            for object in objects:
+                try:
+                    getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(object)
+                except ValueError:
+                    pass
+                else:
+                    changed = True
+            if changed:
+                notifyObservers(instance)
 
     setattr(klass, 'remove%ss' % klass.__ownedType__, removeObjects)
 

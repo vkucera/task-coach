@@ -20,19 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, wx
 import test
 from taskcoachlib import persistence
-from taskcoachlib.domain import task, effort, date, category, note
+from taskcoachlib.domain import base, task, effort, date, category, note
 
 
-class FakeAttachment(object):
-    def __init__(self, type_, filename):
+class FakeAttachment(base.Object):
+    def __init__(self, type_, location):
+        super(FakeAttachment, self).__init__()
         self.type_ = type_
-        self.filename = filename
+        self.__location = location
 
-    def data(self):
-        return self.filename
-
-    def __unicode__(self):
-        return self.filename
+    def location(self):
+        return self.__location
 
 
 class TaskFileTestCase(test.TestCase):

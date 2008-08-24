@@ -284,7 +284,8 @@ class EditTaskTest(TaskEditorTestCase):
     def testAddAttachment(self):
         self.editor[0][5].onFileDrop(0, 0, ['filename'])
         self.editor.ok()
-        self.failUnless('filename' in map(unicode, self.task.attachments()))
+        self.failUnless('filename' in [att.location() for att in self.task.attachments()])
+        self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
         self.editor[0][5]._listCtrl.DeleteItem(0)

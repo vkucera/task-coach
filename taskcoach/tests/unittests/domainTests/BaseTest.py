@@ -35,7 +35,6 @@ class ObjectTest(test.TestCase):
         self.eventsReceived = []
         for eventType in (self.object.subjectChangedEventType(), 
                           self.object.descriptionChangedEventType(),
-                          self.object.attachmentsChangedEventType(),
                           self.object.colorChangedEventType()):
             patterns.Publisher().registerObserver(self.onEvent, eventType)
 
@@ -112,80 +111,17 @@ class ObjectTest(test.TestCase):
     def testDescriptionChangedNotificationIsDifferentForSubclass(self):
         self.subclassObject.setDescription('New')
         self.failIf(self.eventsReceived)
-    
-    # Attachment tests:
-    
-    def testNoAttachmentsByDefault(self):
-        self.failIf(self.object.attachments())
-        
-    def testAddZeroAttachments(self):
-        self.object.addAttachments()
-        self.failIf(self.object.attachments())
-        
-    def testAddZeroAttachmentsCausesNoNotification(self):
-        self.object.addAttachments()
-        self.failIf(self.eventsReceived)
-        
-    def testAddOneAttachment(self):
-        self.object.addAttachments('attachment')
-        self.assertEqual(['attachment'], self.object.attachments())
-        
-    def testAddTwoAttachments(self):
-        self.object.addAttachments('attachment1', 'attachment2')
-        self.assertEqual(['attachment1', 'attachment2'], 
-            self.object.attachments())
-            
-    def testAddAttachmentCausesNotification(self):
-        self.object.addAttachments('attachment')
-        self.assertEqual(patterns.Event(self.object,
-            self.object.attachmentsChangedEventType(), 'attachment'), 
-            self.eventsReceived[0])
-                    
-    def testRemoveNoAttachmentsCausesNoNotification(self):
-        self.object.removeAttachments()
-        self.failIf(self.eventsReceived)
-        
-    def testRemoveNonExistingAttachmentsCausesNoNotification(self):
-        self.object.removeAttachments('attachment')
-        self.failIf(self.eventsReceived)
-        
-    def testRemoveOneAttachment(self):
-        self.object.addAttachments('attachment')
-        self.object.removeAttachments('attachment')
-        self.failIf(self.object.attachments())
-        
-    def testRemoveAttachmentCausesNotification(self):
-        self.object.addAttachments('attachment')
-        self.object.removeAttachments('attachment')
-        self.assertEqual(patterns.Event(self.object,
-            self.object.attachmentsChangedEventType()),
-            self.eventsReceived[-1])
-                    
-    def testSetAttachments(self):
-        self.object.addAttachments('attachment1')
-        self.object.setAttachments(['attachment2'])
-        self.assertEqual(['attachment2'], self.object.attachments())
-
-    def testSetAttachmentsWithNoAttachmentsCausesNotification(self):
-        self.object.setAttachments([])
-        self.assertEqual(patterns.Event(self.object,
-            self.object.attachmentsChangedEventType()),
-            self.eventsReceived[-1])
-        
-    def testCreateWithAttachments(self):
-        object = base.Object(attachments=['attachment'])
-        self.assertEqual(['attachment'], object.attachments())
             
     # State tests:
     
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
-                              attachments=[], color=None), 
+                              color=None), 
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None, 
-                        attachments=['attachment'], color=wx.RED)
+                        color=wx.RED)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
     

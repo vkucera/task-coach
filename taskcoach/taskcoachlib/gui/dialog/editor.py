@@ -700,10 +700,10 @@ class AttachmentPage(EditorPage):
             else:
                 path = filename
 
-            self.addAttachmentToListCtrl(attachment.FileAttachment(path))
+            self.addAttachmentToListCtrl(attachment.FileAttachment(path, subject=path))
 
     def onURLDrop(self, x, y, url):
-        self.addAttachmentToListCtrl(attachment.URIAttachment(url))
+        self.addAttachmentToListCtrl(attachment.URIAttachment(url, subject=url))
 
     def onMailDrop(self, x, y, mail):
         self.addAttachmentToListCtrl(attachment.MailAttachment(mail))
