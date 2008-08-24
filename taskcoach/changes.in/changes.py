@@ -28,7 +28,6 @@ Release('0.71.0', 'July ??, 2008',
     featuresAdded=[
         Feature('''The task and note editors now use an actual category
 viewer. It is possible to create and edit categories from these editors.'''),
-        Feature('''Local undo/redo in the item editors.'''),
         Feature('''The description tooltip now works for efforts and
 categories. It also contains a summary of notes and attachments belonging
 to the hovered object.''', '1642608'),

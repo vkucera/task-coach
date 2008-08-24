@@ -77,8 +77,29 @@ class Dialog(wx.Dialog):
         
     def enableOK(self):
         self._buttonBox.enable(_('OK'))
-                 
-           
+
+
+class ModalDialogMixin(object):
+    """This mixin for Dialog makes it modal."""
+
+    def Show(self, show):
+        self.ShowModal()
+
+    def ok(self, event=None):
+        if event:
+            event.Skip()
+        self.EndModal(wx.ID_OK)
+        self.Close()
+        self.Destroy()
+
+    def cancel(self, event=None):
+        if event:
+            event.Skip()
+        self.EndModal(wx.ID_CANCEL)
+        self.Close()
+        self.Destroy()
+
+
 class BookDialog(Dialog):    
     def fillInterior(self):
         self.addPages()

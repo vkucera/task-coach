@@ -23,7 +23,7 @@ import wx, datetime, os.path, sys
 from wx.lib import masked
 import wx.lib.customtreectrl as customtree
 from taskcoachlib import widgets
-from taskcoachlib.gui import render, viewercontainer, viewer, toolbar, uicommand
+from taskcoachlib.gui import render, viewercontainer, viewer, uicommand
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
@@ -1016,7 +1016,7 @@ class NoteEditBook(widgets.Listbook):
         self.AddPage(AttachmentPage(self, theNote, settings), _('Attachments'), 'attachment')
 
 
-class EditorWithCommand(widgets.NotebookDialog):
+class EditorWithCommand(widgets.ModalDialogMixin, widgets.NotebookDialog):
     def __init__(self, parent, command, *args, **kwargs):
         self._command = command
         CommandHistory().push()
@@ -1025,13 +1025,7 @@ class EditorWithCommand(widgets.NotebookDialog):
         super(EditorWithCommand, self).__init__(parent, command.name(), 
                                                 *args, **kwargs)
 
-        bar = toolbar.ToolBar(self, (16, 16))
-        self._verticalSizer.Insert(0, bar, flag=wx.EXPAND)
-
         self.setFocusOnFirstEntry()
-
-    def getToolBarUICommands(self):
-        return [uicommand.EditUndo(), uicommand.EditRedo()]
 
     def setFocusOnFirstEntry(self):
         firstEntry = self[0][0]._subjectEntry
