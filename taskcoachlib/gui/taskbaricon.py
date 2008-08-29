@@ -27,6 +27,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             defaultBitmap='taskcoach', tickBitmap='tick', tackBitmap='tack', 
             *args, **kwargs):
         super(TaskBarIcon, self).__init__(*args, **kwargs)
+        self.__window = mainwindow
         self.__taskList = taskList
         self.__settings = settings
         self.__bitmap = self.__defaultBitmap = defaultBitmap
@@ -44,7 +45,10 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             eventType='task.track.stop')
         patterns.Publisher().registerObserver(self.onChangeDueDate,
             eventType='task.dueDate')
-        self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, mainwindow.restore)
+        if '__WXGTK__' == wx.Platform:
+            self.Bind(wx.EVT_TASKBAR_LEFT_DOWN, self.onLeftClick)
+        else:
+            self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, mainwindow.restore)
         self.__setTooltipText()
         self.__setIcon()
 
@@ -75,6 +79,12 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             'blinktaskbariconwhentrackingeffort'):
             self.__toggleTrackingBitmap()
             self.__setIcon()
+
+    def onLeftClick(self, event):
+        if self.__window.IsIconized():
+            self.__window.restore(None)
+        else:
+            self.__window.Iconize()
 
     # Menu:
 
