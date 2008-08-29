@@ -25,6 +25,7 @@ releases = [
 Release('0.70.4', 'August ?, 2008',
     summary='''Bug fix release''',
     bugsFixed=[
+        Bug('''Task Coach wasn't notifying users of new versions.'''),
         Bug('''Hide/show the main window with one click on the task bar icon 
 instead of a double click (Linux only).'''),
         Bug('''The Task Coach main window would get a very small size if it
