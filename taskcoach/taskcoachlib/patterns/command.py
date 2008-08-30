@@ -32,24 +32,9 @@ class Command(object):
         return 'command'
 
 
-class AggregateCommand(Command):
-    def __init__(self, commands):
-        super(AggregateCommand, self).__init__()
+class CommandHistory:
+    __metaclass__ = patterns.Singleton
 
-        self.__commands = commands
-
-    def undo(self):
-        commands = self.__commands[:]
-        commands.reverse()
-        for command in commands:
-            command.undo()
-
-    def redo(self):
-        for command in self.__commands:
-            command.redo()
-
-
-class CommandHistoryLayer:
     def __init__(self):
         self.__history = []
         self.__future = []
@@ -97,53 +82,3 @@ class CommandHistoryLayer:
 
     def redostr(self, label='Redo'):
         return self._extendLabel(label, self.__future)
-
-
-class CommandHistory:
-    __metaclass__ = patterns.Singleton
-
-    def __init__(self):
-        self.__stack = [CommandHistoryLayer()]
-
-    def push(self):
-        self.__stack.append(CommandHistoryLayer())
-
-    def pop(self, keep=True):
-        layer = self.__stack.pop()
-
-        cmd = AggregateCommand(layer.getHistory())
-        if keep:
-            self.__stack[-1].append(cmd)
-        else:
-            cmd.undo()
-
-    def clear(self):
-        self.__stack = [CommandHistoryLayer()]
-
-    def __getattr__(self, name):
-        return getattr(self.__stack[-1], name)
-
-
-## def _dump(node, indent=0):
-##     if isinstance(node, CommandHistory):
-##         for layer in node._CommandHistory__stack:
-##             _dump(layer)
-##     elif isinstance(node, CommandHistoryLayer):
-##         if not (node.getHistory() or node.getFuture()):
-##             print (' ' * indent) + 'Empty layer'
-##         else:
-##             print (' ' * indent) + 'Layer'
-##             if node.getHistory():
-##                 print (' ' * indent) + 'History:'
-##                 for command in node.getHistory():
-##                     _dump(command, indent + 2)
-##             if node.getFuture():
-##                 print (' ' * indent) + 'Future:'
-##                 for command in node.getFuture():
-##                     _dump(command, indent + 2)
-##     elif isinstance(node, AggregateCommand):
-##         print (' ' * indent) + 'Aggregate command'
-##         for command in node._AggregateCommand__commands:
-##             _dump(command, indent + 2)
-##     else:
-##         print (' ' * indent) + str(node)

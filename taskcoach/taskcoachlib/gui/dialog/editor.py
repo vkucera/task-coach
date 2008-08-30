@@ -1019,8 +1019,6 @@ class NoteEditBook(widgets.Listbook):
 class EditorWithCommand(widgets.ModalDialogMixin, widgets.NotebookDialog):
     def __init__(self, parent, command, *args, **kwargs):
         self._command = command
-        CommandHistory().push()
-        self.__popped = False
 
         super(EditorWithCommand, self).__init__(parent, command.name(), 
                                                 *args, **kwargs)
@@ -1039,25 +1037,7 @@ class EditorWithCommand(widgets.ModalDialogMixin, widgets.NotebookDialog):
 
     def ok(self, *args, **kwargs):
         self._command.do()
-        CommandHistory().pop()
-        self.__popped = True
-
-        # Do this after, because onClose will be called.
         super(EditorWithCommand, self).ok(*args, **kwargs)
-
-    def cancel(self, event=None):
-        CommandHistory().pop(False)
-        self.__popped = True
-
-        super(EditorWithCommand, self).cancel(event)
-
-    def onClose(self, event):
-        if not self.__popped:
-            # The user  closed the dialog through the  system menu; he
-            # didn't click OK or Cancel.
-            CommandHistory().pop(False)
-            self.__popped = True
-        super(EditorWithCommand, self).onClose(event)
 
 
 class TaskEditor(EditorWithCommand):
