@@ -79,28 +79,6 @@ class Dialog(wx.Dialog):
         self._buttonBox.enable(_('OK'))
 
 
-class ModalDialogMixin(object):
-    """This mixin for Dialog makes it modal."""
-
-    modalDialogs = False # For unit tests...
-
-    def Show(self, show):
-        if self.modalDialogs:
-            self.ShowModal()
-        else:
-            super(ModalDialogMixin, self).Show(show)
-
-    def ok(self, event=None):
-        if self.modalDialogs:
-            self.EndModal(wx.ID_OK)
-        super(ModalDialogMixin, self).ok(event)
-
-    def cancel(self, event=None):
-        if self.modalDialogs:
-            self.EndModal(wx.ID_CANCEL)
-        super(ModalDialogMixin, self).cancel(event)
-
-
 class BookDialog(Dialog):    
     def fillInterior(self):
         self.addPages()
