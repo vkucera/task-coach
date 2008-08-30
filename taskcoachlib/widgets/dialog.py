@@ -82,7 +82,7 @@ class Dialog(wx.Dialog):
 class ModalDialogMixin(object):
     """This mixin for Dialog makes it modal."""
 
-    modalDialogs = True # For unit tests...
+    modalDialogs = False # For unit tests...
 
     def Show(self, show):
         if self.modalDialogs:
