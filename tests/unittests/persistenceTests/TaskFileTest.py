@@ -529,6 +529,7 @@ class TaskFileMergeTest(TaskFileTestCase):
                          list(self.taskFile.categories())[0].categorizables()[0].id())
                          
     def testMerge_Notes(self):
-        self.mergeFile.notes().append(self.note)
+	newNote = note.Note('new note')
+        self.mergeFile.notes().append(newNote)
         self.merge()
-        self.assertEqual(self.note.subject(), list(self.taskFile.notes())[0].subject())
+        self.assertEqual(2, len(self.taskFile.notes()))

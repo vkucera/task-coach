@@ -190,6 +190,7 @@ class TaskFile(patterns.Observable):
         mergeFile.load()
         self.__loading = True
         self.tasks().extend(mergeFile.tasks().rootItems())
+        self.notes().extend(mergeFile.notes().rootItems())
         self.categories().extend(mergeFile.categories().rootItems())
         self.__loading = False
         self.markDirty(force=True)
