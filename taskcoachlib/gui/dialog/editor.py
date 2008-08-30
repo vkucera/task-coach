@@ -1016,7 +1016,7 @@ class NoteEditBook(widgets.Listbook):
         self.AddPage(AttachmentPage(self, theNote, settings), _('Attachments'), 'attachment')
 
 
-class EditorWithCommand(widgets.ModalDialogMixin, widgets.NotebookDialog):
+class EditorWithCommand(widgets.NotebookDialog):
     def __init__(self, parent, command, *args, **kwargs):
         self._command = command
 

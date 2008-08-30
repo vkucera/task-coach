@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from notebook import Notebook, Choicebook, Listbook, AUINotebook, BookPage, \
     BoxedBookPage
 from dialog import Dialog, NotebookDialog, ListbookDialog, HTMLDialog, \
-    AttachmentSelector, ModalDialogMixin
+    AttachmentSelector
 from buttonbox import ButtonBox
 from itemctrl import Column
 from listctrl import ListCtrl
