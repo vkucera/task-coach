@@ -1166,7 +1166,8 @@ class TaskEdit(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
             helpText=taskList.editItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        editor = self.viewer.editTaskDialog(bitmap=self.bitmap)
+        editor = self.viewer.editTaskDialog(bitmap=self.bitmap,
+                                            items=self.viewer.curselection())
         editor.Show(show)
 
 
@@ -1674,7 +1675,8 @@ class CategoryEdit(NeedsSelectedCategory, ViewerCommand, CategoriesCommand):
             helpText=categories.editItemHelpText, *args, **kwargs)
         
     def doCommand(self, event, show=True):
-        dialog = self.viewer.editCategoryDialog(bitmap=self.bitmap)
+        dialog = self.viewer.editCategoryDialog(bitmap=self.bitmap,
+                                                items=self.viewer.curselection())
         dialog.Show(show)
 
 
@@ -1749,7 +1751,8 @@ class NoteEdit(NeedsSelectedNote, ViewerCommand, NotesCommand):
             helpText=notes.editItemHelpText, *args, **kwargs)
         
     def doCommand(self, event, show=True):
-        dialog = self.viewer.editNoteDialog(bitmap=self.bitmap)
+        dialog = self.viewer.editNoteDialog(bitmap=self.bitmap,
+                                            items=self.viewer.curselection())
         dialog.Show(show)
 
 

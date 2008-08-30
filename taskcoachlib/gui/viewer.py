@@ -1256,13 +1256,13 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
         bitmap = kwargs.pop('bitmap')
         kwargs['categories'] = [category for category in self.categories
                                 if category.isFiltered()]
-        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self), 
-            command.NewTaskCommand(self.list, *args, **kwargs), self.list,
-            self.settings, self.categories, bitmap=bitmap)
+        newCommand = command.NewTaskCommand(self.list, *args, **kwargs)
+        newCommand.do()
+        return self.editItemDialog(bitmap=bitmap, items=newCommand.items)
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-            command.EditTaskCommand(self.list, self.curselection()),
+            command.EditTaskCommand(self.list, kwargs['items']),
             self.list, self.settings, self.categories,
             bitmap=kwargs['bitmap'])
     
@@ -1274,10 +1274,9 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
     deleteTaskCommand = deleteItemCommand
     
     def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self), 
-            command.NewSubTaskCommand(self.list, self.curselection()), 
-            self.list, self.settings, self.categories,
-            bitmap=kwargs['bitmap'])
+        newCommand = command.NewSubTaskCommand(self.list, self.curselection())
+        newCommand.do()
+        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
         
     newSubTaskDialog = newSubItemDialog
            
@@ -1560,15 +1559,15 @@ class BaseCategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
         return status1, status2
 
     def newItemDialog(self, *args, **kwargs):
-        return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self), 
-            command.NewCategoryCommand(self.list, *args, **kwargs),
-            self.settings, self.list, bitmap=kwargs['bitmap'])
+        newCommand = command.NewCategoryCommand(self.list, *args, **kwargs)
+        newCommand.do()
+        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
     
     # See TaskViewer for why the methods below have two names.
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
-            command.EditCategoryCommand(self.list, self.curselection()),
+            command.EditCategoryCommand(self.list, kwargs['items']),
             self.settings, self.list, bitmap=kwargs['bitmap'])
     
     editCategoryDialog = editItemDialog
@@ -1579,9 +1578,9 @@ class BaseCategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
     deleteCategoryCommand = deleteItemCommand
     
     def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self), 
-            command.NewSubCategoryCommand(self.list, self.curselection()),
-            self.settings, self.list, bitmap=kwargs['bitmap'])
+        newCommand = command.NewSubCategoryCommand(self.list, self.curselection())
+        newCommand.do()
+        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
         
     newSubCategoryDialog = newSubItemDialog
 
@@ -1754,16 +1753,16 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
     def newItemDialog(self, *args, **kwargs):
         filteredCategories = [category for category in self.categories if
                               category.isFiltered()]
-        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self), 
-            command.NewNoteCommand(self.list, categories=filteredCategories, 
-            *args, **kwargs),
-            self.settings, self.categories, bitmap=kwargs['bitmap'])
+        newCommand = command.NewNoteCommand(self.list, categories=filteredCategories, 
+            *args, **kwargs)
+        newCommand.do()
+        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
     
     # See TaskViewer for why the methods below have two names.
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
-            command.EditNoteCommand(self.list, self.curselection()),
+            command.EditNoteCommand(self.list, kwargs['items']),
             self.settings, self.categories, bitmap=kwargs['bitmap'])
     
     editNoteDialog = editItemDialog
@@ -1774,9 +1773,9 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
     deleteNoteCommand = deleteItemCommand
     
     def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self), 
-            command.NewSubNoteCommand(self.list, self.curselection()),
-            self.settings, self.categories, bitmap=kwargs['bitmap'])
+        newCommand = command.NewSubNoteCommand(self.list, self.curselection())
+        newCommand.do()
+        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
         
     newSubNoteDialog = newSubItemDialog
     
