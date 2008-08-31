@@ -85,6 +85,13 @@ class BookDialog(Dialog):
             
     def __getitem__(self, index):
         return self._interior[index]
+    
+    def cancelPages(self, pagesToCancel):
+        ''' Close the pages and remove them from our interior book widget. '''
+        for pageIndex, page in enumerate(self):
+            if page in pagesToCancel:
+                self._interior.GetPage(pageIndex).Close()
+                self._interior.RemovePage(pageIndex)
        
     def ok(self, *args, **kwargs):
         for page in self._interior:
@@ -93,7 +100,7 @@ class BookDialog(Dialog):
 
     def addPages(self):
         raise NotImplementedError 
-              
+
         
 class NotebookDialog(BookDialog):
     def createInterior(self):

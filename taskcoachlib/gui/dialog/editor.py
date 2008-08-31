@@ -22,13 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, datetime, os.path, sys
 from wx.lib import masked
 import wx.lib.customtreectrl as customtree
-from taskcoachlib import widgets
+from taskcoachlib import widgets, patterns
 from taskcoachlib.gui import render, viewercontainer, viewer, uicommand
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
 from taskcoachlib.thirdparty import desktop, combotreebox
-from taskcoachlib.patterns import CommandHistory
+
 
 class DateEntry(widgets.PanelWithBoxSizer):
     defaultDate = date.Date()
@@ -122,7 +122,7 @@ class PrioritySpinCtrl(wx.SpinCtrl):
 
 class ColorEntryMixin(object):
     def addColorEntry(self):
-        currentColor = self._item.color(recursive=False)
+        currentColor = self.item.color(recursive=False)
         self._colorCheckBox = wx.CheckBox(self, label=_('Use this color:'))
         self._colorCheckBox.SetValue(currentColor is not None)
         self._colorButton = wx.ColourPickerCtrl(self, -1,
@@ -137,7 +137,7 @@ class ColorEntryMixin(object):
             color = self._colorButton.GetColour()
         else:
             color = None
-        self._item.setColor(color)
+        self.item.setColor(color)
 
 
 
@@ -146,11 +146,11 @@ class EditorPage(widgets.PanelWithBoxSizer):
         super(EditorPage, self).__init__(parent, *args, **kwargs)
         self._defaultControl=None
         self._fieldMap={}   
-        self._item = item
+        self.item = item
 
     def addHeaders(self, box):
         headers = ['', self.headerForNonRecursiveAttributes]
-        if self._item.children():
+        if self.item.children():
             headers.append(self.headerForRecursiveAttributes)
         else:
             headers.append('')
@@ -186,7 +186,7 @@ class NoteHeaders(object):
     
 class SubjectPage(ColorEntryMixin, widgets.BookPage):
     def __init__(self, parent, task, *args, **kwargs):
-        self._item = task
+        self.item = task
         super(SubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
         self.addSubjectEntry()
         self.addDescriptionEntry()
@@ -218,27 +218,27 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
 
     def addSubjectEntry(self):
         self._subjectEntry = widgets.SingleLineTextCtrl(self, 
-            self._item.subject())
+            self.item.subject())
         self.addEntry(_('Subject'), self._subjectEntry, 
             flags=[None, wx.ALL|wx.EXPAND])
 
     def addDescriptionEntry(self):
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, 
-            self._item.description())
+            self.item.description())
         self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry,
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
           
     def addPriorityEntry(self):
         self._prioritySpinner = PrioritySpinCtrl(self,
-            value=render.priority(self._item.priority()))
+            value=render.priority(self.item.priority()))
         self.addEntry(_('Priority'), self._prioritySpinner, 
             flags=[None, wx.ALL|wx.EXPAND])
     
     def ok(self):
-        self._item.setSubject(self._subjectEntry.GetValue())
-        self._item.setDescription(self._descriptionEntry.GetValue())
-        self._item.setPriority(self._prioritySpinner.GetValue())
+        self.item.setSubject(self._subjectEntry.GetValue())
+        self.item.setDescription(self._descriptionEntry.GetValue())
+        self.item.setPriority(self._prioritySpinner.GetValue())
         super(SubjectPage, self).ok()
         
     def setSubject(self, subject):
@@ -367,11 +367,11 @@ class DatesPage(EditorPage, TaskHeaders):
             kwargs['max'] =self._maxRecurrenceCountEntry.Value
         kwargs['amount'] = self._recurrenceFrequencyEntry.Value
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
-        self._item.setRecurrence(date.Recurrence(**kwargs))
-        self._item.setStartDate(self._startDateEntry.get())
-        self._item.setDueDate(self._dueDateEntry.get())
-        self._item.setCompletionDate(self._completionDateEntry.get())
-        self._item.setReminder(self._reminderDateTimeEntry.GetValue())
+        self.item.setRecurrence(date.Recurrence(**kwargs))
+        self.item.setStartDate(self._startDateEntry.get())
+        self.item.setDueDate(self._dueDateEntry.get())
+        self.item.setCompletionDate(self._completionDateEntry.get())
+        self.item.setReminder(self._reminderDateTimeEntry.GetValue())
 
     def setReminder(self, reminder):
         self._reminderDateTimeEntry.SetValue(reminder)
@@ -478,9 +478,9 @@ class BudgetPage(EditorPage, TaskHeaders):
         self._defaultControl = self._budgetEntry
 
     def ok(self):
-        self._item.setBudget(self._budgetEntry.get())
-        self._item.setHourlyFee(self._hourlyFeeEntry.get())
-        self._item.setFixedFee(self._fixedFeeEntry.get())
+        self.item.setBudget(self._budgetEntry.get())
+        self.item.setHourlyFee(self._hourlyFeeEntry.get())
+        self.item.setFixedFee(self._fixedFeeEntry.get())
 
 
 class EffortPage(EditorPage, TaskHeaders):
@@ -504,12 +504,12 @@ class EffortPage(EditorPage, TaskHeaders):
 
 class LocalCategoryViewer(viewer.BaseCategoryViewer):
     def __init__(self, item, *args, **kwargs):
-        # tasks and notes are only  used for the 2 commands that we'll
+        # tasks and notes are only used for the 2 commands that we'll
         # suppress anyway.
         kwargs['tasks'] = []
         kwargs['notes'] = []
 
-        self._item = item
+        self.item = item
 
         super(LocalCategoryViewer, self).__init__(*args, **kwargs)
 
@@ -518,7 +518,7 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):
     def getIsItemChecked(self, index):
         item = self.getItemWithIndex(index)
         if isinstance(item, category.Category):
-            return item in self._item.categories()
+            return item in self.item.categories()
         return False
 
     def createCategoryPopupMenu(self):
@@ -568,11 +568,11 @@ class CategoriesPage(EditorPage):
             categoryIndex = treeCtrl.GetIndexOfItem(categoryNode)
             category = self.getCategoryWithIndex(categoryIndex)
             if categoryNode.IsChecked():
-                category.addCategorizable(self._item)
-                self._item.addCategory(category)
+                category.addCategorizable(self.item)
+                self.item.addCategory(category)
             else:
-                category.removeCategorizable(self._item)
-                self._item.removeCategory(category)
+                category.removeCategorizable(self.item)
+                self.item.removeCategory(category)
 
 
 class TaskCategoriesPage(CategoriesPage, TaskHeaders):
@@ -620,7 +620,7 @@ class NotesPage(EditorPage):
         event.Skip()
         
     def ok(self):
-        self._item.setNotes(list(self.noteContainer.rootItems()))
+        self.item.setNotes(list(self.noteContainer.rootItems()))
 
         
 class AttachmentPage(EditorPage):
@@ -763,7 +763,7 @@ class AttachmentPage(EditorPage):
     def ok(self):
         ids = [ self._listCtrl.GetItemData(i) for i in xrange(self._listCtrl.GetItemCount()) ]
         attachments = [v for id_, v in self._listData.items() if id_ in ids]
-        self._item.setAttachments(*attachments)
+        self.item.setAttachments(*attachments)
     
     
 class BehaviorPage(EditorPage, TaskHeaders):
@@ -791,7 +791,7 @@ class BehaviorPage(EditorPage, TaskHeaders):
         self._fieldMap['behavior']=choice
 
     def ok(self):
-        self._item.shouldMarkCompletedWhenAllChildrenCompleted = \
+        self.item.shouldMarkCompletedWhenAllChildrenCompleted = \
             self._markTaskCompletedEntry.GetClientData( \
                 self._markTaskCompletedEntry.GetSelection())
 
@@ -812,6 +812,7 @@ class TaskEditBook(widgets.Listbook):
             self.AddPage(NotesPage(self, task, settings, categories), _('Notes'), 'note')
         self.AddPage(AttachmentPage(self, task, settings), _('Attachments'), 'attachment')
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior')
+        self.item = task
 
 
 class TaskComboTreeBox(wx.Panel):
@@ -870,7 +871,7 @@ class EffortEditBook(widgets.BookPage):
                  *args, **kwargs):
         super(EffortEditBook, self).__init__(parent, columns=3, *args, **kwargs)
         self._editor = editor
-        self._effort = effort
+        self.item = self._effort = effort
         self._effortList = effortList
         self._taskList = taskList
         self._settings = settings
@@ -945,7 +946,7 @@ class EffortEditBook(widgets.BookPage):
 
 class CategorySubjectPage(ColorEntryMixin, widgets.BookPage):
     def __init__(self, parent, category, *args, **kwargs):
-        self._item = self._category = category
+        self.item = self._category = category
         super(CategorySubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
         self.addSubjectEntry()
         self.addDescriptionEntry()
@@ -972,11 +973,12 @@ class CategorySubjectPage(ColorEntryMixin, widgets.BookPage):
 class CategoryEditBook(widgets.Listbook):
     def __init__(self, parent, theCategory, settings, categories,
                  *args, **kwargs):
+        self.item = theCategory
         super(CategoryEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(CategorySubjectPage(self, theCategory), 
                      _('Description'), 'description')
-        self.AddPage(NotesPage(self, theCategory, settings, 
-                     categories), _('Notes'), 'note')
+        self.AddPage(NotesPage(self, theCategory, settings, categories), 
+                     _('Notes'), 'note')
         self.AddPage(AttachmentPage(self, theCategory, settings), 
                      _('Attachments'), 'attachment')
 
@@ -984,7 +986,7 @@ class CategoryEditBook(widgets.Listbook):
 class NoteSubjectPage(ColorEntryMixin, widgets.BookPage):
     def __init__(self, parent, theNote, *args, **kwargs):
         super(NoteSubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
-        self._item = self._note = theNote
+        self.item = self._note = theNote
         self.addSubjectEntry()
         self.addDescriptionEntry()
         self.addColorEntry()
@@ -1009,6 +1011,7 @@ class NoteSubjectPage(ColorEntryMixin, widgets.BookPage):
 
 class NoteEditBook(widgets.Listbook):
     def __init__(self, parent, theNote, settings, categories, *args, **kwargs):
+        self.item = theNote
         super(NoteEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(NoteSubjectPage(self, theNote), _('Description'), 'description')
         self.AddPage(NoteCategoriesPage(self, theNote, categories, settings), _('Categories'),
@@ -1017,13 +1020,13 @@ class NoteEditBook(widgets.Listbook):
 
 
 class EditorWithCommand(widgets.NotebookDialog):
-    def __init__(self, parent, command, *args, **kwargs):
+    def __init__(self, parent, command, container, *args, **kwargs):
         self._command = command
-
         super(EditorWithCommand, self).__init__(parent, command.name(), 
                                                 *args, **kwargs)
-
         self.setFocusOnFirstEntry()
+        patterns.Publisher().registerObserver(self.onItemRemoved, 
+            eventType=container.removeItemEventType())
 
     def setFocusOnFirstEntry(self):
         firstEntry = self[0][0]._subjectEntry
@@ -1035,24 +1038,46 @@ class EditorWithCommand(widgets.NotebookDialog):
         for item in self._command.items:
             self.addPage(item)
 
+    def cancel(self, *args, **kwargs):
+        patterns.Publisher().removeObserver(self.onItemRemoved)
+        super(EditorWithCommand, self).cancel(*args, **kwargs)
+        
     def ok(self, *args, **kwargs):
+        patterns.Publisher().removeObserver(self.onItemRemoved)
         self._command.do()
         super(EditorWithCommand, self).ok(*args, **kwargs)
 
+    def onItemRemoved(self, event):
+        ''' The item we're editing has been removed. Close the tab of the item
+            involved and close the whole editor if there are no tabs left. '''
+        pagesToCancel = [] # Collect the pages to cancel so we don't modify the 
+                           # book widget while we iterate over it
+        for item in event.values():
+            pagesToCancel.extend([page for page in self \
+                                  if self.isPageDisplayingItem(page, item)])
+        self.cancelPages(pagesToCancel)
+        if len(list(self)) == 0:
+            self.cancel()
+            
+    def isPageDisplayingItem(self, page, item):
+        return page.item == item
+
 
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, taskList, settings, categories, bitmap='edit', *args, **kwargs):
+    def __init__(self, parent, command, taskList, settings, categories, 
+                 bitmap='edit', *args, **kwargs):
         self._settings = settings
         self._taskList = taskList
         self._categories = categories
-        super(TaskEditor, self).__init__(parent, command, bitmap, *args, **kwargs)
+        super(TaskEditor, self).__init__(parent, command, taskList, bitmap, 
+                                         *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
         # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
         self.setFocus(*args,**kwargs) 
         # This works on Windows XP, but fails silently on Linux Ubuntu 5.10:
         wx.CallAfter(self.setFocus,*args,**kwargs) 
         # So we did just do it twice, guess it doesn't hurt
-
+        
     def setFocus(self, *args, **kwargs):
         ''' select the correct page and correct control on a page
             kwargs include:
@@ -1095,6 +1120,7 @@ class TaskEditor(EditorWithCommand):
         page = TaskEditBook(self._interior, task, self._taskList,
             self._settings, self._categories)
         self._interior.AddPage(page, task.subject())
+        
 
 
 class EffortEditor(EditorWithCommand):
@@ -1103,7 +1129,8 @@ class EffortEditor(EditorWithCommand):
         self._effortList = effortList
         self._taskList = taskList
         self._settings = settings
-        super(EffortEditor, self).__init__(parent, command, *args, **kwargs)
+        super(EffortEditor, self).__init__(parent, command, effortList, 
+                                           *args, **kwargs)
 
     def setFocusOnFirstEntry(self):
         pass
@@ -1117,12 +1144,19 @@ class EffortEditor(EditorWithCommand):
             self._taskList, self._settings)
         self._interior.AddPage(page, effort.task().subject())
 
+    def isPageDisplayingItem(self, page, item):
+        if hasattr(item, 'setTask'):
+            return page.item == item # Regular effort
+        else:
+            return item.mayContain(page.item) # Composite effort
+
 
 class CategoryEditor(EditorWithCommand):
     def __init__(self, parent, command, settings, categories, *args, **kwargs):
         self._settings = settings
         self._categories = categories
-        super(CategoryEditor, self).__init__(parent, command, *args, **kwargs)
+        super(CategoryEditor, self).__init__(parent, command, categories, 
+                                             *args, **kwargs)
 
     def addPage(self, category):
         page = CategoryEditBook(self._interior, category,
@@ -1131,10 +1165,10 @@ class CategoryEditor(EditorWithCommand):
 
 
 class NoteEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, categories, *args, **kwargs):
+    def __init__(self, parent, command, settings, notes, categories, *args, **kwargs):
         self._settings = settings
         self._categories = categories
-        super(NoteEditor, self).__init__(parent, command, *args, **kwargs)
+        super(NoteEditor, self).__init__(parent, command, notes, *args, **kwargs)
 
     def addPages(self):
         for note in self._command.notes: # FIXME: use getter

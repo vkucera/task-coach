@@ -1261,8 +1261,9 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
         return self.editItemDialog(bitmap=bitmap, items=newCommand.items)
     
     def editItemDialog(self, *args, **kwargs):
+        items = kwargs.get('items', self.curselection())
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-            command.EditTaskCommand(self.list, kwargs['items']),
+            command.EditTaskCommand(self.list, items),
             self.list, self.settings, self.categories,
             bitmap=kwargs['bitmap'])
     
@@ -1276,7 +1277,8 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
     def newSubItemDialog(self, *args, **kwargs):
         newCommand = command.NewSubTaskCommand(self.list, self.curselection())
         newCommand.do()
-        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
+        return self.editItemDialog(bitmap=kwargs['bitmap'], 
+                                   items=newCommand.items)
         
     newSubTaskDialog = newSubItemDialog
            
@@ -1763,7 +1765,7 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
             command.EditNoteCommand(self.list, kwargs['items']),
-            self.settings, self.categories, bitmap=kwargs['bitmap'])
+            self.settings, self.list, self.categories, bitmap=kwargs['bitmap'])
     
     editNoteDialog = editItemDialog
     
