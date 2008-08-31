@@ -1398,7 +1398,7 @@ class TaskAddNote(NeedsSelectedTasks, ViewerCommand,
         noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
             command.AddTaskNoteCommand(self.viewer.model(), 
                 self.viewer.curselection()),
-            self.settings, self.categories, bitmap=self.bitmap)
+            self.settings, self.viewer.model(), self.categories, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
 
@@ -1414,7 +1414,7 @@ class CategoryAddNote(NeedsSelectedCategory, ViewerCommand,
         noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
             command.AddCategoryNoteCommand(self.viewer.model(), 
                 self.viewer.curselection()),
-            self.settings, self.categories, bitmap=self.bitmap)
+            self.settings, self.viewer.model(), self.categories, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
         
@@ -1699,7 +1699,7 @@ class NoteNew(NotesCommand, CategoriesCommand,
         noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
             command.NewNoteCommand(self.notes,
                   categories=self.categoriesForTheNewNote()),
-            self.settings, self.categories, bitmap=self.bitmap)
+            self.settings, self.notes, self.categories, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
 

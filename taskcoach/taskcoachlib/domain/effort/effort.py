@@ -218,6 +218,11 @@ class CompositeEffort(EffortBase):
     def nrBeingTracked(self):
         return len([effort for effort in self.__getEfforts(recursive=True) \
             if effort.isBeingTracked()])
+        
+    def mayContain(self, effort):
+        ''' Return whether effort would be contained in this composite effort 
+            if it existed. '''
+        return effort.task() == self.task() and self.__inPeriod(effort)
 
     def __inPeriod(self, effort):
         return self.getStart() <= effort.getStart() <= self.getStop()
