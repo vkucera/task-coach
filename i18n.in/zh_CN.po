@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: zh_CN\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-03-27 20:39+0000\n"
-"PO-Revision-Date: 2008-05-10 21:13+0100\n"
+"PO-Revision-Date: 2008-09-02 23:17+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1077,7 +1077,7 @@ msgstr "编辑参数"
 
 #: taskcoachlib/gui/uicommand.py:688
 msgid "&All\tCtrl+A"
-msgstr "全部(&A)\ttCtrl+A"
+msgstr "全部(&A)\tCtrl+A"
 
 #: taskcoachlib/gui/uicommand.py:689
 msgid "Select all items in the current view"

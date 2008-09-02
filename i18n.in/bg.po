@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: bg\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-03-27 20:39+0000\n"
-"PO-Revision-Date: 2008-05-10 22:11+0100\n"
+"PO-Revision-Date: 2008-09-02 23:22+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -265,7 +265,7 @@ msgstr "Редактирай избраната задача"
 
 #: taskcoachlib/domain/task/tasklist.py:34
 msgid "&Delete task\tCtrl+DEL"
-msgstr "&Изтрий задача \t Ctrl+DEL"
+msgstr "&Изтрий задача\tCtrl+DEL"
 
 #: taskcoachlib/domain/task/tasklist.py:35
 msgid "Delete the selected task(s)"
@@ -931,7 +931,7 @@ msgstr "Затвори текущия файл"
 
 #: taskcoachlib/gui/uicommand.py:370
 msgid "&Save\tCtrl+S"
-msgstr "&Запази \t Ctrl+S"
+msgstr "&Запази\tCtrl+S"
 
 #: taskcoachlib/gui/uicommand.py:371
 msgid "Save the current file"
@@ -1008,7 +1008,7 @@ msgstr "Експортирай текущия изглед в Comma Separated Va
 
 #: taskcoachlib/gui/uicommand.py:525
 msgid "&Quit\tCtrl+Q"
-msgstr "&Излез от програмата \t Ctrl+Q"
+msgstr "&Излез от програмата\tCtrl+Q"
 
 #: taskcoachlib/gui/uicommand.py:526
 msgid "Exit %s"
@@ -1032,7 +1032,7 @@ msgstr "Възстанови последната отменена команд�
 
 #: taskcoachlib/gui/uicommand.py:593
 msgid "Cu&t\tCtrl+X"
-msgstr "&Изрежи \t Ctrl+X"
+msgstr "&Изрежи \tCtrl+X"
 
 #: taskcoachlib/gui/uicommand.py:594
 msgid "Cut the selected item(s) to the clipboard"
@@ -1040,7 +1040,7 @@ msgstr "Изрежи избраните елементи и ги постави 
 
 #: taskcoachlib/gui/uicommand.py:616
 msgid "&Copy\tCtrl+C"
-msgstr "&Копирай \t Ctrl+C"
+msgstr "&Копирай\tCtrl+C"
 
 #: taskcoachlib/gui/uicommand.py:617
 msgid "Copy the selected item(s) to the clipboard"

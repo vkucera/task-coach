@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: he\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-03-27 20:39+0000\n"
-"PO-Revision-Date: 2008-05-10 21:46+0100\n"
+"PO-Revision-Date: 2008-09-02 23:23+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -903,7 +903,7 @@ msgstr "מעקב אחרי הישגים ל%d משימות"
 
 #: taskcoachlib/gui/uicommand.py:329
 msgid "&Open...\tCtrl+O"
-msgstr "&פתח... \t Ctrl+O"
+msgstr "&פתח... \tCtrl+O"
 
 #: taskcoachlib/gui/uicommand.py:330
 msgid "Open a %s file"
@@ -931,7 +931,7 @@ msgstr "סגור את הקובץ הנוכחי"
 
 #: taskcoachlib/gui/uicommand.py:370
 msgid "&Save\tCtrl+S"
-msgstr "&שמור \t Ctrl+S"
+msgstr "&שמור \tCtrl+S"
 
 #: taskcoachlib/gui/uicommand.py:371
 msgid "Save the current file"
@@ -1008,7 +1008,7 @@ msgstr "ייצא את התצוגה הנוכחית בפורמט CSV (ערכים �
 
 #: taskcoachlib/gui/uicommand.py:525
 msgid "&Quit\tCtrl+Q"
-msgstr "צא \t Ctrl+Q"
+msgstr "צא \tCtrl+Q"
 
 #: taskcoachlib/gui/uicommand.py:526
 msgid "Exit %s"
@@ -1032,7 +1032,7 @@ msgstr "חזור על הפעולה האחרונה שבוצעה"
 
 #: taskcoachlib/gui/uicommand.py:593
 msgid "Cu&t\tCtrl+X"
-msgstr "גזור \t Ctrl+X"
+msgstr "גזור \tCtrl+X"
 
 #: taskcoachlib/gui/uicommand.py:594
 msgid "Cut the selected item(s) to the clipboard"
@@ -1040,7 +1040,7 @@ msgstr "גזירת הפריט(ים) הנבחר(ים) ללוח"
 
 #: taskcoachlib/gui/uicommand.py:616
 msgid "&Copy\tCtrl+C"
-msgstr "ה&עתק \t Ctrl+C"
+msgstr "ה&עתק \tCtrl+C"
 
 #: taskcoachlib/gui/uicommand.py:617
 msgid "Copy the selected item(s) to the clipboard"
@@ -1048,7 +1048,7 @@ msgstr "העתקת הפריט(ים) הנבחר(ים) ללוח"
 
 #: taskcoachlib/gui/uicommand.py:639
 msgid "&Paste\tCtrl+V"
-msgstr "ה&דבק \t Ctrl+V"
+msgstr "ה&דבק \tCtrl+V"
 
 #: taskcoachlib/gui/uicommand.py:640
 msgid "Paste item(s) from the clipboard"
@@ -1056,7 +1056,7 @@ msgstr "הדבקת פריט(ים) מהלוח"
 
 #: taskcoachlib/gui/uicommand.py:661
 msgid "P&aste into task\tShift+Ctrl+V"
-msgstr "הדבק לתוך המשימה \t Shift+Ctrl+V"
+msgstr "הדבק לתוך המשימה \tShift+Ctrl+V"
 
 #: taskcoachlib/gui/uicommand.py:662
 msgid "Paste item(s) from the clipboard into the selected task"
@@ -1073,7 +1073,7 @@ msgstr "ערוך העדפות"
 
 #: taskcoachlib/gui/uicommand.py:688
 msgid "&All\tCtrl+A"
-msgstr "בחר הכל \t Ctrl+A"
+msgstr "בחר הכל \tCtrl+A"
 
 #: taskcoachlib/gui/uicommand.py:689
 msgid "Select all items in the current view"
@@ -1129,7 +1129,7 @@ msgstr "החבא את העמודה שנבחרה"
 
 #: taskcoachlib/gui/uicommand.py:822
 msgid "&Expand all items\tShift+Ctrl+E"
-msgstr "הרחב את כל הפריטים \t Shift+Ctrl+E"
+msgstr "הרחב את כל הפריטים \tShift+Ctrl+E"
 
 #: taskcoachlib/gui/uicommand.py:823
 msgid "Expand all items with subitems"

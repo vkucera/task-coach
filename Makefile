@@ -68,7 +68,7 @@ website: changes
 
 i18n: taskcoachlib/i18n/nl.py
 
-taskcoachlib/i18n/nl.py: i18n.in/messages.pot
+taskcoachlib/i18n/nl.py: i18n.in/messages.pot i18n.in/*.po
 	cd i18n.in; $(PYTHON) make.py
 
 i18n.in/messages.pot: $(shell find taskcoachlib -name '*.py' | grep -v i18n)

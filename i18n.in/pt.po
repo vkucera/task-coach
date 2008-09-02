@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: pt\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-03-27 20:39+0000\n"
-"PO-Revision-Date: 2008-05-10 21:22+0100\n"
+"PO-Revision-Date: 2008-09-02 23:19+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1252,7 +1252,7 @@ msgstr "Marcar a(s) tarefa(s) seleccionada(s) como por concluir"
 
 #: taskcoachlib/gui/uicommand.py:1220
 msgid "Maximize priority\tCtrl+P"
-msgstr "Maximizar prioridade \t Ctrl+P"
+msgstr "Maximizar prioridade \tCtrl+P"
 
 #: taskcoachlib/gui/uicommand.py:1221
 msgid "Make the selected task(s) the highest priority task(s)"
@@ -1260,7 +1260,7 @@ msgstr "Marcar as tarefa(s) seleccionadas como tarefa(s) de maior prioridade"
 
 #: taskcoachlib/gui/uicommand.py:1233
 msgid "Minimize priority\tCtrl+M"
-msgstr "Minimizar prioridade \t Ctrl+M"
+msgstr "Minimizar prioridade \tCtrl+M"
 
 #: taskcoachlib/gui/uicommand.py:1234
 msgid "Make the selected task(s) the lowest priority task(s)"
@@ -1268,7 +1268,7 @@ msgstr "Marcar as tarefa(s) seleccionadas como tarefa(s) de menor prioridade"
 
 #: taskcoachlib/gui/uicommand.py:1246
 msgid "Increase priority\tCtrl+I"
-msgstr "Aumentar prioridade \t Ctrl+I"
+msgstr "Aumentar prioridade\tCtrl+I"
 
 #: taskcoachlib/gui/uicommand.py:1247
 msgid "Increase the priority of the selected task(s)"
@@ -1276,7 +1276,7 @@ msgstr "Aumentar a prioridade da(s) tarefa(s) selecionada(s)"
 
 #: taskcoachlib/gui/uicommand.py:1259
 msgid "Decrease priority\tCtrl+D"
-msgstr "Diminuir prioridade \t Ctrl+D"
+msgstr "Diminuir prioridade\tCtrl+D"
 
 #: taskcoachlib/gui/uicommand.py:1260
 msgid "Decrease the priority of the selected task(s)"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-03-27 20:39+0000\n"
-"PO-Revision-Date: 2008-05-10 21:26+0100\n"
+"PO-Revision-Date: 2008-09-02 23:19+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -907,7 +907,7 @@ msgstr "contando esforço de %d tarefas"
 
 #: taskcoachlib/gui/uicommand.py:329
 msgid "&Open...\tCtrl+O"
-msgstr "&Abrir... \t Ctrl+A"
+msgstr "&Abrir... \tCtrl+A"
 
 #: taskcoachlib/gui/uicommand.py:330
 msgid "Open a %s file"
@@ -935,7 +935,7 @@ msgstr "Fechar o arquivo atual"
 
 #: taskcoachlib/gui/uicommand.py:370
 msgid "&Save\tCtrl+S"
-msgstr "&Salvar \t Ctrl+S"
+msgstr "&Salvar\tCtrl+S"
 
 #: taskcoachlib/gui/uicommand.py:371
 msgid "Save the current file"

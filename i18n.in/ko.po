@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: ko\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-03-27 20:39+0000\n"
-"PO-Revision-Date: 2008-05-10 21:43+0100\n"
+"PO-Revision-Date: 2008-09-02 23:20+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -265,7 +265,7 @@ msgstr "선택한 작업 수정"
 
 #: taskcoachlib/domain/task/tasklist.py:34
 msgid "&Delete task\tCtrl+DEL"
-msgstr "작업 삭제 &d \t Ctrl+DEL"
+msgstr "작업 삭제 &d\tCtrl+DEL"
 
 #: taskcoachlib/domain/task/tasklist.py:35
 msgid "Delete the selected task(s)"
