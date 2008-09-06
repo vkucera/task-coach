@@ -73,9 +73,17 @@ class Attachment(base.Object, NoteOwner):
                    # xml.writer and xml.reader
 
     def __init__(self, location, *args, **kwargs):
+        if not kwargs.has_key('subject'):
+            kwargs['subject'] = location
+
         super(Attachment, self).__init__(*args, **kwargs)
 
         self.__location = location
+
+    def setParent(self, parent):
+        # FIXME: We  shouldn't assume that pasted  items are composite
+        # in PasteCommand.
+        pass
 
     def location(self):
         return self.__location
@@ -169,7 +177,8 @@ class MailAttachment(Attachment):
                 self.setLocation(os.path.normpath(filename))
                 path, name = os.path.split(filename)
 
-        return name
+        self.setLocation(os.path.join(path, name))
+        return super(MailAttachment, self).location()
 
 
 def AttachmentFactory(location, type_=None, *args, **kwargs):

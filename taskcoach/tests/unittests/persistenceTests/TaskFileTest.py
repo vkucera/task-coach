@@ -24,13 +24,20 @@ from taskcoachlib.domain import base, task, effort, date, category, note
 
 
 class FakeAttachment(base.Object):
-    def __init__(self, type_, location):
+    def __init__(self, type_, location, notes=None):
         super(FakeAttachment, self).__init__()
         self.type_ = type_
         self.__location = location
+        if notes is None:
+            self.__notes = []
+        else:
+            self.__notes = notes
 
     def location(self):
         return self.__location
+
+    def notes(self):
+        return self.__notes
 
 
 class TaskFileTestCase(test.TestCase):

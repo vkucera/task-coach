@@ -169,6 +169,8 @@ class XMLWriter:
         node = self.baseNode(attachment, 'attachment')
         node.setAttribute('type', attachment.type_)
         node.setAttribute('location', attachment.location())
+        for note in attachment.notes():
+            node.appendChild(self.noteNode(note))
         return node
         
     def budgetAsAttribute(self, budget):

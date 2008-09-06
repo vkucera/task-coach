@@ -269,7 +269,13 @@ class NotesCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self.notes = kwargs.pop('notes', None)
         super(NotesCommand, self).__init__(*args, **kwargs)
-        
+
+
+class AttachmentsCommand(UICommand):
+    def __init__(self, *args, **kwargs):
+        self.attachments = kwargs.pop('attachments', None)
+        super(AttachmentsCommand, self).__init__(*args, **kwargs)
+
 
 class ViewerCommand(UICommand):
     def __init__(self, *args, **kwargs):
@@ -307,10 +313,15 @@ class NeedsNoteViewer(object):
     def enabled(self, event):
         return super(NeedsNoteViewer, self).enabled(event) and \
             self.viewer.isShowingNotes()
-            
+
+class NeedsAttachmentViewer(object):
+    def enabled(self, event):
+        return super(NeedsAttachmentViewer, self).enabled(event) and \
+            self.viewer.isShowingAttachments()
+
 class NeedsSelectedTasks(NeedsTaskViewer, NeedsSelection):
     pass
-    
+
 class NeedsSelectionWithAttachments(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectionWithAttachments, self).enabled(event) and \
@@ -324,6 +335,9 @@ class NeedsSelectedCategory(NeedsCategoryViewer, NeedsSelection):
     pass
 
 class NeedsSelectedNote(NeedsNoteViewer, NeedsSelection):
+    pass
+
+class NeedsSelectedAttachments(NeedsAttachmentViewer, NeedsSelection):
     pass
 
 class NeedsAtLeastOneTask(object):
@@ -1418,6 +1432,22 @@ class CategoryAddNote(NeedsSelectedCategory, ViewerCommand,
         return noteDialog # for testing purposes
         
 
+class AttachmentAddNote(NeedsSelectedAttachments, ViewerCommand,
+                        CategoriesCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(AttachmentAddNote, self).__init__(menuText=_('Add &note'),
+            helpText=_('Add a note to the selected attachment(s)'),
+            bitmap='note', *args, **kwargs)
+
+    def doCommand(self, event, show=True):
+        noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
+            command.AddAttachmentNoteCommand(self.viewer.model(), 
+                self.viewer.curselection()),
+            self.settings, self.categories, bitmap=self.bitmap)
+        noteDialog.Show(show)
+        return noteDialog # for testing purposes
+
+
 class AddAttachment(NeedsSelection, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(AddAttachment, self).__init__(menuText=_('&Add attachment'),          
@@ -1759,6 +1789,65 @@ class NoteDragAndDrop(NotesCommand, DragAndDropCommand):
                                                   drop=dropItem)
                          
                                                         
+class AttachmentNew(AttachmentsCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        self.categories = kwargs.pop('categories')
+
+        attachments = kwargs['attachments']
+        if 'menuText' not in kwargs:
+            kwargs['menuText'] = attachments.newItemMenuText
+            kwargs['helpText'] = attachments.newItemHelpText
+        super(AttachmentNew, self).__init__(bitmap='new', *args, **kwargs)
+
+    def doCommand(self, event, show=True):
+        attachmentDialog = dialog.editor.AttachmentEditor(self.mainWindow(), 
+            command.NewAttachmentCommand(self.attachments),
+            self.settings, self.categories, bitmap=self.bitmap)
+        attachmentDialog.Show(show)
+        return attachmentDialog # for testing purposes
+
+
+class AttachmentDelete(NeedsSelectedAttachments, AttachmentsCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        attachments = kwargs['attachments']
+        super(AttachmentDelete, self).__init__(bitmap='delete',
+            menuText=attachments.deleteItemMenuText, 
+            helpText=attachments.deleteItemHelpText, *args, **kwargs)
+        
+    def doCommand(self, event):
+        delete = self.viewer.deleteAttachmentCommand()
+        delete.do()
+
+
+class AttachmentEdit(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand):
+    def __init__(self, *args, **kwargs):
+        attachments = kwargs['attachments']
+        super(AttachmentEdit, self).__init__(bitmap='edit',
+            menuText=attachments.editItemMenuText,
+            helpText=attachments.editItemHelpText, *args, **kwargs)
+        
+    def doCommand(self, event, show=True):
+        dialog = self.viewer.editAttachmentDialog(bitmap=self.bitmap)
+        dialog.Show(show)
+
+
+class AttachmentOpen(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand):
+    def __init__(self, *args, **kwargs):
+        attachments = kwargs['attachments']
+        super(AttachmentOpen, self).__init__(bitmap='fileopen',
+            menuText=attachments.openItemMenuText,
+            helpText=attachments.openItemHelpText, *args, **kwargs)
+
+    def doCommand(self, event, showerror=lambda *args, **kwargs: None):
+        for attachment in self.viewer.curselection():
+            try:
+                attachment.open()
+            except Exception, instance:
+                showerror(str(instance), 
+                          caption=_('Error opening attachment'), 
+                          style=wx.ICON_ERROR)
+
+
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self._dialogTitle = kwargs.pop('dialogTitle')

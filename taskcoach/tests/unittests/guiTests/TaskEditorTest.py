@@ -23,6 +23,7 @@ import test
 from unittests import dummy
 from taskcoachlib import gui, command, config, widgets
 from taskcoachlib.domain import task, effort, date, category, note, attachment
+from taskcoachlib.gui import uicommand
 
 
 class DummyViewer:
@@ -171,15 +172,10 @@ class NewTaskTest(TaskEditorTestCase):
         def onError(*args, **kwargs):
             self.errorMessage = args[0]
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
-        id_ = wx.NewId()
-        item = wx.ListItem()
-        item.SetId(0)
-        item.SetText(unicode(att))
-        item.SetData(id_)
-        item.SetState(wx.LIST_STATE_SELECTED)
-        self.editor[0][5]._listCtrl.InsertItem(item)
-        self.editor[0][5]._listData[id_] = att
-        self.editor[0][5].onOpen(None, showerror=onError)
+        self.editor[0][5]._attachmentViewer.widget.ToggleItemSelection(0)
+        command = uicommand.AttachmentOpen(viewer=self.editor[0][5]._attachmentViewer,
+                                           attachments=attachment.AttachmentList())
+        command.doCommand(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo and sys.version_info < (2,5):
             errorMessageStart = "'ascii' codec can't encode character"
         elif '__WXMAC__' in wx.PlatformInfo and sys.version_info >= (2,5):
@@ -235,7 +231,8 @@ class EditTaskTest(TaskEditorTestCase):
 
     def createTasks(self):
         self.task = task.Task('Task to edit')
-        self.task.addAttachments(attachment.FileAttachment('some attachment'))
+        self.attachment = attachment.FileAttachment('some attachment')
+        self.task.addAttachments(self.attachment)
         return [self.task]
 
     def testOk(self):
@@ -282,13 +279,13 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
 
     def testAddAttachment(self):
-        self.editor[0][5].onFileDrop(0, 0, ['filename'])
+        self.editor[0][5]._attachmentViewer.onDropFiles(None, ['filename'])
         self.editor.ok()
         self.failUnless('filename' in [att.location() for att in self.task.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor[0][5]._listCtrl.DeleteItem(0)
+        self.editor[0][5]._attachmentViewer.model().removeItems([self.attachment])
         self.editor.ok()
         self.assertEqual([], self.task.attachments())
 

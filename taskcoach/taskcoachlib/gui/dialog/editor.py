@@ -191,6 +191,7 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
         self.addSubjectEntry()
         self.addDescriptionEntry()
         self.addPriorityEntry()
+        self.addPriorityEntry()
         self.addColorEntry()
         self.fit()
         self._defaultControl=self._subjectEntry
@@ -213,8 +214,6 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
             self._fieldMap[fieldname].SetFocus()
         else:
             self._defaultControl.SetFocus()
-
-
 
     def addSubjectEntry(self):
         self._subjectEntry = widgets.SingleLineTextCtrl(self, 
@@ -575,6 +574,33 @@ class CategoriesPage(EditorPage):
                 self._item.removeCategory(category)
 
 
+class AttachmentsPage(EditorPage):
+    def __init__(self, parent, item, settings, categories, *args, **kwargs):
+        super(AttachmentsPage, self).__init__(parent, item, *args, **kwargs)
+
+        self.attachmentsList = attachment.AttachmentList(item.attachments())
+        attachmentsBox = widgets.BoxWithBoxSizer(self, label=_('Attachments'))
+        self._attachmentViewer = viewer.AttachmentViewer(attachmentsBox,
+                                                         self.attachmentsList,
+                                                         settings,
+                                                         categories=categories,
+                                                         settingsSection='attachmentviewer')
+        attachmentsBox.add(self._attachmentViewer, proportion=1, flag=wx.EXPAND|wx.ALL)
+        attachmentsBox.fit()
+        self.add(attachmentsBox)
+        self.fit()
+        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
+        self._fieldMap['attachments']=self._attachmentViewer
+
+    def ok(self):
+        self._item.setAttachments(self.attachmentsList)
+        super(AttachmentsPage, self).ok()
+
+    def onClose(self, event):
+        self._attachmentViewer.detach()
+        event.Skip()
+
+
 class TaskCategoriesPage(CategoriesPage, TaskHeaders):
     def settingsSection(self):
         return 'categoryviewerintaskeditor'
@@ -621,149 +647,6 @@ class NotesPage(EditorPage):
         
     def ok(self):
         self._item.setNotes(list(self.noteContainer.rootItems()))
-
-        
-class AttachmentPage(EditorPage):
-    def __init__(self, parent, task, settings, *args, **kwargs):
-        super(AttachmentPage, self).__init__(parent, task, *args, **kwargs)
-        self.settings = settings
-        attachmentBox = widgets.BoxWithBoxSizer(self, label=_('Attachments'))
-        self._listCtrl = wx.ListCtrl(attachmentBox, style=wx.LC_REPORT)
-        self._listCtrl.InsertColumn(0, _('Attachment filenames'))
-        self._listCtrl.SetColumnWidth(0, 500)
-        attachmentBox.add(self._listCtrl, flag=wx.EXPAND|wx.ALL, proportion=1)
-        self._listData = {}
-        self._fieldMap['attachments']=self._listCtrl
-
-        boxSizer = wx.BoxSizer(wx.HORIZONTAL)
-        self._buttonBox = widgets.ButtonBox(attachmentBox,
-            (_('Open attachment'), self.onOpen),
-            (_('Remove attachment'), self.onRemove),
-            (_('Edit filename'), self.onEdit),
-            orientation=wx.HORIZONTAL)
-        boxSizer.Add(self._buttonBox)
-        buttonBox2 = widgets.ButtonBox(attachmentBox,
-            (_('Browse for new attachment...'), self.onBrowse),
-            orientation=wx.HORIZONTAL)
-        boxSizer.Add(buttonBox2)
-        attachmentBox.add(boxSizer)
-        attachmentBox.fit()
-
-        filenameBox = widgets.BoxWithBoxSizer(self,
-            label=_('Attachment filename'), orientation=wx.HORIZONTAL)
-        self._urlEntry = widgets.SingleLineTextCtrlWithEnterButton(filenameBox,
-            label=_('Add attachment'), onEnter=self.onAdd)
-        filenameBox.add(self._urlEntry, proportion=1)
-        filenameBox.fit()
-
-        self.add(attachmentBox, proportion=1, border=5)
-        self.add(filenameBox, proportion=0, border=5)
-        self.fit()
-        self.bindEventHandlers()
-        for att in task.attachments():
-            self.addAttachmentToListCtrl(att)
-        if task.attachments():
-            self._listCtrl.SetItemState(0, wx.LIST_STATE_SELECTED,
-                                        wx.LIST_STATE_SELECTED)
-        else:
-            self.onDeselectItem()
-
-    def bindEventHandlers(self):
-        self._listCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelectItem)
-        self._listCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onDeselectItem)
-        self._listCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onOpen)
-        dropTarget = draganddrop.DropTarget(self.onURLDrop, self.onFileDrop,
-            self.onMailDrop)
-        self._listCtrl.SetDropTarget(dropTarget)
-
-    def addAttachmentToListCtrl(self, att):
-        item = wx.ListItem()
-        item.SetData(wx.NewId())
-        item.SetText(unicode(att))
-        index = self._listCtrl.InsertItem(item)
-        self._listCtrl.Select(index)
-        self._listData[item.GetData()] = att
-
-    def onAdd(self, *args, **kwargs):
-        att = self._urlEntry.GetData()
-        if att is None:
-            att = attachment.URIAttachment(self._urlEntry.GetValue())
-        else:
-            att.setDescription(self._urlEntry.GetValue())
-        self.addAttachmentToListCtrl(att)
-
-    def onFileDrop(self, x, y, filenames):
-        base = self.settings.get('file', 'attachmentbase')
-        for filename in filenames:
-            if base:
-                path = attachment.getRelativePath(filename, base)
-            else:
-                path = filename
-
-            self.addAttachmentToListCtrl(attachment.FileAttachment(path, subject=path))
-
-    def onURLDrop(self, x, y, url):
-        self.addAttachmentToListCtrl(attachment.URIAttachment(url, subject=url))
-
-    def onMailDrop(self, x, y, mail):
-        self.addAttachmentToListCtrl(attachment.MailAttachment(mail))
-
-    def onBrowse(self, *args, **kwargs):
-        filename = widgets.AttachmentSelector()
-        if filename:
-            base = self.settings.get('file', 'attachmentbase')
-            if base:
-                path = attachment.getRelativePath(filename, base)
-            else:
-                path = filename
-
-            self.addAttachmentToListCtrl(attachment.FileAttachment(path))
-
-    def onOpen(self, event, showerror=wx.MessageBox):
-        index = -1
-        while True:
-            index = self._listCtrl.GetNextItem(index,
-                state=wx.LIST_STATE_SELECTED)
-            if index == -1:
-                break
-            attachment = self._listData[self._listCtrl.GetItemData(index)]
-            try:
-                attachment.open(self.settings.get('file', 'attachmentbase'))
-            except Exception, instance:
-                showerror(str(instance),
-                    caption=_('Error opening attachment'), style=wx.ICON_ERROR)
-
-    def onRemove(self, *args, **kwargs):
-        index = -1
-        while True:
-            index = self._listCtrl.GetNextItem(index,
-                state=wx.LIST_STATE_SELECTED)
-            if index == -1:
-                break
-            del self._listData[self._listCtrl.GetItemData(index)]
-            self._listCtrl.DeleteItem(index)
-
-    def onEdit(self, *args, **kwargs):
-        index = self._listCtrl.GetNextItem(-1, state=wx.LIST_STATE_SELECTED)
-        attachment = self._listData[self._listCtrl.GetItemData(index)]
-        self._listCtrl.DeleteItem(index)
-        self._urlEntry.SetValue(unicode(attachment))
-        self._urlEntry.SetData(attachment)
-        self._urlEntry.SetFocus()
-
-    def onSelectItem(self, *args, **kwargs):
-        for button in self._buttonBox.buttonLabels():
-            self._buttonBox.enable(button)
-
-    def onDeselectItem(self, *args, **kwargs):
-        if self._listCtrl.GetSelectedItemCount() == 0:
-            for button in self._buttonBox.buttonLabels():
-                self._buttonBox.disable(button)
-
-    def ok(self):
-        ids = [ self._listCtrl.GetItemData(i) for i in xrange(self._listCtrl.GetItemCount()) ]
-        attachments = [v for id_, v in self._listData.items() if id_ in ids]
-        self._item.setAttachments(attachments)
     
     
 class BehaviorPage(EditorPage, TaskHeaders):
@@ -810,7 +693,7 @@ class TaskEditBook(widgets.Listbook):
             self.AddPage(effortPage, _('Effort'), 'start')
         if settings.getboolean('feature', 'notes'):
             self.AddPage(NotesPage(self, task, settings, categories), _('Notes'), 'note')
-        self.AddPage(AttachmentPage(self, task, settings), _('Attachments'), 'attachment')
+        self.AddPage(AttachmentsPage(self, task, settings, categories), _('Attachments'), 'attachment')
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior')
 
 
@@ -977,7 +860,7 @@ class CategoryEditBook(widgets.Listbook):
                      _('Description'), 'description')
         self.AddPage(NotesPage(self, theCategory, settings, 
                      categories), _('Notes'), 'note')
-        self.AddPage(AttachmentPage(self, theCategory, settings), 
+        self.AddPage(AttachmentsPage(self, theCategory, settings, categories), 
                      _('Attachments'), 'attachment')
 
 
@@ -1013,7 +896,66 @@ class NoteEditBook(widgets.Listbook):
         self.AddPage(NoteSubjectPage(self, theNote), _('Description'), 'description')
         self.AddPage(NoteCategoriesPage(self, theNote, categories, settings), _('Categories'),
                      'category')
-        self.AddPage(AttachmentPage(self, theNote, settings), _('Attachments'), 'attachment')
+        self.AddPage(AttachmentsPage(self, theNote, settings, categories),
+                     _('Attachments'), 'attachment')
+
+
+class AttachmentSubjectPage(ColorEntryMixin, widgets.BookPage):
+    def __init__(self, parent, theAttachment, *args, **kwargs):
+        super(AttachmentSubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
+        self._item = self._attachment = theAttachment
+        self.addSubjectEntry()
+        self.addLocationEntry()
+        self.addDescriptionEntry()
+        self.addColorEntry()
+        self.fit()
+
+    def addSubjectEntry(self):
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._attachment.subject())
+        self.addEntry(_('Subject'), self._subjectEntry, flags=[None, wx.ALL|wx.EXPAND])
+
+    def addLocationEntry(self):
+        panel = wx.Panel(self, wx.ID_ANY)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self._locationEntry = widgets.SingleLineTextCtrl(panel, self._attachment.location(),
+                           style=wx.TE_READONLY)
+        sizer.Add(self._locationEntry, 1, wx.ALL, 3)
+        if self._attachment.type_ == 'file':
+            button = wx.Button(panel, wx.ID_ANY, _('Browse'))
+            sizer.Add(button, 0, wx.ALL, 3)
+            wx.EVT_BUTTON(button, wx.ID_ANY, self.OnSelectLocation)
+        panel.SetSizer(sizer)
+        self.addEntry(_('Location'), panel, flags=[None, wx.ALL|wx.EXPAND])
+
+    def addDescriptionEntry(self):
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self,
+            self._attachment.description())
+        self._descriptionEntry.SetSizeHints(300, 150)
+        self.addEntry(_('Description'), self._descriptionEntry,
+            flags=[None, wx.ALL|wx.EXPAND], growable=True)
+
+    def ok(self):
+        self._attachment.setSubject(self._subjectEntry.GetValue())
+        self._attachment.setLocation(self._locationEntry.GetValue())
+        self._attachment.setDescription(self._descriptionEntry.GetValue())
+        super(AttachmentSubjectPage, self).ok()
+
+    def OnSelectLocation(self, evt):
+        filename = widgets.AttachmentSelector()
+        if filename:
+            self._subjectEntry.SetValue(os.path.split(filename)[-1])
+            self._locationEntry.SetValue(filename)
+
+
+class AttachmentEditBook(widgets.Listbook):
+    def __init__(self, parent, theAttachment, settings, categories,
+                 *args, **kwargs):
+        super(AttachmentEditBook, self).__init__(parent, *args, **kwargs)
+        self.AddPage(AttachmentSubjectPage(self, theAttachment), 
+                     _('Description'), 'description')
+        self.AddPage(NotesPage(self, theAttachment, settings, 
+                     categories), _('Notes'), 'note')
 
 
 class EditorWithCommand(widgets.NotebookDialog):
@@ -1170,3 +1112,19 @@ class NoteEditor(EditorWithCommand):
         page = NoteEditBook(self._interior, note, self._settings, 
                             self._categories)
         self._interior.AddPage(page, note.subject())
+
+
+class AttachmentEditor(EditorWithCommand):
+    def __init__(self, parent, command, settings, categories, *args, **kwargs):
+        self._settings = settings
+        self._categories = categories
+        super(AttachmentEditor, self).__init__(parent, command, *args, **kwargs)
+
+    def addPages(self):
+        for attachment in self._command.attachments: # FIXME: use getter
+            self.addPage(attachment)
+
+    def addPage(self, attachment):
+        page = AttachmentEditBook(self._interior, attachment, self._settings,
+                                  self._categories)
+        self._interior.AddPage(page, attachment.subject())

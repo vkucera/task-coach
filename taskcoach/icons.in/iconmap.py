@@ -94,7 +94,10 @@ iconlist = [
 ('maxpriority', 'actions', '2uparrow', [16]),
 ('minpriority', 'actions', '2downarrow', [16]),
 ('incpriority', 'actions', '1uparrow', [16]),
-('decpriority', 'actions', '1downarrow', [16])]
+('decpriority', 'actions', '1downarrow', [16]),
+('file', 'mimetypes', 'unknown', [16]),
+('uri', 'filesystems', 'www', [16]),
+]
 
 icons = {}
 

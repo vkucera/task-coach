@@ -126,7 +126,10 @@ class Object(patterns.Observable):
             self.__color = color
             self.notifyObserversOfColorChange(color)
         
-    def color(self):
+    def color(self, recursive=True):
+        # The 'recursive' argument isn't  actually used here, but some
+        # code assumes  composite objects where there  aren't. This is
+        # the simplest workaround.
         return self.__color
 
     @classmethod
