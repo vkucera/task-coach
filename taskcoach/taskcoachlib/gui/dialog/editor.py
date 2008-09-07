@@ -501,7 +501,22 @@ class EffortPage(EditorPage, TaskHeaders):
         event.Skip()
 
 
-class LocalCategoryViewer(viewer.CategoryViewer):
+class LocalDragAndDropFix(object):
+    def __init__(self, *args, **kwargs):
+        super(LocalDragAndDropFix, self).__init__(*args, **kwargs)
+
+        # For  a reason  that completely  escapes me,  under  MSW, the
+        # viewers don't act  as drop targets in the  notebook. So make
+        # the containing panel do.
+
+        if '__WXMSW__' in wx.PlatformInfo:
+            dropTarget = draganddrop.DropTarget(self.onDropURL,
+                                                self.onDropFiles,
+                                                self.onDropMail)
+            self.SetDropTarget(dropTarget)
+
+
+class LocalCategoryViewer(LocalDragAndDropFix, viewer.CategoryViewer):
     def __init__(self, item, *args, **kwargs):
         # tasks and notes are only  used for the 2 commands that we'll
         # suppress anyway.
@@ -574,17 +589,21 @@ class CategoriesPage(EditorPage):
                 self._item.removeCategory(category)
 
 
+class LocalAttachmentViewer(LocalDragAndDropFix, viewer.AttachmentViewer):
+    pass
+
+
 class AttachmentsPage(EditorPage):
     def __init__(self, parent, item, settings, categories, *args, **kwargs):
         super(AttachmentsPage, self).__init__(parent, item, *args, **kwargs)
 
         self.attachmentsList = attachment.AttachmentList(item.attachments())
         attachmentsBox = widgets.BoxWithBoxSizer(self, label=_('Attachments'))
-        self._attachmentViewer = viewer.AttachmentViewer(attachmentsBox,
-                                                         self.attachmentsList,
-                                                         settings,
-                                                         categories=categories,
-                                                         settingsSection='attachmentviewer')
+        self._attachmentViewer = LocalAttachmentViewer(attachmentsBox,
+                                                       self.attachmentsList,
+                                                       settings,
+                                                       categories=categories,
+                                                       settingsSection='attachmentviewer')
         attachmentsBox.add(self._attachmentViewer, proportion=1, flag=wx.EXPAND|wx.ALL)
         attachmentsBox.fit()
         self.add(attachmentsBox)
@@ -611,7 +630,7 @@ class NoteCategoriesPage(CategoriesPage, NoteHeaders):
         return 'categoryviewerinnoteeditor'
 
 
-class LocalNoteViewer(viewer.NoteViewer):
+class LocalNoteViewer(LocalDragAndDropFix, viewer.NoteViewer):
     def createFilter(self, notes):
         # Inside the editor, all notes should be shown.
         categories = self.categories
