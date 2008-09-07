@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import date, category, note
+from taskcoachlib.domain import date, category, note, attachment
 
 
-class Task(note.NoteOwner, category.CategorizableCompositeObject):
+class Task(note.NoteOwner, attachment.AttachmentOwner, category.CategorizableCompositeObject):
     def __init__(self, subject='', description='', dueDate=None, 
             startDate=None, completionDate=None, budget=None, 
             priority=0, id=None, hourlyFee=0,

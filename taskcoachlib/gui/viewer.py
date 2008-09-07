@@ -344,6 +344,26 @@ class SortableViewerForCategories(SortableViewer):
                                 uicommand.ViewerSortCaseSensitive(viewer=self)]
 
 
+class SortableViewerForAttachments(SortableViewer):
+    def createSortUICommands(self):
+        self._sortUICommands = \
+            [uicommand.ViewerSortOrderCommand(viewer=self),
+             uicommand.ViewerSortCaseSensitive(viewer=self),
+             None,
+             uicommand.ViewerSortByCommand(viewer=self, value='subject',
+                 menuText=_('Sub&ject'),
+                 helpText=_('Sort attachments by subject')),
+             uicommand.ViewerSortByCommand(viewer=self, value='description',
+                 menuText=_('&Description'),
+                 helpText=_('Sort attchments by description')),
+             uicommand.ViewerSortByCommand(viewer=self, value='categories',
+                 menuText=_('&Category'),
+                 helpText=_('Sort attachments by category')),
+             uicommand.ViewerSortByCommand(viewer=self,
+                 value='totalCategories', menuText=_('Overall categories'),
+                 helpText=_('Sort attachments by overall categories'))]
+
+
 class SortableViewerForNotes(SortableViewer):
     def createSortUICommands(self):
         self._sortUICommands = \
@@ -556,7 +576,10 @@ class Viewer(wx.Panel):
     
     def isShowingNotes(self):
         return False
-    
+
+    def isShowingAttachments(self):
+        return False
+
     def visibleColumns(self):
         return [widgets.Column('subject', _('Subject'))]
     
@@ -990,8 +1013,14 @@ class ViewerWithColumns(Viewer):
                                      column.renderDescription(item).split('\n')))]
             else:
                 result = []
-            result.append(('note', [note.subject() for note in item.notes()]))
-            result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
+            try:
+                result.append(('note', [note.subject() for note in item.notes()]))
+            except AttributeError:
+                pass
+            try:
+                result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
+            except AttributeError:
+                pass
             return result
         else:
             return []
@@ -1780,8 +1809,138 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
         return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
         
     newSubNoteDialog = newSubItemDialog
-    
-    
+
+
+class AttachmentViewer(AttachmentDropTarget, ViewerWithColumns,
+                       SortableViewerForAttachments, 
+                       SearchableViewer, ListViewer):
+    SorterClass = attachment.AttachmentSorter
+
+    def __init__(self, *args, **kwargs):
+        self.categories = kwargs.pop('categories')
+        kwargs['settingssection'] = 'attachmentviewer'
+        super(AttachmentViewer, self).__init__(*args, **kwargs)
+
+    def _addAttachments(self, attachments, index, **itemDialogKwargs):
+        self.model().extend(attachments)
+
+    def createWidget(self):
+        imageList = self.createImageList()
+        self._columns = self._createColumns()
+        widget = widgets.ListCtrl(self, self.columns(),
+            self.getItemText, self.getItemTooltipData, self.getItemImage,
+            self.getItemAttr, self.onSelect,
+            uicommand.AttachmentEdit(viewer=self, attachments=self.model()),
+            menu.AttachmentPopupMenu(self.parent, self.settings,
+                                     self.model(), self.categories, self),
+            menu.ColumnPopupMenu(self),
+            resizeableColumn=1, **self.widgetCreationKeywordArguments())
+        widget.SetColumnWidth(0, 150)
+        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)
+        return widget
+
+    def getItemAttr(self, index):
+        item = self.getItemWithIndex(index)
+        return wx.ListItemAttr(colBack=self.getBackgroundColor(item))
+                            
+    def _createColumns(self):
+        return [widgets.Column('type', _('Type'), 
+                               '',
+                               width=self.getColumnWidth('type'),
+                               imageIndexCallback=self.typeImageIndex,
+                               renderCallback=lambda item: '',
+                               resizeCallback=self.onResizeColumn),
+                widgets.Column('subject', _('Subject'), 
+                               attachment.Attachment.subjectChangedEventType(), 
+                               sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                   value='subject',
+                                   menuText=_('Sub&ject'), helpText=_('Sort by subject')),
+                               width=self.getColumnWidth('subject'), 
+                               renderCallback=lambda item: item.subject(),
+                               resizeCallback=self.onResizeColumn),
+                widgets.Column('description', _('Description'),
+                               attachment.Attachment.subjectChangedEventType(),
+                               sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                   value='description',
+                                   menuText=_('&Description'), helpText=_('Sort by description')),
+                               width=self.getColumnWidth('description'),
+                               renderCallback=lambda item: item.description(),
+                               resizeCallback=self.onResizeColumn),
+                widgets.Column('notes', '', 
+                               attachment.Attachment.notesChangedEventType(),
+                               width=self.getColumnWidth('notes'),
+                               alignment=wx.LIST_FORMAT_LEFT,
+                               imageIndexCallback=self.noteImageIndex,
+                               headerImageIndex=self.imageIndex['note'],
+                               renderCallback=lambda item: '',
+                               resizeCallback=self.onResizeColumn),
+                ]
+
+    def createColumnUICommands(self):
+        return [\
+            uicommand.ToggleAutoColumnResizing(viewer=self,
+                                               settings=self.settings),
+            None,
+            uicommand.ViewColumn(menuText=_('&Description'),
+                helpText=_('Show/hide description column'),
+                setting='description', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Notes'),
+                helpText=_('Show/hide notes column'),
+                setting='notes', viewer=self)]
+
+    def createToolBarUICommands(self):
+        commands = super(AttachmentViewer, self).createToolBarUICommands()
+        del commands[5] # Create subitem
+        commands.insert(7, uicommand.AttachmentOpen(viewer=self,
+                                        attachments=attachment.AttachmentList()))
+        commands.insert(7, None)
+        return commands
+
+    def isShowingAttachments(self):
+        return True
+
+    def createImageList(self):
+        imageList = wx.ImageList(16, 16)
+        self.imageIndex = {}
+        for index, image in enumerate(['note', 'uri', 'email', 'fileopen']):
+            imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
+            self.imageIndex[image] = index
+        return imageList
+
+    def noteImageIndex(self, attachment, which):
+        if attachment.notes():
+            return self.imageIndex['note'] 
+        else:
+            return -1
+
+    def typeImageIndex(self, attachment, which):
+        try:
+            return self.imageIndex[{ 'file': 'fileopen',
+                                     'uri': 'uri',
+                                     'mail': 'email'}[attachment.type_]]
+        except KeyError:
+            return -1
+
+    def newItemDialog(self, *args, **kwargs):
+        newCommand = command.NewAttachmentCommand(self.list, *args, **kwargs)
+        newCommand.do()
+        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
+
+    newAttachmentDialog = newItemDialog
+
+    def editItemDialog(self, *args, **kwargs):
+        return dialog.editor.AttachmentEditor(wx.GetTopLevelParent(self),
+            command.EditAttachmentCommand(self.list, kwargs['items'], *args, **kwargs),
+            self.settings, self.categories, bitmap=kwargs['bitmap'])
+
+    editAttachmentDialog = editItemDialog
+
+    def deleteItemCommand(self):
+        return command.DeleteCommand(self.list, self.curselection())
+
+    deleteAttachmentCommand = deleteItemCommand
+
+
 class EffortViewer(SortableViewerForEffort, SearchableViewer, 
                    UpdatePerSecondViewer):
     SorterClass = effort.EffortSorter

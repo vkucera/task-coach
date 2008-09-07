@@ -767,3 +767,27 @@ class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
             return []
         return [uicommand.HideCurrentColumn(viewer=self._window), None] + \
             self._window.getColumnUICommands()
+
+
+class AttachmentPopupMenu(Menu):
+    def __init__(self, mainwindow, settings, attachments, categories, attachmentViewer):
+        super(AttachmentPopupMenu, self).__init__(mainwindow)
+        self.appendUICommands(
+            uicommand.EditCut(viewer=attachmentViewer),
+            uicommand.EditCopy(viewer=attachmentViewer),
+            uicommand.EditPaste(),
+            None,
+            uicommand.AttachmentNew(attachments=attachments, categories=categories,
+                                    settings=settings),
+            uicommand.AttachmentEdit(viewer=attachmentViewer, attachments=attachments),
+            uicommand.AttachmentDelete(viewer=attachmentViewer, attachments=attachments),
+            uicommand.AttachmentOpen(viewer=attachmentViewer, attachments=attachments),
+            )
+
+        if settings.getboolean('feature', 'notes'):
+            self.appendUICommands(
+                None,
+                uicommand.AttachmentAddNote(viewer=attachmentViewer,
+                                            settings=settings,
+                                            categories=categories)
+                )

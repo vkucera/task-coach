@@ -51,11 +51,11 @@ class TaskTreeListViewerTestCase(test.wxTestCase):
         self.viewer.setSortOrderAscending()
         self.viewer.showTree(self.treeMode)
         self.newColor = (100, 200, 100, 255)
-        attachment.MailAttachment.attdir = os.getcwd()
+        attachment.Attachment.attdir = os.getcwd()
 
     def tearDown(self):
         super(TaskTreeListViewerTestCase, self).tearDown()
-        attachment.MailAttachment.attdir = None
+        attachment.Attachment.attdir = None
 
         for name in os.listdir('.'):
             if os.path.isdir(name) and name.endswith('_attachments'):

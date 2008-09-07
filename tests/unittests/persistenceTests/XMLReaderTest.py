@@ -167,7 +167,8 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
                 <attachment>whatever.tsk</attachment>
             </task>
         </tasks>''')
-        self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
+        self.assertEqual(['whatever.tsk'], [att.location() for att in tasks[0].attachments()])
+        self.assertEqual(['whatever.tsk'], [att.subject() for att in tasks[0].attachments()])
         
     def testTwoAttachmentsCompat(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -178,7 +179,9 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
             </task>
         </tasks>''')
         self.assertEqual(['whatever.tsk', 'another.txt'], 
-                         map(unicode, tasks[0].attachments()))
+                         [att.location() for att in tasks[0].attachments()])
+        self.assertEqual(['whatever.tsk', 'another.txt'], 
+                         [att.subject() for att in tasks[0].attachments()])
         
     def testOneAttachment(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -187,7 +190,8 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
                 <attachment>FILE:whatever.tsk</attachment>
             </task>
         </tasks>''')
-        self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
+        self.assertEqual(['whatever.tsk'], [att.location() for att in tasks[0].attachments()])
+        self.assertEqual(['whatever.tsk'], [att.subject() for att in tasks[0].attachments()])
         
     def testTwoAttachments(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -198,7 +202,9 @@ class XMLReaderVersion16Text(XMLReaderTestCase):
             </task>
         </tasks>''')
         self.assertEqual(['whatever.tsk', 'another.txt'], 
-                         map(unicode, tasks[0].attachments()))
+                         [att.location() for att in tasks[0].attachments()])
+        self.assertEqual(['whatever.tsk', 'another.txt'], 
+                         [att.subject() for att in tasks[0].attachments()])
 
 
 # There's no XMLReaderVersion17Test because the only difference between version
@@ -516,39 +522,44 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <task>
-                <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
+                <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
             </task>
         </tasks>''')
-        self.assertEqual(['whatever.tsk'], map(unicode, tasks[0].attachments()))
+        self.assertEqual(['whateverdata.tsk'], [att.location() for att in tasks[0].attachments()])
+        self.assertEqual(['whatever.tsk'], [att.subject() for att in tasks[0].attachments()])
 
     def testNoteWithOneAttachment(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <note>
-                <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
+                <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
             </note>
         </tasks>''')
-        self.assertEqual(['whatever.tsk'], map(unicode, notes[0].attachments()))
+        self.assertEqual(['whateverdata.tsk'], [att.location() for att in notes[0].attachments()])
+        self.assertEqual(['whatever.tsk'], [att.subject() for att in notes[0].attachments()])
 
     def testCategoryWithOneAttachment(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <category>
-                <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
+                <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
             </category>
         </tasks>''')
-        self.assertEqual(['whatever.tsk'], map(unicode, categories[0].attachments()))
+        self.assertEqual(['whateverdata.tsk'], [att.location() for att in categories[0].attachments()])
+        self.assertEqual(['whatever.tsk'], [att.subject() for att in categories[0].attachments()])
         
     def testTaskWithTwoAttachments(self):
         tasks, categories, notes = self.writeAndRead('''
         <tasks>
             <task>
-                <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
-                <attachment type="file"><description>another.txt</description><data>another.txt</data></attachment>
+                <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
+                <attachment type="file"><description>another.txt</description><data>anotherdata.txt</data></attachment>
             </task>
         </tasks>''')
+        self.assertEqual(['whateverdata.tsk', 'anotherdata.txt'], 
+                         [att.location() for att in tasks[0].attachments()])
         self.assertEqual(['whatever.tsk', 'another.txt'], 
-                         map(unicode, tasks[0].attachments()))
+                         [att.subject() for att in tasks[0].attachments()])
         
     def testOneCategory(self):
         tasks, categories, notes = \
@@ -688,11 +699,12 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         <tasks>
             <note>
                 <note>
-                    <attachment type="file"><description>whatever.tsk</description><data>whatever.tsk</data></attachment>
+                    <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
                 </note>
             </note>
         </tasks>''')
-        self.assertEqual(['whatever.tsk'], map(unicode, notes[0].children()[0].attachments()))
+        self.assertEqual(['whateverdata.tsk'], [att.location() for att in notes[0].children()[0].attachments()])
+        self.assertEqual(['whatever.tsk'], [att.subject() for att in notes[0].children()[0].attachments()])
         
     def testNoteCategory(self):
         tasks, categories, notes = self.writeAndRead('''
@@ -868,3 +880,16 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <note expandedContexts="('None',)"/>
         </tasks>''')
         self.failUnless(notes[0].isExpanded())
+
+
+class XMLReaderVersion21Test(XMLReaderTestCase):
+    tskversion = 21 # New in release 0.71.0
+
+    def testAttachmentLocation(self):
+        tasks, categories, notes = self.writeAndRead('''
+        <tasks>
+            <category>
+                <attachment type="file" location="location"><description>description</description></attachment>
+            </category>
+        </tasks>''')
+        self.assertEqual(['location'], [att.location() for att in categories[0].attachments()])

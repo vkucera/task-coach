@@ -29,7 +29,9 @@ def addIcon(pngName, pngFilename, iconPyFile, first):
     # -F: don't generate backwards compatible access functions, since the 
     # generated file isn't backwards compatible anyway (a bug in wxPython
     # 2.8.8.1).
-    options = ['-i', '-c', '-a', '-F', '-n%s'%pngName, pngFilename, iconPyFile]
+    options = ['-i', '-c', '-a', '-n%s'%pngName, pngFilename, iconPyFile]
+    if map(int, wx.__version__.split('.')) >= (2, 8, 8):
+        options.insert(0, '-F')
     if first:
         options.remove('-a')
     wx.tools.img2py.main(options)
@@ -57,8 +59,11 @@ def makeIconPyFile(iconPyFile):
     iconZipFile.close()
 
 def makeSplashScreen(iconPyFile):
-    wx.tools.img2py.main(['-c', '-a', '-F', '-nsplash', 'splash.png', 
-                         iconPyFile])
+    options = ['-c', '-a', '-nsplash', 'splash.png', 
+               iconPyFile]
+    if map(int, wx.__version__.split('.')) >= (2, 8, 8):
+        options.insert(0, '-F')
+    wx.tools.img2py.main(options)
 
 def fixIconFile(iconFileName):
     ''' wxPython 2.8.8.1 uses a new class for images in the generated image

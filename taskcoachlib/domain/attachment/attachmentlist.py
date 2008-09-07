@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,10 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskCommands import *
-from effortCommands import *
-from categoryCommands import *
-from noteCommands import *
-from attachmentCommands import *
-from base import CopyCommand, DeleteCommand, CutCommand, PasteCommand, \
-    AddAttachmentCommand, AddNoteCommand
+from taskcoachlib.patterns import ObservableList
+from taskcoachlib.i18n import _
+
+
+class AttachmentList(ObservableList):
+    newItemMenuText = _('New attachment...')
+    newItemHelpText =  _('Insert a new attachment')
+    editItemMenuText = _('Edit attachment...')
+    editItemHelpText = _('Edit the selected attachments')
+    deleteItemMenuText = _('Delete attachment')
+    deleteItemHelpText = _('Delete the selected attachments')
+    openItemMenuText = _('Open attachment')
+    openItemHelpText = _('Open the selected attachments')

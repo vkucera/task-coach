@@ -129,6 +129,18 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
+'attachmentviewer': { \
+    'title': '',
+    'sortby': 'subject',
+    'sortascending': 'True',
+    'sortcasesensitive': 'True',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False',
+    'columns': "[]",
+    'columnsalwaysvisible': "['type', 'subject']",
+    'columnwidths': "{'notes': 28, 'type': 28}",
+    'columnautoresizing': 'True' },
 'window': { \
     'size': '(700, 500)', # Default size of the main window
     'position': '(-1, -1)', # Position of the main window, undefined by default
