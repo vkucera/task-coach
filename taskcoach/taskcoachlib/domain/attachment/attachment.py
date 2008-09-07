@@ -18,9 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, shutil, tempfile
+
+from taskcoachlib.domain import base
 from taskcoachlib.thirdparty import desktop
 from taskcoachlib.mailer import readMail, openMail
 from taskcoachlib.i18n import _
+from taskcoachlib.domain.note.noteowner import NoteOwner
 
 
 def getRelativePath(path, base=os.getcwd()):
@@ -61,112 +64,105 @@ def getRelativePath(path, base=os.getcwd()):
     return os.path.join(*pth1)
 
 
-class Attachment(object):
+class Attachment(base.Object, NoteOwner):
     ''' Abstract base class for attachments. '''
-    type_ = None
-        
+
+    type_ = 'unknown'
+
+    attdir =  None # This is filled in before saving or reading by
+                   # xml.writer and xml.reader
+
+    def __init__(self, location, *args, **kwargs):
+        if not kwargs.has_key('subject'):
+            kwargs['subject'] = location
+
+        super(Attachment, self).__init__(*args, **kwargs)
+
+        self.__location = location
+
+    def setParent(self, parent):
+        # FIXME: We  shouldn't assume that pasted  items are composite
+        # in PasteCommand.
+        pass
+
+    def location(self):
+        return self.__location
+
+    def setLocation(self, location):
+        self.__location = location
+
     def open(self, workingDir=None):
         raise NotImplementedError
 
-    def data(self):
-        raise NotImplementedError
+    def __cmp__(self, other):
+        try:
+            return cmp(self.location(), other.location())
+        except AttributeError:
+            return 1
 
-    def setDescription(self, descr):
-        raise NotImplementedError
+    def __getstate__(self):
+        try:
+            state = super(Attachment, self).__getstate__()
+        except AttributeError:
+            state = dict()
+        state.update(dict(location=self.location()))
+        return state
 
-    def copy(self):
-        return self.__class__(**self.__getcopystate__())
+    def __setstate__(self, state):
+        try:
+            super(Attachment, self).__setstate__(state)
+        except AttributeError:
+            pass
+        self.setLocation(state['location'])
 
     def __getcopystate__(self):
-        return dict(location=self.data())
+        return self.__getstate__()
+
+    def __unicode__(self):
+        return self.subject()
 
 
 class FileAttachment(Attachment):
     type_ = 'file'
 
-    def __init__(self, location='', description=None, **kwargs):
-        super(FileAttachment, self).__init__(**kwargs)
-        # FIXME: description is ignored
-        self.filename = location
-
     def open(self, workingDir=None, openAttachment=desktop.open):
-        if workingDir is not None and not os.path.isabs(self.filename):
-            path = os.path.join(workingDir, self.filename)
+        if workingDir is not None and not os.path.isabs(self.location()):
+            path = os.path.join(workingDir, self.location())
         else:
-            path = self.filename
+            path = self.location()
 
         openAttachment(os.path.normpath(path))
-
-    def setDescription(self, descr):
-        self.filename = descr
-
-    def data(self):
-        return self.filename
-
-    def __unicode__(self):
-        return unicode(self.filename)
-
-    def __cmp__(self, other):
-        try:
-            return cmp(self.filename, other.filename)
-        except AttributeError:
-            return 1
 
 
 class URIAttachment(Attachment):
     type_ = 'uri'
 
-    def __init__(self, location='', description=None, **kwargs):
-        super(URIAttachment, self).__init__(**kwargs)
-        # FIXME: description is ignored
-        self.uri = location
-
     def open(self, workingDir=None):
-        desktop.open(self.uri)
-
-    def setDescription(self, description):
-        self.uri = description
-
-    def data(self):
-        return self.uri
-
-    def __unicode__(self):
-        return self.uri
-
-    def __cmp__(self, other):
-        try:
-            return cmp(self.uri, other.uri)
-        except AttributeError:
-            return 1
+        desktop.open(self.location())
 
 
 class MailAttachment(Attachment):
     type_ = 'mail'
 
-    attdir =  None # This is filled in before saving or reading by
-                   # xml.writer and xml.reader
-
-    def __init__(self, location='', description=None, **kwargs):
-        super(MailAttachment, self).__init__(**kwargs)
-
+    def __init__(self, location, *args, **kwargs):
         if os.path.isabs(location):
-            self.filename = os.path.normpath(location)
+            location = os.path.normpath(location)
         else:
-            self.filename = os.path.normpath(os.path.join(self.attdir, location))
+            location = os.path.normpath(os.path.join(self.attdir, location))
 
-        if description is None:
-            self.description, unused = readMail(self.filename)
-        else:
-            self.description = description
+        subject, content = readMail(location)
+
+        kwargs.setdefault('subject', subject)
+        kwargs.setdefault('description', content)
+
+        super(MailAttachment, self).__init__(location, *args, **kwargs)
 
     def open(self, workingDir=None):
-        openMail(self.filename)
+        openMail(self.location())
 
-    def setDescription(self, description):
-        self.description = description
-
-    def data(self):
-        path, name = os.path.split(self.filename)
+    def location(self):
+        origname = super(MailAttachment, self).location()
+        path, name = os.path.split(origname)
 
         if self.attdir is not None:
             if path != self.attdir:
@@ -177,36 +173,28 @@ class MailAttachment(Attachment):
 
                 fd, filename = tempfile.mkstemp(suffix='.eml', dir=self.attdir)
                 os.close(fd)
-                shutil.move(self.filename, filename)
-                self.filename = os.path.normpath(filename)
-                path, name = os.path.split(self.filename)
+                shutil.move(origname, filename)
+                self.setLocation(os.path.normpath(filename))
+                path, name = os.path.split(filename)
 
-        return name
-
-    def __unicode__(self):
-        return self.description
-
-    def __cmp__(self, other):
-        try:
-            return cmp(self.filename, other.filename)
-        except AttributeError:
-            return 1
+        self.setLocation(os.path.join(path, name))
+        return super(MailAttachment, self).location()
 
 
-def AttachmentFactory(location, description=None, type_=None):
+def AttachmentFactory(location, type_=None, *args, **kwargs):
     if type_ is None:
         if location.startswith('URI:'):
-            return URIAttachment(location[4:])
+            return URIAttachment(location[4:], subject=location[4:], description=location[4:])
         elif location.startswith('FILE:'):
-            return FileAttachment(location[5:])
+            return FileAttachment(location[5:], subject=location[5:], description=location[5:])
         elif location.startswith('MAIL:'):
-            return MailAttachment(location[5:])
+            return MailAttachment(location[5:], subject=location[5:], description=location[5:])
 
-        return FileAttachment(location)
+        return FileAttachment(location, subject=location, description=location)
 
     try:
         return { 'file': FileAttachment,
                  'uri': URIAttachment,
-                 'mail': MailAttachment }[type_](location, description)
+                 'mail': MailAttachment }[type_](location, *args, **kwargs)
     except KeyError:
         raise TypeError, 'Unknown attachment type: %s' % type_

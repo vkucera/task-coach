@@ -1145,7 +1145,7 @@ class TaskWithoutAttachmentFixture(AttachmentTestCase):
         
     def testAddEmptyListOfAttachments(self):
         self.task.addAttachments()
-        self.failIf(self.events)
+        self.failIf(self.events, self.events)
         
     
 class TaskWithAttachmentFixture(AttachmentTestCase):
@@ -1170,11 +1170,13 @@ class TaskWithAttachmentFixture(AttachmentTestCase):
 
     def testCopy_CopiesIndividualAttachments(self):
         copy = self.task.copy()
-        self.assertEqual(copy.attachments()[0].data(),
-                         self.task.attachments()[0].data())
+        self.assertEqual(copy.attachments()[0].location(),
+                         self.task.attachments()[0].location())
         self.task.attachments()[0].setDescription('new')
-        self.assertNotEqual(copy.attachments()[0].data(),
-                            self.task.attachments()[0].data())
+        # The location of a copy is actually the same; it's a filename
+        # or URI.
+        self.assertEqual(copy.attachments()[0].location(),
+                         self.task.attachments()[0].location())
 
 
 class TaskWithAttachmentAddedTestCase(AttachmentTestCase):

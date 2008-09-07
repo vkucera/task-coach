@@ -17,5 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from attachment import AttachmentFactory, URIAttachment, \
-     FileAttachment, MailAttachment, getRelativePath
+from attachment import *
+from attachmentowner import AttachmentOwner
+from attachmentlist import AttachmentList
+from sorter import AttachmentSorter

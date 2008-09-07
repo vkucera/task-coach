@@ -23,7 +23,7 @@ from taskcoachlib.domain import date, attachment
 
 
 class XMLWriter:    
-    def __init__(self, fd, versionnr=20):
+    def __init__(self, fd, versionnr=21):
         self.__fd = fd
         self.__versionnr = versionnr
 
@@ -32,7 +32,7 @@ class XMLWriter:
         path, name = os.path.split(os.path.abspath(self.__fd.name))
         name, ext = os.path.splitext(name)
         attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-        attachment.MailAttachment.attdir = attdir
+        attachment.Attachment.attdir = attdir
 
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None)
@@ -49,7 +49,7 @@ class XMLWriter:
         self.document.writexml(self.__fd)
 
     def taskNode(self, task):
-        node = self.baseNode(task, 'task', self.taskNode)
+        node = self.baseCompositeNode(task, 'task', self.taskNode)
         if task.startDate() != date.Date():
             node.setAttribute('startdate', str(task.startDate()))
         if task.dueDate() != date.Date():
@@ -75,6 +75,8 @@ class XMLWriter:
             node.appendChild(self.effortNode(effort))
         for note in task.notes():
             node.appendChild(self.noteNode(note))
+        for attachment in task.attachments():
+            node.appendChild(self.attachmentNode(attachment))
         return node
 
     def recurrenceNode(self, recurrence):
@@ -111,12 +113,14 @@ class XMLWriter:
                 if categorizable in container:
                     return True
             return False
-        node = self.baseNode(category, 'category', self.categoryNode, 
-                             categorizableContainers)
+        node = self.baseCompositeNode(category, 'category', self.categoryNode, 
+                                      categorizableContainers)
         if category.isFiltered():
             node.setAttribute('filtered', str(category.isFiltered()))
         for note in category.notes():
             node.appendChild(self.noteNode(note))
+        for attachment in category.attachments():
+            node.appendChild(self.attachmentNode(attachment))
         # Make sure the categorizables referenced are actually in the 
         # categorizableContainer, i.e. they are not deleted
         categorizableIds = ' '.join([categorizable.id() for categorizable in \
@@ -126,34 +130,47 @@ class XMLWriter:
         return node
     
     def noteNode(self, note):
-        return self.baseNode(note, 'note', self.noteNode)
-        
-    def baseNode(self, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
-        ''' Create a node and add the attributes that all composite domain
-            objects share, such as id, subject, description. Also create child
-            nodes by means of the childNodeFactory. '''
+        node = self.baseCompositeNode(note, 'note', self.noteNode)
+        for attachment in note.attachments():
+            node.appendChild(self.attachmentNode(attachment))
+        return node
+
+    def __baseNode(self, item, nodeName):
         node = self.document.createElement(nodeName)
         node.setAttribute('id', item.id())
         if item.subject():
             node.setAttribute('subject', item.subject())
         if item.description():
             node.appendChild(self.textNode('description', item.description()))
+        return node
+
+    def baseNode(self, item, nodeName):
+        ''' Create a node and add the attributes that all composite domain
+            objects share, such as id, subject, description. '''
+        node = self.__baseNode(item, nodeName)
+        if item.color():
+            node.setAttribute('color', str(item.color()))
+        return node
+
+    def baseCompositeNode(self, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
+        """Same as baseNode, but also create child nodes by means of
+        the childNodeFactory."""
+        node = self.__baseNode(item, nodeName)
         if item.color(recursive=False):
             node.setAttribute('color', str(item.color(recursive=False)))
         if item.expandedContexts():
             node.setAttribute('expandedContexts', 
                               str(tuple(sorted(item.expandedContexts()))))
-        for attachment in item.attachments():
-            node.appendChild(self.attachmentNode(attachment))
         for child in item.children():
             node.appendChild(childNodeFactory(child, *childNodeFactoryArgs))
         return node
 
     def attachmentNode(self, attachment):
-        node = self.document.createElement('attachment')
+        node = self.baseNode(attachment, 'attachment')
         node.setAttribute('type', attachment.type_)
-        node.appendChild(self.textNode('description', unicode(attachment)))
-        node.appendChild(self.textNode('data', attachment.data()))
+        node.setAttribute('location', attachment.location())
+        for note in attachment.notes():
+            node.appendChild(self.noteNode(note))
         return node
         
     def budgetAsAttribute(self, budget):

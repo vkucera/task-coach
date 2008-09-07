@@ -29,7 +29,7 @@ class FileAttachmentTest(test.TestCase):
         self.filename = filename
         
     def testCreateFileAttachment(self):
-        self.assertEqual('filename', self.attachment.data())
+        self.assertEqual('filename', self.attachment.location())
         
     def testOpenFileAttachmentWithRelativeFilename(self):
         self.attachment.open(openAttachment=self.openAttachment)
@@ -48,6 +48,6 @@ class FileAttachmentTest(test.TestCase):
                                 
     def testCopy(self):
         copy = self.attachment.copy()
-        self.assertEqual(copy.data(), self.attachment.data())
+        self.assertEqual(copy.location(), self.attachment.location())
         self.attachment.setDescription('new')
-        self.assertNotEqual(copy.data(), self.attachment.data())
+        self.assertEqual(copy.location(), self.attachment.location())

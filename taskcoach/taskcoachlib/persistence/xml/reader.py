@@ -30,7 +30,7 @@ class XMLReader:
         path, name = os.path.split(os.path.abspath(self.__fd.name))
         name, ext = os.path.splitext(name)
         attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-        attachment.MailAttachment.attdir = attdir
+        attachment.Attachment.attdir = attdir
 
         domDocument = xml.dom.minidom.parse(self.__fd)
         self.__tskversion = self.__parseTskVersionNumber(domDocument)
@@ -74,7 +74,7 @@ class XMLReader:
                 if node.nodeName == 'note']
 
     def __parseCategoryNode(self, categoryNode, categorizablesById):
-        kwargs = self.__parseBaseAttributes(categoryNode, 
+        kwargs = self.__parseBaseCompositeAttributes(categoryNode, 
             self.__parseCategoryNodes, categorizablesById)
         kwargs.update(dict(\
             notes=self.__parseNoteNodes(categoryNode.childNodes),
@@ -93,6 +93,8 @@ class XMLReader:
         else:
             categorizables = []
         kwargs['categorizables'] = categorizables
+        if self.__tskversion > 20:
+            kwargs['attachments'] = self.__parseAttachmentNodes(categoryNode.childNodes)
         return category.Category(**kwargs)
                       
     def __parseCategoryNodesFromTaskNodes(self, document, tasks):
@@ -121,7 +123,7 @@ class XMLReader:
         return categoryMapping
         
     def __parseTaskNode(self, taskNode):
-        kwargs = self.__parseBaseAttributes(taskNode, self.__parseTaskNodes)
+        kwargs = self.__parseBaseCompositeAttributes(taskNode, self.__parseTaskNodes)
         kwargs.update(dict(
             startDate=date.parseDate(taskNode.getAttribute('startdate')),
             dueDate=date.parseDate(taskNode.getAttribute('duedate')),
@@ -140,6 +142,8 @@ class XMLReader:
             kwargs['categories'] = self.__parseCategoryNodesWithinTaskNode(taskNode.childNodes)
         else:
             kwargs['categories'] = []
+        if self.__tskversion > 20:
+            kwargs['attachments'] = self.__parseAttachmentNodes(taskNode.childNodes)
         return task.Task(**kwargs)
         
     def __parseRecurrence(self, taskNode):
@@ -172,45 +176,59 @@ class XMLReader:
     
     def __parseNoteNode(self, noteNode):
         ''' Parse the attributes and child notes from the noteNode. '''
-        kwargs = self.__parseBaseAttributes(noteNode, self.__parseNoteNodes)
+        kwargs = self.__parseBaseCompositeAttributes(noteNode, self.__parseNoteNodes)
+        if self.__tskversion > 20:
+            kwargs['attachments'] = self.__parseAttachmentNodes(noteNode.childNodes)
         return note.Note(**kwargs)
     
-    def __parseBaseAttributes(self, node, parseChildren, *parseChildrenArgs):
+    def __parseBaseAttributes(self, node):
         ''' Parse the attributes all composite domain objects share, such as
-            id, subject, description, and children and return them as a 
+            id, subject, description, and return them as a 
             keyword arguments dictionary that can be passed to the domain 
             object constructor. '''
-        return dict(id=node.getAttribute('id'),
+        attributes = dict(id=node.getAttribute('id'),
             subject=node.getAttribute('subject'),
             description=self.__parseDescription(node),
-            attachments=self.__parseAttachments(node),
-            expandedContexts=self.__parseTuple(\
-                node.getAttribute('expandedContexts'), []),
-            color=self.__parseTuple(node.getAttribute('color'), None),
-            children=parseChildren(node.childNodes, *parseChildrenArgs))
-        
+            color=self.__parseTuple(node.getAttribute('color'), None))
+
+        if self.__tskversion <= 20:
+            attributes['attachments'] = self.__parseAttachmentsBeforeVersion21(node)
+
+        return attributes
+
+    def __parseBaseCompositeAttributes(self, node, parseChildren, *parseChildrenArgs):
+        """Same as __parseBaseAttributes, but also parse children and expandedContexts."""
+        kwargs = self.__parseBaseAttributes(node)
+        kwargs['children'] = parseChildren(node.childNodes, *parseChildrenArgs)
+        kwargs['expandedContexts'] = self.__parseTuple(node.getAttribute('expandedContexts'), [])
+        return kwargs
+
     def __parseCategoryNodesWithinTaskNode(self, nodes):
         ''' In tskversion <= 13, categories of tasks were stored as text 
             nodes. '''
         return [self.__parseTextNode(node) for node in nodes \
                 if node.nodeName == 'category']
 
-    def __parseAttachments(self, parent):
+    def __parseAttachmentsBeforeVersion21(self, parent):
         attachments = []
         for node in self.__getNodes(parent, 'attachment'):
             if self.__tskversion <= 16:
                 args = (self.__parseTextNode(node),)
+                kwargs = dict()
             else:
                 args = (self.__parseTextNode(node.getElementsByTagName('data')[0]),
-                        self.__parseTextNode(node.getElementsByTagName('description')[0]),
                         node.getAttribute('type'))
-            attachments.append(attachment.AttachmentFactory(*args))
+                description = self.__parseTextNode(node.getElementsByTagName('description')[0])
+                kwargs = dict(subject=description,
+                              description=description)
+
+            attachments.append(attachment.AttachmentFactory(*args, **kwargs))
         return attachments
 
     def __parseEffortNodes(self, nodes):
         return [self.__parseEffortNode(node) for node in nodes \
                 if node.nodeName == 'effort']
-        
+
     def __parseEffortNode(self, effortNode):
         start = effortNode.getAttribute('start')
         stop = effortNode.getAttribute('stop')
@@ -218,6 +236,17 @@ class XMLReader:
         return effort.Effort(task=None, start=date.parseDateTime(start), 
             stop=date.parseDateTime(stop), description=description)
         
+    def __parseAttachmentNodes(self, nodes):
+        return [self.__parseAttachmentNode(node) for node in nodes \
+                if node.nodeName == 'attachment']
+
+    def __parseAttachmentNode(self, attachmentNode):
+        kwargs = self.__parseBaseAttributes(attachmentNode)
+        kwargs['notes'] = self.__parseNoteNodes(attachmentNode.childNodes)
+        return attachment.AttachmentFactory(attachmentNode.getAttribute('location'),
+                                            attachmentNode.getAttribute('type'),
+                                            **kwargs)
+
     def __parseDescription(self, node):
         if self.__tskversion <= 6:
             description = node.getAttribute('description')

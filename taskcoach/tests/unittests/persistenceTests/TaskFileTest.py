@@ -20,19 +20,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, wx
 import test
 from taskcoachlib import persistence
-from taskcoachlib.domain import task, effort, date, category, note
+from taskcoachlib.domain import base, task, effort, date, category, note
 
 
-class FakeAttachment(object):
-    def __init__(self, type_, filename):
+class FakeAttachment(base.Object):
+    def __init__(self, type_, location, notes=None):
+        super(FakeAttachment, self).__init__()
         self.type_ = type_
-        self.filename = filename
+        self.__location = location
+        if notes is None:
+            self.__notes = []
+        else:
+            self.__notes = notes
 
-    def data(self):
-        return self.filename
+    def location(self):
+        return self.__location
 
-    def __unicode__(self):
-        return self.filename
+    def notes(self):
+        return self.__notes
 
 
 class TaskFileTestCase(test.TestCase):
@@ -470,7 +475,7 @@ class ChangingAttachmentsTests(object):
         self.taskFile.setFilename(self.filename)
         self.item.addAttachments(self.attachment)
         self.taskFile.save()
-        self.item.setAttachments(FakeAttachment('file', 'attachment2'))
+        self.item.setAttachments([FakeAttachment('file', 'attachment2')])
         self.failUnless(self.taskFile.needSave())
 
 

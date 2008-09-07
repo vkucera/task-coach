@@ -19,3 +19,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from object import Object, CompositeObject
 from filter import Filter, SearchFilter
 from sorter import Sorter, TreeSorter
+from owner import DomainObjectOwnerMetaclass

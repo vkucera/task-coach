@@ -357,27 +357,33 @@ class XMLWriterTest(test.TestCase):
         self.expectNotInXML('attachment')
         
     def testTaskWithOneAttachment(self):
-        self.task.addAttachments(attachment.FileAttachment('whatever.txt'))
-        self.expectInXML('<attachment type="file"><description>whatever.txt</description><data>whatever.txt</data></attachment>')
+        self.task.addAttachments(attachment.FileAttachment('whatever.txt', id='foo'))
+        self.expectInXML('<attachment id="foo" location="whatever.txt" subject="whatever.txt" type="file"/>')
+
+    def testObjectWithAttachmentWithNote(self):
+        att = attachment.FileAttachment('whatever.txt', id='foo')
+        self.task.addAttachments(att)
+        att.addNote(note.Note(subject='attnote', id='spam'))
+        self.expectInXML('<attachment id="foo" location="whatever.txt" subject="whatever.txt" type="file"><note')
 
     def testNoteWithOneAttachment(self):
         aNote = note.Note()
         self.noteContainer.append(aNote)
-        aNote.addAttachments(attachment.FileAttachment('whatever.txt'))
-        self.expectInXML('<attachment type="file"><description>whatever.txt</description><data>whatever.txt</data></attachment>')
+        aNote.addAttachments(attachment.FileAttachment('whatever.txt', id='foo'))
+        self.expectInXML('<attachment id="foo" location="whatever.txt" subject="whatever.txt" type="file"/>')
 
     def testCategoryWithOneAttachment(self):
         cat = category.Category('cat')
         self.categoryContainer.append(cat)
-        cat.addAttachments(attachment.FileAttachment('whatever.txt'))
-        self.expectInXML('<attachment type="file"><description>whatever.txt</description><data>whatever.txt</data></attachment>')
+        cat.addAttachments(attachment.FileAttachment('whatever.txt', id='foo'))
+        self.expectInXML('<attachment id="foo" location="whatever.txt" subject="whatever.txt" type="file"/>')
         
     def testTaskWithTwoAttachments(self):
         attachments = [attachment.FileAttachment('whatever.txt'),
                        attachment.FileAttachment('/home/frank/attachment.doc')]
         for a in attachments:
             self.task.addAttachments(a)
-        self.expectInXML(''.join(['<attachment type="file"><description>%s</description><data>%s</data></attachment>' % (unicode(k), unicode(k)) for k in attachments]))
+        self.expectInXML(''.join(['<attachment id="%s" location="%s" subject="%s" type="file"/>' % (k.id(), k.location(), k.location()) for k in attachments]))
         
     def testTaskWithNote(self):
         aNote = note.Note(subject='Note', id='id')
