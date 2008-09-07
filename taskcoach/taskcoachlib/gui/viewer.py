@@ -1896,7 +1896,7 @@ class AttachmentViewer(AttachmentDropTarget, ViewerWithColumns,
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
         self.imageIndex = {}
-        for index, image in enumerate(['note', 'uri', 'email', 'file']):
+        for index, image in enumerate(['note', 'uri', 'email', 'fileopen']):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList
@@ -1909,7 +1909,7 @@ class AttachmentViewer(AttachmentDropTarget, ViewerWithColumns,
 
     def typeImageIndex(self, attachment, which):
         try:
-            return self.imageIndex[{ 'file': 'file',
+            return self.imageIndex[{ 'file': 'fileopen',
                                      'uri': 'uri',
                                      'mail': 'email'}[attachment.type_]]
         except KeyError:
