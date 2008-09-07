@@ -1896,7 +1896,7 @@ class AttachmentViewer(AttachmentDropTarget, ViewerWithColumns,
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
         self.imageIndex = {}
-        for index, image in enumerate(['note', 'uri', 'email']):
+        for index, image in enumerate(['note', 'uri', 'email', 'file']):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList
