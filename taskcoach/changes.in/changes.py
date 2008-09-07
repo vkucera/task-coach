@@ -26,6 +26,8 @@ releases = [
 Release('0.71.0', 'July ??, 2008',
     summary='''?''',
     featuresAdded=[
+        Feature('''Attachments are now regular domain objects; they may
+have notes.'''),
         Feature('''The task and note editors now use an actual category
 viewer. It is possible to create and edit categories from these editors.'''),
         Feature('''Local undo/redo in the item editors.'''),
