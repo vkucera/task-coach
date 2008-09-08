@@ -516,7 +516,7 @@ class LocalDragAndDropFix(object):
             self.SetDropTarget(dropTarget)
 
 
-class LocalCategoryViewer(LocalDragAndDropFix, viewer.CategoryViewer):
+class LocalCategoryViewer(LocalDragAndDropFix, viewer.BaseCategoryViewer):
     def __init__(self, item, *args, **kwargs):
         # tasks and notes are only used for the 2 commands that we'll
         # suppress anyway.
