@@ -589,6 +589,16 @@ class CategoriesPage(EditorPage):
                 self.item.removeCategory(category)
 
 
+class TaskCategoriesPage(CategoriesPage, TaskHeaders):
+    def settingsSection(self):
+        return 'categoryviewerintaskeditor'
+
+
+class NoteCategoriesPage(CategoriesPage, NoteHeaders):
+    def settingsSection(self):
+        return 'categoryviewerinnoteeditor'
+
+
 class LocalAttachmentViewer(LocalDragAndDropFix, viewer.AttachmentViewer):
     pass
 
@@ -603,7 +613,7 @@ class AttachmentsPage(EditorPage):
                                                        self.attachmentsList,
                                                        settings,
                                                        categories=categories,
-                                                       settingsSection='attachmentviewer')
+                                                       settingsSection=self.settingsSection())
         attachmentsBox.add(self._attachmentViewer, proportion=1, flag=wx.EXPAND|wx.ALL)
         attachmentsBox.fit()
         self.add(attachmentsBox)
@@ -620,14 +630,19 @@ class AttachmentsPage(EditorPage):
         event.Skip()
 
 
-class TaskCategoriesPage(CategoriesPage, TaskHeaders):
+class TaskAttachmentsPage(AttachmentsPage):
     def settingsSection(self):
-        return 'categoryviewerintaskeditor'
+        return 'attachmentviewerintaskeditor'
 
 
-class NoteCategoriesPage(CategoriesPage, NoteHeaders):
+class NoteAttachmentsPage(AttachmentsPage):
     def settingsSection(self):
-        return 'categoryviewerinnoteeditor'
+        return 'attachmentviewerinnoteeditor'
+
+
+class CategoryAttachmentsPage(AttachmentsPage):
+    def settingsSection(self):
+        return 'attachmentviewerincategoryeditor'
 
 
 class LocalNoteViewer(LocalDragAndDropFix, viewer.NoteViewer):
@@ -712,7 +727,7 @@ class TaskEditBook(widgets.Listbook):
             self.AddPage(effortPage, _('Effort'), 'start')
         if settings.getboolean('feature', 'notes'):
             self.AddPage(NotesPage(self, task, settings, categories), _('Notes'), 'note')
-        self.AddPage(AttachmentsPage(self, task, settings, categories), _('Attachments'), 'attachment')
+        self.AddPage(TaskAttachmentsPage(self, task, settings, categories), _('Attachments'), 'attachment')
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior')
         self.item = task
 
@@ -881,7 +896,7 @@ class CategoryEditBook(widgets.Listbook):
                      _('Description'), 'description')
         self.AddPage(NotesPage(self, theCategory, settings, categories), 
                      _('Notes'), 'note')
-        self.AddPage(AttachmentsPage(self, theCategory, settings, categories), 
+        self.AddPage(CategoryAttachmentsPage(self, theCategory, settings, categories), 
                      _('Attachments'), 'attachment')
 
 
@@ -918,7 +933,7 @@ class NoteEditBook(widgets.Listbook):
         self.AddPage(NoteSubjectPage(self, theNote), _('Description'), 'description')
         self.AddPage(NoteCategoriesPage(self, theNote, categories, settings), _('Categories'),
                      'category')
-        self.AddPage(AttachmentsPage(self, theNote, settings, categories),
+        self.AddPage(NoteAttachmentsPage(self, theNote, settings, categories),
                      _('Attachments'), 'attachment')
 
 
