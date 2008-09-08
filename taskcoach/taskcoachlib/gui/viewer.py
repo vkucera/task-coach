@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, command, widgets, mailer
+from taskcoachlib import patterns, command, widgets
 from taskcoachlib.domain import base, task, category, effort, date, note, \
     attachment
 from taskcoachlib.i18n import _
@@ -428,9 +428,9 @@ class AttachmentDropTarget(object):
     def onDropMail(self, index, mail):
         ''' This method is called by the widget when a mail message is dropped
             on an item. '''
-        attachments = [attachment.MailAttachment(mail)]
-        subject, content = mailer.readMail(mail)
-        self._addAttachments(attachments, index, subject=subject, 
+        att = attachment.MailAttachment(mail)
+        subject, content = att.read()
+        self._addAttachments([att], index, subject=subject, 
                              description=content)
 
 
