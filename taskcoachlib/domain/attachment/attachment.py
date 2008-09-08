@@ -146,11 +146,15 @@ class MailAttachment(Attachment):
 
     def __init__(self, location, *args, **kwargs):
         if os.path.isabs(location):
-            location = os.path.normpath(location)
+            if self.attdir is None:
+                subject, content = readMail(location)
+            else:
+                location = self.__moveToAttDir(location)
+                subject, content = readMail(os.path.join(self.attdir, location))
         else:
-            location = os.path.normpath(os.path.join(self.attdir, location))
-
-        subject, content = readMail(location)
+            if self.attdir is None:
+                raise RuntimeError, 'Attachment directory not specified'
+            subject, content = readMail(os.path.join(self.attdir, location))
 
         kwargs.setdefault('subject', subject)
         kwargs.setdefault('description', content)
@@ -158,27 +162,28 @@ class MailAttachment(Attachment):
         super(MailAttachment, self).__init__(location, *args, **kwargs)
 
     def open(self, workingDir=None):
-        openMail(self.location())
+        openMail(self.__absoluteLocation())
 
-    def location(self):
-        origname = super(MailAttachment, self).location()
-        path, name = os.path.split(origname)
+    def read(self):
+        return readMail(self.__absoluteLocation())
 
-        if self.attdir is not None:
-            if path != self.attdir:
-                try:
-                    os.makedirs(self.attdir)
-                except OSError:
-                    pass
+    def __moveToAttDir(self, location):
+        fd, filename = tempfile.mkstemp(suffix='.eml', dir=self.attdir)
+        os.close(fd)
+        shutil.move(location, filename)
+        return os.path.split(filename)[-1]
 
-                fd, filename = tempfile.mkstemp(suffix='.eml', dir=self.attdir)
-                os.close(fd)
-                shutil.move(origname, filename)
-                self.setLocation(os.path.normpath(filename))
-                path, name = os.path.split(filename)
-
-        self.setLocation(os.path.join(path, name))
-        return super(MailAttachment, self).location()
+    def __absoluteLocation(self):
+        if os.path.isabs(self.location()):
+            if self.attdir is None:
+                return self.location()
+            else:
+                self.setLocation(self.__moveToAttDir(self.location()))
+                return os.path.join(self.attdir, self.location())
+        else:
+            if self.attdir is None:
+                raise RuntimeError, 'Attachment directory not specified'
+            return os.path.join(self.attdir, self.location())
 
 
 def AttachmentFactory(location, type_=None, *args, **kwargs):
