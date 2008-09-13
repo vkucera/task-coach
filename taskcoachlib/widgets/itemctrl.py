@@ -332,7 +332,7 @@ class _BaseCtrlWithColumns(object):
         try:
             return self.__allColumns.index(column) # Uses overriden __eq__
         except ValueError:
-            raise ValueError, '%s: unknown column name' % columnName
+            raise ValueError, '%s: unknown column' % column.name()
 
         
 class _CtrlWithHideableColumns(_BaseCtrlWithColumns):        

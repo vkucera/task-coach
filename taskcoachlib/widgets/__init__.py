@@ -31,6 +31,7 @@ from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer, BoxWithBoxSizer
 from colorselect import ColorSelect
 from searchctrl import SearchCtrl
+from spinctrl import SpinCtrl
 from tooltip import ToolTipMixin, SimpleToolTip
 from dirchooser import DirectoryChooser
 try:

@@ -98,28 +98,6 @@ class AmountEntry(widgets.PanelWithBoxSizer):
         self._entry.SetValue(value)
 
 
-class PrioritySpinCtrl(wx.SpinCtrl):
-    # FIXME: move to widgets package, there's nothing really priority specific here
-    def __init__(self, *args, **kwargs):
-        kwargs['style'] = wx.SP_ARROW_KEYS
-        super(PrioritySpinCtrl, self).__init__(*args, **kwargs)
-        # Can't use sys.maxint because Python and wxPython disagree on what the
-        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
-        # an Overflow exception, so we use a constant:
-        maxint = 2147483647
-        self.SetRange(-maxint, maxint)
-        self.Bind(wx.EVT_SPINCTRL, self.onValueChanged)
-
-    def onValueChanged(self, event):
-        ''' wx.SpinCtrl resets invalid values (e.g. text or an empty string)
-            to wx.SpinCtrl.GetMin(). The minimum priority value is a large
-            (negative) number. It makes more sense to reset the SpinCtrl to 0
-            in case of invalid input. '''
-        if self.GetValue() == self.GetMin():
-            wx.CallAfter(self.SetValue, 0)
-        event.Skip()
-
-
 class ColorEntryMixin(object):
     def addColorEntry(self):
         currentColor = self.item.color(recursive=False)
@@ -169,7 +147,6 @@ class EditorPage(widgets.PanelWithBoxSizer):
         else:
             self._defaultControl.SetFocus()
 
-
     def ok(self):
         pass
 
@@ -190,7 +167,6 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
         super(SubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
         self.addSubjectEntry()
         self.addDescriptionEntry()
-        self.addPriorityEntry()
         self.addPriorityEntry()
         self.addColorEntry()
         self.fit()
@@ -229,7 +205,7 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
           
     def addPriorityEntry(self):
-        self._prioritySpinner = PrioritySpinCtrl(self,
+        self._prioritySpinner = widgets.SpinCtrl(self,
             value=render.priority(self.item.priority()))
         self.addEntry(_('Priority'), self._prioritySpinner, 
             flags=[None, wx.ALL|wx.EXPAND])
