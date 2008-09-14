@@ -25,6 +25,15 @@ Writer to VCalendar format.
 from taskcoachlib.persistence.vcalendar import vcal
 
 
+def extendedWithAncestors(selection):
+    extendedSelection = selection[:]
+    for item in selection:
+        for ancestor in item.ancestors():
+            if ancestor not in extendedSelection:
+                extendedSelection.append(ancestor)
+    return extendedSelection
+
+
 class VCalendarWriter(object):
     def __init__(self, fd):
         self.__fd = fd
