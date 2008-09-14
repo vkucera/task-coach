@@ -26,6 +26,8 @@ releases = [
 Release('0.71.0', 'July ??, 2008',
     summary='''?''',
     featuresAdded=[
+        Feature('''Tasks can now be created from templates written in a
+custom version of VCalendar.'''),
         Feature('''Attachments are now regular domain objects; they may
 have notes.'''),
         Feature('''The task and note editors now use an actual category
