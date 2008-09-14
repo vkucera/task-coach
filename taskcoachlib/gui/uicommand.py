@@ -289,6 +289,25 @@ class ViewerCommand(UICommand):
 
 # Mixins: 
 
+class PopupButton(object):
+    """Mix this with a UICommand for toolbar pop-up menu"""
+
+    def doCommand(self, event):
+        import menu
+        popupMenu = self.createPopupMenu()
+        if self.toolbar:
+            x, y = self.toolbar.GetPosition()
+            w, h = self.toolbar.GetSize()
+            menuX = wx.GetMousePosition()[0] - self.mainWindow().GetPosition()[0] - 0.5 * self.toolbar.GetToolSize()[0]
+            menuY = y + h
+            self.mainWindow().PopupMenu(popupMenu, (menuX, menuY))
+        else:
+            self.mainWindow().PopupMenu(popupMenu)
+
+    def createPopupMenu(self):
+        raise NotImplementedError
+
+
 class NeedsSelection(object):
     def enabled(self, event):
         return super(NeedsSelection, self).enabled(event) and \
@@ -1218,6 +1237,20 @@ class TaskNewFromTemplate(TaskNew):
         return newTaskDialog # for testing purposes
 
 
+class TaskNewFromTemplateButton(PopupButton, TaskListCommand,
+                                SettingsCommand, CategoriesCommand):
+    def createPopupMenu(self):
+        import menu
+        return menu.TaskTemplateMenu(self.mainWindow(), self.taskList, self.settings,
+                                     self.categories)
+
+    def getMenuText(self):
+        return _('New task &from template')
+
+    def getHelpText(self):
+        return _('Create a new task from a template')
+
+
 class NewTaskWithSelectedCategories(TaskNew, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(NewTaskWithSelectedCategories, self).__init__(\
@@ -1687,25 +1720,17 @@ class EffortStartForTask(TaskListCommand):
         return not self.task.isBeingTracked() and not self.task.completed()      
 
 
-class EffortStartButton(TaskListCommand):
+class EffortStartButton(PopupButton, TaskListCommand):
     def __init__(self, *args, **kwargs):
         super(EffortStartButton, self).__init__(bitmap='startmenu',
             menuText=_('&Start tracking effort'),
             helpText=_('Select a task via the menu and start tracking effort for it'),
             *args, **kwargs)
-        
-    def doCommand(self, event):
+
+    def createPopupMenu(self):
         import menu
-        popupMenu = menu.StartEffortForTaskMenu(self.mainWindow(), self.taskList)
-        if self.toolbar:
-            x, y = self.toolbar.GetPosition()
-            w, h = self.toolbar.GetSize()
-            menuX = wx.GetMousePosition()[0] - self.mainWindow().GetPosition()[0] - 0.5 * self.toolbar.GetToolSize()[0]
-            menuY = y + h
-            self.mainWindow().PopupMenu(popupMenu, (menuX, menuY))
-        else:
-            self.mainWindow().PopupMenu(popupMenu)
-    
+        return menu.StartEffortForTaskMenu(self.mainWindow(), self.taskList)
+
     def enabled(self, event):
         return len(self.taskList) > 0
     

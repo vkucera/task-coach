@@ -1469,6 +1469,11 @@ class TaskTreeListViewer(TaskViewerWithColumns, TreeViewer):
         self.treeOrListUICommand = \
             uicommand.TaskViewerTreeOrListChoice(viewer=self)
         toolBarUICommands.insert(-2, self.treeOrListUICommand)
+        toolBarUICommands.insert(5,
+                uicommand.TaskNewFromTemplateButton(taskList=self.model(),
+                                                    settings=self.settings,
+                                                    categories=self.categories,
+                                                    bitmap='newtmpl'))
         return toolBarUICommands
 
     def setSearchFilter(self, searchString, *args, **kwargs):
