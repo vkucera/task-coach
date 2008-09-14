@@ -215,7 +215,8 @@ defaults = { \
 'behavior': { \
     'markparentcompletedwhenallchildrencompleted': 'True' },
 'feature': { \
-    'notes': 'True' },
+    'notes': 'True',
+    'syncml': 'False' },
 'syncml': { \
     'url': '',
     'username': '',

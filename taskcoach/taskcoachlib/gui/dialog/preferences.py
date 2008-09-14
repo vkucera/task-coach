@@ -257,7 +257,9 @@ class FeaturesPage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(FeaturesPage, self).__init__(*args, **kwargs)
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
-            helpText='restart') 
+            helpText='restart')
+        self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),
+            helpText='restart')
         self.addIntegerSetting('view', 'efforthourstart',
             _('Hour of start of work day'), minimum=0, maximum=23)
         self.addIntegerSetting('view', 'efforthourend',

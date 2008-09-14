@@ -253,6 +253,9 @@ _syncmlSection = _('''<h3><a name="syncml">SyncML support</a></h3>
 
 _aboutSyncmlSubsection = _('''<h4><a name="aboutsyncml">What is SyncML</a></h4>
 
+<p>This feature is optional and off by default. In order to turn it on,
+go to the preferences dialog and check it in the Features page.</p>
+
 <p>SyncML  is   an  XML  protocol  designed   to  synchronize  several
 applications  with  a  server.  A  popular open-source  server  is  <a
 href="http://www.funambol.com/">Funambol</a>.  Synchronization clients

@@ -227,12 +227,13 @@ class FileMenu(Menu):
         self.appendMenu(_('&Export'),
                         ExportMenu(mainwindow, iocontroller, viewerContainer),
                         'export')
-        try:
-            import taskcoachlib.syncml.core
-        except ImportError, e:
-            pass
-        else:
-            self.appendUICommands(uicommand.FileSynchronize(iocontroller=iocontroller, settings=settings))
+        if settings.getboolean('feature', 'syncml'):
+            try:
+                import taskcoachlib.syncml.core
+            except ImportError, e:
+                pass
+            else:
+                self.appendUICommands(uicommand.FileSynchronize(iocontroller=iocontroller, settings=settings))
         self.__recentFilesStartPosition = len(self) 
         self.appendUICommands(None, uicommand.FileQuit())
         self._window.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
@@ -296,13 +297,14 @@ class EditMenu(Menu):
         self.appendMenu(_('&Select')+' '*50,
                         SelectMenu(mainwindow, viewerContainer))
         self.appendUICommands(None, uicommand.EditPreferences(settings))
-        try:
-            import taskcoachlib.syncml.core
-        except ImportError:
-            pass
-        else:
-            self.appendUICommands(uicommand.EditSyncPreferences(mainwindow=mainwindow,
-                                                                iocontroller=iocontroller))
+        if settings.getboolean('feature', 'syncml'):
+            try:
+                import taskcoachlib.syncml.core
+            except ImportError:
+                pass
+            else:
+                self.appendUICommands(uicommand.EditSyncPreferences(mainwindow=mainwindow,
+                                                                    iocontroller=iocontroller))
 
 
 class SelectMenu(Menu):
