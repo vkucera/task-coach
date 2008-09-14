@@ -27,4 +27,5 @@ from html.generator import viewer2html
 from csv.generator import viewer2csv
 from csv.writer import CSVWriter
 from vcalendar.writer import VCalendarWriter
+from vcalendar.vcal import VCalendarParser
 from taskfile import TaskFile, AutoSaver

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, os
 from taskcoachlib import patterns
 from taskcoachlib.domain import task
 from taskcoachlib.i18n import _
@@ -283,6 +283,20 @@ class ExportMenu(Menu):
                                             viewer=viewerContainer))
 
 
+class TaskTemplateMenu(Menu):
+    def __init__(self, mainwindow, taskList, settings, categories):
+        super(TaskTemplateMenu, self).__init__(mainwindow)
+
+        path = settings.get('file', 'templatedir')
+        if path and os.path.exists(path) and os.path.isdir(path):
+            for name in os.listdir(path):
+                fullname = os.path.join(path, name)
+                if name.endswith('.tsktmpl'):
+                    self.appendUICommands(uicommand.TaskNewFromTemplate(fullname,
+                                                taskList=taskList, settings=settings,
+                                                categories=categories))
+
+
 class EditMenu(Menu):
     def __init__(self, mainwindow, settings, iocontroller, viewerContainer):
         super(EditMenu, self).__init__(mainwindow)
@@ -450,8 +464,12 @@ class TaskMenu(Menu):
         categories = taskFile.categories()
         self.appendUICommands(
             uicommand.TaskNew(taskList=tasks, settings=settings,
-                              categories=taskFile.categories()),
-            uicommand.TaskNewSubTask(taskList=tasks,
+                              categories=taskFile.categories()))
+        self.appendMenu(_('New task &from template'),
+                        TaskTemplateMenu(mainwindow, taskList=tasks, settings=settings,
+                                         categories=taskFile.categories()),
+                        'newtmpl')
+        self.appendUICommands(uicommand.TaskNewSubTask(taskList=tasks,
                                      viewer=viewerContainer),
             None,
             uicommand.TaskEdit(taskList=tasks, viewer=viewerContainer),
@@ -610,15 +628,19 @@ class TaskPopupMenu(Menu):
     def __init__(self, mainwindow, settings, tasks, categories, efforts,
                  taskViewer):
         super(TaskPopupMenu, self).__init__(mainwindow)
-        commandsToAppend = [\
+        self.appendUICommands(
             uicommand.EditCut(viewer=taskViewer),
             uicommand.EditCopy(viewer=taskViewer),
             uicommand.EditPaste(),
             uicommand.EditPasteIntoTask(viewer=taskViewer),
             None,
             uicommand.TaskNew(taskList=tasks, settings=settings,
-                              categories=categories),
-            uicommand.TaskNewSubTask(taskList=tasks, viewer=taskViewer),
+                              categories=categories))
+        self.appendMenu(_('New task &from template'),
+                        TaskTemplateMenu(mainwindow, taskList=tasks, settings=settings,
+                                         categories=categories),
+                        'newtmpl')
+        self.appendUICommands(uicommand.TaskNewSubTask(taskList=tasks, viewer=taskViewer),
             None,
             uicommand.TaskEdit(taskList=tasks, viewer=taskViewer),
             uicommand.TaskToggleCompletion(viewer=taskViewer),
@@ -634,24 +656,23 @@ class TaskPopupMenu(Menu):
                                         settings=settings),
             uicommand.OpenAllTaskAttachments(viewer=taskViewer,
                                              settings=settings)
-            ]
+            )
         if settings.getboolean('feature', 'notes'):
-            commandsToAppend.append(
+            self.appendUICommands(
                 uicommand.TaskAddNote(viewer=taskViewer,
                                       settings=settings,
                                       categories=categories)
                 )
-        commandsToAppend.extend([\
+        self.appendUICommands(
             None,
             uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
                                 taskList=tasks, settings=settings),
             uicommand.EffortStart(viewer=taskViewer),
-            uicommand.EffortStop(taskList=tasks)])
+            uicommand.EffortStop(taskList=tasks))
         if taskViewer.isTreeViewer():
-            commandsToAppend.extend([None,
+            self.appendUICommands(None,
                 uicommand.ViewExpandSelected(viewer=taskViewer),
-                uicommand.ViewCollapseSelected(viewer=taskViewer)])
-        self.appendUICommands(*commandsToAppend)
+                uicommand.ViewCollapseSelected(viewer=taskViewer))
 
 
 class EffortPopupMenu(Menu):
