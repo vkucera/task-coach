@@ -278,8 +278,10 @@ class ExportMenu(Menu):
                                        viewer=viewerContainer),
             uicommand.FileExportAsICS(iocontroller=iocontroller),
             uicommand.FileExportAsCSV(iocontroller=iocontroller,
-                                      viewer=viewerContainer))
-       
+                                      viewer=viewerContainer),
+            uicommand.FileExportAsVCalendar(iocontroller=iocontroller,
+                                            viewer=viewerContainer))
+
 
 class EditMenu(Menu):
     def __init__(self, mainwindow, settings, iocontroller, viewerContainer):

@@ -574,6 +574,16 @@ class FileExportAsCSV(IOCommand, ViewerCommand):
         self.iocontroller.exportAsCSV(self.viewer)
 
 
+class FileExportAsVCalendar(IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportAsVCalendar, self).__init__(menuText=_('Export as &VCalendar...'),
+            helpText=_('Export the current view in VCalendar format'),
+            bitmap='exportasvcal', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportAsVCalendar(self.viewer)
+
+
 class FileSynchronize(IOCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(FileSynchronize, self).__init__(menuText=_('S&yncML synchronization'),
