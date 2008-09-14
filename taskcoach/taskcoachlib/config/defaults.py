@@ -215,7 +215,19 @@ defaults = { \
 'behavior': { \
     'markparentcompletedwhenallchildrencompleted': 'True' },
 'feature': { \
-    'notes': 'True' }}
+    'notes': 'True' },
+'syncml': { \
+    'url': '',
+    'username': '',
+    'preferredsyncmode': 'TWO_WAY',
+    'verbose': 'True',
+    'taskdbname': 'task',
+    'notedbname': 'note',
+    'synctasks': 'False',
+    'syncnotes': 'False',
+    'showwarning': 'True',
+    },
+}
 
 minimum = { \
 'view': { \

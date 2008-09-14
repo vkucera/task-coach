@@ -449,8 +449,8 @@ class Viewer(wx.Panel):
         self.__selection = []
         self.__toolbarUICommands = None
         self.list = self.createSorter(self.createFilter(list))
-        self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.widget = self.createWidget()
+        self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.initLayout()
         self.registerModelObservers()
         self.refresh()
@@ -1084,7 +1084,11 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
         self.efforts = kwargs.pop('efforts')
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.__registerForColorChanges()
-            
+
+    def createFilter(self, taskList):
+        tasks = super(TaskViewer, self).createFilter(taskList)
+        return base.DeletedFilter(tasks)
+
     def isShowingTasks(self): 
         return True
     
@@ -1299,7 +1303,8 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
     editTaskDialog = editItemDialog
     
     def deleteItemCommand(self):
-        return command.DeleteTaskCommand(self.list, self.curselection())
+        return command.DeleteTaskCommand(self.list, self.curselection(),
+                  shadow=True)
         
     deleteTaskCommand = deleteItemCommand
     
@@ -1533,8 +1538,10 @@ class BaseCategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
         return menu.CategoryPopupMenu(self.parent, self.settings, self.tasks,
                                       self.notes, self.model(), self, localOnly)
 
-    def createFilter(self, categories):
-        return base.SearchFilter(categories, treeMode=True)
+    # FIXMERGE
+
+    #def createFilter(self, categories):
+    #    return base.SearchFilter(categories, treeMode=True)
     
     def onCategoryChanged(self, event):
         category = event.source()
@@ -1670,8 +1677,10 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
     
     def createFilter(self, notes):
         notes = super(NoteViewer, self).createFilter(notes)
-        return base.SearchFilter(notes, treeMode=True)
-    
+        # FIXMERGE
+##         return base.DeletedFilter(base.SearchFilter(notes, treeMode=True))
+        return base.DeletedFilter(notes)
+
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
         self.imageIndex = {}
@@ -1799,7 +1808,8 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
     editNoteDialog = editItemDialog
     
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection())
+        return command.DeleteCommand(self.list, self.curselection(),
+                  shadow=True)
     
     deleteNoteCommand = deleteItemCommand
     
@@ -2193,4 +2203,3 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         index = self.list.index(effort)
         previousEffort = index > 0 and self.list[index-1] or None
         return previousEffort and effort.getStart() == previousEffort.getStart()
-

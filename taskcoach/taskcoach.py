@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys
+import sys, os
 if not hasattr(sys, "frozen"):
     # These checks are only necessary in a non-frozen environment, i.e. we
     # skip these checks when run from a py2exe-fied application
@@ -35,7 +35,6 @@ if not hasattr(sys, "frozen"):
 Please see http://www.taskcoach.org/faq.html for more information and
 possible resolutions.''')
         sys.exit(1)
-
 
 def start():
     from taskcoachlib import config, application

@@ -20,6 +20,7 @@ import time, os
 import test, mock
 from taskcoachlib import persistence
 from taskcoachlib.domain import task, category, note
+from taskcoachlib.syncml.config import createDefaultSyncConfig
 
 
 class PerformanceTest(test.TestCase):
@@ -27,7 +28,8 @@ class PerformanceTest(test.TestCase):
         taskList = task.TaskList([task.Task('test') for i in range(self.nrTasks)])
         taskfile = file(self.taskfilename, 'w')
         taskWriter = persistence.XMLWriter(taskfile)
-        taskWriter.write(taskList, category.CategoryList(), note.NoteContainer())
+        taskWriter.write(taskList, category.CategoryList(), note.NoteContainer(),
+                         createDefaultSyncConfig('fake'), 'fake')
         taskfile.close()
 
     def setUp(self):

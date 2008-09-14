@@ -21,6 +21,12 @@ from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task
 
+try:
+    from taskcoachlib.syncml import sync
+    from taskcoachlib.widgets import conflict
+except ImportError:
+    # Unsupported platform.
+    pass
 
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,
@@ -44,6 +50,12 @@ class IOController(object):
         self.__csvFileDialogOpts = {'default_path': os.getcwd(),
             'default_extension': 'csv', 'wildcard': 
             _('CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*')}
+
+    def syncMLConfig(self):
+        return self.__taskFile.syncMLConfig()
+
+    def setSyncMLConfig(self, config):
+        self.__taskFile.setSyncMLConfig(config)
 
     def needSave(self):
         return self.__taskFile.needSave()
@@ -182,6 +194,41 @@ class IOController(object):
         else:
             return False
         
+    def synchronize(self, password):
+        synchronizer = sync.Synchronizer(self.__syncReport, self, self.__taskFile,
+                                         password)
+        try:
+            synchronizer.synchronize()
+        finally:
+            synchronizer.Destroy()
+
+        self.__messageCallback(_('Synchronization over.'))
+
+    def resolveNoteConflict(self, flags, local, remote):
+        dlg = conflict.ConflictDialog(conflict.NoteConflictPanel,
+                                      flags, local, remote,
+                                      None, wx.ID_ANY, _('Note conflict'))
+        try:
+            dlg.ShowModal()
+        finally:
+            dlg.Destroy()
+
+        return dlg.resolved
+
+    def resolveTaskConflict(self, flags, local, remote):
+        dlg = conflict.ConflictDialog(conflict.TaskConflictPanel,
+                                      flags, local, remote,
+                                      None, wx.ID_ANY, _('Task conflict'))
+        try:
+            dlg.ShowModal()
+        finally:
+            dlg.Destroy()
+
+        return dlg.resolved
+
+    def __syncReport(self, msg):
+        wx.MessageBox(msg, _('Synchronization status'), style=wx.OK|wx.ICON_ERROR)
+
     def __openFileForWriting(self, filename, mode='w', encoding='utf-8'):
         return codecs.open(filename, mode, encoding)
         
