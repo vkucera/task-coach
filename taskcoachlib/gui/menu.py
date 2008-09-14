@@ -673,11 +673,14 @@ class CategoryPopupMenu(Menu):
             uicommand.NewTaskWithSelectedCategories(taskList=tasks, 
                                                     settings=settings, 
                                                     categories=categories, 
-                                                    viewer=categoryViewer),
-            uicommand.NewNoteWithSelectedCategories(notes=notes, 
-                                                    settings=settings, 
-                                                    categories=categories, 
-                                                    viewer=categoryViewer), 
+                                                    viewer=categoryViewer))
+        if settings.getboolean('feature', 'notes'):
+            self.appendUICommands(
+                uicommand.NewNoteWithSelectedCategories(notes=notes, 
+                                                        settings=settings, 
+                                                        categories=categories, 
+                                                        viewer=categoryViewer))
+        self.appendUICommands( 
             None, 
             uicommand.CategoryNew(categories=categories), 
             uicommand.CategoryNewSubCategory(viewer=categoryViewer, 

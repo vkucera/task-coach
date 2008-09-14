@@ -22,11 +22,13 @@ da'''
 from changetypes import *
 
 releases = [
-Release('0.70.4', 'August ?, 2008',
+Release('0.70.4', 'September ?, 2008',
     summary='''Bug fix release''',
     bugsFixed=[
         Bug('''Task Coach wasn't notifying users of new versions.'''),
         Bug('''When merging, merge notes too.'''),
+        Bug('''When the notes feature is turned off, hide
+the 'Create new note' menu item in the category pop up menu.'''),
         Bug('''Fixed a translation bug.''', '2087395'),
         Bug('''Hide/show the main window with one click on the task bar icon 
 instead of a double click (Linux only).'''),
