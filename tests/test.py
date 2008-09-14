@@ -22,7 +22,6 @@ import sys, unittest, os, time, glob, coverage, wx
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
-    
 
 class TestCase(unittest.TestCase):
     def assertEqualLists(self, expectedList, actualList):

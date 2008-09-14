@@ -22,6 +22,10 @@ import platform
 from distutils.core import setup
 from taskcoachlib import meta
 
+# Import this  here so that py2exe  and py2app can  find the _pysyncml
+# module.
+
+import taskcoachlib.syncml.core
 
 setupOptions = { 
     'name': meta.filename,
@@ -35,7 +39,7 @@ setupOptions = {
     'packages': ['taskcoachlib'] + 
         ['taskcoachlib.' + subpackage for subpackage in ('application', 'meta', 
         'config', 'command', 'widgets', 'gui', 'gui.dialog', 'i18n', 'patterns', 
-        'mailer', 'help', 'domain', 'persistence', 'thirdparty')] +
+        'mailer', 'help', 'domain', 'persistence', 'thirdparty', 'syncml')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note', 'attachment')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
@@ -59,6 +63,10 @@ if 'debian' in platform.dist():
     setupOptions['data_files'] = [\
         ('share/applications', ['build.in/fedora/taskcoach.desktop']), 
         ('share/pixmaps', ['icons.in/taskcoach.png'])]
+
+
+if platform.system() == 'Linux':
+    setupOptions['package_data'] = {'taskcoachlib': ['bin.in/linux/_pysyncml.so']}
 
 
 if __name__ == '__main__':

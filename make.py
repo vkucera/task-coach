@@ -84,7 +84,8 @@ if sys.argv[1] == 'py2exe':
             # contents are imported implicitly via __import__:
             'packages' : ['taskcoachlib.i18n'], 
             'dist_dir' : os.path.join(builddir, py2exeDistdir)}},
-        'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL'])]})
+        'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL',
+                             'dist.in/msvcr80.dll'])]})
  
 elif sys.argv[1] == 'py2app':
     from setuptools import setup

@@ -41,5 +41,9 @@ class CategoryList(patterns.CompositeList):
         for category in self._compositesAndAllChildren(categories):
             for categorizable in category.categorizables():
                 categorizable.removeCategory(category)
-        
 
+    def findCategoryByName(self, name):
+        for category in self:
+            if category.subject() == name:
+                return category
+        return None

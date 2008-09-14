@@ -40,7 +40,7 @@ class WindowDimensionsTracker(object):
         if self.startIconized():
             self._window.Iconize(True)
             wx.CallAfter(self._window.Hide)
-            
+
     def startIconized(self):
         startIconized = self._settings.get(self._section, 'starticonized')
         if startIconized == 'Always':
@@ -204,6 +204,17 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.registerForWindowComponentChanges()
         wx.CallAfter(self.closeSplash)
         wx.CallAfter(self.showTips)
+
+        try:
+            import taskcoachlib.syncml.core
+        except ImportError:
+            if settings.getboolean('syncml', 'showwarning'):
+                dlg = widgets.SyncMLWarningDialog(self)
+                try:
+                    if dlg.ShowModal() == wx.ID_OK:
+                        settings.setboolean('syncml', 'showwarning', False)
+                finally:
+                    dlg.Destroy()
 
     def createWindowComponents(self):
         self.__usingTabbedMainWindow = self.settings.getboolean('view', 
