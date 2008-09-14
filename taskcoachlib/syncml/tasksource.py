@@ -1,7 +1,8 @@
 
-from taskcoachlib.syncml import vcal, basesource
+from taskcoachlib.syncml import basesource
 from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.category import Category
+from taskcoachlib.persistence.vcalendar import vcal
 
 from taskcoachlib.i18n import _
 
