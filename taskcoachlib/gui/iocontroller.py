@@ -50,6 +50,9 @@ class IOController(object):
         self.__csvFileDialogOpts = {'default_path': os.getcwd(),
             'default_extension': 'csv', 'wildcard': 
             _('CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*')}
+        self.__vcalFileDialogOpts = {'default_path': os.getcwd(), 
+            'default_extension': 'vcal', 'wildcard': 
+            _('VCalendar files (*.vcal)|*.vcal|All files (*.*)|*') }
 
     def syncMLConfig(self):
         return self.__taskFile.syncMLConfig()
@@ -194,6 +197,20 @@ class IOController(object):
         else:
             return False
         
+    def exportAsVCalendar(self, viewer, filename=None):
+        if not filename:
+            filename = self.__askUserForFile(_('Export as VCalendar...'),
+                flags=wx.SAVE, fileDialogOpts=self.__vcalFileDialogOpts)
+        if filename:
+            vcalFile = self.__openFileForWriting(filename)
+            persistence.VCalendarWriter(vcalFile).write(viewer)
+            vcalFile.close()
+            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%\
+                {'nrtasks': viewer.size(), 'filename': filename})
+            return True
+        else:
+            return False
+
     def synchronize(self, password):
         synchronizer = sync.Synchronizer(self.__syncReport, self, self.__taskFile,
                                          password)
