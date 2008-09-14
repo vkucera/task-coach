@@ -73,7 +73,8 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
             for key, value in settings.items():
                 if section == 'file' and key == 'templatedir':
                     if not value:
-                        value = os.path.join(self.pathToProgramDir(), 'templates')
+                        value = os.path.join(self.pathToProgramDir(),
+                                             'taskcoach-templates')
                 # Don't notify observers while we are initializing
                 super(Settings, self).set(section, key, value)
 
