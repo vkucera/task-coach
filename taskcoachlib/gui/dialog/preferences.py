@@ -258,6 +258,8 @@ class ColorsPage(SettingsPage):
 class FeaturesPage(SettingsPage):
     def __init__(self, *args, **kwargs):
         super(FeaturesPage, self).__init__(*args, **kwargs)
+        self.addBooleanSetting('feature', 'effort', 
+            _('Allow for tracking effort'), helpText='restart')
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
             helpText='restart')
         self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),

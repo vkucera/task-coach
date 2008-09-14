@@ -177,14 +177,17 @@ class NewTaskTest(TaskEditorTestCase):
         command = uicommand.AttachmentOpen(viewer=self.editor[0][5]._attachmentViewer,
                                            attachments=attachment.AttachmentList())
         command.doCommand(None, showerror=onError)
-        if '__WXMSW__' in wx.PlatformInfo and sys.version_info < (2,5):
-            errorMessageStart = "'ascii' codec can't encode character"
+        if '__WXMSW__' in wx.PlatformInfo:
+            if sys.version_info < (2,5):
+                errorMessageStart = "'ascii' codec can't encode character"
+            else:
+                errorMessageStart = ''
         elif '__WXMAC__' in wx.PlatformInfo and sys.version_info >= (2,5):
-            errorMessageStart = ""    
+            errorMessageStart = ''    
         elif '__WXGTK__' in wx.PlatformInfo:
-            errorMessageStart = ""
+            errorMessageStart = ''
         else:
-            errorMessageStart = "[Error 2] "
+            errorMessageStart = '[Error 2] '
         self.failUnless(self.errorMessage.startswith(errorMessageStart))
 
     def testAddNote(self):

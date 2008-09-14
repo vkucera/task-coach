@@ -218,6 +218,7 @@ defaults = { \
     'markparentcompletedwhenallchildrencompleted': 'True' },
 'feature': { \
     'notes': 'True',
+    'effort': 'True',
     'syncml': 'False' },
 'syncml': { \
     'url': '',
