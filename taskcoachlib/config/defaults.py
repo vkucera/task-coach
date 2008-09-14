@@ -196,7 +196,9 @@ defaults = { \
     'autosave': 'False',
     'backup': 'False',
     'saveinifileinprogramdir': 'False',
-    'attachmentbase': '' },
+    'attachmentbase': '',
+    'templatedir': '' # The default is actually computed in the Settings class
+    },
 'color': { \
     'activetasks': '(0, 0, 0)',
     'completedtasks': '(0, 255, 0)',

@@ -25,8 +25,9 @@ format.
 
 from taskcoachlib.domain.base import Object
 from taskcoachlib.domain.date import date
+from taskcoachlib.i18n import _
 
-import time, calendar
+import time, calendar, datetime
 
 #{ Utility functions
 
@@ -153,6 +154,19 @@ class VCalendarParser(object):
                 # Some  servers only  specify CHARSET  when  there are
                 # non-ASCII characters :)
                 value = value.decode('ascii')
+
+            # If  an item  name ends  with  'TMPL', it's  part of  the
+            # template system and has to be eval()ed.
+
+            if name.endswith('TMPL'):
+                name = name[:-4]
+                context = dict()
+                context.update(datetime.__dict__)
+                context.update(date.__dict__)
+                context['_'] = _
+                value = eval(value, context)
+                if isinstance(value, datetime.date):
+                    value = fmtDate(value)
 
             self.acceptItem(name, value)
 

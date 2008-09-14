@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, os
 from taskcoachlib import patterns, meta, command, help, widgets, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, attachment
@@ -1193,6 +1193,29 @@ class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand):
 
     def categoriesForTheNewTask(self):
         return [category for category in self.categories if category.isFiltered()]
+
+
+class TaskNewFromTemplate(TaskNew):
+    def __init__(self, filename, *args, **kwargs):
+        super(TaskNewFromTemplate, self).__init__(*args, **kwargs)
+
+        parser = persistence.VCalendarParser()
+        parser.parse(map(lambda x: x.rstrip('\r'),
+                         file(filename, 'rb').read().split('\n')))
+        self.__kwargs = parser.tasks[0]
+
+        self.menuText = self.__kwargs.get('subject',
+                                  os.path.splitext(os.path.split(filename)[-1])[0])
+
+    def doCommand(self, event, show=True):
+        self.__kwargs['categories'] = self.categoriesForTheNewTask()
+        newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
+            command.NewTaskCommand(self.taskList, 
+            **self.__kwargs),
+            self.taskList, self.settings, self.categories, 
+            bitmap=self.bitmap)
+        newTaskDialog.Show(show)
+        return newTaskDialog # for testing purposes
 
 
 class NewTaskWithSelectedCategories(TaskNew, ViewerCommand):

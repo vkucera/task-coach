@@ -62,8 +62,9 @@ class NewTaskCommand(base.BaseCommand):
         categories = kwargs.pop('categories', [])
         super(NewTaskCommand, self).__init__(*args, **kwargs)
         self.items = [task.Task(subject=subject, description=description, 
-                                attachments=attachments, categories=categories)]
-        
+                                attachments=attachments, categories=categories,
+                                **kwargs)]
+
     def do_command(self):
         self.list.extend(self.items)
 
@@ -80,7 +81,8 @@ class NewSubTaskCommand(base.BaseCommand, SaveTaskStateMixin):
 
     def __init__(self, *args, **kwargs):
         super(NewSubTaskCommand, self).__init__(*args, **kwargs)
-        self.items = [task.newChild(subject=_('New subtask')) for task in self.items]
+        subject = kwargs.pop('subject', _('New subtask'))
+        self.items = [task.newChild(subject=subject, **kwargs) for task in self.items]
         self.saveStates(self.getTasksToSave())
         
     def getTasksToSave(self):

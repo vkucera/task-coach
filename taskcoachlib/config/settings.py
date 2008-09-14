@@ -71,6 +71,9 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         for section, settings in defaults.defaults.items():
             self.add_section(section)
             for key, value in settings.items():
+                if section == 'file' and key == 'templatedir':
+                    if not value:
+                        value = os.path.join(self.pathToProgramDir(), 'templates')
                 # Don't notify observers while we are initializing
                 super(Settings, self).set(section, key, value)
 

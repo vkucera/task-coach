@@ -43,7 +43,7 @@ setupOptions = {
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note', 'attachment')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
-        'ics', 'html', 'csv')] + ['buildlib'],
+        'ics', 'html', 'csv', 'vcalendar')] + ['buildlib'],
     'scripts': ['taskcoach.py', 'taskcoach.pyw'],
     'classifiers': [\
         'Development Status :: 3 - Alpha',
