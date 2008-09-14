@@ -23,7 +23,9 @@ class TaskSource(basesource.BaseSource):
         self.categoryList = categoryList
 
     def updateItemProperties(self, item, task):
-        item.data = vcal.VCalFromTask(task)
+        item.data = 'BEGIN:VCALENDAR\r\nVERSION: 1.0\r\n' + \
+                    vcal.VCalFromTask(task) + \
+                    'END:VCALENDAR'
         item.dataType = 'text/x-vcalendar'
 
     def compareItemProperties(self, local, remote):
