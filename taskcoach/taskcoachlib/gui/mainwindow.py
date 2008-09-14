@@ -228,8 +228,9 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             self.settings, 'mainviewer') 
         viewerfactory.addTaskViewers(self.viewer, self.taskFile.tasks(), 
             self.settings, self.taskFile.categories(), self.taskFile.efforts())
-        viewerfactory.addEffortViewers(self.viewer, self.taskFile.tasks(), 
-            self.settings)
+        if self.settings.getboolean('feature', 'effort'):
+            viewerfactory.addEffortViewers(self.viewer, self.taskFile.tasks(), 
+                                           self.settings)
         viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
             self.settings, self.taskFile.tasks(), self.taskFile.notes())
         if self.settings.getboolean('feature', 'notes'):
@@ -380,15 +381,19 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this window. ''' 
-        return [uicommand.FileOpen(iocontroller=self.iocontroller), 
+        uiCommands = [
+                uicommand.FileOpen(iocontroller=self.iocontroller), 
                 uicommand.FileSave(iocontroller=self.iocontroller), 
                 uicommand.Print(viewer=self.viewer), 
                 None, 
                 uicommand.EditUndo(), 
-                uicommand.EditRedo(), 
+                uicommand.EditRedo()]
+        if self.settings.getboolean('feature', 'effort'):
+            uiCommands.extend([ 
                 None, 
                 uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
-                uicommand.EffortStop(taskList=self.taskFile.tasks())]
+                uicommand.EffortStop(taskList=self.taskFile.tasks())])
+        return uiCommands
         
     def showToolBar(self, size):
         # Current version of wxPython (2.7.8.1) has a bug 

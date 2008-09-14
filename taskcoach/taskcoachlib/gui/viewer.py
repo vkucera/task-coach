@@ -180,38 +180,38 @@ class FilterableViewerForTasks(FilterableViewer):
         return self.__filterUICommands
 
     def createFilterUICommands(self):
-        return [uicommand.ResetFilter(viewer=self),
-                None,
-                (_('Show only tasks &due before end of'),
-                    uicommand.ViewerFilterByDueDate(menuText=_('&Unlimited'),
-                        helpText=_('Show all tasks'), value='Unlimited',
-                        viewer=self),
-                    uicommand.ViewerFilterByDueDate(menuText=_('&Today'),
-                        helpText=_('Only show tasks due today'), value='Today',
-                        viewer=self),
-                    uicommand.ViewerFilterByDueDate(menuText=_('T&omorrow'),
-                        helpText=_('Only show tasks due today and tomorrow'),
-                        value='Tomorrow', viewer=self),
-                    uicommand.ViewerFilterByDueDate(menuText=_('Wo&rkweek'),
-                        helpText=_('Only show tasks due this work week (i.e. before Friday)'),
-                        value='Workweek', viewer=self),
-                    uicommand.ViewerFilterByDueDate(menuText=_('&Week'),
-                        helpText=_('Only show tasks due this week (i.e. before Sunday)'),
-                        value='Week', viewer=self),
-                    uicommand.ViewerFilterByDueDate(menuText=_('&Month'),
-                        helpText=_('Only show tasks due this month'),
-                        value='Month', viewer=self),
-                    uicommand.ViewerFilterByDueDate(menuText=_('&Year'),
-                        helpText=_('Only show tasks due this year'),
-                        value='Year', viewer=self)),
-                (_('&Hide tasks that are'),
-                    uicommand.ViewerHideActiveTasks(viewer=self),
-                    uicommand.ViewerHideInactiveTasks(viewer=self),
-                    uicommand.ViewerHideCompletedTasks(viewer=self),
-                    None,
-                    uicommand.ViewerHideOverdueTasks(viewer=self),
-                    uicommand.ViewerHideOverbudgetTasks(viewer=self),
-                    uicommand.ViewerHideCompositeTasks(viewer=self))]
+        def dueDateFilter(menuText, helpText, value):
+            return uicommand.ViewerFilterByDueDate(menuText=menuText, 
+                                                   helpText=helpText,
+                                                   value=value, viewer=self)
+        dueDateFilterCommands = (_('Show only tasks &due before end of'),
+            dueDateFilter(_('&Unlimited'), _('Show all tasks'), 'Unlimited'),
+            dueDateFilter(_('&Today'),_('Only show tasks due today'), 'Today'),
+            dueDateFilter(_('T&omorrow'),
+                          _('Only show tasks due today and tomorrow'), 
+                          'Tomorrow'),
+            dueDateFilter(_('Wo&rkweek'), 
+                          _('Only show tasks due this work week (i.e. before Friday)'),
+                          'Workweek'),
+            dueDateFilter(_('&Week'), 
+                          _('Only show tasks due this week (i.e. before Sunday)'),
+                          'Week'),
+            dueDateFilter(_('&Month'), _('Only show tasks due this month'), 
+                          'Month'),
+            dueDateFilter(_('&Year'), _('Only show tasks due this year'),
+                          'Year'))
+        statusFilterCommands = [_('&Hide tasks that are'),
+            uicommand.ViewerHideActiveTasks(viewer=self),
+            uicommand.ViewerHideInactiveTasks(viewer=self),
+            uicommand.ViewerHideCompletedTasks(viewer=self),
+            None,
+            uicommand.ViewerHideOverdueTasks(viewer=self),
+            uicommand.ViewerHideCompositeTasks(viewer=self)]
+        if self.settings.getboolean('feature', 'effort'):
+            statusFilterCommands.insert(-2,
+                uicommand.ViewerHideOverbudgetTasks(viewer=self))
+        return [uicommand.ResetFilter(viewer=self), None, dueDateFilterCommands, 
+                tuple(statusFilterCommands)]
 
     def __getBooleanSetting(self, setting):
         return self.settings.getboolean(self.settingsSection(), setting)
@@ -305,6 +305,12 @@ class SortableViewerForTasks(SortableViewer):
              uicommand.ViewerSortCaseSensitive(viewer=self),
              uicommand.ViewerSortByTaskStatusFirst(viewer=self),
              None]
+        effortOn = self.settings.getboolean('feature', 'effort')
+        dependsOnEffortFeature = ['budget', 'totalBudget', 
+                                  'timeSpent', 'totalTimeSpent',
+                                  'budgetLeft', 'totalBudgetLeft', 
+                                  'hourlyFee', 'fixedFee', 'totalFixedFee',
+                                  'revenue', 'totalRevenue']
         for menuText, helpText, value in [\
             (_('Sub&ject'), _('Sort tasks by subject'), 'subject'),
             (_('&Description'), _('Sort by description'), 'description'),
@@ -329,8 +335,9 @@ class SortableViewerForTasks(SortableViewer):
             (_('&Revenue'), _('Sort tasks by revenue'), 'revenue'),
             (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalRevenue'),
             (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder')]:
-            self._sortUICommands.append(uicommand.ViewerSortByCommand(\
-                viewer=self, value=value, menuText=menuText, helpText=helpText))
+            if value not in dependsOnEffortFeature or (value in dependsOnEffortFeature and effortOn):
+                self._sortUICommands.append(uicommand.ViewerSortByCommand(\
+                    viewer=self, value=value, menuText=menuText, helpText=helpText))
 
 
 class SortableViewerForEffort(SortableViewer):
@@ -659,7 +666,6 @@ class Viewer(wx.Panel):
             uicommand.NewSubDomainObject(viewer=self),
             uicommand.EditDomainObject(viewer=self),
             self.deleteUICommand]
-
     
     def canCreateNewDomainObject(self):
         return True
@@ -1093,7 +1099,7 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
         return True
     
     def createColumnUICommands(self):
-        return [\
+        commands = [
             uicommand.ToggleAutoColumnResizing(viewer=self,
                                                 settings=self.settings),
             None,
@@ -1118,66 +1124,70 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
                  setting='timeLeft', viewer=self),
              uicommand.ViewColumn(menuText=_('&Recurrence'),
                  helpText=_('Show/hide recurrence column'),
-                 setting='recurrence', viewer=self)
-            ),
-            (_('&Budget'),
-             uicommand.ViewColumns(menuText=_('All budget columns'),
-                 helpText=_('Show/hide all budget-related columns'),
-                 setting=['budget', 'totalBudget', 'timeSpent',
-                          'totalTimeSpent', 'budgetLeft','totalBudgetLeft'],
-                 viewer=self),
-             None,
-             uicommand.ViewColumn(menuText=_('&Budget'),
-                 helpText=_('Show/hide budget column'),
-                 setting='budget', viewer=self),
-             uicommand.ViewColumn(menuText=_('Total b&udget'),
-                 helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
-                 setting='totalBudget', viewer=self),
-             uicommand.ViewColumn(menuText=_('&Time spent'),
-                 helpText=_('Show/hide time spent column'),
-                 setting='timeSpent', viewer=self),
-             uicommand.ViewColumn(menuText=_('T&otal time spent'),
-                 helpText=_('Show/hide total time spent column (total time includes time spent on subtasks)'),
-                 setting='totalTimeSpent', viewer=self),
-             uicommand.ViewColumn(menuText=_('Budget &left'),
-                 helpText=_('Show/hide budget left column'),
-                 setting='budgetLeft', viewer=self),
-             uicommand.ViewColumn(menuText=_('Total budget l&eft'),
-                 helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
-                 setting='totalBudgetLeft', viewer=self)
-            ),
-            (_('&Financial'),
-             uicommand.ViewColumns(menuText=_('All financial columns'),
-                 helpText=_('Show/hide all finance-related columns'),
-                 setting=['hourlyFee', 'fixedFee', 'totalFixedFee',
-                          'revenue', 'totalRevenue'],
-                 viewer=self),
-             None,
-             uicommand.ViewColumn(menuText=_('&Hourly fee'),
-                 helpText=_('Show/hide hourly fee column'),
-                 setting='hourlyFee', viewer=self),
-             uicommand.ViewColumn(menuText=_('&Fixed fee'),
-                 helpText=_('Show/hide fixed fee column'),
-                 setting='fixedFee', viewer=self),
-             uicommand.ViewColumn(menuText=_('&Total fixed fee'),
-                 helpText=_('Show/hide total fixed fee column'),
-                 setting='totalFixedFee', viewer=self),
-             uicommand.ViewColumn(menuText=_('&Revenue'),
-                 helpText=_('Show/hide revenue column'),
-                 setting='revenue', viewer=self),
-             uicommand.ViewColumn(menuText=_('T&otal revenue'),
-                 helpText=_('Show/hide total revenue column'),
-                 setting='totalRevenue', viewer=self)
-            ),
+                 setting='recurrence', viewer=self))]
+        if self.settings.getboolean('feature', 'effort'):
+            commands.extend([
+                (_('&Budget'),
+                 uicommand.ViewColumns(menuText=_('All budget columns'),
+                     helpText=_('Show/hide all budget-related columns'),
+                     setting=['budget', 'totalBudget', 'timeSpent',
+                              'totalTimeSpent', 'budgetLeft','totalBudgetLeft'],
+                     viewer=self),
+                 None,
+                 uicommand.ViewColumn(menuText=_('&Budget'),
+                     helpText=_('Show/hide budget column'),
+                     setting='budget', viewer=self),
+                 uicommand.ViewColumn(menuText=_('Total b&udget'),
+                     helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
+                     setting='totalBudget', viewer=self),
+                 uicommand.ViewColumn(menuText=_('&Time spent'),
+                     helpText=_('Show/hide time spent column'),
+                     setting='timeSpent', viewer=self),
+                 uicommand.ViewColumn(menuText=_('T&otal time spent'),
+                     helpText=_('Show/hide total time spent column (total time includes time spent on subtasks)'),
+                     setting='totalTimeSpent', viewer=self),
+                 uicommand.ViewColumn(menuText=_('Budget &left'),
+                     helpText=_('Show/hide budget left column'),
+                     setting='budgetLeft', viewer=self),
+                 uicommand.ViewColumn(menuText=_('Total budget l&eft'),
+                     helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
+                     setting='totalBudgetLeft', viewer=self)
+                ),
+                (_('&Financial'),
+                 uicommand.ViewColumns(menuText=_('All financial columns'),
+                     helpText=_('Show/hide all finance-related columns'),
+                     setting=['hourlyFee', 'fixedFee', 'totalFixedFee',
+                              'revenue', 'totalRevenue'],
+                     viewer=self),
+                 None,
+                 uicommand.ViewColumn(menuText=_('&Hourly fee'),
+                     helpText=_('Show/hide hourly fee column'),
+                     setting='hourlyFee', viewer=self),
+                 uicommand.ViewColumn(menuText=_('&Fixed fee'),
+                     helpText=_('Show/hide fixed fee column'),
+                     setting='fixedFee', viewer=self),
+                 uicommand.ViewColumn(menuText=_('&Total fixed fee'),
+                     helpText=_('Show/hide total fixed fee column'),
+                     setting='totalFixedFee', viewer=self),
+                 uicommand.ViewColumn(menuText=_('&Revenue'),
+                     helpText=_('Show/hide revenue column'),
+                     setting='revenue', viewer=self),
+                 uicommand.ViewColumn(menuText=_('T&otal revenue'),
+                     helpText=_('Show/hide total revenue column'),
+                     setting='totalRevenue', viewer=self))])
+        commands.extend([
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachment column'),
-                setting='attachments', viewer=self),
-            uicommand.ViewColumn(menuText=_('&Notes'),
-                helpText=_('Show/hide notes column'),
-                setting='notes', viewer=self),
+                setting='attachments', viewer=self)])
+        if self.settings.getboolean('feature', 'notes'):
+            commands.append(
+                uicommand.ViewColumn(menuText=_('&Notes'),
+                    helpText=_('Show/hide notes column'),
+                    setting='notes', viewer=self))
+        commands.extend([
             uicommand.ViewColumn(menuText=_('&Categories'),
                 helpText=_('Show/hide categories column'),
                 setting='categories', viewer=self),
@@ -1192,16 +1202,19 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
                 setting='totalPriority', viewer=self),
             uicommand.ViewColumn(menuText=_('&Reminder'),
                 helpText=_('Show/hide reminder column'),
-                setting='reminder', viewer=self)]
+                setting='reminder', viewer=self)])
+        return commands
 
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
-        toggleTaskCompletion = uicommand.TaskToggleCompletion(viewer=self)
-        effortstart = uicommand.EffortStart(viewer=self)
-        effortstop = uicommand.EffortStop(taskList=self.model())
+        taskUICommands = [uicommand.TaskToggleCompletion(viewer=self), None]
+        if self.settings.getboolean('feature', 'effort'):
+            taskUICommands.extend([
+                uicommand.EffortStart(viewer=self),
+                uicommand.EffortStop(taskList=self.model()),
+                None])
         commands = super(TaskViewer, self).createToolBarUICommands() 
-        return commands[:-1] + [toggleTaskCompletion, None, effortstart, 
-            effortstop, None] + commands[-1:]
+        return commands[:-1] + taskUICommands + commands[-1:]
  
     def trackStartEventType(self):
         return 'task.track.start'
@@ -1325,20 +1338,19 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
     def _createColumns(self):
         kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
                       resizeCallback=self.onResizeColumn)
-        return [widgets.Column('subject', _('Subject'), 
+        columns = [widgets.Column('subject', _('Subject'), 
                 task.Task.subjectChangedEventType(), 
                 'task.completionDate', 'task.dueDate', 'task.startDate',
                 'task.track.start', 'task.track.stop', 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                                                           value='subject',
-                    menuText=_('Sub&ject'), helpText=_('Sort by subject')),
+                    value='subject'),
                 width=self.getColumnWidth('subject'), 
                 imageIndexCallback=self.subjectImageIndex,
                 renderCallback=self.renderSubject, **kwargs)] + \
             [widgets.Column('description', _('Description'), 
                 task.Task.descriptionChangedEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                                                           value='description'),
+                    value='description'),
                 renderCallback=lambda task: task.description(), 
                 width=self.getColumnWidth('description'), **kwargs)] + \
             [widgets.Column('attachments', '', 
@@ -1347,14 +1359,16 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
                 alignment=wx.LIST_FORMAT_LEFT,
                 imageIndexCallback=self.attachmentImageIndex,
                 headerImageIndex=self.imageIndex['attachment'],
-                renderCallback=lambda task: '', **kwargs)] + \
-            [widgets.Column('notes', '', 
+                renderCallback=lambda task: '', **kwargs)]
+        if self.settings.getboolean('feature', 'notes'):
+            columns.append(widgets.Column('notes', '', 
                 task.Task.notesChangedEventType(),
                 width=self.getColumnWidth('notes'),
                 alignment=wx.LIST_FORMAT_LEFT,
                 imageIndexCallback=self.noteImageIndex,
                 headerImageIndex=self.imageIndex['note'],
-                renderCallback=lambda task: '', **kwargs)] + \
+                renderCallback=lambda task: '', **kwargs))
+        columns.extend(
             [widgets.Column('categories', _('Categories'), 
                 task.Task.categoryAddedEventType(), 
                 task.Task.categoryRemovedEventType(), 
@@ -1370,12 +1384,14 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                                            value='totalCategories'),
                 renderCallback=lambda task: self.renderCategory(task, recursive=True),
-                width=self.getColumnWidth('totalCategories'), **kwargs)] + \
-            [widgets.Column(name, columnHeader, 'task.'+name, 
-             sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
-             renderCallback=renderCallback, width=self.getColumnWidth(name),
-             alignment=wx.LIST_FORMAT_RIGHT, **kwargs) \
-             for name, columnHeader, renderCallback in \
+                width=self.getColumnWidth('totalCategories'), **kwargs)])
+        effortOn= self.settings.getboolean('feature', 'effort')
+        dependsOnEffortFeature = ['budget', 'totalBudget', 
+                                  'timeSpent', 'totalTimeSpent', 
+                                  'budgetLeft', 'totalBudgetLeft',
+                                  'hourlyFee', 'fixedFee', 'totalFixedFee',
+                                  'revenue', 'totalRevenue']
+        for name, columnHeader, renderCallback in [
             ('startDate', _('Start date'), lambda task: render.date(task.startDate())),
             ('dueDate', _('Due date'), lambda task: render.date(task.dueDate())),
             ('timeLeft', _('Days left'), lambda task: render.daysLeft(task.timeLeft(), task.completed())),
@@ -1394,8 +1410,14 @@ class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
             ('totalFixedFee', _('Total fixed fee'), lambda task: render.amount(task.fixedFee(recursive=True))),
             ('revenue', _('Revenue'), lambda task: render.amount(task.revenue())),
             ('totalRevenue', _('Total revenue'), lambda task: render.amount(task.revenue(recursive=True))),
-            ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder()))]
-                        
+            ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder()))]:
+            if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
+                columns.append(widgets.Column(name, columnHeader, 'task.'+name, 
+                    sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
+                    renderCallback=renderCallback, width=self.getColumnWidth(name),
+                    alignment=wx.LIST_FORMAT_RIGHT, **kwargs))
+        return columns
+         
     def subjectImageIndex(self, task, which):
         normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
         if which in [wx.TreeItemIcon_Expanded, wx.TreeItemIcon_SelectedExpanded]:
@@ -1945,7 +1967,7 @@ class AttachmentViewer(AttachmentDropTarget, ViewerWithColumns,
 
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.AttachmentEditor(wx.GetTopLevelParent(self),
-            command.EditAttachmentCommand(self.list, kwargs['items'], *args, **kwargs),
+            command.EditAttachmentCommand(self.list, *args, **kwargs),
             self.settings, self.categories, bitmap=kwargs['bitmap'])
 
     editAttachmentDialog = editItemDialog

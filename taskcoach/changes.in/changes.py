@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.71.0', 'July ??, 2008',
+Release('0.71.0', 'September ??, 2008',
     summary='''?''',
     featuresAdded=[
         Feature('''Tasks can now be created from templates written in a
@@ -43,6 +43,8 @@ Monday of the month).''', '963803'),
         Feature('''The times used in the drop down menus of the start and stop
 entries of the effort dialog can now be changed via the preferences dialog. 
 Patch supplied by Rob McMullen.'''),
+        Feature('''The effort tracking feature can be turned off via the
+preferences dialog.'''),
         Feature('''Categories and notes can have attachments.'''),
         Feature('''Tasks and categories can contain notes. ''', '1954879'),
         Feature('''The four different effort viewers are integrated in one

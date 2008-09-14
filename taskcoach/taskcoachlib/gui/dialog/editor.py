@@ -695,15 +695,19 @@ class TaskEditBook(widgets.Listbook):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(SubjectPage(self, task), _('Description'), 'description')
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
-        self.AddPage(TaskCategoriesPage(self, task, categories, settings), _('Categories'),
-                     'category')
-        self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')
-        if task.timeSpent(recursive=True):
+        self.AddPage(TaskCategoriesPage(self, task, categories, settings), 
+                     _('Categories'), 'category')
+        effortOn = settings.getboolean('feature', 'effort')
+        if effortOn:
+            self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')
+        if effortOn and task.timeSpent(recursive=True):
             effortPage = EffortPage(self, task, taskList, settings)
             self.AddPage(effortPage, _('Effort'), 'start')
         if settings.getboolean('feature', 'notes'):
-            self.AddPage(NotesPage(self, task, settings, categories), _('Notes'), 'note')
-        self.AddPage(TaskAttachmentsPage(self, task, settings, categories), _('Attachments'), 'attachment')
+            self.AddPage(NotesPage(self, task, settings, categories), 
+                         _('Notes'), 'note')
+        self.AddPage(TaskAttachmentsPage(self, task, settings, categories), 
+                     _('Attachments'), 'attachment')
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior')
         self.item = task
 
@@ -870,9 +874,11 @@ class CategoryEditBook(widgets.Listbook):
         super(CategoryEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(CategorySubjectPage(self, theCategory), 
                      _('Description'), 'description')
-        self.AddPage(NotesPage(self, theCategory, settings, categories), 
-                     _('Notes'), 'note')
-        self.AddPage(CategoryAttachmentsPage(self, theCategory, settings, categories), 
+        if settings.getboolean('feature', 'notes'):
+            self.AddPage(NotesPage(self, theCategory, settings, categories), 
+                         _('Notes'), 'note')
+        self.AddPage(CategoryAttachmentsPage(self, theCategory, settings, 
+                                             categories), 
                      _('Attachments'), 'attachment')
 
 
@@ -967,8 +973,9 @@ class AttachmentEditBook(widgets.Listbook):
         super(AttachmentEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(AttachmentSubjectPage(self, theAttachment), 
                      _('Description'), 'description')
-        self.AddPage(NotesPage(self, theAttachment, settings, 
-                     categories), _('Notes'), 'note')
+        if settings.getboolean('feature', 'notes'):
+            self.AddPage(NotesPage(self, theAttachment, settings, 
+                                   categories), _('Notes'), 'note')
 
 
 class EditorWithCommand(widgets.NotebookDialog):
