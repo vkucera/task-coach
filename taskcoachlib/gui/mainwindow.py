@@ -205,16 +205,17 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         wx.CallAfter(self.closeSplash)
         wx.CallAfter(self.showTips)
 
-        try:
-            import taskcoachlib.syncml.core
-        except ImportError:
-            if settings.getboolean('syncml', 'showwarning'):
-                dlg = widgets.SyncMLWarningDialog(self)
-                try:
-                    if dlg.ShowModal() == wx.ID_OK:
-                        settings.setboolean('syncml', 'showwarning', False)
-                finally:
-                    dlg.Destroy()
+        if settings.getboolean('feature', 'syncml'):
+            try:
+                import taskcoachlib.syncml.core
+            except ImportError:
+                if settings.getboolean('syncml', 'showwarning'):
+                    dlg = widgets.SyncMLWarningDialog(self)
+                    try:
+                        if dlg.ShowModal() == wx.ID_OK:
+                            settings.setboolean('syncml', 'showwarning', False)
+                    finally:
+                        dlg.Destroy()
 
     def createWindowComponents(self):
         self.__usingTabbedMainWindow = self.settings.getboolean('view', 
