@@ -1,20 +1,9 @@
 
 """
-BEGIN:VCALENDAR
-VERSION:1.0
-BEGIN:VTODO
-CATEGORIES:Personal
-DTSTART:20080523T000000
-DTSTART:20080523T000000
-DUE:20080524T000000
-DESCRIPTION;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:Test description=0A=0A=3D multiline=0A=0AAccentu=C3=A9=0A=0AModif bidon=0A
-LAST-MODIFIED:20080525T094406Z
-PERCENT-COMPLETE:0
-PRIORITY:2
-STATUS:NEEDS ACTION
-SUMMARY;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:Test todo
-END:VTODO
-END:VCALENDAR
+
+This module defines classes and functions to handle the VCalendar
+format.
+
 """
 
 from taskcoachlib.domain.base import Object
@@ -22,9 +11,12 @@ from taskcoachlib.domain.date import date
 
 import time, calendar
 
-# Utility functions
+#{ Utility functions
 
 def parseDate(fulldate):
+    """Parses a date as seen in vcalendar files into a
+    L{taskcoachlib.domain.date.Date} object."""
+
     dt, tm = fulldate.split('T')
     year, month, day = int(dt[:4]), int(dt[4:6]), int(dt[6:8])
     hour, minute, second = int(tm[:2]), int(tm[2:4]), int(tm[4:6])
@@ -37,9 +29,42 @@ def parseDate(fulldate):
     return date.Date(year, month, day)
 
 def fmtDate(dt):
+    """Formats a L{taskcoachlib.domain.date.Date} object to a string
+    suitable for inclusion in a vcalendar file."""
     return '%04d%02d%02dT000000' % (dt.year, dt.month, dt.day)
 
+def quoteString(s):
+    """The 'quoted-printable' codec doesn't encode \n, but tries to
+    fold lines with \n instead of CRLF and generally does strange
+    things that ScheduleWorld does not understand (me neither, to an
+    extent). Same thing with \r. This function works around this."""
+
+    s = s.encode('UTF-8').encode('quoted-printable')
+    s = s.replace('=\r', '')
+    s = s.replace('=\n', '')
+    s = s.replace('\r', '=0D')
+    s = s.replace('\n', '=0A')
+
+    return s
+
+#}
+
+#{ Parsing VCalendar files
+
 class VCalendarParser(object):
+    """Base parser class for vcalendar files. This uses the State
+    pattern (in its Python incarnation, replacing the class of an
+    object at runtime) in order to parse different objects in the
+    VCALENDAR. Other states are
+
+     - VTodoParser: parses VTODO objects.
+
+    @ivar kwargs: While parsing, the keyword arguments for the
+        domain object creation for the current (parsed) object.
+    @ivar tasks: A list of dictionnaries suitable to use as
+        keyword arguments for task creation, representing all
+        VTODO object in the parsed file."""
+
     def __init__(self, *args, **kwargs):
         super(VCalendarParser, self).__init__(*args, **kwargs)
 
@@ -51,13 +76,21 @@ class VCalendarParser(object):
         self.init()
 
     def init(self):
+        """Called after a state change."""
         self.kwargs = {}
 
     def setState(self, state):
+        """Sets the state (class) of the parser object."""
         self.__class__ = state
         self.init()
 
     def parse(self, lines):
+        """Actually parses the file.
+        @param lines: A list of lines."""
+
+        # TODO: avoid using indexes here, just iterate. This way the
+        # method can accept a file object as argument.
+
         currentLine = lines[0]
 
         for line in lines[1:]:
@@ -71,6 +104,9 @@ class VCalendarParser(object):
         self.handleLine(currentLine)
 
     def handleLine(self, line):
+        """Called by L{parse} for each line to parse. L{parse} is
+        supposed to have handled the unfolding."""
+
         if line.startswith('BEGIN:'):
             try:
                 self.setState(self.stateMap[line[6:]])
@@ -106,13 +142,19 @@ class VCalendarParser(object):
         return False
 
     def onFinish(self):
+        """This method is called when the current object ends."""
         raise NotImplementedError
 
     def acceptItem(self, name, value):
+        """Called on each new 'item', i.e. key/value pair. Default
+        behaviour is to store the pair in the 'kwargs' instance
+        variable (which is emptied in L{init})."""
         self.kwargs[name.lower()] = value
 
 
 class VTodoParser(VCalendarParser):
+    """This is the state responsible for parsing VTODO objects."""
+
     def onFinish(self):
         if not self.kwargs.has_key('startDate'):
             # This means no start  date, but the task constructor will
@@ -120,7 +162,8 @@ class VTodoParser(VCalendarParser):
             self.kwargs['startDate'] = date.Date()
 
         if self.kwargs.has_key('vcardStatus'):
-            if self.kwargs['vcardStatus'] == 'COMPLETED' and not self.kwargs.has_key('completionDate'):
+            if self.kwargs['vcardStatus'] == 'COMPLETED' and \
+                   not self.kwargs.has_key('completionDate'):
                 # Some servers only give the status, and not the date (SW)
                 if self.kwargs.has_key('last-modified'):
                     self.kwargs['completionDate'] = parseDate(self.kwargs['last-modified'])
@@ -153,25 +196,16 @@ class VTodoParser(VCalendarParser):
         else:
             super(VTodoParser, self).acceptItem(name, value)
 
+#}
+
 
 #==============================================================================
-#
-
-def quoteString(s):
-    # 'quoted-printable' codec  doesn't encode  \n, but tries  to fold
-    # lines with \n instead of  CRLF and generally does strange things
-    # that  ScheduleWorld  does  not  understand (me  neither,  to  an
-    # extent). Same thing with \r.
-
-    s = s.encode('UTF-8').encode('quoted-printable')
-    s = s.replace('=\r', '')
-    s = s.replace('=\n', '')
-    s = s.replace('\r', '=0D')
-    s = s.replace('\n', '=0A')
-
-    return s
+#{ Generating VCalendar files.
 
 def VCalFromTask(task):
+    """This function returns a string representing the task in
+    vcalendar format."""
+
     components = []
 
     values = { 'description': quoteString(task.description()),
@@ -179,8 +213,6 @@ def VCalFromTask(task):
                'priority': min(3, task.priority() + 1),
                'categories': ','.join(map(quoteString, [unicode(c) for c in task.categories(True)])) }
 
-    components.append('BEGIN:VCALENDAR')
-    components.append('VERSION: 1.0')
     components.append('BEGIN:VTODO')
     components.append('UID:%s' % task.id().encode('UTF-8'))
 
@@ -210,7 +242,6 @@ def VCalFromTask(task):
     components.append('PRIORITY:%(priority)d')
     components.append('SUMMARY;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(subject)s')
     components.append('END:VTODO')
-    components.append('END:VCALENDAR')
 
     text = ''
 
@@ -232,3 +263,5 @@ def VCalFromTask(task):
                     line = line[75:]
 
     return text
+
+#}
