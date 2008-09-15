@@ -1143,7 +1143,7 @@ class AttachmentEditor(EditorWithCommand):
     def __init__(self, parent, command, settings, categories, *args, **kwargs):
         self._settings = settings
         self._categories = categories
-        super(AttachmentEditor, self).__init__(parent, command, *args, **kwargs)
+        super(AttachmentEditor, self).__init__(parent, command, categories, *args, **kwargs)
 
     def addPages(self):
         for attachment in self._command.attachments: # FIXME: use getter
