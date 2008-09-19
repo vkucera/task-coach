@@ -19,4 +19,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # This is the xml package. This package contains classes to read and 
 # write xml (.tsk) files.
 from reader import XMLReader, TemplateXMLReader
-from writer import XMLWriter
+from writer import XMLWriter, TemplateXMLWriter

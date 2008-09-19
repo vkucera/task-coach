@@ -148,6 +148,26 @@ class IOController(object):
             self.__showSaveMessage(selectionFile)        
             self.__addRecentFile(filename)
 
+    def saveastemplate(self, task):
+        path = self.__settings.get('file', 'templatedir')
+        if not os.path.isabs(path):
+            path = os.path.join(os.getcwd(), path)
+        filename = self.__askUserForFile(_('Save as template...'),
+                      fileDialogOpts={'default_path': path,
+                                      'default_extension': 'tsktmpl',
+                                      'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name },
+                                         flags=wx.SAVE)
+        if filename:
+            if not filename.endswith('.tsktmpl'):
+                filename += '.tsktmpl'
+            writer = persistence.TemplateXMLWriter(file(filename, 'wb'))
+            taskCopy = task.copy()
+            for category in taskCopy.categories():
+                taskCopy.removeCategory(category)
+                category.removeCategorizable(taskCopy)
+            # TODO: also remove categories for children and notes
+            writer.write(task)
+
     def close(self):
         if self.__taskFile.needSave():
             if not self.__saveUnsavedChanges():
