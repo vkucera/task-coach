@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # writing domain objects in different formats such as XML, ICS/vCalendar, ...
 
 from ics.writer import ICSWriter
-from xml.writer import XMLWriter
+from xml.writer import XMLWriter, TemplateXMLWriter
 from xml.reader import XMLReader, TemplateXMLReader
 from html.writer import HTMLWriter
 from html.generator import viewer2html

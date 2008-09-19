@@ -19,10 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import xml.dom, os
 from taskcoachlib import meta
-from taskcoachlib.domain import date, attachment
+from taskcoachlib.domain import date, attachment, task, note, category
 
 
-class XMLWriter:    
+class XMLWriter(object):
     def __init__(self, fd, versionnr=22):
         self.__fd = fd
         self.__versionnr = versionnr
@@ -47,8 +47,10 @@ class XMLWriter:
             self.document.documentElement.appendChild(self.categoryNode(category, taskList, noteContainer))
         for note in noteContainer.rootItems():
             self.document.documentElement.appendChild(self.noteNode(note))
-        self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
-        self.document.documentElement.appendChild(self.textNode('guid', guid))
+        if syncMLConfig:
+            self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
+        if guid:
+            self.document.documentElement.appendChild(self.textNode('guid', guid))
         self.document.writexml(self.__fd)
 
     def taskNode(self, task):
@@ -206,3 +208,23 @@ class XMLWriter:
 
     def formatDateTime(self, dateTime):
         return dateTime.strftime('%Y-%m-%d %H:%M:%S')
+
+
+class TemplateXMLWriter(XMLWriter):
+    def write(self, tsk):
+        super(TemplateXMLWriter, self).write(task.TaskList([tsk]),
+                   category.CategoryList(),
+                   note.NoteContainer(),
+                   None, None)
+
+    def taskNode(self, task):
+        node = super(TemplateXMLWriter, self).taskNode(task)
+
+        for name in ['startDate', 'dueDate', 'completionDate']:
+            dt = getattr(task, name)()
+            if dt != date.Date():
+                node.removeAttribute(name.lower())
+                delta = dt - date.Today()
+                node.setAttribute(name.lower() + 'tmpl',
+                                  'Today() + timedelta(%d)' % delta.days)
+        return node

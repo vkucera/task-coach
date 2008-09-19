@@ -341,6 +341,11 @@ class NeedsAttachmentViewer(object):
 class NeedsSelectedTasks(NeedsTaskViewer, NeedsSelection):
     pass
 
+class NeedsOneSelectedTask(NeedsTaskViewer, NeedsSelection):
+    def enabled(self, event):
+        return super(NeedsOneSelectedTask, self).enabled(event) and \
+               len(self.viewer.curselection()) == 1
+
 class NeedsSelectionWithAttachments(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectionWithAttachments, self).enabled(event) and \
@@ -469,6 +474,17 @@ class FileSaveSelection(NeedsSelectedTasks, IOCommand, ViewerCommand):
     
     def doCommand(self, event):
         self.iocontroller.saveselection(self.viewer.curselection()), 
+
+
+class FileSaveSelectedTaskAsTemplate(NeedsOneSelectedTask, IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileSaveSelectedTaskAsTemplate, self).__init__(\
+            menuText=_('Save selected task as &template'),
+            helpText=_('Save the selected task as a task template'),
+            bitmap='saveselection', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.saveastemplate(self.viewer.curselection()[0])
 
 
 # FIXME: Move the printing specific stuff somewhere else
