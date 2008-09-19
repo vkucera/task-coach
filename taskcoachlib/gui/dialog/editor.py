@@ -920,9 +920,10 @@ class NoteEditBook(widgets.Listbook):
 
 
 class AttachmentSubjectPage(ColorEntryMixin, widgets.BookPage):
-    def __init__(self, parent, theAttachment, *args, **kwargs):
+    def __init__(self, parent, theAttachment, basePath, *args, **kwargs):
         super(AttachmentSubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
         self.item = self._attachment = theAttachment
+        self.basePath = basePath
         self.addSubjectEntry()
         self.addLocationEntry()
         self.addDescriptionEntry()
@@ -963,6 +964,9 @@ class AttachmentSubjectPage(ColorEntryMixin, widgets.BookPage):
     def OnSelectLocation(self, evt):
         filename = widgets.AttachmentSelector()
         if filename:
+            if self.basePath:
+                print 'RELATIVE'
+                filename = attachment.getRelativePath(filename, self.basePath)
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)
 
@@ -971,7 +975,8 @@ class AttachmentEditBook(widgets.Listbook):
     def __init__(self, parent, theAttachment, settings, categories,
                  *args, **kwargs):
         super(AttachmentEditBook, self).__init__(parent, *args, **kwargs)
-        self.AddPage(AttachmentSubjectPage(self, theAttachment), 
+        self.AddPage(AttachmentSubjectPage(self, theAttachment,
+                                           settings.get('file', 'attachmentbase')), 
                      _('Description'), 'description')
         if settings.getboolean('feature', 'notes'):
             self.AddPage(NotesPage(self, theAttachment, settings, 
