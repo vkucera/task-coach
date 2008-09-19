@@ -1,11 +1,1 @@
-BEGIN:VCALENDAR
-VERSION: 1.0
-BEGIN:VTODO
-SUMMARYTMPL: _('New task due tomorrow')
-DTSTARTTMPL:Today()
-DUETMPL:Tomorrow()
-STATUS:NEEDS-ACTION
-DESCRIPTION;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:
-PRIORITY:0
-END:VTODO
-END:VCALENDAR
+<?xml version="1.0" ?><?taskcoach release="0.71.0" tskversion="22"?><tasks><task duedatetmpl="Tomorrow()" startdatetmpl="Today()" status="2" subject="New task due tomorrow"/></tasks>

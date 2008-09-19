@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ics.writer import ICSWriter
 from xml.writer import XMLWriter
-from xml.reader import XMLReader
+from xml.reader import XMLReader, TemplateXMLReader
 from html.writer import HTMLWriter
 from html.generator import viewer2html
 from csv.generator import viewer2csv
