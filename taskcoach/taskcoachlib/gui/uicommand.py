@@ -1218,19 +1218,24 @@ class TaskNewFromTemplate(TaskNew):
     def __init__(self, filename, *args, **kwargs):
         super(TaskNewFromTemplate, self).__init__(*args, **kwargs)
 
-        parser = persistence.VCalendarParser()
-        parser.parse(map(lambda x: x.rstrip('\r'),
-                         file(filename, 'rb').read().split('\n')))
-        self.__kwargs = parser.tasks[0]
+        self.__filename = filename
 
-        self.menuText = self.__kwargs.get('subject',
-                                  os.path.splitext(os.path.split(filename)[-1])[0])
+        task = self.__readTemplate()
+        self.menuText = task.subject()
+
+    def __readTemplate(self):
+        return persistence.TemplateXMLReader(file(self.__filename, 'rb')).read()
 
     def doCommand(self, event, show=True):
-        self.__kwargs['categories'] = self.categoriesForTheNewTask()
+        # The task template is read every time because it's the
+        # TemplateXMLReader that evaluates dynamic values (Today()
+        # should be evaluated at task creation for instance).
+        task = self.__readTemplate()
+        kwargs = task.__getcopystate__()
+        kwargs['categories'] = self.categoriesForTheNewTask()
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             command.NewTaskCommand(self.taskList, 
-            **self.__kwargs),
+            **kwargs),
             self.taskList, self.settings, self.categories, 
             bitmap=self.bitmap)
         newTaskDialog.Show(show)
