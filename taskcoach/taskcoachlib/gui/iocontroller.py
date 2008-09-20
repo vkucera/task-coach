@@ -160,7 +160,7 @@ class IOController(object):
         if filename:
             if not filename.endswith('.tsktmpl'):
                 filename += '.tsktmpl'
-            writer = persistence.TemplateXMLWriter(file(filename, 'wb'))
+            writer = persistence.TemplateXMLWriter(codecs.open(filename, 'w', 'utf-8'))
             taskCopy = task.copy()
             for category in taskCopy.categories():
                 taskCopy.removeCategory(category)
