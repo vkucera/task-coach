@@ -1240,8 +1240,8 @@ class TaskNewFromTemplate(TaskNew):
         self.menuText = task.subject()
 
     def __readTemplate(self):
-        return persistence.TemplateXMLReader(codecs.open(self.__filename,
-                                                         'r', 'utf-8')).read()
+        return persistence.TemplateXMLReader(file(self.__filename,
+                                                  'rU')).read()
 
     def doCommand(self, event, show=True):
         # The task template is read every time because it's the

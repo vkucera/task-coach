@@ -161,12 +161,7 @@ class IOController(object):
             if not filename.endswith('.tsktmpl'):
                 filename += '.tsktmpl'
             writer = persistence.TemplateXMLWriter(codecs.open(filename, 'w', 'utf-8'))
-            taskCopy = task.copy()
-            for category in taskCopy.categories():
-                taskCopy.removeCategory(category)
-                category.removeCategorizable(taskCopy)
-            # TODO: also remove categories for children and notes
-            writer.write(task)
+            writer.write(task.copy())
 
     def close(self):
         if self.__taskFile.needSave():
