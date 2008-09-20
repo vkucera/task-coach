@@ -23,7 +23,7 @@ from taskcoachlib import patterns, meta, command, help, widgets, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, attachment
 from taskcoachlib.mailer import writeMail
-import dialog, render, viewer
+import dialog, render, viewer, codecs
 
 
 ''' User interface commands (subclasses of UICommand) are actions that can
@@ -1240,7 +1240,8 @@ class TaskNewFromTemplate(TaskNew):
         self.menuText = task.subject()
 
     def __readTemplate(self):
-        return persistence.TemplateXMLReader(file(self.__filename, 'rb')).read()
+        return persistence.TemplateXMLReader(codecs.open(self.__filename,
+                                                         'r', 'utf-8')).read()
 
     def doCommand(self, event, show=True):
         # The task template is read every time because it's the
