@@ -58,6 +58,12 @@ _TOC = _('''<h3>Table of contents</h3>
     <li><a href="#syncmltrouble">Troubleshooting</a></li>
   </ul>
 </li>
+<li><a href="#templates">Task templates</a>
+  <ul>
+    <li><a href="#abouttemplates">About templates</a></li>
+    <li><a href="#usingtemplates">Using templates</a></li>
+  </ul>
+</li>
 </ul>
 ''')
 
@@ -323,13 +329,36 @@ Microsoft download site</a>.
 </p>
 ''')
 
+_templatesSection = _('''<h3><a name="templates">Task templates</a></h3>
+''')
+
+_aboutTemplatesSubsection = _('''<h4><a name="abouttemplates">About templates</a></h4>
+<p>Templates are blueprints for new tasks. Right now, the only task properties that
+can be "parameterized" are the dates. When instantiating a template, the created
+task has its dates replaced with dates relative to the current date.</p>
+''')
+
+_usingTemplatesSubsection = _('''<h4><a name="usingtemplates">Using templates</a></h4>
+<p>One can create a template by selecting a task (only one) and click on the
+"Save task as template" item in the File menu. All subtasks, notes and attachments
+are part of the template. Only categories are not saved.</p>
+
+<p>In order to instantiate a task template, use the "New task from template" menu
+in the Task menu, or the equivalent toolbar button. When the task is created, the
+due, start and completion dates, if applicable, are reevaluated relatively to the
+current date. That means that if you create a template from a task starting today
+and due tomorrow, every time the template is instantiated, the start date will be
+replaced by the current date and the due date by the current date plus one day.</p>
+''')
+
 helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _taskPropertiesSubsection + _taskStatesSubsection + _taskColorsSubsection + \
     _effortSection + _aboutEffortSubsection + _effortPropertiesSubsection + \
     _categorySection + _aboutCategoriesSubSection + _categoryPropertiesSubSection + \
     _emailSection + _aboutEmailSubsection + _emailAttachingSubsection + _emailCreatingSubsection + \
     _syncmlSection + _aboutSyncmlSubsection + _syncmlSetupSubsection + \
-    _syncmlLimitsSubsection + _syncmlTroubleSubsection
+    _syncmlLimitsSubsection + _syncmlTroubleSubsection + \
+    _templatesSection + _aboutTemplatesSubsection + _usingTemplatesSubsection
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
 <h5>Version %(version)s, %(date)s</h5>
