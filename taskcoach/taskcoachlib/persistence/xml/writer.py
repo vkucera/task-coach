@@ -23,18 +23,12 @@ from taskcoachlib.domain import date, attachment, task, note, category
 
 
 class XMLWriter(object):
-    def __init__(self, fd, versionnr=22):
+    def __init__(self, fd, versionnr=23):
         self.__fd = fd
         self.__versionnr = versionnr
 
     def write(self, taskList, categoryContainer,
               noteContainer, syncMLConfig, guid):
-        # Determine where to save attachments.
-        path, name = os.path.split(os.path.abspath(self.__fd.name))
-        name, ext = os.path.splitext(name)
-        attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-        attachment.Attachment.attdir = attdir
-
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None)
         pi = self.document.createProcessingInstruction('taskcoach', 
@@ -176,7 +170,14 @@ class XMLWriter(object):
     def attachmentNode(self, attachment):
         node = self.baseNode(attachment, 'attachment')
         node.setAttribute('type', attachment.type_)
-        node.setAttribute('location', attachment.location())
+        data = attachment.data()
+        if data is None:
+            node.setAttribute('location', attachment.location())
+        else:
+            dataNode = self.textNode('data', data.encode('base64'))
+            dataNode.setAttribute('extension',
+                                  os.path.splitext(attachment.location())[-1])
+            node.appendChild(dataNode)
         for note in attachment.notes():
             node.appendChild(self.noteNode(note))
         return node
