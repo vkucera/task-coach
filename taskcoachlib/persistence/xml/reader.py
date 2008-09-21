@@ -17,11 +17,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import time, xml.dom.minidom, re, os, sys, datetime
+import time, re, os, sys, datetime
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty.desktop import get_temp_file
+
+
+try:
+    from xml.etree import ElementTree as ET
+except ImportError:
+    from taskcoachlib.thirdparty import ElementTree as ET
+
+
+class PIParser(ET.XMLTreeBuilder):
+    """See http://effbot.org/zone/element-pi.htm"""
+    def __init__(self):
+        ET.XMLTreeBuilder.__init__(self)
+        self._parser.ProcessingInstructionHandler = self.handle_pi
+
+        self.tskversion = None
+
+    def handle_pi(self, target, data):
+        if target == 'taskcoach':
+            matchObject = re.search('tskversion="(\d+)"', data)
+            self.tskversion = int(matchObject.group(1))
 
 
 class XMLReader(object):
@@ -29,61 +49,54 @@ class XMLReader(object):
         self.__fd = fd
 
     def read(self):
-        domDocument = xml.dom.minidom.parse(self.__fd)
-        self.__tskversion = self._parseTskVersionNumber(domDocument)
-        tasks = self._parseTaskNodes(domDocument.documentElement.childNodes)
+        parser = PIParser()
+        tree = ET.parse(self.__fd, parser)
+        root = tree.getroot()
+        self.__tskversion = parser.tskversion
+        tasks = self._parseTaskNodes(root)
         categorizables = tasks[:]
         for task in tasks:
             categorizables.extend(task.children(recursive=True))
         if self.__tskversion <= 15:
             notes = []
         else:
-            notes = self._parseNoteNodes(domDocument.documentElement.childNodes)
+            notes = self._parseNoteNodes(root)
         categorizables.extend(notes)
         for note in notes:
             categorizables.extend(note.children(recursive=True))
         categorizablesById = dict([(categorizable.id(), categorizable) for \
                                    categorizable in categorizables])
         if self.__tskversion <= 13:
-            categories = self._parseCategoryNodesFromTaskNodes(domDocument, 
-                                                                categorizablesById)
+            categories = self._parseCategoryNodesFromTaskNodes(root, 
+                                                               categorizablesById)
         else:
-            categories = self._parseCategoryNodes( \
-                domDocument.documentElement.childNodes, categorizablesById)
+            categories = self._parseCategoryNodes(root, categorizablesById)
 
-        guid = self.__findGUIDNode(domDocument.documentElement.childNodes)
-        syncMLConfig = self._parseSyncMLNode(domDocument.documentElement.childNodes, guid)
+        guid = self.__parseGUIDNode(root.find('guid'))
+        syncMLConfig = self._parseSyncMLNode(root, guid)
 
         return tasks, categories, notes, syncMLConfig, guid
-
-    def _parseTskVersionNumber(self, domDocument):
-        processingInstruction = domDocument.firstChild.data
-        matchObject = re.search('tskversion="(\d+)"', processingInstruction)
-        return int(matchObject.group(1))
         
-    def _parseTaskNodes(self, nodes):
-        return [self._parseTaskNode(node) for node in nodes \
-                if node.nodeName == 'task']
+    def _parseTaskNodes(self, node):
+        return [self._parseTaskNode(child) for child in node.findall('task')]
                 
-    def _parseCategoryNodes(self, nodes, categorizablesById):
-        return [self._parseCategoryNode(node, categorizablesById) for node in nodes \
-                if node.nodeName == 'category']
+    def _parseCategoryNodes(self, node, categorizablesById):
+        return [self._parseCategoryNode(child, categorizablesById) \
+                for child in node.findall('category')]
         
-    def _parseNoteNodes(self, nodes):
-        return [self._parseNoteNode(node) for node in nodes \
-                if node.nodeName == 'note']
+    def _parseNoteNodes(self, node):
+        return [self._parseNoteNode(child) for child in node.findall('note')]
 
     def _parseCategoryNode(self, categoryNode, categorizablesById):
         kwargs = self._parseBaseCompositeAttributes(categoryNode, 
             self._parseCategoryNodes, categorizablesById)
         kwargs.update(dict(\
-            notes=self._parseNoteNodes(categoryNode.childNodes),
-            filtered=self._parseBoolean(categoryNode.getAttribute('filtered'), 
-                                         False)))
+            notes=self._parseNoteNodes(categoryNode),
+            filtered=self._parseBoolean(categoryNode.attrib.get('filtered', 'False'))))
         if self.__tskversion < 19:
-            categorizableIds = categoryNode.getAttribute('tasks')
+            categorizableIds = categoryNode.attrib.get('tasks', '')
         else:
-            categorizableIds = categoryNode.getAttribute('categorizables')
+            categorizableIds = categoryNode.attrib.get('categorizables', '')
         if categorizableIds:
             # The category tasks attribute might contain id's that refer to tasks that
             # have been deleted (a bug in release 0.61.5), be prepared:
@@ -94,12 +107,12 @@ class XMLReader(object):
             categorizables = []
         kwargs['categorizables'] = categorizables
         if self.__tskversion > 20:
-            kwargs['attachments'] = self._parseAttachmentNodes(categoryNode.childNodes)
+            kwargs['attachments'] = self._parseAttachmentNodes(categoryNode)
         return category.Category(**kwargs)
                       
-    def _parseCategoryNodesFromTaskNodes(self, document, tasks):
+    def _parseCategoryNodesFromTaskNodes(self, root, tasks):
         ''' In tskversion <=13 category nodes were subnodes of task nodes. '''
-        taskNodes = document.getElementsByTagName('task')
+        taskNodes = root.findall('.//task')
         categoryMapping = self._parseCategoryNodesWithinTaskNodes(taskNodes, tasks)
         subjectCategoryMapping = {}
         for taskId, categories in categoryMapping.items():
@@ -116,35 +129,34 @@ class XMLReader(object):
         ''' In tskversion <=13 category nodes were subnodes of task nodes. '''
         categoryMapping = {}
         for node in taskNodes:
-            taskId = node.getAttribute('id')
-            categories = [self._parseTextNode(node) for node in node.childNodes \
-                          if node.nodeName == 'category']
+            taskId = node.attrib['id']
+            categories = [child.text for child in node.findall('category')]
             categoryMapping.setdefault(taskId, []).extend(categories)
         return categoryMapping
         
     def _parseTaskNode(self, taskNode):
         kwargs = self._parseBaseCompositeAttributes(taskNode, self._parseTaskNodes)
         kwargs.update(dict(
-            startDate=date.parseDate(taskNode.getAttribute('startdate')),
-            dueDate=date.parseDate(taskNode.getAttribute('duedate')),
-            completionDate=date.parseDate(taskNode.getAttribute('completiondate')),
-            budget=date.parseTimeDelta(taskNode.getAttribute('budget')),
-            priority=self._parseInteger(taskNode.getAttribute('priority')),
-            hourlyFee=self._parseFloat(taskNode.getAttribute('hourlyFee')),
-            fixedFee=self._parseFloat(taskNode.getAttribute('fixedFee')),
-            reminder=self._parseDateTime(taskNode.getAttribute('reminder')),
+            startDate=date.parseDate(taskNode.attrib.get('startdate', '')),
+            dueDate=date.parseDate(taskNode.attrib.get('duedate', '')),
+            completionDate=date.parseDate(taskNode.attrib.get('completiondate', '')),
+            budget=date.parseTimeDelta(taskNode.attrib.get('budget', '')),
+            priority=int(taskNode.attrib.get('priority', '0')),
+            hourlyFee=float(taskNode.attrib.get('hourlyFee', '0')),
+            fixedFee=float(taskNode.attrib.get('fixedFee', '0')),
+            reminder=self._parseDateTime(taskNode.attrib.get('reminder', '')),
             shouldMarkCompletedWhenAllChildrenCompleted= \
-                self._parseBoolean(taskNode.getAttribute('shouldMarkCompletedWhenAllChildrenCompleted')),
-            efforts=self._parseEffortNodes(taskNode.childNodes),
-            notes=self._parseNoteNodes(taskNode.childNodes),
+                self._parseBoolean(taskNode.attrib.get('shouldMarkCompletedWhenAllChildrenCompleted', '')),
+            efforts=self._parseEffortNodes(taskNode),
+            notes=self._parseNoteNodes(taskNode),
             recurrence=self._parseRecurrence(taskNode)))
         if self.__tskversion <= 13:
-            kwargs['categories'] = self._parseCategoryNodesWithinTaskNode(taskNode.childNodes)
+            kwargs['categories'] = self._parseCategoryNodesWithinTaskNode(taskNode)
         else:
             kwargs['categories'] = []
 
         if self.__tskversion > 20:
-            kwargs['attachments'] = self._parseAttachmentNodes(taskNode.childNodes)
+            kwargs['attachments'] = self._parseAttachmentNodes(taskNode)
 
         return task.Task(**kwargs)
         
@@ -159,28 +171,28 @@ class XMLReader(object):
         ''' Since tskversion >= 20, recurrence information is stored in a 
             separate node. '''
         kwargs = dict(unit='', amount=1, count=0, max=0, sameWeekday=False)
-        for node in self.__getNodes(taskNode, 'recurrence'):
-            kwargs = dict(unit=node.getAttribute('unit'),
-                amount=self._parseInteger(node.getAttribute('amount'), 1),
-                count=self._parseInteger(node.getAttribute('count')),
-                max=self._parseInteger(node.getAttribute('max')),
-                sameWeekday=self._parseBoolean(node.getAttribute('sameWeekday'), False))
-            break
+        node = taskNode.find('recurrence')
+        if node is not None:
+            kwargs = dict(unit=node.attrib.get('unit', ''),
+                amount=int(node.attrib.get('amount', '1')),
+                count=int(node.attrib.get('count', '0')),
+                max=int(node.attrib.get('max', '0')),
+                sameWeekday=self._parseBoolean(node.attrib.get('sameWeekday', 'False')))
         return kwargs
                                
     def _parseRecurrenceAttributesFromTaskNode(self, taskNode):
         ''' In tskversion <=19 recurrence information was stored as attributes
             of task nodes. '''
-        return dict(unit=taskNode.getAttribute('recurrence'),
-            count=self._parseInteger(taskNode.getAttribute('recurrenceCount')),
-            amount=self._parseInteger(taskNode.getAttribute('recurrenceFrequency'), default=1),
-            max=self._parseInteger(taskNode.getAttribute('maxRecurrenceCount')))
+        return dict(unit=taskNode.attrib.get('recurrence', ''),
+            count=int(taskNode.attrib.get('recurrenceCount', '0')),
+            amount=int(taskNode.attrib.get('recurrenceFrequency', '1')),
+            max=int(taskNode.attrib.get('maxRecurrenceCount', '0')))
     
     def _parseNoteNode(self, noteNode):
         ''' Parse the attributes and child notes from the noteNode. '''
         kwargs = self._parseBaseCompositeAttributes(noteNode, self._parseNoteNodes)
         if self.__tskversion > 20:
-            kwargs['attachments'] = self._parseAttachmentNodes(noteNode.childNodes)
+            kwargs['attachments'] = self._parseAttachmentNodes(noteNode)
         return note.Note(**kwargs)
     
     def _parseBaseAttributes(self, node):
@@ -188,57 +200,54 @@ class XMLReader(object):
             id, subject, description, and return them as a 
             keyword arguments dictionary that can be passed to the domain 
             object constructor. '''
-        attributes = dict(id=node.getAttribute('id'),
-            subject=node.getAttribute('subject'),
+        attributes = dict(id=node.attrib.get('id', None),
+            subject=node.attrib.get('subject', ''),
             description=self._parseDescription(node),
-            color=self._parseTuple(node.getAttribute('color'), None))
+            color=self._parseTuple(node.attrib.get('color', ''), None))
 
         if self.__tskversion <= 20:
             attributes['attachments'] = self._parseAttachmentsBeforeVersion21(node)
         if self.__tskversion >= 22:
-            attributes['status'] = int(node.getAttribute('status'))
+            attributes['status'] = int(node.attrib['status'])
 
         return attributes
 
     def _parseBaseCompositeAttributes(self, node, parseChildren, *parseChildrenArgs):
         """Same as _parseBaseAttributes, but also parse children and expandedContexts."""
         kwargs = self._parseBaseAttributes(node)
-        kwargs['children'] = parseChildren(node.childNodes, *parseChildrenArgs)
-        kwargs['expandedContexts'] = self._parseTuple(node.getAttribute('expandedContexts'), [])
+        kwargs['children'] = parseChildren(node, *parseChildrenArgs)
+        kwargs['expandedContexts'] = self._parseTuple(node.attrib.get('expandedContexts', ''), [])
         return kwargs
 
-    def _parseCategoryNodesWithinTaskNode(self, nodes):
+    def _parseCategoryNodesWithinTaskNode(self, node):
         ''' In tskversion <= 13, categories of tasks were stored as text 
             nodes. '''
-        return [self._parseTextNode(node) for node in nodes \
-                if node.nodeName == 'category']
+        return [child.text for child in node.findall('category')]
 
     def _parseAttachmentsBeforeVersion21(self, parent):
         attachments = []
-        for node in self.__getNodes(parent, 'attachment'):
+        for node in parent.findall('attachment'):
             if self.__tskversion <= 16:
-                args = (self._parseTextNode(node),)
+                args = (node.text,)
                 kwargs = dict()
             else:
-                args = (self._parseTextNode(node.getElementsByTagName('data')[0]),
-                        node.getAttribute('type'))
-                description = self._parseTextNode(node.getElementsByTagName('description')[0])
+                args = (node.find('data').text, node.attrib['type'])
+                description = self._parseDescription(node)
                 kwargs = dict(subject=description,
                               description=description)
 
             attachments.append(attachment.AttachmentFactory(*args, **kwargs))
         return attachments
 
-    def _parseEffortNodes(self, nodes):
-        return [self._parseEffortNode(node) for node in nodes \
-                if node.nodeName == 'effort']
+    def _parseEffortNodes(self, parent):
+        return [self._parseEffortNode(node) for node in parent.findall('effort')]
 
     def _parseEffortNode(self, effortNode):
         kwargs = {}
         if self.__tskversion >= 22:
-            kwargs['status'] = int(effortNode.getAttribute('status'))
-        start = effortNode.getAttribute('start')
-        stop = effortNode.getAttribute('stop')
+            kwargs['status'] = int(effortNode.attrib['status'])
+        start = effortNode.attrib.get('start', '')
+        stop = effortNode.attrib.get('stop', '')
         description = self._parseDescription(effortNode)
         return effort.Effort(task=None, start=date.parseDateTime(start), 
             stop=date.parseDateTime(stop), description=description, **kwargs)
@@ -246,104 +255,70 @@ class XMLReader(object):
     def _parseSyncMLNode(self, nodes, guid):
         syncML = createDefaultSyncConfig(guid)
 
-        for node in nodes:
-            if node.nodeName == 'syncml':
-                self._parseSyncMLNodes(node.childNodes, syncML)
+        for node in nodes.findall('syncml'):
+            self._parseSyncMLNodes(node, syncML)
 
         return syncML
 
-    def _parseSyncMLNodes(self, nodes, cfgNode):
-        for node in nodes:
-            if node.nodeName == 'property':
-                cfgNode.set(node.getAttribute('name'), self._parseTextNodeOrEmpty(node))
+    def _parseSyncMLNodes(self, parent, cfgNode):
+        for node in parent:
+            if node.tag == 'property':
+                cfgNode.set(node.attrib['name'], node.text or u'')
             else:
                 for childCfgNode in cfgNode.children():
-                    if childCfgNode.name == node.nodeName:
+                    if childCfgNode.name == node.tag:
                         break
                 else:
-                    childCfgNode = SyncMLConfigNode(node.nodeName)
+                    childCfgNode = SyncMLConfigNode(node.tag)
                     cfgNode.addChild(childCfgNode)
-                self._parseSyncMLNodes(node.childNodes, childCfgNode)
+                self._parseSyncMLNodes(node, childCfgNode)
 
-    def __findGUIDNode(self, nodes):
-        for node in nodes:
-            if node.nodeName == 'guid':
-                return self._parseTextNode(node)
-        return generate()
+    def __parseGUIDNode(self, node):
+        if node is None:
+            return generate()
+        return node.text
         
-    def _parseAttachmentNodes(self, nodes):
-        return [self._parseAttachmentNode(node) for node in nodes \
-                if node.nodeName == 'attachment']
+    def _parseAttachmentNodes(self, parent):
+        return [self._parseAttachmentNode(node) for node in parent.findall('attachment')]
 
     def _parseAttachmentNode(self, attachmentNode):
         kwargs = self._parseBaseAttributes(attachmentNode)
-        kwargs['notes'] = self._parseNoteNodes(attachmentNode.childNodes)
+        kwargs['notes'] = self._parseNoteNodes(attachmentNode)
 
         if self.__tskversion <= 22:
             path, name = os.path.split(os.path.abspath(self.__fd.name))
             name, ext = os.path.splitext(name)
             attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-            location = os.path.join(attdir, attachmentNode.getAttribute('location'))
+            location = os.path.join(attdir, attachmentNode.attrib['location'])
         else:
-            if attachmentNode.hasAttribute('location'):
-                location = attachmentNode.getAttribute('location')
+            if attachmentNode.attrib.has_key('location'):
+                location = attachmentNode.attrib['location']
             else:
-                for node in attachmentNode.childNodes:
-                    if node.nodeName == 'data':
-                        data = node.firstChild.data
-                        ext = node.getAttribute('extension')
-                        break
-                else:
+                dataNode = attachmentNode.find('data')
+
+                if dataNode is None:
                     raise ValueError, 'Neither location or data are defined for this attachment.'
+
+                data = dataNode.text
+                ext = dataNode.attrib['extension']
 
                 location = get_temp_file(suffix=ext)
                 file(location, 'wb').write(data.decode('base64'))
 
         return attachment.AttachmentFactory(location,
-                                            attachmentNode.getAttribute('type'),
+                                            attachmentNode.attrib['type'],
                                             **kwargs)
 
     def _parseDescription(self, node):
         if self.__tskversion <= 6:
-            description = node.getAttribute('description')
+            description = node.attrib.get('description', '')
         else:
-            descriptionNode = self.__getNode(node, 'description')
-            if descriptionNode and descriptionNode.firstChild:
-                description = descriptionNode.firstChild.data
+            descriptionNode = node.find('description')
+            if descriptionNode is None:
+                description = u''
             else:
-                description = ''
+                description = descriptionNode.text or u''
         return description
-
-    def __getNode(self, parent, tagName):
-        ''' Get the child node of parent with tagName. Returns None if no child 
-            node with tagName can be found. '''
-        for child in parent.childNodes:
-            if child.nodeName == tagName:
-                return child
-        return None
-        
-    def __getNodes(self, parent, tagName):
-        ''' Get all child nodes of parent with tagName. Returns an empty list 
-            if no child node with tagName can be found. '''
-        nodes = []
-        for child in parent.childNodes:
-            if child.nodeName == tagName:
-                nodes.append(child)
-        return nodes
-        
-    def _parseTextNode(self, node):
-        return node.firstChild.data
-    
-    def _parseInteger(self, integerText, default=0):
-        return self._parse(integerText, int, default)
-
-    def _parseTextNodeOrEmpty(self, node):
-        if node.firstChild:
-            return node.firstChild.data
-        return u''
-
-    def _parseFloat(self, floatText, default=0.0):
-        return self._parse(floatText, float, default)
                     
     def _parseDateTime(self, dateTimeText):
         return self._parse(dateTimeText, date.parseDateTime, None)
@@ -382,6 +357,6 @@ class TemplateXMLReader(XMLReader):
 
     def _parseTaskNode(self, taskNode):
         for name in ['startdate', 'duedate', 'completiondate']:
-            if taskNode.hasAttribute(name + 'tmpl'):
-                taskNode.setAttribute(name, str(eval(taskNode.getAttribute(name + 'tmpl'), self.__context)))
+            if taskNode.attrib.has_key(name + 'tmpl'):
+                taskNode.attrib[name] = str(eval(taskNode.attrib[name + 'tmpl'], self.__context))
         return super(TemplateXMLReader, self)._parseTaskNode(taskNode)
