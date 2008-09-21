@@ -1,3 +1,8 @@
+
+
+
+
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
@@ -24,14 +29,18 @@ from taskcoachlib.domain import base, task, effort, date, category, note
 
 
 class FakeAttachment(base.Object):
-    def __init__(self, type_, location, notes=None):
+    def __init__(self, type_, location, notes=None, data=None):
         super(FakeAttachment, self).__init__()
         self.type_ = type_
         self.__location = location
+        self.__data = data
         if notes is None:
             self.__notes = []
         else:
             self.__notes = notes
+
+    def data(self):
+        return self.__data
 
     def location(self):
         return self.__location

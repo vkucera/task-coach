@@ -21,6 +21,7 @@ import time, xml.dom.minidom, re, os, sys, datetime
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
+from taskcoachlib.thirdparty.desktop import get_temp_file
 
 
 class XMLReader(object):
@@ -28,12 +29,6 @@ class XMLReader(object):
         self.__fd = fd
 
     def read(self):
-        # Determine where are attachments.
-        path, name = os.path.split(os.path.abspath(self.__fd.name))
-        name, ext = os.path.splitext(name)
-        attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
-        attachment.Attachment.attdir = attdir
-
         domDocument = xml.dom.minidom.parse(self.__fd)
         self.__tskversion = self._parseTskVersionNumber(domDocument)
         tasks = self._parseTaskNodes(domDocument.documentElement.childNodes)
@@ -283,7 +278,22 @@ class XMLReader(object):
     def _parseAttachmentNode(self, attachmentNode):
         kwargs = self._parseBaseAttributes(attachmentNode)
         kwargs['notes'] = self._parseNoteNodes(attachmentNode.childNodes)
-        return attachment.AttachmentFactory(attachmentNode.getAttribute('location'),
+
+        if attachmentNode.hasAttribute('location'):
+            location = attachmentNode.getAttribute('location')
+        else:
+            for node in attachmentNode.childNodes:
+                if node.nodeName == 'data':
+                    data = node.firstChild.data
+                    ext = node.getAttribute('extension')
+                    break
+            else:
+                raise ValueError, 'Neither location or data are defined for this attachment.'
+
+            location = get_temp_file(suffix=ext)
+            file(location, 'wb').write(data.decode('base64'))
+
+        return attachment.AttachmentFactory(location,
                                             attachmentNode.getAttribute('type'),
                                             **kwargs)
 

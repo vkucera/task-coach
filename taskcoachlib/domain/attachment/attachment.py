@@ -69,9 +69,6 @@ class Attachment(base.Object, NoteOwner):
 
     type_ = 'unknown'
 
-    attdir =  None # This is filled in before saving or reading by
-                   # xml.writer and xml.reader
-
     def __init__(self, location, *args, **kwargs):
         if not kwargs.has_key('subject'):
             kwargs['subject'] = location
@@ -79,6 +76,9 @@ class Attachment(base.Object, NoteOwner):
         super(Attachment, self).__init__(*args, **kwargs)
 
         self.__location = location
+
+    def data(self):
+        return None
 
     def setParent(self, parent):
         # FIXME: We  shouldn't assume that pasted  items are composite
@@ -145,16 +145,7 @@ class MailAttachment(Attachment):
     type_ = 'mail'
 
     def __init__(self, location, *args, **kwargs):
-        if os.path.isabs(location):
-            if self.attdir is None:
-                subject, content = readMail(location)
-            else:
-                location = self.__moveToAttDir(location)
-                subject, content = readMail(os.path.join(self.attdir, location))
-        else:
-            if self.attdir is None:
-                raise RuntimeError, 'Attachment directory not specified'
-            subject, content = readMail(os.path.join(self.attdir, location))
+        subject, content = readMail(location)
 
         kwargs.setdefault('subject', subject)
         kwargs.setdefault('description', content)
@@ -162,28 +153,13 @@ class MailAttachment(Attachment):
         super(MailAttachment, self).__init__(location, *args, **kwargs)
 
     def open(self, workingDir=None):
-        openMail(self.__absoluteLocation())
+        openMail(self.location())
 
     def read(self):
-        return readMail(self.__absoluteLocation())
+        return readMail(self.location())
 
-    def __moveToAttDir(self, location):
-        fd, filename = tempfile.mkstemp(suffix='.eml', dir=self.attdir)
-        os.close(fd)
-        shutil.move(location, filename)
-        return os.path.split(filename)[-1]
-
-    def __absoluteLocation(self):
-        if os.path.isabs(self.location()):
-            if self.attdir is None:
-                return self.location()
-            else:
-                self.setLocation(self.__moveToAttDir(self.location()))
-                return os.path.join(self.attdir, self.location())
-        else:
-            if self.attdir is None:
-                raise RuntimeError, 'Attachment directory not specified'
-            return os.path.join(self.attdir, self.location())
+    def data(self):
+        return file(self.location(), 'rb').read()
 
 
 def AttachmentFactory(location, type_=None, *args, **kwargs):

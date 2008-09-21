@@ -62,6 +62,34 @@ import os
 import sys
 import subprocess
 import commands
+import tempfile
+
+# When opening a file with this module, there is no way to know when
+# we can safely delete it. This is particularly bothering with
+# temporary files. This list holds the names of such files to be
+# deleted at exit.
+
+_TEMPFILES = []
+
+def _cleanupTempFiles():
+    for name in _TEMPFILES:
+        try:
+            os.remove(name)
+        except:
+            pass
+
+import atexit
+atexit.register(_cleanupTempFiles)
+
+def get_temp_file(**kwargs):
+    """Returns the name of a temporary file. This file will be deleted
+    at process termination."""
+
+    fd, filename = tempfile.mkstemp(**kwargs)
+    os.close(fd)
+    _TEMPFILES.append(filename)
+
+    return filename
 
 def get_desktop():
 
