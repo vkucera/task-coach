@@ -487,6 +487,17 @@ class FileSaveSelectedTaskAsTemplate(NeedsOneSelectedTask, IOCommand, ViewerComm
         self.iocontroller.saveastemplate(self.viewer.curselection()[0])
 
 
+class FileAddTemplate(IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileAddTemplate, self).__init__(\
+            menuText=_('Add template'),
+            helpText=_('Add a new template from a template file\n'),
+            bitmap='fileopen', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.addtemplate()
+
+
 # FIXME: Move the printing specific stuff somewhere else
 
 class PrinterSettings(object):
