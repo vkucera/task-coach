@@ -44,7 +44,6 @@ Name: userstartup; Description: "Run %(name)s everytime Windows is started"; Gro
 [Files]
 Source: "%(filename)s-%(version)s-win32exe\%(filename)s.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "%(filename)s-%(version)s-win32exe\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
-Source: "..\templates\*.tsktmpl"; DestDir: "{app}\taskcoach-templates"; Flags: ignoreversion recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [INI]
