@@ -279,19 +279,25 @@ class XMLReader(object):
         kwargs = self._parseBaseAttributes(attachmentNode)
         kwargs['notes'] = self._parseNoteNodes(attachmentNode.childNodes)
 
-        if attachmentNode.hasAttribute('location'):
-            location = attachmentNode.getAttribute('location')
+        if self.__tskversion <= 22:
+            path, name = os.path.split(os.path.abspath(self.__fd.name))
+            name, ext = os.path.splitext(name)
+            attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
+            location = os.path.join(attdir, attachmentNode.getAttribute('location'))
         else:
-            for node in attachmentNode.childNodes:
-                if node.nodeName == 'data':
-                    data = node.firstChild.data
-                    ext = node.getAttribute('extension')
-                    break
+            if attachmentNode.hasAttribute('location'):
+                location = attachmentNode.getAttribute('location')
             else:
-                raise ValueError, 'Neither location or data are defined for this attachment.'
+                for node in attachmentNode.childNodes:
+                    if node.nodeName == 'data':
+                        data = node.firstChild.data
+                        ext = node.getAttribute('extension')
+                        break
+                else:
+                    raise ValueError, 'Neither location or data are defined for this attachment.'
 
-            location = get_temp_file(suffix=ext)
-            file(location, 'wb').write(data.decode('base64'))
+                location = get_temp_file(suffix=ext)
+                file(location, 'wb').write(data.decode('base64'))
 
         return attachment.AttachmentFactory(location,
                                             attachmentNode.getAttribute('type'),

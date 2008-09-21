@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import xml.parsers.expat, sets, wx, StringIO
+import xml.parsers.expat, sets, wx, StringIO, os
 import test
 from taskcoachlib import persistence
 from taskcoachlib.domain import task, date
@@ -928,4 +928,4 @@ class XMLReaderVersion21Test(XMLReaderTestCase):
                 <attachment type="file" location="location"><description>description</description></attachment>
             </category>
         </tasks>''')
-        self.assertEqual(['location'], [att.location() for att in categories[0].attachments()])
+        self.assertEqual(['location'], [os.path.split(att.location())[-1] for att in categories[0].attachments()])
