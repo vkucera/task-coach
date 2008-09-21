@@ -78,14 +78,14 @@ class XMLReaderVersion6Test(XMLReaderTestCase):
     def testDescription(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
-            <task description="%s"/>
+            <task description="%s" id="foo"/>
         </tasks>\n'''%u'Description')
         self.assertEqual(u'Description', tasks[0].description())
 
     def testEffortDescription(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
-            <task>
+            <task id="foo">
                 <effort start="2004-01-01 10:00:00.123000" 
                         stop="2004-01-01 10:30:00.123000" 
                         description="Yo"/>
@@ -98,7 +98,7 @@ class XMLReaderVersion8Test(XMLReaderTestCase):
     tskversion = 8
 
     def testReadTaskWithoutPriority(self):
-        tasks = self.writeAndReadTasks('<tasks><task/></tasks>')
+        tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.assertEqual(0, tasks[0].priority())
         
         
@@ -106,7 +106,7 @@ class XMLReaderVersion9Test(XMLReaderTestCase):
     tskversion = 9
     
     def testReadTaskWithoutId(self):
-        tasks = self.writeAndReadTasks('<tasks><task/></tasks>')
+        tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.failUnless(tasks[0].id())
         
 
@@ -114,7 +114,7 @@ class XMLReaderVersion10Test(XMLReaderTestCase):
     tskversion = 10
     
     def testReadTaskWithoutFee(self):
-        tasks = self.writeAndReadTasks('<tasks><task/></tasks>')
+        tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.assertEqual(0, tasks[0].hourlyFee())
         self.assertEqual(0, tasks[0].fixedFee())
 
@@ -123,7 +123,7 @@ class XMLReaderVersion11Test(XMLReaderTestCase):
     tskversion = 11
     
     def testReadTaskWithoutReminder(self):
-        tasks = self.writeAndReadTasks('<tasks><task/></tasks>')
+        tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.assertEqual(None, tasks[0].reminder())
         
         
@@ -131,7 +131,7 @@ class XMLReaderVersion12Test(XMLReaderTestCase):
     tskversion = 12
     
     def testReadTaskWithoutMarkCompletedWhenAllChildrenCompletedSetting(self):
-        tasks = self.writeAndReadTasks('<tasks><task/></tasks>')
+        tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.assertEqual(None, 
                          tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
         
