@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, sys, codecs, traceback
+import wx, os, sys, codecs, traceback, shutil
 from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task
@@ -149,19 +149,24 @@ class IOController(object):
             self.__addRecentFile(filename)
 
     def saveastemplate(self, task):
-        path = self.__settings.get('file', 'templatedir')
-        if not os.path.isabs(path):
-            path = os.path.join(os.getcwd(), path)
-        filename = self.__askUserForFile(_('Save as template...'),
-                      fileDialogOpts={'default_path': path,
-                                      'default_extension': 'tsktmpl',
-                                      'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name },
-                                         flags=wx.SAVE)
-        if filename:
-            if not filename.endswith('.tsktmpl'):
-                filename += '.tsktmpl'
+        name = wx.GetTextFromUser(_('Please enter the template name.'),
+                                  _('Save as template'))
+        if name:
+            filename = os.path.join(self.__settings.pathToTemplatesDir(),
+                                    name + '.tsktmpl')
             writer = persistence.TemplateXMLWriter(codecs.open(filename, 'w', 'utf-8'))
             writer.write(task.copy())
+
+    def addtemplate(self):
+        filename = self.__askUserForFile(_('Open template...'),
+                      fileDialogOpts={'default_extension': 'tsktmpl',
+                                      'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name },
+                                         flags=wx.OPEN)
+        if filename:
+            shutil.copyfile(filename,
+                            os.path.join(self.__settings.pathToTemplatesDir(),
+                                         os.path.split(filename)[-1]))
+
 
     def close(self):
         if self.__taskFile.needSave():

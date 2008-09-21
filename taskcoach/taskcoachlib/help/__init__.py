@@ -343,13 +343,17 @@ _usingTemplatesSubsection = _('''<h4><a name="usingtemplates">Using templates</a
 "Save task as template" item in the File menu. All subtasks, notes and attachments
 are part of the template. Only categories are not saved.</p>
 
+<p>You can also create a new template from a pre-made template file (.tsktmpl);
+just select "Add template" in the File menu and select the file. Template files
+are stored in a subdirectory of the directory where %(name)s.ini is.</p>
+
 <p>In order to instantiate a task template, use the "New task from template" menu
 in the Task menu, or the equivalent toolbar button. When the task is created, the
 due, start and completion dates, if applicable, are reevaluated relatively to the
 current date. That means that if you create a template from a task starting today
 and due tomorrow, every time the template is instantiated, the start date will be
 replaced by the current date and the due date by the current date plus one day.</p>
-''')
+''' % meta.metaDict)
 
 helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _taskPropertiesSubsection + _taskStatesSubsection + _taskColorsSubsection + \

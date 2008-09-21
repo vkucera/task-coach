@@ -220,8 +220,10 @@ class FileMenu(Menu):
             uicommand.FileSaveAs(iocontroller=iocontroller),
             uicommand.FileSaveSelection(iocontroller=iocontroller,
                                         viewer=viewerContainer),
+            None,
             uicommand.FileSaveSelectedTaskAsTemplate(iocontroller=iocontroller,
                                                      viewer=viewerContainer),
+            uicommand.FileAddTemplate(iocontroller=iocontroller),
             None,
             uicommand.PrintPageSetup(),
             uicommand.PrintPreview(viewer=viewerContainer),
@@ -290,14 +292,13 @@ class TaskTemplateMenu(Menu):
     def __init__(self, mainwindow, taskList, settings, categories):
         super(TaskTemplateMenu, self).__init__(mainwindow)
 
-        path = settings.get('file', 'templatedir')
-        if path and os.path.exists(path) and os.path.isdir(path):
-            for name in os.listdir(path):
-                fullname = os.path.join(path, name)
-                if name.endswith('.tsktmpl'):
-                    self.appendUICommands(uicommand.TaskNewFromTemplate(fullname,
-                                                taskList=taskList, settings=settings,
-                                                categories=categories))
+        path = settings.pathToTemplatesDir()
+        for name in os.listdir(path):
+            fullname = os.path.join(path, name)
+            if name.endswith('.tsktmpl'):
+                self.appendUICommands(uicommand.TaskNewFromTemplate(fullname,
+                                  taskList=taskList, settings=settings,
+                                  categories=categories))
 
 
 class EditMenu(Menu):

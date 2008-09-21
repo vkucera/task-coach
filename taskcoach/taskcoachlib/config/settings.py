@@ -71,10 +71,6 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         for section, settings in defaults.defaults.items():
             self.add_section(section)
             for key, value in settings.items():
-                if section == 'file' and key == 'templatedir':
-                    if not value:
-                        value = os.path.join(self.pathToProgramDir(),
-                                             'taskcoach-templates')
                 # Don't notify observers while we are initializing
                 super(Settings, self).set(section, key, value)
 
@@ -193,7 +189,15 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
                 path = os.getcwd()
             path = os.path.join(path, '.%s'%meta.filename)
         return path
-    
+
+    def pathToTemplatesDir(self):
+        path = os.path.join(self.path(), 'taskcoach-templates')
+        try:
+            os.makedirs(path)
+        except OSError:
+            pass
+        return path
+
     def pathToIniFileSpecifiedOnCommandLine(self):
         return os.path.dirname(self.__iniFileSpecifiedOnCommandLine)
     

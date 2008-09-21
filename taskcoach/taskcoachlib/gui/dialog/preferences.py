@@ -146,8 +146,6 @@ class SavePage(SettingsPage):
             _('(For running %s\nfrom a removable medium)')%meta.name)
         self.addPathSetting('file', 'attachmentbase', _('Attachment base directory'),
                             _('When adding an attachment, try to make\nits path relative to this one.'))
-        self.addPathSetting('file', 'templatedir', _('Templates directory'),
-                            _('Directory where the templates are stored.'))
         self.fit()
             
                
