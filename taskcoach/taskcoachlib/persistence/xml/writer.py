@@ -221,11 +221,22 @@ class TemplateXMLWriter(XMLWriter):
     def taskNode(self, task):
         node = super(TemplateXMLWriter, self).taskNode(task)
 
+        today = date.Today()
+        todayTime = date.DateTime(today.year, today.month, today.day)
+
         for name in ['startDate', 'dueDate', 'completionDate']:
             dt = getattr(task, name)()
             if dt != date.Date():
                 node.removeAttribute(name.lower())
-                delta = dt - date.Today()
+                delta = dt - today
                 node.setAttribute(name.lower() + 'tmpl',
-                                  'Today() + timedelta(%d)' % delta.days)
+                                  'Today() + %s' % repr(delta))
+        for name in ['reminder']:
+            dt = getattr(task, name)()
+            if dt is not None:
+                node.removeAttribute(name.lower())
+                delta = dt - todayTime
+                node.setAttribute(name.lower() + 'tmpl',
+                                  'DateTime(Today().year, Today().month, Today().day) + %s' % repr(delta))
+
         return node
