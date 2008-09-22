@@ -356,7 +356,7 @@ class TemplateXMLReader(XMLReader):
         return super(TemplateXMLReader, self).read()[0][0]
 
     def _parseTaskNode(self, taskNode):
-        for name in ['startdate', 'duedate', 'completiondate']:
+        for name in ['startdate', 'duedate', 'completiondate', 'reminder']:
             if taskNode.attrib.has_key(name + 'tmpl'):
                 taskNode.attrib[name] = str(eval(taskNode.attrib[name + 'tmpl'], self.__context))
         return super(TemplateXMLReader, self)._parseTaskNode(taskNode)
