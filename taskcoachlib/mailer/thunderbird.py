@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, re, imaplib, ConfigParser, wx, tempfile
+import os, re, imaplib, ConfigParser, wx
 from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.desktop import get_temp_file
 
 
 _RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
@@ -232,6 +233,6 @@ def getMail(id_):
     else:
         raise TypeError('Not supported: %s' % id_)
 
-    filename = tempfile.mktemp('.eml')
+    filename = get_temp_file(suffix='.eml')
     reader.saveToFile(file(filename, 'wb'))
     return filename
