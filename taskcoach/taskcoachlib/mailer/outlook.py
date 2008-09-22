@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, tempfile
+from taskcoachlib.thirdparty.desktop import get_temp_file
 
 if os.name == 'nt':
     from win32com.client import GetActiveObject
@@ -36,7 +37,7 @@ if os.name == 'nt':
                 # that some versions of Outlook don't put a blank line
                 # between subject and headers.
 
-                name = tempfile.mktemp('.eml')
+                name = get_temp_file(suffix='.eml')
                 src = file(filename, 'rb')
                 linenb = 0
 
