@@ -38,6 +38,10 @@ class WindowDimensionsTracker(object):
         self._window.Bind(wx.EVT_MOVE, self.onChangePosition)
         self._window.Bind(wx.EVT_MAXIMIZE, self.onMaximize)
         if self.startIconized():
+            if '__WXMAC__' == wx.Platform:
+                # Need to show the window on Mac OS X first, otherwise it   
+                # won't be properly minimized
+                self._window.Show()
             self._window.Iconize(True)
             wx.CallAfter(self._window.Hide)
             
