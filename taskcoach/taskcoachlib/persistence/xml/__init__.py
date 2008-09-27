@@ -20,3 +20,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # write xml (.tsk) files.
 from reader import XMLReader, TemplateXMLReader
 from writer import XMLWriter, TemplateXMLWriter
+from templates import getDefaultTemplates

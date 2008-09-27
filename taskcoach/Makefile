@@ -56,15 +56,20 @@ dmg: icons i18n
 
 icons: taskcoachlib/gui/icons.py
 
+templates: taskcoachlib/persistence/xml/templates.py
+
 taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip
 	cd icons.in; $(PYTHON) make.py
+
+taskcoachlib/persistence/xml/templates.py:
+	cd templates.in; $(PYTHON) make.py
 
 website: changes
 	cd website.in; $(PYTHON) make.py; cd ..
 	$(EPYDOC) --parse-only -o website.out/epydoc taskcoachlib taskcoach.py
 	$(PYTHON) tools/webchecker.py website.out/index.html
 
-i18n: taskcoachlib/i18n/nl.py
+i18n: templates taskcoachlib/i18n/nl.py
 
 taskcoachlib/i18n/nl.py: i18n.in/messages.pot $(shell find i18n.in -name '*.po')
 	cd i18n.in; $(PYTHON) make.py
@@ -76,13 +81,13 @@ changes:
 	$(PYTHON) changes.in/make.py text > CHANGES.txt
 	$(PYTHON) changes.in/make.py html > website.in/changes.html
  
-unittests: icons
+unittests: icons templates
 	cd tests; $(PYTHON) test.py
 
 alltests: icons i18n
 	cd tests; $(PYTHON) test.py --alltests
 
-releasetests: icons
+releasetests: icons templates
 	cd tests; $(PYTHON) test.py --releasetests --no-unittests
 
 integrationtests: icons i18n
@@ -93,7 +98,8 @@ languagetests: i18n
 
 
 CLEANFILES=build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
-REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
+REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \
+	taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 
 clean:
 	$(PYTHON) make.py clean
