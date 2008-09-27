@@ -353,7 +353,7 @@ due, start and completion dates, if applicable, are reevaluated relatively to th
 current date. That means that if you create a template from a task starting today
 and due tomorrow, every time the template is instantiated, the start date will be
 replaced by the current date and the due date by the current date plus one day.</p>
-''' % meta.metaDict)
+''') % meta.metaDict
 
 helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _taskPropertiesSubsection + _taskStatesSubsection + _taskColorsSubsection + \
