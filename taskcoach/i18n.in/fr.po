@@ -19,10 +19,6 @@ msgstr ""
 "X-Poedit-Language: fr_FR\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due today"
-msgstr "Nouvelle tâche dûe aujourd'hui"
-
 #: taskcoachlib/command/base.py:110
 msgid "Copy"
 msgstr "Copier"
