@@ -545,6 +545,7 @@ class NoteMenu(Menu):
         notes = taskFile.notes()
         self.appendUICommands(
             uicommand.NoteNew(notes=notes,
+                              settings=settings,
                               categories=taskFile.categories()),
             uicommand.NoteNewSubNote(viewer=viewerContainer, notes=notes),
             uicommand.NoteEdit(viewer=viewerContainer, notes=notes),
@@ -756,7 +757,7 @@ class NotePopupMenu(Menu):
             uicommand.EditCopy(viewer=noteViewer),
             uicommand.EditPaste(),
             None,
-            uicommand.NoteNew(notes=notes, categories=categories),
+            uicommand.NoteNew(notes=notes, settings=settings, categories=categories),
             uicommand.NoteNewSubNote(viewer=noteViewer, notes=notes),
             uicommand.NoteEdit(viewer=noteViewer, notes=notes),
             uicommand.NoteDelete(viewer=noteViewer, notes=notes),
