@@ -22,6 +22,7 @@ from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty.desktop import get_temp_file
+from taskcoachlib.i18n import _
 
 
 try:
@@ -359,4 +360,5 @@ class TemplateXMLReader(XMLReader):
         for name in ['startdate', 'duedate', 'completiondate', 'reminder']:
             if taskNode.attrib.has_key(name + 'tmpl'):
                 taskNode.attrib[name] = str(eval(taskNode.attrib[name + 'tmpl'], self.__context))
+        taskNode.attrib['subject'] = _(taskNode.attrib['subject'])
         return super(TemplateXMLReader, self)._parseTaskNode(taskNode)

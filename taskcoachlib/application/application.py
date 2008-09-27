@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, os
 
         
 class wxApp(wx.App):
@@ -43,6 +43,14 @@ class Application(object):
             from taskcoachlib import meta
             self.vc = meta.VersionChecker(self.settings)
             self.vc.start()
+        # Copy default templates that don't exist yet in the user's
+        # template directory.
+        from taskcoachlib.persistence import getDefaultTemplates
+        templateDir = self.settings.pathToTemplatesDir()
+        for name, template in getDefaultTemplates():
+            filename = os.path.join(templateDir, name + '.tsktmpl')
+            if not os.path.exists(filename):
+                file(filename, 'wb').write(template)
         self.mainwindow.Show()
         self.wxApp.MainLoop()
         
