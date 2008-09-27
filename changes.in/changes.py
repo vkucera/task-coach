@@ -22,9 +22,10 @@ da'''
 from changetypes import *
 
 releases = [
-Release('0.70.4', 'September ?, 2008',
-    summary='''Bug fix release''',
+Release('0.70.4', 'September 27, 2008',
+    summary='''Bug fix release.''',
     bugsFixed=[
+        Bug('''Allow Task Coach to be installed on Ubuntu 7.10.''', '2117477'),
         Bug('''Task Coach wasn't notifying users of new versions.'''),
         Bug('''When merging, merge notes too.'''),
         Bug('''When the notes feature is turned off, hide
@@ -37,7 +38,7 @@ was started minimized and had not been restored in the previous session.''',
 '2052910')]),
         
 Release('0.70.3', 'August 17, 2008',
-    summary='''Bug fix release''',
+    summary='''Bug fix release.''',
     bugsFixed=[
         Bug('''wxPython 2.8.8.1 generates images in a new, backwards 
 incompatible way, even when told not to do that. This bug affects users 
