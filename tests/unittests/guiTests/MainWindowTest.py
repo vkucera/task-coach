@@ -78,7 +78,10 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTest):
 
     def testMaximize(self):
         self.mainwindow.Maximize()
-        wx.Yield()
+        if '__WXGTK__' == wx.Platform:
+            wx.SafeYield()
+        else:
+            wx.Yield()
         self.failUnless(self.settings.getboolean('window', 'maximized'))
 
 
@@ -89,15 +92,15 @@ class MainWindowMaximizedTest(MainWindowMaximizeTest):
         if '__WXMAC__' not in wx.PlatformInfo:
             self.failUnless(self.mainwindow.IsMaximized())
 
-
 class MainWindowIconizedTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        #self.settings.setboolean('window', 'hidewheniconized', True)
         self.settings.set('window', 'starticonized', 'Always')
         self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(dummy.IOController(),
             self.taskFile, self.settings)
+        if '__WXGTK__' == wx.Platform:
+            wx.SafeYield()
 
     def testIsIconized(self):
         self.failUnless(self.mainwindow.IsIconized())
