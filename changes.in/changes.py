@@ -22,7 +22,7 @@ da'''
 from changetypes import *
 
 releases = [
-Release('0.70.4', 'September 27, 2008',
+Release('0.70.4', 'September 28, 2008',
     summary='''Bug fix release.''',
     bugsFixed=[
         Bug('''Allow Task Coach to be installed on Ubuntu 7.10.''', '2117477'),
