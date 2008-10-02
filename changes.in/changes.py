@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.71.0', 'September ??, 2008',
+Release('0.71.0', 'October ??, 2008',
     summary='''?''',
     featuresAdded=[
         Feature('''Tasks can now be created from templates written in a
@@ -84,8 +84,23 @@ Task nodes may have a recurrence node that contains the recurrence state of
 the task. Categories and notes can contain attachments. Tasks and categories
 can now contain notes.''')]),
 
+Release('0.70.4', 'September 28, 2008',
+    summary='''Bug fix release.''',
+    bugsFixed=[
+        Bug('''Allow Task Coach to be installed on Ubuntu 7.10.''', '2117477'),
+        Bug('''Task Coach wasn't notifying users of new versions.'''),
+        Bug('''When merging, merge notes too.'''),
+        Bug('''When the notes feature is turned off, hide
+the 'Create new note' menu item in the category pop up menu.'''),
+        Bug('''Fixed a translation bug.''', '2087395'),
+        Bug('''Hide/show the main window with one click on the task bar icon 
+instead of a double click (Linux only).'''),
+        Bug('''The Task Coach main window would get a very small size if it
+was started minimized and had not been restored in the previous session.''',
+'2052910')]),
+        
 Release('0.70.3', 'August 17, 2008',
-    summary='''Bug fix release''',
+    summary='''Bug fix release.''',
     bugsFixed=[
         Bug('''wxPython 2.8.8.1 generates images in a new, backwards 
 incompatible way, even when told not to do that. This bug affects users 
