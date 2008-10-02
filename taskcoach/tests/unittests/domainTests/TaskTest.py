@@ -910,6 +910,12 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTests):
     def testRevenueWithEffortButWithZeroFee(self):
         self.assertEqual(0, self.task.revenue())
 
+    def testNotifyEffortOfColorChange(self):
+        self.registerObserver(effort.Effort.colorChangedEventType())
+        self.task.setColor(wx.RED)
+        self.assertEqual(patterns.Event(self.task1effort1,
+            effort.Effort.colorChangedEventType(), wx.RED), self.events[0])
+
 
 class TaskWithTwoEffortsTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):

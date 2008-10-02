@@ -2058,6 +2058,13 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
         self.createColumnUICommands()
+        patterns.Publisher().registerObserver(self.onColorChange,
+            eventType=effort.Effort.colorChangedEventType())
+        
+    def onColorChange(self, event):
+        effort = event.source()
+        if effort in self.model():
+            self.widget.RefreshItem(self.getIndexOfItem(effort))
         
     def showEffortAggregation(self, aggregation):
         ''' Change the aggregation mode. Can be one of 'details', 'day', 'week'
