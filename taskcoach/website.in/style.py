@@ -75,6 +75,7 @@ footer = '''
                 <p>
                     <a href="mailinglist.html">Join mailinglist</a><br>
                     <a href="faq.html">Frequently asked questions</a><br>
+                    <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135">Request support</a><br>
                     <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</a><br>
                     <a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</a>
                 </p>

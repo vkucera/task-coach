@@ -706,7 +706,6 @@ class CategoryPopupMenu(Menu):
     def __init__(self, mainwindow, settings, tasks, notes, categories,
                  categoryViewer, localOnly=False):
         super(CategoryPopupMenu, self).__init__(mainwindow)
-
         self.appendUICommands(
             uicommand.EditCut(viewer=categoryViewer),
             uicommand.EditCopy(viewer=categoryViewer),
@@ -741,8 +740,7 @@ class CategoryPopupMenu(Menu):
             self.appendUICommands(
                 uicommand.CategoryAddNote(viewer=categoryViewer,
                                           categories=categories,
-                                          settings=settings)
-                )
+                                          settings=settings))
         self.appendUICommands(
             None,
             uicommand.ViewExpandSelected(viewer=categoryViewer),

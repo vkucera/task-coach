@@ -24,7 +24,6 @@ import viewer, viewercontainer, viewerfactory, toolbar, uicommand,\
     remindercontroller
 
 
-
 class WindowDimensionsTracker(object):
     ''' Track the dimensions (position and size) of a window in the 
         settings. '''
@@ -38,6 +37,12 @@ class WindowDimensionsTracker(object):
         self._window.Bind(wx.EVT_MOVE, self.onChangePosition)
         self._window.Bind(wx.EVT_MAXIMIZE, self.onMaximize)
         if self.startIconized():
+            if wx.Platform in ('__WXMAC__', '__WXGTK__'):
+                # Need to show the window on Mac OS X first, otherwise it   
+                # won't be properly minimized. On wxGTK we need to show the
+                # window first, otherwise clicking the task bar icon won't
+                # show it.
+                self._window.Show()
             self._window.Iconize(True)
             wx.CallAfter(self._window.Hide)
 
@@ -66,15 +71,16 @@ class WindowDimensionsTracker(object):
             self._window.SetDimensions(0, 0, width, height)
 
     def onChangeSize(self, event):
-        # Ignore the EVT_SIZE when the window is maximized. Note how this 
-        # depends on the EVT_MAXIMIZE being sent before the EVT_SIZE
-        # Jerome, 2008/07/12: On my system (KDE 3.5.7), EVT_MAXIMIZE
-        # is not triggered, so set 'maximized' to True here...
-        if self._window.IsMaximized():
-            self.setSetting('maximized', True)
-        else:
+        # Ignore the EVT_SIZE when the window is maximized or iconized. 
+        # Note how this depends on the EVT_MAXIMIZE being sent before the 
+        # EVT_SIZE.
+        maximized = self._window.IsMaximized()
+        if not maximized and not self._window.IsIconized():
             self.setSetting('size', event.GetSize())
-            self.setSetting('maximized', False)
+        # Jerome, 2008/07/12: On my system (KDE 3.5.7), EVT_MAXIMIZE
+        # is not triggered, so set 'maximized' to True here as well as in 
+        # onMaximize:
+        self.setSetting('maximized', maximized)
         event.Skip()
         
     def onChangePosition(self, event):
