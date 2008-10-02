@@ -472,7 +472,8 @@ class TaskMenu(Menu):
             uicommand.TaskNew(taskList=tasks, settings=settings,
                               categories=taskFile.categories()))
         self.appendMenu(_('New task &from template'),
-                        TaskTemplateMenu(mainwindow, taskList=tasks, settings=settings,
+                        TaskTemplateMenu(mainwindow, taskList=tasks, 
+                                         settings=settings,
                                          categories=taskFile.categories()),
                         'newtmpl')
         self.appendUICommands(uicommand.TaskNewSubTask(taskList=tasks,

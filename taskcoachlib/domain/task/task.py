@@ -21,7 +21,8 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import date, category, note, attachment
 
 
-class Task(note.NoteOwner, attachment.AttachmentOwner, category.CategorizableCompositeObject):
+class Task(note.NoteOwner, attachment.AttachmentOwner, 
+           category.CategorizableCompositeObject):
     def __init__(self, subject='', description='', dueDate=None, 
             startDate=None, completionDate=None, budget=None, 
             priority=0, id=None, hourlyFee=0,
@@ -300,6 +301,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner, category.CategorizableCom
         return sum([child.timeSpent(recursive=True) \
             for child in self.children()], date.TimeDelta())
 
+    def notifyObserversOfColorChange(self, color):
+        super(Task, self).notifyObserversOfColorChange(color)
+        for effort in self.efforts():
+            effort.notifyObserversOfColorChange(color)
+
     def notifyObserversOfBudgetChange(self):
         self.notifyObservers(patterns.Event(self, 'task.budget', self.budget()))
         self.notifyObserversOfTotalBudgetChange()
@@ -506,4 +512,5 @@ class Task(note.NoteOwner, attachment.AttachmentOwner, category.CategorizableCom
     shouldMarkCompletedWhenAllChildrenCompleted = \
         property(fget=__getShouldMarkCompletedWhenAllChildrenCompleted,
                  fset=__setShouldMarkCompletedWhenAllChildrenCompleted)
+
 

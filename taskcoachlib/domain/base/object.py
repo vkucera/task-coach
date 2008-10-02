@@ -99,6 +99,7 @@ class SynchronizedObject(patterns.Observable):
     def isDeleted(self):
         return self.__status == self.STATUS_DELETED
 
+
 class Object(SynchronizedObject):
     def __init__(self, *args, **kwargs):
         self.__subject = kwargs.pop('subject', '')

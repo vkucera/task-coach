@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from unittests import dummy
 from taskcoachlib import gui, config
 from taskcoachlib.domain import task, effort, date
@@ -30,9 +30,9 @@ class EffortViewerUnderTest(gui.viewer.EffortListViewer):
         return []
 
 
-class EffortViewerTest(test.wxTestCase):
+class EffortViewerStatusMessageTest(test.wxTestCase):
     def setUp(self):
-        super(EffortViewerTest, self).setUp()
+        super(EffortViewerStatusMessageTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.task = task.Task()
@@ -71,3 +71,28 @@ class EffortViewerTest(test.wxTestCase):
         self.task.addEffort(effort.Effort(self.task))
         self.assertStatusMessages('Effort: 0 selected, 1 visible, 1 total',
             'Status: 1 tracking')
+
+
+class EffortViewerTest(test.wxTestCase):
+    def setUp(self):
+        super(EffortViewerTest, self).setUp()
+        self.settings = config.Settings(load=False)
+        self.taskList = task.TaskList()
+        self.task = task.Task()
+        self.taskList.append(self.task)
+        self.effort1 = effort.Effort(self.task, date.DateTime(2006,1,1),
+            date.DateTime(2006,1,2))
+        self.effort2 = effort.Effort(self.task, date.DateTime(2006,1,2),
+            date.DateTime(2006,1,3))
+        self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList,  
+            self.settings)
+ 
+    def testEffortColor(self):
+        self.task.setColor(wx.RED)
+        self.task.addEffort(self.effort1)
+        self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
+
+    def testUpdateEffortColor(self):
+        self.task.addEffort(self.effort1)
+        self.task.setColor(wx.RED)
+        self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
