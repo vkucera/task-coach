@@ -173,9 +173,9 @@ class NewTaskTest(TaskEditorTestCase):
         def onError(*args, **kwargs):
             self.errorMessage = args[0]
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
-        self.editor[0][5]._attachmentViewer.widget.ToggleItemSelection(0)
-        command = uicommand.AttachmentOpen(viewer=self.editor[0][5]._attachmentViewer,
-                                           attachments=attachment.AttachmentList())
+        command = uicommand.AttachmentOpen(\
+            viewer=self.editor[0][5]._attachmentViewer,
+            attachments=attachment.AttachmentList([att]))
         command.doCommand(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo:
             if sys.version_info < (2,5):
