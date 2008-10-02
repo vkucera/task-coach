@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import test
 from taskcoachlib import meta, config, gui
-#from taskcoachlib.gui import taskbaricon
 from taskcoachlib.domain import task, effort, date
 
 
@@ -42,6 +41,7 @@ class TaskBarIconTestCase(test.TestCase):
             self.icon.RemoveIcon()
         else:
             self.icon.Destroy()
+        super(TaskBarIconTestCase, self).tearDown()
             
             
 class TaskBarIconTest(TaskBarIconTestCase):
@@ -126,3 +126,4 @@ class TaskBarIconTooltipTest(TaskBarIconTestCase):
         self.taskList.append(newTask)
         self.taskList.remove(newTask)
         self.assertTooltip('')
+
