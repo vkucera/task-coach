@@ -175,6 +175,8 @@ class CompositeEffort(EffortBase):
             eventType='task.revenue')
         patterns.Publisher().registerObserver(self.onTotalRevenueChanged,
             eventType='task.totalRevenue')
+        patterns.Publisher().registerObserver(self.onColorChanged,
+            eventType=task.colorChangedEventType())
 
     def __hash__(self):
         return hash((self.task(), self.getStart()))
@@ -265,3 +267,7 @@ class CompositeEffort(EffortBase):
         effortDescriptions = [effort.description() for effort in \
                               self.__getEfforts(False) if effort.description()]
         return '\n'.join(effortDescriptions)
+    
+    def onColorChanged(self, event):
+        patterns.Publisher().notifyObservers(patterns.Event(self,
+            Effort.colorChangedEventType(), event.value()))
