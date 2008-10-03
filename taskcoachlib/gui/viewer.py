@@ -2053,6 +2053,7 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         self.taskList = base.SearchFilter(list)
         kwargs.setdefault('settingsSection', 'effortlistviewer')
         self.__hiddenTotalColumns = []
+        self.__hiddenWeekdayColumns = []
         self.__columnUICommands = None
         super(EffortListViewer, self).__init__(parent, self.taskList, *args, **kwargs)
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
@@ -2077,8 +2078,9 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         self.registerModelObservers()
         # Update the UICommands used for the column popup menu:
         self.createColumnUICommands() 
-        self._showTotalColumns(show=aggregation!='details')
         self.refresh()
+        self._showTotalColumns(show=aggregation!='details')
+        self._showWeekdayColumns(show=aggregation=='week')
 
     def createFilter(self, taskList):
         ''' Return a class that filters the original list. In this case we
@@ -2142,7 +2144,26 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             ('totalTimeSpent', _('Total time spent'), 'effort.totalDuration',  
                  lambda effort: render.timeSpent(effort.duration(recursive=True))),
             ('totalRevenue', _('Total revenue'), 'effort.totalRevenue',
-                 lambda effort: render.amount(effort.revenue(recursive=True)))]
+                 lambda effort: render.amount(effort.revenue(recursive=True)))] + \
+             [widgets.Column(name, columnHeader, eventType, 
+              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
+              width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn) \
+             for name, columnHeader, eventType, renderCallback in \
+                ('monday', _('Monday'), 'effort.duration',  
+                 lambda effort: self.renderTimeSpentOnDay(effort, 0)),                             
+                ('tuesday', _('Tuesday'), 'effort.duration',  
+                 lambda effort: self.renderTimeSpentOnDay(effort, 1)),
+                ('wednesday', _('Wednesday'), 'effort.duration',  
+                 lambda effort: self.renderTimeSpentOnDay(effort, 2)),
+                ('thursday', _('Thursday'), 'effort.duration',  
+                 lambda effort: self.renderTimeSpentOnDay(effort, 3)),
+                ('friday', _('Friday'), 'effort.duration',  
+                 lambda effort: self.renderTimeSpentOnDay(effort, 4)),
+                ('saturday', _('Saturday'), 'effort.duration',  
+                 lambda effort: self.renderTimeSpentOnDay(effort, 5)),
+                ('sunday', _('Sunday'), 'effort.duration',  
+                 lambda effort: self.renderTimeSpentOnDay(effort, 6))      
+             ]
 
     def _showTotalColumns(self, show=True):
         if show:
@@ -2152,6 +2173,18 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             self.__hiddenTotalColumns = columnsToShow = \
                 [column for column in self.visibleColumns() \
                  if column.name().startswith('total')]
+        for column in columnsToShow:
+            self.showColumn(column, show)
+
+    def _showWeekdayColumns(self, show=True):
+        if show:
+            columnsToShow = self.__hiddenWeekdayColumns[:]
+            self.__hiddenWeekdayColumns = []
+        else:
+            self.__hiddenWeekdayColumns = columnsToShow = \
+                [column for column in self.visibleColumns() \
+                 if column.name() in ['monday', 'tuesday', 'wednesday', 
+                 'thursday', 'friday', 'saturday', 'sunday']]
         for column in columnsToShow:
             self.showColumn(column, show)
 
@@ -2191,7 +2224,14 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
                     helpText=_('Show/hide total revenue column'),
                     setting='totalRevenue',
                     viewer=self))
-
+        if self.aggregation == 'week':
+            self.__columnUICommands.append(\
+                uicommand.ViewColumns(menuText=_('Effort per weekday'),
+                    helpText=_('Show/hide time spent per weekday columns'),
+                    setting=['monday', 'tuesday', 'wednesday', 'thursday', 
+                             'friday', 'saturday', 'sunday'],
+                    viewer=self))
+            
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         toolBarUICommands = super(EffortListViewer, self).getToolBarUICommands() 
@@ -2237,3 +2277,10 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         index = self.list.index(effort)
         previousEffort = index > 0 and self.list[index-1] or None
         return previousEffort and effort.getStart() == previousEffort.getStart()
+
+    def renderTimeSpentOnDay(self, effort, dayOffset):
+        if self.aggregation == 'week':
+            duration = effort.durationDay(dayOffset)
+        else:
+            duration = date.TimeDelta()
+        return render.timeSpent(duration)

@@ -45,6 +45,8 @@ def timeSpent(timeSpent):
     ''' render time spent (of type date.TimeDelta) as
     "<hours>:<minutes>:<seconds>" '''
     from taskcoachlib.domain import date
+    if timeSpent == date.TimeDelta():
+        return ''
     if timeSpent < date.TimeDelta():
         sign = '-'
     else:

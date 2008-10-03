@@ -43,7 +43,7 @@ class RenderDaysLeftTest(test.TestCase):
 
 class RenderTimeSpentTest(test.TestCase):
     def testZeroTime(self):
-        self.assertEqual('0:00:00', render.timeSpent(date.TimeDelta()))
+        self.assertEqual('', render.timeSpent(date.TimeDelta()))
         
     def testOneSecond(self):
         self.assertEqual('0:00:01', 

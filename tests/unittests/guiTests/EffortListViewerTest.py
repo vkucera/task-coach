@@ -95,6 +95,8 @@ class CommonTests(object):
     def testColumnUICommands(self):
         if self.aggregation == 'details':
             expectedLength = 7
+        elif self.aggregation == 'week':
+            expectedLength= 10
         else:
             expectedLength = 9
         self.assertEqual(expectedLength,
