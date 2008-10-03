@@ -60,6 +60,8 @@ the task it belongs to.'''),
         Feature('''The effort viewer can show the (overall) categories of the 
 task of each effort in an (overall) categories column. Patch provided by
 Thomas Sonne Olesen.''', '1911052', '1791670'),
+        Feature('''When the effort viewer is in weekly mode, it can show effort
+per weekday. Patch provided by Thomas Sonne Olesen.'''),
         Feature('''The automatic resizing of columns can be turned off on a
 viewer by viewer basis, using the 'Automatic column resizing' checkable
 menu item in the View->Columns menu and/or in the column header right-click

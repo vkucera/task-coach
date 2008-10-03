@@ -54,7 +54,7 @@ defaults = { \
     'searchfilterincludesubitems': 'False',
     'columns': "['startDate', 'dueDate']",
     'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'notes': 28}",
+    'columnwidths': "{'attachments': 28, 'notes': 28, 'monday': 70, 'tuesday': 70, 'wednesday': 70, 'thursday': 70, 'friday': 70, 'saturday': 70, 'sunday': 70}",
     'columnautoresizing': 'True',
     'tasksdue': 'Unlimited',
     'hidecompletedtasks': 'False',

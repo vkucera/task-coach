@@ -198,6 +198,15 @@ class CompositeEffort(EffortBase):
     def duration(self, recursive=False):
         return sum([effort.duration() for effort in \
                     self.__getEfforts(recursive)], date.TimeDelta())
+
+    def durationDay(self, dayOffset, recursive=False):
+        ''' Return the duration of this composite effort on a specific day. '''
+    	startOfDay = self.getStart() + date.TimeDelta(days=dayOffset)
+    	endOfDay = self.getStart() + date.TimeDelta(days=dayOffset+1)
+        return sum([effort.duration() for effort in \
+                    self.__getEfforts(recursive) \
+                    if startOfDay <= effort.getStart() <= endOfDay], 
+                   date.TimeDelta())
                               
     def revenue(self, recursive=False):
         return sum(effort.revenue() for effort in self.__getEfforts(recursive))
