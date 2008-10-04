@@ -2076,8 +2076,8 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
         self.setModel(self.createSorter(self.createAggregator(self.taskList, 
                                                             aggregation)))
         self.registerModelObservers()
-        # Update the UICommands used for the column popup menu:
-        self.createColumnUICommands() 
+        # Invalidate the UICommands used for the column popup menu:
+        self.__columnUICommands = None
         self.refresh()
         self._showTotalColumns(show=aggregation!='details')
         self._showWeekdayColumns(show=aggregation=='week')
