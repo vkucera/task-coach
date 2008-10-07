@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -122,18 +125,28 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
 
     toolTipMessages = \
         [('nrOverdue', _('one task overdue'), _('%d tasks overdue')),
-         ('nrDueToday', _('one task due today'), _('%d tasks due today')),
-         ('nrBeingTracked', _('tracking effort for one task'), 
-                        _('tracking effort for %d tasks'))]
+         ('nrDueToday', _('one task due today'), _('%d tasks due today'))]
     
     def __setTooltipText(self):
-        textParts = []
-        for getCountMethodName, singular, plural in self.toolTipMessages:
-            count = getattr(self.__taskList, getCountMethodName)()
+        ''' Note that Windows XP and Vista limit the text shown in the
+            tool tip to 64 characters, so we cannot show everything we would
+            like to and have to make choices. '''
+        textParts = []              
+        trackedTasks = self.__taskList.tasksBeingTracked()        
+        if trackedTasks:
+            count = len(trackedTasks)
             if count == 1:
-                textParts.append(singular)
-            elif count > 1:
-                textParts.append(plural%count)
+                textParts.append(_('tracking "%s"')%trackedTasks[0].subject())
+            else:
+                textParts.append(_('tracking effort for %d tasks')%count)
+        else:
+            for getCountMethodName, singular, plural in self.toolTipMessages:
+                count = getattr(self.__taskList, getCountMethodName)()
+                if count == 1:
+                    textParts.append(singular)
+                elif count > 1:
+                    textParts.append(plural%count)
+                
         text = ', '.join(textParts)
         if text:
             self.__tooltipText = u'%s - %s'%(meta.name, text)

@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+opyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -69,8 +72,10 @@ class TaskList(patterns.CompositeSet):
                 category.removeCategorizable(task)
     
     def _nrInterestingTasks(self, isInteresting):
-        interestingTasks = [task for task in self if isInteresting(task)]
-        return len(interestingTasks)
+        return len(self._getInterestingTasks(isInteresting))
+    
+    def _getInterestingTasks(self, isInteresting):
+        return [task for task in self if isInteresting(task)]
 
     def nrCompleted(self):
         return self._nrInterestingTasks(task.Task.completed)
@@ -86,6 +91,9 @@ class TaskList(patterns.CompositeSet):
     
     def nrBeingTracked(self):
         return self._nrInterestingTasks(task.Task.isBeingTracked)
+    
+    def tasksBeingTracked(self):
+        return self._getInterestingTasks(task.Task.isBeingTracked)        
 
     def allCompleted(self):
         nrCompleted = self.nrCompleted()

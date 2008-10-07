@@ -44,6 +44,8 @@ entries of the effort dialog can now be changed via the preferences dialog.
 Patch supplied by Rob McMullen.'''),
         Feature('''The effort tracking feature can be turned off via the
 preferences dialog.'''),
+        Feature('''The system tray icon shows the task being tracked in 
+its tool tip. Patch provided by João Alexandre de Toledo.'''),
         Feature('''Categories and notes can have attachments.'''),
         Feature('''Tasks and categories can contain notes. ''', '1954879'),
         Feature('''The four different effort viewers are integrated in one
