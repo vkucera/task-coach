@@ -101,10 +101,10 @@ class TaskBarIconTooltipTest(TaskBarIconTestCase):
         self.assertTooltip('one task overdue, one task due today')
         
     def testStartTracking(self):
-        activeTask = task.Task()
+        activeTask = task.Task(subject='Subject')
         self.taskList.append(activeTask)
         activeTask.addEffort(effort.Effort(activeTask))
-        self.assertTooltip('tracking effort for one task')
+        self.assertTooltip('tracking "Subject"')
 
     def testStopTracking(self):
         activeTask = task.Task()
