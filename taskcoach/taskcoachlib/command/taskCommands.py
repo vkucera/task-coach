@@ -27,6 +27,29 @@ class SaveTaskStateMixin(base.SaveStateMixin, base.CompositeMixin):
     pass
 
 
+class EffortCommand(base.BaseCommand):
+    def stopTracking(self):
+        self.stoppedEfforts = []
+        for task in self.tasksToStopTracking():
+            self.stoppedEfforts.extend(task.stopTracking())
+
+    def startTracking(self):
+        for effort in self.stoppedEfforts:
+            effort.setStop(date.DateTime.max)
+    
+    def tasksToStopTracking(self):
+        return self.list
+                
+    def do_command(self):
+        self.stopTracking()
+    
+    def undo_command(self):
+        self.startTracking()
+        
+    def redo_command(self):
+        self.stopTracking()
+
+
 class PasteIntoTaskCommand(base.PasteCommand, base.CompositeMixin):
     def name(self):
         return _('Paste into task')
@@ -46,9 +69,28 @@ class DragAndDropTaskCommand(base.DragAndDropCommand):
         return _('Drag and drop task')
 
 
-class DeleteTaskCommand(base.DeleteCommand):
+class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
     def name(self):
         return _('Delete task')
+
+    def tasksToStopTracking(self):
+        return self.items
+
+    # Mmmh,  these 3  methods  are copied  from EffortCommand  because
+    # DeleteCommand does not call  super(). There is probably a better
+    # way to do this.
+
+    def do_command(self):
+        super(DeleteTaskCommand, self).do_command()
+        self.stopTracking()
+    
+    def undo_command(self):
+        super(DeleteTaskCommand, self).undo_command()
+        self.startTracking()
+        
+    def redo_command(self):
+        super(DeleteTaskCommand, self).redo_command()
+        self.stopTracking()
 
 
 class NewTaskCommand(base.BaseCommand):
@@ -133,29 +175,6 @@ class EditTaskCommand(base.EditCommand):
         for task, categories in zip(self.items, newCategories):
             for category in categories:
                 category.addCategorizable(task)
-
-        
-class EffortCommand(base.BaseCommand):
-    def stopTracking(self):
-        self.stoppedEfforts = []
-        for task in self.tasksToStopTracking():
-            self.stoppedEfforts.extend(task.stopTracking())
-
-    def startTracking(self):
-        for effort in self.stoppedEfforts:
-            effort.setStop(date.DateTime.max)
-    
-    def tasksToStopTracking(self):
-        return self.list
-                
-    def do_command(self):
-        self.stopTracking()
-    
-    def undo_command(self):
-        self.startTracking()
-        
-    def redo_command(self):
-        self.stopTracking()
 
 
 class MarkCompletedCommand(EditTaskCommand, EffortCommand):
