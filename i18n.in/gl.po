@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gl\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-08-09 20:46+CEST\n"
-"PO-Revision-Date: 2008-08-09 22:15+0100\n"
+"POT-Creation-Date: 2008-08-10 02:00+0000\n"
+"PO-Revision-Date: 2008-10-08 23:08+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-08-09 18:48+0000\n"
+"X-Launchpad-Export-Date: 2008-10-08 18:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: taskcoachlib/command/base.py:110
@@ -40,7 +40,7 @@ msgid "Drag and drop"
 msgstr "Arrastrar e soltar"
 
 #: taskcoachlib/command/base.py:266
-#: taskcoachlib/gui/dialog/editor.py:625
+#: taskcoachlib/gui/dialog/editor.py:627
 #: taskcoachlib/widgets/dialog.py:146
 msgid "Add attachment"
 msgstr "Engadir anexo"
@@ -67,9 +67,8 @@ msgid "Drag and drop category"
 msgstr "Arrastrar e soltar categoría"
 
 #: taskcoachlib/command/categoryCommands.py:72
-#, fuzzy
 msgid "Add note to category"
-msgstr "Editar categoría"
+msgstr ""
 
 #: taskcoachlib/command/effortCommands.py:26
 msgid "New effort"
@@ -146,9 +145,8 @@ msgid "Decrease priority"
 msgstr "Disminuir prioridade"
 
 #: taskcoachlib/command/taskCommands.py:294
-#, fuzzy
 msgid "Add note to task"
-msgstr "Pegar na tarefa"
+msgstr ""
 
 #: taskcoachlib/config/settings.py:154
 msgid ""
@@ -200,7 +198,7 @@ msgstr "&Nova tarefa..."
 
 #: taskcoachlib/domain/effort/effortlist.py:34
 msgid "Add an effort period to the selected task(s)"
-msgstr ""
+msgstr "Engadir un periodo de esforzo na(s) tarefa(s) seleccionada(s)"
 
 #: taskcoachlib/domain/effort/effortlist.py:35
 msgid "&Edit effort..."
@@ -216,7 +214,7 @@ msgstr "&Borrar esforzo"
 
 #: taskcoachlib/domain/effort/effortlist.py:38
 msgid "Delete the selected effort period(s)"
-msgstr ""
+msgstr "Eliminar o(os) periodo(s) de esforzo seleccionado(s)"
 
 #: taskcoachlib/domain/note/notecontainer.py:24
 msgid "New note..."
@@ -232,7 +230,7 @@ msgstr "Editar nota..."
 
 #: taskcoachlib/domain/note/notecontainer.py:27
 msgid "Edit the selected notes"
-msgstr ""
+msgstr "Editar as notas seleccionadas"
 
 #: taskcoachlib/domain/note/notecontainer.py:28
 msgid "Delete note"
@@ -240,7 +238,7 @@ msgstr "Borrar nota"
 
 #: taskcoachlib/domain/note/notecontainer.py:29
 msgid "Delete the selected notes"
-msgstr ""
+msgstr "Borrar as notas seleccionadas"
 
 #: taskcoachlib/domain/note/notecontainer.py:30
 msgid "New subnote..."
@@ -272,19 +270,19 @@ msgstr "Editar a tarefa seleccionada"
 
 #: taskcoachlib/domain/task/tasklist.py:54
 msgid "&Delete task\tCtrl+DEL"
-msgstr ""
+msgstr "&Borrar tarefa\tCtrl+DEL"
 
 #: taskcoachlib/domain/task/tasklist.py:55
 msgid "Delete the selected task(s)"
-msgstr ""
+msgstr "Eliminar a(s) tarefa(s) seleccionada(s)"
 
 #: taskcoachlib/domain/task/tasklist.py:57
 msgid "Insert a new subtask into the selected task"
-msgstr ""
+msgstr "Insertar unha nova subtarefa na tarefa seleccionada"
 
 #: taskcoachlib/gui/dialog/editor.py:126
 msgid "Use this color:"
-msgstr ""
+msgstr "Usar esta cor"
 
 #: taskcoachlib/gui/dialog/editor.py:132
 msgid "Color"
@@ -296,20 +294,19 @@ msgstr "Para esta tarefa"
 
 #: taskcoachlib/gui/dialog/editor.py:179
 msgid "For this task including all subtasks"
-msgstr ""
+msgstr "Para esta tarefa e subtarefas"
 
 #: taskcoachlib/gui/dialog/editor.py:183
-#, fuzzy
 msgid "For this note"
-msgstr "Para esta tarefa"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:184
 msgid "For this note including all subnotes"
-msgstr ""
+msgstr "Para esta nota incluíndo as subnotas"
 
 #: taskcoachlib/gui/dialog/editor.py:222
-#: taskcoachlib/gui/dialog/editor.py:927
-#: taskcoachlib/gui/dialog/editor.py:965
+#: taskcoachlib/gui/dialog/editor.py:929
+#: taskcoachlib/gui/dialog/editor.py:967
 #: taskcoachlib/gui/viewer.py:479
 #: taskcoachlib/gui/viewer.py:1097
 #: taskcoachlib/gui/viewer.py:1447
@@ -317,12 +314,12 @@ msgid "Subject"
 msgstr "Asunto"
 
 #: taskcoachlib/gui/dialog/editor.py:229
-#: taskcoachlib/gui/dialog/editor.py:773
-#: taskcoachlib/gui/dialog/editor.py:892
-#: taskcoachlib/gui/dialog/editor.py:933
-#: taskcoachlib/gui/dialog/editor.py:947
-#: taskcoachlib/gui/dialog/editor.py:971
-#: taskcoachlib/gui/dialog/editor.py:983
+#: taskcoachlib/gui/dialog/editor.py:775
+#: taskcoachlib/gui/dialog/editor.py:894
+#: taskcoachlib/gui/dialog/editor.py:935
+#: taskcoachlib/gui/dialog/editor.py:949
+#: taskcoachlib/gui/dialog/editor.py:973
+#: taskcoachlib/gui/dialog/editor.py:985
 #: taskcoachlib/gui/viewer.py:1105
 #: taskcoachlib/gui/viewer.py:1450
 #: taskcoachlib/gui/viewer.py:1667
@@ -335,7 +332,7 @@ msgid "Priority"
 msgstr "Prioridade"
 
 #: taskcoachlib/gui/dialog/editor.py:254
-#: taskcoachlib/gui/dialog/editor.py:774
+#: taskcoachlib/gui/dialog/editor.py:776
 msgid "Dates"
 msgstr "Datas"
 
@@ -354,210 +351,209 @@ msgstr "Data Límite"
 msgid "Completion date"
 msgstr "Data de finalización"
 
-#: taskcoachlib/gui/dialog/editor.py:273
-#: taskcoachlib/gui/dialog/editor.py:275
+#: taskcoachlib/gui/dialog/editor.py:274
+#: taskcoachlib/gui/dialog/editor.py:276
 #: taskcoachlib/gui/dialog/reminder.py:35
 #: taskcoachlib/gui/viewer.py:1154
 msgid "Reminder"
 msgstr "Lembranza"
 
-#: taskcoachlib/gui/dialog/editor.py:286
 #: taskcoachlib/gui/dialog/editor.py:287
+#: taskcoachlib/gui/dialog/editor.py:288
 #: taskcoachlib/gui/viewer.py:1140
 msgid "Recurrence"
 msgstr "Recorrencia"
 
-#: taskcoachlib/gui/dialog/editor.py:291
-#: taskcoachlib/gui/dialog/editor.py:344
+#: taskcoachlib/gui/dialog/editor.py:292
+#: taskcoachlib/gui/dialog/editor.py:346
 #: taskcoachlib/widgets/dirchooser.py:28
 msgid "None"
 msgstr "Nada"
 
-#: taskcoachlib/gui/dialog/editor.py:291
+#: taskcoachlib/gui/dialog/editor.py:292
 #: taskcoachlib/gui/render.py:64
 msgid "Daily"
 msgstr "Unha vez ao día"
 
-#: taskcoachlib/gui/dialog/editor.py:291
+#: taskcoachlib/gui/dialog/editor.py:292
 #: taskcoachlib/gui/render.py:64
 msgid "Monthly"
 msgstr "Mensual"
 
-#: taskcoachlib/gui/dialog/editor.py:291
+#: taskcoachlib/gui/dialog/editor.py:292
 #: taskcoachlib/gui/render.py:64
 msgid "Weekly"
 msgstr "Semanal"
 
-#: taskcoachlib/gui/dialog/editor.py:291
+#: taskcoachlib/gui/dialog/editor.py:292
 #: taskcoachlib/gui/render.py:64
 msgid "Yearly"
+msgstr "Anual"
+
+#: taskcoachlib/gui/dialog/editor.py:297
+msgid ", every"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:296
-#, fuzzy
-msgid ", every"
-msgstr "Nunca"
-
-#: taskcoachlib/gui/dialog/editor.py:311
+#: taskcoachlib/gui/dialog/editor.py:312
 msgid "keeping dates on the same weekday"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:320
+#: taskcoachlib/gui/dialog/editor.py:321
 msgid "Maximum number of recurrences"
 msgstr "Número máximo de repeticions"
 
-#: taskcoachlib/gui/dialog/editor.py:398
+#: taskcoachlib/gui/dialog/editor.py:400
 msgid "day(s),"
-msgstr ""
+msgstr "día(s)"
 
-#: taskcoachlib/gui/dialog/editor.py:398
+#: taskcoachlib/gui/dialog/editor.py:400
 msgid "period,"
-msgstr ""
+msgstr "Periodo"
 
-#: taskcoachlib/gui/dialog/editor.py:398
+#: taskcoachlib/gui/dialog/editor.py:400
 msgid "week(s),"
-msgstr ""
+msgstr "semana(s)"
 
-#: taskcoachlib/gui/dialog/editor.py:399
+#: taskcoachlib/gui/dialog/editor.py:401
 msgid "month(s),"
-msgstr ""
+msgstr "mes(es)"
 
-#: taskcoachlib/gui/dialog/editor.py:399
+#: taskcoachlib/gui/dialog/editor.py:401
 msgid "year(s),"
-msgstr ""
+msgstr "ano(s)"
 
-#: taskcoachlib/gui/dialog/editor.py:432
-#: taskcoachlib/gui/dialog/editor.py:450
-#: taskcoachlib/gui/dialog/editor.py:777
+#: taskcoachlib/gui/dialog/editor.py:434
+#: taskcoachlib/gui/dialog/editor.py:452
+#: taskcoachlib/gui/dialog/editor.py:779
 #: taskcoachlib/gui/viewer.py:1141
 msgid "Budget"
 msgstr "Presuposto"
 
-#: taskcoachlib/gui/dialog/editor.py:433
-#: taskcoachlib/gui/dialog/editor.py:458
+#: taskcoachlib/gui/dialog/editor.py:435
+#: taskcoachlib/gui/dialog/editor.py:460
 #: taskcoachlib/gui/viewer.py:1152
 #: taskcoachlib/gui/viewer.py:1674
 msgid "Revenue"
 msgstr "Redito"
 
-#: taskcoachlib/gui/dialog/editor.py:451
+#: taskcoachlib/gui/dialog/editor.py:453
 #: taskcoachlib/gui/viewer.py:1143
 #: taskcoachlib/gui/viewer.py:1672
 msgid "Time spent"
 msgstr "Tempo"
 
-#: taskcoachlib/gui/dialog/editor.py:452
+#: taskcoachlib/gui/dialog/editor.py:454
 #: taskcoachlib/gui/viewer.py:1145
 msgid "Budget left"
 msgstr "Presuposto rexeitado"
 
-#: taskcoachlib/gui/dialog/editor.py:456
+#: taskcoachlib/gui/dialog/editor.py:458
 #: taskcoachlib/gui/viewer.py:1149
 msgid "Hourly fee"
 msgstr "Honorario por hora"
 
-#: taskcoachlib/gui/dialog/editor.py:457
+#: taskcoachlib/gui/dialog/editor.py:459
 #: taskcoachlib/gui/viewer.py:1150
 msgid "Fixed fee"
-msgstr ""
+msgstr "Coste fixo"
 
-#: taskcoachlib/gui/dialog/editor.py:510
-#: taskcoachlib/gui/dialog/editor.py:775
-#: taskcoachlib/gui/dialog/editor.py:984
+#: taskcoachlib/gui/dialog/editor.py:512
+#: taskcoachlib/gui/dialog/editor.py:777
+#: taskcoachlib/gui/dialog/editor.py:986
 #: taskcoachlib/gui/viewer.py:1117
 #: taskcoachlib/gui/viewer.py:1263
 #: taskcoachlib/gui/viewer.py:1454
 msgid "Categories"
 msgstr "Categorías"
 
-#: taskcoachlib/gui/dialog/editor.py:572
-#: taskcoachlib/gui/dialog/editor.py:782
-#: taskcoachlib/gui/dialog/editor.py:949
+#: taskcoachlib/gui/dialog/editor.py:574
+#: taskcoachlib/gui/dialog/editor.py:784
+#: taskcoachlib/gui/dialog/editor.py:951
 #: taskcoachlib/gui/viewer.py:1379
 msgid "Notes"
-msgstr ""
+msgstr "Anotacións"
 
-#: taskcoachlib/gui/dialog/editor.py:600
-#: taskcoachlib/gui/dialog/editor.py:783
-#: taskcoachlib/gui/dialog/editor.py:951
-#: taskcoachlib/gui/dialog/editor.py:986
+#: taskcoachlib/gui/dialog/editor.py:602
+#: taskcoachlib/gui/dialog/editor.py:785
+#: taskcoachlib/gui/dialog/editor.py:953
+#: taskcoachlib/gui/dialog/editor.py:988
 msgid "Attachments"
 msgstr "Adxuntos"
 
-#: taskcoachlib/gui/dialog/editor.py:602
+#: taskcoachlib/gui/dialog/editor.py:604
 msgid "Attachment filenames"
 msgstr "Nomes de ficheiro adxuntos"
 
-#: taskcoachlib/gui/dialog/editor.py:610
+#: taskcoachlib/gui/dialog/editor.py:612
 msgid "Open attachment"
 msgstr "Abir adxunto"
 
-#: taskcoachlib/gui/dialog/editor.py:611
+#: taskcoachlib/gui/dialog/editor.py:613
 msgid "Remove attachment"
 msgstr "Borrar adxunto"
 
-#: taskcoachlib/gui/dialog/editor.py:612
+#: taskcoachlib/gui/dialog/editor.py:614
 msgid "Edit filename"
 msgstr "Editar nome de ficheiro"
 
-#: taskcoachlib/gui/dialog/editor.py:616
+#: taskcoachlib/gui/dialog/editor.py:618
 msgid "Browse for new attachment..."
 msgstr "Buscar novo adxunto..."
 
-#: taskcoachlib/gui/dialog/editor.py:623
+#: taskcoachlib/gui/dialog/editor.py:625
 msgid "Attachment filename"
 msgstr "Ficheiro anexo"
 
-#: taskcoachlib/gui/dialog/editor.py:704
+#: taskcoachlib/gui/dialog/editor.py:706
 #: taskcoachlib/gui/uicommand.py:1431
 msgid "Error opening attachment"
 msgstr "Erro ao abrir anexo"
 
-#: taskcoachlib/gui/dialog/editor.py:743
-#: taskcoachlib/gui/dialog/preferences.py:255
+#: taskcoachlib/gui/dialog/editor.py:745
+#: taskcoachlib/gui/dialog/preferences.py:258
 msgid "Task behavior"
-msgstr ""
+msgstr "Comportamento da tarefa"
 
-#: taskcoachlib/gui/dialog/editor.py:746
+#: taskcoachlib/gui/dialog/editor.py:748
 msgid "Use application-wide setting"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:747
+#: taskcoachlib/gui/dialog/editor.py:749
 msgid "No"
 msgstr "Non"
 
-#: taskcoachlib/gui/dialog/editor.py:747
+#: taskcoachlib/gui/dialog/editor.py:749
 msgid "Yes"
 msgstr "Sí"
 
-#: taskcoachlib/gui/dialog/editor.py:754
+#: taskcoachlib/gui/dialog/editor.py:756
 msgid "Mark task completed when all children are completed?"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:780
+#: taskcoachlib/gui/dialog/editor.py:782
 #: taskcoachlib/gui/viewer.py:1600
 msgid "Effort"
 msgstr "Esforzo"
 
-#: taskcoachlib/gui/dialog/editor.py:784
+#: taskcoachlib/gui/dialog/editor.py:786
 msgid "Behavior"
-msgstr ""
+msgstr "Comportamento"
 
-#: taskcoachlib/gui/dialog/editor.py:858
+#: taskcoachlib/gui/dialog/editor.py:860
 #: taskcoachlib/gui/dialog/reminder.py:41
 #: taskcoachlib/gui/viewer.py:1666
 msgid "Task"
 msgstr "Tarefa"
 
-#: taskcoachlib/gui/dialog/editor.py:869
+#: taskcoachlib/gui/dialog/editor.py:871
 msgid "Start tracking from last stop time"
-msgstr ""
+msgstr "Comezar seguimento desde o último tempo de parada"
 
-#: taskcoachlib/gui/dialog/editor.py:880
+#: taskcoachlib/gui/dialog/editor.py:882
 msgid "Start"
 msgstr "Inicio"
 
-#: taskcoachlib/gui/dialog/editor.py:882
+#: taskcoachlib/gui/dialog/editor.py:884
 msgid "Stop"
 msgstr "Parar"
 
@@ -565,21 +561,21 @@ msgstr "Parar"
 msgid ""
 "This setting will take effect\n"
 "after you restart %s"
-msgstr ""
+msgstr "Este parámetro tomará o novo valor tras reiniciar %s"
 
 #: taskcoachlib/gui/dialog/preferences.py:99
 msgid "Auto save after every change"
-msgstr ""
+msgstr "Salvar automáticamente tras cada cambio"
 
 #: taskcoachlib/gui/dialog/preferences.py:101
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
-msgstr ""
+msgstr "Crear copia de seguridade antes de sobreescribir un ficheiro %s"
 
 #: taskcoachlib/gui/dialog/preferences.py:103
 msgid "Maximum number of recent files to remember"
-msgstr ""
+msgstr "Número máximo de ficheiros recentes para recordar"
 
 #: taskcoachlib/gui/dialog/preferences.py:105
 msgid ""
@@ -594,9 +590,8 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:108
-#, fuzzy
 msgid "Attachment base directory"
-msgstr "Adxuntos"
+msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:109
 msgid ""
@@ -659,81 +654,81 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/gui/dialog/preferences.py:147
-#: taskcoachlib/gui/dialog/preferences.py:257
+#: taskcoachlib/gui/dialog/preferences.py:260
 msgid "Language"
 msgstr "Idioma"
 
-#: taskcoachlib/gui/dialog/preferences.py:186
+#: taskcoachlib/gui/dialog/preferences.py:189
 msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:193
+#: taskcoachlib/gui/dialog/preferences.py:196
 msgid "Language not found?"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:201
+#: taskcoachlib/gui/dialog/preferences.py:204
 msgid "Click this button to change the color of active tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:202
+#: taskcoachlib/gui/dialog/preferences.py:205
 msgid "Click this button to change the color of inactive tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:203
+#: taskcoachlib/gui/dialog/preferences.py:206
 msgid "Click this button to change the color of completed tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:204
+#: taskcoachlib/gui/dialog/preferences.py:207
 msgid "Click this button to change the color of over due tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:205
+#: taskcoachlib/gui/dialog/preferences.py:208
 msgid "Click this button to change the color of tasks due today"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:213
+#: taskcoachlib/gui/dialog/preferences.py:216
 msgid "Allow for taking notes"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:216
+#: taskcoachlib/gui/dialog/preferences.py:219
 msgid "Hour of start of work day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:218
+#: taskcoachlib/gui/dialog/preferences.py:221
 msgid "Hour of end of work day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:220
+#: taskcoachlib/gui/dialog/preferences.py:223
 msgid "Minutes between task start/end times"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:229
+#: taskcoachlib/gui/dialog/preferences.py:232
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:237
+#: taskcoachlib/gui/dialog/preferences.py:240
 msgid "Check spelling in editors"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:254
+#: taskcoachlib/gui/dialog/preferences.py:257
 msgid "Window behavior"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:256
+#: taskcoachlib/gui/dialog/preferences.py:259
 msgid "Files"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:261
 msgid "Colors"
 msgstr "Cores"
 
-#: taskcoachlib/gui/dialog/preferences.py:259
+#: taskcoachlib/gui/dialog/preferences.py:262
 msgid "Features"
 msgstr "Características"
 
-#: taskcoachlib/gui/dialog/preferences.py:261
+#: taskcoachlib/gui/dialog/preferences.py:264
 msgid "Editor"
 msgstr "Editor"
 
@@ -983,19 +978,16 @@ msgid "Every %(frequency)d years"
 msgstr ""
 
 #: taskcoachlib/gui/render.py:61
-#, fuzzy
 msgid "Every other day"
-msgstr "Esforzo por día"
+msgstr ""
 
 #: taskcoachlib/gui/render.py:61
-#, fuzzy
 msgid "Every other week"
-msgstr "Esforzo por semana"
+msgstr ""
 
 #: taskcoachlib/gui/render.py:62
-#, fuzzy
 msgid "Every other month"
-msgstr "Esforzo por mes"
+msgstr ""
 
 #: taskcoachlib/gui/render.py:62
 msgid "Every other year"
@@ -1406,19 +1398,16 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1348
 #: taskcoachlib/gui/uicommand.py:1364
-#, fuzzy
 msgid "Add &note"
-msgstr "Editar nota"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1349
-#, fuzzy
 msgid "Add a note to the selected task(s)"
-msgstr "Editar a tarefa seleccionada"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1365
-#, fuzzy
 msgid "Add a note to the selected category(ies)"
-msgstr "Editar as categorías escollidas"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1379
 msgid "&Add attachment"
@@ -1429,9 +1418,8 @@ msgid "Browse for files to add as attachment to the selected task(s)"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1405
-#, fuzzy
 msgid "Browse for files to add as attachment to the selected categories"
-msgstr "Borrar as categorías escollidas"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1412
 msgid "Browse for files to add as attachment to the selected note(s)"
@@ -1446,9 +1434,8 @@ msgid "Open all attachments of the selected task(s)"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1445
-#, fuzzy
 msgid "Open all attachments of the selected categories"
-msgstr "Borrar as categorías escollidas"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1452
 msgid "Open all attachments of the selected note(s)"
@@ -1543,18 +1530,16 @@ msgid "Effort per week"
 msgstr "Esforzo por semana"
 
 #: taskcoachlib/gui/uicommand.py:1831
-#, fuzzy
 msgid "List of tasks"
-msgstr "Pegar na tarefa"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1831
 msgid "Tree of tasks"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1839
-#, fuzzy
 msgid "Filter on all checked categories"
-msgstr "Borrar as categorías escollidas"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:1840
 msgid "Filter on any checked category"
@@ -1952,9 +1937,8 @@ msgid "Open a new tab with a viewer that displays categories"
 msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2019
-#, fuzzy
 msgid "&Effort"
-msgstr "Esforzo"
+msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:2020
 msgid "Open a new tab with a viewer that displays effort"
@@ -2127,9 +2111,8 @@ msgid "Status: %d filtered"
 msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1447
-#, fuzzy
 msgid "&Subject"
-msgstr "Asunto"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1447
 msgid "Sort notes by subject"
@@ -2140,19 +2123,16 @@ msgid "Sort notes by description"
 msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1455
-#, fuzzy
 msgid "Sort notes by categories"
-msgstr "Editar as categorías escollidas"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1461
-#, fuzzy
 msgid "&Overall categories"
-msgstr "Categorías"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1461
-#, fuzzy
 msgid "Sort notes by overall categories"
-msgstr "Editar as categorías escollidas"
+msgstr ""
 
 #: taskcoachlib/gui/viewer.py:1504
 msgid "Notes: %d selected, %d total"
