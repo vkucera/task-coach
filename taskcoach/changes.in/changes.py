@@ -73,9 +73,10 @@ saved in the task file.''', '2045453'),
 Mallach, Josep-Miquel Ivars, and devaleitzer.'''),
         Feature('''Added an (incomplete) Arabic translation thanks to 
 Moayyed. Please help finish it. See http://www.taskcoach.org/i18n.html.'''),
-        Feature('''Added largely incomplete Estonian, Indonesian, Lithuanian, 
-and Vietnamese translations. Please help finish them. See 
-http://www.taskcoach.org/i18n.html.''')],
+        Feature('''Added largely incomplete Esperanto, Estonian, Indonesian, 
+Marathi, Lithuanian, Norwegion Nynorsk, Slovenian, Telugu, and Vietnamese 
+translations. Please help finish them. 
+See http://www.taskcoach.org/i18n.html.''')],
     bugsFixed=[
         Bug('''Undo wouldnt work well when creating notes in a category or task.'''),
         Bug('''An IndexError would be raised when undoing then editing.'''),
