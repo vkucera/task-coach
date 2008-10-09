@@ -73,15 +73,15 @@ class AutoColumnWidthMixin(object):
                              self.GetColumnWidth(self.ResizeColumn)
             self.DistributeWidthAcrossColumns(extraWidth)
         self.Bind(wx.EVT_SIZE, self.OnResize)
-        wx.CallAfter(self.OnResize, event)
+        wx.CallAfter(self.DoResize)
         event.Skip()
         
     def OnResize(self, event):
+        event.Skip()
         if '__WXMSW__' == wx.Platform:
             wx.CallAfter(self.DoResize)
         else:
             self.DoResize()
-        event.Skip()
 
     def DoResize(self):
         if not self:
