@@ -63,13 +63,15 @@ class TaskBarIconTest(TaskBarIconTestCase):
         self.assertEqual(self.icon.defaultBitmap(), self.icon.bitmap())
         
         
-class TaskBarIconTooltipTest(TaskBarIconTestCase):
+class TaskBarIconTooltipTestCase(TaskBarIconTestCase):
     def assertTooltip(self, text):
         expectedTooltip = meta.name
         if text:
             expectedTooltip += ' - %s'%text
         self.assertEqual(expectedTooltip, self.icon.tooltip())
-   
+
+
+class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
     def testNoTasks(self):
         self.assertTooltip('')
         
@@ -100,30 +102,38 @@ class TaskBarIconTooltipTest(TaskBarIconTestCase):
         self.taskList.append(task.Task(dueDate=date.Today()))
         self.assertTooltip('one task overdue, one task due today')
         
-    def testStartTracking(self):
-        activeTask = task.Task(subject='Subject')
-        self.taskList.append(activeTask)
-        activeTask.addEffort(effort.Effort(activeTask))
-        self.assertTooltip('tracking "Subject"')
-
-    def testStopTracking(self):
-        activeTask = task.Task()
-        self.taskList.append(activeTask)
-        activeEffort = effort.Effort(activeTask)
-        activeTask.addEffort(activeEffort)
-        activeTask.removeEffort(activeEffort)
-        self.assertTooltip('')
-        
-    def testTrackingTwoTasks(self):
-        for i in range(2):
-            activeTask = task.Task()
-            self.taskList.append(activeTask)
-            activeTask.addEffort(effort.Effort(activeTask))
-        self.assertTooltip('tracking effort for 2 tasks')
-
     def testRemoveTask(self):
         newTask = task.Task()
         self.taskList.append(newTask)
         self.taskList.remove(newTask)
         self.assertTooltip('')
 
+
+class TaskBarIconTooltipWithTrackedTaskTest(TaskBarIconTooltipTestCase):
+    def setUp(self):
+        super(TaskBarIconTooltipWithTrackedTaskTest, self).setUp()
+        self.task = task.Task(subject='Subject')
+        self.taskList.append(self.task)
+        self.task.addEffort(effort.Effort(self.task))
+
+    def testStartTracking(self):
+        self.assertTooltip('tracking "Subject"')
+
+    def testStopTracking(self):
+        self.task.efforts()[0].setStop(date.DateTime(2000,1,1,10,0,0))
+        self.assertTooltip('')
+
+    def testTrackingTwoTasks(self):
+        activeTask = task.Task()
+        self.taskList.append(activeTask)
+        activeTask.addEffort(effort.Effort(activeTask))
+        self.assertTooltip('tracking effort for 2 tasks')
+
+    def testChangingSubjectOfTrackedTask(self):
+        self.task.setSubject('New subject')
+        self.assertTooltip('tracking "New subject"')
+
+    def testChangingSubjectOfTaskThatIsNotTrackedAnymore(self):
+        self.task.efforts()[0].setStop(date.DateTime(2000,1,1,10,0,0))
+        self.task.setSubject('New subject')
+        self.assertTooltip('')
