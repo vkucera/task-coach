@@ -1711,7 +1711,7 @@ class EffortDelete(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
         delete.do()
 
 
-class EffortStart(NeedsSelectedTasks, ViewerCommand):
+class EffortStart(NeedsSelectedTasks, ViewerCommand, TaskListCommand):
     ''' UICommand to start tracking effort for the selected task(s). '''
     
     def __init__(self, *args, **kwargs):
@@ -1721,15 +1721,14 @@ class EffortStart(NeedsSelectedTasks, ViewerCommand):
             *args, **kwargs)
     
     def doCommand(self, event):
-        start = command.StartEffortCommand(self.viewer.model(), 
+        start = command.StartEffortCommand(self.taskList, 
             self.viewer.curselection())
         start.do()
         
     def enabled(self, event):
-        if not self.viewer.isShowingTasks():
-            return False
-        return [task for task in self.viewer.curselection() if not
-            (task.isBeingTracked() or task.completed() or task.inactive())]
+        return super(EffortStart, self).enabled(event) and \
+            bool([task for task in self.viewer.curselection() if not
+             (task.isBeingTracked() or task.completed() or task.inactive())])
 
 
 class EffortStartForTask(TaskListCommand):
