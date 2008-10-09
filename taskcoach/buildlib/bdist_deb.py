@@ -71,21 +71,23 @@ class bdist_deb(Command, object):
             self.distribution = None
                     
     def finalize_options(self):
-        mandatoryOptions = [('package', 'the package name'),
-                            ('subsection', 'a subsection for the menu'),
-                            ('title', 'a title for the menu'),
-                            ('description', 'a brief description for the menu'),
-                            ('long_description', 'a long description of the application'),
-                            ('version', 'the version of the application'),
-                            ('copyright', 'a copyright description ("Copyright (C) year-year, author")'),
-                            ('license', 'the title (including version) of the license'),
-                            ('license_abbrev', 'an abbreviated license title'),
-                            ('license_summary', 'a summary of the license of the application'),
-                            ('license_path', 'the path of the license on Debian systems'),
-                            ('command', 'the command to start the application'),
-                            ('author', 'the author of the application'),
-                            ('author_email', 'the email address of the author'),
-                            ('url', 'the url of the application homepage')]
+        mandatoryOptions = [\
+            ('package', 'the package name'),
+            ('subsection', 'a subsection for the menu'),
+            ('title', 'a title for the menu'),
+            ('description', 'a brief description for the menu'),
+            ('long_description', 'a long description of the application'),
+            ('version', 'the version of the application'),
+            ('copyright', 
+             'a copyright description ("Copyright (C) year-year, author")'),
+            ('license', 'the title (including version) of the license'),
+            ('license_abbrev', 'an abbreviated license title'),
+            ('license_summary', 'a summary of the license of the application'),
+            ('license_path', 'the path of the license on Debian systems'),
+            ('command', 'the command to start the application'),
+            ('author', 'the author of the application'),
+            ('author_email', 'the email address of the author'),
+            ('url', 'the url of the application homepage')]
         for option, description in mandatoryOptions:
             if not getattr(self, option):
                 raise errors.DistutilsOptionError, \
@@ -98,7 +100,8 @@ class bdist_deb(Command, object):
         if not self.distribution:
             self.distribution = 'UNRELEASED'
         self.subsection_lower = self.subsection.lower()
-        self.datetime = time.strftime('%a, %d %b %Y %H:%M:%S +0000', time.gmtime())
+        self.datetime = time.strftime('%a, %d %b %Y %H:%M:%S +0000', 
+                                      time.gmtime())
         self.year = time.gmtime()[0]
         self.license_summary = self.wrap_paragraphs(self.license_summary,
                                                     indent='    ')
@@ -127,7 +130,8 @@ class bdist_deb(Command, object):
         ''' Unzip and extract the source distribution archive. '''
         expected_extracted_dir = self.sdist_archive[:-len('.orig.tar.gz')] + '/'
         if self.verbose:
-            log.info('extracting %s to %s'%(self.sdist_archive, expected_extracted_dir))
+            log.info('extracting %s to %s'%(self.sdist_archive, 
+                                            expected_extracted_dir))
         archive = tarfile.open(self.sdist_archive)
         extracted_dir = os.path.join(self.bdist_base, archive.getnames()[0])
         archive.extractall(self.bdist_base)
@@ -163,14 +167,15 @@ class bdist_deb(Command, object):
         os.chmod(filename, 0755)
         
     def build_debian_package(self):
-        os.system('cd %s; debuild -S; dpkg-buildpackage -rfakeroot; cd ..'%self.extracted_dir)
+        os.system('cd %s; debuild -S; dpkg-buildpackage -rfakeroot; cd ..'%\
+                  self.extracted_dir)
 
     def move_debian_package_to_distdir(self):
         for deb_package in glob.glob('build/*.deb'):
             move_file(deb_package, self.dist_dir)
         
     def copyright_contents(self):
-        ''' Create copyright contents. This is a bit more work because the
+        ''' Create copyright contents. This is a bit complicated because the
             header and footer need to have their variables filled in first 
             before their text can be wrapped. '''
         return self.wrap_paragraphs(copyright_header%self.__dict__) + \
