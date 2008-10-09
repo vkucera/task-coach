@@ -455,6 +455,7 @@ class Viewer(wx.Panel):
         self.__instanceNumber = kwargs.pop('instanceNumber')
         self.__selection = []
         self.__toolbarUICommands = None
+        self.originalList = list
         self.list = self.createSorter(self.createFilter(list))
         self.widget = self.createWidget()
         self.toolbar = toolbar.ToolBar(self, (16, 16))
@@ -1101,7 +1102,7 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
     def createColumnUICommands(self):
         commands = [
             uicommand.ToggleAutoColumnResizing(viewer=self,
-                                                settings=self.settings),
+                                               settings=self.settings),
             None,
             (_('&Dates'),
              uicommand.ViewColumns(menuText=_('All date columns'),
@@ -1210,7 +1211,11 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
         taskUICommands = [uicommand.TaskToggleCompletion(viewer=self), None]
         if self.settings.getboolean('feature', 'effort'):
             taskUICommands.extend([
-                uicommand.EffortStart(viewer=self),
+                # EffortStart needs a reference to the original (task) list to
+                # be able to stop tracking effort for tasks that are already 
+                # being tracked, but that might be filtered in the viewer's 
+                # model.
+                uicommand.EffortStart(viewer=self, taskList=self.originalList),
                 uicommand.EffortStop(taskList=self.model()),
                 None])
         commands = super(TaskViewer, self).createToolBarUICommands() 
