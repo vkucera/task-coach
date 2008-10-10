@@ -212,9 +212,9 @@ pages['features'] = \
             only tasks that are due today. 
             <LI>Tasks can be created by dragging an e-mail message from 
             Outlook or Thunderbird onto a task viewer.
-            <LI>Attachments can be added to task by dragging and dropping
-            files, e-mail messages from Outlook or Thunderbird, or URL's onto
-            a task.
+            <LI>Attachments can be added to tasks, notes, and categories by 
+            dragging and dropping files, e-mail messages from Outlook or 
+            Thunderbird, or URL's onto a task, note or category.
             <LI>Task status depends on its subtask and vice versa. E.g. if 
             you mark the last uncompleted subtask as completed, the parent 
             task is automatically marked as completed too.
@@ -233,6 +233,9 @@ pages['features'] = \
             %(name)s prints the information that is visible in the current
             view, including any filters and sort order. 
             <LI>%(name)s can be run from a removable medium.
+            <LI>Tasks and notes can be synchronized via a 
+            <a href="http://www.funambol.com/">Funambol</a> server such
+            as <a href="http://www.scheduleworld.com">ScheduleWorld</a>.
         </UL>
         <H3>Missing features</H3>
         <P>
@@ -255,12 +258,12 @@ pages['i18n'] = \
 '''        <H3>Internationalization</H3>
         <H4>Information for users</H4>
         <P>Currently, %(name)s is available in a number of languages: '''\
-        + ', '.join(meta.languages.keys()) + \
+        + ', '.join(sorted(meta.languages.keys())) + \
         '''. You can select languages via 'Edit' -> 
         'Preferences'. Click the 'Language' icon, select the
         language of your choice and restart %(name)s.</P>
         <H4>Instructions for translators</H4>
-        <P>I would welcome translations in additional languages.
+        <P>We would welcome translations in additional languages.
         Please be aware that, next to providing the initial translation,
         you will be expected to keep your translation up to date as new
         versions of %(name)s are released.</P>
