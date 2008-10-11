@@ -23,8 +23,10 @@ from changetypes import *
 
 releases = [
 
-Release('0.71.0', 'October ??, 2008',
-    summary='''?''',
+Release('0.71.0', 'October 12, 2008',
+    summary='''This release adds task and note synchronization, task templates, 
+more task recurrence options, more translations and a whole bunch of smaller 
+enhancements.''',
     featuresAdded=[
         Feature('''E-mail attachments are now stored directly in the
 task file.'''),
@@ -84,7 +86,8 @@ Marathi, Lithuanian, Norwegion Nynorsk, Slovenian, Telugu, and Vietnamese
 translations. Please help finish them. 
 See http://www.taskcoach.org/i18n.html.''')],
     bugsFixed=[
-        Bug('''Undo wouldnt work well when creating notes in a category or task.'''),
+        Bug('''Undo would not work well when creating notes in a category or 
+task.'''),
         Bug('''An IndexError would be raised when undoing then editing.'''),
         Bug('''Ctrl-PgDn and Ctrl-PgUp would sometimes need to be pressed
 multiple times before the next or previous viewer would be activated. ''')],
