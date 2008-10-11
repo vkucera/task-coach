@@ -26,6 +26,8 @@ releases = [
 Release('0.71.0', 'October ??, 2008',
     summary='''?''',
     featuresAdded=[
+        Feature('''Tasks and notes can now be synchornized with a
+Funambol server (http://www.funambol.com/).''', '2006123', '1892874'),
         Feature('''Tasks can now be saved and reused as templates.'''),
         Feature('''Attachments are now regular domain objects; they may
 have notes.'''),
