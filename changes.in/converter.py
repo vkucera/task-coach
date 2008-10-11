@@ -80,7 +80,7 @@ class ChangeToHTMLConverter(ChangeConverter):
         return changeToBeConverted
     
     def postProcess(self, convertedChange):
-        listOfUrlAndTextFragments = re.split('(http://\S+)', convertedChange)
+        listOfUrlAndTextFragments = re.split('(http://[^\s()]+[^\s().])', convertedChange)
         listOfConvertedUrlsAndTextFragments = []
         for fragment in listOfUrlAndTextFragments:
             if fragment.startswith('http://'):
