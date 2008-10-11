@@ -45,7 +45,7 @@ to the hovered object.''', '1642608'),
 yearly, in addition to daily, weekly, and monthly. Tasks can also recur 
 with a multiple period frequency, e.g. every other week or every three months.
 Monthly recurring tasks can be set to recur on the same week day (e.g. first
-Monday of the month).''', '963803', '2076511'),
+Monday of the month).''', '1963803', '2076511'),
         Feature('''The times used in the drop down menus of the start and stop
 entries of the effort dialog can now be changed via the preferences dialog. 
 Patch supplied by Rob McMullen.'''),
