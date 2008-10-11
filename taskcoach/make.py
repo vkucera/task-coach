@@ -83,9 +83,9 @@ if sys.argv[1] == 'py2exe':
             # We need to explicitly include i18n because its 
             # contents are imported implicitly via __import__:
             'packages' : ['taskcoachlib.i18n'], 
-            'dist_dir' : os.path.join(builddir, py2exeDistdir)}},
-        'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL',
-                             'dist.in/msvcr80.dll'])]})
+            'dist_dir' : os.path.join(builddir, py2exeDistdir),
+            'dll_excludes': 'MSVCR80.dll'}},
+        'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL'])]})
  
 elif sys.argv[1] == 'py2app':
     from setuptools import setup
