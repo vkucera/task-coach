@@ -28,9 +28,10 @@ Release('0.71.0', 'October ??, 2008',
     featuresAdded=[
         Feature('''E-mail attachments are now stored directly in the
 task file.'''),
-        Feature('''Tasks and notes can now be synchornized with a
+        Feature('''Tasks and notes can now be synchronized with a
 Funambol server (http://www.funambol.com/).''', '2006123', '1892874'),
-        Feature('''Tasks can now be saved and reused as templates.'''),
+        Feature('''Tasks can now be saved and reused as templates.''', 
+                '1851847', '1549002', '1484368'),
         Feature('''Attachments are now regular domain objects; they may
 have notes.'''),
         Feature('''The task and note editors now use an actual category
@@ -42,7 +43,7 @@ to the hovered object.''', '1642608'),
 yearly, in addition to daily, weekly, and monthly. Tasks can also recur 
 with a multiple period frequency, e.g. every other week or every three months.
 Monthly recurring tasks can be set to recur on the same week day (e.g. first
-Monday of the month).''', '963803'),
+Monday of the month).''', '963803', '2076511'),
         Feature('''The times used in the drop down menus of the start and stop
 entries of the effort dialog can now be changed via the preferences dialog. 
 Patch supplied by Rob McMullen.'''),
@@ -51,7 +52,8 @@ preferences dialog.'''),
         Feature('''The system tray icon shows the task being tracked in 
 its tool tip. Patch provided by João Alexandre de Toledo.'''),
         Feature('''Categories and notes can have attachments.'''),
-        Feature('''Tasks and categories can contain notes. ''', '1954879'),
+        Feature('''Tasks and categories can contain notes. ''', '1954879', 
+                '2140239'),
         Feature('''The four different effort viewers are integrated in one
 viewer that can switch between different effort aggregation modes, i.e. details,
 per day, per week and per month, via the toolbar.'''),
