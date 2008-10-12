@@ -1149,6 +1149,11 @@ class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
 
 
 class ObjectCommandBase(ViewerCommand):
+    """Base class for delete and edit L{UICommand}s.
+    @cvar __containerName__: The name of the object list in
+        the keyword arguments (e.g. 'notes', 'taskList'...)
+    @cvar __bitmap__: Name of the bitmap for this command"""
+
     __containerName__ = None
     __bitmap__ = None
 
@@ -1158,6 +1163,8 @@ class ObjectCommandBase(ViewerCommand):
 
 
 class ObjectEdit(ObjectCommandBase):
+    """Base class for L{UICommand}s to edit objects."""
+
     __bitmap__ = 'edit'
 
     def __init__(self, *args, **kwargs):
@@ -1172,6 +1179,8 @@ class ObjectEdit(ObjectCommandBase):
 
 
 class ObjectDelete(ObjectCommandBase):
+    """Base class for L{UICommand}s to delete objects."""
+
     __bitmap__ = 'delete'
 
     def __init__(self, *args, **kwargs):
