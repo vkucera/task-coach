@@ -33,19 +33,19 @@ task file.'''),
         Feature('''Tasks and notes can now be synchronized with a
 Funambol server (http://www.funambol.com/).''', '2006123', '1892874'),
         Feature('''Tasks can now be saved and reused as templates.''', 
-                '1851847', '1549002', '1484368'),
+                '1851847', '1549002', '1484368', '1601869'),
         Feature('''Attachments are now regular domain objects; they may
 have notes.'''),
         Feature('''The task and note editors now use an actual category
 viewer. It is possible to create and edit categories from these editors.'''),
         Feature('''The description tooltip now works for efforts and
 categories. It also contains a summary of notes and attachments belonging
-to the hovered object.''', '1642608'),
+to the hovered object.''', '1642608', '1917999'),
         Feature('''More task recurrence options. Tasks can now also recur 
 yearly, in addition to daily, weekly, and monthly. Tasks can also recur 
 with a multiple period frequency, e.g. every other week or every three months.
 Monthly recurring tasks can be set to recur on the same week day (e.g. first
-Monday of the month).''', '1963803', '2076511'),
+Monday of the month).''', '1963803', '1917090', '1913656', '2076511'),
         Feature('''The times used in the drop down menus of the start and stop
 entries of the effort dialog can now be changed via the preferences dialog. 
 Patch supplied by Rob McMullen.'''),
@@ -55,7 +55,7 @@ preferences dialog.'''),
 its tool tip. Patch provided by João Alexandre de Toledo.'''),
         Feature('''Categories and notes can have attachments.'''),
         Feature('''Tasks and categories can contain notes. ''', '1954879', 
-                '2140239'),
+                '2140239', '1525434'),
         Feature('''The four different effort viewers are integrated in one
 viewer that can switch between different effort aggregation modes, i.e. details,
 per day, per week and per month, via the toolbar.'''),
@@ -74,9 +74,9 @@ per weekday. Patch provided by Thomas Sonne Olesen.'''),
         Feature('''The automatic resizing of columns can be turned off on a
 viewer by viewer basis, using the 'Automatic column resizing' checkable
 menu item in the View->Columns menu and/or in the column header right-click
-menu.''', '2047851'),
+menu.''', '2047851', '1466164'),
         Feature('''The expansion state of tasks, categories and notes is 
-saved in the task file.''', '2045453'),
+saved in the task file.''', '2045453', '1790057'),
         Feature('''Added Catalan translation thanks to Ferran Roig, Jordi
 Mallach, Josep-Miquel Ivars, and devaleitzer.'''),
         Feature('''Added an (incomplete) Arabic translation thanks to 
