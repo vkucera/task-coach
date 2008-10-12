@@ -610,6 +610,16 @@ class FileExportAsHTML(IOCommand, ViewerCommand):
         self.iocontroller.exportAsHTML(self.viewer)
 
 
+class FileExportSelectionAsHTML(IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportSelectionAsHTML, self).__init__(menuText=_('Export &selection as HTML...'),
+            helpText=_('Export the selection in the current view as HTML file'),
+            bitmap='exportashtml', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportAsHTML(self.viewer, selectionOnly=True)
+
+
 class FileExportAsCSV(IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsCSV, self).__init__(menuText=_('Export as &CSV...'),

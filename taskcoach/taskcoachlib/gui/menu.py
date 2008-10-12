@@ -281,6 +281,8 @@ class ExportMenu(Menu):
         self.appendUICommands(
             uicommand.FileExportAsHTML(iocontroller=iocontroller,
                                        viewer=viewerContainer),
+            uicommand.FileExportSelectionAsHTML(iocontroller=iocontroller,
+                                                viewer=viewerContainer),
             uicommand.FileExportAsICS(iocontroller=iocontroller),
             uicommand.FileExportAsCSV(iocontroller=iocontroller,
                                       viewer=viewerContainer),

@@ -23,6 +23,14 @@ from changetypes import *
 
 releases = [
 
+Release('0.72.0', '?? ??, 2008', # Or maybe 1.0.0
+    summary='',
+    featuresAdded=[
+        Feature('''One can now export only the current selection
+as HTML.''')
+        ]
+    ),
+
 Release('0.71.0', 'October 12, 2008',
     summary='''This release adds task and note synchronization, task templates, 
 more task recurrence options, more translations and a whole bunch of smaller 

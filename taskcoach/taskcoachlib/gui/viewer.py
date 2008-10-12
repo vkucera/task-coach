@@ -549,7 +549,14 @@ class Viewer(wx.Panel):
         # Translate indices returned by the widget into actual domain objects:
         return [self.getItemWithIndex(index) for index in \
                 self.widget.curselection()]
-    
+
+    def isselected(self, item):
+        """Returns True if the given item is selected. See
+        L{EffortListViewer} for an explanation of why this may be
+        different than 'if item in viewer.curselection()'."""
+
+        return item in self.curselection()
+
     def selectall(self):
         self.widget.selectall()
         
@@ -2262,7 +2269,17 @@ class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns):
             selection = [effort for compositeEffort in selection\
                                 for effort in compositeEffort]
         return selection
-                
+
+    def isselected(self, item):
+        """When this viewer is in aggregation mode, L{curselection}
+        returns the actual underlying L{Effort} objects instead of
+        aggregates. This is a problem e.g. when exporting only a
+        selection, since items we're iterating over (aggregates) are
+        never in curselection(). This method is used instead. It just
+        ignores the overriden version of curselection."""
+
+        return item in super(EffortListViewer, self).curselection()
+
     def renderPeriod(self, effort):
         if self._hasRepeatedPeriod(effort):
             return ''

@@ -30,13 +30,11 @@ def viewer2html(viewer, selectionOnly=False):
         htmlText += '<th align="%s">%s</th>'%(alignment, column.header())
     htmlText += '</tr>\n'
     tree = viewer.isTreeViewer()
-    if selectionOnly:
-        selection = viewer.curselection()
-        if tree:
-            selection = extendedWithAncestors(selection)
+    count = 0
     for item in viewer.visibleItems():
-        if selectionOnly and item not in selection:
+        if selectionOnly and not viewer.isselected(item):
             continue
+        count += 1
         bgColor = viewer.getBackgroundColor(item)
         if bgColor:
             try:
@@ -59,7 +57,7 @@ def viewer2html(viewer, selectionOnly=False):
                 render(item, column, color))
         htmlText += '</tr>\n'
     htmlText += '</table></body></html>\n'
-    return htmlText
+    return htmlText, count
 
 
 def render(item, column, color):
