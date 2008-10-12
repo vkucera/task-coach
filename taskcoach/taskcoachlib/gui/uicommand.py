@@ -1163,7 +1163,8 @@ class ObjectCommandBase(ViewerCommand):
 
 
 class ObjectEdit(ObjectCommandBase):
-    """Base class for L{UICommand}s to edit objects."""
+    """Base class for L{UICommand}s to edit objects. This will use the
+    L{Viewer.editItemDialog} method to open an edit dialog."""
 
     __bitmap__ = 'edit'
 
@@ -1179,7 +1180,9 @@ class ObjectEdit(ObjectCommandBase):
 
 
 class ObjectDelete(ObjectCommandBase):
-    """Base class for L{UICommand}s to delete objects."""
+    """Base class for L{UICommand}s to delete objects. This will use
+    the L{Viewer.deleteItemCommand} method to get the actual delete
+    command."""
 
     __bitmap__ = 'delete'
 
