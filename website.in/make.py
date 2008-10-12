@@ -105,7 +105,8 @@ pages['download'] = \
         <p>
         <table>
         <tr><td rowspan=4 valign=top><img src="windows.png" alt="Windows"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe">Installer</a> for Microsoft Windows</b></td></tr>
+        <td><b><a
+        href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32-2.exe">Installer</a> for Microsoft Windows</b></td></tr>
         <tr><td>Windows versions supported: Windows 2000, XP, Vista</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
         <tr><td>Installation: run the installer; it will guide you through
