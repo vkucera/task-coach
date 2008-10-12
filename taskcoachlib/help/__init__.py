@@ -20,6 +20,7 @@ from taskcoachlib import meta
 from taskcoachlib.i18n import _
 from tips import showTips
 
+_MSURL = "http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en"
 
 _TOC = _('''<h3>Table of contents</h3>
 <ul>
@@ -324,10 +325,10 @@ Currently supported platforms are:
 
 You may experience problems under Windows if you don't have the Microsoft
 Visual 8 runtime installed. You can download it on the
-<a target="_blank" href="http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en">
+<a target="_blank" href="%s">
 Microsoft download site</a>.
 </p>
-''')
+''') % _MSURL
 
 _templatesSection = _('''<h3><a name="templates">Task templates</a></h3>
 ''')
