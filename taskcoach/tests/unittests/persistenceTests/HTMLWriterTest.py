@@ -132,7 +132,9 @@ class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
 class EffortWriterTest(HTMLWriterTestCase):
     def setUp(self):
         super(EffortWriterTest, self).setUp()
-        self.task.addEffort(effort.Effort(self.task))
+        now = date.DateTime.now()
+        self.task.addEffort(effort.Effort(self.task, start=now,
+                                          stop=now + date.TimeDelta(seconds=1)))
 
     def createViewer(self):
         self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList,
@@ -142,5 +144,5 @@ class EffortWriterTest(HTMLWriterTestCase):
         self.expectInHTML('>Task subject<')
         
     def testEffortDuration(self):
-        self.expectInHTML('>0:00:00<')
+        self.expectInHTML('>0:00:01<')
 
