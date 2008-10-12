@@ -246,7 +246,10 @@ Server said: %s
         raise smtplib.SMTPException, errstr
 
 
-commands = dict(phase1=phase1, phase2=phase2, website=uploadWebsite, 
+commands = dict(phase1=phase1, phase2=phase2, 
+                upload=uploadDistributionsToSourceForge, 
+                md5=generateMD5Digests,
+                website=uploadWebsite, 
                 websiteChello=uploadWebsiteToChello, 
                 websiteSF=uploadWebsiteToSourceForge, 
                 pypi=registerWithPyPI)#, announce=mailAnnouncement)
