@@ -23,5 +23,6 @@ class HTMLWriter(object):
         self.__fd = fd
 
     def write(self, viewer, selectionOnly=False):
-        htmlText = generator.viewer2html(viewer, selectionOnly)
+        htmlText, count = generator.viewer2html(viewer, selectionOnly)
         self.__fd.write(htmlText)
+        return count

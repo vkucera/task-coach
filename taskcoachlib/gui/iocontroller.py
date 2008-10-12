@@ -189,16 +189,17 @@ class IOController(object):
         else:
             return False
 
-    def exportAsHTML(self, viewer, filename=None):
+    def exportAsHTML(self, viewer, filename=None, selectionOnly=False):
         if not filename:
             filename = self.__askUserForFile(_('Export as HTML...'),
                 flags=wx.SAVE, fileDialogOpts=self.__htmlFileDialogOpts)
         if filename:
             htmlFile = self.__openFileForWriting(filename)
-            persistence.HTMLWriter(htmlFile).write(viewer)
+            count = persistence.HTMLWriter(htmlFile).write(viewer,
+                                                           selectionOnly=selectionOnly)
             htmlFile.close()
             self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%\
-                {'nrtasks': viewer.size(), 'filename': filename})
+                {'nrtasks': count, 'filename': filename})
             return True
         else:
             return False
