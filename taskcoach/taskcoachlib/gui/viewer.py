@@ -1634,19 +1634,13 @@ class BaseCategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
         newCommand.do()
         return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
     
-    # See TaskViewer for why the methods below have two names.
-    
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
             command.EditCategoryCommand(self.list, kwargs['items']),
             self.settings, self.list, bitmap=kwargs['bitmap'])
     
-    editCategoryDialog = editItemDialog
-    
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection())
-    
-    deleteCategoryCommand = deleteItemCommand
     
     def newSubItemDialog(self, *args, **kwargs):
         newCommand = command.NewSubCategoryCommand(self.list, self.curselection())
@@ -1852,13 +1846,9 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
             command.EditNoteCommand(self.list, kwargs['items']),
             self.settings, self.list, self.categories, bitmap=kwargs['bitmap'])
     
-    editNoteDialog = editItemDialog
-    
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection(),
                   shadow=True)
-    
-    deleteNoteCommand = deleteItemCommand
     
     def newSubItemDialog(self, *args, **kwargs):
         newCommand = command.NewSubNoteCommand(self.list, self.curselection())
@@ -1949,7 +1939,8 @@ class AttachmentViewer(AttachmentDropTarget, ViewerWithColumns,
         commands = super(AttachmentViewer, self).createToolBarUICommands()
         commands[-2:-2] = [None,
                            uicommand.AttachmentNew(attachments=self.model(),
-                                                   settings=self.settings),
+                                                   settings=self.settings,
+                                                   categories=self.categories),
                            uicommand.AttachmentEdit(attachments=self.model(),
                                                     viewer=self),
                            uicommand.AttachmentDelete(attachments=self.model(),
@@ -1996,12 +1987,8 @@ class AttachmentViewer(AttachmentDropTarget, ViewerWithColumns,
             command.EditAttachmentCommand(self.list, *args, **kwargs),
             self.settings, self.categories, bitmap=kwargs['bitmap'])
 
-    editAttachmentDialog = editItemDialog
-
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection())
-
-    deleteAttachmentCommand = deleteItemCommand
 
 
 class EffortViewer(SortableViewerForEffort, SearchableViewer, 
@@ -2069,12 +2056,8 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
             command.EditEffortCommand(self.list, self.curselection()), 
             self.list, self.taskList, self.settings)
     
-    editEffortDialog = editItemDialog
-    
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection())
-    
-    deleteEffortCommand = deleteItemCommand
     
 
 class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns): 

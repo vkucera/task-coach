@@ -1147,6 +1147,42 @@ class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
     def enabled(self, event):
         return not self.viewer.isTreeViewer()
 
+
+class ObjectCommandBase(ViewerCommand):
+    __containerName__ = None
+    __bitmap__ = None
+
+    def __init__(self, *args, **kwargs):
+        kwargs['bitmap'] = self.__bitmap__
+        super(ObjectCommandBase, self).__init__(*args, **kwargs)
+
+
+class ObjectEdit(ObjectCommandBase):
+    __bitmap__ = 'edit'
+
+    def __init__(self, *args, **kwargs):
+        kwargs['menuText'] = kwargs[self.__containerName__].editItemMenuText
+        kwargs['helpText'] = kwargs[self.__containerName__].editItemHelpText
+        super(ObjectEdit, self).__init__(*args, **kwargs)
+
+    def doCommand(self, event, show=True):
+        editor = self.viewer.editItemDialog(bitmap=self.bitmap,
+                                            items=self.viewer.curselection())
+        editor.Show(show)
+
+
+class ObjectDelete(ObjectCommandBase):
+    __bitmap__ = 'delete'
+
+    def __init__(self, *args, **kwargs):
+        kwargs['menuText'] = kwargs[self.__containerName__].deleteItemMenuText
+        kwargs['helpText'] = kwargs[self.__containerName__].deleteItemHelpText
+        super(ObjectDelete, self).__init__(*args, **kwargs)
+
+    def doCommand(self, event):
+        deleteCommand = self.viewer.deleteItemCommand()
+        deleteCommand.do()
+
         
 class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
@@ -1235,29 +1271,12 @@ class TaskNewSubTask(NeedsSelectedTasks,  TaskListCommand, ViewerCommand):
         dialog.Show(show)
         
 
-class TaskEdit(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        taskList = kwargs['taskList']
-        super(TaskEdit, self).__init__(bitmap='edit',
-            menuText=taskList.editItemMenuText, 
-            helpText=taskList.editItemHelpText, *args, **kwargs)
-
-    def doCommand(self, event, show=True):
-        editor = self.viewer.editItemDialog(bitmap=self.bitmap,
-                                            items=self.viewer.curselection())
-        editor.Show(show)
+class TaskEdit(ObjectEdit, NeedsSelectedTasks, TaskListCommand):
+    __containerName__ = 'taskList'
 
 
-class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        taskList = kwargs['taskList']
-        super(TaskDelete, self).__init__(bitmap='delete',
-            menuText=taskList.deleteItemMenuText,
-            helpText=taskList.deleteItemHelpText, *args, **kwargs)
-
-    def doCommand(self, event):
-        deleteCommand = self.viewer.deleteItemCommand()
-        deleteCommand.do()
+class TaskDelete(ObjectDelete, NeedsSelectedTasks, TaskListCommand):
+    __containerName__ = 'taskList'
 
 
 class TaskToggleCompletion(NeedsSelectedTasks, ViewerCommand):
@@ -1615,28 +1634,12 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
         newEffortDialog.Show()
 
 
-class EffortEdit(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        effortList = kwargs['effortList']
-        super(EffortEdit, self).__init__(bitmap='edit',
-            menuText=effortList.editItemMenuText,
-            helpText=effortList.editItemHelpText, *args, **kwargs)
-            
-    def doCommand(self, event):
-        dialog = self.viewer.editEffortDialog(bitmap=self.bitmap)
-        dialog.Show()
+class EffortEdit(ObjectEdit, NeedsSelectedEffort, EffortListCommand):
+    __containerName__ = 'effortList'
 
 
-class EffortDelete(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        effortList = kwargs['effortList']
-        super(EffortDelete, self).__init__(bitmap='delete',
-            menuText=effortList.deleteItemMenuText,
-            helpText=effortList.deleteItemHelpText, *args, **kwargs)
-
-    def doCommand(self, event):
-        delete = self.viewer.deleteEffortCommand()
-        delete.do()
+class EffortDelete(ObjectDelete, NeedsSelectedEffort, EffortListCommand):
+    __containerName__ = 'effortList'
 
 
 class EffortStart(NeedsSelectedTasks, ViewerCommand, TaskListCommand):
@@ -1739,29 +1742,12 @@ class CategoryNewSubCategory(NeedsSelectedCategory, CategoriesCommand,
         dialog.Show(show)
 
 
-class CategoryDelete(NeedsSelectedCategory, CategoriesCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        categories = kwargs['categories']
-        super(CategoryDelete, self).__init__(bitmap='delete',
-            menuText=categories.deleteItemMenuText, 
-            helpText=categories.deleteItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event):
-        delete = self.viewer.deleteCategoryCommand()
-        delete.do()
+class CategoryDelete(ObjectDelete, NeedsSelectedCategory, CategoriesCommand):
+    __containerName__ = 'categories'
 
 
-class CategoryEdit(NeedsSelectedCategory, ViewerCommand, CategoriesCommand):
-    def __init__(self, *args, **kwargs):
-        categories = kwargs['categories']
-        super(CategoryEdit, self).__init__(bitmap='edit',
-            menuText=categories.editItemMenuText,
-            helpText=categories.editItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event, show=True):
-        dialog = self.viewer.editCategoryDialog(bitmap=self.bitmap,
-                                                items=self.viewer.curselection())
-        dialog.Show(show)
+class CategoryEdit(ObjectEdit, NeedsSelectedCategory, CategoriesCommand):
+    __containerName__ = 'categories'
 
 
 class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
@@ -1815,29 +1801,12 @@ class NoteNewSubNote(NeedsSelectedNote, NotesCommand, ViewerCommand):
         dialog.Show(show)
 
 
-class NoteDelete(NeedsSelectedNote, NotesCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        notes = kwargs['notes']
-        super(NoteDelete, self).__init__(bitmap='delete',
-            menuText=notes.deleteItemMenuText, 
-            helpText=notes.deleteItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event):
-        delete = self.viewer.deleteNoteCommand()
-        delete.do()
+class NoteDelete(ObjectDelete, NeedsSelectedNote, NotesCommand):
+    __containerName__ = 'notes'
 
 
-class NoteEdit(NeedsSelectedNote, ViewerCommand, NotesCommand):
-    def __init__(self, *args, **kwargs):
-        notes = kwargs['notes']
-        super(NoteEdit, self).__init__(bitmap='edit',
-            menuText=notes.editItemMenuText,
-            helpText=notes.editItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event, show=True):
-        dialog = self.viewer.editNoteDialog(bitmap=self.bitmap,
-                                            items=self.viewer.curselection())
-        dialog.Show(show)
+class NoteEdit(ObjectEdit, NeedsSelectedNote, NotesCommand):
+    __containerName__ = 'notes'
 
 
 class NoteDragAndDrop(NotesCommand, DragAndDropCommand):
@@ -1862,29 +1831,12 @@ class AttachmentNew(AttachmentsCommand, SettingsCommand, CategoriesCommand):
         return attachmentDialog # for testing purposes
 
 
-class AttachmentDelete(NeedsSelectedAttachments, AttachmentsCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        attachments = kwargs['attachments']
-        super(AttachmentDelete, self).__init__(bitmap='delete',
-            menuText=attachments.deleteItemMenuText, 
-            helpText=attachments.deleteItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event):
-        delete = self.viewer.deleteAttachmentCommand()
-        delete.do()
+class AttachmentDelete(ObjectDelete, NeedsSelectedAttachments, AttachmentsCommand):
+    __containerName__ = 'attachments'
 
 
-class AttachmentEdit(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand):
-    def __init__(self, *args, **kwargs):
-        attachments = kwargs['attachments']
-        super(AttachmentEdit, self).__init__(bitmap='edit',
-            menuText=attachments.editItemMenuText,
-            helpText=attachments.editItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event, show=True):
-        dialog = self.viewer.editAttachmentDialog(bitmap=self.bitmap,
-                                                  items=self.viewer.curselection())
-        dialog.Show(show)
+class AttachmentEdit(ObjectEdit, NeedsSelectedAttachments, AttachmentsCommand):
+    __containerName__ = 'attachments'
 
 
 class AttachmentOpen(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand):
