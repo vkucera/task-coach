@@ -23,6 +23,16 @@ from changetypes import *
 
 releases = [
 
+Release('0.71.1', 'October 13, 2008',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Older task files containing e-mail attachments could
+not be opened.'''),
+        Bug('''Newly created templates would not appear in the Task
+menu, only in the toolbar template button.'''),
+        ]
+    ),
+
 Release('0.71.0', 'October 12, 2008',
     summary='''This release adds task and note synchronization, task templates, 
 more task recurrence options, more translations and a whole bunch of smaller 
