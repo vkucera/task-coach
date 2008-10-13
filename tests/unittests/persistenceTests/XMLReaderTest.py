@@ -561,7 +561,10 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                 <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
             </task>
         </tasks>''')
-        self.assertEqual(['whateverdata.tsk'], [att.location() for att in tasks[0].attachments()])
+        self.assertEqual([os.path.join(os.getcwd(),
+                                       'testfile_attachments',
+                                       'whateverdata.tsk')],
+                         [att.location() for att in tasks[0].attachments()])
         self.assertEqual(['whatever.tsk'], [att.subject() for att in tasks[0].attachments()])
 
     def testNoteWithOneAttachment(self):
@@ -571,7 +574,10 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                 <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
             </note>
         </tasks>''')
-        self.assertEqual(['whateverdata.tsk'], [att.location() for att in notes[0].attachments()])
+        self.assertEqual([os.path.join(os.getcwd(),
+                                       'testfile_attachments',
+                                       'whateverdata.tsk')],
+                         [att.location() for att in notes[0].attachments()])
         self.assertEqual(['whatever.tsk'], [att.subject() for att in notes[0].attachments()])
 
     def testCategoryWithOneAttachment(self):
@@ -581,7 +587,10 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                 <attachment type="file"><description>whatever.tsk</description><data>whateverdata.tsk</data></attachment>
             </category>
         </tasks>''')
-        self.assertEqual(['whateverdata.tsk'], [att.location() for att in categories[0].attachments()])
+        self.assertEqual([os.path.join(os.getcwd(),
+                                       'testfile_attachments',
+                                       'whateverdata.tsk')],
+                         [att.location() for att in categories[0].attachments()])
         self.assertEqual(['whatever.tsk'], [att.subject() for att in categories[0].attachments()])
         
     def testTaskWithTwoAttachments(self):
@@ -592,7 +601,12 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                 <attachment type="file"><description>another.txt</description><data>anotherdata.txt</data></attachment>
             </task>
         </tasks>''')
-        self.assertEqual(['whateverdata.tsk', 'anotherdata.txt'], 
+        self.assertEqual([os.path.join(os.getcwd(),
+                                       'testfile_attachments',
+                                       'whateverdata.tsk'),
+                          os.path.join(os.getcwd(),
+                                       'testfile_attachments',
+                                       'anotherdata.txt')],
                          [att.location() for att in tasks[0].attachments()])
         self.assertEqual(['whatever.tsk', 'another.txt'], 
                          [att.subject() for att in tasks[0].attachments()])
@@ -739,7 +753,10 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                 </note>
             </note>
         </tasks>''')
-        self.assertEqual(['whateverdata.tsk'], [att.location() for att in notes[0].children()[0].attachments()])
+        self.assertEqual([os.path.join(os.getcwd(),
+                                       'testfile_attachments',
+                                       'whateverdata.tsk')],
+                         [att.location() for att in notes[0].children()[0].attachments()])
         self.assertEqual(['whatever.tsk'], [att.subject() for att in notes[0].children()[0].attachments()])
         
     def testNoteCategory(self):
