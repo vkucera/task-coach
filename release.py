@@ -23,6 +23,7 @@ Release steps:
 - Get latest translations from Launchpad
 - make clean all 
 - make alltests 
+- Build all remaining packages (MacOS, .deb, .rpm, Fedora)
 - Run this script (phase1) to upload the distributions to Sourceforge, 
   generate MD5 digests and generate website.
 - Add file releases on Sourceforge by hand.
