@@ -288,17 +288,38 @@ class ExportMenu(Menu):
                                             viewer=viewerContainer))
 
 
-class TaskTemplateMenu(Menu):
+class TaskTemplateMenu(DynamicMenu):
     def __init__(self, mainwindow, taskList, settings, categories):
+        self._uiCommands = None
+        self.settings = settings
+        self.taskList = taskList
+        self.categories = categories
+
         super(TaskTemplateMenu, self).__init__(mainwindow)
 
-        path = settings.pathToTemplatesDir()
+    def registerForMenuUpdate(self):
+        self._window.Bind(wx.EVT_MENU_OPEN, self.onUpdateMenu)
+        
+    def updateMenuItems(self):
+        newCommands = self.getUICommands()
+        if newCommands != self._uiCommands:
+            self.clearMenu()
+            self.fillMenu(newCommands)
+            self._uiCommands = newCommands
+     
+    def fillMenu(self, uiCommands):
+        self.appendUICommands(*uiCommands)
+
+    def getUICommands(self):
+        path = self.settings.pathToTemplatesDir()
+        commands = []
         for name in os.listdir(path):
             fullname = os.path.join(path, name)
             if name.endswith('.tsktmpl'):
-                self.appendUICommands(uicommand.TaskNewFromTemplate(fullname,
-                                  taskList=taskList, settings=settings,
-                                  categories=categories))
+                commands.append(uicommand.TaskNewFromTemplate(fullname,
+                                  taskList=self.taskList, settings=self.settings,
+                                  categories=self.categories))
+        return commands
 
 
 class EditMenu(Menu):
