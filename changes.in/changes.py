@@ -30,6 +30,9 @@ Release('0.71.1', 'October 13, 2008',
 not be opened.'''),
         Bug('''Newly created templates would not appear in the Task
 menu, only in the toolbar template button.'''),
+        Bug('''The installers for Mac OS X and Windows for release 0.71.0
+were missing some files, causing Task Coach not to be able to save.''', 
+        '2162181')
         ]
     ),
 
