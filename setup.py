@@ -25,7 +25,10 @@ from taskcoachlib import meta
 # Import this  here so that py2exe  and py2app can  find the _pysyncml
 # module.
 
-import taskcoachlib.syncml.core
+try:
+    import taskcoachlib.syncml.core
+except ImportError:
+    print 'WARNING: SyncML is not supported on your platform.'
 
 setupOptions = { 
     'name': meta.filename,
