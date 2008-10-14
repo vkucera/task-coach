@@ -23,6 +23,7 @@ Release steps:
 - Get latest translations from Launchpad
 - make clean all 
 - make alltests 
+- Build all remaining packages (MacOS, .deb, .rpm, Fedora)
 - Run this script (phase1) to upload the distributions to Sourceforge, 
   generate MD5 digests and generate website.
 - Add file releases on Sourceforge by hand.
@@ -161,7 +162,9 @@ def registerWithPyPI(settings):
                  (username, password))
     pypirc.close()
     from setup import setupOptions
-    languagesThatPyPIDoesNotRecognize = ['Breton', 'Galician', 'Norwegian (Bokmal)']
+    languagesThatPyPIDoesNotRecognize = ['Breton', 'Estonian', 'Galician', 
+                                         'Lithuanian', 'Norwegian (Bokmal)',
+                                         'Norwegian (Nynorsk)', 'Slovene']
     for language in languagesThatPyPIDoesNotRecognize:
         setupOptions['classifiers'].remove('Natural Language :: %s'%language)
     from distutils.core import setup
@@ -244,7 +247,10 @@ Server said: %s
         raise smtplib.SMTPException, errstr
 
 
-commands = dict(phase1=phase1, phase2=phase2, website=uploadWebsite, 
+commands = dict(phase1=phase1, phase2=phase2, 
+                upload=uploadDistributionsToSourceForge, 
+                md5=generateMD5Digests,
+                website=uploadWebsite, 
                 websiteChello=uploadWebsiteToChello, 
                 websiteSF=uploadWebsiteToSourceForge, 
                 pypi=registerWithPyPI)#, announce=mailAnnouncement)

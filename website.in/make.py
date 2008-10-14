@@ -105,7 +105,8 @@ pages['download'] = \
         <p>
         <table>
         <tr><td rowspan=4 valign=top><img src="windows.png" alt="Windows"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe">Installer</a> for Microsoft Windows</b></td></tr>
+        <td><b><a
+        href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe">Installer</a> for Microsoft Windows</b></td></tr>
         <tr><td>Windows versions supported: Windows 2000, XP, Vista</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
         <tr><td>Installation: run the installer; it will guide you through
@@ -453,8 +454,8 @@ pages['devinfo'] = \
     HREF="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
     at SourceForge</A>. You can check out the code from the repository 
     directly or <A HREF="http://taskcoach.svn.sourceforge.net/">browse the
-    repository</A>. You can also browse the
-    <A HREF="epydoc/index.html">epydoc-generated documentation.</A></p>
+    repository</A>. You can generate documentation with Epydoc from
+    the Makefile: <tt>make epydoc</tt>.</p>
     
     <h4>Tests</h4>
     <p>Tests can be run from the Makefile. There are targets for
@@ -487,7 +488,7 @@ pages['devinfo'] = \
     application is packaged into a dmg file using the <tt>hdiutil</tt>
     utility, which is part of Mac OSX. 
     All the necessary packaging code is in make.py
-    and driven from the Makefile (<tt>macdist</tt> target).</p>
+    and driven from the Makefile (<tt>dmg</tt> target).</p>
     <h5>Linux</h5>
     <p>I create RPM and DEB packages on Ubuntu (<tt>rpm</tt> and <tt>deb</tt>
     targets) and a Fedora RPM package on Fedora (<tt>fedora</tt> target). 
@@ -504,13 +505,14 @@ pages['devinfo'] = \
     see whether some method is a wxPython method or not.</p>
     
     <h4>SVN usage conventions</h4>
-    <p>Releases are tagged Releasex_y_z (where x has always been 0 so far) 
-    and for each Releasex_y_0 a branch (Releasex_y_Branch) is created to
+    <p>Releases are tagged ReleaseX_Y_Z (where X has always been 0 so far) 
+    and for each Releasex_y_0 a branch (ReleaseZ_Y_Branch) is created to
     facilitate bug fix releases. The release tagging and branching is part of 
     the release process as documented in release.py.</p>
-    <p>For new big features, feature-specific branches are created to facilitate 
-    parallel development, checking in changes while developing, and keep 
-    the code on the main trunk releaseable. The process is as follows:</p>
+    <p>For new big features, feature-specific branches are created to 
+    facilitate parallel development, checking in changes while developing, 
+    and keep the code on the main trunk releaseable. The process is as 
+    follows:</p>
     <ul>
     <li>The feature is discussed on taskcoach-dev.</li>
     <li>If all agree it's a good feature to work on, a
