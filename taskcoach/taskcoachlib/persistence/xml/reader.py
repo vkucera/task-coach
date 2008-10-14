@@ -226,13 +226,17 @@ class XMLReader(object):
         return [child.text for child in node.findall('category')]
 
     def _parseAttachmentsBeforeVersion21(self, parent):
+        path, name = os.path.split(os.path.abspath(self.__fd.name))
+        name, ext = os.path.splitext(name)
+        attdir = os.path.normpath(os.path.join(path, name + '_attachments'))
+
         attachments = []
         for node in parent.findall('attachment'):
             if self.__tskversion <= 16:
                 args = (node.text,)
                 kwargs = dict()
             else:
-                args = (node.find('data').text, node.attrib['type'])
+                args = (os.path.join(attdir, node.find('data').text), node.attrib['type'])
                 description = self._parseDescription(node)
                 kwargs = dict(subject=description,
                               description=description)

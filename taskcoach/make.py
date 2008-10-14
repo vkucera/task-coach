@@ -80,9 +80,9 @@ if sys.argv[1] == 'py2exe':
         'options' : {'py2exe' : {
             'compressed' : 1, 
             'optimize' : 2, 
-            # We need to explicitly include i18n because its 
-            # contents are imported implicitly via __import__:
-            'packages' : ['taskcoachlib.i18n'], 
+            # We need to explicitly include these packages because they 
+            # are imported implicitly:
+            'packages' : ['taskcoachlib.i18n', 'xml.dom.minidom'], 
             'dist_dir' : os.path.join(builddir, py2exeDistdir),
             'dll_excludes': 'MSVCR80.dll'}},
         'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL'])]})

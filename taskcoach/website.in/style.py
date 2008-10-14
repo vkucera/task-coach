@@ -110,11 +110,16 @@ footer = '''
                 </p>
             </div>
             <div class="navbox">
+                <h2>News</h2>
+                <p>
+                <a href="download.html">%(name)s %(version)s</a> was released
+                on %(date)s.
+                </p>
+            </div>
+            <div class="navbox">
                 <h2>A word of warning</h2>
                 <p>
                     %(name)s is currently alpha-state software. 
-                    New releases are made available approximately 
-                    monthly and old releases are not supported.
                     There are no separate stable and development branches, 
                     just a development branch. New versions usually contain 
                     a mix of new or changed features and bugfixes, and 
