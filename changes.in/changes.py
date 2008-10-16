@@ -26,7 +26,8 @@ releases = [
 Release('0.71.2', 'October ??, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''The reminder dialog didn't work.''', '2168756')
+        Bug('''The reminder dialog didn't work.''', '2168756'),
+        Bug('''One couldn't add an URI attachment 'by hand''''),
         ]
     ),
 

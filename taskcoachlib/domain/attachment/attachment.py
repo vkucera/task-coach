@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, shutil
+import os, shutil, urlparse
 
 from taskcoachlib.domain import base
 from taskcoachlib.thirdparty import desktop
@@ -126,12 +126,17 @@ class FileAttachment(Attachment):
     type_ = 'file'
 
     def open(self, workingDir=None, openAttachment=desktop.open):
-        if workingDir is not None and not os.path.isabs(self.location()):
-            path = os.path.join(workingDir, self.location())
-        else:
-            path = self.location()
+        # URI attachments are actually special cases of file
+        # attachments. Sometimes.
+        if urlparse.urlparse(self.location())[0] == '': # Local file...
+            if workingDir is not None and not os.path.isabs(self.location()):
+                path = os.path.join(workingDir, self.location())
+            else:
+                path = self.location()
 
-        openAttachment(os.path.normpath(path))
+            openAttachment(os.path.normpath(path))
+        else:
+            openAttachment(self.location())
 
 
 class URIAttachment(Attachment):

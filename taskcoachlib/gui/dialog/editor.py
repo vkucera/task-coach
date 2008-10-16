@@ -938,8 +938,8 @@ class AttachmentSubjectPage(ColorEntryMixin, widgets.BookPage):
         panel = wx.Panel(self, wx.ID_ANY)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self._locationEntry = widgets.SingleLineTextCtrl(panel, self._attachment.location(),
-                           style=wx.TE_READONLY)
+        self._locationEntry = widgets.SingleLineTextCtrl(panel,
+                                                         self._attachment.location())
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
         if self._attachment.type_ == 'file':
             button = wx.Button(panel, wx.ID_ANY, _('Browse'))
