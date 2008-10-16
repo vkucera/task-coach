@@ -1148,76 +1148,52 @@ class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
         return not self.viewer.isTreeViewer()
 
 
-class NewDomainObject(ViewerCommand):
+class ObjectCommandBase(ViewerCommand):
+    """Base class for delete and edit L{UICommand}s.
+    @cvar __containerName__: The name of the object list in
+        the keyword arguments (e.g. 'notes', 'taskList'...)
+    @cvar __bitmap__: Name of the bitmap for this command"""
+
+    __containerName__ = None
+    __bitmap__ = None
+
     def __init__(self, *args, **kwargs):
-        super(NewDomainObject, self).__init__(menuText=_('New item'),
-            bitmap='new', *args, **kwargs)
-        
+        kwargs['bitmap'] = self.__bitmap__
+        super(ObjectCommandBase, self).__init__(*args, **kwargs)
+
+
+class ObjectEdit(ObjectCommandBase):
+    """Base class for L{UICommand}s to edit objects. This will use the
+    L{Viewer.editItemDialog} method to open an edit dialog."""
+
+    __bitmap__ = 'edit'
+
+    def __init__(self, *args, **kwargs):
+        kwargs['menuText'] = kwargs[self.__containerName__].editItemMenuText
+        kwargs['helpText'] = kwargs[self.__containerName__].editItemHelpText
+        super(ObjectEdit, self).__init__(*args, **kwargs)
+
     def doCommand(self, event, show=True):
-        dialog = self.viewer.newItemDialog(bitmap=self.bitmap)
-        dialog.Show(show)
-        
-    def enabled(self, event):
-        return self.viewer.canCreateNewDomainObject() and \
-            super(NewDomainObject, self).enabled(event)
-    
-    def getHelpText(self):
-        return self.viewer.model().newItemHelpText
-    
-    def getMenuText(self):
-        return self.viewer.model().newItemMenuText
-    
+        editor = self.viewer.editItemDialog(bitmap=self.bitmap,
+                                            items=self.viewer.curselection())
+        editor.Show(show)
 
-class NewSubDomainObject(NeedsSelection, ViewerCommand):
+
+class ObjectDelete(ObjectCommandBase):
+    """Base class for L{UICommand}s to delete objects. This will use
+    the L{Viewer.deleteItemCommand} method to get the actual delete
+    command."""
+
+    __bitmap__ = 'delete'
+
     def __init__(self, *args, **kwargs):
-        super(NewSubDomainObject, self).__init__(menuText=_('New subitem'),
-            bitmap='newsub', *args, **kwargs)
-        
-    def doCommand(self, event, show=True):
-        dialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
-        dialog.Show(show)
+        kwargs['menuText'] = kwargs[self.__containerName__].deleteItemMenuText
+        kwargs['helpText'] = kwargs[self.__containerName__].deleteItemHelpText
+        super(ObjectDelete, self).__init__(*args, **kwargs)
 
-    def enabled(self, event):
-        return not self.viewer.isShowingEffort() and \
-            super(NewSubDomainObject, self).enabled(event)
-            
-    def getHelpText(self):
-        return self.viewer.model().newSubItemHelpText
-    
-    def getMenuText(self):
-        return self.viewer.model().newSubItemMenuText
-     
-
-class EditDomainObject(NeedsSelection, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(EditDomainObject, self).__init__(menuText=('Edit item'),
-            bitmap='edit', *args, **kwargs)
-        
-    def doCommand(self, event, show=True):
-        dialog = self.viewer.editItemDialog(bitmap=self.bitmap)
-        dialog.Show(show)
-
-    def getHelpText(self):
-        return self.viewer.model().editItemHelpText
-    
-    def getMenuText(self):
-        return self.viewer.model().editItemMenuText
-
-
-class DeleteDomainObject(NeedsSelection, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(DeleteDomainObject, self).__init__(menuText=_('Delete item'),
-            bitmap='delete', *args, **kwargs)
-        
     def doCommand(self, event):
         deleteCommand = self.viewer.deleteItemCommand()
         deleteCommand.do()
-
-    def getHelpText(self):
-        return self.viewer.model().deleteItemHelpText
-    
-    def getMenuText(self):
-        return self.viewer.model().deleteItemMenuText
 
         
 class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand):
@@ -1303,33 +1279,16 @@ class TaskNewSubTask(NeedsSelectedTasks,  TaskListCommand, ViewerCommand):
             helpText=taskList.newSubItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        dialog = self.viewer.newSubTaskDialog(bitmap=self.bitmap)
+        dialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
         dialog.Show(show)
         
 
-class TaskEdit(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        taskList = kwargs['taskList']
-        super(TaskEdit, self).__init__(bitmap='edit',
-            menuText=taskList.editItemMenuText, 
-            helpText=taskList.editItemHelpText, *args, **kwargs)
-
-    def doCommand(self, event, show=True):
-        editor = self.viewer.editTaskDialog(bitmap=self.bitmap,
-                                            items=self.viewer.curselection())
-        editor.Show(show)
+class TaskEdit(ObjectEdit, NeedsSelectedTasks, TaskListCommand):
+    __containerName__ = 'taskList'
 
 
-class TaskDelete(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        taskList = kwargs['taskList']
-        super(TaskDelete, self).__init__(bitmap='delete',
-            menuText=taskList.deleteItemMenuText,
-            helpText=taskList.deleteItemHelpText, *args, **kwargs)
-
-    def doCommand(self, event):
-        deleteCommand = self.viewer.deleteTaskCommand()
-        deleteCommand.do()
+class TaskDelete(ObjectDelete, NeedsSelectedTasks, TaskListCommand):
+    __containerName__ = 'taskList'
 
 
 class TaskToggleCompletion(NeedsSelectedTasks, ViewerCommand):
@@ -1687,28 +1646,12 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
         newEffortDialog.Show()
 
 
-class EffortEdit(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        effortList = kwargs['effortList']
-        super(EffortEdit, self).__init__(bitmap='edit',
-            menuText=effortList.editItemMenuText,
-            helpText=effortList.editItemHelpText, *args, **kwargs)
-            
-    def doCommand(self, event):
-        dialog = self.viewer.editEffortDialog(bitmap=self.bitmap)
-        dialog.Show()
+class EffortEdit(ObjectEdit, NeedsSelectedEffort, EffortListCommand):
+    __containerName__ = 'effortList'
 
 
-class EffortDelete(NeedsSelectedEffort, EffortListCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        effortList = kwargs['effortList']
-        super(EffortDelete, self).__init__(bitmap='delete',
-            menuText=effortList.deleteItemMenuText,
-            helpText=effortList.deleteItemHelpText, *args, **kwargs)
-
-    def doCommand(self, event):
-        delete = self.viewer.deleteEffortCommand()
-        delete.do()
+class EffortDelete(ObjectDelete, NeedsSelectedEffort, EffortListCommand):
+    __containerName__ = 'effortList'
 
 
 class EffortStart(NeedsSelectedTasks, ViewerCommand, TaskListCommand):
@@ -1811,29 +1754,12 @@ class CategoryNewSubCategory(NeedsSelectedCategory, CategoriesCommand,
         dialog.Show(show)
 
 
-class CategoryDelete(NeedsSelectedCategory, CategoriesCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        categories = kwargs['categories']
-        super(CategoryDelete, self).__init__(bitmap='delete',
-            menuText=categories.deleteItemMenuText, 
-            helpText=categories.deleteItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event):
-        delete = self.viewer.deleteCategoryCommand()
-        delete.do()
+class CategoryDelete(ObjectDelete, NeedsSelectedCategory, CategoriesCommand):
+    __containerName__ = 'categories'
 
 
-class CategoryEdit(NeedsSelectedCategory, ViewerCommand, CategoriesCommand):
-    def __init__(self, *args, **kwargs):
-        categories = kwargs['categories']
-        super(CategoryEdit, self).__init__(bitmap='edit',
-            menuText=categories.editItemMenuText,
-            helpText=categories.editItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event, show=True):
-        dialog = self.viewer.editCategoryDialog(bitmap=self.bitmap,
-                                                items=self.viewer.curselection())
-        dialog.Show(show)
+class CategoryEdit(ObjectEdit, NeedsSelectedCategory, CategoriesCommand):
+    __containerName__ = 'categories'
 
 
 class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
@@ -1887,29 +1813,12 @@ class NoteNewSubNote(NeedsSelectedNote, NotesCommand, ViewerCommand):
         dialog.Show(show)
 
 
-class NoteDelete(NeedsSelectedNote, NotesCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        notes = kwargs['notes']
-        super(NoteDelete, self).__init__(bitmap='delete',
-            menuText=notes.deleteItemMenuText, 
-            helpText=notes.deleteItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event):
-        delete = self.viewer.deleteNoteCommand()
-        delete.do()
+class NoteDelete(ObjectDelete, NeedsSelectedNote, NotesCommand):
+    __containerName__ = 'notes'
 
 
-class NoteEdit(NeedsSelectedNote, ViewerCommand, NotesCommand):
-    def __init__(self, *args, **kwargs):
-        notes = kwargs['notes']
-        super(NoteEdit, self).__init__(bitmap='edit',
-            menuText=notes.editItemMenuText,
-            helpText=notes.editItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event, show=True):
-        dialog = self.viewer.editNoteDialog(bitmap=self.bitmap,
-                                            items=self.viewer.curselection())
-        dialog.Show(show)
+class NoteEdit(ObjectEdit, NeedsSelectedNote, NotesCommand):
+    __containerName__ = 'notes'
 
 
 class NoteDragAndDrop(NotesCommand, DragAndDropCommand):
@@ -1918,10 +1827,8 @@ class NoteDragAndDrop(NotesCommand, DragAndDropCommand):
                                                   drop=dropItem)
                          
                                                         
-class AttachmentNew(AttachmentsCommand, SettingsCommand):
+class AttachmentNew(AttachmentsCommand, SettingsCommand, CategoriesCommand):
     def __init__(self, *args, **kwargs):
-        self.categories = kwargs.pop('categories')
-
         attachments = kwargs['attachments']
         if 'menuText' not in kwargs:
             kwargs['menuText'] = attachments.newItemMenuText
@@ -1936,29 +1843,12 @@ class AttachmentNew(AttachmentsCommand, SettingsCommand):
         return attachmentDialog # for testing purposes
 
 
-class AttachmentDelete(NeedsSelectedAttachments, AttachmentsCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        attachments = kwargs['attachments']
-        super(AttachmentDelete, self).__init__(bitmap='delete',
-            menuText=attachments.deleteItemMenuText, 
-            helpText=attachments.deleteItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event):
-        delete = self.viewer.deleteAttachmentCommand()
-        delete.do()
+class AttachmentDelete(ObjectDelete, NeedsSelectedAttachments, AttachmentsCommand):
+    __containerName__ = 'attachments'
 
 
-class AttachmentEdit(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand):
-    def __init__(self, *args, **kwargs):
-        attachments = kwargs['attachments']
-        super(AttachmentEdit, self).__init__(bitmap='edit',
-            menuText=attachments.editItemMenuText,
-            helpText=attachments.editItemHelpText, *args, **kwargs)
-        
-    def doCommand(self, event, show=True):
-        dialog = self.viewer.editAttachmentDialog(bitmap=self.bitmap,
-                                                  items=self.viewer.curselection())
-        dialog.Show(show)
+class AttachmentEdit(ObjectEdit, NeedsSelectedAttachments, AttachmentsCommand):
+    __containerName__ = 'attachments'
 
 
 class AttachmentOpen(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand):

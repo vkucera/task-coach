@@ -965,7 +965,6 @@ class AttachmentSubjectPage(ColorEntryMixin, widgets.BookPage):
         filename = widgets.AttachmentSelector()
         if filename:
             if self.basePath:
-                print 'RELATIVE'
                 filename = attachment.getRelativePath(filename, self.basePath)
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)
