@@ -30,7 +30,8 @@ Release('0.71.2', 'October ??, 2008',
         Bug('''One couldn't add an URI attachment "by hand".''', '2167705'),
         Bug('''The combobox with tasks in the effort editor
 wouldn't always be properly filled, making it impossible to edit the effort
-record.''', '2167798', '2173127')
+record.''', '2167798', '2173127'),
+        Bug('''Warn the user when the task file cannot be saved.''', '2121470')
         ]
     ),
 

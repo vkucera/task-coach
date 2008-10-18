@@ -53,6 +53,8 @@ class IOController(object):
         self.__vcalFileDialogOpts = {'default_path': os.getcwd(), 
             'default_extension': 'vcal', 'wildcard': 
             _('VCalendar files (*.vcal)|*.vcal|All files (*.*)|*') }
+        self.__errorMessageOptions = dict(caption=_('%s file error')%meta.name, 
+                                          style=wx.ICON_ERROR)
 
     def syncMLConfig(self):
         return self.__taskFile.syncMLConfig()
@@ -75,8 +77,6 @@ class IOController(object):
             
     def open(self, filename=None, showerror=wx.MessageBox, 
              fileExists=os.path.exists, *args):
-        errorMessageOptions = dict(caption=_('%s file error')%meta.name, 
-                                   style=wx.ICON_ERROR)
         if self.__taskFile.needSave():
             if not self.__saveUnsavedChanges():
                 return
@@ -94,7 +94,7 @@ class IOController(object):
                 showerror(_('Error while reading %s:\n')%filename + \
                     ''.join(traceback.format_exception(*sys.exc_info())) + \
                     _('Are you sure it is a %s-file?')%meta.name, 
-                    **errorMessageOptions)
+                    **self.__errorMessageOptions)
                 return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%\
                 {'nrtasks': len(self.__taskFile.tasks()), 
@@ -104,9 +104,9 @@ class IOController(object):
             errorMessage = _("Cannot open %s because it doesn't exist")%filename
             # Use CallAfter on Mac OSX because otherwise the app will hang:
             if '__WXMAC__' in wx.PlatformInfo:
-                wx.CallAfter(showerror, errorMessage, **errorMessageOptions)
+                wx.CallAfter(showerror, errorMessage, **self.__errorMessageOptions)
             else:
-                showerror(errorMessage, **errorMessageOptions)
+                showerror(errorMessage, **self.__errorMessageOptions)
             self.__removeRecentFile(filename)
             
     def merge(self, filename=None):
@@ -117,24 +117,34 @@ class IOController(object):
             self.__messageCallback(_('Merged %(filename)s')%{'filename': filename}) 
             self.__addRecentFile(filename)
 
-    def save(self, *args):
+    def save(self, showerror=wx.MessageBox, *args):
         if self.__taskFile.filename():
-            self.__taskFile.save()
-            self.__showSaveMessage(self.__taskFile)
-            return True
+            try:
+                self.__taskFile.save()
+                self.__showSaveMessage(self.__taskFile)
+                return True
+            except IOError, reason:
+                errorMessage = _('Cannot save %s\n%s')%(self.__taskFile.filename(), reason)
+                showerror(errorMessage, **self.__errorMessageOptions)
+                return self.saveas(showerror=showerror)
         elif not self.__taskFile.isEmpty():
             return self.saveas()
         else:
             return False
 
-    def saveas(self, filename=None):
+    def saveas(self, filename=None, showerror=wx.MessageBox):
         if not filename:
             filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
         if filename:
-            self.__taskFile.saveas(filename)
-            self.__showSaveMessage(self.__taskFile)
-            self.__addRecentFile(filename)
-            return True
+            try:
+                self.__taskFile.saveas(filename)
+                self.__showSaveMessage(self.__taskFile)
+                self.__addRecentFile(filename)
+                return True
+            except IOError, reason:
+                errorMessage = _('Cannot save %s\n%s')%(filename, reason)
+                showerror(errorMessage, **self.__errorMessageOptions)
+                return self.saveas()
         else:
             return False
 

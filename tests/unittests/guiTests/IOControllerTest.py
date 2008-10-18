@@ -94,11 +94,36 @@ class IOControllerTest(test.TestCase):
         
     def testSaveTaskFileWithoutTasksButWithNotes(self):
         self.taskFile.notes().append(note.Note('Note'))
-        def saveasReplacement(self):
+        def saveasReplacement(*args, **kwargs):
             self.saveAsCalled = True
         originalSaveAs = self.iocontroller.__class__.saveas
         self.iocontroller.__class__.saveas = saveasReplacement
         self.iocontroller.save()
-        self.failUnless(self.iocontroller.saveAsCalled)
+        self.failUnless(self.saveAsCalled)
         self.iocontroller.__class__.saveas = originalSaveAs
     
+    def testIOErrorOnSave(self):
+        self.taskFile.setFilename('whatever.tsk')
+        def saveasReplacement(*args, **kwargs):
+            self.saveAsCalled = True
+        originalSaveAs = self.iocontroller.__class__.saveas
+        self.iocontroller.__class__.saveas = saveasReplacement
+        self.taskFile.raiseIOError = True
+        def showerror(*args, **kwargs):
+            self.showerrorCalled = True
+        self.iocontroller.save(showerror=showerror)
+        self.failUnless(self.showerrorCalled and self.saveAsCalled)
+        self.iocontroller.__class__.saveas = originalSaveAs
+
+    def testIOErrorOnSaveAs(self):
+        self.taskFile.raiseIOError = True
+        def saveasReplacement(*args, **kwargs):
+            self.saveAsCalled = True
+        originalSaveAs = self.iocontroller.__class__.saveas
+        def showerror(*args, **kwargs):
+            self.showerrorCalled = True
+            # Prevent the recursive call of saveas:
+            self.iocontroller.__class__.saveas = saveasReplacement
+        self.iocontroller.saveas(filename='whatever.tsk', showerror=showerror)
+        self.failUnless(self.showerrorCalled and self.saveAsCalled)
+        self.iocontroller.__class__.saveas = originalSaveAs
