@@ -66,6 +66,7 @@ footer = '''
                     <a href="changes.html">Change history</a><br>
                     <a href="roadmap.html" 
                        title="Future plans for %(name)s">Roadmap</a><br>
+                    <a href="http://www.fraca7.net:8010/waterfall/">Buildbot waterfall</a><br>
                     <a href="license.html">License</a><br>
                     <a href="credits.html">Credits</a><br>
                 </p>
