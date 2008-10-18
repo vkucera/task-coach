@@ -37,7 +37,8 @@ class ReminderControllerTest(test.TestCase):
         self.taskList.append(self.task)
         self.reminderController = ReminderControllerUnderTest(self.taskList,
             [], config.Settings(load=False), {})
-        self.reminderDateTime = date.DateTime.now() + date.TimeDelta(hours=1)
+        self.nowDateTime = date.DateTime.now()
+        self.reminderDateTime = self.nowDateTime + date.TimeDelta(hours=1)
         
     def testSetTaskReminderAddsClockEventToPublisher(self):
         self.task.setReminder(self.reminderDateTime)
@@ -107,7 +108,7 @@ class ReminderControllerTest(test.TestCase):
         self.task.setReminder(self.reminderDateTime)
         oneHour = date.TimeDelta(hours=1)
         self.reminderController.onCloseReminderDialog(self.dummyCloseEvent(oneHour))
-        self.assertEqual(date.DateTime.now() + oneHour, self.task.reminder())
+        self.assertEqual(self.nowDateTime + oneHour, self.task.reminder())
                
 
 class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
