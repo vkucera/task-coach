@@ -154,6 +154,10 @@ class IOController(object):
         if filename:
             selectionFile = persistence.TaskFile(filename)
             selectionFile.tasks().extend(tasks)
+            allCategories = set()
+            for task in tasks:
+                allCategories.update(task.categories())
+            selectionFile.categories().extend(allCategories)
             selectionFile.save()
             self.__showSaveMessage(selectionFile)        
             self.__addRecentFile(filename)
