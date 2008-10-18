@@ -127,7 +127,7 @@ class IOControllerTest(test.TestCase):
         self.iocontroller.saveas(filename=self.filename1, showerror=showerror)
         self.failUnless(self.showerrorCalled and self.saveAsCalled)
         self.iocontroller.__class__.saveas = originalSaveAs
-        
+    
     def testSaveSelectionAddsCategories(self):
         task1 = task.Task()
         task2 = task.Task()
@@ -140,5 +140,13 @@ class IOControllerTest(test.TestCase):
                                         filename=self.filename1)
         taskFile = persistence.TaskFile(self.filename1)
         taskFile.load()
-        self.assertEqual(1, len(taskFile.categories()))
+        self.assertEqual(1, len(taskFile.categories()))            
         
+    def testIOErrorOnSaveSave(self):
+        self.taskFile.raiseIOError = True
+        self.taskFile.setFilename(self.filename1)
+        def showerror(*args, **kwargs):
+            self.showerrorCalled = True
+        self.taskFile.tasks().append(task.Task())
+        self.iocontroller._saveSave(self.taskFile, showerror)
+        self.failUnless(self.showerrorCalled)

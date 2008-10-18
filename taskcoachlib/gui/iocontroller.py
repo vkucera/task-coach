@@ -38,19 +38,20 @@ class IOController(object):
         self.__taskFile = taskFile
         self.__messageCallback = messageCallback
         self.__settings = settings
-        self.__tskFileDialogOpts = {'default_path': os.getcwd(), 
+        defaultPath = os.path.expanduser('~')
+        self.__tskFileDialogOpts = {'default_path': defaultPath, 
             'default_extension': 'tsk', 'wildcard': 
             _('%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*')%meta.name }
-        self.__icsFileDialogOpts = {'default_path': os.getcwd(), 
+        self.__icsFileDialogOpts = {'default_path': defaultPath, 
             'default_extension': 'ics', 'wildcard': 
             _('iCalendar files (*.ics)|*.ics|All files (*.*)|*') }
-        self.__htmlFileDialogOpts = {'default_path': os.getcwd(), 
+        self.__htmlFileDialogOpts = {'default_path': defaultPath, 
             'default_extension': 'html', 'wildcard': 
             _('HTML files (*.html)|*.html|All files (*.*)|*') }
-        self.__csvFileDialogOpts = {'default_path': os.getcwd(),
+        self.__csvFileDialogOpts = {'default_path': defaultPath,
             'default_extension': 'csv', 'wildcard': 
             _('CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*')}
-        self.__vcalFileDialogOpts = {'default_path': os.getcwd(), 
+        self.__vcalFileDialogOpts = {'default_path': defaultPath, 
             'default_extension': 'vcal', 'wildcard': 
             _('VCalendar files (*.vcal)|*.vcal|All files (*.*)|*') }
         self.__errorMessageOptions = dict(caption=_('%s file error')%meta.name, 
@@ -84,6 +85,7 @@ class IOController(object):
             filename = self.__askUserForFile(_('Open'))
         if not filename:
             return
+        self.__updateDefaultPath(filename)
         if fileExists(filename):
             self.__closeUnconditionally() 
             self.__taskFile.setFilename(filename)
@@ -119,49 +121,63 @@ class IOController(object):
 
     def save(self, showerror=wx.MessageBox, *args):
         if self.__taskFile.filename():
-            try:
-                self.__taskFile.save()
-                self.__showSaveMessage(self.__taskFile)
+            if self._saveSave(self.__taskFile, showerror):
                 return True
-            except IOError, reason:
-                errorMessage = _('Cannot save %s\n%s')%(self.__taskFile.filename(), reason)
-                showerror(errorMessage, **self.__errorMessageOptions)
+            else:
                 return self.saveas(showerror=showerror)
         elif not self.__taskFile.isEmpty():
-            return self.saveas()
+            return self.saveas(showerror=showerror) # Ask for filename
         else:
             return False
 
     def saveas(self, filename=None, showerror=wx.MessageBox):
         if not filename:
             filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
-        if filename:
-            try:
-                self.__taskFile.saveas(filename)
-                self.__showSaveMessage(self.__taskFile)
-                self.__addRecentFile(filename)
-                return True
-            except IOError, reason:
-                errorMessage = _('Cannot save %s\n%s')%(filename, reason)
-                showerror(errorMessage, **self.__errorMessageOptions)
-                return self.saveas()
+            if not filename:
+                return False # User didn't enter a filename, cancel save
+        if self._saveSave(self.__taskFile, showerror, filename):
+            return True
         else:
-            return False
+            return self.saveas(showerror=showerror) # Try again
 
-    def saveselection(self, tasks, filename=None):
+    def saveselection(self, tasks, filename=None, showerror=wx.MessageBox,
+                      TaskFileClass=persistence.TaskFile):
         if not filename:
             filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
-        if filename:
-            selectionFile = persistence.TaskFile(filename)
-            selectionFile.tasks().extend(tasks)
-            allCategories = set()
-            for task in tasks:
-                allCategories.update(task.categories())
-            selectionFile.categories().extend(allCategories)
-            selectionFile.save()
-            self.__showSaveMessage(selectionFile)        
+            if not filename:
+                return False # User didn't enter a filename, cancel save
+        selectionFile = self._createSelectionFile(filename, tasks, TaskFileClass)
+        if self._saveSave(selectionFile, showerror):
+            return True
+        else:
+            return self.saveselection(tasks, showerror=showerror, 
+                                      TaskFileClass=TaskFileClass) # Try again
+            
+    def _createSelectionFile(self, filename, tasks, TaskFileClass):
+        selectionFile = TaskFileClass(filename)
+        selectionFile.tasks().extend(tasks)
+        allCategories = set()
+        for task in tasks:
+            allCategories.update(task.categories())
+        selectionFile.categories().extend(allCategories)
+        return selectionFile
+    
+    def _saveSave(self, file, showerror, filename=None):
+        ''' Save the file and show an error message if saving fails. '''
+        try:
+            if filename:
+                file.saveas(filename)
+            else:
+                file.save()
+                filename = file.filename()
+            self.__showSaveMessage(file)
             self.__addRecentFile(filename)
-
+            return True
+        except IOError, reason:
+            errorMessage = _('Cannot save %s\n%s')%(filename, reason)
+            showerror(errorMessage, **self.__errorMessageOptions)
+            return False
+        
     def saveastemplate(self, task):
         name = wx.GetTextFromUser(_('Please enter the template name.'),
                                   _('Save as template'))
@@ -324,3 +340,8 @@ class IOController(object):
             {'nrtasks': len(savedFile.tasks()), 
              'filename': savedFile.filename()})
 
+    def __updateDefaultPath(self, filename):
+        for options in [self.__tskFileDialogOpts, self.__csvFileDialogOpts,
+                        self.__icsFileDialogOpts, self.__htmlFileDialogOpts,
+                        self.__vcalFileDialogOpts]:
+            options['default_path'] = os.path.dirname(filename)
