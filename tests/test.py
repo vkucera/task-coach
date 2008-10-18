@@ -300,11 +300,16 @@ class TestProfiler:
 
     
 if __name__ == '__main__':
-    options, testFiles = TestOptionParser().parse_args()
-    allTests = AllTests(options, testFiles)
-    if options.profile:
-        TestProfiler(options).run(allTests.runTests)
-    else:
-        result = allTests.runTests()
-        if not result.wasSuccessful():
-            sys.exit(1)
+    try:
+        options, testFiles = TestOptionParser().parse_args()
+        allTests = AllTests(options, testFiles)
+        if options.profile:
+            TestProfiler(options).run(allTests.runTests)
+        else:
+            result = allTests.runTests()
+            if not result.wasSuccessful():
+                sys.exit(1)
+    except:
+        import traceback
+        traceback.print_exc(file=file('log.txt', 'a+'))
+        raise
