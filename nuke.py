@@ -21,9 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, shutil
 
 def nuke():
-    sin, souterr = os.popen4('svn st --no-ignore')
+    sin, sout = os.popen4('svn st --no-ignore')
 
-    for line in souterr:
+    for line in sout:
         if line.startswith('?') or line.startswith('I'):
             filename = line[7:].strip()
             if filename != '.buildbot-sourcedata':
@@ -33,7 +33,7 @@ def nuke():
                     os.remove(filename)
                 print 'Removed', filename
 
-    souterr.close()
+    sout.close()
     sin.close()
 
 if __name__ == '__main__':
