@@ -108,7 +108,7 @@ class ReminderControllerTest(test.TestCase):
         self.task.setReminder(self.reminderDateTime)
         oneHour = date.TimeDelta(hours=1)
         self.reminderController.onCloseReminderDialog(self.dummyCloseEvent(oneHour))
-        self.assertEqual(self.nowDateTime + oneHour, self.task.reminder())
+        self.failUnless(abs(self.nowDateTime + oneHour - self.task.reminder()) < date.TimeDelta(seconds=5))
                
 
 class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
