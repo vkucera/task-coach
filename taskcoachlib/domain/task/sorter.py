@@ -44,6 +44,9 @@ class Sorter(base.TreeSorter):
         # change, because when switching from list to tree mode or vice versa
         # the presentation of the model almost certainly needs to be updated.
         self.reset(forceNotification=True)
+
+    def treeMode(self):
+        return self.__treeMode
         
     def reset(self, *args, **kwargs):
         self._invalidateRootItemCache()
@@ -53,9 +56,13 @@ class Sorter(base.TreeSorter):
         self._invalidateRootItemCache()
         super(Sorter, self).extendSelf(*args, **kwargs)
 
-    def removeItemsFromSelf(self, *args, **kwargs):
+    def removeItemsFromSelf(self, itemsToRemove):
         self._invalidateRootItemCache()
-        super(Sorter, self).removeItemsFromSelf(*args, **kwargs)
+        itemsToRemove = set(itemsToRemove)
+        if self.treeMode():
+            for item in itemsToRemove.copy():
+                itemsToRemove.update(item.children(recursive=True)) 
+        super(Sorter, self).removeItemsFromSelf(itemsToRemove)
 
     def rootItems(self):
         if self.__rootItems is None:
