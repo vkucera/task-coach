@@ -73,15 +73,26 @@ class Application(object):
             splash = gui.SplashScreen()
         else:
             splash = None
-        
         self.taskFile = persistence.TaskFile()
         self.autoSaver = persistence.AutoSaver(settings)
         self.taskRelationshipManager = task.TaskRelationshipManager( \
             taskList=self.taskFile.tasks(), settings=settings)
         self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
-        self.mainwindow = gui.MainWindow(self.io, self.taskFile, settings, splash)
+        self.mainwindow = gui.MainWindow(self.io, self.taskFile, settings, 
+                                         splash)
+        if not self.settings.getboolean('file', 'inifileloaded'):
+            self.warnUserThatIniFileWasNotLoaded()
         if loadTaskFile:
             self.io.openAfterStart(self._args)
-        
+
+    def warnUserThatIniFileWasNotLoaded(self):
+        from taskcoachlib import meta
+        from taskcoachlib.i18n import _
+        reason = self.settings.get('file', 'inifileloaderror')
+        wx.MessageBox(\
+            _("Couldn't load settings from TaskCoach.ini:\n%s")%reason,
+            _('%s file error')%meta.name, style=wx.ICON_ERROR)
+        self.settings.setboolean('file', 'inifileloaded', True) # Reset
+
     def displayMessage(self, message):
         self.mainwindow.displayMessage(message)

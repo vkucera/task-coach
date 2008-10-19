@@ -32,6 +32,8 @@ Release('0.71.2', 'October 19, 2008',
 wouldn't always be properly filled, making it impossible to edit the effort
 record.''', '2167798', '2173127'),
         Bug('''Warn the user when the task file cannot be saved.''', '2121470'),
+        Bug('''Warn the user when the TaskCoach.ini file cannot be loaded.''',
+            '2101765'),
         Bug('''When saving selected tasks, also include any categories the 
 selected tasks are in.'''),
         Bug('''The right-click menu item 'Start tracking effort' wouldn't 

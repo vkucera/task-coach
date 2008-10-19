@@ -345,3 +345,4 @@ class IOController(object):
                         self.__icsFileDialogOpts, self.__htmlFileDialogOpts,
                         self.__vcalFileDialogOpts]:
             options['default_path'] = os.path.dirname(filename)
+
