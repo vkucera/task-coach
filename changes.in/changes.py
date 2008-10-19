@@ -33,7 +33,9 @@ wouldn't always be properly filled, making it impossible to edit the effort
 record.''', '2167798', '2173127'),
         Bug('''Warn the user when the task file cannot be saved.''', '2121470'),
         Bug('''When saving selected tasks, also include any categories the 
-selected tasks are in.''')
+selected tasks are in.'''),
+        Bug('''The right-click menu item 'Start tracking effort' wouldn't 
+work for recurring tasks.''', '2165652')
         ]
     ),
 

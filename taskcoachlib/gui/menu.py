@@ -533,7 +533,7 @@ class EffortMenu(Menu):
             uicommand.EffortEdit(viewer=viewerContainer, effortList=efforts),
             uicommand.EffortDelete(viewer=viewerContainer, effortList=efforts),
             None,
-            uicommand.EffortStart(viewer=viewerContainer),
+            uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
             uicommand.EffortStop(taskList=tasks))
        
 
@@ -700,7 +700,7 @@ class TaskPopupMenu(Menu):
                 None,
                 uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
                                     taskList=tasks, settings=settings),
-                uicommand.EffortStart(viewer=taskViewer),
+                uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
                 uicommand.EffortStop(taskList=tasks))
         if taskViewer.isTreeViewer():
             self.appendUICommands(None,
