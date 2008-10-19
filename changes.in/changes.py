@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.71.2', 'October ??, 2008',
+Release('0.71.2', 'October 19, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''The reminder dialog didn't work.''', '2168756'),
