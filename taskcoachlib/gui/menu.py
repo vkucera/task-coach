@@ -603,8 +603,13 @@ class TaskBarMenu(Menu):
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
-                                    taskList=tasks, settings=settings),
-                None)
+                                    taskList=tasks, settings=settings))
+        if settings.getboolean('feature', 'notes'):
+            self.appendUICommands(
+                uicommand.NoteNew(notes=taskFile.notes(), settings=settings,
+                                  categories=categories))
+        if settings.getboolean('feature', 'effort'):
+            self.appendUICommands(None) # Separator
             label = _('&Start tracking effort')
             self.appendMenu(label,
                 StartEffortForTaskMenu(taskBarIcon, tasks, self, label), 'start')

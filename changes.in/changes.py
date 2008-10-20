@@ -42,6 +42,8 @@ work for recurring tasks.''', '2165652')
     featuresAdded = [
         Feature('''The SyncML password dialog now has a more specific
 title.''', '2176781'),
+        Feature('''The system tray popup menu now has a 'New note' menu 
+item.''', '2182735')
         ]
     ),
 
