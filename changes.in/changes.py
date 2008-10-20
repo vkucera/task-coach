@@ -38,6 +38,10 @@ record.''', '2167798', '2173127'),
 selected tasks are in.'''),
         Bug('''The right-click menu item 'Start tracking effort' wouldn't 
 work for recurring tasks.''', '2165652')
+        ],
+    featuresAdded = [
+        Feature('''The SyncML password dialog now has a more specific
+title.''', '2176781'),
         ]
     ),
 
