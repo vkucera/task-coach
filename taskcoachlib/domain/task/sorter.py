@@ -62,6 +62,7 @@ class Sorter(base.TreeSorter):
         if self.treeMode():
             for item in itemsToRemove.copy():
                 itemsToRemove.update(item.children(recursive=True)) 
+        itemsToRemove = [item for item in itemsToRemove if item in self]
         super(Sorter, self).removeItemsFromSelf(itemsToRemove)
 
     def rootItems(self):

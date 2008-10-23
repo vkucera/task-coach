@@ -40,11 +40,12 @@ class Filter(patterns.SetDecorator):
         super(Filter, self).extendSelf(self.filter(items))
 
     def removeItemsFromSelf(self, items):
-        itemsToRemoveFromSelf = set([item for item in items if item in self])
+        itemsToRemove = set(items)
         if self.treeMode():
-            for item in itemsToRemoveFromSelf.copy():
-                itemsToRemoveFromSelf.update(item.children(recursive=True))
-        super(Filter, self).removeItemsFromSelf(itemsToRemoveFromSelf)
+            for item in itemsToRemove.copy():
+                itemsToRemove.update(item.children(recursive=True))
+        itemsToRemove = [item for item in itemsToRemove if item in self]
+        super(Filter, self).removeItemsFromSelf(itemsToRemove)
         
     def reset(self):
         filteredItems = self.filter(self.observable())
