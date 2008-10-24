@@ -136,6 +136,7 @@ class IOControllerTest(test.TestCase):
         self.taskFile.categories().append(aCategory)
         for eachTask in self.taskFile.tasks():
             eachTask.addCategory(aCategory)
+            aCategory.addCategorizable(eachTask)
         self.iocontroller.saveselection(tasks=self.taskFile.tasks(), 
                                         filename=self.filename1)
         taskFile = persistence.TaskFile(self.filename1)
