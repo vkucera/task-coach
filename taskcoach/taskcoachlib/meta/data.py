@@ -16,11 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re
+import os, re
 
 name = 'Task Coach'
 description = 'Your friendly task manager'
-version = '0.71.1'
+# The buildbot sets TCVERSION when building snapshots.
+version = os.environ.get('TCVERSION', '0.71.1')
 release_month = 'October'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
