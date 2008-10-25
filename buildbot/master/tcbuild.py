@@ -117,4 +117,4 @@ class UploadDEB(FileUpload):
         kwargs['slavesrc'] = WithProperties('dist/taskcoach_r%s-1_all.deb', 'got_revision')
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/taskcoach_r%s-1_all.deb', 'got_revision')
         kwargs['mode'] = 0644
-        FileUpload.__init__(**kwargs)
+        FileUpload.__init__(self, **kwargs)
