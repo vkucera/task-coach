@@ -77,6 +77,7 @@ class BuildDMG(DistCompile):
     descriptionDone = ['MacOS', 'binary']
 
     def createSummary(self, log):
+        DistCompile.createSummary(self, log)
         self.addURL('download',
                     'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision'))
 
@@ -93,6 +94,7 @@ class BuildEXE(DistCompile):
     descriptionDone = ['Windows', 'binary']
 
     def createSummary(self, log):
+        DistCompile.createSummary(self, log)
         self.addURL('download',
                     'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-win32.exe' % self.getProperty('got_revision'))
 
@@ -109,6 +111,7 @@ class BuildSource(DistCompile):
     descriptionDone = ['Source', 'distribution']
 
     def createSummary(self, log):
+        DistCompile.createSummary(self, log)
         self.addURL('download .tar.gz',
                     'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.tar.gz' % self.getProperty('got_revision'))
         self.addURL('download .zip',
@@ -134,6 +137,7 @@ class BuildDEB(DistCompile):
     descriptionDone = ['Debian', 'package']
 
     def createSummary(self, log):
+        DistCompile.createSummary(self, log)
         self.addURL('download',
                     'http://www.fraca7.net/TaskCoach-packages/taskcoach_r%s-1_all.deb' % self.getProperty('got_revision'))
 
