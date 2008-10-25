@@ -248,12 +248,11 @@ pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
 
 pages['screenshots'] = \
 '''       <H3>Screenshots</H3>         
-        <P>Here are a couple of screenshots from version 0.62 that show 
-        the main window, the print preview, and the task editor.</P>
-        <P><IMG SRC="screenshot-0.62-treeview.png" ALT="Main window with task tree view"></P>
-        <P><IMG SRC="screenshot-0.62-listview.png" ALT="Main window with task list view"></P>
-        <P><IMG SRC="screenshot-0.62-printpreview.png" ALT="Print preview"></P>
-        <P><IMG SRC="screenshot-0.62-taskeditor.png" ALT="Task editor"></P>'''
+        <P>Here are a couple of screenshots that show 
+        the main window, the print preview, and the task editor.</P>''' 
+for filename in glob.glob(os.path.join('screenshots', '*.png')):
+    pages['screenshots'] += '<P><IMG SRC="%s" ALT="%s"></P>'%(filename,
+                                                              filename)
 
 pages['i18n'] = \
 '''        <H3>Internationalization</H3>
@@ -547,3 +546,9 @@ for file in glob.glob('*.png') + glob.glob('*.ico') + glob.glob('*.css') + \
     ['../icons.in/splash.png']:
     print file
     shutil.copyfile(file, os.path.join(dist, os.path.basename(file)))
+
+if not os.path.exists(os.path.join(dist, 'screenshots')):
+    os.mkdir(os.path.join(dist, 'screenshots'))
+for file in glob.glob('screenshots/*.png'):
+    print file
+    shutil.copyfile(file, os.path.join(dist, 'screenshots', os.path.basename(file)))
