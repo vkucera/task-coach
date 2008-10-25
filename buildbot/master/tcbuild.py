@@ -6,6 +6,7 @@ from buildbot import interfaces
 from buildbot.process.buildstep import FAILURE
 from zope.interface import implements
 
+
 class TaskCoachEmailLookup(object):
     implements(interfaces.IEmailLookup)
 
