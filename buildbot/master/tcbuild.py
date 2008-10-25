@@ -63,6 +63,12 @@ class BuildDMG(DistCompile):
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
+class UploadDMG(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.dmg', 'got_revision')
+        kwargs['masterdest'] = '/var/www/htdocs/TaskCoach-packages'
+        FileUpload.__init__(self, **kwargs)
+
 class BuildEXE(DistCompile):
     name = 'windist'
     description = ['Generating', 'Windows', 'binary']
