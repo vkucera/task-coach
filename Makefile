@@ -58,7 +58,7 @@ icons: taskcoachlib/gui/icons.py
 
 templates: taskcoachlib/persistence/xml/templates.py
 
-taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip
+taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png
 	cd icons.in; $(PYTHON) make.py
 
 taskcoachlib/persistence/xml/templates.py:
