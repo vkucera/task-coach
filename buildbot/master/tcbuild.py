@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from buildbot.steps.shell import Compile
+from buildbot.steps.shell import Compile, WithProperties
 from buildbot.steps.transfer import FileUpload
 
 class Cleanup(Compile):
@@ -52,40 +52,32 @@ class Epydoc(Compile):
 #==============================================================================
 # Platform-specific
 
-PKGVER = '0.71.2'
+class DistCompile(Compile):
+    def __init__(self, **kwargs):
+        kwargs['command'] = ['make', self.name,
+                             'TCVERSION=r%s' % WithProperties('%s', 'got_revision')]
+        Compile.__init__(self, **kwargs)
 
-class BuildDMG(Compile):
+class BuildDMG(DistCompile):
     name = 'dmg'
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'dmg']
-        Compile.__init__(self, **kwargs)
-
-class BuildEXE(Compile):
-    name = 'exe'
+class BuildEXE(DistCompile):
+    name = 'windist'
     description = ['Generating', 'Windows', 'binary']
     descriptionDone = ['Windows', 'binary']
 
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'windist']
-        Compile.__init__(self, **kwargs)
-
 class UploadEXE(FileUpload):
     def __init__(self, **kwargs):
-        kwargs['slavesrc'] = 'dist/TaskCoach-%s-win32.exe' % PKGVER
-        kwargs['masterdest'] = '~/TaskCoach-packages'
+        kwargs['slavesrc'] = 'dist/TaskCoach-r%s-win32.exe' % WithProperties('%s', 'got_revision')
+        kwargs['masterdest'] = '/var/www/htdocs/TaskCoach-packages'
         FileUpload.__init__(self, **kwargs)
 
     def createSummary(self, log):
-        self.addURL('download', 'http://www.fraca7.net/TaskCoach-packages/TaskCoach-%s-win32.exe' % PKGVER)
+        self.addURL('download', 'http://www.fraca7.net/TaskCoach-packages/TaskCoach-%s-win32.exe' % WithProperties('%s', 'got_revision'))
 
-class BuildDEB(Compile):
+class BuildDEB(DistCompile):
     name = 'deb'
     description = ['Generating', 'Debian', 'package']
     descriptionDone = ['Debian', 'package']
-
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'deb']
-        Compile.__init__(self, **kwargs)
