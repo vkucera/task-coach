@@ -103,6 +103,31 @@ class UploadEXE(FileUpload):
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
+class BuildSource(DistCompile):
+    name = 'sdist'
+    description = ['Generating', 'source', 'distribution']
+    descriptionDone = ['Source', 'distribution']
+
+    def createSummary(self, log):
+        self.addURL('download .tar.gz',
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.tar.gz' % self.getProperty('got_revision'))
+        self.addURL('download .zip',
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.zip' % self.getProperty('got_revision'))
+
+class UploadSourceTar(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.tar.gz', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.tar.gz', 'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
+class UploadSourceZip(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.zip', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.zip', 'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
 class BuildDEB(DistCompile):
     name = 'deb'
     description = ['Generating', 'Debian', 'package']
@@ -115,6 +140,6 @@ class BuildDEB(DistCompile):
 class UploadDEB(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/taskcoach_r%s-1_all.deb', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/taskcoach_r%s-1_all.deb', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/taskcoach_r%s-1_all.deb', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
