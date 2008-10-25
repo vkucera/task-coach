@@ -247,10 +247,12 @@ pages['features'] = \
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
 
 pages['screenshots'] = '<H3>Screenshots</H3>'
-for filename in glob.glob(os.path.join('screenshots', '*.png')):
+for filename in reversed(glob.glob(os.path.join('screenshots', '*.png'))):
     release, platform, description = os.path.basename(filename).split('-')
     description = description[:-len('.png')]
-    pages['screenshots'] += '<P>%s (release %s on %s)<BR><IMG SRC="%s" ALT="%s"></P>'%(description, release, platform, filename, filename)
+    caption = '%s (release %s on %s)'%(description, release, platform)
+    image = '<IMG SRC="%s" ALT="%s">'%(filename, caption)
+    pages['screenshots'] += '<P>%s<BR>%s</P>'%(caption, image)
 
 pages['i18n'] = \
 '''        <H3>Internationalization</H3>
