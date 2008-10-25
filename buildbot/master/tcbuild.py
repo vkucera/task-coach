@@ -2,6 +2,18 @@
 
 from buildbot.steps.shell import Compile, WithProperties
 from buildbot.steps.transfer import FileUpload
+from buildbot import interfaces
+from zope.interface import implements
+
+class TaskCoachEmailLookup(object):
+    implements(interfaces.IEmailLookup)
+
+    def getAddress(self, name):
+        try:
+            return { 'fraca7': 'fraca7@free.fr',
+                     'fniessink': 'frank@niessink.com' }[name]
+        except KeyError:
+            return None
 
 class Cleanup(Compile):
     name = 'Cleanup'
@@ -66,8 +78,12 @@ class BuildDMG(DistCompile):
 class UploadDMG(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.dmg', 'got_revision')
-        kwargs['masterdest'] = '/var/www/htdocs/TaskCoach-packages'
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision')
         FileUpload.__init__(self, **kwargs)
+
+    def createSummary(self, log):
+        self.addURL('download',
+                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision'))
 
 class BuildEXE(DistCompile):
     name = 'windist'
@@ -77,12 +93,12 @@ class BuildEXE(DistCompile):
 class UploadEXE(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s-win32.exe', 'got_revision')
-        kwargs['masterdest'] = '/var/www/htdocs/TaskCoach-packages'
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-win32.exe', 'got_revision')
         FileUpload.__init__(self, **kwargs)
 
     def createSummary(self, log):
         self.addURL('download',
-                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-%s-win32.exe', 'got_revision'))
+                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-win32.exe', 'got_revision'))
 
 class BuildDEB(DistCompile):
     name = 'deb'
