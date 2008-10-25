@@ -246,13 +246,11 @@ pages['features'] = \
 
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
 
-pages['screenshots'] = \
-'''       <H3>Screenshots</H3>         
-        <P>Here are a couple of screenshots that show 
-        the main window, the print preview, and the task editor.</P>''' 
+pages['screenshots'] = '<H3>Screenshots</H3>'
 for filename in glob.glob(os.path.join('screenshots', '*.png')):
-    pages['screenshots'] += '<P><IMG SRC="%s" ALT="%s"></P>'%(filename,
-                                                              filename)
+    release, platform, description = os.path.basename(filename).split('-')
+    description = description[:-len('.png')]
+    pages['screenshots'] += '<P>%s (release %s on %s)<BR><IMG SRC="%s" ALT="%s"></P>'%(description, release, platform, filename, filename)
 
 pages['i18n'] = \
 '''        <H3>Internationalization</H3>
