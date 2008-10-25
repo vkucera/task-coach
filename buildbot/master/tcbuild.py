@@ -76,18 +76,19 @@ class BuildDMG(DistCompile):
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
+    def createSummary(self, log):
+        self.addURL('download',
+                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision'))
+
 class UploadDMG(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.dmg', 'got_revision')
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision')
         FileUpload.__init__(self, **kwargs)
 
-    def finished(self, result):
-        result = FileUpload.finished(self, result)
-        if result != FAILED:
-            self.addURL('download',
-                        WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision'))
-        return result
+    def createSummary(self, log):
+        self.addURL('download',
+                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision'))
 
 class BuildEXE(DistCompile):
     name = 'windist'
