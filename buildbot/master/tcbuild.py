@@ -78,7 +78,7 @@ class BuildDMG(DistCompile):
 
     def createSummary(self, log):
         self.addURL('download',
-                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision'))
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision'))
 
 class UploadDMG(FileUpload):
     def __init__(self, **kwargs):
