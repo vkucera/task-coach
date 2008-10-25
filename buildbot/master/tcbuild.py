@@ -3,6 +3,7 @@
 from buildbot.steps.shell import Compile, WithProperties
 from buildbot.steps.transfer import FileUpload
 from buildbot import interfaces
+from buildbot.process.buildstep import FAILURE
 from zope.interface import implements
 
 class TaskCoachEmailLookup(object):
@@ -81,9 +82,12 @@ class UploadDMG(FileUpload):
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision')
         FileUpload.__init__(self, **kwargs)
 
-    def createSummary(self, log):
-        self.addURL('download',
-                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision'))
+    def finished(self, result):
+        result = FileUpload.finished(self, result)
+        if result != FAILED:
+            self.addURL('download',
+                        WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision'))
+        return result
 
 class BuildEXE(DistCompile):
     name = 'windist'
