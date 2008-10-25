@@ -84,28 +84,37 @@ class UploadDMG(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.dmg', 'got_revision')
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision')
+        kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
-
-    def createSummary(self, log):
-        self.addURL('download',
-                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision'))
 
 class BuildEXE(DistCompile):
     name = 'windist'
     description = ['Generating', 'Windows', 'binary']
     descriptionDone = ['Windows', 'binary']
 
+    def createSummary(self, log):
+        self.addURL('download',
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-win32.exe' % self.getProperty('got_revision'))
+
 class UploadEXE(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s-win32.exe', 'got_revision')
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-win32.exe', 'got_revision')
+        kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
-
-    def createSummary(self, log):
-        self.addURL('download',
-                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-win32.exe', 'got_revision'))
 
 class BuildDEB(DistCompile):
     name = 'deb'
     description = ['Generating', 'Debian', 'package']
     descriptionDone = ['Debian', 'package']
+
+    def createSummary(self, log):
+        self.addURL('download',
+                    'http://www.fraca7.net/TaskCoach-packages/taskcoach_r%s-1_all.deb' % self.getProperty('got_revision'))
+
+class UploadDEB(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/taskcoach_r%s-1_all.deb', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/taskcoach_r%s-1_all.deb', 'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(**kwargs)
