@@ -55,7 +55,7 @@ class Epydoc(Compile):
 class DistCompile(Compile):
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', self.name,
-                             'TCVERSION=r%s' % WithProperties('%s', 'got_revision')]
+                             WithProperties('TCVERSION=r%s', 'got_revision')]
         Compile.__init__(self, **kwargs)
 
 class BuildDMG(DistCompile):
@@ -70,12 +70,13 @@ class BuildEXE(DistCompile):
 
 class UploadEXE(FileUpload):
     def __init__(self, **kwargs):
-        kwargs['slavesrc'] = 'dist/TaskCoach-r%s-win32.exe' % WithProperties('%s', 'got_revision')
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s-win32.exe', 'got_revision')
         kwargs['masterdest'] = '/var/www/htdocs/TaskCoach-packages'
         FileUpload.__init__(self, **kwargs)
 
     def createSummary(self, log):
-        self.addURL('download', 'http://www.fraca7.net/TaskCoach-packages/TaskCoach-%s-win32.exe' % WithProperties('%s', 'got_revision'))
+        self.addURL('download',
+                    WithProperties('http://www.fraca7.net/TaskCoach-packages/TaskCoach-%s-win32.exe', 'got_revision'))
 
 class BuildDEB(DistCompile):
     name = 'deb'
