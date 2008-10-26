@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, sys, glob, wx
+import os, sys, glob, shutil, wx
 sys.path.insert(0, '..')
 from taskcoachlib import meta
 import style
@@ -529,33 +529,38 @@ pages['devinfo'] = \
     should succeed before committing.
 '''
 
-dist = os.path.join('..', 'website.out')
+def ensureFolderExists(folder):    
+    if not os.path.exists(folder):
+        os.mkdir(folder)
 
-if not os.path.isdir(dist):
-    os.mkdir(dist)
-
-for title, text in pages.items():
-    htmlfile = file(os.path.join(dist, '%s.html'%title), 'w')
-    text = style.header + text%meta.metaDict + style.footer
-    htmlfile.write(text)
-    htmlfile.close()
-
-pad = file('pad.xml').read()
-padfile = file(os.path.join(dist, 'pad.xml'), 'w')
-padfile.write(pad%meta.metaDict)
-padfile.close()
-
-import shutil, glob
-
-def copyFiles(targetFolder, *patterns):
-    if not os.path.exists(targetFolder):
-        os.mkdir(targetFolder)
+def writeFile(folder, filename, contents):
+    ensureFolderExists(folder)
+    filename = os.path.join(folder, filename)
+    print 'Creating %s'%filename
+    fd = file(filename, 'w')
+    fd.write(contents)
+    fd.close()
+    
+def expandPatterns(*patterns):
     for pattern in patterns:
-        for source in glob.glob(pattern):
-            target = os.path.join(targetFolder, os.path.basename(source))
-            print 'Copying %s to %s'%(source, target)
-            shutil.copyfile(source, target)
+        for filename in glob.glob(pattern):
+            yield filename
+    
+def copyFiles(folder, *patterns):
+    ensureFolderExists(folder)
+    for source in expandPatterns(*patterns):
+        target = os.path.join(folder, os.path.basename(source))
+        print 'Copying %s to %s'%(source, target)
+        shutil.copyfile(source, target)
 
+def createPAD(folder, filename='pad.xml'):
+    padTemplate = file(filename).read()
+    writeFile(folder, filename, padTemplate%meta.metaDict)
+    
+def createHTMLPages(targetFolder, pages):    
+    for title, text in pages.items():
+        contents = style.header + text%meta.metaDict + style.footer
+        writeFile(targetFolder, '%s.html'%title, contents)
 
 def createThumbnail(srcFilename, targetFolder, bitmapType=wx.BITMAP_TYPE_PNG,
                     thumbnailWidth=200.):
@@ -565,16 +570,22 @@ def createThumbnail(srcFilename, targetFolder, bitmapType=wx.BITMAP_TYPE_PNG,
     image.Rescale(thumbnailWidth, thumbnailHeight)
     thumbFilename = os.path.join(targetFolder, 
                                  'Thumb-' + os.path.basename(srcFilename))
+    print 'Creating %s'%thumbFilename
     image.SaveFile(thumbFilename, bitmapType)
 
 def createThumbnails(targetFolder, *patterns):
-    for pattern in patterns:
-        for source in glob.glob(pattern):
-            createThumbnail(source, screenshotTargetFolder)
-            
-            
-copyFiles(dist, '*.png', '*.ico', '*.css', '../icons.in/splash.png')    
+    for source in expandPatterns(*patterns):
+        createThumbnail(source, targetFolder)
 
-screenshotTargetFolder = os.path.join(dist, 'screenshots')
-copyFiles(screenshotTargetFolder, 'screenshots/*.png')
-createThumbnails(screenshotTargetFolder, 'screenshots/*.png')
+def copyScreenshots(targetFolder, screenshotFolder='screenshots', 
+                                  screenshotFiles='*.png'):
+    screenshotTargetFolder = os.path.join(targetFolder, screenshotFolder)
+    screenshotFiles = os.path.join(screenshotFolder, screenshotFiles)
+    copyFiles(screenshotTargetFolder, screenshotFiles)
+    createThumbnails(screenshotTargetFolder, screenshotFiles)
+
+websiteFolder = os.path.join('..', 'website.out')            
+createHTMLPages(websiteFolder, pages)
+createPAD(websiteFolder)
+copyFiles(websiteFolder, '*.png', '*.ico', '*.css', '../icons.in/splash.png')    
+copyScreenshots(websiteFolder)
