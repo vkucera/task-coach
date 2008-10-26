@@ -17,11 +17,15 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-da'''
+'''
 
 from changetypes import *
 
 releases = [
+            
+Release('0.71.3', 'November ??, 2008',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[]),
 
 Release('0.71.2', 'October 24, 2008',
     summary='''This is a bugfix release.''',
