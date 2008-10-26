@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, sys, glob
+import os, sys, glob, wx
 sys.path.insert(0, '..')
 from taskcoachlib import meta
 import style
@@ -246,12 +246,16 @@ pages['features'] = \
 
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
 
-pages['screenshots'] = '<H3>Screenshots</H3>'
+pages['screenshots'] = '''<H3>Screenshots</H3>
+        <P>Click on a thumbnail image to see the full size screenshot.</P>'''
 for filename in reversed(glob.glob(os.path.join('screenshots', '*.png'))):
-    release, platform, description = os.path.basename(filename).split('-')
+    basename = os.path.basename(filename)
+    release, platform, description = basename.split('-')
     description = description[:-len('.png')]
     caption = '%s (release %s on %s)'%(description, release, platform)
-    image = '<IMG SRC="%s" ALT="%s">'%(filename, caption)
+    thumbnailFilename = os.path.join('screenshots', 'Thumb-'+basename)
+    thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
+    image = '<A HREF="%s">%s</A>'%(filename, thumbnailImage)
     pages['screenshots'] += '<P>%s<BR>%s</P>'%(caption, image)
 
 pages['i18n'] = \
@@ -542,13 +546,35 @@ padfile.write(pad%meta.metaDict)
 padfile.close()
 
 import shutil, glob
-for file in glob.glob('*.png') + glob.glob('*.ico') + glob.glob('*.css') + \
-    ['../icons.in/splash.png']:
-    print file
-    shutil.copyfile(file, os.path.join(dist, os.path.basename(file)))
 
-if not os.path.exists(os.path.join(dist, 'screenshots')):
-    os.mkdir(os.path.join(dist, 'screenshots'))
-for file in glob.glob('screenshots/*.png'):
-    print file
-    shutil.copyfile(file, os.path.join(dist, 'screenshots', os.path.basename(file)))
+def copyFiles(targetFolder, *patterns):
+    if not os.path.exists(targetFolder):
+        os.mkdir(targetFolder)
+    for pattern in patterns:
+        for source in glob.glob(pattern):
+            target = os.path.join(targetFolder, os.path.basename(source))
+            print 'Copying %s to %s'%(source, target)
+            shutil.copyfile(source, target)
+
+
+def createThumbnail(srcFilename, targetFolder, bitmapType=wx.BITMAP_TYPE_PNG,
+                    thumbnailWidth=200.):
+    image = wx.Image(srcFilename, bitmapType)
+    scaleFactor = thumbnailWidth / image.Width
+    thumbnailHeight = int(image.Height * scaleFactor)
+    image.Rescale(thumbnailWidth, thumbnailHeight)
+    thumbFilename = os.path.join(targetFolder, 
+                                 'Thumb-' + os.path.basename(srcFilename))
+    image.SaveFile(thumbFilename, bitmapType)
+
+def createThumbnails(targetFolder, *patterns):
+    for pattern in patterns:
+        for source in glob.glob(pattern):
+            createThumbnail(source, screenshotTargetFolder)
+            
+            
+copyFiles(dist, '*.png', '*.ico', '*.css', '../icons.in/splash.png')    
+
+screenshotTargetFolder = os.path.join(dist, 'screenshots')
+copyFiles(screenshotTargetFolder, 'screenshots/*.png')
+createThumbnails(screenshotTargetFolder, 'screenshots/*.png')
