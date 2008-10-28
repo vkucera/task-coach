@@ -1458,10 +1458,20 @@ class MailItem(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(MailItem, self).__init__(bitmap='email', *args, **kwargs)
 
-    def doCommand(self, event):
+    def doCommand(self, event, mail=writeMail, showerror=wx.MessageBox):
         items = self.viewer.curselection()
+        subject = self.subject(items)
+        body = self.body(items)
+        self.mail(subject, body, mail, showerror)
+
+    def subject(self, items):
         if len(items) > 1:
-            subject = self.subjectForMultipleItems()
+            return self.subjectForMultipleItems()
+        else:
+            return items[0].subject(recursive=True)
+        
+    def body(self, items):
+        if len(items) > 1:
             bodyLines = []
             for item in items:
                 bodyLines.append(item.subject(recursive=True) + '\n')
@@ -1469,11 +1479,16 @@ class MailItem(ViewerCommand):
                     bodyLines.extend(item.description().splitlines())
                     bodyLines.append('\n')
         else:
-            subject = items[0].subject(recursive=True)
             bodyLines = items[0].description().splitlines()
-        body = '\r\n'.join(bodyLines)
-        writeMail('', subject, body)
+        return '\r\n'.join(bodyLines)        
 
+    def mail(self, subject, body, mail, showerror):
+        try:
+            mail('', subject, body)
+        except Exception, reason:
+            showerror(_('Cannot send email:\n%s')%reason, 
+                      caption=_('%s mail error')%meta.name, style=wx.ICON_ERROR)        
+        
 
 class TaskMail(NeedsSelectedTasks, MailItem):
     def __init__(self, *args, **kwargs):

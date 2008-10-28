@@ -90,8 +90,22 @@ class NewTaskWithSelectedCategoryTest(test.wxTestCase):
 
 
 class MailTaskTest(test.TestCase):
-    def testCreate(self):
-        mailTask = gui.uicommand.TaskMail()
+    def testException(self):
+        class DummyTask(object):
+            def subject(self, *args, **kwargs):
+                return 'subject'
+            def description(self):
+                return 'description'
+        class DummyViewer(object):
+            def curselection(self):
+                return [DummyTask()]
+        def mail(*args):
+            raise WindowsError, 'message'
+        def showerror(*args, **kwargs):
+            self.showerror = args
+        mailTask = gui.uicommand.TaskMail(viewer=DummyViewer())
+        mailTask.doCommand(None, mail=mail, showerror=showerror)
+        self.assertEqual('Cannot send email:\nmessage', self.showerror[0])
 
 
 class DummyViewer(object):
