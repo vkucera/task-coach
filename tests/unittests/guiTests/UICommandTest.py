@@ -100,7 +100,7 @@ class MailTaskTest(test.TestCase):
             def curselection(self):
                 return [DummyTask()]
         def mail(*args):
-            raise WindowsError, 'message'
+            raise RuntimeError, 'message'
         def showerror(*args, **kwargs):
             self.showerror = args
         mailTask = gui.uicommand.TaskMail(viewer=DummyViewer())
