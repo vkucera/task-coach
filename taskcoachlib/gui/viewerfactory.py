@@ -22,11 +22,11 @@ import viewer
 
     
 def addEffortViewers(viewerContainer, taskList, settings):
-    _addViewers(viewerContainer, viewer.EffortListViewer, (taskList, 
+    _addViewers(viewerContainer, viewer.EffortViewer, (taskList, 
                 settings), {}, 'start', settings)
 
 def addTaskViewers(viewerContainer, taskList, settings, categories, efforts):
-    _addViewers(viewerContainer, viewer.TaskTreeListViewer, (taskList,
+    _addViewers(viewerContainer, viewer.TaskViewer, (taskList,
                 settings), dict(categories=categories, efforts=efforts), 
                 'task', settings)
 

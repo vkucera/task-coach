@@ -23,11 +23,11 @@ from taskcoachlib.domain import task, effort, category, note, date
 
 class EffortViewerTestCase(test.wxTestCase):
     def createViewer(self):
-        return gui.viewer.EffortListViewer(self.frame,
-                                           self.taskList,
-                                           self.settings,
-                                           category.CategoryList(),
-                                           note.NoteContainer())
+        return gui.viewer.EffortViewer(self.frame,
+                                       self.taskList,
+                                       self.settings,
+                                       category.CategoryList(),
+                                       note.NoteContainer())
 
     def setUp(self):
         super(EffortViewerTestCase, self).setUp()

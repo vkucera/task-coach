@@ -42,7 +42,7 @@ class VCalWriterTestCase(test.wxTestCase):
 
     def createViewer(self):
         self.settings.set('tasktreelistviewer', 'treemode', self.treeMode)
-        self.viewer = gui.viewer.TaskTreeListViewer(self.frame, self.taskList, 
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskList, 
             self.settings, categories=self.categories, notes=self.notes,
             efforts=self.effortList)
 

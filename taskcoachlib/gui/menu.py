@@ -404,7 +404,7 @@ class ViewViewerMenu(Menu):
         viewViewerCommands = [\
             ViewViewer(viewer=viewerContainer, menuText=_('&Task'),
                        helpText=_('Open a new tab with a viewer that displays tasks'),
-                       bitmap='task', viewerClass=viewer.TaskTreeListViewer,
+                       bitmap='task', viewerClass=viewer.TaskViewer,
                        viewerArgs=(tasks, settings),
                        viewerKwargs=dict(categories=categories, efforts=efforts),
                        viewerBitmap='task', settings=settings),
@@ -418,7 +418,7 @@ class ViewViewerMenu(Menu):
             viewViewerCommands.append(
                 ViewViewer(viewer=viewerContainer, menuText=_('&Effort'),
                        helpText=_('Open a new tab with a viewer that displays efforts'),
-                       bitmap='start', viewerClass=viewer.EffortListViewer,
+                       bitmap='start', viewerClass=viewer.EffortViewer,
                        viewerArgs=(tasks, settings),
                        viewerKwargs=dict(), viewerBitmap='start',
                        settings=settings))

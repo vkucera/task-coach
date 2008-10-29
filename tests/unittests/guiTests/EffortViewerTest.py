@@ -22,7 +22,7 @@ from taskcoachlib import gui, config
 from taskcoachlib.domain import task, effort, date
 
 
-class EffortViewerUnderTest(gui.viewer.EffortListViewer):
+class EffortViewerUnderTest(gui.viewer.EffortViewer):
     def createWidget(self):
         return dummy.DummyWidget(self)
     
@@ -84,7 +84,7 @@ class EffortViewerTest(test.wxTestCase):
             date.DateTime(2006,1,2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006,1,2),
             date.DateTime(2006,1,3))
-        self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList,  
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskList,  
             self.settings)
  
     def testEffortColor(self):

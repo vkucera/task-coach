@@ -38,7 +38,7 @@ class ViewerTest(test.wxTestCase):
         self.viewerContainer.addViewer(self.viewer, self.viewer.title())
         
     def createViewer(self):
-        return gui.viewer.TaskTreeListViewer(self.notebook, self.taskList,
+        return gui.viewer.TaskViewer(self.notebook, self.taskList,
             self.settings, categories=self.categories, efforts=self.effortList)
         
     def testSelectAll(self):
@@ -76,7 +76,7 @@ class SortableViewerTest(test.TestCase):
         self.viewer = self.createViewer()
         
     def createViewer(self):
-        viewer = gui.viewer.SortableViewer()
+        viewer = gui.viewer.mixin.SortableViewer()
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'tasktreelistviewer'
         viewer.SorterClass = task.sorter.Sorter
@@ -131,7 +131,7 @@ class SortableViewerTest(test.TestCase):
 class SortableViewerForTasksTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.viewer = gui.viewer.SortableViewerForTasks()
+        self.viewer = gui.viewer.mixin.SortableViewerForTasks()
         self.viewer.settings = self.settings
         self.viewer.settingsSection = lambda: 'tasktreelistviewer'
         self.viewer.model = lambda: task.sorter.Sorter(task.TaskList())
@@ -153,7 +153,7 @@ class DummyViewer(object):
         return model
 
 
-class SearchableViewerUnderTest(gui.viewer.SearchableViewer, DummyViewer):
+class SearchableViewerUnderTest(gui.viewer.mixin.SearchableViewer, DummyViewer):
     pass   
 
     
@@ -220,13 +220,13 @@ class SearchableViewerTest(test.TestCase):
 
 class FilterableViewerTest(test.TestCase):
     def setUp(self):
-        self.viewer = gui.viewer.FilterableViewer()
+        self.viewer = gui.viewer.mixin.FilterableViewer()
         
     def testIsFilterable(self):
         self.failUnless(self.viewer.isFilterable())
 
 
-class FilterableViewerForTasksUnderTest(gui.viewer.FilterableViewerForTasks, 
+class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTasks, 
                                         DummyViewer):
     pass
         
@@ -440,7 +440,7 @@ class FilterableViewerForTasks(test.TestCase):
         self.failIf(anotherViewer.model())   
 
 
-class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
+class TaskTreeListViewerUnderTest(gui.viewer.task.TaskTreeListViewer):
     def __init__(self, *args, **kwargs):
         super(TaskTreeListViewerUnderTest, self).__init__(*args, **kwargs)
         self.events = []
@@ -462,7 +462,7 @@ class EffortViewerUnderTest(dummy.EffortViewerWithDummyWidget):
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
         try:
-            baseViewer = gui.viewer.Viewer(self.frame, task.TaskList(),
+            baseViewer = gui.viewer.base.Viewer(self.frame, task.TaskList(),
                 None, settingsSection='bla')
             self.fail('Expected NotImplementedError')
         except NotImplementedError:
@@ -471,7 +471,7 @@ class ViewerBaseClassTest(test.wxTestCase):
 
 class ViewerIteratorTestCase(test.wxTestCase):
     def createViewer(self):
-        return gui.viewer.TaskTreeListViewer(self.notebook, self.taskList,
+        return gui.viewer.TaskViewer(self.notebook, self.taskList,
             self.settings, categories=self.categories, efforts=self.effortList)
 
     def setUp(self):

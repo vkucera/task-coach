@@ -29,7 +29,7 @@ class TreeViewerTest(test.wxTestCase):
         self.categories = category.CategoryList()
         self.taskList = task.sorter.Sorter(task.TaskList())
         self.effortList = effort.EffortList(self.taskList)
-        self.viewer = gui.viewer.TaskTreeListViewer(self.frame, self.taskList,
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskList,
             self.settings, categories=self.categories, efforts=self.effortList)
         self.expansionContext = self.viewer.settingsSection()
         self.parent = task.Task('parent')

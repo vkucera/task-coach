@@ -118,7 +118,6 @@ class ColorEntryMixin(object):
         self.item.setColor(color)
 
 
-
 class EditorPage(widgets.PanelWithBoxSizer):
     def __init__(self, parent, item, *args, **kwargs):
         super(EditorPage, self).__init__(parent, *args, **kwargs)
@@ -462,7 +461,7 @@ class EffortPage(EditorPage, TaskHeaders):
     def __init__(self, parent, theTask, taskList, settings, *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
         singleTaskList = task.SingleTaskList()
-        self.effortViewer = viewer.EffortListViewer(self, taskList, 
+        self.effortViewer = viewer.EffortViewer(self, taskList, 
             settings, settingsSection='effortviewerintaskeditor')
         self.add(self.effortViewer, proportion=1, flag=wx.EXPAND|wx.ALL, 
                  border=5)

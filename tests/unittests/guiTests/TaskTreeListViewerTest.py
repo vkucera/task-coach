@@ -24,7 +24,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort, category, note, attachment
 
 
-class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
+class TaskTreeListViewerUnderTest(gui.viewer.task.TaskTreeListViewer):
     
     def __init__(self, *args, **kwargs):
         super(TaskTreeListViewerUnderTest, self).__init__(*args, **kwargs)

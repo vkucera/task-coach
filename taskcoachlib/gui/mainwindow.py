@@ -20,8 +20,7 @@ import wx
 from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
-import viewer, viewercontainer, viewerfactory, toolbar, uicommand,\
-    remindercontroller
+import viewercontainer, viewerfactory, toolbar, uicommand, remindercontroller
 
 
 class WindowDimensionsTracker(object):
