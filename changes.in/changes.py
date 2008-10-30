@@ -25,7 +25,10 @@ releases = [
             
 Release('0.71.3', 'November ??, 2008',
     summary='''This is a bugfix release.''',
-    bugsFixed=[]),
+    bugsFixed=[
+        Bug('''Don't hang when exiting the application.''', '2185910')
+        ]
+    ),
 
 Release('0.71.2', 'October 24, 2008',
     summary='''This is a bugfix release.''',
