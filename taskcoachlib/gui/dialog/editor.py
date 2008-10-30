@@ -462,7 +462,8 @@ class EffortPage(EditorPage, TaskHeaders):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
         singleTaskList = task.SingleTaskList()
         self.effortViewer = viewer.EffortViewer(self, taskList, 
-            settings, settingsSection='effortviewerintaskeditor')
+            settings, settingsSection='effortviewerintaskeditor',
+            tasksToShowEffortFor=singleTaskList)
         self.add(self.effortViewer, proportion=1, flag=wx.EXPAND|wx.ALL, 
                  border=5)
         singleTaskList.append(theTask)

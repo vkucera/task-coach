@@ -28,19 +28,21 @@ import base, mixin
 
 
 class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort, 
-                       mixin.SearchableViewer, base.UpdatePerSecondViewer, 
-                       base.ViewerWithColumns): 
+                   mixin.SearchableViewer, base.UpdatePerSecondViewer, 
+                   base.ViewerWithColumns): 
     defaultTitle = _('Effort')  
     SorterClass = effort.EffortSorter
     
     def __init__(self, parent, list, *args, **kwargs):
         self.aggregation = 'details'
-        self.taskList = domain.base.SearchFilter(list)
+        self.taskList = list
+        self.tasksToShowEffortFor = domain.base.SearchFilter(kwargs.get('tasksToShowEffortFor', 
+                                               self.taskList))
         kwargs.setdefault('settingsSection', 'effortviewer')
         self.__hiddenTotalColumns = []
         self.__hiddenWeekdayColumns = []
         self.__columnUICommands = None
-        super(EffortViewer, self).__init__(parent, self.taskList, *args, **kwargs)
+        super(EffortViewer, self).__init__(parent, self.tasksToShowEffortFor, *args, **kwargs)
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
         self.createColumnUICommands()
@@ -70,7 +72,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         assert aggregation in ('details', 'day', 'week', 'month')
         self.aggregation = aggregation
         self.settings.set(self.settingsSection(), 'aggregation', aggregation)
-        self.setModel(self.createSorter(self.createAggregator(self.taskList, 
+        self.setModel(self.createSorter(self.createAggregator(self.tasksToShowEffortFor, 
                                                             aggregation)))
         self.registerModelObservers()
         # Invalidate the UICommands used for the column popup menu:
@@ -315,6 +317,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
     
     def newItemDialog(self, *args, **kwargs):
         selectedTasks = kwargs.get('selectedTasks', [])
+        bitmap = kwargs.get('bitmap', 'new')
         if not selectedTasks:
             subjectDecoratedTaskList = [(task.subject(recursive=True), task) \
                                         for task in self.taskList]
@@ -322,7 +325,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
             command.NewEffortCommand(self.list, selectedTasks),
-            self.list, self.taskList, self.settings, bitmap=kwargs['bitmap'])
+            self.list, self.taskList, self.settings, bitmap=bitmap)
         
     newEffortDialog = newItemDialog
     

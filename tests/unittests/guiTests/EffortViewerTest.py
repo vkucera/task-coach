@@ -30,6 +30,35 @@ class EffortViewerUnderTest(gui.viewer.EffortViewer):
         return []
 
 
+class EffortViewerForSpecificTasksTest(test.wxTestCase):
+    def setUp(self):
+        super(EffortViewerForSpecificTasksTest, self).setUp()
+        self.settings = config.Settings(load=False)
+        self.taskList = task.TaskList()
+        self.task1 = task.Task('Task 1')
+        self.task2 = task.Task('Task 2')
+        self.taskList.extend([self.task1, self.task2])
+        self.effort1 = effort.Effort(self.task1, date.DateTime(2006,1,1),
+            date.DateTime(2006,1,2))
+        self.task1.addEffort(self.effort1)
+        self.effort2 = effort.Effort(self.task2, date.DateTime(2006,1,2),
+            date.DateTime(2006,1,3))
+        self.task2.addEffort(self.effort2)
+        self.viewer = EffortViewerUnderTest(self.frame, self.taskList,  
+            self.settings, tasksToShowEffortFor=task.TaskList([self.task1]))
+        
+    def testViewerShowsOnlyEffortForSpecifiedTask(self):
+        self.assertEqual([self.effort1], self.viewer.model())
+        
+    def testEffortEditorDoesUseAllTasks(self):
+        dialog = self.viewer.newItemDialog()
+        self.assertEqual(2, len(dialog._taskList))
+        
+    def testViewerKeepsShowingOnlyEffortForSpecifiedTasksWhenSwitchingAggregation(self):
+        self.viewer.showEffortAggregation('week')
+        self.assertEqual(1, len(self.viewer.model()))
+        
+        
 class EffortViewerStatusMessageTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerStatusMessageTest, self).setUp()

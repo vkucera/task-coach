@@ -26,7 +26,9 @@ releases = [
 Release('0.71.3', 'November ??, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Don't hang when exiting the application.''', '2185910')
+        Bug('''Don't hang when exiting the application.''', '2185910'),
+        Bug('''Don't show all effort in the effort tab of a task editor, but
+only effort for the task being edited.''', '2207166')
         ]
     ),
 
