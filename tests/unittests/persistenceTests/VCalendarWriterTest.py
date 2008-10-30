@@ -36,7 +36,7 @@ class VCalWriterTestCase(test.wxTestCase):
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
         self.settings = config.Settings(load=False)
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(\
+        self.viewerContainer = gui.viewer.ViewerContainer(\
             widgets.Notebook(self.frame), self.settings, 'mainviewer')
         self.createViewer()
 

@@ -22,3 +22,6 @@ from category import CategoryViewer, BaseCategoryViewer
 from effort import EffortListViewer as EffortViewer
 from note import NoteViewer
 from attachment import AttachmentViewer
+from container import ViewerContainer
+from factory import addTaskViewers, addCategoryViewers, addNoteViewers, \
+    addEffortViewers

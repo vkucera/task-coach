@@ -23,7 +23,7 @@ import wx, datetime, os.path, sys
 from wx.lib import masked
 import wx.lib.customtreectrl as customtree
 from taskcoachlib import widgets, patterns
-from taskcoachlib.gui import render, viewercontainer, viewer, uicommand
+from taskcoachlib.gui import render, viewer, uicommand
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment

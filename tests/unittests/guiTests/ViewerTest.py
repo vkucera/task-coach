@@ -32,7 +32,7 @@ class ViewerTest(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
         self.notebook = widgets.AUINotebook(self.frame)
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
+        self.viewerContainer = gui.viewer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
         self.viewer = self.createViewer()
         self.viewerContainer.addViewer(self.viewer, self.viewer.title())

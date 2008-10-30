@@ -60,7 +60,7 @@ class Viewer(wx.Panel):
             eventType=self.list.sortEventType())
         
     def detach(self):
-        ''' Should be called by viewercontainer before closing the viewer '''
+        ''' Should be called by viewer.container before closing the viewer '''
         patterns.Publisher().removeInstance(self)
 
     def selectEventType(self):

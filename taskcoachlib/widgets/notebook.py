@@ -166,7 +166,6 @@ class Book(object):
         dropTarget = draganddrop.FileDropTarget(onDragOverCallback=self.onDragOver)
         self.SetDropTarget(dropTarget)
         self.Bind(self.pageChangedEvent, self.onPageChanged)
-        #self.Bind(wx.EVT_NAVIGATION_KEY, self.onNavigation)
         self.createImageList()
         
     def createImageList(self):
@@ -179,17 +178,6 @@ class Book(object):
             return self.GetPage(index)
         else:
             raise IndexError
-        
-    def onNavigation(self, event):
-        print self.__class__.__name__, event.GetCurrentFocus()
-        if event.GetCurrentFocus() == None:
-            self[0].SetFocus() 
-            print 'SetFocus called'
-            print wx.Window.FindFocus()
-        else:
-            event.Skip()
-        #self.Navigate()
-        event.Skip()
         
     def onDragOver(self, x, y, defaultResult, pageSelectionArea=None):
         ''' When the user drags something (currently limited to files because

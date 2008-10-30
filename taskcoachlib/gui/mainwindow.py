@@ -20,7 +20,7 @@ import wx
 from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
-import viewercontainer, viewerfactory, toolbar, uicommand, remindercontroller
+import viewer, toolbar, uicommand, remindercontroller
 
 
 class WindowDimensionsTracker(object):
@@ -229,17 +229,17 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             containerWidget = widgets.AUINotebook(self)
         else:
             containerWidget = self
-        self.viewer = viewercontainer.ViewerContainer(containerWidget,
+        self.viewer = viewer.ViewerContainer(containerWidget,
             self.settings, 'mainviewer') 
-        viewerfactory.addTaskViewers(self.viewer, self.taskFile.tasks(), 
+        viewer.addTaskViewers(self.viewer, self.taskFile.tasks(), 
             self.settings, self.taskFile.categories(), self.taskFile.efforts())
         if self.settings.getboolean('feature', 'effort'):
-            viewerfactory.addEffortViewers(self.viewer, self.taskFile.tasks(), 
+            viewer.addEffortViewers(self.viewer, self.taskFile.tasks(), 
                                            self.settings)
-        viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
+        viewer.addCategoryViewers(self.viewer, self.taskFile.categories(),
             self.settings, self.taskFile.tasks(), self.taskFile.notes())
         if self.settings.getboolean('feature', 'notes'):
-            viewerfactory.addNoteViewers(self.viewer, self.taskFile.notes(),
+            viewer.addNoteViewers(self.viewer, self.taskFile.notes(),
                  self.settings, self.taskFile.categories())
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))

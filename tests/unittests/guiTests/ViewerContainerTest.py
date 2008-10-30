@@ -44,7 +44,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
         self.taskList = task.sorter.Sorter(task.TaskList())
         self.notebook = widgets.Notebook(self.frame)
-        self.container = gui.viewercontainer.ViewerContainer(self.notebook, 
+        self.container = gui.viewer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
         self.viewer1 = self.createViewer()
         self.container.addViewer(self.viewer1, 'Dummy 1')
