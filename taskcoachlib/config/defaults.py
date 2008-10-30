@@ -31,7 +31,7 @@ defaults = { \
     'tasktreelistviewercount': '1',  # Number of task tree list viewers in main window
     'categoryviewercount': '1',      # Number of category viewers in main window
     'noteviewercount': '0',          # Number of note viewers in main window
-    'effortlistviewercount': '0',    # Number of effort viewers in main window
+    'effortviewercount': '0',        # Number of effort viewers in main window
     'language': 'en_US',
     'categoryfiltermatchall': 'False',
     'descriptionpopups': 'True',
@@ -110,7 +110,7 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
-'effortlistviewer': { \
+'effortviewer': { \
     'title': '',
     'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
     'columns': "['timeSpent', 'revenue']",

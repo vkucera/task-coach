@@ -16,13 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-from taskcoachlib.i18n import _
 import effort, task, category, note
 
     
 def addEffortViewers(viewerContainer, taskList, settings):
-    _addViewers(viewerContainer, effort.EffortListViewer, (taskList, 
+    _addViewers(viewerContainer, effort.EffortViewer, (taskList, 
                 settings), {}, 'start', settings)
 
 def addTaskViewers(viewerContainer, taskList, settings, categories, efforts):

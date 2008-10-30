@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from task import TaskTreeListViewer as TaskViewer
 from category import CategoryViewer, BaseCategoryViewer
-from effort import EffortListViewer as EffortViewer
+from effort import EffortViewer
 from note import NoteViewer
 from attachment import AttachmentViewer
 from container import ViewerContainer

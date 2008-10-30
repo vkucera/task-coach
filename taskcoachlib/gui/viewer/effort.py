@@ -27,10 +27,26 @@ from taskcoachlib.gui import uicommand, menu, render, dialog
 import base, mixin
 
 
-class EffortViewer(mixin.SortableViewerForEffort, mixin.SearchableViewer, 
-                   base.UpdatePerSecondViewer):
+class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort, 
+                       mixin.SearchableViewer, base.UpdatePerSecondViewer, 
+                       base.ViewerWithColumns): 
+    defaultTitle = _('Effort')  
     SorterClass = effort.EffortSorter
     
+    def __init__(self, parent, list, *args, **kwargs):
+        self.aggregation = 'details'
+        self.taskList = domain.base.SearchFilter(list)
+        kwargs.setdefault('settingsSection', 'effortviewer')
+        self.__hiddenTotalColumns = []
+        self.__hiddenWeekdayColumns = []
+        self.__columnUICommands = None
+        super(EffortViewer, self).__init__(parent, self.taskList, *args, **kwargs)
+        self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
+        self.aggregationUICommand.setChoice(self.aggregation)
+        self.createColumnUICommands()
+        patterns.Publisher().registerObserver(self.onColorChange,
+            eventType=effort.Effort.colorChangedEventType())
+        
     def isSortable(self):
         return False # FIXME: make effort viewers sortable too?
     
@@ -42,76 +58,6 @@ class EffortViewer(mixin.SortableViewerForEffort, mixin.SearchableViewer,
     
     def trackStopEventType(self):
         return 'effort.track.stop'
-
-    def createToolBarUICommands(self):
-        commands = super(EffortViewer, self).createToolBarUICommands()
-        # This is needed for unit tests
-        self.deleteUICommand = uicommand.EffortDelete(viewer=self,
-                                                      effortList=self.model())
-        commands[-2:-2] = [None,
-                           uicommand.EffortNew(viewer=self,
-                                               effortList=self.model(),
-                                               taskList=self.taskList,
-                                               settings=self.settings),
-                           uicommand.EffortEdit(viewer=self,
-                                                effortList=self.model()),
-                           self.deleteUICommand]
-        return commands
-
-    def statusMessages(self):
-        status1 = _('Effort: %d selected, %d visible, %d total')%\
-            (len(self.curselection()), len(self.list), 
-             self.list.originalLength())         
-        status2 = _('Status: %d tracking')% self.list.nrBeingTracked()
-        return status1, status2
-
-    def getItemTooltipData(self, index, column=0):
-        if self.settings.getboolean('view', 'descriptionpopups'):
-            item = self.getItemWithIndex(index)
-            if item.description():
-                return [(None, map(lambda x: x.rstrip('\r'), item.description().split('\n')))]
-        return []
- 
-    # See TaskViewer for why the methods below have two names.
-    
-    def newItemDialog(self, *args, **kwargs):
-        selectedTasks = kwargs.get('selectedTasks', [])
-        if not selectedTasks:
-            subjectDecoratedTaskList = [(task.subject(recursive=True), task) \
-                                        for task in self.taskList]
-            subjectDecoratedTaskList.sort() # Sort by subject
-            selectedTasks = [subjectDecoratedTaskList[0][1]]
-        return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
-            command.NewEffortCommand(self.list, selectedTasks),
-            self.list, self.taskList, self.settings, bitmap=kwargs['bitmap'])
-        
-    newEffortDialog = newItemDialog
-    
-    def editItemDialog(self, *args, **kwargs):
-        return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
-            command.EditEffortCommand(self.list, self.curselection()), 
-            self.list, self.taskList, self.settings)
-    
-    def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection())
-    
-
-class EffortListViewer(base.ListViewer, EffortViewer, base.ViewerWithColumns): 
-    defaultTitle = _('Effort')  
-    
-    def __init__(self, parent, list, *args, **kwargs):
-        self.aggregation = 'details'
-        self.taskList = domain.base.SearchFilter(list)
-        kwargs.setdefault('settingsSection', 'effortlistviewer')
-        self.__hiddenTotalColumns = []
-        self.__hiddenWeekdayColumns = []
-        self.__columnUICommands = None
-        super(EffortListViewer, self).__init__(parent, self.taskList, *args, **kwargs)
-        self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
-        self.aggregationUICommand.setChoice(self.aggregation)
-        self.createColumnUICommands()
-        patterns.Publisher().registerObserver(self.onColorChange,
-            eventType=effort.Effort.colorChangedEventType())
         
     def onColorChange(self, event):
         effort = event.source()
@@ -282,10 +228,25 @@ class EffortListViewer(base.ListViewer, EffortViewer, base.ViewerWithColumns):
                     setting=['monday', 'tuesday', 'wednesday', 'thursday', 
                              'friday', 'saturday', 'sunday'],
                     viewer=self))
-            
+
+    def createToolBarUICommands(self):
+        commands = super(EffortViewer, self).createToolBarUICommands()
+        # This is needed for unit tests
+        self.deleteUICommand = uicommand.EffortDelete(viewer=self,
+                                                      effortList=self.model())
+        commands[-2:-2] = [None,
+                           uicommand.EffortNew(viewer=self,
+                                               effortList=self.model(),
+                                               taskList=self.taskList,
+                                               settings=self.settings),
+                           uicommand.EffortEdit(viewer=self,
+                                                effortList=self.model()),
+                           self.deleteUICommand]
+        return commands
+
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(EffortListViewer, self).getToolBarUICommands() 
+        toolBarUICommands = super(EffortViewer, self).getToolBarUICommands() 
         toolBarUICommands.insert(-2, None) # Separator
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self) 
@@ -302,13 +263,27 @@ class EffortListViewer(base.ListViewer, EffortViewer, base.ViewerWithColumns):
         effort = self.getItemWithIndex(index)
         return wx.ListItemAttr(None, self.getBackgroundColor(effort))
 
+    def getItemTooltipData(self, index, column=0):
+        if self.settings.getboolean('view', 'descriptionpopups'):
+            item = self.getItemWithIndex(index)
+            if item.description():
+                return [(None, map(lambda x: x.rstrip('\r'), item.description().split('\n')))]
+        return []
+    
     def curselection(self):
-        selection = super(EffortListViewer, self).curselection()
+        selection = super(EffortViewer, self).curselection()
         if self.aggregation != 'details':
             selection = [effort for compositeEffort in selection\
                                 for effort in compositeEffort]
         return selection
-                
+
+    def statusMessages(self):
+        status1 = _('Effort: %d selected, %d visible, %d total')%\
+            (len(self.curselection()), len(self.list), 
+             self.list.originalLength())         
+        status2 = _('Status: %d tracking')% self.list.nrBeingTracked()
+        return status1, status2
+
     def renderPeriod(self, effort):
         if self._hasRepeatedPeriod(effort):
             return ''
@@ -335,3 +310,28 @@ class EffortListViewer(base.ListViewer, EffortViewer, base.ViewerWithColumns):
         else:
             duration = date.TimeDelta()
         return render.timeSpent(duration)
+    
+    # See TaskViewer for why the methods below have two names.
+    
+    def newItemDialog(self, *args, **kwargs):
+        selectedTasks = kwargs.get('selectedTasks', [])
+        if not selectedTasks:
+            subjectDecoratedTaskList = [(task.subject(recursive=True), task) \
+                                        for task in self.taskList]
+            subjectDecoratedTaskList.sort() # Sort by subject
+            selectedTasks = [subjectDecoratedTaskList[0][1]]
+        return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
+            command.NewEffortCommand(self.list, selectedTasks),
+            self.list, self.taskList, self.settings, bitmap=kwargs['bitmap'])
+        
+    newEffortDialog = newItemDialog
+    
+    def editItemDialog(self, *args, **kwargs):
+        return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
+            command.EditEffortCommand(self.list, self.curselection()), 
+            self.list, self.taskList, self.settings)
+    
+    def deleteItemCommand(self):
+        return command.DeleteCommand(self.list, self.curselection())
+    
+
