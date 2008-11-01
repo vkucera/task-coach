@@ -112,4 +112,4 @@ reallyclean:
 	rm -rf $(CLEANFILES) $(REALLYCLEANFILES)
 
 nuke:
-	svn st --no-ignore | egrep "^(\?|I)" | cut -c 8- | xargs rm -rf
+	$(PYTHON) nuke.py

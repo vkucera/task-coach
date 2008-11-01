@@ -31,6 +31,30 @@ as HTML.''')
         ]
     ),
 
+Release('0.71.2', 'October 24, 2008',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''The reminder dialog didn't work.''', '2168756'),
+        Bug('''One couldn't add an URI attachment "by hand".''', '2167705'),
+        Bug('''The combobox with tasks in the effort editor
+wouldn't always be properly filled, making it impossible to edit the effort
+record.''', '2167798', '2173127'),
+        Bug('''Warn the user when the task file cannot be saved.''', '2121470'),
+        Bug('''Warn the user when the TaskCoach.ini file cannot be loaded.''',
+            '2101765'),
+        Bug('''When saving selected tasks, also include any categories the 
+selected tasks are in.'''),
+        Bug('''The right-click menu item 'Start tracking effort' wouldn't 
+work for recurring tasks.''', '2165652')
+        ],
+    featuresAdded = [
+        Feature('''The SyncML password dialog now has a more specific
+title.''', '2176781'),
+        Feature('''The system tray popup menu now has a 'New note' menu 
+item.''', '2182735')
+        ]
+    ),
+
 Release('0.71.1', 'October 13, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[

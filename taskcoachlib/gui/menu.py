@@ -535,7 +535,7 @@ class EffortMenu(Menu):
             uicommand.EffortEdit(viewer=viewerContainer, effortList=efforts),
             uicommand.EffortDelete(viewer=viewerContainer, effortList=efforts),
             None,
-            uicommand.EffortStart(viewer=viewerContainer),
+            uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
             uicommand.EffortStop(taskList=tasks))
        
 
@@ -605,8 +605,13 @@ class TaskBarMenu(Menu):
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
-                                    taskList=tasks, settings=settings),
-                None)
+                                    taskList=tasks, settings=settings))
+        if settings.getboolean('feature', 'notes'):
+            self.appendUICommands(
+                uicommand.NoteNew(notes=taskFile.notes(), settings=settings,
+                                  categories=categories))
+        if settings.getboolean('feature', 'effort'):
+            self.appendUICommands(None) # Separator
             label = _('&Start tracking effort')
             self.appendMenu(label,
                 StartEffortForTaskMenu(taskBarIcon, tasks, self, label), 'start')
@@ -702,7 +707,7 @@ class TaskPopupMenu(Menu):
                 None,
                 uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
                                     taskList=tasks, settings=settings),
-                uicommand.EffortStart(viewer=taskViewer),
+                uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
                 uicommand.EffortStop(taskList=tasks))
         if taskViewer.isTreeViewer():
             self.appendUICommands(None,

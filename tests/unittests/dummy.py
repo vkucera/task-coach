@@ -122,10 +122,14 @@ class EffortViewerWithDummyWidget(ViewerWithDummyWidget,
 
             
 class TaskFile(persistence.TaskFile):
+    raiseIOError = False
+    
     def load(self, *args, **kwargs):
-        pass
+        if self.raiseIOError:
+            raise IOError
         
     merge = save = saveas = load
+    
 
 class MainWindow:
     def setToolBarSize(self, *args, **kwargs):

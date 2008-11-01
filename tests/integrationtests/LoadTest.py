@@ -30,7 +30,14 @@ class LoadTest(test.TestCase):
         self.errorDialogCalled = False
         self.mockApp = mock.App()
 
+        # On MacOS, wx.Yield doesn't seem to be enough, so while
+        # running the tests, just short-circuit this.
+
+        self.oldCallAfter = wx.CallAfter
+        wx.CallAfter = lambda func, *args, **kwargs: func(*args, **kwargs)
+
     def tearDown(self):
+        wx.CallAfter = self.oldCallAfter
         self.mockApp.mainwindow.quit()
         if os.path.isfile(self.filename):
             os.remove(self.filename)

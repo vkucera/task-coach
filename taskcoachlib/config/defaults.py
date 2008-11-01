@@ -197,6 +197,8 @@ defaults = { \
     'backup': 'False',
     'saveinifileinprogramdir': 'False',
     'attachmentbase': '',
+    'inifileloaded': 'True',
+    'inifileloaderror': ''
     },
 'color': { \
     'activetasks': '(0, 0, 0)',

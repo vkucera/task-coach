@@ -203,7 +203,16 @@ class ViewFilterInListModeTest(ViewFilterTests, ViewFilterTestCase):
 class ViewFilterInTreeModeTest(ViewFilterTests, ViewFilterTestCase):
     treeMode = True
         
+    def testFilterCompletedTasks(self):
+        self.filter.hideCompletedTasks()
+        child = task.Task()
+        self.task.addChild(child)
+        child.setParent(self.task)
+        self.list.append(self.task)
+        self.task.setCompletionDate()
+        self.assertEqual(0, len(self.filter))
         
+
 class HideCompositeTasksTestCase(ViewFilterTestCase):
     def setUp(self):
         self.list = task.TaskList()
