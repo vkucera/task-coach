@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import test
 from unittests import dummy
-from taskcoachlib import gui, config
-from taskcoachlib.domain import task, note
+from taskcoachlib import gui, config, persistence
+from taskcoachlib.domain import task, note, category
 
 
 class IOControllerTest(test.TestCase):
@@ -94,11 +94,60 @@ class IOControllerTest(test.TestCase):
         
     def testSaveTaskFileWithoutTasksButWithNotes(self):
         self.taskFile.notes().append(note.Note('Note'))
-        def saveasReplacement(self):
+        def saveasReplacement(*args, **kwargs):
             self.saveAsCalled = True
         originalSaveAs = self.iocontroller.__class__.saveas
         self.iocontroller.__class__.saveas = saveasReplacement
         self.iocontroller.save()
-        self.failUnless(self.iocontroller.saveAsCalled)
+        self.failUnless(self.saveAsCalled)
         self.iocontroller.__class__.saveas = originalSaveAs
     
+    def testIOErrorOnSave(self):
+        self.taskFile.setFilename(self.filename1)
+        def saveasReplacement(*args, **kwargs):
+            self.saveAsCalled = True
+        originalSaveAs = self.iocontroller.__class__.saveas
+        self.iocontroller.__class__.saveas = saveasReplacement
+        self.taskFile.raiseIOError = True
+        def showerror(*args, **kwargs):
+            self.showerrorCalled = True
+        self.iocontroller.save(showerror=showerror)
+        self.failUnless(self.showerrorCalled and self.saveAsCalled)
+        self.iocontroller.__class__.saveas = originalSaveAs
+
+    def testIOErrorOnSaveAs(self):
+        self.taskFile.raiseIOError = True
+        def saveasReplacement(*args, **kwargs):
+            self.saveAsCalled = True
+        originalSaveAs = self.iocontroller.__class__.saveas
+        def showerror(*args, **kwargs):
+            self.showerrorCalled = True
+            # Prevent the recursive call of saveas:
+            self.iocontroller.__class__.saveas = saveasReplacement
+        self.iocontroller.saveas(filename=self.filename1, showerror=showerror)
+        self.failUnless(self.showerrorCalled and self.saveAsCalled)
+        self.iocontroller.__class__.saveas = originalSaveAs
+    
+    def testSaveSelectionAddsCategories(self):
+        task1 = task.Task()
+        task2 = task.Task()
+        self.taskFile.tasks().extend([task1, task2])
+        aCategory = category.Category('A Category')
+        self.taskFile.categories().append(aCategory)
+        for eachTask in self.taskFile.tasks():
+            eachTask.addCategory(aCategory)
+            aCategory.addCategorizable(eachTask)
+        self.iocontroller.saveselection(tasks=self.taskFile.tasks(), 
+                                        filename=self.filename1)
+        taskFile = persistence.TaskFile(self.filename1)
+        taskFile.load()
+        self.assertEqual(1, len(taskFile.categories()))            
+        
+    def testIOErrorOnSaveSave(self):
+        self.taskFile.raiseIOError = True
+        self.taskFile.setFilename(self.filename1)
+        def showerror(*args, **kwargs):
+            self.showerrorCalled = True
+        self.taskFile.tasks().append(task.Task())
+        self.iocontroller._saveSave(self.taskFile, showerror)
+        self.failUnless(self.showerrorCalled)

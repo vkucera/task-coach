@@ -46,8 +46,14 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         if load:
             # First, try to load the settings file from the program directory,
             # if that fails, load the settings file from the settings directory
-            if not self.read(self.filename(forceProgramDir=True)):
-                self.read(self.filename()) 
+            try:
+                if not self.read(self.filename(forceProgramDir=True)):
+                    self.read(self.filename()) 
+            except ConfigParser.ParsingError, reason:
+		# Ignore exceptions and simply use default values. 
+                # Also record the failure in the settings:
+                self.set('file', 'inifileloaded', 'False') 
+                self.set('file', 'inifileloaderror', str(reason))
         else:
             # Assume that if the settings are not to be loaded, we also 
             # should be quiet (i.e. we are probably in test mode):

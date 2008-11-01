@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
@@ -16,11 +18,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-"""
+import os, shutil
 
-Classes for synchronization with a SyncML server (tested with
-Funambol). This makes use of a Python wrapper for the Funambol C++ API
-that I wrote, which is currently available at
-svn://www.fraca7.net/fraca7/pysyncml.
+def nuke():
+    sin, sout = os.popen4('svn st --no-ignore')
 
-"""
+    for line in sout:
+        if line.startswith('?') or line.startswith('I'):
+            filename = line[7:].strip()
+            if filename != '.buildbot-sourcedata':
+                if os.path.isdir(filename):
+                    shutil.rmtree(filename)
+                else:
+                    os.remove(filename)
+                print 'Removed', filename
+
+    sout.close()
+    sin.close()
+
+if __name__ == '__main__':
+    nuke()

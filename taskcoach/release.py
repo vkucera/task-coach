@@ -36,6 +36,7 @@ Release steps:
 - Create branch if feature release.
 - Add release to Sourceforge bug tracker groups.
 - Set bug reports and/or feature requests to Pending state.
+- If new release branch, update the buildbot masters configuration.
 '''
 
 import ftplib, smtplib, os, glob, sys, getpass, md5, ConfigParser, \

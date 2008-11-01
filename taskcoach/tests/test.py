@@ -305,4 +305,6 @@ if __name__ == '__main__':
     if options.profile:
         TestProfiler(options).run(allTests.runTests)
     else:
-        allTests.runTests()
+        result = allTests.runTests()
+        if not result.wasSuccessful():
+            sys.exit(1)

@@ -37,7 +37,8 @@ class ReminderControllerTest(test.TestCase):
         self.taskList.append(self.task)
         self.reminderController = ReminderControllerUnderTest(self.taskList,
             [], config.Settings(load=False), {})
-        self.reminderDateTime = date.DateTime.now() + date.TimeDelta(hours=1)
+        self.nowDateTime = date.DateTime.now()
+        self.reminderDateTime = self.nowDateTime + date.TimeDelta(hours=1)
         
     def testSetTaskReminderAddsClockEventToPublisher(self):
         self.task.setReminder(self.reminderDateTime)
@@ -83,6 +84,32 @@ class ReminderControllerTest(test.TestCase):
         self.assertEqual([], patterns.Publisher().observers(eventType=\
                 date.Clock.eventType(self.reminderDateTime)))
         
+    def dummyCloseEvent(self, snoozeTimeDelta=None):
+        class DummySnoozeOptions(object):
+            Selection = 0
+            def GetClientData(self, *args):
+                return snoozeTimeDelta
+        class DummyDialog(object):
+            task = self.task
+            openTaskAfterClose = False
+            snoozeOptions = DummySnoozeOptions()
+            def Destroy(self):
+                pass
+        class DummyEvent(object):
+            EventObject = DummyDialog()
+        return DummyEvent()
+    
+    def testOnCloseReminderResetsReminder(self):
+        self.task.setReminder(self.reminderDateTime)
+        self.reminderController.onCloseReminderDialog(self.dummyCloseEvent())
+        self.assertEqual(None, self.task.reminder())
+
+    def testOnCloseReminderSetsReminder(self):
+        self.task.setReminder(self.reminderDateTime)
+        oneHour = date.TimeDelta(hours=1)
+        self.reminderController.onCloseReminderDialog(self.dummyCloseEvent(oneHour))
+        self.failUnless(abs(self.nowDateTime + oneHour - self.task.reminder()) < date.TimeDelta(seconds=5))
+               
 
 class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
     def setUp(self):

@@ -462,7 +462,7 @@ class EffortPage(EditorPage, TaskHeaders):
     def __init__(self, parent, theTask, taskList, settings, *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
         singleTaskList = task.SingleTaskList()
-        self.effortViewer = viewer.EffortListViewer(self, singleTaskList, 
+        self.effortViewer = viewer.EffortListViewer(self, taskList, 
             settings, settingsSection='effortviewerintaskeditor')
         self.add(self.effortViewer, proportion=1, flag=wx.EXPAND|wx.ALL, 
                  border=5)
@@ -938,8 +938,8 @@ class AttachmentSubjectPage(ColorEntryMixin, widgets.BookPage):
         panel = wx.Panel(self, wx.ID_ANY)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self._locationEntry = widgets.SingleLineTextCtrl(panel, self._attachment.location(),
-                           style=wx.TE_READONLY)
+        self._locationEntry = widgets.SingleLineTextCtrl(panel,
+                                                         self._attachment.location())
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
         if self._attachment.type_ == 'file':
             button = wx.Button(panel, wx.ID_ANY, _('Browse'))
@@ -965,7 +965,6 @@ class AttachmentSubjectPage(ColorEntryMixin, widgets.BookPage):
         filename = widgets.AttachmentSelector()
         if filename:
             if self.basePath:
-                print 'RELATIVE'
                 filename = attachment.getRelativePath(filename, self.basePath)
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)

@@ -663,20 +663,11 @@ class Viewer(wx.Panel):
 
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
-        # Keep this around for unit tests
-        self.deleteUICommand = uicommand.DeleteDomainObject(viewer=self)
         return [
             uicommand.EditCut(viewer=self),
             uicommand.EditCopy(viewer=self),
-            uicommand.EditPaste(),
-            None,
-            uicommand.NewDomainObject(viewer=self),
-            uicommand.NewSubDomainObject(viewer=self),
-            uicommand.EditDomainObject(viewer=self),
-            self.deleteUICommand]
-    
-    def canCreateNewDomainObject(self):
-        return True
+            uicommand.EditPaste()
+            ]
     
 
 class ListViewer(Viewer):
@@ -1215,18 +1206,37 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
 
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
-        taskUICommands = [uicommand.TaskToggleCompletion(viewer=self), None]
+        taskUICommands = super(TaskViewer, self).createToolBarUICommands()
+
+        # Don't use extend() because we want the search box to be at
+        # the end.
+
+        taskUICommands[-2:-2] = [None,
+                                 uicommand.TaskNew(taskList=self.model(),
+                                                   categories=self.categories,
+                                                   settings=self.settings),
+                                 uicommand.TaskNewFromTemplateButton(taskList=self.model(),
+                                                             settings=self.settings,
+                                                             categories=self.categories,
+                                                             bitmap='newtmpl'),
+                                 uicommand.TaskNewSubTask(taskList=self.model(),
+                                                          viewer=self),
+                                 uicommand.TaskEdit(taskList=self.model(),
+                                               viewer=self),
+                                 uicommand.TaskDelete(taskList=self.model(),
+                                                      viewer=self),
+                                 None,
+                                 uicommand.TaskToggleCompletion(viewer=self)]
         if self.settings.getboolean('feature', 'effort'):
-            taskUICommands.extend([
+            taskUICommands[-2:-2] = [
                 # EffortStart needs a reference to the original (task) list to
                 # be able to stop tracking effort for tasks that are already 
                 # being tracked, but that might be filtered in the viewer's 
                 # model.
+                None,
                 uicommand.EffortStart(viewer=self, taskList=self.originalList),
-                uicommand.EffortStop(taskList=self.model()),
-                None])
-        commands = super(TaskViewer, self).createToolBarUICommands() 
-        return commands[:-1] + taskUICommands + commands[-1:]
+                uicommand.EffortStop(taskList=self.model())]
+        return taskUICommands
  
     def trackStartEventType(self):
         return 'task.track.start'
@@ -1299,25 +1309,14 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
         bitmap, bitmap_selected = render.taskBitmapNames(task)
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
 
-    # The methods below have two names. This is because there are two types
-    # of domain object related UICommands. The generic variant works on
-    # whatever type of domain object is shown in the current viewer. The
-    # specific variant works on one specific type of domain object.
-    # When a generic UICommand is invoked, e.g. uicommand.EditDomainObject, 
-    # it will use 'itemEditor' to get a domain object editor for the current 
-    # viewer. But when a specific UICommand is invoked, e.g. uicommand.EditTask, 
-    # a TaskEditor needs to be returned, independently of which viewer is 
-    # current. So, uicommand.NewTask will call taskEditor() to force a 
-    # task editor. 
-    
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
         kwargs['categories'] = [category for category in self.categories
                                 if category.isFiltered()]
-        newCommand = command.NewTaskCommand(self.list, *args, **kwargs)
+        newCommand = command.NewTaskCommand(self.list, **kwargs)
         newCommand.do()
         return self.editItemDialog(bitmap=bitmap, items=newCommand.items)
-    
+
     def editItemDialog(self, *args, **kwargs):
         items = kwargs.get('items', self.curselection())
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
@@ -1325,21 +1324,15 @@ class TaskViewer(AttachmentDropTarget, FilterableViewerForTasks,
             self.list, self.settings, self.categories,
             bitmap=kwargs['bitmap'])
     
-    editTaskDialog = editItemDialog
-    
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.list, self.curselection(),
                   shadow=True)
-        
-    deleteTaskCommand = deleteItemCommand
     
     def newSubItemDialog(self, *args, **kwargs):
         newCommand = command.NewSubTaskCommand(self.list, self.curselection())
         newCommand.do()
         return self.editItemDialog(bitmap=kwargs['bitmap'], 
                                    items=newCommand.items)
-        
-    newSubTaskDialog = newSubItemDialog
            
             
 class TaskViewerWithColumns(TaskViewer, SortableViewerWithColumns):
@@ -1503,11 +1496,6 @@ class TaskTreeListViewer(TaskViewerWithColumns, TreeViewer):
         self.treeOrListUICommand = \
             uicommand.TaskViewerTreeOrListChoice(viewer=self)
         toolBarUICommands.insert(-2, self.treeOrListUICommand)
-        toolBarUICommands.insert(5,
-                uicommand.TaskNewFromTemplateButton(taskList=self.model(),
-                                                    settings=self.settings,
-                                                    categories=self.categories,
-                                                    bitmap='newtmpl'))
         return toolBarUICommands
 
     def setSearchFilter(self, searchString, *args, **kwargs):
@@ -1572,6 +1560,19 @@ class BaseCategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
             self.createCategoryPopupMenu(), 
             **self.widgetCreationKeywordArguments())
         return widget
+
+    def createToolBarUICommands(self):
+        commands = super(BaseCategoryViewer, self).createToolBarUICommands()
+        commands[-2:-2] = [None,
+                           uicommand.CategoryNew(categories=self.model(),
+                                                 settings=self.settings),
+                           uicommand.CategoryNewSubCategory(categories=self.model(),
+                                                            viewer=self),
+                           uicommand.CategoryEdit(categories=self.model(),
+                                                  viewer=self),
+                           uicommand.CategoryDelete(categories=self.model(),
+                                                    viewer=self)]
+        return commands
 
     def createCategoryPopupMenu(self, localOnly=False):
         return menu.CategoryPopupMenu(self.parent, self.settings, self.tasks,
@@ -1640,19 +1641,13 @@ class BaseCategoryViewer(AttachmentDropTarget, SortableViewerForCategories,
         newCommand.do()
         return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
     
-    # See TaskViewer for why the methods below have two names.
-    
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
             command.EditCategoryCommand(self.list, kwargs['items']),
             self.settings, self.list, bitmap=kwargs['bitmap'])
     
-    editCategoryDialog = editItemDialog
-    
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection())
-    
-    deleteCategoryCommand = deleteItemCommand
     
     def newSubItemDialog(self, *args, **kwargs):
         newCommand = command.NewSubCategoryCommand(self.list, self.curselection())
@@ -1733,6 +1728,20 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
             return self.imageIndex['attachment'] 
         else:
             return -1
+
+    def createToolBarUICommands(self):
+        commands = super(NoteViewer, self).createToolBarUICommands()
+        commands[-2:-2] = [None,
+                           uicommand.NoteNew(notes=self.model(),
+                                             categories=self.categories,
+                                             settings=self.settings),
+                           uicommand.NoteNewSubNote(notes=self.model(),
+                                                    viewer=self),
+                           uicommand.NoteEdit(notes=self.model(),
+                                              viewer=self),
+                           uicommand.NoteDelete(notes=self.model(),
+                                                viewer=self)]
+        return commands
 
     def createColumnUICommands(self):
         return [\
@@ -1844,13 +1853,9 @@ class NoteViewer(AttachmentDropTarget, FilterableViewerForNotes,
             command.EditNoteCommand(self.list, kwargs['items']),
             self.settings, self.list, self.categories, bitmap=kwargs['bitmap'])
     
-    editNoteDialog = editItemDialog
-    
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection(),
                   shadow=True)
-    
-    deleteNoteCommand = deleteItemCommand
     
     def newSubItemDialog(self, *args, **kwargs):
         newCommand = command.NewSubNoteCommand(self.list, self.curselection())
@@ -1939,10 +1944,17 @@ class AttachmentViewer(AttachmentDropTarget, ViewerWithColumns,
 
     def createToolBarUICommands(self):
         commands = super(AttachmentViewer, self).createToolBarUICommands()
-        del commands[5] # Create subitem
-        commands.insert(7, uicommand.AttachmentOpen(viewer=self,
-                                        attachments=attachment.AttachmentList()))
-        commands.insert(7, None)
+        commands[-2:-2] = [None,
+                           uicommand.AttachmentNew(attachments=self.model(),
+                                                   settings=self.settings,
+                                                   categories=self.categories),
+                           uicommand.AttachmentEdit(attachments=self.model(),
+                                                    viewer=self),
+                           uicommand.AttachmentDelete(attachments=self.model(),
+                                                      viewer=self),
+                           None,
+                           uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
+                                                    viewer=self)]
         return commands
 
     def isShowingAttachments(self):
@@ -1982,12 +1994,8 @@ class AttachmentViewer(AttachmentDropTarget, ViewerWithColumns,
             command.EditAttachmentCommand(self.list, *args, **kwargs),
             self.settings, self.categories, bitmap=kwargs['bitmap'])
 
-    editAttachmentDialog = editItemDialog
-
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection())
-
-    deleteAttachmentCommand = deleteItemCommand
 
 
 class EffortViewer(SortableViewerForEffort, SearchableViewer, 
@@ -2006,11 +2014,20 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
     def trackStopEventType(self):
         return 'effort.track.stop'
 
-    def getToolBarUICommands(self):
-        ''' Names of UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(EffortViewer, self).getToolBarUICommands()
-        del toolBarUICommands[5] # Remove 'new subitem'
-        return toolBarUICommands
+    def createToolBarUICommands(self):
+        commands = super(EffortViewer, self).createToolBarUICommands()
+        # This is needed for unit tests
+        self.deleteUICommand = uicommand.EffortDelete(viewer=self,
+                                                      effortList=self.model())
+        commands[-2:-2] = [None,
+                           uicommand.EffortNew(viewer=self,
+                                               effortList=self.model(),
+                                               taskList=self.taskList,
+                                               settings=self.settings),
+                           uicommand.EffortEdit(viewer=self,
+                                                effortList=self.model()),
+                           self.deleteUICommand]
+        return commands
 
     def statusMessages(self):
         status1 = _('Effort: %d selected, %d visible, %d total')%\
@@ -2046,15 +2063,8 @@ class EffortViewer(SortableViewerForEffort, SearchableViewer,
             command.EditEffortCommand(self.list, self.curselection()), 
             self.list, self.taskList, self.settings)
     
-    editEffortDialog = editItemDialog
-    
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection())
-    
-    deleteEffortCommand = deleteItemCommand
-    
-    def canCreateNewDomainObject(self):
-        return len(self.taskList) > 0
     
 
 class EffortListViewer(ListViewer, EffortViewer, ViewerWithColumns): 

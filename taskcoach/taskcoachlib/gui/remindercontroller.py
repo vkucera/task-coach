@@ -78,10 +78,12 @@ class ReminderController(object):
             newReminder = date.DateTime.now() + snoozeTimeDelta
         else:
             newReminder = None
-        task.setReminder(newReminder) # FIXME: not undoable, need to use command object
+        task.setReminder(newReminder) # Note that this is not undoable
+        # Undoing the snoozing makes little sense, because it would set the 
+        # reminder back to its original date-time, which is now in the past.
         if dialog.openTaskAfterClose:
             editTask = editor.TaskEditor(self.mainWindow,
-                command.EditTaskCommand([task], [task]), [task], 
+                command.EditTaskCommand(self.taskList, [task]), self.taskList, 
                 self.settings, self.categories, bitmap='edit')
             editTask.Show()
         dialog.Destroy()
