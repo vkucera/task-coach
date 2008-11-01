@@ -52,6 +52,15 @@ class LanguageTests(Compile):
         kwargs['command'] = ['make', 'languagetests']
         Compile.__init__(self, **kwargs)
 
+class DistributionTests(Compile):
+    name = 'distribution tests'
+    description = ['Running', 'distribution', 'tests']
+    descriptionDone = ['Distribution', 'tests']
+
+    def __init__(self, **kwargs):
+        kwargs['command'] = ['make', 'disttests']
+        Compile.__init__(self, **kwargs)
+
 class Epydoc(Compile):
     name = 'epydoc'
     description = ['Generating', 'documentation']

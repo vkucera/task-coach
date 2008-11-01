@@ -98,6 +98,10 @@ integrationtests: icons i18n
 languagetests: i18n
 	cd tests; $(PYTHON) test.py integrationtests/TranslationIntegrityTest.py
 
+# FIXME: disttests should depend on either windist, deb, rpm or dmg...
+disttests:
+	cd tests; $(PYTHON) test.py --disttests --no-unittests
+
 
 CLEANFILES=build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
 REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \

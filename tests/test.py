@@ -123,6 +123,12 @@ class AllTests(unittest.TestSuite):
                 testFiles.extend(self.getTestFilesFromDir('integrationtests'))
             if self._options.releasetests:
                 testFiles.extend(self.getTestFilesFromDir('releasetests'))
+            if self._options.disttests:
+                path = os.path.join('disttests', sys.platform)
+                if os.path.exists(path):
+                    testFiles.extend(self.getTestFilesFromDir(path))
+                else:
+                    print 'WARNING: no disttest for your platform (%s)' % sys.platform
         for filename in testFiles:
             moduleName = self.filenameToModuleName(filename)
             # Importing the module is not strictly necessary because
@@ -238,6 +244,10 @@ class TestOptionParser(config.OptionParser):
         testselection.add_option('--no-releasetests', action='store_false', 
             help="don't run the release tests [default]", dest='releasetests')
 
+        testselection.add_option('--disttests', default=False,
+            action='store_true', help='Run the platform-specific package tests',
+            dest='disttests')
+
         testselection.add_option('--alltests', default=False,
             action='store_true', help='run all tests')
         return testselection
@@ -259,6 +269,7 @@ class TestOptionParser(config.OptionParser):
             options.unittests = True
             options.integrationtests = True
             options.releasetests = True
+            options.disttests = True
         if options.profile:
             options.coverage = False
         return options, args
