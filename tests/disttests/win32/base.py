@@ -3,13 +3,101 @@
 These tests actually assume a fresh configuration (new .ini file, nothing changed).
 """
 
-import os, time, re, unittest
-import win32process, win32event, win32gui
+import sys, os, time, re, shutil, unittest
+import win32process, win32event, win32gui, win32con
 
+sys.path.insert(0, os.path.join(os.path.split(__file__)[0], 'sendinput'))
+from sendinput import *
+
+class Window(object):
+    def __init__(self, hwnd):
+        self.hwnd = hwnd
+
+    def _get_title(self):
+        return win32gui.GetWindowText(self.hwnd)
+    def _set_title(self, title):
+        win32gui.SetWindowText(self.hwnd, title)
+    title = property(_get_title, _set_title, doc="The window title/text")
+
+    def _get_klass(self):
+        return win32gui.GetClassName(self.hwnd)
+    klass = property(_get_klass, doc="The window class name")
+
+    def _get_children(self):
+        result = []
+        def cb(hwnd, lparam):
+            result.append(Window(hwnd))
+            return True
+        try:
+            win32gui.EnumChildWindows(self.hwnd, cb, None)
+        except:
+            result = []
+        return result
+    children = property(_get_children, doc="The window direct children")
+
+    def _get_isForeground(self):
+        return win32gui.GetForegroundWindow() == self.hwnd
+    isForeground = property(_get_isForeground, doc="Wether the window is the foreground")
+
+    def waitFocus(self):
+        for i in xrange(10):
+            time.sleep(1)
+            if self.isForeground:
+                return True
+        return False
+
+    def clickAt(self, dx, dy):
+        """Simulates a click at a given position (relative to the window)"""
+
+        # Posting WM_LBUTTON[DOWN/UP] does not work it seems. Use
+        # SendInput instead. We must find the absolute coordinates
+        # first, and normalize them for SendInput.
+
+        x, y = win32gui.ClientToScreen(self.hwnd, (0, 0))
+        x += dx
+        y += dy
+
+        desktop = win32gui.GetDesktopWindow()
+        left, top, right, bottom = win32gui.GetClientRect(desktop)
+
+        x = int(1.0 * x * 65535 / (right - left))
+        y = int(1.0 * y * 65535 / (bottom - top))
+
+        SendInput((INPUT_MOUSE, (x, y, 0, MOUSEEVENTF_ABSOLUTE|MOUSEEVENTF_MOVE, 0)),
+                  (INPUT_MOUSE, (0, 0, 0, MOUSEEVENTF_LEFTDOWN, 0)),
+                  (INPUT_MOUSE, (0, 0, 0, MOUSEEVENTF_LEFTUP, 0)))
+
+    def close(self):
+        """Closes the window."""
+        win32gui.SendMessage(self.hwnd, win32con.WM_CLOSE, 0, 0)
+
+    def findChildren(self, klass, title):
+        """Find all children, recursively, matching a class and a title."""
+
+        result = []
+        for child in self.children:
+            if child.klass == klass and child.title == title:
+                result.append(child)
+            result.extend(child.findChildren(klass, title))
+        return result
+
+    def dump(self, level=0):
+        """Dumps the window and its children, recursively, to stdout"""
+        print (' ' * level) + str(self)
+        for child in self.children:
+            child.dump(level + 1)
+
+    def __str__(self):
+        return '%s("%s")' % (self.klass, self.title)
 
 class Win32TestCase(unittest.TestCase):
+    args = []
+    basepath = os.path.split(__file__)[0]
+
     def setUp(self):
         self.processHandle = None
+        shutil.copyfile(os.path.join(self.basepath, 'test.tsk'),
+                        os.path.join(self.basepath, 'testfile.tsk'))
 
         path = os.path.join('..', 'build')
         for name in os.listdir(path):
@@ -20,28 +108,36 @@ class Win32TestCase(unittest.TestCase):
         else:
             self.fail('Could not find TaskCoach executable.')
 
+        cmd = [filename, '-i', 'test.ini'] + self.args
+
         sinfo = win32process.STARTUPINFO()
         sinfo.dwFlags = 0
-        hProcess, hThread, processId, threadId = win32process.CreateProcess(filename,
-                                                                            None,
-                                                                            None,
-                                                                            None,
-                                                                            False,
-                                                                            0,
-                                                                            None,
-                                                                            os.getcwd(),
-                                                                            sinfo)
+        hProcess, hThread, processId, threadId = win32process.CreateProcess(None,
+                    ' '.join(cmd),
+                    None,
+                    None,
+                    False,
+                    0,
+                    None,
+                    os.getcwd(),
+                    sinfo)
         self.processHandle = hProcess
         if win32event.WaitForInputIdle(hProcess, 10000) == win32event.WAIT_TIMEOUT:
             self.fail('Could not launch TaskCoach.')
 
+        window = self.findWindow(r'^Tip of the Day$')
+        if window is None:
+            self.fail('Tip window didn\'t appear')
+        window.close()
+
     def tearDown(self):
         if self.processHandle is not None:
             win32process.TerminateProcess(self.processHandle, 0)
+        os.remove(os.path.join(self.basepath, 'testfile.tsk'))
 
-    def expectWindow(self, title, tries=10):
-        """Waits for a window to appear, and return a handle to it, or
-        fail the test.
+    def findWindow(self, title, tries=10):
+        """Waits for a window to appear, and return a Window instance,
+        or None if not found.
 
         @param title: Criterion for the window's title
             (regular expression string)
@@ -66,6 +162,6 @@ class Win32TestCase(unittest.TestCase):
             win32gui.EnumWindows(enumCb, None)
 
             if windows:
-                return windows[0]
+                return Window(windows[0])
 
-        self.fail('Could not find window %s.' % title)
+        return None
