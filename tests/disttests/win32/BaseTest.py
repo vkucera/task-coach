@@ -1,6 +1,5 @@
 
-import os, base
-from taskcoachlib import meta
+import base
 
 class TestLaunch(base.Win32TestCase):
     def test_launch(self):
