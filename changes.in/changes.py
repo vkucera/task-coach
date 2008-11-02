@@ -30,7 +30,9 @@ Release('0.71.3', 'November ??, 2008',
         Bug('''Don't show all effort in the effort tab of a task editor, but
 only effort for the task being edited.''', '2207166'),
         Bug('''Fix for a backwards incompatible change in python 2.6.''', 
-            '2212857')
+            '2212857'),
+        Bug('''Update task details at midnight, even when Task Coach is not 
+active at precisely midnight.''', '2095205')
         ]
     ),
 

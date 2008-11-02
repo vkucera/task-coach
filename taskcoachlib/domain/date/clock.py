@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, time
 from taskcoachlib import patterns
-import dateandtime
+import dateandtime, date
 
 
 class Clock(object):
@@ -27,6 +27,7 @@ class Clock(object):
     def __init__(self, *args, **kwargs):
         now = kwargs.pop('now', time.time)
         super(Clock, self).__init__(*args, **kwargs)
+        self._lastMidnightNotified = date.Today()
         self._timer = wx.PyTimer(self.startTheClock)
         millisecondsToNextWholeSecond = 1000-(now()%1)*1000
         if millisecondsToNextWholeSecond < 1:
@@ -41,13 +42,25 @@ class Clock(object):
         
     def notify(self, now=None, *args, **kwargs):
         now = now or dateandtime.DateTime.now()
-        for eventType in 'clock.second', Clock.eventType(now):
+        self.notifyEverySecondObservers(now)
+        self.notifySpecificTimeObservers(now)
+        self.notifyMidnightObservers(now)
+    
+    def notifyEverySecondObservers(self, now):
+        patterns.Publisher().notifyObservers(patterns.Event(self,
+            'clock.second', now))
+
+    def notifySpecificTimeObservers(self, now):
+        patterns.Publisher().notifyObservers(patterns.Event(self,
+            Clock.eventType(now), now))
+
+    def notifyMidnightObservers(self, now):
+        today = date.Date(now.year, now.month, now.day)
+        if today != self._lastMidnightNotified:
+            self._lastMidnightNotified = today
             patterns.Publisher().notifyObservers(patterns.Event(self,
-                eventType, now))
-        if now.hour == now.minute == now.second == 0:
-            patterns.Publisher().notifyObservers(patterns.Event(self,
-                'clock.midnight', now))
-       
+                'clock.midnight', now))        
+        
     @staticmethod    
     def eventType(dateTime):
         return 'clock.%s'%dateTime.strftime('%Y%m%d-%H%M%S')
