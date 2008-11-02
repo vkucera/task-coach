@@ -60,10 +60,10 @@ class UICommand(object):
         methods to attach the command to a menu or toolbar. Subclasses should 
         implement doCommand() and optionally override enabled(). '''
     
-    def __init__(self, menuText='?', helpText='', bitmap='nobitmap', 
+    def __init__(self, menuText='', helpText='', bitmap='nobitmap', 
              kind=wx.ITEM_NORMAL, id=None, bitmap2=None, *args, **kwargs):
         super(UICommand, self).__init__()
-        self.menuText = menuText
+        self.menuText = menuText or '<%s>'%_('None')
         self.helpText = helpText
         self.bitmap = bitmap
         self.bitmap2 = bitmap2
@@ -1696,7 +1696,7 @@ class EffortStartForTask(TaskListCommand):
         
     def __init__(self, *args, **kwargs):
         self.task = kwargs.pop('task')
-        subject = self.task.subject()
+        subject = self.task.subject() or _('(No subject)') 
         super(EffortStartForTask, self).__init__( \
             bitmap=render.taskBitmapNames(self.task)[0], menuText=subject,
             helpText=_('Start tracking effort for %s')%subject, 
