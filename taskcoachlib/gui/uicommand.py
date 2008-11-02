@@ -62,7 +62,7 @@ class UICommand(object):
     
     def __init__(self, menuText='?', helpText='', bitmap='nobitmap', 
              kind=wx.ITEM_NORMAL, id=None, bitmap2=None, *args, **kwargs):
-        super(UICommand, self).__init__(*args, **kwargs)
+        super(UICommand, self).__init__()
         self.menuText = menuText
         self.helpText = helpText
         self.bitmap = bitmap

@@ -28,7 +28,9 @@ Release('0.71.3', 'November ??, 2008',
     bugsFixed=[
         Bug('''Don't hang when exiting the application.''', '2185910'),
         Bug('''Don't show all effort in the effort tab of a task editor, but
-only effort for the task being edited.''', '2207166')
+only effort for the task being edited.''', '2207166'),
+        Bug('''Fix for a backwards incompatible change in python 2.6.''', 
+            '2212857')
         ]
     ),
 
