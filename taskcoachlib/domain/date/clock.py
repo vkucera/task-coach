@@ -40,6 +40,9 @@ class Clock(object):
         self._clock = wx.PyTimer(self.notify)
         self._clock.Start(milliseconds=1000, oneShot=False)
         
+    def reset(self):
+        self._lastMidnightNotified = date.Today()
+        
     def notify(self, now=None, *args, **kwargs):
         now = now or dateandtime.DateTime.now()
         self.notifyEverySecondObservers(now)
