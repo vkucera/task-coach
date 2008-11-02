@@ -20,6 +20,7 @@
 # put in ./dist, the files for the website end up in ./website.out)
 
 PYTHON="python" # python should be on the path
+DOT="dot"       # dot should be on the path
 
 ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
@@ -71,6 +72,10 @@ website: changes
 epydoc:
 	$(EPYDOC) --parse-only -o epydoc.out taskcoachlib taskcoach.py
 
+dot:
+	$(PYTHON) dot.py taskcoachlib/gui/viewer > dot.out/viewer.dot
+	$(DOT) -Tpng -o"dot.out/viewer.png" -Kdot dot.out/viewer.dot
+
 i18n: templates taskcoachlib/i18n/nl.py
 
 taskcoachlib/i18n/nl.py: i18n.in/messages.pot $(shell find i18n.in -name '*.po')
@@ -103,7 +108,7 @@ disttests:
 	cd tests; $(PYTHON) test.py --disttests --no-unittests
 
 
-CLEANFILES=build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
+CLEANFILES=build dist website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
 REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \
 	taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 

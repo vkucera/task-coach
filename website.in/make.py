@@ -446,7 +446,9 @@ pages['devinfo'] = \
     graphical user interface. On Windows, 
     <A HREF="http://sourceforge.net/projects/pywin32/">Pywin32</A> 
     is used as well. For generating the API documentation you need to have
-    <A HREF="http://epydoc.sourceforge.net/">Epydoc</A> installed.</p>
+    <A HREF="http://epydoc.sourceforge.net/">Epydoc</A> installed. For
+    generating inheritance diagrams you need to have <A
+    HREF="http://www.graphviz.org">Graphviz</A> installed.</p>
     <p>The few other libraries (other than those
     provided by Python, wxPython and Pywin32) that are used are put into the
     taskcoachlib/thirdparty package and included in the source code
@@ -457,8 +459,8 @@ pages['devinfo'] = \
     HREF="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
     at SourceForge</A>. You can check out the code from the repository 
     directly or <A HREF="http://taskcoach.svn.sourceforge.net/">browse the
-    repository</A>. You can generate documentation with Epydoc from
-    the Makefile: <tt>make epydoc</tt>.</p>
+    repository</A>. You can generate documentation with Epydoc and Graphviz
+    from the Makefile: <tt>make dot epydoc</tt>.</p>
     
     <h4>Tests</h4>
     <p>Tests can be run from the Makefile. There are targets for

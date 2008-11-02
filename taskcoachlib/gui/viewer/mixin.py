@@ -76,6 +76,7 @@ class FilterableViewer(object):
         return self.FilterClass(model, **self.filterOptions())
     '''    
 
+
 class FilterableViewerForNotes(FilterableViewer):
     def createFilter(self, notesContainer):
         notesContainer = super(FilterableViewerForNotes, self).createFilter(notesContainer)
