@@ -124,7 +124,14 @@ elif '__WXMAC__' in wx.PlatformInfo:
                                               wx.FRAME_FLOAT_ON_PARENT| \
                                               wx.NO_BORDER)
 
-            self.__maxW, self.__maxH = wx.GetDisplaySize()
+            # There are some subtleties on Mac regarding multi-monitor
+            # displays...
+
+            self.__maxW, self.__maxH = 0, 0
+            for idx in xrange(wx.Display.GetCount()):
+                x, y, w, h = wx.Display(idx).GetGeometry()
+                self.__maxW = max(self.__maxW, x + w)
+                self.__maxH = max(self.__maxH, y + h)
 
             self.MoveXY(self.__maxW, self.__maxH)
             super(ToolTipBase, self).Show()

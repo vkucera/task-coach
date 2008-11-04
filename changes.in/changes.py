@@ -26,6 +26,8 @@ releases = [
 Release('0.71.3', 'November ??, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''A ghost window would appear on the secondary display under MacOSX
+if it's placed on the right.''', '2206656'),
         Bug('''The note total would include deleted notes.''', '2209640'),
         Bug('''Don't hang when exiting the application.''', '2185910', '2209679'),
         Bug('''Don't show all effort in the effort tab of a task editor, but
