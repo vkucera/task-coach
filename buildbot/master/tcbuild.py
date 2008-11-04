@@ -103,7 +103,16 @@ class BuildEXE(DistCompile):
     descriptionDone = ['Windows', 'binary']
 
     def createSummary(self, log):
-        DistCompile.createSummary(self, log)
+        # Not calling superclass here, because py2exe is pretty anal
+        # about what should be a version number: at most 4
+        # dot-separated numbers, so 'rXXXX' doesn't pass. This
+        # procuces a meaningless warning.
+
+        # In the near future, I'll arrange to build up a version
+        # number in the form <actual version>.<current revision>.
+
+        #DistCompile.createSummary(self, log)
+
         self.addURL('download',
                     'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-win32.exe' % self.getProperty('got_revision'))
 
