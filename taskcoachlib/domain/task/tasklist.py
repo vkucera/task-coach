@@ -107,7 +107,7 @@ class TaskList(patterns.CompositeSet):
         
     def originalLength(self):
         ''' Provide a way for bypassing the __len__ method of decorators. '''
-        return len(self)
+        return len([t for t in self if not t.isDeleted()])
     
     def minDate(self):      
         return min(self.__allDates())
