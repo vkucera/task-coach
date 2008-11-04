@@ -26,6 +26,8 @@ releases = [
 Release('0.71.3', 'November ??, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''Dropping a mail with several recipients from Outlook would result
+in a "No subject" subject.''', '2220224'),
         Bug('''A ghost window would appear on the secondary display under MacOSX
 if it's placed on the right.''', '2206656'),
         Bug('''The note total would include deleted notes.''', '2209640'),
