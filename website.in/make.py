@@ -454,6 +454,14 @@ pages['devinfo'] = \
     taskcoachlib/thirdparty package and included in the source code
     repository.</p>
     
+    <h4>Development environment</h4>
+    You are free to use whatever IDE you want. To make use of the Makefile you
+    need to have 'make' installed. It is installed on Linux and Mac OS X by 
+    default. On Windows we recommend you to install
+    <A HREF="http://www.cywin.com">Cygwin</A> which provides a shell (bash) and 
+    a whole range of useful utilities. Make sure to explicitly include make in 
+    the Cygwin setup program because the standard install doesn't contain make.
+    
     <h4>Getting the source</h4>
     <p>%(name)s source code is hosted in a <A
     HREF="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
