@@ -38,7 +38,9 @@ only effort for the task being edited.''', '2207166'),
             '2212857'),
         Bug('''Update task details at midnight, even when Task Coach is not 
 active at precisely midnight.''', '2095205', '2061826'),
-        Bug('''Allow for empty task subjects.''', '2214812')
+        Bug('''Allow for empty task subjects.''', '2214812'),
+        Bug('''Make the drop down button for picking dates look disabled when
+it is disabled.''', '2214706')
         ]
     ),
 
