@@ -1873,12 +1873,12 @@ class AttachmentOpen(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand
             menuText=attachments.openItemMenuText,
             helpText=attachments.openItemHelpText, *args, **kwargs)
 
-    def doCommand(self, event, showerror=lambda *args, **kwargs: None):
+    def doCommand(self, event, showerror=wx.MessageBox):
         for attachment in self.viewer.curselection():
             try:
                 attachment.open()
             except Exception, instance:
-                showerror(str(instance), 
+                showerror(unicode(instance), 
                           caption=_('Error opening attachment'), 
                           style=wx.ICON_ERROR)
 
