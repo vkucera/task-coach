@@ -37,6 +37,9 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
         kwargs['settingssection'] = 'attachmentviewer'
         super(AttachmentViewer, self).__init__(*args, **kwargs)
 
+    def isShowingAttachments(self):
+        return True
+
     def _addAttachments(self, attachments, index, **itemDialogKwargs):
         self.model().extend(attachments)
 
@@ -55,10 +58,6 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
         widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)
         return widget
 
-    def getItemAttr(self, index):
-        item = self.getItemWithIndex(index)
-        return wx.ListItemAttr(colBack=self.getBackgroundColor(item))
-                            
     def _createColumns(self):
         return [widgets.Column('type', _('Type'), 
                                '',
@@ -119,9 +118,6 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
                                                     viewer=self)]
         return commands
 
-    def isShowingAttachments(self):
-        return True
-
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
         self.imageIndex = {}
@@ -129,6 +125,10 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
             self.imageIndex[image] = index
         return imageList
+
+    def getItemAttr(self, index):
+        item = self.getItemWithIndex(index)
+        return wx.ListItemAttr(colBack=self.getBackgroundColor(item))
 
     def noteImageIndex(self, attachment, which):
         if attachment.notes():
