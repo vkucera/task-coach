@@ -1,7 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -69,8 +69,8 @@ class ToolTipMixin(object):
         the tooltip, or None."""
         raise NotImplementedError
 
-    def __OnMotion(self, evt):
-        x, y = evt.GetPosition()
+    def __OnMotion(self, event):
+        x, y = event.GetPosition()
 
         self.__timer.Stop()
 
@@ -78,15 +78,14 @@ class ToolTipMixin(object):
             self.HideTip()
             self.__tip = None
 
-        ret = self.OnBeforeShowToolTip(x, y)
-
-        if ret is not None:
-            self.__tip = ret
+        newTip = self.OnBeforeShowToolTip(x, y)
+        if newTip is not None:
+            self.__tip = newTip
             wx.EVT_MOTION(self.__tip, self.__OnTipMotion)
             self.__position = (x + 20, y + 10)
             self.__timer.Start(200, True)
 
-        evt.Skip()
+        event.Skip()
 
     def __OnTipMotion(self, evt):
         self.HideTip()
