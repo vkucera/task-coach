@@ -35,7 +35,7 @@ class ViewerTest(test.wxTestCase):
         self.viewerContainer = gui.viewer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
         self.viewer = self.createViewer()
-        self.viewerContainer.addViewer(self.viewer, self.viewer.title())
+        self.viewerContainer.addViewer(self.viewer)
         
     def createViewer(self):
         return gui.viewer.TaskViewer(self.notebook, self.taskList,

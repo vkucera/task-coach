@@ -186,6 +186,11 @@ class Viewer(wx.Panel):
     def getBackgroundColor(self, item):
         return None
     
+    def bitmap(self):
+        ''' Return the bitmap that represents this viewer. Used for the 
+            'Viewer->New viewer' menu item, for example. '''
+        return self.defaultBitmap # Class attribute of concrete viewers
+    
     def settingsSection(self):
         ''' Return the settings section of this viewer. '''
         section = self.__settingsSection

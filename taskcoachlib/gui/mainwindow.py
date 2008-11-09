@@ -231,16 +231,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             containerWidget = self
         self.viewer = viewer.ViewerContainer(containerWidget,
             self.settings, 'mainviewer') 
-        viewer.addTaskViewers(self.viewer, self.taskFile.tasks(), 
-            self.settings, self.taskFile.categories(), self.taskFile.efforts())
-        if self.settings.getboolean('feature', 'effort'):
-            viewer.addEffortViewers(self.viewer, self.taskFile.tasks(), 
-                                           self.settings)
-        viewer.addCategoryViewers(self.viewer, self.taskFile.categories(),
-            self.settings, self.taskFile.tasks(), self.taskFile.notes())
-        if self.settings.getboolean('feature', 'notes'):
-            viewer.addNoteViewers(self.viewer, self.taskFile.notes(),
-                 self.settings, self.taskFile.categories())
+        viewer.addViewers(self.viewer, self.taskFile, self.settings)
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         import menu
@@ -282,7 +273,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         perspective = self.settings.get('view', 'perspective')
         for viewerType in viewer.viewerTypes():
             if self.perspectiveAndSettingsHaveDifferentViewerCount(viewerType):
-                # Different viewer counts may happen when the names of a viewer 
+                # Different viewer counts may happen when the name of a viewer 
                 # is changed between versions
                 perspective = ''
                 break

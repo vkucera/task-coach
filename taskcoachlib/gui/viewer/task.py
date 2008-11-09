@@ -33,6 +33,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
                  base.TreeViewer):
     
     defaultTitle = _('Tasks')
+    defaultBitmap = 'task'
     
     def __init__(self, *args, **kwargs):
         self.categories = kwargs.pop('categories')

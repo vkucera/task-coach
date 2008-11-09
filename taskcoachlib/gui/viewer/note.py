@@ -31,6 +31,7 @@ class NoteViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForNotes,
                  mixin.SortableViewerForNotes, base.TreeViewer):
     SorterClass = note.NoteSorter
     defaultTitle = _('Notes')
+    defaultBitmap = 'note'
     
     def __init__(self, *args, **kwargs):
         self.categories = kwargs.pop('categories')

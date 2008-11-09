@@ -54,8 +54,8 @@ class ViewerContainer(object):
     def __getitem__(self, index):
         return self.viewers[index]
 
-    def addViewer(self, viewer, pageName, bitmap=''):
-        self.containerWidget.AddPage(viewer, pageName, bitmap)
+    def addViewer(self, viewer):
+        self.containerWidget.AddPage(viewer, viewer.title(), viewer.bitmap())
         self.viewers.append(viewer)
         if len(self.viewers) - 1 == self.__desiredPageNumber:
             # We need to use CallAfter because the AuiNotebook doesn't allow

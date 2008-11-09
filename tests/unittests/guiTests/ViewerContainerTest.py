@@ -47,14 +47,13 @@ class ViewerContainerTest(test.wxTestCase):
         self.container = gui.viewer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
         self.viewer1 = self.createViewer()
-        self.container.addViewer(self.viewer1, 'Dummy 1')
+        self.container.addViewer(self.viewer1)
         self.viewer2 = self.createViewer()
-        self.container.addViewer(self.viewer2, 'Dummy 2')
+        self.container.addViewer(self.viewer2)
 
     def createViewer(self):
         return dummy.ViewerWithDummyWidget(self.notebook,
-            self.taskList, None, 
-            self.settings, settingsSection='bla')
+            self.taskList, self.settings, settingsSection='taskviewer')
             
     def onEvent(self, event):
         self.events.append(event)

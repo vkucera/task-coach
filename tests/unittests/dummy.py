@@ -89,6 +89,9 @@ class DummyUICommand(gui.uicommand.UICommand):
 
 
 class ViewerWithDummyWidget(gui.viewer.base.Viewer):
+    defaultTitle = 'ViewerWithDummyWidget'
+    defaultBitmap = ''
+    
     def createWidget(self):
         self._columns = self._createColumns()
         return DummyWidget(self)

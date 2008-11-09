@@ -30,7 +30,8 @@ import base, mixin
 class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort, 
                    mixin.SearchableViewer, base.UpdatePerSecondViewer, 
                    base.ViewerWithColumns): 
-    defaultTitle = _('Effort')  
+    defaultTitle = _('Effort')
+    defaultBitmap = 'start'  
     SorterClass = effort.EffortSorter
     
     def __init__(self, parent, list, *args, **kwargs):

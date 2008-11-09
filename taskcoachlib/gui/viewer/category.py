@@ -32,6 +32,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
                          mixin.SearchableViewer, base.TreeViewer):
     SorterClass = category.CategorySorter
     defaultTitle = _('Categories')
+    defaultBitmap = 'category'
     
     def __init__(self, *args, **kwargs):
         self.tasks = kwargs.pop('tasks')

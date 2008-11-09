@@ -864,21 +864,21 @@ class ResetFilter(ViewerCommand):
 
 class ViewViewer(SettingsCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        self.viewerClass = kwargs['viewerClass']
-        self.viewerArgs = kwargs['viewerArgs']
-        self.viewerKwargs = kwargs.get('viewerKwargs', {})
-        self.viewerBitmap = kwargs['viewerBitmap']
+        self.taskFile = kwargs.pop('taskFile')
+        self.viewerClass = kwargs.pop('viewerClass')
+        kwargs.setdefault('bitmap', self.viewerClass.defaultBitmap) 
         super(ViewViewer, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
         self.viewer.Freeze()
-        newViewer = self.viewerClass(self.viewer.containerWidget, 
-                                     *self.viewerArgs, **self.viewerKwargs)
-        self.viewer.addViewer(newViewer, newViewer.title(), self.viewerBitmap)
+        viewer.addOneViewer(self.viewer, self.taskFile, self.settings, self.viewerClass)
+        self.increaseViewerCount()
+        self.viewer.Thaw()
+        
+    def increaseViewerCount(self):
         setting = self.viewerClass.__name__.lower() + 'count'
         viewerCount = self.settings.getint('view', setting)
         self.settings.set('view', setting, str(viewerCount+1))
-        self.viewer.Thaw()
         
 
 class RenameViewer(ViewerCommand):
