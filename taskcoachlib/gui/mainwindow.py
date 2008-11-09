@@ -194,7 +194,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
 class MainWindow(AuiManagedFrameWithNotebookAPI):
     pageClosedEvent = wx.aui.EVT_AUI_PANE_CLOSE
     
-    def __init__(self, iocontroller, taskFile, settings,                 #self.Bind(self.pageClosedEvent, self.onCloseToolBar)
+    def __init__(self, iocontroller, taskFile, settings,
                  splash=None, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
         self.dimensionsTracker = WindowDimensionsTracker(self, settings)
@@ -276,11 +276,25 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         # top of the window when it is initially hidden and later shown.
         wx.CallAfter(self.onShowStatusBar)
         if not self.__usingTabbedMainWindow:
-            perspective = self.settings.get('view', 'perspective')
-            if perspective:
-                self.manager.LoadPerspective(perspective)
-            self.manager.Update()
-                
+            self.restorePerspective()
+            
+    def restorePerspective(self):
+        perspective = self.settings.get('view', 'perspective')
+        for viewerType in viewer.viewerTypes():
+            if self.perspectiveAndSettingsHaveDifferentViewerCount(viewerType):
+                # Different viewer counts may happen when the names of a viewer 
+                # is changed between versions
+                perspective = ''
+                break
+        self.manager.LoadPerspective(perspective)
+        self.manager.Update()
+        
+    def perspectiveAndSettingsHaveDifferentViewerCount(self, viewerType):
+        perspective = self.settings.get('view', 'perspective')
+        perspectiveViewerCount = perspective.count('name=%s'%viewerType)
+        settingsViewerCount = self.settings.getint('view', '%scount'%viewerType)
+        return perspectiveViewerCount != settingsViewerCount
+    
     def registerForWindowComponentChanges(self):
         patterns.Publisher().registerObserver(self.onFilenameChanged, 
             eventType='taskfile.filenameChanged')

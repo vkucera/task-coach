@@ -225,14 +225,14 @@ class SettingsFileLocationTest(SettingsTestCase):
 class MinimumSettingsTest(SettingsTestCase):
     def testAtLeastOneTaskTreeListViewer(self):
         self.assertEqual(1, 
-            self.settings.getint('view', 'tasktreelistviewercount'))
+            self.settings.getint('view', 'taskviewercount'))
 
     def testTwoTaskTreeListViewers(self):
-        self.settings.set('view', 'tasktreelistviewercount', u'2')
+        self.settings.set('view', 'taskviewercount', u'2')
         self.assertEqual(2, 
-            self.settings.getint('view', 'tasktreelistviewercount'))
+            self.settings.getint('view', 'taskviewercount'))
 
     def testAtLeastOneTaskTreeListViewer_EvenWhenSetToZero(self):
-        self.settings.set('view', 'tasktreelistviewercount', u'0')
+        self.settings.set('view', 'taskviewercount', u'0')
         self.assertEqual(1, 
-            self.settings.getint('view', 'tasktreelistviewercount'))
+            self.settings.getint('view', 'taskviewercount'))

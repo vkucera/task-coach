@@ -18,13 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import effort, task, category, note
 
-    
+def viewerTypes():
+    return 'taskviewer', 'noteviewer', 'categoryviewer', 'effortviewer'
+            
 def addEffortViewers(viewerContainer, taskList, settings):
     _addViewers(viewerContainer, effort.EffortViewer, (taskList, 
                 settings), {}, 'start', settings)
 
 def addTaskViewers(viewerContainer, taskList, settings, categories, efforts):
-    _addViewers(viewerContainer, task.TaskTreeListViewer, (taskList,
+    _addViewers(viewerContainer, task.TaskViewer, (taskList,
                 settings), dict(categories=categories, efforts=efforts), 
                 'task', settings)
 

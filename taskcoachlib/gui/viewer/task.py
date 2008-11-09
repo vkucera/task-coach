@@ -29,19 +29,121 @@ import base, mixin
 
 class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks, 
                  mixin.SortableViewerForTasks, mixin.SearchableViewer, 
-                 base.UpdatePerSecondViewer):
+                 base.UpdatePerSecondViewer, base.SortableViewerWithColumns,
+                 base.TreeViewer):
+    
+    defaultTitle = _('Tasks')
+    
     def __init__(self, *args, **kwargs):
         self.categories = kwargs.pop('categories')
         self.efforts = kwargs.pop('efforts')
+        self.__sortKeyUnchangedCount = 0
+        kwargs.setdefault('settingsSection', 'taskviewer')
         super(TaskViewer, self).__init__(*args, **kwargs)
+        self.treeOrListUICommand.setChoice(self.isTreeViewer())
         self.__registerForColorChanges()
-
-    def createFilter(self, taskList):
-        tasks = super(TaskViewer, self).createFilter(taskList)
-        return domain.base.DeletedFilter(tasks)
 
     def isShowingTasks(self): 
         return True
+    
+    def isTreeViewer(self):
+        return self.settings.getboolean(self.settingsSection(), 'treemode')
+
+    def createWidget(self):
+        imageList = self.createImageList() # Has side-effects
+        self._columns = self._createColumns()
+        widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
+            self.getItemTooltipData, self.getItemImage, self.getItemAttr,
+            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
+            uicommand.TaskEdit(taskList=self.model(), viewer=self),
+            uicommand.TaskDragAndDrop(taskList=self.model(), viewer=self),
+            self.createTaskPopupMenu(), self.createColumnPopupMenu(),
+            **self.widgetCreationKeywordArguments())
+        widget.AssignImageList(imageList)
+        return widget    
+    
+    def _createColumns(self):
+        kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
+                      resizeCallback=self.onResizeColumn)
+        columns = [widgets.Column('subject', _('Subject'), 
+                task.Task.subjectChangedEventType(), 
+                'task.completionDate', 'task.dueDate', 'task.startDate',
+                'task.track.start', 'task.track.stop', 
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                    value='subject'),
+                width=self.getColumnWidth('subject'), 
+                imageIndexCallback=self.subjectImageIndex,
+                renderCallback=self.renderSubject, **kwargs)] + \
+            [widgets.Column('description', _('Description'), 
+                task.Task.descriptionChangedEventType(), 
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                    value='description'),
+                renderCallback=lambda task: task.description(), 
+                width=self.getColumnWidth('description'), **kwargs)] + \
+            [widgets.Column('attachments', '', 
+                task.Task.attachmentsChangedEventType(),
+                width=self.getColumnWidth('attachments'),
+                alignment=wx.LIST_FORMAT_LEFT,
+                imageIndexCallback=self.attachmentImageIndex,
+                headerImageIndex=self.imageIndex['attachment'],
+                renderCallback=lambda task: '', **kwargs)]
+        if self.settings.getboolean('feature', 'notes'):
+            columns.append(widgets.Column('notes', '', 
+                task.Task.notesChangedEventType(),
+                width=self.getColumnWidth('notes'),
+                alignment=wx.LIST_FORMAT_LEFT,
+                imageIndexCallback=self.noteImageIndex,
+                headerImageIndex=self.imageIndex['note'],
+                renderCallback=lambda task: '', **kwargs))
+        columns.extend(
+            [widgets.Column('categories', _('Categories'), 
+                task.Task.categoryAddedEventType(), 
+                task.Task.categoryRemovedEventType(), 
+                task.Task.categorySubjectChangedEventType(),
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                           value='categories'),
+                width=self.getColumnWidth('categories'),
+                renderCallback=self.renderCategory, **kwargs)] + \
+            [widgets.Column('totalCategories', _('Overall categories'),
+                task.Task.totalCategoryAddedEventType(),
+                task.Task.totalCategoryRemovedEventType(),
+                task.Task.totalCategorySubjectChangedEventType(),
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                           value='totalCategories'),
+                renderCallback=lambda task: self.renderCategory(task, recursive=True),
+                width=self.getColumnWidth('totalCategories'), **kwargs)])
+        effortOn= self.settings.getboolean('feature', 'effort')
+        dependsOnEffortFeature = ['budget', 'totalBudget', 
+                                  'timeSpent', 'totalTimeSpent', 
+                                  'budgetLeft', 'totalBudgetLeft',
+                                  'hourlyFee', 'fixedFee', 'totalFixedFee',
+                                  'revenue', 'totalRevenue']
+        for name, columnHeader, renderCallback in [
+            ('startDate', _('Start date'), lambda task: render.date(task.startDate())),
+            ('dueDate', _('Due date'), lambda task: render.date(task.dueDate())),
+            ('timeLeft', _('Days left'), lambda task: render.daysLeft(task.timeLeft(), task.completed())),
+            ('completionDate', _('Completion date'), lambda task: render.date(task.completionDate())),
+            ('recurrence', _('Recurrence'), lambda task: render.recurrence(task.recurrence())),
+            ('budget', _('Budget'), lambda task: render.budget(task.budget())),
+            ('totalBudget', _('Total budget'), lambda task: render.budget(task.budget(recursive=True))),
+            ('timeSpent', _('Time spent'), lambda task: render.timeSpent(task.timeSpent())),
+            ('totalTimeSpent', _('Total time spent'), lambda task: render.timeSpent(task.timeSpent(recursive=True))),
+            ('budgetLeft', _('Budget left'), lambda task: render.budget(task.budgetLeft())),
+            ('totalBudgetLeft', _('Total budget left'), lambda task: render.budget(task.budgetLeft(recursive=True))),
+            ('priority', _('Priority'), lambda task: render.priority(task.priority())),
+            ('totalPriority', _('Overall priority'), lambda task: render.priority(task.priority(recursive=True))),
+            ('hourlyFee', _('Hourly fee'), lambda task: render.amount(task.hourlyFee())),
+            ('fixedFee', _('Fixed fee'), lambda task: render.amount(task.fixedFee())),
+            ('totalFixedFee', _('Total fixed fee'), lambda task: render.amount(task.fixedFee(recursive=True))),
+            ('revenue', _('Revenue'), lambda task: render.amount(task.revenue())),
+            ('totalRevenue', _('Total revenue'), lambda task: render.amount(task.revenue(recursive=True))),
+            ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder()))]:
+            if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
+                columns.append(widgets.Column(name, columnHeader, 'task.'+name, 
+                    sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
+                    renderCallback=renderCallback, width=self.getColumnWidth(name),
+                    alignment=wx.LIST_FORMAT_RIGHT, **kwargs))
+        return columns
     
     def createColumnUICommands(self):
         commands = [
@@ -150,6 +252,15 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
                 setting='reminder', viewer=self)])
         return commands
 
+    def getToolBarUICommands(self):
+        ''' UI commands to put on the toolbar of this viewer. '''
+        toolBarUICommands = super(TaskViewer, self).getToolBarUICommands() 
+        toolBarUICommands.insert(-2, None) # Separator
+        self.treeOrListUICommand = \
+            uicommand.TaskViewerTreeOrListChoice(viewer=self)
+        toolBarUICommands.insert(-2, self.treeOrListUICommand)
+        return toolBarUICommands
+
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         taskUICommands = super(TaskViewer, self).createToolBarUICommands()
@@ -204,6 +315,9 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
                                   self.model(), self.categories, self.efforts,
                                   self)
 
+    def createColumnPopupMenu(self):
+        return menu.ColumnPopupMenu(self)
+
     def getColor(self, task):
         return color.taskColor(task, self.settings)
     
@@ -255,6 +369,25 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         bitmap, bitmap_selected = render.taskBitmapNames(task)
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
 
+    def subjectImageIndex(self, task, which):
+        normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
+        if which in [wx.TreeItemIcon_Expanded, wx.TreeItemIcon_SelectedExpanded]:
+            return expandedImageIndex 
+        else:
+            return normalImageIndex
+                    
+    def attachmentImageIndex(self, task, which):
+        if task.attachments():
+            return self.imageIndex['attachment'] 
+        else:
+            return -1
+
+    def noteImageIndex(self, task, which):
+        if task.notes():
+            return self.imageIndex['note'] 
+        else:
+            return -1
+
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
         kwargs['categories'] = [category for category in self.categories
@@ -279,118 +412,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         newCommand.do()
         return self.editItemDialog(bitmap=kwargs['bitmap'], 
                                    items=newCommand.items)
-           
-            
-class TaskViewerWithColumns(TaskViewer, base.SortableViewerWithColumns):
-    def __init__(self, *args, **kwargs):
-        self.__sortKeyUnchangedCount = 0
-        super(TaskViewerWithColumns, self).__init__(*args, **kwargs)
-                            
-    def _createColumns(self):
-        kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
-                      resizeCallback=self.onResizeColumn)
-        columns = [widgets.Column('subject', _('Subject'), 
-                task.Task.subjectChangedEventType(), 
-                'task.completionDate', 'task.dueDate', 'task.startDate',
-                'task.track.start', 'task.track.stop', 
-                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                    value='subject'),
-                width=self.getColumnWidth('subject'), 
-                imageIndexCallback=self.subjectImageIndex,
-                renderCallback=self.renderSubject, **kwargs)] + \
-            [widgets.Column('description', _('Description'), 
-                task.Task.descriptionChangedEventType(), 
-                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                    value='description'),
-                renderCallback=lambda task: task.description(), 
-                width=self.getColumnWidth('description'), **kwargs)] + \
-            [widgets.Column('attachments', '', 
-                task.Task.attachmentsChangedEventType(),
-                width=self.getColumnWidth('attachments'),
-                alignment=wx.LIST_FORMAT_LEFT,
-                imageIndexCallback=self.attachmentImageIndex,
-                headerImageIndex=self.imageIndex['attachment'],
-                renderCallback=lambda task: '', **kwargs)]
-        if self.settings.getboolean('feature', 'notes'):
-            columns.append(widgets.Column('notes', '', 
-                task.Task.notesChangedEventType(),
-                width=self.getColumnWidth('notes'),
-                alignment=wx.LIST_FORMAT_LEFT,
-                imageIndexCallback=self.noteImageIndex,
-                headerImageIndex=self.imageIndex['note'],
-                renderCallback=lambda task: '', **kwargs))
-        columns.extend(
-            [widgets.Column('categories', _('Categories'), 
-                task.Task.categoryAddedEventType(), 
-                task.Task.categoryRemovedEventType(), 
-                task.Task.categorySubjectChangedEventType(),
-                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                                                           value='categories'),
-                width=self.getColumnWidth('categories'),
-                renderCallback=self.renderCategory, **kwargs)] + \
-            [widgets.Column('totalCategories', _('Overall categories'),
-                task.Task.totalCategoryAddedEventType(),
-                task.Task.totalCategoryRemovedEventType(),
-                task.Task.totalCategorySubjectChangedEventType(),
-                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                                                           value='totalCategories'),
-                renderCallback=lambda task: self.renderCategory(task, recursive=True),
-                width=self.getColumnWidth('totalCategories'), **kwargs)])
-        effortOn= self.settings.getboolean('feature', 'effort')
-        dependsOnEffortFeature = ['budget', 'totalBudget', 
-                                  'timeSpent', 'totalTimeSpent', 
-                                  'budgetLeft', 'totalBudgetLeft',
-                                  'hourlyFee', 'fixedFee', 'totalFixedFee',
-                                  'revenue', 'totalRevenue']
-        for name, columnHeader, renderCallback in [
-            ('startDate', _('Start date'), lambda task: render.date(task.startDate())),
-            ('dueDate', _('Due date'), lambda task: render.date(task.dueDate())),
-            ('timeLeft', _('Days left'), lambda task: render.daysLeft(task.timeLeft(), task.completed())),
-            ('completionDate', _('Completion date'), lambda task: render.date(task.completionDate())),
-            ('recurrence', _('Recurrence'), lambda task: render.recurrence(task.recurrence())),
-            ('budget', _('Budget'), lambda task: render.budget(task.budget())),
-            ('totalBudget', _('Total budget'), lambda task: render.budget(task.budget(recursive=True))),
-            ('timeSpent', _('Time spent'), lambda task: render.timeSpent(task.timeSpent())),
-            ('totalTimeSpent', _('Total time spent'), lambda task: render.timeSpent(task.timeSpent(recursive=True))),
-            ('budgetLeft', _('Budget left'), lambda task: render.budget(task.budgetLeft())),
-            ('totalBudgetLeft', _('Total budget left'), lambda task: render.budget(task.budgetLeft(recursive=True))),
-            ('priority', _('Priority'), lambda task: render.priority(task.priority())),
-            ('totalPriority', _('Overall priority'), lambda task: render.priority(task.priority(recursive=True))),
-            ('hourlyFee', _('Hourly fee'), lambda task: render.amount(task.hourlyFee())),
-            ('fixedFee', _('Fixed fee'), lambda task: render.amount(task.fixedFee())),
-            ('totalFixedFee', _('Total fixed fee'), lambda task: render.amount(task.fixedFee(recursive=True))),
-            ('revenue', _('Revenue'), lambda task: render.amount(task.revenue())),
-            ('totalRevenue', _('Total revenue'), lambda task: render.amount(task.revenue(recursive=True))),
-            ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder()))]:
-            if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
-                columns.append(widgets.Column(name, columnHeader, 'task.'+name, 
-                    sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
-                    renderCallback=renderCallback, width=self.getColumnWidth(name),
-                    alignment=wx.LIST_FORMAT_RIGHT, **kwargs))
-        return columns
-         
-    def subjectImageIndex(self, task, which):
-        normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
-        if which in [wx.TreeItemIcon_Expanded, wx.TreeItemIcon_SelectedExpanded]:
-            return expandedImageIndex 
-        else:
-            return normalImageIndex
-                    
-    def attachmentImageIndex(self, task, which):
-        if task.attachments():
-            return self.imageIndex['attachment'] 
-        else:
-            return -1
-
-    def noteImageIndex(self, task, which):
-        if task.notes():
-            return self.imageIndex['note'] 
-        else:
-            return -1
-
-    def createColumnPopupMenu(self):
-        return menu.ColumnPopupMenu(self)
-
+                           
     def sortBy(self, sortKey):
         # If the user clicks the same column for the third time, toggle
         # the SortyByTaskStatusFirst setting:
@@ -401,60 +423,30 @@ class TaskViewerWithColumns(TaskViewer, base.SortableViewerWithColumns):
         if self.__sortKeyUnchangedCount > 1:
             self.setSortByTaskStatusFirst(not self.isSortByTaskStatusFirst())
             self.__sortKeyUnchangedCount = 0
-        super(TaskViewerWithColumns, self).sortBy(sortKey)
+        super(TaskViewer, self).sortBy(sortKey)
             
     def setSortByTaskStatusFirst(self, *args, **kwargs):
-        super(TaskViewerWithColumns, self).setSortByTaskStatusFirst(*args, **kwargs)
+        super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)
         self.showSortOrder()
         
     def getSortOrderImageIndex(self):
-        sortOrderImageIndex = super(TaskViewerWithColumns, self).getSortOrderImageIndex()
+        sortOrderImageIndex = super(TaskViewer, self).getSortOrderImageIndex()
         if self.isSortByTaskStatusFirst():
             sortOrderImageIndex += '_with_status' 
         return sortOrderImageIndex
 
-
-class TaskTreeListViewer(TaskViewerWithColumns, base.TreeViewer):
-    defaultTitle = _('Tasks')
-     
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('settingsSection', 'tasktreelistviewer')
-        super(TaskTreeListViewer, self).__init__(*args, **kwargs)
-        self.treeOrListUICommand.setChoice(self.isTreeViewer())
-        
-    def createWidget(self):
-        imageList = self.createImageList() # Has side-effects
-        self._columns = self._createColumns()
-        widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
-            self.getItemTooltipData, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
-            uicommand.TaskEdit(taskList=self.model(), viewer=self),
-            uicommand.TaskDragAndDrop(taskList=self.model(), viewer=self),
-            self.createTaskPopupMenu(), self.createColumnPopupMenu(),
-            **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList)
-        return widget    
-
-    def getToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(TaskTreeListViewer, self).getToolBarUICommands() 
-        toolBarUICommands.insert(-2, None) # Separator
-        self.treeOrListUICommand = \
-            uicommand.TaskViewerTreeOrListChoice(viewer=self)
-        toolBarUICommands.insert(-2, self.treeOrListUICommand)
-        return toolBarUICommands
+    def createFilter(self, taskList):
+        tasks = super(TaskViewer, self).createFilter(taskList)
+        return domain.base.DeletedFilter(tasks)
 
     def setSearchFilter(self, searchString, *args, **kwargs):
-        super(TaskTreeListViewer, self).setSearchFilter(searchString, *args, **kwargs)
+        super(TaskViewer, self).setSearchFilter(searchString, *args, **kwargs)
         if searchString:
-            self.expandAll()
+            self.expandAll()           
 
     def showTree(self, treeMode):
         self.settings.set(self.settingsSection(), 'treemode', str(treeMode))
         self.model().setTreeMode(treeMode)
-        
-    def isTreeViewer(self):
-        return self.settings.getboolean(self.settingsSection(), 'treemode')
         
     def renderSubject(self, task):
         return task.subject(recursive=not self.isTreeViewer())
@@ -463,19 +455,19 @@ class TaskTreeListViewer(TaskViewerWithColumns, base.TreeViewer):
         ''' If the viewer is in tree mode, return the real root items. If the
             viewer is in list mode, return all items. '''
         if self.isTreeViewer():
-            return super(TaskTreeListViewer, self).getRootItems()
+            return super(TaskViewer, self).getRootItems()
         else:
             return self.model()
     
     def getItemParent(self, item):
         if self.isTreeViewer():
-            return super(TaskTreeListViewer, self).getItemParent(item)
+            return super(TaskViewer, self).getItemParent(item)
         else:
             return None
             
     def getChildrenCount(self, index):
         if self.isTreeViewer() or (index == ()):
-            return super(TaskTreeListViewer, self).getChildrenCount(index)
+            return super(TaskViewer, self).getChildrenCount(index)
         else:
             return 0
 

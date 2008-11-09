@@ -105,11 +105,8 @@ class TaskViewerWithDummyWidget(ViewerWithDummyWidget, gui.viewer.TaskViewer):
         self.createImageList()
         return super(TaskViewerWithDummyWidget, self).createWidget()
 
-
-class TaskTreeListViewerWithDummyWidget(TaskViewerWithDummyWidget, 
-        gui.viewer.task.TaskTreeListViewer):
     def _createColumns(self):
-        return gui.viewer.TaskTreeListViewer._createColumns(self)
+        return gui.viewer.TaskViewer._createColumns(self)
 
 
 class EffortViewerWithDummyWidget(ViewerWithDummyWidget,
