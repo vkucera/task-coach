@@ -74,7 +74,8 @@ epydoc:
 
 dot:
 	$(PYTHON) dot.py taskcoachlib/gui/viewer > dot.out/viewer.dot
-	$(DOT) -Tpng -o"dot.out/viewer.png" -Kdot dot.out/viewer.dot
+	$(PYTHON) dot.py taskcoachlib/gui/dialog > dot.out/dialog.dot
+	$(DOT) -Tpng -Kdot -O dot.out/*.dot
 
 i18n: templates taskcoachlib/i18n/nl.py
 
