@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,7 +56,8 @@ class Window(object):
 
     def _get_isForeground(self):
         return win32gui.GetForegroundWindow() == self.hwnd
-    isForeground = property(_get_isForeground, doc="Wether the window is the foreground")
+    isForeground = property(_get_isForeground, 
+                            doc="Whether the window is the foreground")
 
     def waitFocus(self):
         for i in xrange(10):
@@ -65,7 +67,7 @@ class Window(object):
         return False
 
     def clickAt(self, dx, dy):
-        """Simulates a click at a given position (relative to the window)"""
+        """ Simulates a click at a given position (relative to the window) """
 
         # Posting WM_LBUTTON[DOWN/UP] does not work it seems. Use
         # SendInput instead. We must find the absolute coordinates
@@ -86,11 +88,11 @@ class Window(object):
                   (INPUT_MOUSE, (0, 0, 0, MOUSEEVENTF_LEFTUP, 0)))
 
     def close(self):
-        """Closes the window."""
+        """ Closes the window. """
         win32gui.SendMessage(self.hwnd, win32con.WM_CLOSE, 0, 0)
 
     def findChildren(self, klass, title):
-        """Find all children, recursively, matching a class and a title."""
+        """ Find all children, recursively, matching a class and a title. """
 
         result = []
         for child in self.children:
@@ -100,13 +102,14 @@ class Window(object):
         return result
 
     def dump(self, level=0):
-        """Dumps the window and its children, recursively, to stdout"""
+        """ Dumps the window and its children, recursively, to stdout. """
         print (' ' * level) + str(self)
         for child in self.children:
             child.dump(level + 1)
 
     def __str__(self):
         return '%s("%s")' % (self.klass, self.title)
+
 
 class Win32TestCase(unittest.TestCase):
     args = []
@@ -124,7 +127,7 @@ class Win32TestCase(unittest.TestCase):
             if os.path.isdir(dirname) and os.path.exists(filename):
                 break
         else:
-            self.fail('Could not find TaskCoach executable.')
+            self.fail('Could not find Task Coach executable.')
 
         cmd = [filename, '-i', 'test.ini'] + self.args
 
@@ -141,12 +144,16 @@ class Win32TestCase(unittest.TestCase):
                     sinfo)
         self.processHandle = hProcess
         if win32event.WaitForInputIdle(hProcess, 10000) == win32event.WAIT_TIMEOUT:
-            self.fail('Could not launch TaskCoach.')
+            self.fail('Could not launch Task Coach.')
 
         window = self.findWindow(r'^Tip of the Day$')
         if window is None:
-            self.fail('Tip window didn\'t appear')
+            self.fail("Tip window didn't appear")
         window.close()
+        
+        window = self.findWindow(r'^New version of Task Coach available$')
+        if window:
+            window.close()
 
     def tearDown(self):
         if self.processHandle is not None:
@@ -154,24 +161,22 @@ class Win32TestCase(unittest.TestCase):
         os.remove(os.path.join(self.basepath, 'testfile.tsk'))
 
     def findWindow(self, title, tries=10):
-        """Waits for a window to appear, and return a Window instance,
+        """ Waits for a window to appear, and return a Window instance,
         or None if not found.
 
         @param title: Criterion for the window's title
             (regular expression string)
         @param tries: Max number of scans to perform. Scans are one
-            second apart."""
+            second apart. """
 
-        rx = re.compile(title)
+        titleRegex = re.compile(title)
 
-        for idx in xrange(tries):
-            time.sleep(1)
-
+        for index in xrange(tries):
             windows = []
 
             def enumCb(hwnd, lparam):
                 try:
-                    if rx.search(win32gui.GetWindowText(hwnd)):
+                    if titleRegex.search(win32gui.GetWindowText(hwnd)):
                         windows.append(hwnd)
                 except:
                     pass
@@ -181,5 +186,6 @@ class Win32TestCase(unittest.TestCase):
 
             if windows:
                 return Window(windows[0])
-
+            time.sleep(1)
+            
         return None

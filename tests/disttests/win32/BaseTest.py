@@ -18,11 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, time, base
 
+
 class TestLaunch(base.Win32TestCase):
     def test_launch(self):
         window = self.findWindow(r'^Task Coach$')
         self.failIf(window is None,
                     'Cannot find main window')
+
 
 class TestWithTaskFile(base.Win32TestCase):
     def setUp(self):
