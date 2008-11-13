@@ -870,10 +870,8 @@ class ViewViewer(SettingsCommand, ViewerCommand):
         super(ViewViewer, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
-        self.viewer.Freeze()
         viewer.addOneViewer(self.viewer, self.taskFile, self.settings, self.viewerClass)
         self.increaseViewerCount()
-        self.viewer.Thaw()
         
     def increaseViewerCount(self):
         setting = self.viewerClass.__name__.lower() + 'count'

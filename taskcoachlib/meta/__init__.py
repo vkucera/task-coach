@@ -19,3 +19,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from data import *
 from gpl import licenseText, licenseHTML
 from versionchecker import VersionChecker
+from debug import log_call

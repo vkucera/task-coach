@@ -23,6 +23,14 @@ from changetypes import *
 
 releases = [
             
+Release('0.71.4', 'November ??, 2008',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Properly iterate over the open viewers with Ctrl-PgDn and 
+Ctrl-PgUp.''', '1973357')
+        ]
+    ),
+            
 Release('0.71.3', 'November 10, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
