@@ -437,9 +437,5 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
     def onCloseToolBar(self, event):
         if event.GetPane().IsToolbar():
             self.settings.set('view', 'toolbar', 'None')
-        # Don't call event.Skip(), it crashes TC on Ubuntu. Don't know why. 
-        # But if we don't call Skip our other event handler (for dealing with
-        # closed tabs) is not invoked. FIXME: test other platforms besides MSW
-        if '__WXMSW__' == wx.Platform:
-            event.Skip()
+        event.Skip()
         
