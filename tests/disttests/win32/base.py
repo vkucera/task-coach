@@ -129,6 +129,7 @@ class Win32TestCase(unittest.TestCase):
         else:
             self.fail('Could not find Task Coach executable.')
 
+        self.logfilename = filename + '.log'
         cmd = [filename, '-i', 'test.ini'] + self.args
 
         sinfo = win32process.STARTUPINFO()
