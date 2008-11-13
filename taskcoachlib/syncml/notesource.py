@@ -71,10 +71,10 @@ class NoteSource(BaseSource):
 
     def objectRemovedOnServer(self, note):
         return wx.MessageBox(_('Note "%s" has been deleted on server,\n') % note.subject() + \
-                             _('but locally modified. Should I keep the local version ?'),
+                             _('but locally modified. Should I keep the local version?'),
                              _('Synchronization conflict'), wx.YES_NO) == wx.YES
 
     def objectRemovedOnClient(self, note):
         return wx.MessageBox(_('Note "%s" has been locally deleted,\n') % note.subject() + \
-                             _('but modified on server. Should I keep the remote version ?'),
+                             _('but modified on server. Should I keep the remote version?'),
                              _('Synchronization conflict'), wx.YES_NO) == wx.YES

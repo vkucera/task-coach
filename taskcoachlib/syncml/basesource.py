@@ -57,7 +57,7 @@ class BaseSource(SyncSource):
                     if self.objectList:
                         if wx.MessageBox(_('The synchronization for source %s') % self.name + \
                                          _('will be a refresh from server. All local items will\n' \
-                                           'be deleted. Do you wish to continue ?'),
+                                           'be deleted. Do you wish to continue?'),
                                          _('Refresh from server'), wx.YES_NO) != wx.YES:
                             return 514 # Not sure of this
                         self.objectList.clear()
@@ -69,7 +69,7 @@ class BaseSource(SyncSource):
                                        REFRESH_FROM_CLIENT_BY_SERVER]:
                     if wx.MessageBox(_('The synchronization for source %s') % self.name + \
                                      _('will be a refresh from client. All remote items will\n' \
-                                       'be deleted. Do you wish to continue ?'),
+                                       'be deleted. Do you wish to continue?'),
                                      _('Refresh from server'), wx.YES_NO) != wx.YES:
                         return 514 # Not sure of this
 
