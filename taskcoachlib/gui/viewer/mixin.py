@@ -362,7 +362,7 @@ class SortableViewerForAttachments(SortableViewer):
                  helpText=_('Sort attachments by subject')),
              uicommand.ViewerSortByCommand(viewer=self, value='description',
                  menuText=_('&Description'),
-                 helpText=_('Sort attchments by description')),
+                 helpText=_('Sort attachments by description')),
              uicommand.ViewerSortByCommand(viewer=self, value='categories',
                  menuText=_('&Category'),
                  helpText=_('Sort attachments by category')),
