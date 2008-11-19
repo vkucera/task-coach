@@ -312,7 +312,7 @@ class DatesPage(EditorPage, TaskHeaders):
             self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
         self.fit()
         self._defaultControl=self._reminderDateTimeEntry  #  need to confirm this is the right box
-        
+
     def onRecurrenceChanged(self, event):
         event.Skip()
         recurrenceOn = event.String != _('None')
@@ -1077,10 +1077,6 @@ class TaskEditor(EditorWithCommand):
                 return p
         return page
         
-    def addPages(self):
-        for task in self._command.items:
-            self.addPage(task)
-
     def addPage(self, task):
         page = TaskEditBook(self._interior, task, self._taskList,
             self._settings, self._categories)
