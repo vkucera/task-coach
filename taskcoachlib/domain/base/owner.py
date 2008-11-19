@@ -51,7 +51,8 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     setattr(klass, '%ssChangedEventType' % klass.__ownedType__.lower(), classmethod(changedEventType))
 
     def objects(instance):
-        return getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()))
+        objects = getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()))
+        return [object for object in objects if not object.isDeleted()]
 
     setattr(klass, '%ss' % klass.__ownedType__.lower(), objects)
 
