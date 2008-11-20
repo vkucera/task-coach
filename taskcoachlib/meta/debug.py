@@ -23,13 +23,32 @@ def log_call(func):
     ''' Decorator for function calls that prints the function name,
         arguments and result to stdout. Usage:
         
-        @log
+        @log_call
         def function(arg):
             ...
     '''
+    
+    # Import here instead of at the module level to prevent unnecessary 
+    # inclusion of the inspect module when packaging the application:
+    import inspect 
+    
     def inner(*args, **kwargs):
         result = func(*args, **kwargs)
-        sys.stdout.write('%s(%s, %s) -> %s\n'%(func.__name__, str(args), 
-                                               str(kwargs), str(result)))
+        write = sys.stdout.write
+        for frame in inspect.stack(context=2)[3:0:-1]:
+            write(format_traceback(frame))
+        write('%s(%s, %s) -> %s\n'%(func.__name__, str(args), 
+                                    str(kwargs), str(result)))
+        write('===\n')
         return result
     return inner
+
+
+def format_traceback(frame):
+    result = []
+    filename, lineno, caller, context = frame[1:5]
+    result.append('  File "%s", line %s, in %s'%(filename, lineno, caller))
+    for line in context:
+        result.append(line[:-1])
+    return '\n'.join(result) + '\n'   
+    
