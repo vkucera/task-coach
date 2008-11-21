@@ -25,7 +25,7 @@ from taskcoachlib.gui.dialog import reminder, editor
 
 class ReminderController(object):
     def __init__(self, taskList, categories, settings, *args, **kwargs):
-        super(ReminderController, self).__init__(*args, **kwargs)
+        super(ReminderController, self).__init__()
         patterns.Publisher().registerObserver(self.onSetReminder,
             eventType='task.reminder')
         patterns.Publisher().registerObserver(self.onAddTask,

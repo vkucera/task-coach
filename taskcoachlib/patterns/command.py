@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import singleton as patterns
 
 class Command(object):
+    def __init__(self, *args, **kwargs):
+        super(Command, self).__init__() # object.__init__ takes no arguments
+        
     def do(self):
         CommandHistory().append(self)
 

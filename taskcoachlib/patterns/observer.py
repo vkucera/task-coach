@@ -199,7 +199,7 @@ class Observer(object):
     def __init__(self, *args, **kwargs):
         self.registerObserver = Publisher().registerObserver
         self.removeObserver = Publisher().removeObserver
-        super(Observer, self).__init__(*args, **kwargs)
+        super(Observer, self).__init__()
         
         
 class Decorator(Observer):
