@@ -84,6 +84,8 @@ class Application(object):
             self.warnUserThatIniFileWasNotLoaded()
         if loadTaskFile:
             self.io.openAfterStart(self._args)
+        wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker",
+                                      settings.getboolean('editor', 'maccheckspelling'))
 
     def warnUserThatIniFileWasNotLoaded(self):
         from taskcoachlib import meta

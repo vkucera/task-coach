@@ -1,7 +1,20 @@
 #!/usr/bin/python
 
-from buildbot.steps.shell import Compile
+from buildbot.steps.shell import Compile, WithProperties
 from buildbot.steps.transfer import FileUpload
+from buildbot import interfaces
+from buildbot.process.buildstep import FAILURE
+from zope.interface import implements
+
+class TaskCoachEmailLookup(object):
+    implements(interfaces.IEmailLookup)
+
+    def getAddress(self, name):
+        try:
+            return { 'fraca7': 'fraca7@free.fr',
+                     'fniessink': 'frank@niessink.com' }[name]
+        except KeyError:
+            return None
 
 class Cleanup(Compile):
     name = 'Cleanup'
@@ -39,6 +52,15 @@ class LanguageTests(Compile):
         kwargs['command'] = ['make', 'languagetests']
         Compile.__init__(self, **kwargs)
 
+class DistributionTests(Compile):
+    name = 'distribution tests'
+    description = ['Running', 'distribution', 'tests']
+    descriptionDone = ['Distribution', 'tests']
+
+    def __init__(self, **kwargs):
+        kwargs['command'] = ['make', 'disttests']
+        Compile.__init__(self, **kwargs)
+
 class Epydoc(Compile):
     name = 'epydoc'
     description = ['Generating', 'documentation']
@@ -52,40 +74,94 @@ class Epydoc(Compile):
 #==============================================================================
 # Platform-specific
 
-PKGVER = '0.71.2'
+class DistCompile(Compile):
+    def __init__(self, **kwargs):
+        kwargs['command'] = ['make', self.name,
+                             WithProperties('TCVERSION=r%s', 'got_revision')]
+        Compile.__init__(self, **kwargs)
 
-class BuildDMG(Compile):
+class BuildDMG(DistCompile):
     name = 'dmg'
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'dmg']
-        Compile.__init__(self, **kwargs)
+    def createSummary(self, log):
+        DistCompile.createSummary(self, log)
+        self.addURL('download',
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision'))
 
-class BuildEXE(Compile):
-    name = 'exe'
+class UploadDMG(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.dmg', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
+class BuildEXE(DistCompile):
+    name = 'windist'
     description = ['Generating', 'Windows', 'binary']
     descriptionDone = ['Windows', 'binary']
 
-    def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'windist']
-        Compile.__init__(self, **kwargs)
+    def createSummary(self, log):
+        # Not calling superclass here, because py2exe is pretty anal
+        # about what should be a version number: at most 4
+        # dot-separated numbers, so 'rXXXX' doesn't pass. This
+        # procuces a meaningless warning.
+
+        # In the near future, I'll arrange to build up a version
+        # number in the form <actual version>.<current revision>.
+
+        #DistCompile.createSummary(self, log)
+
+        self.addURL('download',
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-win32.exe' % self.getProperty('got_revision'))
 
 class UploadEXE(FileUpload):
     def __init__(self, **kwargs):
-        kwargs['slavesrc'] = 'dist/TaskCoach-%s-win32.exe' % PKGVER
-        kwargs['masterdest'] = '~/TaskCoach-packages'
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s-win32.exe', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-win32.exe', 'got_revision')
+        kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
-    def createSummary(self, log):
-        self.addURL('download', 'http://www.fraca7.net/TaskCoach-packages/TaskCoach-%s-win32.exe' % PKGVER)
+class BuildSource(DistCompile):
+    name = 'sdist'
+    description = ['Generating', 'source', 'distribution']
+    descriptionDone = ['Source', 'distribution']
 
-class BuildDEB(Compile):
+    def createSummary(self, log):
+        DistCompile.createSummary(self, log)
+        self.addURL('download .tar.gz',
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.tar.gz' % self.getProperty('got_revision'))
+        self.addURL('download .zip',
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.zip' % self.getProperty('got_revision'))
+
+class UploadSourceTar(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.tar.gz', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.tar.gz', 'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
+class UploadSourceZip(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.zip', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.zip', 'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
+class BuildDEB(DistCompile):
     name = 'deb'
     description = ['Generating', 'Debian', 'package']
     descriptionDone = ['Debian', 'package']
 
+    def createSummary(self, log):
+        DistCompile.createSummary(self, log)
+        self.addURL('download',
+                    'http://www.fraca7.net/TaskCoach-packages/taskcoach_r%s-1_all.deb' % self.getProperty('got_revision'))
+
+class UploadDEB(FileUpload):
     def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'deb']
-        Compile.__init__(self, **kwargs)
+        kwargs['slavesrc'] = WithProperties('dist/taskcoach_r%s-1_all.deb', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/taskcoach_r%s-1_all.deb', 'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)

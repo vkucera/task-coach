@@ -20,6 +20,7 @@
 # put in ./dist, the files for the website end up in ./website.out)
 
 PYTHON="python" # python should be on the path
+DOT="dot"       # dot should be on the path
 
 ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
@@ -58,7 +59,7 @@ icons: taskcoachlib/gui/icons.py
 
 templates: taskcoachlib/persistence/xml/templates.py
 
-taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip
+taskcoachlib/gui/icons.py: icons.in/iconmap.py icons.in/nuvola.zip icons.in/splash.png
 	cd icons.in; $(PYTHON) make.py
 
 taskcoachlib/persistence/xml/templates.py:
@@ -70,6 +71,11 @@ website: changes
 
 epydoc:
 	$(EPYDOC) --parse-only -o epydoc.out taskcoachlib taskcoach.py
+
+dot:
+	$(PYTHON) dot.py taskcoachlib/gui/viewer > dot.out/viewer.dot
+	$(PYTHON) dot.py taskcoachlib/gui/dialog > dot.out/dialog.dot
+	$(DOT) -Tpng -Kdot -O dot.out/*.dot
 
 i18n: templates taskcoachlib/i18n/nl.py
 
@@ -98,8 +104,12 @@ integrationtests: icons i18n
 languagetests: i18n
 	cd tests; $(PYTHON) test.py integrationtests/TranslationIntegrityTest.py
 
+# FIXME: disttests should depend on either windist, deb, rpm or dmg...
+disttests:
+	cd tests; $(PYTHON) test.py --disttests --no-unittests
 
-CLEANFILES=build dist website.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
+
+CLEANFILES=build dist website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
 REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \
 	taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 

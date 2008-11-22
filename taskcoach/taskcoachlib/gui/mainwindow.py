@@ -20,8 +20,7 @@ import wx
 from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
-import viewer, viewercontainer, viewerfactory, toolbar, uicommand,\
-    remindercontroller
+import viewer, toolbar, uicommand, remindercontroller
 
 
 class WindowDimensionsTracker(object):
@@ -195,7 +194,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
 class MainWindow(AuiManagedFrameWithNotebookAPI):
     pageClosedEvent = wx.aui.EVT_AUI_PANE_CLOSE
     
-    def __init__(self, iocontroller, taskFile, settings,                 #self.Bind(self.pageClosedEvent, self.onCloseToolBar)
+    def __init__(self, iocontroller, taskFile, settings,
                  splash=None, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
         self.dimensionsTracker = WindowDimensionsTracker(self, settings)
@@ -230,18 +229,9 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             containerWidget = widgets.AUINotebook(self)
         else:
             containerWidget = self
-        self.viewer = viewercontainer.ViewerContainer(containerWidget,
+        self.viewer = viewer.ViewerContainer(containerWidget,
             self.settings, 'mainviewer') 
-        viewerfactory.addTaskViewers(self.viewer, self.taskFile.tasks(), 
-            self.settings, self.taskFile.categories(), self.taskFile.efforts())
-        if self.settings.getboolean('feature', 'effort'):
-            viewerfactory.addEffortViewers(self.viewer, self.taskFile.tasks(), 
-                                           self.settings)
-        viewerfactory.addCategoryViewers(self.viewer, self.taskFile.categories(),
-            self.settings, self.taskFile.tasks(), self.taskFile.notes())
-        if self.settings.getboolean('feature', 'notes'):
-            viewerfactory.addNoteViewers(self.viewer, self.taskFile.notes(),
-                 self.settings, self.taskFile.categories())
+        viewer.addViewers(self.viewer, self.taskFile, self.settings)
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         import menu
@@ -277,11 +267,25 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         # top of the window when it is initially hidden and later shown.
         wx.CallAfter(self.onShowStatusBar)
         if not self.__usingTabbedMainWindow:
-            perspective = self.settings.get('view', 'perspective')
-            if perspective:
-                self.manager.LoadPerspective(perspective)
-            self.manager.Update()
-                
+            self.restorePerspective()
+            
+    def restorePerspective(self):
+        perspective = self.settings.get('view', 'perspective')
+        for viewerType in viewer.viewerTypes():
+            if self.perspectiveAndSettingsHaveDifferentViewerCount(viewerType):
+                # Different viewer counts may happen when the name of a viewer 
+                # is changed between versions
+                perspective = ''
+                break
+        self.manager.LoadPerspective(perspective)
+        self.manager.Update()
+        
+    def perspectiveAndSettingsHaveDifferentViewerCount(self, viewerType):
+        perspective = self.settings.get('view', 'perspective')
+        perspectiveViewerCount = perspective.count('name=%s'%viewerType)
+        settingsViewerCount = self.settings.getint('view', '%scount'%viewerType)
+        return perspectiveViewerCount != settingsViewerCount
+    
     def registerForWindowComponentChanges(self):
         patterns.Publisher().registerObserver(self.onFilenameChanged, 
             eventType='taskfile.filenameChanged')

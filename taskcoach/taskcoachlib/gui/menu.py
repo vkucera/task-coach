@@ -399,39 +399,24 @@ class ViewViewerMenu(Menu):
     def __init__(self, mainwindow, settings, viewerContainer, taskFile):
         super(ViewViewerMenu, self).__init__(mainwindow)
         ViewViewer = uicommand.ViewViewer
-        tasks = taskFile.tasks()
-        categories = taskFile.categories()
-        notes = taskFile.notes()
-        efforts = taskFile.efforts()
+        kwargs = dict(viewer=viewerContainer, taskFile=taskFile, settings=settings)
         viewViewerCommands = [\
-            ViewViewer(viewer=viewerContainer, menuText=_('&Task'),
+            ViewViewer(menuText=_('&Task'),
                        helpText=_('Open a new tab with a viewer that displays tasks'),
-                       bitmap='task', viewerClass=viewer.TaskTreeListViewer,
-                       viewerArgs=(tasks, settings),
-                       viewerKwargs=dict(categories=categories, efforts=efforts),
-                       viewerBitmap='task', settings=settings),
-            ViewViewer(viewer=viewerContainer, menuText=_('&Category'),
+                       viewerClass=viewer.TaskViewer, **kwargs),
+            ViewViewer(menuText=_('&Category'),
                        helpText=_('Open a new tab with a viewer that displays categories'),
-                       bitmap='category', viewerClass=viewer.CategoryViewer,
-                       viewerArgs=(categories, settings),
-                       viewerKwargs=dict(tasks=tasks, notes=notes),
-                       viewerBitmap='category', settings=settings)]
+                       viewerClass=viewer.CategoryViewer, **kwargs)]
         if settings.getboolean('feature', 'effort'):
             viewViewerCommands.append(
-                ViewViewer(viewer=viewerContainer, menuText=_('&Effort'),
+                ViewViewer(menuText=_('&Effort'),
                        helpText=_('Open a new tab with a viewer that displays efforts'),
-                       bitmap='start', viewerClass=viewer.EffortListViewer,
-                       viewerArgs=(tasks, settings),
-                       viewerKwargs=dict(), viewerBitmap='start',
-                       settings=settings))
+                       viewerClass=viewer.EffortViewer, **kwargs))
         if settings.getboolean('feature', 'notes'):
             viewViewerCommands.append(
-                ViewViewer(viewer=viewerContainer, menuText=_('&Note'),
+                ViewViewer(menuText=_('&Note'),
                        helpText=_('Open a new tab with a viewer that displays notes'),
-                       bitmap='note', viewerClass=viewer.NoteViewer,
-                       viewerArgs=(notes, settings),
-                       viewerKwargs=dict(categories=categories),
-                       viewerBitmap='note', settings=settings))
+                       viewerClass=viewer.NoteViewer, **kwargs))
         self.appendUICommands(*viewViewerCommands)
        
                                       

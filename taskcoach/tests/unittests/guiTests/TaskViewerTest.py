@@ -24,20 +24,20 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort, category, note, attachment
 
 
-class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
+class TaskViewerUnderTest(gui.viewer.task.TaskViewer):
     
     def __init__(self, *args, **kwargs):
-        super(TaskTreeListViewerUnderTest, self).__init__(*args, **kwargs)
+        super(TaskViewerUnderTest, self).__init__(*args, **kwargs)
         self.events = []
     
     def onAttributeChanged(self, event):
-        super(TaskTreeListViewerUnderTest, self).onAttributeChanged(event)
+        super(TaskViewerUnderTest, self).onAttributeChanged(event)
         self.events.append(event)
         
 
-class TaskTreeListViewerTestCase(test.wxTestCase):
+class TaskViewerTestCase(test.wxTestCase):
     def setUp(self):
-        super(TaskTreeListViewerTestCase, self).setUp()
+        super(TaskViewerTestCase, self).setUp()
         self.task = task.Task(subject='task')
         self.child = task.Task(subject='child')
         self.child.setParent(self.task)
@@ -45,7 +45,7 @@ class TaskTreeListViewerTestCase(test.wxTestCase):
         self.taskList = task.TaskList()
         self.categories = category.CategoryList()
         effortList = effort.EffortList(self.taskList)
-        self.viewer = TaskTreeListViewerUnderTest(self.frame, self.taskList, 
+        self.viewer = TaskViewerUnderTest(self.frame, self.taskList, 
             self.settings, categories=self.categories, efforts=effortList)
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()
@@ -54,7 +54,7 @@ class TaskTreeListViewerTestCase(test.wxTestCase):
         attachment.Attachment.attdir = os.getcwd()
 
     def tearDown(self):
-        super(TaskTreeListViewerTestCase, self).tearDown()
+        super(TaskViewerTestCase, self).tearDown()
         attachment.Attachment.attdir = None
 
         for name in os.listdir('.'):
@@ -617,13 +617,13 @@ class ColumnsTests(object):
         self.assertEqual(expectedColor, self.viewer.getColor(self.task))
 
 
-class TaskTreeListViewerTest(CommonTests, ColumnsTests, TreeOrListModeTests, 
-                             TaskTreeListViewerTestCase):
+class TaskViewerInTreeModeTest(CommonTests, ColumnsTests, TreeOrListModeTests, 
+                               TaskViewerTestCase):
     treeMode = True
 
 
-class TaskListViewerTest(CommonTests, ColumnsTests, TreeOrListModeTests,
-                         TaskTreeListViewerTestCase):
+class TaskViewerInListModeTest(CommonTests, ColumnsTests, TreeOrListModeTests,
+                               TaskViewerTestCase):
     treeMode = False
         
 
