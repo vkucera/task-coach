@@ -406,7 +406,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
     
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.list, self.curselection(),
-                  shadow=True)
+                  shadow=self.settings.getboolean('feature', 'syncml'))
     
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),

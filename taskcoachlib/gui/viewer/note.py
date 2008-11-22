@@ -209,8 +209,8 @@ class NoteViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForNotes,
     
     def deleteItemCommand(self):
         return command.DeleteCommand(self.list, self.curselection(),
-                  shadow=True)
-    
+                  shadow=self.settings.getboolean('feature', 'syncml'))
+
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
             command.NewSubNoteCommand(self.list, self.curselection()),
