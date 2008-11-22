@@ -511,12 +511,13 @@ class FilePurgeDeletedItems(NeedsDeletedItems, IOCommand):
             bitmap='delete', *args, **kwargs)
 
     def doCommand(self, event):
-        if (wx.MessageBox(_('Purging deleted items is undoable.\n' + \
-                            "If you're planning on enabling\n" + \
-                            'the SyncML feature again with the\n' + \
-                            'same server you used previously,\n' + \
-                            'these items will probably come back.\n\n' + \
-                            'Do you still want to purge?'),
+        if (wx.MessageBox(_('''Purging deleted items is undoable.
+If you're planning on enabling
+the SyncML feature again with the
+same server you used previously,
+these items will probably come back.
+
+Do you still want to purge?'''),
                           _('Warning'), wx.YES_NO) == wx.YES):
             self.iocontroller.purgeDeletedItems()
 
