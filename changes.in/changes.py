@@ -26,6 +26,7 @@ releases = [
 Release('0.71.4', 'November ??, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''Actually delete tasks and notes when SyncML is disabled'''),
         Bug('''Do not create subitems in two steps, this is counterintuitive'''),
         Bug('''Properly iterate over the open viewers with Ctrl-PgDn and 
 Ctrl-PgUp.''', '1973357'),
