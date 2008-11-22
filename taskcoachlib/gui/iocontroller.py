@@ -65,7 +65,15 @@ class IOController(object):
 
     def needSave(self):
         return self.__taskFile.needSave()
-    
+
+    def hasDeletedItems(self):
+        return bool([task for task in self.__taskFile.tasks() if task.isDeleted()] + \
+                    [note for note in self.__taskFile.notes() if note.isDeleted()])
+
+    def purgeDeletedItems(self):
+        self.__taskFile.tasks().removeItems([task for task in self.__taskFile.tasks() if task.isDeleted()])
+        self.__taskFile.notes().removeItems([note for note in self.__taskFile.notes() if note.isDeleted()])
+
     def openAfterStart(self, commandLineArgs):
         ''' Open either the file specified on the command line, or the file
             the user was working on previously, or none at all. '''

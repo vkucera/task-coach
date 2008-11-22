@@ -25,6 +25,10 @@ releases = [
             
 Release('0.71.4', 'November ??, 2008',
     summary='''This is a bugfix release.''',
+    featuresAdded=[
+    Feature('''Add a "Purge deleted items" entry in the File menu for
+people who have been using TaskCoach with SyncML disabled.'''),
+    ],
     bugsFixed=[
         Bug('''Actually delete tasks and notes when SyncML is disabled'''),
         Bug('''Do not create subitems in two steps, this is counterintuitive'''),

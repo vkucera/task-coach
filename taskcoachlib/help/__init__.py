@@ -56,6 +56,7 @@ _TOC = _('''<h3>Table of contents</h3>
     <li><a href="#syncmlsetup">Setup</a></li>
     <li><a href="#syncmllimits">Limitations</a></li>
     <li><a href="#syncmltrouble">Troubleshooting</a></li>
+    <li><a href="#syncmlpurge">Purging deleted items</a></li>
   </ul>
 </li>
 <li><a href="#templates">Task templates</a>
@@ -329,6 +330,30 @@ Microsoft download site</a>.
 </p>
 ''')
 
+_syncmlPurgeSubsection = _('''<h4><a name="syncmlpurge">Purging deleted items</a></h4>
+
+<p>When SyncML is enabled, deleting a task or a note does not actually
+delete it, but rather mark it as deleted. The deleted task or note is
+actually removed from the task or note list on the next
+synchronization. For this reason, if you happen to use the SyncML
+feature, then disable it without having done a sync, there may be some
+deleted notes or tasks in your task file. This is not a problem, but
+takes a little more disk space.</p>
+
+<p>In this case, the "Purge deleted items" menu item in the File menu can
+be used to actually delete these tasks. It is only enabled when you
+need it, that is when there are items to purge. Be aware that after doing this,
+if you re-enable SyncML and make a sync with the same server you used
+previously, all those items will reappear, as the server
+doesn't know they're deleted.</p>
+
+<p>Additionaly, prior to version 0.71.4 of %(name)s, these deleted
+tasks and notes were kept around even with the SyncML feature
+disabled, so tasks and notes were never actually deleted. the "Purge
+deleted items" menu item can be used when upgrading to 0.71.4 to clear
+all these unwanted items.</p>
+''') % meta.metaDict
+
 _templatesSection = _('''<h3><a name="templates">Task templates</a></h3>
 ''')
 
@@ -361,7 +386,7 @@ helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _categorySection + _aboutCategoriesSubSection + _categoryPropertiesSubSection + \
     _emailSection + _aboutEmailSubsection + _emailAttachingSubsection + _emailCreatingSubsection + \
     _syncmlSection + _aboutSyncmlSubsection + _syncmlSetupSubsection + \
-    _syncmlLimitsSubsection + _syncmlTroubleSubsection + \
+    _syncmlLimitsSubsection + _syncmlTroubleSubsection + _syncmlPurgeSubsection + \
     _templatesSection + _aboutTemplatesSubsection + _usingTemplatesSubsection
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>

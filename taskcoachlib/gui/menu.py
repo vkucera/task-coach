@@ -219,7 +219,10 @@ class FileMenu(Menu):
             uicommand.FileSave(iocontroller=iocontroller),
             uicommand.FileSaveAs(iocontroller=iocontroller),
             uicommand.FileSaveSelection(iocontroller=iocontroller,
-                                        viewer=viewerContainer),
+                                        viewer=viewerContainer))
+        if not settings.getboolean('feature', 'syncml'):
+            self.appendUICommands(uicommand.FilePurgeDeletedItems(iocontroller=iocontroller))
+        self.appendUICommands(
             None,
             uicommand.FileSaveSelectedTaskAsTemplate(iocontroller=iocontroller,
                                                      viewer=viewerContainer),

@@ -393,6 +393,11 @@ class NeedsSetting(object):
         return super(NeedsSetting, self).enabled(event) and \
                bool(self.settings.get(self.__section, self.__setting))
 
+class NeedsDeletedItems(object):
+    def enabled(self, event):
+        return super(NeedsDeletedItems, self).enabled(event) and \
+               self.iocontroller.hasDeletedItems()
+
 class DisableWhenTextCtrlHasFocus(object):
     def enabled(self, event):
         if isinstance(wx.Window.FindFocus(), wx.TextCtrl):
@@ -496,6 +501,24 @@ class FileAddTemplate(IOCommand):
 
     def doCommand(self, event):
         self.iocontroller.addtemplate()
+
+
+class FilePurgeDeletedItems(NeedsDeletedItems, IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(FilePurgeDeletedItems, self).__init__(\
+            menuText=_('Purge deleted items'),
+            helpText=_('Actually delete deleted tasks and notes (see the SyncML chapter in Help'),
+            bitmap='delete', *args, **kwargs)
+
+    def doCommand(self, event):
+        if (wx.MessageBox(_('Purging deleted items is undoable.\n' + \
+                            "If you're planning on enabling\n" + \
+                            'the SyncML feature again with the\n' + \
+                            'same server you used previously,\n' + \
+                            'these items will probably come back.\n\n' + \
+                            'Do you still want to purge?'),
+                          _('Warning'), wx.YES_NO) == wx.YES):
+            self.iocontroller.purgeDeletedItems()
 
 
 # FIXME: Move the printing specific stuff somewhere else
