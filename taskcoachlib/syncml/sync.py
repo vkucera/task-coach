@@ -22,8 +22,9 @@ from taskcoachlib.syncml.config import SyncMLConfigNode
 from taskcoachlib.syncml.core import *
 
 from taskcoachlib.i18n import _
+from taskcoachlib.meta import data
 
-import wx
+import sys, wx
 
 class TaskCoachManagementNode(ManagementNode):
     def __init__(self, syncMLConfig, *args, **kwargs):
@@ -130,6 +131,11 @@ class Synchronizer(wx.ProgressDialog):
 
         dc = self.dmt.deviceConfig
         dc.devID = self.clientName
+        dc.devType = 'workstation'
+        dc.manufacturerName = 'Task Coach developers'
+        dc.modelName = sys.platform
+        dc.firmwareVersion = '0.0'
+        dc.softwareVersion = data.version
         self.dmt.deviceConfig = dc
 
         # Tasks source configuration
