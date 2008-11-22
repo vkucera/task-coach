@@ -145,9 +145,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
         return command.DeleteCommand(self.list, self.curselection())
     
     def newSubItemDialog(self, *args, **kwargs):
-        newCommand = command.NewSubCategoryCommand(self.list, self.curselection())
-        newCommand.do()
-        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
+        return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
+            command.NewSubCategoryCommand(self.list, self.curselection()),
+            self.settings, self.list, bitmap=kwargs['bitmap'])
         
     newSubCategoryDialog = newSubItemDialog
 

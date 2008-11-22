@@ -212,9 +212,9 @@ class NoteViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForNotes,
                   shadow=True)
     
     def newSubItemDialog(self, *args, **kwargs):
-        newCommand = command.NewSubNoteCommand(self.list, self.curselection())
-        newCommand.do()
-        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
+        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
+            command.NewSubNoteCommand(self.list, self.curselection()),
+            self.settings, self.list, self.categories, bitmap=kwargs['bitmap'])
         
     newSubNoteDialog = newSubItemDialog
 

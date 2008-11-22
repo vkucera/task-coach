@@ -409,10 +409,10 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
                   shadow=True)
     
     def newSubItemDialog(self, *args, **kwargs):
-        newCommand = command.NewSubTaskCommand(self.list, self.curselection())
-        newCommand.do()
-        return self.editItemDialog(bitmap=kwargs['bitmap'], 
-                                   items=newCommand.items)
+        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
+            command.NewSubTaskCommand(self.list, self.curselection()),
+            self.list, self.settings, self.categories,
+            bitmap=kwargs['bitmap'])
                            
     def sortBy(self, sortKey):
         # If the user clicks the same column for the third time, toggle
