@@ -23,7 +23,7 @@ import wx, datetime, os.path, sys
 from wx.lib import masked
 import wx.lib.customtreectrl as customtree
 from taskcoachlib import widgets, patterns
-from taskcoachlib.gui import render, viewercontainer, viewer, uicommand
+from taskcoachlib.gui import render, viewer, uicommand
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
@@ -116,7 +116,6 @@ class ColorEntryMixin(object):
         else:
             color = None
         self.item.setColor(color)
-
 
 
 class EditorPage(widgets.PanelWithBoxSizer):
@@ -462,8 +461,9 @@ class EffortPage(EditorPage, TaskHeaders):
     def __init__(self, parent, theTask, taskList, settings, *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
         singleTaskList = task.SingleTaskList()
-        self.effortViewer = viewer.EffortListViewer(self, taskList, 
-            settings, settingsSection='effortviewerintaskeditor')
+        self.effortViewer = viewer.EffortViewer(self, taskList, 
+            settings, settingsSection='effortviewerintaskeditor',
+            tasksToShowEffortFor=singleTaskList)
         self.add(self.effortViewer, proportion=1, flag=wx.EXPAND|wx.ALL, 
                  border=5)
         singleTaskList.append(theTask)
@@ -1013,6 +1013,8 @@ class EditorWithCommand(widgets.NotebookDialog):
     def onItemRemoved(self, event):
         ''' The item we're editing has been removed. Close the tab of the item
             involved and close the whole editor if there are no tabs left. '''
+        if not self:
+            return # Prevent _wxPyDeadObject TypeError
         pagesToCancel = [] # Collect the pages to cancel so we don't modify the 
                            # book widget while we iterate over it
         for item in event.values():

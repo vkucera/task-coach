@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, sys, glob
+import os, sys, glob, shutil, wx
 sys.path.insert(0, '..')
 from taskcoachlib import meta
 import style
@@ -246,14 +246,17 @@ pages['features'] = \
 
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
 
-pages['screenshots'] = \
-'''       <H3>Screenshots</H3>         
-        <P>Here are a couple of screenshots from version 0.62 that show 
-        the main window, the print preview, and the task editor.</P>
-        <P><IMG SRC="screenshot-0.62-treeview.png" ALT="Main window with task tree view"></P>
-        <P><IMG SRC="screenshot-0.62-listview.png" ALT="Main window with task list view"></P>
-        <P><IMG SRC="screenshot-0.62-printpreview.png" ALT="Print preview"></P>
-        <P><IMG SRC="screenshot-0.62-taskeditor.png" ALT="Task editor"></P>'''
+pages['screenshots'] = '''<H3>Screenshots</H3>
+        <P>Click on a thumbnail image to see the full size screenshot.</P>'''
+for filename in reversed(glob.glob(os.path.join('screenshots', '*.png'))):
+    basename = os.path.basename(filename)
+    release, platform, description = basename.split('-')
+    description = description[:-len('.png')]
+    caption = '%s (release %s on %s)'%(description, release, platform)
+    thumbnailFilename = os.path.join('screenshots', 'Thumb-'+basename)
+    thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
+    image = '<A HREF="%s">%s</A>'%(filename, thumbnailImage)
+    pages['screenshots'] += '<P>%s<BR>%s</P>'%(caption, image)
 
 pages['i18n'] = \
 '''        <H3>Internationalization</H3>
@@ -443,19 +446,29 @@ pages['devinfo'] = \
     graphical user interface. On Windows, 
     <A HREF="http://sourceforge.net/projects/pywin32/">Pywin32</A> 
     is used as well. For generating the API documentation you need to have
-    <A HREF="http://epydoc.sourceforge.net/">Epydoc</A> installed.</p>
+    <A HREF="http://epydoc.sourceforge.net/">Epydoc</A> installed. For
+    generating inheritance diagrams you need to have <A
+    HREF="http://www.graphviz.org">Graphviz</A> installed.</p>
     <p>The few other libraries (other than those
     provided by Python, wxPython and Pywin32) that are used are put into the
     taskcoachlib/thirdparty package and included in the source code
     repository.</p>
+    
+    <h4>Development environment</h4>
+    You are free to use whatever IDE you want. To make use of the Makefile you
+    need to have 'make' installed. It is installed on Linux and Mac OS X by 
+    default. On Windows we recommend you to install
+    <A HREF="http://www.cywin.com">Cygwin</A> which provides a shell (bash) and 
+    a whole range of useful utilities. Make sure to explicitly include make in 
+    the Cygwin setup program because the standard install doesn't contain make.
     
     <h4>Getting the source</h4>
     <p>%(name)s source code is hosted in a <A
     HREF="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
     at SourceForge</A>. You can check out the code from the repository 
     directly or <A HREF="http://taskcoach.svn.sourceforge.net/">browse the
-    repository</A>. You can generate documentation with Epydoc from
-    the Makefile: <tt>make epydoc</tt>.</p>
+    repository</A>. You can generate documentation with Epydoc and Graphviz
+    from the Makefile: <tt>make dot epydoc</tt>.</p>
     
     <h4>Tests</h4>
     <p>Tests can be run from the Makefile. There are targets for
@@ -526,24 +539,63 @@ pages['devinfo'] = \
     should succeed before committing.
 '''
 
-dist = os.path.join('..', 'website.out')
+def ensureFolderExists(folder):    
+    if not os.path.exists(folder):
+        os.mkdir(folder)
 
-if not os.path.isdir(dist):
-    os.mkdir(dist)
+def writeFile(folder, filename, contents):
+    ensureFolderExists(folder)
+    filename = os.path.join(folder, filename)
+    print 'Creating %s'%filename
+    fd = file(filename, 'w')
+    fd.write(contents)
+    fd.close()
+    
+def expandPatterns(*patterns):
+    for pattern in patterns:
+        for filename in glob.glob(pattern):
+            yield filename
+    
+def copyFiles(folder, *patterns):
+    ensureFolderExists(folder)
+    for source in expandPatterns(*patterns):
+        target = os.path.join(folder, os.path.basename(source))
+        print 'Copying %s to %s'%(source, target)
+        shutil.copyfile(source, target)
 
-for title, text in pages.items():
-    htmlfile = file(os.path.join(dist, '%s.html'%title), 'w')
-    text = style.header + text%meta.metaDict + style.footer
-    htmlfile.write(text)
-    htmlfile.close()
+def createPAD(folder, filename='pad.xml'):
+    padTemplate = file(filename).read()
+    writeFile(folder, filename, padTemplate%meta.metaDict)
+    
+def createHTMLPages(targetFolder, pages):    
+    for title, text in pages.items():
+        contents = style.header + text%meta.metaDict + style.footer
+        writeFile(targetFolder, '%s.html'%title, contents)
 
-pad = file('pad.xml').read()
-padfile = file(os.path.join(dist, 'pad.xml'), 'w')
-padfile.write(pad%meta.metaDict)
-padfile.close()
+def createThumbnail(srcFilename, targetFolder, bitmapType=wx.BITMAP_TYPE_PNG,
+                    thumbnailWidth=200.):
+    image = wx.Image(srcFilename, bitmapType)
+    scaleFactor = thumbnailWidth / image.Width
+    thumbnailHeight = int(image.Height * scaleFactor)
+    image.Rescale(thumbnailWidth, thumbnailHeight)
+    thumbFilename = os.path.join(targetFolder, 
+                                 'Thumb-' + os.path.basename(srcFilename))
+    print 'Creating %s'%thumbFilename
+    image.SaveFile(thumbFilename, bitmapType)
 
-import shutil, glob
-for file in glob.glob('*.png') + glob.glob('*.ico') + glob.glob('*.css') + \
-    ['../icons.in/splash.png']:
-    print file
-    shutil.copyfile(file, os.path.join(dist, os.path.basename(file)))
+def createThumbnails(targetFolder, *patterns):
+    for source in expandPatterns(*patterns):
+        createThumbnail(source, targetFolder)
+
+def copyScreenshots(targetFolder, screenshotFolder='screenshots', 
+                                  screenshotFiles='*.png'):
+    screenshotTargetFolder = os.path.join(targetFolder, screenshotFolder)
+    screenshotFiles = os.path.join(screenshotFolder, screenshotFiles)
+    copyFiles(screenshotTargetFolder, screenshotFiles)
+    createThumbnails(screenshotTargetFolder, screenshotFiles)
+
+websiteFolder = os.path.join('..', 'website.out')            
+createHTMLPages(websiteFolder, pages)
+createPAD(websiteFolder)
+copyFiles(websiteFolder, '*.png', '*.ico', '*.css', '../icons.in/splash.png')    
+copyScreenshots(websiteFolder)

@@ -50,7 +50,7 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
                 if not self.read(self.filename(forceProgramDir=True)):
                     self.read(self.filename()) 
             except ConfigParser.ParsingError, reason:
-		# Ignore exceptions and simply use default values. 
+                # Ignore exceptions and simply use default values. 
                 # Also record the failure in the settings:
                 self.set('file', 'inifileloaded', 'False') 
                 self.set('file', 'inifileloaderror', str(reason))
@@ -133,6 +133,9 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
             
     def setboolean(self, section, option, value):
         self.set(section, option, str(value))
+        # We must do this here because it is a global option
+        if section == 'editor' and option == 'maccheckspelling':
+            wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", value)
 
     def getlist(self, section, option):
         return eval(self.get(section, option))

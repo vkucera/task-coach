@@ -33,27 +33,38 @@ if os.name == 'nt':
             filename = tempfile.mktemp('.eml')
             try:
                 sel.Item(n).SaveAs(filename, 0)
-                # Add Outlook internal ID as custom header... It seems
-                # that some versions of Outlook don't put a blank line
-                # between subject and headers.
+
+                # Okay. In the case of HTML mails, Outlook doesn't put
+                # a blank line between the last header line and the
+                # body. This assumes that the last header is
+                # Subject:. Hope it's true.
+
+                # States:
+                # 0       still in headers
+                # 1       subject: header seen, blank line not written
+                # 2       all headers seen, blank line written
+                # 2       in body
 
                 name = get_temp_file(suffix='.eml')
                 src = file(filename, 'rb')
-                linenb = 0
 
                 try:
                     dst = file(name, 'wb')
                     try:
                         s = 0
                         for line in src:
-                            linenb += 1
                             if s == 0:
-                                if line.strip() == '' or linenb == 5:
+                                dst.write(line)
+                                if line.lower().startswith('subject:'):
                                     dst.write('X-Outlook-ID: %s\r\n' % str(sel.Item(n).EntryID))
                                     s = 1
-                                if linenb == 5 and line.strip() != '':
-                                    dst.write('\r\n')
-                            dst.write(line)
+                            elif s == 1:
+                                dst.write('\r\n')
+                                if line.strip() != '':
+                                    dst.write(line)
+                                s = 2
+                            else:
+                                dst.write(line)
                     finally:
                         dst.close()
                 finally:

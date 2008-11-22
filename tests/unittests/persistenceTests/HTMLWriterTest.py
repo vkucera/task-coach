@@ -34,13 +34,13 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
         self.settings = config.Settings(load=False)
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(\
+        self.viewerContainer = gui.viewer.ViewerContainer(\
             widgets.Notebook(self.frame), self.settings, 'mainviewer')
         self.createViewer()
         
     def createViewer(self):
-        self.settings.set('tasktreelistviewer', 'treemode', self.treeMode)
-        self.viewer = gui.viewer.TaskTreeListViewer(self.frame, self.taskList, 
+        self.settings.set('taskviewer', 'treemode', self.treeMode)
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskList, 
             self.settings, categories=self.categories, notes=self.notes,
             efforts=self.effortList)
 
@@ -137,7 +137,7 @@ class EffortWriterTest(HTMLWriterTestCase):
                                           stop=now + date.TimeDelta(seconds=1)))
 
     def createViewer(self):
-        self.viewer = gui.viewer.EffortListViewer(self.frame, self.taskList,
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskList,
             self.settings)
 
     def testTaskSubject(self):

@@ -62,7 +62,16 @@ class ClockTest(test.wxTestCase):
         self.assertEqual(1, len(self.events))
         
     def testRegisterForDateChange_BeforeMidnight(self):
+        self.clock.notify(now=date.DateTime(2000,1,1,23,59,58))
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='clock.midnight')
         self.clock.notify(now=date.DateTime(2000,1,1,23,59,59))
         self.failIf(self.events)
+
+    def testRegisterForDateChange_ComputerHibernatedAtMidnight(self):
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='clock.midnight')
+        self.clock.notify(now=date.DateTime(2000,1,1,0,0,30))
+        self.clock.notify(now=date.DateTime(2000,1,1,0,0,31))
+        self.assertEqual(1, len(self.events))
+        

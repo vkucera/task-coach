@@ -32,13 +32,13 @@ class ViewerTest(test.wxTestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.categories = category.CategoryList()
         self.notebook = widgets.AUINotebook(self.frame)
-        self.viewerContainer = gui.viewercontainer.ViewerContainer(self.notebook, 
+        self.viewerContainer = gui.viewer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
         self.viewer = self.createViewer()
-        self.viewerContainer.addViewer(self.viewer, self.viewer.title())
+        self.viewerContainer.addViewer(self.viewer)
         
     def createViewer(self):
-        return gui.viewer.TaskTreeListViewer(self.notebook, self.taskList,
+        return gui.viewer.TaskViewer(self.notebook, self.taskList,
             self.settings, categories=self.categories, efforts=self.effortList)
         
     def testSelectAll(self):
@@ -76,9 +76,9 @@ class SortableViewerTest(test.TestCase):
         self.viewer = self.createViewer()
         
     def createViewer(self):
-        viewer = gui.viewer.SortableViewer()
+        viewer = gui.viewer.mixin.SortableViewer()
         viewer.settings = self.settings
-        viewer.settingsSection = lambda: 'tasktreelistviewer'
+        viewer.settingsSection = lambda: 'taskviewer'
         viewer.SorterClass = task.sorter.Sorter
         model = viewer.createSorter(task.TaskList())
         viewer.model = lambda: model
@@ -131,9 +131,9 @@ class SortableViewerTest(test.TestCase):
 class SortableViewerForTasksTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.viewer = gui.viewer.SortableViewerForTasks()
+        self.viewer = gui.viewer.mixin.SortableViewerForTasks()
         self.viewer.settings = self.settings
-        self.viewer.settingsSection = lambda: 'tasktreelistviewer'
+        self.viewer.settingsSection = lambda: 'taskviewer'
         self.viewer.model = lambda: task.sorter.Sorter(task.TaskList())
 
     def testSetSortByTaskStatusFirst(self):
@@ -153,7 +153,7 @@ class DummyViewer(object):
         return model
 
 
-class SearchableViewerUnderTest(gui.viewer.SearchableViewer, DummyViewer):
+class SearchableViewerUnderTest(gui.viewer.mixin.SearchableViewer, DummyViewer):
     pass   
 
     
@@ -165,7 +165,7 @@ class SearchableViewerTest(test.TestCase):
     def createViewer(self):
         viewer = SearchableViewerUnderTest()
         viewer.settings = self.settings
-        viewer.settingsSection = lambda: 'tasktreelistviewer'
+        viewer.settingsSection = lambda: 'taskviewer'
         model = viewer.createFilter(task.TaskList())
         viewer.model = lambda: model
         return viewer
@@ -220,13 +220,13 @@ class SearchableViewerTest(test.TestCase):
 
 class FilterableViewerTest(test.TestCase):
     def setUp(self):
-        self.viewer = gui.viewer.FilterableViewer()
+        self.viewer = gui.viewer.mixin.FilterableViewer()
         
     def testIsFilterable(self):
         self.failUnless(self.viewer.isFilterable())
 
 
-class FilterableViewerForTasksUnderTest(gui.viewer.FilterableViewerForTasks, 
+class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTasks, 
                                         DummyViewer):
     pass
         
@@ -240,7 +240,7 @@ class FilterableViewerForTasks(test.TestCase):
         viewer = FilterableViewerForTasksUnderTest()
         viewer.categories = category.CategoryList()
         viewer.settings = self.settings
-        viewer.settingsSection = lambda: 'tasktreelistviewer'
+        viewer.settingsSection = lambda: 'taskviewer'
         model = viewer.createFilter(task.TaskList())
         viewer.model = lambda: model
         return viewer
@@ -440,13 +440,13 @@ class FilterableViewerForTasks(test.TestCase):
         self.failIf(anotherViewer.model())   
 
 
-class TaskTreeListViewerUnderTest(gui.viewer.TaskTreeListViewer):
+class TaskViewerUnderTest(gui.viewer.TaskViewer):
     def __init__(self, *args, **kwargs):
-        super(TaskTreeListViewerUnderTest, self).__init__(*args, **kwargs)
+        super(TaskViewerUnderTest, self).__init__(*args, **kwargs)
         self.events = []
 
     def onAttributeChanged(self, event):
-        super(TaskTreeListViewerUnderTest, self).onAttributeChanged(event)
+        super(TaskViewerUnderTest, self).onAttributeChanged(event)
         self.events.append(event)
 
 
@@ -462,7 +462,7 @@ class EffortViewerUnderTest(dummy.EffortViewerWithDummyWidget):
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
         try:
-            baseViewer = gui.viewer.Viewer(self.frame, task.TaskList(),
+            baseViewer = gui.viewer.base.Viewer(self.frame, task.TaskList(),
                 None, settingsSection='bla')
             self.fail('Expected NotImplementedError')
         except NotImplementedError:
@@ -471,7 +471,7 @@ class ViewerBaseClassTest(test.wxTestCase):
 
 class ViewerIteratorTestCase(test.wxTestCase):
     def createViewer(self):
-        return gui.viewer.TaskTreeListViewer(self.notebook, self.taskList,
+        return gui.viewer.TaskViewer(self.notebook, self.taskList,
             self.settings, categories=self.categories, efforts=self.effortList)
 
     def setUp(self):
@@ -609,7 +609,7 @@ class UpdatePerSecondViewerTests(object):
 
 class TaskListViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTests, 
         test.wxTestCase):
-    ListViewerClass = TaskTreeListViewerUnderTest
+    ListViewerClass = TaskViewerUnderTest
 
 
 class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTests, 

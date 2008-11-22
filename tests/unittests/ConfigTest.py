@@ -78,37 +78,37 @@ class SettingsTest(SettingsTestCase):
                          self.settings.getlist('file', 'recentfiles'))
         
     def testGetNonExistingSettingFromSection1DefaultsToBaseSection(self):
-        self.settings.add_section('effortlistviewer1')
-        self.settings.set('effortlistviewer', 'columnwidths', '[10]')
+        self.settings.add_section('effortviewer1')
+        self.settings.set('effortviewer', 'columnwidths', '[10]')
         self.assertEqual([10], 
-            self.settings.getlist('effortlistviewer1', 'columnwidths'))
+            self.settings.getlist('effortviewer1', 'columnwidths'))
 
     def testGetNonExistingSettingFromSection2DefaultsToSection1(self):
-        self.settings.add_section('effortlistviewer1')
-        self.settings.add_section('effortlistviewer2')
-        self.settings.set('effortlistviewer1', 'columnwidths', '[10]')
+        self.settings.add_section('effortviewer1')
+        self.settings.add_section('effortviewer2')
+        self.settings.set('effortviewer1', 'columnwidths', '[10]')
         self.assertEqual([10], 
-            self.settings.getlist('effortlistviewer2', 'columnwidths'))
+            self.settings.getlist('effortviewer2', 'columnwidths'))
 
     def testGetNonExistingSettingFromSection2DefaultsToBaseSection(self):
-        self.settings.add_section('effortlistviewer1')
-        self.settings.add_section('effortlistviewer2')
-        self.settings.set('effortlistviewer', 'columnwidths', '[10]')
+        self.settings.add_section('effortviewer1')
+        self.settings.add_section('effortviewer2')
+        self.settings.set('effortviewer', 'columnwidths', '[10]')
         self.assertEqual([10], 
-            self.settings.getlist('effortlistviewer2', 'columnwidths'))
+            self.settings.getlist('effortviewer2', 'columnwidths'))
         
     def testGetNonExistingSettingFromSection2RaisesException(self):
-        self.settings.add_section('effortlistviewer1')
-        self.settings.add_section('effortlistviewer2')
+        self.settings.add_section('effortviewer1')
+        self.settings.add_section('effortviewer2')
         self.assertRaises(ConfigParser.NoOptionError,
-            self.settings.getlist, 'effortlistviewer2', 'nonexisting')
+            self.settings.getlist, 'effortviewer2', 'nonexisting')
 
     def testAddSectionAndSkipOne(self):
-        self.settings.set('effortlistviewer', 'columnwidths', '[10]')
-        self.settings.add_section('effortlistviewer2', 
-            copyFromSection='effortlistviewer')
+        self.settings.set('effortviewer', 'columnwidths', '[10]')
+        self.settings.add_section('effortviewer2', 
+            copyFromSection='effortviewer')
         self.assertEqual([10], 
-            self.settings.getlist('effortlistviewer2', 'columnwidths'))
+            self.settings.getlist('effortviewer2', 'columnwidths'))
         
 
 class SettingsIOTest(SettingsTestCase):
@@ -225,14 +225,14 @@ class SettingsFileLocationTest(SettingsTestCase):
 class MinimumSettingsTest(SettingsTestCase):
     def testAtLeastOneTaskTreeListViewer(self):
         self.assertEqual(1, 
-            self.settings.getint('view', 'tasktreelistviewercount'))
+            self.settings.getint('view', 'taskviewercount'))
 
     def testTwoTaskTreeListViewers(self):
-        self.settings.set('view', 'tasktreelistviewercount', u'2')
+        self.settings.set('view', 'taskviewercount', u'2')
         self.assertEqual(2, 
-            self.settings.getint('view', 'tasktreelistviewercount'))
+            self.settings.getint('view', 'taskviewercount'))
 
     def testAtLeastOneTaskTreeListViewer_EvenWhenSetToZero(self):
-        self.settings.set('view', 'tasktreelistviewercount', u'0')
+        self.settings.set('view', 'taskviewercount', u'0')
         self.assertEqual(1, 
-            self.settings.getint('view', 'tasktreelistviewercount'))
+            self.settings.getint('view', 'taskviewercount'))

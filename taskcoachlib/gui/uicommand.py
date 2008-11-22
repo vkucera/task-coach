@@ -60,10 +60,10 @@ class UICommand(object):
         methods to attach the command to a menu or toolbar. Subclasses should 
         implement doCommand() and optionally override enabled(). '''
     
-    def __init__(self, menuText='?', helpText='', bitmap='nobitmap', 
+    def __init__(self, menuText='', helpText='', bitmap='nobitmap', 
              kind=wx.ITEM_NORMAL, id=None, bitmap2=None, *args, **kwargs):
-        super(UICommand, self).__init__(*args, **kwargs)
-        self.menuText = menuText
+        super(UICommand, self).__init__()
+        self.menuText = menuText or '<%s>'%_('None')
         self.helpText = helpText
         self.bitmap = bitmap
         self.bitmap2 = bitmap2
@@ -874,21 +874,21 @@ class ResetFilter(ViewerCommand):
 
 class ViewViewer(SettingsCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        self.viewerClass = kwargs['viewerClass']
-        self.viewerArgs = kwargs['viewerArgs']
-        self.viewerKwargs = kwargs.get('viewerKwargs', {})
-        self.viewerBitmap = kwargs['viewerBitmap']
+        self.taskFile = kwargs.pop('taskFile')
+        self.viewerClass = kwargs.pop('viewerClass')
+        kwargs.setdefault('bitmap', self.viewerClass.defaultBitmap) 
         super(ViewViewer, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
         self.viewer.Freeze()
-        newViewer = self.viewerClass(self.viewer.containerWidget, 
-                                     *self.viewerArgs, **self.viewerKwargs)
-        self.viewer.addViewer(newViewer, newViewer.title(), self.viewerBitmap)
+        viewer.addOneViewer(self.viewer, self.taskFile, self.settings, self.viewerClass)
+        self.increaseViewerCount()
+        self.viewer.Thaw()
+        
+    def increaseViewerCount(self):
         setting = self.viewerClass.__name__.lower() + 'count'
         viewerCount = self.settings.getint('view', setting)
         self.settings.set('view', setting, str(viewerCount+1))
-        self.viewer.Thaw()
         
 
 class RenameViewer(ViewerCommand):
@@ -1468,10 +1468,20 @@ class MailItem(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(MailItem, self).__init__(bitmap='email', *args, **kwargs)
 
-    def doCommand(self, event):
+    def doCommand(self, event, mail=writeMail, showerror=wx.MessageBox):
         items = self.viewer.curselection()
+        subject = self.subject(items)
+        body = self.body(items)
+        self.mail(subject, body, mail, showerror)
+
+    def subject(self, items):
         if len(items) > 1:
-            subject = self.subjectForMultipleItems()
+            return self.subjectForMultipleItems()
+        else:
+            return items[0].subject(recursive=True)
+        
+    def body(self, items):
+        if len(items) > 1:
             bodyLines = []
             for item in items:
                 bodyLines.append(item.subject(recursive=True) + '\n')
@@ -1479,11 +1489,16 @@ class MailItem(ViewerCommand):
                     bodyLines.extend(item.description().splitlines())
                     bodyLines.append('\n')
         else:
-            subject = items[0].subject(recursive=True)
             bodyLines = items[0].description().splitlines()
-        body = '\r\n'.join(bodyLines)
-        writeMail('', subject, body)
+        return '\r\n'.join(bodyLines)        
 
+    def mail(self, subject, body, mail, showerror):
+        try:
+            mail('', subject, body)
+        except Exception, reason:
+            showerror(_('Cannot send email:\n%s')%reason, 
+                      caption=_('%s mail error')%meta.name, style=wx.ICON_ERROR)        
+        
 
 class TaskMail(NeedsSelectedTasks, MailItem):
     def __init__(self, *args, **kwargs):
@@ -1691,7 +1706,7 @@ class EffortStartForTask(TaskListCommand):
         
     def __init__(self, *args, **kwargs):
         self.task = kwargs.pop('task')
-        subject = self.task.subject()
+        subject = self.task.subject() or _('(No subject)') 
         super(EffortStartForTask, self).__init__( \
             bitmap=render.taskBitmapNames(self.task)[0], menuText=subject,
             helpText=_('Start tracking effort for %s')%subject, 
@@ -1868,12 +1883,12 @@ class AttachmentOpen(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand
             menuText=attachments.openItemMenuText,
             helpText=attachments.openItemHelpText, *args, **kwargs)
 
-    def doCommand(self, event, showerror=lambda *args, **kwargs: None):
+    def doCommand(self, event, showerror=wx.MessageBox):
         for attachment in self.viewer.curselection():
             try:
                 attachment.open()
             except Exception, instance:
-                showerror(str(instance), 
+                showerror(unicode(instance), 
                           caption=_('Error opening attachment'), 
                           style=wx.ICON_ERROR)
 

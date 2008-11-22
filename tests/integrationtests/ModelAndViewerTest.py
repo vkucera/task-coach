@@ -34,7 +34,6 @@ class TaskViewerAndCategoryFilterIntegrationTestFixture(test.wxTestCase):
         self.category.setFiltered()
         
         
-
 class TaskListViewerAndCategoryFilterIntegrationTest( \
         TaskViewerAndCategoryFilterIntegrationTestFixture):
             
@@ -42,7 +41,7 @@ class TaskListViewerAndCategoryFilterIntegrationTest( \
         self.assertEqual(1, self.app.mainwindow.viewer[1].widget.GetItemCount())
 
 
-class TaskTreeListViewerAndCategoryFilterIntegrationTest( \
+class TaskTreeViewerAndCategoryFilterIntegrationTest( \
         TaskViewerAndCategoryFilterIntegrationTestFixture):
             
     def testFilterOnCategoryChildDoesNotHideParent(self):

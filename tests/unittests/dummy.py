@@ -88,7 +88,10 @@ class DummyUICommand(gui.uicommand.UICommand):
         return 'Menu text'
 
 
-class ViewerWithDummyWidget(gui.viewer.Viewer):
+class ViewerWithDummyWidget(gui.viewer.base.Viewer):
+    defaultTitle = 'ViewerWithDummyWidget'
+    defaultBitmap = ''
+    
     def createWidget(self):
         self._columns = self._createColumns()
         return DummyWidget(self)
@@ -105,20 +108,17 @@ class TaskViewerWithDummyWidget(ViewerWithDummyWidget, gui.viewer.TaskViewer):
         self.createImageList()
         return super(TaskViewerWithDummyWidget, self).createWidget()
 
-
-class TaskTreeListViewerWithDummyWidget(TaskViewerWithDummyWidget, 
-        gui.viewer.TaskTreeListViewer):
     def _createColumns(self):
-        return gui.viewer.TaskTreeListViewer._createColumns(self)
+        return gui.viewer.TaskViewer._createColumns(self)
 
 
 class EffortViewerWithDummyWidget(ViewerWithDummyWidget,
-        gui.viewer.EffortListViewer):
+        gui.viewer.EffortViewer):
     def createSorter(self, *args, **kwargs):
-        return gui.viewer.EffortListViewer.createSorter(self, *args, **kwargs)
+        return gui.viewer.EffortViewer.createSorter(self, *args, **kwargs)
 
     def _createColumns(self):
-        return gui.viewer.EffortListViewer._createColumns(self)
+        return gui.viewer.EffortViewer._createColumns(self)
 
             
 class TaskFile(persistence.TaskFile):

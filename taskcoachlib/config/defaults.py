@@ -28,11 +28,11 @@ defaults = { \
     'toolbar': '(22, 22)',
     'mainviewer': '0',               # Index of active viewer in main window
     'effortviewerintaskeditor': '0', # Index of active effort viewer in task editor
-    'tasktreelistviewercount': '1',  # Number of task tree list viewers in main window
+    'taskviewercount': '1',          # Number of task viewers in main window
     'categoryviewercount': '1',      # Number of category viewers in main window
     'noteviewercount': '0',          # Number of note viewers in main window
-    'effortlistviewercount': '0',    # Number of effort viewers in main window
-    'language': 'en_US',
+    'effortviewercount': '0',        # Number of effort viewers in main window
+    'language': 'en_US',             # Language and locale
     'categoryfiltermatchall': 'False',
     'descriptionpopups': 'True',
     # The next three options are used in the effort dialog to populate the
@@ -42,9 +42,9 @@ defaults = { \
     'effortminuteinterval': '15',    # Generate times with this interval
     'perspective': '',               # The layout of the viewers in the main window
     'tabbedmainwindow': 'False'},
-'tasktreelistviewer': { \
-    'title': '',
-    'treemode': 'True',
+'taskviewer': { \
+    'title': '',                     # User supplied viewer title 
+    'treemode': 'True',              # True = tree mode, False = list mode
     'sortby': 'dueDate',
     'sortascending': 'True',
     'sortbystatusfirst': 'True',
@@ -110,7 +110,7 @@ defaults = { \
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False' },
-'effortlistviewer': { \
+'effortviewer': { \
     'title': '',
     'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
     'columns': "['timeSpent', 'revenue']",
@@ -236,5 +236,5 @@ defaults = { \
 
 minimum = { \
 'view': { \
-    'tasktreelistviewercount': '1' }
+    'taskviewercount': '1' }
 }

@@ -1,7 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -96,7 +96,7 @@ def openMail(filename):
 
     desktop.open(filename)
 
-def writeMail(to, subject, body):
+def writeMail(to, subject, body, open=desktop.open):
     def unicode_quote(s):
         # This is like urllib.quote but leaves out Unicode characters,
         # which urllib.quote does not support.
@@ -113,6 +113,5 @@ def writeMail(to, subject, body):
     # one, it fails.  Maybe we should use Mail.app  directly ? What if
     # the user uses something else ?
 
-    desktop.open(u'mailto:%s?subject=%s&body=%s' % (to,
-                                                    unicode_quote(subject),
-                                                    unicode_quote(body)))
+    open(u'mailto:%s?subject=%s&body=%s' % (to, unicode_quote(subject),
+                                                unicode_quote(body)))

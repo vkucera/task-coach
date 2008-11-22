@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
-opyright (C) 2008 Jo„o Alexandre de Toledo <jtoledo@griffo.com.br>
+opyright (C) 2008 Jo√£o Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -107,7 +107,7 @@ class TaskList(patterns.CompositeSet):
         
     def originalLength(self):
         ''' Provide a way for bypassing the __len__ method of decorators. '''
-        return len(self)
+        return len([t for t in self if not t.isDeleted()])
     
     def minDate(self):      
         return min(self.__allDates())

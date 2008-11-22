@@ -111,5 +111,9 @@ class MainWindowIconizedTest(test.wxTestCase):
         self.assertEqual((700, 500), eval(self.settings.get('window', 'size')))
         
     def testWindowSizeShouldnotChangeWhenReceivingChangeSizeEvent(self):
-        self.mainwindow.ProcessEvent(wx.SizeEvent((100,20)))
+        if '__WXGTK__' == wx.Platform:
+            wx.CallAfter(self.mainwindow.ProcessEvent, wx.SizeEvent((100,20)))
+        else:
+            self.mainwindow.ProcessEvent(wx.SizeEvent((100,20)))
         self.assertEqual((700, 500), eval(self.settings.get('window', 'size')))
+

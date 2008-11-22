@@ -17,7 +17,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-da'''
+'''
 
 from changetypes import *
 
@@ -28,6 +28,28 @@ Release('0.72.0', '?? ??, 2008', # Or maybe 1.0.0
     featuresAdded=[
         Feature('''One can now export only the current selection
 as HTML.''')
+        ]
+    ),
+            
+Release('0.71.3', 'November 10, 2008',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Spell checking in editor didn't work under MacOS''', '2214676'),
+        Bug('''Dropping a mail with several recipients from Outlook would result
+in a "No subject" subject.''', '2220224'),
+        Bug('''A ghost window would appear on the secondary display under MacOSX
+if it's placed on the right.''', '2206656'),
+        Bug('''The note total would include deleted notes.''', '2209640'),
+        Bug('''Don't hang when exiting the application.''', '2185910', '2209679'),
+        Bug('''Don't show all effort in the effort tab of a task editor, but
+only effort for the task being edited.''', '2207166'),
+        Bug('''Fix for a backwards incompatible change in python 2.6.''', 
+            '2212857'),
+        Bug('''Update task details at midnight, even when Task Coach is not 
+active at precisely midnight.''', '2095205', '2061826'),
+        Bug('''Allow for empty task subjects.''', '2214812'),
+        Bug('''Make the drop down button for picking dates look disabled when
+it is disabled.''', '2214706')
         ]
     ),
 
