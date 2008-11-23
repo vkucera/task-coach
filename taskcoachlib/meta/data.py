@@ -21,7 +21,7 @@ import os, re
 name = 'Task Coach'
 description = 'Your friendly task manager'
 # The buildbot sets TCVERSION when building snapshots.
-version = os.environ.get('TCVERSION', '0.71.3')
+version = os.environ.get('TCVERSION', '0.71.4')
 release_month = 'November'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
@@ -31,12 +31,12 @@ release_day_nr = '%02d'%int(release_day)
 release_year = '2008'
 release_status = 'alpha'
 date = release_month + ' ' + release_day + ', ' + release_year
-long_description = 'Task Coach is a simple open source todo manager to manage' \
+long_description = '%(name)s is a simple open source todo manager to manage' \
 ' personal tasks and todo lists. It grew out of a frustration that ' \
 'well-known task managers, such as those provided with Outlook or Lotus ' \
 'Notes, do not provide facilities for composite tasks. Often, tasks and ' \
-'other things todo consist of several activities. Task Coach is designed ' \
-'to deal with composite tasks. '
+'other things todo consist of several activities. %(name)s is designed ' \
+'to deal with composite tasks. '%dict(name=name)
 keywords = 'task manager, todo list, pim, time registration, track effort'
 author_first = 'Frank' # Needed for PAD file
 author_last = 'Niessink'# Needed for PAD file
@@ -57,18 +57,18 @@ license_title_and_version = '%s version %s'%(license_title, license_version)
 license = '%s or any later version'%license_title_and_version
 license_title_and_version_abbrev = 'GPLv%s'%license_version
 license_abbrev = '%s+'%license_title_and_version_abbrev
-license_notice = '''Task Coach is free software: you can redistribute it and/or modify
+license_notice = '''%(name)s is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Task Coach is distributed in the hope that it will be useful,
+%(name)s is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
+along with this program.  If not, see <http://www.gnu.org/licenses/>.'''%dict(name=name)
 
 license_notice_html = '<p>%s</p>'%license_notice.replace('\n\n', '</p><p>')
 license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank">http\1</a>', license_notice_html)

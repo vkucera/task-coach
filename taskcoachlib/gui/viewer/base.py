@@ -30,34 +30,38 @@ import mixin
 class Viewer(wx.Panel):
     __metaclass__ = patterns.NumberedInstances
     
-    ''' A Viewer shows the contents of a model (a list of tasks or a list of 
-        efforts) by means of a widget (e.g. a ListCtrl or a TreeListCtrl).'''
+    ''' A Viewer shows domain objects (e.g. tasks or efforts) by means of a 
+        widget (e.g. a ListCtrl or a TreeListCtrl).'''
         
-    def __init__(self, parent, list, settings, *args, **kwargs):
-        super(Viewer, self).__init__(parent, -1) # FIXME: Pass *args, **kwargs
+    def __init__(self, parent, taskFile, settings, *args, **kwargs):
+        super(Viewer, self).__init__(parent, -1)
         self.parent = parent # FIXME: Make instance variables private
+        self.taskFile = taskFile
         self.settings = settings
         self.__settingsSection = kwargs.pop('settingsSection')
         self.__instanceNumber = kwargs.pop('instanceNumber')
         self.__selection = []
         self.__toolbarUICommands = None
-        self.originalList = list
-        self.list = self.createSorter(self.createFilter(list))
+        self.__presentation = self.createSorter(self.createFilter(self.domainObjectsToView()))
         self.widget = self.createWidget()
         self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.initLayout()
-        self.registerModelObservers()
+        self.registerPresentationObservers()
         self.refresh()
+        
+    def domainObjectsToView(self):
+        ''' Return the domain objects that this viewer should display. For
+            global viewers this will be part of the task file, 
+            e.g. self.taskFile.tasks(), for local viewers this will be a list
+            of objects passed to the viewer constructor. '''
+        raise NotImplementedError
     
-    def registerModelObservers(self):
-        for eventHandler in self.onAddItem, self.onRemoveItem, self.onSorted:
+    def registerPresentationObservers(self):
+        for eventHandler in self.onAddItem, self.onRemoveItem:
             patterns.Publisher().removeObserver(eventHandler)
-        patterns.Publisher().registerObserver(self.onAddItem, 
-            eventType=self.list.addItemEventType())
-        patterns.Publisher().registerObserver(self.onRemoveItem, 
-            eventType=self.list.removeItemEventType())
-        patterns.Publisher().registerObserver(self.onSorted, 
-            eventType=self.list.sortEventType())
+        registerObserver = patterns.Publisher().registerObserver
+        registerObserver(self.onAddItem, eventType=self.presentation().addItemEventType())
+        registerObserver(self.onRemoveItem, eventType=self.presentation().removeItemEventType())
         
     def detach(self):
         ''' Should be called by viewer.container before closing the viewer '''
@@ -86,21 +90,21 @@ class Viewer(wx.Panel):
         return self.widget
             
     def createSorter(self, collection):
-        ''' This method can be overridden to decorate the model with a 
+        ''' This method can be overridden to decorate the presentation with a 
             sorter. '''
         return collection
         
     def createFilter(self, collection):
-        ''' This method can be overridden to decorate the model with a 
+        ''' This method can be overridden to decorate the presentation with a 
             filter. '''
         return collection
 
     def onAddItem(self, event):
-        ''' One or more items were added to our model, refresh the widget. '''
+        ''' One or more items were added to our presentation, refresh the widget. '''
         self.refresh()
 
     def onRemoveItem(self, event):
-        ''' One or more items were removed from our model, refresh the 
+        ''' One or more items were removed from our presentation, refresh the 
             widget. '''
         self.refresh()
 
@@ -124,10 +128,10 @@ class Viewer(wx.Panel):
         self.__selection = self.curselection()
         
     def refresh(self):
-        self.widget.refresh(len(self.list))
+        self.widget.refresh(len(self.presentation()))
         # Restore the selection:
         self.widget.select([self.getIndexOfItem(item) for item \
-                            in self.__selection if item in self.model()])
+                            in self.__selection if item in self.presentation()])
                             
     def curselection(self):
         ''' Return a list of items (domain objects) currently selected in our
@@ -148,13 +152,14 @@ class Viewer(wx.Panel):
     def size(self):
         return self.widget.GetItemCount()
     
-    def model(self):
-        ''' Return the model of the viewer. '''
-        return self.list
+    def presentation(self):
+        ''' Return the domain objects that this viewer is currently 
+            displaying. '''
+        return self.__presentation
         
-    def setModel(self, model):
-        ''' Change the model of the viewer. '''
-        self.list = model
+    def setPresentation(self, presentation):
+        ''' Change the presentation of the viewer. '''
+        self.__presentation = presentation
     
     def widgetCreationKeywordArguments(self):
         return {}
@@ -259,15 +264,15 @@ class ListViewer(Viewer):
         return False
 
     def visibleItems(self):
-        ''' Iterate over the items in the model. '''
-        for item in self.model():
+        ''' Iterate over the items in the presentation. '''
+        for item in self.presentation():
             yield item
     
     def getItemWithIndex(self, index):
-        return self.model()[index]
+        return self.presentation()[index]
             
     def getIndexOfItem(self, item):
-        return self.model().index(item)
+        return self.presentation().index(item)
     
 
 class TreeViewer(Viewer):
@@ -343,9 +348,9 @@ class TreeViewer(Viewer):
         super(TreeViewer, self).onSorted(*args, **kwargs)
     
     def visibleItems(self):
-        ''' Iterate over the items in the model. '''            
+        ''' Iterate over the items in the presentation. '''            
         def yieldAllChildren(parent):
-            for item in self.model():
+            for item in self.presentation():
                 itemParent = self.getItemParent(item)
                 if itemParent and itemParent == parent:
                     yield item
@@ -357,7 +362,7 @@ class TreeViewer(Viewer):
                 yield child
 
     def getItemWithIndex(self, index):
-        ''' Return the item in the model with the specified index. index
+        ''' Return the item in the presentation with the specified index. index
             is a tuple of indices that specifies the path to the item. E.g.,
             (0,2,1) is (read the tuple from right to left) the second child 
             of the third child of the first root item. '''
@@ -367,24 +372,24 @@ class TreeViewer(Viewer):
         except KeyError:
             pass
         children = self.getRootItems()
-        model = self.model()
+        presentation = self.presentation()
         for i in index[:-1]:
             item = children[i]
-            childIndices = [model.index(child) for child in item.children() \
-                            if child in model]
+            childIndices = [presentation.index(child) for child in item.children() \
+                            if child in presentation]
             childIndices.sort()
-            children = [model[childIndex] for childIndex in childIndices]
+            children = [presentation[childIndex] for childIndex in childIndices]
         self.__itemsByIndex[index] = item = children[index[-1]]
         return item
         
     def getRootItems(self):
         ''' Allow for overriding what the rootItems are. '''
-        return self.model().rootItems()
+        return self.presentation().rootItems()
 
     def getIndexOfItem(self, item):
         parent = self.getItemParent(item)
         if parent:
-            children = [child for child in self.model() if child.parent() == parent]
+            children = [child for child in self.presentation() if child.parent() == parent]
             return self.getIndexOfItem(parent) + (children.index(item),)
         else:
             return (self.getRootItems().index(item),)
@@ -398,7 +403,7 @@ class TreeViewer(Viewer):
             return len(self.getRootItems())
         else:
             item = self.getItemWithIndex(index)
-            return len([child for child in item.children() if child in self.model()])
+            return len([child for child in item.children() if child in self.presentation()])
     
     def getItemExpanded(self, index):
         item = self.getItemWithIndex(index)
@@ -413,12 +418,12 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
             eventType=self.trackStartEventType())
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=self.trackStopEventType())
-        self.addTrackedItems(self.trackedItems(self.list))
+        self.addTrackedItems(self.trackedItems(self.presentation()))
         
-    def setModel(self, model):
-        self.removeTrackedItems(self.trackedItems(self.model()))
-        super(UpdatePerSecondViewer, self).setModel(model)
-        self.addTrackedItems(self.trackedItems(self.model()))
+    def setPresentation(self, presentation):
+        self.removeTrackedItems(self.trackedItems(self.presentation()))
+        super(UpdatePerSecondViewer, self).setPresentation(presentation)
+        self.addTrackedItems(self.trackedItems(self.presentation()))
                         
     def trackStartEventType(self):
         raise NotImplementedError
@@ -436,12 +441,12 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
 
     def onStartTracking(self, event):
         item = event.source()
-        if item in self.list:
+        if item in self.presentation():
             self.addTrackedItems([item])
 
     def onStopTracking(self, event):
         item = event.source()
-        if item in self.list:
+        if item in self.presentation():
             self.removeTrackedItems([item])
             
     def currentlyTrackedItems(self):
@@ -552,7 +557,7 @@ class ViewerWithColumns(Viewer):
                 
     def onAttributeChanged(self, event):
         item = event.source()
-        if item in self.list:
+        if item in self.presentation():
             self.widget.RefreshItem(self.getIndexOfItem(item))
         
     def columns(self):

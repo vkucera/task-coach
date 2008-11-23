@@ -24,7 +24,7 @@ from taskcoachlib.gui.dialog import reminder, editor
 
 
 class ReminderController(object):
-    def __init__(self, taskList, categories, settings, *args, **kwargs):
+    def __init__(self, taskList, settings):
         super(ReminderController, self).__init__()
         patterns.Publisher().registerObserver(self.onSetReminder,
             eventType='task.reminder')
@@ -36,7 +36,6 @@ class ReminderController(object):
         self.__registerRemindersForTasks(taskList)
         self.settings = settings
         self.taskList = taskList
-        self.categories = categories
     
     def onAddTask(self, event):
         self.__registerRemindersForTasks(event.values())
@@ -83,8 +82,8 @@ class ReminderController(object):
         # reminder back to its original date-time, which is now in the past.
         if dialog.openTaskAfterClose:
             editTask = editor.TaskEditor(self.mainWindow,
-                command.EditTaskCommand(self.taskList, [task]), self.taskList, 
-                self.settings, self.categories, bitmap='edit')
+                command.EditTaskCommand(self.taskList, [task]), 
+                self.mainWindow.taskFile, self.settings, bitmap='edit')
             editTask.Show()
         dialog.Destroy()
         

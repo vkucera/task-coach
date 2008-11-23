@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from unittests import dummy
-from taskcoachlib import gui, config, widgets
+from taskcoachlib import gui, config, widgets, persistence
 from taskcoachlib.domain import task, effort, category, note
 
 
@@ -26,10 +26,10 @@ class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
         super(CategoryViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskList = task.TaskList()
-        self.categories = category.CategoryList()
-        self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
-            self.settings, tasks=self.taskList, notes=note.NoteContainer())
+        taskFile = persistence.TaskFile()
+        self.categories = taskFile.categories()
+        self.viewer = gui.viewer.CategoryViewer(self.frame, taskFile, 
+                                                self.settings)
         
     def addTwoCategories(self):
         cat1 = category.Category('1')
@@ -51,7 +51,7 @@ class CategoryViewerTest(test.wxTestCase):
     def testSortInWidget(self):
         self.addTwoCategories()
         widget = self.viewer.widget
-        for item, cat in zip(widget.GetItemChildren(), self.viewer.model()):
+        for item, cat in zip(widget.GetItemChildren(), self.viewer.presentation()):
             self.assertEqual(cat.subject(), widget.GetItemText(item))
             
     def testSelectAll(self):

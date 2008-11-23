@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from unittests import dummy
-from taskcoachlib import gui, config
+from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, date, category, note
 
 
@@ -34,50 +34,50 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerForSpecificTasksTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskList = task.TaskList()
+        taskFile = persistence.TaskFile()
         self.task1 = task.Task('Task 1')
         self.task2 = task.Task('Task 2')
-        self.taskList.extend([self.task1, self.task2])
+        taskFile.tasks().extend([self.task1, self.task2])
         self.effort1 = effort.Effort(self.task1, date.DateTime(2006,1,1),
             date.DateTime(2006,1,2))
         self.task1.addEffort(self.effort1)
         self.effort2 = effort.Effort(self.task2, date.DateTime(2006,1,2),
             date.DateTime(2006,1,3))
         self.task2.addEffort(self.effort2)
-        self.viewer = EffortViewerUnderTest(self.frame, self.taskList,  
+        self.viewer = EffortViewerUnderTest(self.frame, taskFile,  
             self.settings, tasksToShowEffortFor=task.TaskList([self.task1]))
         
     def testViewerShowsOnlyEffortForSpecifiedTask(self):
-        self.assertEqual([self.effort1], self.viewer.model())
+        self.assertEqual([self.effort1], self.viewer.presentation())
         
     def testEffortEditorDoesUseAllTasks(self):
         dialog = self.viewer.newItemDialog()
-        self.assertEqual(2, len(dialog._taskList))
+        self.assertEqual(2, len(dialog._taskFile.tasks()))
         
     def testViewerKeepsShowingOnlyEffortForSpecifiedTasksWhenSwitchingAggregation(self):
         self.viewer.showEffortAggregation('week')
-        self.assertEqual(1, len(self.viewer.model()))
+        self.assertEqual(1, len(self.viewer.presentation()))
         
         
 class EffortViewerStatusMessageTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerStatusMessageTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskList = task.TaskList()
+        self.taskFile = persistence.TaskFile()
         self.task = task.Task()
-        self.taskList.append(self.task)
+        self.taskFile.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006,1,1),
             date.DateTime(2006,1,2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006,1,2),
             date.DateTime(2006,1,3))
-        self.viewer = EffortViewerUnderTest(self.frame, self.taskList,  
+        self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,  
             self.settings)
             
     def assertStatusMessages(self, message1, message2):
         self.assertEqual((message1, message2), self.viewer.statusMessages())
         
     def testStatusMessage_EmptyTaskList(self):
-        self.taskList.clear()
+        self.taskFile.tasks().clear()
         self.assertStatusMessages('Effort: 0 selected, 0 visible, 0 total', 
             'Status: 0 tracking')
             
@@ -106,15 +106,15 @@ class EffortViewerTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskList = task.TaskList()
+        taskFile = persistence.TaskFile()
+        #self.taskList = taskFile.tasks()
         self.task = task.Task()
-        self.taskList.append(self.task)
+        taskFile.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006,1,1),
             date.DateTime(2006,1,2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006,1,2),
             date.DateTime(2006,1,3))
-        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskList,  
-            self.settings)
+        self.viewer = gui.viewer.EffortViewer(self.frame, taskFile, self.settings)
  
     def testEffortColor(self):
         if '__WXMSW__' == wx.Platform:
@@ -133,11 +133,7 @@ class EffortViewerTest(test.wxTestCase):
 
 class EffortViewerAggregationTestCase(test.wxTestCase):
     def createViewer(self):
-        return gui.viewer.EffortViewer(self.frame,
-                                       self.taskList,
-                                       self.settings,
-                                       category.CategoryList(),
-                                       note.NoteContainer())
+        return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)
 
     def setUp(self):
         super(EffortViewerAggregationTestCase, self).setUp()
@@ -157,7 +153,8 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
         self.task2 = task.Task('Task2')
         self.task2.addEffort(effort.Effort(self.task2, *mostRecentPeriod))
         
-        self.taskList = task.TaskList([self.task, self.task2])
+        self.taskFile = persistence.TaskFile()
+        self.taskFile.tasks().extend([self.task, self.task2])
         self.viewer = self.createViewer()
 
     def switchAggregation(self):

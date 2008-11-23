@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, sys
 import test
 from unittests import dummy
-from taskcoachlib import gui, command, config, widgets
+from taskcoachlib import gui, command, config, widgets, persistence
 from taskcoachlib.domain import task, effort, date, category, note, attachment
 from taskcoachlib.gui import uicommand
 
@@ -54,16 +54,16 @@ class DummyEvent:
 class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
-        self.taskList = task.TaskList()
-        self.effortList = effort.EffortList(self.taskList)
+        self.taskFile = persistence.TaskFile()
+        self.taskList = self.taskFile.tasks()
+        self.effortList = self.taskFile.efforts()
         self.taskList.extend(self.createTasks())
         self.settings = config.Settings(load=False)
         self.editor = self.createEditor()
         
     def createEditor(self):
-        categories = category.CategoryList()
         return gui.dialog.editor.TaskEditor(self.frame, self.createCommand(),
-            self.taskList, self.settings, categories, raiseDialog=False)
+            self.taskFile, self.settings, raiseDialog=False)
 
     def tearDown(self):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
@@ -191,7 +191,7 @@ class NewTaskTest(TaskEditorTestCase):
         self.failUnless(self.errorMessage.startswith(errorMessageStart))
 
     def testAddNote(self):
-        self.editor[0][4].noteContainer.append(note.Note('New note'))
+        self.editor[0][4].notes.append(note.Note('New note'))
         self.editor.ok()
         self.assertEqual(1, len(self.task.notes()))
         
@@ -200,7 +200,7 @@ class NewTaskTest(TaskEditorTestCase):
         child = note.Note('Child')
         parent.addChild(child)
         child.setParent(parent)
-        self.editor[0][4].noteContainer.extend([parent, child])
+        self.editor[0][4].notes.extend([parent, child])
         self.editor.ok()
         # Only the parent note should be added to the notes list:
         self.assertEqual(1, len(self.task.notes())) 
@@ -289,7 +289,7 @@ class EditTaskTest(TaskEditorTestCase):
         self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor[0][5]._attachmentViewer.model().removeItems([self.attachment])
+        self.editor[0][5]._attachmentViewer.presentation().removeItems([self.attachment])
         self.editor.ok()
         self.assertEqual([], self.task.attachments())
 
@@ -395,7 +395,7 @@ class EffortEditorTest(TaskEditorTestCase):
     
     def createEditor(self):
         return gui.dialog.editor.EffortEditor(self.frame, self.createCommand(), 
-            self.effortList, self.taskList, self.settings, raiseDialog=False)
+            self.taskFile, self.settings, raiseDialog=False)
     
     def testCreate(self):
         self.assertEqual(self.effort.getStart().date(), 

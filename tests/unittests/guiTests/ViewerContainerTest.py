@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import test
 from unittests import dummy
-from taskcoachlib import gui, config, widgets, patterns
+from taskcoachlib import gui, config, widgets, patterns, persistence
 from taskcoachlib.domain import task, effort, category, note
 
 
@@ -42,7 +42,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.events = []
         self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
-        self.taskList = task.sorter.Sorter(task.TaskList())
+        self.taskFile = persistence.TaskFile()
         self.notebook = widgets.Notebook(self.frame)
         self.container = gui.viewer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
@@ -53,7 +53,7 @@ class ViewerContainerTest(test.wxTestCase):
 
     def createViewer(self):
         return dummy.ViewerWithDummyWidget(self.notebook,
-            self.taskList, self.settings, settingsSection='taskviewer')
+            self.taskFile, self.settings, settingsSection='taskviewer')
             
     def onEvent(self, event):
         self.events.append(event)
@@ -62,7 +62,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.assertEqual(0, self.container.size())
 
     def testAddTask(self):
-        self.taskList.append(task.Task())
+        self.taskFile.tasks().append(task.Task())
         self.assertEqual(1, self.container.size())
         
     def testChangePage_ChangesActiveViewer(self):

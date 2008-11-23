@@ -35,8 +35,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
     defaultBitmap = 'category'
     
     def __init__(self, *args, **kwargs):
-        self.tasks = kwargs.pop('tasks')
-        self.notes = kwargs.pop('notes')
         kwargs.setdefault('settingsSection', 'categoryviewer')
         super(BaseCategoryViewer, self).__init__(*args, **kwargs)
         for eventType in category.Category.subjectChangedEventType(), \
@@ -44,14 +42,17 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
                          category.Category.colorChangedEventType():
             patterns.Publisher().registerObserver(self.onCategoryChanged, 
                 eventType)
+            
+    def domainObjectsToView(self):
+        return self.taskFile.categories()
     
     def createWidget(self):
-        widget = widgets.CheckTreeCtrl(self, self.getItemText, self.getItemTooltipData,
-            self.getItemImage, self.getItemAttr, self.getChildrenCount,
-            self.getItemExpanded,
+        widget = widgets.CheckTreeCtrl(self, self.getItemText, 
+            self.getItemTooltipData, self.getItemImage, self.getItemAttr, 
+            self.getChildrenCount, self.getItemExpanded,
             self.getIsItemChecked, self.onSelect, self.onCheck,
-            uicommand.CategoryEdit(viewer=self, categories=self.model()),
-            uicommand.CategoryDragAndDrop(viewer=self, categories=self.model()),
+            uicommand.CategoryEdit(viewer=self, categories=self.presentation()),
+            uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             self.createCategoryPopupMenu(), 
             **self.widgetCreationKeywordArguments())
         return widget
@@ -59,28 +60,23 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
     def createToolBarUICommands(self):
         commands = super(BaseCategoryViewer, self).createToolBarUICommands()
         commands[-2:-2] = [None,
-                           uicommand.CategoryNew(categories=self.model(),
+                           uicommand.CategoryNew(categories=self.presentation(),
                                                  settings=self.settings),
-                           uicommand.CategoryNewSubCategory(categories=self.model(),
+                           uicommand.CategoryNewSubCategory(categories=self.presentation(),
                                                             viewer=self),
-                           uicommand.CategoryEdit(categories=self.model(),
+                           uicommand.CategoryEdit(categories=self.presentation(),
                                                   viewer=self),
-                           uicommand.CategoryDelete(categories=self.model(),
+                           uicommand.CategoryDelete(categories=self.presentation(),
                                                     viewer=self)]
         return commands
 
     def createCategoryPopupMenu(self, localOnly=False):
-        return menu.CategoryPopupMenu(self.parent, self.settings, self.tasks,
-                                      self.notes, self.model(), self, localOnly)
-
-    # FIXMERGE
-
-    #def createFilter(self, categories):
-    #    return base.SearchFilter(categories, treeMode=True)
+        return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
+                                      self, localOnly)
     
     def onCategoryChanged(self, event):
         category = event.source()
-        if category in self.list:
+        if category in self.presentation():
             self.widget.RefreshItem(self.getIndexOfItem(category))
 
     def onCheck(self, event):
@@ -127,27 +123,27 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
 
     def statusMessages(self):
         status1 = _('Categories: %d selected, %d total')%\
-            (len(self.curselection()), len(self.list))
-        status2 = _('Status: %d filtered')%len([category for category in self.list if category.isFiltered()])
+            (len(self.curselection()), len(self.presentation()))
+        status2 = _('Status: %d filtered')%len([category for category in self.presentation() if category.isFiltered()])
         return status1, status2
 
     def newItemDialog(self, *args, **kwargs):
-        newCommand = command.NewCategoryCommand(self.list, *args, **kwargs)
+        newCommand = command.NewCategoryCommand(self.presentation(), *args, **kwargs)
         newCommand.do()
         return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
-            command.EditCategoryCommand(self.list, kwargs['items']),
-            self.settings, self.list, bitmap=kwargs['bitmap'])
+            command.EditCategoryCommand(self.presentation(), kwargs['items']),
+            self.settings, self.taskFile, bitmap=kwargs['bitmap'])
     
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection())
+        return command.DeleteCommand(self.presentation(), self.curselection())
     
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
-            command.NewSubCategoryCommand(self.list, self.curselection()),
-            self.settings, self.list, bitmap=kwargs['bitmap'])
+            command.NewSubCategoryCommand(self.presentation(), self.curselection()),
+            self.settings, self.taskFile, bitmap=kwargs['bitmap'])
         
     newSubCategoryDialog = newSubItemDialog
 

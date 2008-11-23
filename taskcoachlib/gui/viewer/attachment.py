@@ -33,15 +33,18 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
     SorterClass = attachment.AttachmentSorter
 
     def __init__(self, *args, **kwargs):
-        self.categories = kwargs.pop('categories')
-        kwargs['settingssection'] = 'attachmentviewer'
+        self.attachments = kwargs.pop('attachmentsToShow')
+        kwargs.setdefault('settingssection', 'attachmentviewer')
         super(AttachmentViewer, self).__init__(*args, **kwargs)
+        
+    def domainObjectsToView(self):
+        return self.attachments
 
     def isShowingAttachments(self):
         return True
 
     def _addAttachments(self, attachments, index, **itemDialogKwargs):
-        self.model().extend(attachments)
+        self.presentation().extend(attachments)
 
     def createWidget(self):
         imageList = self.createImageList()
@@ -49,9 +52,9 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemTooltipData, self.getItemImage,
             self.getItemAttr, self.onSelect,
-            uicommand.AttachmentEdit(viewer=self, attachments=self.model()),
-            menu.AttachmentPopupMenu(self.parent, self.settings,
-                                     self.model(), self.categories, self),
+            uicommand.AttachmentEdit(viewer=self, attachments=self.presentation()),
+            menu.AttachmentPopupMenu(self.parent, self.settings, self.presentation(), 
+                                     self),
             menu.ColumnPopupMenu(self),
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
@@ -106,12 +109,11 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
     def createToolBarUICommands(self):
         commands = super(AttachmentViewer, self).createToolBarUICommands()
         commands[-2:-2] = [None,
-                           uicommand.AttachmentNew(attachments=self.model(),
-                                                   settings=self.settings,
-                                                   categories=self.categories),
-                           uicommand.AttachmentEdit(attachments=self.model(),
+                           uicommand.AttachmentNew(attachments=self.presentation(),
+                                                   settings=self.settings),
+                           uicommand.AttachmentEdit(attachments=self.presentation(),
                                                     viewer=self),
-                           uicommand.AttachmentDelete(attachments=self.model(),
+                           uicommand.AttachmentDelete(attachments=self.presentation(),
                                                       viewer=self),
                            None,
                            uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
@@ -145,7 +147,7 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
             return -1
 
     def newItemDialog(self, *args, **kwargs):
-        newCommand = command.NewAttachmentCommand(self.list, *args, **kwargs)
+        newCommand = command.NewAttachmentCommand(self.presentation(), *args, **kwargs)
         newCommand.do()
         return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
 
@@ -153,9 +155,9 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
 
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.AttachmentEditor(wx.GetTopLevelParent(self),
-            command.EditAttachmentCommand(self.list, *args, **kwargs),
-            self.settings, self.categories, bitmap=kwargs['bitmap'])
+            command.EditAttachmentCommand(self.presentation(), *args, **kwargs),
+            self.settings, self.presentation(), self.taskFile, bitmap=kwargs['bitmap'])
 
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection())
+        return command.DeleteCommand(self.presentation(), self.curselection())
 

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import test
 from unittests import dummy
-from taskcoachlib import gui, config
+from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, category, note, date
 
 
@@ -55,19 +55,24 @@ class UICommandTest(test.wxTestCase):
         self.failUnless(self.uicommand.activated)
 
 
-class NewTaskWithSelectedCategoryTest(test.wxTestCase):
+class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
+    def setUp(self):
+        wx.GetApp().SetTopWindow(self.frame)
+        self.frame.taskFile = persistence.TaskFile()
+        
+
+class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
     def setUp(self):
         super(NewTaskWithSelectedCategoryTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskList = task.TaskList()
-        self.effortList = effort.EffortList(self.taskList)
-        self.categories = category.CategoryList()
+        self.taskFile = self.frame.taskFile = persistence.TaskFile()
+        self.categories = self.taskFile.categories()
         self.categories.append(category.Category('cat'))
-        self.viewer = gui.viewer.CategoryViewer(self.frame, self.categories, 
-            self.settings, tasks=self.taskList, notes=note.NoteContainer())
+        self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskFile, 
+                                                self.settings)
         
     def createNewTask(self):
-        taskNew = gui.uicommand.NewTaskWithSelectedCategories(taskList=self.taskList,
+        taskNew = gui.uicommand.NewTaskWithSelectedCategories(taskList=self.taskFile.tasks(),
                                                 viewer=self.viewer,
                                                 categories=self.categories,
                                                 settings=self.settings)
@@ -143,16 +148,15 @@ class MarkCompletedTest(test.TestCase):
         self.assertMarkCompletedIsEnabled(
             selection=[task.Task(completionDate=date.Today()), task.Task()], 
             shouldBeEnabled=False)
-        
-        
-class TaskNewTest(test.wxTestCase):
+
+
+
+class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
     def testNewTaskWithCategories(self):
-        cat = category.Category('cat', filtered=True)
-        categories = category.CategoryList([cat])
         settings = config.Settings(load=False)
-        taskList = task.TaskList()
-        taskNew = gui.uicommand.TaskNew(taskList=task.TaskList(), 
-                                        categories=categories,
+        cat = category.Category('cat', filtered=True)
+        self.frame.taskFile.categories().append(cat)
+        taskNew = gui.uicommand.TaskNew(taskList=self.frame.taskFile.tasks(), 
                                         settings=settings)
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog[0][2]._categoryViewer.widget
@@ -160,12 +164,11 @@ class TaskNewTest(test.wxTestCase):
         self.failUnless(firstChild.IsChecked())
         
 
-class NoteNewTest(test.wxTestCase):
-    def testNewNoteWithCategories(self):
+class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
+    def testNewNoteWithCategories(self):        
         cat = category.Category('cat', filtered=True)
-        categories = category.CategoryList([cat])
-        noteNew = gui.uicommand.NoteNew(notes=note.NoteContainer(), 
-                                        categories=categories,
+        self.frame.taskFile.categories().append(cat)
+        noteNew = gui.uicommand.NoteNew(notes=self.frame.taskFile.notes(), 
                                         settings=config.Settings(load=False))
         dialog = noteNew.doCommand(None, show=False)
         tree = dialog[0][1]._categoryViewer.widget

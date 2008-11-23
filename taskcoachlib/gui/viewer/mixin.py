@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import command
+from taskcoachlib import command, patterns
 from taskcoachlib.domain import base, task, category, attachment
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand
@@ -32,9 +32,9 @@ class SearchableViewer(object):
     def isSearchable(self):
         return True
     
-    def createFilter(self, model):
-        model = super(SearchableViewer, self).createFilter(model)
-        return base.SearchFilter(model, **self.searchOptions())
+    def createFilter(self, presentation):
+        presentation = super(SearchableViewer, self).createFilter(presentation)
+        return base.SearchFilter(presentation, **self.searchOptions())
 
     def searchOptions(self):
         searchString, matchCase, includeSubItems = self.getSearchFilter()
@@ -48,7 +48,7 @@ class SearchableViewer(object):
         self.settings.set(section, 'searchfilterstring', searchString)
         self.settings.set(section, 'searchfiltermatchcase', str(matchCase))
         self.settings.set(section, 'searchfilterincludesubitems', str(includeSubItems))
-        self.model().setSearchFilter(searchString, matchCase, includeSubItems)
+        self.presentation().setSearchFilter(searchString, matchCase, includeSubItems)
         
     def getSearchFilter(self):
         section = self.settingsSection()
@@ -70,18 +70,12 @@ class FilterableViewer(object):
     def isFilterable(self):
         return True
     
-    '''
-    def createFilter(self, model):
-        model = super(FilterableViewer, self).createFilter(model)
-        return self.FilterClass(model, **self.filterOptions())
-    '''    
-
 
 class FilterableViewerForNotes(FilterableViewer):
     def createFilter(self, notesContainer):
         notesContainer = super(FilterableViewerForNotes, self).createFilter(notesContainer)
         return category.filter.CategoryFilter(notesContainer, 
-            categories=self.categories, treeMode=self.isTreeViewer(),
+            categories=self.taskFile.categories(), treeMode=self.isTreeViewer(),
             filterOnlyWhenAllCategoriesMatch=self.settings.getboolean('view',
             'categoryfiltermatchall'))
         
@@ -96,7 +90,7 @@ class FilterableViewerForTasks(FilterableViewer):
         return category.filter.CategoryFilter( \
             task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
                                    **self.viewFilterOptions()), 
-            categories=self.categories, treeMode=self.isTreeViewer(),
+            categories=self.taskFile.categories(), treeMode=self.isTreeViewer(),
             filterOnlyWhenAllCategoriesMatch=self.settings.getboolean('view',
             'categoryfiltermatchall'))
     
@@ -116,49 +110,49 @@ class FilterableViewerForTasks(FilterableViewer):
     
     def setFilteredByDueDate(self, dueDateString):
         self.settings.set(self.settingsSection(), 'tasksdue', dueDateString)
-        self.model().setFilteredByDueDate(dueDateString)
+        self.presentation().setFilteredByDueDate(dueDateString)
         
     def getFilteredByDueDate(self):
         return self.settings.get(self.settingsSection(), 'tasksdue')
     
     def hideActiveTasks(self, hide=True):
         self.__setBooleanSetting('hideactivetasks', hide)
-        self.model().hideActiveTasks(hide)
+        self.presentation().hideActiveTasks(hide)
         
     def isHidingActiveTasks(self):
         return self.__getBooleanSetting('hideactivetasks')
 
     def hideInactiveTasks(self, hide=True):
         self.__setBooleanSetting('hideinactivetasks', hide)
-        self.model().hideInactiveTasks(hide)
+        self.presentation().hideInactiveTasks(hide)
         
     def isHidingInactiveTasks(self):
         return self.__getBooleanSetting('hideinactivetasks')
     
     def hideCompletedTasks(self, hide=True):
         self.__setBooleanSetting('hidecompletedtasks', hide)
-        self.model().hideCompletedTasks(hide)
+        self.presentation().hideCompletedTasks(hide)
         
     def isHidingCompletedTasks(self):
         return self.__getBooleanSetting('hidecompletedtasks')
     
     def hideOverdueTasks(self, hide=True):
         self.__setBooleanSetting('hideoverduetasks', hide)
-        self.model().hideOverdueTasks(hide)
+        self.presentation().hideOverdueTasks(hide)
         
     def isHidingOverdueTasks(self):
         return self.__getBooleanSetting('hideoverduetasks')
     
     def hideOverbudgetTasks(self, hide=True):
         self.__setBooleanSetting('hideoverbudgettasks', hide)
-        self.model().hideOverbudgetTasks(hide)
+        self.presentation().hideOverbudgetTasks(hide)
     
     def isHidingOverbudgetTasks(self):
         return self.__getBooleanSetting('hideoverbudgettasks')
     
     def hideCompositeTasks(self, hide=True):
         self.__setBooleanSetting('hidecompositetasks', hide)
-        self.model().hideCompositeTasks(hide)
+        self.presentation().hideCompositeTasks(hide)
         
     def isHidingCompositeTasks(self):
         return self.__getBooleanSetting('hidecompositetasks')
@@ -171,7 +165,7 @@ class FilterableViewerForTasks(FilterableViewer):
         self.hideOverbudgetTasks(False)
         self.hideCompositeTasks(False)
         self.setFilteredByDueDate('Unlimited')
-        for category in self.categories:
+        for category in self.taskFile.categories():
             category.setFiltered(False)
         
     def getFilterUICommands(self):
@@ -230,8 +224,14 @@ class SortableViewer(object):
     def isSortable(self):
         return True
 
-    def createSorter(self, model):
-        return self.SorterClass(model, **self.sorterOptions())
+    def registerPresentationObservers(self):
+        super(SortableViewer, self).registerPresentationObservers()
+        patterns.Publisher().removeObserver(self.onSorted)
+        patterns.Publisher().registerObserver(self.onSorted, 
+            eventType=self.presentation().sortEventType())
+
+    def createSorter(self, presentation):
+        return self.SorterClass(presentation, **self.sorterOptions())
     
     def sorterOptions(self):
         return dict(sortBy=self.sortKey(),
@@ -243,7 +243,7 @@ class SortableViewer(object):
             self.setSortOrderAscending(not self.isSortOrderAscending())
         else:
             self.settings.set(self.settingsSection(), 'sortby', sortKey)
-            self.model().sortBy(sortKey)
+            self.presentation().sortBy(sortKey)
         
     def isSortedBy(self, sortKey):
         return sortKey == self.sortKey()
@@ -258,7 +258,7 @@ class SortableViewer(object):
     def setSortOrderAscending(self, ascending=True):
         self.settings.set(self.settingsSection(), 'sortascending', 
             str(ascending))
-        self.model().sortAscending(ascending)
+        self.presentation().sortAscending(ascending)
         
     def isSortCaseSensitive(self):
         return self.settings.getboolean(self.settingsSection(), 
@@ -267,7 +267,7 @@ class SortableViewer(object):
     def setSortCaseSensitive(self, caseSensitive=True):
         self.settings.set(self.settingsSection(), 'sortcasesensitive', 
             str(caseSensitive))
-        self.model().sortCaseSensitive(caseSensitive)
+        self.presentation().sortCaseSensitive(caseSensitive)
 
     def getSortUICommands(self):
         if not self._sortUICommands:
@@ -291,7 +291,7 @@ class SortableViewerForTasks(SortableViewer):
     def setSortByTaskStatusFirst(self, sortByTaskStatusFirst):
         self.settings.set(self.settingsSection(), 'sortbystatusfirst',
             str(sortByTaskStatusFirst))
-        self.model().sortByTaskStatusFirst(sortByTaskStatusFirst)
+        self.presentation().sortByTaskStatusFirst(sortByTaskStatusFirst)
         
     def sorterOptions(self):
         options = super(SortableViewerForTasks, self).sorterOptions()
@@ -411,7 +411,7 @@ class AttachmentDropTarget(object):
                 attachments=attachments, **itemDialogKwargs)
             newItemDialog.Show()
         else:
-            addAttachment = command.AddAttachmentCommand(self.model(),
+            addAttachment = command.AddAttachmentCommand(self.presentation(),
                 [self.getItemWithIndex(index)], attachments=attachments)
             addAttachment.do()
 

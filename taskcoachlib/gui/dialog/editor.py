@@ -458,15 +458,13 @@ class BudgetPage(EditorPage, TaskHeaders):
 
 
 class EffortPage(EditorPage, TaskHeaders):
-    def __init__(self, parent, theTask, taskList, settings, *args, **kwargs):
+    def __init__(self, parent, theTask, taskFile, settings, *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
-        singleTaskList = task.SingleTaskList()
-        self.effortViewer = viewer.EffortViewer(self, taskList, 
+        self.effortViewer = viewer.EffortViewer(self, taskFile,
             settings, settingsSection='effortviewerintaskeditor',
-            tasksToShowEffortFor=singleTaskList)
+            tasksToShowEffortFor=task.TaskList([theTask]))
         self.add(self.effortViewer, proportion=1, flag=wx.EXPAND|wx.ALL, 
                  border=5)
-        singleTaskList.append(theTask)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self.fit()
 
@@ -494,15 +492,8 @@ class LocalDragAndDropFix(object):
 
 class LocalCategoryViewer(LocalDragAndDropFix, viewer.BaseCategoryViewer):
     def __init__(self, item, *args, **kwargs):
-        # tasks and notes are only used for the 2 commands that we'll
-        # suppress anyway.
-        kwargs['tasks'] = []
-        kwargs['notes'] = []
-
         self.item = item
-
         super(LocalCategoryViewer, self).__init__(*args, **kwargs)
-
         self.widget.ExpandAll()
     
     def getIsItemChecked(self, index):
@@ -521,12 +512,12 @@ class LocalCategoryViewer(LocalDragAndDropFix, viewer.BaseCategoryViewer):
 
 
 class CategoriesPage(EditorPage):
-    def __init__(self, parent, item, categories, settings, *args, **kwargs):
+    def __init__(self, parent, item, taskFile, settings, *args, **kwargs):
         super(CategoriesPage, self).__init__(parent, item, *args, **kwargs)
-        self.__categories = category.CategorySorter(categories)
+        self.__categories = category.CategorySorter(taskFile.categories())
         categoriesBox = widgets.BoxWithBoxSizer(self, label=_('Categories'))
-        self._categoryViewer = LocalCategoryViewer(item, categoriesBox, categories,
-                                       tasks=[], notes=[], settings=settings,
+        self._categoryViewer = LocalCategoryViewer(item, categoriesBox,
+                                       taskFile, settings,
                                        settingsSection=self.settingsSection())
         categoriesBox.add(self._categoryViewer, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
@@ -540,23 +531,12 @@ class CategoriesPage(EditorPage):
         self._categoryViewer.detach()
         event.Skip()
 
-    def getCategoryWithIndex(self, index):
-        children = self.__categories.rootItems()
-        for i in index:
-            category = children[i]
-            childIndices = [self.__categories.index(child) for child in \
-                            category.children() if child in self.__categories]
-            childIndices.sort()
-            children = [self.__categories[childIndex] for childIndex \
-                        in childIndices]
-        return category
-
     def ok(self):
         treeCtrl = self._categoryViewer.widget
         treeCtrl.ExpandAll()
         for categoryNode in treeCtrl.GetItemChildren(recursively=True):
             categoryIndex = treeCtrl.GetIndexOfItem(categoryNode)
-            category = self.getCategoryWithIndex(categoryIndex)
+            category = self._categoryViewer.getItemWithIndex(categoryIndex)
             if categoryNode.IsChecked():
                 category.addCategorizable(self.item)
                 self.item.addCategory(category)
@@ -580,16 +560,15 @@ class LocalAttachmentViewer(LocalDragAndDropFix, viewer.AttachmentViewer):
 
 
 class AttachmentsPage(EditorPage):
-    def __init__(self, parent, item, settings, categories, *args, **kwargs):
+    def __init__(self, parent, item, settings, taskFile, *args, **kwargs):
+        settingsSection = kwargs.pop('settingsSection')
         super(AttachmentsPage, self).__init__(parent, item, *args, **kwargs)
-
         self.attachmentsList = attachment.AttachmentList(item.attachments())
         attachmentsBox = widgets.BoxWithBoxSizer(self, label=_('Attachments'))
         self._attachmentViewer = LocalAttachmentViewer(attachmentsBox,
-                                                       self.attachmentsList,
-                                                       settings,
-                                                       categories=categories,
-                                                       settingsSection=self.settingsSection())
+                                                       taskFile, settings,
+                                                       settingsSection=settingsSection,
+                                                       attachmentsToShow=self.attachmentsList)
         attachmentsBox.add(self._attachmentViewer, proportion=1, flag=wx.EXPAND|wx.ALL)
         attachmentsBox.fit()
         self.add(attachmentsBox)
@@ -606,44 +585,21 @@ class AttachmentsPage(EditorPage):
         event.Skip()
 
 
-class TaskAttachmentsPage(AttachmentsPage):
-    def settingsSection(self):
-        return 'attachmentviewerintaskeditor'
-
-
-class NoteAttachmentsPage(AttachmentsPage):
-    def settingsSection(self):
-        return 'attachmentviewerinnoteeditor'
-
-
-class CategoryAttachmentsPage(AttachmentsPage):
-    def settingsSection(self):
-        return 'attachmentviewerincategoryeditor'
-
-
-class LocalNoteViewer(LocalDragAndDropFix, viewer.NoteViewer):
-    def createFilter(self, notes):
-        # Inside the editor, all notes should be shown.
-        categories = self.categories
-        self.categories = category.CategoryList()
-        notes = super(LocalNoteViewer, self).createFilter(notes)
-        self.categories = categories
-        return notes
+class LocalNoteViewer(LocalDragAndDropFix, viewer.BaseNoteViewer):
+    pass
 
 
 class NotesPage(EditorPage):
-    def __init__(self, parent, item, settings, categories, 
-                 *args, **kwargs):
+    def __init__(self, parent, item, settings, taskFile, *args, **kwargs):
         super(NotesPage, self).__init__(parent, item, *args, **kwargs)
         notesBox = widgets.BoxWithBoxSizer(self, label=_('Notes'))
-        self.noteContainer = note.NoteContainer(item.notes())
-        self.noteViewer = LocalNoteViewer(notesBox, self.noteContainer, 
-            settings, settingsSection='noteviewerintaskeditor', 
-            categories=categories)
+        self.notes = note.NoteContainer(item.notes())
+        self.noteViewer = LocalNoteViewer(notesBox, taskFile, settings, 
+            settingsSection='noteviewerintaskeditor',
+            notesToShow=self.notes)
         notesBox.add(self.noteViewer, flag=wx.EXPAND|wx.ALL, proportion=1)
         notesBox.fit()
-        self.add(notesBox, proportion=1, flag=wx.EXPAND|wx.ALL,
-                 border=5)
+        self.add(notesBox, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self._fieldMap['note']=self.noteViewer # not sure of the fieldname
         self._defaultControl=self.noteViewer # not sure of the fieldname
@@ -656,7 +612,7 @@ class NotesPage(EditorPage):
         event.Skip()
         
     def ok(self):
-        self.item.setNotes(list(self.noteContainer.rootItems()))
+        self.item.setNotes(list(self.notes.rootItems()))
 
 
 class BehaviorPage(EditorPage, TaskHeaders):
@@ -690,23 +646,23 @@ class BehaviorPage(EditorPage, TaskHeaders):
 
 
 class TaskEditBook(widgets.Listbook):
-    def __init__(self, parent, task, taskList, settings, categories, 
-                 *args, **kwargs):
+    def __init__(self, parent, task, taskFile, settings, *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(SubjectPage(self, task), _('Description'), 'description')
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
-        self.AddPage(TaskCategoriesPage(self, task, categories, settings), 
+        self.AddPage(TaskCategoriesPage(self, task, taskFile, settings), 
                      _('Categories'), 'category')
         effortOn = settings.getboolean('feature', 'effort')
         if effortOn:
             self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')
         if effortOn and task.timeSpent(recursive=True):
-            effortPage = EffortPage(self, task, taskList, settings)
+            effortPage = EffortPage(self, task, taskFile, settings)
             self.AddPage(effortPage, _('Effort'), 'start')
         if settings.getboolean('feature', 'notes'):
-            self.AddPage(NotesPage(self, task, settings, categories), 
+            self.AddPage(NotesPage(self, task, settings, taskFile), 
                          _('Notes'), 'note')
-        self.AddPage(TaskAttachmentsPage(self, task, settings, categories), 
+        self.AddPage(AttachmentsPage(self, task, settings, taskFile, 
+                                     settingsSection='attachmentviewerintaskeditor'), 
                      _('Attachments'), 'attachment')
         self.AddPage(BehaviorPage(self, task), _('Behavior'), 'behavior')
         self.item = task
@@ -840,7 +796,6 @@ class EffortEditBook(widgets.BookPage):
             self._editor.enableOK()
 
 
-
 class CategorySubjectPage(ColorEntryMixin, widgets.BookPage):
     def __init__(self, parent, category, *args, **kwargs):
         self.item = self._category = category
@@ -868,17 +823,16 @@ class CategorySubjectPage(ColorEntryMixin, widgets.BookPage):
         
         
 class CategoryEditBook(widgets.Listbook):
-    def __init__(self, parent, theCategory, settings, categories,
-                 *args, **kwargs):
+    def __init__(self, parent, theCategory, settings, taskFile, *args, **kwargs):
         self.item = theCategory
         super(CategoryEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(CategorySubjectPage(self, theCategory), 
                      _('Description'), 'description')
         if settings.getboolean('feature', 'notes'):
-            self.AddPage(NotesPage(self, theCategory, settings, categories), 
+            self.AddPage(NotesPage(self, theCategory, settings, taskFile), 
                          _('Notes'), 'note')
-        self.AddPage(CategoryAttachmentsPage(self, theCategory, settings, 
-                                             categories), 
+        self.AddPage(AttachmentsPage(self, theCategory, settings, taskFile, 
+                                     settingsSection='attachmentviewerincategoryeditor'), 
                      _('Attachments'), 'attachment')
 
 
@@ -909,13 +863,14 @@ class NoteSubjectPage(ColorEntryMixin, widgets.BookPage):
         
 
 class NoteEditBook(widgets.Listbook):
-    def __init__(self, parent, theNote, settings, categories, *args, **kwargs):
+    def __init__(self, parent, theNote, settings, categories, taskFile, *args, **kwargs):
         self.item = theNote
         super(NoteEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(NoteSubjectPage(self, theNote), _('Description'), 'description')
-        self.AddPage(NoteCategoriesPage(self, theNote, categories, settings), _('Categories'),
-                     'category')
-        self.AddPage(NoteAttachmentsPage(self, theNote, settings, categories),
+        self.AddPage(NoteCategoriesPage(self, theNote, taskFile, settings), 
+                     _('Categories'), 'category')
+        self.AddPage(AttachmentsPage(self, theNote, settings, taskFile, 
+                                     settingsSection='attachmentviewerinnoteeditor'),
                      _('Attachments'), 'attachment')
 
 
@@ -971,15 +926,16 @@ class AttachmentSubjectPage(ColorEntryMixin, widgets.BookPage):
 
 
 class AttachmentEditBook(widgets.Listbook):
-    def __init__(self, parent, theAttachment, settings, categories,
+    def __init__(self, parent, theAttachment, settings, taskFile,
                  *args, **kwargs):
+        self.item = theAttachment
         super(AttachmentEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(AttachmentSubjectPage(self, theAttachment,
                                            settings.get('file', 'attachmentbase')), 
                      _('Description'), 'description')
         if settings.getboolean('feature', 'notes'):
-            self.AddPage(NotesPage(self, theAttachment, settings, 
-                                   categories), _('Notes'), 'note')
+            self.AddPage(NotesPage(self, theAttachment, settings, taskFile), 
+                         _('Notes'), 'note')
 
 
 class EditorWithCommand(widgets.NotebookDialog):
@@ -1029,13 +985,12 @@ class EditorWithCommand(widgets.NotebookDialog):
 
 
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, taskList, settings, categories, 
-                 bitmap='edit', *args, **kwargs):
+    def __init__(self, parent, command, taskFile, settings, bitmap='edit', 
+                 *args, **kwargs):
         self._settings = settings
-        self._taskList = taskList
-        self._categories = categories
-        super(TaskEditor, self).__init__(parent, command, taskList, bitmap, 
-                                         *args, **kwargs)
+        self._taskFile = taskFile
+        super(TaskEditor, self).__init__(parent, command, taskFile.tasks(), 
+                                         bitmap, *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
         # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
         self.setFocus(*args,**kwargs) 
@@ -1078,31 +1033,29 @@ class TaskEditor(EditorWithCommand):
         return page
         
     def addPage(self, task):
-        page = TaskEditBook(self._interior, task, self._taskList,
-            self._settings, self._categories)
+        page = TaskEditBook(self._interior, task, self._taskFile, self._settings)
         self._interior.AddPage(page, task.subject())
         
 
 
 class EffortEditor(EditorWithCommand):
-    def __init__(self, parent, command, effortList, taskList,
-                 settings, *args, **kwargs):
-        self._effortList = effortList
-        self._taskList = taskList
+    def __init__(self, parent, command, taskFile, settings, *args, **kwargs):
+        self._taskFile = taskFile
         self._settings = settings
-        super(EffortEditor, self).__init__(parent, command, effortList, 
+        super(EffortEditor, self).__init__(parent, command, taskFile.efforts(), 
                                            *args, **kwargs)
 
     def setFocusOnFirstEntry(self):
         pass
         
     def addPages(self):
-        for effort in self._command.efforts: # FIXME: use getter
+        # Override this method to make sure we use the efforts, not the task
+        for effort in self._command.efforts:
             self.addPage(effort)
 
     def addPage(self, effort):
-        page = EffortEditBook(self._interior, effort, self, self._effortList,
-            self._taskList, self._settings)
+        page = EffortEditBook(self._interior, effort, self, self._taskFile.efforts(),
+            self._taskFile.tasks(), self._settings)
         self._interior.AddPage(page, effort.task().subject())
 
     def isPageDisplayingItem(self, page, item):
@@ -1113,45 +1066,37 @@ class EffortEditor(EditorWithCommand):
 
 
 class CategoryEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, categories, *args, **kwargs):
+    def __init__(self, parent, command, settings, taskFile, *args, **kwargs):
         self._settings = settings
-        self._categories = categories
-        super(CategoryEditor, self).__init__(parent, command, categories, 
+        self._taskFile = taskFile
+        super(CategoryEditor, self).__init__(parent, command, taskFile.categories(), 
                                              *args, **kwargs)
 
     def addPage(self, category):
         page = CategoryEditBook(self._interior, category,
-                                self._settings, self._categories)
+                                self._settings, self._taskFile)
         self._interior.AddPage(page, category.subject())
 
 
 class NoteEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, notes, categories, *args, **kwargs):
+    def __init__(self, parent, command, settings, notes, taskFile, *args, **kwargs):
         self._settings = settings
-        self._categories = categories
+        self._taskFile = taskFile
         super(NoteEditor, self).__init__(parent, command, notes, *args, **kwargs)
 
-    def addPages(self):
-        for note in self._command.notes: # FIXME: use getter
-            self.addPage(note)
-            
     def addPage(self, note):
         page = NoteEditBook(self._interior, note, self._settings, 
-                            self._categories)
+                            self._taskFile.categories(), self._taskFile)
         self._interior.AddPage(page, note.subject())
 
 
 class AttachmentEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, categories, *args, **kwargs):
+    def __init__(self, parent, command, settings, attachments, taskFile, *args, **kwargs):
         self._settings = settings
-        self._categories = categories
-        super(AttachmentEditor, self).__init__(parent, command, categories, *args, **kwargs)
-
-    def addPages(self):
-        for attachment in self._command.attachments: # FIXME: use getter
-            self.addPage(attachment)
+        self._taskFile = taskFile
+        super(AttachmentEditor, self).__init__(parent, command, attachments, *args, **kwargs)
 
     def addPage(self, attachment):
         page = AttachmentEditBook(self._interior, attachment, self._settings,
-                                  self._categories)
+                                  self._taskFile)
         self._interior.AddPage(page, attachment.subject())

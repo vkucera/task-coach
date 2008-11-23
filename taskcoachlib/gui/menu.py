@@ -292,12 +292,10 @@ class ExportMenu(Menu):
 
 
 class TaskTemplateMenu(DynamicMenu):
-    def __init__(self, mainwindow, taskList, settings, categories):
+    def __init__(self, mainwindow, taskList, settings):
         self._uiCommands = None
         self.settings = settings
         self.taskList = taskList
-        self.categories = categories
-
         super(TaskTemplateMenu, self).__init__(mainwindow)
 
     def registerForMenuUpdate(self):
@@ -320,8 +318,8 @@ class TaskTemplateMenu(DynamicMenu):
             fullname = os.path.join(path, name)
             if name.endswith('.tsktmpl'):
                 commands.append(uicommand.TaskNewFromTemplate(fullname,
-                                  taskList=self.taskList, settings=self.settings,
-                                  categories=self.categories))
+                                  taskList=self.taskList, 
+                                  settings=self.settings))
         return commands
 
 
@@ -478,12 +476,10 @@ class TaskMenu(Menu):
         tasks = taskFile.tasks()
         categories = taskFile.categories()
         self.appendUICommands(
-            uicommand.TaskNew(taskList=tasks, settings=settings,
-                              categories=taskFile.categories()))
+            uicommand.TaskNew(taskList=tasks, settings=settings))
         self.appendMenu(_('New task &from template'),
                         TaskTemplateMenu(mainwindow, taskList=tasks, 
-                                         settings=settings,
-                                         categories=taskFile.categories()),
+                                         settings=settings),
                         'newtmpl')
         self.appendUICommands(uicommand.TaskNewSubTask(taskList=tasks,
                                      viewer=viewerContainer),
@@ -506,8 +502,7 @@ class TaskMenu(Menu):
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
                 uicommand.TaskAddNote(viewer=viewerContainer,
-                                      settings=settings,
-                                      categories=taskFile.categories())
+                                      settings=settings)
                 )
             
 class EffortMenu(Menu):
@@ -544,7 +539,6 @@ class CategoryMenu(Menu):
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
                 uicommand.CategoryAddNote(viewer=viewerContainer,
-                                          categories=categories,
                                           settings=settings)
                 )
 
@@ -554,9 +548,7 @@ class NoteMenu(Menu):
         super(NoteMenu, self).__init__(mainwindow)
         notes = taskFile.notes()
         self.appendUICommands(
-            uicommand.NoteNew(notes=notes,
-                              settings=settings,
-                              categories=taskFile.categories()),
+            uicommand.NoteNew(notes=notes, settings=settings),
             uicommand.NoteNewSubNote(viewer=viewerContainer, notes=notes),
             uicommand.NoteEdit(viewer=viewerContainer, notes=notes),
             uicommand.NoteDelete(viewer=viewerContainer, notes=notes),
@@ -566,7 +558,7 @@ class NoteMenu(Menu):
                                         settings=settings),
             uicommand.OpenAllNoteAttachments(viewer=viewerContainer,
                                              settings=settings))
-       
+
         
 class HelpMenu(Menu):
     def __init__(self, mainwindow, settings):
@@ -586,16 +578,14 @@ class TaskBarMenu(Menu):
         efforts = taskFile.efforts()
         categories = taskFile.categories()
         self.appendUICommands(
-            uicommand.TaskNew(taskList=tasks, settings=settings,
-                              categories=categories))
+            uicommand.TaskNew(taskList=tasks, settings=settings))
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
                                     taskList=tasks, settings=settings))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
-                uicommand.NoteNew(notes=taskFile.notes(), settings=settings,
-                                  categories=categories))
+                uicommand.NoteNew(notes=taskFile.notes(), settings=settings))
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(None) # Separator
             label = _('&Start tracking effort')
@@ -658,12 +648,10 @@ class TaskPopupMenu(Menu):
             uicommand.EditPaste(),
             uicommand.EditPasteIntoTask(viewer=taskViewer),
             None,
-            uicommand.TaskNew(taskList=tasks, settings=settings,
-                              categories=categories))
+            uicommand.TaskNew(taskList=tasks, settings=settings))
         self.appendMenu(_('New task &from template'),
                         TaskTemplateMenu(mainwindow, taskList=tasks, 
-                                         settings=settings,
-                                         categories=categories),
+                                         settings=settings),
                         'newtmpl')
         self.appendUICommands(
             uicommand.TaskNewSubTask(taskList=tasks, viewer=taskViewer),
@@ -686,8 +674,7 @@ class TaskPopupMenu(Menu):
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
                 uicommand.TaskAddNote(viewer=taskViewer,
-                                      settings=settings,
-                                      categories=categories))
+                                      settings=settings))
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 None,
@@ -718,9 +705,11 @@ class EffortPopupMenu(Menu):
 
 
 class CategoryPopupMenu(Menu):
-    def __init__(self, mainwindow, settings, tasks, notes, categories,
-                 categoryViewer, localOnly=False):
+    def __init__(self, mainwindow, settings, taskFile, categoryViewer, localOnly=False):
         super(CategoryPopupMenu, self).__init__(mainwindow)
+        categories = categoryViewer.presentation()
+        tasks = taskFile.tasks()
+        notes = taskFile.notes()
         self.appendUICommands(
             uicommand.EditCut(viewer=categoryViewer),
             uicommand.EditCopy(viewer=categoryViewer),
@@ -754,7 +743,6 @@ class CategoryPopupMenu(Menu):
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
                 uicommand.CategoryAddNote(viewer=categoryViewer,
-                                          categories=categories,
                                           settings=settings))
         self.appendUICommands(
             None,
@@ -763,22 +751,21 @@ class CategoryPopupMenu(Menu):
 
 
 class NotePopupMenu(Menu):
-    def __init__(self, mainwindow, settings, notes, categories, noteViewer):
+    def __init__(self, mainwindow, settings, notes, noteViewer):
         super(NotePopupMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.EditCut(viewer=noteViewer),
             uicommand.EditCopy(viewer=noteViewer),
             uicommand.EditPaste(),
             None,
-            uicommand.NoteNew(notes=notes, settings=settings, categories=categories),
+            uicommand.NoteNew(notes=notes, settings=settings),
             uicommand.NoteNewSubNote(viewer=noteViewer, notes=notes),
             uicommand.NoteEdit(viewer=noteViewer, notes=notes),
             uicommand.NoteDelete(viewer=noteViewer, notes=notes),
             None,
             uicommand.NoteMail(viewer=noteViewer),
             None,
-            uicommand.AddNoteAttachment(viewer=noteViewer,
-                                        settings=settings),
+            uicommand.AddNoteAttachment(viewer=noteViewer, settings=settings),
             uicommand.OpenAllNoteAttachments(viewer=noteViewer,
                                              settings=settings),
             None,
@@ -832,15 +819,14 @@ class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
 
 
 class AttachmentPopupMenu(Menu):
-    def __init__(self, mainwindow, settings, attachments, categories, attachmentViewer):
+    def __init__(self, mainwindow, settings, attachments, attachmentViewer):
         super(AttachmentPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.EditCut(viewer=attachmentViewer),
             uicommand.EditCopy(viewer=attachmentViewer),
             uicommand.EditPaste(),
             None,
-            uicommand.AttachmentNew(attachments=attachments, categories=categories,
-                                    settings=settings),
+            uicommand.AttachmentNew(attachments=attachments, settings=settings),
             uicommand.AttachmentEdit(viewer=attachmentViewer, attachments=attachments),
             uicommand.AttachmentDelete(viewer=attachmentViewer, attachments=attachments),
             uicommand.AttachmentOpen(viewer=attachmentViewer, attachments=attachments),
@@ -850,5 +836,4 @@ class AttachmentPopupMenu(Menu):
             self.appendUICommands(
                 None,
                 uicommand.AttachmentAddNote(viewer=attachmentViewer,
-                                            settings=settings,
-                                            categories=categories))
+                                            settings=settings))

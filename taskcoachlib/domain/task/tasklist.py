@@ -129,8 +129,3 @@ class TaskList(patterns.CompositeSet):
         
     def __allPriorities(self):
         return [task.priority() for task in self] or (0,)
-
-        
-class SingleTaskList(TaskList):
-    pass
-
