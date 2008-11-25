@@ -26,12 +26,13 @@ releases = [
 Release('0.71.4', 'November ??, 2008',
     summary='''This is a bugfix release.''',
     featuresAdded=[
-    Feature('''Add a "Purge deleted items" entry in the File menu for
-people who have been using TaskCoach with SyncML disabled.'''),
+        Feature('''Add a "Purge deleted items" entry in the File menu for
+people who have been using Task Coach with SyncML disabled.'''),
     ],
     bugsFixed=[
-        Bug('''Actually delete tasks and notes when SyncML is disabled'''),
-        Bug('''Do not create subitems in two steps, this is counterintuitive'''),
+        Bug('''Actually delete tasks and notes when SyncML is disabled.''',
+            '2319921'),
+        Bug('''Do not create subitems in two steps, this is counter intuitive.'''),
         Bug('''Properly iterate over the open viewers with Ctrl-PgDn and 
 Ctrl-PgUp.''', '1973357'),
         Bug('''Update the task viewer when a note is deleted from a task.''',
@@ -42,11 +43,11 @@ Ctrl-PgUp.''', '1973357'),
 Release('0.71.3', 'November 10, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Spell checking in editor didn't work under MacOS''', '2214676'),
+        Bug('''Spell checking in editor didn't work under Mac OS X.''', '2214676'),
         Bug('''Dropping a mail with several recipients from Outlook would result
 in a "No subject" subject.''', '2220224'),
-        Bug('''A ghost window would appear on the secondary display under MacOSX
-if it's placed on the right.''', '2206656'),
+        Bug('''A ghost window would appear on the secondary display under 
+Mac OS X if it's placed on the right.''', '2206656'),
         Bug('''The note total would include deleted notes.''', '2209640'),
         Bug('''Don't hang when exiting the application.''', '2185910', '2209679'),
         Bug('''Don't show all effort in the effort tab of a task editor, but
