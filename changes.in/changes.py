@@ -30,6 +30,8 @@ Release('0.71.4', 'November ??, 2008',
 people who have been using Task Coach with SyncML disabled.'''),
     ],
     bugsFixed=[
+        Bug('''Save the column width of the first column when automatic 
+resizing of columns is off.''', '2255690'),
         Bug('''Actually delete tasks and notes when SyncML is disabled.''',
             '2319921'),
         Bug('''Do not create subitems in two steps, this is counter intuitive.'''),
