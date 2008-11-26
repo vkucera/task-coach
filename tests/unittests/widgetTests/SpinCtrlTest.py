@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib import widgets
 
 
@@ -41,8 +41,17 @@ class SpinCtrlTest(test.wxTestCase):
         spinCtrl = widgets.SpinCtrl(self.frame, max=-1)
         self.assertEqual(-1, spinCtrl.GetValue())
         
+    def fakeWindowsSpinCtrlBehaviourWhenSettingTextValue(self, spinCtrl):
+        spinCtrl.SetValue(0)
+        class DummyEvent(object):
+            def Skip(self):
+                pass
+        spinCtrl.onValueChanged(DummyEvent())
+        
     def testSetInvalidValue(self):
         spinCtrl = widgets.SpinCtrl(self.frame)
         spinCtrl.SetValueString('text')
+        if '__WXMSW__' == wx.Platform:
+            self.fakeWindowsSpinCtrlBehaviourWhenSettingTextValue(spinCtrl)
         self.assertEqual(0, spinCtrl.GetValue())
         
