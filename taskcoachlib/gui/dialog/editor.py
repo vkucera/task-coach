@@ -205,7 +205,7 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
           
     def addPriorityEntry(self):
         self._prioritySpinner = widgets.SpinCtrl(self,
-            value=render.priority(self.item.priority()))
+            initial=self.item.priority())
         self.addEntry(_('Priority'), self._prioritySpinner, 
             flags=[None, wx.ALL|wx.EXPAND])
     
@@ -270,23 +270,17 @@ class DatesPage(EditorPage, TaskHeaders):
         staticText = wx.StaticText(panel, label=_(', every'))
         panelSizer.Add(staticText, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
-        self._recurrenceFrequencyEntry = wx.SpinCtrl(panel, size=(50,-1),
-            style=wx.SP_ARROW_KEYS)
-        # Can't use sys.maxint because Python and wxPython disagree on what the
-        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
-        # an Overflow exception, so we use a constant:
-        maxint = 2147483647
-        self._recurrenceFrequencyEntry.SetRange(1, maxint)
+        self._recurrenceFrequencyEntry = widgets.SpinCtrl(panel, size=(50,-1), 
+                                                          min=1)
         panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
         self._recurrenceStaticText = wx.StaticText(panel, label='reserve some space')
         panelSizer.Add(self._recurrenceStaticText, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3, -1))
-        self._recurrenceSameWeekdayCheckBox = wx.CheckBox(panel, label=_('keeping dates on the same weekday'))
-        panelSizer.Add(self._recurrenceSameWeekdayCheckBox, proportion=1, flag=wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
-        #panelSizer.Add((3, -1))
-        #staticText = wx.StaticText(panel, label=_('keeping dates on the same weekday'))
-        #panelSizer.Add(staticText, flag=wx.ALIGN_CENTER_VERTICAL)
+        self._recurrenceSameWeekdayCheckBox = wx.CheckBox(panel, 
+            label=_('keeping dates on the same weekday'))
+        panelSizer.Add(self._recurrenceSameWeekdayCheckBox, proportion=1, 
+                       flag=wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
         panel.SetSizerAndFit(panelSizer)
         self._recurrenceSizer = panelSizer
 
@@ -298,9 +292,8 @@ class DatesPage(EditorPage, TaskHeaders):
         self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, self.onMaxRecurrenceChecked)
         panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
-        self._maxRecurrenceCountEntry = wx.SpinCtrl(panel, size=(50,-1),
-            style=wx.SP_ARROW_KEYS)
-        self._maxRecurrenceCountEntry.SetRange(1, maxint)
+        self._maxRecurrenceCountEntry = widgets.SpinCtrl(panel, size=(50,-1), 
+                                                         min=1)
         panelSizer.Add(self._maxRecurrenceCountEntry)
         panel.SetSizerAndFit(panelSizer)
         recurrenceBox.add(panel)
