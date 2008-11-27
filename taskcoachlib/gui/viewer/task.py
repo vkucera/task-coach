@@ -114,7 +114,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
                                                            value='totalCategories'),
                 renderCallback=lambda task: self.renderCategory(task, recursive=True),
                 width=self.getColumnWidth('totalCategories'), **kwargs)])
-        effortOn= self.settings.getboolean('feature', 'effort')
+        effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget', 'totalBudget', 
                                   'timeSpent', 'totalTimeSpent', 
                                   'budgetLeft', 'totalBudgetLeft',
@@ -312,8 +312,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
  
     def createTaskPopupMenu(self):
         return menu.TaskPopupMenu(self.parent, self.settings,
-                                  self.presentation(), self.taskFile.categories(), 
-                                  self.taskFile.efforts(),
+                                  self.presentation(), self.taskFile.efforts(),
                                   self)
 
     def createColumnPopupMenu(self):

@@ -184,25 +184,6 @@ class MainMenu(wx.MenuBar):
                                  viewerContainer), _('&Note'))
         self.Append(HelpMenu(mainwindow, settings), _('&Help'))
 
-'''
-class OpenAttachmentsMenu(Menu):
-    def __init__(self, mainwindow, settings):
-        super(OpenAttachmentsMenu, self).__init__(mainwindow)
-        self.Bind(wx.EVT_MENU_OPEN, self.onOpenMenu)
-        
-    def opOpenMenu(self, event):
-        if event.GetMenu() == self:
-            self.__clear()
-            self.__fill()
-        event.Skip()
-        
-    def __clear(self):
-        for item in self.GetMenuItems():
-            self.Delete(item)
-            
-    def __fill(self):
-        pass
-'''
        
 class FileMenu(Menu):
     def __init__(self, mainwindow, settings, iocontroller, viewerContainer):
@@ -238,7 +219,7 @@ class FileMenu(Menu):
         if settings.getboolean('feature', 'syncml'):
             try:
                 import taskcoachlib.syncml.core
-            except ImportError, e:
+            except ImportError:
                 pass
             else:
                 self.appendUICommands(uicommand.FileSynchronize(iocontroller=iocontroller, settings=settings))
@@ -576,7 +557,6 @@ class TaskBarMenu(Menu):
         super(TaskBarMenu, self).__init__(taskBarIcon)
         tasks = taskFile.tasks()
         efforts = taskFile.efforts()
-        categories = taskFile.categories()
         self.appendUICommands(
             uicommand.TaskNew(taskList=tasks, settings=settings))
         if settings.getboolean('feature', 'effort'):
@@ -639,8 +619,7 @@ class StartEffortForTaskMenu(DynamicMenu):
     
 
 class TaskPopupMenu(Menu):
-    def __init__(self, mainwindow, settings, tasks, categories, efforts,
-                 taskViewer):
+    def __init__(self, mainwindow, settings, tasks, efforts, taskViewer):
         super(TaskPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.EditCut(viewer=taskViewer),
