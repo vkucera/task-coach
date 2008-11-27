@@ -30,6 +30,8 @@ Release('0.71.4', 'November ??, 2008',
 people who have been using Task Coach with SyncML disabled.'''),
     ],
     bugsFixed=[
+        Bug('''When merging from the same file multiple times, update the
+existing items instead of duplicating them.''', '2062616'),
         Bug('''Don't set negative priorities to zero in the task editor
 (Linux only).''', '2324869'),
         Bug('''Save the column width of the first column when automatic 

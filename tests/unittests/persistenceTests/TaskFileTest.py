@@ -1,8 +1,3 @@
-
-
-
-
-
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
@@ -62,7 +57,7 @@ class TaskFileTestCase(test.TestCase):
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2)))
         self.filename = 'test.tsk'
-        self.filename2 = 'test.tsk'
+        self.filename2 = 'test2.tsk'
         
     def tearDown(self):
         super(TaskFileTestCase, self).tearDown()
@@ -578,6 +573,16 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.mergeFile.tasks().append(task.Task())
         self.merge()
         self.assertEqual(2, len(self.taskFile.tasks()))
+        
+    def testMerge_TasksWithSubtask(self):
+        parent = task.Task(subject='parent')
+        child = task.Task(subject='child')
+        parent.addChild(child)
+        child.setParent(parent)
+        self.mergeFile.tasks().extend([parent, child])
+        self.merge()
+        self.assertEqual(3, len(self.taskFile.tasks()))
+        self.assertEqual(2, len(self.taskFile.tasks().rootItems()))
 
     def testMerge_OneCategoryInMergeFile(self):
         self.taskFile.categories().remove(self.category)
@@ -608,7 +613,28 @@ class TaskFileMergeTest(TaskFileTestCase):
                          list(self.taskFile.categories())[0].categorizables()[0].id())
                          
     def testMerge_Notes(self):
-	newNote = note.Note('new note')
+        newNote = note.Note('new note')
         self.mergeFile.notes().append(newNote)
         self.merge()
         self.assertEqual(2, len(self.taskFile.notes()))
+
+    def testMerge_SameTask(self):
+        mergedTask = task.Task(subject='merged task', id=self.task.id())
+        self.mergeFile.tasks().append(mergedTask)
+        self.merge()
+        self.assertEqual(1, len(self.taskFile.tasks()))
+        self.assertEqual('merged task', list(self.taskFile.tasks())[0].subject())
+        
+    def testMerge_SameNote(self):
+        mergedNote = note.Note(subject='merged note', id=self.note.id())
+        self.mergeFile.notes().append(mergedNote)
+        self.merge()
+        self.assertEqual(1, len(self.taskFile.notes()))
+        self.assertEqual('merged note', list(self.taskFile.notes())[0].subject())
+
+    def testMerge_SameCategory(self):
+        mergedCategory = category.Category(subject='merged category', id=self.category.id())
+        self.mergeFile.categories().append(mergedCategory)
+        self.merge()
+        self.assertEqual(1, len(self.taskFile.categories()))
+        self.assertEqual('merged category', list(self.taskFile.categories())[0].subject())

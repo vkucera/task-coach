@@ -20,9 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import date
+from taskcoachlib.domain import base, date
 import task
 
 
@@ -32,7 +31,7 @@ def newTaskMenuText():
     # this case) so that whenever that key sequence is typed, this command
     # is invoked. Hence, we use a different accelarator on the Mac.
     menuText = _('&New task...')
-    if '__WXMAC__' in wx.PlatformInfo:
+    if '__WXMAC__' == wx.Platform:
         menuText += u'\tCtrl+N'
     else:
         menuText += u'\tCtrl+INS'
@@ -41,13 +40,14 @@ def newTaskMenuText():
 def newSubTaskMenuText():
     # See comments in newTaskMenuText() above
     menuText = _('New &subtask...')
-    if '__WXMAC__' in wx.PlatformInfo:
+    if '__WXMAC__' == wx.Platform:
         menuText += u'\tShift+Ctrl+N'
     else:
         menuText += u'\tShift+Ctrl+INS'
     return menuText  
-            
-class TaskList(patterns.CompositeSet):
+
+
+class TaskList(base.Collection):
     # FIXME: TaskList should be called TaskCollection or TaskSet
 
     newItemMenuText = newTaskMenuText()
