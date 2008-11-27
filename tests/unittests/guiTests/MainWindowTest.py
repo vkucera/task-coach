@@ -81,7 +81,7 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTest):
     def testMaximize(self):
         self.mainwindow.Maximize()
         if '__WXGTK__' == wx.Platform:
-            wx.SafeYield()
+            wx.YieldIfNeeded()
         else:
             wx.Yield()
         self.failUnless(self.settings.getboolean('window', 'maximized'))
