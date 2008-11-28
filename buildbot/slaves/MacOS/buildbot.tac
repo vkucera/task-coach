@@ -2,7 +2,7 @@
 from twisted.application import service
 from buildbot.slave.bot import BuildSlave
 
-basedir = r'/Users/jeromelaheurte/buildbot/MacOS'
+basedir = r'/Users/jeromelaheurte/Buildslave'
 buildmaster_host = '192.168.0.1'
 port = 9989
 slavename = 'MacOS'
