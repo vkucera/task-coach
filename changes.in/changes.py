@@ -46,7 +46,8 @@ Ctrl-PgUp.''', '1973357'),
         Bug('''Update the task viewer when a note is deleted from a task.''',
             '2277217'),
         Bug('''Update the tray icon tool tip when deleting an overdue task.''',
-            '2321351')
+            '2321351'),
+        Bug('''Wrap long lines in description tool tip windows.''', '2318094')
         ]
     ),
             
