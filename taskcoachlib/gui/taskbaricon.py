@@ -34,6 +34,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__taskList = taskList
         self.__settings = settings
         self.__bitmap = self.__defaultBitmap = defaultBitmap
+        self.__tooltipText = ''
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap
         self.__iconSize = self.__determineIconSize()
@@ -140,7 +141,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             tool tip to 64 characters, so we cannot show everything we would
             like to and have to make choices. '''
         textParts = []              
-        trackedTasks = self.__taskList.tasksBeingTracked()        
+        trackedTasks = self.__taskList.tasksBeingTracked()
         if trackedTasks:
             count = len(trackedTasks)
             if count == 1:
@@ -157,10 +158,14 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
                 
         text = ', '.join(textParts)
         if text:
-            self.__tooltipText = u'%s - %s'%(meta.name, text)
+            text = u'%s - %s'%(meta.name, text)
         else:
-            self.__tooltipText = meta.name
-
+            text = meta.name
+        
+        if text != self.__tooltipText:
+            self.__tooltipText = text
+            self.__setIcon() # Update tooltip
+            
     def __setDefaultBitmap(self):
         self.__bitmap = self.__defaultBitmap
 
@@ -180,15 +185,19 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         try:
             return self.__iconCache[(bitmap, iconSize)]
         except KeyError:
-            bmp = wx.ArtProvider_GetBitmap(bitmap, wx.ART_FRAME_ICON, iconSize)
-            image = wx.ImageFromBitmap(bmp)
-            image.ConvertAlphaToMask()
-            # How to create an empty icon ?
-            icon = wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON, iconSize)
-            icon.CopyFromBitmap(image.ConvertToBitmap())
+            icon = self.__createIcon(bitmap, iconSize)
             self.__iconCache[(bitmap, iconSize)] = icon
             return icon
-
+        
+    def __createIcon(self, bitmap, iconSize):
+        bmp = wx.ArtProvider_GetBitmap(bitmap, wx.ART_FRAME_ICON, iconSize)
+        image = wx.ImageFromBitmap(bmp)
+        image.ConvertAlphaToMask()
+        # How to create an empty icon?
+        icon = wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON, iconSize)
+        icon.CopyFromBitmap(image.ConvertToBitmap())
+        return icon
+    
     def __determineIconSize(self):
         if '__WXMAC__' in wx.PlatformInfo:
             return (128, 128)

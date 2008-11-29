@@ -44,7 +44,9 @@ resizing of columns is off.''', '2255690'),
         Bug('''Properly iterate over the open viewers with Ctrl-PgDn and 
 Ctrl-PgUp.''', '1973357'),
         Bug('''Update the task viewer when a note is deleted from a task.''',
-            '2277217')
+            '2277217'),
+        Bug('''Update the tray icon tool tip when deleting an overdue task.''',
+            '2321351')
         ]
     ),
             
