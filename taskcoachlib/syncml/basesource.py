@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.syncml.core import *
-
 import wx
+from taskcoachlib.syncml.core import *
+from taskcoachlib.i18n import _
+
 
 class BaseSource(SyncSource):
     STATE_NONE         = 0
