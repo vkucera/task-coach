@@ -638,3 +638,20 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.merge()
         self.assertEqual(1, len(self.taskFile.categories()))
         self.assertEqual('merged category', list(self.taskFile.categories())[0].subject())
+        
+        
+class LockTest(test.TestCase):
+    @test.onlyOnPlatform('__WXGTK__')
+    def testLock(self):
+        import fcntl
+        file1 = open('file', 'w')
+        fcntl.flock(file1.fileno(), fcntl.LOCK_EX|fcntl.LOCK_NB)
+        file2 = open('file', 'w')
+        try:
+            fcntl.flock(file2.fileno(), fcntl.LOCK_EX|fcntl.LOCK_NB)
+            self.fail()
+        except IOError:
+            pass
+        finally:
+            file1.close()
+        os.remove('file')
