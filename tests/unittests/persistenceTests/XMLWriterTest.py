@@ -158,12 +158,13 @@ class XMLWriterTest(test.TestCase):
         
     def testTwoCategoriesWithOneTask(self):
         subjects = ['test', 'another']
-        expectedResult = ''
+        expectedResults = []
         for subject in subjects:
             cat = category.Category(subject, [self.task])
             self.categoryContainer.append(cat)
-            expectedResult += '<category categorizables="%s" id="%s" status="1" subject="%s"/>'%(self.task.id(), cat.id(), subject)
-        self.expectInXML(expectedResult)
+            expectedResults.append('<category categorizables="%s" id="%s" status="1" subject="%s"/>'%(self.task.id(), cat.id(), subject))
+        for expectedResult in expectedResults:
+            self.expectInXML(expectedResult)
         
     def testOneCategoryWithSubTask(self):
         child = task.Task()
