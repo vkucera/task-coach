@@ -60,6 +60,7 @@ class TaskCoachManagementNode(ManagementNode):
     def clone(self):
         return self
 
+
 class TaskCoachDMTree(DMTree):
     def __init__(self, syncMLConfig, *args, **kwargs):
         super(TaskCoachDMTree, self).__init__(*args, **kwargs)
@@ -77,6 +78,7 @@ class TaskCoachDMTree(DMTree):
 
         return node
 
+
 class TaskCoachDMTClientConfig(DMTClientConfig):
     def __init__(self, syncMLConfig, *args, **kwargs):
         super(TaskCoachDMTClientConfig, self).__init__(*args, **kwargs)
@@ -88,6 +90,7 @@ class TaskCoachDMTClientConfig(DMTClientConfig):
 
     def createDMTree(self, rootContext):
         return TaskCoachDMTree(self.__syncMLConfig, rootContext)
+
 
 class Synchronizer(wx.ProgressDialog):
     def __init__(self, reportCallback, conflictCallback, taskFile, password):
@@ -182,7 +185,7 @@ class Synchronizer(wx.ProgressDialog):
                              '%s.Notes' % self.clientName, cfg)
             src.preferredSyncMode = globals()[self.notemode]
             self.sources.append(src)
-
+    
     def onAddItem(self):
         self.added += 1
         self.pulse()

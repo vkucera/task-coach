@@ -270,36 +270,31 @@ class IOController(object):
             return False
 
     def synchronize(self, password):
-        synchronizer = sync.Synchronizer(self.__syncReport, self, self.__taskFile,
-                                         password)
+        synchronizer = sync.Synchronizer(self.__syncReport, self, 
+                                         self.__taskFile, password)
         try:
             synchronizer.synchronize()
         finally:
             synchronizer.Destroy()
 
-        self.__messageCallback(_('Synchronization over.'))
+        self.__messageCallback(_('Finished synchronization'))
 
     def resolveNoteConflict(self, flags, local, remote):
-        dlg = conflict.ConflictDialog(conflict.NoteConflictPanel,
-                                      flags, local, remote,
-                                      None, wx.ID_ANY, _('Note conflict'))
-        try:
-            dlg.ShowModal()
-        finally:
-            dlg.Destroy()
-
-        return dlg.resolved
+        return self.resolveConflict(conflict.NoteConflictPanel, 
+                                    flags, local, remote, _('Note conflict'))
 
     def resolveTaskConflict(self, flags, local, remote):
-        dlg = conflict.ConflictDialog(conflict.TaskConflictPanel,
-                                      flags, local, remote,
-                                      None, wx.ID_ANY, _('Task conflict'))
+        return self.resolveConflict(conflict.TaskConflictPanel, 
+                                    flags, local, remote, _('Task conflict'))
+    
+    def resolveConflict(self, panel, flags, local, remote, title):
+        dialog = conflict.ConflictDialog(panel, flags, local, remote, None, 
+                                         wx.ID_ANY, title)
         try:
-            dlg.ShowModal()
+            dialog.ShowModal()
         finally:
-            dlg.Destroy()
-
-        return dlg.resolved
+            dialog.Destroy()
+        return dialog.resolved
 
     def __syncReport(self, msg):
         wx.MessageBox(msg, _('Synchronization status'), style=wx.OK|wx.ICON_ERROR)

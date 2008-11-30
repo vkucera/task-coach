@@ -661,9 +661,10 @@ class FileSynchronize(IOCommand, SettingsCommand):
             bitmap='sync', *args, **kwargs)
 
     def doCommand(self, event):
-        pwd = wx.GetPasswordFromUser(_('Please enter your password.'), _('TaskCoach SyncML password'))
-        if pwd:
-            self.iocontroller.synchronize(pwd)
+        password = wx.GetPasswordFromUser(_('Please enter your password:'), 
+                                          _('Task Coach SyncML password'))
+        if password:
+            self.iocontroller.synchronize(password)
 
 
 class FileQuit(UICommand):
