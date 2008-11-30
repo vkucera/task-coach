@@ -707,7 +707,7 @@ class CategoryPopupMenu(Menu):
                         viewer=categoryViewer))
         self.appendUICommands(
             None,
-            uicommand.CategoryNew(categories=categories),
+            uicommand.CategoryNew(categories=categories, settings=settings),
             uicommand.CategoryNewSubCategory(viewer=categoryViewer,
                                              categories=categories),
             uicommand.CategoryEdit(viewer=categoryViewer,
