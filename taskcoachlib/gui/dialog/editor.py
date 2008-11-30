@@ -1077,6 +1077,11 @@ class NoteEditor(EditorWithCommand):
         self._taskFile = taskFile
         super(NoteEditor, self).__init__(parent, command, notes, *args, **kwargs)
 
+    def addPages(self):
+        # Override this method to make sure we use the notes, not the note owner
+        for note in self._command.notes:
+            self.addPage(note)
+
     def addPage(self, note):
         page = NoteEditBook(self._interior, note, self._settings, 
                             self._taskFile.categories(), self._taskFile)
