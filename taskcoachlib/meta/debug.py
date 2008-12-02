@@ -37,8 +37,11 @@ def log_call(func):
         write = sys.stdout.write
         for frame in inspect.stack(context=2)[3:0:-1]:
             write(format_traceback(frame))
-        write('%s(%s, %s) -> %s\n'%(func.__name__, str(args), 
-                                    str(kwargs), str(result)))
+        try:
+            write('%s(%s, %s) -> %s\n'%(func.__name__, unicode(args), 
+                                    unicode(kwargs), unicode(result)))
+        except:
+            write('%s(...) -> %s\n'%(func.__name__, unicode(result)))
         write('===\n')
         return result
     return inner

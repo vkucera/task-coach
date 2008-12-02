@@ -51,7 +51,7 @@ class TaskFile(patterns.Observable):
         for eventType in (task.Task.subjectChangedEventType(), 
             task.Task.descriptionChangedEventType(), 'task.startDate', 
             'task.dueDate', 'task.completionDate', 'task.priority', 
-            'task.budget', 'task.hourlyFee', 'task.fixedFee',
+            'task.budget', task.Task.hourlyFeeChangedEventType(), 'task.fixedFee',
             'task.timeSpent', 'task.reminder',
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
             task.Task.addChildEventType(), task.Task.removeChildEventType(),

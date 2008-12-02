@@ -123,7 +123,9 @@ class Effort(EffortBase, base.Object):
                 'effort.stop', newStop))
             patterns.Publisher().notifyObservers(patterns.Event(self,
                 'effort.duration', self.duration()))
-
+            if self.task().hourlyFee():
+                self.notifyObserversOfRevenueChange()
+                    
     def notifyStopOrStartTracking(self, previousStop, newStop):
         eventType = ''
         if newStop == None:
@@ -171,10 +173,10 @@ class CompositeEffort(EffortBase):
             eventType=task.trackStartEventType())
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=task.trackStopEventType())
-        patterns.Publisher().registerObserver(self.onRevenueChanged,
-            eventType='task.revenue')
-        patterns.Publisher().registerObserver(self.onTotalRevenueChanged,
-            eventType='task.totalRevenue')
+        patterns.Publisher().registerObserver(self.onHourlyFeeChanged,
+            eventType=task.hourlyFeeChangedEventType())
+        patterns.Publisher().registerObserver(self.onChildHourlyFeeChanged,
+            eventType=task.totalHourlyFeeChangedEventType())
         patterns.Publisher().registerObserver(self.onColorChanged,
             eventType=task.colorChangedEventType())
 
@@ -264,11 +266,11 @@ class CompositeEffort(EffortBase):
             patterns.Publisher().notifyObservers(patterns.Event(self,
                 'effort.track.stop', stoppedEffort))
 
-    def onRevenueChanged(self, event):
+    def onHourlyFeeChanged(self, event):
         patterns.Publisher().notifyObservers(patterns.Event(self,
                 'effort.revenue', self.revenue()))
 
-    def onTotalRevenueChanged(self, event):
+    def onChildHourlyFeeChanged(self, event):
         patterns.Publisher().notifyObservers(patterns.Event(self,
                 'effort.totalRevenue', self.revenue(recursive=True)))
                 

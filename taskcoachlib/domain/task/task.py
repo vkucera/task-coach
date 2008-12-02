@@ -416,10 +416,31 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def setHourlyFee(self, hourlyFee):
         if hourlyFee != self._hourlyFee:
             self._hourlyFee = hourlyFee
-            self.notifyObservers(patterns.Event(self, 'task.hourlyFee',
-                hourlyFee))
-            if self.timeSpent() > date.TimeDelta():
-                self.notifyObserversOfRevenueChange()
+            self.notifyObserversOfHourlyFeeChange(hourlyFee)
+
+    @classmethod
+    def hourlyFeeChangedEventType(class_):
+        return '%s.hourlyFee'%class_
+    
+    @classmethod
+    def totalHourlyFeeChangedEventType(class_):
+        return '%s.totalHourlyFee'%class_
+            
+    def notifyObserversOfHourlyFeeChange(self, hourlyFee):
+        self.notifyObservers(patterns.Event(self, 
+            self.hourlyFeeChangedEventType(), hourlyFee))
+        if self.parent():
+            self.parent().notifyObserversOfChildHourlyFeeChange(hourlyFee)
+        if self.timeSpent() > date.TimeDelta():
+            self.notifyObserversOfRevenueChange()
+            for effort in self.efforts():
+                effort.notifyObserversOfRevenueChange()
+                
+    def notifyObserversOfChildHourlyFeeChange(self, hourlyFee):
+        self.notifyObservers(patterns.Event(self, 
+            self.totalHourlyFeeChangedEventType(), hourlyFee))
+        if self.parent():
+            self.parent().notifyObserversOfChildHourlyFeeChange(hourlyFee)
         
     def revenue(self, recursive=False):
         if recursive:
@@ -446,8 +467,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.notifyObservers(patterns.Event(self, 'task.revenue', 
             self.revenue()))
         self.notifyObserversOfTotalRevenueChange()
-        for effort in self.efforts():
-            effort.notifyObserversOfRevenueChange()
                     
     def notifyObserversOfTotalRevenueChange(self):
         self.notifyObservers(patterns.Event(self, 'task.totalRevenue', 

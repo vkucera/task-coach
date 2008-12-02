@@ -297,10 +297,10 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.assertEqual(100, self.task.hourlyFee())
   
     def testSetHourlyFeeCausesNotification(self):
-        self.registerObserver('task.hourlyFee')
+        self.registerObserver(self.task.hourlyFeeChangedEventType())
         self.task.setHourlyFee(100)
-        self.assertEqual([patterns.Event(self.task, 'task.hourlyFee',
-            100)], self.events)
+        self.assertEqual([patterns.Event(self.task, 
+            self.task.hourlyFeeChangedEventType(), 100)], self.events)
   
     def testSetRecurrence(self):
         self.task.setRecurrence(date.Recurrence('weekly'))
@@ -915,7 +915,7 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTests):
         self.task.setColor(wx.RED)
         self.assertEqual(patterns.Event(self.task1effort1,
             effort.Effort.colorChangedEventType(), wx.RED), self.events[0])
-
+        
 
 class TaskWithTwoEffortsTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
@@ -1275,6 +1275,11 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTests):
         self.task.addEffort(self.effort)
         self.assertEqual([patterns.Event(self.task, 'task.revenue', 100)], 
             self.events)
+
+    def testAddingEffortDoesNotTriggerRevenueNotificationForEffort(self):
+        self.registerObserver('effort.revenue')
+        self.task.addEffort(self.effort)
+        self.assertEqual([], self.events)
 
 
 class RecurringTaskTestCase(TaskTestCase):
