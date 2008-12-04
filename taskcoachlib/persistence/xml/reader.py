@@ -240,8 +240,11 @@ class XMLReader(object):
                 description = self._parseDescription(node)
                 kwargs = dict(subject=description,
                               description=description)
-
-            attachments.append(attachment.AttachmentFactory(*args, **kwargs))
+            try:
+                attachments.append(attachment.AttachmentFactory(*args, **kwargs))
+            except IOError:
+                # Mail attachment, file doesn't exist. Ignore this.
+                pass
         return attachments
 
     def _parseEffortNodes(self, parent):

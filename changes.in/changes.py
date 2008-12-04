@@ -30,6 +30,8 @@ Release('0.71.4', 'December ??, 2008',
 people who have been using Task Coach with SyncML disabled.'''),
     ],
     bugsFixed=[
+        Bug('''Opening an old .tsk file with missing e-mail attachments
+would crash Task Coach.'''),
         Bug('''Don't throw exception when showing an (error) message while
 synchronizing.''', '2356799'),
         Bug('''When merging from the same file multiple times, update the
