@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.71.4', 'December ??, 2008',
+Release('0.71.4', 'December 6, 2008',
     summary='''This is a bugfix release.''',
     featuresAdded=[
         Feature('''Add a "Purge deleted items" entry in the File menu for

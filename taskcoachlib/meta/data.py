@@ -26,7 +26,7 @@ release_month = 'December'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
                     'November', 'December'].index(release_month) + 1)
-release_day = '10'
+release_day = '6'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2008'
 release_status = 'alpha'
