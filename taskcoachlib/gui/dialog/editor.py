@@ -120,9 +120,7 @@ class ColorEntryMixin(object):
 
 class EditorPage(widgets.PanelWithBoxSizer):
     def __init__(self, parent, item, *args, **kwargs):
-        super(EditorPage, self).__init__(parent, *args, **kwargs)
-        self._defaultControl=None
-        self._fieldMap={}   
+        super(EditorPage, self).__init__(parent, *args, **kwargs) 
         self.item = item
 
     def addHeaders(self, box):
@@ -134,18 +132,11 @@ class EditorPage(widgets.PanelWithBoxSizer):
         for header in headers:
             box.add(header)
 
-    def containsField(self,fieldname):
-        return fieldname in self._fieldMap.keys()
-
-    def setFocusForField(self, fieldname):        
-        ''' if a field has an associated control, set focus on that control.
-            if not, set focus to the default control.
-        '''
-        if self.containsField(fieldname):
-            self._fieldMap[fieldname].SetFocus()
-        else:
-            self._defaultControl.SetFocus()
-
+    @staticmethod
+    def columns():
+        ''' A list of names of columns that are editable on this editor page. '''
+        return []
+    
     def ok(self):
         pass
 
@@ -169,26 +160,10 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
         self.addPriorityEntry()
         self.addColorEntry()
         self.fit()
-        self._defaultControl=self._subjectEntry
-        self._fieldMap={}   #FIXME: cz: remove when subject page is an editor page
-        self._fieldMap['subject']    = self._subjectEntry
-        self._fieldMap['description']= self._descriptionEntry
-        self._fieldMap['priority']   = self._prioritySpinner
 
-    def containsField(self,fieldname):
-        #FIXME: cz: remove when subject page is an editor page
-        # print fieldname , "  ",fieldname in self._fieldMap.keys(),' ',self
-        return fieldname in self._fieldMap.keys()
-            
-    def setFocusForField(self, fieldname):        
-        #FIXME: cz: remove when subject page is an editor page
-        ''' if a field has an associated control, set focus on that control.
-            if not, set focus to the default control.
-        '''
-        if self.containsField(fieldname):
-            self._fieldMap[fieldname].SetFocus()
-        else:
-            self._defaultControl.SetFocus()
+    @staticmethod
+    def columns():
+        return ['subject', 'description', 'priority', 'color']
 
     def addSubjectEntry(self):
         self._subjectEntry = widgets.SingleLineTextCtrl(self, 
@@ -235,7 +210,6 @@ class DatesPage(EditorPage, TaskHeaders):
             entry = DateEntry(datesBox, taskMethod(),
                               callback=self.onDateChanged)
             setattr(self, '_%sEntry'%taskMethodName, entry)
-            self._fieldMap[taskMethodName]= entry
             datesBox.add(entry)
             if task.children():
                 recursiveEntry = DateEntry(datesBox,
@@ -249,7 +223,6 @@ class DatesPage(EditorPage, TaskHeaders):
         reminderBox.add(_('Reminder'))
         self._reminderDateTimeEntry = widgets.DateTimeCtrl(reminderBox,
             task.reminder())
-        self._fieldMap['reminder']= self._reminderDateTimeEntry
         # If the user has not set a reminder, make sure that the default 
         # date time in the reminder entry is a reasonable suggestion:
         if self._reminderDateTimeEntry.GetValue() == date.DateTime.max:
@@ -262,8 +235,7 @@ class DatesPage(EditorPage, TaskHeaders):
         panel = wx.Panel(recurrenceBox)
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
         self._recurrenceEntry = wx.Choice(panel,
-            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])
-        self._fieldMap['recurrence']= self._recurrenceEntry        
+            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])        
         self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrenceChanged)
         panelSizer.Add(self._recurrenceEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
@@ -304,8 +276,11 @@ class DatesPage(EditorPage, TaskHeaders):
             box.fit()
             self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
         self.fit()
-        self._defaultControl=self._reminderDateTimeEntry  #  need to confirm this is the right box
 
+    @staticmethod
+    def columns():
+        return ['startDate', 'dueDate', 'completionDate', 'reminder']
+    
     def onRecurrenceChanged(self, event):
         event.Skip()
         recurrenceOn = event.String != _('None')
@@ -428,21 +403,12 @@ class BudgetPage(EditorPage, TaskHeaders):
             box.fit()
             self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
         self.fit()
-        self._fieldMap['budget']=self._budgetEntry
-        #FIXME: cz: ?  The calculated fields now actually set focus on budget entry
-        # behavior can be chaned by adding a separate map, that can be checked in containsField
-        # or changing the setFocusForField method to recognize NONE for field
-        # this behavior will be OK for now.         
-        self._fieldMap['timeSpent']=self._budgetEntry
-        self._fieldMap['totalTimeSpent']=self._budgetEntry
-        self._fieldMap['totalBudget']=self._budgetEntry
-        self._fieldMap['timeLeft']=self._budgetEntry
-        self._fieldMap['budgetLeft']=self._budgetEntry
-        self._fieldMap['totalTimeLeft']=self._budgetEntry
-        self._fieldMap['hourlyFee']=self._hourlyFeeEntry
-        self._fieldMap['revenue']=self._hourlyFeeEntry
-        self._fieldMap['totalRevenue']=self._hourlyFeeEntry
-        self._defaultControl = self._budgetEntry
+        
+    @staticmethod
+    def columns():
+        return ['budget', 'totalBudget', 'budgetLeft', 'totalBudgetLeft', 
+                'hourlyFee', 'fixedFee', 'totalFixedFee', 
+                'revenue', 'totalRevenue']
 
     def ok(self):
         self.item.setBudget(self._budgetEntry.get())
@@ -460,6 +426,10 @@ class EffortPage(EditorPage, TaskHeaders):
                  border=5)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self.fit()
+
+    @staticmethod
+    def columns():
+        return ['timeSpent', 'totalTimeSpent'] 
 
     def onClose(self, event):
         # Don't notify the viewer about any changes anymore, it's about
@@ -517,12 +487,14 @@ class CategoriesPage(EditorPage):
         self.add(categoriesBox)
         self.fit()
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        self._fieldMap['categories']=self._categoryViewer
-        self._fieldMap['totalCategories']=self._categoryViewer # readOnlyField maps to base 
 
     def onClose(self, event):
         self._categoryViewer.detach()
         event.Skip()
+
+    @staticmethod
+    def columns():
+        return ['categories', 'totalCategories'] 
 
     def ok(self):
         treeCtrl = self._categoryViewer.widget
@@ -567,7 +539,10 @@ class AttachmentsPage(EditorPage):
         self.add(attachmentsBox)
         self.fit()
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        self._fieldMap['attachments']=self._attachmentViewer
+
+    @staticmethod
+    def columns():
+        return ['attachments'] 
 
     def ok(self):
         self.item.setAttachments(self.attachmentsList)
@@ -594,9 +569,11 @@ class NotesPage(EditorPage):
         notesBox.fit()
         self.add(notesBox, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        self._fieldMap['note']=self.noteViewer # not sure of the fieldname
-        self._defaultControl=self.noteViewer # not sure of the fieldname
         self.fit()
+    
+    @staticmethod
+    def columns():
+        return ['notes'] 
         
     def onClose(self, event):
         # Don't notify the viewer about any changes anymore, it is about
@@ -629,8 +606,6 @@ class BehaviorPage(EditorPage, TaskHeaders):
         behaviorBox.fit()
         self.add(behaviorBox, border=5)
         self.fit()
-        self._defaultControl=choice
-        self._fieldMap['behavior']=choice
 
     def ok(self):
         self.item.shouldMarkCompletedWhenAllChildrenCompleted = \
@@ -944,7 +919,6 @@ class EditorWithCommand(widgets.NotebookDialog):
         firstEntry = self[0][0]._subjectEntry
         firstEntry.SetSelection(-1, -1) # Select all text
         firstEntry.SetFocus()
-        wx.CallAfter(firstEntry.SetFocus) # FIXME: Is this really needed on MSW? GTK works without CallAfter
 
     def addPages(self):
         for item in self._command.items:
@@ -979,52 +953,28 @@ class EditorWithCommand(widgets.NotebookDialog):
 
 class TaskEditor(EditorWithCommand):
     def __init__(self, parent, command, taskFile, settings, bitmap='edit', 
-                 *args, **kwargs):
+                 columnName='', *args, **kwargs):
         self._settings = settings
         self._taskFile = taskFile
         super(TaskEditor, self).__init__(parent, command, taskFile.tasks(), 
                                          bitmap, *args, **kwargs)
         self[0][0]._subjectEntry.SetSelection(-1, -1)
         # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
-        self.setFocus(*args,**kwargs) 
+        self.setFocus(columnName) 
         # This works on Windows XP, but fails silently on Linux Ubuntu 5.10:
-        wx.CallAfter(self.setFocus,*args,**kwargs) 
+        wx.CallAfter(self.setFocus, columnName) 
         # So we did just do it twice, guess it doesn't hurt
         
-    def setFocus(self, *args, **kwargs):
-        ''' select the correct page and correct control on a page
-            kwargs include:
-            Page --  index of page to select
-            Task --  index of task (in tabbed notebook)
-            Field -- field to highlight (overrides page)
-            '''
-        tsk=0
-        page=0
-        fieldname=''
-        #print args
-        #print kwargs
-        if kwargs.has_key('Task'):
-            tsk=kwargs['Task']
-            self.ChangeSelection(kwargs['Task'])    # always go to the first tab
-        if kwargs.has_key('Page'):
-            page=kwargs['Page']
-            selectCtrl= self[tsk][page]._defaultControl
-        if kwargs.has_key('Field'):
-            # lookup the what page the field is edite on.
-            fieldname=kwargs['Field']    
-            page=self.getFieldPage(fieldname)
-            self[tsk].ChangeSelection(page) # go to the second tab,  try by name.
-        self[tsk].ChangeSelection(page) # go to the second tab,  try by name.
-        self[tsk][page].setFocusForField(fieldname)
-
-    def getFieldPage(self,fieldname,task=0):
-        ''' return the page on which the field should be edited'''
-        page=0 #hard code the second page for sample
-        for  p in range((self[task]).GetPageCount()):
-            if self[task][p].containsField(fieldname):
-                return p
-        return page
-        
+    def setFocus(self, columnName):
+        ''' Select the correct page of the editor and correct control on a page
+            based on the column that the user double clicked. '''
+        page = 0
+        for pageIndex in range(self[0].GetPageCount()):
+            if columnName in self[0][pageIndex].columns():
+                page = pageIndex
+                break
+        self[0].ChangeSelection(page)
+       
     def addPage(self, task):
         page = TaskEditBook(self._interior, task, self._taskFile, self._settings)
         self._interior.AddPage(page, task.subject())

@@ -1197,8 +1197,13 @@ class ObjectEdit(ObjectCommandBase):
         super(ObjectEdit, self).__init__(*args, **kwargs)
 
     def doCommand(self, event, show=True):
+        try:
+            columnName = event.columnName
+        except AttributeError:
+            columnName = ''
         editor = self.viewer.editItemDialog(bitmap=self.bitmap,
-                                            items=self.viewer.curselection())
+                                            items=self.viewer.curselection(),
+                                            columnName=columnName)
         editor.Show(show)
 
 

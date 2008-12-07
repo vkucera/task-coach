@@ -400,7 +400,8 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         items = kwargs.get('items', self.curselection())
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
             command.EditTaskCommand(self.presentation(), items),
-            self.taskFile, self.settings, bitmap=kwargs['bitmap'])
+            self.taskFile, self.settings, bitmap=kwargs['bitmap'],
+            columnName=kwargs.get('columnName', ''))
     
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.presentation(), self.curselection(),

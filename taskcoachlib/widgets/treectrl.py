@@ -276,10 +276,6 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
-        # Next lines commented out because it causes extra select events and
-        # this code doesn't seem to be necessary on wxGtk (Ubuntu) anyway.
-        #self.GetHeaderWindow().Bind(wx.EVT_LEFT_DOWN, 
-        #    self.onHeaderWindowMouseClick)
         
     def onHeaderWindowMouseClick(self, event):
         # Mouse clicks in the header window seem not to be propagated to 
@@ -366,3 +362,14 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
             item = self.GetNextVisible(item)
         return count
 
+    def onItemActivated(self, event):
+        ''' Override TreeMixin default behavior to attach the column clicked on
+            to the event so we can use it elsewhere. '''
+        mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
+        item, flags, column = self.HitTest(mousePosition)
+        if item:
+            # Only get the column name if the hittest returned an item,
+            # otherwise the item was activated from the menu or by double 
+            # clicking on a portion of the tree view not containing an item.
+            event.columnName = self._getColumn(column).name()
+        super(TreeListCtrl, self).onItemActivated(event)
