@@ -142,26 +142,41 @@ class Publisher(object):
         # twice (checking whether the observer is already in the observerList
         # impacts performance too much).
         observerList.append(observer)
+        if len(observerList) == 1:
+            self.notifyObservers(Event(self, 
+                'publisher.firstObserverRegisteredFor.%s'%eventType, eventType))
         
     def removeObserver(self, observer, eventType=None):
         ''' Remove an observer. If no event type is specified, the observer
             is removed for all event types. If an event type is specified
             the observer is removed for that event type only. '''
-        observer = MethodProxy(observer)
-        if eventType:
-            observerListsToScan = [self.__observers.get(eventType, [])]
-        else:
-            observerListsToScan = self.__observers.values()            
-        for observerList in observerListsToScan:
-            if observer in observerList:
-                observerList.remove(observer)
+        if eventType and eventType not in self.__observers:
+            return
+
+        eventTypesToScan = eventType and [eventType] or self.__observers
+        observer = MethodProxy(observer)    
+        for eventType in eventTypesToScan:
+            try:    
+                self.__observers[eventType].remove(observer)
+            except ValueError:
+                pass # observer was not registered for eventType, ignore.
+        self.notifyObserversOfLastObserverRemoved(eventTypesToScan)
                 
     def removeInstance(self, instance):
         ''' Remove all observers that are methods of instance. '''
-        for observerList in self.__observers.values():
+        for observerList in self.__observers.itervalues():
             for observer in observerList[:]:
                 if observer.im_self is instance:
-                    observerList.remove(observer) 
+                    observerList.remove(observer)
+        self.notifyObserversOfLastObserverRemoved(self.__observers)
+                    
+    def notifyObserversOfLastObserverRemoved(self, eventTypes):
+        unobservedEventTypes = [eventType for eventType in eventTypes if \
+                                not self.__observers[eventType]]
+        for eventType in unobservedEventTypes:
+            del self.__observers[eventType]
+            self.notifyObservers(Event(self, 
+                'publisher.lastObserverRemovedFor.%s'%eventType, eventType))
         
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type is extracted from
