@@ -366,10 +366,11 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
         ''' Override TreeMixin default behavior to attach the column clicked on
             to the event so we can use it elsewhere. '''
         mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
-        item, flags, column = self.HitTest(mousePosition)
+        item, flags, column = self.HitTest(mousePosition, alwaysReturnColumn=True)
         if item:
             # Only get the column name if the hittest returned an item,
             # otherwise the item was activated from the menu or by double 
             # clicking on a portion of the tree view not containing an item.
+            column = max(0, column) # FIXME: Why can the column be -1?
             event.columnName = self._getColumn(column).name()
         super(TreeListCtrl, self).onItemActivated(event)
