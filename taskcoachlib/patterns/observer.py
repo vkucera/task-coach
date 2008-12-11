@@ -143,6 +143,8 @@ class Publisher(object):
         # impacts performance too much).
         observerList.append(observer)
         if len(observerList) == 1:
+            self.notifyObservers(Event(self,
+                'publisher.firstObserverRegisteredFor', eventType))
             self.notifyObservers(Event(self, 
                 'publisher.firstObserverRegisteredFor.%s'%eventType, eventType))
         
@@ -211,12 +213,13 @@ class Publisher(object):
     
 
 class Observer(object):
-    def __init__(self, *args, **kwargs):
-        self.registerObserver = Publisher().registerObserver
-        self.removeObserver = Publisher().removeObserver
-        super(Observer, self).__init__()
+    def registerObserver(self, *args, **kwargs):
+        Publisher().registerObserver(*args, **kwargs)
         
-        
+    def removeObserver(self, *args, **kwargs):
+        Publisher().removeObserver(*args, **kwargs)
+
+
 class Decorator(Observer):
     def __init__(self, observable, *args, **kwargs):
         self.__observable = observable
@@ -230,12 +233,15 @@ class Decorator(Observer):
 
 
 class Observable(object):
-    def __init__(self, *args, **kwargs):
-        self.notifyObservers = Publisher().notifyObservers
-        self.startNotifying = Publisher().startNotifying
-        self.stopNotifying = Publisher().stopNotifying
-        super(Observable, self).__init__(*args, **kwargs)
-
+    def notifyObservers(self, *args, **kwargs):
+        Publisher().notifyObservers(*args, **kwargs)
+        
+    def startNotifying(self, *args, **kwargs):
+        Publisher().startNotifying(*args, **kwargs)
+        
+    def stopNotifying(self, *args, **kwargs):
+        Publisher().stopNotifying(*args, **kwargs)
+        
 
 class ObservableCollection(Observable):
     def __hash__(self):

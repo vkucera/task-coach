@@ -411,7 +411,7 @@ class CommonTests(object):
         self.newColor = (255,128,0) # Expected color
         originalToday = date.Today
         date.Today = lambda: date.Tomorrow() # Make it tomorrow
-        date.Clock().notify(now=midnight)
+        date.Clock().notifyMidnightObservers(now=midnight)
         self.assertColor()
         date.Today = originalToday
 

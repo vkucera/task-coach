@@ -76,4 +76,22 @@ class TimeDeltaTest(test.TestCase):
         timedelta = date.TimeDelta(hours=2, minutes=15)
         self.assertEqual(2.25, timedelta.hours())
         
+    def testMillisecondsInOneSecond(self):
+        timedelta = date.TimeDelta(seconds=1)
+        self.assertEqual(1000, timedelta.milliseconds())
 
+    def testMillisecondsInOneHour(self):
+        timedelta = date.TimeDelta(hours=1)
+        self.assertEqual(60*60*1000, timedelta.milliseconds())
+
+    def testMillisecondsInOneDay(self):
+        timedelta = date.TimeDelta(days=1)
+        self.assertEqual(24*60*60*1000, timedelta.milliseconds())
+
+    def testMillisecondsInOneMicrosecond(self):
+        timedelta = date.TimeDelta(microseconds=1)
+        self.assertEqual(0, timedelta.milliseconds())
+
+    def testMillisecondsIn500Microseconds(self):
+        timedelta = date.TimeDelta(microseconds=500)
+        self.assertEqual(1, timedelta.milliseconds())
