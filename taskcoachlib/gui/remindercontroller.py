@@ -62,7 +62,8 @@ class ReminderController(object):
         self.mainWindow = wx.GetApp().GetTopWindow()
         reminderDialog = reminder.ReminderDialog(task, self.mainWindow)
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)
-        if not self.mainWindow.IsShown():
+        self.__mainWindowWasHidden = not self.mainWindow.IsShown()
+        if self.__mainWindowWasHidden:
             self.mainWindow.Show()
         if not self.mainWindow.IsActive():
             self.mainWindow.RequestUserAttention()
@@ -86,7 +87,9 @@ class ReminderController(object):
                 self.mainWindow.taskFile, self.settings, bitmap='edit')
             editTask.Show()
         dialog.Destroy()
-        
+        if self.__mainWindowWasHidden:
+            self.mainWindow.Hide()
+            
     def __registerRemindersForTasks(self, tasks):
         for task in tasks:
             if task.reminder():

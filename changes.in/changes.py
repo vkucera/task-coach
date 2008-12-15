@@ -25,7 +25,11 @@ releases = [
 
 Release('0.71.5', 'December ?, 2008',
     summary='''This is a bugfix release.''',
-    bugsFixed=[]
+    bugsFixed=[
+        Bug('''Don't wake up every second just to keep track of reminders and 
+midnight.'''),
+        Bug('''Hide main window after showing reminder dialog when it was 
+hidden before.''', '2372909')]
     ),
              
 Release('0.71.4', 'December 6, 2008',
