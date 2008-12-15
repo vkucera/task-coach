@@ -57,6 +57,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setDueDate(state['dueDate'])
         self.setCompletionDate(state['completionDate'])
         self.setRecurrence(state['recurrence'])
+        self.setReminder(state['reminder'])
         self.replaceChildren(state['children'])
         self.replaceParent(state['parent'])
         self.setEfforts(state['efforts'])
@@ -77,6 +78,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             categories=set(self._categories), priority=self._priority, 
             hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
             recurrence=self._recurrence.copy(),
+            reminder=self._reminder,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -510,6 +512,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setCompletionDate(date.Date())
         self.setStartDate(self.recurrence(recursive=True)(self.startDate(), next=False))
         self.setDueDate(self.recurrence(recursive=True)(self.dueDate(), next=False))
+        if self.reminder():
+            self.setReminder(self.recurrence(recursive=True)(self.reminder(), next=False))
         self.recurrence()(next=True)
                         
     # behavior

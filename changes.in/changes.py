@@ -29,7 +29,9 @@ Release('0.71.5', 'December ?, 2008',
         Bug('''Don't wake up every second just to keep track of reminders and 
 midnight.'''),
         Bug('''Hide main window after showing reminder dialog when it was 
-hidden before.''', '2372909')]
+hidden before.''', '2372909'),
+        Bug('''When marking a recurring task completed, recur its reminder too, 
+if any.''', '2376415')]
     ),
              
 Release('0.71.4', 'December 6, 2008',

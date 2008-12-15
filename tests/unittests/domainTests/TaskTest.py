@@ -477,7 +477,13 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         state = self.task.__getstate__()
         self.task.addNote(note.Note())
         self.task.__setstate__(state)
-        self.failIf(self.task.notes())                        
+        self.failIf(self.task.notes())
+        
+    def testTaskStateIncludesReminder(self):
+        state = self.task.__getstate__()
+        self.task.setReminder(date.DateTime.now() + date.TimeDelta(seconds=10))
+        self.task.__setstate__(state)
+        self.failIf(self.task.reminder())                     
 
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
@@ -1327,6 +1333,16 @@ class CommonRecurrenceTests(CommonTaskTests):
     def testRecurringTaskIsNotCompletedWhenMarkedCompleted(self):
         self.task.setCompletionDate()
         self.failIf(self.task.completed())
+
+    def testMarkCompletedDoesNotSetReminderIfItWasNotSetPreviously(self):
+        self.task.setCompletionDate()
+        self.assertEqual(None, self.task.reminder())
+    
+    def testMarkCompletedSetsNewReminderIfItWasSetPreviously(self):
+        reminder = date.DateTime.now() + date.TimeDelta(seconds=10)
+        self.task.setReminder(reminder)
+        self.task.setCompletionDate()
+        self.assertEqual(self.createRecurrence()(reminder), self.task.reminder())
         
     def testCopyRecurrence(self):
         self.assertEqual(self.task.copy().recurrence(), self.task.recurrence())
