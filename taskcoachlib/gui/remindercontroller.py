@@ -33,6 +33,7 @@ class ReminderController(object):
         patterns.Publisher().registerObserver(self.onRemoveTask,
             eventType=taskList.removeItemEventType())
         self.__tasksWithReminders = {} # {task: reminderDateTime}
+        self.__mainWindowWasHidden = False
         self.__registerRemindersForTasks(taskList)
         self.settings = settings
         self.taskList = taskList
