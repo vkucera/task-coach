@@ -140,9 +140,10 @@ class Clock(patterns.Observer, patterns.Observable):
         
     def _createTimers(self):
         self._secondTimer = PeriodicTimer(self.notifySecondObservers, 'second')
-        self._midnightTimer = PeriodicTimer(self.notifyMidnightObservers, 'day')
+        self._midnightTimer = PeriodicTimer(self.notifyMidnightObservers, 'second')
+        self._midnightTimer.Start()
         self._scheduledTimer = ScheduledTimer(self.notifySpecificTimeObservers)
-        
+                
     def _watchForClockObservers(self):
         self.registerObserver(self.onFirstObserverRegisteredForSecond, 
             'publisher.firstObserverRegisteredFor.clock.second')
@@ -172,7 +173,7 @@ class Clock(patterns.Observer, patterns.Observable):
         now = now or dateandtime.DateTime.now()
         self.notifyObservers(patterns.Event(self, Clock.eventType(now), now))
 
-    def notifyMidnightObservers(self, now):
+    def notifyMidnightObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
         today = date.Date(now.year, now.month, now.day)
         if today != self._lastMidnightNotified:
