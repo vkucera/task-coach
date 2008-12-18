@@ -98,26 +98,6 @@ class AmountEntry(widgets.PanelWithBoxSizer):
         self._entry.SetValue(value)
 
 
-class ColorEntryMixin(object):
-    def addColorEntry(self):
-        currentColor = self.item.color(recursive=False)
-        self._colorCheckBox = wx.CheckBox(self, label=_('Use this color:'))
-        self._colorCheckBox.SetValue(currentColor is not None)
-        self._colorButton = wx.ColourPickerCtrl(self, -1,
-            currentColor or wx.WHITE, size=(40,-1))
-        self._colorButton.Bind(wx.EVT_COLOURPICKER_CHANGED,
-            lambda event: self._colorCheckBox.SetValue(True))
-        self.addEntry(_('Color'), self._colorCheckBox, self._colorButton)
-
-    def ok(self):
-        super(ColorEntryMixin, self).ok()
-        if self._colorCheckBox.IsChecked():
-            color = self._colorButton.GetColour()
-        else:
-            color = None
-        self.item.setColor(color)
-
-
 class EditorPage(widgets.PanelWithBoxSizer):
     def __init__(self, parent, item, *args, **kwargs):
         super(EditorPage, self).__init__(parent, *args, **kwargs) 
@@ -150,26 +130,12 @@ class NoteHeaders(object):
     headerForNonRecursiveAttributes = _('For this note')
     headerForRecursiveAttributes = _('For this note including all subnotes')
 
-    
-class SubjectPage(ColorEntryMixin, widgets.BookPage):
-    def __init__(self, parent, task, *args, **kwargs):
-        self.item = task
-        super(SubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
-        self.addSubjectEntry()
-        self.addDescriptionEntry()
-        self.addPriorityEntry()
-        self.addColorEntry()
-        self.fit()
 
-    @staticmethod
-    def columns():
-        return ['subject', 'description', 'priority', 'color']
-
+class SubjectPage(widgets.BookPage):
     def addSubjectEntry(self):
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, 
-            self.item.subject())
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, self.item.subject())
         self.addEntry(_('Subject'), self._subjectEntry, 
-            flags=[None, wx.ALL|wx.EXPAND])
+                      flags=[None, wx.ALL|wx.EXPAND])
 
     def addDescriptionEntry(self):
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, 
@@ -177,7 +143,48 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
         self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry,
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
-          
+
+    def addColorEntry(self):
+        currentColor = self.item.color(recursive=False)
+        self._colorCheckBox = wx.CheckBox(self, label=_('Use this color:'))
+        self._colorCheckBox.SetValue(currentColor is not None)
+        self._colorButton = wx.ColourPickerCtrl(self, -1,
+            currentColor or wx.WHITE, size=(40,-1))
+        self._colorButton.Bind(wx.EVT_COLOURPICKER_CHANGED,
+            lambda event: self._colorCheckBox.SetValue(True))
+        self.addEntry(_('Color'), self._colorCheckBox, self._colorButton)
+
+    def setSubject(self, subject):
+        self._subjectEntry.SetValue(subject)
+
+    def setDescription(self, description):
+        self._descriptionEntry.SetValue(description)
+
+    def ok(self):
+        self.item.setSubject(self._subjectEntry.GetValue())
+        self.item.setDescription(self._descriptionEntry.GetValue())
+        if self._colorCheckBox.IsChecked():
+            color = self._colorButton.GetColour()
+        else:
+            color = None
+        self.item.setColor(color)
+        super(SubjectPage, self).ok()
+                        
+    @staticmethod
+    def columns():
+        return ['subject', 'description', 'color']
+
+    
+class TaskSubjectPage(SubjectPage):
+    def __init__(self, parent, task, *args, **kwargs):
+        self.item = task
+        super(TaskSubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
+        self.addSubjectEntry()
+        self.addDescriptionEntry()
+        self.addPriorityEntry()
+        self.addColorEntry()
+        self.fit()
+         
     def addPriorityEntry(self):
         self._prioritySpinner = widgets.SpinCtrl(self,
             initial=self.item.priority())
@@ -185,16 +192,70 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
             flags=[None, wx.ALL|wx.EXPAND])
     
     def ok(self):
-        self.item.setSubject(self._subjectEntry.GetValue())
-        self.item.setDescription(self._descriptionEntry.GetValue())
         self.item.setPriority(self._prioritySpinner.GetValue())
-        super(SubjectPage, self).ok()
+        super(TaskSubjectPage, self).ok()
+ 
+    @staticmethod
+    def columns():
+        return SubjectPage.columns() + ['priority']
         
-    def setSubject(self, subject):
-        self._subjectEntry.SetValue(subject)
 
-    def setDescription(self, description):
-        self._descriptionEntry.SetValue(description)
+class CategorySubjectPage(SubjectPage):
+    def __init__(self, parent, category, *args, **kwargs):
+        self.item = self._category = category
+        super(CategorySubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
+        self.addSubjectEntry()
+        self.addDescriptionEntry()
+        self.addColorEntry()
+        self.fit()
+
+
+class NoteSubjectPage(SubjectPage):
+    def __init__(self, parent, theNote, *args, **kwargs):
+        super(NoteSubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
+        self.item = self._note = theNote
+        self.addSubjectEntry()
+        self.addDescriptionEntry()
+        self.addColorEntry()
+        self.fit()
+            
+
+class AttachmentSubjectPage(SubjectPage):
+    def __init__(self, parent, theAttachment, basePath, *args, **kwargs):
+        super(AttachmentSubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
+        self.item = self._attachment = theAttachment
+        self.basePath = basePath
+        self.addSubjectEntry()
+        self.addLocationEntry()
+        self.addDescriptionEntry()
+        self.addColorEntry()
+        self.fit()
+
+    def addLocationEntry(self):
+        panel = wx.Panel(self, wx.ID_ANY)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self._locationEntry = widgets.SingleLineTextCtrl(panel,
+                                                         self._attachment.location())
+        sizer.Add(self._locationEntry, 1, wx.ALL, 3)
+        if self._attachment.type_ == 'file':
+            button = wx.Button(panel, wx.ID_ANY, _('Browse'))
+            sizer.Add(button, 0, wx.ALL, 3)
+            wx.EVT_BUTTON(button, wx.ID_ANY, self.OnSelectLocation)
+        panel.SetSizer(sizer)
+        self.addEntry(_('Location'), panel, flags=[None, wx.ALL|wx.EXPAND])
+
+    def ok(self):
+        self._attachment.setLocation(self._locationEntry.GetValue())
+        super(AttachmentSubjectPage, self).ok()
+
+    def OnSelectLocation(self, evt):
+        filename = widgets.AttachmentSelector()
+        if filename:
+            if self.basePath:
+                filename = attachment.getRelativePath(filename, self.basePath)
+            self._subjectEntry.SetValue(os.path.split(filename)[-1])
+            self._locationEntry.SetValue(filename)
 
 
 class DatesPage(EditorPage, TaskHeaders):
@@ -626,7 +687,7 @@ class BehaviorPage(EditorPage, TaskHeaders):
 class TaskEditBook(widgets.Listbook):
     def __init__(self, parent, task, taskFile, settings, *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
-        self.AddPage(SubjectPage(self, task), _('Description'), 'description')
+        self.AddPage(TaskSubjectPage(self, task), _('Description'), 'description')
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
         self.AddPage(TaskCategoriesPage(self, task, taskFile, settings), 
                      _('Categories'), 'category')
@@ -773,32 +834,6 @@ class EffortEditBook(widgets.BookPage):
         else:
             self._editor.enableOK()
 
-
-class CategorySubjectPage(ColorEntryMixin, widgets.BookPage):
-    def __init__(self, parent, category, *args, **kwargs):
-        self.item = self._category = category
-        super(CategorySubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
-        self.addSubjectEntry()
-        self.addDescriptionEntry()
-        self.addColorEntry()
-        self.fit()
-
-    def addSubjectEntry(self):
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._category.subject())
-        self.addEntry(_('Subject'), self._subjectEntry, flags=[None, wx.ALL|wx.EXPAND])
-
-    def addDescriptionEntry(self):
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self,
-            self._category.description())
-        self._descriptionEntry.SetSizeHints(300, 150)
-        self.addEntry(_('Description'), self._descriptionEntry,
-            flags=[None, wx.ALL|wx.EXPAND], growable=True)
-
-    def ok(self):
-        self._category.setSubject(self._subjectEntry.GetValue())
-        self._category.setDescription(self._descriptionEntry.GetValue())
-        super(CategorySubjectPage, self).ok()
-        
         
 class CategoryEditBook(widgets.Listbook):
     def __init__(self, parent, theCategory, settings, taskFile, *args, **kwargs):
@@ -814,32 +849,6 @@ class CategoryEditBook(widgets.Listbook):
                      _('Attachments'), 'attachment')
 
 
-class NoteSubjectPage(ColorEntryMixin, widgets.BookPage):
-    def __init__(self, parent, theNote, *args, **kwargs):
-        super(NoteSubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
-        self.item = self._note = theNote
-        self.addSubjectEntry()
-        self.addDescriptionEntry()
-        self.addColorEntry()
-        self.fit()
-
-    def addSubjectEntry(self):
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._note.subject())
-        self.addEntry(_('Subject'), self._subjectEntry, flags=[None, wx.ALL|wx.EXPAND])
-
-    def addDescriptionEntry(self):
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self,
-            self._note.description())
-        self._descriptionEntry.SetSizeHints(300, 150)
-        self.addEntry(_('Description'), self._descriptionEntry,
-            flags=[None, wx.ALL|wx.EXPAND], growable=True)
-
-    def ok(self):
-        self._note.setSubject(self._subjectEntry.GetValue())
-        self._note.setDescription(self._descriptionEntry.GetValue())
-        super(NoteSubjectPage, self).ok()
-        
-
 class NoteEditBook(widgets.Listbook):
     def __init__(self, parent, theNote, settings, categories, taskFile, *args, **kwargs):
         self.item = theNote
@@ -850,57 +859,6 @@ class NoteEditBook(widgets.Listbook):
         self.AddPage(AttachmentsPage(self, theNote, settings, taskFile, 
                                      settingsSection='attachmentviewerinnoteeditor'),
                      _('Attachments'), 'attachment')
-
-
-class AttachmentSubjectPage(ColorEntryMixin, widgets.BookPage):
-    def __init__(self, parent, theAttachment, basePath, *args, **kwargs):
-        super(AttachmentSubjectPage, self).__init__(parent, columns=3, *args, **kwargs)
-        self.item = self._attachment = theAttachment
-        self.basePath = basePath
-        self.addSubjectEntry()
-        self.addLocationEntry()
-        self.addDescriptionEntry()
-        self.addColorEntry()
-        self.fit()
-
-    def addSubjectEntry(self):
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._attachment.subject())
-        self.addEntry(_('Subject'), self._subjectEntry, flags=[None, wx.ALL|wx.EXPAND])
-
-    def addLocationEntry(self):
-        panel = wx.Panel(self, wx.ID_ANY)
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
-
-        self._locationEntry = widgets.SingleLineTextCtrl(panel,
-                                                         self._attachment.location())
-        sizer.Add(self._locationEntry, 1, wx.ALL, 3)
-        if self._attachment.type_ == 'file':
-            button = wx.Button(panel, wx.ID_ANY, _('Browse'))
-            sizer.Add(button, 0, wx.ALL, 3)
-            wx.EVT_BUTTON(button, wx.ID_ANY, self.OnSelectLocation)
-        panel.SetSizer(sizer)
-        self.addEntry(_('Location'), panel, flags=[None, wx.ALL|wx.EXPAND])
-
-    def addDescriptionEntry(self):
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self,
-            self._attachment.description())
-        self._descriptionEntry.SetSizeHints(300, 150)
-        self.addEntry(_('Description'), self._descriptionEntry,
-            flags=[None, wx.ALL|wx.EXPAND], growable=True)
-
-    def ok(self):
-        self._attachment.setSubject(self._subjectEntry.GetValue())
-        self._attachment.setLocation(self._locationEntry.GetValue())
-        self._attachment.setDescription(self._descriptionEntry.GetValue())
-        super(AttachmentSubjectPage, self).ok()
-
-    def OnSelectLocation(self, evt):
-        filename = widgets.AttachmentSelector()
-        if filename:
-            if self.basePath:
-                filename = attachment.getRelativePath(filename, self.basePath)
-            self._subjectEntry.SetValue(os.path.split(filename)[-1])
-            self._locationEntry.SetValue(filename)
 
 
 class AttachmentEditBook(widgets.Listbook):
@@ -921,7 +879,11 @@ class EditorWithCommand(widgets.NotebookDialog):
         self._command = command
         super(EditorWithCommand, self).__init__(parent, command.name(), 
                                                 *args, **kwargs)
-        self.setFocusOnFirstEntry()
+        columnName = kwargs.get('columnName', '')
+        if columnName:
+            self.setFocus(columnName)
+        else:
+            self.setFocusOnFirstEntry()
         patterns.Publisher().registerObserver(self.onItemRemoved, 
             eventType=container.removeItemEventType())
 
@@ -934,6 +896,8 @@ class EditorWithCommand(widgets.NotebookDialog):
                 page = pageIndex
                 break
         self[0].ChangeSelection(page)
+        if page == 0:
+            self.setFocusOnFirstEntry()
         
     def setFocusOnFirstEntry(self):
         firstEntry = self[0][0]._subjectEntry
@@ -973,18 +937,12 @@ class EditorWithCommand(widgets.NotebookDialog):
 
 class TaskEditor(EditorWithCommand):
     def __init__(self, parent, command, taskFile, settings, bitmap='edit', 
-                 columnName='', *args, **kwargs):
+                 *args, **kwargs):
         self._settings = settings
         self._taskFile = taskFile
         super(TaskEditor, self).__init__(parent, command, taskFile.tasks(), 
                                          bitmap, *args, **kwargs)
-        self[0][0]._subjectEntry.SetSelection(-1, -1)
-        # This works on Linux Ubuntu 5.10, but fails silently on Windows XP:
-        self.setFocus(columnName) 
-        # This works on Windows XP, but fails silently on Linux Ubuntu 5.10:
-        wx.CallAfter(self.setFocus, columnName) 
-        # So we did just do it twice, guess it doesn't hurt
-        
+
     def addPage(self, task):
         page = TaskEditBook(self._interior, task, self._taskFile, self._settings)
         self._interior.AddPage(page, task.subject())

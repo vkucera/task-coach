@@ -210,7 +210,8 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
             command.EditNoteCommand(self.presentation(), kwargs['items']),
             self.settings, self.presentation(),  
-            self.taskFile, bitmap=kwargs['bitmap'])
+            self.taskFile, bitmap=kwargs['bitmap'],
+            columnName=kwargs.get('columnName', ''))
     
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection(),
