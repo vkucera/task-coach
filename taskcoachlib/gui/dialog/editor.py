@@ -200,6 +200,16 @@ class SubjectPage(ColorEntryMixin, widgets.BookPage):
 class DatesPage(EditorPage, TaskHeaders):
     def __init__(self, parent, task, *args, **kwargs):
         super(DatesPage, self).__init__(parent, task, *args, **kwargs)
+        datesBox = self.addDatesBox(task)
+        reminderBox = self.addReminderBox(task)
+        recurrenceBox = self.addRecurrenceBox(task)
+
+        for box in datesBox, reminderBox, recurrenceBox:
+            box.fit()
+            self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
+        self.fit()
+    
+    def addDatesBox(self, task):
         datesBox = widgets.BoxWithFlexGridSizer(self, label=_('Dates'), cols=3)
         self.addHeaders(datesBox)
         for label, taskMethodName in [(_('Start date'), 'startDate'),
@@ -217,9 +227,11 @@ class DatesPage(EditorPage, TaskHeaders):
             else:
                 recursiveEntry = (0, 0)
             datesBox.add(recursiveEntry)
-
-        reminderBox = widgets.BoxWithFlexGridSizer(self, label=_('Reminder'),
-            cols=2)
+        return datesBox
+        
+    def addReminderBox(self, task):
+        reminderBox = widgets.BoxWithFlexGridSizer(self, label=_('Reminder'), 
+                                                   cols=2)
         reminderBox.add(_('Reminder'))
         self._reminderDateTimeEntry = widgets.DateTimeCtrl(reminderBox,
             task.reminder())
@@ -228,8 +240,10 @@ class DatesPage(EditorPage, TaskHeaders):
         if self._reminderDateTimeEntry.GetValue() == date.DateTime.max:
             self.suggestReminder()
         reminderBox.add(self._reminderDateTimeEntry)
-
-        self._recurrenceBox = recurrenceBox = widgets.BoxWithFlexGridSizer(self,
+        return reminderBox
+        
+    def addRecurrenceBox(self, task):
+        recurrenceBox = widgets.BoxWithFlexGridSizer(self,
             label=_('Recurrence'), cols=2)
         recurrenceBox.add(_('Recurrence'))
         panel = wx.Panel(recurrenceBox)
@@ -271,12 +285,8 @@ class DatesPage(EditorPage, TaskHeaders):
         recurrenceBox.add(panel)
 
         self.setRecurrence(task.recurrence())
-
-        for box in datesBox, reminderBox, recurrenceBox:
-            box.fit()
-            self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
-        self.fit()
-
+        return recurrenceBox
+    
     @staticmethod
     def columns():
         return ['startDate', 'dueDate', 'completionDate', 'reminder']
@@ -915,6 +925,16 @@ class EditorWithCommand(widgets.NotebookDialog):
         patterns.Publisher().registerObserver(self.onItemRemoved, 
             eventType=container.removeItemEventType())
 
+    def setFocus(self, columnName):
+        ''' Select the correct page of the editor and correct control on a page
+            based on the column that the user double clicked. '''
+        page = 0
+        for pageIndex in range(self[0].GetPageCount()):
+            if columnName in self[0][pageIndex].columns():
+                page = pageIndex
+                break
+        self[0].ChangeSelection(page)
+        
     def setFocusOnFirstEntry(self):
         firstEntry = self[0][0]._subjectEntry
         firstEntry.SetSelection(-1, -1) # Select all text
@@ -965,21 +985,10 @@ class TaskEditor(EditorWithCommand):
         wx.CallAfter(self.setFocus, columnName) 
         # So we did just do it twice, guess it doesn't hurt
         
-    def setFocus(self, columnName):
-        ''' Select the correct page of the editor and correct control on a page
-            based on the column that the user double clicked. '''
-        page = 0
-        for pageIndex in range(self[0].GetPageCount()):
-            if columnName in self[0][pageIndex].columns():
-                page = pageIndex
-                break
-        self[0].ChangeSelection(page)
-       
     def addPage(self, task):
         page = TaskEditBook(self._interior, task, self._taskFile, self._settings)
         self._interior.AddPage(page, task.subject())
         
-
 
 class EffortEditor(EditorWithCommand):
     def __init__(self, parent, command, taskFile, settings, *args, **kwargs):
