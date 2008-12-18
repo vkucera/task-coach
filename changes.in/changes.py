@@ -25,6 +25,12 @@ releases = [
 
 Release('0.71.5', 'December ?, 2008',
     summary='''This is a bugfix release.''',
+    featuresAdded=[
+        Feature('''When double clicking an item in a viewer, open the editor
+on the right page, depending on the column clicked. For example, when clicking
+on the due date column in a task viewer, Task Coach will open the task editor
+with the dates page raised. Patch provided by Carl Zmola.''')
+        ],
     bugsFixed=[
         Bug('''Don't wake up every second just to keep track of reminders and 
 midnight.'''),
