@@ -20,13 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, datetime, os.path, sys
-import wx.lib.customtreectrl as customtree
 from taskcoachlib import widgets, patterns
 from taskcoachlib.gui import render, viewer, uicommand
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
-from taskcoachlib.thirdparty import desktop, combotreebox
+from taskcoachlib.thirdparty import desktop
 import entry
 
 
@@ -642,57 +641,6 @@ class TaskEditBook(widgets.Listbook):
         self.item = task
 
 
-class TaskComboTreeBox(wx.Panel):
-    ''' A ComboTreeBox with tasks. This class does not inherit from the
-        ComboTreeBox widget, because that widget is created using a
-        factory function. '''
-
-    def __init__(self, parent, rootTasks, selectedTask):
-        ''' Initialize the ComboTreeBox, add the root tasks recursively and
-            set the selection. '''
-        super(TaskComboTreeBox, self).__init__(parent)
-        self._createInterior()
-        self._addTasks(rootTasks)
-        self.SetSelection(selectedTask)
-
-    def __getattr__(self, attr):
-        ''' Delegate unknown attributes to the ComboTreeBox. This is needed
-            since we cannot inherit from ComboTreeBox, but have to use
-            delegation. '''
-        return getattr(self._comboTreeBox, attr)
-
-    def _createInterior(self):
-        ''' Create the ComboTreebox widget. '''
-        self._comboTreeBox = combotreebox.ComboTreeBox(self,
-            style=wx.CB_READONLY|wx.CB_SORT)
-        boxSizer = wx.BoxSizer()
-        boxSizer.Add(self._comboTreeBox, flag=wx.EXPAND, proportion=1)
-        self.SetSizerAndFit(boxSizer)
-
-    def _addTasks(self, rootTasks):
-        ''' Add the root tasks to the ComboTreeBox, including all their
-            subtasks. '''
-        for task in rootTasks:
-            self._addTaskRecursively(task)
-
-    def _addTaskRecursively(self, task, parentItem=None):
-        ''' Add a task to the ComboTreeBox and then recursively add its
-            subtasks. '''
-        item = self._comboTreeBox.Append(task.subject(), parent=parentItem,
-                                         clientData=task)
-        for child in task.children():
-            self._addTaskRecursively(child, item)
-
-    def SetSelection(self, task):
-        ''' Select the given task. '''
-        self._comboTreeBox.SetClientDataSelection(task)
-
-    def GetSelection(self):
-        ''' Return the selected task. '''
-        selection = self._comboTreeBox.GetSelection()
-        return self._comboTreeBox.GetClientData(selection)
-
-
 class EffortEditBook(widgets.BookPage):
     def __init__(self, parent, effort, editor, effortList, taskList, settings,
                  *args, **kwargs):
@@ -710,7 +658,7 @@ class EffortEditBook(widgets.BookPage):
     def addTaskEntry(self):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
-        self._taskEntry = TaskComboTreeBox(self,
+        self._taskEntry = entry.TaskComboTreeBox(self,
             rootTasks=self._taskList.rootItems(),
             selectedTask=self._effort.task())
         self.addEntry(_('Task'), self._taskEntry,

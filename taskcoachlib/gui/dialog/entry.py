@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from wx.lib import masked
+from taskcoachlib.thirdparty import combotreebox
 from taskcoachlib import widgets
 from taskcoachlib.domain import date
 
@@ -91,3 +92,55 @@ class AmountEntry(widgets.PanelWithBoxSizer):
 
     def set(self, value):
         self._entry.SetValue(value)
+
+
+class TaskComboTreeBox(wx.Panel):
+    ''' A ComboTreeBox with tasks. This class does not inherit from the
+        ComboTreeBox widget, because that widget is created using a
+        factory function. '''
+
+    def __init__(self, parent, rootTasks, selectedTask):
+        ''' Initialize the ComboTreeBox, add the root tasks recursively and
+            set the selection. '''
+        super(TaskComboTreeBox, self).__init__(parent)
+        self._createInterior()
+        self._addTasks(rootTasks)
+        self.SetSelection(selectedTask)
+
+    def __getattr__(self, attr):
+        ''' Delegate unknown attributes to the ComboTreeBox. This is needed
+            since we cannot inherit from ComboTreeBox, but have to use
+            delegation. '''
+        return getattr(self._comboTreeBox, attr)
+
+    def _createInterior(self):
+        ''' Create the ComboTreebox widget. '''
+        self._comboTreeBox = combotreebox.ComboTreeBox(self,
+            style=wx.CB_READONLY|wx.CB_SORT)
+        boxSizer = wx.BoxSizer()
+        boxSizer.Add(self._comboTreeBox, flag=wx.EXPAND, proportion=1)
+        self.SetSizerAndFit(boxSizer)
+
+    def _addTasks(self, rootTasks):
+        ''' Add the root tasks to the ComboTreeBox, including all their
+            subtasks. '''
+        for task in rootTasks:
+            self._addTaskRecursively(task)
+
+    def _addTaskRecursively(self, task, parentItem=None):
+        ''' Add a task to the ComboTreeBox and then recursively add its
+            subtasks. '''
+        item = self._comboTreeBox.Append(task.subject(), parent=parentItem,
+                                         clientData=task)
+        for child in task.children():
+            self._addTaskRecursively(child, item)
+
+    def SetSelection(self, task):
+        ''' Select the given task. '''
+        self._comboTreeBox.SetClientDataSelection(task)
+
+    def GetSelection(self):
+        ''' Return the selected task. '''
+        selection = self._comboTreeBox.GetSelection()
+        return self._comboTreeBox.GetClientData(selection)
+
