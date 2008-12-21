@@ -197,6 +197,11 @@ class UnicodeAwareConfigParserTest(test.TestCase):
 class SpecificSettingsTest(SettingsTestCase):
     def testDefaultWindowPosition(self):
         self.assertEqual('(-1, -1)', self.settings.get('window', 'position'))
+        
+    def testSetCurrentVersionAtSave(self):
+        self.settings.set('version', 'current', '0.0')
+        self.settings.save()
+        self.assertEqual(meta.data.version, self.settings.get('version', 'current'))
             
 
 class SettingsFileLocationTest(SettingsTestCase):
