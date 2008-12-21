@@ -35,7 +35,6 @@ class Page(object):
         return dict()
     
     def setFocusOnEntry(self, columnName):
-        print columnName,
         try:
             theEntry = self.entries()[columnName]
         except KeyError:
