@@ -29,9 +29,30 @@ from taskcoachlib.thirdparty import desktop
 import entry
 
 
-class EditorPage(widgets.PanelWithBoxSizer):
+class Page(object):
+    def entries(self):
+        ''' A mapping of names of columns to entries on this editor page. '''
+        return dict()
+    
+    def setFocusOnEntry(self, columnName):
+        print columnName,
+        try:
+            theEntry = self.entries()[columnName]
+        except KeyError:
+            return
+        try:
+            theEntry.SetSelection(-1, -1) # Select all text
+        except (AttributeError, TypeError):
+            pass # Not a TextCtrl
+        theEntry.SetFocus()
+
+    def ok(self):
+        pass
+       
+        
+class PageWithHeaders(Page, widgets.PanelWithBoxSizer):
     def __init__(self, parent, item, *args, **kwargs):
-        super(EditorPage, self).__init__(parent, *args, **kwargs) 
+        super(PageWithHeaders, self).__init__(parent, *args, **kwargs) 
         self.item = item
 
     def addHeaders(self, box):
@@ -42,14 +63,7 @@ class EditorPage(widgets.PanelWithBoxSizer):
             headers.append('')
         for header in headers:
             box.add(header)
-
-    @staticmethod
-    def columns():
-        ''' A list of names of columns that are editable on this editor page. '''
-        return []
     
-    def ok(self):
-        pass
 
 
 class TaskHeaders(object):
@@ -62,7 +76,7 @@ class NoteHeaders(object):
     headerForRecursiveAttributes = _('For this note including all subnotes')
 
 
-class SubjectPage(widgets.BookPage):
+class SubjectPage(Page, widgets.BookPage):
     def addSubjectEntry(self):
         self._subjectEntry = widgets.SingleLineTextCtrl(self, self.item.subject())
         self.addEntry(_('Subject'), self._subjectEntry, 
@@ -101,9 +115,9 @@ class SubjectPage(widgets.BookPage):
         self.item.setColor(color)
         super(SubjectPage, self).ok()
                         
-    @staticmethod
-    def columns():
-        return ['subject', 'description', 'color']
+    def entries(self):
+        return dict(subject=self._subjectEntry, 
+                    description=self._descriptionEntry)
 
     
 class TaskSubjectPage(SubjectPage):
@@ -126,10 +140,11 @@ class TaskSubjectPage(SubjectPage):
         self.item.setPriority(self._prioritySpinner.GetValue())
         super(TaskSubjectPage, self).ok()
  
-    @staticmethod
-    def columns():
-        return SubjectPage.columns() + ['priority']
-        
+    def entries(self):
+        entries = super(TaskSubjectPage, self).entries()
+        entries['priority'] = entries['totalPriority'] = self._prioritySpinner
+        return entries
+            
 
 class CategorySubjectPage(SubjectPage):
     def __init__(self, parent, category, *args, **kwargs):
@@ -189,7 +204,7 @@ class AttachmentSubjectPage(SubjectPage):
             self._locationEntry.SetValue(filename)
 
 
-class DatesPage(EditorPage, TaskHeaders):
+class DatesPage(PageWithHeaders, TaskHeaders):
     def __init__(self, parent, task, *args, **kwargs):
         super(DatesPage, self).__init__(parent, task, *args, **kwargs)
         datesBox = self.addDatesBox(task)
@@ -279,9 +294,12 @@ class DatesPage(EditorPage, TaskHeaders):
         self.setRecurrence(task.recurrence())
         return recurrenceBox
     
-    @staticmethod
-    def columns():
-        return ['startDate', 'dueDate', 'completionDate', 'reminder']
+    def entries(self):
+        return dict(startDate=self._startDateEntry, dueDate=self._dueDateEntry,
+                    completionDate=self._completionDateEntry, 
+                    timeLeft=self._dueDateEntry, 
+                    reminder=self._reminderDateTimeEntry, 
+                    recurrence=self._recurrenceEntry)
     
     def onRecurrenceChanged(self, event):
         event.Skip()
@@ -369,7 +387,7 @@ class DatesPage(EditorPage, TaskHeaders):
         # control it will show the suggested date time
 
 
-class BudgetPage(EditorPage, TaskHeaders):
+class BudgetPage(PageWithHeaders, TaskHeaders):
     def __init__(self, parent, task, *args, **kwargs):
         super(BudgetPage, self).__init__(parent, task, *args, **kwargs)
         # Boxes:
@@ -409,19 +427,24 @@ class BudgetPage(EditorPage, TaskHeaders):
             self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
         self.fit()
         
-    @staticmethod
-    def columns():
-        return ['budget', 'totalBudget', 'budgetLeft', 'totalBudgetLeft', 
-                'hourlyFee', 'fixedFee', 'totalFixedFee', 
-                'revenue', 'totalRevenue']
-
+    def entries(self):
+        return dict(budget=self._budgetEntry, 
+                    totalBudget=self._budgetEntry,
+                    budgetLeft=self._budgetEntry, 
+                    totalBudgetLeft=self._budgetEntry, 
+                    hourlyFee=self._hourlyFeeEntry, 
+                    fixedFee=self._fixedFeeEntry, 
+                    totalFixedFee=self._fixedFeeEntry, 
+                    revenue=self._hourlyFeeEntry, 
+                    totalRevenue=self._hourlyFeeEntry)
+        
     def ok(self):
         self.item.setBudget(self._budgetEntry.get())
         self.item.setHourlyFee(self._hourlyFeeEntry.get())
         self.item.setFixedFee(self._fixedFeeEntry.get())
 
 
-class EffortPage(EditorPage, TaskHeaders):
+class EffortPage(PageWithHeaders, TaskHeaders):
     def __init__(self, parent, theTask, taskFile, settings, *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
         self.effortViewer = viewer.EffortViewer(self, taskFile,
@@ -432,10 +455,10 @@ class EffortPage(EditorPage, TaskHeaders):
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self.fit()
 
-    @staticmethod
-    def columns():
-        return ['timeSpent', 'totalTimeSpent'] 
-
+    def entries(self):
+        return dict(timeSpent=self.effortViewer, 
+                    totalTimeSpent=self.effortViewer)
+        
     def onClose(self, event):
         # Don't notify the viewer about any changes anymore, it's about
         # to be deleted.
@@ -479,7 +502,7 @@ class LocalCategoryViewer(LocalDragAndDropFix, viewer.BaseCategoryViewer):
         pass
 
 
-class CategoriesPage(EditorPage):
+class CategoriesPage(PageWithHeaders):
     def __init__(self, parent, item, taskFile, settings, *args, **kwargs):
         super(CategoriesPage, self).__init__(parent, item, *args, **kwargs)
         self.__categories = category.CategorySorter(taskFile.categories())
@@ -497,9 +520,9 @@ class CategoriesPage(EditorPage):
         self._categoryViewer.detach()
         event.Skip()
 
-    @staticmethod
-    def columns():
-        return ['categories', 'totalCategories'] 
+    def entries(self):
+        return dict(categories=self._categoryViewer,
+                    totalCategories=self._categoryViewer) 
 
     def ok(self):
         treeCtrl = self._categoryViewer.widget
@@ -529,7 +552,7 @@ class LocalAttachmentViewer(LocalDragAndDropFix, viewer.AttachmentViewer):
     pass
 
 
-class AttachmentsPage(EditorPage):
+class AttachmentsPage(PageWithHeaders):
     def __init__(self, parent, item, settings, taskFile, *args, **kwargs):
         settingsSection = kwargs.pop('settingsSection')
         super(AttachmentsPage, self).__init__(parent, item, *args, **kwargs)
@@ -545,9 +568,8 @@ class AttachmentsPage(EditorPage):
         self.fit()
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
 
-    @staticmethod
-    def columns():
-        return ['attachments'] 
+    def entries(self):
+        return dict(attachments=self._attachmentViewer)
 
     def ok(self):
         self.item.setAttachments(self.attachmentsList)
@@ -562,7 +584,7 @@ class LocalNoteViewer(LocalDragAndDropFix, viewer.BaseNoteViewer):
     pass
 
 
-class NotesPage(EditorPage):
+class NotesPage(PageWithHeaders):
     def __init__(self, parent, item, settings, taskFile, *args, **kwargs):
         super(NotesPage, self).__init__(parent, item, *args, **kwargs)
         notesBox = widgets.BoxWithBoxSizer(self, label=_('Notes'))
@@ -576,9 +598,8 @@ class NotesPage(EditorPage):
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self.fit()
     
-    @staticmethod
-    def columns():
-        return ['notes'] 
+    def entries(self):
+        return dict(notes=self.noteViewer)
         
     def onClose(self, event):
         # Don't notify the viewer about any changes anymore, it is about
@@ -590,7 +611,7 @@ class NotesPage(EditorPage):
         self.item.setNotes(list(self.notes.rootItems()))
 
 
-class BehaviorPage(EditorPage, TaskHeaders):
+class BehaviorPage(PageWithHeaders, TaskHeaders):
     def __init__(self, parent, task, *args, **kwargs):
         super(BehaviorPage, self).__init__(parent, task, *args, **kwargs)
         behaviorBox = widgets.BoxWithFlexGridSizer(self,
@@ -625,12 +646,11 @@ class TaskEditBook(widgets.Listbook):
         self.AddPage(DatesPage(self, task), _('Dates'), 'date')
         self.AddPage(TaskCategoriesPage(self, task, taskFile, settings), 
                      _('Categories'), 'category')
-        effortOn = settings.getboolean('feature', 'effort')
-        if effortOn:
-            self.AddPage(BudgetPage(self, task), _('Budget'), 'budget')
-        if effortOn and task.timeSpent(recursive=True):
-            effortPage = EffortPage(self, task, taskFile, settings)
-            self.AddPage(effortPage, _('Effort'), 'start')
+        if settings.getboolean('feature', 'effort'):
+            self.AddPage(BudgetPage(self, task),
+                         _('Budget'), 'budget')
+            self.AddPage(EffortPage(self, task, taskFile, settings), 
+                         _('Effort'), 'start')
         if settings.getboolean('feature', 'notes'):
             self.AddPage(NotesPage(self, task, settings, taskFile), 
                          _('Notes'), 'note')
@@ -641,7 +661,7 @@ class TaskEditBook(widgets.Listbook):
         self.item = task
 
 
-class EffortEditBook(widgets.BookPage):
+class EffortEditBook(Page, widgets.BookPage):
     def __init__(self, parent, effort, editor, effortList, taskList, settings,
                  *args, **kwargs):
         super(EffortEditBook, self).__init__(parent, columns=3, *args, **kwargs)
@@ -717,7 +737,24 @@ class EffortEditBook(widgets.BookPage):
         else:
             self._editor.enableOK()
 
-        
+    # Fake a Book interface:
+    
+    def GetPageCount(self):
+        return 1 # EffortEditBook has no pages.
+    
+    def ChangeSelection(self, pageIndex):
+        pass
+    
+    def __getitem__(self, index):
+        return self
+    
+    def entries(self):
+        return dict(period=self._stopEntry, task=self._taskEntry,
+                    description=self._descriptionEntry,
+                    timeSpent=self._stopEntry, totalTimeSpent=self._stopEntry,
+                    revenue=self._taskEntry, totalRevenue=self._taskEntry)
+    
+    
 class CategoryEditBook(widgets.Listbook):
     def __init__(self, parent, theCategory, settings, taskFile, *args, **kwargs):
         self.item = theCategory
@@ -775,12 +812,11 @@ class EditorWithCommand(widgets.NotebookDialog):
             based on the column that the user double clicked. '''
         page = 0
         for pageIndex in range(self[0].GetPageCount()):
-            if columnName in self[0][pageIndex].columns():
+            if columnName in self[0][pageIndex].entries():
                 page = pageIndex
                 break
         self[0].ChangeSelection(page)
-        if page == 0:
-            self.setFocusOnFirstEntry()
+        self[0][page].setFocusOnEntry(columnName)
         
     def setFocusOnFirstEntry(self):
         firstEntry = self[0][0]._subjectEntry

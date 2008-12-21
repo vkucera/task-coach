@@ -65,7 +65,8 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
             self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onSelect)
             self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onSelect)
         if editCommand:
-            self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, editCommand)  
+            self.editCommand = editCommand
+            self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onItemActivated)  
 
     def OnGetItemText(self, rowIndex, columnIndex):
         return self.getItemText(rowIndex, columnIndex)
@@ -87,6 +88,19 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
         
     def onSelect(self, event):
         self.selectCommand(event)
+        
+    def onItemActivated(self, event):
+        ''' Override default behavior to attach the column clicked on
+            to the event so we can use it elsewhere. '''
+        mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
+        index, flags, column = self.HitTest(mousePosition, alwaysReturnColumn=True)
+        if index >= 0:
+            # Only get the column name if the hittest returned an item,
+            # otherwise the item was activated from the menu or by double 
+            # clicking on a portion of the tree view not containing an item.
+            column = max(0, column) # FIXME: Why can the column be -1?
+            event.columnName = self._getColumn(column).name()
+        self.editCommand(event)
 
     def RefreshItems(self):
         if self.GetItemCount(): 

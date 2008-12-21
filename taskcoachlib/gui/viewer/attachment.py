@@ -156,7 +156,8 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.AttachmentEditor(wx.GetTopLevelParent(self),
             command.EditAttachmentCommand(self.presentation(), *args, **kwargs),
-            self.settings, self.presentation(), self.taskFile, bitmap=kwargs['bitmap'])
+            self.settings, self.presentation(), self.taskFile, 
+            bitmap=kwargs['bitmap'], columnName=kwargs.get('columnName', ''))
 
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection())

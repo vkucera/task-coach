@@ -135,7 +135,8 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
             command.EditCategoryCommand(self.presentation(), kwargs['items']),
-            self.settings, self.taskFile, bitmap=kwargs['bitmap'])
+            self.settings, self.taskFile, bitmap=kwargs['bitmap'],
+            columnName=kwargs.get('columnName', ''))
     
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection())

@@ -174,7 +174,7 @@ class NewTaskTest(TaskEditorTestCase):
             self.errorMessage = args[0]
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
         command = uicommand.AttachmentOpen(\
-            viewer=self.editor[0][5]._attachmentViewer,
+            viewer=self.editor[0][6]._attachmentViewer,
             attachments=attachment.AttachmentList([att]))
         command.doCommand(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo:
@@ -191,7 +191,7 @@ class NewTaskTest(TaskEditorTestCase):
         self.failUnless(self.errorMessage.startswith(errorMessageStart))
 
     def testAddNote(self):
-        self.editor[0][4].notes.append(note.Note('New note'))
+        self.editor[0][5].notes.append(note.Note('New note'))
         self.editor.ok()
         self.assertEqual(1, len(self.task.notes()))
         
@@ -200,7 +200,7 @@ class NewTaskTest(TaskEditorTestCase):
         child = note.Note('Child')
         parent.addChild(child)
         child.setParent(parent)
-        self.editor[0][4].notes.extend([parent, child])
+        self.editor[0][5].notes.extend([parent, child])
         self.editor.ok()
         # Only the parent note should be added to the notes list:
         self.assertEqual(1, len(self.task.notes())) 
@@ -278,18 +278,18 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual('New category', self.editor[0][2]._checkListBox.GetString(0))
         
     def testBehaviorMarkCompleted(self):
-        self.editor[0][6]._markTaskCompletedEntry.SetStringSelection('Yes')
+        self.editor[0][7]._markTaskCompletedEntry.SetStringSelection('Yes')
         self.editor.ok()
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
 
     def testAddAttachment(self):
-        self.editor[0][5]._attachmentViewer.onDropFiles(None, ['filename'])
+        self.editor[0][6]._attachmentViewer.onDropFiles(None, ['filename'])
         self.editor.ok()
         self.failUnless('filename' in [att.location() for att in self.task.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor[0][5]._attachmentViewer.presentation().removeItems([self.attachment])
+        self.editor[0][6]._attachmentViewer.presentation().removeItems([self.attachment])
         self.editor.ok()
         self.assertEqual([], self.task.attachments())
 
