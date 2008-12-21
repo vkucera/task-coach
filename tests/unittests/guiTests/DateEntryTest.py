@@ -17,14 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib.gui.dialog import editor 
+from taskcoachlib.gui.dialog import entry 
 from taskcoachlib.domain import date
 
 
 class DateEntryTest(test.wxTestCase):
     def setUp(self):
         super(DateEntryTest, self).setUp()
-        self.dateEntry = editor.DateEntry(self.frame)
+        self.dateEntry = entry.DateEntry(self.frame)
         self.date = date.Date(2004, 1, 1)
 
     def testCreate(self):
@@ -57,6 +57,6 @@ class DateEntryTest(test.wxTestCase):
 
 class DateEntryConstructorTest(test.wxTestCase):
     def testCreateWithDate(self):
-        dateEntry = editor.DateEntry(self.frame, date.Tomorrow())
+        dateEntry = entry.DateEntry(self.frame, date.Tomorrow())
         self.assertEqual(date.Tomorrow(), dateEntry.get())
 

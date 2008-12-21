@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, datetime, os.path, sys
-from wx.lib import masked
 import wx.lib.customtreectrl as customtree
 from taskcoachlib import widgets, patterns
 from taskcoachlib.gui import render, viewer, uicommand
@@ -28,74 +27,7 @@ from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
 from taskcoachlib.thirdparty import desktop, combotreebox
-
-
-class DateEntry(widgets.PanelWithBoxSizer):
-    defaultDate = date.Date()
-
-    def __init__(self, parent, date=defaultDate, readonly=False, callback=None,
-                 *args, **kwargs):
-        super(DateEntry, self).__init__(parent, *args, **kwargs)
-        self._entry = widgets.DateCtrl(self, callback)
-        if readonly:
-            self._entry.Disable()
-        self._entry.SetValue(date)
-        self.add(self._entry)
-        self.fit()
-
-    def get(self, defaultDate=None):
-        result = self._entry.GetValue()
-        if result == date.Date() and defaultDate:
-            result = defaultDate
-        return result
-
-    def set(self, date=defaultDate):
-        self._entry.SetValue(date)
-
-    def setToday(self):
-        self._entry.SetValue(date.Today())
-
-
-class TimeDeltaEntry(widgets.PanelWithBoxSizer):
-    defaultTimeDelta=date.TimeDelta()
-
-    def __init__(self, parent, timeDelta=defaultTimeDelta, readonly=False,
-                 *args, **kwargs):
-        super(TimeDeltaEntry, self).__init__(parent, *args, **kwargs)
-        if readonly:
-            self._entry = wx.StaticText(self, label=render.timeSpent(timeDelta))
-        else:
-            self._entry = masked.TextCtrl(self, mask='#{6}:##:##',
-                fields=[masked.Field(formatcodes='rRFS'),
-                        masked.Field(formatcodes='RFS'),
-                        masked.Field(formatcodes='RFS')])
-            hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
-            self._entry.SetFieldParameters(0, defaultValue='%6d'%hours)
-            self._entry.SetFieldParameters(1, defaultValue='%02d'%minutes)
-            self._entry.SetFieldParameters(2, defaultValue='%02d'%seconds)
-        self.add(self._entry, flag=wx.EXPAND|wx.ALL, proportion=1)
-        self.fit()
-
-    def get(self):
-        return date.parseTimeDelta(self._entry.GetValue())
-
-
-class AmountEntry(widgets.PanelWithBoxSizer):
-    def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
-        super(AmountEntry, self).__init__(parent, *args, **kwargs)
-        if readonly:
-            self._entry = wx.StaticText(self, label=render.amount(amount))
-        else:
-            self._entry = masked.NumCtrl(self, fractionWidth=2,
-                                         allowNegative=False, value=amount)
-        self.add(self._entry)
-        self.fit()
-
-    def get(self):
-        return self._entry.GetValue()
-
-    def set(self, value):
-        self._entry.SetValue(value)
+import entry
 
 
 class EditorPage(widgets.PanelWithBoxSizer):
@@ -278,16 +210,16 @@ class DatesPage(EditorPage, TaskHeaders):
                                       (_('Completion date'), 'completionDate')]:
             datesBox.add(label)
             taskMethod = getattr(task, taskMethodName)
-            entry = DateEntry(datesBox, taskMethod(),
-                              callback=self.onDateChanged)
-            setattr(self, '_%sEntry'%taskMethodName, entry)
-            datesBox.add(entry)
+            dateEntry = entry.DateEntry(datesBox, taskMethod(),
+                                        callback=self.onDateChanged)
+            setattr(self, '_%sEntry'%taskMethodName, dateEntry)
+            datesBox.add(dateEntry)
             if task.children():
-                recursiveEntry = DateEntry(datesBox,
+                recursiveDateEntry = entry.DateEntry(datesBox,
                     taskMethod(recursive=True), readonly=True)
             else:
-                recursiveEntry = (0, 0)
-            datesBox.add(recursiveEntry)
+                recursiveDateEntry = (0, 0)
+            datesBox.add(recursiveDateEntry)
         return datesBox
         
     def addReminderBox(self, task):
@@ -445,9 +377,9 @@ class BudgetPage(EditorPage, TaskHeaders):
         budgetBox = widgets.BoxWithFlexGridSizer(self, label=_('Budget'), cols=3)
         revenueBox = widgets.BoxWithFlexGridSizer(self, label=_('Revenue'), cols=3)
         # Editable entries:
-        self._budgetEntry = TimeDeltaEntry(budgetBox, task.budget())
-        self._hourlyFeeEntry = AmountEntry(revenueBox, task.hourlyFee())
-        self._fixedFeeEntry = AmountEntry(revenueBox, task.fixedFee())
+        self._budgetEntry = entry.TimeDeltaEntry(budgetBox, task.budget())
+        self._hourlyFeeEntry = entry.AmountEntry(revenueBox, task.hourlyFee())
+        self._fixedFeeEntry = entry.AmountEntry(revenueBox, task.fixedFee())
         # Readonly entries:
         if task.children():
             recursiveBudget = render.budget(task.budget(recursive=True))
@@ -460,16 +392,19 @@ class BudgetPage(EditorPage, TaskHeaders):
             recursiveFixedFee = recursiveRevenue = ''
         # Fill the boxes:
         self.addHeaders(budgetBox)
-        for entry in [_('Budget'), self._budgetEntry, recursiveBudget,
-                      _('Time spent'), render.budget(task.timeSpent()), recursiveTimeSpent,
-                      _('Budget left'), render.budget(task.budgetLeft()), recursiveBudgetLeft]:
-            budgetBox.add(entry, flag=wx.ALIGN_RIGHT)
+        for eachEntry in [_('Budget'), self._budgetEntry, recursiveBudget,
+                          _('Time spent'), render.budget(task.timeSpent()), 
+                          recursiveTimeSpent, _('Budget left'), 
+                          render.budget(task.budgetLeft()),
+                          recursiveBudgetLeft]:
+            budgetBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
 
         self.addHeaders(revenueBox)
-        for entry in [_('Hourly fee'), self._hourlyFeeEntry, '',
-                      _('Fixed fee'), self._fixedFeeEntry, recursiveFixedFee,
-                      _('Revenue'), render.amount(task.revenue()), recursiveRevenue]:
-            revenueBox.add(entry, flag=wx.ALIGN_RIGHT)
+        for eachEntry in [_('Hourly fee'), self._hourlyFeeEntry, '',
+                          _('Fixed fee'), self._fixedFeeEntry, 
+                          recursiveFixedFee, _('Revenue'), 
+                          render.amount(task.revenue()), recursiveRevenue]:
+            revenueBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
         for box in budgetBox, revenueBox:
             box.fit()
             self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
