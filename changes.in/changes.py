@@ -38,7 +38,8 @@ midnight.'''),
 hidden before.''', '2372909'),
         Bug('''When marking a recurring task completed, recur its reminder too, 
 if any.''', '2376415'),
-        Bug('''Refresh task status at midnight.''', '2095205')]
+        Bug('''Refresh task status at midnight.''', '2095205'),
+        Bug('''Fix tab traversal in the effort editor on Linux.''', '1965751')]
     ),
              
 Release('0.71.4', 'December 6, 2008',

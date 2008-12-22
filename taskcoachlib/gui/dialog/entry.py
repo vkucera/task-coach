@@ -116,7 +116,7 @@ class TaskComboTreeBox(wx.Panel):
     def _createInterior(self):
         ''' Create the ComboTreebox widget. '''
         self._comboTreeBox = combotreebox.ComboTreeBox(self,
-            style=wx.CB_READONLY|wx.CB_SORT)
+            style=wx.CB_READONLY|wx.CB_SORT|wx.TAB_TRAVERSAL)
         boxSizer = wx.BoxSizer()
         boxSizer.Add(self._comboTreeBox, flag=wx.EXPAND, proportion=1)
         self.SetSizerAndFit(boxSizer)
