@@ -324,7 +324,7 @@ class IOController(object):
     def __saveUnsavedChanges(self):
         result = wx.MessageBox(_('You have unsaved changes.\n'
             'Save before closing?'), _('%s: save changes?')%meta.name,
-            wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION)
+            style=wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION|wx.YES_DEFAULT)
         if result == wx.YES:
             if not self.save():
                 return False
