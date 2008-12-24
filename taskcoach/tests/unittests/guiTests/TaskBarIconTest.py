@@ -107,6 +107,12 @@ class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
         self.taskList.append(newTask)
         self.taskList.remove(newTask)
         self.assertTooltip('')
+        
+    def testRemoveOverdueTask(self):
+        overdueTask = task.Task(dueDate=date.Yesterday())
+        self.taskList.append(overdueTask)
+        self.taskList.remove(overdueTask)
+        self.assertTooltip('')
 
 
 class TaskBarIconTooltipWithTrackedTaskTest(TaskBarIconTooltipTestCase):

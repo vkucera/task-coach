@@ -251,11 +251,12 @@ pages['screenshots'] = '''<H3>Screenshots</H3>
 for filename in reversed(glob.glob(os.path.join('screenshots', '*.png'))):
     basename = os.path.basename(filename)
     release, platform, description = basename.split('-')
-    description = description[:-len('.png')]
+    platform = platform.replace('_', ' ')
+    description = description[:-len('.png')].replace('_', ' ')
     caption = '%s (release %s on %s)'%(description, release, platform)
-    thumbnailFilename = os.path.join('screenshots', 'Thumb-'+basename)
+    thumbnailFilename = 'screenshots/Thumb-'+basename
     thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
-    image = '<A HREF="%s">%s</A>'%(filename, thumbnailImage)
+    image = '<A HREF="%s">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
     pages['screenshots'] += '<P>%s<BR>%s</P>'%(caption, image)
 
 pages['i18n'] = \

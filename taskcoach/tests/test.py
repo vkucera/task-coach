@@ -23,6 +23,18 @@ projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 
+def onlyOnPlatform(*platforms):
+    ''' Decorator for unit tests that only run on specific platforms. '''
+    def ignore(*args, **kwargs):
+        pass
+    def runTest(func):
+        return func
+    if wx.Platform in platforms:
+        return runTest
+    else:
+        return ignore
+            
+            
 class TestCase(unittest.TestCase):
     def assertEqualLists(self, expectedList, actualList):
         self.assertEqual(len(expectedList), len(actualList))
@@ -57,7 +69,7 @@ class wxTestCase(TestCase):
     frame = wx.Frame(None, -1, 'Frame')
     from taskcoachlib import gui
     gui.init()
-
+    
     def setUp(self):
         pass
 

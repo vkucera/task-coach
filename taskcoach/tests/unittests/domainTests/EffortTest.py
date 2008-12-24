@@ -107,6 +107,14 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual(patterns.Event(self.effort, 'effort.revenue', 2400.0),
             self.events[0])
 
+    def testRevenueNotificationForEffortDurationChange(self):
+        self.task.setHourlyFee(100)
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.revenue')
+        self.effort.setStop(date.DateTime(2004,1,3))
+        self.assertEqual(patterns.Event(self.effort, 'effort.revenue', 4800.0),
+            self.events[0])
+
     def testDefaultStartAndStop(self):
         effortPeriod = effort.Effort(self.task)
         currentTime = date.DateTime.now()

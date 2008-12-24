@@ -57,6 +57,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setDueDate(state['dueDate'])
         self.setCompletionDate(state['completionDate'])
         self.setRecurrence(state['recurrence'])
+        self.setReminder(state['reminder'])
         self.replaceChildren(state['children'])
         self.replaceParent(state['parent'])
         self.setEfforts(state['efforts'])
@@ -77,6 +78,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             categories=set(self._categories), priority=self._priority, 
             hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
             recurrence=self._recurrence.copy(),
+            reminder=self._reminder,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -416,10 +418,31 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def setHourlyFee(self, hourlyFee):
         if hourlyFee != self._hourlyFee:
             self._hourlyFee = hourlyFee
-            self.notifyObservers(patterns.Event(self, 'task.hourlyFee',
-                hourlyFee))
-            if self.timeSpent() > date.TimeDelta():
-                self.notifyObserversOfRevenueChange()
+            self.notifyObserversOfHourlyFeeChange(hourlyFee)
+
+    @classmethod
+    def hourlyFeeChangedEventType(class_):
+        return '%s.hourlyFee'%class_
+    
+    @classmethod
+    def totalHourlyFeeChangedEventType(class_):
+        return '%s.totalHourlyFee'%class_
+            
+    def notifyObserversOfHourlyFeeChange(self, hourlyFee):
+        self.notifyObservers(patterns.Event(self, 
+            self.hourlyFeeChangedEventType(), hourlyFee))
+        if self.parent():
+            self.parent().notifyObserversOfChildHourlyFeeChange(hourlyFee)
+        if self.timeSpent() > date.TimeDelta():
+            self.notifyObserversOfRevenueChange()
+            for effort in self.efforts():
+                effort.notifyObserversOfRevenueChange()
+                
+    def notifyObserversOfChildHourlyFeeChange(self, hourlyFee):
+        self.notifyObservers(patterns.Event(self, 
+            self.totalHourlyFeeChangedEventType(), hourlyFee))
+        if self.parent():
+            self.parent().notifyObserversOfChildHourlyFeeChange(hourlyFee)
         
     def revenue(self, recursive=False):
         if recursive:
@@ -446,8 +469,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.notifyObservers(patterns.Event(self, 'task.revenue', 
             self.revenue()))
         self.notifyObserversOfTotalRevenueChange()
-        for effort in self.efforts():
-            effort.notifyObserversOfRevenueChange()
                     
     def notifyObserversOfTotalRevenueChange(self):
         self.notifyObservers(patterns.Event(self, 'task.totalRevenue', 
@@ -491,6 +512,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setCompletionDate(date.Date())
         self.setStartDate(self.recurrence(recursive=True)(self.startDate(), next=False))
         self.setDueDate(self.recurrence(recursive=True)(self.dueDate(), next=False))
+        if self.reminder():
+            self.setReminder(self.recurrence(recursive=True)(self.reminder(), next=False))
         self.recurrence()(next=True)
                         
     # behavior

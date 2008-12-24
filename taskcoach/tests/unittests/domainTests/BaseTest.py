@@ -243,3 +243,20 @@ class CompositeObjectTest(test.TestCase):
                          self.compositeObject.expandedContexts())
         self.compositeObject.expand(context='another_viewer')
         self.failIf('another_viewer' in copy.expandedContexts())
+
+
+class BaseCollectionTest(test.TestCase):
+    def setUp(self):
+        self.collection = base.Collection()
+        
+    def testLookupByIdWhenCollectionIsEmptyRaisesIndexError(self):
+        try:
+            self.collection.getObjectById('id')
+            self.fail()
+        except IndexError:
+            pass
+        
+    def testLookupIdWhenObjectIsInCollection(self):
+        object = base.CompositeObject()
+        self.collection.append(object)
+        self.assertEqual(object, self.collection.getObjectById(object.id()))

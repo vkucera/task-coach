@@ -153,6 +153,7 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         self.set('version', 'python', sys.version)
         self.set('version', 'wxpython', '%s-%s @ %s'%(wx.VERSION_STRING, wx.PlatformInfo[2], wx.PlatformInfo[1]))
         self.set('version', 'pythonfrozen', str(hasattr(sys, 'frozen')))
+        self.set('version', 'current', meta.data.version)
         if not self.__loadAndSave:
             return
         try:

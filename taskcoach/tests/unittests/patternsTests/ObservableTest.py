@@ -312,6 +312,9 @@ class PublisherTest(test.TestCase):
         
     def onEvent(self, event):
         self.events.append(event)
+        
+    def dummyEventHandler(self, event):
+        pass
                 
     def testPublisherIsSingleton(self):
         anotherPublisher = patterns.Publisher()
@@ -403,6 +406,12 @@ class PublisherTest(test.TestCase):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.removeObserver(self.onEvent, eventType='otherType')
         self.assertEqual([self.onEvent], self.publisher.observers())
+
+    def testRemoveObserverForSpecificType_RegisteredForDifferentTypeThatHasObservers(self):
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        self.publisher.registerObserver(self.dummyEventHandler, eventType='otherType')
+        self.publisher.removeObserver(self.onEvent, eventType='otherType')
+        self.assertEqual([self.onEvent], self.publisher.observers('eventType'))
         
     def testRemoveObserversForSpecificInstance(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
@@ -445,4 +454,29 @@ class PublisherTest(test.TestCase):
         self.publisher.notifyObservers(patterns.Event(self, 'eventType'))
         self.assertEqual([patterns.Event(self, 'eventType')], self.events)
 
+    def testNotificationOfFirstObserverForEventType(self):
+        self.publisher.registerObserver(self.onEvent, eventType='publisher.firstObserverRegisteredFor.eventType')
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        self.assertEqual([patterns.Event(self.publisher, 
+            'publisher.firstObserverRegisteredFor.eventType', 'eventType')], 
+            self.events)
+
+    def testNoNotificationOfSecondObserverForEventType(self):
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        self.publisher.registerObserver(self.onEvent, eventType='publisher.firstObserverRegisteredFor.eventType')
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        self.assertEqual([], self.events)
         
+    def testNotificationForLastObserverRemoved(self):
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor.eventType')
+        self.publisher.removeObserver(self.onEvent, eventType='eventType')
+        self.assertEqual([patterns.Event(self.publisher, 
+            'publisher.lastObserverRemovedFor.eventType', 'eventType')], 
+            self.events)
+
+    def testNoNotificationForNonExistingObserverRemoved(self):
+        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor.eventType')
+        self.publisher.removeObserver(self.onEvent, eventType='eventType')
+        self.assertEqual([], self.events)
+

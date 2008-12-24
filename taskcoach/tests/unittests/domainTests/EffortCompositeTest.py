@@ -520,7 +520,6 @@ class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
         self.task.setHourlyFee(1000)
         self.assertEqual(1100, self.composite.revenue(recursive=True))
 
-        
     def testThatAnHourlyFeeChangeCausesATotalRevenueNotification(self):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType='effort.totalRevenue')

@@ -26,26 +26,32 @@ from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin
 
-class NoteViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForNotes, 
-                 mixin.SearchableViewer, base.SortableViewerWithColumns, 
-                 mixin.SortableViewerForNotes, base.TreeViewer):
+class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer, 
+                     base.SortableViewerWithColumns,
+                     mixin.SortableViewerForNotes, base.TreeViewer):
     SorterClass = note.NoteSorter
     defaultTitle = _('Notes')
     defaultBitmap = 'note'
     
     def __init__(self, *args, **kwargs):
-        self.categories = kwargs.pop('categories')
         kwargs.setdefault('settingsSection', 'noteviewer')
-        super(NoteViewer, self).__init__(*args, **kwargs)
+        self.notesToShow = kwargs.get('notesToShow', None)
+        super(BaseNoteViewer, self).__init__(*args, **kwargs)
         for eventType in [note.Note.subjectChangedEventType()]:
             patterns.Publisher().registerObserver(self.onNoteChanged, 
                 eventType)
         patterns.Publisher().registerObserver(self.onColorChange,
             eventType=note.Note.colorChangedEventType())
         
+    def domainObjectsToView(self):
+        if self.notesToShow is None:
+            return self.taskFile.notes()
+        else:
+            return self.notesToShow
+        
     def onColorChange(self, event):
         note = event.source()
-        if note in self.model():
+        if note in self.presentation():
             self.widget.RefreshItem(self.getIndexOfItem(note))
 
     def createWidget(self):
@@ -54,19 +60,17 @@ class NoteViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForNotes,
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText, 
             self.getItemTooltipData, self.getItemImage, self.getItemAttr, 
             self.getChildrenCount, self.getItemExpanded, self.onSelect,
-            uicommand.NoteEdit(viewer=self, notes=self.model()),
-            uicommand.NoteDragAndDrop(viewer=self, notes=self.model()),
-            menu.NotePopupMenu(self.parent, self.settings, self.model(),
-                               self.categories, self), 
+            uicommand.NoteEdit(viewer=self, notes=self.presentation()),
+            uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
+            menu.NotePopupMenu(self.parent, self.settings, self.presentation(),
+                               self), 
             menu.ColumnPopupMenu(self),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)
         return widget
     
     def createFilter(self, notes):
-        notes = super(NoteViewer, self).createFilter(notes)
-        # FIXMERGE
-##         return base.DeletedFilter(base.SearchFilter(notes, treeMode=True))
+        notes = super(BaseNoteViewer, self).createFilter(notes)
         return domain.base.DeletedFilter(notes)
 
     def createImageList(self):
@@ -84,16 +88,15 @@ class NoteViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForNotes,
             return -1
 
     def createToolBarUICommands(self):
-        commands = super(NoteViewer, self).createToolBarUICommands()
+        commands = super(BaseNoteViewer, self).createToolBarUICommands()
         commands[-2:-2] = [None,
-                           uicommand.NoteNew(notes=self.model(),
-                                             categories=self.categories,
+                           uicommand.NoteNew(notes=self.presentation(),
                                              settings=self.settings),
-                           uicommand.NoteNewSubNote(notes=self.model(),
+                           uicommand.NoteNewSubNote(notes=self.presentation(),
                                                     viewer=self),
-                           uicommand.NoteEdit(notes=self.model(),
+                           uicommand.NoteEdit(notes=self.presentation(),
                                               viewer=self),
-                           uicommand.NoteDelete(notes=self.model(),
+                           uicommand.NoteDelete(notes=self.presentation(),
                                                 viewer=self)]
         return commands
 
@@ -156,7 +159,7 @@ class NoteViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForNotes,
                      
     def onNoteChanged(self, event):
         note = event.source()
-        if note in self.list:
+        if note in self.presentation():
             self.widget.RefreshItem(self.getIndexOfItem(note))
             
     def getItemText(self, index, column=0):
@@ -188,15 +191,16 @@ class NoteViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForNotes,
 
     def statusMessages(self):
         status1 = _('Notes: %d selected, %d total')%\
-            (len(self.curselection()), len(self.list))
+            (len(self.curselection()), len(self.presentation()))
         status2 = _('Status: n/a')
         return status1, status2
 
     def newItemDialog(self, *args, **kwargs):
-        filteredCategories = [category for category in self.categories if
+        filteredCategories = [category for category in self.taskFile.categories() if
                               category.isFiltered()]
-        newCommand = command.NewNoteCommand(self.list, categories=filteredCategories, 
-            *args, **kwargs)
+        newCommand = command.NewNoteCommand(self.presentation(), 
+                                            categories=filteredCategories, 
+                                            *args, **kwargs)
         newCommand.do()
         return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
     
@@ -204,17 +208,23 @@ class NoteViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForNotes,
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
-            command.EditNoteCommand(self.list, kwargs['items']),
-            self.settings, self.list, self.categories, bitmap=kwargs['bitmap'])
+            command.EditNoteCommand(self.presentation(), kwargs['items']),
+            self.settings, self.presentation(),  
+            self.taskFile, bitmap=kwargs['bitmap'],
+            columnName=kwargs.get('columnName', ''))
     
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection(),
-                  shadow=True)
-    
+        return command.DeleteCommand(self.presentation(), self.curselection(),
+                  shadow=self.settings.getboolean('feature', 'syncml'))
+
     def newSubItemDialog(self, *args, **kwargs):
-        newCommand = command.NewSubNoteCommand(self.list, self.curselection())
-        newCommand.do()
-        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
+        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
+            command.NewSubNoteCommand(self.presentation(), self.curselection()),
+            self.settings, self.presentation(), 
+            self.taskFile, bitmap=kwargs['bitmap'])
         
     newSubNoteDialog = newSubItemDialog
 
+
+class NoteViewer(mixin.FilterableViewerForNotes, BaseNoteViewer): 
+    pass

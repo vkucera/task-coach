@@ -42,7 +42,7 @@ class Sorter(base.TreeSorter):
             pass
         # Make sure we notify our observers even if the sort order does not
         # change, because when switching from list to tree mode or vice versa
-        # the presentation of the model almost certainly needs to be updated.
+        # the presentation almost certainly needs to be updated.
         self.reset(forceNotification=True)
 
     def treeMode(self):

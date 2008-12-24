@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import patterns
+from taskcoachlib.domain import base
 from taskcoachlib.i18n import _
 
 
-class CategoryList(patterns.CompositeList):
+class CategoryList(base.Collection):
     newItemMenuText = _('New category...')
     newItemHelpText =  _('Insert a new category')
     editItemMenuText = _('Edit category...')

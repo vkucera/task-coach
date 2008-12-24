@@ -51,6 +51,7 @@ class TestWithTaskFile(base.Win32TestCase):
 
         editor = self.findWindow(r'^Edit task')
         self.failIf(editor is None, 'Task editor not found')
+        editor.waitFocus()
 
         editor.findChildren('Button', 'OK')[0].clickAt(5, 5)
 
@@ -58,6 +59,9 @@ class TestWithTaskFile(base.Win32TestCase):
         mainwindow.clickAt(58, 15) # Save button
 
         time.sleep(2)
+
+        if os.path.exists(self.logfilename):
+            self.fail('Exception occurred while saving:\n' + file(self.logfilename, 'rb').read())
 
         self.failUnless(os.stat(self.args[0]).st_mtime > timestamp,
                         'File was not written')

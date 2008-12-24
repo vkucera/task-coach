@@ -23,22 +23,73 @@ from changetypes import *
 
 releases = [
 
-Release('0.72.0', '?? ??, 2008', # Or maybe 1.0.0
+Release('0.72.0', '?? ??, 2009', # Or maybe 1.0.0
     summary='',
     featuresAdded=[
         Feature('''One can now export only the current selection
 as HTML.''')
         ]
     ),
+
+Release('0.71.5', 'December 24, 2008',
+    summary='''This release adds one usability enhancement and a few bug 
+fixes.''',
+    featuresAdded=[
+        Feature('''When double clicking an item in a viewer, open the editor
+on the right page, depending on the column clicked. For example, when clicking
+on the due date column in a task viewer, Task Coach will open the task editor
+with the dates page raised. Patch provided by Carl Zmola.''')
+        ],
+    bugsFixed=[
+        Bug('''Don't wake up every second just to keep track of reminders and 
+midnight.'''),
+        Bug('''Hide main window after showing reminder dialog when it was 
+hidden before.''', '2372909'),
+        Bug('''When marking a recurring task completed, recur its reminder too, 
+if any.''', '2376415'),
+        Bug('''Refresh task status at midnight.''', '2095205'),
+        Bug('''Fix tab traversal in the effort editor on Linux.''', '1965751')]
+    ),
+             
+Release('0.71.4', 'December 6, 2008',
+    summary='''This is a bugfix release.''',
+    featuresAdded=[
+        Feature('''Add a "Purge deleted items" entry in the File menu for
+people who have been using Task Coach with SyncML disabled.'''),
+    ],
+    bugsFixed=[
+        Bug('''Opening an old .tsk file with missing e-mail attachments
+would crash Task Coach.'''),
+        Bug('''Don't throw exception when showing an (error) message while
+synchronizing.''', '2356799'),
+        Bug('''When merging from the same file multiple times, update the
+existing items instead of duplicating them.''', '2062616'),
+        Bug('''Don't set negative priorities to zero in the task editor
+(Linux only).''', '2324869'),
+        Bug('''Save the column width of the first column when automatic 
+resizing of columns is off.''', '2255690'),
+        Bug('''Actually delete tasks and notes when SyncML is disabled.''',
+            '2319921'),
+        Bug('''Do not create subitems in two steps, this is counter intuitive.'''),
+        Bug('''Properly iterate over the open viewers with Ctrl-PgDn and 
+Ctrl-PgUp.''', '1973357'),
+        Bug('''Update the task viewer when a note is deleted from a task.''',
+            '2277217'),
+        Bug('''Update the tray icon tool tip when deleting an overdue task.''',
+            '2321351'),
+        Bug('''Wrap long lines in description tool tip windows.''', '2318094')
+        ]
+    ),
+>>>>>>> .merge-right.r1585
             
 Release('0.71.3', 'November 10, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Spell checking in editor didn't work under MacOS''', '2214676'),
+        Bug('''Spell checking in editor didn't work under Mac OS X.''', '2214676'),
         Bug('''Dropping a mail with several recipients from Outlook would result
 in a "No subject" subject.''', '2220224'),
-        Bug('''A ghost window would appear on the secondary display under MacOSX
-if it's placed on the right.''', '2206656'),
+        Bug('''A ghost window would appear on the secondary display under 
+Mac OS X if it's placed on the right.''', '2206656'),
         Bug('''The note total would include deleted notes.''', '2209640'),
         Bug('''Don't hang when exiting the application.''', '2185910', '2209679'),
         Bug('''Don't show all effort in the effort tab of a task editor, but

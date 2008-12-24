@@ -36,14 +36,15 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
     defaultBitmap = 'task'
     
     def __init__(self, *args, **kwargs):
-        self.categories = kwargs.pop('categories')
-        self.efforts = kwargs.pop('efforts')
         self.__sortKeyUnchangedCount = 0
         kwargs.setdefault('settingsSection', 'taskviewer')
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.treeOrListUICommand.setChoice(self.isTreeViewer())
         self.__registerForColorChanges()
 
+    def domainObjectsToView(self):
+        return self.taskFile.tasks()
+    
     def isShowingTasks(self): 
         return True
     
@@ -56,8 +57,8 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
             self.getItemTooltipData, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.onSelect, 
-            uicommand.TaskEdit(taskList=self.model(), viewer=self),
-            uicommand.TaskDragAndDrop(taskList=self.model(), viewer=self),
+            uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
+            uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)
@@ -113,7 +114,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
                                                            value='totalCategories'),
                 renderCallback=lambda task: self.renderCategory(task, recursive=True),
                 width=self.getColumnWidth('totalCategories'), **kwargs)])
-        effortOn= self.settings.getboolean('feature', 'effort')
+        effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget', 'totalBudget', 
                                   'timeSpent', 'totalTimeSpent', 
                                   'budgetLeft', 'totalBudgetLeft',
@@ -270,18 +271,16 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         # the end.
 
         taskUICommands[-2:-2] = [None,
-                                 uicommand.TaskNew(taskList=self.model(),
-                                                   categories=self.categories,
+                                 uicommand.TaskNew(taskList=self.presentation(),
                                                    settings=self.settings),
-                                 uicommand.TaskNewFromTemplateButton(taskList=self.model(),
+                                 uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
                                                              settings=self.settings,
-                                                             categories=self.categories,
                                                              bitmap='newtmpl'),
-                                 uicommand.TaskNewSubTask(taskList=self.model(),
+                                 uicommand.TaskNewSubTask(taskList=self.presentation(),
                                                           viewer=self),
-                                 uicommand.TaskEdit(taskList=self.model(),
+                                 uicommand.TaskEdit(taskList=self.presentation(),
                                                viewer=self),
-                                 uicommand.TaskDelete(taskList=self.model(),
+                                 uicommand.TaskDelete(taskList=self.presentation(),
                                                       viewer=self),
                                  None,
                                  uicommand.TaskToggleCompletion(viewer=self)]
@@ -290,10 +289,10 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
                 # EffortStart needs a reference to the original (task) list to
                 # be able to stop tracking effort for tasks that are already 
                 # being tracked, but that might be filtered in the viewer's 
-                # model.
+                # presentation.
                 None,
-                uicommand.EffortStart(viewer=self, taskList=self.originalList),
-                uicommand.EffortStop(taskList=self.model())]
+                uicommand.EffortStart(viewer=self, taskList=self.taskFile.tasks()),
+                uicommand.EffortStop(taskList=self.presentation())]
         return taskUICommands
  
     def trackStartEventType(self):
@@ -304,16 +303,16 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
    
     def statusMessages(self):
         status1 = _('Tasks: %d selected, %d visible, %d total')%\
-            (len(self.curselection()), len(self.list), 
-             self.list.originalLength())         
+            (len(self.curselection()), len(self.presentation()), 
+             self.presentation().originalLength())         
         status2 = _('Status: %d over due, %d inactive, %d completed')% \
-            (self.list.nrOverdue(), self.list.nrInactive(),
-             self.list.nrCompleted())
+            (self.presentation().nrOverdue(), self.presentation().nrInactive(),
+             self.presentation().nrCompleted())
         return status1, status2
  
     def createTaskPopupMenu(self):
         return menu.TaskPopupMenu(self.parent, self.settings,
-                                  self.model(), self.categories, self.efforts,
+                                  self.presentation(), self.taskFile.efforts(),
                                   self)
 
     def createColumnPopupMenu(self):
@@ -349,7 +348,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         
     def onColorChange(self, event):
         task = event.source()
-        if task in self.model():
+        if task in self.presentation():
             self.widget.RefreshItem(self.getIndexOfItem(task))
 
     def createImageList(self):
@@ -391,28 +390,27 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
 
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
-        kwargs['categories'] = [category for category in self.categories
+        kwargs['categories'] = [category for category in self.taskFile.categories()
                                 if category.isFiltered()]
-        newCommand = command.NewTaskCommand(self.list, **kwargs)
+        newCommand = command.NewTaskCommand(self.presentation(), **kwargs)
         newCommand.do()
         return self.editItemDialog(bitmap=bitmap, items=newCommand.items)
 
     def editItemDialog(self, *args, **kwargs):
         items = kwargs.get('items', self.curselection())
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-            command.EditTaskCommand(self.list, items),
-            self.list, self.settings, self.categories,
-            bitmap=kwargs['bitmap'])
+            command.EditTaskCommand(self.presentation(), items),
+            self.taskFile, self.settings, bitmap=kwargs['bitmap'],
+            columnName=kwargs.get('columnName', ''))
     
     def deleteItemCommand(self):
-        return command.DeleteTaskCommand(self.list, self.curselection(),
-                  shadow=True)
+        return command.DeleteTaskCommand(self.presentation(), self.curselection(),
+                  shadow=self.settings.getboolean('feature', 'syncml'))
     
     def newSubItemDialog(self, *args, **kwargs):
-        newCommand = command.NewSubTaskCommand(self.list, self.curselection())
-        newCommand.do()
-        return self.editItemDialog(bitmap=kwargs['bitmap'], 
-                                   items=newCommand.items)
+        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
+            command.NewSubTaskCommand(self.presentation(), self.curselection()),
+            self.taskFile, self.settings, bitmap=kwargs['bitmap'])
                            
     def sortBy(self, sortKey):
         # If the user clicks the same column for the third time, toggle
@@ -447,7 +445,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
 
     def showTree(self, treeMode):
         self.settings.set(self.settingsSection(), 'treemode', str(treeMode))
-        self.model().setTreeMode(treeMode)
+        self.presentation().setTreeMode(treeMode)
         
     def renderSubject(self, task):
         return task.subject(recursive=not self.isTreeViewer())
@@ -458,7 +456,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         if self.isTreeViewer():
             return super(TaskViewer, self).getRootItems()
         else:
-            return self.model()
+            return self.presentation()
     
     def getItemParent(self, item):
         if self.isTreeViewer():

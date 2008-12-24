@@ -204,7 +204,7 @@ class Column(object):
         self.__name = name
         self.__columnHeader = columnHeader
         self.width = kwargs.pop('width', wx.gizmos.DEFAULT_COL_WIDTH)
-        # The event types to use for registering an oberver that is
+        # The event types to use for registering an observer that is
         # interested in changes that affect this column:
         self.__eventTypes = eventTypes
         self.__sortCallback = kwargs.pop('sortCallback', None)
@@ -419,11 +419,16 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
 
 
 class _CtrlWithAutoResizedColumns(autowidth.AutoColumnWidthMixin):
-    def DoResize(self, *args, **kwargs):
-        super(_CtrlWithAutoResizedColumns, self).DoResize(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(_CtrlWithAutoResizedColumns, self).__init__(*args, **kwargs)
+        self.Bind(wx.EVT_LIST_COL_END_DRAG, self.onEndColumnResize)
+        
+    def onEndColumnResize(self, event):
+        ''' Save the column widths after the user did a resize. '''
         for index, column in enumerate(self._visibleColumns()):
             column.setWidth(self.GetColumnWidth(index))
-
+        event.Skip()
+        
 
 class CtrlWithColumns(_CtrlWithAutoResizedColumns, _CtrlWithHideableColumns,
                       _CtrlWithSortableColumns, _CtrlWithColumnPopupMenu):

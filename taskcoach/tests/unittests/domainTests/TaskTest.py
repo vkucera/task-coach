@@ -297,10 +297,10 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.assertEqual(100, self.task.hourlyFee())
   
     def testSetHourlyFeeCausesNotification(self):
-        self.registerObserver('task.hourlyFee')
+        self.registerObserver(self.task.hourlyFeeChangedEventType())
         self.task.setHourlyFee(100)
-        self.assertEqual([patterns.Event(self.task, 'task.hourlyFee',
-            100)], self.events)
+        self.assertEqual([patterns.Event(self.task, 
+            self.task.hourlyFeeChangedEventType(), 100)], self.events)
   
     def testSetRecurrence(self):
         self.task.setRecurrence(date.Recurrence('weekly'))
@@ -477,7 +477,13 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         state = self.task.__getstate__()
         self.task.addNote(note.Note())
         self.task.__setstate__(state)
-        self.failIf(self.task.notes())                        
+        self.failIf(self.task.notes())
+        
+    def testTaskStateIncludesReminder(self):
+        state = self.task.__getstate__()
+        self.task.setReminder(date.DateTime.now() + date.TimeDelta(seconds=10))
+        self.task.__setstate__(state)
+        self.failIf(self.task.reminder())                     
 
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
@@ -915,7 +921,7 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTests):
         self.task.setColor(wx.RED)
         self.assertEqual(patterns.Event(self.task1effort1,
             effort.Effort.colorChangedEventType(), wx.RED), self.events[0])
-
+        
 
 class TaskWithTwoEffortsTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
@@ -1276,6 +1282,11 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTests):
         self.assertEqual([patterns.Event(self.task, 'task.revenue', 100)], 
             self.events)
 
+    def testAddingEffortDoesNotTriggerRevenueNotificationForEffort(self):
+        self.registerObserver('effort.revenue')
+        self.task.addEffort(self.effort)
+        self.assertEqual([], self.events)
+
 
 class RecurringTaskTestCase(TaskTestCase):
     def taskCreationKeywordArguments(self):
@@ -1322,6 +1333,16 @@ class CommonRecurrenceTests(CommonTaskTests):
     def testRecurringTaskIsNotCompletedWhenMarkedCompleted(self):
         self.task.setCompletionDate()
         self.failIf(self.task.completed())
+
+    def testMarkCompletedDoesNotSetReminderIfItWasNotSetPreviously(self):
+        self.task.setCompletionDate()
+        self.assertEqual(None, self.task.reminder())
+    
+    def testMarkCompletedSetsNewReminderIfItWasSetPreviously(self):
+        reminder = date.DateTime.now() + date.TimeDelta(seconds=10)
+        self.task.setReminder(reminder)
+        self.task.setCompletionDate()
+        self.assertEqual(self.createRecurrence()(reminder), self.task.reminder())
         
     def testCopyRecurrence(self):
         self.assertEqual(self.task.copy().recurrence(), self.task.recurrence())

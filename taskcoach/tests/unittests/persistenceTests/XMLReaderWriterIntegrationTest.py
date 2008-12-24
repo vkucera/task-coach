@@ -152,10 +152,10 @@ class IntegrationTest(IntegrationTestCase):
        
     def testCategory(self):
         self.assertEqual(self.task.id(), 
-                         self.categoriesWrittenAndRead[0].categorizables()[0].id())
+                         list(self.categoriesWrittenAndRead)[0].categorizables()[0].id())
 
     def testFilteredCategory(self):
-        self.failUnless(self.categoriesWrittenAndRead[0].isFiltered())
+        self.failUnless(list(self.categoriesWrittenAndRead)[0].isFiltered())
         
     def testPriority(self):
         self.assertAttributeWrittenAndRead(self.task, 'priority')
@@ -201,8 +201,8 @@ class IntegrationTest(IntegrationTestCase):
             self.notesWrittenAndRead.rootItems()[0].children()[0].subject())
         
     def testCategoryDescription(self):
-        self.assertEqual(self.categories[0].description(), 
-                         self.categoriesWrittenAndRead[0].description())
+        self.assertEqual(list(self.categories)[0].description(), 
+                         list(self.categoriesWrittenAndRead)[0].description())
 
     def testNoteId(self):
         self.assertEqual(self.notes.rootItems()[0].id(),
@@ -210,11 +210,11 @@ class IntegrationTest(IntegrationTestCase):
         
     def testCategoryId(self):
         self.assertEqual(self.category.id(),
-                         self.categoriesWrittenAndRead[0].id())
+                         list(self.categoriesWrittenAndRead)[0].id())
         
     def testNoteWithCategory(self):
         self.failUnless(self.notesWrittenAndRead.rootItems()[0] in \
-                        self.categoriesWrittenAndRead[0].categorizables())
+                        list(self.categoriesWrittenAndRead)[0].categorizables())
         
     def testTaskNote(self):
         self.assertContainedDomainObjectsWrittenAndRead(self.task, 'notes')

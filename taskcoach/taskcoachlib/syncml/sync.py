@@ -22,8 +22,9 @@ from taskcoachlib.syncml.config import SyncMLConfigNode
 from taskcoachlib.syncml.core import *
 
 from taskcoachlib.i18n import _
+from taskcoachlib.meta import data
 
-import wx
+import sys, wx
 
 class TaskCoachManagementNode(ManagementNode):
     def __init__(self, syncMLConfig, *args, **kwargs):
@@ -59,6 +60,7 @@ class TaskCoachManagementNode(ManagementNode):
     def clone(self):
         return self
 
+
 class TaskCoachDMTree(DMTree):
     def __init__(self, syncMLConfig, *args, **kwargs):
         super(TaskCoachDMTree, self).__init__(*args, **kwargs)
@@ -76,6 +78,7 @@ class TaskCoachDMTree(DMTree):
 
         return node
 
+
 class TaskCoachDMTClientConfig(DMTClientConfig):
     def __init__(self, syncMLConfig, *args, **kwargs):
         super(TaskCoachDMTClientConfig, self).__init__(*args, **kwargs)
@@ -87,6 +90,7 @@ class TaskCoachDMTClientConfig(DMTClientConfig):
 
     def createDMTree(self, rootContext):
         return TaskCoachDMTree(self.__syncMLConfig, rootContext)
+
 
 class Synchronizer(wx.ProgressDialog):
     def __init__(self, reportCallback, conflictCallback, taskFile, password):
@@ -130,6 +134,11 @@ class Synchronizer(wx.ProgressDialog):
 
         dc = self.dmt.deviceConfig
         dc.devID = self.clientName
+        dc.devType = 'workstation'
+        dc.manufacturerName = 'Task Coach developers'
+        dc.modelName = sys.platform
+        dc.firmwareVersion = '0.0'
+        dc.softwareVersion = data.version
         self.dmt.deviceConfig = dc
 
         # Tasks source configuration
@@ -176,7 +185,7 @@ class Synchronizer(wx.ProgressDialog):
                              '%s.Notes' % self.clientName, cfg)
             src.preferredSyncMode = globals()[self.notemode]
             self.sources.append(src)
-
+    
     def onAddItem(self):
         self.added += 1
         self.pulse()

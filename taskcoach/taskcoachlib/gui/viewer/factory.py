@@ -29,45 +29,23 @@ class addViewers(object):
     
     def __init__(self, viewerContainer, taskFile, settings):
         self.viewerContainer = viewerContainer
-        self.taskFile = taskFile
         self.settings = settings
+        self.viewerInitArgs = (viewerContainer.containerWidget, taskFile, 
+                               settings)
         self.addAllViewers()
         
     def addAllViewers(self):
-        self.addTaskViewers()
+        self.addViewers(task.TaskViewer)
         if self.settings.getboolean('feature', 'effort'):
-            self.addEffortViewers()
-        self.addCategoryViewers()
+            self.addViewers(effort.EffortViewer)
+        self.addViewers(category.CategoryViewer)
         if self.settings.getboolean('feature', 'notes'):
-            self.addNoteViewers()
+            self.addViewers(note.NoteViewer)
 
-    def addTaskViewers(self):
-        self._addViewers(task.TaskViewer, 
-                         (self.taskFile.tasks(), self.settings), 
-                         dict(categories=self.taskFile.categories(), 
-                              efforts=self.taskFile.efforts()))
-           
-    def addEffortViewers(self):
-        self._addViewers(effort.EffortViewer, 
-                         (self.taskFile.tasks(), self.settings), 
-                         {})
-
-    def addCategoryViewers(self):
-        self._addViewers(category.CategoryViewer, 
-                         (self.taskFile.categories(), self.settings), 
-                         dict(tasks=self.taskFile.tasks(), 
-                              notes=self.taskFile.notes()))
-        
-    def addNoteViewers(self):
-        self._addViewers(note.NoteViewer, 
-                         (self.taskFile.notes(), self.settings), 
-                         dict(categories=self.taskFile.categories()))
-
-    def _addViewers(self, viewerClass, viewerArgs, viewerKwArgs):
+    def addViewers(self, viewerClass):
         numberOfViewersToAdd = self.numberOfViewersToAdd(viewerClass)
         for i in range(numberOfViewersToAdd):
-            viewerInstance = viewerClass(self.viewerContainer.containerWidget, 
-                                         *viewerArgs, **viewerKwArgs)
+            viewerInstance = viewerClass(*self.viewerInitArgs)
             self.viewerContainer.addViewer(viewerInstance)
     
     def numberOfViewersToAdd(self, viewerClass):

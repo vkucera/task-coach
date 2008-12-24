@@ -151,3 +151,51 @@ class IOControllerTest(test.TestCase):
         self.taskFile.tasks().append(task.Task())
         self.iocontroller._saveSave(self.taskFile, showerror)
         self.failUnless(self.showerrorCalled)
+
+    def testNothingDeleted(self):
+        self.taskFile.tasks().append(task.Task('Task'))
+        self.taskFile.notes().append(note.Note('Note'))
+        self.failIf(self.iocontroller.hasDeletedItems())
+
+    def testNoteDeleted(self):
+        self.taskFile.tasks().append(task.Task('Task'))
+        myNote = note.Note('Note')
+        myNote.markDeleted()
+        self.taskFile.notes().append(myNote)
+        self.failUnless(self.iocontroller.hasDeletedItems())
+
+    def testTaskDeleted(self):
+        myTask = task.Task('Task')
+        myTask.markDeleted()
+        self.taskFile.tasks().append(myTask)
+        self.taskFile.notes().append(note.Note('Note'))
+        self.failUnless(self.iocontroller.hasDeletedItems())
+
+    def testPurgeNothing(self):
+        myTask = task.Task('Task')
+        myNote = note.Note('Note')
+        self.taskFile.tasks().append(myTask)
+        self.taskFile.notes().append(myNote)
+        self.iocontroller.purgeDeletedItems()
+        self.assertEqual(self.taskFile.tasks(), [myTask])
+        self.assertEqual(self.taskFile.notes(), [myNote])
+
+    def testPurgeNote(self):
+        myTask = task.Task('Task')
+        myNote = note.Note('Note')
+        self.taskFile.tasks().append(myTask)
+        self.taskFile.notes().append(myNote)
+        myNote.markDeleted()
+        self.iocontroller.purgeDeletedItems()
+        self.assertEqual(self.taskFile.tasks(), [myTask])
+        self.assertEqual(self.taskFile.notes(), [])
+
+    def testPurgeTask(self):
+        myTask = task.Task('Task')
+        myNote = note.Note('Note')
+        self.taskFile.tasks().append(myTask)
+        self.taskFile.notes().append(myNote)
+        myTask.markDeleted()
+        self.iocontroller.purgeDeletedItems()
+        self.assertEqual(self.taskFile.tasks(), [])
+        self.assertEqual(self.taskFile.notes(), [myNote])

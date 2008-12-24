@@ -51,7 +51,7 @@ class TaskFile(patterns.Observable):
         for eventType in (task.Task.subjectChangedEventType(), 
             task.Task.descriptionChangedEventType(), 'task.startDate', 
             'task.dueDate', 'task.completionDate', 'task.priority', 
-            'task.budget', 'task.hourlyFee', 'task.fixedFee',
+            'task.budget', task.Task.hourlyFeeChangedEventType(), 'task.fixedFee',
             'task.timeSpent', 'task.reminder',
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
             task.Task.addChildEventType(), task.Task.removeChildEventType(),
@@ -143,7 +143,7 @@ class TaskFile(patterns.Observable):
             event.source().markDirty()
 
     def setFilename(self, filename):
-        self.__lastFilename = self.__filename or filename
+        self.__lastFilename = filename or self.__filename
         self.__filename = filename
         self.notifyObservers(patterns.Event(self, 'taskfile.filenameChanged', 
                                             filename))
@@ -228,12 +228,25 @@ class TaskFile(patterns.Observable):
         mergeFile = self.__class__(filename)
         mergeFile.load()
         self.__loading = True
+        self.tasks().removeItems(self.objectsToOverwrite(self.tasks(), mergeFile.tasks()))
         self.tasks().extend(mergeFile.tasks().rootItems())
+        self.notes().removeItems(self.objectsToOverwrite(self.notes(), mergeFile.notes()))
         self.notes().extend(mergeFile.notes().rootItems())
+        self.categories().removeItems(self.objectsToOverwrite(self.categories(),
+                                                              mergeFile.categories()))
         self.categories().extend(mergeFile.categories().rootItems())
         self.__loading = False
         self.markDirty(force=True)
-
+        
+    def objectsToOverwrite(self, originalObjects, objectsToMerge):
+        objectsToOverwrite = []
+        for object in objectsToMerge:
+            try:
+                objectsToOverwrite.append(originalObjects.getObjectById(object.id()))
+            except IndexError:
+                pass
+        return objectsToOverwrite
+    
     def needSave(self):
         return not self.__loading and self.__needSave
 

@@ -23,22 +23,29 @@ import wx
 
 
 class SpinCtrl(wx.SpinCtrl):
+    # Can't use sys.maxint for the range because Python and wxPython disagree 
+    # on what the maximum integer is on Suse 10.0 x86_64. Using sys.maxint 
+    # will cause an Overflow exception, so we use a constant:
+    maxRange = 2147483647
+    
     def __init__(self, *args, **kwargs):
         kwargs['style'] = wx.SP_ARROW_KEYS
+        if 'min' not in kwargs:
+            kwargs['min'] = -self.maxRange
+        if 'max' not in kwargs:
+            kwargs['max'] = self.maxRange
         super(SpinCtrl, self).__init__(*args, **kwargs)
-        # Can't use sys.maxint because Python and wxPython disagree on what the
-        # maximum integer is on Suse 10.0 x86_64. Using sys.maxint will cause
-        # an Overflow exception, so we use a constant:
-        maxint = 2147483647
-        self.SetRange(-maxint, maxint)
-        self.Bind(wx.EVT_SPINCTRL, self.onValueChanged)
+        if '__WXGTK__' != wx.Platform:
+            # on wxGtk, entering text is not possible anyway, so no need to deal
+            # with it.
+            self.Bind(wx.EVT_SPINCTRL, self.onValueChanged)
 
     def onValueChanged(self, event):
         ''' wx.SpinCtrl resets invalid values (e.g. text or an empty string)
             to wx.SpinCtrl.GetMin(). The minimum priority value is a large
-            (negative) number. It makes more sense to reset the SpinCtrl to 0
-            in case of invalid input. '''
-        if self.GetValue() == self.GetMin():
+            (negative) number by default. It makes more sense to reset the 
+            SpinCtrl to 0 in case of invalid input. '''
+        if self.GetValue() == -self.maxRange:
             wx.CallAfter(self.SetValue, 0)
         event.Skip()
 

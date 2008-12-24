@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from task import TaskViewer
 from category import CategoryViewer, BaseCategoryViewer
 from effort import EffortViewer
-from note import NoteViewer
+from note import NoteViewer, BaseNoteViewer
 from attachment import AttachmentViewer
 from container import ViewerContainer
 from factory import viewerTypes, addViewers, addOneViewer

@@ -43,7 +43,10 @@ def start():
     if options.profile:
         import hotshot
         profiler = hotshot.Profile('.profile')
-        profiler.runcall(app.start)
+        if options.skipstart:
+            app.start(profiler)
+        else:
+            profiler.runcall(app.start)
     else:
         app.start()
 

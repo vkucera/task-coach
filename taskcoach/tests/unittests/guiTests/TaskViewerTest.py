@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os
 import test
-from taskcoachlib import gui, widgets, config
+from taskcoachlib import gui, widgets, config, persistence
 from taskcoachlib.gui import render
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort, category, note, attachment
@@ -42,11 +42,10 @@ class TaskViewerTestCase(test.wxTestCase):
         self.child = task.Task(subject='child')
         self.child.setParent(self.task)
         self.settings = config.Settings(load=False)
-        self.taskList = task.TaskList()
-        self.categories = category.CategoryList()
-        effortList = effort.EffortList(self.taskList)
-        self.viewer = TaskViewerUnderTest(self.frame, self.taskList, 
-            self.settings, categories=self.categories, efforts=effortList)
+        self.taskFile = persistence.TaskFile()
+        self.taskList = self.taskFile.tasks()
+        self.viewer = TaskViewerUnderTest(self.frame, self.taskFile, 
+                                          self.settings)
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()
         self.viewer.showTree(self.treeMode)
@@ -373,7 +372,7 @@ class CommonTests(object):
         self.taskList.append(aTask)
         self.viewer.onDropFiles(self.viewer.getIndexOfItem(aTask), ['filename'])
         self.assertEqual([attachment.FileAttachment('filename')],
-                         self.viewer.model()[0].attachments())
+                         self.viewer.presentation()[0].attachments())
 
     def testOnDropURL(self):
         aTask = task.Task()
@@ -381,7 +380,7 @@ class CommonTests(object):
         self.viewer.onDropURL(self.viewer.getIndexOfItem(aTask), 
                               'http://www.example.com/')
         self.assertEqual([attachment.URIAttachment('http://www.example.com/')],
-                         self.viewer.model()[0].attachments())
+                         self.viewer.presentation()[0].attachments())
 
     def testOnDropMail(self):
         file('test.mail', 'wb').write('Subject: foo\r\n\r\nBody\r\n')
@@ -389,7 +388,7 @@ class CommonTests(object):
         self.taskList.append(aTask)
         self.viewer.onDropMail(self.viewer.getIndexOfItem(aTask), 'test.mail')
         self.assertEqual([attachment.MailAttachment('test.mail')],
-                         self.viewer.model()[0].attachments())
+                         self.viewer.presentation()[0].attachments())
         
     def testCategoryColor(self):
         cat = category.Category('category with color', color=self.newColor)
@@ -399,7 +398,7 @@ class CommonTests(object):
         self.assertBackgroundColor()
         
     def testNewItem(self):
-        self.categories.append(category.Category('cat', filtered=True))
+        self.taskFile.categories().append(category.Category('cat', filtered=True))
         dialog = self.viewer.newItemDialog(bitmap='new')
         tree = dialog[0][2]._categoryViewer.widget
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
@@ -412,7 +411,7 @@ class CommonTests(object):
         self.newColor = (255,128,0) # Expected color
         originalToday = date.Today
         date.Today = lambda: date.Tomorrow() # Make it tomorrow
-        date.Clock().notify(now=midnight)
+        date.Clock().notifyMidnightObservers(now=midnight)
         self.assertColor()
         date.Today = originalToday
 
@@ -515,12 +514,12 @@ class ColumnsTests(object):
         self.assertEqual("24:00:00", totalTimeSpent)
         
     def testGetSelection(self):
-        self.viewer.model().extend([task.Task('a'), task.Task('b')])
+        self.viewer.presentation().extend([task.Task('a'), task.Task('b')])
         self.viewer.widget.select([(0,)])
         self.assertEqual('a', self.viewer.curselection()[0].subject())
 
     def testGetSelection_AfterResort(self):
-        self.viewer.model().extend([task.Task('a'), task.Task('b')])
+        self.viewer.presentation().extend([task.Task('a'), task.Task('b')])
         self.viewer.widget.select([(0,)])
         self.viewer.onSelect([(0,)])
         self.viewer.setSortOrderAscending(False)

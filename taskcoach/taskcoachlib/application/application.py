@@ -37,7 +37,7 @@ class Application(object):
         self.wxApp = wxApp(redirect=False)
         self.init(**kwargs)
 
-    def start(self):
+    def start(self, profiler=None):
         ''' Call this to start the Application. '''
         if self.settings.getboolean('version', 'notify'):
             from taskcoachlib import meta
@@ -52,7 +52,10 @@ class Application(object):
             if not os.path.exists(filename):
                 file(filename, 'wb').write(template)
         self.mainwindow.Show()
-        self.wxApp.MainLoop()
+        if profiler:
+             profiler.runcall(self.wxApp.MainLoop)
+        else:
+             self.wxApp.MainLoop()
         
     def init(self, loadSettings=True, loadTaskFile=True):
         ''' Initialize the application. Needs to be called before 
