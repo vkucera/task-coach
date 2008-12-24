@@ -26,7 +26,7 @@ from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
 from taskcoachlib.thirdparty import desktop
-import entry
+from taskcoachlib.gui.dialog import entry
 
 
 class Page(object):

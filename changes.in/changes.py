@@ -23,8 +23,9 @@ from changetypes import *
 
 releases = [
 
-Release('0.71.5', 'December ?, 2008',
-    summary='''This is a bugfix release.''',
+Release('0.71.5', 'December 24, 2008',
+    summary='''This release adds one usability enhancement and a few bug 
+fixes.''',
     featuresAdded=[
         Feature('''When double clicking an item in a viewer, open the editor
 on the right page, depending on the column clicked. For example, when clicking
