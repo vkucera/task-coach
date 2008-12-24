@@ -43,7 +43,7 @@ class DummyWidget(wx.Frame):
         self._selection = indices
 
     def GetItemCount(self):
-        return len(self.viewer.list)
+        return len(self.viewer.presentation())
 
     def refresh(self, *args, **kwargs):
         pass
@@ -92,6 +92,9 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer):
     defaultTitle = 'ViewerWithDummyWidget'
     defaultBitmap = ''
     
+    def domainObjectsToView(self):
+        return self.taskFile.tasks()
+    
     def createWidget(self):
         self._columns = self._createColumns()
         return DummyWidget(self)
@@ -100,27 +103,9 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer):
         return []
     
     def getItemWithIndex(self, index):
-        return self.model()[index]
+        return self.presentation()[index]
 
     
-class TaskViewerWithDummyWidget(ViewerWithDummyWidget, gui.viewer.TaskViewer):
-    def createWidget(self):
-        self.createImageList()
-        return super(TaskViewerWithDummyWidget, self).createWidget()
-
-    def _createColumns(self):
-        return gui.viewer.TaskViewer._createColumns(self)
-
-
-class EffortViewerWithDummyWidget(ViewerWithDummyWidget,
-        gui.viewer.EffortViewer):
-    def createSorter(self, *args, **kwargs):
-        return gui.viewer.EffortViewer.createSorter(self, *args, **kwargs)
-
-    def _createColumns(self):
-        return gui.viewer.EffortViewer._createColumns(self)
-
-            
 class TaskFile(persistence.TaskFile):
     raiseIOError = False
     
@@ -136,6 +121,7 @@ class MainWindow:
         pass
         
     showFindDialog = setToolBarSize
+
 
 class IOController:
     def needSave(self, *args, **kwargs):

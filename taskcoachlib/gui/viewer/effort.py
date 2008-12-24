@@ -34,21 +34,23 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
     defaultBitmap = 'start'  
     SorterClass = effort.EffortSorter
     
-    def __init__(self, parent, list, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.aggregation = 'details'
-        self.taskList = list
-        self.tasksToShowEffortFor = domain.base.SearchFilter(kwargs.get('tasksToShowEffortFor', 
-                                               self.taskList))
+        self.tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', None)
         kwargs.setdefault('settingsSection', 'effortviewer')
         self.__hiddenTotalColumns = []
         self.__hiddenWeekdayColumns = []
         self.__columnUICommands = None
-        super(EffortViewer, self).__init__(parent, self.tasksToShowEffortFor, *args, **kwargs)
+        super(EffortViewer, self).__init__(*args, **kwargs)
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
         self.createColumnUICommands()
         patterns.Publisher().registerObserver(self.onColorChange,
             eventType=effort.Effort.colorChangedEventType())
+        
+    def domainObjectsToView(self):
+        self.tasksToShowEffortFor = self.tasksToShowEffortFor or self.taskFile.tasks()
+        return domain.base.SearchFilter(self.tasksToShowEffortFor)
         
     def isSortable(self):
         return False # FIXME: make effort viewers sortable too?
@@ -64,7 +66,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         
     def onColorChange(self, event):
         effort = event.source()
-        if effort in self.model():
+        if effort in self.presentation():
             self.widget.RefreshItem(self.getIndexOfItem(effort))
         
     def showEffortAggregation(self, aggregation):
@@ -73,9 +75,9 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         assert aggregation in ('details', 'day', 'week', 'month')
         self.aggregation = aggregation
         self.settings.set(self.settingsSection(), 'aggregation', aggregation)
-        self.setModel(self.createSorter(self.createAggregator(self.tasksToShowEffortFor, 
-                                                            aggregation)))
-        self.registerModelObservers()
+        self.setPresentation(self.createSorter(self.createAggregator(\
+                             self.domainObjectsToView(), aggregation)))
+        self.registerPresentationObservers()
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None
         self.refresh()
@@ -107,9 +109,9 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         widget = widgets.ListCtrl(self, self.columns(),
             self.getItemText, self.getItemTooltipData, self.getItemImage,
             self.getItemAttr, self.onSelect,
-            uicommand.EffortEdit(viewer=self, effortList=self.model()),
-            menu.EffortPopupMenu(self.parent, self.taskList, self.settings,
-                                 self.model(), self),
+            uicommand.EffortEdit(viewer=self, effortList=self.presentation()),
+            menu.EffortPopupMenu(self.parent, self.taskFile.tasks(), 
+                                 self.settings, self.presentation(), self),
             menu.EffortViewerColumnPopupMenu(self),
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
@@ -236,14 +238,14 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         commands = super(EffortViewer, self).createToolBarUICommands()
         # This is needed for unit tests
         self.deleteUICommand = uicommand.EffortDelete(viewer=self,
-                                                      effortList=self.model())
+                                                      effortList=self.presentation())
         commands[-2:-2] = [None,
                            uicommand.EffortNew(viewer=self,
-                                               effortList=self.model(),
-                                               taskList=self.taskList,
+                                               effortList=self.presentation(),
+                                               taskList=self.taskFile.tasks(),
                                                settings=self.settings),
                            uicommand.EffortEdit(viewer=self,
-                                                effortList=self.model()),
+                                                effortList=self.presentation()),
                            self.deleteUICommand]
         return commands
 
@@ -292,9 +294,9 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
 
     def statusMessages(self):
         status1 = _('Effort: %d selected, %d visible, %d total')%\
-            (len(self.curselection()), len(self.list), 
-             self.list.originalLength())         
-        status2 = _('Status: %d tracking')% self.list.nrBeingTracked()
+            (len(self.curselection()), len(self.presentation()), 
+             self.presentation().originalLength())         
+        status2 = _('Status: %d tracking')% self.presentation().nrBeingTracked()
         return status1, status2
 
     def renderPeriod(self, effort):
@@ -313,8 +315,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
     def _hasRepeatedPeriod(self, effort):
         ''' Return whether the effort has the same period as the previous 
             effort record. '''
-        index = self.list.index(effort)
-        previousEffort = index > 0 and self.list[index-1] or None
+        index = self.presentation().index(effort)
+        previousEffort = index > 0 and self.presentation()[index-1] or None
         return previousEffort and effort.getStart() == previousEffort.getStart()
 
     def renderTimeSpentOnDay(self, effort, dayOffset):
@@ -331,21 +333,22 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         bitmap = kwargs.get('bitmap', 'new')
         if not selectedTasks:
             subjectDecoratedTaskList = [(task.subject(recursive=True), task) \
-                                        for task in self.taskList]
+                                        for task in self.tasksToShowEffortFor]
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
-            command.NewEffortCommand(self.list, selectedTasks),
-            self.list, self.taskList, self.settings, bitmap=bitmap)
+            command.NewEffortCommand(self.presentation(), selectedTasks),
+            self.taskFile, self.settings, bitmap=bitmap)
         
     newEffortDialog = newItemDialog
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
-            command.EditEffortCommand(self.list, self.curselection()), 
-            self.list, self.taskList, self.settings)
+            command.EditEffortCommand(self.presentation(), self.curselection()), 
+            self.taskFile, self.settings, 
+            columnName=kwargs.get('columnName', ''))
     
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.list, self.curselection())
+        return command.DeleteCommand(self.presentation(), self.curselection())
     
 

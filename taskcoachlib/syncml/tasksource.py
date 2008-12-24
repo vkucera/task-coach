@@ -151,10 +151,10 @@ class TaskSource(basesource.BaseSource):
 
     def objectRemovedOnServer(self, task):
         return wx.MessageBox(_('Task "%s" has been deleted on server,\n') % task.subject() + \
-                             _('but locally modified. Should I keep the local version ?'),
+                             _('but locally modified. Should I keep the local version?'),
                              _('Synchronization conflict'), wx.YES_NO) == wx.YES
 
     def objectRemovedOnClient(self, task):
         return wx.MessageBox(_('Task "%s" has been locally deleted,\n') % task.subject() + \
-                             _('but modified on server. Should I keep the remote version ?'),
+                             _('but modified on server. Should I keep the remote version?'),
                              _('Synchronization conflict'), wx.YES_NO) == wx.YES

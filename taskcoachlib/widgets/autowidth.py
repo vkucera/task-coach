@@ -40,8 +40,7 @@ class AutoColumnWidthMixin(object):
         self.ResizeColumn = kwargs.pop('resizeableColumn', -1)
         self.ResizeColumnMinWidth = kwargs.pop('resizeableColumnMinWidth', 50)
         super(AutoColumnWidthMixin, self).__init__(*args, **kwargs)
-        self.ToggleAutoResizing(True)
-
+        
     def ToggleAutoResizing(self, on):
         if on == self._isAutoResizing:
             return

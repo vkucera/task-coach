@@ -129,6 +129,7 @@ class Win32TestCase(unittest.TestCase):
         else:
             self.fail('Could not find Task Coach executable.')
 
+        self.logfilename = filename + '.log'
         cmd = [filename, '-i', 'test.ini'] + self.args
 
         sinfo = win32process.STARTUPINFO()
@@ -143,7 +144,7 @@ class Win32TestCase(unittest.TestCase):
                     os.getcwd(),
                     sinfo)
         self.processHandle = hProcess
-        if win32event.WaitForInputIdle(hProcess, 10000) == win32event.WAIT_TIMEOUT:
+        if win32event.WaitForInputIdle(hProcess, 60000) == win32event.WAIT_TIMEOUT:
             self.fail('Could not launch Task Coach.')
 
         window = self.findWindow(r'^Tip of the Day$')

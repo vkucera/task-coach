@@ -393,6 +393,11 @@ class NeedsSetting(object):
         return super(NeedsSetting, self).enabled(event) and \
                bool(self.settings.get(self.__section, self.__setting))
 
+class NeedsDeletedItems(object):
+    def enabled(self, event):
+        return super(NeedsDeletedItems, self).enabled(event) and \
+               self.iocontroller.hasDeletedItems()
+
 class DisableWhenTextCtrlHasFocus(object):
     def enabled(self, event):
         if isinstance(wx.Window.FindFocus(), wx.TextCtrl):
@@ -496,6 +501,25 @@ class FileAddTemplate(IOCommand):
 
     def doCommand(self, event):
         self.iocontroller.addtemplate()
+
+
+class FilePurgeDeletedItems(NeedsDeletedItems, IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(FilePurgeDeletedItems, self).__init__(\
+            menuText=_('Purge deleted items'),
+            helpText=_('Actually delete deleted tasks and notes (see the SyncML chapter in Help'),
+            bitmap='delete', *args, **kwargs)
+
+    def doCommand(self, event):
+        if (wx.MessageBox(_('''Purging deleted items is undoable.
+If you're planning on enabling
+the SyncML feature again with the
+same server you used previously,
+these items will probably come back.
+
+Do you still want to purge?'''),
+                          _('Warning'), wx.YES_NO) == wx.YES):
+            self.iocontroller.purgeDeletedItems()
 
 
 # FIXME: Move the printing specific stuff somewhere else
@@ -647,9 +671,10 @@ class FileSynchronize(IOCommand, SettingsCommand):
             bitmap='sync', *args, **kwargs)
 
     def doCommand(self, event):
-        pwd = wx.GetPasswordFromUser(_('Please enter your password.'), _('TaskCoach SyncML password'))
-        if pwd:
-            self.iocontroller.synchronize(pwd)
+        password = wx.GetPasswordFromUser(_('Please enter your password:'), 
+                                          _('Task Coach SyncML password'))
+        if password:
+            self.iocontroller.synchronize(password)
 
 
 class FileQuit(UICommand):
@@ -731,7 +756,7 @@ class EditCut(NeedsSelection, ViewerCommand):
         if isinstance(windowWithFocus, wx.TextCtrl):
             windowWithFocus.Cut()
         else:
-            cutCommand = command.CutCommand(self.viewer.model(),
+            cutCommand = command.CutCommand(self.viewer.presentation(),
                                             self.viewer.curselection())
             cutCommand.do()
 
@@ -754,7 +779,7 @@ class EditCopy(NeedsSelection, ViewerCommand):
         if isinstance(windowWithFocus, wx.TextCtrl):
             windowWithFocus.Copy()
         else:
-            copyCommand = command.CopyCommand(self.viewer.model(), 
+            copyCommand = command.CopyCommand(self.viewer.presentation(), 
                                               self.viewer.curselection())
             copyCommand.do()
 
@@ -880,10 +905,8 @@ class ViewViewer(SettingsCommand, ViewerCommand):
         super(ViewViewer, self).__init__(*args, **kwargs)
         
     def doCommand(self, event):
-        self.viewer.Freeze()
         viewer.addOneViewer(self.viewer, self.taskFile, self.settings, self.viewerClass)
         self.increaseViewerCount()
-        self.viewer.Thaw()
         
     def increaseViewerCount(self):
         setting = self.viewerClass.__name__.lower() + 'count'
@@ -1184,8 +1207,13 @@ class ObjectEdit(ObjectCommandBase):
         super(ObjectEdit, self).__init__(*args, **kwargs)
 
     def doCommand(self, event, show=True):
+        try:
+            columnName = event.columnName
+        except AttributeError:
+            columnName = ''
         editor = self.viewer.editItemDialog(bitmap=self.bitmap,
-                                            items=self.viewer.curselection())
+                                            items=self.viewer.curselection(),
+                                            columnName=columnName)
         editor.Show(show)
 
 
@@ -1206,7 +1234,7 @@ class ObjectDelete(ObjectCommandBase):
         deleteCommand.do()
 
         
-class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand):
+class TaskNew(TaskListCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         taskList = kwargs['taskList']
         if 'menuText' not in kwargs:
@@ -1218,21 +1246,19 @@ class TaskNew(TaskListCommand, CategoriesCommand, SettingsCommand):
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             command.NewTaskCommand(self.taskList, 
             categories=self.categoriesForTheNewTask()), 
-            self.taskList, self.settings, self.categories, 
-            bitmap=self.bitmap)
+            self.mainWindow().taskFile, self.settings, bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
 
     def categoriesForTheNewTask(self):
-        return [category for category in self.categories if category.isFiltered()]
+        categories = self.mainWindow().taskFile.categories()
+        return [category for category in categories if category.isFiltered()]
 
 
 class TaskNewFromTemplate(TaskNew):
     def __init__(self, filename, *args, **kwargs):
         super(TaskNewFromTemplate, self).__init__(*args, **kwargs)
-
         self.__filename = filename
-
         task = self.__readTemplate()
         self.menuText = task.subject()
 
@@ -1248,20 +1274,17 @@ class TaskNewFromTemplate(TaskNew):
         kwargs = task.__getcopystate__()
         kwargs['categories'] = self.categoriesForTheNewTask()
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
-            command.NewTaskCommand(self.taskList, 
-            **kwargs),
-            self.taskList, self.settings, self.categories, 
-            bitmap=self.bitmap)
+            command.NewTaskCommand(self.taskList, **kwargs),
+            self.mainWindow().taskFile, self.settings, bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
 
 
-class TaskNewFromTemplateButton(PopupButton, TaskListCommand,
-                                SettingsCommand, CategoriesCommand):
+class TaskNewFromTemplateButton(PopupButton, TaskListCommand, SettingsCommand):
     def createPopupMenu(self):
         import menu
-        return menu.TaskTemplateMenu(self.mainWindow(), self.taskList, self.settings,
-                                     self.categories)
+        return menu.TaskTemplateMenu(self.mainWindow(), self.taskList, 
+                                     self.settings)
 
     def getMenuText(self):
         return _('New task &from template')
@@ -1314,7 +1337,7 @@ class TaskToggleCompletion(NeedsSelectedTasks, ViewerCommand):
         
     def doCommand(self, event):
         markCompletedCommand = command.MarkCompletedCommand( \
-            self.viewer.model(), self.viewer.curselection())
+            self.viewer.presentation(), self.viewer.curselection())
         markCompletedCommand.do()
 
     def enabled(self, event):
@@ -1520,8 +1543,7 @@ class NoteMail(NeedsSelectedNote, MailItem):
         return _('Notes')
 
 
-class TaskAddNote(NeedsSelectedTasks, ViewerCommand,
-                  CategoriesCommand, SettingsCommand):
+class TaskAddNote(NeedsSelectedTasks, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(TaskAddNote, self).__init__(menuText=_('Add &note'),
             helpText=_('Add a note to the selected task(s)'),
@@ -1529,15 +1551,15 @@ class TaskAddNote(NeedsSelectedTasks, ViewerCommand,
             
     def doCommand(self, event, show=True):
         noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-            command.AddTaskNoteCommand(self.viewer.model(), 
+            command.AddTaskNoteCommand(self.viewer.presentation(), 
                 self.viewer.curselection()),
-            self.settings, self.viewer.model(), self.categories, bitmap=self.bitmap)
+            self.settings, self.viewer.presentation(),
+            self.mainWindow().taskFile, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
 
 
-class CategoryAddNote(NeedsSelectedCategory, ViewerCommand,
-                      CategoriesCommand, SettingsCommand):
+class CategoryAddNote(NeedsSelectedCategory, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(CategoryAddNote, self).__init__(menuText=_('Add &note'),
             helpText=_('Add a note to the selected category(ies)'),
@@ -1545,15 +1567,15 @@ class CategoryAddNote(NeedsSelectedCategory, ViewerCommand,
             
     def doCommand(self, event, show=True):
         noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-            command.AddCategoryNoteCommand(self.viewer.model(), 
+            command.AddCategoryNoteCommand(self.viewer.presentation(), 
                 self.viewer.curselection()),
-            self.settings, self.viewer.model(), self.categories, bitmap=self.bitmap)
+            self.settings, self.viewer.presentation(),  
+            self.mainWindow().taskFile, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
         
 
-class AttachmentAddNote(NeedsSelectedAttachments, ViewerCommand,
-                        CategoriesCommand, SettingsCommand):
+class AttachmentAddNote(NeedsSelectedAttachments, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(AttachmentAddNote, self).__init__(menuText=_('Add &note'),
             helpText=_('Add a note to the selected attachment(s)'),
@@ -1561,9 +1583,9 @@ class AttachmentAddNote(NeedsSelectedAttachments, ViewerCommand,
 
     def doCommand(self, event, show=True):
         noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-            command.AddAttachmentNoteCommand(self.viewer.model(), 
+            command.AddAttachmentNoteCommand(self.viewer.presentation(), 
                 self.viewer.curselection()),
-            self.settings, self.categories, bitmap=self.bitmap)
+            self.settings, self.mainWindow().taskFile, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
 
@@ -1581,7 +1603,7 @@ class AddAttachment(NeedsSelection, ViewerCommand, SettingsCommand):
         if base:
             filename = attachment.getRelativePath(filename, base)
         addAttachmentCommand = command.AddAttachmentCommand( \
-            self.viewer.model(), self.viewer.curselection(), 
+            self.viewer.presentation(), self.viewer.curselection(), 
             attachments=[attachment.FileAttachment(filename)])
         addAttachmentCommand.do()
 
@@ -1654,21 +1676,26 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
         super(EffortNew, self).__init__(bitmap='new',  
             menuText=effortList.newItemMenuText, 
             helpText=effortList.newItemHelpText, *args, **kwargs)
-            
+
     def doCommand(self, event):
         if self.viewer.isShowingTasks() and self.viewer.curselection():
             selectedTasks = self.viewer.curselection()
+        elif self.viewer.isShowingEffort():
+            selectedTasks = [self.firstTask(self.viewer.tasksToShowEffortFor)]
         else:
-            subjectDecoratedTaskList = [(task.subject(recursive=True), 
-                task) for task in self.taskList]
-            subjectDecoratedTaskList.sort() # Sort by subject
-            selectedTasks = [subjectDecoratedTaskList[0][1]]
+            selectedTasks = [self.firstTask(self.taskList)]
 
         newEffortDialog = dialog.editor.EffortEditor(self.mainWindow(), 
             command.NewEffortCommand(self.effortList, selectedTasks),
-            self.effortList, self.taskList, 
-            self.settings, bitmap=self.bitmap)
+            self.mainWindow().taskFile, self.settings, bitmap=self.bitmap)
         newEffortDialog.Show()
+
+    @staticmethod    
+    def firstTask(tasks):
+        subjectDecoratedTasks = [(task.subject(recursive=True), 
+            task) for task in tasks]
+        subjectDecoratedTasks.sort()
+        return subjectDecoratedTasks[0][1]
 
 
 class EffortEdit(ObjectEdit, NeedsSelectedEffort, EffortListCommand):
@@ -1762,7 +1789,7 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
     def doCommand(self, event, show=True):
         newCategoryDialog = dialog.editor.CategoryEditor(self.mainWindow(), 
             command.NewCategoryCommand(self.categories),
-            self.settings, self.categories, bitmap=self.bitmap)
+            self.settings, self.mainWindow().taskFile, bitmap=self.bitmap)
         newCategoryDialog.Show(show)
         
 
@@ -1793,8 +1820,7 @@ class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
                                                   drop=dropItem)
 
 
-class NoteNew(NotesCommand, CategoriesCommand, 
-              SettingsCommand):
+class NoteNew(NotesCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         notes = kwargs['notes']
         if 'menuText' not in kwargs:
@@ -1806,13 +1832,14 @@ class NoteNew(NotesCommand, CategoriesCommand,
         noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
             command.NewNoteCommand(self.notes,
                   categories=self.categoriesForTheNewNote()),
-            self.settings, self.notes, self.categories, bitmap=self.bitmap)
+            self.settings, self.notes, self.mainWindow().taskFile,
+            bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
 
     def categoriesForTheNewNote(self):
-        return [category for category in self.categories if
-                category.isFiltered()]
+        categories = self.mainWindow().taskFile.categories()
+        return [category for category in categories if category.isFiltered()]
     
 
 class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
@@ -1852,7 +1879,7 @@ class NoteDragAndDrop(NotesCommand, DragAndDropCommand):
                                                   drop=dropItem)
                          
                                                         
-class AttachmentNew(AttachmentsCommand, SettingsCommand, CategoriesCommand):
+class AttachmentNew(AttachmentsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         attachments = kwargs['attachments']
         if 'menuText' not in kwargs:
@@ -1863,7 +1890,8 @@ class AttachmentNew(AttachmentsCommand, SettingsCommand, CategoriesCommand):
     def doCommand(self, event, show=True):
         attachmentDialog = dialog.editor.AttachmentEditor(self.mainWindow(), 
             command.NewAttachmentCommand(self.attachments),
-            self.settings, self.categories, bitmap=self.bitmap)
+            self.settings, self.attachments, self.mainWindow().taskFile, 
+            bitmap=self.bitmap)
         attachmentDialog.Show(show)
         return attachmentDialog # for testing purposes
 

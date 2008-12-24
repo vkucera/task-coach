@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import datetime, timedelta, re
 
 class DateTime(datetime.datetime):
+    
     def weeknumber(self):
         return self.isocalendar()[1]
 
@@ -62,6 +63,9 @@ class DateTime(datetime.datetime):
         result = super(DateTime, self).__add__(other)
         return self.__class__(result.year, result.month, result.day, 
             result.hour, result.minute, result.second, result.microsecond)
+
+DateTime.max = DateTime(datetime.datetime.max.year, 12, 31).endOfDay()
+DateTime.min = DateTime(datetime.datetime.min.year, 1, 1).startOfDay()
 
 
 def parseDateTime(string):

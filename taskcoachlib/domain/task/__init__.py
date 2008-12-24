@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from task import Task
-from tasklist import TaskList, SingleTaskList
+from tasklist import TaskList
 import filter
 import sorter
 from clipboard import Clipboard

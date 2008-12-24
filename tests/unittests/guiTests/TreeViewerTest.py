@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import test
-from taskcoachlib import gui, widgets, config
+from taskcoachlib import gui, widgets, config, persistence
 from taskcoachlib.domain import category, task, effort
     
        
@@ -26,17 +26,15 @@ class TreeViewerTest(test.wxTestCase):
     def setUp(self):
         super(TreeViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.categories = category.CategoryList()
-        self.taskList = task.sorter.Sorter(task.TaskList())
-        self.effortList = effort.EffortList(self.taskList)
-        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskList,
-            self.settings, categories=self.categories, efforts=self.effortList)
+        taskFile = persistence.TaskFile()
+        self.viewer = gui.viewer.TaskViewer(self.frame, taskFile,
+            self.settings)
         self.expansionContext = self.viewer.settingsSection()
         self.parent = task.Task('parent')
         self.child = task.Task('child')
         self.parent.addChild(self.child)
         self.child.setParent(self.parent)
-        self.taskList.extend([self.parent, self.child])
+        taskFile.tasks().extend([self.parent, self.child])
         self.viewer.refresh()
         self.widget = self.viewer.widget
                 

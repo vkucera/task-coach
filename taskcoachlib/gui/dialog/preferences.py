@@ -54,8 +54,8 @@ class SettingsPageBase(widgets.BookPage):
         
     def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100,
             helpText=''):
-        spin = wx.SpinCtrl(self, min=minimum, max=maximum, size=(40, -1),
-            value=str(self.getint(section, setting)))
+        spin = widgets.SpinCtrl(self, min=minimum, max=maximum, size=(40, -1),
+            initial=self.getint(section, setting))
         self.addEntry(text, spin, helpText)
         self._integerSettings.append((section, setting, spin))
 

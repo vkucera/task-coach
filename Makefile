@@ -37,7 +37,7 @@ windist: icons i18n
 	$(PYTHON) make.py py2exe
 	$(INNOSETUP) build/taskcoach.iss
 
-sdist: icons changes i18n dist/TaskCoach-$(TCVERSION).tar.gz
+sdist: icons changes i18n templates dist/TaskCoach-$(TCVERSION).tar.gz
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
@@ -95,7 +95,7 @@ unittests: icons templates
 alltests: icons i18n
 	cd tests; $(PYTHON) test.py --alltests
 
-releasetests: icons templates
+releasetests: sdist 
 	cd tests; $(PYTHON) test.py --releasetests --no-unittests
 
 integrationtests: icons i18n

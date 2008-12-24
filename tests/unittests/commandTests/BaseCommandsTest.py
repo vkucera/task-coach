@@ -46,7 +46,7 @@ class AddAttachmentTests(object):
     def addAttachment(self, selectedItems=None, 
                       attachment=attachment.FileAttachment('attachment')):
         self.attachment = attachment
-        addAttachmentCommand = command.AddAttachmentCommand(self.model,
+        addAttachmentCommand = command.AddAttachmentCommand(self.container,
             selectedItems or [], attachments=[attachment])
         addAttachmentCommand.do()
 
@@ -69,19 +69,19 @@ class AddAttachmentTestCase(CommandTestCase):
         super(AddAttachmentTestCase, self).setUp()
         self.item1 = self.ItemClass('item1')
         self.item2 = self.ItemClass('item2')
-        self.model = self.ModelClass([self.item1, self.item2])
+        self.container = self.ContainerClass([self.item1, self.item2])
 
 
 class AddAttachmentCommandWithTasksTest(AddAttachmentTestCase, AddAttachmentTests):
     ItemClass = task.Task
-    ModelClass = task.TaskList
+    ContainerClass = task.TaskList
 
 
 class AddAttachmentCommandWithNotesTest(AddAttachmentTestCase, AddAttachmentTests):
     ItemClass = note.Note
-    ModelClass = note.NoteContainer
+    ContainerClass = note.NoteContainer
 
 
 class AddAttachmentCommandWithCategoriesTest(AddAttachmentTestCase, AddAttachmentTests):
     ItemClass = category.Category
-    ModelClass = category.CategoryList
+    ContainerClass = category.CategoryList

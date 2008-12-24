@@ -33,7 +33,10 @@ header = '''
             <table cellspacing=5>
                 <tr>
                     <td valign=top>
-                        <img align="center" src="taskcoach.png"/>
+                        <a href="index.html">
+                            <img align="center" src="taskcoach.png"
+                                 style="border-style: none"/>
+                        </a>
                     </td>
                     <td>
                         <h1>%(name)s - %(description)s</h1>
@@ -48,46 +51,56 @@ footer = '''
         </div><!-- end of content div -->
         <div id="navAlpha">
             <div class="navbox">
-                <h2>Contents</h2>
+                <h2>Download</h2>
                 <p>
-                    <a href="index.html" title="%(name)s homepage">Home</a><br>
-                    <a href="https://sourceforge.net/projects/taskcoach/"
-                       title="%(name)s at Sourceforge">Sourceforge home</a><br>
-                    <strong><em><a href="download.html" 
-                       title="Get %(name)s here">Download</a></em></strong><br>
-                    <a href="screenshots.html" 
+                    &raquo; <a href="download.html" title="Get %(name)s here">
+                        Get %(name)s here
+                    </a>
+                </p>
+            </div>
+            <div class="navbox">
+                <h2>About</h2>
+                <p>
+                    &raquo; <a href="index.html" title="%(name)s overview">Overview</a><br>
+                    &raquo; <a href="screenshots.html" 
                        title="View some screenshots of %(name)s here">
                          Screenshots</a><br>
-                    <a href="features.html" 
-                       title="List of features in the current version of %(name)s">Features</a><br>
-                    <a href="i18n.html">Translations</a><br>
-                    <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Known bugs</a><br>
-                    <a href="http://taskcoach.blogspot.com">Frank's blog</a><br>
-                    <a href="changes.html">Change history</a><br>
-                    <a href="roadmap.html" 
+                    &raquo; <a href="features.html" 
+                       title="List of features in the current version of %(name)s">
+                         Features</a><br>
+                    &raquo; <a href="i18n.html" 
+                               title="Available translations">
+                         Translations</a><br>
+                    &raquo; <a href="changes.html">Change history</a><br>
+                    &raquo; <a href="roadmap.html" 
                        title="Future plans for %(name)s">Roadmap</a><br>
-                    <a href="http://www.fraca7.net:8010/waterfall">Buildbot waterfall</a><br>
-                    <a href="license.html">License</a><br>
-                    <a href="credits.html">Credits</a><br>
+                    &raquo; <a href="http://taskcoach.blogspot.com">Frank's blog</a><br>
+                    &raquo; <a href="https://sourceforge.net/projects/taskcoach/"
+                       title="%(name)s @ Sourceforge">Sourceforge pages</a><br>
+                    &raquo; <a href="http://www.fraca7.net:8010/waterfall">Buildbot waterfall</a><br>
+                    &raquo; <a href="license.html">License</a><br>
+                    &raquo; <a href="credits.html">Credits</a>
                 </p>
             </div>
             <div class="navbox">
                 <h2>Get support</h2>
                 <p>
-                    <a href="mailinglist.html">Join mailinglist</a><br>
-                    <a href="faq.html">Frequently asked questions</a><br>
-                    <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135">Request support</a><br>
-                    <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</a><br>
-                    <a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</a>
+                    &raquo; <a href="mailinglist.html">Join mailinglist</a><br>
+                    &raquo; <a href="faq.html">Frequently asked questions</a><br>
+                    &raquo; <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135">Request support</a><br>
+                    &raquo; <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Browse known bugs</a><br>
+                    &raquo; <a
+                    href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</a><br>
+                    &raquo; <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</a>
                 </p>
             </div>
             <div class="navbox">
                 <h2>Give support</h2>
                 <p>                    
-                    <a href="i18n.html">Help translate</a><br>
-                    <a href="devinfo.html">Help develop</a><br>
-                    <a href="donations.html">Donate</a><br>
-                    <a href="http://www.cafepress.com/taskcoach/">Buy the mug</a>
+                    &raquo; <a href="i18n.html">Help translate</a><br>
+                    &raquo; <a href="devinfo.html">Help develop</a><br>
+                    &raquo; <a href="donations.html">Donate</a><br>
+                    &raquo; <a href="http://www.cafepress.com/taskcoach/">Buy the mug</a>
                 </p>
             </div>
         </div>

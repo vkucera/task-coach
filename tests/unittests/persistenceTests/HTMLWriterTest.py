@@ -28,21 +28,16 @@ class HTMLWriterTestCase(test.wxTestCase):
         super(HTMLWriterTestCase, self).setUp()
         self.fd = StringIO.StringIO()
         self.writer = persistence.HTMLWriter(self.fd)
+        self.taskFile = persistence.TaskFile()
         self.task = task.Task('Task subject')
-        self.taskList = task.TaskList([self.task])
-        self.effortList = effort.EffortList(self.taskList)
-        self.categories = category.CategoryList()
-        self.notes = note.NoteContainer()
+        self.taskFile.tasks().append(self.task)
         self.settings = config.Settings(load=False)
-        self.viewerContainer = gui.viewer.ViewerContainer(\
-            widgets.Notebook(self.frame), self.settings, 'mainviewer')
         self.createViewer()
         
     def createViewer(self):
         self.settings.set('taskviewer', 'treemode', self.treeMode)
-        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskList, 
-            self.settings, categories=self.categories, notes=self.notes,
-            efforts=self.effortList)
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
+            self.settings)
 
     def __writeAndRead(self, selectionOnly):
         self.writer.write(self.viewer, selectionOnly)
@@ -71,7 +66,7 @@ class TaskTests(object):
     def testWriteSelectionOnly_SelectedChild(self):
         child = task.Task('Child')
         self.task.addChild(child)
-        self.taskList.append(child)
+        self.taskFile.tasks().append(child)
         self.selectItem(1)
         self.expectInHTML('>Task subject<')
         
@@ -137,7 +132,7 @@ class EffortWriterTest(HTMLWriterTestCase):
                                           stop=now + date.TimeDelta(seconds=1)))
 
     def createViewer(self):
-        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskList,
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
             self.settings)
 
     def testTaskSubject(self):

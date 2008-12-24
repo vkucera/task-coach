@@ -140,7 +140,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
                 yield grandChild
 
     def AddPage(self, page, caption, name): 
-        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().FloatingSize((300,200))
+        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
         # To ensure we have a center pane we make the first pane the center pane:
         if not self.manager.GetAllPanes():
             paneInfo = paneInfo.Center().CloseButton(False)
@@ -156,7 +156,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
             if paneInfo.window == window:
                 return index
         return wx.NOT_FOUND
-     
+    
     def AdvanceSelection(self, forward=True): 
         # FIXME: duplicated from widgets.AUINotebook.AdvanceSelection
         if self.PageCount <= 1:
@@ -171,6 +171,9 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
                 self.Selection -= 1
             else:
                 self.Selection = self.PageCount - 1
+        currentPane = self.manager.GetAllPanes()[self.Selection]
+        if currentPane.IsToolbar():
+            self.AdvanceSelection(forward)
 
     def GetPageCount(self):
         return len(self.manager.GetAllPanes())
@@ -240,7 +243,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         self.createTaskBarIcon()
         self.reminderController = \
             remindercontroller.ReminderController(self.taskFile.tasks(), 
-                self.taskFile.categories(), self.settings)
+                self.settings)
         
     def AddPage(self, page, caption, *args):
         name = page.settingsSection()
@@ -434,4 +437,5 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
     def onCloseToolBar(self, event):
         if event.GetPane().IsToolbar():
             self.settings.set('view', 'toolbar', 'None')
-        # Don't call event.Skip(), it crashes TC on Ubuntu. Don't know why.
+        event.Skip()
+        

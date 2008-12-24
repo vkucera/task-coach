@@ -65,7 +65,15 @@ class IOController(object):
 
     def needSave(self):
         return self.__taskFile.needSave()
-    
+
+    def hasDeletedItems(self):
+        return bool([task for task in self.__taskFile.tasks() if task.isDeleted()] + \
+                    [note for note in self.__taskFile.notes() if note.isDeleted()])
+
+    def purgeDeletedItems(self):
+        self.__taskFile.tasks().removeItems([task for task in self.__taskFile.tasks() if task.isDeleted()])
+        self.__taskFile.notes().removeItems([note for note in self.__taskFile.notes() if note.isDeleted()])
+
     def openAfterStart(self, commandLineArgs):
         ''' Open either the file specified on the command line, or the file
             the user was working on previously, or none at all. '''
@@ -263,36 +271,31 @@ class IOController(object):
             return False
 
     def synchronize(self, password):
-        synchronizer = sync.Synchronizer(self.__syncReport, self, self.__taskFile,
-                                         password)
+        synchronizer = sync.Synchronizer(self.__syncReport, self, 
+                                         self.__taskFile, password)
         try:
             synchronizer.synchronize()
         finally:
             synchronizer.Destroy()
 
-        self.__messageCallback(_('Synchronization over.'))
+        self.__messageCallback(_('Finished synchronization'))
 
     def resolveNoteConflict(self, flags, local, remote):
-        dlg = conflict.ConflictDialog(conflict.NoteConflictPanel,
-                                      flags, local, remote,
-                                      None, wx.ID_ANY, _('Note conflict'))
-        try:
-            dlg.ShowModal()
-        finally:
-            dlg.Destroy()
-
-        return dlg.resolved
+        return self.resolveConflict(conflict.NoteConflictPanel, 
+                                    flags, local, remote, _('Note conflict'))
 
     def resolveTaskConflict(self, flags, local, remote):
-        dlg = conflict.ConflictDialog(conflict.TaskConflictPanel,
-                                      flags, local, remote,
-                                      None, wx.ID_ANY, _('Task conflict'))
+        return self.resolveConflict(conflict.TaskConflictPanel, 
+                                    flags, local, remote, _('Task conflict'))
+    
+    def resolveConflict(self, panel, flags, local, remote, title):
+        dialog = conflict.ConflictDialog(panel, flags, local, remote, None, 
+                                         wx.ID_ANY, title)
         try:
-            dlg.ShowModal()
+            dialog.ShowModal()
         finally:
-            dlg.Destroy()
-
-        return dlg.resolved
+            dialog.Destroy()
+        return dialog.resolved
 
     def __syncReport(self, msg):
         wx.MessageBox(msg, _('Synchronization status'), style=wx.OK|wx.ICON_ERROR)
@@ -322,7 +325,7 @@ class IOController(object):
     def __saveUnsavedChanges(self):
         result = wx.MessageBox(_('You have unsaved changes.\n'
             'Save before closing?'), _('%s: save changes?')%meta.name,
-            wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION)
+            style=wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION|wx.YES_DEFAULT)
         if result == wx.YES:
             if not self.save():
                 return False

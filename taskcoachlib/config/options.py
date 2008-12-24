@@ -54,6 +54,10 @@ class ApplicationOptionParser(OptionParser):
     def profileOption(self):
         return optparse.Option('-p', '--profile', default=False, 
             action='store_true', help=optparse.SUPPRESS_HELP)
+ 
+    def profile_skipstartOption(self):
+        return optparse.Option('-s', '--skipstart', default=False, 
+            action='store_true', help=optparse.SUPPRESS_HELP)
 
     def iniOption(self):
         return optparse.Option('-i', '--ini', dest='inifile',

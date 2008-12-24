@@ -19,6 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import datetime
 
 class TimeDelta(datetime.timedelta):
+    millisecondsPerSecond = 1000
+    millisecondsPerDay = 24 * 60 * 60 * millisecondsPerSecond
+    millisecondsPerMicroSecond = 1/1000.
+    
     def hoursMinutesSeconds(self):
         ''' Return a tuple (hours, minutes, seconds). Note that the caller
             is responsible for checking whether the TimeDelta instance is
@@ -38,6 +42,12 @@ class TimeDelta(datetime.timedelta):
         ''' Return hours as float. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
         return hours + (minutes / 60.) + (seconds / 3600.)
+    
+    def milliseconds(self):
+        ''' Timedelta expressed in number of milliseconds. '''
+        return int(round((self.days * self.millisecondsPerDay) + \
+                         (self.seconds * self.millisecondsPerSecond) + \
+                         (self.microseconds * self.millisecondsPerMicroSecond)))
         
     def __add__(self, other):
         ''' Make sure we return a TimeDelta instance and not a 

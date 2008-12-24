@@ -36,7 +36,7 @@ class ReminderControllerTest(test.TestCase):
         self.task = task.Task('Task')
         self.taskList.append(self.task)
         self.reminderController = ReminderControllerUnderTest(self.taskList,
-            [], config.Settings(load=False), {})
+            config.Settings(load=False))
         self.nowDateTime = date.DateTime.now()
         self.reminderDateTime = self.nowDateTime + date.TimeDelta(hours=1)
         
@@ -48,13 +48,13 @@ class ReminderControllerTest(test.TestCase):
 
     def testClockTriggersReminder(self):
         self.task.setReminder(self.reminderDateTime)
-        date.Clock().notify(now=self.reminderDateTime)
+        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
         self.assertEqual([self.task], 
                          self.reminderController.messages)
         
     def testAfterReminderClockEventIsRemovedFromPublisher(self):
         self.task.setReminder(self.reminderDateTime)
-        date.Clock().notify(now=self.reminderDateTime)
+        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
         self.assertEqual([], patterns.Publisher().observers(eventType=\
                 date.Clock.eventType(self.reminderDateTime)))
         
@@ -119,26 +119,26 @@ class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
         self.task2 = task.Task('Task 2', reminder=self.reminderDateTime)
         self.taskList.extend([self.task1, self.task2])
         self.reminderController = ReminderControllerUnderTest(self.taskList,
-            [], config.Settings(load=False), {})
+            config.Settings(load=False))
 
     def testClockNotificationResultsInTwoMessages(self):
-        date.Clock().notify(now=self.reminderDateTime)
+        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
         self.assertEqualLists([self.task1, self.task2], 
             self.reminderController.messages)
 
     def testChangeOneReminder(self):
         self.task1.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
-        date.Clock().notify(now=self.reminderDateTime + date.TimeDelta(hours=1))
+        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime + date.TimeDelta(hours=1))
         self.assertEqualLists([self.task1, self.task2], 
                               self.reminderController.messages)
                          
     def testChangeOneReminderDoesNotAffectTheOther(self):
         self.task1.setReminder(self.reminderDateTime + date.TimeDelta(hours=1))
-        date.Clock().notify(now=self.reminderDateTime)
+        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
         self.assertEqual([self.task2], self.reminderController.messages)
                                                   
     def testRemoveOneTaskDoesNotAffectTheOther(self):
         self.taskList.remove(self.task1)
-        date.Clock().notify(now=self.reminderDateTime)
+        date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
         self.assertEqual([self.task2], self.reminderController.messages)
         

@@ -24,8 +24,8 @@ from taskcoachlib.gui.dialog import reminder, editor
 
 
 class ReminderController(object):
-    def __init__(self, taskList, categories, settings, *args, **kwargs):
-        super(ReminderController, self).__init__(*args, **kwargs)
+    def __init__(self, taskList, settings):
+        super(ReminderController, self).__init__()
         patterns.Publisher().registerObserver(self.onSetReminder,
             eventType='task.reminder')
         patterns.Publisher().registerObserver(self.onAddTask,
@@ -33,10 +33,10 @@ class ReminderController(object):
         patterns.Publisher().registerObserver(self.onRemoveTask,
             eventType=taskList.removeItemEventType())
         self.__tasksWithReminders = {} # {task: reminderDateTime}
+        self.__mainWindowWasHidden = False
         self.__registerRemindersForTasks(taskList)
         self.settings = settings
         self.taskList = taskList
-        self.categories = categories
     
     def onAddTask(self, event):
         self.__registerRemindersForTasks(event.values())
@@ -63,7 +63,8 @@ class ReminderController(object):
         self.mainWindow = wx.GetApp().GetTopWindow()
         reminderDialog = reminder.ReminderDialog(task, self.mainWindow)
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)
-        if not self.mainWindow.IsShown():
+        self.__mainWindowWasHidden = not self.mainWindow.IsShown()
+        if self.__mainWindowWasHidden:
             self.mainWindow.Show()
         if not self.mainWindow.IsActive():
             self.mainWindow.RequestUserAttention()
@@ -83,11 +84,13 @@ class ReminderController(object):
         # reminder back to its original date-time, which is now in the past.
         if dialog.openTaskAfterClose:
             editTask = editor.TaskEditor(self.mainWindow,
-                command.EditTaskCommand(self.taskList, [task]), self.taskList, 
-                self.settings, self.categories, bitmap='edit')
+                command.EditTaskCommand(self.taskList, [task]), 
+                self.mainWindow.taskFile, self.settings, bitmap='edit')
             editTask.Show()
         dialog.Destroy()
-        
+        if self.__mainWindowWasHidden:
+            self.mainWindow.Hide()
+            
     def __registerRemindersForTasks(self, tasks):
         for task in tasks:
             if task.reminder():
