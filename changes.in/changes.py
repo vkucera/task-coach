@@ -80,7 +80,6 @@ Ctrl-PgUp.''', '1973357'),
         Bug('''Wrap long lines in description tool tip windows.''', '2318094')
         ]
     ),
->>>>>>> .merge-right.r1585
             
 Release('0.71.3', 'November 10, 2008',
     summary='''This is a bugfix release.''',
