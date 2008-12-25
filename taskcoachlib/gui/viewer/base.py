@@ -60,15 +60,20 @@ class Viewer(wx.Panel):
         for eventHandler in self.onAddItem, self.onRemoveItem:
             patterns.Publisher().removeObserver(eventHandler)
         registerObserver = patterns.Publisher().registerObserver
-        registerObserver(self.onAddItem, eventType=self.presentation().addItemEventType())
-        registerObserver(self.onRemoveItem, eventType=self.presentation().removeItemEventType())
+        registerObserver(self.onAddItem, 
+                         eventType=self.presentation().addItemEventType(),
+                         eventSource=self.presentation())
+        registerObserver(self.onRemoveItem, 
+                         eventType=self.presentation().removeItemEventType(),
+                         eventSource=self.presentation())
         
     def detach(self):
         ''' Should be called by viewer.container before closing the viewer '''
         patterns.Publisher().removeInstance(self)
 
-    def selectEventType(self):
-        return '%s (%s).select'%(self.__class__, id(self))
+    @classmethod
+    def selectEventType(class_):
+        return '%s.select'%class_
     
     def title(self):
         return self.settings.get(self.settingsSection(), 'title') or self.defaultTitle

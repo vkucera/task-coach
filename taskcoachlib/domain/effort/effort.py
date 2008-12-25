@@ -43,6 +43,17 @@ class EffortBase(object):
     def categories(self, recursive=False):
         return self._task.categories(recursive)
 
+    @classmethod
+    def trackStartEventType(class_):
+        return 'effort.track.start' 
+        # We don't use '%s.effort...'%class_ because we need Effort and 
+        # CompositeEffort to use the same event types. This is needed to make
+        # UpdatePerSecondViewer work regardless whether EffortViewer is in
+        # aggregate mode or not.
+    
+    @classmethod
+    def trackStopEventType(class_):
+        return 'effort.track.stop'
     
 
 class Effort(EffortBase, base.Object):
@@ -129,10 +140,10 @@ class Effort(EffortBase, base.Object):
     def notifyStopOrStartTracking(self, previousStop, newStop):
         eventType = ''
         if newStop == None:
-            eventType = 'effort.track.start'
+            eventType = self.trackStartEventType()
             self.task().notifyObserversOfStartTracking(self)
         elif previousStop == None:
-            eventType = 'effort.track.stop'
+            eventType = self.trackStopEventType()
             self.task().notifyObserversOfStopTracking(self)
         if eventType:
             patterns.Publisher().notifyObservers(patterns.Event(self, 
@@ -168,17 +179,17 @@ class CompositeEffort(EffortBase):
         self.__effortCache = {} # {True: [efforts recursively], False: [efforts]}
         self.__invalidateCache()
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
-            eventType=task.totalTimeSpentChangedEventType())
+            eventType=task.totalTimeSpentChangedEventType(), eventSource=task)
         patterns.Publisher().registerObserver(self.onStartTracking,
-            eventType=task.trackStartEventType())
+            eventType=task.trackStartEventType(), eventSource=task)
         patterns.Publisher().registerObserver(self.onStopTracking,
-            eventType=task.trackStopEventType())
+            eventType=task.trackStopEventType(), eventSource=task)
         patterns.Publisher().registerObserver(self.onHourlyFeeChanged,
-            eventType=task.hourlyFeeChangedEventType())
+            eventType=task.hourlyFeeChangedEventType(), eventSource=task)
         patterns.Publisher().registerObserver(self.onChildHourlyFeeChanged,
-            eventType=task.totalHourlyFeeChangedEventType())
+            eventType=task.totalHourlyFeeChangedEventType(), eventSource=task)
         patterns.Publisher().registerObserver(self.onColorChanged,
-            eventType=task.colorChangedEventType())
+            eventType=task.colorChangedEventType(), eventSource=task)
 
     def __hash__(self):
         return hash((self.task(), self.getStart()))
@@ -257,14 +268,14 @@ class CompositeEffort(EffortBase):
         if self.__inPeriod(startedEffort):
             self.__invalidateCache()
             patterns.Publisher().notifyObservers(patterns.Event(self,
-                'effort.track.start', startedEffort))
+                self.trackStartEventType(), startedEffort))
 
     def onStopTracking(self, event):
         stoppedEffort = event.value()
         if self.__inPeriod(stoppedEffort):
             self.__invalidateCache()
             patterns.Publisher().notifyObservers(patterns.Event(self,
-                'effort.track.stop', stoppedEffort))
+                self.trackStopEventType(), stoppedEffort))
 
     def onHourlyFeeChanged(self, event):
         patterns.Publisher().notifyObservers(patterns.Event(self,

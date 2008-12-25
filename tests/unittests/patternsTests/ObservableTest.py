@@ -57,9 +57,11 @@ class ObservableCollectionFixture(test.TestCase):
     def setUp(self):
         self.collection = self.createObservableCollection()
         patterns.Publisher().registerObserver(self.onAdd, 
-            eventType=self.collection.addItemEventType())
+            eventType=self.collection.addItemEventType(),
+            eventSource=self.collection)
         patterns.Publisher().registerObserver(self.onRemove,
-            eventType=self.collection.removeItemEventType())
+            eventType=self.collection.removeItemEventType(),
+            eventSource=self.collection)
         self.receivedAddEvents = []
         self.receivedRemoveEvents = []
 
@@ -274,9 +276,11 @@ class ListDecoratorTest_ObserveTheObserver(test.TestCase):
         self.list = patterns.ObservableList()
         self.observer = patterns.ListDecorator(self.list)
         patterns.Publisher().registerObserver(self.onAdd, 
-            eventType=self.observer.addItemEventType())
+            eventType=self.observer.addItemEventType(),
+            eventSource=self.observer)
         patterns.Publisher().registerObserver(self.onRemove,
-            eventType=self.observer.removeItemEventType())
+            eventType=self.observer.removeItemEventType(),
+            eventSource=self.observer)
         self.receivedAddEvents = []
         self.receivedRemoveEvents = []
 
@@ -323,7 +327,7 @@ class PublisherTest(test.TestCase):
     def testRegisterObserver(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.assertEqual([self.onEvent], self.publisher.observers())
-
+        
     def testRegisterObserver_Twice(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
@@ -480,3 +484,37 @@ class PublisherTest(test.TestCase):
         self.publisher.removeObserver(self.onEvent, eventType='eventType')
         self.assertEqual([], self.events)
 
+    def testRegisterObserver_ForSpecificSource(self):
+        observable1 = patterns.Observable()
+        observable2 = patterns.Observable()
+        self.publisher.registerObserver(self.onEvent, eventType='eventType', 
+                                        eventSource=observable1)
+        event = patterns.Event(observable2, 'eventType')
+        observable2.notifyObservers(event)
+        self.failIf(self.events)
+        
+    def testNotifyObserver_ForSpecificSource(self):
+        observable1 = patterns.Observable()
+        self.publisher.registerObserver(self.onEvent, eventType='eventType', 
+                                        eventSource=observable1)
+        event = patterns.Event(observable1, 'eventType')
+        observable1.notifyObservers(event)
+        self.assertEqual([event], self.events)
+        
+    def testRemoveObserver_RegisteredForSpecificSource(self):
+        observable1 = patterns.Observable()
+        self.publisher.registerObserver(self.onEvent, eventType='eventType', 
+                                        eventSource=observable1)
+        self.publisher.removeObserver(self.onEvent)
+        event = patterns.Event(observable1, 'eventType')
+        observable1.notifyObservers(event)
+        self.failIf(self.events)
+        
+    def testRemoveObserverForSpecificEventType_RegisteredForSpecificSource(self):
+        observable1 = patterns.Observable()
+        self.publisher.registerObserver(self.onEvent, eventType='eventType', 
+                                        eventSource=observable1)
+        self.publisher.removeObserver(self.onEvent, eventType='eventType')
+        event = patterns.Event(observable1, 'eventType')
+        observable1.notifyObservers(event)
+        self.failIf(self.events)

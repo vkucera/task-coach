@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import meta, patterns
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import date
+from taskcoachlib.domain import date, task
 
         
 class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
@@ -40,13 +40,15 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__iconSize = self.__determineIconSize()
         self.__iconCache = {}
         patterns.Publisher().registerObserver(self.onAddItem,
-            eventType=self.__taskList.addItemEventType())
+            eventType=taskList.addItemEventType(),
+            eventSource=taskList)
         patterns.Publisher().registerObserver(self.onRemoveItem, 
-            eventType=self.__taskList.removeItemEventType())
+            eventType=taskList.removeItemEventType(),
+            eventSource=taskList)
         patterns.Publisher().registerObserver(self.onStartTracking,
-            eventType='task.track.start')
+            eventType=task.Task.trackStartEventType())
         patterns.Publisher().registerObserver(self.onStopTracking,
-            eventType='task.track.stop')
+            eventType=task.Task.trackStopEventType())
         patterns.Publisher().registerObserver(self.onChangeDueDate,
             eventType='task.dueDate')
         if '__WXGTK__' == wx.Platform:
@@ -68,7 +70,8 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
 
     def onStartTracking(self, event):
         patterns.Publisher().registerObserver(self.onChangeSubject,
-            eventType=event.source().subjectChangedEventType())
+            eventType=event.source().subjectChangedEventType(),
+            eventSource=event.source())
         self.__setTooltipText()
         self.__startTicking()
 

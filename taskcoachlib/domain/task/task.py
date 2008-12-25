@@ -116,7 +116,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         oldTotalBudgetLeft = self.budgetLeft(recursive=True)
         oldTotalPriority = self.priority(recursive=True)
         super(Task, self).addChild(child)
-        self.notifyObservers(patterns.Event(self, Task.addChildEventType(), child))
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
         if child.budget(recursive=True):
             self.notifyObserversOfTotalBudgetChange()
@@ -342,39 +341,33 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.hourlyFee() > 0:
             self.notifyObserversOfRevenueChange()
     
-    def totalTimeSpentChangedEventType(self):
-        return 'task(%s).totalTimeSpent'%self.id()
+    @classmethod
+    def totalTimeSpentChangedEventType(class_):
+        return 'task.totalTimeSpent'
 
     def notifyObserversOfTotalTimeSpentChange(self, changedEffort=None):
-        totalTimeSpent = self.timeSpent(recursive=True)
-        self.notifyObservers(patterns.Event(self, 'task.totalTimeSpent', 
-            totalTimeSpent))
         self.notifyObservers(patterns.Event(self, 
             self.totalTimeSpentChangedEventType(), changedEffort))
         parent = self.parent()
         if parent: 
             parent.notifyObserversOfTotalTimeSpentChange(changedEffort)
 
-    def trackStartEventType(self):
-        return 'task(%s).track.start'%self.id()
+    @classmethod
+    def trackStartEventType(class_):
+        return '%s.track.start'%class_
 
     def notifyObserversOfStartTracking(self, *trackedEfforts):
-        # Notify observers interested in any task that starts tracking effort
-        self.notifyObservers(patterns.Event(self, 'task.track.start',
-            *trackedEfforts))
-        # Notify observers interested in this task
         self.notifyObservers(patterns.Event(self, self.trackStartEventType(),
             *trackedEfforts))
         parent = self.parent()
         if parent: 
             parent.notifyObserversOfStartTracking(*trackedEfforts)
 
-    def trackStopEventType(self):
-        return 'task(%s).track.stop'%self.id()
+    @classmethod
+    def trackStopEventType(class_):
+        return '%s.track.stop'%class_
     
     def notifyObserversOfStopTracking(self, *trackedEfforts):
-        self.notifyObservers(patterns.Event(self, 'task.track.stop',
-            *trackedEfforts))
         self.notifyObservers(patterns.Event(self, self.trackStopEventType(),
             *trackedEfforts))
         parent = self.parent()

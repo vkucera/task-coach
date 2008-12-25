@@ -89,16 +89,16 @@ class EffortTest(test.TestCase, asserts.Mixin):
 
     def testNotificationForStartTracking(self):
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType='effort.track.start')
+            eventType=self.effort.trackStartEventType())
         self.effort.setStop(date.Date())
-        self.assertEqual('effort.track.start', self.events[0].type())
+        self.assertEqual(self.effort.trackStartEventType(), self.events[0].type())
 
     def testNotificationForStopTracking(self):
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType='effort.track.stop')
+            eventType=self.effort.trackStopEventType())
         self.effort.setStop(date.Date())
         self.effort.setStop(date.DateTime.now())
-        self.assertEqual('effort.track.stop', self.events[0].type())
+        self.assertEqual(self.effort.trackStopEventType(), self.events[0].type())
 
     def testRevenueNotificationForTaskHourlyFeeChange(self):
         patterns.Publisher().registerObserver(self.onEvent,

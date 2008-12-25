@@ -29,9 +29,10 @@ class Sorter(patterns.ListDecorator):
         super(Sorter, self).__init__(*args, **kwargs)
         self._registerObserverForAttribute(self._sortKey)
         self.reset()
-        
-    def sortEventType(self):
-        return '%s(%s).sorted'%(self.__class__, id(self))
+
+    @classmethod        
+    def sortEventType(class_):
+        return '%s.sorted'%class_
     
     def extendSelf(self, *args, **kwargs):
         super(Sorter, self).extendSelf(*args, **kwargs)

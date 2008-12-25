@@ -29,9 +29,11 @@ class EffortListTest(test.TestCase):
         self.effortList = effort.EffortList(self.taskList)
         self.taskList.append(self.task)
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=self.effortList.addItemEventType())
+            eventType=self.effortList.addItemEventType(),
+            eventSource=self.effortList)
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=self.effortList.removeItemEventType())
+            eventType=self.effortList.removeItemEventType(),
+            eventSource=self.effortList)
         self.effort = effort.Effort(self.task, date.DateTime(2004, 1, 1), 
             date.DateTime(2004, 1, 2))
         

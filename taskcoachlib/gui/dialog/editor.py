@@ -804,7 +804,7 @@ class EditorWithCommand(widgets.NotebookDialog):
         else:
             self.setFocusOnFirstEntry()
         patterns.Publisher().registerObserver(self.onItemRemoved, 
-            eventType=container.removeItemEventType())
+            eventType=container.removeItemEventType(), eventSource=container)
 
     def setFocus(self, columnName):
         ''' Select the correct page of the editor and correct control on a page

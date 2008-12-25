@@ -28,9 +28,9 @@ class StatusBar(wx.StatusBar):
         self.parent = parent
         self.viewer = viewer
         patterns.Publisher().registerObserver(self.onSelect, 
-            eventType=self.viewer.selectEventType())
+            eventType=viewer.selectEventType(), eventSource=viewer)
         patterns.Publisher().registerObserver(self.onSelect, 
-            eventType=self.viewer.viewerChangeEventType())
+            eventType=viewer.viewerChangeEventType(), eventSource=viewer)
         self.scheduledStatusDisplay = None
         self.onSelect(None)
         parent.Bind(wx.EVT_MENU_HIGHLIGHT_ALL, self.resetStatusBar)

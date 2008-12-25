@@ -28,8 +28,9 @@ class MockViewerContainer(object):
     def __init__(self, *args, **kwargs):
         self.__sortBy = 'subject'
         self.__ascending = True
-        
-    def viewerChangeEventType(self):
+    
+    @classmethod    
+    def viewerChangeEventType(class_):
         return 'bla'
 
     def settingsSection(self):

@@ -70,7 +70,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         columns = [widgets.Column('subject', _('Subject'), 
                 task.Task.subjectChangedEventType(), 
                 'task.completionDate', 'task.dueDate', 'task.startDate',
-                'task.track.start', 'task.track.stop', 
+                task.Task.trackStartEventType(), task.Task.trackStopEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='subject'),
                 width=self.getColumnWidth('subject'), 
@@ -296,10 +296,10 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         return taskUICommands
  
     def trackStartEventType(self):
-        return 'task.track.start'
+        return task.Task.trackStartEventType()
     
     def trackStopEventType(self):
-        return 'task.track.stop'
+        return task.Task.trackStopEventType()
    
     def statusMessages(self):
         status1 = _('Tasks: %d selected, %d visible, %d total')%\

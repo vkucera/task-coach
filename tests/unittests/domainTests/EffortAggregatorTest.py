@@ -27,9 +27,11 @@ class EffortAggregatorTestCase(test.TestCase):
         self.effortAggregator = effort.EffortAggregator(self.taskList, 
             aggregation=self.aggregation)
         patterns.Publisher().registerObserver(self.onEvent, 
-            eventType=self.effortAggregator.addItemEventType())
+            eventType=self.effortAggregator.addItemEventType(),
+            eventSource=self.effortAggregator)
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=self.effortAggregator.removeItemEventType())
+            eventType=self.effortAggregator.removeItemEventType(),
+            eventSource=self.effortAggregator)
         self.task1 = task.Task(subject='task 1')
         self.task2 = task.Task(subject='task 2')
         self.task3 = task.Task(subject='child')
