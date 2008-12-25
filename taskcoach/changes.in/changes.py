@@ -27,7 +27,10 @@ Release('0.72.0', '?? ??, 2009', # Or maybe 1.0.0
     summary='',
     featuresAdded=[
         Feature('''One can now export only the current selection
-as HTML.''')
+as HTML.'''),
+        Feature('''When using yearly recurrence of tasks, allow for keeping
+the recurring date on the same weekday (e.g. to recur on the first
+Monday of the year).''', '2164568')
         ]
     ),
 

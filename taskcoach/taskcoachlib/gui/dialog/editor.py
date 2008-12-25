@@ -348,10 +348,10 @@ class DatesPage(PageWithHeaders, TaskHeaders):
         self._recurrenceFrequencyEntry.Enable(bool(recurrence))
         if recurrence.amount > 1:
             self._recurrenceFrequencyEntry.Value = recurrence.amount
-        if recurrence.unit == 'monthly':
+        if recurrence.unit in ('monthly', 'yearly'):
             self._recurrenceSameWeekdayCheckBox.Value = recurrence.sameWeekday
         else:
-            # If recurrence is not monthly, set same week day to False
+            # If recurrence is not monthly or yearly, set same week day to False
             self._recurrenceSameWeekdayCheckBox.Value = False
         self.updateRecurrenceLabel()
 
@@ -360,7 +360,7 @@ class DatesPage(PageWithHeaders, TaskHeaders):
                           3: _('month(s),'), 4: _('year(s),')}
         recurrenceLabel = recurrenceDict[self._recurrenceEntry.Selection]
         self._recurrenceStaticText.SetLabel(recurrenceLabel)
-        self._recurrenceSameWeekdayCheckBox.Enable(self._recurrenceEntry.Selection == 3)
+        self._recurrenceSameWeekdayCheckBox.Enable(self._recurrenceEntry.Selection in (3,4))
         self._recurrenceSizer.Layout()
 
     def suggestReminder(self):
