@@ -206,3 +206,40 @@ class BiYearlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
     def testEveryOtherYear(self):
         self.assertEqual(date.Date(2004,3,1), self.recur(date.Date(2002,3,1)))
             
+
+class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('yearly', sameWeekday=True)
+        
+    def testFirstTuesdayOfTheYear(self):
+        self.assertEqual(date.Date(2009,1,6), self.recur(date.Date(2008,1,1)))
+
+    def testFirstWednesdayOfTheYear(self):
+        self.assertEqual(date.Date(2009,1,7), self.recur(date.Date(2008,1,2)))
+
+    def testFirstThursdayOfTheYear(self):
+        self.assertEqual(date.Date(2009,1,1), self.recur(date.Date(2008,1,3)))
+
+    def testFirstFridayOfTheYear(self):
+        self.assertEqual(date.Date(2009,1,2), self.recur(date.Date(2008,1,4)))
+
+    def testLastWednesdayOfTheYear(self):
+        self.assertEqual(date.Date(2009,12,30), self.recur(date.Date(2008,12,31)))
+
+    def testLastTuesdayOfTheYear(self):
+        self.assertEqual(date.Date(2009,12,29), self.recur(date.Date(2008,12,30)))
+
+    def testLastMondayOfTheYear(self):
+        self.assertEqual(date.Date(2009,12,28), self.recur(date.Date(2008,12,29)))
+
+    def testLastSundayOfTheYear(self):
+        self.assertEqual(date.Date(2009,12,27), self.recur(date.Date(2008,12,28)))
+
+    def testLastSaturdayOfTheYear(self):
+        self.assertEqual(date.Date(2009,12,26), self.recur(date.Date(2008,12,27)))
+
+    def testLastFridayOfTheYear(self):
+        self.assertEqual(date.Date(2009,12,25), self.recur(date.Date(2008,12,26)))
+
+    def testLastThursdayOfTheYear(self):
+        self.assertEqual(date.Date(2009,12,24), self.recur(date.Date(2008,12,25)))
