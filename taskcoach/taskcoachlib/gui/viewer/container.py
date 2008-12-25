@@ -64,13 +64,15 @@ class ViewerContainer(object):
             wx.CallAfter(self.containerWidget.SetSelection, 
                          self.__desiredPageNumber)
         patterns.Publisher().registerObserver(self.onSelect, 
-            eventType=viewer.selectEventType())
+            eventType=viewer.selectEventType(), eventSource=viewer)
 
-    def selectEventType(self):
-        return '%s (%s).select'%(self.__class__, id(self))
+    @classmethod
+    def selectEventType(class_):
+        return '%s.select'%class_
     
-    def viewerChangeEventType(self):
-        return '%s (%s).viewerChange'%(self.__class__, id(self))
+    @classmethod
+    def viewerChangeEventType(class_):
+        return '%s.viewerChange'%class_
     
     def __getattr__(self, method):
         ''' Return a function that will call the method on the first viewer 

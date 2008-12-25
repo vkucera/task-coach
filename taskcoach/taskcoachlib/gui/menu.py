@@ -588,9 +588,13 @@ class StartEffortForTaskMenu(DynamicMenu):
 
     def registerForMenuUpdate(self):
         for eventType in (self.tasks.addItemEventType(), 
-                          self.tasks.removeItemEventType(),
-                          task.Task.subjectChangedEventType(),
-                          'task.track.start', 'task.track.stop',
+                          self.tasks.removeItemEventType()):
+            patterns.Publisher().registerObserver(self.onUpdateMenu,
+                                                  eventType=eventType,
+                                                  eventSource=self.tasks)
+        for eventType in (task.Task.subjectChangedEventType(),
+                          task.Task.trackStartEventType(), 
+                          task.Task.trackStopEventType(),
                           'task.startDate', 'task.dueDate', 
                           'task.completionDate'):
             patterns.Publisher().registerObserver(self.onUpdateMenu, eventType)

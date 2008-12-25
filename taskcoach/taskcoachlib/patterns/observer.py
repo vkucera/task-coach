@@ -112,8 +112,8 @@ class Publisher(object):
         Objects (Observers) interested in change notifications register a 
         callback method via Publisher.registerObserver. The callback should
         expect one argument; an instance of the Event class. Observers can 
-        register their interest in specific event types (topics) when 
-        registering. 
+        register their interest in specific event types (topics), and 
+        optionally specific event sources, when registering. 
         
         Implementation note: 
         - Publisher is a Singleton class since all observables and all
@@ -128,41 +128,41 @@ class Publisher(object):
         
     def clear(self):
         ''' Clear the registry of observers. Mainly for testing purposes. '''
-        self.__observers = {} # {eventType: [list of callbacks]}
+        self.__observers = {} # {(eventType, eventSource): [list of callbacks]}
         self.__notifyingSemaphore = 0
     
-    def registerObserver(self, observer, eventType):
+    def registerObserver(self, observer, eventType, eventSource=None):
         ''' Register an observer for an event type. The observer is a callback 
             method that should expect one argument, an instance of Event.
-            The eventType can be anything hashable, typically a string. '''
+            The eventType can be anything hashable, typically a string. When 
+            passing a specific eventSource, the observer is only called when the
+            event originates from the specified eventSource. '''
         assert hasattr(observer, 'im_self')
         observer = MethodProxy(observer)
-        observerList = self.__observers.setdefault(eventType, [])
+        observerList = self.__observers.setdefault((eventType, eventSource), [])
         # Note: it's the caller's responsibility to not add the same observer
         # twice (checking whether the observer is already in the observerList
         # impacts performance too much).
         observerList.append(observer)
         if len(observerList) == 1:
-            self.notifyObservers(Event(self,
-                'publisher.firstObserverRegisteredFor', eventType))
-            self.notifyObservers(Event(self, 
-                'publisher.firstObserverRegisteredFor.%s'%eventType, eventType))
+            self.notifyObserversOfFirstObserverRegistered(eventType)
         
     def removeObserver(self, observer, eventType=None):
         ''' Remove an observer. If no event type is specified, the observer
             is removed for all event types. If an event type is specified
             the observer is removed for that event type only. '''
-        if eventType and eventType not in self.__observers:
-            return
-
-        eventTypesToScan = eventType and [eventType] or self.__observers
+        if eventType:
+            eventTypesAndSources = [(type, source) for (type, source) in \
+                                    self.__observers if type == eventType]
+        else:
+            eventTypesAndSources = self.__observers    
         observer = MethodProxy(observer)    
-        for eventType in eventTypesToScan:
+        for eventTypeAndSource in eventTypesAndSources:
             try:    
-                self.__observers[eventType].remove(observer)
+                self.__observers[eventTypeAndSource].remove(observer)
             except ValueError:
                 pass # observer was not registered for eventType, ignore.
-        self.notifyObserversOfLastObserverRemoved(eventTypesToScan)
+        self.notifyObserversOfLastObserverRemoved()
                 
     def removeInstance(self, instance):
         ''' Remove all observers that are methods of instance. '''
@@ -170,28 +170,39 @@ class Publisher(object):
             for observer in observerList[:]:
                 if observer.im_self is instance:
                     observerList.remove(observer)
-        self.notifyObserversOfLastObserverRemoved(self.__observers)
+        self.notifyObserversOfLastObserverRemoved()
+        
+    def notifyObserversOfFirstObserverRegistered(self, eventType):
+        self.notifyObservers(Event(self,
+            'publisher.firstObserverRegisteredFor', eventType))
+        self.notifyObservers(Event(self, 
+            'publisher.firstObserverRegisteredFor.%s'%eventType, eventType))
                     
-    def notifyObserversOfLastObserverRemoved(self, eventTypes):
-        unobservedEventTypes = [eventType for eventType in eventTypes if \
-                                not self.__observers[eventType]]
-        for eventType in unobservedEventTypes:
-            del self.__observers[eventType]
+    def notifyObserversOfLastObserverRemoved(self):
+        for eventType, eventSource in self.__observers.keys():
+            if self.__observers[(eventType, eventSource)]:
+                continue
+            del self.__observers[(eventType, eventSource)]
             self.notifyObservers(Event(self, 
                 'publisher.lastObserverRemovedFor.%s'%eventType, eventType))
         
     def notifyObservers(self, event):
-        ''' Notify observers of the event. The event type is extracted from
-            the event. '''
-        if self.isNotifying():
-            for observer in self.__observers.get(event.type(), []):
-                observer(event)
+        ''' Notify observers of the event and/or source. The event type and 
+            source are extracted from the event. '''
+        if not self.isNotifying():
+            return
+        observers = []
+        for eventTypeAndSource in [(event.type(), None), 
+                                   (event.type(), event.source())]:
+            observers.extend(self.__observers.get(eventTypeAndSource, []))
+        for observer in observers:
+            observer(event)
                 
     def observers(self, eventType=None):
         ''' Get the currently registered observers. Optionally specify
             a specific event type to get observers for that event type only. '''
         if eventType:
-            observerProxies = self.__observers.get(eventType, [])
+            observerProxies = self.__observers.get((eventType, None), [])
         else:
             observerProxies = [observer for observersForEventType in \
                     self.__observers.values() for observer in \
@@ -248,15 +259,17 @@ class ObservableCollection(Observable):
         ''' Make ObservableCollections suitable as keys in dictionaries. '''
         return hash(id(self))
 
-    def addItemEventType(self):
+    @classmethod
+    def addItemEventType(class_):
         ''' The event type used to notify observers that one or more items
             have been added to the collection. '''
-        return '%s (%s).add'%(self.__class__, id(self))
+        return '%s.add'%class_
     
-    def removeItemEventType(self):
+    @classmethod
+    def removeItemEventType(class_):
         ''' The event type used to notify observers that one or more items
             have been removed from the collection. '''
-        return '%s (%s).remove'%(self.__class__, id(self))
+        return '%s.remove'%class_
 
     def notifyObserversOfItemsAdded(self, *items):
         self.notifyObservers(Event(self, self.addItemEventType(), *items))
@@ -336,11 +349,12 @@ class CollectionDecorator(Decorator, ObservableCollection):
 
     def __init__(self, observedCollection, *args, **kwargs):
         super(CollectionDecorator, self).__init__(observedCollection, *args, **kwargs)
+        observable = self.observable()
         self.registerObserver(self.onAddItem, 
-            eventType=self.observable().addItemEventType())
+            eventType=observable.addItemEventType(), eventSource=observable)
         self.registerObserver(self.onRemoveItem, 
-            eventType=self.observable().removeItemEventType())
-        self.extendSelf(self.observable())
+            eventType=observable.removeItemEventType(), eventSource=observable)
+        self.extendSelf(observable)
 
     def __repr__(self):
         return '%s(%s)'%(self.__class__, super(CollectionDecorator, self).__repr__())

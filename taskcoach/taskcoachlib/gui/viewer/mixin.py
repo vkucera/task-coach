@@ -228,7 +228,8 @@ class SortableViewer(object):
         super(SortableViewer, self).registerPresentationObservers()
         patterns.Publisher().removeObserver(self.onSorted)
         patterns.Publisher().registerObserver(self.onSorted, 
-            eventType=self.presentation().sortEventType())
+            eventType=self.presentation().sortEventType(),
+            eventSource=self.presentation())
 
     def createSorter(self, presentation):
         return self.SorterClass(presentation, **self.sorterOptions())

@@ -75,7 +75,8 @@ class ViewerContainerTest(test.wxTestCase):
 
     def testChangePage_NotifiesObserversAboutNewActiveViewer(self):
         patterns.Publisher().registerObserver(self.onEvent, 
-            eventType=self.container.viewerChangeEventType())
+            eventType=self.container.viewerChangeEventType(), 
+            eventSource=self.container)
         self.container.onPageChanged(DummyEvent(1))
         self.failUnless(self.events)
         
@@ -101,7 +102,8 @@ class ViewerContainerTest(test.wxTestCase):
     def testCloseViewer_NotifiesObserversAboutNewActiveViewer(self):
         self.container.onPageChanged(DummyEvent(1))
         patterns.Publisher().registerObserver(self.onEvent, 
-            eventType=self.container.viewerChangeEventType())
+            eventType=self.container.viewerChangeEventType(), 
+            eventSource=self.container)
         self.container.onPageClosed(DummyEvent())
         self.failUnless(self.events)
 

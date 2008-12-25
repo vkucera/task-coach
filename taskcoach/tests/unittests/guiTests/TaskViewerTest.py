@@ -539,7 +539,7 @@ class ColumnsTests(object):
     def testStartTracking(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task))
-        self.assertEqual('task.track.start', self.viewer.events[0].type())
+        self.assertEqual(self.task.trackStartEventType(), self.viewer.events[0].type())
 
     def testChangeStartDateWhileColumnNotShown(self):
         self.taskList.append(self.task)

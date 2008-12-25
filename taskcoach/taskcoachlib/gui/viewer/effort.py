@@ -59,10 +59,10 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         return True
     
     def trackStartEventType(self):
-        return 'effort.track.start'
+        return effort.Effort.trackStartEventType()
     
     def trackStopEventType(self):
-        return 'effort.track.stop'
+        return effort.Effort.trackStopEventType()
         
     def onColorChange(self, event):
         effort = event.source()

@@ -107,7 +107,6 @@ class EffortViewerTest(test.wxTestCase):
         super(EffortViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
         taskFile = persistence.TaskFile()
-        #self.taskList = taskFile.tasks()
         self.task = task.Task()
         taskFile.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006,1,1),

@@ -45,7 +45,7 @@ class ClockTest(test.wxTestCase):
         self.failUnless(self.clock is clock2)
         
     def testRegisterForSpecificTime(self):
-        realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=1)
+        realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=2)
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=date.Clock.eventType(realSoonNow))
         self.clock._scheduledTimer._notify(now=realSoonNow)

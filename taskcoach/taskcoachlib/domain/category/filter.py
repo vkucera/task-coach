@@ -26,11 +26,14 @@ class CategoryFilter(base.Filter):
         self.__categories = kwargs.pop('categories')
         self.__filterOnlyWhenAllCategoriesMatch = \
             kwargs.pop('filterOnlyWhenAllCategoriesMatch', False)
-        eventTypes = [self.__categories.addItemEventType(),
-                      self.__categories.removeItemEventType(),
-                      category.Category.categorizableAddedEventType(),
+        for eventType in (self.__categories.addItemEventType(),
+                          self.__categories.removeItemEventType()):
+            patterns.Publisher().registerObserver(self.onCategoryChanged,
+                                                  eventType=eventType, 
+                                                  eventSource=self.__categories)
+        eventTypes = (category.Category.categorizableAddedEventType(),
                       category.Category.categorizableRemovedEventType(),
-                      category.Category.filterChangedEventType()]
+                      category.Category.filterChangedEventType())
         for eventType in eventTypes:
             patterns.Publisher().registerObserver(self.onCategoryChanged,
                                                   eventType=eventType)

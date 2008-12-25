@@ -152,6 +152,7 @@ class EffortAggregator(patterns.SetDecorator,
         return (task, self.startOfPeriod(effortStart), 
             self.endOfPeriod(effortStart))
     
-    def sortEventType(self):
+    @classmethod
+    def sortEventType(class_):
         return 'this event type is not used' 
 
