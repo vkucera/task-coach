@@ -484,7 +484,7 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
 
     def RefreshExpansionStatesRecursively(self, item):
         for child in self.GetItemChildren(item, recursively=True):
-            self.RefreshExpansionState(item, self.GetIndexOfItem(child))
+            self.RefreshExpansionState(child, self.GetIndexOfItem(child))
 
     def RefreshExpansionState(self, item, itemIndex):
         itemShouldBeExpanded = self.OnGetItemExpanded(itemIndex)
