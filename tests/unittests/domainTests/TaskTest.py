@@ -285,6 +285,13 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.registerObserver('task.fixedFee')
         self.task.setFixedFee(1000)
         self.assertEqual(1000, self.events[0].value())
+
+    def testSetFixedFeeCausesTotalFixedFeeNotification(self):
+        self.registerObserver('task.totalFixedFee')
+        self.task.setFixedFee(1000)
+        self.assertEqual([patterns.Event(self.task, 'task.totalFixedFee', 
+                          1000)], 
+                         self.events)
     
     def testSetFixedFeeCausesRevenueChangeNotification(self):
         self.registerObserver('task.revenue')
@@ -856,6 +863,12 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         activeEffort.setStop()
         self.assertEqual(patterns.Event(self.task1, 'task.track.stop',
             activeEffort), self.events[-1])
+
+    def testSetFixedFeeOfChild(self):
+        self.registerObserver('task.totalFixedFee')
+        self.task1_1.setFixedFee(1000)
+        self.failUnless(patterns.Event(self.task, 'task.totalFixedFee', 1000) \
+                        in self.events)
 
     def testGetFixedFeeRecursive(self):
         self.task.setFixedFee(2000)

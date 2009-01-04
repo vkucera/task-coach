@@ -26,7 +26,9 @@ releases = [
 Release('0.71.6', 'January ?, 2008',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Don't crash when adding a task.''', '2467347')
+        Bug('''Don't crash when adding a task.''', '2467347'),
+        Bug('''Update the total fixed fee column in the task viewer when
+adding a subtask with a fixed fee.''', '2467347')
         ]
     ),
 
