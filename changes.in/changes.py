@@ -23,6 +23,13 @@ from changetypes import *
 
 releases = [
 
+Release('0.71.6', 'January ?, 2008',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Don't crash when adding a task.''', '2467347')
+        ]
+    ),
+
 Release('0.71.5', 'December 24, 2008',
     summary='''This release adds one usability enhancement and a few bug 
 fixes.''',
@@ -40,7 +47,8 @@ hidden before.''', '2372909'),
         Bug('''When marking a recurring task completed, recur its reminder too, 
 if any.''', '2376415'),
         Bug('''Refresh task status at midnight.''', '2095205'),
-        Bug('''Fix tab traversal in the effort editor on Linux.''', '1965751')]
+        Bug('''Fix tab traversal in the effort editor on Linux.''', '1965751')
+        ]
     ),
              
 Release('0.71.4', 'December 6, 2008',
