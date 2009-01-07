@@ -32,6 +32,7 @@ defaults = { \
     'categoryviewercount': '1',      # Number of category viewers in main window
     'noteviewercount': '0',          # Number of note viewers in main window
     'effortviewercount': '0',        # Number of effort viewers in main window
+    'squaretaskviewercount': '0',
     'language': 'en_US',             # Language and locale
     'categoryfiltermatchall': 'False',
     'descriptionpopups': 'True',
@@ -63,6 +64,8 @@ defaults = { \
     'hideoverduetasks': 'False',
     'hideoverbudgettasks': 'False',
     'hidecompositetasks': 'False' },
+'squaretaskviewer': { \
+    'title': ''},
 'categoryviewer': { \
     'title': '',
     'sortby': 'subject',

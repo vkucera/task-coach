@@ -25,6 +25,7 @@ from buttonbox import ButtonBox
 from itemctrl import Column
 from listctrl import ListCtrl
 from treectrl import TreeCtrl, CustomTreeCtrl, CheckTreeCtrl, TreeListCtrl
+from squaremap import SquareMap
 from datectrl import DateCtrl, DateTimeCtrl, DatePickerCtrl
 from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
     MultiLineTextCtrl, StaticTextWithToolTip

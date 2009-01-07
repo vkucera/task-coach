@@ -21,12 +21,65 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import patterns, command, widgets, domain
-from taskcoachlib.domain import task
+from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, color, render, dialog
 import base, mixin
 
 
+class SquareTaskViewer(base.TreeViewer):
+    defaultTitle = _('Tasks')
+    defaultBitmap = 'task'
+    
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'squaretaskviewer')
+        super(SquareTaskViewer, self).__init__(*args, **kwargs)
+        
+    def domainObjectsToView(self):
+        return self.taskFile.tasks()
+
+    def isShowingTasks(self): 
+        return True
+
+    def createWidget(self):
+        class RootNode(object):
+            def __init__(self, tasks):
+                self.tasks = tasks
+            def children(self):
+                return self.tasks.rootItems()
+            def budget(self, recursive=True):
+                if recursive:
+                    return sum([task.budget(recursive=True) for task in self.children()], date.TimeDelta())
+                else:
+                    return date.TimeDelta()
+        return widgets.SquareMap(self, RootNode(self.taskFile.tasks()))
+    
+    # SquareMap adapter methods:
+    
+    def overall(self, task):
+        return task.budget(recursive=True).milliseconds()
+    
+    def children_sum(self, children, parent):
+        timeDelta = parent.budget(recursive=True) - parent.budget(recursive=False)
+        return timeDelta.milliseconds()
+    
+    def empty(self, task):
+        overall = self.overall(task)
+        if overall:
+            children_sum = self.children_sum(self.children(task), task)
+            return (overall - children_sum)/overall
+        return 0
+    
+    def label(self, task):
+        return task.subject()
+
+    def value(self, task, parent=None):
+        return task.budget(recursive=False).milliseconds()
+    
+    def children(self, task):
+        return task.children()
+    
+    
 class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks, 
                  mixin.SortableViewerForTasks, mixin.SearchableViewer, 
                  base.UpdatePerSecondViewer, base.SortableViewerWithColumns,
