@@ -386,6 +386,9 @@ class ViewViewerMenu(Menu):
             ViewViewer(menuText=_('&Task'),
                        helpText=_('Open a new tab with a viewer that displays tasks'),
                        viewerClass=viewer.TaskViewer, **kwargs),
+            ViewViewer(menuText=_('&Square task'),
+                       helpText=_('Open a new tab with a viewer that displays tasks'),
+                       viewerClass=viewer.SquareTaskViewer, **kwargs),
             ViewViewer(menuText=_('&Category'),
                        helpText=_('Open a new tab with a viewer that displays categories'),
                        viewerClass=viewer.CategoryViewer, **kwargs)]

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import effort, task, category, note
 
 def viewerTypes():
-    return 'taskviewer', 'noteviewer', 'categoryviewer', 'effortviewer'
+    return 'squaretaskviewer', 'taskviewer', 'noteviewer', 'categoryviewer', 'effortviewer'
 
 
 class addViewers(object):
@@ -36,6 +36,7 @@ class addViewers(object):
         
     def addAllViewers(self):
         self.addViewers(task.TaskViewer)
+        self.addViewers(task.SquareTaskViewer)
         if self.settings.getboolean('feature', 'effort'):
             self.addViewers(effort.EffortViewer)
         self.addViewers(category.CategoryViewer)
