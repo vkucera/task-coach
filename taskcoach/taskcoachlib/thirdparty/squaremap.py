@@ -91,6 +91,8 @@ class SquareMap( wx.Panel ):
         brush = wx.Brush( color  )
         dc.SetBrush( brush )
         dc.DrawRectangle( x,y,w,h )
+        brush = wx.Brush(self.BackgroundColor)
+        dc.DrawText(self.adapter.label(node), x+2, y)
         children_hot_map = []
         hot_map.append( (wx.Rect( int(x),int(y),int(w),int(h)), node, children_hot_map ) )
         x += self.padding
