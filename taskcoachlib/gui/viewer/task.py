@@ -45,6 +45,8 @@ class SquareTaskViewer(base.TreeViewer):
         class RootNode(object):
             def __init__(self, tasks):
                 self.tasks = tasks
+            def subject(self):
+                return ''
             def children(self):
                 return self.tasks.rootItems()
             def budget(self, recursive=True):
