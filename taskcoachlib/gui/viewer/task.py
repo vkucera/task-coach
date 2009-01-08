@@ -51,7 +51,8 @@ class SquareTaskViewer(base.TreeViewer):
                 return self.tasks.rootItems()
             def budget(self, recursive=True):
                 if recursive:
-                    return sum([task.budget(recursive=True) for task in self.children()], date.TimeDelta())
+                    return sum([task.budget(recursive=True) for task in self.children()], 
+                               date.TimeDelta())
                 else:
                     return date.TimeDelta()
         return widgets.SquareMap(self, RootNode(self.taskFile.tasks()))
@@ -59,24 +60,25 @@ class SquareTaskViewer(base.TreeViewer):
     # SquareMap adapter methods:
     
     def overall(self, task):
-        return task.budget(recursive=True).milliseconds()
+        return task.budget(recursive=True).milliseconds()/1000
     
     def children_sum(self, children, parent):
-        timeDelta = parent.budget(recursive=True) - parent.budget(recursive=False)
-        return timeDelta.milliseconds()
+        timeDelta = sum([child.budget(recursive=True) for child in children], 
+                        date.TimeDelta())
+        return timeDelta.milliseconds()/1000
     
     def empty(self, task):
         overall = self.overall(task)
         if overall:
             children_sum = self.children_sum(self.children(task), task)
-            return (overall - children_sum)/overall
+            return (overall - children_sum)/float(overall)
         return 0
     
     def label(self, task):
-        return task.subject()
+        return task.subject() 
 
     def value(self, task, parent=None):
-        return task.budget(recursive=False).milliseconds()
+        return task.budget(recursive=True).milliseconds()/1000
     
     def children(self, task):
         return task.children()

@@ -69,7 +69,6 @@ class SquareMap( wx.Panel ):
         self.model = model
         self.Refresh()
     
-    
     def OnDraw( self, event ):
         """Event handler to draw our node-map into the device context"""
         dc = wx.PaintDC( self )
@@ -79,6 +78,7 @@ class SquareMap( wx.Panel ):
             brush = wx.Brush( self.BackgroundColor  )
             dc.SetBackground( brush )
             dc.Clear()
+            dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
             w, h = dc.GetSize()
             self.DrawBox( dc, self.model, 0,0,w,h, hot_map = self.hot_map )
     
@@ -103,7 +103,9 @@ class SquareMap( wx.Panel ):
         empty = self.adapter.empty( node )
         if empty:
             # is a fraction of the space which is empty...
+            oldh = h
             h = h * (1.0-empty)
+            y -= h - oldh 
         
         if w >1 and h> 1:
             children = self.adapter.children( node )
