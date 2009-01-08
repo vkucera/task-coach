@@ -2068,6 +2068,14 @@ class CategoryViewerFilterChoice(SettingsCommand, ToolbarChoiceCommand):
         self.settings.set('view', 'categoryfiltermatchall', str(choice))
 
 
+class SquareTaskViewerOrderChoice(ViewerCommand, ToolbarChoiceCommand):
+    choiceLabels = [_('Budget'), _('Budget left'), _('Time spent'), _('Revenue')]
+    choiceData = ['budget', 'budgetLeft', 'timeSpent', 'revenue']
+    
+    def doChoice(self, choice):
+        self.viewer.orderBy(choice)
+        
+
 class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(ToggleAutoColumnResizing, self).__init__(\
