@@ -33,7 +33,10 @@ class SquareTaskViewer(base.TreeViewer):
     
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'squaretaskviewer')
+        self.__orderBy = None
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
+        self.orderBy('budget')
+        self.orderUICommand.setChoice(self.__orderBy)
         
     def domainObjectsToView(self):
         return self.taskFile.tasks()
@@ -49,23 +52,50 @@ class SquareTaskViewer(base.TreeViewer):
                 return ''
             def children(self):
                 return self.tasks.rootItems()
-            def budget(self, recursive=True):
-                if recursive:
-                    return sum([task.budget(recursive=True) for task in self.children()], 
-                               date.TimeDelta())
+            def __getattr__(self, attr):
+                def getTaskAttribute(recursive=True):
+                    if recursive:
+                        return sum([getattr(task, attr)(recursive=True) for task in self.children()],
+                                   self.__zero)
+                    else:
+                        return self.__zero
+
+                if attr in ('budget', 'budgetLeft', 'timeSpent'):
+                    self.__zero = date.TimeDelta()
                 else:
-                    return date.TimeDelta()
+                    self.__zero = 0
+                return getTaskAttribute
         return widgets.SquareMap(self, RootNode(self.taskFile.tasks()))
+
+    def getToolBarUICommands(self):
+        ''' UI commands to put on the toolbar of this viewer. '''
+        toolBarUICommands = super(SquareTaskViewer, self).getToolBarUICommands() 
+        toolBarUICommands.append(None) # Separator
+        self.orderUICommand = \
+            uicommand.SquareTaskViewerOrderChoice(viewer=self)
+        toolBarUICommands.append(self.orderUICommand)
+        return toolBarUICommands
+    
+    def orderBy(self, choice):
+        if choice != self.__orderBy:           
+            self.__orderBy = choice
+            if choice in ('budget', 'budgetLeft', 'timeSpent'):
+                self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds()/1000
+                self.__zero = date.TimeDelta()
+            else:
+                self.__transformTaskAttribute = lambda x: x
+                self.__zero = 0
+            self.refresh()
     
     # SquareMap adapter methods:
     
     def overall(self, task):
-        return task.budget(recursive=True).milliseconds()/1000
+        return self.__transformTaskAttribute(getattr(task, self.__orderBy)(recursive=True))
     
     def children_sum(self, children, parent):
-        timeDelta = sum([child.budget(recursive=True) for child in children], 
-                        date.TimeDelta())
-        return timeDelta.milliseconds()/1000
+        timeDelta = sum([getattr(child, self.__orderBy)(recursive=True) for child in children], 
+                        self.__zero)
+        return self.__transformTaskAttribute(timeDelta)
     
     def empty(self, task):
         overall = self.overall(task)
@@ -75,10 +105,11 @@ class SquareTaskViewer(base.TreeViewer):
         return 0
     
     def label(self, task):
-        return task.subject() 
+        return '%s (%s)'%(task.subject(), 
+                          getattr(task, self.__orderBy)(recursive=False)) 
 
     def value(self, task, parent=None):
-        return task.budget(recursive=True).milliseconds()/1000
+        return self.overall(task)
     
     def children(self, task):
         return task.children()

@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 import wx, sys, os
-import  wx
 import  wx.lib.newevent
 
 SquareHighlightEvent, EVT_SQUARE_HIGHLIGHTED = wx.lib.newevent.NewEvent()
