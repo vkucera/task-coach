@@ -35,7 +35,7 @@ class SquareTaskViewer(base.TreeViewer):
         kwargs.setdefault('settingsSection', 'squaretaskviewer')
         self.__orderBy = None
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
-        self.orderBy('budget')
+        self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
         self.orderUICommand.setChoice(self.__orderBy)
         
     def domainObjectsToView(self):
@@ -79,6 +79,7 @@ class SquareTaskViewer(base.TreeViewer):
     def orderBy(self, choice):
         if choice != self.__orderBy:           
             self.__orderBy = choice
+            self.settings.set(self.settingsSection(), 'sortby', choice)
             if choice in ('budget', 'budgetLeft', 'timeSpent'):
                 self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds()/1000
                 self.__zero = date.TimeDelta()

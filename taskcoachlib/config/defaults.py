@@ -65,7 +65,8 @@ defaults = { \
     'hideoverbudgettasks': 'False',
     'hidecompositetasks': 'False' },
 'squaretaskviewer': { \
-    'title': ''},
+    'title': '',
+    'sortby': 'budget' },
 'categoryviewer': { \
     'title': '',
     'sortby': 'subject',
