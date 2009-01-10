@@ -27,7 +27,47 @@ from taskcoachlib.gui import uicommand, menu, color, render, dialog
 import base, mixin
 
 
-class SquareTaskViewer(base.TreeViewer):
+class BaseTaskViewer(base.TreeViewer):
+    def domainObjectsToView(self):
+        return self.taskFile.tasks()
+
+    def isShowingTasks(self): 
+        return True
+
+    def editItemDialog(self, *args, **kwargs):
+        items = kwargs.get('items', self.curselection())
+        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
+            command.EditTaskCommand(self.presentation(), items),
+            self.taskFile, self.settings, bitmap=kwargs['bitmap'],
+            columnName=kwargs.get('columnName', ''))
+    
+
+class RootNode(object):
+    def __init__(self, tasks):
+        self.tasks = tasks
+        
+    def subject(self):
+        return ''
+    
+    def children(self):
+        return self.tasks.rootItems()
+    
+    def __getattr__(self, attr):
+        def getTaskAttribute(recursive=True):
+            if recursive:
+                return sum([getattr(task, attr)(recursive=True) for task in self.children()],
+                           self.__zero)
+            else:
+                return self.__zero
+
+        if attr in ('budget', 'budgetLeft', 'timeSpent'):
+            self.__zero = date.TimeDelta()
+        else:
+            self.__zero = 0
+        return getTaskAttribute
+            
+
+class SquareTaskViewer(BaseTaskViewer):
     defaultTitle = _('Tasks')
     defaultBitmap = 'task'
     
@@ -37,35 +77,10 @@ class SquareTaskViewer(base.TreeViewer):
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
         self.orderUICommand.setChoice(self.__orderBy)
-        
-    def domainObjectsToView(self):
-        return self.taskFile.tasks()
-
-    def isShowingTasks(self): 
-        return True
 
     def createWidget(self):
-        class RootNode(object):
-            def __init__(self, tasks):
-                self.tasks = tasks
-            def subject(self):
-                return ''
-            def children(self):
-                return self.tasks.rootItems()
-            def __getattr__(self, attr):
-                def getTaskAttribute(recursive=True):
-                    if recursive:
-                        return sum([getattr(task, attr)(recursive=True) for task in self.children()],
-                                   self.__zero)
-                    else:
-                        return self.__zero
-
-                if attr in ('budget', 'budgetLeft', 'timeSpent'):
-                    self.__zero = date.TimeDelta()
-                else:
-                    self.__zero = 0
-                return getTaskAttribute
-        return widgets.SquareMap(self, RootNode(self.taskFile.tasks()))
+        return widgets.SquareMap(self, RootNode(self.presentation()), self.onSelect,
+                                 uicommand.TaskEdit(taskList=self.presentation(), viewer=self))
 
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
@@ -77,16 +92,23 @@ class SquareTaskViewer(base.TreeViewer):
         return toolBarUICommands
     
     def orderBy(self, choice):
-        if choice != self.__orderBy:           
-            self.__orderBy = choice
-            self.settings.set(self.settingsSection(), 'sortby', choice)
-            if choice in ('budget', 'budgetLeft', 'timeSpent'):
-                self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds()/1000
-                self.__zero = date.TimeDelta()
-            else:
-                self.__transformTaskAttribute = lambda x: x
-                self.__zero = 0
-            self.refresh()
+        if choice == self.__orderBy:
+            return
+        self.__orderBy = choice
+        self.settings.set(self.settingsSection(), 'sortby', choice)
+        if choice in ('budget', 'budgetLeft', 'timeSpent'):
+            self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds()/1000
+            self.__zero = date.TimeDelta()
+        else:
+            self.__transformTaskAttribute = lambda x: x
+            self.__zero = 0
+        self.refresh()
+        
+    def curselection(self):
+        # Override curselection, because there is no need to translate indices
+        # back to domain objects. Our widget already returns the selected domain
+        # object itself.
+        return self.widget.curselection()
     
     # SquareMap adapter methods:
     
@@ -119,7 +141,7 @@ class SquareTaskViewer(base.TreeViewer):
 class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks, 
                  mixin.SortableViewerForTasks, mixin.SearchableViewer, 
                  base.UpdatePerSecondViewer, base.SortableViewerWithColumns,
-                 base.TreeViewer):
+                 BaseTaskViewer):
     
     defaultTitle = _('Tasks')
     defaultBitmap = 'task'
@@ -130,12 +152,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.treeOrListUICommand.setChoice(self.isTreeViewer())
         self.__registerForColorChanges()
-
-    def domainObjectsToView(self):
-        return self.taskFile.tasks()
-    
-    def isShowingTasks(self): 
-        return True
     
     def isTreeViewer(self):
         return self.settings.getboolean(self.settingsSection(), 'treemode')
@@ -485,13 +501,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         newCommand.do()
         return self.editItemDialog(bitmap=bitmap, items=newCommand.items)
 
-    def editItemDialog(self, *args, **kwargs):
-        items = kwargs.get('items', self.curselection())
-        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-            command.EditTaskCommand(self.presentation(), items),
-            self.taskFile, self.settings, bitmap=kwargs['bitmap'],
-            columnName=kwargs.get('columnName', ''))
-    
+
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.presentation(), self.curselection(),
                   shadow=self.settings.getboolean('feature', 'syncml'))
