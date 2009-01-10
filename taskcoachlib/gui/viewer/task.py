@@ -67,7 +67,7 @@ class RootNode(object):
         return getTaskAttribute
             
 
-class SquareTaskViewer(BaseTaskViewer):
+class SquareTaskViewer(mixin.SearchableViewer, BaseTaskViewer):
     defaultTitle = _('Tasks')
     defaultBitmap = 'task'
     
@@ -87,10 +87,10 @@ class SquareTaskViewer(BaseTaskViewer):
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         toolBarUICommands = super(SquareTaskViewer, self).getToolBarUICommands() 
-        toolBarUICommands.append(None) # Separator
+        toolBarUICommands.insert(-2, None) # Separator
         self.orderUICommand = \
             uicommand.SquareTaskViewerOrderChoice(viewer=self)
-        toolBarUICommands.append(self.orderUICommand)
+        toolBarUICommands.insert(-2, self.orderUICommand)
         return toolBarUICommands
     
     def orderBy(self, choice):
@@ -118,8 +118,8 @@ class SquareTaskViewer(BaseTaskViewer):
         return self.__transformTaskAttribute(getattr(task, self.__orderBy)(recursive=True))
     
     def children_sum(self, children, parent):
-        timeDelta = sum([getattr(child, self.__orderBy)(recursive=True) for child in children], 
-                        self.__zero)
+        timeDelta = sum([getattr(child, self.__orderBy)(recursive=True) for child in children \
+                         if child in self.presentation()], self.__zero)
         return self.__transformTaskAttribute(timeDelta)
     
     def empty(self, task):
@@ -137,7 +137,7 @@ class SquareTaskViewer(BaseTaskViewer):
         return self.overall(task)
     
     def children(self, task):
-        return task.children()
+        return [child for child in task.children() if child in self.presentation()]
     
     
 class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks, 
