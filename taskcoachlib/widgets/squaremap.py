@@ -15,7 +15,10 @@ class SquareMap(squaremap.SquareMap):
         self.Refresh()
         
     def onSelect(self, event):
-        self.__selection = [event.node]
+        if event.node == self.model:
+            self.__selection = []
+        else:
+            self.__selection = [event.node]
         wx.CallAfter(self.selectCommand)
         event.Skip()
         
