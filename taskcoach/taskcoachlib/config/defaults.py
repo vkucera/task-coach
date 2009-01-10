@@ -66,7 +66,10 @@ defaults = { \
     'hidecompositetasks': 'False' },
 'squaretaskviewer': { \
     'title': '',
-    'sortby': 'budget' },
+    'sortby': 'budget',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False' },
 'categoryviewer': { \
     'title': '',
     'sortby': 'subject',
