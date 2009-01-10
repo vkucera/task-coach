@@ -73,7 +73,9 @@ class SquareTaskViewer(BaseTaskViewer):
     
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'squaretaskviewer')
-        self.__orderBy = None
+        self.__orderBy = 'revenue'
+        self.__transformTaskAttribute = lambda x: x
+        self.__zero = 0
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
         self.orderUICommand.setChoice(self.__orderBy)
