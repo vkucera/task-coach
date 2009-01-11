@@ -75,9 +75,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
                                       self, localOnly)
     
     def onCategoryChanged(self, event):
-        category = event.source()
-        if category in self.presentation():
-            self.widget.RefreshItem(self.getIndexOfItem(category))
+        self.refreshItem(event.source())
 
     def onCheck(self, event):
         category = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))

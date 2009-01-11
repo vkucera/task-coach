@@ -75,7 +75,9 @@ class Sorter(base.TreeSorter):
         
     def sortByTaskStatusFirst(self, sortByTaskStatusFirst):
         self.__sortByTaskStatusFirst = sortByTaskStatusFirst
-        self.reset()
+        # We don't need to invoke self.reset() here since when this property is
+        # changed, the sort order also changes which in turn will cause 
+        # self.reset() to be called.
                                 
     def createSortKeyFunction(self):
         statusSortKey = self.__createStatusSortKey()

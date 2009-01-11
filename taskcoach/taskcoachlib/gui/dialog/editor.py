@@ -832,9 +832,9 @@ class EditorWithCommand(widgets.NotebookDialog):
         
     def ok(self, *args, **kwargs):
         patterns.Publisher().removeObserver(self.onItemRemoved)
-        self._command.do()
         super(EditorWithCommand, self).ok(*args, **kwargs)
-
+        self._command.do()
+        
     def onItemRemoved(self, event):
         ''' The item we're editing has been removed. Close the tab of the item
             involved and close the whole editor if there are no tabs left. '''

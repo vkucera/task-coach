@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +17,28 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from data import *
-from gpl import licenseText, licenseHTML
-from versionchecker import VersionChecker
-from debug import log_call, time_call, profile_call
+
+import test
+from taskcoachlib.domain import base
+from taskcoachlib import patterns
+
+
+class OwnerUnderTest(patterns.Observable):
+    __metaclass__ = base.DomainObjectOwnerMetaclass
+    __ownedType__ = 'Foo'
+    
+    
+class OwnerTest(test.TestCase):
+    def setUp(self):
+        self.owner = OwnerUnderTest()
+        self.events = []
+        
+    def onEvent(self, event):
+        self.events.append(event)
+        
+    def testSetObjects_NoNotificationWhenUnchanged(self):
+        patterns.Publisher().registerObserver(self.onEvent, 
+            self.owner.foosChangedEventType())
+        self.owner.setFoos([])
+        self.failIf(self.events)
+        

@@ -40,6 +40,7 @@ class Recurrence(object):
             self.count += 1
             if self.count >= self.max and self.max != 0:
                 self.unit = '' # We're done with recurring
+                return
         if len(result) > 1:
             return tuple(result)
         elif len(result) == 1:
@@ -114,12 +115,14 @@ class Recurrence(object):
         return newDate
 
     def copy(self):
-        return self.__class__(self.unit, self.amount, self.sameWeekday)
+        return self.__class__(self.unit, self.amount, self.sameWeekday, 
+                              self.max)
     
     def __eq__(self, other):
         try:
             return self.unit == other.unit and self.amount == other.amount and \
-                   self.sameWeekday == other.sameWeekday
+                   self.sameWeekday == other.sameWeekday and \
+                   self.max == other.max
         except AttributeError:
             return False
  

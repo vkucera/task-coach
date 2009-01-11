@@ -37,11 +37,9 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         kwargs.setdefault('settingsSection', 'noteviewer')
         self.notesToShow = kwargs.get('notesToShow', None)
         super(BaseNoteViewer, self).__init__(*args, **kwargs)
-        for eventType in [note.Note.subjectChangedEventType()]:
-            patterns.Publisher().registerObserver(self.onNoteChanged, 
-                eventType)
-        patterns.Publisher().registerObserver(self.onColorChange,
-            eventType=note.Note.colorChangedEventType())
+        for eventType in [note.Note.subjectChangedEventType(),
+                          note.Note.colorChangedEventType()]:
+            patterns.Publisher().registerObserver(self.onNoteChanged, eventType)
         
     def domainObjectsToView(self):
         if self.notesToShow is None:
@@ -49,11 +47,6 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         else:
             return self.notesToShow
         
-    def onColorChange(self, event):
-        note = event.source()
-        if note in self.presentation():
-            self.widget.RefreshItem(self.getIndexOfItem(note))
-
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
@@ -158,9 +151,7 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         return columns
                      
     def onNoteChanged(self, event):
-        note = event.source()
-        if note in self.presentation():
-            self.widget.RefreshItem(self.getIndexOfItem(note))
+        self.refreshItem(event.source())
             
     def getItemText(self, index, column=0):
         item = self.getItemWithIndex(index)

@@ -40,7 +40,10 @@ class CommonRecurrenceTests(object):
         self.recur.max = 1
         self.recur(date.Today(), next=False)
         self.failUnless(self.recur)
-        
+
+    def testCount(self):
+        self.assertEqual(0, self.recur.count)
+                
 
 class NoRecurrenceTest(test.TestCase, CommonRecurrenceTests):
     def setUp(self):
@@ -243,3 +246,21 @@ class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
 
     def testLastThursdayOfTheYear(self):
         self.assertEqual(date.Date(2009,12,24), self.recur(date.Date(2008,12,25)))
+        
+        
+class MaxRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+    def setUp(self):
+        self.recur = date.Recurrence('daily', max=4)
+        
+    def testFirst(self):
+        self.assertEqual(date.Date(2000,1,2), 
+                         self.recur(date.Date(2000,1,1), next=True))
+        
+    def testCountAfterFirst(self):
+        self.recur(date.Date(2000,1,1), next=True)
+        self.assertEqual(1, self.recur.count)
+        
+    def testLast(self):
+        self.recur.count = 4
+        self.assertEqual(None, self.recur(date.Date(2000,1,1), next=True))
+
