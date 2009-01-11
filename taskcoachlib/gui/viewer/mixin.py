@@ -226,8 +226,7 @@ class SortableViewer(object):
 
     def registerPresentationObservers(self):
         super(SortableViewer, self).registerPresentationObservers()
-        patterns.Publisher().removeObserver(self.onSorted)
-        patterns.Publisher().registerObserver(self.onSorted, 
+        patterns.Publisher().registerObserver(self.onPresentationChanged, 
             eventType=self.presentation().sortEventType(),
             eventSource=self.presentation())
 
@@ -285,6 +284,22 @@ class SortableViewer(object):
 class SortableViewerForTasks(SortableViewer):
     SorterClass = task.sorter.Sorter
     
+    def __init__(self, *args, **kwargs):
+        self.__sortKeyUnchangedCount = 0
+        super(SortableViewerForTasks, self).__init__(*args, **kwargs)
+    
+    def sortBy(self, sortKey):
+        # If the user clicks the same column for the third time, toggle
+        # the SortyByTaskStatusFirst setting:
+        if self.isSortedBy(sortKey):
+            self.__sortKeyUnchangedCount += 1
+        else:
+            self.__sortKeyUnchangedCount = 0
+        if self.__sortKeyUnchangedCount > 1:
+            self.setSortByTaskStatusFirst(not self.isSortByTaskStatusFirst())
+            self.__sortKeyUnchangedCount = 0
+        super(SortableViewerForTasks, self).sortBy(sortKey)
+
     def isSortByTaskStatusFirst(self):
         return self.settings.getboolean(self.settingsSection(),
             'sortbystatusfirst')

@@ -441,6 +441,21 @@ class TaskFileTest(TaskFileTestCase):
         self.note.expand()
         self.failUnless(self.taskFile.needSave())
         
+    def testNeedSave_AfterMarkDeleted(self):
+        self.taskFile.notes().append(self.note)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.note.markDeleted()
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterMarkNotDeleted(self):
+        self.taskFile.notes().append(self.note)
+        self.note.markDeleted()
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        self.note.cleanDirty()
+        self.failUnless(self.taskFile.needSave())
+                
     def testLastFilename_IsEmptyInitially(self):
         self.assertEqual('', self.taskFile.lastFilename())
         

@@ -35,8 +35,10 @@ class Sorter(patterns.ListDecorator):
         return '%s.sorted'%class_
     
     def extendSelf(self, *args, **kwargs):
+        patterns.Publisher().stopNotifying()
         super(Sorter, self).extendSelf(*args, **kwargs)
-        self.reset()
+        patterns.Publisher().startNotifying()
+        self.reset(forceNotification=True)
 
     # We don't implement removeItemsFromSelf() because there is no need 
     # to resort when items are removed since after removing items the 
@@ -89,7 +91,7 @@ class Sorter(patterns.ListDecorator):
         try:
             return getattr(self.DomainObjectClass, '%sChangedEventType'%attribute)()
         except AttributeError:
-            return '%s.%s'%(self.EventTypePrefix, attribute)
+            return '%s.%s'%(self.EventTypePrefix, attribute) # FIXME: to be removed when no event type strings are used anymore.
 
 
 class TreeSorter(Sorter):

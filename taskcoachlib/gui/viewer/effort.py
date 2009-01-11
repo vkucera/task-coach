@@ -65,9 +65,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         return effort.Effort.trackStopEventType()
         
     def onColorChange(self, event):
-        effort = event.source()
-        if effort in self.presentation():
-            self.widget.RefreshItem(self.getIndexOfItem(effort))
+        self.refreshItem(event.source())
         
     def showEffortAggregation(self, aggregation):
         ''' Change the aggregation mode. Can be one of 'details', 'day', 'week'

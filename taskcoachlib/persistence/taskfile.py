@@ -19,12 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, codecs, shutil, xml
 from taskcoachlib import patterns
-from taskcoachlib.domain import date, task, category, note, effort
+from taskcoachlib.domain import base, date, task, category, note, effort
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 
 
-class TaskFile(patterns.Observable):
+class TaskFile(patterns.Observable, patterns.Observer):
     def __init__(self, filename='', *args, **kwargs):
         self.__filename = self.__lastFilename = filename
         self.__needSave = self.__loading = False
@@ -39,22 +39,19 @@ class TaskFile(patterns.Observable):
         # can monitor when the task file needs saving (i.e. is 'dirty'):
         for eventType in (self.tasks().addItemEventType(), 
                           self.tasks().removeItemEventType()):
-            patterns.Publisher().registerObserver(self.onDomainObjectAddedOrRemoved,
-                                                  eventType=eventType,
-                                                  eventSource=self.tasks())
+            self.registerObserver(self.onDomainObjectAddedOrRemoved,
+                eventType, eventSource=self.tasks())
         for eventType in (self.categories().addItemEventType(),
                           self.categories().removeItemEventType()):
-            patterns.Publisher().registerObserver(self.onDomainObjectAddedOrRemoved,
-                                                  eventType=eventType,
-                                                  eventSource=self.categories())
+            self.registerObserver(self.onDomainObjectAddedOrRemoved,
+                eventType, eventSource=self.categories())
         for eventType in (self.notes().addItemEventType(),
                           self.notes().removeItemEventType()):
-            patterns.Publisher().registerObserver(self.onDomainObjectAddedOrRemoved,
-                                                  eventType=eventType,
-                                                  eventSource=self.notes())
-        for eventType in ('object.markdeleted', 'object.marknotdeleted'):
-            patterns.Publisher().registerObserver(self.onDomainObjectAddedOrRemoved, 
-                                                  eventType)
+            self.registerObserver(self.onDomainObjectAddedOrRemoved,
+                eventType, eventSource=self.notes())
+        for eventType in (base.Object.markDeletedEventType(),
+                          base.Object.markNotDeletedEventType()):
+            self.registerObserver(self.onDomainObjectAddedOrRemoved, eventType)
 
         for eventType in (task.Task.subjectChangedEventType(), 
             task.Task.descriptionChangedEventType(), 'task.startDate', 
@@ -69,15 +66,13 @@ class TaskFile(patterns.Observable):
             task.Task.categoryRemovedEventType(), 
             task.Task.attachmentsChangedEventType(),
             task.Task.expansionChangedEventType()):
-            patterns.Publisher().registerObserver(self.onTaskChanged, 
-                                                  eventType=eventType)
+            self.registerObserver(self.onTaskChanged, eventType)
         for eventType in (effort.Effort.descriptionChangedEventType(), 
                           'effort.start', 'effort.stop'):
             # We don't need to observe 'effort.task', because when an
             # effort record is assigned to a different task we already will 
             # get a notification through 'task.effort.add'                
-            patterns.Publisher().registerObserver(self.onEffortChanged, 
-                                                  eventType=eventType)
+            self.registerObserver(self.onEffortChanged, eventType)
         for eventType in (note.Note.subjectChangedEventType(), 
                 note.Note.descriptionChangedEventType(), 
                 note.Note.addChildEventType(), 
@@ -86,8 +81,7 @@ class TaskFile(patterns.Observable):
                 note.Note.categoryRemovedEventType(),
                 note.Note.attachmentsChangedEventType(),
                 note.Note.expansionChangedEventType()):
-            patterns.Publisher().registerObserver(self.onNoteChanged, 
-                                                  eventType=eventType)
+            self.registerObserver(self.onNoteChanged, eventType)
         for eventType in (category.Category.filterChangedEventType(), 
                 category.Category.subjectChangedEventType(),
                 category.Category.descriptionChangedEventType(),
@@ -95,8 +89,7 @@ class TaskFile(patterns.Observable):
                 category.Category.notesChangedEventType(),
                 category.Category.attachmentsChangedEventType(),
                 category.Category.expansionChangedEventType()):
-            patterns.Publisher().registerObserver(self.onCategoryChanged, 
-                eventType=eventType)
+            self.registerObserver(self.onCategoryChanged, eventType)
 
     def __str__(self):
         return self.filename()

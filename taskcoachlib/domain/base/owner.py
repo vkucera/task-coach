@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 
+
 def DomainObjectOwnerMetaclass(name, bases, ns):
     """This metaclass makes a class an owner for some domain
     objects. The __ownedType__ attribute of the class must be a
@@ -61,9 +62,11 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
 
     setattr(klass, '_%s__notifyObservers' % name, notifyObservers)
 
-    def setObjects(instance, objects):
-        setattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()), objects)
-        notifyObservers(instance)
+    def setObjects(instance, newObjects):
+        if newObjects != objects(instance):
+            setattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()), 
+                                            newObjects)
+            notifyObservers(instance)
 
     setattr(klass, 'set%ss' % klass.__ownedType__, setObjects)
 

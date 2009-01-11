@@ -35,18 +35,50 @@ def log_call(func):
     def inner(*args, **kwargs):
         result = func(*args, **kwargs)
         write = sys.stdout.write
-        for frame in inspect.stack(context=2)[3:0:-1]:
+        for frame in inspect.stack(context=2)[5:0:-1]:
             write(format_traceback(frame))
-        try:
-            write('%s(%s, %s) -> %s\n'%(func.__name__, unicode(args), 
-                                    unicode(kwargs), unicode(result)))
-        except:
-            write('%s(...) -> %s\n'%(func.__name__, unicode(result)))
+        write('%s\n'%signature(func, args, kwargs, result))
         write('===\n')
+        return result
+    return inner
+    
+    
+def time_call(func):
+    ''' Decorator for function calls that times the call. '''
+    
+    import time
+    
+    def inner(*args, **kwargs):
+        start = time.time() 
+        result = func(*args, **kwargs)
+        stop = time.time()
+        sys.stdout.write('%s took %f seconds\n'%\
+            (signature(func, args, kwargs, result), stop-start))
         return result
     return inner
 
 
+def profile_call(func):
+    ''' Docorator for profiling a specific function. I'm not sure what
+        happens if you decorate a recursive function... '''
+
+    import hotshot
+    
+    def inner(*args, **kwargs):
+        profiler = hotshot.Profile('.profile')
+        return profiler.runcall(func, *args, **kwargs)
+    return inner
+
+
+def signature(func, args, kwargs, result):
+    func = func.__name__
+    result = unicode(result)
+    try:
+        return '%s(%s, %s) -> %s'%(func, unicode(args), unicode(kwargs), result)
+    except:
+        return '%s(...) -> %s'%(func, result)
+                               
+                               
 def format_traceback(frame):
     result = []
     filename, lineno, caller, context = frame[1:5]

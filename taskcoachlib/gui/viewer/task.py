@@ -149,7 +149,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
     defaultBitmap = 'task'
     
     def __init__(self, *args, **kwargs):
-        self.__sortKeyUnchangedCount = 0
         kwargs.setdefault('settingsSection', 'taskviewer')
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.treeOrListUICommand.setChoice(self.isTreeViewer())
@@ -454,9 +453,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         self.refresh()
         
     def onColorChange(self, event):
-        task = event.source()
-        if task in self.presentation():
-            self.widget.RefreshItem(self.getIndexOfItem(task))
+        self.refreshItem(event.source())
 
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
@@ -512,19 +509,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
             command.NewSubTaskCommand(self.presentation(), self.curselection()),
             self.taskFile, self.settings, bitmap=kwargs['bitmap'])
-                           
-    def sortBy(self, sortKey):
-        # If the user clicks the same column for the third time, toggle
-        # the SortyByTaskStatusFirst setting:
-        if self.isSortedBy(sortKey):
-            self.__sortKeyUnchangedCount += 1
-        else:
-            self.__sortKeyUnchangedCount = 0
-        if self.__sortKeyUnchangedCount > 1:
-            self.setSortByTaskStatusFirst(not self.isSortByTaskStatusFirst())
-            self.__sortKeyUnchangedCount = 0
-        super(TaskViewer, self).sortBy(sortKey)
-            
+
     def setSortByTaskStatusFirst(self, *args, **kwargs):
         super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)
         self.showSortOrder()

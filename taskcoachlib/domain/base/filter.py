@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re, sre_constants
 from taskcoachlib import patterns
+from taskcoachlib.domain.base import object
 
 
 class Filter(patterns.SetDecorator):
@@ -113,7 +115,8 @@ class DeletedFilter(Filter):
     def __init__(self, *args, **kwargs):
         super(DeletedFilter, self).__init__(*args, **kwargs)
 
-        for eventType in ['object.markdeleted', 'object.marknotdeleted']:
+        for eventType in [object.Object.markDeletedEventType(),
+                          object.Object.markNotDeletedEventType()]:
             patterns.Publisher().registerObserver(self.onObjectMarkedDeletedOrNot,
                           eventType=eventType)
 

@@ -57,13 +57,12 @@ class Viewer(wx.Panel):
         raise NotImplementedError
     
     def registerPresentationObservers(self):
-        for eventHandler in self.onAddItem, self.onRemoveItem:
-            patterns.Publisher().removeObserver(eventHandler)
+        patterns.Publisher().removeObserver(self.onPresentationChanged)
         registerObserver = patterns.Publisher().registerObserver
-        registerObserver(self.onAddItem, 
+        registerObserver(self.onPresentationChanged, 
                          eventType=self.presentation().addItemEventType(),
                          eventSource=self.presentation())
-        registerObserver(self.onRemoveItem, 
+        registerObserver(self.onPresentationChanged, 
                          eventType=self.presentation().removeItemEventType(),
                          eventSource=self.presentation())
         
@@ -104,20 +103,11 @@ class Viewer(wx.Panel):
             filter. '''
         return collection
 
-    def onAddItem(self, event):
-        ''' One or more items were added to our presentation, refresh the widget. '''
+    def onPresentationChanged(self, event):
+        ''' Whenever our presentation is changed (items added, items removed,
+            order changed) the viewer refreshes itself. '''
         self.refresh()
-
-    def onRemoveItem(self, event):
-        ''' One or more items were removed from our presentation, refresh the 
-            widget. '''
-        self.refresh()
-
-    def onSorted(self, event):
-        ''' The sort order of our items was changed, refresh the widget. '''
-        # FIXME: move to SortableViewer?
-        self.refresh()
-
+        
     def onSelect(self, *args):
         ''' The selection of items in the widget has been changed. Notify 
             our observers and remember the current selection so we can
@@ -131,13 +121,17 @@ class Viewer(wx.Panel):
             patterns.Event(self, self.selectEventType(), self.curselection())))
         # Remember the current selection so we can restore it after a refresh:
         self.__selection = self.curselection()
-        
+
     def refresh(self):
         self.widget.refresh(len(self.presentation()))
         # Restore the selection:
         self.widget.select([self.getIndexOfItem(item) for item \
                             in self.__selection if item in self.presentation()])
-                            
+    
+    def refreshItem(self, item):
+        if item in self.presentation():
+            self.widget.RefreshItem(self.getIndexOfItem(item))
+                        
     def curselection(self):
         ''' Return a list of items (domain objects) currently selected in our
             widget. '''
@@ -347,17 +341,9 @@ class TreeViewer(Viewer):
     def isTreeViewer(self):
         return True
 
-    def onAddItem(self, *args, **kwargs):
+    def onPresentationChanged(self, *args, **kwargs):
         self.__itemsByIndex = dict()
-        super(TreeViewer, self).onAddItem(*args, **kwargs)
-
-    def onRemoveItem(self, *args, **kwargs):
-        self.__itemsByIndex = dict()
-        super(TreeViewer, self).onRemoveItem(*args, **kwargs)
-
-    def onSorted(self, *args, **kwargs):
-        self.__itemsByIndex = dict()
-        super(TreeViewer, self).onSorted(*args, **kwargs)
+        super(TreeViewer, self).onPresentationChanged(*args, **kwargs)
     
     def visibleItems(self):
         ''' Iterate over the items in the presentation. '''            
@@ -430,12 +416,11 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
             eventType=self.trackStartEventType())
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=self.trackStopEventType())
-        self.addTrackedItems(self.trackedItems(self.presentation()))
+        self.setTrackedItems(self.trackedItems(self.presentation()))
         
     def setPresentation(self, presentation):
-        self.removeTrackedItems(self.trackedItems(self.presentation()))
         super(UpdatePerSecondViewer, self).setPresentation(presentation)
-        self.addTrackedItems(self.trackedItems(self.presentation()))
+        self.setTrackedItems(self.trackedItems(self.presentation()))
                         
     def trackStartEventType(self):
         raise NotImplementedError
@@ -443,13 +428,9 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
     def trackStopEventType(self):
         raise NotImplementedError
 
-    def onAddItem(self, event):
-        self.addTrackedItems(self.trackedItems(event.values()))
-        super(UpdatePerSecondViewer, self).onAddItem(event)
-
-    def onRemoveItem(self, event):
-        self.removeTrackedItems(self.trackedItems(event.values()))
-        super(UpdatePerSecondViewer, self).onRemoveItem(event)
+    def onPresentationChanged(self, event):
+        self.setTrackedItems(self.trackedItems(self.presentation()))
+        super(UpdatePerSecondViewer, self).onPresentationChanged(event)
 
     def onStartTracking(self, event):
         item = event.source()
@@ -465,16 +446,13 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
         return list(self.__trackedItems)
 
     def onEverySecond(self, event):
-        trackedItemsToRemove = []
         for item in self.__trackedItems:
-            # Prepare for a ValueError, because we might receive a clock
-            # notification before we receive a 'remove item' notification for
-            # an item that has been removed from the observed collection.
-            try:
-                self.widget.RefreshItem(self.getIndexOfItem(item))
-            except ValueError:
-                trackedItemsToRemove.append(item)
-        self.removeTrackedItems(trackedItemsToRemove)
+            self.refreshItem(item)
+        
+    def setTrackedItems(self, items):
+        self.__trackedItems = set(items)
+        self.startClockIfNecessary()
+        self.stopClockIfNecessary()
             
     def addTrackedItems(self, items):
         if items:
@@ -568,9 +546,7 @@ class ViewerWithColumns(Viewer):
         self.showColumn(column, show=False)
                 
     def onAttributeChanged(self, event):
-        item = event.source()
-        if item in self.presentation():
-            self.widget.RefreshItem(self.getIndexOfItem(item))
+        self.refreshItem(event.source())
         
     def columns(self):
         return self._columns

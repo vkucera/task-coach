@@ -23,7 +23,8 @@ import task
 
 class ViewFilter(base.Filter):
     def __init__(self, *args, **kwargs):
-        self.__dueDateFilter = self.stringToDueDate(kwargs.pop('dueDateFilter', 'Unlimited'))
+        self.__dueDateFilter = self.stringToDueDate(kwargs.pop('dueDateFilter', 
+                                                               'Unlimited'))
         self.__hideActiveTasks = kwargs.pop('hideActiveTasks', False)
         self.__hideCompletedTasks = kwargs.pop('hideCompletedTasks', False)
         self.__hideInactiveTasks = kwargs.pop('hideInactiveTasks', False)

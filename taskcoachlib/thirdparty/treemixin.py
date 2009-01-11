@@ -92,7 +92,7 @@ class TreeAPIHarmonizer(object):
     MainWindow = property(fget=GetMainWindow)
 
     def GetItemImage(self, item, which=wx.TreeItemIcon_Normal, column=-1):
-        # CustomTreeCtrl always wants the which argument, so provide it
+        # CustomTreeCtrl always wants the which argument, so provide it.
         # TreeListCtr.GetItemImage has a different order of arguments than
         # the other tree controls. Hide the differences.
         if self.GetColumnCount():
@@ -294,7 +294,7 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
     the callback passes an item index. Whereas for list controls a simple
     integer index can be used, for tree controls indicating a specific
     item is a little bit more complicated. See below for a more detailed 
-    explanation of the how index works.
+    explanation of how indices work.
 
     Note that VirtualTree forces the wx.TR_HIDE_ROOT style.
 
@@ -388,6 +388,7 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         # by making the root item the current item:
         self.SetCurrentItem(rootItem)
         self.RefreshChildrenRecursively(rootItem)
+        self.Update()
                                 
     def RefreshItem(self, index):
         """ Redraws the item with the specified index. """
@@ -414,7 +415,7 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
             self.RefreshItemRecursively(child, childIndex)
         for unusedChild in reusableChildren:
             self.Delete(unusedChild)
-              
+                          
     def RefreshItemRecursively(self, item, itemIndex):
         """ Refresh the item and its children recursively. """
         hasChildren = bool(self.OnGetChildrenCount(itemIndex))
@@ -439,7 +440,10 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         self.RefreshItemImage(item, index, hasChildren)
         self.RefreshCheckedState(item, index)
         return item
-
+        
+    def RefreshItemType(self, item, index):
+        return self.__refreshAttribute(item, index, 'ItemType')
+        
     def RefreshItemText(self, item, index):
         self.__refreshAttribute(item, index, 'ItemText')
 
@@ -456,14 +460,15 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
     def RefreshBackgroundColour(self, item, index):
         self.__refreshAttribute(item, index, 'ItemBackgroundColour')
 
+    regularIcons = [wx.TreeItemIcon_Normal, wx.TreeItemIcon_Selected]
+    expandedIcons = [wx.TreeItemIcon_Expanded, 
+                     wx.TreeItemIcon_SelectedExpanded]
+
     def RefreshItemImage(self, item, index, hasChildren):
-        regularIcons = [wx.TreeItemIcon_Normal, wx.TreeItemIcon_Selected]
-        expandedIcons = [wx.TreeItemIcon_Expanded, 
-                         wx.TreeItemIcon_SelectedExpanded]
         # Refresh images in first column:
-        for icon in regularIcons:
+        for icon in self.regularIcons:
             self.__refreshAttribute(item, index, 'ItemImage', icon)
-        for icon in expandedIcons:
+        for icon in self.expandedIcons:
             if hasChildren:
                 imageIndex = self.OnGetItemImage(index, icon)
             else:
@@ -472,22 +477,20 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
                 self.SetItemImage(item, imageIndex, icon)
         # Refresh images in remaining columns, if any:
         for columnIndex in range(1, self.GetColumnCount()):
-            for icon in regularIcons:
+            for icon in self.regularIcons:
                 self.__refreshAttribute(item, index, 'ItemImage', icon, 
                                         columnIndex)
-
-    def RefreshItemType(self, item, index):
-        return self.__refreshAttribute(item, index, 'ItemType')
 
     def RefreshCheckedState(self, item, index):
         self.__refreshAttribute(item, index, 'ItemChecked')
 
     def RefreshExpansionState(self, item, itemIndex):
-        # We need to careful with the itemIndex here, because 
+        # We need to be careful with the itemIndex here, because 
         # RefreshExpansionState is called by wx.CallAfter. If there are two 
         # updates right after one another, this method is called after the 
         # second update and the itemIndex passed to this method may not be 
         # valid anymore
+        wx.YieldIfNeeded() # Process user input if needed
         try:
             itemShouldBeExpanded = self.OnGetItemExpanded(itemIndex)
         except:

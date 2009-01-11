@@ -39,10 +39,10 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__tackBitmap = tackBitmap
         self.__iconSize = self.__determineIconSize()
         self.__iconCache = {}
-        patterns.Publisher().registerObserver(self.onAddItem,
+        patterns.Publisher().registerObserver(self.onTaskListChanged,
             eventType=taskList.addItemEventType(),
             eventSource=taskList)
-        patterns.Publisher().registerObserver(self.onRemoveItem, 
+        patterns.Publisher().registerObserver(self.onTaskListChanged, 
             eventType=taskList.removeItemEventType(),
             eventSource=taskList)
         patterns.Publisher().registerObserver(self.onStartTracking,
@@ -60,14 +60,10 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
 
     # Event handlers:
 
-    def onAddItem(self, event):
+    def onTaskListChanged(self, event):
         self.__setTooltipText()
-        self.__startTicking()
+        self.__startOrStopTicking()
         
-    def onRemoveItem(self, event):
-        self.__setTooltipText()
-        self.__stopTicking()
-
     def onStartTracking(self, event):
         patterns.Publisher().registerObserver(self.onChangeSubject,
             eventType=event.source().subjectChangedEventType(),
@@ -122,7 +118,11 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         return self.__defaultBitmap
             
     # Private methods:
-
+    
+    def __startOrStopTicking(self):
+        self.__startTicking()
+        self.__stopTicking()
+            
     def __startTicking(self):
         if self.__taskList.nrBeingTracked() > 0 and not self.isClockStarted():
             self.startClock()

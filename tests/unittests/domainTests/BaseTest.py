@@ -24,6 +24,71 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import base, date
 
 
+class SynchronizedObjectTest(test.TestCase):
+    def setUp(self):
+        self.object = base.SynchronizedObject()
+        self.events = []
+        
+    def onEvent(self, event):
+        self.events.append(event)
+        
+    def registerObserver(self, eventType):
+        patterns.Publisher().registerObserver(self.onEvent, eventType)
+        
+    def assertObjectStatus(self, expectedStatus):
+        self.assertEqual(expectedStatus, self.object.getStatus())
+        
+    def assertOneEventReceived(self, eventSource, eventType, *values):
+        self.assertEqual([patterns.Event(eventSource, eventType, *values)], 
+                         self.events)
+    
+    def testInitialStatus(self):
+        self.assertObjectStatus(base.SynchronizedObject.STATUS_NEW)
+                         
+    def testMarkDeleted(self):
+        self.object.markDeleted()
+        self.assertObjectStatus(base.SynchronizedObject.STATUS_DELETED)
+                         
+    def testMarkDeletedNotification(self):
+        self.registerObserver(self.object.markDeletedEventType())
+        self.object.markDeleted()
+        self.assertOneEventReceived(self.object,
+            self.object.markDeletedEventType(), self.object.getStatus())
+    
+    def testMarkNewObjectAsNotDeleted(self):
+        self.object.cleanDirty()
+        self.assertObjectStatus(base.SynchronizedObject.STATUS_NONE)
+    
+    def testMarkDeletedObjectAsUndeleted(self):
+        self.object.markDeleted()
+        self.object.cleanDirty()
+        self.assertObjectStatus(base.SynchronizedObject.STATUS_NONE) 
+
+    def testMarkNotDeletedNotification(self):
+        self.object.markDeleted()
+        self.registerObserver(self.object.markNotDeletedEventType())
+        self.object.cleanDirty()
+        self.assertOneEventReceived(self.object, 
+            self.object.markNotDeletedEventType(), self.object.getStatus()) 
+
+    def testSetStateToDeletedCausesNotification(self):
+        self.object.markDeleted()
+        state = self.object.__getstate__()
+        self.object.cleanDirty()
+        self.registerObserver(self.object.markDeletedEventType())
+        self.object.__setstate__(state)                
+        self.assertOneEventReceived(self.object, 
+            self.object.markDeletedEventType())
+
+    def testSetStateToNotDeletedCausesNotification(self):
+        state = self.object.__getstate__()
+        self.object.markDeleted()
+        self.registerObserver(self.object.markNotDeletedEventType())
+        self.object.__setstate__(state)                
+        self.assertOneEventReceived(self.object, 
+            self.object.markNotDeletedEventType())
+                    
+                    
 class ObjectSubclass(base.Object):
     pass
 
