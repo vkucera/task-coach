@@ -31,3 +31,12 @@ class SquareMap(squaremap.SquareMap):
     
     def curselection(self):
         return self.__selection
+
+    def GetItemCount(self):
+        return 0
+
+    def isAnyItemExpandable(self):
+        return False
+
+    isSelectionExpandable = isSelectionCollapsable = isAnyItemCollapsable =\
+        isAnyItemExpandable
