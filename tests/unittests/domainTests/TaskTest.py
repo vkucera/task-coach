@@ -799,6 +799,14 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.setBudget(oneHour)
         self.assertEqual(oneHour, self.events[0].value())
 
+    def testTotalBudgetNotification_WhenRemovingChild(self):
+        self.task1_1.setBudget(oneHour)
+        self.registerObserver('task.totalBudget')
+        self.task.removeChild(self.task1_1)
+        self.assertEqual([patterns.Event(self.task, 'task.totalBudget', 
+                                         date.TimeDelta(0))], 
+                         self.events)
+
     def testTotalBudgetLeftNotification_WhenChildBudgetChanges(self):
         self.registerObserver('task.totalBudgetLeft')
         self.task1_1.setBudget(oneHour)
