@@ -54,7 +54,15 @@ class RootNode(object):
     
     def children(self):
         return self.tasks.rootItems()
-    
+
+    def color(self, *args, **kwargs):
+        return None
+
+    def completed(self, *args, **kwargs):
+        return False
+
+    dueToday = inactive = overdue = completed
+
     def __getattr__(self, attr):
         def getTaskAttribute(recursive=True):
             if recursive:
@@ -141,6 +149,12 @@ class SquareTaskViewer(mixin.SearchableViewer, BaseTaskViewer):
     
     def children(self, task):
         return [child for child in task.children() if child in self.presentation()]
+
+    def background_color(self, task, depth):
+        return task.color()
+
+    def foreground_color(self, task, depth):
+        return color.taskColor(task, self.settings)
     
     
 class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks, 
