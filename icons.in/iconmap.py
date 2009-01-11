@@ -76,6 +76,7 @@ iconlist = [
 ('budget', 'apps', 'kcalc', [16, 22, 32]),
 ('viewalltasks', 'apps', 'kreversi', [16]),
 ('viewnewviewer', 'actions', 'tab_new', [16]),
+('squaremapviewer', 'actions', 'squaremap', [16]),
 ('activatenextviewer', 'actions', 'tab_advance_next', [16]),
 ('activatepreviousviewer', 'actions', 'tab_advance_prev', [16]),
 ('viewexpand', 'actions', 'edit_add', [16]),
