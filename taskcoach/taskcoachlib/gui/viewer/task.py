@@ -28,6 +28,9 @@ import base, mixin
 
 
 class BaseTaskViewer(base.TreeViewer):
+    defaultTitle = _('Tasks')
+    defaultBitmap = 'task'
+
     def domainObjectsToView(self):
         return self.taskFile.tasks()
 
@@ -68,9 +71,9 @@ class RootNode(object):
             
 
 class SquareTaskViewer(mixin.SearchableViewer, BaseTaskViewer):
-    defaultTitle = _('Tasks')
-    defaultBitmap = 'task'
-    
+    defaultTitle = _('Task square map')
+    defaultBitmap = 'squaremapviewer'
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'squaretaskviewer')
         self.__orderBy = 'revenue'
@@ -144,10 +147,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
                  mixin.SortableViewerForTasks, mixin.SearchableViewer, 
                  base.UpdatePerSecondViewer, base.SortableViewerWithColumns,
                  BaseTaskViewer):
-    
-    defaultTitle = _('Tasks')
-    defaultBitmap = 'task'
-    
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskviewer')
         super(TaskViewer, self).__init__(*args, **kwargs)
