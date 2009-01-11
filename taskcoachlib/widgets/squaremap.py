@@ -1,5 +1,5 @@
 import wx
-from taskcoachlib.thirdparty import squaremap
+from taskcoachlib.thirdparty.squaremap import squaremap
 
 
 class SquareMap(squaremap.SquareMap):

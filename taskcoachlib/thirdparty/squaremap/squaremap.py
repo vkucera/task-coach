@@ -15,9 +15,11 @@ class SquareMap( wx.Panel ):
     
     def __init__( 
         self,  parent=None, id=-1, pos=wx.DefaultPosition, 
-        size=wx.DefaultSize, style=wx.TAB_TRAVERSAL|wx.NO_BORDER|wx.FULL_REPAINT_ON_RESIZE, 
+        size=wx.DefaultSize, 
+        style=wx.TAB_TRAVERSAL|wx.NO_BORDER|wx.FULL_REPAINT_ON_RESIZE, 
         name='SquareMap', model = None,
         adapter = None,
+        labels = True, # set to True to draw textual labels within the boxes
         padding = 2, # amount to reduce the children's box from the parent's box
     ):
         super( SquareMap, self ).__init__(
@@ -25,6 +27,7 @@ class SquareMap( wx.Panel ):
         )
         self.model = model
         self.padding = padding
+        self.labels = labels
         self.Bind( wx.EVT_PAINT, self.OnPaint)
         self.Bind( wx.EVT_SIZE, self.OnSize )
         self.Bind( wx.EVT_MOTION, self.OnMouse )
@@ -145,8 +148,11 @@ class SquareMap( wx.Panel ):
         dc.SetBrush( self.BrushForNode( node, depth ) )
         dc.SetPen( self.PenForNode( node, depth ) )
         dc.DrawRoundedRectangle( x,y,w,h, self.padding *3 )
-        brush = wx.Brush(self.BackgroundColor)
-        dc.DrawText(self.adapter.label(node), x+2, y)
+        if self.labels:
+            brush = wx.Brush(self.BackgroundColor)
+            # TODO: only draw if we have enough room (otherwise turns into 
+            # a huge mess if you have lots of heavily nested boxes.
+            dc.DrawText(self.adapter.label(node), x+2, y)
         children_hot_map = []
         hot_map.append( (wx.Rect( int(x),int(y),int(w),int(h)), node, children_hot_map ) )
         x += self.padding
