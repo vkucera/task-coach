@@ -56,6 +56,7 @@ class TaskFile(patterns.Observable):
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
             task.Task.addChildEventType(), task.Task.removeChildEventType(),
             'task.effort.add', 'task.effort.remove', 
+            task.Task.colorChangedEventType(),
             task.Task.notesChangedEventType(),
             task.Task.categoryAddedEventType(), 
             task.Task.categoryRemovedEventType(), 
