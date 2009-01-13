@@ -29,7 +29,9 @@ Release('0.71.6', 'January ?, 2008',
         Bug('''Don't crash when adding a task.''', '2467347'),
         Bug('''Update the total fixed fee column in the task viewer when
 adding a subtask with a fixed fee.''', '2467347'),
-        Bug('''Mark task file dirty when the user edits a task color.''')
+        Bug('''Mark task file dirty when the user edits a task color.'''),
+        Bug('''Update the hourly fee column in the task viewer when the 
+the user edits the hourly fee of a task.''')
         ]
     ),
 
