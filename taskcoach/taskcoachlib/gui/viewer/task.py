@@ -142,7 +142,7 @@ class SquareTaskViewer(mixin.SearchableViewer, BaseTaskViewer):
     
     def label(self, task):
         return '%s (%s)'%(task.subject(), 
-                          getattr(task, self.__orderBy)(recursive=False)) 
+                          self.render(getattr(task, self.__orderBy)(recursive=False)))
 
     def value(self, task, parent=None):
         return self.overall(task)
@@ -155,6 +155,15 @@ class SquareTaskViewer(mixin.SearchableViewer, BaseTaskViewer):
 
     def foreground_color(self, task, depth):
         return color.taskColor(task, self.settings)
+
+    # Helper methods
+    
+    renderer = dict(budget=render.budget, budgetLeft=render.budget,
+                    timeSpent=render.timeSpent, fixedFee=render.amount,
+                    revenue=render.amount)
+    
+    def render(self, value):
+        return self.renderer[self.__orderBy](value)
     
     
 class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks, 

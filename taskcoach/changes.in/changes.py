@@ -23,14 +23,17 @@ from changetypes import *
 
 releases = [
 
-Release('0.72.0', '?? ??, 2009', # Or maybe 1.0.0
+Release('0.72.0', '?? ??, 2009', # Or maybe 1.0.0?
     summary='',
     featuresAdded=[
         Feature('''One can now export only the current selection
 as HTML.'''),
         Feature('''When using yearly recurrence of tasks, allow for keeping
 the recurring date on the same weekday (e.g. to recur on the first
-Monday of the year).''', '2164568')
+Monday of the year).''', '2164568'),
+        Feature('''Added a square map viewer for tasks that displays tasks in 
+the form of a set of nested squares. The relative size of the squares is 
+determined by either budget, budget left, time spent, fixed fee or revenue.''')
         ]
     ),
 
