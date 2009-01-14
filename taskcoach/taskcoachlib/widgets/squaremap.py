@@ -5,7 +5,8 @@ from taskcoachlib.thirdparty.squaremap import squaremap
 class SquareMap(squaremap.SquareMap):
     def __init__(self, parent, rootNode, onSelect, onEdit):
         self.__selection = []
-        super(SquareMap, self).__init__(parent, model=rootNode, adapter=parent)
+        super(SquareMap, self).__init__(parent, model=rootNode, adapter=parent, 
+                                        highlight=False)
         self.selectCommand = onSelect
         self.Bind(squaremap.EVT_SQUARE_SELECTED, self.onSelect)
         self.editCommand = onEdit
