@@ -20,6 +20,7 @@ class SquareMap( wx.Panel ):
         name='SquareMap', model = None,
         adapter = None,
         labels = True, # set to True to draw textual labels within the boxes
+        highlight = True, # set to False to turn of highlighting
         padding = 2, # amount to reduce the children's box from the parent's box
     ):
         super( SquareMap, self ).__init__(
@@ -28,11 +29,15 @@ class SquareMap( wx.Panel ):
         self.model = model
         self.padding = padding
         self.labels = labels
+        self.highlight = highlight
+        self.selected = None
         self.Bind( wx.EVT_PAINT, self.OnPaint)
         self.Bind( wx.EVT_SIZE, self.OnSize )
-        self.Bind( wx.EVT_MOTION, self.OnMouse )
+        if highlight:
+            self.Bind( wx.EVT_MOTION, self.OnMouse )
         self.Bind( wx.EVT_LEFT_UP, self.OnClickRelease )
         self.Bind( wx.EVT_LEFT_DCLICK, self.OnDoubleClick )
+        self.Bind( wx.EVT_KEY_UP, self.OnKeyUp )
         self.hot_map = []
         self.adapter = adapter or DefaultAdapter()
         self.DEFAULT_PEN = wx.Pen( wx.BLACK, 1, wx.SOLID )
@@ -55,6 +60,82 @@ class SquareMap( wx.Panel ):
         if node:
             wx.PostEvent( self, SquareActivationEvent( node=node, point=event.GetPosition(), map=self ) )
     
+    def OnKeyUp(self, event):
+        event.Skip()
+        if not self.selected or not self.hot_map:
+            return
+        
+        index, hot_map = self.FindSelectedHotmap(self.hot_map)
+        if event.KeyCode == wx.WXK_HOME:
+            self.SetSelected(self.hot_map[0][1])
+        elif event.KeyCode == wx.WXK_END:
+            self.SetSelected(self.lastChild(self.hot_map))
+        elif event.KeyCode == wx.WXK_RIGHT:
+            self.SetSelected(self.firstChild(hot_map))
+        elif event.KeyCode == wx.WXK_DOWN:
+            self.SetSelected(self.nextChild(hot_map, index))
+        elif event.KeyCode == wx.WXK_UP:
+            self.SetSelected(self.previousChild(hot_map, index))
+        elif event.KeyCode == wx.WXK_LEFT:
+            parent = self.parent(self.hot_map, self.selected)
+            if parent:
+                self.SetSelected(parent)
+        elif event.KeyCode == wx.WXK_RETURN:
+            wx.PostEvent(self, SquareActivationEvent(node=self.selected,
+                                                     map=self))
+            
+    def FindSelectedHotmap(self, hot_map):
+        if not hot_map:
+            return None
+        for index, (rect, node, children) in enumerate(hot_map):
+            if node == self.selected:
+                return index, hot_map
+            else:
+                result = self.FindSelectedHotmap(children)
+                if result:
+                    return result
+                else:
+                    continue
+        return None
+            
+    def lastChild(self, hot_map):
+        children = hot_map[-1][2]
+        if children:
+            return self.lastChild(children)
+        else:
+            return hot_map[-1][1]
+        
+    def firstChild(self, hot_map):
+        children = hot_map[0][2]
+        if children:
+            return children[0][1]
+        else:
+            return hot_map[0][1] # Unchanged
+        
+    def nextChild(self, hotmap, index):
+        if index >= len(hotmap) - 1:
+            return hotmap[-1][1] # Already at last node
+        else:
+            return hotmap[index+1][1]
+    
+    def previousChild(self, hotmap, index):
+        if index <= 0:
+            return hotmap[0][1] # Already at first node
+        else:
+            return hotmap[index-1][1]
+        
+    def parent(self, hotmap, node):
+        for rect, parent, children in hotmap:
+            for rect, child, grandchildren in children:
+                if child == node:
+                    return parent
+            result = self.parent(children, node)
+            if result:
+                return result
+            else:
+                continue
+        return None
+        
     def NodeFromPosition( self, position, hot_map=None ):
         """Retrieve the node at the given position"""
         if hot_map is None:
@@ -66,7 +147,10 @@ class SquareMap( wx.Panel ):
                     return child 
                 return node
         return None
-        
+
+    def GetSelected(self):
+        return self.selected
+            
     def SetSelected( self, node, point=None, propagate=True ):
         """Set the given node selected in the square-map"""
         previous = self.selected
