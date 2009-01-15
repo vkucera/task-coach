@@ -118,6 +118,18 @@ class CommonTests(object):
         self.taskList.remove(self.task)
         self.assertItems()
 
+    def testUndoRemoveTaskWithSubtask(self):
+        self.task.addChild(self.child)
+        self.taskList.append(self.task)
+        self.viewer.widget.select([self.viewer.getIndexOfItem(self.task)])
+        command = self.viewer.deleteItemCommand()
+        command.do()
+        command.undo()
+        if self.viewer.isTreeViewer():
+            self.assertItems((self.task, 1), self.child)
+        else:
+            self.assertItems(self.child, self.task)
+
     def testCurrent(self):
         self.taskList.append(self.task)
         self.viewer.widget.select([(0,)])

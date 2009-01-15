@@ -667,7 +667,11 @@ class EffortEditBook(Page, widgets.BookPage):
         self._editor = editor
         self.item = self._effort = effort
         self._effortList = effortList
-        self._taskList = taskList
+        if effort.task() in taskList:
+            self._taskList = taskList
+        else:
+            self._taskList = task.TaskList(taskList)
+            self._taskList.append(effort.task())
         self._settings = settings
         self.addTaskEntry()
         self.addStartAndStopEntries()
