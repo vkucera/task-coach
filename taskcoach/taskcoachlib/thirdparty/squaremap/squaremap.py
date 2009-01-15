@@ -6,11 +6,68 @@ SquareHighlightEvent, EVT_SQUARE_HIGHLIGHTED = wx.lib.newevent.NewEvent()
 SquareSelectionEvent, EVT_SQUARE_SELECTED = wx.lib.newevent.NewEvent()
 SquareActivationEvent, EVT_SQUARE_ACTIVATED = wx.lib.newevent.NewEvent()
 
+
+class HotMapNavigator(object):
+    ''' Utility class for navigating the hot map and finding nodes. '''
+
+    @classmethod
+    def findNode(class_, hot_map, targetNode, parentNode=None):
+        ''' Find the target node in the hot_map. '''
+        for index, (rect, node, children) in enumerate(hot_map):
+            if node == targetNode:
+                return parentNode, hot_map, index
+            result = class_.findNode(children, targetNode, node)
+            if result:
+                return result
+        return None
+
+    @classmethod
+    def findNodeAtPosition(class_, hot_map, position, parent=None):
+        ''' Retrieve the node at the given position. '''
+        for rect, node, children in hot_map:
+            if rect.Contains(position):
+                return class_.findNodeAtPosition(children, position, node)
+        return parent
+
+    @staticmethod
+    def firstChild(hot_map, index):
+        ''' Return the first child of the node indicated by index. '''
+        children = hot_map[index][2]
+        if children:
+            return children[0][1]
+        else:
+            return hot_map[index][1] # No children, return the node itself
+        
+    @staticmethod
+    def nextChild(hotmap, index):
+        ''' Return the next sibling of the node indicated by index. '''
+        nextChildIndex = min(index + 1, len(hotmap) - 1)
+        return hotmap[nextChildIndex][1]
+    
+    @staticmethod
+    def previousChild(hotmap, index):
+        ''' Return the previous sibling of the node indicated by index. '''
+        previousChildIndex = max(0, index - 1)
+        return hotmap[previousChildIndex][1]
+
+    @staticmethod
+    def firstNode(hot_map):
+        ''' Return the very first node in the hot_map. '''
+        return hot_map[0][1]
+    
+    @classmethod
+    def lastNode(class_, hot_map):
+        ''' Return the very last node (recursively) in the hot map. '''
+        children = hot_map[-1][2]
+        if children:
+            return class_.lastNode(children)
+        else:
+            return hot_map[-1][1] # Return the last node
+    
+    
 class SquareMap( wx.Panel ):
     """Construct a nested-box trees structure view"""
-    highlighted = None
-    selected = None
-    
+
     BackgroundColor = wx.Color( 128,128,128 )
     
     def __init__( 
@@ -30,7 +87,8 @@ class SquareMap( wx.Panel ):
         self.padding = padding
         self.labels = labels
         self.highlight = highlight
-        self.selected = None
+        self.selectedNode = None
+        self.highlightedNode = None
         self.Bind( wx.EVT_PAINT, self.OnPaint)
         self.Bind( wx.EVT_SIZE, self.OnSize )
         if highlight:
@@ -46,126 +104,63 @@ class SquareMap( wx.Panel ):
         
     def OnMouse( self, event ):
         """Handle mouse-move event by selecting a given element"""
-        node = self.NodeFromPosition( event.GetPosition() )
+        node = HotMapNavigator.findNodeAtPosition(self.hot_map, event.GetPosition())
         self.SetHighlight( node, event.GetPosition() )
 
     def OnClickRelease( self, event ):
         """Release over a given square in the map"""
-        node = self.NodeFromPosition( event.GetPosition() )
+        node = HotMapNavigator.findNodeAtPosition(self.hot_map, event.GetPosition())
         self.SetSelected( node, event.GetPosition() )
         
     def OnDoubleClick(self, event):
         """Double click on a given square in the map"""
-        node = self.NodeFromPosition(event.GetPosition())
+        node = HotMapNavigator.findNodeAtPosition(self.hot_map, event.GetPosition())
         if node:
             wx.PostEvent( self, SquareActivationEvent( node=node, point=event.GetPosition(), map=self ) )
     
     def OnKeyUp(self, event):
         event.Skip()
-        if not self.selected or not self.hot_map:
+        if not self.selectedNode or not self.hot_map:
             return
         
-        index, hot_map = self.FindSelectedHotmap(self.hot_map)
         if event.KeyCode == wx.WXK_HOME:
-            self.SetSelected(self.hot_map[0][1])
+            self.SetSelected(HotMapNavigator.firstNode(self.hot_map))
+            return
         elif event.KeyCode == wx.WXK_END:
-            self.SetSelected(self.lastChild(self.hot_map))
-        elif event.KeyCode == wx.WXK_RIGHT:
-            self.SetSelected(self.firstChild(hot_map))
-        elif event.KeyCode == wx.WXK_DOWN:
-            self.SetSelected(self.nextChild(hot_map, index))
+            self.SetSelected(HotMapNavigator.lastNode(self.hot_map))
+            return
+        
+        parent, children, index = HotMapNavigator.findNode(self.hot_map, self.selectedNode)
+        if event.KeyCode == wx.WXK_DOWN:
+            self.SetSelected(HotMapNavigator.nextChild(children, index))
         elif event.KeyCode == wx.WXK_UP:
-            self.SetSelected(self.previousChild(hot_map, index))
-        elif event.KeyCode == wx.WXK_LEFT:
-            parent = self.parent(self.hot_map, self.selected)
-            if parent:
-                self.SetSelected(parent)
+            self.SetSelected(HotMapNavigator.previousChild(children, index))
+        elif event.KeyCode == wx.WXK_RIGHT:
+            self.SetSelected(HotMapNavigator.firstChild(children, index))
+        elif event.KeyCode == wx.WXK_LEFT and parent:
+            self.SetSelected(parent)
         elif event.KeyCode == wx.WXK_RETURN:
-            wx.PostEvent(self, SquareActivationEvent(node=self.selected,
+            wx.PostEvent(self, SquareActivationEvent(node=self.selectedNode,
                                                      map=self))
             
-    def FindSelectedHotmap(self, hot_map):
-        if not hot_map:
-            return None
-        for index, (rect, node, children) in enumerate(hot_map):
-            if node == self.selected:
-                return index, hot_map
-            else:
-                result = self.FindSelectedHotmap(children)
-                if result:
-                    return result
-                else:
-                    continue
-        return None
-            
-    def lastChild(self, hot_map):
-        children = hot_map[-1][2]
-        if children:
-            return self.lastChild(children)
-        else:
-            return hot_map[-1][1]
-        
-    def firstChild(self, hot_map):
-        children = hot_map[0][2]
-        if children:
-            return children[0][1]
-        else:
-            return hot_map[0][1] # Unchanged
-        
-    def nextChild(self, hotmap, index):
-        if index >= len(hotmap) - 1:
-            return hotmap[-1][1] # Already at last node
-        else:
-            return hotmap[index+1][1]
-    
-    def previousChild(self, hotmap, index):
-        if index <= 0:
-            return hotmap[0][1] # Already at first node
-        else:
-            return hotmap[index-1][1]
-        
-    def parent(self, hotmap, node):
-        for rect, parent, children in hotmap:
-            for rect, child, grandchildren in children:
-                if child == node:
-                    return parent
-            result = self.parent(children, node)
-            if result:
-                return result
-            else:
-                continue
-        return None
-        
-    def NodeFromPosition( self, position, hot_map=None ):
-        """Retrieve the node at the given position"""
-        if hot_map is None:
-            hot_map = self.hot_map
-        for rect,node,children in hot_map:
-            if rect.Contains( position ):
-                child = self.NodeFromPosition( position, children )
-                if child:
-                    return child 
-                return node
-        return None
-
     def GetSelected(self):
-        return self.selected
+        return self.selectedNode
             
     def SetSelected( self, node, point=None, propagate=True ):
         """Set the given node selected in the square-map"""
-        previous = self.selected
-        self.selected = node 
-        if node != previous:
-            self.Refresh()
+        if node == self.selectedNode:
+            return
+        self.selectedNode = node 
+        self.Refresh()
         if node:
             wx.PostEvent( self, SquareSelectionEvent( node=node, point=point, map=self ) )
 
     def SetHighlight( self, node, point=None, propagate=True ):
         """Set the currently-highlighted node"""
-        previous = self.highlighted
-        self.highlighted = node 
-        if node != previous:
-            self.Refresh()
+        if node == self.highlightedNode:
+            return
+        self.highlightedNode = node 
+        self.Refresh()
         if node and propagate:
             wx.PostEvent( self, SquareHighlightEvent( node=node, point=point, map=self ) )
 
@@ -197,22 +192,24 @@ class SquareMap( wx.Panel ):
         self.Draw(dc)
         
     def Draw(self, dc):
-        if self.model:
-            self.hot_map = []
-            dc.BeginDrawing()
-            brush = wx.Brush( self.BackgroundColor  )
-            dc.SetBackground( brush )
-            dc.Clear()
-            dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
-            w, h = dc.GetSize()
-            self.DrawBox( dc, self.model, 0,0,w,h, hot_map = self.hot_map )
-            dc.EndDrawing()
+        ''' Draw the tree map on the device context. '''
+        if not self.model:
+            return
+        self.hot_map = []
+        dc.BeginDrawing()
+        brush = wx.Brush( self.BackgroundColor  )
+        dc.SetBackground( brush )
+        dc.Clear()
+        dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
+        w, h = dc.GetSize()
+        self.DrawBox( dc, self.model, 0,0,w,h, hot_map = self.hot_map )
+        dc.EndDrawing()
    
     def BrushForNode( self, node, depth=0 ):
         """Create brush to use to display the given node"""
-        if node is self.selected:
+        if node == self.selectedNode:
             color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        elif node is self.highlighted:
+        elif node == self.highlightedNode:
             color = wx.Color( red=0, green=255, blue=0 )
         else:
             color = self.adapter.background_color(node, depth)
@@ -225,19 +222,19 @@ class SquareMap( wx.Panel ):
     
     def PenForNode( self, node, depth=0 ):
         """Determine the pen to use to display the given node"""
-        if node is self.selected:
+        if node == self.selectedNode:
             return self.SELECTED_PEN
         return self.DEFAULT_PEN
 
     def TextForegroundForNode(self, node, depth=0):
         """Determine the text foreground color to use to display the label of
            the given node"""
-        if node is self.selected:
-	    fg_color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
+        if node == self.selectedNode:
+            fg_color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
         else:
             fg_color = self.adapter.foreground_color(node, depth)
             if not fg_color:
-	        fg_color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOWTEXT)
+                fg_color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOWTEXT)
         return fg_color
     
     def DrawBox( self, dc, node, x,y,w,h, hot_map, depth=0 ):
@@ -245,9 +242,7 @@ class SquareMap( wx.Panel ):
         dc.SetBrush( self.BrushForNode( node, depth ) )
         dc.SetPen( self.PenForNode( node, depth ) )
         dc.DrawRoundedRectangle( x,y,w,h, self.padding *3 )
-        if self.labels:
-            # TODO: only draw if we have enough room (otherwise turns into 
-            # a huge mess if you have lots of heavily nested boxes.
+        if self.labels and h >= dc.GetTextExtent('ABC')[1]:
             dc.SetTextForeground(self.TextForegroundForNode(node, depth))
             dc.DrawText(self.adapter.label(node), x+2, y)
         children_hot_map = []
