@@ -27,6 +27,7 @@ NSDate *dateFromStamp(NSNumber *stamp)
 @implementation TaskList
 
 @synthesize count;
+@synthesize title;
 
 - (void)countCallback:(NSDictionary *)dict
 {
@@ -43,12 +44,13 @@ NSDate *dateFromStamp(NSNumber *stamp)
 	[task release];
 }
 
-- initWithView:(NSString *)viewName category:(NSInteger)categoryId
+- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)theTitle
 {
 	if (self = [super init])
 	{
 		tasks = [[NSMutableArray alloc] initWithCapacity:CACHELENGTH];
 		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE categoryId=%d ORDER BY name LIMIT ?,?", viewName, categoryId]] retain];
+		title = [theTitle copy];
 
 		Statement *countReq = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@ WHERE categoryId=%d", viewName, categoryId]];
 		[countReq execWithTarget:self action:@selector(countCallback:)];
@@ -64,6 +66,7 @@ NSDate *dateFromStamp(NSNumber *stamp)
 {
 	[tasks release];
 	[request release];
+	[title release];
 	
 	[super dealloc];
 }

@@ -18,10 +18,36 @@
 	{
 		title = [theTitle retain];
 		
-		overdueList = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId];
-		dueTodayList = [[TaskList alloc] initWithView:@"DueTodayTask" category:categoryId];
-		startedList = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId];
-		notStartedList = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId];
+		TaskList *list;
+		headers = [[NSMutableArray alloc] initWithCapacity:4];
+		
+		list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:NSLocalizedString(@"Overdue", @"Overdue task title")];
+		if ([list count])
+		{
+			[headers addObject:list];
+		}
+		[list release];
+
+		list = [[TaskList alloc] initWithView:@"DueTodayTask" category:categoryId title:NSLocalizedString(@"Due today", @"Due today task title")];
+		if ([list count])
+		{
+			[headers addObject:list];
+		}
+		[list release];
+
+		list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:NSLocalizedString(@"Started", @"Started task title")];
+		if ([list count])
+		{
+			[headers addObject:list];
+		}
+		[list release];
+
+		list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:NSLocalizedString(@"Not started", @"Not started task title")];
+		if ([list count])
+		{
+			[headers addObject:list];
+		}
+		[list release];
 	}
 	
 	return self;
@@ -35,10 +61,7 @@
 - (void)dealloc
 {
 	[title release];
-	[overdueList release];
-	[dueTodayList release];
-	[startedList release];
-	[notStartedList release];
+	[headers release];
 
     [super dealloc];
 }
@@ -47,41 +70,29 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 4;
+	NSInteger count = [headers count];
+
+    return count ? count : 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-	switch (section)
+	if ([headers count])
 	{
-		case 0:
-			return NSLocalizedString(@"Overdue", @"Overdue tasks header title");
-		case 1:
-			return NSLocalizedString(@"Due today", @"Due today tasks header title");
-		case 2:
-			return NSLocalizedString(@"Started", @"Started tasks header title");
-		case 3:
-			return NSLocalizedString(@"Not started", @"Not started tasks header title");
+		return [[headers objectAtIndex:section] title];
 	}
 	
-	return NSLocalizedString(@"Others", @"Other tasks header title; should not exist...");
+	return NSLocalizedString(@"No tasks.", @"No tasks header");
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	switch (section)
+	if ([headers count])
 	{
-		case 0:
-			return [overdueList count];
-		case 1:
-			return [dueTodayList count];
-		case 2:
-			return [startedList count];
-		case 3:
-			return [notStartedList count];
-		default:
-			return 0;
+		return [[headers objectAtIndex:section] count];
 	}
+	
+	return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -94,24 +105,7 @@
         cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
     }
 
-	switch (indexPath.section)
-	{
-		case 0:
-			cell.text = [[overdueList taskAtIndex:indexPath.row] name];
-			break;
-		case 1:
-			cell.text = [[dueTodayList taskAtIndex:indexPath.row] name];
-			break;
-		case 2:
-			cell.text = [[startedList taskAtIndex:indexPath.row] name];
-			break;
-		case 3:
-			cell.text = [[notStartedList taskAtIndex:indexPath.row] name];
-			break;
-		default:
-			cell.text = @"Testing";
-			break;
-	}
+	cell.text = [[[headers objectAtIndex:indexPath.section] taskAtIndex:indexPath.row] name];
 
     return cell;
 }
