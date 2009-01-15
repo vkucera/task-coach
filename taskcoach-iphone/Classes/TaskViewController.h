@@ -8,11 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+@class TaskList;
+
 @interface TaskViewController : UITableViewController
 {
 	NSString *title;
+
+	TaskList *overdueList;
+	TaskList *dueTodayList;
+	TaskList *startedList;
+	TaskList *notStartedList;
 }
 
-- initWithTitle:(NSString *)title;
+- initWithTitle:(NSString *)title category:(NSInteger)categoryId;
 
 @end

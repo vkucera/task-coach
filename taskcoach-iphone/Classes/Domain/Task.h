@@ -11,6 +11,11 @@
 
 @interface Task : DomainObject
 {
+	NSDate *startDate;
+	NSDate *dueDate;
+	NSDate *completionDate;
 }
+
+- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status startDate:(NSDate *)startDate dueDate:(NSDate *)dueDate completionDate:(NSDate *)completionDate;
 
 @end
