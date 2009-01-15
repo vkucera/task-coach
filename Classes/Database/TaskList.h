@@ -8,9 +8,22 @@
 
 #import <Foundation/Foundation.h>
 
+@class Statement;
+@class Task;
+
 @interface TaskList : NSObject
 {
-	// XXXTODO
+	NSMutableArray *tasks;
+	NSInteger firstIndex;
+	Statement *request;
+	NSInteger count;
 }
+
+@property (nonatomic, readonly) NSInteger count;
+
+- initWithView:(NSString *)viewName category:(NSInteger)categoryId;
+
+- (Task *)taskAtIndex:(NSInteger)index;
+- (void)reload;
 
 @end

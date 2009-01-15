@@ -100,7 +100,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row] name]];
+	TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row] name] category:[[categories objectAtIndex:indexPath.row] objectId]];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }

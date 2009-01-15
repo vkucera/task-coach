@@ -22,6 +22,8 @@ CREATE TABLE Task
 	name VARCHAR(2048) NOT NULL,
 	status INTEGER NOT NULL DEFAULT 1,
 
+	-- Task-specific fields
+
 	categoryId INTEGER NULL DEFAULT NULL,
 	
 	-- Dates are represented as number of seconds since the Unix Epoch
@@ -35,6 +37,13 @@ CREATE TABLE Task
 CREATE INDEX idxTaskStatus ON Task (status);
 CREATE INDEX idxTaskName ON Task (name);
 CREATE INDEX idxTaskCategory ON Task (categoryId);
+
+-- Views
+
+CREATE VIEW OverdueTask AS SELECT * FROM Task WHERE status != 3 AND dueDate < DATE('now');
+CREATE VIEW DueTodayTask AS SELECT * FROM Task WHERE status != 3 AND dueDate == DATE('now');
+CREATE VIEW StartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NOT NULL AND startDate >= DATE('now') AND (dueDate > DATE('now') OR dueDate IS NULL);
+CREATE VIEW NotStartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NULL;
 
 -- XXXTMP: testing data
 
