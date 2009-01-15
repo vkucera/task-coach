@@ -62,6 +62,45 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
         return menu.TaskPopupMenu(self.parent, self.settings,
                                   self.presentation(), self.taskFile.efforts(),
                                   self)
+
+    def createToolBarUICommands(self):
+        ''' UI commands to put on the toolbar of this viewer. '''
+        taskUICommands = super(BaseTaskViewer, self).createToolBarUICommands()
+
+        # Don't use extend() because we want the search box to be at the end.
+        taskUICommands[-2:-2] = \
+            [None,
+             uicommand.TaskNew(taskList=self.presentation(),
+                               settings=self.settings),
+             uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
+                                                 settings=self.settings,
+                                                 bitmap='newtmpl'),
+             uicommand.TaskNewSubTask(taskList=self.presentation(),
+                                      viewer=self),
+             uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
+             uicommand.TaskDelete(taskList=self.presentation(), viewer=self),
+             None,
+             uicommand.TaskToggleCompletion(viewer=self)]
+        if self.settings.getboolean('feature', 'effort'):
+            taskUICommands[-2:-2] = [
+                # EffortStart needs a reference to the original (task) list to
+                # be able to stop tracking effort for tasks that are already 
+                # being tracked, but that might be filtered in the viewer's 
+                # presentation.
+                None,
+                uicommand.EffortStart(viewer=self, 
+                                      taskList=self.taskFile.tasks()),
+                uicommand.EffortStop(taskList=self.presentation())]
+        return taskUICommands
+ 
+    def statusMessages(self):
+        status1 = _('Tasks: %d selected, %d visible, %d total')%\
+            (len(self.curselection()), len(self.presentation()), 
+             self.presentation().originalLength())         
+        status2 = _('Status: %d over due, %d inactive, %d completed')% \
+            (self.presentation().nrOverdue(), self.presentation().nrInactive(),
+             self.presentation().nrCompleted())
+        return status1, status2
     
 
 class RootNode(object):
@@ -415,53 +454,13 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
         toolBarUICommands.insert(-2, self.treeOrListUICommand)
         return toolBarUICommands
 
-    def createToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        taskUICommands = super(TaskViewer, self).createToolBarUICommands()
 
-        # Don't use extend() because we want the search box to be at
-        # the end.
-
-        taskUICommands[-2:-2] = [None,
-                                 uicommand.TaskNew(taskList=self.presentation(),
-                                                   settings=self.settings),
-                                 uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
-                                                             settings=self.settings,
-                                                             bitmap='newtmpl'),
-                                 uicommand.TaskNewSubTask(taskList=self.presentation(),
-                                                          viewer=self),
-                                 uicommand.TaskEdit(taskList=self.presentation(),
-                                               viewer=self),
-                                 uicommand.TaskDelete(taskList=self.presentation(),
-                                                      viewer=self),
-                                 None,
-                                 uicommand.TaskToggleCompletion(viewer=self)]
-        if self.settings.getboolean('feature', 'effort'):
-            taskUICommands[-2:-2] = [
-                # EffortStart needs a reference to the original (task) list to
-                # be able to stop tracking effort for tasks that are already 
-                # being tracked, but that might be filtered in the viewer's 
-                # presentation.
-                None,
-                uicommand.EffortStart(viewer=self, taskList=self.taskFile.tasks()),
-                uicommand.EffortStop(taskList=self.presentation())]
-        return taskUICommands
- 
     def trackStartEventType(self):
         return task.Task.trackStartEventType()
     
     def trackStopEventType(self):
         return task.Task.trackStopEventType()
-   
-    def statusMessages(self):
-        status1 = _('Tasks: %d selected, %d visible, %d total')%\
-            (len(self.curselection()), len(self.presentation()), 
-             self.presentation().originalLength())         
-        status2 = _('Status: %d over due, %d inactive, %d completed')% \
-            (self.presentation().nrOverdue(), self.presentation().nrInactive(),
-             self.presentation().nrCompleted())
-        return status1, status2
- 
+
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
 
