@@ -16,6 +16,10 @@
 	NSDate *completionDate;
 }
 
+@property (nonatomic, retain) NSDate *startDate;
+@property (nonatomic, retain) NSDate *dueDate;
+@property (nonatomic, retain) NSDate *completionDate;
+
 - initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status startDate:(NSDate *)startDate dueDate:(NSDate *)dueDate completionDate:(NSDate *)completionDate;
 
 @end
