@@ -8,6 +8,7 @@
 
 #import "CategoryViewController.h"
 #import "StringChoiceController.h"
+#import "TaskViewController.h"
 
 #import "Database/Database.h"
 #import "Database/Statement.h"
@@ -97,9 +98,11 @@
     return cell;
 }
 
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row] name]];
+	[self.navigationController pushViewController:ctrl animated:YES];
+	[ctrl release];
 }
 
 @end
