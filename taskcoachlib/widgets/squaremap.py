@@ -3,7 +3,7 @@ from taskcoachlib.thirdparty.squaremap import squaremap
 
 
 class SquareMap(squaremap.SquareMap):
-    def __init__(self, parent, rootNode, onSelect, onEdit):
+    def __init__(self, parent, rootNode, onSelect, onEdit, popupMenu):
         self.__selection = []
         super(SquareMap, self).__init__(parent, model=rootNode, adapter=parent, 
                                         highlight=False)
@@ -11,6 +11,8 @@ class SquareMap(squaremap.SquareMap):
         self.Bind(squaremap.EVT_SQUARE_SELECTED, self.onSelect)
         self.editCommand = onEdit
         self.Bind(squaremap.EVT_SQUARE_ACTIVATED, self.onEdit)
+        self.popupMenu = popupMenu
+        self.Bind(wx.EVT_RIGHT_DOWN, self.onPopup)
         
     def refresh(self, count):
         self.Refresh()
@@ -29,6 +31,11 @@ class SquareMap(squaremap.SquareMap):
     def onEdit(self, event):
         self.editCommand(event)
         event.Skip()
+        
+    def onPopup(self, event):
+        self.OnClickRelease(event) # Make sure the node is selected
+        self.SetFocus()
+        self.PopupMenu(self.popupMenu)
     
     def curselection(self):
         return self.__selection
@@ -41,3 +48,8 @@ class SquareMap(squaremap.SquareMap):
 
     isSelectionExpandable = isSelectionCollapsable = isAnyItemCollapsable =\
         isAnyItemExpandable
+
+    def GetMainWindow(self):
+        return self
+    
+    MainWindow = property(GetMainWindow)

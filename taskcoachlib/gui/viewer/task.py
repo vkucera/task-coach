@@ -27,7 +27,8 @@ from taskcoachlib.gui import uicommand, menu, color, render, dialog
 import base, mixin
 
 
-class BaseTaskViewer(base.TreeViewer):
+class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks, 
+                     base.TreeViewer):
     defaultTitle = _('Tasks')
     defaultBitmap = 'task'
 
@@ -37,12 +38,30 @@ class BaseTaskViewer(base.TreeViewer):
     def isShowingTasks(self): 
         return True
 
+    def createFilter(self, taskList):
+        tasks = super(BaseTaskViewer, self).createFilter(taskList)
+        return domain.base.DeletedFilter(tasks)
+
     def editItemDialog(self, *args, **kwargs):
         items = kwargs.get('items', self.curselection())
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
             command.EditTaskCommand(self.presentation(), items),
             self.taskFile, self.settings, bitmap=kwargs['bitmap'],
             columnName=kwargs.get('columnName', ''))
+
+    def newSubItemDialog(self, *args, **kwargs):
+        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
+            command.NewSubTaskCommand(self.presentation(), self.curselection()),
+            self.taskFile, self.settings, bitmap=kwargs['bitmap'])
+
+    def deleteItemCommand(self):
+        return command.DeleteTaskCommand(self.presentation(), self.curselection(),
+                  shadow=self.settings.getboolean('feature', 'syncml'))    
+
+    def createTaskPopupMenu(self):
+        return menu.TaskPopupMenu(self.parent, self.settings,
+                                  self.presentation(), self.taskFile.efforts(),
+                                  self)
     
 
 class RootNode(object):
@@ -78,7 +97,7 @@ class RootNode(object):
         return getTaskAttribute
             
 
-class SquareTaskViewer(mixin.SearchableViewer, BaseTaskViewer):
+class SquareTaskViewer(BaseTaskViewer):
     defaultTitle = _('Task square map')
     defaultBitmap = 'squaremapviewer'
 
@@ -93,8 +112,9 @@ class SquareTaskViewer(mixin.SearchableViewer, BaseTaskViewer):
 
     def createWidget(self):
         return widgets.SquareMap(self, RootNode(self.presentation()), self.onSelect,
-                                 uicommand.TaskEdit(taskList=self.presentation(), viewer=self))
-
+                                 uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
+                                 self.createTaskPopupMenu())
+        
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         toolBarUICommands = super(SquareTaskViewer, self).getToolBarUICommands() 
@@ -141,8 +161,12 @@ class SquareTaskViewer(mixin.SearchableViewer, BaseTaskViewer):
         return 0
     
     def label(self, task):
-        return '%s (%s)'%(task.subject(), 
-                          self.render(getattr(task, self.__orderBy)(recursive=False)))
+        subject = task.subject()
+        value = self.render(getattr(task, self.__orderBy)(recursive=False))
+        if value:
+            return '%s (%s)'%(subject, value) 
+        else:
+            return subject
 
     def value(self, task, parent=None):
         return self.overall(task)
@@ -166,8 +190,7 @@ class SquareTaskViewer(mixin.SearchableViewer, BaseTaskViewer):
         return self.renderer[self.__orderBy](value)
     
     
-class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks, 
-                 mixin.SortableViewerForTasks, mixin.SearchableViewer, 
+class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks, 
                  base.UpdatePerSecondViewer, base.SortableViewerWithColumns,
                  BaseTaskViewer):
 
@@ -439,11 +462,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
              self.presentation().nrCompleted())
         return status1, status2
  
-    def createTaskPopupMenu(self):
-        return menu.TaskPopupMenu(self.parent, self.settings,
-                                  self.presentation(), self.taskFile.efforts(),
-                                  self)
-
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
 
@@ -523,16 +541,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         newCommand.do()
         return self.editItemDialog(bitmap=bitmap, items=newCommand.items)
 
-
-    def deleteItemCommand(self):
-        return command.DeleteTaskCommand(self.presentation(), self.curselection(),
-                  shadow=self.settings.getboolean('feature', 'syncml'))
-    
-    def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-            command.NewSubTaskCommand(self.presentation(), self.curselection()),
-            self.taskFile, self.settings, bitmap=kwargs['bitmap'])
-
     def setSortByTaskStatusFirst(self, *args, **kwargs):
         super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)
         self.showSortOrder()
@@ -542,10 +550,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.FilterableViewerForTasks,
         if self.isSortByTaskStatusFirst():
             sortOrderImageIndex += '_with_status' 
         return sortOrderImageIndex
-
-    def createFilter(self, taskList):
-        tasks = super(TaskViewer, self).createFilter(taskList)
-        return domain.base.DeletedFilter(tasks)
 
     def setSearchFilter(self, searchString, *args, **kwargs):
         super(TaskViewer, self).setSearchFilter(searchString, *args, **kwargs)
