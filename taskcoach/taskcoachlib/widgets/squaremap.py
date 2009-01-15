@@ -17,6 +17,9 @@ class SquareMap(squaremap.SquareMap):
     def refresh(self, count):
         self.Refresh()
         
+    def RefreshItem(self, *args):
+        self.Refresh()
+        
     def onSelect(self, event):
         if event.node == self.model:
             self.__selection = []
