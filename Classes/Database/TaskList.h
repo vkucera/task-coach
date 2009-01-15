@@ -17,11 +17,13 @@
 	NSInteger firstIndex;
 	Statement *request;
 	NSInteger count;
+	NSString *title;
 }
 
 @property (nonatomic, readonly) NSInteger count;
+@property (nonatomic, readonly) NSString *title;
 
-- initWithView:(NSString *)viewName category:(NSInteger)categoryId;
+- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)title;
 
 - (Task *)taskAtIndex:(NSInteger)index;
 - (void)reload;

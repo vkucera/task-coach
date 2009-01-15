@@ -14,10 +14,7 @@
 {
 	NSString *title;
 
-	TaskList *overdueList;
-	TaskList *dueTodayList;
-	TaskList *startedList;
-	TaskList *notStartedList;
+	NSMutableArray *headers;
 }
 
 - initWithTitle:(NSString *)title category:(NSInteger)categoryId;
