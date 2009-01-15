@@ -12,6 +12,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		A61DE2390F1E3F5B004BC97E /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = A61DE2380F1E3F5B004BC97E /* Task.m */; };
 		A68EDEC50F1E1F1700F51FF2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */; };
 		A68EDED30F1E1F8500F51FF2 /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */; };
 		A68EDEE20F1E212A00F51FF2 /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDEDD0F1E212A00F51FF2 /* Database.m */; };
@@ -24,7 +25,9 @@
 		A68EDF450F1E275700F51FF2 /* DomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF430F1E275700F51FF2 /* DomainObject.m */; };
 		A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */; };
 		A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */; };
-		A68EE0490F1E317D00F51FF2 /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EE0480F1E317D00F51FF2 /* Task.m */; };
+		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
+		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
+		A6DDF85D0F1F993800F35108 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DDF85B0F1F993800F35108 /* TaskView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +40,8 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCoach_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A61DE2370F1E3F5B004BC97E /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Task.h; path = Domain/Task.h; sourceTree = "<group>"; };
+		A61DE2380F1E3F5B004BC97E /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Task.m; path = Domain/Task.m; sourceTree = "<group>"; };
 		A68EDEC40F1E1F1700F51FF2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		A68EDED10F1E1F8500F51FF2 /* CategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
@@ -57,8 +62,11 @@
 		A68EDF850F1E2A6D00F51FF2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringChoiceController.h; sourceTree = "<group>"; };
 		A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringChoiceController.m; sourceTree = "<group>"; };
-		A68EE0470F1E317D00F51FF2 /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Task.h; sourceTree = "<group>"; };
-		A68EE0480F1E317D00F51FF2 /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Task.m; sourceTree = "<group>"; };
+		A6DDF84E0F1F974000F35108 /* TaskList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskList.h; path = Database/TaskList.h; sourceTree = "<group>"; };
+		A6DDF84F0F1F974000F35108 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskList.m; path = Database/TaskList.m; sourceTree = "<group>"; };
+		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
+		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
+		A6DDF85C0F1F993800F35108 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +95,8 @@
 				A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */,
 				A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */,
 				A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */,
+				A6DDF8520F1F988600F35108 /* TaskViewController.h */,
+				A6DDF8530F1F988600F35108 /* TaskViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -109,6 +119,7 @@
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */,
 				A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */,
+				A6DDF85B0F1F993800F35108 /* TaskView.xib */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -153,6 +164,8 @@
 				A68EDEDF0F1E212A00F51FF2 /* SQLite.m */,
 				A68EDEE00F1E212A00F51FF2 /* Statement.h */,
 				A68EDEE10F1E212A00F51FF2 /* Statement.m */,
+				A6DDF84E0F1F974000F35108 /* TaskList.h */,
+				A6DDF84F0F1F974000F35108 /* TaskList.m */,
 			);
 			name = Database;
 			sourceTree = "<group>";
@@ -160,12 +173,12 @@
 		A68EDEF50F1E224300F51FF2 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				A61DE2370F1E3F5B004BC97E /* Task.h */,
+				A61DE2380F1E3F5B004BC97E /* Task.m */,
 				A68EDF400F1E275700F51FF2 /* Category.h */,
 				A68EDF410F1E275700F51FF2 /* Category.m */,
 				A68EDF420F1E275700F51FF2 /* DomainObject.h */,
 				A68EDF430F1E275700F51FF2 /* DomainObject.m */,
-				A68EE0470F1E317D00F51FF2 /* Task.h */,
-				A68EE0480F1E317D00F51FF2 /* Task.m */,
 			);
 			name = Domain;
 			sourceTree = "<group>";
@@ -223,6 +236,7 @@
 				A68EDEF80F1E230C00F51FF2 /* taskcoach.db in Resources */,
 				A68EDEFC0F1E23BF00F51FF2 /* TaskCoach.png in Resources */,
 				A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */,
+				A6DDF85D0F1F993800F35108 /* TaskView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,7 +256,9 @@
 				A68EDF440F1E275700F51FF2 /* Category.m in Sources */,
 				A68EDF450F1E275700F51FF2 /* DomainObject.m in Sources */,
 				A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */,
-				A68EE0490F1E317D00F51FF2 /* Task.m in Sources */,
+				A61DE2390F1E3F5B004BC97E /* Task.m in Sources */,
+				A6DDF8500F1F974000F35108 /* TaskList.m in Sources */,
+				A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +279,14 @@
 				A68EDF850F1E2A6D00F51FF2 /* en */,
 			);
 			name = StringChoice.xib;
+			sourceTree = "<group>";
+		};
+		A6DDF85B0F1F993800F35108 /* TaskView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A6DDF85C0F1F993800F35108 /* en */,
+			);
+			name = TaskView.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
