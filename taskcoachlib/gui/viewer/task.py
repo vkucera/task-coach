@@ -31,7 +31,11 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
                      base.TreeViewer):
     defaultTitle = _('Tasks')
     defaultBitmap = 'task'
-
+    
+    def __init__(self, *args, **kwargs):
+        super(BaseTaskViewer, self).__init__(*args, **kwargs)
+        self.__registerForColorChanges()
+        
     def domainObjectsToView(self):
         return self.taskFile.tasks()
 
@@ -101,7 +105,27 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
             (self.presentation().nrOverdue(), self.presentation().nrInactive(),
              self.presentation().nrCompleted())
         return status1, status2
-    
+
+    def __registerForColorChanges(self):
+        colorSettings = ['color.%s'%setting for setting in 'activetasks',\
+            'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
+        for colorSetting in colorSettings:
+            patterns.Publisher().registerObserver(self.onColorSettingChange, 
+                eventType=colorSetting)
+        patterns.Publisher().registerObserver(self.onColorChange,
+            eventType=task.Task.colorChangedEventType())
+        patterns.Publisher().registerObserver(self.atMidnight,
+            eventType='clock.midnight')
+
+    def atMidnight(self, event):
+        self.refresh()
+        
+    def onColorSettingChange(self, event):
+        self.refresh()
+        
+    def onColorChange(self, event):
+        self.refreshItem(event.source())
+        
 
 class RootNode(object):
     def __init__(self, tasks):
@@ -239,7 +263,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
         kwargs.setdefault('settingsSection', 'taskviewer')
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.treeOrListUICommand.setChoice(self.isTreeViewer())
-        self.__registerForColorChanges()
     
     def isTreeViewer(self):
         return self.settings.getboolean(self.settingsSection(), 'treemode')
@@ -456,7 +479,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
         toolBarUICommands.insert(-2, self.treeOrListUICommand)
         return toolBarUICommands
 
-
     def trackStartEventType(self):
         return task.Task.trackStartEventType()
     
@@ -476,26 +498,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
         task = self.getItemWithIndex(index)
         return wx.ListItemAttr(self.getColor(task), 
                                self.getBackgroundColor(task))
-
-    def __registerForColorChanges(self):
-        colorSettings = ['color.%s'%setting for setting in 'activetasks',\
-            'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
-        for colorSetting in colorSettings:
-            patterns.Publisher().registerObserver(self.onColorSettingChange, 
-                eventType=colorSetting)
-        patterns.Publisher().registerObserver(self.onColorChange,
-            eventType=task.Task.colorChangedEventType())
-        patterns.Publisher().registerObserver(self.atMidnight,
-            eventType='clock.midnight')
-        
-    def atMidnight(self, event):
-        self.refresh()
-        
-    def onColorSettingChange(self, event):
-        self.refresh()
-        
-    def onColorChange(self, event):
-        self.refreshItem(event.source())
 
     def createImageList(self):
         imageList = wx.ImageList(16, 16)
