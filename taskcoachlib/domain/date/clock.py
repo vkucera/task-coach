@@ -26,10 +26,11 @@ class LargeIntervalTimer(wx.PyTimer):
         interval in pieces. '''
         
     maxMillisecondsPerInterval = 24 * 60 * 60 * 1000
-
+    
     def Start(self, milliseconds, oneShot=True):
         self.millisecondsToGo = milliseconds
-        self.Notify()
+        if self.Notify:
+            self.Notify()
         
     def Notify(self):
         if self.millisecondsToGo <= 0:
@@ -44,7 +45,7 @@ class LargeIntervalTimer(wx.PyTimer):
                            self.maxMillisecondsPerInterval)
         self.millisecondsToGo -= nextInterval
         super(LargeIntervalTimer, self).Start(nextInterval, oneShot=True)
-
+        
 
 class PeriodicTimer(wx.PyTimer):
     ''' PeriodicTimer allows for scheduling a callback to be called on a
