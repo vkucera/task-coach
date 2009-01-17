@@ -200,11 +200,17 @@ class SquareMap( wx.Panel ):
         brush = wx.Brush( self.BackgroundColor  )
         dc.SetBackground( brush )
         dc.Clear()
-        dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
+        dc.SetFont(self.FontForLabels())
         w, h = dc.GetSize()
         self.DrawBox( dc, self.model, 0,0,w,h, hot_map = self.hot_map )
         dc.EndDrawing()
-   
+        
+    def FontForLabels(self):
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        scale = dc.GetPPI()[0]/96
+        font.SetPointSize(scale*font.GetPointSize())
+        return font
+    
     def BrushForNode( self, node, depth=0 ):
         """Create brush to use to display the given node"""
         if node == self.selectedNode:
