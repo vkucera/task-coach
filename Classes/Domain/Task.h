@@ -11,15 +11,17 @@
 
 @interface Task : DomainObject
 {
+	NSString *description;
 	NSDate *startDate;
 	NSDate *dueDate;
 	NSDate *completionDate;
 }
 
+@property (nonatomic, retain) NSString *description;
 @property (nonatomic, retain) NSDate *startDate;
 @property (nonatomic, retain) NSDate *dueDate;
 @property (nonatomic, retain) NSDate *completionDate;
 
-- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status startDate:(NSDate *)startDate dueDate:(NSDate *)dueDate completionDate:(NSDate *)completionDate;
+- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status description:(NSString *)description startDate:(NSDate *)startDate dueDate:(NSDate *)dueDate completionDate:(NSDate *)completionDate;
 
 @end
