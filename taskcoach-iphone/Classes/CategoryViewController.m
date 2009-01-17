@@ -79,7 +79,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [categories count];
+    return [categories count] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -93,14 +93,31 @@
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-	cell.text = [[categories objectAtIndex:indexPath.row] name];
+	if (indexPath.row)
+	{
+		cell.text = [[categories objectAtIndex:indexPath.row - 1] name];
+	}
+	else
+	{
+		cell.text = NSLocalizedString(@"All", @"All categories name");
+	}
 
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row] name] category:[[categories objectAtIndex:indexPath.row] objectId]];
+	TaskViewController *ctrl;
+	
+	if (indexPath.row)
+	{
+		ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId]];
+	}
+	else
+	{
+		ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1];
+	}
+
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }

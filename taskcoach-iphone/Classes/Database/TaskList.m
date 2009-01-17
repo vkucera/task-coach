@@ -49,10 +49,29 @@ NSDate *dateFromStamp(NSNumber *stamp)
 	if (self = [super init])
 	{
 		tasks = [[NSMutableArray alloc] initWithCapacity:CACHELENGTH];
-		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE categoryId=%d ORDER BY name LIMIT ?,?", viewName, categoryId]] retain];
+
+		if (categoryId == -1)
+		{
+			request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY NAME LIMIT ?,?", viewName]] retain];
+		}
+		else
+		{
+			request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE categoryId=%d ORDER BY name LIMIT ?,?", viewName, categoryId]] retain];
+		}
+
 		title = [theTitle copy];
 
-		Statement *countReq = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@ WHERE categoryId=%d", viewName, categoryId]];
+		Statement *countReq;
+
+		if (categoryId == -1)
+		{
+			countReq = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@", viewName]];
+		}
+		else
+		{
+			countReq = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@ WHERE categoryId=%d", viewName, categoryId]];
+		}
+
 		[countReq execWithTarget:self action:@selector(countCallback:)];
 		
 		// firstIndex is already initialized to 0
