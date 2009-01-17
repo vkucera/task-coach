@@ -55,6 +55,7 @@ INSERT INTO Category (name) VALUES ('Test3');
 INSERT INTO Task (name, categoryId) VALUES ('Task1', 1);
 -- Started
 INSERT INTO Task (name, categoryId, startDate) VALUES ('Task2', 1, DATE('now', '-1 day'));
+INSERT INTO Task (name, categoryId, startDate) VALUES ('Task5', 1, DATE('now', '-1 day'));
 -- Due today
 INSERT INTO Task (name, categoryId, startDate, dueDate) VALUES ('Task3', 1, DATE('now'), DATE('now'));
 -- Overdue

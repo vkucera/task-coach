@@ -16,6 +16,7 @@
 	NSMutableArray *tasks;
 	NSInteger firstIndex;
 	Statement *request;
+	Statement *countRequest;
 	NSInteger count;
 	NSString *title;
 }
