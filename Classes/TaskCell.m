@@ -24,15 +24,15 @@
 	switch (status)
 	{
 		case TASKSTATUS_OVERDUE:
-			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern"), [[task dueDate] descriptionWithLocale:[NSLocale currentLocale]]];
+			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern"), task.dueDate];
 			break;
 		case TASKSTATUS_DUETODAY:
-			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Started %@", @"Start date infos pattern"), [[task startDate] descriptionWithLocale:[NSLocale currentLocale]]];
+			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Started %@", @"Start date infos pattern"), task.startDate];
 			break;
 		case TASKSTATUS_STARTED:
 		case TASKSTATUS_NOTSTARTED:
 			if ([task dueDate])
-				infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern (started/not started)"), [[task dueDate] descriptionWithLocale:[NSLocale currentLocale]]];
+				infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern (started/not started)"), task.dueDate];
 			else
 				infosLabel.text = @"";
 			break;

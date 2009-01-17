@@ -28,12 +28,11 @@ CREATE TABLE Task
 
 	categoryId INTEGER NULL DEFAULT NULL,
 	
-	-- Dates are represented as number of seconds since the Unix Epoch
-	-- TODO: move this to 64 bits to prevent the infamous year 2038 bug :)
+	-- Dates are represented as YYYY-MM-DD strings
 	
-	startDate INTEGER NULL DEFAULT NULL,
-	dueDate INTEGER NULL DEFAULT NULL,
-	completionDate INTEGER NULL DEFAULT NULL
+	startDate CHAR(10) NULL DEFAULT NULL,
+	dueDate CHAR(10) NULL DEFAULT NULL,
+	completionDate CHAR(10) NULL DEFAULT NULL
 );
 
 CREATE INDEX idxTaskStatus ON Task (status);

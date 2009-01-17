@@ -20,7 +20,7 @@ static Statement *_saveStatement = NULL;
 @synthesize dueDate;
 @synthesize completionDate;
 
-- initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus description:(NSString *)theDescription startDate:(NSDate *)theStartDate dueDate:(NSDate *)theDueDate completionDate:(NSDate *)theCompletionDate;
+- initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus description:(NSString *)theDescription startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate;
 {
 	if (self = [super initWithId:theId name:theName status:theStatus])
 	{
@@ -54,9 +54,9 @@ static Statement *_saveStatement = NULL;
 {
 	[super bind];
 	[[self saveStatement] bindString:description atIndex:3];
-	[[self saveStatement] bindInteger:(NSInteger)[startDate timeIntervalSince1970] atIndex:4];
-	[[self saveStatement] bindInteger:(NSInteger)[dueDate timeIntervalSince1970] atIndex:5];
-	[[self saveStatement] bindInteger:(NSInteger)[completionDate timeIntervalSince1970] atIndex:6];
+	[[self saveStatement] bindString:startDate atIndex:4];
+	[[self saveStatement] bindString:dueDate atIndex:5];
+	[[self saveStatement] bindString:completionDate atIndex:6];
 }
 
 // Overridden setters
@@ -68,21 +68,21 @@ static Statement *_saveStatement = NULL;
 	[self setStatus:STATUS_MODIFIED];
 }
 
-- (void)setStartDate:(NSDate *)date
+- (void)setStartDate:(NSString *)date
 {
 	[startDate release];
 	startDate = [date retain];
 	[self setStatus:STATUS_MODIFIED];
 }
 
-- (void)setDueDate:(NSDate *)date
+- (void)setDueDate:(NSString *)date
 {
 	[dueDate release];
 	dueDate = [date retain];
 	[self setStatus:STATUS_MODIFIED];
 }
 
-- (void)setCompletionDate:(NSDate *)date
+- (void)setCompletionDate:(NSString *)date
 {
 	[completionDate release];
 	completionDate = [date retain];
