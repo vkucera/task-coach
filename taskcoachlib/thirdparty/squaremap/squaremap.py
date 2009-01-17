@@ -200,14 +200,14 @@ class SquareMap( wx.Panel ):
         brush = wx.Brush( self.BackgroundColor  )
         dc.SetBackground( brush )
         dc.Clear()
-        dc.SetFont(self.FontForLabels())
+        dc.SetFont(self.FontForLabels(dc))
         w, h = dc.GetSize()
         self.DrawBox( dc, self.model, 0,0,w,h, hot_map = self.hot_map )
         dc.EndDrawing()
         
-    def FontForLabels(self):
+    def FontForLabels(self, dc):
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        scale = dc.GetPPI()[0]/96
+        scale = dc.GetPPI()[0] / wx.ScreenDC().GetPPI()[0]
         font.SetPointSize(scale*font.GetPointSize())
         return font
     
