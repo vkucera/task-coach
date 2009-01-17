@@ -19,7 +19,6 @@
     [window makeKeyAndVisible];
 }
 
-
 - (void)dealloc
 {
 	[mainController release];
@@ -27,6 +26,5 @@
 
     [super dealloc];
 }
-
 
 @end
