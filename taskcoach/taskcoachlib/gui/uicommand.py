@@ -23,7 +23,7 @@ from taskcoachlib import patterns, meta, command, help, widgets, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, attachment
 from taskcoachlib.mailer import writeMail
-import dialog, render, viewer, codecs
+import dialog, render, viewer, codecs, printer
 
 
 ''' User interface commands (subclasses of UICommand) are actions that can
@@ -522,37 +522,6 @@ Do you still want to purge?'''),
             self.iocontroller.purgeDeletedItems()
 
 
-# FIXME: Move the printing specific stuff somewhere else
-
-class PrinterSettings(object):
-    def __init__(self):
-        self.printData = wx.PrintData()
-        self.pageSetupData = wx.PageSetupDialogData(self.printData)
-
-    def updatePageSetupData(self, data):
-        self.pageSetupData = wx.PageSetupDialogData(data)
-        self.updatePrintData(data.GetPrintData())
-
-    def updatePrintData(self, printData):
-        self.printData = wx.PrintData(printData)
-        self.pageSetupData.SetPrintData(self.printData)
-
-printerSettings = PrinterSettings()
-
-class Printout(wx.html.HtmlPrintout):
-    def __init__(self, aViewer, printSelectionOnly=False, *args, **kwargs):
-        super(Printout, self).__init__(*args, **kwargs)
-        htmlText = persistence.viewer2html(aViewer, 
-                                           selectionOnly=printSelectionOnly)
-        self.SetHtmlText(htmlText)
-        self.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
-        self.SetFonts('Arial', 'Courier')
-        global printerSettings
-        top, left = printerSettings.pageSetupData.GetMarginTopLeft()
-        bottom, right = printerSettings.pageSetupData.GetMarginBottomRight()
-        self.SetMargins(top, bottom, left, right)
-
-                
 class PrintPageSetup(UICommand):
     def __init__(self, *args, **kwargs):
         super(PrintPageSetup, self).__init__(\
@@ -561,12 +530,11 @@ class PrintPageSetup(UICommand):
             bitmap='pagesetup', id=wx.ID_PRINT_SETUP, *args, **kwargs)
 
     def doCommand(self, event):
-        global printerSettings
         dialog = wx.PageSetupDialog(self.mainWindow(), 
-            printerSettings.pageSetupData)
+            printer.printerSettings.pageSetupData)
         result = dialog.ShowModal()
         if result == wx.ID_OK:
-            printerSettings.updatePageSetupData(dialog.GetPageSetupData())
+            printer.printerSettings.updatePageSetupData(dialog.GetPageSetupData())
         dialog.Destroy()
 
 
@@ -578,16 +546,15 @@ class PrintPreview(ViewerCommand):
             bitmap='printpreview', id=wx.ID_PREVIEW, *args, **kwargs)
 
     def doCommand(self, event):
-        global printerSettings 
-        printout = Printout(self.viewer)
-        printout2 = Printout(self.viewer)
+        printout = printer.Printout(self.viewer)
+        printout2 = printer.Printout(self.viewer)
         preview = wx.PrintPreview(printout, printout2, 
-            printerSettings.printData)
+            printer.printerSettings.printData)
         previewFrame = wx.PreviewFrame(preview, self.mainWindow(), 
             _('Print preview'), size=(750, 700))
         previewFrame.Initialize()
         previewFrame.Show()
-        
+      
 
 class Print(ViewerCommand):
     def __init__(self, *args, **kwargs):
@@ -596,21 +563,20 @@ class Print(ViewerCommand):
             helpText=_('Print the current file'), 
             bitmap='print', id=wx.ID_PRINT, *args, **kwargs)
 
-    def doCommand(self, event):
-        global printerSettings 
-        printDialogData = wx.PrintDialogData(printerSettings.printData)
+    def doCommand(self, event): 
+        printDialogData = wx.PrintDialogData(printer.printerSettings.printData)
         printDialogData.EnableSelection(True)
-        printer = wx.Printer(printDialogData)
-        if not printer.PrintDialog(self.mainWindow()):
+        wxPrinter = wx.Printer(printDialogData)
+        if not wxPrinter.PrintDialog(self.mainWindow()):
             return
-        printout = Printout(self.viewer, 
-            printSelectionOnly=printer.PrintDialogData.Selection)
+        printout = printer.Printout(self.viewer, 
+            printSelectionOnly=wxPrinter.PrintDialogData.Selection)
         # If the user checks the selection radio button, the ToPage property 
         # gets set to 1. Looks like a bug to me. The simple work-around is to
         # reset the ToPage property to the MaxPage value if necessary:
-        if printer.PrintDialogData.Selection:
-            printer.PrintDialogData.ToPage = printer.PrintDialogData.MaxPage
-        printer.Print(self.mainWindow(), printout, prompt=False)
+        if wxPrinter.PrintDialogData.Selection:
+            wxPrinter.PrintDialogData.ToPage = wxPrinter.PrintDialogData.MaxPage
+        wxPrinter.Print(self.mainWindow(), printout, prompt=False)
  
 
 class FileExportAsICS(IOCommand):
