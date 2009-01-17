@@ -19,15 +19,6 @@
 
 #define CACHELENGTH (8 * 3)
 
-NSDate *dateFromStamp(NSNumber *stamp)
-{
-	// Takes a timestamp (seconds since the Unix Epoch) and returns an autoreleased NSDate object (or nil)
-	if (stamp == nil)
-		return nil;
-	
-	return [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[stamp intValue]];
-}
-
 @implementation TaskList
 
 @synthesize count;
@@ -43,9 +34,9 @@ NSDate *dateFromStamp(NSNumber *stamp)
 {
 	Task *task = [[Task alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue]
 							   description:[dict objectForKey:@"descfription"]
-							   startDate:dateFromStamp([dict objectForKey:@"startDate"])
-							   dueDate:dateFromStamp([dict objectForKey:@"dueDate"])
-						       completionDate:dateFromStamp([dict objectForKey:@"completionDate"])];
+							   startDate:[dict objectForKey:@"startDate"]
+							   dueDate:[dict objectForKey:@"dueDate"]
+						       completionDate:[dict objectForKey:@"completionDate"]];
 	[tasks addObject:task];
 	[task release];
 }

@@ -44,10 +44,15 @@
 
 - (void)bindString:(NSString *)string atIndex:(NSInteger)index
 {
-	if (sqlite3_bind_text(pReq, index, [string UTF8String], -1, NULL) != SQLITE_OK)
+	if (string)
 	{
-		@throw [NSException exceptionWithName:@"DatabaseError" reason:[connection errmsg] userInfo:nil];
+		if (sqlite3_bind_text(pReq, index, [string UTF8String], -1, NULL) != SQLITE_OK)
+		{
+			@throw [NSException exceptionWithName:@"DatabaseError" reason:[connection errmsg] userInfo:nil];
+		}
 	}
+	else
+		[self bindNullAtIndex:index];
 }
 
 - (void)bindNullAtIndex:(NSInteger)index
