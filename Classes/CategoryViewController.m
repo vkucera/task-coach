@@ -42,6 +42,16 @@
 	[super viewDidLoad];
 }
 
+- (void)childWasPopped
+{
+	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+	
+	if (indexPath)
+	{
+		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+	}
+}
+
 - (void)dealloc
 {
 	[categories release];
