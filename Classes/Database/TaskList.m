@@ -61,18 +61,14 @@ NSDate *dateFromStamp(NSNumber *stamp)
 
 		title = [theTitle copy];
 
-		Statement *countReq;
-
 		if (categoryId == -1)
 		{
-			countReq = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@", viewName]];
+			countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@", viewName]] retain];
 		}
 		else
 		{
-			countReq = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@ WHERE categoryId=%d", viewName, categoryId]];
+			countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@ WHERE categoryId=%d", viewName, categoryId]] retain];
 		}
-
-		[countReq execWithTarget:self action:@selector(countCallback:)];
 		
 		// firstIndex is already initialized to 0
 		[self reload];
@@ -85,6 +81,7 @@ NSDate *dateFromStamp(NSNumber *stamp)
 {
 	[tasks release];
 	[request release];
+	[countRequest release];
 	[title release];
 	
 	[super dealloc];
@@ -96,6 +93,7 @@ NSDate *dateFromStamp(NSNumber *stamp)
 	[request bindInteger:firstIndex atIndex:1];
 	[request bindInteger:CACHELENGTH atIndex:2];
 	[request execWithTarget:self action:@selector(taskCallback:)];
+	[countRequest execWithTarget:self action:@selector(countCallback:)];
 }
 
 - (Task *)taskAtIndex:(NSInteger)index

@@ -27,5 +27,6 @@
 - initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status;
 
 - (void)setStatus:(NSInteger)status;
+- (void)delete;
 
 @end

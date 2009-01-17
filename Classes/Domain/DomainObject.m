@@ -7,6 +7,8 @@
 //
 
 #import "DomainObject.h"
+#import "Database.h"
+#import "Statement.h"
 
 @implementation DomainObject
 
@@ -46,6 +48,13 @@
 				status = newStatus;
 			break;
 	}
+}
+
+- (void)delete
+{
+	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM %@ WHERE id=?", [self class]]];
+	[req bindInteger:objectId atIndex:1];
+	[req exec];
 }
 
 // Overriden setters to maintain the status
