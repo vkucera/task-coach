@@ -28,7 +28,7 @@ import base, mixin
 
 
 class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks, 
-                     base.TreeViewer):
+                     base.TreeViewer, patterns.Observer):
     defaultTitle = _('Tasks')
     defaultBitmap = 'task'
     
@@ -117,7 +117,7 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
         for colorSetting in colorSettings:
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
-        patterns.Publisher().registerObserver(self.onColorChange,
+        patterns.Publisher().registerObserver(self.onTaskChange,
             eventType=task.Task.colorChangedEventType())
         patterns.Publisher().registerObserver(self.atMidnight,
             eventType='clock.midnight')
@@ -128,7 +128,7 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
     def onColorSettingChange(self, event):
         self.refresh()
         
-    def onColorChange(self, event):
+    def onTaskChange(self, event):
         self.refreshItem(event.source())
         
 
@@ -178,6 +178,7 @@ class SquareTaskViewer(BaseTaskViewer):
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
         self.orderUICommand.setChoice(self.__orderBy)
+        self.registerObserver(self.onTaskChange, task.Task.subjectChangedEventType())
 
     def createWidget(self):
         return widgets.SquareMap(self, RootNode(self.presentation()), self.onSelect,
@@ -196,8 +197,11 @@ class SquareTaskViewer(BaseTaskViewer):
     def orderBy(self, choice):
         if choice == self.__orderBy:
             return
+        oldChoice = self.__orderBy
         self.__orderBy = choice
         self.settings.set(self.settingsSection(), 'sortby', choice)
+        self.removeObserver(self.onTaskChange, 'task.%s'%oldChoice)
+        self.registerObserver(self.onTaskChange, 'task.%s'%choice)
         if choice in ('budget', 'budgetLeft', 'timeSpent'):
             self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds()/1000
             self.__zero = date.TimeDelta()
