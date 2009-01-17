@@ -28,7 +28,7 @@ import base, mixin
 
 
 class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks, 
-                     base.TreeViewer, patterns.Observer):
+                     base.UpdatePerSecondViewer, base.TreeViewer, patterns.Observer):
     defaultTitle = _('Tasks')
     defaultBitmap = 'task'
     
@@ -45,6 +45,12 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
     def createFilter(self, taskList):
         tasks = super(BaseTaskViewer, self).createFilter(taskList)
         return domain.base.DeletedFilter(tasks)
+
+    def trackStartEventType(self):
+        return task.Task.trackStartEventType()
+    
+    def trackStopEventType(self):
+        return task.Task.trackStopEventType()
 
     def editItemDialog(self, *args, **kwargs):
         items = kwargs.get('items', self.curselection())
@@ -269,7 +275,7 @@ class SquareTaskViewer(BaseTaskViewer):
     
     
 class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks, 
-                 base.UpdatePerSecondViewer, base.SortableViewerWithColumns,
+                 base.SortableViewerWithColumns,
                  BaseTaskViewer):
 
     def __init__(self, *args, **kwargs):
@@ -491,12 +497,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
             uicommand.TaskViewerTreeOrListChoice(viewer=self)
         toolBarUICommands.insert(-2, self.treeOrListUICommand)
         return toolBarUICommands
-
-    def trackStartEventType(self):
-        return task.Task.trackStartEventType()
-    
-    def trackStopEventType(self):
-        return task.Task.trackStopEventType()
 
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
