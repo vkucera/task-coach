@@ -13,6 +13,10 @@
 
 #import "Task.h"
 
+#import "String+Utils.h"
+
+#import "Configuration.h"
+
 #define CACHELENGTH (8 * 3)
 
 NSDate *dateFromStamp(NSNumber *stamp)
@@ -50,26 +54,36 @@ NSDate *dateFromStamp(NSNumber *stamp)
 	{
 		tasks = [[NSMutableArray alloc] initWithCapacity:CACHELENGTH];
 
-		if (categoryId == -1)
+		NSMutableArray *where = [[NSMutableArray alloc] initWithCapacity:2];
+		
+		if (categoryId != -1)
 		{
-			request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY NAME LIMIT ?,?", viewName]] retain];
+			[where addObject:[NSString stringWithFormat:@"categoryId == %d", categoryId]];
+		}
+
+		if (![Configuration configuration].showCompleted)
+		{
+			[where addObject:@"completionDate IS NULL"];
+		}
+
+		NSString *req;
+
+		if ([where count])
+		{
+			req = [NSString stringWithFormat:@"FROM %@ WHERE %@", viewName, [@" AND " stringByJoiningStrings:where]];
 		}
 		else
 		{
-			request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE categoryId=%d ORDER BY name LIMIT ?,?", viewName, categoryId]] retain];
+			req = [NSString stringWithFormat:@"FROM %@", viewName];
 		}
+
+		[where release];
+
+		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * %@ ORDER BY name LIMIT ?,?", req]] retain];
+		countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total %@", req]] retain];
 
 		title = [theTitle copy];
 
-		if (categoryId == -1)
-		{
-			countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@", viewName]] retain];
-		}
-		else
-		{
-			countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@ WHERE categoryId=%d", viewName, categoryId]] retain];
-		}
-		
 		// firstIndex is already initialized to 0
 		[self reload];
 	}
