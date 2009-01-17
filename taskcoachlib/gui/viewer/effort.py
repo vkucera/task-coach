@@ -80,9 +80,16 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         self.registerPresentationObservers()
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None
-        self.refresh()
+        # If the widget is auto-resizing columns, turn it off temporarily to 
+        # make removing/adding columns faster
+        autoResizing = self.widget.IsAutoResizing()
+        if autoResizing:
+            self.widget.ToggleAutoResizing(False)
         self._showTotalColumns(show=aggregation!='details')
         self._showWeekdayColumns(show=aggregation=='week')
+        if autoResizing:
+            self.widget.ToggleAutoResizing(True)
+        self.refresh()
 
     def createFilter(self, taskList):
         ''' Return a class that filters the original list. In this case we
@@ -176,7 +183,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
                 [column for column in self.visibleColumns() \
                  if column.name().startswith('total')]
         for column in columnsToShow:
-            self.showColumn(column, show)
+            self.showColumn(column, show, refresh=False)
 
     def _showWeekdayColumns(self, show=True):
         if show:
@@ -188,7 +195,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
                  if column.name() in ['monday', 'tuesday', 'wednesday', 
                  'thursday', 'friday', 'saturday', 'sunday']]
         for column in columnsToShow:
-            self.showColumn(column, show)
+            self.showColumn(column, show, refresh=False)
 
     def getColumnUICommands(self):
         if not self.__columnUICommands:
