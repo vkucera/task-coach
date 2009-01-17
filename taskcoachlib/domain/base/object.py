@@ -47,16 +47,16 @@ class SynchronizedObject(patterns.Observable):
             super(SynchronizedObject, self).__setstate__(state)
         except AttributeError:
             pass
-
-        oldstatus = self.__status
-        self.__status = state['status']
-
-        if oldstatus == self.STATUS_DELETED:
-            self.notifyObservers(patterns.Event(self,
-                         'object.marknotdeleted'))
-        elif self.__status == self.STATUS_DELETED:
-            self.notifyObservers(patterns.Event(self,
-                         'object.markdeleted'))
+        if state['status'] == self.__status:
+            return
+        if state['status'] == self.STATUS_CHANGED:
+            self.markDirty()
+        elif state['status'] == self.STATUS_DELETED:
+            self.markDeleted()
+        elif state['status'] == self.STATUS_NEW:
+            self.markNew()
+        elif state['status'] == self.STATUS_NONE:
+            self.cleanDirty()
 
     def freezeStatus(self):
         self.__frozenStatus = True
@@ -68,12 +68,21 @@ class SynchronizedObject(patterns.Observable):
         return self.__status
 
     def markDirty(self, force=False):
-        if (self.__status == self.STATUS_NONE or force) and not self.__frozenStatus:
-            self.__status = self.STATUS_CHANGED
+        if not self.__frozenStatus:
+            oldstatus = self.__status
+            if self.__status == self.STATUS_NONE or force:
+                self.__status = self.STATUS_CHANGED
+                if oldstatus == self.STATUS_DELETED:
+                    self.notifyObservers(patterns.Event(self, 
+                        'object.marknotdeleted', self.__status))
 
     def markNew(self):
         if not self.__frozenStatus:
+            oldstatus = self.__status
             self.__status = self.STATUS_NEW
+            if oldstatus == self.STATUS_DELETED:
+                self.notifyObservers(patterns.Event(self, 
+                     'object.marknotdeleted', self.__status))
 
     def markDeleted(self):
         if not self.__frozenStatus:
@@ -304,3 +313,24 @@ class CompositeObject(Object, patterns.ObservableComposite):
             for child in self.children():
                 child.notifyObserversOfParentColorChange(color)
 
+    # Override SynchronizedObject methods to also mark child objects
+
+    def markDeleted(self, *args, **kwargs):
+        super(CompositeObject, self).markDeleted(*args, **kwargs)
+        for child in self.children():
+            child.markDeleted(*args, **kwargs)
+            
+    def markNew(self, *args, **kwargs):
+        super(CompositeObject, self).markNew(*args, **kwargs)
+        for child in self.children():
+            child.markNew(*args, **kwargs)
+
+    def markDirty(self, *args, **kwargs):
+        super(CompositeObject, self).markDirty(*args, **kwargs)
+        for child in self.children():
+            child.markDirty(*args, **kwargs)
+            
+    def cleanDirty(self, *args, **kwargs):        
+        super(CompositeObject, self).cleanDirty(*args, **kwargs)
+        for child in self.children():
+            child.cleanDirty(*args, **kwargs)
