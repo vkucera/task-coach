@@ -29,4 +29,7 @@
 - (void)setStatus:(NSInteger)status;
 - (void)delete;
 
+- (void)bind;
+- (void)save;
+
 @end
