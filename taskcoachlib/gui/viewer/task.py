@@ -99,12 +99,17 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
  
     def statusMessages(self):
         status1 = _('Tasks: %d selected, %d visible, %d total')%\
-            (len(self.curselection()), len(self.presentation()), 
+            (len(self.curselection()), self.nrOfVisibleTasks(), 
              self.presentation().originalLength())         
         status2 = _('Status: %d over due, %d inactive, %d completed')% \
             (self.presentation().nrOverdue(), self.presentation().nrInactive(),
              self.presentation().nrCompleted())
         return status1, status2
+    
+    def nrOfVisibleTasks(self):
+        # Make this overridable for viewers where the widgets does not show all
+        # items in the presentation, i.e. the widget does filtering on its own.
+        return len(self.presentation())
 
     def __registerForColorChanges(self):
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
@@ -206,6 +211,10 @@ class SquareTaskViewer(BaseTaskViewer):
         # back to domain objects. Our widget already returns the selected domain
         # object itself.
         return self.widget.curselection()
+    
+    def nrOfVisibleTasks(self):
+        return len([task for task in self.presentation() if getattr(task, 
+                    self.__orderBy)(recursive=True) > self.__zero])
     
     # SquareMap adapter methods:
     
