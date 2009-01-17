@@ -190,7 +190,7 @@
 		else
 		{
 			[task setStatus:STATUS_DELETED];
-			// XXXTODO: save in database
+			[task save];
 		}
 
 		if ([[headers objectAtIndex:indexPath.section - 1] count] == 1)

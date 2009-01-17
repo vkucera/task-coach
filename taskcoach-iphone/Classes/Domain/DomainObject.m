@@ -10,6 +10,8 @@
 #import "Database.h"
 #import "Statement.h"
 
+static Statement *_saveStatement = NULL;
+
 @implementation DomainObject
 
 @synthesize objectId;
@@ -50,11 +52,30 @@
 	}
 }
 
+- (Statement *)saveStatement
+{
+	if (!_saveStatement)
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=? WHERE id=%d", [self class], objectId]] retain];
+	return _saveStatement;
+}
+
 - (void)delete
 {
 	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM %@ WHERE id=?", [self class]]];
 	[req bindInteger:objectId atIndex:1];
 	[req exec];
+}
+
+- (void)bind
+{
+	[[self saveStatement] bindString:name atIndex:1];
+	[[self saveStatement] bindInteger:status atIndex:2];
+}
+
+- (void)save
+{
+	[self bind];
+	[[self saveStatement] exec];
 }
 
 // Overriden setters to maintain the status

@@ -8,6 +8,11 @@
 
 #import "Task.h"
 
+#import "Database.h"
+#import "Statement.h"
+
+static Statement *_saveStatement = NULL;
+
 @implementation Task
 
 @synthesize startDate;
@@ -33,6 +38,21 @@
 	[completionDate release];
 
 	[super dealloc];
+}
+
+- (Statement *)saveStatement
+{
+	if (!_saveStatement)
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=?, startDate=?, dueDate=?, completionDate=? WHERE id=%d", [self class], objectId]] retain];
+	return _saveStatement;
+}
+
+- (void)bind
+{
+	[super bind];
+	[[self saveStatement] bindInteger:(NSInteger)[startDate timeIntervalSince1970] atIndex:3];
+	[[self saveStatement] bindInteger:(NSInteger)[dueDate timeIntervalSince1970] atIndex:4];
+	[[self saveStatement] bindInteger:(NSInteger)[completionDate timeIntervalSince1970] atIndex:5];
 }
 
 // Overridden setters
