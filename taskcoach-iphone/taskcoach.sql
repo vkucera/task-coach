@@ -24,6 +24,8 @@ CREATE TABLE Task
 
 	-- Task-specific fields
 
+	description TEXT NOT NULL DEFAULT '',
+
 	categoryId INTEGER NULL DEFAULT NULL,
 	
 	-- Dates are represented as number of seconds since the Unix Epoch

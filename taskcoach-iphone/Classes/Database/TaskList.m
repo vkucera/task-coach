@@ -41,6 +41,7 @@ NSDate *dateFromStamp(NSNumber *stamp)
 - (void)taskCallback:(NSDictionary *)dict
 {
 	Task *task = [[Task alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue]
+							   description:[dict objectForKey:@"descfription"]
 							   startDate:dateFromStamp([dict objectForKey:@"startDate"])
 							   dueDate:dateFromStamp([dict objectForKey:@"dueDate"])
 						       completionDate:dateFromStamp([dict objectForKey:@"completionDate"])];
