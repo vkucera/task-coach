@@ -248,9 +248,15 @@ class SquareMap( wx.Panel ):
         dc.SetBrush( self.BrushForNode( node, depth ) )
         dc.SetPen( self.PenForNode( node, depth ) )
         dc.DrawRoundedRectangle( x,y,w,h, self.padding *3 )
+        icon = self.adapter.icon(node, node==self.selectedNode)
+        if icon and h >= icon.GetHeight() and w >= icon.GetWidth():
+            iconWidth = icon.GetWidth() + 2
+            dc.DrawIcon(icon, x+2, y+2) 
+        else:
+            iconWidth = 0
         if self.labels and h >= dc.GetTextExtent('ABC')[1]:
             dc.SetTextForeground(self.TextForegroundForNode(node, depth))
-            dc.DrawText(self.adapter.label(node), x+2, y)
+            dc.DrawText(self.adapter.label(node), x + iconWidth + 2, y+2)
         children_hot_map = []
         hot_map.append( (wx.Rect( int(x),int(y),int(w),int(h)), node, children_hot_map ) )
         x += self.padding
@@ -320,6 +326,8 @@ class DefaultAdapter( object ):
     def background_color(self, node, depth):
         return None
     def foreground_color(self, node, depth):
+        return None
+    def icon(self, node, isSelected):
         return None
 
 

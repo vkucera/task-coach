@@ -154,7 +154,7 @@ class RootNode(object):
     def completed(self, *args, **kwargs):
         return False
 
-    dueToday = inactive = overdue = completed
+    dueToday = inactive = overdue = isBeingTracked = completed
 
     def __getattr__(self, attr):
         def getTaskAttribute(recursive=True):
@@ -263,6 +263,12 @@ class SquareTaskViewer(BaseTaskViewer):
 
     def foreground_color(self, task, depth):
         return color.taskColor(task, self.settings)
+    
+    def icon(self, task, isSelected):
+        bitmap, bitmap_selected = render.taskBitmapNames(task)
+        if isSelected:
+            bitmap = bitmap_selected
+        return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
 
     # Helper methods
     
