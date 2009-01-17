@@ -42,7 +42,7 @@ CREATE INDEX idxTaskCategory ON Task (categoryId);
 
 CREATE VIEW OverdueTask AS SELECT * FROM Task WHERE status != 3 AND dueDate < DATE('now');
 CREATE VIEW DueTodayTask AS SELECT * FROM Task WHERE status != 3 AND dueDate == DATE('now');
-CREATE VIEW StartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NOT NULL AND startDate >= DATE('now') AND (dueDate > DATE('now') OR dueDate IS NULL);
+CREATE VIEW StartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATE('now') AND (dueDate > DATE('now') OR dueDate IS NULL);
 CREATE VIEW NotStartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NULL;
 
 -- XXXTMP: testing data
@@ -54,7 +54,7 @@ INSERT INTO Category (name) VALUES ('Test3');
 -- Not started
 INSERT INTO Task (name, categoryId) VALUES ('Task1', 1);
 -- Started
-INSERT INTO Task (name, categoryId, startDate) VALUES ('Task2', 1, DATE('now'));
+INSERT INTO Task (name, categoryId, startDate) VALUES ('Task2', 1, DATE('now', '-1 day'));
 -- Due today
 INSERT INTO Task (name, categoryId, startDate, dueDate) VALUES ('Task3', 1, DATE('now'), DATE('now'));
 -- Overdue
