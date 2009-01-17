@@ -32,6 +32,7 @@ NSDate *dateFromStamp(NSNumber *stamp)
 
 @synthesize count;
 @synthesize title;
+@synthesize status;
 
 - (void)countCallback:(NSDictionary *)dict
 {
@@ -49,7 +50,7 @@ NSDate *dateFromStamp(NSNumber *stamp)
 	[task release];
 }
 
-- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)theTitle
+- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)theTitle status:(NSInteger)theStatus
 {
 	if (self = [super init])
 	{
@@ -84,6 +85,7 @@ NSDate *dateFromStamp(NSNumber *stamp)
 		countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total %@", req]] retain];
 
 		title = [theTitle copy];
+		status = theStatus;
 
 		// firstIndex is already initialized to 0
 		[self reload];

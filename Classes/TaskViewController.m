@@ -8,6 +8,9 @@
 
 #import "TaskViewController.h"
 
+#import "TaskCell.h"
+#import "CellFactory.h"
+
 #import "TaskList.h"
 #import "Database.h"
 #import "Statement.h"
@@ -25,28 +28,28 @@
 		TaskList *list;
 		headers = [[NSMutableArray alloc] initWithCapacity:4];
 		
-		list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:NSLocalizedString(@"Overdue", @"Overdue task title")];
+		list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:NSLocalizedString(@"Overdue", @"Overdue task title") status:TASKSTATUS_OVERDUE];
 		if ([list count])
 		{
 			[headers addObject:list];
 		}
 		[list release];
 
-		list = [[TaskList alloc] initWithView:@"DueTodayTask" category:categoryId title:NSLocalizedString(@"Due today", @"Due today task title")];
+		list = [[TaskList alloc] initWithView:@"DueTodayTask" category:categoryId title:NSLocalizedString(@"Due today", @"Due today task title") status:TASKSTATUS_DUETODAY];
 		if ([list count])
 		{
 			[headers addObject:list];
 		}
 		[list release];
 
-		list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:NSLocalizedString(@"Started", @"Started task title")];
+		list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:NSLocalizedString(@"Started", @"Started task title") status:TASKSTATUS_STARTED];
 		if ([list count])
 		{
 			[headers addObject:list];
 		}
 		[list release];
 
-		list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:NSLocalizedString(@"Not started", @"Not started task title")];
+		list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:NSLocalizedString(@"Not started", @"Not started task title") status:TASKSTATUS_NOTSTARTED];
 		if ([list count])
 		{
 			[headers addObject:list];
@@ -141,21 +144,34 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-	{
-        cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
-    }
+	UITableViewCell *cell;
 
 	if (self.editing && (indexPath.section == 0))
 	{
+		cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+
+		if (cell == nil)
+		{
+			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Cell"] autorelease];
+		}
+
 		cell.text = NSLocalizedString(@"Add task...", @"Add task cell text");
 	}
 	else
 	{
-		cell.text = [[[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:indexPath.row] name];
+		TaskCell *taskCell = (TaskCell *)[tableView dequeueReusableCellWithIdentifier:@"TaskCell"];
+
+		if (taskCell == nil)
+		{
+			taskCell = [[[CellFactory cellFactory] createTaskCell] autorelease];
+		}
+
+		TaskList *list = [headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)];
+		Task *task = [list taskAtIndex:indexPath.row];
+
+		[taskCell setTask:task withStatus:task.completionDate ? TASKSTATUS_COMPLETED : list.status];
+
+		cell = (UITableViewCell *)taskCell;
 	}
 
     return cell;
