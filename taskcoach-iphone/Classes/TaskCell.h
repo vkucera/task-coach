@@ -21,6 +21,6 @@
 @property (nonatomic, retain) IBOutlet UILabel *titleLabel;
 @property (nonatomic, retain) IBOutlet UILabel *infosLabel;
 
-- (void)setTask:(Task *)task withStatus:(NSInteger)status;
+- (void)setTask:(Task *)task;
 
 @end

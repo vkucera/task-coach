@@ -59,6 +59,29 @@ static Statement *_saveStatement = NULL;
 	[[self saveStatement] bindString:completionDate atIndex:6];
 }
 
+- (NSInteger)taskStatus
+{
+	char bf[4096]; // Gros bill :)
+	time_t tm;
+	time(&tm);
+	strftime(bf, 4096, "%Y-%m-%d", localtime(&tm));
+	NSString *now = [NSString stringWithUTF8String:bf];
+	
+	if (completionDate)
+		return TASKSTATUS_COMPLETED;
+	
+	if (dueDate && ([now compare:dueDate] == NSOrderedDescending))
+		return TASKSTATUS_OVERDUE;
+
+	if (dueDate && ([now compare:dueDate] == NSOrderedSame))
+		return TASKSTATUS_DUETODAY;
+	
+	if (startDate)
+		return TASKSTATUS_STARTED;
+	
+	return TASKSTATUS_NOTSTARTED;
+}
+
 // Overridden setters
 
 - (void)setDescription:(NSString *)descr

@@ -17,11 +17,11 @@
 @synthesize titleLabel;
 @synthesize infosLabel;
 
-- (void)setTask:(Task *)task withStatus:(NSInteger)status
+- (void)setTask:(Task *)task
 {
 	titleLabel.text = task.name;
 
-	switch (status)
+	switch ([task taskStatus])
 	{
 		case TASKSTATUS_OVERDUE:
 			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern"), task.dueDate];
@@ -41,7 +41,7 @@
 			break;
 	}
 	
-	switch (status)
+	switch ([task taskStatus])
 	{
 		case TASKSTATUS_OVERDUE:
 			leftImage.image = [UIImage imageNamed:@"ledred.png"];

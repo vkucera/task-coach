@@ -169,7 +169,7 @@
 		TaskList *list = [headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)];
 		Task *task = [list taskAtIndex:indexPath.row];
 
-		[taskCell setTask:task withStatus:task.completionDate ? TASKSTATUS_COMPLETED : list.status];
+		[taskCell setTask:task];
 
 		cell = (UITableViewCell *)taskCell;
 	}

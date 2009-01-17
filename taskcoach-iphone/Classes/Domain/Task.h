@@ -9,6 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "DomainObject.h"
 
+#define TASKSTATUS_OVERDUE           0
+#define TASKSTATUS_DUETODAY          1
+#define TASKSTATUS_STARTED           2
+#define TASKSTATUS_NOTSTARTED        3
+#define TASKSTATUS_COMPLETED         4
+
 @interface Task : DomainObject
 {
 	NSString *description;
@@ -23,5 +29,7 @@
 @property (nonatomic, retain) NSString *completionDate;
 
 - initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status description:(NSString *)description startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate;
+
+- (NSInteger)taskStatus;
 
 @end

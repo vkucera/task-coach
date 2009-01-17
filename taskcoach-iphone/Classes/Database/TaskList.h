@@ -11,12 +11,6 @@
 @class Statement;
 @class Task;
 
-#define TASKSTATUS_OVERDUE           0
-#define TASKSTATUS_DUETODAY          1
-#define TASKSTATUS_STARTED           2
-#define TASKSTATUS_NOTSTARTED        3
-#define TASKSTATUS_COMPLETED         4
-
 @interface TaskList : NSObject
 {
 	NSMutableArray *tasks;
