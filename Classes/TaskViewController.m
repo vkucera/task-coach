@@ -149,6 +149,8 @@
 
 	[cell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
 	[task release];
+
+	tapping = [indexPath retain];
 }
 
 #pragma mark Table view methods
@@ -271,6 +273,21 @@
 			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 		}
 	}
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (tapping && ([tapping isEqualTo:indexPath]))
+	{
+		[self.tableView deselectRowAtIndexPath:tapping animated:NO];
+		[tapping release];
+		tapping = nil;
+
+		return;
+	}
+
+	// XXXTODO
+	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

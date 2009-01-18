@@ -16,6 +16,7 @@
 
 	NSMutableArray *headers;
 	BOOL isBecomingEditable;
+	NSIndexPath *tapping;
 }
 
 - initWithTitle:(NSString *)title category:(NSInteger)categoryId;

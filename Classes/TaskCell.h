@@ -21,6 +21,8 @@
 	
 	id target;
 	SEL action;
+	
+	BOOL isTapping;
 }
 
 @property (nonatomic, readonly) NSInteger taskId;
