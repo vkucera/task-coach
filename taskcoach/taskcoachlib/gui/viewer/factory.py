@@ -46,16 +46,21 @@ class addViewers(object):
     def addViewers(self, viewerClass):
         numberOfViewersToAdd = self.numberOfViewersToAdd(viewerClass)
         for i in range(numberOfViewersToAdd):
-            viewerInstance = viewerClass(*self.viewerInitArgs)
+            viewerInstance = viewerClass(*self.viewerInitArgs, 
+                                         **self.viewerKwargs(viewerClass))
             self.viewerContainer.addViewer(viewerInstance)
     
     def numberOfViewersToAdd(self, viewerClass):
         return self.settings.getint('view', viewerClass.__name__.lower() + 'count')
 
+    def viewerKwargs(self, viewerClass):
+        return dict()
+    
 
 class addOneViewer(addViewers):
-    def __init__(self, viewerContainer, taskFile, settings, viewerClass):
+    def __init__(self, viewerContainer, taskFile, settings, viewerClass, **kwargs):
         self.viewerClass = viewerClass
+        self.kwargs = kwargs
         super(addOneViewer, self).__init__(viewerContainer, taskFile, settings)
         
     def numberOfViewersToAdd(self, viewerClass):
@@ -63,3 +68,6 @@ class addOneViewer(addViewers):
             return 1
         else:
             return 0
+        
+    def viewerKwargs(self, viewerClass):
+        return self.kwargs

@@ -397,6 +397,10 @@ class ViewViewerMenu(Menu):
                 ViewViewer(menuText=_('&Effort'),
                        helpText=_('Open a new tab with a viewer that displays efforts'),
                        viewerClass=viewer.EffortViewer, **kwargs))
+            viewViewerCommands.append(
+                uicommand.ViewEffortViewerForSelectedTask(menuText=_('Effort for &one task'),
+                        helpText=_('Open a new tab with a viewer that displays efforts for the selected task'),
+                        viewerClass=viewer.EffortViewer, **kwargs))
         if settings.getboolean('feature', 'notes'):
             viewViewerCommands.append(
                 ViewViewer(menuText=_('&Note'),
