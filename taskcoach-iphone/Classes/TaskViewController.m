@@ -277,7 +277,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (tapping && ([tapping isEqualTo:indexPath]))
+	if (tapping && ([tapping compare:indexPath] == NSOrderedSame))
 	{
 		[self.tableView deselectRowAtIndexPath:tapping animated:NO];
 		[tapping release];
