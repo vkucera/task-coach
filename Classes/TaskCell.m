@@ -7,18 +7,24 @@
 //
 
 #import "TaskCell.h"
+#import "CheckView.h"
 
 #import "Task.h"
 #import "TaskList.h"
 
 @implementation TaskCell
 
+@synthesize taskId;
 @synthesize leftImage;
 @synthesize titleLabel;
 @synthesize infosLabel;
 
-- (void)setTask:(Task *)task
+- (void)setTask:(Task *)task target:(id)theTarget action:(SEL)theAction
 {
+	taskId = task.objectId;
+	target = theTarget;
+	action = theAction;
+
 	titleLabel.text = task.name;
 
 	switch ([task taskStatus])
@@ -61,6 +67,8 @@
 		default:
 			break;
 	}
+	
+	[leftImage setTarget:self action:@selector(onTapImage)];
 }
 
 - (void)dealloc
@@ -70,6 +78,11 @@
 	[infosLabel release];
 
 	[super dealloc];
+}
+
+- (void)onTapImage
+{
+	[target performSelector:action withObject:self];
 }
 
 @end

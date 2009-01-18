@@ -41,6 +41,7 @@
 		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
 		A6DDF85D0F1F993800F35108 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DDF85B0F1F993800F35108 /* TaskView.xib */; };
+		A6EA679A0F2255E7004108B5 /* CheckView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6EA67990F2255E7004108B5 /* CheckView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -99,6 +100,8 @@
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
 		A6DDF85C0F1F993800F35108 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskView.xib; sourceTree = "<group>"; };
+		A6EA67980F2255E7004108B5 /* CheckView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckView.h; sourceTree = "<group>"; };
+		A6EA67990F2255E7004108B5 /* CheckView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +141,8 @@
 				A64603A60F2234B500FC71AD /* CellFactory.m */,
 				A64603A80F2234D900FC71AD /* TaskCell.h */,
 				A64603A90F2234D900FC71AD /* TaskCell.m */,
+				A6EA67980F2255E7004108B5 /* CheckView.h */,
+				A6EA67990F2255E7004108B5 /* CheckView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -347,6 +352,7 @@
 				A62760710F221EFC0041D761 /* String+Utils.m in Sources */,
 				A64603A70F2234B500FC71AD /* CellFactory.m in Sources */,
 				A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */,
+				A6EA679A0F2255E7004108B5 /* CheckView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
