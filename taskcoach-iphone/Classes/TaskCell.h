@@ -9,18 +9,25 @@
 #import <UIKit/UIKit.h>
 
 @class Task;
+@class CheckView;
 
 @interface TaskCell : UITableViewCell
 {
-	UIImageView *leftImage;
+	NSInteger taskId;
+
+	CheckView *leftImage;
 	UILabel *titleLabel;
 	UILabel *infosLabel;
+	
+	id target;
+	SEL action;
 }
 
-@property (nonatomic, retain) IBOutlet UIImageView *leftImage;
+@property (nonatomic, readonly) NSInteger taskId;
+@property (nonatomic, retain) IBOutlet CheckView *leftImage;
 @property (nonatomic, retain) IBOutlet UILabel *titleLabel;
 @property (nonatomic, retain) IBOutlet UILabel *infosLabel;
 
-- (void)setTask:(Task *)task;
+- (void)setTask:(Task *)task target:(id)target action:(SEL)action;
 
 @end

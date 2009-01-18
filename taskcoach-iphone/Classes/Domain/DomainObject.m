@@ -55,7 +55,7 @@ static Statement *_saveStatement = NULL;
 - (Statement *)saveStatement
 {
 	if (!_saveStatement)
-		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=? WHERE id=%d", [self class], objectId]] retain];
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=? WHERE id=?", [self class]]] retain];
 	return _saveStatement;
 }
 
@@ -66,8 +66,14 @@ static Statement *_saveStatement = NULL;
 	[req exec];
 }
 
+- (void)bindId
+{
+	[[self saveStatement] bindInteger:objectId atIndex:3];
+}
+
 - (void)bind
 {
+	[self bindId];
 	[[self saveStatement] bindString:name atIndex:1];
 	[[self saveStatement] bindInteger:status atIndex:2];
 }

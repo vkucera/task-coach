@@ -17,6 +17,8 @@
 
 #import "Task.h"
 
+#import "Configuration.h"
+
 @implementation TaskViewController
 
 - initWithTitle:(NSString *)theTitle category:(NSInteger)categoryId
@@ -102,6 +104,53 @@
 	}
 }
 
+- (void)onToggleTaskCompletion:(TaskCell *)cell
+{
+	NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+	NSInteger section, row;
+
+	section = indexPath.section;
+	row = indexPath.row;
+	if (self.editing)
+		section -= 1;
+
+	Task *task = [[[headers objectAtIndex:section] taskAtIndex:row] retain];
+
+	if ([task taskStatus] == TASKSTATUS_COMPLETED)
+	{
+		task.completionDate = nil;
+		[task save];
+	}
+	else
+	{
+		char bf[4096];
+		time_t tm;
+		time(&tm);
+		strftime(bf, 4096, "%Y-%m-%d", localtime(&tm));
+		task.completionDate = [NSString stringWithUTF8String:bf];
+		[task save];
+
+		if (![Configuration configuration].showCompleted)
+		{
+			TaskList *list = [headers objectAtIndex:section];
+			[list reload];
+			
+			if ([list count])
+			{
+				[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+			}
+			else
+			{
+				[headers removeObjectAtIndex:section];
+				[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+			}
+		}
+	}
+
+	[cell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
+	[task release];
+}
+
 #pragma mark Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -169,7 +218,7 @@
 		TaskList *list = [headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)];
 		Task *task = [list taskAtIndex:indexPath.row];
 
-		[taskCell setTask:task];
+		[taskCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
 
 		cell = (UITableViewCell *)taskCell;
 	}
