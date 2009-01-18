@@ -879,6 +879,18 @@ class ViewViewer(SettingsCommand, ViewerCommand):
         viewerCount = self.settings.getint('view', setting)
         self.settings.set('view', setting, str(viewerCount+1))
         
+        
+class ViewEffortViewerForSelectedTask(NeedsOneSelectedTask, SettingsCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        self.viewerClass = viewer.EffortViewer
+        self.taskFile = kwargs.pop('taskFile')
+        kwargs['bitmap'] = viewer.EffortViewer.defaultBitmap
+        super(ViewEffortViewerForSelectedTask, self).__init__(*args, **kwargs)
+        
+    def doCommand(self, event):
+        viewer.addOneViewer(self.viewer, self.taskFile, self.settings, 
+                            self.viewerClass, tasksToShowEffortFor=task.TaskList(self.viewer.curselection()))
+        
 
 class RenameViewer(ViewerCommand):
     def __init__(self, *args, **kwargs):
