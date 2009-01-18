@@ -116,14 +116,12 @@ class ObjectTest(test.TestCase):
     
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
-                              status=self.object.getStatus(),
-                              color=None), 
+                              status=self.object.getStatus(), color=None), 
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
-                        status=42,
-                        color=wx.RED)
+                        status=self.object.STATUS_DELETED, color=wx.RED)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
     

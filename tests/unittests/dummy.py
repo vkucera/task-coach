@@ -59,6 +59,9 @@ class DummyWidget(wx.Frame):
 
     def GetColumnWidth(self, column):
         return 100
+
+    def IsAutoResizing(self):
+        return False
         
     def showSort(self, *args, **kwargs):
         pass

@@ -22,6 +22,7 @@ import time
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 
+
 class SynchronizedObject(patterns.Observable):
     STATUS_NONE    = 0
     STATUS_NEW     = 1
@@ -30,7 +31,6 @@ class SynchronizedObject(patterns.Observable):
 
     def __init__(self, *args, **kwargs):
         self.__status = kwargs.pop('status', self.STATUS_NEW)
-        self.__frozenStatus = kwargs.pop('frozenStatus', False)
         super(SynchronizedObject, self).__init__(*args, **kwargs)
 
     def __getstate__(self):
@@ -58,46 +58,36 @@ class SynchronizedObject(patterns.Observable):
         elif state['status'] == self.STATUS_NONE:
             self.cleanDirty()
 
-    def freezeStatus(self):
-        self.__frozenStatus = True
-
-    def thawStatus(self):
-        self.__frozenStatus = False
-
     def getStatus(self):
         return self.__status
 
     def markDirty(self, force=False):
-        if not self.__frozenStatus:
-            oldstatus = self.__status
-            if self.__status == self.STATUS_NONE or force:
-                self.__status = self.STATUS_CHANGED
-                if oldstatus == self.STATUS_DELETED:
-                    self.notifyObservers(patterns.Event(self, 
-                        'object.marknotdeleted', self.__status))
+        oldstatus = self.__status
+        if self.__status == self.STATUS_NONE or force:
+            self.__status = self.STATUS_CHANGED
+            if oldstatus == self.STATUS_DELETED:
+                self.notifyObservers(patterns.Event(self, 
+                    'object.marknotdeleted', self.__status))
 
     def markNew(self):
-        if not self.__frozenStatus:
-            oldstatus = self.__status
-            self.__status = self.STATUS_NEW
-            if oldstatus == self.STATUS_DELETED:
-                self.notifyObservers(patterns.Event(self, 
-                     'object.marknotdeleted', self.__status))
+        oldstatus = self.__status
+        self.__status = self.STATUS_NEW
+        if oldstatus == self.STATUS_DELETED:
+            self.notifyObservers(patterns.Event(self, 
+                 'object.marknotdeleted', self.__status))
 
     def markDeleted(self):
-        if not self.__frozenStatus:
-            self.__status = self.STATUS_DELETED
-            self.notifyObservers(patterns.Event(self, 
-                'object.markdeleted', self.__status))
+        self.__status = self.STATUS_DELETED
+        self.notifyObservers(patterns.Event(self, 
+            'object.markdeleted', self.__status))
 
     def cleanDirty(self):
-        if not self.__frozenStatus:
-            oldstatus = self.__status
-            self.__status = self.STATUS_NONE
+        oldstatus = self.__status
+        self.__status = self.STATUS_NONE
 
-            if oldstatus == self.STATUS_DELETED:
-                self.notifyObservers(patterns.Event(self, 
-                     'object.marknotdeleted', self.__status))
+        if oldstatus == self.STATUS_DELETED:
+            self.notifyObservers(patterns.Event(self, 
+                 'object.marknotdeleted', self.__status))
 
     def isNew(self):
         return self.__status == self.STATUS_NEW
