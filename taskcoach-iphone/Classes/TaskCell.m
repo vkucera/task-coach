@@ -82,7 +82,20 @@
 
 - (void)onTapImage
 {
+	isTapping = YES;
 	[target performSelector:action withObject:self];
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+	if (isTapping)
+	{
+		isTapping = NO;
+	}
+	else
+	{
+		[super setSelected:selected animated:animated];
+	}
 }
 
 @end
