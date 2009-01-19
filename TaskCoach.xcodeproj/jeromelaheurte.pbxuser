@@ -96,8 +96,8 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 254069463;
-			PBXWorkspaceStateSaveDate = 254069463;
+			PBXPerProjectTemplateStateSaveDate = 254069855;
+			PBXWorkspaceStateSaveDate = 254069855;
 		};
 		perUserProjectItems = {
 			A626B6700F1E3451006D7C9D /* PBXTextBookmark */ = A626B6700F1E3451006D7C9D /* PBXTextBookmark */;
@@ -153,9 +153,6 @@
 			A68EE04E0F1E324800F51FF2 /* PBXTextBookmark */ = A68EE04E0F1E324800F51FF2 /* PBXTextBookmark */;
 			A68EE0530F1E324800F51FF2 /* PBXTextBookmark */ = A68EE0530F1E324800F51FF2 /* PBXTextBookmark */;
 			A69E418D0F24CB7800BB3EFE /* PBXTextBookmark */ = A69E418D0F24CB7800BB3EFE /* PBXTextBookmark */;
-			A69E418E0F24CB7800BB3EFE /* PBXTextBookmark */ = A69E418E0F24CB7800BB3EFE /* PBXTextBookmark */;
-			A69E418F0F24CB7800BB3EFE /* PBXTextBookmark */ = A69E418F0F24CB7800BB3EFE /* PBXTextBookmark */;
-			A69E41900F24CB7800BB3EFE /* PBXTextBookmark */ = A69E41900F24CB7800BB3EFE /* PBXTextBookmark */;
 			A6AE0B250F1E403B00A8760C /* PBXTextBookmark */ = A6AE0B250F1E403B00A8760C /* PBXTextBookmark */;
 			A6AE0B260F1E403B00A8760C /* PBXTextBookmark */ = A6AE0B260F1E403B00A8760C /* PBXTextBookmark */;
 			A6AEE78D0F21D3330061CF77 /* PBXTextBookmark */ = A6AEE78D0F21D3330061CF77 /* PBXTextBookmark */;
@@ -193,6 +190,8 @@
 			A6EA689A0F231B84004108B5 /* PBXTextBookmark */ = A6EA689A0F231B84004108B5 /* PBXTextBookmark */;
 			A6EA69320F232189004108B5 /* PBXTextBookmark */ = A6EA69320F232189004108B5 /* PBXTextBookmark */;
 			A6EA699D0F23260E004108B5 /* PBXTextBookmark */ = A6EA699D0F23260E004108B5 /* PBXTextBookmark */;
+			A6F344080F24CCCE0066F920 /* PBXTextBookmark */ = A6F344080F24CCCE0066F920 /* PBXTextBookmark */;
+			A6F344090F24CCCE0066F920 /* PBXTextBookmark */ = A6F344090F24CCCE0066F920 /* PBXTextBookmark */;
 			A6F8FC060F21E39E006C48AF /* PBXTextBookmark */ = A6F8FC060F21E39E006C48AF /* PBXTextBookmark */;
 			A6F8FC680F21E5B7006C48AF /* PBXTextBookmark */ = A6F8FC680F21E5B7006C48AF /* PBXTextBookmark */;
 			A6F8FC6A0F21E5B7006C48AF /* PBXTextBookmark */ = A6F8FC6A0F21E5B7006C48AF /* PBXTextBookmark */;
@@ -730,9 +729,9 @@
 	};
 	A68EDEF60F1E227500F51FF2 /* taskcoach.sql */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1119, 924}}";
-			sepNavSelRange = "{1314, 0}";
-			sepNavVisRange = "{287, 1863}";
+			sepNavIntBoundsRect = "{{0, 0}, {1122, 924}}";
+			sepNavSelRange = "{1389, 0}";
+			sepNavVisRange = "{286, 1940}";
 		};
 	};
 	A68EDF0F0F1E24AB00F51FF2 /* PlistBookmark */ = {
@@ -1019,36 +1018,6 @@
 		rType = 0;
 		vrLen = 1443;
 		vrLoc = 5494;
-	};
-	A69E418E0F24CB7800BB3EFE /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A68EDEF60F1E227500F51FF2 /* taskcoach.sql */;
-		name = "taskcoach.sql: 22";
-		rLen = 0;
-		rLoc = 361;
-		rType = 0;
-		vrLen = 1582;
-		vrLoc = 116;
-	};
-	A69E418F0F24CB7800BB3EFE /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */;
-		name = "TaskViewController.m: 260";
-		rLen = 0;
-		rLoc = 6316;
-		rType = 0;
-		vrLen = 1443;
-		vrLoc = 5494;
-	};
-	A69E41900F24CB7800BB3EFE /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A68EDEF60F1E227500F51FF2 /* taskcoach.sql */;
-		name = "taskcoach.sql: 47";
-		rLen = 0;
-		rLoc = 1314;
-		rType = 0;
-		vrLen = 1863;
-		vrLoc = 287;
 	};
 	A6AB32DA0F2219D3002EA062 /* DomainObject.m */ = {
 		isa = PBXFileReference;
@@ -1559,6 +1528,26 @@
 		rType = 0;
 		vrLen = 736;
 		vrLoc = 0;
+	};
+	A6F344080F24CCCE0066F920 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A68EDEF60F1E227500F51FF2 /* taskcoach.sql */;
+		name = "taskcoach.sql: 47";
+		rLen = 0;
+		rLoc = 1390;
+		rType = 0;
+		vrLen = 1864;
+		vrLoc = 286;
+	};
+	A6F344090F24CCCE0066F920 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A68EDEF60F1E227500F51FF2 /* taskcoach.sql */;
+		name = "taskcoach.sql: 47";
+		rLen = 0;
+		rLoc = 1389;
+		rType = 0;
+		vrLen = 1940;
+		vrLoc = 286;
 	};
 	A6F8FBE80F21E1BE006C48AF /* Network.m */ = {
 		isa = PBXFileReference;
