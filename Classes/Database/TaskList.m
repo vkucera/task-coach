@@ -36,7 +36,8 @@
 							   description:[dict objectForKey:@"description"]
 							   startDate:[dict objectForKey:@"startDate"]
 							   dueDate:[dict objectForKey:@"dueDate"]
-						       completionDate:[dict objectForKey:@"completionDate"]];
+						       completionDate:[dict objectForKey:@"completionDate"]
+							   category:[dict objectForKey:@"categoryId"]];
 	[tasks addObject:task];
 	[task release];
 }

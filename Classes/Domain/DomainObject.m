@@ -80,6 +80,13 @@ static Statement *_saveStatement = NULL;
 
 - (void)save
 {
+	if (objectId == -1)
+	{
+		Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO %@ (name) VALUES ('')", [self class]]];
+		[req exec];
+		objectId = [[Database connection] lastRowID];
+	}
+
 	[self bind];
 	[[self saveStatement] exec];
 }
