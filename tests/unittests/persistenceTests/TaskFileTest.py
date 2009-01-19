@@ -177,7 +177,7 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterNewNoteAdded(self):
-        newNote = note.Note('Note')
+        newNote = note.Note(subject='Note')
         self.emptyTaskFile.notes().append(newNote)
         self.failUnless(self.emptyTaskFile.needSave())
     
@@ -498,7 +498,7 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         
     def testSaveAndLoad(self):
         self.saveAndLoad([task.Task(subject='ABC'), 
-            task.Task(duedate=date.Tomorrow())])
+            task.Task(dueDate=date.Tomorrow())])
 
     def testSaveAndLoadTaskWithChild(self):
         parentTask = task.Task()
@@ -575,7 +575,7 @@ class TaskFileMergeTest(TaskFileTestCase):
                          list(self.taskFile.categories())[0].categorizables()[0].id())
                          
     def testMerge_Notes(self):
-        newNote = note.Note('new note')
+        newNote = note.Note(subject='new note')
         self.mergeFile.notes().append(newNote)
         self.merge()
         self.assertEqual(2, len(self.taskFile.notes()))

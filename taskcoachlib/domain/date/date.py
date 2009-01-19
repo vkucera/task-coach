@@ -25,9 +25,6 @@ minimumDate = datetime.date.min
     
 class RealDate(datetime.date):
 
-    def __init__(self, year, month, day):
-        super(RealDate, self).__init__(year, month, day)
-
     def weekday(self):
         return self.isoweekday()
 

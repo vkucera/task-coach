@@ -191,13 +191,13 @@ class NewTaskTest(TaskEditorTestCase):
         self.failUnless(self.errorMessage.startswith(errorMessageStart))
 
     def testAddNote(self):
-        self.editor[0][5].notes.append(note.Note('New note'))
+        self.editor[0][5].notes.append(note.Note(subject='New note'))
         self.editor.ok()
         self.assertEqual(1, len(self.task.notes()))
         
     def testAddNoteWithSubnote(self):
-        parent = note.Note('New note')
-        child = note.Note('Child')
+        parent = note.Note(subject='New note')
+        child = note.Note(subject='Child')
         parent.addChild(child)
         child.setParent(parent)
         self.editor[0][5].notes.extend([parent, child])

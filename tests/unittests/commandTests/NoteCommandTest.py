@@ -61,7 +61,7 @@ class AddNoteCommandTest(NoteCommandTestCase):
 class NewSubNoteCommandTest(NoteCommandTestCase):
     def setUp(self):
         super(NewSubNoteCommandTest, self).setUp()
-        self.note = note.Note('Note')
+        self.note = note.Note(subject='Note')
         self.notes.append(self.note)
         
     def newSubNote(self, notes=None):
@@ -108,9 +108,9 @@ class EditNoteCommandTest(NoteCommandTestCase):
 class DragAndDropNoteCommand(NoteCommandTestCase):
     def setUp(self):
         super(DragAndDropNoteCommand, self).setUp()
-        self.parent = note.Note('parent')
-        self.child = note.Note('child')
-        self.grandchild = note.Note('grandchild')
+        self.parent = note.Note(subject='parent')
+        self.child = note.Note(subject='child')
+        self.grandchild = note.Note(subject='grandchild')
         self.parent.addChild(self.child)
         self.child.addChild(self.grandchild)
         self.notes.extend([self.parent])
