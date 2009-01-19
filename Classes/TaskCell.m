@@ -26,6 +26,7 @@
 	action = theAction;
 
 	titleLabel.text = task.name;
+	infosLabel.text = @"";
 
 	switch ([task taskStatus])
 	{
@@ -35,15 +36,14 @@
 		case TASKSTATUS_OVERDUE:
 			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern"), task.dueDate];
 			break;
+		case TASKSTATUS_DUETODAY:
+			if (task.startDate)
+				infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Started %@", @"Started date infos pattern"), task.startDate];
+			break;
 		case TASKSTATUS_STARTED:
 		case TASKSTATUS_NOTSTARTED:
-			if ([task dueDate])
+			if (task.dueDate)
 				infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern (started/not started)"), task.dueDate];
-			else
-				infosLabel.text = @"";
-			break;
-		default:
-			infosLabel.text = @"";
 			break;
 	}
 	
