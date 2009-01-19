@@ -13,6 +13,7 @@
 @interface TaskViewController : UITableViewController
 {
 	NSString *title;
+	NSInteger categoryId;
 
 	NSMutableArray *headers;
 	BOOL isBecomingEditable;

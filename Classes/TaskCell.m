@@ -29,11 +29,11 @@
 
 	switch ([task taskStatus])
 	{
+		case TASKSTATUS_COMPLETED:
+			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Completed %@", @"Completed date infos patter"), task.completionDate];
+			break;
 		case TASKSTATUS_OVERDUE:
 			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern"), task.dueDate];
-			break;
-		case TASKSTATUS_DUETODAY:
-			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Started %@", @"Start date infos pattern"), task.startDate];
 			break;
 		case TASKSTATUS_STARTED:
 		case TASKSTATUS_NOTSTARTED:
@@ -49,6 +49,9 @@
 	
 	switch ([task taskStatus])
 	{
+		case TASKSTATUS_COMPLETED:
+			leftImage.image = [UIImage imageNamed:@"ledgreen.png"];
+			break;
 		case TASKSTATUS_OVERDUE:
 			leftImage.image = [UIImage imageNamed:@"ledred.png"];
 			break;
@@ -60,9 +63,6 @@
 			break;
 		case TASKSTATUS_NOTSTARTED:
 			leftImage.image = [UIImage imageNamed:@"ledgrey.png"];
-			break;
-		case TASKSTATUS_COMPLETED:
-			leftImage.image = [UIImage imageNamed:@"ledgreen.png"];
 			break;
 		default:
 			break;

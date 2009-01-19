@@ -7,6 +7,7 @@
 //
 
 #import "TaskViewController.h"
+#import "TaskDetailsController.h"
 
 #import "TaskCell.h"
 #import "CellFactory.h"
@@ -21,42 +22,50 @@
 
 @implementation TaskViewController
 
-- initWithTitle:(NSString *)theTitle category:(NSInteger)categoryId
+- (void)loadData
+{
+	[headers release];
+	
+	TaskList *list;
+	headers = [[NSMutableArray alloc] initWithCapacity:4];
+	
+	list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:NSLocalizedString(@"Overdue", @"Overdue task title") status:TASKSTATUS_OVERDUE];
+	if ([list count])
+	{
+		[headers addObject:list];
+	}
+	[list release];
+	
+	list = [[TaskList alloc] initWithView:@"DueTodayTask" category:categoryId title:NSLocalizedString(@"Due today", @"Due today task title") status:TASKSTATUS_DUETODAY];
+	if ([list count])
+	{
+		[headers addObject:list];
+	}
+	[list release];
+	
+	list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:NSLocalizedString(@"Started", @"Started task title") status:TASKSTATUS_STARTED];
+	if ([list count])
+	{
+		[headers addObject:list];
+	}
+	[list release];
+	
+	list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:NSLocalizedString(@"Not started", @"Not started task title") status:TASKSTATUS_NOTSTARTED];
+	if ([list count])
+	{
+		[headers addObject:list];
+	}
+	[list release];
+}
+
+- initWithTitle:(NSString *)theTitle category:(NSInteger)theId
 {
 	if (self = [super initWithNibName:@"TaskView" bundle:[NSBundle mainBundle]])
 	{
 		title = [theTitle retain];
-		
-		TaskList *list;
-		headers = [[NSMutableArray alloc] initWithCapacity:4];
-		
-		list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:NSLocalizedString(@"Overdue", @"Overdue task title") status:TASKSTATUS_OVERDUE];
-		if ([list count])
-		{
-			[headers addObject:list];
-		}
-		[list release];
+		categoryId = theId;
 
-		list = [[TaskList alloc] initWithView:@"DueTodayTask" category:categoryId title:NSLocalizedString(@"Due today", @"Due today task title") status:TASKSTATUS_DUETODAY];
-		if ([list count])
-		{
-			[headers addObject:list];
-		}
-		[list release];
-
-		list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:NSLocalizedString(@"Started", @"Started task title") status:TASKSTATUS_STARTED];
-		if ([list count])
-		{
-			[headers addObject:list];
-		}
-		[list release];
-
-		list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:NSLocalizedString(@"Not started", @"Not started task title") status:TASKSTATUS_NOTSTARTED];
-		if ([list count])
-		{
-			[headers addObject:list];
-		}
-		[list release];
+		[self loadData];
 	}
 	
 	return self;
@@ -66,6 +75,12 @@
 {
 	self.navigationItem.title = title;
 	self.navigationItem.rightBarButtonItem = [self editButtonItem];
+}
+
+- (void)childWasPopped
+{
+	[self loadData];
+	[self.tableView reloadData];
 }
 
 - (void)dealloc
@@ -123,11 +138,7 @@
 	}
 	else
 	{
-		char bf[4096];
-		time_t tm;
-		time(&tm);
-		strftime(bf, 4096, "%Y-%m-%d", localtime(&tm));
-		task.completionDate = [NSString stringWithUTF8String:bf];
+		[task setCompleted:YES];
 		[task save];
 
 		if (![Configuration configuration].showCompleted)
@@ -137,12 +148,12 @@
 			
 			if ([list count])
 			{
-				[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+				[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
 			}
 			else
 			{
 				[headers removeObjectAtIndex:section];
-				[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+				[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationBottom];
 			}
 		}
 	}
@@ -286,8 +297,10 @@
 		return;
 	}
 
-	// XXXTODO
-	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:indexPath.row];
+	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
+	[self.navigationController pushViewController:ctrl animated:YES];
+	[ctrl release];
 }
 
 @end

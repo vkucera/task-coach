@@ -87,6 +87,15 @@ static Statement *_saveStatement = NULL;
 	return TASKSTATUS_NOTSTARTED;
 }
 
+- (void)setCompleted:(BOOL)completed
+{
+	char bf[4096];
+	time_t tm;
+	time(&tm);
+	strftime(bf, 4096, "%Y-%m-%d", localtime(&tm));
+	self.completionDate = [NSString stringWithUTF8String:bf];
+}
+
 // Overridden setters
 
 - (void)setDescription:(NSString *)descr

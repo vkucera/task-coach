@@ -37,6 +37,14 @@
 		A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */; };
 		A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
+		A6D384560F247DDF0097F0F6 /* TaskDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */; };
+		A6D384610F247E910097F0F6 /* TaskDetails.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D384600F247E910097F0F6 /* TaskDetails.xib */; };
+		A6D3846C0F2481C80097F0F6 /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */; };
+		A6D384780F24830F0097F0F6 /* TextFieldCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D384770F24830F0097F0F6 /* TextFieldCell.xib */; };
+		A6D385540F24A0E20097F0F6 /* SwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D385530F24A0E20097F0F6 /* SwitchCell.m */; };
+		A6D385630F24A2330097F0F6 /* SwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D385620F24A2330097F0F6 /* SwitchCell.xib */; };
+		A6D3862F0F24B02A0097F0F6 /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */; };
+		A6D3868A0F24B4450097F0F6 /* DatePickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D386880F24B4450097F0F6 /* DatePickerView.xib */; };
 		A6D8AC030F221BFA006894AA /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A6D8AC020F221BFA006894AA /* Settings.bundle */; };
 		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
@@ -64,7 +72,7 @@
 		A64603A60F2234B500FC71AD /* CellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellFactory.m; sourceTree = "<group>"; };
 		A64603A80F2234D900FC71AD /* TaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCell.h; sourceTree = "<group>"; };
 		A64603A90F2234D900FC71AD /* TaskCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCell.m; sourceTree = "<group>"; };
-		A64603D30F2235DA00FC71AD /* TaskCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCell.xib; sourceTree = "<group>"; };
+		A64603D30F2235DA00FC71AD /* TaskCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = TaskCell.xib; path = ../TaskCell.xib; sourceTree = "<group>"; };
 		A64604900F223FC500FC71AD /* ledblue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledblue.png; sourceTree = "<group>"; };
 		A64604910F223FC500FC71AD /* ledgreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledgreen.png; sourceTree = "<group>"; };
 		A64604920F223FC500FC71AD /* ledgrey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledgrey.png; sourceTree = "<group>"; };
@@ -94,6 +102,18 @@
 		A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringChoiceController.m; sourceTree = "<group>"; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
 		A6AEE77E0F21CFA00061CF77 /* Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Network.m; path = Network/Network.m; sourceTree = "<group>"; };
+		A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsController.h; sourceTree = "<group>"; };
+		A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsController.m; sourceTree = "<group>"; };
+		A6D384600F247E910097F0F6 /* TaskDetails.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetails.xib; sourceTree = "<group>"; };
+		A6D3846A0F2481C80097F0F6 /* TextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldCell.h; sourceTree = "<group>"; };
+		A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldCell.m; sourceTree = "<group>"; };
+		A6D384770F24830F0097F0F6 /* TextFieldCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = TextFieldCell.xib; path = ../TextFieldCell.xib; sourceTree = "<group>"; };
+		A6D385520F24A0E20097F0F6 /* SwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchCell.h; sourceTree = "<group>"; };
+		A6D385530F24A0E20097F0F6 /* SwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchCell.m; sourceTree = "<group>"; };
+		A6D385620F24A2330097F0F6 /* SwitchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SwitchCell.xib; path = ../SwitchCell.xib; sourceTree = "<group>"; };
+		A6D3862D0F24B02A0097F0F6 /* DatePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerViewController.h; sourceTree = "<group>"; };
+		A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerViewController.m; sourceTree = "<group>"; };
+		A6D386890F24B4450097F0F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6D8AC020F221BFA006894AA /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		A6DDF84E0F1F974000F35108 /* TaskList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskList.h; path = Database/TaskList.h; sourceTree = "<group>"; };
 		A6DDF84F0F1F974000F35108 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskList.m; path = Database/TaskList.m; sourceTree = "<group>"; };
@@ -122,6 +142,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A6D386B40F24C12E0097F0F6 /* Cells */,
 				A627606E0F221EEC0041D761 /* Utils */,
 				A627605B0F221CF20041D761 /* Config */,
 				A6AEE7750F21CF4A0061CF77 /* Network */,
@@ -137,12 +158,12 @@
 				A6DDF8530F1F988600F35108 /* TaskViewController.m */,
 				A673ABF40F2203D000E548BB /* NavigationController.h */,
 				A673ABF50F2203D000E548BB /* NavigationController.m */,
-				A64603A50F2234B500FC71AD /* CellFactory.h */,
-				A64603A60F2234B500FC71AD /* CellFactory.m */,
-				A64603A80F2234D900FC71AD /* TaskCell.h */,
-				A64603A90F2234D900FC71AD /* TaskCell.m */,
 				A6EA67980F2255E7004108B5 /* CheckView.h */,
 				A6EA67990F2255E7004108B5 /* CheckView.m */,
+				A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */,
+				A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */,
+				A6D3862D0F24B02A0097F0F6 /* DatePickerViewController.h */,
+				A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -167,7 +188,8 @@
 				A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */,
 				A6DDF85B0F1F993800F35108 /* TaskView.xib */,
 				A6D8AC020F221BFA006894AA /* Settings.bundle */,
-				A64603D30F2235DA00FC71AD /* TaskCell.xib */,
+				A6D384600F247E910097F0F6 /* TaskDetails.xib */,
+				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -263,6 +285,24 @@
 			name = Network;
 			sourceTree = "<group>";
 		};
+		A6D386B40F24C12E0097F0F6 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A64603A50F2234B500FC71AD /* CellFactory.h */,
+				A64603A60F2234B500FC71AD /* CellFactory.m */,
+				A64603A80F2234D900FC71AD /* TaskCell.h */,
+				A64603A90F2234D900FC71AD /* TaskCell.m */,
+				A64603D30F2235DA00FC71AD /* TaskCell.xib */,
+				A6D3846A0F2481C80097F0F6 /* TextFieldCell.h */,
+				A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */,
+				A6D384770F24830F0097F0F6 /* TextFieldCell.xib */,
+				A6D385520F24A0E20097F0F6 /* SwitchCell.h */,
+				A6D385530F24A0E20097F0F6 /* SwitchCell.m */,
+				A6D385620F24A2330097F0F6 /* SwitchCell.xib */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -324,6 +364,10 @@
 				A64604970F223FC500FC71AD /* ledgrey.png in Resources */,
 				A64604980F223FC500FC71AD /* ledorange.png in Resources */,
 				A64604990F223FC500FC71AD /* ledred.png in Resources */,
+				A6D384610F247E910097F0F6 /* TaskDetails.xib in Resources */,
+				A6D384780F24830F0097F0F6 /* TextFieldCell.xib in Resources */,
+				A6D385630F24A2330097F0F6 /* SwitchCell.xib in Resources */,
+				A6D3868A0F24B4450097F0F6 /* DatePickerView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,6 +397,10 @@
 				A64603A70F2234B500FC71AD /* CellFactory.m in Sources */,
 				A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */,
 				A6EA679A0F2255E7004108B5 /* CheckView.m in Sources */,
+				A6D384560F247DDF0097F0F6 /* TaskDetailsController.m in Sources */,
+				A6D3846C0F2481C80097F0F6 /* TextFieldCell.m in Sources */,
+				A6D385540F24A0E20097F0F6 /* SwitchCell.m in Sources */,
+				A6D3862F0F24B02A0097F0F6 /* DatePickerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +421,14 @@
 				A68EDF850F1E2A6D00F51FF2 /* en */,
 			);
 			name = StringChoice.xib;
+			sourceTree = "<group>";
+		};
+		A6D386880F24B4450097F0F6 /* DatePickerView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A6D386890F24B4450097F0F6 /* en */,
+			);
+			name = DatePickerView.xib;
 			sourceTree = "<group>";
 		};
 		A6DDF85B0F1F993800F35108 /* TaskView.xib */ = {

@@ -9,16 +9,24 @@
 #import <Foundation/Foundation.h>
 
 @class TaskCell;
+@class TextFieldCell;
+@class SwitchCell;
 
 @interface CellFactory : NSObject
 {
 	TaskCell *taskCellTemplate;
+	TextFieldCell *textFieldCellTemplate;
+	SwitchCell *switchCellTemplate;
 }
 
 @property (nonatomic, assign) IBOutlet TaskCell *taskCellTemplate;
+@property (nonatomic, assign) IBOutlet TextFieldCell *textFieldCellTemplate;
+@property (nonatomic, assign) IBOutlet SwitchCell *switchCellTemplate;
 
 + (CellFactory *)cellFactory;
 
 - (TaskCell *)createTaskCell;
+- (TextFieldCell *)createTextFieldCell;
+- (SwitchCell *)createSwitchCell;
 
 @end
