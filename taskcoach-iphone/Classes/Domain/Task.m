@@ -11,6 +11,8 @@
 #import "Database.h"
 #import "Statement.h"
 
+#import "DateUtils.h"
+
 static Statement *_saveStatement = NULL;
 
 @implementation Task
@@ -75,11 +77,7 @@ static Statement *_saveStatement = NULL;
 
 - (NSInteger)taskStatus
 {
-	char bf[4096]; // Gros bill :)
-	time_t tm;
-	time(&tm);
-	strftime(bf, 4096, "%Y-%m-%d", localtime(&tm));
-	NSString *now = [NSString stringWithUTF8String:bf];
+	NSString *now = [[DateUtils instance] stringFromDate:[NSDate date]];
 	
 	if (completionDate)
 		return TASKSTATUS_COMPLETED;
@@ -98,11 +96,7 @@ static Statement *_saveStatement = NULL;
 
 - (void)setCompleted:(BOOL)completed
 {
-	char bf[4096];
-	time_t tm;
-	time(&tm);
-	strftime(bf, 4096, "%Y-%m-%d", localtime(&tm));
-	self.completionDate = [NSString stringWithUTF8String:bf];
+	self.completionDate = [[DateUtils instance] stringFromDate:[NSDate date]];
 }
 
 // Overridden setters

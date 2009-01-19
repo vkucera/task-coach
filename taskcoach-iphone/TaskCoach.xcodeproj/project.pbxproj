@@ -36,6 +36,7 @@
 		A68EDF450F1E275700F51FF2 /* DomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF430F1E275700F51FF2 /* DomainObject.m */; };
 		A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */; };
 		A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */; };
+		A692198F0F24CDEA0010D2BA /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A692198E0F24CDEA0010D2BA /* DateUtils.m */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
 		A6D384560F247DDF0097F0F6 /* TaskDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */; };
 		A6D384610F247E910097F0F6 /* TaskDetails.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D384600F247E910097F0F6 /* TaskDetails.xib */; };
@@ -100,6 +101,8 @@
 		A68EDF850F1E2A6D00F51FF2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringChoiceController.h; sourceTree = "<group>"; };
 		A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringChoiceController.m; sourceTree = "<group>"; };
+		A692198D0F24CDEA0010D2BA /* DateUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateUtils.h; path = Domain/DateUtils.h; sourceTree = "<group>"; };
+		A692198E0F24CDEA0010D2BA /* DateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateUtils.m; path = Domain/DateUtils.m; sourceTree = "<group>"; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
 		A6AEE77E0F21CFA00061CF77 /* Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Network.m; path = Network/Network.m; sourceTree = "<group>"; };
 		A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsController.h; sourceTree = "<group>"; };
@@ -272,6 +275,8 @@
 				A68EDF410F1E275700F51FF2 /* Category.m */,
 				A68EDF420F1E275700F51FF2 /* DomainObject.h */,
 				A68EDF430F1E275700F51FF2 /* DomainObject.m */,
+				A692198D0F24CDEA0010D2BA /* DateUtils.h */,
+				A692198E0F24CDEA0010D2BA /* DateUtils.m */,
 			);
 			name = Domain;
 			sourceTree = "<group>";
@@ -401,6 +406,7 @@
 				A6D3846C0F2481C80097F0F6 /* TextFieldCell.m in Sources */,
 				A6D385540F24A0E20097F0F6 /* SwitchCell.m in Sources */,
 				A6D3862F0F24B02A0097F0F6 /* DatePickerViewController.m in Sources */,
+				A692198F0F24CDEA0010D2BA /* DateUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

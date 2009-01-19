@@ -14,6 +14,8 @@
 #import "CellFactory.h"
 #import "TextFieldCell.h"
 
+#import "DateUtils.h"
+
 //======================================================================
 
 @implementation TaskDetailsController
@@ -156,10 +158,7 @@
 	
 	if (date)
 	{
-		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-		[formatter setDateFormat:@"yyyy-MM-dd"];
-		task.startDate = [formatter stringFromDate:date];
-		[formatter release];
+		task.startDate = [[DateUtils instance] stringFromDate:date];
 	}
 	else if (!task.startDate)
 	{
@@ -179,10 +178,7 @@
 	
 	if (date)
 	{
-		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-		[formatter setDateFormat:@"yyyy-MM-dd"];
-		task.dueDate = [formatter stringFromDate:date];
-		[formatter release];
+		task.dueDate = [[DateUtils instance] stringFromDate:date];
 	}
 	else if (!task.dueDate)
 	{
