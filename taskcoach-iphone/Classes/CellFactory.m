@@ -9,12 +9,16 @@
 #import "CellFactory.h"
 
 #import "TaskCell.h"
+#import "TextFieldCell.h"
+#import "SwitchCell.h"
 
 static CellFactory *_cellFactory = NULL;
 
 @implementation CellFactory
 
 @synthesize taskCellTemplate;
+@synthesize textFieldCellTemplate;
+@synthesize switchCellTemplate;
 
 + (CellFactory *)cellFactory
 {
@@ -27,6 +31,18 @@ static CellFactory *_cellFactory = NULL;
 {
 	[[NSBundle mainBundle] loadNibNamed:@"TaskCell" owner:self options:nil];
 	return [taskCellTemplate retain];
+}
+
+- (TextFieldCell *)createTextFieldCell
+{
+	[[NSBundle mainBundle] loadNibNamed:@"TextFieldCell" owner:self options:nil];
+	return textFieldCellTemplate;
+}
+
+- (SwitchCell *)createSwitchCell
+{
+	[[NSBundle mainBundle] loadNibNamed:@"SwitchCell" owner:self options:nil];
+	return switchCellTemplate;
 }
 
 @end

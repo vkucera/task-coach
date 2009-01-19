@@ -31,5 +31,6 @@
 - initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status description:(NSString *)description startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate;
 
 - (NSInteger)taskStatus;
+- (void)setCompleted:(BOOL)completed;
 
 @end
