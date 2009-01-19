@@ -20,7 +20,7 @@ import wx
 import test
 from unittests import dummy
 from taskcoachlib import gui, config, persistence
-from taskcoachlib.domain import task, effort, category, note, date
+from taskcoachlib.domain import task, effort, category, note, date, attachment
 
 
 class UICommandTest(test.wxTestCase):
@@ -238,3 +238,24 @@ class EffortViewerAggregationChoiceTest(test.TestCase):
                          self.choice.choiceCtrl.GetStringSelection())
         self.assertEqual(2, self.choice.currentChoice)
 
+
+class OpenAllAttachmentsTest(test.TestCase):
+    def setUp(self):
+        settings = config.Settings(load=False)
+        self.viewer = DummyViewer([task.Task()])
+        self.openAll = gui.uicommand.OpenAllAttachments(settings=settings, 
+                                                        viewer=self.viewer)
+
+    def showerror(self, *args, **kwargs):
+        self.errorArgs = args
+        self.errorKwargs = kwargs
+        
+    def testNoAttachments(self):
+        self.openAll.doCommand(None)
+        
+    def testNonexistingAttachment(self):
+        self.viewer.selection[0].addAttachment(attachment.FileAttachment('Attachment'))
+        self.openAll.doCommand(None, showerror=self.showerror)
+        # Don't test the error message itself, it differs per platform
+        self.assertEqual(dict(caption='Error opening attachment',
+                              style=wx.ICON_ERROR), self.errorKwargs)

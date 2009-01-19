@@ -1626,7 +1626,7 @@ class OpenAllAttachments(NeedsSelectionWithAttachments, ViewerCommand,
            menuText=_('&Open all attachments'), 
            bitmap='attachment', *args, **kwargs)
         
-    def doCommand(self, event):
+    def doCommand(self, event, showerror=wx.MessageBox):
         base = self.settings.get('file', 'attachmentbase')
         for item in self.viewer.curselection():
             for attachment in item.attachments():

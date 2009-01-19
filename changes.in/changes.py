@@ -32,7 +32,9 @@ adding a subtask with a fixed fee.''', '2467347'),
         Bug('''Mark task file dirty when the user edits a task color.'''),
         Bug('''Update the hourly fee column in the task viewer when the 
 the user edits the hourly fee of a task.'''),
-        Bug('''Make it possible to add an effort record to a new task.''')
+        Bug('''Make it possible to add an effort record to a new task.'''),
+        Bug('''When opening all attachments of an item, give an error message
+for each attachment that cannot be opened.''')
         ]
     ),
 
