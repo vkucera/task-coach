@@ -248,15 +248,7 @@ class SquareMap( wx.Panel ):
         dc.SetBrush( self.BrushForNode( node, depth ) )
         dc.SetPen( self.PenForNode( node, depth ) )
         dc.DrawRoundedRectangle( x,y,w,h, self.padding *3 )
-        icon = self.adapter.icon(node, node==self.selectedNode)
-        if icon and h >= icon.GetHeight() and w >= icon.GetWidth():
-            iconWidth = icon.GetWidth() + 2
-            dc.DrawIcon(icon, x+2, y+2) 
-        else:
-            iconWidth = 0
-        if self.labels and h >= dc.GetTextExtent('ABC')[1]:
-            dc.SetTextForeground(self.TextForegroundForNode(node, depth))
-            dc.DrawText(self.adapter.label(node), x + iconWidth + 2, y+2)
+        self.DrawIconAndLabel(dc, node, x, y, w, h, depth)
         children_hot_map = []
         hot_map.append( (wx.Rect( int(x),int(y),int(w),int(h)), node, children_hot_map ) )
         x += self.padding
@@ -275,7 +267,21 @@ class SquareMap( wx.Panel ):
             children = self.adapter.children( node )
             if children:
                 self.LayoutChildren( dc, children, node, x,y,w,h, children_hot_map, depth+1 )
-
+                
+    def DrawIconAndLabel(self, dc, node, x, y, w, h, depth):
+        ''' Draw the icon, if any, and the label, if any, of the node. '''
+        dc.SetClippingRegion(x+1, y+1, w-2, h-2) # Don't draw outside the box
+        icon = self.adapter.icon(node, node==self.selectedNode)
+        if icon and h >= icon.GetHeight() and w >= icon.GetWidth():
+            iconWidth = icon.GetWidth() + 2
+            dc.DrawIcon(icon, x+2, y+2) 
+        else:
+            iconWidth = 0
+        if self.labels and h >= dc.GetTextExtent('ABC')[1]:
+            dc.SetTextForeground(self.TextForegroundForNode(node, depth))
+            dc.DrawText(self.adapter.label(node), x + iconWidth + 2, y+2)
+        dc.DestroyClippingRegion()
+        
     def LayoutChildren( self, dc, children, parent, x,y,w,h, hot_map, depth=0 ):
         """Layout the set of children in the given rectangle"""
         nodes = [ (self.adapter.value(node,parent),node) for node in children ]
@@ -299,6 +305,7 @@ class SquareMap( wx.Panel ):
                 y += new_h 
             if rest:
                 self.LayoutChildren( dc, rest, parent, x,y,w,h, hot_map, depth )
+
 
 class DefaultAdapter( object ):
     """Default adapter class for adapting node-trees to SquareMap API"""
