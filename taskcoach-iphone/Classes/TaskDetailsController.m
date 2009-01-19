@@ -22,7 +22,7 @@
 {
 	if (self = [super initWithNibName:@"TaskDetails" bundle:[NSBundle mainBundle]])
 	{
-		task = theTask;
+		task = [theTask retain];
 		cells = [[NSMutableArray alloc] initWithCapacity:5];
 
 		SwitchCell *completeCell = [[CellFactory cellFactory] createSwitchCell];
@@ -72,6 +72,7 @@
 
 - (void)dealloc
 {
+	[task release];
 	[cells release];
 	[startDateValueCell release];
 	[dueDateValueCell release];
@@ -81,7 +82,17 @@
 
 - (void)viewDidLoad
 {
-	self.navigationItem.title = task.name;
+	if (task.objectId == -1)
+	{
+		// New task.
+		TextFieldCell *cell = [cells objectAtIndex:1];
+		[cell.textField becomeFirstResponder];
+		self.navigationItem.title = NSLocalizedString(@"New task", @"New task editing title");
+	}
+	else
+	{
+		self.navigationItem.title = task.name;
+	}
 }
 
 - (void)onSwitchValueChanged:(SwitchCell *)cell
@@ -237,6 +248,7 @@
 		task.name = textField.text;
 		[task save];
 		[textField resignFirstResponder];
+		self.navigationItem.title = task.name;
 
 		return YES;
 	}
