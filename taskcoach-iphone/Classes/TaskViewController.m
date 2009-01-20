@@ -241,13 +241,19 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	NSLog(@"Editing: %d; indexPath=%@\n", isBecomingEditable, indexPath); // XXXTMP
+
 	if (isBecomingEditable)
 	{
-		isBecomingEditable = NO;
+		if ((indexPath.section == 0) && (indexPath.row == 0))
+		{
+			isBecomingEditable = NO;
+		}
+
 		return UITableViewCellEditingStyleDelete;
 	}
 
-	return indexPath.section ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleInsert;
+	return ((indexPath.section != 0) || (indexPath.row != 0)) ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleInsert;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
