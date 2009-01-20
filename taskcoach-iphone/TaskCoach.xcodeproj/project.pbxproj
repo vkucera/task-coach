@@ -17,7 +17,6 @@
 		A62760710F221EFC0041D761 /* String+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A62760700F221EFC0041D761 /* String+Utils.m */; };
 		A64603A70F2234B500FC71AD /* CellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A60F2234B500FC71AD /* CellFactory.m */; };
 		A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A90F2234D900FC71AD /* TaskCell.m */; };
-		A64603D40F2235DA00FC71AD /* TaskCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A64603D30F2235DA00FC71AD /* TaskCell.xib */; };
 		A64604950F223FC500FC71AD /* ledblue.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604900F223FC500FC71AD /* ledblue.png */; };
 		A64604960F223FC500FC71AD /* ledgreen.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604910F223FC500FC71AD /* ledgreen.png */; };
 		A64604970F223FC500FC71AD /* ledgrey.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604920F223FC500FC71AD /* ledgrey.png */; };
@@ -37,6 +36,8 @@
 		A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */; };
 		A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */; };
 		A692198F0F24CDEA0010D2BA /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A692198E0F24CDEA0010D2BA /* DateUtils.m */; };
+		A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975370F26572200622396 /* TaskCellLeft.xib */; };
+		A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975380F26572200622396 /* TaskCellRight.xib */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
 		A6D384560F247DDF0097F0F6 /* TaskDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */; };
 		A6D384610F247E910097F0F6 /* TaskDetails.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D384600F247E910097F0F6 /* TaskDetails.xib */; };
@@ -73,7 +74,6 @@
 		A64603A60F2234B500FC71AD /* CellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellFactory.m; sourceTree = "<group>"; };
 		A64603A80F2234D900FC71AD /* TaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCell.h; sourceTree = "<group>"; };
 		A64603A90F2234D900FC71AD /* TaskCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCell.m; sourceTree = "<group>"; };
-		A64603D30F2235DA00FC71AD /* TaskCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = TaskCell.xib; path = ../TaskCell.xib; sourceTree = "<group>"; };
 		A64604900F223FC500FC71AD /* ledblue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledblue.png; sourceTree = "<group>"; };
 		A64604910F223FC500FC71AD /* ledgreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledgreen.png; sourceTree = "<group>"; };
 		A64604920F223FC500FC71AD /* ledgrey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledgrey.png; sourceTree = "<group>"; };
@@ -103,6 +103,8 @@
 		A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringChoiceController.m; sourceTree = "<group>"; };
 		A692198D0F24CDEA0010D2BA /* DateUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateUtils.h; path = Domain/DateUtils.h; sourceTree = "<group>"; };
 		A692198E0F24CDEA0010D2BA /* DateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateUtils.m; path = Domain/DateUtils.m; sourceTree = "<group>"; };
+		A6A975370F26572200622396 /* TaskCellLeft.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellLeft.xib; sourceTree = SOURCE_ROOT; };
+		A6A975380F26572200622396 /* TaskCellRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRight.xib; sourceTree = SOURCE_ROOT; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
 		A6AEE77E0F21CFA00061CF77 /* Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Network.m; path = Network/Network.m; sourceTree = "<group>"; };
 		A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsController.h; sourceTree = "<group>"; };
@@ -293,11 +295,12 @@
 		A6D386B40F24C12E0097F0F6 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				A6A975370F26572200622396 /* TaskCellLeft.xib */,
+				A6A975380F26572200622396 /* TaskCellRight.xib */,
 				A64603A50F2234B500FC71AD /* CellFactory.h */,
 				A64603A60F2234B500FC71AD /* CellFactory.m */,
 				A64603A80F2234D900FC71AD /* TaskCell.h */,
 				A64603A90F2234D900FC71AD /* TaskCell.m */,
-				A64603D30F2235DA00FC71AD /* TaskCell.xib */,
 				A6D3846A0F2481C80097F0F6 /* TextFieldCell.h */,
 				A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */,
 				A6D384770F24830F0097F0F6 /* TextFieldCell.xib */,
@@ -363,7 +366,6 @@
 				A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */,
 				A6DDF85D0F1F993800F35108 /* TaskView.xib in Resources */,
 				A6D8AC030F221BFA006894AA /* Settings.bundle in Resources */,
-				A64603D40F2235DA00FC71AD /* TaskCell.xib in Resources */,
 				A64604950F223FC500FC71AD /* ledblue.png in Resources */,
 				A64604960F223FC500FC71AD /* ledgreen.png in Resources */,
 				A64604970F223FC500FC71AD /* ledgrey.png in Resources */,
@@ -373,6 +375,8 @@
 				A6D384780F24830F0097F0F6 /* TextFieldCell.xib in Resources */,
 				A6D385630F24A2330097F0F6 /* SwitchCell.xib in Resources */,
 				A6D3868A0F24B4450097F0F6 /* DatePickerView.xib in Resources */,
+				A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */,
+				A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
