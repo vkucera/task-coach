@@ -7,6 +7,7 @@
 //
 
 #import "DatePickerViewController.h"
+#import "DateUtils.h"
 
 @implementation DatePickerViewController
 
@@ -21,7 +22,7 @@
 
 		if (theDate)
 		{
-			date = [NSDate dateWithNaturalLanguageString:theDate];
+			date = [[DateUtils instance] dateFromString:theDate];
 		}
 		else
 		{
