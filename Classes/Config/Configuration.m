@@ -13,6 +13,7 @@ static Configuration *_configuration = NULL;
 @implementation Configuration
 
 @synthesize showCompleted;
+@synthesize iconPosition;
 
 + (Configuration *)configuration
 {
@@ -28,6 +29,7 @@ static Configuration *_configuration = NULL;
 		NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
 
 		showCompleted = [config boolForKey:@"showcompleted"];
+		iconPosition = [config integerForKey:@"iconposition"];
 	}
 	
 	return self;

@@ -12,6 +12,8 @@
 #import "TextFieldCell.h"
 #import "SwitchCell.h"
 
+#import "Configuration.h"
+
 static CellFactory *_cellFactory = NULL;
 
 @implementation CellFactory
@@ -29,7 +31,11 @@ static CellFactory *_cellFactory = NULL;
 
 - (TaskCell *)createTaskCell
 {
-	[[NSBundle mainBundle] loadNibNamed:@"TaskCell" owner:self options:nil];
+	if ([Configuration configuration].iconPosition == ICONPOSITION_RIGHT)
+		[[NSBundle mainBundle] loadNibNamed:@"TaskCellRight" owner:self options:nil];
+	else
+		[[NSBundle mainBundle] loadNibNamed:@"TaskCellLeft" owner:self options:nil];
+
 	return [taskCellTemplate retain];
 }
 
