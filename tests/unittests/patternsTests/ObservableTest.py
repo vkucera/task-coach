@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,17 +41,20 @@ class EventTest(test.TestCase):
 class ObservableTest(test.TestCase):
     def setUp(self):
         self.events = []
+        self.observable = patterns.Observable()
         
     def onEvent(self, event):
         self.events.append(event)
         
     def testNotifyObservers(self):
         patterns.Publisher().registerObserver(self.onEvent, 'eventType')
-        observable = patterns.Observable()
-        event = patterns.Event(observable, 'eventType')
-        observable.notifyObservers(event)
+        event = patterns.Event(self.observable, 'eventType')
+        self.observable.notifyObservers(event)
         self.assertEqual([event], self.events)
-        
+
+    def testDefaultModificationEventTypes(self):
+        self.assertEqual([], self.observable.modificationEventTypes())
+                
 
 class ObservableCollectionFixture(test.TestCase):
     def setUp(self):
@@ -146,6 +149,11 @@ class ObservableCollectionTests(object):
         self.collection.clear()
         self.failIf(self.receivedRemoveEvents)
         
+    def testModificationEventTypes(self):
+        self.assertEqual([self.collection.addItemEventType(), 
+                          self.collection.removeItemEventType()],
+                         self.collection.modificationEventTypes())
+
         
 class ObservableListTest(ObservableCollectionFixture, ObservableCollectionTests):
     def createObservableCollection(self):

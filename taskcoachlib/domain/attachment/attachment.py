@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -18,10 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, shutil, urlparse
-
+from taskcoachlib import patterns, mailer
 from taskcoachlib.domain import base
 from taskcoachlib.thirdparty import desktop
-from taskcoachlib.mailer import readMail, openMail
 from taskcoachlib.i18n import _
 from taskcoachlib.domain.note.noteowner import NoteOwner
 
@@ -89,8 +88,15 @@ class Attachment(base.Object, NoteOwner):
         return self.__location
 
     def setLocation(self, location):
-        self.__location = location
+        if location != self.__location:
+            self.__location = location
+            self.notifyObservers(patterns.Event(self, self.locationChangedEventType(), 
+                                                location))
 
+    @classmethod
+    def locationChangedEventType(class_):
+        return '%s.location'%class_
+    
     def open(self, workingDir=None):
         raise NotImplementedError
 
@@ -120,6 +126,11 @@ class Attachment(base.Object, NoteOwner):
 
     def __unicode__(self):
         return self.subject()
+    
+    @classmethod
+    def modificationEventTypes(class_):
+        eventTypes = super(Attachment, class_).modificationEventTypes()
+        return eventTypes + [class_.locationChangedEventType()]
 
 
 class FileAttachment(Attachment):
@@ -150,7 +161,8 @@ class MailAttachment(Attachment):
     type_ = 'mail'
 
     def __init__(self, location, *args, **kwargs):
-        subject, content = readMail(location)
+        self._readMail = kwargs.pop('readMail', mailer.readMail)
+        subject, content = self._readMail(location)
 
         kwargs.setdefault('subject', subject)
         kwargs.setdefault('description', content)
@@ -158,10 +170,10 @@ class MailAttachment(Attachment):
         super(MailAttachment, self).__init__(location, *args, **kwargs)
 
     def open(self, workingDir=None):
-        openMail(self.location())
+        mailer.openMail(self.location())
 
     def read(self):
-        return readMail(self.location())
+        return self._readMail(self.location())
 
     def data(self):
         return file(self.location(), 'rb').read()

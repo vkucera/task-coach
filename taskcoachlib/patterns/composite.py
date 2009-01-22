@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -117,6 +117,12 @@ class ObservableComposite(Composite, observer.Observable):
         self.notifyObservers(observer.Event(self, self.removeChildEventType(),
                                             child))
 
+    @classmethod
+    def modificationEventTypes(class_):
+        eventTypes = super(ObservableComposite, class_).modificationEventTypes()
+        return eventTypes + [class_.addChildEventType(), 
+                             class_.removeChildEventType()]
+            
 
 class CompositeCollection(object):
     def __init__(self, initList=None, *args, **kwargs):

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,6 +40,13 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     @classmethod
     def categorizableRemovedEventType(class_):
         return 'category.categorizable.removed'
+    
+    @classmethod
+    def modificationEventTypes(class_):
+        eventTypes = super(Category, class_).modificationEventTypes()
+        return eventTypes + [class_.filterChangedEventType(),
+                             class_.categorizableAddedEventType(),
+                             class_.categorizableRemovedEventType()]
                 
     def __getstate__(self):
         state = super(Category, self).__getstate__()

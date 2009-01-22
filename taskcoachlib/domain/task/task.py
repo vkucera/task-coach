@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -528,5 +528,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     shouldMarkCompletedWhenAllChildrenCompleted = \
         property(fget=__getShouldMarkCompletedWhenAllChildrenCompleted,
                  fset=__setShouldMarkCompletedWhenAllChildrenCompleted)
-
-
+    
+    @classmethod
+    def modificationEventTypes(class_):
+        eventTypes = super(Task, class_).modificationEventTypes()
+        return eventTypes + ['task.dueDate', 'task.startDate', 
+                             'task.completionDate', 'task.effort.add', 
+                             'task.effort.remove', 'task.budget', 
+                             'task.priority', 
+                             class_.hourlyFeeChangedEventType(), 
+                             'task.fixedFee',
+                             'task.reminder', 'task.recurrence',
+                             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted']

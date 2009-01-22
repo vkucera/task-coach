@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, wx
 import test
 from taskcoachlib import persistence
-from taskcoachlib.domain import base, task, effort, date, category, note
+from taskcoachlib.domain import base, task, effort, date, category, note, attachment
 
 
 class FakeAttachment(base.Object):
@@ -54,8 +54,9 @@ class TaskFileTestCase(test.TestCase):
         self.taskFile.categories().append(self.category)
         self.note = note.Note()
         self.taskFile.notes().append(self.note)
-        self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1),
-            date.DateTime(2004,1,2)))
+        self.effort = effort.Effort(self.task, date.DateTime(2004,1,1),
+                                               date.DateTime(2004,1,2))
+        self.task.addEffort(self.effort)
         self.filename = 'test.tsk'
         self.filename2 = 'test2.tsk'
         
@@ -228,43 +229,40 @@ class TaskFileTest(TaskFileTestCase):
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditEffortDescription(self):
-        newEffort = effort.Effort(self.task)
-        self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
-        newEffort.setDescription('new description')
+        self.effort.setDescription('new description')
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditEffortStart(self):
-        newEffort = effort.Effort(self.task, date.DateTime(2000,1,1),
-            date.DateTime(2000,1,2))
-        self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
-        newEffort.setStart(date.DateTime(2005,1,1,10,0,0))
+        self.effort.setStart(date.DateTime(2005,1,1,10,0,0))
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterEditEffortStop(self):
-        newEffort = effort.Effort(self.task, date.DateTime(2000,1,1),
-            date.DateTime(2000,1,2))
-        self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
-        newEffort.setStop(date.DateTime(2005,1,1,10,0,0))
+        self.effort.setStop(date.DateTime(2005,1,1,10,0,0))
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditEffortTask(self):
         task2 = task.Task()
         self.taskFile.tasks().append(task2)
-        newEffort = effort.Effort(self.task)
-        self.task.addEffort(newEffort)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
-        newEffort.setTask(task2)
+        self.effort.setTask(task2)
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterEditEffortColor(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.effort.setColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterTaskAddedToCategory(self):
@@ -295,6 +293,12 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
         self.note.removeCategory(self.category)
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterAddingNoteToTask(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.task.addNote(note.Note(subject='Note'))
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterChangePriority(self):
@@ -346,6 +350,12 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.task.setReminder(date.DateTime(2005,1,1,10,0,0))
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterChangeRecurrence(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.task.setRecurrence(date.Recurrence('daily'))
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterChangeSetting(self):
@@ -499,6 +509,99 @@ class ChangingAttachmentsTests(object):
         self.item.addAttachments(self.attachment)
         self.taskFile.save()
         self.item.setAttachments([FakeAttachment('file', 'attachment2')])
+        self.failUnless(self.taskFile.needSave())
+
+    def addAttachment(self, attachment):
+        self.taskFile.setFilename(self.filename)
+        self.item.addAttachments(attachment)
+        self.taskFile.save()
+               
+    def addFileAttachment(self):
+        self.fileAttachment = attachment.FileAttachment('Old location')
+        self.addAttachment(self.fileAttachment)
+
+    def testNeedSave_AfterFileAttachmentLocationChanged(self):
+        self.addFileAttachment()
+        self.fileAttachment.setLocation('New location')
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterFileAttachmentSubjectChanged(self):
+        self.addFileAttachment()
+        self.fileAttachment.setSubject('New subject')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterFileAttachmentDescriptionChanged(self):
+        self.addFileAttachment()
+        self.fileAttachment.setDescription('New description')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterFileAttachmentColorChanged(self):
+        self.addFileAttachment()
+        self.fileAttachment.setColor(wx.RED)
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterFileAttachmentNoteAdded(self):
+        self.addFileAttachment()
+        self.fileAttachment.addNote(note.Note(subject='Note'))
+        self.failUnless(self.taskFile.needSave())
+
+    def addURIAttachment(self):
+        self.uriAttachment = attachment.URIAttachment('Old location')
+        self.addAttachment(self.uriAttachment)
+
+    def testNeedSave_AfterURIAttachmentLocationChanged(self):
+        self.addURIAttachment()
+        self.uriAttachment.setLocation('New location')
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterURIAttachmentSubjectChanged(self):
+        self.addURIAttachment()
+        self.uriAttachment.setSubject('New subject')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterURIAttachmentDescriptionChanged(self):
+        self.addURIAttachment()
+        self.uriAttachment.setDescription('New description')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterURIAttachmentColorChanged(self):
+        self.addURIAttachment()
+        self.uriAttachment.setColor(wx.RED)
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterURIAttachmentNoteAdded(self):
+        self.addURIAttachment()
+        self.uriAttachment.addNote(note.Note(subject='Note'))
+        self.failUnless(self.taskFile.needSave())
+
+    def addMailAttachment(self):
+        self.mailAttachment = attachment.MailAttachment(self.filename, 
+                                  readMail=lambda location: ('', ''))
+        self.addAttachment(self.mailAttachment)
+        
+    def testNeedSave_AfterMailAttachmentLocationChanged(self):
+        self.addMailAttachment()
+        self.mailAttachment.setLocation('New location')
+        self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterURIAttachmentSubjectChanged(self):
+        self.addMailAttachment()
+        self.mailAttachment.setSubject('New subject')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterURIAttachmentDescriptionChanged(self):
+        self.addMailAttachment()
+        self.mailAttachment.setDescription('New description')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterURIAttachmentColorChanged(self):
+        self.addMailAttachment()
+        self.mailAttachment.setColor(wx.RED)
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterURIAttachmentNoteAdded(self):
+        self.addMailAttachment()
+        self.mailAttachment.addNote(note.Note(subject='Note'))
         self.failUnless(self.taskFile.needSave())
 
 

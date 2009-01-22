@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -191,6 +191,11 @@ class ObservableCompositeTest(test.TestCase):
         self.composite.removeChild(self.child)
         self.assertEqual([patterns.Event(self.composite, eventType, 
             self.child)], self.events)
+
+    def testModificationEventTypes(self):
+        self.assertEqual([self.composite.addChildEventType(), 
+                          self.composite.removeChildEventType()], 
+                          self.composite.modificationEventTypes())
 
             
 class CompositeCollectionTest(test.TestCase):
