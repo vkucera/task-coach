@@ -122,7 +122,7 @@
 			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
 		}
 	}
-	else if (cell = dueDateCell)
+	else if (cell == dueDateCell)
 	{
 		NSIndexPath *indexPath = [self.tableView indexPathForCell:dueDateCell];
 		indexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
