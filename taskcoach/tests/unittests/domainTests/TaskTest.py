@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -84,6 +84,15 @@ class CommonTaskTests(asserts.TaskAsserts):
         copy = self.task.copy()
         self.assertTaskCopy(copy, self.task)
 
+    def testModificationEventTypes(self):
+        self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
+             ['task.dueDate', 'task.startDate', 'task.completionDate', 
+              'task.effort.add', 'task.effort.remove', 'task.budget', 
+              'task.priority', task.Task.hourlyFeeChangedEventType(), 
+              'task.fixedFee', 'task.reminder', 'task.recurrence',
+              'task.setting.shouldMarkCompletedWhenAllChildrenCompleted'],
+             self.task.modificationEventTypes())
+        
 
 class NoBudgetTests(object):
     ''' These tests should succeed for all tasks without budget. '''

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,3 +21,4 @@ from collection import Collection
 from filter import Filter, SearchFilter, DeletedFilter
 from sorter import Sorter, TreeSorter
 from owner import DomainObjectOwnerMetaclass
+from changetracker import ChangeTracker

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
       - addFoo, removeFoo, addFoos, removeFoos
       - setFoos, foos
       - foosChangedEventType
+      - modificationEventTypes
       - __notifyObservers"""
 
     # This  metaclass is  a function  instead  of a  subclass of  type
@@ -49,7 +50,17 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     def changedEventType(class_):
         return '%s.%s' % (class_, klass.__ownedType__.lower())
 
-    setattr(klass, '%ssChangedEventType' % klass.__ownedType__.lower(), classmethod(changedEventType))
+    setattr(klass, '%ssChangedEventType' % klass.__ownedType__.lower(), 
+            classmethod(changedEventType))
+    
+    def modificationEventTypes(class_):
+        try:
+            eventTypes = super(klass, class_).modificationEventTypes()
+        except AttributeError:
+            eventTypes = []
+        return eventTypes + [changedEventType(class_)]
+    
+    klass.modificationEventTypes = classmethod(modificationEventTypes)
 
     def objects(instance):
         objects = getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()))
@@ -58,7 +69,9 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     setattr(klass, '%ss' % klass.__ownedType__.lower(), objects)
 
     def notifyObservers(instance):
-        instance.notifyObservers(patterns.Event(instance, changedEventType(instance.__class__), *objects(instance)))
+        instance.notifyObservers(patterns.Event(instance, 
+                                                changedEventType(instance.__class__), 
+                                                *objects(instance)))
 
     setattr(klass, '_%s__notifyObservers' % name, notifyObservers)
 

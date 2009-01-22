@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -287,6 +287,13 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(self.category)
         copy = self.categorizable.copy()
         self.assertEqual(copy.categories(), self.categorizable.categories())
+        
+    def testModificationEventTypes(self):
+        self.assertEqual(super(category.CategorizableCompositeObject,
+                               self.categorizable).modificationEventTypes() + \
+                         [self.categoryAddedEventType, 
+                          self.categoryRemovedEventType],
+                         self.categorizable.modificationEventTypes())
 
 
 class CategoryTest(test.TestCase):
@@ -568,3 +575,12 @@ class CategoryTest(test.TestCase):
         aNote = note.Note(subject='Note')
         self.category.addNote(aNote)
         self.assertEqual([aNote], self.category.notes())
+        
+    def testModificationEventTypes(self):
+        self.assertEqual(super(category.Category,
+                               self.category).modificationEventTypes() + \
+                         [self.category.filterChangedEventType(), 
+                          self.category.categorizableAddedEventType(),
+                          self.category.categorizableRemovedEventType()], 
+                         self.category.modificationEventTypes())
+

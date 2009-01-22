@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -88,6 +88,12 @@ class Sorter(patterns.ListDecorator):
         patterns.Publisher().removeObserver(self.reset, eventType=eventType)
 
     def _createEventTypeFromAttribute(self, attribute):
+        ''' At the moment, there are two ways event types are specified: 
+            1) by means of a simple, dot-separated, string. For example 
+            "task.subject", or 
+            2) by means of a method that returns an event type string. For
+            example task.Task.subjectChangedEventType(). This method tries both
+            options to get the event type. '''
         try:
             return getattr(self.DomainObjectClass, '%sChangedEventType'%attribute)()
         except AttributeError:

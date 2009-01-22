@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -226,6 +226,15 @@ class Object(SynchronizedObject):
     def notifyObserversOfColorChange(self, color):
         self.notifyObservers(patterns.Event(self, 
             self.colorChangedEventType(), color))
+        
+    # Event types:
+    
+    @classmethod
+    def modificationEventTypes(class_):
+        eventTypes = super(Object, class_).modificationEventTypes()
+        return eventTypes + [class_.subjectChangedEventType(),
+                             class_.descriptionChangedEventType(),
+                             class_.colorChangedEventType()]
 
 
 class CompositeObject(Object, patterns.ObservableComposite):
@@ -313,4 +322,11 @@ class CompositeObject(Object, patterns.ObservableComposite):
                 self.colorChangedEventType(), color))
             for child in self.children():
                 child.notifyObserversOfParentColorChange(color)
+
+    # Event types:
+
+    @classmethod
+    def modificationEventTypes(class_):
+        return super(CompositeObject, class_).modificationEventTypes() + \
+            [class_.expansionChangedEventType()]
 

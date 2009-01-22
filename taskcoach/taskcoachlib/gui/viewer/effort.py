@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
@@ -121,7 +121,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
                 resizeCallback=self.onResizeColumn) \
             for name, columnHeader, eventType, renderCallback in \
             ('period', _('Period'), 'effort.duration', self.renderPeriod),
-            ('task', _('Task'), 'effort.task', lambda effort: effort.task().subject(recursive=True)),
+            ('task', _('Task'), effort.Effort.taskChangedEventType(), lambda effort: effort.task().subject(recursive=True)),
             ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description())] + \
             [widgets.Column('categories', _('Categories'),
              width=self.getColumnWidth('categories'),

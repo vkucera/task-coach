@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
 
     def testNotificationForSetTask(self):
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType='effort.task')
+            eventType=effort.Effort.taskChangedEventType())
         task2 = task.Task()
         self.effort.setTask(task2)
         self.assertEqual(task2, self.events[0].value())
@@ -203,6 +203,12 @@ class EffortTest(test.TestCase, asserts.Mixin):
     def testSubject(self):
         self.assertEqual(self.task.subject(), self.effort.subject())
 
+    def testModificationEventTypes(self):
+        self.assertEqual(super(effort.Effort, self.effort).modificationEventTypes() + \
+                         [self.effort.taskChangedEventType(), 
+                          'effort.start', 'effort.stop'], 
+                         self.effort.modificationEventTypes())
+
 
 class EffortWithoutTaskTest(test.TestCase):   
     def setUp(self):
@@ -221,7 +227,8 @@ class EffortWithoutTaskTest(test.TestCase):
         self.assertEqual(self.task, self.effort.task())
     
     def testSettingTask_CausesNoNotification(self):
-        patterns.Publisher().registerObserver(self.onEvent, 'effort.task')
+        patterns.Publisher().registerObserver(self.onEvent, 
+                                              self.effort.taskChangedEventType())
         self.effort.setTask(self.task)
         self.failIf(self.events)
 

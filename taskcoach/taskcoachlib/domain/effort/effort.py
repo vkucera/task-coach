@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -76,9 +76,13 @@ class Effort(EffortBase, base.Object):
         self._task = task
         self._task.addEffort(self)
         patterns.Publisher().notifyObservers(patterns.Event(self, 
-            'effort.task', task))
-
+            self.taskChangedEventType(), task))
+        
     setParent = setTask # FIXME: I should really create a common superclass for Effort and Task
+    
+    @classmethod
+    def taskChangedEventType(class_):
+        return '%s.task'%class_
     
     def __str__(self):
         return 'Effort(%s, %s, %s)'%(self._task, self._start, self._stop)
@@ -165,6 +169,13 @@ class Effort(EffortBase, base.Object):
     def notifyObserversOfRevenueChange(self):
         self.notifyObservers(patterns.Event(self, 'effort.revenue', 
             self.revenue()))
+        
+    @classmethod    
+    def modificationEventTypes(class_):
+        eventTypes = super(Effort, class_).modificationEventTypes()
+        return eventTypes + [class_.taskChangedEventType(), 
+                             'effort.start', 'effort.stop']
+    
     
 
 class CompositeEffort(EffortBase):
@@ -293,3 +304,8 @@ class CompositeEffort(EffortBase):
     def onColorChanged(self, event):
         patterns.Publisher().notifyObservers(patterns.Event(self,
             Effort.colorChangedEventType(), event.value()))
+        
+    @classmethod
+    def modificationEventTypes(class_):
+        return [] # A composite effort cannot be 'dirty' since its contents
+        # are determined by the contained efforts.

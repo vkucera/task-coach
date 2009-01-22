@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -234,6 +234,14 @@ class ObjectTest(test.TestCase):
         self.object.setColor(wx.BLACK)
         self.assertEqual(1, len(self.eventsReceived))
 
+    # Event types:
+    
+    def testModificationEventTypes(self):
+        self.assertEqual([self.object.subjectChangedEventType(),
+                          self.object.descriptionChangedEventType(),
+                          self.object.colorChangedEventType()], 
+                         self.object.modificationEventTypes())
+
 
 class CompositeObjectTest(test.TestCase):
     def setUp(self):
@@ -308,6 +316,15 @@ class CompositeObjectTest(test.TestCase):
                          self.compositeObject.expandedContexts())
         self.compositeObject.expand(context='another_viewer')
         self.failIf('another_viewer' in copy.expandedContexts())
+
+    def testModificationEventTypes(self):
+        self.assertEqual([self.compositeObject.addChildEventType(),
+                          self.compositeObject.removeChildEventType(),
+                          self.compositeObject.subjectChangedEventType(),
+                          self.compositeObject.descriptionChangedEventType(),
+                          self.compositeObject.colorChangedEventType(),
+                          self.compositeObject.expansionChangedEventType()], 
+                         self.compositeObject.modificationEventTypes())
 
 
 class BaseCollectionTest(test.TestCase):

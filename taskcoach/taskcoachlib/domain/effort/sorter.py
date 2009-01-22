@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base
+import effort
 
 
 class EffortSorter(base.Sorter):
@@ -28,7 +29,7 @@ class EffortSorter(base.Sorter):
         patterns.Publisher().registerObserver(self.reset, 
             eventType='effort.start')
         patterns.Publisher().registerObserver(self.reset,
-            eventType='effort.task')
+            eventType=effort.Effort.taskChangedEventType())
     
     def createSortKeyFunction(self):
         # Sort by start of effort first, then by task subject

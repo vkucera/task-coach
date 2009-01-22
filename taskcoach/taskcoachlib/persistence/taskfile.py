@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, codecs, shutil, xml
 from taskcoachlib import patterns
-from taskcoachlib.domain import base, date, task, category, note, effort
+from taskcoachlib.domain import base, date, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 
@@ -57,7 +57,7 @@ class TaskFile(patterns.Observable, patterns.Observer):
             task.Task.descriptionChangedEventType(), 'task.startDate', 
             'task.dueDate', 'task.completionDate', 'task.priority', 
             'task.budget', task.Task.hourlyFeeChangedEventType(), 'task.fixedFee',
-            'task.timeSpent', 'task.reminder',
+            'task.reminder', 'task.recurrence',
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
             task.Task.addChildEventType(), task.Task.removeChildEventType(),
             'task.effort.add', 'task.effort.remove', 
@@ -68,10 +68,11 @@ class TaskFile(patterns.Observable, patterns.Observer):
             task.Task.expansionChangedEventType()):
             self.registerObserver(self.onTaskChanged, eventType)
         for eventType in (effort.Effort.descriptionChangedEventType(), 
+                          effort.Effort.colorChangedEventType(),
                           'effort.start', 'effort.stop'):
-            # We don't need to observe 'effort.task', because when an
-            # effort record is assigned to a different task we already will 
-            # get a notification through 'task.effort.add'                
+            # We don't need to observe effort.Effort.taskChangedEventType(), 
+            # because when an effort record is assigned to a different task we 
+            # already will get a notification through 'task.effort.add'                
             self.registerObserver(self.onEffortChanged, eventType)
         for eventType in (note.Note.subjectChangedEventType(), 
                 note.Note.descriptionChangedEventType(), 
@@ -90,6 +91,10 @@ class TaskFile(patterns.Observable, patterns.Observer):
                 category.Category.attachmentsChangedEventType(),
                 category.Category.expansionChangedEventType()):
             self.registerObserver(self.onCategoryChanged, eventType)
+        for eventType in attachment.FileAttachment.modificationEventTypes() + \
+                         attachment.URIAttachment.modificationEventTypes() + \
+                         attachment.MailAttachment.modificationEventTypes(): 
+            self.registerObserver(self.onAttachmentChanged, eventType) 
 
     def __str__(self):
         return self.filename()
@@ -140,6 +145,13 @@ class TaskFile(patterns.Observable, patterns.Observer):
             
     def onNoteChanged(self, event):
         if event.source() in self.notes() and not self.__loading:
+            self.markDirty()
+            event.source().markDirty()
+            
+    def onAttachmentChanged(self, event):
+        if not self.__loading:
+            # Attachments don't know their owner, so we can't check whether the
+            # attachment is actually in the task file. Assume it is.
             self.markDirty()
             event.source().markDirty()
 
