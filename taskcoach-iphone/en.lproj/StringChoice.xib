@@ -39,7 +39,7 @@
 					<object class="IBUITextField" id="693762947">
 						<reference key="NSNextResponder" ref="483436429"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 15}, {280, 31}}</string>
+						<string key="NSFrame">{{20, 20}, {280, 31}}</string>
 						<reference key="NSSuperview" ref="483436429"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -56,12 +56,14 @@
 						<bool key="IBUIClearsOnBeginEditing">YES</bool>
 						<bool key="IBUIAdjustsFontSizeToFit">YES</bool>
 						<float key="IBUIMinimumFontSize">1.700000e+01</float>
-						<object class="IBUITextInputTraits" key="IBUITextInputTraits"/>
+						<object class="IBUITextInputTraits" key="IBUITextInputTraits">
+							<int key="IBUIAutocapitalizationType">2</int>
+						</object>
 					</object>
 					<object class="IBUIButton" id="951593543">
 						<reference key="NSNextResponder" ref="483436429"/>
 						<int key="NSvFlags">295</int>
-						<string key="NSFrame">{{119, 54}, {82, 29}}</string>
+						<string key="NSFrame">{{119, 59}, {82, 29}}</string>
 						<reference key="NSSuperview" ref="483436429"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -219,7 +221,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">9</int>
+			<int key="maxID">10</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
