@@ -53,43 +53,13 @@ class TaskFile(patterns.Observable, patterns.Observer):
                           base.Object.markNotDeletedEventType()):
             self.registerObserver(self.onDomainObjectAddedOrRemoved, eventType)
 
-        for eventType in (task.Task.subjectChangedEventType(), 
-            task.Task.descriptionChangedEventType(), 'task.startDate', 
-            'task.dueDate', 'task.completionDate', 'task.priority', 
-            'task.budget', task.Task.hourlyFeeChangedEventType(), 'task.fixedFee',
-            'task.reminder', 'task.recurrence',
-            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
-            task.Task.addChildEventType(), task.Task.removeChildEventType(),
-            'task.effort.add', 'task.effort.remove', 
-            task.Task.notesChangedEventType(),
-            task.Task.categoryAddedEventType(), 
-            task.Task.categoryRemovedEventType(), 
-            task.Task.attachmentsChangedEventType(),
-            task.Task.expansionChangedEventType()):
+        for eventType in task.Task.modificationEventTypes():
             self.registerObserver(self.onTaskChanged, eventType)
-        for eventType in (effort.Effort.descriptionChangedEventType(), 
-                          effort.Effort.colorChangedEventType(),
-                          'effort.start', 'effort.stop'):
-            # We don't need to observe effort.Effort.taskChangedEventType(), 
-            # because when an effort record is assigned to a different task we 
-            # already will get a notification through 'task.effort.add'                
+        for eventType in effort.Effort.modificationEventTypes():
             self.registerObserver(self.onEffortChanged, eventType)
-        for eventType in (note.Note.subjectChangedEventType(), 
-                note.Note.descriptionChangedEventType(), 
-                note.Note.addChildEventType(), 
-                note.Note.removeChildEventType(),
-                note.Note.categoryAddedEventType(),
-                note.Note.categoryRemovedEventType(),
-                note.Note.attachmentsChangedEventType(),
-                note.Note.expansionChangedEventType()):
+        for eventType in note.Note.modificationEventTypes():
             self.registerObserver(self.onNoteChanged, eventType)
-        for eventType in (category.Category.filterChangedEventType(), 
-                category.Category.subjectChangedEventType(),
-                category.Category.descriptionChangedEventType(),
-                category.Category.colorChangedEventType(),
-                category.Category.notesChangedEventType(),
-                category.Category.attachmentsChangedEventType(),
-                category.Category.expansionChangedEventType()):
+        for eventType in category.Category.modificationEventTypes():
             self.registerObserver(self.onCategoryChanged, eventType)
         for eventType in attachment.FileAttachment.modificationEventTypes() + \
                          attachment.URIAttachment.modificationEventTypes() + \

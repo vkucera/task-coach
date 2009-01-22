@@ -206,6 +206,13 @@ class TaskFileTest(TaskFileTestCase):
         self.failIf(self.taskFile.needSave())
         self.task.setDescription('new description')
         self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterEditTaskColor(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failIf(self.taskFile.needSave())
+        self.task.setColor(wx.RED)
+        self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterEditTaskStartDate(self):
         self.taskFile.setFilename(self.filename)
@@ -415,6 +422,12 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()        
         list(self.taskFile.notes())[0].setDescription('new description')
+        self.failUnless(self.taskFile.needSave())
+
+    def testNeedSave_AfterNoteColorChanged(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()        
+        list(self.taskFile.notes())[0].setColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterAddNoteChild(self):
