@@ -96,7 +96,10 @@ static Statement *_saveStatement = NULL;
 
 - (void)setCompleted:(BOOL)completed
 {
-	self.completionDate = [[DateUtils instance] stringFromDate:[NSDate date]];
+	if (completed)
+		self.completionDate = [[DateUtils instance] stringFromDate:[NSDate date]];
+	else
+		self.completionDate = nil;
 }
 
 // Overridden setters
