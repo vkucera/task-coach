@@ -28,16 +28,22 @@ class ChangeTracker(patterns.Observer):
         super(ChangeTracker, self).__init__()
         self.__collection = collection
         self.__added = set()
-        self.__removed = set()
-        self.__modified = set()
+        self.reset()
         self.registerForCollectionChanges()
         self.registerForItemChanges()
+        
+    def reset(self):
+        self.registerForItemChanges([item for item in self.__collection \
+                                     if item.id() in self.__added])
+        self.__added = set()
+        self.__removed = set()
+        self.__modified = set()
         
     def registerForCollectionChanges(self):
         for handler, eventType in \
                 [(self.onAddItem, self.__collection.addItemEventType()),
                  (self.onRemoveItem, self.__collection.removeItemEventType())]:
-            self.registerObserver(handler, eventType)
+            self.registerObserver(handler, eventType, eventSource=self.__collection)
             
     def registerForItemChanges(self, items=None, register=True):
         items = items or self.__collection
@@ -47,7 +53,7 @@ class ChangeTracker(patterns.Observer):
             changeObservation = self.removeObserver
         for item in items:
             for eventType in item.modificationEventTypes():
-                changeObservation(self.onModifyItem, eventType)
+                changeObservation(self.onModifyItem, eventType, eventSource=item)
                     
     def onAddItem(self, event):
         self.__added |= set([item.id() for item in event.values()])

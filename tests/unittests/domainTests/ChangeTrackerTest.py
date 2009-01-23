@@ -24,11 +24,8 @@ from taskcoachlib.domain import base
 class ChangeTrackerTest(test.TestCase):
     def setUp(self):
         self.collection = base.Collection()
-        self.startTracking()
-        self.object = base.CompositeObject()
-        
-    def startTracking(self):
         self.tracker = base.ChangeTracker(self.collection)
+        self.object = base.CompositeObject()
         
     def testTrackerHasNotObservedAnyAdditionsByDefault(self):
         self.failIf(self.tracker.added())
@@ -45,13 +42,13 @@ class ChangeTrackerTest(test.TestCase):
         
     def testRemoveItem(self):
         self.collection.append(self.object)
-        self.startTracking()
+        self.tracker.reset()
         self.collection.remove(self.object)
         self.assertEqual(set([self.object.id()]), self.tracker.removed())
         
     def testModifyItem(self):
         self.collection.append(self.object)
-        self.startTracking()
+        self.tracker.reset()
         self.object.setSubject('New subject')
         self.assertEqual(set([self.object.id()]), self.tracker.modified())
         
@@ -68,15 +65,39 @@ class ChangeTrackerTest(test.TestCase):
         
     def testRemoveModifiedItem(self):
         self.collection.append(self.object)
-        self.startTracking()
+        self.tracker.reset()
         self.object.setSubject('New subject')
         self.collection.remove(self.object)
         self.failIf(self.tracker.modified())
         
     def testRemoveModificationObservationWhenItemIsRemovedFromCollection(self):
         self.collection.append(self.object)
-        self.startTracking()
+        self.tracker.reset()
         self.collection.remove(self.object)
         self.object.setSubject('New subject')
         self.failIf(self.tracker.modified())
         
+    def testChangeTrackerIgnoresAdditionsToOtherCollections(self):
+        secondCollection = base.Collection()
+        secondCollection.append(self.object)
+        self.failIf(self.tracker.added())
+        
+    def testChangeTrackerIgnoresRemovalsFromOtherCollections(self):
+        secondCollection = base.Collection()
+        secondCollection.append(self.object)
+        self.collection.append(self.object)
+        secondCollection.remove(self.object)
+        self.failUnless(self.tracker.added())
+        
+    def testChangeTrackerIgnoresChangesToObjectsNotInCollection(self):
+        self.collection.append(self.object)
+        self.tracker.reset()
+        secondObject = base.CompositeObject()
+        secondObject.setSubject('New subject')
+        self.failIf(self.tracker.modified())
+        
+    def testAddedItemsAreTrackedAfterReset(self):
+        self.collection.append(self.object)
+        self.tracker.reset()
+        self.object.setSubject('New subject')
+        self.failUnless(self.tracker.modified())

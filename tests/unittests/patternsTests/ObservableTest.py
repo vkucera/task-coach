@@ -526,3 +526,48 @@ class PublisherTest(test.TestCase):
         event = patterns.Event(observable1, 'eventType')
         observable1.notifyObservers(event)
         self.failIf(self.events)
+
+    def testRemoveObserverForSpecificEventSource(self):
+        observable1 = patterns.Observable()
+        observable2 = patterns.Observable()
+        self.publisher.registerObserver(self.onEvent, eventType='eventType', 
+                                        eventSource=observable1)
+        self.publisher.registerObserver(self.onEvent, eventType='eventType',
+                                        eventSource=observable2)
+        self.publisher.removeObserver(self.onEvent, eventSource=observable1)
+        event = patterns.Event(observable2, 'eventType')
+        observable2.notifyObservers(event)
+        self.failUnless(self.events)
+        
+    def testRemoveObserverForSpecificEventTypeAndSource(self):
+        observable1 = patterns.Observable()
+        observable2 = patterns.Observable()
+        self.publisher.registerObserver(self.onEvent, eventType='eventType1', 
+                                        eventSource=observable1)
+        self.publisher.registerObserver(self.onEvent, eventType='eventType1', 
+                                        eventSource=observable2)
+        self.publisher.registerObserver(self.onEvent, eventType='eventType2',
+                                        eventSource=observable1)
+        self.publisher.removeObserver(self.onEvent, eventType='eventType1',
+                                      eventSource=observable1)
+        event = patterns.Event(observable1, 'eventType1')
+        observable1.notifyObservers(event)
+        self.failIf(self.events)
+        event = patterns.Event(observable1, 'eventType2')
+        observable1.notifyObservers(event)
+        self.failUnless(self.events)
+
+    def testRemoveObserverForSpecificEventTypeAndSourceDoesNotRemoveOtherSources(self):
+        observable1 = patterns.Observable()
+        observable2 = patterns.Observable()
+        self.publisher.registerObserver(self.onEvent, eventType='eventType1', 
+                                        eventSource=observable1)
+        self.publisher.registerObserver(self.onEvent, eventType='eventType1', 
+                                        eventSource=observable2)
+        self.publisher.registerObserver(self.onEvent, eventType='eventType2',
+                                        eventSource=observable1)
+        self.publisher.removeObserver(self.onEvent, eventType='eventType1',
+                                      eventSource=observable1)
+        event = patterns.Event(observable2, 'eventType1')
+        observable2.notifyObservers(event)
+        self.failUnless(self.events)
