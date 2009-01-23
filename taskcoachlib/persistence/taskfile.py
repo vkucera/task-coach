@@ -37,22 +37,15 @@ class TaskFile(patterns.Observable, patterns.Observer):
         super(TaskFile, self).__init__(*args, **kwargs)
         # Register for tasks, categories, efforts and notes being changed so we 
         # can monitor when the task file needs saving (i.e. is 'dirty'):
-        for eventType in (self.tasks().addItemEventType(), 
-                          self.tasks().removeItemEventType()):
-            self.registerObserver(self.onDomainObjectAddedOrRemoved,
-                eventType, eventSource=self.tasks())
-        for eventType in (self.categories().addItemEventType(),
-                          self.categories().removeItemEventType()):
-            self.registerObserver(self.onDomainObjectAddedOrRemoved,
-                eventType, eventSource=self.categories())
-        for eventType in (self.notes().addItemEventType(),
-                          self.notes().removeItemEventType()):
-            self.registerObserver(self.onDomainObjectAddedOrRemoved,
-                eventType, eventSource=self.notes())
+        for container in self.tasks(), self.categories(), self.notes():
+            for eventType in container.modificationEventTypes():
+                self.registerObserver(self.onDomainObjectAddedOrRemoved,
+                                      eventType, eventSource=container)
+            
         for eventType in (base.Object.markDeletedEventType(),
                           base.Object.markNotDeletedEventType()):
             self.registerObserver(self.onDomainObjectAddedOrRemoved, eventType)
-
+            
         for eventType in task.Task.modificationEventTypes():
             self.registerObserver(self.onTaskChanged, eventType)
         for eventType in effort.Effort.modificationEventTypes():
