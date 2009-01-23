@@ -175,37 +175,37 @@ class SquareMap( wx.Panel ):
         self.UpdateDrawing()
     
     def OnPaint(self, event):
-        dc = wx.BufferedPaintDC(self, self._Buffer)
+        dc = wx.BufferedPaintDC(self, self._buffer)
 
     def OnSize(self, event):
-        # The Buffer is initialized in OnSize, so that the buffer is always
+        # The buffer is initialized in here, so that the buffer is always
         # the same size as the Window.
-        self.Width, self.Height = self.GetClientSizeTuple()
-        # Make new off screen bitmap: this bitmap will always have the
+        width, height = self.GetClientSizeTuple()
+        # Make new off-screen bitmap: this bitmap will always have the
         # current drawing in it, so it can be used to save the image to
         # a file, or whatever.
-        self._Buffer = wx.EmptyBitmap(self.Width, self.Height)
+        self._buffer = wx.EmptyBitmap(width, height)
         self.UpdateDrawing()
 
     def UpdateDrawing(self):
-        dc = wx.BufferedDC(wx.ClientDC(self), self._Buffer)
+        dc = wx.BufferedDC(wx.ClientDC(self), self._buffer)
         self.Draw(dc)
         
     def Draw(self, dc):
         ''' Draw the tree map on the device context. '''
-        if not self.model:
-            return
         self.hot_map = []
         dc.BeginDrawing()
         brush = wx.Brush( self.BackgroundColor  )
         dc.SetBackground( brush )
         dc.Clear()
-        dc.SetFont(self.FontForLabels(dc))
-        w, h = dc.GetSize()
-        self.DrawBox( dc, self.model, 0,0,w,h, hot_map = self.hot_map )
+        if self.model:
+            dc.SetFont(self.FontForLabels(dc))
+            w, h = dc.GetSize()
+            self.DrawBox( dc, self.model, 0,0,w,h, hot_map = self.hot_map )
         dc.EndDrawing()
         
     def FontForLabels(self, dc):
+        ''' Return the default GUI font, scaled for printing if necessary. '''
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         scale = dc.GetPPI()[0] / wx.ScreenDC().GetPPI()[0]
         font.SetPointSize(scale*font.GetPointSize())
@@ -331,10 +331,13 @@ class DefaultAdapter( object ):
             return (overall - self.children_sum( self.children(node), node))/float(overall)
         return 0
     def background_color(self, node, depth):
+        ''' The color to use as background color of the node. '''
         return None
     def foreground_color(self, node, depth):
+        ''' The color to use for the label. '''
         return None
     def icon(self, node, isSelected):
+        ''' The icon to display in the node. '''
         return None
 
 
