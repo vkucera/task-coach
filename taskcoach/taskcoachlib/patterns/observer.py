@@ -106,6 +106,24 @@ class MethodProxy(object):
     im_self = property(get_im_self)
 
 
+def wrapObserver(decoratedMethod):
+    ''' Wrap the observer argument (assumed to be the first after self) in
+        a MethodProxy class. ''' 
+    def decorator(self, observer, *args, **kwargs):
+        assert hasattr(observer, 'im_self')
+        observer = MethodProxy(observer)
+        return decoratedMethod(self, observer, *args, **kwargs)
+    return decorator
+
+
+def unwrapObservers(decoratedMethod):
+    ''' Unwrap the returned observers from their MethodProxy class. '''
+    def decorator(*args, **kwargs):
+        observers = decoratedMethod(*args, **kwargs)
+        return [proxy.method for proxy in observers]
+    return decorator
+
+
 class Publisher(object):
     ''' Publisher is used to register for event notifications. It supports
         the publisher/subscribe pattern, also known as the observer pattern.
@@ -131,14 +149,14 @@ class Publisher(object):
         self.__observers = {} # {(eventType, eventSource): [list of callbacks]}
         self.__notifyingSemaphore = 0
     
+    @wrapObserver
     def registerObserver(self, observer, eventType, eventSource=None):
         ''' Register an observer for an event type. The observer is a callback 
             method that should expect one argument, an instance of Event.
             The eventType can be anything hashable, typically a string. When 
             passing a specific eventSource, the observer is only called when the
             event originates from the specified eventSource. '''
-        assert hasattr(observer, 'im_self')
-        observer = MethodProxy(observer)
+            
         observerList = self.__observers.setdefault((eventType, eventSource), [])
         # Note: it's the caller's responsibility to not add the same observer
         # twice (checking whether the observer is already in the observerList
@@ -146,22 +164,38 @@ class Publisher(object):
         observerList.append(observer)
         if len(observerList) == 1:
             self.notifyObserversOfFirstObserverRegistered(eventType)
-        
-    def removeObserver(self, observer, eventType=None):
+    
+    @wrapObserver    
+    def removeObserver(self, observer, eventType=None, eventSource=None):
         ''' Remove an observer. If no event type is specified, the observer
             is removed for all event types. If an event type is specified
-            the observer is removed for that event type only. '''
-        if eventType:
-            eventTypesAndSources = [(type, source) for (type, source) in \
-                                    self.__observers if type == eventType]
+            the observer is removed for that event type only. If not event
+            source is specified, the observer is removed for all event sources.
+            If an event source is specified, the observer is removed for that
+            event source only. If both an event type and an event source are
+            specified, the observer is removed for the combination of that
+            specific event type and event source only. '''
+            
+        # First, create a match function that will select the combination of
+        # event source and event type we're looking for:
+        if eventType and eventSource:
+            def match(type, source):
+                return type == eventType and source == eventSource
+        elif eventType:
+            def match(type, source): return type == eventType
+        elif eventSource:
+            def match(type, source): return source == eventSource
         else:
-            eventTypesAndSources = self.__observers    
-        observer = MethodProxy(observer)    
-        for eventTypeAndSource in eventTypesAndSources:
+            def match(type, source): return True
+
+        # Next, remove observers that are registered for the event source and
+        # event type we're looking for, i.e. that match:    
+        matchingKeys = [key for key in self.__observers if match(*key)] 
+        for key in matchingKeys:
             try:    
-                self.__observers[eventTypeAndSource].remove(observer)
+                self.__observers[key].remove(observer)
             except ValueError:
-                pass # observer was not registered for eventType, ignore.
+                pass # observer was not registered for this key, ignore.
         self.notifyObserversOfLastObserverRemoved()
                 
     def removeInstance(self, instance):
@@ -197,17 +231,17 @@ class Publisher(object):
             observers.extend(self.__observers.get(eventTypeAndSource, []))
         for observer in observers:
             observer(event)
-                
+     
+    @unwrapObservers           
     def observers(self, eventType=None):
         ''' Get the currently registered observers. Optionally specify
             a specific event type to get observers for that event type only. '''
         if eventType:
-            observerProxies = self.__observers.get((eventType, None), [])
+            return self.__observers.get((eventType, None), [])
         else:
-            observerProxies = [observer for observersForEventType in \
+            return [observer for observersForEventType in \
                     self.__observers.values() for observer in \
                     observersForEventType]
-        return [proxy.method for proxy in observerProxies]
     
     def stopNotifying(self):
         ''' Temporarily stop notifying. Calls to stopNotifying and 
