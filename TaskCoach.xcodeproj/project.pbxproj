@@ -46,6 +46,7 @@
 		A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975370F26572200622396 /* TaskCellLeft.xib */; };
 		A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975380F26572200622396 /* TaskCellRight.xib */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
+		A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C9843D0F2B77C40088A73F /* GUIDState.m */; };
 		A6D384560F247DDF0097F0F6 /* TaskDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */; };
 		A6D384610F247E910097F0F6 /* TaskDetails.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D384600F247E910097F0F6 /* TaskDetails.xib */; };
 		A6D3846C0F2481C80097F0F6 /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */; };
@@ -128,6 +129,8 @@
 		A6A975380F26572200622396 /* TaskCellRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRight.xib; sourceTree = SOURCE_ROOT; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
 		A6AEE77E0F21CFA00061CF77 /* Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Network.m; path = Network/Network.m; sourceTree = "<group>"; };
+		A6C9843C0F2B77C40088A73F /* GUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDState.h; path = Synchronization/GUIDState.h; sourceTree = "<group>"; };
+		A6C9843D0F2B77C40088A73F /* GUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GUIDState.m; path = Synchronization/GUIDState.m; sourceTree = "<group>"; };
 		A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsController.h; sourceTree = "<group>"; };
 		A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsController.m; sourceTree = "<group>"; };
 		A6D384600F247E910097F0F6 /* TaskDetails.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetails.xib; sourceTree = "<group>"; };
@@ -295,6 +298,8 @@
 				A6664DE60F2B498300638C68 /* InitialState.m */,
 				A6664EC30F2B504800638C68 /* AuthentificationState.h */,
 				A6664EC40F2B504800638C68 /* AuthentificationState.m */,
+				A6C9843C0F2B77C40088A73F /* GUIDState.h */,
+				A6C9843D0F2B77C40088A73F /* GUIDState.m */,
 			);
 			name = Synchronization;
 			sourceTree = "<group>";
@@ -465,6 +470,7 @@
 				A6664DDC0F2B486000638C68 /* BaseState.m in Sources */,
 				A6664DE70F2B498300638C68 /* InitialState.m in Sources */,
 				A6664EC50F2B504800638C68 /* AuthentificationState.m in Sources */,
+				A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

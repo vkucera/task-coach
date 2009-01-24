@@ -39,12 +39,24 @@ CREATE INDEX idxTaskStatus ON Task (status);
 CREATE INDEX idxTaskName ON Task (name);
 CREATE INDEX idxTaskCategory ON Task (categoryId);
 
+CREATE TABLE Meta
+(
+	name VARCHAR(255) NOT NULL,
+	value VARCHAR(255)
+);
+
+CREATE UNIQUE INDEX idxMetaName ON Meta (name);
+
 -- Views
 
 CREATE VIEW OverdueTask AS SELECT * FROM Task WHERE status != 3 AND dueDate < DATE('now') ORDER BY dueDate, startDate DESC;
 CREATE VIEW DueTodayTask AS SELECT * FROM Task WHERE status != 3 AND dueDate == DATE('now') ORDER BY startDate DESC;
 CREATE VIEW StartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATE('now') AND (dueDate > DATE('now') OR dueDate IS NULL) ORDER BY startDate;
 CREATE VIEW NotStartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NULL AND (dueDate > DATE('now') OR dueDate IS NULL);
+
+-- Initial data
+
+INSERT INTO Meta (name, value) VALUES ('version', '1');
 
 -- XXXTMP: testing data
 
