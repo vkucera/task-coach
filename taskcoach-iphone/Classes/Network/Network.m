@@ -175,9 +175,7 @@
 				[delegate networkDidConnect:self];
 			break;
 		case NSStreamEventEndEncountered:
-			closeCount += 1;
-			if (closeCount == 2)
-				[delegate networkDidClose:self];
+			[delegate networkDidClose:self];
 			break;
 		case NSStreamEventErrorOccurred:
 			[delegate networkDidEncounterError:self];
