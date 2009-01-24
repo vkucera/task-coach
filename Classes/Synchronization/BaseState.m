@@ -14,6 +14,8 @@
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
 {
+	NSLog(@"Connection closed.");
+
 	controller.state = nil;
 	
 	UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Connection closed error title")
@@ -26,6 +28,8 @@
 
 - (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller
 {
+	NSLog(@"Network error.");
+
 	controller.state = nil;
 
 	UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Network error title")

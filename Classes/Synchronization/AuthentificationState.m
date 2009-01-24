@@ -58,7 +58,7 @@
 			  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Bad password cancel button title") otherButtonTitles:nil];
 		[view show];
 		[view release];
-		[network release];
+		[theNetwork release];
 	}
 }
 

@@ -37,7 +37,7 @@
 	controller.state = nil;
 	
 	UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Connection error", @"Connection error title")
-												   message:NSLocalizedString(@"An error occurred while connecting to the remote host. Please check your settings.", @"Connection error message")
+												   message:NSLocalizedString(@"An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host.", @"Connection error message")
 												  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Connection error cancel button title") otherButtonTitles:nil];
 	[view show];
 	[view release];

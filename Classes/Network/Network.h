@@ -33,7 +33,6 @@
 	BOOL writing;
 	
 	NSInteger connectionCount;
-	NSInteger closeCount;
 }
 
 // The delegate is NOT retained
