@@ -155,7 +155,10 @@
 			else
 			{
 				[headers removeObjectAtIndex:section];
-				[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationBottom];
+				if ([headers count])
+					[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationBottom];
+				else
+					[self.tableView reloadData];
 			}
 		}
 	}
