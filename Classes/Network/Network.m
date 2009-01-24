@@ -56,6 +56,8 @@
 		
 		data = [[NSMutableData data] retain];
 		toSend = [[NSMutableArray alloc] init];
+		
+		expecting = -1;
 	}
 	
 	return self;
@@ -76,9 +78,42 @@
 	[super dealloc];
 }
 
+- (void)pumpData
+{
+	if (expecting > 0)
+	{
+		NSInteger offset = 0;
+		
+		if ([data length] - offset >= expecting)
+		{
+			NSData *recvd = [NSData dataWithBytes:[data bytes] + offset length:expecting];
+			offset += expecting;
+			
+			NSMutableData *newData = [[NSMutableData alloc] initWithBytes:[data bytes] + offset length:[data length] - offset];
+			[data release];
+			data = newData;
+			expecting = -1;
+
+			[delegate network:self didGetData:recvd];
+		}
+	}
+	else if (expecting == 0)
+	{
+		if ([data length])
+		{
+			NSData *recvd = [NSData dataWithData:data];
+			[data setLength:0];
+			expecting = -1;
+
+			[delegate network:self didGetData:recvd];
+		}
+	}
+}
+
 - (void)expect:(NSInteger)bytes
 {
 	expecting = bytes;
+	[self pumpData];
 }
 
 - (void)writeToStream:(NSStream *)stream
@@ -86,10 +121,13 @@
 	Buffer *bf = [toSend objectAtIndex:0];
 	unsigned int len = 0;
 	
+	NSLog(@"Trying to write %d bytes...", [bf.data length] - bf.offset);
 	len = [(NSOutputStream *)stream write:(uint8_t *)[bf.data bytes] + bf.offset maxLength:[bf.data length] - bf.offset];
+	NSLog(@"Wrote %d bytes", len);
 	bf.offset += len;
 	if (bf.offset == [bf.data length])
 	{
+		NSLog(@"Remove one buffer");
 		[toSend removeObjectAtIndex:0];
 	}
 }	
@@ -100,8 +138,31 @@
 	[toSend addObject:bf];
 	[bf release];
 	
+	NSLog(@"Appending %d bytes (%d)", [theData length], writing);
+	
 	if (!writing)
 		[self writeToStream:outputStream];
+}
+
+- (void)appendInteger:(int32_t)value
+{
+	value = htonl(value);
+	[self append:[NSData dataWithBytes:&value length:sizeof(value)]];
+}
+
+- (void)appendString:(NSString *)string
+{
+	const char *bf = [string UTF8String];
+	int32_t len = strlen(bf);
+
+	[self appendInteger:len];
+	[self append:[NSData dataWithBytes:bf length:len]];
+}
+
+- (void)close
+{
+	[inputStream close];
+	[outputStream close];
 }
 
 - (void)stream:(NSStream *)stream handleEvent:(NSStreamEvent)eventCode
@@ -109,10 +170,14 @@
 	switch (eventCode)
 	{
 		case NSStreamEventOpenCompleted:
-			[delegate networkDidConnect:self];
+			connectionCount += 1;
+			if (connectionCount == 2)
+				[delegate networkDidConnect:self];
 			break;
 		case NSStreamEventEndEncountered:
-			[delegate networkDidClose:self];
+			closeCount += 1;
+			if (closeCount == 2)
+				[delegate networkDidClose:self];
 			break;
 		case NSStreamEventErrorOccurred:
 			[delegate networkDidEncounterError:self];
@@ -121,26 +186,13 @@
 		{
 			uint8_t buffer[1024];
 			unsigned int len = 0;
-			NSInteger offset = 0;
 
 			len = [(NSInputStream *)stream read:buffer maxLength:1024];
 			
 			if (len)
 			{
-				while ([data length] + len - offset >= expecting)
-				{
-					NSInteger remain = expecting - [data length];
-					[data appendBytes:buffer + offset + [data length] length:expecting - [data length]];
-					offset += remain;
-					
-					[delegate network:self didGetData:data];
-					[data setLength:0];
-				}
-				
-				if (offset != len)
-				{
-					[data appendBytes:buffer + offset length:len - offset];
-				}
+				[data appendBytes:buffer length:len];
+				[self pumpData];
 			}
 
 			break;

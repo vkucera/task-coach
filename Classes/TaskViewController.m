@@ -246,8 +246,6 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSLog(@"Editing: %d; indexPath=%@\n", isBecomingEditable, indexPath); // XXXTMP
-
 	if (isBecomingEditable)
 	{
 		if ((indexPath.section == 0) && (indexPath.row == 0))
