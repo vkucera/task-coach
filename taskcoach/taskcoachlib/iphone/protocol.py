@@ -151,5 +151,4 @@ class PasswordState(BaseState):
                 disp.close_when_done() # XXX TODO
             else:
                 disp.push(struct.pack('!i', 0))
-                self.length = None
-                disp.set_terminator(4)
+                disp.close_when_done();
