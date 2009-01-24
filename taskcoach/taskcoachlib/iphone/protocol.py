@@ -97,6 +97,10 @@ class IPhoneHandler(asynchat.async_chat):
         self.data = StringIO.StringIO()
         self.state.handleData(self, data)
 
+    def handle_close(self):
+        print 'Closed.'
+        self.close()
+
     # XXXTODO: handle_error
 
 
@@ -110,7 +114,6 @@ class BaseState(object):
 
     def init(self):
         pass
-
 
 class InitialState(BaseState):
     def init(self, disp):
@@ -143,4 +146,9 @@ class PasswordState(BaseState):
             disp.set_terminator(self.length)
         else:
             print 'Password:', data
-            disp.close() # XXX TODO
+            if data.decode('UTF-8') == disp.password:
+                disp.push(struct.pack('!i', 1))
+                disp.close_when_done() # XXX TODO
+            else:
+                disp.push(struct.pack('!i', 0))
+                disp.set_terminator(4)

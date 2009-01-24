@@ -31,12 +31,20 @@
 	NSMutableData *data;
 	NSMutableArray *toSend;
 	BOOL writing;
+	
+	NSInteger connectionCount;
+	NSInteger closeCount;
 }
 
 // The delegate is NOT retained
 - initWithAddress:(NSString *)address port:(NSInteger)port delegate:(id <NetworkDelegate>)delegate;
 
 - (void)expect:(NSInteger)bytes;
+
 - (void)append:(NSData *)data;
+- (void)appendInteger:(int32_t)value;
+- (void)appendString:(NSString *)string;
+
+- (void)close;
 
 @end

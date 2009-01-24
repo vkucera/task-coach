@@ -19,5 +19,6 @@
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;
 
 - (IBAction)onAddCategory:(UIBarButtonItem *)button;
+- (IBAction)onSynchronize:(UIBarButtonItem *)button;
 
 @end

@@ -10,6 +10,7 @@
 #import "NavigationController.h"
 #import "StringChoiceController.h"
 #import "TaskViewController.h"
+#import "SyncViewController.h"
 
 #import "Database/Database.h"
 #import "Database/Statement.h"
@@ -132,6 +133,15 @@
 	}
 
 	[self.navigationController pushViewController:ctrl animated:YES];
+	[ctrl release];
+}
+
+//===========================================================
+
+- (IBAction)onSynchronize:(UIBarButtonItem *)button
+{
+	SyncViewController *ctrl = [[SyncViewController alloc] init];
+	[self.navigationController presentModalViewController:ctrl animated:YES];
 	[ctrl release];
 }
 
