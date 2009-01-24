@@ -21,6 +21,8 @@ from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
 from taskcoachlib.iphone.protocol import IPhoneAcceptor
+from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
+from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 import viewer, toolbar, uicommand, remindercontroller
 
 
@@ -195,7 +197,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
     Selection = property(GetSelection, SetSelection)
     
     
-class MainWindow(AuiManagedFrameWithNotebookAPI):
+class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
     pageClosedEvent = wx.aui.EVT_AUI_PANE_CLOSE
     
     def __init__(self, iocontroller, taskFile, settings,
@@ -449,3 +451,16 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             self.settings.set('view', 'toolbar', 'None')
         event.Skip()
         
+    # iPhone-related methods. These are called from the asyncore thread so they're deferred.
+
+    @synchronized
+    def getIPhoneSyncType(self, guid):
+        if guid == self.taskFile.guid():
+            return 0 # two-ways
+
+        dlg = IPhoneSyncTypeDialog(self, wx.ID_ANY, _('Synchronization type'))
+        try:
+            dlg.ShowModal()
+            return dlg.value
+        finally:
+            dlg.Destroy()

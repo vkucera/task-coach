@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.gui.threading import synchronized, DeferredCallMixin
+from taskcoachlib.gui.threads import synchronized, DeferredCallMixin
 from taskcoachlib.patterns.network import Acceptor
 from taskcoachlib.i18n import _
 
@@ -148,7 +148,34 @@ class PasswordState(BaseState):
             print 'Password:', data
             if data.decode('UTF-8') == disp.password:
                 disp.push(struct.pack('!i', 1))
-                disp.close_when_done() # XXX TODO
+                self.setState(GUIDState, disp)
             else:
                 disp.push(struct.pack('!i', 0))
                 disp.close_when_done();
+
+
+class GUIDState(BaseState):
+    def init(self, disp):
+        self.length = None
+        disp.set_terminator(4)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            if self.length:
+                disp.set_terminator(self.length)
+            else:
+                print 'No GUID.'
+                self.onSyncType(disp, disp.window.getIPhoneSyncType(None))
+        else:
+            print 'GUID:', data
+            self.onSyncType(disp, disp.window.getIPhoneSyncType(data))
+
+    def onSyncType(self, disp, type_):
+        print 'Synchronization type:', type_
+        disp.push(struct.pack('!i', type_))
+
+        if type_ == 3:
+            disp.close_when_done()
+        else:
+            disp.close_when_done() # XXXTODO

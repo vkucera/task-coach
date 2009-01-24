@@ -42,12 +42,12 @@ class DeferredCallMixin(object):
     deferred call to a method from the wx GUI thread."""
 
     def __init__(self, *args, **kwargs):
-        super(Object, self).__init__(*args, **kwargs)
+        super(DeferredCallMixin, self).__init__(*args, **kwargs)
 
         EVT_INVOKE(self, self.__OnInvoke)
 
     def __OnInvoke(self, event):
-        event.func(*event.args, **event.kwargs)
+        event.result = event.func(*event.args, **event.kwargs)
         event.event.set()
 
     def Invoke(self, func, *args, **kwargs):
@@ -58,6 +58,7 @@ class DeferredCallMixin(object):
 
         event = InvokeEvent(func, args, kwargs)
         wx.PostEvent(self, event)
+
         event.event.wait()
 
         return event.result

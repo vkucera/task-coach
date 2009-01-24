@@ -7,6 +7,7 @@
 //
 
 #import "AuthentificationState.h"
+#import "GUIDState.h"
 #import "Network.h"
 #import "SyncViewController.h"
 
@@ -46,7 +47,7 @@
 	if (status)
 	{
 		NSLog(@"Password was accepted.");
-		// XXXTODO: next state
+		controller.state = [GUIDState stateWithNetwork:network controller:controller];
 	}
 	else
 	{

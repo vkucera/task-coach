@@ -22,4 +22,3 @@ from command import *
 from composite import (Composite, ObservableComposite, CompositeList, 
                        CompositeSet)
 from metaclass import *
-
