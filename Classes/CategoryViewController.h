@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class NavigationController;
 
 @interface CategoryViewController : UITableViewController
 {
+	NavigationController *navigationController;
 	NSMutableArray *categories;
 }
+
+@property (nonatomic, assign) IBOutlet NavigationController *navigationController;
 
 - (IBAction)onAddCategory:(UIBarButtonItem *)button;
 

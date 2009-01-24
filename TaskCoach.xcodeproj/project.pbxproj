@@ -52,6 +52,7 @@
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
 		A6DDF85D0F1F993800F35108 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DDF85B0F1F993800F35108 /* TaskView.xib */; };
 		A6EA679A0F2255E7004108B5 /* CheckView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6EA67990F2255E7004108B5 /* CheckView.m */; };
+		A6FA97DC0F2B2E1C00505D87 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -127,6 +128,8 @@
 		A6DDF85C0F1F993800F35108 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6EA67980F2255E7004108B5 /* CheckView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckView.h; sourceTree = "<group>"; };
 		A6EA67990F2255E7004108B5 /* CheckView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckView.m; sourceTree = "<group>"; };
+		A6FA97DA0F2B2E1C00505D87 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +172,8 @@
 				A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */,
 				A6D3862D0F24B02A0097F0F6 /* DatePickerViewController.h */,
 				A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */,
+				A6FA97DA0F2B2E1C00505D87 /* MainViewController.h */,
+				A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -411,6 +416,7 @@
 				A6D385540F24A0E20097F0F6 /* SwitchCell.m in Sources */,
 				A6D3862F0F24B02A0097F0F6 /* DatePickerViewController.m in Sources */,
 				A692198F0F24CDEA0010D2BA /* DateUtils.m in Sources */,
+				A6FA97DC0F2B2E1C00505D87 /* MainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
