@@ -14,6 +14,8 @@ static Configuration *_configuration = NULL;
 
 @synthesize showCompleted;
 @synthesize iconPosition;
+@synthesize host;
+@synthesize port;
 
 + (Configuration *)configuration
 {
@@ -30,6 +32,8 @@ static Configuration *_configuration = NULL;
 
 		showCompleted = [config boolForKey:@"showcompleted"];
 		iconPosition = [config integerForKey:@"iconposition"];
+		host = [[config stringForKey:@"host"] copy];
+		port = [[config stringForKey:@"port"] intValue];
 	}
 	
 	return self;
@@ -37,6 +41,8 @@ static Configuration *_configuration = NULL;
 
 - (void)dealloc
 {
+	[host release];
+
 	[super dealloc];
 }
 
