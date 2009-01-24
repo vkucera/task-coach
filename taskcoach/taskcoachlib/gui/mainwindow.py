@@ -229,12 +229,11 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
         try:
             IPhoneAcceptor(self, settings)
         except socket.error, e:
-            wx.MessageBox(_('Error'),
-                          _('An error occurred when trying to listen for iPhone devices.\n') + \
+            wx.MessageBox(_('An error occurred when trying to listen for iPhone devices.\n') + \
                           _('The port is probably already used. Please try to specify a\n') + \
                           _('different port in the iPhone section of the configuration\n') + \
                           _('and restart Task Coach.\n') + \
-                          _('Error details: %s') % str(e), wx.OK)
+                          _('Error details: %s') % str(e), _('Error'), wx.OK)
 
     def createWindowComponents(self):
         self.__usingTabbedMainWindow = self.settings.getboolean('view', 
