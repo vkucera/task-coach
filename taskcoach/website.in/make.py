@@ -397,6 +397,27 @@ pages['faq'] = \
     the preferences dialog ('Edit' -> 'Preferences'), check 'Save settings 
     (TaskCoach.ini) in the same directory as the program' to make sure your
     settings are saved on the USB stick.</P>
+    <P><I>Can I have a global hotkey to enter new tasks?</I></P>
+    <P>On Windows, install <A HREF="http://www.autohotkey.com">AutoHotkey</A> 
+    (it's open source and free) and put this in your <TT>AutoHotKey.ahk</TT>
+    script:
+    <PRE>^!n::
+IfWinExist Task Coach
+{
+    WinActivate Task Coach
+}
+else
+{
+    Run %%A_ProgramFiles%%\\TaskCoach\\taskcoach.exe
+}
+WinWaitActive Task Coach
+WinMenuSelectItem Task Coach,, Task, New task...
+return
+</PRE>
+    This will register Control-Alt-N as global hotkey for entering a new
+    task. %(name)s will be started if necessary. If you use a translation, you
+    need to change 'Task, New task...' into your language.</P>
+    <P>We'd appreciate suggestions for other platforms...</P> 
 '''
 
 pages['roadmap'] = \
