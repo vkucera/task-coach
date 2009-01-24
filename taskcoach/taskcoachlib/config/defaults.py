@@ -239,6 +239,11 @@ defaults = { \
     'syncnotes': 'False',
     'showwarning': 'True',
     },
+'iphone': { \
+    'password': '',
+    'host': '',
+    'port': '8001',
+    },
 }
 
 minimum = { \

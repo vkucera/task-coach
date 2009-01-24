@@ -283,7 +283,21 @@ class TaskBehaviorPage(SettingsPage):
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
         self.fit()
-        
+
+
+class IPhonePage(SettingsPage):
+    def __init__(self, *args, **kwargs):
+        super(IPhonePage, self).__init__(*args, **kwargs)
+        self.addTextSetting('iphone', 'password',
+            _('Password for synchronization with iPhone'))
+        self.addTextSetting('iphone', 'host',
+            _('Address the iPhone will connect to'), # Kind of, avoid confusing the user...
+            helpText='restart')
+        self.addIntegerSetting('iphone', 'port',
+            _('Port the iPhone will connect to'),
+            helpText='restart')
+        self.fit()
+
         
 class EditorPage(SettingsPage):
     def __init__(self, *args, **kwargs):
@@ -311,7 +325,8 @@ class Preferences(widgets.ListbookDialog):
             (SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), 'save'),
             (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'language'),
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'colorize'),
-            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior')]
+            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior'),
+            (IPhonePage(parent=self._interior, columns=3, settings=self.settings), _('iPhone'), 'iphone')]
         if '__WXMAC__' in wx.PlatformInfo:
             pages.append((EditorPage(parent=self._interior, columns=2, settings=self.settings), _('Editor'), 'edit'))
         for page, title, bitmap in pages:

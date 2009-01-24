@@ -16,10 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, socket
 from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
+from taskcoachlib.iphone.protocol import IPhoneAcceptor
 import viewer, toolbar, uicommand, remindercontroller
 
 
@@ -224,6 +225,16 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
                             settings.setboolean('syncml', 'showwarning', False)
                     finally:
                         dlg.Destroy()
+
+        try:
+            IPhoneAcceptor(self, settings)
+        except socket.error, e:
+            wx.MessageBox(_('Error'),
+                          _('An error occurred when trying to listen for iPhone devices.\n') + \
+                          _('The port is probably already used. Please try to specify a\n') + \
+                          _('different port in the iPhone section of the configuration\n') + \
+                          _('and restart Task Coach.\n') + \
+                          _('Error details: %s') % str(e), wx.OK)
 
     def createWindowComponents(self):
         self.__usingTabbedMainWindow = self.settings.getboolean('view', 
