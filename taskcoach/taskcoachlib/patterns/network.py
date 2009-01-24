@@ -21,14 +21,11 @@ import asynchat, socket
 
 class Acceptor(asynchat.async_chat):
     def __init__(self, handlerFactory, host, port):
-        # The bind call is synchronous, so that the caller may catch
-        # any exception
+        asynchat.async_chat.__init__(self)
 
-        fp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        fp.bind((host, port))
-        fp.listen(5)
-
-        asynchat.async_chat.__init__(self, fp)
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.bind((host, port))
+        self.listen(5)
 
         self.handlerFactory = handlerFactory
 
