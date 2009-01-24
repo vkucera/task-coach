@@ -7,6 +7,7 @@
 //
 
 #import "CategoryViewController.h"
+#import "NavigationController.h"
 #import "StringChoiceController.h"
 #import "TaskViewController.h"
 
@@ -16,6 +17,8 @@
 #import "Domain/Category.h"
 
 @implementation CategoryViewController
+
+@synthesize navigationController;
 
 - (void)addCategory:(NSDictionary *)dict
 {
@@ -62,7 +65,7 @@
 - (IBAction)onAddCategory:(UIBarButtonItem *)button
 {
 	StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:NSLocalizedString(@"Enter category name", @"New category placeholder") target:self action:@selector(onCategoryAdded:)];
-	[self presentModalViewController:ctrl animated:YES];
+	[self.navigationController presentModalViewController:ctrl animated:YES];
 	[ctrl release];
 }
 
@@ -77,7 +80,7 @@
 		[self.tableView reloadData];
 	}
 
-	[self dismissModalViewControllerAnimated:YES];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark Table view methods
