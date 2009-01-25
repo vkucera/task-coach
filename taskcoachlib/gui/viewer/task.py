@@ -208,7 +208,7 @@ class SquareTaskViewer(BaseTaskViewer):
         self.settings.set(self.settingsSection(), 'sortby', choice)
         self.removeObserver(self.onTaskChange, 'task.%s'%oldChoice)
         self.registerObserver(self.onTaskChange, 'task.%s'%choice)
-        if choice in ('budget', 'budgetLeft', 'timeSpent'):
+        if choice in ('budget', 'timeSpent'):
             self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds()/1000
             self.__zero = date.TimeDelta()
         else:
@@ -272,9 +272,8 @@ class SquareTaskViewer(BaseTaskViewer):
 
     # Helper methods
     
-    renderer = dict(budget=render.budget, budgetLeft=render.budget,
-                    timeSpent=render.timeSpent, fixedFee=render.amount,
-                    revenue=render.amount)
+    renderer = dict(budget=render.budget, timeSpent=render.timeSpent, 
+                    fixedFee=render.amount, revenue=render.amount)
     
     def render(self, value):
         return self.renderer[self.__orderBy](value)
