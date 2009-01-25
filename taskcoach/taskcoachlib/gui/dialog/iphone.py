@@ -44,6 +44,8 @@ would you like to use ?''')), 1, wx.EXPAND|wx.ALL, 5)
 
         self.SetSizer(vsz)
         self.Fit()
+        self.CentreOnScreen()
+        self.RequestUserAttention()
 
         self.value = 3 # cancel
 

@@ -10,6 +10,7 @@
 #import "Network.h"
 #import "SyncViewController.h"
 #import "ProtocolNegotiationState.h"
+#import "Database.h"
 
 // Initial state just waits for the connection to be established.
 
@@ -32,6 +33,7 @@
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
 {
+	[[Database connection] begin];
 	controller.state = [ProtocolNegotiationState stateWithNetwork:network controller:controller];
 }
 

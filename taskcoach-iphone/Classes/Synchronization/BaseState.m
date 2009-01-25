@@ -9,6 +9,7 @@
 #import "BaseState.h"
 #import "Network.h"
 #import "SyncViewController.h"
+#import "Database.h"
 
 @implementation BaseState
 
@@ -24,6 +25,7 @@
 	[view show];
 	[view release];
 	[network release];
+	[[Database connection] rollback];
 }
 
 - (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller
@@ -38,6 +40,7 @@
 	[view show];
 	[view release];
 	[network release];
+	[[Database connection] rollback];
 }
 
 @end

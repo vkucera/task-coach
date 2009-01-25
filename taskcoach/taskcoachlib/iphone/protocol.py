@@ -175,7 +175,5 @@ class GUIDState(BaseState):
         print 'Synchronization type:', type_
         disp.push(struct.pack('!i', type_))
 
-        if type_ == 3:
-            disp.close_when_done()
-        else:
+        if type_ != 3:
             disp.close_when_done() # XXXTODO
