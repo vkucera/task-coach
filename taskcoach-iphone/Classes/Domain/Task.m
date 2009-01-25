@@ -23,11 +23,11 @@ static Statement *_saveStatement = NULL;
 @synthesize dueDate;
 @synthesize completionDate;
 
-- initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus description:(NSString *)theDescription
+- initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId description:(NSString *)theDescription
 			startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate
 			category:(NSNumber *)theCategory
 {
-	if (self = [super initWithId:theId name:theName status:theStatus])
+	if (self = [super initWithId:theId name:theName status:theStatus taskCoachId:tcId])
 	{
 		description = [theDescription retain];
 		startDate = [theStartDate retain];
@@ -59,20 +59,20 @@ static Statement *_saveStatement = NULL;
 
 - (void)bindId
 {
-	[[self saveStatement] bindInteger:objectId atIndex:8];
+	[[self saveStatement] bindInteger:objectId atIndex:9];
 }
 
 - (void)bind
 {
 	[super bind];
 	if (category)
-		[[self saveStatement] bindInteger:[category intValue] atIndex:3];
+		[[self saveStatement] bindInteger:[category intValue] atIndex:4];
 	else
-		[[self saveStatement] bindNullAtIndex:3];
-	[[self saveStatement] bindString:description atIndex:4];
-	[[self saveStatement] bindString:startDate atIndex:5];
-	[[self saveStatement] bindString:dueDate atIndex:6];
-	[[self saveStatement] bindString:completionDate atIndex:7];
+		[[self saveStatement] bindNullAtIndex:4];
+	[[self saveStatement] bindString:description atIndex:5];
+	[[self saveStatement] bindString:startDate atIndex:6];
+	[[self saveStatement] bindString:dueDate atIndex:7];
+	[[self saveStatement] bindString:completionDate atIndex:8];
 }
 
 - (NSInteger)taskStatus

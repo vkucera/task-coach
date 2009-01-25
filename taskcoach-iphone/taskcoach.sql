@@ -10,17 +10,20 @@ CREATE TABLE Category
 (
 	id INTEGER PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
-	status INTEGER NOT NULL DEFAULT 1
+	status INTEGER NOT NULL DEFAULT 1,
+	taskcoachId VARCHAR(255) NULL DEFAULT NULL
 );
 
 CREATE INDEX idxCategoryStatus ON Category (status);
 CREATE INDEX idxCategoryName ON Category (name);
+CREATE INDEX idxCategoryTaskCoachId ON Category (taskcoachId);
 
 CREATE TABLE Task
 (
 	id INTEGER PRIMARY KEY,
 	name VARCHAR(2048) NOT NULL,
 	status INTEGER NOT NULL DEFAULT 1,
+	taskcoachId VARCHAR(255) NULL DEFAULT NULL,
 
 	-- Task-specific fields
 
@@ -37,6 +40,7 @@ CREATE TABLE Task
 
 CREATE INDEX idxTaskStatus ON Task (status);
 CREATE INDEX idxTaskName ON Task (name);
+CREATE INDEX idxTaskTaskCoachId ON Task (taskcoachId);
 CREATE INDEX idxTaskCategory ON Task (categoryId);
 
 CREATE TABLE Meta

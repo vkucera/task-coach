@@ -30,7 +30,7 @@
 @property (nonatomic, retain) NSString *dueDate;
 @property (nonatomic, retain) NSString *completionDate;
 
-- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status description:(NSString *)description
+- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId description:(NSString *)description
 			startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate
 			category:(NSNumber *)category;
 
