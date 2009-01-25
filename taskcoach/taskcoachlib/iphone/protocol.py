@@ -93,6 +93,24 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 #
 # After all categories and tasks have been sent, Task Coach sends the file
 # GUID as a string.
+#
+# == Two-way ==
+#
+# All conventions are the same as in "Full from Task Coach".
+#
+# 1) The device sends four integers: number of new categories, number of new tasks,
+#    number of deleted tasks, and number of modified tasks.
+# 2) For each new category, the device sends its name, and waits for the ID.
+# 3) For each new task, the device sends it (same format as above, but without the
+#    ID) and waits for its ID.
+# 4) For each deleted task, the device sends its ID.
+# 5) For each modified task, the device sends it (same format as above)
+# 6) Go into "Full from Task Coach" mode.
+#
+# == Full from device ==
+#
+# yet TODO.
+
 
 class IPhoneAcceptor(Acceptor):
     def __init__(self, window, settings):
