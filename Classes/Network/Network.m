@@ -99,14 +99,7 @@
 	}
 	else if (expecting == 0)
 	{
-		if ([data length])
-		{
-			NSData *recvd = [NSData dataWithData:data];
-			[data setLength:0];
-			expecting = -1;
-
-			[delegate network:self didGetData:recvd];
-		}
+		[delegate network:self didGetData:[NSData dataWithBytes:NULL length:0]];
 	}
 }
 

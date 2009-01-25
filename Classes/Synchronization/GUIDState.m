@@ -7,6 +7,7 @@
 //
 
 #import "GUIDState.h"
+#import "FullFromDesktopState.h"
 #import "Network.h"
 #import "SyncViewController.h"
 #import "Database.h"
@@ -14,26 +15,21 @@
 
 @implementation GUIDState
 
-- initWithNetwork:(Network *)network controller:(SyncViewController *)controller
+- (void)activated
 {
-	if (self = [super init])
+	Statement *req = [[Database connection] statementWithSQL:@"SELECT value FROM Meta WHERE name='guid'"];
+	[req execWithTarget:self action:@selector(onGUID:)];
+	
+	if (guid == nil)
 	{
-		Statement *req = [[Database connection] statementWithSQL:@"SELECT value FROM Meta WHERE name='guid'"];
-		[req execWithTarget:self action:@selector(onGUID:)];
-
-		if (guid == nil)
-		{
-			[network appendInteger:0];
-		}
-		else
-		{
-			[network appendString:guid];
-		}
-
-		[network expect:4];
+		[myNetwork appendInteger:0];
+	}
+	else
+	{
+		[myNetwork appendString:guid];
 	}
 	
-	return self;
+	[myNetwork expect:4];
 }
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
@@ -50,7 +46,7 @@
 
 - (void)onGUID:(NSDictionary *)dict
 {
-	guid = [[dict objectForKey:@"guid"] retain];
+	guid = [[dict objectForKey:@"value"] retain];
 }
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
@@ -70,7 +66,7 @@
 			// XXXTODO two-way
 			break;
 		case 1:
-			// XXXTODO refresh from desktop
+			controller.state = [FullFromDesktopState stateWithNetwork:network controller:controller];
 			break;
 		case 2:
 			// XXXTODO refresh from device
@@ -79,9 +75,9 @@
 			// User cancel
 			controller.state = nil;
 			[[Database connection] rollback];
-			[controller dismissModalViewControllerAnimated:YES];
 			[network close];
 			[network release];
+			[controller finished];
 			break;
 	}
 }

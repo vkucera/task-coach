@@ -13,6 +13,17 @@
 
 @implementation BaseState
 
+- initWithNetwork:(Network *)network controller:(SyncViewController *)controller
+{
+	if (self = [super init])
+	{
+		myNetwork = network;
+		myController = controller;
+	}
+	
+	return self;
+}
+
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
 {
 	NSLog(@"Connection closed.");

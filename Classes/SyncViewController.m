@@ -18,10 +18,12 @@
 @synthesize state;
 @synthesize password;
 
-- init
+- initWithTarget:(id)theTarget action:(SEL)theAction
 {
 	if (self = [super initWithNibName:@"SyncView" bundle:[NSBundle mainBundle]])
 	{
+		target = theTarget;
+		action = theAction;
 	}
 	
 	return self;
@@ -36,6 +38,12 @@
 	[super dealloc];
 }
 
+- (void)finished
+{
+	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[target performSelector:action];
+}
+
 - (void)viewDidLoad
 {
 	label.text = NSLocalizedString(@"Connecting...", @"Connecting title");
@@ -44,6 +52,13 @@
 	NSLog(@"Starting synchronization");
 
 	self.state = [InitialState stateWithNetwork:[[Network alloc] initWithAddress:[Configuration configuration].host port:[Configuration configuration].port delegate:self] controller:self];
+}
+
+- (void)setState:(NSObject <State> *)newState
+{
+	[state release];
+	state = [newState retain];
+	[state activated];
 }
 
 // NetworkDelegate methods

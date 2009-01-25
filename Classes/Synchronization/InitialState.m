@@ -16,14 +16,9 @@
 
 @implementation InitialState
 
-- initWithNetwork:(Network *)network controller:(SyncViewController *)controller
+- (void)activated
 {
-	if (self = [super init])
-	{
-		controller.label.text = NSLocalizedString(@"Connecting...", @"Connecting title");
-	}
-	
-	return self;
+	myController.label.text = NSLocalizedString(@"Connecting...", @"Connecting title");
 }
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller

@@ -1,8 +1,8 @@
 //
-//  InitialState.h
+//  EndState.h
 //  TaskCoach
 //
-//  Created by Jérôme Laheurte on 24/01/09.
+//  Created by Jérôme Laheurte on 25/01/09.
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
@@ -10,7 +10,7 @@
 
 #import "BaseState.h"
 
-@interface InitialState : BaseState <State>
+@interface EndState : BaseState <State>
 {
 }
 

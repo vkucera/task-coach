@@ -12,7 +12,11 @@
 
 @interface BaseState : NSObject
 {
+	Network *myNetwork;
+	SyncViewController *myController;
 }
+
+- initWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller;
 - (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller;

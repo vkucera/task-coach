@@ -19,6 +19,9 @@
 	UITextField *password;
 
 	NSObject <State> *state;
+
+	id target;
+	SEL action;
 }
 
 @property (nonatomic, retain) IBOutlet UILabel *label;
@@ -28,6 +31,8 @@
 
 @property (nonatomic, retain) NSObject <State> *state;
 
-- init;
+- initWithTarget:(id)target action:(SEL)action;
+
+- (void)finished;
 
 @end
