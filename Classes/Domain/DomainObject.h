@@ -18,13 +18,15 @@
 	NSInteger objectId;
 	NSString *name;
 	NSInteger status;
+	NSString *taskCoachId;
 }
 
 @property (nonatomic, readonly) NSInteger objectId;
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, readonly) NSInteger status;
+@property (nonatomic, copy) NSString *taskCoachId;
 
-- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status;
+- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId;
 
 - (void)setStatus:(NSInteger)status;
 - (void)delete;

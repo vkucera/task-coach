@@ -17,14 +17,16 @@ static Statement *_saveStatement = NULL;
 @synthesize objectId;
 @synthesize name;
 @synthesize status;
+@synthesize taskCoachId;
 
-- initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus
+- initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId
 {
 	if (self = [super init])
 	{
 		objectId = theId;
 		name = [theName retain];
 		status = theStatus;
+		taskCoachId = tcId;
 	}
 	
 	return self;
@@ -33,6 +35,7 @@ static Statement *_saveStatement = NULL;
 - (void)dealloc
 {
 	[name release];
+	[taskCoachId release];
 	
 	[super dealloc];
 }
@@ -55,7 +58,7 @@ static Statement *_saveStatement = NULL;
 - (Statement *)saveStatement
 {
 	if (!_saveStatement)
-		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=? WHERE id=?", [self class]]] retain];
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=?, taskCoachId=? WHERE id=?", [self class]]] retain];
 	return _saveStatement;
 }
 
@@ -68,7 +71,7 @@ static Statement *_saveStatement = NULL;
 
 - (void)bindId
 {
-	[[self saveStatement] bindInteger:objectId atIndex:3];
+	[[self saveStatement] bindInteger:objectId atIndex:4];
 }
 
 - (void)bind
@@ -76,6 +79,7 @@ static Statement *_saveStatement = NULL;
 	[self bindId];
 	[[self saveStatement] bindString:name atIndex:1];
 	[[self saveStatement] bindInteger:status atIndex:2];
+	[[self saveStatement] bindString:taskCoachId atIndex:3];
 }
 
 - (void)save

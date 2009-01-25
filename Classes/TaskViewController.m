@@ -266,7 +266,8 @@
 		NSNumber *category = nil;
 		if (categoryId != -1)
 			category = [NSNumber numberWithInt:categoryId];
-		Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW description:@"" startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil category:category];
+		Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
+									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil category:category];
 		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];

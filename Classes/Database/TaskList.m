@@ -33,6 +33,7 @@
 - (void)taskCallback:(NSDictionary *)dict
 {
 	Task *task = [[Task alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue]
+							   taskCoachId:[dict objectForKey:@"taskCoachId"]
 							   description:[dict objectForKey:@"description"]
 							   startDate:[dict objectForKey:@"startDate"]
 							   dueDate:[dict objectForKey:@"dueDate"]

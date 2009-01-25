@@ -23,7 +23,7 @@
 
 - (void)addCategory:(NSDictionary *)dict
 {
-	Category *category = [[Category alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue]];
+	Category *category = [[Category alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue] taskCoachId:nil];
 	[categories addObject:category];
 }
 
