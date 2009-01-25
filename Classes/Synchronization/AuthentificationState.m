@@ -10,6 +10,7 @@
 #import "GUIDState.h"
 #import "Network.h"
 #import "SyncViewController.h"
+#import "Database.h"
 
 @implementation AuthentificationState
 
@@ -60,6 +61,7 @@
 		[view show];
 		[view release];
 		[theNetwork release];
+		[[Database connection] rollback];
 	}
 }
 

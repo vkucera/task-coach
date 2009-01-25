@@ -67,19 +67,21 @@
 	switch (syncType)
 	{
 		case 0:
-			// XXXTODO
+			// XXXTODO two-way
 			break;
 		case 1:
-			// XXXTODO
+			// XXXTODO refresh from desktop
 			break;
 		case 2:
-			// XXXTODO
+			// XXXTODO refresh from device
 			break;
 		case 3:
 			// User cancel
-			[controller dismissModalViewControllerAnimated:YES];
 			controller.state = nil;
+			[[Database connection] rollback];
+			[controller dismissModalViewControllerAnimated:YES];
 			[network close];
+			[network release];
 			break;
 	}
 }
