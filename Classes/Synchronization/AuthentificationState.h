@@ -12,6 +12,7 @@
 
 @interface AuthentificationState : BaseState <State, UITextFieldDelegate>
 {
+	NSMutableData *hashData;
 }
 
 @end
