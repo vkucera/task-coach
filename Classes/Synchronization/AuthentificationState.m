@@ -53,7 +53,7 @@
 	{
 		controller.state = nil;
 		[theNetwork close];
-		
+
 		UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Bad password error title")
 			  message:NSLocalizedString(@"Incorrect password.", @"Bad password message")
 			  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Bad password cancel button title") otherButtonTitles:nil];
