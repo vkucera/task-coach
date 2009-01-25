@@ -151,7 +151,7 @@ class PasswordState(BaseState):
                 self.setState(GUIDState, disp)
             else:
                 disp.push(struct.pack('!i', 0))
-                disp.close_when_done();
+                # The other end will close.
 
 
 class GUIDState(BaseState):
