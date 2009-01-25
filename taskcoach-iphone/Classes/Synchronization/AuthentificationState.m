@@ -19,6 +19,8 @@
 	{
 		network = theNetwork;
 
+		controller.label.text = NSLocalizedString(@"Authentication", @"Authentication state title");
+
 		controller.password.hidden = NO;
 		controller.password.delegate = self;
 
@@ -30,8 +32,6 @@
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	controller.label.text = NSLocalizedString(@"Authentification", @"Authentification state title");
-
 	return [[[AuthentificationState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
