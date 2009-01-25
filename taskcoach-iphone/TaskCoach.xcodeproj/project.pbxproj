@@ -60,6 +60,8 @@
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
 		A6DDF85D0F1F993800F35108 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DDF85B0F1F993800F35108 /* TaskView.xib */; };
 		A6EA679A0F2255E7004108B5 /* CheckView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6EA67990F2255E7004108B5 /* CheckView.m */; };
+		A6F8E3FA0F2C6CFD007D929C /* FullFromDesktopState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */; };
+		A6F8E4940F2C7574007D929C /* EndState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F8E4930F2C7574007D929C /* EndState.m */; };
 		A6FA97DC0F2B2E1C00505D87 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -151,6 +153,10 @@
 		A6DDF85C0F1F993800F35108 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6EA67980F2255E7004108B5 /* CheckView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckView.h; sourceTree = "<group>"; };
 		A6EA67990F2255E7004108B5 /* CheckView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckView.m; sourceTree = "<group>"; };
+		A6F8E3F80F2C6CFD007D929C /* FullFromDesktopState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullFromDesktopState.h; path = Synchronization/FullFromDesktopState.h; sourceTree = "<group>"; };
+		A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDesktopState.m; path = Synchronization/FullFromDesktopState.m; sourceTree = "<group>"; };
+		A6F8E4920F2C7574007D929C /* EndState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EndState.h; path = Synchronization/EndState.h; sourceTree = "<group>"; };
+		A6F8E4930F2C7574007D929C /* EndState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EndState.m; path = Synchronization/EndState.m; sourceTree = "<group>"; };
 		A6FA97DA0F2B2E1C00505D87 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -300,6 +306,10 @@
 				A6664EC40F2B504800638C68 /* AuthentificationState.m */,
 				A6C9843C0F2B77C40088A73F /* GUIDState.h */,
 				A6C9843D0F2B77C40088A73F /* GUIDState.m */,
+				A6F8E3F80F2C6CFD007D929C /* FullFromDesktopState.h */,
+				A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */,
+				A6F8E4920F2C7574007D929C /* EndState.h */,
+				A6F8E4930F2C7574007D929C /* EndState.m */,
 			);
 			name = Synchronization;
 			sourceTree = "<group>";
@@ -471,6 +481,8 @@
 				A6664DE70F2B498300638C68 /* InitialState.m in Sources */,
 				A6664EC50F2B504800638C68 /* AuthentificationState.m in Sources */,
 				A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */,
+				A6F8E3FA0F2C6CFD007D929C /* FullFromDesktopState.m in Sources */,
+				A6F8E4940F2C7574007D929C /* EndState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

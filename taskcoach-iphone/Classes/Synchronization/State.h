@@ -15,6 +15,8 @@
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
+- (void)activated;
+
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller;
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller;
 - (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller;

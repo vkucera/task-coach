@@ -26,15 +26,17 @@ def EVT_INVOKE(win, func):
 
 
 class InvokeEvent(wx.PyEvent):
-    def __init__(self, func, args, kwargs):
+    def __init__(self, sync, func, args, kwargs):
         super(InvokeEvent, self).__init__()
 
         self.SetEventType(wxEVT_INVOKE)
 
+        self.sync = sync
         self.func = func
         self.args = args
         self.kwargs = kwargs
         self.event = threading.Event()
+        self.result = None
 
 
 class DeferredCallMixin(object):
@@ -50,16 +52,17 @@ class DeferredCallMixin(object):
         event.result = event.func(*event.args, **event.kwargs)
         event.event.set()
 
-    def Invoke(self, func, *args, **kwargs):
+    def Invoke(self, sync, func, *args, **kwargs):
         """When called from any thread other than the main GUI thread,
         Invoke(function, *args, **kwargs) will call 'function' from
         the GUI thread, block until it returns, and return its return
-        value."""
+        value, or returns immediately if 'sync' is False."""
 
-        event = InvokeEvent(func, args, kwargs)
+        event = InvokeEvent(sync, func, args, kwargs)
         wx.PostEvent(self, event)
 
-        event.event.wait()
+        if sync:
+            event.event.wait()
 
         return event.result
 
@@ -69,6 +72,14 @@ def synchronized(func):
     make a method automatically called through Invoke."""
 
     def inner(self, *args, **kwargs):
-        return self.Invoke(func, self, *args, **kwargs)
+        return self.Invoke(True, func, self, *args, **kwargs)
+
+    return inner
+
+def synchronizednb(func):
+    """Same as synchronized, but the call doesn't block."""
+
+    def inner(self, *args, **kwargs):
+        return self.Invoke(False, func, self, *args, **kwargs)
 
     return inner

@@ -26,7 +26,7 @@ static Statement *_saveStatement = NULL;
 		objectId = theId;
 		name = [theName retain];
 		status = theStatus;
-		taskCoachId = tcId;
+		taskCoachId = [tcId retain];
 	}
 	
 	return self;

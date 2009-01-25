@@ -12,7 +12,6 @@
 
 @interface AuthentificationState : BaseState <State, UITextFieldDelegate>
 {
-	Network *network;
 }
 
 @end

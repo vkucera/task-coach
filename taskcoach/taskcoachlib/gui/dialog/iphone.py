@@ -17,7 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+
+from taskcoachlib.gui.threads import DeferredCallMixin, synchronized, synchronizednb
 from taskcoachlib.i18n import _
+
 
 class IPhoneSyncTypeDialog(wx.Dialog):
     def __init__(self, *args, **kwargs):
@@ -59,3 +62,32 @@ would you like to use ?''')), 1, wx.EXPAND|wx.ALL, 5)
 
     def OnCancel(self, evt):
         self.EndModal(wx.ID_CANCEL)
+
+
+class IPhoneSyncDialog(DeferredCallMixin, wx.Dialog):
+    def __init__(self, deviceName, *args, **kwargs):
+        super(IPhoneSyncDialog, self).__init__(*args, **kwargs)
+
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(wx.StaticText(self, wx.ID_ANY, _('Synchronizing with %s...') % deviceName),
+                  0, wx.ALL, 3)
+
+        self.gauge = wx.Gauge(self, wx.ID_ANY)
+        self.gauge.SetRange(100)
+        sizer.Add(self.gauge, 0, wx.EXPAND|wx.ALL, 3)
+
+        self.SetSizer(sizer)
+        self.Fit()
+        self.CentreOnScreen()
+
+    @synchronized
+    def SetProgress(self, value, total):
+        self.gauge.SetValue(int(100 * value / total))
+
+    @synchronizednb
+    def Started(self):
+        self.ShowModal()
+
+    @synchronized
+    def Finished(self):
+        self.EndModal(wx.ID_OK)

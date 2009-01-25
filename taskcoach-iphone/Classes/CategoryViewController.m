@@ -140,9 +140,15 @@
 
 - (IBAction)onSynchronize:(UIBarButtonItem *)button
 {
-	SyncViewController *ctrl = [[SyncViewController alloc] init];
+	SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished)];
 	[self.navigationController presentModalViewController:ctrl animated:YES];
 	[ctrl release];
+}
+
+- (void)onSyncFinished
+{
+	[self loadCategories];
+	[self.tableView reloadData];
 }
 
 @end

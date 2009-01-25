@@ -14,21 +14,14 @@
 
 @implementation AuthentificationState
 
-- initWithNetwork:(Network *)theNetwork controller:(SyncViewController *)controller
+- (void)activated
 {
-	if (self = [super init])
-	{
-		network = theNetwork;
-
-		controller.label.text = NSLocalizedString(@"Authentication", @"Authentication state title");
-
-		controller.password.hidden = NO;
-		controller.password.delegate = self;
-
-		[controller.password becomeFirstResponder];
-	}
+	myController.label.text = NSLocalizedString(@"Authentication", @"Authentication state title");
 	
-	return self;
+	myController.password.hidden = NO;
+	myController.password.delegate = self;
+	
+	[myController.password becomeFirstResponder];
 }
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
@@ -41,7 +34,7 @@
 	// n/a
 }
 
-- (void)network:(Network *)theNetwork didGetData:(NSData *)data controller:(SyncViewController *)controller
+- (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
 {
 	int32_t status = ntohl(*((int32_t *)[data bytes]));
 	
@@ -53,14 +46,14 @@
 	else
 	{
 		controller.state = nil;
-		[theNetwork close];
+		[network close];
 
 		UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Bad password error title")
 			  message:NSLocalizedString(@"Incorrect password.", @"Bad password message")
 			  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Bad password cancel button title") otherButtonTitles:nil];
 		[view show];
 		[view release];
-		[theNetwork release];
+		[network release];
 		[[Database connection] rollback];
 	}
 }
@@ -69,9 +62,13 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-	[network expect:4];
-	[network appendString:textField.text];
-	
+	[myNetwork expect:4];
+	[myNetwork appendString:textField.text];
+
+	// Also send device name right after the password
+	UIDevice *dev = [UIDevice currentDevice];
+	[myNetwork appendString:dev.name];
+
 	[textField resignFirstResponder];
 	textField.hidden = YES;
 
