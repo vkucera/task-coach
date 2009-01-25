@@ -85,8 +85,17 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-	[hashData appendData:[textField.text dataUsingEncoding:kCFStringEncodingUTF8]];
-	
+	// Though MacOS (and so the iPhone simulator) do know how to create data from a string
+	// using kCFStringEncodingUTF8, the iPhone itself doesn't. It's able to encode a
+	// string in UTF-8 though. Go figure.
+
+	//[hashData appendData:[textField.text dataUsingEncoding:kCFStringEncodingUTF8]];
+
+	const char *bf = [textField.text UTF8String];
+	[hashData appendData:[NSData dataWithBytes:bf length:strlen(bf)]];
+
+	// End of UTF-8 hack.
+
 	CC_SHA1_CTX context;
 	CC_SHA1_Init(&context);
 	CC_SHA1_Update(&context, [hashData bytes], [hashData length]);
