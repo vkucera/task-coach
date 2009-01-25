@@ -348,7 +348,7 @@ if you re-enable SyncML and make a sync with the same server you used
 previously, all those items will reappear, as the server
 doesn't know they're deleted.</p>
 
-<p>Additionaly, prior to version 0.71.4 of %(name)s, these deleted
+<p>In addition, prior to version 0.71.4 of %(name)s, these deleted
 tasks and notes were kept around even with the SyncML feature
 disabled, so tasks and notes were never actually deleted. the "Purge
 deleted items" menu item can be used when upgrading to 0.71.4 to clear
