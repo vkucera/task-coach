@@ -13,12 +13,20 @@
 
 @implementation ProtocolNegotiationState
 
+- initWithNetwork:(Network *)network controller:(SyncViewController *)controller
+{
+	if (self = [super init])
+	{
+		controller.label.text = NSLocalizedString(@"Protocol negotiation...", @"Protocol negotiation title");
+		[network expect:4];
+	}
+
+	return self;
+}
+
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	controller.label.text = NSLocalizedString(@"Protocol negotiation...", @"Protocol negotiation title");
-	[network expect:4];
-
-	return [[[ProtocolNegotiationState alloc] init] autorelease];
+	return [[[ProtocolNegotiationState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
