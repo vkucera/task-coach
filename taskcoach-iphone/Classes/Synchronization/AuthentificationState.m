@@ -6,6 +6,8 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
+#include <CommonCrypto/CommonDigest.h>
+
 #import "AuthentificationState.h"
 #import "GUIDState.h"
 #import "Network.h"
@@ -21,12 +23,19 @@
 	myController.password.hidden = NO;
 	myController.password.delegate = self;
 	
-	[myController.password becomeFirstResponder];
+	[myNetwork expect:512];
 }
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
 	return [[[AuthentificationState alloc] initWithNetwork:network controller:controller] autorelease];
+}
+
+- (void)dealloc
+{
+	[hashData release];
+	
+	[super dealloc];
 }
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
@@ -36,25 +45,39 @@
 
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
 {
-	int32_t status = ntohl(*((int32_t *)[data bytes]));
-	
-	if (status)
+	if ([data length] == 4)
 	{
-		NSLog(@"Password was accepted.");
-		controller.state = [GUIDState stateWithNetwork:network controller:controller];
+		int32_t status = ntohl(*((int32_t *)[data bytes]));
+	
+		if (status)
+		{
+			NSLog(@"Password was accepted.");
+			
+			// Also send device name
+			UIDevice *dev = [UIDevice currentDevice];
+			NSLog(@"Sending device name: %@", dev.name);
+			[network appendString:dev.name];
+
+			controller.state = [GUIDState stateWithNetwork:network controller:controller];
+		}
+		else
+		{
+			controller.state = nil;
+			[network close];
+
+			UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Bad password error title")
+													message:NSLocalizedString(@"Incorrect password.", @"Bad password message")
+													delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Bad password cancel button title") otherButtonTitles:nil];
+			[view show];
+			[view release];
+			[network release];
+			[[Database connection] rollback];
+		}
 	}
 	else
 	{
-		controller.state = nil;
-		[network close];
-
-		UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Bad password error title")
-			  message:NSLocalizedString(@"Incorrect password.", @"Bad password message")
-			  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Bad password cancel button title") otherButtonTitles:nil];
-		[view show];
-		[view release];
-		[network release];
-		[[Database connection] rollback];
+		hashData = [[NSMutableData alloc] initWithData:data];
+		[myController.password becomeFirstResponder];
 	}
 }
 
@@ -62,12 +85,16 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-	[myNetwork expect:4];
-	[myNetwork appendString:textField.text];
+	[hashData appendData:[textField.text dataUsingEncoding:kCFStringEncodingUTF8]];
+	
+	CC_SHA1_CTX context;
+	CC_SHA1_Init(&context);
+	CC_SHA1_Update(&context, [hashData bytes], [hashData length]);
+	unsigned char hash[20];
+	CC_SHA1_Final(hash, &context);
 
-	// Also send device name right after the password
-	UIDevice *dev = [UIDevice currentDevice];
-	[myNetwork appendString:dev.name];
+	[myNetwork append:[NSData dataWithBytes:hash length:20]];
+	[myNetwork expect:4];
 
 	[textField resignFirstResponder];
 	textField.hidden = YES;

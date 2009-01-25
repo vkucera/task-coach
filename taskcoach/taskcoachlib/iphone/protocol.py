@@ -23,7 +23,7 @@ from taskcoachlib.domain.date import Date
 
 from taskcoachlib.i18n import _
 
-import wx, asynchat, threading, asyncore, struct, StringIO
+import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 
 # Default port is 8001.
 #
@@ -34,9 +34,10 @@ import wx, asynchat, threading, asyncore, struct, StringIO
 # supported version (currently 1). If the iPhone answers 0, it doesn't
 # support it, so decrement and try again. If it answers 1, go to 2.
 #
-# 2) The iPhone sends the password. No challenge or encryption
-# supported yet. Task Coach answers either 0 (wrong password) and
-# closes the connection, or 1 (authentication OK), then go to 3.
+# 2) SHA1 challenge: Task Coach sends 512 random bytes to the
+# device. The device appends the user provided password as UTF-8 data
+# and sends back the SHA1 hash of the result. Task Coach checks the
+# hash and sends 0 (wrong hash) or 1 (authenticated), and then go to 3.
 #
 # 3) The iPhone sends its device name.
 #
@@ -124,6 +125,8 @@ class IPhoneHandler(asynchat.async_chat):
         self.data = StringIO.StringIO()
         self.state = InitialState(self)
 
+        random.seed(time.time())
+
     def collect_incoming_data(self, data):
         self.data.write(data)
 
@@ -194,22 +197,19 @@ class InitialState(BaseState):
 
 class PasswordState(BaseState):
     def init(self, disp):
+        self.hashData = ''.join([struct.pack('B', random.randint(0, 255)) for i in xrange(512)])
+        disp.push(self.hashData)
+
         self.length = None
-        disp.set_terminator(4)
+        disp.set_terminator(20)
 
     def handleData(self, disp, data):
-        if self.length is None:
-            self.length, = struct.unpack('!i', data)
-            print 'Password length:', self.length
-            disp.set_terminator(self.length)
+        if data == sha.sha(self.hashData + disp.password.encode('UTF-8')).digest():
+            disp.pushInteger(1)
+            print 'Authentication OK'
+            self.setState(DeviceNameState, disp)
         else:
-            print 'Password:', data
-            if data.decode('UTF-8') == disp.password:
-                disp.pushInteger(1)
-                self.setState(DeviceNameState, disp)
-            else:
-                disp.pushInteger(0)
-                # The other end will close.
+            disp.pushInteger(0)
 
 
 class DeviceNameState(BaseState):
@@ -220,8 +220,10 @@ class DeviceNameState(BaseState):
     def handleData(self, disp, data):
         if self.length is None:
             self.length, = struct.unpack('!i', data)
+            print 'Name length:', self.length
             disp.set_terminator(self.length)
         else:
+            print 'Device name:', data
             self.deviceName = data.decode('UTF-8')
             self.setState(GUIDState, disp)
 
