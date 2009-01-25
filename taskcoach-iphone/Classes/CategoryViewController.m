@@ -109,7 +109,7 @@
     
 	if (indexPath.row)
 	{
-		cell.text = [[categories objectAtIndex:indexPath.row - 1] name];
+		cell.text = [NSString stringWithFormat:@"%@ (%d)", [[categories objectAtIndex:indexPath.row - 1] name ], [[categories objectAtIndex:indexPath.row - 1] count]];
 	}
 	else
 	{

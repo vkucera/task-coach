@@ -7,7 +7,25 @@
 //
 
 #import "Category.h"
+#import "Database.h"
+#import "Statement.h"
+#import "Configuration.h"
 
 @implementation Category
+
+- (NSInteger)count
+{
+	if ([Configuration configuration].showCompleted)
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM AllTask WHERE categoryId=%d", objectId]] execWithTarget:self action:@selector(setCount:)];
+	else
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM AllTask WHERE categoryId=%d AND completionDate IS NULL", objectId]] execWithTarget:self action:@selector(setCount:)];
+
+	return taskCount;
+}
+
+- (void)setCount:(NSDictionary *)dict
+{
+	taskCount = [[dict objectForKey:@"total"] intValue];
+}
 
 @end

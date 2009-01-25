@@ -12,6 +12,9 @@
 
 @interface Category : DomainObject
 {
+	NSInteger taskCount;
 }
+
+- (NSInteger)count;
 
 @end
