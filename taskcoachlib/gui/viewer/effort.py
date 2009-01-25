@@ -36,7 +36,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
     
     def __init__(self, *args, **kwargs):
         self.aggregation = 'details'
-        self.tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', None)
+        self.tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', [])
         kwargs.setdefault('settingsSection', 'effortviewer')
         self.__hiddenTotalColumns = []
         self.__hiddenWeekdayColumns = []
@@ -49,8 +49,9 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             eventType=effort.Effort.colorChangedEventType())
         
     def domainObjectsToView(self):
-        self.tasksToShowEffortFor = self.tasksToShowEffortFor or self.taskFile.tasks()
-        return domain.base.SearchFilter(self.tasksToShowEffortFor)
+        return domain.base.SearchFilter(\
+             domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
+                                             selectedItems=self.tasksToShowEffortFor))
         
     def isSortable(self):
         return False # FIXME: make effort viewers sortable too?

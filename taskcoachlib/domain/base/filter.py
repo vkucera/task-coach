@@ -62,7 +62,19 @@ class Filter(patterns.SetDecorator):
 
     def rootItems(self):
         return [item for item in self if item.parent() is None]
+
+
+class SelectedItemsFilter(Filter):
+    def __init__(self, *args, **kwargs):
+        self.__selectedItems = kwargs.pop('selectedItems' , [])
+        super(SelectedItemsFilter, self).__init__(*args, **kwargs)
         
+    def filter(self, items):
+        if self.__selectedItems:
+            return [item for item in items if item in self.__selectedItems]
+        else:
+            return items
+    
 
 class SearchFilter(Filter):
     def __init__(self, *args, **kwargs):
