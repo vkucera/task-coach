@@ -63,7 +63,19 @@
 			
 			NSLog(@"%d categories, %d tasks", categoryCount, taskCount);
 			
-			state = 1;
+			if (categoryCount)
+			{
+				state = 1;
+			}
+			else if (taskCount)
+			{
+				state = 5;
+			}
+			else
+			{
+				state = 19;
+			}
+
 			[network expect:4];
 
 			break;
@@ -110,7 +122,15 @@
 			}
 			else
 			{
-				state = 5;
+				if (taskCount)
+				{
+					state = 5;
+				}
+				else
+				{
+					state = 19;
+				}
+
 				[network expect:4];
 			}
 
