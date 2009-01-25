@@ -10,6 +10,17 @@
 
 @implementation NSString (Utils)
 
++ (NSString *)stringFromUTF8Data:(NSData *)data
+{
+	static unsigned char zero = 0;
+	
+	// Seems the iPhone doesn't know about kCFStringEncodingUTF8...
+	NSMutableData *mdata = [[[NSMutableData alloc] initWithData:data] autorelease];
+	[mdata appendBytes:&zero length:1];
+	
+	return [NSString stringWithUTF8String:[mdata bytes]];
+}
+
 - (NSString *)stringByJoiningStrings:(NSArray *)strings
 {
 	switch ([strings count])

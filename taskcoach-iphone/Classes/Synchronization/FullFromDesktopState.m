@@ -14,6 +14,7 @@
 #import "SyncViewController.h"
 #import "Category.h"
 #import "Task.h"
+#import "String+Utils.h"
 
 @implementation FullFromDesktopState
 
@@ -89,7 +90,7 @@
 			break;
 		case 2:
 			[categoryName release];
-			categoryName = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+			categoryName = [[NSString stringFromUTF8Data:data] retain];
 			
 			state = 3;
 			[network expect:4];
@@ -102,12 +103,11 @@
 			break;
 		case 4:
 		{
-			NSString *categoryId = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+			NSString *categoryId = [NSString stringFromUTF8Data:data];
 			
 			Category *category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId];
 			[category save];
 			[category release];
-			[categoryId release];
 
 			NSLog(@"Added category %@", categoryName);
 
@@ -146,7 +146,7 @@
 			break;
 		case 6:
 			[taskSubject release];
-			taskSubject = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+			taskSubject = [[NSString stringFromUTF8Data:data] retain];
 			NSLog(@"Task subject: %@", taskSubject);
 			
 			state = 7;
@@ -160,7 +160,7 @@
 			break;
 		case 8:
 			[taskId release];
-			taskId = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+			taskId = [[NSString stringFromUTF8Data:data] retain];
 			NSLog(@"Task ID: %@", taskId);
 			
 			state = 9;
@@ -174,7 +174,7 @@
 			break;
 		case 10:
 			[taskDescription release];
-			taskDescription = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+			taskDescription = [[NSString stringFromUTF8Data:data] retain];
 			NSLog(@"Task description: %@", taskDescription);
 			
 			state = 11;
@@ -208,7 +208,7 @@
 			}
 
 			[*pStr release];
-			*pStr = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+			*pStr = [[NSString stringFromUTF8Data:data] retain];
 			NSLog(@"Date: %@", *pStr);
 			
 			state = state + 1;
@@ -223,7 +223,7 @@
 			break;
 		case 18:
 		{
-			NSString *catId = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+			NSString *catId = [NSString stringFromUTF8Data:data];
 
 			if (![taskStart length])
 			{
@@ -256,7 +256,6 @@
 			[task save];
 			NSLog(@"Added task %@ (category id=%@)", taskSubject, taskCategoryId);
 			[task release];
-			[catId release];
 			[taskCategoryId release];
 
 			++doneCount;
@@ -282,11 +281,12 @@
 			break;
 		case 20:
 		{
-			NSString *guid = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+			NSString *guid = [[NSString stringFromUTF8Data:data] retain];
 			Statement *req = [[Database connection] statementWithSQL:@"INSERT INTO Meta (name, value) VALUES (?, ?)"];
 			[req bindString:@"guid" atIndex:1];
 			[req bindString:guid atIndex:2];
 			[req exec];
+			[guid release];
 
 			controller.state = [EndState stateWithNetwork:network controller:controller];
 		}

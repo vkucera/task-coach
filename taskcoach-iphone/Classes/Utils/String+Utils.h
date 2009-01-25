@@ -10,6 +10,8 @@
 
 @interface NSString (Utils)
 
++ (NSString *)stringFromUTF8Data:(NSData *)data;
+
 // Python's string join-like method
 - (NSString *)stringByJoiningStrings:(NSArray *)strings;
 
