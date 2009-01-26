@@ -25,7 +25,7 @@ class Translator:
     
     def __init__(self, languageAndCountry=None):
         if languageAndCountry:
-            language = languageAndCountry[:2] # e.g. 'nl_NL'[:2] == 'nl'
+            language = languageAndCountry.split('_')[0] # e.g. 'nl_NL'[:2] == 'nl'
             self._importTranslation(languageAndCountry, language)
             self._setLocale(languageAndCountry, language)
 
