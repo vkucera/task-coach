@@ -33,7 +33,8 @@ Monday of the year).''', '2164568'),
         Feature('''Added a square map viewer for tasks that displays tasks in 
 the form of a set of nested squares. The relative size of the squares is 
 determined by either budget, budget left, time spent, fixed fee or revenue.'''),
-        Feature('''One can now open an effort viewer for a specific task.''')
+        Feature('''One can now open an effort viewer for a specific task.'''),
+        Feature('''Added (incomplete) Hindi and German (Low) translations.''')
         ]
     ),
 
