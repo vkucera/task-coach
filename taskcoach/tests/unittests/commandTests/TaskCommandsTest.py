@@ -41,10 +41,10 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         super(TaskCommandTestCase, self).tearDown()
         task.Clipboard().clear()
 
-    def delete(self, items=None):
+    def delete(self, items=None, shadow=False):
         if items == 'all':
             items = list(self.list)
-        command.DeleteTaskCommand(self.list, items or []).do()
+        command.DeleteTaskCommand(self.list, items or [], shadow=shadow).do()
  
     def paste(self, items=None):
         if items:
@@ -158,10 +158,18 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         self.failUnlessParentAndChild(self.parent, self.child)
         self.failUnlessParentAndChild(self.child, self.grandchild)
 
+    def assertShadowed(self, *tasks):
+        for task in tasks:
+            self.failUnless(task.isDeleted())
+        
     def testDeleteParent(self):
         self.delete([self.parent])
         self.assertDeleteWorks()
-
+        
+    def testDeleteParentWhileShadowing(self):
+        self.delete([self.parent], shadow=True)
+        self.assertShadowed(self.parent, *self.parent.children())
+        
     def testDeleteParentAndChild(self):
         self.delete([self.parent, self.child])
         self.assertDeleteWorks()

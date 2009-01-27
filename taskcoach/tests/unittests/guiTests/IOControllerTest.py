@@ -93,7 +93,7 @@ class IOControllerTest(test.TestCase):
                                      expectedFilenames=filenames[1:])
         
     def testSaveTaskFileWithoutTasksButWithNotes(self):
-        self.taskFile.notes().append(note.Note('Note'))
+        self.taskFile.notes().append(note.Note(subject='Note'))
         def saveasReplacement(*args, **kwargs):
             self.saveAsCalled = True
         originalSaveAs = self.iocontroller.__class__.saveas
@@ -153,27 +153,27 @@ class IOControllerTest(test.TestCase):
         self.failUnless(self.showerrorCalled)
 
     def testNothingDeleted(self):
-        self.taskFile.tasks().append(task.Task('Task'))
-        self.taskFile.notes().append(note.Note('Note'))
+        self.taskFile.tasks().append(task.Task(subject='Task'))
+        self.taskFile.notes().append(note.Note(subject='Note'))
         self.failIf(self.iocontroller.hasDeletedItems())
 
     def testNoteDeleted(self):
-        self.taskFile.tasks().append(task.Task('Task'))
-        myNote = note.Note('Note')
+        self.taskFile.tasks().append(task.Task(subject='Task'))
+        myNote = note.Note(subject='Note')
         myNote.markDeleted()
         self.taskFile.notes().append(myNote)
         self.failUnless(self.iocontroller.hasDeletedItems())
 
     def testTaskDeleted(self):
-        myTask = task.Task('Task')
+        myTask = task.Task(subject='Task')
         myTask.markDeleted()
         self.taskFile.tasks().append(myTask)
-        self.taskFile.notes().append(note.Note('Note'))
+        self.taskFile.notes().append(note.Note(subject='Note'))
         self.failUnless(self.iocontroller.hasDeletedItems())
 
     def testPurgeNothing(self):
-        myTask = task.Task('Task')
-        myNote = note.Note('Note')
+        myTask = task.Task(subject='Task')
+        myNote = note.Note(subject='Note')
         self.taskFile.tasks().append(myTask)
         self.taskFile.notes().append(myNote)
         self.iocontroller.purgeDeletedItems()
@@ -181,8 +181,8 @@ class IOControllerTest(test.TestCase):
         self.assertEqual(self.taskFile.notes(), [myNote])
 
     def testPurgeNote(self):
-        myTask = task.Task('Task')
-        myNote = note.Note('Note')
+        myTask = task.Task(subject='Task')
+        myNote = note.Note(subject='Note')
         self.taskFile.tasks().append(myTask)
         self.taskFile.notes().append(myNote)
         myNote.markDeleted()
@@ -191,8 +191,8 @@ class IOControllerTest(test.TestCase):
         self.assertEqual(self.taskFile.notes(), [])
 
     def testPurgeTask(self):
-        myTask = task.Task('Task')
-        myNote = note.Note('Note')
+        myTask = task.Task(subject='Task')
+        myNote = note.Note(subject='Note')
         self.taskFile.tasks().append(myTask)
         self.taskFile.notes().append(myNote)
         myTask.markDeleted()

@@ -242,7 +242,7 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
                                       self.viewer, self.taskFile))
         self.createTaskBarIcon()
         self.reminderController = \
-            remindercontroller.ReminderController(self.taskFile.tasks(), 
+            remindercontroller.ReminderController(self, self.taskFile.tasks(), 
                 self.settings)
         
     def AddPage(self, page, caption, *args):

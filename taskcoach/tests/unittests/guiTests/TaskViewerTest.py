@@ -118,6 +118,18 @@ class CommonTests(object):
         self.taskList.remove(self.task)
         self.assertItems()
 
+    def testUndoRemoveTaskWithSubtask(self):
+        self.task.addChild(self.child)
+        self.taskList.append(self.task)
+        self.viewer.widget.select([self.viewer.getIndexOfItem(self.task)])
+        command = self.viewer.deleteItemCommand()
+        command.do()
+        command.undo()
+        if self.viewer.isTreeViewer():
+            self.assertItems((self.task, 1), self.child)
+        else:
+            self.assertItems(self.child, self.task)
+
     def testCurrent(self):
         self.taskList.append(self.task)
         self.viewer.widget.select([(0,)])
@@ -587,7 +599,29 @@ class ColumnsTests(object):
         self.taskList.append(self.task)
         self.child.setPriority(10)
         self.assertEqual('task.totalPriority', self.viewer.events[0].type())
+        
+    def testChangeHourlyFeeWhileColumnShown(self):
+        self.showColumn('hourlyFee')
+        self.taskList.append(self.task)
+        self.task.setHourlyFee(100)
+        self.assertEqual('100.00', self.getItemText(0, 3))
+        
+    def testChangeFixedFeeWhileColumnShown(self):
+        self.showColumn('fixedFee')
+        self.taskList.append(self.task)
+        self.task.setFixedFee(200)
+        self.assertEqual('200.00', self.getItemText(0, 3))
 
+    def testChangeTotalFixedFeeWhileColumnShown(self):
+        self.showColumn('totalFixedFee')
+        self.taskList.append(self.task)
+        self.taskList.append(self.child)
+        self.task.addChild(self.child)
+        self.task.setFixedFee(100)
+        self.child.setFixedFee(200)
+        self.viewer.setSortOrderAscending(False)
+        self.assertEqual('300.00', self.getItemText(0, 3))
+        
     # Test all attributes...
 
     def testGetColorForDefaultTask(self):

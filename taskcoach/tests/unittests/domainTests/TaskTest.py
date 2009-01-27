@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx, sets
+import test, wx
 from unittests import asserts
 from taskcoachlib import patterns
 from taskcoachlib.domain import task, effort, date, attachment, note
@@ -294,6 +294,13 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.registerObserver('task.fixedFee')
         self.task.setFixedFee(1000)
         self.assertEqual(1000, self.events[0].value())
+
+    def testSetFixedFeeCausesTotalFixedFeeNotification(self):
+        self.registerObserver('task.totalFixedFee')
+        self.task.setFixedFee(1000)
+        self.assertEqual([patterns.Event(self.task, 'task.totalFixedFee', 
+                          1000)], 
+                         self.events)
     
     def testSetFixedFeeCausesRevenueChangeNotification(self):
         self.registerObserver('task.revenue')
@@ -802,6 +809,14 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.setBudget(oneHour)
         self.assertEqual(oneHour, self.events[0].value())
 
+    def testTotalBudgetNotification_WhenRemovingChild(self):
+        self.task1_1.setBudget(oneHour)
+        self.registerObserver('task.totalBudget')
+        self.task.removeChild(self.task1_1)
+        self.assertEqual([patterns.Event(self.task, 'task.totalBudget', 
+                                         date.TimeDelta(0))], 
+                         self.events)
+
     def testTotalBudgetLeftNotification_WhenChildBudgetChanges(self):
         self.registerObserver('task.totalBudgetLeft')
         self.task1_1.setBudget(oneHour)
@@ -867,6 +882,12 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         activeEffort.setStop()
         self.assertEqual(patterns.Event(self.task1, 
             self.task1.trackStopEventType(), activeEffort), self.events[-1])
+
+    def testSetFixedFeeOfChild(self):
+        self.registerObserver('task.totalFixedFee')
+        self.task1_1.setFixedFee(1000)
+        self.failUnless(patterns.Event(self.task, 'task.totalFixedFee', 1000) \
+                        in self.events)
 
     def testGetFixedFeeRecursive(self):
         self.task.setFixedFee(2000)

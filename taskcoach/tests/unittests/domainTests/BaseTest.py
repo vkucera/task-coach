@@ -78,7 +78,7 @@ class SynchronizedObjectTest(test.TestCase):
         self.registerObserver(self.object.markDeletedEventType())
         self.object.__setstate__(state)                
         self.assertOneEventReceived(self.object, 
-            self.object.markDeletedEventType())
+            self.object.markDeletedEventType(), self.object.STATUS_DELETED)
 
     def testSetStateToNotDeletedCausesNotification(self):
         state = self.object.__getstate__()
@@ -86,7 +86,7 @@ class SynchronizedObjectTest(test.TestCase):
         self.registerObserver(self.object.markNotDeletedEventType())
         self.object.__setstate__(state)                
         self.assertOneEventReceived(self.object, 
-            self.object.markNotDeletedEventType())
+            self.object.markNotDeletedEventType(), self.object.STATUS_NEW)
                     
                     
 class ObjectSubclass(base.Object):
@@ -181,14 +181,12 @@ class ObjectTest(test.TestCase):
     
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
-                              status=self.object.getStatus(),
-                              color=None), 
+                              status=self.object.getStatus(), color=None), 
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
-                        status=42,
-                        color=wx.RED)
+                        status=self.object.STATUS_DELETED, color=wx.RED)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
     

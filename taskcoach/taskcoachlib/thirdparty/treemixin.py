@@ -389,6 +389,10 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         self.SetCurrentItem(rootItem)
         self.RefreshChildrenRecursively(rootItem)
         self.Update()
+        # Expanding and collapsing trigger events, and the event handlers
+        # might query the tree before we're done refreshing, so postpone
+        # expanding and collapsing items until we're done refreshing.
+        self.RefreshExpansionStatesRecursively(rootItem)
                                 
     def RefreshItem(self, index):
         """ Redraws the item with the specified index. """
@@ -422,10 +426,6 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         item = self.DoRefreshItem(item, itemIndex, hasChildren)
         if hasChildren:
             self.RefreshChildrenRecursively(item, itemIndex)
-            # Expanding and collapsing trigger events, and the event handlers
-            # might query the tree before we're done refreshing, so postpone
-            # expanding and collapsing items until we're done refreshing.
-            wx.CallAfter(self.RefreshExpansionState, item, itemIndex)
         else:
             self.DeleteChildren(item)
  
@@ -484,17 +484,12 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
     def RefreshCheckedState(self, item, index):
         self.__refreshAttribute(item, index, 'ItemChecked')
 
+    def RefreshExpansionStatesRecursively(self, item):
+        for child in self.GetItemChildren(item, recursively=True):
+            self.RefreshExpansionState(child, self.GetIndexOfItem(child))
+
     def RefreshExpansionState(self, item, itemIndex):
-        # We need to be careful with the itemIndex here, because 
-        # RefreshExpansionState is called by wx.CallAfter. If there are two 
-        # updates right after one another, this method is called after the 
-        # second update and the itemIndex passed to this method may not be 
-        # valid anymore
-        wx.YieldIfNeeded() # Process user input if needed
-        try:
-            itemShouldBeExpanded = self.OnGetItemExpanded(itemIndex)
-        except:
-            return
+        itemShouldBeExpanded = self.OnGetItemExpanded(itemIndex)
         if itemShouldBeExpanded == 'Undetermined':
             return
         itemIsExpanded = self.IsExpanded(item)

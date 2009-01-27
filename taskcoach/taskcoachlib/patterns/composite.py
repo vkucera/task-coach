@@ -20,13 +20,11 @@ import observer
 
 
 class Composite(object):
-    def __init__(self, *args, **kwargs):
-        children = kwargs.pop('children', [])
-        parent = kwargs.pop('parent', None)
-        super(Composite, self).__init__(*args, **kwargs)
+    def __init__(self, children=None, parent=None):
+        super(Composite, self).__init__()
         self.__parent = parent
-        self.__children = children
-        for child in children:
+        self.__children = children or []
+        for child in self.__children:
             child.setParent(self)
         
     def __getstate__(self):

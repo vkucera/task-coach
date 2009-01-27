@@ -35,6 +35,17 @@ the form of a set of nested squares. The relative size of the squares is
 determined by either budget, budget left, time spent, fixed fee or revenue.'''),
         Feature('''One can now open an effort viewer for a specific task.'''),
         Feature('''Added (incomplete) Hindi and German (Low) translations.''')
+        ],
+    bugsFixed=[
+        Bug('''Don't crash when adding a task.''', '2467347'),
+        Bug('''Update the total fixed fee column in the task viewer when
+adding a subtask with a fixed fee.''', '2467347'),
+        Bug('''Mark task file dirty when the user edits a task color.'''),
+        Bug('''Update the hourly fee column in the task viewer when the 
+the user edits the hourly fee of a task.'''),
+        Bug('''Make it possible to add an effort record to a new task.'''),
+        Bug('''When opening all attachments of an item, give an error message
+for each attachment that cannot be opened.''')
         ]
     ),
 
@@ -55,7 +66,8 @@ hidden before.''', '2372909'),
         Bug('''When marking a recurring task completed, recur its reminder too, 
 if any.''', '2376415'),
         Bug('''Refresh task status at midnight.''', '2095205'),
-        Bug('''Fix tab traversal in the effort editor on Linux.''', '1965751')]
+        Bug('''Fix tab traversal in the effort editor on Linux.''', '1965751')
+        ]
     ),
              
 Release('0.71.4', 'December 6, 2008',
