@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib import gui, patterns, config
 from taskcoachlib.domain import task, date
 
@@ -29,17 +29,30 @@ class ReminderControllerUnderTest(gui.ReminderController):
     def showReminderMessage(self, message):
         self.messages.append(message)
 
+        
+class DummyWindow(object):
+    def IsShown(self):
+        return True
+    
+    def IsActive(self):
+        return True
 
-class ReminderControllerTest(test.TestCase):
+
+class ReminderControllerTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
-        self.task = task.Task('Task')
-        self.taskList.append(self.task)
-        self.reminderController = ReminderControllerUnderTest(self.taskList,
-            config.Settings(load=False))
+        self.reminderController = ReminderControllerUnderTest(DummyWindow(), 
+            self.taskList, config.Settings(load=False))
         self.nowDateTime = date.DateTime.now()
         self.reminderDateTime = self.nowDateTime + date.TimeDelta(hours=1)
-        
+
+
+class ReminderControllerTest(ReminderControllerTestCase):
+    def setUp(self):
+        super(ReminderControllerTest, self).setUp()
+        self.task = task.Task('Task')
+        self.taskList.append(self.task)
+
     def testSetTaskReminderAddsClockEventToPublisher(self):
         self.task.setReminder(self.reminderDateTime)
         self.assertEqual([self.reminderController.onReminder], 
@@ -111,15 +124,12 @@ class ReminderControllerTest(test.TestCase):
         self.failUnless(abs(self.nowDateTime + oneHour - self.task.reminder()) < date.TimeDelta(seconds=5))
                
 
-class ReminderControllerTest_TwoTasksWithSameReminderDateTime(test.TestCase):
+class ReminderControllerTest_TwoTasksWithSameReminderDateTime(ReminderControllerTestCase):
     def setUp(self):
-        self.taskList = task.TaskList()
-        self.reminderDateTime = date.DateTime.now() + date.TimeDelta(hours=1)
+        super(ReminderControllerTest_TwoTasksWithSameReminderDateTime, self).setUp()
         self.task1 = task.Task('Task 1', reminder=self.reminderDateTime)
         self.task2 = task.Task('Task 2', reminder=self.reminderDateTime)
         self.taskList.extend([self.task1, self.task2])
-        self.reminderController = ReminderControllerUnderTest(self.taskList,
-            config.Settings(load=False))
 
     def testClockNotificationResultsInTwoMessages(self):
         date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)

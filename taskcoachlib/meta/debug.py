@@ -18,30 +18,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 
-
-def log_call(func):
+def log_call(traceback_depth):
     ''' Decorator for function calls that prints the function name,
         arguments and result to stdout. Usage:
         
-        @log_call
+        @log_call(traceback_depth)
         def function(arg):
             ...
     '''
-    
     # Import here instead of at the module level to prevent unnecessary 
     # inclusion of the inspect module when packaging the application:
     import inspect 
     
-    def inner(*args, **kwargs):
-        result = func(*args, **kwargs)
-        write = sys.stdout.write
-        for frame in inspect.stack(context=2)[5:0:-1]:
-            write(format_traceback(frame))
-        write('%s\n'%signature(func, args, kwargs, result))
-        write('===\n')
-        return result
-    return inner
-    
+    def outer(func):        
+        def inner(*args, **kwargs):
+            result = func(*args, **kwargs)
+            write = sys.stdout.write
+            for frame in inspect.stack(context=2)[traceback_depth:0:-1]:
+                write(format_traceback(frame))
+            write('%s\n'%signature(func, args, kwargs, result))
+            write('===\n')
+            return result
+        return inner
+    return outer    
+        
     
 def time_call(func):
     ''' Decorator for function calls that times the call. '''

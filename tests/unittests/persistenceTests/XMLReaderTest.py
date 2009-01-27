@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import xml.parsers.expat, sets, wx, StringIO, os
+import xml.parsers.expat, wx, StringIO, os
 import test
 from taskcoachlib import persistence
 from taskcoachlib.domain import task, date

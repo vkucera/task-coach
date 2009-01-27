@@ -23,7 +23,7 @@ from taskcoachlib.domain import category, note
 
 class CategorizableCompositeObjectTest(test.TestCase):
     def setUp(self):
-        self.categorizable = category.CategorizableCompositeObject('categorizable')
+        self.categorizable = category.CategorizableCompositeObject(subject='categorizable')
         self.category = category.Category('category')
         
     categoryAddedEventType = category.CategorizableCompositeObject.categoryAddedEventType()
@@ -86,10 +86,10 @@ class CategorizableCompositeObjectTest(test.TestCase):
         
     def testAddParentToCategory(self):
         self.registerObserver(self.totalCategoryAddedEventType)
-        child = category.CategorizableCompositeObject('child')
+        child = category.CategorizableCompositeObject(subject='child')
         self.categorizable.addChild(child)
         child.setParent(self.categorizable)
-        cat = category.Category('Parent category')
+        cat = category.Category(subject='Parent category')
         self.categorizable.addCategory(cat)
         self.assertEqual([patterns.Event(child, self.totalCategoryAddedEventType, 
             cat)], self.events)
@@ -298,10 +298,10 @@ class CategorizableCompositeObjectTest(test.TestCase):
 
 class CategoryTest(test.TestCase):
     def setUp(self):
-        self.category = category.Category('category')
-        self.subCategory = category.Category('subcategory')
-        self.categorizable = category.CategorizableCompositeObject('parent')
-        self.child = category.CategorizableCompositeObject('child')
+        self.category = category.Category(subject='category')
+        self.subCategory = category.Category(subject='subcategory')
+        self.categorizable = category.CategorizableCompositeObject(subject='parent')
+        self.child = category.CategorizableCompositeObject(subject='child')
         
     def testGetState_Subject(self):
         self.assertEqual('category', self.category.__getstate__()['subject'])

@@ -526,7 +526,7 @@ class ViewerWithColumns(Viewer):
                     self.showColumn(column, show)
                 break
 
-    def showColumn(self, column, show=True):
+    def showColumn(self, column, show=True, refresh=True):
         if show:
             self.__visibleColumns.append(column)
             # Make sure we keep the columns in the right order:
@@ -539,7 +539,8 @@ class ViewerWithColumns(Viewer):
         self.widget.showColumn(column, show)
         self.settings.set(self.settingsSection(), 'columns', 
             str([column.name() for column in self.__visibleColumns]))
-        self.widget.RefreshItems()
+        if refresh:
+            self.widget.RefreshItems()
 
     def hideColumn(self, visibleColumnIndex):
         column = self.visibleColumns()[visibleColumnIndex]

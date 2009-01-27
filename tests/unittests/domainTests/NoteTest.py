@@ -110,7 +110,7 @@ class NoteTest(test.TestCase):
         
 class NoteOwnerTest(test.TestCase):
     def setUp(self):
-        self.note = note.Note('Note')
+        self.note = note.Note(subject='Note')
         self.noteOwner = note.NoteOwner()
         self.events = []
         

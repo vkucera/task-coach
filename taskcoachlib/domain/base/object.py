@@ -32,7 +32,6 @@ class SynchronizedObject(patterns.Observable):
 
     def __init__(self, *args, **kwargs):
         self.__status = kwargs.pop('status', self.STATUS_NEW)
-        self.__frozenStatus = kwargs.pop('frozenStatus', False)
         super(SynchronizedObject, self).__init__(*args, **kwargs)
 
     @classmethod
@@ -57,48 +56,46 @@ class SynchronizedObject(patterns.Observable):
             super(SynchronizedObject, self).__setstate__(state)
         except AttributeError:
             pass
-
-        oldstatus = self.__status
-        self.__status = state['status']
-
-        if oldstatus == self.STATUS_DELETED:
-            self.notifyObservers(patterns.Event(self,
-                self.markNotDeletedEventType()))
-        elif self.__status == self.STATUS_DELETED:
-            self.notifyObservers(patterns.Event(self,
-                self.markDeletedEventType()))
-
-    def freezeStatus(self):
-        self.__frozenStatus = True
-
-    def thawStatus(self):
-        self.__frozenStatus = False
+        if state['status'] == self.__status:
+            return
+        if state['status'] == self.STATUS_CHANGED:
+            self.markDirty()
+        elif state['status'] == self.STATUS_DELETED:
+            self.markDeleted()
+        elif state['status'] == self.STATUS_NEW:
+            self.markNew()
+        elif state['status'] == self.STATUS_NONE:
+            self.cleanDirty()
 
     def getStatus(self):
         return self.__status
 
     def markDirty(self, force=False):
-        if (self.__status == self.STATUS_NONE or force) and not self.__frozenStatus:
+        oldstatus = self.__status
+        if self.__status == self.STATUS_NONE or force:
             self.__status = self.STATUS_CHANGED
-
-    def markNew(self):
-        if not self.__frozenStatus:
-            self.__status = self.STATUS_NEW
-
-    def markDeleted(self):
-        if not self.__frozenStatus:
-            self.__status = self.STATUS_DELETED
-            self.notifyObservers(patterns.Event(self, 
-                self.markDeletedEventType(), self.__status))
-
-    def cleanDirty(self):
-        if not self.__frozenStatus:
-            oldstatus = self.__status
-            self.__status = self.STATUS_NONE
-
             if oldstatus == self.STATUS_DELETED:
                 self.notifyObservers(patterns.Event(self, 
-                     self.markNotDeletedEventType(), self.__status))
+                    self.markNotDeletedEventType(), self.__status))
+
+    def markNew(self):
+        oldstatus = self.__status
+        self.__status = self.STATUS_NEW
+        if oldstatus == self.STATUS_DELETED:
+            self.notifyObservers(patterns.Event(self, 
+                 self.markNotDeletedEventType(), self.__status))
+
+    def markDeleted(self):
+        self.__status = self.STATUS_DELETED
+        self.notifyObservers(patterns.Event(self, 
+            self.markDeletedEventType(), self.__status))
+
+    def cleanDirty(self):
+        oldstatus = self.__status
+        self.__status = self.STATUS_NONE
+        if oldstatus == self.STATUS_DELETED:
+            self.notifyObservers(patterns.Event(self, 
+                 self.markNotDeletedEventType(), self.__status))
 
     def isNew(self):
         return self.__status == self.STATUS_NEW
@@ -329,4 +326,26 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def modificationEventTypes(class_):
         return super(CompositeObject, class_).modificationEventTypes() + \
             [class_.expansionChangedEventType()]
+
+    # Override SynchronizedObject methods to also mark child objects
+
+    def markDeleted(self, *args, **kwargs):
+        super(CompositeObject, self).markDeleted(*args, **kwargs)
+        for child in self.children():
+            child.markDeleted(*args, **kwargs)
+            
+    def markNew(self, *args, **kwargs):
+        super(CompositeObject, self).markNew(*args, **kwargs)
+        for child in self.children():
+            child.markNew(*args, **kwargs)
+
+    def markDirty(self, *args, **kwargs):
+        super(CompositeObject, self).markDirty(*args, **kwargs)
+        for child in self.children():
+            child.markDirty(*args, **kwargs)
+            
+    def cleanDirty(self, *args, **kwargs):        
+        super(CompositeObject, self).cleanDirty(*args, **kwargs)
+        for child in self.children():
+            child.cleanDirty(*args, **kwargs)
 

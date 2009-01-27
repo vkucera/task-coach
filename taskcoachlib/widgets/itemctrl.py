@@ -310,7 +310,6 @@ class _BaseCtrlWithColumns(object):
             elif colIndex < columnIndex:
                 newMap.append((colIndex, col))
         self.__indexMap = newMap
-
         self.DeleteColumn(columnIndex)
 
     def _allColumns(self):

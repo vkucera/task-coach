@@ -21,6 +21,32 @@ from taskcoachlib import patterns
 import dateandtime, date, timedelta
 
 
+class LargeIntervalTimer(wx.PyTimer):
+    ''' A timer that allows for unbounded large intervals, by dividing up the
+        interval in pieces. '''
+        
+    maxMillisecondsPerInterval = 24 * 60 * 60 * 1000
+    
+    def Start(self, milliseconds, oneShot=True):
+        self.millisecondsToGo = milliseconds
+        if self.Notify:
+            self.Notify()
+        
+    def Notify(self):
+        if self.millisecondsToGo <= 0:
+            super(LargeIntervalTimer, self).Notify()
+        else:
+            self._startInterval()
+
+    def _startInterval(self):
+        # To allow for arbitrary large intervals, we divide the interval 
+        # into pieces of at most self.maxMilliseconds:
+        nextInterval = min(self.millisecondsToGo, 
+                           self.maxMillisecondsPerInterval)
+        self.millisecondsToGo -= nextInterval
+        super(LargeIntervalTimer, self).Start(nextInterval, oneShot=True)
+        
+
 class PeriodicTimer(wx.PyTimer):
     ''' PeriodicTimer allows for scheduling a callback to be called on a
         periodic basis. '''
@@ -40,7 +66,7 @@ class PeriodicTimer(wx.PyTimer):
     def Stop(self):
         self._onceTimer.Stop()
         super(PeriodicTimer, self).Stop()
-        
+                
     def _startOfPeriodArguments(self, period):
         keywordArguments = dict()
         periods = self.periodsAllowed + ['microsecond']
@@ -51,49 +77,34 @@ class PeriodicTimer(wx.PyTimer):
 
     def _startFiringEveryPeriod(self, now=None):
         self.Notify()
-        super(PeriodicTimer, self).Start(milliseconds=self._period.milliseconds(), oneShot=False)
+        super(PeriodicTimer, self).Start(milliseconds=self._period.milliseconds(), 
+                                         oneShot=False)
 
     def _startOfNextPeriod(self, now):
         now = now or dateandtime.DateTime.now()
         now = now.replace(**self._resetToStartOfPeriodArguments)
         return now + self._period
-                
 
-class OnceTimer(wx.PyTimer):
+        
+class OnceTimer(LargeIntervalTimer):
     ''' OnceTimer allows for scheduling a callback at a specific date and 
         time. '''
-        
-    maxMillisecondsPerInterval = 24 * 60 * 60 * 1000
-    
+            
     def __init__(self, callback, dateTime=None, now=None):
-        super(OnceTimer, self).__init__(self._onEndOfInterval)
-        self._callback = callback
+        self.__callback = callback
+        super(OnceTimer, self).__init__(self._notify)
         if dateTime:
             self.Start(dateTime, now)
         
     def Start(self, dateTime, now=None):
         now = now or dateandtime.DateTime.now()
         timeDelta = dateTime - now
-        self.millisecondsToGo = timeDelta.milliseconds()
-        self._onEndOfInterval()
-            
-    def _onEndOfInterval(self):
-        if self.millisecondsToGo <= 0:
-            self._notify()
-        else:
-            self._startInterval()
+        super(OnceTimer, self).Start(timeDelta.milliseconds())
 
     def _notify(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self._callback(now)
-        
-    def _startInterval(self):
-        # To allow for arbitrary large intervals, we divide the interval 
-        # into pieces of at most self.maxMilliseconds:
-        nextInterval = min(self.millisecondsToGo, 
-                           self.maxMillisecondsPerInterval)
-        self.millisecondsToGo -= nextInterval
-        super(OnceTimer, self).Start(nextInterval, oneShot=True)
+        self.__callback(now)
+
 
 
 class ScheduledTimer(OnceTimer):
@@ -140,7 +151,7 @@ class Clock(patterns.Observer, patterns.Observable):
         
     def _createTimers(self):
         self._secondTimer = PeriodicTimer(self.notifySecondObservers, 'second')
-        self._midnightTimer = PeriodicTimer(self.notifyMidnightObservers, 'second')
+        self._midnightTimer = PeriodicTimer(self.notifyMidnightObservers, 'day')
         self._midnightTimer.Start()
         self._scheduledTimer = ScheduledTimer(self.notifySpecificTimeObservers)
                 
@@ -175,10 +186,7 @@ class Clock(patterns.Observer, patterns.Observable):
 
     def notifyMidnightObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        today = date.Date(now.year, now.month, now.day)
-        if today != self._lastMidnightNotified:
-            self._lastMidnightNotified = today
-            self.notifyObservers(patterns.Event(self, 'clock.midnight', now))        
+        self.notifyObservers(patterns.Event(self, 'clock.midnight', now))        
 
     def reset(self):
         self._lastMidnightNotified = date.Today()

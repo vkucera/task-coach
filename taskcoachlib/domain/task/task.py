@@ -416,27 +416,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def hourlyFeeChangedEventType(class_):
         return '%s.hourlyFee'%class_
-    
-    @classmethod
-    def totalHourlyFeeChangedEventType(class_):
-        return '%s.totalHourlyFee'%class_
             
     def notifyObserversOfHourlyFeeChange(self, hourlyFee):
         self.notifyObservers(patterns.Event(self, 
             self.hourlyFeeChangedEventType(), hourlyFee))
-        if self.parent():
-            self.parent().notifyObserversOfChildHourlyFeeChange(hourlyFee)
         if self.timeSpent() > date.TimeDelta():
             self.notifyObserversOfRevenueChange()
             for effort in self.efforts():
                 effort.notifyObserversOfRevenueChange()
                 
-    def notifyObserversOfChildHourlyFeeChange(self, hourlyFee):
-        self.notifyObservers(patterns.Event(self, 
-            self.totalHourlyFeeChangedEventType(), hourlyFee))
-        if self.parent():
-            self.parent().notifyObserversOfChildHourlyFeeChange(hourlyFee)
-        
     def revenue(self, recursive=False):
         if recursive:
             childRevenues = sum(child.revenue(recursive) for child in self.children())
@@ -454,9 +442,19 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def setFixedFee(self, fixedFee):
         if fixedFee != self._fixedFee:
             self._fixedFee = fixedFee
-            self.notifyObservers(patterns.Event(self, 'task.fixedFee',
-                fixedFee))
+            self.notifyObserversOfFixedFeeChange(fixedFee)
             self.notifyObserversOfRevenueChange()
+
+    def notifyObserversOfFixedFeeChange(self, fixedFee):
+        self.notifyObservers(patterns.Event(self, 'task.fixedFee', fixedFee))
+        self.notifyObserversOfTotalFixedFeeChange()
+
+    def notifyObserversOfTotalFixedFeeChange(self):
+        self.notifyObservers(patterns.Event(self, 'task.totalFixedFee', 
+                                            self.fixedFee(recursive=True)))
+        parent = self.parent()
+        if parent:
+            parent.notifyObserversOfTotalFixedFeeChange()
 
     def notifyObserversOfRevenueChange(self):
         self.notifyObservers(patterns.Event(self, 'task.revenue', 

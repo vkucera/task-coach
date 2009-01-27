@@ -64,12 +64,12 @@ class IntegrationTest_EmptyList(IntegrationTestCase):
 class IntegrationTest(IntegrationTestCase):
     def fillContainers(self):
         self.description = 'Description\nLine 2'
-        self.task = task.Task('Subject', self.description, 
-            startdate=date.Yesterday(), duedate=date.Tomorrow(), 
-            completiondate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
+        self.task = task.Task(subject='Subject', description=self.description, 
+            startDate=date.Yesterday(), dueDate=date.Tomorrow(), 
+            completionDate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
             priority=4, hourlyFee=100.5, fixedFee=1000, 
             recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
-            reminder=date.DateTime(2004,1,1), color=wx.RED, expand=True,
+            reminder=date.DateTime(2004,1,1), color=wx.RED, expandedContexts=['viewer1'],
             shouldMarkCompletedWhenAllChildrenCompleted=True)
         self.child = task.Task()
         self.task.addChild(self.child)
@@ -84,7 +84,8 @@ class IntegrationTest(IntegrationTestCase):
         self.task.addNote(note.Note(subject='Task note'))
         self.task2 = task.Task('Task 2', priority=-1954)
         self.taskList.extend([self.task, self.task2])
-        self.note = note.Note('Note', 'Description', children=[note.Note('Child')])
+        self.note = note.Note(subject='Note', description='Description', 
+                              children=[note.Note(subject='Child')])
         self.notes.append(self.note)
         self.category.addCategorizable(self.note)
 

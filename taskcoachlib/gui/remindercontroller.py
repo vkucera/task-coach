@@ -24,7 +24,7 @@ from taskcoachlib.gui.dialog import reminder, editor
 
 
 class ReminderController(object):
-    def __init__(self, taskList, settings):
+    def __init__(self, mainWindow, taskList, settings):
         super(ReminderController, self).__init__()
         patterns.Publisher().registerObserver(self.onSetReminder,
             eventType='task.reminder')
@@ -35,6 +35,7 @@ class ReminderController(object):
             eventType=taskList.removeItemEventType(),
             eventSource=taskList)
         self.__tasksWithReminders = {} # {task: reminderDateTime}
+        self.__mainWindow = mainWindow
         self.__mainWindowWasHidden = False
         self.__registerRemindersForTasks(taskList)
         self.settings = settings
@@ -60,16 +61,18 @@ class ReminderController(object):
             if reminderDateTime <= now:
                 self.showReminderMessage(task)
                 self.__removeReminder(task)
-
-    def showReminderMessage(self, task):
-        self.mainWindow = wx.GetApp().GetTopWindow()
-        reminderDialog = reminder.ReminderDialog(task, self.mainWindow)
-        reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)
-        self.__mainWindowWasHidden = not self.mainWindow.IsShown()
+        self.requestUserAttention()
+        
+    def requestUserAttention(self):
+        self.__mainWindowWasHidden = not self.__mainWindow.IsShown()
         if self.__mainWindowWasHidden:
-            self.mainWindow.Show()
-        if not self.mainWindow.IsActive():
-            self.mainWindow.RequestUserAttention()
+            self.__mainWindow.Show()
+        if not self.__mainWindow.IsActive():
+            self.__mainWindow.RequestUserAttention()
+        
+    def showReminderMessage(self, task):
+        reminderDialog = reminder.ReminderDialog(task, self.__mainWindow)
+        reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
         reminderDialog.Show()
         
     def onCloseReminderDialog(self, event):
@@ -85,13 +88,13 @@ class ReminderController(object):
         # Undoing the snoozing makes little sense, because it would set the 
         # reminder back to its original date-time, which is now in the past.
         if dialog.openTaskAfterClose:
-            editTask = editor.TaskEditor(self.mainWindow,
+            editTask = editor.TaskEditor(self.__mainWindow,
                 command.EditTaskCommand(self.taskList, [task]), 
                 self.mainWindow.taskFile, self.settings, bitmap='edit')
             editTask.Show()
         dialog.Destroy()
         if self.__mainWindowWasHidden:
-            self.mainWindow.Hide()
+            self.__mainWindow.Hide()
             
     def __registerRemindersForTasks(self, tasks):
         for task in tasks:

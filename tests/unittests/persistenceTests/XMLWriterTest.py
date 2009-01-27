@@ -174,8 +174,8 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('<category categorizables="%s" id="id" status="1" subject="test"/>'%child.id())
         
     def testSubCategoryWithoutTasks(self):
-        parentCategory = category.Category('parent')
-        childCategory = category.Category('child')
+        parentCategory = category.Category(subject='parent')
+        childCategory = category.Category(subject='child')
         parentCategory.addChild(childCategory)
         self.categoryContainer.extend([parentCategory, childCategory])
         self.expectInXML('<category id="%s" status="1" subject="parent">'
@@ -183,8 +183,8 @@ class XMLWriterTest(test.TestCase):
                          (parentCategory.id(), childCategory.id()))
 
     def testSubCategoryWithOneTask(self):
-        parentCategory = category.Category('parent')
-        childCategory = category.Category('child', categorizables=[self.task])
+        parentCategory = category.Category(subject='parent')
+        childCategory = category.Category(subject='child', categorizables=[self.task])
         parentCategory.addChild(childCategory)
         self.categoryContainer.extend([parentCategory, childCategory])
         self.expectInXML('<category id="%s" status="1" subject="parent">'
@@ -193,22 +193,22 @@ class XMLWriterTest(test.TestCase):
                                         childCategory.id()))
     
     def testFilteredCategory(self):
-        filteredCategory = category.Category('test', filtered=True, id='id')
+        filteredCategory = category.Category(subject='test', filtered=True, id='id')
         self.categoryContainer.extend([filteredCategory])
         self.expectInXML('<category filtered="True" id="id" status="1" subject="test"/>')
 
     def testCategoryWithDescription(self):
-        aCategory = category.Category('subject', description='Description', id='id')
+        aCategory = category.Category(subject='subject', description='Description', id='id')
         self.categoryContainer.append(aCategory)
         self.expectInXML('<category id="id" status="1" subject="subject"><description>Description</description></category>')
         
     def testCategoryWithUnicodeSubject(self):
-        unicodeCategory = category.Category(u'ï¬Ÿï­Žï­–', id='id')
+        unicodeCategory = category.Category(subject=u'ï¬Ÿï­Žï­–', id='id')
         self.categoryContainer.extend([unicodeCategory])
         self.expectInXML(u'<category id="id" status="1" subject="ï¬Ÿï­Žï­–"/>')
 
     def testCategoryWithDeletedTask(self):
-        aCategory = category.Category('category', tasks=[self.task], id='id')
+        aCategory = category.Category(subject='category', categorizables=[self.task], id='id')
         self.categoryContainer.append(aCategory)
         self.taskList.remove(self.task)
         self.expectInXML('<category id="id" status="1" subject="category"/>')
@@ -224,18 +224,18 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('id="%s"'%self.task.id())
         
     def testCategoryId(self):
-        aCategory = category.Category('category')
+        aCategory = category.Category(subject='category')
         self.categoryContainer.append(aCategory)
         self.expectInXML('id="%s"'%aCategory.id())
 
     def testNoteId(self):
-        aNote = note.Note('note')
+        aNote = note.Note(subject='note')
         self.noteContainer.append(aNote)
         self.expectInXML('id="%s"'%aNote.id())
 
     def testTwoTasks(self):
         self.task.setSubject('task 1')
-        task2 = task.Task('task 2')
+        task2 = task.Task(subject='task 2')
         self.taskList.append(task2)
         self.expectInXML('subject="task 2"')
 
@@ -292,19 +292,19 @@ class XMLWriterTest(test.TestCase):
                                                                                                   base.SynchronizedObject.STATUS_NEW))
         
     def testNoteWithCategory(self):
-        cat = category.Category('cat', id='catId')
+        cat = category.Category(subject='cat', id='catId')
         self.categoryContainer.append(cat)
-        aNote = note.Note('note', id='noteId', categories=[cat])
+        aNote = note.Note(subject='note', id='noteId', categories=[cat])
         self.noteContainer.append(aNote)
         cat.addCategorizable(aNote)
         self.expectInXML('<category categorizables="noteId" id="catId" status="1" subject="cat"/>')
 
     def testCategoryColor(self):
-        self.categoryContainer.append(category.Category('test', color=wx.RED))
+        self.categoryContainer.append(category.Category(subject='test', color=wx.RED))
         self.expectInXML('color="(255, 0, 0, 255)"')
 
     def testDontWriteInheritedCategoryColor(self):
-        parent = category.Category('test', color=wx.RED)
+        parent = category.Category(subject='test', color=wx.RED)
         child = category.Category(subject='child', id='id')
         parent.addChild(child)
         self.categoryContainer.append(parent)
