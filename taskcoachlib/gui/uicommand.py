@@ -1659,7 +1659,7 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
         if self.viewer.isShowingTasks() and self.viewer.curselection():
             selectedTasks = self.viewer.curselection()
         elif self.viewer.isShowingEffort():
-            selectedTasks = [self.firstTask(self.viewer.tasksToShowEffortFor)]
+            selectedTasks = [self.firstTask(self.viewer.domainObjectsToView())]
         else:
             selectedTasks = [self.firstTask(self.taskList)]
 
