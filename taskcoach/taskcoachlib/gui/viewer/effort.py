@@ -242,27 +242,24 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
 
     def createToolBarUICommands(self):
         commands = super(EffortViewer, self).createToolBarUICommands()
-        # This is needed for unit tests
+        # This is an instance variable for use in unit tests
         self.deleteUICommand = uicommand.EffortDelete(viewer=self,
                                                       effortList=self.presentation())
-        commands[-2:-2] = [None,
-                           uicommand.EffortNew(viewer=self,
-                                               effortList=self.presentation(),
-                                               taskList=self.taskFile.tasks(),
-                                               settings=self.settings),
-                           uicommand.EffortEdit(viewer=self,
-                                                effortList=self.presentation()),
-                           self.deleteUICommand]
-        return commands
-
-    def getToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(EffortViewer, self).getToolBarUICommands() 
-        toolBarUICommands.insert(-2, None) # Separator
+        # This is an instance variable so that the choice can be changed programmatically
         self.aggregationUICommand = \
-            uicommand.EffortViewerAggregationChoice(viewer=self) 
-        toolBarUICommands.insert(-2, self.aggregationUICommand)
-        return toolBarUICommands
+            uicommand.EffortViewerAggregationChoice(viewer=self)
+        for command in [None, 
+                        uicommand.EffortNew(viewer=self,
+                                            effortList=self.presentation(),
+                                            taskList=self.taskFile.tasks(),
+                                            settings=self.settings),
+                        uicommand.EffortEdit(viewer=self,
+                                             effortList=self.presentation()),
+                        self.deleteUICommand, 
+                        None,
+                        self.aggregationUICommand]:
+            commands.insert(-2, command)
+        return commands
 
     def getItemImage(self, index, which, column=0):
         return -1
