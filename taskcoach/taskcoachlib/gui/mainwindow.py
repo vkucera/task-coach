@@ -472,3 +472,29 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
                       _('task file, but the protocol negotiation failed. Please file a\n') + \
                       _('bug report.'),
                       _('Error'), wx.OK)
+
+    # The notification system is not thread-save; adding or modifying tasks
+    # or categories from the asyncore thread crashes the app.
+
+    @synchronized
+    def clearTasks(self):
+        self.taskFile._clear()
+
+    @synchronized
+    def restoreTasks(self, categories, tasks):
+        self.taskFile._clear()
+        for category in categories:
+            self.taskFile.categories().append(category)
+        for task in tasks:
+            self.taskFile.tasks().append(task)
+
+    @synchronized
+    def addIPhoneCategory(self, category):
+        self.taskFile.categories().append(category)
+
+    @synchronized
+    def addIPhoneTask(self, task, category):
+        self.taskFile.tasks().append(task)
+        if category:
+            task.addCategory(category)
+            category.addCategorizable(task)

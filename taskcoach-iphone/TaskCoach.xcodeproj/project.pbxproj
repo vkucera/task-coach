@@ -12,6 +12,9 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		A604D98E0F31C25B00D3DC79 /* FullFromDeviceState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */; };
+		A604D99C0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */; };
+		A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */; };
 		A61DE2390F1E3F5B004BC97E /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = A61DE2380F1E3F5B004BC97E /* Task.m */; };
 		A627606A0F221D0A0041D761 /* Configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = A62760690F221D0A0041D761 /* Configuration.m */; };
 		A62760710F221EFC0041D761 /* String+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A62760700F221EFC0041D761 /* String+Utils.m */; };
@@ -75,6 +78,12 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCoach_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullFromDeviceState.h; path = Synchronization/FullFromDeviceState.h; sourceTree = "<group>"; };
+		A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDeviceState.m; path = Synchronization/FullFromDeviceState.m; sourceTree = "<group>"; };
+		A604D99A0F31C7FA00D3DC79 /* FullFromDeviceTaskState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullFromDeviceTaskState.h; path = Synchronization/FullFromDeviceTaskState.h; sourceTree = "<group>"; };
+		A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDeviceTaskState.m; path = Synchronization/FullFromDeviceTaskState.m; sourceTree = "<group>"; };
+		A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGUIDState.h; path = Synchronization/GetGUIDState.h; sourceTree = "<group>"; };
+		A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGUIDState.m; path = Synchronization/GetGUIDState.m; sourceTree = "<group>"; };
 		A61DE2370F1E3F5B004BC97E /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Task.h; path = Domain/Task.h; sourceTree = "<group>"; };
 		A61DE2380F1E3F5B004BC97E /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Task.m; path = Domain/Task.m; sourceTree = "<group>"; };
 		A62760680F221D0A0041D761 /* Configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Configuration.h; path = Config/Configuration.h; sourceTree = "<group>"; };
@@ -310,6 +319,12 @@
 				A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */,
 				A6F8E4920F2C7574007D929C /* EndState.h */,
 				A6F8E4930F2C7574007D929C /* EndState.m */,
+				A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */,
+				A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */,
+				A604D99A0F31C7FA00D3DC79 /* FullFromDeviceTaskState.h */,
+				A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */,
+				A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */,
+				A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */,
 			);
 			name = Synchronization;
 			sourceTree = "<group>";
@@ -483,6 +498,9 @@
 				A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */,
 				A6F8E3FA0F2C6CFD007D929C /* FullFromDesktopState.m in Sources */,
 				A6F8E4940F2C7574007D929C /* EndState.m in Sources */,
+				A604D98E0F31C25B00D3DC79 /* FullFromDeviceState.m in Sources */,
+				A604D99C0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m in Sources */,
+				A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -23,7 +23,7 @@
 	myController.label.text = NSLocalizedString(@"Synchronizing...", @"Synchronizing title");
 	[myController.activity stopAnimating];
 	myController.progress.hidden = NO;
-	
+
 	[[[Database connection] statementWithSQL:@"DELETE FROM Category"] exec];
 	[[[Database connection] statementWithSQL:@"DELETE FROM Task"] exec];
 	[[[Database connection] statementWithSQL:@"DELETE FROM Meta WHERE name='guid'"] exec];

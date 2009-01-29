@@ -145,11 +145,20 @@
 
 - (void)appendString:(NSString *)string
 {
-	const char *bf = [string UTF8String];
-	int32_t len = strlen(bf);
+	if (string)
+	{
+		const char *bf = [string UTF8String];
+		int32_t len = strlen(bf);
 
-	[self appendInteger:len];
-	[self append:[NSData dataWithBytes:bf length:len]];
+		[self appendInteger:len];
+		
+		if (len)
+			[self append:[NSData dataWithBytes:bf length:len]];
+	}
+	else
+	{
+		[self appendInteger:0];
+	}
 }
 
 - (void)close

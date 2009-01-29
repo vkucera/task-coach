@@ -19,7 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib.gui.threads import synchronized, DeferredCallMixin
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncDialog
 from taskcoachlib.patterns.network import Acceptor
-from taskcoachlib.domain.date import Date
+from taskcoachlib.domain.date import Date, parseDate
+
+from taskcoachlib.domain.category import Category
+from taskcoachlib.domain.task import Task
 
 from taskcoachlib.i18n import _
 
@@ -100,8 +103,10 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 #
 # 1) The device sends two integers: number of categories, number of tasks
 # 2) For each category, the device sends the category name and waits for its ID.
-# 3) For each task, the device sends the full task (same format as above), and
-#    waits for its ID.
+# 3) For each task, the device sends the full task (same format as above, without
+#    the ID), and waits for its ID.
+# 4) Task Coach sends the GUID
+# 5) Task Coach closes the connection
 #
 # == Two-way ==
 #
@@ -182,10 +187,13 @@ class IPhoneHandler(asynchat.async_chat):
 
 
 class BaseState(object):
-    def __init__(self, *args, **kwargs):
-        self.init(*args, **kwargs)
+    def __init__(self, disp, *args, **kwargs):
+        self.oldTasks = disp.window.taskFile.tasks().copy()
+        self.oldCategories = disp.window.taskFile.categories().copy()
 
         self.dlg = None
+
+        self.init(disp, *args, **kwargs)
 
     def setState(self, state, *args, **kwargs):
         self.__class__ = state
@@ -195,7 +203,11 @@ class BaseState(object):
         if self.dlg is not None:
             self.dlg.Finished()
 
-    def init(self):
+        # Rollback
+        print 'Rollback!'
+        disp.window.restoreTasks(self.oldCategories, self.oldTasks)
+
+    def init(self, disp):
         pass
 
 
@@ -280,7 +292,10 @@ class GUIDState(BaseState):
 
             self.setState(FullFromDesktopState, disp)
         elif type_ == 2:
-            pass # XXXTODO
+            self.dlg = IPhoneSyncDialog(self.deviceName, disp.window, wx.ID_ANY, _('iPhone/iPod'))
+            self.dlg.Started()
+
+            self.setState(FullFromDeviceState, disp)
 
         # On cancel, the other end will close the connection
 
@@ -325,5 +340,110 @@ class FullFromDesktopState(BaseState):
             self.dlg.SetProgress(count, total)
 
         disp.pushString(disp.window.taskFile.guid())
+        self.setState(EndState, disp)
+
+
+class FullFromDeviceState(BaseState):
+    def init(self, disp):
+        disp.window.clearTasks()
+        disp.set_terminator(8)
+
+    def handleData(self, disp, data):
+        self.categoryCount, self.taskCount = struct.unpack('!ii', data)
+        self.total = self.categoryCount + self.taskCount
+        print '%d categories, %d tasks' % (self.categoryCount, self.taskCount)
+        self.count = 0
+        self.setState(FullFromDeviceCategoryState, disp)
+
+
+class FullFromDeviceCategoryState(BaseState):
+    def init(self, disp):
+        self.length = None
+        self.categoryMap = {}
+
+        disp.set_terminator(4)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            disp.set_terminator(self.length)
+        else:
+            print 'New category:', data
+            category = Category(data.decode('UTF-8'))
+            disp.window.addIPhoneCategory(category)
+            disp.pushString(category.id())
+            self.categoryMap[category.id()] = category
+
+            self.categoryCount -= 1
+            self.count += 1
+            self.dlg.SetProgress(self.count, self.total)
+
+            if self.categoryCount:
+                self.length = None
+                disp.set_terminator(4)
+            else:
+                self.setState(FullFromDeviceTaskState, disp)
+
+
+class FullFromDeviceTaskState(BaseState):
+    def init(self, disp):
+        self.length = None
+        self.state = 0
+        disp.set_terminator(4)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            if self.length == 0:
+                self.handleData(disp, '')
+            else:
+                disp.set_terminator(self.length)
+        else:
+            if self.state == 0:
+                self.subject = data.decode('UTF-8')
+            elif self.state == 1:
+                self.description = data.decode('UTF-8')
+            elif self.state == 2:
+                self.startDate = parseDate(data)
+            elif self.state == 3:
+                self.dueDate = parseDate(data)
+            elif self.state == 4:
+                self.completionDate = parseDate(data)
+            elif self.state == 5:
+                task = Task(subject=self.subject,
+                            description=self.description,
+                            startDate=self.startDate,
+                            dueDate=self.dueDate,
+                            completionDate=self.completionDate)
+
+                if data:
+                    category = self.categoryMap[data.decode('UTF-8')]
+                else:
+                    category = None
+
+                print 'New task:', self.subject, category
+
+                disp.window.addIPhoneTask(task, category)
+
+                disp.pushString(task.id())
+
+                self.taskCount -= 1
+                self.count += 1
+                self.dlg.SetProgress(self.count, self.total)
+
+            if self.state == 5 and self.taskCount == 0:
+                disp.pushString(disp.window.taskFile.guid())
+                self.setState(EndState, disp)
+            else:
+                self.state = (self.state + 1) % 6
+                self.length = None
+                disp.set_terminator(4)
+
+
+class EndState(BaseState):
+    def init(self, disp):
         disp.close_when_done()
         self.dlg.Finished()
+
+    def handleClose(self, disp):
+        pass
