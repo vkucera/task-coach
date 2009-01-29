@@ -317,7 +317,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>GetGUIDState.m</string>
+								<string>EndState.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -325,11 +325,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>GetGUIDState.m</string>
+										<string>EndState.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6A9D0FC0F31DD7500CBB256</string>
+										<string>A68876930F31DF2600BD753A</string>
 										<key>history</key>
 										<array>
 											<string>A68EDF0F0F1E24AB00F51FF2</string>
@@ -386,7 +386,6 @@
 											<string>A678EA620F2C9725001F13EB</string>
 											<string>A678EA770F2C9774001F13EB</string>
 											<string>A6863C360F2CA5760025234E</string>
-											<string>A6485BA70F2CB601009F349D</string>
 											<string>A6485BD20F2CBA26009F349D</string>
 											<string>A604D9B90F31CCC300D3DC79</string>
 											<string>A604D9BA0F31CCC300D3DC79</string>
@@ -407,7 +406,8 @@
 											<string>A6A9D0EB0F31DCD500CBB256</string>
 											<string>A6A9D0EC0F31DCD500CBB256</string>
 											<string>A6A9D0ED0F31DCD500CBB256</string>
-											<string>A6A9D0EE0F31DCD500CBB256</string>
+											<string>A68876910F31DF2600BD753A</string>
+											<string>A6485BA70F2CB601009F349D</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -487,16 +487,7 @@
 											<string>A604D9F70F31CCC300D3DC79</string>
 											<string>A604DA0B0F31CCC300D3DC79</string>
 											<string>A604DA0C0F31CCC300D3DC79</string>
-											<string>A6A9D0C00F31DABF00CBB256</string>
-											<string>A6A9D0DF0F31DC6000CBB256</string>
-											<string>A6A9D0E30F31DC6800CBB256</string>
-											<string>A6A9D0E40F31DC6800CBB256</string>
-											<string>A6A9D0EF0F31DCD500CBB256</string>
-											<string>A6A9D0F00F31DCD500CBB256</string>
-											<string>A6A9D0F10F31DCD500CBB256</string>
-											<string>A6A9D0F20F31DCD500CBB256</string>
-											<string>A6A9D0F30F31DCD500CBB256</string>
-											<string>A6A9D0F40F31DCD500CBB256</string>
+											<string>A68876920F31DF2600BD753A</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -619,11 +610,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6A9D0C20F31DABF00CBB256</string>
+				<string>A688768E0F31DDD000BD753A</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6A9D0C30F31DABF00CBB256</string>
+				<string>A688768F0F31DDD000BD753A</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6A9D0C40F31DABF00CBB256</string>
+				<string>A68876900F31DDD000BD753A</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -807,8 +798,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A6A9D0D80F31DBA300CBB256</string>
-		<string>A6A9D0D00F31DB0D00CBB256</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
