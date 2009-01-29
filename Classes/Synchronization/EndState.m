@@ -11,6 +11,7 @@
 #import "Statement.h"
 #import "Network.h"
 #import "SyncViewController.h"
+#import "DomainObject.h"
 
 @implementation EndState
 
