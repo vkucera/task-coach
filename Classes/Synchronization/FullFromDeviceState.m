@@ -51,41 +51,4 @@
 	[myNetwork appendString:[dict objectForKey:@"name"]];
 }
 
-/*
-- (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
-{
-	switch (state)
-	{
-		case 0:
-			state = 1;
-			[network expect:ntohl(*((int32_t *)[data bytes]))];
-			break;
-		case 1:
-		{
-			Statement *req = [[Database connection] statementWithSQL:@"UPDATE Category SET taskCoachId=? WHERE id=?"];
-			[req bindString:[NSString stringFromUTF8Data:data] atIndex:1];
-			[req bindInteger:[[objectIds objectAtIndex:0] intValue] atIndex:2];
-			[req exec];
-			[objectIds removeObjectAtIndex:0];
-
-			objectCount -= 1;
-			count += 1;
-			myController.progress.progress = 1.0 * count / total;
-			
-			if (objectCount)
-			{
-				state = 0;
-				[network expect:4];
-			}
-			else
-			{
-				controller.state = [FullFromDeviceTaskState stateWithNetwork:network controller:controller];
-			}
-
-			break;
-		}
-	}
-}
-*/
-
 @end
