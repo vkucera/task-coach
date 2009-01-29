@@ -23,8 +23,10 @@ from changetypes import *
 
 releases = [
 
-Release('0.72.0', '?? ??, 2009', # Or maybe 1.0.0?
-    summary='',
+Release('0.72.0', 'January 30, 2009', 
+    summary='''This release adds a square map task viewer and a 
+single-task effort viewer. This release also fixes a few bugs and adds a few
+smaller feature enhancements.''',
     featuresAdded=[
         Feature('''One can now export only the current selection as HTML.'''),
         Feature('''When using yearly recurrence of tasks, allow for keeping
