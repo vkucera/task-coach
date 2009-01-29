@@ -12,79 +12,46 @@
 #import "SyncViewController.h"
 #import "Database.h"
 #import "Statement.h"
-#import "String+Utils.h"
 
 @implementation FullFromDeviceState
 
-- initWithNetwork:(Network *)network controller:(SyncViewController *)controller
-{
-	if (self = [super initWithNetwork:network controller:controller])
-	{
-		categoryIds = [[NSMutableArray alloc] initWithCapacity:32];
-	}
-	
-	return self;
-}
-
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	return [[[FullFromDeviceState alloc] initWithNetwork:network controller:controller] autorelease];
-}
-
-- (void)dealloc
-{
-	[categoryIds release];
-	
-	[super dealloc];
+	return [[[FullFromDeviceState alloc] initWithNetwork:network controller:controller nextState:[FullFromDeviceTaskState stateWithNetwork:network controller:controller] expectIds:YES] autorelease];
 }
 
 - (void)activated
 {
+	[[[Database connection] statementWithSQL:@"DELETE FROM Meta WHERE name='guid'"] exec];
+	
 	myController.label.text = NSLocalizedString(@"Synchronizing...", @"Synchronizing title");
 	[myController.activity stopAnimating];
 	myController.progress.hidden = NO;
-
-	[[[Database connection] statementWithSQL:@"DELETE FROM Meta WHERE name='guid'"] exec];
-
-	[myNetwork expect:4];
-
-	Statement *req;
 	
-	req = [[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM Category"];
-	[req execWithTarget:self action:@selector(onCategoryCount:)];
-	
-	req = [[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM Task"];
-	[req execWithTarget:self action:@selector(onTaskCount:)];
-	
-	req = [[Database connection] statementWithSQL:@"SELECT * FROM Category"];
-	[req execWithTarget:self action:@selector(onCategory:)];
-}
+	[super activated];
 
-- (void)onCategoryCount:(NSDictionary *)dict
-{
-	categoryCount = [[dict objectForKey:@"total"] intValue];
 	[myNetwork appendInteger:categoryCount];
+	[myNetwork appendInteger:taskCount];
+	
+	objectCount = categoryCount;
+
+	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Category WHERE %@", [self categoryWhereClause]]];
+	[req execWithTarget:self action:@selector(onObject:)];
 }
 
-- (void)onTaskCount:(NSDictionary *)dict
+- (NSString *)tableName
 {
-	total = categoryCount + [[dict objectForKey:@"total"] intValue];
-	[myNetwork appendInteger:[[dict objectForKey:@"total"] intValue]];
+	return @"Category";
 }
 
-- (void)onCategory:(NSDictionary *)dict
+- (void)onObject:(NSDictionary *)dict
 {
-	NSLog(@"Pushing category %@", [dict objectForKey:@"name"]);
+	[super onObject:dict];
 
-	[categoryIds addObject:[dict objectForKey:@"id"]];
 	[myNetwork appendString:[dict objectForKey:@"name"]];
 }
 
-- (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
-{
-	// n/a
-}
-
+/*
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
 {
 	switch (state)
@@ -97,15 +64,15 @@
 		{
 			Statement *req = [[Database connection] statementWithSQL:@"UPDATE Category SET taskCoachId=? WHERE id=?"];
 			[req bindString:[NSString stringFromUTF8Data:data] atIndex:1];
-			[req bindInteger:[[categoryIds objectAtIndex:0] intValue] atIndex:2];
+			[req bindInteger:[[objectIds objectAtIndex:0] intValue] atIndex:2];
 			[req exec];
-			[categoryIds removeObjectAtIndex:0];
+			[objectIds removeObjectAtIndex:0];
 
-			categoryCount -= 1;
+			objectCount -= 1;
 			count += 1;
 			myController.progress.progress = 1.0 * count / total;
 			
-			if (categoryCount)
+			if (objectCount)
 			{
 				state = 0;
 				[network expect:4];
@@ -119,5 +86,6 @@
 		}
 	}
 }
+*/
 
 @end

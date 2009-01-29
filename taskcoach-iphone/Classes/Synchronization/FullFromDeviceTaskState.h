@@ -8,15 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BaseState.h"
+#import "UploadObjectsState.h"
 
-@interface FullFromDeviceTaskState : BaseState <State>
+@interface FullFromDeviceTaskState : UploadObjectsState
 {
-	NSMutableArray *taskIds;
-	NSInteger state;
-	NSInteger taskCount;
-	NSInteger count;
-	NSInteger total;
 }
 
 @end

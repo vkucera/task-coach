@@ -8,15 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BaseState.h"
+#import "UploadObjectsState.h"
 
-@interface FullFromDeviceState : BaseState <State>
+@interface FullFromDeviceState : UploadObjectsState
 {
-	NSMutableArray *categoryIds;
-	NSInteger state;
-	NSInteger categoryCount;
-	NSInteger count;
-	NSInteger total;
 }
 
 @end
