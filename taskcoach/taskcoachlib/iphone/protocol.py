@@ -94,6 +94,15 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 # After all categories and tasks have been sent, Task Coach sends the file
 # GUID as a string.
 #
+# == Full from device ==
+#
+# All conventions are the same as in "Full from Task Coach".
+#
+# 1) The device sends two integers: number of categories, number of tasks
+# 2) For each category, the device sends the category name and waits for its ID.
+# 3) For each task, the device sends the full task (same format as above), and
+#    waits for its ID.
+#
 # == Two-way ==
 #
 # All conventions are the same as in "Full from Task Coach".
@@ -106,10 +115,6 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 # 4) For each deleted task, the device sends its ID.
 # 5) For each modified task, the device sends it (same format as above)
 # 6) Go into "Full from Task Coach" mode.
-#
-# == Full from device ==
-#
-# yet TODO.
 
 
 class IPhoneAcceptor(Acceptor):
@@ -210,7 +215,7 @@ class InitialState(BaseState):
         else:
             print 'Protocol KO.'
             disp.close()
-            # XXXTODO: notify user
+            disp.window.notifyIPhoneProtocolFailed()
 
 
 class PasswordState(BaseState):
