@@ -56,8 +56,9 @@
 
 - (void)setState:(NSObject <State> *)newState
 {
+	[newState retain];
 	[state release];
-	state = [newState retain];
+	state = newState;
 	[state activated];
 }
 

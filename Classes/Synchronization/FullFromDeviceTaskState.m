@@ -12,62 +12,33 @@
 #import "SyncViewController.h"
 #import "Database.h"
 #import "Statement.h"
-#import "String+Utils.h"
 
 @implementation FullFromDeviceTaskState
 
-- initWithNetwork:(Network *)network controller:(SyncViewController *)controller
-{
-	if (self = [super initWithNetwork:network controller:controller])
-	{
-		taskIds = [[NSMutableArray alloc] initWithCapacity:32];
-	}
-	
-	return self;
-}
-
-- (void)dealloc
-{
-	[taskIds release];
-	
-	[super dealloc];
-}
-
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	return [[[FullFromDeviceTaskState alloc] initWithNetwork:network controller:controller] autorelease];
+	return [[[FullFromDeviceTaskState alloc] initWithNetwork:network controller:controller nextState:[GetGUIDState stateWithNetwork:network controller:controller] expectIds:YES] autorelease];
 }
 
 - (void)activated
 {
-	[myNetwork expect:4];
+	[super activated];
+
+	count = categoryCount;
+	objectCount = taskCount;
 	
-	Statement *req;
-	
-	req = [[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM Task"];
-	[req execWithTarget:self action:@selector(onTaskCount:)];
-	
-	req = [[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM Category"];
-	[req execWithTarget:self action:@selector(onCategoryCount:)];
-	
-	req = [[Database connection] statementWithSQL:@"SELECT Task.*, Category.taskCoachId AS catId FROM Task LEFT JOIN Category ON Task.categoryId = Category.id"];
-	[req execWithTarget:self action:@selector(onTask:)];
+	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT Task.*, Category.taskCoachId AS catId FROM Task LEFT JOIN Category ON Task.categoryId = Category.id WHERE %@", [self taskWhereClause]]];
+	[req execWithTarget:self action:@selector(onObject:)];
 }
 
-- (void)onTaskCount:(NSDictionary *)dict
+- (NSString *)tableName
 {
-	taskCount = [[dict objectForKey:@"total"] intValue];
+	return @"Task";
 }
 
-- (void)onCategoryCount:(NSDictionary *)dict
+- (void)onObject:(NSDictionary *)dict
 {
-	count = [[dict objectForKey:@"total"] intValue];
-	total = count + taskCount;
-}
-
-- (void)onTask:(NSDictionary *)dict
-{
-	[taskIds addObject:[dict objectForKey:@"id"]];
+	[super onObject:dict];
 
 	[myNetwork appendString:[dict objectForKey:@"name"]];
 	[myNetwork appendString:[dict objectForKey:@"description"]];
@@ -78,11 +49,7 @@
 	
 }
 
-- (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
-{
-	// n/a
-}
-
+/*
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
 {
 	switch (state)
@@ -95,15 +62,15 @@
 		{
 			Statement *req = [[Database connection] statementWithSQL:@"UPDATE Task SET taskCoachId=? WHERE id=?"];
 			[req bindString:[NSString stringFromUTF8Data:data] atIndex:1];
-			[req bindInteger:[[taskIds objectAtIndex:0] intValue] atIndex:2];
+			[req bindInteger:[[objectIds objectAtIndex:0] intValue] atIndex:2];
 			[req exec];
-			[taskIds removeObjectAtIndex:0];
+			[objectIds removeObjectAtIndex:0];
 			
-			taskCount -= 1;
+			objectCount -= 1;
 			count += 1;
 			myController.progress.progress = 1.0 * count / total;
 			
-			if (taskCount)
+			if (objectCount)
 			{
 				state = 0;
 				[network expect:4];
@@ -117,5 +84,6 @@
 		}
 	}
 }
+ */
 
 @end
