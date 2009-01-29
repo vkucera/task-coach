@@ -8,6 +8,7 @@
 
 #import "GUIDState.h"
 #import "FullFromDesktopState.h"
+#import "FullFromDeviceState.h"
 #import "Network.h"
 #import "SyncViewController.h"
 #import "Database.h"
@@ -69,7 +70,7 @@
 			controller.state = [FullFromDesktopState stateWithNetwork:network controller:controller];
 			break;
 		case 2:
-			// XXXTODO refresh from device
+			controller.state = [FullFromDeviceState stateWithNetwork:network controller:controller];
 			break;
 		case 3:
 			// User cancel
