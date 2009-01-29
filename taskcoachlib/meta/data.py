@@ -50,6 +50,7 @@ icon = url + 'taskcoach.png'
 pad = url + 'pad.xml'
 download = url + 'download.html'
 dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
+announcement_addresses = 'developers@taskcoach.org'
 copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)
 license_title = 'GNU General Public License'
 license_version = '3'

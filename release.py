@@ -189,6 +189,14 @@ def phase2(settings):
     uploadWebsite(settings)
     registerWithPyPI(settings)
 
+def latest_release(metadata):
+    sys.path.insert(0, 'changes.in')
+    import changes, converter
+    del sys.path[0]
+    return converter.ReleaseToTextConverter().convert(changes.releases[0],
+        greeting="We're happy to announce release %(version)s "
+                  "of %(name)s."%metadata)
+
 def mailAnnouncement(settings):
     server = settings.get('smtp', 'hostname')
     port = settings.get('smtp', 'port')
@@ -196,40 +204,42 @@ def mailAnnouncement(settings):
     password = settings.get('smtp', 'password')
     sender_name = settings.get('smtp', 'sender_name')
     sender_email_address = settings.get('smtp', 'sender_email_address')
-    recipients = ['frank@niessink.com']
     metadata = taskcoachlib.meta.data.metaDict
+    recipients = metadata['announcement_addresses']
     metadata.update(dict(sender_name=sender_name,
                          sender_email_address=sender_email_address))
-    msg = '''To: frank@niessink.com
+    metadata['release'] = latest_release(metadata)
+    msg = '''To: %(announcement_addresses)s
 From: %(sender_name)s <%(sender_email_address)s>
 Reply-To: %(author_email)s
 Subject: [ANN] Release %(version)s of %(name)s
 
 Hi,
 
-We're happy to announce release %(version)s of %(name)s. @Insert release
-summary here@
-
-Bugs fixed:
-
-@Insert bugs here@
-
-Feature(s) added:
-
-@Insert features here@
+%(release)s
 
 What is %(name)s?
 
-%(name)s is a simple task manager that allows for hierarchical tasks, i.e. tasks in tasks. %(name)s is open source (%(license_abbrev)s) and is developed using Python and wxPython. You can download %(name)s from:
+%(name)s is a simple task manager that allows for hierarchical tasks, 
+i.e. tasks in tasks. %(name)s is open source (%(license_abbrev)s) and is developed 
+using Python and wxPython. You can download %(name)s from:
 
 %(url)s
 
-In addition to the source distribution, packaged distributions are available for Windows XP/Vista, Mac OS X, and Linux (Debian and RPM format).
+In addition to the source distribution, packaged distributions are available 
+for Windows XP/Vista, Mac OS X, and Linux (Debian and RPM format).
 
-Note that %(name)s is %(release_status)s software. We do our best to prevent bugs, but it is always wise to back up your task file regularly, and especially when upgrading to a new release.
+Note that %(name)s is %(release_status)s software. We do our best to prevent bugs, 
+but it is always wise to back up your task file regularly, and especially 
+when upgrading to a new release.
 
-Regards, Jerome and Frank
+Regards, 
+
+%(author)s
+Task Coach development team
+
 '''%metadata
+
     session = smtplib.SMTP(server, port)
     session.set_debuglevel(1)
     session.helo()
@@ -241,7 +251,7 @@ Regards, Jerome and Frank
     if smtpresult:
         errstr = ""
         for recip in smtpresult.keys():
-            errstr = """Could not delivery mail to: %s 
+            errstr = """Could not deliver mail to: %s 
 Server said: %s
 %s
 %s""" % (recip, smtpresult[recip][0], smtpresult[recip][1], errstr)
@@ -254,7 +264,7 @@ commands = dict(phase1=phase1, phase2=phase2,
                 website=uploadWebsite, 
                 websiteChello=uploadWebsiteToChello, 
                 websiteSF=uploadWebsiteToSourceForge, 
-                pypi=registerWithPyPI)#, announce=mailAnnouncement)
+                pypi=registerWithPyPI, announce=mailAnnouncement)
 settings = Settings()
 try:
     commands[sys.argv[1]](settings)
