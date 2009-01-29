@@ -569,7 +569,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2D5D1246-9F1B-4CF1-B315-E08B7378ED7B";
-				SDKROOT = iphoneos2.2;
+				SDKROOT = iphoneos2.2.1;
 			};
 			name = Debug;
 		};
@@ -583,7 +583,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2D5D1246-9F1B-4CF1-B315-E08B7378ED7B";
-				SDKROOT = iphoneos2.2;
+				SDKROOT = iphoneos2.2.1;
 			};
 			name = Release;
 		};
