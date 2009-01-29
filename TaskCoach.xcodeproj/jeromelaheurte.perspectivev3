@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>ActivePerspectiveName</key>
-	<string>Debug</string>
+	<string>Project</string>
 	<key>AllowedModules</key>
 	<array>
 		<dict>
@@ -230,6 +230,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -297,6 +299,8 @@
 							<string>MainColumn</string>
 							<real>335</real>
 						</array>
+						<key>RubberWindowFrame</key>
+						<string>108 178 1546 972 0 0 1920 1178 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -324,7 +328,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6EF3A600F2CBE88008BF203</string>
+										<string>A631985B0F31B81500E80F56</string>
 										<key>history</key>
 										<array>
 											<string>A68EDF0F0F1E24AB00F51FF2</string>
@@ -396,7 +400,7 @@
 											<string>A6485BD10F2CBA26009F349D</string>
 											<string>A6485BD20F2CBA26009F349D</string>
 											<string>A6485BD30F2CBA26009F349D</string>
-											<string>A6A6CB050F2CBA8100E023D5</string>
+											<string>A61E2A550F2D914D00740EDA</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -484,6 +488,8 @@
 							<dict>
 								<key>Frame</key>
 								<string>{{0, 0}, {1189, 548}}</string>
+								<key>RubberWindowFrame</key>
+								<string>108 178 1546 972 0 0 1920 1178 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -507,6 +513,8 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1189, 351}}</string>
+										<key>RubberWindowFrame</key>
+										<string>108 178 1546 972 0 0 1920 1178 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -588,11 +596,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6EF3A490F2CBD80008BF203</string>
+				<string>A63198520F31B81500E80F56</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6EF3A4A0F2CBD80008BF203</string>
+				<string>A63198530F31B81500E80F56</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6EF3A4B0F2CBD80008BF203</string>
+				<string>A63198540F31B81500E80F56</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -642,8 +650,6 @@
 					<dict>
 						<key>Frame</key>
 						<string>{{0, 0}, {1546, 415}}</string>
-						<key>RubberWindowFrame</key>
-						<string>108 178 1546 972 0 0 1920 1178 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXDebugCLIModule</string>
@@ -718,11 +724,7 @@
 							</array>
 							<key>Frame</key>
 							<string>{{510, 0}, {1036, 245}}</string>
-							<key>RubberWindowFrame</key>
-							<string>108 178 1546 972 0 0 1920 1178 </string>
 						</dict>
-						<key>RubberWindowFrame</key>
-						<string>108 178 1546 972 0 0 1920 1178 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXDebugSessionModule</string>
@@ -745,14 +747,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6EF3A4C0F2CBD80008BF203</string>
+				<string>A63198550F31B81500E80F56</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6EF3A4D0F2CBD80008BF203</string>
-				<string>A6EF3A4E0F2CBD80008BF203</string>
-				<string>A6EF3A4F0F2CBD80008BF203</string>
-				<string>A6EF3A500F2CBD80008BF203</string>
-				<string>A6EF3A510F2CBD80008BF203</string>
+				<string>A63198560F31B81500E80F56</string>
+				<string>A63198570F31B81500E80F56</string>
+				<string>A63198580F31B81500E80F56</string>
+				<string>A63198590F31B81500E80F56</string>
+				<string>A631985A0F31B81500E80F56</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -782,8 +784,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A6EF3A520F2CBD80008BF203</string>
-		<string>A6EF3A530F2CBD80008BF203</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
