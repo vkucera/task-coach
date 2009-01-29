@@ -8,6 +8,7 @@
 
 #import "EndState.h"
 #import "Database.h"
+#import "Statement.h"
 #import "Network.h"
 #import "SyncViewController.h"
 
@@ -15,6 +16,25 @@
 
 - (void)activated
 {
+	// Cleanup
+	Statement *req;
+	
+	req = [[Database connection] statementWithSQL:@"DELETE FROM Task WHERE status=?"];
+	[req bindInteger:STATUS_DELETED atIndex:1];
+	[req exec];
+	
+	req = [[Database connection] statementWithSQL:@"DELETE FROM Category WHERE status=?"];
+	[req bindInteger:STATUS_DELETED atIndex:1];
+	[req exec];
+	
+	req = [[Database connection] statementWithSQL:@"UPDATE Category SET STATUS=?"];
+	[req bindInteger:STATUS_NONE atIndex:1];
+	[req exec];
+	
+	req = [[Database connection] statementWithSQL:@"UPDATE Task SET STATUS=?"];
+	[req bindInteger:STATUS_NONE atIndex:1];
+	[req exec];
+	
 	[[Database connection] commit];
 
 	[myNetwork release];
