@@ -293,7 +293,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         never in curselection(). This method is used instead. It just
         ignores the overriden version of curselection."""
 
-        return item in super(EffortListViewer, self).curselection()
+        return item in super(EffortViewer, self).curselection()
 
     def statusMessages(self):
         status1 = _('Effort: %d selected, %d visible, %d total')%\

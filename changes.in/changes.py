@@ -22,6 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('0.72.1', 'February ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Exporting a selection of effort records resulted in an empty 
+HTML file.''')
+        ]
+    ),
 
 Release('0.72.0', 'January 30, 2009', 
     summary='''This release adds a square map task viewer and a 
