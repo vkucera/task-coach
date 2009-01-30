@@ -35,6 +35,7 @@ Release steps:
 - Post announcement on Launchpad by hand.
 - Tag source code with tag ReleaseX_Y_Z.
 - Create branch if feature release.
+- Merge changes between this release and the previous release to the trunk.
 - Add release to Sourceforge bug tracker groups.
 - Set bug reports and/or feature requests to Pending state.
 - If new release branch, update the buildbot masters configuration.
@@ -166,7 +167,8 @@ def registerWithPyPI(settings):
     from setup import setupOptions
     languagesThatPyPIDoesNotRecognize = ['Breton', 'Estonian', 'Galician', 
                                          'Lithuanian', 'Norwegian (Bokmal)',
-                                         'Norwegian (Nynorsk)', 'Slovene']
+                                         'Norwegian (Nynorsk)', 'Slovene',
+                                         'German (Low)']
     for language in languagesThatPyPIDoesNotRecognize:
         setupOptions['classifiers'].remove('Natural Language :: %s'%language)
     from distutils.core import setup
