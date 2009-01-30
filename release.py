@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,18 +20,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
 Release steps:
-- Get latest translations from Launchpad
-- make clean all 
-- make alltests 
-- Build all remaining packages (MacOS, .deb, .rpm, Fedora)
+- Get latest translations from Launchpad.
+- Run 'make clean all'.
+- Run 'make alltests'.
+- Build all remaining packages (MacOS, .deb, .rpm, Fedora) and copy them to 
+  the dist folder.
 - Run this script (phase1) to upload the distributions to Sourceforge, 
   generate MD5 digests and generate website.
 - Add file releases on Sourceforge by hand.
 - Run this script (phase2) to publish to Sourceforge website, Chello (my ISP) 
-  and PyPI (Python Package Index).
+  and PyPI (Python Package Index) and to send the announcement email.
 - Post project news on Sourceforge by hand.
 - Post release notification on Freshmeat by hand.
-- Email taskcoach@yahoogroups.com and python-announce@python.org.
+- Post announcement on Launchpad by hand.
 - Tag source code with tag ReleaseX_Y_Z.
 - Create branch if feature release.
 - Add release to Sourceforge bug tracker groups.
@@ -188,6 +189,7 @@ def phase1(settings):
 def phase2(settings):
     uploadWebsite(settings)
     registerWithPyPI(settings)
+    mailAnnouncement(settings)
 
 def latest_release(metadata):
     sys.path.insert(0, 'changes.in')
@@ -198,16 +200,9 @@ def latest_release(metadata):
                   "of %(name)s."%metadata)
 
 def mailAnnouncement(settings):
-    server = settings.get('smtp', 'hostname')
-    port = settings.get('smtp', 'port')
-    username = settings.get('smtp', 'username')
-    password = settings.get('smtp', 'password')
-    sender_name = settings.get('smtp', 'sender_name')
-    sender_email_address = settings.get('smtp', 'sender_email_address')
     metadata = taskcoachlib.meta.data.metaDict
-    recipients = metadata['announcement_addresses']
-    metadata.update(dict(sender_name=sender_name,
-                         sender_email_address=sender_email_address))
+    for sender_info in 'sender_name', 'sender_email_address':
+        metadata[sender_info] = settings.get('smtp', sender_info)
     metadata['release'] = latest_release(metadata)
     msg = '''To: %(announcement_addresses)s
 From: %(sender_name)s <%(sender_email_address)s>
@@ -239,6 +234,12 @@ Regards,
 Task Coach development team
 
 '''%metadata
+
+    recipients = metadata['announcement_addresses']
+    server = settings.get('smtp', 'hostname')
+    port = settings.get('smtp', 'port')
+    username = settings.get('smtp', 'username')
+    password = settings.get('smtp', 'password')
 
     session = smtplib.SMTP(server, port)
     session.set_debuglevel(1)
