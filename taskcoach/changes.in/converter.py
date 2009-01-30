@@ -112,8 +112,10 @@ class ReleaseConverter(object):
         return {'s' : len(listToCount) > 1 and 's' or '',
                 'y' : len(listToCount) > 1 and 'ies' or 'y' }
 
-    def convert(self, release):
-        result = [self.header(release), self.summary(release)]
+    def convert(self, release, greeting=''):
+        result = [self.summary(release, greeting)]
+        if not greeting:
+            result.insert(0, self.header(release))
         for section, list in [('Bug%(s)s fixed', release.bugsFixed),
                 ('Feature%(s)s added', release.featuresAdded),
                 ('Feature%(s)s changed', release.featuresChanged),
@@ -127,13 +129,13 @@ class ReleaseConverter(object):
                     result.append(self._changeConverter.convert(change))
                 result.append(self.sectionFooter(section, list))
         result = [line for line in result if line]
-        return '\n'.join(result)+'\n\n\n'
+        return '\n'.join(result)+'\n\n'
 
     def header(self, release):
         return 'Release %s - %s'%(release.number, release.date)
 
-    def summary(self, release):
-        return release.summary
+    def summary(self, release, greeting=''):
+        return ' '.join([text for text in greeting, release.summary if text])
     
     def sectionHeader(self, section, list):
         return '\n%s:'%(section%self._addS(list))
@@ -144,6 +146,17 @@ class ReleaseConverter(object):
 
 class ReleaseToTextConverter(ReleaseConverter):
     ChangeConverterClass = ChangeToTextConverter
+
+    def summary(self, *args, **kwargs):
+        summary = super(ReleaseToTextConverter, self).summary(*args, **kwargs)
+        wrapper = textwrap.TextWrapper(initial_indent='', 
+            subsequent_indent='', width=78)
+        multipleSpaces = re.compile(r'(?<!^) +', re.M)
+        summary = wrapper.fill(summary)
+        # Somehow the text wrapper introduces multiple spaces within
+        # lines, this is a work around:
+        summary = multipleSpaces.sub(' ', summary)
+        return summary
 
 
 class ReleaseToHTMLConverter(ReleaseConverter):
@@ -159,7 +172,7 @@ class ReleaseToHTMLConverter(ReleaseConverter):
     def sectionFooter(self, section, list):
         return '</UL>'
 
-    def summary(self, release):
+    def summary(self, release, greeting=''):
         summaryText = super(ReleaseToHTMLConverter, self).summary(release)
         if summaryText:
             return '<P>%s</P>'%summaryText
