@@ -64,7 +64,18 @@ class PageWithHeaders(Page, widgets.PanelWithBoxSizer):
             box.add(header)
     
 
-
+class PageWithViewerMixin(object):
+    def __init__(self, *args, **kwargs):
+        super(PageWithViewerMixin, self).__init__(*args, **kwargs)
+        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
+        
+    def onClose(self, event):
+        # Don't notify the viewer about any changes anymore, it's about
+        # to be deleted.
+        self.viewer.detach()
+        event.Skip()
+        
+        
 class TaskHeaders(object):
     headerForNonRecursiveAttributes = _('For this task')
     headerForRecursiveAttributes = _('For this task including all subtasks')
@@ -443,26 +454,21 @@ class BudgetPage(PageWithHeaders, TaskHeaders):
         self.item.setFixedFee(self._fixedFeeEntry.get())
 
 
-class EffortPage(PageWithHeaders, TaskHeaders):
+class EffortPage(PageWithViewerMixin, PageWithHeaders, TaskHeaders):
     def __init__(self, parent, theTask, taskFile, settings, *args, **kwargs):
         super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
-        self.effortViewer = viewer.EffortViewer(self, taskFile,
+        self.viewer = viewer.EffortViewer(self, taskFile,
             settings, settingsSection='effortviewerintaskeditor',
             tasksToShowEffortFor=task.TaskList([theTask]))
-        self.add(self.effortViewer, proportion=1, flag=wx.EXPAND|wx.ALL, 
+        self.add(self.viewer, proportion=1, flag=wx.EXPAND|wx.ALL, 
                  border=5)
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
+        
         self.fit()
 
     def entries(self):
-        return dict(timeSpent=self.effortViewer, 
-                    totalTimeSpent=self.effortViewer)
+        return dict(timeSpent=self.viewer, totalTimeSpent=self.viewer)
         
-    def onClose(self, event):
-        # Don't notify the viewer about any changes anymore, it's about
-        # to be deleted.
-        self.effortViewer.detach()
-        event.Skip()
+
 
 
 class LocalDragAndDropFix(object):
@@ -501,34 +507,28 @@ class LocalCategoryViewer(LocalDragAndDropFix, viewer.BaseCategoryViewer):
         pass
 
 
-class CategoriesPage(PageWithHeaders):
+class CategoriesPage(PageWithViewerMixin, PageWithHeaders):
     def __init__(self, parent, item, taskFile, settings, *args, **kwargs):
         super(CategoriesPage, self).__init__(parent, item, *args, **kwargs)
         self.__categories = category.CategorySorter(taskFile.categories())
         categoriesBox = widgets.BoxWithBoxSizer(self, label=_('Categories'))
-        self._categoryViewer = LocalCategoryViewer(item, categoriesBox,
-                                       taskFile, settings,
-                                       settingsSection=self.settingsSection())
-        categoriesBox.add(self._categoryViewer, proportion=1, flag=wx.EXPAND|wx.ALL)
+        self.viewer = LocalCategoryViewer(item, categoriesBox,
+                                          taskFile, settings,
+                                          settingsSection=self.settingsSection())
+        categoriesBox.add(self.viewer, proportion=1, flag=wx.EXPAND|wx.ALL)
         categoriesBox.fit()
         self.add(categoriesBox)
         self.fit()
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-
-    def onClose(self, event):
-        self._categoryViewer.detach()
-        event.Skip()
 
     def entries(self):
-        return dict(categories=self._categoryViewer,
-                    totalCategories=self._categoryViewer) 
+        return dict(categories=self.viewer, totalCategories=self.viewer) 
 
     def ok(self):
-        treeCtrl = self._categoryViewer.widget
+        treeCtrl = self.viewer.widget
         treeCtrl.ExpandAll()
         for categoryNode in treeCtrl.GetItemChildren(recursively=True):
             categoryIndex = treeCtrl.GetIndexOfItem(categoryNode)
-            category = self._categoryViewer.getItemWithIndex(categoryIndex)
+            category = self.viewer.getItemWithIndex(categoryIndex)
             if categoryNode.IsChecked():
                 category.addCategorizable(self.item)
                 self.item.addCategory(category)
@@ -551,61 +551,49 @@ class LocalAttachmentViewer(LocalDragAndDropFix, viewer.AttachmentViewer):
     pass
 
 
-class AttachmentsPage(PageWithHeaders):
+class AttachmentsPage(PageWithViewerMixin, PageWithHeaders):
     def __init__(self, parent, item, settings, taskFile, *args, **kwargs):
         settingsSection = kwargs.pop('settingsSection')
         super(AttachmentsPage, self).__init__(parent, item, *args, **kwargs)
         self.attachmentsList = attachment.AttachmentList(item.attachments())
         attachmentsBox = widgets.BoxWithBoxSizer(self, label=_('Attachments'))
-        self._attachmentViewer = LocalAttachmentViewer(attachmentsBox,
-                                                       taskFile, settings,
-                                                       settingsSection=settingsSection,
-                                                       attachmentsToShow=self.attachmentsList)
-        attachmentsBox.add(self._attachmentViewer, proportion=1, flag=wx.EXPAND|wx.ALL)
+        self.viewer = LocalAttachmentViewer(attachmentsBox,
+                                            taskFile, settings,
+                                            settingsSection=settingsSection,
+                                            attachmentsToShow=self.attachmentsList)
+        attachmentsBox.add(self.viewer, proportion=1, flag=wx.EXPAND|wx.ALL)
         attachmentsBox.fit()
         self.add(attachmentsBox)
         self.fit()
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
 
     def entries(self):
-        return dict(attachments=self._attachmentViewer)
+        return dict(attachments=self.viewer)
 
     def ok(self):
         self.item.setAttachments(self.attachmentsList)
         super(AttachmentsPage, self).ok()
-
-    def onClose(self, event):
-        self._attachmentViewer.detach()
-        event.Skip()
 
 
 class LocalNoteViewer(LocalDragAndDropFix, viewer.BaseNoteViewer):
     pass
 
 
-class NotesPage(PageWithHeaders):
+class NotesPage(PageWithViewerMixin, PageWithHeaders):
     def __init__(self, parent, item, settings, taskFile, *args, **kwargs):
         super(NotesPage, self).__init__(parent, item, *args, **kwargs)
         notesBox = widgets.BoxWithBoxSizer(self, label=_('Notes'))
         self.notes = note.NoteContainer(item.notes())
-        self.noteViewer = LocalNoteViewer(notesBox, taskFile, settings, 
+        self.viewer = LocalNoteViewer(notesBox, taskFile, settings, 
             settingsSection='noteviewerintaskeditor',
             notesToShow=self.notes)
-        notesBox.add(self.noteViewer, flag=wx.EXPAND|wx.ALL, proportion=1)
+        notesBox.add(self.viewer, flag=wx.EXPAND|wx.ALL, proportion=1)
         notesBox.fit()
         self.add(notesBox, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self.fit()
     
     def entries(self):
-        return dict(notes=self.noteViewer)
-        
-    def onClose(self, event):
-        # Don't notify the viewer about any changes anymore, it is about
-        # to be deleted.
-        self.noteViewer.detach()
-        event.Skip()
-        
+        return dict(notes=self.viewer)
+                
     def ok(self):
         self.item.setNotes(list(self.notes.rootItems()))
 
