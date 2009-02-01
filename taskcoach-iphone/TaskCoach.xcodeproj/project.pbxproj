@@ -15,6 +15,7 @@
 		A604D98E0F31C25B00D3DC79 /* FullFromDeviceState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */; };
 		A604D99C0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */; };
 		A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */; };
+		A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A6142CD20F35DE61001DD420 /* PositionStore.m */; };
 		A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFB0F35BA450086ECD6 /* TwoWayState.m */; };
 		A61AED000F35BBD20086ECD6 /* TwoWayNewCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFF0F35BBD20086ECD6 /* TwoWayNewCategoriesState.m */; };
 		A61AED620F35C30F0086ECD6 /* TwoWayNewTasksState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AED610F35C30F0086ECD6 /* TwoWayNewTasksState.m */; };
@@ -90,6 +91,8 @@
 		A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDeviceTaskState.m; path = Synchronization/FullFromDeviceTaskState.m; sourceTree = "<group>"; };
 		A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGUIDState.h; path = Synchronization/GetGUIDState.h; sourceTree = "<group>"; };
 		A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGUIDState.m; path = Synchronization/GetGUIDState.m; sourceTree = "<group>"; };
+		A6142CD10F35DE61001DD420 /* PositionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositionStore.h; sourceTree = "<group>"; };
+		A6142CD20F35DE61001DD420 /* PositionStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PositionStore.m; sourceTree = "<group>"; };
 		A61AECFA0F35BA450086ECD6 /* TwoWayState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayState.h; path = Synchronization/TwoWayState.h; sourceTree = "<group>"; };
 		A61AECFB0F35BA450086ECD6 /* TwoWayState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayState.m; path = Synchronization/TwoWayState.m; sourceTree = "<group>"; };
 		A61AECFE0F35BBD20086ECD6 /* TwoWayNewCategoriesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayNewCategoriesState.h; path = Synchronization/TwoWayNewCategoriesState.h; sourceTree = "<group>"; };
@@ -233,6 +236,8 @@
 				A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */,
 				A6664C210F2B35F300638C68 /* SyncViewController.h */,
 				A6664C220F2B35F300638C68 /* SyncViewController.m */,
+				A6142CD10F35DE61001DD420 /* PositionStore.h */,
+				A6142CD20F35DE61001DD420 /* PositionStore.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -537,6 +542,7 @@
 				A61AED620F35C30F0086ECD6 /* TwoWayNewTasksState.m in Sources */,
 				A61AEE790F35CB610086ECD6 /* TwoWayDeletedTasksState.m in Sources */,
 				A61AEEFB0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m in Sources */,
+				A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,7 @@
 //
 
 #import "NavigationController.h"
+#import "PositionStore.h"
 
 @implementation NavigationController
 
@@ -21,6 +22,22 @@
 	
 	if ([ctrl respondsToSelector:@selector(childWasPopped)])
 		[ctrl performSelector:@selector(childWasPopped)];
+}
+
+- (void)willTerminate
+{
+	UIViewController *ctrl = [self topViewController];
+	
+	if ([ctrl respondsToSelector:@selector(willTerminate)])
+		[ctrl performSelector:@selector(willTerminate)];
+}
+
+- (void)restorePosition:(Position *)pos store:(PositionStore *)store
+{
+	UIViewController *ctrl = [self topViewController];
+	
+	if ([ctrl respondsToSelector:@selector(restorePosition:store:)])
+		[ctrl performSelector:@selector(restorePosition:store:) withObject:pos withObject:store];
 }
 
 @end

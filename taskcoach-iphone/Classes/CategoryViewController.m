@@ -16,10 +16,45 @@
 #import "Database/Statement.h"
 
 #import "Domain/Category.h"
+#import "PositionStore.h"
 
 @implementation CategoryViewController
 
 @synthesize navigationController;
+
+- (void)willTerminate
+{
+	[[PositionStore instance] push:self indexPath:nil];
+}
+
+- (void)restorePosition:(Position *)pos store:(PositionStore *)store
+{
+	[self.tableView setContentOffset:pos.scrollPosition animated:NO];
+	
+	if (pos.indexPath)
+	{
+		[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+
+		TaskViewController *ctrl;
+		
+		if (pos.indexPath.row)
+		{
+			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId]];
+		}
+		else
+		{
+			ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1];
+		}
+		
+		[[PositionStore instance] push:self indexPath:pos.indexPath];
+		
+		// I don't want to animate this but strange things happen if I don't...
+		[self.navigationController pushViewController:ctrl animated:YES];
+		[ctrl release];
+
+		[store restore:ctrl];
+	}
+}
 
 - (void)addCategory:(NSDictionary *)dict
 {
@@ -53,6 +88,7 @@
 	if (indexPath)
 	{
 		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+		[[PositionStore instance] pop];
 	}
 }
 
@@ -131,7 +167,9 @@
 	{
 		ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1];
 	}
-
+	
+	[[PositionStore instance] push:self indexPath:indexPath];
+	
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }
