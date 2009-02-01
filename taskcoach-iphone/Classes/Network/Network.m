@@ -133,7 +133,7 @@
 	
 	NSLog(@"Appending %d bytes (%d)", [theData length], writing);
 	
-	if (!writing)
+	if (!writing && [outputStream hasSpaceAvailable])
 		[self writeToStream:outputStream];
 }
 
@@ -199,6 +199,8 @@
 		}
 		case NSStreamEventHasSpaceAvailable:
 		{
+			NSLog(@"Space available");
+
 			if ([toSend count])
 			{
 				writing = YES;
