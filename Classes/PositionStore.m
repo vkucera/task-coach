@@ -98,12 +98,7 @@ static PositionStore *_instance = nil;
 
 - (void)save:(NSString *)path
 {
-	NSMutableData *data = [[NSMutableData data] retain];
-	NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-	[archiver encodeRootObject:positions];
-	[archiver release];
-	
-	[data writeToFile:path atomically:NO];
+	[NSKeyedArchiver archiveRootObject:positions toFile:path];
 }
 
 
