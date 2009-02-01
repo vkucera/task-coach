@@ -1,0 +1,157 @@
+//
+//  PositionStore.m
+//  TaskCoach
+//
+//  Created by Jérôme Laheurte on 01/02/09.
+//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//
+
+#import "PositionStore.h"
+
+static PositionStore *_instance = nil;
+
+@implementation Position
+
+@synthesize indexPath;
+
+- (CGPoint)scrollPosition
+{
+	static CGPoint p = {0, 0};
+	p.y = scrollPosition;
+	return p;
+}
+
+- initWithController:(UITableViewController *)controller indexPath:(NSIndexPath *)path
+{
+	if (self = [super init])
+	{
+		CGPoint p = controller.tableView.contentOffset;
+
+		scrollPosition = p.y;
+		indexPath = [path retain];
+	}
+	
+	return self;
+}
+
+- initWithCoder:(NSCoder *)coder
+{
+	if (self = [super init])
+	{
+		NSPoint p = [coder decodePoint];
+		scrollPosition = p.y;
+		p = [coder decodePoint];
+		if (p.x < 0)
+			indexPath = nil;
+		else
+			indexPath = [[NSIndexPath indexPathForRow:p.x inSection:p.y] retain];
+	}
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	[indexPath release];
+	
+	[super dealloc];
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+	NSPoint p;
+	p.x = self.scrollPosition.x;
+	p.y = self.scrollPosition.y;
+	[coder encodePoint:p];
+	if (indexPath)
+	{
+		p.x = indexPath.row;
+		p.y = indexPath.section;
+	}
+	else
+	{
+		p.x = -1;
+		p.y = 0;
+	}
+	[coder encodePoint:p];
+}
+
+@end
+
+//============================
+
+@implementation PositionStore
+
++ (PositionStore *)instance
+{
+	if (!_instance)
+	{
+		_instance = [[PositionStore alloc] init];
+	}
+	
+	return _instance;
+}
+
+- init
+{
+	if (self = [super init])
+	{
+		positions = [[NSMutableArray alloc] initWithCapacity:3];
+	}
+	
+	return self;
+}
+
+- initWithFile:(NSString *)path
+{
+	if (self = [super init])
+	{
+		NSData *data = [[NSData alloc] initWithContentsOfFile:path];
+		positions = [[NSUnarchiver unarchiveObjectWithData:data] retain];
+		[data release];
+	}
+	
+	return self;
+}
+
+- (void)save:(NSString *)path
+{
+	NSMutableData *data = [[NSMutableData data] retain];
+	NSArchiver *archiver = [[NSArchiver alloc] initForWritingWithMutableData:data];
+	[archiver encodeRootObject:positions];
+	[archiver release];
+	
+	[data writeToFile:path atomically:NO];
+}
+
+
+- (void)dealloc
+{
+	[positions release];
+	
+	[super dealloc];
+}
+
+- (void)push:(UITableViewController *)controller indexPath:(NSIndexPath *)indexPath
+{
+	Position *pos = [[Position alloc] initWithController:controller indexPath:indexPath];
+	[positions addObject:pos];
+	[pos release];
+}
+
+- (void)pop
+{
+	[positions removeLastObject];
+}
+
+- (void)restore:(UIViewController *)controller
+{
+	if ([controller respondsToSelector:@selector(restorePosition:store:)] && (current < [positions count]))
+	{
+		Position *pos = [positions objectAtIndex:current];
+		++current;
+		[controller performSelector:@selector(restorePosition:store:) withObject:pos withObject:self];
+	}
+}
+
+@end
