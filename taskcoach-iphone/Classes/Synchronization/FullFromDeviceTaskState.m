@@ -46,7 +46,6 @@
 	[myNetwork appendString:[dict objectForKey:@"dueDate"]];
 	[myNetwork appendString:[dict objectForKey:@"completionDate"]];
 	[myNetwork appendString:[dict objectForKey:@"catId"]];
-	
 }
 
 @end

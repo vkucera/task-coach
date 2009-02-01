@@ -496,3 +496,15 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
         if category:
             task.addCategory(category)
             category.addCategorizable(task)
+
+    @synchronized
+    def removeIPhoneTask(self, task):
+        self.taskFile.tasks().remove(task)
+
+    @synchronized
+    def modifyIPhoneTask(self, task, subject, description, startDate, dueDate, completionDate):
+        task.setSubject(subject)
+        task.setDescription(description)
+        task.setStartDate(startDate)
+        task.setDueDate(dueDate)
+        task.setCompletionDate(completionDate)

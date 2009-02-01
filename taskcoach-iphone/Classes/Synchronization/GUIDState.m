@@ -9,6 +9,7 @@
 #import "GUIDState.h"
 #import "FullFromDesktopState.h"
 #import "FullFromDeviceState.h"
+#import "TwoWayState.h"
 #import "Network.h"
 #import "SyncViewController.h"
 #import "Database.h"
@@ -64,7 +65,7 @@
 	switch (syncType)
 	{
 		case 0:
-			// XXXTODO two-way
+			controller.state = [TwoWayState stateWithNetwork:network controller:controller];
 			break;
 		case 1:
 			controller.state = [FullFromDesktopState stateWithNetwork:network controller:controller];

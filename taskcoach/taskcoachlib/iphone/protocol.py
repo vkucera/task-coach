@@ -118,7 +118,7 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 # 3) For each new task, the device sends it (same format as above, but without the
 #    ID) and waits for its ID.
 # 4) For each deleted task, the device sends its ID.
-# 5) For each modified task, the device sends it (same format as above)
+# 5) For each modified task, the device sends it (same format as above, without the category Id)
 # 6) Go into "Full from Task Coach" mode.
 
 
@@ -171,6 +171,7 @@ class IPhoneHandler(asynchat.async_chat):
     def handle_error(self):
         asynchat.async_chat.handle_error(self)
         self.close()
+        self.state.handleClose(self)
 
     def pushString(self, string):
         string = string.encode('UTF-8')
@@ -285,7 +286,10 @@ class GUIDState(BaseState):
         disp.push(struct.pack('!i', type_))
 
         if type_ == 0:
-            pass # XXXTODO
+            self.dlg = IPhoneSyncDialog(self.deviceName, disp.window, wx.ID_ANY, _('iPhone/iPod'))
+            self.dlg.Started()
+
+            self.setState(TwoWayState, disp)
         elif type_ == 1:
             self.dlg = IPhoneSyncDialog(self.deviceName, disp.window, wx.ID_ANY, _('iPhone/iPod'))
             self.dlg.Started()
@@ -302,6 +306,8 @@ class GUIDState(BaseState):
 
 class FullFromDesktopState(BaseState):
     def init(self, disp):
+        print 'Full from desktop.'
+
         # Send only top-level categories
         disp.pushInteger(len(disp.window.taskFile.categories().rootItems()))
         disp.pushInteger(len(disp.window.taskFile.tasks()))
@@ -434,6 +440,197 @@ class FullFromDeviceTaskState(BaseState):
             if self.state == 5 and self.taskCount == 0:
                 disp.pushString(disp.window.taskFile.guid())
                 self.setState(EndState, disp)
+            else:
+                self.state = (self.state + 1) % 6
+                self.length = None
+                disp.set_terminator(4)
+
+
+class TwoWayState(BaseState):
+    def init(self, disp):
+        print 'Two-way; waiting for lengths'
+        disp.set_terminator(16)
+
+        self.categoryMap = dict()
+        for category in disp.window.taskFile.categories():
+            self.categoryMap[category.id()] = category
+
+        self.taskMap = dict()
+        for task in disp.window.taskFile.tasks():
+            self.taskMap[task.id()] = task
+
+    def handleData(self, disp, data):
+        (self.newCategoriesCount, self.newTasksCount,
+         self.deletedTasksCount, self.modifiedTasksCount) = struct.unpack('!iiii', data)
+
+        print 'New categories:', self.newCategoriesCount
+        print 'New tasks:', self.newTasksCount
+        print 'Deleted tasks:', self.deletedTasksCount
+        print 'Modified tasks:', self.modifiedTasksCount
+
+        self.setState(TwoWayNewCategoriesState, disp)
+
+
+class TwoWayNewCategoriesState(BaseState):
+    def init(self, disp):
+        if self.newCategoriesCount:
+            self.length = None
+            disp.set_terminator(4)
+        else:
+            self.setState(TwoWayNewTasksState, disp)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            disp.set_terminator(self.length)
+        else:
+            print 'Got new category', data
+            category = Category(data.decode('UTF-8'))
+            disp.window.addIPhoneCategory(category)
+            disp.pushString(category.id())
+            self.categoryMap[category.id()] = category
+
+            self.newCategoriesCount -= 1
+            if self.newCategoriesCount:
+                self.length = None
+                disp.set_terminator(4)
+            else:
+                self.setState(TwoWayNewTasksState, disp)
+
+
+class TwoWayNewTasksState(BaseState):
+    def init(self, disp):
+        if self.newTasksCount:
+            self.length = None
+            self.state = 0
+            disp.set_terminator(4)
+        else:
+            self.setState(TwoWayDeletedTasksState, disp)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            if self.length == 0:
+                self.handleData(disp, '')
+            else:
+                disp.set_terminator(self.length)
+        else:
+            if self.state == 0:
+                self.subject = data.decode('UTF-8')
+            elif self.state == 1:
+                self.description = data.decode('UTF-8')
+            elif self.state == 2:
+                self.startDate = parseDate(data)
+            elif self.state == 3:
+                self.dueDate = parseDate(data)
+            elif self.state == 4:
+                self.completionDate = parseDate(data)
+            elif self.state == 5:
+                task = Task(subject=self.subject,
+                            description=self.description,
+                            startDate=self.startDate,
+                            dueDate=self.dueDate,
+                            completionDate=self.completionDate)
+
+                if data:
+                    category = self.categoryMap[data.decode('UTF-8')]
+                else:
+                    category = None
+
+                print 'New task:', self.subject, category
+
+                disp.window.addIPhoneTask(task, category)
+
+                disp.pushString(task.id())
+
+                self.newTasksCount -= 1
+
+            if self.state == 5 and self.newTasksCount == 0:
+                self.setState(TwoWayDeletedTasksState, disp)
+            else:
+                self.state = (self.state + 1) % 6
+                self.length = None
+                disp.set_terminator(4)
+
+
+class TwoWayDeletedTasksState(BaseState):
+    def init(self, disp):
+        if self.deletedTasksCount:
+            self.length = None
+            disp.set_terminator(4)
+        else:
+            self.setState(TwoWayModifiedTasks, disp)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            disp.set_terminator(self.length)
+        else:
+            try:
+                task = self.taskMap[data.decode('UTF-8')]
+            except KeyError:
+                # Probably deleted on the desktop side as well
+                print 'Warning: cannot find task %s' % data
+            else:
+                del self.taskMap[data.decode('UTF-8')]
+                print 'Deleting task', task.subject()
+                disp.window.removeIPhoneTask(task)
+
+            self.deletedTasksCount -= 1
+            if self.deletedTasksCount:
+                self.length = None
+                disp.set_terminator(4)
+            else:
+                self.setState(TwoWayModifiedTasks, disp)
+
+
+class TwoWayModifiedTasks(BaseState):
+    def init(self, disp):
+        if self.modifiedTasksCount:
+            self.length = None
+            self.state = 0
+            disp.set_terminator(4)
+        else:
+            self.setState(FullFromDesktopState, disp)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            if self.length == 0:
+                self.handleData(disp, '')
+            else:
+                disp.set_terminator(self.length)
+        else:
+            if self.state == 0:
+                self.subject = data.decode('UTF-8')
+            elif self.state == 1:
+                self.id_ = data.decode('UTF-8')
+            elif self.state == 2:
+                self.description = data.decode('UTF-8')
+            elif self.state == 3:
+                self.startDate = parseDate(data)
+            elif self.state == 4:
+                self.dueDate = parseDate(data)
+            elif self.state == 5:
+                self.completionDate = parseDate(data)
+
+                try:
+                    task = self.taskMap[self.id_]
+                except KeyError:
+                    # Probably deleted on desktop
+                    print 'Warning: could not find task %s' % self.id_
+                else:
+                    disp.window.modifyIPhoneTask(task,
+                                                 self.subject,
+                                                 self.description,
+                                                 self.startDate,
+                                                 self.dueDate,
+                                                 self.completionDate)
+
+                self.modifiedTasksCount -= 1
+
+            if self.state == 5 and self.modifiedTasksCount == 0:
+                self.setState(FullFromDesktopState, disp)
             else:
                 self.state = (self.state + 1) % 6
                 self.length = None
