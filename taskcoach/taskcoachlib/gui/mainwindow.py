@@ -483,10 +483,8 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
     @synchronized
     def restoreTasks(self, categories, tasks):
         self.taskFile._clear()
-        for category in categories:
-            self.taskFile.categories().append(category)
-        for task in tasks:
-            self.taskFile.tasks().append(task)
+        self.taskFile.categories().extend(categories)
+        self.taskFile.tasks().extend(tasks)
 
     @synchronized
     def addIPhoneCategory(self, category):
