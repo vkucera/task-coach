@@ -38,13 +38,8 @@ static PositionStore *_instance = nil;
 {
 	if (self = [super init])
 	{
-		NSPoint p = [coder decodePoint];
-		scrollPosition = p.y;
-		p = [coder decodePoint];
-		if (p.x < 0)
-			indexPath = nil;
-		else
-			indexPath = [[NSIndexPath indexPathForRow:p.x inSection:p.y] retain];
+		scrollPosition = [coder decodeIntegerForKey:@"scrollPosition"];
+		indexPath = [coder decodeObjectForKey:@"indexPath"];
 	}
 	
 	return self;
@@ -59,21 +54,8 @@ static PositionStore *_instance = nil;
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-	NSPoint p;
-	p.x = self.scrollPosition.x;
-	p.y = self.scrollPosition.y;
-	[coder encodePoint:p];
-	if (indexPath)
-	{
-		p.x = indexPath.row;
-		p.y = indexPath.section;
-	}
-	else
-	{
-		p.x = -1;
-		p.y = 0;
-	}
-	[coder encodePoint:p];
+	[coder encodeInteger:scrollPosition forKey:@"scrollPosition"];
+	[coder encodeObject:indexPath forKey:@"indexPath"];
 }
 
 @end
@@ -107,7 +89,7 @@ static PositionStore *_instance = nil;
 	if (self = [super init])
 	{
 		NSData *data = [[NSData alloc] initWithContentsOfFile:path];
-		positions = [[NSUnarchiver unarchiveObjectWithData:data] retain];
+		positions = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];
 		[data release];
 	}
 	
@@ -117,7 +99,7 @@ static PositionStore *_instance = nil;
 - (void)save:(NSString *)path
 {
 	NSMutableData *data = [[NSMutableData data] retain];
-	NSArchiver *archiver = [[NSArchiver alloc] initForWritingWithMutableData:data];
+	NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
 	[archiver encodeRootObject:positions];
 	[archiver release];
 	
