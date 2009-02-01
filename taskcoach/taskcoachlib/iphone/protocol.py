@@ -196,6 +196,32 @@ class BaseState(object):
 
         self.init(disp, *args, **kwargs)
 
+    def isTaskEligible(self, task):
+        """Returns True if a task should be considered when syncing with an iPhone/iPod Touch
+        device. Right now, a task is eligible if
+
+         * It's a leaf task (no children)
+         * Or it has a reminder
+         * Or It's overdue
+         * Or ot belongs to a category named 'iPhone'
+
+         This will probably be more configurable in the future."""
+
+        if len(task.children()) == 0:
+            return True
+
+        if task.reminder() is not None:
+            return True
+
+        if task.overdue():
+            return True
+
+        for category in task.categories():
+            if category.subject() == 'iPhone':
+                return True
+
+        return False
+
     def setState(self, state, *args, **kwargs):
         self.__class__ = state
         self.init(*args, **kwargs)
@@ -308,26 +334,31 @@ class FullFromDesktopState(BaseState):
     def init(self, disp):
         print 'Full from desktop.'
 
-        # Send only top-level categories
-        disp.pushInteger(len(disp.window.taskFile.categories().rootItems()))
-        disp.pushInteger(len(disp.window.taskFile.tasks()))
+        tasks = filter(self.isTaskEligible, disp.window.taskFile.tasks())
+        categories = [category for category in disp.window.taskFile.categories().rootItems() \
+                          if category.subject() != u'iPhone']
 
-        total = len(disp.window.taskFile.categories().rootItems()) + len(disp.window.taskFile.tasks())
+        # Send only top-level categories and eligible tasks
+        disp.pushInteger(len(categories))
+        disp.pushInteger(len(tasks))
+
+        total = len(categories) + len(tasks)
         count = 0
 
-        for category in disp.window.taskFile.categories().rootItems():
+        for category in categories:
             disp.pushString(category.subject())
             disp.pushString(category.id())
             count += 1
             self.dlg.SetProgress(count, total)
 
-        for task in disp.window.taskFile.tasks():
+        for task in tasks:
             def getTopCategory(t):
                 s = set()
                 for category in t.categories(recursive=True):
                     while category.parent():
                         category = category.parent()
-                    s.add(category)
+                    if category in categories:
+                        s.add(category)
                 s = list(s)
                 s.sort(lambda x, y: cmp(unicode(x), unicode(y)))
                 if s:
