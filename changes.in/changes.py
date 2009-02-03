@@ -27,7 +27,8 @@ Release('0.72.1', 'February ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Exporting a selection of effort records resulted in an empty 
-HTML file.''')
+HTML file.'''),
+        Bug('''Opening a task from a reminder dialog didn't work.''')
         ]
     ),
 

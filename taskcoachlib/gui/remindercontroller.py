@@ -75,7 +75,7 @@ class ReminderController(object):
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
         reminderDialog.Show()
         
-    def onCloseReminderDialog(self, event):
+    def onCloseReminderDialog(self, event, show=True):
         dialog = event.EventObject
         task = dialog.task
         snoozeOptions = dialog.snoozeOptions
@@ -90,11 +90,14 @@ class ReminderController(object):
         if dialog.openTaskAfterClose:
             editTask = editor.TaskEditor(self.__mainWindow,
                 command.EditTaskCommand(self.taskList, [task]), 
-                self.mainWindow.taskFile, self.settings, bitmap='edit')
-            editTask.Show()
+                self.__mainWindow.taskFile, self.settings, bitmap='edit')
+            editTask.Show(show)
+        else:
+            editTask = None
         dialog.Destroy()
         if self.__mainWindowWasHidden:
             self.__mainWindow.Hide()
+        return editTask # For unit testing purposes
             
     def __registerRemindersForTasks(self, tasks):
         for task in tasks:
