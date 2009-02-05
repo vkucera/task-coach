@@ -68,6 +68,7 @@ class Viewer(wx.Panel):
         
     def detach(self):
         ''' Should be called by viewer.container before closing the viewer '''
+        patterns.Publisher().removeInstance(self.presentation())
         patterns.Publisher().removeInstance(self)
 
     @classmethod
