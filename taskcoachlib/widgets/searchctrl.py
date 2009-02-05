@@ -95,7 +95,9 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         if not self.IsEnabled():
             return
         if not self.isValid():
-            self.__tooltip.SetText(_('This is an invalid regular expression.\nDefaulting to substring search.'))
+            self.__tooltip.SetData([(None, 
+                [_('This is an invalid regular expression.'), 
+                 _('Defaulting to substring search.')])])
             x, y = self.GetParent().ClientToScreenXY(*self.GetPosition())
             w, h = self.GetClientSize()
             self.DoShowTip(x + 3, y + h + 4, self.__tooltip)

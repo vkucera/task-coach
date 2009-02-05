@@ -29,7 +29,9 @@ Release('0.72.1', 'February ?, 2009',
         Bug('''Exporting a selection of effort records resulted in an empty 
 HTML file.'''),
         Bug('''Opening a task from a reminder dialog didn't work.'''),
-        Bug('''Include effort for subtasks in the effort viewer for one task.''')
+        Bug('''Include effort for subtasks in the effort viewer for one task.'''),
+        Bug('''Correctly display error message when the user enters an invalid
+regular expression in a search control.''')
         ],
     featuresAdded=[
         Feature('''When the single task, whose effort records are shown in
