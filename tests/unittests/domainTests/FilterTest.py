@@ -579,3 +579,13 @@ class SelectedItemsFilterTest(test.TestCase):
         self.child.addChild(grandchild)
         self.list.append(self.child)
         self.failUnless(grandchild in self.filter)
+        
+    def testRemoveSelectedItem(self):
+        self.list.remove(self.task)
+        self.failIf(self.filter)
+        
+    def testSelectedItemsFilterShowsAllTasksWhenSelectedItemsRemoved(self):
+        otherTask = task.Task()
+        self.list.append(otherTask)
+        self.list.remove(self.task)
+        self.assertEqual([otherTask], list(self.filter))

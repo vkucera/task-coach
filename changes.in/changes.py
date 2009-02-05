@@ -30,6 +30,11 @@ Release('0.72.1', 'February ?, 2009',
 HTML file.'''),
         Bug('''Opening a task from a reminder dialog didn't work.'''),
         Bug('''Include effort for subtasks in the effort viewer for one task.''')
+        ],
+    featuresAdded=[
+        Feature('''When the single task, whose effort records are shown in
+a single task effort viewer, is removed, the effort viewer resets to
+show all effort records of all tasks.''')
         ]
     ),
 
