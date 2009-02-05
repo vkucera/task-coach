@@ -36,7 +36,8 @@ regular expression in a search control.''')
     featuresAdded=[
         Feature('''When the single task, whose effort records are shown in
 a single task effort viewer, is removed, the effort viewer resets to
-show all effort records of all tasks.''')
+show all effort records of all tasks.'''),
+        Feature('''Tool tips for task square map viewer.''')
         ]
     ),
 
