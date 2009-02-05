@@ -67,13 +67,26 @@ class Filter(patterns.SetDecorator):
 class SelectedItemsFilter(Filter):
     def __init__(self, *args, **kwargs):
         self.__selectedItems = kwargs.pop('selectedItems' , [])
+        self.__includeSubItems = kwargs.pop('includeSubItems', True)
         super(SelectedItemsFilter, self).__init__(*args, **kwargs)
         
     def filter(self, items):
         if self.__selectedItems:
-            return [item for item in items if item in self.__selectedItems]
+            result = [item for item in items if self.itemOrAncestorInSelectedItems(item)]
+            if self.__includeSubItems:
+                for item in result[:]:
+                    result.extend(item.children(recursive=True))
+            return result
         else:
             return items
+        
+    def itemOrAncestorInSelectedItems(self, item):
+        if item in self.__selectedItems:
+            return True
+        elif item.parent():
+            return self.itemOrAncestorInSelectedItems(item.parent())
+        else:
+            return False
     
 
 class SearchFilter(Filter):

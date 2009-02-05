@@ -558,3 +558,24 @@ class DeletedFilterTest(test.TestCase):
         self.task.cleanDirty()
         self.assertEqual(1, len(self.filter))
 
+
+class SelectedItemsFilterTest(test.TestCase):
+    def setUp(self):
+        self.task = task.Task()
+        self.child = task.Task(parent=self.task)
+        self.list = task.TaskList([self.task])
+        self.filter = base.SelectedItemsFilter(self.list, 
+                                               selectedItems=[self.task])
+        
+    def testInitialContent(self):
+        self.assertEqual([self.task], list(self.filter))
+        
+    def testAddChild(self):
+        self.list.append(self.child)
+        self.failUnless(self.child in self.filter)
+        
+    def testAddChildWithGrandchild(self):
+        grandchild = task.Task(parent=self.child)
+        self.child.addChild(grandchild)
+        self.list.append(self.child)
+        self.failUnless(grandchild in self.filter)

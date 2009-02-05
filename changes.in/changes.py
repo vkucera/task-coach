@@ -28,7 +28,8 @@ Release('0.72.1', 'February ?, 2009',
     bugsFixed=[
         Bug('''Exporting a selection of effort records resulted in an empty 
 HTML file.'''),
-        Bug('''Opening a task from a reminder dialog didn't work.''')
+        Bug('''Opening a task from a reminder dialog didn't work.'''),
+        Bug('''Include effort for subtasks in the effort viewer for one task.''')
         ]
     ),
 
