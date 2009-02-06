@@ -174,7 +174,7 @@ class NewTaskTest(TaskEditorTestCase):
             self.errorMessage = args[0]
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
         command = uicommand.AttachmentOpen(\
-            viewer=self.editor[0][6]._attachmentViewer,
+            viewer=self.editor[0][6].viewer,
             attachments=attachment.AttachmentList([att]))
         command.doCommand(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo:
@@ -283,13 +283,13 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
 
     def testAddAttachment(self):
-        self.editor[0][6]._attachmentViewer.onDropFiles(None, ['filename'])
+        self.editor[0][6].viewer.onDropFiles(None, ['filename'])
         self.editor.ok()
         self.failUnless('filename' in [att.location() for att in self.task.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor[0][6]._attachmentViewer.presentation().removeItems([self.attachment])
+        self.editor[0][6].viewer.presentation().removeItems([self.attachment])
         self.editor.ok()
         self.assertEqual([], self.task.attachments())
 
@@ -365,7 +365,7 @@ class EditTaskWithEffortTest(TaskEditorTestCase):
         return [self.task]
     
     def testEffortIsShown(self):
-        self.assertEqual(1, self.editor[0][4].effortViewer.widget.GetItemCount())
+        self.assertEqual(1, self.editor[0][4].viewer.widget.GetItemCount())
                           
     def testCancel(self):
         self.editor.cancel()
