@@ -29,7 +29,7 @@
 	
 	objectCount = categoryCount;
 
-	if (taskCount)
+	if (categoryCount)
 	{
 		Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Category WHERE status=%d", STATUS_NEW]];
 		[req execWithTarget:self action:@selector(onObject:)];

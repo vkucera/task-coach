@@ -87,8 +87,6 @@
 
 - (void)network:(Network *)network didGetData:(NSData *)data
 {
-	NSLog(@"Got %d bytes", [data length]);
-
 	[state network:network didGetData:data controller:self];
 }
 

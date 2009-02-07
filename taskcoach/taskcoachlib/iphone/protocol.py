@@ -304,7 +304,7 @@ class GUIDState(BaseState):
                 print 'No GUID.'
                 self.onSyncType(disp, disp.window.getIPhoneSyncType(None))
         else:
-            print 'GUID:', data
+            print 'GUID: %s (local: %s)' % (data, disp.window.taskFile.guid())
             self.onSyncType(disp, disp.window.getIPhoneSyncType(data))
 
     def onSyncType(self, disp, type_):
