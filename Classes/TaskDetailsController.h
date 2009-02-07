@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 
 #import "SwitchCell.h"
+#import "DescriptionCell.h"
 
 @class Task;
 
-@interface TaskDetailsController : UITableViewController <UITextFieldDelegate, SwitchCellDelegate>
+@interface TaskDetailsController : UITableViewController <UITextFieldDelegate, SwitchCellDelegate, UITextViewDelegate>
 {
 	Task *task;
 	NSMutableArray *cells;
@@ -22,6 +23,8 @@
 	
 	SwitchCell *dueDateCell;
 	UITableViewCell *dueDateValueCell;
+	
+	DescriptionCell *descriptionCell;
 }
 
 - initWithTask:(Task *)task;

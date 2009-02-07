@@ -66,6 +66,8 @@
 		A6D3862F0F24B02A0097F0F6 /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */; };
 		A6D3868A0F24B4450097F0F6 /* DatePickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D386880F24B4450097F0F6 /* DatePickerView.xib */; };
 		A6D8AC030F221BFA006894AA /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A6D8AC020F221BFA006894AA /* Settings.bundle */; };
+		A6DA5C690F3D870900372358 /* DescriptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DA5C680F3D870900372358 /* DescriptionCell.m */; };
+		A6DA5C780F3D87F300372358 /* DescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DA5C770F3D87F300372358 /* DescriptionCell.xib */; };
 		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
 		A6DDF85D0F1F993800F35108 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DDF85B0F1F993800F35108 /* TaskView.xib */; };
@@ -176,6 +178,9 @@
 		A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerViewController.m; sourceTree = "<group>"; };
 		A6D386890F24B4450097F0F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6D8AC020F221BFA006894AA /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		A6DA5C670F3D870900372358 /* DescriptionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionCell.h; sourceTree = "<group>"; };
+		A6DA5C680F3D870900372358 /* DescriptionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionCell.m; sourceTree = "<group>"; };
+		A6DA5C770F3D87F300372358 /* DescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DescriptionCell.xib; sourceTree = SOURCE_ROOT; };
 		A6DDF84E0F1F974000F35108 /* TaskList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskList.h; path = Database/TaskList.h; sourceTree = "<group>"; };
 		A6DDF84F0F1F974000F35108 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskList.m; path = Database/TaskList.m; sourceTree = "<group>"; };
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
@@ -418,6 +423,9 @@
 				A6D385520F24A0E20097F0F6 /* SwitchCell.h */,
 				A6D385530F24A0E20097F0F6 /* SwitchCell.m */,
 				A6D385620F24A2330097F0F6 /* SwitchCell.xib */,
+				A6DA5C670F3D870900372358 /* DescriptionCell.h */,
+				A6DA5C680F3D870900372358 /* DescriptionCell.m */,
+				A6DA5C770F3D87F300372358 /* DescriptionCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -489,6 +497,7 @@
 				A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */,
 				A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */,
 				A6664C290F2B367A00638C68 /* SyncView.xib in Resources */,
+				A6DA5C780F3D87F300372358 /* DescriptionCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -543,6 +552,7 @@
 				A61AEE790F35CB610086ECD6 /* TwoWayDeletedTasksState.m in Sources */,
 				A61AEEFB0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m in Sources */,
 				A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */,
+				A6DA5C690F3D870900372358 /* DescriptionCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
