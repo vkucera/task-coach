@@ -44,6 +44,8 @@
 {
 	[super onObject:dict];
 
+	NSLog(@"Sending new task %@", [dict objectForKey:@"name"]);
+	
 	[myNetwork appendString:[dict objectForKey:@"name"]];
 	[myNetwork appendString:[dict objectForKey:@"description"]];
 	[myNetwork appendString:[dict objectForKey:@"startDate"]];

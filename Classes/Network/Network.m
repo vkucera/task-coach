@@ -114,13 +114,10 @@
 	Buffer *bf = [toSend objectAtIndex:0];
 	unsigned int len = 0;
 	
-	NSLog(@"Trying to write %d bytes...", [bf.data length] - bf.offset);
 	len = [(NSOutputStream *)stream write:(uint8_t *)[bf.data bytes] + bf.offset maxLength:[bf.data length] - bf.offset];
-	NSLog(@"Wrote %d bytes", len);
 	bf.offset += len;
 	if (bf.offset == [bf.data length])
 	{
-		NSLog(@"Remove one buffer");
 		[toSend removeObjectAtIndex:0];
 	}
 }	
@@ -130,8 +127,6 @@
 	Buffer *bf = [[Buffer alloc] initWithData:theData];
 	[toSend addObject:bf];
 	[bf release];
-	
-	NSLog(@"Appending %d bytes (%d)", [theData length], writing);
 	
 	if (!writing && [outputStream hasSpaceAvailable])
 		[self writeToStream:outputStream];
@@ -199,8 +194,6 @@
 		}
 		case NSStreamEventHasSpaceAvailable:
 		{
-			NSLog(@"Space available");
-
 			if ([toSend count])
 			{
 				writing = YES;
