@@ -13,6 +13,7 @@
 
 #import "CellFactory.h"
 #import "TextFieldCell.h"
+#import "DescriptionCell.h"
 
 #import "DateUtils.h"
 
@@ -37,6 +38,11 @@
 		nameCell.textField.delegate = self;
 		nameCell.textField.text = task.name;
 		[cells addObject:nameCell];
+		
+		descriptionCell = [[CellFactory cellFactory] createDescriptionCell];
+		descriptionCell.textView.delegate = self;
+		descriptionCell.textView.text = task.description;
+		[cells addObject:descriptionCell];
 		
 		startDateCell = [[CellFactory cellFactory] createSwitchCell];
 		[startDateCell setDelegate:self];
@@ -235,6 +241,15 @@
 	}
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
+	
+	if (cell == descriptionCell)
+		return 160;
+	return 44;
+}
+
 #pragma mark UITextFieldDelegate protocol
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -250,6 +265,23 @@
 	}
 
 	return NO;
+}
+
+#pragma mark UITextViewDelegate protocol
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+	UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(onSaveDescription:)];
+	self.navigationItem.rightBarButtonItem = button;
+	[button release];
+}
+
+- (void)onSaveDescription:(UIBarButtonItem *)button
+{
+	self.navigationItem.rightBarButtonItem = nil;
+	[descriptionCell.textView resignFirstResponder];
+	task.description = descriptionCell.textView.text;
+	[task save];
 }
 
 @end
