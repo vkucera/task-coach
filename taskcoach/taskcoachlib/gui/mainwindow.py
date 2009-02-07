@@ -478,11 +478,11 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
 
     @synchronized
     def clearTasks(self):
-        self.taskFile._clear()
+        self.taskFile._clear(False)
 
     @synchronized
     def restoreTasks(self, categories, tasks):
-        self.taskFile._clear()
+        self.taskFile._clear(False)
         self.taskFile.categories().extend(categories)
         self.taskFile.tasks().extend(tasks)
 
