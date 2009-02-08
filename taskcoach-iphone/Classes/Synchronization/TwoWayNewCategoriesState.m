@@ -28,6 +28,7 @@
 	[super activated];
 	
 	objectCount = categoryCount;
+	[self afterActivation];
 
 	if (categoryCount)
 	{

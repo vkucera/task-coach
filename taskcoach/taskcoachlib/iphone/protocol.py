@@ -386,7 +386,10 @@ class FullFromDeviceCategoryState(BaseState):
         self.length = None
         self.categoryMap = {}
 
-        disp.set_terminator(4)
+        if self.categoryCount:
+            disp.set_terminator(4)
+        else:
+            self.setState(FullFromDeviceTaskState, disp)
 
     def handleData(self, disp, data):
         if self.length is None:
@@ -413,9 +416,13 @@ class FullFromDeviceCategoryState(BaseState):
 class FullFromDeviceTaskState(BaseState):
     def init(self, disp):
         print 'FullFromDeviceTaskState'
-        self.length = None
-        self.state = 0
-        disp.set_terminator(4)
+        if self.taskCount:
+            self.length = None
+            self.state = 0
+            disp.set_terminator(4)
+        else:
+            disp.pushString(disp.window.taskFile.guid())
+            self.setState(EndState, disp)
 
     def handleData(self, disp, data):
         if self.length is None:

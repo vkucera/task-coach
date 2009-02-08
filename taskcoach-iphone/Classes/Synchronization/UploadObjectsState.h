@@ -28,6 +28,7 @@
 - initWithNetwork:(Network *)network controller:(SyncViewController *)controller nextState:(NSObject <State> *)nextState expectIds:(BOOL)expectIds;
 
 - (void)activated;
+- (void)afterActivation;
 - (void)onObject:(NSDictionary *)dict;
 
 // "abstract" methods
