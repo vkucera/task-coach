@@ -29,6 +29,7 @@
 	
 	objectCount = taskCount;
 	taskCategories = [[NSMutableArray alloc] initWithCapacity:2];
+	[self afterActivation];
 	
 	if (taskCount)
 	{

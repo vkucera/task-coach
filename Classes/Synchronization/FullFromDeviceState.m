@@ -34,6 +34,7 @@
 	[myNetwork appendInteger:taskCount];
 	
 	objectCount = categoryCount;
+	[self afterActivation];
 
 	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Category WHERE %@", [self categoryWhereClause]]];
 	[req execWithTarget:self action:@selector(onObject:)];

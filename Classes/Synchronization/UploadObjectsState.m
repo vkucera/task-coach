@@ -54,9 +54,19 @@
 	[req execWithTarget:self action:@selector(onTaskCount:)];
 	
 	total = categoryCount + taskCount;
-	
-	if (objectIds)
-		[myNetwork expect:4];
+}
+
+- (void)afterActivation
+{
+	if (objectCount)
+	{
+		if (objectIds)
+			[myNetwork expect:4];
+	}
+	else
+	{
+		myController.state = nextState;
+	}
 }
 
 - (void)onCategoryCount:(NSDictionary *)dict

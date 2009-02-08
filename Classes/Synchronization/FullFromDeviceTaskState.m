@@ -27,6 +27,7 @@
 	count = categoryCount;
 	objectCount = taskCount;
 	taskCategories = [[NSMutableArray alloc] initWithCapacity:2];
+	[self afterActivation];
 	
 	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Task WHERE %@", [self taskWhereClause]]];
 	[req execWithTarget:self action:@selector(onObject:)];
