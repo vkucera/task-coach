@@ -25,8 +25,10 @@
 	UITableViewCell *dueDateValueCell;
 	
 	DescriptionCell *descriptionCell;
+
+	NSInteger categoryId;
 }
 
-- initWithTask:(Task *)task;
+- initWithTask:(Task *)task category:(NSInteger)category;
 
 @end

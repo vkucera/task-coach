@@ -16,9 +16,9 @@
 - (NSInteger)count
 {
 	if ([Configuration configuration].showCompleted)
-		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM AllTask WHERE categoryId=%d", objectId]] execWithTarget:self action:@selector(setCount:)];
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM AllTask LEFT JOIN TaskHasCategory ON id=idTask WHERE idCategory=%d", objectId]] execWithTarget:self action:@selector(setCount:)];
 	else
-		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM AllTask WHERE categoryId=%d AND completionDate IS NULL", objectId]] execWithTarget:self action:@selector(setCount:)];
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM AllTask LEFT JOIN TaskHasCategory ON id=idTask WHERE idCategory=%d AND completionDate IS NULL", objectId]] execWithTarget:self action:@selector(setCount:)];
 
 	return taskCount;
 }

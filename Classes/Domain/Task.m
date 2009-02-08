@@ -17,7 +17,6 @@ static Statement *_saveStatement = NULL;
 
 @implementation Task
 
-@synthesize category;
 @synthesize description;
 @synthesize startDate;
 @synthesize dueDate;
@@ -25,7 +24,6 @@ static Statement *_saveStatement = NULL;
 
 - initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId description:(NSString *)theDescription
 			startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate
-			category:(NSNumber *)theCategory
 {
 	if (self = [super initWithId:theId name:theName status:theStatus taskCoachId:tcId])
 	{
@@ -33,7 +31,6 @@ static Statement *_saveStatement = NULL;
 		startDate = [theStartDate retain];
 		dueDate = [theDueDate retain];
 		completionDate = [theCompletionDate retain];
-		category = [theCategory retain];
 	}
 	
 	return self;
@@ -45,7 +42,6 @@ static Statement *_saveStatement = NULL;
 	[startDate release];
 	[dueDate release];
 	[completionDate release];
-	[category release];
 
 	[super dealloc];
 }
@@ -53,26 +49,32 @@ static Statement *_saveStatement = NULL;
 - (Statement *)saveStatement
 {
 	if (!_saveStatement)
-		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=?, taskCoachId=?, categoryId=?, description=?, startDate=?, dueDate=?, completionDate=? WHERE id=?", [self class]]] retain];
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=?, taskCoachId=?, description=?, startDate=?, dueDate=?, completionDate=? WHERE id=?", [self class]]] retain];
 	return _saveStatement;
 }
 
 - (void)bindId
 {
-	[[self saveStatement] bindInteger:objectId atIndex:9];
+	[[self saveStatement] bindInteger:objectId atIndex:8];
 }
 
 - (void)bind
 {
 	[super bind];
-	if (category)
-		[[self saveStatement] bindInteger:[category intValue] atIndex:4];
-	else
-		[[self saveStatement] bindNullAtIndex:4];
-	[[self saveStatement] bindString:description atIndex:5];
-	[[self saveStatement] bindString:startDate atIndex:6];
-	[[self saveStatement] bindString:dueDate atIndex:7];
-	[[self saveStatement] bindString:completionDate atIndex:8];
+
+	[[self saveStatement] bindString:description atIndex:4];
+	[[self saveStatement] bindString:startDate atIndex:5];
+	[[self saveStatement] bindString:dueDate atIndex:6];
+	[[self saveStatement] bindString:completionDate atIndex:7];
+}
+
+- (void)delete
+{
+	Statement *req = [[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory WHERE idTask=?"];
+	[req bindInteger:objectId atIndex:1];
+	[req exec];
+
+	[super delete];
 }
 
 - (NSInteger)taskStatus

@@ -37,8 +37,7 @@
 							   description:[dict objectForKey:@"description"]
 							   startDate:[dict objectForKey:@"startDate"]
 							   dueDate:[dict objectForKey:@"dueDate"]
-						       completionDate:[dict objectForKey:@"completionDate"]
-							   category:[dict objectForKey:@"categoryId"]];
+						       completionDate:[dict objectForKey:@"completionDate"]];
 	[tasks addObject:task];
 	[task release];
 }
@@ -53,7 +52,7 @@
 		
 		if (categoryId != -1)
 		{
-			[where addObject:[NSString stringWithFormat:@"categoryId == %d", categoryId]];
+			[where addObject:[NSString stringWithFormat:@"idCategory == %d", categoryId]];
 		}
 
 		if (![Configuration configuration].showCompleted)
@@ -65,17 +64,17 @@
 
 		if ([where count])
 		{
-			req = [NSString stringWithFormat:@"FROM %@ WHERE %@", viewName, [@" AND " stringByJoiningStrings:where]];
+			req = [NSString stringWithFormat:@"FROM %@ LEFT JOIN TaskHasCategory ON id=idTask WHERE %@", viewName, [@" AND " stringByJoiningStrings:where]];
 		}
 		else
 		{
-			req = [NSString stringWithFormat:@"FROM %@", viewName];
+			req = [NSString stringWithFormat:@"FROM %@ LEFT JOIN TaskHasCategory ON id=idTask", viewName];
 		}
 
 		[where release];
 
-		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * %@ ORDER BY name LIMIT ?,?", req]] retain];
-		countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total %@", req]] retain];
+		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * %@ GROUP BY id ORDER BY name LIMIT ?,?", req]] retain];
+		countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(DISTINCT(id)) AS total %@", req]] retain];
 
 		title = [theTitle copy];
 		status = theStatus;
