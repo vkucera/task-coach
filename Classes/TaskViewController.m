@@ -102,7 +102,9 @@
 {
 	[self loadData];
 	[self.tableView reloadData];
-	[[PositionStore instance] pop];
+	if (!isCreatingTask)
+		[[PositionStore instance] pop];
+	isCreatingTask = NO;
 }
 
 - (void)dealloc
@@ -285,6 +287,7 @@
 	{
 		Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
 									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil];
+		isCreatingTask = YES;
 		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
