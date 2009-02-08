@@ -26,6 +26,8 @@ releases = [
 Release('0.72.1', 'February ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''On MacOS, the window height would increase by 29 pixels
+each time Task Coach is launched'''),
         Bug('''Exporting a selection of effort records resulted in an empty 
 HTML file.'''),
         Bug('''Opening a task from a reminder dialog didn't work.'''),

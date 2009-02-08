@@ -108,12 +108,20 @@ class MainWindowIconizedTest(test.wxTestCase):
         self.failUnless(self.mainwindow.IsIconized())
                         
     def testWindowSize(self):
-        self.assertEqual((700, 500), eval(self.settings.get('window', 'size')))
+        # On MacOS, the window height is increased by 29 pixels in "real life" but
+        # not when running this test...
+        height = 500
+        if wx.Platform == '__WXMAC__':
+            height -= 29
+        self.assertEqual((700, height), eval(self.settings.get('window', 'size')))
         
     def testWindowSizeShouldnotChangeWhenReceivingChangeSizeEvent(self):
         if '__WXGTK__' == wx.Platform:
             wx.CallAfter(self.mainwindow.ProcessEvent, wx.SizeEvent((100,20)))
         else:
             self.mainwindow.ProcessEvent(wx.SizeEvent((100,20)))
-        self.assertEqual((700, 500), eval(self.settings.get('window', 'size')))
+        height = 500
+        if wx.Platform == '__WXMAC__':
+            height -= 29
+        self.assertEqual((700, height), eval(self.settings.get('window', 'size')))
 
