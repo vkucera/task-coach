@@ -84,7 +84,8 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 #  4) start date
 #  5) due date
 #  6) completion date
-#  7) category ID (string)
+#  7) Number of categories (int)
+#  8) Category IDs (strings)
 #
 # All dates are string, formatted YYYY-MM-DD. An empty string means None.
 # As the iPhone version does not support hierarchical categories, the following
@@ -335,10 +336,8 @@ class FullFromDesktopState(BaseState):
         print 'Full from desktop.'
 
         tasks = filter(self.isTaskEligible, disp.window.taskFile.tasks())
-        categories = [category for category in disp.window.taskFile.categories().rootItems() \
-                          if category.subject() != u'iPhone']
+        categories = disp.window.taskFile.categories()
 
-        # Send only top-level categories and eligible tasks
         disp.pushInteger(len(categories))
         disp.pushInteger(len(tasks))
 
@@ -352,26 +351,15 @@ class FullFromDesktopState(BaseState):
             self.dlg.SetProgress(count, total)
 
         for task in tasks:
-            def getTopCategory(t):
-                s = set()
-                for category in t.categories(recursive=True):
-                    while category.parent():
-                        category = category.parent()
-                    if category in categories:
-                        s.add(category)
-                s = list(s)
-                s.sort(lambda x, y: cmp(unicode(x), unicode(y)))
-                if s:
-                    return s[0].id()
-                return ''
-
             disp.pushString(task.subject())
             disp.pushString(task.id())
             disp.pushString(task.description())
             disp.pushDate(task.startDate())
             disp.pushDate(task.dueDate())
             disp.pushDate(task.completionDate())
-            disp.pushString(getTopCategory(task))
+            disp.pushInteger(len(task.categories()))
+            for category in task.categories():
+                disp.pushString(category.id())
 
             count += 1
             self.dlg.SetProgress(count, total)
@@ -424,6 +412,7 @@ class FullFromDeviceCategoryState(BaseState):
 
 class FullFromDeviceTaskState(BaseState):
     def init(self, disp):
+        print 'FullFromDeviceTaskState'
         self.length = None
         self.state = 0
         disp.set_terminator(4)
@@ -445,36 +434,74 @@ class FullFromDeviceTaskState(BaseState):
             elif self.state == 3:
                 self.dueDate = parseDate(data)
             elif self.state == 4:
-                self.completionDate = parseDate(data)
-            elif self.state == 5:
                 task = Task(subject=self.subject,
                             description=self.description,
                             startDate=self.startDate,
                             dueDate=self.dueDate,
-                            completionDate=self.completionDate)
+                            completionDate=parseDate(data))
 
-                if data:
-                    category = self.categoryMap[data.decode('UTF-8')]
-                else:
-                    category = None
+                print 'New task:', self.subject
 
-                print 'New task:', self.subject, category
+                self.setState(FullFromDeviceTaskCategoryCountState, disp, task)
 
-                disp.window.addIPhoneTask(task, category)
+            if self.state != 4:
+                self.length = None
+                self.state += 1
+                disp.set_terminator(4)
 
-                disp.pushString(task.id())
+class FullFromDeviceTaskCategoryCountState(BaseState):
+    def init(self, disp, task):
+        self.task = task
+        disp.set_terminator(4)
 
+    def handleData(self, disp, data):
+        self.taskCategoryCount, = struct.unpack('!i', data)
+        print 'Task category count:', self.taskCategoryCount
+        if self.taskCategoryCount:
+            self.setState(FullFromDeviceTaskCategoriesState, disp)
+        else:
+            disp.pushString(self.task.id())
+            self.taskCount -= 1
+            self.count += 1
+            self.dlg.SetProgress(self.count, self.total)
+
+            if self.taskCount:
+                self.setState(FullFromDeviceTaskState, disp)
+            else:
+                disp.pushString(disp.window.taskFile.guid())
+                self.setState(EndState, disp)
+
+
+class FullFromDeviceTaskCategoriesState(BaseState):
+    def init(self, disp):
+        self.categories = []
+        self.length = None
+        disp.set_terminator(4)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            disp.set_terminator(self.length)
+        else:
+            print 'Cat Id:', data
+            self.categories.append(self.categoryMap[data.decode('UTF-8')])
+
+            self.taskCategoryCount -= 1
+            if self.taskCategoryCount:
+                self.length = None
+                disp.set_terminator(4)
+            else:
+                disp.window.addIPhoneTask(self.task, self.categories)
+                disp.pushString(self.task.id())
                 self.taskCount -= 1
                 self.count += 1
                 self.dlg.SetProgress(self.count, self.total)
 
-            if self.state == 5 and self.taskCount == 0:
-                disp.pushString(disp.window.taskFile.guid())
-                self.setState(EndState, disp)
-            else:
-                self.state = (self.state + 1) % 6
-                self.length = None
-                disp.set_terminator(4)
+                if self.taskCount:
+                    self.setState(FullFromDeviceTaskState, disp)
+                else:
+                    disp.pushString(disp.window.taskFile.guid())
+                    self.setState(EndState, disp)
 
 
 class TwoWayState(BaseState):
@@ -555,33 +582,63 @@ class TwoWayNewTasksState(BaseState):
             elif self.state == 3:
                 self.dueDate = parseDate(data)
             elif self.state == 4:
-                self.completionDate = parseDate(data)
-            elif self.state == 5:
                 task = Task(subject=self.subject,
                             description=self.description,
                             startDate=self.startDate,
                             dueDate=self.dueDate,
-                            completionDate=self.completionDate)
+                            completionDate=parseDate(data))
 
-                if data:
-                    category = self.categoryMap[data.decode('UTF-8')]
-                else:
-                    category = None
+                self.setState(TwoWayNewTasksCategoryCountState, disp, task)
 
-                print 'New task:', self.subject, category
-
-                disp.window.addIPhoneTask(task, category)
-
-                disp.pushString(task.id())
-
-                self.newTasksCount -= 1
-
-            if self.state == 5 and self.newTasksCount == 0:
-                self.setState(TwoWayDeletedTasksState, disp)
-            else:
-                self.state = (self.state + 1) % 6
+            if self.state != 4:
+                self.state += 1
                 self.length = None
                 disp.set_terminator(4)
+
+
+class TwoWayNewTasksCategoryCountState(BaseState):
+    def init(self, disp, task):
+        self.task = task
+        disp.set_terminator(4)
+
+    def handleData(self, disp, data):
+        self.taskCategoryCount, = struct.unpack('!i', data)
+        if self.taskCategoryCount:
+            self.setState(TwoWayNewTasksCategoriesState, disp)
+        else:
+            disp.window.addIPhoneTask(self.task, [])
+            disp.pushString(self.task.id())
+            self.newTasksCount -= 1
+            if self.newTasksCount:
+                self.setState(TwoWayNewTasksState, disp)
+            else:
+                self.setState(TwoWayDeletedTasksState, disp)
+
+
+class TwoWayNewTasksCategoriesState(BaseState):
+    def init(self, disp):
+        self.categories = []
+        self.length = None
+        disp.set_terminator(4)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            disp.set_terminator(self.length)
+        else:
+            self.categories.append(self.categoryMap[data.decode('UTF-8')])
+            self.taskCategoryCount -= 1
+            if self.taskCategoryCount:
+                self.length = None
+                disp.set_terminator(4)
+            else:
+                disp.window.addIPhoneTask(self.task, self.categories)
+                disp.pushString(self.task.id())
+                self.newTasksCount -= 1
+                if self.newTasksCount:
+                    self.setState(TwoWayNewTasksState, disp)
+                else:
+                    self.setState(TwoWayDeletedTasksState, disp)
 
 
 class TwoWayDeletedTasksState(BaseState):

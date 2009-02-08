@@ -283,12 +283,9 @@
 {
 	if (indexPath.section == 0)
 	{
-		NSNumber *category = nil;
-		if (categoryId != -1)
-			category = [NSNumber numberWithInt:categoryId];
 		Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil category:category];
-		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
+									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil];
+		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
 	}
@@ -334,7 +331,7 @@
 	}
 
 	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:indexPath.row];
-	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
+	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:indexPath];
 	[ctrl release];

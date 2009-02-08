@@ -16,16 +16,20 @@
 #import "DescriptionCell.h"
 
 #import "DateUtils.h"
+#import "Database.h"
+#import "Statement.h"
 
 //======================================================================
 
 @implementation TaskDetailsController
 
-- initWithTask:(Task *)theTask
+- initWithTask:(Task *)theTask category:(NSInteger)category
 {
 	if (self = [super initWithNibName:@"TaskDetails" bundle:[NSBundle mainBundle]])
 	{
 		task = [theTask retain];
+		categoryId = category;
+
 		cells = [[NSMutableArray alloc] initWithCapacity:5];
 
 		SwitchCell *completeCell = [[CellFactory cellFactory] createSwitchCell];
@@ -88,6 +92,20 @@
 	[super dealloc];
 }
 
+- (void)saveTask
+{
+	BOOL isNew = (task.objectId == -1);
+	[task save];
+	
+	if (isNew && (categoryId != -1))
+	{
+		Statement *req = [[Database connection] statementWithSQL:@"INSERT INTO TaskHasCategory (idTask, idCategory) VALUES (?, ?)"];
+		[req bindInteger:task.objectId atIndex:1];
+		[req bindInteger:categoryId atIndex:2];
+		[req exec];
+	}
+}
+
 - (void)viewDidLoad
 {
 	if (task.objectId == -1)
@@ -122,7 +140,7 @@
 		else
 		{
 			task.startDate = nil;
-			[task save];
+			[self saveTask];
 
 			[cells removeObjectAtIndex:indexPath.row];
 			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
@@ -145,7 +163,7 @@
 		else
 		{
 			task.dueDate = nil;
-			[task save];
+			[self saveTask];
 			
 			[cells removeObjectAtIndex:indexPath.row];
 			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
@@ -154,7 +172,7 @@
 	else
 	{
 		[task setCompleted:cell.switch_.on];
-		[task save];
+		[self saveTask];
 	}
 }
 
@@ -174,7 +192,7 @@
 		[startDateCell.switch_ setOn:NO animated:YES];
 	}
 	
-	[task save];
+	[self saveTask];
 	startDateValueCell.text = task.startDate;
 }
 
@@ -194,7 +212,7 @@
 		[dueDateCell.switch_ setOn:NO animated:YES];
 	}
 	
-	[task save];
+	[self saveTask];
 	dueDateValueCell.text = task.dueDate;
 }
 
@@ -257,7 +275,7 @@
 	if ([textField.text length])
 	{
 		task.name = textField.text;
-		[task save];
+		[self saveTask];
 		[textField resignFirstResponder];
 		self.navigationItem.title = task.name;
 
@@ -281,7 +299,7 @@
 	self.navigationItem.rightBarButtonItem = nil;
 	[descriptionCell.textView resignFirstResponder];
 	task.description = descriptionCell.textView.text;
-	[task save];
+	[self saveTask];
 }
 
 @end

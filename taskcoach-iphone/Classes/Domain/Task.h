@@ -17,22 +17,19 @@
 
 @interface Task : DomainObject
 {
-	NSNumber *category;
 	NSString *description;
 	NSString *startDate;
 	NSString *dueDate;
 	NSString *completionDate;
 }
 
-@property (nonatomic, retain) NSNumber *category;
 @property (nonatomic, retain) NSString *description;
 @property (nonatomic, retain) NSString *startDate;
 @property (nonatomic, retain) NSString *dueDate;
 @property (nonatomic, retain) NSString *completionDate;
 
 - initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId description:(NSString *)description
-			startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate
-			category:(NSNumber *)category;
+   startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate;
 
 - (NSInteger)taskStatus;
 - (void)setCompleted:(BOOL)completed;

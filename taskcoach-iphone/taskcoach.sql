@@ -28,8 +28,6 @@ CREATE TABLE Task
 	-- Task-specific fields
 
 	description TEXT NOT NULL DEFAULT '',
-
-	categoryId INTEGER NULL DEFAULT NULL,
 	
 	-- Dates are represented as YYYY-MM-DD strings
 	
@@ -41,7 +39,15 @@ CREATE TABLE Task
 CREATE INDEX idxTaskStatus ON Task (status);
 CREATE INDEX idxTaskName ON Task (name);
 CREATE INDEX idxTaskTaskCoachId ON Task (taskcoachId);
-CREATE INDEX idxTaskCategory ON Task (categoryId);
+
+CREATE TABLE TaskHasCategory
+(
+	idTask INTEGER,
+	idCategory INTEGER
+);
+
+CREATE INDEX idxTaskHasCategoryTask ON TaskHasCategory (idTask);
+CREATE INDEX idxTaskHasCategoryCategory ON TaskHasCategory (idCategory);
 
 CREATE TABLE Meta
 (
@@ -62,21 +68,3 @@ CREATE VIEW NotStartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate
 -- Initial data
 
 INSERT INTO Meta (name, value) VALUES ('version', '1');
-
--- XXXTMP: testing data
-
-INSERT INTO Category (name) VALUES ('Test1');
-INSERT INTO Category (name) VALUES ('Test2');
-INSERT INTO Category (name) VALUES ('Test3');
-
--- Not started
-INSERT INTO Task (name, categoryId) VALUES ('Task1', 1);
--- Started
-INSERT INTO Task (name, categoryId, startDate) VALUES ('Task2', 1, DATE('now', '-1 day'));
-INSERT INTO Task (name, categoryId, startDate) VALUES ('Task5', 1, DATE('now', '-1 day'));
--- Due today
-INSERT INTO Task (name, categoryId, startDate, dueDate) VALUES ('Task3', 1, DATE('now'), DATE('now'));
--- Overdue
-INSERT INTO Task (name, categoryId, startDate, dueDate) VALUES ('Task4', 1, DATE('now', '-1 day'), DATE('now', '-1 day'));
--- Completed
-INSERT INTO Task (name, categoryId, startDate, dueDate, completionDate) VALUES ('Task6', 1, DATE('now', '-1 day'), DATE('now'), DATE('now'));

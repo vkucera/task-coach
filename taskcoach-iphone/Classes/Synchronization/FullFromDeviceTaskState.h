@@ -12,6 +12,7 @@
 
 @interface FullFromDeviceTaskState : UploadObjectsState
 {
+	NSMutableArray *taskCategories;
 }
 
 @end

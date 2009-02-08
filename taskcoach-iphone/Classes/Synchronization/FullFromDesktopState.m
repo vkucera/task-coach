@@ -26,6 +26,7 @@
 
 	[[[Database connection] statementWithSQL:@"DELETE FROM Category"] exec];
 	[[[Database connection] statementWithSQL:@"DELETE FROM Task"] exec];
+	[[[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory"] exec];
 	[[[Database connection] statementWithSQL:@"DELETE FROM Meta WHERE name='guid'"] exec];
 	
 	[myNetwork expect:8];
@@ -217,13 +218,8 @@
 			break;
 		}
 		case 17:
-			state = 18;
-			[network expect:ntohl(*((int32_t *)[data bytes]))];
-			
-			break;
-		case 18:
 		{
-			NSString *catId = [NSString stringFromUTF8Data:data];
+			taskCategoryCount = ntohl(*((int32_t *)[data bytes]));
 
 			if (![taskStart length])
 			{
@@ -242,44 +238,79 @@
 				[taskCompleted release];
 				taskCompleted = nil;
 			}
-
-			taskCategoryId = nil;
-			if ([catId length])
-			{
-				Statement *req = [[Database connection] statementWithSQL:@"SELECT id FROM Category WHERE taskCoachId=?"];
-				[req bindString:catId atIndex:1];
-				[req execWithTarget:self action:@selector(onFoundCategory:)];
-			}
 			
 			Task *task = [[Task alloc] initWithId:-1 name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
-										startDate:taskStart dueDate:taskDue completionDate:taskCompleted category:taskCategoryId];
+										startDate:taskStart dueDate:taskDue completionDate:taskCompleted];
 			[task save];
-			NSLog(@"Added task %@ (category id=%@)", taskSubject, taskCategoryId);
+			NSLog(@"Added task %@", taskSubject);
+			taskLocalId = task.objectId;
 			[task release];
-			[taskCategoryId release];
 
-			++doneCount;
-			--taskCount;
-			
-			if (taskCount)
+			if (taskCategoryCount)
 			{
-				state = 5;
-				[network expect:4];
+				state = 18;
 			}
 			else
 			{
-				state = 19;
-				[network expect:4];
+				++doneCount;
+				--taskCount;
+				
+				if (taskCount)
+				{
+					state = 5;
+				}
+				else
+				{
+					state = 20;
+				}
 			}
-			
+				
+			[network expect:4];
+
 			break;
 		}
-		case 19:
-			state = 20;
+		case 18:
+			state = 19;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 			
 			break;
+		case 19:
+		{
+			Statement *req = [[Database connection] statementWithSQL:@"SELECT id FROM Category WHERE taskCoachId=?"];
+			[req bindString:[NSString stringFromUTF8Data:data] atIndex:1];
+			[req execWithTarget:self action:@selector(onFoundCategory:)];
+			
+			--taskCategoryCount;
+			
+			if (taskCategoryCount)
+			{
+				state = 18;
+			}
+			else
+			{
+				++doneCount;
+				--taskCount;
+				
+				if (taskCount)
+				{
+					state = 5;
+				}
+				else
+				{
+					state = 20;
+				}
+			}
+
+			[network expect:4];
+			
+			break;
+		}
 		case 20:
+			state = 21;
+			[network expect:ntohl(*((int32_t *)[data bytes]))];
+			
+			break;
+		case 21:
 		{
 			NSString *guid = [[NSString stringFromUTF8Data:data] retain];
 			Statement *req = [[Database connection] statementWithSQL:@"INSERT INTO Meta (name, value) VALUES (?, ?)"];
@@ -299,7 +330,8 @@
 
 - (void)onFoundCategory:(NSDictionary *)dict
 {
-	taskCategoryId = [[dict objectForKey:@"id"] retain];
+	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO TaskHasCategory (idTask, idCategory) VALUES (%d, %d)", taskLocalId, [[dict objectForKey:@"id"] intValue]]];
+	[req exec];
 }
 
 @end

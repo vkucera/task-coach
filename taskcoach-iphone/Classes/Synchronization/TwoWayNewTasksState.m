@@ -28,16 +28,24 @@
 	[super activated];
 	
 	objectCount = taskCount;
+	taskCategories = [[NSMutableArray alloc] initWithCapacity:2];
 	
 	if (taskCount)
 	{
-		Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT Task.*, Category.taskCoachId AS catId FROM Task LEFT JOIN Category ON Task.categoryId = Category.id WHERE Task.status=%d", STATUS_NEW]];
+		Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Task WHERE Task.status=%d", STATUS_NEW]];
 		[req execWithTarget:self action:@selector(onObject:)];
 	}
 	else
 	{
 		myController.state = nextState;
 	}
+}
+
+- (void)dealloc
+{
+	[taskCategories release];
+	
+	[super dealloc];
 }
 
 - (void)onObject:(NSDictionary *)dict
@@ -51,7 +59,21 @@
 	[myNetwork appendString:[dict objectForKey:@"startDate"]];
 	[myNetwork appendString:[dict objectForKey:@"dueDate"]];
 	[myNetwork appendString:[dict objectForKey:@"completionDate"]];
-	[myNetwork appendString:[dict objectForKey:@"catId"]];
+
+	[taskCategories removeAllObjects];
+	Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category, TaskHasCategory WHERE idCategory=id AND idTask=?"];
+	[req bindInteger:[[dict objectForKey:@"id"] intValue] atIndex:1];
+	[req execWithTarget:self action:@selector(onFoundCategory:)];
+	[myNetwork appendInteger:[taskCategories count]];
+	for (NSString *catId in taskCategories)
+	{
+		[myNetwork appendString:catId];
+	}
+}
+
+- (void)onFoundCategory:(NSDictionary *)dict
+{
+	[taskCategories addObject:[dict objectForKey:@"taskCoachId"]];
 }
 
 - (NSString *)categoryWhereClause

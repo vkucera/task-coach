@@ -25,7 +25,9 @@
 	NSString *taskStart;
 	NSString *taskDue;
 	NSString *taskCompleted;
-	NSNumber *taskCategoryId;
+	
+	NSInteger taskCategoryCount;
+	NSInteger taskLocalId;
 }
 
 @end
