@@ -3,7 +3,7 @@ from twisted.application import service
 from buildbot.slave.bot import BuildSlave
 
 basedir = r'/home/jerome/buildbot/Ubuntu'
-host = '192.168.0.1'
+host = '192.168.0.10'
 port = 9989
 slavename = 'Ubuntu'
 passwd = file('.passwd', 'rb').readlines()[0].strip()

@@ -3,7 +3,7 @@ from twisted.application import service
 from buildbot.slave.bot import BuildSlave
 
 basedir = r'/Users/jeromelaheurte/Buildslave'
-buildmaster_host = '192.168.0.1'
+buildmaster_host = '192.168.0.10'
 port = 9989
 slavename = 'MacOS'
 passwd = file('.passwd', 'rb').readlines()[0].strip()
