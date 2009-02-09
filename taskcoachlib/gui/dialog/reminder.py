@@ -27,7 +27,7 @@ from taskcoachlib.gui import render
 class ReminderDialog(sized_controls.SizedDialog):
     snoozeChoices = [_("Don't snooze"), _('Five minutes'), _('Ten minutes'),
                      _('Fifteen minutes'), _('Half an hour'), _('One hour'),
-                     _('Two hours'), ('24 hours')]
+                     _('Two hours'), _('24 hours')]
     snoozeTimes = [date.TimeDelta(minutes=minutes) for minutes in \
                    (0, 5, 10, 15, 30, 60, 120, 24*60)]
     
