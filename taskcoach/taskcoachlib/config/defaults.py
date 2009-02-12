@@ -33,6 +33,7 @@ defaults = { \
     'noteviewercount': '0',          # Number of note viewers in main window
     'effortviewercount': '0',        # Number of effort viewers in main window
     'squaretaskviewercount': '0',
+    'timelineviewercount': '0',
     'language': 'en_US',             # Language and locale
     'categoryfiltermatchall': 'False',
     'descriptionpopups': 'True',
@@ -67,6 +68,18 @@ defaults = { \
 'squaretaskviewer': { \
     'title': '',
     'sortby': 'budget',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False',
+    'tasksdue': 'Unlimited',
+    'hidecompletedtasks': 'False',
+    'hideinactivetasks': 'False',
+    'hideactivetasks': 'False',
+    'hideoverduetasks': 'False',
+    'hideoverbudgettasks': 'False',
+    'hidecompositetasks': 'False' },
+'timelineviewer': { \
+    'title': '',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',

@@ -37,6 +37,7 @@ class addViewers(object):
     def addAllViewers(self):
         self.addViewers(task.TaskViewer)
         self.addViewers(task.SquareTaskViewer)
+        self.addViewers(task.TimelineViewer)
         if self.settings.getboolean('feature', 'effort'):
             self.addViewers(effort.EffortViewer)
         self.addViewers(category.CategoryViewer)

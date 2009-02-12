@@ -156,6 +156,8 @@ class RootNode(object):
 
     dueToday = inactive = overdue = isBeingTracked = completed
 
+
+class SquareMapRootNode(RootNode):
     def __getattr__(self, attr):
         def getTaskAttribute(recursive=True):
             if recursive:
@@ -170,7 +172,55 @@ class RootNode(object):
         else:
             self.__zero = 0
         return getTaskAttribute
-            
+
+
+class TimelineRootNode(RootNode):
+    def parallel_children(self):
+        return self.children()
+
+    def sequential_children(self):
+        return []
+
+
+class TimelineViewer(BaseTaskViewer):
+    defaultTitle = _('Timeline')
+    defaultBitmap = 'timelineviewer'
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'timelineviewer')
+        super(TimelineViewer, self).__init__(*args, **kwargs)
+        #self.registerObserver(self.onTaskChange, task.Task.subjectChangedEventType())
+
+    def createWidget(self):
+        return widgets.Timeline(self, TimelineRootNode(self.presentation()))
+
+    def curselection(self):
+        # Override curselection, because there is no need to translate indices
+        # back to domain objects. Our widget already returns the selected domain
+        # object itself.
+        return self.widget.curselection()
+ 
+    def start(self, item, recursive=False):
+        return 0
+
+    def stop(self, item, recursive=False):
+        return 100
+
+    def label(self, item):
+        return item.subject()
+
+    def sequential_children(self, item):
+        try:
+            return item.efforts()
+        except AttributeError:
+            return []
+
+    def parallel_children(self, item):
+        try:
+            return [child for child in item.children() if child in self.presentation()]
+        except AttributeError:
+            return []
+  
 
 class SquareTaskViewer(BaseTaskViewer):
     defaultTitle = _('Task square map')
@@ -187,7 +237,7 @@ class SquareTaskViewer(BaseTaskViewer):
         self.registerObserver(self.onTaskChange, task.Task.subjectChangedEventType())
 
     def createWidget(self):
-        return widgets.SquareMap(self, RootNode(self.presentation()), self.onSelect,
+        return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), self.onSelect,
                                  uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
                                  self.createTaskPopupMenu())
         
