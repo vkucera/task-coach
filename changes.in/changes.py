@@ -35,7 +35,9 @@ HTML file.'''),
         Bug('''Correctly display error message when the user enters an invalid
 regular expression in a search control.'''),
         Bug('''Update the task square map viewer when the task status changes
-(e.g. when a task is completed).''')
+(e.g. when a task is completed).'''),
+        Bug('''When SyncML is enabled and the last subtask of a task is
+deleted, correctly update the icon in the task viewer.''')
         ],
     featuresAdded=[
         Feature('''When the single task, whose effort records are shown in

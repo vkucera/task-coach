@@ -295,7 +295,8 @@ class SquareTaskViewer(BaseTaskViewer):
         return self.renderer[self.__orderBy](value)
 
     def iconName(self, task, isSelected):
-        bitmap, bitmap_selected = render.taskBitmapNames(task)
+        bitmap, bitmap_selected = render.taskBitmapNames(task, 
+                                                         self.children(task))
         if isSelected:
             bitmap = bitmap_selected
         return bitmap
