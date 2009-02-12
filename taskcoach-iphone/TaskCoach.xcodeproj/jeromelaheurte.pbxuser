@@ -23,7 +23,7 @@
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeBuildConfigurationName = Debug;
 		activeExecutable = A68EDEB00F1E1EDF00F51FF2 /* TaskCoach */;
-		activeSDKPreference = iphonesimulator2.2.1;
+		activeSDKPreference = iphoneos2.2.1;
 		activeTarget = 1D6058900D05DD3D006BFB54 /* TaskCoach */;
 		addToTargets = (
 			1D6058900D05DD3D006BFB54 /* TaskCoach */,
@@ -132,8 +132,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 255790859;
-			PBXWorkspaceStateSaveDate = 255790859;
+			PBXPerProjectTemplateStateSaveDate = 255853168;
+			PBXWorkspaceStateSaveDate = 255853168;
 		};
 		perUserProjectItems = {
 			A604D9BA0F31CCC300D3DC79 /* PBXTextBookmark */ = A604D9BA0F31CCC300D3DC79 /* PBXTextBookmark */;
@@ -295,7 +295,6 @@
 			A6EA67CB0F225856004108B5 /* PBXTextBookmark */ = A6EA67CB0F225856004108B5 /* PBXTextBookmark */;
 			A6EA69320F232189004108B5 /* PBXTextBookmark */ = A6EA69320F232189004108B5 /* PBXTextBookmark */;
 			A6EAD6730F3F0F690086C149 /* PBXTextBookmark */ = A6EAD6730F3F0F690086C149 /* PBXTextBookmark */;
-			A6EAD6750F3F0F690086C149 /* PBXTextBookmark */ = A6EAD6750F3F0F690086C149 /* PBXTextBookmark */;
 			A6EAD6810F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6810F3F11A10086C149 /* PBXTextBookmark */;
 			A6EAD6820F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6820F3F11A10086C149 /* PBXTextBookmark */;
 			A6EAD6830F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6830F3F11A10086C149 /* PBXTextBookmark */;
@@ -306,22 +305,6 @@
 			A6EAD6880F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6880F3F11A10086C149 /* PBXTextBookmark */;
 			A6EAD6890F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6890F3F11A10086C149 /* PBXTextBookmark */;
 			A6EAD68A0F3F11A10086C149 /* PBXTextBookmark */ = A6EAD68A0F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD68B0F3F11A10086C149 /* PBXTextBookmark */ = A6EAD68B0F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD68D0F3F11A10086C149 /* PBXTextBookmark */ = A6EAD68D0F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD68E0F3F11A10086C149 /* PBXTextBookmark */ = A6EAD68E0F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD68F0F3F11A10086C149 /* PBXTextBookmark */ = A6EAD68F0F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6900F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6900F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6910F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6910F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6920F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6920F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6930F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6930F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6940F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6940F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6950F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6950F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6960F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6960F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6970F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6970F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6980F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6980F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD6990F3F11A10086C149 /* PBXTextBookmark */ = A6EAD6990F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD69A0F3F11A10086C149 /* PBXTextBookmark */ = A6EAD69A0F3F11A10086C149 /* PBXTextBookmark */;
-			A6EAD69B0F3F11A10086C149 /* PBXTextBookmark */ = A6EAD69B0F3F11A10086C149 /* PBXTextBookmark */;
 			A6EAD69C0F3F11A10086C149 /* PBXTextBookmark */ = A6EAD69C0F3F11A10086C149 /* PBXTextBookmark */;
 			A6F8E3FF0F2C6EAD007D929C /* PBXTextBookmark */ = A6F8E3FF0F2C6EAD007D929C /* PBXTextBookmark */;
 			A6F8E40F0F2C6EAD007D929C /* PBXTextBookmark */ = A6F8E40F0F2C6EAD007D929C /* PBXTextBookmark */;
@@ -337,6 +320,7 @@
 			A6F8E5DB0F2C886A007D929C /* PBXTextBookmark */ = A6F8E5DB0F2C886A007D929C /* PBXTextBookmark */;
 			A6F8E5ED0F2C88CB007D929C /* PBXTextBookmark */ = A6F8E5ED0F2C88CB007D929C /* PBXTextBookmark */;
 			A6F8E5EE0F2C88CB007D929C /* PBXTextBookmark */ = A6F8E5EE0F2C88CB007D929C /* PBXTextBookmark */;
+			A6F927F70F4003250018BA8D /* PBXTextBookmark */ = A6F927F70F4003250018BA8D /* PBXTextBookmark */;
 			A6FA97EC0F2B2F0E00505D87 /* PBXTextBookmark */ = A6FA97EC0F2B2F0E00505D87 /* PBXTextBookmark */;
 			A6FA97ED0F2B2F0E00505D87 /* PBXTextBookmark */ = A6FA97ED0F2B2F0E00505D87 /* PBXTextBookmark */;
 		};
@@ -359,7 +343,7 @@
 	A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1274, 585}}";
-			sepNavSelRange = "{197, 18}";
+			sepNavSelRange = "{282, 0}";
 			sepNavVisRange = "{0, 282}";
 		};
 	};
@@ -1443,11 +1427,6 @@
 		name = UploadObjectsState.h;
 		path = "/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/Classes/Synchronization/UploadObjectsState.h";
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1274, 585}}";
-			sepNavSelRange = "{221, 18}";
-			sepNavVisRange = "{0, 807}";
-		};
 	};
 	A683DDE00F2B323E005398D8 /* PlistBookmark */ = {
 		isa = PlistBookmark;
@@ -1800,11 +1779,11 @@
 		delayBeforeContinue = 0;
 		fileReference = 1D3623250D0F684500981E51 /* TaskCoachAppDelegate.m */;
 		functionName = "-applicationDidFinishLaunching:";
-		hitCount = 1;
+		hitCount = 0;
 		ignoreCount = 0;
 		lineNumber = 17;
 		location = TaskCoach;
-		modificationTime = 255790623.9608451;
+		modificationTime = 255853339.838156;
 		state = 2;
 	};
 	A68EE03C0F1E303800F51FF2 /* PBXTextBookmark */ = {
@@ -1992,11 +1971,6 @@
 		name = TaskViewController.m;
 		path = "/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/Classes/TaskViewController.m";
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1274, 4872}}";
-			sepNavSelRange = "{7100, 0}";
-			sepNavVisRange = "{6384, 1260}";
-		};
 	};
 	A6BF986E0F3EF5080065060F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -2058,11 +2032,6 @@
 		name = FullFromDesktopState.m;
 		path = "/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/Classes/Synchronization/FullFromDesktopState.m";
 		sourceTree = "<group>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1631, 4690}}";
-			sepNavSelRange = "{4879, 0}";
-			sepNavVisRange = "{1673, 236}";
-		};
 	};
 	A6BF98E00F3EFC1A0065060F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -2110,11 +2079,6 @@
 		name = TwoWayNewTasksState.m;
 		path = "/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/Classes/Synchronization/TwoWayNewTasksState.m";
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1274, 1442}}";
-			sepNavSelRange = "{849, 0}";
-			sepNavVisRange = "{185, 1045}";
-		};
 	};
 	A6BF99970F3F0B290065060F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -2740,16 +2704,6 @@
 		vrLen = 1260;
 		vrLoc = 6384;
 	};
-	A6EAD6750F3F0F690086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6BF98660F3EF4ED0065060F /* TaskViewController.m */;
-		name = "TaskViewController.m: 290";
-		rLen = 0;
-		rLoc = 7100;
-		rType = 0;
-		vrLen = 1260;
-		vrLoc = 6384;
-	};
 	A6EAD6810F3F11A10086C149 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A6BF98DA0F3EFC110065060F /* FullFromDesktopState.m */;
@@ -2841,175 +2795,6 @@
 		vrLoc = 185;
 	};
 	A6EAD68A0F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */;
-		name = "FullFromDeviceState.m: 37";
-		rLen = 0;
-		rLoc = 1072;
-		rType = 0;
-		vrLen = 1185;
-		vrLoc = 272;
-	};
-	A6EAD68B0F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6EAD68C0F3F11A10086C149 /* FullFromDeviceState.h */;
-		rLen = 18;
-		rLoc = 197;
-		rType = 0;
-	};
-	A6EAD68C0F3F11A10086C149 /* FullFromDeviceState.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = FullFromDeviceState.h;
-		path = "/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/Classes/Synchronization/FullFromDeviceState.h";
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1274, 585}}";
-			sepNavSelRange = "{197, 18}";
-			sepNavVisRange = "{0, 282}";
-		};
-	};
-	A6EAD68D0F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6BF98DA0F3EFC110065060F /* FullFromDesktopState.m */;
-		name = "FullFromDesktopState.m: 273";
-		rLen = 2;
-		rLoc = 5139;
-		rType = 0;
-		vrLen = 696;
-		vrLoc = 4932;
-	};
-	A6EAD68E0F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */;
-		name = "FullFromDeviceState.m: 30";
-		rLen = 0;
-		rLoc = 913;
-		rType = 0;
-		vrLen = 1144;
-		vrLoc = 293;
-	};
-	A6EAD68F0F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */;
-		name = "FullFromDeviceState.h: 15";
-		rLen = 0;
-		rLoc = 274;
-		rType = 0;
-		vrLen = 282;
-		vrLoc = 0;
-	};
-	A6EAD6900F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6793B260F31E28700AAEC17 /* UploadObjectsState.m */;
-		name = "UploadObjectsState.m: 59";
-		rLen = 0;
-		rLoc = 1410;
-		rType = 0;
-		vrLen = 964;
-		vrLoc = 640;
-	};
-	A6EAD6910F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6793C630F31EFDB00AAEC17 /* UploadObjectsState.h */;
-		name = "UploadObjectsState.h: 31";
-		rLen = 0;
-		rLoc = 646;
-		rType = 0;
-		vrLen = 807;
-		vrLoc = 0;
-	};
-	A6EAD6920F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6793B260F31E28700AAEC17 /* UploadObjectsState.m */;
-		name = "UploadObjectsState.m: 57";
-		rLen = 0;
-		rLoc = 1410;
-		rType = 0;
-		vrLen = 942;
-		vrLoc = 763;
-	};
-	A6EAD6930F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6793C630F31EFDB00AAEC17 /* UploadObjectsState.h */;
-		name = "UploadObjectsState.h: 13";
-		rLen = 18;
-		rLoc = 221;
-		rType = 0;
-		vrLen = 807;
-		vrLoc = 0;
-	};
-	A6EAD6940F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A604D99A0F31C7FA00D3DC79 /* FullFromDeviceTaskState.h */;
-		name = "FullFromDeviceTaskState.h: 11";
-		rLen = 18;
-		rLoc = 201;
-		rType = 0;
-		vrLen = 323;
-		vrLoc = 0;
-	};
-	A6EAD6950F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */;
-		name = "FullFromDeviceTaskState.m: 30";
-		rLen = 0;
-		rLoc = 808;
-		rType = 0;
-		vrLen = 1071;
-		vrLoc = 94;
-	};
-	A6EAD6960F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A61AECFE0F35BBD20086ECD6 /* TwoWayNewCategoriesState.h */;
-		name = "TwoWayNewCategoriesState.h: 13";
-		rLen = 18;
-		rLoc = 263;
-		rType = 0;
-		vrLen = 292;
-		vrLoc = 0;
-	};
-	A6EAD6970F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A61AECFF0F35BBD20086ECD6 /* TwoWayNewCategoriesState.m */;
-		name = "TwoWayNewCategoriesState.m: 31";
-		rLen = 0;
-		rLoc = 802;
-		rType = 0;
-		vrLen = 1076;
-		vrLoc = 227;
-	};
-	A6EAD6980F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A61AED600F35C30F0086ECD6 /* TwoWayNewTasksState.h */;
-		name = "TwoWayNewTasksState.h: 11";
-		rLen = 18;
-		rLoc = 197;
-		rType = 0;
-		vrLen = 315;
-		vrLoc = 0;
-	};
-	A6EAD6990F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6BF996A0F3F06960065060F /* TwoWayNewTasksState.m */;
-		name = "TwoWayNewTasksState.m: 32";
-		rLen = 0;
-		rLoc = 849;
-		rType = 0;
-		vrLen = 1045;
-		vrLoc = 185;
-	};
-	A6EAD69A0F3F11A10086C149 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */;
-		name = "FullFromDeviceState.h: 11";
-		rLen = 18;
-		rLoc = 197;
-		rType = 0;
-		vrLen = 282;
-		vrLoc = 0;
-	};
-	A6EAD69B0F3F11A10086C149 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */;
 		name = "FullFromDeviceState.m: 37";
@@ -3202,6 +2987,16 @@
 		rLoc = 1108;
 		rType = 0;
 		vrLen = 948;
+		vrLoc = 0;
+	};
+	A6F927F70F4003250018BA8D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */;
+		name = "FullFromDeviceState.h: 18";
+		rLen = 0;
+		rLoc = 282;
+		rType = 0;
+		vrLen = 282;
 		vrLoc = 0;
 	};
 	A6FA97DA0F2B2E1C00505D87 /* MainViewController.h */ = {
