@@ -184,16 +184,19 @@ class SquareTaskViewer(BaseTaskViewer):
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
         self.orderUICommand.setChoice(self.__orderBy)
-        self.registerObserver(self.onTaskChange, task.Task.subjectChangedEventType())
+        for eventType in (task.Task.subjectChangedEventType(), 'task.dueDate',
+            'task.startDate', 'task.completionDate'):
+            self.registerObserver(self.onTaskChange, eventType)
 
     def createWidget(self):
-        return widgets.SquareMap(self, RootNode(self.presentation()), self.onSelect,
-                                 uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
-                                 self.getItemTooltipData, self.createTaskPopupMenu())
+        return widgets.SquareMap(self, RootNode(self.presentation()), 
+            self.onSelect, 
+            uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
+            self.getItemTooltipData, self.createTaskPopupMenu())
         
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(SquareTaskViewer, self).getToolBarUICommands() 
+        toolBarUICommands = super(SquareTaskViewer, self).getToolBarUICommands()
         toolBarUICommands.insert(-2, None) # Separator
         self.orderUICommand = \
             uicommand.SquareTaskViewerOrderChoice(viewer=self)
@@ -227,19 +230,19 @@ class SquareTaskViewer(BaseTaskViewer):
                     self.__orderBy)(recursive=True) > self.__zero])
         
     def getItemTooltipData(self, task):
-        if self.settings.getboolean('view', 'descriptionpopups'):
-            result = [(self.iconName(task, task in self.curselection()), 
-                       [self.label(task)])]
-            if task.description():
-                result.append((None, map(lambda x: x.rstrip('\n'),
-                                     task.description().split('\n'))))
-            if task.notes():
-                result.append(('note', [note.subject() for note in task.notes()]))
-            if task.attachments():
-                result.append(('attachment', [unicode(attachment) for attachment in task.attachments()]))
-            return result
-        else:
+        if not self.settings.getboolean('view', 'descriptionpopups'):
             return []
+        result = [(self.iconName(task, task in self.curselection()), 
+                   [self.label(task)])]
+        if task.description():
+            result.append((None, map(lambda x: x.rstrip('\n'),
+                                 task.description().split('\n'))))
+        if task.notes():
+            result.append(('note', [note.subject() for note in task.notes()]))
+        if task.attachments():
+            result.append(('attachment', 
+                [unicode(attachment) for attachment in task.attachments()]))
+        return result
     
     # SquareMap adapter methods:
     

@@ -33,7 +33,9 @@ HTML file.'''),
         Bug('''Opening a task from a reminder dialog didn't work.'''),
         Bug('''Include effort for subtasks in the effort viewer for one task.'''),
         Bug('''Correctly display error message when the user enters an invalid
-regular expression in a search control.''')
+regular expression in a search control.'''),
+        Bug('''Update the task square map viewer when the task status changes
+(e.g. when a task is completed).''')
         ],
     featuresAdded=[
         Feature('''When the single task, whose effort records are shown in
