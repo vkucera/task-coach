@@ -30,7 +30,8 @@ Release('0.72.1', 'February ?, 2009',
 each time Task Coach is launched'''),
         Bug('''Exporting a selection of effort records resulted in an empty 
 HTML file.'''),
-        Bug('''Opening a task from a reminder dialog didn't work.'''),
+        Bug('''Opening a task from a reminder dialog didn't work.''', 
+            '2580772'),
         Bug('''Include effort for subtasks in the effort viewer for one task.'''),
         Bug('''Correctly display error message when the user enters an invalid
 regular expression in a search control.'''),
