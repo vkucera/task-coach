@@ -26,6 +26,8 @@ releases = [
 Release('0.72.1', 'February ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''Drang and drop from Thunderbird wouldn't work with
+GMail IMAP accounts.''', '2549194'),
         Bug('''Exception when synchronizing with the new version of ScheduleWorld''',
             '2553046'),
         Bug('''On MacOS, the window height would increase by 29 pixels
