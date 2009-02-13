@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,12 +26,13 @@ releases = [
 Release('0.72.1', 'February ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Drang and drop from Thunderbird wouldn't work with
+        Bug('''Drag and drop from Thunderbird wouldn't work with
 GMail IMAP accounts.''', '2549194'),
-        Bug('''Exception when synchronizing with the new version of ScheduleWorld''',
+        Bug('''Exception when synchronizing with the new version of
+ScheduleWorld.''',
             '2553046'),
         Bug('''On MacOS, the window height would increase by 29 pixels
-each time Task Coach is launched'''),
+each time Task Coach is launched.'''),
         Bug('''Exporting a selection of effort records resulted in an empty 
 HTML file.'''),
         Bug('''Opening a task from a reminder dialog didn't work.''', 
