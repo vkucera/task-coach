@@ -61,6 +61,10 @@ class WindowDimensionsTracker(object):
         
     def setDimensions(self):
         width, height = self.getSetting('size')
+        if wx.Platform == '__WXMAC__':
+            # Under MacOS 10.5 and 10.4, when setting the size, the actual window height
+            # is increased by 29 pixels. Dunno why, but it's highly annoying.
+            height -= 29
         x, y = self.getSetting('position')
         self._window.SetDimensions(x, y, width, height)
         if self.getSetting('maximized'):

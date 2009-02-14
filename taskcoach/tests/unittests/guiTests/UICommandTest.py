@@ -21,6 +21,14 @@ import test
 from unittests import dummy
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, category, note, date, attachment
+from taskcoachlib.thirdparty import desktop
+
+if desktop.get_desktop() == 'KDE':
+    # On KDE, kfmclient insists on showing an error message for non-existing
+    # files, even when passing --noninteractive, so we make sure kfmclient is
+    # not invoked at all 
+    import os
+    os.environ['DESKTOP_LAUNCH'] = 'python -c "import sys, os; 0 if os.path.exists(sys.argv[1]) else 1"'
 
 
 class UICommandTest(test.wxTestCase):
@@ -245,6 +253,7 @@ class OpenAllAttachmentsTest(test.TestCase):
         self.viewer = DummyViewer([task.Task()])
         self.openAll = gui.uicommand.OpenAllAttachments(settings=settings, 
                                                         viewer=self.viewer)
+        self.errorKwargs = None
 
     def showerror(self, *args, **kwargs):
         self.errorArgs = args
@@ -255,7 +264,11 @@ class OpenAllAttachmentsTest(test.TestCase):
         
     def testNonexistingAttachment(self):
         self.viewer.selection[0].addAttachment(attachment.FileAttachment('Attachment'))
-        self.openAll.doCommand(None, showerror=self.showerror)
+        result = self.openAll.doCommand(None, showerror=self.showerror)
         # Don't test the error message itself, it differs per platform
-        self.assertEqual(dict(caption='Error opening attachment',
-                              style=wx.ICON_ERROR), self.errorKwargs)
+        if self.errorKwargs:
+            self.assertEqual(dict(caption='Error opening attachment',
+                                  style=wx.ICON_ERROR), self.errorKwargs)
+        else:
+            self.assertNotEqual(0, result)
+

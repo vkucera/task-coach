@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, wx
-from taskcoachlib import gui, patterns, config
+from taskcoachlib import gui, patterns, config, persistence
 from taskcoachlib.domain import task, date
 
 
@@ -30,7 +30,11 @@ class ReminderControllerUnderTest(gui.ReminderController):
         self.messages.append(message)
 
         
-class DummyWindow(object):
+class DummyWindow(wx.Frame):
+    def __init__(self):
+        super(DummyWindow, self).__init__(None)
+        self.taskFile = persistence.TaskFile()
+        
     def IsShown(self):
         return True
     
@@ -97,14 +101,14 @@ class ReminderControllerTest(ReminderControllerTestCase):
         self.assertEqual([], patterns.Publisher().observers(eventType=\
                 date.Clock.eventType(self.reminderDateTime)))
         
-    def dummyCloseEvent(self, snoozeTimeDelta=None):
+    def dummyCloseEvent(self, snoozeTimeDelta=None, openAfterClose=False):
         class DummySnoozeOptions(object):
             Selection = 0
             def GetClientData(self, *args):
                 return snoozeTimeDelta
         class DummyDialog(object):
             task = self.task
-            openTaskAfterClose = False
+            openTaskAfterClose = openAfterClose
             snoozeOptions = DummySnoozeOptions()
             def Destroy(self):
                 pass
@@ -114,15 +118,24 @@ class ReminderControllerTest(ReminderControllerTestCase):
     
     def testOnCloseReminderResetsReminder(self):
         self.task.setReminder(self.reminderDateTime)
-        self.reminderController.onCloseReminderDialog(self.dummyCloseEvent())
+        self.reminderController.onCloseReminderDialog(self.dummyCloseEvent(), 
+                                                      show=False)
         self.assertEqual(None, self.task.reminder())
 
     def testOnCloseReminderSetsReminder(self):
         self.task.setReminder(self.reminderDateTime)
         oneHour = date.TimeDelta(hours=1)
-        self.reminderController.onCloseReminderDialog(self.dummyCloseEvent(oneHour))
-        self.failUnless(abs(self.nowDateTime + oneHour - self.task.reminder()) < date.TimeDelta(seconds=5))
-               
+        self.reminderController.onCloseReminderDialog(\
+            self.dummyCloseEvent(oneHour), show=False)
+        self.failUnless(abs(self.nowDateTime + oneHour - self.task.reminder()) \
+                        < date.TimeDelta(seconds=5))
+
+    def testOnCloseMayOpenTask(self):
+        self.task.setReminder(self.reminderDateTime)
+        dialog = self.reminderController.onCloseReminderDialog(\
+            self.dummyCloseEvent(openAfterClose=True), show=False)
+        self.failUnless(dialog)
+                       
 
 class ReminderControllerTest_TwoTasksWithSameReminderDateTime(ReminderControllerTestCase):
     def setUp(self):

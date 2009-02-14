@@ -137,24 +137,22 @@ class FileAttachment(Attachment):
     type_ = 'file'
 
     def open(self, workingDir=None, openAttachment=desktop.open):
-        # URI attachments are actually special cases of file
-        # attachments. Sometimes.
-        if urlparse.urlparse(self.location())[0] == '': # Local file...
-            if workingDir is not None and not os.path.isabs(self.location()):
-                path = os.path.join(workingDir, self.location())
-            else:
-                path = self.location()
+        location = self.location()
+        if self.isLocalFile():
+            if workingDir and not os.path.isabs(location):
+                location = os.path.join(workingDir, location)
+            location = os.path.normpath(location)
+        return openAttachment(location)
 
-            openAttachment(os.path.normpath(path))
-        else:
-            openAttachment(self.location())
+    def isLocalFile(self):
+        return urlparse.urlparse(self.location())[0] == ''
 
 
 class URIAttachment(Attachment):
     type_ = 'uri'
 
     def open(self, workingDir=None):
-        desktop.open(self.location())
+        return desktop.open(self.location())
 
 
 class MailAttachment(Attachment):
@@ -170,7 +168,7 @@ class MailAttachment(Attachment):
         super(MailAttachment, self).__init__(location, *args, **kwargs)
 
     def open(self, workingDir=None):
-        mailer.openMail(self.location())
+        return mailer.openMail(self.location())
 
     def read(self):
         return self._readMail(self.location())

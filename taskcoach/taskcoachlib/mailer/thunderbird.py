@@ -25,6 +25,21 @@ from taskcoachlib.thirdparty.desktop import get_temp_file
 _RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
 _RX_IMAP    = re.compile('imap-message://([^@]+)@(.+)/(.*)#([0-9]+)')
 
+
+def unquote(s):
+    """Converts %nn sequences into corresponding characters. I
+    couldn't find anything in the standard library to do this, but I
+    probably didn't search hard enough."""
+
+    rx = re.compile('%([0-9a-fA-F][0-9a-fA-F])')
+    mt = rx.search(s)
+    while mt:
+        s = s[:mt.start(1) - 1] + chr(int(mt.group(1), 16)) + s[mt.end(1):]
+        mt = rx.search(s)
+
+    return s
+
+
 def getThunderbirdDir():
     path = None
 
@@ -143,7 +158,7 @@ class ThunderbirdImapReader(object):
 
         self.url = url
 
-        self.user = mt.group(1)
+        self.user = unquote(mt.group(1))
         self.server = mt.group(2)
         self.box = mt.group(3)
         self.uid = int(mt.group(4))
