@@ -98,4 +98,11 @@
 	[state network:network didGetData:data controller:self];
 }
 
+// UIAlertViewDelegate.
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	[self dismissModalViewControllerAnimated:YES];
+}
+
 @end

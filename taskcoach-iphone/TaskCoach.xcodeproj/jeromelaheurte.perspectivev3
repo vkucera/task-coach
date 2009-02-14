@@ -311,8 +311,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -330,7 +328,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A66E483F0F46DCD8004712E2</string>
+										<string>A6F7C0600F46E39E00253B03</string>
 										<key>history</key>
 										<array>
 											<string>A68EDF0F0F1E24AB00F51FF2</string>
@@ -416,18 +414,18 @@
 											<string>A66E46DC0F46CF16004712E2</string>
 											<string>A66E46E00F46CF16004712E2</string>
 											<string>A66E46E10F46CF16004712E2</string>
-											<string>A66E470B0F46CFCF004712E2</string>
 											<string>A66E47670F46D2AF004712E2</string>
 											<string>A66E47880F46D40C004712E2</string>
 											<string>A66E47B60F46D699004712E2</string>
 											<string>A66E47B70F46D699004712E2</string>
-											<string>A66E47B80F46D699004712E2</string>
 											<string>A66E47B90F46D699004712E2</string>
 											<string>A66E482D0F46DB7E004712E2</string>
-											<string>A66E482E0F46DB7E004712E2</string>
 											<string>A66E482F0F46DB7E004712E2</string>
 											<string>A66E48300F46DB7E004712E2</string>
-											<string>A66E48310F46DB7E004712E2</string>
+											<string>A6F7C01F0F46E05A00253B03</string>
+											<string>A6F7C0200F46E05A00253B03</string>
+											<string>A6F7C0360F46E16600253B03</string>
+											<string>A6F7C05C0F46E2DF00253B03</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -526,88 +524,10 @@
 											<string>A6DA5C9A0F3D8B7600372358</string>
 											<string>A6DDED0C0F46C55C0047AEF5</string>
 											<string>A66E46910F46CE23004712E2</string>
-											<string>A66E46920F46CE23004712E2</string>
-											<string>A66E46930F46CE23004712E2</string>
-											<string>A66E46940F46CE23004712E2</string>
-											<string>A66E46950F46CE23004712E2</string>
-											<string>A66E46960F46CE23004712E2</string>
-											<string>A66E46970F46CE23004712E2</string>
-											<string>A66E46980F46CE23004712E2</string>
-											<string>A66E46990F46CE23004712E2</string>
-											<string>A66E469A0F46CE23004712E2</string>
-											<string>A66E469B0F46CE23004712E2</string>
-											<string>A66E469C0F46CE23004712E2</string>
-											<string>A66E469D0F46CE23004712E2</string>
-											<string>A66E469E0F46CE23004712E2</string>
-											<string>A66E469F0F46CE23004712E2</string>
-											<string>A66E46A00F46CE23004712E2</string>
-											<string>A66E46A10F46CE23004712E2</string>
-											<string>A66E46A20F46CE23004712E2</string>
-											<string>A66E46A30F46CE23004712E2</string>
-											<string>A66E46A40F46CE23004712E2</string>
-											<string>A66E46A50F46CE23004712E2</string>
-											<string>A66E46A60F46CE23004712E2</string>
-											<string>A66E46A70F46CE23004712E2</string>
-											<string>A66E46A80F46CE23004712E2</string>
-											<string>A66E46A90F46CE23004712E2</string>
-											<string>A66E46AA0F46CE23004712E2</string>
-											<string>A66E46AB0F46CE23004712E2</string>
-											<string>A66E46AC0F46CE23004712E2</string>
-											<string>A66E46AD0F46CE23004712E2</string>
-											<string>A66E46AE0F46CE23004712E2</string>
-											<string>A66E46AF0F46CE23004712E2</string>
-											<string>A66E46B00F46CE23004712E2</string>
-											<string>A66E46B10F46CE23004712E2</string>
-											<string>A66E46B20F46CE23004712E2</string>
-											<string>A66E46B30F46CE23004712E2</string>
-											<string>A66E46B40F46CE23004712E2</string>
-											<string>A66E46B50F46CE23004712E2</string>
-											<string>A66E46B60F46CE23004712E2</string>
-											<string>A66E46B70F46CE23004712E2</string>
-											<string>A66E46B80F46CE23004712E2</string>
-											<string>A66E46B90F46CE23004712E2</string>
-											<string>A66E46CC0F46CE4E004712E2</string>
-											<string>A66E46E30F46CF16004712E2</string>
-											<string>A66E46E40F46CF16004712E2</string>
-											<string>A66E46E50F46CF16004712E2</string>
-											<string>A66E46E60F46CF16004712E2</string>
-											<string>A66E46E70F46CF16004712E2</string>
-											<string>A66E46E80F46CF16004712E2</string>
-											<string>A66E46E90F46CF16004712E2</string>
-											<string>A66E46EA0F46CF16004712E2</string>
-											<string>A66E47010F46CF96004712E2</string>
-											<string>A66E47020F46CF96004712E2</string>
-											<string>A66E470D0F46CFCF004712E2</string>
-											<string>A66E472F0F46D1C1004712E2</string>
-											<string>A66E47300F46D1C1004712E2</string>
-											<string>A66E47420F46D20E004712E2</string>
-											<string>A66E47430F46D20E004712E2</string>
-											<string>A66E47440F46D20E004712E2</string>
-											<string>A66E47550F46D256004712E2</string>
-											<string>A66E47560F46D256004712E2</string>
-											<string>A66E47690F46D2AF004712E2</string>
-											<string>A66E476A0F46D2AF004712E2</string>
-											<string>A66E47750F46D2E4004712E2</string>
-											<string>A66E47760F46D2E4004712E2</string>
-											<string>A66E478A0F46D40C004712E2</string>
-											<string>A66E478B0F46D40C004712E2</string>
-											<string>A66E47980F46D49A004712E2</string>
-											<string>A66E479E0F46D4AF004712E2</string>
-											<string>A66E47BC0F46D699004712E2</string>
-											<string>A66E47BD0F46D699004712E2</string>
-											<string>A66E47BE0F46D699004712E2</string>
-											<string>A66E47BF0F46D699004712E2</string>
-											<string>A66E47C00F46D699004712E2</string>
-											<string>A66E47C10F46D699004712E2</string>
-											<string>A66E47C20F46D699004712E2</string>
-											<string>A66E47C30F46D699004712E2</string>
-											<string>A66E47C40F46D699004712E2</string>
-											<string>A66E47D70F46D853004712E2</string>
-											<string>A66E47F20F46D9C2004712E2</string>
-											<string>A66E48320F46DB7E004712E2</string>
-											<string>A66E48330F46DB7E004712E2</string>
-											<string>A66E48340F46DB7E004712E2</string>
-											<string>A66E48350F46DB7E004712E2</string>
+											<string>A6F7C0220F46E05A00253B03</string>
+											<string>A6F7C0230F46E05A00253B03</string>
+											<string>A6F7C0240F46E05A00253B03</string>
+											<string>A6F7C0380F46E16600253B03</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -636,6 +556,8 @@
 							<key>Tabs</key>
 							<array>
 								<dict>
+									<key>BecomeActive</key>
+									<true/>
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXProjectModuleGUID</key>
@@ -730,11 +652,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A66E46BE0F46CE26004712E2</string>
+				<string>A6F7C0270F46E06A00253B03</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A66E46BF0F46CE26004712E2</string>
+				<string>A6F7C0280F46E06A00253B03</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A66E46C00F46CE26004712E2</string>
+				<string>A6F7C0290F46E06A00253B03</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -881,13 +803,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A66E46C10F46CE26004712E2</string>
+				<string>A6F7C02A0F46E06A00253B03</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A66E46C20F46CE26004712E2</string>
-				<string>A66E46C30F46CE26004712E2</string>
-				<string>A66E46C40F46CE26004712E2</string>
-				<string>A66E46C50F46CE26004712E2</string>
+				<string>A6F7C02B0F46E06A00253B03</string>
+				<string>A6F7C02C0F46E06A00253B03</string>
+				<string>A6F7C02D0F46E06A00253B03</string>
+				<string>A6F7C02E0F46E06A00253B03</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
 			</array>
 			<key>ToolbarConfiguration</key>
@@ -918,8 +840,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A66E46F20F46CF3A004712E2</string>
-		<string>A66E46F30F46CF3A004712E2</string>
+		<string>A6F7C02F0F46E06A00253B03</string>
+		<string>A6F7C0300F46E06A00253B03</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

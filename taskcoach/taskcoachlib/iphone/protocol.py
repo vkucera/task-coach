@@ -88,15 +88,14 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 #  8) Category IDs (strings)
 #
 # All dates are string, formatted YYYY-MM-DD. An empty string means None.
-# As the iPhone version does not support hierarchical categories, the following
-# algorithm is used to select the task category to send:
-#
-# 1) List all top-level categories of the task's categories
-# 2) Sort them by name
-# 3) Take the first one
 #
 # After all categories and tasks have been sent, Task Coach sends the file
 # GUID as a string.
+#
+# After each object has been sent, Task Coach waits for the device to send
+# a status code (integer). Currently it is always 1. This seems necessary for
+# the iPhone UI to update; without that the run loop doesn't have a chance to
+# run anything not network-related...
 #
 # == Full from device ==
 #
@@ -336,40 +335,79 @@ class FullFromDesktopState(BaseState):
     def init(self, disp):
         print 'Full from desktop.'
 
-        tasks = filter(self.isTaskEligible, disp.window.taskFile.tasks())
-        categories = disp.window.taskFile.categories()
+        self.tasks = filter(self.isTaskEligible, disp.window.taskFile.tasks())
+        self.categories = list(disp.window.taskFile.categories())
 
-        disp.pushInteger(len(categories))
-        disp.pushInteger(len(tasks))
+        disp.pushInteger(len(self.categories))
+        disp.pushInteger(len(self.tasks))
 
-        total = len(categories) + len(tasks)
-        count = 0
+        self.total = len(self.categories) + len(self.tasks)
+        self.count = 0
 
-        for category in categories:
-            disp.pushString(category.subject())
-            disp.pushString(category.id())
-            count += 1
-            self.dlg.SetProgress(count, total)
-            import time
-            time.sleep(0.1) # XXXTMP
+        self.setState(FullFromDesktopCategoryState, disp)
 
-        for task in tasks:
-            disp.pushString(task.subject())
-            disp.pushString(task.id())
-            disp.pushString(task.description())
-            disp.pushDate(task.startDate())
-            disp.pushDate(task.dueDate())
-            disp.pushDate(task.completionDate())
-            disp.pushInteger(len(task.categories()))
-            for category in task.categories():
+
+class FullFromDesktopCategoryState(BaseState):
+    def init(self, disp):
+        if self.categories:
+            disp.pushString(self.categories[0].subject())
+            disp.pushString(self.categories[0].id())
+            self.index = 0
+            disp.set_terminator(4)
+        else:
+            self.setState(FullFromDesktopTaskState, disp)
+
+    def handleData(self, disp, data):
+        self.count += 1
+        self.dlg.SetProgress(self.count, self.total)
+
+        self.index += 1
+        if self.index < len(self.categories):
+            disp.pushString(self.categories[self.index].subject())
+            disp.pushString(self.categories[self.index].id())
+            disp.set_terminator(4)
+        else:
+            self.setState(FullFromDesktopTaskState, disp)
+
+class FullFromDesktopTaskState(BaseState):
+    def init(self, disp):
+        if self.tasks:
+            disp.pushString(self.tasks[0].subject())
+            disp.pushString(self.tasks[0].id())
+            disp.pushString(self.tasks[0].description())
+            disp.pushDate(self.tasks[0].startDate())
+            disp.pushDate(self.tasks[0].dueDate())
+            disp.pushDate(self.tasks[0].completionDate())
+            disp.pushInteger(len(self.tasks[0].categories()))
+            for category in self.tasks[0].categories():
                 disp.pushString(category.id())
+            self.index = 0
+            disp.set_terminator(4)
+        else:
+            disp.pushString(disp.window.taskFile.guid())
+            print 'End of sync.'
+            self.setState(EndState, disp)
 
-            count += 1
-            self.dlg.SetProgress(count, total)
+    def handleData(self, disp, data):
+        self.count += 1
+        self.dlg.SetProgress(self.count, self.total)
 
-        disp.pushString(disp.window.taskFile.guid())
-        print 'End of sync.'
-        self.setState(EndState, disp)
+        self.index += 1
+        if self.index < len(self.tasks):
+            disp.pushString(self.tasks[self.index].subject())
+            disp.pushString(self.tasks[self.index].id())
+            disp.pushString(self.tasks[self.index].description())
+            disp.pushDate(self.tasks[self.index].startDate())
+            disp.pushDate(self.tasks[self.index].dueDate())
+            disp.pushDate(self.tasks[self.index].completionDate())
+            disp.pushInteger(len(self.tasks[self.index].categories()))
+            for category in self.tasks[self.index].categories():
+                disp.pushString(category.id())
+            disp.set_terminator(4)
+        else:
+            disp.pushString(disp.window.taskFile.guid())
+            print 'End of sync.'
+            self.setState(EndState, disp)
 
 
 class FullFromDeviceState(BaseState):
