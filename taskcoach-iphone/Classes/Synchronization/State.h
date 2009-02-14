@@ -22,4 +22,6 @@
 - (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller;
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller;
 
+- (void)cancel;
+
 @end

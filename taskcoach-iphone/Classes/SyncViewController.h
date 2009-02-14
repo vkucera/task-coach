@@ -17,6 +17,7 @@
 	UIActivityIndicatorView *activity;
 	UIProgressView *progress;
 	UITextField *password;
+	UIButton *cancelButton;
 
 	NSObject <State> *state;
 
@@ -28,11 +29,14 @@
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *activity;
 @property (nonatomic, retain) IBOutlet UIProgressView *progress;
 @property (nonatomic, retain) IBOutlet UITextField *password;
+@property (nonatomic, retain) IBOutlet UIButton *cancelButton;
 
 @property (nonatomic, retain) NSObject <State> *state;
 
 - initWithTarget:(id)target action:(SEL)action;
 
 - (void)finished;
+
+- (IBAction)onCancel:(UIButton *)button;
 
 @end

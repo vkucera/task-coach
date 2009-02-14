@@ -6,7 +6,8 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#include <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonDigest.h>
+#import <Security/Security.h>
 
 #import "AuthentificationState.h"
 #import "GUIDState.h"
@@ -20,10 +21,29 @@
 {
 	myController.label.text = NSLocalizedString(@"Authentication", @"Authentication state title");
 	
-	myController.password.hidden = NO;
 	myController.password.delegate = self;
-	
-	[myNetwork expect:512];
+
+#if TARGET_IPHONE_SIMULATOR
+	myController.password.hidden = NO;
+	myController.cancelButton.hidden = NO;
+
+	[myController.password becomeFirstResponder];
+#else
+	keychain = [[KeychainWrapper alloc] init];
+	currentPassword = [[keychain objectForKey:(id)kSecValueData] retain];
+
+	if ([currentPassword length] != 0)
+	{
+		[myNetwork expect:512];
+	}
+	else
+	{
+		myController.password.hidden = NO;
+		myController.cancelButton.hidden = NO;
+
+		[myController.password becomeFirstResponder];
+	}
+#endif
 }
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
@@ -33,9 +53,18 @@
 
 - (void)dealloc
 {
-	[hashData release];
+#if !TARGET_IPHONE_SIMULATOR
+	[keychain release];
+	[currentPassword release];
+#endif
 	
 	[super dealloc];
+}
+
+- (void)cancel
+{
+	myController.password.delegate = nil;
+	[super cancel];
 }
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
@@ -52,7 +81,11 @@
 		if (status)
 		{
 			NSLog(@"Password was accepted.");
-			
+
+#if !TARGET_IPHONE_SIMULATOR
+			[keychain setObject:currentPassword forKey:(id)kSecValueData];
+#endif
+
 			// Also send device name
 			UIDevice *dev = [UIDevice currentDevice];
 			NSLog(@"Sending device name: %@", dev.name);
@@ -62,22 +95,33 @@
 		}
 		else
 		{
-			controller.state = nil;
-			[network close];
-
 			UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Bad password error title")
 													message:NSLocalizedString(@"Incorrect password.", @"Bad password message")
-													delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Bad password cancel button title") otherButtonTitles:nil];
+													delegate:self cancelButtonTitle:NSLocalizedString(@"Retry", @"Bad password retry button title") otherButtonTitles:nil];
 			[view show];
 			[view release];
-			[network release];
-			[[Database connection] rollback];
 		}
 	}
 	else
 	{
-		hashData = [[NSMutableData alloc] initWithData:data];
-		[myController.password becomeFirstResponder];
+		// Though MacOS (and so the iPhone simulator) do know how to create data from a string
+		// using kCFStringEncodingUTF8, the iPhone itself doesn't. It's able to encode a
+		// string in UTF-8 though. Go figure.
+		
+		NSMutableData *hashData = [[NSMutableData alloc] initWithData:data];
+		const char *bf = [currentPassword UTF8String];
+		[hashData appendData:[NSData dataWithBytes:bf length:strlen(bf)]];
+
+		CC_SHA1_CTX context;
+		CC_SHA1_Init(&context);
+		CC_SHA1_Update(&context, [hashData bytes], [hashData length]);
+		unsigned char hash[20];
+		CC_SHA1_Final(hash, &context);
+		
+		[hashData release];
+		
+		[myNetwork expect:4];
+		[myNetwork append:[NSData dataWithBytes:hash length:20]];
 	}
 }
 
@@ -85,30 +129,23 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-	// Though MacOS (and so the iPhone simulator) do know how to create data from a string
-	// using kCFStringEncodingUTF8, the iPhone itself doesn't. It's able to encode a
-	// string in UTF-8 though. Go figure.
-
-	//[hashData appendData:[textField.text dataUsingEncoding:kCFStringEncodingUTF8]];
-
-	const char *bf = [textField.text UTF8String];
-	[hashData appendData:[NSData dataWithBytes:bf length:strlen(bf)]];
-
-	// End of UTF-8 hack.
-
-	CC_SHA1_CTX context;
-	CC_SHA1_Init(&context);
-	CC_SHA1_Update(&context, [hashData bytes], [hashData length]);
-	unsigned char hash[20];
-	CC_SHA1_Final(hash, &context);
-
-	[myNetwork append:[NSData dataWithBytes:hash length:20]];
-	[myNetwork expect:4];
-
 	[textField resignFirstResponder];
 	textField.hidden = YES;
+	myController.cancelButton.hidden = YES;
+	[currentPassword release];
+	currentPassword = [textField.text copy];
+	[myNetwork expect:512];
 
 	return NO;
+}
+
+// UIAlertViewDelegate.
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	myController.password.hidden = NO;
+	myController.cancelButton.hidden = NO;
+	[myController.password becomeFirstResponder];
 }
 
 @end

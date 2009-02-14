@@ -273,6 +273,7 @@ class PasswordState(BaseState):
             self.setState(DeviceNameState, disp)
         else:
             disp.pushInteger(0)
+            self.setState(PasswordState, disp)
 
 
 class DeviceNameState(BaseState):
@@ -349,6 +350,8 @@ class FullFromDesktopState(BaseState):
             disp.pushString(category.id())
             count += 1
             self.dlg.SetProgress(count, total)
+            import time
+            time.sleep(0.1) # XXXTMP
 
         for task in tasks:
             disp.pushString(task.subject())
@@ -365,6 +368,7 @@ class FullFromDesktopState(BaseState):
             self.dlg.SetProgress(count, total)
 
         disp.pushString(disp.window.taskFile.guid())
+        print 'End of sync.'
         self.setState(EndState, disp)
 
 

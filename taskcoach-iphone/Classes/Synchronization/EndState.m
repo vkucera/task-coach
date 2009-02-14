@@ -37,11 +37,6 @@
 	[req exec];
 	
 	[[Database connection] commit];
-
-	[myNetwork release];
-
-	myController.state = nil;
-	[myController finished];
 }
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
@@ -56,7 +51,9 @@
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
 {
-	// n/a
+	myController.state = nil;
+	[network release];
+	[myController finished];
 }
 
 - (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller
