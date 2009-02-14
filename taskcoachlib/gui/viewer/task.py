@@ -234,16 +234,19 @@ class SquareTaskViewer(BaseTaskViewer):
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
         self.orderUICommand.setChoice(self.__orderBy)
-        self.registerObserver(self.onTaskChange, task.Task.subjectChangedEventType())
+        for eventType in (task.Task.subjectChangedEventType(), 'task.dueDate',
+            'task.startDate', 'task.completionDate'):
+            self.registerObserver(self.onTaskChange, eventType)
 
     def createWidget(self):
-        return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), self.onSelect,
-                                 uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
-                                 self.createTaskPopupMenu())
+        return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), 
+            self.onSelect, 
+            uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
+            self.getItemTooltipData, self.createTaskPopupMenu())
         
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(SquareTaskViewer, self).getToolBarUICommands() 
+        toolBarUICommands = super(SquareTaskViewer, self).getToolBarUICommands()
         toolBarUICommands.insert(-2, None) # Separator
         self.orderUICommand = \
             uicommand.SquareTaskViewerOrderChoice(viewer=self)
@@ -275,6 +278,21 @@ class SquareTaskViewer(BaseTaskViewer):
     def nrOfVisibleTasks(self):
         return len([task for task in self.presentation() if getattr(task, 
                     self.__orderBy)(recursive=True) > self.__zero])
+        
+    def getItemTooltipData(self, task):
+        if not self.settings.getboolean('view', 'descriptionpopups'):
+            return []
+        result = [(self.iconName(task, task in self.curselection()), 
+                   [self.label(task)])]
+        if task.description():
+            result.append((None, map(lambda x: x.rstrip('\n'),
+                                 task.description().split('\n'))))
+        if task.notes():
+            result.append(('note', [note.subject() for note in task.notes()]))
+        if task.attachments():
+            result.append(('attachment', 
+                [unicode(attachment) for attachment in task.attachments()]))
+        return result
     
     # SquareMap adapter methods:
     
@@ -315,9 +333,7 @@ class SquareTaskViewer(BaseTaskViewer):
         return color.taskColor(task, self.settings)
     
     def icon(self, task, isSelected):
-        bitmap, bitmap_selected = render.taskBitmapNames(task)
-        if isSelected:
-            bitmap = bitmap_selected
+        bitmap = self.iconName(task, isSelected)
         return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
 
     # Helper methods
@@ -327,11 +343,17 @@ class SquareTaskViewer(BaseTaskViewer):
     
     def render(self, value):
         return self.renderer[self.__orderBy](value)
+
+    def iconName(self, task, isSelected):
+        bitmap, bitmap_selected = render.taskBitmapNames(task, 
+                                                         self.children(task))
+        if isSelected:
+            bitmap = bitmap_selected
+        return bitmap
     
     
 class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks, 
-                 base.SortableViewerWithColumns,
-                 BaseTaskViewer):
+                 base.SortableViewerWithColumns, BaseTaskViewer):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskviewer')

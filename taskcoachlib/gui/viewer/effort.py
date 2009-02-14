@@ -41,6 +41,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         self.__hiddenTotalColumns = []
         self.__hiddenWeekdayColumns = []
         self.__columnUICommands = None
+        self.__domainObjectsToView = None
+        self.__observersToDetach = []
         super(EffortViewer, self).__init__(*args, **kwargs)
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
@@ -49,10 +51,19 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             eventType=effort.Effort.colorChangedEventType())
         
     def domainObjectsToView(self):
-        return domain.base.SearchFilter(\
-             domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
-                                             selectedItems=self.tasksToShowEffortFor))
-        
+        if self.__domainObjectsToView is None:
+            selectedItemsFilter = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
+                                            selectedItems=self.tasksToShowEffortFor)
+            searchFilter = domain.base.SearchFilter(selectedItemsFilter)
+            self.__domainObjectsToView = searchFilter
+            self.__observersToDetach.extend([selectedItemsFilter, searchFilter])
+        return self.__domainObjectsToView
+    
+    def detach(self):
+        super(EffortViewer, self).detach()
+        for observer in self.__observersToDetach:
+            patterns.Publisher().removeInstance(observer)    
+            
     def isSortable(self):
         return False # FIXME: make effort viewers sortable too?
     
@@ -106,10 +117,12 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             - per week ('week'), or 
             - per month ('month'). '''
         if aggregation == 'details':
-            return effort.EffortList(taskList)
+            result = effort.EffortList(taskList)
         else:
-            return effort.EffortAggregator(taskList, aggregation=aggregation)
-                
+            result = effort.EffortAggregator(taskList, aggregation=aggregation)
+        self.__observersToDetach.append(result)
+        return result
+            
     def createWidget(self):
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(),
@@ -293,7 +306,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         never in curselection(). This method is used instead. It just
         ignores the overriden version of curselection."""
 
-        return item in super(EffortListViewer, self).curselection()
+        return item in super(EffortViewer, self).curselection()
 
     def statusMessages(self):
         status1 = _('Effort: %d selected, %d visible, %d total')%\

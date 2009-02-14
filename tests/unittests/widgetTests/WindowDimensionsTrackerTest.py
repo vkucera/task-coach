@@ -34,8 +34,12 @@ class WindowTest(test.wxTestCase):
             self.frame.GetPositionTuple())
          
     def testInitialSize(self):
+        # See MainWindowTest...
+        w, h = self.frame.GetSizeTuple()
+        if wx.Platform == '__WXMAC__':
+            h += 29
         self.assertEqual(eval(self.settings.get(self.section, 'size')),
-            self.frame.GetSizeTuple())
+            (w, h))
      
     def testInitialIconizeState(self):
         self.assertEqual(self.settings.getboolean(self.section, 'iconized'),

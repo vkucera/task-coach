@@ -1619,7 +1619,7 @@ class OpenAllAttachments(NeedsSelectionWithAttachments, ViewerCommand,
         for item in self.viewer.curselection():
             for attachment in item.attachments():
                 try:    
-                    attachment.open(base)
+                    return attachment.open(base)
                 except Exception, instance:
                     showerror(str(instance), 
                         caption=_('Error opening attachment'), 

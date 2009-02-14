@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('0.72.1', 'February 14, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Drag and drop from Thunderbird wouldn't work with
+GMail IMAP accounts.''', '2549194'),
+        Bug('''Exception when synchronizing with the new version of
+ScheduleWorld.''',
+            '2553046'),
+        Bug('''On MacOS, the window height would increase by 29 pixels
+each time Task Coach is launched.'''),
+        Bug('''Exporting a selection of effort records resulted in an empty 
+HTML file.'''),
+        Bug('''Opening a task from a reminder dialog didn't work.''', 
+            '2580772'),
+        Bug('''Include effort for subtasks in the effort viewer for one task.'''),
+        Bug('''Correctly display error message when the user enters an invalid
+regular expression in a search control.'''),
+        Bug('''Update the task square map viewer when the task status changes
+(e.g. when a task is completed).'''),
+        Bug('''When SyncML is enabled and the last subtask of a task is
+deleted, correctly update the icon in the task viewer.''')
+        ],
+    featuresAdded=[
+        Feature('''When the single task, whose effort records are shown in
+a single task effort viewer, is removed, the effort viewer resets to
+show all effort records of all tasks.'''),
+        Feature('''Tool tips for task square map viewer.''')
+        ]
+    ),
 
 Release('0.72.0', 'January 30, 2009', 
     summary='''This release adds a square map task viewer and a 
@@ -41,7 +71,7 @@ determined by either budget, budget left, time spent, fixed fee or revenue.'''),
     bugsFixed=[
         Bug('''Don't crash when adding a task.''', '2467347'),
         Bug('''Update the total fixed fee column in the task viewer when
-adding a subtask with a fixed fee.''', '2467347'),
+adding a subtask with a fixed fee.'''),
         Bug('''Mark task file dirty when the user edits a task color.'''),
         Bug('''Update the hourly fee column in the task viewer when the 
 the user edits the hourly fee of a task.'''),

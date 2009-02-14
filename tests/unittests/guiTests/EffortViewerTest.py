@@ -128,6 +128,9 @@ class EffortViewerTest(test.wxTestCase):
         self.task.addEffort(self.effort1)
         self.task.setColor(wx.RED)
         self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
+        
+    def testIsSelected(self):
+        self.failIf(self.viewer.isselected(self.effort1))
 
 
 class EffortViewerAggregationTestCase(test.wxTestCase):

@@ -23,7 +23,7 @@ from taskcoachlib.persistence.vcalendar import vcal
 
 from taskcoachlib.i18n import _
 
-import wx
+import wx, inspect
 
 class TaskSource(basesource.BaseSource):
     CONFLICT_STARTDATE        = 0x01
@@ -78,7 +78,8 @@ class TaskSource(basesource.BaseSource):
 
         categories = parser.tasks[0].pop('categories', [])
 
-        task = Task(**parser.tasks[0])
+        kwargs = dict([(k, v) for k, v in parser.tasks[0].items() if k in inspect.getargspec(Task.__init__)[0]])
+        task = Task(**kwargs)
 
         for category in categories:
             categoryObject = self.categoryList.findCategoryByName(category)
