@@ -124,8 +124,17 @@
 	
 	if (indexPath)
 	{
-		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 		[[PositionStore instance] pop];
+		
+		if (indexPath.row)
+		{
+			[self.tableView reloadData];
+		}
+
+		// XXXFIXME: because of the reloadData, this isn't actually animated, but it is needed
+		// to refresh the task count...
+
+		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	}
 }
 
