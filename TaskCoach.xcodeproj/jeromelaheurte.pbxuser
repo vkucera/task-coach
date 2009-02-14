@@ -23,7 +23,7 @@
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeBuildConfigurationName = Debug;
 		activeExecutable = A68EDEB00F1E1EDF00F51FF2 /* TaskCoach */;
-		activeSDKPreference = iphonesimulator2.2.1;
+		activeSDKPreference = iphoneos2.2.1;
 		activeTarget = 1D6058900D05DD3D006BFB54 /* TaskCoach */;
 		addToTargets = (
 			1D6058900D05DD3D006BFB54 /* TaskCoach */,
@@ -132,8 +132,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 256310738;
-			PBXWorkspaceStateSaveDate = 256310738;
+			PBXPerProjectTemplateStateSaveDate = 256311492;
+			PBXWorkspaceStateSaveDate = 256311492;
 		};
 		perUserProjectItems = {
 			A604D9BA0F31CCC300D3DC79 /* PBXTextBookmark */ = A604D9BA0F31CCC300D3DC79 /* PBXTextBookmark */;
@@ -165,6 +165,7 @@
 			A61AEF030F35D4F50086ECD6 /* PBXTextBookmark */ = A61AEF030F35D4F50086ECD6 /* PBXTextBookmark */;
 			A61AEF090F35D4F50086ECD6 /* PBXTextBookmark */ = A61AEF090F35D4F50086ECD6 /* PBXTextBookmark */;
 			A61AEF0A0F35D4F50086ECD6 /* PBXTextBookmark */ = A61AEF0A0F35D4F50086ECD6 /* PBXTextBookmark */;
+			A62496060F47009500C09115 /* PBXTextBookmark */ = A62496060F47009500C09115 /* PBXTextBookmark */;
 			A627607E0F22209F0041D761 /* PlistBookmark */ = A627607E0F22209F0041D761 /* PlistBookmark */;
 			A62760800F22209F0041D761 /* PBXTextBookmark */ = A62760800F22209F0041D761 /* PBXTextBookmark */;
 			A62760810F22209F0041D761 /* PBXTextBookmark */ = A62760810F22209F0041D761 /* PBXTextBookmark */;
@@ -181,12 +182,9 @@
 			A6485BD20F2CBA26009F349D /* PBXTextBookmark */ = A6485BD20F2CBA26009F349D /* PBXTextBookmark */;
 			A65A19AF0F3F0EC8005584E0 /* PBXTextBookmark */ = A65A19AF0F3F0EC8005584E0 /* PBXTextBookmark */;
 			A65A19B10F3F0EC8005584E0 /* PBXTextBookmark */ = A65A19B10F3F0EC8005584E0 /* PBXTextBookmark */;
+			A661C6DA0F47083D0078E981 /* PBXTextBookmark */ = A661C6DA0F47083D0078E981 /* PBXTextBookmark */;
 			A663174A0F47003500324B41 /* PBXTextBookmark */ = A663174A0F47003500324B41 /* PBXTextBookmark */;
 			A663174B0F47003500324B41 /* PBXTextBookmark */ = A663174B0F47003500324B41 /* PBXTextBookmark */;
-			A663174C0F47003500324B41 /* PBXTextBookmark */ = A663174C0F47003500324B41 /* PBXTextBookmark */;
-			A663174D0F47003500324B41 /* PBXTextBookmark */ = A663174D0F47003500324B41 /* PBXTextBookmark */;
-			A663174E0F47003500324B41 /* PBXTextBookmark */ = A663174E0F47003500324B41 /* PBXTextBookmark */;
-			A663174F0F47003500324B41 /* PBXTextBookmark */ = A663174F0F47003500324B41 /* PBXTextBookmark */;
 			A6664C360F2B380D00638C68 /* PBXTextBookmark */ = A6664C360F2B380D00638C68 /* PBXTextBookmark */;
 			A6664C370F2B380D00638C68 /* PBXTextBookmark */ = A6664C370F2B380D00638C68 /* PBXTextBookmark */;
 			A6664D580F2B457100638C68 /* PBXTextBookmark */ = A6664D580F2B457100638C68 /* PBXTextBookmark */;
@@ -795,6 +793,16 @@
 			sepNavVisRange = "{917, 979}";
 		};
 	};
+	A62496060F47009500C09115 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */;
+		name = "CategoryViewController.m: 136";
+		rLen = 0;
+		rLoc = 3452;
+		rType = 0;
+		vrLen = 1031;
+		vrLoc = 2974;
+	};
 	A62760680F221D0A0041D761 /* Configuration.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1119, 639}}";
@@ -1029,6 +1037,16 @@
 		vrLen = 465;
 		vrLoc = 0;
 	};
+	A661C6DA0F47083D0078E981 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */;
+		name = "CategoryViewController.m: 118";
+		rLen = 0;
+		rLoc = 3112;
+		rType = 0;
+		vrLen = 1030;
+		vrLoc = 2957;
+	};
 	A663174A0F47003500324B41 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A6BF98C80F3EFA850065060F /* Category.m */;
@@ -1048,46 +1066,6 @@
 		rType = 0;
 		vrLen = 683;
 		vrLoc = 0;
-	};
-	A663174C0F47003500324B41 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6F8BEAE0F46F35000385F57 /* CategoryViewController.m */;
-		name = "CategoryViewController.m: 133";
-		rLen = 0;
-		rLoc = 3324;
-		rType = 0;
-		vrLen = 975;
-		vrLoc = 2974;
-	};
-	A663174D0F47003500324B41 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6BF98C80F3EFA850065060F /* Category.m */;
-		name = "Category.m: 23";
-		rLen = 0;
-		rLoc = 398;
-		rType = 0;
-		vrLen = 1095;
-		vrLoc = 1194;
-	};
-	A663174E0F47003500324B41 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A68EDF400F1E275700F51FF2 /* Category.h */;
-		name = "Category.h: 29";
-		rLen = 0;
-		rLoc = 676;
-		rType = 0;
-		vrLen = 683;
-		vrLoc = 0;
-	};
-	A663174F0F47003500324B41 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */;
-		name = "CategoryViewController.m: 136";
-		rLen = 0;
-		rLoc = 3452;
-		rType = 0;
-		vrLen = 1031;
-		vrLoc = 2974;
 	};
 	A6664C210F2B35F300638C68 /* SyncViewController.h */ = {
 		uiCtxt = {
@@ -1580,9 +1558,9 @@
 	};
 	A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1274, 3472}}";
-			sepNavSelRange = "{3452, 0}";
-			sepNavVisRange = "{2974, 1031}";
+			sepNavIntBoundsRect = "{{0, 0}, {1274, 3416}}";
+			sepNavSelRange = "{3112, 0}";
+			sepNavVisRange = "{2957, 1030}";
 		};
 	};
 	A68EDEDC0F1E212A00F51FF2 /* Database.h */ = {
@@ -1863,7 +1841,7 @@
 		ignoreCount = 0;
 		lineNumber = 17;
 		location = TaskCoach;
-		modificationTime = 256310108.43216;
+		modificationTime = 256313207.214957;
 		state = 2;
 	};
 	A68EE03C0F1E303800F51FF2 /* PBXTextBookmark */ = {
@@ -2075,11 +2053,6 @@
 		name = Category.m;
 		path = "/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/Classes/Domain/Category.m";
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1530, 1442}}";
-			sepNavSelRange = "{398, 0}";
-			sepNavVisRange = "{1194, 1095}";
-		};
 	};
 	A6BF990E0F3EFDC00065060F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -2919,18 +2892,6 @@
 		rType = 0;
 		vrLen = 1070;
 		vrLoc = 0;
-	};
-	A6F8BEAE0F46F35000385F57 /* CategoryViewController.m */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.objc;
-		name = CategoryViewController.m;
-		path = "/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/Classes/CategoryViewController.m";
-		sourceTree = "<group>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1274, 3472}}";
-			sepNavSelRange = "{3452, 0}";
-			sepNavVisRange = "{2974, 1031}";
-		};
 	};
 	A6F8BF170F46F67900385F57 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
