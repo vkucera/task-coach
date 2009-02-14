@@ -295,7 +295,7 @@ class IPhonePage(SettingsPage):
             helpText='restart')
         self.addIntegerSetting('iphone', 'port',
             _('Port the iPhone will connect to'),
-            helpText='restart')
+            helpText='restart', minimum=4096, maximum=16384)
         self.fit()
 
         
