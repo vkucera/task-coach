@@ -12,9 +12,20 @@
 
 @interface Category : DomainObject
 {
+	NSString *parentId;
 	NSInteger taskCount;
+	NSInteger level;
+	NSMutableArray *children;
 }
 
+@property (nonatomic, readonly) NSString *parentId;
+@property (nonatomic) NSInteger level;
+
+- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId parentId:(NSString *)parentId;
+
 - (NSInteger)count;
+
+- (void)addChild:(Category *)child;
+- (void)finalizeChildren:(NSMutableArray *)categories;
 
 @end

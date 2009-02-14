@@ -58,24 +58,61 @@
 
 - (void)addCategory:(NSDictionary *)dict
 {
-	Category *category = [[Category alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue] taskCoachId:nil];
+	Category *category = [[Category alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"]
+											   status:[[dict objectForKey:@"status"] intValue] taskCoachId:[dict objectForKey:@"taskCoachId"]
+											   parentId:[dict objectForKey:@"parentTaskCoachId"]];
 	[categories addObject:category];
 }
 
 - (void)loadCategories
 {
-	[categories release];
+	[categories removeAllObjects];
 
 	// We're assuming that there are not a bunch of categories, therefore we keep them in memory.
 	// This is not the case with tasks.
 	
-	categories = [[NSMutableArray alloc] initWithCapacity:8];
 	Statement *req = [[Database connection] statementWithSQL:@"SELECT * FROM Category WHERE status != 3 ORDER BY name"];
 	[req execWithTarget:self action:@selector(addCategory:)];
+
+	NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:8];
+	NSMutableArray *rootItems = [[NSMutableArray alloc] initWithCapacity:8];
+
+	for (Category *category in categories)
+	{
+		if (category.taskCoachId)
+		{
+			[dict setObject:category forKey:category.taskCoachId];
+			if (!category.parentId)
+				[rootItems addObject:category];
+		}
+		else
+		{
+			[rootItems addObject:category];
+		}
+	}
+
+	for (Category *category in categories)
+	{
+		if (category.parentId)
+		{
+			Category *parent = [dict objectForKey:category.parentId];
+			[parent addChild:category];
+		}
+	}
+
+	[categories removeAllObjects];
+	for (Category *category in rootItems)
+	{
+		[category finalizeChildren:categories];
+	}
+
+	[dict release];
+	[rootItems release];
 }
 
 - (void)viewDidLoad
 {
+	categories = [[NSMutableArray alloc] init];
 	[self loadCategories];
 
 	[super viewDidLoad];
@@ -145,7 +182,10 @@
     
 	if (indexPath.row)
 	{
-		cell.text = [NSString stringWithFormat:@"%@ (%d)", [[categories objectAtIndex:indexPath.row - 1] name ], [[categories objectAtIndex:indexPath.row - 1] count]];
+		Category *category = [categories objectAtIndex:indexPath.row - 1];
+
+		cell.text = [NSString stringWithFormat:@"%@ (%d)", [category name], [category count]];
+		cell.indentationLevel = category.level;
 	}
 	else
 	{

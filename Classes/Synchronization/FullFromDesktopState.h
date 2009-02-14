@@ -19,6 +19,7 @@
 	NSInteger total;
 	
 	NSString *categoryName;
+	NSString *categoryId;
 	
 	NSString *taskSubject;
 	NSString *taskId;
