@@ -75,6 +75,7 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 #
 #  1) name (string)
 #  2) ID (string)
+#  3) Parent ID (string)
 #
 # Tasks are sent as:
 #
@@ -174,8 +175,11 @@ class IPhoneHandler(asynchat.async_chat):
         self.state.handleClose(self)
 
     def pushString(self, string):
-        string = string.encode('UTF-8')
-        self.push(struct.pack('!i', len(string)) + string)
+        if string is None:
+            self.pushInteger(0)
+        else:
+            string = string.encode('UTF-8')
+            self.push(struct.pack('!i', len(string)) + string)
 
     def pushInteger(self, value):
         self.push(struct.pack('!i', value))
@@ -352,6 +356,11 @@ class FullFromDesktopCategoryState(BaseState):
         if self.categories:
             disp.pushString(self.categories[0].subject())
             disp.pushString(self.categories[0].id())
+            parent = self.categories[0].parent()
+            if parent is None:
+                disp.pushString(None)
+            else:
+                disp.pushString(parent.id())
             self.index = 0
             disp.set_terminator(4)
         else:
@@ -365,6 +374,12 @@ class FullFromDesktopCategoryState(BaseState):
         if self.index < len(self.categories):
             disp.pushString(self.categories[self.index].subject())
             disp.pushString(self.categories[self.index].id())
+            parent = self.categories[self.index].parent()
+            if parent is None:
+                disp.pushString(None)
+            else:
+                disp.pushString(parent.id())
+
             disp.set_terminator(4)
         else:
             self.setState(FullFromDesktopTaskState, disp)

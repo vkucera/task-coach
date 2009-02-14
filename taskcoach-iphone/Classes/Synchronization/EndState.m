@@ -51,9 +51,8 @@
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
 {
-	myController.state = nil;
-	[network release];
-	[myController finished];
+	controller.state = nil;
+	[controller finished];
 }
 
 - (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller

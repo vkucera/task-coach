@@ -10,6 +10,7 @@
 
 #import "Database.h"
 #import "Statement.h"
+#import "CategoriesSelector.h"
 
 #import "Task.h"
 
@@ -52,7 +53,9 @@
 		
 		if (categoryId != -1)
 		{
-			[where addObject:[NSString stringWithFormat:@"idCategory == %d", categoryId]];
+			CategoriesSelector *sel = [[CategoriesSelector alloc] initWithId:categoryId];
+			[where addObject:[sel clause]];
+			[sel release];
 		}
 
 		if (![Configuration configuration].showCompleted)

@@ -40,6 +40,7 @@
 - (void)dealloc
 {
 	[categoryName release];
+	[categoryId release];
 	[taskSubject release];
 	[taskId release];
 	[taskDescription release];
@@ -55,11 +56,38 @@
 	// n/a
 }
 
+#define INITIAL                              0
+#define CATEGORY_NAME_LENGTH                 1
+#define CATEGORY_NAME                        2
+#define CATEGORY_ID_LENGTH                   3
+#define CATEGORY_ID                          4
+#define CATEGORY_PARENT_ID_LENGTH            5
+#define CATEGORY_PARENT_ID                   6
+
+#define TASK_SUBJECT_LENGTH                  7
+#define TASK_SUBJECT                         8
+#define TASK_ID_LENGTH                       9
+#define TASK_ID                              10
+#define TASK_DESCRIPTION_LENGTH              11
+#define TASK_DESCRIPTION                     12
+#define TASK_DATE_LENGTH_0                   13
+#define TASK_DATE_0                          14
+#define TASK_DATE_LENGTH_1                   15
+#define TASK_DATE_1                          16
+#define TASK_DATE_LENGTH_2                   17
+#define TASK_DATE_2                          18
+#define TASK_CATEGORY_COUNT                  19
+#define TASK_CATEGORY_ID_LENGTH              20
+#define TASK_CATEGORY_ID                     21
+
+#define GUID_LENGTH                          22
+#define GUID                                 23
+
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
 {
 	switch (state)
 	{
-		case 0:
+		case INITIAL:
 			categoryCount = ntohl(*((int32_t *)[data bytes]));
 			taskCount = ntohl(*((int32_t *)([data bytes] + 4)));
 			total = categoryCount + taskCount;
@@ -69,15 +97,15 @@
 			
 			if (categoryCount)
 			{
-				state = 1;
+				state = CATEGORY_NAME_LENGTH;
 			}
 			else if (taskCount)
 			{
-				state = 5;
+				state = TASK_SUBJECT_LENGTH;
 			}
 			else
 			{
-				state = 20;
+				state = GUID_LENGTH;
 			}
 
 			[network expect:4];
@@ -86,29 +114,44 @@
 		
 		// Categories
 
-		case 1:
-			state = 2;
+		case CATEGORY_NAME_LENGTH:
+			state = CATEGORY_NAME;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 
 			break;
-		case 2:
+		case CATEGORY_NAME:
 			[categoryName release];
 			categoryName = [[NSString stringFromUTF8Data:data] retain];
 			
-			state = 3;
+			state = CATEGORY_ID_LENGTH;
 			[network expect:4];
 			
 			break;
-		case 3:
-			state = 4;
+		case CATEGORY_ID_LENGTH:
+			state = CATEGORY_ID;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 
 			break;
-		case 4:
-		{
-			NSString *categoryId = [NSString stringFromUTF8Data:data];
+		case CATEGORY_ID:
+			[categoryId release];
+			categoryId = [[NSString stringFromUTF8Data:data]retain];
+			state = CATEGORY_PARENT_ID_LENGTH;
+			[network expect:4];
+
+			break;
+		case CATEGORY_PARENT_ID_LENGTH:
+			state = CATEGORY_PARENT_ID;
+			[network expect:ntohl(*((int32_t *)[data bytes]))];
 			
-			Category *category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId];
+			break;
+		case CATEGORY_PARENT_ID:
+		{
+			Category *category;
+			if ([data length])
+				category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId parentId:[NSString stringFromUTF8Data:data]];
+			else
+				category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId];
+
 			[category save];
 			[category release];
 
@@ -121,18 +164,18 @@
 			
 			if (categoryCount)
 			{
-				state = 1;
+				state = CATEGORY_NAME_LENGTH;
 				[network expect:4];
 			}
 			else
 			{
 				if (taskCount)
 				{
-					state = 5;
+					state = TASK_SUBJECT_LENGTH;
 				}
 				else
 				{
-					state = 20;
+					state = GUID_LENGTH;
 				}
 
 				[network expect:4];
@@ -145,70 +188,70 @@
 			
 		// Tasks
 			
-		case 5:
-			state = 6;
+		case TASK_SUBJECT_LENGTH:
+			state = TASK_SUBJECT;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 			
 			break;
-		case 6:
+		case TASK_SUBJECT:
 			[taskSubject release];
 			taskSubject = [[NSString stringFromUTF8Data:data] retain];
 			NSLog(@"Task subject: %@", taskSubject);
 			
-			state = 7;
+			state = TASK_ID_LENGTH;
 			[network expect:4];
 
 			break;
-		case 7:
-			state = 8;
+		case TASK_ID_LENGTH:
+			state = TASK_ID;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 			
 			break;
-		case 8:
+		case TASK_ID:
 			[taskId release];
 			taskId = [[NSString stringFromUTF8Data:data] retain];
 			NSLog(@"Task ID: %@", taskId);
 			
-			state = 9;
+			state = TASK_DESCRIPTION_LENGTH;
 			[network expect:4];
 			
 			break;
-		case 9:
-			state = 10;
+		case TASK_DESCRIPTION_LENGTH:
+			state = TASK_DESCRIPTION;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 
 			break;
-		case 10:
+		case TASK_DESCRIPTION:
 			[taskDescription release];
 			taskDescription = [[NSString stringFromUTF8Data:data] retain];
 			NSLog(@"Task description: %@", taskDescription);
 			
-			state = 11;
+			state = TASK_DATE_LENGTH_0;
 			[network expect:4];
 			
 			break;
-		case 11:
-		case 13:
-		case 15:
+		case TASK_DATE_LENGTH_0:
+		case TASK_DATE_LENGTH_1:
+		case TASK_DATE_LENGTH_2:
 			state = state + 1;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 
 			break;
-		case 12:
-		case 14:
-		case 16:
+		case TASK_DATE_0:
+		case TASK_DATE_1:
+		case TASK_DATE_2:
 		{
 			NSString **pStr;
 			
 			switch (state)
 			{
-				case 12:
+				case TASK_DATE_0:
 					pStr = &taskStart;
 					break;
-				case 14:
+				case TASK_DATE_1:
 					pStr = &taskDue;
 					break;
-				case 16:
+				case TASK_DATE_2:
 					pStr = &taskCompleted;
 					break;
 			}
@@ -222,7 +265,7 @@
 
 			break;
 		}
-		case 17:
+		case TASK_CATEGORY_COUNT:
 		{
 			taskCategoryCount = ntohl(*((int32_t *)[data bytes]));
 
@@ -253,7 +296,7 @@
 
 			if (taskCategoryCount)
 			{
-				state = 18;
+				state = TASK_CATEGORY_ID_LENGTH;
 				[network expect:4];
 			}
 			else
@@ -264,11 +307,11 @@
 				
 				if (taskCount)
 				{
-					state = 5;
+					state = TASK_SUBJECT_LENGTH;
 				}
 				else
 				{
-					state = 20;
+					state = GUID_LENGTH;
 				}
 
 				[network expect:4];
@@ -277,12 +320,12 @@
 
 			break;
 		}
-		case 18:
-			state = 19;
+		case TASK_CATEGORY_ID_LENGTH:
+			state = TASK_CATEGORY_ID;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 			
 			break;
-		case 19:
+		case TASK_CATEGORY_ID:
 		{
 			Statement *req = [[Database connection] statementWithSQL:@"SELECT id FROM Category WHERE taskCoachId=?"];
 			[req bindString:[NSString stringFromUTF8Data:data] atIndex:1];
@@ -292,7 +335,7 @@
 			
 			if (taskCategoryCount)
 			{
-				state = 18;
+				state = TASK_CATEGORY_ID_LENGTH;
 				[network expect:4];
 			}
 			else
@@ -303,11 +346,11 @@
 				
 				if (taskCount)
 				{
-					state = 5;
+					state = TASK_SUBJECT_LENGTH;
 				}
 				else
 				{
-					state = 20;
+					state = GUID_LENGTH;
 				}
 
 				[network expect:4];
@@ -318,12 +361,12 @@
 			
 			break;
 		}
-		case 20:
-			state = 21;
+		case GUID_LENGTH:
+			state = GUID;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 			
 			break;
-		case 21:
+		case GUID:
 		{
 			NSString *guid = [[NSString stringFromUTF8Data:data] retain];
 			Statement *req = [[Database connection] statementWithSQL:@"INSERT INTO Meta (name, value) VALUES (?, ?)"];
