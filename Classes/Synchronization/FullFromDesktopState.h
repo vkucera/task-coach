@@ -16,6 +16,7 @@
 	NSInteger categoryCount;
 	NSInteger taskCount;
 	NSInteger doneCount;
+	NSInteger total;
 	
 	NSString *categoryName;
 	

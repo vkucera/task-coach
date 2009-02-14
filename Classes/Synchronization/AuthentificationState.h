@@ -9,10 +9,15 @@
 #import <Foundation/Foundation.h>
 
 #import "BaseState.h"
+#import "KeychainWrapper.h"
 
 @interface AuthentificationState : BaseState <State, UITextFieldDelegate>
 {
-	NSMutableData *hashData;
+	NSString *currentPassword;
+
+#if !TARGET_IPHONE_SIMULATOR
+	KeychainWrapper *keychain;
+#endif
 }
 
 @end

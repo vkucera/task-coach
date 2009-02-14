@@ -62,6 +62,8 @@
 		case 0:
 			categoryCount = ntohl(*((int32_t *)[data bytes]));
 			taskCount = ntohl(*((int32_t *)([data bytes] + 4)));
+			total = categoryCount + taskCount;
+			controller.progress.progress = 0;
 			
 			NSLog(@"%d categories, %d tasks", categoryCount, taskCount);
 			
@@ -115,6 +117,7 @@
 			--categoryCount;
 			
 			++doneCount;
+			controller.progress.progress = 1.0 * doneCount / total;
 			
 			if (categoryCount)
 			{
@@ -253,6 +256,7 @@
 			else
 			{
 				++doneCount;
+				controller.progress.progress = 1.0 * doneCount / total;
 				--taskCount;
 				
 				if (taskCount)
@@ -289,6 +293,7 @@
 			else
 			{
 				++doneCount;
+				controller.progress.progress = 1.0 * doneCount / total;
 				--taskCount;
 				
 				if (taskCount)

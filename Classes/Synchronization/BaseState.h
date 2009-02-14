@@ -21,4 +21,6 @@
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller;
 - (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller;
 
+- (void)cancel;
+
 @end

@@ -68,6 +68,8 @@
 		A6D8AC030F221BFA006894AA /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A6D8AC020F221BFA006894AA /* Settings.bundle */; };
 		A6DA5C690F3D870900372358 /* DescriptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DA5C680F3D870900372358 /* DescriptionCell.m */; };
 		A6DA5C780F3D87F300372358 /* DescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DA5C770F3D87F300372358 /* DescriptionCell.xib */; };
+		A6DDECFC0F46C5040047AEF5 /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */; };
+		A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DDED1A0F46C5D30047AEF5 /* Security.framework */; };
 		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
 		A6DDF85D0F1F993800F35108 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DDF85B0F1F993800F35108 /* TaskView.xib */; };
@@ -181,6 +183,9 @@
 		A6DA5C670F3D870900372358 /* DescriptionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionCell.h; sourceTree = "<group>"; };
 		A6DA5C680F3D870900372358 /* DescriptionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionCell.m; sourceTree = "<group>"; };
 		A6DA5C770F3D87F300372358 /* DescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DescriptionCell.xib; sourceTree = SOURCE_ROOT; };
+		A6DDECFA0F46C5040047AEF5 /* KeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainWrapper.h; sourceTree = "<group>"; };
+		A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainWrapper.m; sourceTree = "<group>"; };
+		A6DDED1A0F46C5D30047AEF5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A6DDF84E0F1F974000F35108 /* TaskList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskList.h; path = Database/TaskList.h; sourceTree = "<group>"; };
 		A6DDF84F0F1F974000F35108 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskList.m; path = Database/TaskList.m; sourceTree = "<group>"; };
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
@@ -205,6 +210,7 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				A68EDEF30F1E222700F51FF2 /* libsqlite3.0.dylib in Frameworks */,
+				A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +249,8 @@
 				A6664C220F2B35F300638C68 /* SyncViewController.m */,
 				A6142CD10F35DE61001DD420 /* PositionStore.h */,
 				A6142CD20F35DE61001DD420 /* PositionStore.m */,
+				A6DDECFA0F46C5040047AEF5 /* KeychainWrapper.h */,
+				A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -302,6 +310,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A6DDED1A0F46C5D30047AEF5 /* Security.framework */,
 				A68EDEF20F1E222700F51FF2 /* libsqlite3.0.dylib */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
@@ -553,6 +562,7 @@
 				A61AEEFB0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m in Sources */,
 				A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */,
 				A6DA5C690F3D870900372358 /* DescriptionCell.m in Sources */,
+				A6DDECFC0F46C5040047AEF5 /* KeychainWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

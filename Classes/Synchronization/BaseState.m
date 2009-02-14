@@ -54,4 +54,12 @@
 	[[Database connection] rollback];
 }
 
+- (void)cancel
+{
+	myController.state = nil;
+	//[myNetwork close];
+	[myNetwork release];
+	[[Database connection] rollback];
+}
+
 @end

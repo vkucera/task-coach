@@ -17,6 +17,7 @@
 @synthesize progress;
 @synthesize state;
 @synthesize password;
+@synthesize cancelButton;
 
 - initWithTarget:(id)theTarget action:(SEL)theAction
 {
@@ -44,10 +45,17 @@
 	[target performSelector:action];
 }
 
+- (IBAction)onCancel:(UIButton *)button
+{
+	[state cancel];
+	[self dismissModalViewControllerAnimated:YES];
+}
+
 - (void)viewDidLoad
 {
 	label.text = NSLocalizedString(@"Connecting...", @"Connecting title");
 	password.hidden = YES;
+	cancelButton.hidden = YES;
 	
 	NSLog(@"Starting synchronization");
 
@@ -88,13 +96,6 @@
 - (void)network:(Network *)network didGetData:(NSData *)data
 {
 	[state network:network didGetData:data controller:self];
-}
-
-// UIAlertViewDelegate. The alert view is actually instantiated from State.
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 @end
