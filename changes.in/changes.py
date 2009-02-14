@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.72.1', 'February ?, 2009',
+Release('0.72.1', 'February 14, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Drag and drop from Thunderbird wouldn't work with
