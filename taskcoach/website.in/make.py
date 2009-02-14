@@ -244,20 +244,39 @@ pages['features'] = \
         for features that people miss.
         </P>'''
 
+def appendThumbnails(name, flt):
+    for filename in reversed(glob.glob(os.path.join('screenshots', '*.png'))):
+        if flt(filename):
+            basename = os.path.basename(filename)
+            release, platform, description = basename.split('-')
+            platform = platform.replace('_', ' ')
+            description = description[:-len('.png')].replace('_', ' ')
+            caption = '%s (release %s on %s)'%(description, release, platform)
+            thumbnailFilename = 'screenshots/Thumb-'+basename
+            thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
+            image = '<A HREF="%s">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
+            pages[name] += '<P>%s<BR>%s</P>'%(caption, image)
+
+pages['iPhone'] = '''<H3>iPhone</H3>
+        <P>There is a todo-list application for iPhone that can synchronize with Task Coach
+through the network, starting with version 0.73 of Task Coach. Main features are</P>
+
+        <UL>
+          <LI>Hierarchical categories.</LI>
+          <LI>Editing of task subject, description, dates and completed status.</LI>
+          <LI>Tap on the task's led icon to mark it complete.</LI>
+          <LI>Available in English and French.</LI>
+        </UL>
+
+        <P>More features are planned, like support for multiple task files and effort tracking.
+Here are some thumbnails of the UI:</P>'''
+appendThumbnails('iPhone', lambda x: x.find('iPhone') != -1)
+
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
 
 pages['screenshots'] = '''<H3>Screenshots</H3>
         <P>Click on a thumbnail image to see the full size screenshot.</P>'''
-for filename in reversed(glob.glob(os.path.join('screenshots', '*.png'))):
-    basename = os.path.basename(filename)
-    release, platform, description = basename.split('-')
-    platform = platform.replace('_', ' ')
-    description = description[:-len('.png')].replace('_', ' ')
-    caption = '%s (release %s on %s)'%(description, release, platform)
-    thumbnailFilename = 'screenshots/Thumb-'+basename
-    thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
-    image = '<A HREF="%s">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
-    pages['screenshots'] += '<P>%s<BR>%s</P>'%(caption, image)
+appendThumbnails('screenshots', lambda x: x.find('iPhone') == -1)
 
 pages['i18n'] = \
 '''        <H3>Internationalization</H3>
