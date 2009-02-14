@@ -165,7 +165,6 @@ class IPhoneHandler(asynchat.async_chat):
         self.state.handleData(self, data)
 
     def handle_close(self):
-        print 'Closed.'
         self.state.handleClose(self)
         self.close()
 
@@ -235,7 +234,6 @@ class BaseState(object):
             self.dlg.Finished()
 
         # Rollback
-        print 'Rollback!'
         disp.window.restoreTasks(self.oldCategories, self.oldTasks)
 
     def init(self, disp):
@@ -244,8 +242,6 @@ class BaseState(object):
 
 class InitialState(BaseState):
     def init(self, disp):
-        print 'New connection.'
-
         disp.set_terminator(4)
         disp.pushInteger(1) # Protocol version
 
@@ -253,10 +249,8 @@ class InitialState(BaseState):
         response, = struct.unpack('!i', data)
 
         if response:
-            print 'Protocol OK.'
             self.setState(PasswordState, disp)
         else:
-            print 'Protocol KO.'
             disp.close()
             disp.window.notifyIPhoneProtocolFailed()
 
@@ -272,7 +266,6 @@ class PasswordState(BaseState):
     def handleData(self, disp, data):
         if data == sha.sha(self.hashData + disp.password.encode('UTF-8')).digest():
             disp.pushInteger(1)
-            print 'Authentication OK'
             self.setState(DeviceNameState, disp)
         else:
             disp.pushInteger(0)
@@ -287,10 +280,8 @@ class DeviceNameState(BaseState):
     def handleData(self, disp, data):
         if self.length is None:
             self.length, = struct.unpack('!i', data)
-            print 'Name length:', self.length
             disp.set_terminator(self.length)
         else:
-            print 'Device name:', data
             self.deviceName = data.decode('UTF-8')
             self.setState(GUIDState, disp)
 
@@ -306,14 +297,11 @@ class GUIDState(BaseState):
             if self.length:
                 disp.set_terminator(self.length)
             else:
-                print 'No GUID.'
                 self.onSyncType(disp, disp.window.getIPhoneSyncType(None))
         else:
-            print 'GUID: %s (local: %s)' % (data, disp.window.taskFile.guid())
             self.onSyncType(disp, disp.window.getIPhoneSyncType(data))
 
     def onSyncType(self, disp, type_):
-        print 'Synchronization type:', type_
         disp.push(struct.pack('!i', type_))
 
         if type_ == 0:
@@ -337,8 +325,6 @@ class GUIDState(BaseState):
 
 class FullFromDesktopState(BaseState):
     def init(self, disp):
-        print 'Full from desktop.'
-
         self.tasks = filter(self.isTaskEligible, disp.window.taskFile.tasks())
         self.categories = list(disp.window.taskFile.categories())
 
@@ -400,7 +386,6 @@ class FullFromDesktopTaskState(BaseState):
             disp.set_terminator(4)
         else:
             disp.pushString(disp.window.taskFile.guid())
-            print 'End of sync.'
             self.setState(EndState, disp)
 
     def handleData(self, disp, data):
@@ -421,7 +406,6 @@ class FullFromDesktopTaskState(BaseState):
             disp.set_terminator(4)
         else:
             disp.pushString(disp.window.taskFile.guid())
-            print 'End of sync.'
             self.setState(EndState, disp)
 
 
@@ -433,7 +417,6 @@ class FullFromDeviceState(BaseState):
     def handleData(self, disp, data):
         self.categoryCount, self.taskCount = struct.unpack('!ii', data)
         self.total = self.categoryCount + self.taskCount
-        print '%d categories, %d tasks' % (self.categoryCount, self.taskCount)
         self.count = 0
         self.setState(FullFromDeviceCategoryState, disp)
 
@@ -453,7 +436,6 @@ class FullFromDeviceCategoryState(BaseState):
             self.length, = struct.unpack('!i', data)
             disp.set_terminator(self.length)
         else:
-            print 'New category:', data
             category = Category(data.decode('UTF-8'))
             disp.window.addIPhoneCategory(category)
             disp.pushString(category.id())
@@ -472,7 +454,6 @@ class FullFromDeviceCategoryState(BaseState):
 
 class FullFromDeviceTaskState(BaseState):
     def init(self, disp):
-        print 'FullFromDeviceTaskState'
         if self.taskCount:
             self.length = None
             self.state = 0
@@ -504,8 +485,6 @@ class FullFromDeviceTaskState(BaseState):
                             dueDate=self.dueDate,
                             completionDate=parseDate(data))
 
-                print 'New task:', self.subject
-
                 self.setState(FullFromDeviceTaskCategoryCountState, disp, task)
 
             if self.state != 4:
@@ -520,7 +499,6 @@ class FullFromDeviceTaskCategoryCountState(BaseState):
 
     def handleData(self, disp, data):
         self.taskCategoryCount, = struct.unpack('!i', data)
-        print 'Task category count:', self.taskCategoryCount
         if self.taskCategoryCount:
             self.setState(FullFromDeviceTaskCategoriesState, disp)
         else:
@@ -547,7 +525,6 @@ class FullFromDeviceTaskCategoriesState(BaseState):
             self.length, = struct.unpack('!i', data)
             disp.set_terminator(self.length)
         else:
-            print 'Cat Id:', data
             self.categories.append(self.categoryMap[data.decode('UTF-8')])
 
             self.taskCategoryCount -= 1
@@ -570,7 +547,6 @@ class FullFromDeviceTaskCategoriesState(BaseState):
 
 class TwoWayState(BaseState):
     def init(self, disp):
-        print 'Two-way; waiting for lengths'
         disp.set_terminator(16)
 
         self.categoryMap = dict()
@@ -584,11 +560,6 @@ class TwoWayState(BaseState):
     def handleData(self, disp, data):
         (self.newCategoriesCount, self.newTasksCount,
          self.deletedTasksCount, self.modifiedTasksCount) = struct.unpack('!iiii', data)
-
-        print 'New categories:', self.newCategoriesCount
-        print 'New tasks:', self.newTasksCount
-        print 'Deleted tasks:', self.deletedTasksCount
-        print 'Modified tasks:', self.modifiedTasksCount
 
         self.setState(TwoWayNewCategoriesState, disp)
 
@@ -606,7 +577,6 @@ class TwoWayNewCategoriesState(BaseState):
             self.length, = struct.unpack('!i', data)
             disp.set_terminator(self.length)
         else:
-            print 'Got new category', data
             category = Category(data.decode('UTF-8'))
             disp.window.addIPhoneCategory(category)
             disp.pushString(category.id())
@@ -722,10 +692,9 @@ class TwoWayDeletedTasksState(BaseState):
                 task = self.taskMap[data.decode('UTF-8')]
             except KeyError:
                 # Probably deleted on the desktop side as well
-                print 'Warning: cannot find task %s' % data
+                pass
             else:
                 del self.taskMap[data.decode('UTF-8')]
-                print 'Deleting task', task.subject()
                 disp.window.removeIPhoneTask(task)
 
             self.deletedTasksCount -= 1
@@ -770,7 +739,7 @@ class TwoWayModifiedTasks(BaseState):
                     task = self.taskMap[self.id_]
                 except KeyError:
                     # Probably deleted on desktop
-                    print 'Warning: could not find task %s' % self.id_
+                    pass
                 else:
                     disp.window.modifyIPhoneTask(task,
                                                  self.subject,
