@@ -268,6 +268,9 @@ through the network, starting with version 0.73 of Task Coach. Main features are
           <LI>Available in English and French.</LI>
         </UL>
 
+        <P>Note: as for now, this app is not yet available on the AppStore (pending
+approval from Apple).</P>
+
         <P>More features are planned, like support for multiple task files and effort tracking.
 Here are some thumbnails of the UI:</P>'''
 appendThumbnails('iPhone', lambda x: x.find('iPhone') != -1)
