@@ -272,17 +272,24 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+	[textField resignFirstResponder];
+	return NO;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
 	if ([textField.text length])
 	{
 		task.name = textField.text;
-		[self saveTask];
-		[textField resignFirstResponder];
-		self.navigationItem.title = task.name;
-
-		return YES;
+	}
+	else
+	{
+		task.name = NSLocalizedString(@"New task", @"New task subject");
+		textField.text = task.name;
 	}
 
-	return NO;
+	[self saveTask];
+	self.navigationItem.title = task.name;
 }
 
 #pragma mark UITextViewDelegate protocol
