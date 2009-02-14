@@ -138,6 +138,8 @@
 				[network expect:4];
 			}
 
+			[network appendInteger:1];
+			
 			break;
 		}
 			
@@ -252,6 +254,7 @@
 			if (taskCategoryCount)
 			{
 				state = 18;
+				[network expect:4];
 			}
 			else
 			{
@@ -267,9 +270,10 @@
 				{
 					state = 20;
 				}
+
+				[network expect:4];
+				[network appendInteger:1];
 			}
-				
-			[network expect:4];
 
 			break;
 		}
@@ -289,6 +293,7 @@
 			if (taskCategoryCount)
 			{
 				state = 18;
+				[network expect:4];
 			}
 			else
 			{
@@ -304,9 +309,12 @@
 				{
 					state = 20;
 				}
-			}
 
-			[network expect:4];
+				[network expect:4];
+
+				NSLog(@"Sending ACK");
+				[network appendInteger:1];
+			}
 			
 			break;
 		}
@@ -329,8 +337,6 @@
 		default:
 			break;
 	}
-
-	controller.progress.progress = 1.0 * doneCount / (categoryCount + taskCount);
 }
 
 - (void)onFoundCategory:(NSDictionary *)dict
