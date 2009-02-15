@@ -16,10 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, socket
 from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
+from taskcoachlib.iphone.protocol import IPhoneAcceptor
+from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
+from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 import viewer, toolbar, uicommand, remindercontroller
 
 
@@ -198,7 +201,7 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
     Selection = property(GetSelection, SetSelection)
     
     
-class MainWindow(AuiManagedFrameWithNotebookAPI):
+class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
     pageClosedEvent = wx.aui.EVT_AUI_PANE_CLOSE
     
     def __init__(self, iocontroller, taskFile, settings,
@@ -228,6 +231,16 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
                             settings.setboolean('syncml', 'showwarning', False)
                     finally:
                         dlg.Destroy()
+
+        if settings.getboolean('feature', 'iphone'):
+            try:
+                IPhoneAcceptor(self, settings)
+            except socket.error, e:
+                wx.MessageBox(_('An error occurred when trying to listen for iPhone devices.\n') + \
+                              _('The port is probably already used. Please try to specify a\n') + \
+                              _('different port in the iPhone section of the configuration\n') + \
+                              _('and restart Task Coach.\n') + \
+                              _('Error details: %s') % str(e), _('Error'), wx.OK)
 
     def createWindowComponents(self):
         self.__usingTabbedMainWindow = self.settings.getboolean('view', 
@@ -443,3 +456,60 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
             self.settings.set('view', 'toolbar', 'None')
         event.Skip()
         
+    # iPhone-related methods. These are called from the asyncore thread so they're deferred.
+
+    @synchronized
+    def getIPhoneSyncType(self, guid):
+        if guid == self.taskFile.guid():
+            return 0 # two-ways
+
+        dlg = IPhoneSyncTypeDialog(self, wx.ID_ANY, _('Synchronization type'))
+        try:
+            dlg.ShowModal()
+            return dlg.value
+        finally:
+            dlg.Destroy()
+
+    @synchronized
+    def notifyIPhoneProtocolFailed(self):
+        # This should actually never happen.
+        wx.MessageBox(_('An iPhone or iPod Touch device tried to synchronize with this\n') + \
+                      _('task file, but the protocol negotiation failed. Please file a\n') + \
+                      _('bug report.'),
+                      _('Error'), wx.OK)
+
+    # The notification system is not thread-save; adding or modifying tasks
+    # or categories from the asyncore thread crashes the app.
+
+    @synchronized
+    def clearTasks(self):
+        self.taskFile._clear(False)
+
+    @synchronized
+    def restoreTasks(self, categories, tasks):
+        self.taskFile._clear(False)
+        self.taskFile.categories().extend(categories)
+        self.taskFile.tasks().extend(tasks)
+
+    @synchronized
+    def addIPhoneCategory(self, category):
+        self.taskFile.categories().append(category)
+
+    @synchronized
+    def addIPhoneTask(self, task, categories):
+        self.taskFile.tasks().append(task)
+        for category in categories:
+            task.addCategory(category)
+            category.addCategorizable(task)
+
+    @synchronized
+    def removeIPhoneTask(self, task):
+        self.taskFile.tasks().remove(task)
+
+    @synchronized
+    def modifyIPhoneTask(self, task, subject, description, startDate, dueDate, completionDate):
+        task.setSubject(subject)
+        task.setDescription(description)
+        task.setStartDate(startDate)
+        task.setDueDate(dueDate)
+        task.setCompletionDate(completionDate)

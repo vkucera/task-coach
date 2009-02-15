@@ -60,6 +60,12 @@ _TOC = _('''<h3>Table of contents</h3>
     <li><a href="#syncmlpurge">Purging deleted items</a></li>
   </ul>
 </li>
+<li><a href="#iphone">iPhone and iPod Touch</a>
+  <ul>
+    <li><a href="#taskcoachiphone">Task Coach on the iPhone</a></li>
+    <li><a href="#iphoneconf">Configuration</a></li>
+  </ul>
+</li>
 <li><a href="#templates">Task templates</a>
   <ul>
     <li><a href="#abouttemplates">About templates</a></li>
@@ -355,6 +361,57 @@ deleted items" menu item can be used when upgrading to 0.71.4 to clear
 all these unwanted items.</p>
 ''') % meta.metaDict
 
+_iPhoneSection = _('''<h3><a name="iphone">iPhone and iPod Touch</a></h3>
+''')
+
+_iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">Task Coach on the iPhone</a></h4>
+
+<!-- XXX remove this later -->
+<p><i>NB: as for now, the iPhone app is pending approval from Apple</i></p>
+
+<p>There is an iPhone/iPod Touch companion app for Task Coach, available on
+Apple's AppStore. This app has few features right now, but allows you to take
+your tasks away and modify them:</p>
+
+<ul>
+  <li>Two-way synchronization with Task Coach on the desktop (only one task file
+      supported, but a later version will support multiple files)</li>
+  <li>Edit subject, description and dates</li>
+  <li>Hierarchical categories</li>
+  <li>Create new tasks and categories</li>
+  <li>Mark a task complete by tapping its status LED</li>
+</ul>
+
+<p>Features planned for the next version are:</p>
+
+<ul>
+  <li>Effort tracking</li>
+  <li>Editing of budget</li>
+</ul>''')
+
+_iPhoneConfigurationSubsection = _('''<h4><a name="iphoneconf">Configuration</a></h4>
+
+<p>In order to synchronize your iPhone/iPod Touch device with Task Coach on the
+desktop, you have to tell it where it is. After installing Task Coach for iPhone,
+launch the Settings application and enter the Task Coach section. Configurable
+items are:</p>
+
+<ul>
+  <li>"Show completed": Whether to show or hide completed tasks.</li>
+  <li>"Icon position": Position (left or right) of the status LED in the
+      task list. Default is Right, which is better for right-handed people.</li>
+  <li>"Task Coach host": The IP address, or host name, of the computer running
+      Task Coach with which you want to sync.</li>
+  <li>"Task Coach port": The port on which Task Coach listens for incoming
+      connections. The default should be fine.</li>
+</ul>
+
+<p>Before synchronizing, you must also configure Task Coach on the desktop; in
+the preferences, in the "Features" tab, check "Enable iPhone synchronization".
+Restart Task Coach. Now, in the preferences, choose the "iPhone" tab and fill in
+at least the password. Leaving the default values for host and port should be
+fine.</p>''')
+
 _templatesSection = _('''<h3><a name="templates">Task templates</a></h3>
 ''')
 
@@ -388,6 +445,7 @@ helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _emailSection + _aboutEmailSubsection + _emailAttachingSubsection + _emailCreatingSubsection + \
     _syncmlSection + _aboutSyncmlSubsection + _syncmlSetupSubsection + \
     _syncmlLimitsSubsection + _syncmlTroubleSubsection + _syncmlPurgeSubsection + \
+    _iPhoneSection + _iPhoneAboutSubsection + _iPhoneConfigurationSubsection + \
     _templatesSection + _aboutTemplatesSubsection + _usingTemplatesSubsection
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>

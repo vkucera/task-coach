@@ -269,6 +269,8 @@ class FeaturesPage(SettingsPage):
             helpText='restart')
         self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),
             helpText='restart')
+        self.addBooleanSetting('feature', 'iphone', _('Enable iPhone synchronization'),
+            helpText='restart')
         self.addIntegerSetting('view', 'efforthourstart',
             _('Hour of start of work day'), minimum=0, maximum=23)
         self.addIntegerSetting('view', 'efforthourend',
@@ -285,7 +287,21 @@ class TaskBehaviorPage(SettingsPage):
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
         self.fit()
-        
+
+
+class IPhonePage(SettingsPage):
+    def __init__(self, *args, **kwargs):
+        super(IPhonePage, self).__init__(*args, **kwargs)
+        self.addTextSetting('iphone', 'password',
+            _('Password for synchronization with iPhone'))
+        self.addTextSetting('iphone', 'host',
+            _('Address the iPhone will connect to'), # Kind of, avoid confusing the user...
+            helpText='restart')
+        self.addIntegerSetting('iphone', 'port',
+            _('Port the iPhone will connect to'),
+            helpText='restart', minimum=4096, maximum=16384)
+        self.fit()
+
         
 class EditorPage(SettingsPage):
     def __init__(self, *args, **kwargs):
@@ -314,6 +330,8 @@ class Preferences(widgets.ListbookDialog):
             (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'language'),
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'colorize'),
             (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior')]
+        if self.settings.getboolean('feature', 'iphone'):
+            pages.append((IPhonePage(parent=self._interior, columns=3, settings=self.settings), _('iPhone'), 'iphone'))
         if '__WXMAC__' in wx.PlatformInfo:
             pages.append((EditorPage(parent=self._interior, columns=2, settings=self.settings), _('Editor'), 'edit'))
         for page, title, bitmap in pages:

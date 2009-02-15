@@ -22,7 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('0.73', '?? ??, 2009',
+    summary='''This release adds a timeline viewer, and support
+for synchronizing with a companion iPhone/iPod Touch device''',
+    featuresAdded=[
+        Feature('''Synchronize an iPhone/iPod Touch device with
+Task Coach.'''),
+    ]),
+
 Release('0.72.1', 'February 14, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
