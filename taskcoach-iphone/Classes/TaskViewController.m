@@ -38,8 +38,11 @@
 	{
 		[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		
-		// I don't want to animate this but strange things happen if I don't...
-		[self tableView:self.tableView didSelectRowAtIndexPath:pos.indexPath];
+		Task *task = [[headers objectAtIndex:pos.indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:pos.indexPath.row];
+		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
+		[self.navigationController pushViewController:ctrl animated:NO];
+		[[PositionStore instance] push:self indexPath:pos.indexPath];
+		[ctrl release];
 	}
 }
 

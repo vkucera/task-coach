@@ -48,7 +48,6 @@
 		
 		[[PositionStore instance] push:self indexPath:pos.indexPath];
 		
-		// I don't want to animate this but strange things happen if I don't...
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
 
@@ -116,6 +115,26 @@
 	[self loadCategories];
 
 	[super viewDidLoad];
+	
+	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+	NSString *cachesDir = [cachesPaths objectAtIndex:0];
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if (![fileManager fileExistsAtPath:cachesDir])
+	{
+		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
+	}
+	
+	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store"];
+	
+	if ([fileManager fileExistsAtPath:path])
+	{
+		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store"]];
+		[store restore:self];
+		[store release];
+	}
+	
+	[fileManager release];
 }
 
 - (void)childWasPopped
