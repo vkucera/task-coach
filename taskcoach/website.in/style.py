@@ -68,6 +68,7 @@ footer = '''
                     &raquo; <a href="features.html" 
                        title="List of features in the current version of %(name)s">
                          Features</a><br>
+                    &raquo; <a href="iPhone.html" title="iPhone app">iPhone</a><br>
                     &raquo; <a href="i18n.html" 
                                title="Available translations">
                          Translations</a><br>

@@ -247,7 +247,8 @@ defaults = { \
 'feature': { \
     'notes': 'True',
     'effort': 'True',
-    'syncml': 'False' },
+    'syncml': 'False',
+    'iphone': 'False' },
 'syncml': { \
     'url': '',
     'username': '',
@@ -258,6 +259,11 @@ defaults = { \
     'synctasks': 'False',
     'syncnotes': 'False',
     'showwarning': 'True',
+    },
+'iphone': { \
+    'password': '',
+    'host': '',
+    'port': '8001',
     },
 }
 

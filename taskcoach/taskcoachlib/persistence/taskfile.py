@@ -140,12 +140,13 @@ class TaskFile(patterns.Observable, patterns.Observer):
             self.__needSave = False
             self.notifyObservers(patterns.Event(self, 'taskfile.dirty', False))
             
-    def _clear(self):
+    def _clear(self, regenerate=True):
         self.tasks().removeItems(list(self.tasks()))
         self.categories().removeItems(list(self.categories()))
         self.notes().removeItems(list(self.notes()))
-        self.__guid = generate()
-        self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
+        if regenerate:
+            self.__guid = generate()
+            self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
         
     def close(self):
         self.setFilename('')
