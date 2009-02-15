@@ -227,7 +227,8 @@ defaults = { \
 'feature': { \
     'notes': 'True',
     'effort': 'True',
-    'syncml': 'False' },
+    'syncml': 'False',
+    'iphone': 'False' },
 'syncml': { \
     'url': '',
     'username': '',

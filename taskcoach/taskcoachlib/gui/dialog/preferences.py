@@ -267,6 +267,8 @@ class FeaturesPage(SettingsPage):
             helpText='restart')
         self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),
             helpText='restart')
+        self.addBooleanSetting('feature', 'iphone', _('Enable iPhone synchronization'),
+            helpText='restart')
         self.addIntegerSetting('view', 'efforthourstart',
             _('Hour of start of work day'), minimum=0, maximum=23)
         self.addIntegerSetting('view', 'efforthourend',
@@ -325,8 +327,9 @@ class Preferences(widgets.ListbookDialog):
             (SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), 'save'),
             (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'language'),
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'colorize'),
-            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior'),
-            (IPhonePage(parent=self._interior, columns=3, settings=self.settings), _('iPhone'), 'iphone')]
+            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior')]
+        if self.settings.getboolean('feature', 'iphone'):
+            pages.append((IPhonePage(parent=self._interior, columns=3, settings=self.settings), _('iPhone'), 'iphone'))
         if '__WXMAC__' in wx.PlatformInfo:
             pages.append((EditorPage(parent=self._interior, columns=2, settings=self.settings), _('Editor'), 'edit'))
         for page, title, bitmap in pages:
