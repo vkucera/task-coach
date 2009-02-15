@@ -61,6 +61,7 @@
 		A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975370F26572200622396 /* TaskCellLeft.xib */; };
 		A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975380F26572200622396 /* TaskCellRight.xib */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
+		A6C30BEB0F48218C00A04E7C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A6C30BEA0F48218C00A04E7C /* Default.png */; };
 		A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C9843D0F2B77C40088A73F /* GUIDState.m */; };
 		A6D384560F247DDF0097F0F6 /* TaskDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */; };
 		A6D384610F247E910097F0F6 /* TaskDetails.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D384600F247E910097F0F6 /* TaskDetails.xib */; };
@@ -180,6 +181,7 @@
 		A6A975380F26572200622396 /* TaskCellRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRight.xib; sourceTree = SOURCE_ROOT; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
 		A6AEE77E0F21CFA00061CF77 /* Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Network.m; path = Network/Network.m; sourceTree = "<group>"; };
+		A6C30BEA0F48218C00A04E7C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		A6C9843C0F2B77C40088A73F /* GUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDState.h; path = Synchronization/GUIDState.h; sourceTree = "<group>"; };
 		A6C9843D0F2B77C40088A73F /* GUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GUIDState.m; path = Synchronization/GUIDState.m; sourceTree = "<group>"; };
 		A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsController.h; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 				A68EDEFB0F1E23BF00F51FF2 /* TaskCoach.png */,
 				A68EDEF70F1E230C00F51FF2 /* taskcoach.db */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				A6C30BEA0F48218C00A04E7C /* Default.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -537,6 +540,7 @@
 				A680C0DE0F47368E00A8D18B /* MainWindow.strings in Resources */,
 				A680C0DF0F47368E00A8D18B /* StringChoice.strings in Resources */,
 				A680C0E00F47368E00A8D18B /* SyncView.strings in Resources */,
+				A6C30BEB0F48218C00A04E7C /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
