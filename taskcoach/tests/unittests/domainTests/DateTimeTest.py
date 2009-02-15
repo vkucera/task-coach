@@ -64,6 +64,14 @@ class DateTimeTest(test.TestCase):
         endOfMonth = date.DateTime(2005,4,30).endOfDay()
         midMonth = date.DateTime(2005,4,15,12,45,1,999999)
         self.assertEqual(endOfMonth, midMonth.endOfMonth())
+        
+    def testOrdinalOfDateTimeAtMidnightEqualsOrdinalOfDate(self):
+        self.assertEqual(date.Date(2000, 1, 1).toordinal(), 
+                         date.DateTime(2000, 1, 1).toordinal())
+
+    def testOrdinalOfDateTimeAtNoon(self):
+        self.assertEqual(date.Date(2000, 1, 1).toordinal() + 0.5, 
+                         date.DateTime(2000, 1, 1, 12, 0, 0).toordinal())
 
 
 class TimeTest(test.TestCase):

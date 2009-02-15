@@ -3,9 +3,9 @@ import wx
 
 class TimeLine(wx.Panel):
     def __init__(self, *args, **kwargs):
-	self.model = kwargs.pop('model', [])
-	self.padding = kwargs.pop('padding', 3)
-	self.adapter = kwargs.pop('adapter', DefaultAdapter())
+        self.model = kwargs.pop('model', [])
+        self.padding = kwargs.pop('padding', 3)
+        self.adapter = kwargs.pop('adapter', DefaultAdapter())
         super(TimeLine, self).__init__(*args, **kwargs) 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize )
@@ -36,15 +36,15 @@ class TimeLine(wx.Panel):
     def Draw(self, dc):
         ''' Draw the timeline on the device context. '''
         dc.BeginDrawing()
-        brush = wx.Brush(wx.BLACK)
+        brush = wx.Brush(wx.WHITE)
         dc.SetBackground(brush)
         dc.Clear()
         if self.model:
-            self.min_start = self.adapter.start(self.model, recursive=True)
-            self.max_stop = self.adapter.stop(self.model, recursive=True)
+            self.min_start = float(self.adapter.start(self.model, recursive=True))
+            self.max_stop = float(self.adapter.stop(self.model, recursive=True))
             self.length = self.max_stop - self.min_start
             self.width, self.height = dc.GetSize()
-            self.DrawBox(dc, self.model, 0, self.height)
+            self.LayoutParallelChildren(dc, self.model, 0, self.height)
         dc.EndDrawing()
         
     def DrawBox(self, dc, node, y, h):
@@ -53,13 +53,11 @@ class TimeLine(wx.Panel):
         w = self.scaleWidth(stop - start)
         dc.DrawRoundedRectangle(x, y, w, h, self.padding * 2)
         if h >= dc.GetTextExtent('ABC')[1]:
-	    dc.SetClippingRegion(x+1, y+1, w-2, h-2)
-	    dc.DrawText(self.adapter.label(node), x+2, y+2)
-	    dc.DestroyClippingRegion()
-        seqHeight = 0
-        if self.adapter.sequential_children(node):
-            seqHeight = min(20,h/(1+len(self.adapter.parallel_children(node))))
-            self.LayoutSequentialChildren(dc, node, y, seqHeight)
+            dc.SetClippingRegion(x+1, y+1, w-2, h-2)
+            dc.DrawText(self.adapter.label(node), x+2, y+2)
+            dc.DestroyClippingRegion()
+        seqHeight = min(20,h/(1+len(self.adapter.parallel_children(node))))    
+        self.LayoutSequentialChildren(dc, node, y, seqHeight)
         self.LayoutParallelChildren(dc, node, y+seqHeight, h-seqHeight)
  
     def LayoutParallelChildren(self, dc, parent, y, h):
@@ -67,7 +65,7 @@ class TimeLine(wx.Panel):
         if not children:
             return
         childY = y
-        h -= (len(children) -1) # vertical space between children
+        h -= (len(children) - 1) # vertical space between children
         childHeight = h / len(children)
         for child in children:
             if childHeight >= self.padding:
@@ -78,8 +76,11 @@ class TimeLine(wx.Panel):
         children = self.adapter.sequential_children(parent)
         if not children:
             return
+        oldPen = dc.GetPen()
+        dc.SetPen(wx.Pen(wx.BLACK, style=wx.DOT))
         for child in children:
             self.DrawBox(dc, child, y, h)
+        dc.SetPen(oldPen)
 
     def scaleX(self, x):
         return self.scaleWidth(x - self.min_start)
@@ -136,7 +137,7 @@ class TestApp(wx.App):
     def get_model(self, size):
         parallel_children, sequential_children = [], []
         if size > 0:
-	     parallel_children = [self.get_model(size-1) for i in range(size)]
+            parallel_children = [self.get_model(size-1) for i in range(size)]
         sequential_children = [Node('Seq 1', 30+10*size, 40+10*size, [], []),
                                Node('Seq 2', 80-10*size, 90-10*size, [], [])] 
         return Node('Node %d'%size, 0+5*size, 100-5*size, parallel_children, 
