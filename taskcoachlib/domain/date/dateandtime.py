@@ -20,11 +20,26 @@ import datetime, timedelta, re
 
 class DateTime(datetime.datetime):
     
+    secondsPerMinute = 60
+    minutesPerHour = 60
+    hoursPerDay = 24
+    secondsPerHour = minutesPerHour * secondsPerMinute
+    secondsPerDay = hoursPerDay * secondsPerHour
+    
     def weeknumber(self):
         return self.isocalendar()[1]
 
     def weekday(self):
         return self.isoweekday()
+    
+    def toordinal(self):
+        ''' Return the ordinal number of the day, plus a fraction between 0 and
+            1 for parts of the day. '''
+        ordinal = super(DateTime, self).toordinal()
+        seconds = self.hour * self.secondsPerHour + \
+                  self.minute * self.secondsPerMinute + \
+                  self.second
+        return ordinal + (seconds / float(self.secondsPerDay))
         
     def startOfDay(self):
         return self.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -63,6 +78,7 @@ class DateTime(datetime.datetime):
         result = super(DateTime, self).__add__(other)
         return self.__class__(result.year, result.month, result.day, 
             result.hour, result.minute, result.second, result.microsecond)
+
 
 DateTime.max = DateTime(datetime.datetime.max.year, 12, 31).endOfDay()
 DateTime.min = DateTime(datetime.datetime.min.year, 1, 1).startOfDay()

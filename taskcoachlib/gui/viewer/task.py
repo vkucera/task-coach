@@ -175,12 +175,31 @@ class SquareMapRootNode(RootNode):
 
 
 class TimelineRootNode(RootNode):
+    def children(self):
+        children = super(TimelineRootNode, self).children()
+        children.sort(key=lambda task: task.startDate())
+        return children
+    
     def parallel_children(self):
         return self.children()
 
     def sequential_children(self):
         return []
 
+    def startDate(self, recursive=False):
+        startDates = [item.startDate(recursive=True) for item in self.parallel_children()]
+        startDates = [aDate for aDate in startDates if aDate != date.Date()]
+        if not startDates:
+            startDates.append(date.Today())
+        return min(startDates)
+    
+    def dueDate(self, recursive=False):
+        dueDates = [item.dueDate(recursive=True) for item in self.parallel_children()]
+        dueDates = [aDate for aDate in dueDates if aDate != date.Date()]
+        if not dueDates:
+            dueDates.append(date.Tomorrow())    
+        return max(dueDates)
+    
 
 class TimelineViewer(BaseTaskViewer):
     defaultTitle = _('Timeline')
@@ -192,7 +211,8 @@ class TimelineViewer(BaseTaskViewer):
         #self.registerObserver(self.onTaskChange, task.Task.subjectChangedEventType())
 
     def createWidget(self):
-        return widgets.Timeline(self, TimelineRootNode(self.presentation()))
+        self.rootNode = TimelineRootNode(self.presentation())
+        return widgets.Timeline(self, self.rootNode)
 
     def curselection(self):
         # Override curselection, because there is no need to translate indices
@@ -201,10 +221,24 @@ class TimelineViewer(BaseTaskViewer):
         return self.widget.curselection()
  
     def start(self, item, recursive=False):
-        return 0
+        try:
+            start = item.startDate(recursive=recursive)
+        except AttributeError:
+            start = item.getStart()
+        return start.toordinal()
 
     def stop(self, item, recursive=False):
-        return 100
+        try:
+            stop = item.dueDate(recursive=recursive)
+            if stop == date.Date():
+                stop = self.rootNode.dueDate() + date.oneDay + date.oneDay   
+            else:
+                stop += date.oneDay
+        except AttributeError:
+            stop = item.getStop()
+            if not stop:
+                stop = date.Tomorrow()
+        return stop.toordinal() 
 
     def label(self, item):
         return item.subject()
@@ -217,7 +251,9 @@ class TimelineViewer(BaseTaskViewer):
 
     def parallel_children(self, item):
         try:
-            return [child for child in item.children() if child in self.presentation()]
+            children = [child for child in item.children() if child in self.presentation()]
+            children.sort(key=lambda task: task.startDate())
+            return children
         except AttributeError:
             return []
   
