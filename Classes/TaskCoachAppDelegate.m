@@ -18,26 +18,6 @@
 {
 	[window addSubview:mainController.view];
 	
-	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-	NSString *cachesDir = [cachesPaths objectAtIndex:0];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if (![fileManager fileExistsAtPath:cachesDir])
-	{
-		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
-	}
-
-	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store"];
-
-	if ([fileManager fileExistsAtPath:path])
-	{
-		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store"]];
-		[store restore:mainController];
-		[store release];
-	}
-
-	[fileManager release];
-	
 	[window makeKeyAndVisible];
 }
 
