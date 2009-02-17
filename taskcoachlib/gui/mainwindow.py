@@ -22,7 +22,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
 from taskcoachlib.iphone.protocol import IPhoneAcceptor
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
-from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
+from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
 import viewer, toolbar, uicommand, remindercontroller
 
 
@@ -457,6 +457,10 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
         event.Skip()
         
     # iPhone-related methods. These are called from the asyncore thread so they're deferred.
+
+    @synchronized
+    def createIPhoneProgressDialog(self, deviceName):
+        return IPhoneSyncDialog(deviceName, self, wx.ID_ANY, _('iPhone/iPod'))
 
     @synchronized
     def getIPhoneSyncType(self, guid):
