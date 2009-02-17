@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.gui.threads import synchronized, DeferredCallMixin
-from taskcoachlib.gui.dialog.iphone import IPhoneSyncDialog
 from taskcoachlib.patterns.network import Acceptor
 from taskcoachlib.domain.date import Date, parseDate
 
@@ -304,20 +303,15 @@ class GUIDState(BaseState):
     def onSyncType(self, disp, type_):
         disp.push(struct.pack('!i', type_))
 
-        if type_ == 0:
-            self.dlg = IPhoneSyncDialog(self.deviceName, disp.window, wx.ID_ANY, _('iPhone/iPod'))
+        if type_ != 3:
+            self.dlg = disp.window.createIPhoneProgressDialog(self.deviceName)
             self.dlg.Started()
 
+        if type_ == 0:
             self.setState(TwoWayState, disp)
         elif type_ == 1:
-            self.dlg = IPhoneSyncDialog(self.deviceName, disp.window, wx.ID_ANY, _('iPhone/iPod'))
-            self.dlg.Started()
-
             self.setState(FullFromDesktopState, disp)
         elif type_ == 2:
-            self.dlg = IPhoneSyncDialog(self.deviceName, disp.window, wx.ID_ANY, _('iPhone/iPod'))
-            self.dlg.Started()
-
             self.setState(FullFromDeviceState, disp)
 
         # On cancel, the other end will close the connection
