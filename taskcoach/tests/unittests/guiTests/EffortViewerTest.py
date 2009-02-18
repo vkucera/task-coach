@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
         
     def testViewerKeepsShowingOnlyEffortForSpecifiedTasksWhenSwitchingAggregation(self):
         self.viewer.showEffortAggregation('week')
-        self.assertEqual(1, len(self.viewer.presentation()))
+        self.assertEqual(2, len(self.viewer.presentation()))
         
         
 class EffortViewerStatusMessageTest(test.wxTestCase):
@@ -194,12 +194,20 @@ class CommonTests(object):
         
     def testSearch(self):
         self.viewer.setSearchFilter('Task2')
-        self.assertEqual(1, self.viewer.size())
+        if self.aggregation == 'details':
+            expectedNumberOfItems = 1
+        else:
+            expectedNumberOfItems = 2
+        self.assertEqual(expectedNumberOfItems, self.viewer.size())
 
     def testDelete(self):
         self.viewer.widget.select((0,))
         self.viewer.deleteUICommand.doCommand(None)
-        self.assertEqual(self.expectedNumberOfItems - 1, self.viewer.size())
+        if self.aggregation == 'details':
+            expectedNumberOfItems = self.expectedNumberOfItems - 1
+        else:
+            expectedNumberOfItems = self.expectedNumberOfItems - 3
+        self.assertEqual(expectedNumberOfItems, self.viewer.size())
     
     def testColumnUICommands(self):
         if self.aggregation == 'details':
@@ -246,7 +254,12 @@ class CommonTests(object):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
         self.switchAggregation()    
         self.viewer.onEverySecond(None) # Simulate clock firing
-        self.assertEqual(1, len(self.viewer.currentlyTrackedItems()))
+        if self.aggregation == 'details': # Before the switch
+            expectedNrOfTrackedItems = 2
+        else:
+            expectedNrOfTrackedItems = 1
+        self.assertEqual(expectedNrOfTrackedItems, 
+                         len(self.viewer.currentlyTrackedItems()))
     
 
 class EffortViewerWithoutAggregationTest(CommonTests, 
@@ -259,20 +272,20 @@ class EffortViewerWithoutAggregationTest(CommonTests,
 class EffortViewerWithAggregationPerDayTest(CommonTests, 
                                             EffortViewerAggregationTestCase):
     aggregation = 'day'
-    expectedNumberOfItems = 4
+    expectedNumberOfItems = 7 # 4 day/task combinations on 3 days (== 3 total rows) 
     expectedPeriodRendering = '2008-07-23'
 
 
 class EffortViewerWithAggregationPerWeekTest(CommonTests, 
                                              EffortViewerAggregationTestCase):
     aggregation = 'week'
-    expectedNumberOfItems = 3
+    expectedNumberOfItems = 5 # 3 week/task combinations in 2 weeks (== 2 total rows)
     expectedPeriodRendering = '2008-30'
 
 
 class EffortViewerWithAggregationPerMonthTest(CommonTests, 
                                               EffortViewerAggregationTestCase):
     aggregation = 'month'
-    expectedNumberOfItems = 2
+    expectedNumberOfItems = 3 # 2 month/task combinations in 1 month (== 1 total row)
     expectedPeriodRendering = gui.render.month(date.Date(2008,07,01))
 

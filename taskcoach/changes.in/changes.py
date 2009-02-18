@@ -23,12 +23,16 @@ from changetypes import *
 
 releases = [
 
-Release('0.73', '?? ??, 2009',
+Release('0.73.0', 'February ?, 2009',
     summary='''This release adds a timeline viewer, and support
 for synchronizing with a companion iPhone/iPod Touch device''',
     featuresAdded=[
         Feature('''Synchronize an iPhone/iPod Touch device with
 Task Coach.'''),
+        Feature('''Added a timeline viewer that shows tasks and efforts on 
+a horizontal time scale.'''),
+        Feature('''When an effort viewer is displaying effort per day, week,
+or month, a total line is shown for each period.''', '1962219')
     ]),
 
 Release('0.72.1', 'February 14, 2009',
