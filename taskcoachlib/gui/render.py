@@ -98,7 +98,10 @@ def weekNumber(dateTime):
     return '%d-%d'%(dateTime.year, dateTime.weeknumber())
     
 def amount(aFloat):
-    return '%.2f'%aFloat
+    renderedAmount = '%.2f'%aFloat
+    if renderedAmount == '0.00':
+        renderedAmount = ''
+    return renderedAmount
 
 def taskBitmapNames(task, hasChildren=None):
     ''' Return two bitmap names for the task, one for deselected tasks and

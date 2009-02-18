@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import date, task
-import effort, effortlist
+import effort, effortlist, composite
 
 
 class EffortAggregator(patterns.SetDecorator, 
@@ -109,15 +109,24 @@ class EffortAggregator(patterns.SetDecorator,
         for effort in efforts:
             for task in taskAndAncestors:
                 newComposites.extend(self.createComposite(effort, task))
+            newComposites.extend(self.createCompositeForPeriod(effort))
         return newComposites
 
     def createComposite(self, anEffort, task):
         key = self.keyForEffort(anEffort, task)
         if key in self.__composites:
             return []
-        newComposite = effort.CompositeEffort(*key)
+        newComposite = composite.CompositeEffort(*key)
         self.__composites[key] = newComposite
         return [newComposite]
+    
+    def createCompositeForPeriod(self, anEffort):
+        key = self.keyForPeriod(anEffort)
+        if key in self.__composites:
+            return []
+        newCompositePerPeriod = composite.CompositeEffortPerPeriod(key[0], key[1], self.observable())
+        self.__composites[key] = newCompositePerPeriod
+        return [newCompositePerPeriod]
 
     def removeComposites(self, task, efforts):
         taskAndAncestors = [task] + task.ancestors()
@@ -144,13 +153,20 @@ class EffortAggregator(patterns.SetDecorator,
 
     @staticmethod
     def keyForComposite(composite):
-        return (composite.task(), composite.getStart(), composite.getStop())
+        if composite.task().__class__.__name__ == 'Total':
+            return (composite.getStart(), composite.getStop())
+        else:
+            return (composite.task(), composite.getStart(), composite.getStop())
     
     def keyForEffort(self, effort, task=None):
         task = task or effort.task()
         effortStart = effort.getStart()
         return (task, self.startOfPeriod(effortStart), 
             self.endOfPeriod(effortStart))
+        
+    def keyForPeriod(self, effort):
+        key = self.keyForEffort(effort)
+        return key[1], key[2]
     
     @classmethod
     def sortEventType(class_):
