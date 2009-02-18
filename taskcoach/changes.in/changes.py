@@ -28,9 +28,9 @@ Release('0.73.0', 'February ?, 2009',
 for synchronizing with a companion iPhone/iPod Touch device''',
     featuresAdded=[
         Feature('''Synchronize an iPhone/iPod Touch device with
-Task Coach.'''),
+Task Coach.''', '2042153'),
         Feature('''Added a timeline viewer that shows tasks and efforts on 
-a horizontal time scale.'''),
+a horizontal time scale.''', '2533644', '1230080'),
         Feature('''When an effort viewer is displaying effort per day, week,
 or month, a total line is shown for each period.''', '1962219')
     ]),
@@ -44,7 +44,7 @@ GMail IMAP accounts.''', '2549194'),
 ScheduleWorld.''',
             '2553046'),
         Bug('''On MacOS, the window height would increase by 29 pixels
-each time Task Coach is launched.'''),
+each time Task Coach was launched.'''),
         Bug('''Exporting a selection of effort records resulted in an empty 
 HTML file.'''),
         Bug('''Opening a task from a reminder dialog didn't work.''', 
