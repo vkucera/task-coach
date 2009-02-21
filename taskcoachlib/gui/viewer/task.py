@@ -137,6 +137,21 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
     def onTaskChange(self, event):
         self.refreshItem(event.source())
         
+    def children(self, item):
+        try:
+            return [child for child in item.children() if child in self.presentation()]
+        except AttributeError:
+            return []
+
+    def iconName(self, item, isSelected):
+        if not hasattr(item, 'children'):
+            return ''
+        bitmap, bitmap_selected = render.taskBitmapNames(item, 
+                                                         self.children(item))
+        if isSelected:
+            bitmap = bitmap_selected
+        return bitmap
+        
 
 class RootNode(object):
     def __init__(self, tasks):
@@ -145,8 +160,11 @@ class RootNode(object):
     def subject(self):
         return ''
     
-    def children(self):
-        return self.tasks.rootItems()
+    def children(self, recursive=False):
+        if recursive:
+            return self.tasks[:]
+        else:
+            return self.tasks.rootItems()
 
     def color(self, *args, **kwargs):
         return None
@@ -175,13 +193,13 @@ class SquareMapRootNode(RootNode):
 
 
 class TimelineRootNode(RootNode):
-    def children(self):
-        children = super(TimelineRootNode, self).children()
+    def children(self, recursive=False):
+        children = super(TimelineRootNode, self).children(recursive)
         children.sort(key=lambda task: task.startDate())
         return children
     
-    def parallel_children(self):
-        return self.children()
+    def parallel_children(self, recursive=False):
+        return self.children(recursive)
 
     def sequential_children(self):
         return []
@@ -219,10 +237,18 @@ class TimelineViewer(BaseTaskViewer):
         # back to domain objects. Our widget already returns the selected domain
         # object itself.
         return self.widget.curselection()
+    
+    def bounds(self, item):
+        times = [self.start(item), self.stop(item)]
+        for child in self.parallel_children(item) + self.sequential_children(item):
+            times.extend(self.bounds(child))
+        return min(times), max(times)
  
     def start(self, item, recursive=False):
         try:
             start = item.startDate(recursive=recursive)
+            if start == date.Date():
+                start = date.Yesterday()
         except AttributeError:
             start = item.getStart()
         return start.toordinal()
@@ -231,7 +257,7 @@ class TimelineViewer(BaseTaskViewer):
         try:
             stop = item.dueDate(recursive=recursive)
             if stop == date.Date():
-                stop = self.rootNode.dueDate() + date.oneDay + date.oneDay   
+                stop = date.Tomorrow()   
             else:
                 stop += date.oneDay
         except AttributeError:
@@ -240,23 +266,37 @@ class TimelineViewer(BaseTaskViewer):
                 stop = date.Tomorrow()
         return stop.toordinal() 
 
-    def label(self, item):
-        return item.subject()
-
     def sequential_children(self, item):
         try:
             return item.efforts()
         except AttributeError:
             return []
 
-    def parallel_children(self, item):
+    def parallel_children(self, item, recursive=False):
         try:
-            children = [child for child in item.children() if child in self.presentation()]
+            children = [child for child in item.children(recursive=recursive) \
+                        if child in self.presentation()]
             children.sort(key=lambda task: task.startDate())
             return children
         except AttributeError:
             return []
+
+    def label(self, item):
+        return item.subject()
+
+    def background_color(self, item):
+        return item.color()
+
+    def foreground_color(self, item, depth=0):
+        if hasattr(item, 'children'):
+            return color.taskColor(item, self.settings)
+        else:
+            return None
   
+    def icon(self, item, isSelected=False):
+        bitmap = self.iconName(item, isSelected)
+        return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
+
 
 class SquareTaskViewer(BaseTaskViewer):
     defaultTitle = _('Task square map')
@@ -359,9 +399,6 @@ class SquareTaskViewer(BaseTaskViewer):
     def value(self, task, parent=None):
         return self.overall(task)
     
-    def children(self, task):
-        return [child for child in task.children() if child in self.presentation()]
-
     def background_color(self, task, depth):
         return task.color()
 
@@ -380,12 +417,6 @@ class SquareTaskViewer(BaseTaskViewer):
     def render(self, value):
         return self.renderer[self.__orderBy](value)
 
-    def iconName(self, task, isSelected):
-        bitmap, bitmap_selected = render.taskBitmapNames(task, 
-                                                         self.children(task))
-        if isSelected:
-            bitmap = bitmap_selected
-        return bitmap
     
     
 class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks, 

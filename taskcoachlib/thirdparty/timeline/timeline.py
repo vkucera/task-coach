@@ -6,6 +6,7 @@ class TimeLine(wx.Panel):
         self.model = kwargs.pop('model', [])
         self.padding = kwargs.pop('padding', 3)
         self.adapter = kwargs.pop('adapter', DefaultAdapter())
+        self.selectedNode = None
         super(TimeLine, self).__init__(*args, **kwargs) 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize )
@@ -39,47 +40,97 @@ class TimeLine(wx.Panel):
         brush = wx.Brush(wx.WHITE)
         dc.SetBackground(brush)
         dc.Clear()
+        dc.SetFont(self.FontForLabels(dc))
         if self.model:
-            self.min_start = float(self.adapter.start(self.model, recursive=True))
-            self.max_stop = float(self.adapter.stop(self.model, recursive=True))
+            bounds = self.adapter.bounds(self.model)
+            self.min_start = float(min(bounds))
+            self.max_stop = float(max(bounds)) 
             self.length = self.max_stop - self.min_start
             self.width, self.height = dc.GetSize()
-            self.LayoutParallelChildren(dc, self.model, 0, self.height)
+            self.DrawParallelChildren(dc, self.model, 0, self.height)
         dc.EndDrawing()
         
-    def DrawBox(self, dc, node, y, h):
+    def FontForLabels(self, dc):
+        ''' Return the default GUI font, scaled for printing if necessary. '''
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        scale = dc.GetPPI()[0] / wx.ScreenDC().GetPPI()[0]
+        font.SetPointSize(scale*font.GetPointSize())
+        return font
+    
+    def BrushForNode(self, node, depth):
+        ''' Create brush to use to display the given node '''
+        if node == self.selectedNode:
+            color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        else:
+            color = self.adapter.background_color(node)
+            if not color:
+                red = (depth * 10)%255
+                green = 255-((depth * 10)%255)
+                blue = 200
+                color = wx.Color(red, green, blue)
+        return wx.Brush(color)
+        
+    def DrawBox(self, dc, node, y, h, depth=0):
         start, stop = self.adapter.start(node), self.adapter.stop(node)
+        start, stop = min(start, stop), max(start, stop) # Sanitize input
         x = self.scaleX(start)
         w = self.scaleWidth(stop - start)
+        dc.SetBrush(self.BrushForNode(node, depth))
         dc.DrawRoundedRectangle(x, y, w, h, self.padding * 2)
+        self.DrawIconAndLabel(dc, node, x, y, w, h, depth)
+        seqHeight = dc.GetTextExtent('ABC')[1] + 2    
+        self.DrawSequentialChildren(dc, node, y, seqHeight, depth+1)
+        self.DrawParallelChildren(dc, node, y+seqHeight, h-seqHeight, depth+1)
+        
+    def DrawIconAndLabel(self, dc, node, x, y, w, h, depth):
+        ''' Draw the icon, if any, and the label, if any, of the node. '''
+        dc.SetClippingRegion(x+1, y+1, w-2, h-2) # Don't draw outside the box
+        icon = self.adapter.icon(node, node==self.selectedNode)
+        if icon and h >= icon.GetHeight() and w >= icon.GetWidth():
+            iconWidth = icon.GetWidth() + 2
+            dc.DrawIcon(icon, x+2, y+2) 
+        else:
+            iconWidth = 0
         if h >= dc.GetTextExtent('ABC')[1]:
-            dc.SetClippingRegion(x+1, y+1, w-2, h-2)
-            dc.DrawText(self.adapter.label(node), x+2, y+2)
-            dc.DestroyClippingRegion()
-        seqHeight = min(20,h/(1+len(self.adapter.parallel_children(node))))    
-        self.LayoutSequentialChildren(dc, node, y, seqHeight)
-        self.LayoutParallelChildren(dc, node, y+seqHeight, h-seqHeight)
+            dc.SetTextForeground(self.TextForegroundForNode(node, depth))
+            dc.DrawText(self.adapter.label(node), x + iconWidth + 2, y+2)
+        dc.DestroyClippingRegion()
  
-    def LayoutParallelChildren(self, dc, parent, y, h):
+    def TextForegroundForNode(self, node, depth=0):
+        ''' Determine the text foreground color to use to display the label of
+            the given node '''
+        if node == self.selectedNode:
+            fg_color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
+        else:
+            fg_color = self.adapter.foreground_color(node, depth)
+            if not fg_color:
+                fg_color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOWTEXT)
+        return fg_color
+
+    def DrawParallelChildren(self, dc, parent, y, h, depth=0):
         children = self.adapter.parallel_children(parent)
         if not children:
             return
         childY = y
         h -= (len(children) - 1) # vertical space between children
-        childHeight = h / len(children)
-        for child in children:
+        recursiveChildrenList = [self.adapter.parallel_children(child, recursive=True) \
+                                 for child in children]
+        recursiveChildrenCounts = [len(recursiveChildren) for recursiveChildren in recursiveChildrenList]
+        recursiveChildHeight = h / float(len(children) + sum(recursiveChildrenCounts))
+        for child, numberOfRecursiveChildren in zip(children, recursiveChildrenCounts):
+            childHeight = recursiveChildHeight * (numberOfRecursiveChildren + 1)
             if childHeight >= self.padding:
-                self.DrawBox(dc, child, childY, childHeight)
+                self.DrawBox(dc, child, childY, childHeight, depth)
             childY += childHeight + 1
 
-    def LayoutSequentialChildren(self, dc, parent, y, h):
+    def DrawSequentialChildren(self, dc, parent, y, h, depth=0):
         children = self.adapter.sequential_children(parent)
         if not children:
             return
         oldPen = dc.GetPen()
         dc.SetPen(wx.Pen(wx.BLACK, style=wx.DOT))
         for child in children:
-            self.DrawBox(dc, child, y, h)
+            self.DrawBox(dc, child, y, h, depth)
         dc.SetPen(oldPen)
 
     def scaleX(self, x):
@@ -90,14 +141,24 @@ class TimeLine(wx.Panel):
 
 
 class DefaultAdapter(object):
-    def parallel_children(self, node):
-        return node.parallel_children
+    def parallel_children(self, node, recursive=False):
+        children = node.parallel_children[:]
+        if recursive:
+            for child in node.parallel_children:
+                children.extend(self.parallel_children(child, True))
+        return children
 
     def sequential_children(self, node):
         return node.sequential_children
 
     def children(self, node):
         return self.parallel_children(node) + self.sequential_children(node)
+    
+    def bounds(self, node):
+        times = [node.start, node.stop]
+        for child in self.children(node):
+            times.extend(self.bounds(child))
+        return min(times), max(times)
 
     def start(self, node, recursive=False):
         starts = [node.start] 
@@ -115,7 +176,16 @@ class DefaultAdapter(object):
 
     def label(self, node):
         return node.path
+    
+    def background_color(self, node):
+        return None
 
+    def foreground_color(self, node, depth):
+        return None
+    
+    def icon(self, node):
+        return None
+    
     
 class TestApp(wx.App):
     ''' Basic application for holding the viewing Frame '''

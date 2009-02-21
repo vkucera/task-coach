@@ -21,7 +21,7 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import date, task
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import render
-import base
+import base, effort
 
 
 class BaseCompositeEffort(base.BaseEffort):
@@ -159,8 +159,9 @@ class CompositeEffort(BaseCompositeEffort):
         return '\n'.join(effortDescriptions)
     
     def onColorChanged(self, event):
+        return # FIXME: CompositeEffort does not derive from base.Object
         patterns.Publisher().notifyObservers(patterns.Event(self,
-            Effort.colorChangedEventType(), event.value()))
+            self.colorChangedEventType(), event.value()))
         
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):
@@ -171,7 +172,8 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType=task.Task.totalTimeSpentChangedEventType())
         for eventType in self.taskList.modificationEventTypes():
-            patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType)
+            patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
+                                                  eventSource=self.taskList)
 
     def onTimeSpentChanged(self, event):
         changedEffort = event.value()
