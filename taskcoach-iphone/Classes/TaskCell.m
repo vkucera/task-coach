@@ -17,7 +17,31 @@
 @synthesize taskId;
 @synthesize leftImage;
 @synthesize titleLabel;
-@synthesize infosLabel;
+
+- (NSString *)completedLedName
+{
+	return @"ledgreen.png";
+}
+
+- (NSString *)overdueLedName
+{
+	return @"ledred.png";
+}
+
+- (NSString *)dueTodayLedName
+{
+	return @"ledorange.png";
+}
+
+- (NSString *)startedLedName
+{
+	return @"ledblue.png";
+}
+
+- (NSString *)notStartedLedName
+{
+	return @"ledgrey.png";
+}
 
 - (void)setTask:(Task *)task target:(id)theTarget action:(SEL)theAction
 {
@@ -26,43 +50,23 @@
 	action = theAction;
 
 	titleLabel.text = task.name;
-	infosLabel.text = @"";
-
-	switch ([task taskStatus])
-	{
-		case TASKSTATUS_COMPLETED:
-			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Completed %@", @"Completed date infos patter"), task.completionDate];
-			break;
-		case TASKSTATUS_OVERDUE:
-			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern"), task.dueDate];
-			break;
-		case TASKSTATUS_DUETODAY:
-			if (task.startDate)
-				infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Started %@", @"Started date infos pattern"), task.startDate];
-			break;
-		case TASKSTATUS_STARTED:
-		case TASKSTATUS_NOTSTARTED:
-			if (task.dueDate)
-				infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern (started/not started)"), task.dueDate];
-			break;
-	}
 	
 	switch ([task taskStatus])
 	{
 		case TASKSTATUS_COMPLETED:
-			leftImage.image = [UIImage imageNamed:@"ledgreen.png"];
+			leftImage.image = [UIImage imageNamed:[self completedLedName]];
 			break;
 		case TASKSTATUS_OVERDUE:
-			leftImage.image = [UIImage imageNamed:@"ledred.png"];
+			leftImage.image = [UIImage imageNamed:[self overdueLedName]];
 			break;
 		case TASKSTATUS_DUETODAY:
-			leftImage.image = [UIImage imageNamed:@"ledorange.png"];
+			leftImage.image = [UIImage imageNamed:[self dueTodayLedName]];
 			break;
 		case TASKSTATUS_STARTED:
-			leftImage.image = [UIImage imageNamed:@"ledblue.png"];
+			leftImage.image = [UIImage imageNamed:[self startedLedName]];
 			break;
 		case TASKSTATUS_NOTSTARTED:
-			leftImage.image = [UIImage imageNamed:@"ledgrey.png"];
+			leftImage.image = [UIImage imageNamed:[self notStartedLedName]];
 			break;
 		default:
 			break;
@@ -75,7 +79,6 @@
 {
 	[leftImage release];
 	[titleLabel release];
-	[infosLabel release];
 
 	[super dealloc];
 }
