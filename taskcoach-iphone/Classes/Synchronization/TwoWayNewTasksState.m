@@ -36,10 +36,6 @@
 		Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Task WHERE Task.status=%d", STATUS_NEW]];
 		[req execWithTarget:self action:@selector(onObject:)];
 	}
-	else
-	{
-		myController.state = nextState;
-	}
 }
 
 - (void)dealloc

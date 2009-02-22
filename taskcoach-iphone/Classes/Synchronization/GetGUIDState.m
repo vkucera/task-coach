@@ -44,6 +44,7 @@
 			Statement *req = [[Database connection] statementWithSQL:@"INSERT INTO Meta (name, value) VALUES ('guid', ?)"];
 			[req bindString:[NSString stringFromUTF8Data:data] atIndex:1];
 			[req exec];
+			[network appendInteger:1];
 
 			controller.state = [EndState stateWithNetwork:network controller:controller];
 			break;

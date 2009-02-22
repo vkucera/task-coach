@@ -268,6 +268,7 @@
 		case TASK_CATEGORY_COUNT:
 		{
 			taskCategoryCount = ntohl(*((int32_t *)[data bytes]));
+			NSLog(@"Task has %d categories.", taskCategoryCount);
 
 			if (![taskStart length])
 			{
@@ -304,6 +305,8 @@
 				++doneCount;
 				controller.progress.progress = 1.0 * doneCount / total;
 				--taskCount;
+				
+				NSLog(@"Remaining tasks: %d", taskCount);
 				
 				if (taskCount)
 				{
@@ -344,6 +347,8 @@
 				controller.progress.progress = 1.0 * doneCount / total;
 				--taskCount;
 				
+				NSLog(@"Remaining tasks: %d", taskCount);
+
 				if (taskCount)
 				{
 					state = TASK_SUBJECT_LENGTH;
@@ -353,7 +358,9 @@
 					state = GUID_LENGTH;
 				}
 
+				NSLog(@"EXPECT");
 				[network expect:4];
+				NSLog(@"/EXPECT");
 
 				NSLog(@"Sending ACK");
 				[network appendInteger:1];
@@ -375,6 +382,8 @@
 			[req exec];
 			[guid release];
 
+			[network appendInteger:1];
+			
 			controller.state = [EndState stateWithNetwork:network controller:controller];
 		}
 		default:

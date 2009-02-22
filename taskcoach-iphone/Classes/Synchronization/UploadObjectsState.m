@@ -99,6 +99,8 @@
 			break;
 		case 1:
 		{
+			NSLog(@"Got ID: %@", [NSString stringFromUTF8Data:data]);
+
 			Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET taskCoachId=? WHERE id=?", [self tableName]]];
 			[req bindString:[NSString stringFromUTF8Data:data] atIndex:1];
 			[req bindInteger:[[objectIds objectAtIndex:0] intValue] atIndex:2];
