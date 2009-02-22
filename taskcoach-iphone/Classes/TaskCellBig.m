@@ -67,7 +67,7 @@
 	switch ([task taskStatus])
 	{
 		case TASKSTATUS_COMPLETED:
-			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Completed %@", @"Completed date infos patter"), task.completionDate];
+			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Completed %@", @"Completed date infos pattern"), task.completionDate];
 			break;
 		case TASKSTATUS_OVERDUE:
 			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern"), task.dueDate];
