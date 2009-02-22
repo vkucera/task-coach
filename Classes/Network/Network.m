@@ -175,16 +175,16 @@
 			[delegate networkDidClose:self];
 			break;
 		case NSStreamEventErrorOccurred:
-			[delegate networkDidEncounterError:self];
+			[delegate networkDidEncounterError:self error:[stream streamError]];
 			break;
 		case NSStreamEventHasBytesAvailable:
 		{
 			uint8_t buffer[1024];
-			unsigned int len = 0;
+			NSInteger len = 0;
 
 			len = [(NSInputStream *)stream read:buffer maxLength:1024];
 			
-			if (len)
+			if (len >= 0)
 			{
 				[data appendBytes:buffer length:len];
 				[self pumpData];

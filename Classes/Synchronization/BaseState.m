@@ -39,14 +39,14 @@
 	[[Database connection] rollback];
 }
 
-- (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller
+- (void)networkDidEncounterError:(Network *)network error:(NSError *)error controller:(SyncViewController *)controller
 {
 	NSLog(@"Network error.");
 
 	controller.state = nil;
 
 	UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Network error title")
-												   message:NSLocalizedString(@"A network error occurred.", @"Network error message")
+												  message:[NSString stringWithFormat:NSLocalizedString(@"A network error occurred: %@", @"Network error message"), [error localizedDescription]]
 												  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Network error cancel button title") otherButtonTitles:nil];
 	[view show];
 	[view release];

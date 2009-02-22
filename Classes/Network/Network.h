@@ -14,7 +14,7 @@
 
 - (void)networkDidConnect:(Network *)network;
 - (void)networkDidClose:(Network *)network;
-- (void)networkDidEncounterError:(Network *)network;
+- (void)networkDidEncounterError:(Network *)network error:(NSError *)error;
 
 // This works like asynchat but only with numerical terminators
 - (void)network:(Network *)network didGetData:(NSData *)data;
