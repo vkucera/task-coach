@@ -86,11 +86,11 @@
 	[state networkDidClose:network controller:self];
 }
 
-- (void)networkDidEncounterError:(Network *)network
+- (void)networkDidEncounterError:(Network *)network error:(NSError *)error
 {
-	NSLog(@"Network error");
+	NSLog(@"Network error (%@)", [error description]);
 	
-	[state networkDidEncounterError:network controller:self];
+	[state networkDidEncounterError:network error:error controller:self];
 }
 
 - (void)network:(Network *)network didGetData:(NSData *)data

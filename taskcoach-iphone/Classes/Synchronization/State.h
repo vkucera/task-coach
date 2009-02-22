@@ -19,7 +19,7 @@
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller;
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller;
-- (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller;
+- (void)networkDidEncounterError:(Network *)network error:(NSError *)error controller:(SyncViewController *)controller;
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller;
 
 - (void)cancel;
