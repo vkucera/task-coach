@@ -105,7 +105,7 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 # 2) For each category, the device sends the category name and waits for its ID.
 # 3) For each task, the device sends the full task (same format as above, without
 #    the ID), and waits for its ID.
-# 4) Task Coach sends the GUID
+# 4) Task Coach sends the GUID and waits for an integer (currently always 1)
 # 5) Task Coach closes the connection
 #
 # == Two-way ==
@@ -383,6 +383,8 @@ class FullFromDesktopTaskState(BaseState):
             self.setState(EndState, disp)
 
     def handleData(self, disp, data):
+        code, = struct.unpack('!i', data)
+
         self.count += 1
         self.dlg.SetProgress(self.count, self.total)
 
@@ -631,6 +633,7 @@ class TwoWayNewTasksCategoryCountState(BaseState):
 
     def handleData(self, disp, data):
         self.taskCategoryCount, = struct.unpack('!i', data)
+
         if self.taskCategoryCount:
             self.setState(TwoWayNewTasksCategoriesState, disp)
         else:
@@ -652,7 +655,10 @@ class TwoWayNewTasksCategoriesState(BaseState):
     def handleData(self, disp, data):
         if self.length is None:
             self.length, = struct.unpack('!i', data)
-            disp.set_terminator(self.length)
+            if self.length == 0:
+                self.handleData('')
+            else:
+                disp.set_terminator(self.length)
         else:
             self.categories.append(self.categoryMap[data.decode('UTF-8')])
             self.taskCategoryCount -= 1
@@ -754,6 +760,10 @@ class TwoWayModifiedTasks(BaseState):
 
 class EndState(BaseState):
     def init(self, disp):
+        disp.set_terminator(4)
+
+    def handleData(self, disp, data):
+        code, = struct.unpack('!i', data) # We don't care right now
         disp.close_when_done()
         self.dlg.Finished()
 
