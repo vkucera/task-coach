@@ -37,7 +37,7 @@
 	// n/a
 }
 
-- (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller
+- (void)networkDidEncounterError:(Network *)network error:(NSError *)error controller:(SyncViewController *)controller
 {
 	controller.state = nil;
 	
