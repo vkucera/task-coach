@@ -24,6 +24,14 @@
 		A61DE2390F1E3F5B004BC97E /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = A61DE2380F1E3F5B004BC97E /* Task.m */; };
 		A627606A0F221D0A0041D761 /* Configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = A62760690F221D0A0041D761 /* Configuration.m */; };
 		A62760710F221EFC0041D761 /* String+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A62760700F221EFC0041D761 /* String+Utils.m */; };
+		A63CC07C0F517055003669FD /* TaskCellLeftBig.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */; };
+		A63CC07D0F517055003669FD /* TaskCellRightBig.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63CC07B0F517055003669FD /* TaskCellRightBig.xib */; };
+		A63CC0810F5170FC003669FD /* TaskCellBig.m in Sources */ = {isa = PBXBuildFile; fileRef = A63CC0800F5170FC003669FD /* TaskCellBig.m */; };
+		A63CC0B90F5174EC003669FD /* ledbluebig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B40F5174EC003669FD /* ledbluebig.png */; };
+		A63CC0BA0F5174EC003669FD /* ledgreenbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B50F5174EC003669FD /* ledgreenbig.png */; };
+		A63CC0BB0F5174EC003669FD /* ledgreybig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B60F5174EC003669FD /* ledgreybig.png */; };
+		A63CC0BC0F5174EC003669FD /* ledorangebig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B70F5174EC003669FD /* ledorangebig.png */; };
+		A63CC0BD0F5174EC003669FD /* ledredbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B80F5174EC003669FD /* ledredbig.png */; };
 		A64603A70F2234B500FC71AD /* CellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A60F2234B500FC71AD /* CellFactory.m */; };
 		A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A90F2234D900FC71AD /* TaskCell.m */; };
 		A64604950F223FC500FC71AD /* ledblue.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604900F223FC500FC71AD /* ledblue.png */; };
@@ -120,6 +128,15 @@
 		A62760690F221D0A0041D761 /* Configuration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Configuration.m; path = Config/Configuration.m; sourceTree = "<group>"; };
 		A627606F0F221EFC0041D761 /* String+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "String+Utils.h"; path = "Utils/String+Utils.h"; sourceTree = "<group>"; };
 		A62760700F221EFC0041D761 /* String+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "String+Utils.m"; path = "Utils/String+Utils.m"; sourceTree = "<group>"; };
+		A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellLeftBig.xib; sourceTree = SOURCE_ROOT; };
+		A63CC07B0F517055003669FD /* TaskCellRightBig.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRightBig.xib; sourceTree = SOURCE_ROOT; };
+		A63CC07F0F5170FC003669FD /* TaskCellBig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCellBig.h; sourceTree = "<group>"; };
+		A63CC0800F5170FC003669FD /* TaskCellBig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCellBig.m; sourceTree = "<group>"; };
+		A63CC0B40F5174EC003669FD /* ledbluebig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledbluebig.png; sourceTree = "<group>"; };
+		A63CC0B50F5174EC003669FD /* ledgreenbig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledgreenbig.png; sourceTree = "<group>"; };
+		A63CC0B60F5174EC003669FD /* ledgreybig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledgreybig.png; sourceTree = "<group>"; };
+		A63CC0B70F5174EC003669FD /* ledorangebig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledorangebig.png; sourceTree = "<group>"; };
+		A63CC0B80F5174EC003669FD /* ledredbig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledredbig.png; sourceTree = "<group>"; };
 		A64603A50F2234B500FC71AD /* CellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellFactory.h; sourceTree = "<group>"; };
 		A64603A60F2234B500FC71AD /* CellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellFactory.m; sourceTree = "<group>"; };
 		A64603A80F2234D900FC71AD /* TaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCell.h; sourceTree = "<group>"; };
@@ -318,6 +335,11 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A63CC0B40F5174EC003669FD /* ledbluebig.png */,
+				A63CC0B50F5174EC003669FD /* ledgreenbig.png */,
+				A63CC0B60F5174EC003669FD /* ledgreybig.png */,
+				A63CC0B70F5174EC003669FD /* ledorangebig.png */,
+				A63CC0B80F5174EC003669FD /* ledredbig.png */,
 				A680C0C40F47366900A8D18B /* Localizable.strings */,
 				A64604900F223FC500FC71AD /* ledblue.png */,
 				A64604910F223FC500FC71AD /* ledgreen.png */,
@@ -447,6 +469,8 @@
 		A6D386B40F24C12E0097F0F6 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */,
+				A63CC07B0F517055003669FD /* TaskCellRightBig.xib */,
 				A6A975370F26572200622396 /* TaskCellLeft.xib */,
 				A6A975380F26572200622396 /* TaskCellRight.xib */,
 				A64603A50F2234B500FC71AD /* CellFactory.h */,
@@ -462,6 +486,8 @@
 				A6DA5C670F3D870900372358 /* DescriptionCell.h */,
 				A6DA5C680F3D870900372358 /* DescriptionCell.m */,
 				A6DA5C770F3D87F300372358 /* DescriptionCell.xib */,
+				A63CC07F0F5170FC003669FD /* TaskCellBig.h */,
+				A63CC0800F5170FC003669FD /* TaskCellBig.m */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -541,6 +567,13 @@
 				A680C0DF0F47368E00A8D18B /* StringChoice.strings in Resources */,
 				A680C0E00F47368E00A8D18B /* SyncView.strings in Resources */,
 				A6C30BEB0F48218C00A04E7C /* Default.png in Resources */,
+				A63CC07C0F517055003669FD /* TaskCellLeftBig.xib in Resources */,
+				A63CC07D0F517055003669FD /* TaskCellRightBig.xib in Resources */,
+				A63CC0B90F5174EC003669FD /* ledbluebig.png in Resources */,
+				A63CC0BA0F5174EC003669FD /* ledgreenbig.png in Resources */,
+				A63CC0BB0F5174EC003669FD /* ledgreybig.png in Resources */,
+				A63CC0BC0F5174EC003669FD /* ledorangebig.png in Resources */,
+				A63CC0BD0F5174EC003669FD /* ledredbig.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,6 +631,7 @@
 				A6DA5C690F3D870900372358 /* DescriptionCell.m in Sources */,
 				A6DDECFC0F46C5040047AEF5 /* KeychainWrapper.m in Sources */,
 				A6F8BF740F46F93C00385F57 /* CategoriesSelector.m in Sources */,
+				A63CC0810F5170FC003669FD /* TaskCellBig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

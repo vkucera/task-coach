@@ -14,6 +14,7 @@ static Configuration *_configuration = NULL;
 
 @synthesize showCompleted;
 @synthesize iconPosition;
+@synthesize compactTasks;
 @synthesize host;
 @synthesize port;
 
@@ -32,6 +33,7 @@ static Configuration *_configuration = NULL;
 
 		showCompleted = [config boolForKey:@"showcompleted"];
 		iconPosition = [config integerForKey:@"iconposition"];
+		compactTasks = [config boolForKey:@"compacttasks"];
 		host = [[config stringForKey:@"host"] copy];
 		port = [[config stringForKey:@"port"] intValue];
 	}

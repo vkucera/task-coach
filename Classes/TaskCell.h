@@ -17,7 +17,6 @@
 
 	CheckView *leftImage;
 	UILabel *titleLabel;
-	UILabel *infosLabel;
 	
 	id target;
 	SEL action;
@@ -28,7 +27,6 @@
 @property (nonatomic, readonly) NSInteger taskId;
 @property (nonatomic, retain) IBOutlet CheckView *leftImage;
 @property (nonatomic, retain) IBOutlet UILabel *titleLabel;
-@property (nonatomic, retain) IBOutlet UILabel *infosLabel;
 
 - (void)setTask:(Task *)task target:(id)target action:(SEL)action;
 
