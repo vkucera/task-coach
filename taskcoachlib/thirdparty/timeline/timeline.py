@@ -3,6 +3,7 @@ import wx, wx.lib
 
 
 TimeLineSelectionEvent, EVT_TIMELINE_SELECTED = wx.lib.newevent.NewEvent()
+TimeLineActivationEvent, EVT_TIMELINE_ACTIVATED = wx.lib.newevent.NewEvent()
 
 
 class HotMap(object):
@@ -38,6 +39,7 @@ class TimeLine(wx.Panel):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize )
         self.Bind(wx.EVT_LEFT_UP, self.OnClickRelease)
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
         self.OnSize(None)
 
     def Refresh(self):
@@ -59,9 +61,16 @@ class TimeLine(wx.Panel):
         self.UpdateDrawing()
         
     def OnClickRelease(self, event):
-        node = self.hot_map.findNodeAtPosition(event.GetPosition())
-        self.SetSelected(node, event.GetPosition())
-        
+        point = event.GetPosition()
+        node = self.hot_map.findNodeAtPosition(point)
+        self.SetSelected(node, point)
+
+    def OnDoubleClick(self, event):
+        point = event.GetPosition()
+        node = self.hot_map.findNodeAtPosition(point)
+        if node:
+            wx.PostEvent(self, TimeLineActivationEvent(node=node, point=point))
+    
     def GetSelected(self):
         return self.selectedNode
 

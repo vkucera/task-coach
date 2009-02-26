@@ -54,10 +54,15 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
 
     def editItemDialog(self, *args, **kwargs):
         items = kwargs.get('items', self.curselection())
-        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-            command.EditTaskCommand(self.presentation(), items),
-            self.taskFile, self.settings, bitmap=kwargs['bitmap'],
-            columnName=kwargs.get('columnName', ''))
+        if isinstance(items[0], task.Task):
+            return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
+                command.EditTaskCommand(self.presentation(), items),
+                self.taskFile, self.settings, bitmap=kwargs['bitmap'],
+                columnName=kwargs.get('columnName', ''))
+        else:
+            return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
+                command.EditEffortCommand(self.taskFile.efforts(), items),
+                self.taskFile, self.settings, bitmap=kwargs['bitmap'])
 
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
@@ -230,8 +235,15 @@ class TimelineViewer(BaseTaskViewer):
 
     def createWidget(self):
         self.rootNode = TimelineRootNode(self.presentation())
-        return widgets.Timeline(self, self.rootNode)
+        return widgets.Timeline(self, self.rootNode, self.onSelect, self.onEdit)
 
+    def onEdit(self, item):
+        if isinstance(item, task.Task):
+            edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)
+        else:
+            edit = uicommand.EffortEdit(effortList=self.taskFile.efforts(), viewer=self)
+        edit(item)
+        
     def curselection(self):
         # Override curselection, because there is no need to translate indices
         # back to domain objects. Our widget already returns the selected domain
