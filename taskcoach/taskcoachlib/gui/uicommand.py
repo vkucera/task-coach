@@ -351,8 +351,7 @@ class NeedsOneSelectedTask(NeedsSelectedTasks):
 class NeedsSelectionWithAttachments(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectionWithAttachments, self).enabled(event) and \
-            not self.viewer.isShowingEffort() and \
-            bool([item for item in self.viewer.curselection() if item.attachments()])
+            any([item.attachments() for item in self.viewer.curselection() if not isinstance(item, effort.Effort)])
 
 class NeedsSelectedEffort(NeedsSelection):
     def enabled(self, event):
@@ -1588,6 +1587,10 @@ class AddAttachment(NeedsSelection, ViewerCommand, SettingsCommand):
             self.viewer.presentation(), self.viewer.curselection(), 
             attachments=[attachment.FileAttachment(filename)])
         addAttachmentCommand.do()
+        
+    def enabled(self, event):
+        return super(AddAttachment, self).enabled(event) and \
+            not any(isinstance(item, effort.Effort) for item in self.viewer.curselection())
 
 
 class AddTaskAttachment(NeedsTaskViewer, AddAttachment):
