@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, os
 from taskcoachlib import patterns, meta, command, help, widgets, persistence
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, attachment
+from taskcoachlib.domain import task, attachment, effort
 from taskcoachlib.mailer import writeMail
 import dialog, render, viewer, codecs, printer
 
@@ -338,10 +338,12 @@ class NeedsAttachmentViewer(object):
         return super(NeedsAttachmentViewer, self).enabled(event) and \
             self.viewer.isShowingAttachments()
 
-class NeedsSelectedTasks(NeedsTaskViewer, NeedsSelection):
-    pass
+class NeedsSelectedTasks(NeedsSelection):
+    def enabled(self, event):
+        return super(NeedsSelectedTasks, self).enabled(event) and \
+            all([isinstance(item, task.Task) for item in self.viewer.curselection()])
 
-class NeedsOneSelectedTask(NeedsTaskViewer, NeedsSelection):
+class NeedsOneSelectedTask(NeedsSelectedTasks):
     def enabled(self, event):
         return super(NeedsOneSelectedTask, self).enabled(event) and \
                len(self.viewer.curselection()) == 1
@@ -352,8 +354,10 @@ class NeedsSelectionWithAttachments(NeedsSelection):
             not self.viewer.isShowingEffort() and \
             bool([item for item in self.viewer.curselection() if item.attachments()])
 
-class NeedsSelectedEffort(NeedsEffortViewer, NeedsSelection):
-    pass
+class NeedsSelectedEffort(NeedsSelection):
+    def enabled(self, event):
+        return super(NeedsSelectedEffort, self).enabled(event) and \
+            all([isinstance(item, effort.Effort) for item in self.viewer.curselection()])
 
 class NeedsSelectedCategory(NeedsCategoryViewer, NeedsSelection):
     pass
@@ -1376,7 +1380,7 @@ class TaskToggleCompletion(NeedsSelectedTasks, ViewerCommand):
             return self.defaultHelpText
         
     def allSelectedTasksAreCompleted(self):
-        if self.viewer.isShowingTasks() and self.viewer.curselection():
+        if super(TaskToggleCompletion, self).enabled(None):
             for task in self.viewer.curselection():
                 if not task.completed():
                     return False

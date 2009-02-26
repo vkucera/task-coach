@@ -21,9 +21,13 @@ from taskcoachlib.thirdparty.timeline import timeline
 
 
 class Timeline(timeline.TimeLine):
-    def __init__(self, parent, rootNode):
+    def __init__(self, parent, rootNode, onSelect, onEdit):
         self.__selection = []
         super(Timeline, self).__init__(parent, model=rootNode, adapter=parent)
+        self.selectCommand = onSelect
+        self.Bind(timeline.EVT_TIMELINE_SELECTED, self.onSelect)
+        self.editCommand = onEdit
+        self.Bind(timeline.EVT_TIMELINE_ACTIVATED, self.onEdit)
         
     def refresh(self, count):
         self.Refresh()
@@ -43,7 +47,7 @@ class Timeline(timeline.TimeLine):
         pass
     
     def onEdit(self, event):
-        self.editCommand(event)
+        self.editCommand(event.node)
         event.Skip()
         
     def onPopup(self, event):
