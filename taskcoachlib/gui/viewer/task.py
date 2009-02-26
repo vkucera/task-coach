@@ -157,6 +157,21 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
             bitmap = bitmap_selected
         return bitmap
         
+    def getItemTooltipData(self, task):
+        if not self.settings.getboolean('view', 'descriptionpopups'):
+            return []
+        result = [(self.iconName(task, task in self.curselection()), 
+                   [self.label(task)])]
+        if task.description():
+            result.append((None, map(lambda x: x.rstrip('\n'),
+                                 task.description().split('\n'))))
+        if task.notes():
+            result.append(('note', [note.subject() for note in task.notes()]))
+        if task.attachments():
+            result.append(('attachment', 
+                [unicode(attachment) for attachment in task.attachments()]))
+        return result
+
 
 class RootNode(object):
     def __init__(self, tasks):
@@ -235,7 +250,8 @@ class TimelineViewer(BaseTaskViewer):
 
     def createWidget(self):
         self.rootNode = TimelineRootNode(self.presentation())
-        return widgets.Timeline(self, self.rootNode, self.onSelect, self.onEdit)
+        return widgets.Timeline(self, self.rootNode, self.onSelect, self.onEdit,
+                                self.getItemTooltipData, self.createTaskPopupMenu())
 
     def onEdit(self, item):
         if isinstance(item, task.Task):
@@ -309,6 +325,18 @@ class TimelineViewer(BaseTaskViewer):
         bitmap = self.iconName(item, isSelected)
         return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
 
+    def getItemTooltipData(self, item):
+        if not self.settings.getboolean('view', 'descriptionpopups'):
+            result = []
+        elif isinstance(item, task.Task):
+            result = super(TimelineViewer, self).getItemTooltipData(item)
+        else:
+            result = [(None, [render.dateTimePeriod(item.getStart(), item.getStop())])]
+            if item.description(): 
+                result.append((None, map(lambda x: x.rstrip('\n'),
+                                 item.description().split('\n'))))       
+        return result
+
 
 class SquareTaskViewer(BaseTaskViewer):
     defaultTitle = _('Task square map')
@@ -367,20 +395,7 @@ class SquareTaskViewer(BaseTaskViewer):
         return len([task for task in self.presentation() if getattr(task, 
                     self.__orderBy)(recursive=True) > self.__zero])
         
-    def getItemTooltipData(self, task):
-        if not self.settings.getboolean('view', 'descriptionpopups'):
-            return []
-        result = [(self.iconName(task, task in self.curselection()), 
-                   [self.label(task)])]
-        if task.description():
-            result.append((None, map(lambda x: x.rstrip('\n'),
-                                 task.description().split('\n'))))
-        if task.notes():
-            result.append(('note', [note.subject() for note in task.notes()]))
-        if task.attachments():
-            result.append(('attachment', 
-                [unicode(attachment) for attachment in task.attachments()]))
-        return result
+
     
     # SquareMap adapter methods:
     
