@@ -7,14 +7,17 @@ TimeLineActivationEvent, EVT_TIMELINE_ACTIVATED = wx.lib.newevent.NewEvent()
 
 
 class HotMap(object):
-    def __init__(self):
+    def __init__(self, parent=None):
+        self.parent = parent
+        self.nodes = []
         self.rects = {}
         self.children = {}
         super(HotMap, self).__init__()
         
     def append(self, node, rect):
+        self.nodes.append(node)
         self.rects[node] = rect
-        self.children[node] = HotMap()
+        self.children[node] = HotMap(node)
         
     def __getitem__(self, node):
         return self.children[node]
@@ -25,6 +28,42 @@ class HotMap(object):
             if rect.Contains(position):
                 return self[node].findNodeAtPosition(position, node)
         return parent
+    
+    def firstNode(self):
+        return self.nodes[0] if self.nodes else None
+    
+    def lastNode(self, parent=None):
+        if self.nodes:
+            last = self.nodes[-1]
+            return self[last].lastNode(last)
+        else:
+            return parent
+    
+    def findNode(self, target):
+        if target in self.nodes:
+            return self
+        for node in self.nodes:
+            result = self[node].findNode(target)
+            if result:
+                return result
+        return None
+    
+    def nextChild(self, target):
+        index = self.nodes.index(target)
+        index = min(index+1, len(self.nodes)-1)
+        return self.nodes[index]
+    
+    def previousChild(self, target):
+        index = self.nodes.index(target)
+        index = max(index-1, 0)
+        return self.nodes[index]
+    
+    def firstChild(self, target):
+        children = self[target].nodes
+        if children:
+            return children[0]
+        else:
+            return self        
         
            
 class TimeLine(wx.Panel):
@@ -35,11 +74,13 @@ class TimeLine(wx.Panel):
         self.selectedNode = None
         self.DEFAULT_PEN = wx.Pen(wx.BLACK, 1, wx.SOLID)
         self.SELECTED_PEN = wx.Pen(wx.WHITE, 2, wx.SOLID)
+        kwargs['style'] = wx.TAB_TRAVERSAL|wx.NO_BORDER|wx.FULL_REPAINT_ON_RESIZE
         super(TimeLine, self).__init__(*args, **kwargs) 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize )
         self.Bind(wx.EVT_LEFT_UP, self.OnClickRelease)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
+        self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
         self.OnSize(None)
 
     def Refresh(self):
@@ -61,6 +102,7 @@ class TimeLine(wx.Panel):
         self.UpdateDrawing()
         
     def OnClickRelease(self, event):
+        event.Skip()
         point = event.GetPosition()
         node = self.hot_map.findNodeAtPosition(point)
         self.SetSelected(node, point)
@@ -70,6 +112,28 @@ class TimeLine(wx.Panel):
         node = self.hot_map.findNodeAtPosition(point)
         if node:
             wx.PostEvent(self, TimeLineActivationEvent(node=node, point=point))
+            
+    def OnKeyUp(self, event):
+        event.Skip()
+        if not self.selectedNode or not self.hot_map:
+            return
+        if event.KeyCode == wx.WXK_HOME:
+            self.SetSelected(self.hot_map.firstNode())
+            return
+        elif event.KeyCode == wx.WXK_END:
+            self.SetSelected(self.hot_map.lastNode())
+            return
+        hot_map = self.hot_map.findNode(self.selectedNode)
+        if event.KeyCode == wx.WXK_DOWN:
+            self.SetSelected(hot_map.nextChild(self.selectedNode))
+        elif event.KeyCode == wx.WXK_UP:
+            self.SetSelected(hot_map.previousChild(self.selectedNode))
+        elif event.KeyCode == wx.WXK_RIGHT:
+            self.SetSelected(hot_map.firstChild(self.selectedNode))
+        elif event.KeyCode == wx.WXK_LEFT and hot_map.parent:
+            self.SetSelected(hot_map.parent)
+        elif event.KeyCode == wx.WXK_RETURN:
+            wx.PostEvent(self, TimeLineActivationEvent(node=self.selectedNode))
     
     def GetSelected(self):
         return self.selectedNode
