@@ -305,8 +305,6 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-	NSLog(@"END EDITING");
-
 	self.navigationItem.rightBarButtonItem = nil;
 	task.description = descriptionCell.textView.text;
 	[self saveTask];
