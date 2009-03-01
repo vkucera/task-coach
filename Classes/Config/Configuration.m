@@ -48,4 +48,16 @@ static Configuration *_configuration = NULL;
 	[super dealloc];
 }
 
+- (void)save
+{
+	NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
+
+	// Save only read-write properties
+	if (host)
+		[config setObject:host forKey:@"host"];
+	[config setInteger:port forKey:@"port"];
+
+	[config synchronize];
+}
+
 @end

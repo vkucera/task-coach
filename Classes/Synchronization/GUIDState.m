@@ -79,7 +79,7 @@
 			[[Database connection] rollback];
 			[network close];
 			[network release];
-			[controller finished];
+			[controller finished:YES];
 			break;
 	}
 }

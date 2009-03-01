@@ -19,6 +19,9 @@
 	UITextField *password;
 	UIButton *cancelButton;
 
+	NSString *host;
+	NSInteger port;
+
 	NSObject <State> *state;
 
 	id target;
@@ -33,9 +36,9 @@
 
 @property (nonatomic, retain) NSObject <State> *state;
 
-- initWithTarget:(id)target action:(SEL)action;
+- initWithTarget:(id)target action:(SEL)action host:(NSString *)host port:(NSInteger)port;
 
-- (void)finished;
+- (void)finished:(BOOL)ok;
 
 - (IBAction)onCancel:(UIButton *)button;
 

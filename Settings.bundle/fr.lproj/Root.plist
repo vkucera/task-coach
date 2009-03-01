@@ -54,36 +54,6 @@
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Réseau</string>
-		</dict>
-		<dict>
-			<key>KeyboardType</key>
-			<string>NumbersAndPunctuation</string>
-			<key>DefaultValue</key>
-			<string>192.168.0.1</string>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>Hôte Task Coach</string>
-			<key>Key</key>
-			<string>host</string>
-		</dict>
-		<dict>
-			<key>KeyboardType</key>
-			<string>NumberPad</string>
-			<key>DefaultValue</key>
-			<string>8001</string>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>Port Task Coach</string>
-			<key>Key</key>
-			<string>port</string>
-		</dict>
 	</array>
 </dict>
 </plist>
