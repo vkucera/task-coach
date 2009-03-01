@@ -294,19 +294,27 @@
 
 #pragma mark UITextViewDelegate protocol
 
-- (void)textViewDidBeginEditing:(UITextView *)textView
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
 	UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(onSaveDescription:)];
 	self.navigationItem.rightBarButtonItem = button;
 	[button release];
+	
+	return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+	NSLog(@"END EDITING");
+
+	self.navigationItem.rightBarButtonItem = nil;
+	task.description = descriptionCell.textView.text;
+	[self saveTask];
 }
 
 - (void)onSaveDescription:(UIBarButtonItem *)button
 {
-	self.navigationItem.rightBarButtonItem = nil;
 	[descriptionCell.textView resignFirstResponder];
-	task.description = descriptionCell.textView.text;
-	[self saveTask];
 }
 
 @end
