@@ -18,6 +18,8 @@
 #import "Domain/Category.h"
 #import "PositionStore.h"
 
+#import "Configuration.h"
+
 @implementation CategoryViewController
 
 @synthesize navigationController;
@@ -246,15 +248,44 @@
 
 - (IBAction)onSynchronize:(UIBarButtonItem *)button
 {
-	SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished)];
-	[self.navigationController presentModalViewController:ctrl animated:YES];
-	[ctrl release];
+	if (![Configuration configuration].host)
+	{
+		// Host not defined, browse
+		BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_test._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
+		browser.delegate = self;
+		browser.searchingForServicesString = NSLocalizedString(@"Looking for Task Coach", @"Bonjour search string");
+		[self.navigationController presentModalViewController:browser animated:YES];
+		[browser release];
+	}
+	else
+	{
+		SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[Configuration configuration].host port:[Configuration configuration].port];
+		[self.navigationController presentModalViewController:ctrl animated:YES];
+		[ctrl release];
+	}
 }
 
 - (void)onSyncFinished
 {
 	[self loadCategories];
 	[self.tableView reloadData];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+- (void) bonjourBrowser:(BonjourBrowser*)browser didResolveInstance:(NSNetService*)ref
+{
+	if (ref)
+	{
+		NSLog(@"Found Task Coach: %@:%d", [ref hostName], [ref port]);
+
+		SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[ref hostName] port:[ref port]];
+		[self.navigationController.modalViewController presentModalViewController:ctrl animated:YES];
+		[ctrl release];
+	}
+	else
+	{
+		[self.navigationController dismissModalViewControllerAnimated:YES];
+	}
 }
 
 @end

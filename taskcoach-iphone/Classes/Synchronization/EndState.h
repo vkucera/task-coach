@@ -12,6 +12,7 @@
 
 @interface EndState : BaseState <State>
 {
+	BOOL isOK;
 }
 
 @end

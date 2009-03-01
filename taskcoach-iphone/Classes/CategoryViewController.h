@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#import "BonjourBrowser.h"
+#import "SyncViewController.h"
+
 @class NavigationController;
 
-@interface CategoryViewController : UITableViewController
+@interface CategoryViewController : UITableViewController <BonjourBrowserDelegate>
 {
 	NavigationController *navigationController;
 	NSMutableArray *categories;

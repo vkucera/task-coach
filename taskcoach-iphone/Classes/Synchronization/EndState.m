@@ -52,7 +52,7 @@
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
 {
 	controller.state = nil;
-	[controller finished];
+	[controller finished:isOK];
 }
 
 - (void)networkDidEncounterError:(Network *)network controller:(SyncViewController *)controller

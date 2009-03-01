@@ -19,12 +19,15 @@
 @synthesize password;
 @synthesize cancelButton;
 
-- initWithTarget:(id)theTarget action:(SEL)theAction
+- initWithTarget:(id)theTarget action:(SEL)theAction host:(NSString *)theHost port:(NSInteger)thePort
 {
 	if (self = [super initWithNibName:@"SyncView" bundle:[NSBundle mainBundle]])
 	{
 		target = theTarget;
 		action = theAction;
+
+		host = [theHost copy];
+		port = thePort;
 	}
 	
 	return self;
@@ -35,20 +38,24 @@
 	[label release];
 	[activity release];
 	[progress release];
+	[host release];
 
 	[super dealloc];
 }
 
-- (void)finished
+- (void)finished:(BOOL)ok
 {
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[Configuration configuration].host = host;
+	[Configuration configuration].port = port;
+	[[Configuration configuration] save];
+
 	[target performSelector:action];
 }
 
 - (IBAction)onCancel:(UIButton *)button
 {
 	[state cancel];
-	[self dismissModalViewControllerAnimated:YES];
+	[target performSelector:action];
 }
 
 - (void)viewDidLoad
@@ -58,8 +65,7 @@
 	cancelButton.hidden = YES;
 	
 	NSLog(@"Starting synchronization");
-
-	self.state = [InitialState stateWithNetwork:[[Network alloc] initWithAddress:[Configuration configuration].host port:[Configuration configuration].port delegate:self] controller:self];
+	self.state = [InitialState stateWithNetwork:[[Network alloc] initWithAddress:host port:port delegate:self] controller:self];
 }
 
 - (void)setState:(NSObject <State> *)newState
@@ -102,7 +108,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	[self dismissModalViewControllerAnimated:YES];
+	[target performSelector:action];
 }
 
 @end
