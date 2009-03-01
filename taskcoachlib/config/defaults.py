@@ -264,6 +264,7 @@ defaults = { \
     'password': '',
     'host': '',
     'port': '8001',
+    'service': 'Task Coach',
     },
 }
 

@@ -20,7 +20,7 @@ import wx, socket
 from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
-from taskcoachlib.iphone.protocol import IPhoneAcceptor
+from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
 import viewer, toolbar, uicommand, remindercontroller
@@ -232,6 +232,8 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
                     finally:
                         dlg.Destroy()
 
+        self.bonjourRegister = None
+
         if settings.getboolean('feature', 'iphone'):
             try:
                 IPhoneAcceptor(self, settings)
@@ -241,6 +243,8 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
                               _('different port in the iPhone section of the configuration\n') + \
                               _('and restart Task Coach.\n') + \
                               _('Error details: %s') % str(e), _('Error'), wx.OK)
+            else:
+                self.bonjourRegister = BonjourServiceRegister(settings)
 
     def createWindowComponents(self):
         self.__usingTabbedMainWindow = self.settings.getboolean('view', 
@@ -378,6 +382,8 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
         self.settings.set('view', 'perspective', perspective)
         self.dimensionsTracker.savePosition()
         self.settings.save()
+        if self.bonjourRegister is not None:
+            self.bonjourRegister.stop()
         wx.GetApp().ProcessIdle()
         wx.GetApp().ExitMainLoop()
         
