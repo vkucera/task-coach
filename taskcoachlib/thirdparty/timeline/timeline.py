@@ -243,9 +243,11 @@ class TimeLine(wx.Panel):
         
     def DrawNow(self, dc):
         oldPen = dc.GetPen()
-        dc.SetPen(wx.Pen(wx.Color(0,0,0,100)))
+        width = 3
+        dc.SetPen(wx.Pen(wx.Color(128,200,128), width=width))
         now = self.scaleX(self.adapter.now())
         dc.DrawLine(now, 0, now, self.height)
+        dc.DrawText(self.adapter.nowlabel(), now + width, 0)
         dc.SetPen(oldPen)
 
     def scaleX(self, x):
@@ -334,6 +336,9 @@ class DefaultAdapter(object):
     
     def now(self):
         return 0
+    
+    def nowlabel(self):
+        return 'Now'
     
     
 class TestApp(wx.App):
