@@ -175,6 +175,7 @@ class TimeLine(wx.Panel):
             self.length = self.max_stop - self.min_start
             self.width, self.height = dc.GetSize()
             self.DrawParallelChildren(dc, self.model, 0, self.height, self.hot_map)
+            self.DrawNow(dc)
         dc.EndDrawing()
         
     def FontForLabels(self, dc):
@@ -186,9 +187,13 @@ class TimeLine(wx.Panel):
     
     def DrawBox(self, dc, node, y, h, hot_map, isSequentialNode=False, depth=0):
         start, stop = self.adapter.start(node), self.adapter.stop(node)
+        if start is None:
+            start = self.min_start - 10
+        if stop is None:
+            stop = self.max_stop + 10
         start, stop = min(start, stop), max(start, stop) # Sanitize input
-        x = self.scaleX(start)
-        w = self.scaleWidth(stop - start)
+        x = self.scaleX(start) + 2*depth
+        w = self.scaleWidth(stop - start) - 4*depth
         dc.SetBrush(self.brushForNode(node, depth))
         dc.SetPen(self.penForNode(node, isSequentialNode, depth))
         dc.DrawRoundedRectangle(x, y, w, h, self.padding * 2)
@@ -200,6 +205,10 @@ class TimeLine(wx.Panel):
         
     def DrawIconAndLabel(self, dc, node, x, y, w, h, depth):
         ''' Draw the icon, if any, and the label, if any, of the node. '''
+        # Make sure the Icon and Label are visible:
+        if x < 0:
+            w -= abs(x)
+            x = 0
         dc.SetClippingRegion(x+1, y+1, w-2, h-2) # Don't draw outside the box
         icon = self.adapter.icon(node, node==self.selectedNode)
         if icon and h >= icon.GetHeight() and w >= icon.GetWidth():
@@ -231,6 +240,13 @@ class TimeLine(wx.Panel):
     def DrawSequentialChildren(self, dc, parent, y, h, hot_map, depth=0):
         for child in self.adapter.sequential_children(parent):
             self.DrawBox(dc, child, y, h, hot_map, isSequentialNode=True, depth=depth)
+        
+    def DrawNow(self, dc):
+        oldPen = dc.GetPen()
+        dc.SetPen(wx.Pen(wx.Color(0,0,0,100)))
+        now = self.scaleX(self.adapter.now())
+        dc.DrawLine(now, 0, now, self.height)
+        dc.SetPen(oldPen)
 
     def scaleX(self, x):
         return self.scaleWidth(x - self.min_start)
@@ -315,6 +331,9 @@ class DefaultAdapter(object):
     
     def icon(self, node):
         return None
+    
+    def now(self):
+        return 0
     
     
 class TestApp(wx.App):

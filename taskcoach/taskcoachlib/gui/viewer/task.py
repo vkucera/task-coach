@@ -270,28 +270,35 @@ class TimelineViewer(BaseTaskViewer):
         times = [self.start(item), self.stop(item)]
         for child in self.parallel_children(item) + self.sequential_children(item):
             times.extend(self.bounds(child))
-        return min(times), max(times)
+        times = [time for time in times if time is not None]
+        if times:
+            return min(times), max(times)
+        else:
+            return []
  
     def start(self, item, recursive=False):
         try:
             start = item.startDate(recursive=recursive)
             if start == date.Date():
-                start = date.Yesterday()
+                return None
         except AttributeError:
             start = item.getStart()
         return start.toordinal()
 
     def stop(self, item, recursive=False):
         try:
-            stop = item.dueDate(recursive=recursive)
+            if item.completed():
+                stop = item.completionDate(recursive=recursive)
+            else:
+                stop = item.dueDate(recursive=recursive)
             if stop == date.Date():
-                stop = date.Tomorrow()   
+                return None   
             else:
                 stop += date.oneDay
         except AttributeError:
             stop = item.getStop()
             if not stop:
-                stop = date.Tomorrow()
+                return None
         return stop.toordinal() 
 
     def sequential_children(self, item):
@@ -324,6 +331,9 @@ class TimelineViewer(BaseTaskViewer):
     def icon(self, item, isSelected=False):
         bitmap = self.iconName(item, isSelected)
         return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
+    
+    def now(self):
+        return date.Today().toordinal()
 
     def getItemTooltipData(self, item):
         if not self.settings.getboolean('view', 'descriptionpopups'):
