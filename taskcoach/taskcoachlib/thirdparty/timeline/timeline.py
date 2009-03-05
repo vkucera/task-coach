@@ -174,7 +174,8 @@ class TimeLine(wx.Panel):
             self.max_stop = float(max(bounds)) 
             self.length = self.max_stop - self.min_start
             self.width, self.height = dc.GetSize()
-            self.DrawParallelChildren(dc, self.model, 0, self.height, self.hot_map)
+            labelHeight = dc.GetTextExtent('ABC')[1] + 2 # Leave room for time labels
+            self.DrawParallelChildren(dc, self.model, labelHeight, self.height-labelHeight, self.hot_map)
             self.DrawNow(dc)
         dc.EndDrawing()
         
@@ -242,13 +243,12 @@ class TimeLine(wx.Panel):
             self.DrawBox(dc, child, y, h, hot_map, isSequentialNode=True, depth=depth)
         
     def DrawNow(self, dc):
-        oldPen = dc.GetPen()
+        dc = wx.GCDC(dc) # To be able to use an alpha channel in the Pen
         width = 3
-        dc.SetPen(wx.Pen(wx.Color(128,200,128), width=width))
+        dc.SetPen(wx.Pen(wx.Color(128, 200, 128, 128), width=width))
         now = self.scaleX(self.adapter.now())
         dc.DrawLine(now, 0, now, self.height)
         dc.DrawText(self.adapter.nowlabel(), now + width, 0)
-        dc.SetPen(oldPen)
 
     def scaleX(self, x):
         return self.scaleWidth(x - self.min_start)
