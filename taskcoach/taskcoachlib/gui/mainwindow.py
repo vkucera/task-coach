@@ -20,7 +20,6 @@ import wx, socket
 from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
-from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
 import viewer, toolbar, uicommand, remindercontroller
@@ -235,6 +234,7 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
         self.bonjourRegister = None
 
         if settings.getboolean('feature', 'iphone'):
+            from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
             try:
                 IPhoneAcceptor(self, settings)
             except socket.error, e:
