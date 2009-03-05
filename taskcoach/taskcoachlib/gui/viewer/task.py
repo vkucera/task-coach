@@ -334,6 +334,9 @@ class TimelineViewer(BaseTaskViewer):
     
     def now(self):
         return date.Today().toordinal()
+    
+    def nowlabel(self):
+        return _('Now')
 
     def getItemTooltipData(self, item):
         if not self.settings.getboolean('view', 'descriptionpopups'):
