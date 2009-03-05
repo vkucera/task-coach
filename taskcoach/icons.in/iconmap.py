@@ -77,6 +77,7 @@ iconlist = [
 ('viewalltasks', 'apps', 'kreversi', [16]),
 ('viewnewviewer', 'actions', 'tab_new', [16]),
 ('squaremapviewer', 'actions', 'squaremap', [16]),
+('timelineviewer', 'actions', 'timeline', [16]),
 ('activatenextviewer', 'actions', 'tab_advance_next', [16]),
 ('activatepreviousviewer', 'actions', 'tab_advance_prev', [16]),
 ('viewexpand', 'actions', 'edit_add', [16]),
