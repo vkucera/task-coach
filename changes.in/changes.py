@@ -23,6 +23,14 @@ from changetypes import *
 
 releases = [
             
+Release('0.72.2', 'March ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Correctly read task files with version <= 13 (Task Coach release
+0.57 and earlier) that contain categories.''')
+        ]
+    ),
+            
 Release('0.72.1', 'February 14, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[

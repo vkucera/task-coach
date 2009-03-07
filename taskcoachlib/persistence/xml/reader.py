@@ -123,7 +123,9 @@ class XMLReader(object):
                 else:
                     cat = category.Category(subject)
                     subjectCategoryMapping[subject] = cat
-                cat.addCategorizable(tasks[taskId])
+                task = tasks[taskId]
+                cat.addCategorizable(task)
+                task.addCategory(cat)
         return subjectCategoryMapping.values()
     
     def _parseCategoryNodesWithinTaskNodes(self, taskNodes, tasks):
@@ -151,11 +153,12 @@ class XMLReader(object):
             efforts=self._parseEffortNodes(taskNode),
             notes=self._parseNoteNodes(taskNode),
             recurrence=self._parseRecurrence(taskNode)))
+        '''
         if self.__tskversion <= 13:
             kwargs['categories'] = self._parseCategoryNodesWithinTaskNode(taskNode)
         else:
             kwargs['categories'] = []
-
+        '''   
         if self.__tskversion > 20:
             kwargs['attachments'] = self._parseAttachmentNodes(taskNode)
 
