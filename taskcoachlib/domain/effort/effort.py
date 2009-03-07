@@ -218,6 +218,9 @@ class CompositeEffort(EffortBase):
         return 'CompositeEffort(task=%s, start=%s, stop=%s, efforts=%s)'%\
             (self.task(), self.getStart(), self.getStop(),
             str([e for e in self.__getEfforts(recursive=True)]))
+            
+    def markDirty(self):
+        pass # CompositeEfforts cannot be dirty
 
     def duration(self, recursive=False):
         return sum([effort.duration() for effort in \

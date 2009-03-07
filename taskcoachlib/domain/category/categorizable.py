@@ -107,11 +107,16 @@ class CategorizableCompositeObject(base.CompositeObject):
             return None
             
     def color(self, recursive=True):
-        myColor = super(CategorizableCompositeObject, self).color(recursive)
-        if myColor or not recursive:
-            return myColor
+        myOwnColor = super(CategorizableCompositeObject, self).color(False)
+        if myOwnColor:
+            return myOwnColor
+        categoryBasedColor = self._categoryColor()
+        if categoryBasedColor:
+            return categoryBasedColor
+        if recursive:
+            return super(CategorizableCompositeObject, self).color(True)
         else:
-            return self._categoryColor()
+            return None
 
     @classmethod
     def totalCategoryAddedEventType(class_):
