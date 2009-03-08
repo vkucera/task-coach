@@ -16,6 +16,7 @@
 	BOOL showCompleted;
 	NSInteger iconPosition;
 	BOOL compactTasks;
+	BOOL confirmComplete;
 	NSString *host;
 	NSInteger port;
 }
@@ -23,6 +24,7 @@
 @property (nonatomic, readonly) BOOL showCompleted;
 @property (nonatomic, readonly) NSInteger iconPosition;
 @property (nonatomic, readonly) BOOL compactTasks;
+@property (nonatomic, readonly) BOOL confirmComplete;
 @property (nonatomic, copy) NSString *host;
 @property (nonatomic) NSInteger port;
 

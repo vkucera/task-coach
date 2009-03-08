@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @class TaskList;
+@class TaskCell;
 
-@interface TaskViewController : UITableViewController
+@interface TaskViewController : UITableViewController <UIAlertViewDelegate>
 {
 	NSString *title;
 	NSInteger categoryId;
@@ -19,6 +20,8 @@
 	BOOL isBecomingEditable;
 	NSIndexPath *tapping;
 	BOOL isCreatingTask;
+	
+	TaskCell *currentCell;
 }
 
 - initWithTitle:(NSString *)title category:(NSInteger)categoryId;
