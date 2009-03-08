@@ -20,13 +20,35 @@ import asynchat, socket
 
 
 class Acceptor(asynchat.async_chat):
+    """Basic Acceptor using asynchat."""
+
     def __init__(self, handlerFactory, host, port):
+        """@param handlerFactory: A callable used to instantiate connection
+               handlers. Takes the socket and client address as parameters.
+           @param host: Host to bind to.
+           @param port: Port to bind to. If None, a free port between 4096
+               and 8192 is used."""
+
         asynchat.async_chat.__init__(self)
 
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-        self.bind((host, port))
+        if port is None:
+            for port in xrange(4096, 8192):
+                try:
+                    self.bind((host, port))
+                except socket.error:
+                    pass
+                else:
+                    break;
+            else:
+                raise RuntimeError, 'Could not find a free port to bind to.'
+        else:
+            self.bind((host, port))
+
+        self.port = port
+
         self.listen(5)
 
         self.handlerFactory = handlerFactory

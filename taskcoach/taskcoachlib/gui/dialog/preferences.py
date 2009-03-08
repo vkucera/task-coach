@@ -294,12 +294,6 @@ class IPhonePage(SettingsPage):
         super(IPhonePage, self).__init__(*args, **kwargs)
         self.addTextSetting('iphone', 'password',
             _('Password for synchronization with iPhone'))
-        self.addTextSetting('iphone', 'host',
-            _('Address the iPhone will connect to'), # Kind of, avoid confusing the user...
-            helpText='restart')
-        self.addIntegerSetting('iphone', 'port',
-            _('Port the iPhone will connect to'),
-            helpText='restart', minimum=4096, maximum=16384)
         self.addTextSetting('iphone', 'service',
             _('Bonjour service name'), helpText='restart')
         self.fit()
