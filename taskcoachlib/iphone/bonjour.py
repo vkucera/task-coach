@@ -20,7 +20,7 @@ from taskcoachlib.thirdparty import pybonjour
 import select, threading
 
 class BonjourServiceRegister(object):
-    def __init__(self, settings):
+    def __init__(self, settings, port):
         super(BonjourServiceRegister, self).__init__()
 
         self.name = settings.get('iphone', 'service')
@@ -28,7 +28,7 @@ class BonjourServiceRegister(object):
 
         sdRef = pybonjour.DNSServiceRegister(name=self.name,
                                              regtype='_test._tcp',
-                                             port=settings.getint('iphone', 'port'),
+                                             port=port,
                                              callBack=self.__registerCallback)
 
         self.__thread = threading.Thread(target=self.__run, args=(sdRef,))

@@ -135,9 +135,7 @@ class IPhoneAcceptor(Acceptor):
                           _('iPhone section of the configuration and try again.'),
                           _('Error'), wx.OK)
 
-        Acceptor.__init__(self, factory,
-                          settings.get('iphone', 'host'),
-                          settings.getint('iphone', 'port'))
+        Acceptor.__init__(self, factory, '', None)
 
         thread = threading.Thread(target=asyncore.loop)
         thread.setDaemon(True)
