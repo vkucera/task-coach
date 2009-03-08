@@ -146,18 +146,18 @@
 	}
 }
 
-- (void)onToggleTaskCompletion:(TaskCell *)cell
+- (void)toggleTaskCompletion
 {
-	NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+	NSIndexPath *indexPath = [self.tableView indexPathForCell:currentCell];
 	NSInteger section, row;
-
+	
 	section = indexPath.section;
 	row = indexPath.row;
 	if (self.editing)
 		section -= 1;
-
+	
 	Task *task = [[[headers objectAtIndex:section] taskAtIndex:row] retain];
-
+	
 	if ([task taskStatus] == TASKSTATUS_COMPLETED)
 	{
 		task.completionDate = nil;
@@ -167,7 +167,7 @@
 	{
 		[task setCompleted:YES];
 		[task save];
-
+		
 		if (![Configuration configuration].showCompleted)
 		{
 			TaskList *list = [headers objectAtIndex:section];
@@ -187,11 +187,57 @@
 			}
 		}
 	}
-
-	[cell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
+	
+	[currentCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
 	[task release];
+	[currentCell release];
+	currentCell = nil;
+}
 
+- (void)onToggleTaskCompletion:(TaskCell *)cell
+{
+	currentCell = [cell retain];
+
+	NSIndexPath *indexPath = [self.tableView indexPathForCell:currentCell];
+	NSInteger section, row;
+	
+	section = indexPath.section;
+	row = indexPath.row;
+	if (self.editing)
+		section -= 1;
+	
 	tapping = [indexPath retain];
+
+	Task *task = [[[headers objectAtIndex:section] taskAtIndex:row] retain];
+
+	if ([Configuration configuration].confirmComplete && ![Configuration configuration].showCompleted)
+	{
+		UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Confirmation", @"Mark task complete confirmation title")
+	        message:[NSString stringWithFormat:NSLocalizedString(@"Do you really want to mark \"%@\" complete ?", @"Mark task complete confirmation message"), [task name]] delegate:self
+			cancelButtonTitle:NSLocalizedString(@"No", @"Cancel mark task complete") otherButtonTitles:nil];
+		[confirm addButtonWithTitle:NSLocalizedString(@"Yes", @"Confirm mark task complete")];
+		[confirm show];
+		[confirm release];
+	}
+	else
+	{
+		[self toggleTaskCompletion];
+	}
+}
+
+#pragma mark UIAlertViewDelegate protocol
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex == 1)
+	{
+		[self toggleTaskCompletion];
+	}
+	else
+	{
+		[currentCell release];
+		currentCell = nil;
+	}
 }
 
 #pragma mark Table view methods
