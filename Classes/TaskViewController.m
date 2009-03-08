@@ -95,10 +95,18 @@
 	return self;
 }
 
+- (void)setAddButton
+{
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeContactAdd];
+	self.navigationItem.titleView = button;
+	[button addTarget:self action:@selector(onAddTask:) forControlEvents:UIControlEventTouchUpInside];
+}
+
 - (void)viewDidLoad
 {
 	self.navigationItem.title = title;
 	self.navigationItem.rightBarButtonItem = [self editButtonItem];
+	[self setAddButton];
 }
 
 - (void)childWasPopped
@@ -120,6 +128,15 @@
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
+	if (editing)
+	{
+		self.navigationItem.titleView = nil;
+	}
+	else
+	{
+		[self setAddButton];
+	}
+
 	if ([headers count])
 	{
 		// See editingStyleForRowAtIndexPath. Without this trick, the first task
@@ -391,6 +408,16 @@
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:indexPath];
+	[ctrl release];
+}
+
+- (void)onAddTask:(UIButton *)button
+{
+	Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
+								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil];
+	isCreatingTask = YES;
+	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
+	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }
 
