@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+import wx.lib.hyperlink as hl
 
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized, synchronizednb
 from taskcoachlib.i18n import _
@@ -90,4 +91,41 @@ class IPhoneSyncDialog(DeferredCallMixin, wx.Dialog):
 
     @synchronized
     def Finished(self):
+        self.EndModal(wx.ID_OK)
+
+
+class IPhoneBonjourDialog(wx.Dialog):
+    def __init__(self, *args, **kwargs):
+        super(IPhoneBonjourDialog, self).__init__(*args, **kwargs)
+
+        vsizer = wx.BoxSizer(wx.VERTICAL)
+        vsizer.Add(wx.StaticText(self, wx.ID_ANY,
+                                 _('You have enabled the iPhone synchronization feature, which\n'
+                                   'needs Bonjour. Bonjour does not seem to be installed on\n'
+                                   'your system.')), 0, wx.ALL, 3)
+        if '__WXMSW__' in wx.PlatformInfo:
+            vsizer.Add(wx.StaticText(self, wx.ID_ANY,
+                                     _('Please download and install Bonjour for Windows from\n')), 0, wx.ALL, 3)
+            vsizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY,
+                                        _('Apple\'s web site'),
+                                        URL='http://support.apple.com/downloads/Bonjour_for_Windows'), 0, wx.ALL, 3)
+        else:
+            # MacOS does support Bonjour in all cases, so we're probably running Linux.
+            vsizer.Add(wx.StaticText(self, wx.ID_ANY,
+                                     _('Bonjour support for Linux is generally provided by\n'
+                                       'Avahi.')), 0, wx.ALL, 3)
+            vsizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY,
+                                        _('More details on pybonjour web site'),
+                                        URL='http://o2s.csail.mit.edu/o2s-wiki/pybonjour'), 0, wx.ALL, 3)
+
+        btnOK = wx.Button(self, wx.ID_ANY, _('OK'))
+        vsizer.Add(btnOK, 0, wx.ALIGN_CENTRE|wx.ALL, 3)
+
+        self.SetSizer(vsizer)
+        self.Fit()
+        self.CentreOnScreen()
+
+        wx.EVT_BUTTON(btnOK, wx.ID_ANY, self.OnDismiss)
+
+    def OnDismiss(self, evt):
         self.EndModal(wx.ID_OK)
