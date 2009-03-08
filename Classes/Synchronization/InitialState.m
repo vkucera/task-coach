@@ -11,6 +11,7 @@
 #import "SyncViewController.h"
 #import "ProtocolNegotiationState.h"
 #import "Database.h"
+#import "Configuration.h"
 
 // Initial state just waits for the connection to be established.
 
@@ -40,7 +41,11 @@
 - (void)networkDidEncounterError:(Network *)network error:(NSError *)error controller:(SyncViewController *)controller
 {
 	controller.state = nil;
-	
+
+	[Configuration configuration].domain = nil;
+	[Configuration configuration].name = nil;
+	[[Configuration configuration] save];
+
 	UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Connection error", @"Connection error title")
 												   message:NSLocalizedString(@"An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host.", @"Connection error message")
 												  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Connection error cancel button title") otherButtonTitles:nil];

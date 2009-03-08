@@ -45,10 +45,6 @@
 
 - (void)finished:(BOOL)ok
 {
-	[Configuration configuration].host = host;
-	[Configuration configuration].port = port;
-	[[Configuration configuration] save];
-
 	[target performSelector:action];
 }
 

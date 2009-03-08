@@ -248,9 +248,9 @@
 
 - (IBAction)onSynchronize:(UIBarButtonItem *)button
 {
-	if (![Configuration configuration].host)
+	if (![Configuration configuration].name)
 	{
-		// Host not defined, browse
+		// Name/domain not defined, browse
 		BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_test._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
 		browser.delegate = self;
 		browser.searchingForServicesString = NSLocalizedString(@"Looking for Task Coach", @"Bonjour search string");
@@ -259,10 +259,31 @@
 	}
 	else
 	{
-		SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[Configuration configuration].host port:[Configuration configuration].port];
-		[self.navigationController presentModalViewController:ctrl animated:YES];
-		[ctrl release];
+		NSNetService *srv = [[NSNetService alloc] initWithDomain:[Configuration configuration].domain type:@"_test._tcp" name:[Configuration configuration].name];
+		srv.delegate = self;
+		[srv resolveWithTimeout:5];
 	}
+}
+
+// NSNetService delegate
+
+- (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict
+{
+	// Browse again...
+
+	BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_test._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
+	browser.delegate = self;
+	browser.searchingForServicesString = NSLocalizedString(@"Looking for Task Coach", @"Bonjour search string");
+	[self.navigationController presentModalViewController:browser animated:YES];
+	[browser release];
+	[sender release];
+}
+
+- (void)netServiceDidResolveAddress:(NSNetService *)sender
+{
+	SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[sender hostName] port:[sender port]];
+	[self.navigationController presentModalViewController:ctrl animated:YES];
+	[ctrl release];
 }
 
 - (void)onSyncFinished
@@ -272,11 +293,15 @@
 	[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
-- (void) bonjourBrowser:(BonjourBrowser*)browser didResolveInstance:(NSNetService*)ref
+- (void)bonjourBrowser:(BonjourBrowser*)browser didResolveInstance:(NSNetService*)ref
 {
 	if (ref)
 	{
 		NSLog(@"Found Task Coach: %@:%d", [ref hostName], [ref port]);
+
+		[Configuration configuration].domain = [ref domain];
+		[Configuration configuration].name = [ref name];
+		[[Configuration configuration] save];
 
 		SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[ref hostName] port:[ref port]];
 		[self.navigationController.modalViewController presentModalViewController:ctrl animated:YES];
