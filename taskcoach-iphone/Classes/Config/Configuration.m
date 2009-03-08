@@ -16,8 +16,8 @@ static Configuration *_configuration = NULL;
 @synthesize iconPosition;
 @synthesize compactTasks;
 @synthesize confirmComplete;
-@synthesize host;
-@synthesize port;
+@synthesize name;
+@synthesize domain;
 
 + (Configuration *)configuration
 {
@@ -36,8 +36,9 @@ static Configuration *_configuration = NULL;
 		iconPosition = [config integerForKey:@"iconposition"];
 		compactTasks = [config boolForKey:@"compacttasks"];
 		confirmComplete = [config boolForKey:@"confirmcomplete"];
-		host = [[config stringForKey:@"host"] copy];
-		port = [[config stringForKey:@"port"] intValue];
+
+		name = [[config stringForKey:@"name"] copy];
+		domain = [[config stringForKey:@"domain"] copy];
 	}
 	
 	return self;
@@ -45,7 +46,8 @@ static Configuration *_configuration = NULL;
 
 - (void)dealloc
 {
-	[host release];
+	[name release];
+	[domain release];
 
 	[super dealloc];
 }
@@ -55,9 +57,10 @@ static Configuration *_configuration = NULL;
 	NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
 
 	// Save only read-write properties
-	if (host)
-		[config setObject:host forKey:@"host"];
-	[config setInteger:port forKey:@"port"];
+	if (name)
+		[config setObject:name forKey:@"name"];
+	if (domain)
+		[config setObject:domain forKey:@"domain"];
 
 	[config synchronize];
 }
