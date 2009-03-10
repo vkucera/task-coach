@@ -209,9 +209,9 @@ class FileMenu(Menu):
                                                      viewer=viewerContainer),
             uicommand.FileAddTemplate(iocontroller=iocontroller),
             None,
-            uicommand.PrintPageSetup(),
-            uicommand.PrintPreview(viewer=viewerContainer),
-            uicommand.Print(viewer=viewerContainer),
+            uicommand.PrintPageSetup(settings=settings),
+            uicommand.PrintPreview(viewer=viewerContainer, settings=settings),
+            uicommand.Print(viewer=viewerContainer, settings=settings),
             None)
         self.appendMenu(_('&Export'),
                         ExportMenu(mainwindow, iocontroller, viewerContainer),

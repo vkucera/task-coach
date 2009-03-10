@@ -31,7 +31,8 @@ Windows''', '2665317'),
         Bug('''Correctly read task files with version <= 13 (Task Coach release
 0.57 and earlier) that contain categories.'''),
         Bug('''When a subtask belongs to a category with color, use that 
-color to color the subtask, rather than the color of the parent task.''')
+color to color the subtask, rather than the color of the parent task.'''),
+        Bug('''Save print margins in the TaskCoach.ini file.''', '2632431')
         ]
     ),
             
