@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -117,9 +117,9 @@ footer = '''
                     <a href="http://www.icon-king.com">Nuvola icon set</a><br>
                     <a href="http://www.jrsoftware.org">Inno Setup</a><br>
                     <a href="http://www.bluerobot.com">Bluerobot.com</a><br>
-                    <a href="http://sourceforge.net"><img
-                src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&amp;type=1"
-                width="88" height="31" border="0" alt="SourceForge.net"/></a><br>
+                    <a href="http://sourceforge.net/projects/taskcoach">
+                      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8" width="80" height="15" border="0" alt="Task Coach at SourceForge.net"/>
+                    </a><br>
                     <SCRIPT type='text/javascript' language='JavaScript' src='http://www.ohloh.net/projects/5109;badge_js'></SCRIPT>
                 </p>
             </div>
