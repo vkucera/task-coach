@@ -264,6 +264,14 @@ defaults = { \
     'password': '',
     'service': 'Task Coach',
     },
+'printer': { \
+    'margin_left': '0',
+    'margin_top': '0',
+    'margin_bottom': '0',
+    'margin_right': '0',
+    'paper_id': '0',
+    'orientation': str(wx.PORTRAIT),
+    },
 }
 
 minimum = { \

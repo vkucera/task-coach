@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -114,10 +114,10 @@ class CompositeEffortTest(test.TestCase):
     def testRemoveEffortNotification(self):
         self.task.addEffort(self.effort1)
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType='effort.duration')
+            eventType='effort.composite.empty')
         self.task.removeEffort(self.effort1)
-        self.assertEqual(patterns.Event(self.composite, 'effort.duration', 
-            self.composite.duration()), self.events[0])
+        self.assertEqual(patterns.Event(self.composite, 
+            'effort.composite.empty'), self.events[0])
 
     def testRemoveTrackedEffortFromTask(self):
         self.task.addEffort(self.trackedEffort)
@@ -339,10 +339,10 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
     def testRemoveEffortFromChildNotification(self):
         self.child.addEffort(self.childEffort)
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType='effort.duration')
+            eventType='effort.composite.empty')
         self.child.removeEffort(self.childEffort)
-        self.assertEqual(patterns.Event(self.composite, 'effort.duration', 
-            self.composite.duration()), self.events[0])
+        self.assertEqual(patterns.Event(self.composite, 
+            'effort.composite.empty'), self.events[0])
 
     def testRemoveTrackedEffortFromChildTask(self):
         self.child.addEffort(self.trackedEffort)

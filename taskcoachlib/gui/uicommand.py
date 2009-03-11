@@ -525,7 +525,7 @@ Do you still want to purge?'''),
             self.iocontroller.purgeDeletedItems()
 
 
-class PrintPageSetup(UICommand):
+class PrintPageSetup(SettingsCommand, UICommand):
     def __init__(self, *args, **kwargs):
         super(PrintPageSetup, self).__init__(\
             menuText=_('Page setup...\tShift+Ctrl+P'), 
@@ -533,15 +533,16 @@ class PrintPageSetup(UICommand):
             bitmap='pagesetup', id=wx.ID_PRINT_SETUP, *args, **kwargs)
 
     def doCommand(self, event):
+        printerSettings = printer.PrinterSettings(self.settings)
         dialog = wx.PageSetupDialog(self.mainWindow(), 
-            printer.printerSettings.pageSetupData)
+                                    printerSettings.pageSetupData)
         result = dialog.ShowModal()
         if result == wx.ID_OK:
-            printer.printerSettings.updatePageSetupData(dialog.GetPageSetupData())
+            printerSettings.updatePageSetupData(dialog.GetPageSetupData())
         dialog.Destroy()
 
 
-class PrintPreview(ViewerCommand):
+class PrintPreview(ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(PrintPreview, self).__init__(\
             menuText=_('Print preview'), 
@@ -551,15 +552,16 @@ class PrintPreview(ViewerCommand):
     def doCommand(self, event):
         printout = printer.Printout(self.viewer)
         printout2 = printer.Printout(self.viewer)
+        printerSettings = printer.PrinterSettings(self.settings)
         preview = wx.PrintPreview(printout, printout2, 
-            printer.printerSettings.printData)
+                                  printerSettings.printData)
         previewFrame = wx.PreviewFrame(preview, self.mainWindow(), 
             _('Print preview'), size=(750, 700))
         previewFrame.Initialize()
         previewFrame.Show()
       
 
-class Print(ViewerCommand):
+class Print(ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(Print, self).__init__(\
             menuText=_('Print...\tCtrl+P'), 
@@ -567,7 +569,8 @@ class Print(ViewerCommand):
             bitmap='print', id=wx.ID_PRINT, *args, **kwargs)
 
     def doCommand(self, event): 
-        printDialogData = wx.PrintDialogData(printer.printerSettings.printData)
+        printerSettings = printer.PrinterSettings(self.settings)
+        printDialogData = wx.PrintDialogData(printerSettings.printData)
         printDialogData.EnableSelection(True)
         wxPrinter = wx.Printer(printDialogData)
         if not wxPrinter.PrintDialog(self.mainWindow()):

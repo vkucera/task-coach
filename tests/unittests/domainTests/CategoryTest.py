@@ -162,6 +162,15 @@ class CategorizableCompositeObjectTest(test.TestCase):
         child.setParent(self.categorizable)
         self.category.setColor(wx.RED)
         self.assertEqual(wx.RED, child.color())
+        
+    def testSubItemDoesNotUseParentColorWhenItHasItsOwnColor(self):
+        child = category.CategorizableCompositeObject()
+        self.categorizable.addChild(child)
+        child.setParent(self.categorizable)
+        child.addCategory(self.category)
+        self.categorizable.setColor(wx.RED)
+        self.category.setColor(wx.BLUE)
+        self.assertEqual(wx.BLUE, child.color())
     
     def testColorChanged(self):
         self.categorizable.addCategory(self.category)

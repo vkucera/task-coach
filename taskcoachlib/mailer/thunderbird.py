@@ -1,7 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,10 +60,33 @@ def getThunderbirdDir():
 
     return path
 
+_PORTABLECACHE = None
+
 def getDefaultProfileDir():
     """Returns Thunderbird's default profile directory"""
 
+    global _PORTABLECACHE
+
     path = getThunderbirdDir()
+
+    # Thunderbird Portable does not have a profiles.ini file, only one
+    # profile. And there's only one way to know where it
+    # is... Hackish.
+
+    if os.name == 'nt' and not os.path.exists(path):
+        if _PORTABLECACHE is not None:
+            return _PORTABLECACHE
+
+        from taskcoachlib.thirdparty import wmi
+
+        for process in wmi.WMI().Win32_Process():
+            if process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):
+                _PORTABLEPATH = os.path.join(os.path.split(process.ExecutablePath)[0], 'Data', 'profile')
+                break
+        else:
+            raise RuntimeError, 'Could not find Thunderbird profile.'
+
+        return _PORTABLECACHE
 
     parser = ConfigParser.RawConfigParser()
     parser.read([os.path.join(path, 'profiles.ini')])
