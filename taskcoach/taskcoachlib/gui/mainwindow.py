@@ -425,7 +425,7 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
         uiCommands = [
                 uicommand.FileOpen(iocontroller=self.iocontroller), 
                 uicommand.FileSave(iocontroller=self.iocontroller), 
-                uicommand.Print(viewer=self.viewer), 
+                uicommand.Print(viewer=self.viewer, settings=self.settings), 
                 None, 
                 uicommand.EditUndo(), 
                 uicommand.EditRedo()]

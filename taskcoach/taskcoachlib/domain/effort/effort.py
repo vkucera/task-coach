@@ -141,5 +141,4 @@ class Effort(baseeffort.BaseEffort, base.Object):
         eventTypes = super(Effort, class_).modificationEventTypes()
         return eventTypes + [class_.taskChangedEventType(), 
                              'effort.start', 'effort.stop']
-    
-    
+ 

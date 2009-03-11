@@ -35,6 +35,19 @@ a horizontal time scale.''', '2533644', '1230080'),
 or month, a total line is shown for each period.''', '1962219')
     ]),
 
+Release('0.72.2', 'March 11, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Support drag and drop from Thunderbird Portable under
+Windows''', '2665317'),
+        Bug('''Correctly read task files with version <= 13 (Task Coach release
+0.57 and earlier) that contain categories.'''),
+        Bug('''When a subtask belongs to a category with color, use that 
+color to color the subtask, rather than the color of the parent task.'''),
+        Bug('''Save print margins in the TaskCoach.ini file.''', '2632431')
+        ]
+    ),
+            
 Release('0.72.1', 'February 14, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[

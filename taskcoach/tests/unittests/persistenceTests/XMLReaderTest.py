@@ -149,6 +149,7 @@ class XMLReaderVersion13Test(XMLReaderTestCase):
 
         self.assertEqual('test', categories[0].subject())
         self.assertEqual([tasks[0]], categories[0].categorizables())
+        self.assertEqual(set([categories[0]]), tasks[0].categories())
 
     def testMultipleCategories(self):
         tasks, categories = self.writeAndReadTasksAndCategories('''
@@ -162,9 +163,10 @@ class XMLReaderVersion13Test(XMLReaderTestCase):
 
         for category in categories:
             self.assertEqual([tasks[0]], category.categorizables())
+            self.failUnless(category in tasks[0].categories())
             
     def testSubTaskWithCategories(self):
-        categories = self.writeAndReadCategories('''
+        tasks, categories = self.writeAndReadTasksAndCategories('''
         <tasks>
             <task id="1">
                 <category>test</category>
@@ -177,8 +179,10 @@ class XMLReaderVersion13Test(XMLReaderTestCase):
         anotherCategory = categories[1]
         self.assertEqual("1", testCategory.categorizables()[0].id())
         self.assertEqual("1.1", anotherCategory.categorizables()[0].id())         
-
-
+        self.assertEqual(set([testCategory]), tasks[0].categories())
+        self.assertEqual(set([anotherCategory]), tasks[0].children()[0].categories())
+        
+        
 class XMLReaderVersion14Test(XMLReaderTestCase):
     tskversion = 14
     

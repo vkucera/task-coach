@@ -37,6 +37,9 @@ class BaseCompositeEffort(base.BaseEffort):
     def __len__(self):
         return len(self._getEfforts())
 
+    def markDirty(self):
+        pass # CompositeEfforts cannot be dirty
+
     def durationDay(self, dayOffset):
         ''' Return the duration of this composite effort on a specific day. '''
         startOfDay = self.getStart() + date.TimeDelta(days=dayOffset)
@@ -48,12 +51,10 @@ class BaseCompositeEffort(base.BaseEffort):
                               
     def notifyObserversOfDurationOrEmpty(self):
         if self._getEfforts():
-            duration = self.duration(recursive=True)
-            patterns.Publisher().notifyObservers(patterns.Event(self,
-                'effort.duration', duration))
+            eventArgs = ('effort.duration', self.duration(recursive=True))
         else:
-            patterns.Publisher().notifyObservers(patterns.Event(self, 
-                'effort.composite.empty'))                
+            eventArgs = ('effort.composite.empty',)
+        patterns.Publisher().notifyObservers(patterns.Event(self, *eventArgs))
 
     @classmethod
     def modificationEventTypes(class_):

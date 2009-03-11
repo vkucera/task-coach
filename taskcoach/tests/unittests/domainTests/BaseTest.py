@@ -297,7 +297,14 @@ class CompositeObjectTest(test.TestCase):
         child.setParent(self.compositeObject)
         self.compositeObject.setColor(wx.RED)
         self.assertEqual(wx.RED, child.color())
-
+        
+    def testSubItemDoesNotUseParentColorIfItHasItsOwnColor(self):
+        child = base.CompositeObject(color=wx.RED)
+        self.compositeObject.addChild(child)
+        child.setParent(self.compositeObject)
+        self.compositeObject.setColor(wx.BLUE)        
+        self.assertEqual(wx.RED, child.color())
+        
     def testColorChangedNotification(self):
         child = base.CompositeObject()
         self.compositeObject.addChild(child)

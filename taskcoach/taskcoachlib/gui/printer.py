@@ -19,24 +19,63 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import persistence
+from taskcoachlib import persistence, patterns
 from taskcoachlib.i18n import _
 
 
 class PrinterSettings(object):
-    def __init__(self):
+    __metaclass__ = patterns.Singleton
+
+    edges = ('top', 'left', 'bottom', 'right')
+
+    def __init__(self, settings):
+        self.settings = settings
         self.printData = wx.PrintData()
         self.pageSetupData = wx.PageSetupDialogData(self.printData)
+        self._initializeFromSettings()
 
     def updatePageSetupData(self, data):
         self.pageSetupData = wx.PageSetupDialogData(data)
         self.updatePrintData(data.GetPrintData())
+        self._saveToSettings()
 
     def updatePrintData(self, printData):
         self.printData = wx.PrintData(printData)
         self.pageSetupData.SetPrintData(self.printData)
+ 
+    def __getattr__(self, attr):
+        try:
+            return getattr(self.pageSetupData, attr)
+        except AttributeError:
+            return getattr(self.printData, attr)
 
-printerSettings = PrinterSettings()
+    def _initializeFromSettings(self):
+        ''' Load the printer settings from the user settings. '''
+        margin = dict()
+        for edge in self.edges:
+            margin[edge] = self._getSetting('margin_'+edge)
+        topLeft = wx.Point(margin['top'], margin['left'])
+        bottomRight = wx.Point(margin['bottom'], margin['right'])
+        self.SetMarginTopLeft(topLeft)
+        self.SetMarginBottomRight(bottomRight)
+        self.SetPaperId(self._getSetting('paper_id'))
+        self.SetOrientation(self._getSetting('orientation'))
+
+    def _saveToSettings(self):
+        ''' Save the printer settings to the user settings. '''
+        margin = dict()
+        margin['top'], margin['left'] = self.GetMarginTopLeft()  
+        margin['bottom'], margin['right'] = self.GetMarginBottomRight()  
+        for edge in self.edges:
+            self._setSetting('margin_'+edge, margin[edge])
+        self._setSetting('paper_id', self.GetPaperId())
+        self._setSetting('orientation', self.GetOrientation())
+
+    def _getSetting(self, option):
+        return self.settings.getint('printer', option)
+
+    def _setSetting(self, option, value):
+        self.settings.set('printer', option, str(value))
 
 
 class HTMLPrintout(wx.html.HtmlPrintout):

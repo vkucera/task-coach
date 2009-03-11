@@ -238,7 +238,7 @@ class CommonTests(object):
         self.taskList.append(self.task1)
         self.task1.addEffort(self.effort1period1a)
         self.assertEqual(1, len(self.events))
-        self.assertEqual(list(self.effortAggregator)[1], self.events[0].value())
+        self.assertEqual(list(self.effortAggregator)[0], self.events[0].value())
 
     def testNotification_Remove(self):
         self.taskList.append(self.task1)
@@ -263,14 +263,14 @@ class CommonTests(object):
         self.task1.addEffort(self.effort1period1a)
         self.effort1period1a.setTask(self.task2)
         self.assertEqual(2, len(self.effortAggregator))
-        self.assertEqual(self.task2, list(self.effortAggregator)[1].task())
+        self.assertEqual(self.task2, list(self.effortAggregator)[0].task())
 
     def testChangeTaskOfChildEffort(self):
         self.taskList.extend([self.task1, self.task2])
         self.task3.addEffort(self.effort3period1a)
         self.effort3period1a.setTask(self.task2)
         self.assertEqual(2, len(self.effortAggregator))
-        self.assertEqual(self.task2, list(self.effortAggregator)[1].task())
+        self.assertEqual(self.task2, list(self.effortAggregator)[0].task())
 
     def testRemoveTaskAfterChangeTaskOfEffort(self):
         self.taskList.extend([self.task1, self.task2])
@@ -278,7 +278,7 @@ class CommonTests(object):
         self.effort1period1a.setTask(self.task2)
         self.taskList.remove(self.task1)
         self.assertEqual(2, len(self.effortAggregator))
-        self.assertEqual(self.task2, list(self.effortAggregator)[1].task())
+        self.assertEqual(self.task2, list(self.effortAggregator)[0].task())
 
     def testRemoveAndAddEffortToSamePeriod(self):
         self.taskList.append(self.task1)
