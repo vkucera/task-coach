@@ -27,7 +27,9 @@ Release('0.73.3', 'March ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't turn on the color selection in the task edit dialog when 
-the task color is based on the category it belongs to.''')
+the task color is based on the category it belongs to.'''),
+        Bug('''Make it easier to edit budget values in the task edit 
+dialog.''', '2654254')
     ]
 ),
             
