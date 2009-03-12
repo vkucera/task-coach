@@ -22,6 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+
+Release('0.73.3', 'March ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Don't turn on the color selection in the task edit dialog when 
+the task color is based on the category it belongs to.''')
+    ]
+),
             
 Release('0.72.2', 'March 11, 2009',
     summary='''This is a bugfix release.''',
