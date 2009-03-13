@@ -56,6 +56,7 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
                         chello=['hostname', 'username', 'password'],
+                        localftp=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'])
         for section in defaults:
             self.add_section(section)
@@ -74,12 +75,14 @@ class Settings(ConfigParser.SafeConfigParser, object):
             self.write(file(self.filename, 'w'))
         return value
 
+
 def uploadDistributionsToSourceForge(settings):
     print 'Uploading distributions to SourceForge...'
     username = settings.get('sourceforge', 'username')
     os.system('rsync -avP -e ssh dist/* %s@frs.sourceforge.net:uploads/' % \
               username)
     print 'Done uploading distributions to SourceForge.'
+
 
 def generateMD5Digests(settings):
     print 'Generating MD5 digests...'
@@ -134,6 +137,51 @@ class SimpleFTP(ftplib.FTP, object):
                 self.storbinary('STOR %s'%filename, 
                                 file(os.path.join(root, filename), 'rb'))
 
+    def get(self, filename):
+        print 'Retrieve %s'%filename
+        self.retrbinary('RETR %s'%filename, open(filename, 'wb').write)
+
+
+
+def localDownload(settings):
+    ''' Download distributions from a local ftp site to dist dir. '''
+    hostname = settings.get('localftp', 'hostname')
+    username = settings.get('localftp', 'username')
+    password = settings.get('localftp', 'password')
+    metadata = taskcoachlib.meta.data.metaDict
+    folder = settings.get('localftp', 'folder')%metadata
+    if hostname and username and password and folder:
+        print 'Downloading distributions from local FTP site...'
+        localFTP = SimpleFTP(hostname, username, password)
+        localFTP.cwd(folder)
+        os.chdir('dist') 
+        for filename in localFTP.nlst():
+            if metadata['version'] in filename: 
+                localFTP.get(filename)
+        os.chdir('..') 
+        localFTP.quit()
+        print 'Done downloading distributions from local FTP site...'
+    else:
+        print 'Warning: cannot download from local FTP site; missing credentials'
+
+def localUpload(settings):
+    ''' Upload distributions to a local ftp site from dist dir. '''
+    hostname = settings.get('localftp', 'hostname')
+    username = settings.get('localftp', 'username')
+    password = settings.get('localftp', 'password')
+    metadata = taskcoachlib.meta.data.metaDict
+    folder = settings.get('localftp', 'folder')%metadata
+    if hostname and username and password and folder:
+        print 'Uploading distributions to local FTP site...'
+        localFTP = SimpleFTP(hostname, username, password)
+        localFTP.cwd(folder)
+        localFTP.put('dist')
+        localFTP.quit()
+        print 'Done uploading distributions to local FTP site...'
+    else:
+        print 'Warning: cannot upload to local FTP site; missing credentials'
+
+
 def uploadWebsiteToChello(settings):
     hostname = settings.get('chello', 'hostname')
     username = settings.get('chello', 'username')
@@ -150,12 +198,14 @@ def uploadWebsiteToChello(settings):
     else:
         print 'Warning: cannot upload website to Chello; missing credentials'
 
+
 def uploadWebsiteToSourceForge(settings):
     print 'Uploading website to SourceForge...'
     username = settings.get('sourceforge', 'username')
     os.system('scp -r website.out/* %s@web.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs' % username)
     print 'Done uploading website to SourceForge.'
     
+ 
 def registerWithPyPI(settings):
     print 'Registering with PyPI...'
     username = settings.get('pypi', 'username')
@@ -179,19 +229,23 @@ def registerWithPyPI(settings):
     os.remove('.pypirc')
     print 'Done registering with PyPI.'
 
+
 def uploadWebsite(settings):
     uploadWebsiteToChello(settings)
     uploadWebsiteToSourceForge(settings)
     
+
 def phase1(settings):
     uploadDistributionsToSourceForge(settings)
     generateMD5Digests(settings)
     generateWebsite(settings)
     
+
 def phase2(settings):
     uploadWebsite(settings)
     registerWithPyPI(settings)
     mailAnnouncement(settings)
+
 
 def latest_release(metadata):
     sys.path.insert(0, 'changes.in')
@@ -200,6 +254,7 @@ def latest_release(metadata):
     return converter.ReleaseToTextConverter().convert(changes.releases[0],
         greeting="We're happy to announce release %(version)s "
                   "of %(name)s."%metadata)
+
 
 def mailAnnouncement(settings):
     metadata = taskcoachlib.meta.data.metaDict
@@ -262,6 +317,7 @@ Server said: %s
 
 
 commands = dict(phase1=phase1, phase2=phase2, 
+                localDownload=localDownload, localUpload=localUpload,
                 upload=uploadDistributionsToSourceForge, 
                 md5=generateMD5Digests,
                 website=uploadWebsite, 
