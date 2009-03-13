@@ -79,14 +79,14 @@ class PrinterSettings(object):
 
 
 class HTMLPrintout(wx.html.HtmlPrintout):
-    def __init__(self, aViewer, printSelectionOnly=False, *args, **kwargs):
+    def __init__(self, aViewer, settings, printSelectionOnly=False, *args, **kwargs):
         super(HTMLPrintout, self).__init__(*args, **kwargs)
         htmlText, count = persistence.viewer2html(aViewer, 
                                                   selectionOnly=printSelectionOnly)
         self.SetHtmlText(htmlText)
         self.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
         self.SetFonts('Arial', 'Courier')
-        global printerSettings
+        printerSettings = PrinterSettings(settings)
         top, left = printerSettings.pageSetupData.GetMarginTopLeft()
         bottom, right = printerSettings.pageSetupData.GetMarginBottomRight()
         self.SetMargins(top, bottom, left, right)
@@ -104,8 +104,8 @@ class DCPrintout(wx.Printout):
         return (1, 1, 1, 1)
 
 
-def Printout(viewer, printSelectionOnly=False, *args, **kwargs):
+def Printout(viewer, settings, printSelectionOnly=False, *args, **kwargs):
     if hasattr(viewer.getWidget(), 'Draw'):
         return DCPrintout(viewer)
     else:
-        return HTMLPrintout(viewer, printSelectionOnly, *args, **kwargs)
+        return HTMLPrintout(viewer, settings, printSelectionOnly, *args, **kwargs)
