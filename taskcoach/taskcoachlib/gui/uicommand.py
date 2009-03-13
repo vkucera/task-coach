@@ -550,8 +550,8 @@ class PrintPreview(ViewerCommand, SettingsCommand):
             bitmap='printpreview', id=wx.ID_PREVIEW, *args, **kwargs)
 
     def doCommand(self, event):
-        printout = printer.Printout(self.viewer)
-        printout2 = printer.Printout(self.viewer)
+        printout = printer.Printout(self.viewer, self.settings)
+        printout2 = printer.Printout(self.viewer, self.settings)
         printerSettings = printer.PrinterSettings(self.settings)
         preview = wx.PrintPreview(printout, printout2, 
                                   printerSettings.printData)
@@ -575,7 +575,7 @@ class Print(ViewerCommand, SettingsCommand):
         wxPrinter = wx.Printer(printDialogData)
         if not wxPrinter.PrintDialog(self.mainWindow()):
             return
-        printout = printer.Printout(self.viewer, 
+        printout = printer.Printout(self.viewer, self.settings,
             printSelectionOnly=wxPrinter.PrintDialogData.Selection)
         # If the user checks the selection radio button, the ToPage property 
         # gets set to 1. Looks like a bug to me. The simple work-around is to

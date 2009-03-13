@@ -62,9 +62,10 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
             self._entry = wx.StaticText(self, label=render.timeSpent(timeDelta))
         else:
             self._entry = masked.TextCtrl(self, mask='#{6}:##:##',
-                fields=[masked.Field(formatcodes='rRFS'),
-                        masked.Field(formatcodes='RFS'),
-                        masked.Field(formatcodes='RFS')])
+                formatcodes='F',
+                fields=[masked.Field(formatcodes='r'),
+                        masked.Field(formatcodes='', choices=['00', '30']),
+                        masked.Field(formatcodes='')])
             hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
             self._entry.SetFieldParameters(0, defaultValue='%6d'%hours)
             self._entry.SetFieldParameters(1, defaultValue='%02d'%minutes)
@@ -83,6 +84,7 @@ class AmountEntry(widgets.PanelWithBoxSizer):
             self._entry = wx.StaticText(self, label=render.amount(amount))
         else:
             self._entry = masked.NumCtrl(self, fractionWidth=2,
+                                         selectOnEntry=False,
                                          allowNegative=False, value=amount)
         self.add(self._entry)
         self.fit()
