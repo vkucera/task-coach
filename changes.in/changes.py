@@ -30,7 +30,7 @@ Release('0.73.3', 'March 13, 2009',
 the task color is based on the category it belongs to.'''),
         Bug('''Make it easier to edit budget values in the task edit 
 dialog.''', '2654254'),
-         Bug('''Fix regression caused by the of saving print margins added in 
+         Bug('''Fix regression caused by the saving of print margins added in 
 release 0.72.2.''', '2632431')
     ]
 ),
