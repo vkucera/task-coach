@@ -174,7 +174,11 @@ def localUpload(settings):
     if hostname and username and password and folder:
         print 'Uploading distributions to local FTP site...'
         localFTP = SimpleFTP(hostname, username, password)
-        localFTP.cwd(folder)
+        try:
+            localFTP.cwd(folder)
+        except ftplib.error_perm, info:
+            localFTP.mkd(folder)
+            localFTP.cwd(folder)
         localFTP.put('dist')
         localFTP.quit()
         print 'Done uploading distributions to local FTP site...'
