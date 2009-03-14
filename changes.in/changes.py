@@ -23,7 +23,14 @@ from changetypes import *
 
 releases = [
 
-Release('0.73.3', 'March 13, 2009',
+Release('0.72.4', 'March ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+       Bug(''' ... ''')
+    ]
+),
+
+Release('0.72.3', 'March 13, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't turn on the color selection in the task edit dialog when 
