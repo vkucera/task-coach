@@ -46,8 +46,10 @@
 		A6664DDC0F2B486000638C68 /* BaseState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DDB0F2B486000638C68 /* BaseState.m */; };
 		A6664DE70F2B498300638C68 /* InitialState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DE60F2B498300638C68 /* InitialState.m */; };
 		A6664EC50F2B504800638C68 /* AuthentificationState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664EC40F2B504800638C68 /* AuthentificationState.m */; };
+		A66AFCEE0F6BABA9003B37C1 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A66AFCED0F6BABA9003B37C1 /* iTunesArtwork */; };
 		A673ABF60F2203D000E548BB /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A673ABF50F2203D000E548BB /* NavigationController.m */; };
 		A6793B270F31E28700AAEC17 /* UploadObjectsState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6793B260F31E28700AAEC17 /* UploadObjectsState.m */; };
+		A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */; };
 		A67E47E60F5A938F00000A24 /* BonjourBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */; };
 		A67E47E70F5A938F00000A24 /* BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47E10F5A938F00000A24 /* BrowserViewController.m */; };
 		A67E47E80F5A938F00000A24 /* DomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47E30F5A938F00000A24 /* DomainViewController.m */; };
@@ -163,10 +165,12 @@
 		A6664DE60F2B498300638C68 /* InitialState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitialState.m; path = Synchronization/InitialState.m; sourceTree = "<group>"; };
 		A6664EC30F2B504800638C68 /* AuthentificationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthentificationState.h; path = Synchronization/AuthentificationState.h; sourceTree = "<group>"; };
 		A6664EC40F2B504800638C68 /* AuthentificationState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthentificationState.m; path = Synchronization/AuthentificationState.m; sourceTree = "<group>"; };
+		A66AFCED0F6BABA9003B37C1 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		A673ABF40F2203D000E548BB /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		A673ABF50F2203D000E548BB /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		A6793B250F31E28700AAEC17 /* UploadObjectsState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadObjectsState.h; path = Synchronization/UploadObjectsState.h; sourceTree = "<group>"; };
 		A6793B260F31E28700AAEC17 /* UploadObjectsState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadObjectsState.m; path = Synchronization/UploadObjectsState.m; sourceTree = "<group>"; };
+		A67A0C200F6BA57100F48A82 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		A67E47DE0F5A938F00000A24 /* BonjourBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BonjourBrowser.h; path = Bonjour/BonjourBrowser.h; sourceTree = "<group>"; };
 		A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BonjourBrowser.m; path = Bonjour/BonjourBrowser.m; sourceTree = "<group>"; };
 		A67E47E00F5A938F00000A24 /* BrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrowserViewController.h; path = Bonjour/BrowserViewController.h; sourceTree = "<group>"; };
@@ -327,6 +331,7 @@
 				A6D4F09B0F473390001CD86B /* TaskView.xib */,
 				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
 				A6664C270F2B367A00638C68 /* SyncView.xib */,
+				A67A0C200F6BA57100F48A82 /* Entitlements.plist */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -348,6 +353,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A66AFCED0F6BABA9003B37C1 /* iTunesArtwork */,
 				A63CC0B40F5174EC003669FD /* ledbluebig.png */,
 				A63CC0B50F5174EC003669FD /* ledgreenbig.png */,
 				A63CC0B60F5174EC003669FD /* ledgreybig.png */,
@@ -602,6 +608,8 @@
 				A63CC0BB0F5174EC003669FD /* ledgreybig.png in Resources */,
 				A63CC0BC0F5174EC003669FD /* ledorangebig.png in Resources */,
 				A63CC0BD0F5174EC003669FD /* ledredbig.png in Resources */,
+				A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */,
+				A66AFCEE0F6BABA9003B37C1 /* iTunesArtwork in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -775,6 +783,35 @@
 			};
 			name = Release;
 		};
+		A67A0C0E0F6BA42100F48A82 /* Beta tests */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jérôme Laheurte";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2D5D1246-9F1B-4CF1-B315-E08B7378ED7B";
+				SDKROOT = iphoneos2.2.1;
+			};
+			name = "Beta tests";
+		};
+		A67A0C0F0F6BA42100F48A82 /* Beta tests */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_NAME = TaskCoach;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C3ECCC5D-5DCC-4113-AB0D-CB322C428708";
+			};
+			name = "Beta tests";
+		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -812,6 +849,7 @@
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+				A67A0C0F0F6BA42100F48A82 /* Beta tests */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -821,6 +859,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				A67A0C0E0F6BA42100F48A82 /* Beta tests */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
