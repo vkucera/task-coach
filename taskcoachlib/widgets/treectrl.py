@@ -86,14 +86,19 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         event.Skip()
                     
     def onDoubleClick(self, event):
-        if not self.isCollapseExpandButtonClicked(event):
+        if not self.isClickablePartOfNodeClicked(event):
             self.editCommand(event)
         event.Skip(False)
         
     def onItemActivated(self, event):
         self.editCommand(event)
         event.Skip(False)
-
+        
+    def isClickablePartOfNodeClicked(self, event):
+        ''' Return whether the user double clicked some part of the node that
+            can also receive regular mouse clicks. '''
+        return self.isCollapseExpandButtonClicked(event)
+    
     def isCollapseExpandButtonClicked(self, event):
         item, flags, column = self.HitTest(event.GetPosition(), 
                                            alwaysReturnColumn=True)
@@ -235,6 +240,17 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithToolTip,
         # Don't open the editor (see TreeMixin.onItemActivated) but let the 
         # default event handler (un)check the item:
         event.Skip()
+        
+    def isClickablePartOfNodeClicked(self, event):
+        ''' Return whether the user double clicked some part of the node that
+            can also receive regular mouse clicks. '''
+        return super(CustomTreeCtrl, self).isClickablePartOfNodeClicked(event) or \
+            self.isCheckBoxClicked(event)
+            
+    def isCheckBoxClicked(self, event):
+        item, flags, column = self.HitTest(event.GetPosition(), 
+                                           alwaysReturnColumn=True)
+        return flags & customtree.TREE_HITTEST_ONITEMCHECKICON
     
 
 class CheckTreeCtrl(CustomTreeCtrl):
