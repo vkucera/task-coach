@@ -26,7 +26,7 @@ class BonjourServiceRegister(object):
         self.name = settings.get('iphone', 'service')
         self.__stopped = False
 
-        sdRef = pybonjour.DNSServiceRegister(name=self.name,
+        sdRef = pybonjour.DNSServiceRegister(name=self.name or None,
                                              regtype='_test._tcp',
                                              port=port,
                                              callBack=self.__registerCallback)
