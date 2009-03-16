@@ -237,6 +237,10 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
         if settings.getboolean('feature', 'iphone'):
             try:
                 from taskcoachlib.thirdparty import pybonjour
+                from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
+
+                acceptor = IPhoneAcceptor(self, settings)
+                self.bonjourRegister = BonjourServiceRegister(settings, acceptor.port)
             except:
                 from taskcoachlib.gui.dialog.iphone import IPhoneBonjourDialog
 
@@ -245,11 +249,6 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
                     dlg.ShowModal()
                 finally:
                     dlg.Destroy()
-            else:
-                from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
-
-                acceptor = IPhoneAcceptor(self, settings)
-                self.bonjourRegister = BonjourServiceRegister(settings, acceptor.port)
 
     def createWindowComponents(self):
         self.__usingTabbedMainWindow = self.settings.getboolean('view', 
