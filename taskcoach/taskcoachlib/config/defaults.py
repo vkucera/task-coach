@@ -262,7 +262,7 @@ defaults = { \
     },
 'iphone': { \
     'password': '',
-    'service': 'Task Coach',
+    'service': '',
     },
 'printer': { \
     'margin_left': '0',
