@@ -19,16 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import threading, wx, urllib2
 import data
 
-
-# We don't use cElementTree because py2exe somehow does not
-# include cElementTree. ElementTree is no problem though...
-# We also can't use cElementTree (easily) because it's not part of the
-# Python 2.4 module library, so if import of ElementTree fails we get our
-# own copy from the thirdparty package.
-try:
-    import xml.etree.ElementTree as ElementTree
-except ImportError:
-    from taskcoachlib.thirdparty import ElementTree
+import xml.etree.ElementTree as ElementTree
    
    
 class VersionChecker(threading.Thread):

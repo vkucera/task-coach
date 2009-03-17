@@ -25,10 +25,7 @@ from taskcoachlib.thirdparty.desktop import get_temp_file
 from taskcoachlib.i18n import translate
 
 
-try:
-    from xml.etree import ElementTree as ET
-except ImportError:
-    from taskcoachlib.thirdparty import ElementTree as ET
+from xml.etree import ElementTree as ET
 
 
 class PIParser(ET.XMLTreeBuilder):

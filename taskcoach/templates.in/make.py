@@ -20,13 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 
-try:
-    from xml.etree import ElementTree as ET # Python 2.5
-except ImportError:
-    # Fallback on TC's included version
-    import sys
-    sys.path.insert(0, os.path.join('..', 'taskcoachlib', 'thirdparty'))
-    import ElementTree as ET
+from xml.etree import ElementTree as ET
 
 def dumpTemplate(filename, fd):
     path, name = os.path.split(filename)
