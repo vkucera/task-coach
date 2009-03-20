@@ -107,7 +107,8 @@ class TaskFile(patterns.Observable, patterns.Observer):
                 categorizable.markDirty()
             
     def onNoteChanged(self, event):
-        if event.source() in self.notes() and not self.__loading:
+        if not self.__loading:
+            # A note may be in self.notes() or it may be a note of another domain object.
             self.markDirty()
             event.source().markDirty()
             

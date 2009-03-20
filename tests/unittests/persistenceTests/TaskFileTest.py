@@ -318,6 +318,14 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.taskFile.save()
         self.task.addNote(note.Note(subject='Note'))
         self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterTaskNoteChanged(self):
+        self.taskFile.setFilename(self.filename)
+        newNote = note.Note(subject='Note')
+        self.task.addNote(newNote)
+        self.taskFile.save()
+        newNote.setSubject('New subject')
+        self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterChangePriority(self):
         self.task.setPriority(10)
