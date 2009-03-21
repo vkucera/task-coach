@@ -16,15 +16,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import wx
 from wx.lib import masked
  
 
 class FixOverwriteSelection(object):
     def _SetSelection(self, start, end):
-        # By exchanging the start and end parameters we make sure that the 
-        # cursor is at the start of the field so that typing overwrites the 
-        # current field instead of moving to the next field:
-        super(FixOverwriteSelection, self)._SetSelection(end, start)
+        if '__WXGTK__' == wx.Platform:
+            # By exchanging the start and end parameters we make sure that the 
+            # cursor is at the start of the field so that typing overwrites the 
+            # current field instead of moving to the next field:
+            start, end = end, start
+        super(FixOverwriteSelection, self)._SetSelection(start, end)
 
 
 class TextCtrl(FixOverwriteSelection, masked.TextCtrl):
