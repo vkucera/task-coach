@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
@@ -61,15 +61,12 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
         if readonly:
             self._entry = wx.StaticText(self, label=render.timeSpent(timeDelta))
         else:
-            self._entry = masked.TextCtrl(self, mask='#{6}:##:##',
-                formatcodes='F',
-                fields=[masked.Field(formatcodes='r'),
-                        masked.Field(formatcodes='', choices=['00', '30']),
-                        masked.Field(formatcodes='')])
             hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
-            self._entry.SetFieldParameters(0, defaultValue='%6d'%hours)
-            self._entry.SetFieldParameters(1, defaultValue='%02d'%minutes)
-            self._entry.SetFieldParameters(2, defaultValue='%02d'%seconds)
+            self._entry = widgets.masked.TextCtrl(self, mask='#{6}:##:##',
+                formatcodes='FS',
+                fields=[masked.Field(formatcodes='r', defaultValue='%6d'%hours),
+                        masked.Field(defaultValue='%02d'%minutes),
+                        masked.Field(defaultValue='%02d'%seconds)])
         self.add(self._entry, flag=wx.EXPAND|wx.ALL, proportion=1)
         self.fit()
 
@@ -83,9 +80,8 @@ class AmountEntry(widgets.PanelWithBoxSizer):
         if readonly:
             self._entry = wx.StaticText(self, label=render.amount(amount))
         else:
-            self._entry = masked.NumCtrl(self, fractionWidth=2,
-                                         selectOnEntry=False,
-                                         allowNegative=False, value=amount)
+            self._entry = widgets.masked.NumCtrl(self, fractionWidth=2,
+                selectOnEntry=True, allowNegative=False, value=amount)
         self.add(self._entry)
         self.fit()
 

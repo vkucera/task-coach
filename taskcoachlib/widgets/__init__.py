@@ -36,6 +36,7 @@ from spinctrl import SpinCtrl
 from tooltip import ToolTipMixin, SimpleToolTip
 from dirchooser import DirectoryChooser
 from syncmlwarning import SyncMLWarningDialog
+import masked
 try:
     from wx.lib import sized_controls
 except ImportError:
