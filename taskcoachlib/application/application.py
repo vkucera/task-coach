@@ -76,7 +76,7 @@ class Application(object):
             splash = gui.SplashScreen()
         else:
             splash = None
-        self.taskFile = persistence.TaskFile()
+        self.taskFile = persistence.LockedTaskFile()
         self.autoSaver = persistence.AutoSaver(settings)
         self.taskRelationshipManager = task.TaskRelationshipManager( \
             taskList=self.taskFile.tasks(), settings=settings)

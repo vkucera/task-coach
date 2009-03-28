@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +21,7 @@ import wx, os, sys, codecs, traceback, shutil
 from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task
+from taskcoachlib.thirdparty import lockfile
 
 try:
     from taskcoachlib.syncml import sync
@@ -27,6 +29,7 @@ try:
 except ImportError:
     # Unsupported platform.
     pass
+
 
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,
@@ -96,11 +99,13 @@ class IOController(object):
         self.__updateDefaultPath(filename)
         if fileExists(filename):
             self.__closeUnconditionally() 
-            self.__taskFile.setFilename(filename)
             try:
-                self.__taskFile.load()                
+                self.__taskFile.load(filename)
+            except lockfile.AlreadyLocked:
+                showerror(_('Cannot open %s because it is locked')%filename, 
+                          **self.__errorMessageOptions)
+                return
             except Exception:
-                self.__taskFile.setFilename('')
                 showerror(_('Error while reading %s:\n')%filename + \
                     ''.join(traceback.format_exception(*sys.exc_info())) + \
                     _('Are you sure it is a %s-file?')%meta.name, 
@@ -112,7 +117,7 @@ class IOController(object):
             self.__addRecentFile(filename)
         else:
             errorMessage = _("Cannot open %s because it doesn't exist")%filename
-            # Use CallAfter on Mac OSX because otherwise the app will hang:
+            # Use CallAfter on Mac OS X because otherwise the app will hang:
             if '__WXMAC__' in wx.PlatformInfo:
                 wx.CallAfter(showerror, errorMessage, **self.__errorMessageOptions)
             else:
@@ -154,15 +159,15 @@ class IOController(object):
             filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
             if not filename:
                 return False # User didn't enter a filename, cancel save
-        selectionFile = self._createSelectionFile(filename, tasks, TaskFileClass)
-        if self._saveSave(selectionFile, showerror):
+        selectionFile = self._createSelectionFile(tasks, TaskFileClass)
+        if self._saveSave(selectionFile, showerror, filename):
             return True
         else:
             return self.saveselection(tasks, showerror=showerror, 
                                       TaskFileClass=TaskFileClass) # Try again
             
-    def _createSelectionFile(self, filename, tasks, TaskFileClass):
-        selectionFile = TaskFileClass(filename)
+    def _createSelectionFile(self, tasks, TaskFileClass):
+        selectionFile = TaskFileClass()
         selectionFile.tasks().extend(tasks)
         allCategories = set()
         for task in tasks:
@@ -204,7 +209,6 @@ class IOController(object):
             shutil.copyfile(filename,
                             os.path.join(self.__settings.pathToTemplatesDir(),
                                          os.path.split(filename)[-1]))
-
 
     def close(self):
         if self.__taskFile.needSave():

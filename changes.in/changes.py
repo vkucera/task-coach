@@ -26,9 +26,12 @@ releases = [
 Release('0.72.4', 'March ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-       Bug('''Fail silently if checking for the availability of a new 
+        Bug('''Lock a task file while the user is working on it. Note that
+locks are only honored by Task Coach itself; locked files can still be 
+removed using a file explorer.''', '2318647'),
+        Bug('''Fail silently if checking for the availability of a new 
 Task Coach version doesn't work for some reason.''', '2669995'),
-       Bug('''Don't open the category edit dialog when the user double clicks
+        Bug('''Don't open the category edit dialog when the user double clicks
 a category check box.''', '2685754'),
         Bug('''In the budget page of the task edit dialog, make sure that 
 selected values can be overwritten.''', '2654254')
@@ -42,7 +45,7 @@ Release('0.72.3', 'March 13, 2009',
 the task color is based on the category it belongs to.'''),
         Bug('''Make it easier to edit budget values in the task edit 
 dialog.''', '2654254'),
-         Bug('''Fix regression caused by the saving of print margins added in 
+        Bug('''Fix regression caused by the saving of print margins added in 
 release 0.72.2.''', '2632431')
     ]
 ),

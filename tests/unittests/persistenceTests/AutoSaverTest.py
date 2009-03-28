@@ -64,9 +64,9 @@ class DummyTaskFile(persistence.TaskFile):
         self.saveCalled += 1
         super(DummyTaskFile, self).save(*args, **kwargs)
 
-    def load(self, throw=False, *args, **kwargs):
+    def load(self, filename=None, throw=False, *args, **kwargs):
         self._throw = throw
-        return super(DummyTaskFile, self).load(*args, **kwargs)
+        return super(DummyTaskFile, self).load(filename, *args, **kwargs)
 
 
 class AutoSaverTestCase(test.TestCase):
