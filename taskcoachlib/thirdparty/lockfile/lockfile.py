@@ -293,6 +293,7 @@ class MkdirFileLock(LockBase):
         """
         LockBase.__init__(self, path, threaded)
         if threaded:
+            import thread
             tname = "%x-" % thread.get_ident()
         else:
             tname = ""
