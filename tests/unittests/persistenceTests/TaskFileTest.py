@@ -841,3 +841,8 @@ class LockedTaskFileLockTest(TaskFileTestCase):
         self.emptyTaskFile.load(self.filename)
         self.assertEqual(1, len(self.emptyTaskFile.tasks()))
         
+    def testOpenBreakLock(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.emptyTaskFile.load(self.filename, breakLock=True)
+        self.failUnless(self.emptyTaskFile.is_locked())
