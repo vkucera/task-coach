@@ -251,7 +251,7 @@
 	if (![Configuration configuration].name)
 	{
 		// Name/domain not defined, browse
-		BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_test._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
+		BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
 		browser.delegate = self;
 		browser.searchingForServicesString = NSLocalizedString(@"Looking for Task Coach", @"Bonjour search string");
 		[self.navigationController presentModalViewController:browser animated:YES];
@@ -259,7 +259,7 @@
 	}
 	else
 	{
-		NSNetService *srv = [[NSNetService alloc] initWithDomain:[Configuration configuration].domain type:@"_test._tcp" name:[Configuration configuration].name];
+		NSNetService *srv = [[NSNetService alloc] initWithDomain:[Configuration configuration].domain type:@"_taskcoachsync._tcp" name:[Configuration configuration].name];
 		srv.delegate = self;
 		[srv resolveWithTimeout:5];
 	}
@@ -271,7 +271,7 @@
 {
 	// Browse again...
 
-	BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_test._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
+	BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
 	browser.delegate = self;
 	browser.searchingForServicesString = NSLocalizedString(@"Looking for Task Coach", @"Bonjour search string");
 	[self.navigationController presentModalViewController:browser animated:YES];
