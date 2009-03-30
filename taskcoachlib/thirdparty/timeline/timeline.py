@@ -239,7 +239,7 @@ class TimeLine(wx.Panel):
         if not children:
             return
         childY = y
-        h -= (len(children)) # vertical space between children
+        h -= len(children) # vertical space between children
         recursiveChildrenList = [self.adapter.parallel_children(child, recursive=True) \
                                  for child in children]
         recursiveChildrenCounts = [len(recursiveChildren) for recursiveChildren in recursiveChildrenList]
