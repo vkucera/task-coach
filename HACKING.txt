@@ -1,0 +1,70 @@
+=====================================================================
+Task Coach - Your friendly task manager
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+
+Task Coach is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Task Coach is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+=====================================================================
+
+--- Prerequisites ---------------------------------------------------
+
+You need Python version 2.5 or higher and wxPython version 
+2.8.6.0-unicode or higher. See http://www.taskcoach.org/devinfo.html 
+for more details.
+
+--- Preparation -----------------------------------------------------
+
+Task Coach needs a few generated files, run the following command
+to generate them:
+
+  make icons templates i18n
+
+--- Running ---------------------------------------------------------
+
+Start Task Coach from the command line like this:
+
+  python taskcoach.py
+
+--- Testing ---------------------------------------------------------
+
+To run the tests, enter:
+
+  make unittests
+
+Check out the Makefile for more testing options. The test script
+has a bunch of options as well, enter: 
+
+  cd tests; python test.py --help
+
+for more information.
+
+--- Installation ----------------------------------------------------
+
+There are two options to install Task Coach: 
+
+First, you can simply move this directory to some suitable 
+location and run taskcoach.py (or taskcoach.pyw if you are on 
+the Windows platform) from there.
+
+Alternatively, you can use the Python distutils setup script
+to let Python install Task Coach for you. In that case run the
+following command:
+
+  python setup.py install
+
+If you have a previous version of Task Coach installed, you may
+need to force old files to be overwritten, like this:
+
+  python setup.py install --force
+
+=====================================================================
