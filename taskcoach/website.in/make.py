@@ -511,7 +511,8 @@ pages['devinfo'] = \
     HREF="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
     at SourceForge</A>. You can check out the code from the repository 
     directly or <A HREF="http://taskcoach.svn.sourceforge.net/">browse the
-    repository</A>. You can generate documentation with Epydoc and Graphviz
+    repository</A>. Please read the file <tt>HACKING.txt</tt> after checking
+    out the sources. You can generate documentation with Epydoc and Graphviz
     from the Makefile: <tt>make dot epydoc</tt>.</p>
     
     <h4>Tests</h4>
