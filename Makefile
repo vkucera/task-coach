@@ -33,25 +33,27 @@ TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.v
 
 all: windist sdist website
 
-windist: icons i18n
+prepare: icons i18n templates
+
+windist: prepare
 	$(PYTHON) make.py py2exe
 	$(INNOSETUP) build/taskcoach.iss
 
-sdist: icons changes i18n templates dist/TaskCoach-$(TCVERSION).tar.gz
+sdist: prepare templates dist/TaskCoach-$(TCVERSION).tar.gz
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
 
-rpm: icons changes i18n
+rpm: prepare
 	$(PYTHON) make.py bdist_rpm --requires "python2.5,python-wxgtk2.8" --group "Applications/Productivity"
 
-fedora: icons changes i18n
+fedora: prepare
 	$(PYTHON) make.py bdist_rpm_fedora 
 
 deb: sdist
 	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz
 
-dmg: icons i18n
+dmg: prepare
 	$(PYTHON) make.py py2app
 	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach-$(TCVERSION).dmg
 

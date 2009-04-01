@@ -1,6 +1,7 @@
 =====================================================================
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2009 George Weeks <gcw52@telus.net>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,14 +21,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 You need Python version 2.5 or higher and wxPython version 
 2.8.6.0-unicode or higher. See http://www.taskcoach.org/devinfo.html 
-for more details.
+for more details and platform specific notes. 
+    
+For building distributions and running tests, GNU make is used. Make 
+is installed on most systems by default. On Windows you can install 
+Cygwin (http://www.cygwin.com) to get make and a lot of other nice 
+utilities. Make will automatically use the file Makefile as its 
+script, unless directed otherwise. Makefile in turn uses "make.py" 
+to build distributions. So, if you don't have make installed you can
+still build the distributions by running the commands from the 
+Makefile by hand.
 
 --- Preparation -----------------------------------------------------
 
 Task Coach needs a few generated files, run the following command
 to generate them:
 
-  make icons templates i18n
+  make prepare
 
 --- Running ---------------------------------------------------------
 
@@ -48,6 +58,23 @@ has a bunch of options as well, enter:
 
 for more information.
 
+--- Building distributions ------------------------------------------
+
+Use the Makefile to create distributions (they are placed in dist/):
+
+  make windist # Creates installer for Windows
+  make dmg     # Creates disk image for Mac OS X
+  make rpm     # Creates generic RPM
+  make fedora  # Creates RPM for Fedora 8
+  make deb     # Creates Debian package for Debian and Ubuntu
+
+Check out the Makefile for more details. E.g. to create the Task
+Coach app on Mac OS X you can also run:
+
+  python make.py py2app
+
+The TaskCoach.app ends up in build/
+
 --- Installation ----------------------------------------------------
 
 There are two options to install Task Coach: 
@@ -61,6 +88,11 @@ to let Python install Task Coach for you. In that case run the
 following command:
 
   python setup.py install
+
+You may need to run this command as root if you get 
+"Permission denied" errors:
+
+  sudo python setup.py install
 
 If you have a previous version of Task Coach installed, you may
 need to force old files to be overwritten, like this:
