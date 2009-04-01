@@ -26,6 +26,8 @@ releases = [
 Release('0.72.4', 'March ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''When exporting effort to iCalendar format, use 'floating times'
+rather than UTC.''', '2722224'),
         Bug('''Lock a task file while the user is working on it. Note that
 locks are only honored by Task Coach itself; locked files can still be 
 removed using a file explorer.''', '2318647'),

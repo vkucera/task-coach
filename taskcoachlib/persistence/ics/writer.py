@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -67,8 +67,8 @@ class ICSWriter:
         if description:
             self += 'DESCRIPTION:%s'%description.replace('\n','\\n')
 
-        start = effort.getStart().strftime('%Y%m%dT%H%M%SZ')
-        stop = effort.getStop().strftime('%Y%m%dT%H%M%SZ')
+        start = effort.getStart().strftime('%Y%m%dT%H%M%S')
+        stop = effort.getStop().strftime('%Y%m%dT%H%M%S')
         istart = int(time.mktime(effort.getStart().utctimetuple()))
         istop = int(time.mktime(effort.getStop().utctimetuple()))
 
