@@ -289,15 +289,17 @@ class HideCompositeTasksInTreeModeTest(HideCompositeTasksTests,
 
 class SearchFilterTest(test.TestCase):
     def setUp(self):
-        self.parent = task.Task(subject='*ABC')
-        self.child = task.Task(subject='DEF')
+        self.parent = task.Task(subject='*ABC', description='Parent description')
+        self.child = task.Task(subject='DEF', description='Child description')
         self.parent.addChild(self.child)
         self.list = task.TaskList([self.parent, self.child])
         self.filter = base.SearchFilter(self.list)
 
     def setSearchString(self, searchString, matchCase=False,
-                        includeSubItems=False):
-        self.filter.setSearchFilter(searchString, matchCase, includeSubItems)
+                        includeSubItems=False, searchDescription=False):
+        self.filter.setSearchFilter(searchString, matchCase=matchCase, 
+                                    includeSubItems=includeSubItems,
+                                    searchDescription=searchDescription)
         
     def testNoMatch(self):
         self.setSearchString('XYZ')
@@ -356,6 +358,28 @@ class SearchFilterTest(test.TestCase):
     def testInvalidRegex(self):
         self.setSearchString('*')
         self.assertEqual(1, len(self.filter))
+
+    def testSearchDescription(self):
+        self.setSearchString('parent description', searchDescription=True)
+        self.assertEqual(1, len(self.filter))
+
+    def testSearchDescription_TurnedOff(self):
+        self.setSearchString('parent description')
+        self.assertEqual(0, len(self.filter))
+        
+    def testSearchDescriptionWithSubItemsIncluded(self):
+        self.setSearchString('parent description', includeSubItems=True,
+                             searchDescription=True)
+        self.assertEqual(2, len(self.filter))
+
+    def testSearchDescription_MatchChildDoesNotSelectParentWhenNotInTreeMode(self):
+        self.setSearchString('child description', searchDescription=True)
+        self.assertEqual(1, len(self.filter))
+
+    def testSearchDescription_MatchChildAlsoSelectsParentWhenInTreeMode(self):
+        self.filter.setTreeMode(True)
+        self.setSearchString('child description', searchDescription=True)
+        self.assertEqual(2, len(self.filter))
 
 
 class CategoryFilterHelpers(object):
