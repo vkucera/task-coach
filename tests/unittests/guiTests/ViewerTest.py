@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -173,7 +173,7 @@ class SearchableViewerTest(test.TestCase):
         self.failUnless(self.viewer.isSearchable())
         
     def testDefaultSearchFilter(self):
-        self.assertEqual(('', False, False), self.viewer.getSearchFilter())
+        self.assertEqual(('', False, False, False), self.viewer.getSearchFilter())
         
     def testSetSearchFilterString(self):
         self.viewer.setSearchFilter('bla', matchCase=True)
@@ -209,6 +209,16 @@ class SearchableViewerTest(test.TestCase):
         self.viewer.presentation().append(parent)
         self.viewer.setSearchFilter('parent', includeSubItems=True)
         self.assertEqual(2, len(self.viewer.presentation()))
+        
+    def testSearchDescription(self):
+        self.viewer.setSearchFilter('bla', searchDescription=True)
+        self.assertEqual(True, self.settings.getboolean(self.viewer.settingsSection(),
+                                                        'searchdescription'))
+        
+    def testSearchDescription_AffectsPresentation(self):
+        self.viewer.presentation().append(task.Task('subject', description='description'))
+        self.viewer.setSearchFilter('descr', searchDescription=True)
+        self.assertEqual(1, len(self.viewer.presentation()))
         
     def testApplySettingsWhenCreatingViewer(self):
         self.settings.set(self.viewer.settingsSection(), 'searchfilterstring', 'whatever')
@@ -508,7 +518,7 @@ class ViewerIteratorTests(object):
         child = task.Task('child')
         parent.addChild(child)
         self.taskList.append(parent)
-        self.viewer.setSearchFilter('parent', True)
+        self.viewer.setSearchFilter('parent', matchCase=True)
         self.assertEqual([parent], self.getItemsFromIterator())
         
     

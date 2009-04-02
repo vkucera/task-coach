@@ -32,7 +32,10 @@ Task Coach.''', '2042153'),
         Feature('''Added a timeline viewer that shows tasks and efforts on 
 a horizontal time scale.''', '2533644', '1230080'),
         Feature('''When an effort viewer is displaying effort per day, week,
-or month, a total line is shown for each period.''', '1962219')
+or month, a total line is shown for each period.''', '1962219'),
+        Feature('''The search control in the toolbar of viewers now includes
+an option to search descriptions too.''', '1816660', '2020347', '2157010',
+'2510045')
     ]),
 
 Release('0.73.3', 'March 13, 2009',

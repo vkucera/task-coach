@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.__callback = kwargs.pop('callback')
         self.__matchCase = kwargs.pop('matchCase', False)
         self.__includeSubItems = kwargs.pop('includeSubItems', False)
+        self.__searchDescription = kwargs.pop('searchDescription', False)
         size = kwargs.pop('size', (16, 16))
         super(SearchCtrl, self).__init__(*args, **kwargs)
         self.SetSearchMenuBitmap(wx.ArtProvider_GetBitmap('searchmenu', wx.ART_TOOLBAR, size))
@@ -48,6 +49,10 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
             _('Include sub items'), 
             _('Include sub items of matching items in the search results'))
         self.__includeSubItemsMenuItem.Check(self.__includeSubItems)
+        self.__searchDescriptionMenuItem = menu.AppendCheckItem(wx.ID_ANY,
+            _('Search description too'),
+            _('Search both subject and description'))
+        self.__searchDescriptionMenuItem.Check(self.__searchDescription)
         self.SetMenu(menu)
         
     def bindEventHandlers(self):
@@ -58,7 +63,9 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
                      (wx.EVT_MENU, self.onMatchCaseMenuItem, 
                          self.__matchCaseMenuItem),
                      (wx.EVT_MENU, self.onIncludeSubItemsMenuItem, 
-                         self.__includeSubItemsMenuItem)]:
+                         self.__includeSubItemsMenuItem),
+                     (wx.EVT_MENU, self.onSearchDescriptionMenuItem,
+                         self.__searchDescriptionMenuItem)]:
             self.Bind(*args)
         # Precreate menu item ids for the recent searches and bind the event
         # handler for those menu item ids. It's no problem that the actual menu
@@ -77,6 +84,10 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.__includeSubItems = includeSubItems
         self.__includeSubItemsMenuItem.Check(includeSubItems)
 
+    def setSearchDescription(self, searchDescription):
+        self.__searchDescription = searchDescription
+        self.__searchDescriptionMenuItem.Check(searchDescription)
+        
     def isValid(self):
         try:
             re.compile(self.GetValue())
@@ -107,7 +118,8 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         if searchString:
             self.rememberSearchString(searchString)
         self.ShowCancelButton(bool(searchString))
-        self.__callback(searchString, self.__matchCase, self.__includeSubItems)
+        self.__callback(searchString, self.__matchCase, self.__includeSubItems,
+                        self.__searchDescription)
 
     def onCancel(self, event):
         self.SetValue('')
@@ -121,6 +133,11 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         
     def onIncludeSubItemsMenuItem(self, event):
         self.__includeSubItems = self._isMenuItemChecked(event)
+        self.onFind(event)
+        event.Skip()
+        
+    def onSearchDescriptionMenuItem(self, event):
+        self.__searchDescription = self._isMenuItemChecked(event)
         self.onFind(event)
         event.Skip()
         
@@ -143,8 +160,8 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.addRecentSearches(menu)
         
     def removeRecentSearches(self, menu):
-        while menu.GetMenuItemCount() > 2:
-            item = menu.FindItemByPosition(2)
+        while menu.GetMenuItemCount() > 3:
+            item = menu.FindItemByPosition(3)
             menu.DestroyItem(item)
 
     def addRecentSearches(self, menu):

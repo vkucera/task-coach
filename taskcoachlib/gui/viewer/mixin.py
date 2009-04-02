@@ -37,25 +37,31 @@ class SearchableViewer(object):
         return base.SearchFilter(presentation, **self.searchOptions())
 
     def searchOptions(self):
-        searchString, matchCase, includeSubItems = self.getSearchFilter()
-        return dict(searchString=searchString, matchCase=matchCase, 
+        searchString, matchCase, includeSubItems, searchDescription = self.getSearchFilter()
+        return dict(searchString=searchString, 
+                    matchCase=matchCase, 
                     includeSubItems=includeSubItems, 
+                    searchDescription=searchDescription,
                     treeMode=self.isTreeViewer())
     
     def setSearchFilter(self, searchString, matchCase=False, 
-                        includeSubItems=False):
+                        includeSubItems=False, searchDescription=False):
         section = self.settingsSection()
         self.settings.set(section, 'searchfilterstring', searchString)
         self.settings.set(section, 'searchfiltermatchcase', str(matchCase))
         self.settings.set(section, 'searchfilterincludesubitems', str(includeSubItems))
-        self.presentation().setSearchFilter(searchString, matchCase, includeSubItems)
+        self.settings.set(section, 'searchdescription', str(searchDescription))
+        self.presentation().setSearchFilter(searchString, matchCase=matchCase, 
+                                            includeSubItems=includeSubItems,
+                                            searchDescription=searchDescription)
         
     def getSearchFilter(self):
         section = self.settingsSection()
         searchString = self.settings.get(section, 'searchfilterstring')
         matchCase = self.settings.getboolean(section, 'searchfiltermatchcase')
         includeSubItems = self.settings.getboolean(section, 'searchfilterincludesubitems')
-        return searchString, matchCase, includeSubItems
+        searchDescription = self.settings.getboolean(section, 'searchdescription')
+        return searchString, matchCase, includeSubItems, searchDescription
     
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''

@@ -100,14 +100,19 @@ class SearchFilter(Filter):
         searchString = kwargs.pop('searchString', u'')
         matchCase = kwargs.pop('matchCase', False)
         includeSubItems = kwargs.pop('includeSubItems', False)
+        searchDescription = kwargs.pop('searchDescription', False)
 
-        self.setSearchFilter(searchString, matchCase, includeSubItems, False)
+        self.setSearchFilter(searchString, matchCase=matchCase, 
+                             includeSubItems=includeSubItems, 
+                             searchDescription=searchDescription, doReset=False)
 
         super(SearchFilter, self).__init__(*args, **kwargs)
 
     def setSearchFilter(self, searchString, matchCase=False, 
-                        includeSubItems=False, doReset=True):
+                        includeSubItems=False, searchDescription=False, 
+                        doReset=True):
         self.__includeSubItems = includeSubItems
+        self.__searchDescription = searchDescription
 
         try:
             if matchCase:
@@ -127,19 +132,25 @@ class SearchFilter(Filter):
 
     def filter(self, items):
         return [item for item in items if \
-                self.__searchPredicate(self.__itemSubject(item))]
+                self.__searchPredicate(self.__itemText(item))]
         
-    def __itemSubject(self, item):
-        subject = item.subject()
+    def __itemText(self, item):
+        text = self.__itemOwnText(item)
         if self.__includeSubItems:
             parent = item.parent()
             while parent:
-                subject += parent.subject()
+                text += self.__itemOwnText(parent)
                 parent = parent.parent()
         if self.treeMode():
-            subject += ' '.join([child.subject() for child in \
+            text += ' '.join([self.__itemOwnText(child) for child in \
                 item.children(recursive=True) if child in self.observable()])
-        return subject
+        return text
+
+    def __itemOwnText(self, item):
+        text = item.subject()
+        if self.__searchDescription:
+            text += item.description()
+        return text 
 
 
 class DeletedFilter(Filter):
