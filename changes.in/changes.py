@@ -36,7 +36,9 @@ Task Coach version doesn't work for some reason.''', '2669995'),
         Bug('''Don't open the category edit dialog when the user double clicks
 a category check box.''', '2685754'),
         Bug('''In the budget page of the task edit dialog, make sure that 
-selected values can be overwritten.''', '2654254')
+selected values can be overwritten.''', '2654254'),
+        Bug('''Make the Debian package work with python versions >= 2.5 
+(but smaller than python 3.0).''', '2724839')
     ]
 ),
 
