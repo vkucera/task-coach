@@ -246,8 +246,10 @@ class TimelineViewer(BaseTaskViewer):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'timelineviewer')
         super(TimelineViewer, self).__init__(*args, **kwargs)
-        #self.registerObserver(self.onTaskChange, task.Task.subjectChangedEventType())
-
+        for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
+            'task.dueDate', 'task.completionDate'):
+            self.registerObserver(self.onTaskChange, eventType)
+        
     def createWidget(self):
         self.rootNode = TimelineRootNode(self.presentation())
         return widgets.Timeline(self, self.rootNode, self.onSelect, self.onEdit,
