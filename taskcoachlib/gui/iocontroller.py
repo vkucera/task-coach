@@ -345,7 +345,7 @@ class IOController(object):
     
     def __askBreakLock(self, filename):
         result = wx.MessageBox(_('Cannot open %s because it is locked.\n'
-            'Break the lock?'%filename), _('%s: file locked')%meta.name,
+            'Break the lock?')%filename, _('%s: file locked')%meta.name,
             style=wx.YES_NO|wx.ICON_QUESTION|wx.NO_DEFAULT)
         return result == wx.YES
     
