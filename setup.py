@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -43,7 +43,8 @@ setupOptions = {
         ['taskcoachlib.' + subpackage for subpackage in ('application', 'meta', 
         'config', 'command', 'widgets', 'gui', 'gui.dialog', 'gui.viewer', 
         'i18n', 'patterns', 'mailer', 'help', 'domain', 'persistence', 
-        'thirdparty', 'thirdparty.squaremap', 'syncml')] +
+        'thirdparty', 'thirdparty.squaremap', 'thirdparty.lockfile', 
+        'syncml')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note', 'attachment')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 

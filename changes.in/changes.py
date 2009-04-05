@@ -23,6 +23,13 @@ from changetypes import *
 
 releases = [
 
+Release('0.72.5', 'April 5, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Include the lockfile package in the distributions.''')
+    ]
+),
+
 Release('0.72.4', 'April 5, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
