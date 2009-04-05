@@ -145,9 +145,9 @@ class TaskFile(patterns.Observable, patterns.Observer):
             self.notifyObservers(patterns.Event(self, 'taskfile.dirty', False))
             
     def _clear(self):
-        self.tasks().removeItems(list(self.tasks()))
-        self.categories().removeItems(list(self.categories()))
-        self.notes().removeItems(list(self.notes()))
+        self.tasks().clear()
+        self.categories().clear()
+        self.notes().clear()
         self.__guid = generate()
         self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
         
