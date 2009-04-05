@@ -43,7 +43,8 @@ setupOptions = {
         ['taskcoachlib.' + subpackage for subpackage in ('application', 'meta', 
         'config', 'command', 'widgets', 'gui', 'gui.dialog', 'gui.viewer', 
         'i18n', 'patterns', 'mailer', 'help', 'domain', 'persistence', 
-        'thirdparty', 'thirdparty.squaremap', 'syncml', 'iphone')] +
+        'thirdparty', 'thirdparty.squaremap', 'thirdparty.timeline', 
+        'syncml', 'iphone')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note', 'attachment')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
