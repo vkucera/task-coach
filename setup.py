@@ -39,6 +39,7 @@ setupOptions = {
     'version': meta.version,
     'url': meta.url,
     'license': meta.license,
+    'download_url': meta.download,
     'packages': ['taskcoachlib'] + 
         ['taskcoachlib.' + subpackage for subpackage in ('application', 'meta', 
         'config', 'command', 'widgets', 'gui', 'gui.dialog', 'gui.viewer', 
