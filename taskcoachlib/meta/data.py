@@ -22,11 +22,11 @@ name = 'Task Coach'
 description = 'Your friendly task manager'
 # The buildbot sets TCVERSION when building snapshots.
 version = os.environ.get('TCVERSION', '0.72.4')
-release_month = 'March'
+release_month = 'April'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
                     'November', 'December'].index(release_month) + 1)
-release_day = '0'
+release_day = '5'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2009'
 release_status = 'alpha'

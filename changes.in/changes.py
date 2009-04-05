@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.72.4', 'March ?, 2009',
+Release('0.72.4', 'April 5, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When exporting effort to iCalendar format, use 'floating times'
