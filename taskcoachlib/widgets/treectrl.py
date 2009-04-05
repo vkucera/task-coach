@@ -29,25 +29,19 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         return self.getChildrenCount(index)
         
     def OnGetItemText(self, index, column=0):
-        if column:
-            return self.getItemText(index, column)
-        else:
-            return self.getItemText(index)
+        args = (index, column) if column else (index,)
+        return self.getItemText(*args)
         
     def OnGetItemExpanded(self, index):
         return self.getItemExpanded(index)
 
     def OnGetItemTooltipData(self, index, column=0):
-        if column:
-            return self.getItemTooltipData(index, column)
-        else:
-            return self.getItemTooltipData(index)
+        args = (index, column) if column else (index,)
+        return self.getItemTooltipData(*args)
 
     def OnGetItemImage(self, index, which, column=0):
-        if column:
-            return self.getItemImage(index, which, column)
-        else:
-            return self.getItemImage(index, which)
+        args = (index, which, column) if column else (index, which)
+        return self.getItemImage(*args)
         
     def OnGetItemTextColour(self, index):
         return self.getItemAttr(index).GetTextColour()
