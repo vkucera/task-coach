@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -41,12 +41,8 @@ def start():
     options, args = config.ApplicationOptionParser().parse_args()
     app = application.Application(options, args)
     if options.profile:
-        import hotshot
-        profiler = hotshot.Profile('.profile')
-        if options.skipstart:
-            app.start(profiler)
-        else:
-            profiler.runcall(app.start)
+        import cProfile
+        cProfile.runctx('app.start()', globals(), locals(), filename='.profile')
     else:
         app.start()
 
