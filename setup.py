@@ -51,6 +51,7 @@ setupOptions = {
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
         'ics', 'html', 'csv', 'vcalendar')] + ['buildlib'],
     'scripts': ['taskcoach.py', 'taskcoach.pyw'],
+    'options': dict(build=dict(executable='/usr/bin/python2.5')),
     'classifiers': [\
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',

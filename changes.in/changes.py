@@ -26,7 +26,10 @@ releases = [
 Release('0.72.6', 'April ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Task Coach couldn't be installed using EasyInstall.''')
+        Bug('''Task Coach couldn't be installed using EasyInstall.'''),
+        Bug('''Task Coach couldn't be installed on Linux systems that have 
+2.6 as their default Python version. Task Coach currently needs Python 2.5.
+Fixed by forcing an install for Python 2.5 on all Linux systems.''', '2724839')
     ]
 ),
 

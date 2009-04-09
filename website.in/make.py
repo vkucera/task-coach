@@ -96,7 +96,7 @@ except IOError:
     md5 = ''
 
 prerequisites = '''<a href="http://www.python.org/download/">Python</a> 
-<strong>%(pythonversion)s</strong> (or newer)
+<strong>%(pythonversion)s</strong> 
 and <a href="http://www.wxpython.org/download.php">wxPython</a>
 <strong>%(wxpythonversion)s</strong> (or newer).'''
 

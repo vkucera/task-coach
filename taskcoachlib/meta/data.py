@@ -75,7 +75,7 @@ license_notice_html = '<p>%s</p>'%license_notice.replace('\n\n', '</p><p>')
 license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank">http\1</a>', license_notice_html)
 
 platform = 'Any'
-pythonversion = '2.4'
+pythonversion = '2.5'
 wxpythonversion = '2.8.6.0-unicode'
 languages = {
     'English': None, 
