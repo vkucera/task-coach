@@ -1,12 +1,12 @@
 Metadata-Version: 1.0
 Name: lockfile
-Version: 0.7
+Version: 0.8
 Summary: Platform-independent file locking module
 Home-page: http://smontanaro.dyndns.org/python/
 Author: Skip Montanaro
 Author-email: skip@pobox.com
 License: MIT License
-Download-URL: http://smontanaro.dyndns.org/python/lockfile-0.7.tar.gz
+Download-URL: http://smontanaro.dyndns.org/python/lockfile-0.8.tar.gz
 Description: 
         The lockfile module exports a FileLock class which provides a simple
         API for locking files.  Unlike the Windows msvcrt.locking function,
@@ -15,7 +15,7 @@ Description:
         Windows platforms.  The lock mechanism relies on the atomic nature of
         the link (on Unix) and mkdir (on Windows) system calls.
         
-        Version 0.7 fixes a bug in stringifying the current thread name.
+        Version 0.8 fixes several bugs relating to threads and test reorganization.
 Platform: UNKNOWN
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
