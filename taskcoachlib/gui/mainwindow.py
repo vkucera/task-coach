@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import wx
 from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
-import viewer, toolbar, uicommand, remindercontroller
+import viewer, toolbar, uicommand, remindercontroller, artprovider
 
 
 class WindowDimensionsTracker(object):
@@ -256,17 +256,9 @@ class MainWindow(AuiManagedFrameWithNotebookAPI):
     def initWindow(self):
         wx.GetApp().SetTopWindow(self)
         self.setTitle(self.taskFile.filename())
-        self.setIcon()
+        self.SetIcons(artprovider.iconBundle('taskcoach'))
         self.displayMessage(_('Welcome to %(name)s version %(version)s')% \
             {'name': meta.name, 'version': meta.version}, pane=1)
-
-    def setIcon(self):
-        bundle = wx.IconBundle()
-        for size in [(16, 16), (22, 22), (32, 32), (48, 48), (64, 64), 
-                     (128, 128)]:
-            icon = wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, size)
-            bundle.AddIcon(icon)
-        self.SetIcons(bundle)
 
     def initWindowComponents(self):
         self.onShowToolBar()

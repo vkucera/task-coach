@@ -23,6 +23,7 @@ import wx
 from taskcoachlib import meta, patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date, task
+import artprovider
 
         
 class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
@@ -37,8 +38,6 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__tooltipText = ''
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap
-        self.__iconSize = self.__determineIconSize()
-        self.__iconCache = {}
         patterns.Publisher().registerObserver(self.onTaskListChanged,
             eventType=taskList.addItemEventType(),
             eventSource=taskList)
@@ -160,10 +159,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
                     textParts.append(plural%count)
                 
         text = ', '.join(textParts)
-        if text:
-            text = u'%s - %s'%(meta.name, text)
-        else:
-            text = meta.name
+        text = u'%s - %s'%(meta.name, text) if text else meta.name
         
         if text != self.__tooltipText:
             self.__tooltipText = text
@@ -179,31 +175,5 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             self.__bitmap = self.__tickBitmap
 
     def __setIcon(self):
-        icon = self.__getIcon(self.__bitmap, self.__iconSize)
+        icon = artprovider.getIcon(self.__bitmap)
         self.SetIcon(icon, self.__tooltipText)
-        
-    def __getIcon(self, bitmap, iconSize):
-        ''' Return the icon, converting alpha channel to mask. Use a cache
-            to prevent leakage of GDI object count. '''
-        try:
-            return self.__iconCache[(bitmap, iconSize)]
-        except KeyError:
-            icon = self.__createIcon(bitmap, iconSize)
-            self.__iconCache[(bitmap, iconSize)] = icon
-            return icon
-        
-    def __createIcon(self, bitmap, iconSize):
-        bmp = wx.ArtProvider_GetBitmap(bitmap, wx.ART_FRAME_ICON, iconSize)
-        image = wx.ImageFromBitmap(bmp)
-        image.ConvertAlphaToMask()
-        # How to create an empty icon?
-        icon = wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON, iconSize)
-        icon.CopyFromBitmap(image.ConvertToBitmap())
-        return icon
-    
-    def __determineIconSize(self):
-        if '__WXMAC__' in wx.PlatformInfo:
-            return (128, 128)
-        else:
-            return (16, 16)
-
