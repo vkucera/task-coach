@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -251,9 +251,30 @@ class Listbook(Book, wx.Listbook):
             super.onDragOver. '''
         return super(Listbook, self).onDragOver(x, y, defaultResult, 
             pageSelectionArea=self.GetListView())
+
+
+class AdvanceSelectionMixin(object):
+    ''' A mixin class for the AdvanceSelection method that is part of the 
+        Notebook API but missing from the AuiNotebook API. This method is 
+        in its own mixin class because both AUINotebook as well as 
+        AuiManagedFrameWithNotebookAPI need it. '''
+        
+    def AdvanceSelection(self, forward=True):
+        if self.PageCount <= 1:
+            return # Not enough pages to advance selection
+        if forward:
+            if 0 <= self.Selection < self.PageCount - 1:
+                self.Selection += 1
+            else:
+                self.Selection = 0
+        else:
+            if 1 <= self.Selection < self.PageCount:
+                self.Selection -= 1
+            else:
+                self.Selection = self.PageCount - 1        
+
     
-    
-class AUINotebook(Book, wx.aui.AuiNotebook):
+class AUINotebook(AdvanceSelectionMixin, Book, wx.aui.AuiNotebook):
     pageChangedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED
     pageClosedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE
     
@@ -288,18 +309,86 @@ class AUINotebook(Book, wx.aui.AuiNotebook):
         if self.GetPageCount() > 1:
             self.SetWindowStyle(self.GetWindowStyleFlag() | wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
 
+
+class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
+    ''' An AUI managed frame that provides (part of) the notebook API. '''
+
+    def __init__(self, *args, **kwargs):
+        super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
+        self.manager = wx.aui.AuiManager(self, 
+            wx.aui.AUI_MGR_DEFAULT|wx.aui.AUI_MGR_ALLOW_ACTIVE_PANE)
+        self.Bind(wx.aui.EVT_AUI_RENDER, self.onRender)
+                
+    def onRender(self, event):
+        ''' Whenever the AUI managed frames get rendered, make sure the active
+            pane has focus. '''
+        event.Skip()
+        self.SetFocusToActivePane()
+        
+    def SetFocusToActivePane(self):
+        windowWithFocus = wx.Window.FindFocus()
+        if windowWithFocus not in self.GetAllPanesAndChildren():
+            return # Focus is outside this Frame, don't change the focus
+        for pane in self.manager.GetAllPanes():
+            if pane.HasFlag(wx.aui.AuiPaneInfo.optionActive):
+                if pane.window != windowWithFocus:
+                    pane.window.SetFocus()
+                break
+        
+    def GetAllPanesAndChildren(self):
+        ''' Yield all managed windows and their children, recursively. '''
+        for pane in self.manager.GetAllPanes():
+            yield pane
+            for child in self.GetAllChildren(pane.window):
+                yield child
+    
+    def GetAllChildren(self, window):
+        ''' Yield all child windows of window, recursively. '''                
+        for child in window.GetChildren():
+            yield child
+            for grandChild in self.GetAllChildren(child):
+                yield grandChild
+
+    def AddPage(self, page, caption, name): 
+        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
+        # To ensure we have a center pane we make the first pane the center pane:
+        if not self.manager.GetAllPanes():
+            paneInfo = paneInfo.Center().CloseButton(False)
+        self.manager.AddPane(page, paneInfo)
+        self.manager.Update()
+
+    def SetPageText(self, index, title):
+        self.manager.GetAllPanes()[index].Caption(title)
+        self.manager.Update()
+
+    def GetPageIndex(self, window):
+        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            if paneInfo.window == window:
+                return index
+        return wx.NOT_FOUND
+    
     def AdvanceSelection(self, forward=True):
-        ''' This method is part of the Notebook API but missing from the 
-            AuiNotebook API. '''
-        if self.PageCount <= 1:
-            return # Not enough viewers to advance selection
-        if forward:
-            if 0 <= self.Selection < self.PageCount - 1:
-                self.Selection += 1
-            else:
-                self.Selection = 0
-        else:
-            if 1 <= self.Selection < self.PageCount:
-                self.Selection -= 1
-            else:
-                self.Selection = self.PageCount - 1
+        super(AuiManagedFrameWithNotebookAPI, self).AdvanceSelection(forward)
+        currentPane = self.manager.GetAllPanes()[self.Selection]
+        if currentPane.IsToolbar() and self.PageCount > 1:
+            self.AdvanceSelection(forward)
+
+    def GetPageCount(self):
+        return len(self.manager.GetAllPanes())
+    
+    PageCount = property(GetPageCount)
+        
+    def GetSelection(self):
+        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            if paneInfo.HasFlag(wx.aui.AuiPaneInfo.optionActive):
+                return index
+        return wx.NOT_FOUND
+
+    def SetSelection(self, targetIndex, *args):
+        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            self.manager.GetAllPanes()[index].SetFlag(wx.aui.AuiPaneInfo.optionActive, index==targetIndex)
+        self.manager.Update()
+        
+    Selection = property(GetSelection, SetSelection)
+    
+    
