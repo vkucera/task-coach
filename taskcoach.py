@@ -23,8 +23,8 @@ import sys, os
 if not hasattr(sys, "frozen"):
     # These checks are only necessary in a non-frozen environment, i.e. we
     # skip these checks when run from a py2exe-fied application
-    import wxversion
     try:
+        import wxversion
         wxversion.ensureMinimal("2.8-unicode", optionsRequired=True)
     except:
         pass
