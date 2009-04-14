@@ -29,7 +29,11 @@ Release('0.72.6', 'April ?, 2009',
         Bug('''Task Coach couldn't be installed using EasyInstall.'''),
         Bug('''Task Coach couldn't be installed on Linux systems that have 
 2.6 as their default Python version. Task Coach currently needs Python 2.5.
-Fixed by forcing an install for Python 2.5 on all Linux systems.''', '2724839')
+Fixed by forcing an install for Python 2.5 on all Linux systems when 
+installing from a RPM or Debian package.''', '2724839'),
+        Bug('''The lockfile package used for file locking had a bug when
+used with Python 2.6. Fixed by upgrading the lockfile package to version 
+0.8.''', '2761466')
     ]
 ),
 
