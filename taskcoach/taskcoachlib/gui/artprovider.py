@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, icons
+from taskcoachlib import patterns
+
 
 class ArtProvider(wx.ArtProvider):
     def CreateBitmap(self, artId, artClient, size):
@@ -29,14 +31,56 @@ class ArtProvider(wx.ArtProvider):
         else:
             return wx.NullBitmap
 
-    def convertAlphaToMask(self, bitmap):
+    @staticmethod
+    def convertAlphaToMask(bitmap):
         image = wx.ImageFromBitmap(bitmap)
         image.ConvertAlphaToMask()
-        return wx.BitmapFromImage(image)
+        return wx.BitmapFromImage(image)    
+
+
+class IconProvider(object):
+    __metaclass__ = patterns.Singleton
+
+    def __init__(self):
+        self.__iconCache = dict()
+        self.__iconSizeOnCurrentPlatform = 128 if '__WXMAC__' == wx.Platform else 16
+        
+    def getIcon(self, iconTitle): 
+        ''' Return the icon. Use a cache to prevent leakage of GDI object 
+            count. '''
+        try:
+            return self.__iconCache[iconTitle]
+        except KeyError:
+            icon = self.getIconFromArtProvider(iconTitle)
+            self.__iconCache[iconTitle] = icon
+            return icon
+        
+    def iconBundle(self, iconTitle):
+        ''' Create an icon bundle with icons of different sizes. '''
+        bundle = wx.IconBundle()
+        for size in (16, 22, 32, 48, 64, 128):
+            bundle.AddIcon(self.getIconFromArtProvider(iconTitle, size))
+        return bundle
+    
+    def getIconFromArtProvider(self, iconTitle, iconSize=None):
+        size = iconSize or self.__iconSizeOnCurrentPlatform
+        # wx.ArtProvider_GetIcon doesn't convert alpha to mask, so we do it
+        # ourselves:
+        bitmap = wx.ArtProvider_GetBitmap(iconTitle, wx.ART_FRAME_ICON, 
+                                          (size, size))    
+        bitmap = ArtProvider.convertAlphaToMask(bitmap)
+        return wx.IconFromBitmap(bitmap)
+
+
+def iconBundle(iconTitle):
+    return IconProvider().iconBundle(iconTitle)
+
+
+def getIcon(iconTitle):
+    return IconProvider().getIcon(iconTitle)
 
 
 def init():
-    # (wx.GetApp().GetComCtl32Version() >= 600) and 
     if ('__WXMSW__' in wx.PlatformInfo) and (wx.DisplayDepth() >= 32):
         wx.SystemOptions_SetOption("msw.remap", "0")
     try:

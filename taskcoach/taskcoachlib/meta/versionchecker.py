@@ -39,20 +39,17 @@ class VersionChecker(threading.Thread):
             
     def getLatestVersion(self):
         try:
-            padFile = self.retrievePadFile()
-        except urllib2.URLError:
+            pad = self.parsePadFile(self.retrievePadFile())
+            return pad.findtext('Program_Info/Program_Version')
+        except:
             return self.settings.get('version', 'notified')
-        try:
-            pad = ElementTree.parse(padFile)
-        except ElementTree.ExpatError:
-            # This can happen e.g. when connected to a hotel network that
-            # returns the same webpage for each url requested
-            return self.settings.get('version', 'notified')
-        return pad.findtext('Program_Info/Program_Version')
-    
+
+    def parsePadFile(self, padFile):
+        return ElementTree.parse(padFile)
+
     def retrievePadFile(self):
         return urllib2.urlopen(data.pad)
-    
+
     def notifyUser(self, latestVersion):
         # Must use CallAfter because this is a non-GUI thread
         wx.CallAfter(self.showDialog, latestVersion)

@@ -1,27 +1,26 @@
+'''
+Task Coach - Your friendly task manager
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
-## Task Coach - Your friendly task manager
-## Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
-## Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Task Coach is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-## Task Coach is free software: you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation, either version 3 of the License, or
-## (at your option) any later version.
+Task Coach is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-## Task Coach is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+'''
 
-## You should have received a copy of the GNU General Public License
-## along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-"""
-
+'''
 This module defines classes and functions to handle the VCalendar
 format.
-
-"""
+'''
 
 from taskcoachlib.domain.base import Object
 from taskcoachlib.domain.date import date
@@ -32,8 +31,8 @@ import time, calendar, datetime
 #{ Utility functions
 
 def parseDate(fulldate):
-    """Parses a date as seen in vcalendar files into a
-    L{taskcoachlib.domain.date.Date} object."""
+    ''' Parses a date as seen in vcalendar files into a 
+    L{taskcoachlib.domain.date.Date} object. '''
 
     dt, tm = fulldate.split('T')
     year, month, day = int(dt[:4]), int(dt[4:6]), int(dt[6:8])
@@ -47,22 +46,21 @@ def parseDate(fulldate):
     return date.Date(year, month, day)
 
 def fmtDate(dt):
-    """Formats a L{taskcoachlib.domain.date.Date} object to a string
-    suitable for inclusion in a vcalendar file."""
+    ''' Formats a L{taskcoachlib.domain.date.Date} object to a string
+    suitable for inclusion in a vcalendar file. '''
     return '%04d%02d%02dT000000' % (dt.year, dt.month, dt.day)
 
 def quoteString(s):
-    """The 'quoted-printable' codec doesn't encode \n, but tries to
+    ''' The 'quoted-printable' codec doesn't encode \n, but tries to
     fold lines with \n instead of CRLF and generally does strange
     things that ScheduleWorld does not understand (me neither, to an
-    extent). Same thing with \r. This function works around this."""
+    extent). Same thing with \r. This function works around this. '''
 
     s = s.encode('UTF-8').encode('quoted-printable')
     s = s.replace('=\r', '')
     s = s.replace('=\n', '')
     s = s.replace('\r', '=0D')
     s = s.replace('\n', '=0A')
-
     return s
 
 #}
@@ -70,7 +68,7 @@ def quoteString(s):
 #{ Parsing VCalendar files
 
 class VCalendarParser(object):
-    """Base parser class for vcalendar files. This uses the State
+    ''' Base parser class for vcalendar files. This uses the State
     pattern (in its Python incarnation, replacing the class of an
     object at runtime) in order to parse different objects in the
     VCALENDAR. Other states are
@@ -79,32 +77,29 @@ class VCalendarParser(object):
 
     @ivar kwargs: While parsing, the keyword arguments for the
         domain object creation for the current (parsed) object.
-    @ivar tasks: A list of dictionnaries suitable to use as
+    @ivar tasks: A list of dictionaries suitable to use as
         keyword arguments for task creation, representing all
-        VTODO object in the parsed file."""
+        VTODO object in the parsed file. '''
 
     def __init__(self, *args, **kwargs):
         super(VCalendarParser, self).__init__(*args, **kwargs)
-
         self.stateMap = { 'VCALENDAR': VCalendarParser,
                           'VTODO':     VTodoParser }
-
         self.tasks = []
-
         self.init()
 
     def init(self):
-        """Called after a state change."""
+        ''' Called after a state change. '''
         self.kwargs = {}
 
     def setState(self, state):
-        """Sets the state (class) of the parser object."""
+        ''' Sets the state (class) of the parser object. '''
         self.__class__ = state
         self.init()
 
     def parse(self, lines):
-        """Actually parses the file.
-        @param lines: A list of lines."""
+        ''' Actually parses the file.
+        @param lines: A list of lines. '''
 
         # TODO: avoid using indexes here, just iterate. This way the
         # method can accept a file object as argument.
@@ -122,8 +117,8 @@ class VCalendarParser(object):
         self.handleLine(currentLine)
 
     def handleLine(self, line):
-        """Called by L{parse} for each line to parse. L{parse} is
-        supposed to have handled the unfolding."""
+        ''' Called by L{parse} for each line to parse. L{parse} is
+        supposed to have handled the unfolding. '''
 
         if line.startswith('BEGIN:'):
             try:
@@ -173,18 +168,18 @@ class VCalendarParser(object):
         return False
 
     def onFinish(self):
-        """This method is called when the current object ends."""
+        ''' This method is called when the current object ends. '''
         raise NotImplementedError
 
     def acceptItem(self, name, value):
-        """Called on each new 'item', i.e. key/value pair. Default
+        ''' Called on each new 'item', i.e. key/value pair. Default
         behaviour is to store the pair in the 'kwargs' instance
-        variable (which is emptied in L{init})."""
+        variable (which is emptied in L{init}). '''
         self.kwargs[name.lower()] = value
 
 
 class VTodoParser(VCalendarParser):
-    """This is the state responsible for parsing VTODO objects."""
+    ''' This is the state responsible for parsing VTODO objects. '''
 
     def onFinish(self):
         if not self.kwargs.has_key('startDate'):
@@ -229,13 +224,12 @@ class VTodoParser(VCalendarParser):
 
 #}
 
-
 #==============================================================================
 #{ Generating VCalendar files.
 
 def VCalFromTask(task):
-    """This function returns a string representing the task in
-    vcalendar format."""
+    ''' This function returns a string representing the task in
+    vcalendar format. '''
 
     components = []
 

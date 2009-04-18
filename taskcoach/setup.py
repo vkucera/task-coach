@@ -2,7 +2,8 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,17 +40,19 @@ setupOptions = {
     'version': meta.version,
     'url': meta.url,
     'license': meta.license,
+    'download_url': meta.download,
     'packages': ['taskcoachlib'] + 
         ['taskcoachlib.' + subpackage for subpackage in ('application', 'meta', 
         'config', 'command', 'widgets', 'gui', 'gui.dialog', 'gui.viewer', 
         'i18n', 'patterns', 'mailer', 'help', 'domain', 'persistence', 
         'thirdparty', 'thirdparty.squaremap', 'thirdparty.timeline', 
-        'syncml', 'iphone')] +
+        'thirdparty.lockfile', 'syncml', 'iphone')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note', 'attachment')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
         'ics', 'html', 'csv', 'vcalendar')] + ['buildlib'],
     'scripts': ['taskcoach.py', 'taskcoach.pyw'],
+    'options': dict(build=dict(executable='/usr/bin/python2.5')),
     'classifiers': [\
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',

@@ -250,7 +250,7 @@ class SquareMap( wx.Panel ):
         dc.SetBrush( self.BrushForNode( node, depth ) )
         dc.SetPen( self.PenForNode( node, depth ) )
         dc.DrawRoundedRectangle( x,y,w,h, self.padding *3 )
-        self.DrawIconAndLabel(dc, node, x, y, w, h, depth)
+#        self.DrawIconAndLabel(dc, node, x, y, w, h, depth)
         children_hot_map = []
         hot_map.append( (wx.Rect( int(x),int(y),int(w),int(h)), node, children_hot_map ) )
         x += self.padding
@@ -259,9 +259,12 @@ class SquareMap( wx.Panel ):
         h -= self.padding*2
         
         empty = self.adapter.empty( node )
+        icon_drawn = False
         if empty:
             # is a fraction of the space which is empty...
             new_h = h * (1.0-empty)
+            self.DrawIconAndLabel(dc, node, x, y, w, h-new_h, depth)
+            icon_drawn = True
             y += (h-new_h)
             h = new_h
         
@@ -269,6 +272,9 @@ class SquareMap( wx.Panel ):
             children = self.adapter.children( node )
             if children:
                 self.LayoutChildren( dc, children, node, x,y,w,h, children_hot_map, depth+1 )
+            else:
+                if not icon_drawn:
+                    self.DrawIconAndLabel(dc, node, x, y, w, h, depth)
                 
     def DrawIconAndLabel(self, dc, node, x, y, w, h, depth):
         ''' Draw the icon, if any, and the label, if any, of the node. '''
@@ -297,15 +303,19 @@ class SquareMap( wx.Panel ):
                 new_w = int(w*fraction)
                 if new_w:
                     self.DrawBox( dc, firstNode, x,y, new_w, h, hot_map, depth+1 )
+                else:
+                    return # no other node will show up as non-0 either
                 w = w-new_w
                 x += new_w 
             else:
                 new_h = int(h*fraction)
                 if new_h:
                     self.DrawBox( dc, firstNode, x,y, w, new_h, hot_map, depth + 1 )
+                else:
+                    return # no other node will show up as non-0 either
                 h = h-new_h
                 y += new_h 
-            if rest:
+            if rest and (h > self.padding*2) and (w > self.padding*2):
                 self.LayoutChildren( dc, rest, parent, x,y,w,h, hot_map, depth )
 
 
@@ -341,6 +351,9 @@ class DefaultAdapter( object ):
     def icon(self, node, isSelected):
         ''' The icon to display in the node. '''
         return None
+    def parents( self, node ):
+        """Retrieve/calculate the set of parents for the given node"""
+        return []
 
 
 class TestApp(wx.App):

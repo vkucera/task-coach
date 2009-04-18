@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.73.0', 'February ?, 2009',
+Release('0.73.0', 'April ?, 2009',
     summary='''This release adds a timeline viewer, and support
 for synchronizing with a companion iPhone/iPod Touch device''',
     featuresAdded=[
@@ -38,14 +38,56 @@ an option to search descriptions too.''', '1816660', '2020347', '2157010',
 '2510045')
     ]),
 
-Release('0.73.3', 'March 13, 2009',
+Release('0.72.6', 'April 18, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach couldn't be installed using EasyInstall.'''),
+        Bug('''Task Coach couldn't be installed on Linux systems that have 
+2.6 as their default Python version. Task Coach currently needs Python 2.5.
+Fixed by forcing an install for Python 2.5 on all Linux systems when 
+installing from a RPM or Debian package.''', '2724839'),
+        Bug('''The lockfile package used for file locking had a bug when
+used with Python 2.6. Fixed by upgrading the lockfile package to version 
+0.8.''', '2761466'),
+        Bug('''Task Coach would sometimes crash when dragging a task onto 
+another task on Windows.''', '2573263', '1995248')
+    ]
+),
+
+Release('0.72.5', 'April 5, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Include the lockfile package in the distributions.''')
+    ]
+),
+
+Release('0.72.4', 'April 5, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When exporting effort to iCalendar format, use 'floating times'
+rather than UTC.''', '2722224'),
+        Bug('''Lock a task file while the user is working on it. Note that
+locks are only honored by Task Coach itself; locked files can still be 
+removed using a file explorer.''', '2318647'),
+        Bug('''Fail silently if checking for the availability of a new 
+Task Coach version doesn't work for some reason.''', '2669995'),
+        Bug('''Don't open the category edit dialog when the user double clicks
+a category check box.''', '2685754'),
+        Bug('''In the budget page of the task edit dialog, make sure that 
+selected values can be overwritten.''', '2654254'),
+        Bug('''Make the Debian package work with python versions >= 2.5 
+(but smaller than python 3.0).''', '2724839')
+    ]
+),
+
+Release('0.72.3', 'March 13, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't turn on the color selection in the task edit dialog when 
 the task color is based on the category it belongs to.'''),
         Bug('''Make it easier to edit budget values in the task edit 
 dialog.''', '2654254'),
-         Bug('''Fix regression caused by the saving of print margins added in 
+        Bug('''Fix regression caused by the saving of print margins added in 
 release 0.72.2.''', '2632431')
     ]
 ),

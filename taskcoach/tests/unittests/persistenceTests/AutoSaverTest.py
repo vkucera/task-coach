@@ -1,7 +1,7 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -64,9 +64,9 @@ class DummyTaskFile(persistence.TaskFile):
         self.saveCalled += 1
         super(DummyTaskFile, self).save(*args, **kwargs)
 
-    def load(self, throw=False, *args, **kwargs):
+    def load(self, filename=None, throw=False, *args, **kwargs):
         self._throw = throw
-        return super(DummyTaskFile, self).load(*args, **kwargs)
+        return super(DummyTaskFile, self).load(filename, *args, **kwargs)
 
 
 class AutoSaverTestCase(test.TestCase):

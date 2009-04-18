@@ -18,26 +18,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from taskcoachlib import config, meta
-#from taskcoachlib.meta import versionchecker
 
 
 class VersionCheckerUnderTest(meta.VersionChecker):
     def __init__(self, *args, **kwargs):
         self.version = kwargs.pop('version')
-        self.fail = kwargs.pop('fail', False)
+        self.retrievalException = kwargs.pop('retrievalException', None)
+        self.parseException = kwargs.pop('parseException', None)
         self.userNotified = False
         super(VersionCheckerUnderTest, self).__init__(*args, **kwargs)
         
     def retrievePadFile(self):
-        if self.fail:
-            import urllib2
-            raise urllib2.HTTPError(None, None, None, None, None)
+        if self.retrievalException:
+            raise self.retrievalException
         else:
             import StringIO
             return StringIO.StringIO('<?xml version="1.0" encoding="UTF-8" ?>\n'
                                      '<XML_DIZ_INFO><Program_Info>'
                                      '<Program_Version>%s</Program_Version>'
                                      '</Program_Info></XML_DIZ_INFO>'%self.version)
+            
+    def parsePadFile(self, padFile):
+        if self.parseException:
+            raise self.parseException
+        else:
+            return super(VersionCheckerUnderTest, self).parsePadFile(padFile)
             
     def notifyUser(self, *args, **kwargs):
         self.userNotified = True
@@ -47,14 +52,15 @@ class VersionCheckerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         
-    def checkVersion(self, version, fail=False):
+    def checkVersion(self, version, retrievalException=None, parseException=None):
         checker = VersionCheckerUnderTest(self.settings, version=version, 
-                                          fail=fail)
+                                          retrievalException=retrievalException, 
+                                          parseException=parseException)
         checker.run()
         return checker
         
-    def assertLastVersionNotified(self, version, fail=False):
-        self.checkVersion(version, fail)
+    def assertLastVersionNotified(self, version, retrievalException=None, parseException=None):
+        self.checkVersion(version, retrievalException, parseException)
         self.assertEqual(version, self.settings.get('version', 'notified'))
         
     def testLatestVersionIsNewerThanLastVersionNotified(self):
@@ -64,7 +70,14 @@ class VersionCheckerTest(test.TestCase):
         self.assertLastVersionNotified(meta.data.version)
         
     def testErrorWhileGettingPadFile(self):
-        self.assertLastVersionNotified(meta.data.version, True)
+        import urllib2
+        retrievalException = urllib2.HTTPError(None, None, None, None, None)
+        self.assertLastVersionNotified(meta.data.version, retrievalException)
+        
+    def testExpatParsingError(self):
+        import xml.parsers.expat as expat
+        exception = expat.error
+        self.assertLastVersionNotified(meta.data.version, parseException=exception)
         
     def testDontNotifyWhenCurrentVersionIsNewerThanLastVersionNotified(self):
         self.settings.set('version', 'notified', '0.0')

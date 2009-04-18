@@ -96,7 +96,7 @@ except IOError:
     md5 = ''
 
 prerequisites = '''<a href="http://www.python.org/download/">Python</a> 
-<strong>%(pythonversion)s</strong> (or newer)
+<strong>%(pythonversion)s</strong> 
 and <a href="http://www.wxpython.org/download.php">wxPython</a>
 <strong>%(wxpythonversion)s</strong> (or newer).'''
 
@@ -193,7 +193,7 @@ pages['download'] = \
         </p>
         <h3>Download previous releases of %(name)s</h3>
         <P>Download previous releases of %(name)s from 
-        <A HREF="%(dist_download_prefix)s">Sourceforge</A>.
+        <A HREF="http://sourceforge.net/project/showfiles.php?group_id=130831&package_id=143476">Sourceforge</A>.
         </P>
         <h3>MD5 Digests</h3>
 ''' + md5 

@@ -37,7 +37,7 @@ class Application(object):
         self.wxApp = wxApp(redirect=False)
         self.init(**kwargs)
 
-    def start(self, profiler=None):
+    def start(self):
         ''' Call this to start the Application. '''
         if self.settings.getboolean('version', 'notify'):
             from taskcoachlib import meta
@@ -52,10 +52,7 @@ class Application(object):
             if not os.path.exists(filename):
                 file(filename, 'wb').write(template)
         self.mainwindow.Show()
-        if profiler:
-             profiler.runcall(self.wxApp.MainLoop)
-        else:
-             self.wxApp.MainLoop()
+        self.wxApp.MainLoop()
         
     def init(self, loadSettings=True, loadTaskFile=True):
         ''' Initialize the application. Needs to be called before 
@@ -76,7 +73,7 @@ class Application(object):
             splash = gui.SplashScreen()
         else:
             splash = None
-        self.taskFile = persistence.TaskFile()
+        self.taskFile = persistence.LockedTaskFile()
         self.autoSaver = persistence.AutoSaver(settings)
         self.taskRelationshipManager = task.TaskRelationshipManager( \
             taskList=self.taskFile.tasks(), settings=settings)
