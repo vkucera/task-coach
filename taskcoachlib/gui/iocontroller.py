@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +21,7 @@ import wx, os, sys, codecs, traceback, shutil
 from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task
+from taskcoachlib.thirdparty import lockfile
 
 try:
     from taskcoachlib.syncml import sync
@@ -27,6 +29,7 @@ try:
 except ImportError:
     # Unsupported platform.
     pass
+
 
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,
@@ -85,7 +88,7 @@ class IOController(object):
             self.open(filename)
             
     def open(self, filename=None, showerror=wx.MessageBox, 
-             fileExists=os.path.exists, *args):
+             fileExists=os.path.exists, breakLock=False, *args):
         if self.__taskFile.needSave():
             if not self.__saveUnsavedChanges():
                 return
@@ -95,12 +98,16 @@ class IOController(object):
             return
         self.__updateDefaultPath(filename)
         if fileExists(filename):
-            self.__closeUnconditionally() 
-            self.__taskFile.setFilename(filename)
+            self.__closeUnconditionally()
+            self.__addRecentFile(filename) 
             try:
-                self.__taskFile.load()                
+                self.__taskFile.load(filename, breakLock=breakLock)
+            except lockfile.AlreadyLocked:
+                if self.__askBreakLock(filename):
+                    self.open(filename, showerror, breakLock=True)
+                else:
+                    return
             except Exception:
-                self.__taskFile.setFilename('')
                 showerror(_('Error while reading %s:\n')%filename + \
                     ''.join(traceback.format_exception(*sys.exc_info())) + \
                     _('Are you sure it is a %s-file?')%meta.name, 
@@ -109,10 +116,9 @@ class IOController(object):
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%\
                 {'nrtasks': len(self.__taskFile.tasks()), 
                  'filename': self.__taskFile.filename()})
-            self.__addRecentFile(filename)
         else:
             errorMessage = _("Cannot open %s because it doesn't exist")%filename
-            # Use CallAfter on Mac OSX because otherwise the app will hang:
+            # Use CallAfter on Mac OS X because otherwise the app will hang:
             if '__WXMAC__' in wx.PlatformInfo:
                 wx.CallAfter(showerror, errorMessage, **self.__errorMessageOptions)
             else:
@@ -154,15 +160,15 @@ class IOController(object):
             filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
             if not filename:
                 return False # User didn't enter a filename, cancel save
-        selectionFile = self._createSelectionFile(filename, tasks, TaskFileClass)
-        if self._saveSave(selectionFile, showerror):
+        selectionFile = self._createSelectionFile(tasks, TaskFileClass)
+        if self._saveSave(selectionFile, showerror, filename):
             return True
         else:
             return self.saveselection(tasks, showerror=showerror, 
                                       TaskFileClass=TaskFileClass) # Try again
             
-    def _createSelectionFile(self, filename, tasks, TaskFileClass):
-        selectionFile = TaskFileClass(filename)
+    def _createSelectionFile(self, tasks, TaskFileClass):
+        selectionFile = TaskFileClass()
         selectionFile.tasks().extend(tasks)
         allCategories = set()
         for task in tasks:
@@ -176,11 +182,16 @@ class IOController(object):
             if filename:
                 file.saveas(filename)
             else:
-                file.save()
                 filename = file.filename()
+                file.save()
             self.__showSaveMessage(file)
             self.__addRecentFile(filename)
             return True
+        except lockfile.AlreadyLocked:
+            errorMessage = _('Cannot save %s\n'
+                'It is locked by another instance of %s.\n')%(filename, meta.name)
+            showerror(errorMessage, **self.__errorMessageOptions)
+            return False
         except IOError, reason:
             errorMessage = _('Cannot save %s\n%s')%(filename, reason)
             showerror(errorMessage, **self.__errorMessageOptions)
@@ -204,7 +215,6 @@ class IOController(object):
             shutil.copyfile(filename,
                             os.path.join(self.__settings.pathToTemplatesDir(),
                                          os.path.split(filename)[-1]))
-
 
     def close(self):
         if self.__taskFile.needSave():
@@ -332,6 +342,12 @@ class IOController(object):
         elif result == wx.CANCEL:
             return False
         return True
+    
+    def __askBreakLock(self, filename):
+        result = wx.MessageBox(_('Cannot open %s because it is locked.\n'
+            'Break the lock?')%filename, _('%s: file locked')%meta.name,
+            style=wx.YES_NO|wx.ICON_QUESTION|wx.NO_DEFAULT)
+        return result == wx.YES
     
     def __closeUnconditionally(self):
         self.__messageCallback(_('Closed %s')%self.__taskFile.filename())

@@ -23,7 +23,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
-import viewer, toolbar, uicommand, remindercontroller
+import viewer, toolbar, uicommand, remindercontroller, artprovider
 
 
 class WindowDimensionsTracker(object):
@@ -106,102 +106,7 @@ class WindowDimensionsTracker(object):
         self.setSetting('iconized', iconized)
 
 
-class AuiManagedFrameWithNotebookAPI(wx.Frame):
-    ''' An AUI managed frame that provides (part of) the notebook API. This
-        class is to be moved to the widgets package. '''
-
-    def __init__(self, *args, **kwargs):
-        super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
-        self.manager = wx.aui.AuiManager(self, 
-            wx.aui.AUI_MGR_DEFAULT|wx.aui.AUI_MGR_ALLOW_ACTIVE_PANE)
-        self.Bind(wx.aui.EVT_AUI_RENDER, self.onRender)
-                
-    def onRender(self, event):
-        ''' Whenever the AUI managed frames get rendered, make sure the active
-            pane has focus. '''
-        event.Skip()
-        self.SetFocusToActivePane()
-        
-    def SetFocusToActivePane(self):
-        windowWithFocus = wx.Window.FindFocus()
-        if windowWithFocus not in self.GetAllPanesAndChildren():
-            return # Focus is outside this Frame, don't change the focus
-        for pane in self.manager.GetAllPanes():
-            if pane.HasFlag(wx.aui.AuiPaneInfo.optionActive):
-                if pane.window != windowWithFocus:
-                    pane.window.SetFocus()
-                break
-        
-    def GetAllPanesAndChildren(self):
-        ''' Yield all managed windows and their children, recursively. '''
-        for pane in self.manager.GetAllPanes():
-            yield pane
-            for child in self.GetAllChildren(pane.window):
-                yield child
-    
-    def GetAllChildren(self, window):
-        ''' Yield all child windows of window, recursively. '''                
-        for child in window.GetChildren():
-            yield child
-            for grandChild in self.GetAllChildren(child):
-                yield grandChild
-
-    def AddPage(self, page, caption, name): 
-        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
-        # To ensure we have a center pane we make the first pane the center pane:
-        if not self.manager.GetAllPanes():
-            paneInfo = paneInfo.Center().CloseButton(False)
-        self.manager.AddPane(page, paneInfo)
-        self.manager.Update()
-
-    def SetPageText(self, index, title):
-        self.manager.GetAllPanes()[index].Caption(title)
-        self.manager.Update()
-
-    def GetPageIndex(self, window):
-        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
-            if paneInfo.window == window:
-                return index
-        return wx.NOT_FOUND
-    
-    def AdvanceSelection(self, forward=True): 
-        # FIXME: duplicated from widgets.AUINotebook.AdvanceSelection
-        if self.PageCount <= 1:
-            return # Not enough viewers to advance selection
-        if forward:
-            if 0 <= self.Selection < self.PageCount - 1:
-                self.Selection += 1
-            else:
-                self.Selection = 0
-        else:
-            if 1 <= self.Selection < self.PageCount:
-                self.Selection -= 1
-            else:
-                self.Selection = self.PageCount - 1
-        currentPane = self.manager.GetAllPanes()[self.Selection]
-        if currentPane.IsToolbar():
-            self.AdvanceSelection(forward)
-
-    def GetPageCount(self):
-        return len(self.manager.GetAllPanes())
-    
-    PageCount = property(GetPageCount)
-        
-    def GetSelection(self):
-        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
-            if paneInfo.HasFlag(wx.aui.AuiPaneInfo.optionActive):
-                return index
-        return wx.NOT_FOUND
-
-    def SetSelection(self, targetIndex, *args):
-        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
-            self.manager.GetAllPanes()[index].SetFlag(wx.aui.AuiPaneInfo.optionActive, index==targetIndex)
-        self.manager.Update()
-        
-    Selection = property(GetSelection, SetSelection)
-    
-    
-class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
+class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
     pageClosedEvent = wx.aui.EVT_AUI_PANE_CLOSE
     
     def __init__(self, iocontroller, taskFile, settings,
@@ -277,17 +182,9 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
     def initWindow(self):
         wx.GetApp().SetTopWindow(self)
         self.setTitle(self.taskFile.filename())
-        self.setIcon()
+        self.SetIcons(artprovider.iconBundle('taskcoach'))
         self.displayMessage(_('Welcome to %(name)s version %(version)s')% \
             {'name': meta.name, 'version': meta.version}, pane=1)
-
-    def setIcon(self):
-        bundle = wx.IconBundle()
-        for size in [(16, 16), (22, 22), (32, 32), (48, 48), (64, 64), 
-                     (128, 128)]:
-            icon = wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, size)
-            bundle.AddIcon(icon)
-        self.SetIcons(bundle)
 
     def initWindowComponents(self):
         self.onShowToolBar()
@@ -527,3 +424,4 @@ class MainWindow(DeferredCallMixin, AuiManagedFrameWithNotebookAPI):
         task.setStartDate(startDate)
         task.setDueDate(dueDate)
         task.setCompletionDate(completionDate)
+

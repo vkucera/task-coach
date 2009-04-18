@@ -139,7 +139,8 @@ class IOControllerTest(test.TestCase):
             aCategory.addCategorizable(eachTask)
         self.iocontroller.saveselection(tasks=self.taskFile.tasks(), 
                                         filename=self.filename1)
-        taskFile = persistence.TaskFile(self.filename1)
+        taskFile = persistence.TaskFile()
+        taskFile.setFilename(self.filename1)
         taskFile.load()
         self.assertEqual(1, len(taskFile.categories()))            
         

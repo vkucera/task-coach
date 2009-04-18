@@ -21,6 +21,7 @@ import os, wx
 import test
 from taskcoachlib import persistence
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
+from taskcoachlib.thirdparty import lockfile
 
 
 class FakeAttachment(base.Object):
@@ -46,8 +47,7 @@ class FakeAttachment(base.Object):
 
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
-        self.taskFile = persistence.TaskFile()
-        self.emptyTaskFile = persistence.TaskFile()
+        self.createTaskFiles()
         self.task = task.Task()
         self.taskFile.tasks().append(self.task)
         self.category = category.Category('category')
@@ -60,8 +60,14 @@ class TaskFileTestCase(test.TestCase):
         self.filename = 'test.tsk'
         self.filename2 = 'test2.tsk'
         
+    def createTaskFiles(self):
+        self.taskFile = persistence.TaskFile()
+        self.emptyTaskFile = persistence.TaskFile()
+        
     def tearDown(self):
         super(TaskFileTestCase, self).tearDown()
+        self.taskFile.close()
+        self.emptyTaskFile.close()
         self.remove(self.filename, self.filename2)
 
     def remove(self, *filenames):
@@ -73,7 +79,7 @@ class TaskFileTestCase(test.TestCase):
 class TaskFileTest(TaskFileTestCase):
     def testIsEmptyInitially(self):
         self.failUnless(self.emptyTaskFile.isEmpty())
-    
+        
     def testHasNoTasksInitially(self):
         self.failIf(self.emptyTaskFile.tasks())
         
@@ -151,7 +157,7 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.setFilename(self.filename)
         self.taskFile.close()
         self.taskFile.close()
-        self.assertEqual('', self.taskFile.lastFilename())
+        self.assertEqual(self.filename, self.taskFile.lastFilename())
         
     def testLastFilename_EqualsCurrentFilenameAfterSaveAs(self):
         self.taskFile.setFilename(self.filename)
@@ -318,6 +324,14 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.taskFile.save()
         self.task.addNote(note.Note(subject='Note'))
         self.failUnless(self.taskFile.needSave())
+        
+    def testNeedSave_AfterTaskNoteChanged(self):
+        self.taskFile.setFilename(self.filename)
+        newNote = note.Note(subject='Note')
+        self.task.addNote(newNote)
+        self.taskFile.save()
+        newNote.setSubject('New subject')
+        self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterChangePriority(self):
         self.task.setPriority(10)
@@ -471,11 +485,11 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.taskFile.close()
         self.assertEqual(self.filename, self.taskFile.lastFilename())
         
-    def testLastFilename_IsEmptyAfterClosingTwice(self):
+    def testLastFilename_EqualsPreviousFilenameAfterClosingTwice(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.close()
         self.taskFile.close()
-        self.assertEqual('', self.taskFile.lastFilename())
+        self.assertEqual(self.filename, self.taskFile.lastFilename())
         
     def testLastFilename_EqualsCurrentFilenameAfterSaveAs(self):
         self.taskFile.setFilename(self.filename)
@@ -664,13 +678,15 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         self.taskFile.saveas('new.tsk')
         self.taskFile.load()
         self.assertEqual(1, len(self.taskFile.tasks()))
+        self.taskFile.close()
         self.remove('new.tsk')
 
 
 class TaskFileMergeTest(TaskFileTestCase):
     def setUp(self):
         super(TaskFileMergeTest, self).setUp()
-        self.mergeFile = persistence.TaskFile('merge.tsk')
+        self.mergeFile = persistence.TaskFile()
+        self.mergeFile.setFilename('merge.tsk')
     
     def tearDown(self):
         self.remove('merge.tsk')
@@ -751,18 +767,82 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.assertEqual('merged category', list(self.taskFile.categories())[0].subject())
         
         
-class LockTest(test.TestCase):
-    @test.onlyOnPlatform('__WXGTK__')
-    def testLock(self):
-        import fcntl
-        file1 = open('file', 'w')
-        fcntl.flock(file1.fileno(), fcntl.LOCK_EX|fcntl.LOCK_NB)
-        file2 = open('file', 'w')
-        try:
-            fcntl.flock(file2.fileno(), fcntl.LOCK_EX|fcntl.LOCK_NB)
-            self.fail()
-        except IOError:
-            pass
-        finally:
-            file1.close()
-        os.remove('file')
+class LockedTaskFileLockTest(TaskFileTestCase):
+    def createTaskFiles(self):
+        self.taskFile = persistence.LockedTaskFile()
+        self.emptyTaskFile = persistence.LockedTaskFile()
+        
+    def tearDown(self):
+        self.taskFile.close()
+        self.emptyTaskFile.close()
+        super(LockedTaskFileLockTest, self).tearDown()
+        
+    def testFileIsNotLockedInitially(self):
+        self.failIf(self.taskFile.is_locked())
+        self.failIf(self.emptyTaskFile.is_locked())
+        
+    def testFileIsLockedAfterLoading(self):
+        self.taskFile.load(self.filename)
+        self.failUnless(self.taskFile.is_locked())
+
+    def testFileIsLockedAfterLoadingTwice(self):
+        self.taskFile.load(self.filename)
+        self.taskFile.load(self.filename)
+        self.failUnless(self.taskFile.is_locked())
+        
+    def testFileIsNotLockedAfterClosing(self):
+        self.taskFile.close()
+        self.failIf(self.taskFile.is_locked())
+
+    def testFileIsnotLockedAfterLoadingAndClosing(self):
+        self.taskFile.load(self.filename)
+        self.taskFile.close()
+        self.failIf(self.taskFile.is_locked())
+           
+    def testFileIsLockedAfterSaving(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.failUnless(self.taskFile.is_locked())
+        
+    def testFileIsLockedAfterSavingTwice(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.taskFile.save()
+        self.failUnless(self.taskFile.is_locked())
+        
+    def testFileIsNotLockedAfterSavingAndClosing(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.taskFile.close()
+        self.failIf(self.taskFile.is_locked())
+        
+    def testFileIsLockedAfterSaveAs(self):
+        self.taskFile.saveas(self.filename)
+        self.failUnless(self.taskFile.is_locked())
+        
+    def testFileIsLockedAfterSaveAndSaveAs(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.taskFile.saveas(self.filename2)
+        self.failUnless(self.taskFile.is_locked())
+        
+    def testFileCanBeLoadedAfterClose(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.taskFile.close()
+        self.emptyTaskFile.load(self.filename)
+        self.assertEqual(1, len(self.emptyTaskFile.tasks()))
+        
+    def testOriginalFileCanBeLoadedAfterSaveAs(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.taskFile.saveas(self.filename2)
+        self.taskFile.close()
+        self.emptyTaskFile.load(self.filename)
+        self.assertEqual(1, len(self.emptyTaskFile.tasks()))
+        
+    def testOpenBreakLock(self):
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.emptyTaskFile.load(self.filename, breakLock=True)
+        self.failUnless(self.emptyTaskFile.is_locked())

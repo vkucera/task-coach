@@ -22,11 +22,12 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import base, date, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
+from taskcoachlib.thirdparty import lockfile
 
 
 class TaskFile(patterns.Observable, patterns.Observer):
-    def __init__(self, filename='', *args, **kwargs):
-        self.__filename = self.__lastFilename = filename
+    def __init__(self, *args, **kwargs):
+        self.__filename = self.__lastFilename = ''
         self.__needSave = self.__loading = False
         self.__tasks = task.TaskList()
         self.__categories = category.CategoryList()
@@ -107,7 +108,8 @@ class TaskFile(patterns.Observable, patterns.Observer):
                 categorizable.markDirty()
             
     def onNoteChanged(self, event):
-        if event.source() in self.notes() and not self.__loading:
+        if not self.__loading:
+            # A note may be in self.notes() or it may be a note of another domain object.
             self.markDirty()
             event.source().markDirty()
             
@@ -119,6 +121,8 @@ class TaskFile(patterns.Observable, patterns.Observer):
             event.source().markDirty()
 
     def setFilename(self, filename):
+        if filename == self.__filename:
+            return
         self.__lastFilename = filename or self.__filename
         self.__filename = filename
         self.notifyObservers(patterns.Event(self, 'taskfile.filenameChanged', 
@@ -129,7 +133,7 @@ class TaskFile(patterns.Observable, patterns.Observer):
         
     def lastFilename(self):
         return self.__lastFilename
-        
+    
     def markDirty(self, force=False):
         if force or not self.__needSave:
             self.__needSave = True
@@ -141,9 +145,9 @@ class TaskFile(patterns.Observable, patterns.Observer):
             self.notifyObservers(patterns.Event(self, 'taskfile.dirty', False))
             
     def _clear(self, regenerate=True):
-        self.tasks().removeItems(list(self.tasks()))
-        self.categories().removeItems(list(self.categories()))
-        self.notes().removeItems(list(self.notes()))
+        self.tasks().clear()
+        self.categories().clear()
+        self.notes().clear()
         if regenerate:
             self.__guid = generate()
             self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
@@ -166,8 +170,10 @@ class TaskFile(patterns.Observable, patterns.Observer):
     def _openForWrite(self):
         return codecs.open(self.__filename, 'w', 'utf-8')
     
-    def load(self):
+    def load(self, filename=None):
         self.__loading = True
+        if filename:
+            self.setFilename(filename)
         try:
             if self.exists():
                 fd = self._openForRead()
@@ -185,6 +191,9 @@ class TaskFile(patterns.Observable, patterns.Observer):
             self.notes().extend(notes)
             self.__syncMLConfig = syncMLConfig
             self.__guid = guid
+        except:
+            self.setFilename('')
+            raise
         finally:
             self.__loading = False
             self.__needSave = False
@@ -202,8 +211,8 @@ class TaskFile(patterns.Observable, patterns.Observer):
         self.save()
 
     def merge(self, filename):
-        mergeFile = self.__class__(filename)
-        mergeFile.load()
+        mergeFile = self.__class__()
+        mergeFile.load(filename)
         self.__loading = True
         self.tasks().removeItems(self.objectsToOverwrite(self.tasks(), mergeFile.tasks()))
         self.tasks().extend(mergeFile.tasks().rootItems())
@@ -235,6 +244,58 @@ class TaskFile(patterns.Observable, patterns.Observer):
         self.__needSave = True
 
 
+class LockedTaskFile(TaskFile):
+    ''' LockedTaskFile adds cooperative locking to the TaskFile. '''
+    
+    def __init__(self, *args, **kwargs):
+        super(LockedTaskFile, self).__init__(*args, **kwargs)
+        self.__lock = None
+        
+    def is_locked(self):
+        return self.__lock and self.__lock.is_locked()
+
+    def is_locked_by_me(self):
+        return self.is_locked() and self.__lock.i_am_locking()
+    
+    def release_lock(self):
+        if self.is_locked_by_me():
+            self.__lock.release()
+            
+    def acquire_lock(self, filename):
+        if not self.is_locked_by_me():
+            self.__lock = lockfile.FileLock(filename)
+            self.__lock.acquire(-1)
+            
+    def break_lock(self, filename):
+        self.__lock = lockfile.FileLock(filename)
+        self.__lock.break_lock()
+            
+    def load(self, filename=None, breakLock=False):
+        ''' Lock the file before we load, if not already locked. '''
+        filename = filename or self.filename()
+        if filename:
+            if breakLock:
+                self.break_lock(filename)
+            self.acquire_lock(filename)
+        return super(LockedTaskFile, self).load(filename)
+    
+    def save(self):
+        ''' Lock the file before we save, if not already locked. '''
+        self.acquire_lock(self.filename())
+        return super(LockedTaskFile, self).save()
+    
+    def saveas(self, filename):
+        ''' Unlock the file before we save it under another name. '''
+        self.release_lock()
+        return super(LockedTaskFile, self).saveas(filename)
+    
+    def close(self):
+        ''' Unlock the file before after close it. '''
+        result = super(LockedTaskFile, self).close()
+        self.release_lock()
+        return result
+        
+    
 class AutoSaver(patterns.Observer):
     def __init__(self, settings, *args, **kwargs):
         super(AutoSaver, self).__init__(*args, **kwargs)
@@ -272,3 +333,4 @@ class AutoSaver(patterns.Observer):
         
     def _isOn(self, booleanSetting):
         return self.__settings.getboolean('file', booleanSetting)
+

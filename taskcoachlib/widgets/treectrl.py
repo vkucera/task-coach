@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,25 +29,19 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         return self.getChildrenCount(index)
         
     def OnGetItemText(self, index, column=0):
-        if column:
-            return self.getItemText(index, column)
-        else:
-            return self.getItemText(index)
+        args = (index, column) if column else (index,)
+        return self.getItemText(*args)
         
     def OnGetItemExpanded(self, index):
         return self.getItemExpanded(index)
 
     def OnGetItemTooltipData(self, index, column=0):
-        if column:
-            return self.getItemTooltipData(index, column)
-        else:
-            return self.getItemTooltipData(index)
+        args = (index, column) if column else (index,)
+        return self.getItemTooltipData(*args)
 
     def OnGetItemImage(self, index, which, column=0):
-        if column:
-            return self.getItemImage(index, which, column)
-        else:
-            return self.getItemImage(index, which)
+        args = (index, which, column) if column else (index, which)
+        return self.getItemImage(*args)
         
     def OnGetItemTextColour(self, index):
         return self.getItemAttr(index).GetTextColour()
@@ -86,14 +80,19 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         event.Skip()
                     
     def onDoubleClick(self, event):
-        if not self.isCollapseExpandButtonClicked(event):
+        if not self.isClickablePartOfNodeClicked(event):
             self.editCommand(event)
         event.Skip(False)
         
     def onItemActivated(self, event):
         self.editCommand(event)
         event.Skip(False)
-
+        
+    def isClickablePartOfNodeClicked(self, event):
+        ''' Return whether the user double clicked some part of the node that
+            can also receive regular mouse clicks. '''
+        return self.isCollapseExpandButtonClicked(event)
+    
     def isCollapseExpandButtonClicked(self, event):
         item, flags, column = self.HitTest(event.GetPosition(), 
                                            alwaysReturnColumn=True)
@@ -235,6 +234,17 @@ class CustomTreeCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithToolTip,
         # Don't open the editor (see TreeMixin.onItemActivated) but let the 
         # default event handler (un)check the item:
         event.Skip()
+        
+    def isClickablePartOfNodeClicked(self, event):
+        ''' Return whether the user double clicked some part of the node that
+            can also receive regular mouse clicks. '''
+        return super(CustomTreeCtrl, self).isClickablePartOfNodeClicked(event) or \
+            self.isCheckBoxClicked(event)
+            
+    def isCheckBoxClicked(self, event):
+        item, flags, column = self.HitTest(event.GetPosition(), 
+                                           alwaysReturnColumn=True)
+        return flags & customtree.TREE_HITTEST_ONITEMCHECKICON
     
 
 class CheckTreeCtrl(CustomTreeCtrl):

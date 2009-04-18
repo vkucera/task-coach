@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -220,7 +220,7 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: ${python:Depends}, python-wxgtk2.8, python-wxversion, ${misc:Depends}
+Depends: python2.5, python-wxgtk2.8, python-wxversion
 Description: %(description)s.
 %(long_description)s
 '''
