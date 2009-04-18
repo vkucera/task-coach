@@ -193,7 +193,7 @@ pages['download'] = \
         </p>
         <h3>Download previous releases of %(name)s</h3>
         <P>Download previous releases of %(name)s from 
-        <A HREF="%(dist_download_prefix)s">Sourceforge</A>.
+        <A HREF="http://sourceforge.net/project/showfiles.php?group_id=130831&package_id=143476">Sourceforge</A>.
         </P>
         <h3>MD5 Digests</h3>
 ''' + md5 
