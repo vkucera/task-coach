@@ -64,7 +64,12 @@ class IconProvider(object):
     
     def getIconFromArtProvider(self, iconTitle, iconSize=None):
         size = iconSize or self.__iconSizeOnCurrentPlatform
-        return wx.ArtProvider_GetIcon(iconTitle, wx.ART_FRAME_ICON, (size, size))    
+        # wx.ArtProvider_GetIcon doesn't convert alpha to mask, so we do it
+        # ourselves:
+        bitmap = wx.ArtProvider_GetBitmap(iconTitle, wx.ART_FRAME_ICON, 
+                                          (size, size))    
+        bitmap = ArtProvider.convertAlphaToMask(bitmap)
+        return wx.IconFromBitmap(bitmap)
 
 
 def iconBundle(iconTitle):
