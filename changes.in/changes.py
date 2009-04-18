@@ -33,7 +33,9 @@ Fixed by forcing an install for Python 2.5 on all Linux systems when
 installing from a RPM or Debian package.''', '2724839'),
         Bug('''The lockfile package used for file locking had a bug when
 used with Python 2.6. Fixed by upgrading the lockfile package to version 
-0.8.''', '2761466')
+0.8.''', '2761466'),
+        Bug('''Task Coach would sometimes crash when dragging a task onto 
+another task on Windows.''', '2573263', '1995248')
     ]
 ),
 

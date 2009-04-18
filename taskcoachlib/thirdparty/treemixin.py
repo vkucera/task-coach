@@ -591,6 +591,10 @@ class DragAndDrop(TreeAPIHarmonizer, TreeHelper):
         self.SetCursorToDragging()
 
     def StopDragging(self):
+        # There's a bug in the TreeListCtrl (wxPython 2.8.7.1) that 
+        # may make the current item point to a non-existing item. Prevent that 
+        # by making the root item the current item:
+        self.SetCurrentItem(self.GetRootItem())
         self.GetMainWindow().Unbind(wx.EVT_MOTION)
         self.Unbind(wx.EVT_TREE_END_DRAG)
         self.ResetCursor()
