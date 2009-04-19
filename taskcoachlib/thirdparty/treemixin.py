@@ -25,8 +25,8 @@ The VirtualTree and DragAndDrop mixins force the wx.TR_HIDE_ROOT style.
 
 Author: Frank Niessink <frank@niessink.com>
 License: wxWidgets license
-Version: 1.5
-Date: 10 July 2008
+Version: 1.6
+Date: April 19, 2009
 
 ExpansionState is based on code and ideas from Karsten Hilbert.
 Andrea Gavana provided help with the CustomTreeCtrl integration.
@@ -393,7 +393,7 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         # might query the tree before we're done refreshing, so postpone
         # expanding and collapsing items until we're done refreshing.
         self.RefreshExpansionStatesRecursively(rootItem)
-                                
+        
     def RefreshItem(self, index):
         """ Redraws the item with the specified index. """
         try:
@@ -564,7 +564,7 @@ class DragAndDrop(TreeAPIHarmonizer, TreeHelper):
             if dropTarget != self.GetRootItem():
                 self.SelectItem(dropTarget)
             self.OnDrop(dropTarget, self._dragItem)
-
+        
     def OnDragging(self, event):
         if not event.Dragging():
             self.StopDragging()
@@ -591,16 +591,12 @@ class DragAndDrop(TreeAPIHarmonizer, TreeHelper):
         self.SetCursorToDragging()
 
     def StopDragging(self):
-        # There's a bug in the TreeListCtrl (wxPython 2.8.7.1) that 
-        # may make the current item point to a non-existing item. Prevent that 
-        # by making the root item the current item:
-        self.SetCurrentItem(self.GetRootItem())
         self.GetMainWindow().Unbind(wx.EVT_MOTION)
         self.Unbind(wx.EVT_TREE_END_DRAG)
         self.ResetCursor()
         self.UnselectAll()
         self.SelectItem(self._dragItem)
-
+        
     def SetCursorToDragging(self):
         self.GetMainWindow().SetCursor(wx.StockCursor(wx.CURSOR_HAND))
         
