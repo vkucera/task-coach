@@ -51,15 +51,16 @@ footer = '''
         </div><!-- end of content div -->
         <div id="navAlpha">
             <div class="navbox">
-                <h2>Download</h2>
+                <h2>Welcome!</h2>
                 <p>
+                    %(name)s %(version)s was released on %(date)s.<br>
                     &raquo; <a href="download.html" title="Get %(name)s here">
                         Get %(name)s here
                     </a>
                 </p>
             </div>
             <div class="navbox">
-                <h2>About</h2>
+                <h2>About %(name)s</h2>
                 <p>
                     &raquo; <a href="index.html" title="%(name)s overview">Overview</a><br>
                     &raquo; <a href="screenshots.html" 
@@ -103,8 +104,6 @@ footer = '''
                     &raquo; <a href="http://www.cafepress.com/taskcoach/">Buy the mug</a>
                 </p>
             </div>
-        </div>
-        <div id="navBeta">
             <div class="navbox">
                 <h2>Links</h2>
                 <p>
@@ -123,11 +122,21 @@ footer = '''
                     <SCRIPT type='text/javascript' language='JavaScript' src='http://www.ohloh.net/projects/5109;badge_js'></SCRIPT>
                 </p>
             </div>
+        </div>
+        <div id="navBeta">
             <div class="navbox">
-                <h2>News</h2>
                 <p>
-                <a href="download.html">%(name)s %(version)s</a> was released
-                on %(date)s.
+<script type="text/javascript"><!--
+google_ad_client = "pub-2371570118755412";
+/* 160x600, gemaakt 23-4-09 */
+google_ad_slot = "3326044876";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
                 </p>
             </div>
             <div class="navbox">

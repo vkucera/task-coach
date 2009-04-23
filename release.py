@@ -55,7 +55,8 @@ class Settings(ConfigParser.SafeConfigParser, object):
         defaults = dict(sourceforge=['username', 'password'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
-                        chello=['hostname', 'username', 'password'],
+                        chello=['hostname', 'username', 'password', 'folder'],
+                        hypernation=['hostname', 'username', 'password', 'folder'],
                         localftp=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'])
         for section in defaults:
@@ -121,6 +122,17 @@ def generateWebsite(settings):
 
 
 class SimpleFTP(ftplib.FTP, object):
+    def __init__(self, hostname, username, password, folder='.'):
+        super(SimpleFTP, self).__init__(hostname, username, password)
+        self.ensure_folder(folder)
+            
+    def ensure_folder(self, folder):
+        try:
+            self.cwd(folder)
+        except ftplib.error_perm, info:
+            self.mkd(folder)
+            self.cwd(folder)    
+            
     def put(self, folder):
         for root, dirs, filenames in os.walk(folder):
             if root != folder:
@@ -152,17 +164,17 @@ def localDownload(settings):
     folder = settings.get('localftp', 'folder')%metadata
     if hostname and username and password and folder:
         print 'Downloading distributions from local FTP site...'
-        localFTP = SimpleFTP(hostname, username, password)
-        localFTP.cwd(folder)
+        ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('dist') 
-        for filename in localFTP.nlst():
+        for filename in ftp.nlst():
             if metadata['version'] in filename: 
-                localFTP.get(filename)
+                ftp.get(filename)
         os.chdir('..') 
-        localFTP.quit()
+        ftp.quit()
         print 'Done downloading distributions from local FTP site...'
     else:
         print 'Warning: cannot download from local FTP site; missing credentials'
+
 
 def localUpload(settings):
     ''' Upload distributions to a local ftp site from dist dir. '''
@@ -173,34 +185,39 @@ def localUpload(settings):
     folder = settings.get('localftp', 'folder')%metadata
     if hostname and username and password and folder:
         print 'Uploading distributions to local FTP site...'
-        localFTP = SimpleFTP(hostname, username, password)
-        try:
-            localFTP.cwd(folder)
-        except ftplib.error_perm, info:
-            localFTP.mkd(folder)
-            localFTP.cwd(folder)
-        localFTP.put('dist')
-        localFTP.quit()
+        ftp = SimpleFTP(hostname, username, password, folder)
+        ftp.put('dist')
+        ftp.quit()
         print 'Done uploading distributions to local FTP site...'
     else:
         print 'Warning: cannot upload to local FTP site; missing credentials'
 
 
-def uploadWebsiteToChello(settings):
-    hostname = settings.get('chello', 'hostname')
-    username = settings.get('chello', 'username')
-    password = settings.get('chello', 'password')
+def uploadWebsiteToWebsiteHost(settings, websiteName):
+    settingsSection = websiteName.lower()
+    hostname = settings.get(settingsSection, 'hostname')
+    username = settings.get(settingsSection, 'username')
+    password = settings.get(settingsSection, 'password')
+    folder = settings.get(settingsSection, 'folder')
     
-    if hostname and username and password:
-        print "Uploading website to Chello..."
-        chello = SimpleFTP(hostname, username, password)
+    if hostname and username and password and folder:
+        print 'Uploading website to %s...'%websiteName
+        ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('website.out')
-        chello.put('.')
-        chello.quit()
+        ftp.put('.')
+        ftp.quit()
         os.chdir('..')
-        print 'Done uploading website to Chello.'
+        print 'Done uploading website to %s.'%websiteName
     else:
-        print 'Warning: cannot upload website to Chello; missing credentials'
+        print 'Warning: cannot upload website to %s; missing credentials'%websiteName
+
+
+def uploadWebsiteToChello(settings):
+    uploadWebsiteToWebsiteHost(settings, 'Chello')
+
+
+def uploadWebsiteToHypernation(settings):
+    uploadWebsiteToWebsiteHost(settings, 'Hypernation')
 
 
 def uploadWebsiteToSourceForge(settings):
@@ -208,7 +225,7 @@ def uploadWebsiteToSourceForge(settings):
     username = settings.get('sourceforge', 'username')
     os.system('scp -r website.out/* %s@web.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs' % username)
     print 'Done uploading website to SourceForge.'
-    
+
  
 def registerWithPyPI(settings):
     print 'Registering with PyPI...'
@@ -237,6 +254,7 @@ def registerWithPyPI(settings):
 def uploadWebsite(settings):
     uploadWebsiteToChello(settings)
     uploadWebsiteToSourceForge(settings)
+    uploadWebsiteToHypernation(settings)
     
 
 def phase1(settings):
@@ -326,7 +344,8 @@ commands = dict(phase1=phase1, phase2=phase2,
                 md5=generateMD5Digests,
                 website=uploadWebsite, 
                 websiteChello=uploadWebsiteToChello, 
-                websiteSF=uploadWebsiteToSourceForge, 
+                websiteSF=uploadWebsiteToSourceForge,
+                websiteHN=uploadWebsiteToHypernation, 
                 pypi=registerWithPyPI, announce=mailAnnouncement)
 settings = Settings()
 try:
