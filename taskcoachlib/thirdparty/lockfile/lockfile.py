@@ -492,7 +492,21 @@ class SQLiteFileLock(LockBase):
                        (self.lock_file,))
         self.connection.commit()
 
-if hasattr(os, "link"):
-    FileLock = LinkFileLock
-else:
-    FileLock = MkdirFileLock
+
+def canLink(path):
+    if not hasattr(os, "link"):
+        return False
+    linkPath = path + '.lnk'
+    try:
+        os.link(path, linkPath)
+        return True
+    except OSError:
+        return False
+    finally:
+        if os.path.exists(linkPath):
+            os.remove(linkPath)
+
+
+def FileLock(path, *args, **kwargs):
+    Lock = LinkFileLock if canLink(path) else MkdirFileLock
+    return Lock(path, *args, **kwargs)
