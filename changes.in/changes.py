@@ -26,6 +26,10 @@ releases = [
 Release('0.72.7', 'April ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+    ],
+    websiteChanges=[
+        Website('''Added Google Ads to generate additional revenue to cover the
+cost of hardware and commercial operating systems.''', 'index.html')
     ]
 ),
 
