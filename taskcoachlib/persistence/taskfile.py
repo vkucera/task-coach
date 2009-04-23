@@ -263,16 +263,16 @@ class LockedTaskFile(TaskFile):
     def acquire_lock(self, filename):
         if not self.is_locked_by_me():
             self.__lock = lockfile.FileLock(filename)
-            self.__lock.acquire(-1)
+            self.__lock.acquire()
             
     def break_lock(self, filename):
         self.__lock = lockfile.FileLock(filename)
         self.__lock.break_lock()
             
-    def load(self, filename=None, breakLock=False):
+    def load(self, filename=None, lock=True, breakLock=False):
         ''' Lock the file before we load, if not already locked. '''
         filename = filename or self.filename()
-        if filename:
+        if lock and filename:
             if breakLock:
                 self.break_lock(filename)
             self.acquire_lock(filename)
