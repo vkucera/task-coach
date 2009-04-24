@@ -263,7 +263,7 @@ class LockedTaskFile(TaskFile):
     def acquire_lock(self, filename):
         if not self.is_locked_by_me():
             self.__lock = lockfile.FileLock(filename)
-            self.__lock.acquire()
+            self.__lock.acquire(-1) # Fail immediately if we can't get a lock
             
     def break_lock(self, filename):
         self.__lock = lockfile.FileLock(filename)
