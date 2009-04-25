@@ -26,8 +26,8 @@ releases = [
 Release('0.72.7', 'April ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-               Bug('''Allow for opening a task file unlocked to support
-memory sticks where locking doesn't work.''', '2776249')
+               Bug('''Support locking of task files on USB sticks/drives that
+have a different file system than the host system has.''', '2776249')
     ],
     websiteChanges=[
         Website('''Added Google Ads to generate additional revenue to cover the
