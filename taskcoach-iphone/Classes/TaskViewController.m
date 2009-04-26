@@ -97,7 +97,9 @@
 
 - (void)setAddButton
 {
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeContactAdd];
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+	[button setFrame:CGRectMake(0, 0, 22, 22)];
+	[button setImage:[UIImage imageNamed:@"addtask.png"] forState:UIControlStateNormal];
 	self.navigationItem.titleView = button;
 	[button addTarget:self action:@selector(onAddTask:) forControlEvents:UIControlEventTouchUpInside];
 }
