@@ -17,9 +17,11 @@
 {
 	NavigationController *navigationController;
 	NSMutableArray *categories;
+	UIBarButtonItem *syncButton;
 }
 
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;
+@property (nonatomic, assign) IBOutlet UIBarButtonItem *syncButton;
 
 - (IBAction)onAddCategory:(UIBarButtonItem *)button;
 - (IBAction)onSynchronize:(UIBarButtonItem *)button;
