@@ -23,6 +23,7 @@
 @implementation CategoryViewController
 
 @synthesize navigationController;
+@synthesize syncButton;
 
 - (void)willTerminate
 {
@@ -248,6 +249,8 @@
 
 - (IBAction)onSynchronize:(UIBarButtonItem *)button
 {
+	button.enabled = NO;
+
 	if (![Configuration configuration].name)
 	{
 		// Name/domain not defined, browse
@@ -291,6 +294,7 @@
 	[self loadCategories];
 	[self.tableView reloadData];
 	[self.navigationController dismissModalViewControllerAnimated:YES];
+	syncButton.enabled = YES;
 }
 
 - (void)bonjourBrowser:(BonjourBrowser*)browser didResolveInstance:(NSNetService*)ref
@@ -309,6 +313,7 @@
 	}
 	else
 	{
+		syncButton.enabled = YES;
 		[self.navigationController dismissModalViewControllerAnimated:YES];
 	}
 }
