@@ -15,6 +15,7 @@
 		A604D98E0F31C25B00D3DC79 /* FullFromDeviceState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */; };
 		A604D99C0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */; };
 		A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */; };
+		A60575FF0FA457590054E4C3 /* addtask.png in Resources */ = {isa = PBXBuildFile; fileRef = A60575FE0FA457590054E4C3 /* addtask.png */; };
 		A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A6142CD20F35DE61001DD420 /* PositionStore.m */; };
 		A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFB0F35BA450086ECD6 /* TwoWayState.m */; };
 		A61AED000F35BBD20086ECD6 /* TwoWayNewCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFF0F35BBD20086ECD6 /* TwoWayNewCategoriesState.m */; };
@@ -46,7 +47,6 @@
 		A6664DDC0F2B486000638C68 /* BaseState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DDB0F2B486000638C68 /* BaseState.m */; };
 		A6664DE70F2B498300638C68 /* InitialState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DE60F2B498300638C68 /* InitialState.m */; };
 		A6664EC50F2B504800638C68 /* AuthentificationState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664EC40F2B504800638C68 /* AuthentificationState.m */; };
-		A66AFCEE0F6BABA9003B37C1 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A66AFCED0F6BABA9003B37C1 /* iTunesArtwork */; };
 		A673ABF60F2203D000E548BB /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A673ABF50F2203D000E548BB /* NavigationController.m */; };
 		A6793B270F31E28700AAEC17 /* UploadObjectsState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6793B260F31E28700AAEC17 /* UploadObjectsState.m */; };
 		A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */; };
@@ -93,6 +93,7 @@
 		A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DDED1A0F46C5D30047AEF5 /* Security.framework */; };
 		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
+		A6E0A9560FA45CEA0034F413 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = A6E0A9550FA45CEA0034F413 /* iTunesArtwork.png */; };
 		A6EA679A0F2255E7004108B5 /* CheckView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6EA67990F2255E7004108B5 /* CheckView.m */; };
 		A6F8BF740F46F93C00385F57 /* CategoriesSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F8BF730F46F93C00385F57 /* CategoriesSelector.m */; };
 		A6F8E3FA0F2C6CFD007D929C /* FullFromDesktopState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */; };
@@ -116,6 +117,7 @@
 		A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDeviceTaskState.m; path = Synchronization/FullFromDeviceTaskState.m; sourceTree = "<group>"; };
 		A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGUIDState.h; path = Synchronization/GetGUIDState.h; sourceTree = "<group>"; };
 		A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGUIDState.m; path = Synchronization/GetGUIDState.m; sourceTree = "<group>"; };
+		A60575FE0FA457590054E4C3 /* addtask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addtask.png; sourceTree = "<group>"; };
 		A6142CD10F35DE61001DD420 /* PositionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositionStore.h; sourceTree = "<group>"; };
 		A6142CD20F35DE61001DD420 /* PositionStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PositionStore.m; sourceTree = "<group>"; };
 		A61AECFA0F35BA450086ECD6 /* TwoWayState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayState.h; path = Synchronization/TwoWayState.h; sourceTree = "<group>"; };
@@ -165,7 +167,6 @@
 		A6664DE60F2B498300638C68 /* InitialState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitialState.m; path = Synchronization/InitialState.m; sourceTree = "<group>"; };
 		A6664EC30F2B504800638C68 /* AuthentificationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthentificationState.h; path = Synchronization/AuthentificationState.h; sourceTree = "<group>"; };
 		A6664EC40F2B504800638C68 /* AuthentificationState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthentificationState.m; path = Synchronization/AuthentificationState.m; sourceTree = "<group>"; };
-		A66AFCED0F6BABA9003B37C1 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		A673ABF40F2203D000E548BB /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		A673ABF50F2203D000E548BB /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		A6793B250F31E28700AAEC17 /* UploadObjectsState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadObjectsState.h; path = Synchronization/UploadObjectsState.h; sourceTree = "<group>"; };
@@ -241,6 +242,7 @@
 		A6DDF84F0F1F974000F35108 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskList.m; path = Database/TaskList.m; sourceTree = "<group>"; };
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
+		A6E0A9550FA45CEA0034F413 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		A6EA67980F2255E7004108B5 /* CheckView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckView.h; sourceTree = "<group>"; };
 		A6EA67990F2255E7004108B5 /* CheckView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckView.m; sourceTree = "<group>"; };
 		A6F8BF720F46F93C00385F57 /* CategoriesSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CategoriesSelector.h; path = Database/CategoriesSelector.h; sourceTree = "<group>"; };
@@ -353,7 +355,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A66AFCED0F6BABA9003B37C1 /* iTunesArtwork */,
+				A6E0A9550FA45CEA0034F413 /* iTunesArtwork.png */,
+				A60575FE0FA457590054E4C3 /* addtask.png */,
 				A63CC0B40F5174EC003669FD /* ledbluebig.png */,
 				A63CC0B50F5174EC003669FD /* ledgreenbig.png */,
 				A63CC0B60F5174EC003669FD /* ledgreybig.png */,
@@ -609,7 +612,8 @@
 				A63CC0BC0F5174EC003669FD /* ledorangebig.png in Resources */,
 				A63CC0BD0F5174EC003669FD /* ledredbig.png in Resources */,
 				A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */,
-				A66AFCEE0F6BABA9003B37C1 /* iTunesArtwork in Resources */,
+				A60575FF0FA457590054E4C3 /* addtask.png in Resources */,
+				A6E0A9560FA45CEA0034F413 /* iTunesArtwork.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
