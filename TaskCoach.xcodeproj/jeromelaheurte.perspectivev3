@@ -230,6 +230,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -267,13 +269,10 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>080E96DDFE201D6D7F000001</string>
-								<string>29B97317FDCFA39411CA2CEA</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>35</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -323,7 +322,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6E0A9660FA45D680034F413</string>
+										<string>A6B7A5D00FA45EC60067B76A</string>
 										<key>history</key>
 										<array>
 											<string>A68EDF5D0F1E28CE00F51FF2</string>
@@ -427,7 +426,7 @@
 											<string>A605760E0FA458A10054E4C3</string>
 											<string>A605760F0FA458A10054E4C3</string>
 											<string>A605767A0FA45CA70054E4C3</string>
-											<string>A605767C0FA45CA70054E4C3</string>
+											<string>A6B7A5B80FA45E290067B76A</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -570,8 +569,6 @@
 							<key>Tabs</key>
 							<array>
 								<dict>
-									<key>BecomeActive</key>
-									<true/>
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXProjectModuleGUID</key>
@@ -666,11 +663,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6E0A95C0FA45D0C0034F413</string>
+				<string>A6B7A5AF0FA45DC50067B76A</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6E0A95D0FA45D0C0034F413</string>
+				<string>A6B7A5B00FA45DC50067B76A</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6E0A95E0FA45D0C0034F413</string>
+				<string>A6B7A5B10FA45DC50067B76A</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -817,14 +814,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6E0A95F0FA45D0C0034F413</string>
+				<string>A6B7A5BA0FA45E290067B76A</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6E0A9600FA45D0C0034F413</string>
-				<string>A6E0A9610FA45D0C0034F413</string>
-				<string>A6E0A9620FA45D0C0034F413</string>
-				<string>A6E0A9630FA45D0C0034F413</string>
-				<string>A6E0A9640FA45D0C0034F413</string>
+				<string>A6B7A5BB0FA45E290067B76A</string>
+				<string>A6B7A5BC0FA45E290067B76A</string>
+				<string>A6B7A5BD0FA45E290067B76A</string>
+				<string>A6B7A5BE0FA45E290067B76A</string>
+				<string>A6B7A5BF0FA45E290067B76A</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
