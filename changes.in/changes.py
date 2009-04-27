@@ -29,7 +29,7 @@ Release('0.72.7', 'April ?, 2009',
         Bug('''Support locking of task files on USB sticks/drives that
 have a different file system than the host system has.''', '2776249'),
         Bug('''Task Coach would sometimes crash when dragging a task onto 
-another task on Windows.''', '2573263', '1995248')
+another task on Windows.''', '2573263', '1995248', '2247808')
     ],
     websiteChanges=[
         Website('''Added Google Ads to generate additional revenue to cover the
