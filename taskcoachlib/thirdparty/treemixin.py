@@ -91,7 +91,7 @@ class TreeAPIHarmonizer(object):
     
     MainWindow = property(fget=GetMainWindow)
 
-    def GetItemImage(self, item, which=wx.TreeItemIcon_Normal, column=-1):
+    def GetItemImage(self, item, which=wx.TreeItemIcon_Normal, column=0):
         # CustomTreeCtrl always wants the which argument, so provide it.
         # TreeListCtr.GetItemImage has a different order of arguments than
         # the other tree controls. Hide the differences.
@@ -102,7 +102,7 @@ class TreeAPIHarmonizer(object):
         return super(TreeAPIHarmonizer, self).GetItemImage(*args)
 
     def SetItemImage(self, item, imageIndex, which=wx.TreeItemIcon_Normal, 
-                     column=-1):
+                     column=0):
         # The SetItemImage signature is different for TreeListCtrl and
         # other tree controls. This adapter method hides the differences.
         if self.GetColumnCount():
@@ -111,6 +111,16 @@ class TreeAPIHarmonizer(object):
             args = (item, imageIndex, which)
         super(TreeAPIHarmonizer, self).SetItemImage(*args)
 
+    def SelectAll(self):
+        # Only TreeListCtrl has this method, make it available for all 
+        # tree controls
+        superClass = super(TreeAPIHarmonizer, self)
+        if hasattr(superClass, 'SelectAll'):
+            return superClass.SelectAll()
+        else:
+            for item in self.GetItemChildren(recursively=True):
+                self.SelectItem(item)
+    
     def UnselectAll(self):
         # Unselect all items, regardless of whether we are in multiple 
         # selection mode or not.
@@ -173,7 +183,7 @@ class TreeAPIHarmonizer(object):
         else:
             return super(TreeAPIHarmonizer, self).SelectItem(item, *args, 
                                                              **kwargs)
-
+        
     def HitTest(self, point, *args, **kwargs):
         """ HitTest returns a two-tuple (item, flags) for tree controls
         without columns and a three-tuple (item, flags, column) for tree

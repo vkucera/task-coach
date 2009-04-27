@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, itemctrl
 import wx.gizmos as gizmos
 from wx.lib import customtreectrl as customtree
-from taskcoachlib.thirdparty import treemixin
+from taskcoachlib.thirdparty import treemixin, hypertreelist
 
         
 class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
@@ -198,12 +198,6 @@ class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
         # (wx.TR_HAS_BUTTONS) appear. I think this is a bug in wx.TreeCtrl.
         return super(TreeCtrl, self).getStyle() | wx.TR_LINES_AT_ROOT
 
-    # Adapters to make the TreeCtrl API more like the TreeListCtrl API:
-        
-    def SelectAll(self):
-        for item in self.GetItemChildren(recursively=True):
-            self.SelectItem(item)
-    
 
 class CustomTreeCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithToolTip,
                      TreeMixin, customtree.CustomTreeCtrl): 
@@ -267,7 +261,7 @@ class CheckTreeCtrl(CustomTreeCtrl):
 
 
 class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, 
-                   itemctrl.CtrlWithToolTip, TreeMixin, gizmos.TreeListCtrl):
+                   itemctrl.CtrlWithToolTip, TreeMixin, hypertreelist.HyperTreeList):
     # TreeListCtrl uses ALIGN_LEFT, ..., ListCtrl uses LIST_FORMAT_LEFT, ... for
     # specifying alignment of columns. This dictionary allows us to map from the 
     # ListCtrl constants to the TreeListCtrl constants:
@@ -336,7 +330,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
     def selectItems(self, *items):
         for item in items:
             if not self.IsSelected(item):
-                super(TreeListCtrl, self).SelectItem(item, unselect_others=False)
+                super(TreeListCtrl, self).SelectItem(item)
         
     def ToggleItemSelection(self, item):
         ''' TreeListCtrl doesn't have a ToggleItemSelection. '''

@@ -26,8 +26,10 @@ releases = [
 Release('0.72.7', 'April ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-               Bug('''Support locking of task files on USB sticks/drives that
-have a different file system than the host system has.''', '2776249')
+        Bug('''Support locking of task files on USB sticks/drives that
+have a different file system than the host system has.''', '2776249'),
+        Bug('''Task Coach would sometimes crash when dragging a task onto 
+another task on Windows.''', '2573263', '1995248')
     ],
     websiteChanges=[
         Website('''Added Google Ads to generate additional revenue to cover the
