@@ -185,7 +185,7 @@ class TreeListColumnInfo(object):
     def __init__(self, input="", width=_DEFAULT_COL_WIDTH, flag=wx.ALIGN_LEFT,
                  image=-1, shown=True, colour=None, edit=False):
 
-        if type(input) == type(""):
+        if isinstance(input, str) or isinstance(input, unicode):
             self._text = input
             self._width = width
             self._flag = flag
