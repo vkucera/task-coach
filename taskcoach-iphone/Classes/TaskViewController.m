@@ -395,6 +395,16 @@
 	}
 }
 
+- (void)onAddTask:(UIButton *)button
+{
+	Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
+								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil];
+	isCreatingTask = YES;
+	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
+	[self.navigationController pushViewController:ctrl animated:YES];
+	[ctrl release];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (tapping && ([tapping compare:indexPath] == NSOrderedSame))
@@ -406,20 +416,16 @@
 		return;
 	}
 
+	if (self.editing && indexPath.section == 0)
+	{
+		[self onAddTask:nil];
+		return;
+	}
+
 	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:indexPath.row];
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:indexPath];
-	[ctrl release];
-}
-
-- (void)onAddTask:(UIButton *)button
-{
-	Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil];
-	isCreatingTask = YES;
-	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
-	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }
 
