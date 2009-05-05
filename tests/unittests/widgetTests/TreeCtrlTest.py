@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ class TreeCtrlTestCase(test.wxTestCase):
         
         
 class CommonTests(object):
-    ''' Tests common to TreeCtrlTest and TreeListCtrlTest. '''
+    ''' Tests for all types of trees. '''
 
     def testCreate(self):
         self.assertTree()
@@ -276,12 +276,14 @@ class CommonTests(object):
         parent, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
         self.treeCtrl.Expand(parent)
         self.failIf(self.treeCtrl.isAnyItemExpandable())
-
-
-class TreeCtrlTest(TreeCtrlTestCase, CommonTests):            
+        
+        
+class TreeListCtrlTest(TreeCtrlTestCase, CommonTests):
     def setUp(self):
-        super(TreeCtrlTest, self).setUp()
-        self.treeCtrl = widgets.TreeCtrl(self.frame, self.getItemText,
+        super(TreeListCtrlTest, self).setUp()
+        columns = [widgets.Column('subject', 'Subject')]
+        self.treeCtrl = widgets.TreeListCtrl(self.frame, columns,
+            self.getItemText,
             self.getItemTooltipText, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.onSelect, 
             dummy.DummyUICommand(), dummy.DummyUICommand())
@@ -290,31 +292,14 @@ class TreeCtrlTest(TreeCtrlTestCase, CommonTests):
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
                           (16,16)))
         self.treeCtrl.AssignImageList(imageList)
-        
-        
-class CustomTreeCtrlTest(TreeCtrlTestCase, CommonTests):
-    def setUp(self):
-        super(CustomTreeCtrlTest, self).setUp()
-        self.treeCtrl = widgets.CustomTreeCtrl(self.frame, self.getItemText,
-            self.getItemTooltipText, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
-            dummy.DummyUICommand(), dummy.DummyUICommand())
-        imageList = wx.ImageList(16, 16)
-        for bitmapName in ['task', 'tasks']:
-            imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
-                          (16,16)))
-        self.treeCtrl.AssignImageList(imageList)
-        
-    def testIsSelectionCollapsable_CollapsedAndExpandedTasksInSelection(self):
-        # This test only makes sense when the TreeCtrl supports wx.TR_EXTENDED, 
-        # and CustomTreeCtrl does not support that.
-        pass
-
+    
 
 class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
     def setUp(self):
         super(CheckTreeCtrlTest, self).setUp()
-        self.treeCtrl = widgets.CheckTreeCtrl(self.frame, self.getItemText,
+        columns = [widgets.Column('subject', 'Subject')]
+        self.treeCtrl = widgets.CheckTreeCtrl(self.frame, columns,
+            self.getItemText,
             self.getItemTooltipText, self.getItemImage, self.getItemAttr,
             self.getChildrenCount, self.getItemExpanded, self.getIsItemChecked, 
             self.onSelect, self.onCheck, 

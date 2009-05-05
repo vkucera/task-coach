@@ -23,13 +23,19 @@ from changetypes import *
 
 releases = [
 
-Release('0.72.7', 'April ?, 2009',
+Release('0.72.7', 'May ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Support locking of task files on USB sticks/drives that
 have a different file system than the host system has.''', '2776249'),
         Bug('''Task Coach would sometimes crash when dragging a task onto 
-another task on Windows.''', '2573263', '1995248', '2247808')
+another task on Windows. Fixed by using a different widget for tree-list 
+controls.''', '2573263', '1995248', '2247808')
+    ],
+    featuresAdded=[
+        Feature('''The category viewer can show additional columns (description,
+attachment, ...) besides just the subject of categories. This is a side effect 
+of the fix for the drag and drop issues.''')
     ],
     websiteChanges=[
         Website('''Added Google Ads to generate additional revenue to cover the

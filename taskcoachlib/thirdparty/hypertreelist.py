@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 25 Apr 2009, 10.00 GMT
+# Latest Revision: 04 May 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -136,8 +136,8 @@ HyperTreeList has been tested on the following platforms:
   * Windows (Windows XP);
 
 
-Latest Revision: Andrea Gavana @ 25 Apr 2009, 10.00 GMT
-Version 0.6
+Latest Revision: Andrea Gavana @ 04 May 2009, 10.00 GMT
+Version 0.7
 
 """
 
@@ -148,6 +148,7 @@ import wx.gizmos
 from customtreectrl import CustomTreeCtrl
 from customtreectrl import DragImage, TreeEvent, GenericTreeItem
 from customtreectrl import TreeRenameTimer as TreeListRenameTimer
+from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED
 
 # Version Info
 __version__ = "0.6"
@@ -185,7 +186,7 @@ class TreeListColumnInfo(object):
     def __init__(self, input="", width=_DEFAULT_COL_WIDTH, flag=wx.ALIGN_LEFT,
                  image=-1, shown=True, colour=None, edit=False):
 
-        if isinstance(input, str) or isinstance(input, unicode):
+        if isinstance(input, basestring):
             self._text = input
             self._width = width
             self._flag = flag
@@ -2939,7 +2940,7 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "GetFirstVisibleItem", "GetNextVisible", "GetPrevVisible", "AddRoot", "PrependItem", "InsertItem",
             "AppendItem", "Delete", "DeleteChildren", "DeleteRoot", "Expand", "ExpandAll", "ExpandAllChildren",
             "Collapse", "CollapseAndReset", "Toggle", "Unselect", "UnselectAll", "SelectItem",
-            "EnsureVisible", "ScrollTo", "HitTest", "GetBoundingRect", "EditLabel", "SortChildren", "FindItem",
+            "EnsureVisible", "ScrollTo", "HitTest", "GetBoundingRect", "EditLabel", "FindItem",
             "SetDragItem", "GetColumnCount", "SetMainColumn", "GetHyperTextFont", "SetHyperTextFont",
             "SetHyperTextVisitedColour", "GetHyperTextVisitedColour", "SetHyperTextNewColour", "GetHyperTextNewColour",
             "SetItemVisited", "GetItemVisited", "SetHilightFocusColour", "GetHilightFocusColour", "SetHilightNonFocusColour",
@@ -2952,7 +2953,7 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "CheckChilds", "CheckSameLevel", "GetItemWindowEnabled", "SetItemWindowEnabled", "GetItemType",
             "IsDescendantOf", "SetItemHyperText", "IsItemHyperText", "SetItemBold", "SetItemDropHighlight", "SetItemItalic",
             "GetEditControl", "ShouldInheritColours", "GetItemWindow", "SetItemWindow", "SetItemTextColour", "HideItem",
-            "DeleteAllItems", "ItemHasChildren"]
+            "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection"]
 
 
 class HyperTreeList(wx.PyControl):
@@ -2965,6 +2966,7 @@ class HyperTreeList(wx.PyControl):
         self._header_win = None
         self._main_win = None
         self._headerHeight = 0
+        self._attr_set = False
         
         main_style = style & ~(wx.SIMPLE_BORDER|wx.SUNKEN_BORDER|wx.DOUBLE_BORDER|
                                 wx.RAISED_BORDER|wx.STATIC_BORDER)
@@ -3039,14 +3041,6 @@ class HyperTreeList(wx.PyControl):
             style |= self._main_win.GetTreeStyle()
             
         return style
-
-
-    def OnCompareItems(self, item1, item2):
-
-        # do the comparison here, and not delegate to self._main_win, in order
-        # to let the user override it
-
-        return self.GetItemText(item1) == self.GetItemText(item2)
 
 
     def SetBackgroundColour(self, colour):
@@ -3244,6 +3238,28 @@ class HyperTreeList(wx.PyControl):
         return ""
 
 
+    def SortChildren(self, item):
+        """
+        Sorts the children of the given item using OnCompareItems method of HyperTreeList. 
+        You should override that method to change the sort order (the default is ascending
+        case-sensitive alphabetical order).
+        """
+
+        if not self._attr_set:
+            setattr(self._main_win, "OnCompareItems", self.OnCompareItems)
+            self._attr_set = True
+            
+        self._main_win.SortChildren(item)
+        
+
+    def OnCompareItems(self, item1, item2):
+
+        # do the comparison here, and not delegate to self._main_win, in order
+        # to let the user override it
+
+        return self.GetItemText(item1) == self.GetItemText(item2)
+
+    
     def GetClassDefaultAttributes(self):
         """Gets the class default attributes."""
 

@@ -53,6 +53,8 @@ class TreeAPIHarmonizer(object):
         # Only TreeListCtrl has columns, return 0 if we are mixed in
         # with another tree control.
         return self.__callSuper('GetColumnCount', 0, *args, **kwargs)
+    
+    ColumnCount = property(GetColumnCount)
 
     def GetItemType(self, *args, **kwargs):
         # Only CustomTreeCtrl has different item types, return the
@@ -119,7 +121,8 @@ class TreeAPIHarmonizer(object):
             return superClass.SelectAll()
         else:
             for item in self.GetItemChildren(recursively=True):
-                self.SelectItem(item)
+                if not self.IsSelected(item):
+                    self.SelectItem(item)
     
     def UnselectAll(self):
         # Unselect all items, regardless of whether we are in multiple 

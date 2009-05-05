@@ -566,16 +566,10 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
             return normalImageIndex
                     
     def attachmentImageIndex(self, task, which):
-        if task.attachments():
-            return self.imageIndex['attachment'] 
-        else:
-            return -1
+        return self.imageIndex['attachment'] if task.attachments() else -1 
 
     def noteImageIndex(self, task, which):
-        if task.notes():
-            return self.imageIndex['note'] 
-        else:
-            return -1
+        return self.imageIndex['note'] if task.notes() else -1 
 
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
