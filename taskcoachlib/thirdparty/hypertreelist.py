@@ -880,9 +880,13 @@ class TreeListItem(GenericTreeItem):
                         return self, flags, column
 
                 # check for hit on the check icons
-                wcheck = 0
-                if theCtrl._checkWidth > 0:
-                    chkX = self._text_x - theCtrl._imgWidth - 3*_MARGIN - theCtrl._btnWidth
+                if self.GetType() != 0:
+                    imageWidth = 0
+                    numberOfMargins = 1
+                    if self.GetCurrentImage() != _NO_IMAGE:
+                        imageWidth = theCtrl._imgWidth
+                        numberOfMargins += 1
+                    chkX = self._text_x - imageWidth - numberOfMargins*_MARGIN - theCtrl._checkWidth
                     chkY = y_mid - theCtrl._checkHeight2
                     if ((point.x >= chkX) and (point.x <= (chkX + theCtrl._checkWidth)) and
                         (point.y >= chkY) and (point.y <= (chkY + theCtrl._checkHeight))):                    
@@ -890,7 +894,7 @@ class TreeListItem(GenericTreeItem):
                         return self, flags, maincol
                     
                 # check for image hit
-                if theCtrl._imgWidth > 0:
+                if self.GetCurrentImage() != _NO_IMAGE:
                     imgX = self._text_x - theCtrl._imgWidth - _MARGIN                        
                     imgY = y_mid - theCtrl._imgHeight2
                     if ((point.x >= imgX) and (point.x <= (imgX + theCtrl._imgWidth)) and
