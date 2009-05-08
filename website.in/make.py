@@ -49,23 +49,10 @@ pages['index'] = \
         <A HREF="devinfo.html">help develop</A> new features and/or 
         <A HREF="donations.html">donate some money</A> (to help recover 
         costs; any amount is appreciated).</P>
-        <P>%(name)s is developed using a number of open source products.
-        See <A HREF="credits.html">credits</A> for details.</P>
-        <P>Enjoy, %(author)s &lt;%(author_email)s&gt;</P>
+        <P>%(name)s is developed using a number of products, see 
+        credits at the left.</P>
+        <P>Enjoy, <a href="mailto:%(author_email)s">%(author)s</a></P>
         '''
-
-pages['credits'] = \
-'''        <H3>Credits</H3>
-        <P>%(name)s depends on a number of other, open source, software
-        packages. It is developed in <A
-        HREF="http://www.python.org">Python</A>. The user interface uses
-        <A HREF="http://www.wxpython.org">wxPython</A>. The icons are from
-        the great <A HREF="http://www.icon-king.com">Nuvola icon set</A> by 
-        David Vignoni. The Windows installer is <A
-        HREF="http://www.jrsoftware.org">Inno Setup</A>. %(name)s source
-        code and releases are hosted by <A
-        HREF="http://sourceforge.net/">Sourceforge</A>.</P>
-'''
 
 pages['donations'] = \
 '''        <H3>Donations</H3>
@@ -102,6 +89,12 @@ and <a href="http://www.wxpython.org/download.php">wxPython</a>
 
 pages['download'] = \
 '''        <H3>Download %(name)s (release %(version)s)</H3>
+        <p><b>A word of warning:</b> %(name)s is currently alpha-state software. 
+        This means that %(name)s contains bugs. We do our best to prevent 
+        bugs and fix them as soon as possible. Still, we strongly advise you 
+        to make backups of your work on a regular basis, and especially before 
+        upgrading.</p>
+        <hr>
         <p>
         <table>
         <tr><td rowspan=4 valign=top><img src="windows.png" alt="Windows"></td>
@@ -448,6 +441,15 @@ pages['devinfo'] = \
     <p>Here's some information for developers that either want to hack
     on %(name)s or reuse code.</p>
     
+    <h4>Project hosting</h4>
+    <P>%(name)s source code, file downloads and trackers are hosted at 
+    <a href="https://sourceforge.net/projects/taskcoach/" 
+       title="%(name)s @ Sourceforge">Sourceforge</a>. Translations are hosted
+    at 
+    <a href="http://launchpad.net/taskcoach/"
+       title="%(name)s @Launchpad">Launchpad</a>.
+    </P>
+    
     <h4>Mailinglist</h4>
     <P>A Yahoo!Groups mailinglist is available for discussing the development
     of %(name)s. You can join by sending mail to <tt><a 
@@ -557,8 +559,14 @@ pages['devinfo'] = \
     <li>The feature is tested on all platforms.</li>
     <li>The changes are merged back to main trunk.</li>
     </ul>
+    <p>
     For small new features, development is done on the trunk, but all unittests
     should succeed before committing.
+    </p>
+    <h4>Blog</h4>
+    <p>Frank keeps an not very frequent 
+    <a href="http://taskcoach.blogspot.com">blog</a> about
+    lessons learned from developing %(name)s.</p>
 '''
 
 def ensureFolderExists(folder):    

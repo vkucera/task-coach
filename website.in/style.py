@@ -51,61 +51,47 @@ footer = '''
         </div><!-- end of content div -->
         <div id="navAlpha">
             <div class="navbox">
-                <h2>Welcome!</h2>
-                <p>
-                    %(name)s %(version)s was released on %(date)s.<br>
-                    &raquo; <a href="download.html" title="Get %(name)s here">
-                        Get %(name)s here
-                    </a>
-                </p>
-            </div>
-            <div class="navbox">
                 <h2>About %(name)s</h2>
-                <p>
-                    &raquo; <a href="index.html" title="%(name)s overview">Overview</a><br>
-                    &raquo; <a href="screenshots.html" 
-                       title="View some screenshots of %(name)s here">
-                         Screenshots</a><br>
-                    &raquo; <a href="features.html" 
-                       title="List of features in the current version of %(name)s">
-                         Features</a><br>
-                    &raquo; <a href="i18n.html" 
-                               title="Available translations">
-                         Translations</a><br>
-                    &raquo; <a href="changes.html">Change history</a><br>
-                    &raquo; <a href="roadmap.html" 
-                       title="Future plans for %(name)s">Roadmap</a><br>
-                    &raquo; <a href="http://taskcoach.blogspot.com">Frank's blog</a><br>
-                    &raquo; <a href="https://sourceforge.net/projects/taskcoach/"
-                       title="%(name)s @ Sourceforge">Sourceforge pages</a><br>
-                    &raquo; <a href="http://www.fraca7.net:8010/waterfall">Buildbot waterfall</a><br>
-                    &raquo; <a href="license.html">License</a><br>
-                    &raquo; <a href="credits.html">Credits</a>
-                </p>
+                <p>%(name)s %(version)s was released on %(date)s.</p>
+                <ul>
+                    <li><b><a href="download.html" title="Download %(name)s">Download</a></b></li>
+                    <li><a href="index.html" title="%(name)s overview">Overview</a></li>
+                    <li><a href="screenshots.html" 
+                       title="View some screenshots of %(name)s here">Screenshots</a></li>
+                    <li><a href="features.html" 
+                       title="List of features in the current version of %(name)s">Features</a></li>
+                    <li><a href="i18n.html" 
+                               title="Available translations">Translations</a></li>
+                    <li><a href="changes.html" 
+                       title="An overview of bugs fixed and features added per version of %(name)s">Change history</a></li>
+                    <li><a href="roadmap.html" 
+                       title="Future plans for %(name)s">Roadmap</a></li>
+                    <li><a href="license.html" 
+                       title="Your rights and obligations when using %(name)s">License</a></li>
+                </ul>
             </div>
             <div class="navbox">
                 <h2>Get support</h2>
-                <p>
-                    &raquo; <a href="mailinglist.html">Join mailinglist</a><br>
-                    &raquo; <a href="faq.html">Frequently asked questions</a><br>
-                    &raquo; <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135">Request support</a><br>
-                    &raquo; <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Browse known bugs</a><br>
-                    &raquo; <a
-                    href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</a><br>
-                    &raquo; <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</a>
-                </p>
+                <ul>
+                    <li><a href="mailinglist.html">Join mailinglist</a></li>
+                    <li><a href="faq.html">Frequently asked questions</a></li>
+                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135">Request support</a></li>
+                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Browse known bugs</a></li>
+                    <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</a></li>
+                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</a></li>
+                </ul>
             </div>
             <div class="navbox">
                 <h2>Give support</h2>
-                <p>                    
-                    &raquo; <a href="i18n.html">Help translate</a><br>
-                    &raquo; <a href="devinfo.html">Help develop</a><br>
-                    &raquo; <a href="donations.html">Donate</a><br>
-                    &raquo; <a href="http://www.cafepress.com/taskcoach/">Buy the mug</a>
+                <ul>                    
+                    <li><a href="i18n.html">Help translate</a></li>
+                    <li><a href="devinfo.html">Help develop</a></li>
+                    <li><a href="donations.html">Donate</a></li>
+                    <li><a href="http://www.cafepress.com/taskcoach/">Buy the mug</a></li>
                 </p>
             </div>
             <div class="navbox">
-                <h2>Links</h2>
+                <h2>Credits</h2>
                 <p>
                     <a href="http://www.python.org"><img
                     src="python-powered-w-70x28.png" alt="Python"
@@ -140,16 +126,14 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                 </p>
             </div>
             <div class="navbox">
-                <h2>A word of warning</h2>
-                <p>
-                    %(name)s is currently alpha-state software. 
-                    There are no separate stable and development branches, 
-                    just a development branch. New versions usually contain 
-                    a mix of new or changed features and bugfixes, and 
-                    unfortunately, sometimes new bugs. So, if you use 
-                    %(name)s in a production-like setting, backing up your 
-                    work on a regular basis is strongly advised.
-                </p>
+                <h2>Twitter updates</h2>
+                <div id="twitter_div">
+                    <h2 style="display: none;" >Twitter Updates</h2>
+                    <ul id="twitter_update_list"></ul>
+                    <a href="http://twitter.com/taskcoach" id="twitter-link" style="display:block;text-align:left;">Follow Task Coach on Twitter</a>
+                </div>
+                <script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+                <script type="text/javascript" src="http://twitter.com/statuses/user_timeline/taskcoach.json?callback=twitterCallback2&amp;count=3"></script>
             </div>
         </div>
     </body>
