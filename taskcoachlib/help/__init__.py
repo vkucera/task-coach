@@ -391,26 +391,32 @@ your tasks away and modify them:</p>
 
 _iPhoneConfigurationSubsection = _('''<h4><a name="iphoneconf">Configuration</a></h4>
 
-<p>In order to synchronize your iPhone/iPod Touch device with Task Coach on the
-desktop, you have to tell it where it is. After installing Task Coach for iPhone,
-launch the Settings application and enter the Task Coach section. Configurable
-items are:</p>
+<p>There are some settings for the iPhone app in the Settings application:</p>
 
 <ul>
-  <li>"Show completed": Whether to show or hide completed tasks.</li>
-  <li>"Icon position": Position (left or right) of the status LED in the
-      task list. Default is Right, which is better for right-handed people.</li>
-  <li>"Task Coach host": The IP address, or host name, of the computer running
-      Task Coach with which you want to sync.</li>
-  <li>"Task Coach port": The port on which Task Coach listens for incoming
-      connections. The default should be fine.</li>
+  <li>Show completed: whether to show completed tasks.</li>
+  <li>Icon position: the LED icon may show up either on the left side or the right side of the screen.</li>
+  <li>Compact mode: if this is enabled, the task list has smaller LEDs and don't show categories or dates.</li>
+  <li>Confirm complete: if enabled, a message box will pop up for confirmation when you mark a task complete by tapping its LED.</li>
 </ul>
 
 <p>Before synchronizing, you must also configure Task Coach on the desktop; in
 the preferences, in the "Features" tab, check "Enable iPhone synchronization".
 Restart Task Coach. Now, in the preferences, choose the "iPhone" tab and fill in
-at least the password. Leaving the default values for host and port should be
-fine.</p>''')
+at least the password.</p>
+
+<p>When you tap the "Sync" button in the category view, Task Coach
+will automatically detect running instances of Task Coach on your
+desktop and ask you to select one (you may have several instances
+running on different computers on your network, or several instances
+on the same computer). The name displayed is, by default, some string
+identifying the computer it's running on. To customize this, you may
+change the "Bonjour service name" in the configuration.</p>
+
+<p>Task Coach will remember the choosen instance and try it next time
+you synchronize; if it's not running, it will prompt you again.</p>
+
+''')
 
 _templatesSection = _('''<h3><a name="templates">Task templates</a></h3>
 ''')
