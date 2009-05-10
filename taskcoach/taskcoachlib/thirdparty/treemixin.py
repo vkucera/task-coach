@@ -25,8 +25,8 @@ The VirtualTree and DragAndDrop mixins force the wx.TR_HIDE_ROOT style.
 
 Author: Frank Niessink <frank@niessink.com>
 License: wxWidgets license
-Version: 1.5
-Date: 10 July 2008
+Version: 1.6
+Date: April 19, 2009
 
 ExpansionState is based on code and ideas from Karsten Hilbert.
 Andrea Gavana provided help with the CustomTreeCtrl integration.
@@ -53,6 +53,8 @@ class TreeAPIHarmonizer(object):
         # Only TreeListCtrl has columns, return 0 if we are mixed in
         # with another tree control.
         return self.__callSuper('GetColumnCount', 0, *args, **kwargs)
+    
+    ColumnCount = property(GetColumnCount)
 
     def GetItemType(self, *args, **kwargs):
         # Only CustomTreeCtrl has different item types, return the
@@ -91,7 +93,7 @@ class TreeAPIHarmonizer(object):
     
     MainWindow = property(fget=GetMainWindow)
 
-    def GetItemImage(self, item, which=wx.TreeItemIcon_Normal, column=-1):
+    def GetItemImage(self, item, which=wx.TreeItemIcon_Normal, column=0):
         # CustomTreeCtrl always wants the which argument, so provide it.
         # TreeListCtr.GetItemImage has a different order of arguments than
         # the other tree controls. Hide the differences.
@@ -102,7 +104,7 @@ class TreeAPIHarmonizer(object):
         return super(TreeAPIHarmonizer, self).GetItemImage(*args)
 
     def SetItemImage(self, item, imageIndex, which=wx.TreeItemIcon_Normal, 
-                     column=-1):
+                     column=0):
         # The SetItemImage signature is different for TreeListCtrl and
         # other tree controls. This adapter method hides the differences.
         if self.GetColumnCount():
@@ -111,6 +113,17 @@ class TreeAPIHarmonizer(object):
             args = (item, imageIndex, which)
         super(TreeAPIHarmonizer, self).SetItemImage(*args)
 
+    def SelectAll(self):
+        # Only TreeListCtrl has this method, make it available for all 
+        # tree controls
+        superClass = super(TreeAPIHarmonizer, self)
+        if hasattr(superClass, 'SelectAll'):
+            return superClass.SelectAll()
+        else:
+            for item in self.GetItemChildren(recursively=True):
+                if not self.IsSelected(item):
+                    self.SelectItem(item)
+    
     def UnselectAll(self):
         # Unselect all items, regardless of whether we are in multiple 
         # selection mode or not.
@@ -173,7 +186,7 @@ class TreeAPIHarmonizer(object):
         else:
             return super(TreeAPIHarmonizer, self).SelectItem(item, *args, 
                                                              **kwargs)
-
+        
     def HitTest(self, point, *args, **kwargs):
         """ HitTest returns a two-tuple (item, flags) for tree controls
         without columns and a three-tuple (item, flags, column) for tree
@@ -393,7 +406,7 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
         # might query the tree before we're done refreshing, so postpone
         # expanding and collapsing items until we're done refreshing.
         self.RefreshExpansionStatesRecursively(rootItem)
-                                
+        
     def RefreshItem(self, index):
         """ Redraws the item with the specified index. """
         try:
@@ -564,7 +577,7 @@ class DragAndDrop(TreeAPIHarmonizer, TreeHelper):
             if dropTarget != self.GetRootItem():
                 self.SelectItem(dropTarget)
             self.OnDrop(dropTarget, self._dragItem)
-
+        
     def OnDragging(self, event):
         if not event.Dragging():
             self.StopDragging()
@@ -591,16 +604,12 @@ class DragAndDrop(TreeAPIHarmonizer, TreeHelper):
         self.SetCursorToDragging()
 
     def StopDragging(self):
-        # There's a bug in the TreeListCtrl (wxPython 2.8.7.1) that 
-        # may make the current item point to a non-existing item. Prevent that 
-        # by making the root item the current item:
-        self.SetCurrentItem(self.GetRootItem())
         self.GetMainWindow().Unbind(wx.EVT_MOTION)
         self.Unbind(wx.EVT_TREE_END_DRAG)
         self.ResetCursor()
         self.UnselectAll()
         self.SelectItem(self._dragItem)
-
+        
     def SetCursorToDragging(self):
         self.GetMainWindow().SetCursor(wx.StockCursor(wx.CURSOR_HAND))
         

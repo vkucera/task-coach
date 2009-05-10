@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, itemctrl
 import wx.gizmos as gizmos
 from wx.lib import customtreectrl as customtree
-from taskcoachlib.thirdparty import treemixin
+from taskcoachlib.thirdparty import treemixin, hypertreelist
 
         
 class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
@@ -58,7 +58,7 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.onItemActivated)
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
-        self.Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
+        self.GetMainWindow().Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
                
     def onKeyDown(self, event):
         if event.GetKeyCode() == wx.WXK_RETURN:
@@ -180,94 +180,10 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
             if self.ItemHasChildren(item) and self.IsExpanded(item):
                 return True
         return False
-
-
-class TreeCtrl(itemctrl.CtrlWithItems, TreeMixin, wx.TreeCtrl):
-    def __init__(self, parent, getItemText, getItemTooltipData, getItemImage,
-            getItemAttr, getChildrenCount, getItemExpanded, selectCommand, editCommand,
-            dragAndDropCommand, itemPopupMenu=None, *args, **kwargs):
-        super(TreeCtrl, self).__init__(parent, style=self.getStyle(), 
-            itemPopupMenu=itemPopupMenu, *args, **kwargs)
-        self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
-        self.setItemGetters(getItemText, getItemTooltipData, getItemImage, getItemAttr,
-            getChildrenCount, getItemExpanded)
-        self.refresh()
-     
-    def getStyle(self):
-        # Adding wx.TR_LINES_AT_ROOT is necessary to make the buttons 
-        # (wx.TR_HAS_BUTTONS) appear. I think this is a bug in wx.TreeCtrl.
-        return super(TreeCtrl, self).getStyle() | wx.TR_LINES_AT_ROOT
-
-    # Adapters to make the TreeCtrl API more like the TreeListCtrl API:
-        
-    def SelectAll(self):
-        for item in self.GetItemChildren(recursively=True):
-            self.SelectItem(item)
     
-
-class CustomTreeCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithToolTip,
-                     TreeMixin, customtree.CustomTreeCtrl): 
-    def __init__(self, parent, getItemText, getItemTooltipData, getItemImage,
-            getItemAttr, getChildrenCount, getItemExpanded, selectCommand, editCommand,
-            dragAndDropCommand, itemPopupMenu=None, *args, **kwargs):
-        super(CustomTreeCtrl, self).__init__(parent, style=self.getStyle(), 
-            itemPopupMenu=itemPopupMenu, *args, **kwargs)
-        self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
-        self.setItemGetters(getItemText, getItemTooltipData, getItemImage, getItemAttr,
-            getChildrenCount, getItemExpanded)
-        self.SetTreeStyle(self.getStyle()) # FIXME: Why is this necessary?
-        self.SetBackgroundColour(wx.TreeCtrl.GetClassDefaultAttributes().colBg)
-        self.refresh()
-            
-    # Adapters to make the CustomTreeCtrl API more like the TreeListCtrl API:
-        
-    def SelectAll(self):
-        for item in self.GetItemChildren(recursively=True):
-            if not self.IsSelected(item):
-                self.SelectItem(item)
-    
-    def getStyle(self):
-        return wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE | \
-            wx.WANTS_CHARS
-            
-    def onItemActivated(self, event):
-        # Don't open the editor (see TreeMixin.onItemActivated) but let the 
-        # default event handler (un)check the item:
-        event.Skip()
-        
-    def isClickablePartOfNodeClicked(self, event):
-        ''' Return whether the user double clicked some part of the node that
-            can also receive regular mouse clicks. '''
-        return super(CustomTreeCtrl, self).isClickablePartOfNodeClicked(event) or \
-            self.isCheckBoxClicked(event)
-            
-    def isCheckBoxClicked(self, event):
-        item, flags, column = self.HitTest(event.GetPosition(), 
-                                           alwaysReturnColumn=True)
-        return flags & customtree.TREE_HITTEST_ONITEMCHECKICON
-    
-
-class CheckTreeCtrl(CustomTreeCtrl):
-    def __init__(self, parent, getItemText, getItemTooltipData, getItemImage,
-            getItemAttr, getChildrenCount, getItemExpanded, getIsItemChecked,
-            selectCommand, checkCommand, editCommand, dragAndDropCommand, 
-            itemPopupMenu=None, *args, **kwargs):
-        self.getIsItemChecked = getIsItemChecked
-        super(CheckTreeCtrl, self).__init__(parent, getItemText, getItemTooltipData,
-            getItemImage, getItemAttr, getChildrenCount, getItemExpanded,
-            selectCommand, editCommand, dragAndDropCommand, 
-            itemPopupMenu, *args, **kwargs)
-        self.Bind(customtree.EVT_TREE_ITEM_CHECKED, checkCommand)
-        
-    def OnGetItemType(self, index):
-        return 1
-    
-    def OnGetItemChecked(self, index):
-        return self.getIsItemChecked(index)
-
 
 class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, 
-                   itemctrl.CtrlWithToolTip, TreeMixin, gizmos.TreeListCtrl):
+                   itemctrl.CtrlWithToolTip, TreeMixin, hypertreelist.HyperTreeList):
     # TreeListCtrl uses ALIGN_LEFT, ..., ListCtrl uses LIST_FORMAT_LEFT, ... for
     # specifying alignment of columns. This dictionary allows us to map from the 
     # ListCtrl constants to the TreeListCtrl constants:
@@ -287,15 +203,6 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
         
-    def onHeaderWindowMouseClick(self, event):
-        # Mouse clicks in the header window seem not to be propagated to 
-        # containing windows, but mouse clicks in the main window do. By 
-        # simulating a mouse click in the main window we make sure that
-        # if the TreeListCtrl is in a AUINotebook tab, the tab is properly
-        # activated when the user clicks a column header.
-        self.GetMainWindow().ProcessEvent(wx.MouseEvent(wx.wxEVT_LEFT_DOWN))
-        event.Skip()
-
     # Extend CtrlWithColumns with TreeListCtrl specific behaviour:
         
     def _setColumns(self, *args, **kwargs):
@@ -306,7 +213,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
 
     def getStyle(self):
         return super(TreeListCtrl, self).getStyle() | wx.TR_FULL_ROW_HIGHLIGHT \
-            | wx.WANTS_CHARS
+            | wx.WANTS_CHARS | customtree.TR_HAS_VARIABLE_ROW_HEIGHT  
         
     def allItems(self):
         for rowIndex in range(self._count):
@@ -316,7 +223,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
                 pass # Item is hidden
             
     # Adapters to make the TreeListCtrl API more like the TreeCtrl API:
-        
+    """
     def SelectItem(self, item, select=True):
         ''' SelectItem takes an item and an optional boolean that indicates 
             whether the item should be selected (True, default) or unselected 
@@ -336,12 +243,8 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
     def selectItems(self, *items):
         for item in items:
             if not self.IsSelected(item):
-                super(TreeListCtrl, self).SelectItem(item, unselect_others=False)
-        
-    def ToggleItemSelection(self, item):
-        ''' TreeListCtrl doesn't have a ToggleItemSelection. '''
-        self.SelectItem(item, not self.IsSelected(item))
-        
+                super(TreeListCtrl, self).SelectItem(item)
+    """    
     # Adapters to make the TreeListCtrl more like the ListCtrl
     
     def DeleteColumn(self, columnIndex):
@@ -384,3 +287,38 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
             column = max(0, column) # FIXME: Why can the column be -1?
             event.columnName = self._getColumn(column).name()
         super(TreeListCtrl, self).onItemActivated(event)
+
+
+class CheckTreeCtrl(TreeListCtrl):
+    def __init__(self, parent, columns, getItemText, getItemTooltipData, getItemImage,
+            getItemAttr, getChildrenCount, getItemExpanded, getIsItemChecked,
+            selectCommand, checkCommand, editCommand, dragAndDropCommand, 
+            itemPopupMenu=None, *args, **kwargs):
+        self.getIsItemChecked = getIsItemChecked
+        super(CheckTreeCtrl, self).__init__(parent, columns, getItemText, 
+            getItemTooltipData, getItemImage, getItemAttr, getChildrenCount, 
+            getItemExpanded, selectCommand, editCommand, dragAndDropCommand, 
+            itemPopupMenu, *args, **kwargs)
+        self.Bind(hypertreelist.EVT_TREE_ITEM_CHECKED, checkCommand)
+        
+    def OnGetItemType(self, index):
+        return 1
+    
+    def OnGetItemChecked(self, index):
+        return self.getIsItemChecked(index)
+
+    def isClickablePartOfNodeClicked(self, event):
+        ''' Return whether the user double clicked some part of the node that
+            can also receive regular mouse clicks. '''
+        return super(CheckTreeCtrl, self).isClickablePartOfNodeClicked(event) or \
+            self.isCheckBoxClicked(event)
+            
+    def isCheckBoxClicked(self, event):
+        item, flags, column = self.HitTest(event.GetPosition(), 
+                                           alwaysReturnColumn=True)
+        return flags & customtree.TREE_HITTEST_ONITEMCHECKICON
+
+    def onItemActivated(self, event):
+        # Don't open the editor (see TreeMixin.onItemActivated) but let the 
+        # default event handler (un)check the item:
+        event.Skip()

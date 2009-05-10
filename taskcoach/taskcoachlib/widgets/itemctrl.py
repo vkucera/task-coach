@@ -182,13 +182,14 @@ class CtrlWithToolTip(_CtrlWithItems, tooltip.ToolTipMixin):
         except AttributeError:
             return item
 
-    def OnBeforeShowToolTip(self, x, y):
+    def OnBeforeShowToolTip(self, x, y): 
         item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
-        if self._itemIsOk(item):
+        if self._itemIsOk(item):    
             tooltipData = self.OnGetItemTooltipData(self.GetIndexOfItem(item), column)
             doShow = reduce(operator.__or__,
                             map(bool, [data[1] for data in tooltipData]),
                             False)
+            
             if doShow:
                 self.__tip.SetData(tooltipData)
                 return self.__tip

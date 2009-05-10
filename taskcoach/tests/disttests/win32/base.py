@@ -1,7 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
-Copyright (C) 2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -160,6 +160,9 @@ class Win32TestCase(unittest.TestCase):
         if self.processHandle is not None:
             win32process.TerminateProcess(self.processHandle, 0)
         os.remove(os.path.join(self.basepath, 'testfile.tsk'))
+        lockdir = os.path.join(self.basepath, 'testfile.tsk.lock')
+        if os.path.exists(lockdir):
+            shutil.rmtree(os.path.join(self.basepath, 'testfile.tsk.lock'))
 
     def findWindow(self, title, tries=10):
         """ Waits for a window to appear, and return a Window instance,

@@ -88,7 +88,7 @@ class IOController(object):
             self.open(filename)
             
     def open(self, filename=None, showerror=wx.MessageBox, 
-             fileExists=os.path.exists, breakLock=False, *args):
+             fileExists=os.path.exists, breakLock=False, lock=True, *args):
         if self.__taskFile.needSave():
             if not self.__saveUnsavedChanges():
                 return
@@ -101,9 +101,12 @@ class IOController(object):
             self.__closeUnconditionally()
             self.__addRecentFile(filename) 
             try:
-                self.__taskFile.load(filename, breakLock=breakLock)
+                self.__taskFile.load(filename, lock=lock, breakLock=breakLock)
             except lockfile.AlreadyLocked:
-                if self.__askBreakLock(filename):
+                if breakLock:
+                    if self.__askOpenUnlocked(filename): 
+                        self.open(filename, showerror, lock=False)
+                elif self.__askBreakLock(filename):
                     self.open(filename, showerror, breakLock=True)
                 else:
                     return
@@ -346,6 +349,13 @@ class IOController(object):
     def __askBreakLock(self, filename):
         result = wx.MessageBox(_('Cannot open %s because it is locked.\n'
             'Break the lock?')%filename, _('%s: file locked')%meta.name,
+            style=wx.YES_NO|wx.ICON_QUESTION|wx.NO_DEFAULT)
+        return result == wx.YES
+    
+    def __askOpenUnlocked(self, filename):
+        result = wx.MessageBox(_('Cannot acquire a lock because locking is not supported\n'
+             'on the location of %s.\nOpen %s unlocked?')%(filename, filename), 
+             _('%s: file locked')%meta.name,
             style=wx.YES_NO|wx.ICON_QUESTION|wx.NO_DEFAULT)
         return result == wx.YES
     
