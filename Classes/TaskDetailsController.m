@@ -59,7 +59,11 @@
 		
 		if (task.startDate != nil)
 		{
+#ifdef __IPHONE_3_0
+			startDateValueCell.textLabel.text = task.startDate;
+#else
 			startDateValueCell.text = task.startDate;
+#endif
 			[cells addObject:startDateValueCell];
 		}
 		
@@ -74,7 +78,11 @@
 		
 		if (task.dueDate != nil)
 		{
+#ifdef __IPHONE_3_0
+			dueDateValueCell.textLabel.text = task.dueDate;
+#else
 			dueDateValueCell.text = task.dueDate;
+#endif
 			[cells addObject:dueDateValueCell];
 		}
 	}
@@ -193,7 +201,12 @@
 	}
 	
 	[self saveTask];
+	
+#ifdef __IPHONE_3_0
+	startDateValueCell.textLabel.text = task.startDate;
+#else
 	startDateValueCell.text = task.startDate;
+#endif
 }
 
 - (void)onPickDueDate:(NSDate *)date
@@ -213,7 +226,12 @@
 	}
 	
 	[self saveTask];
+	
+#ifdef __IPHONE_3_0
+	dueDateValueCell.textLabel.text = task.dueDate;
+#else
 	dueDateValueCell.text = task.dueDate;
+#endif
 }
 
 #pragma mark Table view methods
