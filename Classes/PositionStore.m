@@ -17,7 +17,7 @@ static PositionStore *_instance = nil;
 - (CGPoint)scrollPosition
 {
 	static CGPoint p = {0, 0};
-	p.y = scrollPosition;
+	p.y = _scrollPosition;
 	return p;
 }
 
@@ -27,7 +27,7 @@ static PositionStore *_instance = nil;
 	{
 		CGPoint p = controller.tableView.contentOffset;
 
-		scrollPosition = p.y;
+		_scrollPosition = p.y;
 		indexPath = [path retain];
 	}
 	
@@ -38,7 +38,7 @@ static PositionStore *_instance = nil;
 {
 	if (self = [super init])
 	{
-		scrollPosition = [coder decodeIntegerForKey:@"scrollPosition"];
+		_scrollPosition = [coder decodeIntegerForKey:@"scrollPosition"];
 		indexPath = [coder decodeObjectForKey:@"indexPath"];
 	}
 	
@@ -54,7 +54,7 @@ static PositionStore *_instance = nil;
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-	[coder encodeInteger:scrollPosition forKey:@"scrollPosition"];
+	[coder encodeInteger:_scrollPosition forKey:@"scrollPosition"];
 	[coder encodeObject:indexPath forKey:@"indexPath"];
 }
 

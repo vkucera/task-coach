@@ -10,7 +10,7 @@
 
 @interface Position : NSObject <NSCoding>
 {
-	NSInteger scrollPosition;
+	NSInteger _scrollPosition;
 	NSIndexPath *indexPath;
 }
 
