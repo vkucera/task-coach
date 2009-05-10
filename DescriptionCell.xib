@@ -46,6 +46,10 @@
 								<int key="NSvFlags">314</int>
 								<string key="NSFrame">{{10, 10}, {308, 175}}</string>
 								<reference key="NSSuperview" ref="751590592"/>
+								<object class="NSColor" key="IBUIBackgroundColor" id="420130901">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MSAxIDEAA</bytes>
+								</object>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -59,6 +63,7 @@
 									<double key="NSSize">1.300000e+01</double>
 									<int key="NSfFlags">16</int>
 								</object>
+								<object class="IBUITextInputTraits" key="IBUITextInputTraits"/>
 							</object>
 						</object>
 						<string key="NSFrameSize">{328, 195}</string>
@@ -75,10 +80,7 @@
 				</object>
 				<string key="NSFrameSize">{328, 195}</string>
 				<reference key="NSSuperview"/>
-				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MSAwAA</bytes>
-				</object>
+				<reference key="IBUIBackgroundColor" ref="420130901"/>
 				<bool key="IBUIOpaque">NO</bool>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 				<int key="IBUISelectionStyle">0</int>
@@ -273,14 +275,12 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>infosLabel</string>
 							<string>leftImage</string>
 							<string>target</string>
 							<string>titleLabel</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UILabel</string>
 							<string>CheckView</string>
 							<string>id</string>
 							<string>UILabel</string>
@@ -308,5 +308,6 @@
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.LastKnownRelativeProjectPath">TaskCoach.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<string key="IBCocoaTouchPluginVersion">3.0</string>
 	</data>
 </archive>
