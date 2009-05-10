@@ -168,7 +168,7 @@ def localDownload(settings):
         ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('dist') 
         for filename in ftp.nlst():
-            if metadata['version'] in filename: 
+            if metadata['version'] in filename and not filename.startswith('.'): 
                 ftp.get(filename)
         os.chdir('..') 
         ftp.quit()
