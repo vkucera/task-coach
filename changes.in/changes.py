@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.72.7', 'May ?, 2009',
+Release('0.72.7', 'May 10, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Support locking of task files on USB sticks/drives that
