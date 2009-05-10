@@ -44,8 +44,12 @@
 							<object class="IBUIImageView" id="277858410">
 								<reference key="NSNextResponder" ref="827285899"/>
 								<int key="NSvFlags">297</int>
-								<string key="NSFrame">{{242, 6}, {48, 48}}</string>
+								<string key="NSFrame">{{245, 6}, {48, 48}}</string>
 								<reference key="NSSuperview" ref="827285899"/>
+								<object class="NSColor" key="IBUIBackgroundColor" id="270471598">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MSAxIDEAA</bytes>
+								</object>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 								<int key="IBUIContentMode">4</int>
@@ -55,6 +59,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{20, 6}, {214, 23}}</string>
 								<reference key="NSSuperview" ref="827285899"/>
+								<reference key="IBUIBackgroundColor" ref="270471598"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -78,6 +83,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{20, 26}, {214, 14}}</string>
 								<reference key="NSSuperview" ref="827285899"/>
+								<reference key="IBUIBackgroundColor" ref="270471598"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -104,6 +110,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{20, 40}, {214, 14}}</string>
 								<reference key="NSSuperview" ref="827285899"/>
+								<reference key="IBUIBackgroundColor" ref="270471598"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -122,7 +129,7 @@
 								<int key="IBUITextAlignment">2</int>
 							</object>
 						</object>
-						<string key="NSFrameSize">{297, 60}</string>
+						<string key="NSFrameSize">{300, 60}</string>
 						<reference key="NSSuperview" ref="155650394"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
@@ -136,10 +143,7 @@
 				</object>
 				<string key="NSFrameSize">{320, 60}</string>
 				<reference key="NSSuperview"/>
-				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MSAwAA</bytes>
-				</object>
+				<reference key="IBUIBackgroundColor" ref="270471598"/>
 				<bool key="IBUIOpaque">NO</bool>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 				<int key="IBUIAccessoryType">1</int>
@@ -438,5 +442,6 @@
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.LastKnownRelativeProjectPath">TaskCoach.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<string key="IBCocoaTouchPluginVersion">3.0</string>
 	</data>
 </archive>
