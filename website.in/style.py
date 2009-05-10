@@ -114,10 +114,10 @@ footer = '''
                 <p>
 <script type="text/javascript"><!--
 google_ad_client = "pub-2371570118755412";
-/* 160x600, gemaakt 23-4-09 */
-google_ad_slot = "3326044876";
-google_ad_width = 160;
-google_ad_height = 600;
+/* 120x240, gemaakt 10-5-09 */
+google_ad_slot = "6528039249";
+google_ad_width = 120;
+google_ad_height = 240;
 //-->
 </script>
 <script type="text/javascript"
