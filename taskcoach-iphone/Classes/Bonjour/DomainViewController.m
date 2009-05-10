@@ -207,8 +207,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	}
 	
 	// Set up the text for the cell
+#ifdef __IPHONE_3_0
+	cell.textLabel.text = [(indexPath.section ? self.customs : self.domains) objectAtIndex:indexPath.row];
+	cell.textLabel.textColor = [UIColor blackColor];
+#else
 	cell.text = [(indexPath.section ? self.customs : self.domains) objectAtIndex:indexPath.row];
 	cell.textColor = [UIColor blackColor];
+#endif
 	cell.accessoryType = self.showDisclosureIndicators ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
 	return cell;
 }

@@ -215,12 +215,20 @@
 	{
 		Category *category = [categories objectAtIndex:indexPath.row - 1];
 
+#ifdef __IPHONE_3_0
+		cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)", [category name], [category count]];
+#else
 		cell.text = [NSString stringWithFormat:@"%@ (%d)", [category name], [category count]];
+#endif
 		cell.indentationLevel = category.level;
 	}
 	else
 	{
+#ifdef __IPHONE_3_0
+		cell.textLabel.text = NSLocalizedString(@"All", @"All categories name");
+#else
 		cell.text = NSLocalizedString(@"All", @"All categories name");
+#endif
 	}
 
     return cell;

@@ -312,7 +312,11 @@
 			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Cell"] autorelease];
 		}
 
+#ifdef __IPHONE_3_0
+		cell.textLabel.text = NSLocalizedString(@"Add task...", @"Add task cell text");
+#else
 		cell.text = NSLocalizedString(@"Add task...", @"Add task cell text");
+#endif
 	}
 	else
 	{

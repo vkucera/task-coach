@@ -202,16 +202,26 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	NSUInteger count = [self.services count];
 	if (count == 0 && self.searchingForServicesString) {
         // If there are no services and searchingForServicesString is set, show one row explaining that to the user.
+#ifdef __IPHONE_3_0
+        cell.textLabel.text = self.searchingForServicesString;
+		cell.textLabel.textColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+#else
         cell.text = self.searchingForServicesString;
 		cell.textColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+#endif
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		return cell;
 	}
 	
 	// Set up the text for the cell
 	NSNetService* service = [self.services objectAtIndex:indexPath.row];
+#ifdef __IPHONE_3_0
+	cell.textLabel.text = [service name];
+	cell.textLabel.textColor = [UIColor blackColor];
+#else
 	cell.text = [service name];
 	cell.textColor = [UIColor blackColor];
+#endif
 	cell.accessoryType = self.showDisclosureIndicators ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
 	
 	// Note that the underlying array could have changed, and we want to show the activity indicator on the correct cell
