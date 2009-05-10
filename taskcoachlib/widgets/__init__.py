@@ -24,7 +24,7 @@ from dialog import Dialog, NotebookDialog, ListbookDialog, HTMLDialog, \
 from buttonbox import ButtonBox
 from itemctrl import Column
 from listctrl import ListCtrl
-from treectrl import TreeCtrl, CustomTreeCtrl, CheckTreeCtrl, TreeListCtrl
+from treectrl import CheckTreeCtrl, TreeListCtrl
 from squaremap import SquareMap
 from timeline import Timeline
 from datectrl import DateCtrl, DateTimeCtrl, DatePickerCtrl

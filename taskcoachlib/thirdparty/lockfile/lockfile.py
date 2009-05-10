@@ -492,7 +492,46 @@ class SQLiteFileLock(LockBase):
                        (self.lock_file,))
         self.connection.commit()
 
-if hasattr(os, "link"):
-    FileLock = LinkFileLock
-else:
-    FileLock = MkdirFileLock
+
+def canLinkExistingPath(path, linkPath):
+    try:
+        os.link(path, linkPath)
+        return True
+    except OSError:
+        return False
+    finally:
+        if os.path.exists(linkPath):
+            os.remove(linkPath)
+ 
+
+def canLink(path):
+    if not hasattr(os, "link"):
+        return False
+    linkPath = path + '.lnk'
+    if os.path.exists(path):
+        if os.path.islink(linkPath):
+            # Both path and linkPath exist, so we can link
+            return True
+        elif os.path.exists(linkPath):
+            # Hmm, linkPath exists, but is not a link, check again recursively
+            return canLink(linkPath)
+        else:
+            return canLinkExistingPath(path, linkPath)
+    else: 
+        # path does not exist, create it temporarily
+        try:
+            open(path, "wb").close()
+            # Success, now try to link
+            return canLinkExistingPath(path, linkPath)
+        except OSError:
+            # Failed to create path, what to do?
+            # Assume linking works since os.link exists
+            return True
+        finally:
+            if os.path.exists(path):
+                os.remove(path)
+
+
+def FileLock(path, *args, **kwargs):
+    Lock = LinkFileLock if canLink(path) else MkdirFileLock
+    return Lock(path, *args, **kwargs)

@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.73.0', 'April ?, 2009',
+Release('0.73.0', 'May ?, 2009',
     summary='''This release adds a timeline viewer, and support
 for synchronizing with a companion iPhone/iPod Touch device''',
     featuresAdded=[
@@ -37,6 +37,28 @@ or month, a total line is shown for each period.''', '1962219'),
 an option to search descriptions too.''', '1816660', '2020347', '2157010',
 '2510045')
     ]),
+
+Release('0.72.7', 'May 10, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Support locking of task files on USB sticks/drives that
+have a different file system than the host system has.''', '2776249'),
+        Bug('''Task Coach would sometimes crash when dragging a task onto 
+another task on Windows. Fixed by using a different widget for tree-list 
+controls.''', '2573263', '1995248', '2247808')
+    ],
+    featuresAdded=[
+        Feature('''The category viewer can show additional columns (description,
+attachment, ...) besides just the subject of categories. This is a side effect 
+of the fix for the drag and drop issues.''')
+    ],
+    websiteChanges=[
+        Website('''Follow Task Coach on twitter: http://twitter.com/taskcoach. 
+The latest tweets are also listed on http://www.taskcoach.org.''', 'index.html'),
+        Website('''Added Google Ads to generate additional revenue to cover the
+cost of hardware and commercial operating systems.''', 'index.html')
+    ]
+),
 
 Release('0.72.6', 'April 18, 2009',
     summary='''This is a bugfix release.''',

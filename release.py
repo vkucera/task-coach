@@ -28,7 +28,7 @@ Release steps:
 - Run this script (phase1) to upload the distributions to Sourceforge, 
   generate MD5 digests and generate website.
 - Add file releases on Sourceforge by hand.
-- Run this script (phase2) to publish to Sourceforge website, Chello (my ISP) 
+- Run this script (phase2) to publish to Hypernation.net website, Chello (my ISP) 
   and PyPI (Python Package Index) and to send the announcement email.
 - Post project news on Sourceforge by hand.
 - Post release notification on Freshmeat by hand.
@@ -42,7 +42,7 @@ Release steps:
 '''
 
 import ftplib, smtplib, os, glob, sys, getpass, md5, ConfigParser, \
-    taskcoachlib.meta
+    twitter, taskcoachlib.meta
 
 class Settings(ConfigParser.SafeConfigParser, object):
     def __init__(self):
@@ -55,9 +55,11 @@ class Settings(ConfigParser.SafeConfigParser, object):
         defaults = dict(sourceforge=['username', 'password'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
-                        chello=['hostname', 'username', 'password'],
+                        chello=['hostname', 'username', 'password', 'folder'],
+                        hypernation=['hostname', 'username', 'password', 'folder'],
                         localftp=['hostname', 'username', 'password', 'folder'],
-                        pypi=['username', 'password'])
+                        pypi=['username', 'password'],
+                        twitter=['username', 'password'])
         for section in defaults:
             self.add_section(section)
             for option in defaults[section]:
@@ -121,6 +123,17 @@ def generateWebsite(settings):
 
 
 class SimpleFTP(ftplib.FTP, object):
+    def __init__(self, hostname, username, password, folder='.'):
+        super(SimpleFTP, self).__init__(hostname, username, password)
+        self.ensure_folder(folder)
+            
+    def ensure_folder(self, folder):
+        try:
+            self.cwd(folder)
+        except ftplib.error_perm, info:
+            self.mkd(folder)
+            self.cwd(folder)    
+            
     def put(self, folder):
         for root, dirs, filenames in os.walk(folder):
             if root != folder:
@@ -152,17 +165,17 @@ def localDownload(settings):
     folder = settings.get('localftp', 'folder')%metadata
     if hostname and username and password and folder:
         print 'Downloading distributions from local FTP site...'
-        localFTP = SimpleFTP(hostname, username, password)
-        localFTP.cwd(folder)
+        ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('dist') 
-        for filename in localFTP.nlst():
-            if metadata['version'] in filename: 
-                localFTP.get(filename)
+        for filename in ftp.nlst():
+            if metadata['version'] in filename and not filename.startswith('.'): 
+                ftp.get(filename)
         os.chdir('..') 
-        localFTP.quit()
+        ftp.quit()
         print 'Done downloading distributions from local FTP site...'
     else:
         print 'Warning: cannot download from local FTP site; missing credentials'
+
 
 def localUpload(settings):
     ''' Upload distributions to a local ftp site from dist dir. '''
@@ -173,42 +186,40 @@ def localUpload(settings):
     folder = settings.get('localftp', 'folder')%metadata
     if hostname and username and password and folder:
         print 'Uploading distributions to local FTP site...'
-        localFTP = SimpleFTP(hostname, username, password)
-        try:
-            localFTP.cwd(folder)
-        except ftplib.error_perm, info:
-            localFTP.mkd(folder)
-            localFTP.cwd(folder)
-        localFTP.put('dist')
-        localFTP.quit()
+        ftp = SimpleFTP(hostname, username, password, folder)
+        ftp.put('dist')
+        ftp.quit()
         print 'Done uploading distributions to local FTP site...'
     else:
         print 'Warning: cannot upload to local FTP site; missing credentials'
 
 
-def uploadWebsiteToChello(settings):
-    hostname = settings.get('chello', 'hostname')
-    username = settings.get('chello', 'username')
-    password = settings.get('chello', 'password')
+def uploadWebsiteToWebsiteHost(settings, websiteName):
+    settingsSection = websiteName.lower()
+    hostname = settings.get(settingsSection, 'hostname')
+    username = settings.get(settingsSection, 'username')
+    password = settings.get(settingsSection, 'password')
+    folder = settings.get(settingsSection, 'folder')
     
-    if hostname and username and password:
-        print "Uploading website to Chello..."
-        chello = SimpleFTP(hostname, username, password)
+    if hostname and username and password and folder:
+        print 'Uploading website to %s...'%websiteName
+        ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('website.out')
-        chello.put('.')
-        chello.quit()
+        ftp.put('.')
+        ftp.quit()
         os.chdir('..')
-        print 'Done uploading website to Chello.'
+        print 'Done uploading website to %s.'%websiteName
     else:
-        print 'Warning: cannot upload website to Chello; missing credentials'
+        print 'Warning: cannot upload website to %s; missing credentials'%websiteName
 
 
-def uploadWebsiteToSourceForge(settings):
-    print 'Uploading website to SourceForge...'
-    username = settings.get('sourceforge', 'username')
-    os.system('scp -r website.out/* %s@web.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs' % username)
-    print 'Done uploading website to SourceForge.'
-    
+def uploadWebsiteToChello(settings):
+    uploadWebsiteToWebsiteHost(settings, 'Chello')
+
+
+def uploadWebsiteToHypernation(settings):
+    uploadWebsiteToWebsiteHost(settings, 'Hypernation')
+
  
 def registerWithPyPI(settings):
     print 'Registering with PyPI...'
@@ -234,9 +245,19 @@ def registerWithPyPI(settings):
     print 'Done registering with PyPI.'
 
 
+def announceOnTwitter(settings):
+    print 'Announcing on twitter...'
+    username = settings.get('twitter', 'username')
+    password = settings.get('twitter', 'password')
+    metadata = taskcoachlib.meta.data.metaDict
+    api = twitter.Api(username=username, password=password)
+    api.PostUpdate('Release %(version)s of %(name)s is available from %(url)s'%metadata)
+    print 'Done announcing on twitter.'
+
+
 def uploadWebsite(settings):
     uploadWebsiteToChello(settings)
-    uploadWebsiteToSourceForge(settings)
+    uploadWebsiteToHypernation(settings)
     
 
 def phase1(settings):
@@ -248,6 +269,7 @@ def phase1(settings):
 def phase2(settings):
     uploadWebsite(settings)
     registerWithPyPI(settings)
+    announceOnTwitter(settings)
     mailAnnouncement(settings)
 
 
@@ -326,7 +348,8 @@ commands = dict(phase1=phase1, phase2=phase2,
                 md5=generateMD5Digests,
                 website=uploadWebsite, 
                 websiteChello=uploadWebsiteToChello, 
-                websiteSF=uploadWebsiteToSourceForge, 
+                websiteHN=uploadWebsiteToHypernation,
+                twitter=announceOnTwitter, 
                 pypi=registerWithPyPI, announce=mailAnnouncement)
 settings = Settings()
 try:

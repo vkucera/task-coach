@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -33,10 +33,10 @@ class ToolTipMixin(object):
         self.__position = (0, 0)
         self.__text = None
 
-        wx.EVT_MOTION(self, self.__OnMotion)
-        wx.EVT_LEAVE_WINDOW(self, self.__OnLeave)
-        wx.EVT_TIMER(self, self.__timer.GetId(), self.__OnTimer)
-
+        self.GetMainWindow().Bind(wx.EVT_MOTION, self.__OnMotion)
+        self.GetMainWindow().Bind(wx.EVT_LEAVE_WINDOW, self.__OnLeave)
+        self.Bind(wx.EVT_TIMER, self.__OnTimer, id=self.__timer.GetId())        
+        
     def ShowTip(self, x, y):
         # Ensure we're not too big (in the Y direction anyway) for the
         # desktop display area. This doesn't work on Linux because
@@ -81,7 +81,7 @@ class ToolTipMixin(object):
         newTip = self.OnBeforeShowToolTip(x, y)
         if newTip is not None:
             self.__tip = newTip
-            wx.EVT_MOTION(self.__tip, self.__OnTipMotion)
+            self.__tip.Bind(wx.EVT_MOTION, self.__OnTipMotion)
             self.__position = (x + 20, y + 10)
             self.__timer.Start(200, True)
 
@@ -100,7 +100,7 @@ class ToolTipMixin(object):
         event.Skip()
 
     def __OnTimer(self, event):
-        self.ShowTip(*self.ClientToScreenXY(*self.__position))
+        self.ShowTip(*self.GetMainWindow().ClientToScreenXY(*self.__position))
 
 
 if '__WXMSW__' in wx.PlatformInfo:
@@ -153,12 +153,12 @@ class SimpleToolTip(ToolTipBase):
     def __init__(self, parent):
         super(SimpleToolTip, self).__init__(parent)
         self.data = []
-        wx.EVT_PAINT(self, self.OnPaint)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
 
     def SetData(self, data):
         self.data = self._wrapLongLines(data)
         self.SetSize(self._calculateSize())
-        self.Refresh() # Needed on MacOS X
+        self.Refresh() # Needed on Mac OS X
         
     def _wrapLongLines(self, data):
         wrappedData = []

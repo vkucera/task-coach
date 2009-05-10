@@ -29,7 +29,8 @@ import base, mixin
 
 class BaseCategoryViewer(mixin.AttachmentDropTarget, 
                          mixin.SortableViewerForCategories, 
-                         mixin.SearchableViewer, base.TreeViewer):
+                         mixin.SearchableViewer, 
+                         base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = category.CategorySorter
     defaultTitle = _('Categories')
     defaultBitmap = 'category'
@@ -47,15 +48,77 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
         return self.taskFile.categories()
     
     def createWidget(self):
-        widget = widgets.CheckTreeCtrl(self, self.getItemText, 
+        imageList = self.createImageList() # Has side-effects
+        self._columns = self._createColumns()
+        widget = widgets.CheckTreeCtrl(self, self._columns, self.getItemText, 
             self.getItemTooltipData, self.getItemImage, self.getItemAttr, 
             self.getChildrenCount, self.getItemExpanded,
             self.getIsItemChecked, self.onSelect, self.onCheck,
             uicommand.CategoryEdit(viewer=self, categories=self.presentation()),
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             self.createCategoryPopupMenu(), 
+            menu.ColumnPopupMenu(self),
             **self.widgetCreationKeywordArguments())
+        widget.AssignImageList(imageList)
         return widget
+
+    def createColumnUICommands(self):
+        return [\
+            uicommand.ToggleAutoColumnResizing(viewer=self,
+                                               settings=self.settings),
+            None,
+            uicommand.ViewColumn(menuText=_('&Description'),
+                helpText=_('Show/hide description column'),
+                setting='description', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Attachments'),
+                helpText=_('Show/hide attachments column'),
+                setting='attachments', viewer=self)]
+            
+    def _createColumns(self):
+        kwargs = dict(renderDescriptionCallback=lambda category: category.description())
+        columns = [widgets.Column('subject', _('Subject'), 
+                       category.Category.subjectChangedEventType(),  
+                       sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                           value='subject'), 
+                       width=self.getColumnWidth('subject'), 
+                       **kwargs),
+                   widgets.Column('description', _('Description'), 
+                       category.Category.descriptionChangedEventType(), 
+                       sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                           value='description'),
+                       renderCallback=lambda category: category.description(), 
+                       width=self.getColumnWidth('description'), 
+                       **kwargs),
+                   widgets.Column('attachments', '', 
+                       category.Category.attachmentsChangedEventType(),
+                       width=self.getColumnWidth('attachments'),
+                       alignment=wx.LIST_FORMAT_LEFT,
+                       imageIndexCallback=self.attachmentImageIndex,
+                       headerImageIndex=self.imageIndex['attachment'],
+                       renderCallback=lambda category: '', **kwargs)]
+        if self.settings.getboolean('feature', 'notes'):
+            columns.append(widgets.Column('notes', '', 
+                       category.Category.notesChangedEventType(),
+                       width=self.getColumnWidth('notes'),
+                       alignment=wx.LIST_FORMAT_LEFT,
+                       imageIndexCallback=self.noteImageIndex,
+                       headerImageIndex=self.imageIndex['note'],
+                       renderCallback=lambda category: '', **kwargs))
+        return columns
+    
+    def createImageList(self):
+        imageList = wx.ImageList(16, 16)
+        self.imageIndex = {}
+        for index, image in enumerate(['ascending', 'descending', 'attachment', 'note']):
+            imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
+            self.imageIndex[image] = index
+        return imageList
+
+    def attachmentImageIndex(self, category, which):
+        return self.imageIndex['attachment'] if category.attachments() else -1 
+        
+    def noteImageIndex(self, category, which):
+        return self.imageIndex['note'] if category.notes() else -1
 
     def createToolBarUICommands(self):
         commands = super(BaseCategoryViewer, self).createToolBarUICommands()
@@ -70,6 +133,23 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
                                                     viewer=self)]
         return commands
 
+    def createColumnUICommands(self):
+        commands = [\
+            uicommand.ToggleAutoColumnResizing(viewer=self,
+                                               settings=self.settings),
+            None,
+            uicommand.ViewColumn(menuText=_('&Description'),
+                helpText=_('Show/hide description column'),
+                setting='description', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Attachments'),
+                helpText=_('Show/hide attachments column'),
+                setting='attachments', viewer=self)]
+        if self.settings.getboolean('feature', 'notes'):
+            commands.append(uicommand.ViewColumn(menuText=_('&Notes'),
+                helpText=_('Show/hide notes column'),
+                setting='notes', viewer=self))
+        return commands
+        
     def createCategoryPopupMenu(self, localOnly=False):
         return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
                                       self, localOnly)
@@ -82,11 +162,12 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
         category.setFiltered(event.GetItem().IsChecked())
         self.onSelect(event) # Notify status bar
             
-    def getItemText(self, index):    # FIXME: pull up to TreeViewer
+    def getItemText(self, index, column=0):    
         item = self.getItemWithIndex(index)
-        return item.subject()
+        column = self.visibleColumns()[column]
+        return column.render(item)
 
-    def getItemTooltipData(self, index):
+    def getItemTooltipData(self, index, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             item = self.getItemWithIndex(index)
             if item.description():
@@ -99,9 +180,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
             return result
         else:
             return []
-
-    def getItemImage(self, index, which):
-        return -1
     
     def getBackgroundColor(self, item):
         return item.color()

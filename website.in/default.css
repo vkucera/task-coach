@@ -39,7 +39,25 @@ a {
 a:link {color:#09c;}
 a:visited {color:#07a;}
 a:hover {background-color:#eee;}
-  
+
+
+#twitter_update_list {
+	padding: 0;
+	margin: 0;
+	}
+#twitter_update_list li {
+    list-style-type: none;
+    margin-left: .8em;
+    text-indent: -.8em;
+    line-height: 1.5em;
+    padding-bottom: 0.5em;
+    }  
+#twitter_update_list li:before { 
+    content: "\00BB";  /* >> */
+    display: inline;
+    padding-right: 0.3em;
+    }
+
 
 /* All the content boxes belong to the content class. */
 .content {
@@ -85,3 +103,26 @@ body>#navBeta {width:190px;}
 	border-radius: 2em;
     }
 
+.navbox p {
+    margin:0px 0px 8px 0px;
+    line-height: 1.5em;
+    }
+    
+.navbox ul {
+	padding: 0;
+	margin: 0;
+    }
+
+.navbox li {    
+    list-style-type: none;
+    margin-left: .8em;
+    text-indent: -.8em;
+    line-height: 1.0em;
+    padding-bottom: 0.5em;
+    }  
+
+.navbox li:before { 
+    content: "\00BB"; /* >> */
+    display: inline;
+    padding-right: 0.3em;
+    }
