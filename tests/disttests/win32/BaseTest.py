@@ -39,12 +39,12 @@ class TestWithTaskFile(base.Win32TestCase):
                     'Cannot find main window')
         self.failUnless(window.title.endswith('testfile.tsk'),
                         'Wrong window title')
-
+        
     def test_save(self):
         timestamp = os.stat(self.args[0]).st_mtime
 
         mainwindow = self.findWindow(r'^Task Coach')
-        w = mainwindow.findChildren('wxWindowClassNR', 'treelistctrl')
+        w = mainwindow.findChildren('wxWindowClassNR', 'HyperTreeList')
 
         w[1].clickAt(5, 30)
         w[1].clickAt(5, 30)
