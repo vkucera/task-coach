@@ -28,7 +28,7 @@ Release steps:
 - Run this script (phase1) to upload the distributions to Sourceforge, 
   generate MD5 digests and generate website.
 - Add file releases on Sourceforge by hand.
-- Run this script (phase2) to publish to Sourceforge website, Chello (my ISP) 
+- Run this script (phase2) to publish to Hypernation.net website, Chello (my ISP) 
   and PyPI (Python Package Index) and to send the announcement email.
 - Post project news on Sourceforge by hand.
 - Post release notification on Freshmeat by hand.
@@ -42,7 +42,7 @@ Release steps:
 '''
 
 import ftplib, smtplib, os, glob, sys, getpass, md5, ConfigParser, \
-    taskcoachlib.meta
+    twitter, taskcoachlib.meta
 
 class Settings(ConfigParser.SafeConfigParser, object):
     def __init__(self):
@@ -58,7 +58,8 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         chello=['hostname', 'username', 'password', 'folder'],
                         hypernation=['hostname', 'username', 'password', 'folder'],
                         localftp=['hostname', 'username', 'password', 'folder'],
-                        pypi=['username', 'password'])
+                        pypi=['username', 'password'],
+                        twitter=['username', 'password'])
         for section in defaults:
             self.add_section(section)
             for option in defaults[section]:
@@ -219,13 +220,6 @@ def uploadWebsiteToChello(settings):
 def uploadWebsiteToHypernation(settings):
     uploadWebsiteToWebsiteHost(settings, 'Hypernation')
 
-
-def uploadWebsiteToSourceForge(settings):
-    print 'Uploading website to SourceForge...'
-    username = settings.get('sourceforge', 'username')
-    os.system('scp -r website.out/* %s@web.sourceforge.net:/home/groups/t/ta/taskcoach/htdocs' % username)
-    print 'Done uploading website to SourceForge.'
-
  
 def registerWithPyPI(settings):
     print 'Registering with PyPI...'
@@ -251,9 +245,18 @@ def registerWithPyPI(settings):
     print 'Done registering with PyPI.'
 
 
+def announceOnTwitter(settings):
+    print 'Announcing on twitter...'
+    username = settings.get('twitter', 'username')
+    password = settings.get('twitter', 'password')
+    metadata = taskcoachlib.meta.data.metaDict
+    api = twitter.Api(username=username, password=password)
+    api.PostUpdate('Release %(version)s of %(name)s is available from %(url)s'%metadata)
+    print 'Done announcing on twitter.'
+
+
 def uploadWebsite(settings):
     uploadWebsiteToChello(settings)
-    uploadWebsiteToSourceForge(settings)
     uploadWebsiteToHypernation(settings)
     
 
@@ -344,8 +347,8 @@ commands = dict(phase1=phase1, phase2=phase2,
                 md5=generateMD5Digests,
                 website=uploadWebsite, 
                 websiteChello=uploadWebsiteToChello, 
-                websiteSF=uploadWebsiteToSourceForge,
-                websiteHN=uploadWebsiteToHypernation, 
+                websiteHN=uploadWebsiteToHypernation,
+                twitter=announceOnTwitter, 
                 pypi=registerWithPyPI, announce=mailAnnouncement)
 settings = Settings()
 try:
