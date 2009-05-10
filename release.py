@@ -269,6 +269,7 @@ def phase1(settings):
 def phase2(settings):
     uploadWebsite(settings)
     registerWithPyPI(settings)
+    announceOnTwitter(settings)
     mailAnnouncement(settings)
 
 

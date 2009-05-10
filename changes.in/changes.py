@@ -38,6 +38,8 @@ attachment, ...) besides just the subject of categories. This is a side effect
 of the fix for the drag and drop issues.''')
     ],
     websiteChanges=[
+        Website('''Follow Task Coach on twitter: http://twitter.com/taskcoach. 
+The latest tweets are also listed on http://www.taskcoach.org.''', 'index.html'),
         Website('''Added Google Ads to generate additional revenue to cover the
 cost of hardware and commercial operating systems.''', 'index.html')
     ]
