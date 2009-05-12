@@ -47,6 +47,8 @@ def getThunderbirdDir():
         path = os.path.join(os.environ['HOME'], 'Library', 'Thunderbird')
     elif os.name == 'posix':
         path = os.path.join(os.environ['HOME'], '.thunderbird')
+        if not os.path.exists(path):
+            path = os.path.join(os.environ['HOME'], '.mozilla-thunderbird')
     elif os.name == 'nt':
         if os.environ.has_key('APPDATA'):
             path = os.path.join(os.environ['APPDATA'], 'Thunderbird')
