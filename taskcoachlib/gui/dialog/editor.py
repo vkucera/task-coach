@@ -92,8 +92,11 @@ class SubjectPage(Page, widgets.BookPage):
         currentColor = self.item.color(recursive=False)
         self._colorCheckBox = wx.CheckBox(self, label=_('Use this color:'))
         self._colorCheckBox.SetValue(currentColor is not None)
-        self._colorButton = wx.ColourPickerCtrl(self, -1,
-            currentColor or wx.WHITE, size=(40,-1))
+        # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
+        # so convert the tuple to a wx.Color:
+        currentColor = wx.Color(*currentColor) if currentColor else wx.WHITE
+        self._colorButton = wx.ColourPickerCtrl(self, -1, currentColor, 
+                                                size=(40,-1))
         self._colorButton.Bind(wx.EVT_COLOURPICKER_CHANGED,
             lambda event: self._colorCheckBox.SetValue(True))
         self.addEntry(_('Color'), self._colorCheckBox, self._colorButton)

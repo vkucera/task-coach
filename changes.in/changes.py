@@ -23,11 +23,13 @@ from changetypes import *
 
 releases = [
 
-Release('0.72.8', '?? ??, 2009',
+Release('0.72.8', 'May ??, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Drag and drop from Thunderbird would not work on Debian-derived distros.''',
-            '2790274')
+        Bug('''Drag and drop from Thunderbird would not work on Debian-derived 
+distributions.''', '2790274'),
+        Bug('''Work around a bug in wxPython 2.8.9.2 on Mac OS X that prevented
+dialogs to be opened for items that have a color set.''', '2789977')
         ]
 ),
 
