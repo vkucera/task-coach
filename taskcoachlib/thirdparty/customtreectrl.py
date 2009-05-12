@@ -1925,7 +1925,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                       enabled=True, x=16, y=16):
         """Get a native looking checkbox or radio button bitmap
         @keyword checkbox: Get a checkbox=True, radiobutton=False
-        @keyword checked: contorl is marked or not
+        @keyword checked: control is marked or not
 
         """
         bmp = wx.EmptyBitmap(x, y)
@@ -1942,9 +1942,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             flag |= wx.CONTROL_DISABLED
 
         if checkbox:
-            render.DrawCheckBox(self, mdc, (0, 0, x, y), flag)
+            render.DrawCheckBox(self, dc, (0, 0, x, y), flag)
         else:
-            render.DrawRadioButton(self, mdc, (0, 0, x, y), flag)
+            render.DrawRadioButton(self, dc, (0, 0, x, y), flag)
 
         mdc.SelectObject(wx.NullBitmap)
         return bmp

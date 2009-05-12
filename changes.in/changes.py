@@ -29,7 +29,9 @@ Release('0.72.8', 'May ??, 2009',
         Bug('''Drag and drop from Thunderbird would not work on Debian-derived 
 distributions.''', '2790274'),
         Bug('''Work around a bug in wxPython 2.8.9.2 on Mac OS X that prevented
-dialogs to be opened for items that have a color set.''', '2789977')
+dialogs to be opened for items that have a color set.''', '2789977'),
+        Bug('''Draw check boxes instead of black squares in the category viewer
+on Windows XP and Vista with the classic theme.''', )
         ]
 ),
 
@@ -40,7 +42,7 @@ Release('0.72.7', 'May 10, 2009',
 have a different file system than the host system has.''', '2776249'),
         Bug('''Task Coach would sometimes crash when dragging a task onto 
 another task on Windows. Fixed by using a different widget for tree-list 
-controls.''', '2573263', '1995248', '2247808')
+controls.''', '2573263', '1995248', '2247808', '1963262')
     ],
     featuresAdded=[
         Feature('''The category viewer can show additional columns (description,
