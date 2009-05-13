@@ -1930,7 +1930,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
         bmp = wx.EmptyBitmap(x, y)
         mdc = wx.MemoryDC(bmp)
-        dc = wx.GCDC(mdc)
+        mdc.Clear()
         render = wx.RendererNative.Get()
 
         if checked:
@@ -1942,9 +1942,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             flag |= wx.CONTROL_DISABLED
 
         if checkbox:
-            render.DrawCheckBox(self, dc, (0, 0, x, y), flag)
+            render.DrawCheckBox(self, mdc, (0, 0, x, y), flag)
         else:
-            render.DrawRadioButton(self, dc, (0, 0, x, y), flag)
+            render.DrawRadioButton(self, mdc, (0, 0, x, y), flag)
 
         mdc.SelectObject(wx.NullBitmap)
         return bmp

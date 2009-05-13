@@ -31,7 +31,8 @@ distributions.''', '2790274'),
         Bug('''Work around a bug in wxPython 2.8.9.2 on Mac OS X that prevented
 dialogs to be opened for items that have a color set.''', '2789977'),
         Bug('''Draw check boxes instead of black squares in the category viewer
-on Windows XP and Vista with the classic theme.''', )
+on Windows XP and Vista with the classic theme.'''),
+        Bug('''The background of checkboxes were corrupted under Linux.'''),
         ]
 ),
 
