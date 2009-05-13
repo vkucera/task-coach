@@ -33,6 +33,8 @@ dialogs to be opened for items that have a color set.''', '2789977'),
         Bug('''Draw check boxes instead of black squares in the category viewer
 on Windows XP and Vista with the classic theme.'''),
         Bug('''The background of checkboxes were corrupted under Linux.'''),
+        Bug('''Double clicking an item in a specific column wouldn't select the 
+appropriate tab in the dialog.''', '2791100')
         ]
 ),
 

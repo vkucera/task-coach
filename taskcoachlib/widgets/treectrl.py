@@ -81,8 +81,9 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
                     
     def onDoubleClick(self, event):
         if not self.isClickablePartOfNodeClicked(event):
-            self.editCommand(event)
-        event.Skip(False)
+            self.onItemActivated(event)
+        else:
+            event.Skip(False)
         
     def onItemActivated(self, event):
         self.editCommand(event)
@@ -296,6 +297,12 @@ class CheckTreeCtrl(TreeListCtrl):
         return flags & customtree.TREE_HITTEST_ONITEMCHECKICON
 
     def onItemActivated(self, event):
-        # Don't open the editor (see TreeMixin.onItemActivated) but let the 
-        # default event handler (un)check the item:
-        event.Skip()
+        if self.isDoubleClicked(event):
+            # Invoke super.onItemActivated to edit the item
+            super(CheckTreeCtrl, self).onItemActivated(event)
+        else:
+            # Item is activated, let another event handler deal with the event 
+            event.Skip()
+            
+    def isDoubleClicked(self, event):
+        return hasattr(event, 'LeftDClick') and event.LeftDClick()
