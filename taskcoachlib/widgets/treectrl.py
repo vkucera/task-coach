@@ -30,7 +30,10 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         
     def OnGetItemText(self, index, column=0):
         args = (index, column) if column else (index,)
-        return self.getItemText(*args)
+        text = self.getItemText(*args)
+        if text.count('\n') > 3:
+            text = '\n'.join(text.split('\n')[:3] + ['...'])
+        return text
         
     def OnGetItemExpanded(self, index):
         return self.getItemExpanded(index)
