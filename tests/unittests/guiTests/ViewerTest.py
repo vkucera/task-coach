@@ -534,6 +534,7 @@ class MockWidget(object):
 class UpdatePerSecondViewerTests(object):
     def setUp(self):
         self.settings = config.Settings(load=False)
+        self.settings.set('taskviewer', 'columns', "['timeSpent']")
         self.taskFile = persistence.TaskFile()
         self.taskList = task.sorter.Sorter(self.taskFile.tasks(), sortBy='dueDate')
         self.updateViewer = self.createUpdateViewer()
