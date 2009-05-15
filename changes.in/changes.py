@@ -35,7 +35,9 @@ on Windows XP and Vista with the classic theme.'''),
         Bug('''The background of checkboxes were corrupted under Linux.'''),
         Bug('''Double clicking an item in a specific column wouldn't select the 
 appropriate tab in the dialog.''', '2791100'),
-        Bug('''Reduce flickering when tracking effort for a task.''')
+        Bug('''Reduce flickering when tracking effort for a task.'''),
+        Bug('''Opening a task file with e-mail attachments not specifying their
+encoding on a different system than the one the task file was created could fail.''')
         ]
 ),
 
