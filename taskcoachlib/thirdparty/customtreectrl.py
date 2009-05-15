@@ -1951,6 +1951,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             render.DrawRadioButton(self, mdc, (x, y, width, height), flag)
 
         mdc.SelectObject(wx.NullBitmap)
+        bmp.SetMaskColour(mask)
         return bmp
 
     def GetCount(self):
