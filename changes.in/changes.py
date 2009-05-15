@@ -32,12 +32,13 @@ distributions.''', '2790274'),
 dialogs to be opened for items that have a color set.''', '2789977'),
         Bug('''Draw check boxes instead of black squares in the category viewer
 on Windows XP and Vista with the classic theme.'''),
-        Bug('''The background of checkboxes were corrupted under Linux.'''),
+        Bug('''The background of check boxes were corrupted under Linux.'''),
         Bug('''Double clicking an item in a specific column wouldn't select the 
 appropriate tab in the dialog.''', '2791100'),
         Bug('''Reduce flickering when tracking effort for a task.'''),
         Bug('''Opening a task file with e-mail attachments not specifying their
-encoding on a different system than the one the task file was created could fail.''')
+encoding on a different system than the one the task file was created could fail.'''),
+        Bug('''Couldn't add effort to a freshly created task.''')
         ]
 ),
 

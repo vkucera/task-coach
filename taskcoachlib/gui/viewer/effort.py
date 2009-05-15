@@ -52,12 +52,19 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:
-            selectedItemsFilter = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
-                                            selectedItems=self.tasksToShowEffortFor)
-            searchFilter = domain.base.SearchFilter(selectedItemsFilter)
+            if self.displayingNewTasks():
+                tasks = self.tasksToShowEffortFor
+            else:
+                tasks = selectedItemsFilter = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
+                                                                              selectedItems=self.tasksToShowEffortFor)
+                self.__observersToDetach.append(selectedItemsFilter)
+            searchFilter = domain.base.SearchFilter(tasks)
             self.__domainObjectsToView = searchFilter
-            self.__observersToDetach.extend([selectedItemsFilter, searchFilter])
+            self.__observersToDetach.append(searchFilter)
         return self.__domainObjectsToView
+    
+    def displayingNewTasks(self):
+        return any([task not in self.taskFile.tasks() for task in self.tasksToShowEffortFor])
     
     def detach(self):
         super(EffortViewer, self).detach()
