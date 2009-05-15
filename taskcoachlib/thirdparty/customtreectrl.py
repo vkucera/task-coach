@@ -1930,14 +1930,15 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
         bmp = wx.EmptyBitmap(x, y)
         mdc = wx.MemoryDC(bmp)
+        mask = wx.Colour(0xfe, 0xfe, 0xfe)
+        mdc.SetBackground(wx.Brush(mask))
         mdc.Clear()
+        
         render = wx.RendererNative.Get()
 
+        flag = 0
         if checked:
-            flag = wx.CONTROL_CHECKED
-        else:
-            flag = 0
-
+            flag |= wx.CONTROL_CHECKED
         if not enabled:
             flag |= wx.CONTROL_DISABLED
 

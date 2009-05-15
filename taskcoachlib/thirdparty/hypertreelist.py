@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 04 May 2009, 10.00 GMT
+# Latest Revision: 08 May 2009, 11.00 GMT
 #
 #
 # TODO List
@@ -136,7 +136,7 @@ HyperTreeList has been tested on the following platforms:
   * Windows (Windows XP);
 
 
-Latest Revision: Andrea Gavana @ 04 May 2009, 10.00 GMT
+Latest Revision: Andrea Gavana @ 08 May 2009, 11.00 GMT
 Version 0.7
 
 """
@@ -151,7 +151,7 @@ from customtreectrl import TreeRenameTimer as TreeListRenameTimer
 from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED
 
 # Version Info
-__version__ = "0.6"
+__version__ = "0.7"
 
 # --------------------------------------------------------------------------
 # Constants
