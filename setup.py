@@ -45,7 +45,7 @@ setupOptions = {
         'config', 'command', 'widgets', 'gui', 'gui.dialog', 'gui.viewer', 
         'i18n', 'patterns', 'mailer', 'help', 'domain', 'persistence', 
         'thirdparty', 'thirdparty.squaremap', 'thirdparty.lockfile', 
-        'syncml')] +
+        'thirdparty.chardet', 'syncml')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note', 'attachment')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
