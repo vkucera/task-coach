@@ -3,6 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,13 +23,12 @@ import platform
 from distutils.core import setup
 from taskcoachlib import meta
 
-# Import this  here so that py2exe  and py2app can  find the _pysyncml
-# module.
-
+# Import this here so that py2exe and py2app can find the _pysyncml module:
 try:
     import taskcoachlib.syncml.core
 except ImportError:
     print 'WARNING: SyncML is not supported on your platform.'
+
 
 setupOptions = { 
     'name': meta.filename,
