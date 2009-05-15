@@ -1922,13 +1922,13 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         event.Skip()
 
     def GetControlBmp(self, checkbox=True, checked=False,
-                      enabled=True, x=16, y=16):
+                      enabled=True, width=16, height=16):
         """Get a native looking checkbox or radio button bitmap
         @keyword checkbox: Get a checkbox=True, radiobutton=False
         @keyword checked: control is marked or not
 
         """
-        bmp = wx.EmptyBitmap(x, y)
+        bmp = wx.EmptyBitmap(width, height)
         mdc = wx.MemoryDC(bmp)
         mask = wx.Colour(0xfe, 0xfe, 0xfe)
         mdc.SetBackground(wx.Brush(mask))
@@ -1942,10 +1942,13 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         if not enabled:
             flag |= wx.CONTROL_DISABLED
 
+        x, y = 0, 0
         if checkbox:
-            render.DrawCheckBox(self, mdc, (0, 0, x, y), flag)
+            if '__WXGTK__' == wx.Platform:
+                x, y = -1, -1
+            render.DrawCheckBox(self, mdc, (x, y, width, height), flag)
         else:
-            render.DrawRadioButton(self, mdc, (0, 0, x, y), flag)
+            render.DrawRadioButton(self, mdc, (x, y, width, height), flag)
 
         mdc.SelectObject(wx.NullBitmap)
         return bmp
@@ -4088,40 +4091,48 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             self._imageListCheck.Add(self.GetControlBmp(checkbox=True,
                                                         checked=True,
                                                         enabled=True,
-                                                        x=sizex, y=sizey))
+                                                        width=sizex, 
+                                                        height=sizey))
             self._grayedCheckList.Add(self.GetControlBmp(checkbox=True,
                                                          checked=True,
                                                          enabled=False,
-                                                         x=sizex, y=sizey))
+                                                         width=sizex, 
+                                                         height=sizey))
 
             self._imageListCheck.Add(self.GetControlBmp(checkbox=True,
                                                         checked=False,
                                                         enabled=True,
-                                                        x=sizex, y=sizey))
+                                                        width=sizex, 
+                                                        height=sizey))
             self._grayedCheckList.Add(self.GetControlBmp(checkbox=True,
                                                          checked=False,
                                                          enabled=False,
-                                                         x=sizex, y=sizey))
+                                                         width=sizex, 
+                                                         height=sizey))
 
 
             # Get the Radio Buttons
             self._imageListCheck.Add(self.GetControlBmp(checkbox=False,
                                                         checked=True,
                                                         enabled=True,
-                                                        x=sizex, y=sizey))
+                                                        width=sizex, 
+                                                        height=sizey))
             self._grayedCheckList.Add(self.GetControlBmp(checkbox=False,
                                                          checked=True,
                                                          enabled=False,
-                                                         x=sizex, y=sizey))
+                                                         width=sizex, 
+                                                         height=sizey))
 
             self._imageListCheck.Add(self.GetControlBmp(checkbox=False,
                                                         checked=False,
                                                         enabled=True,
-                                                        x=sizex, y=sizey))
+                                                        width=sizex, 
+                                                        height=sizey))
             self._grayedCheckList.Add(self.GetControlBmp(checkbox=False,
                                                         checked=False,
                                                         enabled=False,
-                                                        x=sizex, y=sizey))
+                                                        width=sizex, 
+                                                        height=sizey))
 
         else:
 
