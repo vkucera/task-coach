@@ -45,7 +45,9 @@ encoding on a different system than the one the task file was created could fail
 the reminder drop down as well.''', '2792160')
         ],
     dependenciesChanged=[
-        Dependency('''Task Coach requires at least wxPython 2.8.9.2-unicode.''')
+        Dependency('''Task Coach now at least needs wxPython 2.8.9.2-unicode.
+Since the Windows installer and the Mac OS X dmg package have wxPython included, 
+this only affects users of the RPM, Debian, and source distributions.''')
         ]
 ),
 
