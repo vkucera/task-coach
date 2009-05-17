@@ -23,13 +23,12 @@ import platform
 from distutils.core import setup
 from taskcoachlib import meta
 
-# Import this  here so that py2exe  and py2app can  find the _pysyncml
-# module.
-
+# Import this here so that py2exe and py2app can find the _pysyncml module:
 try:
     import taskcoachlib.syncml.core
 except ImportError:
     print 'WARNING: SyncML is not supported on your platform.'
+
 
 setupOptions = { 
     'name': meta.filename,
@@ -46,7 +45,7 @@ setupOptions = {
         'config', 'command', 'widgets', 'gui', 'gui.dialog', 'gui.viewer', 
         'i18n', 'patterns', 'mailer', 'help', 'domain', 'persistence', 
         'thirdparty', 'thirdparty.squaremap', 'thirdparty.timeline', 
-        'thirdparty.lockfile', 'syncml', 'iphone')] +
+        'thirdparty.lockfile', 'thirdparty.chardet', 'syncml', 'iphone')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
         'date', 'category', 'effort', 'task', 'note', 'attachment')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 

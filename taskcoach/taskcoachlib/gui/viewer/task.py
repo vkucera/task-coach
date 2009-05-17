@@ -51,7 +51,7 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
     
     def trackStopEventType(self):
         return task.Task.trackStopEventType()
-
+    
     def editItemDialog(self, *args, **kwargs):
         items = kwargs.get('items', self.curselection())
         if isinstance(items[0], task.Task):
@@ -759,6 +759,13 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
         
     def renderSubject(self, task):
         return task.subject(recursive=not self.isTreeViewer())
+    
+    def onEverySecond(self, event):
+        # Only update when a column is visible that changes every second 
+        if any([self.isVisibleColumnByName(column) for column in 'timeSpent', 
+               'totalTimeSpent', 'budgetLeft', 'totalBudgetLeft',
+               'revenue', 'totalRevenue']):
+            super(TaskViewer, self).onEverySecond(event)
 
     def getRootItems(self):
         ''' If the viewer is in tree mode, return the real root items. If the

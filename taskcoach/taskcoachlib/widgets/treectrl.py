@@ -30,7 +30,10 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
         
     def OnGetItemText(self, index, column=0):
         args = (index, column) if column else (index,)
-        return self.getItemText(*args)
+        text = self.getItemText(*args)
+        if text.count('\n') > 3:
+            text = '\n'.join(text.split('\n')[:3] + ['...'])
+        return text
         
     def OnGetItemExpanded(self, index):
         return self.getItemExpanded(index)
@@ -81,8 +84,9 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
                     
     def onDoubleClick(self, event):
         if not self.isClickablePartOfNodeClicked(event):
-            self.editCommand(event)
-        event.Skip(False)
+            self.onItemActivated(event)
+        else:
+            event.Skip(False)
         
     def onItemActivated(self, event):
         self.editCommand(event)
@@ -221,30 +225,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
                 yield rowIndex, self[rowIndex]
             except IndexError:
                 pass # Item is hidden
-            
-    # Adapters to make the TreeListCtrl API more like the TreeCtrl API:
-    """
-    def SelectItem(self, item, select=True):
-        ''' SelectItem takes an item and an optional boolean that indicates 
-            whether the item should be selected (True, default) or unselected 
-            (False). This makes SelectItem more similar to 
-            TreeCtrl.SelectItem. '''
-        if select:
-            self.selectItems(item)
-        elif not select and self.IsSelected(item):
-            # Take the current selection and remove item from it. This is a
-            # bit more wordy then I'd like, but TreeListCtrl has no 
-            # UnselectItem.
-            currentSelection = self.GetSelections()
-            currentSelection.remove(item)
-            self.UnselectAll()
-            self.selectItems(*currentSelection)
-    
-    def selectItems(self, *items):
-        for item in items:
-            if not self.IsSelected(item):
-                super(TreeListCtrl, self).SelectItem(item)
-    """    
+
     # Adapters to make the TreeListCtrl more like the ListCtrl
     
     def DeleteColumn(self, columnIndex):
@@ -319,6 +300,12 @@ class CheckTreeCtrl(TreeListCtrl):
         return flags & customtree.TREE_HITTEST_ONITEMCHECKICON
 
     def onItemActivated(self, event):
-        # Don't open the editor (see TreeMixin.onItemActivated) but let the 
-        # default event handler (un)check the item:
-        event.Skip()
+        if self.isDoubleClicked(event):
+            # Invoke super.onItemActivated to edit the item
+            super(CheckTreeCtrl, self).onItemActivated(event)
+        else:
+            # Item is activated, let another event handler deal with the event 
+            event.Skip()
+            
+    def isDoubleClicked(self, event):
+        return hasattr(event, 'LeftDClick') and event.LeftDClick()

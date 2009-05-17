@@ -465,6 +465,9 @@ class VirtualTree(TreeAPIHarmonizer, TreeHelper):
             self.__refreshAttribute(item, index, 'ItemText', columnIndex)
 
     def RefreshItemFont(self, item, index):
+        value = self.OnGetItemFont(index)
+        if value == wx.NullFont:
+            return
         self.__refreshAttribute(item, index, 'ItemFont')
 
     def RefreshTextColour(self, item, index):
