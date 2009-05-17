@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.72.8', 'May ??, 2009',
+Release('0.72.8', 'May 17, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Drag and drop from Thunderbird would not work on Debian-derived 
@@ -42,7 +42,11 @@ encoding on a different system than the one the task file was created could fail
         ],
     featuresAdded=[
         Feature('''Use the settings for effort dialog start and stop times for
-the reminder drop down as well.''', '2792160')]
+the reminder drop down as well.''', '2792160')
+        ],
+    dependencyChanged=[
+        Dependency('''Task Coach requires at least wxPython 2.8.9.2-unicode.''')
+        ]
 ),
 
 Release('0.72.7', 'May 10, 2009',

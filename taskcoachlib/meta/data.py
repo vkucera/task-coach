@@ -26,7 +26,7 @@ release_month = 'May'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
                     'November', 'December'].index(release_month) + 1)
-release_day = '0'
+release_day = '17'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2009'
 release_status = 'alpha'
@@ -76,7 +76,7 @@ license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank
 
 platform = 'Any'
 pythonversion = '2.5'
-wxpythonversion = '2.8.6.0-unicode'
+wxpythonversion = '2.8.9.2-unicode'
 languages = {
     'English': None, 
     'Arabic': 'ar',
