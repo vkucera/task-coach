@@ -29,6 +29,16 @@ from taskcoachlib.thirdparty import desktop
 from taskcoachlib.gui.dialog import entry
 
 
+def createDateTimeCtrl(parent, value, settings, callback=None, noneAllowed=True):
+    ''' Factory function for creating a DateTimeCtrl widget using the user
+        settings for earliest and latest times and interval. '''
+    starthour = settings.getint('view', 'efforthourstart')
+    endhour = settings.getint('view', 'efforthourend')
+    interval = settings.getint('view', 'effortminuteinterval')
+    return widgets.DateTimeCtrl(parent, value, callback, noneAllowed=noneAllowed,
+        starthour=starthour, endhour=endhour, interval=interval)
+
+
 class Page(object):
     def entries(self):
         ''' A mapping of names of columns to entries on this editor page. '''
@@ -62,7 +72,6 @@ class PageWithHeaders(Page, widgets.PanelWithBoxSizer):
             headers.append('')
         for header in headers:
             box.add(header)
-    
 
 
 class TaskHeaders(object):
@@ -207,8 +216,9 @@ class AttachmentSubjectPage(SubjectPage):
 
 
 class DatesPage(PageWithHeaders, TaskHeaders):
-    def __init__(self, parent, task, *args, **kwargs):
+    def __init__(self, parent, task, settings, *args, **kwargs):
         super(DatesPage, self).__init__(parent, task, *args, **kwargs)
+        self._settings = settings
         datesBox = self.addDatesBox(task)
         reminderBox = self.addReminderBox(task)
         recurrenceBox = self.addRecurrenceBox(task)
@@ -242,8 +252,8 @@ class DatesPage(PageWithHeaders, TaskHeaders):
         reminderBox = widgets.BoxWithFlexGridSizer(self, label=_('Reminder'), 
                                                    cols=2)
         reminderBox.add(_('Reminder'))
-        self._reminderDateTimeEntry = widgets.DateTimeCtrl(reminderBox,
-            task.reminder())
+        self._reminderDateTimeEntry = createDateTimeCtrl(reminderBox,
+            task.reminder(), self._settings)
         # If the user has not set a reminder, make sure that the default 
         # date time in the reminder entry is a reasonable suggestion:
         if self._reminderDateTimeEntry.GetValue() == date.DateTime.max:
@@ -645,7 +655,7 @@ class TaskEditBook(widgets.Listbook):
     def __init__(self, parent, task, taskFile, settings, *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(TaskSubjectPage(self, task), _('Description'), 'description')
-        self.AddPage(DatesPage(self, task), _('Dates'), 'date')
+        self.AddPage(DatesPage(self, task, settings), _('Dates'), 'date')
         self.AddPage(TaskCategoriesPage(self, task, taskFile, settings), 
                      _('Categories'), 'category')
         if settings.getboolean('feature', 'effort'):
@@ -691,12 +701,8 @@ class EffortEditBook(Page, widgets.BookPage):
                       flags=[None, wx.ALL|wx.EXPAND])
 
     def addStartAndStopEntries(self):
-        starthour = self._settings.getint('view', 'efforthourstart')
-        endhour = self._settings.getint('view', 'efforthourend')
-        interval = self._settings.getint('view', 'effortminuteinterval')
-        self._startEntry = widgets.DateTimeCtrl(self, self._effort.getStart(),
-            self.onPeriodChanged, noneAllowed=False,
-            starthour=starthour, endhour=endhour, interval=interval)
+        self._startEntry = createDateTimeCtrl(self, self._effort.getStart(),
+            self._settings, self.onPeriodChanged, noneAllowed=False)
         startFromLastEffortButton = wx.Button(self,
             label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort,
@@ -704,10 +710,8 @@ class EffortEditBook(Page, widgets.BookPage):
         if self._effortList.maxDateTime() is None:
             startFromLastEffortButton.Disable()
 
-        self._stopEntry = widgets.DateTimeCtrl(self, self._effort.getStop(),
-            self.onPeriodChanged, noneAllowed=True,
-            starthour=starthour, endhour=endhour, interval=interval)
-
+        self._stopEntry = createDateTimeCtrl(self, self._effort.getStop(),
+            self._settings, self.onPeriodChanged, noneAllowed=True)
         flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
         self.addEntry(_('Start'), self._startEntry,
             startFromLastEffortButton,  flags=flags)

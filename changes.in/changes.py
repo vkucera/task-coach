@@ -39,7 +39,10 @@ appropriate tab in the dialog.''', '2791100'),
         Bug('''Opening a task file with e-mail attachments not specifying their
 encoding on a different system than the one the task file was created could fail.'''),
         Bug('''Couldn't add effort to a freshly created task.''')
-        ]
+        ],
+    featuresAdded=[
+        Feature('''Use the settings for effort dialog start and stop times for
+the reminder drop down as well.''', '2792160')]
 ),
 
 Release('0.72.7', 'May 10, 2009',
