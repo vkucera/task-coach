@@ -44,7 +44,7 @@ encoding on a different system than the one the task file was created could fail
         Feature('''Use the settings for effort dialog start and stop times for
 the reminder drop down as well.''', '2792160')
         ],
-    dependencyChanged=[
+    dependenciesChanged=[
         Dependency('''Task Coach requires at least wxPython 2.8.9.2-unicode.''')
         ]
 ),
@@ -101,7 +101,7 @@ Release('0.72.4', 'April 5, 2009',
 rather than UTC.''', '2722224'),
         Bug('''Lock a task file while the user is working on it. Note that
 locks are only honored by Task Coach itself; locked files can still be 
-removed using a file explorer.''', '2318647'),
+removed using a file explorer.''', '2318647', '2236420'),
         Bug('''Fail silently if checking for the availability of a new 
 Task Coach version doesn't work for some reason.''', '2669995'),
         Bug('''Don't open the category edit dialog when the user double clicks
