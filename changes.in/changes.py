@@ -38,6 +38,34 @@ an option to search descriptions too.''', '1816660', '2020347', '2157010',
 '2510045')
     ]),
 
+Release('0.72.8', 'May 17, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Drag and drop from Thunderbird would not work on Debian-derived 
+distributions.''', '2790274'),
+        Bug('''Work around a bug in wxPython 2.8.9.2 on Mac OS X that prevented
+dialogs to be opened for items that have a color set.''', '2789977'),
+        Bug('''Draw check boxes instead of black squares in the category viewer
+on Windows XP and Vista with the classic theme.'''),
+        Bug('''The background of check boxes were corrupted under Linux.'''),
+        Bug('''Double clicking an item in a specific column wouldn't select the 
+appropriate tab in the dialog.''', '2791100'),
+        Bug('''Reduce flickering when tracking effort for a task.'''),
+        Bug('''Opening a task file with e-mail attachments not specifying their
+encoding on a different system than the one the task file was created could fail.'''),
+        Bug('''Couldn't add effort to a freshly created task.''')
+        ],
+    featuresAdded=[
+        Feature('''Use the settings for effort dialog start and stop times for
+the reminder drop down as well.''', '2792160')
+        ],
+    dependenciesChanged=[
+        Dependency('''Task Coach now at least needs wxPython 2.8.9.2-unicode.
+Since the Windows installer and the Mac OS X dmg package have wxPython included, 
+this only affects users of the RPM, Debian, and source distributions.''')
+        ]
+),
+
 Release('0.72.7', 'May 10, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
@@ -45,7 +73,7 @@ Release('0.72.7', 'May 10, 2009',
 have a different file system than the host system has.''', '2776249'),
         Bug('''Task Coach would sometimes crash when dragging a task onto 
 another task on Windows. Fixed by using a different widget for tree-list 
-controls.''', '2573263', '1995248', '2247808')
+controls.''', '2573263', '1995248', '2247808', '1963262')
     ],
     featuresAdded=[
         Feature('''The category viewer can show additional columns (description,
@@ -90,7 +118,7 @@ Release('0.72.4', 'April 5, 2009',
 rather than UTC.''', '2722224'),
         Bug('''Lock a task file while the user is working on it. Note that
 locks are only honored by Task Coach itself; locked files can still be 
-removed using a file explorer.''', '2318647'),
+removed using a file explorer.''', '2318647', '2236420'),
         Bug('''Fail silently if checking for the availability of a new 
 Task Coach version doesn't work for some reason.''', '2669995'),
         Bug('''Don't open the category edit dialog when the user double clicks

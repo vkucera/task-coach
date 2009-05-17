@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, re, tempfile
-from taskcoachlib.thirdparty import desktop
+from taskcoachlib.thirdparty import desktop, chardet
 from taskcoachlib.i18n import _
 import urllib
 
@@ -45,9 +45,7 @@ def readMail(filename, readContent=True):
             content += line
 
     if encoding is None:
-        encoding = wx.Locale_GetSystemEncodingName()
-        if not encoding:
-            encoding = 'ISO-8859-1'
+        encoding = chardet.detect(content)['encoding']
 
     if subject is None:
         subject = _('Untitled e-mail')
