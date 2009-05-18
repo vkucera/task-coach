@@ -38,7 +38,8 @@ pages['index'] = \
         is at version %(version)s. Many people use it on a daily basis, but 
         there are still a lot of 
         features missing. If there's anything you'd like to see included, 
-        <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">please 
+        <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_feature');">please 
         let us know</a>.
         <P>%(name)s is licensed under the <A HREF="license.html">%(license)s</A> 
         and free to use for both 
@@ -59,10 +60,10 @@ pages['donations'] = \
         <P>Donations for the development of %(name)s are very much appreciated.
         Options for donating are:
         <UL>
-            <LI><A HREF="https://sourceforge.net/donate/index.php?group_id=130831">Donate
+            <LI><A HREF="https://sourceforge.net/donate/index.php?group_id=130831" onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/donate');">Donate
             via SourceForge</A>. Fees are deducted for PayPal and 
             SourceForge. This gets you <A
-        HREF="https://sourceforge.net/project/project_donations.php?group_id=130831">listed</A> as donator.
+        HREF="https://sourceforge.net/project/project_donations.php?group_id=130831" onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/donaters');">listed</A> as donator.
             <LI><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_s-xclick">
 <input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" name="submit" alt="Betalingen verrichten met PayPal is snel, gratis en veilig!">
@@ -82,9 +83,11 @@ try:
 except IOError:
     md5 = ''
 
-prerequisites = '''<a href="http://www.python.org/download/">Python</a> 
+prerequisites = '''<a href="http://www.python.org/download/" 
+onClick="javascript: pageTracker._trackPageview('/outgoing/python.org/download');">Python</a> 
 <strong>%(pythonversion)s</strong> 
-and <a href="http://www.wxpython.org/download.php">wxPython</a>
+and <a href="http://www.wxpython.org/download.php" 
+onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org/download');">wxPython</a>
 <strong>%(wxpythonversion)s</strong> (or newer).'''
 
 pages['download'] = \
@@ -99,7 +102,8 @@ pages['download'] = \
         <table>
         <tr><td rowspan=4 valign=top><img src="windows.png" alt="Windows"></td>
         <td><b><a
-        href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe">Installer</a> for Microsoft Windows</b></td></tr>
+        href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe" 
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/windows');">Installer</a> for Microsoft Windows</b></td></tr>
         <tr><td>Windows versions supported: Windows 2000, XP, Vista</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
         <tr><td>Installation: run the installer; it will guide you through
@@ -110,7 +114,8 @@ pages['download'] = \
         <p>
         <table>
         <tr><td rowspan=4 valign=top><img src="mac.png" alt="Mac OS X"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.dmg">Disk image (dmg)</a> for Mac OS X</b></td></tr>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.dmg"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/macosx');">Disk image (dmg)</a> for Mac OS X</b></td></tr>
         <tr><td>Mac OS X versions supported: Mac OS X Tiger/10.4 
         (Universal).</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
@@ -122,7 +127,8 @@ pages['download'] = \
         <p>
         <table>
         <tr><td rowspan=5 valign=top><img src="debian.png" alt="Debian"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb">Debian package (deb)</a> for Debian</b></td></tr>
+        <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/debian');">Debian package (deb)</a> for Debian</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''
         <tr><td>Installation: 
         Unfortunately Debian does not ship with wxPython 2.8 which is required 
@@ -135,7 +141,8 @@ pages['download'] = \
         <p>
         <table>
         <tr><td rowspan=5 valign=top><img src="ubuntu.png" alt="Ubuntu"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb">Debian package (deb)</a> for Ubuntu</b></td></tr>
+        <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/ubuntu');">Debian package (deb)</a> for Ubuntu</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''
         <tr><td>Installation:
         double click the package to start the installer.</td></tr> 
@@ -145,7 +152,8 @@ pages['download'] = \
         <p>
         <table>
         <tr><td rowspan=5 valign=top><img src="gentoo.png" alt="Gentoo"></td>
-        <td><b><a href="http://packages.gentoo.org/package/app-office/taskcoach">Ebuild</a> for Gentoo</b></td></tr>
+        <td><b><a href="http://packages.gentoo.org/package/app-office/taskcoach"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/gentoo.org/download/gentoo');">Ebuild</a> for Gentoo</b></td></tr>
         <tr><td>Installation:
         %(name)s is included in Gentoo Portage. Install with emerge:<br>
         <tt>$ emerge taskcoach</tt><td></tr>
@@ -155,7 +163,8 @@ pages['download'] = \
         <p>
         <table>
         <tr><td rowspan=5 valign=top><img src="fedora.png" alt="Fedora"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc8.noarch.rpm">RPM package</a> for Fedora 8</b></td></tr>
+        <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc8.noarch.rpm"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/fedora');">RPM package</a> for Fedora 8</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
         <tr><td>Installation: <tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc8.noarch.rpm</tt></td></tr>
         </table>
@@ -164,7 +173,8 @@ pages['download'] = \
         <p>
         <table>
         <tr><td rowspan=5 valign=top><img src="linux.png" alt="Linux"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm">RPM package</a> for RPM-based Linux distributions</b></td></tr>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/rpm');">RPM package</a> for RPM-based Linux distributions</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
         <tr><td>Installation: use your package manager to install the 
         package</td></tr>
@@ -174,9 +184,12 @@ pages['download'] = \
         <p>
         <table>
         <tr><td rowspan=6 valign=top><img src="source.png" alt="Source code"></td>
-        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.src.rpm">Source RPM package</a></b></td></tr>
-        <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.zip">Source zip archive</a></b></td></tr>
-        <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz">Source tar archive</a></b></td></tr>
+        <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s-1.src.rpm"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/source_rpm');">Source RPM package</a></b></td></tr>
+        <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.zip"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/source_zip');">Source zip archive</a></b></td></tr>
+        <tr><td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/source_gz');">Source tar archive</a></b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
         <tr><td>Installation: decompress the archive and run <tt>python 
         setup.py install</tt>. If you have a previous version of %(name)s 
@@ -186,7 +199,8 @@ pages['download'] = \
         </p>
         <h3>Download previous releases of %(name)s</h3>
         <P>Download previous releases of %(name)s from 
-        <A HREF="http://sourceforge.net/project/showfiles.php?group_id=130831&package_id=143476">Sourceforge</A>.
+        <A HREF="http://sourceforge.net/project/showfiles.php?group_id=130831&package_id=143476"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/old_releases');">Sourceforge</A>.
         </P>
         <h3>MD5 Digests</h3>
 ''' + md5 
@@ -233,7 +247,8 @@ pages['features'] = \
         </UL>
         <H3>Missing features</H3>
         <P>
-        See the list of <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137">requested features</A> 
+        See the list of <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/feature_requests');">requested features</A> 
         for features that people miss.
         </P>'''
 
@@ -267,20 +282,25 @@ pages['i18n'] = \
         versions of %(name)s are released.</P>
         <P>A Yahoo!Groups mailinglist is available for discussing the development
         and translation of %(name)s. You can join by sending mail to <tt><a 
-        href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
+        href="mailto:taskcoach-dev-subscribe@yahoogroups.com" 
+        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-dev');">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
         or alternatively, if you have a Yahoo id (or don't mind creating one), 
-        join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
+        join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-dev');">webinterface</a>.</P>
 
         <P>To create a new translation or update an existing translation, 
         please follow these steps and guidelines:
         <OL>
-            <LI>Register at <A HREF="http://launchpad.net">Launchpad</A> and
+            <LI>Register at <A HREF="http://launchpad.net" 
+            onClick="javascript: pageTracker._trackPageview('/outgoing/launchpad.net');">Launchpad</A> and
             don't forget to set your preferred languages, i.e. the language(s)
             you want to translate to.
             <LI>Learn more about 
-            <A HREF="http://translations.launchpad.net/+about">translation 
+            <A HREF="http://translations.launchpad.net/+about" 
+            onClick="javascript: pageTracker._trackPageview('/outgoing/launchpad.net/translations');">translation 
             support by Launchpad</A>.
-            <LI>Go to <A HREF="https://launchpad.net/taskcoach">%(name)s at 
+            <LI>Go to <A HREF="https://launchpad.net/taskcoach" 
+            onClick="javascript: pageTracker._trackPageview('/outgoing/launchpad.net/taskcoach');">%(name)s at 
             Launchpad</A> and click "Help translate".
             <LI>Start contributing to an existing translation or create a new
             one.
@@ -310,16 +330,21 @@ pages['mailinglist'] = \
 '''       <H3>Mailinglist</H3>         
         <P>A Yahoo!Groups mailinglist is available for discussing
         %(name)s. You can join by sending mail to <tt><a 
-        href="mailto:taskcoach-subscribe@yahoogroups.com">taskcoach-subscribe@yahoogroups.com</a></tt>
+        href="mailto:taskcoach-subscribe@yahoogroups.com" 
+        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-users');">taskcoach-subscribe@yahoogroups.com</a></tt>
         or alternatively, if you have a Yahoo id (or don't mind creating
         one), join via the <a
-        href="http://groups.yahoo.com/group/taskcoach/join">webinterface</a>.</P>
+        href="http://groups.yahoo.com/group/taskcoach/join" 
+        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-users');">webinterface</a>.</P>
         <P>You can browse the <a
-        href="http://groups.yahoo.com/group/taskcoach/messages">archive
+        href="http://groups.yahoo.com/group/taskcoach/messages" 
+        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/archive/taskcoach-users');">archive
         of messages</a> without subscribing to the mailinglist.</P>
         <p>The mailinglist is also available as the newsgroup 
-        <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach">gmane.comp.sysutils.pim.taskcoach</a>
-        on <a href="http://gmane.org">Gmane</a>.</p>
+        <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach" 
+        onClick="javascript: pageTracker._trackPageview('/outgoing/gmane.org/taskcoach');">gmane.comp.sysutils.pim.taskcoach</a>
+        on <a href="http://gmane.org" 
+        onClick="javascript: pageTracker._trackPageview('/outgoing/gmane.org');">Gmane</a>.</p>
 '''
 
 pages['faq'] = \
@@ -443,36 +468,49 @@ pages['devinfo'] = \
     
     <h4>Project hosting</h4>
     <P>%(name)s source code, file downloads and trackers are hosted at 
-    <a href="https://sourceforge.net/projects/taskcoach/" 
+    <a href="https://sourceforge.net/projects/taskcoach/"
+       onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/taskcoach');" 
        title="%(name)s @ Sourceforge">Sourceforge</a>. Translations are hosted
     at 
     <a href="http://launchpad.net/taskcoach/"
+       onClick="javascript: pageTracker._trackPageview('/outgoing/launchpad.net/taskcoach');"
        title="%(name)s @Launchpad">Launchpad</a>.
     </P>
     
     <h4>Mailinglist</h4>
     <P>A Yahoo!Groups mailinglist is available for discussing the development
     of %(name)s. You can join by sending mail to <tt><a 
-    href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
+    href="mailto:taskcoach-dev-subscribe@yahoogroups.com"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-dev');">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
     or alternatively, if you have a Yahoo id (or don't mind creating one), 
-    join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
-    <P>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
+    join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-dev');">webinterface</a>.</P>
+    <P>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/archive/taskcoach-dev');">archive
     of messages</a> without subscribing to the mailinglist.</P>
     <p>The mailinglist is also available as the newsgroup 
-    <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
-    on <a href="http://gmane.org">Gmane</a>.</p>
+    <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/gmane.org/taskcoach-dev');">gmane.comp.sysutils.pim.taskcoach.devel</a>
+    on <a href="http://gmane.org"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/gmane.org');">Gmane</a>.</p>
     <P>A Sourceforge mailinglist is available for receiving commit messages.
-    If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join this mailinglist</a>.
+    If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/join/taskcoach-commits');">join this mailinglist</a>.
     
     <h4>Dependencies</h4>
-    <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
-    using <A HREF="http://www.wxpython.org">wxPython</A> for the
+    <p>%(name)s is developed in <A HREF="http://www.python.org"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/python.org');">Python</A>,
+    using <A HREF="http://www.wxpython.org" 
+    onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org');">wxPython</A> for the
     graphical user interface. On Windows, 
-    <A HREF="http://sourceforge.net/projects/pywin32/">Pywin32</A> 
+    <A HREF="http://sourceforge.net/projects/pywin32/"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/pywin32');">Pywin32</A> 
     is used as well. For generating the API documentation you need to have
-    <A HREF="http://epydoc.sourceforge.net/">Epydoc</A> installed. For
+    <A HREF="http://epydoc.sourceforge.net/"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/epydoc');">Epydoc</A> installed. For
     generating inheritance diagrams you need to have <A
-    HREF="http://www.graphviz.org">Graphviz</A> installed.</p>
+    HREF="http://www.graphviz.org"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/graphviz.org');">Graphviz</A> installed.</p>
     <p>The few other libraries (other than those
     provided by Python, wxPython and Pywin32) that are used are put into the
     taskcoachlib/thirdparty package and included in the source code
@@ -482,15 +520,18 @@ pages['devinfo'] = \
     You are free to use whatever IDE you want. To make use of the Makefile you
     need to have 'make' installed. It is installed on Linux and Mac OS X by 
     default. On Windows we recommend you to install
-    <A HREF="http://www.cywin.com">Cygwin</A> which provides a shell (bash) and 
+    <A HREF="http://www.cywin.com"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/cygwin.com');">Cygwin</A> which provides a shell (bash) and 
     a whole range of useful utilities. Make sure to explicitly include make in 
     the Cygwin setup program because the standard install doesn't contain make.
     
     <h4>Getting the source</h4>
     <p>%(name)s source code is hosted in a <A
-    HREF="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
+    HREF="http://sourceforge.net/svn/?group_id=130831"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/svn');">Subversion repository 
     at SourceForge</A>. You can check out the code from the repository 
-    directly or <A HREF="http://taskcoach.svn.sourceforge.net/">browse the
+    directly or <A HREF="http://taskcoach.svn.sourceforge.net/" 
+    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/svn');">browse the
     repository</A>. You can generate documentation with Epydoc and Graphviz
     from the Makefile: <tt>make dot epydoc</tt>.</p>
     
@@ -565,7 +606,8 @@ pages['devinfo'] = \
     </p>
     <h4>Blog</h4>
     <p>Frank keeps an not very frequent 
-    <a href="http://taskcoach.blogspot.com">blog</a> about
+    <a href="http://taskcoach.blogspot.com"
+    onClick="javascript: pageTracker._trackPageview('/outgoing/blogspot.com/taskcoach');">blog</a> about
     lessons learned from developing %(name)s.</p>
 '''
 
