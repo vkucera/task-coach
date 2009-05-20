@@ -45,7 +45,15 @@ def readMail(filename, readContent=True):
             content += line
 
     if encoding is None:
-        encoding = chardet.detect(content)['encoding']
+        # Don't try to guess every time. When there are many e-mails
+        # with big attachments, it may take *very* long.
+
+        try:
+            content.decode(wx.Locale_GetSystemEncodingName())
+        except UnicodeError:
+            encoding = chardet.detect(content)['encoding']
+        else:
+            encoding = wx.Locale_GetSystemEncodingName()
 
     if subject is None:
         subject = _('Untitled e-mail')
