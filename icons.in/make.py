@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,12 +26,7 @@ def extractIcon(iconZipFile, pngFilename, pngZipped):
     pngFile.close()
 
 def addIcon(pngName, pngFilename, iconPyFile, first):
-    # -F: don't generate backwards compatible access functions, since the 
-    # generated file isn't backwards compatible anyway (a bug in wxPython
-    # 2.8.8.1).
-    options = ['-i', '-c', '-a', '-n%s'%pngName, pngFilename, iconPyFile]
-    if map(int, wx.__version__.split('.')) >= (2, 8, 8):
-        options.insert(0, '-F')
+    options = ['-F', '-i', '-c', '-a', '-n%s'%pngName, pngFilename, iconPyFile]
     if first:
         options.remove('-a')
     wx.tools.img2py.main(options)
@@ -59,30 +54,11 @@ def makeIconPyFile(iconPyFile):
     iconZipFile.close()
 
 def makeSplashScreen(iconPyFile):
-    options = ['-c', '-a', '-nsplash', 'splash.png', 
-               iconPyFile]
-    if map(int, wx.__version__.split('.')) >= (2, 8, 8):
-        options.insert(0, '-F')
+    options = ['-F', '-c', '-a', '-nsplash', 'splash.png', iconPyFile]
     wx.tools.img2py.main(options)
-
-def fixIconFile(iconFileName):
-    ''' wxPython 2.8.8.1 uses a new class for images in the generated image
-        file. Since this class is not available in older versions of wxPython 
-        we include that file in taskcoachlib.thirdparty and change the import 
-        in the generated image file. '''
-    fd = file(iconFileName)
-    contents = fd.readlines()
-    fd.close()
-    fd = file(iconFileName, 'w')
-    for line in contents:
-        if line.startswith('from wx.lib.embeddedimage'):
-            line = 'from taskcoachlib.thirdparty.embeddedimage import PyEmbeddedImage\n'
-        fd.write(line)
-    fd.close()
 
 
 if __name__ == '__main__':
     iconFileName = '../taskcoachlib/gui/icons.py'
     makeIconPyFile(iconFileName)
     makeSplashScreen(iconFileName)
-    fixIconFile(iconFileName)
