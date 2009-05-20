@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,14 +19,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 from taskcoachlib.thirdparty import desktop
 
+
 class DesktopTest(test.TestCase):
     def testOpenByForcingAnException(self):
         ''' desktop.open will open a browser or other program and we
-        don't want that during unittesting. So we provide a non-existing
-        desktop, which will cause desktop.open to raise an exception. '''
+            don't want that during unit testing. So we provide a non-existing
+            desktop, which will cause desktop.open to raise an exception. '''
 
         try:
-            desktop.open('http://taskcoach.niessink.com',
+            desktop.open('http://www.taskcoach.org',
                 desktop='Force exception')
             self.fail('desktop.open ignored our non-existing desktop?!')
         except OSError:

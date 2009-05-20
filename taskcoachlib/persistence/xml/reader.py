@@ -22,8 +22,8 @@ import xml.etree.ElementTree as ET
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
-from taskcoachlib.thirdparty.desktop import get_temp_file
 from taskcoachlib.i18n import translate
+from .. import sessiontempfile
 
 
 class PIParser(ET.XMLTreeBuilder):
@@ -308,7 +308,7 @@ class XMLReader(object):
                 data = dataNode.text
                 ext = dataNode.attrib['extension']
 
-                location = get_temp_file(suffix=ext)
+                location = sessiontempfile.get_temp_file(suffix=ext)
                 file(location, 'wb').write(data.decode('base64'))
 
         return attachment.AttachmentFactory(location,

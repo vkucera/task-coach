@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, re, imaplib, ConfigParser, wx
 from taskcoachlib.i18n import _
-from taskcoachlib.thirdparty.desktop import get_temp_file
+from taskcoachlib import persistence
 
 
 _RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
@@ -263,7 +263,7 @@ class ThunderbirdImapReader(object):
         fp.write(self._getMail())
 
 #==============================================================================
-#
+
 
 def getMail(id_):
     if id_.startswith('mailbox-message://'):
@@ -273,6 +273,6 @@ def getMail(id_):
     else:
         raise TypeError('Not supported: %s' % id_)
 
-    filename = get_temp_file(suffix='.eml')
+    filename = persistence.get_temp_file(suffix='.eml')
     reader.saveToFile(file(filename, 'wb'))
     return filename
