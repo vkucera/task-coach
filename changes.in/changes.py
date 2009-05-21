@@ -23,6 +23,17 @@ from changetypes import *
 
 releases = [
 
+Release('0.72.9', 'May ??, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Don't throw an exception when exporting an active effort record
+to iCal format.''')
+        ],
+    featuresAdded=[
+        Feature('''All export options can now export selected items only.''')
+        ]
+    ),
+    
 Release('0.72.8', 'May 17, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[

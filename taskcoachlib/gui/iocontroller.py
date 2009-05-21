@@ -225,63 +225,36 @@ class IOController(object):
                 return False
         self.__closeUnconditionally()
         return True
-
-    def exportAsICS(self, filename=None):
-        if not filename:
-            filename = self.__askUserForFile(_('Export as iCalendar...'),
-                flags=wx.SAVE, fileDialogOpts=self.__icsFileDialogOpts)
+    
+    def export(self, title, fileDialogOpts, writerClass, viewer, selectionOnly):
+        filename = self.__askUserForFile(title, fileDialogOpts, flags=wx.SAVE)
         if filename:
-            icsFile = self.__openFileForWriting(filename)
-            persistence.ICSWriter(icsFile).write(self.__taskFile.tasks())
-            icsFile.close()
-            self.__messageCallback(_('Exported %(nrtasks)d tasks to %(filename)s')%\
-                {'nrtasks': len(self.__taskFile.tasks()), 'filename': filename})
+            fd = self.__openFileForWriting(filename)
+            count = writerClass(fd).write(viewer, selectionOnly)
+            fd.close()
+            self.__messageCallback(_('Exported %(count)d items to %(filename)s')%\
+                {'count': count, 'filename': filename})
             return True
         else:
             return False
 
-    def exportAsHTML(self, viewer, filename=None, selectionOnly=False):
-        if not filename:
-            filename = self.__askUserForFile(_('Export as HTML...'),
-                flags=wx.SAVE, fileDialogOpts=self.__htmlFileDialogOpts)
-        if filename:
-            htmlFile = self.__openFileForWriting(filename)
-            count = persistence.HTMLWriter(htmlFile).write(viewer,
-                                                           selectionOnly=selectionOnly)
-            htmlFile.close()
-            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%\
-                {'nrtasks': count, 'filename': filename})
-            return True
-        else:
-            return False
-
-    def exportAsCSV(self, viewer, filename=None):
-        if not filename:
-            filename = self.__askUserForFile(_('Export as CSV...'),
-                flags=wx.SAVE, fileDialogOpts=self.__csvFileDialogOpts)
-        if filename:
-            csvFile = self.__openFileForWriting(filename)
-            persistence.CSVWriter(csvFile).write(viewer)
-            csvFile.close()
-            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%\
-                {'nrtasks': viewer.size(), 'filename': filename})
-            return True
-        else:
-            return False
+    def exportEffortAsICS(self, viewer, selectionOnly=False):
+        return self.export(_('Export effort as iCalendar...'), 
+            self.__icsFileDialogOpts, persistence.ICSWriter, viewer, 
+            selectionOnly)
         
-    def exportAsVCalendar(self, viewer, filename=None):
-        if not filename:
-            filename = self.__askUserForFile(_('Export as VCalendar...'),
-                flags=wx.SAVE, fileDialogOpts=self.__vcalFileDialogOpts)
-        if filename:
-            vcalFile = self.__openFileForWriting(filename)
-            persistence.VCalendarWriter(vcalFile).write(viewer)
-            vcalFile.close()
-            self.__messageCallback(_('Exported %(nrtasks)d items to %(filename)s')%\
-                {'nrtasks': viewer.size(), 'filename': filename})
-            return True
-        else:
-            return False
+    def exportAsHTML(self, viewer, selectionOnly=False):
+        return self.export(_('Export as HTML...'), self.__htmlFileDialogOpts, 
+            persistence.HTMLWriter, viewer, selectionOnly)
+
+    def exportAsCSV(self, viewer, selectionOnly=False):
+        return self.export(_('Export as CSV...'), self.__csvFileDialogOpts, 
+            persistence.CSVWriter, viewer, selectionOnly)
+        
+    def exportAsVCalendar(self, viewer, selectionOnly=False):
+        return self.export(_('Export as VCalendar...'),
+            self.__vcalFileDialogOpts, persistence.VCalendarWriter, viewer, 
+            selectionOnly)
 
     def synchronize(self, password):
         synchronizer = sync.Synchronizer(self.__syncReport, self, 

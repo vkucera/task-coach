@@ -582,17 +582,28 @@ class Print(ViewerCommand, SettingsCommand):
         wxPrinter.Print(self.mainWindow(), printout, prompt=False)
  
 
-class FileExportAsICS(IOCommand):
+class FileExportEffortAsICS(NeedsEffortViewer, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(FileExportAsICS, self).__init__(\
+        super(FileExportEffortAsICS, self).__init__(\
             menuText=_('Export effort as &iCalendar...'), 
             helpText=_('Export effort in iCalendar (*.ics) format'),
             bitmap='exportasics', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsICS()
+        self.iocontroller.exportEffortAsICS(self.viewer)
 
 
+class FileExportSelectedEffortAsICS(NeedsSelectedEffort, IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportSelectedEffortAsICS, self).__init__(\
+            menuText=_('Export selected effort as &iCalendar...'), 
+            helpText=_('Export selected effort in iCalendar (*.ics) format'),
+            bitmap='exportasics', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportEffortAsICS(self.viewer, selectionOnly=True)
+        
+        
 class FileExportAsHTML(IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsHTML, self).__init__(menuText=_('Export as &HTML...'), 
@@ -603,7 +614,7 @@ class FileExportAsHTML(IOCommand, ViewerCommand):
         self.iocontroller.exportAsHTML(self.viewer)
 
 
-class FileExportSelectionAsHTML(IOCommand, ViewerCommand):
+class FileExportSelectionAsHTML(NeedsSelection, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportSelectionAsHTML, self).__init__(menuText=_('Export &selection as HTML...'),
             helpText=_('Export the selection in the current view as HTML file'),
@@ -623,14 +634,34 @@ class FileExportAsCSV(IOCommand, ViewerCommand):
         self.iocontroller.exportAsCSV(self.viewer)
 
 
-class FileExportAsVCalendar(IOCommand, ViewerCommand):
+class FileExportSelectionAsCSV(NeedsSelection, IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportSelectionAsCSV, self).__init__(menuText=_('Export selection as &CSV...'),
+            helpText=_('Export the selection in the current view in Comma Separated Values (CSV) format'),
+            bitmap='exportascsv', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportAsCSV(self.viewer, selectionOnly=True)
+
+
+class FileExportAsVCalendar(NeedsTaskViewer, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsVCalendar, self).__init__(menuText=_('Export as &VCalendar...'),
-            helpText=_('Export the current view in VCalendar format'),
+            helpText=_('Export the current task viewer in VCalendar format'),
             bitmap='exportasvcal', *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.exportAsVCalendar(self.viewer)
+
+
+class FileExportSelectionAsVCalendar(NeedsSelectedTasks, IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportSelectionAsVCalendar, self).__init__(menuText=_('Export selection as &VCalendar...'),
+            helpText=_('Export the selected tasks in the current task viewer in VCalendar format'),
+            bitmap='exportasvcal', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportAsVCalendar(self.viewer, selectionOnly=True)
 
 
 class FileSynchronize(IOCommand, SettingsCommand):

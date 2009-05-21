@@ -17,10 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-'''
-Writer to VCalendar format.
-'''
-
 from taskcoachlib.persistence.vcalendar import vcal
 
 
@@ -47,10 +43,12 @@ class VCalendarWriter(object):
             if tree:
                 selection = extendedWithAncestors(selection)
 
+        count = 0
         for task in viewer.visibleItems():
             if selectionOnly and task not in selection:
                 continue
             self.__fd.write(vcal.VCalFromTask(task))
-
+            count += 1
+            
         self.__fd.write('END:VCALENDAR\r\n')
-
+        return count

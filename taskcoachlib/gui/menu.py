@@ -262,16 +262,16 @@ class FileMenu(Menu):
 class ExportMenu(Menu):
     def __init__(self, mainwindow, iocontroller, viewerContainer):
         super(ExportMenu, self).__init__(mainwindow)
+        kwargs = dict(iocontroller=iocontroller, viewer=viewerContainer)
         self.appendUICommands(
-            uicommand.FileExportAsHTML(iocontroller=iocontroller,
-                                       viewer=viewerContainer),
-            uicommand.FileExportSelectionAsHTML(iocontroller=iocontroller,
-                                                viewer=viewerContainer),
-            uicommand.FileExportAsICS(iocontroller=iocontroller),
-            uicommand.FileExportAsCSV(iocontroller=iocontroller,
-                                      viewer=viewerContainer),
-            uicommand.FileExportAsVCalendar(iocontroller=iocontroller,
-                                            viewer=viewerContainer))
+            uicommand.FileExportAsHTML(**kwargs),
+            uicommand.FileExportSelectionAsHTML(**kwargs),
+            uicommand.FileExportEffortAsICS(**kwargs),
+            uicommand.FileExportSelectedEffortAsICS(**kwargs),
+            uicommand.FileExportAsCSV(**kwargs),
+            uicommand.FileExportSelectionAsCSV(**kwargs),
+            uicommand.FileExportAsVCalendar(**kwargs),
+            uicommand.FileExportSelectionAsVCalendar(**kwargs))
 
 
 class TaskTemplateMenu(DynamicMenu):
