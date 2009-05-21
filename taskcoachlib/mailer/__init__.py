@@ -46,6 +46,8 @@ def readMail(filename, readContent=True):
 
     if encoding is None:
         encoding = chardet.detect(content)['encoding']
+    if encoding is None:
+        encoding = "utf-8"
 
     if subject is None:
         subject = _('Untitled e-mail')

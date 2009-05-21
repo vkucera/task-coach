@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, atexit
+import os, atexit, tempfile
 from taskcoachlib import patterns
 
 
@@ -30,7 +30,7 @@ class TempFiles(object):
     def register(self, filename):
         self.__tempFiles.append(filename)
 
-    def cleanup():
+    def cleanup(self):
         for name in self.__tempFiles:
             try:
                 os.remove(name)

@@ -27,10 +27,15 @@ Release('0.72.9', 'May ??, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't throw an exception when exporting an active effort record
-to iCal format.''')
+to iCal format.'''),
+        Bug('''Refuse to open task files that have a different format because
+they are created by a newer version of Task Coach than the one the user is 
+using.''')
         ],
     featuresAdded=[
-        Feature('''All export options can now export selected items only.''')
+        Feature('''All export options can now export selected items only.'''),
+        Feature('''Put line breaks in the XML so that task files are 
+easier to examine in a text editor.''', '1277365')
         ]
     ),
     

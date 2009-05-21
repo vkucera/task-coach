@@ -110,6 +110,12 @@ class IOController(object):
                     self.open(filename, showerror, breakLock=True)
                 else:
                     return
+            except persistence.xml.reader.XMLReaderTooNewException:
+                showerror(_('Cannot open %(filename)s\n'
+                            'because it was created by a newer version of %(name)s.\n'
+                            'Please upgrade %(name)s.')%\
+                          dict(filename=filename, name=meta.name))
+                return
             except Exception:
                 showerror(_('Error while reading %s:\n')%filename + \
                     ''.join(traceback.format_exception(*sys.exc_info())) + \

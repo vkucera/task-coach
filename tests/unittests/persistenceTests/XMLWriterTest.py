@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('<?taskcoach release="%s"'%meta.data.version)
 
     def testGUID(self):
-        self.expectInXML('<guid>GUID</guid>')
+        self.expectInXML('<guid>\nGUID\n</guid>')
 
     def testTaskSubject(self):
         self.task.setSubject('Subject')
@@ -73,7 +73,7 @@ class XMLWriterTest(test.TestCase):
             
     def testTaskDescription(self):
         self.task.setDescription('Description')
-        self.expectInXML('<description>Description</description>')
+        self.expectInXML('<description>\nDescription\n</description>\n')
         
     def testEmptyTaskDescriptionIsNotWritten(self):
         self.expectNotInXML('<description>')
@@ -102,13 +102,15 @@ class XMLWriterTest(test.TestCase):
         
     def testChildTask(self):
         self.task.addChild(task.Task(subject='child'))
-        self.expectInXML('subject="child"/></task><category')
+        self.expectInXML('subject="child"/>\n</task>\n<category')
 
     def testEffort(self):
         taskEffort = effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2), description='description\nline 2')
         self.task.addEffort(taskEffort)
-        self.expectInXML('<effort start="%s" status="%d" stop="%s"><description>description\nline 2</description></effort>'% \
+        self.expectInXML('<effort start="%s" status="%d" stop="%s">\n'
+                         '<description>\ndescription\nline 2\n</description>\n'
+                         '</effort>'% \
             (taskEffort.getStart(), base.SynchronizedObject.STATUS_NEW, taskEffort.getStop()))
         
     def testThatEffortTimesDoNotContainMilliseconds(self):
@@ -178,8 +180,8 @@ class XMLWriterTest(test.TestCase):
         childCategory = category.Category(subject='child')
         parentCategory.addChild(childCategory)
         self.categoryContainer.extend([parentCategory, childCategory])
-        self.expectInXML('<category id="%s" status="1" subject="parent">'
-                         '<category id="%s" status="1" subject="child"/></category>'%\
+        self.expectInXML('<category id="%s" status="1" subject="parent">\n'
+                         '<category id="%s" status="1" subject="child"/>\n</category>'%\
                          (parentCategory.id(), childCategory.id()))
 
     def testSubCategoryWithOneTask(self):
@@ -187,8 +189,8 @@ class XMLWriterTest(test.TestCase):
         childCategory = category.Category(subject='child', categorizables=[self.task])
         parentCategory.addChild(childCategory)
         self.categoryContainer.extend([parentCategory, childCategory])
-        self.expectInXML('<category id="%s" status="1" subject="parent">'
-                         '<category categorizables="%s" id="%s" status="1" subject="child"/>'
+        self.expectInXML('<category id="%s" status="1" subject="parent">\n'
+                         '<category categorizables="%s" id="%s" status="1" subject="child"/>\n'
                          '</category>'%(parentCategory.id(), self.task.id(), 
                                         childCategory.id()))
     
@@ -200,7 +202,9 @@ class XMLWriterTest(test.TestCase):
     def testCategoryWithDescription(self):
         aCategory = category.Category(subject='subject', description='Description', id='id')
         self.categoryContainer.append(aCategory)
-        self.expectInXML('<category id="id" status="1" subject="subject"><description>Description</description></category>')
+        self.expectInXML('<category id="id" status="1" subject="subject">\n'
+                         '<description>\nDescription\n</description>\n'
+                         '</category>')
         
     def testCategoryWithUnicodeSubject(self):
         unicodeCategory = category.Category(subject=u'ï¬Ÿï­Žï­–', id='id')
@@ -281,14 +285,18 @@ class XMLWriterTest(test.TestCase):
         
     def testNoteWithDescription(self):
         self.noteContainer.append(note.Note(description='Description', id='id'))
-        self.expectInXML('<note id="id" status="%d"><description>Description</description></note>' % base.SynchronizedObject.STATUS_NEW)
+        self.expectInXML('<note id="id" status="%d">\n'
+                         '<description>\nDescription\n</description>\n'
+                         '</note>' % base.SynchronizedObject.STATUS_NEW)
         
     def testNoteWithChild(self):
         aNote = note.Note(id='parent')
         child = note.Note(id='child')
         aNote.addChild(child)
         self.noteContainer.append(aNote)
-        self.expectInXML('<note id="parent" status="%d"><note id="child" status="%d"/></note>' % (base.SynchronizedObject.STATUS_NEW,
+        self.expectInXML('<note id="parent" status="%d">\n'
+                         '<note id="child" status="%d"/>\n'
+                         '</note>' % (base.SynchronizedObject.STATUS_NEW,
                                                                                                   base.SynchronizedObject.STATUS_NEW))
         
     def testNoteWithCategory(self):
@@ -375,7 +383,7 @@ class XMLWriterTest(test.TestCase):
         att = attachment.FileAttachment('whatever.txt', id='foo')
         self.task.addAttachments(att)
         att.addNote(note.Note(subject='attnote', id='spam'))
-        self.expectInXML('<attachment id="foo" location="whatever.txt" status="1" subject="whatever.txt" type="file"><note')
+        self.expectInXML('<attachment id="foo" location="whatever.txt" status="1" subject="whatever.txt" type="file">\n<note')
 
     def testNoteWithOneAttachment(self):
         aNote = note.Note()
@@ -400,44 +408,44 @@ class XMLWriterTest(test.TestCase):
     def testTaskWithNote(self):
         aNote = note.Note(subject='Note', id='id')
         self.task.addNote(aNote)
-        self.expectInXML('><note id="id" status="1" subject="Note"/></task>')
+        self.expectInXML('>\n<note id="id" status="1" subject="Note"/>\n</task>')
 
     def testTaskWithNotes(self):
         note1 = note.Note(subject='Note1', id='1')
         note2 = note.Note(subject='Note2', id='2')
         self.task.addNote(note1)
         self.task.addNote(note2)
-        self.expectInXML('><note id="1" status="1" subject="Note1"/>'
-            '<note id="2" status="1" subject="Note2"/></task>')
+        self.expectInXML('>\n<note id="1" status="1" subject="Note1"/>\n'
+            '<note id="2" status="1" subject="Note2"/>\n</task>')
         
     def testTaskWithNestedNotes(self):
         aNote = note.Note(subject='Note', id='1')
         subNote = note.Note(subject='Subnote', id='2')
         aNote.addChild(subNote)
         self.task.addNote(aNote)
-        self.expectInXML('><note id="1" status="1" subject="Note">'
-            '<note id="2" status="1" subject="Subnote"/></note></task>')
+        self.expectInXML('>\n<note id="1" status="1" subject="Note">\n'
+            '<note id="2" status="1" subject="Subnote"/>\n</note>\n</task>')
 
     def testCategoryWithNote(self):
         aNote = note.Note(subject='Note', id='id')
         self.category.addNote(aNote)
-        self.expectInXML('><note id="id" status="1" subject="Note"/></category>')
+        self.expectInXML('>\n<note id="id" status="1" subject="Note"/>\n</category>')
 
     def testCategoryWithNotes(self):
         note1 = note.Note(subject='Note1', id='1')
         note2 = note.Note(subject='Note2', id='2')
         self.category.addNote(note1)
         self.category.addNote(note2)
-        self.expectInXML('><note id="1" status="1" subject="Note1"/>'
-            '<note id="2" status="1" subject="Note2"/></category>')
+        self.expectInXML('>\n<note id="1" status="1" subject="Note1"/>\n'
+            '<note id="2" status="1" subject="Note2"/>\n</category>')
         
     def testCategoryWithNestedNotes(self):
         aNote = note.Note(subject='Note', id='1')
         subNote = note.Note(subject='Subnote', id='2')
         aNote.addChild(subNote)
         self.category.addNote(aNote)
-        self.expectInXML('><note id="1" status="1" subject="Note">'
-            '<note id="2" status="1" subject="Subnote"/></note></category>')
+        self.expectInXML('>\n<note id="1" status="1" subject="Note">\n'
+            '<note id="2" status="1" subject="Subnote"/>\n</note>\n</category>')
 
     def testTaskDefaultExpansionState(self):
         # Don't write anything if the task is not expanded: 

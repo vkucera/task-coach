@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ from taskcoachlib.domain import date, attachment, task, note, category
 
 
 class XMLWriter(object):
-    def __init__(self, fd, versionnr=23):
+    def __init__(self, fd, versionnr=meta.data.tskversion):
         self.__fd = fd
         self.__versionnr = versionnr
 
@@ -45,7 +45,7 @@ class XMLWriter(object):
             self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
         if guid:
             self.document.documentElement.appendChild(self.textNode('guid', guid))
-        self.document.writexml(self.__fd)
+        self.document.writexml(self.__fd, newl='\n')
 
     def taskNode(self, task):
         node = self.baseCompositeNode(task, 'task', self.taskNode)
