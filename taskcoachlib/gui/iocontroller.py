@@ -134,11 +134,29 @@ class IOController(object):
                 showerror(errorMessage, **self.__errorMessageOptions)
             self.__removeRecentFile(filename)
             
-    def merge(self, filename=None):
+    def merge(self, filename=None, showerror=wx.MessageBox):
         if not filename:
             filename = self.__askUserForFile(_('Merge'))
         if filename:
-            self.__taskFile.merge(filename)
+            try:
+                self.__taskFile.merge(filename)
+            except lockfile.AlreadyLocked:
+                showerror(_('Cannot open %(filename)s\nbecause it is locked.')%\
+                          dict(filename=filename),
+                          **self.__errorMessageOptions)
+                return
+            except persistence.xml.reader.XMLReaderTooNewException:
+                showerror(_('Cannot open %(filename)s\n'
+                            'because it was created by a newer version of %(name)s.\n'
+                            'Please upgrade %(name)s.')%\
+                          dict(filename=filename, name=meta.name))
+                return
+            except Exception:
+                showerror(_('Error while reading %s:\n')%filename + \
+                    ''.join(traceback.format_exception(*sys.exc_info())) + \
+                    _('Are you sure it is a %s-file?')%meta.name, 
+                    **self.__errorMessageOptions)
+                return                
             self.__messageCallback(_('Merged %(filename)s')%{'filename': filename}) 
             self.__addRecentFile(filename)
 

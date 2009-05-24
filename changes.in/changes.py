@@ -32,7 +32,9 @@ to iCal format.'''),
 they are created by a newer version of Task Coach than the one the user is 
 using.'''),
         Bug('''Updating menu items would trigger exceptions after closing a
-(task) viewer.''')
+(task) viewer.'''),
+        Bug('''After merging, Task Coach would display the wrong filename in the
+window title.''')
         ],
     featuresAdded=[
         Feature('''All export options can now export selected items only.'''),

@@ -192,7 +192,7 @@ class MainWindow(widgets.AuiManagedFrameWithNotebookAPI):
     
     def registerForWindowComponentChanges(self):
         patterns.Publisher().registerObserver(self.onFilenameChanged, 
-            eventType='taskfile.filenameChanged')
+            eventType='taskfile.filenameChanged', eventSource=self.taskFile)
         patterns.Publisher().registerObserver(self.onShowStatusBar, 
             eventType='view.statusbar')
         patterns.Publisher().registerObserver(self.onShowToolBar, 

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os
+import os, shutil
 import test
 from unittests import dummy
 from taskcoachlib import gui, config, persistence
@@ -36,6 +36,8 @@ class IOControllerTest(test.TestCase):
         for filename in self.filename1, self.filename2:
             if os.path.exists(filename):
                 os.remove(filename)
+            if os.path.exists(filename + '.lock'):
+                shutil.rmtree(filename + '.lock')
         super(IOControllerTest, self).tearDown()
         
     def doIOAndCheckRecentFiles(self, open=None, saveas=None, 
@@ -200,3 +202,16 @@ class IOControllerTest(test.TestCase):
         self.iocontroller.purgeDeletedItems()
         self.assertEqual(self.taskFile.tasks(), [])
         self.assertEqual(self.taskFile.notes(), [myNote])
+
+    def testMerge(self):
+        mergeFile = persistence.TaskFile()
+        mergeFile.setFilename(self.filename2)
+        mergeFile.tasks().append(task.Task(subject='Task to merge'))
+        mergeFile.save()
+        mergeFile.close()
+        targetFile = persistence.TaskFile()
+        iocontroller = gui.IOController(targetFile, lambda *args: None, 
+                                        self.settings)
+        iocontroller.merge(self.filename2)
+        self.assertEqual('Task to merge', list(targetFile.tasks())[0].subject())
+        
