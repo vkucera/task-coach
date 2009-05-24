@@ -34,7 +34,9 @@ using.'''),
         Bug('''Updating menu items would trigger exceptions after closing a
 (task) viewer.'''),
         Bug('''After merging, Task Coach would display the wrong filename in the
-window title.''')
+window title.'''),
+        Bug('''Smaller task edit dialog to cater for lower resolution 
+screens.''', '2214687')
         ],
     featuresAdded=[
         Feature('''All export options can now export selected items only.'''),
