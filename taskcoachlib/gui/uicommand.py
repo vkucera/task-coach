@@ -313,38 +313,46 @@ class NeedsSelection(object):
         return super(NeedsSelection, self).enabled(event) and \
             self.viewer.curselection()
 
+
 class NeedsTaskViewer(object):
     def enabled(self, event):
         return super(NeedsTaskViewer, self).enabled(event) and \
             self.viewer.isShowingTasks()
+
 
 class NeedsEffortViewer(object):
     def enabled(self, event):
         return super(NeedsEffortViewer, self).enabled(event) and \
             self.viewer.isShowingEffort()
 
+
 class NeedsCategoryViewer(object):
     def enabled(self, event):
         return super(NeedsCategoryViewer, self).enabled(event) and \
             self.viewer.isShowingCategories()
+
 
 class NeedsNoteViewer(object):
     def enabled(self, event):
         return super(NeedsNoteViewer, self).enabled(event) and \
             self.viewer.isShowingNotes()
 
+
 class NeedsAttachmentViewer(object):
     def enabled(self, event):
         return super(NeedsAttachmentViewer, self).enabled(event) and \
             self.viewer.isShowingAttachments()
 
+
 class NeedsSelectedTasks(NeedsTaskViewer, NeedsSelection):
     pass
+
 
 class NeedsOneSelectedTask(NeedsTaskViewer, NeedsSelection):
     def enabled(self, event):
         return super(NeedsOneSelectedTask, self).enabled(event) and \
                len(self.viewer.curselection()) == 1
+
 
 class NeedsSelectionWithAttachments(NeedsSelection):
     def enabled(self, event):
@@ -352,51 +360,61 @@ class NeedsSelectionWithAttachments(NeedsSelection):
             not self.viewer.isShowingEffort() and \
             bool([item for item in self.viewer.curselection() if item.attachments()])
 
+
 class NeedsSelectedEffort(NeedsEffortViewer, NeedsSelection):
     pass
+
 
 class NeedsSelectedCategory(NeedsCategoryViewer, NeedsSelection):
     pass
 
+
 class NeedsSelectedNote(NeedsNoteViewer, NeedsSelection):
     pass
+
 
 class NeedsSelectedAttachments(NeedsAttachmentViewer, NeedsSelection):
     pass
 
+
 class NeedsAtLeastOneTask(object):
     def enabled(self, event):
         return len(self.taskList) > 0
+
         
 class NeedsItems(object):
     def enabled(self, event):
         return self.viewer.size() 
 
+
 class NeedsTreeViewer(object):
     def enabled(self, event):
         return super(NeedsTreeViewer, self).enabled(event) and \
             self.viewer.isTreeViewer()
+
             
 class NeedsListViewer(object):
     def enabled(self, event):
         return super(NeedsListViewer, self).enabled(event) and \
             (not self.viewer.isTreeViewer())
 
+
 class NeedsSetting(object):
     def __init__(self, *args, **kwargs):
         self.__section = kwargs.pop('section')
         self.__setting = kwargs.pop('setting')
-
         super(NeedsSetting, self).__init__(*args, **kwargs)
 
     def enabled(self, event):
         return super(NeedsSetting, self).enabled(event) and \
                bool(self.settings.get(self.__section, self.__setting))
 
+
 class NeedsDeletedItems(object):
     def enabled(self, event):
         return super(NeedsDeletedItems, self).enabled(event) and \
                self.iocontroller.hasDeletedItems()
+
 
 class DisableWhenTextCtrlHasFocus(object):
     def enabled(self, event):
@@ -404,6 +422,7 @@ class DisableWhenTextCtrlHasFocus(object):
             return False
         else:
             return super(DisableWhenTextCtrlHasFocus, self).enabled(event)
+
 
 # Commands:
 
@@ -746,10 +765,10 @@ class EditRedo(UICommand):
 
 
 class EditCut(NeedsSelection, ViewerCommand):
-    def __init__(self, *args, **kwargs):        
+    def __init__(self, *args, **kwargs):     
         super(EditCut, self).__init__(menuText=_('Cu&t\tCtrl+X'), 
             helpText=_('Cut the selected item(s) to the clipboard'), 
-            bitmap='cut', id=wx.ID_CUT, *args, **kwargs)
+            bitmap='cut', *args, **kwargs)
 
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -772,7 +791,7 @@ class EditCopy(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EditCopy, self).__init__(menuText=_('&Copy\tCtrl+C'), 
             helpText=_('Copy the selected item(s) to the clipboard'), 
-            bitmap='copy', id=wx.ID_COPY, *args, **kwargs)
+            bitmap='copy', *args, **kwargs)
 
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -815,7 +834,8 @@ class EditPaste(UICommand):
 
 class EditPasteIntoTask(NeedsSelectedTasks, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(EditPasteIntoTask, self).__init__(menuText=_('P&aste into task\tShift+Ctrl+V'), 
+        super(EditPasteIntoTask, self).__init__(
+            menuText=_('P&aste into task\tShift+Ctrl+V'), 
             helpText=_('Paste item(s) from the clipboard into the selected task'),
             bitmap='pasteintotask', *args, **kwargs)
 

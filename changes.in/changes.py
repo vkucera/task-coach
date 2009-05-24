@@ -30,7 +30,9 @@ Release('0.72.9', 'May ??, 2009',
 to iCal format.'''),
         Bug('''Refuse to open task files that have a different format because
 they are created by a newer version of Task Coach than the one the user is 
-using.''')
+using.'''),
+        Bug('''Updating menu items would trigger exceptions after closing a
+(task) viewer.''')
         ],
     featuresAdded=[
         Feature('''All export options can now export selected items only.'''),

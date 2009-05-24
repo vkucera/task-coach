@@ -150,11 +150,15 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
         
     def updateMenuItems(self):
         newCommands = self.getUICommands()
-        if newCommands != self._uiCommands:
-            self.clearMenu()
-            self.fillMenu(newCommands)
-            self._uiCommands = newCommands
-        
+        try:
+            if newCommands == self._uiCommands:
+                return
+        except wx._core.PyDeadObjectError: # Old viewer was closed
+            pass
+        self.clearMenu()
+        self.fillMenu(newCommands)
+        self._uiCommands = newCommands
+            
     def fillMenu(self, uiCommands):
         self.appendUICommands(*uiCommands)
         
@@ -313,8 +317,8 @@ class EditMenu(Menu):
             uicommand.EditUndo(),
             uicommand.EditRedo(),
             None,
-            uicommand.EditCut(viewer=viewerContainer),
-            uicommand.EditCopy(viewer=viewerContainer),
+            uicommand.EditCut(viewer=viewerContainer, id=wx.ID_CUT),
+            uicommand.EditCopy(viewer=viewerContainer, id=wx.ID_COPY),
             uicommand.EditPaste(),
             uicommand.EditPasteIntoTask(viewer=viewerContainer),
             None)
