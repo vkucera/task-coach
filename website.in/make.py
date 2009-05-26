@@ -131,9 +131,10 @@ pages['download'] = \
         onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/debian');">Debian package (deb)</a> for Debian</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''
         <tr><td>Installation: 
-        Unfortunately Debian does not ship with wxPython 2.8 which is required 
-        for %(name)s. You will need to add the wxWidgets repositories to your 
-        apt sources list following <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these instructions</a>. 
+        Unfortunately Debian does not currently ship with wxPython 2.8.9.2 
+        which is required for %(name)s. You will need to add the wxWidgets 
+        repositories to your apt sources list following 
+        <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these instructions</a>. 
         You can then continue by following the Ubuntu instructions.</td></tr>
         </table>
         </p>

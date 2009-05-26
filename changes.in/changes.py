@@ -39,7 +39,7 @@ window title.'''),
 screens.''', '2214687')
         ],
     featuresAdded=[
-        Feature('''All export options can now export selected items only.'''),
+        Feature('''All export options can now also export selected items only.'''),
         Feature('''Put line breaks in the XML so that task files are 
 easier to examine in a text editor.''', '1277365')
         ]
