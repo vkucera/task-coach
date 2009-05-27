@@ -2,8 +2,8 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
-opyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -82,6 +82,9 @@ class TaskList(base.Collection):
 
     def nrOverdue(self):
         return self._nrInterestingTasks(task.Task.overdue)
+    
+    def nrActive(self):
+        return self._nrInterestingTasks(task.Task.active)
 
     def nrInactive(self):
         return self._nrInterestingTasks(task.Task.inactive)

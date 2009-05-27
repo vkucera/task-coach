@@ -38,7 +38,11 @@ window title.'''),
         Bug('''Smaller task edit dialog to cater for lower resolution 
 screens.''', '2214687'),
         Bug('''Dragging email from a Thunderbird client that uses Gmail as IMAP
-server didn't work.''')
+server didn't work.'''),
+        Bug('''When the SyncML feature is turned on, Task Coach would show 
+deleted tasks in the drop down menu of the start effort tracking button on the 
+toolbar and it would show effort for deleted tasks in the effort viewer.''', 
+'2679544', '2214043')
         ],
     featuresAdded=[
         Feature('''All export options can now also export selected items only.'''),

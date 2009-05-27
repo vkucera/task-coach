@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, os
 from taskcoachlib import patterns, meta, command, help, widgets, persistence
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, attachment
+from taskcoachlib.domain import base, task, attachment
 from taskcoachlib.mailer import writeMail
 import dialog, render, viewer, codecs, printer
 
@@ -290,20 +290,25 @@ class ViewerCommand(UICommand):
 # Mixins: 
 
 class PopupButton(object):
-    """Mix this with a UICommand for toolbar pop-up menu"""
+    """ Mix this with a UICommand for a toolbar pop-up menu. """
 
     def doCommand(self, event):
-        import menu
-        popupMenu = self.createPopupMenu()
+        args = [self.createPopupMenu()]
         if self.toolbar:
-            x, y = self.toolbar.GetPosition()
-            w, h = self.toolbar.GetSize()
-            menuX = wx.GetMousePosition()[0] - self.mainWindow().GetPosition()[0] - 0.5 * self.toolbar.GetToolSize()[0]
-            menuY = y + h
-            self.mainWindow().PopupMenu(popupMenu, (menuX, menuY))
-        else:
-            self.mainWindow().PopupMenu(popupMenu)
+            args.append(self.menuXY())
+        self.mainWindow().PopupMenu(*args)
 
+    def menuXY(self):
+        ''' Location to pop up the menu. '''
+        mouseX = wx.GetMousePosition()[0]
+        windowX = self.mainWindow().GetPosition()[0]
+        buttonWidth = self.toolbar.GetToolSize()[0]
+        menuX = mouseX - windowX - 0.5 * buttonWidth
+        toolbarY = self.toolbar.GetPosition()[1]
+        toolbarHeight = self.toolbar.GetSize()[1]
+        menuY = toolbarY + toolbarHeight
+        return menuX, menuY
+    
     def createPopupMenu(self):
         raise NotImplementedError
 
@@ -1754,13 +1759,13 @@ class EffortStart(NeedsSelectedTasks, ViewerCommand, TaskListCommand):
         
     def enabled(self, event):
         return super(EffortStart, self).enabled(event) and \
-            bool([task for task in self.viewer.curselection() if not
-             (task.isBeingTracked() or task.completed() or task.inactive())])
+            any(task.active() and not task.isBeingTracked() \
+                for task in self.viewer.curselection())
 
 
 class EffortStartForTask(TaskListCommand):
     ''' UICommand to start tracking for a specific task. This command can
-        be used to build a menu with seperate menu items for all tasks. 
+        be used to build a menu with separate menu items for all tasks. 
         See gui.menu.StartEffortForTaskMenu. '''
         
     def __init__(self, *args, **kwargs):
@@ -1781,6 +1786,7 @@ class EffortStartForTask(TaskListCommand):
 
 class EffortStartButton(PopupButton, TaskListCommand):
     def __init__(self, *args, **kwargs):
+        kwargs['taskList'] = base.filter.DeletedFilter(kwargs['taskList'])
         super(EffortStartButton, self).__init__(bitmap='startmenu',
             menuText=_('&Start tracking effort'),
             helpText=_('Select a task via the menu and start tracking effort for it'),
@@ -1791,7 +1797,7 @@ class EffortStartButton(PopupButton, TaskListCommand):
         return menu.StartEffortForTaskMenu(self.mainWindow(), self.taskList)
 
     def enabled(self, event):
-        return len(self.taskList) > 0
+        return any(task.active() for task in self.taskList)
     
 
 class EffortStop(TaskListCommand):
@@ -1806,9 +1812,7 @@ class EffortStop(TaskListCommand):
         stop.do()
 
     def enabled(self, event):
-        # FIXME: when support for python 2.4 is dropped use:
-        # return any(True for task in self.taskList if task.isBeingTracked())
-        return True in (True for task in self.taskList if task.isBeingTracked())
+        return any(task.isBeingTracked() for task in self.taskList)
 
 
 class CategoryNew(CategoriesCommand, SettingsCommand):

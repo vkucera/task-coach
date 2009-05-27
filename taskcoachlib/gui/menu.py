@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os
 from taskcoachlib import patterns
-from taskcoachlib.domain import task
+from taskcoachlib.domain import task, base
 from taskcoachlib.i18n import _
 import uicommand, viewer
 
@@ -583,7 +583,9 @@ class TaskBarMenu(Menu):
             self.appendUICommands(None) # Separator
             label = _('&Start tracking effort')
             self.appendMenu(label,
-                StartEffortForTaskMenu(taskBarIcon, tasks, self, label), 'start')
+                StartEffortForTaskMenu(taskBarIcon, 
+                                       base.filter.DeletedFilter(tasks), 
+                                       self, label), 'start')
             self.appendUICommands(uicommand.EffortStop(taskList=tasks))
         self.appendUICommands(
             None,
@@ -620,7 +622,8 @@ class StartEffortForTaskMenu(DynamicMenu):
     def addMenuItemForTask(self, task, menu):
         uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
         uiCommand.appendToMenu(menu, self._window)
-        activeChildren = [child for child in task.children() if child.active()]
+        activeChildren = [child for child in task.children() if \
+                          child in self.tasks and child.active()]
         if activeChildren:
             activeChildren.sort(key=lambda task: task.subject())
             subMenu = wx.Menu()
