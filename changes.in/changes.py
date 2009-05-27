@@ -36,7 +36,9 @@ using.'''),
         Bug('''After merging, Task Coach would display the wrong filename in the
 window title.'''),
         Bug('''Smaller task edit dialog to cater for lower resolution 
-screens.''', '2214687')
+screens.''', '2214687'),
+        Bug('''Dragging email from a Thunderbird client that uses Gmail as IMAP
+server didn't work.''')
         ],
     featuresAdded=[
         Feature('''All export options can now also export selected items only.'''),

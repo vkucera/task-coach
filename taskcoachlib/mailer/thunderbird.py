@@ -23,7 +23,7 @@ from taskcoachlib import persistence
 
 
 _RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
-_RX_IMAP    = re.compile('imap-message://([^@]+)@(.+)/(.*)#([0-9]+)')
+_RX_IMAP    = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#([0-9]+)')
 
 
 def unquote(s):
@@ -184,9 +184,9 @@ class ThunderbirdImapReader(object):
         self.url = url
 
         self.user = unquote(mt.group(1))
-        self.server = mt.group(2)
+        self.server = mt.group(2) 
         self.box = mt.group(3)
-        self.uid = int(mt.group(4))
+        self.uid = int(mt.group(4)) 
 
         config = {}
         def user_pref(key, value):
@@ -216,6 +216,10 @@ class ThunderbirdImapReader(object):
                 break
 
         self.ssl = bool(stype == 3 or isSecure)
+        # When dragging mail from Thunderbird that uses Gmail via IMAP the
+        # server reported is imap.google.com, but for a direct connection we
+        # need to connect with imap.gmail.com:
+        self.server = 'imap.gmail.com' if self.server == 'imap.google.com' else self.server 
         self.port = port or {True: 993, False: 143}[self.ssl]
 
     def _getMail(self):
