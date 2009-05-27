@@ -83,7 +83,8 @@ license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank
 
 platform = 'Any'
 pythonversion = '2.5'
-wxpythonversion = '2.8.9.2-unicode'
+wxpythonversionnumber = '2.8.9.2'
+wxpythonversion = '%s-unicode'%wxpythonversionnumber
 
 languages = {
     'English': None, 

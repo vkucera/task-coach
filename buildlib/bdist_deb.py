@@ -220,7 +220,7 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python2.5, python-wxgtk2.8, python-wxversion
+Depends: python2.5, python-wxgtk2.8 (>= %(wxpythonversionnumber)s), python-wxversion
 Description: %(description)s.
 %(long_description)s
 '''
