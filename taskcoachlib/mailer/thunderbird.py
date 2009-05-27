@@ -234,7 +234,7 @@ class ThunderbirdImapReader(object):
             pwd = wx.GetPasswordFromUser(_('Please enter password for user %(user)s on %(server)s:%(port)d') % \
                                          dict(user=self.user, server=self.server, port=self.port))
             if pwd == '':
-                raise ValueError('User cancelled')
+                raise ValueError('User canceled')
 
         while True:
             try:
@@ -247,7 +247,7 @@ class ThunderbirdImapReader(object):
 
             pwd = wx.GetPasswordFromUser(_('Wrong password. Please try again.'))
             if pwd == '':
-                raise ValueError('User cancelled')
+                raise ValueError('User canceled')
 
         self._PASSWORDS[(self.server, self.user, self.port)] = pwd
 
