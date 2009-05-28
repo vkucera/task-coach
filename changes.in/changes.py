@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.72.9', 'May ??, 2009',
+Release('0.72.9', 'May 28, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't throw an exception when exporting an active effort record
