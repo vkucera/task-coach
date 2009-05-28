@@ -120,6 +120,7 @@ elif sys.argv[1] == 'bdist_deb':
         license_abbrev=meta.data.license_title_and_version_abbrev,
         license_path='/usr/share/common-licenses/GPL-3',
         license_summary=meta.data.license_notice, 
+        wxpythonversion=meta.data.wxpythonversionnumber,
         subsection='Office', url=meta.data.url,
         command='/usr/bin/taskcoach.py'))))
     

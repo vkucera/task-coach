@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -19,11 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, re, imaplib, ConfigParser, wx
 from taskcoachlib.i18n import _
-from taskcoachlib.thirdparty.desktop import get_temp_file
+from taskcoachlib import persistence
 
 
 _RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
-_RX_IMAP    = re.compile('imap-message://([^@]+)@(.+)/(.*)#([0-9]+)')
+_RX_IMAP    = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#([0-9]+)')
 
 
 def unquote(s):
@@ -184,9 +184,9 @@ class ThunderbirdImapReader(object):
         self.url = url
 
         self.user = unquote(mt.group(1))
-        self.server = mt.group(2)
+        self.server = mt.group(2) 
         self.box = mt.group(3)
-        self.uid = int(mt.group(4))
+        self.uid = int(mt.group(4)) 
 
         config = {}
         def user_pref(key, value):
@@ -216,6 +216,10 @@ class ThunderbirdImapReader(object):
                 break
 
         self.ssl = bool(stype == 3 or isSecure)
+        # When dragging mail from Thunderbird that uses Gmail via IMAP the
+        # server reported is imap.google.com, but for a direct connection we
+        # need to connect with imap.gmail.com:
+        self.server = 'imap.gmail.com' if self.server == 'imap.google.com' else self.server 
         self.port = port or {True: 993, False: 143}[self.ssl]
 
     def _getMail(self):
@@ -230,20 +234,21 @@ class ThunderbirdImapReader(object):
             pwd = wx.GetPasswordFromUser(_('Please enter password for user %(user)s on %(server)s:%(port)d') % \
                                          dict(user=self.user, server=self.server, port=self.port))
             if pwd == '':
-                raise ValueError('User cancelled')
+                raise ValueError('User canceled')
 
         while True:
             try:
                 response, params = cn.login(self.user, pwd)
-            except:
+            except cn.error, e:
                 response = 'KO'
+                errmsg, = e.args
 
             if response == 'OK':
                 break
 
-            pwd = wx.GetPasswordFromUser(_('Wrong password. Please try again.'))
+            pwd = wx.GetPasswordFromUser(_('Login failed (%s). Please try again.') % errmsg)
             if pwd == '':
-                raise ValueError('User cancelled')
+                raise ValueError('User canceled')
 
         self._PASSWORDS[(self.server, self.user, self.port)] = pwd
 
@@ -263,7 +268,7 @@ class ThunderbirdImapReader(object):
         fp.write(self._getMail())
 
 #==============================================================================
-#
+
 
 def getMail(id_):
     if id_.startswith('mailbox-message://'):
@@ -273,6 +278,6 @@ def getMail(id_):
     else:
         raise TypeError('Not supported: %s' % id_)
 
-    filename = get_temp_file(suffix='.eml')
+    filename = persistence.get_temp_file(suffix='.eml')
     reader.saveToFile(file(filename, 'wb'))
     return filename

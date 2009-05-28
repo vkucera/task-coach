@@ -30,3 +30,4 @@ from csv.writer import CSVWriter
 from vcalendar.writer import VCalendarWriter
 from vcalendar.vcal import VCalendarParser
 from taskfile import TaskFile, LockedTaskFile, AutoSaver
+from sessiontempfile import get_temp_file

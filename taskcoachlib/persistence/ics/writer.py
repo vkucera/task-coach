@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
 from taskcoachlib import meta
+from taskcoachlib.domain import date
 
 # FIXME: Use thirdparty product.
 
@@ -34,43 +35,37 @@ class ICSWriter:
         self.__fd.flush()
         return self
 
-    def write(self, taskList):
+    def write(self, effortViewer, selectionOnly=False):
         self += 'BEGIN:VCALENDAR'
         self += 'VERSION:2.0'
         domain = meta.url[len('http://'):-1]
         self += 'PRODID:-//%s//NONSGML %s V%s//EN'%(domain, meta.name, meta.version)
 
-        for task in taskList.rootItems():
-            self.writeTask(task)
+        selection = effortViewer.curselection() if selectionOnly else []
+            
+        count = 0
+        for effort in effortViewer.visibleItems():
+            if selectionOnly and effort not in selection:
+                continue
+            self.writeEffort(effort)
+            count += 1
 
         self += 'END:VCALENDAR'
+        return count # Number of effort records written
 
-    def writeTask(self, task):
-        for child in task.children():
-            self.writeTask(child)
-
-        for effort in task.efforts():
-            self.writeEffort(task, effort)
-
-    def writeEffort(self, task, effort):
+    def writeEffort(self, effort):
+        task = effort.task()
         self += 'BEGIN:VEVENT'
-
         self += 'SUMMARY:%s'%task.subject(recursive=True)
+        self.writeDescription(effort, task)
 
-        description = ''
-        if task.description():
-            description = task.description()
-        if effort.description():
-            if description:
-                description += '\n----\n'
-            description += effort.description()
-        if description:
-            self += 'DESCRIPTION:%s'%description.replace('\n','\\n')
+        startDateTime = effort.getStart()
+        start = startDateTime.strftime('%Y%m%dT%H%M%S')
+        istart = int(time.mktime(startDateTime.utctimetuple()))
 
-        start = effort.getStart().strftime('%Y%m%dT%H%M%S')
-        stop = effort.getStop().strftime('%Y%m%dT%H%M%S')
-        istart = int(time.mktime(effort.getStart().utctimetuple()))
-        istop = int(time.mktime(effort.getStop().utctimetuple()))
+        stopDateTime = effort.getStop() if effort.getStop() else date.DateTime.now()
+        stop = stopDateTime.strftime('%Y%m%dT%H%M%S')
+        istop = int(time.mktime(stopDateTime.utctimetuple()))
 
         self += 'CREATED:%s' % start
         self += 'LAST-MODIFIED:%s' % stop
@@ -80,6 +75,15 @@ class ICSWriter:
         self += 'UID:uuid:%d-%d' % (istart, istop)
         self += 'DTSTART:%s' % start
         self += 'DTEND:%s' % stop
-
         self += 'END:VEVENT'
-
+        
+    def writeDescription(self, effort, task):
+        description = ''
+        if task.description():
+            description = task.description()
+        if effort.description():
+            if description:
+                description += '\n----\n'
+            description += effort.description()
+        if description:
+            self += 'DESCRIPTION:%s'%description.replace('\n','\\n')

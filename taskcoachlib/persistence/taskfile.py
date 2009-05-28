@@ -221,6 +221,7 @@ class TaskFile(patterns.Observable, patterns.Observer):
         self.categories().removeItems(self.objectsToOverwrite(self.categories(),
                                                               mergeFile.categories()))
         self.categories().extend(mergeFile.categories().rootItems())
+        mergeFile.close()
         self.__loading = False
         self.markDirty(force=True)
         
@@ -290,7 +291,7 @@ class LockedTaskFile(TaskFile):
         return super(LockedTaskFile, self).saveas(filename)
     
     def close(self):
-        ''' Unlock the file before after close it. '''
+        ''' Unlock the file after we close it. '''
         result = super(LockedTaskFile, self).close()
         self.release_lock()
         return result

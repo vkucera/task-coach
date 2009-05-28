@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -281,3 +281,41 @@ class ViewMenuTestCase(test.wxTestCase):
         self.menu.openMenu()
         self.failIf(self.menu.FindItemByPosition(4).IsChecked())
         self.failUnless(self.menu.FindItemByPosition(5).IsChecked())
+
+
+class StartEffortForTaskMenuTest(test.wxTestCase):
+    def setUp(self):
+        self.tasks = task.TaskList()
+        self.menu = gui.menu.StartEffortForTaskMenu(self.frame, self.tasks)
+        
+    def addTask(self):
+        newTask = task.Task(subject='Subject')
+        self.tasks.append(newTask)
+        return newTask
+    
+    def addParentAndChild(self):
+        parent = self.addTask()
+        child = self.addTask()
+        parent.addChild(child)
+        return parent, child
+    
+    def testMenuIsEmptyInitially(self):
+        self.assertEqual(0, len(self.menu))
+
+    def testNewTasksAreAdded(self):
+        self.addTask()
+        self.assertEqual(1, len(self.menu))
+
+    def testDeletedTasksAreRemoved(self):
+        newTask = self.addTask()
+        self.tasks.remove(newTask)
+        self.assertEqual(0, len(self.menu))
+    
+    def testNewChildTasksAreAdded(self):
+        self.addParentAndChild()
+        self.assertEqual(2, len(self.menu))
+        
+    def testDeletedChildTasksAreRemoved(self):
+        parent, child = self.addParentAndChild()
+        self.tasks.remove(child)
+        self.assertEqual(1, len(self.menu))

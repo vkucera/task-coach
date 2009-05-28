@@ -115,11 +115,11 @@ class SubjectPage(Page, widgets.BookPage):
         # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
         # so convert the tuple to a wx.Color:
         currentColor = wx.Color(*currentColor) if currentColor else wx.WHITE
-        self._colorButton = wx.ColourPickerCtrl(self, -1, currentColor, 
-                                                size=(40,-1))
+        self._colorButton = wx.ColourPickerCtrl(self, -1, currentColor)
         self._colorButton.Bind(wx.EVT_COLOURPICKER_CHANGED,
             lambda event: self._colorCheckBox.SetValue(True))
-        self.addEntry(_('Color'), self._colorCheckBox, self._colorButton)
+        self.addEntry(_('Color'), self._colorCheckBox, self._colorButton,
+                      flags=[None, None, wx.ALL])
 
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)
@@ -156,7 +156,7 @@ class TaskSubjectPage(SubjectPage):
         self._prioritySpinner = widgets.SpinCtrl(self,
             initial=self.item.priority())
         self.addEntry(_('Priority'), self._prioritySpinner, 
-            flags=[None, wx.ALL|wx.EXPAND])
+                      flags=[None, wx.ALL])
     
     def ok(self):
         self.item.setPriority(self._prioritySpinner.GetValue())
@@ -301,7 +301,7 @@ class DatesPage(PageWithHeaders, TaskHeaders):
         self._recurrenceSizer = panelSizer
 
         recurrenceBox.add(panel)
-        recurrenceBox.add(_('Maximum number of recurrences'))
+        recurrenceBox.add(_('Maximum number\nof recurrences'))
         panel = wx.Panel(recurrenceBox)
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
         self._maxRecurrenceCheckBox = wx.CheckBox(panel)
@@ -651,6 +651,7 @@ class TaskEditBook(widgets.Listbook):
                          _('Budget'), 'budget')
             self.AddPage(EffortPage(self, task, taskFile, settings), 
                          _('Effort'), 'start')
+
         if settings.getboolean('feature', 'notes'):
             self.AddPage(NotesPage(self, task, settings, taskFile), 
                          _('Notes'), 'note')

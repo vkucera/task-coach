@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+
 
 def viewer2html(viewer, selectionOnly=False):
     visibleColumns = viewer.visibleColumns()
@@ -68,11 +69,3 @@ def render(item, column, color):
         renderedItem = '<font color="%s">%s</font>'%(color, renderedItem)
     return renderedItem
     
-
-def extendedWithAncestors(selection):
-    extendedSelection = selection[:]
-    for item in selection:
-        for ancestor in item.ancestors():
-            if ancestor not in extendedSelection:
-                extendedSelection.append(ancestor)
-    return extendedSelection
