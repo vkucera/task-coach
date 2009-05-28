@@ -239,13 +239,14 @@ class ThunderbirdImapReader(object):
         while True:
             try:
                 response, params = cn.login(self.user, pwd)
-            except:
+            except cn.error, e:
                 response = 'KO'
+                errmsg, = e.args
 
             if response == 'OK':
                 break
 
-            pwd = wx.GetPasswordFromUser(_('Wrong password. Please try again.'))
+            pwd = wx.GetPasswordFromUser(_('Login failed (%s). Please try again.') % errmsg)
             if pwd == '':
                 raise ValueError('User canceled')
 
