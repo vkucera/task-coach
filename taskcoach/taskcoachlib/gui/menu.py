@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os
 from taskcoachlib import patterns
-from taskcoachlib.domain import task
+from taskcoachlib.domain import task, base
 from taskcoachlib.i18n import _
 import uicommand, viewer
 
@@ -150,11 +150,15 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
         
     def updateMenuItems(self):
         newCommands = self.getUICommands()
-        if newCommands != self._uiCommands:
-            self.clearMenu()
-            self.fillMenu(newCommands)
-            self._uiCommands = newCommands
-        
+        try:
+            if newCommands == self._uiCommands:
+                return
+        except wx._core.PyDeadObjectError: # Old viewer was closed
+            pass
+        self.clearMenu()
+        self.fillMenu(newCommands)
+        self._uiCommands = newCommands
+            
     def fillMenu(self, uiCommands):
         self.appendUICommands(*uiCommands)
         
@@ -262,16 +266,16 @@ class FileMenu(Menu):
 class ExportMenu(Menu):
     def __init__(self, mainwindow, iocontroller, viewerContainer):
         super(ExportMenu, self).__init__(mainwindow)
+        kwargs = dict(iocontroller=iocontroller, viewer=viewerContainer)
         self.appendUICommands(
-            uicommand.FileExportAsHTML(iocontroller=iocontroller,
-                                       viewer=viewerContainer),
-            uicommand.FileExportSelectionAsHTML(iocontroller=iocontroller,
-                                                viewer=viewerContainer),
-            uicommand.FileExportAsICS(iocontroller=iocontroller),
-            uicommand.FileExportAsCSV(iocontroller=iocontroller,
-                                      viewer=viewerContainer),
-            uicommand.FileExportAsVCalendar(iocontroller=iocontroller,
-                                            viewer=viewerContainer))
+            uicommand.FileExportAsHTML(**kwargs),
+            uicommand.FileExportSelectionAsHTML(**kwargs),
+            uicommand.FileExportEffortAsICS(**kwargs),
+            uicommand.FileExportSelectedEffortAsICS(**kwargs),
+            uicommand.FileExportAsCSV(**kwargs),
+            uicommand.FileExportSelectionAsCSV(**kwargs),
+            uicommand.FileExportAsVCalendar(**kwargs),
+            uicommand.FileExportSelectionAsVCalendar(**kwargs))
 
 
 class TaskTemplateMenu(DynamicMenu):
@@ -313,8 +317,8 @@ class EditMenu(Menu):
             uicommand.EditUndo(),
             uicommand.EditRedo(),
             None,
-            uicommand.EditCut(viewer=viewerContainer),
-            uicommand.EditCopy(viewer=viewerContainer),
+            uicommand.EditCut(viewer=viewerContainer, id=wx.ID_CUT),
+            uicommand.EditCopy(viewer=viewerContainer, id=wx.ID_COPY),
             uicommand.EditPaste(),
             uicommand.EditPasteIntoTask(viewer=viewerContainer),
             None)
@@ -582,7 +586,9 @@ class TaskBarMenu(Menu):
             self.appendUICommands(None) # Separator
             label = _('&Start tracking effort')
             self.appendMenu(label,
-                StartEffortForTaskMenu(taskBarIcon, tasks, self, label), 'start')
+                StartEffortForTaskMenu(taskBarIcon, 
+                                       base.filter.DeletedFilter(tasks), 
+                                       self, label), 'start')
             self.appendUICommands(uicommand.EffortStop(taskList=tasks))
         self.appendUICommands(
             None,
@@ -619,7 +625,8 @@ class StartEffortForTaskMenu(DynamicMenu):
     def addMenuItemForTask(self, task, menu):
         uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
         uiCommand.appendToMenu(menu, self._window)
-        activeChildren = [child for child in task.children() if child.active()]
+        activeChildren = [child for child in task.children() if \
+                          child in self.tasks and child.active()]
         if activeChildren:
             activeChildren.sort(key=lambda task: task.subject())
             subMenu = wx.Menu()

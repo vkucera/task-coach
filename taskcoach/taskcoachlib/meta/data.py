@@ -20,17 +20,21 @@ import os, re
 
 name = 'Task Coach'
 description = 'Your friendly task manager'
+
 # The buildbot sets TCVERSION when building snapshots.
-version = os.environ.get('TCVERSION', '0.72.8')
+version = os.environ.get('TCVERSION', '0.72.9')
+tskversion = 24 # Current version number of the task file format
+
 release_month = 'May'
 release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
                     'June', 'July', 'August', 'September', 'October', 
                     'November', 'December'].index(release_month) + 1)
-release_day = '17'
+release_day = '28'
 release_day_nr = '%02d'%int(release_day)
 release_year = '2009'
 release_status = 'alpha'
 date = release_month + ' ' + release_day + ', ' + release_year
+
 long_description = '%(name)s is a simple open source todo manager to manage' \
 ' personal tasks and todo lists. It grew out of a frustration that ' \
 'well-known task managers, such as those provided with Outlook or Lotus ' \
@@ -38,19 +42,22 @@ long_description = '%(name)s is a simple open source todo manager to manage' \
 'other things todo consist of several activities. %(name)s is designed ' \
 'to deal with composite tasks. '%dict(name=name)
 keywords = 'task manager, todo list, pim, time registration, track effort'
-author_first = 'Frank' # Needed for PAD file
-author_last = 'Niessink'# Needed for PAD file
+author_first, author_last = 'Frank', 'Niessink' # Needed for PAD file
 author = '%s %s and Jerome Laheurte'%(author_first, author_last)
 author_email = 'developers@taskcoach.org'
-filename = 'TaskCoach'
+
+filename = name.replace(' ', '')
 filename_lower = filename.lower()
+
 url = 'http://www.taskcoach.org/'
-screenshot = url + 'screenshot-0.62-treeview.png'
+screenshot = url + 'screenshots/0.71.2-Windows_XP-Tasks_categories_and_effort.png'
 icon = url + 'taskcoach.png'
 pad = url + 'pad.xml'
 download = url + 'download.html'
 dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
+
 announcement_addresses = 'taskcoach@yahoogroups.com, python-announce@python.org'
+
 copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)
 license_title = 'GNU General Public License'
 license_version = '3'
@@ -76,7 +83,9 @@ license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank
 
 platform = 'Any'
 pythonversion = '2.5'
-wxpythonversion = '2.8.9.2-unicode'
+wxpythonversionnumber = '2.8.9.2'
+wxpythonversion = '%s-unicode'%wxpythonversionnumber
+
 languages = {
     'English': None, 
     'Arabic': 'ar',

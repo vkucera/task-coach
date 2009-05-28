@@ -47,6 +47,8 @@ def readMail(filename, readContent=True):
     if encoding is None:
         # Don't try to guess every time. When there are many e-mails
         # with big attachments, it may take *very* long.
+    if encoding is None:
+        encoding = "utf-8"
 
         try:
             content.decode(wx.Locale_GetSystemEncodingName())

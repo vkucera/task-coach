@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, os
 from taskcoachlib import patterns, meta, command, help, widgets, persistence
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, attachment, effort
+from taskcoachlib.domain import base, task, attachment, effort
 from taskcoachlib.mailer import writeMail
 import dialog, render, viewer, codecs, printer
 
@@ -290,20 +290,25 @@ class ViewerCommand(UICommand):
 # Mixins: 
 
 class PopupButton(object):
-    """Mix this with a UICommand for toolbar pop-up menu"""
+    """ Mix this with a UICommand for a toolbar pop-up menu. """
 
     def doCommand(self, event):
-        import menu
-        popupMenu = self.createPopupMenu()
+        args = [self.createPopupMenu()]
         if self.toolbar:
-            x, y = self.toolbar.GetPosition()
-            w, h = self.toolbar.GetSize()
-            menuX = wx.GetMousePosition()[0] - self.mainWindow().GetPosition()[0] - 0.5 * self.toolbar.GetToolSize()[0]
-            menuY = y + h
-            self.mainWindow().PopupMenu(popupMenu, (menuX, menuY))
-        else:
-            self.mainWindow().PopupMenu(popupMenu)
+            args.append(self.menuXY())
+        self.mainWindow().PopupMenu(*args)
 
+    def menuXY(self):
+        ''' Location to pop up the menu. '''
+        mouseX = wx.GetMousePosition()[0]
+        windowX = self.mainWindow().GetPosition()[0]
+        buttonWidth = self.toolbar.GetToolSize()[0]
+        menuX = mouseX - windowX - 0.5 * buttonWidth
+        toolbarY = self.toolbar.GetPosition()[1]
+        toolbarHeight = self.toolbar.GetSize()[1]
+        menuY = toolbarY + toolbarHeight
+        return menuX, menuY
+    
     def createPopupMenu(self):
         raise NotImplementedError
 
@@ -313,25 +318,30 @@ class NeedsSelection(object):
         return super(NeedsSelection, self).enabled(event) and \
             self.viewer.curselection()
 
+
 class NeedsTaskViewer(object):
     def enabled(self, event):
         return super(NeedsTaskViewer, self).enabled(event) and \
             self.viewer.isShowingTasks()
+
 
 class NeedsEffortViewer(object):
     def enabled(self, event):
         return super(NeedsEffortViewer, self).enabled(event) and \
             self.viewer.isShowingEffort()
 
+
 class NeedsCategoryViewer(object):
     def enabled(self, event):
         return super(NeedsCategoryViewer, self).enabled(event) and \
             self.viewer.isShowingCategories()
 
+
 class NeedsNoteViewer(object):
     def enabled(self, event):
         return super(NeedsNoteViewer, self).enabled(event) and \
             self.viewer.isShowingNotes()
+
 
 class NeedsAttachmentViewer(object):
     def enabled(self, event):
@@ -343,63 +353,75 @@ class NeedsSelectedTasks(NeedsSelection):
         return super(NeedsSelectedTasks, self).enabled(event) and \
             all([isinstance(item, task.Task) for item in self.viewer.curselection()])
 
+
 class NeedsOneSelectedTask(NeedsSelectedTasks):
     def enabled(self, event):
         return super(NeedsOneSelectedTask, self).enabled(event) and \
                len(self.viewer.curselection()) == 1
+
 
 class NeedsSelectionWithAttachments(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectionWithAttachments, self).enabled(event) and \
             any([item.attachments() for item in self.viewer.curselection() if not isinstance(item, effort.Effort)])
 
+
 class NeedsSelectedEffort(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectedEffort, self).enabled(event) and \
             all([isinstance(item, effort.Effort) for item in self.viewer.curselection()])
 
+
 class NeedsSelectedCategory(NeedsCategoryViewer, NeedsSelection):
     pass
+
 
 class NeedsSelectedNote(NeedsNoteViewer, NeedsSelection):
     pass
 
+
 class NeedsSelectedAttachments(NeedsAttachmentViewer, NeedsSelection):
     pass
+
 
 class NeedsAtLeastOneTask(object):
     def enabled(self, event):
         return len(self.taskList) > 0
+
         
 class NeedsItems(object):
     def enabled(self, event):
         return self.viewer.size() 
 
+
 class NeedsTreeViewer(object):
     def enabled(self, event):
         return super(NeedsTreeViewer, self).enabled(event) and \
             self.viewer.isTreeViewer()
+
             
 class NeedsListViewer(object):
     def enabled(self, event):
         return super(NeedsListViewer, self).enabled(event) and \
             (not self.viewer.isTreeViewer())
 
+
 class NeedsSetting(object):
     def __init__(self, *args, **kwargs):
         self.__section = kwargs.pop('section')
         self.__setting = kwargs.pop('setting')
-
         super(NeedsSetting, self).__init__(*args, **kwargs)
 
     def enabled(self, event):
         return super(NeedsSetting, self).enabled(event) and \
                bool(self.settings.get(self.__section, self.__setting))
 
+
 class NeedsDeletedItems(object):
     def enabled(self, event):
         return super(NeedsDeletedItems, self).enabled(event) and \
                self.iocontroller.hasDeletedItems()
+
 
 class DisableWhenTextCtrlHasFocus(object):
     def enabled(self, event):
@@ -407,6 +429,7 @@ class DisableWhenTextCtrlHasFocus(object):
             return False
         else:
             return super(DisableWhenTextCtrlHasFocus, self).enabled(event)
+
 
 # Commands:
 
@@ -585,17 +608,28 @@ class Print(ViewerCommand, SettingsCommand):
         wxPrinter.Print(self.mainWindow(), printout, prompt=False)
  
 
-class FileExportAsICS(IOCommand):
+class FileExportEffortAsICS(NeedsEffortViewer, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(FileExportAsICS, self).__init__(\
+        super(FileExportEffortAsICS, self).__init__(\
             menuText=_('Export effort as &iCalendar...'), 
             helpText=_('Export effort in iCalendar (*.ics) format'),
             bitmap='exportasics', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsICS()
+        self.iocontroller.exportEffortAsICS(self.viewer)
 
 
+class FileExportSelectedEffortAsICS(NeedsSelectedEffort, IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportSelectedEffortAsICS, self).__init__(\
+            menuText=_('Export selected effort as &iCalendar...'), 
+            helpText=_('Export selected effort in iCalendar (*.ics) format'),
+            bitmap='exportasics', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportEffortAsICS(self.viewer, selectionOnly=True)
+        
+        
 class FileExportAsHTML(IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsHTML, self).__init__(menuText=_('Export as &HTML...'), 
@@ -606,7 +640,7 @@ class FileExportAsHTML(IOCommand, ViewerCommand):
         self.iocontroller.exportAsHTML(self.viewer)
 
 
-class FileExportSelectionAsHTML(IOCommand, ViewerCommand):
+class FileExportSelectionAsHTML(NeedsSelection, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportSelectionAsHTML, self).__init__(menuText=_('Export &selection as HTML...'),
             helpText=_('Export the selection in the current view as HTML file'),
@@ -626,14 +660,34 @@ class FileExportAsCSV(IOCommand, ViewerCommand):
         self.iocontroller.exportAsCSV(self.viewer)
 
 
-class FileExportAsVCalendar(IOCommand, ViewerCommand):
+class FileExportSelectionAsCSV(NeedsSelection, IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportSelectionAsCSV, self).__init__(menuText=_('Export selection as &CSV...'),
+            helpText=_('Export the selection in the current view in Comma Separated Values (CSV) format'),
+            bitmap='exportascsv', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportAsCSV(self.viewer, selectionOnly=True)
+
+
+class FileExportAsVCalendar(NeedsTaskViewer, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsVCalendar, self).__init__(menuText=_('Export as &VCalendar...'),
-            helpText=_('Export the current view in VCalendar format'),
+            helpText=_('Export the current task viewer in VCalendar format'),
             bitmap='exportasvcal', *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.exportAsVCalendar(self.viewer)
+
+
+class FileExportSelectionAsVCalendar(NeedsSelectedTasks, IOCommand, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileExportSelectionAsVCalendar, self).__init__(menuText=_('Export selection as &VCalendar...'),
+            helpText=_('Export the selected tasks in the current task viewer in VCalendar format'),
+            bitmap='exportasvcal', *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.exportAsVCalendar(self.viewer, selectionOnly=True)
 
 
 class FileSynchronize(IOCommand, SettingsCommand):
@@ -718,10 +772,10 @@ class EditRedo(UICommand):
 
 
 class EditCut(NeedsSelection, ViewerCommand):
-    def __init__(self, *args, **kwargs):        
+    def __init__(self, *args, **kwargs):     
         super(EditCut, self).__init__(menuText=_('Cu&t\tCtrl+X'), 
             helpText=_('Cut the selected item(s) to the clipboard'), 
-            bitmap='cut', id=wx.ID_CUT, *args, **kwargs)
+            bitmap='cut', *args, **kwargs)
 
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -744,7 +798,7 @@ class EditCopy(NeedsSelection, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EditCopy, self).__init__(menuText=_('&Copy\tCtrl+C'), 
             helpText=_('Copy the selected item(s) to the clipboard'), 
-            bitmap='copy', id=wx.ID_COPY, *args, **kwargs)
+            bitmap='copy', *args, **kwargs)
 
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -787,7 +841,8 @@ class EditPaste(UICommand):
 
 class EditPasteIntoTask(NeedsSelectedTasks, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(EditPasteIntoTask, self).__init__(menuText=_('P&aste into task\tShift+Ctrl+V'), 
+        super(EditPasteIntoTask, self).__init__(
+            menuText=_('P&aste into task\tShift+Ctrl+V'), 
             helpText=_('Paste item(s) from the clipboard into the selected task'),
             bitmap='pasteintotask', *args, **kwargs)
 
@@ -1710,13 +1765,13 @@ class EffortStart(NeedsSelectedTasks, ViewerCommand, TaskListCommand):
         
     def enabled(self, event):
         return super(EffortStart, self).enabled(event) and \
-            bool([task for task in self.viewer.curselection() if not
-             (task.isBeingTracked() or task.completed() or task.inactive())])
+            any(task.active() and not task.isBeingTracked() \
+                for task in self.viewer.curselection())
 
 
 class EffortStartForTask(TaskListCommand):
     ''' UICommand to start tracking for a specific task. This command can
-        be used to build a menu with seperate menu items for all tasks. 
+        be used to build a menu with separate menu items for all tasks. 
         See gui.menu.StartEffortForTaskMenu. '''
         
     def __init__(self, *args, **kwargs):
@@ -1737,6 +1792,7 @@ class EffortStartForTask(TaskListCommand):
 
 class EffortStartButton(PopupButton, TaskListCommand):
     def __init__(self, *args, **kwargs):
+        kwargs['taskList'] = base.filter.DeletedFilter(kwargs['taskList'])
         super(EffortStartButton, self).__init__(bitmap='startmenu',
             menuText=_('&Start tracking effort'),
             helpText=_('Select a task via the menu and start tracking effort for it'),
@@ -1747,7 +1803,7 @@ class EffortStartButton(PopupButton, TaskListCommand):
         return menu.StartEffortForTaskMenu(self.mainWindow(), self.taskList)
 
     def enabled(self, event):
-        return len(self.taskList) > 0
+        return any(task.active() for task in self.taskList)
     
 
 class EffortStop(TaskListCommand):
@@ -1762,9 +1818,7 @@ class EffortStop(TaskListCommand):
         stop.do()
 
     def enabled(self, event):
-        # FIXME: when support for python 2.4 is dropped use:
-        # return any(True for task in self.taskList if task.isBeingTracked())
-        return True in (True for task in self.taskList if task.isBeingTracked())
+        return any(task.isBeingTracked() for task in self.taskList)
 
 
 class CategoryNew(CategoriesCommand, SettingsCommand):

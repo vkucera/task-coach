@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -18,14 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import time, re, os, sys, datetime
+import xml.etree.ElementTree as ET
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
-from taskcoachlib.thirdparty.desktop import get_temp_file
 from taskcoachlib.i18n import translate
-
-
-from xml.etree import ElementTree as ET
+from taskcoachlib import meta
+from .. import sessiontempfile
 
 
 class PIParser(ET.XMLTreeBuilder):
@@ -42,6 +41,10 @@ class PIParser(ET.XMLTreeBuilder):
             self.tskversion = int(matchObject.group(1))
 
 
+class XMLReaderTooNewException(Exception):
+    pass
+
+
 class XMLReader(object):
     def __init__(self, fd):
         self.__fd = fd
@@ -51,6 +54,8 @@ class XMLReader(object):
         tree = ET.parse(self.__fd, parser)
         root = tree.getroot()
         self.__tskversion = parser.tskversion
+        if self.__tskversion > meta.data.tskversion:
+            raise XMLReaderTooNewException # Version number of task file is too high
         tasks = self._parseTaskNodes(root)
         categorizables = tasks[:]
         for task in tasks:
@@ -150,15 +155,8 @@ class XMLReader(object):
             efforts=self._parseEffortNodes(taskNode),
             notes=self._parseNoteNodes(taskNode),
             recurrence=self._parseRecurrence(taskNode)))
-        '''
-        if self.__tskversion <= 13:
-            kwargs['categories'] = self._parseCategoryNodesWithinTaskNode(taskNode)
-        else:
-            kwargs['categories'] = []
-        '''   
         if self.__tskversion > 20:
             kwargs['attachments'] = self._parseAttachmentNodes(taskNode)
-
         return task.Task(**kwargs)
         
     def _parseRecurrence(self, taskNode):
@@ -220,11 +218,6 @@ class XMLReader(object):
         kwargs['expandedContexts'] = self._parseTuple(node.attrib.get('expandedContexts', ''), [])
         return kwargs
 
-    def _parseCategoryNodesWithinTaskNode(self, node):
-        ''' In tskversion <= 13, categories of tasks were stored as text 
-            nodes. '''
-        return [child.text for child in node.findall('category')]
-
     def _parseAttachmentsBeforeVersion21(self, parent):
         path, name = os.path.split(os.path.abspath(self.__fd.name))
         name, ext = os.path.splitext(name)
@@ -271,7 +264,7 @@ class XMLReader(object):
     def _parseSyncMLNodes(self, parent, cfgNode):
         for node in parent:
             if node.tag == 'property':
-                cfgNode.set(node.attrib['name'], node.text or u'')
+                cfgNode.set(node.attrib['name'], self._parseText(node))
             else:
                 for childCfgNode in cfgNode.children():
                     if childCfgNode.name == node.tag:
@@ -282,9 +275,8 @@ class XMLReader(object):
                 self._parseSyncMLNodes(node, childCfgNode)
 
     def __parseGUIDNode(self, node):
-        if node is None:
-            return generate()
-        return node.text
+        guid = self._parseText(node)
+        return guid if guid else generate()
         
     def _parseAttachmentNodes(self, parent):
         return [self._parseAttachmentNode(node) for node in parent.findall('attachment')]
@@ -307,10 +299,10 @@ class XMLReader(object):
                 if dataNode is None:
                     raise ValueError, 'Neither location or data are defined for this attachment.'
 
-                data = dataNode.text
+                data = self._parseText(dataNode)
                 ext = dataNode.attrib['extension']
 
-                location = get_temp_file(suffix=ext)
+                location = sessiontempfile.get_temp_file(suffix=ext)
                 file(location, 'wb').write(data.decode('base64'))
 
         return attachment.AttachmentFactory(location,
@@ -321,12 +313,18 @@ class XMLReader(object):
         if self.__tskversion <= 6:
             description = node.attrib.get('description', '')
         else:
-            descriptionNode = node.find('description')
-            if descriptionNode is None:
-                description = u''
-            else:
-                description = descriptionNode.text or u''
+            description = self._parseText(node.find('description'))
         return description
+    
+    def _parseText(self, textNode):
+        text = u'' if textNode is None else textNode.text or u''
+        if self.__tskversion >= 24:
+            # Strip newlines
+            if text.startswith('\n'):
+                text = text[1:]
+            if text.endswith('\n'):
+                text = text[:-1]
+        return text
                     
     def _parseDateTime(self, dateTimeText):
         return self._parse(dateTimeText, date.parseDateTime, None)

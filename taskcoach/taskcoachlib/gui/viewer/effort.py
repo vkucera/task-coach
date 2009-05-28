@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import effort, date
+from taskcoachlib.domain.base import filter
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 import base, mixin
@@ -114,8 +115,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             the taskList, either individually (i.e. no aggregation), per day,
             per week, or per month. '''
         aggregation = self.settings.get(self.settingsSection(), 'aggregation')
-        return self.createAggregator(taskList, aggregation)
-                
+        return self.createAggregator(filter.DeletedFilter(taskList), aggregation)
+    
     def createAggregator(self, taskList, aggregation):
         ''' Return an instance of a class that aggregates the effort records 
             in the taskList, either:

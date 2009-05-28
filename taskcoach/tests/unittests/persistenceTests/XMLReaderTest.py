@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -70,7 +70,7 @@ class XMLReaderTestCase(test.TestCase):
     def writeAndReadGUID(self, xml):
         tasks, categories, notes, syncMLConfig, guid = self.writeAndRead(xml)
         return guid
-
+    
     
 class XMLReaderVersion6Test(XMLReaderTestCase):
     tskversion = 6
@@ -92,7 +92,7 @@ class XMLReaderVersion6Test(XMLReaderTestCase):
             </task>
         </tasks>''')
         self.assertEqual('Yo', tasks[0].efforts()[0].description())
-
+        
 
 class XMLReaderVersion8Test(XMLReaderTestCase):   
     tskversion = 8
@@ -322,7 +322,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             pass
         
     def testNoTasksAndNoCategories(self):
-        tasks, categories, notes, syncMLConfig, guid = self.writeAndRead('<tasks/>\n')
+        tasks, categories, notes = self.writeAndReadTasksAndCategoriesAndNotes('<tasks/>\n')
         self.assertEqual(([], [], []), (tasks, categories, notes))
         
     def testOneTask(self):
@@ -950,3 +950,75 @@ class XMLReaderVersion21Test(XMLReaderTestCase):
             </category>
         </tasks>''')
         self.assertEqual(['location'], [os.path.split(att.location())[-1] for att in categories[0].attachments()])
+
+
+class XMLReaderVersion23Test(XMLReaderTestCase):
+    tskversion = 22
+
+    def testStatus(self):
+        tasks, categories, notes = self.writeAndReadTasksAndCategoriesAndNotes(\
+            '<tasks><task subject="Task" status="2"></task></tasks>')
+        self.assertEqual(2, tasks[0].status())
+
+
+class XMLReaderVersion23Test(XMLReaderTestCase):
+    tskversion = 23
+
+    def testDescription(self):
+        tasks, categories, notes = self.writeAndReadTasksAndCategoriesAndNotes(\
+            '<tasks><task subject="Task" status="0">'
+            '<description>\nDescription\n</description>'
+            '</task></tasks>')
+        self.assertEqual('\nDescription\n', tasks[0].description())
+
+    def testAttachmentData(self):
+        import base64
+        tasks = self.writeAndReadTasks(\
+            '<tasks>\n<task status="0">\n'
+            '<attachment type="mail" status="0">\n'
+            '<data extension="eml">%s</data>\n'
+            '</attachment>\n</task>\n</tasks>\n'%base64.encodestring('Data'))
+        self.assertEqual('Data', tasks[0].attachments()[0].data())
+    
+    def testGUID(self):
+        guid = self.writeAndReadGUID('<tasks><guid>GUID</guid></tasks>')
+        self.assertEqual('GUID', guid)
+
+    def testSyncMLConfig(self):
+        syncmlConfig = self.writeAndReadSyncMLConfig('<tasks><syncml><property name="name">value</property></syncml></tasks>')
+        self.assertEqual('value', syncmlConfig.get('name'))
+        
+        
+class XMLReaderVersion24Test(XMLReaderTestCase):
+    tskversion = 24 # New in release 0.72.9
+
+    # tskversion 24 introduces newlines so that the XML is not on one long
+    # line anymore. We have to be sure not to introduce new lines in
+    # text nodes though.
+
+    def testDescription(self):
+        tasks = self.writeAndReadTasks(\
+            '<tasks>\n<task subject="Task" status="0">\n'
+            '<description>\nDescription\n</description>\n'
+            '</task>\n</tasks>\n')
+        self.assertEqual('Description', tasks[0].description())
+        
+    def testAttachmentData(self):
+        import base64
+        tasks = self.writeAndReadTasks(\
+            '<tasks>\n<task status="0">\n'
+            '<attachment type="mail" status="0">\n'
+            '<data extension="eml">\n%s\n</data>\n'
+            '</attachment>\n</task>\n</tasks>\n'%base64.encodestring('Data'))
+        self.assertEqual('Data', tasks[0].attachments()[0].data())
+
+    def testGUID(self):
+        guid = self.writeAndReadGUID('<tasks>\n<guid>\nGUID\n</guid>\n</tasks>')
+        self.assertEqual('GUID', guid)
+
+    def testSyncMLConfig(self):
+        syncmlConfig = self.writeAndReadSyncMLConfig(\
+            '<tasks>\n<syncml>\n'
+            '<property name="name">\nvalue\n</property>\n'
+            '</syncml>\n</tasks>\n')
+        self.assertEqual('value', syncmlConfig.get('name'))

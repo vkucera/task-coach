@@ -20,8 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from wx.lib import masked
-from taskcoachlib.thirdparty import combotreebox
+from wx.lib import masked, combotreebox
 from taskcoachlib import widgets
 from taskcoachlib.domain import date
 

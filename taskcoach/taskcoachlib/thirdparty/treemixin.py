@@ -25,8 +25,8 @@ The VirtualTree and DragAndDrop mixins force the wx.TR_HIDE_ROOT style.
 
 Author: Frank Niessink <frank@niessink.com>
 License: wxWidgets license
-Version: 1.6
-Date: April 19, 2009
+Version: 1.7
+Date: April 22, 2009
 
 ExpansionState is based on code and ideas from Karsten Hilbert.
 Andrea Gavana provided help with the CustomTreeCtrl integration.
@@ -95,9 +95,11 @@ class TreeAPIHarmonizer(object):
 
     def GetItemImage(self, item, which=wx.TreeItemIcon_Normal, column=0):
         # CustomTreeCtrl always wants the which argument, so provide it.
-        # TreeListCtr.GetItemImage has a different order of arguments than
+        # TreeListCtrl.GetItemImage has a different order of arguments than
         # the other tree controls. Hide the differences.
         if self.GetColumnCount():
+            if column < 0:
+                column = 0
             args = (item, column, which)
         else:
             args = (item, which)
@@ -108,6 +110,8 @@ class TreeAPIHarmonizer(object):
         # The SetItemImage signature is different for TreeListCtrl and
         # other tree controls. This adapter method hides the differences.
         if self.GetColumnCount():
+            if column < 0:
+                column = 0
             args = (item, imageIndex, column, which)
         else:
             args = (item, imageIndex, which)

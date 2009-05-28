@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import generator, csv, cStringIO
 
 class UnicodeCSVWriter:
     ''' A CSV writer that writes rows to a CSV file encoded in utf-8. 
-        Based on http://docs.python.org/lib/csv-examples.html
+        Based on http://docs.python.org/lib/csv-examples.html.
     '''
     def __init__(self, fd, *args, **kwargs):
         # Redirect output to a queue
@@ -46,6 +46,7 @@ class CSVWriter(object):
     def __init__(self, fd):
         self.__fd = fd
 
-    def write(self, viewer):
-        csvRows = generator.viewer2csv(viewer)
+    def write(self, viewer, selectionOnly=False):
+        csvRows = generator.viewer2csv(viewer, selectionOnly)
         UnicodeCSVWriter(self.__fd).writerows(csvRows)
+        return len(csvRows) - 1 # Don't count header row

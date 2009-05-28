@@ -38,6 +38,34 @@ an option to search descriptions too.''', '1816660', '2020347', '2157010',
 '2510045')
     ]),
 
+Release('0.72.9', 'May 28, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Don't throw an exception when exporting an active effort record
+to iCal format.'''),
+        Bug('''Refuse to open task files that have a different format because
+they are created by a newer version of Task Coach than the one the user is 
+using.'''),
+        Bug('''Updating menu items would trigger exceptions after closing a
+(task) viewer.'''),
+        Bug('''After merging, Task Coach would display the wrong filename in the
+window title.'''),
+        Bug('''Smaller task edit dialog to cater for lower resolution 
+screens.''', '2214687'),
+        Bug('''Dragging email from a Thunderbird client that uses Gmail as IMAP
+server didn't work.'''),
+        Bug('''When the SyncML feature is turned on, Task Coach would show 
+deleted tasks in the drop down menu of the start effort tracking button on the 
+toolbar and it would show effort for deleted tasks in the effort viewer.''', 
+'2679544', '2214043')
+        ],
+    featuresAdded=[
+        Feature('''All export options can now also export selected items only.'''),
+        Feature('''Put line breaks in the XML so that task files are 
+easier to examine in a text editor.''', '1277365')
+        ]
+    ),
+    
 Release('0.72.8', 'May 17, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, tempfile
-from taskcoachlib.thirdparty.desktop import get_temp_file
+from taskcoachlib import persistence
+
 
 if os.name == 'nt':
     from win32com.client import GetActiveObject
@@ -30,7 +31,7 @@ if os.name == 'nt':
 
         ret = []
         for n in xrange(1, sel.Count + 1):
-            filename = tempfile.mktemp('.eml')
+            filename = tempfile.mkstemp('.eml')
             try:
                 sel.Item(n).SaveAs(filename, 0)
 
@@ -45,7 +46,7 @@ if os.name == 'nt':
                 # 2       all headers seen, blank line written
                 # 2       in body
 
-                name = get_temp_file(suffix='.eml')
+                name = persistence.get_temp_file(suffix='.eml')
                 src = file(filename, 'rb')
 
                 try:

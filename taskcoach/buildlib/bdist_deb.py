@@ -52,6 +52,7 @@ class bdist_deb(Command, object):
         ('license-abbrev=', None, 'abbreviated license title, e.g. "GPLv3"'),
         ('license-summary=', None, 'summary of the license of the application'),
         ('license-path=', None, 'path of the license on Debian systems'),
+        ('wxpythonversion=', None, 'minimal wxPython version needed'),
         ('url=', None, 'url of the application homepage'),
         ('architecture=', None, 'architecure of the deb package [all]')]
 
@@ -68,7 +69,7 @@ class bdist_deb(Command, object):
             self.author_email = self.copyright = self.license = \
             self.license_abbrev = self.license_summary = self.license_path = \
             self.url = self.version = self.package_version = \
-            self.distribution = None
+            self.distribution = self.wxpythonversion = None
                     
     def finalize_options(self):
         mandatoryOptions = [\
@@ -99,6 +100,8 @@ class bdist_deb(Command, object):
             self.package_version = '1'
         if not self.distribution:
             self.distribution = 'UNRELEASED'
+        if not self.wxpythonversion:
+            self.wxpythonversion = '2.8'
         self.subsection_lower = self.subsection.lower()
         self.datetime = time.strftime('%a, %d %b %Y %H:%M:%S +0000', 
                                       time.gmtime())
@@ -220,7 +223,7 @@ Homepage: %(url)s
 
 Package: %(package)s
 Architecture: %(architecture)s
-Depends: python2.5, python-wxgtk2.8, python-wxversion
+Depends: python2.5, python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion
 Description: %(description)s.
 %(long_description)s
 '''

@@ -22,11 +22,21 @@ from taskcoachlib import meta, persistence
 from taskcoachlib.domain import task, effort, date
 
 
+class DummyViewer(object):
+    def __init__(self, effortList):
+        self.effortList = effortList
+        
+    def visibleItems(self):
+        return self.effortList
+        
+
 class ICSTestCase(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
         self.writer = persistence.ICSWriter(self.fd)
         self.taskList = self.createTaskList()
+        self.effortList = effort.EffortList(self.taskList)
+        self.viewer = DummyViewer(self.effortList)
         self.icsFile = self.writeAndParse()
         
     def createTaskList(self):
@@ -34,7 +44,7 @@ class ICSTestCase(test.TestCase):
         return task.TaskList([self.task])
 
     def writeAndParse(self):
-        self.writer.write(self.taskList)
+        self.writer.write(self.viewer)
         self.fd.reset()
         return [line[:-1] for line in self.fd.readlines()]
 
@@ -67,6 +77,24 @@ class WriteOneEffortRecordAsICSTest(ICSTestCase, CommonICSTests):
     
     def testBeginEvent(self):
         self.assertEqual('BEGIN:VEVENT', self.icsFile[3])
+
+    def testEndEvent(self):
+        self.assertEqual('END:VEVENT', self.icsFile[-2])
+
+
+class WriteOneActiveEffortRecordAsICSTest(ICSTestCase, CommonICSTests):
+    def createTaskList(self):
+        taskList = super(WriteOneActiveEffortRecordAsICSTest, self).createTaskList()
+        self.effort = effort.Effort(self.task, date.DateTime(2005,1,1))
+        self.task.addEffort(self.effort)
+        return taskList
+    
+    def testBeginEvent(self):
+        self.assertEqual('BEGIN:VEVENT', self.icsFile[3])
+        
+    def testLastModified(self):
+        stop = date.DateTime.now().strftime('%Y%m%dT%H%M')
+        self.failUnless(self.icsFile[6].startswith('LAST-MODIFIED:%s'%stop))
 
     def testEndEvent(self):
         self.assertEqual('END:VEVENT', self.icsFile[-2])

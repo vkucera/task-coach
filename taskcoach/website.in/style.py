@@ -29,6 +29,15 @@ header = '''
         <title>%(name)s</title>
     </head>
     <body>
+    <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%%3E%%3C/script%%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8814256-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
         <div class="content">
             <table cellspacing=5>
                 <tr>
@@ -76,10 +85,18 @@ footer = '''
                 <ul>
                     <li><a href="mailinglist.html">Join mailinglist</a></li>
                     <li><a href="faq.html">Frequently asked questions</a></li>
-                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135">Request support</a></li>
-                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Browse known bugs</a></li>
-                    <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Submit a bug report</a></li>
-                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137">Request a feature</a></li>
+                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135" 
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_support');">Request support</a>
+                    </li>
+                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134" 
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/browse_bugs');">Browse known bugs</a>
+                    </li>
+                    <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134" 
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/submit_bug');">Submit a bug report</a>
+                    </li>
+                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137" 
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_feature');">Request a feature</a>
+                    </li>
                 </ul>
             </div>
             <div class="navbox">
@@ -88,25 +105,34 @@ footer = '''
                     <li><a href="i18n.html">Help translate</a></li>
                     <li><a href="devinfo.html">Help develop</a></li>
                     <li><a href="donations.html">Donate</a></li>
-                    <li><a href="http://www.cafepress.com/taskcoach/">Buy the mug</a></li>
+                    <li><a href="http://www.cafepress.com/taskcoach/" 
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/cafepress.com/taskcoach');">Buy the mug</a>
+                    </li>
                 </p>
             </div>
             <div class="navbox">
                 <h2>Credits</h2>
                 <p>
-                    <a href="http://www.python.org"><img
-                    src="python-powered-w-70x28.png" alt="Python"
-                    width="70" height="28" border="0"></a><br>
-                    <a href="http://www.wxpython.org"><img
-                    src="powered-by-wxpython-80x15.png"
-                    alt="wxPython" width="80" height="15" border="0"></a><br>
-                    <a href="http://www.icon-king.com">Nuvola icon set</a><br>
-                    <a href="http://www.jrsoftware.org">Inno Setup</a><br>
-                    <a href="http://www.bluerobot.com">Bluerobot.com</a><br>
-                    <a href="http://sourceforge.net/projects/taskcoach">
-                      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8" width="80" height="15" border="0" alt="Task Coach at SourceForge.net"/>
+                    <a href="http://www.python.org" 
+                       onClick="javascript: pageTracker._trackPageview('/outgoing/python.org');"><img src="python-powered-w-70x28.png" alt="Python"
+                       width="70" height="28" border="0"></a><br>
+                    <a href="http://www.wxpython.org" 
+                       onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org');"><img
+                       src="powered-by-wxpython-80x15.png"
+                       alt="wxPython" width="80" height="15" border="0"></a><br>
+                    <a href="http://www.icon-king.com" 
+                       onClick="javascript: pageTracker._trackPageview('/outgoing/icon-king.com');">Nuvola icon set</a><br>
+                    <a href="http://www.jrsoftware.org" 
+                       onClick="javascript: pageTracker._trackPageview('/outgoing/jrsoftware.org');">Inno Setup</a><br>
+                    <a href="http://www.bluerobot.com" 
+                       onClick="javascript: pageTracker._trackPageview('/outgoing/bluerobot.com');">Bluerobot.com</a><br>
+                    <a href="http://sourceforge.net/projects/taskcoach" 
+                       onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/projects/taskcoach');">
+                        <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8" 
+                             width="80" height="15" border="0" alt="Task Coach at SourceForge.net"/>
                     </a><br>
-                    <SCRIPT type='text/javascript' language='JavaScript' src='http://www.ohloh.net/projects/5109;badge_js'></SCRIPT>
+                    <SCRIPT type='text/javascript' language='JavaScript' 
+                            src='http://www.ohloh.net/projects/5109;badge_js'></SCRIPT>
                 </p>
             </div>
         </div>
@@ -137,15 +163,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                 <script type="text/javascript" src="http://twitter.com/statuses/user_timeline/taskcoach.json?callback=twitterCallback2&amp;count=3"></script>
             </div>
         </div>
-        <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%%3E%%3C/script%%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-8814256-1");
-pageTracker._trackPageview();
-} catch(err) {}</script>
     </body>
 </html>
 '''%meta.metaDict
