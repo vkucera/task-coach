@@ -134,6 +134,9 @@ class NewTaskTest(TaskEditorTestCase):
         self.setDescription('Description')
         self.editor.ok()
         self.assertEqual('Description', self.task.description())
+        
+    def testPriority(self):
+        self.assertEqual(0, self.editor[0][0]._prioritySpinner.GetValue())
 
     def testSetReminder(self):
         reminderDateTime = date.DateTime(2005,1,1)

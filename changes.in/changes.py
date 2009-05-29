@@ -23,6 +23,14 @@ from changetypes import *
 
 releases = [
 
+Release('0.72.10', 'June ??, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When opening a task edit dialog, the priority field would not
+show the priority until the up or down button was clicked (Mac OS X only).''')
+        ]
+    ),
+    
 Release('0.72.9', 'May 28, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
