@@ -64,7 +64,7 @@ CREATE VIEW AllTask AS SELECT * FROM Task WHERE status != 3 ORDER BY name;
 CREATE VIEW OverdueTask AS SELECT * FROM Task WHERE status != 3 AND dueDate < DATE('now') ORDER BY dueDate, startDate DESC;
 CREATE VIEW DueTodayTask AS SELECT * FROM Task WHERE status != 3 AND dueDate == DATE('now') ORDER BY startDate DESC;
 CREATE VIEW StartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATE('now') AND (dueDate > DATE('now') OR dueDate IS NULL) ORDER BY startDate;
-CREATE VIEW NotStartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NULL AND (dueDate > DATE('now') OR dueDate IS NULL);
+CREATE VIEW NotStartedTask AS SELECT * FROM Task WHERE status != 3 AND (startDate IS NULL OR startDate > DATE('now'));
 
 -- Initial data
 
