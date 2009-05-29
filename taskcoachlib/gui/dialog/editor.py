@@ -143,7 +143,7 @@ class TaskSubjectPage(SubjectPage):
          
     def addPriorityEntry(self):
         priority = self.item.priority()
-        self._prioritySpinner = widgets.SpinCtrl(self, #value=str(priority),
+        self._prioritySpinner = widgets.SpinCtrl(self, value=str(priority),
             initial=priority, size=(100, -1))
         self.addEntry(_('Priority'), self._prioritySpinner, 
                       flags=[None, wx.ALL])
