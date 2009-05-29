@@ -129,13 +129,12 @@ pages['download'] = \
         <tr><td rowspan=5 valign=top><img src="debian.png" alt="Debian"></td>
         <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb"
         onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/debian');">Debian package (deb)</a> for Debian</b></td></tr>
-        <tr><td>Prerequisites: ''' + prerequisites + '''
-        <tr><td>Installation: 
-        Unfortunately Debian does not currently ship with wxPython 2.8.9.2 
-        which is required for %(name)s. You will need to add the wxWidgets 
-        repositories to your apt sources list following 
-        <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these instructions</a>. 
-        You can then continue by following the Ubuntu instructions.</td></tr>
+        <tr><td>Prerequisites: ''' + prerequisites + ''' If your Debian 
+        installation does not have the minimally required wxPython version you 
+        will need to install it yourself following 
+        <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these instructions</a>.</td></tr>
+        <tr><td>Installation:
+        double click the package to start the installer.</td></tr>
         </table>
         </p>
         <hr>
@@ -144,7 +143,10 @@ pages['download'] = \
         <tr><td rowspan=5 valign=top><img src="ubuntu.png" alt="Ubuntu"></td>
         <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb"
         onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/ubuntu');">Debian package (deb)</a> for Ubuntu</b></td></tr>
-        <tr><td>Prerequisites: ''' + prerequisites + '''
+        <tr><td>Prerequisites: ''' + prerequisites + ''' If your Ubuntu 
+        installation does not have the minimally required wxPython version you 
+        will need to install it yourself following 
+        <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these instructions</a>.</td></tr>
         <tr><td>Installation:
         double click the package to start the installer.</td></tr> 
         </table>
