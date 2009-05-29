@@ -30,11 +30,13 @@ class VersionChecker(threading.Thread):
         return True # Don't block application exit
         
     def run(self):
-        latestVersion = self.getLatestVersion()
-        lastVersionNotified = self.settings.get('version', 'notified')
-        if latestVersion > lastVersionNotified and latestVersion > data.version:
-            self.settings.set('version', 'notified', latestVersion)
-            self.notifyUser(latestVersion)
+        latestVersionString = self.getLatestVersion()
+        latestVersion = self.tupleVersion(latestVersionString)
+        lastVersionNotified = self.tupleVersion(self.settings.get('version', 'notified'))
+        currentVersion = self.tupleVersion(data.version)
+        if latestVersion > lastVersionNotified and latestVersion > currentVersion:
+            self.settings.set('version', 'notified', latestVersionString)
+            self.notifyUser(latestVersionString)
             
     def getLatestVersion(self):
         try:
@@ -62,3 +64,6 @@ class VersionChecker(threading.Thread):
         self.settings.set('version', 'notify', str(dialog.check.GetValue())) 
         dialog.Destroy()
 
+    @staticmethod
+    def tupleVersion(versionString):
+        return tuple(int(i) for i in versionString.split('.'))
