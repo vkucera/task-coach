@@ -1,3 +1,7 @@
+2009-05-29  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+
+	* taskcoach.sql, Task.m: Not started tasks wouldn't show up
+
 2009-05-29  Jérôme Laheurte  <fraca7@free.fr>
 
 	* fr.lproj/Localizable.strings: Fix french translation spelling
