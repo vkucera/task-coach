@@ -1,5 +1,7 @@
 2009-05-29  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 
+	* Classes/Domain/Task.m: Started today tasks would show up as not started
+
 	* taskcoach.sql, Task.m: Not started tasks wouldn't show up
 
 2009-05-29  Jérôme Laheurte  <fraca7@free.fr>

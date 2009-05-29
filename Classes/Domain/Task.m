@@ -90,7 +90,7 @@ static Statement *_saveStatement = NULL;
 	if (dueDate && ([now compare:dueDate] == NSOrderedSame))
 		return TASKSTATUS_DUETODAY;
 	
-	if (startDate && ([now compare:startDate] == NSOrderedDescending))
+	if (startDate && ([now compare:startDate] != NSOrderedAscending))
 		return TASKSTATUS_STARTED;
 
 	return TASKSTATUS_NOTSTARTED;
