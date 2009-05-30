@@ -86,8 +86,12 @@ class Application(object):
             self.io.openAfterStart(self._args)
         wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker",
                                       settings.getboolean('editor', 'maccheckspelling'))
+        self.registerSignalHandlers()
+        
+    def registerSignalHandlers(self):
         signal.signal(signal.SIGTERM, self.onSIGTERM)
-        signal.signal(signal.SIGHUP, self.onSIGHUP)
+        if hasattr(signal, 'SIGHUP'):
+            signal.signal(signal.SIGHUP, self.onSIGHUP)
 
     def onSIGTERM(self, *args):
         ''' onSIGTERM is called when the process receives a TERM signal. '''
