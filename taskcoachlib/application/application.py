@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os
+import wx, os, signal
 
         
 class wxApp(wx.App):
@@ -86,6 +86,19 @@ class Application(object):
             self.io.openAfterStart(self._args)
         wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker",
                                       settings.getboolean('editor', 'maccheckspelling'))
+        signal.signal(signal.SIGTERM, self.onSIGTERM)
+        signal.signal(signal.SIGHUP, self.onSIGHUP)
+
+    def onSIGTERM(self, *args):
+        ''' onSIGTERM is called when the process receives a TERM signal. '''
+        # Give the user time to save the file:
+        self.mainwindow.quit()
+
+    def onSIGHUP(self, *args):
+        ''' onSIGHUP is called when the process receives a HUP signal, 
+            typically when the user logs out. '''
+        # No time to pop up dialogs, force quit:
+        self.mainwindow.quit(force=True)
 
     def warnUserThatIniFileWasNotLoaded(self):
         from taskcoachlib import meta

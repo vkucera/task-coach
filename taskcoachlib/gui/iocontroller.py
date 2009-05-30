@@ -243,10 +243,18 @@ class IOController(object):
                             os.path.join(self.__settings.pathToTemplatesDir(),
                                          os.path.split(filename)[-1]))
 
-    def close(self):
+    def close(self, force=False):
         if self.__taskFile.needSave():
-            if not self.__saveUnsavedChanges():
-                return False
+            if force:
+                # No user interaction, since we're forced to close right now.
+                if self.__taskFile.filename():
+                    self._saveSave(self.__taskFile, 
+                                   lambda *args, **kwargs: None)
+                else:
+                    pass # No filename, we cannot ask, give up...
+            else:
+                if not self.__saveUnsavedChanges():
+                    return False
         self.__closeUnconditionally()
         return True
     
