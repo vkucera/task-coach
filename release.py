@@ -207,6 +207,7 @@ def uploadWebsiteToWebsiteHost(settings, websiteName):
         ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('website.out')
         ftp.put('.')
+        ftp.put('.htaccess')
         ftp.quit()
         os.chdir('..')
         print 'Done uploading website to %s.'%websiteName
