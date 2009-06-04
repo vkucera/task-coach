@@ -85,7 +85,9 @@ class IOController(object):
         else:
             filename = self.__settings.get('file', 'lastfile')
         if filename:
-            self.open(filename)
+            # Use CallAfter so that the main window is opened first and any 
+            # error messages are shown on top of it
+            wx.CallAfter(self.open, filename)
             
     def open(self, filename=None, showerror=wx.MessageBox, 
              fileExists=os.path.exists, breakLock=False, lock=True, *args):
