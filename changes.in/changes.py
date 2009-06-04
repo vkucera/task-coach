@@ -28,10 +28,13 @@ Release('0.72.10', 'June ??, 2009',
     bugsFixed=[
         Bug('''When opening a task edit dialog, the priority field would not
 show the priority until the up or down button was clicked (Mac OS X only).'''),
+        Bug('''When opening a locked file, Task Coach would hang
+(Mac OS X only).'''),
         Bug('''Require wxPython 2.8.9.1 instead of 2.8.9.2 in the Debian 
 package file (.deb) because Ubuntu 9.04 is still shipping 2.8.9.1 (Ubuntu 
 only).''', '2798457'),
-        Bug('''When logging off or shutting down the computer save unsaved changes (Linux).''')
+        Bug('''When logging off or shutting down the computer save unsaved 
+changes (Linux only).''')
         ]
     ),
     
