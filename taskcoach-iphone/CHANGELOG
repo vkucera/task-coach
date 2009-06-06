@@ -1,5 +1,7 @@
 2009-06-06  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 
+	* misc: Use same font everywhere, with shadow.
+
 	* TaskCellBig: Don't use italics.
 
 	* misc: Fix some UI bugs when toggling editing mode
