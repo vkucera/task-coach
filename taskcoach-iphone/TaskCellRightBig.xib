@@ -88,8 +88,8 @@
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="IBUIText">Infos</string>
-								<object class="NSFont" key="IBUIFont" id="686273391">
-									<string key="NSName">Helvetica-Oblique</string>
+								<object class="NSFont" key="IBUIFont" id="547910746">
+									<string key="NSName">Helvetica</string>
 									<double key="NSSize">1.100000e+01</double>
 									<int key="NSfFlags">16</int>
 								</object>
@@ -115,7 +115,7 @@
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="IBUIText">Categories</string>
-								<reference key="IBUIFont" ref="686273391"/>
+								<reference key="IBUIFont" ref="547910746"/>
 								<reference key="IBUITextColor" ref="114822338"/>
 								<nil key="IBUIHighlightedColor"/>
 								<object class="NSColor" key="IBUIShadowColor">
