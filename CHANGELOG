@@ -1,5 +1,8 @@
 2009-06-06  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 
+	* Classes/TaskCell.m: Fix selection bug when confirming mark
+	complete (2.2 specific).
+
 	* TaskCell: fix overlapping views
 
 2009-05-29  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>

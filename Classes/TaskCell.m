@@ -94,6 +94,7 @@
 	if (isTapping)
 	{
 		isTapping = NO;
+		[super setSelected:NO animated:NO];
 	}
 	else
 	{
