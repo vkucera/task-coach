@@ -304,7 +304,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def notifyObserversOfColorChange(self, color):
         super(Task, self).notifyObserversOfColorChange(color)
-        for effort in self.efforts():
+        for effort in self.efforts(recursive=True):
             effort.notifyObserversOfColorChange(color)
 
     def notifyObserversOfBudgetChange(self):
