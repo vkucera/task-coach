@@ -1,5 +1,7 @@
 2009-06-06  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 
+	* misc: Fix some UI bugs when toggling editing mode
+
 	* addtask.png: Change icon
 
 	* Classes/TaskCell.m: Fix selection bug when confirming mark

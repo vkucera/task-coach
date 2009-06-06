@@ -2,9 +2,9 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">528</int>
-		<string key="IBDocument.SystemVersion">9G55</string>
+		<string key="IBDocument.SystemVersion">9J61</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.43</string>
+		<string key="IBDocument.AppKitVersion">949.46</string>
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -44,7 +44,7 @@
 							<object class="IBUIImageView" id="277858410">
 								<reference key="NSNextResponder" ref="827285899"/>
 								<int key="NSvFlags">297</int>
-								<string key="NSFrame">{{258, 6}, {32, 32}}</string>
+								<string key="NSFrame">{{255, 6}, {32, 32}}</string>
 								<reference key="NSSuperview" ref="827285899"/>
 								<object class="NSColor" key="IBUIBackgroundColor" id="608990587">
 									<int key="NSColorSpace">1</int>
@@ -56,7 +56,7 @@
 							</object>
 							<object class="IBUILabel" id="949998819">
 								<reference key="NSNextResponder" ref="827285899"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">290</int>
 								<string key="NSFrame">{{20, 10}, {217, 23}}</string>
 								<reference key="NSSuperview" ref="827285899"/>
 								<reference key="IBUIBackgroundColor" ref="608990587"/>
@@ -79,7 +79,7 @@
 								<float key="IBUIMinimumFontSize">1.000000e+01</float>
 							</object>
 						</object>
-						<string key="NSFrameSize">{300, 44}</string>
+						<string key="NSFrameSize">{297, 44}</string>
 						<reference key="NSSuperview" ref="155650394"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
@@ -339,6 +339,5 @@
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.LastKnownRelativeProjectPath">TaskCoach.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<string key="IBCocoaTouchPluginVersion">3.0</string>
 	</data>
 </archive>
