@@ -2,9 +2,9 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">528</int>
-		<string key="IBDocument.SystemVersion">9G55</string>
+		<string key="IBDocument.SystemVersion">9J61</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.43</string>
+		<string key="IBDocument.AppKitVersion">949.46</string>
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -44,7 +44,7 @@
 							<object class="IBUIImageView" id="277858410">
 								<reference key="NSNextResponder" ref="827285899"/>
 								<int key="NSvFlags">297</int>
-								<string key="NSFrame">{{245, 6}, {48, 48}}</string>
+								<string key="NSFrame">{{243, 15}, {48, 48}}</string>
 								<reference key="NSSuperview" ref="827285899"/>
 								<object class="NSColor" key="IBUIBackgroundColor" id="270471598">
 									<int key="NSColorSpace">1</int>
@@ -81,7 +81,7 @@
 							<object class="IBUILabel" id="222111165">
 								<reference key="NSNextResponder" ref="827285899"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{20, 26}, {214, 14}}</string>
+								<string key="NSFrame">{{20, 29}, {214, 14}}</string>
 								<reference key="NSSuperview" ref="827285899"/>
 								<reference key="IBUIBackgroundColor" ref="270471598"/>
 								<bool key="IBUIOpaque">NO</bool>
@@ -108,7 +108,7 @@
 							<object class="IBUILabel" id="353758169">
 								<reference key="NSNextResponder" ref="827285899"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{20, 40}, {214, 14}}</string>
+								<string key="NSFrame">{{20, 45}, {214, 14}}</string>
 								<reference key="NSSuperview" ref="827285899"/>
 								<reference key="IBUIBackgroundColor" ref="270471598"/>
 								<bool key="IBUIOpaque">NO</bool>
@@ -129,7 +129,7 @@
 								<int key="IBUITextAlignment">2</int>
 							</object>
 						</object>
-						<string key="NSFrameSize">{300, 60}</string>
+						<string key="NSFrameSize">{301, 79}</string>
 						<reference key="NSSuperview" ref="155650394"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
@@ -141,7 +141,7 @@
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 					</object>
 				</object>
-				<string key="NSFrameSize">{320, 60}</string>
+				<string key="NSFrameSize">{324, 79}</string>
 				<reference key="NSSuperview"/>
 				<reference key="IBUIBackgroundColor" ref="270471598"/>
 				<bool key="IBUIOpaque">NO</bool>
@@ -224,8 +224,8 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="949998819"/>
 							<reference ref="222111165"/>
-							<reference ref="277858410"/>
 							<reference ref="353758169"/>
+							<reference ref="277858410"/>
 						</object>
 						<reference key="parent" ref="957960031"/>
 					</object>
@@ -272,7 +272,7 @@
 					<string>UIResponder</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>TaskCellBig</string>
-					<string>{{285, 960}, {320, 60}}</string>
+					<string>{{285, 941}, {324, 79}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>CheckView</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -442,6 +442,5 @@
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.LastKnownRelativeProjectPath">TaskCoach.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<string key="IBCocoaTouchPluginVersion">3.0</string>
 	</data>
 </archive>
