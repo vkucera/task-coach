@@ -1,3 +1,7 @@
+2009-06-06  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+
+	* TaskCell: fix overlapping views
+
 2009-05-29  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 
 	* Classes/Domain/Task.m: Started today tasks would show up as not started
