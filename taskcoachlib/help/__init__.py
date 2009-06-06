@@ -366,9 +366,6 @@ _iPhoneSection = _('''<h3><a name="iphone">iPhone and iPod Touch</a></h3>
 
 _iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">Task Coach on the iPhone</a></h4>
 
-<!-- XXX remove this later -->
-<p><i>NB: as for now, the iPhone app is pending approval from Apple</i></p>
-
 <p>There is an iPhone/iPod Touch companion app for Task Coach, available on
 Apple's AppStore. This app has few features right now, but allows you to take
 your tasks away and modify them:</p>
@@ -387,6 +384,8 @@ your tasks away and modify them:</p>
 <ul>
   <li>Effort tracking</li>
   <li>Editing of budget</li>
+  <li>Multiple task files</li>
+  <li>Multiple categories for a task</li>
 </ul>''')
 
 _iPhoneConfigurationSubsection = _('''<h4><a name="iphoneconf">Configuration</a></h4>
@@ -415,6 +414,10 @@ change the "Bonjour service name" in the configuration.</p>
 
 <p>Task Coach will remember the choosen instance and try it next time
 you synchronize; if it's not running, it will prompt you again.</p>
+
+<p>Note that this synchronization happens through the network; there is
+no need for the device to be connected through USB nor for iTunes to
+be running.</p>
 
 ''')
 
