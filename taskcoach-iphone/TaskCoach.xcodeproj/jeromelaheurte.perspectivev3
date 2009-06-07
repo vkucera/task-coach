@@ -230,6 +230,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -271,7 +273,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>16</integer>
+									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
@@ -303,14 +305,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Localizable.strings</string>
+								<string>DateCell.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -318,11 +318,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Localizable.strings</string>
+										<string>DateCell.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6CCEC460FDBD72600D00839</string>
+										<string>A60358EA0FDBDB6A00AF4FE9</string>
 										<key>history</key>
 										<array>
 											<string>A68EDF5D0F1E28CE00F51FF2</string>
@@ -413,7 +413,6 @@
 											<string>A6FACDF40FB70E7700A594EB</string>
 											<string>A6B66D390FCB19F4007B435E</string>
 											<string>A6B66D400FCB1AA9007B435E</string>
-											<string>A628F6940FD043D50033FD1D</string>
 											<string>A628F6950FD043D50033FD1D</string>
 											<string>A628F6C60FD0446E0033FD1D</string>
 											<string>A6307C140FDA6F0C00B0A200</string>
@@ -429,10 +428,11 @@
 											<string>A6B264EE0FDBD01400FF2AD0</string>
 											<string>A6B264EF0FDBD01400FF2AD0</string>
 											<string>A6B264F00FDBD01400FF2AD0</string>
-											<string>A6B265260FDBD0C600FF2AD0</string>
 											<string>A6B265560FDBD30100FF2AD0</string>
 											<string>A6CCEC370FDBD6D700D00839</string>
-											<string>A6CCEC380FDBD6D700D00839</string>
+											<string>A6CA45820FDBDA4C00ABF2E0</string>
+											<string>A6CA45910FDBDA8700ABF2E0</string>
+											<string>A630577B0FDBDB4B0015B8CA</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -551,7 +551,6 @@
 											<string>A6B66D3B0FCB19F4007B435E</string>
 											<string>A6B264F50FDBD01400FF2AD0</string>
 											<string>A6B264F60FDBD01400FF2AD0</string>
-											<string>A6CCEC390FDBD6D700D00839</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -676,11 +675,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6CCEC3B0FDBD6D700D00839</string>
+				<string>A60358E70FDBDB6A00AF4FE9</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6CCEC3C0FDBD6D700D00839</string>
+				<string>A60358E80FDBDB6A00AF4FE9</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6CCEC3D0FDBD6D700D00839</string>
+				<string>A60358E90FDBDB6A00AF4FE9</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -827,14 +826,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6CCEC3E0FDBD6D700D00839</string>
+				<string>A6CA45880FDBDA4C00ABF2E0</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6CCEC3F0FDBD6D700D00839</string>
-				<string>A6CCEC400FDBD6D700D00839</string>
-				<string>A6CCEC410FDBD6D700D00839</string>
-				<string>A6CCEC420FDBD6D700D00839</string>
-				<string>A6CCEC430FDBD6D700D00839</string>
+				<string>A6CA45890FDBDA4C00ABF2E0</string>
+				<string>A6CA458A0FDBDA4C00ABF2E0</string>
+				<string>A6CA458B0FDBDA4C00ABF2E0</string>
+				<string>A6CA458C0FDBDA4C00ABF2E0</string>
+				<string>A6CA458D0FDBDA4C00ABF2E0</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -864,7 +863,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A6CCEC450FDBD6D700D00839</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
