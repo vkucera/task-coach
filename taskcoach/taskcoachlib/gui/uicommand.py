@@ -1526,6 +1526,39 @@ class TaskDragAndDrop(TaskListCommand, DragAndDropCommand):
                                               drop=dropItem)
 
 
+class ToggleCategory(NeedsSelection, ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        self.category = kwargs.pop('category')
+        subject = self.category.subject()
+        super(ToggleCategory, self).__init__(menuText=subject,
+            helpText=_('Toggle %s')%subject, kind=wx.ITEM_CHECK, *args, **kwargs)
+        
+    def doCommand(self, event):
+        check = command.ToggleCategoryCommand(category=self.category,
+                                              items=self.viewer.curselection())
+        check.do()
+        
+    def onUpdateUI(self, event):
+        super(ToggleCategory, self).onUpdateUI(event)
+        if self.enabled(event):
+            for menuItem in self.menuItems:
+                menuItem.Check(self.category in self.viewer.curselection()[0].categories())
+
+
+class TaskToggleCategory(ToggleCategory):
+    def enabled(self, event):
+        print 'TaskToggleCategory.enabled'
+        return super(TaskToggleCategory, self).enabled(event) and \
+            self.viewer.isShowingTasks()
+
+
+class NoteToggleCategory(ToggleCategory):
+    def enabled(self, event):        
+        print 'NoteToggleCategory.enabled'
+        return super(NoteToggleCategory, self).enabled(event) and \
+            self.viewer.isShowingNotes()
+    
+
 class MailItem(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(MailItem, self).__init__(bitmap='email', *args, **kwargs)

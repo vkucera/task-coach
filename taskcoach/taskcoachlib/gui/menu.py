@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os
 from taskcoachlib import patterns
-from taskcoachlib.domain import task, base
+from taskcoachlib.domain import task, base, category
 from taskcoachlib.i18n import _
 import uicommand, viewer
 
@@ -501,6 +501,10 @@ class TaskMenu(Menu):
                 uicommand.TaskAddNote(viewer=viewerContainer,
                                       settings=settings)
                 )
+        self.appendMenu(_('&Toggle category'),
+                        ToggleCategoryMenu(mainwindow, categories=categories,
+                                          viewer=viewerContainer), 'category')
+            
             
 class EffortMenu(Menu):
     def __init__(self, mainwindow, settings, taskFile, viewerContainer):
@@ -544,6 +548,7 @@ class NoteMenu(Menu):
     def __init__(self, mainwindow, settings, taskFile, viewerContainer):
         super(NoteMenu, self).__init__(mainwindow)
         notes = taskFile.notes()
+        categories = taskFile.categories()
         self.appendUICommands(
             uicommand.NoteNew(notes=notes, settings=settings),
             uicommand.NoteNewSubNote(viewer=viewerContainer, notes=notes),
@@ -555,6 +560,9 @@ class NoteMenu(Menu):
                                         settings=settings),
             uicommand.OpenAllNoteAttachments(viewer=viewerContainer,
                                              settings=settings))
+        self.appendMenu(_('&Toggle category'),
+                        ToggleCategoryMenu(mainwindow, categories=categories,
+                                           viewer=viewerContainer), 'category')
 
         
 class HelpMenu(Menu):
@@ -595,6 +603,47 @@ class TaskBarMenu(Menu):
             uicommand.MainWindowRestore(),
             uicommand.FileQuit())
         
+
+class ToggleCategoryMenu(DynamicMenu):
+    def __init__(self, mainwindow, categories, viewer):
+        self.categories = categories
+        self.viewer = viewer
+        if viewer.isViewerContainer():
+            self.uiCommandClass = uicommand.ToggleCategory
+        elif viewer.isShowingTasks():
+            self.uiCommandClass = uicommand.TaskToggleCategory
+        else:
+            self.uiCommandClass = uicommand.NoteToggleCategory
+        super(ToggleCategoryMenu, self).__init__(mainwindow)
+        
+    def registerForMenuUpdate(self):
+        for eventType in (self.categories.addItemEventType(), 
+                          self.categories.removeItemEventType()):
+            patterns.Publisher().registerObserver(self.onUpdateMenu,
+                                                  eventType=eventType,
+                                                  eventSource=self.categories)
+        patterns.Publisher().registerObserver(self.onUpdateMenu, 
+            eventType=category.Category.subjectChangedEventType())
+           
+    def updateMenuItems(self):
+        self.clearMenu()
+        for category in self.categories.rootItems():
+            self.addMenuItemForCategory(category, self)
+            
+    def addMenuItemForCategory(self, category, menu):
+        uiCommand = self.uiCommandClass(category=category, viewer=self.viewer)
+        uiCommand.appendToMenu(menu, self._window)
+        children = category.children()[:]
+        if children:
+            children.sort(key=lambda category: category.subject())
+            subMenu = wx.Menu()
+            for child in children:
+                self.addMenuItemForCategory(child, subMenu)
+            menu.AppendSubMenu(subMenu, _('%s (subcategories)')%category.subject())
+    
+    def enabled(self):
+        return bool(self.categories)
+    
                    
 class StartEffortForTaskMenu(DynamicMenu):
     def __init__(self, taskBarIcon, tasks, parentMenu=None, labelInParentMenu=''):
@@ -642,7 +691,7 @@ class StartEffortForTaskMenu(DynamicMenu):
     
 
 class TaskPopupMenu(Menu):
-    def __init__(self, mainwindow, settings, tasks, efforts, taskViewer):
+    def __init__(self, mainwindow, settings, tasks, efforts, categories, taskViewer):
         super(TaskPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.EditCut(viewer=taskViewer),
@@ -677,6 +726,9 @@ class TaskPopupMenu(Menu):
             self.appendUICommands(
                 uicommand.TaskAddNote(viewer=taskViewer,
                                       settings=settings))
+        self.appendMenu(_('&Toggle category'),
+                        ToggleCategoryMenu(mainwindow, categories=categories,
+                                           viewer=taskViewer), 'category')
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 None,
@@ -753,7 +805,7 @@ class CategoryPopupMenu(Menu):
 
 
 class NotePopupMenu(Menu):
-    def __init__(self, mainwindow, settings, notes, noteViewer):
+    def __init__(self, mainwindow, settings, notes, categories, noteViewer):
         super(NotePopupMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.EditCut(viewer=noteViewer),
@@ -769,7 +821,11 @@ class NotePopupMenu(Menu):
             None,
             uicommand.AddNoteAttachment(viewer=noteViewer, settings=settings),
             uicommand.OpenAllNoteAttachments(viewer=noteViewer,
-                                             settings=settings),
+                                             settings=settings))
+        self.appendMenu(_('&Toggle category'),
+                        ToggleCategoryMenu(mainwindow, categories=categories,
+                                           viewer=noteViewer), 'category')
+        self.appendUICommands(
             None,
             uicommand.ViewExpandSelected(viewer=noteViewer),
             uicommand.ViewCollapseSelected(viewer=noteViewer))

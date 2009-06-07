@@ -56,7 +56,7 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
             uicommand.NoteEdit(viewer=self, notes=self.presentation()),
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
             menu.NotePopupMenu(self.parent, self.settings, self.presentation(),
-                               self), 
+                               self.taskFile.categories(), self), 
             menu.ColumnPopupMenu(self),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList)

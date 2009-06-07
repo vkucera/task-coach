@@ -171,6 +171,9 @@ class Viewer(wx.Panel):
     def widgetCreationKeywordArguments(self):
         return {}
 
+    def isViewerContainer(self):
+        return False
+    
     def isShowingTasks(self): 
         return False
 
