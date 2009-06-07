@@ -54,7 +54,7 @@ class SyncMLConfigNode(object):
 
 def createDefaultSyncConfig(uid):
     cfg = SyncMLConfigNode('root')
-    root = SyncMLConfigNode('TaskCoach-%s' % uid)
+    root = SyncMLConfigNode('TaskCoach_%s' % uid)
     cfg.addChild(root)
     spds = SyncMLConfigNode('spds')
     root.addChild(spds)
@@ -62,9 +62,9 @@ def createDefaultSyncConfig(uid):
     spds.addChild(sources)
     syncml = SyncMLConfigNode('syncml')
     spds.addChild(syncml)
-    tasks = SyncMLConfigNode('TaskCoach-%s.Tasks' % uid)
+    tasks = SyncMLConfigNode('TaskCoach_%s_Tasks' % uid)
     sources.addChild(tasks)
-    notes = SyncMLConfigNode('TaskCoach-%s.Notes' % uid)
+    notes = SyncMLConfigNode('TaskCoach_%s_Notes' % uid)
     sources.addChild(notes)
     auth = SyncMLConfigNode('Auth')
     syncml.addChild(auth)

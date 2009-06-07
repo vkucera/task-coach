@@ -270,7 +270,10 @@ class XMLReader(object):
                     if childCfgNode.name == node.tag:
                         break
                 else:
-                    childCfgNode = SyncMLConfigNode(node.tag)
+                    tag = node.tag
+                    if self.__tskversion <= 24:
+                        tag = tag.replace('-', '_').replace('.', '_')
+                    childCfgNode = SyncMLConfigNode(tag)
                     cfgNode.addChild(childCfgNode)
                 self._parseSyncMLNodes(node, childCfgNode)
 

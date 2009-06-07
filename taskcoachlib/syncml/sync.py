@@ -97,7 +97,7 @@ class Synchronizer(wx.ProgressDialog):
         super(Synchronizer, self).__init__(_('Synchronization'),
                                            _('Synchronizing. Please wait.\n\n\n'))
 
-        self.clientName = 'TaskCoach-%s' % taskFile.guid().encode('UTF-8')
+        self.clientName = 'TaskCoach_%s' % taskFile.guid().encode('UTF-8')
         self.reportCallback = reportCallback
         self.conflictCallback = conflictCallback
         self.taskFile = taskFile
@@ -108,14 +108,14 @@ class Synchronizer(wx.ProgressDialog):
         self.password = password.encode('UTF-8')
         self.url = cfg[self.clientName]['spds']['syncml']['Conn'].get('syncUrl').encode('UTF-8')
 
-        self.synctasks = cfg[self.clientName]['spds']['sources']['%s.Tasks' % self.clientName].get('dosync') == 'True'
-        self.syncnotes = cfg[self.clientName]['spds']['sources']['%s.Notes' % self.clientName].get('dosync') == 'True'
+        self.synctasks = cfg[self.clientName]['spds']['sources']['%s_Tasks' % self.clientName].get('dosync') == 'True'
+        self.syncnotes = cfg[self.clientName]['spds']['sources']['%s_Notes' % self.clientName].get('dosync') == 'True'
 
-        self.taskdbname = cfg[self.clientName]['spds']['sources']['%s.Tasks' % self.clientName].get('uri').encode('UTF-8')
-        self.notedbname = cfg[self.clientName]['spds']['sources']['%s.Notes' % self.clientName].get('uri').encode('UTF-8')
+        self.taskdbname = cfg[self.clientName]['spds']['sources']['%s_Tasks' % self.clientName].get('uri').encode('UTF-8')
+        self.notedbname = cfg[self.clientName]['spds']['sources']['%s_Notes' % self.clientName].get('uri').encode('UTF-8')
 
-        self.taskmode = cfg[self.clientName]['spds']['sources']['%s.Tasks' % self.clientName].get('preferredsyncmode')
-        self.notemode = cfg[self.clientName]['spds']['sources']['%s.Notes' % self.clientName].get('preferredsyncmode')
+        self.taskmode = cfg[self.clientName]['spds']['sources']['%s_Tasks' % self.clientName].get('preferredsyncmode')
+        self.notemode = cfg[self.clientName]['spds']['sources']['%s_Notes' % self.clientName].get('preferredsyncmode')
 
     def init(self):
         self.dmt = TaskCoachDMTClientConfig(self.taskFile.syncMLConfig(), self.clientName)
@@ -147,11 +147,11 @@ class Synchronizer(wx.ProgressDialog):
 
         if self.synctasks:
             try:
-                cfg = self.dmt.getSyncSourceConfig('%s.Tasks' % self.clientName)
+                cfg = self.dmt.getSyncSourceConfig('%s_Tasks' % self.clientName)
             except ValueError:
                 cfg = SyncSourceConfig()
 
-            cfg.name = '%s.Tasks' % self.clientName
+            cfg.name = '%s_Tasks' % self.clientName
             cfg.URI = self.taskdbname
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/vcard:3.0'
@@ -162,17 +162,17 @@ class Synchronizer(wx.ProgressDialog):
             src = TaskSource(self,
                              self.taskFile.tasks(),
                              self.taskFile.categories(),
-                             '%s.Tasks' % self.clientName, cfg)
+                             '%s_Tasks' % self.clientName, cfg)
             src.preferredSyncMode = globals()[self.taskmode]
             self.sources.append(src)
 
         if self.syncnotes:
             try:
-                cfg = self.dmt.getSyncSourceConfig('%s.Notes' % self.clientName)
+                cfg = self.dmt.getSyncSourceConfig('%s_Notes' % self.clientName)
             except ValueError:
                 cfg = SyncSourceConfig()
 
-            cfg.name = '%s.Notes' % self.clientName
+            cfg.name = '%s_Notes' % self.clientName
             cfg.URI = self.notedbname
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/plain'
@@ -182,7 +182,7 @@ class Synchronizer(wx.ProgressDialog):
 
             src = NoteSource(self,
                              self.taskFile.notes(),
-                             '%s.Notes' % self.clientName, cfg)
+                             '%s_Notes' % self.clientName, cfg)
             src.preferredSyncMode = globals()[self.notemode]
             self.sources.append(src)
     
