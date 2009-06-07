@@ -11,6 +11,7 @@
 #import "TaskCell.h"
 #import "TextFieldCell.h"
 #import "SwitchCell.h"
+#import "DateCell.h"
 #import "DescriptionCell.h"
 
 #import "Configuration.h"
@@ -22,6 +23,7 @@ static CellFactory *_cellFactory = NULL;
 @synthesize taskCellTemplate;
 @synthesize textFieldCellTemplate;
 @synthesize switchCellTemplate;
+@synthesize dateCellTemplate;
 @synthesize descriptionCellTemplate;
 
 + (CellFactory *)cellFactory
@@ -61,6 +63,12 @@ static CellFactory *_cellFactory = NULL;
 {
 	[[NSBundle mainBundle] loadNibNamed:@"SwitchCell" owner:self options:nil];
 	return switchCellTemplate;
+}
+
+- (DateCell *)createDateCell
+{
+	[[NSBundle mainBundle] loadNibNamed:@"DateCell" owner:self options:nil];
+	return dateCellTemplate;
 }
 
 - (DescriptionCell *)createDescriptionCell

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "SwitchCell.h"
+#import "DateCell.h"
 #import "DescriptionCell.h"
 
 @class Task;
@@ -18,11 +19,8 @@
 	Task *task;
 	NSMutableArray *cells;
 	
-	SwitchCell *startDateCell;
-	UITableViewCell *startDateValueCell;
-	
-	SwitchCell *dueDateCell;
-	UITableViewCell *dueDateValueCell;
+	DateCell *startDateCell;
+	DateCell *dueDateCell;
 	
 	DescriptionCell *descriptionCell;
 

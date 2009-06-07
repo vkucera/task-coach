@@ -75,6 +75,8 @@
 		A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975370F26572200622396 /* TaskCellLeft.xib */; };
 		A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975380F26572200622396 /* TaskCellRight.xib */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
+		A6B264D00FDBCB9400FF2AD0 /* DateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */; };
+		A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */; };
 		A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A6B7A5B20FA45E110067B76A /* iTunesArtwork */; };
 		A6C30BEB0F48218C00A04E7C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A6C30BEA0F48218C00A04E7C /* Default.png */; };
 		A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C9843D0F2B77C40088A73F /* GUIDState.m */; };
@@ -215,6 +217,9 @@
 		A6A975380F26572200622396 /* TaskCellRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRight.xib; sourceTree = SOURCE_ROOT; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
 		A6AEE77E0F21CFA00061CF77 /* Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Network.m; path = Network/Network.m; sourceTree = "<group>"; };
+		A6B264CE0FDBCB9400FF2AD0 /* DateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateCell.h; sourceTree = "<group>"; };
+		A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateCell.m; sourceTree = "<group>"; };
+		A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateCell.xib; sourceTree = SOURCE_ROOT; };
 		A6B7A5B20FA45E110067B76A /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		A6C30BEA0F48218C00A04E7C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		A6C9843C0F2B77C40088A73F /* GUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDState.h; path = Synchronization/GUIDState.h; sourceTree = "<group>"; };
@@ -525,6 +530,9 @@
 				A6DA5C770F3D87F300372358 /* DescriptionCell.xib */,
 				A63CC07F0F5170FC003669FD /* TaskCellBig.h */,
 				A63CC0800F5170FC003669FD /* TaskCellBig.m */,
+				A6B264CE0FDBCB9400FF2AD0 /* DateCell.h */,
+				A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */,
+				A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -614,6 +622,7 @@
 				A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */,
 				A60575FF0FA457590054E4C3 /* addtask.png in Resources */,
 				A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */,
+				A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,6 +685,7 @@
 				A67E47E70F5A938F00000A24 /* BrowserViewController.m in Sources */,
 				A67E47E80F5A938F00000A24 /* DomainViewController.m in Sources */,
 				A67E47E90F5A938F00000A24 /* SimpleEditViewController.m in Sources */,
+				A6B264D00FDBCB9400FF2AD0 /* DateCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
