@@ -855,6 +855,36 @@
 			};
 			name = "Beta tests";
 		};
+		A695998F0FDBD8BA0014FFA6 /* Beta tests phase 3 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D412F355-5B8C-421F-B90F-BC4D592ABD23";
+				SDKROOT = iphoneos2.2.1;
+			};
+			name = "Beta tests phase 3";
+		};
+		A69599900FDBD8BA0014FFA6 /* Beta tests phase 3 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_NAME = TaskCoach;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C3ECCC5D-5DCC-4113-AB0D-CB322C428708";
+			};
+			name = "Beta tests phase 3";
+		};
 		A6B66D310FCB1946007B435E /* Beta tests phase 2 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -925,6 +955,7 @@
 				A634EFF90F88B4D400DFE235 /* Distribution */,
 				A67A0C0F0F6BA42100F48A82 /* Beta tests */,
 				A6B66D320FCB1946007B435E /* Beta tests phase 2 */,
+				A69599900FDBD8BA0014FFA6 /* Beta tests phase 3 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -937,6 +968,7 @@
 				A634EFF80F88B4D400DFE235 /* Distribution */,
 				A67A0C0E0F6BA42100F48A82 /* Beta tests */,
 				A6B66D310FCB1946007B435E /* Beta tests phase 2 */,
+				A695998F0FDBD8BA0014FFA6 /* Beta tests phase 3 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

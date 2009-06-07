@@ -92,7 +92,7 @@
 							</object>
 							<object class="IBUISwitch" id="709123094">
 								<reference key="NSNextResponder" ref="628045312"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">289</int>
 								<string key="NSFrame">{{206, 8}, {94, 27}}</string>
 								<reference key="NSSuperview" ref="628045312"/>
 								<bool key="IBUIOpaque">NO</bool>
@@ -403,6 +403,5 @@
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.LastKnownRelativeProjectPath">TaskCoach.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<string key="IBCocoaTouchPluginVersion">3.0</string>
 	</data>
 </archive>
