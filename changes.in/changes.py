@@ -34,7 +34,8 @@ show the priority until the up or down button was clicked (Mac OS X only).'''),
 package file (.deb) because Ubuntu 9.04 is still shipping 2.8.9.1 (Ubuntu 
 only).''', '2798457'),
         Bug('''When logging off or shutting down the computer save unsaved 
-changes (Linux only).''')
+changes (Linux only).'''),
+        Bug('''When using SyncML the task file could get corrupted.''')
         ]
     ),
     

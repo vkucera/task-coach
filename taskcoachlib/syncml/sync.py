@@ -1,7 +1,8 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
-
+Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2009 Frank Niessink <frank@niessink.com>
+ 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -25,6 +26,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.meta import data
 
 import sys, wx
+
 
 class TaskCoachManagementNode(ManagementNode):
     def __init__(self, syncMLConfig, *args, **kwargs):
@@ -97,7 +99,7 @@ class Synchronizer(wx.ProgressDialog):
         super(Synchronizer, self).__init__(_('Synchronization'),
                                            _('Synchronizing. Please wait.\n\n\n'))
 
-        self.clientName = 'TaskCoach_%s' % taskFile.guid().encode('UTF-8')
+        self.clientName = 'TaskCoach-%s' % taskFile.guid().encode('UTF-8')
         self.reportCallback = reportCallback
         self.conflictCallback = conflictCallback
         self.taskFile = taskFile
@@ -108,14 +110,14 @@ class Synchronizer(wx.ProgressDialog):
         self.password = password.encode('UTF-8')
         self.url = cfg[self.clientName]['spds']['syncml']['Conn'].get('syncUrl').encode('UTF-8')
 
-        self.synctasks = cfg[self.clientName]['spds']['sources']['%s_Tasks' % self.clientName].get('dosync') == 'True'
-        self.syncnotes = cfg[self.clientName]['spds']['sources']['%s_Notes' % self.clientName].get('dosync') == 'True'
+        self.synctasks = cfg[self.clientName]['spds']['sources']['%s.Tasks' % self.clientName].get('dosync') == 'True'
+        self.syncnotes = cfg[self.clientName]['spds']['sources']['%s.Notes' % self.clientName].get('dosync') == 'True'
 
-        self.taskdbname = cfg[self.clientName]['spds']['sources']['%s_Tasks' % self.clientName].get('uri').encode('UTF-8')
-        self.notedbname = cfg[self.clientName]['spds']['sources']['%s_Notes' % self.clientName].get('uri').encode('UTF-8')
+        self.taskdbname = cfg[self.clientName]['spds']['sources']['%s.Tasks' % self.clientName].get('uri').encode('UTF-8')
+        self.notedbname = cfg[self.clientName]['spds']['sources']['%s.Notes' % self.clientName].get('uri').encode('UTF-8')
 
-        self.taskmode = cfg[self.clientName]['spds']['sources']['%s_Tasks' % self.clientName].get('preferredsyncmode')
-        self.notemode = cfg[self.clientName]['spds']['sources']['%s_Notes' % self.clientName].get('preferredsyncmode')
+        self.taskmode = cfg[self.clientName]['spds']['sources']['%s.Tasks' % self.clientName].get('preferredsyncmode')
+        self.notemode = cfg[self.clientName]['spds']['sources']['%s.Notes' % self.clientName].get('preferredsyncmode')
 
     def init(self):
         self.dmt = TaskCoachDMTClientConfig(self.taskFile.syncMLConfig(), self.clientName)
@@ -147,11 +149,11 @@ class Synchronizer(wx.ProgressDialog):
 
         if self.synctasks:
             try:
-                cfg = self.dmt.getSyncSourceConfig('%s_Tasks' % self.clientName)
+                cfg = self.dmt.getSyncSourceConfig('%s.Tasks' % self.clientName)
             except ValueError:
                 cfg = SyncSourceConfig()
 
-            cfg.name = '%s_Tasks' % self.clientName
+            cfg.name = '%s.Tasks' % self.clientName
             cfg.URI = self.taskdbname
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/vcard:3.0'
@@ -162,17 +164,17 @@ class Synchronizer(wx.ProgressDialog):
             src = TaskSource(self,
                              self.taskFile.tasks(),
                              self.taskFile.categories(),
-                             '%s_Tasks' % self.clientName, cfg)
+                             '%s.Tasks' % self.clientName, cfg)
             src.preferredSyncMode = globals()[self.taskmode]
             self.sources.append(src)
 
         if self.syncnotes:
             try:
-                cfg = self.dmt.getSyncSourceConfig('%s_Notes' % self.clientName)
+                cfg = self.dmt.getSyncSourceConfig('%s.Notes' % self.clientName)
             except ValueError:
                 cfg = SyncSourceConfig()
 
-            cfg.name = '%s_Notes' % self.clientName
+            cfg.name = '%s.Notes' % self.clientName
             cfg.URI = self.notedbname
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/plain'
@@ -182,7 +184,7 @@ class Synchronizer(wx.ProgressDialog):
 
             src = NoteSource(self,
                              self.taskFile.notes(),
-                             '%s_Notes' % self.clientName, cfg)
+                             '%s.Notes' % self.clientName, cfg)
             src.preferredSyncMode = globals()[self.notemode]
             self.sources.append(src)
     

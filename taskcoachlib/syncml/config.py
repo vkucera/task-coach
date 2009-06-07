@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,9 +53,10 @@ class SyncMLConfigNode(object):
                 return child
         raise KeyError, name
 
+
 def createDefaultSyncConfig(uid):
     cfg = SyncMLConfigNode('root')
-    root = SyncMLConfigNode('TaskCoach_%s' % uid)
+    root = SyncMLConfigNode('TaskCoach-%s' % uid)
     cfg.addChild(root)
     spds = SyncMLConfigNode('spds')
     root.addChild(spds)
@@ -62,9 +64,9 @@ def createDefaultSyncConfig(uid):
     spds.addChild(sources)
     syncml = SyncMLConfigNode('syncml')
     spds.addChild(syncml)
-    tasks = SyncMLConfigNode('TaskCoach_%s_Tasks' % uid)
+    tasks = SyncMLConfigNode('TaskCoach-%s.Tasks' % uid)
     sources.addChild(tasks)
-    notes = SyncMLConfigNode('TaskCoach_%s_Notes' % uid)
+    notes = SyncMLConfigNode('TaskCoach-%s.Notes' % uid)
     sources.addChild(notes)
     auth = SyncMLConfigNode('Auth')
     syncml.addChild(auth)

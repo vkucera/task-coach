@@ -1,7 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import os, re
 
 # The buildbot sets TCVERSION when building snapshots.
 version = os.environ.get('TCVERSION', '0.72.10')
-tskversion = 25 # Current version number of the task file format
+tskversion = 24 # Current version number of the task file format
 release_day = '0' # Day number of the release, 1-31, as string
 release_month = 'June' # Month of the release in plain English 
 release_year = '2009' # Year of the release as string

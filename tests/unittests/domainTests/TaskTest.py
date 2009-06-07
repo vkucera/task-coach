@@ -1039,7 +1039,7 @@ class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTests):
         self.registerObserver(self.task1_1effort1.colorChangedEventType(), 
                               self.task1_1effort1)
         self.task.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.events[0].value())
+        self.assertEqual([wx.RED], [event.value() for event in self.events])
         
 
 class TaskWithGrandChildAndEffortTest(TaskTestCase, CommonTaskTests):

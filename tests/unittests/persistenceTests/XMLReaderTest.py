@@ -1022,3 +1022,22 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
             '<property name="name">\nvalue\n</property>\n'
             '</syncml>\n</tasks>\n')
         self.assertEqual('value', syncmlConfig.get('name'))
+        
+    def testSyncMLConfigWithNewLinesInXMLNodes(self):
+        ''' Release 0.72.9 (and earlier?) had a bug where tags in the syncml
+            config information would be split across multiple lines. Fixed in
+            release 0.72.10. ''' 
+        expectedGUID = '0000011d209a4b6c3f9f7c32000a00b100240032'
+        actualGUID = self.writeAndReadGUID(\
+            '<tasks>\n<syncml><TaskCoach-\n'
+            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
+            '><spds><sources><TaskCoach-\n'
+            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
+            '.Tasks/><TaskCoach-\n'
+            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
+            '.Notes/></sources><syncml><Auth/><Conn/></syncml></spds></TaskCoach-\n'
+            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
+            '><TaskCoach-0000011d209a4b6c3f9f7c32000a00b100240032><spds><sources><TaskCoach-0000011d209a4b6c3f9f7c32000a00b100240032.Tasks/><TaskCoach-0000011d209a4b6c3f9f7c32000a00b100240032.Notes/></sources><syncml><Auth/><Conn/></syncml></spds></TaskCoach-0000011d209a4b6c3f9f7c32000a00b100240032></syncml><guid>\n'
+            '0000011d209a4b6c3f9f7c32000a00b100240032\n'
+            '</guid></tasks>')
+        self.assertEqual(expectedGUID, actualGUID)
