@@ -35,7 +35,10 @@ a horizontal time scale.''', '2533644', '1230080'),
 or month, a total line is shown for each period.''', '1962219'),
         Feature('''The search control in the toolbar of viewers now includes
 an option to search descriptions too.''', '1816660', '2020347', '2157010',
-'2510045')
+'2510045'),
+        Feature('''Add or remove tasks and notes from categories using the
+task and note menu's in the menubar or the right-click popup menu for tasks
+and notes.''', '1931323', '2011031', '1918685')
     ]),
 
 Release('0.72.9', 'May 28, 2009',

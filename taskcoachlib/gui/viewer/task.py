@@ -76,7 +76,7 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
     def createTaskPopupMenu(self):
         return menu.TaskPopupMenu(self.parent, self.settings,
                                   self.presentation(), self.taskFile.efforts(),
-                                  self)
+                                  self.taskFile.categories(), self)
 
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''

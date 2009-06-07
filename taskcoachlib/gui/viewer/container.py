@@ -42,6 +42,9 @@ class ViewerContainer(object):
         except ValueError:
             self.__desiredPageNumber = 0
         super(ViewerContainer, self).__init__(*args, **kwargs)
+        
+    def isViewerContainer(self):
+        return True
 
     def bindContainerWidgetEvents(self):
         eventsAndHandlers = dict(pageClosedEvent=self.onPageClosed, 
