@@ -48,43 +48,17 @@
 		descriptionCell.textView.text = task.description;
 		[cells addObject:descriptionCell];
 		
-		startDateCell = [[CellFactory cellFactory] createSwitchCell];
+		startDateCell = [[CellFactory cellFactory] createDateCell];
 		[startDateCell setDelegate:self];
 		startDateCell.label.text = NSLocalizedString(@"Start date", @"Task details start date label");
-		[startDateCell.switch_ setOn:(task.startDate != nil)];
+		[startDateCell setDate:task.startDate];
 		[cells addObject:startDateCell];
 		
-		startDateValueCell = [[UITableViewCell alloc] initWithFrame:CGRectZero];
-		startDateValueCell.indentationLevel = 1;
-		
-		if (task.startDate != nil)
-		{
-#ifdef __IPHONE_3_0
-			startDateValueCell.textLabel.text = task.startDate;
-#else
-			startDateValueCell.text = task.startDate;
-#endif
-			[cells addObject:startDateValueCell];
-		}
-		
-		dueDateCell = [[CellFactory cellFactory] createSwitchCell];
+		dueDateCell = [[CellFactory cellFactory] createDateCell];
 		[dueDateCell setDelegate:self];
 		dueDateCell.label.text = NSLocalizedString(@"Due date", @"Task details due date label");
-		[dueDateCell.switch_ setOn:(task.dueDate != nil)];
+		[dueDateCell setDate:task.dueDate];
 		[cells addObject:dueDateCell];
-		
-		dueDateValueCell = [[UITableViewCell alloc] initWithFrame:CGRectZero];
-		dueDateValueCell.indentationLevel = 1;
-		
-		if (task.dueDate != nil)
-		{
-#ifdef __IPHONE_3_0
-			dueDateValueCell.textLabel.text = task.dueDate;
-#else
-			dueDateValueCell.text = task.dueDate;
-#endif
-			[cells addObject:dueDateValueCell];
-		}
 	}
 
 	return self;
@@ -94,8 +68,6 @@
 {
 	[task release];
 	[cells release];
-	[startDateValueCell release];
-	[dueDateValueCell release];
 
 	[super dealloc];
 }
@@ -133,14 +105,8 @@
 {
 	if (cell == startDateCell)
 	{
-		NSIndexPath *indexPath = [self.tableView indexPathForCell:startDateCell];
-		indexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
-
 		if (cell.switch_.on)
 		{
-			[cells insertObject:startDateValueCell atIndex:indexPath.row];
-			[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
-
 			DatePickerViewController *ctrl = [[DatePickerViewController alloc] initWithDate:task.startDate target:self action:@selector(onPickStartDate:)];
 			[self.navigationController presentModalViewController:ctrl animated:YES];
 			[ctrl release];
@@ -149,21 +115,13 @@
 		{
 			task.startDate = nil;
 			[self saveTask];
-
-			[cells removeObjectAtIndex:indexPath.row];
-			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
+			[startDateCell setDate:nil];
 		}
 	}
 	else if (cell == dueDateCell)
 	{
-		NSIndexPath *indexPath = [self.tableView indexPathForCell:dueDateCell];
-		indexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
-		
 		if (cell.switch_.on)
 		{
-			[cells insertObject:dueDateValueCell atIndex:indexPath.row];
-			[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
-			
 			DatePickerViewController *ctrl = [[DatePickerViewController alloc] initWithDate:task.dueDate target:self action:@selector(onPickDueDate:)];
 			[self.navigationController presentModalViewController:ctrl animated:YES];
 			[ctrl release];
@@ -172,9 +130,7 @@
 		{
 			task.dueDate = nil;
 			[self saveTask];
-			
-			[cells removeObjectAtIndex:indexPath.row];
-			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
+			[dueDateCell setDate:nil];
 		}
 	}
 	else
@@ -194,19 +150,11 @@
 	}
 	else if (!task.startDate)
 	{
-		[cells removeObject:startDateValueCell];
-		NSIndexPath *indexPath = [self.tableView indexPathForCell:startDateValueCell];
-		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
 		[startDateCell.switch_ setOn:NO animated:YES];
 	}
 	
 	[self saveTask];
-	
-#ifdef __IPHONE_3_0
-	startDateValueCell.textLabel.text = task.startDate;
-#else
-	startDateValueCell.text = task.startDate;
-#endif
+	[startDateCell setDate:task.startDate];
 }
 
 - (void)onPickDueDate:(NSDate *)date
@@ -219,19 +167,11 @@
 	}
 	else if (!task.dueDate)
 	{
-		[cells removeObject:dueDateValueCell];
-		NSIndexPath *indexPath = [self.tableView indexPathForCell:dueDateValueCell];
-		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
 		[dueDateCell.switch_ setOn:NO animated:YES];
 	}
 	
 	[self saveTask];
-	
-#ifdef __IPHONE_3_0
-	dueDateValueCell.textLabel.text = task.dueDate;
-#else
-	dueDateValueCell.text = task.dueDate;
-#endif
+	[dueDateCell setDate:task.dueDate];
 }
 
 #pragma mark Table view methods
@@ -261,11 +201,11 @@
 	UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
 	DatePickerViewController *ctrl = nil;
 
-	if (cell == startDateValueCell)
+	if (cell == startDateCell)
 	{
 		ctrl = [[DatePickerViewController alloc] initWithDate:task.startDate target:self action:@selector(onPickStartDate:)];
 	}
-	else if (cell == dueDateValueCell)
+	else if (cell == dueDateCell)
 	{
 		ctrl = [[DatePickerViewController alloc] initWithDate:task.dueDate target:self action:@selector(onPickDueDate:)];
 	}
@@ -282,7 +222,7 @@
 	UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
 	
 	if (cell == descriptionCell)
-		return 160;
+		return 220;
 	return 44;
 }
 
