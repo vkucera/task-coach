@@ -49,11 +49,13 @@ def readMail(filename, readContent=True):
         # with big attachments, it may take *very* long.
 
         try:
-            content.decode(wx.Locale_GetSystemEncodingName())
+            encoding = wx.Locale_GetSystemEncodingName()
+            if not encoding:
+                # This happens on Mac OS...
+                encoding = 'UTF-8'
+            content.decode(encoding)
         except UnicodeError:
             encoding = chardet.detect(content)['encoding']
-        else:
-            encoding = wx.Locale_GetSystemEncodingName()
 
     if subject is None:
         subject = _('Untitled e-mail')
