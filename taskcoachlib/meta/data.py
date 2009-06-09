@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,23 +19,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, re
 
-name = 'Task Coach'
-description = 'Your friendly task manager'
+# Edit these for every release:
 
 # The buildbot sets TCVERSION when building snapshots.
-version = os.environ.get('TCVERSION', '0.72.9')
+version = os.environ.get('TCVERSION', '0.72.10')
 tskversion = 24 # Current version number of the task file format
+release_day = '9' # Day number of the release, 1-31, as string
+release_month = 'June' # Month of the release in plain English 
+release_year = '2009' # Year of the release as string
+release_status = 'alpha' # One of 'alpha', 'beta', 'stable'
 
-release_month = 'May'
-release_month_nr = '%02d'%(['January', 'February', 'March', 'April', 'May', 
-                    'June', 'July', 'August', 'September', 'October', 
-                    'November', 'December'].index(release_month) + 1)
-release_day = '28'
+# No editing needed below this line for doing a release.
+
+months = ['January', 'February', 'March', 'April', 'May', 'June', 
+          'July', 'August', 'September', 'October', 'November', 'December']
+release_month_nr = '%02d'%(months.index(release_month) + 1)
 release_day_nr = '%02d'%int(release_day)
-release_year = '2009'
-release_status = 'alpha'
 date = release_month + ' ' + release_day + ', ' + release_year
 
+name = 'Task Coach'
+description = 'Your friendly task manager'
 long_description = '%(name)s is a simple open source todo manager to manage' \
 ' personal tasks and todo lists. It grew out of a frustration that ' \
 'well-known task managers, such as those provided with Outlook or Lotus ' \
@@ -83,7 +87,7 @@ license_notice_html = re.sub(r'<http([^>]*)>', r'<a href="http\1" target="_blank
 
 platform = 'Any'
 pythonversion = '2.5'
-wxpythonversionnumber = '2.8.9.2'
+wxpythonversionnumber = '2.8.9.1'
 wxpythonversion = '%s-unicode'%wxpythonversionnumber
 
 languages = {

@@ -28,12 +28,12 @@ Release steps:
 - Run this script (phase1) to upload the distributions to Sourceforge, 
   generate MD5 digests and generate website.
 - Add file releases on Sourceforge by hand.
+- Adapt download pages on Sourceforge for Windows and Mac OS X.
 - Run this script (phase2) to publish to Hypernation.net website, 
   Chello (Frank's ISP), Twitter and PyPI (Python Package Index) and to send 
   the announcement email.
 - Post project news on Sourceforge by hand.
 - Post release notification on Freshmeat by hand.
-- Post announcement on Launchpad by hand.
 - Tag source code with tag ReleaseX_Y_Z.
 - Create branch if feature release.
 - Merge changes between this release and the previous release to the trunk.
@@ -207,6 +207,7 @@ def uploadWebsiteToWebsiteHost(settings, websiteName):
         ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('website.out')
         ftp.put('.')
+        ftp.put('.htaccess')
         ftp.quit()
         os.chdir('..')
         print 'Done uploading website to %s.'%websiteName

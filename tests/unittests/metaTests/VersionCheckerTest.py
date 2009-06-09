@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ class VersionCheckerTest(test.TestCase):
         self.assertEqual(version, self.settings.get('version', 'notified'))
         
     def testLatestVersionIsNewerThanLastVersionNotified(self):
-        self.assertLastVersionNotified('99.99')
+        self.assertLastVersionNotified('99.99.99')
         
     def testLatestVersionEqualsLastVersionNotified(self):
         self.assertLastVersionNotified(meta.data.version)
@@ -84,3 +84,10 @@ class VersionCheckerTest(test.TestCase):
         checker = self.checkVersion(meta.data.version)
         self.failIf(checker.userNotified)
 
+    def test9IsNotNewerThan10(self):
+        currentVersion = meta.data.version
+        meta.data.version = '0.72.10'
+        self.settings.set('version', 'notified', '0.72.8')
+        checker = self.checkVersion('0.72.9')
+        self.failIf(checker.userNotified)
+        meta.data.version = currentVersion

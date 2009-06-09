@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import time, re, os, sys, datetime
+import time, re, os, sys, datetime, StringIO
 import xml.etree.ElementTree as ET
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
@@ -50,6 +50,8 @@ class XMLReader(object):
         self.__fd = fd
 
     def read(self):
+        if self._hasBrokenLines():
+            self._fixBrokenLines()
         parser = PIParser()
         tree = ET.parse(self.__fd, parser)
         root = tree.getroot()
@@ -79,7 +81,25 @@ class XMLReader(object):
         syncMLConfig = self._parseSyncMLNode(root, guid)
 
         return tasks, categories, notes, syncMLConfig, guid
-        
+    
+    def _hasBrokenLines(self):
+        ''' tskversion 24 may contain newlines in element tags. '''
+        hasBrokenLines = '><spds><sources><TaskCoach-\n' in self.__fd.read()
+        self.__fd.seek(0)
+        return hasBrokenLines
+    
+    def _fixBrokenLines(self):
+        ''' Remove spurious newlines from element tags. '''
+        self.__origFd = self.__fd
+        self.__fd = StringIO.StringIO()
+        lines = self.__origFd.readlines()
+        for index in xrange(len(lines)):
+            if lines[index].endswith('<TaskCoach-\n') or lines[index].endswith('</TaskCoach-\n'):
+                lines[index] = lines[index][:-1] # Remove newline
+                lines[index+1] = lines[index+1][:-1] # Remove newline
+        self.__fd.write(''.join(lines))
+        self.__fd.seek(0)
+
     def _parseTaskNodes(self, node):
         return [self._parseTaskNode(child) for child in node.findall('task')]
                 
@@ -270,12 +290,13 @@ class XMLReader(object):
                     if childCfgNode.name == node.tag:
                         break
                 else:
-                    childCfgNode = SyncMLConfigNode(node.tag)
+                    tag = node.tag
+                    childCfgNode = SyncMLConfigNode(tag)
                     cfgNode.addChild(childCfgNode)
                 self._parseSyncMLNodes(node, childCfgNode)
 
     def __parseGUIDNode(self, node):
-        guid = self._parseText(node)
+        guid = self._parseText(node).strip()
         return guid if guid else generate()
         
     def _parseAttachmentNodes(self, parent):
