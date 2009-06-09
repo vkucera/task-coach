@@ -41,7 +41,11 @@ class ChangeHistoryTestCase(test.TestCase):
                         self.latestRelease.featuresAdded)
         
     def testLatestReleaseNumberIsHigherThanPreviousReleaseNumber(self):
-        self.failUnless(self.latestRelease.number > changes.releases[1].number)
+        def major_minor_patch(release_number):
+            return tuple([int(number) for number in release_number.split('.')])
+        latestRelease = major_minor_patch(self.latestRelease.number)
+        latestButOneRelease = major_minor_patch(changes.releases[1].number)
+        self.failUnless(latestRelease > latestButOneRelease)
         
     def testLatestReleaseSummaryLength(self):
         self.failUnless(10 <= len(self.latestRelease.summary) < 600)
