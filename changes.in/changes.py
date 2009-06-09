@@ -33,6 +33,7 @@ show the priority until the up or down button was clicked (Mac OS X only).'''),
         Bug('''Require wxPython 2.8.9.1 instead of 2.8.9.2 in the Debian 
 package file (.deb) because Ubuntu 9.04 is still shipping 2.8.9.1 (Ubuntu 
 only).''', '2798457'),
+        Bug('''Fix drag and drop from Outlook (Windows only).''', '2803013'),
         Bug('''When logging off or shutting down the computer save unsaved 
 changes (Linux only).'''),
         Bug('''When using SyncML the task file could get corrupted.''')
