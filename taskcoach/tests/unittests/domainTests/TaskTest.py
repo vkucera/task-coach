@@ -1035,6 +1035,12 @@ class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTests):
         self.task1_1.setHourlyFee(100)
         self.assertEqual(4800, self.task.revenue(recursive=True))
         
+    def testChildEffortColorNotification(self):
+        self.registerObserver(self.task1_1effort1.colorChangedEventType(), 
+                              self.task1_1effort1)
+        self.task.setColor(wx.RED)
+        self.assertEqual([wx.RED], [event.value() for event in self.events])
+        
 
 class TaskWithGrandChildAndEffortTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):

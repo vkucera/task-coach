@@ -41,11 +41,12 @@ class TestCase(unittest.TestCase):
         for item in expectedList:
             self.failUnless(item in actualList)
             
-    def registerObserver(self, eventType):
+    def registerObserver(self, eventType, eventSource=None):
         if not hasattr(self, 'events'):
             self.events = []
         from taskcoachlib import patterns
-        patterns.Publisher().registerObserver(self.onEvent, eventType=eventType)
+        patterns.Publisher().registerObserver(self.onEvent, eventType=eventType,
+                                              eventSource=eventSource)
         
     def onEvent(self, event):
         self.events.append(event)

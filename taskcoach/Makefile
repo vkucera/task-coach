@@ -70,6 +70,7 @@ taskcoachlib/persistence/xml/templates.py:
 website: changes
 	cd website.in; $(PYTHON) make.py; cd ..
 	$(PYTHON) tools/webchecker.py website.out/index.html
+	$(PYTHON) tools/webchecker.py website.out/index_fr.html
 
 epydoc:
 	$(EPYDOC) --parse-only -o epydoc.out taskcoachlib taskcoach.py

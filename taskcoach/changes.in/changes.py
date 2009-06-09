@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.73.0', 'May ?, 2009',
+Release('0.73.0', 'June ?, 2009',
     summary='''This release adds a timeline viewer, and support
 for synchronizing with a companion iPhone/iPod Touch device''',
     featuresAdded=[
@@ -41,6 +41,23 @@ task and note menu's in the menubar or the right-click popup menu for tasks
 and notes.''', '1931323', '2011031', '1918685')
     ]),
 
+Release('0.72.10', 'June 9, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When opening a task edit dialog, the priority field would not
+show the priority until the up or down button was clicked (Mac OS X only).'''),
+        Bug('''When opening a locked file, Task Coach would hang
+(Mac OS X only).'''),
+        Bug('''Require wxPython 2.8.9.1 instead of 2.8.9.2 in the Debian 
+package file (.deb) because Ubuntu 9.04 is still shipping 2.8.9.1 (Ubuntu 
+only).''', '2798457'),
+        Bug('''Fix drag and drop from Outlook (Windows only).''', '2803013'),
+        Bug('''When logging off or shutting down the computer save unsaved 
+changes (Linux only).'''),
+        Bug('''When using SyncML the task file could get corrupted.''')
+        ]
+    ),
+    
 Release('0.72.9', 'May 28, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[

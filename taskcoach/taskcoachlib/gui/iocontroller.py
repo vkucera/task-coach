@@ -85,7 +85,9 @@ class IOController(object):
         else:
             filename = self.__settings.get('file', 'lastfile')
         if filename:
-            self.open(filename)
+            # Use CallAfter so that the main window is opened first and any 
+            # error messages are shown on top of it
+            wx.CallAfter(self.open, filename)
             
     def open(self, filename=None, showerror=wx.MessageBox, 
              fileExists=os.path.exists, breakLock=False, lock=True, *args):
@@ -243,10 +245,18 @@ class IOController(object):
                             os.path.join(self.__settings.pathToTemplatesDir(),
                                          os.path.split(filename)[-1]))
 
-    def close(self):
+    def close(self, force=False):
         if self.__taskFile.needSave():
-            if not self.__saveUnsavedChanges():
-                return False
+            if force:
+                # No user interaction, since we're forced to close right now.
+                if self.__taskFile.filename():
+                    self._saveSave(self.__taskFile, 
+                                   lambda *args, **kwargs: None)
+                else:
+                    pass # No filename, we cannot ask, give up...
+            else:
+                if not self.__saveUnsavedChanges():
+                    return False
         self.__closeUnconditionally()
         return True
     

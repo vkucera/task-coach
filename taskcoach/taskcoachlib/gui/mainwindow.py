@@ -262,8 +262,8 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
     def displayMessage(self, message, pane=0):
         self.GetStatusBar().SetStatusText(message, pane)
 
-    def quit(self):
-        if not self.iocontroller.close():
+    def quit(self, force=False):
+        if not self.iocontroller.close(force=force):
             return
         # Remember what the user was working on: 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
