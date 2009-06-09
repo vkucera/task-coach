@@ -142,12 +142,12 @@ and <a href="http://www.wxpython.org/download.php"
 onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org/download');">wxPython</a>
 <strong>%(wxpythonversion)s</strong> (or newer).'''
 
-prerequisites_fr = unicode('''<a href="http://www.python.org/download/" 
+prerequisites_fr = '''<a href="http://www.python.org/download/" 
 onClick="javascript: pageTracker._trackPageview('/outgoing/python.org/download');">Python</a> 
 <strong>%(pythonversion)s</strong> 
 et <a href="http://www.wxpython.org/download.php" 
 onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org/download');">wxPython</a>
-<strong>%(wxpythonversion)s</strong> (ou plus récente).''', 'ISO-8859-1')
+<strong>%(wxpythonversion)s</strong> (ou plus récente).'''
 
 pages['download'] = \
 '''        <H3>Download %(name)s (release %(version)s)</H3>
