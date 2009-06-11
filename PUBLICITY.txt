@@ -1,5 +1,5 @@
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,16 +21,15 @@ Task Coach is listed at the following webpages:
 Task Coach Homepage    http://www.taskcoach.org
 Sourceforge homepage   http://www.sourceforge.net/projects/taskcoach
 Freshmeat homepage     http://freshmeat.net/projects/taskcoach
-wxPythonPit            http://wiki.wxpython.org/index.cgi/wxPythonPit_20Apps
+Launchpad homepage     http://launchpad.net/taskcoach
+wxPythonPit            http://wiki.wxpython.org/wxPythonPit%20Apps
 PythonInfo Wiki        http://www.python.org/moin/Applications
 Open Directory         http://dmoz.org/Computers/Software/Freeware/Personal_Information_Managers/
-Vaults of Parnassus    http://py.vaults.ca
-Python Packages Index  http://www.python.org/pypi
+Python Packages Index  http://pypi.python.org/pypi/TaskCoach/
 Freeware Home          http://www.freewarehome.com/ 
 Wikipedia              http://en.wikipedia.org/wiki/Task_Coach
 MacSoftwareUsingPython http://wiki.python.org/moin/MacPython/MacSoftwareUsingPython
-FSF/UNESCO Free Software Directory http://directory.fsf.org (submitted 2007-04-11)
 CNET Upload.com        http://www.upload.com
-Ohloh                  http://www.ohloh.net/projects/5109
+Ohloh                  http://www.ohloh.net/p/taskcoach
 Apple                  http://www.apple.com/downloads/macosx/unix_open_source/taskcoach.html
-CIA                    http://cia.vc/project/taskcoach
+CIA                    http://cia.vc/stats/project/taskcoach

@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -58,12 +59,6 @@ _TOC = _('''<h3>Table of contents</h3>
     <li><a href="#syncmllimits">Limitations</a></li>
     <li><a href="#syncmltrouble">Troubleshooting</a></li>
     <li><a href="#syncmlpurge">Purging deleted items</a></li>
-  </ul>
-</li>
-<li><a href="#iphone">iPhone and iPod Touch</a>
-  <ul>
-    <li><a href="#taskcoachiphone">Task Coach on the iPhone</a></li>
-    <li><a href="#iphoneconf">Configuration</a></li>
   </ul>
 </li>
 <li><a href="#templates">Task templates</a>
@@ -361,66 +356,6 @@ deleted items" menu item can be used when upgrading to 0.71.4 to clear
 all these unwanted items.</p>
 ''') % meta.metaDict
 
-_iPhoneSection = _('''<h3><a name="iphone">iPhone and iPod Touch</a></h3>
-''')
-
-_iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">Task Coach on the iPhone</a></h4>
-
-<p>There is an iPhone/iPod Touch companion app for Task Coach, available on
-Apple's AppStore. This app has few features right now, but allows you to take
-your tasks away and modify them:</p>
-
-<ul>
-  <li>Two-way synchronization with Task Coach on the desktop (only one task file
-      supported, but a later version will support multiple files)</li>
-  <li>Edit subject, description and dates</li>
-  <li>Hierarchical categories</li>
-  <li>Create new tasks and categories</li>
-  <li>Mark a task complete by tapping its status LED</li>
-</ul>
-
-<p>Features planned for the next version are:</p>
-
-<ul>
-  <li>Effort tracking</li>
-  <li>Editing of budget</li>
-  <li>Multiple task files</li>
-  <li>Multiple categories for a task</li>
-</ul>''')
-
-_iPhoneConfigurationSubsection = _('''<h4><a name="iphoneconf">Configuration</a></h4>
-
-<p>There are some settings for the iPhone app in the Settings application:</p>
-
-<ul>
-  <li>Show completed: whether to show completed tasks.</li>
-  <li>Icon position: the LED icon may show up either on the left side or the right side of the screen.</li>
-  <li>Compact mode: if this is enabled, the task list has smaller LEDs and don't show categories or dates.</li>
-  <li>Confirm complete: if enabled, a message box will pop up for confirmation when you mark a task complete by tapping its LED.</li>
-</ul>
-
-<p>Before synchronizing, you must also configure Task Coach on the desktop; in
-the preferences, in the "Features" tab, check "Enable iPhone synchronization".
-Restart Task Coach. Now, in the preferences, choose the "iPhone" tab and fill in
-at least the password.</p>
-
-<p>When you tap the "Sync" button in the category view, Task Coach
-will automatically detect running instances of Task Coach on your
-desktop and ask you to select one (you may have several instances
-running on different computers on your network, or several instances
-on the same computer). The name displayed is, by default, some string
-identifying the computer it's running on. To customize this, you may
-change the "Bonjour service name" in the configuration.</p>
-
-<p>Task Coach will remember the choosen instance and try it next time
-you synchronize; if it's not running, it will prompt you again.</p>
-
-<p>Note that this synchronization happens through the network; there is
-no need for the device to be connected through USB nor for iTunes to
-be running.</p>
-
-''')
-
 _templatesSection = _('''<h3><a name="templates">Task templates</a></h3>
 ''')
 
@@ -454,7 +389,6 @@ helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _emailSection + _aboutEmailSubsection + _emailAttachingSubsection + _emailCreatingSubsection + \
     _syncmlSection + _aboutSyncmlSubsection + _syncmlSetupSubsection + \
     _syncmlLimitsSubsection + _syncmlTroubleSubsection + _syncmlPurgeSubsection + \
-    _iPhoneSection + _iPhoneAboutSubsection + _iPhoneConfigurationSubsection + \
     _templatesSection + _aboutTemplatesSubsection + _usingTemplatesSubsection
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>

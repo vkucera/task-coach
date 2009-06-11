@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -268,8 +268,6 @@ class FeaturesPage(SettingsPage):
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
             helpText='restart')
         self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),
-            helpText='restart')
-        self.addBooleanSetting('feature', 'iphone', _('Enable iPhone synchronization'),
             helpText='restart')
         self.addIntegerSetting('view', 'efforthourstart',
             _('Hour of start of work day'), minimum=0, maximum=23)
