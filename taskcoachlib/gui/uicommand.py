@@ -1547,14 +1547,12 @@ class ToggleCategory(NeedsSelection, ViewerCommand):
 
 class TaskToggleCategory(ToggleCategory):
     def enabled(self, event):
-        print 'TaskToggleCategory.enabled'
         return super(TaskToggleCategory, self).enabled(event) and \
             self.viewer.isShowingTasks()
 
 
 class NoteToggleCategory(ToggleCategory):
     def enabled(self, event):        
-        print 'NoteToggleCategory.enabled'
         return super(NoteToggleCategory, self).enabled(event) and \
             self.viewer.isShowingNotes()
     
