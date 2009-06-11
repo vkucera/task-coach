@@ -23,12 +23,19 @@ from changetypes import *
 
 releases = [
 
+Release('0.74.0', 'June ?, 2009',
+    summary='''This release adds support for synchronizing with a companion 
+iPhone/iPod Touch device.''',
+    featuresAdded=[
+        Feature('''Synchronize an iPhone/iPod Touch device with
+Task Coach.''', '2042153')
+        ]
+    ),
+
 Release('0.73.0', 'June ?, 2009',
     summary='''This release adds a timeline viewer, and support
 for synchronizing with a companion iPhone/iPod Touch device''',
     featuresAdded=[
-        Feature('''Synchronize an iPhone/iPod Touch device with
-Task Coach.''', '2042153'),
         Feature('''Added a timeline viewer that shows tasks and efforts on 
 a horizontal time scale.''', '2533644', '1230080'),
         Feature('''When an effort viewer is displaying effort per day, week,
