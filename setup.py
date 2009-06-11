@@ -26,7 +26,9 @@ from taskcoachlib import meta
 # Import this here so that py2exe and py2app can find the _pysyncml module:
 try:
     import taskcoachlib.syncml.core
+    executable = '/usr/bin/python2.5' # We only have pysyncml for python 2.5
 except ImportError:
+    executable = None # No need to force a specific python version
     print 'WARNING: SyncML is not supported on your platform.'
 
 
@@ -52,7 +54,6 @@ setupOptions = {
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
         'ics', 'html', 'csv', 'vcalendar')] + ['buildlib'],
     'scripts': ['taskcoach.py', 'taskcoach.pyw'],
-    'options': dict(build=dict(executable='/usr/bin/python2.5')),
     'classifiers': [\
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',
@@ -60,6 +61,10 @@ setupOptions = {
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Office/Business :: Scheduling']}
+
+if executable:
+    # Force a specific Python version if necessary:
+    setupOptions['options'] =  dict(build=dict(executable=executable))
 
 # Add available translations:
 languages = sorted(meta.data.languages.keys())
