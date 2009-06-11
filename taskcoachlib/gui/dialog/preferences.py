@@ -185,6 +185,8 @@ class LanguagePage(SettingsPage):
         super(LanguagePage, self).__init__(*args, **kwargs)
         self.addChoiceSetting('view', 'language', _('Language'), 
             [('ar', u'الْعَرَبيّة (Arabic)'),
+             ('eu_ES', 'Euskal Herria (Basque)'),
+             ('bs_BA', u'босански (Bosnian)'),
              ('pt_BR', u'Português brasileiro (Brazilian Portuguese)'),
              ('br_FR', 'Brezhoneg (Breton)'),
              ('bg_BG', u'български (Bulgarian)'),
@@ -194,6 +196,7 @@ class LanguagePage(SettingsPage):
              ('cs_CS', u'Čeština (Czech)'),
              ('da_DA', 'Dansk (Danish)'),
              ('nl_NL', 'Nederlands (Dutch)'),
+             ('en_AU', 'English (Australia)'),
              ('en_CA', 'English (Canada)'), 
              ('en_GB', 'English (UK)'),
              ('en_US', 'English (US)'), 

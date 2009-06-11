@@ -93,6 +93,8 @@ wxpythonversion = '%s-unicode'%wxpythonversionnumber
 languages = {
     'English': None, 
     'Arabic': 'ar',
+    'Basque': 'eu',
+    'Bosnian': 'bs',
     'Breton': 'br',
     'Bulgarian': 'bg',
     'Catalan': 'ca',

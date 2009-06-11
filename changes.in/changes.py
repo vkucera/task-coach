@@ -37,7 +37,10 @@ an option to search descriptions too.''', '1816660', '2020347', '2157010',
 '2510045'),
         Feature('''Add or remove tasks and notes from categories using the
 task and note menus in the menubar or the right-click popup menu for tasks
-and notes.''', '1931323', '2011031', '1918685')
+and notes.''', '1931323', '2011031', '1918685'),
+        Feature('''Added largely incomplete Bosnian and Basque 
+translations. Please help make these translations complete. 
+See http://www.taskcoach.org/i18n.html.''')
     ]),
 
 Release('0.72.10', 'June 9, 2009',
