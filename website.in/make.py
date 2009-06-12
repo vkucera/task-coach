@@ -494,7 +494,7 @@ def appendThumbnails(name, flt):
             thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
             image = '<A HREF="%s">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
             pages[name] += '<P>%s<BR>%s</P>'%(caption, image)
-
+"""
 pages['iPhone'] = '''<H3>iPhone</H3>
         <P>There is a todo-list application for iPhone that can synchronize with Task Coach
 through the network, starting with version 0.73 of Task Coach. Main features are</P>
@@ -512,6 +512,7 @@ approval from Apple).</P>
         <P>More features are planned, like support for multiple task files and effort tracking.
 Here are some thumbnails of the UI:</P>'''
 appendThumbnails('iPhone', lambda x: x.find('iPhone') != -1)
+"""
 
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
 
@@ -850,51 +851,6 @@ return
     %(name)s sera lancé si nécessaire. Si vous utilisez un autre langage que l'anglais, vous
     devrez changer 'Task, New Task...' pour se conformer à votre langue.</P>
     <P>Nous apprécierions des suggestions pour les autres systèmes d'exploitation...</P>
-''', 'ISO-8859-1')
-
-pages['roadmap'] = \
-'''    <h3>%(name)s roadmap</h3>
-    <p>My aim for %(name)s is to be a personal assistent that helps with
-    the daily chores of life: remembering things to do, registering
-    hours spent on projects, taking notes, etc. It should also be as
-    intuitive as possible for users to deal with and not require any technical
-    knowledge.</p>
-    <p>Currently, %(name)s knows about four domain concepts: tasks, 
-    effort, notes, and categories. A domain concepts that might be added 
-    in the future is contact person.</p>
-    <p>In the long run, it might be worthwile to allow
-    users to add their own concepts. So, for example, if you want to keep
-    a list of books to read you could define a book concept and accompanying
-    fields like author, title, isbn, read/unread status, etc. That would
-    also need the file format to be very flexible.</p>
-    <p>Currently, the focus of %(name)s is to support single users. In the long
-    run, support for exchange of tasks with other users should be possible,
-    probably via the iCalendar standard.</p>
-    <p>Anyway, this is it for now, I'll add more as soon as my thoughts
-    on the subject crystalize into a more coherent picture of the future 
-    direction for %(name)s.</p>
-'''
-
-pages['roadmap_fr'] = \
-unicode('''    <h3>Plans pour %(name)s</h3>
-    <p>Mon but pour %(name)s est d'en faire un assistant personnel pour aider
-    aux corvées quotidiennes: se souvenir des choses à faire, retenir les
-    heures passées sur les projets, prendre des notes, etc. Il devrait aussi
-    être aussi intuitif que possible à utiliser et ne pas nécessiter de
-    connaissance technique particulière.</p>
-    <p>Actuellement, %(name)s connaît quatre types d'objets: tâches, efforts,
-    notes et catégories. Un concept qui pourrait être ajouté plus tard est
-    celui de contact.</p>
-    <p>A long terme, il serait intéressant de permettre aux utilisateurs d'ajouter
-    leurs propres concepts. Par exemple, si vous voulez maintenir une liste
-    de livres à lire vous pourriez définir un concept de livre et les champs
-    associés comme auteur, titre, isbn, lu/non lu etc. Il faudrait que le format
-    de fichier soit trés flexible.</p>
-    <p>Actuellement, le but de %(name)s est de ne supporter qu'un utilisateur. A
-    long terme, un système d'échange de tâches entre utilisateurs serait possible,
-    probablement via le format iCalendar.</p>
-    <p>C'est tout pour l'instant, j'en rajouterais lorsque mes idées sur
-    le sujet se seront cristalisées en un schéma plus cohérent de l'avenir de %(name)s.
 ''', 'ISO-8859-1')
 
 pages['devinfo'] = \
