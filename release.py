@@ -232,10 +232,9 @@ def registerWithPyPI(settings):
                  (username, password))
     pypirc.close()
     from setup import setupOptions
-    languagesThatPyPIDoesNotRecognize = ['Breton', 'Estonian', 'Galician', 
-                                         'Lithuanian', 'Norwegian (Bokmal)',
-                                         'Norwegian (Nynorsk)', 'Slovene',
-                                         'German (Low)']
+    languagesThatPyPIDoesNotRecognize = ['Basque', 'Breton', 'Estonian', 
+        'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 'Norwegian (Nynorsk)', 
+        'Slovene', 'German (Low)']
     for language in languagesThatPyPIDoesNotRecognize:
         setupOptions['classifiers'].remove('Natural Language :: %s'%language)
     from distutils.core import setup
