@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.73.0', 'June 11, 2009',
+Release('0.73.0', 'June 12, 2009',
     summary='''This release adds a timeline viewer, the ability to search
 item descriptions, total-per-period information in the effort viewer, and
 easier category manipulation.''',

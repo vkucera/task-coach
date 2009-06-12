@@ -24,7 +24,7 @@ import os, re
 # The buildbot sets TCVERSION when building snapshots.
 version = os.environ.get('TCVERSION', '0.73.0')
 tskversion = 24 # Current version number of the task file format
-release_day = '11' # Day number of the release, 1-31, as string
+release_day = '12' # Day number of the release, 1-31, as string
 release_month = 'June' # Month of the release in plain English 
 release_year = '2009' # Year of the release as string
 release_status = 'alpha' # One of 'alpha', 'beta', 'stable'
