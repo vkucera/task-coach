@@ -224,11 +224,13 @@ pages['download'] = \
         <hr>
         <p>
         <table>
-        <tr><td rowspan=5 valign=top><img src="fedora.png" alt="Fedora"></td>
+        <tr><td rowspan=6 valign=top><img src="fedora.png" alt="Fedora"></td>
         <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc8.noarch.rpm"
-        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/fedora');">RPM package</a> for Fedora 8</b></td></tr>
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/fedora');">RPM package</a> for Fedora 8-10</b></td></tr>
+        <tr><td><b><a href="%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc11.noarch.rpm"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/fedora');">RPM package</a> for Fedora 11</b></td></tr>
         <tr><td>Prerequisites: ''' + prerequisites + '''</td></tr>
-        <tr><td>Installation: <tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc8.noarch.rpm</tt></td></tr>
+        <tr><td>Installation: <tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt></td></tr>
         </table>
         </p>
         <hr>
@@ -344,11 +346,13 @@ unicode('''        <H3>Télécharger %(name)s (version %(version)s)</H3>
         <hr>
         <p>
         <table>
-        <tr><td rowspan=5 valign=top><img src="fedora.png" alt="Fedora"></td>
+        <tr><td rowspan=6 valign=top><img src="fedora.png" alt="Fedora"></td>
         <td><b><a href="%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc8.noarch.rpm"
-        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/fedora');">Paquet RPM</a> pour Fedora 8</b></td></tr>
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/fedora');">Paquet RPM</a> pour Fedora 8-10</b></td></tr>
+        <tr><td><b><a href="%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc11.noarch.rpm"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/fedora');">Paquet RPM</a> pour Fedora 11</b></td></tr>
         <tr><td>Prérequis: ''' + prerequisites_fr + '''</td></tr>
-        <tr><td>Installation: <tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc8.noarch.rpm</tt></td></tr>
+        <tr><td>Installation: <tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt></td></tr>
         </table>
         </p>
         <hr>
