@@ -1,5 +1,5 @@
 # Task Coach - Your friendly task manager
-# Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+# Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 # Copyright (C) 2008 Marcin Zajaczkowski <mszpak@wp.pl>
 # 
 # Task Coach is free software: you can redistribute it and/or modify
@@ -31,9 +31,8 @@ Source1:	taskcoach.png
 Source2:	build.in/fedora/taskcoach.desktop
 BuildRoot: 	%%{_tmppath}/%%{name}-%%{version}-%%{release}-root-%%(%%{__id_u} -n)
 BuildArch:	noarch
-Requires: 	python >= 2.4
-#author specifies it as "2.8.6.0-unicode", but 2.8.4 seems to be fine
-Requires:	wxPython >= 2.8.4
+Requires: 	python >= %(pythonversion)s
+Requires:	wxPython >= %(wxpythonversionnumber)s
 
 # Must have setuptools to build the package
 # The build portions moved to a subpackage in F-8
@@ -80,6 +79,9 @@ desktop-file-install --vendor fedora \
 
 %%exclude %%{_bindir}/taskcoach.pyw
 %%exclude %%{_libdir}/python*/site-packages/buildlib/*.py*
+%%if 0%%{?fedora} >= 11
+%%exclude %%{_libdir}/python*/site-packages/taskcoachlib/bin.in/*
+%%endif
 
 %%changelog
 * Wed Mar 19 2008 Frank Niessink <frank ATT niessink DOTT com> - 0.70.0-1

@@ -47,7 +47,7 @@ dist/TaskCoach-$(TCVERSION).tar.gz:
 rpm: prepare
 	$(PYTHON) make.py bdist_rpm --requires "python2.5,python-wxgtk2.8" --group "Applications/Productivity"
 
-fedora: prepare
+fedora: prepare changes
 	$(PYTHON) make.py bdist_rpm_fedora 
 
 deb: sdist

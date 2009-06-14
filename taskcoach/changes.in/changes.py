@@ -32,9 +32,10 @@ Task Coach.''', '2042153')
         ]
     ),
 
-Release('0.73.0', 'June ?, 2009',
-    summary='''This release adds a timeline viewer, and support
-for synchronizing with a companion iPhone/iPod Touch device''',
+Release('0.73.0', 'June 12, 2009',
+    summary='''This release adds a timeline viewer, the ability to search
+item descriptions, total-per-period information in the effort viewer, and
+easier category manipulation.''',
     featuresAdded=[
         Feature('''Added a timeline viewer that shows tasks and efforts on 
 a horizontal time scale.''', '2533644', '1230080'),
@@ -44,8 +45,11 @@ or month, a total line is shown for each period.''', '1962219'),
 an option to search descriptions too.''', '1816660', '2020347', '2157010',
 '2510045'),
         Feature('''Add or remove tasks and notes from categories using the
-task and note menu's in the menubar or the right-click popup menu for tasks
-and notes.''', '1931323', '2011031', '1918685')
+task and note menus in the menubar or the right-click popup menu for tasks
+and notes.''', '1931323', '2011031', '1918685'),
+        Feature('''Added largely incomplete Bosnian and Basque 
+translations. Please help make these translations complete. 
+See http://www.taskcoach.org/i18n.html.''')
     ]),
 
 Release('0.72.10', 'June 9, 2009',
