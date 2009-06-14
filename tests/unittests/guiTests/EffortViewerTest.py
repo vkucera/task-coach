@@ -266,14 +266,14 @@ class EffortViewerWithoutAggregationTest(CommonTests,
                                          EffortViewerAggregationTestCase):
     aggregation = 'details'
     expectedNumberOfItems = 5
-    expectedPeriodRendering = '2008-07-23 01:00 - 02:00'
+    expectedPeriodRendering = '07/23/08 01:00 - 02:00'
     
 
 class EffortViewerWithAggregationPerDayTest(CommonTests, 
                                             EffortViewerAggregationTestCase):
     aggregation = 'day'
     expectedNumberOfItems = 7 # 4 day/task combinations on 3 days (== 3 total rows) 
-    expectedPeriodRendering = '2008-07-23'
+    expectedPeriodRendering = '07/23/08'
 
 
 class EffortViewerWithAggregationPerWeekTest(CommonTests, 

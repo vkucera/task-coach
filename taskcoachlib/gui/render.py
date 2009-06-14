@@ -25,7 +25,9 @@ from taskcoachlib.i18n import _
 
 def date(date):
     ''' render a date (of type date.Date) '''
-    return str(date)
+    if str(date) == '':
+        return ''
+    return date.strftime('%x')
     
 def priority(priority):
     ''' Render an (integer) priority '''
@@ -74,7 +76,9 @@ def budget(aBudget):
         
 def dateTime(dateTime):
     if dateTime:
-        return dateTime.strftime('%Y-%m-%d %H:%M')
+        # Don't use %+ because it prints seconds as well.
+        return '%s %s' % (date(dateTime), time(dateTime))
+        return dateTime.strftime('TEST %Y-%m-%d %H:%M TEST')
     else:
         return ''
     
