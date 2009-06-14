@@ -105,28 +105,24 @@ def monetaryAmount(aFloat):
         locale.format('%.2f', aFloat, grouping=True)
 
 def taskBitmapNames(task, hasChildren=None):
-    ''' Return two bitmap names for the task, one for deselected tasks and
+    ''' Return two bitmap names for the task, one for unselected tasks and
     one for selected tasks. The bitmaps depend on the state of the task and 
     whether the task has children. '''
+    
+    if task.isBeingTracked():
+        return 'start', 'start'
      
     if hasChildren is None:
-        hashildren = bool(task.children())
-    bitmap = 'task'            
-    if hasChildren:
-        bitmap += 's'
-    if task.completed():
-        bitmap += '_completed'
-    elif task.overdue():
-        bitmap += '_overdue'
-    elif task.dueToday():
-        bitmap += '_duetoday'
-    elif task.inactive():
-        bitmap += '_inactive'
-    if hasChildren:
-        bitmap_selected = bitmap + '_open'
-    else:
-        bitmap_selected = bitmap
-    if task.isBeingTracked():
-        bitmap = bitmap_selected = 'start'
+        hasChildren = bool(task.children())
+    
+    bitmap = 'tasks' if hasChildren else 'task'            
+
+    for state in 'completed', 'overdue', 'dueToday', 'inactive':
+        if getattr(task, state)():
+            bitmap += '_' + state.lower()
+            break
+
+    bitmap_selected = bitmap + '_open' if hasChildren else bitmap
+
     return bitmap, bitmap_selected
 
