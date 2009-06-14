@@ -76,8 +76,6 @@ footer = '''
                                title="Available translations">Translations</a></li>
                     <li><a href="changes.html" 
                        title="An overview of bugs fixed and features added per version of %(name)s">Change history</a></li>
-                    <li><a href="roadmap.html" 
-                       title="Future plans for %(name)s">Roadmap</a></li>
                     <li><a href="license.html" 
                        title="Your rights and obligations when using %(name)s">License</a></li>
                 </ul>

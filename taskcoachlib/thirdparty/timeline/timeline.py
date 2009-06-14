@@ -74,6 +74,7 @@ class TimeLine(wx.Panel):
         self.padding = kwargs.pop('padding', 3)
         self.adapter = kwargs.pop('adapter', DefaultAdapter())
         self.selectedNode = None
+        self._buffer = wx.EmptyBitmap(20, 20) # Have a default buffer ready
         self.DEFAULT_PEN = wx.Pen(wx.BLACK, 1, wx.SOLID)
         self.SELECTED_PEN = wx.Pen(wx.WHITE, 2, wx.SOLID)
         kwargs['style'] = wx.TAB_TRAVERSAL|wx.NO_BORDER|wx.FULL_REPAINT_ON_RESIZE|wx.WANTS_CHARS

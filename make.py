@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -106,6 +107,9 @@ elif sys.argv[1] == 'bdist_rpm_fedora':
     setupOptions.update(dict(options=dict(bdist_rpm_fedora=dict(\
         spec_file=spec_file, icon='icons.in/taskcoach.png', 
         desktop_file='build.in/fedora/taskcoach.desktop'))))
+    # On Fedora, to keep the rpm build process going when it finds 
+    # unpackaged files you need to create a ~/.rpmmacros file 
+    # containing the line '%_unpackaged_files_terminate_build 0'.
 
 elif sys.argv[1] == 'bdist_deb':
     from distutils.core import setup
@@ -126,9 +130,6 @@ elif sys.argv[1] == 'bdist_deb':
     
 else:
     from distutils.core import setup
-    # On Fedora, to keep the rpm build process going when it finds 
-    # unpackaged files you need to create a ~/.rpmmacros file 
-    # containing the line '%_unpackaged_files_terminate_build 0'.
 
 
 if __name__ == '__main__':

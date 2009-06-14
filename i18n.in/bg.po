@@ -9,21 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bg\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-01-25 14:24+0000\n"
-"PO-Revision-Date: 2009-01-26 23:43+0100\n"
+"POT-Creation-Date: 2009-01-26 23:54+0000\n"
+"PO-Revision-Date: 2009-06-11 13:28+0100\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-01-26 19:16+0000\n"
+"X-Launchpad-Export-Date: 2009-06-11 10:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#: taskcoachlib\application\application.py:98
-msgid ""
-"Couldn't load settings from TaskCoach.ini:\n"
-"%s"
-msgstr ""
 
 #: taskcoachlib\application\application.py:99
 #: taskcoachlib\gui\iocontroller.py:57
@@ -37,10 +31,6 @@ msgstr "Нов прикрепен файл"
 #: taskcoachlib\command\attachmentCommands.py:56
 msgid "Edit attachment"
 msgstr "Редактиране на прикрепения файл"
-
-#: taskcoachlib\command\attachmentCommands.py:64
-msgid "Add note to attachment"
-msgstr ""
 
 #: taskcoachlib\command\base.py:111
 msgid "Copy"
@@ -87,10 +77,6 @@ msgstr "Редактиране на категория"
 #: taskcoachlib\command\categoryCommands.py:67
 msgid "Drag and drop category"
 msgstr "Влачене и пускане на категория"
-
-#: taskcoachlib\command\categoryCommands.py:72
-msgid "Add note to category"
-msgstr ""
 
 #: taskcoachlib\command\effortCommands.py:26
 msgid "New effort"
@@ -165,10 +151,6 @@ msgstr "Повиши приоритета"
 #: taskcoachlib\command\taskCommands.py:308
 msgid "Decrease priority"
 msgstr "Понижи приоритета"
-
-#: taskcoachlib\command\taskCommands.py:315
-msgid "Add note to task"
-msgstr ""
 
 #: taskcoachlib\config\settings.py:167
 msgid ""
@@ -342,19 +324,11 @@ msgstr "За тази задача"
 msgid "For this task including all subtasks"
 msgstr "За тази задача, включително всички подзадачи"
 
-#: taskcoachlib\gui\dialog\editor.py:74
-msgid "For this note"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\editor.py:75
-msgid "For this note including all subnotes"
-msgstr ""
-
 #: taskcoachlib\gui\dialog\editor.py:81
 #: taskcoachlib\gui\viewer\attachment.py:71
 #: taskcoachlib\gui\viewer\base.py:189
 #: taskcoachlib\gui\viewer\note.py:124
-#: taskcoachlib\gui\viewer\task.py:311
+#: taskcoachlib\gui\viewer\task.py:310
 #: taskcoachlib\widgets\conflict.py:161
 #: taskcoachlib\widgets\conflict.py:189
 msgid "Subject"
@@ -367,9 +341,9 @@ msgstr "Заглавие"
 #: taskcoachlib\gui\dialog\editor.py:775
 #: taskcoachlib\gui\dialog\editor.py:790
 #: taskcoachlib\gui\viewer\attachment.py:79
-#: taskcoachlib\gui\viewer\effort.py:125
+#: taskcoachlib\gui\viewer\effort.py:126
 #: taskcoachlib\gui\viewer\note.py:127
-#: taskcoachlib\gui\viewer\task.py:320
+#: taskcoachlib\gui\viewer\task.py:319
 #: taskcoachlib\widgets\conflict.py:166
 #: taskcoachlib\widgets\conflict.py:194
 msgid "Description"
@@ -384,14 +358,10 @@ msgid "Color"
 msgstr "Цвят"
 
 #: taskcoachlib\gui\dialog\editor.py:135
-#: taskcoachlib\gui\viewer\task.py:376
+#: taskcoachlib\gui\viewer\task.py:375
 #: taskcoachlib\widgets\conflict.py:214
 msgid "Priority"
 msgstr "Приоритет"
-
-#: taskcoachlib\gui\dialog\editor.py:187
-msgid "Browse"
-msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:191
 msgid "Location"
@@ -403,19 +373,19 @@ msgid "Dates"
 msgstr "Дати"
 
 #: taskcoachlib\gui\dialog\editor.py:221
-#: taskcoachlib\gui\viewer\task.py:365
+#: taskcoachlib\gui\viewer\task.py:364
 #: taskcoachlib\widgets\conflict.py:199
 msgid "Start date"
 msgstr "Начална дата"
 
 #: taskcoachlib\gui\dialog\editor.py:222
-#: taskcoachlib\gui\viewer\task.py:366
+#: taskcoachlib\gui\viewer\task.py:365
 #: taskcoachlib\widgets\conflict.py:204
 msgid "Due date"
 msgstr "Насрочена дата"
 
 #: taskcoachlib\gui\dialog\editor.py:223
-#: taskcoachlib\gui\viewer\task.py:368
+#: taskcoachlib\gui\viewer\task.py:367
 #: taskcoachlib\widgets\conflict.py:209
 msgid "Completion date"
 msgstr "Дата на завършване"
@@ -423,13 +393,13 @@ msgstr "Дата на завършване"
 #: taskcoachlib\gui\dialog\editor.py:239
 #: taskcoachlib\gui\dialog\editor.py:241
 #: taskcoachlib\gui\dialog\reminder.py:35
-#: taskcoachlib\gui\viewer\task.py:383
+#: taskcoachlib\gui\viewer\task.py:382
 msgid "Reminder"
 msgstr "Напомняне"
 
 #: taskcoachlib\gui\dialog\editor.py:253
 #: taskcoachlib\gui\dialog\editor.py:254
-#: taskcoachlib\gui\viewer\task.py:369
+#: taskcoachlib\gui\viewer\task.py:368
 msgid "Recurrence"
 msgstr "Повторение"
 
@@ -460,75 +430,46 @@ msgstr "Седмично"
 msgid "Yearly"
 msgstr "Годишно"
 
-#: taskcoachlib\gui\dialog\editor.py:262
-msgid ", every"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\editor.py:273
-msgid "keeping dates on the same weekday"
-msgstr ""
-
 #: taskcoachlib\gui\dialog\editor.py:280
 msgid "Maximum number of recurrences"
 msgstr "Максимален брой повторения"
-
-#: taskcoachlib\gui\dialog\editor.py:359
-msgid "day(s),"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\editor.py:359
-msgid "period,"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\editor.py:359
-msgid "week(s),"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\editor.py:360
-msgid "month(s),"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\editor.py:360
-msgid "year(s),"
-msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:393
 #: taskcoachlib\gui\dialog\editor.py:411
 #: taskcoachlib\gui\dialog\editor.py:650
 #: taskcoachlib\gui\uicommand.py:2050
-#: taskcoachlib\gui\viewer\task.py:370
+#: taskcoachlib\gui\viewer\task.py:369
 msgid "Budget"
 msgstr "Бюджет"
 
 #: taskcoachlib\gui\dialog\editor.py:394
 #: taskcoachlib\gui\dialog\editor.py:421
-#: taskcoachlib\gui\uicommand.py:2051
-#: taskcoachlib\gui\viewer\effort.py:142
-#: taskcoachlib\gui\viewer\task.py:381
+#: taskcoachlib\gui\uicommand.py:2050
+#: taskcoachlib\gui\viewer\effort.py:143
+#: taskcoachlib\gui\viewer\task.py:380
 msgid "Revenue"
 msgstr "Приход"
 
 #: taskcoachlib\gui\dialog\editor.py:412
 #: taskcoachlib\gui\uicommand.py:2050
-#: taskcoachlib\gui\viewer\effort.py:140
-#: taskcoachlib\gui\viewer\task.py:372
+#: taskcoachlib\gui\viewer\effort.py:141
+#: taskcoachlib\gui\viewer\task.py:371
 msgid "Time spent"
 msgstr "Отделено време"
 
 #: taskcoachlib\gui\dialog\editor.py:413
-#: taskcoachlib\gui\uicommand.py:2050
-#: taskcoachlib\gui\viewer\task.py:374
+#: taskcoachlib\gui\viewer\task.py:373
 msgid "Budget left"
 msgstr "Остатък бюджет"
 
 #: taskcoachlib\gui\dialog\editor.py:419
-#: taskcoachlib\gui\viewer\task.py:378
+#: taskcoachlib\gui\viewer\task.py:377
 msgid "Hourly fee"
 msgstr "Почасово възнаграждение"
 
 #: taskcoachlib\gui\dialog\editor.py:420
-#: taskcoachlib\gui\uicommand.py:2051
-#: taskcoachlib\gui\viewer\task.py:379
+#: taskcoachlib\gui\uicommand.py:2050
+#: taskcoachlib\gui\viewer\task.py:378
 msgid "Fixed fee"
 msgstr "Фиксирано възнаграждение"
 
@@ -536,9 +477,9 @@ msgstr "Фиксирано възнаграждение"
 #: taskcoachlib\gui\dialog\editor.py:647
 #: taskcoachlib\gui\dialog\editor.py:777
 #: taskcoachlib\gui\viewer\category.py:34
-#: taskcoachlib\gui\viewer\effort.py:126
+#: taskcoachlib\gui\viewer\effort.py:127
 #: taskcoachlib\gui\viewer\note.py:131
-#: taskcoachlib\gui\viewer\task.py:342
+#: taskcoachlib\gui\viewer\task.py:341
 #: taskcoachlib\widgets\conflict.py:219
 msgid "Categories"
 msgstr "Категории"
@@ -561,7 +502,7 @@ msgid "Notes"
 msgstr "Бележки"
 
 #: taskcoachlib\gui\dialog\editor.py:617
-#: taskcoachlib\gui\dialog\preferences.py:310
+#: taskcoachlib\gui\dialog\preferences.py:312
 msgid "Task behavior"
 msgstr "Поведение на задача"
 
@@ -592,7 +533,7 @@ msgstr "Поведение"
 
 #: taskcoachlib\gui\dialog\editor.py:683
 #: taskcoachlib\gui\dialog\reminder.py:41
-#: taskcoachlib\gui\viewer\effort.py:124
+#: taskcoachlib\gui\viewer\effort.py:125
 msgid "Task"
 msgstr "Задача"
 
@@ -608,47 +549,13 @@ msgstr "Стартирай"
 msgid "Stop"
 msgstr "Спри"
 
-#: taskcoachlib\gui\dialog\preferences.py:118
-msgid ""
-"This setting will take effect\n"
-"after you restart %s"
-msgstr ""
-
 #: taskcoachlib\gui\dialog\preferences.py:138
 msgid "Auto save after every change"
 msgstr "Запазвай автоматично след всяка промяна"
 
-#: taskcoachlib\gui\dialog\preferences.py:140
-msgid ""
-"Create a backup copy before\n"
-"overwriting a %s file"
-msgstr ""
-
 #: taskcoachlib\gui\dialog\preferences.py:142
 msgid "Maximum number of recent files to remember"
 msgstr "Максимален брой на нови файлове за запомняне"
-
-#: taskcoachlib\gui\dialog\preferences.py:144
-msgid ""
-"Save settings (%s.ini) in the same\n"
-"directory as the program"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:146
-msgid ""
-"(For running %s\n"
-"from a removable medium)"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:147
-msgid "Attachment base directory"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:148
-msgid ""
-"When adding an attachment, try to make\n"
-"its path relative to this one."
-msgstr ""
 
 #: taskcoachlib\gui\dialog\preferences.py:156
 msgid "Show splash screen on startup"
@@ -670,10 +577,6 @@ msgstr "Винаги"
 msgid "Never"
 msgstr "Никога"
 
-#: taskcoachlib\gui\dialog\preferences.py:163
-msgid "If it was iconized last session"
-msgstr ""
-
 #: taskcoachlib\gui\dialog\preferences.py:165
 msgid "Check for new version of %(name)s on startup"
 msgstr "Провери за нова версия of %(name)s при стартиране"
@@ -690,104 +593,60 @@ msgstr "Минимизирай главния прозорец при затва
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Тиктакащ часовник при проследяване на опит"
 
-#: taskcoachlib\gui\dialog\preferences.py:173
-msgid ""
-"Show a popup with the description of an item\n"
-"when hovering over it"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:175
-msgid ""
-"Use a tabbed user interface for the main window\n"
-"(Note: the layout you create by dragging and\n"
-"dropping tabs cannot be saved. This is a limitation\n"
-"of the underlying toolkit)."
-msgstr ""
-
 #: taskcoachlib\gui\dialog\preferences.py:186
-#: taskcoachlib\gui\dialog\preferences.py:312
+#: taskcoachlib\gui\dialog\preferences.py:314
 msgid "Language"
 msgstr "Език"
 
-#: taskcoachlib\gui\dialog\preferences.py:237
-msgid ""
-"If your language is not available, or the translation needs \n"
-"improving, please consider helping. See:"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:244
-msgid "Language not found?"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:252
+#: taskcoachlib\gui\dialog\preferences.py:254
 msgid "Click this button to change the color of active tasks"
 msgstr "Натисни този бутон за промяна цвета на активните задачи"
 
-#: taskcoachlib\gui\dialog\preferences.py:253
+#: taskcoachlib\gui\dialog\preferences.py:255
 msgid "Click this button to change the color of inactive tasks"
 msgstr "Натисни този бутон за промяна цвета на неактивните задачи"
 
-#: taskcoachlib\gui\dialog\preferences.py:254
+#: taskcoachlib\gui\dialog\preferences.py:256
 msgid "Click this button to change the color of completed tasks"
 msgstr "Натисни този бутон за промяна цвета на завършените задачи"
 
-#: taskcoachlib\gui\dialog\preferences.py:255
+#: taskcoachlib\gui\dialog\preferences.py:257
 msgid "Click this button to change the color of over due tasks"
 msgstr "Натисни този бутон за промяна цвета на пропуснатите задачи"
 
-#: taskcoachlib\gui\dialog\preferences.py:256
+#: taskcoachlib\gui\dialog\preferences.py:258
 msgid "Click this button to change the color of tasks due today"
 msgstr "Натисни този бутон за промяна цвета на задачи с краен срок днес"
 
-#: taskcoachlib\gui\dialog\preferences.py:265
-msgid "Allow for tracking effort"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:266
+#: taskcoachlib\gui\dialog\preferences.py:268
 msgid "Allow for taking notes"
 msgstr "Позволи вземане на бележки"
 
-#: taskcoachlib\gui\dialog\preferences.py:268
-msgid "Enable SyncML"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:271
-msgid "Hour of start of work day"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:273
-msgid "Hour of end of work day"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:275
-msgid "Minutes between task start/end times"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:284
+#: taskcoachlib\gui\dialog\preferences.py:286
 msgid "Mark parent task completed when all children are completed"
 msgstr "Маркирай главна задача като завършена, когато всички подзадачи са завършени"
 
-#: taskcoachlib\gui\dialog\preferences.py:292
+#: taskcoachlib\gui\dialog\preferences.py:294
 msgid "Check spelling in editors"
 msgstr "Провери правописа в редакторите"
 
-#: taskcoachlib\gui\dialog\preferences.py:309
+#: taskcoachlib\gui\dialog\preferences.py:311
 msgid "Window behavior"
 msgstr "Поведение на прозореца"
 
-#: taskcoachlib\gui\dialog\preferences.py:311
+#: taskcoachlib\gui\dialog\preferences.py:313
 msgid "Files"
 msgstr "Файлове"
 
-#: taskcoachlib\gui\dialog\preferences.py:313
+#: taskcoachlib\gui\dialog\preferences.py:315
 msgid "Colors"
 msgstr "Цветове"
 
-#: taskcoachlib\gui\dialog\preferences.py:314
+#: taskcoachlib\gui\dialog\preferences.py:316
 msgid "Features"
 msgstr "Възможностти"
 
-#: taskcoachlib\gui\dialog\preferences.py:316
+#: taskcoachlib\gui\dialog\preferences.py:318
 msgid "Editor"
 msgstr "Редактор"
 
@@ -827,71 +686,6 @@ msgstr "Напомняне дата/време"
 msgid "Snooze"
 msgstr "Изчакай"
 
-#: taskcoachlib\gui\dialog\syncpreferences.py:91
-msgid "SyncML server URL"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:92
-msgid "User name/ID"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:101
-msgid "Enable tasks synchronization"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:102
-msgid "Tasks database name"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:104
-#: taskcoachlib\gui\dialog\syncpreferences.py:122
-msgid "Preferred synchonization mode"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:105
-#: taskcoachlib\gui\dialog\syncpreferences.py:123
-msgid "Two way"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:106
-#: taskcoachlib\gui\dialog\syncpreferences.py:124
-msgid "Slow"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:107
-#: taskcoachlib\gui\dialog\syncpreferences.py:125
-msgid "One way from client"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:108
-#: taskcoachlib\gui\dialog\syncpreferences.py:126
-msgid "Refresh from client"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:109
-#: taskcoachlib\gui\dialog\syncpreferences.py:127
-msgid "One way from server"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:110
-#: taskcoachlib\gui\dialog\syncpreferences.py:128
-#: taskcoachlib\syncml\basesource.py:61
-#: taskcoachlib\syncml\basesource.py:73
-msgid "Refresh from server"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:119
-msgid "Enable notes synchronization"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:120
-msgid "Notes database name"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\syncpreferences.py:144
-msgid "Access"
-msgstr ""
-
 #: taskcoachlib\gui\dialog\syncpreferences.py:146
 #: taskcoachlib\gui\uicommand.py:1511
 #: taskcoachlib\gui\viewer\task.py:32
@@ -910,10 +704,6 @@ msgstr "Версия %(version)s на %(name)s"
 msgid "Notify me of new versions."
 msgstr "Съобщи ми за нови версии"
 
-#: taskcoachlib\gui\iocontroller.py:44
-msgid "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
-msgstr ""
-
 #: taskcoachlib\gui\iocontroller.py:47
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
@@ -925,10 +715,6 @@ msgstr "HTML файлове (*.html)|*.html|Всички файлове (*.*)|*"
 #: taskcoachlib\gui\iocontroller.py:53
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr "CSV файлове (*.csv)|*.csv|Текстови файлове (*.txt)|*.txt|Всички файлове (*.*)|*"
-
-#: taskcoachlib\gui\iocontroller.py:56
-msgid "VCalendar files (*.vcal)|*.vcal|All files (*.*)|*"
-msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:93
 msgid "Open"
@@ -963,28 +749,6 @@ msgstr "Слети %(filename)s"
 msgid "Save as..."
 msgstr "Запиши като..."
 
-#: taskcoachlib\gui\iocontroller.py:185
-msgid ""
-"Cannot save %s\n"
-"%s"
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:190
-msgid "Please enter the template name."
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:191
-msgid "Save as template"
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:199
-msgid "Open template..."
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:201
-msgid "%s template files (*.tsktmpl)|*.tsktmpl"
-msgstr ""
-
 #: taskcoachlib\gui\iocontroller.py:218
 msgid "Export as iCalendar..."
 msgstr "Експортирай като iCalendar..."
@@ -1006,26 +770,6 @@ msgstr "Експортирани %(nrtasks)d точки в %(filename)s"
 #: taskcoachlib\gui\iocontroller.py:247
 msgid "Export as CSV..."
 msgstr "Експортирай като CSV..."
-
-#: taskcoachlib\gui\iocontroller.py:261
-msgid "Export as VCalendar..."
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:281
-msgid "Finished synchronization"
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:285
-msgid "Note conflict"
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:289
-msgid "Task conflict"
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:301
-msgid "Synchronization status"
-msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:326
 msgid ""
@@ -1148,37 +892,9 @@ msgstr "Показване/скриване на Лента за състоян�
 msgid "Status&bar"
 msgstr "Лента на &статуса"
 
-#: taskcoachlib\gui\menu.py:387
-msgid "Open a new tab with a viewer that displays tasks"
-msgstr ""
-
-#: taskcoachlib\gui\menu.py:389
-msgid "Task &square map"
-msgstr ""
-
-#: taskcoachlib\gui\menu.py:390
-msgid "Open a new tab with a viewer that displays tasks in a square map"
-msgstr ""
-
 #: taskcoachlib\gui\menu.py:393
 msgid "Open a new tab with a viewer that displays categories"
 msgstr "Отвори нов етикет с изглед, показващ категориите"
-
-#: taskcoachlib\gui\menu.py:397
-msgid "&Effort"
-msgstr ""
-
-#: taskcoachlib\gui\menu.py:398
-msgid "Open a new tab with a viewer that displays efforts"
-msgstr ""
-
-#: taskcoachlib\gui\menu.py:401
-msgid "Effort for &one task"
-msgstr ""
-
-#: taskcoachlib\gui\menu.py:402
-msgid "Open a new tab with a viewer that displays efforts for the selected task"
-msgstr ""
 
 #: taskcoachlib\gui\menu.py:407
 msgid "Open a new tab with a viewer that displays notes"
@@ -1216,21 +932,11 @@ msgstr "&Големи картинки"
 msgid "Large images (32x32) on the toolbar"
 msgstr "Големи картинки (32x32) за лентата с инструменти"
 
-#: taskcoachlib\gui\menu.py:470
-#: taskcoachlib\gui\menu.py:644
-#: taskcoachlib\gui\uicommand.py:1268
-msgid "New task &from template"
-msgstr ""
-
 #: taskcoachlib\gui\menu.py:580
 #: taskcoachlib\gui\uicommand.py:1692
 #: taskcoachlib\gui\uicommand.py:1731
 msgid "&Start tracking effort"
 msgstr "&Започни проследяване на опит"
-
-#: taskcoachlib\gui\menu.py:625
-msgid "%s (subtasks)"
-msgstr ""
 
 #: taskcoachlib\gui\printer.py:48
 msgid "Page"
@@ -1239,38 +945,6 @@ msgstr "Страница"
 #: taskcoachlib\gui\render.py:40
 msgid "Infinite"
 msgstr "Безкрайност"
-
-#: taskcoachlib\gui\render.py:60
-msgid "Every %(frequency)d days"
-msgstr ""
-
-#: taskcoachlib\gui\render.py:60
-msgid "Every %(frequency)d weeks"
-msgstr ""
-
-#: taskcoachlib\gui\render.py:61
-msgid "Every %(frequency)d months"
-msgstr ""
-
-#: taskcoachlib\gui\render.py:61
-msgid "Every %(frequency)d years"
-msgstr ""
-
-#: taskcoachlib\gui\render.py:63
-msgid "Every other day"
-msgstr ""
-
-#: taskcoachlib\gui\render.py:63
-msgid "Every other week"
-msgstr ""
-
-#: taskcoachlib\gui\render.py:64
-msgid "Every other month"
-msgstr ""
-
-#: taskcoachlib\gui\render.py:64
-msgid "Every other year"
-msgstr ""
 
 #: taskcoachlib\gui\render.py:83
 msgid "now"
@@ -1291,10 +965,6 @@ msgstr "%d задачи завършват днес"
 #: taskcoachlib\gui\taskbaricon.py:140
 msgid "one task due today"
 msgstr "една задача завършва днес"
-
-#: taskcoachlib\gui\taskbaricon.py:151
-msgid "tracking \"%s\""
-msgstr ""
 
 #: taskcoachlib\gui\taskbaricon.py:153
 msgid "tracking effort for %d tasks"
@@ -1320,10 +990,6 @@ msgstr "&Сливане..."
 msgid "Merge tasks from another file with the current file"
 msgstr "Слей задачи от друг файл с текущия"
 
-#: taskcoachlib\gui\uicommand.py:443
-msgid "&Close\tCtrl+W"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:444
 msgid "Close the current file"
 msgstr "Затвори текущия файл"
@@ -1335,10 +1001,6 @@ msgstr "&Запази\tCtrl+S"
 #: taskcoachlib\gui\uicommand.py:454
 msgid "Save the current file"
 msgstr "Запази текущия файл"
-
-#: taskcoachlib\gui\uicommand.py:466
-msgid "S&ave as...\tShift+Ctrl+S"
-msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:467
 msgid "Save the current file under a new name"
@@ -1352,49 +1014,6 @@ msgstr "&Запази избраните..."
 msgid "Save the selected tasks to a separate file"
 msgstr "Запази избраните задачи в отделен файл"
 
-#: taskcoachlib\gui\uicommand.py:487
-msgid "Save selected task as &template"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:488
-msgid "Save the selected task as a task template"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:498
-msgid "Add template"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:499
-msgid "Add a new template from a template file\n"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:509
-msgid "Purge deleted items"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:510
-msgid "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:514
-msgid ""
-"Purging deleted items is undoable.\n"
-"If you're planning on enabling\n"
-"the SyncML feature again with the\n"
-"same server you used previously,\n"
-"these items will probably come back.\n"
-"\n"
-"Do you still want to purge?"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:521
-msgid "Warning"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:528
-msgid "Page setup...\tShift+Ctrl+P"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:529
 msgid "Setup the characteristics of the printer page"
 msgstr "Настройка на страницата за принтиране"
@@ -1407,10 +1026,6 @@ msgstr "Преглед преди печат"
 #: taskcoachlib\gui\uicommand.py:545
 msgid "Show a preview of what the print will look like"
 msgstr "Покажи преглед на печата"
-
-#: taskcoachlib\gui\uicommand.py:562
-msgid "Print...\tCtrl+P"
-msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:563
 msgid "Print the current file"
@@ -1432,14 +1047,6 @@ msgstr "Експортирай като &HTML..."
 msgid "Export the current view as HTML file"
 msgstr "Експортирай текущия изглед като HTML файл"
 
-#: taskcoachlib\gui\uicommand.py:605
-msgid "Export &selection as HTML..."
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:606
-msgid "Export the selection in the current view as HTML file"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:615
 msgid "Export as &CSV..."
 msgstr "Експортирай като &CSV..."
@@ -1447,30 +1054,6 @@ msgstr "Експортирай като &CSV..."
 #: taskcoachlib\gui\uicommand.py:616
 msgid "Export the current view in Comma Separated Values (CSV) format"
 msgstr "Експортирай текущия изглед в Comma Separated Values (CSV) формат"
-
-#: taskcoachlib\gui\uicommand.py:625
-msgid "Export as &VCalendar..."
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:626
-msgid "Export the current view in VCalendar format"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:635
-msgid "S&yncML synchronization"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:636
-msgid "Synchronize with a SyncML server"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:640
-msgid "Please enter your password:"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:641
-msgid "Task Coach SyncML password"
-msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:648
 msgid "&Quit\tCtrl+Q"
@@ -1537,15 +1120,6 @@ msgstr "Настройки..."
 msgid "Edit preferences"
 msgstr "Предпочитания за редактиране"
 
-#: taskcoachlib\gui\uicommand.py:811
-msgid "SyncML preferences..."
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:812
-#: taskcoachlib\gui\uicommand.py:818
-msgid "Edit SyncML preferences"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:824
 msgid "&All\tCtrl+A"
 msgstr "&Всички\tCtrl+A"
@@ -1553,10 +1127,6 @@ msgstr "&Всички\tCtrl+A"
 #: taskcoachlib\gui\uicommand.py:825
 msgid "Select all items in the current view"
 msgstr "Избери всички елементи в текущия изглед"
-
-#: taskcoachlib\gui\uicommand.py:839
-msgid "&Invert selection"
-msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:840
 msgid "Select unselected items and unselect selected items"
@@ -1698,26 +1268,6 @@ msgstr "Прехвърля &бюджета"
 msgid "Show/hide tasks that are over budget"
 msgstr "Покажи/Скрий задачи с прехвърлен бюджет"
 
-#: taskcoachlib\gui\uicommand.py:1148
-msgid "C&omposite"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1149
-msgid "Show/hide tasks with subtasks in list mode"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1271
-msgid "Create a new task from a template"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1277
-msgid "New task with selected categories..."
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1278
-msgid "Insert a new task with the selected categories checked"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:1306
 msgid "&Mark task completed\tCtrl+RETURN"
 msgstr "&Маркирай задачата като завършена\tCtrl+RETURN"
@@ -1734,47 +1284,21 @@ msgstr "&Маркирай задачата като незавършена\tCtrl
 msgid "Mark the selected task(s) uncompleted"
 msgstr "Маркирай избраните задачи като незавършени"
 
-#: taskcoachlib\gui\uicommand.py:1396
-msgid "Maximize priority\tShift+Ctrl+I"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:1397
 msgid "Make the selected task(s) the highest priority task(s)"
 msgstr "Задай на избраните задачи най-висок приоритет"
-
-#: taskcoachlib\gui\uicommand.py:1409
-msgid "Minimize priority\tShift+Ctrl+D"
-msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:1410
 msgid "Make the selected task(s) the lowest priority task(s)"
 msgstr "Задай на избраните задачи най-нисък приоритет"
 
-#: taskcoachlib\gui\uicommand.py:1422
-msgid "Increase priority\tCtrl+I"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:1423
 msgid "Increase the priority of the selected task(s)"
 msgstr "Повиши приоритета на избраните задачи"
 
-#: taskcoachlib\gui\uicommand.py:1435
-msgid "Decrease priority\tCtrl+D"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:1436
 msgid "Decrease the priority of the selected task(s)"
 msgstr "Понижи приоритета на избраните задачи"
-
-#: taskcoachlib\gui\uicommand.py:1500
-msgid ""
-"Cannot send email:\n"
-"%s"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1501
-msgid "%s mail error"
-msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:1506
 msgid "Mail task"
@@ -1784,32 +1308,6 @@ msgstr "Изпрати задача по пощата"
 msgid "Mail the task, using your default mailer"
 msgstr "Изпрати задачата по пощата, използвайки мейл клиент по подразбиране"
 
-#: taskcoachlib\gui\uicommand.py:1516
-msgid "Mail note"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1517
-msgid "Mail the note, using your default mailer"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1526
-#: taskcoachlib\gui\uicommand.py:1542
-#: taskcoachlib\gui\uicommand.py:1558
-msgid "Add &note"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1527
-msgid "Add a note to the selected task(s)"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1543
-msgid "Add a note to the selected category(ies)"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1559
-msgid "Add a note to the selected attachment(s)"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:1573
 msgid "&Add attachment"
 msgstr "&Добави приложение"
@@ -1817,14 +1315,6 @@ msgstr "&Добави приложение"
 #: taskcoachlib\gui\uicommand.py:1592
 msgid "Browse for files to add as attachment to the selected task(s)"
 msgstr "Търси файлове за добавяне като приложения към избраните задачи"
-
-#: taskcoachlib\gui\uicommand.py:1599
-msgid "Browse for files to add as attachment to the selected categories"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1606
-msgid "Browse for files to add as attachment to the selected note(s)"
-msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:1614
 msgid "&Open all attachments"
@@ -1839,29 +1329,9 @@ msgstr "Грешка при отваряне на приложението"
 msgid "Open all attachments of the selected task(s)"
 msgstr "Отвори всички приложения за избраните задачи"
 
-#: taskcoachlib\gui\uicommand.py:1639
-msgid "Open all attachments of the selected categories"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1646
-msgid "Open all attachments of the selected note(s)"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:1693
 msgid "Start tracking effort for the selected task(s)"
 msgstr "&Започни проследяване на опит за избраните задачи"
-
-#: taskcoachlib\gui\uicommand.py:1714
-msgid "(No subject)"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1717
-msgid "Start tracking effort for %s"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1732
-msgid "Select a task via the menu and start tracking effort for it"
-msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:1746
 msgid "St&op tracking effort"
@@ -1870,22 +1340,6 @@ msgstr "&Спри проследяване а опит"
 #: taskcoachlib\gui\uicommand.py:1747
 msgid "Stop tracking effort for the active task(s)"
 msgstr "Спри проследяване на опит за избраните задачи"
-
-#: taskcoachlib\gui\uicommand.py:1826
-msgid "New note with selected categories..."
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1827
-msgid "Insert a new note with the selected categories checked"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1932
-msgid "&Help contents\tCtrl+?"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1935
-msgid "&Help contents\tCtrl+H"
-msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:1937
 msgid "Help about the program"
@@ -1951,34 +1405,6 @@ msgstr "Опит за месец"
 msgid "Effort per week"
 msgstr "Опит за седица"
 
-#: taskcoachlib\gui\uicommand.py:2033
-msgid "List of tasks"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2033
-msgid "Tree of tasks"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2041
-msgid "Filter on all checked categories"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2042
-msgid "Filter on any checked category"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2062
-msgid "&Automatic column resizing"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2063
-msgid "When checked, automatically resize columns to fill available space"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\attachment.py:65
-msgid "Type"
-msgstr ""
-
 #: taskcoachlib\gui\viewer\attachment.py:75
 msgid "Sort by subject"
 msgstr "Сортирай по заглавие"
@@ -1992,13 +1418,13 @@ msgstr "&Заглавие"
 
 #: taskcoachlib\gui\viewer\attachment.py:83
 #: taskcoachlib\gui\viewer\attachment.py:102
-#: taskcoachlib\gui\viewer\effort.py:201
+#: taskcoachlib\gui\viewer\effort.py:202
 #: taskcoachlib\gui\viewer\mixin.py:332
 #: taskcoachlib\gui\viewer\mixin.py:380
 #: taskcoachlib\gui\viewer\mixin.py:400
 #: taskcoachlib\gui\viewer\note.py:101
 #: taskcoachlib\gui\viewer\note.py:127
-#: taskcoachlib\gui\viewer\task.py:469
+#: taskcoachlib\gui\viewer\task.py:468
 msgid "&Description"
 msgstr "&Описание"
 
@@ -2008,21 +1434,11 @@ msgid "Sort by description"
 msgstr "Сортирай по описание"
 
 #: taskcoachlib\gui\viewer\attachment.py:103
-#: taskcoachlib\gui\viewer\effort.py:202
+#: taskcoachlib\gui\viewer\effort.py:203
 #: taskcoachlib\gui\viewer\note.py:102
-#: taskcoachlib\gui\viewer\task.py:470
+#: taskcoachlib\gui\viewer\task.py:469
 msgid "Show/hide description column"
 msgstr "Покажи/Скрий колоната с описания"
-
-#: taskcoachlib\gui\viewer\attachment.py:105
-#: taskcoachlib\gui\viewer\task.py:477
-msgid "&Notes"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\attachment.py:106
-#: taskcoachlib\gui\viewer\task.py:478
-msgid "Show/hide notes column"
-msgstr ""
 
 #: taskcoachlib\gui\viewer\category.py:123
 msgid "Categories: %d selected, %d total"
@@ -2032,126 +1448,78 @@ msgstr "Категории: %d избрани, %d общо"
 msgid "Status: %d filtered"
 msgstr "Статус: %d филтрирани"
 
-#: taskcoachlib\gui\viewer\effort.py:123
+#: taskcoachlib\gui\viewer\effort.py:124
 msgid "Period"
 msgstr "Период"
 
-#: taskcoachlib\gui\viewer\effort.py:131
-#: taskcoachlib\gui\viewer\effort.py:207
+#: taskcoachlib\gui\viewer\effort.py:132
+#: taskcoachlib\gui\viewer\effort.py:208
 #: taskcoachlib\gui\viewer\mixin.py:334
 #: taskcoachlib\gui\viewer\mixin.py:386
 #: taskcoachlib\gui\viewer\mixin.py:406
 #: taskcoachlib\gui\viewer\note.py:110
 #: taskcoachlib\gui\viewer\note.py:137
-#: taskcoachlib\gui\viewer\task.py:350
-#: taskcoachlib\gui\viewer\task.py:484
+#: taskcoachlib\gui\viewer\task.py:349
+#: taskcoachlib\gui\viewer\task.py:483
 msgid "Overall categories"
 msgstr "Общи категории"
 
-#: taskcoachlib\gui\viewer\effort.py:144
-#: taskcoachlib\gui\viewer\task.py:373
+#: taskcoachlib\gui\viewer\effort.py:145
+#: taskcoachlib\gui\viewer\task.py:372
 msgid "Total time spent"
 msgstr "Общо използвано време"
 
-#: taskcoachlib\gui\viewer\effort.py:146
-#: taskcoachlib\gui\viewer\task.py:382
+#: taskcoachlib\gui\viewer\effort.py:147
+#: taskcoachlib\gui\viewer\task.py:381
 msgid "Total revenue"
 msgstr "Общ приход"
 
-#: taskcoachlib\gui\viewer\effort.py:152
-msgid "Monday"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:154
-msgid "Tuesday"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:156
-msgid "Wednesday"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:158
-msgid "Thursday"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:160
-msgid "Friday"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:162
-msgid "Saturday"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:164
-msgid "Sunday"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:204
+#: taskcoachlib\gui\viewer\effort.py:205
 #: taskcoachlib\gui\viewer\note.py:107
 #: taskcoachlib\gui\viewer\note.py:131
-#: taskcoachlib\gui\viewer\task.py:481
+#: taskcoachlib\gui\viewer\task.py:480
 msgid "&Categories"
 msgstr "&Категории"
 
-#: taskcoachlib\gui\viewer\effort.py:205
-#: taskcoachlib\gui\viewer\effort.py:208
+#: taskcoachlib\gui\viewer\effort.py:206
+#: taskcoachlib\gui\viewer\effort.py:209
 #: taskcoachlib\gui\viewer\note.py:108
-#: taskcoachlib\gui\viewer\task.py:482
+#: taskcoachlib\gui\viewer\task.py:481
 msgid "Show/hide categories column"
 msgstr "Покажи/Скрий колоната на категориите"
 
-#: taskcoachlib\gui\viewer\effort.py:210
+#: taskcoachlib\gui\viewer\effort.py:211
 #: taskcoachlib\gui\viewer\mixin.py:342
-#: taskcoachlib\gui\viewer\task.py:433
+#: taskcoachlib\gui\viewer\task.py:432
 msgid "&Time spent"
 msgstr "&Отделено време"
 
-#: taskcoachlib\gui\viewer\effort.py:211
-#: taskcoachlib\gui\viewer\task.py:434
+#: taskcoachlib\gui\viewer\effort.py:212
+#: taskcoachlib\gui\viewer\task.py:433
 msgid "Show/hide time spent column"
 msgstr "Покажи/Скрий колоната с отделеното време"
 
-#: taskcoachlib\gui\viewer\effort.py:213
+#: taskcoachlib\gui\viewer\effort.py:214
 #: taskcoachlib\gui\viewer\mixin.py:351
-#: taskcoachlib\gui\viewer\task.py:462
+#: taskcoachlib\gui\viewer\task.py:461
 msgid "&Revenue"
 msgstr "&Приход"
 
-#: taskcoachlib\gui\viewer\effort.py:214
-#: taskcoachlib\gui\viewer\task.py:463
+#: taskcoachlib\gui\viewer\effort.py:215
+#: taskcoachlib\gui\viewer\task.py:462
 msgid "Show/hide revenue column"
 msgstr "Покажи/Скрий колона на приходите"
 
-#: taskcoachlib\gui\viewer\effort.py:218
-msgid "&Total time spent"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:219
-msgid "Show/hide total time spent column"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:223
-msgid "Total &revenue"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:224
-#: taskcoachlib\gui\viewer\task.py:466
+#: taskcoachlib\gui\viewer\effort.py:225
+#: taskcoachlib\gui\viewer\task.py:465
 msgid "Show/hide total revenue column"
 msgstr "Покажи/Скрий колоната с общия приход"
 
-#: taskcoachlib\gui\viewer\effort.py:229
-msgid "Effort per weekday"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:230
-msgid "Show/hide time spent per weekday columns"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\effort.py:294
+#: taskcoachlib\gui\viewer\effort.py:295
 msgid "Effort: %d selected, %d visible, %d total"
 msgstr "Опит: %d избрани, %d видими, %d общо"
 
-#: taskcoachlib\gui\viewer\effort.py:297
+#: taskcoachlib\gui\viewer\effort.py:298
 msgid "Status: %d tracking"
 msgstr "Статус: %d проследяване"
 
@@ -2182,10 +1550,6 @@ msgstr "У&тре"
 #: taskcoachlib\gui\viewer\mixin.py:185
 msgid "Only show tasks due today and tomorrow"
 msgstr "Показвай само задачи, завършващи днес или утре"
-
-#: taskcoachlib\gui\viewer\mixin.py:187
-msgid "Wo&rkweek"
-msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:188
 msgid "Only show tasks due this work week (i.e. before Friday)"
@@ -2219,10 +1583,6 @@ msgstr "Покажи сам задачи с краен срок тази год�
 msgid "&Hide tasks that are"
 msgstr "&Скрий задачи които са"
 
-#: taskcoachlib\gui\viewer\mixin.py:331
-msgid "Sort tasks by subject"
-msgstr ""
-
 #: taskcoachlib\gui\viewer\mixin.py:333
 msgid "Sort by category"
 msgstr "Сортирай по категория"
@@ -2236,7 +1596,7 @@ msgid "Sort tasks by start date"
 msgstr "Сортирай задачите по начална дата"
 
 #: taskcoachlib\gui\viewer\mixin.py:335
-#: taskcoachlib\gui\viewer\task.py:403
+#: taskcoachlib\gui\viewer\task.py:402
 msgid "&Start date"
 msgstr "&Начална дата"
 
@@ -2245,7 +1605,7 @@ msgid "Sort tasks by due date"
 msgstr "Сортирай задачите по крайна дата"
 
 #: taskcoachlib\gui\viewer\mixin.py:336
-#: taskcoachlib\gui\viewer\task.py:406
+#: taskcoachlib\gui\viewer\task.py:405
 msgid "&Due date"
 msgstr "&Крайна дата"
 
@@ -2262,7 +1622,7 @@ msgid "Sort tasks by number of days left"
 msgstr "Сортирай задачите по оставащи дни"
 
 #: taskcoachlib\gui\viewer\mixin.py:338
-#: taskcoachlib\gui\viewer\task.py:412
+#: taskcoachlib\gui\viewer\task.py:411
 msgid "D&ays left"
 msgstr "О&ставащи дни"
 
@@ -2271,7 +1631,7 @@ msgid "Sort tasks by recurrence"
 msgstr "Сортирай задачите по повторение"
 
 #: taskcoachlib\gui\viewer\mixin.py:339
-#: taskcoachlib\gui\viewer\task.py:415
+#: taskcoachlib\gui\viewer\task.py:414
 msgid "&Recurrence"
 msgstr "&Повторение"
 
@@ -2280,8 +1640,8 @@ msgid "Sort tasks by budget"
 msgstr "Сортирай задачите по бюджет"
 
 #: taskcoachlib\gui\viewer\mixin.py:340
-#: taskcoachlib\gui\viewer\task.py:420
-#: taskcoachlib\gui\viewer\task.py:427
+#: taskcoachlib\gui\viewer\task.py:419
+#: taskcoachlib\gui\viewer\task.py:426
 msgid "&Budget"
 msgstr "&Бюджет"
 
@@ -2290,7 +1650,7 @@ msgid "Sort tasks by total budget"
 msgstr "Сортирай задачите по общ бюджет"
 
 #: taskcoachlib\gui\viewer\mixin.py:341
-#: taskcoachlib\gui\viewer\task.py:430
+#: taskcoachlib\gui\viewer\task.py:429
 msgid "Total b&udget"
 msgstr "Общ б&юджет"
 
@@ -2303,7 +1663,7 @@ msgid "Sort tasks by total time spent"
 msgstr "Сортирай задачите по общо отделено време"
 
 #: taskcoachlib\gui\viewer\mixin.py:343
-#: taskcoachlib\gui\viewer\task.py:436
+#: taskcoachlib\gui\viewer\task.py:435
 msgid "T&otal time spent"
 msgstr "&Общо отделено време"
 
@@ -2312,7 +1672,7 @@ msgid "Sort tasks by budget left"
 msgstr "Сортирай задачите по остатъчен бюджет"
 
 #: taskcoachlib\gui\viewer\mixin.py:344
-#: taskcoachlib\gui\viewer\task.py:439
+#: taskcoachlib\gui\viewer\task.py:438
 msgid "Budget &left"
 msgstr "&Остатък бюджет"
 
@@ -2321,7 +1681,7 @@ msgid "Sort tasks by total budget left"
 msgstr "Сортирай задачите по общ остатъчен бюджет"
 
 #: taskcoachlib\gui\viewer\mixin.py:345
-#: taskcoachlib\gui\viewer\task.py:442
+#: taskcoachlib\gui\viewer\task.py:441
 msgid "Total budget l&eft"
 msgstr "&Общ остатък бюджет"
 
@@ -2330,7 +1690,7 @@ msgid "Sort tasks by priority"
 msgstr "Сортирай задачите по приоритет"
 
 #: taskcoachlib\gui\viewer\mixin.py:346
-#: taskcoachlib\gui\viewer\task.py:487
+#: taskcoachlib\gui\viewer\task.py:486
 msgid "&Priority"
 msgstr "&Приоритет"
 
@@ -2339,7 +1699,7 @@ msgid "Sort tasks by overall priority"
 msgstr "Сортирай задачите по приоритет"
 
 #: taskcoachlib\gui\viewer\mixin.py:347
-#: taskcoachlib\gui\viewer\task.py:377
+#: taskcoachlib\gui\viewer\task.py:376
 msgid "Overall priority"
 msgstr "Общ приоритет"
 
@@ -2348,7 +1708,7 @@ msgid "Sort tasks by hourly fee"
 msgstr "Сортирай задачите по часова ставка"
 
 #: taskcoachlib\gui\viewer\mixin.py:348
-#: taskcoachlib\gui\viewer\task.py:453
+#: taskcoachlib\gui\viewer\task.py:452
 msgid "&Hourly fee"
 msgstr "&Часова ставка"
 
@@ -2357,7 +1717,7 @@ msgid "Sort tasks by fixed fee"
 msgstr "Сортирай задачите по фиксирана ставка"
 
 #: taskcoachlib\gui\viewer\mixin.py:349
-#: taskcoachlib\gui\viewer\task.py:456
+#: taskcoachlib\gui\viewer\task.py:455
 msgid "&Fixed fee"
 msgstr "&Фиксирана ставка"
 
@@ -2386,70 +1746,14 @@ msgid "Sort tasks by reminder date and time"
 msgstr "Сортирай задачите по дата и време на напомняне"
 
 #: taskcoachlib\gui\viewer\mixin.py:353
-#: taskcoachlib\gui\viewer\task.py:493
+#: taskcoachlib\gui\viewer\task.py:492
 msgid "&Reminder"
 msgstr "&Напомняне"
 
-#: taskcoachlib\gui\viewer\mixin.py:378
-msgid "Sort attachments by subject"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:381
-msgid "Sort attachments by description"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:384
-msgid "Sort attachments by category"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:387
-msgid "Sort attachments by overall categories"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:398
-#: taskcoachlib\gui\viewer\note.py:124
-msgid "Sort notes by subject"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:401
-#: taskcoachlib\gui\viewer\note.py:128
-msgid "Sort notes by description"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:404
-msgid "Sort notes by category"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:407
-#: taskcoachlib\gui\viewer\note.py:138
-msgid "Sort notes by overall categories"
-msgstr ""
-
 #: taskcoachlib\gui\viewer\note.py:104
-#: taskcoachlib\gui\viewer\task.py:472
+#: taskcoachlib\gui\viewer\task.py:471
 msgid "&Attachments"
 msgstr "&Прикрепени файлове"
-
-#: taskcoachlib\gui\viewer\note.py:105
-msgid "Show/hide attachments column"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\note.py:111
-#: taskcoachlib\gui\viewer\task.py:485
-msgid "Show/hide overall categories column"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\note.py:124
-msgid "&Subject"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\note.py:132
-msgid "Sort notes by categories"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\note.py:138
-msgid "&Overall categories"
-msgstr ""
 
 #: taskcoachlib\gui\viewer\note.py:184
 msgid "Notes: %d selected, %d total"
@@ -2467,190 +1771,133 @@ msgstr "Задачи: %d избрани, %d видими, %d общо"
 msgid "Status: %d over due, %d inactive, %d completed"
 msgstr "Статус: %d пресрочени, %d неактивни, %d завършени"
 
-#: taskcoachlib\gui\viewer\task.py:176
-msgid "Task square map"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\task.py:367
+#: taskcoachlib\gui\viewer\task.py:366
 msgid "Days left"
 msgstr "Оставащи дни"
 
-#: taskcoachlib\gui\viewer\task.py:371
+#: taskcoachlib\gui\viewer\task.py:370
 msgid "Total budget"
 msgstr "Общ бюджет"
 
-#: taskcoachlib\gui\viewer\task.py:375
+#: taskcoachlib\gui\viewer\task.py:374
 msgid "Total budget left"
 msgstr "Общ остатък бюджет"
 
-#: taskcoachlib\gui\viewer\task.py:380
+#: taskcoachlib\gui\viewer\task.py:379
 msgid "Total fixed fee"
 msgstr "Обща фиксирана ставка"
 
-#: taskcoachlib\gui\viewer\task.py:396
+#: taskcoachlib\gui\viewer\task.py:395
 msgid "&Dates"
 msgstr "&Дати"
 
-#: taskcoachlib\gui\viewer\task.py:397
+#: taskcoachlib\gui\viewer\task.py:396
 msgid "All date columns"
 msgstr "Колони с всички дати"
 
-#: taskcoachlib\gui\viewer\task.py:398
+#: taskcoachlib\gui\viewer\task.py:397
 msgid "Show/hide all date-related columns"
 msgstr "Покажи/Скрий всички колони свързани с дати"
 
-#: taskcoachlib\gui\viewer\task.py:404
+#: taskcoachlib\gui\viewer\task.py:403
 msgid "Show/hide start date column"
 msgstr "Покажи/Скрий колоната с начална дата"
 
-#: taskcoachlib\gui\viewer\task.py:407
+#: taskcoachlib\gui\viewer\task.py:406
 msgid "Show/hide due date column"
 msgstr "Покажи/Скрий колона на крайните дати"
 
-#: taskcoachlib\gui\viewer\task.py:409
+#: taskcoachlib\gui\viewer\task.py:408
 msgid "Co&mpletion date"
 msgstr "Да&та на завършване"
 
-#: taskcoachlib\gui\viewer\task.py:410
+#: taskcoachlib\gui\viewer\task.py:409
 msgid "Show/hide completion date column"
 msgstr "Покажи/Скрий колона на датите на завършване"
 
-#: taskcoachlib\gui\viewer\task.py:413
+#: taskcoachlib\gui\viewer\task.py:412
 msgid "Show/hide days left column"
 msgstr "Покажи/Скрий колона на оставащи дни"
 
-#: taskcoachlib\gui\viewer\task.py:416
+#: taskcoachlib\gui\viewer\task.py:415
 msgid "Show/hide recurrence column"
 msgstr "Покажи/Скрий колоната с повторенията"
 
-#: taskcoachlib\gui\viewer\task.py:421
+#: taskcoachlib\gui\viewer\task.py:420
 msgid "All budget columns"
 msgstr "Всички колони с бюджет"
 
-#: taskcoachlib\gui\viewer\task.py:422
+#: taskcoachlib\gui\viewer\task.py:421
 msgid "Show/hide all budget-related columns"
 msgstr "Покажи/Скрий всички колони свързани с бюджета"
 
-#: taskcoachlib\gui\viewer\task.py:428
+#: taskcoachlib\gui\viewer\task.py:427
 msgid "Show/hide budget column"
 msgstr "Покажи/Скрий колона на бюджета"
 
-#: taskcoachlib\gui\viewer\task.py:431
+#: taskcoachlib\gui\viewer\task.py:430
 msgid "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr "Покажи/Скрий колоната с общия бюджет (общия бюджет включва бюджета за подзадачите)"
 
-#: taskcoachlib\gui\viewer\task.py:437
+#: taskcoachlib\gui\viewer\task.py:436
 msgid "Show/hide total time spent column (total time includes time spent on subtasks)"
 msgstr "Покажи/Скрий общото отделено време (общото отделено време включва времето отделено за подзадачи)"
 
-#: taskcoachlib\gui\viewer\task.py:440
+#: taskcoachlib\gui\viewer\task.py:439
 msgid "Show/hide budget left column"
 msgstr "Покажи/Скрий колоната с остатъка от бюджета"
 
-#: taskcoachlib\gui\viewer\task.py:443
+#: taskcoachlib\gui\viewer\task.py:442
 msgid "Show/hide total budget left column (total budget left includes budget left for subtasks)"
 msgstr "Покажи/Скрий общ остатък от бюджета (обш остатък от бюджета включва остатъка от бюджета за подзадачи)"
 
-#: taskcoachlib\gui\viewer\task.py:446
+#: taskcoachlib\gui\viewer\task.py:445
 msgid "&Financial"
 msgstr "&Финансов"
 
-#: taskcoachlib\gui\viewer\task.py:447
+#: taskcoachlib\gui\viewer\task.py:446
 msgid "All financial columns"
 msgstr "Всички финансови колони"
 
-#: taskcoachlib\gui\viewer\task.py:448
+#: taskcoachlib\gui\viewer\task.py:447
 msgid "Show/hide all finance-related columns"
 msgstr "Покажи/Скрий всички свързани с финанси колони"
 
-#: taskcoachlib\gui\viewer\task.py:454
+#: taskcoachlib\gui\viewer\task.py:453
 msgid "Show/hide hourly fee column"
 msgstr "Покажи/Скрий колоната с часовата ставка"
 
-#: taskcoachlib\gui\viewer\task.py:457
+#: taskcoachlib\gui\viewer\task.py:456
 msgid "Show/hide fixed fee column"
 msgstr "Покажи/Скрий колоната с фиксирана ставка"
 
-#: taskcoachlib\gui\viewer\task.py:459
+#: taskcoachlib\gui\viewer\task.py:458
 msgid "&Total fixed fee"
 msgstr "&Обща фиксирана ставка"
 
-#: taskcoachlib\gui\viewer\task.py:460
+#: taskcoachlib\gui\viewer\task.py:459
 msgid "Show/hide total fixed fee column"
 msgstr "Покажи/Скрий колоната с обща фиксирана ставка"
 
-#: taskcoachlib\gui\viewer\task.py:465
+#: taskcoachlib\gui\viewer\task.py:464
 msgid "T&otal revenue"
 msgstr "%Общ приход"
 
-#: taskcoachlib\gui\viewer\task.py:473
+#: taskcoachlib\gui\viewer\task.py:472
 msgid "Show/hide attachment column"
 msgstr "Покажи/Скрий колона на приложенията"
 
-#: taskcoachlib\gui\viewer\task.py:488
+#: taskcoachlib\gui\viewer\task.py:487
 msgid "Show/hide priority column"
 msgstr "Покажи/Скрий колоната с приоритети"
 
-#: taskcoachlib\gui\viewer\task.py:490
+#: taskcoachlib\gui\viewer\task.py:489
 msgid "O&verall priority"
 msgstr "Ц&ялостен приоритет"
 
-#: taskcoachlib\gui\viewer\task.py:491
-msgid "Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\task.py:494
+#: taskcoachlib\gui\viewer\task.py:493
 msgid "Show/hide reminder column"
 msgstr "Покажи/Скрий колоната с напомняния"
-
-#: taskcoachlib\help\__init__.py:25
-msgid ""
-"<h3>Table of contents</h3>\n"
-"<ul>\n"
-"<li><a href=\"#tasks\">Tasks</a>\n"
-"    <ul>\n"
-"        <li><a href=\"#abouttasks\">About tasks</a></li>\n"
-"        <li><a href=\"#taskproperties\">Task properties</a></li>\n"
-"        <li><a href=\"#taskstates\">Task states</a></li>\n"
-"        <li><a href=\"#taskcolors\">Task colors</a></li>\n"
-"    </ul>\n"
-"</li>\n"
-"<li><a href=\"#effort\">Effort</a>\n"
-"    <ul>\n"
-"        <li><a href=\"#abouteffort\">About effort</a></li>\n"
-"        <li><a href=\"#effortproperties\">Effort properties</a></li>\n"
-"    </ul>\n"
-"</li>\n"
-"<li><a href=\"#categories\">Categories</a>\n"
-"    <ul>\n"
-"        <li><a href=\"#aboutcategories\">About categories</a></li>\n"
-"        <li><a href=\"#categoryproperties\">Category properties</a></li>\n"
-"    </ul>\n"
-"</li>\n"
-"<li><a href=\"#email\">E-mail (Outlook &amp; Thunderbird) integration</a>\n"
-"  <ul>\n"
-"    <li><a href=\"#aboutemail\">About e-mail integration</a></li>\n"
-"    <li><a href=\"#emailattach\">Attaching an e-mail to a task</a></li>\n"
-"    <li><a href=\"#emailcreate\">Creating a task from an e-mail</a></li>\n"
-"  </ul>\n"
-"</li>\n"
-"<li><a href=\"#syncml\">SyncML support</a>\n"
-"  <ul>\n"
-"    <li><a href=\"#aboutsyncml\">What is SyncML</a></li>\n"
-"    <li><a href=\"#syncmlsetup\">Setup</a></li>\n"
-"    <li><a href=\"#syncmllimits\">Limitations</a></li>\n"
-"    <li><a href=\"#syncmltrouble\">Troubleshooting</a></li>\n"
-"    <li><a href=\"#syncmlpurge\">Purging deleted items</a></li>\n"
-"  </ul>\n"
-"</li>\n"
-"<li><a href=\"#templates\">Task templates</a>\n"
-"  <ul>\n"
-"    <li><a href=\"#abouttemplates\">About templates</a></li>\n"
-"    <li><a href=\"#usingtemplates\">Using templates</a></li>\n"
-"  </ul>\n"
-"</li>\n"
-"</ul>\n"
-msgstr ""
 
 #: taskcoachlib\help\__init__.py:72
 msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
@@ -2948,6 +2195,873 @@ msgstr ""
 "с тях цвят, смесица от цветвете че бъде използвана за генериране на фона на\n"
 "тази задача.</p>\n"
 
+#: taskcoachlib\help\__init__.py:405
+msgid ""
+"\n"
+"Version %(version)s, %(date)s\n"
+"\n"
+"By %(author)s <%(author_email)s>\n"
+"\n"
+"%(url)s\n"
+"\n"
+"%(copyright)s\n"
+"%(license)s\n"
+"\n"
+msgstr ""
+"\n"
+"Версия %(version)s, %(date)s\n"
+"\n"
+"От %(author)s <%(author_email)s>\n"
+"\n"
+"%(url)s\n"
+"\n"
+"%(copyright)s\n"
+"%(license)s\n"
+"\n"
+
+#: taskcoachlib\help\tips.py:26
+msgid "%(name)s has a mailinglist where you can discuss usage of %(name)s with fellow users, discuss and request features and complain about bugs. Go to %(url)s and join today!"
+msgstr "%(name)s има пощенски списък където можете да обсъждате използването на %(name)s с други потребители, да обсъждате и предлагате нови възможности и да се оплачете за бъгове. Идете на %(url)s и се присъединете днес!"
+
+#: taskcoachlib\help\tips.py:27
+msgid "%(name)s has unlimited undo and redo. Any change that you make, be it editing a task description, or deleting an effort record, is undoable. Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards through your edit history."
+msgstr "%(name)s има неограничен брой 'откажи' и 'повтори'. Всяка промяна която правите, била тя описание на задача или изтриване на запис на опит е отменима. Изберете 'Редактирай' -> 'Отмени' и 'Редактирай' -> 'Повтори' за да се придвижвате напред-назад в историята на Вашите редакции."
+
+#: taskcoachlib\help\tips.py:28
+msgid "%(name)s is available in a number of different languages. Select 'Edit' -> 'Preferences' to see whether your language is one of them. If your language is not available or the translation needs improvement, please consider helping with the translation of %(name)s. Visit %(url)s for more information about how you can help."
+msgstr "%(name)s е в наличност за различни езици. Изберете 'Редактирай' -> 'Предпочитания' за да видите дали вашият език е един от тях. Ако вашият език не е в наличност или превода изисква подобрение, можете да помогнете с превода на %(name)s. Посетете %(url)s за повече информация относно това как можете да помогнете."
+
+#: taskcoachlib\help\tips.py:29
+msgid "If you enter a URL (e.g. %(url)s) in a task or effort description, it becomes a link. Clicking on the link will open the URL in your default web browser."
+msgstr "Ако въведете URL адрес (напр. %(url)s) в описание на задача или опит, той се превръща във връзка. Кликване върху тази връзка ще отвори URL във вашия браузър по подразбиране."
+
+#: taskcoachlib\help\tips.py:30
+msgid "You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks. The same goes for categories."
+msgstr "Можете да теглите и пускате задачи в дървовидния изглед с цел да пренареждате йерархичните взаимоотношения между задачите. Същото се отнася и за категориите"
+
+#: taskcoachlib\help\tips.py:31
+msgid "You can drag files from a file browser onto a task to create attachments. Dragging the files over a tab will raise the appropriate page, dragging the files over a collapsed task (the boxed + sign) in the tree view will expand the task to show its subtasks."
+msgstr "Можете да теглите файлове от файлов браузър върху задача за да създавате приложения. Тегленето на файлове върху етикет ще покаже подходящата страница, тегленето на файлове върху събрана задача (със знак + отпред) във дървовидния изглед ще разгъне задачата за да покаже нейните подзадачи."
+
+#: taskcoachlib\help\tips.py:32
+msgid "You can create any viewer layout you want by dragging and dropping the tabs. Unfortunately, due to a limitation of the current version of the graphical toolkit (wxPython), the layout cannot be saved for reuse in the next session."
+msgstr "Можете да създавате оформлението на всеки изглед посредством влачене и пускане на етикетите. За съжаление, поради ограничения в текущата версия на графичния инструмент (wxPython), оформлението не може да бъде запазено за повторна употреба в следваща сесия."
+
+#: taskcoachlib\help\tips.py:33
+msgid "What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc."
+msgstr "Какво точно е принтирано когато изберете 'Файл' -> 'Принтирай' , зависи от текущия изглед. Ако последния показва списък със задачи - те ще бъдат принтирани, ако показва опити групирани по месец, те ще бъдат принтирани. Същото се отнася за видимите колони, реда на сортиране, филтрирани задачи и т.н."
+
+#: taskcoachlib\help\tips.py:34
+msgid "Left-click a column header to sort by that column. Click the column header again to change the sort order from ascending to descending and back again. Right-click a column header to hide that column or make additional columns visible."
+msgstr "Ляв клик на мишката върху заглавие на колона, за да сортирате по тази колона. Кликнете отново за промяна от възходящ в низходящ ред на сортиране. Десен клик на мишката върху заглавие на колона, за да скриете тази колона или да направите други колони видими."
+
+#: taskcoachlib\mailer\__init__.py:53
+msgid "Untitled e-mail"
+msgstr "Неозаглавен e-mail"
+
+#: taskcoachlib\mailer\thunderbird.py:190
+msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
+msgstr "Миля въведете парола за потребител %(user)s в %(server)s:%(port)d"
+
+#: taskcoachlib\mailer\thunderbird.py:204
+msgid "Wrong password. Please try again."
+msgstr "Грешна парола. Моля опитайте отново."
+
+#: taskcoachlib\widgets\buttonbox.py:24
+#: taskcoachlib\widgets\conflict.py:261
+#: taskcoachlib\widgets\dialog.py:53
+#: taskcoachlib\widgets\dialog.py:76
+#: taskcoachlib\widgets\dialog.py:79
+#: taskcoachlib\widgets\dialog.py:146
+#: taskcoachlib\widgets\syncmlwarning.py:18
+msgid "OK"
+msgstr "ОК"
+
+#: taskcoachlib\widgets\buttonbox.py:24
+#: taskcoachlib\widgets\dialog.py:54
+msgid "Cancel"
+msgstr "Откажи"
+
+#: taskcoachlib\widgets\dialog.py:155
+msgid "All files (*.*)|*"
+msgstr "Всички файлове (*.*)|*"
+
+#: taskcoachlib\widgets\searchctrl.py:45
+msgid "Match case"
+msgstr "Сравнявай формата на буквите"
+
+#: taskcoachlib\widgets\searchctrl.py:45
+msgid "Match case when filtering"
+msgstr "Съпоставка на формата на буквите при филтриране"
+
+#: taskcoachlib\widgets\searchctrl.py:48
+msgid "Include sub items"
+msgstr "Включи субелементи"
+
+#: taskcoachlib\widgets\searchctrl.py:49
+msgid "Include sub items of matching items in the search results"
+msgstr "Включи субелементи от съвпадащите елементи в резултата от търсенето"
+
+#: taskcoachlib\widgets\searchctrl.py:150
+msgid "Recent searches"
+msgstr "Най-нови търсения"
+
+#: taskcoachlib\widgets\searchctrl.py:161
+msgid "Viewer not searchable"
+msgstr "Изгледа не може да се претърсва"
+
+#: taskcoachlib\application\application.py:98
+msgid ""
+"Couldn't load settings from TaskCoach.ini:\n"
+"%s"
+msgstr ""
+
+#: taskcoachlib\command\attachmentCommands.py:64
+msgid "Add note to attachment"
+msgstr ""
+
+#: taskcoachlib\command\categoryCommands.py:72
+msgid "Add note to category"
+msgstr ""
+
+#: taskcoachlib\command\taskCommands.py:315
+msgid "Add note to task"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:74
+msgid "For this note"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:75
+msgid "For this note including all subnotes"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:187
+msgid "Browse"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:262
+msgid ", every"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:273
+msgid "keeping dates on the same weekday"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:359
+msgid "day(s),"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:359
+msgid "period,"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:359
+msgid "week(s),"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:360
+msgid "month(s),"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:360
+msgid "year(s),"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:118
+msgid ""
+"This setting will take effect\n"
+"after you restart %s"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:140
+msgid ""
+"Create a backup copy before\n"
+"overwriting a %s file"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:144
+msgid ""
+"Save settings (%s.ini) in the same\n"
+"directory as the program"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:146
+msgid ""
+"(For running %s\n"
+"from a removable medium)"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:147
+msgid "Attachment base directory"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:148
+msgid ""
+"When adding an attachment, try to make\n"
+"its path relative to this one."
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:163
+msgid "If it was iconized last session"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:173
+msgid ""
+"Show a popup with the description of an item\n"
+"when hovering over it"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:175
+msgid ""
+"Use a tabbed user interface for the main window\n"
+"(Note: the layout you create by dragging and\n"
+"dropping tabs cannot be saved. This is a limitation\n"
+"of the underlying toolkit)."
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:239
+msgid ""
+"If your language is not available, or the translation needs \n"
+"improving, please consider helping. See:"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:246
+msgid "Language not found?"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:267
+msgid "Allow for tracking effort"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:270
+msgid "Enable SyncML"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:273
+msgid "Hour of start of work day"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:275
+msgid "Hour of end of work day"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:277
+msgid "Minutes between task start/end times"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:91
+msgid "SyncML server URL"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:92
+msgid "User name/ID"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:101
+msgid "Enable tasks synchronization"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:102
+msgid "Tasks database name"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:104
+#: taskcoachlib\gui\dialog\syncpreferences.py:122
+msgid "Preferred synchonization mode"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:105
+#: taskcoachlib\gui\dialog\syncpreferences.py:123
+msgid "Two way"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:106
+#: taskcoachlib\gui\dialog\syncpreferences.py:124
+msgid "Slow"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:107
+#: taskcoachlib\gui\dialog\syncpreferences.py:125
+msgid "One way from client"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:108
+#: taskcoachlib\gui\dialog\syncpreferences.py:126
+msgid "Refresh from client"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:109
+#: taskcoachlib\gui\dialog\syncpreferences.py:127
+msgid "One way from server"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:110
+#: taskcoachlib\gui\dialog\syncpreferences.py:128
+#: taskcoachlib\syncml\basesource.py:61
+#: taskcoachlib\syncml\basesource.py:73
+msgid "Refresh from server"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:119
+msgid "Enable notes synchronization"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:120
+msgid "Notes database name"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\syncpreferences.py:144
+msgid "Access"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:44
+msgid "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:56
+msgid "VCalendar files (*.vcal)|*.vcal|All files (*.*)|*"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:185
+msgid ""
+"Cannot save %s\n"
+"%s"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:190
+msgid "Please enter the template name."
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:191
+msgid "Save as template"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:199
+msgid "Open template..."
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:201
+msgid "%s template files (*.tsktmpl)|*.tsktmpl"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:261
+msgid "Export as VCalendar..."
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:281
+msgid "Finished synchronization"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:285
+msgid "Note conflict"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:289
+msgid "Task conflict"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:301
+msgid "Synchronization status"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:387
+msgid "Open a new tab with a viewer that displays tasks"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:389
+msgid "Task &square map"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:390
+msgid "Open a new tab with a viewer that displays tasks in a square map"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:397
+msgid "&Effort"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:398
+msgid "Open a new tab with a viewer that displays efforts"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:401
+msgid "Effort for &one task"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:402
+msgid "Open a new tab with a viewer that displays efforts for the selected task"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:470
+#: taskcoachlib\gui\menu.py:644
+#: taskcoachlib\gui\uicommand.py:1268
+msgid "New task &from template"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:625
+msgid "%s (subtasks)"
+msgstr ""
+
+#: taskcoachlib\gui\render.py:60
+msgid "Every %(frequency)d days"
+msgstr ""
+
+#: taskcoachlib\gui\render.py:60
+msgid "Every %(frequency)d weeks"
+msgstr ""
+
+#: taskcoachlib\gui\render.py:61
+msgid "Every %(frequency)d months"
+msgstr ""
+
+#: taskcoachlib\gui\render.py:61
+msgid "Every %(frequency)d years"
+msgstr ""
+
+#: taskcoachlib\gui\render.py:63
+msgid "Every other day"
+msgstr ""
+
+#: taskcoachlib\gui\render.py:63
+msgid "Every other week"
+msgstr ""
+
+#: taskcoachlib\gui\render.py:64
+msgid "Every other month"
+msgstr ""
+
+#: taskcoachlib\gui\render.py:64
+msgid "Every other year"
+msgstr ""
+
+#: taskcoachlib\gui\taskbaricon.py:151
+msgid "tracking \"%s\""
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:443
+msgid "&Close\tCtrl+W"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:466
+msgid "S&ave as...\tShift+Ctrl+S"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:487
+msgid "Save selected task as &template"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:488
+msgid "Save the selected task as a task template"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:498
+msgid "Add template"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:499
+msgid "Add a new template from a template file\n"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:509
+msgid "Purge deleted items"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:510
+msgid "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:514
+msgid ""
+"Purging deleted items is undoable.\n"
+"If you're planning on enabling\n"
+"the SyncML feature again with the\n"
+"same server you used previously,\n"
+"these items will probably come back.\n"
+"\n"
+"Do you still want to purge?"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:521
+msgid "Warning"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:528
+msgid "Page setup...\tShift+Ctrl+P"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:562
+msgid "Print...\tCtrl+P"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:605
+msgid "Export &selection as HTML..."
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:606
+msgid "Export the selection in the current view as HTML file"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:625
+msgid "Export as &VCalendar..."
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:626
+msgid "Export the current view in VCalendar format"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:635
+msgid "S&yncML synchronization"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:636
+msgid "Synchronize with a SyncML server"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:640
+msgid "Please enter your password:"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:641
+msgid "Task Coach SyncML password"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:811
+msgid "SyncML preferences..."
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:812
+#: taskcoachlib\gui\uicommand.py:818
+msgid "Edit SyncML preferences"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:839
+msgid "&Invert selection"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1148
+msgid "C&omposite"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1149
+msgid "Show/hide tasks with subtasks in list mode"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1271
+msgid "Create a new task from a template"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1277
+msgid "New task with selected categories..."
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1278
+msgid "Insert a new task with the selected categories checked"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1396
+msgid "Maximize priority\tShift+Ctrl+I"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1409
+msgid "Minimize priority\tShift+Ctrl+D"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1422
+msgid "Increase priority\tCtrl+I"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1435
+msgid "Decrease priority\tCtrl+D"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1500
+msgid ""
+"Cannot send email:\n"
+"%s"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1501
+msgid "%s mail error"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1516
+msgid "Mail note"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1517
+msgid "Mail the note, using your default mailer"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1526
+#: taskcoachlib\gui\uicommand.py:1542
+#: taskcoachlib\gui\uicommand.py:1558
+msgid "Add &note"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1527
+msgid "Add a note to the selected task(s)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1543
+msgid "Add a note to the selected category(ies)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1559
+msgid "Add a note to the selected attachment(s)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1599
+msgid "Browse for files to add as attachment to the selected categories"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1606
+msgid "Browse for files to add as attachment to the selected note(s)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1639
+msgid "Open all attachments of the selected categories"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1646
+msgid "Open all attachments of the selected note(s)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1714
+msgid "(No subject)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1717
+msgid "Start tracking effort for %s"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1732
+msgid "Select a task via the menu and start tracking effort for it"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1826
+msgid "New note with selected categories..."
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1827
+msgid "Insert a new note with the selected categories checked"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1932
+msgid "&Help contents\tCtrl+?"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1935
+msgid "&Help contents\tCtrl+H"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:2033
+msgid "List of tasks"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:2033
+msgid "Tree of tasks"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:2041
+msgid "Filter on all checked categories"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:2042
+msgid "Filter on any checked category"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:2060
+msgid "&Automatic column resizing"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:2061
+msgid "When checked, automatically resize columns to fill available space"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\attachment.py:65
+msgid "Type"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\attachment.py:105
+#: taskcoachlib\gui\viewer\task.py:476
+msgid "&Notes"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\attachment.py:106
+#: taskcoachlib\gui\viewer\task.py:477
+msgid "Show/hide notes column"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:153
+msgid "Monday"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:155
+msgid "Tuesday"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:157
+msgid "Wednesday"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:159
+msgid "Thursday"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:161
+msgid "Friday"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:163
+msgid "Saturday"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:165
+msgid "Sunday"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:219
+msgid "&Total time spent"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:220
+msgid "Show/hide total time spent column"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:224
+msgid "Total &revenue"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:230
+msgid "Effort per weekday"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\effort.py:231
+msgid "Show/hide time spent per weekday columns"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:187
+msgid "Wo&rkweek"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:331
+msgid "Sort tasks by subject"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:378
+msgid "Sort attachments by subject"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:381
+msgid "Sort attachments by description"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:384
+msgid "Sort attachments by category"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:387
+msgid "Sort attachments by overall categories"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:398
+#: taskcoachlib\gui\viewer\note.py:124
+msgid "Sort notes by subject"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:401
+#: taskcoachlib\gui\viewer\note.py:128
+msgid "Sort notes by description"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:404
+msgid "Sort notes by category"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:407
+#: taskcoachlib\gui\viewer\note.py:138
+msgid "Sort notes by overall categories"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\note.py:105
+msgid "Show/hide attachments column"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\note.py:111
+#: taskcoachlib\gui\viewer\task.py:484
+msgid "Show/hide overall categories column"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\note.py:124
+msgid "&Subject"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\note.py:132
+msgid "Sort notes by categories"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\note.py:138
+msgid "&Overall categories"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\task.py:176
+msgid "Task square map"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\task.py:490
+msgid "Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:25
+msgid ""
+"<h3>Table of contents</h3>\n"
+"<ul>\n"
+"<li><a href=\"#tasks\">Tasks</a>\n"
+"    <ul>\n"
+"        <li><a href=\"#abouttasks\">About tasks</a></li>\n"
+"        <li><a href=\"#taskproperties\">Task properties</a></li>\n"
+"        <li><a href=\"#taskstates\">Task states</a></li>\n"
+"        <li><a href=\"#taskcolors\">Task colors</a></li>\n"
+"    </ul>\n"
+"</li>\n"
+"<li><a href=\"#effort\">Effort</a>\n"
+"    <ul>\n"
+"        <li><a href=\"#abouteffort\">About effort</a></li>\n"
+"        <li><a href=\"#effortproperties\">Effort properties</a></li>\n"
+"    </ul>\n"
+"</li>\n"
+"<li><a href=\"#categories\">Categories</a>\n"
+"    <ul>\n"
+"        <li><a href=\"#aboutcategories\">About categories</a></li>\n"
+"        <li><a href=\"#categoryproperties\">Category properties</a></li>\n"
+"    </ul>\n"
+"</li>\n"
+"<li><a href=\"#email\">E-mail (Outlook &amp; Thunderbird) integration</a>\n"
+"  <ul>\n"
+"    <li><a href=\"#aboutemail\">About e-mail integration</a></li>\n"
+"    <li><a href=\"#emailattach\">Attaching an e-mail to a task</a></li>\n"
+"    <li><a href=\"#emailcreate\">Creating a task from an e-mail</a></li>\n"
+"  </ul>\n"
+"</li>\n"
+"<li><a href=\"#syncml\">SyncML support</a>\n"
+"  <ul>\n"
+"    <li><a href=\"#aboutsyncml\">What is SyncML</a></li>\n"
+"    <li><a href=\"#syncmlsetup\">Setup</a></li>\n"
+"    <li><a href=\"#syncmllimits\">Limitations</a></li>\n"
+"    <li><a href=\"#syncmltrouble\">Troubleshooting</a></li>\n"
+"    <li><a href=\"#syncmlpurge\">Purging deleted items</a></li>\n"
+"  </ul>\n"
+"</li>\n"
+"<li><a href=\"#templates\">Task templates</a>\n"
+"  <ul>\n"
+"    <li><a href=\"#abouttemplates\">About templates</a></li>\n"
+"    <li><a href=\"#usingtemplates\">Using templates</a></li>\n"
+"  </ul>\n"
+"</li>\n"
+"</ul>\n"
+msgstr ""
+
 #: taskcoachlib\help\__init__.py:222
 msgid "<h3><a name=\"email\">E-mail (Outlook &amp; Thunderbird) integration</a></h3>\n"
 msgstr ""
@@ -3096,7 +3210,7 @@ msgid ""
 "previously, all those items will reappear, as the server\n"
 "doesn't know they're deleted.</p>\n"
 "\n"
-"<p>Additionaly, prior to version 0.71.4 of %(name)s, these deleted\n"
+"<p>In addition, prior to version 0.71.4 of %(name)s, these deleted\n"
 "tasks and notes were kept around even with the SyncML feature\n"
 "disabled, so tasks and notes were never actually deleted. the \"Purge\n"
 "deleted items\" menu item can be used when upgrading to 0.71.4 to clear\n"
@@ -3144,69 +3258,9 @@ msgid ""
 "<p>%(license_notice_html)s</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:405
-msgid ""
-"\n"
-"Version %(version)s, %(date)s\n"
-"\n"
-"By %(author)s <%(author_email)s>\n"
-"\n"
-"%(url)s\n"
-"\n"
-"%(copyright)s\n"
-"%(license)s\n"
-"\n"
-msgstr ""
-"\n"
-"Версия %(version)s, %(date)s\n"
-"\n"
-"От %(author)s <%(author_email)s>\n"
-"\n"
-"%(url)s\n"
-"\n"
-"%(copyright)s\n"
-"%(license)s\n"
-"\n"
-
 #: taskcoachlib\help\tips.py:25
 msgid "%(name)s is currently alpha software. Although the %(name)s developers try hard to prevent them, bugs do happen. So, backing up your work on a regular basis is strongly advised."
 msgstr ""
-
-#: taskcoachlib\help\tips.py:26
-msgid "%(name)s has a mailinglist where you can discuss usage of %(name)s with fellow users, discuss and request features and complain about bugs. Go to %(url)s and join today!"
-msgstr "%(name)s има пощенски списък където можете да обсъждате използването на %(name)s с други потребители, да обсъждате и предлагате нови възможности и да се оплачете за бъгове. Идете на %(url)s и се присъединете днес!"
-
-#: taskcoachlib\help\tips.py:27
-msgid "%(name)s has unlimited undo and redo. Any change that you make, be it editing a task description, or deleting an effort record, is undoable. Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards through your edit history."
-msgstr "%(name)s има неограничен брой 'откажи' и 'повтори'. Всяка промяна която правите, била тя описание на задача или изтриване на запис на опит е отменима. Изберете 'Редактирай' -> 'Отмени' и 'Редактирай' -> 'Повтори' за да се придвижвате напред-назад в историята на Вашите редакции."
-
-#: taskcoachlib\help\tips.py:28
-msgid "%(name)s is available in a number of different languages. Select 'Edit' -> 'Preferences' to see whether your language is one of them. If your language is not available or the translation needs improvement, please consider helping with the translation of %(name)s. Visit %(url)s for more information about how you can help."
-msgstr "%(name)s е в наличност за различни езици. Изберете 'Редактирай' -> 'Предпочитания' за да видите дали вашият език е един от тях. Ако вашият език не е в наличност или превода изисква подобрение, можете да помогнете с превода на %(name)s. Посетете %(url)s за повече информация относно това как можете да помогнете."
-
-#: taskcoachlib\help\tips.py:29
-msgid "If you enter a URL (e.g. %(url)s) in a task or effort description, it becomes a link. Clicking on the link will open the URL in your default web browser."
-msgstr "Ако въведете URL адрес (напр. %(url)s) в описание на задача или опит, той се превръща във връзка. Кликване върху тази връзка ще отвори URL във вашия браузър по подразбиране."
-
-#: taskcoachlib\help\tips.py:30
-msgid "You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks. The same goes for categories."
-msgstr "Можете да теглите и пускате задачи в дървовидния изглед с цел да пренареждате йерархичните взаимоотношения между задачите. Същото се отнася и за категориите"
-
-#: taskcoachlib\help\tips.py:31
-msgid "You can drag files from a file browser onto a task to create attachments. Dragging the files over a tab will raise the appropriate page, dragging the files over a collapsed task (the boxed + sign) in the tree view will expand the task to show its subtasks."
-msgstr "Можете да теглите файлове от файлов браузър върху задача за да създавате приложения. Тегленето на файлове върху етикет ще покаже подходящата страница, тегленето на файлове върху събрана задача (със знак + отпред) във дървовидния изглед ще разгъне задачата за да покаже нейните подзадачи."
-
-#: taskcoachlib\help\tips.py:32
-msgid "You can create any viewer layout you want by dragging and dropping the tabs. Unfortunately, due to a limitation of the current version of the graphical toolkit (wxPython), the layout cannot be saved for reuse in the next session."
-msgstr "Можете да създавате оформлението на всеки изглед посредством влачене и пускане на етикетите. За съжаление, поради ограничения в текущата версия на графичния инструмент (wxPython), оформлението не може да бъде запазено за повторна употреба в следваща сесия."
-
-#: taskcoachlib\help\tips.py:33
-msgid "What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc."
-msgstr "Какво точно е принтирано когато изберете 'Файл' -> 'Принтирай' , зависи от текущия изглед. Ако последния показва списък със задачи - те ще бъдат принтирани, ако показва опити групирани по месец, те ще бъдат принтирани. Същото се отнася за видимите колони, реда на сортиране, филтрирани задачи и т.н."
-
-#: taskcoachlib\help\tips.py:34
-msgid "Left-click a column header to sort by that column. Click the column header again to change the sort order from ascending to descending and back again. Right-click a column header to hide that column or make additional columns visible."
-msgstr "Ляв клик на мишката върху заглавие на колона, за да сортирате по тази колона. Кликнете отново за промяна от възходящ в низходящ ред на сортиране. Десен клик на мишката върху заглавие на колона, за да скриете тази колона или да направите други колони видими."
 
 #: taskcoachlib\help\tips.py:35
 msgid "You can turn off some features, such as notes and effort tracking, in the Preferences dialog. Features turned off are not accessible via the user interface, resulting in a 'smaller' user interface."
@@ -3215,18 +3269,6 @@ msgstr ""
 #: taskcoachlib\help\tips.py:36
 msgid "You can create a template from a task in order to reduce typing when repetitive patterns emerge."
 msgstr ""
-
-#: taskcoachlib\mailer\__init__.py:53
-msgid "Untitled e-mail"
-msgstr "Неозаглавен e-mail"
-
-#: taskcoachlib\mailer\thunderbird.py:190
-msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
-msgstr "Миля въведете парола за потребител %(user)s в %(server)s:%(port)d"
-
-#: taskcoachlib\mailer\thunderbird.py:204
-msgid "Wrong password. Please try again."
-msgstr "Грешна парола. Моля опитайте отново."
 
 #: taskcoachlib\persistence\xml\templates.py:8
 msgid "New task due today"
@@ -3314,21 +3356,6 @@ msgstr ""
 msgid "Task \"%s\" has been locally deleted,\n"
 msgstr ""
 
-#: taskcoachlib\widgets\buttonbox.py:24
-#: taskcoachlib\widgets\conflict.py:261
-#: taskcoachlib\widgets\dialog.py:53
-#: taskcoachlib\widgets\dialog.py:76
-#: taskcoachlib\widgets\dialog.py:79
-#: taskcoachlib\widgets\dialog.py:146
-#: taskcoachlib\widgets\syncmlwarning.py:18
-msgid "OK"
-msgstr "ОК"
-
-#: taskcoachlib\widgets\buttonbox.py:24
-#: taskcoachlib\widgets\dialog.py:54
-msgid "Cancel"
-msgstr "Откажи"
-
 #: taskcoachlib\widgets\conflict.py:83
 msgid "Field name"
 msgstr ""
@@ -3345,39 +3372,11 @@ msgstr ""
 msgid "Fusion"
 msgstr ""
 
-#: taskcoachlib\widgets\dialog.py:155
-msgid "All files (*.*)|*"
-msgstr "Всички файлове (*.*)|*"
-
-#: taskcoachlib\widgets\searchctrl.py:45
-msgid "Match case"
-msgstr "Сравнявай формата на буквите"
-
-#: taskcoachlib\widgets\searchctrl.py:45
-msgid "Match case when filtering"
-msgstr "Съпоставка на формата на буквите при филтриране"
-
-#: taskcoachlib\widgets\searchctrl.py:48
-msgid "Include sub items"
-msgstr "Включи субелементи"
-
-#: taskcoachlib\widgets\searchctrl.py:49
-msgid "Include sub items of matching items in the search results"
-msgstr "Включи субелементи от съвпадащите елементи в резултата от търсенето"
-
 #: taskcoachlib\widgets\searchctrl.py:98
 msgid ""
 "This is an invalid regular expression.\n"
 "Defaulting to substring search."
 msgstr ""
-
-#: taskcoachlib\widgets\searchctrl.py:150
-msgid "Recent searches"
-msgstr "Най-нови търсения"
-
-#: taskcoachlib\widgets\searchctrl.py:161
-msgid "Viewer not searchable"
-msgstr "Изгледа не може да се претърсва"
 
 #: taskcoachlib\widgets\syncmlwarning.py:8
 msgid "Compatibility warning"
@@ -3395,89 +3394,4 @@ msgstr ""
 #: taskcoachlib\widgets\syncmlwarning.py:16
 msgid "Never show this dialog again"
 msgstr ""
-
-#~ msgid "Remove attachment"
-#~ msgstr "Отстрани приложение"
-#~ msgid "&Close"
-#~ msgstr "&Затвори"
-#~ msgid "S&ave as..."
-#~ msgstr "&Запази като..."
-#~ msgid "Please enter recipient"
-#~ msgstr "Моля въведете получател"
-#~ msgid ""
-#~ "Show/hide overall priority column (overall priority is the maximum priority "
-#~ "of a task and all its subtasks)"
-#~ msgstr ""
-#~ "Покажи/Скрий колоната на цялостния приоритет (цялостния приоритет е "
-#~ "максималния приоритет за задача и всичките и подзадачи)"
-#~ msgid "Wo&rk week"
-#~ msgstr "Ра&ботна седмица"
-#~ msgid "Task list"
-#~ msgstr "Списък задачи"
-#~ msgid "Task tree"
-#~ msgstr "Дърво на задачите"
-#~ msgid ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Version %(version)s, %(date)s</h5>\n"
-#~ "<p>By %(author)s <%(author_email)s><p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license)s</p>\n"
-#~ msgstr ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Версия %(version)s, %(date)s</h5>\n"
-#~ "<p>От %(author)s <%(author_email)s></p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license)s</p>\n"
-#~ msgid "Attachment filenames"
-#~ msgstr "Файови имена на приложения"
-#~ msgid "Edit filename"
-#~ msgstr "Редактирай име на файл"
-#~ msgid "Browse for new attachment..."
-#~ msgstr "Търси за ново приложение..."
-#~ msgid "Attachment filename"
-#~ msgstr "Файлово име на приложението"
-#~ msgid "Print..."
-#~ msgstr "Печат..."
-#~ msgid "tracking effort for one task"
-#~ msgstr "проследяване на опит за една задача"
-#~ msgid "New item"
-#~ msgstr "Нов елемент"
-#~ msgid "New subitem"
-#~ msgstr "Нов субелемент"
-#~ msgid "Delete item"
-#~ msgstr "Изтрий елемент"
-#~ msgid "Open a new tab with a viewer that displays tasks in a list"
-#~ msgstr "Отвори нов етикет с изглед, показващ задачите в списъка"
-#~ msgid "Open a new tab with a viewer that displays tasks in a tree"
-#~ msgstr "Отвори нов етикет с изглед, показващ задачите в дървовидно"
-#~ msgid "Open a new tab with a viewer that displays effort details"
-#~ msgstr "Отвори нов етикет с изглед, показващ детайли за опита"
-#~ msgid "Open a new tab with a viewer that displays effort per day"
-#~ msgstr "Отвори нов етикет с изглед, показващ опити за ден"
-#~ msgid "Open a new tab with a viewer that displays effort per week"
-#~ msgstr "Отвори нов етикет с изглед който показва опит за седмица"
-#~ msgid "Open a new tab with a viewer that displays effort per month"
-#~ msgstr "Отвори нов етикет с изглед който показва опит за месец"
-#~ msgid "Hide tasks &with subtasks"
-#~ msgstr "Скрий задачи &с подзадачи"
-#~ msgid "Task &list"
-#~ msgstr "Списък &задачи"
-#~ msgid "Task &tree"
-#~ msgstr "Дърво на &задачите"
-#~ msgid "&Effort detail"
-#~ msgstr "&Детайли за опита"
-#~ msgid "Effort per &day"
-#~ msgstr "Усилие за &ден"
-#~ msgid "Effort per &week"
-#~ msgstr "&Опит за седмица"
-#~ msgid "Effort per &month"
-#~ msgstr "Опит за &месец"
-#~ msgid ""
-#~ "Show/hide overall categories column (overall categories includes all parent "
-#~ "task categories, recursively)"
-#~ msgstr ""
-#~ "Покажи/Скрий колоната на общите категории (общите категории включват всички "
-#~ "главни категории задачи, рекурсивно)"
 
