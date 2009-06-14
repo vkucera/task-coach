@@ -84,7 +84,8 @@ class DynamicMenu(Menu):
         # handlers get a chance too:
         if hasattr(event, 'Skip'):
             event.Skip()
-        self.updateMenu()
+        if self._window: # Check that window is still alive
+            self.updateMenu()
         
     def updateMenu(self):
         ''' Updating the menu consists of two steps: updating the menu item
