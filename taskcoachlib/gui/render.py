@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ''' render.py - functions to render various objects, like date, time, etc. '''
 
+import locale
 from taskcoachlib.i18n import _
 
 
@@ -98,11 +99,10 @@ def weekNumber(dateTime):
     # is one off in 2004
     return '%d-%d'%(dateTime.year, dateTime.weeknumber())
     
-def amount(aFloat):
-    renderedAmount = '%.2f'%aFloat
-    if renderedAmount == '0.00':
-        renderedAmount = ''
-    return renderedAmount
+def monetaryAmount(aFloat):
+    ''' Render a monetary amount, using the user's locale. '''
+    return '' if round(aFloat, 2) == 0 else \
+        locale.format('%.2f', aFloat, grouping=True)
 
 def taskBitmapNames(task, hasChildren=None):
     ''' Return two bitmap names for the task, one for deselected tasks and

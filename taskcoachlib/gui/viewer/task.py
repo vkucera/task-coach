@@ -454,7 +454,8 @@ class SquareTaskViewer(BaseTaskViewer):
     # Helper methods
     
     renderer = dict(budget=render.budget, timeSpent=render.timeSpent, 
-                    fixedFee=render.amount, revenue=render.amount)
+                    fixedFee=render.monetaryAmount, 
+                    revenue=render.monetaryAmount)
     
     def render(self, value):
         return self.renderer[self.__orderBy](value)
@@ -555,11 +556,11 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
             ('totalBudgetLeft', _('Total budget left'), lambda task: render.budget(task.budgetLeft(recursive=True)), None),
             ('priority', _('Priority'), lambda task: render.priority(task.priority()), None),
             ('totalPriority', _('Overall priority'), lambda task: render.priority(task.priority(recursive=True)), None),
-            ('hourlyFee', _('Hourly fee'), lambda task: render.amount(task.hourlyFee()), task.Task.hourlyFeeChangedEventType()),
-            ('fixedFee', _('Fixed fee'), lambda task: render.amount(task.fixedFee()), None),
-            ('totalFixedFee', _('Total fixed fee'), lambda task: render.amount(task.fixedFee(recursive=True)), None),
-            ('revenue', _('Revenue'), lambda task: render.amount(task.revenue()), None),
-            ('totalRevenue', _('Total revenue'), lambda task: render.amount(task.revenue(recursive=True)), None),
+            ('hourlyFee', _('Hourly fee'), lambda task: render.monetaryAmount(task.hourlyFee()), task.Task.hourlyFeeChangedEventType()),
+            ('fixedFee', _('Fixed fee'), lambda task: render.monetaryAmount(task.fixedFee()), None),
+            ('totalFixedFee', _('Total fixed fee'), lambda task: render.monetaryAmount(task.fixedFee(recursive=True)), None),
+            ('revenue', _('Revenue'), lambda task: render.monetaryAmount(task.revenue()), None),
+            ('totalRevenue', _('Total revenue'), lambda task: render.monetaryAmount(task.revenue(recursive=True)), None),
             ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder()), None)]:
             eventType = eventType or 'task.'+name
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:

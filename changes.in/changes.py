@@ -26,8 +26,10 @@ releases = [
 Release('0.73.1', '?? ??, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-       Bug('''Dates and times in the viewer's columns were not localized.'''),
-    ]),
+       Bug('''Dates and amounts were not localized.''', '2806189', '1625111', 
+           '1790055')
+       ]
+    ),
 
 Release('0.73.0', 'June 12, 2009',
     summary='''This release adds a timeline viewer, the ability to search

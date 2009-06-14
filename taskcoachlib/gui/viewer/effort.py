@@ -169,11 +169,11 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             ('timeSpent', _('Time spent'), 'effort.duration', 
                 lambda effort: render.timeSpent(effort.duration())),
             ('revenue', _('Revenue'), 'effort.revenue', 
-                lambda effort: render.amount(effort.revenue())),
+                lambda effort: render.monetaryAmount(effort.revenue())),
             ('totalTimeSpent', _('Total time spent'), 'effort.totalDuration',  
                  lambda effort: render.timeSpent(effort.duration(recursive=True))),
             ('totalRevenue', _('Total revenue'), 'effort.totalRevenue',
-                 lambda effort: render.amount(effort.revenue(recursive=True)))] + \
+                 lambda effort: render.monetaryAmount(effort.revenue(recursive=True)))] + \
              [widgets.Column(name, columnHeader, eventType, 
               renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
               width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn) \

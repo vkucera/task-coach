@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, locale
 from wx.lib import masked, combotreebox
 from taskcoachlib import widgets
 from taskcoachlib.domain import date
@@ -77,9 +77,13 @@ class AmountEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
         super(AmountEntry, self).__init__(parent, *args, **kwargs)
         if readonly:
-            self._entry = wx.StaticText(self, label=render.amount(amount))
+            self._entry = wx.StaticText(self, label=render.monetaryAmount(amount))
         else:
+            local_conventions = locale.localeconv()
             self._entry = widgets.masked.NumCtrl(self, fractionWidth=2,
+                decimalChar=local_conventions['decimal_point'] or '.', 
+                groupChar=local_conventions['thousands_sep'] or ',',
+                groupDigits=len(local_conventions['grouping'])>1,
                 selectOnEntry=True, allowNegative=False, value=amount)
         self.add(self._entry)
         self.fit()
