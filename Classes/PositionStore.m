@@ -39,7 +39,7 @@ static PositionStore *_instance = nil;
 	if (self = [super init])
 	{
 		_scrollPosition = [coder decodeIntegerForKey:@"scrollPosition"];
-		indexPath = [coder decodeObjectForKey:@"indexPath"];
+		indexPath = [[coder decodeObjectForKey:@"indexPath"] retain];
 	}
 	
 	return self;
