@@ -2,7 +2,8 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -75,12 +76,8 @@ def budget(aBudget):
     return timeSpent(aBudget)
         
 def dateTime(dateTime):
-    if dateTime:
-        # Don't use %+ because it prints seconds as well.
-        return '%s %s' % (date(dateTime), time(dateTime))
-        return dateTime.strftime('TEST %Y-%m-%d %H:%M TEST')
-    else:
-        return ''
+    # Don't use %+ because it prints seconds as well.
+    return '%s %s' % (date(dateTime), time(dateTime)) if dateTime else ''
     
 def dateTimePeriod(start, stop):
     if stop is None:
@@ -97,8 +94,8 @@ def month(dateTime):
     return dateTime.strftime('%Y %B')
     
 def weekNumber(dateTime):
-    # Would have liked to use dateTime.strftime('%Y-%U'), but the week number is one off
-    # in 2004
+    # Would have liked to use dateTime.strftime('%Y-%U'), but the week number 
+    # is one off in 2004
     return '%d-%d'%(dateTime.year, dateTime.weeknumber())
     
 def amount(aFloat):
