@@ -766,6 +766,18 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.addEffort(effort.Effort(self.task1_1))
         self.task1.removeChild(self.task1_1)
         self.failIf(self.events)
+        
+    def testRecursiveDueDate(self):
+        self.assertEqual(date.Date(), self.task1.dueDate(recursive=True))
+        
+    def testRecursiveDueDateWhenChildDueToday(self):
+        self.task1_1.setDueDate(date.Today())
+        self.assertEqual(date.Today(), self.task1.dueDate(recursive=True))
+        
+    def testRecursiveDueDateWhenChildDueTodayAndCompleted(self):
+        self.task1_1.setDueDate(date.Today())
+        self.task1_1.setCompletionDate(date.Today())
+        self.assertEqual(date.Date(), self.task1.dueDate(recursive=True))
 
     def testNotAllChildrenAreCompleted(self):
         self.failIf(self.task1.allChildrenCompleted())

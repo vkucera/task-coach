@@ -166,7 +166,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def startDate(self, recursive=False):
         if recursive:
             childrenStartDates = [child.startDate(recursive=True) for child in self.children() if not child.completed()]
-            return min(childrenStartDates+[self._startDate])
+            return min(childrenStartDates + [self._startDate])
         else:
             return self._startDate
 
@@ -183,7 +183,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             childrenCompletionDates = [child.completionDate(recursive=True) \
                 for child in self.children() if child.completed()]
-            return max(childrenCompletionDates+[self._completionDate])
+            return max(childrenCompletionDates + [self._completionDate])
         else:
             return self._completionDate
 
