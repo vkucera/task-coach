@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,8 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, StringIO
 import test
-from unittests import dummy
-from taskcoachlib import persistence, gui, config, widgets
+from taskcoachlib import persistence, gui, config
 from taskcoachlib.domain import task, category, effort, date, note
 
 

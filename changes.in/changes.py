@@ -29,7 +29,9 @@ Release('0.73.1', '?? ??, 2009',
         Bug('''Dates and amounts were not localized.''', '2806189', '1625111', 
            '1790055'),
         Bug('''Use folder icons for tasks with subtasks in the task viewer.''',
-            '2806191')
+            '2806191'),
+        Bug('''Export of selected effort to a CSV-file would result in an empty 
+file.''', '2806383')
        ]
     ),
 
