@@ -174,7 +174,9 @@ class TimeLine(wx.Panel):
         if self.model:
             bounds = self.adapter.bounds(self.model)
             self.min_start = float(min(bounds))
-            self.max_stop = float(max(bounds)) 
+            self.max_stop = float(max(bounds))
+            if self.max_stop - self.min_start < 100:
+                self.max_stop += 100 
             self.length = self.max_stop - self.min_start
             self.width, self.height = dc.GetSize()
             labelHeight = dc.GetTextExtent('ABC')[1] + 2 # Leave room for time labels
