@@ -31,7 +31,7 @@ Release('0.73.1', '?? ??, 2009',
         Bug('''Use folder icons for tasks with subtasks in the task viewer.''',
             '2806191'),
         Bug('''Export of selected effort to a CSV-file would result in an empty 
-file.''', '2806383')
+file.''', '2806383', '2807003')
        ]
     ),
 
