@@ -296,8 +296,8 @@ class TestProfiler:
         self._options = options
 
     def reportLastRun(self):
-        import hotshot.stats
-        stats = hotshot.stats.load(self._logfile)
+        import pstats
+        stats = pstats.Stats(self._logfile)
         stats.strip_dirs()
         for sortKey in self._options.profile_sort:
             stats.sort_stats(sortKey)
@@ -308,14 +308,16 @@ class TestProfiler:
         if self._options.profile_callees:
             stats.print_callees()
 
-    def run(self, command, *args, **kwargs):
-        if self._options.profile_report_only or self.profile(command, *args, **kwargs):
+    def run(self, tests, command='runTests'):
+        if self._options.profile_report_only or self.profile(tests, command):
             self.reportLastRun()
 
-    def profile(self, command, *args, **kwargs):
-        import hotshot
-        profiler = hotshot.Profile(self._logfile)
-        result = profiler.runcall(command, *args, **kwargs)
+    def profile(self, tests, command):
+        import cProfile
+        _locals = dict(locals())
+        cProfile.runctx('result = tests.%s()'%command, globals(), _locals,
+            filename=self._logfile)
+        result = _locals['result']
         if not result.wasSuccessful():
             self.cleanup()
         return result.wasSuccessful()
@@ -329,7 +331,7 @@ if __name__ == '__main__':
     options, testFiles = TestOptionParser().parse_args()
     allTests = AllTests(options, testFiles)
     if options.profile:
-        TestProfiler(options).run(allTests.runTests)
+        TestProfiler(options).run(allTests)
     else:
         result = allTests.runTests()
         if not result.wasSuccessful():
