@@ -603,13 +603,13 @@ class ColumnsTests(object):
         self.showColumn('hourlyFee')
         self.taskList.append(self.task)
         self.task.setHourlyFee(100)
-        self.assertEqual('100.00', self.getItemText(0, 3))
+        self.assertEqual(render.monetaryAmount(100.), self.getItemText(0, 3))
         
     def testChangeFixedFeeWhileColumnShown(self):
         self.showColumn('fixedFee')
         self.taskList.append(self.task)
         self.task.setFixedFee(200)
-        self.assertEqual('200.00', self.getItemText(0, 3))
+        self.assertEqual(render.monetaryAmount(200.), self.getItemText(0, 3))
 
     def testChangeTotalFixedFeeWhileColumnShown(self):
         self.showColumn('totalFixedFee')
@@ -619,7 +619,7 @@ class ColumnsTests(object):
         self.task.setFixedFee(100)
         self.child.setFixedFee(200)
         self.viewer.setSortOrderAscending(False)
-        self.assertEqual('300.00', self.getItemText(0, 3))
+        self.assertEqual(render.monetaryAmount(300.), self.getItemText(0, 3))
         
     # Test all attributes...
 
