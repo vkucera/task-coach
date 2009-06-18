@@ -75,19 +75,29 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
 
 class AmountEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
+        self.local_conventions = kwargs.pop('localeconv', locale.localeconv())
         super(AmountEntry, self).__init__(parent, *args, **kwargs)
-        if readonly:
-            self._entry = wx.StaticText(self, label=render.monetaryAmount(amount))
-        else:
-            local_conventions = locale.localeconv()
-            self._entry = widgets.masked.NumCtrl(self, fractionWidth=2,
-                decimalChar=local_conventions['decimal_point'] or '.', 
-                groupChar=local_conventions['thousands_sep'] or ',',
-                groupDigits=len(local_conventions['grouping'])>1,
-                selectOnEntry=True, allowNegative=False, value=amount)
+        # Select factory for creating the entry:
+        createEntry = self.createReadOnlyEntry if readonly else self.createEntry
+        self._entry = createEntry(amount)
         self.add(self._entry)
         self.fit()
 
+    def createReadOnlyEntry(self, amount):
+        return wx.StaticText(self, label=render.monetaryAmount(amount))
+
+    def createEntry(self, amount):
+        decimalChar = self.local_conventions['decimal_point'] or '.'
+        groupChar = self.local_conventions['thousands_sep'] or ','
+        groupDigits = len(self.local_conventions['grouping']) > 1
+        # Prevent decimalChar and groupChar from being the same:
+        if groupChar == decimalChar: 
+            groupChar = ' ' # Space is not allowed as decimal point
+        return widgets.masked.NumCtrl(self, fractionWidth=2,
+            decimalChar=decimalChar, groupChar=groupChar,
+            groupDigits=groupDigits, 
+            selectOnEntry=True, allowNegative=False, value=amount)
+  
     def get(self):
         return self._entry.GetValue()
 
