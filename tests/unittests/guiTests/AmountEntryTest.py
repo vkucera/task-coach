@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
@@ -64,3 +65,10 @@ class AmountEntryTest(test.wxTestCase):
             self.fail('Expected ValueError')
         except ValueError:
             pass
+
+    def testNonAsciiDecimalPoint(self):
+        entry.AmountEntry(self.frame, localeconv=LocalConv(decimal_point=u'é'))
+        
+    def testNonAsciiThousandsSeparator(self):
+        entry.AmountEntry(self.frame, localeconv=LocalConv(thousands_sep=u'é', 
+                                                           grouping=[3,3,3]))
