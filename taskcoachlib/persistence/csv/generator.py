@@ -57,12 +57,10 @@ def viewer2csv(viewer, selectionOnly=False):
     
     isTree = viewer.isTreeViewer()    
     rowBuilder = RowBuilder(viewer.visibleColumns(), isTree)
+    items = viewer.visibleItems()
     if selectionOnly:
-        selection = viewer.curselection()
+        items = [item for item in items if viewer.isselected(item)]
         if isTree:
-            selection = extendedWithAncestors(selection)
-        items = [item for item in viewer.visibleItems() if item in selection]
-    else:
-        items = viewer.visibleItems() 
+            items = extendedWithAncestors(items)
     return rowBuilder.rows(items)
 

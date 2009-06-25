@@ -63,12 +63,20 @@ class TaskTests(object):
         self.expectNotInCSV('Task subject', selectionOnly=True)
         
     def testWriteSelectionOnly_SelectedChild(self):
-        child = task.Task('Child')
-        self.task.addChild(child)
+        child = task.Task('Child', parent=self.task)
         self.taskFile.tasks().append(child)
-        self.selectItem(1)
-        self.expectInCSV('Task subject,')
-               
+        if self.treeMode == 'True':
+            self.selectItem((0, 0))
+            self.expectInCSV('Task subject,', selectionOnly=True)
+        else:
+            self.selectItem((1,))
+            self.expectNotInCSV('Task subject,', selectionOnly=True)
+
+    def testWriteSelectionOnly_SelectedParent(self):
+        child = task.Task('Child', parent=self.task)
+        self.taskFile.tasks().append(child)
+        self.selectItem((0,))
+        self.expectNotInCSV('Child', selectionOnly=True)
                 
         
 class CSVListWriterTest(TaskTests, CSVWriterTestCase):
@@ -105,6 +113,17 @@ class EffortWriterTest(CSVWriterTestCase):
         
     def testEffortDuration(self):
         self.expectInCSV(',0:00:01,')
+        
+    def testEffortPerDay(self):
+        self.viewer.showEffortAggregation('day')
+        self.expectInCSV('Total')
 
+    def testEffortPerDay_SelectionOnly_EmptySelection(self):
+        self.viewer.showEffortAggregation('day')
+        self.expectNotInCSV('Total', selectionOnly=True)
 
+    def testEffortPerDay_SelectionOnly_SelectAll(self):
+        self.viewer.showEffortAggregation('day')
+        self.viewer.selectall()
+        self.expectInCSV('Total', selectionOnly=True)
         

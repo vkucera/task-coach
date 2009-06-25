@@ -22,6 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('0.73.2', 'June ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Export of selected effort to a SCV-file would result in an empty 
+file.''', '2810978')
+        ]
+    ),
 
 Release('0.73.1', 'June 24, 2009',
     summary='''This is a bugfix release.''',
