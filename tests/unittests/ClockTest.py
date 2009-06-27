@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -216,12 +216,12 @@ class ScheduledTimerTest(test.TestCase):
         self.scheduleFutureAlarm()
         secondAlarmTime = self.alarmTime+date.TimeDelta(seconds=10)
         self.scheduleFutureAlarm(secondAlarmTime)
-        self.timer.onTimer()
+        self.timer._notify(now=self.alarmTime-date.oneDay)
         self.assertEqual(1, self.alarmFired)
-        self.timer.onTimer()
+        self.timer._notify(now=self.alarmTime-date.oneDay)
         self.assertEqual(2, self.alarmFired)
 
-    def testInvocationOfTwoFutureAlarmsForDifferentTimes(self):
+    def testAfterSchedulingTwoFutureAlarmsForDifferentTimesAndFiringTheFirstOneTheSecondOneIsScheduled(self):
         self.scheduleFutureAlarm()
         secondAlarmTime = self.alarmTime+date.TimeDelta(seconds=10)
         self.scheduleFutureAlarm(secondAlarmTime)
