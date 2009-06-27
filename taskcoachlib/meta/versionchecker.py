@@ -55,11 +55,12 @@ class VersionChecker(threading.Thread):
         # Must use CallAfter because this is a non-GUI thread
         wx.CallAfter(self.showDialog, latestVersion)
         
-    def showDialog(self, latestVersion):
+    def showDialog(self, latestVersion, VersionDialog=None):
         # Import version here to prevent circular import:
         from taskcoachlib.gui.dialog import version 
-        dialog = version.VersionDialog(wx.GetApp().GetTopWindow(), 
-                                       version=latestVersion)
+        VersionDialog = VersionDialog or version.VersionDialog
+        dialog = VersionDialog(wx.GetApp().GetTopWindow(), 
+                               version=latestVersion)
         dialog.ShowModal()
         self.settings.set('version', 'notify', str(dialog.check.GetValue())) 
         dialog.Destroy()

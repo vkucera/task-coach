@@ -91,3 +91,19 @@ class VersionCheckerTest(test.TestCase):
         checker = self.checkVersion('0.72.9')
         self.failIf(checker.userNotified)
         meta.data.version = currentVersion
+
+    def testShowDialog(self):
+        self.failUnless(self.settings.getboolean('version', 'notify'))
+        class DummyCheck(object):
+            def GetValue(self):
+                return False
+        class DummyDialog(object):
+            def __init__(self, *args, **kwargs):
+                self.check = DummyCheck()
+            def ShowModal(self):
+                pass
+            Destroy = ShowModal
+        checker = meta.VersionChecker(self.settings)
+        checker.showDialog('1.0', VersionDialog=DummyDialog)
+        self.failIf(self.settings.getboolean('version', 'notify'))
+

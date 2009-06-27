@@ -192,6 +192,11 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task.setFixedFee(1000)
         self.task.addEffort(self.effort)
         self.assertEqual(1000, self.effort.revenue())
+
+    def testRevenue_FixedFee_OneSmallEffort(self):
+        self.task.setFixedFee(1000)
+        self.effort.setStop(self.effort.getStart())
+        self.assertEqual(0, self.effort.revenue())
         
     def testRevenue_FixedFee_TwoEfforts(self):
         self.task.setFixedFee(1000)

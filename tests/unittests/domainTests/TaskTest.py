@@ -687,6 +687,11 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.assertEqual([patterns.Event(self.task1, 
             task.Task.removeChildEventType(), self.task1_1)], self.events)
 
+    def testRemoveNonExistingChildCausesNoNotification(self):
+        self.registerObserver(task.Task.removeChildEventType())
+        self.task1.removeChild('Not a child')
+        self.failIf(self.events)
+
     def testRemoveChildWithBudgetCausesTotalBudgetNotification(self):
         self.task1_1.setBudget(date.TimeDelta(hours=100))
         self.registerObserver('task.totalBudget')
@@ -823,50 +828,57 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
 
     def testTotalBudgetNotification_WhenRemovingChild(self):
         self.task1_1.setBudget(oneHour)
-        self.registerObserver('task.totalBudget')
+        self.registerObserver('task.totalBudget', eventSource=self.task1)
         self.task.removeChild(self.task1_1)
         self.assertEqual([patterns.Event(self.task, 'task.totalBudget', 
                                          date.TimeDelta(0))], 
                          self.events)
 
     def testTotalBudgetLeftNotification_WhenChildBudgetChanges(self):
-        self.registerObserver('task.totalBudgetLeft')
+        self.registerObserver('task.totalBudgetLeft', eventSource=self.task1)
         self.task1_1.setBudget(oneHour)
         self.assertEqual(oneHour, self.events[0].value())
 
     def testTotalBudgetLeftNotification_WhenChildTimeSpentChanges(self):
         self.task1_1.setBudget(twoHours)
-        self.registerObserver('task.totalBudgetLeft')
+        self.registerObserver('task.totalBudgetLeft', eventSource=self.task1)
         self.task1_1.addEffort(effort.Effort(self.task1_1,
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
         self.assertEqual(oneHour, self.events[0].value())
 
+    def testTotalBudgetLeftNotification_WhenParentHasNoBudget(self):
+        self.task1_1.setBudget(twoHours)
+        self.registerObserver('task.totalBudgetLeft', eventSource=self.task1)
+        self.task1.addEffort(effort.Effort(self.task1,
+            date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
+        self.assertEqual(oneHour, self.events[0].value())
+
     def testNoTotalBudgetLeftNotification_WhenChildTimeSpentChangesButNoBudget(self):
-        self.registerObserver('task.totalBudgetLeft')
+        self.registerObserver('task.totalBudgetLeft', eventSource=self.task1)
         self.task1_1.addEffort(effort.Effort(self.task1_1,
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
         self.failIf(self.events)
 
     def testTotalTimeSpentNotification(self):
-        self.registerObserver(task.Task.totalTimeSpentChangedEventType())
+        self.registerObserver(task.Task.totalTimeSpentChangedEventType(),
+            eventSource=self.task1)
         newEffort = effort.Effort(self.task1_1,
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0))
         self.task1_1.addEffort(newEffort)
         self.assertEqual(newEffort, self.events[0].value())
 
     def testTotalPriorityNotification(self):
-        self.registerObserver('task.totalPriority')
+        self.registerObserver('task.totalPriority', eventSource=self.task1)
         self.task1_1.setPriority(10)
         self.assertEqual(10, self.events[0].value())
 
     def testNoTotalPriorityNotification_WithLowerChildPriority(self):
-        self.registerObserver('task.totalPriority')
+        self.registerObserver('task.totalPriority', eventSource=self.task1)
         self.task1_1.setPriority(-1)
-        self.assertEqual([patterns.Event(self.task1_1, 'task.totalPriority', -1)], 
-            self.events)
+        self.failIf(self.events)
 
     def testTotalRevenueNotification(self):
-        self.registerObserver('task.totalRevenue')
+        self.registerObserver('task.totalRevenue', eventSource=self.task1)
         self.task1_1.setHourlyFee(100)
         self.task1_1.addEffort(effort.Effort(self.task1_1,
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,12,0,0)))
@@ -1095,8 +1107,13 @@ class TaskWithBudgetTest(TaskTestCase, CommonTaskTests):
         self.addEffort(oneHour)
         self.assertEqual(oneHour, self.task.budgetLeft())
 
-    def testBudgetNotifications(self):
+    def testBudgetLeftNotifications(self):
         self.registerObserver('task.budgetLeft')
+        self.addEffort(oneHour)
+        self.assertEqual(oneHour, self.events[0].value())
+
+    def testTotalBudgetLeftNotification(self):
+        self.registerObserver('task.totalBudgetLeft')
         self.addEffort(oneHour)
         self.assertEqual(oneHour, self.events[0].value())
 

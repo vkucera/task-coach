@@ -61,7 +61,7 @@ class Event(object):
         self.__type = type
         self.__values = values
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return 'Event(%s, %s, %s)'%(self.__source, self.__type, self.__values)
 
     def __eq__(self, other):
@@ -403,7 +403,7 @@ class CollectionDecorator(Decorator, ObservableCollection):
             eventType=observable.removeItemEventType(), eventSource=observable)
         self.extendSelf(observable)
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return '%s(%s)'%(self.__class__, super(CollectionDecorator, self).__repr__())
 
     def onAddItem(self, event):
