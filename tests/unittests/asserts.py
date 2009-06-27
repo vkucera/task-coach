@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,9 +56,6 @@ class TaskAsserts(object):
         self.failIf(child in parent.children())
         if child.parent():
             self.failIf(child.parent() == parent)
-
-    def failIfParentHasChild(self, parent, child):
-        self.failIf(child in parent.children())
 
     def failUnlessParentAndChild(self, parent, child):
         self.failUnless(child in parent.children())

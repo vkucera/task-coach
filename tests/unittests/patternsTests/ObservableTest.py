@@ -37,6 +37,9 @@ class EventTest(test.TestCase):
         self.assertNotEqual(patterns.Event(self, 'eventtype', 'some value'), 
                             patterns.Event(None, 'eventtype', 'some value'))
 
+    def testEventSources(self):
+        self.assertEqual([self], patterns.Event(self, 'eventtype').sources())
+
 
 class ObservableTest(test.TestCase):
     def setUp(self):
