@@ -72,6 +72,9 @@ class Event(object):
     def source(self):
         return self.__source
 
+    def sources(self):
+        return [self.__source]
+
     def type(self):
         return self.__type
 

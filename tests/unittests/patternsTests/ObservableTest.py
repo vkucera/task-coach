@@ -112,7 +112,7 @@ class ObservableCollectionTests(object):
     def testRemovingAnItemNotInCollection_CausesException(self):
         try:
             self.collection.remove(1)
-            self.fail('Expected ValueError or KeyError')
+            self.fail('Expected ValueError or KeyError') # pragma: no cover
         except (ValueError, KeyError):
             pass
 
@@ -314,11 +314,6 @@ class ListDecoratorTest_ObserveTheObserver(test.TestCase):
         self.list.removeItems([1, 3])
         self.assertEqual((1, 3), self.receivedRemoveEvents[0].values())
 
-    def testRemoveItemsFromOriginal(self):
-        self.list.extend([1, 2, 3])
-        self.observer.removeItems([1, 3])
-        self.assertEqual((1, 3), self.receivedRemoveEvents[0].values())
-        
 
 class PublisherTest(test.TestCase):
     def setUp(self):
@@ -329,7 +324,7 @@ class PublisherTest(test.TestCase):
         self.events.append(event)
         
     def dummyEventHandler(self, event):
-        pass
+        pass # pragma: no cover
                 
     def testPublisherIsSingleton(self):
         anotherPublisher = patterns.Publisher()
@@ -357,9 +352,8 @@ class PublisherTest(test.TestCase):
             an instance method of a list (sub)class as callback. '''
         class List(list):
             def onEvent(self, *args):
-                pass
+                pass # pragma: no cover
         self.publisher.registerObserver(List().onEvent, eventType='eventType')    
-
     def testGetObservers_WithoutObservers(self):
         self.assertEqual([], self.publisher.observers())
         

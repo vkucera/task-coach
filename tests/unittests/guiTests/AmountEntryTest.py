@@ -62,7 +62,7 @@ class AmountEntryTest(test.wxTestCase):
         try:
             entry.AmountEntry(self.frame, 
                               localeconv=LocalConv(decimal_point=' '))
-            self.fail('Expected ValueError')
+            self.fail('Expected ValueError') # pragma: no cover
         except ValueError:
             pass
 

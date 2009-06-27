@@ -359,6 +359,10 @@ class SearchFilterTest(test.TestCase):
         self.setSearchString('*')
         self.assertEqual(1, len(self.filter))
 
+    def testInvalidRegex_WhileMatchCase(self):
+        self.setSearchString('*', matchCase=True)
+        self.assertEqual(1, len(self.filter))
+
     def testSearchDescription(self):
         self.setSearchString('parent description', searchDescription=True)
         self.assertEqual(1, len(self.filter))

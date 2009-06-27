@@ -37,7 +37,7 @@ class IOControllerTest(test.TestCase):
             if os.path.exists(filename):
                 os.remove(filename)
             if os.path.exists(filename + '.lock'):
-                shutil.rmtree(filename + '.lock')
+                shutil.rmtree(filename + '.lock') # pragma: no cover
         super(IOControllerTest, self).tearDown()
         
     def doIOAndCheckRecentFiles(self, open=None, saveas=None, 

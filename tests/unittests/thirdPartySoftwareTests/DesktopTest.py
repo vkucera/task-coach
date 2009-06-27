@@ -29,6 +29,7 @@ class DesktopTest(test.TestCase):
         try:
             desktop.open('http://www.taskcoach.org',
                 desktop='Force exception')
-            self.fail('desktop.open ignored our non-existing desktop?!')
+            self.fail('desktop.open() ignored '
+                      'our non-existing desktop?!') # pragma: no cover
         except OSError:
             pass

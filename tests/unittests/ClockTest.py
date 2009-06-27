@@ -78,7 +78,7 @@ class PeriodicTimerTest_EverySecond(test.TestCase):
         self.dateTime = date.DateTime(2000,1,1,10,0,0)
         
     def onTimer(self):
-        self.timerFired = True
+        self.timerFired = True # pragma: no cover
 
     def testNextWholeSecond(self):
         self.assertEqual(self.dateTime, 

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,23 +23,14 @@ from taskcoachlib import widgets
 
 
 class VirtualListCtrlTestCase(test.wxTestCase):
-    def getItemText(self, index, column):
-        return 'Dummy text'
-    
-    def getItemImage(self, index):
-        return -1
-    
-    def getItemAttr(self, *args):
-        return wx.ListItemAttr()
-        
-    def onSelect(self, *args):
-        pass
-        
+
+    getItemText = getItemImage = getItemAttr = onSelect = None
+
     def createListCtrl(self):
         return widgets.ListCtrl(self.frame, self.columns,
             self.getItemText, self.getItemImage, self.getItemAttr, self.onSelect, 
             dummy.DummyUICommand())
-            
+
     def createColumns(self, nrColumns):
         columns = []
         for columnIndex in range(1, nrColumns+1):

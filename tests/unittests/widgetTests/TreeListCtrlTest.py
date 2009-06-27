@@ -23,6 +23,9 @@ from taskcoachlib import widgets
 
 
 class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
+
+    onSelect = getItemTooltipText = None
+
     def setUp(self):
         super(TreeListCtrlTestCase, self).setUp()
         self.createColumns()
@@ -52,7 +55,7 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
     
     def getItemImage(self, index, which, column=None):
         return super(TreeListCtrlTestCase, self).getItemImage(index)
-    
+
     
 class TreeListCtrlTest(TreeListCtrlTestCase, TreeCtrlTest.CommonTests):
     pass
@@ -96,5 +99,3 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
     def testShowColumn(self):
         self.showColumn('column2', False)
         self.showColumn('column2', True)
-        self.assertColumns()
-        

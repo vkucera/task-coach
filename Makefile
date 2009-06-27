@@ -1,5 +1,5 @@
 # Task Coach - Your friendly task manager
-# Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+# Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 # 
 # Task Coach is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -111,8 +111,11 @@ languagetests: i18n
 disttests:
 	cd tests; $(PYTHON) test.py --disttests --no-unittests
 
+coverage:
+	cd tests; coverage -x test.py; coverage -b -d coverage.out
 
-CLEANFILES=build dist website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile
+
+CLEANFILES=build dist website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out
 REALLYCLEANFILES=taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \
 	taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 

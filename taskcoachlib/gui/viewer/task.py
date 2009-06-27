@@ -720,10 +720,9 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
 
     def subjectImageIndex(self, task, which):
         normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
-        if which in [wx.TreeItemIcon_Expanded, wx.TreeItemIcon_SelectedExpanded]:
-            return expandedImageIndex 
-        else:
-            return normalImageIndex
+        expanded = which in [wx.TreeItemIcon_Expanded, 
+                             wx.TreeItemIcon_SelectedExpanded]
+        return expandedImageIndex if expanded else normalImageIndex
                     
     def attachmentImageIndex(self, task, which):
         return self.imageIndex['attachment'] if task.attachments() else -1 
@@ -771,20 +770,14 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
     def getRootItems(self):
         ''' If the viewer is in tree mode, return the real root items. If the
             viewer is in list mode, return all items. '''
-        if self.isTreeViewer():
-            return super(TaskViewer, self).getRootItems()
-        else:
-            return self.presentation()
+        return super(TaskViewer, self).getRootItems() if \
+            self.isTreeViewer() else self.presentation()
     
     def getItemParent(self, item):
-        if self.isTreeViewer():
-            return super(TaskViewer, self).getItemParent(item)
-        else:
-            return None
+        return super(TaskViewer, self).getItemParent(item) if \
+            self.isTreeViewer() else None
             
     def getChildrenCount(self, index):
-        if self.isTreeViewer() or (index == ()):
-            return super(TaskViewer, self).getChildrenCount(index)
-        else:
-            return 0
+        return super(TaskViewer, self).getChildrenCount(index) if \
+            self.isTreeViewer() or (index == ()) else 0
 

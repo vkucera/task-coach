@@ -388,7 +388,7 @@ class FilterableViewerForTasks(test.TestCase):
         self.viewer.hideOverbudgetTasks()
         self.failIf(self.viewer.presentation())
         
-    def testUnhideOverdueTasks(self):
+    def testUnhideOverbudgetTasks(self):
         overBudgetTask = task.Task(budget=date.TimeDelta(hours=10))
         overBudgetTask.addEffort(effort.Effort(overBudgetTask, date.Date(2000,1,1), date.Date(2000,1,2)))
         self.viewer.presentation().append(overBudgetTask)
@@ -454,7 +454,7 @@ class ViewerBaseClassTest(test.wxTestCase):
         try:
             baseViewer = gui.viewer.base.Viewer(self.frame, 
                 persistence.TaskFile(), None, settingsSection='bla')
-            self.fail('Expected NotImplementedError')
+            self.fail('Expected NotImplementedError') # pragma: no cover
         except NotImplementedError:
             pass
 
@@ -471,15 +471,11 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.taskList = self.taskFile.tasks()
         self.notebook = widgets.AUINotebook(self.frame)
         self.viewer = self.createViewer()
-        self.settings.set(self.viewer.settingsSection(), 'treemode', 
-                          self.treeMode)
+        self.viewer.showTree(self.treeMode == 'True')
         self.viewer.sortBy('subject')
 
     def getItemsFromIterator(self):
-        result = []
-        for item in self.viewer.visibleItems():
-            result.append(item)
-        return result
+        return list(self.viewer.visibleItems())
 
 
 class ViewerIteratorTests(object):
@@ -492,11 +488,10 @@ class ViewerIteratorTests(object):
         
     def testOneParentAndOneChild(self):
         parent = task.Task('Z')
-        child = task.Task('A')
+        child = task.Task('A', parent=parent)
         parent.addChild(child)
-        child.setParent(parent)
         self.taskList.append(parent)
-        if self.treeMode:
+        if self.treeMode == 'True':
             expectedParentAndChildOrder = [parent, child]
         else:
             expectedParentAndChildOrder = [child, parent]
@@ -505,8 +500,8 @@ class ViewerIteratorTests(object):
 
     def testOneParentOneChildAndOneGrandChild(self):
         parent = task.Task('a-parent')
-        child = task.Task('b-child')
-        grandChild = task.Task('c-grandchild')
+        child = task.Task('b-child', parent=parent)
+        grandChild = task.Task('c-grandchild', parent=child)
         parent.addChild(child)
         child.addChild(grandChild)
         self.taskList.append(parent)
@@ -537,9 +532,6 @@ class MockWidget(object):
     def RefreshItem(self, index):
         self.refreshedItems.append(index)
     
-    def curselection(self):
-        return []
-
 
 class UpdatePerSecondViewerTests(object):
     def setUp(self):

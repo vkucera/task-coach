@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -110,8 +110,10 @@ class MailTaskTest(test.TestCase):
             def description(self):
                 return 'description'
         class DummyViewer(object):
+            def __init__(self):
+                self.__selection = [DummyTask()]
             def curselection(self):
-                return [DummyTask()]
+                return self.__selection
         def mail(*args):
             raise RuntimeError, 'message'
         def showerror(*args, **kwargs):
@@ -127,9 +129,6 @@ class DummyViewer(object):
         
     def curselection(self):
         return self.selection
-    
-    def isShowingTasks(self):
-        return True
     
     
 class MarkCompletedTest(test.TestCase):
@@ -250,19 +249,19 @@ class EffortViewerAggregationChoiceTest(test.TestCase):
 class OpenAllAttachmentsTest(test.TestCase):
     def setUp(self):
         settings = config.Settings(load=False)
-        self.viewer = DummyViewer([task.Task()])
+        self.viewer = DummyViewer([task.Task('Task')])
         self.openAll = gui.uicommand.OpenAllAttachments(settings=settings, 
                                                         viewer=self.viewer)
         self.errorKwargs = None
 
-    def showerror(self, *args, **kwargs):
+    def showerror(self, *args, **kwargs): # pragma: no cover
         self.errorArgs = args
         self.errorKwargs = kwargs
         
     def testNoAttachments(self):
         self.openAll.doCommand(None)
         
-    def testNonexistingAttachment(self):
+    def testNonexistingAttachment(self): # pragma: no cover
         self.viewer.selection[0].addAttachment(attachment.FileAttachment('Attachment'))
         result = self.openAll.doCommand(None, showerror=self.showerror)
         # Don't test the error message itself, it differs per platform

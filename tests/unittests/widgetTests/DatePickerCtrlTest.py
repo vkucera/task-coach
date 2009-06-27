@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -78,9 +78,9 @@ class DatePickerCtrlFactoryTest(test.wxTestCase):
     def testFactoryFunctionStyleIncludesDP_ALLOWNONE(self):
         dpc = widgets.DatePickerCtrl(self.frame, style=wx.DP_ALLOWNONE)
         # style=wx.DP_ALLOWNONE is broken on some platforms/wxPython versions:
-        if widgets.datectrl.styleDP_ALLOWNONEIsBroken():
+        if widgets.datectrl.styleDP_ALLOWNONEIsBroken(): # pragma: no cover
             self.failIf(self.isWxDatePickerCtrl(dpc))
-        else:
+        else: # pragma: no cover
             self.failUnless(self.isWxDatePickerCtrl(dpc))
             
             

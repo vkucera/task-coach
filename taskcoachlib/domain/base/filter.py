@@ -58,7 +58,7 @@ class Filter(patterns.SetDecorator):
             
     def filter(self, items):
         ''' filter returns the items that pass the filter. '''
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def rootItems(self):
         return [item for item in self if item.parent() is None]

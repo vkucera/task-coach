@@ -317,7 +317,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
     def testReadEmptyStream(self):
         try:
             self.reader.read()
-            self.fail('Expected ExpatError')
+            self.fail('Expected ExpatError') # pragma: no cover
         except xml.parsers.expat.ExpatError:
             pass
         
@@ -952,13 +952,13 @@ class XMLReaderVersion21Test(XMLReaderTestCase):
         self.assertEqual(['location'], [os.path.split(att.location())[-1] for att in categories[0].attachments()])
 
 
-class XMLReaderVersion23Test(XMLReaderTestCase):
+class XMLReaderVersion22Test(XMLReaderTestCase):
     tskversion = 22
 
     def testStatus(self):
         tasks, categories, notes = self.writeAndReadTasksAndCategoriesAndNotes(\
             '<tasks><task subject="Task" status="2"></task></tasks>')
-        self.assertEqual(2, tasks[0].status())
+        self.assertEqual(2, tasks[0].getStatus())
 
 
 class XMLReaderVersion23Test(XMLReaderTestCase):

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,17 +27,8 @@ class DummyWidget(wx.Frame):
         self.viewer = viewer
         self.refreshedItems = []
 
-    def DeleteAllItems(self, *args, **kwargs):
-        pass
-
     def curselection(self):
         return self._selection
-
-    def selection_set(self, index):
-        self._selection.append(index)
-
-    def selectall(self):
-        self._selection = range(len(self.viewer.list))
 
     def select(self, indices):
         self._selection = indices
@@ -48,33 +39,9 @@ class DummyWidget(wx.Frame):
     def refresh(self, *args, **kwargs):
         pass
 
-    def RefreshItems(self, *args, **kwargs):
-        pass
-
-    def RefreshItem(self, index):
-        self.refreshedItems.append(index)
-        
-    def refreshItem(self, index):
-        self.refreshedItems.append(index)
-
-    def GetColumnWidth(self, column):
-        return 100
-
     def IsAutoResizing(self):
         return False
         
-    def showSort(self, *args, **kwargs):
-        pass
-
-    def showColumn(self, *args, **kwargs):
-        pass
-
-    def showSortColumn(self, *args, **kwargs):
-        pass
-
-    def showSortOrder(self, *args, **kwargs):
-        pass
-
 
 class DummyUICommand(gui.uicommand.UICommand):
     bitmap = 'undo'
@@ -83,12 +50,6 @@ class DummyUICommand(gui.uicommand.UICommand):
 
     def onCommandActivate(self, event):
         self.activated = True
-
-    def getHelpText(self):
-        return 'Help text'
-    
-    def getMenuText(self):
-        return 'Menu text'
 
 
 class ViewerWithDummyWidget(gui.viewer.base.Viewer):
@@ -105,9 +66,6 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer):
     def _createColumns(self):
         return []
     
-    def getItemWithIndex(self, index):
-        return self.presentation()[index]
-
     
 class TaskFile(persistence.TaskFile):
     raiseIOError = False
@@ -120,10 +78,7 @@ class TaskFile(persistence.TaskFile):
     
 
 class MainWindow:
-    def setToolBarSize(self, *args, **kwargs):
-        pass
-        
-    showFindDialog = setToolBarSize
+    showFindDialog = None
 
 
 class IOController:

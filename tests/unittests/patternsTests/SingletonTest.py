@@ -115,11 +115,8 @@ class SingletonSubclassTest(test.TestCase):
     def testSubclassInitCanHaveArgs(self):
         class Sub(Singleton):
             def __init__(self, arg):
-                pass
-        try:
-            sub = Sub('Yo')
-        except TypeError:
-            self.fail()
+                self.arg = arg
+        self.assertEqual('Yo', Sub('Yo').arg)
 
     def testSubclassInitIsOnlyCalledOnce(self):
         class Sub(Singleton):

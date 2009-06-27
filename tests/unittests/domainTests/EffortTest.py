@@ -217,7 +217,7 @@ class EffortWithoutTaskTest(test.TestCase):
         self.events = []
         
     def onEvent(self, event):
-        self.events.append(event)
+        self.events.append(event) # pragma: no cover
         
     def testCreatingAnEffortWithoutTask(self):
         self.assertEqual(None, self.effort.task())

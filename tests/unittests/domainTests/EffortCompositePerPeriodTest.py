@@ -38,10 +38,6 @@ class CompositeEffortPerPeriodTest(test.TestCase):
         self.composite = effort.CompositeEffortPerPeriod(\
             date.DateTime(2004,1,1,0,0,0), date.DateTime(2004,1,1,23,59,59),
             self.taskList)
-        self.events = []
-    
-    def onEvent(self, event):
-        self.events.append(event)
 
     def testInitialLength(self):
         self.assertEqual(0, len(self.composite))

@@ -57,7 +57,7 @@ class TaskViewerTestCase(test.wxTestCase):
 
         for name in os.listdir('.'):
             if os.path.isdir(name) and name.endswith('_attachments'):
-                os.rmdir(name)
+                os.rmdir(name) # pragma: no cover
         if os.path.isfile('test.mail'):
             os.remove('test.mail')
         
@@ -496,7 +496,7 @@ class TreeOrListModeTests(object):
             expectedIndex = (0,)
         self.assertEqual(expectedIndex, self.viewer.getIndexOfItem(self.child))
 
-    def testSortOrder(self):
+    def testSortOrderOfChildDueToday(self):
         self.task.addChild(self.child)
         self.taskList.append(self.task)
         self.child.setDueDate(date.Today())
@@ -592,7 +592,7 @@ class ColumnsTests(object):
         self.child.setPriority(10)
         self.failIf(self.viewer.events)
 
-    def testChangePriorityWhileColumnShown(self):
+    def testChangeTotalPriorityWhileColumnShown(self):
         self.showColumn('totalPriority')
         self.task.addChild(self.child)
         self.taskList.append(self.task)

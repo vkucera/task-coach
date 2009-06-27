@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -160,7 +160,7 @@ class CommonTaskRelationshipManagerTests(object):
         else:
             self.assertEqual(date.Today(), self.grandchild.startDate())
 
-    def testMarkLastChildCompletedMakesParentRecur_AndThusChildIsNotCompleted(self):
+    def testMarkLastChildCompletedMakesParentRecur_AndThusGrandChildIsNotCompleted(self):
         self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.addChild(self.grandchild)
         self.grandchild.setParent(self.child)

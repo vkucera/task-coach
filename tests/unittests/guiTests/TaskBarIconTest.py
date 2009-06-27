@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,21 +22,14 @@ from taskcoachlib import meta, config, gui
 from taskcoachlib.domain import task, effort, date
 
 
-class MainWindowMock:
-    def restore(self):
-        pass
-
-    quit = restore
-    
-
 class TaskBarIconTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.settings = config.Settings(load=False)
-        self.icon = gui.TaskBarIcon(MainWindowMock(), self.taskList,
+        self.icon = gui.TaskBarIcon(None, self.taskList,
             self.settings)
 
-    def tearDown(self):
+    def tearDown(self): # pragma: no cover
         if '__WXMAC__' in wx.PlatformInfo: 
             self.icon.RemoveIcon()
         else:

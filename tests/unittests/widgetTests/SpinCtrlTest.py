@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ class SpinCtrlTest(test.wxTestCase):
         spinCtrl = widgets.SpinCtrl(self.frame, max=-1)
         self.assertEqual(-1, spinCtrl.GetValue())
         
-    def fakeWindowsSpinCtrlBehaviourWhenSettingTextValue(self, spinCtrl):
+    def fakeWindowsSpinCtrlBehaviourWhenSettingTextValue(self, spinCtrl): # pragma: no cover
         spinCtrl.SetValue(0)
         class DummyEvent(object):
             def Skip(self):
@@ -51,7 +51,7 @@ class SpinCtrlTest(test.wxTestCase):
     def testSetInvalidValue(self):
         spinCtrl = widgets.SpinCtrl(self.frame)
         spinCtrl.SetValueString('text')
-        if '__WXMSW__' == wx.Platform:
+        if '__WXMSW__' == wx.Platform: # pragma: no cover
             self.fakeWindowsSpinCtrlBehaviourWhenSettingTextValue(spinCtrl)
         self.assertEqual(0, spinCtrl.GetValue())
         
