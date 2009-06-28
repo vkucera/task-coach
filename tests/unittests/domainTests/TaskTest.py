@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test, wx
 from unittests import asserts
 from taskcoachlib import patterns
-from taskcoachlib.domain import task, effort, date, attachment, note
+from taskcoachlib.domain import task, effort, date, attachment, note, category
 
 
 # Handy globals
@@ -923,6 +923,23 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.setFixedFee(1000)
         self.assertEqual(3000, self.task.revenue(recursive=True))
         
+    def testColorChangeNotificationOfEfforts(self):
+        self.registerObserver(effort.Effort.colorChangedEventType())
+        self.task.addEffort(effort.Effort(self.task))
+        self.task1_1.addEffort(effort.Effort(self.task1_1))
+        self.task.setColor(wx.RED)
+        self.assertEqual(2, len(self.events))
+
+    def testColorChangeNotificationOfEfforts_ViaCategory(self):
+        self.registerObserver(effort.Effort.colorChangedEventType())
+        self.task.addEffort(effort.Effort(self.task))
+        self.task1_1.addEffort(effort.Effort(self.task1_1))
+        cat = category.Category('Cat')
+        cat.addCategorizable(self.task)
+        self.task.addCategory(cat)
+        cat.setColor(wx.RED)
+        self.assertEqual(2, len(self.events))
+
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def taskCreationKeywordArguments(self):
