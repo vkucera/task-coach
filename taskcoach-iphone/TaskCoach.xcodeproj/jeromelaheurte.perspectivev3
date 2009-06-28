@@ -230,6 +230,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -267,14 +269,13 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>29B97317FDCFA39411CA2CEA</string>
 								<string>19C28FACFE9D520D11CA2CBB</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>23</integer>
-									<integer>22</integer>
+									<integer>6</integer>
+									<integer>5</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -324,7 +325,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6FC847B0FF000B40015DC12</string>
+										<string>A66DB9D50FF7410D00E72C49</string>
 										<key>history</key>
 										<array>
 											<string>A68EDF5D0F1E28CE00F51FF2</string>
@@ -435,7 +436,7 @@
 											<string>A6F7A7E70FE50125000DD58C</string>
 											<string>A6CCF5600FEE210000A5BD97</string>
 											<string>A6FC84770FF000B40015DC12</string>
-											<string>A6FC84780FF000B40015DC12</string>
+											<string>A66DB9D40FF7410D00E72C49</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -554,7 +555,6 @@
 											<string>A6B66D3B0FCB19F4007B435E</string>
 											<string>A6B264F50FDBD01400FF2AD0</string>
 											<string>A6B264F60FDBD01400FF2AD0</string>
-											<string>A6FC84790FF000B40015DC12</string>
 											<string>A6FC847A0FF000B40015DC12</string>
 										</array>
 									</dict>
@@ -639,7 +639,7 @@
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXBuildLogShowsTranscriptDefaultKey</key>
-										<string>{{0, 32}, {1335, 145}}</string>
+										<string>{{0, -50}, {1335, 227}}</string>
 										<key>PBXProjectModuleGUID</key>
 										<string>XCMainBuildResultsModuleGUID</string>
 										<key>PBXProjectModuleLabel</key>
@@ -680,11 +680,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6FC847C0FF000B40015DC12</string>
+				<string>A66DB9CF0FF73F2100E72C49</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6FC847D0FF000B40015DC12</string>
+				<string>A66DB9D00FF73F2100E72C49</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6FC847E0FF000B40015DC12</string>
+				<string>A66DB9D10FF73F2100E72C49</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
