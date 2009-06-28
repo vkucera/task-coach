@@ -437,14 +437,12 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
         super(UpdatePerSecondViewer, self).onPresentationChanged(event)
 
     def onStartTracking(self, event):
-        item = event.source()
-        if item in self.presentation():
-            self.addTrackedItems([item])
+        self.addTrackedItems([item for item in event.sources() \
+                              if item in self.presentation()])
 
     def onStopTracking(self, event):
-        item = event.source()
-        if item in self.presentation():
-            self.removeTrackedItems([item])
+        self.removeTrackedItems([item for item in event.sources() \
+                                 if item in self.presentation()])
             
     def currentlyTrackedItems(self):
         return list(self.__trackedItems)
@@ -551,7 +549,10 @@ class ViewerWithColumns(Viewer):
         self.showColumn(column, show=False)
                 
     def onAttributeChanged(self, event):
-        self.refreshItem(event.source())
+        # FIXME: check for number of sources and call refresh when there
+        # are many?
+        for item in event.sources():
+            self.refreshItem(item)
         
     def columns(self):
         return self._columns

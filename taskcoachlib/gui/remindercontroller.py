@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,12 +48,9 @@ class ReminderController(object):
         self.__removeRemindersForTasks(event.values())
                 
     def onSetReminder(self, event):
-        task, newReminderDateTime = event.source(), event.value()
-        oldReminderDateTime = self.__tasksWithReminders.get(task, None)
-        if oldReminderDateTime:
-            self.__removeReminder(task, oldReminderDateTime)
-        if newReminderDateTime:
-            self.__registerReminder(task, newReminderDateTime)            
+        tasks = event.sources()
+        self.__removeRemindersForTasks(tasks)
+        self.__registerRemindersForTasks(tasks)
         
     def onReminder(self, event):
         now = event.value() + date.TimeDelta(seconds=1)
@@ -109,19 +106,21 @@ class ReminderController(object):
             if task in self.__tasksWithReminders:
                 self.__removeReminder(task)
 
-    def __registerReminder(self, task, reminderDateTime=None):
-        reminderDateTime = reminderDateTime or task.reminder()
+    def __registerReminder(self, task):
+        reminderDateTime = task.reminder()
         if reminderDateTime < date.DateTime.now():
             reminderDateTime = date.DateTime.now() + date.TimeDelta(seconds=2)
         if reminderDateTime not in self.__tasksWithReminders.values():
-            self.__changeDateTimeObservation(reminderDateTime, 'registerObserver')
+            self.__changeDateTimeObservation(reminderDateTime, 
+                                             'registerObserver')
         self.__tasksWithReminders[task] = reminderDateTime
             
-    def __removeReminder(self, task, reminderDateTime=None):
-        reminderDateTime = reminderDateTime or task.reminder()
+    def __removeReminder(self, task):
+        oldReminderDateTime = self.__tasksWithReminders[task]
         del self.__tasksWithReminders[task]
-        if reminderDateTime not in self.__tasksWithReminders.values():
-            self.__changeDateTimeObservation(reminderDateTime, 'removeObserver')
+        if oldReminderDateTime not in self.__tasksWithReminders.values():
+            self.__changeDateTimeObservation(oldReminderDateTime, 
+                                             'removeObserver')
     
     def __changeDateTimeObservation(self, reminderDateTime, registrationMethod):
         eventType = date.Clock().eventType(reminderDateTime)

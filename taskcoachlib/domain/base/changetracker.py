@@ -68,8 +68,7 @@ class ChangeTracker(patterns.Observer):
         self.__modified -= removedItemIds
         
     def onModifyItem(self, event):
-        item = event.source()
-        self.__modified.add(item.id())
+        self.__modified |= set([item.id() for item in event.sources()])
         
     def added(self):
         return self.__added

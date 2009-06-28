@@ -155,7 +155,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
                                       self, localOnly)
     
     def onCategoryChanged(self, event):
-        self.refreshItem(event.source())
+        # FIXME: call refresh when there are many sources?
+        for item in event.sources():
+            self.refreshItem(item)
 
     def onCheck(self, event):
         category = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))

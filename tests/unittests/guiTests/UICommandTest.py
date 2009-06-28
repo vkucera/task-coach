@@ -23,7 +23,7 @@ from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, category, note, date, attachment
 from taskcoachlib.thirdparty import desktop
 
-if desktop.get_desktop() == 'KDE':
+if desktop.get_desktop() == 'KDE': # pragma: no cover
     # On KDE, kfmclient insists on showing an error message for non-existing
     # files, even when passing --noninteractive, so we make sure kfmclient is
     # not invoked at all 

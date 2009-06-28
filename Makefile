@@ -112,7 +112,7 @@ disttests:
 	cd tests; $(PYTHON) test.py --disttests --no-unittests
 
 coverage:
-	cd tests; coverage -x test.py; coverage -b -d coverage.out
+	cd tests; coverage -x test.py; coverage -b -d coverage.out -o /usr,test
 
 
 CLEANFILES=build dist website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out

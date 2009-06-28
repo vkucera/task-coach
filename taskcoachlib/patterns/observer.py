@@ -65,7 +65,7 @@ class Event(object):
         return 'Event(%s, %s, %s)'%(self.__source, self.__type, self.__values)
 
     def __eq__(self, other):
-        return self.source() == other.source() and \
+        return self.sources() == other.sources() and \
                self.type() == other.type() and \
                self.values() == other.values()
 
@@ -224,13 +224,14 @@ class Publisher(object):
                 'publisher.lastObserverRemovedFor.%s'%eventType, eventType))
         
     def notifyObservers(self, event):
-        ''' Notify observers of the event and/or source. The event type and 
-            source are extracted from the event. '''
+        ''' Notify observers of the event and/or sources. The event type and 
+            sources are extracted from the event. '''
         if not self.isNotifying():
             return
         observers = []
-        for eventTypeAndSource in [(event.type(), None), 
-                                   (event.type(), event.source())]:
+        sources = event.sources() + [None] # Include the catch-all source
+        eventTypesAndSources = [(event.type(), source) for source in sources]
+        for eventTypeAndSource in eventTypesAndSources:
             observers.extend(self.__observers.get(eventTypeAndSource, []))
         for observer in observers:
             observer(event)

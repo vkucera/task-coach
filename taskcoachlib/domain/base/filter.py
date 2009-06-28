@@ -163,13 +163,10 @@ class DeletedFilter(Filter):
                           eventType=eventType)
 
     def onObjectMarkedDeletedOrNot(self, event):
-        obj = event.source()
-
-        if obj.isDeleted():
-            self.removeItemsFromSelf([obj])
-        else:
-            if obj in self.observable() and not obj in self:
-                self.extendSelf([obj])
+        items = event.sources()
+        self.removeItemsFromSelf([item for item in items if item.isDeleted()])
+        self.extendSelf([item for item in items if not item.isDeleted() \
+            and item in self.observable() and not item in self])
 
     def filter(self, items):
         return [item for item in items if not item.isDeleted()]

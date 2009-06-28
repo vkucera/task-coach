@@ -92,33 +92,51 @@ class TaskFile(patterns.Observable, patterns.Observer):
         self.markDirty()
         
     def onTaskChanged(self, event):
-        if event.source() in self.tasks() and not self.__loading:
+        if self.__loading:
+            return
+        tasks = [task for task in event.sources() if task in self.tasks()]
+        if tasks:
             self.markDirty()
-            event.source().markDirty()
+            for task in tasks:
+                task.markDirty()
             
     def onEffortChanged(self, event):
-        if event.source().task() in self.tasks() and not self.__loading:
+        if self.__loading:
+            return
+        efforts = [effort for effort in event.sources() if \
+                   effort.task() in self.tasks()]
+        if efforts:
             self.markDirty()
-            event.source().markDirty()
+            for effort in efforts:
+                effort.markDirty()
             
     def onCategoryChanged(self, event):
-        if event.source() in self.categories() and not self.__loading:
-            self.markDirty()
-            for categorizable in event.source().categorizables():
-                categorizable.markDirty()
+        if self.__loading:
+            return
+        categories = [category for category in event.sources() if \
+                      category in self.categories()]
+        if categories:
+             self.markDirty()
+             for categorizable in category.categorizables():
+                 categorizable.markDirty()
             
     def onNoteChanged(self, event):
-        if not self.__loading:
-            # A note may be in self.notes() or it may be a note of another domain object.
-            self.markDirty()
-            event.source().markDirty()
+        if self.__loading:
+            return
+        # A note may be in self.notes() or it may be a note of another 
+        # domain object.
+        self.markDirty()
+        for note in event.sources():
+            note.markDirty()
             
     def onAttachmentChanged(self, event):
-        if not self.__loading:
-            # Attachments don't know their owner, so we can't check whether the
-            # attachment is actually in the task file. Assume it is.
-            self.markDirty()
-            event.source().markDirty()
+        if self.__loading:
+            return
+        # Attachments don't know their owner, so we can't check whether the
+        # attachment is actually in the task file. Assume it is.
+        self.markDirty()
+        for attachment in event.sources():
+            attachment.markDirty()
 
     def setFilename(self, filename):
         if filename == self.__filename:
@@ -306,14 +324,14 @@ class AutoSaver(patterns.Observer):
                               eventType='taskfile.aboutToSave')
             
     def onTaskFileDirty(self, event):
-        taskFile = event.source()
-        if self._needSave(taskFile):
-            taskFile.save()
+        for taskFile in event.sources():
+            if self._needSave(taskFile):
+                taskFile.save()
         
     def onTaskFileAboutToSave(self, event):
-        taskFile = event.source()
-        if self._needBackup(taskFile):
-            self._createBackup(taskFile)
+        for taskFile in event.sources():
+            if self._needBackup(taskFile):
+                self._createBackup(taskFile)
     
     def _needSave(self, taskFile):
         return taskFile.filename() and taskFile.needSave() and \

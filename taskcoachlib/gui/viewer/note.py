@@ -151,7 +151,9 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         return columns
                      
     def onNoteChanged(self, event):
-        self.refreshItem(event.source())
+        # FIXME: call refresh when there are many sources?
+        for item in event.sources():
+            self.refreshItem(item)
             
     def getItemText(self, index, column=0):
         item = self.getItemWithIndex(index)

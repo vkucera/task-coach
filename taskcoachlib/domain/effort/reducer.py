@@ -84,24 +84,24 @@ class EffortAggregator(patterns.SetDecorator,
             super(EffortAggregator, self).extendSelf(newComposites)
 
     def onCompositeEmpty(self, event):
-        composite = event.source()
-        if composite not in self:
-            return
-        key = self.keyForComposite(composite)
-        if key not in self.__composites:
-            # A composite may already have been removed, e.g. when a
-            # parent and child task have effort in the same period
-            return
-        del self.__composites[key]
-        super(EffortAggregator, self).removeItemsFromSelf([composite])
+        composites = [composite for composite in event.sources() if \
+                      composite in self]
+        keys = [self.keyForComposite(composite) for composite in composites]
+        # A composite may already have been removed, e.g. when a
+        # parent and child task have effort in the same period
+        keys = [key for key in keys if key in self.__composites]
+        for key in keys:
+            del self.__composites[key]
+        super(EffortAggregator, self).removeItemsFromSelf(composites)
         
     def onEffortStartChanged(self, event):
-        effort = event.source()
-        key = self.keyForEffort(effort)
-        task = effort.task()
-        if (task in self.observable()) and (key not in self.__composites):
-            newComposites = self.createComposites(task, [effort])
-            super(EffortAggregator, self).extendSelf(newComposites)
+        newComposites = []
+        for effort in event.sources():
+            key = self.keyForEffort(effort)
+            task = effort.task()
+            if (task in self.observable()) and (key not in self.__composites):
+                newComposites.extend(self.createComposites(task, [effort]))
+        super(EffortAggregator, self).extendSelf(newComposites)
             
     def createComposites(self, task, efforts):
         newComposites = []

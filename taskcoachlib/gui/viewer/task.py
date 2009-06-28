@@ -140,7 +140,9 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
         self.refresh()
         
     def onTaskChange(self, event):
-        self.refreshItem(event.source())
+        # FIXME: call refresh when there are many sources?
+        for item in event.sources():
+            self.refreshItem(item)
         
     def children(self, item):
         try:
