@@ -56,8 +56,8 @@ class CategorizableCompositeObject(base.CompositeObject):
     def addCategory(self, category):
         if category not in self._categories:
             self._categories.add(category)
-            self.notifyObservers(patterns.Event(self, 
-                self.categoryAddedEventType(), category))
+            self.notifyObservers(patterns.Event( \
+                self.categoryAddedEventType(), self, category))
             self.notifyChildObserversOfCategoryChange(category, 'add')
             if category.color(): 
                 self.notifyObserversOfColorChange(category.color())
@@ -69,8 +69,8 @@ class CategorizableCompositeObject(base.CompositeObject):
     def removeCategory(self, category):
         if category in self._categories:
             self._categories.discard(category)
-            self.notifyObservers(patterns.Event(self, 
-                self.categoryRemovedEventType(), category))
+            self.notifyObservers(patterns.Event( \
+                self.categoryRemovedEventType(), self, category))
             self.notifyChildObserversOfCategoryChange(category, 'remove')
             if category.color():
                 self.notifyObserversOfColorChange(category.color())
@@ -133,15 +133,15 @@ class CategorizableCompositeObject(base.CompositeObject):
         else:
             eventType = self.totalCategoryRemovedEventType()
         for child in self.children(recursive=True):
-            self.notifyObservers(patterns.Event(child, eventType, category))
+            self.notifyObservers(patterns.Event(eventType, child, category))
    
     @classmethod
     def categorySubjectChangedEventType(class_):
         return 'categorizable.category.subject'
              
     def notifyObserversOfCategorySubjectChange(self, category):
-        self.notifyObservers(patterns.Event(self, 
-            self.categorySubjectChangedEventType(), category.subject()))
+        self.notifyObservers(patterns.Event( \
+            self.categorySubjectChangedEventType(), self, category.subject()))
         self.notifyObserversOfTotalCategorySubjectChange(category)
     
     @classmethod
@@ -150,8 +150,8 @@ class CategorizableCompositeObject(base.CompositeObject):
     
     def notifyObserversOfTotalCategorySubjectChange(self, category):
         for categorizable in [self] + self.children(recursive=True):
-            self.notifyObservers(patterns.Event(categorizable, 
-                self.totalCategorySubjectChangedEventType(), 
+            self.notifyObservers(patterns.Event( \
+                self.totalCategorySubjectChangedEventType(), categorizable,
                 category.subject()))
             
     @classmethod

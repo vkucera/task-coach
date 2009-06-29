@@ -143,7 +143,7 @@ class TaskFile(patterns.Observable, patterns.Observer):
             return
         self.__lastFilename = filename or self.__filename
         self.__filename = filename
-        self.notifyObservers(patterns.Event(self, 'taskfile.filenameChanged', 
+        self.notifyObservers(patterns.Event('taskfile.filenameChanged', self,
                                             filename))
 
     def filename(self):
@@ -155,12 +155,12 @@ class TaskFile(patterns.Observable, patterns.Observer):
     def markDirty(self, force=False):
         if force or not self.__needSave:
             self.__needSave = True
-            self.notifyObservers(patterns.Event(self, 'taskfile.dirty', True))
+            self.notifyObservers(patterns.Event('taskfile.dirty', self, True))
                 
     def markClean(self):
         if self.__needSave:
             self.__needSave = False
-            self.notifyObservers(patterns.Event(self, 'taskfile.dirty', False))
+            self.notifyObservers(patterns.Event('taskfile.dirty', self, False))
             
     def _clear(self, regenerate=True):
         self.tasks().clear()
@@ -217,7 +217,7 @@ class TaskFile(patterns.Observable, patterns.Observer):
             self.__needSave = False
         
     def save(self):
-        self.notifyObservers(patterns.Event(self, 'taskfile.aboutToSave'))
+        self.notifyObservers(patterns.Event('taskfile.aboutToSave', self))
         fd = self._openForWrite()
         xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                 self.syncMLConfig(), self.guid())

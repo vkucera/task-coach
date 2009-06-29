@@ -61,7 +61,8 @@ class FileAttachmentTest(test.TestCase):
         eventType = self.attachment.locationChangedEventType()
         patterns.Publisher().registerObserver(self.onEvent, eventType)
         self.attachment.setLocation('new location')
-        self.assertEqual([patterns.Event(self.attachment, eventType, 'new location')], 
+        self.assertEqual([patterns.Event(eventType, self.attachment, 
+                                         'new location')], 
                          self.events)
 
     def testModificationEventTypes(self):

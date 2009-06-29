@@ -553,8 +553,8 @@ class UpdatePerSecondViewerTests(object):
 
     def testClockNotificationResultsInRefreshedItem(self):
         self.updateViewer.widget = MockWidget()
-        self.updateViewer.onEverySecond(patterns.Event(date.Clock(),
-            'clock.second'))
+        self.updateViewer.onEverySecond(patterns.Event('clock.second', 
+            date.Clock()))
         expectedIndex = self.taskList.index(self.trackedTask)
         if self.updateViewer.isTreeViewer():
             expectedIndex = (expectedIndex,)
@@ -564,8 +564,8 @@ class UpdatePerSecondViewerTests(object):
     def testClockNotificationResultsInRefreshedItem_OnlyForTrackedItems(self):
         self.taskList.append(task.Task('not tracked'))
         self.updateViewer.widget = MockWidget()
-        self.updateViewer.onEverySecond(patterns.Event(date.Clock(),
-            'clock.second'))
+        self.updateViewer.onEverySecond(patterns.Event('clock.second',
+            date.Clock()))
         self.assertEqual(1, len(self.updateViewer.widget.refreshedItems))
 
     def testStopTrackingRemovesViewerFromClockObservers(self):

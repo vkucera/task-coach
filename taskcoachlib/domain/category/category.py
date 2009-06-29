@@ -81,14 +81,14 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def addCategorizable(self, categorizable):
         if categorizable not in self.__categorizables: # FIXME: use set
             self.__categorizables.append(categorizable)
-            self.notifyObservers(patterns.Event(self, 
-                self.categorizableAddedEventType(), categorizable))
+            self.notifyObservers(patterns.Event( \
+                self.categorizableAddedEventType(), self, categorizable))
             
     def removeCategorizable(self, categorizable):
         if categorizable in self.__categorizables:
             self.__categorizables.remove(categorizable)
-            self.notifyObservers(patterns.Event(self, 
-                self.categorizableRemovedEventType(), categorizable))
+            self.notifyObservers(patterns.Event( \
+                self.categorizableRemovedEventType(), self, categorizable))
             
     def isFiltered(self):
         return self.__filtered
@@ -96,8 +96,8 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def setFiltered(self, filtered=True):
         if filtered != self.__filtered:
             self.__filtered = filtered
-            self.notifyObservers(patterns.Event(self, 
-                self.filterChangedEventType(), filtered))
+            self.notifyObservers(patterns.Event(self.filterChangedEventType(), 
+                                                self, filtered))
         if filtered:
             self._turnOffFilteringOfParent()
             self._turnOffFilteringOfChildren()

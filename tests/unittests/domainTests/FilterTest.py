@@ -491,15 +491,15 @@ class CategoryFilterFixtureAndCommonTests(CategoryFilterHelpers):
     def testReceiveFilterMatchOnAllNotificationFromViewer(self):
         self.unusedCategory.setFiltered()
         self.parentCategory.setFiltered()
-        patterns.Publisher().notifyObservers(patterns.Event(None,
-            'view.categoryfiltermatchall', 'True'))
+        patterns.Publisher().notifyObservers(patterns.Event( \
+            'view.categoryfiltermatchall', None, 'True'))
         self.assertEqual(0, len(self.filter))
 
     def testReceiveFilterMatchOnAnyNotificationFromViewer(self):
         self.unusedCategory.setFiltered()
         self.parentCategory.setFiltered()
-        patterns.Publisher().notifyObservers(patterns.Event(None,
-            'view.categoryfiltermatchall', 'False'))
+        patterns.Publisher().notifyObservers(patterns.Event( \
+            'view.categoryfiltermatchall', None, 'False'))
         self.assertEqual(2, len(self.filter))
         
 

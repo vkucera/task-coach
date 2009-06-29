@@ -178,15 +178,15 @@ class Clock(patterns.Observer, patterns.Observable):
             
     def notifySecondObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self.notifyObservers(patterns.Event(self, 'clock.second', now))
+        self.notifyObservers(patterns.Event('clock.second', self, now))
 
     def notifySpecificTimeObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self.notifyObservers(patterns.Event(self, Clock.eventType(now), now))
+        self.notifyObservers(patterns.Event(Clock.eventType(now), self, now))
 
     def notifyMidnightObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self.notifyObservers(patterns.Event(self, 'clock.midnight', now))        
+        self.notifyObservers(patterns.Event('clock.midnight', self, now))        
 
     def reset(self):
         self._lastMidnightNotified = date.Today()

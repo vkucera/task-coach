@@ -56,17 +56,17 @@ class Set(set):
 
 class Event(object):
     ''' Event represents notification events. '''
-    def __init__(self, source, type, *values):
+    def __init__(self, type, source, *values):
         self.__sources = [source]
         self.__type = type
         self.__values = values
 
     def __repr__(self): # pragma: no cover
-        return 'Event(%s, %s, %s)'%(self.__sources, self.__type, self.__values)
+        return 'Event(%s, %s, %s)'%(self.__type, self.__sources, self.__values)
 
     def __eq__(self, other):
-        return self.sources() == other.sources() and \
-               self.type() == other.type() and \
+        return self.type() == other.type() and \
+               self.sources() == other.sources() and \
                self.values() == other.values()
 
     def sources(self):
@@ -207,18 +207,20 @@ class Publisher(object):
         self.notifyObserversOfLastObserverRemoved()
         
     def notifyObserversOfFirstObserverRegistered(self, eventType):
-        self.notifyObservers(Event(self,
-            'publisher.firstObserverRegisteredFor', eventType))
-        self.notifyObservers(Event(self, 
-            'publisher.firstObserverRegisteredFor.%s'%eventType, eventType))
+        self.notifyObservers(Event(
+            'publisher.firstObserverRegisteredFor', self, eventType))
+        self.notifyObservers(Event( 
+            'publisher.firstObserverRegisteredFor.%s'%eventType, self, 
+            eventType))
                     
     def notifyObserversOfLastObserverRemoved(self):
         for eventType, eventSource in self.__observers.keys():
             if self.__observers[(eventType, eventSource)]:
                 continue
             del self.__observers[(eventType, eventSource)]
-            self.notifyObservers(Event(self, 
-                'publisher.lastObserverRemovedFor.%s'%eventType, eventType))
+            self.notifyObservers(Event( 
+                'publisher.lastObserverRemovedFor.%s'%eventType, self, 
+                eventType))
         
     def notifyObservers(self, event):
         ''' Notify observers of the event and/or sources. The event type and 
@@ -311,10 +313,10 @@ class ObservableCollection(Observable):
         return '%s.remove'%class_
 
     def notifyObserversOfItemsAdded(self, *items):
-        self.notifyObservers(Event(self, self.addItemEventType(), *items))
+        self.notifyObservers(Event(self.addItemEventType(), self, *items))
 
     def notifyObserversOfItemsRemoved(self, *items):
-        self.notifyObservers(Event(self, self.removeItemEventType(), *items))
+        self.notifyObservers(Event(self.removeItemEventType(), self, *items))
 
     @classmethod
     def modificationEventTypes(class_):

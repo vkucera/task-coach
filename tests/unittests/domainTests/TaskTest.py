@@ -298,15 +298,14 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testSetFixedFeeCausesTotalFixedFeeNotification(self):
         self.registerObserver('task.totalFixedFee')
         self.task.setFixedFee(1000)
-        self.assertEqual([patterns.Event(self.task, 'task.totalFixedFee', 
-                          1000)], 
-                         self.events)
+        self.assertEqual([patterns.Event('task.totalFixedFee', self.task, 
+            1000)], self.events)
     
     def testSetFixedFeeCausesRevenueChangeNotification(self):
         self.registerObserver('task.revenue')
         self.task.setFixedFee(1000)
-        self.assertEqual([patterns.Event(self.task, 'task.revenue',
-            1000)], self.events)
+        self.assertEqual([patterns.Event('task.revenue', self.task, 1000)], 
+            self.events)
   
     def testSetHourlyFeeViaSetter(self):
         self.task.setHourlyFee(100)
@@ -315,8 +314,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testSetHourlyFeeCausesNotification(self):
         self.registerObserver(self.task.hourlyFeeChangedEventType())
         self.task.setHourlyFee(100)
-        self.assertEqual([patterns.Event(self.task, 
-            self.task.hourlyFeeChangedEventType(), 100)], self.events)
+        self.assertEqual([patterns.Event( \
+            self.task.hourlyFeeChangedEventType(), self.task, 100)], 
+            self.events)
   
     def testSetRecurrence(self):
         self.task.setRecurrence(date.Recurrence('weekly'))
@@ -325,7 +325,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testSetRecurrenceCausesNotification(self):
         self.registerObserver('task.recurrence')
         self.task.setRecurrence(date.Recurrence('weekly'))
-        self.assertEqual([patterns.Event(self.task, 'task.recurrence',
+        self.assertEqual([patterns.Event('task.recurrence', self.task,
             date.Recurrence('weekly'))], self.events)
                         
     # Add child
@@ -341,7 +341,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         child = task.Task()
         child.setBudget(date.TimeDelta(100))
         self.task.addChild(child)
-        self.assertEqual(patterns.Event(self.task, 'task.totalBudget',
+        self.assertEqual(patterns.Event('task.totalBudget', self.task,
             date.TimeDelta(100)), self.events[-1])
 
     def testAddChildWithoutBudgetCausesNoTotalBudgetNotification(self):
@@ -357,7 +357,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         child.addEffort(effort.Effort(child, date.DateTime(2000,1,1,10,0,0),
             date.DateTime(2000,1,1,11,0,0)))
         self.task.addChild(child)
-        self.assertEqual(patterns.Event(self.task, 'task.totalBudgetLeft',
+        self.assertEqual(patterns.Event('task.totalBudgetLeft', self.task,
             date.TimeDelta(hours=99)), self.events[0])
 
     def testAddChildWithoutEffortCausesNoTotalBudgetLeftNotification(self):
@@ -380,7 +380,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         child.setBudget(date.TimeDelta(hours=100))
         self.registerObserver('task.totalBudgetLeft')
         self.task.addChild(child)
-        self.assertEqual(patterns.Event(self.task, 'task.totalBudgetLeft',
+        self.assertEqual(patterns.Event('task.totalBudgetLeft', self.task,
             date.TimeDelta(hours=100)), self.events[0])
 
     def testAddChildWithEffortCausesTotalTimeSpentNotification(self):
@@ -389,8 +389,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
             date.DateTime(2000,1,1,11,0,0)))
         self.registerObserver(task.Task.totalTimeSpentChangedEventType())
         self.task.addChild(child)
-        self.assertEqual(patterns.Event(self.task, 
-            task.Task.totalTimeSpentChangedEventType(), None), self.events[0])
+        self.assertEqual(patterns.Event( \
+            task.Task.totalTimeSpentChangedEventType(), self.task, None), 
+            self.events[0])
 
     def testAddChildWithoutEffortCausesNoTotalTimeSpentNotification(self):
         self.registerObserver(task.Task.totalTimeSpentChangedEventType())
@@ -403,7 +404,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         child.setPriority(10)
         self.registerObserver('task.totalPriority')
         self.task.addChild(child)
-        self.assertEqual(patterns.Event(self.task, 'task.totalPriority', 10), 
+        self.assertEqual(patterns.Event('task.totalPriority', self.task, 10), 
             self.events[0])
 
     def testAddChildWithLowerPriorityCausesNoTotalPriorityNotification(self):
@@ -418,7 +419,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         child.setFixedFee(1000)
         self.registerObserver('task.totalRevenue')
         self.task.addChild(child)
-        self.assertEqual(patterns.Event(self.task, 'task.totalRevenue', 1000),
+        self.assertEqual(patterns.Event('task.totalRevenue', self.task, 1000),
             self.events[0])
 
     def testAddChildWithoutRevenueCausesNoTotalRevenueNotification(self):
@@ -432,9 +433,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         child.addEffort(effort.Effort(child))
         self.registerObserver(self.task.trackStartEventType())
         self.task.addChild(child)
-        self.assertEqual(patterns.Event(self.task, 
-                                        self.task.trackStartEventType(),
-            child.efforts()[0]), self.events[0])
+        self.assertEqual(patterns.Event(self.task.trackStartEventType(),
+            self.task, child.efforts()[0]), self.events[0])
 
     # Constructor
 
@@ -458,8 +458,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.registerObserver(self.task.trackStartEventType())
         activeEffort = effort.Effort(self.task)
         self.task.addEffort(activeEffort)
-        self.assertEqual([patterns.Event(self.task, 
-            self.task.trackStartEventType(), activeEffort)], self.events)
+        self.assertEqual([patterns.Event(self.task.trackStartEventType(),
+            self.task, activeEffort)], self.events)
 
     # Notes:
     
@@ -473,7 +473,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.registerObserver(eventType)
         aNote = note.Note()
         self.task.addNote(aNote)
-        self.assertEqual([patterns.Event(self.task, eventType, aNote)], 
+        self.assertEqual([patterns.Event(eventType, self.task, aNote)], 
                          self.events)
         
     # State (FIXME: need to test other attributes too)
@@ -684,8 +684,8 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testRemoveChildNotification(self):
         self.registerObserver(task.Task.removeChildEventType())
         self.task1.removeChild(self.task1_1)
-        self.assertEqual([patterns.Event(self.task1, 
-            task.Task.removeChildEventType(), self.task1_1)], self.events)
+        self.assertEqual([patterns.Event(task.Task.removeChildEventType(), 
+            self.task1, self.task1_1)], self.events)
 
     def testRemoveNonExistingChildCausesNoNotification(self):
         self.registerObserver(task.Task.removeChildEventType())
@@ -696,7 +696,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.setBudget(date.TimeDelta(hours=100))
         self.registerObserver('task.totalBudget')
         self.task1.removeChild(self.task1_1)
-        self.assertEqual(patterns.Event(self.task1, 'task.totalBudget',
+        self.assertEqual(patterns.Event('task.totalBudget', self.task1,
             date.TimeDelta()), self.events[0])
 
     def testRemoveChildWithoutBudgetCausesNoTotalBudgetNotification(self):
@@ -710,7 +710,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.addEffort(effort.Effort(self.task1_1, 
             date.DateTime(2005,1,1,11,0,0), date.DateTime(2005,1,1,12,0,0)))
         self.task1.removeChild(self.task1_1)
-        self.assertEqual(patterns.Event(self.task1, 'task.totalBudgetLeft',
+        self.assertEqual(patterns.Event('task.totalBudgetLeft', self.task1,
             date.TimeDelta(hours=100)), self.events[0])
 
     def testRemoveChildWithEffortFromTaskWithoutBudgetCausesNoTotalBudgetLeftNotification(self):
@@ -725,8 +725,9 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
             date.DateTime(2005,1,1,11,0,0), date.DateTime(2005,1,1,12,0,0)))
         self.registerObserver(task.Task.totalTimeSpentChangedEventType())
         self.task1.removeChild(self.task1_1)
-        self.assertEqual(patterns.Event(self.task1, 
-            task.Task.totalTimeSpentChangedEventType(), None), self.events[0])
+        self.assertEqual(patterns.Event( \
+            task.Task.totalTimeSpentChangedEventType(), self.task1, None), 
+            self.events[0])
 
     def testRemoveChildWithoutEffortCausesNoTotalTimeSpentNotification(self):
         self.registerObserver(task.Task.totalTimeSpentChangedEventType())
@@ -737,7 +738,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.setPriority(10)
         self.registerObserver('task.totalPriority')
         self.task1.removeChild(self.task1_1)
-        self.assertEqual(patterns.Event(self.task1, 'task.totalPriority', 0), 
+        self.assertEqual(patterns.Event('task.totalPriority', self.task1, 0), 
             self.events[0])
 
     def testRemoveChildWithLowPriorityCausesNoTotalPriorityNotification(self):
@@ -750,7 +751,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.setFixedFee(1000)
         self.registerObserver('task.totalRevenue')
         self.task1.removeChild(self.task1_1)
-        self.assertEqual(patterns.Event(self.task1, 'task.totalRevenue', 0), 
+        self.assertEqual(patterns.Event('task.totalRevenue', self.task1, 0), 
             self.events[0])
 
     def testRemoveChildWithoutRevenueCausesNoTotalRevenueNotification(self):
@@ -762,8 +763,8 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.registerObserver(self.task1.trackStopEventType())
         self.task1_1.addEffort(effort.Effort(self.task1_1))
         self.task1.removeChild(self.task1_1)
-        self.assertEqual(patterns.Event(self.task1, 
-            self.task1.trackStopEventType(), self.task1_1.efforts()[0]), self.events[0])
+        self.assertEqual(patterns.Event(self.task1.trackStopEventType(), 
+            self.task1, self.task1_1.efforts()[0]), self.events[0])
 
     def testRemoveTrackedChildWhenParentIsTrackedTooCausesNoStopTrackingNotification(self):
         self.registerObserver(self.task1.trackStopEventType())
@@ -830,7 +831,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.setBudget(oneHour)
         self.registerObserver('task.totalBudget', eventSource=self.task1)
         self.task.removeChild(self.task1_1)
-        self.assertEqual([patterns.Event(self.task, 'task.totalBudget', 
+        self.assertEqual([patterns.Event('task.totalBudget', self.task1,
                                          date.TimeDelta(0))], 
                          self.events)
 
@@ -896,21 +897,21 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.registerObserver(self.task1.trackStartEventType())
         activeEffort = effort.Effort(self.task1_1)
         self.task1_1.addEffort(activeEffort)
-        self.assertEqual(patterns.Event(self.task1, 
-            self.task1.trackStartEventType(), activeEffort), self.events[-1])
+        self.assertEqual(patterns.Event(self.task1.trackStartEventType(),
+            self.task1, activeEffort), self.events[-1])
 
     def testNotificationWhenChildTrackingStops(self):
         self.registerObserver(self.task1.trackStopEventType())
         activeEffort = effort.Effort(self.task1_1)
         self.task1_1.addEffort(activeEffort)
         activeEffort.setStop()
-        self.assertEqual(patterns.Event(self.task1, 
-            self.task1.trackStopEventType(), activeEffort), self.events[-1])
+        self.assertEqual(patterns.Event(self.task1.trackStopEventType(), 
+            self.task1, activeEffort), self.events[-1])
 
     def testSetFixedFeeOfChild(self):
         self.registerObserver('task.totalFixedFee')
         self.task1_1.setFixedFee(1000)
-        self.failUnless(patterns.Event(self.task, 'task.totalFixedFee', 1000) \
+        self.failUnless(patterns.Event('task.totalFixedFee', self.task1, 1000) \
                         in self.events)
 
     def testGetFixedFeeRecursive(self):
@@ -978,14 +979,14 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTests):
 
     def testStartTrackingEffort(self):
         self.task1effort1.setStop(date.DateTime.max)
-        self.assertEqual(patterns.Event(self.task, 
-            self.task.trackStartEventType(), self.task1effort1), self.events[0])
+        self.assertEqual(patterns.Event(self.task.trackStartEventType(), 
+            self.task, self.task1effort1), self.events[0])
 
     def testStopTrackingEffort(self):
         self.task1effort1.setStop(date.DateTime.max)
         self.task1effort1.setStop()
-        self.assertEqual(patterns.Event(self.task, 
-            self.task.trackStopEventType(), self.task1effort1), self.events[1])
+        self.assertEqual(patterns.Event(self.task.trackStopEventType(), 
+            self.task, self.task1effort1), self.events[1])
 
     def testRevenueWithEffortButWithZeroFee(self):
         self.assertEqual(0, self.task.revenue())
@@ -993,8 +994,8 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTests):
     def testNotifyEffortOfColorChange(self):
         self.registerObserver(effort.Effort.colorChangedEventType())
         self.task.setColor(wx.RED)
-        self.assertEqual(patterns.Event(self.task1effort1,
-            effort.Effort.colorChangedEventType(), wx.RED), self.events[0])
+        self.assertEqual(patterns.Event(effort.Effort.colorChangedEventType(), 
+            self.task1effort1, wx.RED), self.events[0])
         
 
 class TaskWithTwoEffortsTest(TaskTestCase, CommonTaskTests):
@@ -1044,13 +1045,13 @@ class TaskWithActiveEffort(TaskTestCase, CommonTaskTests):
 
     def testRemoveActiveEffortShouldCauseStopTrackingEvent(self):
         self.task.removeEffort(self.task1effort1)
-        self.assertEqual(patterns.Event(self.task, 
-            self.task.trackStopEventType(), self.task1effort1), self.events[0])
+        self.assertEqual(patterns.Event(self.task.trackStopEventType(), 
+            self.task, self.task1effort1), self.events[0])
 
     def testStopTrackingEvent(self):
         self.task.stopTracking()
-        self.assertEqual([patterns.Event(self.task, 
-            self.task.trackStopEventType(), self.task1effort1)], self.events)
+        self.assertEqual([patterns.Event(self.task.trackStopEventType(), 
+            self.task, self.task1effort1)], self.events)
 
 
 class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTests):
@@ -1365,7 +1366,7 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTests):
     def testRevenue_Notification(self):
         self.registerObserver('task.revenue')
         self.task.addEffort(self.effort)
-        self.assertEqual([patterns.Event(self.task, 'task.revenue', 100)], 
+        self.assertEqual([patterns.Event('task.revenue', self.task, 100)], 
             self.events)
 
     def testAddingEffortDoesNotTriggerRevenueNotificationForEffort(self):

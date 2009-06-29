@@ -119,7 +119,7 @@ class Viewer(wx.Panel):
             return
         # Be sure all wx events are handled before we notify our observers: 
         wx.CallAfter(lambda: patterns.Publisher().notifyObservers(\
-            patterns.Event(self, self.selectEventType(), self.curselection())))
+            patterns.Event(self.selectEventType(), self, self.curselection())))
         # Remember the current selection so we can restore it after a refresh:
         self.__selection = self.curselection()
 

@@ -48,8 +48,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testAddCategoryNotification(self):
         self.registerObserver(self.categoryAddedEventType)
         self.categorizable.addCategory(self.category)
-        self.assertEqual([patterns.Event(self.categorizable, 
-            self.categoryAddedEventType, self.category)], self.events)    
+        self.assertEqual([patterns.Event( \
+            self.categoryAddedEventType, self.categorizable, self.category)], 
+            self.events)    
         
     def testAddSecondCategory(self):
         self.categorizable.addCategory(self.category)
@@ -91,8 +92,8 @@ class CategorizableCompositeObjectTest(test.TestCase):
         child.setParent(self.categorizable)
         cat = category.Category(subject='Parent category')
         self.categorizable.addCategory(cat)
-        self.assertEqual([patterns.Event(child, self.totalCategoryAddedEventType, 
-            cat)], self.events)
+        self.assertEqual([patterns.Event(self.totalCategoryAddedEventType, 
+            child, cat)], self.events)
         
     def testRemoveCategory(self):
         self.categorizable.addCategory(self.category)
@@ -289,8 +290,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addChild(child)
         self.registerObserver(self.totalCategoryRemovedEventType)
         self.categorizable.removeCategory(self.category)
-        self.assertEqual([patterns.Event(child, 
-            self.totalCategoryRemovedEventType, self.category)], self.events)
+        self.assertEqual([patterns.Event( \
+            self.totalCategoryRemovedEventType, child, self.category)], 
+            self.events)
 
     def testCopy(self):
         self.categorizable.addCategory(self.category)
@@ -332,7 +334,7 @@ class CategoryTest(test.TestCase):
         eventType = category.Category.subjectChangedEventType()
         self.registerObserver(eventType)
         self.category.setSubject('New')
-        self.assertEqual([patterns.Event(self.category, eventType, 'New')], 
+        self.assertEqual([patterns.Event(eventType, self.category, 'New')], 
             self.events)
         
     def testSetSubjectCausesNoNotificationWhenNewSubjectEqualsOldSubject(self):

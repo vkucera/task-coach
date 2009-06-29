@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -110,8 +110,8 @@ class ViewerContainer(object):
         pass # Don't forward del to one of the viewers.
     
     def onSelect(self, event):
-        patterns.Publisher().notifyObservers(patterns.Event(self, 
-            self.selectEventType(), *event.values()))
+        patterns.Publisher().notifyObservers(patterns.Event( \
+            self.selectEventType(), self, *event.values()))
 
     def onPageChanged(self, event):
         self._changePage(event.Selection)
@@ -142,6 +142,6 @@ class ViewerContainer(object):
     def _changePage(self, pageNumber):
         self.__currentPageNumber = pageNumber        
         self._settings.set('view', self.__setting, str(pageNumber))
-        patterns.Publisher().notifyObservers(patterns.Event(self, 
-            self.viewerChangeEventType(), pageNumber))
+        patterns.Publisher().notifyObservers(patterns.Event( \
+            self.viewerChangeEventType(), self, pageNumber))
 
