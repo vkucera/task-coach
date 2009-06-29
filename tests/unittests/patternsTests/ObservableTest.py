@@ -21,24 +21,41 @@ from taskcoachlib import patterns
 
 
 class EventTest(test.TestCase):
+    def setUp(self):
+        self.event = patterns.Event(self, 'eventtype', 'some value')
+
     def testEqualWhenAllValuesAreEqual(self):
-        self.assertEqual(patterns.Event(self, 'eventtype', 'some value'), 
+        self.assertEqual(self.event,
                          patterns.Event(self, 'eventtype', 'some value'))
 
     def testUnequalWhenValuesAreDifferent(self):
-        self.assertNotEqual(patterns.Event(self, 'eventtype', 'some value'), 
+        self.assertNotEqual(self.event,
                             patterns.Event(self, 'eventtype', 'other value'))
     
     def testUnequalWhenTypesAreDifferent(self):
-        self.assertNotEqual(patterns.Event(self, 'eventtype', 'some value'), 
+        self.assertNotEqual(self.event,
                             patterns.Event(self, 'other type', 'some value'))
 
     def testUnequalWhenSourcesAreDifferent(self):
-        self.assertNotEqual(patterns.Event(self, 'eventtype', 'some value'), 
+        self.assertNotEqual(self.event,
                             patterns.Event(None, 'eventtype', 'some value'))
 
     def testEventSources(self):
-        self.assertEqual([self], patterns.Event(self, 'eventtype').sources())
+        self.assertEqual([self], self.event.sources())
+
+    def testEventValue(self):
+        self.assertEqual('some value', self.event.value())
+
+    def testEventValues(self):
+        self.assertEqual(('some value',), self.event.values())
+
+    def testEventValueForSpecificSource(self):
+        self.assertEqual('some value', 
+                         self.event.value(self.event.sources()[0]))
+
+    def testEventValuesForSpecificSource(self):
+        self.assertEqual(('some value',), 
+                         self.event.values(self.event.sources()[0]))
 
 
 class ObservableTest(test.TestCase):
@@ -79,6 +96,12 @@ class ObservableCollectionFixture(test.TestCase):
 
 
 class ObservableCollectionTests(object):
+    def testCollectionEqualsItself(self):
+        self.failUnless(self.collection == self.collection)
+
+    def testCollectionDoesNotEqualOtherCollections(self):
+        self.failIf(self.collection == self.createObservableCollection())
+
     def testAppend(self):
         self.collection.append(1)
         self.failUnless(1 in self.collection)

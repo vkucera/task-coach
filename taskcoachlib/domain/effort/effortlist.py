@@ -76,14 +76,18 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         super(EffortList, self).removeItemsFromSelf(effortsToRemove)
 
     def onAddEffortToTask(self, event):
-        if event.source() in self.observable():
-            effortsToAdd = event.values()
-            super(EffortList, self).extendSelf(effortsToAdd)
+        effortsToAdd = []
+        for task in event.sources():
+            if task in self.observable():
+                effortsToAdd.extend(event.values(task))
+        super(EffortList, self).extendSelf(effortsToAdd)
         
     def onRemoveEffortFromTask(self, event):
-        if event.source() in self.observable():
-            effortsToRemove = event.values()
-            super(EffortList, self).removeItemsFromSelf(effortsToRemove)
+        effortsToRemove = []
+        for task in event.sources():
+            if task in self.observable():
+                effortsToRemove.extend(event.values(task))
+        super(EffortList, self).removeItemsFromSelf(effortsToRemove)
 
     def originalLength(self):
         ''' Do not delegate originalLength to the underlying TaskList because

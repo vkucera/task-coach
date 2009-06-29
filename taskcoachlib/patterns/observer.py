@@ -57,31 +57,28 @@ class Set(set):
 class Event(object):
     ''' Event represents notification events. '''
     def __init__(self, source, type, *values):
-        self.__source = source
+        self.__sources = [source]
         self.__type = type
         self.__values = values
 
     def __repr__(self): # pragma: no cover
-        return 'Event(%s, %s, %s)'%(self.__source, self.__type, self.__values)
+        return 'Event(%s, %s, %s)'%(self.__sources, self.__type, self.__values)
 
     def __eq__(self, other):
         return self.sources() == other.sources() and \
                self.type() == other.type() and \
                self.values() == other.values()
 
-    def source(self):
-        return self.__source
-
     def sources(self):
-        return [self.__source]
+        return self.__sources
 
     def type(self):
         return self.__type
 
-    def value(self):
+    def value(self, source=None):
         return self.__values[0]
 
-    def values(self):
+    def values(self, source=None):
         return self.__values
 
 

@@ -71,17 +71,21 @@ class EffortAggregator(patterns.SetDecorator,
             self.removeComposites(task, task.efforts())
 
     def onEffortAddedToTask(self, event):
-        task, effort = event.source(), event.value()
-        if task in self.observable():
-            newComposites = self.createComposites(task, [effort])
-            super(EffortAggregator, self).extendSelf(newComposites)
+        newComposites = []
+        for task in event.sources():
+            if task in self.observable():
+                efforts = event.values(task)
+                newComposites.extend(self.createComposites(task, efforts))
+        super(EffortAggregator, self).extendSelf(newComposites)
         
     def onChildAddedToTask(self, event):
-        task, child = event.source(), event.value()
-        if task in self.observable():
-            newComposites = self.createComposites(task,
-                child.efforts(recursive=True))
-            super(EffortAggregator, self).extendSelf(newComposites)
+        newComposites = []
+        for task in event.sources():
+            if task in self.observable():
+                child = event.value(task)
+                newComposites.extend(self.createComposites(task,
+                    child.efforts(recursive=True)))
+        super(EffortAggregator, self).extendSelf(newComposites)
 
     def onCompositeEmpty(self, event):
         composites = [composite for composite in event.sources() if \

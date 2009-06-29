@@ -65,11 +65,12 @@ class TaskRelationshipManager(object):
                     task.stopTracking()
 
     def onAddChild(self, event):
-        task, child = event.source(), event.value()
-        self.__markParentCompletedOrUncompletedIfNecessary(task, child)
-        self.__setDueDateParent(task, child)
-        if child.startDate() < task.startDate():
-            task.setStartDate(child.startDate())
+        for task in event.sources():
+            child = event.value(task)
+            self.__markParentCompletedOrUncompletedIfNecessary(task, child)
+            self.__setDueDateParent(task, child)
+            if child.startDate() < task.startDate():
+                task.setStartDate(child.startDate())
 
     def onRemoveChild(self, event):
         for task in event.sources():
