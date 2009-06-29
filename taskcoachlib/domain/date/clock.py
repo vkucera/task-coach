@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -214,4 +214,4 @@ class ClockObserver(patterns.Observer):
             patterns.Publisher().observers(eventType='clock.second')
         
     def onEverySecond(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover

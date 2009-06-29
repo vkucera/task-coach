@@ -20,6 +20,14 @@ import test, wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 
+
+class MockTimer:
+    def Start(self):
+        self.started = True
+
+    def Stop(self):
+        self.stopped = True
+
         
 class ClockTest(test.wxTestCase):
     def setUp(self):
@@ -69,7 +77,21 @@ class ClockTest(test.wxTestCase):
             eventType='clock.midnight')
         self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,1,1,10,15))
         self.assertEqual(1, len(self.events))
-        
+
+    def testStartClockOnFirstObserverRegisteredForSecond(self):
+        self.clock._secondTimer = MockTimer()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='clock.second')
+        self.failUnless(self.clock._secondTimer.started)
+
+    def testStopClockOnLastObserverRemovedForSecond(self):
+        self.clock._secondTimer = MockTimer()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='clock.second')
+        patterns.Publisher().removeObserver(self.onEvent,
+            eventType='clock.second')
+        self.failUnless(self.clock._secondTimer.stopped)
+
 
 class PeriodicTimerTest_EverySecond(test.TestCase):
     def setUp(self):
