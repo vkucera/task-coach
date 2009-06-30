@@ -22,11 +22,16 @@ from taskcoachlib import meta, config, gui
 from taskcoachlib.domain import task, effort, date
 
 
+class MainWindowMock(object):
+    def restore(self):
+        pass
+    
+
 class TaskBarIconTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.settings = config.Settings(load=False)
-        self.icon = gui.TaskBarIcon(None, self.taskList,
+        self.icon = gui.TaskBarIcon(MainWindowMock(), self.taskList,
             self.settings)
 
     def tearDown(self): # pragma: no cover

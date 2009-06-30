@@ -24,7 +24,7 @@ from taskcoachlib import widgets
 
 class VirtualListCtrlTestCase(test.wxTestCase):
 
-    getItemText = getItemImage = getItemAttr = onSelect = None
+    getItemText = getItemImage = getItemAttr = onSelect = lambda *args: None
 
     def createListCtrl(self):
         return widgets.ListCtrl(self.frame, self.columns,
