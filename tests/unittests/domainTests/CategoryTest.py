@@ -186,7 +186,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setColor(wx.RED)
-        self.assertEqual(2, len(self.events))
+        self.assertEqual(1, len(self.events))
         
     def testCategorizableDoesNotNotifyWhenItHasItsOwnColor(self):
         self.categorizable.addCategory(self.category)
@@ -580,7 +580,7 @@ class CategoryTest(test.TestCase):
         self.registerObserver(eventType)
         self.category.addChild(self.subCategory)
         self.category.setColor(wx.RED)
-        self.assertEqual(2, len(self.events))
+        self.assertEqual(1, len(self.events))
         
     def testAddNote(self):
         aNote = note.Note(subject='Note')

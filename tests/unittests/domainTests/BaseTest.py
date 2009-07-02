@@ -313,7 +313,7 @@ class CompositeObjectTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=base.CompositeObject.colorChangedEventType())
         self.compositeObject.setColor(wx.RED)
-        self.assertEqual(2, len(self.eventsReceived))
+        self.assertEqual(1, len(self.eventsReceived))
 
     def testCopy(self):
         self.compositeObject.expand(context='some_viewer')
