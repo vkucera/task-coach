@@ -128,12 +128,12 @@ class CategorizableCompositeObject(base.CompositeObject):
             
     def notifyChildObserversOfCategoryChange(self, category, change):
         assert change in ('add', 'remove')
-        if change == 'add':
-            eventType = self.totalCategoryAddedEventType()
-        else:
-            eventType = self.totalCategoryRemovedEventType()
+        eventType = self.totalCategoryAddedEventType() if change == 'add' else \
+                    self.totalCategoryRemovedEventType()
+        event = patterns.Event(eventType)
         for child in self.children(recursive=True):
-            self.notifyObservers(patterns.Event(eventType, child, category))
+            event.addSource(child, category)
+        self.notifyObservers(event)
    
     @classmethod
     def categorySubjectChangedEventType(class_):
@@ -149,10 +149,12 @@ class CategorizableCompositeObject(base.CompositeObject):
         return 'categorizable.totalCategory.subject'
     
     def notifyObserversOfTotalCategorySubjectChange(self, category):
-        for categorizable in [self] + self.children(recursive=True):
-            self.notifyObservers(patterns.Event( \
-                self.totalCategorySubjectChangedEventType(), categorizable,
-                category.subject()))
+        subject = category.subject()
+        event = patterns.Event(self.totalCategorySubjectChangedEventType(), 
+                               self, subject)
+        for categorizable in self.children(recursive=True):
+            event.addSource(categorizable, subject)
+        self.notifyObservers(event)
             
     @classmethod
     def modificationEventTypes(class_):

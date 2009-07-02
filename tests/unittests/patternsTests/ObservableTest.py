@@ -39,6 +39,10 @@ class EventTest(test.TestCase):
     def testUnequalWhenSourcesAreDifferent(self):
         self.assertNotEqual(self.event,
                             patterns.Event('eventtype', None, 'some value'))
+        
+    def testEventWithoutSources(self):
+        event = patterns.Event('eventtype')
+        self.assertEqual(set(), event.sources())
 
     def testEventSources(self):
         self.assertEqual(set([self]), self.event.sources())

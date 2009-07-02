@@ -136,9 +136,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setSubject('New subject')
-        # Expect categorySubjectChangedEventType and 2x 
+        # Expect one categorySubjectChangedEventType and one 
         # totalCategorySubjectChangedEventType: 
-        self.assertEqual(3, len(self.events))        
+        self.assertEqual(2, len(self.events))        
 
     def testColor(self):
         self.categorizable.addCategory(self.category)

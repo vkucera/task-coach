@@ -56,9 +56,9 @@ class Set(set):
 
 class Event(object):
     ''' Event represents notification events. '''
-    def __init__(self, type, source, *values):
+    def __init__(self, type, source=None, *values):
         self.__type = type
-        self.__sourcesAndValues = {source: values}
+        self.__sourcesAndValues = {} if source is None else {source: values}
 
     def __repr__(self): # pragma: no cover
         return 'Event(%s, %s)'%(self.__type, self.__sourcesAndValues)
@@ -245,7 +245,7 @@ class Publisher(object):
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 
             extracted from the event. '''
-        if not self.isNotifying():
+        if not self.isNotifying() or not event.sources():
             return
         observers = []
         # Include observers not registered for a specific event source:
