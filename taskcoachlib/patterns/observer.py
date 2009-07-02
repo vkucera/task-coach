@@ -57,29 +57,49 @@ class Set(set):
 class Event(object):
     ''' Event represents notification events. '''
     def __init__(self, type, source, *values):
-        self.__sources = [source]
         self.__type = type
-        self.__values = values
+        self.__sourcesAndValues = {source: values}
 
     def __repr__(self): # pragma: no cover
-        return 'Event(%s, %s, %s)'%(self.__type, self.__sources, self.__values)
+        return 'Event(%s, %s)'%(self.__type, self.__sourcesAndValues)
 
     def __eq__(self, other):
         return self.type() == other.type() and \
-               self.sources() == other.sources() and \
-               self.values() == other.values()
+               self.sourcesAndValues() == other.sourcesAndValues()
 
-    def sources(self):
-        return self.__sources
+    def addSource(self, source, *values):
+        ''' Add a source with optional values to the event. If the source was
+            added previously its previous values are overwritten by the 
+            passed values. '''
+        self.__sourcesAndValues[source] = values
 
     def type(self):
+        ''' Return the event type. '''
         return self.__type
+    
+    def sources(self):
+        ''' Return a set of sources of this event instance. '''
+        return set(self.__sourcesAndValues.keys())
+    
+    def sourcesAndValues(self):
+        ''' Return a dict of sources and values. '''
+        return self.__sourcesAndValues
 
     def value(self, source=None):
-        return self.__values[0]
+        ''' Return the value that belongs to source. If there are multiple
+            values, this method returns only the first one. So this method is 
+            useful if the caller is sure there is only one value associated
+            with source. If source is None return the value of an arbitrary 
+            source. This latter option is useful if the caller is sure there 
+            is only one source. '''
+        return self.values(source)[0]
 
     def values(self, source=None):
-        return self.__values
+        ''' Return the values that belong to source. If source is None return
+            the values of an arbitrary source. This latter option is useful if
+            the caller is sure there is only one source. '''
+        source = source or self.__sourcesAndValues.keys()[0]
+        return self.__sourcesAndValues[source]
 
 
 class MethodProxy(object):
@@ -228,7 +248,7 @@ class Publisher(object):
         if not self.isNotifying():
             return
         observers = []
-        sources = event.sources() + [None] # Include the catch-all source
+        sources = event.sources() | set([None]) # Include the catch-all source
         eventTypesAndSources = [(event.type(), source) for source in sources]
         for eventTypeAndSource in eventTypesAndSources:
             observers.extend(self.__observers.get(eventTypeAndSource, []))

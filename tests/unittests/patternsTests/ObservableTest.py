@@ -41,7 +41,7 @@ class EventTest(test.TestCase):
                             patterns.Event('eventtype', None, 'some value'))
 
     def testEventSources(self):
-        self.assertEqual([self], self.event.sources())
+        self.assertEqual(set([self]), self.event.sources())
 
     def testEventValue(self):
         self.assertEqual('some value', self.event.value())
@@ -50,12 +50,30 @@ class EventTest(test.TestCase):
         self.assertEqual(('some value',), self.event.values())
 
     def testEventValueForSpecificSource(self):
-        self.assertEqual('some value', 
-                         self.event.value(self.event.sources()[0]))
+        self.assertEqual('some value', self.event.value(self))
 
     def testEventValuesForSpecificSource(self):
-        self.assertEqual(('some value',), 
-                         self.event.values(self.event.sources()[0]))
+        self.assertEqual(('some value',), self.event.values(self))
+        
+    def testAddSource(self):
+        self.event.addSource('source')
+        self.assertEqual(set([self, 'source']), self.event.sources())
+        
+    def testAddExistingSource(self):
+        self.event.addSource(self)
+        self.assertEqual(set([self]), self.event.sources())
+        
+    def testAddSourceAndValue(self):
+        self.event.addSource('source', 'value')
+        self.assertEqual('value', self.event.value('source'))
+
+    def testAddSourceAndValues(self):
+        self.event.addSource('source', 'value1', 'value2')
+        self.assertEqual(('value1', 'value2'), self.event.values('source'))
+        
+    def testExistingSourceAndValue(self):
+        self.event.addSource(self, 'new value')
+        self.assertEqual('new value', self.event.value())
 
 
 class ObservableTest(test.TestCase):
