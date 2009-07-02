@@ -104,6 +104,9 @@ class Viewer(wx.Panel):
             filter. '''
         return collection
 
+    def onAttributeChanged(self, event):
+        self.refreshItems(*event.sources())
+        
     def onPresentationChanged(self, event):
         ''' Whenever our presentation is changed (items added, items removed,
             order changed) the viewer refreshes itself. '''
@@ -124,14 +127,15 @@ class Viewer(wx.Panel):
         self.__selection = self.curselection()
 
     def refresh(self):
-        self.widget.refresh(len(self.presentation()))
+        self.widget.RefreshAllItems(len(self.presentation()))
         # Restore the selection:
         self.widget.select([self.getIndexOfItem(item) for item \
                             in self.__selection if item in self.presentation()])
     
-    def refreshItem(self, item):
-        if item in self.presentation():
-            self.widget.RefreshItem(self.getIndexOfItem(item))
+    def refreshItems(self, *items):
+        indices = [self.getIndexOfItem(item) for item in items \
+                   if item in self.presentation()]
+        self.widget.RefreshItems(*indices)
                         
     def curselection(self):
         ''' Return a list of items (domain objects) currently selected in our
@@ -448,8 +452,7 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
         return list(self.__trackedItems)
 
     def onEverySecond(self, event):
-        for item in self.__trackedItems:
-            self.refreshItem(item)
+        self.refreshItems(*self.__trackedItems)
         
     def setTrackedItems(self, items):
         self.__trackedItems = set(items)
@@ -542,18 +545,12 @@ class ViewerWithColumns(Viewer):
         self.settings.set(self.settingsSection(), 'columns', 
             str([column.name() for column in self.__visibleColumns]))
         if refresh:
-            self.widget.RefreshItems()
+            self.widget.RefreshAllItems(len(self.presentation()))
 
     def hideColumn(self, visibleColumnIndex):
         column = self.visibleColumns()[visibleColumnIndex]
         self.showColumn(column, show=False)
                 
-    def onAttributeChanged(self, event):
-        # FIXME: check for number of sources and call refresh when there
-        # are many?
-        for item in event.sources():
-            self.refreshItem(item)
-        
     def columns(self):
         return self._columns
     

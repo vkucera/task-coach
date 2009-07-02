@@ -65,7 +65,7 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
     def setUp(self):
         super(TreeListCtrlColumnsTest, self).setUp()
         self.setTree('item')
-        self.treeCtrl.refresh(1)
+        self.treeCtrl.RefreshAllItems(1)
         self.visibleColumns = self.columns()[1:]
         
     def assertColumns(self):

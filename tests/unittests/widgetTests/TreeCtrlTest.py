@@ -26,7 +26,7 @@ class TreeCtrlTestCase(test.wxTestCase):
     def setTree(self, *items, **kwargs):
         self._tree = items
         if kwargs.get('refresh', True):
-            self.treeCtrl.refresh()
+            self.treeCtrl.RefreshAllItems()
             
     def getItem(self, index):
         item, children = 'root item', self._tree

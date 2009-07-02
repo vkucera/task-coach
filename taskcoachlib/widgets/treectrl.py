@@ -118,8 +118,15 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
     def GetItemCount(self):
         return self.GetCount()
 
-    def refresh(self, count=0):
-        self.RefreshItems()
+    def RefreshAllItems(self, count=0):
+        super(TreeMixin, self).RefreshItems()
+
+    def RefreshItems(self, *indices):
+        if len(indices) <= 5:
+            for index in indices:
+                self.RefreshItem(index)
+        else:
+            self.RefreshAllItems()
                  
     def expandAllItems(self):
         self.ExpandAll()

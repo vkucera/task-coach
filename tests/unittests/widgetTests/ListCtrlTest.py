@@ -44,7 +44,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.listctrl = self.createListCtrl()
             
     def testOneItem(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.assertEqual(1, self.listctrl.GetItemCount())
 
     def testNrOfColumns(self):
@@ -76,41 +76,41 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.assertEqual(2, self.listctrl.GetColumnCount())
         
     def testSelect(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.listctrl.select([0])
         self.assertEqual([0], self.listctrl.curselection())
         
     def testSelect_EmptySelection(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.listctrl.select([])
         self.assertEqual([], self.listctrl.curselection())
         
     def testSelect_MultipleSelection(self):
-        self.listctrl.refresh(2)
+        self.listctrl.RefreshAllItems(2)
         self.listctrl.select([0, 1])
         self.assertEqual([0, 1], self.listctrl.curselection())
         
     def testSelect_DisjunctMultipleSelection(self):
-        self.listctrl.refresh(3)
+        self.listctrl.RefreshAllItems(3)
         self.listctrl.select([0, 2])
         self.assertEqual([0, 2], self.listctrl.curselection())
         
     def testSelect_SetsFocus(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.listctrl.select([0])
         self.assertEqual(0, self.listctrl.GetFocusedItem())
 
     def testSelect_EmptySelection_SetsFocus(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.listctrl.select([])
         self.assertEqual(-1, self.listctrl.GetFocusedItem())
 
     def testSelect_MultipleSelection_SetsFocus(self):
-        self.listctrl.refresh(2)
+        self.listctrl.RefreshAllItems(2)
         self.listctrl.select([0, 1])
         self.assertEqual(0, self.listctrl.GetFocusedItem())
 
     def testSelect_DisjunctMultipleSelection_SetsFocus(self):
-        self.listctrl.refresh(3)
+        self.listctrl.RefreshAllItems(3)
         self.listctrl.select([0, 2])
         self.assertEqual(0, self.listctrl.GetFocusedItem())

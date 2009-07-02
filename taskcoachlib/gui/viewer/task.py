@@ -128,7 +128,7 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
         for colorSetting in colorSettings:
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
-        patterns.Publisher().registerObserver(self.onTaskChange,
+        patterns.Publisher().registerObserver(self.onAttributeChanged,
             eventType=task.Task.colorChangedEventType())
         patterns.Publisher().registerObserver(self.atMidnight,
             eventType='clock.midnight')
@@ -138,11 +138,6 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
         
     def onColorSettingChange(self, event):
         self.refresh()
-        
-    def onTaskChange(self, event):
-        # FIXME: call refresh when there are many sources?
-        for item in event.sources():
-            self.refreshItem(item)
         
     def children(self, item):
         try:
@@ -250,7 +245,7 @@ class TimelineViewer(BaseTaskViewer):
         super(TimelineViewer, self).__init__(*args, **kwargs)
         for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
             'task.dueDate', 'task.completionDate'):
-            self.registerObserver(self.onTaskChange, eventType)
+            self.registerObserver(self.onAttributeChanged, eventType)
         
     def createWidget(self):
         self.rootNode = TimelineRootNode(self.presentation())
@@ -369,7 +364,7 @@ class SquareTaskViewer(BaseTaskViewer):
         self.orderUICommand.setChoice(self.__orderBy)
         for eventType in (task.Task.subjectChangedEventType(), 'task.dueDate',
             'task.startDate', 'task.completionDate'):
-            self.registerObserver(self.onTaskChange, eventType)
+            self.registerObserver(self.onAttributeChanged, eventType)
 
     def createWidget(self):
         return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), 
@@ -392,8 +387,8 @@ class SquareTaskViewer(BaseTaskViewer):
         oldChoice = self.__orderBy
         self.__orderBy = choice
         self.settings.set(self.settingsSection(), 'sortby', choice)
-        self.removeObserver(self.onTaskChange, 'task.%s'%oldChoice)
-        self.registerObserver(self.onTaskChange, 'task.%s'%choice)
+        self.removeObserver(self.onAttributeChanged, 'task.%s'%oldChoice)
+        self.registerObserver(self.onAttributeChanged, 'task.%s'%choice)
         if choice in ('budget', 'timeSpent'):
             self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds()/1000
             self.__zero = date.TimeDelta()
@@ -413,7 +408,6 @@ class SquareTaskViewer(BaseTaskViewer):
                     self.__orderBy)(recursive=True) > self.__zero])
         
 
-    
     # SquareMap adapter methods:
     
     def overall(self, task):

@@ -36,7 +36,7 @@ class DummyWidget(wx.Frame):
     def GetItemCount(self):
         return len(self.viewer.presentation())
 
-    def refresh(self, *args, **kwargs):
+    def RefreshAllItems(self, *args, **kwargs):
         pass
 
     def IsAutoResizing(self):

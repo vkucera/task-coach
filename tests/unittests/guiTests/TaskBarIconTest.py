@@ -24,7 +24,7 @@ from taskcoachlib.domain import task, effort, date
 
 class MainWindowMock(object):
     def restore(self):
-        pass
+        pass # pragma: no cover
     
 
 class TaskBarIconTestCase(test.TestCase):

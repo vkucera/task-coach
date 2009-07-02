@@ -41,7 +41,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
         for eventType in category.Category.subjectChangedEventType(), \
                          category.Category.filterChangedEventType(), \
                          category.Category.colorChangedEventType():
-            patterns.Publisher().registerObserver(self.onCategoryChanged, 
+            patterns.Publisher().registerObserver(self.onAttributeChanged, 
                 eventType)
             
     def domainObjectsToView(self):
@@ -154,11 +154,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
         return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
                                       self, localOnly)
     
-    def onCategoryChanged(self, event):
-        # FIXME: call refresh when there are many sources?
-        for item in event.sources():
-            self.refreshItem(item)
-
     def onCheck(self, event):
         category = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
         category.setFiltered(event.GetItem().IsChecked())

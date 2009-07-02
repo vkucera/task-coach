@@ -48,7 +48,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
         self.createColumnUICommands()
-        patterns.Publisher().registerObserver(self.onColorChange,
+        patterns.Publisher().registerObserver(self.onAttributeChanged,
             eventType=effort.Effort.colorChangedEventType())
         
     def domainObjectsToView(self):
@@ -83,11 +83,6 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
     
     def trackStopEventType(self):
         return effort.Effort.trackStopEventType()
-        
-    def onColorChange(self, event):
-        # FIXME: call refresh when there are many sources?
-        for item in event.sources():
-            self.refreshItem(item)
         
     def showEffortAggregation(self, aggregation):
         ''' Change the aggregation mode. Can be one of 'details', 'day', 'week'

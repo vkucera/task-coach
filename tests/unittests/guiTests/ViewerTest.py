@@ -529,8 +529,8 @@ class MockWidget(object):
     def __init__(self):
         self.refreshedItems = []
         
-    def RefreshItem(self, index):
-        self.refreshedItems.append(index)
+    def RefreshItems(self, *indices):
+        self.refreshedItems.extend(indices)
     
 
 class UpdatePerSecondViewerTests(object):

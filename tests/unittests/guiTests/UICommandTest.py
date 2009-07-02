@@ -23,12 +23,14 @@ from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, category, note, date, attachment
 from taskcoachlib.thirdparty import desktop
 
-if desktop.get_desktop() == 'KDE': # pragma: no cover
-    # On KDE, kfmclient insists on showing an error message for non-existing
-    # files, even when passing --noninteractive, so we make sure kfmclient is
-    # not invoked at all 
+if desktop.get_desktop() in ('KDE', 'GNOME'): # pragma: no cover
+    # On a KDE desktop, kfmclient insists on showing an error message for 
+    # non-existing files, even when passing --noninteractive, so we make sure 
+    # kfmclient is not invoked at all. 
+    # On a GNOME desktop, this launch replacement prevents an error message
+    # to stderr when the file doesn't exist.
     import os
-    os.environ['DESKTOP_LAUNCH'] = 'python -c "import sys, os; 0 if os.path.exists(sys.argv[1]) else 1"'
+    os.environ['DESKTOP_LAUNCH'] = 'python -c "import sys, os; sys.exit(0 if os.path.exists(sys.argv[1]) else 1)"'
 
 
 class UICommandTest(test.wxTestCase):
@@ -69,6 +71,8 @@ class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
         self.frame.taskFile = persistence.TaskFile()
         
 
+
+
 class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
     def setUp(self):
         super(NewTaskWithSelectedCategoryTest, self).setUp()
@@ -78,12 +82,11 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
         self.categories.append(category.Category('cat'))
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskFile, 
                                                 self.settings)
-        
+       
     def createNewTask(self):
-        taskNew = gui.uicommand.NewTaskWithSelectedCategories(taskList=self.taskFile.tasks(),
-                                                viewer=self.viewer,
-                                                categories=self.categories,
-                                                settings=self.settings)
+        taskNew = gui.uicommand.NewTaskWithSelectedCategories( \
+            taskList=self.taskFile.tasks(), viewer=self.viewer, 
+            categories=self.categories, settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog[0][2].viewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
@@ -102,34 +105,32 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
         self.failIf(firstCategoryInTaskDialog.IsChecked())
 
 
-class MailTaskTest(test.TestCase):
-    def testException(self):
-        class DummyTask(object):
-            def subject(self, *args, **kwargs):
-                return 'subject'
-            def description(self):
-                return 'description'
-        class DummyViewer(object):
-            def __init__(self):
-                self.__selection = [DummyTask()]
-            def curselection(self):
-                return self.__selection
-        def mail(*args):
-            raise RuntimeError, 'message'
-        def showerror(*args, **kwargs):
-            self.showerror = args
-        mailTask = gui.uicommand.TaskMail(viewer=DummyViewer())
-        mailTask.doCommand(None, mail=mail, showerror=showerror)
-        self.assertEqual('Cannot send email:\nmessage', self.showerror[0])
+class DummyTask(object):
+    def subject(self, *args, **kwargs):
+	return 'subject'
+    def description(self):
+	return 'description'
 
 
 class DummyViewer(object):
     def __init__(self, selection=None):
-        self.selection = selection or []
-        
+	self.selection = selection or []
+
     def curselection(self):
-        return self.selection
-    
+	return self.selection
+
+
+
+class MailTaskTest(test.TestCase):
+    def testException(self):
+        def mail(*args):
+             raise RuntimeError, 'message'
+        def showerror(*args, **kwargs):
+             self.showerror = args
+        mailTask = gui.uicommand.TaskMail(viewer=DummyViewer([DummyTask()]))
+        mailTask.doCommand(None, mail=mail, showerror=showerror)
+        self.assertEqual('Cannot send email:\nmessage', self.showerror[0])
+
     
 class MarkCompletedTest(test.TestCase):
     def assertMarkCompletedIsEnabled(self, selection, shouldBeEnabled=True):

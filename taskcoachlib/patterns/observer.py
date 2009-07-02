@@ -189,7 +189,7 @@ class Publisher(object):
     def removeObserver(self, observer, eventType=None, eventSource=None):
         ''' Remove an observer. If no event type is specified, the observer
             is removed for all event types. If an event type is specified
-            the observer is removed for that event type only. If not event
+            the observer is removed for that event type only. If no event
             source is specified, the observer is removed for all event sources.
             If an event source is specified, the observer is removed for that
             event source only. If both an event type and an event source are
@@ -243,12 +243,13 @@ class Publisher(object):
                 eventType))
         
     def notifyObservers(self, event):
-        ''' Notify observers of the event and/or sources. The event type and 
-            sources are extracted from the event. '''
+        ''' Notify observers of the event. The event type and sources are 
+            extracted from the event. '''
         if not self.isNotifying():
             return
         observers = []
-        sources = event.sources() | set([None]) # Include the catch-all source
+        # Include observers not registered for a specific event source:
+        sources = event.sources() | set([None]) 
         eventTypesAndSources = [(event.type(), source) for source in sources]
         for eventTypeAndSource in eventTypesAndSources:
             observers.extend(self.__observers.get(eventTypeAndSource, []))
