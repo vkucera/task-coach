@@ -26,7 +26,7 @@ releases = [
 Release('0.73.2', 'June ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Export of selected effort to a SCV-file would result in an empty 
+        Bug('''Export of selected effort to a CSV-file would result in an empty 
 file.''', '2810978')
         ]
     ),
