@@ -307,12 +307,13 @@ class CompositeObject(Object, patterns.ObservableComposite):
         
     def notifyObserversOfColorChange(self, color):
         event = patterns.Event(self.colorChangedEventType(), self, color)
-        sources = self.childrenWithoutOwnColor(self)
+        sources = self.childrenWithoutOwnColor()
         for source in sources:
             event.addSource(source, color)
         self.notifyObservers(event)
 
-    def childrenWithoutOwnColor(self, parent):
+    def childrenWithoutOwnColor(self, parent=None):
+        parent = parent or self
         children = []
         for child in parent.children():
             if child.color(recursive=False) is None:

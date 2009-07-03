@@ -929,7 +929,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.addEffort(effort.Effort(self.task))
         self.task1_1.addEffort(effort.Effort(self.task1_1))
         self.task.setColor(wx.RED)
-        self.assertEqual(2, len(self.events))
+        self.assertEqual(1, len(self.events))
 
     def testColorChangeNotificationOfEfforts_ViaCategory(self):
         self.registerObserver(effort.Effort.colorChangedEventType())
@@ -939,7 +939,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         cat.addCategorizable(self.task)
         self.task.addCategory(cat)
         cat.setColor(wx.RED)
-        self.assertEqual(2, len(self.events))
+        self.assertEqual(1, len(self.events))
 
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):

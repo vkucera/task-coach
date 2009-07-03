@@ -304,8 +304,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def notifyObserversOfColorChange(self, color):
         super(Task, self).notifyObserversOfColorChange(color)
-        for effort in self.efforts(recursive=True):
-            effort.notifyObserversOfColorChange(color)
+        self.notifyEffortObserversOfColorChange(color)
+        
+    def notifyEffortObserversOfColorChange(self, color):
+        from taskcoachlib.domain import effort # prevent circular import
+        event = patterns.Event(effort.Effort.colorChangedEventType())
+        for task in [self] + self.childrenWithoutOwnColor():
+            for eachEffort in task.efforts():
+                event.addSource(eachEffort, color)
+        self.notifyObservers(event)
 
     def notifyObserversOfBudgetChange(self):
         self.notifyObservers(patterns.Event('task.budget', self, self.budget()))
