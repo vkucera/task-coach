@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, note, attachment
+import categorizable
 
 
 class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject):
@@ -31,14 +32,20 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
             
     @classmethod
     def filterChangedEventType(class_):
+        ''' Event type to notify observers that categorizables belonging to
+            this category are filtered or not. '''
         return 'category.filter'
     
     @classmethod
     def categorizableAddedEventType(class_):
+        ''' Event type to notify observers that categorizables have been added
+            to this category. '''
         return 'category.categorizable.added'
     
     @classmethod
     def categorizableRemovedEventType(class_):
+        ''' Event type to notify observers that categorizables have been removed
+            from this category. ''' 
         return 'category.categorizable.removed'
     
     @classmethod
@@ -67,9 +74,25 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
 
     def setSubject(self, *args, **kwargs):
         if super(Category, self).setSubject(*args, **kwargs):
-            for categorizable in self.categorizables(recursive=True):
-                categorizable.notifyObserversOfCategorySubjectChange(self)
-    
+            self.notifyCategorizableObserversOfSubjectChange()
+            self.notifyCategorizableObserversOfTotalSubjectChange()       
+
+    def notifyCategorizableObserversOfSubjectChange(self):
+        subject = self.subject()
+        event = patterns.Event(categorizable.CategorizableCompositeObject.categorySubjectChangedEventType())
+        for eachCategorizable in self.categorizables(recursive=True):
+            event.addSource(eachCategorizable, subject)
+        self.notifyObservers(event)
+        
+    def notifyCategorizableObserversOfTotalSubjectChange(self):
+        subject = self.subject()
+        event = patterns.Event(categorizable.CategorizableCompositeObject.totalCategorySubjectChangedEventType())
+        for eachCategorizable in self.categorizables(recursive=True):
+            event.addSource(eachCategorizable, subject)
+            for childCategorizable in eachCategorizable.children(recursive=True):
+                event.addSource(childCategorizable, subject)
+        self.notifyObservers(event)
+                    
     def categorizables(self, recursive=False):
         result = []
         if recursive:
@@ -126,6 +149,8 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
                             
     def notifyObserversOfColorChange(self, color):
         super(Category, self).notifyObserversOfColorChange(color)
+        self.notifyCategorizableObserversOfColorChange(color)
+        
+    def notifyCategorizableObserversOfColorChange(self, color):
         for categorizable in self.categorizables(recursive=True):
             categorizable.notifyObserversOfColorChange(color)
-
