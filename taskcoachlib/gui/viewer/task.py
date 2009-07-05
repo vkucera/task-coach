@@ -196,7 +196,7 @@ class SquareMapRootNode(RootNode):
     def __getattr__(self, attr):
         def getTaskAttribute(recursive=True):
             if recursive:
-                return max(sum([getattr(task, attr)(recursive=True) for task in self.children()],
+                return max(sum((getattr(task, attr)(recursive=True) for task in self.children()),
                                self.__zero), 
                            self.__zero)
             else:
@@ -415,8 +415,8 @@ class SquareTaskViewer(BaseTaskViewer):
                                                  self.__zero))
     
     def children_sum(self, children, parent):
-        children_sum = sum([getattr(child, self.__orderBy)(recursive=True) for child in children \
-                            if child in self.presentation()], self.__zero)
+        children_sum = sum((getattr(child, self.__orderBy)(recursive=True) for child in children \
+                            if child in self.presentation()), self.__zero)
         return self.__transformTaskAttribute(max(children_sum, self.__zero))
     
     def empty(self, task):

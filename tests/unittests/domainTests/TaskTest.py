@@ -435,6 +435,17 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.addChild(child)
         self.assertEqual(patterns.Event(self.task.trackStartEventType(),
             self.task, child.efforts()[0]), self.events[0])
+        
+    def testAddChildWithTwoTrackedEffortsCausesStartTrackingNotification(self):
+        child = task.Task()
+        child.addEffort(effort.Effort(child))
+        child.addEffort(effort.Effort(child))
+        self.registerObserver(self.task.trackStartEventType())
+        self.task.addChild(child)
+        expectedEvent = patterns.Event(self.task.trackStartEventType(),
+            self.task, *child.efforts())
+        self.assertEqual([expectedEvent], self.events)
+        
 
     # Constructor
 
