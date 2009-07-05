@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, widgets
+from taskcoachlib import patterns, widgets, command
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, toolbar
@@ -272,6 +272,9 @@ class Viewer(wx.Panel):
             uicommand.EditPaste()
             ]
     
+    def deleteItemCommand(self):
+        return command.DeleteCommand(self.presentation(), self.curselection())
+
 
 class ListViewer(Viewer):
     def isTreeViewer(self):

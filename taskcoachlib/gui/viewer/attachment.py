@@ -159,6 +159,3 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
             self.settings, self.presentation(), self.taskFile, 
             bitmap=kwargs['bitmap'], columnName=kwargs.get('columnName', ''))
 
-    def deleteItemCommand(self):
-        return command.DeleteCommand(self.presentation(), self.curselection())
-

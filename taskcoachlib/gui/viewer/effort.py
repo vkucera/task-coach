@@ -368,8 +368,3 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             command.EditEffortCommand(self.presentation(), self.curselection()), 
             self.taskFile, self.settings, 
             columnName=kwargs.get('columnName', ''))
-    
-    def deleteItemCommand(self):
-        return command.DeleteCommand(self.presentation(), self.curselection())
-    
-
