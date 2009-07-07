@@ -90,8 +90,14 @@ class AmountEntry(widgets.PanelWithBoxSizer):
         decimalChar = self.local_conventions['decimal_point'] or '.'
         groupChar = self.local_conventions['thousands_sep'] or ','
         groupDigits = len(self.local_conventions['grouping']) > 1
+        # The thousands separator may come up as ISO-8859-1 character
+        # 0xa0, which looks like a space but isn't ASCII, which
+        # confuses NumCtrl... Play it safe and avoid any non-ASCII
+        # character here.
+        if ord(groupChar) >= 128:
+            groupChar = ' '
         # Prevent decimalChar and groupChar from being the same:
-        if groupChar == decimalChar: 
+        if groupChar == decimalChar:
             groupChar = ' ' # Space is not allowed as decimal point
         return widgets.masked.NumCtrl(self, fractionWidth=2,
             decimalChar=decimalChar, groupChar=groupChar,
