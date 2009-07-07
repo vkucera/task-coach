@@ -115,7 +115,7 @@ class IPhoneBonjourDialog(wx.Dialog):
                                      _('Bonjour support for Linux is generally provided by\n'
                                        'Avahi.')), 0, wx.ALL, 3)
             vsizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY,
-                                        _('You may find details for your distribution here:'),
+                                        _('You may find details for your distribution here'),
                                         URL='http://avahi.org/wiki/AboutAvahi#Distributions'), 0, wx.ALL, 3)
             vsizer.Add(wx.StaticText(self, wx.ID_ANY,
                                      _('Note that under some systems (Fedora), you may have to\n'
