@@ -119,7 +119,7 @@ class IPhoneBonjourDialog(wx.Dialog):
                                         URL='http://avahi.org/wiki/AboutAvahi#Distributions'), 0, wx.ALL, 3)
             vsizer.Add(wx.StaticText(self, wx.ID_ANY,
                                      _('Note that under some systems (Fedora), you may have to\n'
-                                       'install the libdns_sd package as well as Avahi in order\n'
+                                       'install the avahi-compat-libdns_sd package as well as Avahi in order\n'
                                        'for this to work.')), 0, wx.ALL, 3)
 
         btnOK = wx.Button(self, wx.ID_ANY, _('OK'))
