@@ -185,8 +185,6 @@ footer_fr = unicode('''
                                title="Traductions disponibles">Traductions</a></li>
                     <li><a href="changes.html" 
                        title="Un survol des bogues corrigés et des fonctionnalités ajoutées par version de %(name)s">Historique</a></li>
-                    <li><a href="roadmap.html" 
-                       title="Plans à venir pour %(name)s">Plans</a></li>
                     <li><a href="license.html" 
                        title="Vos droits et devoirs liés à l'utilisation de %(name)s">Licence</a></li>
                 </ul>
