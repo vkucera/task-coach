@@ -67,7 +67,7 @@ footer = '''
                 <ul>
                     <li><b><a href="download.html" title="Download %(name)s">Download</a></b></li>
                     <li><a href="index.html" title="%(name)s overview">Overview</a></li>
-                    <!--<li><a href="iPhone.html" title="iPhone app">iPhone</a></li>-->
+                    <li><a href="iPhone.html" title="iPhone app">iPhone</a></li>
                     <li><a href="screenshots.html" 
                        title="View some screenshots of %(name)s here">Screenshots</a></li>
                     <li><a href="features.html" 

@@ -498,7 +498,6 @@ def appendThumbnails(name, flt):
             thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
             image = '<A HREF="%s">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
             pages[name] += '<P>%s<BR>%s</P>'%(caption, image)
-"""
 pages['iPhone'] = '''<H3>iPhone</H3>
         <P>There is a todo-list application for iPhone that can synchronize with Task Coach
 through the network, starting with version 0.73 of Task Coach. Main features are</P>
@@ -510,13 +509,11 @@ through the network, starting with version 0.73 of Task Coach. Main features are
           <LI>Available in English and French.</LI>
         </UL>
 
-        <P>Note: as for now, this app is not yet available on the AppStore (pending
-approval from Apple).</P>
+        <P>It is available on the AppStore.</P>
 
         <P>More features are planned, like support for multiple task files and effort tracking.
 Here are some thumbnails of the UI:</P>'''
 appendThumbnails('iPhone', lambda x: x.find('iPhone') != -1)
-"""
 
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
 

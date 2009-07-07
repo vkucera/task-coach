@@ -272,6 +272,8 @@ class FeaturesPage(SettingsPage):
             helpText='restart')
         self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),
             helpText='restart')
+        self.addBooleanSetting('feature', 'iphone', _('Enable iPhone synchronization'),
+            helpText='restart')
         self.addIntegerSetting('view', 'efforthourstart',
             _('Hour of start of work day'), minimum=0, maximum=23)
         self.addIntegerSetting('view', 'efforthourend',
