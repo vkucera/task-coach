@@ -115,8 +115,8 @@ class IPhoneBonjourDialog(wx.Dialog):
                                      _('Bonjour support for Linux is generally provided by\n'
                                        'Avahi.')), 0, wx.ALL, 3)
             vsizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY,
-                                        _('More details on pybonjour web site'),
-                                        URL='http://o2s.csail.mit.edu/o2s-wiki/pybonjour'), 0, wx.ALL, 3)
+                                        _('You may find details for your distribution here:'),
+                                        URL='http://avahi.org/wiki/AboutAvahi#Distributions'), 0, wx.ALL, 3)
 
         btnOK = wx.Button(self, wx.ID_ANY, _('OK'))
         vsizer.Add(btnOK, 0, wx.ALIGN_CENTRE|wx.ALL, 3)
