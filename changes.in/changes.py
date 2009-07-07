@@ -23,19 +23,13 @@ from changetypes import *
 
 releases = [
             
-Release('0.73.3', 'Jully ?, 2009',
-    summary='''This is a bugfix release.''',
-    bugsFixed=[
-        Bug('''Fix a crash when creating/editing tasks for non-english
-locales.''', '2817287', '2817335')
-        ]
-    ),
-            
-Release('0.73.2', 'June ?, 2009',
+Release('0.73.2', 'July ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Export of selected effort to a CSV-file would result in an empty 
-file.''', '2810978')
+file.''', '2810978'),
+        Bug('''Fix a crash when creating/editing tasks for non-english
+locales.''', '2817287', '2817335')
         ]
     ),
 
