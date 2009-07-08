@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, locale
 from wx.lib import masked, combotreebox
 from taskcoachlib import widgets
 from taskcoachlib.domain import date
@@ -75,15 +75,35 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
 
 class AmountEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
+        self.local_conventions = kwargs.pop('localeconv', locale.localeconv())
         super(AmountEntry, self).__init__(parent, *args, **kwargs)
-        if readonly:
-            self._entry = wx.StaticText(self, label=render.amount(amount))
-        else:
-            self._entry = widgets.masked.NumCtrl(self, fractionWidth=2,
-                selectOnEntry=True, allowNegative=False, value=amount)
+        # Select factory for creating the entry:
+        createEntry = self.createReadOnlyEntry if readonly else self.createEntry
+        self._entry = createEntry(amount)
         self.add(self._entry)
         self.fit()
 
+    def createReadOnlyEntry(self, amount):
+        return wx.StaticText(self, label=render.monetaryAmount(amount))
+
+    def createEntry(self, amount):
+        decimalChar = self.local_conventions['decimal_point'] or '.'
+        groupChar = self.local_conventions['thousands_sep'] or ','
+        groupDigits = len(self.local_conventions['grouping']) > 1
+        # The thousands separator may come up as ISO-8859-1 character
+        # 0xa0, which looks like a space but isn't ASCII, which
+        # confuses NumCtrl... Play it safe and avoid any non-ASCII
+        # character here.
+        if ord(groupChar) >= 128:
+            groupChar = ' '
+        # Prevent decimalChar and groupChar from being the same:
+        if groupChar == decimalChar:
+            groupChar = ' ' # Space is not allowed as decimal point
+        return widgets.masked.NumCtrl(self, fractionWidth=2,
+            decimalChar=decimalChar, groupChar=groupChar,
+            groupDigits=groupDigits, 
+            selectOnEntry=True, allowNegative=False, value=amount)
+  
     def get(self):
         return self._entry.GetValue()
 

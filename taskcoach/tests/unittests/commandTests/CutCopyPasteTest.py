@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -43,13 +43,13 @@ class CutCommandWithTasksTest(TaskCommandTestCase):
         self.assertDoUndoRedo(self.assertEmptyTaskList, 
             lambda: self.assertTaskList(self.originalList))
         
-    def FIXMEtestCutTaskThatBelongsToCategory(self):
-        cat = category.Category('category')
-        self.categories.append(cat)
-        cat.addCategorizable(self.task1)
+    def testCutTaskThatBelongsToCategory(self):
+        self.category.addCategorizable(self.task1)
+        self.task1.addCategory(self.category)
         self.cut('all')
-        self.assertDoUndoRedo(lambda: self.failIf(cat.categorizables()),
-                              lambda: self.assertEqual([self.task1], cat.categorizables()))
+        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()),
+                              lambda: self.assertEqual([self.task1], 
+                                                       self.category.categorizables()))
 
 
 class CutCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):

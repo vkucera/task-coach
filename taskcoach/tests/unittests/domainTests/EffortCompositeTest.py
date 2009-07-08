@@ -82,8 +82,8 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=self.composite.trackStartEventType())
         self.task.addEffort(self.trackedEffort)
-        self.assertEqual(patterns.Event(self.composite, 
-            self.composite.trackStartEventType(), self.trackedEffort), 
+        self.assertEqual(patterns.Event(self.composite.trackStartEventType(), 
+            self.composite, self.trackedEffort), 
             self.events[0])
 
     def testAddTrackedEffortToTaskDoesNotCauseListEmptyNotification(self):
@@ -103,7 +103,7 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.duration')
         self.task.addEffort(self.effort1)
-        self.assertEqual(patterns.Event(self.composite, 'effort.duration', 
+        self.assertEqual(patterns.Event('effort.duration', self.composite,
             self.composite.duration()), self.events[0])
 
     def testRemoveEffortFromTask(self):
@@ -116,16 +116,16 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.composite.empty')
         self.task.removeEffort(self.effort1)
-        self.assertEqual(patterns.Event(self.composite, 
-            'effort.composite.empty'), self.events[0])
+        self.assertEqual(patterns.Event('effort.composite.empty', 
+            self.composite), self.events[0])
 
     def testRemoveTrackedEffortFromTask(self):
         self.task.addEffort(self.trackedEffort)
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=self.composite.trackStopEventType())
         self.task.removeEffort(self.trackedEffort)
-        self.assertEqual(patterns.Event(self.composite, 
-            self.composite.trackStopEventType(), self.trackedEffort), 
+        self.assertEqual(patterns.Event(self.composite.trackStopEventType(), 
+            self.composite, self.trackedEffort), 
             self.events[0])
 
     def testRemoveFirstFromTwoTrackedEffortsFromTask(self):
@@ -162,7 +162,7 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType='effort.revenue')
         self.task.setHourlyFee(100)
-        self.assertEqual(patterns.Event(self.composite, 'effort.revenue', 
+        self.assertEqual(patterns.Event('effort.revenue', self.composite,
             100.0), self.events[0])
 
     def testIsBeingTracked(self):
@@ -175,17 +175,16 @@ class CompositeEffortTest(test.TestCase):
             eventType=self.composite.trackStartEventType())
         self.task.addEffort(self.effort1)
         self.effort1.setStop(date.Date())
-        self.assertEqual(patterns.Event(self.composite, 
-                                        self.composite.trackStartEventType(), 
-            self.effort1), self.events[0])
+        self.assertEqual(patterns.Event(self.composite.trackStartEventType(), 
+            self.composite, self.effort1), self.events[0])
 
     def testNoNotificationForStartTrackingIfActiveEffortOutsidePeriod(self):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=self.effort3.trackStartEventType())
         self.task.addEffort(self.effort3)
         self.effort3.setStop(date.Date())
-        self.assertEqual([patterns.Event(self.effort3, 
-                                         self.effort3.trackStartEventType())],
+        self.assertEqual([patterns.Event(self.effort3.trackStartEventType(),
+                                         self.effort3)],
             self.events)
 
     def testNotificationForStopTracking(self):
@@ -194,9 +193,8 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=self.composite.trackStopEventType())
         self.effort1.setStop()
-        self.assertEqual(patterns.Event(self.composite, 
-                                        self.composite.trackStopEventType(), 
-            self.effort1), self.events[0])
+        self.assertEqual(patterns.Event(self.composite.trackStopEventType(), 
+            self.composite, self.effort1), self.events[0])
 
     def testNoNotificationForStopTrackingIfActiveEffortOutsidePeriod(self):
         self.task.addEffort(self.effort3)
@@ -204,8 +202,8 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=self.effort3.trackStopEventType())
         self.effort3.setStop()
-        self.assertEqual([patterns.Event(self.effort3, 
-                                         self.effort3.trackStopEventType())], 
+        self.assertEqual([patterns.Event(self.effort3.trackStopEventType(),
+                                         self.effort3)], 
             self.events)
 
     def testChangeStartTimeOfEffort_KeepWithinPeriod(self):
@@ -218,8 +216,8 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.duration')
         self.effort1.setStart(self.effort1.getStart() + date.TimeDelta(hours=1))
-        self.assertEqual(patterns.Event(self.composite, 'effort.duration', 
-            self.composite.duration()), self.events[0])
+        self.assertEqual(patterns.Event('effort.duration', 
+            self.composite, self.composite.duration()), self.events[0])
 
     def testChangeStartTimeOfEffort_MoveOutsidePeriode(self):
         self.task.addEffort(self.effort1)
@@ -241,7 +239,7 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.duration')
         self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
-        self.assertEqual(patterns.Event(self.composite, 'effort.duration', 
+        self.assertEqual(patterns.Event('effort.duration', self.composite, 
             self.composite.duration()), self.events[0])
 
     def testChangeStartTimeOfEffort_MoveInsidePeriod(self):
@@ -254,8 +252,8 @@ class CompositeEffortTest(test.TestCase):
             eventType='effort.composite.empty')
         self.task.addEffort(self.effort1)
         self.task.removeEffort(self.effort1)
-        self.assertEqual([patterns.Event(self.composite, 'effort.composite.empty')],
-            self.events)
+        self.assertEqual([patterns.Event('effort.composite.empty',
+            self.composite)], self.events)
         
     def testChangeTask(self):
         self.task.addEffort(self.effort1)
@@ -267,8 +265,8 @@ class CompositeEffortTest(test.TestCase):
             eventType='effort.composite.empty')
         self.task.addEffort(self.effort1)
         self.effort1.setTask(task.Task())
-        self.assertEqual([patterns.Event(self.composite,
-            'effort.composite.empty')], self.events)
+        self.assertEqual([patterns.Event('effort.composite.empty', 
+             self.composite)], self.events)
         
     def testGetDescription_ZeroEfforts(self):
         self.assertEqual('', self.composite.description())
@@ -320,16 +318,15 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.duration')
         self.child.addEffort(self.childEffort)
-        self.assertEqual(patterns.Event(self.composite, 'effort.duration', 
+        self.assertEqual(patterns.Event('effort.duration', self.composite,
             self.composite.duration(recursive=True)), self.events[0])
 
     def testAddTrackedEffortToChildTask(self):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=self.composite.trackStartEventType())
         self.child.addEffort(self.trackedEffort)
-        self.assertEqual(patterns.Event(self.composite, 
-                                        self.composite.trackStartEventType(), 
-            self.trackedEffort), self.events[0])
+        self.assertEqual(patterns.Event(self.composite.trackStartEventType(), 
+            self.composite, self.trackedEffort), self.events[0])
 
     def testRemoveEffortFromChildTask(self):
         self.child.addEffort(self.childEffort)
@@ -341,17 +338,16 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.composite.empty')
         self.child.removeEffort(self.childEffort)
-        self.assertEqual(patterns.Event(self.composite, 
-            'effort.composite.empty'), self.events[0])
+        self.assertEqual(patterns.Event('effort.composite.empty', 
+            self.composite), self.events[0])
 
     def testRemoveTrackedEffortFromChildTask(self):
         self.child.addEffort(self.trackedEffort)
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=self.composite.trackStopEventType())
         self.child.removeEffort(self.trackedEffort)
-        self.assertEqual(patterns.Event(self.composite, 
-                                        self.composite.trackStopEventType(), 
-            self.trackedEffort), self.events[0])
+        self.assertEqual(patterns.Event(self.composite.trackStopEventType(), 
+            self.composite, self.trackedEffort), self.events[0])
 
     def testDuration(self):
         self.child.addEffort(self.childEffort)
@@ -419,8 +415,8 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
             eventType='effort.composite.empty')
         self.child.addEffort(self.childEffort)
         self.task.removeChild(self.child)
-        self.assertEqual(patterns.Event(self.composite, 'effort.composite.empty'),
-            self.events[0])
+        self.assertEqual(patterns.Event('effort.composite.empty',
+            self.composite), self.events[0])
 
     def testChangeStartTimeOfChildEffort_MoveInsidePeriod(self):
         childEffort = effort.Effort(self.child)
@@ -532,7 +528,7 @@ class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType='effort.totalRevenue')
         self.child.setHourlyFee(100)
-        self.assertEqual(patterns.Event(self.composite, 'effort.totalRevenue', 
+        self.assertEqual(patterns.Event('effort.totalRevenue', self.composite,
             100.0), self.events[0])
         
         

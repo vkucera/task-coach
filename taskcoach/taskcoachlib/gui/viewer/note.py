@@ -39,7 +39,8 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         super(BaseNoteViewer, self).__init__(*args, **kwargs)
         for eventType in [note.Note.subjectChangedEventType(),
                           note.Note.colorChangedEventType()]:
-            patterns.Publisher().registerObserver(self.onNoteChanged, eventType)
+            patterns.Publisher().registerObserver(self.onAttributeChanged, 
+                                                  eventType)
         
     def domainObjectsToView(self):
         if self.notesToShow is None:
@@ -150,9 +151,6 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         columns.insert(2, attachmentsColumn)
         return columns
                      
-    def onNoteChanged(self, event):
-        self.refreshItem(event.source())
-            
     def getItemText(self, index, column=0):
         item = self.getItemWithIndex(index)
         column = self.visibleColumns()[column]

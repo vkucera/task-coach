@@ -2,7 +2,8 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,12 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ''' render.py - functions to render various objects, like date, time, etc. '''
 
+import locale
 from taskcoachlib.i18n import _
 
 
 def date(date):
     ''' render a date (of type date.Date) '''
-    return str(date)
+    if str(date) == '':
+        return ''
+    return date.strftime('%x')
     
 def priority(priority):
     ''' Render an (integer) priority '''
@@ -73,10 +77,8 @@ def budget(aBudget):
     return timeSpent(aBudget)
         
 def dateTime(dateTime):
-    if dateTime:
-        return dateTime.strftime('%Y-%m-%d %H:%M')
-    else:
-        return ''
+    # Don't use %+ because it prints seconds as well.
+    return '%s %s' % (date(dateTime), time(dateTime)) if dateTime else ''
     
 def dateTimePeriod(start, stop):
     if stop is None:
@@ -93,39 +95,34 @@ def month(dateTime):
     return dateTime.strftime('%Y %B')
     
 def weekNumber(dateTime):
-    # Would have liked to use dateTime.strftime('%Y-%U'), but the week number is one off
-    # in 2004
+    # Would have liked to use dateTime.strftime('%Y-%U'), but the week number 
+    # is one off in 2004
     return '%d-%d'%(dateTime.year, dateTime.weeknumber())
     
-def amount(aFloat):
-    renderedAmount = '%.2f'%aFloat
-    if renderedAmount == '0.00':
-        renderedAmount = ''
-    return renderedAmount
+def monetaryAmount(aFloat):
+    ''' Render a monetary amount, using the user's locale. '''
+    return '' if round(aFloat, 2) == 0 else \
+        locale.format('%.2f', aFloat, grouping=True)
 
 def taskBitmapNames(task, hasChildren=None):
-    ''' Return two bitmap names for the task, one for deselected tasks and
+    ''' Return two bitmap names for the task, one for unselected tasks and
     one for selected tasks. The bitmaps depend on the state of the task and 
     whether the task has children. '''
+    
+    if task.isBeingTracked():
+        return 'start', 'start'
      
     if hasChildren is None:
-        hashildren = bool(task.children())
-    bitmap = 'task'            
-    if hasChildren:
-        bitmap += 's'
-    if task.completed():
-        bitmap += '_completed'
-    elif task.overdue():
-        bitmap += '_overdue'
-    elif task.dueToday():
-        bitmap += '_duetoday'
-    elif task.inactive():
-        bitmap += '_inactive'
-    if hasChildren:
-        bitmap_selected = bitmap + '_open'
-    else:
-        bitmap_selected = bitmap
-    if task.isBeingTracked():
-        bitmap = bitmap_selected = 'start'
+        hasChildren = bool(task.children())
+    
+    bitmap = 'tasks' if hasChildren else 'task'            
+
+    for state in 'completed', 'overdue', 'dueToday', 'inactive':
+        if getattr(task, state)():
+            bitmap += '_' + state.lower()
+            break
+
+    bitmap_selected = bitmap + '_open' if hasChildren else bitmap
+
     return bitmap, bitmap_selected
 

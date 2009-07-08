@@ -27,6 +27,11 @@ class OwnerUnderTest(patterns.Observable):
     __metaclass__ = base.DomainObjectOwnerMetaclass
     __ownedType__ = 'Foo'
     
+
+class Foo(object):
+    def isDeleted(self):
+        return False
+
     
 class OwnerTest(test.TestCase):
     def setUp(self):
@@ -34,7 +39,7 @@ class OwnerTest(test.TestCase):
         self.events = []
         
     def onEvent(self, event):
-        self.events.append(event)
+        self.events.append(event) 
         
     def testSetObjects_NoNotificationWhenUnchanged(self):
         patterns.Publisher().registerObserver(self.onEvent, 
@@ -42,3 +47,9 @@ class OwnerTest(test.TestCase):
         self.owner.setFoos([])
         self.failIf(self.events)
         
+    def testSetObjects_NotificationWhenCanged(self):
+        patterns.Publisher().registerObserver(self.onEvent, 
+            self.owner.foosChangedEventType())
+        self.owner.setFoos([Foo()])
+        self.assertEqual(1, len(self.events))
+

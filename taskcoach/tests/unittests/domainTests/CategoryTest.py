@@ -48,8 +48,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testAddCategoryNotification(self):
         self.registerObserver(self.categoryAddedEventType)
         self.categorizable.addCategory(self.category)
-        self.assertEqual([patterns.Event(self.categorizable, 
-            self.categoryAddedEventType, self.category)], self.events)    
+        self.assertEqual([patterns.Event( \
+            self.categoryAddedEventType, self.categorizable, self.category)], 
+            self.events)    
         
     def testAddSecondCategory(self):
         self.categorizable.addCategory(self.category)
@@ -91,8 +92,8 @@ class CategorizableCompositeObjectTest(test.TestCase):
         child.setParent(self.categorizable)
         cat = category.Category(subject='Parent category')
         self.categorizable.addCategory(cat)
-        self.assertEqual([patterns.Event(child, self.totalCategoryAddedEventType, 
-            cat)], self.events)
+        self.assertEqual([patterns.Event(self.totalCategoryAddedEventType, 
+            child, cat)], self.events)
         
     def testRemoveCategory(self):
         self.categorizable.addCategory(self.category)
@@ -135,9 +136,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setSubject('New subject')
-        # Expect categorySubjectChangedEventType and 2x 
+        # Expect one categorySubjectChangedEventType and one 
         # totalCategorySubjectChangedEventType: 
-        self.assertEqual(3, len(self.events))        
+        self.assertEqual(2, len(self.events))        
 
     def testColor(self):
         self.categorizable.addCategory(self.category)
@@ -185,7 +186,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setColor(wx.RED)
-        self.assertEqual(2, len(self.events))
+        self.assertEqual(1, len(self.events))
         
     def testCategorizableDoesNotNotifyWhenItHasItsOwnColor(self):
         self.categorizable.addCategory(self.category)
@@ -289,8 +290,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addChild(child)
         self.registerObserver(self.totalCategoryRemovedEventType)
         self.categorizable.removeCategory(self.category)
-        self.assertEqual([patterns.Event(child, 
-            self.totalCategoryRemovedEventType, self.category)], self.events)
+        self.assertEqual([patterns.Event( \
+            self.totalCategoryRemovedEventType, child, self.category)], 
+            self.events)
 
     def testCopy(self):
         self.categorizable.addCategory(self.category)
@@ -332,7 +334,7 @@ class CategoryTest(test.TestCase):
         eventType = category.Category.subjectChangedEventType()
         self.registerObserver(eventType)
         self.category.setSubject('New')
-        self.assertEqual([patterns.Event(self.category, eventType, 'New')], 
+        self.assertEqual([patterns.Event(eventType, self.category, 'New')], 
             self.events)
         
     def testSetSubjectCausesNoNotificationWhenNewSubjectEqualsOldSubject(self):
@@ -578,7 +580,7 @@ class CategoryTest(test.TestCase):
         self.registerObserver(eventType)
         self.category.addChild(self.subCategory)
         self.category.setColor(wx.RED)
-        self.assertEqual(2, len(self.events))
+        self.assertEqual(1, len(self.events))
         
     def testAddNote(self):
         aNote = note.Note(subject='Note')

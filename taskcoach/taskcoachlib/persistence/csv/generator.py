@@ -29,8 +29,10 @@ def extendedWithAncestors(selection):
 class RowBuilder(object):
     def __init__(self, visibleColumns, isTree):
         self.__visibleColumns = visibleColumns
-        self.indent = lambda item: ' ' * len(item.ancestors()) if isTree else \
-                      lambda item: ''
+        if isTree:
+            self.indent = lambda item: ' ' * len(item.ancestors())
+        else:
+            self.indent = lambda item: ''
         
     def headerRow(self):
         return [column.header() for column in self.__visibleColumns]
@@ -55,12 +57,10 @@ def viewer2csv(viewer, selectionOnly=False):
     
     isTree = viewer.isTreeViewer()    
     rowBuilder = RowBuilder(viewer.visibleColumns(), isTree)
+    items = viewer.visibleItems()
     if selectionOnly:
-        selection = viewer.curselection()
+        items = [item for item in items if viewer.isselected(item)]
         if isTree:
-            selection = extendedWithAncestors(selection)
-        items = [item for item in viewer.visibleItems() if item in selection]
-    else:
-        items = viewer.visibleItems() 
+            items = extendedWithAncestors(items)
     return rowBuilder.rows(items)
 

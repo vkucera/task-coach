@@ -120,6 +120,15 @@ class AutoSaverTestCase(test.TestCase):
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.load()
         self.failIf(self.taskFile.saveCalled)
+
+    def testLoadWithExceptionDoesNotTriggerAutoSave(self):
+        self.settings.set('file', 'autosave', 'True')
+        self.taskFile.setFilename('whatever.tsk')
+        try:
+            self.taskFile.load(throw=True)
+        except IOError:
+            pass
+        self.failIf(self.taskFile.saveCalled)
         
     def testMergeDoesTriggerAutoSave(self):
         self.settings.set('file', 'autosave', 'True')

@@ -181,7 +181,7 @@ class ObservableCompositeTest(test.TestCase):
         eventType = self.composite.addChildEventType()
         self.registerObserver(eventType)    
         self.composite.addChild(self.child)
-        self.assertEqual([patterns.Event(self.composite, eventType, 
+        self.assertEqual([patterns.Event(eventType, self.composite, 
             self.child)], self.events)
             
     def testRemoveChild(self):
@@ -189,7 +189,7 @@ class ObservableCompositeTest(test.TestCase):
         self.registerObserver(eventType)    
         self.composite.addChild(self.child)
         self.composite.removeChild(self.child)
-        self.assertEqual([patterns.Event(self.composite, eventType, 
+        self.assertEqual([patterns.Event(eventType, self.composite,
             self.child)], self.events)
 
     def testModificationEventTypes(self):
@@ -268,8 +268,8 @@ class CompositeCollectionTest(test.TestCase):
         self.collection.append(self.composite)
         self.composite2.setParent(self.composite)
         self.collection.append(self.composite2)
-        self.assertEqual([patterns.Event(self.composite, 
-            self.composite.addChildEventType(), self.composite2)], self.events)
+        self.assertEqual([patterns.Event(self.composite.addChildEventType(), 
+            self.composite, self.composite2)], self.events)
     
     def testRemoveChildFromCollectionRemovesChildFromParent(self):
         self.collection.extend([self.composite, self.composite2])
@@ -282,9 +282,8 @@ class CompositeCollectionTest(test.TestCase):
         self.collection.extend([self.composite, self.composite2])
         self.composite.addChild(self.composite2)
         self.collection.remove(self.composite2)
-        self.assertEqual([patterns.Event(self.composite, 
-            self.composite.removeChildEventType(), self.composite2)], 
-            self.events)
+        self.assertEqual([patterns.Event(self.composite.removeChildEventType(), 
+            self.composite, self.composite2)], self.events)
 
     def testRemoveCompositeWithChildRemovesChildToo(self):
         self.composite.addChild(self.composite2)

@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, unittest, os, time, glob, coverage, wx
+import sys, unittest, os, time, glob, wx
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
@@ -160,15 +160,7 @@ class AllTests(unittest.TestSuite):
             verbosity=self._options.verbosity,
             timeTests=self._options.time,
             nrTestsToReport=self._options.time_reports)
-        if self._options.coverage:
-            coverage.erase()
-            coverage.start()
-        result = testrunner.run(self)
-        if self._options.coverage:
-            coverage.stop()
-            print coverage.report(self.getPyFilesFromDir(os.path.join(projectRoot, 
-                'taskcoachlib')))
-        return result
+        return testrunner.run(self)
 
     @staticmethod
     def getPyFilesFromDir(directory):
@@ -184,8 +176,6 @@ class AllTests(unittest.TestSuite):
         for root, dirs, files in os.walk(directory):
             result.extend([os.path.join(root, file) for file in files \
                            if file.endswith(extension)])
-            if 'CVS' in dirs:
-                dirs.remove('CVS')
         return result
 
 
@@ -214,8 +204,7 @@ class TestOptionParser(config.OptionParser):
     def profileOptionGroup(self):
         profile = config.OptionGroup(self, 'Profiling', 
             'Options to profile the tests to see what test code or production '
-            'code is taking the most time. Each of these options implies '
-            '--no-coverage.')
+            'code is taking the most time.')
         profile.add_option('-p', '--profile', default=False, 
             action='store_true', help='profile the running of all the tests')
         profile.add_option('-r', '--report-only', dest='profile_report_only', 
@@ -267,13 +256,6 @@ class TestOptionParser(config.OptionParser):
             action='store_true', help='run all tests')
         return testselection
 
-    def testcoverageOptionGroup(self):
-        testcoverage = config.OptionGroup(self, 'Test coverage',
-            'Options to measure test (statement) coverage.')
-        testcoverage.add_option('--coverage', default=False,
-            action='store_true', help='measure test statement coverage')
-        return testcoverage
-        
     def parse_args(self):
         options, args = super(TestOptionParser, self).parse_args()
         if options.profile_report_only:
@@ -285,8 +267,6 @@ class TestOptionParser(config.OptionParser):
             options.integrationtests = True
             options.releasetests = True
             options.disttests = True
-        if options.profile:
-            options.coverage = False
         return options, args
 
 
@@ -296,8 +276,8 @@ class TestProfiler:
         self._options = options
 
     def reportLastRun(self):
-        import hotshot.stats
-        stats = hotshot.stats.load(self._logfile)
+        import pstats
+        stats = pstats.Stats(self._logfile)
         stats.strip_dirs()
         for sortKey in self._options.profile_sort:
             stats.sort_stats(sortKey)
@@ -308,14 +288,16 @@ class TestProfiler:
         if self._options.profile_callees:
             stats.print_callees()
 
-    def run(self, command, *args, **kwargs):
-        if self._options.profile_report_only or self.profile(command, *args, **kwargs):
+    def run(self, tests, command='runTests'):
+        if self._options.profile_report_only or self.profile(tests, command):
             self.reportLastRun()
 
-    def profile(self, command, *args, **kwargs):
-        import hotshot
-        profiler = hotshot.Profile(self._logfile)
-        result = profiler.runcall(command, *args, **kwargs)
+    def profile(self, tests, command):
+        import cProfile
+        _locals = dict(locals())
+        cProfile.runctx('result = tests.%s()'%command, globals(), _locals,
+            filename=self._logfile)
+        result = _locals['result']
         if not result.wasSuccessful():
             self.cleanup()
         return result.wasSuccessful()
@@ -329,7 +311,7 @@ if __name__ == '__main__':
     options, testFiles = TestOptionParser().parse_args()
     allTests = AllTests(options, testFiles)
     if options.profile:
-        TestProfiler(options).run(allTests.runTests)
+        TestProfiler(options).run(allTests)
     else:
         result = allTests.runTests()
         if not result.wasSuccessful():

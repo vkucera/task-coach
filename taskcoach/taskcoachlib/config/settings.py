@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -126,10 +126,10 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
             currentValue = self.get(section, option)
         if value != currentValue:
             self.notifyObservers(\
-                patterns.Event(self, 'before.%s.%s'%(section, option), value))
+                patterns.Event('before.%s.%s'%(section, option), self, value))
             super(Settings, self).set(section, option, value)
             self.notifyObservers(\
-                patterns.Event(self, '%s.%s'%(section, option), value))
+                patterns.Event('%s.%s'%(section, option), self, value))
             
     def setboolean(self, section, option, value):
         self.set(section, option, str(value))

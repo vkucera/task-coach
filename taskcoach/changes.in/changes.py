@@ -22,14 +22,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-
-Release('0.74.0', 'June ?, 2009',
-    summary='''This release adds support for synchronizing with a companion 
-iPhone/iPod Touch device.''',
+            
+Release('0.73.2', 'July 8, 2009',
+    summary='''This release fixes some bugs, and adds synchronization with
+the iPhone version now available on the AppStore.''',
     featuresAdded=[
-        Feature('''Synchronize an iPhone/iPod Touch device with
-Task Coach.''', '2042153')
+        Feature('''Two-way synchronization with Task Coach for the iPhone.''',
+                '2042153', '2722216'),
+        ],
+    bugsFixed=[
+        Bug('''Export of selected effort to a CSV-file would result in an empty 
+file.''', '2810978'),
+        Bug('''Fix a crash when creating/editing tasks for non-english
+locales.''', '2817287', '2817335', '2812005')
         ]
+    ),
+
+Release('0.73.1', 'June 24, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Dates and amounts were not localized.''', '2806189', '1625111', 
+           '1790055'),
+        Bug('''Use folder icons for tasks with subtasks in the task viewer.''',
+            '2806191'),
+        Bug('''Export of selected effort to a CSV-file would result in an empty 
+file.''', '2806383', '2807003', '2810978')
+       ]
     ),
 
 Release('0.73.0', 'June 12, 2009',

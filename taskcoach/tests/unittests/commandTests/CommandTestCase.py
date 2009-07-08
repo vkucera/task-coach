@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,39 +21,10 @@ from unittests import asserts
 from taskcoachlib import patterns, command
 
 
-class TestCommand(patterns.Command):
-    def __init__(self):
-        self.done = False
-        self.undone = False
-        self.redone = False
-
-    def do(self):
-        super(TestCommand, self).do()
-        self.done = True
-
-    def undo(self):
-        self.undone = True
-
-    def redo(self):
-        self.redone = True
-
-
 class CommandTestCase(test.wxTestCase, asserts.CommandAsserts):
     def tearDown(self):
         super(CommandTestCase, self).tearDown()
         patterns.CommandHistory().clear()
-
-    def push(self):
-        patterns.CommandHistory().push()
-
-    def pop(self, keep=True):
-        patterns.CommandHistory().pop(keep)
-
-    def hasHistory(self):
-        return patterns.CommandHistory().hasHistory()
-
-    def hasFuture(self):
-        return patterns.CommandHistory().hasFuture()
 
     def undo(self):
         patterns.CommandHistory().undo()

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,14 +40,11 @@ class ViewFilter(base.Filter):
         super(ViewFilter, self).__init__(*args, **kwargs)
 
     def onTaskChange(self, event):
-        self.addOrRemoveTask(event.source())
-
-    def addOrRemoveTask(self, task):
-        if self.filterTask(task):
-            if task in self.observable() and task not in self:
-                self.extendSelf([task])
-        else:
-            self.removeItemsFromSelf([task])
+        tasks = event.sources()
+        self.removeItemsFromSelf([task for task in tasks if not \
+                                  self.filterTask(task)])
+        self.extendSelf([task for tasks in tasks if self.filterTask(task) \
+                         and task in self.observable() and task not in self])
             
     def setFilteredByDueDate(self, dueDateString):
         self.__dueDateFilter = self.stringToDueDate(dueDateString)

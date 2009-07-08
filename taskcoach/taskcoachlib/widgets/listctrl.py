@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -102,23 +102,21 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
             event.columnName = self._getColumn(column).name()
         self.editCommand(event)
 
-    def RefreshItems(self):
-        if self.GetItemCount(): 
-            # Only invoke RefreshItems if there's something to refresh
-            # Note: RefreshItems will only refresh visible items, no need for
-            # us to calculate which items are visible.
-            super(VirtualListCtrl, self).RefreshItems(0, self.GetItemCount()-1)
-        
-    def refresh(self, count):
-        ''' Refresh the contents of the (visible part of the) ListCtrl '''
+    def RefreshAllItems(self, count):
         self.SetItemCount(count)
         if count == 0:
             self.DeleteAllItems()
         else:
-            self.RefreshItems()
-        
-    def refreshItem(self, index):
-        self.RefreshItem(index)
+            # The VirtualListCtrl makes sure only visible items are updated
+            super(VirtualListCtrl, self).RefreshItems(0, count-1)
+
+    def RefreshItems(self, *indices):
+        ''' Refresh specific items. '''
+        if len(indices) <= 5:
+            for index in indices:
+                self.RefreshItem(index)
+        else:
+            self.RefreshAllItems(self.GetItemCount())
         
     def curselection(self):
         return wx.lib.mixins.listctrl.getListCtrlSelection(self)

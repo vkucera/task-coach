@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,8 +45,8 @@ class NoteTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             self.note.subjectChangedEventType())
         self.note.setSubject('Note')
-        self.assertEqual(patterns.Event(self.note, 
-            self.note.subjectChangedEventType(), 'Note'), self.events[0])
+        self.assertEqual(patterns.Event(self.note.subjectChangedEventType(), 
+            self.note, 'Note'), self.events[0])
         
     def testDefaultDescription(self):
         self.assertEqual('', self.note.description())
@@ -63,9 +63,8 @@ class NoteTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             self.note.descriptionChangedEventType())
         self.note.setDescription('Description')
-        self.assertEqual(patterns.Event(self.note, 
-            self.note.descriptionChangedEventType(), 'Description'), 
-            self.events[0])
+        self.assertEqual(patterns.Event(self.note.descriptionChangedEventType(),
+            self.note, 'Description'), self.events[0])
         
     def testAddChild(self):
         self.note.addChild(self.child)
@@ -80,16 +79,16 @@ class NoteTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             note.Note.addChildEventType())
         self.note.addChild(self.child)
-        self.assertEqual(patterns.Event(self.note, 
-            note.Note.addChildEventType(), self.child), self.events[0])
+        self.assertEqual(patterns.Event(note.Note.addChildEventType(), 
+            self.note, self.child), self.events[0])
         
     def testRemoveChildNotification(self):
         patterns.Publisher().registerObserver(self.onEvent, 
             note.Note.removeChildEventType())
         self.note.addChild(self.child)
         self.note.removeChild(self.child)
-        self.assertEqual(patterns.Event(self.note, 
-            note.Note.removeChildEventType(), self.child), self.events[0])
+        self.assertEqual(patterns.Event(note.Note.removeChildEventType(), 
+            self.note, self.child), self.events[0])
         
     def testNewChild(self):
         child = self.note.newChild(subject='child')
@@ -128,8 +127,9 @@ class NoteOwnerTest(test.TestCase):
     def testAddNoteNotification(self):
         self.registerObserver()
         self.noteOwner.addNote(self.note)
-        self.assertEqual(patterns.Event(self.noteOwner, 
-            note.NoteOwner.notesChangedEventType(), self.note), self.events[0])
+        self.assertEqual(patterns.Event( \
+            note.NoteOwner.notesChangedEventType(), self.noteOwner, self.note), 
+            self.events[0])
         
     def testRemoveNote(self):
         self.noteOwner.addNote(self.note)
@@ -140,8 +140,9 @@ class NoteOwnerTest(test.TestCase):
         self.noteOwner.addNote(self.note)
         self.registerObserver()
         self.noteOwner.removeNote(self.note)
-        self.assertEqual(patterns.Event(self.noteOwner, 
-            note.NoteOwner.notesChangedEventType(), *self.noteOwner.notes()), 
+        self.assertEqual(patterns.Event( \
+            note.NoteOwner.notesChangedEventType(), self.noteOwner, 
+            *self.noteOwner.notes()), 
             self.events[0])
             
     def testGetState(self):
@@ -161,8 +162,9 @@ class NoteOwnerTest(test.TestCase):
         self.noteOwner.removeNote(self.note)
         self.registerObserver()
         self.noteOwner.__setstate__(state)
-        self.assertEqual(patterns.Event(self.noteOwner, 
-            note.NoteOwner.notesChangedEventType(), self.note), self.events[0])
+        self.assertEqual(patterns.Event( \
+            note.NoteOwner.notesChangedEventType(), self.noteOwner, self.note), 
+            self.events[0])
             
     def testInitializeNotesViaConstructor(self):
         noteOwner = note.NoteOwner(notes=[self.note])

@@ -28,7 +28,7 @@ class TestLaunch(base.Win32TestCase):
 
 class TestWithTaskFile(base.Win32TestCase):
     def setUp(self):
-        self.args = [os.path.join(self.basepath, 'testfile.tsk')]
+        self.args = ['"%s"'%os.path.join(self.basepath, 'testfile.tsk')]
         super(TestWithTaskFile, self).setUp()
 
     def test_launch(self):
@@ -41,7 +41,8 @@ class TestWithTaskFile(base.Win32TestCase):
                         'Wrong window title')
         
     def test_save(self):
-        timestamp = os.stat(self.args[0]).st_mtime
+        filename = self.args[0][1:-1] # Remove "'s
+        timestamp = os.stat(filename).st_mtime
 
         mainwindow = self.findWindow(r'^Task Coach')
         w = mainwindow.findChildren('wxWindowClassNR', 'HyperTreeList')
@@ -63,6 +64,6 @@ class TestWithTaskFile(base.Win32TestCase):
         if os.path.exists(self.logfilename):
             self.fail('Exception occurred while saving:\n' + file(self.logfilename, 'rb').read())
 
-        self.failUnless(os.stat(self.args[0]).st_mtime > timestamp,
+        self.failUnless(os.stat(filename).st_mtime > timestamp,
                         'File was not written')
-        self.assertNotEqual(os.path.getsize(self.args[0]), 0)
+        self.assertNotEqual(os.path.getsize(filename), 0)

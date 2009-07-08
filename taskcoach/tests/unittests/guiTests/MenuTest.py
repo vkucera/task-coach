@@ -29,10 +29,6 @@ class MockViewerContainer(object):
         self.__sortBy = 'subject'
         self.__ascending = True
     
-    @classmethod    
-    def viewerChangeEventType(class_):
-        return 'bla'
-
     def settingsSection(self):
         return 'section'
     
@@ -67,27 +63,6 @@ class MockViewerContainer(object):
                 uicommand.ViewerSortByCommand(viewer=self, value='description',
                     menuText='&Description', helpText='help')]
         
-    def isVisibleColumnByName(self, *args, **kwargs):
-        return True
-    
-    def hasHideableColumns(self):
-        return False
-    
-    def getColumnUICommands(self):
-        return []
-    
-    def isFilteredByDueDate(self, *args, **kwargs):
-        return False
-    
-    def isFilterable(self):
-        return False
-    
-    def getFilterUICommands(self):
-        return []
-    
-    def resetFilter(self):
-        pass
-    
 
 class MenuTestCase(test.wxTestCase):
     def setUp(self):

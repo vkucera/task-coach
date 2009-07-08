@@ -58,6 +58,19 @@ has a bunch of options as well, enter:
 
 for more information.
 
+--- Test coverage ---------------------------------------------------
+
+To create test coverage reports, you need to install coverage.py
+(http://pypi.python.org/pypi/coverage/). Install with:
+
+  sudo easy_install coverage
+
+To create a coverage report, enter:
+
+  make coverage
+
+The coverage report is written to tests/coverage.out.
+
 --- Building distributions ------------------------------------------
 
 Use the Makefile to create distributions (they are placed in dist/):
@@ -65,7 +78,7 @@ Use the Makefile to create distributions (they are placed in dist/):
   make windist # Creates installer for Windows
   make dmg     # Creates disk image for Mac OS X
   make rpm     # Creates generic RPM
-  make fedora  # Creates RPM for Fedora 8
+  make fedora  # Creates RPM for Fedora 8 or later
   make deb     # Creates Debian package for Debian and Ubuntu
 
 Check out the Makefile for more details. E.g. to create the Task

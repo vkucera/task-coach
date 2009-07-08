@@ -26,7 +26,7 @@ class TreeCtrlTestCase(test.wxTestCase):
     def setTree(self, *items, **kwargs):
         self._tree = items
         if kwargs.get('refresh', True):
-            self.treeCtrl.refresh()
+            self.treeCtrl.RefreshAllItems()
             
     def getItem(self, index):
         item, children = 'root item', self._tree
@@ -43,9 +43,6 @@ class TreeCtrlTestCase(test.wxTestCase):
     def getItemText(self, index):
         return self.getItem(index)[0]
 
-    def getItemTooltipText(self, index):
-        return None
-
     def getItemImage(self, index, *args, **kwargs):
         if self.getChildrenCount(index):
             return 1
@@ -54,13 +51,12 @@ class TreeCtrlTestCase(test.wxTestCase):
         
     def getItemAttr(self, index):
         return wx.ListItemAttr()
+
+    getItemTooltipText = onSelect = None
                                 
     def getChildrenCount(self, index):
         return len(self.getItem(index)[1])
             
-    def onSelect(self, *args, **kwargs):
-        pass
-    
     def assertNodes(self, index, treeItem):
         self.assertEqual(self.getItemText(index), self.treeCtrl.GetItemText(treeItem))
         childrenCount = self.getChildrenCount(index)

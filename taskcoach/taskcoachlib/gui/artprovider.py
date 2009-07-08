@@ -82,7 +82,7 @@ def getIcon(iconTitle):
 
 def init():
     if ('__WXMSW__' in wx.PlatformInfo) and (wx.DisplayDepth() >= 32):
-        wx.SystemOptions_SetOption("msw.remap", "0")
+        wx.SystemOptions_SetOption("msw.remap", "0") # pragma: no cover
     try:
         wx.ArtProvider_PushProvider(ArtProvider())
     except AttributeError:

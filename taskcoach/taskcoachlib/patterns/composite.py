@@ -107,12 +107,12 @@ class ObservableComposite(Composite, observer.Observable):
     
     def addChild(self, child):
         super(ObservableComposite, self).addChild(child)
-        self.notifyObservers(observer.Event(self, self.addChildEventType(), 
+        self.notifyObservers(observer.Event(self.addChildEventType(), self,
                                             child))
                                             
     def removeChild(self, child):
         super(ObservableComposite, self).removeChild(child)
-        self.notifyObservers(observer.Event(self, self.removeChildEventType(),
+        self.notifyObservers(observer.Event(self.removeChildEventType(), self,
                                             child))
 
     @classmethod
@@ -140,8 +140,8 @@ class CompositeCollection(object):
         self.startNotifying()
         self.notifyObserversOfItemsAdded(*compositesAndAllChildren)
         for parent, children in parentsWithChildrenAdded.items():
-            self.notifyObservers(observer.Event(parent,
-                parent.addChildEventType(), *children))
+            self.notifyObservers(observer.Event(parent.addChildEventType(), 
+                                                parent, *children))
             
     def _compositesAndAllChildren(self, composites):
         compositesAndAllChildren = set(composites) 
@@ -175,8 +175,8 @@ class CompositeCollection(object):
         self.notifyObserversOfItemsRemoved(*compositesAndAllChildren)
         for parent, children in parentsWithChildrenRemoved.items():
             if parent in self:
-                self.notifyObservers(observer.Event(parent,
-                    parent.removeChildEventType(), *children))
+                self.notifyObservers(observer.Event(
+                    parent.removeChildEventType(), parent, *children))
 
     def _splitCompositesInParentsAndChildren(self, composites):
         parents, children = [], []

@@ -41,7 +41,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
         for eventType in category.Category.subjectChangedEventType(), \
                          category.Category.filterChangedEventType(), \
                          category.Category.colorChangedEventType():
-            patterns.Publisher().registerObserver(self.onCategoryChanged, 
+            patterns.Publisher().registerObserver(self.onAttributeChanged, 
                 eventType)
             
     def domainObjectsToView(self):
@@ -154,9 +154,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
         return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
                                       self, localOnly)
     
-    def onCategoryChanged(self, event):
-        self.refreshItem(event.source())
-
     def onCheck(self, event):
         category = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
         category.setFiltered(event.GetItem().IsChecked())
@@ -213,9 +210,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
             command.EditCategoryCommand(self.presentation(), kwargs['items']),
             self.settings, self.taskFile, bitmap=kwargs['bitmap'],
             columnName=kwargs.get('columnName', ''))
-    
-    def deleteItemCommand(self):
-        return command.DeleteCommand(self.presentation(), self.curselection())
     
     def newSubItemDialog(self, *args, **kwargs):
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,13 +32,13 @@ class OptionParser(optparse.OptionParser, object):
     def __addOptions(self):
         self.__getAndAddOptions('Option', self.add_option)
         
-    def __methodsEndingWith(self, suffix):
-        return [method for name, method in vars(self.__class__).items() if
-                name.endswith(suffix)]
-
     def __getAndAddOptions(self, suffix, addOption):
         for getOption in self.__methodsEndingWith(suffix):
             addOption(getOption(self))
+
+    def __methodsEndingWith(self, suffix):
+        return [method for name, method in vars(self.__class__).items() if
+                name.endswith(suffix)]
 
                 
 class OptionGroup(optparse.OptionGroup, object):

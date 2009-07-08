@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,12 +23,14 @@ from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, category, note, date, attachment
 from taskcoachlib.thirdparty import desktop
 
-if desktop.get_desktop() == 'KDE':
-    # On KDE, kfmclient insists on showing an error message for non-existing
-    # files, even when passing --noninteractive, so we make sure kfmclient is
-    # not invoked at all 
+if desktop.get_desktop() in ('KDE', 'GNOME'): # pragma: no cover
+    # On a KDE desktop, kfmclient insists on showing an error message for 
+    # non-existing files, even when passing --noninteractive, so we make sure 
+    # kfmclient is not invoked at all. 
+    # On a GNOME desktop, this launch replacement prevents an error message
+    # to stderr when the file doesn't exist.
     import os
-    os.environ['DESKTOP_LAUNCH'] = 'python -c "import sys, os; 0 if os.path.exists(sys.argv[1]) else 1"'
+    os.environ['DESKTOP_LAUNCH'] = 'python -c "import sys, os; sys.exit(0 if os.path.exists(sys.argv[1]) else 1)"'
 
 
 class UICommandTest(test.wxTestCase):
@@ -69,6 +71,8 @@ class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
         self.frame.taskFile = persistence.TaskFile()
         
 
+
+
 class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
     def setUp(self):
         super(NewTaskWithSelectedCategoryTest, self).setUp()
@@ -78,12 +82,11 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
         self.categories.append(category.Category('cat'))
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskFile, 
                                                 self.settings)
-        
+       
     def createNewTask(self):
-        taskNew = gui.uicommand.NewTaskWithSelectedCategories(taskList=self.taskFile.tasks(),
-                                                viewer=self.viewer,
-                                                categories=self.categories,
-                                                settings=self.settings)
+        taskNew = gui.uicommand.NewTaskWithSelectedCategories( \
+            taskList=self.taskFile.tasks(), viewer=self.viewer, 
+            categories=self.categories, settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog[0][2].viewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
@@ -102,35 +105,32 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
         self.failIf(firstCategoryInTaskDialog.IsChecked())
 
 
-class MailTaskTest(test.TestCase):
-    def testException(self):
-        class DummyTask(object):
-            def subject(self, *args, **kwargs):
-                return 'subject'
-            def description(self):
-                return 'description'
-        class DummyViewer(object):
-            def curselection(self):
-                return [DummyTask()]
-        def mail(*args):
-            raise RuntimeError, 'message'
-        def showerror(*args, **kwargs):
-            self.showerror = args
-        mailTask = gui.uicommand.TaskMail(viewer=DummyViewer())
-        mailTask.doCommand(None, mail=mail, showerror=showerror)
-        self.assertEqual('Cannot send email:\nmessage', self.showerror[0])
+class DummyTask(object):
+    def subject(self, *args, **kwargs):
+	return 'subject'
+    def description(self):
+	return 'description'
 
 
 class DummyViewer(object):
     def __init__(self, selection=None):
-        self.selection = selection or []
-        
+	self.selection = selection or []
+
     def curselection(self):
-        return self.selection
-    
-    def isShowingTasks(self):
-        return True
-    
+	return self.selection
+
+
+
+class MailTaskTest(test.TestCase):
+    def testException(self):
+        def mail(*args):
+             raise RuntimeError, 'message'
+        def showerror(*args, **kwargs):
+             self.showerror = args
+        mailTask = gui.uicommand.TaskMail(viewer=DummyViewer([DummyTask()]))
+        mailTask.doCommand(None, mail=mail, showerror=showerror)
+        self.assertEqual('Cannot send email:\nmessage', self.showerror[0])
+
     
 class MarkCompletedTest(test.TestCase):
     def assertMarkCompletedIsEnabled(self, selection, shouldBeEnabled=True):
@@ -250,19 +250,19 @@ class EffortViewerAggregationChoiceTest(test.TestCase):
 class OpenAllAttachmentsTest(test.TestCase):
     def setUp(self):
         settings = config.Settings(load=False)
-        self.viewer = DummyViewer([task.Task()])
+        self.viewer = DummyViewer([task.Task('Task')])
         self.openAll = gui.uicommand.OpenAllAttachments(settings=settings, 
                                                         viewer=self.viewer)
         self.errorKwargs = None
 
-    def showerror(self, *args, **kwargs):
+    def showerror(self, *args, **kwargs): # pragma: no cover
         self.errorArgs = args
         self.errorKwargs = kwargs
         
     def testNoAttachments(self):
         self.openAll.doCommand(None)
         
-    def testNonexistingAttachment(self):
+    def testNonexistingAttachment(self): # pragma: no cover
         self.viewer.selection[0].addAttachment(attachment.FileAttachment('Attachment'))
         result = self.openAll.doCommand(None, showerror=self.showerror)
         # Don't test the error message itself, it differs per platform

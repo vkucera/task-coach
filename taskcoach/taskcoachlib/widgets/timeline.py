@@ -35,10 +35,10 @@ class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):
         self.popupMenu = popupMenu
         self.Bind(wx.EVT_RIGHT_DOWN, self.onPopup)
         
-    def refresh(self, count):
+    def RefreshAllItems(self, count):
         self.Refresh()
         
-    def RefreshItem(self, *args):
+    def RefreshItems(self, *args):
         self.Refresh()
         
     def onSelect(self, event):

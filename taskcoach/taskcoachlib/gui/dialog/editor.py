@@ -426,8 +426,8 @@ class BudgetPage(PageWithHeaders, TaskHeaders):
             recursiveBudget = render.budget(task.budget(recursive=True))
             recursiveTimeSpent = render.timeSpent(task.timeSpent(recursive=True))
             recursiveBudgetLeft = render.budget(task.budgetLeft(recursive=True))
-            recursiveFixedFee = render.amount(task.fixedFee(recursive=True))
-            recursiveRevenue = render.amount(task.revenue(recursive=True))
+            recursiveFixedFee = render.monetaryAmount(task.fixedFee(recursive=True))
+            recursiveRevenue = render.monetaryAmount(task.revenue(recursive=True))
         else:
             recursiveBudget = recursiveTimeSpent = recursiveBudgetLeft = \
             recursiveFixedFee = recursiveRevenue = ''
@@ -444,7 +444,7 @@ class BudgetPage(PageWithHeaders, TaskHeaders):
         for eachEntry in [_('Hourly fee'), self._hourlyFeeEntry, '',
                           _('Fixed fee'), self._fixedFeeEntry, 
                           recursiveFixedFee, _('Revenue'), 
-                          render.amount(task.revenue()), recursiveRevenue]:
+                          render.monetaryAmount(task.revenue()), recursiveRevenue]:
             revenueBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
         for box in budgetBox, revenueBox:
             box.fit()

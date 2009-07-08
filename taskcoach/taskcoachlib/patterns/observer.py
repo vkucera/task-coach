@@ -56,30 +56,50 @@ class Set(set):
 
 class Event(object):
     ''' Event represents notification events. '''
-    def __init__(self, source, type, *values):
-        self.__source = source
+    def __init__(self, type, source=None, *values):
         self.__type = type
-        self.__values = values
+        self.__sourcesAndValues = {} if source is None else {source: values}
 
-    def __repr__(self):
-        return 'Event(%s, %s, %s)'%(self.__source, self.__type, self.__values)
+    def __repr__(self): # pragma: no cover
+        return 'Event(%s, %s)'%(self.__type, self.__sourcesAndValues)
 
     def __eq__(self, other):
-        return self.source() == other.source() and \
-               self.type() == other.type() and \
-               self.values() == other.values()
+        return self.type() == other.type() and \
+               self.sourcesAndValues() == other.sourcesAndValues()
 
-    def source(self):
-        return self.__source
+    def addSource(self, source, *values):
+        ''' Add a source with optional values to the event. If the source was
+            added previously its previous values are overwritten by the 
+            passed values. '''
+        self.__sourcesAndValues[source] = values
 
     def type(self):
+        ''' Return the event type. '''
         return self.__type
+    
+    def sources(self):
+        ''' Return a set of sources of this event instance. '''
+        return set(self.__sourcesAndValues.keys())
+    
+    def sourcesAndValues(self):
+        ''' Return a dict of sources and values. '''
+        return self.__sourcesAndValues
 
-    def value(self):
-        return self.__values[0]
+    def value(self, source=None):
+        ''' Return the value that belongs to source. If there are multiple
+            values, this method returns only the first one. So this method is 
+            useful if the caller is sure there is only one value associated
+            with source. If source is None return the value of an arbitrary 
+            source. This latter option is useful if the caller is sure there 
+            is only one source. '''
+        return self.values(source)[0]
 
-    def values(self):
-        return self.__values
+    def values(self, source=None):
+        ''' Return the values that belong to source. If source is None return
+            the values of an arbitrary source. This latter option is useful if
+            the caller is sure there is only one source. '''
+        source = source or self.__sourcesAndValues.keys()[0]
+        return self.__sourcesAndValues[source]
 
 
 class MethodProxy(object):
@@ -169,7 +189,7 @@ class Publisher(object):
     def removeObserver(self, observer, eventType=None, eventSource=None):
         ''' Remove an observer. If no event type is specified, the observer
             is removed for all event types. If an event type is specified
-            the observer is removed for that event type only. If not event
+            the observer is removed for that event type only. If no event
             source is specified, the observer is removed for all event sources.
             If an event source is specified, the observer is removed for that
             event source only. If both an event type and an event source are
@@ -207,27 +227,31 @@ class Publisher(object):
         self.notifyObserversOfLastObserverRemoved()
         
     def notifyObserversOfFirstObserverRegistered(self, eventType):
-        self.notifyObservers(Event(self,
-            'publisher.firstObserverRegisteredFor', eventType))
-        self.notifyObservers(Event(self, 
-            'publisher.firstObserverRegisteredFor.%s'%eventType, eventType))
+        self.notifyObservers(Event(
+            'publisher.firstObserverRegisteredFor', self, eventType))
+        self.notifyObservers(Event( 
+            'publisher.firstObserverRegisteredFor.%s'%eventType, self, 
+            eventType))
                     
     def notifyObserversOfLastObserverRemoved(self):
         for eventType, eventSource in self.__observers.keys():
             if self.__observers[(eventType, eventSource)]:
                 continue
             del self.__observers[(eventType, eventSource)]
-            self.notifyObservers(Event(self, 
-                'publisher.lastObserverRemovedFor.%s'%eventType, eventType))
+            self.notifyObservers(Event( 
+                'publisher.lastObserverRemovedFor.%s'%eventType, self, 
+                eventType))
         
     def notifyObservers(self, event):
-        ''' Notify observers of the event and/or source. The event type and 
-            source are extracted from the event. '''
-        if not self.isNotifying():
+        ''' Notify observers of the event. The event type and sources are 
+            extracted from the event. '''
+        if not self.isNotifying() or not event.sources():
             return
         observers = []
-        for eventTypeAndSource in [(event.type(), None), 
-                                   (event.type(), event.source())]:
+        # Include observers not registered for a specific event source:
+        sources = event.sources() | set([None]) 
+        eventTypesAndSources = [(event.type(), source) for source in sources]
+        for eventTypeAndSource in eventTypesAndSources:
             observers.extend(self.__observers.get(eventTypeAndSource, []))
         for observer in observers:
             observer(event)
@@ -310,10 +334,10 @@ class ObservableCollection(Observable):
         return '%s.remove'%class_
 
     def notifyObserversOfItemsAdded(self, *items):
-        self.notifyObservers(Event(self, self.addItemEventType(), *items))
+        self.notifyObservers(Event(self.addItemEventType(), self, *items))
 
     def notifyObserversOfItemsRemoved(self, *items):
-        self.notifyObservers(Event(self, self.removeItemEventType(), *items))
+        self.notifyObservers(Event(self.removeItemEventType(), self, *items))
 
     @classmethod
     def modificationEventTypes(class_):
@@ -400,7 +424,7 @@ class CollectionDecorator(Decorator, ObservableCollection):
             eventType=observable.removeItemEventType(), eventSource=observable)
         self.extendSelf(observable)
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return '%s(%s)'%(self.__class__, super(CollectionDecorator, self).__repr__())
 
     def onAddItem(self, event):

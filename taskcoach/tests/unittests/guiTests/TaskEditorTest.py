@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,31 +24,6 @@ from unittests import dummy
 from taskcoachlib import gui, command, config, widgets, persistence
 from taskcoachlib.domain import task, effort, date, category, note, attachment
 from taskcoachlib.gui import uicommand
-
-
-class DummyViewer:
-    def __init__(self):
-        self.taskList = task.TaskList()
-
-    def extend(self, *args):
-        self.taskList.extend(*args)
-
-    def select(self, *args):
-        pass
-
-    def curselection(self, *args, **kwargs):
-        return self.taskList
-
-    def __getitem__(self, index):
-        return self.taskList[index]
-
-
-class DummyEvent:
-    def __init__(self, checked):
-        self._checked = checked
-
-    def IsChecked(self):
-        return self._checked
 
 
 class TaskEditorTestCase(test.wxTestCase):
@@ -87,12 +62,6 @@ class TaskEditorTestCase(test.wxTestCase):
     def setRecurrence(self, newRecurrence, index=0):
         self.editor[index][1].setRecurrence(newRecurrence)
 
-    def setMaxRecurrenceCount(self, maxRecurrence, index=0):
-        self.editor[index][1].setMaxRecurrenceCount(maxRecurrence)
-        
-    def setRecurrenceFrequency(self, recurrenceFrequency, index=0):
-        self.editor[index][1].setRecurrenceFrequency(recurrenceFrequency)
-                
 
 class NewTaskTest(TaskEditorTestCase):
     def createCommand(self):
@@ -169,7 +138,7 @@ class NewTaskTest(TaskEditorTestCase):
         self.editor.ok()
         self.failUnless(self.task.recurrence().sameWeekday)
     
-    def testOpenAttachmentWithNonAsciiFileNameThrowsException(self):
+    def testOpenAttachmentWithNonAsciiFileNameThrowsException(self): # pragma: no cover
         ''' os.startfile() does not accept unicode filenames. This will be 
             fixed in Python 2.5. This test will fail if the bug is fixed. '''
         self.errorMessage = ''
@@ -275,11 +244,6 @@ class EditTaskTest(TaskEditorTestCase):
         self.editor.ok()
         self.assertEqual(100.5, self.task.fixedFee())
 
-    def XXXtestAddCategory(self): # FIXME
-        self.editor[0][2]._textEntry.SetValue('New category')
-        self.editor[0][2]._textEntry.onEnter()
-        self.assertEqual('New category', self.editor[0][2]._checkListBox.GetString(0))
-        
     def testBehaviorMarkCompleted(self):
         self.editor[0][7]._markTaskCompletedEntry.SetStringSelection('Yes')
         self.editor.ok()
