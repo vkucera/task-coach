@@ -65,6 +65,7 @@ _TOC = _('''<h3>Table of contents</h3>
   <ul>
     <li><a href="#taskcoachiphone">Task Coach on the iPhone</a></li>
     <li><a href="#iphoneconf">Configuration</a></li>
+    <li><a href="#iphonetrouble">Troubleshooting</a></li>
   </ul>
 </li>
 <li><a href="#templates">Task templates</a>
@@ -423,6 +424,19 @@ be running.</p>
 ''')
 
 
+_iPhoneTroubleshootingSubsection = _('''<h4><a name="iphonetrouble">Troubleshooting</a></h4>
+<p>
+<h5>My computer doesn't appear in the list when trying to sync</h5>
+Check that your iPhone/iPod Touch is connected to the same network your
+computer is through WiFi.
+</p>
+
+<p>
+<h5>The iPhone can't connect to my computer</h5>
+If you have a firewall, check that ports 4096-4100 are open.
+</p>
+''')
+
 _templatesSection = _('''<h3><a name="templates">Task templates</a></h3>
 ''')
 
@@ -457,6 +471,7 @@ helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _syncmlSection + _aboutSyncmlSubsection + _syncmlSetupSubsection + \
     _syncmlLimitsSubsection + _syncmlTroubleSubsection + _syncmlPurgeSubsection + \
     _iPhoneSection + _iPhoneAboutSubsection + _iPhoneConfigurationSubsection + \
+    _iPhoneTroubleshootingSubsection + \
     _templatesSection + _aboutTemplatesSubsection + _usingTemplatesSubsection
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>

@@ -121,6 +121,8 @@ class IPhoneBonjourDialog(wx.Dialog):
                                      _('Note that under some systems (Fedora), you may have to\n'
                                        'install the avahi-compat-libdns_sd package as well as Avahi in order\n'
                                        'for this to work.')), 0, wx.ALL, 3)
+            vsizer.Add(wx.StaticText(self, wx.ID_ANY,
+                                     _('In addition, if you have a firewall, check that ports 4096-4100 are open.')))
 
         btnOK = wx.Button(self, wx.ID_ANY, _('OK'))
         vsizer.Add(btnOK, 0, wx.ALIGN_CENTRE|wx.ALL, 3)
