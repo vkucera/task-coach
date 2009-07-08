@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,23 +23,14 @@ from taskcoachlib import widgets
 
 
 class VirtualListCtrlTestCase(test.wxTestCase):
-    def getItemText(self, index, column):
-        return 'Dummy text'
-    
-    def getItemImage(self, index):
-        return -1
-    
-    def getItemAttr(self, *args):
-        return wx.ListItemAttr()
-        
-    def onSelect(self, *args):
-        pass
-        
+
+    getItemText = getItemImage = getItemAttr = onSelect = lambda *args: None
+
     def createListCtrl(self):
         return widgets.ListCtrl(self.frame, self.columns,
             self.getItemText, self.getItemImage, self.getItemAttr, self.onSelect, 
             dummy.DummyUICommand())
-            
+
     def createColumns(self, nrColumns):
         columns = []
         for columnIndex in range(1, nrColumns+1):
@@ -53,7 +44,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.listctrl = self.createListCtrl()
             
     def testOneItem(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.assertEqual(1, self.listctrl.GetItemCount())
 
     def testNrOfColumns(self):
@@ -85,41 +76,41 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.assertEqual(2, self.listctrl.GetColumnCount())
         
     def testSelect(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.listctrl.select([0])
         self.assertEqual([0], self.listctrl.curselection())
         
     def testSelect_EmptySelection(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.listctrl.select([])
         self.assertEqual([], self.listctrl.curselection())
         
     def testSelect_MultipleSelection(self):
-        self.listctrl.refresh(2)
+        self.listctrl.RefreshAllItems(2)
         self.listctrl.select([0, 1])
         self.assertEqual([0, 1], self.listctrl.curselection())
         
     def testSelect_DisjunctMultipleSelection(self):
-        self.listctrl.refresh(3)
+        self.listctrl.RefreshAllItems(3)
         self.listctrl.select([0, 2])
         self.assertEqual([0, 2], self.listctrl.curselection())
         
     def testSelect_SetsFocus(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.listctrl.select([0])
         self.assertEqual(0, self.listctrl.GetFocusedItem())
 
     def testSelect_EmptySelection_SetsFocus(self):
-        self.listctrl.refresh(1)
+        self.listctrl.RefreshAllItems(1)
         self.listctrl.select([])
         self.assertEqual(-1, self.listctrl.GetFocusedItem())
 
     def testSelect_MultipleSelection_SetsFocus(self):
-        self.listctrl.refresh(2)
+        self.listctrl.RefreshAllItems(2)
         self.listctrl.select([0, 1])
         self.assertEqual(0, self.listctrl.GetFocusedItem())
 
     def testSelect_DisjunctMultipleSelection_SetsFocus(self):
-        self.listctrl.refresh(3)
+        self.listctrl.RefreshAllItems(3)
         self.listctrl.select([0, 2])
         self.assertEqual(0, self.listctrl.GetFocusedItem())

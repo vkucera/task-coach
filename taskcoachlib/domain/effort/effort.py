@@ -41,8 +41,8 @@ class Effort(baseeffort.BaseEffort, base.Object):
         self._task.removeEffort(self)
         self._task = task
         self._task.addEffort(self)
-        patterns.Publisher().notifyObservers(patterns.Event(self, 
-            self.taskChangedEventType(), task))
+        patterns.Publisher().notifyObservers(patterns.Event( \
+            self.taskChangedEventType(), self, task))
         
     setParent = setTask # FIXME: I should really create a common superclass for Effort and Task
     
@@ -85,10 +85,11 @@ class Effort(baseeffort.BaseEffort, base.Object):
             return
         self._start = startDatetime
         self.task().notifyObserversOfTimeSpentChange(self)
-        patterns.Publisher().notifyObservers(patterns.Event(self,
-            'effort.start', self._start))
-        patterns.Publisher().notifyObservers(patterns.Event(self,
-            'effort.duration', self.duration()))
+        patterns.Publisher().notifyObservers(patterns.Event('effort.start', 
+                                                            self, self._start))
+        patterns.Publisher().notifyObservers(patterns.Event('effort.duration', 
+                                                            self, 
+                                                            self.duration()))
             
     def setStop(self, newStop=None):
         if newStop is None:
@@ -100,10 +101,10 @@ class Effort(baseeffort.BaseEffort, base.Object):
             self._stop = newStop
             self.notifyStopOrStartTracking(previousStop, newStop)
             self.task().notifyObserversOfTimeSpentChange(self)
-            patterns.Publisher().notifyObservers(patterns.Event(self, 
-                'effort.stop', newStop))
-            patterns.Publisher().notifyObservers(patterns.Event(self,
-                'effort.duration', self.duration()))
+            patterns.Publisher().notifyObservers(patterns.Event('effort.stop', 
+                                                                self, newStop))
+            patterns.Publisher().notifyObservers(patterns.Event( \
+                'effort.duration', self, self.duration()))
             if self.task().hourlyFee():
                 self.notifyObserversOfRevenueChange()
                     
@@ -116,8 +117,8 @@ class Effort(baseeffort.BaseEffort, base.Object):
             eventType = self.trackStopEventType()
             self.task().notifyObserversOfStopTracking(self)
         if eventType:
-            patterns.Publisher().notifyObservers(patterns.Event(self, 
-                eventType))
+            patterns.Publisher().notifyObservers(patterns.Event(eventType, 
+                                                                self))
 
     def isBeingTracked(self, recursive=False):
         return self._stop is None
@@ -133,7 +134,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         return variableRevenue + fixedRevenue
     
     def notifyObserversOfRevenueChange(self):
-        self.notifyObservers(patterns.Event(self, 'effort.revenue', 
+        self.notifyObservers(patterns.Event('effort.revenue', self,
             self.revenue()))
         
     @classmethod    

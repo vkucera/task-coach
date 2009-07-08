@@ -67,8 +67,8 @@ class Sorter(patterns.ListDecorator):
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
         if self != oldSelf or forceNotification:
-            patterns.Publisher().notifyObservers(patterns.Event(self, 
-                self.sortEventType()))
+            patterns.Publisher().notifyObservers(patterns.Event( \
+                self.sortEventType(), self))
 
     def createSortKeyFunction(self):
         ''' createSortKeyFunction returns a function that is passed to the 

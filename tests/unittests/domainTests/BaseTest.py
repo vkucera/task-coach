@@ -39,7 +39,7 @@ class SynchronizedObjectTest(test.TestCase):
         self.assertEqual(expectedStatus, self.object.getStatus())
         
     def assertOneEventReceived(self, eventSource, eventType, *values):
-        self.assertEqual([patterns.Event(eventSource, eventType, *values)], 
+        self.assertEqual([patterns.Event(eventType, eventSource, *values)], 
                          self.events)
     
     def testInitialStatus(self):
@@ -138,8 +138,8 @@ class ObjectTest(test.TestCase):
         
     def testSetSubjectCausesNotification(self):
         self.object.setSubject('New subject')
-        self.assertEqual(patterns.Event(self.object, 
-            self.object.subjectChangedEventType(), 'New subject'), 
+        self.assertEqual(patterns.Event( \
+            self.object.subjectChangedEventType(), self.object, 'New subject'), 
             self.eventsReceived[0])
         
     def testSetSubjectUnchangedDoesNotCauseNotification(self):
@@ -165,8 +165,9 @@ class ObjectTest(test.TestCase):
         
     def testSetDescriptionCausesNotification(self):
         self.object.setDescription('New description')
-        self.assertEqual(patterns.Event(self.object, 
-            self.object.descriptionChangedEventType(), 'New description'), 
+        self.assertEqual(patterns.Event( \
+            self.object.descriptionChangedEventType(), self.object, 
+            'New description'), 
             self.eventsReceived[0])
 
     def testSetDescriptionUnchangedDoesNotCauseNotification(self):
@@ -312,7 +313,7 @@ class CompositeObjectTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=base.CompositeObject.colorChangedEventType())
         self.compositeObject.setColor(wx.RED)
-        self.assertEqual(2, len(self.eventsReceived))
+        self.assertEqual(1, len(self.eventsReceived))
 
     def testCopy(self):
         self.compositeObject.expand(context='some_viewer')

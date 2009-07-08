@@ -75,27 +75,27 @@ class SynchronizedObject(patterns.Observable):
         if self.__status == self.STATUS_NONE or force:
             self.__status = self.STATUS_CHANGED
             if oldstatus == self.STATUS_DELETED:
-                self.notifyObservers(patterns.Event(self, 
-                    self.markNotDeletedEventType(), self.__status))
+                self.notifyObservers(patterns.Event( \
+                    self.markNotDeletedEventType(), self, self.__status))
 
     def markNew(self):
         oldstatus = self.__status
         self.__status = self.STATUS_NEW
         if oldstatus == self.STATUS_DELETED:
-            self.notifyObservers(patterns.Event(self, 
-                 self.markNotDeletedEventType(), self.__status))
+            self.notifyObservers(patterns.Event( \
+                 self.markNotDeletedEventType(), self, self.__status))
 
     def markDeleted(self):
         self.__status = self.STATUS_DELETED
-        self.notifyObservers(patterns.Event(self, 
-            self.markDeletedEventType(), self.__status))
+        self.notifyObservers(patterns.Event( \
+            self.markDeletedEventType(), self, self.__status))
 
     def cleanDirty(self):
         oldstatus = self.__status
         self.__status = self.STATUS_NONE
         if oldstatus == self.STATUS_DELETED:
-            self.notifyObservers(patterns.Event(self, 
-                 self.markNotDeletedEventType(), self.__status))
+            self.notifyObservers(patterns.Event( \
+                 self.markNotDeletedEventType(), self, self.__status))
 
     def isNew(self):
         return self.__status == self.STATUS_NEW
@@ -175,8 +175,8 @@ class Object(SynchronizedObject):
     def setSubject(self, subject):
         if subject != self.__subject:
             self.__subject = subject
-            self.notifyObservers(patterns.Event(self, 
-                self.subjectChangedEventType(), subject))
+            self.notifyObservers(patterns.Event( \
+                self.subjectChangedEventType(), self, subject))
             return True # Subject was changed
         else:
             return False # Subject was not changed
@@ -193,8 +193,8 @@ class Object(SynchronizedObject):
     def setDescription(self, description):
         if description != self.__description:
             self.__description = description
-            self.notifyObservers(patterns.Event(self, 
-                self.descriptionChangedEventType(), description))
+            self.notifyObservers(patterns.Event( \
+                self.descriptionChangedEventType(), self, description))
             return True # Description was changed
         else:
             return False # Description was not changed
@@ -221,8 +221,8 @@ class Object(SynchronizedObject):
         return '%s.color'%class_
     
     def notifyObserversOfColorChange(self, color):
-        self.notifyObservers(patterns.Event(self, 
-            self.colorChangedEventType(), color))
+        self.notifyObservers(patterns.Event(self.colorChangedEventType(), 
+                                            self, color))
         
     # Event types:
     
@@ -293,8 +293,8 @@ class CompositeObject(Object, patterns.ObservableComposite):
         return '%s.expanded'%class_
 
     def notifyObserversOfExpansionChange(self):
-        self.notifyObservers(patterns.Event(self, 
-            self.expansionChangedEventType()))
+        self.notifyObservers(patterns.Event(self.expansionChangedEventType(), 
+                                            self))
         
     # Color:
         
@@ -306,19 +306,19 @@ class CompositeObject(Object, patterns.ObservableComposite):
             return myColor
         
     def notifyObserversOfColorChange(self, color):
-        super(CompositeObject, self).notifyObserversOfColorChange(color)
-        for child in self.children():
-            child.notifyObserversOfParentColorChange(color)
+        event = patterns.Event(self.colorChangedEventType(), self, color)
+        sources = self.childrenWithoutOwnColor()
+        for source in sources:
+            event.addSource(source, color)
+        self.notifyObservers(event)
 
-    def notifyObserversOfParentColorChange(self, color):
-        ''' If this object has its own color, do nothing. If this object
-            uses the color of its parent, notify its observers of the color 
-            change. And similarly for the children of this object. '''
-        if self.color(recursive=False) is None:
-            self.notifyObservers(patterns.Event(self, 
-                self.colorChangedEventType(), color))
-            for child in self.children():
-                child.notifyObserversOfParentColorChange(color)
+    def childrenWithoutOwnColor(self, parent=None):
+        parent = parent or self
+        children = []
+        for child in parent.children():
+            if child.color(recursive=False) is None:
+                children.extend([child] + self.childrenWithoutOwnColor(child))
+        return children
 
     # Event types:
 

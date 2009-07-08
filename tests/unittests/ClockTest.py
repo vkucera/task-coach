@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,6 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test, wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
+
+
+class MockTimer:
+    def Start(self):
+        self.started = True
+
+    def Stop(self):
+        self.stopped = True
 
         
 class ClockTest(test.wxTestCase):
@@ -69,7 +77,21 @@ class ClockTest(test.wxTestCase):
             eventType='clock.midnight')
         self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,1,1,10,15))
         self.assertEqual(1, len(self.events))
-        
+
+    def testStartClockOnFirstObserverRegisteredForSecond(self):
+        self.clock._secondTimer = MockTimer()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='clock.second')
+        self.failUnless(self.clock._secondTimer.started)
+
+    def testStopClockOnLastObserverRemovedForSecond(self):
+        self.clock._secondTimer = MockTimer()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='clock.second')
+        patterns.Publisher().removeObserver(self.onEvent,
+            eventType='clock.second')
+        self.failUnless(self.clock._secondTimer.stopped)
+
 
 class PeriodicTimerTest_EverySecond(test.TestCase):
     def setUp(self):
@@ -78,7 +100,7 @@ class PeriodicTimerTest_EverySecond(test.TestCase):
         self.dateTime = date.DateTime(2000,1,1,10,0,0)
         
     def onTimer(self):
-        self.timerFired = True
+        self.timerFired = True # pragma: no cover
 
     def testNextWholeSecond(self):
         self.assertEqual(self.dateTime, 
@@ -216,12 +238,12 @@ class ScheduledTimerTest(test.TestCase):
         self.scheduleFutureAlarm()
         secondAlarmTime = self.alarmTime+date.TimeDelta(seconds=10)
         self.scheduleFutureAlarm(secondAlarmTime)
-        self.timer.onTimer()
+        self.timer._notify(now=self.alarmTime-date.oneDay)
         self.assertEqual(1, self.alarmFired)
-        self.timer.onTimer()
+        self.timer._notify(now=self.alarmTime-date.oneDay)
         self.assertEqual(2, self.alarmFired)
 
-    def testInvocationOfTwoFutureAlarmsForDifferentTimes(self):
+    def testAfterSchedulingTwoFutureAlarmsForDifferentTimesAndFiringTheFirstOneTheSecondOneIsScheduled(self):
         self.scheduleFutureAlarm()
         secondAlarmTime = self.alarmTime+date.TimeDelta(seconds=10)
         self.scheduleFutureAlarm(secondAlarmTime)

@@ -44,17 +44,17 @@ class BaseCompositeEffort(base.BaseEffort):
         ''' Return the duration of this composite effort on a specific day. '''
         startOfDay = self.getStart() + date.TimeDelta(days=dayOffset)
         endOfDay = self.getStart() + date.TimeDelta(days=dayOffset+1)
-        return sum([effort.duration() for effort in \
+        return sum((effort.duration() for effort in \
                     self._getEfforts(recursive=False) \
-                    if startOfDay <= effort.getStart() <= endOfDay], 
+                    if startOfDay <= effort.getStart() <= endOfDay), 
                    date.TimeDelta())
                               
     def notifyObserversOfDurationOrEmpty(self):
         if self._getEfforts():
-            eventArgs = ('effort.duration', self.duration(recursive=True))
+            eventArgs = ('effort.duration', self, self.duration(recursive=True))
         else:
-            eventArgs = ('effort.composite.empty',)
-        patterns.Publisher().notifyObservers(patterns.Event(self, *eventArgs))
+            eventArgs = ('effort.composite.empty', self)
+        patterns.Publisher().notifyObservers(patterns.Event(*eventArgs))
 
     @classmethod
     def modificationEventTypes(class_):
@@ -95,8 +95,8 @@ class CompositeEffort(BaseCompositeEffort):
             str([e for e in self._getEfforts()]))
 
     def duration(self, recursive=False):
-        return sum([effort.duration() for effort in \
-                    self._getEfforts(recursive)], date.TimeDelta())
+        return sum((effort.duration() for effort in \
+                    self._getEfforts(recursive)), date.TimeDelta())
 
     def revenue(self, recursive=False):
         return sum(effort.revenue() for effort in self._getEfforts(recursive))
@@ -136,23 +136,23 @@ class CompositeEffort(BaseCompositeEffort):
         startedEffort = event.value()
         if self._inPeriod(startedEffort):
             self.__invalidateCache()
-            patterns.Publisher().notifyObservers(patterns.Event(self,
-                self.trackStartEventType(), startedEffort))
+            patterns.Publisher().notifyObservers(patterns.Event( \
+                self.trackStartEventType(), self, startedEffort))
 
     def onStopTracking(self, event):
         stoppedEffort = event.value()
         if self._inPeriod(stoppedEffort):
             self.__invalidateCache()
-            patterns.Publisher().notifyObservers(patterns.Event(self,
-                self.trackStopEventType(), stoppedEffort))
+            patterns.Publisher().notifyObservers(patterns.Event( \
+                self.trackStopEventType(), self, stoppedEffort))
 
     def onRevenueChanged(self, event):
-        patterns.Publisher().notifyObservers(patterns.Event(self,
-                'effort.revenue', self.revenue()))
+        patterns.Publisher().notifyObservers(patterns.Event( \
+                'effort.revenue', self, self.revenue()))
 
     def onTotalRevenueChanged(self, event):
-        patterns.Publisher().notifyObservers(patterns.Event(self,
-                'effort.totalRevenue', self.revenue(recursive=True)))
+        patterns.Publisher().notifyObservers(patterns.Event( \
+                'effort.totalRevenue', self, self.revenue(recursive=True)))
         
     def description(self):
         effortDescriptions = [effort.description() for effort in \
@@ -161,8 +161,8 @@ class CompositeEffort(BaseCompositeEffort):
     
     def onColorChanged(self, event):
         return # FIXME: CompositeEffort does not derive from base.Object
-        patterns.Publisher().notifyObservers(patterns.Event(self,
-            self.colorChangedEventType(), event.value()))
+        patterns.Publisher().notifyObservers(patterns.Event( \
+            self.colorChangedEventType(), self, event.value()))
         
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):

@@ -96,7 +96,8 @@ class Recurrence(object):
             days = 365
         newDate = aDate + timedelta.TimeDelta(days=days)
         if self.sameWeekday:
-            # Find the nearest date in newDate's year that is on the right weekday 
+            # Find the nearest date in newDate's year that is on the right 
+            # weekday:
             weekday, year = aDate.weekday(), newDate.year
             oneDay = timedelta.TimeDelta(days=1)
             newEarlierDate = newLaterDate = newDate
@@ -106,12 +107,8 @@ class Recurrence(object):
                 newLaterDate = newLaterDate + oneDay
             if newEarlierDate.year != year:
                 newDate = newLaterDate
-            elif newLaterDate.year != year:
-                newDate = newEarlierDate
-            elif newDate - newEarlierDate < newLaterDate - newDate:
-                newDate = newEarlierDate
             else:
-                newDate = newLaterDate
+                newDate = newEarlierDate
         return newDate
 
     def copy(self):

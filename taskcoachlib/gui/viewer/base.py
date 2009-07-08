@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, widgets
+from taskcoachlib import patterns, widgets, command
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, toolbar
@@ -104,6 +104,9 @@ class Viewer(wx.Panel):
             filter. '''
         return collection
 
+    def onAttributeChanged(self, event):
+        self.refreshItems(*event.sources())
+        
     def onPresentationChanged(self, event):
         ''' Whenever our presentation is changed (items added, items removed,
             order changed) the viewer refreshes itself. '''
@@ -119,19 +122,20 @@ class Viewer(wx.Panel):
             return
         # Be sure all wx events are handled before we notify our observers: 
         wx.CallAfter(lambda: patterns.Publisher().notifyObservers(\
-            patterns.Event(self, self.selectEventType(), self.curselection())))
+            patterns.Event(self.selectEventType(), self, self.curselection())))
         # Remember the current selection so we can restore it after a refresh:
         self.__selection = self.curselection()
 
     def refresh(self):
-        self.widget.refresh(len(self.presentation()))
+        self.widget.RefreshAllItems(len(self.presentation()))
         # Restore the selection:
         self.widget.select([self.getIndexOfItem(item) for item \
                             in self.__selection if item in self.presentation()])
     
-    def refreshItem(self, item):
-        if item in self.presentation():
-            self.widget.RefreshItem(self.getIndexOfItem(item))
+    def refreshItems(self, *items):
+        indices = [self.getIndexOfItem(item) for item in items \
+                   if item in self.presentation()]
+        self.widget.RefreshItems(*indices)
                         
     def curselection(self):
         ''' Return a list of items (domain objects) currently selected in our
@@ -268,6 +272,9 @@ class Viewer(wx.Panel):
             uicommand.EditPaste()
             ]
     
+    def deleteItemCommand(self):
+        return command.DeleteCommand(self.presentation(), self.curselection())
+
 
 class ListViewer(Viewer):
     def isTreeViewer(self):
@@ -437,21 +444,18 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
         super(UpdatePerSecondViewer, self).onPresentationChanged(event)
 
     def onStartTracking(self, event):
-        item = event.source()
-        if item in self.presentation():
-            self.addTrackedItems([item])
+        self.addTrackedItems([item for item in event.sources() \
+                              if item in self.presentation()])
 
     def onStopTracking(self, event):
-        item = event.source()
-        if item in self.presentation():
-            self.removeTrackedItems([item])
+        self.removeTrackedItems([item for item in event.sources() \
+                                 if item in self.presentation()])
             
     def currentlyTrackedItems(self):
         return list(self.__trackedItems)
 
     def onEverySecond(self, event):
-        for item in self.__trackedItems:
-            self.refreshItem(item)
+        self.refreshItems(*self.__trackedItems)
         
     def setTrackedItems(self, items):
         self.__trackedItems = set(items)
@@ -544,15 +548,12 @@ class ViewerWithColumns(Viewer):
         self.settings.set(self.settingsSection(), 'columns', 
             str([column.name() for column in self.__visibleColumns]))
         if refresh:
-            self.widget.RefreshItems()
+            self.widget.RefreshAllItems(len(self.presentation()))
 
     def hideColumn(self, visibleColumnIndex):
         column = self.visibleColumns()[visibleColumnIndex]
         self.showColumn(column, show=False)
                 
-    def onAttributeChanged(self, event):
-        self.refreshItem(event.source())
-        
     def columns(self):
         return self._columns
     

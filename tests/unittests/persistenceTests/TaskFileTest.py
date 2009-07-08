@@ -30,10 +30,7 @@ class FakeAttachment(base.Object):
         self.type_ = type_
         self.__location = location
         self.__data = data
-        if notes is None:
-            self.__notes = []
-        else:
-            self.__notes = notes
+        self.__notes = notes or []
 
     def data(self):
         return self.__data
@@ -235,13 +232,6 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.task.setDescription('new description')
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterEditTaskColor(self):
-        self.taskFile.setFilename(self.filename)
-        self.taskFile.save()
-        self.failIf(self.taskFile.needSave())
-        self.task.setColor(wx.RED)
-        self.failUnless(self.taskFile.needSave())
-        
     def testNeedSave_AfterEditTaskColor(self):
         self.task.setColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
@@ -591,22 +581,22 @@ class ChangingAttachmentsTests(object):
         self.mailAttachment.setLocation('New location')
         self.failUnless(self.taskFile.needSave())
         
-    def testNeedSave_AfterURIAttachmentSubjectChanged(self):
+    def testNeedSave_AfterMailAttachmentSubjectChanged(self):
         self.addMailAttachment()
         self.mailAttachment.setSubject('New subject')
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterURIAttachmentDescriptionChanged(self):
+    def testNeedSave_AfterMailAttachmentDescriptionChanged(self):
         self.addMailAttachment()
         self.mailAttachment.setDescription('New description')
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterURIAttachmentColorChanged(self):
+    def testNeedSave_AfterMailAttachmentColorChanged(self):
         self.addMailAttachment()
         self.mailAttachment.setColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterURIAttachmentNoteAdded(self):
+    def testNeedSave_AfterMailAttachmentNoteAdded(self):
         self.addMailAttachment()
         self.mailAttachment.addNote(note.Note(subject='Note'))
         self.failUnless(self.taskFile.needSave())

@@ -63,7 +63,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
             eventType='effort.duration')
         start = date.DateTime.now()
         self.effort.setStart(start)
-        self.assertEqual(patterns.Event(self.effort, 'effort.duration',
+        self.assertEqual(patterns.Event('effort.duration', self.effort,
             self.effort.duration()), self.events[0])
 
     def testDurationNotificationForSetStop(self):
@@ -71,7 +71,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
             eventType='effort.duration')
         stop = date.DateTime.now()
         self.effort.setStop(stop)
-        self.assertEqual(patterns.Event(self.effort, 'effort.duration',
+        self.assertEqual(patterns.Event('effort.duration', self.effort,
             self.effort.duration()), self.events[0])
         
     def testNotificationForSetDescription(self):
@@ -104,7 +104,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.revenue')
         self.task.setHourlyFee(100)
-        self.assertEqual(patterns.Event(self.effort, 'effort.revenue', 2400.0),
+        self.assertEqual(patterns.Event('effort.revenue', self.effort, 2400.0),
             self.events[0])
 
     def testRevenueNotificationForEffortDurationChange(self):
@@ -112,7 +112,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.revenue')
         self.effort.setStop(date.DateTime(2004,1,3))
-        self.assertEqual(patterns.Event(self.effort, 'effort.revenue', 4800.0),
+        self.assertEqual(patterns.Event('effort.revenue', self.effort, 4800.0),
             self.events[0])
 
     def testDefaultStartAndStop(self):
@@ -192,6 +192,11 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.task.setFixedFee(1000)
         self.task.addEffort(self.effort)
         self.assertEqual(1000, self.effort.revenue())
+
+    def testRevenue_FixedFee_OneSmallEffort(self):
+        self.task.setFixedFee(1000)
+        self.effort.setStop(self.effort.getStart())
+        self.assertEqual(0, self.effort.revenue())
         
     def testRevenue_FixedFee_TwoEfforts(self):
         self.task.setFixedFee(1000)
@@ -217,7 +222,7 @@ class EffortWithoutTaskTest(test.TestCase):
         self.events = []
         
     def onEvent(self, event):
-        self.events.append(event)
+        self.events.append(event) # pragma: no cover
         
     def testCreatingAnEffortWithoutTask(self):
         self.assertEqual(None, self.effort.task())

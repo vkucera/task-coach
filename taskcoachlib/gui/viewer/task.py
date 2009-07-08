@@ -128,7 +128,7 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
         for colorSetting in colorSettings:
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
-        patterns.Publisher().registerObserver(self.onTaskChange,
+        patterns.Publisher().registerObserver(self.onAttributeChanged,
             eventType=task.Task.colorChangedEventType())
         patterns.Publisher().registerObserver(self.atMidnight,
             eventType='clock.midnight')
@@ -138,9 +138,6 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
         
     def onColorSettingChange(self, event):
         self.refresh()
-        
-    def onTaskChange(self, event):
-        self.refreshItem(event.source())
         
     def children(self, item):
         try:
@@ -199,7 +196,7 @@ class SquareMapRootNode(RootNode):
     def __getattr__(self, attr):
         def getTaskAttribute(recursive=True):
             if recursive:
-                return max(sum([getattr(task, attr)(recursive=True) for task in self.children()],
+                return max(sum((getattr(task, attr)(recursive=True) for task in self.children()),
                                self.__zero), 
                            self.__zero)
             else:
@@ -248,7 +245,7 @@ class TimelineViewer(BaseTaskViewer):
         super(TimelineViewer, self).__init__(*args, **kwargs)
         for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
             'task.dueDate', 'task.completionDate'):
-            self.registerObserver(self.onTaskChange, eventType)
+            self.registerObserver(self.onAttributeChanged, eventType)
         
     def createWidget(self):
         self.rootNode = TimelineRootNode(self.presentation())
@@ -367,7 +364,7 @@ class SquareTaskViewer(BaseTaskViewer):
         self.orderUICommand.setChoice(self.__orderBy)
         for eventType in (task.Task.subjectChangedEventType(), 'task.dueDate',
             'task.startDate', 'task.completionDate'):
-            self.registerObserver(self.onTaskChange, eventType)
+            self.registerObserver(self.onAttributeChanged, eventType)
 
     def createWidget(self):
         return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), 
@@ -390,8 +387,8 @@ class SquareTaskViewer(BaseTaskViewer):
         oldChoice = self.__orderBy
         self.__orderBy = choice
         self.settings.set(self.settingsSection(), 'sortby', choice)
-        self.removeObserver(self.onTaskChange, 'task.%s'%oldChoice)
-        self.registerObserver(self.onTaskChange, 'task.%s'%choice)
+        self.removeObserver(self.onAttributeChanged, 'task.%s'%oldChoice)
+        self.registerObserver(self.onAttributeChanged, 'task.%s'%choice)
         if choice in ('budget', 'timeSpent'):
             self.__transformTaskAttribute = lambda timeSpent: timeSpent.milliseconds()/1000
             self.__zero = date.TimeDelta()
@@ -411,7 +408,6 @@ class SquareTaskViewer(BaseTaskViewer):
                     self.__orderBy)(recursive=True) > self.__zero])
         
 
-    
     # SquareMap adapter methods:
     
     def overall(self, task):
@@ -419,8 +415,8 @@ class SquareTaskViewer(BaseTaskViewer):
                                                  self.__zero))
     
     def children_sum(self, children, parent):
-        children_sum = sum([getattr(child, self.__orderBy)(recursive=True) for child in children \
-                            if child in self.presentation()], self.__zero)
+        children_sum = sum((getattr(child, self.__orderBy)(recursive=True) for child in children \
+                            if child in self.presentation()), self.__zero)
         return self.__transformTaskAttribute(max(children_sum, self.__zero))
     
     def empty(self, task):
@@ -454,7 +450,8 @@ class SquareTaskViewer(BaseTaskViewer):
     # Helper methods
     
     renderer = dict(budget=render.budget, timeSpent=render.timeSpent, 
-                    fixedFee=render.amount, revenue=render.amount)
+                    fixedFee=render.monetaryAmount, 
+                    revenue=render.monetaryAmount)
     
     def render(self, value):
         return self.renderer[self.__orderBy](value)
@@ -555,11 +552,11 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
             ('totalBudgetLeft', _('Total budget left'), lambda task: render.budget(task.budgetLeft(recursive=True)), None),
             ('priority', _('Priority'), lambda task: render.priority(task.priority()), None),
             ('totalPriority', _('Overall priority'), lambda task: render.priority(task.priority(recursive=True)), None),
-            ('hourlyFee', _('Hourly fee'), lambda task: render.amount(task.hourlyFee()), task.Task.hourlyFeeChangedEventType()),
-            ('fixedFee', _('Fixed fee'), lambda task: render.amount(task.fixedFee()), None),
-            ('totalFixedFee', _('Total fixed fee'), lambda task: render.amount(task.fixedFee(recursive=True)), None),
-            ('revenue', _('Revenue'), lambda task: render.amount(task.revenue()), None),
-            ('totalRevenue', _('Total revenue'), lambda task: render.amount(task.revenue(recursive=True)), None),
+            ('hourlyFee', _('Hourly fee'), lambda task: render.monetaryAmount(task.hourlyFee()), task.Task.hourlyFeeChangedEventType()),
+            ('fixedFee', _('Fixed fee'), lambda task: render.monetaryAmount(task.fixedFee()), None),
+            ('totalFixedFee', _('Total fixed fee'), lambda task: render.monetaryAmount(task.fixedFee(recursive=True)), None),
+            ('revenue', _('Revenue'), lambda task: render.monetaryAmount(task.revenue()), None),
+            ('totalRevenue', _('Total revenue'), lambda task: render.monetaryAmount(task.revenue(recursive=True)), None),
             ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder()), None)]:
             eventType = eventType or 'task.'+name
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
@@ -719,10 +716,9 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
 
     def subjectImageIndex(self, task, which):
         normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
-        if which in [wx.TreeItemIcon_Expanded, wx.TreeItemIcon_SelectedExpanded]:
-            return expandedImageIndex 
-        else:
-            return normalImageIndex
+        expanded = which in [wx.TreeItemIcon_Expanded, 
+                             wx.TreeItemIcon_SelectedExpanded]
+        return expandedImageIndex if expanded else normalImageIndex
                     
     def attachmentImageIndex(self, task, which):
         return self.imageIndex['attachment'] if task.attachments() else -1 
@@ -770,20 +766,14 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
     def getRootItems(self):
         ''' If the viewer is in tree mode, return the real root items. If the
             viewer is in list mode, return all items. '''
-        if self.isTreeViewer():
-            return super(TaskViewer, self).getRootItems()
-        else:
-            return self.presentation()
+        return super(TaskViewer, self).getRootItems() if \
+            self.isTreeViewer() else self.presentation()
     
     def getItemParent(self, item):
-        if self.isTreeViewer():
-            return super(TaskViewer, self).getItemParent(item)
-        else:
-            return None
+        return super(TaskViewer, self).getItemParent(item) if \
+            self.isTreeViewer() else None
             
     def getChildrenCount(self, index):
-        if self.isTreeViewer() or (index == ()):
-            return super(TaskViewer, self).getChildrenCount(index)
-        else:
-            return 0
+        return super(TaskViewer, self).getChildrenCount(index) if \
+            self.isTreeViewer() or (index == ()) else 0
 

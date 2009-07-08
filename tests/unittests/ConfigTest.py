@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,9 +26,6 @@ class SettingsUnderTest(config.Settings):
     def __init__(self, *args, **kwargs):
         kwargs['load'] = False
         super(SettingsUnderTest, self).__init__(*args, **kwargs)
-
-    def read(self, *args):
-        pass
 
 
 class SettingsTestCase(test.TestCase):

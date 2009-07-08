@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,8 +25,8 @@ class PyDateTimeTest(test.TestCase):
         date = datetime.date(2004, 4, 1) # April 1st, 2004
         try:
             lastDayOfApril = date.replace(day=31)
-            self.fail('Surprise! datetime.date.replace works as we want!')
-            self.assertEqual(datetime.date(2004, 4, 30), lastDayOfApril)
+            self.fail('Surprise! datetime.date.replace works as we want!') # pragma: no cover
+            self.assertEqual(datetime.date(2004, 4, 30), lastDayOfApril) # pragma: no cover
         except ValueError:
             pass
 

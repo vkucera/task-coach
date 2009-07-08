@@ -116,15 +116,17 @@ class EffortViewerTest(test.wxTestCase):
         self.viewer = gui.viewer.EffortViewer(self.frame, taskFile, self.settings)
  
     def testEffortColor(self):
+        # GetItemBackgroundColour doesn't seem to work on Windows:
         if '__WXMSW__' == wx.Platform:
-            return # GetItemBackgroundColour doesn't seem to work on Windows
+            return # pragma: no cover
         self.task.setColor(wx.RED)
         self.task.addEffort(self.effort1)
         self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
 
     def testUpdateEffortColor(self):
+        # GetItemBackgroundColour doesn't seem to work on Windows
         if '__WXMSW__' == wx.Platform:
-            return # GetItemBackgroundColour doesn't seem to work on Windows
+            return # pragma: no cover
         self.task.addEffort(self.effort1)
         self.task.setColor(wx.RED)
         self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
@@ -266,14 +268,15 @@ class EffortViewerWithoutAggregationTest(CommonTests,
                                          EffortViewerAggregationTestCase):
     aggregation = 'details'
     expectedNumberOfItems = 5
-    expectedPeriodRendering = '2008-07-23 01:00 - 02:00'
+    expectedPeriodRendering = gui.render.dateTimePeriod(\
+        date.DateTime(2008,7,23,1,0), date.DateTime(2008,7,23,2,0))
     
 
 class EffortViewerWithAggregationPerDayTest(CommonTests, 
                                             EffortViewerAggregationTestCase):
     aggregation = 'day'
     expectedNumberOfItems = 7 # 4 day/task combinations on 3 days (== 3 total rows) 
-    expectedPeriodRendering = '2008-07-23'
+    expectedPeriodRendering = gui.render.date(date.Date(2008,7,23))
 
 
 class EffortViewerWithAggregationPerWeekTest(CommonTests, 

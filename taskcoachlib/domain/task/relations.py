@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,39 +41,40 @@ class TaskRelationshipManager(object):
             patterns.Publisher().registerObserver(handler, eventType=eventType)        
 
     def onStartDate(self, event):
-        task = event.source()
-        if not task.recurrence(True): 
-            # Let Task.recur() handle the change in start date
-            self.__setStartDateChildren(task)
-        if task.parent():
-            self.__setStartDateParent(task.parent(), task)
+        for task in event.sources():
+            if not task.recurrence(True): 
+                # Let Task.recur() handle the change in start date
+                self.__setStartDateChildren(task)
+            if task.parent():
+                self.__setStartDateParent(task.parent(), task)
 
     def onDueDate(self, event):
-        task = event.source()
-        self.__setDueDateChildren(task)
-        if task.parent():
-            self.__setDueDateParent(task.parent(), task)
+        for task in event.sources():
+            self.__setDueDateChildren(task)
+            if task.parent():
+                self.__setDueDateParent(task.parent(), task)
 
     def onCompletionDate(self, event):
-        task = event.source()
-        if task.parent():
-            self.__markParentCompletedOrUncompletedIfNecessary(task.parent(), 
-                task)
-        if task.completed():
-            self.__markUncompletedChildrenCompleted(task)
-            if task.isBeingTracked():
-                task.stopTracking()
+        for task in event.sources():
+            if task.parent():
+                self.__markParentCompletedOrUncompletedIfNecessary(\
+                    task.parent(), task)
+            if task.completed():
+                self.__markUncompletedChildrenCompleted(task)
+                if task.isBeingTracked():
+                    task.stopTracking()
 
     def onAddChild(self, event):
-        task, child = event.source(), event.value()
-        self.__markParentCompletedOrUncompletedIfNecessary(task, child)
-        self.__setDueDateParent(task, child)
-        if child.startDate() < task.startDate():
-            task.setStartDate(child.startDate())
+        for task in event.sources():
+            child = event.value(task)
+            self.__markParentCompletedOrUncompletedIfNecessary(task, child)
+            self.__setDueDateParent(task, child)
+            if child.startDate() < task.startDate():
+                task.setStartDate(child.startDate())
 
     def onRemoveChild(self, event):
-        task = event.source()
-        self.__markTaskCompletedIfNecessary(task, date.Today())
+        for task in event.sources():
+            self.__markTaskCompletedIfNecessary(task, date.Today())
 
     def __markParentCompletedOrUncompletedIfNecessary(self, parent, child):
         if child.completed():

@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 from taskcoachlib.gui import render
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, date
+from taskcoachlib.domain import task, date, effort
 
 
 class RenderDaysLeftTest(test.TestCase):
@@ -114,4 +114,70 @@ class RenderRecurrenceTest(test.TestCase):
         
     def testThreeYearly(self):
         self.assertEqual('Every 3 years', 
-                         render.recurrence(date.Recurrence('yearly', 3))) 
+                         render.recurrence(date.Recurrence('yearly', 3)))
+        
+
+class RenderBitmapNames_TestCase(test.TestCase):
+    def setUp(self):
+        self.task = task.Task()
+
+    def assertBitmapNames(self, bitmap, bitmap_selected=None):
+        if not bitmap_selected:
+            bitmap_selected = bitmap
+        self.assertEqual((bitmap, bitmap_selected), 
+                         render.taskBitmapNames(self.task))
+
+
+class RenderBitmapNames_CommonTests(object):        
+    def testTrackedTask(self):
+        self.task.addEffort(effort.Effort(self.task))
+        self.assertBitmapNames('start')
+    
+    
+class RenderBitmapNames_TaskWithoutChildren(RenderBitmapNames_TestCase, 
+                                            RenderBitmapNames_CommonTests):    
+    def testDefaultTask(self):
+        self.assertBitmapNames('task')
+        
+    def testCompletedTask(self):
+        self.task.setCompletionDate()
+        self.assertBitmapNames('task_completed')
+        
+    def testInactiveTask(self):
+        self.task.setStartDate(date.Tomorrow())
+        self.assertBitmapNames('task_inactive')
+        
+    def testOverdueTask(self):
+        self.task.setDueDate(date.Yesterday())
+        self.assertBitmapNames('task_overdue')
+
+    def testDueTodayTask(self):
+        self.task.setDueDate(date.Today())
+        self.assertBitmapNames('task_duetoday')
+
+
+class RenderBitmapNames_TaskWithChildren(RenderBitmapNames_TestCase,
+                                         RenderBitmapNames_CommonTests):
+    def setUp(self):
+        super(RenderBitmapNames_TaskWithChildren, self).setUp()
+        self.task.addChild(task.Task())
+        
+    def testDefaultTask(self):
+        self.assertBitmapNames('tasks', 'tasks_open')
+        
+    def testCompletedTask(self):
+        self.task.setCompletionDate()
+        self.assertBitmapNames('tasks_completed', 'tasks_completed_open')
+
+    def testInactiveTask(self):
+        self.task.setCompletionDate()
+        self.assertBitmapNames('tasks_completed', 'tasks_completed_open')
+
+    def testOverdueTask(self):
+        self.task.setDueDate(date.Yesterday())
+        self.assertBitmapNames('tasks_overdue', 'tasks_overdue_open')
+
+    def testDueTodayTask(self):
+        self.task.setDueDate(date.Today())
+        self.assertBitmapNames('tasks_duetoday', 'tasks_duetoday_open')
+        

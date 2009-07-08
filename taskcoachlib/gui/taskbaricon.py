@@ -64,15 +64,16 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__startOrStopTicking()
         
     def onStartTracking(self, event):
-        patterns.Publisher().registerObserver(self.onChangeSubject,
-            eventType=event.source().subjectChangedEventType(),
-            eventSource=event.source())
+        for item in event.sources():
+            patterns.Publisher().registerObserver(self.onChangeSubject,
+                eventType=item.subjectChangedEventType(), eventSource=item)
         self.__setTooltipText()
         self.__startTicking()
 
     def onStopTracking(self, event):
-        patterns.Publisher().removeObserver(self.onChangeSubject,
-            eventType=event.source().subjectChangedEventType())
+        for item in event.sources():
+            patterns.Publisher().removeObserver(self.onChangeSubject,
+                eventType=item.subjectChangedEventType())
         self.__setTooltipText()
         self.__stopTicking()
 

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -178,15 +178,15 @@ class Clock(patterns.Observer, patterns.Observable):
             
     def notifySecondObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self.notifyObservers(patterns.Event(self, 'clock.second', now))
+        self.notifyObservers(patterns.Event('clock.second', self, now))
 
     def notifySpecificTimeObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self.notifyObservers(patterns.Event(self, Clock.eventType(now), now))
+        self.notifyObservers(patterns.Event(Clock.eventType(now), self, now))
 
     def notifyMidnightObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self.notifyObservers(patterns.Event(self, 'clock.midnight', now))        
+        self.notifyObservers(patterns.Event('clock.midnight', self, now))        
 
     def reset(self):
         self._lastMidnightNotified = date.Today()
@@ -214,4 +214,4 @@ class ClockObserver(patterns.Observer):
             patterns.Publisher().observers(eventType='clock.second')
         
     def onEverySecond(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover

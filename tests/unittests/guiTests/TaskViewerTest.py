@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@ from taskcoachlib.domain import task, date, effort, category, note, attachment
 
 
 class TaskViewerUnderTest(gui.viewer.task.TaskViewer):
-    
     def __init__(self, *args, **kwargs):
         super(TaskViewerUnderTest, self).__init__(*args, **kwargs)
         self.events = []
@@ -58,7 +57,7 @@ class TaskViewerTestCase(test.wxTestCase):
 
         for name in os.listdir('.'):
             if os.path.isdir(name) and name.endswith('_attachments'):
-                os.rmdir(name)
+                os.rmdir(name) # pragma: no cover
         if os.path.isfile('test.mail'):
             os.remove('test.mail')
         
@@ -497,7 +496,7 @@ class TreeOrListModeTests(object):
             expectedIndex = (0,)
         self.assertEqual(expectedIndex, self.viewer.getIndexOfItem(self.child))
 
-    def testSortOrder(self):
+    def testSortOrderOfChildDueToday(self):
         self.task.addChild(self.child)
         self.taskList.append(self.task)
         self.child.setDueDate(date.Today())
@@ -593,7 +592,7 @@ class ColumnsTests(object):
         self.child.setPriority(10)
         self.failIf(self.viewer.events)
 
-    def testChangePriorityWhileColumnShown(self):
+    def testChangeTotalPriorityWhileColumnShown(self):
         self.showColumn('totalPriority')
         self.task.addChild(self.child)
         self.taskList.append(self.task)
@@ -604,13 +603,13 @@ class ColumnsTests(object):
         self.showColumn('hourlyFee')
         self.taskList.append(self.task)
         self.task.setHourlyFee(100)
-        self.assertEqual('100.00', self.getItemText(0, 3))
+        self.assertEqual(render.monetaryAmount(100.), self.getItemText(0, 3))
         
     def testChangeFixedFeeWhileColumnShown(self):
         self.showColumn('fixedFee')
         self.taskList.append(self.task)
         self.task.setFixedFee(200)
-        self.assertEqual('200.00', self.getItemText(0, 3))
+        self.assertEqual(render.monetaryAmount(200.), self.getItemText(0, 3))
 
     def testChangeTotalFixedFeeWhileColumnShown(self):
         self.showColumn('totalFixedFee')
@@ -620,7 +619,7 @@ class ColumnsTests(object):
         self.task.setFixedFee(100)
         self.child.setFixedFee(200)
         self.viewer.setSortOrderAscending(False)
-        self.assertEqual('300.00', self.getItemText(0, 3))
+        self.assertEqual(render.monetaryAmount(300.), self.getItemText(0, 3))
         
     # Test all attributes...
 
