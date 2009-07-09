@@ -55,51 +55,82 @@ class Set(set):
 
 
 class Event(object):
-    ''' Event represents notification events. '''
+    ''' Event represents notification events. Events can notify about a single
+        event type for a single source or for multiple event types and multiple
+        sources at the same time. The Event methods try to make both uses easy.
+        
+        This creates an event for one type, one source and one value
+        >>> event = Event('event type', 'event source', 'new value') 
+        
+        To add more event sources with their own value:
+        >>> event.addSource('another source', 'another value')
+        
+        To add a source with a different event type:
+        >>> event.addSource('yet another source', 'its value', type='another type')
+        '''
+        
     def __init__(self, type, source=None, *values):
-        self.__type = type
-        self.__sourcesAndValues = {} if source is None else {source: values}
+        self.__sourcesAndValuesByType = {type: {} if source is None else \
+                                               {source: values}}
 
     def __repr__(self): # pragma: no cover
-        return 'Event(%s, %s)'%(self.__type, self.__sourcesAndValues)
+        return 'Event(%s)'%(self.__sourcesAndValuesByType)
 
     def __eq__(self, other):
-        return self.type() == other.type() and \
-               self.sourcesAndValues() == other.sourcesAndValues()
+        ''' Events compare equal when all their data is equal. '''
+        return self.sourcesAndValuesByType() == other.sourcesAndValuesByType()
 
-    def addSource(self, source, *values):
-        ''' Add a source with optional values to the event. If the source was
-            added previously its previous values are overwritten by the 
-            passed values. '''
-        self.__sourcesAndValues[source] = values
+    def addSource(self, source, *values, **kwargs):
+        ''' Add a source with optional values to the event. Optionally specify
+            the type as keyword argument. If the source was added previously for 
+            the specified type, its previous values *for the specified type* 
+            are overwritten by the passed values. If no type is specified,
+            the source and values are added for a random type, i.e. only omit 
+            the type if the event has is only one type. '''
+        type = kwargs.pop('type', self.type())
+        self.__sourcesAndValuesByType.setdefault(type, {})[source] = values
 
     def type(self):
-        ''' Return the event type. '''
-        return self.__type
+        ''' Return the event type. If there are multiple event types, this
+            method returns an arbitrary event type. This method is useful if
+            the caller is sure this event instance has only one event type. '''
+        return list(self.types())[0]
     
-    def sources(self):
-        ''' Return a set of sources of this event instance. '''
-        return set(self.__sourcesAndValues.keys())
+    def types(self):
+        ''' Return the set of event types that this event is notifying. '''
+        return set(self.__sourcesAndValuesByType.keys())
     
-    def sourcesAndValues(self):
-        ''' Return a dict of sources and values. '''
-        return self.__sourcesAndValues
+    def sources(self, type=None):
+        ''' Return the set of all sources of this event instance, or the 
+            sources for a specific event type. '''
+        if type is None: # return all sources regardless of type
+            sources = set()
+            for type in self.__sourcesAndValuesByType:
+                sources |= self.sources(type)
+            return sources
+        else:
+            return set(self.__sourcesAndValuesByType[type].keys())
+    
+    def sourcesAndValuesByType(self):
+        ''' Return all data {type: {source: values}}. '''
+        return self.__sourcesAndValuesByType
 
-    def value(self, source=None):
+    def value(self, source=None, type=None):
         ''' Return the value that belongs to source. If there are multiple
             values, this method returns only the first one. So this method is 
             useful if the caller is sure there is only one value associated
             with source. If source is None return the value of an arbitrary 
             source. This latter option is useful if the caller is sure there 
             is only one source. '''
-        return self.values(source)[0]
+        return self.values(source, type)[0]
 
-    def values(self, source=None):
+    def values(self, source=None, type=None):
         ''' Return the values that belong to source. If source is None return
             the values of an arbitrary source. This latter option is useful if
             the caller is sure there is only one source. '''
-        source = source or self.__sourcesAndValues.keys()[0]
-        return self.__sourcesAndValues[source]
+        type = type or self.type()
+        source = source or self.__sourcesAndValuesByType[type].keys()[0]
+        return self.__sourcesAndValuesByType[type][source]
 
 
 class MethodProxy(object):
@@ -112,6 +143,9 @@ class MethodProxy(object):
     def __init__(self, method):
         self.method = method
         
+    def __repr__(self):
+        return 'MethodProxy(%s)'%self.method
+        
     def __call__(self, *args, **kwargs):
         return self.method(*args, **kwargs)
         
@@ -120,6 +154,14 @@ class MethodProxy(object):
                self.method.im_self is other.method.im_self and \
                self.method.im_func is other.method.im_func
                
+    def __ne__(self, other):
+        return not (self == other)
+    
+    def __hash__(self):
+        # Can't use self.method.im_self for the hash, it might be mutable
+        return hash((self.method.im_class, id(self.method.im_self), 
+                     self.method.im_func))
+                   
     def get_im_self(self):
         return self.method.im_self
     
@@ -166,7 +208,7 @@ class Publisher(object):
         
     def clear(self):
         ''' Clear the registry of observers. Mainly for testing purposes. '''
-        self.__observers = {} # {(eventType, eventSource): [list of callbacks]}
+        self.__observers = {} # {(eventType, eventSource): set(callbacks)}
         self.__notifyingSemaphore = 0
     
     @wrapObserver
@@ -177,12 +219,11 @@ class Publisher(object):
             passing a specific eventSource, the observer is only called when the
             event originates from the specified eventSource. '''
             
-        observerList = self.__observers.setdefault((eventType, eventSource), [])
-        # Note: it's the caller's responsibility to not add the same observer
-        # twice (checking whether the observer is already in the observerList
-        # impacts performance too much).
-        observerList.append(observer)
-        if len(observerList) == 1:
+        observers = self.__observers.setdefault((eventType, eventSource), set())
+        if observers:
+            observers.add(observer)
+        else:
+            observers.add(observer)
             self.notifyObserversOfFirstObserverRegistered(eventType)
     
     @wrapObserver    
@@ -212,18 +253,15 @@ class Publisher(object):
         # event type we're looking for, i.e. that match:    
         matchingKeys = [key for key in self.__observers if match(*key)] 
         for key in matchingKeys:
-            try:    
-                self.__observers[key].remove(observer)
-            except ValueError:
-                pass # observer was not registered for this key, ignore.
+            self.__observers[key].discard(observer)
         self.notifyObserversOfLastObserverRemoved()
                 
     def removeInstance(self, instance):
         ''' Remove all observers that are methods of instance. '''
-        for observerList in self.__observers.itervalues():
-            for observer in observerList[:]:
+        for observers in self.__observers.itervalues():
+            for observer in observers.copy():
                 if observer.im_self is instance:
-                    observerList.remove(observer)
+                    observers.discard(observer)
         self.notifyObserversOfLastObserverRemoved()
         
     def notifyObserversOfFirstObserverRegistered(self, eventType):
@@ -247,12 +285,13 @@ class Publisher(object):
             extracted from the event. '''
         if not self.isNotifying() or not event.sources():
             return
-        observers = []
+        observers = set()
         # Include observers not registered for a specific event source:
-        sources = event.sources() | set([None]) 
-        eventTypesAndSources = [(event.type(), source) for source in sources]
+        sources = event.sources() | set([None])
+        types = event.types()
+        eventTypesAndSources = [(type, source) for source in sources for type in types]
         for eventTypeAndSource in eventTypesAndSources:
-            observers.extend(self.__observers.get(eventTypeAndSource, []))
+            observers |= self.__observers.get(eventTypeAndSource, set())
         for observer in observers:
             observer(event)
      
@@ -261,11 +300,12 @@ class Publisher(object):
         ''' Get the currently registered observers. Optionally specify
             a specific event type to get observers for that event type only. '''
         if eventType:
-            return self.__observers.get((eventType, None), [])
+            return self.__observers.get((eventType, None), set())
         else:
-            return [observer for observersForEventType in \
-                    self.__observers.values() for observer in \
-                    observersForEventType]
+            result = set()
+            for observers in self.__observers.values():
+                result |= observers
+            return result
     
     def stopNotifying(self):
         ''' Temporarily stop notifying. Calls to stopNotifying and 

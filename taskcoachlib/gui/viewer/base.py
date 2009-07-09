@@ -624,7 +624,14 @@ class ViewerWithColumns(Viewer):
                 eventType=eventType)                    
         
     def __stopObserving(self, eventTypes):
+        # Collect the event types that the currently visible columns are
+        # interested in and make sure we don't stop observing those event types.
+        eventTypesOfVisibleColumns = []
+        for column in self.visibleColumns():
+            eventTypesOfVisibleColumns.extend(column.eventTypes())
         for eventType in eventTypes:
+            if eventType in eventTypesOfVisibleColumns:
+                continue
             patterns.Publisher().removeObserver(self.onAttributeChanged, 
                 eventType=eventType)
 
