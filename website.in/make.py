@@ -509,7 +509,7 @@ through the network, starting with version 0.73.2 of Task Coach. Main features a
           <LI>Available in English and French.</LI>
         </UL>
 
-        <P>It is available on the AppStore.</P>
+        <P>It is available on the <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8">AppStore.</a></P>
 
         <P>More features are planned, like support for multiple task files and effort tracking.
 Here are some thumbnails of the UI:</P>'''

@@ -369,7 +369,8 @@ _iPhoneSection = _('''<h3><a name="iphone">iPhone and iPod Touch</a></h3>
 _iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">Task Coach on the iPhone</a></h4>
 
 <p>There is an iPhone/iPod Touch companion app for Task Coach, available on
-Apple's AppStore. This app has few features right now, but allows you to take
+<a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8">Apple's
+AppStore.</a> This app has few features right now, but allows you to take
 your tasks away and modify them:</p>
 
 <ul>
