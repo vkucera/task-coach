@@ -27,7 +27,8 @@ Release('0.73.3', 'July ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Opening the task menu in the main menu bar while a category 
-viewer was active would result in exceptions.''', '2818254')
+viewer was active would result in exceptions.''', '2818254'),
+        Bug('''The time control in the effort editor was too narrow''', '2790805'),
         ]
     ),
                 
