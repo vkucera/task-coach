@@ -22,7 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('0.73.3', 'July ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Opening the task menu in the main menu bar while a category 
+viewer was active would result in exceptions.''', '2818254')
+        ]
+    ),
+                
 Release('0.73.2', 'July 8, 2009',
     summary='''This release fixes some bugs, and adds synchronization with
 the iPhone version now available on the AppStore.''',

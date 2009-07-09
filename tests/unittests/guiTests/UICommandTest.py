@@ -107,18 +107,20 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
 
 class DummyTask(object):
     def subject(self, *args, **kwargs):
-	return 'subject'
+        return 'subject'
     def description(self):
-	return 'description'
+        return 'description'
 
 
 class DummyViewer(object):
     def __init__(self, selection=None):
-	self.selection = selection or []
+        self.selection = selection or []
 
     def curselection(self):
-	return self.selection
-
+        return self.selection
+    
+    def isShowingCategories(self):
+        return self.selection and isinstance(self.selection[0], category.Category)
 
 
 class MailTaskTest(test.TestCase):
@@ -272,3 +274,19 @@ class OpenAllAttachmentsTest(test.TestCase):
         else:
             self.assertNotEqual(0, result)
 
+
+class ToggleCategoryTest(test.TestCase):
+    def setUp(self):
+        self.category = category.Category('Category')
+        
+    def testEnableWhenViewerIsShowingCategorizables(self):
+        viewer = DummyViewer(selection=[task.Task('Task')])
+        uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
+                                                 category=self.category)
+        self.failUnless(uiCommand.enabled(None))
+        
+    def testDisableWhenViewerIsShowingCategories(self):
+        viewer = DummyViewer(selection=[self.category])
+        uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
+                                                 category=self.category)
+        self.failIf(uiCommand.enabled(None))

@@ -1544,6 +1544,9 @@ class ToggleCategory(NeedsSelection, ViewerCommand):
             for menuItem in self.menuItems:
                 menuItem.Check(self.category in self.viewer.curselection()[0].categories())
 
+    def enabled(self, event):
+        return super(ToggleCategory, self).enabled(event) and not self.viewer.isShowingCategories()
+
 
 class TaskToggleCategory(ToggleCategory):
     def enabled(self, event):
