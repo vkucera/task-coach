@@ -913,7 +913,7 @@ pages['devinfo'] = \
     You are free to use whatever IDE you want. To make use of the Makefile you
     need to have 'make' installed. It is installed on Linux and Mac OS X by 
     default. On Windows we recommend you to install
-    <A HREF="http://www.cywin.com"
+    <A HREF="http://www.cygwin.com"
     onClick="javascript: pageTracker._trackPageview('/outgoing/cygwin.com');">Cygwin</A> which provides a shell (bash) and 
     a whole range of useful utilities. Make sure to explicitly include make in 
     the Cygwin setup program because the standard install doesn't contain make.
@@ -1063,7 +1063,7 @@ unicode('''    <h3>Informations pour les développeurs</h3>
     Vous êtes libre d'utiliser l'EDI que vous voulez. Pour utiliser la Makefile vous
     aurez besoin de 'make'. Il est installé par défaut sous Linux et MacOS.
     Sous Windows, nous vous conseillons d'installer
-    <A HREF="http://www.cywin.com"
+    <A HREF="http://www.cygwin.com"
     onClick="javascript: pageTracker._trackPageview('/outgoing/cygwin.com');">Cygwin</A>
     qui fournit un shell (bash) et une flopée d'utilitaires. Assurez-vous d'inclure
     explicitement make dans le programme d'installation de Cygwin car l'installation

@@ -29,6 +29,7 @@ Release('0.73.3', 'July ?, 2009',
         Bug('''Opening the task menu in the main menu bar while a category 
 viewer was active would result in exceptions.''', '2818254'),
         Bug('''The time control in the effort editor was too narrow''', '2790805'),
+        Bug('''Link to http://www.cygwin.com on the website had a typo.''', '2819702')
         ]
     ),
                 
