@@ -17,27 +17,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, test
-from unittests import dummy
 from taskcoachlib import gui, config, persistence, meta
 
 
 class MainWindowUnderTest(gui.MainWindow):
-    def canCreateTaskBarIcon(self):
-        return False
+    def createWindowComponents(self):
+        # Create only the window components we really need for the tests
+        self.createViewerContainer()
+        self.createStatusBar()
+    
+
+class DummyIOController:
+    def needSave(self, *args, **kwargs):
+        return False # pragma: no cover
 
 
-class MainWindowTest(test.wxTestCase):
+class MainWindowTestCase(test.wxTestCase):
     def setUp(self):
-        super(MainWindowTest, self).setUp()
+        super(MainWindowTestCase, self).setUp()
         self.settings = config.Settings(load=False)
+        self.setSettings()
         self.taskFile = persistence.TaskFile()
-        self.mainwindow = MainWindowUnderTest(dummy.IOController(),
+        self.mainwindow = MainWindowUnderTest(DummyIOController(),
             self.taskFile, self.settings)
         
+    def setSettings(self):
+        pass
+
     def tearDown(self):
         del self.mainwindow
-        super(MainWindowTest, self).tearDown()
-
+        super(MainWindowTestCase, self).tearDown()
+        
+        
+class MainWindowTest(MainWindowTestCase):
     def testStatusBar_Show(self):
         self.settings.set('view', 'statusbar', 'True')
         self.failUnless(self.mainwindow.GetStatusBar().IsShown())
@@ -56,25 +68,18 @@ class MainWindowTest(test.wxTestCase):
 
         
 
-class MainWindowMaximizeTest(test.wxTestCase):
-    maximized = False
-
+class MainWindowMaximizeTestCase(MainWindowTestCase):
     def setUp(self):
-        super(MainWindowMaximizeTest, self).setUp()
-        self.settings = config.Settings(load=False)
-        self.settings.setboolean('window', 'maximized', self.maximized)
-        self.taskFile = persistence.TaskFile()
-        self.mainwindow = MainWindowUnderTest(dummy.IOController(),
-            self.taskFile, self.settings)
+        super(MainWindowMaximizeTestCase, self).setUp()
         self.mainwindow.Show() # Or IsMaximized() returns always False...
-
-    def tearDown(self):
-        self.mainwindow.Hide()
-        del self.mainwindow
-        super(MainWindowMaximizeTest, self).tearDown()
+        
+    def setSettings(self):
+        self.settings.setboolean('window', 'maximized', self.maximized)
 
 
-class MainWindowNotMaximizedTest(MainWindowMaximizeTest):
+class MainWindowNotMaximizedTest(MainWindowMaximizeTestCase):
+    maximized = False
+    
     def testCreate(self):
         self.failIf(self.mainwindow.IsMaximized())
 
@@ -87,23 +92,23 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTest):
         self.failUnless(self.settings.getboolean('window', 'maximized'))
 
 
-class MainWindowMaximizedTest(MainWindowMaximizeTest):
+class MainWindowMaximizedTest(MainWindowMaximizeTestCase):
     maximized = True
 
+    @test.skipOnPlatform('__WXMAC__')
     def testCreate(self):
-        if '__WXMAC__' not in wx.PlatformInfo: 
-            self.failUnless(self.mainwindow.IsMaximized()) # pragma: no cover
+        self.failUnless(self.mainwindow.IsMaximized()) # pragma: no cover
 
-class MainWindowIconizedTest(test.wxTestCase):
+
+class MainWindowIconizedTest(MainWindowTestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
-        self.settings.set('window', 'starticonized', 'Always')
-        self.taskFile = persistence.TaskFile()
-        self.mainwindow = MainWindowUnderTest(dummy.IOController(),
-            self.taskFile, self.settings)
+        super(MainWindowIconizedTest, self).setUp()        
         if '__WXGTK__' == wx.Platform:
             wx.SafeYield() # pragma: no cover
-
+            
+    def setSettings(self):
+        self.settings.set('window', 'starticonized', 'Always')
+        
     def testIsIconized(self):
         self.failUnless(self.mainwindow.IsIconized())
                         

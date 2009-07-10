@@ -156,21 +156,30 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
                     dlg.Destroy()
 
     def createWindowComponents(self):
-        self.__usingTabbedMainWindow = self.settings.getboolean('view', 
+        self.createViewerContainer()
+        viewer.addViewers(self.viewer, self.taskFile, self.settings)
+        self.createStatusBar()
+        self.createMenuBar()
+        self.createTaskBarIcon()
+        self.createReminderController()
+        
+    def createViewerContainer(self):
+        tabbed = self.__usingTabbedMainWindow = self.settings.getboolean('view', 
             'tabbedmainwindow') 
-        if self.__usingTabbedMainWindow:
-            containerWidget = widgets.AUINotebook(self)
-        else:
-            containerWidget = self
+        containerWidget = widgets.AUINotebook(self) if tabbed else self
         self.viewer = viewer.ViewerContainer(containerWidget,
             self.settings, 'mainviewer') 
-        viewer.addViewers(self.viewer, self.taskFile, self.settings)
+        
+    def createStatusBar(self):
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))
+        
+    def createMenuBar(self):
         import menu
         self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller, 
                                       self.viewer, self.taskFile))
-        self.createTaskBarIcon()
+    
+    def createReminderController(self):
         self.reminderController = \
             remindercontroller.ReminderController(self, self.taskFile.tasks(), 
                 self.settings)

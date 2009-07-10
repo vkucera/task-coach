@@ -23,18 +23,26 @@ projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 
+
+def ignore(*args, **kwargs):
+    pass
+
+
+def runTest(func):
+    return func
+
+
 def onlyOnPlatform(*platforms):
     ''' Decorator for unit tests that only run on specific platforms. '''
-    def ignore(*args, **kwargs):
-        pass
-    def runTest(func):
-        return func
-    if wx.Platform in platforms:
-        return runTest
-    else:
-        return ignore
-            
-            
+    return runTest if wx.Platform in platforms else ignore
+
+    
+def skipOnPlatform(*platforms):
+    ''' Decorator for unit tests that are to be skipped on specific 
+        platforms. '''
+    return ignore if wx.Platform in platforms else runTest
+    
+
 class TestCase(unittest.TestCase):
     def assertEqualLists(self, expectedList, actualList):
         self.assertEqual(len(expectedList), len(actualList))

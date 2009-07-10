@@ -35,13 +35,13 @@ class MockViewerContainer(object):
         return 'section'
     
     def curselection(self):
-        return self.selection
+        return self.selection # pragma: no cover
     
     def isViewerContainer(self):
         return True
     
     def isShowingCategories(self):
-        return self.showingCategories
+        return self.showingCategories # pragma: no cover
     
     def isSortable(self):
         return True
