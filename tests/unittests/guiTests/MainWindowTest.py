@@ -25,7 +25,7 @@ class MainWindowUnderTest(gui.MainWindow):
         # Create only the window components we really need for the tests
         self.createViewerContainer()
         # Prevent exception on Linux:
-        self.viewer.statusMessages = lambda *args: '', '' 
+        self.viewer.statusMessages = lambda *args: lambda *args: '', '' 
         self.createStatusBar()
     
 
