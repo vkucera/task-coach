@@ -144,6 +144,8 @@ class AllTests(unittest.TestSuite):
                 testFiles.extend(self.getTestFilesFromDir('unittests'))
             if self._options.integrationtests:
                 testFiles.extend(self.getTestFilesFromDir('integrationtests'))
+            if self._options.languagetests:
+                testFiles.extend(self.getTestFilesFromDir('languagetests'))
             if self._options.releasetests:
                 testFiles.extend(self.getTestFilesFromDir('releasetests'))
             if self._options.disttests:
@@ -239,29 +241,17 @@ class TestOptionParser(config.OptionParser):
     def testselectionOptionGroup(self):
         testselection = config.OptionGroup(self, 'Test selection',
             'Options to determine which tests to run.')
+        
+        description = dict(dist='the platform-specific package', all='all')
 
-        testselection.add_option('--unittests', default=True,
-            action='store_true', help='run the unit tests [default]')
-        testselection.add_option('--no-unittests', action='store_false', 
-            help="don't run the unit tests", dest='unittests')
+        def help(selection):
+            return 'run %s tests'%description.get(selection, 'the %s'%selection) + \
+                   (' [default]' if selection == 'unit' else '')
+        
+        for selection in 'unit', 'integration', 'language', 'release', 'dist', 'all':
+            testselection.add_option('--%stests'%selection, default=False,
+                action='store_true', help=help(selection))
 
-        testselection.add_option('--integrationtests', default=False,
-            action='store_true', help='run the integration tests')
-        testselection.add_option('--no-integrationtests', action='store_false', 
-            help="don't run the integration tests [default]",
-            dest='integrationtests')
-
-        testselection.add_option('--releasetests', default=False,
-            action='store_true', help='run the release tests')
-        testselection.add_option('--no-releasetests', action='store_false', 
-            help="don't run the release tests [default]", dest='releasetests')
-
-        testselection.add_option('--disttests', default=False,
-            action='store_true', help='Run the platform-specific package tests',
-            dest='disttests')
-
-        testselection.add_option('--alltests', default=False,
-            action='store_true', help='run all tests')
         return testselection
 
     def parse_args(self):
@@ -270,9 +260,14 @@ class TestOptionParser(config.OptionParser):
             options.profile = True
         if not options.profile_sort:
             options.profile_sort.append('cumulative')
+        if not (options.unittests or options.integrationtests or \
+                options.languagetests or options.releasetests or \
+                options.disttests or options.alltests):
+            options.unittests = True # the default option
         if options.alltests:
             options.unittests = True
             options.integrationtests = True
+            options.languagetests = True
             options.releasetests = True
             options.disttests = True
         return options, args
