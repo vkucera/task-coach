@@ -19,13 +19,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, test
 from taskcoachlib import gui, config, persistence, meta
 
+class MockViewer(wx.Frame):
+    def title(self):
+        return ''
+    
+    def bitmap(self):
+        return ''
+    
+    def statusMessages(self):
+        return '', ''
+    
+    def settingsSection(self):
+        return 'taskviewer'
+    
+    def selectEventType(self):
+        return ''
+
 
 class MainWindowUnderTest(gui.MainWindow):
     def createWindowComponents(self):
         # Create only the window components we really need for the tests
         self.createViewerContainer()
-        # Prevent exception on Linux:
-        self.viewer.statusMessages = lambda *args: lambda *args: '', '' 
+        self.viewer.addViewer(MockViewer(None))
         self.createStatusBar()
     
 
