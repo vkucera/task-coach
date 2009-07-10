@@ -24,6 +24,8 @@ class MainWindowUnderTest(gui.MainWindow):
     def createWindowComponents(self):
         # Create only the window components we really need for the tests
         self.createViewerContainer()
+        # Prevent exception on Linux:
+        self.viewer.statusMessages = lambda *args: '', '' 
         self.createStatusBar()
     
 
