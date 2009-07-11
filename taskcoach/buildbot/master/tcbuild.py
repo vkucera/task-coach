@@ -155,7 +155,9 @@ class BuildDEB(DistCompile):
     descriptionDone = ['Debian', 'package']
 
     def createSummary(self, log):
-        DistCompile.createSummary(self, log)
+        # Not calling parent because there are a bunch of warnings we
+        # don't really care about.
+        # DistCompile.createSummary(self, log)
         self.addURL('download',
                     'http://www.fraca7.net/TaskCoach-packages/taskcoach_r%s-1_all.deb' % self.getProperty('got_revision'))
 
@@ -172,7 +174,9 @@ class BuildRPM(DistCompile):
     descriptiondone = ['RPM', 'package']
 
     def createSummary(self, log):
-        DistCompile.createSummary(self, log)
+        # Not calling parent because there are a bunch of warnings we
+        # don't really care about.
+        # DistCompile.createSummary(self, log)
         self.addURL('download',
                     'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-1.noarch.rpm' % self.getProperty('got_revision'))
 
@@ -196,7 +200,9 @@ class BuildFedoraBase(DistCompile):
     descriptionDone = ['Fedora', 'package']
 
     def createSummary(self, log):
-        DistCompile.createSummary(self, log)
+        # Not calling parent because there are a bunch of warnings we
+        # don't really care about.
+        # DistCompile.createSummary(self, log)
         self.addURL('download',
                     'http://www.fraca7.net/TaskCoach-packages/taskcoach-r%s-1.fc%d.noarch.rpm' % (self.getProperty('got_revision'),
                                                                                                   self.fedoraVersion))
