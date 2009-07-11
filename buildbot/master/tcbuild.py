@@ -83,7 +83,7 @@ class Coverage(Compile):
 class UploadCoverage(DirectoryUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'tests/coverage.out'
-        kwargs['masterdest'] = WithProperties('/var/www/htmldocs/TaskCoach-coverage/%s-%d',
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-coverage/%s-%d',
                                               'buildername', 'buildnumber')
         DirectoryUpload.__init__(self, **kwargs)
 
