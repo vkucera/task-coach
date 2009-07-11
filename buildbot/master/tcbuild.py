@@ -203,8 +203,8 @@ class BuildFedoraBase(DistCompile):
 
 class UploadFedoraBase(FileUpload):
     def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/taskcoach-r%s-1.fc%%d.noarch.rpm', 'got_revision') % self.fedoraVersion
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/taskcoach-r%s-1.fc%%d.noarch.rpm', 'got_revision') % self.fedoraVersion
+        kwargs['slavesrc'] = WithProperties('dist/taskcoach-r%%s-1.fc%d.noarch.rpm' % self.fedoraVersion, 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/taskcoach-r%%s-1.fc%d.noarch.rpm' % self.fedoraVersion, 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
