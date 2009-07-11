@@ -104,7 +104,7 @@ releasetests: sdist
 integrationtests: icons i18n
 	cd tests; $(PYTHON) test.py --integrationtests --no-unittests
 
-languagetests: i18n
+languagetests: icons i18n
 	cd tests; $(PYTHON) test.py integrationtests/TranslationIntegrityTest.py
 
 # FIXME: disttests should depend on either windist, deb, rpm or dmg...
