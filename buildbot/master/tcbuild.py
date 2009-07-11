@@ -165,3 +165,20 @@ class UploadDEB(FileUpload):
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/taskcoach_r%s-1_all.deb', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
+
+class BuildRPM(DistCompile):
+    name = 'rpm'
+    description = ['Generating', 'RPM', 'package']
+    descriptiondone = ['RPM', 'package']
+
+    def createSummary(self, log):
+        DistCompile.createSummary(self, log)
+        self.addURL('download',
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-1.noarch.rpm' % self.getProperty('got_revision'))
+
+class UploadRPM(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s-1.noarch.rpm', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-1.noarch.rpm', 'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
