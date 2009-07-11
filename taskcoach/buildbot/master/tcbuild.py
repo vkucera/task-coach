@@ -85,6 +85,7 @@ class UploadCoverage(DirectoryUpload):
         kwargs['slavesrc'] = 'tests/coverage.out'
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-coverage/%s-%d',
                                               'buildername', 'buildnumber')
+        kwargs['mode'] = 0644
         DirectoryUpload.__init__(self, **kwargs)
 
 class Epydoc(Compile):
