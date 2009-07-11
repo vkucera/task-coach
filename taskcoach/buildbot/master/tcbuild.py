@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from buildbot.steps.shell import Compile, WithProperties
-from buildbot.steps.transfer import FileUpload
+from buildbot.steps.transfer import FileUpload, DirectoryUpload
 from buildbot import interfaces
 from buildbot.process.buildstep import FAILURE
 from zope.interface import implements
@@ -63,6 +63,29 @@ class DistributionTests(Compile):
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'disttests']
         Compile.__init__(self, **kwargs)
+
+class Coverage(Compile):
+    name = 'coverage'
+    description = ['Running', 'coverage']
+    descriptionDone = ['Coverage']
+
+    def __init__(self, **kwargs):
+        kwargs['command'] = ['make', 'coverage']
+        Compile.__init__(self, **kwargs)
+
+    def createSummary(self, log):
+        Compile.createSummary(self, log)
+
+        self.addURL('coverage',
+                    'http://www.fraca7.net/TaskCoach-coverage/%s-%d/index.html' % (self.getProperty('buildername'),
+                                                                                   self.getProperty('buildnumber')))
+
+class UploadCoverage(DirectoryUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = 'tests/coverage.out'
+        kwargs['masterdest'] = WithProperties('/var/www/htmldocs/TaskCoach-coverage/%s-%d',
+                                              'buildername', 'buildnumber')
+        DirectoryUpload.__init__(self, **kwargs)
 
 class Epydoc(Compile):
     name = 'epydoc'
