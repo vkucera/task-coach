@@ -145,6 +145,12 @@ class Viewer(wx.Panel):
         # Translate indices returned by the widget into actual domain objects:
         return [self.getItemWithIndex(index) for index in \
                 self.widget.curselection()]
+        
+    def curselectionIsInstanceOf(self, class_):
+        ''' Return whether all items in the current selection are instances of
+            class_. Can be overridden in subclasses that show only one type
+            of items to simply check the class. '''
+        return all(isinstance(item, class_) for item in self.curselection())
 
     def isselected(self, item):
         """Returns True if the given item is selected. See

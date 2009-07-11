@@ -42,6 +42,9 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
 
     def isShowingAttachments(self):
         return True
+    
+    def curselectionIsInstanceOf(self, class_):
+        return class_ == attachment.Attachment
 
     def _addAttachments(self, attachments, index, **itemDialogKwargs):
         self.presentation().extend(attachments)
