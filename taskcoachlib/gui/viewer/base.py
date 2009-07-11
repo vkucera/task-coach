@@ -41,6 +41,8 @@ class Viewer(wx.Panel):
         self.__settingsSection = kwargs.pop('settingsSection')
         self.__instanceNumber = kwargs.pop('instanceNumber')
         self.__selection = []
+        # Flag so that we don't notify observers while we're selecting all items
+        self.__selectingAllItems = False
         self.__toolbarUICommands = None
         self.__presentation = self.createSorter(self.createFilter(self.domainObjectsToView()))
         self.widget = self.createWidget()
@@ -116,7 +118,7 @@ class Viewer(wx.Panel):
         ''' The selection of items in the widget has been changed. Notify 
             our observers and remember the current selection so we can
             restore it later, e.g. after the sort order is changed. '''
-        if self.IsBeingDeleted():
+        if self.IsBeingDeleted() or self.__selectingAllItems:
             # Some widgets change the selection and send selection events when 
             # deleting all items as part of the Destroy process. Ignore.
             return
@@ -152,7 +154,19 @@ class Viewer(wx.Panel):
         return item in self.curselection()
 
     def selectall(self):
+        ''' Select all items in the presentation. Since some of the widgets we
+            use may send events for each individual item (!) we stop processing
+            selection events while we select all items. '''
+        self.__selectingAllItems = True
         self.widget.selectall()
+        # Use CallAfter to make sure we start processing selection events 
+        # after all selection events have been fired (and ignored):
+        wx.CallAfter(self.endOfSelectAll)
+        # Pretend we received one selection event for the selectall() call:
+        self.onSelect()
+        
+    def endOfSelectAll(self):
+        self.__selectingAllItems = False
         
     def invertselection(self):
         self.widget.invertselection()
