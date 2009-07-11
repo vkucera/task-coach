@@ -118,9 +118,13 @@ class DummyViewer(object):
 
     def curselection(self):
         return self.selection
-    
+
+    def curselectionIsInstanceOf(self, class_):
+        return self.selection and isinstance(self.selection[0], class_)
+        
     def isShowingCategories(self):
         return self.selection and isinstance(self.selection[0], category.Category)
+
 
 
 class MailTaskTest(test.TestCase):
@@ -154,11 +158,9 @@ class MarkCompletedTest(test.TestCase):
         self.assertMarkCompletedIsEnabled(
             selection=[task.Task(completionDate=date.Today())])
         
-    def testNotEnabledWhenSelectedTasksAreBothCompletedAndUncompleted(self):
+    def testEnabledWhenSelectedTasksAreBothCompletedAndUncompleted(self):
         self.assertMarkCompletedIsEnabled(
-            selection=[task.Task(completionDate=date.Today()), task.Task()], 
-            shouldBeEnabled=False)
-
+            selection=[task.Task(completionDate=date.Today()), task.Task()])
 
 
 class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):

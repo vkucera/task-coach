@@ -363,7 +363,6 @@ class NeedsOneSelectedTask(NeedsSelectedTasks):
 
 class NeedsSelectionWithAttachments(NeedsSelection):
     def enabled(self, event):
-        return True
         return super(NeedsSelectionWithAttachments, self).enabled(event) and \
             any(item.attachments() for item in self.viewer.curselection() if not isinstance(item, effort.Effort))
 
@@ -371,7 +370,7 @@ class NeedsSelectionWithAttachments(NeedsSelection):
 class NeedsSelectedEffort(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectedEffort, self).enabled(event) and \
-            all(isinstance(item, effort.Effort) for item in self.viewer.curselection())
+            self.viewer.curselectionIsInstance(effort.Effort)
 
 
 class NeedsSelectedCategory(NeedsCategoryViewer, NeedsSelection):
