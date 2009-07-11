@@ -182,3 +182,10 @@ class UploadRPM(FileUpload):
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-1.noarch.rpm', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
+
+class UploadSRPM(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s-1.src.rpm', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-1.src.rpm', 'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
