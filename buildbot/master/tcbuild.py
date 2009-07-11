@@ -32,6 +32,9 @@ class UnitTests(Compile):
 
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'unittests']
+        # On several distros, some tests fail randomly. Just make sure
+        # we still build the package and so on.
+        kwargs['haltOnFailure'] = False
         Compile.__init__(self, **kwargs)
 
 class IntegrationTests(Compile):
