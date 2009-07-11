@@ -98,7 +98,7 @@ unittests: icons templates
 integrationtests: icons
 	cd tests; $(PYTHON) test.py --integrationtests
 
-languagetests: i18n
+languagetests: icons i18n
 	cd tests; $(PYTHON) test.py --languagetests
 
 releasetests: sdist 
