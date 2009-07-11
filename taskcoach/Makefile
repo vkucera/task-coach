@@ -93,7 +93,7 @@ changes:
 	$(PYTHON) changes.in/make.py html > website.in/changes.html
  
 unittests: icons templates
-	cd tests; $(PYTHON) test.py
+	cd tests; $(PYTHON) test.py -v
 
 alltests: icons i18n
 	cd tests; $(PYTHON) test.py --alltests
