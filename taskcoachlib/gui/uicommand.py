@@ -370,7 +370,7 @@ class NeedsSelectionWithAttachments(NeedsSelection):
 class NeedsSelectedEffort(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectedEffort, self).enabled(event) and \
-            self.viewer.curselectionIsInstance(effort.Effort)
+            self.viewer.curselectionIsInstanceOf(effort.Effort)
 
 
 class NeedsSelectedCategory(NeedsCategoryViewer, NeedsSelection):
