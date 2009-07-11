@@ -265,11 +265,10 @@ class Publisher(object):
         self.notifyObserversOfLastObserverRemoved()
         
     def notifyObserversOfFirstObserverRegistered(self, eventType):
-        self.notifyObservers(Event(
-            'publisher.firstObserverRegisteredFor', self, eventType))
-        self.notifyObservers(Event( 
-            'publisher.firstObserverRegisteredFor.%s'%eventType, self, 
-            eventType))
+        event = Event('publisher.firstObserverRegisteredFor', self, eventType)
+        event.addSource(self, eventType, 
+                        type='publisher.firstObserverRegisteredFor.%s'%eventType)
+        self.notifyObservers(event)
                     
     def notifyObserversOfLastObserverRemoved(self):
         for eventType, eventSource in self.__observers.keys():

@@ -553,9 +553,12 @@ class PublisherTest(test.TestCase):
     def testNotificationOfFirstObserverForEventType(self):
         self.publisher.registerObserver(self.onEvent, eventType='publisher.firstObserverRegisteredFor.eventType')
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([patterns.Event( \
+        expectedEvent = patterns.Event( \
             'publisher.firstObserverRegisteredFor.eventType', self.publisher, 
-            'eventType')], self.events)
+            'eventType')
+        expectedEvent.addSource(self.publisher, 'eventType', 
+                                type='publisher.firstObserverRegisteredFor')
+        self.assertEqual([expectedEvent], self.events)
 
     def testNoNotificationOfSecondObserverForEventType(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')

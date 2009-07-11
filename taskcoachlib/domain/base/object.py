@@ -69,33 +69,47 @@ class SynchronizedObject(patterns.Observable):
 
     def getStatus(self):
         return self.__status
-
+        
     def markDirty(self, force=False):
-        oldstatus = self.__status
+        if self.setStatusDirty(force):
+            self.notifyObservers(patterns.Event( \
+                self.markNotDeletedEventType(), self, self.__status))
+
+    def setStatusDirty(self, force=False):
+        oldStatus = self.__status
         if self.__status == self.STATUS_NONE or force:
             self.__status = self.STATUS_CHANGED
-            if oldstatus == self.STATUS_DELETED:
-                self.notifyObservers(patterns.Event( \
-                    self.markNotDeletedEventType(), self, self.__status))
+            return oldStatus == self.STATUS_DELETED
+        else:
+            return False
 
     def markNew(self):
-        oldstatus = self.__status
-        self.__status = self.STATUS_NEW
-        if oldstatus == self.STATUS_DELETED:
+        if self.setStatusNew():
             self.notifyObservers(patterns.Event( \
                  self.markNotDeletedEventType(), self, self.__status))
+            
+    def setStatusNew(self):
+        oldStatus = self.__status
+        self.__status = self.STATUS_NEW
+        return oldStatus == self.STATUS_DELETED
 
     def markDeleted(self):
-        self.__status = self.STATUS_DELETED
+        self.setStatusDeleted()
         self.notifyObservers(patterns.Event( \
             self.markDeletedEventType(), self, self.__status))
 
+    def setStatusDeleted(self):
+        self.__status = self.STATUS_DELETED
+
     def cleanDirty(self):
-        oldstatus = self.__status
-        self.__status = self.STATUS_NONE
-        if oldstatus == self.STATUS_DELETED:
+        if self.setStatusNone():
             self.notifyObservers(patterns.Event( \
                  self.markNotDeletedEventType(), self, self.__status))
+            
+    def setStatusNone(self):
+        oldStatus = self.__status
+        self.__status = self.STATUS_NONE
+        return oldStatus == self.STATUS_DELETED
 
     def isNew(self):
         return self.__status == self.STATUS_NEW
@@ -329,23 +343,39 @@ class CompositeObject(Object, patterns.ObservableComposite):
 
     # Override SynchronizedObject methods to also mark child objects
 
-    def markDeleted(self, *args, **kwargs):
-        super(CompositeObject, self).markDeleted(*args, **kwargs)
-        for child in self.children():
-            child.markDeleted(*args, **kwargs)
+    def markDeleted(self):
+        self.setStatusDeleted()
+        statusDeleted = self.getStatus()
+        event = patterns.Event(self.markDeletedEventType(), self, statusDeleted)
+        for child in self.children(recursive=True):
+            child.setStatusDeleted()
+            event.addSource(child, statusDeleted)
+        self.notifyObservers(event)
             
-    def markNew(self, *args, **kwargs):
-        super(CompositeObject, self).markNew(*args, **kwargs)
-        for child in self.children():
-            child.markNew(*args, **kwargs)
+    def markNew(self):
+        event = patterns.Event(self.markNotDeletedEventType())
+        if self.setStatusNew():
+            event.addSource(self, self.getStatus())
+        for child in self.children(recursive=True):
+            if child.setStatusNew():
+                event.addSource(child, child.getStatus())
+        self.notifyObservers(event)
 
-    def markDirty(self, *args, **kwargs):
-        super(CompositeObject, self).markDirty(*args, **kwargs)
-        for child in self.children():
-            child.markDirty(*args, **kwargs)
+    def markDirty(self, force=False):
+        event = patterns.Event(self.markNotDeletedEventType())
+        if self.setStatusDirty(force):
+            event.addSource(self, self.getStatus())
+        for child in self.children(recursive=True):
+            if child.setStatusDirty(force):
+                event.addSource(child, child.getStatus())
+        self.notifyObservers(event)
             
-    def cleanDirty(self, *args, **kwargs):        
-        super(CompositeObject, self).cleanDirty(*args, **kwargs)
-        for child in self.children():
-            child.cleanDirty(*args, **kwargs)
+    def cleanDirty(self):
+        event = patterns.Event(self.markNotDeletedEventType())
+        if self.setStatusNone():
+            event.addSource(self, self.getStatus())        
+        for child in self.children(recursive=True):
+            if child.setStatusNone():
+                event.addSource(child, child.getStatus())
+        self.notifyObservers(event)
 
