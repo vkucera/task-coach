@@ -189,3 +189,33 @@ class UploadSRPM(FileUpload):
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-1.src.rpm', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
+
+class BuildFedoraBase(DistCompile):
+    name = 'fedora'
+    description = ['Generating', 'Fedora', 'package']
+    descriptionDone = ['Fedora', 'package']
+
+    def createSummary(self, log):
+        DistCompile.createSummary(self, log)
+        self.addURL('download',
+                    'http://www.fraca7.net/TaskCoach-packages/taskcoach-r%s-1.fc%d.noarch.rpm' % (self.getProperty('got_revision'),
+                                                                                                  self.fedoraVersion))
+
+class UploadFedoraBase(FileUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/taskcoach-r%s-1.fc%%d.noarch.rpm', 'got_revision') % self.fedoraVersion
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/taskcoach-r%s-1.fc%%d.noarch.rpm', 'got_revision') % self.fedoraVersion
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
+class BuildFedora8(BuildFedoraBase):
+    fedoraVersion = 8
+
+class BuildFedora11(BuildFedoraBase):
+    fedoraVersion = 11
+
+class UploadFedora8(UploadFedoraBase):
+    fedoraVersion = 8
+
+class UploadFedora11(UploadFedoraBase):
+    fedoraVersion = 11
