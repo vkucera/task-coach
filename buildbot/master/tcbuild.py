@@ -4,6 +4,8 @@ from buildbot.steps.shell import Compile, WithProperties
 from buildbot.steps.transfer import FileUpload, DirectoryUpload
 from buildbot import interfaces
 from buildbot.process.buildstep import FAILURE
+from buildbot import version
+
 from zope.interface import implements
 
 class TaskCoachEmailLookup(object):
@@ -86,6 +88,8 @@ class UploadCoverage(DirectoryUpload):
         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-coverage/%s-%d',
                                               'buildername', 'buildnumber')
         kwargs['mode'] = 0755
+        if map(int, version.split('.')) >= (0, 7, 11):
+            kwargs['compress'] = None
         DirectoryUpload.__init__(self, **kwargs)
 
 class Epydoc(Compile):
