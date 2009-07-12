@@ -39,6 +39,10 @@ class EventTest(test.TestCase):
     def testUnequalWhenSourcesAreDifferent(self):
         self.assertNotEqual(self.event,
                             patterns.Event('eventtype', None, 'some value'))
+        
+    def testEventWithoutType(self):
+        event = patterns.Event()
+        self.assertEqual(set(), event.types())
                 
     def testEventWithoutSources(self):
         event = patterns.Event('eventtype')
@@ -90,6 +94,13 @@ class EventTest(test.TestCase):
     def testGetSourcesForSpecificType(self):
         self.assertEqual(set([self]), self.event.sources('eventtype'))
         
+    def testGetSourcesForSpecificTypes(self):
+        self.event.addSource('source', type='another eventtype')
+        self.assertEqual(set([self, 'source']), self.event.sources(*self.event.types()))
+        
+    def testGetSourcesForNonExistingEventType(self):
+        self.assertEqual(set(), self.event.sources('unused eventType'))
+        
     def testGetAllSourcesAfterAddingSourceForSpecificType(self):
         self.event.addSource('source', type='another eventtype')
         self.assertEqual(set([self, 'source']), self.event.sources())
@@ -117,7 +128,43 @@ class EventTest(test.TestCase):
                              type='another eventtype')
         self.assertEqual('value for another eventtype', 
                          self.event.value(self, type='another eventtype'))
-                    
+        
+    def testSubEventForOneTypeWhenEventHasOneType(self):
+        self.assertEqual(self.event, self.event.subEvent((self.event.type(), self)))
+
+    def testSubEventForOneTypeWhenEventHasTwoTypes(self):
+        self.event.addSource('source', type='another eventtype')
+        expectedEvent = patterns.Event('eventtype', self, 'some value')
+        self.assertEqual(expectedEvent, self.event.subEvent(('eventtype', self)))
+
+    def testSubEventForTwoTypesWhenEventHasTwoTypes(self):
+        self.event.addSource('source', type='another eventtype')
+        args = [('eventtype', self), ('another eventtype', 'source')]
+        self.assertEqual(self.event, self.event.subEvent(*args))
+
+    def testSubEventForTypeThatIsNotPresent(self):
+        self.assertEqual(patterns.Event(), 
+                         self.event.subEvent(('missing eventtype', self)))
+        
+    def testSubEventForOneSourceWhenEventHasOneSource(self):
+        self.assertEqual(self.event, self.event.subEvent(('eventtype', self)))
+        
+    def testSubEventForUnspecifiedSource(self):
+        self.assertEqual(self.event, self.event.subEvent(('eventtype', None)))
+
+    def testSubEventForUnspecifiedSourceAndSpecifiedSources(self):
+        self.assertEqual(self.event, self.event.subEvent(('eventtype', self), 
+                                                         ('eventtype', None)))
+        
+    def testSubEventForSourceThatIsNotPresent(self):
+        self.assertEqual(patterns.Event(), 
+                         self.event.subEvent(('eventtype', 'missing source')))
+
+    def testSubEventForSourceThatIsNotPresentForSpecifiedType(self):
+        self.event.addSource('source', type='another eventtype')
+        self.assertEqual(patterns.Event(), 
+                         self.event.subEvent(('eventtype', 'source')))
+        
 
 class ObservableTest(test.TestCase):
     def setUp(self):
@@ -481,8 +528,18 @@ class PublisherTest(test.TestCase):
         event = patterns.Event('eventType1', self)
         event.addSource(self, type='eventType2')
         self.publisher.notifyObservers(event)
-        self.assertEqual([event], self.events)
-        self.assertEqual([event], self.events2)
+        self.assertEqual([patterns.Event('eventType1', self)], self.events)
+        self.assertEqual([patterns.Event('eventType2', self)], self.events2)
+        
+    def testNotifyObserversWithEventWithoutTypes(self):
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        self.publisher.notifyObservers(patterns.Event())
+        self.failIf(self.events)
+
+    def testNotifyObserversWithEventWithoutSources(self):
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        self.publisher.notifyObservers(patterns.Event('eventType'))
+        self.failIf(self.events)
         
     def testRemoveObserverForAnyEventType_NotRegisteredBefore(self):
         self.publisher.removeObserver(self.onEvent)
@@ -556,8 +613,6 @@ class PublisherTest(test.TestCase):
         expectedEvent = patterns.Event( \
             'publisher.firstObserverRegisteredFor.eventType', self.publisher, 
             'eventType')
-        expectedEvent.addSource(self.publisher, 'eventType', 
-                                type='publisher.firstObserverRegisteredFor')
         self.assertEqual([expectedEvent], self.events)
 
     def testNoNotificationOfSecondObserverForEventType(self):

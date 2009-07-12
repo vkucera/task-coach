@@ -69,9 +69,9 @@ class Event(object):
         >>> event.addSource('yet another source', 'its value', type='another type')
         '''
         
-    def __init__(self, type, source=None, *values):
-        self.__sourcesAndValuesByType = {type: {} if source is None else \
-                                               {source: values}}
+    def __init__(self, type=None, source=None, *values):
+        self.__sourcesAndValuesByType = {} if type is None else \
+            {type: {} if source is None else {source: values}}
 
     def __repr__(self): # pragma: no cover
         return 'Event(%s)'%(self.__sourcesAndValuesByType)
@@ -93,23 +93,22 @@ class Event(object):
     def type(self):
         ''' Return the event type. If there are multiple event types, this
             method returns an arbitrary event type. This method is useful if
-            the caller is sure this event instance has only one event type. '''
-        return list(self.types())[0]
+            the caller is sure this event instance has exactly one event 
+            type. '''
+        return list(self.types())[0] if self.types() else None
     
     def types(self):
         ''' Return the set of event types that this event is notifying. '''
         return set(self.__sourcesAndValuesByType.keys())
     
-    def sources(self, type=None):
+    def sources(self, *types):
         ''' Return the set of all sources of this event instance, or the 
-            sources for a specific event type. '''
-        if type is None: # return all sources regardless of type
-            sources = set()
-            for type in self.__sourcesAndValuesByType:
-                sources |= self.sources(type)
-            return sources
-        else:
-            return set(self.__sourcesAndValuesByType[type].keys())
+            sources for specific event types. '''
+        types = types or self.types()
+        sources = set()
+        for type in types:
+            sources |= set(self.__sourcesAndValuesByType.get(type, dict()).keys())
+        return sources
     
     def sourcesAndValuesByType(self):
         ''' Return all data {type: {source: values}}. '''
@@ -131,7 +130,21 @@ class Event(object):
         type = type or self.type()
         source = source or self.__sourcesAndValuesByType[type].keys()[0]
         return self.__sourcesAndValuesByType[type][source]
-
+    
+    def subEvent(self, *typesAndSources):
+        ''' Create a new event that contains a subset of the data of this 
+            event. '''
+        subEvent = self.__class__()
+        for type, source in typesAndSources:
+            sourcesToAdd = self.sources(type)
+            if source is not None:
+                # Make sure source is actually in self.sources(type):
+                sourcesToAdd &= set([source])
+            kwargs = dict(type=type) # Python doesn't allow type=type after *values 
+            for eachSource in sourcesToAdd:
+                subEvent.addSource(eachSource, *self.values(eachSource, type), **kwargs)
+        return subEvent
+    
 
 class MethodProxy(object):
     ''' Wrap methods in a class that allows for comparing methods. Comparison
@@ -284,15 +297,17 @@ class Publisher(object):
             extracted from the event. '''
         if not self.isNotifying() or not event.sources():
             return
-        observers = set()
+        # Collect observers *and* the types and sources they are registered for
+        observers = dict() # {observer: set([(type, source), ...])} 
+        types = event.types()
         # Include observers not registered for a specific event source:
         sources = event.sources() | set([None])
-        types = event.types()
         eventTypesAndSources = [(type, source) for source in sources for type in types]
         for eventTypeAndSource in eventTypesAndSources:
-            observers |= self.__observers.get(eventTypeAndSource, set())
-        for observer in observers:
-            observer(event)
+            for observer in self.__observers.get(eventTypeAndSource, set()):
+                observers.setdefault(observer, set()).add(eventTypeAndSource)
+        for observer, eventTypesAndSources in observers.iteritems():
+            observer(event.subEvent(*eventTypesAndSources))
      
     @unwrapObservers           
     def observers(self, eventType=None):

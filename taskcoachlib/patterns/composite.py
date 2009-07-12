@@ -138,10 +138,12 @@ class CompositeCollection(object):
         super(CompositeCollection, self).extend(compositesAndAllChildren)
         parentsWithChildrenAdded = self._addCompositesToParent(composites)
         self.startNotifying()
-        self.notifyObserversOfItemsAdded(*compositesAndAllChildren)
+        event = observer.Event(self.addItemEventType(), self, *compositesAndAllChildren)
         for parent, children in parentsWithChildrenAdded.items():
-            self.notifyObservers(observer.Event(parent.addChildEventType(), 
-                                                parent, *children))
+            # Python doesn't allow keyword arguments after *positional_args,
+            # create a kwargs dict for type:
+            event.addSource(parent, *children, **dict(type=parent.addChildEventType()))
+        self.notifyObservers(event)
             
     def _compositesAndAllChildren(self, composites):
         compositesAndAllChildren = set(composites) 
@@ -172,11 +174,11 @@ class CompositeCollection(object):
         self._removeCompositesFromCollection(parents)
         parentsWithChildrenRemoved = self._removeCompositesFromParent(composites)
         self.startNotifying()
-        self.notifyObserversOfItemsRemoved(*compositesAndAllChildren)
+        event = observer.Event(self.removeItemEventType(), self, *compositesAndAllChildren)
         for parent, children in parentsWithChildrenRemoved.items():
             if parent in self:
-                self.notifyObservers(observer.Event(
-                    parent.removeChildEventType(), parent, *children))
+                event.addSource(parent, *children, **dict(type=parent.removeChildEventType()))
+        self.notifyObservers(event)
 
     def _splitCompositesInParentsAndChildren(self, composites):
         parents, children = [], []

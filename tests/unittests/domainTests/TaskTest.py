@@ -888,7 +888,6 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.registerObserver('task.totalPriority', eventSource=self.task1)
         self.task1_1.setPriority(-1)
         expectedEvent = patterns.Event('task.totalPriority', self.task1, 0)
-        expectedEvent.addSource(self.task1_1, -1)
         self.assertEqual([expectedEvent], self.events)
 
     def testTotalRevenueNotification(self):
@@ -913,7 +912,6 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1_1.addEffort(activeEffort)
         expectedEvent = patterns.Event(self.task1.trackStartEventType(),
             self.task1, activeEffort)
-        expectedEvent.addSource(self.task1_1, activeEffort)
         self.assertEqual([expectedEvent], self.events)
 
     def testNotificationWhenChildTrackingStops(self):
@@ -924,14 +922,12 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         activeEffort.setStop()
         expectedEvent = patterns.Event(self.task1.trackStopEventType(), 
             self.task1, activeEffort)
-        expectedEvent.addSource(self.task1_1, activeEffort)
         self.assertEqual([expectedEvent], self.events)
 
     def testSetFixedFeeOfChild(self):
         self.registerObserver('task.totalFixedFee', eventSource=self.task1)
         self.task1_1.setFixedFee(1000)
         expectedEvent = patterns.Event('task.totalFixedFee', self.task1, 1000)
-        expectedEvent.addSource(self.task1_1, 1000)
         self.assertEqual([expectedEvent], self.events)
 
     def testGetFixedFeeRecursive(self):
