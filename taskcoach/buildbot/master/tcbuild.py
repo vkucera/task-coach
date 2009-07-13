@@ -21,18 +21,6 @@ class TaskCoachEmailLookup(object):
             return None
 
 
-class SafeWithProperties(WithProperties):
-    """WithProperties('%s', 'branch') expands to '' in Trunk, while
-    '%s' % self.getProperty('branch') expands to 'None'..."""
-
-    def render(self, pmap):
-        def norm(n):
-            if n is None:
-                return 'None'
-            return n
-        return WithProperties.render(self, dict([(name, norm(pmap[name])) for name in pmap.keys()]))
-
-
 class Cleanup(Compile):
     name = 'Cleanup'
     description = ['Deleting', 'unversioned', 'files']
@@ -136,7 +124,7 @@ class DistCompile(Compile):
 
     def createSummary(self, log):
         url = 'http://www.fraca7.net/TaskCoach-packages/%%s/%s' % self.filename()
-        url = url % (self.getProperty('branch'), self.getProperty('got_revision'))
+        url = url % (self.getProperty('branch') or '', self.getProperty('got_revision'))
 
         self.addURL('Download', url)
 
@@ -144,8 +132,8 @@ class DistCompile(Compile):
 class UploadBase(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/%s' % self.filename(), 'got_revision')
-        kwargs['masterdest'] = SafeWithProperties('/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename(),
-                                                  'branch', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename(),
+                                              'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -191,17 +179,17 @@ class BuildSource(DistCompile):
         # DistCompile.createSummary(self, log)
 
         self.addURL('download .tar.gz',
-                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz' % (self.getProperty('branch'),
+                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz' % (self.getProperty('branch') or '',
                                                                                           self.getProperty('got_revision')))
         self.addURL('download .zip',
-                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.zip' % (self.getProperty('branch'),
+                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.zip' % (self.getProperty('branch') or '',
                                                                                        self.getProperty('got_revision')))
 
 
 class UploadSourceTar(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.tar.gz', 'got_revision')
-        kwargs['masterdest'] = SafeWithProperties('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz', 'branch', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz', 'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -209,7 +197,7 @@ class UploadSourceTar(FileUpload):
 class UploadSourceZip(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.zip', 'got_revision')
-        kwargs['masterdest'] = SafeWithProperties('/var/www/htdocs/%s/TaskCoach-packages/TaskCoach-r%s.zip', 'branch', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/%s/TaskCoach-packages/TaskCoach-r%s.zip', 'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -241,11 +229,11 @@ class BuildRPM(DistCompile):
         # don't really care about.
         # DistCompile.createSummary(self, log)
         self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s-1.noarch.rpm' % (self.getProperty('branch'),
+                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s-1.noarch.rpm' % (self.getProperty('branch') or '',
                                                                                                 self.getProperty('got_revision')))
 
         self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s-1.src.rpm' % (self.getProperty('branch'),
+                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s-1.src.rpm' % (self.getProperty('branch') or '',
                                                                                              self.getProperty('got_revision')))
 
 
