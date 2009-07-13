@@ -320,11 +320,15 @@ class CompositeObject(Object, patterns.ObservableComposite):
             return myColor
         
     def notifyObserversOfColorChange(self, color):
-        event = patterns.Event(self.colorChangedEventType(), self, color)
-        sources = self.childrenWithoutOwnColor()
-        for source in sources:
-            event.addSource(source, color)
-        self.notifyObservers(event)
+        self.notifyObservers(self.colorChangedEvent(color))
+        
+    def colorChangedEvent(self, color, event=None):
+        event = event or patterns.Event()
+        event.addSource(self, color, type=self.colorChangedEventType())
+        children = self.childrenWithoutOwnColor()
+        for child in children:
+            event.addSource(child, color, type=child.colorChangedEventType())
+        return event
 
     def childrenWithoutOwnColor(self, parent=None):
         parent = parent or self

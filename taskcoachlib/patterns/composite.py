@@ -49,13 +49,13 @@ class Composite(object):
         return self.__parent
     
     def ancestors(self):
+        ''' Return the parent, and its parent, etc., as a list. '''
         parent = self.parent()
-        if parent:
-            return parent.ancestors() + [parent]
-        else:
-            return []
+        return parent.ancestors() + [parent] if parent else []
     
     def family(self):
+        ''' Return this object, its ancestors and all of its children 
+            (recursively). '''
         return self.ancestors() + [self] + self.children(recursive=True)
     
     def setParent(self, parent):

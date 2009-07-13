@@ -54,27 +54,31 @@ class CategorizableCompositeObject(base.CompositeObject):
         return 'categorizable.category.add'
 
     def addCategory(self, category):
-        if category not in self._categories:
-            self._categories.add(category)
-            self.notifyObservers(patterns.Event( \
-                self.categoryAddedEventType(), self, category))
-            self.notifyChildObserversOfCategoryChange(category, 'add')
-            if category.color(): 
-                self.notifyObserversOfColorChange(category.color())
+        if category in self._categories:
+            return
+        self._categories.add(category)
+        event = patterns.Event(self.categoryAddedEventType(), self, category)
+        for child in self.children(recursive=True):
+            event.addSource(child, category, type=child.totalCategoryAddedEventType())
+        if category.color():
+            event = self.colorChangedEvent(category.color, event)
+        self.notifyObservers(event)
 
     @classmethod
     def categoryRemovedEventType(class_):
         return 'categorizable.category.remove'
     
     def removeCategory(self, category):
-        if category in self._categories:
-            self._categories.discard(category)
-            self.notifyObservers(patterns.Event( \
-                self.categoryRemovedEventType(), self, category))
-            self.notifyChildObserversOfCategoryChange(category, 'remove')
-            if category.color():
-                self.notifyObserversOfColorChange(category.color())
-                
+        if category not in self._categories:
+            return
+        self._categories.discard(category)
+        event = patterns.Event(self.categoryRemovedEventType(), self, category)
+        for child in self.children(recursive=True):
+            event.addSource(child, category, type=child.totalCategoryRemovedEventType())
+        if category.color():
+            event = self.colorChangedEvent(category.color, event)
+        self.notifyObservers(event)
+        
     def setCategories(self, categories):
         oldCategories = set(self._categories)
         for category in oldCategories:
@@ -82,6 +86,18 @@ class CategorizableCompositeObject(base.CompositeObject):
                 self.removeCategory(category)
         for category in categories:
             self.addCategory(category)
+
+    def color(self, recursive=True):
+        myOwnColor = super(CategorizableCompositeObject, self).color(False)
+        if myOwnColor or not recursive:
+            return myOwnColor
+        categoryBasedColor = self._categoryColor()
+        if categoryBasedColor:
+            return categoryBasedColor
+        if recursive:
+            return super(CategorizableCompositeObject, self).color(True)
+        else:
+            return None
         
     def _categoryColor(self):
         ''' If a categorizable object belongs to a category that has a color 
@@ -106,18 +122,6 @@ class CategorizableCompositeObject(base.CompositeObject):
         else:
             return None
             
-    def color(self, recursive=True):
-        myOwnColor = super(CategorizableCompositeObject, self).color(False)
-        if myOwnColor or not recursive:
-            return myOwnColor
-        categoryBasedColor = self._categoryColor()
-        if categoryBasedColor:
-            return categoryBasedColor
-        if recursive:
-            return super(CategorizableCompositeObject, self).color(True)
-        else:
-            return None
-
     @classmethod
     def totalCategoryAddedEventType(class_):
         return 'categorizable.totalCategory.add'
@@ -126,15 +130,6 @@ class CategorizableCompositeObject(base.CompositeObject):
     def totalCategoryRemovedEventType(class_):
         return 'categorizable.totalCategory.remove'
             
-    def notifyChildObserversOfCategoryChange(self, category, change):
-        assert change in ('add', 'remove')
-        eventType = self.totalCategoryAddedEventType() if change == 'add' else \
-                    self.totalCategoryRemovedEventType()
-        event = patterns.Event(eventType)
-        for child in self.children(recursive=True):
-            event.addSource(child, category)
-        self.notifyObservers(event)
-   
     @classmethod
     def categorySubjectChangedEventType(class_):
         return 'categorizable.category.subject'
