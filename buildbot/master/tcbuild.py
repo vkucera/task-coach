@@ -119,12 +119,22 @@ class UploadBase(FileUpload):
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
-    def finished(self, result):
-        result = FileUpload.finished(self, result)
-        if result == SUCCESS:
+    def createSummary(self, log):
+        FileUpload.createSummary(self, log)
+
+        if self.cmd.rc is None or self.cmd.rc == 0:
             self.addURL('Download',
                         ('http://www.fraca7.net/TaskCoach-packages/%s' % self.filename()) \
                         % self.getProperty('got_revision'))
+
+    def finished(self, result):
+        result = FileUpload.finished(self, result)
+        if result == SUCCESS:
+            cname = ('/var/www/htdocs/TaskCoach-packages/%s' % self.filename()) % 'latest'
+            if os.path.exists(cname):
+                os.remove(cname)
+            os.symlink(cname,
+                       ('/var/www/htdocs/TaskCoach-packages/%s' % self.filename()) % self.getProperty('got_revision'))
         return result
 
 class BuildDMG(DistCompile):
