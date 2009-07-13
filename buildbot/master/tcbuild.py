@@ -11,6 +11,7 @@ from zope.interface import implements
 
 import os
 
+
 class TaskCoachEmailLookup(object):
     implements(interfaces.IEmailLookup)
 
@@ -21,6 +22,7 @@ class TaskCoachEmailLookup(object):
         except KeyError:
             return None
 
+
 class Cleanup(Compile):
     name = 'Cleanup'
     description = ['Deleting', 'unversioned', 'files']
@@ -29,6 +31,10 @@ class Cleanup(Compile):
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'nuke']
         Compile.__init__(self, **kwargs)
+
+
+#==============================================================================
+# Tests and documentation
 
 class UnitTests(Compile):
     name = 'unit tests'
@@ -42,6 +48,7 @@ class UnitTests(Compile):
         kwargs['haltOnFailure'] = False
         Compile.__init__(self, **kwargs)
 
+
 class IntegrationTests(Compile):
     name = 'integration tests'
     description = ['Running', 'integration', 'tests']
@@ -50,6 +57,7 @@ class IntegrationTests(Compile):
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'integrationtests']
         Compile.__init__(self, **kwargs)
+
 
 class LanguageTests(Compile):
     name = 'language tests'
@@ -60,6 +68,7 @@ class LanguageTests(Compile):
         kwargs['command'] = ['make', 'languagetests']
         Compile.__init__(self, **kwargs)
 
+
 class DistributionTests(Compile):
     name = 'distribution tests'
     description = ['Running', 'distribution', 'tests']
@@ -68,6 +77,7 @@ class DistributionTests(Compile):
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'disttests']
         Compile.__init__(self, **kwargs)
+
 
 class Coverage(Compile):
     name = 'coverage'
@@ -84,6 +94,7 @@ class Coverage(Compile):
         self.addURL('coverage',
                     'http://www.fraca7.net/TaskCoach-coverage/%s/index.html' % (self.getProperty('buildername')))
 
+
 class UploadCoverage(DirectoryUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'tests/coverage.out'
@@ -92,6 +103,7 @@ class UploadCoverage(DirectoryUpload):
         kwargs['mode'] = 0755
         kwargs['compress'] = None
         DirectoryUpload.__init__(self, **kwargs)
+
 
 class Epydoc(Compile):
     name = 'epydoc'
@@ -104,7 +116,7 @@ class Epydoc(Compile):
 
 
 #==============================================================================
-# Platform-specific
+# Platform-specific packages
 
 class DistCompile(Compile):
     def __init__(self, **kwargs):
@@ -112,68 +124,63 @@ class DistCompile(Compile):
                              WithProperties('TCVERSION=r%s', 'got_revision')]
         Compile.__init__(self, **kwargs)
 
-class UploadBase(FileUpload):
-    def filename(self):
-        raise NotImplementedError
+    def createSummary(self, log):
+        url = 'http://www.fraca7.net/TaskCoach-packages/%%s/%s' % self.filename()
+        url = url % (self.getProperty('branch'), self.getProperty('got_revision'))
 
+        self.addURL('Download', url)
+
+##         cname = '/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename()
+##         cname = cname % (self.getProperty('branch'), 'latest')
+
+##         if os.path.exists(cname):
+##             os.remove(cname)
+
+##         dname = '/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename()
+##         dname = dname % (self.getProperty('branch'), self.getProperty('got_revision'))
+
+##         os.symlink(dname, cname)
+
+
+class UploadBase(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/%s' % self.filename(), 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%s' % self.filename(),
-                                              'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename(),
+                                              'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
-class BuildDMG(DistCompile):
+# Mac OS X
+
+class DMGMixin:
+    def filename(self):
+        return 'TaskCoach-r%s.dmg'
+
+class BuildDMG(DistCompile, DMGMixin):
     name = 'dmg'
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
-    def createSummary(self, log):
-        DistCompile.createSummary(self, log)
-        self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision'))
 
-        cname = '/var/www/htdocs/TaskCoach-packages/TaskCoach-latest.dmg'
-        if os.path.exists(cname):
-            os.remove(cname)
-        os.symlink('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision'),
-                   cname)
+class UploadDMG(UploadBase, DMGMixin):
+    pass
 
-class UploadDMG(UploadBase):
+# Windows
+
+class EXEMixin:
     def filename(self):
-        return 'TaskCoach-r%s.dmg'
+        return 'TaskCoach-r%s-win32.exe'
 
-class BuildEXE(DistCompile):
+class BuildEXE(DistCompile, EXEMixin):
     name = 'windist'
     description = ['Generating', 'Windows', 'binary']
     descriptionDone = ['Windows', 'binary']
 
-    def createSummary(self, log):
-        # Not calling superclass here, because py2exe is pretty anal
-        # about what should be a version number: at most 4
-        # dot-separated numbers, so 'rXXXX' doesn't pass. This
-        # procuces a meaningless warning.
 
-        # In the near future, I'll arrange to build up a version
-        # number in the form <actual version>.<current revision>.
+class UploadEXE(UploadBase, EXEMixin):
+    pass
 
-        #DistCompile.createSummary(self, log)
-
-        self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-win32.exe' % self.getProperty('got_revision'))
-
-        cname = '/var/www/htdocs/TaskCoach-packages/TaskCoach-latest-win32.exe'
-        if os.path.exists(cname):
-            os.remove(cname)
-        os.symlink('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-win32.exe' % self.getProperty('got_revision'),
-                   cname)
-
-class UploadEXE(FileUpload):
-    def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s-win32.exe', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-win32.exe', 'got_revision')
-        kwargs['mode'] = 0644
-        FileUpload.__init__(self, **kwargs)
+# Source
 
 class BuildSource(DistCompile):
     name = 'sdist'
@@ -182,61 +189,61 @@ class BuildSource(DistCompile):
 
     def createSummary(self, log):
         DistCompile.createSummary(self, log)
+
         self.addURL('download .tar.gz',
-                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.tar.gz' % self.getProperty('got_revision'))
+                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz' % (self.getProperty('branch'),
+                                                                                          self.getProperty('got_revision')))
         self.addURL('download .zip',
-                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.zip' % self.getProperty('got_revision'))
+                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.zip' % (self.getProperty('branch'),
+                                                                                       self.getProperty('got_revision')))
 
-        cname = '/var/www/htdocs/TaskCoach-packages/TaskCoach-latest.tar.gz'
-        if os.path.exists(cname):
-            os.remove(cname)
-        os.symlink('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.tar.gz' % self.getProperty('got_revision'),
-                   cname)
+##         cname = '/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-latest.tar.gz' % self.getProperty('branch')
+##         if os.path.exists(cname):
+##             os.remove(cname)
+##         os.symlink('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz' % (self.getProperty('branch'),
+##                                                                                    self.getProperty('got_revision')),
+##                    cname)
 
-        cname = '/var/www/htdocs/TaskCoach-packages/TaskCoach-latest.zip'
-        if os.path.exists(cname):
-            os.remove(cname)
-        os.symlink('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.zip' % self.getProperty('got_revision'),
-                   cname)
+##         cname = '/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-latest.zip' % self.getProperty('branch')
+##         if os.path.exists(cname):
+##             os.remove(cname)
+##         os.symlink('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.zip' % (self.getProperty('branch'),
+##                                                                                 self.getProperty('got_revision')),
+##                    cname)
+
 
 class UploadSourceTar(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.tar.gz', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.tar.gz', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz', 'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
+
 
 class UploadSourceZip(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.zip', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.zip', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/%s/TaskCoach-packages/TaskCoach-r%s.zip', 'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
-class BuildDEB(DistCompile):
+# Debian
+
+class DEBMixin:
+    def filename(self):
+        return 'taskcoach_r%s-1_all.deb'
+
+
+class BuildDEB(DistCompile, DEBMixin):
     name = 'deb'
     description = ['Generating', 'Debian', 'package']
     descriptionDone = ['Debian', 'package']
 
-    def createSummary(self, log):
-        # Not calling parent because there are a bunch of warnings we
-        # don't really care about.
-        # DistCompile.createSummary(self, log)
-        self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/taskcoach_r%s-1_all.deb' % self.getProperty('got_revision'))
 
-        cname = '/var/www/htdocs/TaskCoach-packages/taskcoach_latest-1_all.deb'
-        if os.path.exists(cname):
-            os.remove(cname)
-        os.symlink('/var/www/htdocs/TaskCoach-packages/taskcoach_r%s-1_all.deb' % self.getProperty('got_revision'),
-                   cname)
+class UploadDEB(UploadBase, DEBMixin):
+    pass
 
-class UploadDEB(FileUpload):
-    def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/taskcoach_r%s-1_all.deb', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/taskcoach_r%s-1_all.deb', 'got_revision')
-        kwargs['mode'] = 0644
-        FileUpload.__init__(self, **kwargs)
+# Generic RPM
 
 class BuildRPM(DistCompile):
     name = 'rpm'
@@ -248,72 +255,65 @@ class BuildRPM(DistCompile):
         # don't really care about.
         # DistCompile.createSummary(self, log)
         self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-1.noarch.rpm' % self.getProperty('got_revision'))
+                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s-1.noarch.rpm' % (self.getProperty('branch'),
+                                                                                                self.getProperty('got_revision')))
 
         self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s-1.src.rpm' % self.getProperty('got_revision'))
+                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s-1.src.rpm' % (self.getProperty('branch'),
+                                                                                             self.getProperty('got_revision')))
 
-        cname = '/var/www/htdocs/TaskCoach-packages/TaskCoach-latest-1.noarch.rpm'
-        if os.path.exists(cname):
-            os.remove(cname)
-        os.symlink('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-1.noarch.rpm' % self.getProperty('got_revision'),
-                   cname)
+##         cname = '/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-latest-1.noarch.rpm' % self.getProperty('branch')
+##         if os.path.exists(cname):
+##             os.remove(cname)
+##         os.symlink('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s-1.noarch.rpm' % (self.getProperty('branch'),
+##                                                                                          self.getProperty('got_revision')),
+##                    cname)
 
-        cname = '/var/www/htdocs/TaskCoach-packages/TaskCoach-latest-1.src.rpm'
-        if os.path.exists(cname):
-            os.remove(cname)
-        os.symlink('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-1.src.rpm' % self.getProperty('got_revision'),
-                   cname)
+##         cname = '/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-latest-1.src.rpm' % self.getProperty('branch')
+##         if os.path.exists(cname):
+##             os.remove(cname)
+##         os.symlink('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s-1.src.rpm' % (self.getProperty('branch'),
+##                                                                                       self.getProperty('got_revision')),
+##                    cname)
 
-class UploadRPM(FileUpload):
-    def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s-1.noarch.rpm', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-1.noarch.rpm', 'got_revision')
-        kwargs['mode'] = 0644
-        FileUpload.__init__(self, **kwargs)
 
-class UploadSRPM(FileUpload):
-    def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s-1.src.rpm', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s-1.src.rpm', 'got_revision')
-        kwargs['mode'] = 0644
-        FileUpload.__init__(self, **kwargs)
+class UploadRPM(UploadBase):
+    def filename(self):
+        return 'TaskCoach-r%s-1.noarch.rpm'
 
-class BuildFedoraBase(DistCompile):
+
+class UploadSRPM(UploadBase):
+    def filename(self):
+        return 'TaskCoach-r%s-1.src.rpm'
+
+# Fedora
+
+class FedoraMixin:
+    def filename(self):
+        return 'taskcoach-r%%s-1.fc%d.noarch.rpm' % self.fedoraVersion
+
+
+class BuildFedoraBase(DistCompile, FedoraMixin):
     name = 'fedora'
     description = ['Generating', 'Fedora', 'package']
     descriptionDone = ['Fedora', 'package']
 
-    def createSummary(self, log):
-        # Not calling parent because there are a bunch of warnings we
-        # don't really care about.
-        # DistCompile.createSummary(self, log)
-        self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/taskcoach-r%s-1.fc%d.noarch.rpm' % (self.getProperty('got_revision'),
-                                                                                                  self.fedoraVersion))
 
-        cname = '/var/www/htdocs/TaskCoach-packages/taskcoach-latest-1.fc%d.noarch.rpm' % self.fedoraVersion
-        if os.path.exists(cname):
-            os.remove(cname)
-        os.symlink('/var/www/htdocs/TaskCoach-packages/taskcoach-r%s-1.fc%d.noarch.rpm' % (self.getProperty('got_revision'),
-                                                                                           self.fedoraVersion),
-                   cname)
+class UploadFedoraBase(UploadBase, FedoraMixin):
+    pass
 
-class UploadFedoraBase(FileUpload):
-    def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/taskcoach-r%%s-1.fc%d.noarch.rpm' % self.fedoraVersion, 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/taskcoach-r%%s-1.fc%d.noarch.rpm' % self.fedoraVersion, 'got_revision')
-        kwargs['mode'] = 0644
-        FileUpload.__init__(self, **kwargs)
 
 class BuildFedora8(BuildFedoraBase):
     fedoraVersion = 8
 
+
 class BuildFedora11(BuildFedoraBase):
     fedoraVersion = 11
 
+
 class UploadFedora8(UploadFedoraBase):
     fedoraVersion = 8
+
 
 class UploadFedora11(UploadFedoraBase):
     fedoraVersion = 11
