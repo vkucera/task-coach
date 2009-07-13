@@ -9,8 +9,6 @@ from twisted.python import log
 
 from zope.interface import implements
 
-import os
-
 
 class TaskCoachEmailLookup(object):
     implements(interfaces.IEmailLookup)
@@ -21,6 +19,18 @@ class TaskCoachEmailLookup(object):
                      'fniessink': 'frank@niessink.com' }[name]
         except KeyError:
             return None
+
+
+class SafeWithProperties(WithProperties):
+    """WithProperties('%s', 'branch') expands to '' in Trunk, while
+    '%s' % self.getProperty('branch') expands to 'None'..."""
+
+    def render(self, pmap):
+        def norm(n):
+            if n is None:
+                return 'None'
+            return n
+        return WithProperties.render(self, dict([(name, norm(pmap[name])) for name in pmap.keys()]))
 
 
 class Cleanup(Compile):
@@ -130,23 +140,12 @@ class DistCompile(Compile):
 
         self.addURL('Download', url)
 
-##         cname = '/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename()
-##         cname = cname % (self.getProperty('branch'), 'latest')
-
-##         if os.path.exists(cname):
-##             os.remove(cname)
-
-##         dname = '/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename()
-##         dname = dname % (self.getProperty('branch'), self.getProperty('got_revision'))
-
-##         os.symlink(dname, cname)
-
 
 class UploadBase(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/%s' % self.filename(), 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename(),
-                                              'branch', 'got_revision')
+        kwargs['masterdest'] = SafeWithProperties('/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename(),
+                                                  'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -188,7 +187,8 @@ class BuildSource(DistCompile):
     descriptionDone = ['Source', 'distribution']
 
     def createSummary(self, log):
-        DistCompile.createSummary(self, log)
+        # Special case, handle this ourselves
+        # DistCompile.createSummary(self, log)
 
         self.addURL('download .tar.gz',
                     'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz' % (self.getProperty('branch'),
@@ -197,25 +197,11 @@ class BuildSource(DistCompile):
                     'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.zip' % (self.getProperty('branch'),
                                                                                        self.getProperty('got_revision')))
 
-##         cname = '/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-latest.tar.gz' % self.getProperty('branch')
-##         if os.path.exists(cname):
-##             os.remove(cname)
-##         os.symlink('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz' % (self.getProperty('branch'),
-##                                                                                    self.getProperty('got_revision')),
-##                    cname)
-
-##         cname = '/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-latest.zip' % self.getProperty('branch')
-##         if os.path.exists(cname):
-##             os.remove(cname)
-##         os.symlink('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.zip' % (self.getProperty('branch'),
-##                                                                                 self.getProperty('got_revision')),
-##                    cname)
-
 
 class UploadSourceTar(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.tar.gz', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz', 'branch', 'got_revision')
+        kwargs['masterdest'] = SafeWithProperties('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz', 'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -223,7 +209,7 @@ class UploadSourceTar(FileUpload):
 class UploadSourceZip(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.zip', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/%s/TaskCoach-packages/TaskCoach-r%s.zip', 'branch', 'got_revision')
+        kwargs['masterdest'] = SafeWithProperties('/var/www/htdocs/%s/TaskCoach-packages/TaskCoach-r%s.zip', 'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -261,20 +247,6 @@ class BuildRPM(DistCompile):
         self.addURL('download',
                     'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s-1.src.rpm' % (self.getProperty('branch'),
                                                                                              self.getProperty('got_revision')))
-
-##         cname = '/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-latest-1.noarch.rpm' % self.getProperty('branch')
-##         if os.path.exists(cname):
-##             os.remove(cname)
-##         os.symlink('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s-1.noarch.rpm' % (self.getProperty('branch'),
-##                                                                                          self.getProperty('got_revision')),
-##                    cname)
-
-##         cname = '/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-latest-1.src.rpm' % self.getProperty('branch')
-##         if os.path.exists(cname):
-##             os.remove(cname)
-##         os.symlink('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s-1.src.rpm' % (self.getProperty('branch'),
-##                                                                                       self.getProperty('got_revision')),
-##                    cname)
 
 
 class UploadRPM(UploadBase):
