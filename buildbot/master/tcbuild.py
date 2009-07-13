@@ -3,7 +3,7 @@
 from buildbot.steps.shell import Compile, WithProperties
 from buildbot.steps.transfer import FileUpload, DirectoryUpload
 from buildbot import interfaces
-from buildbot.process.buildstep import FAILURE
+from buildbot.process.buildstep import SUCCESS, FAILURE
 
 from zope.interface import implements
 
@@ -83,8 +83,8 @@ class Coverage(Compile):
 class UploadCoverage(DirectoryUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'tests/coverage.out'
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-coverage/%s-%d',
-                                              'buildername', 'buildnumber')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-coverage/%s',
+                                              'buildername')
         kwargs['mode'] = 0755
         kwargs['compress'] = None
         DirectoryUpload.__init__(self, **kwargs)
@@ -108,22 +108,43 @@ class DistCompile(Compile):
                              WithProperties('TCVERSION=r%s', 'got_revision')]
         Compile.__init__(self, **kwargs)
 
+class UploadBase(FileUpload):
+    def filename(self):
+        raise NotImplementedError
+
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = WithProperties('dist/%s' % self.filename(), 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%s' % self.filename(),
+                                              'got_revision')
+        kwargs['mode'] = 0644
+        FileUpload.__init__(self, **kwargs)
+
+    def finished(self, result):
+        if result == SUCCESS:
+            self.addURL('Download',
+                        ('http://www.fraca7.net/TaskCoach-packages/%s' % self.filename()) \
+                        % self.getProperty('got_revision'))
+        return FileUpload.finished(result)
+
 class BuildDMG(DistCompile):
     name = 'dmg'
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
-    def createSummary(self, log):
-        DistCompile.createSummary(self, log)
-        self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision'))
+##     def createSummary(self, log):
+##         DistCompile.createSummary(self, log)
+##         self.addURL('download',
+##                     'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision'))
 
-class UploadDMG(FileUpload):
-    def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.dmg', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision')
-        kwargs['mode'] = 0644
-        FileUpload.__init__(self, **kwargs)
+class UploadDMG(UploadBase):
+    def filename(self):
+        return 'TaskCoach-r%s.dmg'
+
+##     def __init__(self, **kwargs):
+##         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.dmg', 'got_revision')
+##         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision')
+##         kwargs['mode'] = 0644
+##         FileUpload.__init__(self, **kwargs)
 
 class BuildEXE(DistCompile):
     name = 'windist'
