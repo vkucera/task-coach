@@ -5,6 +5,8 @@ from buildbot.steps.transfer import FileUpload, DirectoryUpload
 from buildbot import interfaces
 from buildbot.process.buildstep import SUCCESS, FAILURE
 
+from twisted.python import log
+
 from zope.interface import implements
 
 class TaskCoachEmailLookup(object):
@@ -123,13 +125,19 @@ class UploadBase(FileUpload):
         FileUpload.createSummary(self, log)
 
         if self.cmd.rc is None or self.cmd.rc == 0:
+            log.msg('Adding URL.')
             self.addURL('Download',
                         ('http://www.fraca7.net/TaskCoach-packages/%s' % self.filename()) \
                         % self.getProperty('got_revision'))
 
     def finished(self, result):
         result = FileUpload.finished(self, result)
+
+        log.msg('Finished UploadBase: %d' % result)
+
         if result == SUCCESS:
+            log.msg('Symlink.')
+
             cname = ('/var/www/htdocs/TaskCoach-packages/%s' % self.filename()) % 'latest'
             if os.path.exists(cname):
                 os.remove(cname)
