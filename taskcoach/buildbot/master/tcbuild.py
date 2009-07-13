@@ -78,8 +78,7 @@ class Coverage(Compile):
         Compile.createSummary(self, log)
 
         self.addURL('coverage',
-                    'http://www.fraca7.net/TaskCoach-coverage/%s-%d/index.html' % (self.getProperty('buildername'),
-                                                                                   self.getProperty('buildnumber')))
+                    'http://www.fraca7.net/TaskCoach-coverage/%s/index.html' % (self.getProperty('buildername')))
 
 class UploadCoverage(DirectoryUpload):
     def __init__(self, **kwargs):
