@@ -121,49 +121,25 @@ class UploadBase(FileUpload):
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
-    def createSummary(self, log):
-        FileUpload.createSummary(self, log)
-
-        if self.cmd.rc is None or self.cmd.rc == 0:
-            log.msg('Adding URL.')
-            self.addURL('Download',
-                        ('http://www.fraca7.net/TaskCoach-packages/%s' % self.filename()) \
-                        % self.getProperty('got_revision'))
-
-    def finished(self, result):
-        result = FileUpload.finished(self, result)
-
-        log.msg('Finished UploadBase: %d' % result)
-
-        if result == SUCCESS:
-            log.msg('Symlink.')
-
-            cname = ('/var/www/htdocs/TaskCoach-packages/%s' % self.filename()) % 'latest'
-            if os.path.exists(cname):
-                os.remove(cname)
-            os.symlink(cname,
-                       ('/var/www/htdocs/TaskCoach-packages/%s' % self.filename()) % self.getProperty('got_revision'))
-        return result
-
 class BuildDMG(DistCompile):
     name = 'dmg'
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
-##     def createSummary(self, log):
-##         DistCompile.createSummary(self, log)
-##         self.addURL('download',
-##                     'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision'))
+    def createSummary(self, log):
+        DistCompile.createSummary(self, log)
+        self.addURL('download',
+                    'http://www.fraca7.net/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision'))
+
+        cname = '/var/www/htdocs/TaskCoach-packages/TaskCoach-latest.dmg'
+        if os.path.exists(cname):
+            os.remove(cname)
+        os.symlink(cname,
+                   ('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg' % self.getProperty('got_revision')))
 
 class UploadDMG(UploadBase):
     def filename(self):
         return 'TaskCoach-r%s.dmg'
-
-##     def __init__(self, **kwargs):
-##         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.dmg', 'got_revision')
-##         kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/TaskCoach-r%s.dmg', 'got_revision')
-##         kwargs['mode'] = 0644
-##         FileUpload.__init__(self, **kwargs)
 
 class BuildEXE(DistCompile):
     name = 'windist'
