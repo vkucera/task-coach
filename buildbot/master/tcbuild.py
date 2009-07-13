@@ -120,11 +120,12 @@ class UploadBase(FileUpload):
         FileUpload.__init__(self, **kwargs)
 
     def finished(self, result):
+        result = FileUpload.finished(self, result)
         if result == SUCCESS:
             self.addURL('Download',
                         ('http://www.fraca7.net/TaskCoach-packages/%s' % self.filename()) \
                         % self.getProperty('got_revision'))
-        return FileUpload.finished(result)
+        return result
 
 class BuildDMG(DistCompile):
     name = 'dmg'
