@@ -9,6 +9,8 @@ from twisted.python import log
 
 from zope.interface import implements
 
+import os
+
 class TaskCoachEmailLookup(object):
     implements(interfaces.IEmailLookup)
 
