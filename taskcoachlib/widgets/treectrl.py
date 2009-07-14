@@ -17,9 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, itemctrl
-import wx.gizmos as gizmos
-from wx.lib import customtreectrl as customtree
 from taskcoachlib.thirdparty import treemixin, hypertreelist
+from taskcoachlib.thirdparty import customtreectrl as customtree
 
         
 class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
@@ -100,6 +99,7 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
     def isCollapseExpandButtonClicked(self, event):
         item, flags, column = self.HitTest(event.GetPosition(), 
                                            alwaysReturnColumn=True)
+        print flags & wx.TREE_HITTEST_ONITEMBUTTON
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
         
     def getStyle(self):
@@ -151,8 +151,6 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
     def select(self, selection):
         for item in self.GetItemChildren(recursively=True):
             self.SelectItem(item, self.GetIndexOfItem(item) in selection)
-        if self.GetSelections():
-            self.SetCurrentItem(self.GetSelections()[0])
         
     def clearselection(self):
         self.UnselectAll()
@@ -223,8 +221,8 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
     # Extend TreeMixin with TreeListCtrl specific behaviour:
 
     def getStyle(self):
-        return super(TreeListCtrl, self).getStyle() | wx.TR_FULL_ROW_HIGHLIGHT \
-            | wx.WANTS_CHARS | customtree.TR_HAS_VARIABLE_ROW_HEIGHT  
+        return (super(TreeListCtrl, self).getStyle() | wx.TR_FULL_ROW_HIGHLIGHT \
+            | wx.WANTS_CHARS | customtree.TR_HAS_VARIABLE_ROW_HEIGHT) & ~hypertreelist.TR_NO_HEADER 
         
     def allItems(self):
         for rowIndex in range(self._count):
