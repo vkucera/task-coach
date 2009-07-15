@@ -918,13 +918,15 @@ pages['devinfo'] = \
     repository.</p>
     
     <h4>Development environment</h4>
+    <p>
     You are free to use whatever IDE you want. To make use of the Makefile you
-    need to have 'make' installed. It is installed on Linux and Mac OS X by 
-    default. On Windows we recommend you to install
+    need to have <tt>make</tt> installed. It is installed on Linux and Mac OS X 
+    by default. On Windows we recommend you to install
     <A HREF="http://www.cygwin.com"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/cygwin.com');">Cygwin</A> which provides a shell (bash) and 
-    a whole range of useful utilities. Make sure to explicitly include make in 
-    the Cygwin setup program because the standard install doesn't contain make.
+    onClick="javascript: pageTracker._trackPageview('/outgoing/cygwin.com');">Cygwin</A> 
+    which provides a shell (bash) and a whole range of useful utilities. 
+    Make sure to explicitly include <tt>make</tt> in the Cygwin setup program 
+    because the standard install doesn't contain <tt>make</tt>.</p>
     
     <h4>Getting the source</h4>
     <p>%(name)s source code is hosted in a <A
@@ -970,7 +972,7 @@ pages['devinfo'] = \
     All the necessary packaging code is in make.py
     and driven from the Makefile (<tt>dmg</tt> target).</p>
     <h5>Linux</h5>
-    <p>I create RPM and DEB packages on Ubuntu (<tt>rpm</tt> and <tt>deb</tt>
+    <p>We create RPM and Debian packages on Ubuntu (<tt>rpm</tt> and <tt>deb</tt>
     targets) and a Fedora RPM package on Fedora (<tt>fedora</tt> target). 
     Alternatively, Linux users that have installed python and wxPython
     themselves (if not installed by default) can also use the source
@@ -980,7 +982,7 @@ pages['devinfo'] = \
     <h4>Coding style</h4>
     <p>Class names are StudlyCaps. Method names are camelCase, except
     for wxPython methods that are called or overridden because those are
-    StudlyCaps. At first I thought that was ugly, a mixture of two
+    StudlyCaps. At first this looked ugly, a mixture of two
     styles. But it turned out to be quite handy, since you can easily
     see whether some method is a wxPython method or not.</p>
     
@@ -1007,7 +1009,7 @@ pages['devinfo'] = \
     should succeed before committing.
     </p>
     <h4>Blog</h4>
-    <p>Frank keeps an not very frequent 
+    <p>Frank keeps a not very frequent 
     <a href="http://taskcoach.blogspot.com"
     onClick="javascript: pageTracker._trackPageview('/outgoing/blogspot.com/taskcoach');">blog</a> about
     lessons learned from developing %(name)s.</p>
@@ -1068,14 +1070,14 @@ unicode('''    <h3>Informations pour les développeurs</h3>
     sont placées dans le package taskcoachlib/thirdparty et incluses dans le dépot des sources.</p>
 
     <h4>Environnement de développement</h4>
-    Vous êtes libre d'utiliser l'EDI que vous voulez. Pour utiliser la Makefile vous
-    aurez besoin de 'make'. Il est installé par défaut sous Linux et MacOS.
-    Sous Windows, nous vous conseillons d'installer
+    <p>Vous êtes libre d'utiliser l'EDI que vous voulez. Pour utiliser la 
+    Makefile vous aurez besoin de <tt>make</tt>. Il est installé par défaut 
+    sous Linux et MacOS. Sous Windows, nous vous conseillons d'installer
     <A HREF="http://www.cygwin.com"
     onClick="javascript: pageTracker._trackPageview('/outgoing/cygwin.com');">Cygwin</A>
-    qui fournit un shell (bash) et une flopée d'utilitaires. Assurez-vous d'inclure
-    explicitement make dans le programme d'installation de Cygwin car l'installation
-    standard ne l'inclut pas.
+    qui fournit un shell (bash) et une flopée d'utilitaires. Assurez-vous 
+    d'inclure explicitement <tt>make</tt> dans le programme d'installation de 
+    Cygwin car l'installation standard ne l'inclut pas.</p>
 
     <h4>Récupérer le code source</h4>
     <p>Le code source de %(name)s est hébergé dans un <a
@@ -1117,7 +1119,7 @@ unicode('''    <h3>Informations pour les développeurs</h3>
     Tout le code nécessaire est dans make.py et dirigé depuis la Makefile (cible
     <tt>dmg</tt>).</p>
     <h5>Linux</h5>
-    <p>Je crée les paquets RPM et DEB sous Ubuntu (cibles <tt>rpm</tt> et <tt>deb</tt>)
+    <p>Nous créons les paquets RPM et Debian sous Ubuntu (cibles <tt>rpm</tt> et <tt>deb</tt>)
     et le paquet RPM Fedora sous Fedora (cible <tt>fedora</tt>). Alternativement,
     les utilisateurs Linux qui ont installé Python et wxPython eux-même (ou si ces
     paquets sont installés par défaut) peuvent aussi utiliser la distribution source.
@@ -1126,7 +1128,7 @@ unicode('''    <h3>Informations pour les développeurs</h3>
     <h4>Style de codage</h4>
     <p>Les noms de classe sont capitalisées (StudlyCaps). Les noms de méthodes
     sont en camelCase, à part les méthodes wxPython qui sont invoquées ou
-    surchargées car celles-ci sont capitalisées. Au début je trouvais cela laid,
+    surchargées car celles-ci sont capitalisées. Au début ce cela laid,
     ce mélange de deux styles. Mais finalement c'est plutôt pratique, cela permet
     de distinguer facilement un méthode wxPython d'une autre.</p>
 

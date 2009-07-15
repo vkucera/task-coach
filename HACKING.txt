@@ -17,10 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =====================================================================
 
+Welcome to Task Coach - Your friendly task manager
+
+Below you find information about running, testing, installing, and 
+developing Task Coach.
+
 --- Prerequisites ---------------------------------------------------
 
 You need Python version 2.5 or higher and wxPython version 
-2.8.6.0-unicode or higher. See http://www.taskcoach.org/devinfo.html 
+2.8.9.1-unicode or higher. See http://www.taskcoach.org/devinfo.html 
 for more details and platform specific notes. 
     
 For building distributions and running tests, GNU make is used. Make 
@@ -111,5 +116,67 @@ If you have a previous version of Task Coach installed, you may
 need to force old files to be overwritten, like this:
 
   python setup.py install --force
+
+--- Architecture overview -------------------------------------------
+  
+Task Coach is a desktop application, developed in Python and using 
+wxPython for its GUI. Task Coach is more or less developed using the 
+Model-View-Controller architectural style. Its main components are:
+
+* the domain layer that consists of domain classes for tasks, 
+  categories, effort, notes and other domain objects,
+* the gui layer that consists of viewers, controllers, dialogs, 
+  menu's and other GUI objects,
+* the persistence layer that knows how to load and save domain 
+  objects from and to XML files (the .tsk files) and how to export 
+  domain objects to different formats, including HTML.
+
+The layering is not strict: The domain layer has no knowledge of the 
+gui and persistence layer. The persistence layer has no knowledge of 
+the gui layer. But the gui layer has knowledge of both persistence 
+and domain layer.
+
+--- Source code overview --------------------------------------------
+
+The Task Coach source code is organized in python packages. The most 
+important and biggest packages are the domain packages that contains 
+classes for the domain objects and the gui package that contains 
+viewers, dialogs and other gui components.
+
+The command package contains classes that implement user actions, 
+e.g. adding a new task or deleting a category. These actions are all 
+undoable and redoable. The package is called 'command' since it uses 
+the so-called Command patterns to implement unlimited undo-redo.
+
+The config package contains classes related to user configurable 
+options that are saved in the TaskCoach.ini file, including all 
+default values for the options.
+
+The help package contains help files and the license.
+
+The i18n ('internationalization') package contains the (generated) 
+translation modules. These python modules are generated from the .po 
+files (see taskcoach/i18n.in).
+
+The mailer package contains modules to interact with Outlook and 
+Thunderbird for email attachments and drag and drop from email 
+clients.
+
+The meta package contains meta information about Task Coach, such as 
+author, version number, etc.
+
+The patterns package contains base classes for design patterns such 
+as Singleton and Observable that are used in other packages.
+
+The persistence package contains modules for saving the Task Coach 
+data in its .tsk file format, which actually is XML and for exporting 
+data in different formats.
+
+The thirdparty package contains third party modules that are used as 
+is, but are included here to ease installation.
+
+The widgets package contains widgets that are used in the gui 
+package. These are mostly widgets from wxPython that need a slight 
+adaption in their interface.
 
 =====================================================================

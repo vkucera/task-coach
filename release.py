@@ -32,7 +32,6 @@ Release steps:
 - Run this script (phase2) to publish to Hypernation.net website, 
   Chello (Frank's ISP), Twitter and PyPI (Python Package Index) and to send 
   the announcement email.
-- Post project news on Sourceforge by hand.
 - Post release notification on Freshmeat by hand.
 - Tag source code with tag ReleaseX_Y_Z.
 - Create branch if feature release.
