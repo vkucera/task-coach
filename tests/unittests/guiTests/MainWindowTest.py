@@ -121,7 +121,7 @@ class MainWindowIconizedTest(MainWindowTestCase):
     def setUp(self):
         super(MainWindowIconizedTest, self).setUp()        
         if '__WXGTK__' == wx.Platform:
-            wx.Yield() # pragma: no cover
+            wx.SafeYield() # pragma: no cover
             
     def setSettings(self):
         self.settings.set('window', 'starticonized', 'Always')
