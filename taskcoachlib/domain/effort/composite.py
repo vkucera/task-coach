@@ -25,6 +25,11 @@ import base, effort
 
 
 class BaseCompositeEffort(base.BaseEffort):
+    def __init__(self, theTask, *args, **kwargs):
+        super(BaseCompositeEffort, self).__init__(theTask, *args, **kwargs)
+        patterns.Publisher().registerObserver(self.onTimeSpentChanged,
+            eventType=task.Task.totalTimeSpentChangedEventType(), eventSource=theTask)
+        
     def _inPeriod(self, effort):
         return self.getStart() <= effort.getStart() <= self.getStop()
 
@@ -54,13 +59,20 @@ class BaseCompositeEffort(base.BaseEffort):
             eventArgs = ('effort.duration', self, self.duration(recursive=True))
         else:
             eventArgs = ('effort.composite.empty', self)
-        patterns.Publisher().notifyObservers(patterns.Event(*eventArgs))
+        patterns.Event(*eventArgs).send()
 
     @classmethod
     def modificationEventTypes(class_):
         return [] # A composite effort cannot be 'dirty' since its contents
         # are determined by the contained efforts.
 
+    def onTimeSpentChanged(self, event):
+        changedEffort = event.values()[0] if event.values() else None
+        if changedEffort is None or self._inPeriod(changedEffort) or \
+                                    self._inCache(changedEffort):
+            self._invalidateCache()
+            self.notifyObserversOfDurationOrEmpty()
+            
 
 class CompositeEffort(BaseCompositeEffort):
     ''' CompositeEffort is a lazy list (but cached) of efforts for one task
@@ -72,9 +84,7 @@ class CompositeEffort(BaseCompositeEffort):
     def __init__(self, task, start, stop):
         super(CompositeEffort, self).__init__(task, start, stop)
         self.__effortCache = {} # {True: [efforts recursively], False: [efforts]}
-        self.__invalidateCache()
-        patterns.Publisher().registerObserver(self.onTimeSpentChanged,
-            eventType=task.totalTimeSpentChangedEventType(), eventSource=task)
+        self._invalidateCache()
         patterns.Publisher().registerObserver(self.onStartTracking,
             eventType=task.trackStartEventType(), eventSource=task)
         patterns.Publisher().registerObserver(self.onStopTracking,
@@ -101,13 +111,13 @@ class CompositeEffort(BaseCompositeEffort):
     def revenue(self, recursive=False):
         return sum(effort.revenue() for effort in self._getEfforts(recursive))
     
-    def __invalidateCache(self):
+    def _invalidateCache(self):
         for recursive in False, True:
             self.__effortCache[recursive] = \
                 [effort for effort in self.task().efforts(recursive=recursive) \
                  if self._inPeriod(effort)]
                 
-    def __inCache(self, effort):
+    def _inCache(self, effort):
         return effort in self.__effortCache[True]
 
     def _getEfforts(self, recursive=True):
@@ -124,35 +134,24 @@ class CompositeEffort(BaseCompositeEffort):
         ''' Return whether effort would be contained in this composite effort 
             if it existed. '''
         return effort.task() == self.task() and self._inPeriod(effort)
-
-    def onTimeSpentChanged(self, event):
-        changedEffort = event.value()
-        if changedEffort is None or self._inPeriod(changedEffort) or \
-                                    self.__inCache(changedEffort):
-            self.__invalidateCache()
-            self.notifyObserversOfDurationOrEmpty()
-
+            
     def onStartTracking(self, event):
         startedEffort = event.value()
         if self._inPeriod(startedEffort):
-            self.__invalidateCache()
-            patterns.Publisher().notifyObservers(patterns.Event( \
-                self.trackStartEventType(), self, startedEffort))
+            self._invalidateCache()
+            patterns.Event(self.trackStartEventType(), self, startedEffort).send()
 
     def onStopTracking(self, event):
         stoppedEffort = event.value()
         if self._inPeriod(stoppedEffort):
-            self.__invalidateCache()
-            patterns.Publisher().notifyObservers(patterns.Event( \
-                self.trackStopEventType(), self, stoppedEffort))
+            self._invalidateCache()
+            patterns.Event(self.trackStopEventType(), self, stoppedEffort).send()
 
     def onRevenueChanged(self, event):
-        patterns.Publisher().notifyObservers(patterns.Event( \
-                'effort.revenue', self, self.revenue()))
+        patterns.Event('effort.revenue', self, self.revenue()).send()
 
     def onTotalRevenueChanged(self, event):
-        patterns.Publisher().notifyObservers(patterns.Event( \
-                'effort.totalRevenue', self, self.revenue(recursive=True)))
+        patterns.Event('effort.totalRevenue', self, self.revenue(recursive=True)).send()
         
     def description(self):
         effortDescriptions = [effort.description() for effort in \
@@ -161,31 +160,23 @@ class CompositeEffort(BaseCompositeEffort):
     
     def onColorChanged(self, event):
         return # FIXME: CompositeEffort does not derive from base.Object
-        patterns.Publisher().notifyObservers(patterns.Event( \
-            self.colorChangedEventType(), self, event.value()))
+        patterns.Event(self.colorChangedEventType(), self, event.value()).send()
         
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):
     def __init__(self, start, stop, taskList):
         self.taskList = taskList
         super(CompositeEffortPerPeriod, self).__init__(None, start, stop)
-        self.__invalidateCache()
+        self._invalidateCache()
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType=task.Task.totalTimeSpentChangedEventType())
         for eventType in self.taskList.modificationEventTypes():
             patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
                                                   eventSource=self.taskList)
 
-    def onTimeSpentChanged(self, event):
-        changedEffort = event.value()
-        if changedEffort is None or self._inPeriod(changedEffort) or \
-                                    self.__inCache(changedEffort):
-            self.__invalidateCache()
-            self.notifyObserversOfDurationOrEmpty()
-
     def onTaskAddedOrRemoved(self, event):
         if any(task.efforts() for task in event.values()):
-            self.__invalidateCache()
+            self._invalidateCache()
             self.notifyObserversOfDurationOrEmpty()
             
     def task(self):
@@ -225,11 +216,11 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
     def _getEfforts(self, recursive=False): # recursive argument is ignored
         return self.__effortCache
     
-    def __invalidateCache(self):
+    def _invalidateCache(self):
         self.__effortCache = []
         for task in self.taskList:
             self.__effortCache.extend([effort for effort in task.efforts() \
                                        if self._inPeriod(effort)])
-                
-    def __inCache(self, effort):
+
+    def _inCache(self, effort):
         return effort in self.__effortCache

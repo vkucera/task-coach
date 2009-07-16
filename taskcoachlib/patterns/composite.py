@@ -96,7 +96,7 @@ class Composite(object):
         self.__parent = parent
         
 
-class ObservableComposite(Composite, observer.Observable):
+class ObservableComposite(Composite):
     @classmethod
     def addChildEventType(class_):
         return 'composite(%s).child.add'%class_
@@ -107,17 +107,18 @@ class ObservableComposite(Composite, observer.Observable):
     
     def addChild(self, child):
         super(ObservableComposite, self).addChild(child)
-        self.notifyObservers(observer.Event(self.addChildEventType(), self,
-                                            child))
+        observer.Event(self.addChildEventType(), self, child).send()
                                             
     def removeChild(self, child):
         super(ObservableComposite, self).removeChild(child)
-        self.notifyObservers(observer.Event(self.removeChildEventType(), self,
-                                            child))
+        observer.Event(self.removeChildEventType(), self, child).send()
 
     @classmethod
     def modificationEventTypes(class_):
-        eventTypes = super(ObservableComposite, class_).modificationEventTypes()
+        try:
+            eventTypes = super(ObservableComposite, class_).modificationEventTypes()
+        except AttributeError:
+            eventTypes = []
         return eventTypes + [class_.addChildEventType(), 
                              class_.removeChildEventType()]
             
@@ -134,16 +135,16 @@ class CompositeCollection(object):
         if not composites:
             return
         compositesAndAllChildren = self._compositesAndAllChildren(composites) 
-        self.stopNotifying()
+        observer.Publisher().stopNotifying()
         super(CompositeCollection, self).extend(compositesAndAllChildren)
         parentsWithChildrenAdded = self._addCompositesToParent(composites)
-        self.startNotifying()
+        observer.Publisher().startNotifying()
         event = observer.Event(self.addItemEventType(), self, *compositesAndAllChildren)
         for parent, children in parentsWithChildrenAdded.items():
             # Python doesn't allow keyword arguments after *positional_args,
             # create a kwargs dict for type:
             event.addSource(parent, *children, **dict(type=parent.addChildEventType()))
-        self.notifyObservers(event)
+        event.send()
             
     def _compositesAndAllChildren(self, composites):
         compositesAndAllChildren = set(composites) 
@@ -170,15 +171,15 @@ class CompositeCollection(object):
             return
         parents, children = self._splitCompositesInParentsAndChildren(composites)
         compositesAndAllChildren = self._compositesAndAllChildren(parents)
-        self.stopNotifying()
+        observer.Publisher().stopNotifying()
         self._removeCompositesFromCollection(parents)
         parentsWithChildrenRemoved = self._removeCompositesFromParent(composites)
-        self.startNotifying()
+        observer.Publisher().startNotifying()
         event = observer.Event(self.removeItemEventType(), self, *compositesAndAllChildren)
         for parent, children in parentsWithChildrenRemoved.items():
             if parent in self:
                 event.addSource(parent, *children, **dict(type=parent.removeChildEventType()))
-        self.notifyObservers(event)
+        event.send()
 
     def _splitCompositesInParentsAndChildren(self, composites):
         parents, children = [], []

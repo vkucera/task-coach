@@ -110,8 +110,7 @@ class ViewerContainer(object):
         pass # Don't forward del to one of the viewers.
     
     def onSelect(self, event):
-        patterns.Publisher().notifyObservers(patterns.Event( \
-            self.selectEventType(), self, *event.values()))
+        patterns.Event(self.selectEventType(), self, *event.values()).send()
 
     def onPageChanged(self, event):
         self._changePage(event.Selection)
@@ -142,6 +141,5 @@ class ViewerContainer(object):
     def _changePage(self, pageNumber):
         self.__currentPageNumber = pageNumber        
         self._settings.set('view', self.__setting, str(pageNumber))
-        patterns.Publisher().notifyObservers(patterns.Event( \
-            self.viewerChangeEventType(), self, pageNumber))
+        patterns.Event(self.viewerChangeEventType(), self, pageNumber).send()
 

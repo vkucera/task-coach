@@ -115,19 +115,21 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         oldTotalPriority = self.priority(recursive=True)
         super(Task, self).addChild(child)
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
+        event = patterns.Event()
         if child.budget(recursive=True):
-            self.notifyObserversOfTotalBudgetChange()
+            event = self.totalBudgetEvent(event)
         if newTotalBudgetLeft != oldTotalBudgetLeft:
-            self.notifyObserversOfTotalBudgetLeftChange()
+            event = self.totalBudgetLeftEvent(event)
         if child.timeSpent(recursive=True):
-            self.notifyObserversOfTotalTimeSpentChange()
+            event = self.totalTimeSpentEvent(event)
         if self.priority(recursive=True) != oldTotalPriority:
-            self.notifyObserversOfTotalPriorityChange()
+            event = self.totalPriorityEvent(event)
         if child.revenue(recursive=True):
-            self.notifyObserversOfTotalRevenueChange()
+            event = self.totalRevenueEvent(event)
         if child.isBeingTracked(recursive=True):
-            self.notifyObserversOfStartTracking(*child.activeEfforts(recursive=True))
-
+            event = self.startTrackingEvent(event, *child.activeEfforts(recursive=True))
+        event.send()
+        
     def removeChild(self, child):
         if child not in self.children():
             return
@@ -135,20 +137,22 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         oldTotalPriority = self.priority(recursive=True)
         super(Task, self).removeChild(child)
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
+        event = patterns.Event()
         if child.budget(recursive=True):
-            self.notifyObserversOfTotalBudgetChange()
+            event = self.totalBudgetEvent(event)
         if newTotalBudgetLeft != oldTotalBudgetLeft:
-            self.notifyObserversOfTotalBudgetLeftChange()
+            event = self.totalBudgetLeftEvent(event)
         if child.timeSpent(recursive=True):
-            self.notifyObserversOfTotalTimeSpentChange()
+            event = self.totalTimeSpentEvent(event)
         if self.priority(recursive=True) != oldTotalPriority:
-            self.notifyObserversOfTotalPriorityChange()
+            event = self.totalPriorityEvent(event)
         if child.revenue(recursive=True):
-            self.notifyObserversOfTotalRevenueChange()
+            event = self.totalRevenueEvent(event)
         if child.isBeingTracked(recursive=True) and not \
             self.isBeingTracked(recursive=True):
-            self.notifyObserversOfStopTracking(*child.activeEfforts(recursive=True))
-
+            event = self.stopTrackingEvent(event, *child.activeEfforts(recursive=True))
+        event.send()
+        
     def dueDate(self, recursive=False):
         if recursive:
             childrenDueDates = [child.dueDate(recursive=True) for child in \
@@ -157,10 +161,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         else:
             return self._dueDate
 
-    def setDueDate(self, dueDate):
-        if dueDate != self._dueDate:
-            self._dueDate = dueDate
-            self.notifyObserversOfAttributeChange('task.dueDate', dueDate)
+    def setDueDate(self, dueDate, event=None):
+        if dueDate == self._dueDate:
+            return event
+        self._dueDate = dueDate
+        notify = event is None
+        event = event or patterns.Event()
+        event.addSource(self, dueDate, type='task.dueDate')
+        if notify:
+            event.send()
+        else:
+            return event
 
     def startDate(self, recursive=False):
         if recursive:
@@ -170,10 +181,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         else:
             return self._startDate
 
-    def setStartDate(self, startDate):
-        if startDate != self._startDate:
-            self._startDate = startDate
-            self.notifyObserversOfAttributeChange('task.startDate', startDate)
+    def setStartDate(self, startDate, event=None):
+        if startDate == self._startDate:
+            return event
+        self._startDate = startDate
+        notify = event is None
+        event = event or patterns.Event()
+        event.addSource(self, startDate, type='task.startDate')
+        if notify:
+            event.send()
+        else:
+            return event
 
     def timeLeft(self, recursive=False):
         return self.dueDate(recursive) - date.Today()
@@ -186,23 +204,29 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         else:
             return self._completionDate
 
-    def setCompletionDate(self, completionDate=None):
+    def setCompletionDate(self, completionDate=None, event=None):
         completionDate = completionDate or date.Today()
-        if completionDate != self._completionDate:
-            if completionDate != date.Date() and self.recurrence():
-                self.recur()
-            else:
-                parent = self.parent()
-                if parent:
-                    oldParentTotalPriority = parent.priority(recursive=True) 
-                self._completionDate = completionDate
-                self.notifyObserversOfAttributeChange('task.completionDate', 
-                    completionDate)
-                if parent and parent.priority(recursive=True) != \
-                              oldParentTotalPriority:
-                    parent.notifyObserversOfTotalPriorityChange()                    
-                if completionDate != date.Date():
-                    self.setReminder(None)
+        if completionDate == self._completionDate:
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        if completionDate != date.Date() and self.recurrence():
+            self.recur(event)
+        else:
+            parent = self.parent()
+            if parent:
+                oldParentTotalPriority = parent.priority(recursive=True) 
+            self._completionDate = completionDate
+            event.addSource(self, completionDate, type='task.completionDate')
+            if parent and parent.priority(recursive=True) != \
+                          oldParentTotalPriority:
+                event = self.totalPriorityEvent(event)                    
+            if completionDate != date.Date():
+                event = self.setReminder(None, event)
+        if notify:
+            event.send()
+        else:
+            return event
         
     def completed(self):
         return self.completionDate() != date.Date()
@@ -238,23 +262,76 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def isBeingTracked(self, recursive=False):
         return self.activeEfforts(recursive)
         
-    def addEffort(self, effort):
-        wasTracking = self.isBeingTracked()
-        if effort not in self._efforts:
-            self._efforts.append(effort)
-            self.notifyObserversOfAttributeChange('task.effort.add', effort)
-            if effort.isBeingTracked() and not wasTracking:
-                self.notifyObserversOfStartTracking(effort)
-            self.notifyObserversOfTimeSpentChange(effort)
-        
-    def removeEffort(self, effort):
+    def addEffort(self, effort, event=None):
         if effort in self._efforts:
-            self._efforts.remove(effort)
-            self.notifyObserversOfAttributeChange('task.effort.remove', effort)
-            if effort.isBeingTracked() and not self.isBeingTracked():
-                self.notifyObserversOfStopTracking(effort)
-            self.notifyObserversOfTimeSpentChange(effort)
+            return event
+        wasTracking = self.isBeingTracked()
+        self._efforts.append(effort)
+        notify = event is None
+        event = event or patterns.Event()
+        event.addSource(self, effort, type='task.effort.add')
+        if effort.isBeingTracked() and not wasTracking:
+            event = self.startTrackingEvent(event, effort)
+        event = self.timeSpentEvent(event, effort)
+        if notify:
+            event.send()
+        else:
+            return event
+        
+    def startTrackingEvent(self, event, *efforts):    
+        for ancestor in [self] + self.ancestors():
+            event.addSource(ancestor, *efforts, 
+                            **dict(type=ancestor.trackStartEventType()))
+        return event
 
+    def removeEffort(self, effort, event=None):
+        if effort not in self._efforts:
+            return event
+        self._efforts.remove(effort)
+        notify = event is None
+        event = event or patterns.Event()
+        event.addSource(self, effort, type='task.effort.remove')
+        if effort.isBeingTracked() and not self.isBeingTracked():
+            event = self.stopTrackingEvent(event, effort)
+        event = self.timeSpentEvent(event, effort)
+        if notify:
+            event.send()
+        else:
+            return event
+        
+    def stopTrackingEvent(self, event, *efforts):
+        for ancestor in [self] + self.ancestors():
+            event.addSource(ancestor, *efforts, 
+                            **dict(type=ancestor.trackStopEventType()))
+        return event
+            
+    def timeSpentEvent(self, event, effort):
+        event.addSource(self, self.timeSpent(), type='task.timeSpent')
+        event = self.totalTimeSpentEvent(event, effort)
+        if self.budget():
+            event = self.budgetLeftEvent(event)
+        elif self.budget(recursive=True):
+            event = self.totalBudgetLeftEvent(event)
+        if self.hourlyFee() > 0:
+            event = self.revenueEvent(event)
+        return event
+    
+    def totalTimeSpentEvent(self, event, *efforts):
+        for ancestor in [self] + self.ancestors():
+            event.addSource(ancestor, *efforts, 
+                            **dict(type=ancestor.totalTimeSpentChangedEventType()))
+        return event
+    
+    def revenueEvent(self, event):
+        event.addSource(self, self.revenue(), type='task.revenue')
+        return self.totalRevenueEvent(event)
+    
+    def totalRevenueEvent(self, event):
+        for ancestor in [self] + self.ancestors():
+            event.addSource(ancestor, ancestor.revenue(recursive=True), 
+                            type='task.totalRevenue')
+        return event
+    
     def setEfforts(self, efforts):
         self._efforts = efforts # FIXME: no notification?
 
@@ -264,9 +341,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def stopTracking(self):
         stoppedEfforts = []
+        event = patterns.Event()
         for effort in self.activeEfforts():
-            effort.setStop()
+            effort.setStop(event=event)
             stoppedEfforts.append(effort)
+        event.send()
         return stoppedEfforts
                 
     def budget(self, recursive=False):
@@ -277,78 +356,56 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return result
         
     def setBudget(self, budget):
-        if budget != self._budget:
-            self._budget = budget
-            self.notifyObserversOfBudgetChange()
-            self.notifyObserversOfBudgetLeftChange()
+        if budget == self._budget:
+            return
+        self._budget = budget
+        event = self.budgetEvent(patterns.Event())
+        event.send()
         
+    def budgetEvent(self, event):
+        event.addSource(self, self.budget(), type='task.budget')
+        event = self.totalBudgetEvent(event)
+        return self.budgetLeftEvent(event)
+    
+    def totalBudgetEvent(self, event):
+        for ancestor in [self] + self.ancestors():
+            event.addSource(ancestor, ancestor.budget(recursive=True), 
+                            type='task.totalBudget')
+        return event
+        
+    def budgetLeftEvent(self, event):
+        event.addSource(self, self.budgetLeft(), type='task.budgetLeft')
+        return self.totalBudgetLeftEvent(event)
+    
+    def totalBudgetLeftEvent(self, event):
+        for ancestor in [self] + self.ancestors():
+            event.addSource(ancestor, ancestor.budgetLeft(recursive=True), 
+                            type='task.totalBudgetLeft')
+        return event
+    
     def budgetLeft(self, recursive=False):
         budget = self.budget(recursive)
         return budget - self.timeSpent(recursive) if budget else budget
     
-    def notifyObserversOfColorChange(self, color):
-        super(Task, self).notifyObserversOfColorChange(color)
-        self.notifyEffortObserversOfColorChange(color)
-        
-    def notifyEffortObserversOfColorChange(self, color):
+    def colorChangedEvent(self, event, color):
+        event = super(Task, self).colorChangedEvent(event, color)    
         from taskcoachlib.domain import effort # prevent circular import
-        event = patterns.Event(effort.Effort.colorChangedEventType())
         for task in [self] + self.childrenWithoutOwnColor():
             for eachEffort in task.efforts():
-                event.addSource(eachEffort, color)
-        self.notifyObservers(event)
-
-    def notifyObserversOfBudgetChange(self):
-        self.notifyObserversOfAttributeChange('task.budget', self.budget())
-        self.notifyObserversOfTotalBudgetChange()
-
-    def notifyObserversOfTotalBudgetChange(self):
-        self.notifyObserversOfTotalAttributeChange('task.totalBudget', 
-                                                   Task.budget)
-
-    def notifyObserversOfBudgetLeftChange(self):
-        self.notifyObserversOfAttributeChange('task.budgetLeft', 
-                                              self.budgetLeft())
-        self.notifyObserversOfTotalBudgetLeftChange()
-        
-    def notifyObserversOfTotalBudgetLeftChange(self):
-        self.notifyObserversOfTotalAttributeChange('task.totalBudgetLeft', 
-                                                   Task.budgetLeft)
-        
-    def notifyObserversOfTimeSpentChange(self, changedEffort):
-        self.notifyObserversOfAttributeChange('task.timeSpent', 
-                                              self.timeSpent())
-        self.notifyObserversOfTotalTimeSpentChange(changedEffort)
-        if self.budget():
-            self.notifyObserversOfBudgetLeftChange()
-        elif self.budget(recursive=True):
-            self.notifyObserversOfTotalBudgetLeftChange()
-        if self.hourlyFee() > 0:
-            self.notifyObserversOfRevenueChange()
-    
+                event.addSource(eachEffort, color, type=eachEffort.colorChangedEventType())
+        return event
+                    
     @classmethod
     def totalTimeSpentChangedEventType(class_):
         return 'task.totalTimeSpent'
-
-    def notifyObserversOfTotalTimeSpentChange(self, changedEffort=None):
-        self.notifyObserversOfTotalAttributeChange( \
-            self.totalTimeSpentChangedEventType(), changedEffort)
 
     @classmethod
     def trackStartEventType(class_):
         return '%s.track.start'%class_
 
-    def notifyObserversOfStartTracking(self, *trackedEfforts):
-        self.notifyObserversOfTotalAttributeChange( \
-            self.trackStartEventType(), *trackedEfforts)
-
     @classmethod
     def trackStopEventType(class_):
         return '%s.track.stop'%class_
-    
-    def notifyObserversOfStopTracking(self, *trackedEfforts):
-        self.notifyObserversOfTotalAttributeChange( \
-            self.trackStopEventType(), *trackedEfforts)
         
     # priority
     
@@ -364,42 +421,40 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def setPriority(self, priority):
         if priority != self._priority:
             self._priority = priority
-            self.notifyObserversOfPriorityChange()
-        
-    def notifyObserversOfPriorityChange(self):
-        self.notifyObserversOfAttributeChange('task.priority', self.priority())
-        self.notifyObserversOfTotalPriorityChange()
-
-    def notifyObserversOfTotalPriorityChange(self):
-        self.notifyObserversOfTotalAttributeChange('task.totalPriority', 
-                                                   Task.priority)
-        
+            self.priorityEvent(patterns.Event()).send()
+            
+    def priorityEvent(self, event):
+        event.addSource(self, self.priority(), type='task.priority')
+        return self.totalPriorityEvent(event)
+    
+    def totalPriorityEvent(self, event):
+        for ancestor in [self] + self.ancestors():
+            event.addSource(ancestor, ancestor.priority(recursive=True),
+                            type='task.totalPriority')
+        return event
+                
     # revenue
     
     def hourlyFee(self, recursive=False):
         return self._hourlyFee
     
     def setHourlyFee(self, hourlyFee):
-        if hourlyFee != self._hourlyFee:
-            self._hourlyFee = hourlyFee
-            self.notifyObserversOfHourlyFeeChange(hourlyFee)
+        if hourlyFee == self._hourlyFee:
+            return
+        self._hourlyFee = hourlyFee
+        self.hourlyFeeEvent(patterns.Event()).send()
 
+    def hourlyFeeEvent(self, event):
+        event.addSource(self, self.hourlyFee(), 
+                        type=self.hourlyFeeChangedEventType())
+        if self.timeSpent() > date.TimeDelta():
+            for objectWithRevenue in [self] + self.efforts():
+                event = objectWithRevenue.revenueEvent(event)
+        return event
+            
     @classmethod
     def hourlyFeeChangedEventType(class_):
         return '%s.hourlyFee'%class_
-            
-    def notifyObserversOfHourlyFeeChange(self, hourlyFee):
-        self.notifyObserversOfAttributeChange(self.hourlyFeeChangedEventType(),
-                                              hourlyFee)
-        if self.timeSpent() > date.TimeDelta():
-            self.notifyObserversOfRevenueChange()
-            self.notifyEffortObserversOfRevenueChange()
-
-    def notifyEffortObserversOfRevenueChange(self):
-        event = patterns.Event('effort.revenue')
-        for effort in self.efforts():
-            event.addSource(effort, effort.revenue())
-        self.notifyObservers(event)
                 
     def revenue(self, recursive=False):
         childRevenues = sum(child.revenue(recursive) for child in 
@@ -413,35 +468,42 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self._fixedFee + childFixedFees
     
     def setFixedFee(self, fixedFee):
-        if fixedFee != self._fixedFee:
-            self._fixedFee = fixedFee
-            self.notifyObserversOfFixedFeeChange(fixedFee)
-            self.notifyObserversOfRevenueChange()
-
-    def notifyObserversOfFixedFeeChange(self, fixedFee):
-        self.notifyObserversOfAttributeChange('task.fixedFee', fixedFee)
-        self.notifyObserversOfTotalAttributeChange('task.totalFixedFee', 
-                                                   Task.fixedFee)
-
-    def notifyObserversOfRevenueChange(self):
-        self.notifyObserversOfAttributeChange('task.revenue', self.revenue())
-        self.notifyObserversOfTotalRevenueChange()
-                    
-    def notifyObserversOfTotalRevenueChange(self):
-        self.notifyObserversOfTotalAttributeChange('task.totalRevenue', 
-                                                   Task.revenue)
+        if fixedFee == self._fixedFee:
+            return
+        self._fixedFee = fixedFee
+        event = self.fixedFeeEvent(patterns.Event())
+        event = self.revenueEvent(event)
+        event.send()
+        
+    def fixedFeeEvent(self, event):
+        event.addSource(self, self.fixedFee(), type='task.fixedFee')
+        event = self.totalFixedFeeEvent(event)
+        return event
+    
+    def totalFixedFeeEvent(self, event):
+        for ancestor in [self] + self.ancestors():
+            event.addSource(ancestor, ancestor.fixedFee(recursive=True),
+                            type='task.totalFixedFee')
+        return event
         
     # reminder
     
     def reminder(self, recursive=False):
         return self._reminder
 
-    def setReminder(self, reminderDateTime=None):
+    def setReminder(self, reminderDateTime=None, event=None):
         if reminderDateTime == date.DateTime.max:
             reminderDateTime = None
-        if reminderDateTime != self._reminder:
-            self._reminder = reminderDateTime
-            self.notifyObserversOfAttributeChange('task.reminder', self._reminder)
+        if reminderDateTime == self._reminder:
+            return event
+        self._reminder = reminderDateTime
+        notify = event is None
+        event = event or patterns.Event()
+        event.addSource(self, self._reminder, type='task.reminder')
+        if notify:
+            event.send()
+        else:
+            return event
                     
     # Recurrence
     
@@ -453,20 +515,30 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     def setRecurrence(self, recurrence=None):
         recurrence = recurrence or date.Recurrence()
-        if recurrence != self._recurrence:
-            self._recurrence = recurrence
-            self.notifyObserversOfAttributeChange('task.recurrence', recurrence)
+        if recurrence == self._recurrence:
+            return
+        self._recurrence = recurrence
+        patterns.Event('task.recurrence', self, recurrence).send()
             
-    def recur(self):
+    def recur(self, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         for child in self.children():
             if not child.recurrence():
-                child.recur()
-        self.setCompletionDate(date.Date())
-        self.setStartDate(self.recurrence(recursive=True)(self.startDate(), next=False))
-        self.setDueDate(self.recurrence(recursive=True)(self.dueDate(), next=False))
+                event = child.recur(event)
+        self.setCompletionDate(date.Date(), event)
+        nextStartDate = self.recurrence(recursive=True)(self.startDate(), next=False)
+        self.setStartDate(nextStartDate, event)
+        nextDueDate = self.recurrence(recursive=True)(self.dueDate(), next=False)
+        self.setDueDate(nextDueDate, event)
         if self.reminder():
-            self.setReminder(self.recurrence(recursive=True)(self.reminder(), next=False))
+            nextReminder = self.recurrence(recursive=True)(self.reminder(), next=False)
+            self.setReminder(nextReminder, event)
         self.recurrence()(next=True)
+        if notify:
+            event.send()
+        else:
+            return event
                         
     # behavior
     
@@ -477,9 +549,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if newValue == self._shouldMarkCompletedWhenAllChildrenCompleted:
             return
         self._shouldMarkCompletedWhenAllChildrenCompleted = newValue
-        self.notifyObserversOfAttributeChange( \
-            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted', 
-            newValue)
+        event = patterns.Event('task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
+                               self, newValue)
+        event.send()
 
     def __getShouldMarkCompletedWhenAllChildrenCompleted(self):
         return self._shouldMarkCompletedWhenAllChildrenCompleted
@@ -499,19 +571,3 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              'task.fixedFee',
                              'task.reminder', 'task.recurrence',
                              'task.setting.shouldMarkCompletedWhenAllChildrenCompleted']
-        
-    # utilities
-        
-    def notifyObserversOfTotalAttributeChange(self, eventType, *getterOrValues):
-        if callable(getterOrValues[0]):
-            getter = lambda instance: (getterOrValues[0](instance, recursive=True),)
-        else:
-            getter = lambda instance: getterOrValues
-        event = patterns.Event(eventType, self, *getter(self))
-        for ancestor in self.ancestors():
-            event.addSource(ancestor, *getter(ancestor))
-        self.notifyObservers(event)
-
-    def notifyObserversOfAttributeChange(self, eventType, attributeValue):
-        event = patterns.Event(eventType, self, attributeValue)
-        self.notifyObservers(event)

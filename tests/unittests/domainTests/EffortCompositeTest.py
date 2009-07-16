@@ -162,8 +162,8 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType='effort.revenue')
         self.task.setHourlyFee(100)
-        self.assertEqual(patterns.Event('effort.revenue', self.composite,
-            100.0), self.events[0])
+        self.failUnless(patterns.Event('effort.revenue', self.composite,
+            100.0) in self.events)
 
     def testIsBeingTracked(self):
         self.task.addEffort(self.effort1)
@@ -175,8 +175,8 @@ class CompositeEffortTest(test.TestCase):
             eventType=self.composite.trackStartEventType())
         self.task.addEffort(self.effort1)
         self.effort1.setStop(date.Date())
-        self.assertEqual(patterns.Event(self.composite.trackStartEventType(), 
-            self.composite, self.effort1), self.events[0])
+        self.failUnless(patterns.Event(self.composite.trackStartEventType(), 
+            self.composite, self.effort1) in self.events)
 
     def testNoNotificationForStartTrackingIfActiveEffortOutsidePeriod(self):
         patterns.Publisher().registerObserver(self.onEvent,
@@ -193,8 +193,8 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=self.composite.trackStopEventType())
         self.effort1.setStop()
-        self.assertEqual(patterns.Event(self.composite.trackStopEventType(), 
-            self.composite, self.effort1), self.events[0])
+        self.failUnless(patterns.Event(self.composite.trackStopEventType(), 
+            self.composite, self.effort1) in self.events)
 
     def testNoNotificationForStopTrackingIfActiveEffortOutsidePeriod(self):
         self.task.addEffort(self.effort3)
@@ -216,8 +216,8 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.duration')
         self.effort1.setStart(self.effort1.getStart() + date.TimeDelta(hours=1))
-        self.assertEqual(patterns.Event('effort.duration', 
-            self.composite, self.composite.duration()), self.events[0])
+        self.failUnless(patterns.Event('effort.duration', 
+            self.composite, self.composite.duration()) in self.events)
 
     def testChangeStartTimeOfEffort_MoveOutsidePeriode(self):
         self.task.addEffort(self.effort1)
@@ -239,8 +239,10 @@ class CompositeEffortTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.duration')
         self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
-        self.assertEqual(patterns.Event('effort.duration', self.composite, 
-            self.composite.duration()), self.events[0])
+        expectedEvent = patterns.Event('effort.duration', self.composite, 
+            self.composite.duration())
+        #expectedEvent.addSource(self.effort1, self.effort1.duration(), type='effort.duration')
+        self.failUnless(expectedEvent in self.events)
 
     def testChangeStartTimeOfEffort_MoveInsidePeriod(self):
         self.task.addEffort(self.effort3)

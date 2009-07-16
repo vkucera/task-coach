@@ -123,8 +123,7 @@ class Viewer(wx.Panel):
             # deleting all items as part of the Destroy process. Ignore.
             return
         # Be sure all wx events are handled before we notify our observers: 
-        wx.CallAfter(lambda: patterns.Publisher().notifyObservers(\
-            patterns.Event(self.selectEventType(), self, self.curselection())))
+        wx.CallAfter(lambda: patterns.Event(self.selectEventType(), self, self.curselection()).send())
         # Remember the current selection so we can restore it after a refresh:
         self.__selection = self.curselection()
 

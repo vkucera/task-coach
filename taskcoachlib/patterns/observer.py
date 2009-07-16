@@ -145,6 +145,10 @@ class Event(object):
                 subEvent.addSource(eachSource, *self.values(eachSource, type), **kwargs)
         return subEvent
     
+    def send(self):
+        ''' Send this event to observers of the type(s) of this event. '''
+        Publisher().notifyObservers(self)
+    
 
 class MethodProxy(object):
     ''' Wrap methods in a class that allows for comparing methods. Comparison
@@ -281,16 +285,15 @@ class Publisher(object):
         event = Event('publisher.firstObserverRegisteredFor', self, eventType)
         event.addSource(self, eventType, 
                         type='publisher.firstObserverRegisteredFor.%s'%eventType)
-        self.notifyObservers(event)
+        event.send()
                     
     def notifyObserversOfLastObserverRemoved(self):
         for eventType, eventSource in self.__observers.keys():
             if self.__observers[(eventType, eventSource)]:
                 continue
             del self.__observers[(eventType, eventSource)]
-            self.notifyObservers(Event( 
-                'publisher.lastObserverRemovedFor.%s'%eventType, self, 
-                eventType))
+            Event('publisher.lastObserverRemovedFor.%s'%eventType, self, 
+                eventType).send()
         
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 
@@ -355,22 +358,7 @@ class Decorator(Observer):
         return getattr(self.observable(), attribute)
 
 
-class Observable(object):
-    def notifyObservers(self, *args, **kwargs):
-        Publisher().notifyObservers(*args, **kwargs)
-        
-    def startNotifying(self, *args, **kwargs):
-        Publisher().startNotifying(*args, **kwargs)
-        
-    def stopNotifying(self, *args, **kwargs):
-        Publisher().stopNotifying(*args, **kwargs)
-
-    @classmethod
-    def modificationEventTypes(class_):
-        return []        
-
-
-class ObservableCollection(Observable):
+class ObservableCollection(object):
     def __hash__(self):
         ''' Make ObservableCollections suitable as keys in dictionaries. '''
         return hash(id(self))
@@ -388,14 +376,17 @@ class ObservableCollection(Observable):
         return '%s.remove'%class_
 
     def notifyObserversOfItemsAdded(self, *items):
-        self.notifyObservers(Event(self.addItemEventType(), self, *items))
+        Event(self.addItemEventType(), self, *items).send()
 
     def notifyObserversOfItemsRemoved(self, *items):
-        self.notifyObservers(Event(self.removeItemEventType(), self, *items))
+        Event(self.removeItemEventType(), self, *items).send()
 
     @classmethod
     def modificationEventTypes(class_):
-        eventTypes = super(ObservableCollection, class_).modificationEventTypes()
+        try:
+            eventTypes = super(ObservableCollection, class_).modificationEventTypes()
+        except AttributeError:
+            eventTypes = []
         return eventTypes + [class_.addItemEventType(), 
                              class_.removeItemEventType()]
 

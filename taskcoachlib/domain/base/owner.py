@@ -69,8 +69,8 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     setattr(klass, '%ss' % klass.__ownedType__.lower(), objects)
 
     def notifyObservers(instance):
-        instance.notifyObservers(patterns.Event( \
-            changedEventType(instance.__class__), instance, *objects(instance)))
+        patterns.Event(changedEventType(instance.__class__), instance, 
+                       *objects(instance)).send()
 
     setattr(klass, '_%s__notifyObservers' % name, notifyObservers)
 

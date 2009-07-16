@@ -88,10 +88,10 @@ class Attachment(base.Object, NoteOwner):
         return self.__location
 
     def setLocation(self, location):
-        if location != self.__location:
-            self.__location = location
-            self.notifyObservers(patterns.Event( \
-                self.locationChangedEventType(), self, location))
+        if location == self.__location:
+            return
+        self.__location = location
+        patterns.Event(self.locationChangedEventType(), self, location).send()
 
     @classmethod
     def locationChangedEventType(class_):

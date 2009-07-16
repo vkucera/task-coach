@@ -66,7 +66,7 @@ class TaskTestCase(test.TestCase):
                 self.taskCreationKeywordArguments()]
 
     def taskCreationKeywordArguments(self):
-        return [{}]
+        return [dict(subject='Task')]
 
     def addEffort(self, hours, task=None):
         task = task or self.task
@@ -389,9 +389,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
             date.DateTime(2000,1,1,11,0,0)))
         self.registerObserver(task.Task.totalTimeSpentChangedEventType())
         self.task.addChild(child)
-        self.assertEqual(patterns.Event( \
-            task.Task.totalTimeSpentChangedEventType(), self.task, None), 
-            self.events[0])
+        self.assertEqual([patterns.Event( \
+            task.Task.totalTimeSpentChangedEventType(), self.task)], 
+            self.events)
 
     def testAddChildWithoutEffortCausesNoTotalTimeSpentNotification(self):
         self.registerObserver(task.Task.totalTimeSpentChangedEventType())
@@ -737,7 +737,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.registerObserver(task.Task.totalTimeSpentChangedEventType())
         self.task1.removeChild(self.task1_1)
         self.assertEqual(patterns.Event( \
-            task.Task.totalTimeSpentChangedEventType(), self.task1, None), 
+            task.Task.totalTimeSpentChangedEventType(), self.task1), 
             self.events[0])
 
     def testRemoveChildWithoutEffortCausesNoTotalTimeSpentNotification(self):
@@ -1337,9 +1337,10 @@ class RecursivePriorityFixture(TaskTestCase, CommonTaskTests):
         self.assertEqual(1, self.task1.priority(recursive=True))
         
     def testTotalPriorityNotificationWhenMarkingChildCompleted(self):
-        self.registerObserver('task.totalPriority')
+        self.registerObserver('task.totalPriority', eventSource=self.task1)
         self.task1_1.setCompletionDate()
-        self.assertEqual(1, self.events[0].value())
+        self.assertEqual([patterns.Event('task.totalPriority', self.task1, 1)], 
+                         self.events)
         
     def testTotalPriorityNotificationWhenMarkingChildUncompleted(self):
         self.task1_1.setCompletionDate()
@@ -1361,7 +1362,7 @@ class TaskWithFixedFeeFixture(TaskTestCase, CommonTaskTests):
 
 class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
-        return [{'hourlyFee': 100}]
+        return [{'subject': 'Task', 'hourlyFee': 100}]
     
     def setUp(self):
         super(TaskWithHourlyFeeFixture, self).setUp()
@@ -1384,6 +1385,23 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTests):
         self.task.addEffort(self.effort)
         self.assertEqual([patterns.Event('task.revenue', self.task, 100)], 
             self.events)
+        
+    def testNoRevenue_Notification_WhenChildRevenueChanges(self):
+        child = task.Task('child', hourlyFee=100)
+        self.task.addChild(child)
+        self.registerObserver('task.Revenue', eventSource=self.task)
+        child.addEffort(effort.Effort(child, date.DateTime(2005,1,1,10,0,0),
+                                      date.DateTime(2005,1,1,11,0,0)))
+        self.failIf(self.events)
+        
+    def testTotalRevenue_Notification(self):
+        child = task.Task('child', hourlyFee=100)
+        self.task.addChild(child)
+        self.registerObserver('task.totalRevenue', eventSource=self.task)
+        child.addEffort(effort.Effort(child, date.DateTime(2005,1,1,10,0,0),
+                                      date.DateTime(2005,1,1,11,0,0)))
+        self.assertEqual([patterns.Event('task.totalRevenue', self.task, 100)],
+                         self.events)
 
     def testAddingEffortDoesNotTriggerRevenueNotificationForEffort(self):
         self.registerObserver('effort.revenue')
@@ -1396,6 +1414,7 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTests):
         self.task.setHourlyFee(200)
         self.assertEqual([patterns.Event('effort.revenue', self.effort, 200)],
                          self.events)
+    
 
 class RecurringTaskTestCase(TaskTestCase):
     def taskCreationKeywordArguments(self):

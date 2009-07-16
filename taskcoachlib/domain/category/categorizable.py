@@ -61,8 +61,8 @@ class CategorizableCompositeObject(base.CompositeObject):
         for child in self.children(recursive=True):
             event.addSource(child, category, type=child.totalCategoryAddedEventType())
         if category.color():
-            event = self.colorChangedEvent(category.color, event)
-        self.notifyObservers(event)
+            event = self.colorChangedEvent(event, category.color())
+        event.send()
 
     @classmethod
     def categoryRemovedEventType(class_):
@@ -76,8 +76,8 @@ class CategorizableCompositeObject(base.CompositeObject):
         for child in self.children(recursive=True):
             event.addSource(child, category, type=child.totalCategoryRemovedEventType())
         if category.color():
-            event = self.colorChangedEvent(category.color, event)
-        self.notifyObservers(event)
+            event = self.colorChangedEvent(event, category.color())
+        event.send()
         
     def setCategories(self, categories):
         oldCategories = set(self._categories)

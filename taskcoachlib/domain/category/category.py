@@ -82,7 +82,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         event = patterns.Event(categorizable.CategorizableCompositeObject.categorySubjectChangedEventType())
         for eachCategorizable in self.categorizables(recursive=True):
             event.addSource(eachCategorizable, subject)
-        self.notifyObservers(event)
+        event.send()
         
     def notifyCategorizableObserversOfTotalSubjectChange(self):
         subject = self.subject()
@@ -91,7 +91,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
             event.addSource(eachCategorizable, subject)
             for childCategorizable in eachCategorizable.children(recursive=True):
                 event.addSource(childCategorizable, subject)
-        self.notifyObservers(event)
+        event.send()
                     
     def categorizables(self, recursive=False):
         result = []
@@ -104,14 +104,12 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def addCategorizable(self, categorizable):
         if categorizable not in self.__categorizables: # FIXME: use set
             self.__categorizables.append(categorizable)
-            self.notifyObservers(patterns.Event( \
-                self.categorizableAddedEventType(), self, categorizable))
+            patterns.Event(self.categorizableAddedEventType(), self, categorizable).send()
             
     def removeCategorizable(self, categorizable):
         if categorizable in self.__categorizables:
             self.__categorizables.remove(categorizable)
-            self.notifyObservers(patterns.Event( \
-                self.categorizableRemovedEventType(), self, categorizable))
+            patterns.Event(self.categorizableRemovedEventType(), self, categorizable).send()
             
     def isFiltered(self):
         return self.__filtered
@@ -119,8 +117,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def setFiltered(self, filtered=True):
         if filtered != self.__filtered:
             self.__filtered = filtered
-            self.notifyObservers(patterns.Event(self.filterChangedEventType(), 
-                                                self, filtered))
+            patterns.Event(self.filterChangedEventType(), self, filtered).send()
         if filtered:
             self._turnOffFilteringOfParent()
             self._turnOffFilteringOfChildren()
@@ -146,11 +143,9 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
             if categorizableToInvestigate in containedCategorizables:
                 return True
         return False
-                            
-    def notifyObserversOfColorChange(self, color):
-        super(Category, self).notifyObserversOfColorChange(color)
-        self.notifyCategorizableObserversOfColorChange(color)
-        
-    def notifyCategorizableObserversOfColorChange(self, color):
+    
+    def colorChangedEvent(self, event, color):
+        event = super(Category, self).colorChangedEvent(event, color)
         for categorizable in self.categorizables(recursive=True):
-            categorizable.notifyObserversOfColorChange(color)
+            event = categorizable.colorChangedEvent(event, color)
+        return event
