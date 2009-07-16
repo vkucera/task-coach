@@ -112,6 +112,23 @@ class Epydoc(Compile):
         kwargs['command'] = ['make', 'epydoc']
         Compile.__init__(self, **kwargs)
 
+    def createSummary(self, log):
+        Compile.createSummary(self, log)
+
+        self.addURL('Documentation',
+                    'http://www.fraca7.net/TaskCoach-doc/%s/index.html' % (self.getProperty('buildername')))
+
+
+class UploadDoc(DirectoryUpload):
+    def __init__(self, **kwargs):
+        kwargs['slavesrc'] = 'epydoc.out'
+        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-doc/%s',
+                                              'buildername')
+        kwargs['mode'] = 0755
+        kwargs['compress'] = None
+        DirectoryUpload.__init__(self, **kwargs)
+
+
 
 #==============================================================================
 # Platform-specific packages
