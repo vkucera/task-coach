@@ -1129,7 +1129,7 @@ unicode('''    <h3>Informations pour les développeurs</h3>
     <h4>Style de codage</h4>
     <p>Les noms de classe sont capitalisées (StudlyCaps). Les noms de méthodes
     sont en camelCase, à part les méthodes wxPython qui sont invoquées ou
-    surchargées car celles-ci sont capitalisées. Au début ce cela laid,
+    surchargées car celles-ci sont capitalisées. Cela parait laid au début,
     ce mélange de deux styles. Mais finalement c'est plutôt pratique, cela permet
     de distinguer facilement un méthode wxPython d'une autre.</p>
 
