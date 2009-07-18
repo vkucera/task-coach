@@ -47,6 +47,7 @@ class TaskViewerTestCase(test.wxTestCase):
                                           self.settings)
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()
+        self.viewer.setSortByTaskStatusFirst(True)
         self.viewer.showTree(self.treeMode)
         self.newColor = (100, 200, 100, 255)
         attachment.Attachment.attdir = os.getcwd()
@@ -160,8 +161,6 @@ class CommonTests(object):
             self.assertItems(self.child, self.task)
            
     def testSortOrder(self):
-        self.viewer.sortBy('subject')
-        self.viewer.setSortOrderAscending()
         self.task.addChild(self.child)
         task2 = task.Task(subject='zzz')
         self.taskList.extend([self.task, task2])
@@ -175,6 +174,13 @@ class CommonTests(object):
         self.taskList.extend([self.task, task2])
         self.assertItems(self.task, task2)
         self.task.setCompletionDate()
+        self.assertItems(task2, self.task)
+        
+    def testMakeInactive(self):
+        task2 = task.Task(subject='task2')
+        self.taskList.extend([self.task, task2])
+        self.assertItems(self.task, task2)
+        self.task.setStartDate(date.Tomorrow())
         self.assertItems(task2, self.task)
                         
     def testViewDueTodayHidesTasksNotDueToday(self):
@@ -234,7 +240,6 @@ class CommonTests(object):
         self.assertEqual(2, self.viewer.widget.GetColumnCount())
         
     def testShowSort_Subject(self):
-        self.viewer.sortBy('subject')
         self.assertNotEqual(-1, self.viewer.widget.GetColumn(0).GetImage())
         self.assertEqual(-1, self.viewer.widget.GetColumn(1).GetImage())
     

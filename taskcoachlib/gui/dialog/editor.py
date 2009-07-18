@@ -622,7 +622,7 @@ class BehaviorPage(PageWithHeaders, TaskHeaders):
                 [(None, _('Use application-wide setting')),
                  (False, _('No')), (True, _('Yes'))]:
             choice.Append(choiceText, choiceValue)
-            if choiceValue == task.shouldMarkCompletedWhenAllChildrenCompleted:
+            if choiceValue == task.shouldMarkCompletedWhenAllChildrenCompleted():
                 choice.SetSelection(choice.GetCount()-1)
         if choice.GetSelection() == wx.NOT_FOUND:
             # Force a selection if necessary:
@@ -635,9 +635,9 @@ class BehaviorPage(PageWithHeaders, TaskHeaders):
         self.fit()
 
     def ok(self):
-        self.item.shouldMarkCompletedWhenAllChildrenCompleted = \
+        self.item.setShouldMarkCompletedWhenAllChildrenCompleted( \
             self._markTaskCompletedEntry.GetClientData( \
-                self._markTaskCompletedEntry.GetSelection())
+                self._markTaskCompletedEntry.GetSelection()))
 
 
 class TaskEditBook(widgets.Listbook):

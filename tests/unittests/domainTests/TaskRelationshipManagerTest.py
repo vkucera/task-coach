@@ -108,8 +108,8 @@ class CommonTaskRelationshipManagerTests(object):
         self.failUnless(self.child.completed())
         
     def shouldMarkCompletedWhenAllChildrenCompleted(self, task):
-        return task.shouldMarkCompletedWhenAllChildrenCompleted == True or \
-            (task.shouldMarkCompletedWhenAllChildrenCompleted == None and \
+        return task.shouldMarkCompletedWhenAllChildrenCompleted() == True or \
+            (task.shouldMarkCompletedWhenAllChildrenCompleted() == None and \
              self.markParentCompletedWhenAllChildrenCompleted == True)
         
     def testMarkLastChildCompletedMakesParentRecur(self):
@@ -330,8 +330,8 @@ class MarkParentCompletedAutomaticallyIsOnButTaskSettingIsOff( \
     
     def setUp(self):
         super(MarkParentCompletedAutomaticallyIsOnButTaskSettingIsOff, self).setUp()
-        self.parent.shouldMarkCompletedWhenAllChildrenCompleted = False
-        self.child.shouldMarkCompletedWhenAllChildrenCompleted = False
+        for task in self.parent, self.child:
+            task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
 
 
 class MarkParentCompletedAutomaticallyIsOffButTaskSettingIsOn( \
@@ -341,7 +341,7 @@ class MarkParentCompletedAutomaticallyIsOffButTaskSettingIsOn( \
 
     def setUp(self):
         super(MarkParentCompletedAutomaticallyIsOffButTaskSettingIsOn, self).setUp()
-        self.parent.shouldMarkCompletedWhenAllChildrenCompleted = True
-        self.child.shouldMarkCompletedWhenAllChildrenCompleted = True
+        for task in self.parent, self.child:
+            task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
     
 

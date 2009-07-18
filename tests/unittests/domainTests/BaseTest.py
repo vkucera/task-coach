@@ -190,6 +190,13 @@ class ObjectTest(test.TestCase):
                         status=self.object.STATUS_DELETED, color=wx.RED)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
+        
+    def testSetState_SendsOneNotification(self):
+        newState = dict(subject='New', description='New', id=None,
+                        status=self.object.STATUS_DELETED, color=wx.RED)
+        self.object.__setstate__(newState)
+        self.assertEqual(1, len(self.eventsReceived))
+        
     
     # Copy tests:
         

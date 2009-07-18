@@ -27,23 +27,27 @@ class Effort(baseeffort.BaseEffort, base.Object):
         super(Effort, self).__init__(task, start or date.DateTime.now(), stop, 
             *args, **kwargs)
 
-    def setTask(self, task):
+    def setTask(self, task, event=None):
         if self._task is None: 
             # We haven't been fully initialised yet, so allow setting of the
             # task, without notifying observers. Also, don't call addEffort()
             # on the new task, because we assume setTask was invoked by the
             # new task itself.
             self._task = task
-            return
+            return event
         if task in (self._task, None): 
             # command.PasteCommand may try to set the parent to None
-            return
-        event = patterns.Event()
+            return event
+        notify = event is None
+        event = event or patterns.Event()
         event = self._task.removeEffort(self, event)
         self._task = task
         event = self._task.addEffort(self, event)
         event.addSource(self, task, type=self.taskChangedEventType())
-        event.send()
+        if notify:
+            event.send()
+        else:
+            return event
         
     setParent = setTask # FIXME: should we create a common superclass for Effort and Task?
     
@@ -62,11 +66,17 @@ class Effort(baseeffort.BaseEffort, base.Object):
             stop=self._stop))
         return state
 
-    def __setstate__(self, state):
-        super(Effort, self).__setstate__(state)
-        self.setTask(state['task'])
-        self.setStart(state['start'])
-        self.setStop(state['stop'])
+    def __setstate__(self, state, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(Effort, self).__setstate__(state, event)
+        event = self.setTask(state['task'], event)
+        event = self.setStart(state['start'], event)
+        event = self.setStop(state['stop'], event)
+        if notify:
+            event.send()
+        else:
+            return event
 
     def __getcopystate__(self):
         state = super(Effort, self).__getcopystate__()
@@ -81,17 +91,21 @@ class Effort(baseeffort.BaseEffort, base.Object):
             stop = now()
         return stop - self._start
         
-    def setStart(self, startDatetime):
+    def setStart(self, startDatetime, event=None):
         if startDatetime == self._start:
-            return
+            return event
+        notify = event is None 
+        event = event or patterns.Event()
         self._start = startDatetime
-        event = patterns.Event()
         event = self.task().timeSpentEvent(event, self)
         event.addSource(self, self._start, type='effort.start')
         event.addSource(self, self.duration(), type='effort.duration')
         if self.task().hourlyFee():
             event.addSource(self, self.revenue(), type='effort.revenue')
-        event.send()
+        if notify:
+            event.send()
+        else:
+            return event
         
     def setStop(self, newStop=None, event=None):
         if newStop is None:
@@ -99,11 +113,11 @@ class Effort(baseeffort.BaseEffort, base.Object):
         elif newStop == date.DateTime.max:
             newStop = None
         if newStop == self._stop:
-            return
-        previousStop = self._stop
-        self._stop = newStop
+            return event
         notify = event is None
         event = event or patterns.Event()
+        previousStop = self._stop
+        self._stop = newStop
         if newStop == None:
             event.addSource(self, type=self.trackStartEventType())
             event = self.task().startTrackingEvent(event, self)

@@ -157,7 +157,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     
     def testShouldMarkTaskCompletedIsUndecidedByDefault(self):
         self.assertEqual(None, 
-            self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+            self.task.shouldMarkCompletedWhenAllChildrenCompleted())
         
     def testTaskHasNoAttachmentsByDefault(self):
         self.assertEqual([], self.task.attachments())
@@ -1224,15 +1224,15 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueFixture(TaskSettingT
     
     def testSetting(self):
         self.assertEqual(True, 
-            self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+            self.task.shouldMarkCompletedWhenAllChildrenCompleted())
     
     def testSetSetting(self):
-        self.task.shouldMarkCompletedWhenAllChildrenCompleted = False
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
         self.assertEqual(False, 
-            self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+            self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 
     def testSetSettingCausesNotification(self):
-        self.task.shouldMarkCompletedWhenAllChildrenCompleted = False
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
         self.assertEqual(False, self.events[0].value())
         
 
@@ -1242,12 +1242,12 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseFixture(TaskTestCas
     
     def testSetting(self):
         self.assertEqual(False, 
-            self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+            self.task.shouldMarkCompletedWhenAllChildrenCompleted())
     
     def testSetSetting(self):
-        self.task.shouldMarkCompletedWhenAllChildrenCompleted = True
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
         self.assertEqual(True, 
-            self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+            self.task.shouldMarkCompletedWhenAllChildrenCompleted())
         
 
 class AttachmentTestCase(TaskTestCase, CommonTaskTests):

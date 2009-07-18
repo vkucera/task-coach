@@ -79,8 +79,8 @@ class TaskAsserts(object):
         self.assertEqual(orig.hourlyFee(), copy.hourlyFee())
         self.assertEqual(orig.attachments(), copy.attachments())
         self.assertEqual(orig.reminder(), copy.reminder())
-        self.assertEqual(orig.shouldMarkCompletedWhenAllChildrenCompleted,
-                         copy.shouldMarkCompletedWhenAllChildrenCompleted)
+        self.assertEqual(orig.shouldMarkCompletedWhenAllChildrenCompleted(),
+                         copy.shouldMarkCompletedWhenAllChildrenCompleted())
         self.assertEqual(len(orig.children()), len(copy.children()))
         for origChild, copyChild in zip(orig.children(), copy.children()):
             self.assertTaskCopy(origChild, copyChild)

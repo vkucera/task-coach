@@ -247,7 +247,8 @@ class EditTaskTest(TaskEditorTestCase):
     def testBehaviorMarkCompleted(self):
         self.editor[0][7]._markTaskCompletedEntry.SetStringSelection('Yes')
         self.editor.ok()
-        self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+        self.assertEqual(True, 
+                         self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 
     def testAddAttachment(self):
         self.editor[0][6].viewer.onDropFiles(None, ['filename'])

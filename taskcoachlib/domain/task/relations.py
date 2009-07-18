@@ -92,7 +92,7 @@ class TaskRelationshipManager(object):
             self.__settings.getboolean('behavior', 
                 'markparentcompletedwhenallchildrencompleted')
         shouldMarkCompletedAccordingToTask = \
-            task.shouldMarkCompletedWhenAllChildrenCompleted
+            task.shouldMarkCompletedWhenAllChildrenCompleted()
         return (shouldMarkCompletedAccordingToTask == True) or \
             ((shouldMarkCompletedAccordingToTask == None) and \
               shouldMarkCompletedAccordingToSetting)

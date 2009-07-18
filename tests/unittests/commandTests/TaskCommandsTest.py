@@ -131,7 +131,7 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
         self.task1.addCategory(self.category)
         self.delete('all')
         self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()), 
-            lambda: self.assertEqual([self.task1], self.category.categorizables()))
+            lambda: self.assertEqual(set([self.task1]), self.category.categorizables()))
         
     def testDeleteTaskWithTwoCategories(self):
         cat1 = category.Category('category 1')
@@ -142,7 +142,7 @@ class DeleteCommandWithTasksTest(TaskCommandTestCase):
             self.task1.addCategory(cat)
         self.delete('all')
         self.assertDoUndoRedo(lambda: self.failIf(cat1.categorizables() or cat2.categorizables()), 
-            lambda: self.failUnless([self.task1] == cat1.categorizables() == cat2.categorizables()))
+            lambda: self.failUnless(set([self.task1]) == cat1.categorizables() == cat2.categorizables()))
         
 
 class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
@@ -190,7 +190,7 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         self.child.addCategory(self.category)
         self.delete([self.parent])
         self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()), 
-            lambda: self.assertEqual([self.child], self.category.categorizables()))
+            lambda: self.assertEqual(set([self.child]), self.category.categorizables()))
 
     def testDeleteParentAndChildWhenParentAndChildBelongToDifferentCategories(self):
         cat1 = category.Category('category 1')
@@ -202,8 +202,8 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         self.parent.addCategory(cat2)
         self.delete([self.parent])
         self.assertDoUndoRedo(lambda: self.failIf(cat1.categorizables() or cat2.categorizables()), 
-            lambda: self.failUnless([self.child] == cat1.categorizables() and \
-                                    [self.parent] == cat2.categorizables()))
+            lambda: self.failUnless(set([self.child]) == cat1.categorizables() and \
+                                    set([self.parent]) == cat2.categorizables()))
 
     def testDeleteParentAndChildWhenParentAndChildBelongToSameCategory(self):
         for task in self.parent, self.child:
@@ -353,7 +353,7 @@ class EditTaskCommandTest(TaskCommandTestCase):
     def testAddCategory_AffectsCategory(self):
         self.edit([self.task1])
         self.assertDoUndoRedo(
-            lambda: self.assertEqual([self.task1], self.category.categorizables()),
+            lambda: self.assertEqual(set([self.task1]), self.category.categorizables()),
             lambda: self.failIf(self.category.categorizables()))
         
     def testRemoveCategory(self):
@@ -370,7 +370,7 @@ class EditTaskCommandTest(TaskCommandTestCase):
         self.edit([self.task1])
         self.assertDoUndoRedo(
             lambda: self.failIf(self.category.categorizables()),
-            lambda: self.assertEqual([self.task1], self.category.categorizables()))
+            lambda: self.assertEqual(set([self.task1]), self.category.categorizables()))
 
     def testAddRecurrence(self):
         self.edit([self.task1], 

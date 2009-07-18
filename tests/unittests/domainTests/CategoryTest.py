@@ -83,7 +83,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         
     def testAddCategoryDoesNotAddCategorizableToCategory(self):
         self.categorizable.addCategory(self.category)
-        self.assertEqual([], self.category.categorizables())
+        self.assertEqual(set([]), self.category.categorizables())
         
     def testAddParentToCategory(self):
         self.registerObserver(self.totalCategoryAddedEventType)
@@ -125,20 +125,24 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setSubject('New subject')
-        # Expect categorySubjectChangedEventType and 
-        # totalCategorySubjectChangedEventType:
-        self.assertEqual(2, len(self.events)) 
+        expectedEvent = patterns.Event()
+        expectedEvent.addSource(self.categorizable, 'New subject', type=self.categorySubjectChangedEventType)
+        expectedEvent.addSource(self.categorizable, 'New subject', type=self.totalCategorySubjectChangedEventType)
+        self.assertEqual([expectedEvent], self.events) 
 
     def testCategorySubjectChanged_NotifySubItemsToo(self):
         self.registerObserver(self.categorySubjectChangedEventType)
         self.registerObserver(self.totalCategorySubjectChangedEventType)
-        self.categorizable.addChild(category.CategorizableCompositeObject())
+        childCategorizable = category.CategorizableCompositeObject(subject='Child categorizable')
+        self.categorizable.addChild(childCategorizable)
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setSubject('New subject')
-        # Expect one categorySubjectChangedEventType and one 
-        # totalCategorySubjectChangedEventType: 
-        self.assertEqual(2, len(self.events))        
+        expectedEvent = patterns.Event()
+        expectedEvent.addSource(self.categorizable, 'New subject', type=self.categorySubjectChangedEventType)
+        expectedEvent.addSource(self.categorizable, 'New subject', type=self.totalCategorySubjectChangedEventType)
+        expectedEvent.addSource(childCategorizable, 'New subject', type=self.totalCategorySubjectChangedEventType)
+        self.assertEqual([expectedEvent], self.events) 
 
     def testColor(self):
         self.categorizable.addCategory(self.category)
@@ -323,6 +327,17 @@ class CategoryTest(test.TestCase):
     def testGetState_Color(self):
         self.assertEqual(None, self.category.__getstate__()['color'])
         
+    def testSetState_OneNotification(self):
+        newState = dict(subject='New subject', description='New description',
+                        color=wx.RED, status=self.category.STATUS_DELETED,
+                        parent=None, children=[self.subCategory], id=self.category.id(),
+                        categorizables=[self.categorizable], notes=[],
+                        attachments=[], filtered=True)
+        for eventType in self.category.modificationEventTypes():
+            self.registerObserver(eventType)
+        self.category.__setstate__(newState)
+        self.assertEqual(1, len(self.events))
+        
     def testCreateWithSubject(self):
         self.assertEqual('category', self.category.subject())
     
@@ -348,11 +363,11 @@ class CategoryTest(test.TestCase):
         self.assertEqual('Description', aCategory.description())
 
     def testNoCategorizablesAfterCreation(self):
-        self.assertEqual([], self.category.categorizables())
+        self.assertEqual(set(), self.category.categorizables())
       
     def testAddCategorizable(self):
         self.category.addCategorizable(self.categorizable)
-        self.assertEqual([self.categorizable], self.category.categorizables())
+        self.assertEqual(set([self.categorizable]), self.category.categorizables())
         
     def testAddCategorizableDoesNotAddCategoryToCategorizable(self):
         self.category.addCategorizable(self.categorizable)
@@ -361,7 +376,7 @@ class CategoryTest(test.TestCase):
     def testAddCategorizableTwice(self):
         self.category.addCategorizable(self.categorizable)
         self.category.addCategorizable(self.categorizable)
-        self.assertEqual([self.categorizable], self.category.categorizables())
+        self.assertEqual(set([self.categorizable]), self.category.categorizables())
         
     def testRemoveCategorizable(self):
         self.category.addCategorizable(self.categorizable)
@@ -376,7 +391,7 @@ class CategoryTest(test.TestCase):
     
     def testCreateWithCategorizable(self):
         cat = category.Category('category', [self.categorizable])
-        self.assertEqual([self.categorizable], cat.categorizables())
+        self.assertEqual(set([self.categorizable]), cat.categorizables())
         
     def testCreateWithCategorizableDoesNotSetCategorizableCategories(self):
         cat = category.Category('category', [self.categorizable])
@@ -385,7 +400,7 @@ class CategoryTest(test.TestCase):
     def testAddCategorizableToSubCategory(self):
         self.category.addChild(self.subCategory)
         self.subCategory.addCategorizable(self.categorizable)
-        self.assertEqual([self.categorizable], 
+        self.assertEqual(set([self.categorizable]), 
                          self.category.categorizables(recursive=True))
      
     def testAddSubCategory(self):
