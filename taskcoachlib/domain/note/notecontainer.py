@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.domain import base
 from taskcoachlib.i18n import _
+from taskcoachlib import patterns
 
 
 class NoteContainer(base.Collection):
@@ -30,15 +31,27 @@ class NoteContainer(base.Collection):
     newSubItemMenuText = _('New subnote...')
     newSubItemHelpText = _('Insert a new subnote')
 
-    def extend(self, notes):
-        super(NoteContainer, self).extend(notes)
+    def extend(self, notes, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(NoteContainer, self).extend(notes, event)
         for note in self._compositesAndAllChildren(notes):
             for category in note.categories():
-                category.addCategorizable(note)
+                event = category.addCategorizable(note, event=event)
+        if notify:
+            event.send()
+        else:
+            return event
                 
-    def removeItems(self, notes):
-        super(NoteContainer, self).removeItems(notes)
+    def removeItems(self, notes, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(NoteContainer, self).removeItems(notes, event)
         for note in self._compositesAndAllChildren(notes):
             for category in note.categories():
-                category.removeCategorizable(note)
-    
+                category.removeCategorizable(note, event=event)
+        if notify:
+            event.send()
+        else:
+            return event
+                

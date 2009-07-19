@@ -42,13 +42,25 @@ class EffortAggregator(patterns.SetDecorator,
         patterns.Publisher().registerObserver(self.onEffortStartChanged, 
             eventType='effort.start')
         
-    def extend(self, efforts):
+    def extend(self, efforts, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         for effort in efforts:
-            effort.task().addEffort(effort)
+            event = effort.task().addEffort(effort, event)
+        if notify:
+            event.send()
+        else:
+            return event
             
-    def removeItems(self, efforts):
+    def removeItems(self, efforts, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         for effort in efforts:
-            effort.task().removeEffort(effort)
+            event = effort.task().removeEffort(effort, event)
+        if notify:
+            event.send()
+        else:
+            return event
             
     def extendSelf(self, tasks):
         ''' extendSelf is called when an item is added to the observed

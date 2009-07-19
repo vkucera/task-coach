@@ -178,21 +178,27 @@ class CompositeCollection(object):
         super(CompositeCollection, self).__init__(*args, **kwargs)
         self.extend(initList or [])
     
-    def append(self, composite):
-        self.extend([composite])
+    def append(self, composite, event=None):
+        return self.extend([composite], event)
 
-    def extend(self, composites):
+    def extend(self, composites, event=None):
         if not composites:
-            return
+            return event
+        notify = event is None
+        event = event or observer.Event()
         compositesAndAllChildren = self._compositesAndAllChildren(composites) 
         observer.Publisher().stopNotifying()
         super(CompositeCollection, self).extend(compositesAndAllChildren)
         parentsWithChildrenAdded = self._addCompositesToParent(composites)
         observer.Publisher().startNotifying()
-        event = observer.Event(self.addItemEventType(), self, *compositesAndAllChildren)
+        event.addSource(self, *compositesAndAllChildren, 
+                        **dict(type=self.addItemEventType()))
         for parent, children in parentsWithChildrenAdded.items():
             event.addSource(parent, *children, **dict(type=parent.addChildEventType()))
-        event.send()
+        if notify:
+            event.send()
+        else:
+            return event
             
     def _compositesAndAllChildren(self, composites):
         compositesAndAllChildren = set(composites) 
@@ -210,24 +216,30 @@ class CompositeCollection(object):
                     parents.setdefault(parent, []).append(composite)
         return parents
     
-    def remove(self, composite):
-        if composite in self:
-            self.removeItems([composite])
+    def remove(self, composite, event=None):
+        return self.removeItems([composite], event) if composite in self else event
 
-    def removeItems(self, composites):
+    def removeItems(self, composites, event=None):
         if not composites:
-            return
+            return event
+        notify = event is None
+        event = event or observer.Event()
         parents, children = self._splitCompositesInParentsAndChildren(composites)
         compositesAndAllChildren = self._compositesAndAllChildren(parents)
         observer.Publisher().stopNotifying()
         self._removeCompositesFromCollection(parents)
         parentsWithChildrenRemoved = self._removeCompositesFromParent(composites)
         observer.Publisher().startNotifying()
-        event = observer.Event(self.removeItemEventType(), self, *compositesAndAllChildren)
+        event.addSource(self, *compositesAndAllChildren, 
+                        **dict(type=self.removeItemEventType()))
         for parent, children in parentsWithChildrenRemoved.items():
             if parent in self:
-                event.addSource(parent, *children, **dict(type=parent.removeChildEventType()))
-        event.send()
+                event.addSource(parent, *children, 
+                                **dict(type=parent.removeChildEventType()))
+        if notify:
+            event.send()
+        else:
+            return event
 
     def _splitCompositesInParentsAndChildren(self, composites):
         parents, children = [], []

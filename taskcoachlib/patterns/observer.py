@@ -399,58 +399,124 @@ class ObservableSet(ObservableCollection, Set):
             result = list(self) == other
         return result
 
-    def append(self, item):
+    def append(self, item, event=None):
+        notify = event is None
+        event = event or Event()
         self.add(item)
-        self.notifyObserversOfItemsAdded(item)
+        event.addSource(self, item, type=self.addItemEventType())
+        if notify:
+            event.send()
+        else:
+            return event
 
-    def extend(self, items):
-        if items:
-            self.update(items)
-            self.notifyObserversOfItemsAdded(*items)
-        
-    def remove(self, item):
+    def extend(self, items, event=None):
+        if not items:
+            return event
+        notify = event is None
+        event = event or Event()
+        self.update(items)
+        event.addSource(self, *items, **dict(type=self.addItemEventType()))
+        if notify:
+            event.send()
+        else:
+            return event
+    
+    def remove(self, item, event=None):
+        notify = event is None
+        event = event or Event()
         super(ObservableSet, self).remove(item)
-        self.notifyObserversOfItemsRemoved(item)
+        event.addSource(self, item, type=self.removeItemEventType())
+        if notify:
+            event.send()
+        else:
+            return event
     
-    def removeItems(self, items):
-        if items:
-            self.difference_update(items)
-            self.notifyObserversOfItemsRemoved(*items)
+    def removeItems(self, items, event=None):
+        if not items:
+            return event
+        notify = event is None
+        event = event or Event()
+        self.difference_update(items)
+        event.addSource(self, *items, **dict(type=self.removeItemEventType()))
+        if notify:
+            event.send()
+        else:
+            return event
     
-    def clear(self):
-        if self:
-            items = tuple(self)
-            super(ObservableSet, self).clear()
-            self.notifyObserversOfItemsRemoved(*items)
+    def clear(self, event=None):
+        if not self:
+            return event
+        notify = event is None
+        event = event or Event()
+        items = tuple(self)
+        super(ObservableSet, self).clear()
+        event.addSource(self, *items, **dict(type=self.removeItemEventType()))
+        if notify:
+            event.send()
+        else:
+            return event
     
 
 class ObservableList(ObservableCollection, List):
     ''' ObservableList is a list that notifies observers 
         when items are added to or removed from the list. '''
         
-    def append(self, item):
+    def append(self, item, event=None):
+        notify = event is None
+        event = event or Event()
         super(ObservableList, self).append(item)
-        self.notifyObserversOfItemsAdded(item)
+        event.addSource(self, item, type=self.addItemEventType())
+        if notify:
+            event.send()
+        else:
+            return event
         
-    def extend(self, items):
-        if items:
-            super(ObservableList, self).extend(items)
-            self.notifyObserversOfItemsAdded(*items)
+    def extend(self, items, event=None):
+        if not items:
+            return event
+        notify = event is None
+        event = event or Event()
+        super(ObservableList, self).extend(items)
+        event.addSource(self, *items, **dict(type=self.addItemEventType()))
+        if notify:
+            event.send()
+        else:
+            return event
             
-    def remove(self, item):
+    def remove(self, item, event=None):
+        notify = event is None
+        event = event or Event()
         super(ObservableList, self).remove(item)
-        self.notifyObserversOfItemsRemoved(item)
+        event.addSource(self, item, type=self.removeItemEventType())
+        if notify:
+            event.send()
+        else:
+            return event
     
-    def removeItems(self, items):
-        if items:
-            super(ObservableList, self).removeItems(items)
-            self.notifyObserversOfItemsRemoved(*items)
+    def removeItems(self, items, event=None):
+        if not items:
+            return event
+        notify = event is None
+        event = event or Event()
+        super(ObservableList, self).removeItems(items)
+        event.addSource(self, *items, **dict(type=self.removeItemEventType()))
+        if notify:
+            event.send()
+        else:
+            return event
 
-    def clear(self):
-        if self:
-            items = tuple(self)
-            del self[:]
-            self.notifyObserversOfItemsRemoved(*items) 
+    def clear(self, event=None):
+        if not self:
+            return event
+        notify = event is None
+        event = event or Event()
+        items = tuple(self)
+        del self[:]
+        event.addSource(self, *items, **dict(type=self.removeItemEventType()))
+        if notify:
+            event.send()
+        else:
+            return event 
                
 
 class CollectionDecorator(Decorator, ObservableCollection):
@@ -496,17 +562,17 @@ class CollectionDecorator(Decorator, ObservableCollection):
 
     # Delegate changes to the observed collection
 
-    def append(self, item):
-        self.observable().append(item)
+    def append(self, *args, **kwargs):
+        return self.observable().append(*args, **kwargs)
             
-    def extend(self, items):
-        self.observable().extend(items)
+    def extend(self, *args, **kwargs):
+        return self.observable().extend(*args, **kwargs)
         
-    def remove(self, item):
-        self.observable().remove(item)
+    def remove(self, *args, **kwargs):
+        return self.observable().remove(*args, **kwargs)
     
-    def removeItems(self, items):
-        self.observable().removeItems(items)
+    def removeItems(self, *args, **kwargs):
+        return self.observable().removeItems(*args, **kwargs)
         
 
 class ListDecorator(CollectionDecorator, ObservableList):

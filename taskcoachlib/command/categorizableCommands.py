@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.i18n import _
+from taskcoachlib import patterns
 import base
 
 
@@ -34,10 +35,12 @@ class ToggleCategoryCommand(base.BaseCommand):
     undo_command = redo_command = do_command
         
     def toggle_category(self):
+        event = patterns.Event()
         for item in self.items:
             if self.category in item.categories():
-                self.category.removeCategorizable(item)
-                item.removeCategory(self.category)
+                self.category.removeCategorizable(item, event=event)
+                item.removeCategory(self.category, event=event)
             else:
-                self.category.addCategorizable(item)
-                item.addCategory(self.category)  
+                self.category.addCategorizable(item, event=event)
+                item.addCategory(self.category, event=event)
+        event.send()  

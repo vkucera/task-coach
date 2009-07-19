@@ -361,14 +361,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return sum((effort.duration() for effort in self.efforts(recursive)), 
                    date.TimeDelta())
 
-    def stopTracking(self):
-        stoppedEfforts = []
-        event = patterns.Event()
+    def stopTracking(self, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         for effort in self.activeEfforts():
-            effort.setStop(event=event)
-            stoppedEfforts.append(effort)
-        event.send()
-        return stoppedEfforts
+            event = effort.setStop(event=event)
+        if notify:
+            event.send()
+        else:
+            return event
                 
     def budget(self, recursive=False):
         result = self._budget
