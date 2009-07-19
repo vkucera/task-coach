@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wxversion
-wxversion.ensureMinimal("2.8-unicode", optionsRequired=True) 
+wxversion.ensureMinimal("2.8")
 
 import os, wx.tools.img2py
 
