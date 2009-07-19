@@ -33,7 +33,8 @@ class GetRelativePathTest(test.TestCase):
         self.assertEqual('..', attachment.getRelativePath('/test', '/test/subdir'))
         
     def testBaseAndPathAreDifferent(self):
-        self.assertEqual('..\\bar', attachment.getRelativePath('/bar', '/foo'))
+        self.assertEqual(os.path.join('..', 'bar'),
+                         attachment.getRelativePath('/bar', '/foo'))
         
         
 class FileAttachmentTest(test.TestCase):
