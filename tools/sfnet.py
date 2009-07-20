@@ -55,6 +55,9 @@ class SourceForge(PAM.PAMIE):
                 self.clickButton('login')):
             raise RuntimeError('Could not login')
 
+    def logout(self):
+        self.clickLink('Log out')
+
     def addRelease(self, releaseName):
         """This assumes default package"""
 
@@ -154,15 +157,54 @@ class SourceForge(PAM.PAMIE):
             else:
                 raise RuntimeError('could not find submit button for %s' % filename)
 
+    def addGroup(self, name):
+        if not self.navigate('https://sourceforge.net/projects/%s/develop' % self.__projectName):
+            raise RuntimeError('Could not go to project page')
+
+        bugs = self.findElement('a', 'innerText', 'Bugs')
+        if bugs is None:
+            raise RuntimeError('Could not go to bugs tracker')
+        bugs.click()
+
+        if not self.clickLink('Admin'):
+            raise RuntimeError('Could not go to tracker admin')
+
+        # Collect admin links for all trackers
+
+        links = []
+        for link in self.getElementsList('a'):
+            if link.getAttribute('href').find('/tracker/admin/?atid=') != -1:
+                links.append(link.getAttribute('href'))
+
+        # Add group to all trackers
+
+        for link in links:
+            self.navigate(link)
+
+            if not self.clickLink('Add/Update Groups'):
+                raise RuntimeError('Could not go to group add form')
+
+            if not self.setTextBox('name', name):
+                raise RuntimeError('Could not fill name')
+
+            submit = self.findElement('input', 'name', 'post_changes')
+            if submit is None:
+                raise RuntimeError('Where is the submit button ?')
+            submit.click()
+
 
 def main():
-    sf = SourceForge('projectname')
-    sf.login('login', 'pwd')
+    sf = SourceForge('pydropbar')
+    sf.login('fraca7', file('.passwd', 'rb').read().strip())
 
     sf.addRelease('test')
     sf.editRelease1('notes', 'changes', ['foobar-1.0.tar.gz', 'foobar-1.0.exe'])
     sf.editRelease2([('appbar-1.0.tar.gz', 'Platform-Independent', 'Source .gz'),
                      ('foobar-1.0.exe', 'i386', '.exe')])
+
+    sf.addGroup('TestGroup')
+
+    sf.logout()
     sf.quit()
 
 
