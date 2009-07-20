@@ -22,7 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('0.74.0', 'July ?, 2009',
+    summary=''' ... ''',
+    featuresAdded=[
+        Feature('''When exporting data to an HTML file, Task Coach writes a
+simple CSS stylesheet alongside it. The CSS stylesheet can be edited by the 
+user (e.g. using Notepad); Task Coach won't overwrite it.''')
+        ]
+    ),
+                
 Release('0.73.2', 'July 8, 2009',
     summary='''This release fixes some bugs, and adds synchronization with
 the iPhone version now available on the AppStore.''',

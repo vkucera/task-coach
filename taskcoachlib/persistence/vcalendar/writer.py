@@ -30,7 +30,7 @@ def extendedWithAncestors(selection):
 
 
 class VCalendarWriter(object):
-    def __init__(self, fd):
+    def __init__(self, fd, filename=None):
         self.__fd = fd
 
     def write(self, viewer, selectionOnly=False):

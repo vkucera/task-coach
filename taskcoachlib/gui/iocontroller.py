@@ -264,7 +264,7 @@ class IOController(object):
         filename = self.__askUserForFile(title, fileDialogOpts, flags=wx.SAVE)
         if filename:
             fd = self.__openFileForWriting(filename)
-            count = writerClass(fd).write(viewer, selectionOnly)
+            count = writerClass(fd, filename).write(viewer, selectionOnly)
             fd.close()
             self.__messageCallback(_('Exported %(count)d items to %(filename)s')%\
                 {'count': count, 'filename': filename})
