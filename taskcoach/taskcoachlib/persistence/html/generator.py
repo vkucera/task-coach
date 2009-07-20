@@ -36,7 +36,8 @@ def viewer2html(viewer, selectionOnly=False):
     htmlText += ' '*indent + '<tr>\n'
     indent += 2
     for column, alignment in zip(visibleColumns, columnAlignments):
-        htmlText += ' '*indent + '<th align="%s">%s</th>\n'%(alignment, column.header())
+        header = column.header() or '&nbsp;'
+        htmlText += ' '*indent + '<th align="%s">%s</th>\n'%(alignment, header)
     indent -= 2
     htmlText += ' '*indent + '</tr>\n'
     tree = viewer.isTreeViewer()
@@ -64,8 +65,9 @@ def viewer2html(viewer, selectionOnly=False):
         htmlText += ' '*indent + '<td align="%s">%s%s</td>\n'%(columnAlignments[0], space,
             render(item, visibleColumns[0], color))
         for column, alignment in zip(visibleColumns[1:], columnAlignments[1:]):
+            renderedItem = render(item, column, color) or '&nbsp;'
             htmlText += ' '*indent + '<td align="%s">%s</td>\n'%(alignment,
-                render(item, column, color))
+                renderedItem)
         indent -= 2
         htmlText += ' '*indent + '</tr>\n'
     htmlText += '''    </table>
