@@ -18,28 +18,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 
+docType = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
+metaTag = '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">'
+cssLink = '<link href="%s" rel="stylesheet" type="text/css" media="screen">'
+tableStartTag = '<table id="table">'
 
-def viewer2html(viewer, selectionOnly=False):
+
+def viewer2html(viewer, cssFilename=None, selectionOnly=False):
     visibleColumns = viewer.visibleColumns()
-    htmlText = '''<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  </head>
-  <body>
-    <table border=1 cellpadding=2>
-'''
+    htmlText = '%s\n<html>\n  <head>\n    %s\n'%(docType, metaTag)
+    if cssFilename:
+        htmlText += '    %s\n'%(cssLink%cssFilename)
+    htmlText += '  </head>\n  <body>\n    %s\n'%tableStartTag
+    
     columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left',
                          wx.LIST_FORMAT_CENTRE: 'center',
                          wx.LIST_FORMAT_RIGHT: 'right'}[column.alignment()]
                          for column in visibleColumns]
     indent = 6
-    htmlText += ' '*indent + '<tr>\n'
+    htmlText += ' '*indent + '<caption>%s</caption>\n'%viewer.title()
+    htmlText += ' '*indent + '<thead>\n'
+    indent += 2
+    htmlText += ' '*indent + '<tr class="header">\n'
     indent += 2
     for column, alignment in zip(visibleColumns, columnAlignments):
         header = column.header() or '&nbsp;'
-        htmlText += ' '*indent + '<th align="%s">%s</th>\n'%(alignment, header)
+        name = column.name()
+        if viewer.isSortable() and viewer.isSortedBy(name):
+            id = ' id="sorted" '
+        else:
+            id = ''
+        htmlText += ' '*indent + '<th scope="col" class="%s"%salign="%s">%s</th>\n'%(name, id, alignment, header)
     indent -= 2
     htmlText += ' '*indent + '</tr>\n'
+    indent -= 2
+    htmlText += ' '*indent + '</thead>\n'
+    htmlText += ' '*indent + '<tbody>\n'
+    indent += 2
     tree = viewer.isTreeViewer()
     count = 0
     for item in viewer.visibleItems():
@@ -55,21 +70,16 @@ def viewer2html(viewer, selectionOnly=False):
             htmlText += ' '*indent + '<tr bgcolor="%s">\n'%bgColor
         else:
             htmlText += ' '*indent + '<tr>\n'
-        if tree:
-            space = '&nbsp;' * len(item.ancestors()) * 3
-        else:
-            space = ''
+
         color = viewer.getColor(item)
-        
-        indent +=2
-        htmlText += ' '*indent + '<td align="%s">%s%s</td>\n'%(columnAlignments[0], space,
-            render(item, visibleColumns[0], color))
+        renderedItem = render(item, visibleColumns[0], color, tree)
+        htmlText += cell(renderedItem, visibleColumns[0], columnAlignments[0], indent)
         for column, alignment in zip(visibleColumns[1:], columnAlignments[1:]):
-            renderedItem = render(item, column, color) or '&nbsp;'
-            htmlText += ' '*indent + '<td align="%s">%s</td>\n'%(alignment,
-                renderedItem)
-        indent -= 2
+            renderedItem = render(item, column, color)
+            htmlText += cell(renderedItem, column, alignment, indent)
         htmlText += ' '*indent + '</tr>\n'
+    indent -= 2
+    htmlText += ' '*indent + '</tbody>\n'
     htmlText += '''    </table>
   </body>
 </html>
@@ -77,11 +87,20 @@ def viewer2html(viewer, selectionOnly=False):
     return htmlText, count
 
 
-def render(item, column, color):
+def cell(item, column, alignment, indent):
+    return ' ' * (indent+2) + '<td class="%s" align="%s">%s</td>\n'%(column.name(),
+        alignment, item)
+
+
+def render(item, column, color, tree=False):
     renderedItem = column.render(item)
     renderedItem = renderedItem.replace('\n', '<br>')
     if color[:3] != (0, 0, 0):
         color = '#%02X%02X%02X'%(color[0], color[1], color[2])
         renderedItem = '<font color="%s">%s</font>'%(color, renderedItem)
+    if tree:
+        renderedItem = '&nbsp;' * len(item.ancestors()) * 3 + renderedItem
+    if not renderedItem:
+        renderedItem = '&nbsp;'
     return renderedItem
     

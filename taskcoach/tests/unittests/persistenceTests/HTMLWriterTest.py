@@ -26,7 +26,7 @@ class HTMLWriterTestCase(test.wxTestCase):
     def setUp(self):
         super(HTMLWriterTestCase, self).setUp()
         self.fd = StringIO.StringIO()
-        self.writer = persistence.HTMLWriter(self.fd)
+        self.writer = persistence.HTMLWriter(self.fd, 'filename.html')
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('Task subject')
         self.taskFile.tasks().append(self.task)
@@ -59,6 +59,9 @@ class TaskTests(object):
     def testTaskSubject(self):
         self.expectInHTML('>Task subject<')
         
+    def testCSSLink(self):
+        self.expectInHTML('<link href="filename.css" rel="stylesheet" type="text/css" media="screen">')
+        
     def testWriteSelectionOnly(self):
         self.expectNotInHTML('>Task subject<', selectionOnly=True)
         
@@ -70,7 +73,7 @@ class TaskTests(object):
         self.expectInHTML('>Task subject<')
         
     def testSubjectColumnAlignment(self):
-        self.expectInHTML('<td align="left">Task subject</td>')
+        self.expectInHTML('align="left">Task subject</td>')
         
     def testOverdueTask(self):
         self.task.setDueDate(date.Yesterday())

@@ -27,7 +27,7 @@ class ICSWriter:
         and more specifically http://www.ietf.org/rfc/rfc2445.txt.
         Initial version provided by Gissehel. '''
 
-    def __init__(self, fd):
+    def __init__(self, fd, filename=None):
         self.__fd = fd
 
     def __iadd__(self, line):
