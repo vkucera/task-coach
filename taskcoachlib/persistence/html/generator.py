@@ -21,15 +21,24 @@ import wx
 
 def viewer2html(viewer, selectionOnly=False):
     visibleColumns = viewer.visibleColumns()
-    htmlText = '<html>\n<head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"></head>\n<body><table border=1 cellpadding=2>\n'
+    htmlText = '''<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+    <table border=1 cellpadding=2>
+'''
     columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left',
                          wx.LIST_FORMAT_CENTRE: 'center',
                          wx.LIST_FORMAT_RIGHT: 'right'}[column.alignment()]
                          for column in visibleColumns]
-    htmlText += '<tr>'
+    indent = 6
+    htmlText += ' '*indent + '<tr>\n'
+    indent += 2
     for column, alignment in zip(visibleColumns, columnAlignments):
-        htmlText += '<th align="%s">%s</th>'%(alignment, column.header())
-    htmlText += '</tr>\n'
+        htmlText += ' '*indent + '<th align="%s">%s</th>\n'%(alignment, column.header())
+    indent -= 2
+    htmlText += ' '*indent + '</tr>\n'
     tree = viewer.isTreeViewer()
     count = 0
     for item in viewer.visibleItems():
@@ -42,22 +51,27 @@ def viewer2html(viewer, selectionOnly=False):
                 bgColor = bgColor.GetAsString(wx.C2S_HTML_SYNTAX)
             except AttributeError: # bgColor is a tuple
                 bgColor = wx.Color(*bgColor).GetAsString(wx.C2S_HTML_SYNTAX)
-            htmlText += '<tr bgcolor="%s">'%bgColor
+            htmlText += ' '*indent + '<tr bgcolor="%s">\n'%bgColor
         else:
-            htmlText += '<tr>'
+            htmlText += ' '*indent + '<tr>\n'
         if tree:
             space = '&nbsp;' * len(item.ancestors()) * 3
         else:
             space = ''
         color = viewer.getColor(item)
         
-        htmlText += '<td align="%s">%s%s</td>'%(columnAlignments[0], space,
+        indent +=2
+        htmlText += ' '*indent + '<td align="%s">%s%s</td>\n'%(columnAlignments[0], space,
             render(item, visibleColumns[0], color))
         for column, alignment in zip(visibleColumns[1:], columnAlignments[1:]):
-            htmlText += '<td align="%s">%s</td>'%(alignment,
+            htmlText += ' '*indent + '<td align="%s">%s</td>\n'%(alignment,
                 render(item, column, color))
-        htmlText += '</tr>\n'
-    htmlText += '</table></body></html>\n'
+        indent -= 2
+        htmlText += ' '*indent + '</tr>\n'
+    htmlText += '''    </table>
+  </body>
+</html>
+'''
     return htmlText, count
 
 
