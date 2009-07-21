@@ -22,11 +22,17 @@ from taskcoachlib import persistence, gui, config
 from taskcoachlib.domain import task, category, effort, date, note
 
 
+class HTMLWriterUnderTest(persistence.HTMLWriter):
+    def _writeCSS(self):
+        pass
+    
+    
 class HTMLWriterTestCase(test.wxTestCase):
     def setUp(self):
         super(HTMLWriterTestCase, self).setUp()
         self.fd = StringIO.StringIO()
-        self.writer = persistence.HTMLWriter(self.fd, 'filename.html')
+        self.filename = 'filename.html'
+        self.writer = HTMLWriterUnderTest(self.fd, self.filename)
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('Task subject')
         self.taskFile.tasks().append(self.task)
