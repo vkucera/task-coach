@@ -33,6 +33,14 @@ viewer was active would result in exceptions.''', '2818254'),
         Bug('''The context menu key didn't work.''', '2807326'),
         Bug('''With SyncML enabled, tasks deleted on the desktop would still show up
 on the iPhone/iPod Touch.''')
+        ],
+    featuresAdded=[
+        Feature('''Specify which language to use on the command line. Type
+"taskcoach[.py|.exe] --help" on the command line for more information.'''),
+        Feature('''Load a .po file (a file containing translations) with a 
+command line option. Type "taskcoach[.py|.exe] --help" on the command line for more 
+information. This option allows translators to check their work more 
+easily.''', '1599933')
         ]
     ),
                 
