@@ -92,7 +92,7 @@ footer = '''
                            onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/browse_bugs');">Browse known bugs</a>
                     </li>
                     <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/submit_bug');">Submit a bug report</a>
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/submit_bug');">Report a bug</a>
                     </li>
                     <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137" 
                            onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_feature');">Request a feature</a>
@@ -201,7 +201,7 @@ footer_fr = unicode('''
                            onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/browse_bugs');">Parcourir les bogues connus</a>
                     </li>
                     <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/submit_bug');">Soumettre un rapport de bogue</a>
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/submit_bug');">Rapporter un bogue</a>
                     </li>
                     <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137" 
                            onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_feature');">Demander une fonctionnalité</a>
