@@ -167,10 +167,21 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def setDueDate(self, dueDate, event=None):
         if dueDate == self._dueDate:
             return event
-        self._dueDate = dueDate
+
         notify = event is None
         event = event or patterns.Event()
+        
+        self._dueDate = dueDate
         event.addSource(self, dueDate, type='task.dueDate')
+
+        for child in self.children():
+            if child.dueDate() > dueDate:
+                event = child.setDueDate(dueDate, event)
+        if self.parent():
+            parent = self.parent()
+            if dueDate > parent.dueDate():
+                event = parent.setDueDate(dueDate, event)
+        
         if notify:
             event.send()
         else:
@@ -576,9 +587,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def recur(self, event=None):
         notify = event is None
         event = event or patterns.Event()
-        for child in self.children():
-            if not child.recurrence():
-                event = child.recur(event)
         event = self.setCompletionDate(date.Date(), event)
         nextStartDate = self.recurrence(recursive=True)(self.startDate(), next=False)
         event = self.setStartDate(nextStartDate, event)
@@ -587,6 +595,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.reminder():
             nextReminder = self.recurrence(recursive=True)(self.reminder(), next=False)
             event = self.setReminder(nextReminder, event)
+        for child in self.children():
+            if not child.recurrence():
+                event = child.recur(event)
         self.recurrence()(next=True)
         if notify:
             event.send()

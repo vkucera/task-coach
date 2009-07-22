@@ -32,9 +32,9 @@ class TaskRelationshipManager(object):
         self.__settings = kwargs.pop('settings')
         taskList = kwargs.pop('taskList')
         super(TaskRelationshipManager, self).__init__(*args, **kwargs)
-        self.handlers = (self.onStartDate, self.onDueDate, 
+        self.handlers = (self.onStartDate,
             self.onCompletionDate, self.onAddChild, self.onRemoveChild)
-        self.eventTypes = ('task.startDate', 'task.dueDate', 
+        self.eventTypes = ('task.startDate',
             'task.completionDate', task.Task.addChildEventType(), 
             task.Task.removeChildEventType())
         for handler, eventType in zip(self.handlers, self.eventTypes):
@@ -48,14 +48,6 @@ class TaskRelationshipManager(object):
                 self.__setStartDateChildren(task, newEvent)
             if task.parent():
                 self.__setStartDateParent(task.parent(), task, newEvent)
-        newEvent.send()
-
-    def onDueDate(self, event):
-        newEvent = patterns.Event()
-        for task in event.sources():
-            self.__setDueDateChildren(task, newEvent)
-            if task.parent():
-                self.__setDueDateParent(task.parent(), task, newEvent)
         newEvent.send()
 
     def onCompletionDate(self, event):
@@ -117,12 +109,6 @@ class TaskRelationshipManager(object):
             if not child.completed():
                 child.setRecurrence(event=event)
                 child.setCompletionDate(taskCompletionDate, event)
-    
-    def __setDueDateChildren(self, task, event):
-        taskDueDate = task.dueDate()
-        for child in task.children():
-            if child.dueDate() > taskDueDate:
-                child.setDueDate(taskDueDate, event)
                 
     def __setDueDateParent(self, parent, child, event):
         if child.dueDate() > parent.dueDate():
