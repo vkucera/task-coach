@@ -32,7 +32,8 @@ viewer was active would result in exceptions.''', '2818254'),
         Bug('''Link to http://www.cygwin.com on the website had a typo.''', '2819702'),
         Bug('''The context menu key didn't work.''', '2807326'),
         Bug('''With SyncML enabled, tasks deleted on the desktop would still show up
-on the iPhone/iPod Touch.''')
+on the iPhone/iPod Touch.'''),
+        Bug('''Translate tip window controls and search controls.''', '2825463')
         ],
     featuresAdded=[
         Feature('''Specify which language to use on the command line. Type

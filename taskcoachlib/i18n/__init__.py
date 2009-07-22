@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, imp, tempfile
+import wx, os, imp, tempfile, locale
 from taskcoachlib import patterns
 import po2dict
 
@@ -69,6 +69,9 @@ class Translator:
 
     def _setLocale(self, *localeStrings):
         ''' Try to set the locale, trying possibly multiple localeStrings. '''
+        # This is necessary for standard dialog texts to be translated:
+        locale.setlocale(locale.LC_ALL)
+        # Set the wxPython locale:
         for localeString in localeStrings:
             languageInfo = wx.Locale.FindLanguageInfo(localeString)
             if languageInfo:
