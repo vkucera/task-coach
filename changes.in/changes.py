@@ -33,7 +33,9 @@ viewer was active would result in exceptions.''', '2818254'),
         Bug('''The context menu key didn't work.''', '2807326'),
         Bug('''With SyncML enabled, tasks deleted on the desktop would still show up
 on the iPhone/iPod Touch.'''),
-        Bug('''Translate tip window controls and search controls.''', '2825463')
+        Bug('''Translate tip window controls, search controls, and
+viewer titles.''', '2825463', '2825222'),
+        Bug('''Prevent exception when opening a new viewer.''', '2825222')
         ],
     featuresAdded=[
         Feature('''Specify which language to use on the command line. Type

@@ -3194,8 +3194,11 @@ class HyperTreeList(wx.PyControl):
         self._windowStyle = style
         
         self._main_win = TreeListMainWindow(self, -1, wx.Point(0, 0), size, main_style, validator)
+        self._main_win._buffered = False
         self._header_win = TreeListHeaderWindow(self, -1, self._main_win, wx.Point(0, 0),
                                                 wx.DefaultSize, wx.TAB_TRAVERSAL)
+        self._header_win._buffered = False
+        
         self.CalculateAndSetHeaderHeight()
         self.Bind(wx.EVT_SIZE, self.OnSize)
 

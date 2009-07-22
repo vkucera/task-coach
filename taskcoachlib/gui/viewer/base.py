@@ -81,7 +81,8 @@ class Viewer(wx.Panel):
         return self.settings.get(self.settingsSection(), 'title') or self.defaultTitle
     
     def setTitle(self, title):
-        self.settings.set(self.settingsSection(), 'title', title)
+        titleToSaveInSettings = '' if title == self.defaultTitle else title
+        self.settings.set(self.settingsSection(), 'title', titleToSaveInSettings)
         self.parent.SetPageText(self.parent.GetPageIndex(self), title)
 
     def initLayout(self):
