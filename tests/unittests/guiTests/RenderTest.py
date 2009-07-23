@@ -196,11 +196,14 @@ class RenderException(test.TestCase):
                              render.exception(UnicodeDecodeError, instance))
             
     def testExceptionThatCannotBePrinted(self):
-        class UnprintableException(Exception):
-            def __unicode__(self):
-                # This causes an UnicodeDecodeError when printed:
-                return str(self).decode('ascii')
-        instance = UnprintableException('éáí')
-        self.assertEqual(str(UnprintableException), 
-                         render.exception(UnprintableException, instance))
-        
+        """win32all exceptions may contain localized error
+        messages. But Exception.__str__ does not handle non-ASCII
+        characters in the args instance variable; calling
+        unicode(instance) is just like calling str(instance) and
+        raises an UnicodeEncodeError."""
+
+        e = Exception(u'é')
+        try:
+            render.exception(Exception, e)
+        except UnicodeEncodeError:
+            self.fail()
