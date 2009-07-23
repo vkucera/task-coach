@@ -37,7 +37,7 @@ on the iPhone/iPod Touch.'''),
 viewer titles.''', '2825463', '2825222'),
         Bug('''Prevent exception when opening a new viewer.''', '2825222'),
         Bug('''Don't fail silently when something goes wrong while opening 
-an attachment.''')
+an attachment.''', '2826178')
         ],
     featuresAdded=[
         Feature('''Specify which language to use on the command line. Type
