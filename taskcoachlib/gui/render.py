@@ -126,3 +126,9 @@ def taskBitmapNames(task, hasChildren=None):
 
     return bitmap, bitmap_selected
 
+def exception(exception, instance):
+    ''' Safely render an exception, being prepared for new exceptions. '''
+    try:
+        return unicode(instance)
+    except UnicodeDecodeError:
+        return str(exception)

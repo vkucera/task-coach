@@ -35,7 +35,9 @@ viewer was active would result in exceptions.''', '2818254'),
 on the iPhone/iPod Touch.'''),
         Bug('''Translate tip window controls, search controls, and
 viewer titles.''', '2825463', '2825222'),
-        Bug('''Prevent exception when opening a new viewer.''', '2825222')
+        Bug('''Prevent exception when opening a new viewer.''', '2825222'),
+        Bug('''Don't fail silently when something goes wrong while opening 
+an attachment.''')
         ],
     featuresAdded=[
         Feature('''Specify which language to use on the command line. Type

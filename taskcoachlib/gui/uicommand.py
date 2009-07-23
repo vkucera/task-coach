@@ -1989,7 +1989,7 @@ class AttachmentOpen(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand
             try:
                 attachment.open()
             except Exception, instance:
-                showerror(unicode(instance), 
+                showerror(render.exception(Exception, instance), 
                           caption=_('Error opening attachment'), 
                           style=wx.ICON_ERROR)
 

@@ -181,3 +181,26 @@ class RenderBitmapNames_TaskWithChildren(RenderBitmapNames_TestCase,
         self.task.setDueDate(date.Today())
         self.assertBitmapNames('tasks_duetoday', 'tasks_duetoday_open')
         
+        
+class RenderException(test.TestCase):
+    def testRenderException(self):
+        instance = Exception()
+        self.assertEqual(unicode(instance), 
+                         render.exception(Exception, instance))
+
+    def testRenderUnicodeDecodeError(self):
+        try:
+            'abc'.encode('utf-16').decode('utf-8')
+        except UnicodeDecodeError, instance:
+            self.assertEqual(str(instance), 
+                             render.exception(UnicodeDecodeError, instance))
+            
+    def testExceptionThatCannotBePrinted(self):
+        class UnprintableException(Exception):
+            def __unicode__(self):
+                # This causes an UnicodeDecodeError when printed:
+                return str(self).decode('ascii')
+        instance = UnprintableException('éáí')
+        self.assertEqual(str(UnprintableException), 
+                         render.exception(UnprintableException, instance))
+        
