@@ -48,20 +48,35 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.writer.write(self.viewer, selectionOnly)
         return self.fd.getvalue()
     
-    def expectInHTML(self, htmlFragment, selectionOnly=False):
+    def expectInHTML(self, *htmlFragments, **kwargs):
+        selectionOnly = kwargs.pop('selectionOnly', False)
         html = self.__writeAndRead(selectionOnly)
-        self.failUnless(htmlFragment in html, 
-                        '%s not in %s'%(htmlFragment, html))
+        for htmlFragment in htmlFragments:
+            self.failUnless(htmlFragment in html, 
+                            '%s not in %s'%(htmlFragment, html))
     
-    def expectNotInHTML(self, htmlFragment, selectionOnly=False):
+    def expectNotInHTML(self, *htmlFragments, **kwargs):
+        selectionOnly = kwargs.pop('selectionOnly', False)
         html = self.__writeAndRead(selectionOnly)
-        self.failIf(htmlFragment in html, '%s in %s'%(htmlFragment, html))
+        for htmlFragment in htmlFragments:
+            self.failIf(htmlFragment in html, '%s in %s'%(htmlFragment, html))
 
     def selectItem(self, index):
         self.viewer.widget.select((index,))
 
 
-class TaskTests(object):
+class CommonTests(object):
+    def testHTML(self):
+        self.expectInHTML('<html>\n', '</html>\n')
+        
+    def testHeader(self):
+        self.expectInHTML('  <head>\n', '  </head>\n')
+
+    def testBody(self):
+        self.expectInHTML('  <body>\n', '  </body>\n')
+
+
+class TaskTests(CommonTests):
     def testTaskSubject(self):
         self.expectInHTML('>Task subject<')
         
@@ -79,39 +94,42 @@ class TaskTests(object):
         self.expectInHTML('>Task subject<')
         
     def testSubjectColumnAlignment(self):
-        self.expectInHTML('align="left">Task subject</td>')
+        self.expectInHTML('<td class="subject" style="text-align: left">Task subject</td>')
+
+    def testSubjectColumnHeaderAlignment(self):
+        self.expectInHTML('<th class="subject" scope="col" style="text-align: left">Subject</th>')
         
     def testOverdueTask(self):
         self.task.setDueDate(date.Yesterday())
-        self.expectInHTML('<font color="#FF0000">Task subject</font>')
+        self.expectInHTML('<tr style="color: #FF0000">')
 
     def testCompletedTask(self):
         self.task.setCompletionDate()
-        self.expectInHTML('<font color="#00FF00">Task subject</font>')
+        self.expectInHTML('<tr style="color: #00FF00">')
 
     def testTaskDueToday(self):
         self.task.setDueDate(date.Today())
         expectedColor = '%02X%02X%02X'%eval(self.settings.get('color', 'duetodaytasks'))[:3]
-        self.expectInHTML('<font color="#%s">Task subject</font>'%expectedColor)
+        self.expectInHTML('<tr style="color: #%s">'%expectedColor)
         
     def testInactiveTask(self):
         self.task.setStartDate(date.Tomorrow())
         expectedColor = '%02X%02X%02X'%eval(self.settings.get('color', 'inactivetasks'))[:3]
-        self.expectInHTML('<font color="#%s">Task subject</font>'%expectedColor)
+        self.expectInHTML('<tr style="color: #%s">'%expectedColor)
 
     def testTaskColor(self):
         self.task.setColor(wx.RED)
-        self.expectInHTML('<tr bgcolor="#FF0000">')
+        self.expectInHTML('<tr style="background: #FF0000">')
         
     def testCategoryColor(self):
         cat = category.Category('cat', color=wx.RED)
         self.task.addCategory(cat)
-        self.expectInHTML('<tr bgcolor="#FF0000">')
+        self.expectInHTML('<tr style="background: #FF0000">')
 
     def testCategoryColorAsTuple(self):
         cat = category.Category('cat', color=(255, 0, 0, 0))
         self.task.addCategory(cat)
-        self.expectInHTML('<tr bgcolor="#FF0000">')
+        self.expectInHTML('<tr style="background: #FF0000">')
         
         
 class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
@@ -132,7 +150,7 @@ class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
     treeMode = 'True'
 
 
-class EffortWriterTest(HTMLWriterTestCase):
+class EffortWriterTest(HTMLWriterTestCase, CommonTests):
     def setUp(self):
         super(EffortWriterTest, self).setUp()
         now = date.DateTime.now()
