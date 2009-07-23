@@ -28,19 +28,19 @@ class Translator:
         if not language:
             return
         load = self._loadPoFile if language.endswith('.po') else self._loadModule
-        module, localeStrings = load(language) 
+        module, language = load(language) 
         self._installModule(module)
-        self._setLocale(*localeStrings)
+        self._setLocale(language)
 
     def _loadPoFile(self, poFilename):
         ''' Load the translation from a .po file by creating a python 
             module with po2dict and them importing that module. ''' 
-        language = os.path.splitext(os.path.basename(poFilename))[0]
+        language = self._languageFromPoFilename(poFilename)
         pyFilename = self._tmpPyFilename()
         po2dict.make(poFilename, pyFilename)
         module = imp.load_source(language, pyFilename)
         os.remove(pyFilename)
-        return module, (language,)
+        return module, language
     
     def _tmpPyFilename(self):
         ''' Return a filename of a (closed) temporary .py file. '''
@@ -49,17 +49,16 @@ class Translator:
         tmpFile.close()
         return pyFilename
 
-    def _loadModule(self, languageAndCountry):
+    def _loadModule(self, language):
         ''' Load the translation from a python module that has been 
             created from a .po file with po2dict before. '''
-        language = languageAndCountry.split('_')[0] # e.g. 'nl_NL'.split('_')[0] == 'nl'
-        for moduleName in languageAndCountry, language:
+        for moduleName in self._localeStrings(language):
             try:
                 module = __import__(moduleName, globals())
                 break
             except ImportError:
                 module = None
-        return module, (languageAndCountry, language)
+        return module, language
 
     def _installModule(self, module):
         ''' Make the module's translation dictionary and encoding available. '''
@@ -67,17 +66,27 @@ class Translator:
             self.__language = module.dict
             self.__encoding = module.encoding
 
-    def _setLocale(self, *localeStrings):
+    def _setLocale(self, language):
         ''' Try to set the locale, trying possibly multiple localeStrings. '''
         # This is necessary for standard dialog texts to be translated:
         locale.setlocale(locale.LC_ALL)
         # Set the wxPython locale:
-        for localeString in localeStrings:
+        for localeString in self._localeStrings(language):
             languageInfo = wx.Locale.FindLanguageInfo(localeString)
             if languageInfo:
                 self.__locale = wx.Locale(languageInfo.Language)
                 break
-
+            
+    def _localeStrings(self, language):
+        ''' Extract language and language_country from language if possible. '''
+        localeStrings = [language]
+        if '_' in language:
+            localeStrings.append(language.split('_')[0])
+        return localeStrings
+    
+    def _languageFromPoFilename(self, poFilename):
+        return os.path.splitext(os.path.basename(poFilename))[0]
+        
     def translate(self, string):
         ''' Look up string in the current language dictionary. Return the
             passed string if no language dictionary is available or if the
