@@ -16,91 +16,179 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
-
-docType = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
-metaTag = '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">'
-cssLink = '<link href="%s" rel="stylesheet" type="text/css" media="screen">'
-tableStartTag = '<table id="table">'
+import wx, cgi
 
 
 def viewer2html(viewer, cssFilename=None, selectionOnly=False):
-    visibleColumns = viewer.visibleColumns()
-    htmlText = '%s\n<html>\n  <head>\n    %s\n'%(docType, metaTag)
-    if cssFilename:
-        htmlText += '    %s\n'%(cssLink%cssFilename)
-    htmlText += '  </head>\n  <body>\n    %s\n'%tableStartTag
+    converter = Viewer2HTMLConverter(viewer)
+    return converter(cssFilename, selectionOnly) 
+
+
+class Viewer2HTMLConverter(object):
+    ''' Class to convert the visible contents of a viewer into HTML.'''
     
-    columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left',
-                         wx.LIST_FORMAT_CENTRE: 'center',
-                         wx.LIST_FORMAT_RIGHT: 'right'}[column.alignment()]
-                         for column in visibleColumns]
-    indent = 6
-    htmlText += ' '*indent + '<caption>%s</caption>\n'%viewer.title()
-    htmlText += ' '*indent + '<thead>\n'
-    indent += 2
-    htmlText += ' '*indent + '<tr class="header">\n'
-    indent += 2
-    for column, alignment in zip(visibleColumns, columnAlignments):
+    docType = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
+    metaTag = '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">'
+    cssLink = '<link href="%s" rel="stylesheet" type="text/css" media="screen">'
+
+    def __init__(self, viewer):
+        super(Viewer2HTMLConverter, self).__init__()
+        self.viewer = viewer
+        
+    def __call__(self, cssFilename, selectionOnly):
+        ''' Create an HTML document. '''
+        lines = [self.docType] + self.html(cssFilename, selectionOnly) + ['']
+        return '\n'.join(lines), self.count
+    
+    def html(self, cssFilename, selectionOnly, level=0):
+        ''' Returns all HTML, consisting of header and body. '''
+        htmlContent = self.htmlHeader(cssFilename, level+1) + \
+                      self.htmlBody(selectionOnly, level+1)
+        return self.wrap(htmlContent, 'html', level)
+    
+    def htmlHeader(self, cssFilename, level):
+        ''' Return the HTML header <head>. '''
+        htmlHeaderContent = self.htmlHeaderContent(cssFilename, level+1)
+        return self.wrap(htmlHeaderContent, 'head', level)
+        
+    def htmlHeaderContent(self, cssFilename, level):
+        ''' Returns the HTML header section, containing meta tag, title, and
+            optional link to a CSS stylesheet. '''
+        htmlHeaderContent = [self.indent(self.metaTag, level), 
+                             self.wrap(self.viewer.title(), 'title', level, oneLine=True)]
+        if cssFilename:
+            htmlHeaderContent.append(self.indent(self.cssLink%cssFilename, level))
+        return htmlHeaderContent
+    
+    def htmlBody(self, selectionOnly, level):
+        ''' Returns the HTML body section, containing one table with all 
+            visible data. '''
+        htmlBodyContent = self.table(selectionOnly, level+1)
+        return self.wrap(htmlBodyContent, 'body', level)
+    
+    def table(self, selectionOnly, level):
+        ''' Returns the table, consisting of caption, table header and table 
+            body. '''
+        visibleColumns = self.viewer.visibleColumns()
+        columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left',
+                             wx.LIST_FORMAT_CENTRE: 'center',
+                             wx.LIST_FORMAT_RIGHT: 'right'}[column.alignment()]
+                             for column in visibleColumns]
+        tableContent = [self.tableCaption(level+1)] + \
+                       self.tableHeader(visibleColumns, columnAlignments, level+1) + \
+                       self.tableBody(visibleColumns, columnAlignments, selectionOnly, level+1)
+        return self.wrap(tableContent, 'table', level, id='table')
+                
+    def tableCaption(self, level):
+        ''' Returns the table caption, based on the viewer title. '''
+        return self.wrap(self.viewer.title(), 'caption', level, oneLine=True)
+    
+    def tableHeader(self, visibleColumns, columnAlignments, level):
+        ''' Returns the table header section <thead> containing the header
+            row with the column headers. '''
+        tableHeaderContent = self.headerRow(visibleColumns, columnAlignments, level+1)
+        return self.wrap(tableHeaderContent, 'thead', level)
+        
+    def headerRow(self, visibleColumns, columnAlignments, level):
+        ''' Returns the header row <tr> for the table. '''
+        headerRowContent = []
+        for column, alignment in zip(visibleColumns, columnAlignments):
+            headerRowContent.append(self.headerCell(column, alignment, level+1))
+        return self.wrap(headerRowContent, 'tr', level, **{'class': 'header'})
+        
+    def headerCell(self, column, alignment, level):
+        ''' Returns a table header <th> for the specific column. '''
         header = column.header() or '&nbsp;'
         name = column.name()
-        if viewer.isSortable() and viewer.isSortedBy(name):
-            id = ' id="sorted" '
-        else:
-            id = ''
-        htmlText += ' '*indent + '<th scope="col" class="%s"%salign="%s">%s</th>\n'%(name, id, alignment, header)
-    indent -= 2
-    htmlText += ' '*indent + '</tr>\n'
-    indent -= 2
-    htmlText += ' '*indent + '</thead>\n'
-    htmlText += ' '*indent + '<tbody>\n'
-    indent += 2
-    tree = viewer.isTreeViewer()
-    count = 0
-    for item in viewer.visibleItems():
-        if selectionOnly and not viewer.isselected(item):
-            continue
-        count += 1
-        bgColor = viewer.getBackgroundColor(item)
-        if bgColor:
-            try:
-                bgColor = bgColor.GetAsString(wx.C2S_HTML_SYNTAX)
-            except AttributeError: # bgColor is a tuple
-                bgColor = wx.Color(*bgColor).GetAsString(wx.C2S_HTML_SYNTAX)
-            htmlText += ' '*indent + '<tr bgcolor="%s">\n'%bgColor
-        else:
-            htmlText += ' '*indent + '<tr>\n'
-
-        color = viewer.getColor(item)
-        renderedItem = render(item, visibleColumns[0], color, tree)
-        htmlText += cell(renderedItem, visibleColumns[0], columnAlignments[0], indent)
-        for column, alignment in zip(visibleColumns[1:], columnAlignments[1:]):
-            renderedItem = render(item, column, color)
-            htmlText += cell(renderedItem, column, alignment, indent)
-        htmlText += ' '*indent + '</tr>\n'
-    indent -= 2
-    htmlText += ' '*indent + '</tbody>\n'
-    htmlText += '''    </table>
-  </body>
-</html>
-'''
-    return htmlText, count
-
-
-def cell(item, column, alignment, indent):
-    return ' ' * (indent+2) + '<td class="%s" align="%s">%s</td>\n'%(column.name(),
-        alignment, item)
-
-
-def render(item, column, color, tree=False):
-    renderedItem = column.render(item)
-    renderedItem = renderedItem.replace('\n', '<br>')
-    if color[:3] != (0, 0, 0):
-        color = '#%02X%02X%02X'%(color[0], color[1], color[2])
-        renderedItem = '<font color="%s">%s</font>'%(color, renderedItem)
-    if tree:
-        renderedItem = '&nbsp;' * len(item.ancestors()) * 3 + renderedItem
-    if not renderedItem:
-        renderedItem = '&nbsp;'
-    return renderedItem
+        attributes = {'scope': 'col', 'class': name, 
+                      'style': 'text-align: %s'%alignment}
+        if self.viewer.isSortable() and self.viewer.isSortedBy(name):
+            attributes['id'] = 'sorted'
+        return self.wrap(header, 'th', level, oneLine=True, **attributes)
     
+    def tableBody(self, visibleColumns, columnAlignments, selectionOnly, level):
+        ''' Returns the table body <tbody>. ''' 
+        tree = self.viewer.isTreeViewer()
+        self.count = 0
+        tableBodyContent = []
+        for item in self.viewer.visibleItems():
+            if selectionOnly and not self.viewer.isselected(item):
+                continue
+            self.count += 1
+            tableBodyContent.extend(self.bodyRow(item, visibleColumns, columnAlignments, tree, level+1))
+        return self.wrap(tableBodyContent, 'tbody', level)
+    
+    def bodyRow(self, item, visibleColumns, columnAlignments, tree, level):
+        ''' Returns a <tr> containing the values of item for the 
+            visibleColumns. '''
+        bodyRowContent = []
+        for column, alignment in zip(visibleColumns, columnAlignments):
+            renderedItem = self.render(item, column, indent=not bodyRowContent and tree)
+            bodyRowContent.append(self.bodyCell(renderedItem, column, alignment, level+1))
+        style = self.bodyRowStyleAttribute(item)
+        attributes = dict(style=style) if style else dict()
+        return self.wrap(bodyRowContent, 'tr', level, **attributes)
+    
+    def bodyRowStyleAttribute(self, item):
+        ''' Determine the style attribute for item. Returns a CSS style
+            specification: 'color: <color>; background: <color>'. '''
+        bgColor = self.viewer.getBackgroundColor(item)
+        bgColor = 'background: %s'%self.cssColorSyntax(bgColor) if bgColor else ''
+        fgColor = self.viewer.getColor(item)
+        fgColor = 'color: %s'%self.cssColorSyntax(fgColor) if fgColor and fgColor != wx.BLACK else ''
+        style = '; '.join(color for color in (bgColor, fgColor) if color)
+        return style
+    
+    def bodyCell(self, item, column, alignment, level):
+        ''' Return a <td> for the item/column combination, using the specified
+            aligment (one of 'left', 'center', 'right'). '''
+        attributes = {'class': column.name(), 
+                      'style': 'text-align: %s'%alignment}
+        return self.wrap(item, 'td', level, oneLine=True, **attributes)
+    
+    @classmethod
+    def wrap(class_, lines, tagName, level, oneLine=False, **attributes):
+        ''' Wrap one or more lines with <tagName [optional attributes]> and 
+            </tagName>. '''
+        if attributes:
+            attributes = ' ' + ' '.join(sorted('%s="%s"'%(key, value) for key, value in attributes.iteritems()))
+        else:
+            attributes = ''
+        openTag = '<%s%s>'%(tagName, attributes)
+        closeTag = '</%s>'%tagName
+        if oneLine:
+            return class_.indent(openTag + lines + closeTag, level)
+        else:
+            return [class_.indent(openTag, level)] + \
+                   lines + \
+                   [class_.indent(closeTag, level)]
+    
+    @staticmethod
+    def indent(htmlText, level=0):
+        ''' Indent the htmlText with spaces according to the level, so that
+            the resulting HTML looks nicely indented. '''
+        return '  ' * level + htmlText
+    
+    @classmethod
+    def cssColorSyntax(class_, color):
+        ''' Translate the wx-color, either a wx.Color instance or a tuple, 
+            into CSS syntax. ''' 
+        try:
+            return color.GetAsString(wx.C2S_HTML_SYNTAX)
+        except AttributeError: # color is a tuple
+            return class_.cssColorSyntax(wx.Color(*color))
+        
+    @staticmethod
+    def render(item, column, indent=False):
+        ''' Render the item based on the column, escape HTML and indent if 
+            the item with non-breaking spaces, if indent == True. '''
+        # Escape the rendered item and then replace newlines with <br>. 
+        renderedItem = cgi.escape(column.render(item)).replace('\n', '<br>')
+        if indent:
+            # Indent the subject with whitespace
+            renderedItem = '&nbsp;' * len(item.ancestors()) * 3 + renderedItem
+        if not renderedItem:
+            # Make sure the empty cell is drawn
+            renderedItem = '&nbsp;'
+        return renderedItem
+        

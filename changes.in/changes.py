@@ -28,7 +28,7 @@ Release('0.74.0', 'July ?, 2009',
     featuresAdded=[
         Feature('''When exporting data to an HTML file, Task Coach writes a
 simple CSS stylesheet alongside it. The CSS stylesheet can be edited by the 
-user (e.g. using Notepad); Task Coach won't overwrite it.''')
+user using a text editor; Task Coach won't overwrite it.''')
         ]
     ),
                 
