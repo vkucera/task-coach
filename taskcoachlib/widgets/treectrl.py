@@ -99,7 +99,6 @@ class TreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop):
     def isCollapseExpandButtonClicked(self, event):
         item, flags, column = self.HitTest(event.GetPosition(), 
                                            alwaysReturnColumn=True)
-        print flags & wx.TREE_HITTEST_ONITEMBUTTON
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
         
     def getStyle(self):
