@@ -130,6 +130,9 @@ def exception(exception, instance):
     ''' Safely render an exception, being prepared for new exceptions. '''
 
     try:
+        # In this order. Python 2.6 fixed the unicode exception
+        # problem.
+        return unicode(instance)
         return str(instance)
     except UnicodeEncodeError:
         return '<class %s>' % str(exception)
