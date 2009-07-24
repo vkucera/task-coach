@@ -366,6 +366,9 @@ class SquareTaskViewer(BaseTaskViewer):
             'task.startDate', 'task.completionDate'):
             self.registerObserver(self.onAttributeChanged, eventType)
 
+    def curselectionIsInstanceOf(self, class_):
+        return class_ == task.Task
+    
     def createWidget(self):
         return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), 
             self.onSelect, 
@@ -469,6 +472,9 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
     def isTreeViewer(self):
         return self.settings.getboolean(self.settingsSection(), 'treemode')
 
+    def curselectionIsInstanceOf(self, class_):
+        return class_ == task.Task
+    
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -83,8 +83,10 @@ class SaveStateMixin:
         return [object.__getstate__() for object in self.objectsToBeSaved]
 
     def __setStates(self, states):
+        event = patterns.Event()
         for object, state in zip(self.objectsToBeSaved, states):
-            object.__setstate__(state)
+            event = object.__setstate__(state, event)
+        event.send()
 
 
 class CompositeMixin(object):

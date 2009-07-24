@@ -138,7 +138,7 @@ class ScheduledTimer(OnceTimer):
             return dateandtime.DateTime.max
 
 
-class Clock(patterns.Observer, patterns.Observable):
+class Clock(patterns.Observer):
     __metaclass__ = patterns.Singleton
     
     timeFormat = '%Y%m%d-%H%M%S'
@@ -178,15 +178,15 @@ class Clock(patterns.Observer, patterns.Observable):
             
     def notifySecondObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self.notifyObservers(patterns.Event('clock.second', self, now))
+        patterns.Event('clock.second', self, now).send()
 
     def notifySpecificTimeObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self.notifyObservers(patterns.Event(Clock.eventType(now), self, now))
+        patterns.Event(Clock.eventType(now), self, now).send()
 
     def notifyMidnightObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
-        self.notifyObservers(patterns.Event('clock.midnight', self, now))        
+        patterns.Event('clock.midnight', self, now).send()        
 
     def reset(self):
         self._lastMidnightNotified = date.Today()

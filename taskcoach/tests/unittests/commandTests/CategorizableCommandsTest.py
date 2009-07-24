@@ -41,5 +41,5 @@ class ToggleCategoryCommandTest(CommandTestCase):
     def testToggleCategory_AffectsCategory(self):
         self.toggleItem([self.categorizable])
         self.assertDoUndoRedo(\
-            lambda: self.assertEqual([self.categorizable], self.category.categorizables()),
-            lambda: self.assertEqual([], self.category.categorizables()))
+            lambda: self.assertEqual(set([self.categorizable]), self.category.categorizables()),
+            lambda: self.assertEqual(set(), self.category.categorizables()))

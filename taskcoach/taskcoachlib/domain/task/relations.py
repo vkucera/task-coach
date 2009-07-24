@@ -32,98 +32,94 @@ class TaskRelationshipManager(object):
         self.__settings = kwargs.pop('settings')
         taskList = kwargs.pop('taskList')
         super(TaskRelationshipManager, self).__init__(*args, **kwargs)
-        self.handlers = (self.onStartDate, self.onDueDate, 
+        self.handlers = (self.onStartDate,
             self.onCompletionDate, self.onAddChild, self.onRemoveChild)
-        self.eventTypes = ('task.startDate', 'task.dueDate', 
+        self.eventTypes = ('task.startDate',
             'task.completionDate', task.Task.addChildEventType(), 
             task.Task.removeChildEventType())
         for handler, eventType in zip(self.handlers, self.eventTypes):
             patterns.Publisher().registerObserver(handler, eventType=eventType)        
 
     def onStartDate(self, event):
+        newEvent = patterns.Event()
         for task in event.sources():
             if not task.recurrence(True): 
                 # Let Task.recur() handle the change in start date
-                self.__setStartDateChildren(task)
+                self.__setStartDateChildren(task, newEvent)
             if task.parent():
-                self.__setStartDateParent(task.parent(), task)
-
-    def onDueDate(self, event):
-        for task in event.sources():
-            self.__setDueDateChildren(task)
-            if task.parent():
-                self.__setDueDateParent(task.parent(), task)
+                self.__setStartDateParent(task.parent(), task, newEvent)
+        newEvent.send()
 
     def onCompletionDate(self, event):
+        newEvent = patterns.Event()
         for task in event.sources():
             if task.parent():
                 self.__markParentCompletedOrUncompletedIfNecessary(\
-                    task.parent(), task)
+                    task.parent(), task, newEvent)
             if task.completed():
-                self.__markUncompletedChildrenCompleted(task)
+                self.__markUncompletedChildrenCompleted(task, newEvent)
                 if task.isBeingTracked():
-                    task.stopTracking()
+                    task.stopTracking(newEvent)
+        newEvent.send()
 
     def onAddChild(self, event):
+        newEvent = patterns.Event()
         for task in event.sources():
             child = event.value(task)
-            self.__markParentCompletedOrUncompletedIfNecessary(task, child)
-            self.__setDueDateParent(task, child)
+            self.__markParentCompletedOrUncompletedIfNecessary(task, child, newEvent)
+            self.__setDueDateParent(task, child, newEvent)
             if child.startDate() < task.startDate():
-                task.setStartDate(child.startDate())
-
+                task.setStartDate(child.startDate(), newEvent)
+        newEvent.send()
+        
     def onRemoveChild(self, event):
+        newEvent = patterns.Event()
         for task in event.sources():
-            self.__markTaskCompletedIfNecessary(task, date.Today())
+            self.__markTaskCompletedIfNecessary(task, date.Today(), newEvent)
+        newEvent.send()
 
-    def __markParentCompletedOrUncompletedIfNecessary(self, parent, child):
+    def __markParentCompletedOrUncompletedIfNecessary(self, parent, child, event):
         if child.completed():
-            self.__markTaskCompletedIfNecessary(parent, child.completionDate())
+            self.__markTaskCompletedIfNecessary(parent, child.completionDate(), event)
         else:
-            self.__markTaskUncompletedIfNecessary(parent)
+            self.__markTaskUncompletedIfNecessary(parent, event)
                 
-    def __markTaskCompletedIfNecessary(self, task, completionDate):
+    def __markTaskCompletedIfNecessary(self, task, completionDate, event):
         if task.allChildrenCompleted() and not task.completed() and \
                 self.__shouldMarkTaskCompletedWhenAllChildrenCompleted(task):
-            task.setCompletionDate(completionDate)
+            task.setCompletionDate(completionDate, event)
     
     def __shouldMarkTaskCompletedWhenAllChildrenCompleted(self, task):
         shouldMarkCompletedAccordingToSetting = \
             self.__settings.getboolean('behavior', 
                 'markparentcompletedwhenallchildrencompleted')
         shouldMarkCompletedAccordingToTask = \
-            task.shouldMarkCompletedWhenAllChildrenCompleted
+            task.shouldMarkCompletedWhenAllChildrenCompleted()
         return (shouldMarkCompletedAccordingToTask == True) or \
             ((shouldMarkCompletedAccordingToTask == None) and \
               shouldMarkCompletedAccordingToSetting)
       
-    def __markTaskUncompletedIfNecessary(self, task):
+    def __markTaskUncompletedIfNecessary(self, task, event):
         if task.completed():
-            task.setCompletionDate(date.Date())
+            task.setCompletionDate(date.Date(), event)
 
-    def __markUncompletedChildrenCompleted(self, task):
+    def __markUncompletedChildrenCompleted(self, task, event):
         taskCompletionDate = task.completionDate()
         for child in task.children():
             if not child.completed():
-                child.setRecurrence()
-                child.setCompletionDate(taskCompletionDate)
-    
-    def __setDueDateChildren(self, task):
-        taskDueDate = task.dueDate()
-        for child in task.children():
-            if child.dueDate() > taskDueDate:
-                child.setDueDate(taskDueDate)
+                child.setRecurrence(event=event)
+                child.setCompletionDate(taskCompletionDate, event)
                 
-    def __setDueDateParent(self, parent, child):
+    def __setDueDateParent(self, parent, child, event):
         if child.dueDate() > parent.dueDate():
-            parent.setDueDate(child.dueDate())
+            parent.setDueDate(child.dueDate(), event)
             
-    def __setStartDateChildren(self, task):
+    def __setStartDateChildren(self, task, event):
         taskStartDate = task.startDate()
         for child in task.children():
             if taskStartDate > child.startDate():
-                child.setStartDate(taskStartDate)
+                child.setStartDate(taskStartDate, event)
     
-    def __setStartDateParent(self, parent, child):
+    def __setStartDateParent(self, parent, child, event):
         if child.startDate() < parent.startDate():
-            parent.setStartDate(child.startDate())
+            parent.setStartDate(child.startDate(), event)

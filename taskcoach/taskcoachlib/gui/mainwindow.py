@@ -156,21 +156,30 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
                     dlg.Destroy()
 
     def createWindowComponents(self):
-        self.__usingTabbedMainWindow = self.settings.getboolean('view', 
+        self.createViewerContainer()
+        viewer.addViewers(self.viewer, self.taskFile, self.settings)
+        self.createStatusBar()
+        self.createMenuBar()
+        self.createTaskBarIcon()
+        self.createReminderController()
+        
+    def createViewerContainer(self):
+        tabbed = self.__usingTabbedMainWindow = self.settings.getboolean('view', 
             'tabbedmainwindow') 
-        if self.__usingTabbedMainWindow:
-            containerWidget = widgets.AUINotebook(self)
-        else:
-            containerWidget = self
+        containerWidget = widgets.AUINotebook(self) if tabbed else self
         self.viewer = viewer.ViewerContainer(containerWidget,
             self.settings, 'mainviewer') 
-        viewer.addViewers(self.viewer, self.taskFile, self.settings)
+        
+    def createStatusBar(self):
         import status
         self.SetStatusBar(status.StatusBar(self, self.viewer))
+        
+    def createMenuBar(self):
         import menu
         self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller, 
                                       self.viewer, self.taskFile))
-        self.createTaskBarIcon()
+    
+    def createReminderController(self):
         self.reminderController = \
             remindercontroller.ReminderController(self, self.taskFile.tasks(), 
                 self.settings)
@@ -196,13 +205,19 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
             
     def restorePerspective(self):
         perspective = self.settings.get('view', 'perspective')
-        for viewerType in viewer.viewerTypes():
+        viewerTypes = viewer.viewerTypes()
+        for viewerType in viewerTypes:
             if self.perspectiveAndSettingsHaveDifferentViewerCount(viewerType):
                 # Different viewer counts may happen when the name of a viewer 
                 # is changed between versions
                 perspective = ''
                 break
         self.manager.LoadPerspective(perspective)
+        # Ignore the titles that are saved in the perspective, they may be 
+        # incorrect when the user changes translation:
+        for pane in self.manager.GetAllPanes():
+            if hasattr(pane.window, 'title'):
+                pane.Caption(pane.window.title())
         self.manager.Update()
         
     def perspectiveAndSettingsHaveDifferentViewerCount(self, viewerType):
@@ -267,26 +282,29 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
             return
         # Remember what the user was working on: 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
-        # Save the number of viewers for each viewer type:
+        self.saveViewerCounts()
+        self.savePerspective()
+        self.dimensionsTracker.savePosition()
+        self.settings.save()
+        if hasattr(self, 'taskBarIcon'):
+            self.taskBarIcon.RemoveIcon()
+        if self.bonjourRegister is not None:
+            self.bonjourRegister.stop()
+        wx.GetApp().ProcessIdle()
+        wx.GetApp().ExitMainLoop()
+        
+    def saveViewerCounts(self):
+        ''' Save the number of viewers for each viewer type. '''
         counts = {}
         for viewer in self.viewer:
             setting = viewer.__class__.__name__.lower() + 'count'
             counts[setting] = counts.get(setting, 0) + 1
         for key, value in counts.items():
             self.settings.set('view', key, str(value))
-        if hasattr(self, 'taskBarIcon'):
-            self.taskBarIcon.RemoveIcon()
-        if self.__usingTabbedMainWindow:
-            perspective = ''
-        else:
-            perspective = self.manager.SavePerspective()
+            
+    def savePerspective(self):
+        perspective = '' if self.__usingTabbedMainWindow else self.manager.SavePerspective()
         self.settings.set('view', 'perspective', perspective)
-        self.dimensionsTracker.savePosition()
-        self.settings.save()
-        if self.bonjourRegister is not None:
-            self.bonjourRegister.stop()
-        wx.GetApp().ProcessIdle()
-        wx.GetApp().ExitMainLoop()
         
     def onClose(self, event):
         if event.CanVeto() and self.settings.getboolean('window', 

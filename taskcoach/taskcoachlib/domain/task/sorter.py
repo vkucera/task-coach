@@ -50,11 +50,11 @@ class Sorter(base.TreeSorter):
         
     def reset(self, *args, **kwargs):
         self._invalidateRootItemCache()
-        super(Sorter, self).reset(*args, **kwargs)
+        return super(Sorter, self).reset(*args, **kwargs)
         
     def extendSelf(self, *args, **kwargs):
         self._invalidateRootItemCache()
-        super(Sorter, self).extendSelf(*args, **kwargs)
+        return super(Sorter, self).extendSelf(*args, **kwargs)
 
     def removeItemsFromSelf(self, itemsToRemove):
         self._invalidateRootItemCache()
@@ -63,7 +63,7 @@ class Sorter(base.TreeSorter):
             for item in itemsToRemove.copy():
                 itemsToRemove.update(item.children(recursive=True)) 
         itemsToRemove = [item for item in itemsToRemove if item in self]
-        super(Sorter, self).removeItemsFromSelf(itemsToRemove)
+        return super(Sorter, self).removeItemsFromSelf(itemsToRemove)
 
     def rootItems(self):
         if self.__rootItems is None:

@@ -63,22 +63,28 @@ class _CtrlWithItemPopupMenu(_CtrlWithPopupMenu):
         super(_CtrlWithItemPopupMenu, self).__init__(*args, **kwargs)
         if self.__popupMenu is not None:
             self._attachPopupMenu(self,
-                (wx.EVT_LIST_ITEM_RIGHT_CLICK, wx.EVT_TREE_ITEM_RIGHT_CLICK), 
+                (wx.EVT_LIST_ITEM_RIGHT_CLICK, wx.EVT_TREE_ITEM_RIGHT_CLICK,
+                 wx.EVT_CONTEXT_MENU), 
                 self.onItemPopupMenu)
 
     def onItemPopupMenu(self, event):
         # Make sure the window this control is in has focus:
-        event.GetEventObject().MainWindow.SetFocus()
-        # Make sure the item under the mouse is selected because that
-        # is what users expect and what is most user-friendly. Not all
-        # widgets do this by default, e.g. the TreeListCtrl does not.
-        item, flags, column = self.HitTest(event.GetPoint(), 
-                                           alwaysReturnColumn=True)
-        if not self._itemIsOk(item):
-            return
-        if not self.IsSelected(item):
-            self.UnselectAll()
-            self.SelectItem(item)
+        try:
+            window = event.GetEventObject().MainWindow
+        except AttributeError:
+            window = event.GetEventObject()
+        window.SetFocus()
+        if hasattr(event, 'GetPoint'):
+            # Make sure the item under the mouse is selected because that
+            # is what users expect and what is most user-friendly. Not all
+            # widgets do this by default, e.g. the TreeListCtrl does not.
+            item, flags, column = self.HitTest(event.GetPoint(), 
+                                               alwaysReturnColumn=True)
+            if not self._itemIsOk(item):
+                return
+            if not self.IsSelected(item):
+                self.UnselectAll()
+                self.SelectItem(item)
         self.PopupMenu(self.__popupMenu)
 
 

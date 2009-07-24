@@ -181,3 +181,29 @@ class RenderBitmapNames_TaskWithChildren(RenderBitmapNames_TestCase,
         self.task.setDueDate(date.Today())
         self.assertBitmapNames('tasks_duetoday', 'tasks_duetoday_open')
         
+        
+class RenderException(test.TestCase):
+    def testRenderException(self):
+        instance = Exception()
+        self.assertEqual(unicode(instance), 
+                         render.exception(Exception, instance))
+
+    def testRenderUnicodeDecodeError(self):
+        try:
+            'abc'.encode('utf-16').decode('utf-8')
+        except UnicodeDecodeError, instance:
+            self.assertEqual(unicode(instance), 
+                             render.exception(UnicodeDecodeError, instance))
+            
+    def testExceptionThatCannotBePrinted(self):
+        """win32all exceptions may contain localized error
+        messages. But Exception.__str__ does not handle non-ASCII
+        characters in the args instance variable; calling
+        unicode(instance) is just like calling str(instance) and
+        raises an UnicodeEncodeError."""
+
+        e = Exception(u'é')
+        try:
+            render.exception(Exception, e)
+        except UnicodeEncodeError:
+            self.fail()

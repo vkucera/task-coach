@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.domain import base
 from taskcoachlib.i18n import _
+from taskcoachlib import patterns
 
 
 class CategoryList(base.Collection):
@@ -30,17 +31,29 @@ class CategoryList(base.Collection):
     newSubItemMenuText = _('New subcategory...')
     newSubItemHelpText = _('Insert a new subcategory')
     
-    def extend(self, categories):
-        super(CategoryList, self).extend(categories)
+    def extend(self, categories, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(CategoryList, self).extend(categories, event)
         for category in self._compositesAndAllChildren(categories):
             for categorizable in category.categorizables():
-                categorizable.addCategory(category)
+                event = categorizable.addCategory(category, event=event)
+        if notify:
+            event.send()
+        else:
+            return event
                 
-    def removeItems(self, categories):
-        super(CategoryList, self).removeItems(categories)
+    def removeItems(self, categories, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(CategoryList, self).removeItems(categories, event)
         for category in self._compositesAndAllChildren(categories):
             for categorizable in category.categorizables():
-                categorizable.removeCategory(category)
+                categorizable.removeCategory(category, event=event)
+        if notify:
+            event.send()
+        else:
+            return event
 
     def findCategoryByName(self, name):
         for category in self:

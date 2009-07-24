@@ -52,7 +52,7 @@ class ApplicationOptionParser(OptionParser):
         super(ApplicationOptionParser, self).__init__(*args, **kwargs)
         
     def profileOption(self):
-        return optparse.Option('-p', '--profile', default=False, 
+        return optparse.Option('--profile', default=False, 
             action='store_true', help=optparse.SUPPRESS_HELP)
  
     def profile_skipstartOption(self):
@@ -62,4 +62,13 @@ class ApplicationOptionParser(OptionParser):
     def iniOption(self):
         return optparse.Option('-i', '--ini', dest='inifile',
             help='use the specified INIFILE for storing settings')
+        
+    def languageOption(self):
+        return optparse.Option('-l', '--language', dest='language', 
+            type='choice', choices=sorted([lang for lang in \
+                meta.data.languages.values() if lang is not None] + ['en']),
+            help='use the specified LANGUAGE for the GUI (e.g. "nl" or "fr"')
 
+    def poOption(self):
+        return optparse.Option('-p', '--po', dest='pofile',
+            help='use the specified POFILE for translation of the GUI') 

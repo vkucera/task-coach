@@ -62,7 +62,11 @@ class ViewerTest(test.wxTestCase):
         
     def testSetTitleSavesTitleInSettings(self):
         self.viewer.setTitle('New title')
-        self.assertEqual('New title', self.settings.get(self.viewer.settingsSection(), 'title'))        
+        self.assertEqual('New title', self.settings.get(self.viewer.settingsSection(), 'title'))
+        
+    def testSetTitleDoesNotSaveTitleInSettingsWhenTitleIsDefaultTitle(self):
+        self.viewer.setTitle(self.viewer.defaultTitle)
+        self.assertEqual('', self.settings.get(self.viewer.settingsSection(), 'title'))
 
     def testSetTitleChangesTabTitle(self):
         self.viewer.setTitle('New title')

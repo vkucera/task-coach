@@ -133,7 +133,7 @@ class XMLReaderVersion12Test(XMLReaderTestCase):
     def testReadTaskWithoutMarkCompletedWhenAllChildrenCompletedSetting(self):
         tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
         self.assertEqual(None, 
-                         tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
+                         tasks[0].shouldMarkCompletedWhenAllChildrenCompleted())
         
 
 class XMLReaderVersion13Test(XMLReaderTestCase):
@@ -148,7 +148,7 @@ class XMLReaderVersion13Test(XMLReaderTestCase):
         </tasks>''')
 
         self.assertEqual('test', categories[0].subject())
-        self.assertEqual([tasks[0]], categories[0].categorizables())
+        self.assertEqual(set([tasks[0]]), categories[0].categorizables())
         self.assertEqual(set([categories[0]]), tasks[0].categories())
 
     def testMultipleCategories(self):
@@ -162,7 +162,7 @@ class XMLReaderVersion13Test(XMLReaderTestCase):
         </tasks>''')
 
         for category in categories:
-            self.assertEqual([tasks[0]], category.categorizables())
+            self.assertEqual(set([tasks[0]]), category.categorizables())
             self.failUnless(category in tasks[0].categories())
             
     def testSubTaskWithCategories(self):
@@ -177,8 +177,8 @@ class XMLReaderVersion13Test(XMLReaderTestCase):
         </tasks>''')
         testCategory = categories[0]
         anotherCategory = categories[1]
-        self.assertEqual("1", testCategory.categorizables()[0].id())
-        self.assertEqual("1.1", anotherCategory.categorizables()[0].id())         
+        self.assertEqual("1", list(testCategory.categorizables())[0].id())
+        self.assertEqual("1.1", list(anotherCategory.categorizables())[0].id())         
         self.assertEqual(set([testCategory]), tasks[0].categories())
         self.assertEqual(set([anotherCategory]), tasks[0].children()[0].categories())
         
@@ -531,7 +531,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <task shouldMarkCompletedWhenAllChildrenCompleted="True"/>
         </tasks>''')
         self.assertEqual(True, 
-                         tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
+                         tasks[0].shouldMarkCompletedWhenAllChildrenCompleted())
 
     def testMarkCompletedWhenAllChildrenCompletedSetting_False(self):
         tasks = self.writeAndReadTasks('''
@@ -539,12 +539,12 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <task shouldMarkCompletedWhenAllChildrenCompleted="False"/>
         </tasks>''')
         self.assertEqual(False,
-                         tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
+                         tasks[0].shouldMarkCompletedWhenAllChildrenCompleted())
  
     def testMarkCompletedWhenAllChildrenCompletedSetting_None(self):
         tasks = self.writeAndReadTasks('<tasks><task/></tasks>')
         self.assertEqual(None,
-                         tasks[0].shouldMarkCompletedWhenAllChildrenCompleted)
+                         tasks[0].shouldMarkCompletedWhenAllChildrenCompleted())
 
     def testTaskWithoutAttachments(self):
         tasks = self.writeAndReadTasks('<tasks><task/></tasks>')
@@ -657,7 +657,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <category subject="cat" categorizables="1"/>
             <task id="1"/>
         </tasks>''')
-        self.assertEqual(tasks, categories[0].categorizables())
+        self.assertEqual(set(tasks), categories[0].categorizables())
         
     def testTwoRecursiveCategories(self):
         categories = self.writeAndReadCategories('''
@@ -687,8 +687,8 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <task subject="task2" id="2"/>
         </tasks>''')
 
-        self.assertEqual(tasks[0], categories[0].categorizables()[0])
-        self.assertEqual(tasks[1], categories[0].children()[0].categorizables()[0])
+        self.assertEqual(tasks[0], list(categories[0].categorizables())[0])
+        self.assertEqual(tasks[1], list(categories[0].children()[0].categorizables())[0])
         
     def testSubtaskCategory(self):
         tasks, categories = self.writeAndReadTasksAndCategories('''
@@ -698,7 +698,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
                 <task subject="task2" id="1.1"/>
             </task>
         </tasks>''')
-        self.assertEqual(tasks[0].children()[0], categories[0].categorizables()[0])
+        self.assertEqual(tasks[0].children()[0], list(categories[0].categorizables())[0])
         
     def testFilteredCategory(self):
         categories = self.writeAndReadCategories('''
@@ -769,7 +769,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
             <note id="noteId" subject="Note"/>
             <category categorizables="noteId" subject="Category"/>
         </tasks>''')
-        self.assertEqual(notes[0], categories[0].categorizables()[0])
+        self.assertEqual(notes[0], list(categories[0].categorizables())[0])
         
     def testNoteId(self):
         notes = self.writeAndReadNotes('''

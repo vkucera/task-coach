@@ -29,14 +29,14 @@ from taskcoachlib.thirdparty import desktop
 from taskcoachlib.gui.dialog import entry
 
 
-def createDateTimeCtrl(parent, value, settings, callback=None, noneAllowed=True):
+def createDateTimeCtrl(parent, value, settings, callback=None, noneAllowed=True, **kwargs):
     ''' Factory function for creating a DateTimeCtrl widget using the user
         settings for earliest and latest times and interval. '''
     starthour = settings.getint('view', 'efforthourstart')
     endhour = settings.getint('view', 'efforthourend')
     interval = settings.getint('view', 'effortminuteinterval')
     return widgets.DateTimeCtrl(parent, value, callback, noneAllowed=noneAllowed,
-        starthour=starthour, endhour=endhour, interval=interval)
+        starthour=starthour, endhour=endhour, interval=interval, **kwargs)
 
 
 class Page(object):
@@ -622,7 +622,7 @@ class BehaviorPage(PageWithHeaders, TaskHeaders):
                 [(None, _('Use application-wide setting')),
                  (False, _('No')), (True, _('Yes'))]:
             choice.Append(choiceText, choiceValue)
-            if choiceValue == task.shouldMarkCompletedWhenAllChildrenCompleted:
+            if choiceValue == task.shouldMarkCompletedWhenAllChildrenCompleted():
                 choice.SetSelection(choice.GetCount()-1)
         if choice.GetSelection() == wx.NOT_FOUND:
             # Force a selection if necessary:
@@ -635,9 +635,9 @@ class BehaviorPage(PageWithHeaders, TaskHeaders):
         self.fit()
 
     def ok(self):
-        self.item.shouldMarkCompletedWhenAllChildrenCompleted = \
+        self.item.setShouldMarkCompletedWhenAllChildrenCompleted( \
             self._markTaskCompletedEntry.GetClientData( \
-                self._markTaskCompletedEntry.GetSelection())
+                self._markTaskCompletedEntry.GetSelection()))
 
 
 class TaskEditBook(widgets.Listbook):
@@ -692,7 +692,7 @@ class EffortEditBook(Page, widgets.BookPage):
 
     def addStartAndStopEntries(self):
         self._startEntry = createDateTimeCtrl(self, self._effort.getStart(),
-            self._settings, self.onPeriodChanged, noneAllowed=False)
+            self._settings, self.onPeriodChanged, noneAllowed=False, showSeconds=True)
         startFromLastEffortButton = wx.Button(self,
             label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort,
@@ -701,7 +701,7 @@ class EffortEditBook(Page, widgets.BookPage):
             startFromLastEffortButton.Disable()
 
         self._stopEntry = createDateTimeCtrl(self, self._effort.getStop(),
-            self._settings, self.onPeriodChanged, noneAllowed=True)
+            self._settings, self.onPeriodChanged, noneAllowed=True, showSeconds=True)
         flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
         self.addEntry(_('Start'), self._startEntry,
             startFromLastEffortButton,  flags=flags)

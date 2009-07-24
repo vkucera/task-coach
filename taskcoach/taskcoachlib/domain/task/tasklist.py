@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+from taskcoachlib import patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, date
 import task
@@ -59,17 +60,29 @@ class TaskList(base.Collection):
     newSubItemMenuText = newSubTaskMenuText()
     newSubItemHelpText = _('Insert a new subtask into the selected task')
     
-    def extend(self, tasks):
-        super(TaskList, self).extend(tasks)
+    def extend(self, tasks, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(TaskList, self).extend(tasks, event)
         for task in self._compositesAndAllChildren(tasks):
             for category in task.categories():
-                category.addCategorizable(task)
+                event = category.addCategorizable(task, event=event)
+        if notify:
+            event.send()
+        else:
+            return event
                 
-    def removeItems(self, tasks):
-        super(TaskList, self).removeItems(tasks)
+    def removeItems(self, tasks, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(TaskList, self).removeItems(tasks, event)
         for task in self._compositesAndAllChildren(tasks):
             for category in task.categories():
-                category.removeCategorizable(task)
+                event = category.removeCategorizable(task, event=event)
+        if notify:
+            event.send()
+        else:
+            return event
     
     def _nrInterestingTasks(self, isInteresting):
         return len(self._getInterestingTasks(isInteresting))

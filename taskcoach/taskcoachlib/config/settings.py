@@ -34,7 +34,7 @@ class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
         return value.decode('utf-8')
     
 
-class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser):
+class Settings(patterns.Observer, UnicodeAwareConfigParser):
     def __init__(self, load=True, iniFile=None, *args, **kwargs):
         # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we 
         # have to call the superclass __init__ explicitly:
@@ -125,11 +125,9 @@ class Settings(patterns.Observable, patterns.Observer, UnicodeAwareConfigParser)
         else:
             currentValue = self.get(section, option)
         if value != currentValue:
-            self.notifyObservers(\
-                patterns.Event('before.%s.%s'%(section, option), self, value))
+            patterns.Event('before.%s.%s'%(section, option), self, value).send()
             super(Settings, self).set(section, option, value)
-            self.notifyObservers(\
-                patterns.Event('%s.%s'%(section, option), self, value))
+            patterns.Event('%s.%s'%(section, option), self, value).send()
             
     def setboolean(self, section, option, value):
         self.set(section, option, str(value))

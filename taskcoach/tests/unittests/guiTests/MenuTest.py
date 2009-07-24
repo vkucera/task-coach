@@ -28,9 +28,20 @@ class MockViewerContainer(object):
     def __init__(self, *args, **kwargs):
         self.__sortBy = 'subject'
         self.__ascending = True
+        self.selection = []
+        self.showingCategories = False
     
     def settingsSection(self):
         return 'section'
+    
+    def curselection(self):
+        return self.selection # pragma: no cover
+    
+    def isViewerContainer(self):
+        return True
+    
+    def isShowingCategories(self):
+        return self.showingCategories # pragma: no cover
     
     def isSortable(self):
         return True
@@ -293,4 +304,20 @@ class StartEffortForTaskMenuTest(test.wxTestCase):
     def testDeletedChildTasksAreRemoved(self):
         parent, child = self.addParentAndChild()
         self.tasks.remove(child)
+        self.assertEqual(1, len(self.menu))
+
+
+class ToggleCategoryMenuTest(test.wxTestCase):
+    def setUp(self):
+        self.categories = category.CategoryList()
+        self.category = category.Category('Category')
+        self.viewerContainer = MockViewerContainer() 
+        self.menu = gui.menu.ToggleCategoryMenu(self.frame, self.categories,
+                                                self.viewerContainer)
+        
+    def testMenuInitiallyEmpty(self):
+        self.assertEqual(0, len(self.menu))
+        
+    def testOneCategory(self):
+        self.categories.append(self.category)
         self.assertEqual(1, len(self.menu))

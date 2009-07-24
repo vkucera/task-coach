@@ -40,6 +40,10 @@ class EventTest(test.TestCase):
         self.assertNotEqual(self.event,
                             patterns.Event('eventtype', None, 'some value'))
         
+    def testEventWithoutType(self):
+        event = patterns.Event()
+        self.assertEqual(set(), event.types())
+                
     def testEventWithoutSources(self):
         event = patterns.Event('eventtype')
         self.assertEqual(set(), event.sources())
@@ -79,23 +83,87 @@ class EventTest(test.TestCase):
         self.event.addSource(self, 'new value')
         self.assertEqual('new value', self.event.value())
 
-
-class ObservableTest(test.TestCase):
-    def setUp(self):
-        self.events = []
-        self.observable = patterns.Observable()
+    def testEventTypes(self):
+        self.assertEqual(set(['eventtype']), self.event.types())
         
-    def onEvent(self, event):
-        self.events.append(event)
+    def testAddSourceForSpecificType(self):
+        self.event.addSource(self, type='another eventtype')
+        self.assertEqual(set(['eventtype', 'another eventtype']), 
+                         self.event.types())
         
-    def testNotifyObservers(self):
-        patterns.Publisher().registerObserver(self.onEvent, 'eventType')
-        event = patterns.Event('eventType', self.observable)
-        self.observable.notifyObservers(event)
-        self.assertEqual([event], self.events)
+    def testGetSourcesForSpecificType(self):
+        self.assertEqual(set([self]), self.event.sources('eventtype'))
+        
+    def testGetSourcesForSpecificTypes(self):
+        self.event.addSource('source', type='another eventtype')
+        self.assertEqual(set([self, 'source']), self.event.sources(*self.event.types()))
+        
+    def testGetSourcesForNonExistingEventType(self):
+        self.assertEqual(set(), self.event.sources('unused eventType'))
+        
+    def testGetAllSourcesAfterAddingSourceForSpecificType(self):
+        self.event.addSource('source', type='another eventtype')
+        self.assertEqual(set([self, 'source']), self.event.sources())
+        
+    def testAddSourceAndValueForSpecificType(self):
+        self.event.addSource('source', 'value', type='another eventtype')
+        self.assertEqual('value', self.event.value('source'))
+        
+    def testAddSourceAndValuesForSpecificType(self):
+        self.event.addSource('source', 'value1', 'value2', 
+                             type='another eventtype')
+        self.assertEqual(('value1', 'value2'), self.event.values('source'))
+        
+    def testAddExistingSourceToAnotherType(self):
+        self.event.addSource(self, type='another eventtype')
+        self.assertEqual(set([self]), self.event.sources())
 
-    def testDefaultModificationEventTypes(self):
-        self.assertEqual([], self.observable.modificationEventTypes())
+    def testAddExistingSourceWithValueToTypeDoesNotRemoveValueForEarlierType(self):
+        self.event.addSource(self, 'value for another eventtype', 
+                             type='another eventtype')
+        self.assertEqual('some value', self.event.value(self, type='eventtype'))
+
+    def testAddExistingSourceWithValueToType(self):
+        self.event.addSource(self, 'value for another eventtype', 
+                             type='another eventtype')
+        self.assertEqual('value for another eventtype', 
+                         self.event.value(self, type='another eventtype'))
+        
+    def testSubEventForOneTypeWhenEventHasOneType(self):
+        self.assertEqual(self.event, self.event.subEvent((self.event.type(), self)))
+
+    def testSubEventForOneTypeWhenEventHasTwoTypes(self):
+        self.event.addSource('source', type='another eventtype')
+        expectedEvent = patterns.Event('eventtype', self, 'some value')
+        self.assertEqual(expectedEvent, self.event.subEvent(('eventtype', self)))
+
+    def testSubEventForTwoTypesWhenEventHasTwoTypes(self):
+        self.event.addSource('source', type='another eventtype')
+        args = [('eventtype', self), ('another eventtype', 'source')]
+        self.assertEqual(self.event, self.event.subEvent(*args))
+
+    def testSubEventForTypeThatIsNotPresent(self):
+        self.assertEqual(patterns.Event(), 
+                         self.event.subEvent(('missing eventtype', self)))
+        
+    def testSubEventForOneSourceWhenEventHasOneSource(self):
+        self.assertEqual(self.event, self.event.subEvent(('eventtype', self)))
+        
+    def testSubEventForUnspecifiedSource(self):
+        self.assertEqual(self.event, self.event.subEvent(('eventtype', None)))
+
+    def testSubEventForUnspecifiedSourceAndSpecifiedSources(self):
+        self.assertEqual(self.event, self.event.subEvent(('eventtype', self), 
+                                                         ('eventtype', None)))
+        
+    def testSubEventForSourceThatIsNotPresent(self):
+        self.assertEqual(patterns.Event(), 
+                         self.event.subEvent(('eventtype', 'missing source')))
+
+    def testSubEventForSourceThatIsNotPresentForSpecifiedType(self):
+        self.event.addSource('source', type='another eventtype')
+        self.assertEqual(patterns.Event(), 
+                         self.event.subEvent(('eventtype', 'source')))
                 
 
 class ObservableCollectionFixture(test.TestCase):
@@ -364,13 +432,14 @@ class PublisherTest(test.TestCase):
     def setUp(self):
         self.publisher = patterns.Publisher()
         self.events = []
+        self.events2 = []
         
     def onEvent(self, event):
         self.events.append(event)
-        
-    def dummyEventHandler(self, event):
-        pass # pragma: no cover
-                
+
+    def onEvent2(self, event):
+        self.events2.append(event)
+                        
     def testPublisherIsSingleton(self):
         anotherPublisher = patterns.Publisher()
         self.failUnless(self.publisher is anotherPublisher)
@@ -382,14 +451,12 @@ class PublisherTest(test.TestCase):
     def testRegisterObserver_Twice(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([self.onEvent, self.onEvent], 
-                         self.publisher.observers())
+        self.assertEqual([self.onEvent], self.publisher.observers())
         
     def testRegisterObserver_ForTwoDifferentTypes(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType1')
         self.publisher.registerObserver(self.onEvent, eventType='eventType2')
-        self.assertEqual([self.onEvent, self.onEvent],
-            self.publisher.observers())
+        self.assertEqual([self.onEvent], self.publisher.observers())
         
     def testRegisterObserver_ListMethod(self):
         ''' A previous implementation of Publisher used sets. This caused a 
@@ -398,7 +465,8 @@ class PublisherTest(test.TestCase):
         class List(list):
             def onEvent(self, *args):
                 pass # pragma: no cover
-        self.publisher.registerObserver(List().onEvent, eventType='eventType')    
+        self.publisher.registerObserver(List().onEvent, eventType='eventType')   
+         
     def testGetObservers_WithoutObservers(self):
         self.assertEqual([], self.publisher.observers())
         
@@ -415,32 +483,45 @@ class PublisherTest(test.TestCase):
         self.publisher.registerObserver(self.onEvent, eventType='eventType2')
         self.assertEqual([self.onEvent], 
             self.publisher.observers(eventType='eventType1'))
-
-    def testGetAllObservers_WhenDifferentTypesRegistered(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType1')
-        self.publisher.registerObserver(self.onEvent, eventType='eventType2')
-        self.assertEqual([self.onEvent, self.onEvent], 
-            self.publisher.observers())            
             
     def testNotifyObservers_WithoutObservers(self):
-        self.publisher.notifyObservers(patterns.Event('eventType', self))
+        patterns.Event('eventType', self).send()
         self.failIf(self.events)
 
     def testNotifyObservers_WithObserverForDifferentEventType(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType1')
-        self.publisher.notifyObservers(patterns.Event('eventType2', self))
+        patterns.Event('eventType2', self).send()
         self.failIf(self.events)
         
     def testNotifyObservers_WithObserverForRightEventType(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.notifyObservers(patterns.Event('eventType', self))
+        patterns.Event('eventType', self).send()
         self.assertEqual([patterns.Event('eventType', self)], self.events)
         
     def testNotifyObservers_WithObserversForSameAndDifferentEventTypes(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType1')
         self.publisher.registerObserver(self.onEvent, eventType='eventType2')
-        self.publisher.notifyObservers(patterns.Event('eventType1', self))
+        patterns.Event('eventType1', self).send()
         self.assertEqual([patterns.Event('eventType1', self)], self.events)
+        
+    def testNotifyObservers_ForDifferentEventTypesWithOneEvent(self):
+        self.publisher.registerObserver(self.onEvent, eventType='eventType1')
+        self.publisher.registerObserver(self.onEvent2, eventType='eventType2')
+        event = patterns.Event('eventType1', self)
+        event.addSource(self, type='eventType2')
+        event.send()
+        self.assertEqual([patterns.Event('eventType1', self)], self.events)
+        self.assertEqual([patterns.Event('eventType2', self)], self.events2)
+        
+    def testNotifyObserversWithEventWithoutTypes(self):
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        patterns.Event().send()
+        self.failIf(self.events)
+
+    def testNotifyObserversWithEventWithoutSources(self):
+        self.publisher.registerObserver(self.onEvent, eventType='eventType')
+        patterns.Event('eventType').send()
+        self.failIf(self.events)
         
     def testRemoveObserverForAnyEventType_NotRegisteredBefore(self):
         self.publisher.removeObserver(self.onEvent)
@@ -463,7 +544,7 @@ class PublisherTest(test.TestCase):
 
     def testRemoveObserverForSpecificType_RegisteredForDifferentTypeThatHasObservers(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.registerObserver(self.dummyEventHandler, eventType='otherType')
+        self.publisher.registerObserver(self.onEvent2, eventType='otherType')
         self.publisher.removeObserver(self.onEvent, eventType='otherType')
         self.assertEqual([self.onEvent], self.publisher.observers('eventType'))
         
@@ -481,14 +562,14 @@ class PublisherTest(test.TestCase):
     def testStopNotifying(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.stopNotifying()
-        self.publisher.notifyObservers(patterns.Event('eventType', self))
+        patterns.Event('eventType', self).send()
         self.failIf(self.events)
         
     def testStartNotifying(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.stopNotifying()
         self.publisher.startNotifying()
-        self.publisher.notifyObservers(patterns.Event('eventType', self))
+        patterns.Event('eventType', self).send()
         self.assertEqual([patterns.Event('eventType', self)], self.events)
 
     def testNestedStopNotifying(self):
@@ -496,7 +577,7 @@ class PublisherTest(test.TestCase):
         self.publisher.stopNotifying()
         self.publisher.stopNotifying()
         self.publisher.startNotifying()
-        self.publisher.notifyObservers(patterns.Event('eventType', self))
+        patterns.Event('eventType', self).send()
         self.failIf(self.events)
         
     def testNestedStartNotifying(self):
@@ -505,15 +586,16 @@ class PublisherTest(test.TestCase):
         self.publisher.stopNotifying()
         self.publisher.startNotifying()
         self.publisher.startNotifying()
-        self.publisher.notifyObservers(patterns.Event('eventType', self))
+        patterns.Event('eventType', self).send()
         self.assertEqual([patterns.Event('eventType', self)], self.events)
 
     def testNotificationOfFirstObserverForEventType(self):
         self.publisher.registerObserver(self.onEvent, eventType='publisher.firstObserverRegisteredFor.eventType')
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.assertEqual([patterns.Event( \
+        expectedEvent = patterns.Event( \
             'publisher.firstObserverRegisteredFor.eventType', self.publisher, 
-            'eventType')], self.events)
+            'eventType')
+        self.assertEqual([expectedEvent], self.events)
 
     def testNoNotificationOfSecondObserverForEventType(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
@@ -535,81 +617,64 @@ class PublisherTest(test.TestCase):
         self.assertEqual([], self.events)
 
     def testRegisterObserver_ForSpecificSource(self):
-        observable1 = patterns.Observable()
-        observable2 = patterns.Observable()
         self.publisher.registerObserver(self.onEvent, eventType='eventType', 
-                                        eventSource=observable1)
-        event = patterns.Event('eventType', observable2)
-        observable2.notifyObservers(event)
+                                        eventSource='observable1')
+        patterns.Event('eventType', 'observable2').send()
         self.failIf(self.events)
         
     def testNotifyObserver_ForSpecificSource(self):
-        observable1 = patterns.Observable()
         self.publisher.registerObserver(self.onEvent, eventType='eventType', 
-                                        eventSource=observable1)
-        event = patterns.Event('eventType', observable1)
-        observable1.notifyObservers(event)
+                                        eventSource='observable1')
+        event = patterns.Event('eventType', 'observable1')
+        event.send()
         self.assertEqual([event], self.events)
         
     def testRemoveObserver_RegisteredForSpecificSource(self):
-        observable1 = patterns.Observable()
         self.publisher.registerObserver(self.onEvent, eventType='eventType', 
-                                        eventSource=observable1)
+                                        eventSource='observable1')
         self.publisher.removeObserver(self.onEvent)
-        event = patterns.Event('eventType', observable1)
-        observable1.notifyObservers(event)
+        event = patterns.Event('eventType', 'observable1')
+        event.send()
         self.failIf(self.events)
         
     def testRemoveObserverForSpecificEventType_RegisteredForSpecificSource(self):
-        observable1 = patterns.Observable()
         self.publisher.registerObserver(self.onEvent, eventType='eventType', 
-                                        eventSource=observable1)
+                                        eventSource='observable1')
         self.publisher.removeObserver(self.onEvent, eventType='eventType')
-        event = patterns.Event('eventType', observable1) 
-        observable1.notifyObservers(event)
+        patterns.Event('eventType', 'observable1').send() 
         self.failIf(self.events)
 
     def testRemoveObserverForSpecificEventSource(self):
-        observable1 = patterns.Observable()
-        observable2 = patterns.Observable()
         self.publisher.registerObserver(self.onEvent, eventType='eventType', 
-                                        eventSource=observable1)
+                                        eventSource='observable1')
         self.publisher.registerObserver(self.onEvent, eventType='eventType',
-                                        eventSource=observable2)
-        self.publisher.removeObserver(self.onEvent, eventSource=observable1)
-        event = patterns.Event('eventType', observable2)
-        observable2.notifyObservers(event)
+                                        eventSource='observable2')
+        self.publisher.removeObserver(self.onEvent, eventSource='observable1')
+        patterns.Event('eventType', 'observable2').send()
         self.failUnless(self.events)
         
     def testRemoveObserverForSpecificEventTypeAndSource(self):
-        observable1 = patterns.Observable()
-        observable2 = patterns.Observable()
         self.publisher.registerObserver(self.onEvent, eventType='eventType1', 
-                                        eventSource=observable1)
+                                        eventSource='observable1')
         self.publisher.registerObserver(self.onEvent, eventType='eventType1', 
-                                        eventSource=observable2)
+                                        eventSource='observable2')
         self.publisher.registerObserver(self.onEvent, eventType='eventType2',
-                                        eventSource=observable1)
+                                        eventSource='observable1')
         self.publisher.removeObserver(self.onEvent, eventType='eventType1',
-                                      eventSource=observable1)
-        event = patterns.Event('eventType1', observable1)
-        observable1.notifyObservers(event)
+                                      eventSource='observable1')
+        patterns.Event('eventType1', 'observable1').send()
         self.failIf(self.events)
-        event = patterns.Event('eventType2', observable1)
-        observable1.notifyObservers(event)
+        patterns.Event('eventType2', 'observable1').send()
         self.failUnless(self.events)
 
     def testRemoveObserverForSpecificEventTypeAndSourceDoesNotRemoveOtherSources(self):
-        observable1 = patterns.Observable()
-        observable2 = patterns.Observable()
         self.publisher.registerObserver(self.onEvent, eventType='eventType1', 
-                                        eventSource=observable1)
+                                        eventSource='observable1')
         self.publisher.registerObserver(self.onEvent, eventType='eventType1', 
-                                        eventSource=observable2)
+                                        eventSource='observable2')
         self.publisher.registerObserver(self.onEvent, eventType='eventType2',
-                                        eventSource=observable1)
+                                        eventSource='observable1')
         self.publisher.removeObserver(self.onEvent, eventType='eventType1',
-                                      eventSource=observable1)
-        event = patterns.Event('eventType1', observable2)
-        observable2.notifyObservers(event)
+                                      eventSource='observable1')
+        patterns.Event('eventType1', 'observable2').send()
         self.failUnless(self.events)

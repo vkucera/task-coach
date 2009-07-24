@@ -31,7 +31,8 @@ class EffortCommand(base.BaseCommand):
     def stopTracking(self):
         self.stoppedEfforts = []
         for task in self.tasksToStopTracking():
-            self.stoppedEfforts.extend(task.stopTracking())
+            self.stoppedEfforts.extend(task.activeEfforts())
+            task.stopTracking()
 
     def startTracking(self):
         for effort in self.stoppedEfforts:

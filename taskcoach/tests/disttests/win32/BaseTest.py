@@ -46,14 +46,18 @@ class TestWithTaskFile(base.Win32TestCase):
 
         mainwindow = self.findWindow(r'^Task Coach')
         w = mainwindow.findChildren('wxWindowClassNR', 'HyperTreeList')
-
-        w[1].clickAt(5, 30)
-        w[1].clickAt(5, 30)
+        
+        # Double-click the first task to open the task edit dialog:
+        for i in range(2):
+            w[1].clickAt(5, 30)
 
         editor = self.findWindow(r'^Edit task')
         self.failIf(editor is None, 'Task editor not found')
         editor.waitFocus()
 
+        # Increase priority so the task is "dirty":
+        editor.findChildren('msctls_updown32', '')[0].clickAt(2, 2) 
+        # Close the task edit dialog:
         editor.findChildren('Button', 'OK')[0].clickAt(5, 5)
 
         mainwindow.waitFocus()
@@ -62,7 +66,8 @@ class TestWithTaskFile(base.Win32TestCase):
         time.sleep(2)
 
         if os.path.exists(self.logfilename):
-            self.fail('Exception occurred while saving:\n' + file(self.logfilename, 'rb').read())
+            self.fail('Exception occurred while saving:\n' + \
+                      file(self.logfilename, 'rb').read())
 
         self.failUnless(os.stat(filename).st_mtime > timestamp,
                         'File was not written')

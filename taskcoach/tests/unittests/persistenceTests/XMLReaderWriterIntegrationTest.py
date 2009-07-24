@@ -102,11 +102,6 @@ class IntegrationTest(IntegrationTestCase):
         self.assertEqual([obj.id() for obj in getattr(task, attribute)()], 
                          [obj.id() for obj in getattr(taskWrittenAndRead, attribute)()])
                
-    def assertPropertyWrittenAndRead(self, task, property):
-        taskWrittenAndRead = self.getTaskWrittenAndRead(task.id())
-        self.assertEqual(getattr(task, property), 
-                         getattr(taskWrittenAndRead, property))
-
     def testSubject(self):
         self.assertAttributeWrittenAndRead(self.task, 'subject')
 
@@ -153,7 +148,7 @@ class IntegrationTest(IntegrationTestCase):
        
     def testCategory(self):
         self.assertEqual(self.task.id(), 
-                         list(self.categoriesWrittenAndRead)[0].categorizables()[0].id())
+                         list(list(self.categoriesWrittenAndRead)[0].categorizables())[0].id())
 
     def testFilteredCategory(self):
         self.failUnless(list(self.categoriesWrittenAndRead)[0].isFiltered())
@@ -177,11 +172,11 @@ class IntegrationTest(IntegrationTestCase):
         self.assertAttributeWrittenAndRead(self.task2, 'reminder')
         
     def testMarkCompletedWhenAllChildrenCompletedSetting_True(self):
-        self.assertPropertyWrittenAndRead(self.task, 
+        self.assertAttributeWrittenAndRead(self.task, 
             'shouldMarkCompletedWhenAllChildrenCompleted')
  
     def testMarkCompletedWhenAllChildrenCompletedSetting_None(self):
-        self.assertPropertyWrittenAndRead(self.task2, 
+        self.assertAttributeWrittenAndRead(self.task2, 
             'shouldMarkCompletedWhenAllChildrenCompleted')
  
     def testAttachment(self):

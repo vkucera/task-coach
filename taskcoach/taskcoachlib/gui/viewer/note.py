@@ -47,7 +47,10 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
             return self.taskFile.notes()
         else:
             return self.notesToShow
-        
+
+    def curselectionIsInstanceOf(self, class_):
+        return class_ == note.Note
+
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()

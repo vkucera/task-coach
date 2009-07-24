@@ -44,7 +44,7 @@ class TaskEditorTestCase(test.wxTestCase):
         # TaskEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
         if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
-            wx.Yield() 
+            wx.Yield() # pragma: no cover 
         super(TaskEditorTestCase, self).tearDown()
         
     def createTasks(self):
@@ -149,14 +149,14 @@ class NewTaskTest(TaskEditorTestCase):
             viewer=self.editor[0][6].viewer,
             attachments=attachment.AttachmentList([att]))
         command.doCommand(None, showerror=onError)
-        if '__WXMSW__' in wx.PlatformInfo:
+        if '__WXMSW__' in wx.PlatformInfo: # pragma: no cover
             if sys.version_info < (2,5):
                 errorMessageStart = "'ascii' codec can't encode character"
             else:
                 errorMessageStart = ''
         elif '__WXMAC__' in wx.PlatformInfo and sys.version_info >= (2,5):
-            errorMessageStart = ''    
-        elif '__WXGTK__' in wx.PlatformInfo:
+            errorMessageStart = '' # pragma: no cover
+        elif '__WXGTK__' in wx.PlatformInfo: # pragma: no cover
             errorMessageStart = ''
         else:
             errorMessageStart = '[Error 2] '
@@ -247,7 +247,8 @@ class EditTaskTest(TaskEditorTestCase):
     def testBehaviorMarkCompleted(self):
         self.editor[0][7]._markTaskCompletedEntry.SetStringSelection('Yes')
         self.editor.ok()
-        self.assertEqual(True, self.task.shouldMarkCompletedWhenAllChildrenCompleted)
+        self.assertEqual(True, 
+                         self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 
     def testAddAttachment(self):
         self.editor[0][6].viewer.onDropFiles(None, ['filename'])
@@ -345,7 +346,7 @@ class FocusTest(TaskEditorTestCase):
 
     def testFocus(self):
         if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
-            wx.Yield()
+            wx.Yield() # pragma: no cover
         self.assertEqual(self.editor[0][0]._subjectEntry, wx.Window_FindFocus())
 
 

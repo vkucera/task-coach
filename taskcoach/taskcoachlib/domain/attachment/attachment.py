@@ -17,11 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, shutil, urlparse
+import os, urlparse
 from taskcoachlib import patterns, mailer
 from taskcoachlib.domain import base
 from taskcoachlib.thirdparty import desktop
-from taskcoachlib.i18n import _
 from taskcoachlib.domain.note.noteowner import NoteOwner
 
 
@@ -33,34 +32,34 @@ def getRelativePath(path, base=os.getcwd()):
     path = os.path.realpath(os.path.normpath(path))
     base = os.path.realpath(os.path.normpath(base))
 
-    drv1, pth1 = os.path.splitdrive(path)
-    drv2, pth2 = os.path.splitdrive(base)
+    drive1, path1 = os.path.splitdrive(path)
+    drive2, path2 = os.path.splitdrive(base)
 
     # No relative path is possible if the two are on different drives.
-    if drv1 != drv2:
+    if drive1 != drive2:
         return path
 
-    if pth1.startswith(pth2):
-        if pth1 == pth2:
+    if path1.startswith(path2):
+        if path1 == path2:
             return ''
 
-        if pth2 == os.path.sep:
-            return pth1[1:]
+        if path2 == os.path.sep:
+            return path1[1:]
 
-        return pth1[len(pth2) + 1:]
+        return path1[len(path2) + 1:]
 
-    pth1 = pth1.split(os.path.sep)
-    pth2 = pth2.split(os.path.sep)
+    path1 = path1.split(os.path.sep)
+    path2 = path2.split(os.path.sep)
 
-    while pth1 and pth2 and pth1[0] == pth2[0]:
-        pth1.pop(0)
-        pth2.pop(0)
+    while path1 and path2 and path1[0] == path2[0]:
+        path1.pop(0)
+        path2.pop(0)
 
-    while pth2:
-        pth1.insert(0, '..')
-        pth2.pop(0)
+    while path2:
+        path1.insert(0, '..')
+        path2.pop(0)
 
-    return os.path.join(*pth1)
+    return os.path.join(*path1)
 
 
 class Attachment(base.Object, NoteOwner):
@@ -87,11 +86,17 @@ class Attachment(base.Object, NoteOwner):
     def location(self):
         return self.__location
 
-    def setLocation(self, location):
-        if location != self.__location:
-            self.__location = location
-            self.notifyObservers(patterns.Event( \
-                self.locationChangedEventType(), self, location))
+    def setLocation(self, location, event=None):
+        if location == self.__location:
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        self.__location = location
+        event.addSource(self, location, type=self.locationChangedEventType())
+        if notify:
+            event.send()
+        else:
+            return event
 
     @classmethod
     def locationChangedEventType(class_):
@@ -114,12 +119,18 @@ class Attachment(base.Object, NoteOwner):
         state.update(dict(location=self.location()))
         return state
 
-    def __setstate__(self, state):
+    def __setstate__(self, state, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         try:
-            super(Attachment, self).__setstate__(state)
+            event = super(Attachment, self).__setstate__(state, event)
         except AttributeError:
             pass
-        self.setLocation(state['location'])
+        event = self.setLocation(state['location'], event)
+        if notify:
+            event.send()
+        else:
+            return event
 
     def __getcopystate__(self):
         return self.__getstate__()
