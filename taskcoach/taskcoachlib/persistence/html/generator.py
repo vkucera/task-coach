@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, cgi
+from taskcoachlib.gui import color
 
 
-def viewer2html(viewer, cssFilename=None, selectionOnly=False):
-    converter = Viewer2HTMLConverter(viewer)
+def viewer2html(viewer, settings, cssFilename=None, selectionOnly=False):
+    converter = Viewer2HTMLConverter(viewer, settings)
     return converter(cssFilename, selectionOnly) 
 
 
@@ -31,9 +32,10 @@ class Viewer2HTMLConverter(object):
     metaTag = '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">'
     cssLink = '<link href="%s" rel="stylesheet" type="text/css" media="screen">'
 
-    def __init__(self, viewer):
+    def __init__(self, viewer, settings):
         super(Viewer2HTMLConverter, self).__init__()
         self.viewer = viewer
+        self.settings = settings
         
     def __call__(self, cssFilename, selectionOnly):
         ''' Create an HTML document. '''
@@ -72,6 +74,12 @@ class Viewer2HTMLConverter(object):
         for column, alignment in zip(visibleColumns, columnAlignments):
             columnStyle = self.indent('.%s {text-align: %s}'%(column.name(), alignment), level+1)
             styleContent.append(columnStyle)
+        if self.viewer.isShowingTasks():
+            for status in 'completed', 'duetoday', 'overdue', 'inactive', 'active':
+                statusColor = color.taskColorForStatus(status, self.settings)
+                statusColor = self.cssColorSyntax(statusColor)
+                statusStyle = '.%s {color: %s}'%(status, statusColor)
+                styleContent.append(self.indent(statusStyle, level+1))
         return self.wrap(styleContent, 'style', level, type='text/css')
     
     def htmlBody(self, selectionOnly, level):
@@ -136,16 +144,24 @@ class Viewer2HTMLConverter(object):
             bodyRowContent.append(self.bodyCell(renderedItem, column, level+1))
         style = self.bodyRowStyleAttribute(item)
         attributes = dict(style=style) if style else dict()
+        if self.viewer.isShowingTasks(): 
+            if item.completed():
+                attributes['class'] = 'completed'
+            elif item.overdue():
+                attributes['class'] = 'overdue'
+            elif item.dueToday():
+                attributes['class'] = 'duetoday'
+            elif item.inactive():
+                attributes['class'] = 'inactive'
+            else:
+                attributes['class'] = 'active'
         return self.wrap(bodyRowContent, 'tr', level, **attributes)
     
     def bodyRowStyleAttribute(self, item):
         ''' Determine the style attribute for item. Returns a CSS style
-            specification: 'color: <color>; background: <color>'. '''
+            specification: 'background: <color>'. '''
         bgColor = self.viewer.getBackgroundColor(item)
-        bgColor = 'background: %s'%self.cssColorSyntax(bgColor) if bgColor else ''
-        fgColor = self.viewer.getColor(item)
-        fgColor = 'color: %s'%self.cssColorSyntax(fgColor) if fgColor and fgColor != wx.BLACK else ''
-        style = '; '.join(color for color in (bgColor, fgColor) if color)
+        style = 'background: %s'%self.cssColorSyntax(bgColor) if bgColor else ''
         return style
     
     def bodyCell(self, item, column, level):

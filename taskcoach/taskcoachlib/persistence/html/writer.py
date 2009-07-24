@@ -54,12 +54,6 @@ caption {
     background-color:#ebedff;
 }
 
-/* Styles for a header of a specific column, in this case the subject column.
-   Note how this style overrides the default style in the HTML file. */ 
-th.subject {
-    text-align: center;
-}
-
 /* Mark the column that is sorted on */
 #sorted {
     text-decoration: underline;
@@ -81,6 +75,24 @@ th {
     padding: 5px;
     border: 2px solid #ebedff;
 }
+
+/* Other possibilities to tune the layout include:
+
+   Change the styles for a header of a specific column, in this case the subject 
+   column. Note how this style overrides the default style in the HTML file: 
+   
+   th.subject {
+      text-align: center;
+   }
+
+   If the exported HTML file contains tasks it possible to change the color of 
+   completed (or overdue, duetoday, inactive, active) tasks like this:
+   
+   .completed {
+       color: red;
+   }
+   
+*/
 '''%meta.data.metaDict
 
 class HTMLWriter(object):
@@ -89,9 +101,9 @@ class HTMLWriter(object):
         self.__filename = filename
         self.__cssFilename = os.path.splitext(filename)[0] + '.css'
 
-    def write(self, viewer, selectionOnly=False):
+    def write(self, viewer, settings, selectionOnly=False):
         cssFilename = os.path.basename(self.__cssFilename)
-        htmlText, count = generator.viewer2html(viewer, cssFilename, selectionOnly)
+        htmlText, count = generator.viewer2html(viewer, settings, cssFilename, selectionOnly)
         self.__fd.write(htmlText)
         self._writeCSS()
         return count

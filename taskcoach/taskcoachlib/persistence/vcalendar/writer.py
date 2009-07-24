@@ -33,7 +33,7 @@ class VCalendarWriter(object):
     def __init__(self, fd, filename=None):
         self.__fd = fd
 
-    def write(self, viewer, selectionOnly=False):
+    def write(self, viewer, settings, selectionOnly=False):
         self.__fd.write('BEGIN:VCALENDAR\r\n')
         self.__fd.write('VERSION: 1.0\r\n')
 
