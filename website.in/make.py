@@ -269,7 +269,8 @@ pages['download'] = \
         edge, use at your own risks.</p>
         <p>There are two sets of packages: from Trunk and from the latest Release branch. If you don't
         know what that means, you probably shouldn't download these.</p>
-        <a href="http://www.fraca7.net/TaskCoach-packages/latest.py">Download page</a>
+        <a href="http://www.fraca7.net/TaskCoach-packages/latest_bugfixes.py">Download page for release branch</a>
+        <a href="http://www.fraca7.net/TaskCoach-packages/latest_features.py">Download page for trunk</a>
         <h3>Download previous releases of %(name)s</h3>
         <P>Download previous releases of %(name)s from 
         <A HREF="http://sourceforge.net/project/showfiles.php?group_id=130831&package_id=143476"
