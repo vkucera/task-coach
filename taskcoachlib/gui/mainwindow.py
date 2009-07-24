@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, socket
+import wx, socket, re
 from taskcoachlib import meta, patterns, widgets, command, help
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort
@@ -205,13 +205,25 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
             
     def restorePerspective(self):
         perspective = self.settings.get('view', 'perspective')
-        for viewerType in viewer.viewerTypes():
+        viewerTypes = viewer.viewerTypes()
+        for viewerType in viewerTypes:
             if self.perspectiveAndSettingsHaveDifferentViewerCount(viewerType):
                 # Different viewer counts may happen when the name of a viewer 
                 # is changed between versions
                 perspective = ''
                 break
         self.manager.LoadPerspective(perspective)
+        # We don't save the viewer titles in the ini file because the viewer 
+        # titles are translated. If we would save them and the user would 
+        # change the language then the viewer titles would be in the old 
+        # language the next session. So, since the perspective does not 
+        # contain the viewer titles, we have to set captions of the viewer 
+        # panes ourselves. We make them equal to the viewer titles (this is 
+        # possible since the viewer titles are saved separately in the 
+        # ini file):
+        for pane in self.manager.GetAllPanes():
+            if hasattr(pane.window, 'title'):
+                pane.Caption(pane.window.title())
         self.manager.Update()
         
     def perspectiveAndSettingsHaveDifferentViewerCount(self, viewerType):
@@ -276,26 +288,33 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
             return
         # Remember what the user was working on: 
         self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
-        # Save the number of viewers for each viewer type:
+        self.saveViewerCounts()
+        self.savePerspective()
+        self.dimensionsTracker.savePosition()
+        self.settings.save()
+        if hasattr(self, 'taskBarIcon'):
+            self.taskBarIcon.RemoveIcon()
+        if self.bonjourRegister is not None:
+            self.bonjourRegister.stop()
+        wx.GetApp().ProcessIdle()
+        wx.GetApp().ExitMainLoop()
+        
+    def saveViewerCounts(self):
+        ''' Save the number of viewers for each viewer type. '''
         counts = {}
         for viewer in self.viewer:
             setting = viewer.__class__.__name__.lower() + 'count'
             counts[setting] = counts.get(setting, 0) + 1
         for key, value in counts.items():
             self.settings.set('view', key, str(value))
-        if hasattr(self, 'taskBarIcon'):
-            self.taskBarIcon.RemoveIcon()
-        if self.__usingTabbedMainWindow:
-            perspective = ''
-        else:
-            perspective = self.manager.SavePerspective()
+            
+    def savePerspective(self):
+        perspective = '' if self.__usingTabbedMainWindow else self.manager.SavePerspective()
+        # Don't save the viewer titles in the ini file. The viewer titles are
+        # translated. If we save them and the user changes the language then
+        # the viewer titles would be in the old language the next session. 
+        perspective = re.sub('caption=[^;]*;', '', perspective)
         self.settings.set('view', 'perspective', perspective)
-        self.dimensionsTracker.savePosition()
-        self.settings.save()
-        if self.bonjourRegister is not None:
-            self.bonjourRegister.stop()
-        wx.GetApp().ProcessIdle()
-        wx.GetApp().ExitMainLoop()
         
     def onClose(self, event):
         if event.CanVeto() and self.settings.getboolean('window', 
