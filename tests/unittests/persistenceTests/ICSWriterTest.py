@@ -37,6 +37,7 @@ class ICSTestCase(test.TestCase):
         self.taskList = self.createTaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.viewer = DummyViewer(self.effortList)
+        self.settings = None
         self.icsFile = self.writeAndParse()
         
     def createTaskList(self):
@@ -44,7 +45,7 @@ class ICSTestCase(test.TestCase):
         return task.TaskList([self.task])
 
     def writeAndParse(self):
-        self.writer.write(self.viewer)
+        self.writer.write(self.viewer, self.settings)
         self.fd.reset()
         return [line[:-1] for line in self.fd.readlines()]
 

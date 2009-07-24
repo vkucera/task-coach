@@ -35,7 +35,7 @@ class ICSWriter:
         self.__fd.flush()
         return self
 
-    def write(self, effortViewer, selectionOnly=False):
+    def write(self, effortViewer, settings, selectionOnly=False):
         self += 'BEGIN:VCALENDAR'
         self += 'VERSION:2.0'
         domain = meta.url[len('http://'):-1]

@@ -45,7 +45,7 @@ class HTMLWriterTestCase(test.wxTestCase):
             self.settings)
 
     def __writeAndRead(self, selectionOnly):
-        self.writer.write(self.viewer, selectionOnly)
+        self.writer.write(self.viewer, self.settings, selectionOnly)
         return self.fd.getvalue()
     
     def expectInHTML(self, *htmlFragments, **kwargs):
@@ -99,37 +99,42 @@ class TaskTests(CommonTests):
     def testColumnStyle(self):
         self.expectInHTML('      .subject {text-align: left}\n')
         
+    def testTaskStatusStyle(self):
+        self.expectInHTML('      .completed {color: #00FF00}\n')
+        
+    def testTaskStatusStyleWhenColorChangedInSettings(self):
+        self.settings.set('color', 'completedtasks', str(wx.RED))
+        self.expectInHTML('      .completed {color: #FF0000}\n')
+        
     def testOverdueTask(self):
         self.task.setDueDate(date.Yesterday())
-        self.expectInHTML('<tr style="color: #FF0000">')
+        self.expectInHTML('<tr class="overdue">')
 
     def testCompletedTask(self):
         self.task.setCompletionDate()
-        self.expectInHTML('<tr style="color: #00FF00">')
+        self.expectInHTML('<tr class="completed">')
 
     def testTaskDueToday(self):
         self.task.setDueDate(date.Today())
-        expectedColor = '%02X%02X%02X'%eval(self.settings.get('color', 'duetodaytasks'))[:3]
-        self.expectInHTML('<tr style="color: #%s">'%expectedColor)
+        self.expectInHTML('<tr class="duetoday">')
         
     def testInactiveTask(self):
         self.task.setStartDate(date.Tomorrow())
-        expectedColor = '%02X%02X%02X'%eval(self.settings.get('color', 'inactivetasks'))[:3]
-        self.expectInHTML('<tr style="color: #%s">'%expectedColor)
+        self.expectInHTML('<tr class="inactive">')
 
     def testTaskColor(self):
         self.task.setColor(wx.RED)
-        self.expectInHTML('<tr style="background: #FF0000">')
+        self.expectInHTML('<tr class="active" style="background: #FF0000">')
         
     def testCategoryColor(self):
         cat = category.Category('cat', color=wx.RED)
         self.task.addCategory(cat)
-        self.expectInHTML('<tr style="background: #FF0000">')
+        self.expectInHTML('<tr class="active" style="background: #FF0000">')
 
     def testCategoryColorAsTuple(self):
         cat = category.Category('cat', color=(255, 0, 0, 0))
         self.task.addCategory(cat)
-        self.expectInHTML('<tr style="background: #FF0000">')
+        self.expectInHTML('<tr class="active" style="background: #FF0000">')
         
         
 class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,15 +18,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 
+
 def taskColor(task, settings):
+    ''' Return the current color of task, based on its status (completed,
+        overdue, duetoday, inactive, or active). '''
     if task.completed():
-        setting = 'completedtasks'
+        status = 'completed'
     elif task.overdue(): 
-        setting = 'overduetasks'
+        status = 'overdue'
     elif task.dueToday():
-        setting = 'duetodaytasks'
+        status = 'duetoday'
     elif task.inactive(): 
-        setting = 'inactivetasks'
+        status = 'inactive'
     else:
-        setting = 'activetasks'
-    return wx.Colour(*eval(settings.get('color', setting)))
+        status = 'active'
+    return taskColorForStatus(status, settings)
+
+
+def taskColorForStatus(status, settings):
+    ''' Return the task color for the status (one of 'completed', 'overdue', 
+        'duetoday', 'inactive', or 'active'). '''
+    return wx.Colour(*eval(settings.get('color', '%stasks'%status)))

@@ -39,7 +39,7 @@ class CSVWriterTestCase(test.wxTestCase):
             self.settings)
 
     def __writeAndRead(self, selectionOnly):
-        self.writer.write(self.viewer, selectionOnly)
+        self.writer.write(self.viewer, self.settings, selectionOnly)
         return self.fd.getvalue()
     
     def expectInCSV(self, csvFragment, selectionOnly=False):
