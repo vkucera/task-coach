@@ -48,7 +48,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     klass.__init__ = constructor
 
     def changedEventType(class_):
-        return '%s.%s' % (class_, klass.__ownedType__.lower())
+        return '%s.%ss' % (class_, klass.__ownedType__.lower())
 
     setattr(klass, '%ssChangedEventType' % klass.__ownedType__.lower(), 
             classmethod(changedEventType))
@@ -68,53 +68,84 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
 
     setattr(klass, '%ss' % klass.__ownedType__.lower(), objects)
 
-    def notifyObservers(instance):
-        instance.notifyObservers(patterns.Event( \
-            changedEventType(instance.__class__), instance, *objects(instance)))
-
-    setattr(klass, '_%s__notifyObservers' % name, notifyObservers)
-
-    def setObjects(instance, newObjects):
-        if newObjects != objects(instance):
-            setattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()), 
-                                            newObjects)
-            notifyObservers(instance)
+    def setObjects(instance, newObjects, event=None):
+        if newObjects == objects(instance):
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        setattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()), 
+                                        newObjects)
+        event = changedEvent(instance, event, *newObjects)
+        if notify:
+            event.send()
+        else:
+            return event
 
     setattr(klass, 'set%ss' % klass.__ownedType__, setObjects)
 
-    def addObject(instance, object):
+    def changedEvent(instance, event, *objects):
+        event.addSource(instance, *objects, 
+                        **dict(type=changedEventType(instance.__class__)))
+        return event
+    
+    setattr(klass, '%ssChangedEvent' % klass.__ownedType__.lower(), changedEvent)
+
+    def addObject(instance, object, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).append(object)
-        notifyObservers(instance)
+        event = changedEvent(instance, event, object)
+        if notify:
+            event.send()
+        else:
+            return event
 
     setattr(klass, 'add%s' % klass.__ownedType__, addObject)
 
-    def addObjects(instance, *objects):
-        if objects:
-            for object in objects:
-                getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).append(object)
-            notifyObservers(instance)
+    def addObjects(instance, *objects, **kwargs):
+        event = kwargs.pop('event', None)
+        if not objects:
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).extend(objects)
+        event = changedEvent(instance, event, *objects)
+        if notify:
+            event.send()
+        else:
+            return event
 
     setattr(klass, 'add%ss' % klass.__ownedType__, addObjects)
 
-    def removeObject(instance, object):
+    def removeObject(instance, object, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(object)
-        notifyObservers(instance)
+        event = changedEvent(instance, event, object)
+        if notify:
+            event.send()
+        else:
+            return event
 
     setattr(klass, 'remove%s' % klass.__ownedType__, removeObject)
 
-    def removeObjects(instance, *objects):
-        if objects:
-            changed = False
-            for object in objects:
-                try:
-                    getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(object)
-                except ValueError:
-                    pass
-                else:
-                    changed = True
-            if changed:
-                notifyObservers(instance)
-
+    def removeObjects(instance, *objects, **kwargs):
+        event = kwargs.pop('event', None)
+        if not objects:
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        for object in objects:
+            try:
+                getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(object)
+            except ValueError:
+                pass
+        event = changedEvent(instance, event, *objects)
+        if notify:
+            event.send()
+        else:
+            return event
+        
     setattr(klass, 'remove%ss' % klass.__ownedType__, removeObjects)
 
     def getstate(instance):
@@ -127,12 +158,18 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
 
     klass.__getstate__ = getstate
 
-    def setstate(instance, state):
+    def setstate(instance, state, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         try:
-            super(klass, instance).__setstate__(state)
+            event = super(klass, instance).__setstate__(state, event)
         except AttributeError:
             pass
-        setObjects(instance, state[klass.__ownedType__.lower() + 's'])
+        event = setObjects(instance, state[klass.__ownedType__.lower() + 's'], event)
+        if notify:
+            event.send()
+        else:
+            return event
 
     klass.__setstate__ = setstate
 

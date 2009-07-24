@@ -102,7 +102,7 @@ class NoteTest(test.TestCase):
         
     def testSetState(self):
         self.note.__setstate__(dict(id='id', subject='new', description='new', 
-            parent=None, children=[], status=42, attachments=[],
+            parent=None, children=[], status=42, attachments=[], categories=[],
             color=(0,0,0,255)))
         self.assertEqual('new', self.note.description())
         
@@ -140,10 +140,9 @@ class NoteOwnerTest(test.TestCase):
         self.noteOwner.addNote(self.note)
         self.registerObserver()
         self.noteOwner.removeNote(self.note)
-        self.assertEqual(patterns.Event( \
-            note.NoteOwner.notesChangedEventType(), self.noteOwner, 
-            *self.noteOwner.notes()), 
-            self.events[0])
+        self.assertEqual([patterns.Event( \
+            note.NoteOwner.notesChangedEventType(), self.noteOwner, self.note)], 
+            self.events)
             
     def testGetState(self):
         self.noteOwner.addNote(self.note)

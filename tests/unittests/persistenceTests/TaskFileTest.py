@@ -367,7 +367,7 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterChangeSetting(self):
-        self.task.shouldMarkCompletedWhenAllChildrenCompleted = True
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterAddingCategory(self):     
@@ -727,7 +727,7 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.category.addCategorizable(aTask)
         self.merge()
         self.assertEqual(aTask.id(), 
-                         list(self.taskFile.categories())[0].categorizables()[0].id())
+                         list(list(self.taskFile.categories())[0].categorizables())[0].id())
                          
     def testMerge_Notes(self):
         newNote = note.Note(subject='new note')

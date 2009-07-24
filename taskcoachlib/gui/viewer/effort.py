@@ -78,6 +78,9 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
     def isShowingEffort(self):
         return True
     
+    def curselectionIsInstanceOf(self, class_):
+        return class_ == effort.Effort
+    
     def trackStartEventType(self):
         return effort.Effort.trackStartEventType()
     

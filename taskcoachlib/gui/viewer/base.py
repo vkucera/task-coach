@@ -41,6 +41,8 @@ class Viewer(wx.Panel):
         self.__settingsSection = kwargs.pop('settingsSection')
         self.__instanceNumber = kwargs.pop('instanceNumber')
         self.__selection = []
+        # Flag so that we don't notify observers while we're selecting all items
+        self.__selectingAllItems = False
         self.__toolbarUICommands = None
         self.__presentation = self.createSorter(self.createFilter(self.domainObjectsToView()))
         self.widget = self.createWidget()
@@ -79,7 +81,8 @@ class Viewer(wx.Panel):
         return self.settings.get(self.settingsSection(), 'title') or self.defaultTitle
     
     def setTitle(self, title):
-        self.settings.set(self.settingsSection(), 'title', title)
+        titleToSaveInSettings = '' if title == self.defaultTitle else title
+        self.settings.set(self.settingsSection(), 'title', titleToSaveInSettings)
         self.parent.SetPageText(self.parent.GetPageIndex(self), title)
 
     def initLayout(self):
@@ -116,13 +119,12 @@ class Viewer(wx.Panel):
         ''' The selection of items in the widget has been changed. Notify 
             our observers and remember the current selection so we can
             restore it later, e.g. after the sort order is changed. '''
-        if self.IsBeingDeleted():
+        if self.IsBeingDeleted() or self.__selectingAllItems:
             # Some widgets change the selection and send selection events when 
             # deleting all items as part of the Destroy process. Ignore.
             return
         # Be sure all wx events are handled before we notify our observers: 
-        wx.CallAfter(lambda: patterns.Publisher().notifyObservers(\
-            patterns.Event(self.selectEventType(), self, self.curselection())))
+        wx.CallAfter(lambda: patterns.Event(self.selectEventType(), self, self.curselection()).send())
         # Remember the current selection so we can restore it after a refresh:
         self.__selection = self.curselection()
 
@@ -143,6 +145,12 @@ class Viewer(wx.Panel):
         # Translate indices returned by the widget into actual domain objects:
         return [self.getItemWithIndex(index) for index in \
                 self.widget.curselection()]
+        
+    def curselectionIsInstanceOf(self, class_):
+        ''' Return whether all items in the current selection are instances of
+            class_. Can be overridden in subclasses that show only one type
+            of items to simply check the class. '''
+        return all(isinstance(item, class_) for item in self.curselection())
 
     def isselected(self, item):
         """Returns True if the given item is selected. See
@@ -152,7 +160,19 @@ class Viewer(wx.Panel):
         return item in self.curselection()
 
     def selectall(self):
+        ''' Select all items in the presentation. Since some of the widgets we
+            use may send events for each individual item (!) we stop processing
+            selection events while we select all items. '''
+        self.__selectingAllItems = True
         self.widget.selectall()
+        # Use CallAfter to make sure we start processing selection events 
+        # after all selection events have been fired (and ignored):
+        wx.CallAfter(self.endOfSelectAll)
+        # Pretend we received one selection event for the selectall() call:
+        self.onSelect()
+        
+    def endOfSelectAll(self):
+        self.__selectingAllItems = False
         
     def invertselection(self):
         self.widget.invertselection()
@@ -624,7 +644,14 @@ class ViewerWithColumns(Viewer):
                 eventType=eventType)                    
         
     def __stopObserving(self, eventTypes):
+        # Collect the event types that the currently visible columns are
+        # interested in and make sure we don't stop observing those event types.
+        eventTypesOfVisibleColumns = []
+        for column in self.visibleColumns():
+            eventTypesOfVisibleColumns.extend(column.eventTypes())
         for eventType in eventTypes:
+            if eventType in eventTypesOfVisibleColumns:
+                continue
             patterns.Publisher().removeObserver(self.onAttributeChanged, 
                 eventType=eventType)
 

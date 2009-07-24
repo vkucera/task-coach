@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 from unittests import asserts 
 from taskcoachlib import patterns
-from taskcoachlib.domain import task, effort, date
+from taskcoachlib.domain import task, effort, date, category
 
 
 class EffortTest(test.TestCase, asserts.Mixin):
@@ -69,8 +69,7 @@ class EffortTest(test.TestCase, asserts.Mixin):
     def testDurationNotificationForSetStop(self):
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.duration')
-        stop = date.DateTime.now()
-        self.effort.setStop(stop)
+        self.effort.setStop(date.DateTime.now())
         self.assertEqual(patterns.Event('effort.duration', self.effort,
             self.effort.duration()), self.events[0])
         
@@ -107,12 +106,20 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqual(patterns.Event('effort.revenue', self.effort, 2400.0),
             self.events[0])
 
-    def testRevenueNotificationForEffortDurationChange(self):
+    def testRevenueNotificationForEffortDurationChange_ChangeStop(self):
         self.task.setHourlyFee(100)
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='effort.revenue')
         self.effort.setStop(date.DateTime(2004,1,3))
         self.assertEqual(patterns.Event('effort.revenue', self.effort, 4800.0),
+            self.events[0])
+
+    def testRevenueNotificationForEffortDurationChange_ChangeStart(self):
+        self.task.setHourlyFee(100)
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType='effort.revenue')
+        self.effort.setStart(date.DateTime(2004,1,1,12,0,0))
+        self.assertEqual(patterns.Event('effort.revenue', self.effort, 1200.0),
             self.events[0])
 
     def testDefaultStartAndStop(self):
@@ -207,6 +214,13 @@ class EffortTest(test.TestCase, asserts.Mixin):
 
     def testSubject(self):
         self.assertEqual(self.task.subject(), self.effort.subject())
+        
+    def testNoCategories(self):
+        self.assertEqual(self.task.categories(), self.effort.categories())
+        
+    def testCategories(self):
+        self.task.addCategory(category.Category('C'))
+        self.assertEqual(self.task.categories(), self.effort.categories())
 
     def testModificationEventTypes(self):
         self.assertEqual(super(effort.Effort, self.effort).modificationEventTypes() + \

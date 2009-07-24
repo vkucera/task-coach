@@ -348,10 +348,11 @@ class NeedsAttachmentViewer(object):
         return super(NeedsAttachmentViewer, self).enabled(event) and \
             self.viewer.isShowingAttachments()
 
+
 class NeedsSelectedTasks(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectedTasks, self).enabled(event) and \
-            all([isinstance(item, task.Task) for item in self.viewer.curselection()])
+            self.viewer.curselectionIsInstanceOf(task.Task)
 
 
 class NeedsOneSelectedTask(NeedsSelectedTasks):
@@ -363,13 +364,13 @@ class NeedsOneSelectedTask(NeedsSelectedTasks):
 class NeedsSelectionWithAttachments(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectionWithAttachments, self).enabled(event) and \
-            any([item.attachments() for item in self.viewer.curselection() if not isinstance(item, effort.Effort)])
+            any(item.attachments() for item in self.viewer.curselection() if not isinstance(item, effort.Effort))
 
 
 class NeedsSelectedEffort(NeedsSelection):
     def enabled(self, event):
         return super(NeedsSelectedEffort, self).enabled(event) and \
-            all([isinstance(item, effort.Effort) for item in self.viewer.curselection()])
+            self.viewer.curselectionIsInstanceOf(effort.Effort)
 
 
 class NeedsSelectedCategory(NeedsCategoryViewer, NeedsSelection):
@@ -1378,10 +1379,6 @@ class TaskToggleCompletion(NeedsSelectedTasks, ViewerCommand):
         markCompletedCommand = command.MarkCompletedCommand( \
             self.viewer.presentation(), self.viewer.curselection())
         markCompletedCommand.do()
-
-    def enabled(self, event):
-        return super(TaskToggleCompletion, self).enabled(event) and \
-            self.allSelectedTasksHaveSameCompletionState()
             
     def onUpdateUI(self, event):
         super(TaskToggleCompletion, self).onUpdateUI(event)
@@ -1417,39 +1414,39 @@ class TaskToggleCompletion(NeedsSelectedTasks, ViewerCommand):
             self.toolbar.EnableTool(self.id, False)     
     
     def updateMenuItems(self, allSelectedTasksAreCompleted):
-        menuText = self.getMenuText()
-        helpText = self.getHelpText()
+        menuText = self.getMenuText(allSelectedTasksAreCompleted)
+        helpText = self.getHelpText(allSelectedTasksAreCompleted)
         for menuItem in self.menuItems:
             menuItem.Check(allSelectedTasksAreCompleted)
             menuItem.SetItemLabel(menuText)
             menuItem.SetHelp(helpText)
         
-    def getMenuText(self):
-        if self.allSelectedTasksAreCompleted():
+    def getMenuText(self, allSelectedTasksAreCompleted=None):
+        if allSelectedTasksAreCompleted is None:
+            allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
+        if allSelectedTasksAreCompleted:
             return _('&Mark task uncompleted\tCtrl+RETURN')
         else:
             return self.defaultMenuText
         
-    def getHelpText(self):
-        if self.allSelectedTasksAreCompleted():
+    def getHelpText(self, allSelectedTasksAreCompleted=None):
+        if allSelectedTasksAreCompleted is None:
+            allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
+        if allSelectedTasksAreCompleted:
             return _('Mark the selected task(s) uncompleted')
         else:
             return self.defaultHelpText
         
     def allSelectedTasksAreCompleted(self):
-        if super(TaskToggleCompletion, self).enabled(None):
+        if super(TaskToggleCompletion, self).enabled(None) and \
+           len(self.viewer.curselection()) < 20:
             for task in self.viewer.curselection():
                 if not task.completed():
                     return False
             return True
         else:
             return False
-    
-    def allSelectedTasksHaveSameCompletionState(self):
-        selectedTasks = self.viewer.curselection()
-        nrCompleted = len([task for task in selectedTasks if task.completed()])
-        return nrCompleted in (0, len(selectedTasks))
-    
+
     
 class TaskMaxPriority(NeedsSelectedTasks, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
@@ -1543,6 +1540,9 @@ class ToggleCategory(NeedsSelection, ViewerCommand):
         if self.enabled(event):
             for menuItem in self.menuItems:
                 menuItem.Check(self.category in self.viewer.curselection()[0].categories())
+
+    def enabled(self, event):
+        return super(ToggleCategory, self).enabled(event) and not self.viewer.isShowingCategories()
 
 
 class TaskToggleCategory(ToggleCategory):
@@ -1989,7 +1989,7 @@ class AttachmentOpen(NeedsSelectedAttachments, ViewerCommand, AttachmentsCommand
             try:
                 attachment.open()
             except Exception, instance:
-                showerror(unicode(instance), 
+                showerror(render.exception(Exception, instance), 
                           caption=_('Error opening attachment'), 
                           style=wx.ICON_ERROR)
 

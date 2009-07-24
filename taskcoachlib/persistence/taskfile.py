@@ -25,7 +25,7 @@ from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 
 
-class TaskFile(patterns.Observable, patterns.Observer):
+class TaskFile(patterns.Observer):
     def __init__(self, *args, **kwargs):
         self.__filename = self.__lastFilename = ''
         self.__needSave = self.__loading = False
@@ -143,8 +143,7 @@ class TaskFile(patterns.Observable, patterns.Observer):
             return
         self.__lastFilename = filename or self.__filename
         self.__filename = filename
-        self.notifyObservers(patterns.Event('taskfile.filenameChanged', self,
-                                            filename))
+        patterns.Event('taskfile.filenameChanged', self, filename).send()
 
     def filename(self):
         return self.__filename
@@ -155,12 +154,12 @@ class TaskFile(patterns.Observable, patterns.Observer):
     def markDirty(self, force=False):
         if force or not self.__needSave:
             self.__needSave = True
-            self.notifyObservers(patterns.Event('taskfile.dirty', self, True))
+            patterns.Event('taskfile.dirty', self, True).send()
                 
     def markClean(self):
         if self.__needSave:
             self.__needSave = False
-            self.notifyObservers(patterns.Event('taskfile.dirty', self, False))
+            patterns.Event('taskfile.dirty', self, False).send()
             
     def _clear(self, regenerate=True):
         self.tasks().clear()
@@ -217,7 +216,7 @@ class TaskFile(patterns.Observable, patterns.Observer):
             self.__needSave = False
         
     def save(self):
-        self.notifyObservers(patterns.Event('taskfile.aboutToSave', self))
+        patterns.Event('taskfile.aboutToSave', self).send()
         fd = self._openForWrite()
         xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                 self.syncMLConfig(), self.guid())

@@ -47,6 +47,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
     def domainObjectsToView(self):
         return self.taskFile.categories()
     
+    def curselectionIsInstanceOf(self, class_):
+        return class_ == category.Category
+    
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()

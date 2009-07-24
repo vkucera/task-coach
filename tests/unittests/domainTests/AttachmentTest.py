@@ -21,6 +21,21 @@ import test
 from taskcoachlib import patterns
 from taskcoachlib.domain import attachment
 
+
+class GetRelativePathTest(test.TestCase):
+    def testBaseAndPathEqual(self):
+        self.assertEqual('', attachment.getRelativePath('/test', '/test'))
+        
+    def testPathIsSubDirOfBase(self):
+        self.assertEqual('subdir', attachment.getRelativePath('/test/subdir', '/test'))
+
+    def testBaseIsSubDirOfPath(self):
+        self.assertEqual('..', attachment.getRelativePath('/test', '/test/subdir'))
+        
+    def testBaseAndPathAreDifferent(self):
+        self.assertEqual(os.path.join('..', 'bar'),
+                         attachment.getRelativePath('/bar', '/foo'))
+        
         
 class FileAttachmentTest(test.TestCase):
     def setUp(self):

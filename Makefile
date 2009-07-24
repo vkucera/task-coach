@@ -93,23 +93,23 @@ changes:
 	$(PYTHON) changes.in/make.py html > website.in/changes.html
  
 unittests: icons templates
-	cd tests; $(PYTHON) test.py
+	cd tests; $(PYTHON) test.py --unittests
 
-alltests: icons i18n
-	cd tests; $(PYTHON) test.py --alltests
-
-releasetests: sdist 
-	cd tests; $(PYTHON) test.py --releasetests --no-unittests
-
-integrationtests: icons i18n
-	cd tests; $(PYTHON) test.py --integrationtests --no-unittests
+integrationtests: icons
+	cd tests; $(PYTHON) test.py --integrationtests
 
 languagetests: icons i18n
-	cd tests; $(PYTHON) test.py integrationtests/TranslationIntegrityTest.py
+	cd tests; $(PYTHON) test.py --languagetests
+
+releasetests: sdist 
+	cd tests; $(PYTHON) test.py --releasetests
 
 # FIXME: disttests should depend on either windist, deb, rpm or dmg...
 disttests:
-	cd tests; $(PYTHON) test.py --disttests --no-unittests
+	cd tests; $(PYTHON) test.py --disttests
+
+alltests: icons templates i18n sdist
+	cd tests; $(PYTHON) test.py --alltests
 
 coverage:
 	cd tests; coverage -x test.py; coverage -b -d coverage.out -o /usr

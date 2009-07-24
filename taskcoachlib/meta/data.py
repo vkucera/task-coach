@@ -25,7 +25,7 @@ import os, re
 version = os.environ.get('TCVERSION', '0.74.0')
 tskversion = 24 # Current version number of the task file format
 release_day = '0' # Day number of the release, 1-31, as string
-release_month = 'June' # Month of the release in plain English 
+release_month = 'July' # Month of the release in plain English 
 release_year = '2009' # Year of the release as string
 release_status = 'alpha' # One of 'alpha', 'beta', 'stable'
 

@@ -24,7 +24,7 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import date
 
 
-class SynchronizedObject(patterns.Observable):
+class SynchronizedObject(object):
     STATUS_NONE    = 0
     STATUS_NEW     = 1
     STATUS_CHANGED = 2
@@ -51,51 +51,96 @@ class SynchronizedObject(patterns.Observable):
         state['status'] = self.__status
         return state
 
-    def __setstate__(self, state):
+    def __setstate__(self, state, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         try:
-            super(SynchronizedObject, self).__setstate__(state)
+            event = super(SynchronizedObject, self).__setstate__(state, event)
         except AttributeError:
             pass
-        if state['status'] == self.__status:
-            return
-        if state['status'] == self.STATUS_CHANGED:
-            self.markDirty()
-        elif state['status'] == self.STATUS_DELETED:
-            self.markDeleted()
-        elif state['status'] == self.STATUS_NEW:
-            self.markNew()
-        elif state['status'] == self.STATUS_NONE:
-            self.cleanDirty()
+        if state['status'] != self.__status:
+            if state['status'] == self.STATUS_CHANGED:
+                event = self.markDirty(event=event)
+            elif state['status'] == self.STATUS_DELETED:
+                event = self.markDeleted(event)
+            elif state['status'] == self.STATUS_NEW:
+                event = self.markNew(event)
+            elif state['status'] == self.STATUS_NONE:
+                event = self.cleanDirty(event)
+        if notify:
+            event.send()
+        else:
+            return event
 
     def getStatus(self):
         return self.__status
+        
+    def markDirty(self, force=False, event=None):
+        if not self.setStatusDirty(force):
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        event.addSource(self, self.__status, 
+                        type=self.markNotDeletedEventType())
+        if notify:
+            event.send()
+        else:
+            return event
 
-    def markDirty(self, force=False):
-        oldstatus = self.__status
+    def setStatusDirty(self, force=False):
+        oldStatus = self.__status
         if self.__status == self.STATUS_NONE or force:
             self.__status = self.STATUS_CHANGED
-            if oldstatus == self.STATUS_DELETED:
-                self.notifyObservers(patterns.Event( \
-                    self.markNotDeletedEventType(), self, self.__status))
+            return oldStatus == self.STATUS_DELETED
+        else:
+            return False
 
-    def markNew(self):
-        oldstatus = self.__status
+    def markNew(self, event=None):
+        if not self.setStatusNew():
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        event.addSource(self, self.__status,
+                        type=self.markNotDeletedEventType())
+        if notify:
+            event.send()
+        else:
+            return event
+            
+    def setStatusNew(self):
+        oldStatus = self.__status
         self.__status = self.STATUS_NEW
-        if oldstatus == self.STATUS_DELETED:
-            self.notifyObservers(patterns.Event( \
-                 self.markNotDeletedEventType(), self, self.__status))
+        return oldStatus == self.STATUS_DELETED
 
-    def markDeleted(self):
+    def markDeleted(self, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        self.setStatusDeleted()
+        event.addSource(self, self.__status, type=self.markDeletedEventType())
+        if notify:
+            event.send()
+        else:
+            return event
+
+    def setStatusDeleted(self):
         self.__status = self.STATUS_DELETED
-        self.notifyObservers(patterns.Event( \
-            self.markDeletedEventType(), self, self.__status))
 
-    def cleanDirty(self):
-        oldstatus = self.__status
+    def cleanDirty(self, event=None):
+        if not self.setStatusNone():
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        event.addSource(self, self.__status, 
+                        type=self.markNotDeletedEventType())
+        if notify:
+            event.send()
+        else:
+            return event
+            
+    def setStatusNone(self):
+        oldStatus = self.__status
         self.__status = self.STATUS_NONE
-        if oldstatus == self.STATUS_DELETED:
-            self.notifyObservers(patterns.Event( \
-                 self.markNotDeletedEventType(), self, self.__status))
+        return oldStatus == self.STATUS_DELETED
 
     def isNew(self):
         return self.__status == self.STATUS_NEW
@@ -130,15 +175,21 @@ class Object(SynchronizedObject):
                           color=self.__color))
         return state
     
-    def __setstate__(self, state):
+    def __setstate__(self, state, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         try:
-            super(Object, self).__setstate__(state)
+            event = super(Object, self).__setstate__(state, event)
         except AttributeError:
             pass
         self.setId(state['id'])
-        self.setSubject(state['subject'])
-        self.setDescription(state['description'])
-        self.setColor(state['color'])
+        event = self.setSubject(state['subject'], event)
+        event = self.setDescription(state['description'], event)
+        event = self.setColor(state['color'], event)
+        if notify:
+            event.send()
+        else:
+            return event
 
     def __getcopystate__(self):
         ''' Return a dictionary that can be passed to __init__ when creating
@@ -172,14 +223,21 @@ class Object(SynchronizedObject):
     def subject(self):
         return self.__subject
     
-    def setSubject(self, subject):
-        if subject != self.__subject:
-            self.__subject = subject
-            self.notifyObservers(patterns.Event( \
-                self.subjectChangedEventType(), self, subject))
-            return True # Subject was changed
+    def setSubject(self, subject, event=None):
+        if subject == self.__subject:
+            return event        
+        notify = event is None
+        event = event or patterns.Event()
+        self.__subject = subject
+        event = self.subjectChangedEvent(event)
+        if notify:
+            event.send()
         else:
-            return False # Subject was not changed
+            return event
+        
+    def subjectChangedEvent(self, event):
+        event.addSource(self, self.subject(), type=self.subjectChangedEventType())
+        return event
     
     @classmethod    
     def subjectChangedEventType(class_):
@@ -190,29 +248,44 @@ class Object(SynchronizedObject):
     def description(self):
         return self.__description
     
-    def setDescription(self, description):
-        if description != self.__description:
-            self.__description = description
-            self.notifyObservers(patterns.Event( \
-                self.descriptionChangedEventType(), self, description))
-            return True # Description was changed
+    def setDescription(self, description, event=None):
+        if description == self.__description:
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        self.__description = description
+        event = self.descriptionChangedEvent(event)
+        if notify:
+            event.send()
         else:
-            return False # Description was not changed
+            return event
         
+    def descriptionChangedEvent(self, event):
+        event.addSource(self, self.description(), 
+                        type=self.descriptionChangedEventType())
+        return event
+            
     @classmethod    
     def descriptionChangedEventType(class_):
         return '%s.description'%class_
     
     # Color:
     
-    def setColor(self, color):
-        if color != self.__color:
-            self.__color = color
-            self.notifyObserversOfColorChange(color)
+    def setColor(self, color, event=None):
+        if color == self.__color:
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        self.__color = color
+        event = self.colorChangedEvent(event)
+        if notify:
+            event.send()
+        else:
+            return event
         
-    def color(self, recursive=True):
-        # The 'recursive' argument isn't  actually used here, but some
-        # code assumes  composite objects where there  aren't. This is
+    def color(self, recursive=False):
+        # The 'recursive' argument isn't actually used here, but some
+        # code assumes composite objects where there aren't. This is
         # the simplest workaround.
         return self.__color
 
@@ -220,15 +293,18 @@ class Object(SynchronizedObject):
     def colorChangedEventType(class_):
         return '%s.color'%class_
     
-    def notifyObserversOfColorChange(self, color):
-        self.notifyObservers(patterns.Event(self.colorChangedEventType(), 
-                                            self, color))
+    def colorChangedEvent(self, event):
+        event.addSource(self, self.color(), type=self.colorChangedEventType())
+        return event
         
     # Event types:
     
     @classmethod
     def modificationEventTypes(class_):
-        eventTypes = super(Object, class_).modificationEventTypes()
+        try:
+            eventTypes = super(Object, class_).modificationEventTypes()
+        except AttributeError:
+            eventTypes = []
         return eventTypes + [class_.subjectChangedEventType(),
                              class_.descriptionChangedEventType(),
                              class_.colorChangedEventType()]
@@ -277,25 +353,31 @@ class CompositeObject(Object, patterns.ObservableComposite):
             expanded. ''' 
         return list(self.__expandedContexts)
     
-    def expand(self, expand=True, context='None'):
+    def expand(self, expand=True, context='None', event=None):
         ''' Expands (or collapses) the composite object in the specified 
             context. ''' 
-        wasExpanded = self.isExpanded(context)
+        if expand == self.isExpanded(context):
+            return event
+        notify = event is None
+        event = event or patterns.Event()
         if expand:
             self.__expandedContexts.add(context)
-        elif context in self.__expandedContexts:
-            self.__expandedContexts.remove(context)
-        if expand != wasExpanded:
-            self.notifyObserversOfExpansionChange()
+        else:
+            self.__expandedContexts.discard(context)
+        event = self.expansionChangedEvent(event)
+        if notify:
+            event.send()
+        else:
+            return event
 
     @classmethod
     def expansionChangedEventType(class_):
         return '%s.expanded'%class_
 
-    def notifyObserversOfExpansionChange(self):
-        self.notifyObservers(patterns.Event(self.expansionChangedEventType(), 
-                                            self))
-        
+    def expansionChangedEvent(self, event):
+        event.addSource(self, type=self.expansionChangedEventType())
+        return event
+    
     # Color:
         
     def color(self, recursive=True):
@@ -304,13 +386,14 @@ class CompositeObject(Object, patterns.ObservableComposite):
             return self.parent().color()
         else:
             return myColor
-        
-    def notifyObserversOfColorChange(self, color):
-        event = patterns.Event(self.colorChangedEventType(), self, color)
-        sources = self.childrenWithoutOwnColor()
-        for source in sources:
-            event.addSource(source, color)
-        self.notifyObservers(event)
+                
+    def colorChangedEvent(self, event):
+        event = super(CompositeObject, self).colorChangedEvent(event)
+        children = self.childrenWithoutOwnColor()
+        color = self.color(recursive=False)
+        for child in children:
+            event.addSource(child, color, type=child.colorChangedEventType())
+        return event
 
     def childrenWithoutOwnColor(self, parent=None):
         parent = parent or self
@@ -329,23 +412,47 @@ class CompositeObject(Object, patterns.ObservableComposite):
 
     # Override SynchronizedObject methods to also mark child objects
 
-    def markDeleted(self, *args, **kwargs):
-        super(CompositeObject, self).markDeleted(*args, **kwargs)
+    def markDeleted(self, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(CompositeObject, self).markDeleted(event)
         for child in self.children():
-            child.markDeleted(*args, **kwargs)
+            event = child.markDeleted(event)
+        if notify:
+            event.send()
+        else:
+            return event
             
-    def markNew(self, *args, **kwargs):
-        super(CompositeObject, self).markNew(*args, **kwargs)
+    def markNew(self, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(CompositeObject, self).markNew(event)
         for child in self.children():
-            child.markNew(*args, **kwargs)
+            event = child.markNew(event)
+        if notify:
+            event.send()
+        else:
+            return event
 
-    def markDirty(self, *args, **kwargs):
-        super(CompositeObject, self).markDirty(*args, **kwargs)
+    def markDirty(self, force=False, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(CompositeObject, self).markDirty(force, event)
         for child in self.children():
-            child.markDirty(*args, **kwargs)
+            event = child.markDirty(force, event)
+        if notify:
+            event.send()
+        else:
+            return event
             
-    def cleanDirty(self, *args, **kwargs):        
-        super(CompositeObject, self).cleanDirty(*args, **kwargs)
+    def cleanDirty(self, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        event = super(CompositeObject, self).cleanDirty(event)
         for child in self.children():
-            child.cleanDirty(*args, **kwargs)
+            event = child.cleanDirty(event)
+        if notify:
+            event.send()
+        else:
+            return event
 

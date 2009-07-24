@@ -68,9 +68,9 @@ class XMLWriter(object):
             node.setAttribute('fixedFee', str(task.fixedFee()))
         if task.reminder() != None:
             node.setAttribute('reminder', str(task.reminder()))
-        if task.shouldMarkCompletedWhenAllChildrenCompleted != None:
+        if task.shouldMarkCompletedWhenAllChildrenCompleted() != None:
             node.setAttribute('shouldMarkCompletedWhenAllChildrenCompleted', 
-                              str(task.shouldMarkCompletedWhenAllChildrenCompleted))
+                              str(task.shouldMarkCompletedWhenAllChildrenCompleted()))
         for effort in task.efforts():
             node.appendChild(self.effortNode(effort))
         for note in task.notes():

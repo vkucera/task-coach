@@ -160,23 +160,25 @@ class DateCtrl(Panel):
 
 class TimeCtrl(Panel):
     def __init__(self, parent, callback=None, starthour=8, endhour=18, 
-                 interval=15, *args, **kwargs):
+                 interval=15, showSeconds=False, *args, **kwargs):
         self._starthour = starthour
         self._endhour = endhour
         self._interval = interval
+        self._showSeconds = showSeconds
         super(TimeCtrl, self).__init__(parent, callback, *args, **kwargs)
         
     def SetValue(self, time):
         if time is not None:
             value = '%02d:%02d'%(time.hour, time.minute)
-            if time.second != 0:
+            if self._showSeconds:
                 value += ':%02d'%time.second
             self._controls[0].SetValue(value)
     
     def _createControls(self, callback):
         # TODO: use wx.lib.masked.ComboBox or wx.lib.masked.TimeCtrl?
-        control = wx.ComboBox(self, value='00:00', choices=self._choices(), 
-                              size=(75,-1))
+        control = wx.ComboBox(self, value=self._showSeconds and '00:00:00' or '00:00',
+                              choices=self._choices(), 
+                              size=(self._showSeconds and 100 or 75,-1))
         control.Bind(wx.EVT_TEXT, callback)
         control.Bind(wx.EVT_COMBOBOX, callback)
         return [control]
@@ -185,7 +187,8 @@ class TimeCtrl(Panel):
         choices = []
         for hour in range(self._starthour, self._endhour):
             for minute in range(0, 60, self._interval):
-                choices.append('%02d:%02d'%(hour, minute))
+                choices.append(('%02d:%02d'%(hour, minute)) + \
+                               (self._showSeconds and ':00' or ''))
         return choices
         
     def GetValue(self):
@@ -200,12 +203,13 @@ class TimeCtrl(Panel):
 
 class DateTimeCtrl(Panel):
     def __init__(self, parent, dateTime, callback=None, noneAllowed=True,
-                 starthour=8, endhour=18, interval=15, 
+                 starthour=8, endhour=18, interval=15, showSeconds=False,
                  *args, **kwargs):
         self._noneAllowed = noneAllowed
         self._starthour = starthour
         self._endhour = endhour
         self._interval = interval
+        self._showSeconds = showSeconds
         super(DateTimeCtrl, self).__init__(parent, callback, *args, **kwargs)
         self._callback = callback or self.__nullCallback
         self.SetValue(dateTime)
@@ -218,7 +222,8 @@ class DateTimeCtrl(Panel):
             self._noneAllowed)
         self._dateCtrl.Bind(wx.EVT_CHECKBOX, self.onEnableDatePicker)
         self._timeCtrl = TimeCtrl(self, self._timeCtrlCallback,
-                                  self._starthour, self._endhour, self._interval)
+                                  self._starthour, self._endhour, self._interval,
+                                  self._showSeconds)
         return [self._dateCtrl, self._timeCtrl]
         
     def onEnableDatePicker(self, event):

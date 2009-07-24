@@ -23,7 +23,7 @@ from taskcoachlib.domain import base
 from taskcoachlib import patterns
 
 
-class OwnerUnderTest(patterns.Observable):
+class OwnerUnderTest(object):
     __metaclass__ = base.DomainObjectOwnerMetaclass
     __ownedType__ = 'Foo'
     

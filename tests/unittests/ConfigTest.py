@@ -226,15 +226,42 @@ class SettingsFileLocationTest(SettingsTestCase):
 
 class MinimumSettingsTest(SettingsTestCase):
     def testAtLeastOneTaskTreeListViewer(self):
-        self.assertEqual(1, 
-            self.settings.getint('view', 'taskviewercount'))
+        self.assertEqual(1, self.settings.getint('view', 'taskviewercount'))
 
     def testTwoTaskTreeListViewers(self):
         self.settings.set('view', 'taskviewercount', u'2')
-        self.assertEqual(2, 
-            self.settings.getint('view', 'taskviewercount'))
+        self.assertEqual(2, self.settings.getint('view', 'taskviewercount'))
 
     def testAtLeastOneTaskTreeListViewer_EvenWhenSetToZero(self):
         self.settings.set('view', 'taskviewercount', u'0')
-        self.assertEqual(1, 
-            self.settings.getint('view', 'taskviewercount'))
+        self.assertEqual(1, self.settings.getint('view', 'taskviewercount'))
+        
+        
+class ApplicationOptionsTest(test.TestCase):
+    def setUp(self):
+        super(ApplicationOptionsTest, self).setUp()
+        self.parser = config.ApplicationOptionParser()
+        
+    def testUsage(self):
+        self.assertEqual('%prog [options] [.tsk file]', self.parser.usage)
+        
+    def testLanguage(self):
+        options, args = self.parser.parse_args(['-l', 'nl'])
+        self.assertEqual('nl', options.language)
+
+    def testLanguageWhenNotChanged(self):
+        options, args = self.parser.parse_args([])
+        self.assertEqual(None, options.language)
+        
+    def testPoFile(self):
+        options, args = self.parser.parse_args(['-p', 'test.po'])
+        self.assertEqual('test.po', options.pofile)
+
+    def testIniFile(self):
+        options, args = self.parser.parse_args(['-i', 'test.ini'])
+        self.assertEqual('test.ini', options.inifile)
+        
+    def testProfile(self):
+        options, args = self.parser.parse_args(['--profile'])
+        self.failUnless(options.profile)
+        

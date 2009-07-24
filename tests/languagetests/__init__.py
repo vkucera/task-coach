@@ -16,9 +16,3 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import glob, po2dict, shutil
-
-for poFile in sorted(glob.glob('*.po')):
-    print 'Creating python dictionary from', poFile
-    pyFile = po2dict.make(poFile)
-    shutil.move(pyFile, '../taskcoachlib/i18n/%s'%pyFile)

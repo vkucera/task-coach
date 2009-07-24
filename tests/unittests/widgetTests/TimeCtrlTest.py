@@ -21,10 +21,10 @@ from taskcoachlib import widgets
 from taskcoachlib.domain import date
 
 
-class TimeCtrlTest(test.wxTestCase):
+class TimeCtrlTest_Seconds(test.wxTestCase):
     def setUp(self):
-        super(TimeCtrlTest, self).setUp()
-        self.timeCtrl = widgets.datectrl.TimeCtrl(self.frame)
+        super(TimeCtrlTest_Seconds, self).setUp()
+        self.timeCtrl = widgets.datectrl.TimeCtrl(self.frame, showSeconds=True)
         
     def testGetValue(self):
         oneHour = date.Time(hour=1)
@@ -35,3 +35,20 @@ class TimeCtrlTest(test.wxTestCase):
         oneHourAndTenSeconds = date.Time(hour=1, second=10)
         self.timeCtrl.SetValue(oneHourAndTenSeconds)
         self.assertEqual(oneHourAndTenSeconds, self.timeCtrl.GetValue())
+
+
+class TimeCtrlTest_NoSeconds(test.wxTestCase):
+    def setUp(self):
+        super(TimeCtrlTest_NoSeconds, self).setUp()
+        self.timeCtrl = widgets.datectrl.TimeCtrl(self.frame, showSeconds=False)
+
+    def testGetValue(self):
+        oneHour = date.Time(hour=1)
+        self.timeCtrl.SetValue(oneHour)
+        self.assertEqual(oneHour, self.timeCtrl.GetValue())
+
+    def testGetValue_SecondPrecision(self):
+        oneHour = date.Time(hour=1)
+        oneHourAndTenSeconds = date.Time(hour=1, second=10)
+        self.timeCtrl.SetValue(oneHourAndTenSeconds)
+        self.assertEqual(oneHour, self.timeCtrl.GetValue())

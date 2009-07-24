@@ -207,6 +207,9 @@ class BaseState(object):
 
          This will probably be more configurable in the future."""
 
+        if task.isDeleted():
+            return False
+
         if len(task.children()) == 0:
             return True
 
@@ -318,7 +321,7 @@ class GUIDState(BaseState):
 class FullFromDesktopState(BaseState):
     def init(self, disp):
         self.tasks = filter(self.isTaskEligible, disp.window.taskFile.tasks())
-        self.categories = list(disp.window.taskFile.categories())
+        self.categories = list([cat for cat in disp.window.taskFile.categories() if not cat.isDeleted()])
 
         disp.pushInteger(len(self.categories))
         disp.pushInteger(len(self.tasks))

@@ -190,6 +190,13 @@ class ObjectTest(test.TestCase):
                         status=self.object.STATUS_DELETED, color=wx.RED)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
+        
+    def testSetState_SendsOneNotification(self):
+        newState = dict(subject='New', description='New', id=None,
+                        status=self.object.STATUS_DELETED, color=wx.RED)
+        self.object.__setstate__(newState)
+        self.assertEqual(1, len(self.eventsReceived))
+        
     
     # Copy tests:
         
@@ -250,6 +257,11 @@ class CompositeObjectTest(test.TestCase):
     def onEvent(self, event):
         self.eventsReceived.append(event)
         
+    def addChild(self, **kwargs):
+        self.child = base.CompositeObject(**kwargs)
+        self.compositeObject.addChild(self.child)
+        self.child.setParent(self.compositeObject)
+        
     def testIsExpanded(self):
         self.failIf(self.compositeObject.isExpanded())
         
@@ -288,28 +300,21 @@ class CompositeObjectTest(test.TestCase):
         
     def testRecursiveSubject(self):
         self.compositeObject.setSubject('parent')
-        child = base.CompositeObject(subject='child')
-        self.compositeObject.addChild(child)
-        self.assertEqual(u'parent -> child', child.subject(recursive=True))
+        self.addChild(subject='child')
+        self.assertEqual(u'parent -> child', self.child.subject(recursive=True))
 
     def testSubItemUsesParentColor(self):
-        child = base.CompositeObject()
-        self.compositeObject.addChild(child)
-        child.setParent(self.compositeObject)
+        self.addChild()
         self.compositeObject.setColor(wx.RED)
-        self.assertEqual(wx.RED, child.color())
+        self.assertEqual(wx.RED, self.child.color())
         
     def testSubItemDoesNotUseParentColorIfItHasItsOwnColor(self):
-        child = base.CompositeObject(color=wx.RED)
-        self.compositeObject.addChild(child)
-        child.setParent(self.compositeObject)
+        self.addChild(color=wx.RED)
         self.compositeObject.setColor(wx.BLUE)        
-        self.assertEqual(wx.RED, child.color())
+        self.assertEqual(wx.RED, self.child.color())
         
     def testColorChangedNotification(self):
-        child = base.CompositeObject()
-        self.compositeObject.addChild(child)
-        child.setParent(self.compositeObject)
+        self.addChild()
         patterns.Publisher().registerObserver(self.onEvent,
             eventType=base.CompositeObject.colorChangedEventType())
         self.compositeObject.setColor(wx.RED)
@@ -322,7 +327,50 @@ class CompositeObjectTest(test.TestCase):
                          self.compositeObject.expandedContexts())
         self.compositeObject.expand(context='another_viewer')
         self.failIf('another_viewer' in copy.expandedContexts())
+        
+    def testMarkDeleted(self):
+        self.addChild()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=base.CompositeObject.markDeletedEventType())
+        self.compositeObject.markDeleted()
+        expectedEvent = patterns.Event(base.CompositeObject.markDeletedEventType(),
+                                       self.compositeObject, base.CompositeObject.STATUS_DELETED)
+        expectedEvent.addSource(self.child, base.CompositeObject.STATUS_DELETED)
+        self.assertEqual([expectedEvent], self.eventsReceived)
+        
+    def testMarkDirty(self):
+        self.addChild()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=base.CompositeObject.markNotDeletedEventType())
+        self.compositeObject.markDeleted()
+        self.compositeObject.markDirty(force=True)
+        expectedEvent = patterns.Event(base.CompositeObject.markNotDeletedEventType(),
+                                       self.compositeObject, base.CompositeObject.STATUS_CHANGED)
+        expectedEvent.addSource(self.child, base.CompositeObject.STATUS_CHANGED)
+        self.assertEqual([expectedEvent], self.eventsReceived)
 
+    def testMarkNew(self):
+        self.addChild()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=base.CompositeObject.markNotDeletedEventType())
+        self.compositeObject.markDeleted()
+        self.compositeObject.markNew()
+        expectedEvent = patterns.Event(base.CompositeObject.markNotDeletedEventType(),
+                                       self.compositeObject, base.CompositeObject.STATUS_NEW)
+        expectedEvent.addSource(self.child, base.CompositeObject.STATUS_NEW)
+        self.assertEqual([expectedEvent], self.eventsReceived)
+        
+    def testCleanDirty(self):
+        self.addChild()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=base.CompositeObject.markNotDeletedEventType())
+        self.compositeObject.markDeleted()
+        self.compositeObject.cleanDirty()
+        expectedEvent = patterns.Event(base.CompositeObject.markNotDeletedEventType(),
+                                       self.compositeObject, base.CompositeObject.STATUS_NONE)
+        expectedEvent.addSource(self.child, base.CompositeObject.STATUS_NONE)
+        self.assertEqual([expectedEvent], self.eventsReceived)
+        
     def testModificationEventTypes(self):
         self.assertEqual([self.compositeObject.addChildEventType(),
                           self.compositeObject.removeChildEventType(),

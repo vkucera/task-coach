@@ -79,8 +79,3 @@ class TaskFile(persistence.TaskFile):
 
 class MainWindow:
     showFindDialog = None
-
-
-class IOController:
-    def needSave(self, *args, **kwargs):
-        return False

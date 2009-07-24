@@ -268,8 +268,9 @@ class CompositeCollectionTest(test.TestCase):
         self.collection.append(self.composite)
         self.composite2.setParent(self.composite)
         self.collection.append(self.composite2)
-        self.assertEqual([patterns.Event(self.composite.addChildEventType(), 
-            self.composite, self.composite2)], self.events)
+        expectedEvent = patterns.Event(self.composite.addChildEventType(),
+                                       self.composite, self.composite2)
+        self.assertEqual([expectedEvent], self.events)
     
     def testRemoveChildFromCollectionRemovesChildFromParent(self):
         self.collection.extend([self.composite, self.composite2])
@@ -282,8 +283,9 @@ class CompositeCollectionTest(test.TestCase):
         self.collection.extend([self.composite, self.composite2])
         self.composite.addChild(self.composite2)
         self.collection.remove(self.composite2)
-        self.assertEqual([patterns.Event(self.composite.removeChildEventType(), 
-            self.composite, self.composite2)], self.events)
+        expectedEvent = patterns.Event(self.composite.removeChildEventType(),
+                                       self.composite, self.composite2)
+        self.assertEqual([expectedEvent], self.events)
 
     def testRemoveCompositeWithChildRemovesChildToo(self):
         self.composite.addChild(self.composite2)
@@ -309,7 +311,7 @@ class CompositeCollectionTest(test.TestCase):
         self.collection.append(self.composite)
         self.collection.remove(self.composite2)
         self.assertEqualLists([self.composite2, grandChild],
-                              self.events[0].values())
+                              self.events[0].values(type=self.collection.removeItemEventType()))
     
     def testRemoveCompositeWithChildrenDoesNotBreakParentChildRelation(self):
         self.composite.addChild(self.composite2)

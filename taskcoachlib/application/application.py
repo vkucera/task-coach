@@ -43,51 +43,63 @@ class Application(object):
             from taskcoachlib import meta
             self.vc = meta.VersionChecker(self.settings)
             self.vc.start()
-        # Copy default templates that don't exist yet in the user's
-        # template directory.
+        self.copyDefaultTemplates()
+        self.mainwindow.Show()
+        self.wxApp.MainLoop()
+        
+    def copyDefaultTemplates(self):
+        ''' Copy default templates that don't exist yet in the user's
+            template directory. '''
         from taskcoachlib.persistence import getDefaultTemplates
         templateDir = self.settings.pathToTemplatesDir()
         for name, template in getDefaultTemplates():
             filename = os.path.join(templateDir, name + '.tsktmpl')
             if not os.path.exists(filename):
                 file(filename, 'wb').write(template)
-        self.mainwindow.Show()
-        self.wxApp.MainLoop()
         
     def init(self, loadSettings=True, loadTaskFile=True):
         ''' Initialize the application. Needs to be called before 
             Application.start(). ''' 
-        from taskcoachlib import config, i18n
-        if self._options:
-            iniFile = self._options.inifile
-        else:
-            iniFile = None
-        self.settings = settings = config.Settings(loadSettings, iniFile)
-        i18n.Translator(settings.get('view', 'language'))
+        self.initConfig(loadSettings)
+        self.initLanguage()
         from taskcoachlib import gui, persistence, meta
         from taskcoachlib.domain import task
         self.wxApp.SetAppName(meta.name)
         self.wxApp.SetVendorName(meta.author)
         gui.init()
-        if settings.getboolean('window', 'splash'):
+        if self.settings.getboolean('window', 'splash'):
             splash = gui.SplashScreen()
         else:
             splash = None
         self.taskFile = persistence.LockedTaskFile()
-        self.autoSaver = persistence.AutoSaver(settings)
+        self.autoSaver = persistence.AutoSaver(self.settings)
         self.taskRelationshipManager = task.TaskRelationshipManager( \
-            taskList=self.taskFile.tasks(), settings=settings)
-        self.io = gui.IOController(self.taskFile, self.displayMessage, settings)
-        self.mainwindow = gui.MainWindow(self.io, self.taskFile, settings, 
+            taskList=self.taskFile.tasks(), settings=self.settings)
+        self.io = gui.IOController(self.taskFile, self.displayMessage, self.settings)
+        self.mainwindow = gui.MainWindow(self.io, self.taskFile, self.settings, 
                                          splash)
         if not self.settings.getboolean('file', 'inifileloaded'):
             self.warnUserThatIniFileWasNotLoaded()
         if loadTaskFile:
             self.io.openAfterStart(self._args)
         wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker",
-                                      settings.getboolean('editor', 'maccheckspelling'))
+                                      self.settings.getboolean('editor', 'maccheckspelling'))
         self.registerSignalHandlers()
         
+    def initConfig(self, loadSettings):
+        from taskcoachlib import config
+        iniFile = self._options.inifile if self._options else None
+        self.settings = config.Settings(loadSettings, iniFile)
+        
+    def initLanguage(self):
+        from taskcoachlib import i18n
+        language = None
+        if self._options:
+            language = self._options.pofile or self._options.language
+        if not language:
+            language = self.settings.get('view', 'language')
+        i18n.Translator(language)
+                
     def registerSignalHandlers(self):
         signal.signal(signal.SIGTERM, self.onSIGTERM)
         if hasattr(signal, 'SIGHUP'):
