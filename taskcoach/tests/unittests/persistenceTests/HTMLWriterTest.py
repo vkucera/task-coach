@@ -71,7 +71,10 @@ class CommonTests(object):
         
     def testHeader(self):
         self.expectInHTML('  <head>\n', '  </head>\n')
-
+        
+    def testStyle(self):
+        self.expectInHTML('    <style type="text/css">\n', '    </style>\n')
+        
     def testBody(self):
         self.expectInHTML('  <body>\n', '  </body>\n')
 
@@ -92,12 +95,9 @@ class TaskTests(CommonTests):
         self.taskFile.tasks().append(child)
         self.selectItem(1)
         self.expectInHTML('>Task subject<')
-        
-    def testSubjectColumnAlignment(self):
-        self.expectInHTML('<td class="subject" style="text-align: left">Task subject</td>')
 
-    def testSubjectColumnHeaderAlignment(self):
-        self.expectInHTML('<th class="subject" scope="col" style="text-align: left">Subject</th>')
+    def testColumnStyle(self):
+        self.expectInHTML('      .subject {text-align: left}\n')
         
     def testOverdueTask(self):
         self.task.setDueDate(date.Yesterday())
@@ -166,4 +166,7 @@ class EffortWriterTest(HTMLWriterTestCase, CommonTests):
         
     def testEffortDuration(self):
         self.expectInHTML('>0:00:01<')
+        
+    def testColumnStyle(self):
+        self.expectInHTML('      .task {text-align: left}\n')
 

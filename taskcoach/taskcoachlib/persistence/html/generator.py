@@ -55,10 +55,24 @@ class Viewer2HTMLConverter(object):
         ''' Returns the HTML header section, containing meta tag, title, and
             optional link to a CSS stylesheet. '''
         htmlHeaderContent = [self.indent(self.metaTag, level), 
-                             self.wrap(self.viewer.title(), 'title', level, oneLine=True)]
+                             self.wrap(self.viewer.title(), 'title', level, oneLine=True)] + \
+                            self.style(level)
         if cssFilename:
             htmlHeaderContent.append(self.indent(self.cssLink%cssFilename, level))
         return htmlHeaderContent
+    
+    def style(self, level):
+        ''' Add a style section that contains the alignment for the columns. '''
+        visibleColumns = self.viewer.visibleColumns()
+        columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left',
+                             wx.LIST_FORMAT_CENTRE: 'center',
+                             wx.LIST_FORMAT_RIGHT: 'right'}[column.alignment()]
+                             for column in visibleColumns]
+        styleContent = []
+        for column, alignment in zip(visibleColumns, columnAlignments):
+            columnStyle = self.indent('.%s {text-align: %s}'%(column.name(), alignment), level+1)
+            styleContent.append(columnStyle)
+        return self.wrap(styleContent, 'style', level, type='text/css')
     
     def htmlBody(self, selectionOnly, level):
         ''' Returns the HTML body section, containing one table with all 
@@ -70,43 +84,38 @@ class Viewer2HTMLConverter(object):
         ''' Returns the table, consisting of caption, table header and table 
             body. '''
         visibleColumns = self.viewer.visibleColumns()
-        columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left',
-                             wx.LIST_FORMAT_CENTRE: 'center',
-                             wx.LIST_FORMAT_RIGHT: 'right'}[column.alignment()]
-                             for column in visibleColumns]
         tableContent = [self.tableCaption(level+1)] + \
-                       self.tableHeader(visibleColumns, columnAlignments, level+1) + \
-                       self.tableBody(visibleColumns, columnAlignments, selectionOnly, level+1)
+                       self.tableHeader(visibleColumns, level+1) + \
+                       self.tableBody(visibleColumns, selectionOnly, level+1)
         return self.wrap(tableContent, 'table', level, id='table')
                 
     def tableCaption(self, level):
         ''' Returns the table caption, based on the viewer title. '''
         return self.wrap(self.viewer.title(), 'caption', level, oneLine=True)
     
-    def tableHeader(self, visibleColumns, columnAlignments, level):
+    def tableHeader(self, visibleColumns, level):
         ''' Returns the table header section <thead> containing the header
             row with the column headers. '''
-        tableHeaderContent = self.headerRow(visibleColumns, columnAlignments, level+1)
+        tableHeaderContent = self.headerRow(visibleColumns, level+1)
         return self.wrap(tableHeaderContent, 'thead', level)
         
-    def headerRow(self, visibleColumns, columnAlignments, level):
+    def headerRow(self, visibleColumns, level):
         ''' Returns the header row <tr> for the table. '''
         headerRowContent = []
-        for column, alignment in zip(visibleColumns, columnAlignments):
-            headerRowContent.append(self.headerCell(column, alignment, level+1))
+        for column in visibleColumns:
+            headerRowContent.append(self.headerCell(column, level+1))
         return self.wrap(headerRowContent, 'tr', level, **{'class': 'header'})
         
-    def headerCell(self, column, alignment, level):
+    def headerCell(self, column, level):
         ''' Returns a table header <th> for the specific column. '''
         header = column.header() or '&nbsp;'
         name = column.name()
-        attributes = {'scope': 'col', 'class': name, 
-                      'style': 'text-align: %s'%alignment}
+        attributes = {'scope': 'col', 'class': name}
         if self.viewer.isSortable() and self.viewer.isSortedBy(name):
             attributes['id'] = 'sorted'
         return self.wrap(header, 'th', level, oneLine=True, **attributes)
     
-    def tableBody(self, visibleColumns, columnAlignments, selectionOnly, level):
+    def tableBody(self, visibleColumns, selectionOnly, level):
         ''' Returns the table body <tbody>. ''' 
         tree = self.viewer.isTreeViewer()
         self.count = 0
@@ -115,16 +124,16 @@ class Viewer2HTMLConverter(object):
             if selectionOnly and not self.viewer.isselected(item):
                 continue
             self.count += 1
-            tableBodyContent.extend(self.bodyRow(item, visibleColumns, columnAlignments, tree, level+1))
+            tableBodyContent.extend(self.bodyRow(item, visibleColumns, tree, level+1))
         return self.wrap(tableBodyContent, 'tbody', level)
     
-    def bodyRow(self, item, visibleColumns, columnAlignments, tree, level):
+    def bodyRow(self, item, visibleColumns, tree, level):
         ''' Returns a <tr> containing the values of item for the 
             visibleColumns. '''
         bodyRowContent = []
-        for column, alignment in zip(visibleColumns, columnAlignments):
+        for column in visibleColumns:
             renderedItem = self.render(item, column, indent=not bodyRowContent and tree)
-            bodyRowContent.append(self.bodyCell(renderedItem, column, alignment, level+1))
+            bodyRowContent.append(self.bodyCell(renderedItem, column, level+1))
         style = self.bodyRowStyleAttribute(item)
         attributes = dict(style=style) if style else dict()
         return self.wrap(bodyRowContent, 'tr', level, **attributes)
@@ -139,11 +148,10 @@ class Viewer2HTMLConverter(object):
         style = '; '.join(color for color in (bgColor, fgColor) if color)
         return style
     
-    def bodyCell(self, item, column, alignment, level):
+    def bodyCell(self, item, column, level):
         ''' Return a <td> for the item/column combination, using the specified
             aligment (one of 'left', 'center', 'right'). '''
-        attributes = {'class': column.name(), 
-                      'style': 'text-align: %s'%alignment}
+        attributes = {'class': column.name()}
         return self.wrap(item, 'td', level, oneLine=True, **attributes)
     
     @classmethod
