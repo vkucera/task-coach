@@ -272,12 +272,12 @@ _aboutSyncmlSubsection = _('''<h4><a name="aboutsyncml">What is SyncML</a></h4>
 <p>This feature is optional and off by default. In order to turn it on,
 go to the preferences dialog and check it in the Features page.</p>
 
-<p>SyncML  is   an  XML  protocol  designed   to  synchronize  several
-applications  with  a  server.  A  popular open-source  server  is  <a
-href="http://www.funambol.com/">Funambol</a>.  Synchronization clients
-are available  for many devices and applications  (Outlook, Pocket PC,
-iPod, iPhone,  Evolution, etc...),  as well as  so-called "connectors"
-which allow the server  to synchronize with Exchange, Google Calendar,
+<p>SyncML is an XML protocol designed to synchronize several
+applications with a server. A popular open-source server is <a
+href="http://www.funambol.com/">Funambol</a>. Synchronization clients
+are available for many devices and applications (Outlook, Pocket PC,
+iPod, iPhone, Evolution, etc...), as well as  so-called "connectors"
+which allow the server to synchronize with Exchange, Google Calendar,
 etc.</p>
 
 <p>%(name)s has built-in SyncML client support. This means you can
@@ -303,11 +303,12 @@ you choose; some examples are:
 The database names are pretty standard; the default values should work.</p>
 
 <p>Each task file has its own client ID, so that two different task files
-will de considered different "devices" by the server.</p>''')
+will be considered different "devices" by the server.</p>''')
 
 _syncmlLimitsSubsection = _('''<h4><a name="syncmllimits">Limitations</a></h4>
 
-<p>Some limitations are due to the fact that, the underlying data type being vcalendar, some TaskCoach features cannot be presented to the server.
+<p>Some limitations are due to the fact that, the underlying data type being 
+vcalendar, some %(name)s features cannot be presented to the server.</p>
 
   <ul>
     <li>Task and category hierarchy are lost to the server.</li>
@@ -366,15 +367,15 @@ all these unwanted items.</p>
 _iPhoneSection = _('''<h3><a name="iphone">iPhone and iPod Touch</a></h3>
 ''')
 
-_iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">Task Coach on the iPhone</a></h4>
+_iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">%(name)s on the iPhone</a></h4>
 
-<p>There is an iPhone/iPod Touch companion app for Task Coach, available on
+<p>There is an iPhone/iPod Touch companion app for %(name)s, available on
 <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8">Apple's
 AppStore.</a> This app has few features right now, but allows you to take
 your tasks away and modify them:</p>
 
 <ul>
-  <li>Two-way synchronization with Task Coach on the desktop (only one task file
+  <li>Two-way synchronization with %(name)s on the desktop (only one task file
       supported, but a later version will support multiple files)</li>
   <li>Edit subject, description and dates</li>
   <li>Hierarchical categories</li>
@@ -402,20 +403,20 @@ _iPhoneConfigurationSubsection = _('''<h4><a name="iphoneconf">Configuration</a>
   <li>Confirm complete: if enabled, a message box will pop up for confirmation when you mark a task complete by tapping its LED.</li>
 </ul>
 
-<p>Before synchronizing, you must also configure Task Coach on the desktop; in
+<p>Before synchronizing, you must also configure %(name)s on the desktop; in
 the preferences, in the "Features" tab, check "Enable iPhone synchronization".
-Restart Task Coach. Now, in the preferences, choose the "iPhone" tab and fill in
+Restart %(name)s. Now, in the preferences, choose the "iPhone" tab and fill in
 at least the password.</p>
 
-<p>When you tap the "Sync" button in the category view, Task Coach
-will automatically detect running instances of Task Coach on your
+<p>When you tap the "Sync" button in the category view, %(name)s
+will automatically detect running instances of %n(name)s on your
 desktop and ask you to select one (you may have several instances
 running on different computers on your network, or several instances
 on the same computer). The name displayed is, by default, some string
 identifying the computer it's running on. To customize this, you may
 change the "Bonjour service name" in the configuration.</p>
 
-<p>Task Coach will remember the choosen instance and try it next time
+<p>%(name)s will remember the choosen instance and try it next time
 you synchronize; if it's not running, it will prompt you again.</p>
 
 <p>Note that this synchronization happens through the network; there is
@@ -454,7 +455,7 @@ are part of the template. Only categories are not saved.</p>
 
 <p>You can also create a new template from a pre-made template file (.tsktmpl);
 just select "Add template" in the File menu and select the file. Template files
-are stored in a subdirectory of the directory where %(name)s.ini is.</p>
+are stored in a subdirectory of the directory where TaskCoach.ini is.</p>
 
 <p>In order to instantiate a task template, use the "New task from template" menu
 in the Task menu, or the equivalent toolbar button. When the task is created, the
@@ -476,7 +477,7 @@ helpHTML = _TOC + _taskSection + _aboutTasksSubsection + \
     _templatesSection + _aboutTemplatesSubsection + _usingTemplatesSubsection
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
-<h5>Version %(version)s, %(date)s</h5>
+<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>
 <p>By %(author)s &lt;%(author_email)s&gt;<p>
 <p><a href="%(url)s" target="_blank">%(url)s</a></p>
 <p>%(copyright)s</p>
@@ -488,7 +489,7 @@ doubleline = '================================================================\n
 header = doubleline + '%(name)s - %(description)s\n'%meta.metaDict + doubleline
 
 aboutText = header + _('''
-Version %(version)s, %(date)s
+Version %(version)s, Revision %(revision)s, %(date)s
 
 By %(author)s <%(author_email)s>
 

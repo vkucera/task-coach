@@ -177,7 +177,7 @@ pages['download'] = \
         <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.dmg"
         onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/macosx');">Disk image (dmg)</a> for Mac OS X</b></td></tr>
         <tr><td>Mac OS X versions supported: Mac OS X Tiger/10.4 
-        (Universal).</td></tr>
+        (Universal) and later.</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
         <tr><td>Installation: double click the package and drop the %(name)s 
         application in your programs folder.</td></tr>
@@ -510,8 +510,8 @@ def appendThumbnails(name, flt):
             pages[name] += '<P>%s<BR>%s</P>'%(caption, image)
 
 pages['iPhone'] = '''<H3>iPhone</H3>
-        <P>There is a todo-list application for iPhone that can synchronize with Task Coach
-through the network, starting with version 0.73.2 of Task Coach. Main features are</P>
+        <P>There is a todo-list application for iPhone that can synchronize with %(name)s
+through the network, starting with version 0.73.2 of %(name)s. Main features are</P>
 
         <UL>
           <LI>Hierarchical categories.</LI>
@@ -593,6 +593,9 @@ pages['i18n'] = \
             keyboard uses 
             different labels for those keys. Picking a different letter is 
             possible, but please make sure each letter is used only once.</LI>
+            <LI>To test your translation, download it as .po file from 
+            Launchpad and start %(name)s with the <TT>--po &lt;po file&gt;</TT> 
+            command line option.</LI> 
         </OL>
         </P>'''
 
@@ -693,7 +696,7 @@ unicode('''       <H3>Chaîne de courriel</H3>
 pages['faq'] = \
 '''    <H3>Frequently asked questions</H3>
     <P><I>I upgraded to a new version and now I cannot load my %(name)s file. It
-    says: "Error loading <myfile>.tsk. Are you sure it is a %(name)s file?".
+    says: "Error loading &lt;myfile&gt;.tsk. Are you sure it is a %(name)s file?".
     I'm sure the file's ok. What next?</I></P>
     <P>Remove your TaskCoach.ini file and try again. Sometimes errors in
     loading old settings files will cause %(name)s to barf on .tsk files that
@@ -713,7 +716,7 @@ pages['faq'] = \
     folder was installed to, and hence python cannot find the library. 
     The taskcoachlib folder is located in 
     /usr/lib/python2.X/site-packages. If you find the taskcoachlib folder and
-    run taskcoach.py with the same python version, Task Coach should run. So 
+    run taskcoach.py with the same python version, %(name)s should run. So 
     if taskcoachlib is in /usr/lib/python2.X/site-packages and taskcoach.py is
     located in /usr/bin then 'python2.X /usr/bin/taskcoach.py' should work. To
     solve this more permanently you can move the taskcoachlib folder to the
@@ -753,7 +756,7 @@ pages['faq'] = \
     smaller. If you make the subject column smaller all other columns will be
     made wider. If you make another column wider, the subject column will be 
     made smaller and vice versa.</P>
-    <P><I>Can I run Task Coach from a USB stick?</I></P>
+    <P><I>Can I run %(name)s from a USB stick?</I></P>
     <P>Yes, just install it on a USB stick. In addition, in the files tab of
     the preferences dialog ('Edit' -> 'Preferences'), check 'Save settings 
     (TaskCoach.ini) in the same directory as the program' to make sure your

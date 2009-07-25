@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 # match the currently open file, the user is prompted for the kind of
 # synchronization he wants (full from Task Coach or full from device).
 #
-# 5) TaskCoach sends the synchronization type to the iPhone. The
+# 5) Task Coach sends the synchronization type to the iPhone. The
 # actual synchronization can begin now.
 #
 # Types are
@@ -59,7 +59,7 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 #
 # Two-way is actually implemented as: get changes from iPhone, then
 # full from Task Coach. This allows us to avoid keeping track of
-# changes on the TaskCoach side; we're not using the change tracking
+# changes on the Task Coach side; we're not using the change tracking
 # mechanism because it would interfere with SyncML. Cons: no conflict
 # resolution, the device always wins. This should not be a problem in
 # this use case.
@@ -130,9 +130,9 @@ class IPhoneAcceptor(Acceptor):
             if password:
                 return IPhoneHandler(window, settings.get('iphone', 'password'), fp)
 
-            wx.MessageBox(_('An iPhone or iPod Touch tried to connect to Task Coach,\n') + \
-                          _('but no password is set. Please set a password in the\n') + \
-                          _('iPhone section of the configuration and try again.'),
+            wx.MessageBox(_('''An iPhone or iPod Touch tried to connect to Task Coach,\n'''
+                            '''but no password is set. Please set a password in the\n'''
+                            '''iPhone section of the configuration and try again.'''),
                           _('Error'), wx.OK)
 
         Acceptor.__init__(self, factory, '', None)
@@ -202,8 +202,8 @@ class BaseState(object):
 
          * It's a leaf task (no children)
          * Or it has a reminder
-         * Or It's overdue
-         * Or ot belongs to a category named 'iPhone'
+         * Or it's overdue
+         * Or it belongs to a category named 'iPhone'
 
          This will probably be more configurable in the future."""
 

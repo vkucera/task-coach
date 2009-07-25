@@ -23,6 +23,7 @@ import os, re
 
 # The buildbot sets TCVERSION when building snapshots.
 version = os.environ.get('TCVERSION', '0.74.0')
+revision = '$Rev$'.split(' ')[1] # Subversion revision number
 tskversion = 24 # Current version number of the task file format
 release_day = '0' # Day number of the release, 1-31, as string
 release_month = 'July' # Month of the release in plain English 
