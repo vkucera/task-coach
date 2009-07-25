@@ -402,9 +402,9 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
     @synchronized
     def notifyIPhoneProtocolFailed(self):
         # This should actually never happen.
-        wx.MessageBox(_('An iPhone or iPod Touch device tried to synchronize with this\n') + \
-                      _('task file, but the protocol negotiation failed. Please file a\n') + \
-                      _('bug report.'),
+        wx.MessageBox(_('''An iPhone or iPod Touch device tried to synchronize with this\n'''
+                      '''task file, but the protocol negotiation failed. Please file a\n'''
+                      '''bug report.'''),
                       _('Error'), wx.OK)
 
     # The notification system is not thread-save; adding or modifying tasks
