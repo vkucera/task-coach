@@ -9,18 +9,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ko\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-01-26 23:54+0000\n"
-"PO-Revision-Date: 2009-06-11 20:23+0100\n"
+"POT-Creation-Date: 2009-06-11 21:28+0000\n"
+"PO-Revision-Date: 2009-07-25 21:15+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-06-11 10:40+0000\n"
+"X-Launchpad-Export-Date: 2009-07-25 22:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: taskcoachlib\application\application.py:99
-#: taskcoachlib\gui\iocontroller.py:57
+#: taskcoachlib\gui\dialog\preferences.py:118
+msgid ""
+"This setting will take effect\n"
+"after you restart %s"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:140
+msgid ""
+"Create a backup copy before\n"
+"overwriting a %s file"
+msgstr ""
+
+#: taskcoachlib\application\application.py:112
+msgid ""
+"Couldn't load settings from TaskCoach.ini:\n"
+"%s"
+msgstr ""
+
+#: taskcoachlib\application\application.py:113
+#: taskcoachlib\gui\iocontroller.py:60
 msgid "%s file error"
 msgstr "%s 파일 오류"
 
@@ -56,15 +74,17 @@ msgstr "붙여넣기"
 msgid "Drag and drop"
 msgstr "끌어다 놓기"
 
-#: taskcoachlib\command\base.py:283
-#: taskcoachlib\widgets\dialog.py:153
+#: taskcoachlib\command\base.py:283 taskcoachlib\widgets\dialog.py:153
 msgid "Add attachment"
 msgstr "첨부화일 추가"
 
-#: taskcoachlib\command\base.py:310
-#: taskcoachlib\command\noteCommands.py:26
+#: taskcoachlib\command\base.py:310 taskcoachlib\command\noteCommands.py:26
 msgid "New note"
 msgstr "새 노트"
+
+#: taskcoachlib\command\categorizableCommands.py:25
+msgid "Toggle category"
+msgstr ""
 
 #: taskcoachlib\command\categoryCommands.py:26
 msgid "New category"
@@ -240,6 +260,14 @@ msgstr "새 하위분류..."
 msgid "Insert a new subcategory"
 msgstr "새 하위분류 넣기"
 
+#: taskcoachlib\domain\effort\composite.py:194
+msgid "Total"
+msgstr ""
+
+#: taskcoachlib\domain\effort\composite.py:200
+msgid "Total for %s"
+msgstr ""
+
 #: taskcoachlib\domain\effort\effortlist.py:33
 msgid "&New effort..."
 msgstr "새 노력(&n)..."
@@ -328,294 +356,303 @@ msgstr "선택한 작업 삭제"
 msgid "Insert a new subtask into the selected task"
 msgstr "선택한 작업에 하위작업 추가"
 
-#: taskcoachlib\gui\dialog\editor.py:69
+#: taskcoachlib\gui\dialog\editor.py:89
 msgid "For this task"
 msgstr "이 작업에 대해"
 
-#: taskcoachlib\gui\dialog\editor.py:70
+#: taskcoachlib\gui\dialog\editor.py:90
 msgid "For this task including all subtasks"
 msgstr "모든 하위작업을 포함하는 작업"
 
-#: taskcoachlib\gui\dialog\editor.py:74
+#: taskcoachlib\gui\dialog\editor.py:94
 msgid "For this note"
 msgstr "이 노트에 대해"
 
-#: taskcoachlib\gui\dialog\editor.py:75
+#: taskcoachlib\gui\dialog\editor.py:95
 msgid "For this note including all subnotes"
 msgstr "모든 하위노트를 포한 노트"
 
-#: taskcoachlib\gui\dialog\editor.py:81
+#: taskcoachlib\gui\dialog\editor.py:101
 #: taskcoachlib\gui\viewer\attachment.py:71
-#: taskcoachlib\gui\viewer\base.py:189
-#: taskcoachlib\gui\viewer\note.py:124
-#: taskcoachlib\gui\viewer\task.py:310
-#: taskcoachlib\widgets\conflict.py:161
-#: taskcoachlib\widgets\conflict.py:189
+#: taskcoachlib\gui\viewer\base.py:193 taskcoachlib\gui\viewer\category.py:79
+#: taskcoachlib\gui\viewer\note.py:124 taskcoachlib\gui\viewer\task.py:491
+#: taskcoachlib\widgets\conflict.py:161 taskcoachlib\widgets\conflict.py:189
 msgid "Subject"
 msgstr "제목"
 
-#: taskcoachlib\gui\dialog\editor.py:88
-#: taskcoachlib\gui\dialog\editor.py:644
-#: taskcoachlib\gui\dialog\editor.py:717
-#: taskcoachlib\gui\dialog\editor.py:762
-#: taskcoachlib\gui\dialog\editor.py:775
-#: taskcoachlib\gui\dialog\editor.py:790
+#: taskcoachlib\gui\dialog\editor.py:108 taskcoachlib\gui\dialog\editor.py:646
+#: taskcoachlib\gui\dialog\editor.py:718 taskcoachlib\gui\dialog\editor.py:763
+#: taskcoachlib\gui\dialog\editor.py:776 taskcoachlib\gui\dialog\editor.py:791
 #: taskcoachlib\gui\viewer\attachment.py:79
-#: taskcoachlib\gui\viewer\effort.py:126
-#: taskcoachlib\gui\viewer\note.py:127
-#: taskcoachlib\gui\viewer\task.py:319
-#: taskcoachlib\widgets\conflict.py:166
+#: taskcoachlib\gui\viewer\category.py:85
+#: taskcoachlib\gui\viewer\effort.py:154 taskcoachlib\gui\viewer\note.py:127
+#: taskcoachlib\gui\viewer\task.py:500 taskcoachlib\widgets\conflict.py:166
 #: taskcoachlib\widgets\conflict.py:194
 msgid "Description"
 msgstr "설명"
 
-#: taskcoachlib\gui\dialog\editor.py:93
+#: taskcoachlib\gui\dialog\editor.py:113
 msgid "Use this color:"
 msgstr "이 색상 사용:"
 
-#: taskcoachlib\gui\dialog\editor.py:99
+#: taskcoachlib\gui\dialog\editor.py:121
 msgid "Color"
 msgstr "색상"
 
-#: taskcoachlib\gui\dialog\editor.py:135
-#: taskcoachlib\gui\viewer\task.py:375
+#: taskcoachlib\gui\dialog\editor.py:159 taskcoachlib\gui\viewer\task.py:556
 #: taskcoachlib\widgets\conflict.py:214
 msgid "Priority"
 msgstr "우선순위"
 
-#: taskcoachlib\gui\dialog\editor.py:187
+#: taskcoachlib\gui\dialog\editor.py:211
 msgid "Browse"
 msgstr "탐색"
 
-#: taskcoachlib\gui\dialog\editor.py:191
+#: taskcoachlib\gui\dialog\editor.py:215
 msgid "Location"
 msgstr "위치"
 
-#: taskcoachlib\gui\dialog\editor.py:219
-#: taskcoachlib\gui\dialog\editor.py:645
+#: taskcoachlib\gui\dialog\editor.py:244 taskcoachlib\gui\dialog\editor.py:647
 msgid "Dates"
 msgstr "날짜"
 
-#: taskcoachlib\gui\dialog\editor.py:221
-#: taskcoachlib\gui\viewer\task.py:364
+#: taskcoachlib\gui\dialog\editor.py:246 taskcoachlib\gui\viewer\task.py:545
 #: taskcoachlib\widgets\conflict.py:199
 msgid "Start date"
 msgstr "시작일"
 
-#: taskcoachlib\gui\dialog\editor.py:222
-#: taskcoachlib\gui\viewer\task.py:365
+#: taskcoachlib\gui\dialog\editor.py:247 taskcoachlib\gui\viewer\task.py:546
 #: taskcoachlib\widgets\conflict.py:204
 msgid "Due date"
 msgstr "마감일"
 
-#: taskcoachlib\gui\dialog\editor.py:223
-#: taskcoachlib\gui\viewer\task.py:367
+#: taskcoachlib\gui\dialog\editor.py:248 taskcoachlib\gui\viewer\task.py:548
 #: taskcoachlib\widgets\conflict.py:209
 msgid "Completion date"
 msgstr "완료일"
 
-#: taskcoachlib\gui\dialog\editor.py:239
-#: taskcoachlib\gui\dialog\editor.py:241
-#: taskcoachlib\gui\dialog\reminder.py:35
-#: taskcoachlib\gui\viewer\task.py:382
+#: taskcoachlib\gui\dialog\editor.py:264 taskcoachlib\gui\dialog\editor.py:266
+#: taskcoachlib\gui\dialog\reminder.py:35 taskcoachlib\gui\viewer\task.py:563
 msgid "Reminder"
 msgstr "알림"
 
-#: taskcoachlib\gui\dialog\editor.py:253
-#: taskcoachlib\gui\dialog\editor.py:254
-#: taskcoachlib\gui\viewer\task.py:368
+#: taskcoachlib\gui\dialog\editor.py:278 taskcoachlib\gui\dialog\editor.py:279
+#: taskcoachlib\gui\viewer\task.py:549
 msgid "Recurrence"
 msgstr "반복"
 
-#: taskcoachlib\gui\dialog\editor.py:258
-#: taskcoachlib\gui\dialog\editor.py:305
-#: taskcoachlib\gui\uicommand.py:66
-#: taskcoachlib\widgets\dirchooser.py:28
+#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\dialog\editor.py:330
+#: taskcoachlib\gui\uicommand.py:66 taskcoachlib\widgets\dirchooser.py:28
 msgid "None"
 msgstr "없음"
 
-#: taskcoachlib\gui\dialog\editor.py:258
-#: taskcoachlib\gui\render.py:66
+#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:66
 msgid "Daily"
 msgstr "매일"
 
-#: taskcoachlib\gui\dialog\editor.py:258
-#: taskcoachlib\gui\render.py:66
+#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:66
 msgid "Monthly"
 msgstr "월간"
 
-#: taskcoachlib\gui\dialog\editor.py:258
-#: taskcoachlib\gui\render.py:66
+#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:66
 msgid "Weekly"
 msgstr "매주"
 
-#: taskcoachlib\gui\dialog\editor.py:258
-#: taskcoachlib\gui\render.py:66
+#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:66
 msgid "Yearly"
 msgstr "연간"
 
-#: taskcoachlib\gui\dialog\editor.py:262
+#: taskcoachlib\gui\dialog\editor.py:287
 msgid ", every"
 msgstr ", 모두"
 
-#: taskcoachlib\gui\dialog\editor.py:273
+#: taskcoachlib\gui\dialog\editor.py:298
 msgid "keeping dates on the same weekday"
 msgstr "같은 요일일때 날짜 보관"
 
-#: taskcoachlib\gui\dialog\editor.py:280
-msgid "Maximum number of recurrences"
-msgstr "반복설정 초과"
+#: taskcoachlib\gui\dialog\editor.py:305
+msgid ""
+"Maximum number\n"
+"of recurrences"
+msgstr ""
 
-#: taskcoachlib\gui\dialog\editor.py:359
+#: taskcoachlib\gui\dialog\editor.py:384
 msgid "day(s),"
 msgstr "일,"
 
-#: taskcoachlib\gui\dialog\editor.py:359
+#: taskcoachlib\gui\dialog\editor.py:384
 msgid "period,"
 msgstr "기간,"
 
-#: taskcoachlib\gui\dialog\editor.py:359
+#: taskcoachlib\gui\dialog\editor.py:384
 msgid "week(s),"
 msgstr "주,"
 
-#: taskcoachlib\gui\dialog\editor.py:360
+#: taskcoachlib\gui\dialog\editor.py:385
 msgid "month(s),"
 msgstr "달,"
 
-#: taskcoachlib\gui\dialog\editor.py:360
+#: taskcoachlib\gui\dialog\editor.py:385
 msgid "year(s),"
 msgstr "년,"
 
-#: taskcoachlib\gui\dialog\editor.py:393
-#: taskcoachlib\gui\dialog\editor.py:411
-#: taskcoachlib\gui\dialog\editor.py:650
-#: taskcoachlib\gui\uicommand.py:2050
-#: taskcoachlib\gui\viewer\task.py:369
+#: taskcoachlib\gui\dialog\editor.py:418 taskcoachlib\gui\dialog\editor.py:436
+#: taskcoachlib\gui\dialog\editor.py:652 taskcoachlib\gui\uicommand.py:2148
+#: taskcoachlib\gui\viewer\task.py:550
 msgid "Budget"
 msgstr "예산"
 
-#: taskcoachlib\gui\dialog\editor.py:394
-#: taskcoachlib\gui\dialog\editor.py:421
-#: taskcoachlib\gui\uicommand.py:2050
-#: taskcoachlib\gui\viewer\effort.py:143
-#: taskcoachlib\gui\viewer\task.py:380
+#: taskcoachlib\gui\dialog\editor.py:419 taskcoachlib\gui\dialog\editor.py:446
+#: taskcoachlib\gui\uicommand.py:2148 taskcoachlib\gui\viewer\effort.py:171
+#: taskcoachlib\gui\viewer\task.py:561
 msgid "Revenue"
 msgstr "수입"
 
-#: taskcoachlib\gui\dialog\editor.py:412
-#: taskcoachlib\gui\uicommand.py:2050
-#: taskcoachlib\gui\viewer\effort.py:141
-#: taskcoachlib\gui\viewer\task.py:371
+#: taskcoachlib\gui\dialog\editor.py:437 taskcoachlib\gui\uicommand.py:2148
+#: taskcoachlib\gui\viewer\effort.py:169 taskcoachlib\gui\viewer\task.py:552
 msgid "Time spent"
 msgstr "시간지출"
 
-#: taskcoachlib\gui\dialog\editor.py:413
-#: taskcoachlib\gui\viewer\task.py:373
+#: taskcoachlib\gui\dialog\editor.py:438 taskcoachlib\gui\viewer\task.py:554
 msgid "Budget left"
 msgstr "남은 예산"
 
-#: taskcoachlib\gui\dialog\editor.py:419
-#: taskcoachlib\gui\viewer\task.py:377
+#: taskcoachlib\gui\dialog\editor.py:444 taskcoachlib\gui\viewer\task.py:558
 msgid "Hourly fee"
 msgstr "시간당 지출"
 
-#: taskcoachlib\gui\dialog\editor.py:420
-#: taskcoachlib\gui\uicommand.py:2050
-#: taskcoachlib\gui\viewer\task.py:378
+#: taskcoachlib\gui\dialog\editor.py:445 taskcoachlib\gui\uicommand.py:2148
+#: taskcoachlib\gui\viewer\task.py:559
 msgid "Fixed fee"
 msgstr "고정 지출"
 
-#: taskcoachlib\gui\dialog\editor.py:508
-#: taskcoachlib\gui\dialog\editor.py:647
-#: taskcoachlib\gui\dialog\editor.py:777
-#: taskcoachlib\gui\viewer\category.py:34
-#: taskcoachlib\gui\viewer\effort.py:127
-#: taskcoachlib\gui\viewer\note.py:131
-#: taskcoachlib\gui\viewer\task.py:341
-#: taskcoachlib\widgets\conflict.py:219
+#: taskcoachlib\gui\dialog\editor.py:528 taskcoachlib\gui\dialog\editor.py:649
+#: taskcoachlib\gui\dialog\editor.py:778
+#: taskcoachlib\gui\viewer\category.py:35
+#: taskcoachlib\gui\viewer\effort.py:155 taskcoachlib\gui\viewer\note.py:131
+#: taskcoachlib\gui\viewer\task.py:522 taskcoachlib\widgets\conflict.py:219
 msgid "Categories"
 msgstr "분류"
 
-#: taskcoachlib\gui\dialog\editor.py:559
-#: taskcoachlib\gui\dialog\editor.py:658
-#: taskcoachlib\gui\dialog\editor.py:768
-#: taskcoachlib\gui\dialog\editor.py:780
+#: taskcoachlib\gui\dialog\editor.py:573 taskcoachlib\gui\dialog\editor.py:661
+#: taskcoachlib\gui\dialog\editor.py:769 taskcoachlib\gui\dialog\editor.py:781
 msgid "Attachments"
 msgstr "첨부파일"
 
-#: taskcoachlib\gui\dialog\editor.py:589
-#: taskcoachlib\gui\dialog\editor.py:655
-#: taskcoachlib\gui\dialog\editor.py:765
-#: taskcoachlib\gui\dialog\editor.py:793
+#: taskcoachlib\gui\dialog\editor.py:598 taskcoachlib\gui\dialog\editor.py:658
+#: taskcoachlib\gui\dialog\editor.py:766 taskcoachlib\gui\dialog\editor.py:794
 #: taskcoachlib\gui\dialog\syncpreferences.py:148
-#: taskcoachlib\gui\uicommand.py:1521
-#: taskcoachlib\gui\viewer\note.py:33
+#: taskcoachlib\gui\uicommand.py:1613 taskcoachlib\gui\viewer\note.py:33
 msgid "Notes"
 msgstr "메모"
 
-#: taskcoachlib\gui\dialog\editor.py:617
-#: taskcoachlib\gui\dialog\preferences.py:312
+#: taskcoachlib\gui\dialog\editor.py:619
+#: taskcoachlib\gui\dialog\preferences.py:325
 msgid "Task behavior"
 msgstr "작업 동작"
 
-#: taskcoachlib\gui\dialog\editor.py:620
+#: taskcoachlib\gui\dialog\editor.py:622
 msgid "Use application-wide setting"
 msgstr "어플리케이션 포괄설정 사용"
 
-#: taskcoachlib\gui\dialog\editor.py:621
+#: taskcoachlib\gui\dialog\editor.py:623
 msgid "No"
 msgstr "아니오"
 
-#: taskcoachlib\gui\dialog\editor.py:621
+#: taskcoachlib\gui\dialog\editor.py:623
 msgid "Yes"
 msgstr "예"
 
-#: taskcoachlib\gui\dialog\editor.py:628
+#: taskcoachlib\gui\dialog\editor.py:630
 msgid "Mark task completed when all children are completed?"
 msgstr "모든 아이가 완료하였을때 작업 완료를 마크"
 
-#: taskcoachlib\gui\dialog\editor.py:652
-#: taskcoachlib\gui\viewer\effort.py:33
+#: taskcoachlib\gui\dialog\editor.py:654 taskcoachlib\gui\viewer\effort.py:34
 msgid "Effort"
 msgstr "노력"
 
-#: taskcoachlib\gui\dialog\editor.py:659
+#: taskcoachlib\gui\dialog\editor.py:662
 msgid "Behavior"
 msgstr "동작"
 
-#: taskcoachlib\gui\dialog\editor.py:683
+#: taskcoachlib\gui\dialog\editor.py:690
 #: taskcoachlib\gui\dialog\reminder.py:41
-#: taskcoachlib\gui\viewer\effort.py:125
+#: taskcoachlib\gui\viewer\effort.py:153
 msgid "Task"
 msgstr "작업"
 
-#: taskcoachlib\gui\dialog\editor.py:694
+#: taskcoachlib\gui\dialog\editor.py:697
 msgid "Start tracking from last stop time"
 msgstr "마지막 작업에서 추적 시작"
 
-#: taskcoachlib\gui\dialog\editor.py:705
+#: taskcoachlib\gui\dialog\editor.py:706
 msgid "Start"
 msgstr "시작"
 
-#: taskcoachlib\gui\dialog\editor.py:707
+#: taskcoachlib\gui\dialog\editor.py:708
 msgid "Stop"
 msgstr "중지"
 
-#: taskcoachlib\gui\dialog\preferences.py:118
+#: taskcoachlib\gui\dialog\iphone.py:32
 msgid ""
-"This setting will take effect\n"
-"after you restart %s"
+"An iPhone or iPod Touch device is trying\n"
+"to synchronize with this task file for\n"
+"the first time. What kind of synchronization\n"
+"would you like to use ?"
 msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:38
+msgid "Refresh from desktop"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:41
+msgid "Refresh from device"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:44 taskcoachlib\widgets\buttonbox.py:24
+#: taskcoachlib\widgets\dialog.py:54
+msgid "Cancel"
+msgstr "취소"
+
+#: taskcoachlib\gui\dialog\iphone.py:73
+msgid "Synchronizing with %s..."
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:103
+msgid ""
+"You have enabled the iPhone synchronization feature, which\n"
+"needs Bonjour. Bonjour does not seem to be installed on\n"
+"your system."
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:108
+msgid "Please download and install Bonjour for Windows from\n"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:110
+msgid "Apple's web site"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:115
+msgid ""
+"Bonjour support for Linux is generally provided by\n"
+"Avahi."
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:118
+msgid "More details on pybonjour web site"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:121 taskcoachlib\widgets\buttonbox.py:24
+#: taskcoachlib\widgets\conflict.py:261 taskcoachlib\widgets\dialog.py:53
+#: taskcoachlib\widgets\dialog.py:76 taskcoachlib\widgets\dialog.py:79
+#: taskcoachlib\widgets\dialog.py:146 taskcoachlib\widgets\syncmlwarning.py:18
+msgid "OK"
+msgstr "확인"
 
 #: taskcoachlib\gui\dialog\preferences.py:138
 msgid "Auto save after every change"
 msgstr "모든 수정사항 자동저장"
-
-#: taskcoachlib\gui\dialog\preferences.py:140
-msgid ""
-"Create a backup copy before\n"
-"overwriting a %s file"
-msgstr ""
 
 #: taskcoachlib\gui\dialog\preferences.py:142
 msgid "Maximum number of recent files to remember"
@@ -626,6 +663,12 @@ msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
 msgstr "프로그램과 같은 디렉토리에 설정파일(%s.ini) 저장"
+
+#: taskcoachlib\gui\dialog\preferences.py:146
+msgid ""
+"(For running %s\n"
+"from a removable medium)"
+msgstr ""
 
 #: taskcoachlib\gui\dialog\preferences.py:147
 msgid "Attachment base directory"
@@ -695,11 +738,11 @@ msgstr ""
 "underlying 툴킷의 제한사항임.)"
 
 #: taskcoachlib\gui\dialog\preferences.py:186
-#: taskcoachlib\gui\dialog\preferences.py:314
+#: taskcoachlib\gui\dialog\preferences.py:327
 msgid "Language"
 msgstr "언어"
 
-#: taskcoachlib\gui\dialog\preferences.py:239
+#: taskcoachlib\gui\dialog\preferences.py:242
 msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
@@ -707,79 +750,91 @@ msgstr ""
 "당신의 언어가 사용할수 없거나 번역 개선중이면 \n"
 "도움알을 참고하세요. 보기:"
 
-#: taskcoachlib\gui\dialog\preferences.py:246
+#: taskcoachlib\gui\dialog\preferences.py:249
 msgid "Language not found?"
 msgstr "언어파일 찾을수없음?"
 
-#: taskcoachlib\gui\dialog\preferences.py:254
+#: taskcoachlib\gui\dialog\preferences.py:257
 msgid "Click this button to change the color of active tasks"
 msgstr "활성화된 작업 색상 바꾸기 버튼"
 
-#: taskcoachlib\gui\dialog\preferences.py:255
+#: taskcoachlib\gui\dialog\preferences.py:258
 msgid "Click this button to change the color of inactive tasks"
 msgstr "비활성화된 작업 색상 바꾸기 버튼"
 
-#: taskcoachlib\gui\dialog\preferences.py:256
+#: taskcoachlib\gui\dialog\preferences.py:259
 msgid "Click this button to change the color of completed tasks"
 msgstr "완료된 작업 색상 바꾸기 버튼"
 
-#: taskcoachlib\gui\dialog\preferences.py:257
+#: taskcoachlib\gui\dialog\preferences.py:260
 msgid "Click this button to change the color of over due tasks"
 msgstr "지난 작업 색상 바꾸기 버튼"
 
-#: taskcoachlib\gui\dialog\preferences.py:258
+#: taskcoachlib\gui\dialog\preferences.py:261
 msgid "Click this button to change the color of tasks due today"
 msgstr "오늘 지난 작업 색상 바꾸기 버튼"
 
-#: taskcoachlib\gui\dialog\preferences.py:267
+#: taskcoachlib\gui\dialog\preferences.py:270
 msgid "Allow for tracking effort"
 msgstr "모든 노력 추적 허용"
 
-#: taskcoachlib\gui\dialog\preferences.py:268
+#: taskcoachlib\gui\dialog\preferences.py:271
 msgid "Allow for taking notes"
 msgstr "노트 허용"
 
-#: taskcoachlib\gui\dialog\preferences.py:270
+#: taskcoachlib\gui\dialog\preferences.py:273
 msgid "Enable SyncML"
 msgstr "syncML 활성화"
 
-#: taskcoachlib\gui\dialog\preferences.py:273
+#: taskcoachlib\gui\dialog\preferences.py:276
 msgid "Hour of start of work day"
 msgstr "매주 작업 시작시각"
 
-#: taskcoachlib\gui\dialog\preferences.py:275
+#: taskcoachlib\gui\dialog\preferences.py:278
 msgid "Hour of end of work day"
 msgstr "매주 작업 완료시각"
 
-#: taskcoachlib\gui\dialog\preferences.py:277
+#: taskcoachlib\gui\dialog\preferences.py:280
 msgid "Minutes between task start/end times"
 msgstr "작업 시간/끝 소요시간(분)"
 
-#: taskcoachlib\gui\dialog\preferences.py:286
+#: taskcoachlib\gui\dialog\preferences.py:289
 msgid "Mark parent task completed when all children are completed"
 msgstr "모든 하위작업 완료시 상위작업 완료 표시"
 
-#: taskcoachlib\gui\dialog\preferences.py:294
+#: taskcoachlib\gui\dialog\preferences.py:297
+msgid "Password for synchronization with iPhone"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:299
+msgid "Bonjour service name"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:307
 msgid "Check spelling in editors"
 msgstr "편집기 철자 검사"
 
-#: taskcoachlib\gui\dialog\preferences.py:311
+#: taskcoachlib\gui\dialog\preferences.py:324
 msgid "Window behavior"
 msgstr "창 동작"
 
-#: taskcoachlib\gui\dialog\preferences.py:313
+#: taskcoachlib\gui\dialog\preferences.py:326
 msgid "Files"
 msgstr "파일"
 
-#: taskcoachlib\gui\dialog\preferences.py:315
+#: taskcoachlib\gui\dialog\preferences.py:328
 msgid "Colors"
 msgstr "색상"
 
-#: taskcoachlib\gui\dialog\preferences.py:316
+#: taskcoachlib\gui\dialog\preferences.py:329
 msgid "Features"
 msgstr "특징"
 
-#: taskcoachlib\gui\dialog\preferences.py:318
+#: taskcoachlib\gui\dialog\preferences.py:331
+msgid "iPhone"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:333
 msgid "Editor"
 msgstr "편집기"
 
@@ -806,6 +861,10 @@ msgstr "30분"
 #: taskcoachlib\gui\dialog\reminder.py:29
 msgid "One hour"
 msgstr "한시간"
+
+#: taskcoachlib\gui\dialog\reminder.py:30
+msgid "24 hours"
+msgstr ""
 
 #: taskcoachlib\gui\dialog\reminder.py:30
 msgid "Two hours"
@@ -867,8 +926,7 @@ msgstr "서버에서 한방향"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:110
 #: taskcoachlib\gui\dialog\syncpreferences.py:128
-#: taskcoachlib\syncml\basesource.py:61
-#: taskcoachlib\syncml\basesource.py:73
+#: taskcoachlib\syncml\basesource.py:61 taskcoachlib\syncml\basesource.py:73
 msgid "Refresh from server"
 msgstr "서버 리프레시"
 
@@ -885,8 +943,7 @@ msgid "Access"
 msgstr "접근"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:146
-#: taskcoachlib\gui\uicommand.py:1511
-#: taskcoachlib\gui\viewer\task.py:32
+#: taskcoachlib\gui\uicommand.py:1603 taskcoachlib\gui\viewer\task.py:32
 msgid "Tasks"
 msgstr "작업"
 
@@ -902,114 +959,137 @@ msgstr "%(name)s 버전 %(version)s 가능"
 msgid "Notify me of new versions."
 msgstr "새버전 알림"
 
-#: taskcoachlib\gui\iocontroller.py:44
-msgid "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
+#: taskcoachlib\gui\iocontroller.py:47
+msgid ""
+"%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr "%s 파일 (*.tsk)|*.tsk|백업파일 (*.tsk.bak)|*.tsk.bak|모든 파일 (*.*)|*"
 
-#: taskcoachlib\gui\iocontroller.py:47
+#: taskcoachlib\gui\iocontroller.py:50
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "iCalendar 파일 (*.ics)|*.ics|모든 파일 (*.*)|*"
 
-#: taskcoachlib\gui\iocontroller.py:50
+#: taskcoachlib\gui\iocontroller.py:53
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
 msgstr "HTML 파일 (*.html)|*.html|모든 파일 (*.*)|*"
 
-#: taskcoachlib\gui\iocontroller.py:53
+#: taskcoachlib\gui\iocontroller.py:56
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr "CSV 파일 (*.csv)|*.csv|텍스트파일 (*.txt)|*.txt|모든 파일 (*.*)|*"
 
-#: taskcoachlib\gui\iocontroller.py:56
+#: taskcoachlib\gui\iocontroller.py:59
 msgid "VCalendar files (*.vcal)|*.vcal|All files (*.*)|*"
 msgstr "VCalendar 파일 (*.vcal)|*.vcal|모든 파일 (*.*)|*"
 
-#: taskcoachlib\gui\iocontroller.py:93
+#: taskcoachlib\gui\iocontroller.py:98
 msgid "Open"
 msgstr "열기"
 
-#: taskcoachlib\gui\iocontroller.py:104
+#: taskcoachlib\gui\iocontroller.py:116 taskcoachlib\gui\iocontroller.py:151
+msgid ""
+"Cannot open %(filename)s\n"
+"because it was created by a newer version of %(name)s.\n"
+"Please upgrade %(name)s."
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:122 taskcoachlib\gui\iocontroller.py:157
 msgid "Error while reading %s:\n"
 msgstr "읽는 도중 에러 %s:\n"
 
-#: taskcoachlib\gui\iocontroller.py:106
+#: taskcoachlib\gui\iocontroller.py:124 taskcoachlib\gui\iocontroller.py:159
 msgid "Are you sure it is a %s-file?"
 msgstr "%s-파일이 정확합니까?"
 
-#: taskcoachlib\gui\iocontroller.py:109
+#: taskcoachlib\gui\iocontroller.py:127
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "%(filename)s에서 %(nrtasks)d 작업 불러옴"
 
-#: taskcoachlib\gui\iocontroller.py:114
+#: taskcoachlib\gui\iocontroller.py:131
 msgid "Cannot open %s because it doesn't exist"
 msgstr "%s 파일 없음."
 
-#: taskcoachlib\gui\iocontroller.py:124
+#: taskcoachlib\gui\iocontroller.py:141
 msgid "Merge"
 msgstr "병합"
 
-#: taskcoachlib\gui\iocontroller.py:127
+#: taskcoachlib\gui\iocontroller.py:146
+msgid ""
+"Cannot open %(filename)s\n"
+"because it is locked."
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:162
 msgid "Merged %(filename)s"
 msgstr "%(filename)s 병합"
 
-#: taskcoachlib\gui\iocontroller.py:143
-#: taskcoachlib\gui\iocontroller.py:154
+#: taskcoachlib\gui\iocontroller.py:178 taskcoachlib\gui\iocontroller.py:189
 msgid "Save as..."
 msgstr "새이름으로 저장..."
 
-#: taskcoachlib\gui\iocontroller.py:190
+#: taskcoachlib\gui\iocontroller.py:220
+msgid ""
+"Cannot save %s\n"
+"It is locked by another instance of %s.\n"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:225
+msgid ""
+"Cannot save %s\n"
+"%s"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:230
 msgid "Please enter the template name."
 msgstr "서식 이름을 입력하세요."
 
-#: taskcoachlib\gui\iocontroller.py:191
+#: taskcoachlib\gui\iocontroller.py:231
 msgid "Save as template"
 msgstr "서식 저장"
 
-#: taskcoachlib\gui\iocontroller.py:199
+#: taskcoachlib\gui\iocontroller.py:239
 msgid "Open template..."
 msgstr "서식 열기..."
 
-#: taskcoachlib\gui\iocontroller.py:201
+#: taskcoachlib\gui\iocontroller.py:241
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "%s 서식파일 (*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib\gui\iocontroller.py:218
-msgid "Export as iCalendar..."
-msgstr "iCalendar 내보내기..."
+#: taskcoachlib\gui\iocontroller.py:269
+msgid "Exported %(count)d items to %(filename)s"
+msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:224
-msgid "Exported %(nrtasks)d tasks to %(filename)s"
-msgstr "%(nrtasks)d 작업은 %(filename)s 파일로 내보내기."
+#: taskcoachlib\gui\iocontroller.py:276
+msgid "Export effort as iCalendar..."
+msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:232
+#: taskcoachlib\gui\iocontroller.py:281
 msgid "Export as HTML..."
 msgstr "HTML 내보내기..."
 
-#: taskcoachlib\gui\iocontroller.py:239
-#: taskcoachlib\gui\iocontroller.py:253
-#: taskcoachlib\gui\iocontroller.py:267
-msgid "Exported %(nrtasks)d items to %(filename)s"
-msgstr "%(filename)s 의 %(nrtasks)d 작업 내보내기"
-
-#: taskcoachlib\gui\iocontroller.py:247
+#: taskcoachlib\gui\iocontroller.py:285
 msgid "Export as CSV..."
 msgstr "CSV 내보내기..."
 
-#: taskcoachlib\gui\iocontroller.py:261
+#: taskcoachlib\gui\iocontroller.py:289
 msgid "Export as VCalendar..."
 msgstr "VCalendar 내보내기..."
 
-#: taskcoachlib\gui\iocontroller.py:285
+#: taskcoachlib\gui\iocontroller.py:301
+msgid "Finished synchronization"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:305
 msgid "Note conflict"
 msgstr "노트 불일치"
 
-#: taskcoachlib\gui\iocontroller.py:289
+#: taskcoachlib\gui\iocontroller.py:309
 msgid "Task conflict"
 msgstr "작업 불일치"
 
-#: taskcoachlib\gui\iocontroller.py:301
+#: taskcoachlib\gui\iocontroller.py:321
 msgid "Synchronization status"
 msgstr "동기화 상태"
 
-#: taskcoachlib\gui\iocontroller.py:326
+#: taskcoachlib\gui\iocontroller.py:346
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -1017,188 +1097,259 @@ msgstr ""
 "수정사항이 저장되지 않았습니다.\n"
 "닫기전에 저장하시겠습니까?"
 
-#: taskcoachlib\gui\iocontroller.py:327
+#: taskcoachlib\gui\iocontroller.py:347
 msgid "%s: save changes?"
 msgstr "%s: 수정사항 저장?"
 
-#: taskcoachlib\gui\iocontroller.py:337
+#: taskcoachlib\gui\iocontroller.py:357
+msgid ""
+"Cannot open %s because it is locked.\n"
+"Break the lock?"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:358 taskcoachlib\gui\iocontroller.py:365
+msgid "%s: file locked"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:363
+msgid ""
+"Cannot acquire a lock because locking is not supported\n"
+"on the location of %s.\n"
+"Open %s unlocked?"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:370
 msgid "Closed %s"
 msgstr "%s 닫음"
 
-#: taskcoachlib\gui\iocontroller.py:343
+#: taskcoachlib\gui\iocontroller.py:376
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "%(filename)s의 %(nrtasks)d 작업 저장"
 
-#: taskcoachlib\gui\mainwindow.py:256
+#: taskcoachlib\gui\mainwindow.py:152 taskcoachlib\gui\uicommand.py:547
+msgid "Warning"
+msgstr ""
+
+#: taskcoachlib\gui\mainwindow.py:186
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "%(name)s 버전 %(version)s 환영합니다."
 
-#: taskcoachlib\gui\menu.py:170
+#: taskcoachlib\gui\mainwindow.py:370
+msgid "iPhone/iPod"
+msgstr ""
+
+#: taskcoachlib\gui\mainwindow.py:377
+msgid "Synchronization type"
+msgstr ""
+
+#: taskcoachlib\gui\mainwindow.py:387
+msgid "An iPhone or iPod Touch device tried to synchronize with this\n"
+msgstr ""
+
+#: taskcoachlib\gui\mainwindow.py:388
+msgid "task file, but the protocol negotiation failed. Please file a\n"
+msgstr ""
+
+#: taskcoachlib\gui\mainwindow.py:389
+msgid "bug report."
+msgstr ""
+
+#: taskcoachlib\gui\mainwindow.py:390 taskcoachlib\iphone\protocol.py:136
+msgid "Error"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:174
 msgid "&File"
 msgstr "파일(&F)"
 
-#: taskcoachlib\gui\menu.py:172
+#: taskcoachlib\gui\menu.py:176
 msgid "&Edit"
 msgstr "편집(&E)"
 
-#: taskcoachlib\gui\menu.py:174
+#: taskcoachlib\gui\menu.py:178
 msgid "&View"
 msgstr "보기(&V)"
 
-#: taskcoachlib\gui\menu.py:176
-#: taskcoachlib\gui\menu.py:386
+#: taskcoachlib\gui\menu.py:180 taskcoachlib\gui\menu.py:390
 msgid "&Task"
 msgstr "작업(&T)"
 
-#: taskcoachlib\gui\menu.py:179
+#: taskcoachlib\gui\menu.py:183
 msgid "Eff&ort"
 msgstr "노력(&O)"
 
-#: taskcoachlib\gui\menu.py:181
-#: taskcoachlib\gui\menu.py:392
-#: taskcoachlib\gui\viewer\mixin.py:333
-#: taskcoachlib\gui\viewer\mixin.py:383
-#: taskcoachlib\gui\viewer\mixin.py:403
+#: taskcoachlib\gui\menu.py:185 taskcoachlib\gui\menu.py:399
+#: taskcoachlib\gui\viewer\mixin.py:339 taskcoachlib\gui\viewer\mixin.py:389
+#: taskcoachlib\gui\viewer\mixin.py:409
 msgid "&Category"
 msgstr "분류(&C)"
 
-#: taskcoachlib\gui\menu.py:184
-#: taskcoachlib\gui\menu.py:406
+#: taskcoachlib\gui\menu.py:188 taskcoachlib\gui\menu.py:413
 msgid "&Note"
 msgstr "노트(&N)"
 
-#: taskcoachlib\gui\menu.py:185
+#: taskcoachlib\gui\menu.py:189
 msgid "&Help"
 msgstr "도움말(&H)"
 
-#: taskcoachlib\gui\menu.py:216
+#: taskcoachlib\gui\menu.py:220
 msgid "&Export"
 msgstr "내보내기(&E)"
 
-#: taskcoachlib\gui\menu.py:322
+#: taskcoachlib\gui\menu.py:326
 msgid "&Select"
 msgstr "선택(&S)"
 
-#: taskcoachlib\gui\menu.py:347
+#: taskcoachlib\gui\menu.py:351
 msgid "&New viewer"
 msgstr "새로운 보기(&N)"
 
-#: taskcoachlib\gui\menu.py:351
+#: taskcoachlib\gui\menu.py:355
 msgid "&Activate next viewer\tCtrl+PgDn"
 msgstr "다음 뷰어 활성(&A)\tCtrl+PgDn"
 
-#: taskcoachlib\gui\menu.py:352
+#: taskcoachlib\gui\menu.py:356
 msgid "Activate the next open viewer"
 msgstr "다음 열린 뷰어 활성"
 
-#: taskcoachlib\gui\menu.py:355
+#: taskcoachlib\gui\menu.py:359
 msgid "Activate &previous viewer\tCtrl+PgUp"
 msgstr "이전 뷰어 활성(&A)\tCtrl+PgUp"
 
-#: taskcoachlib\gui\menu.py:356
+#: taskcoachlib\gui\menu.py:360
 msgid "Activate the previous open viewer"
 msgstr "이전 열린 뷰어 활성"
 
-#: taskcoachlib\gui\menu.py:363
-#: taskcoachlib\gui\menu.py:364
+#: taskcoachlib\gui\menu.py:367 taskcoachlib\gui\menu.py:368
 msgid "&Filter"
 msgstr "필터(&F)"
 
-#: taskcoachlib\gui\menu.py:365
-#: taskcoachlib\gui\menu.py:366
+#: taskcoachlib\gui\menu.py:369 taskcoachlib\gui\menu.py:370
 msgid "&Sort"
 msgstr "정렬(&S)"
 
-#: taskcoachlib\gui\menu.py:367
-#: taskcoachlib\gui\menu.py:368
+#: taskcoachlib\gui\menu.py:371 taskcoachlib\gui\menu.py:372
 msgid "&Columns"
 msgstr "컬럽(&C)"
 
-#: taskcoachlib\gui\menu.py:370
+#: taskcoachlib\gui\menu.py:374
 msgid "&Tree options"
 msgstr "트리옵션(&T)"
 
-#: taskcoachlib\gui\menu.py:374
+#: taskcoachlib\gui\menu.py:378
 msgid "T&oolbar"
 msgstr "도구상자(&T)"
 
-#: taskcoachlib\gui\menu.py:376
+#: taskcoachlib\gui\menu.py:380
 msgid "Show/hide status bar"
 msgstr "상태바 보기/감추기"
 
-#: taskcoachlib\gui\menu.py:376
+#: taskcoachlib\gui\menu.py:380
 msgid "Status&bar"
 msgstr "상태바(&B)"
 
-#: taskcoachlib\gui\menu.py:387
+#: taskcoachlib\gui\menu.py:391
 msgid "Open a new tab with a viewer that displays tasks"
 msgstr "화면 작업 뷰어 새탭으로 열기"
 
 #: taskcoachlib\gui\menu.py:393
+msgid "Task &square map"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:394
+msgid "Open a new tab with a viewer that displays tasks in a square map"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:396
+msgid "T&imeline"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:397
+msgid ""
+"Open a new tab with a viewer that displays a timeline of tasks and effort"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:400
 msgid "Open a new tab with a viewer that displays categories"
 msgstr "화면상 분류 뷰어 새탭으로 열기"
 
-#: taskcoachlib\gui\menu.py:397
+#: taskcoachlib\gui\menu.py:404
 msgid "&Effort"
 msgstr "노력(&E)"
 
-#: taskcoachlib\gui\menu.py:398
+#: taskcoachlib\gui\menu.py:405
 msgid "Open a new tab with a viewer that displays efforts"
 msgstr "화면상 노력 뷰어 새탭으로 열기"
 
-#: taskcoachlib\gui\menu.py:407
+#: taskcoachlib\gui\menu.py:408
+msgid "Effort for &one task"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:409
+msgid ""
+"Open a new tab with a viewer that displays efforts for the selected task"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:414
 msgid "Open a new tab with a viewer that displays notes"
 msgstr "화면상 노트 뷰어 새탭으로 열기"
 
-#: taskcoachlib\gui\menu.py:453
+#: taskcoachlib\gui\menu.py:460
 msgid "&Hide"
 msgstr "숨기기"
 
-#: taskcoachlib\gui\menu.py:453
+#: taskcoachlib\gui\menu.py:460
 msgid "Hide the toolbar"
 msgstr "도구모음 감추기"
 
-#: taskcoachlib\gui\menu.py:454
+#: taskcoachlib\gui\menu.py:461
 msgid "&Small images"
 msgstr "작은 이미지"
 
-#: taskcoachlib\gui\menu.py:454
+#: taskcoachlib\gui\menu.py:461
 msgid "Small images (16x16) on the toolbar"
 msgstr "작은 이미지(16x16) 도구모음"
 
-#: taskcoachlib\gui\menu.py:455
+#: taskcoachlib\gui\menu.py:462
 msgid "&Medium-sized images"
 msgstr "중간크기 이미지"
 
-#: taskcoachlib\gui\menu.py:455
+#: taskcoachlib\gui\menu.py:462
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr "중간 이미지(22x22) 도구모음"
 
-#: taskcoachlib\gui\menu.py:456
+#: taskcoachlib\gui\menu.py:463
 msgid "&Large images"
 msgstr "큰 이미지"
 
-#: taskcoachlib\gui\menu.py:456
+#: taskcoachlib\gui\menu.py:463
 msgid "Large images (32x32) on the toolbar"
 msgstr "큰 이미지(32x32) 도구모음"
 
-#: taskcoachlib\gui\menu.py:470
-#: taskcoachlib\gui\menu.py:644
-#: taskcoachlib\gui\uicommand.py:1268
+#: taskcoachlib\gui\menu.py:477 taskcoachlib\gui\menu.py:703
+#: taskcoachlib\gui\uicommand.py:1329
 msgid "New task &from template"
 msgstr "서식에서 새 작업(&F)"
 
-#: taskcoachlib\gui\menu.py:580
-#: taskcoachlib\gui\uicommand.py:1692
-#: taskcoachlib\gui\uicommand.py:1731
+#: taskcoachlib\gui\menu.py:504 taskcoachlib\gui\menu.py:563
+#: taskcoachlib\gui\menu.py:729 taskcoachlib\gui\menu.py:825
+msgid "&Toggle category"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:595 taskcoachlib\gui\uicommand.py:1788
+#: taskcoachlib\gui\uicommand.py:1828
 msgid "&Start tracking effort"
 msgstr "노력 추적 시작(&S)"
 
-#: taskcoachlib\gui\menu.py:625
+#: taskcoachlib\gui\menu.py:642
+msgid "%s (subcategories)"
+msgstr ""
+
+#: taskcoachlib\gui\menu.py:684
 msgid "%s (subtasks)"
 msgstr "%s (하위작업)"
 
-#: taskcoachlib\gui\printer.py:48
+#: taskcoachlib\gui\printer.py:87
 msgid "Page"
 msgstr "페이지"
 
@@ -1242,573 +1393,729 @@ msgstr "다른 모든 년"
 msgid "now"
 msgstr "현재"
 
-#: taskcoachlib\gui\taskbaricon.py:139
+#: taskcoachlib\gui\taskbaricon.py:138
 msgid "%d tasks overdue"
 msgstr "지난 작업 %d"
 
-#: taskcoachlib\gui\taskbaricon.py:139
+#: taskcoachlib\gui\taskbaricon.py:138
 msgid "one task overdue"
 msgstr "지난 작업"
 
-#: taskcoachlib\gui\taskbaricon.py:151
+#: taskcoachlib\gui\taskbaricon.py:139
+msgid "%d tasks due today"
+msgstr ""
+
+#: taskcoachlib\gui\taskbaricon.py:139
+msgid "one task due today"
+msgstr ""
+
+#: taskcoachlib\gui\taskbaricon.py:150
 msgid "tracking \"%s\""
 msgstr "추적중 \"%s\""
 
-#: taskcoachlib\gui\taskbaricon.py:153
+#: taskcoachlib\gui\taskbaricon.py:152
 msgid "tracking effort for %d tasks"
 msgstr "%d 작업의 노력 추적중"
 
-#: taskcoachlib\gui\uicommand.py:413
+#: taskcoachlib\gui\uicommand.py:438
+msgid "&Open...\tCtrl+O"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:439
 msgid "Open a %s file"
 msgstr "%s 파일 열기"
 
-#: taskcoachlib\gui\uicommand.py:425
+#: taskcoachlib\gui\uicommand.py:451
 msgid "Open %s"
 msgstr "%s 열기"
 
-#: taskcoachlib\gui\uicommand.py:433
+#: taskcoachlib\gui\uicommand.py:459
 msgid "&Merge..."
 msgstr "병합(&M)..."
 
-#: taskcoachlib\gui\uicommand.py:434
+#: taskcoachlib\gui\uicommand.py:460
 msgid "Merge tasks from another file with the current file"
 msgstr "현재파일과 다른 파일 병합"
 
-#: taskcoachlib\gui\uicommand.py:443
+#: taskcoachlib\gui\uicommand.py:469
 msgid "&Close\tCtrl+W"
 msgstr "닫기(&C)\tCtrl+W"
 
-#: taskcoachlib\gui\uicommand.py:444
+#: taskcoachlib\gui\uicommand.py:470
 msgid "Close the current file"
 msgstr "현재 파일 닫기"
 
-#: taskcoachlib\gui\uicommand.py:453
+#: taskcoachlib\gui\uicommand.py:479
 msgid "&Save\tCtrl+S"
 msgstr "저장(&S)\tCtrl+S"
 
-#: taskcoachlib\gui\uicommand.py:454
+#: taskcoachlib\gui\uicommand.py:480
 msgid "Save the current file"
 msgstr "현재 파일 저장"
 
-#: taskcoachlib\gui\uicommand.py:466
+#: taskcoachlib\gui\uicommand.py:492
 msgid "S&ave as...\tShift+Ctrl+S"
 msgstr "새이름으로(&a)...\tShift+Ctrl+S"
 
-#: taskcoachlib\gui\uicommand.py:467
+#: taskcoachlib\gui\uicommand.py:493
 msgid "Save the current file under a new name"
 msgstr "새로운 이름으로 현재파일 저장"
 
-#: taskcoachlib\gui\uicommand.py:476
+#: taskcoachlib\gui\uicommand.py:502
 msgid "Sa&ve selection..."
 msgstr "선택사항 저장(&v)..."
 
-#: taskcoachlib\gui\uicommand.py:477
+#: taskcoachlib\gui\uicommand.py:503
 msgid "Save the selected tasks to a separate file"
 msgstr "선택한 작업만 다른 파일로 저장"
 
-#: taskcoachlib\gui\uicommand.py:487
+#: taskcoachlib\gui\uicommand.py:513
 msgid "Save selected task as &template"
 msgstr "선택한 작업 서식(&t) 저장"
 
-#: taskcoachlib\gui\uicommand.py:488
+#: taskcoachlib\gui\uicommand.py:514
 msgid "Save the selected task as a task template"
 msgstr "선택한 작업 서식으로 저장"
 
-#: taskcoachlib\gui\uicommand.py:498
+#: taskcoachlib\gui\uicommand.py:524
 msgid "Add template"
 msgstr "서식 추가"
 
-#: taskcoachlib\gui\uicommand.py:499
+#: taskcoachlib\gui\uicommand.py:525
 msgid "Add a new template from a template file\n"
 msgstr "서식파일로부터 서식 추가\n"
 
-#: taskcoachlib\gui\uicommand.py:528
+#: taskcoachlib\gui\uicommand.py:535
+msgid "Purge deleted items"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:536
+msgid ""
+"Actually delete deleted tasks and notes (see the SyncML chapter in Help"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:540
+msgid ""
+"Purging deleted items is undoable.\n"
+"If you're planning on enabling\n"
+"the SyncML feature again with the\n"
+"same server you used previously,\n"
+"these items will probably come back.\n"
+"\n"
+"Do you still want to purge?"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:554
 msgid "Page setup...\tShift+Ctrl+P"
 msgstr "페이지 설정...\tShift+Ctrl+P"
 
-#: taskcoachlib\gui\uicommand.py:544
-#: taskcoachlib\gui\uicommand.py:554
+#: taskcoachlib\gui\uicommand.py:555
+msgid "Setup the characteristics of the printer page"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:571 taskcoachlib\gui\uicommand.py:582
 msgid "Print preview"
 msgstr "인쇄 미리보기"
 
-#: taskcoachlib\gui\uicommand.py:545
+#: taskcoachlib\gui\uicommand.py:572
 msgid "Show a preview of what the print will look like"
 msgstr "인쇄될 화명으로 미리보기"
 
-#: taskcoachlib\gui\uicommand.py:562
+#: taskcoachlib\gui\uicommand.py:590
 msgid "Print...\tCtrl+P"
 msgstr "인쇄...\tCtrl+P"
 
-#: taskcoachlib\gui\uicommand.py:563
+#: taskcoachlib\gui\uicommand.py:591
 msgid "Print the current file"
 msgstr "현재 파일 인쇄"
 
-#: taskcoachlib\gui\uicommand.py:595
-msgid "Export as &HTML..."
-msgstr "&HTML 내보내기..."
+#: taskcoachlib\gui\uicommand.py:614
+msgid "Export effort as &iCalendar..."
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:615
-msgid "Export as &CSV..."
-msgstr "&CSV 내보내기..."
+msgid "Export effort in iCalendar (*.ics) format"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:625
-msgid "Export as &VCalendar..."
+msgid "Export selected effort as &iCalendar..."
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:626
-msgid "Export the current view in VCalendar format"
+msgid "Export selected effort in iCalendar (*.ics) format"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:635
+msgid "Export as &HTML..."
+msgstr "&HTML 내보내기..."
+
+#: taskcoachlib\gui\uicommand.py:636
+msgid "Export the current view as HTML file"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:645
+msgid "Export &selection as HTML..."
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:646
+msgid "Export the selection in the current view as HTML file"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:655
+msgid "Export as &CSV..."
+msgstr "&CSV 내보내기..."
+
+#: taskcoachlib\gui\uicommand.py:656
+msgid "Export the current view in Comma Separated Values (CSV) format"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:665
+msgid "Export selection as &CSV..."
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:666
+msgid ""
+"Export the selection in the current view in Comma Separated Values (CSV) "
+"format"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:675
+msgid "Export as &VCalendar..."
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:676
+msgid "Export the current task viewer in VCalendar format"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:685
+msgid "Export selection as &VCalendar..."
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:686
+msgid ""
+"Export the selected tasks in the current task viewer in VCalendar format"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:695
 msgid "S&yncML synchronization"
 msgstr "SyncML 동기화(&y)"
 
-#: taskcoachlib\gui\uicommand.py:636
+#: taskcoachlib\gui\uicommand.py:696
 msgid "Synchronize with a SyncML server"
 msgstr "SyncML서버d와 동기화"
 
-#: taskcoachlib\gui\uicommand.py:648
+#: taskcoachlib\gui\uicommand.py:700
+msgid "Please enter your password:"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:701
+msgid "Task Coach SyncML password"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:708
 msgid "&Quit\tCtrl+Q"
 msgstr "나가기(&Q)\tCtrl+Q"
 
-#: taskcoachlib\gui\uicommand.py:649
+#: taskcoachlib\gui\uicommand.py:709
 msgid "Exit %s"
 msgstr "나가기 %s"
 
-#: taskcoachlib\gui\uicommand.py:657
+#: taskcoachlib\gui\uicommand.py:717
 msgid "&Undo"
 msgstr "실행 취소(&U)"
 
-#: taskcoachlib\gui\uicommand.py:662
+#: taskcoachlib\gui\uicommand.py:722
 msgid "Undo the last command"
 msgstr "마지막 구문 실행 취소"
 
-#: taskcoachlib\gui\uicommand.py:686
+#: taskcoachlib\gui\uicommand.py:746
 msgid "&Redo"
 msgstr "다시 실행(&R)"
 
-#: taskcoachlib\gui\uicommand.py:691
+#: taskcoachlib\gui\uicommand.py:751
 msgid "Redo the last command that was undone"
 msgstr "실행취소된 마지막 구문 실행"
 
-#: taskcoachlib\gui\uicommand.py:717
+#: taskcoachlib\gui\uicommand.py:776
+msgid "Cu&t\tCtrl+X"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:777
 msgid "Cut the selected item(s) to the clipboard"
 msgstr "선택한 항목 클립보드로 잘라내기"
 
-#: taskcoachlib\gui\uicommand.py:739
+#: taskcoachlib\gui\uicommand.py:799
 msgid "&Copy\tCtrl+C"
 msgstr "복사(&C)\tCtrl+C"
 
-#: taskcoachlib\gui\uicommand.py:740
+#: taskcoachlib\gui\uicommand.py:800
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "선택한 항목을 클립보드로 복사"
 
-#: taskcoachlib\gui\uicommand.py:762
+#: taskcoachlib\gui\uicommand.py:822
 msgid "&Paste\tCtrl+V"
 msgstr "붙여넣기(&P)\tCtrl+V"
 
-#: taskcoachlib\gui\uicommand.py:763
+#: taskcoachlib\gui\uicommand.py:823
 msgid "Paste item(s) from the clipboard"
 msgstr "클립보드로부터 항목 붙여넣기"
 
-#: taskcoachlib\gui\uicommand.py:784
+#: taskcoachlib\gui\uicommand.py:845
 msgid "P&aste into task\tShift+Ctrl+V"
 msgstr "작업으로부터 붙여넣기(&a)\tShift+Ctrl+V"
 
-#: taskcoachlib\gui\uicommand.py:785
+#: taskcoachlib\gui\uicommand.py:846
 msgid "Paste item(s) from the clipboard into the selected task"
 msgstr "클립보드로 부터 선택한 작업에 붙여넣기"
 
-#: taskcoachlib\gui\uicommand.py:799
+#: taskcoachlib\gui\uicommand.py:860
 msgid "Preferences..."
 msgstr "설정..."
 
-#: taskcoachlib\gui\uicommand.py:800
-#: taskcoachlib\gui\uicommand.py:805
+#: taskcoachlib\gui\uicommand.py:861 taskcoachlib\gui\uicommand.py:866
 msgid "Edit preferences"
 msgstr "기본 설정 편집"
 
-#: taskcoachlib\gui\uicommand.py:811
+#: taskcoachlib\gui\uicommand.py:872
 msgid "SyncML preferences..."
 msgstr "SyncML 설정..."
 
-#: taskcoachlib\gui\uicommand.py:812
-#: taskcoachlib\gui\uicommand.py:818
+#: taskcoachlib\gui\uicommand.py:873 taskcoachlib\gui\uicommand.py:879
 msgid "Edit SyncML preferences"
 msgstr "SyncML 설정 편집"
 
-#: taskcoachlib\gui\uicommand.py:824
+#: taskcoachlib\gui\uicommand.py:885
 msgid "&All\tCtrl+A"
 msgstr "모두(&A)\tCtrl+A"
 
-#: taskcoachlib\gui\uicommand.py:825
+#: taskcoachlib\gui\uicommand.py:886
 msgid "Select all items in the current view"
 msgstr "현재 모든 항목 선택"
 
-#: taskcoachlib\gui\uicommand.py:839
+#: taskcoachlib\gui\uicommand.py:900
 msgid "&Invert selection"
 msgstr "선택 반전 (%I)"
 
-#: taskcoachlib\gui\uicommand.py:840
+#: taskcoachlib\gui\uicommand.py:901
 msgid "Select unselected items and unselect selected items"
 msgstr "선택하지 않은 항목 선택과 선택한 항목 선택하지 않음"
 
-#: taskcoachlib\gui\uicommand.py:849
+#: taskcoachlib\gui\uicommand.py:910
 msgid "&Clear selection"
 msgstr "선택 지우기 (&C)"
 
-#: taskcoachlib\gui\uicommand.py:850
+#: taskcoachlib\gui\uicommand.py:911
 msgid "Unselect all items"
 msgstr "모든 항목 선택하지 않음"
 
-#: taskcoachlib\gui\uicommand.py:858
+#: taskcoachlib\gui\uicommand.py:919
 msgid "&Clear all filters"
 msgstr "모든 필터 지우기(&C)"
 
-#: taskcoachlib\gui\uicommand.py:859
+#: taskcoachlib\gui\uicommand.py:920
 msgid "Show all items (reset all filters)"
 msgstr "모든 항목 보기(모든 필터 제외)"
 
-#: taskcoachlib\gui\uicommand.py:897
+#: taskcoachlib\gui\uicommand.py:958
 msgid "&Rename viewer..."
 msgstr "뷰어이름 바꾸기(&R)..."
 
-#: taskcoachlib\gui\uicommand.py:898
+#: taskcoachlib\gui\uicommand.py:959
 msgid "Rename the selected viewer"
 msgstr "선택한 뷰어 이름 바꾸기"
 
-#: taskcoachlib\gui\uicommand.py:902
+#: taskcoachlib\gui\uicommand.py:963
 msgid "New title for the viewer:"
 msgstr "뷰어의 새로운 이름:"
 
-#: taskcoachlib\gui\uicommand.py:902
+#: taskcoachlib\gui\uicommand.py:963
 msgid "Rename viewer"
 msgstr "뷰어 이름 바꾸기"
 
-#: taskcoachlib\gui\uicommand.py:923
+#: taskcoachlib\gui\uicommand.py:984
 msgid "&Hide this column"
 msgstr "컬럼 감추기(&H)"
 
-#: taskcoachlib\gui\uicommand.py:924
+#: taskcoachlib\gui\uicommand.py:985
 msgid "Hide the selected column"
 msgstr "선택한 컬럼 감추기"
 
-#: taskcoachlib\gui\uicommand.py:971
+#: taskcoachlib\gui\uicommand.py:1032
 msgid "&Expand all items\tShift+Ctrl+E"
 msgstr "모든 항목 펼치기(&E)\tShift+Ctrl+E"
 
-#: taskcoachlib\gui\uicommand.py:972
+#: taskcoachlib\gui\uicommand.py:1033
 msgid "Expand all items with subitems"
 msgstr "하위항목포함 모든 항목 펼치기"
 
-#: taskcoachlib\gui\uicommand.py:985
+#: taskcoachlib\gui\uicommand.py:1046
 msgid "E&xpand"
 msgstr "펼치기(&x)"
 
-#: taskcoachlib\gui\uicommand.py:985
+#: taskcoachlib\gui\uicommand.py:1046
 msgid "Expand the selected item(s)"
 msgstr "선택한 항목 펼치기"
 
-#: taskcoachlib\gui\uicommand.py:999
+#: taskcoachlib\gui\uicommand.py:1060
 msgid "&Collapse all items\tShift+Ctrl+C"
 msgstr "모든 항목 접기(&C)\tShift+Ctrl+C"
 
-#: taskcoachlib\gui\uicommand.py:1000
+#: taskcoachlib\gui\uicommand.py:1061
 msgid "Collapse all items with subitems"
 msgstr "하위항목포함 모든 항목 접기"
 
-#: taskcoachlib\gui\uicommand.py:1013
+#: taskcoachlib\gui\uicommand.py:1074
 msgid "C&ollapse"
 msgstr "접기(&o)"
 
-#: taskcoachlib\gui\uicommand.py:1014
+#: taskcoachlib\gui\uicommand.py:1075
 msgid "Collapse the selected items with subitems"
 msgstr "선택한 항목(하위 항목포함) 접기"
 
-#: taskcoachlib\gui\uicommand.py:1035
+#: taskcoachlib\gui\uicommand.py:1096
 msgid "&Ascending"
 msgstr "순차정렬(&A)"
 
-#: taskcoachlib\gui\uicommand.py:1036
+#: taskcoachlib\gui\uicommand.py:1097
 msgid "Sort ascending (checked) or descending (unchecked)"
 msgstr "(선택된) 순차정렬이거나 (미선택된)역순정렬 정렬"
 
-#: taskcoachlib\gui\uicommand.py:1049
+#: taskcoachlib\gui\uicommand.py:1110
 msgid "Sort case sensitive"
 msgstr "대소문자 정렬"
 
-#: taskcoachlib\gui\uicommand.py:1063
+#: taskcoachlib\gui\uicommand.py:1111
+msgid ""
+"When comparing text, sorting is case sensitive (checked) or insensitive "
+"(unchecked)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1124
 msgid "Sort by status &first"
 msgstr "상태우선 정렬(&f)"
 
-#: taskcoachlib\gui\uicommand.py:1084
+#: taskcoachlib\gui\uicommand.py:1125
+msgid "Sort tasks by status (active/inactive/completed) first"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1145
 msgid "&Active"
 msgstr "활성(&A)"
 
-#: taskcoachlib\gui\uicommand.py:1097
+#: taskcoachlib\gui\uicommand.py:1146
+msgid ""
+"Show/hide active tasks (tasks with a start date in the past and a due date "
+"in the future)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1158
 msgid "&Inactive"
 msgstr "비활성(&I)"
 
-#: taskcoachlib\gui\uicommand.py:1110
+#: taskcoachlib\gui\uicommand.py:1159
+msgid "Show/hide inactive tasks (tasks with a start date in the future)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1171
 msgid "&Completed"
 msgstr "완료(&C)"
 
-#: taskcoachlib\gui\uicommand.py:1111
+#: taskcoachlib\gui\uicommand.py:1172
 msgid "Show/hide completed tasks"
 msgstr "완료 작업 보임/감춤"
 
-#: taskcoachlib\gui\uicommand.py:1122
+#: taskcoachlib\gui\uicommand.py:1183
 msgid "&Over due"
 msgstr "지남(&O)"
 
-#: taskcoachlib\gui\uicommand.py:1123
+#: taskcoachlib\gui\uicommand.py:1184
 msgid "Show/hide over due tasks (tasks with a due date in the past)"
 msgstr "지난 작업 보임/감춤"
 
-#: taskcoachlib\gui\uicommand.py:1135
+#: taskcoachlib\gui\uicommand.py:1196
 msgid "Over &budget"
 msgstr "예산 초과(&b)"
 
-#: taskcoachlib\gui\uicommand.py:1136
+#: taskcoachlib\gui\uicommand.py:1197
 msgid "Show/hide tasks that are over budget"
 msgstr "초과 예산 작업 보임/감춤"
 
-#: taskcoachlib\gui\uicommand.py:1271
+#: taskcoachlib\gui\uicommand.py:1209
+msgid "C&omposite"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1210
+msgid "Show/hide tasks with subtasks in list mode"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1332
 msgid "Create a new task from a template"
 msgstr "서식에 새 작업 작성"
 
-#: taskcoachlib\gui\uicommand.py:1277
+#: taskcoachlib\gui\uicommand.py:1338
 msgid "New task with selected categories..."
 msgstr "선택한 분류에서 새 작업..."
 
-#: taskcoachlib\gui\uicommand.py:1278
+#: taskcoachlib\gui\uicommand.py:1339
 msgid "Insert a new task with the selected categories checked"
 msgstr "체크한 선택한 분류에서 새 작업추가"
 
-#: taskcoachlib\gui\uicommand.py:1307
+#: taskcoachlib\gui\uicommand.py:1367
+msgid "&Mark task completed\tCtrl+RETURN"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1368
 msgid "Mark the selected task(s) completed"
 msgstr "선택한 작업 완료 표시"
 
-#: taskcoachlib\gui\uicommand.py:1368
+#: taskcoachlib\gui\uicommand.py:1429
 msgid "&Mark task uncompleted\tCtrl+RETURN"
 msgstr "미완료 작업 표시(&M)\tCtrl+RETURN"
 
-#: taskcoachlib\gui\uicommand.py:1374
+#: taskcoachlib\gui\uicommand.py:1435
 msgid "Mark the selected task(s) uncompleted"
 msgstr "선택한 작업 미완료 표시"
 
-#: taskcoachlib\gui\uicommand.py:1396
+#: taskcoachlib\gui\uicommand.py:1457
 msgid "Maximize priority\tShift+Ctrl+I"
 msgstr "최고 우선순위\tShift+Ctrl+I"
 
-#: taskcoachlib\gui\uicommand.py:1397
+#: taskcoachlib\gui\uicommand.py:1458
 msgid "Make the selected task(s) the highest priority task(s)"
 msgstr "선택한 작업 최우선권 표시"
 
-#: taskcoachlib\gui\uicommand.py:1409
+#: taskcoachlib\gui\uicommand.py:1470
 msgid "Minimize priority\tShift+Ctrl+D"
 msgstr "최저 우선순위\tShift+Ctrl+D"
 
-#: taskcoachlib\gui\uicommand.py:1410
+#: taskcoachlib\gui\uicommand.py:1471
 msgid "Make the selected task(s) the lowest priority task(s)"
 msgstr "선택한 작업 최하위권 표시"
 
-#: taskcoachlib\gui\uicommand.py:1422
+#: taskcoachlib\gui\uicommand.py:1483
 msgid "Increase priority\tCtrl+I"
 msgstr "우선순위 올림\tCtrl+I"
 
-#: taskcoachlib\gui\uicommand.py:1423
+#: taskcoachlib\gui\uicommand.py:1484
 msgid "Increase the priority of the selected task(s)"
 msgstr "선택한 작업 우선순위 올림"
 
-#: taskcoachlib\gui\uicommand.py:1435
+#: taskcoachlib\gui\uicommand.py:1496
 msgid "Decrease priority\tCtrl+D"
 msgstr "우선순위 내림\tCtrl+D"
 
-#: taskcoachlib\gui\uicommand.py:1436
+#: taskcoachlib\gui\uicommand.py:1497
 msgid "Decrease the priority of the selected task(s)"
 msgstr "선택한 작업 우선순위 내림"
 
-#: taskcoachlib\gui\uicommand.py:1506
+#: taskcoachlib\gui\uicommand.py:1534
+msgid "Toggle %s"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1592
+msgid ""
+"Cannot send email:\n"
+"%s"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1593
+msgid "%s mail error"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1598
 msgid "Mail task"
 msgstr "메일 작업"
 
-#: taskcoachlib\gui\uicommand.py:1507
+#: taskcoachlib\gui\uicommand.py:1599
 msgid "Mail the task, using your default mailer"
 msgstr "기본 메일러를 이용한 메일 작업"
 
-#: taskcoachlib\gui\uicommand.py:1516
+#: taskcoachlib\gui\uicommand.py:1608
 msgid "Mail note"
 msgstr "ㅁ[ㅇ;ㄹ 넡,"
 
-#: taskcoachlib\gui\uicommand.py:1517
+#: taskcoachlib\gui\uicommand.py:1609
 msgid "Mail the note, using your default mailer"
 msgstr "기본 메일러를 이용한 메일 노트"
 
-#: taskcoachlib\gui\uicommand.py:1526
-#: taskcoachlib\gui\uicommand.py:1542
-#: taskcoachlib\gui\uicommand.py:1558
+#: taskcoachlib\gui\uicommand.py:1618 taskcoachlib\gui\uicommand.py:1634
+#: taskcoachlib\gui\uicommand.py:1650
 msgid "Add &note"
 msgstr "새 노트(&n)"
 
-#: taskcoachlib\gui\uicommand.py:1527
+#: taskcoachlib\gui\uicommand.py:1619
 msgid "Add a note to the selected task(s)"
 msgstr "선택한 작업 노트 추가"
 
-#: taskcoachlib\gui\uicommand.py:1543
+#: taskcoachlib\gui\uicommand.py:1635
 msgid "Add a note to the selected category(ies)"
 msgstr "선택한 분류 노트 추가"
 
-#: taskcoachlib\gui\uicommand.py:1559
+#: taskcoachlib\gui\uicommand.py:1651
 msgid "Add a note to the selected attachment(s)"
 msgstr "선택한 첨부파일 노트 추가"
 
-#: taskcoachlib\gui\uicommand.py:1573
+#: taskcoachlib\gui\uicommand.py:1665
 msgid "&Add attachment"
 msgstr "첨부파일 추가 (&A)"
 
-#: taskcoachlib\gui\uicommand.py:1592
+#: taskcoachlib\gui\uicommand.py:1688
 msgid "Browse for files to add as attachment to the selected task(s)"
 msgstr "썬택한 작업의 추가된 첨부파일 탐색"
 
-#: taskcoachlib\gui\uicommand.py:1599
+#: taskcoachlib\gui\uicommand.py:1695
 msgid "Browse for files to add as attachment to the selected categories"
 msgstr "선택한 분류의 추가된 첨부파일 탐색"
 
-#: taskcoachlib\gui\uicommand.py:1606
+#: taskcoachlib\gui\uicommand.py:1702
 msgid "Browse for files to add as attachment to the selected note(s)"
 msgstr "선택한 노트의 추가된 첨부파일 탐색"
 
-#: taskcoachlib\gui\uicommand.py:1614
+#: taskcoachlib\gui\uicommand.py:1710
 msgid "&Open all attachments"
 msgstr "모든 첨부파일 열기 (&O)"
 
-#: taskcoachlib\gui\uicommand.py:1625
-#: taskcoachlib\gui\uicommand.py:1898
+#: taskcoachlib\gui\uicommand.py:1721 taskcoachlib\gui\uicommand.py:1993
 msgid "Error opening attachment"
 msgstr "열린 첨부파일 오류"
 
-#: taskcoachlib\gui\uicommand.py:1632
+#: taskcoachlib\gui\uicommand.py:1728
 msgid "Open all attachments of the selected task(s)"
 msgstr "선택한 작업의 모든 첨부파일 열기"
 
-#: taskcoachlib\gui\uicommand.py:1639
+#: taskcoachlib\gui\uicommand.py:1735
 msgid "Open all attachments of the selected categories"
 msgstr "선택한 분류의 모든 첨부파일 열기"
 
-#: taskcoachlib\gui\uicommand.py:1646
+#: taskcoachlib\gui\uicommand.py:1742
 msgid "Open all attachments of the selected note(s)"
 msgstr "선택한 노트의 모든 첨부파일 열기"
 
-#: taskcoachlib\gui\uicommand.py:1693
+#: taskcoachlib\gui\uicommand.py:1789
 msgid "Start tracking effort for the selected task(s)"
 msgstr "선택한 작업의 노력 추적"
 
-#: taskcoachlib\gui\uicommand.py:1717
+#: taskcoachlib\gui\uicommand.py:1810
+msgid "(No subject)"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1813
 msgid "Start tracking effort for %s"
 msgstr "%s 노력 추적 시작"
 
-#: taskcoachlib\gui\uicommand.py:1746
+#: taskcoachlib\gui\uicommand.py:1829
+msgid "Select a task via the menu and start tracking effort for it"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1843
 msgid "St&op tracking effort"
 msgstr "노력 추적 중지 (&o)"
 
-#: taskcoachlib\gui\uicommand.py:1747
+#: taskcoachlib\gui\uicommand.py:1844
 msgid "Stop tracking effort for the active task(s)"
 msgstr "활성화된 작업의 노력 추적 중지"
 
-#: taskcoachlib\gui\uicommand.py:1826
+#: taskcoachlib\gui\uicommand.py:1921
 msgid "New note with selected categories..."
 msgstr "선택한 분류 새 노트..."
 
-#: taskcoachlib\gui\uicommand.py:1827
+#: taskcoachlib\gui\uicommand.py:1922
 msgid "Insert a new note with the selected categories checked"
 msgstr "체크한 선택한 분류에 새 노트 삽입"
 
-#: taskcoachlib\gui\uicommand.py:1932
+#: taskcoachlib\gui\uicommand.py:2027
 msgid "&Help contents\tCtrl+?"
 msgstr "도움말(&H)\tCtrl+?"
 
-#: taskcoachlib\gui\uicommand.py:1935
+#: taskcoachlib\gui\uicommand.py:2030
 msgid "&Help contents\tCtrl+H"
 msgstr "도움말(&H)\tCtrl+H"
 
-#: taskcoachlib\gui\uicommand.py:1937
+#: taskcoachlib\gui\uicommand.py:2032
 msgid "Help about the program"
 msgstr "이 프로그램에 대한 도움말"
 
-#: taskcoachlib\gui\uicommand.py:1938
+#: taskcoachlib\gui\uicommand.py:2033
 msgid "Help"
 msgstr "도움말"
 
-#: taskcoachlib\gui\uicommand.py:1944
+#: taskcoachlib\gui\uicommand.py:2039
 msgid "&Tips"
 msgstr "팁(&T)"
 
-#: taskcoachlib\gui\uicommand.py:1945
+#: taskcoachlib\gui\uicommand.py:2040
 msgid "Tips about the program"
 msgstr "이 프로그램 팁"
 
-#: taskcoachlib\gui\uicommand.py:1958
+#: taskcoachlib\gui\uicommand.py:2053
 msgid "&About %s"
 msgstr "%s에 대하여(&A)"
 
-#: taskcoachlib\gui\uicommand.py:1959
+#: taskcoachlib\gui\uicommand.py:2054
 msgid "Version and contact information about %s"
 msgstr "%s의 버전과 연락정보"
 
-#: taskcoachlib\gui\uicommand.py:1960
+#: taskcoachlib\gui\uicommand.py:2055
 msgid "Help: About %s"
 msgstr "도움말: %s에 대해"
 
-#: taskcoachlib\gui\uicommand.py:1966
+#: taskcoachlib\gui\uicommand.py:2061
 msgid "&License"
 msgstr "라이센스(&L)"
 
-#: taskcoachlib\gui\uicommand.py:1967
+#: taskcoachlib\gui\uicommand.py:2062
 msgid "%s license"
 msgstr "%s 라이센스"
 
-#: taskcoachlib\gui\uicommand.py:1968
+#: taskcoachlib\gui\uicommand.py:2063
 msgid "Help: %s license"
 msgstr "도움말: %s 라이센스"
 
-#: taskcoachlib\gui\uicommand.py:1975
+#: taskcoachlib\gui\uicommand.py:2070
 msgid "&Restore"
 msgstr "복구(&R)"
 
-#: taskcoachlib\gui\uicommand.py:1976
+#: taskcoachlib\gui\uicommand.py:2071
 msgid "Restore the window to its previous state"
 msgstr "이전 상태로 창 복구"
 
-#: taskcoachlib\gui\uicommand.py:2024
+#: taskcoachlib\gui\uicommand.py:2122
 msgid "Effort details"
 msgstr "노력 세부"
 
-#: taskcoachlib\gui\uicommand.py:2024
+#: taskcoachlib\gui\uicommand.py:2122
 msgid "Effort per day"
 msgstr "하루 노력"
 
-#: taskcoachlib\gui\uicommand.py:2025
+#: taskcoachlib\gui\uicommand.py:2123
 msgid "Effort per month"
 msgstr "한달 노력"
 
-#: taskcoachlib\gui\uicommand.py:2025
+#: taskcoachlib\gui\uicommand.py:2123
 msgid "Effort per week"
 msgstr "한주 노력"
 
-#: taskcoachlib\gui\uicommand.py:2033
+#: taskcoachlib\gui\uicommand.py:2131
 msgid "List of tasks"
 msgstr "작업목록"
 
-#: taskcoachlib\gui\uicommand.py:2033
+#: taskcoachlib\gui\uicommand.py:2131
 msgid "Tree of tasks"
 msgstr "작업트리"
 
-#: taskcoachlib\gui\uicommand.py:2060
+#: taskcoachlib\gui\uicommand.py:2139
+msgid "Filter on all checked categories"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:2140
+msgid "Filter on any checked category"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:2158
 msgid "&Automatic column resizing"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:2061
+#: taskcoachlib\gui\uicommand.py:2159
 msgid "When checked, automatically resize columns to fill available space"
 msgstr ""
 
@@ -1821,434 +2128,426 @@ msgid "Sort by subject"
 msgstr "제목 정렬"
 
 #: taskcoachlib\gui\viewer\attachment.py:75
-#: taskcoachlib\gui\viewer\mixin.py:331
-#: taskcoachlib\gui\viewer\mixin.py:377
-#: taskcoachlib\gui\viewer\mixin.py:397
+#: taskcoachlib\gui\viewer\mixin.py:337 taskcoachlib\gui\viewer\mixin.py:383
+#: taskcoachlib\gui\viewer\mixin.py:403
 msgid "Sub&ject"
 msgstr "제목(&j)"
 
 #: taskcoachlib\gui\viewer\attachment.py:83
-#: taskcoachlib\gui\viewer\mixin.py:332
+#: taskcoachlib\gui\viewer\attachment.py:102
+#: taskcoachlib\gui\viewer\category.py:70
+#: taskcoachlib\gui\viewer\category.py:141
+#: taskcoachlib\gui\viewer\effort.py:230 taskcoachlib\gui\viewer\mixin.py:338
+#: taskcoachlib\gui\viewer\mixin.py:386 taskcoachlib\gui\viewer\mixin.py:406
+#: taskcoachlib\gui\viewer\note.py:101 taskcoachlib\gui\viewer\note.py:127
+#: taskcoachlib\gui\viewer\task.py:650
+msgid "&Description"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\attachment.py:83
+#: taskcoachlib\gui\viewer\mixin.py:338
 msgid "Sort by description"
 msgstr "설명순 정렬"
 
 #: taskcoachlib\gui\viewer\attachment.py:103
-#: taskcoachlib\gui\viewer\effort.py:203
-#: taskcoachlib\gui\viewer\note.py:102
-#: taskcoachlib\gui\viewer\task.py:469
+#: taskcoachlib\gui\viewer\category.py:71
+#: taskcoachlib\gui\viewer\category.py:142
+#: taskcoachlib\gui\viewer\effort.py:231 taskcoachlib\gui\viewer\note.py:102
+#: taskcoachlib\gui\viewer\task.py:651
 msgid "Show/hide description column"
 msgstr "설명 컬럼 보임/감춤"
 
 #: taskcoachlib\gui\viewer\attachment.py:105
-#: taskcoachlib\gui\viewer\task.py:476
+#: taskcoachlib\gui\viewer\category.py:148 taskcoachlib\gui\viewer\task.py:658
 msgid "&Notes"
 msgstr "노트(&N)"
 
 #: taskcoachlib\gui\viewer\attachment.py:106
-#: taskcoachlib\gui\viewer\task.py:477
+#: taskcoachlib\gui\viewer\category.py:149 taskcoachlib\gui\viewer\task.py:659
 msgid "Show/hide notes column"
 msgstr "노트 컬럼 보임/감춤"
 
-#: taskcoachlib\gui\viewer\category.py:123
-msgid "Categories: %d selected, %d total"
-msgstr "분류: 선택 %d개, 전체 %d개"
-
-#: taskcoachlib\gui\viewer\category.py:125
-msgid "Status: %d filtered"
-msgstr "상태: %d개 필터링 됨."
-
-#: taskcoachlib\gui\viewer\effort.py:124
-msgid "Period"
-msgstr "기간"
-
-#: taskcoachlib\gui\viewer\effort.py:132
-#: taskcoachlib\gui\viewer\effort.py:208
-#: taskcoachlib\gui\viewer\mixin.py:334
-#: taskcoachlib\gui\viewer\mixin.py:386
-#: taskcoachlib\gui\viewer\mixin.py:406
-#: taskcoachlib\gui\viewer\note.py:110
-#: taskcoachlib\gui\viewer\note.py:137
-#: taskcoachlib\gui\viewer\task.py:349
-#: taskcoachlib\gui\viewer\task.py:483
-msgid "Overall categories"
-msgstr "전체 분류"
-
-#: taskcoachlib\gui\viewer\effort.py:145
-#: taskcoachlib\gui\viewer\task.py:372
-msgid "Total time spent"
-msgstr "전체 소요시간"
-
-#: taskcoachlib\gui\viewer\effort.py:147
-#: taskcoachlib\gui\viewer\task.py:381
-msgid "Total revenue"
-msgstr "전체 수입"
-
-#: taskcoachlib\gui\viewer\effort.py:153
-msgid "Monday"
-msgstr "월별"
-
-#: taskcoachlib\gui\viewer\effort.py:155
-msgid "Tuesday"
-msgstr "화요일"
-
-#: taskcoachlib\gui\viewer\effort.py:157
-msgid "Wednesday"
-msgstr "수요일"
-
-#: taskcoachlib\gui\viewer\effort.py:159
-msgid "Thursday"
-msgstr "목요일"
-
-#: taskcoachlib\gui\viewer\effort.py:161
-msgid "Friday"
-msgstr "금요일"
-
-#: taskcoachlib\gui\viewer\effort.py:163
-msgid "Saturday"
-msgstr "토요일"
-
-#: taskcoachlib\gui\viewer\effort.py:165
-msgid "Sunday"
-msgstr "일요일"
-
-#: taskcoachlib\gui\viewer\effort.py:205
-#: taskcoachlib\gui\viewer\note.py:107
-#: taskcoachlib\gui\viewer\note.py:131
-#: taskcoachlib\gui\viewer\task.py:480
-msgid "&Categories"
-msgstr "분류(&C)"
-
-#: taskcoachlib\gui\viewer\effort.py:206
-#: taskcoachlib\gui\viewer\effort.py:209
-#: taskcoachlib\gui\viewer\note.py:108
-#: taskcoachlib\gui\viewer\task.py:481
-msgid "Show/hide categories column"
-msgstr "분류 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\effort.py:211
-#: taskcoachlib\gui\viewer\mixin.py:342
-#: taskcoachlib\gui\viewer\task.py:432
-msgid "&Time spent"
-msgstr "소요시간(&T)"
-
-#: taskcoachlib\gui\viewer\effort.py:212
-#: taskcoachlib\gui\viewer\task.py:433
-msgid "Show/hide time spent column"
-msgstr "소요시간컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\effort.py:214
-#: taskcoachlib\gui\viewer\mixin.py:351
-#: taskcoachlib\gui\viewer\task.py:461
-msgid "&Revenue"
-msgstr "수입(&R)"
-
-#: taskcoachlib\gui\viewer\effort.py:215
-#: taskcoachlib\gui\viewer\task.py:462
-msgid "Show/hide revenue column"
-msgstr "수입 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\effort.py:219
-msgid "&Total time spent"
-msgstr "전체 소요시간(&T)"
-
-#: taskcoachlib\gui\viewer\effort.py:220
-msgid "Show/hide total time spent column"
-msgstr "전체 소요시간 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\effort.py:224
-msgid "Total &revenue"
-msgstr "전체 수입 (&r)"
-
-#: taskcoachlib\gui\viewer\effort.py:225
-#: taskcoachlib\gui\viewer\task.py:465
-msgid "Show/hide total revenue column"
-msgstr "전체수입 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\effort.py:230
-msgid "Effort per weekday"
-msgstr "일주간 노력"
-
-#: taskcoachlib\gui\viewer\effort.py:231
-msgid "Show/hide time spent per weekday columns"
-msgstr "일주간일간 소요시간 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\effort.py:295
-msgid "Effort: %d selected, %d visible, %d total"
-msgstr "노력: 선택 %d, 보기 %d, 전체 %d"
-
-#: taskcoachlib\gui\viewer\effort.py:298
-msgid "Status: %d tracking"
-msgstr "상태: %d 추적"
-
-#: taskcoachlib\gui\viewer\mixin.py:182
-msgid "Show all tasks"
-msgstr "모든 작업 보기"
-
-#: taskcoachlib\gui\viewer\mixin.py:183
-msgid "&Today"
-msgstr "오늘"
-
-#: taskcoachlib\gui\viewer\mixin.py:183
-msgid "Only show tasks due today"
-msgstr "오늘 작업만 보기"
-
-#: taskcoachlib\gui\viewer\mixin.py:184
-msgid "T&omorrow"
-msgstr "내일(&o)"
-
-#: taskcoachlib\gui\viewer\mixin.py:185
-msgid "Only show tasks due today and tomorrow"
-msgstr "오늘/내일 작업만 보기"
-
-#: taskcoachlib\gui\viewer\mixin.py:187
-msgid "Wo&rkweek"
-msgstr "노동시간(&o)"
-
-#: taskcoachlib\gui\viewer\mixin.py:188
-msgid "Only show tasks due this work week (i.e. before Friday)"
-msgstr "이번주(노동시간) 작업만 보기 (얘,금요일이전)"
-
-#: taskcoachlib\gui\viewer\mixin.py:190
-msgid "&Week"
-msgstr "주(&W)"
-
-#: taskcoachlib\gui\viewer\mixin.py:191
-msgid "Only show tasks due this week (i.e. before Sunday)"
-msgstr "이번주 작업만 보기 (예, 일요일이전)"
-
-#: taskcoachlib\gui\viewer\mixin.py:193
-msgid "&Month"
-msgstr "달(&M)"
-
-#: taskcoachlib\gui\viewer\mixin.py:193
-msgid "Only show tasks due this month"
-msgstr "이번달 작업만 보기"
-
-#: taskcoachlib\gui\viewer\mixin.py:195
-msgid "&Year"
-msgstr "년(&Y)"
-
-#: taskcoachlib\gui\viewer\mixin.py:195
-msgid "Only show tasks due this year"
-msgstr "올해 작업만 보기"
-
-#: taskcoachlib\gui\viewer\mixin.py:197
-msgid "&Hide tasks that are"
-msgstr "작업 감추기"
-
-#: taskcoachlib\gui\viewer\mixin.py:331
-msgid "Sort tasks by subject"
-msgstr "제목별 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:333
-msgid "Sort by category"
-msgstr "분류순 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:334
-msgid "Sort by overall categories"
-msgstr "전체 분류순 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:335
-msgid "Sort tasks by start date"
-msgstr "시작일순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:335
-#: taskcoachlib\gui\viewer\task.py:402
-msgid "&Start date"
-msgstr "시작일(&S)"
-
-#: taskcoachlib\gui\viewer\mixin.py:336
-msgid "Sort tasks by due date"
-msgstr "예상일 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:336
-#: taskcoachlib\gui\viewer\task.py:405
-msgid "&Due date"
-msgstr "예상일(&D)"
-
-#: taskcoachlib\gui\viewer\mixin.py:337
-msgid "&Completion date"
-msgstr "완료일(&C)"
-
-#: taskcoachlib\gui\viewer\mixin.py:337
-msgid "Sort tasks by completion date"
-msgstr "완료일순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:338
-msgid "Sort tasks by number of days left"
-msgstr "남은 날짜순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:338
-#: taskcoachlib\gui\viewer\task.py:411
-msgid "D&ays left"
-msgstr "남은 날짜(&D)"
-
-#: taskcoachlib\gui\viewer\mixin.py:339
-msgid "Sort tasks by recurrence"
-msgstr "반복순 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:339
-#: taskcoachlib\gui\viewer\task.py:414
-msgid "&Recurrence"
-msgstr "반복(&R)"
-
-#: taskcoachlib\gui\viewer\mixin.py:340
-msgid "Sort tasks by budget"
-msgstr "예산순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:340
-#: taskcoachlib\gui\viewer\task.py:419
-#: taskcoachlib\gui\viewer\task.py:426
-msgid "&Budget"
-msgstr "예산(&B)"
-
-#: taskcoachlib\gui\viewer\mixin.py:341
-msgid "Sort tasks by total budget"
-msgstr "전체 예산순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:341
-#: taskcoachlib\gui\viewer\task.py:429
-msgid "Total b&udget"
-msgstr "전체 예산 (&u)"
-
-#: taskcoachlib\gui\viewer\mixin.py:342
-msgid "Sort tasks by time spent"
-msgstr "소요시간순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:343
-msgid "Sort tasks by total time spent"
-msgstr "전체 소요시간순 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:343
-#: taskcoachlib\gui\viewer\task.py:435
-msgid "T&otal time spent"
-msgstr "전체 소요시간(&o)"
-
-#: taskcoachlib\gui\viewer\mixin.py:344
-msgid "Sort tasks by budget left"
-msgstr "남은 예산순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:344
-#: taskcoachlib\gui\viewer\task.py:438
-msgid "Budget &left"
-msgstr "남은 예산(&l)"
-
-#: taskcoachlib\gui\viewer\mixin.py:345
-msgid "Sort tasks by total budget left"
-msgstr "전체 남은 예산순 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:345
-#: taskcoachlib\gui\viewer\task.py:441
-msgid "Total budget l&eft"
-msgstr "전체 남은 예산(&e)"
-
-#: taskcoachlib\gui\viewer\mixin.py:346
-msgid "Sort tasks by priority"
-msgstr "우선순위순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:346
-#: taskcoachlib\gui\viewer\task.py:486
-msgid "&Priority"
-msgstr "우선순위 (&P)"
-
-#: taskcoachlib\gui\viewer\mixin.py:347
-msgid "Sort tasks by overall priority"
-msgstr "전체 우선순위순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:347
-#: taskcoachlib\gui\viewer\task.py:376
-msgid "Overall priority"
-msgstr "전체 우선순위"
-
-#: taskcoachlib\gui\viewer\mixin.py:348
-msgid "Sort tasks by hourly fee"
-msgstr "시급 비용순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:348
-#: taskcoachlib\gui\viewer\task.py:452
-msgid "&Hourly fee"
-msgstr "시급 비용(&H)"
-
-#: taskcoachlib\gui\viewer\mixin.py:349
-msgid "Sort tasks by fixed fee"
-msgstr "고정 비용순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:349
-#: taskcoachlib\gui\viewer\task.py:455
-msgid "&Fixed fee"
-msgstr "고정 비용(&F)"
-
-#: taskcoachlib\gui\viewer\mixin.py:350
-msgid "Sort tasks by total fixed fee"
-msgstr "전체 고정비용순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:350
-msgid "Total fi&xed fee"
-msgstr "전체 고정비용(&x)"
-
-#: taskcoachlib\gui\viewer\mixin.py:351
-msgid "Sort tasks by revenue"
-msgstr "수입순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:352
-msgid "Sort tasks by total revenue"
-msgstr "전체 수입순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:352
-msgid "Total re&venue"
-msgstr "전체 수입 (&v)"
-
-#: taskcoachlib\gui\viewer\mixin.py:353
-msgid "Sort tasks by reminder date and time"
-msgstr "알림 시간대순 작업 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:353
-#: taskcoachlib\gui\viewer\task.py:492
-msgid "&Reminder"
-msgstr "알림 (&R)"
-
-#: taskcoachlib\gui\viewer\mixin.py:378
-msgid "Sort attachments by subject"
-msgstr "제목순 첨부파일 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:384
-msgid "Sort attachments by category"
-msgstr "분류순 첨부파일 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:387
-msgid "Sort attachments by overall categories"
-msgstr "전체분류순 첨부파일 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:398
-#: taskcoachlib\gui\viewer\note.py:124
-msgid "Sort notes by subject"
-msgstr "제목순 노트 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:401
-#: taskcoachlib\gui\viewer\note.py:128
-msgid "Sort notes by description"
-msgstr "설명순 노트 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:404
-msgid "Sort notes by category"
-msgstr "분류순 노트 정렬"
-
-#: taskcoachlib\gui\viewer\mixin.py:407
-#: taskcoachlib\gui\viewer\note.py:138
-msgid "Sort notes by overall categories"
-msgstr "전체 분류순 노트 정렬"
-
-#: taskcoachlib\gui\viewer\note.py:104
-#: taskcoachlib\gui\viewer\task.py:471
+#: taskcoachlib\gui\viewer\category.py:73
+#: taskcoachlib\gui\viewer\category.py:144 taskcoachlib\gui\viewer\note.py:104
+#: taskcoachlib\gui\viewer\task.py:653
 msgid "&Attachments"
 msgstr "첨부파일(&A)"
 
-#: taskcoachlib\gui\viewer\note.py:105
+#: taskcoachlib\gui\viewer\category.py:74
+#: taskcoachlib\gui\viewer\category.py:145 taskcoachlib\gui\viewer\note.py:105
 msgid "Show/hide attachments column"
 msgstr "첨부파일 컬럼 보임/감춤"
 
-#: taskcoachlib\gui\viewer\note.py:111
-#: taskcoachlib\gui\viewer\task.py:484
+#: taskcoachlib\gui\viewer\category.py:201
+msgid "Categories: %d selected, %d total"
+msgstr "분류: 선택 %d개, 전체 %d개"
+
+#: taskcoachlib\gui\viewer\category.py:203
+msgid "Status: %d filtered"
+msgstr "상태: %d개 필터링 됨."
+
+#: taskcoachlib\gui\viewer\effort.py:152
+msgid "Period"
+msgstr "기간"
+
+#: taskcoachlib\gui\viewer\effort.py:160 taskcoachlib\gui\viewer\effort.py:236
+#: taskcoachlib\gui\viewer\mixin.py:340 taskcoachlib\gui\viewer\mixin.py:392
+#: taskcoachlib\gui\viewer\mixin.py:412 taskcoachlib\gui\viewer\note.py:110
+#: taskcoachlib\gui\viewer\note.py:137 taskcoachlib\gui\viewer\task.py:530
+#: taskcoachlib\gui\viewer\task.py:665
+msgid "Overall categories"
+msgstr "전체 분류"
+
+#: taskcoachlib\gui\viewer\effort.py:173 taskcoachlib\gui\viewer\task.py:553
+msgid "Total time spent"
+msgstr "전체 소요시간"
+
+#: taskcoachlib\gui\viewer\effort.py:175 taskcoachlib\gui\viewer\task.py:562
+msgid "Total revenue"
+msgstr "전체 수입"
+
+#: taskcoachlib\gui\viewer\effort.py:181
+msgid "Monday"
+msgstr "월별"
+
+#: taskcoachlib\gui\viewer\effort.py:183
+msgid "Tuesday"
+msgstr "화요일"
+
+#: taskcoachlib\gui\viewer\effort.py:185
+msgid "Wednesday"
+msgstr "수요일"
+
+#: taskcoachlib\gui\viewer\effort.py:187
+msgid "Thursday"
+msgstr "목요일"
+
+#: taskcoachlib\gui\viewer\effort.py:189
+msgid "Friday"
+msgstr "금요일"
+
+#: taskcoachlib\gui\viewer\effort.py:191
+msgid "Saturday"
+msgstr "토요일"
+
+#: taskcoachlib\gui\viewer\effort.py:193
+msgid "Sunday"
+msgstr "일요일"
+
+#: taskcoachlib\gui\viewer\effort.py:233 taskcoachlib\gui\viewer\note.py:107
+#: taskcoachlib\gui\viewer\note.py:131 taskcoachlib\gui\viewer\task.py:662
+msgid "&Categories"
+msgstr "분류(&C)"
+
+#: taskcoachlib\gui\viewer\effort.py:234 taskcoachlib\gui\viewer\effort.py:237
+#: taskcoachlib\gui\viewer\note.py:108 taskcoachlib\gui\viewer\task.py:663
+msgid "Show/hide categories column"
+msgstr "분류 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\effort.py:239 taskcoachlib\gui\viewer\mixin.py:348
+#: taskcoachlib\gui\viewer\task.py:614
+msgid "&Time spent"
+msgstr "소요시간(&T)"
+
+#: taskcoachlib\gui\viewer\effort.py:240 taskcoachlib\gui\viewer\task.py:615
+msgid "Show/hide time spent column"
+msgstr "소요시간컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\effort.py:242 taskcoachlib\gui\viewer\mixin.py:357
+#: taskcoachlib\gui\viewer\task.py:643
+msgid "&Revenue"
+msgstr "수입(&R)"
+
+#: taskcoachlib\gui\viewer\effort.py:243 taskcoachlib\gui\viewer\task.py:644
+msgid "Show/hide revenue column"
+msgstr "수입 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\effort.py:247
+msgid "&Total time spent"
+msgstr "전체 소요시간(&T)"
+
+#: taskcoachlib\gui\viewer\effort.py:248
+msgid "Show/hide total time spent column"
+msgstr "전체 소요시간 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\effort.py:252
+msgid "Total &revenue"
+msgstr "전체 수입 (&r)"
+
+#: taskcoachlib\gui\viewer\effort.py:253 taskcoachlib\gui\viewer\task.py:647
+msgid "Show/hide total revenue column"
+msgstr "전체수입 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\effort.py:258
+msgid "Effort per weekday"
+msgstr "일주간 노력"
+
+#: taskcoachlib\gui\viewer\effort.py:259
+msgid "Show/hide time spent per weekday columns"
+msgstr "일주간일간 소요시간 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\effort.py:320
+msgid "Effort: %d selected, %d visible, %d total"
+msgstr "노력: 선택 %d, 보기 %d, 전체 %d"
+
+#: taskcoachlib\gui\viewer\effort.py:323
+msgid "Status: %d tracking"
+msgstr "상태: %d 추적"
+
+#: taskcoachlib\gui\viewer\mixin.py:187
+msgid "Show only tasks &due before end of"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:188
+msgid "&Unlimited"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:188
+msgid "Show all tasks"
+msgstr "모든 작업 보기"
+
+#: taskcoachlib\gui\viewer\mixin.py:189
+msgid "&Today"
+msgstr "오늘"
+
+#: taskcoachlib\gui\viewer\mixin.py:189
+msgid "Only show tasks due today"
+msgstr "오늘 작업만 보기"
+
+#: taskcoachlib\gui\viewer\mixin.py:190
+msgid "T&omorrow"
+msgstr "내일(&o)"
+
+#: taskcoachlib\gui\viewer\mixin.py:191
+msgid "Only show tasks due today and tomorrow"
+msgstr "오늘/내일 작업만 보기"
+
+#: taskcoachlib\gui\viewer\mixin.py:193
+msgid "Wo&rkweek"
+msgstr "노동시간(&o)"
+
+#: taskcoachlib\gui\viewer\mixin.py:194
+msgid "Only show tasks due this work week (i.e. before Friday)"
+msgstr "이번주(노동시간) 작업만 보기 (얘,금요일이전)"
+
+#: taskcoachlib\gui\viewer\mixin.py:196
+msgid "&Week"
+msgstr "주(&W)"
+
+#: taskcoachlib\gui\viewer\mixin.py:197
+msgid "Only show tasks due this week (i.e. before Sunday)"
+msgstr "이번주 작업만 보기 (예, 일요일이전)"
+
+#: taskcoachlib\gui\viewer\mixin.py:199
+msgid "&Month"
+msgstr "달(&M)"
+
+#: taskcoachlib\gui\viewer\mixin.py:199
+msgid "Only show tasks due this month"
+msgstr "이번달 작업만 보기"
+
+#: taskcoachlib\gui\viewer\mixin.py:201
+msgid "&Year"
+msgstr "년(&Y)"
+
+#: taskcoachlib\gui\viewer\mixin.py:201
+msgid "Only show tasks due this year"
+msgstr "올해 작업만 보기"
+
+#: taskcoachlib\gui\viewer\mixin.py:203
+msgid "&Hide tasks that are"
+msgstr "작업 감추기"
+
+#: taskcoachlib\gui\viewer\mixin.py:337
+msgid "Sort tasks by subject"
+msgstr "제목별 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:339
+msgid "Sort by category"
+msgstr "분류순 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:340
+msgid "Sort by overall categories"
+msgstr "전체 분류순 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:341
+msgid "Sort tasks by start date"
+msgstr "시작일순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:341 taskcoachlib\gui\viewer\task.py:584
+msgid "&Start date"
+msgstr "시작일(&S)"
+
+#: taskcoachlib\gui\viewer\mixin.py:342
+msgid "Sort tasks by due date"
+msgstr "예상일 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:342 taskcoachlib\gui\viewer\task.py:587
+msgid "&Due date"
+msgstr "예상일(&D)"
+
+#: taskcoachlib\gui\viewer\mixin.py:343
+msgid "&Completion date"
+msgstr "완료일(&C)"
+
+#: taskcoachlib\gui\viewer\mixin.py:343
+msgid "Sort tasks by completion date"
+msgstr "완료일순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:344
+msgid "Sort tasks by number of days left"
+msgstr "남은 날짜순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:344 taskcoachlib\gui\viewer\task.py:593
+msgid "D&ays left"
+msgstr "남은 날짜(&D)"
+
+#: taskcoachlib\gui\viewer\mixin.py:345
+msgid "Sort tasks by recurrence"
+msgstr "반복순 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:345 taskcoachlib\gui\viewer\task.py:596
+msgid "&Recurrence"
+msgstr "반복(&R)"
+
+#: taskcoachlib\gui\viewer\mixin.py:346
+msgid "Sort tasks by budget"
+msgstr "예산순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:346 taskcoachlib\gui\viewer\task.py:601
+#: taskcoachlib\gui\viewer\task.py:608
+msgid "&Budget"
+msgstr "예산(&B)"
+
+#: taskcoachlib\gui\viewer\mixin.py:347
+msgid "Sort tasks by total budget"
+msgstr "전체 예산순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:347 taskcoachlib\gui\viewer\task.py:611
+msgid "Total b&udget"
+msgstr "전체 예산 (&u)"
+
+#: taskcoachlib\gui\viewer\mixin.py:348
+msgid "Sort tasks by time spent"
+msgstr "소요시간순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:349
+msgid "Sort tasks by total time spent"
+msgstr "전체 소요시간순 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:349 taskcoachlib\gui\viewer\task.py:617
+msgid "T&otal time spent"
+msgstr "전체 소요시간(&o)"
+
+#: taskcoachlib\gui\viewer\mixin.py:350
+msgid "Sort tasks by budget left"
+msgstr "남은 예산순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:350 taskcoachlib\gui\viewer\task.py:620
+msgid "Budget &left"
+msgstr "남은 예산(&l)"
+
+#: taskcoachlib\gui\viewer\mixin.py:351
+msgid "Sort tasks by total budget left"
+msgstr "전체 남은 예산순 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:351 taskcoachlib\gui\viewer\task.py:623
+msgid "Total budget l&eft"
+msgstr "전체 남은 예산(&e)"
+
+#: taskcoachlib\gui\viewer\mixin.py:352
+msgid "Sort tasks by priority"
+msgstr "우선순위순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:352 taskcoachlib\gui\viewer\task.py:668
+msgid "&Priority"
+msgstr "우선순위 (&P)"
+
+#: taskcoachlib\gui\viewer\mixin.py:353
+msgid "Sort tasks by overall priority"
+msgstr "전체 우선순위순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:353 taskcoachlib\gui\viewer\task.py:557
+msgid "Overall priority"
+msgstr "전체 우선순위"
+
+#: taskcoachlib\gui\viewer\mixin.py:354
+msgid "Sort tasks by hourly fee"
+msgstr "시급 비용순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:354 taskcoachlib\gui\viewer\task.py:634
+msgid "&Hourly fee"
+msgstr "시급 비용(&H)"
+
+#: taskcoachlib\gui\viewer\mixin.py:355
+msgid "Sort tasks by fixed fee"
+msgstr "고정 비용순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:355 taskcoachlib\gui\viewer\task.py:637
+msgid "&Fixed fee"
+msgstr "고정 비용(&F)"
+
+#: taskcoachlib\gui\viewer\mixin.py:356
+msgid "Sort tasks by total fixed fee"
+msgstr "전체 고정비용순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:356
+msgid "Total fi&xed fee"
+msgstr "전체 고정비용(&x)"
+
+#: taskcoachlib\gui\viewer\mixin.py:357
+msgid "Sort tasks by revenue"
+msgstr "수입순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:358
+msgid "Sort tasks by total revenue"
+msgstr "전체 수입순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:358
+msgid "Total re&venue"
+msgstr "전체 수입 (&v)"
+
+#: taskcoachlib\gui\viewer\mixin.py:359
+msgid "Sort tasks by reminder date and time"
+msgstr "알림 시간대순 작업 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:359 taskcoachlib\gui\viewer\task.py:674
+msgid "&Reminder"
+msgstr "알림 (&R)"
+
+#: taskcoachlib\gui\viewer\mixin.py:384
+msgid "Sort attachments by subject"
+msgstr "제목순 첨부파일 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:387
+msgid "Sort attachments by description"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\mixin.py:390
+msgid "Sort attachments by category"
+msgstr "분류순 첨부파일 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:393
+msgid "Sort attachments by overall categories"
+msgstr "전체분류순 첨부파일 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:404 taskcoachlib\gui\viewer\note.py:124
+msgid "Sort notes by subject"
+msgstr "제목순 노트 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:407 taskcoachlib\gui\viewer\note.py:128
+msgid "Sort notes by description"
+msgstr "설명순 노트 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:410
+msgid "Sort notes by category"
+msgstr "분류순 노트 정렬"
+
+#: taskcoachlib\gui\viewer\mixin.py:413 taskcoachlib\gui\viewer\note.py:138
+msgid "Sort notes by overall categories"
+msgstr "전체 분류순 노트 정렬"
+
+#: taskcoachlib\gui\viewer\note.py:111 taskcoachlib\gui\viewer\task.py:666
 msgid "Show/hide overall categories column"
 msgstr "전체 분류 컬럼 보임/감춤"
 
@@ -2272,622 +2571,166 @@ msgstr "메모: 선택 %d개, 전체 %d개"
 msgid "Status: n/a"
 msgstr "상태: 없음"
 
-#: taskcoachlib\gui\viewer\task.py:107
+#: taskcoachlib\gui\viewer\task.py:112
 msgid "Tasks: %d selected, %d visible, %d total"
 msgstr "작업: 선택 %d, 보기 %d, 전체 %d"
 
-#: taskcoachlib\gui\viewer\task.py:110
+#: taskcoachlib\gui\viewer\task.py:115
 msgid "Status: %d over due, %d inactive, %d completed"
 msgstr "상태: 기간초과 %d개, 비활성 %d개, 완료 %d개"
 
-#: taskcoachlib\gui\viewer\task.py:366
-msgid "Days left"
-msgstr "남은 날짜"
-
-#: taskcoachlib\gui\viewer\task.py:370
-msgid "Total budget"
-msgstr "전체 예산"
-
-#: taskcoachlib\gui\viewer\task.py:374
-msgid "Total budget left"
-msgstr "전체 남은 예산"
-
-#: taskcoachlib\gui\viewer\task.py:379
-msgid "Total fixed fee"
-msgstr "전체 고정비용"
-
-#: taskcoachlib\gui\viewer\task.py:395
-msgid "&Dates"
-msgstr "날짜(&D)"
-
-#: taskcoachlib\gui\viewer\task.py:396
-msgid "All date columns"
-msgstr "모든 날짜 컬럼"
-
-#: taskcoachlib\gui\viewer\task.py:397
-msgid "Show/hide all date-related columns"
-msgstr "모든 날짜관련 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:403
-msgid "Show/hide start date column"
-msgstr "시작일 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:406
-msgid "Show/hide due date column"
-msgstr "기간 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:408
-msgid "Co&mpletion date"
-msgstr "완료일 (&m)"
-
-#: taskcoachlib\gui\viewer\task.py:409
-msgid "Show/hide completion date column"
-msgstr "완료일 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:412
-msgid "Show/hide days left column"
-msgstr "남은날짜 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:415
-msgid "Show/hide recurrence column"
-msgstr "반복컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:420
-msgid "All budget columns"
-msgstr "모든 예산 컬럼"
-
-#: taskcoachlib\gui\viewer\task.py:421
-msgid "Show/hide all budget-related columns"
-msgstr "모든 예산관련 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:427
-msgid "Show/hide budget column"
-msgstr "예산컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:430
-msgid "Show/hide total budget column (total budget includes budget for subtasks)"
-msgstr "모든 예산컬럽 보임/감춤 (전체 예산은 하위예산도 포함함)"
-
-#: taskcoachlib\gui\viewer\task.py:436
-msgid "Show/hide total time spent column (total time includes time spent on subtasks)"
-msgstr "모든 소요시간컬럼 보임/감춤(모든 시간은 하위작업의 소요시간을 포함함)"
-
-#: taskcoachlib\gui\viewer\task.py:439
-msgid "Show/hide budget left column"
-msgstr "남은 예산일 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:442
-msgid "Show/hide total budget left column (total budget left includes budget left for subtasks)"
-msgstr "모든 예산 남은일 컬럼 보임/감춤(모든 예산일은 하위작업의 남은 예산일을 포함함)"
-
-#: taskcoachlib\gui\viewer\task.py:445
-msgid "&Financial"
-msgstr "재정 (&F)"
-
-#: taskcoachlib\gui\viewer\task.py:446
-msgid "All financial columns"
-msgstr "모든 재정 컬럼"
-
-#: taskcoachlib\gui\viewer\task.py:447
-msgid "Show/hide all finance-related columns"
-msgstr "모든 재정관련 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:453
-msgid "Show/hide hourly fee column"
-msgstr "시급 비용 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:456
-msgid "Show/hide fixed fee column"
-msgstr "고정 비용 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:458
-msgid "&Total fixed fee"
-msgstr "전체 고정 비용 (&T)"
-
-#: taskcoachlib\gui\viewer\task.py:459
-msgid "Show/hide total fixed fee column"
-msgstr "전체 고정 비용 컬럼 보임/감충"
-
-#: taskcoachlib\gui\viewer\task.py:464
-msgid "T&otal revenue"
-msgstr "전체수입(&o)"
-
-#: taskcoachlib\gui\viewer\task.py:472
-msgid "Show/hide attachment column"
-msgstr "첨부파일 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:487
-msgid "Show/hide priority column"
-msgstr "우선순위 컬럼 보임/감춤"
-
-#: taskcoachlib\gui\viewer\task.py:489
-msgid "O&verall priority"
-msgstr "우선순위(&V)"
-
-#: taskcoachlib\gui\viewer\task.py:490
-msgid "Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks"
+#: taskcoachlib\gui\viewer\task.py:243
+msgid "Timeline"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:72
-msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
-msgstr "<h3><a name=\"tasks\">작업</a></h3>\n"
-
-#: taskcoachlib\help\__init__.py:259
-msgid "<h3><a name=\"syncml\">SyncML support</a></h3>\n"
+#: taskcoachlib\gui\viewer\task.py:341
+msgid "Now"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:262
-msgid ""
-"<h4><a name=\"aboutsyncml\">What is SyncML</a></h4>\n"
-"\n"
-"<p>This feature is optional and off by default. In order to turn it on,\n"
-"go to the preferences dialog and check it in the Features page.</p>\n"
-"\n"
-"<p>SyncML  is   an  XML  protocol  designed   to  synchronize  several\n"
-"applications  with  a  server.  A  popular open-source  server  is  <a\n"
-"href=\"http://www.funambol.com/\">Funambol</a>.  Synchronization clients\n"
-"are available  for many devices and applications  (Outlook, Pocket PC,\n"
-"iPod, iPhone,  Evolution, etc...),  as well as  so-called \"connectors\"\n"
-"which allow the server  to synchronize with Exchange, Google Calendar,\n"
-"etc.</p>\n"
-"\n"
-"<p>%(name)s has built-in SyncML client support. This means you can\n"
-"setup %(name)s to synchronize with the same SyncML server you\n"
-"synchronize with with Outlook and have all Outlook tasks and notes in\n"
-"your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or\n"
-"your Pocket PC.</p>\n"
-"\n"
-msgstr ""
-
-#: taskcoachlib\help\__init__.py:283
-msgid ""
-"<h4><a name=\"syncmlsetup\">Setup</a></h4>\n"
-"\n"
-"<p>To setup SyncML, edit the SyncML preferences in Edit/SyncML preferences.\n"
-"Fill in the synchronization URL, your ID on the server and choose which\n"
-"items to synchronize (tasks and/or notes). The URL depends on the server\n"
-"you choose; some examples are:\n"
-"\n"
-"<ul>\n"
-"  <li><a href=\"http://www.scheduleworld.com/\">ScheduleWorld</a>: http://sync.scheduleworld.com/funambol/ds</li>\n"
-"  <li><a href=\"http://memotoo.com\">MemoToo</a>: http://sync.memotoo.com/syncml</li>\n"
-"</ul>\n"
-"\n"
-"The database names are pretty standard; the default values should work.</p>\n"
-"\n"
-"<p>Each task file has its own client ID, so that two different task files\n"
-"will de considered different \"devices\" by the server.</p>"
-msgstr ""
-
-#: taskcoachlib\help\__init__.py:300
-msgid ""
-"<h4><a name=\"syncmllimits\">Limitations</a></h4>\n"
-"\n"
-"<p>Some limitations are due to the fact that, the underlying data type being vcalendar, some TaskCoach features cannot be presented to the server.\n"
-"\n"
-"  <ul>\n"
-"    <li>Task and category hierarchy are lost to the server.</li>\n"
-"    <li>Recurrence and reminders are not supported yet.</li>\n"
-"    <li>Note categories are lost to the server.</li>\n"
-"    <li>The conflict detection/resolution system is a work around a Funambol\n"
-"        limitation. It should work in most cases, but if many applications\n"
-"        synchronize with the same server at the same time, problems may rise.</li>\n"
-"    <li>Probably some others...</li>\n"
-"  </ul>\n"
-"</p>\n"
-msgstr ""
-
-#: taskcoachlib\help\__init__.py:358
-msgid "<h3><a name=\"templates\">Task templates</a></h3>\n"
-msgstr "<h3><a name=\"templates\">작업 서식</a></h3>\n"
-
-#: taskcoachlib\help\__init__.py:361
-msgid ""
-"<h4><a name=\"abouttemplates\">About templates</a></h4>\n"
-"<p>Templates are blueprints for new tasks. Right now, the only task properties that\n"
-"can be \"parameterized\" are the dates. When instantiating a template, the created\n"
-"task has its dates replaced with dates relative to the current date.</p>\n"
-msgstr ""
-
-#: taskcoachlib\help\__init__.py:367
-msgid ""
-"<h4><a name=\"usingtemplates\">Using templates</a></h4>\n"
-"<p>One can create a template by selecting a task (only one) and click on the\n"
-"\"Save task as template\" item in the File menu. All subtasks, notes and attachments\n"
-"are part of the template. Only categories are not saved.</p>\n"
-"\n"
-"<p>You can also create a new template from a pre-made template file (.tsktmpl);\n"
-"just select \"Add template\" in the File menu and select the file. Template files\n"
-"are stored in a subdirectory of the directory where %(name)s.ini is.</p>\n"
-"\n"
-"<p>In order to instantiate a task template, use the \"New task from template\" menu\n"
-"in the Task menu, or the equivalent toolbar button. When the task is created, the\n"
-"due, start and completion dates, if applicable, are reevaluated relatively to the\n"
-"current date. That means that if you create a template from a task starting today\n"
-"and due tomorrow, every time the template is instantiated, the start date will be\n"
-"replaced by the current date and the due date by the current date plus one day.</p>\n"
-msgstr ""
-
-#: taskcoachlib\help\tips.py:25
-msgid "%(name)s is currently alpha software. Although the %(name)s developers try hard to prevent them, bugs do happen. So, backing up your work on a regular basis is strongly advised."
-msgstr "%(name)s 은/는 알파버전입니다. %(name)s 개발자의 노력에도 불구하고, 버그가 발생할 수도 있습니다. 그러므로, 기본 설정에서 작업을 먼저 백업해두시길 적극 권장합니다."
-
-#: taskcoachlib\help\tips.py:35
-msgid "You can turn off some features, such as notes and effort tracking, in the Preferences dialog. Features turned off are not accessible via the user interface, resulting in a 'smaller' user interface."
-msgstr ""
-
-#: taskcoachlib\help\tips.py:36
-msgid "You can create a template from a task in order to reduce typing when repetitive patterns emerge."
-msgstr ""
-
-#: taskcoachlib\mailer\__init__.py:53
-msgid "Untitled e-mail"
-msgstr "제목없는 e-mail"
-
-#: taskcoachlib\mailer\thunderbird.py:190
-msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
-msgstr "%(server)s:%(port)d 의 사용자 %(user)s님의 패스워드를 입력하세요"
-
-#: taskcoachlib\mailer\thunderbird.py:204
-msgid "Wrong password. Please try again."
-msgstr "패스워드가 틀렸습니다. 다시 시도해주세요."
-
-#: taskcoachlib\persistence\xml\templates.py:8
-msgid "New task due today"
-msgstr "오늘 새작업"
-
-#: taskcoachlib\persistence\xml\templates.py:10
-msgid "New task due tomorrow"
-msgstr "내일 새작업"
-
-#: taskcoachlib\syncml\basesource.py:58
-#: taskcoachlib\syncml\basesource.py:70
-msgid "The synchronization for source %s"
-msgstr "소스 %s 의 동기화"
-
-#: taskcoachlib\syncml\notesource.py:73
-msgid "Note \"%s\" has been deleted on server,\n"
-msgstr ""
-
-#: taskcoachlib\syncml\notesource.py:75
-#: taskcoachlib\syncml\notesource.py:80
-#: taskcoachlib\syncml\tasksource.py:155
-#: taskcoachlib\syncml\tasksource.py:160
-msgid "Synchronization conflict"
-msgstr ""
-
-#: taskcoachlib\syncml\notesource.py:78
-msgid "Note \"%s\" has been locally deleted,\n"
-msgstr ""
-
-#: taskcoachlib\syncml\sync.py:97
-msgid "Synchronization"
-msgstr ""
-
-#: taskcoachlib\syncml\sync.py:98
-msgid ""
-"Synchronizing. Please wait.\n"
-"\n"
-"\n"
-msgstr ""
-"동기화중. 잠시 기다려주세요.\n"
-"\n"
-"\n"
-
-#: taskcoachlib\syncml\sync.py:202
-msgid ""
-"%d items added.\n"
-"%d items updated.\n"
-"%d items deleted."
-msgstr ""
-"%d 항목 추가.\n"
-"%d 항목 업데이트.\n"
-"%d 항목 삭제."
-
-#: taskcoachlib\syncml\sync.py:208
-msgid ""
-"An error occurred in the synchronization.\n"
-"Error code: %d; message: %s"
-msgstr ""
-"동기화중 에러 발생.\n"
-"에러코드: %d; 메세지: %s"
-
-#: taskcoachlib\syncml\sync.py:213
-msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
-msgstr "먼저 Edit/SyncML 의 SyncML 설정을 수정해야합니다."
-
-#: taskcoachlib\syncml\tasksource.py:153
-msgid "Task \"%s\" has been deleted on server,\n"
-msgstr "서버의 \"%s\" 작업 삭제되었음,\n"
-
-#: taskcoachlib\syncml\tasksource.py:158
-msgid "Task \"%s\" has been locally deleted,\n"
-msgstr "로컬의 \"%s\" 작업 삭제되었음,\n"
-
-#: taskcoachlib\widgets\buttonbox.py:24
-#: taskcoachlib\widgets\conflict.py:261
-#: taskcoachlib\widgets\dialog.py:53
-#: taskcoachlib\widgets\dialog.py:76
-#: taskcoachlib\widgets\dialog.py:79
-#: taskcoachlib\widgets\dialog.py:146
-#: taskcoachlib\widgets\syncmlwarning.py:18
-msgid "OK"
-msgstr "확인"
-
-#: taskcoachlib\widgets\buttonbox.py:24
-#: taskcoachlib\widgets\dialog.py:54
-msgid "Cancel"
-msgstr "취소"
-
-#: taskcoachlib\widgets\conflict.py:83
-msgid "Field name"
-msgstr "필드명"
-
-#: taskcoachlib\widgets\conflict.py:84
-msgid "Local"
-msgstr "로컬"
-
-#: taskcoachlib\widgets\conflict.py:86
-msgid "Remote"
-msgstr "리모트"
-
-#: taskcoachlib\widgets\conflict.py:88
-msgid "Fusion"
-msgstr "퓨전"
-
-#: taskcoachlib\widgets\dialog.py:155
-msgid "All files (*.*)|*"
-msgstr "모든 파일 (*.*)|*"
-
-#: taskcoachlib\widgets\searchctrl.py:45
-msgid "Match case"
-msgstr "대/소문자 구분"
-
-#: taskcoachlib\widgets\searchctrl.py:45
-msgid "Match case when filtering"
-msgstr "필터링할 때 대소문자 구분"
-
-#: taskcoachlib\widgets\searchctrl.py:48
-msgid "Include sub items"
-msgstr "하위항목 포함"
-
-#: taskcoachlib\widgets\searchctrl.py:49
-msgid "Include sub items of matching items in the search results"
-msgstr "검색결과중 같은 이름의 모든 하위항목 포함"
-
-#: taskcoachlib\widgets\searchctrl.py:98
-msgid ""
-"This is an invalid regular expression.\n"
-"Defaulting to substring search."
-msgstr ""
-"이 정규표현식은 불확실합니다..\n"
-"기본 문자열로 검색합니다."
-
-#: taskcoachlib\widgets\searchctrl.py:150
-msgid "Recent searches"
-msgstr "최근 검색"
-
-#: taskcoachlib\widgets\searchctrl.py:161
-msgid "Viewer not searchable"
-msgstr "검색불가능 뷰어"
-
-#: taskcoachlib\widgets\syncmlwarning.py:8
-msgid "Compatibility warning"
-msgstr "호환성 경고"
-
-#: taskcoachlib\widgets\syncmlwarning.py:11
-msgid ""
-"The SyncML feature is disabled, because the module\n"
-"could not be loaded. This may be because your platform\n"
-"is not supported, or under Windows, you may be missing\n"
-"some mandatory DLLs. Please see the SyncML section of\n"
-"the online help for details (under \"Troubleshooting\")."
-msgstr ""
-
-#: taskcoachlib\widgets\syncmlwarning.py:16
-msgid "Never show this dialog again"
-msgstr "다음부터 이 대화상자 보여주지 않음"
-
-#: taskcoachlib\application\application.py:98
-msgid ""
-"Couldn't load settings from TaskCoach.ini:\n"
-"%s"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\preferences.py:146
-msgid ""
-"(For running %s\n"
-"from a removable medium)"
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:185
-msgid ""
-"Cannot save %s\n"
-"%s"
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:281
-msgid "Finished synchronization"
-msgstr ""
-
-#: taskcoachlib\gui\menu.py:389
-msgid "Task &square map"
-msgstr ""
-
-#: taskcoachlib\gui\menu.py:390
-msgid "Open a new tab with a viewer that displays tasks in a square map"
-msgstr ""
-
-#: taskcoachlib\gui\menu.py:401
-msgid "Effort for &one task"
-msgstr ""
-
-#: taskcoachlib\gui\menu.py:402
-msgid "Open a new tab with a viewer that displays efforts for the selected task"
-msgstr ""
-
-#: taskcoachlib\gui\taskbaricon.py:140
-msgid "%d tasks due today"
-msgstr ""
-
-#: taskcoachlib\gui\taskbaricon.py:140
-msgid "one task due today"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:412
-msgid "&Open...\tCtrl+O"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:509
-msgid "Purge deleted items"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:510
-msgid "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:514
-msgid ""
-"Purging deleted items is undoable.\n"
-"If you're planning on enabling\n"
-"the SyncML feature again with the\n"
-"same server you used previously,\n"
-"these items will probably come back.\n"
-"\n"
-"Do you still want to purge?"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:521
-msgid "Warning"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:529
-msgid "Setup the characteristics of the printer page"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:585
-msgid "Export effort as &iCalendar..."
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:586
-msgid "Export effort in iCalendar (*.ics) format"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:596
-msgid "Export the current view as HTML file"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:605
-msgid "Export &selection as HTML..."
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:606
-msgid "Export the selection in the current view as HTML file"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:616
-msgid "Export the current view in Comma Separated Values (CSV) format"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:640
-msgid "Please enter your password:"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:641
-msgid "Task Coach SyncML password"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:716
-msgid "Cu&t\tCtrl+X"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1050
-msgid "When comparing text, sorting is case sensitive (checked) or insensitive (unchecked)"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1064
-msgid "Sort tasks by status (active/inactive/completed) first"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1085
-msgid "Show/hide active tasks (tasks with a start date in the past and a due date in the future)"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1098
-msgid "Show/hide inactive tasks (tasks with a start date in the future)"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1148
-msgid "C&omposite"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1149
-msgid "Show/hide tasks with subtasks in list mode"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1306
-msgid "&Mark task completed\tCtrl+RETURN"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1500
-msgid ""
-"Cannot send email:\n"
-"%s"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1501
-msgid "%s mail error"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1714
-msgid "(No subject)"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1732
-msgid "Select a task via the menu and start tracking effort for it"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2041
-msgid "Filter on all checked categories"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2042
-msgid "Filter on any checked category"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\attachment.py:83
-#: taskcoachlib\gui\viewer\attachment.py:102
-#: taskcoachlib\gui\viewer\effort.py:202
-#: taskcoachlib\gui\viewer\mixin.py:332
-#: taskcoachlib\gui\viewer\mixin.py:380
-#: taskcoachlib\gui\viewer\mixin.py:400
-#: taskcoachlib\gui\viewer\note.py:101
-#: taskcoachlib\gui\viewer\note.py:127
-#: taskcoachlib\gui\viewer\task.py:468
-msgid "&Description"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:181
-msgid "Show only tasks &due before end of"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:182
-msgid "&Unlimited"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\mixin.py:381
-msgid "Sort attachments by description"
-msgstr ""
-
-#: taskcoachlib\gui\viewer\task.py:176
+#: taskcoachlib\gui\viewer\task.py:357
 msgid "Task square map"
 msgstr ""
 
-#: taskcoachlib\gui\viewer\task.py:493
+#: taskcoachlib\gui\viewer\task.py:547
+msgid "Days left"
+msgstr "남은 날짜"
+
+#: taskcoachlib\gui\viewer\task.py:551
+msgid "Total budget"
+msgstr "전체 예산"
+
+#: taskcoachlib\gui\viewer\task.py:555
+msgid "Total budget left"
+msgstr "전체 남은 예산"
+
+#: taskcoachlib\gui\viewer\task.py:560
+msgid "Total fixed fee"
+msgstr "전체 고정비용"
+
+#: taskcoachlib\gui\viewer\task.py:577
+msgid "&Dates"
+msgstr "날짜(&D)"
+
+#: taskcoachlib\gui\viewer\task.py:578
+msgid "All date columns"
+msgstr "모든 날짜 컬럼"
+
+#: taskcoachlib\gui\viewer\task.py:579
+msgid "Show/hide all date-related columns"
+msgstr "모든 날짜관련 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:585
+msgid "Show/hide start date column"
+msgstr "시작일 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:588
+msgid "Show/hide due date column"
+msgstr "기간 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:590
+msgid "Co&mpletion date"
+msgstr "완료일 (&m)"
+
+#: taskcoachlib\gui\viewer\task.py:591
+msgid "Show/hide completion date column"
+msgstr "완료일 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:594
+msgid "Show/hide days left column"
+msgstr "남은날짜 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:597
+msgid "Show/hide recurrence column"
+msgstr "반복컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:602
+msgid "All budget columns"
+msgstr "모든 예산 컬럼"
+
+#: taskcoachlib\gui\viewer\task.py:603
+msgid "Show/hide all budget-related columns"
+msgstr "모든 예산관련 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:609
+msgid "Show/hide budget column"
+msgstr "예산컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:612
+msgid ""
+"Show/hide total budget column (total budget includes budget for subtasks)"
+msgstr "모든 예산컬럽 보임/감춤 (전체 예산은 하위예산도 포함함)"
+
+#: taskcoachlib\gui\viewer\task.py:618
+msgid ""
+"Show/hide total time spent column (total time includes time spent on "
+"subtasks)"
+msgstr "모든 소요시간컬럼 보임/감춤(모든 시간은 하위작업의 소요시간을 포함함)"
+
+#: taskcoachlib\gui\viewer\task.py:621
+msgid "Show/hide budget left column"
+msgstr "남은 예산일 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:624
+msgid ""
+"Show/hide total budget left column (total budget left includes budget left "
+"for subtasks)"
+msgstr "모든 예산 남은일 컬럼 보임/감춤(모든 예산일은 하위작업의 남은 예산일을 포함함)"
+
+#: taskcoachlib\gui\viewer\task.py:627
+msgid "&Financial"
+msgstr "재정 (&F)"
+
+#: taskcoachlib\gui\viewer\task.py:628
+msgid "All financial columns"
+msgstr "모든 재정 컬럼"
+
+#: taskcoachlib\gui\viewer\task.py:629
+msgid "Show/hide all finance-related columns"
+msgstr "모든 재정관련 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:635
+msgid "Show/hide hourly fee column"
+msgstr "시급 비용 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:638
+msgid "Show/hide fixed fee column"
+msgstr "고정 비용 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:640
+msgid "&Total fixed fee"
+msgstr "전체 고정 비용 (&T)"
+
+#: taskcoachlib\gui\viewer\task.py:641
+msgid "Show/hide total fixed fee column"
+msgstr "전체 고정 비용 컬럼 보임/감충"
+
+#: taskcoachlib\gui\viewer\task.py:646
+msgid "T&otal revenue"
+msgstr "전체수입(&o)"
+
+#: taskcoachlib\gui\viewer\task.py:654
+msgid "Show/hide attachment column"
+msgstr "첨부파일 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:669
+msgid "Show/hide priority column"
+msgstr "우선순위 컬럼 보임/감춤"
+
+#: taskcoachlib\gui\viewer\task.py:671
+msgid "O&verall priority"
+msgstr "우선순위(&V)"
+
+#: taskcoachlib\gui\viewer\task.py:672
+msgid ""
+"Show/hide overall priority column (overall priority is the maximum priority "
+"of a task and all its subtasks"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\task.py:675
 msgid "Show/hide reminder column"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:25
+#: taskcoachlib\help\__init__.py:26
 msgid ""
 "<h3>Table of contents</h3>\n"
 "<ul>\n"
@@ -2936,17 +2779,23 @@ msgid ""
 "</ul>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:75
+#: taskcoachlib\help\__init__.py:73
+msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
+msgstr "<h3><a name=\"tasks\">작업</a></h3>\n"
+
+#: taskcoachlib\help\__init__.py:76
 msgid ""
 "<h4><a name=\"abouttasks\">About tasks</a></h4>\n"
 " \n"
 "<p>Tasks are the basic objects that you manipulate. Tasks can\n"
-"represent anything from a simple little thing you have to do, like buying a gift\n"
-"for your loved one, to a complete project, consisting of different phases, and\n"
+"represent anything from a simple little thing you have to do, like buying a "
+"gift\n"
+"for your loved one, to a complete project, consisting of different phases, "
+"and\n"
 "numerous activities.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:83
+#: taskcoachlib\help\__init__.py:84
 msgid ""
 "<h4><a name=\"taskproperties\">Task \n"
 "properties</a></h4>\n"
@@ -2957,30 +2806,36 @@ msgid ""
 "<li>Description: a multi-line description of the task.</li>\n"
 "<li>Due date: the date the task should be finished. This can be 'None' \n"
 "indicating that this task has no fixed due date.</li>\n"
-"<li>Start date: the first date on which the task can be started. The start date \n"
-"defaults to the date the task is created. It can also be 'None' indicating that\n"
+"<li>Start date: the first date on which the task can be started. The start "
+"date \n"
+"defaults to the date the task is created. It can also be 'None' indicating "
+"that\n"
 "you don't really want to start this task. This can be convenient for e.g. \n"
 "registering sick leave.</li>\n"
 "<li>Completion date: this date is 'None' as long as the task has not been \n"
-"completed. It is set to the current date when you mark the task as completed. \n"
+"completed. It is set to the current date when you mark the task as "
+"completed. \n"
 "The completion date can also be entered manually.</li>\n"
 "<li>Budget: amount of hours available for the task.</li>\n"
 "<li>Hourly fee: the amount of money earned with the task per hour.</li>\n"
-"<li>Fixed fee: the amount of money earned with the task regardless of the time\n"
+"<li>Fixed fee: the amount of money earned with the task regardless of the "
+"time\n"
 "spent.</li>\n"
 "</ul></p>\n"
 "\n"
 "<p>The following properties are calculated from the properties above:\n"
 "<ul>\n"
 "<li>Days left: the number of days left until the due date.</li>\n"
-"<li>Total budget: sum of task budget and the budgets of all subtasks of the \n"
+"<li>Total budget: sum of task budget and the budgets of all subtasks of the "
+"\n"
 "task, recursively.</li>\n"
 "<li>Time spent: effort spent on the task.</li>\n"
 "<li>Total time spent: effort spent on the task and all subtasks, \n"
 "recursively.</li>\n"
 "<li>Budget left: task budget minus time spent on the task.</li>\n"
 "<li>Total budget left: total task budget minus total time spent.</li>\n"
-"<li>Total fixed fee: sum of fixed fee of the task and the fixed fees of all \n"
+"<li>Total fixed fee: sum of fixed fee of the task and the fixed fees of all "
+"\n"
 "subtasks of the task, recursively.</li>\n"
 "<li>Revenue: hourly fee times hours spent plus fixed fee.</li>\n"
 "<li>Total revenue: sum of task revenue and revenue of all subtasks, \n"
@@ -2988,13 +2843,14 @@ msgid ""
 "</ul></p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:123
+#: taskcoachlib\help\__init__.py:124
 msgid ""
 "<h4><a name=\"taskstates\">Task states</a></h4>\n"
 "\n"
 "<p>Tasks always have exactly one of the following states:\n"
 "<ul>\n"
-"<li>Active: the start date is in the past and the due date in the future;</li>\n"
+"<li>Active: the start date is in the past and the due date in the "
+"future;</li>\n"
 "<li>Inactive: the start date is in the future, or</li>\n"
 "<li>Completed: the task has been completed.</li>\n"
 "</ul></p>\n"
@@ -3010,7 +2866,7 @@ msgid ""
 " "
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:142
+#: taskcoachlib\help\__init__.py:143
 msgid ""
 "<h4><a name=\"taskcolors\">Task colors</a></h4>\n"
 "\n"
@@ -3022,28 +2878,31 @@ msgid ""
 "<li>Future tasks are gray, and</li>\n"
 "<li>Completed tasks are green.</li>\n"
 "</ul>\n"
-"This all assumes you have not changed the text colors through the preferences \n"
+"This all assumes you have not changed the text colors through the "
+"preferences \n"
 "dialog, of course.</p>\n"
 "<p>The background color of tasks is determined by the categories the task\n"
 "belongs to, see the section about \n"
 "<a href=\"#categoryproperties\">category properties</a> below.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:159
+#: taskcoachlib\help\__init__.py:160
 msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:162
+#: taskcoachlib\help\__init__.py:163
 msgid ""
 "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
 "\n"
 "<p>Whenever you spent time on tasks, you can record the amount of time\n"
-"spent by tracking effort. Select a task and invoke 'Start tracking effort' in\n"
-"the Effort menu or the context menu or via the 'Start tracking effort' toolbar \n"
+"spent by tracking effort. Select a task and invoke 'Start tracking effort' "
+"in\n"
+"the Effort menu or the context menu or via the 'Start tracking effort' "
+"toolbar \n"
 "button.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:170
+#: taskcoachlib\help\__init__.py:171
 msgid ""
 "<h4><a name=\"effortproperties\">Effort\n"
 "properties</a></h4>\n"
@@ -3052,7 +2911,8 @@ msgid ""
 "<ul>\n"
 "<li>Task: the task the effort belongs to.</li>\n"
 "<li>Start date/time: start date and time of the effort.</li>\n"
-"<li>Stop date/time: stop date and time of the effort. This can be 'None' as \n"
+"<li>Stop date/time: stop date and time of the effort. This can be 'None' as "
+"\n"
 "long as you are still working on the task.</li>\n"
 "<li>Description: a multi-line description of the effort.</li>\n"
 "</ul></p>\n"
@@ -3067,28 +2927,32 @@ msgid ""
 "</ul></p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:192
+#: taskcoachlib\help\__init__.py:193
 msgid "<h3><a name=\"categories\">Categories</a></h3>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:195
+#: taskcoachlib\help\__init__.py:196
 msgid ""
 "<h4><a name=\"aboutcategories\">About \n"
 "categories</a></h4>\n"
 "\n"
-"<p>Tasks may belong to one or more categories. First, you need to create the\n"
-"category that you want to use via the 'Category' menu. Then, you can add a task to\n"
-"one or more categories by editing the task and checking the relevant categories\n"
+"<p>Tasks may belong to one or more categories. First, you need to create "
+"the\n"
+"category that you want to use via the 'Category' menu. Then, you can add a "
+"task to\n"
+"one or more categories by editing the task and checking the relevant "
+"categories\n"
 "for that task in the category pane of the task editor.</p>\n"
 "\n"
-"<p>You can limit the tasks shown in the task viewers to one or more categories\n"
+"<p>You can limit the tasks shown in the task viewers to one or more "
+"categories\n"
 "by checking a category in the category viewer. For example, if you have a \n"
 "category 'phone calls' and you check that category, the task viewers will \n"
 "only show tasks belonging to that category; in other words the phone calls \n"
 "you need to make.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:210
+#: taskcoachlib\help\__init__.py:211
 msgid ""
 "<h4><a name=\"categoryproperties\">Category \n"
 "properties</a></h4>\n"
@@ -3097,16 +2961,19 @@ msgid ""
 "to render the background of the category and the background of tasks that\n"
 "belong to that category. If a category has no color of its own, but it has\n"
 "a parent category with a color, the parent's color will be used.  \n"
-"If a task belongs to multiple categories that each have a color associated with\n"
+"If a task belongs to multiple categories that each have a color associated "
+"with\n"
 "them, a mixture of the colors will be used to render the background of that\n"
 "task.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:222
-msgid "<h3><a name=\"email\">E-mail (Outlook &amp; Thunderbird) integration</a></h3>\n"
+#: taskcoachlib\help\__init__.py:223
+msgid ""
+"<h3><a name=\"email\">E-mail (Outlook &amp; Thunderbird) "
+"integration</a></h3>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:225
+#: taskcoachlib\help\__init__.py:226
 msgid ""
 "<h4><a name=\"aboutemail\">About e-mail integration</a></h4>\n"
 "\n"
@@ -3122,7 +2989,7 @@ msgid ""
 "e-mails from Thunderbird. This does not apply to Outlook.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:239
+#: taskcoachlib\help\__init__.py:240
 msgid ""
 "<h4><a name=\"emailattach\">Attaching an e-mail to a task</a></h4>\n"
 "\n"
@@ -3136,7 +3003,7 @@ msgid ""
 "</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:251
+#: taskcoachlib\help\__init__.py:252
 msgid ""
 "<h4><a name=\"emailcreate\">Creating a task from an e-mail</a></h4>\n"
 "\n"
@@ -3146,7 +3013,77 @@ msgid ""
 "attached to the newly created task.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:316
+#: taskcoachlib\help\__init__.py:260
+msgid "<h3><a name=\"syncml\">SyncML support</a></h3>\n"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:263
+msgid ""
+"<h4><a name=\"aboutsyncml\">What is SyncML</a></h4>\n"
+"\n"
+"<p>This feature is optional and off by default. In order to turn it on,\n"
+"go to the preferences dialog and check it in the Features page.</p>\n"
+"\n"
+"<p>SyncML  is   an  XML  protocol  designed   to  synchronize  several\n"
+"applications  with  a  server.  A  popular open-source  server  is  <a\n"
+"href=\"http://www.funambol.com/\">Funambol</a>.  Synchronization clients\n"
+"are available  for many devices and applications  (Outlook, Pocket PC,\n"
+"iPod, iPhone,  Evolution, etc...),  as well as  so-called \"connectors\"\n"
+"which allow the server  to synchronize with Exchange, Google Calendar,\n"
+"etc.</p>\n"
+"\n"
+"<p>%(name)s has built-in SyncML client support. This means you can\n"
+"setup %(name)s to synchronize with the same SyncML server you\n"
+"synchronize with with Outlook and have all Outlook tasks and notes in\n"
+"your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or\n"
+"your Pocket PC.</p>\n"
+"\n"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:284
+msgid ""
+"<h4><a name=\"syncmlsetup\">Setup</a></h4>\n"
+"\n"
+"<p>To setup SyncML, edit the SyncML preferences in Edit/SyncML preferences.\n"
+"Fill in the synchronization URL, your ID on the server and choose which\n"
+"items to synchronize (tasks and/or notes). The URL depends on the server\n"
+"you choose; some examples are:\n"
+"\n"
+"<ul>\n"
+"  <li><a href=\"http://www.scheduleworld.com/\">ScheduleWorld</a>: "
+"http://sync.scheduleworld.com/funambol/ds</li>\n"
+"  <li><a href=\"http://memotoo.com\">MemoToo</a>: "
+"http://sync.memotoo.com/syncml</li>\n"
+"</ul>\n"
+"\n"
+"The database names are pretty standard; the default values should work.</p>\n"
+"\n"
+"<p>Each task file has its own client ID, so that two different task files\n"
+"will de considered different \"devices\" by the server.</p>"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:301
+msgid ""
+"<h4><a name=\"syncmllimits\">Limitations</a></h4>\n"
+"\n"
+"<p>Some limitations are due to the fact that, the underlying data type being "
+"vcalendar, some TaskCoach features cannot be presented to the server.\n"
+"\n"
+"  <ul>\n"
+"    <li>Task and category hierarchy are lost to the server.</li>\n"
+"    <li>Recurrence and reminders are not supported yet.</li>\n"
+"    <li>Note categories are lost to the server.</li>\n"
+"    <li>The conflict detection/resolution system is a work around a "
+"Funambol\n"
+"        limitation. It should work in most cases, but if many applications\n"
+"        synchronize with the same server at the same time, problems may "
+"rise.</li>\n"
+"    <li>Probably some others...</li>\n"
+"  </ul>\n"
+"</p>\n"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:317
 msgid ""
 "<h4><a name=\"syncmltrouble\">Troubleshooting</a></h4>\n"
 "\n"
@@ -3166,7 +3103,7 @@ msgid ""
 "</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:334
+#: taskcoachlib\help\__init__.py:335
 msgid ""
 "<h4><a name=\"syncmlpurge\">Purging deleted items</a></h4>\n"
 "\n"
@@ -3180,7 +3117,8 @@ msgid ""
 "\n"
 "<p>In this case, the \"Purge deleted items\" menu item in the File menu can\n"
 "be used to actually delete these tasks. It is only enabled when you\n"
-"need it, that is when there are items to purge. Be aware that after doing this,\n"
+"need it, that is when there are items to purge. Be aware that after doing "
+"this,\n"
 "if you re-enable SyncML and make a sync with the same server you used\n"
 "previously, all those items will reappear, as the server\n"
 "doesn't know they're deleted.</p>\n"
@@ -3192,7 +3130,50 @@ msgid ""
 "all these unwanted items.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:393
+#: taskcoachlib\help\__init__.py:359
+msgid "<h3><a name=\"templates\">Task templates</a></h3>\n"
+msgstr "<h3><a name=\"templates\">작업 서식</a></h3>\n"
+
+#: taskcoachlib\help\__init__.py:362
+msgid ""
+"<h4><a name=\"abouttemplates\">About templates</a></h4>\n"
+"<p>Templates are blueprints for new tasks. Right now, the only task "
+"properties that\n"
+"can be \"parameterized\" are the dates. When instantiating a template, the "
+"created\n"
+"task has its dates replaced with dates relative to the current date.</p>\n"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:368
+msgid ""
+"<h4><a name=\"usingtemplates\">Using templates</a></h4>\n"
+"<p>One can create a template by selecting a task (only one) and click on "
+"the\n"
+"\"Save task as template\" item in the File menu. All subtasks, notes and "
+"attachments\n"
+"are part of the template. Only categories are not saved.</p>\n"
+"\n"
+"<p>You can also create a new template from a pre-made template file "
+"(.tsktmpl);\n"
+"just select \"Add template\" in the File menu and select the file. Template "
+"files\n"
+"are stored in a subdirectory of the directory where %(name)s.ini is.</p>\n"
+"\n"
+"<p>In order to instantiate a task template, use the \"New task from "
+"template\" menu\n"
+"in the Task menu, or the equivalent toolbar button. When the task is "
+"created, the\n"
+"due, start and completion dates, if applicable, are reevaluated relatively "
+"to the\n"
+"current date. That means that if you create a template from a task starting "
+"today\n"
+"and due tomorrow, every time the template is instantiated, the start date "
+"will be\n"
+"replaced by the current date and the due date by the current date plus one "
+"day.</p>\n"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:394
 msgid ""
 "<h4>%(name)s - %(description)s</h4>\n"
 "<h5>Version %(version)s, %(date)s</h5>\n"
@@ -3202,7 +3183,7 @@ msgid ""
 "<p>%(license_notice_html)s</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:405
+#: taskcoachlib\help\__init__.py:406
 msgid ""
 "\n"
 "Version %(version)s, %(date)s\n"
@@ -3217,40 +3198,130 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib\help\tips.py:26
-msgid "%(name)s has a mailinglist where you can discuss usage of %(name)s with fellow users, discuss and request features and complain about bugs. Go to %(url)s and join today!"
+msgid ""
+"%(name)s is currently alpha software. Although the %(name)s developers try "
+"hard to prevent them, bugs do happen. So, backing up your work on a regular "
+"basis is strongly advised."
 msgstr ""
+"%(name)s 은/는 알파버전입니다. %(name)s 개발자의 노력에도 불구하고, 버그가 발생할 수도 있습니다. 그러므로, 기본 "
+"설정에서 작업을 먼저 백업해두시길 적극 권장합니다."
 
 #: taskcoachlib\help\tips.py:27
-msgid "%(name)s has unlimited undo and redo. Any change that you make, be it editing a task description, or deleting an effort record, is undoable. Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards through your edit history."
+msgid ""
+"%(name)s has a mailinglist where you can discuss usage of %(name)s with "
+"fellow users, discuss and request features and complain about bugs. Go to "
+"%(url)s and join today!"
 msgstr ""
 
 #: taskcoachlib\help\tips.py:28
-msgid "%(name)s is available in a number of different languages. Select 'Edit' -> 'Preferences' to see whether your language is one of them. If your language is not available or the translation needs improvement, please consider helping with the translation of %(name)s. Visit %(url)s for more information about how you can help."
+msgid ""
+"%(name)s has unlimited undo and redo. Any change that you make, be it "
+"editing a task description, or deleting an effort record, is undoable. "
+"Select 'Edit' -> 'Undo' and 'Edit' -> 'Redo' to go backwards and forwards "
+"through your edit history."
 msgstr ""
 
 #: taskcoachlib\help\tips.py:29
-msgid "If you enter a URL (e.g. %(url)s) in a task or effort description, it becomes a link. Clicking on the link will open the URL in your default web browser."
+msgid ""
+"%(name)s is available in a number of different languages. Select 'Edit' -> "
+"'Preferences' to see whether your language is one of them. If your language "
+"is not available or the translation needs improvement, please consider "
+"helping with the translation of %(name)s. Visit %(url)s for more information "
+"about how you can help."
 msgstr ""
 
 #: taskcoachlib\help\tips.py:30
-msgid "You can drag and drop tasks in the tree view to rearrange parent-child relationships between tasks. The same goes for categories."
+msgid ""
+"If you enter a URL (e.g. %(url)s) in a task or effort description, it "
+"becomes a link. Clicking on the link will open the URL in your default web "
+"browser."
 msgstr ""
 
 #: taskcoachlib\help\tips.py:31
-msgid "You can drag files from a file browser onto a task to create attachments. Dragging the files over a tab will raise the appropriate page, dragging the files over a collapsed task (the boxed + sign) in the tree view will expand the task to show its subtasks."
+msgid ""
+"You can drag and drop tasks in the tree view to rearrange parent-child "
+"relationships between tasks. The same goes for categories."
 msgstr ""
 
 #: taskcoachlib\help\tips.py:32
-msgid "You can create any viewer layout you want by dragging and dropping the tabs. Unfortunately, due to a limitation of the current version of the graphical toolkit (wxPython), the layout cannot be saved for reuse in the next session."
+msgid ""
+"You can drag files from a file browser onto a task to create attachments. "
+"Dragging the files over a tab will raise the appropriate page, dragging the "
+"files over a collapsed task (the boxed + sign) in the tree view will expand "
+"the task to show its subtasks."
 msgstr ""
 
 #: taskcoachlib\help\tips.py:33
-msgid "What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc."
+msgid ""
+"You can create any viewer layout you want by dragging and dropping the tabs. "
+"Unfortunately, due to a limitation of the current version of the graphical "
+"toolkit (wxPython), the layout cannot be saved for reuse in the next session."
 msgstr ""
 
 #: taskcoachlib\help\tips.py:34
-msgid "Left-click a column header to sort by that column. Click the column header again to change the sort order from ascending to descending and back again. Right-click a column header to hide that column or make additional columns visible."
+msgid ""
+"What is actually printed when you select 'File' -> 'Print' depends on the "
+"current view. If the current view shows the task list, a list of tasks will "
+"be printed, if the current view shows effort grouped by month, that will be "
+"printed. The same goes for visible columns, sort order, filtered tasks, etc."
 msgstr ""
+
+#: taskcoachlib\help\tips.py:35
+msgid ""
+"Left-click a column header to sort by that column. Click the column header "
+"again to change the sort order from ascending to descending and back again. "
+"Right-click a column header to hide that column or make additional columns "
+"visible."
+msgstr ""
+
+#: taskcoachlib\help\tips.py:36
+msgid ""
+"You can turn off some features, such as notes and effort tracking, in the "
+"Preferences dialog. Features turned off are not accessible via the user "
+"interface, resulting in a 'smaller' user interface."
+msgstr ""
+
+#: taskcoachlib\help\tips.py:37
+msgid ""
+"You can create a template from a task in order to reduce typing when "
+"repetitive patterns emerge."
+msgstr ""
+
+#: taskcoachlib\iphone\protocol.py:133
+msgid "An iPhone or iPod Touch tried to connect to Task Coach,\n"
+msgstr ""
+
+#: taskcoachlib\iphone\protocol.py:134
+msgid "but no password is set. Please set a password in the\n"
+msgstr ""
+
+#: taskcoachlib\iphone\protocol.py:135
+msgid "iPhone section of the configuration and try again."
+msgstr ""
+
+#: taskcoachlib\mailer\__init__.py:61
+msgid "Untitled e-mail"
+msgstr "제목없는 e-mail"
+
+#: taskcoachlib\mailer\thunderbird.py:234
+msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
+msgstr "%(server)s:%(port)d 의 사용자 %(user)s님의 패스워드를 입력하세요"
+
+#: taskcoachlib\mailer\thunderbird.py:249
+msgid "Login failed (%s). Please try again."
+msgstr ""
+
+#: taskcoachlib\persistence\xml\templates.py:8
+msgid "New task due today"
+msgstr "오늘 새작업"
+
+#: taskcoachlib\persistence\xml\templates.py:10
+msgid "New task due tomorrow"
+msgstr "내일 새작업"
+
+#: taskcoachlib\syncml\basesource.py:58 taskcoachlib\syncml\basesource.py:70
+msgid "The synchronization for source %s"
+msgstr "소스 %s 의 동기화"
 
 #: taskcoachlib\syncml\basesource.py:59
 msgid ""
@@ -3264,13 +3335,166 @@ msgid ""
 "be deleted. Do you wish to continue?"
 msgstr ""
 
-#: taskcoachlib\syncml\notesource.py:74
-#: taskcoachlib\syncml\tasksource.py:154
+#: taskcoachlib\syncml\notesource.py:73
+msgid "Note \"%s\" has been deleted on server,\n"
+msgstr ""
+
+#: taskcoachlib\syncml\notesource.py:74 taskcoachlib\syncml\tasksource.py:155
 msgid "but locally modified. Should I keep the local version?"
 msgstr ""
 
-#: taskcoachlib\syncml\notesource.py:79
-#: taskcoachlib\syncml\tasksource.py:159
+#: taskcoachlib\syncml\notesource.py:75 taskcoachlib\syncml\notesource.py:80
+#: taskcoachlib\syncml\tasksource.py:156 taskcoachlib\syncml\tasksource.py:161
+msgid "Synchronization conflict"
+msgstr ""
+
+#: taskcoachlib\syncml\notesource.py:78
+msgid "Note \"%s\" has been locally deleted,\n"
+msgstr ""
+
+#: taskcoachlib\syncml\notesource.py:79 taskcoachlib\syncml\tasksource.py:160
 msgid "but modified on server. Should I keep the remote version?"
 msgstr ""
 
+#: taskcoachlib\syncml\sync.py:99
+msgid "Synchronization"
+msgstr ""
+
+#: taskcoachlib\syncml\sync.py:100
+msgid ""
+"Synchronizing. Please wait.\n"
+"\n"
+"\n"
+msgstr ""
+"동기화중. 잠시 기다려주세요.\n"
+"\n"
+"\n"
+
+#: taskcoachlib\syncml\sync.py:204
+msgid ""
+"%d items added.\n"
+"%d items updated.\n"
+"%d items deleted."
+msgstr ""
+"%d 항목 추가.\n"
+"%d 항목 업데이트.\n"
+"%d 항목 삭제."
+
+#: taskcoachlib\syncml\sync.py:210
+msgid ""
+"An error occurred in the synchronization.\n"
+"Error code: %d; message: %s"
+msgstr ""
+"동기화중 에러 발생.\n"
+"에러코드: %d; 메세지: %s"
+
+#: taskcoachlib\syncml\sync.py:215
+msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
+msgstr "먼저 Edit/SyncML 의 SyncML 설정을 수정해야합니다."
+
+#: taskcoachlib\syncml\tasksource.py:154
+msgid "Task \"%s\" has been deleted on server,\n"
+msgstr "서버의 \"%s\" 작업 삭제되었음,\n"
+
+#: taskcoachlib\syncml\tasksource.py:159
+msgid "Task \"%s\" has been locally deleted,\n"
+msgstr "로컬의 \"%s\" 작업 삭제되었음,\n"
+
+#: taskcoachlib\widgets\conflict.py:83
+msgid "Field name"
+msgstr "필드명"
+
+#: taskcoachlib\widgets\conflict.py:84
+msgid "Local"
+msgstr "로컬"
+
+#: taskcoachlib\widgets\conflict.py:86
+msgid "Remote"
+msgstr "리모트"
+
+#: taskcoachlib\widgets\conflict.py:88
+msgid "Fusion"
+msgstr "퓨전"
+
+#: taskcoachlib\widgets\dialog.py:155
+msgid "All files (*.*)|*"
+msgstr "모든 파일 (*.*)|*"
+
+#: taskcoachlib\widgets\searchctrl.py:49
+msgid "Match case"
+msgstr "대/소문자 구분"
+
+#: taskcoachlib\widgets\searchctrl.py:49
+msgid "Match case when filtering"
+msgstr "필터링할 때 대소문자 구분"
+
+#: taskcoachlib\widgets\searchctrl.py:52
+msgid "Include sub items"
+msgstr "하위항목 포함"
+
+#: taskcoachlib\widgets\searchctrl.py:53
+msgid "Include sub items of matching items in the search results"
+msgstr "검색결과중 같은 이름의 모든 하위항목 포함"
+
+#: taskcoachlib\widgets\searchctrl.py:56
+msgid "Search description too"
+msgstr ""
+
+#: taskcoachlib\widgets\searchctrl.py:57
+msgid "Search both subject and description"
+msgstr ""
+
+#: taskcoachlib\widgets\searchctrl.py:113
+msgid "This is an invalid regular expression."
+msgstr ""
+
+#: taskcoachlib\widgets\searchctrl.py:114
+msgid "Defaulting to substring search."
+msgstr ""
+
+#: taskcoachlib\widgets\searchctrl.py:172
+msgid "Recent searches"
+msgstr "최근 검색"
+
+#: taskcoachlib\widgets\searchctrl.py:183
+msgid "Viewer not searchable"
+msgstr "검색불가능 뷰어"
+
+#: taskcoachlib\widgets\syncmlwarning.py:8
+msgid "Compatibility warning"
+msgstr "호환성 경고"
+
+#: taskcoachlib\widgets\syncmlwarning.py:11
+msgid ""
+"The SyncML feature is disabled, because the module\n"
+"could not be loaded. This may be because your platform\n"
+"is not supported, or under Windows, you may be missing\n"
+"some mandatory DLLs. Please see the SyncML section of\n"
+"the online help for details (under \"Troubleshooting\")."
+msgstr ""
+
+#: taskcoachlib\widgets\syncmlwarning.py:16
+msgid "Never show this dialog again"
+msgstr "다음부터 이 대화상자 보여주지 않음"
+
+#~ msgid "Maximum number of recurrences"
+#~ msgstr "반복설정 초과"
+
+#~ msgid "Wrong password. Please try again."
+#~ msgstr "패스워드가 틀렸습니다. 다시 시도해주세요."
+
+#~ msgid "Export as iCalendar..."
+#~ msgstr "iCalendar 내보내기..."
+
+#~ msgid "Exported %(nrtasks)d tasks to %(filename)s"
+#~ msgstr "%(nrtasks)d 작업은 %(filename)s 파일로 내보내기."
+
+#~ msgid ""
+#~ "This is an invalid regular expression.\n"
+#~ "Defaulting to substring search."
+#~ msgstr ""
+#~ "이 정규표현식은 불확실합니다..\n"
+#~ "기본 문자열로 검색합니다."
+
+#~ msgid "Exported %(nrtasks)d items to %(filename)s"
+#~ msgstr "%(filename)s 의 %(nrtasks)d 작업 내보내기"
