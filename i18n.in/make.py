@@ -16,7 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import glob, po2dict, shutil
+import glob, shutil, sys, os
+projectRoot = os.path.abspath('..')
+if projectRoot not in sys.path:
+    sys.path.insert(0, projectRoot)
+from taskcoachlib.i18n import po2dict 
+
 
 for poFile in sorted(glob.glob('*.po')):
     print 'Creating python dictionary from', poFile
