@@ -177,7 +177,7 @@ pages['download'] = \
         <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.dmg"
         onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/macosx');">Disk image (dmg)</a> for Mac OS X</b></td></tr>
         <tr><td>Mac OS X versions supported: Mac OS X Tiger/10.4 
-        (Universal).</td></tr>
+        (Universal) and later.</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
         <tr><td>Installation: double click the package and drop the %(name)s 
         application in your programs folder.</td></tr>
