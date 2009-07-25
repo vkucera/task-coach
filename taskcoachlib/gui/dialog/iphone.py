@@ -32,7 +32,7 @@ class IPhoneSyncTypeDialog(wx.Dialog):
                               _('''An iPhone or iPod Touch device is trying
 to synchronize with this task file for
 the first time. What kind of synchronization
-would you like to use ?''')), 1, wx.EXPAND|wx.ALL, 5)
+would you like to use?''')), 1, wx.EXPAND|wx.ALL, 5)
 
         hsz = wx.BoxSizer(wx.HORIZONTAL)
         btn = wx.Button(self, wx.ID_ANY, _('Refresh from desktop'))
