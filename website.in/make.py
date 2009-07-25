@@ -592,6 +592,9 @@ pages['i18n'] = \
             keyboard uses 
             different labels for those keys. Picking a different letter is 
             possible, but please make sure each letter is used only once.</LI>
+            <LI>To test your translation, download it as .po file from 
+            Launchpad and start %(name)s with the <TT>--po &lt;po file&gt;</TT> 
+            command line option.</LI> 
         </OL>
         </P>'''
 
@@ -692,7 +695,7 @@ unicode('''       <H3>Chaîne de courriel</H3>
 pages['faq'] = \
 '''    <H3>Frequently asked questions</H3>
     <P><I>I upgraded to a new version and now I cannot load my %(name)s file. It
-    says: "Error loading <myfile>.tsk. Are you sure it is a %(name)s file?".
+    says: "Error loading &lt;myfile&gt;.tsk. Are you sure it is a %(name)s file?".
     I'm sure the file's ok. What next?</I></P>
     <P>Remove your TaskCoach.ini file and try again. Sometimes errors in
     loading old settings files will cause %(name)s to barf on .tsk files that
