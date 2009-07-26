@@ -510,6 +510,7 @@ def appendThumbnails(name, flt):
             thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
             image = '<A HREF="%s">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
             pages[name] += '<P>%s<BR>%s</P>'%(caption, image)
+
 pages['iPhone'] = '''<H3>iPhone</H3>
         <P>There is a todo-list application for iPhone that can synchronize with %(name)s
 through the network, starting with version 0.73.2 of %(name)s. Main features are</P>
@@ -523,8 +524,40 @@ through the network, starting with version 0.73.2 of %(name)s. Main features are
 
         <P>It is available on the <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8">AppStore.</a></P>
 
-        <P>More features are planned, like support for multiple task files and effort tracking.
-Here are some thumbnails of the UI:</P>'''
+        <P>More features are planned, like support for multiple task files and effort tracking.</P>
+
+<P>For this iPhone version, we use <a
+href="http://taskcoach.uservoice.com/">UserVoice</a> instead of
+SourceForge trackers. This allows you to vote for feature requests, so
+that we can sort out which ones are the most popular.</P>
+
+<P>Here are some thumbnails of the UI:</P>'''
+appendThumbnails('iPhone', lambda x: x.find('iPhone') != -1)
+
+pages['iPhone_fr'] = '''<H3>iPhone</H3>
+        <P>Il existe une application iPhone qui est capable de se
+        synchroniser avec %(name)s via le réseau, à partir de la
+        version 0.73.2 de %(name)s. Ses principales fonctionnalités
+        sont</P>
+
+        <UL>
+          <LI>Catégories hiérarchiques.</LI>
+          <LI>Edition du sujet, de la description, des dates et de l'état terminé.</LI>
+          <LI>Tapoter l'icône LED de la tâche pour la terminer.</LI>
+          <LI>Disponible en anglais et en français.</LI>
+        </UL>
+
+        <P>Elle est disponible sur l'<a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8">AppStore.</a></P>
+
+        </P>D'autres fonctionnalités sont prévues, comme la possibilité de fichiers de tâche multiples et le suivi.</P>
+
+<P>Pour cette version iPhone, nous utilisons <a
+href="http://taskcoach.uservoice.com/">UserVoice</a> au lieu des
+trackers SourceForge. Cela vous permet de voter pour des demandes de
+fonctionnalité, de manière à ce que nous puissions déterminer les plus
+populaires.</P>
+
+<P>Quelques captures d'écran::</P>'''
 appendThumbnails('iPhone', lambda x: x.find('iPhone') != -1)
 
 pages['license'] = '<PRE>%s</PRE>'%meta.licenseText
