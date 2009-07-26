@@ -63,7 +63,6 @@ class Application(object):
         self.initConfig(loadSettings)
         self.initLanguage()
         from taskcoachlib import gui, persistence, meta
-        from taskcoachlib.domain import task
         self.wxApp.SetAppName(meta.name)
         self.wxApp.SetVendorName(meta.author)
         gui.init()
@@ -73,8 +72,6 @@ class Application(object):
             splash = None
         self.taskFile = persistence.LockedTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)
-        self.taskRelationshipManager = task.TaskRelationshipManager( \
-            taskList=self.taskFile.tasks(), settings=self.settings)
         self.io = gui.IOController(self.taskFile, self.displayMessage, self.settings)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, self.settings, 
                                          splash)
@@ -88,8 +85,10 @@ class Application(object):
         
     def initConfig(self, loadSettings):
         from taskcoachlib import config
+        from taskcoachlib.domain import task
         iniFile = self._options.inifile if self._options else None
         self.settings = config.Settings(loadSettings, iniFile)
+        task.Task.settings = self.settings # Let task instances access settings
         
     def initLanguage(self):
         from taskcoachlib import i18n
