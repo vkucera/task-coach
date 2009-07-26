@@ -55,6 +55,7 @@ pages['index'] = \
         <P>%(name)s is developed using a number of products, see 
         credits at the left.</P>
         <P>Enjoy, <a href="mailto:%(author_email)s">%(author)s</a></P>
+        <!-- AppStoreHQ:claim_code:258f8973d401112a215d79afdb82fef934ee56c9 -->
         '''
 
 pages['index_fr'] = \
@@ -86,6 +87,7 @@ u'''        <P><IMG SRC="banner.png" ALT="Bandeau"></P>
         <P>%(name)s est développé à l'aide de nombreux outils; voir les références à gauche.</P>
 
         <P><a href="mailto:%(author_email)s">%(author)s</a></P>
+        <!-- AppStoreHQ:claim_code:258f8973d401112a215d79afdb82fef934ee56c9 -->
         '''
 
 pages['donations'] = \
