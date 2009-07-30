@@ -33,6 +33,9 @@ TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.v
 
 all: windist sdist website
 
+revision:
+	echo "revision='$(TCVERSION)'" > taskcoachlib/meta/revision.py
+
 prepare: icons i18n templates
 
 windist: prepare

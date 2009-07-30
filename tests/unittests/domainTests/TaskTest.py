@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from unittests import asserts
-from taskcoachlib import patterns
+from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date, attachment, note, category
 
 
@@ -46,13 +46,14 @@ class TaskTestCase(test.TestCase):
             setattr(self, effortLabel, effort)
             
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.tasks = self.createTasks()
         self.task = self.tasks[0]
-        for index, task in enumerate(self.tasks):
+        for index, eachTask in enumerate(self.tasks):
             taskLabel = 'task%d'%(index+1)
-            setattr(self, taskLabel, task)
-            self.labelTaskChildrenAndEffort(task, taskLabel)
-            self.labelEfforts(task, taskLabel)
+            setattr(self, taskLabel, eachTask)
+            self.labelTaskChildrenAndEffort(eachTask, taskLabel)
+            self.labelEfforts(eachTask, taskLabel)
         for eventType in self.eventTypes:
             self.registerObserver(eventType)
             
