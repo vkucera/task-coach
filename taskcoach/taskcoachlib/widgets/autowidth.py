@@ -68,7 +68,7 @@ class AutoColumnWidthMixin(object):
             event.Skip()
         
     def OnEndColumnDrag(self, event):
-        if event.Column == self.ResizeColumn and self.ColumnCount > 1:
+        if event.Column == self.ResizeColumn and self.GetColumnCount() > 1:
             extraWidth = self.__oldResizeColumnWidth - \
                              self.GetColumnWidth(self.ResizeColumn)
             self.DistributeWidthAcrossColumns(extraWidth)
@@ -103,7 +103,7 @@ class AutoColumnWidthMixin(object):
         # space across the other columns, or get the extra needed space from
         # the other columns. The other columns are resized proportionally to 
         # their previous width.
-        otherColumns = [index for index in range(self.ColumnCount)
+        otherColumns = [index for index in range(self.GetColumnCount())
                         if index != self.ResizeColumn]
         totalWidth = float(sum(self.GetColumnWidth(index) for index in 
                                otherColumns))

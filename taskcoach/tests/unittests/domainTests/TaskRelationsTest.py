@@ -23,19 +23,16 @@ from taskcoachlib.domain import task, date, effort
 
 class CommonTaskRelationshipManagerTests(object):
     def setUp(self):
+        task.Task.settings = settings = config.Settings(load=False)
         self.parent = task.Task('parent')
         self.child = task.Task('child')
         self.parent.addChild(self.child)
         self.child.setParent(self.parent)
         self.child2 = task.Task('child2')
         self.grandchild = task.Task('grandchild')
-        settings = config.Settings(load=False)
         settings.set('behavior', 'markparentcompletedwhenallchildrencompleted', 
             str(self.markParentCompletedWhenAllChildrenCompleted))
         self.taskList = task.TaskList([self.parent, self.child2, self.grandchild])
-        self.taskRelationshipManager = \
-            task.TaskRelationshipManager(taskList=self.taskList,
-                                         settings=settings)
         
     # completion date
     

@@ -131,6 +131,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             event = self.totalRevenueEvent(event)
         if child.isBeingTracked(recursive=True):
             event = self.startTrackingEvent(event, *child.activeEfforts(recursive=True))
+            
+        if self.shouldBeMarkedCompleted():
+            self.setCompletionDate(child.completionDate(), event)
+        elif self.completed() and not child.completed():
+            self.setCompletionDate(date.Date(), event)
+
+        if child.dueDate() > self.dueDate():
+            self.setDueDate(child.dueDate(), event)            
+        if child.startDate() < self.startDate():
+            self.setStartDate(child.startDate(), event)
+
         event.send()
         
     def removeChild(self, child):
@@ -154,6 +165,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if child.isBeingTracked(recursive=True) and not \
             self.isBeingTracked(recursive=True):
             event = self.stopTrackingEvent(event, *child.activeEfforts(recursive=True))
+            
+        if self.shouldBeMarkedCompleted(): 
+            # The removed child was the last uncompleted child
+            self.setCompletionDate(date.Today(), event)
+            
         event.send()
         
     def dueDate(self, recursive=False):
@@ -177,6 +193,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for child in self.children():
             if child.dueDate() > dueDate:
                 event = child.setDueDate(dueDate, event)
+                
         if self.parent():
             parent = self.parent()
             if dueDate > parent.dueDate():
@@ -198,10 +215,21 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def setStartDate(self, startDate, event=None):
         if startDate == self._startDate:
             return event
-        self._startDate = startDate
         notify = event is None
         event = event or patterns.Event()
+        self._startDate = startDate
         event.addSource(self, startDate, type='task.startDate')
+        
+        if not self.recurrence(True): 
+            # Let Task.recur() handle the change in start date
+            for child in self.children():
+                if startDate > child.startDate():
+                    child.setStartDate(startDate, event)
+            
+            parent = self.parent()
+            if parent and startDate < parent.startDate():
+                parent.setStartDate(startDate, event)
+        
         if notify:
             event.send()
         else:
@@ -232,16 +260,49 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 oldParentTotalPriority = parent.priority(recursive=True) 
             self._completionDate = completionDate
             event.addSource(self, completionDate, type='task.completionDate')
+            
             if parent and parent.priority(recursive=True) != \
                           oldParentTotalPriority:
                 event = self.totalPriorityEvent(event)                    
             if completionDate != date.Date():
                 event = self.setReminder(None, event)
+                
+            if parent:
+                if self.completed():
+                    if parent.shouldBeMarkedCompleted():
+                        parent.setCompletionDate(completionDate, event)
+                else:
+                    if parent.completed():
+                        parent.setCompletionDate(date.Date(), event)
+            if self.completed():
+                for child in self.children():
+                    if not child.completed():
+                        child.setRecurrence(event=event)
+                        child.setCompletionDate(completionDate, event)
+                
+                if self.isBeingTracked():
+                    self.stopTracking(event)
+                    
         if notify:
             event.send()
         else:
             return event
-        
+
+    def shouldBeMarkedCompleted(self):
+        ''' Return whether this task should be marked completed. It should be
+            marked completed when 1) it's not completed, 2) all of its children
+            are completed, 3) its setting says it should be completed when
+            all of its children are completed. '''
+        shouldMarkCompletedAccordingToSetting = \
+            self.settings.getboolean('behavior', 
+                'markparentcompletedwhenallchildrencompleted')
+        shouldMarkCompletedAccordingToTask = \
+            self.shouldMarkCompletedWhenAllChildrenCompleted()
+        return ((shouldMarkCompletedAccordingToTask == True) or \
+                ((shouldMarkCompletedAccordingToTask == None) and \
+                  shouldMarkCompletedAccordingToSetting)) and \
+               (not self.completed()) and self.allChildrenCompleted()
+      
     def completed(self):
         return self.completionDate() != date.Date()
 
