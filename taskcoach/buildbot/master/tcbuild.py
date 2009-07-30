@@ -30,6 +30,17 @@ class Cleanup(Compile):
         kwargs['command'] = ['make', 'nuke']
         Compile.__init__(self, **kwargs)
 
+
+class Revision(Compile):
+    name = 'Revision'
+    description = ['Generating', 'revision', 'file']
+    descriptionDone = ['Revision', 'file', 'generated']
+
+    def __init__(self, **kwargs):
+        kwargs['command'] = ['make', 'revision', WithProperties('TCVERSION=%s',
+                                                                'got_revision')]
+        Compile.__init__(self, **kwargs)
+
 
 #==============================================================================
 # Tests and documentation
