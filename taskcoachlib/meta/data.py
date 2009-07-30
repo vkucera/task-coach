@@ -19,6 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, re
 
+try:
+    from taskcoachlib.meta.revision import revision
+except ImportError:
+    revision = 'release'
+
 # Edit these for every release:
 
 # The buildbot sets TCVERSION when building snapshots.
