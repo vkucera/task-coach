@@ -80,9 +80,14 @@ class Settings(ConfigParser.SafeConfigParser, object):
 
 def uploadDistributionsToSourceForge(settings):
     print 'Uploading distributions to SourceForge...'
-    username = settings.get('sourceforge', 'username')
-    os.system('rsync -avP -e ssh dist/* %s@frs.sourceforge.net:uploads/' % \
-              username)
+    metadata = taskcoachlib.meta.data.metaDict
+    project = metadata['filename_lower']
+    pr = project[:2]
+    p = project[0]
+    username = '%s,%s'%(settings.get('sourceforge', 'username'), project)
+    folder = '/home/frs/project/%(p)s/%(pr)s/%(project)s/%(project)s/Release-%(version)s/'%\
+             dict(project=project, pr=pr, p=p, version=metadata['version'])
+    os.system('rsync -avP -e ssh dist/* %s@frs.sourceforge.net:%s'%(username, folder))
     print 'Done uploading distributions to SourceForge.'
 
 
