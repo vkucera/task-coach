@@ -7,6 +7,7 @@
 //
 
 #import "Task.h"
+#import "Category.h"
 
 #import "Database.h"
 #import "Statement.h"
@@ -102,6 +103,43 @@ static Statement *_saveStatement = NULL;
 		self.completionDate = [[DateUtils instance] stringFromDate:[NSDate date]];
 	else
 		self.completionDate = nil;
+}
+
+- (void)hasCategoryCallback:(NSDictionary *)dict
+{
+	hasCat = YES;
+}
+
+- (BOOL)hasCategory:(Category *)category
+{
+	hasCat = NO;
+	Statement *req = [[Database connection] statementWithSQL:@"SELECT * FROM TaskHasCategory WHERE idTask=? AND idCategory=?"];
+	[req bindInteger:objectId atIndex:1];
+	[req bindInteger:[category objectId] atIndex:2];
+	[req execWithTarget:self action:@selector(hasCategoryCallback:)];
+	return hasCat;
+}
+
+- (void)removeCategory:(Category *)category
+{
+	Statement *req = [[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory WHERE idTask=? AND idCategory=?"];
+	[req bindInteger:objectId atIndex:1];
+	[req bindInteger:[category objectId] atIndex:2];
+	[req exec];
+	
+	[self setStatus:STATUS_MODIFIED];
+	[self save];
+}
+
+- (void)addCategory:(Category *)category
+{
+	Statement *req = [[Database connection] statementWithSQL:@"INSERT INTO TaskHasCategory (idTask, idCategory) VALUES (?, ?)"];
+	[req bindInteger:objectId atIndex:1];
+	[req bindInteger:[category objectId] atIndex:2];
+	[req exec];
+	
+	[self setStatus:STATUS_MODIFIED];
+	[self save];
 }
 
 // Overridden setters

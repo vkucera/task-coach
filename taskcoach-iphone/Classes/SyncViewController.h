@@ -26,6 +26,8 @@
 
 	id target;
 	SEL action;
+	
+	NSInteger protocolVersion;
 }
 
 @property (nonatomic, retain) IBOutlet UILabel *label;
@@ -35,6 +37,7 @@
 @property (nonatomic, retain) IBOutlet UIButton *cancelButton;
 
 @property (nonatomic, retain) NSObject <State> *state;
+@property (nonatomic) NSInteger protocolVersion;
 
 - initWithTarget:(id)target action:(SEL)action host:(NSString *)host port:(NSInteger)port;
 

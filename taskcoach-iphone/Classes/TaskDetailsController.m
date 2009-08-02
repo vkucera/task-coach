@@ -8,6 +8,7 @@
 
 #import "TaskDetailsController.h"
 #import "DatePickerViewController.h"
+#import "TaskCategoryPickerController.h"
 
 #import "Task.h"
 
@@ -48,6 +49,12 @@
 		descriptionCell.textView.text = task.description;
 		[cells addObject:descriptionCell];
 		
+		categoriesCell = [[UITableViewCell alloc] initWithFrame:CGRectZero];
+		categoriesCell.text = NSLocalizedString(@"Categories", @"Categories cell text in task details");
+		categoriesCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		[cells addObject:categoriesCell];
+		[categoriesCell release];
+
 		startDateCell = [[CellFactory cellFactory] createDateCell];
 		[startDateCell setDelegate:self];
 		startDateCell.label.text = NSLocalizedString(@"Start date", @"Task details start date label");
@@ -199,9 +206,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
-	DatePickerViewController *ctrl = nil;
+	UIViewController *ctrl = nil;
 
-	if (cell == startDateCell)
+	if (cell == categoriesCell)
+	{
+		TaskCategoryPickerController *categoryPicker = [[TaskCategoryPickerController alloc] initWithTask:task];
+		[self.navigationController pushViewController:categoryPicker animated:YES];
+		[categoryPicker release];
+	}
+	else if (cell == startDateCell)
 	{
 		ctrl = [[DatePickerViewController alloc] initWithDate:task.startDate target:self action:@selector(onPickStartDate:)];
 	}
@@ -222,7 +235,7 @@
 	UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
 	
 	if (cell == descriptionCell)
-		return 220;
+		return 180;
 	return 44;
 }
 

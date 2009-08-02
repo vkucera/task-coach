@@ -22,8 +22,27 @@
 	return [[[TwoWayModifiedTasksState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
+- initWithNetwork:(Network *)network controller:(SyncViewController *)controller
+{
+	if (self = [super initWithNetwork:network controller:controller])
+	{
+		protocolVersion = controller.protocolVersion;
+	}
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	[taskCategories release];
+	
+	[super dealloc];
+}
+
 - (void)activated
 {
+	taskCategories = [[NSMutableArray alloc] initWithCapacity:2];
+
 	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Task WHERE status=%d", STATUS_MODIFIED]];
 	[req execWithTarget:self action:@selector(onModifiedTask:)];
 	
@@ -38,6 +57,28 @@
 	[myNetwork appendString:[dict objectForKey:@"startDate"]];
 	[myNetwork appendString:[dict objectForKey:@"dueDate"]];
 	[myNetwork appendString:[dict objectForKey:@"completionDate"]];
+	
+	if (protocolVersion == 2)
+	{
+		// Send categories as well, they may have been modified on the device.
+		[taskCategories removeAllObjects];
+
+		Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category, TaskHasCategory WHERE idCategory=id AND idTask=?"];
+		[req bindInteger:[[dict objectForKey:@"id"] intValue] atIndex:1];
+		[req execWithTarget:self action:@selector(onFoundCategory:)];
+		[myNetwork appendInteger:[taskCategories count]];
+		for (NSString *catId in taskCategories)
+		{
+			NSLog(@"Send category for modified task (v2): %@", catId);
+
+			[myNetwork appendString:catId];
+		}
+	}
+}
+
+- (void)onFoundCategory:(NSDictionary *)dict
+{
+	[taskCategories addObject:[dict objectForKey:@"taskCoachId"]];
 }
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller

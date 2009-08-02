@@ -8,15 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+#import "BaseCategoryViewController.h"
 #import "BonjourBrowser.h"
 #import "SyncViewController.h"
 
 @class NavigationController;
 
-@interface CategoryViewController : UITableViewController <BonjourBrowserDelegate>
+@interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate>
 {
 	NavigationController *navigationController;
-	NSMutableArray *categories;
 	UIBarButtonItem *syncButton;
 }
 
