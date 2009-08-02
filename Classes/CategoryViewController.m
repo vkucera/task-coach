@@ -6,8 +6,8 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import "CategoryViewController.h"
 #import "NavigationController.h"
+#import "CategoryViewController.h"
 #import "StringChoiceController.h"
 #import "TaskViewController.h"
 #import "SyncViewController.h"
@@ -58,65 +58,8 @@
 	}
 }
 
-- (void)addCategory:(NSDictionary *)dict
-{
-	Category *category = [[Category alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"]
-											   status:[[dict objectForKey:@"status"] intValue] taskCoachId:[dict objectForKey:@"taskCoachId"]
-											   parentId:[dict objectForKey:@"parentTaskCoachId"]];
-	[categories addObject:category];
-}
-
-- (void)loadCategories
-{
-	[categories removeAllObjects];
-
-	// We're assuming that there are not a bunch of categories, therefore we keep them in memory.
-	// This is not the case with tasks.
-	
-	Statement *req = [[Database connection] statementWithSQL:@"SELECT * FROM Category WHERE status != 3 ORDER BY name"];
-	[req execWithTarget:self action:@selector(addCategory:)];
-
-	NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:8];
-	NSMutableArray *rootItems = [[NSMutableArray alloc] initWithCapacity:8];
-
-	for (Category *category in categories)
-	{
-		if (category.taskCoachId)
-		{
-			[dict setObject:category forKey:category.taskCoachId];
-			if (!category.parentId)
-				[rootItems addObject:category];
-		}
-		else
-		{
-			[rootItems addObject:category];
-		}
-	}
-
-	for (Category *category in categories)
-	{
-		if (category.parentId)
-		{
-			Category *parent = [dict objectForKey:category.parentId];
-			[parent addChild:category];
-		}
-	}
-
-	[categories removeAllObjects];
-	for (Category *category in rootItems)
-	{
-		[category finalizeChildren:categories];
-	}
-
-	[dict release];
-	[rootItems release];
-}
-
 - (void)viewDidLoad
 {
-	categories = [[NSMutableArray alloc] init];
-	[self loadCategories];
-
 	[super viewDidLoad];
 	
 	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
@@ -143,28 +86,21 @@
 - (void)childWasPopped
 {
 	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-	
+
 	if (indexPath)
 	{
 		[[PositionStore instance] pop];
 		
-		if (indexPath.row)
-		{
-			[self.tableView reloadData];
-		}
+		[self.tableView reloadData];
 
-		// XXXFIXME: because of the reloadData, this isn't actually animated, but it is needed
-		// to refresh the task count...
+		// XXXFIXME: reloadData is not enough to refresh the task count ?
 
+		for (NSIndexPath *path in [self.tableView indexPathsForVisibleRows])
+			[self.tableView deselectRowAtIndexPath:path animated:YES];
+
+		// And the above code does not actually deselect the selected cell. Duh...
 		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	}
-}
-
-- (void)dealloc
-{
-	[categories release];
-
-    [super dealloc];
 }
 
 - (IBAction)onAddCategory:(UIBarButtonItem *)button
@@ -188,50 +124,22 @@
 	[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
-#pragma mark Table view methods
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (void)fillCell:(UITableViewCell *)cell forCategory:(Category *)category
 {
-    return 1;
+	[super fillCell:cell forCategory:category];
+
+#ifdef __IPHONE_3_0
+	cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)", [category name], [category count]];
+#else
+	cell.text = [NSString stringWithFormat:@"%@ (%d)", [category name], [category count]];
+#endif
 }
+
+#pragma mark Table view methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [categories count] + 1;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-	{
-        cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-    
-	if (indexPath.row)
-	{
-		Category *category = [categories objectAtIndex:indexPath.row - 1];
-
-#ifdef __IPHONE_3_0
-		cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)", [category name], [category count]];
-#else
-		cell.text = [NSString stringWithFormat:@"%@ (%d)", [category name], [category count]];
-#endif
-		cell.indentationLevel = category.level;
-	}
-	else
-	{
-#ifdef __IPHONE_3_0
-		cell.textLabel.text = NSLocalizedString(@"All", @"All categories name");
-#else
-		cell.text = NSLocalizedString(@"All", @"All categories name");
-#endif
-	}
-
-    return cell;
+    return [super tableView:tableView numberOfRowsInSection:section] + 1;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -251,6 +159,35 @@
 	
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	UITableViewCell *cell;
+
+	if (indexPath.row)
+	{
+		cell = [super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section]];
+	}
+	else
+	{
+		static NSString *CellIdentifier = @"Cell";
+		
+		cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+		if (cell == nil)
+		{
+			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+		}
+
+#ifdef __IPHONE_3_0
+		cell.textLabel.text = NSLocalizedString(@"All", @"All categories name");
+#else
+		cell.text = NSLocalizedString(@"All", @"All categories name");
+#endif
+	}
+
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	return cell;
 }
 
 //===========================================================

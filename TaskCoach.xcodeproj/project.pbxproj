@@ -16,6 +16,10 @@
 		A604D99C0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */; };
 		A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */; };
 		A60575FF0FA457590054E4C3 /* addtask.png in Resources */ = {isa = PBXBuildFile; fileRef = A60575FE0FA457590054E4C3 /* addtask.png */; };
+		A60B6E30102587FA00F9983C /* BaseCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */; };
+		A60B6ED710258D9D00F9983C /* TaskCategoryPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */; };
+		A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */; };
+		A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */; };
 		A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A6142CD20F35DE61001DD420 /* PositionStore.m */; };
 		A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFB0F35BA450086ECD6 /* TwoWayState.m */; };
 		A61AED000F35BBD20086ECD6 /* TwoWayNewCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFF0F35BBD20086ECD6 /* TwoWayNewCategoriesState.m */; };
@@ -120,6 +124,12 @@
 		A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGUIDState.h; path = Synchronization/GetGUIDState.h; sourceTree = "<group>"; };
 		A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGUIDState.m; path = Synchronization/GetGUIDState.m; sourceTree = "<group>"; };
 		A60575FE0FA457590054E4C3 /* addtask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addtask.png; sourceTree = "<group>"; };
+		A60B6E2E102587FA00F9983C /* BaseCategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCategoryViewController.h; sourceTree = "<group>"; };
+		A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCategoryViewController.m; sourceTree = "<group>"; };
+		A60B6ED510258D9D00F9983C /* TaskCategoryPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCategoryPickerController.h; sourceTree = "<group>"; };
+		A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCategoryPickerController.m; sourceTree = "<group>"; };
+		A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCategoryPicker.xib; sourceTree = "<group>"; };
+		A60B70EA1025AF0B00F9983C /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
 		A6142CD10F35DE61001DD420 /* PositionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositionStore.h; sourceTree = "<group>"; };
 		A6142CD20F35DE61001DD420 /* PositionStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PositionStore.m; sourceTree = "<group>"; };
 		A61AECFA0F35BA450086ECD6 /* TwoWayState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayState.h; path = Synchronization/TwoWayState.h; sourceTree = "<group>"; };
@@ -311,6 +321,10 @@
 				A6142CD20F35DE61001DD420 /* PositionStore.m */,
 				A6DDECFA0F46C5040047AEF5 /* KeychainWrapper.h */,
 				A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */,
+				A60B6E2E102587FA00F9983C /* BaseCategoryViewController.h */,
+				A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */,
+				A60B6ED510258D9D00F9983C /* TaskCategoryPickerController.h */,
+				A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -339,6 +353,7 @@
 				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
 				A6664C270F2B367A00638C68 /* SyncView.xib */,
 				A67A0C200F6BA57100F48A82 /* Entitlements.plist */,
+				A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -346,6 +361,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				A60B70EA1025AF0B00F9983C /* CHANGELOG */,
 				A680C0D50F47368E00A8D18B /* DatePickerView.strings */,
 				A680C0D70F47368E00A8D18B /* MainWindow.strings */,
 				A680C0D90F47368E00A8D18B /* StringChoice.strings */,
@@ -623,6 +639,8 @@
 				A60575FF0FA457590054E4C3 /* addtask.png in Resources */,
 				A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */,
 				A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */,
+				A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */,
+				A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -686,6 +704,8 @@
 				A67E47E80F5A938F00000A24 /* DomainViewController.m in Sources */,
 				A67E47E90F5A938F00000A24 /* SimpleEditViewController.m in Sources */,
 				A6B264D00FDBCB9400FF2AD0 /* DateCell.m in Sources */,
+				A60B6E30102587FA00F9983C /* BaseCategoryViewController.m in Sources */,
+				A60B6ED710258D9D00F9983C /* TaskCategoryPickerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

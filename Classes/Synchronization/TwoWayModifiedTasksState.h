@@ -12,6 +12,8 @@
 
 @interface TwoWayModifiedTasksState : BaseState <State>
 {
+	NSInteger protocolVersion;
+	NSMutableArray *taskCategories;
 }
 
 @end

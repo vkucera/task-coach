@@ -19,6 +19,7 @@
 	Task *task;
 	NSMutableArray *cells;
 	
+	UITableViewCell *categoriesCell;
 	DateCell *startDateCell;
 	DateCell *dueDateCell;
 	

@@ -16,6 +16,7 @@
 @synthesize activity;
 @synthesize progress;
 @synthesize state;
+@synthesize protocolVersion;
 @synthesize password;
 @synthesize cancelButton;
 

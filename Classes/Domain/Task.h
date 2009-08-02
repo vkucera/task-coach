@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "DomainObject.h"
 
+@class Category;
+
 #define TASKSTATUS_OVERDUE           0
 #define TASKSTATUS_DUETODAY          1
 #define TASKSTATUS_STARTED           2
@@ -21,6 +23,8 @@
 	NSString *startDate;
 	NSString *dueDate;
 	NSString *completionDate;
+	
+	BOOL hasCat;
 }
 
 @property (nonatomic, retain) NSString *description;
@@ -33,5 +37,9 @@
 
 - (NSInteger)taskStatus;
 - (void)setCompleted:(BOOL)completed;
+
+- (BOOL)hasCategory:(Category *)category;
+- (void)removeCategory:(Category *)category;
+- (void)addCategory:(Category *)category;
 
 @end
