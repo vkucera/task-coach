@@ -1258,5 +1258,5 @@ def copyScreenshots(targetFolder, screenshotFolder='screenshots',
 websiteFolder = os.path.join('..', 'website.out')            
 createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
-copyFiles(websiteFolder, '*.png', '*.ico', '*.css', '../icons.in/splash.png', '.htaccess')    
+copyFiles(websiteFolder, '*.png', '*.ico', '*.css', '../icons.in/splash.png') #, '.htaccess')    
 copyScreenshots(websiteFolder)
