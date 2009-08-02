@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.73.3', 'August ?, 2009',
+Release('0.73.3', 'August 2, 2009',
     summary='''This release fixes some bugs, and adds support for synchronizing
 with the next version of the iPhone app (1.1).''',
     bugsFixed=[
