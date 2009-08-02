@@ -50,7 +50,11 @@
 		[cells addObject:descriptionCell];
 		
 		categoriesCell = [[UITableViewCell alloc] initWithFrame:CGRectZero];
+#ifdef __IPHONE_3_0
+		categoriesCell.textLabel.text = NSLocalizedString(@"Categories", @"Categories cell text in task details");
+#else
 		categoriesCell.text = NSLocalizedString(@"Categories", @"Categories cell text in task details");
+#endif
 		categoriesCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		[cells addObject:categoriesCell];
 		[categoriesCell release];
