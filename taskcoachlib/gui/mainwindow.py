@@ -436,10 +436,18 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
         self.taskFile.tasks().remove(task)
 
     @synchronized
-    def modifyIPhoneTask(self, task, subject, description, startDate, dueDate, completionDate):
+    def modifyIPhoneTask(self, task, subject, description, startDate, dueDate, completionDate, categories):
         task.setSubject(subject)
         task.setDescription(description)
         task.setStartDate(startDate)
         task.setDueDate(dueDate)
         task.setCompletionDate(completionDate)
 
+        if categories is not None: # Protocol v2
+            for category in task.categories():
+                task.removeCategory(category)
+                category.removeCategorizable(task)
+
+            for category in categories:
+                task.addCategory(category)
+                category.addCategorizable(task)

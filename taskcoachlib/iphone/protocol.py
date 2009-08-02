@@ -33,8 +33,9 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 # Strings are sent as their length (as integer), then data (UTF-8 encoded).
 #
 # 1) The protocol version is negotiated: Task Coach sends its higher
-# supported version (currently 1). If the iPhone answers 0, it doesn't
+# supported version (currently 2). If the iPhone answers 0, it doesn't
 # support it, so decrement and try again. If it answers 1, go to 2.
+# See at the end of this comment to know what's new in protocol 2.
 #
 # 2) SHA1 challenge: Task Coach sends 512 random bytes to the
 # device. The device appends the user provided password as UTF-8 data
@@ -121,6 +122,10 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 # 5) For each modified task, the device sends it (same format as above, without the category Id)
 # 6) Go into "Full from Task Coach" mode.
 
+# What's new in protocol v2
+
+# In the two-way state, when uploading modified tasks from the device to the desktop,
+# it adds the number of categories for the task, then each category ID.
 
 class IPhoneAcceptor(Acceptor):
     def __init__(self, window, settings):
@@ -242,17 +247,24 @@ class BaseState(object):
 
 class InitialState(BaseState):
     def init(self, disp):
+        self.currentProtocolVersion = 2
         disp.set_terminator(4)
-        disp.pushInteger(1) # Protocol version
+        disp.pushInteger(self.currentProtocolVersion)
 
     def handleData(self, disp, data):
         response, = struct.unpack('!i', data)
 
         if response:
+            disp.protocolVersion = self.currentProtocolVersion
             self.setState(PasswordState, disp)
         else:
-            disp.close()
-            disp.window.notifyIPhoneProtocolFailed()
+            if self.currentProtocolVersion == 1:
+                disp.close()
+                disp.window.notifyIPhoneProtocolFailed()
+            else:
+                self.currentProtocolVersion -= 1
+                disp.set_terminator(4)
+                disp.pushInteger(self.currentProtocolVersion)
 
 
 class PasswordState(BaseState):
@@ -715,15 +727,47 @@ class TwoWayModifiedTasks(BaseState):
         else:
             self.setState(FullFromDesktopState, disp)
 
+    def finalize(self, disp):
+        try:
+            task = self.taskMap[self.id_]
+        except KeyError:
+            # Probably deleted on desktop
+            pass
+        else:
+            disp.window.modifyIPhoneTask(task,
+                                         self.subject,
+                                         self.description,
+                                         self.startDate,
+                                         self.dueDate,
+                                         self.completionDate,
+                                         self.categories)
+
     def handleData(self, disp, data):
         if self.length is None:
             self.length, = struct.unpack('!i', data)
-            if self.length == 0:
-                self.handleData(disp, '')
+            if self.state == 6: # Protocol version 2 only
+                if self.length:
+                    self.categoryCount = self.length
+                    self.length = None
+                    self.state = 7
+                    disp.set_terminator(4)
+                else:
+                    self.finalize(disp)
+                    self.modifiedTasksCount -= 1
+                    if self.modifiedTasksCount == 0:
+                        self.setState(FullFromDesktopState, disp)
+                    else:
+                        self.state = 0
+                        self.length = None
+                        disp.set_terminator(4)
             else:
-                disp.set_terminator(self.length)
+                if self.length == 0:
+                    self.handleData(disp, '')
+                else:
+                    disp.set_terminator(self.length)
         else:
             if self.state == 0:
+                self.categories = None
                 self.subject = data.decode('UTF-8')
             elif self.state == 1:
                 self.id_ = data.decode('UTF-8')
@@ -736,27 +780,31 @@ class TwoWayModifiedTasks(BaseState):
             elif self.state == 5:
                 self.completionDate = parseDate(data)
 
-                try:
-                    task = self.taskMap[self.id_]
-                except KeyError:
-                    # Probably deleted on desktop
-                    pass
+                if disp.protocolVersion == 1:
+                    self.finalize(disp)
+                    self.modifiedTasksCount -= 1
                 else:
-                    disp.window.modifyIPhoneTask(task,
-                                                 self.subject,
-                                                 self.description,
-                                                 self.startDate,
-                                                 self.dueDate,
-                                                 self.completionDate)
+                    self.categories = []
+                    self.state = 6
+            elif self.state == 7:
+                self.categories.append(self.categoryMap[data.decode('UTF-8')])
+                self.categoryCount -= 1
+                if self.categoryCount == 0:
+                    self.finalize(disp)
+                    self.modifiedTasksCount -= 1
+                    if self.modifiedTasksCount == 0:
+                        self.setState(FullFromDesktopState, disp)
+                    else:
+                        self.state = 0
 
-                self.modifiedTasksCount -= 1
+            if disp.protocolVersion == 1 or (disp.protocolVersion == 2 and self.state < 5):
+                if self.state == 5 and self.modifiedTasksCount == 0:
+                    self.setState(FullFromDesktopState, disp)
+                else:
+                    self.state = (self.state + 1) % 6
 
-            if self.state == 5 and self.modifiedTasksCount == 0:
-                self.setState(FullFromDesktopState, disp)
-            else:
-                self.state = (self.state + 1) % 6
-                self.length = None
-                disp.set_terminator(4)
+            self.length = None
+            disp.set_terminator(4)
 
 
 class EndState(BaseState):
