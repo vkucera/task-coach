@@ -32,16 +32,19 @@ user using a text editor; Task Coach won't overwrite it.''')
         ]
     ),
                 
-Release('0.73.3', 'July ?, 2009',
-    summary='''This is a bugfix release.''',
+Release('0.73.3', 'August ?, 2009',
+    summary='''This release fixes some bugs, and adds support for synchronizing
+with the next version of the iPhone app (1.1).''',
     bugsFixed=[
         Bug('''Opening the task menu in the main menu bar while a category 
 viewer was active would result in exceptions.''', '2818254'),
-        Bug('''The time control in the effort editor was too narrow''', '2790805'),
-        Bug('''Link to http://www.cygwin.com on the website had a typo.''', '2819702'),
+        Bug('''The time control in the effort editor was too narrow''', 
+            '2790805'),
+        Bug('''Link to http://www.cygwin.com on the website had a typo.''', 
+            '2819702'),
         Bug('''The context menu key didn't work.''', '2807326'),
-        Bug('''With SyncML enabled, tasks deleted on the desktop would still show up
-on the iPhone/iPod Touch.'''),
+        Bug('''With SyncML enabled, tasks deleted on the desktop would still 
+show up on the iPhone/iPod Touch.'''),
         Bug('''Translate tip window controls, search controls, and
 viewer titles.''', '2825463', '2825222'),
         Bug('''Prevent exception when opening a new viewer.''', '2825222'),
@@ -52,9 +55,11 @@ an attachment.''', '2826178')
         Feature('''Specify which language to use on the command line. Type
 "taskcoach[.py|.exe] --help" on the command line for more information.'''),
         Feature('''Load a .po file (a file containing translations) with a 
-command line option. Type "taskcoach[.py|.exe] --help" on the command line for more 
-information. This option allows translators to check their work more 
-easily.''', '1599933')
+command line option. Type "taskcoach[.py|.exe] --help" on the command line for 
+more information. This option allows translators to check their work more 
+easily.''', '1599933'),
+        Feature('''Synchronizing with the next version for the iPhone (1.1) is
+now supported (one can edit a task's categories from the device).''')
         ]
     ),
                 

@@ -25,6 +25,7 @@ class PrinterTest(test.TestCase):
     def setUp(self):
         super(PrinterTest, self).setUp()
         self.settings = config.Settings(load=False)
+        self.margins = dict(top=1, left=2, bottom=3, right=4)
         self.printerSettings = gui.printer.PrinterSettings(self.settings)
         self.pageSetupData = wx.PageSetupDialogData()
 
@@ -39,14 +40,14 @@ class PrinterTest(test.TestCase):
         self.assertEqual(wx.PORTRAIT, printerSettings.GetOrientation())
 
     def testSetMargin(self):
-        self.pageSetupData.SetMarginTopLeft(wx.Point(1, 1))
+        self.pageSetupData.SetMarginTopLeft(wx.Point(10, 1))
         self.printerSettings.updatePageSetupData(self.pageSetupData)
-        self.assertEqual(wx.Point(1, 1), 
+        self.assertEqual(wx.Point(10, 1), 
                          self.printerSettings.GetMarginTopLeft())
 
     def testDefaultMarginsFromSettings(self):
         settings = self.settings
-        for margin in 'top', 'left', 'bottom', 'right':
+        for margin in self.margins:
             self.assertEqual(0, settings.getint('printer', 'margin_'+margin))
 
     def testSetPaperId(self):
@@ -67,12 +68,14 @@ class PrinterTest(test.TestCase):
                          self.settings.getint('printer', 'orientation'))
 
     def testUpdateMarginsInPageSetupDataUpdatesSettings(self):
-        self.pageSetupData.SetMarginTopLeft(wx.Point(1, 1))
-        self.pageSetupData.SetMarginBottomRight(wx.Point(1, 1))
+        self.pageSetupData.SetMarginTopLeft(wx.Point(self.margins['top'], 
+                                                     self.margins['left']))
+        self.pageSetupData.SetMarginBottomRight(wx.Point(self.margins['bottom'], 
+                                                         self.margins['right']))
         self.printerSettings.updatePageSetupData(self.pageSetupData)
-        settings = self.settings
-        for margin in 'top', 'left', 'bottom', 'right':
-            self.assertEqual(1, settings.getint('printer', 'margin_'+margin))
+        for margin in self.margins:
+            self.assertEqual(self.margins[margin], 
+                             self.settings.getint('printer', 'margin_'+margin))
 
     def testUpdatePaperIdInPageSetupDataUpdatesSettings(self):
         self.pageSetupData.SetPaperId(1)
@@ -87,10 +90,13 @@ class PrinterTest(test.TestCase):
 
     def testMarginsInPageSetupDataAreUpdatedFromSettings(self):
         gui.printer.PrinterSettings.deleteInstance()
-        self.settings.set('printer', 'margin_left', '1')
+        for margin in self.margins:
+            self.settings.set('printer', 'margin_'+margin, 
+                              str(self.margins[margin]))
         printerSettings = gui.printer.PrinterSettings(self.settings)
-        self.assertEqual(wx.Point(0, 1), printerSettings.GetMarginTopLeft())
-
+        self.assertEqual(wx.Point(1, 2), printerSettings.GetMarginTopLeft())
+        self.assertEqual(wx.Point(3, 4), printerSettings.GetMarginBottomRight())
+        
     def testPaperIdInPageSetupDataIsUpdatedFromSettings(self):
         gui.printer.PrinterSettings.deleteInstance()
         self.settings.set('printer', 'paper_id', '1')
