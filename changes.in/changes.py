@@ -27,7 +27,9 @@ Release('0.73.4', 'August ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Prevent text in right-aligned columns, like dates in
-the task viewer, to be partially cut off.''', '2806466')
+the task viewer, to be partially cut off.''', '2806466'),
+        Bug('''Don't crash when a template task has an empty subject.''', 
+            '2831233')
         ]
     ),
     
