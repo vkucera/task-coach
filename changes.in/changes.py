@@ -29,7 +29,9 @@ Release('0.73.4', 'August ?, 2009',
         Bug('''Prevent text in right-aligned columns, like dates in
 the task viewer, to be partially cut off.''', '2806466'),
         Bug('''Don't crash when a template task has an empty subject.''', 
-            '2831233')
+            '2831233'),
+        Bug('''Always show the correct 'mark task (un)completed' bitmap in the 
+task context menu.''', '2830125')
         ]
     ),
     
