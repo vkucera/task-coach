@@ -23,6 +23,14 @@ from changetypes import *
 
 releases = [
 
+Release('0.73.4', 'August ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Prevent text in right-aligned columns, like dates in
+the task viewer, to be partially cut off.''', '2806466')
+        ]
+    ),
+    
 Release('0.73.3', 'August 2, 2009',
     summary='''This release fixes some bugs, and adds support for synchronizing
 with the next version of the iPhone app (1.1).''',

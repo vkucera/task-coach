@@ -2113,7 +2113,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             text_w, dummy, dummy = dc.GetMultiLineTextExtent(text)
 
             if alignment == wx.ALIGN_RIGHT:
-                w = col_w - (image_w + wcheck + text_w + off_w + _MARGIN)
+                w = col_w - (image_w + wcheck + text_w + off_w + _MARGIN + 1)
                 x += (w > 0 and [w] or [0])[0]
 
             elif alignment == wx.ALIGN_CENTER:
