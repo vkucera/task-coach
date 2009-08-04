@@ -31,7 +31,9 @@ the task viewer, to be partially cut off.''', '2806466'),
         Bug('''Don't crash when a template task has an empty subject.''', 
             '2831233'),
         Bug('''Always show the correct 'mark task (un)completed' bitmap in the 
-task context menu.''', '2830125')
+task context menu.''', '2830125'),
+        Bug('''The GUI would always display English, instead of the language
+set via the preference dialog or specified on the command line.''', '2831534')
         ]
     ),
     
